@@ -1,0 +1,56 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
+                    xmlns:localView="clr-namespace:VirtoCommerce.ManagementClient.Security.View"
+                  
+                    xmlns:localWizardView="clr-namespace:VirtoCommerce.ManagementClient.Security.View.Wizard"
+                    xmlns:implementations="clr-namespace:VirtoCommerce.ManagementClient.Security.ViewModel.Implementations"
+                    xmlns:localWizardViewModel="clr-namespace:VirtoCommerce.ManagementClient.Security.ViewModel.Wizard.Implementations">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/HomeViewTheme/VirtoCommerceHomeTheme.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <DataTemplate DataType="{x:Type implementations:SecurityMainViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type core_controls:HorizontalTabDefaultView}"/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type implementations:AccountHomeViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localView:AccountHomeView}"/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type implementations:AccountViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localView:AccountView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type implementations:PasswordChangeViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localView:PasswordChangeView}"/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type implementations:RoleHomeViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localView:RoleHomeView}"/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type implementations:RoleViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localView:RoleView}"/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type implementations:LoginViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localView:LoginView}"/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type localWizardViewModel:AccountOverviewStepViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localWizardView:AccountOverviewView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type localWizardViewModel:AccountRolesStepViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localWizardView:AccountRolesView}"/>
+    </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type localWizardViewModel:RoleOverviewStepViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localWizardView:RoleOverviewView}"/>
+    </DataTemplate>
+
+	<!--Brushes-->
+	<SolidColorBrush x:Key="SecurityDetailMenuItemBrush" Color="#409FD8"/>
+	<!--Brushes-->
+
+</ResourceDictionary>

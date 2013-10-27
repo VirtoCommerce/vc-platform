@@ -1,0 +1,16 @@
+*     { background:none !important; text-align:left !important; }
+html  { margin:0 !important; padding:0 !important; }
+body  { background:#fff !important; font-size:9pt !important; padding:0 !important; margin:10px !important; }
+a     { color:#2976c9 !important; }
+th,td { color:#2f2f2f !important;  border-color:#ccc !important; }
+
+.header-container,
+.nav-container,
+.footer-container,
+.pager,
+.toolbar,
+.actions,
+.buttons-set { display:none !important; }
+
+.page-print .data-table .cart-tax-total { background-position:100% -54px; }
+.page-print .data-table .cart-tax-info { display:block !important; }

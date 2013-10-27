@@ -1,0 +1,83 @@
+﻿@model CheckoutAddressModel
+
+<script language="javascript">
+
+    $(document).ready(function () {
+        var id = '@ViewData.TemplateInfo.GetFullHtmlFieldId(String.Empty)';
+    	var c = new VirtoAddress(id);
+    });
+
+</script>
+@Html.HiddenFor(m => m.Address.Name)
+<li class="clearfix">
+    <div class="input-box input-firstname">
+        @Html.LabelForEx(m => m.Address.FirstName)<br />
+        @Html.TextBoxFor(m => m.Address.FirstName, new { @class = "input-text" })<br />
+        @Html.ValidationMessageFor(m => m.Address.FirstName)
+    </div>
+    <div class="input-box input-lastname">
+        @Html.LabelForEx(m => m.Address.LastName)<br />
+        @Html.TextBoxFor(m => m.Address.LastName, new { @class = "input-text" })<br />
+        @Html.ValidationMessageFor(m => m.Address.LastName)
+    </div>
+</li>
+<li class="clearfix">
+    <div class="input-box input-email">
+        @Html.LabelForEx(m => m.Address.Email)<br />
+        @Html.TextBoxFor(m => m.Address.Email, new { @class = "validate-email input-text" })<br />
+        @Html.ValidationMessageFor(m => m.Address.Email)
+    </div>
+    <div class="input-box input-telephone">
+        @Html.LabelForEx(m => m.Address.DaytimePhoneNumber)<br />
+        @Html.TextBoxFor(m => m.Address.DaytimePhoneNumber, new { @class = "input-text" })
+		@Html.ValidationMessageFor(m => m.Address.DaytimePhoneNumber)
+    </div>
+</li>
+<li class="clearfix">
+    <div class="input-box input-address">
+        @Html.LabelForEx(m => m.Address.Line1)<br />
+        @Html.TextBoxFor(m => m.Address.Line1, new { @class = "input-text" })
+        @Html.ValidationMessageFor(m => m.Address.Line1)
+        @Html.TextBoxFor(m => m.Address.Line2, new { @class = "input-text onestepcheckout-address-line" })
+    </div>
+</li>
+<li class="clearfix">
+    <div class="input-box input-country">
+        @Html.LabelForEx(m => m.Address.CountryCode)<br />
+        @Html.DropDownListFor(m => m.Address.CountryCode, new SelectList(Model.Countries, "CountryId", "DisplayName"))
+        @Html.HiddenFor(m => m.Address.CountryName)
+		@Html.ValidationMessageFor(m => m.Address.CountryCode)
+    </div>
+</li>
+<li class="clearfix">
+    <div class="input-box input-city">
+        @Html.LabelForEx(m => m.Address.City)<br />
+        @Html.TextBoxFor(m => m.Address.City, new { @class = "input-text" })
+		@Html.ValidationMessageFor(m => m.Address.City)
+    </div>
+</li>
+<li class="clearfix" id="">
+    <div class="input-box input-postcode">
+        @Html.LabelForEx(m => m.Address.PostalCode)<br />
+        @Html.TextBoxFor(m => m.Address.PostalCode, new { @class = "validate-zip-international input-text" })<br />
+        @Html.ValidationMessageFor(m => m.Address.PostalCode)
+    </div>
+    <div class="input-box input-region">
+        @Html.LabelForEx(m => m.Address.StateProvince)<br />
+        @Html.DropDownList("StateProvinceId", new SelectList(new string[] { "select state/province" }))
+        @Html.TextBoxFor(m => m.Address.StateProvince, new { @class = "input-text", style = "display:none" })<br />
+        @Html.ValidationMessageFor(m => m.Address.StateProvince)
+    </div>
+</li>
+<li class="clearfix">
+    <div class="input-box input-company">
+        @Html.LabelForEx(m => m.Address.Organization)<br />
+        @Html.TextBoxFor(m => m.Address.Organization, new { @class = "input-text" })
+		@Html.ValidationMessageFor(m => m.Address.Organization)
+    </div>
+    <div class="input-box input-fax">
+        @Html.LabelForEx(m => m.Address.FaxNumber)<br />
+        @Html.TextBoxFor(m => m.Address.FaxNumber, new { @class = "input-text" })
+		@Html.ValidationMessageFor(m => m.Address.FaxNumber)
+    </div>
+</li>

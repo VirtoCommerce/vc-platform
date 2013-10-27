@@ -1,0 +1,23 @@
+﻿@model System.Web.Mvc.HandleErrorInfo
+@{
+    Layout = "~/Views/Shared/_ErrorLayout.cshtml";
+    ViewBag.Title = "Search error";
+}
+
+<div class="main-container col1-layout">
+    <div class="main">
+        <div class="col-main">
+            <div class="std">
+
+                <h2>Search is not working</h2>
+                <p>
+                    We're sorry. The search is not working now.
+                </p>
+                <p>
+                    Go to <a href="@Href("~/")">Home Page</a>.
+                </p>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,3 @@
+﻿INSERT INTO [PropertySet] ([PropertySetId],[Name],[TargetType],[CatalogId],[LastModified],[Created],[Discriminator]) VALUES (N'19368867-49A5-4C95-BFC8-00D47B22FA9E',N'Apple property set',N'All',N'Apple',NULL,NULL,N'PropertySet');
+INSERT INTO [PropertySet] ([PropertySetId],[Name],[TargetType],[CatalogId],[LastModified],[Created],[Discriminator]) VALUES (N'2367B695-40C1-461D-B59F-F7A657688444',N'Samsung property set',N'All',N'Samsung',NULL,NULL,N'PropertySet');
+INSERT INTO [PropertySet] ([PropertySetId],[Name],[TargetType],[CatalogId],[LastModified],[Created],[Discriminator]) VALUES (N'CDCC6AEE-E083-48F0-A604-DA1F81C105C9',N'Sony property set',N'All',N'Sony',NULL,NULL,N'PropertySet');

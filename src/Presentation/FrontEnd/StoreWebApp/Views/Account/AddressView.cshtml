@@ -1,0 +1,14 @@
+﻿@model VirtoCommerce.Foundation.Customers.Model.Address
+@{
+	Layout = "";
+}
+
+<address>
+	@Model.FirstName @Model.LastName<br/>
+	@Model.Line1<br/>
+	@Model.Line2<br/>
+	@Model.City, @Model.StateProvince, @Model.PostalCode<br/>
+	@Model.CountryName<br/>
+	T: @Model.DaytimePhoneNumber
+	<br/>F: @Model.FaxNumber
+</address>

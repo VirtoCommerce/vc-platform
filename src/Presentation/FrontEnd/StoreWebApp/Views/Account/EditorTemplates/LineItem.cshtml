@@ -1,0 +1,50 @@
+﻿@using VirtoCommerce.Web.Virto.Helpers
+@model LineItemModel
+<tr id="@String.Format("row-{0}", Model.LineItem.LineItemId)" class="first last odd">
+	<td>
+		@Html.HiddenFor(x => x.LineItemId)
+		<a title="@Model.LineItem.Description" href="#" class="product-image">
+			<img width="113" height="113" alt="@Model.LineItem.Description" src="@Url.Image(Model.CatalogItem.Item, "primaryimage")" onerror="this.onerror=null;this.src='@Href("~/Content/themes/default/images/blank.png")';" /></a>
+		<h2 class="product-name">
+			<a href="@Url.ItemUrl(Model.CatalogItem.Item, Model.ParentCatalogItem)">
+				@Model.DisplayName</a>
+		</h2>
+		<div class="price-box">
+			<span id="product-price-119" class="regular-price"><span class="price">@Model.FormattedPlacedPrice</span></span>
+		</div>
+		<p class="configured-price">
+			<span class="price-label">@("Configured Price:".LocalizeHtml())</span> <span class="price">@Model.FormattedPlacedPrice</span>
+		</p>
+	</td>
+	<td>
+		@Html.TextAreaFor(m => m.Comment, new { @onfocus = "focusComment(this)", @onblur = "focusComment(this)", @cols = "5", @rows = "3", @class = "commentArea" })
+	</td>
+	<td>
+		<span class="nobr">
+	@if (Model.LineItem.LastModified.HasValue)
+ {
+		@Model.LineItem.LastModified.Value.ToLongDateString()
+ }
+ else if (Model.LineItem.Created.HasValue)
+      { 
+ 		@Model.LineItem.Created.Value.ToShortDateString()
+      }
+		</span>
+	</td>
+	<td class="a-center">
+		<p>
+			@Html.TextBoxFor(x => x.Quantity, new { @class = "input-text qty", maxlength = "12", size = "4" })
+		</p>
+		@{Html.RenderPartial("AddToCart", CatalogHelper.CreateCatalogModel(Model.CatalogItem.ItemId, Model.ParentCatalogItem != null ? Model.ParentCatalogItem.ItemId : null), new ViewDataDictionary { { "View", "Details" } });}
+		<p>
+			@Html.ActionLink("Edit".Localize(), "Configure", "Cart", new { lineItemId = Model.LineItemId }, new { title = "Edit item".Localize() })
+		</p>
+	</td>
+	<td class="last">
+		@Ajax.ActionLink("Remove item".Localize(), "RemoveFromWishList", "Cart", new { lineItemId = Model.LineItemId }, new AjaxOptions
+			{
+				HttpMethod = "POST", Confirm = "Are you sure you would like to remove this item from the wish list?".Localize(), 
+				OnSuccess = "VirtoCart.onUpdate"
+			}, new { @class = "btn-remove btn-remove2" })
+	</td>
+</tr>

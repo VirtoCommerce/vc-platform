@@ -1,0 +1,32 @@
+﻿<base:ViewBase xmlns:base="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure;assembly=VirtoCommerce.ManagementClient.Core"
+            x:Class="VirtoCommerce.ManagementClient.Catalog.View.Wizard.PriceListAssignmentSetConditionsStepView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+              xmlns:core_behavior="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Behaviors;assembly=VirtoCommerce.ManagementClient.Core"
+			  xmlns:localModule="clr-namespace:VirtoCommerce.ManagementClient.Catalog"
+            xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
+               xmlns:securityModule="clr-namespace:VirtoCommerce.Foundation.Security.Model;assembly=VirtoCommerce.Foundation"
+               mc:Ignorable="d" 
+            Height="400" Width="800" VerticalAlignment="Top" HorizontalAlignment="Left">
+	<base:ViewBase.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/WizardViewTheme/VirtoCommerceWizardTheme.xaml"/>
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</base:ViewBase.Resources>
+
+            <ScrollViewer CanContentScroll="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <ItemsControl ItemsSource="{Binding ExpressionElementBlock.Children}" core_behavior:PermissionBehavior.PermissionId="{x:Static securityModule:PredefinedPermissions.PricingPrice_List_AssignmentsManage}"
+          core_behavior:PermissionBehavior.DenyVisibility="Visible">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <core_controls:ExpressionBuilder RootExpression="{Binding }" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>   
+
+</base:ViewBase>

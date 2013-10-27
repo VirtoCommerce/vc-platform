@@ -1,0 +1,115 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Data.Services.Common;
+using System.Linq;
+using System.Runtime.Serialization;
+using System.Text;
+using VirtoCommerce.Foundation.Frameworks;
+
+
+namespace VirtoCommerce.Foundation.Reviews.Model.Management
+{
+	[DataContract]
+	[EntitySet("UserBlacklists")]
+	[DataServiceKey("SubscriptionId")]
+	public class UserBlacklist : StorageEntity
+	{
+		public UserBlacklist()
+		{
+			_UserBlacklistId = GenerateNewKey();
+		}
+
+		private string _UserBlacklistId;
+		[Key]
+		[StringLength(128, ErrorMessage = "Only 128 characters allowed.")]
+		[DataMember]
+		public string UserBlacklistId
+		{
+			get
+			{
+				return _UserBlacklistId;
+			}
+			set
+			{
+				SetValue(ref _UserBlacklistId, () => this.UserBlacklistId, value);
+			}
+		}
+
+		private string _UserId;
+		[DataMember]
+		[StringLength(128, ErrorMessage = "Only 128 characters allowed.")]
+		public string UserId
+		{
+			get
+			{
+				return _UserId;
+			}
+			set
+			{
+				SetValue(ref _UserId, () => this.UserId, value);
+			}
+		}
+
+		private string _UserFullName;
+		[DataMember]
+		[StringLength(128, ErrorMessage = "Only 128 characters allowed.")]
+		public string UserFullName
+		{
+			get
+			{
+				return _UserFullName;
+			}
+			set
+			{
+				SetValue(ref _UserFullName, () => this.UserFullName, value);
+			}
+		}
+
+
+		private string _UserLocation;
+		[DataMember]
+		[StringLength(128, ErrorMessage = "Only 128 characters allowed.")]
+		public string UserLocation
+		{
+			get
+			{
+				return _UserLocation;
+			}
+			set
+			{
+				SetValue(ref _UserLocation, () => this.UserLocation, value);
+			}
+		}
+
+		private int _Status;
+		[DataMember]
+		public int Status
+		{
+			get
+			{
+				return _Status;
+			}
+			set
+			{
+				SetValue(ref _Status, () => this.Status, value);
+			}
+		} // Pending, Approved, Denied	   
+
+
+		private string _Comment;
+		[DataMember]
+		[StringLength(1024, ErrorMessage = "Only 1024 characters allowed.")]
+		public string Comment
+		{
+			get
+			{
+				return _Comment;
+			}
+			set
+			{
+				SetValue(ref _Comment, () => this.Comment, value);
+			}
+		}
+	}
+}

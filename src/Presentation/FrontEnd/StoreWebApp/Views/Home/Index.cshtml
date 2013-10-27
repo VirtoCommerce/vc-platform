@@ -1,0 +1,24 @@
+﻿@{
+    ViewBag.Title = Html.Title("Home".Localize());
+}
+        <div class="main-container col1-layout">
+            <div class="main">
+                <div class="col-main">
+                    <div class="std">
+                        <div style="float: left; width: 653px;">
+                             @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeMain" });}
+                        </div>
+                        <div style="float: right; width: 280px;">
+                            <div style="margin: 0 0 10px;">
+                                @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeRightTop" });}
+                            </div>
+                            <div>
+                                @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeRightBottom" });}
+                             </div>
+                        </div>
+                        <div class="clearer">
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+        </div>

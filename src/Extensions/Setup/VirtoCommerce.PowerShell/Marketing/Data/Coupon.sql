@@ -1,0 +1,1 @@
+﻿INSERT INTO [Coupon] ([CouponId],[Code],[CouponSetId],[LastModified],[Created],[Discriminator]) VALUES (N'1f0ce31c-00a4-468f-8e1b-b9a888052d69',N'testCoupon',NULL,N'20130904 06:28:01.393',N'20130904 06:25:57.700',N'Coupon');

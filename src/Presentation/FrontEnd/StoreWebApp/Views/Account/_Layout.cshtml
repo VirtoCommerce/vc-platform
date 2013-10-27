@@ -1,0 +1,33 @@
+﻿@{
+    Layout = "../Shared/_SideBarLayout.cshtml";
+}
+<div class="my-account">
+    @RenderBody()
+</div>
+@section SideBarContent {
+    <div class="block block-account">
+        <div class="block-title">
+            <strong><span>@("My Account".LocalizeHtml())</span></strong>
+        </div>
+        <div class="block-content">
+            @Html.Partial("SideMenu")
+        </div>
+    </div>
+    @*@{Html.RenderAction("CompanyMenu", "Account");}*@
+    <div class="block block-cart">
+        <div class="block-title">
+            <strong><span>@("My Cart".LocalizeHtml())</span></strong>
+        </div>
+        <div class="block-content">
+            @{Html.RenderAction("MiniView", "Cart");}
+        </div>
+    </div>
+    <div class="block block-list block-compare">
+        <div class="block-title">
+            <strong><span>@("Compare Products".LocalizeHtml())</span></strong>
+        </div>
+        <div class="block-content">
+			@{Html.RenderAction("MiniCompareList", "Account");}
+        </div>
+    </div>
+}

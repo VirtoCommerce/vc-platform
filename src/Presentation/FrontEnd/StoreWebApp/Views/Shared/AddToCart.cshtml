@@ -1,0 +1,41 @@
+﻿@using VirtoCommerce.Web.Virto.Helpers
+@model CatalogItemWithPriceModel
+
+@switch ((string)ViewData["View"])
+ {
+	 case "List":
+		 if (Model != null && Model.Availability != null && Model.Availability.IsAvailable && Model.Price != null && (Model.Price.SalePrice.HasValue || Model.Price.ListPrice.HasValue))
+		 {
+			 <button type="button" title="@("Add to Cart".LocalizeHtml())" class="button btn-cart" onclick="VirtoCart.addToCart('Item added to cart', '@Url.Encode(Model.CatalogItem.ItemId)', '@Url.Encode(Model.CatalogItem.ParentItemId)', 1)">
+				 <span><span>@("Add to Cart".LocalizeHtml())</span></span>
+			 </button>
+		 }
+		 else
+		 {
+			 <div style="color:#ff0000; font-weight: bold; text-align: left;">@("Not for sale".LocalizeHtml())</div>
+		 }
+		 break;
+	 case "Orders":
+		 <button type="button" title="@("Add to Cart".LocalizeHtml())" class="button btn-cart" onclick="return VirtoCart.addToCartOrdersClick();">
+			 <span><span>@("Add to Cart".LocalizeHtml())</span></span>
+		 </button>
+		 break;
+	 default:
+		 if (Model != null && 
+			 ((Model.CatalogItem !=null 
+			 && CatalogHelper.CatalogClient.GetItemRelations(Model.CatalogItem.ItemId).Any()) || //check if item has variations
+			 (Model.Availability != null && 
+			 Model.Availability.IsAvailable && 
+			 Model.Price != null && 
+			 (Model.Price.SalePrice.HasValue || Model.Price.ListPrice.HasValue))))
+		 {
+			 <button type="button" title="@("Add to Cart".LocalizeHtml())" class="button btn-cart" onclick="return VirtoCart.addToCartClick('@((Model.CatalogItem != null) ? Model.CatalogItem.ItemId : "")','@((Model.CatalogItem != null) ? Model.CatalogItem.ParentItemId : "")'); ">
+				 <span><span>@("Add to Cart".LocalizeHtml())</span></span>
+			 </button>
+		 }
+		 else
+		 {
+			 <div style="color:#ff0000; font-weight: bold; text-align: left;">@("Not for sale".LocalizeHtml())</div>
+		 }
+		 break;
+ }

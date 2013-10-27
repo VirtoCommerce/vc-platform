@@ -1,0 +1,21 @@
+﻿<base:ViewBase x:Class="VirtoCommerce.ManagementClient.Fulfillment.View.Wizard.Stores.StoreNavigationStepView"
+            xmlns:base="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure;assembly=VirtoCommerce.ManagementClient.Core"
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+            xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+            xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+            xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
+            mc:Ignorable="d"
+            MinHeight="300" Width="600" HorizontalAlignment="Left" VerticalAlignment="Top">
+<base:ViewBase.Resources>
+	<ResourceDictionary>
+		<ResourceDictionary.MergedDictionaries>
+			<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/WizardViewTheme/VirtoCommerceWizardTheme.xaml"/>
+		</ResourceDictionary.MergedDictionaries>
+	</ResourceDictionary>
+</base:ViewBase.Resources>
+    <Grid>
+        <core_controls:WatermarkedTextBox Text="{Binding SettingFilteredNavigation.LongTextValue, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+								Height="300" Style="{StaticResource Virto_Multiline_WatermarkedTextBox_Style}" />
+    </Grid>
+</base:ViewBase>

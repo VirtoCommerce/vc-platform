@@ -1,0 +1,8 @@
+﻿@model Category
+
+@{
+    ViewBag.Title = Html.Title(Model.Name.Localize());
+}
+
+@Html.Action("SearchResultsWithinCategory", "search", new { category = Model })
+

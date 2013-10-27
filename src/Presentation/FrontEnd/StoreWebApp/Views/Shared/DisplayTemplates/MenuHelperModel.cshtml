@@ -1,0 +1,13 @@
+﻿@model MvcSiteMapProvider.Web.Html.Models.MenuHelperModel
+@using System.Web.Mvc.Html
+@using MvcSiteMapProvider.Web.Html.Models
+
+<ul id="nav">
+    @foreach (var node in Model.Nodes) { 
+        <li class="level0">@Html.DisplayFor(m => node, "TopMenuNodeModel") 
+@*            @if (node.Children.Any()) {
+                @Html.DisplayFor(m => node.Children)
+            }*@
+        </li>
+    }
+</ul>

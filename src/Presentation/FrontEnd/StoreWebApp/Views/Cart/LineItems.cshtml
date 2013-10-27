@@ -1,0 +1,7 @@
+﻿@model CartModel
+
+@for (var i = 0; i < Model.LineItems.Count(); i++)
+{
+	@Html.EditorFor(m => Model.LineItems[i], "lineItem")
+}
+

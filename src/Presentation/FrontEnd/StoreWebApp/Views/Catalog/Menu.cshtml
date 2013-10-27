@@ -1,0 +1,14 @@
+﻿@model CatalogItemWithPriceModel
+@{
+    var review = Model.CatalogItem.EditorialReviews.FirstOrDefault(r => r.Source.Equals("Product Description"));
+    var reviewText = review != null ? review.Content : "";
+  }
+
+<a class="product-image" href="@Url.ItemUrl(Model.CatalogItem.Item, Model.CatalogItem.ParentItemId)" title="@Model.DisplayName">
+    <img src="@Url.Image(Model.CatalogItem.Item, "primaryimage")" width="70" height="70" class="img_left imgshadow" alt="@Model.DisplayName" onerror="this.onerror=null;this.src='@Href("~/Content/themes/default/images/blank.png")';" />
+</a>
+<p style="max-height:50px; overflow-y:hidden">@Html.Raw(reviewText)</p>
+
+<div class="actions">
+    @{Html.RenderPartial("AddToCart", Model, new ViewDataDictionary { { "View", "List" } });}
+</div>

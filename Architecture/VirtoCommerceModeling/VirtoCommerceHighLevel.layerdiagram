@@ -1,0 +1,186 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<layerModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/SimpleShapesModel" dslVersion="1.0.0.0" Id="80ff5638-028e-4271-ae07-1d3bec828380" xmlns="http://schemas.microsoft.com/VisualStudio/TeamArchitect/LayerDesigner">
+  <layers>
+    <layer Id="c4f13c0d-f7bd-46e0-89c4-bbc8233bb771" name="OData Services">
+      <dependencyToLayers>
+        <dependencyFromLayerToLayer Id="fca22ece-d123-4717-b93e-2fa6ab80606d" direction="Forward">
+          <layerMoniker Id="3601bd82-b662-4b2f-9779-20c95e5adbcb" />
+        </dependencyFromLayerToLayer>
+        <dependencyFromLayerToLayer Id="21db7d05-bcff-40f3-83b2-0e97ea085fa8" direction="Forward">
+          <layerMoniker Id="df834da9-360d-4cf7-a7e5-8e8885b968ae" />
+        </dependencyFromLayerToLayer>
+      </dependencyToLayers>
+    </layer>
+    <layer Id="df834da9-360d-4cf7-a7e5-8e8885b968ae" name="Virto Commerce Foundation Data API">
+      <dependencyToLayers>
+        <dependencyFromLayerToLayer Id="847e65a5-08ce-4f21-a04d-15fdac83735a" direction="Forward">
+          <layerMoniker Id="3601bd82-b662-4b2f-9779-20c95e5adbcb" />
+        </dependencyFromLayerToLayer>
+      </dependencyToLayers>
+      <references>
+        <reference Id="a97f0673-38e2-4be3-bb7e-71a8bd68eb21" name="CommerceFoundation.Data">
+          <ArtifactNode Label="CommerceFoundation.Data" Category="CodeSchema_Project" Id="(Assembly=../../CommerceFoundation.Data/CommerceFoundation.Data.csproj)">
+            <Category Ref="File" />
+          </ArtifactNode>
+          <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data)" Label="VirtoCommerce.Foundation.Data.dll" Category="CodeSchema_Assembly">
+            <Category Ref="FileSystem.Category.FileOfType.dll" />
+            <LinkCategory Ref="Produces" />
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+        </reference>
+      </references>
+    </layer>
+    <layer Id="3601bd82-b662-4b2f-9779-20c95e5adbcb" name="Commerce Foundation API / Object Model">
+      <references>
+        <reference Id="e3fb4cd2-eb01-4f6c-ad0e-504dbcea77c9" name="CommerceFoundation">
+          <ArtifactNode Label="CommerceFoundation" Category="CodeSchema_Project" Id="(Assembly=../../CommerceFoundation.Core/CommerceFoundation.csproj)">
+            <Category Ref="File" />
+          </ArtifactNode>
+          <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation)" Label="VirtoCommerce.Foundation.dll" Category="CodeSchema_Assembly">
+            <Category Ref="FileSystem.Category.FileOfType.dll" />
+            <LinkCategory Ref="Produces" />
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+        </reference>
+      </references>
+    </layer>
+    <layer Id="72247a0e-0956-4613-a9a3-f673aeab9fc8" name="Commerce Manager">
+      <dependencyToLayers>
+        <dependencyFromLayerToLayer Id="f47d1470-805e-41ad-b06a-22f6a4469d11" direction="Forward">
+          <layerMoniker Id="3601bd82-b662-4b2f-9779-20c95e5adbcb" />
+        </dependencyFromLayerToLayer>
+        <dependencyFromLayerToLayer Id="7ef6fce3-0640-4786-8809-fd5d43c22ad4" direction="Forward">
+          <layerMoniker Id="c4f13c0d-f7bd-46e0-89c4-bbc8233bb771" />
+        </dependencyFromLayerToLayer>
+      </dependencyToLayers>
+    </layer>
+    <layer Id="c39862e3-3217-4762-ab38-c93fdcb62048" name="Web Frontend">
+      <dependencyToLayers>
+        <dependencyFromLayerToLayer Id="c267889d-8be5-4707-8ecb-36a33123775a" direction="Forward">
+          <layerMoniker Id="df834da9-360d-4cf7-a7e5-8e8885b968ae" />
+        </dependencyFromLayerToLayer>
+        <dependencyFromLayerToLayer Id="ebfdb32d-7c3c-4fc4-8b87-463682c3f1ea" direction="Forward">
+          <layerMoniker Id="3601bd82-b662-4b2f-9779-20c95e5adbcb" />
+        </dependencyFromLayerToLayer>
+        <dependencyFromLayerToLayer Id="0aa1f974-b9f3-4971-a0c2-547932c15cac" direction="Forward">
+          <layerMoniker Id="71bec407-371d-43f6-8184-bee250b9b496" />
+        </dependencyFromLayerToLayer>
+      </dependencyToLayers>
+      <references>
+        <reference Id="cad50dd4-abe7-4cf4-ae6e-c284008c4543" name="StoreWebApp">
+          <ArtifactNode Label="StoreWebApp" Category="CodeSchema_Project" Id="(Assembly=../../CommerceFoundation.Presentation/FrontEnd/StoreWebApp/StoreWebApp.csproj)">
+            <Category Ref="File" />
+          </ArtifactNode>
+          <ExpandedNode Id="(Assembly=VirtoCommerce.Web)" Label="VirtoCommerce.Web.dll" Category="CodeSchema_Assembly">
+            <Category Ref="FileSystem.Category.FileOfType.dll" />
+            <LinkCategory Ref="Produces" />
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+        </reference>
+      </references>
+    </layer>
+    <layer Id="71bec407-371d-43f6-8184-bee250b9b496" name="Extensions">
+      <dependencyToLayers>
+        <dependencyFromLayerToLayer Id="78dbb683-df29-4876-9214-67d76c13e000" direction="Forward">
+          <layerMoniker Id="df834da9-360d-4cf7-a7e5-8e8885b968ae" />
+        </dependencyFromLayerToLayer>
+        <dependencyFromLayerToLayer Id="b59b5653-3944-447f-a6a3-e33a82c81e9e" direction="Forward">
+          <layerMoniker Id="3601bd82-b662-4b2f-9779-20c95e5adbcb" />
+        </dependencyFromLayerToLayer>
+      </dependencyToLayers>
+      <references>
+        <reference Id="88e92897-b41a-4037-9182-05176dc4e770" name="Cache">
+          <ArtifactNode Label="Cache" Category="CodeSchema_Project" Id="(Assembly=../../Extensions/Cache)">
+            <Category Ref="SolutionFolder" />
+          </ArtifactNode>
+          <ExpandedNode Id="(Assembly=VirtoCommerce.Caching.AppFabric)" Label="VirtoCommerce.Caching.AppFabric.dll" Category="CodeSchema_Assembly">
+            <Category Ref="FileSystem.Category.FileOfType.dll" />
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=VirtoCommerce.Caching.HttpCache)" Label="VirtoCommerce.Caching.HttpCache.dll" Category="CodeSchema_Assembly">
+            <Category Ref="FileSystem.Category.FileOfType.dll" />
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+        </reference>
+        <reference Id="f757a1be-a344-4330-ad44-06723b345e53" name="Jobs">
+          <ArtifactNode Label="Jobs" Category="CodeSchema_Project" Id="(Assembly=../../Extensions/Jobs)">
+            <Category Ref="SolutionFolder" />
+          </ArtifactNode>
+          <ExpandedNode Id="(Assembly=VirtoCommerce.Scheduling)" Label="VirtoCommerce.Scheduling.dll" Category="CodeSchema_Assembly">
+            <Category Ref="FileSystem.Category.FileOfType.dll" />
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+        </reference>
+        <reference Id="94a7800d-0319-4ad6-bf4e-c32c10989613" name="Payments">
+          <ArtifactNode Label="Payments" Category="CodeSchema_Project" Id="(Assembly=../../Extensions/Payments)">
+            <Category Ref="SolutionFolder" />
+          </ArtifactNode>
+          <ExpandedNode Id="(Assembly=VirtoCommerce.PaymentGateways)" Label="VirtoCommerce.PaymentGateways.dll" Category="CodeSchema_Assembly">
+            <Category Ref="FileSystem.Category.FileOfType.dll" />
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+        </reference>
+        <reference Id="ee2fabdc-4cd6-4e9a-ae9d-6ed52ac99f6b" name="Search">
+          <ArtifactNode Label="Search" Category="CodeSchema_Project" Id="(Assembly=../../Extensions/Search)">
+            <Category Ref="SolutionFolder" />
+          </ArtifactNode>
+          <ExpandedNode Id="(Assembly=VirtoCommerce.Search.Index)" Label="VirtoCommerce.Search.Index.dll" Category="CodeSchema_Assembly">
+            <Category Ref="FileSystem.Category.FileOfType.dll" />
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=VirtoCommerce.ElasticSearchProvider)" Label="VirtoCommerce.ElasticSearchProvider.dll" Category="CodeSchema_Assembly">
+            <Category Ref="FileSystem.Category.FileOfType.dll" />
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+        </reference>
+        <reference Id="4e9d176a-2e1b-4d3f-ab53-430cc8315af8" name="Shipping">
+          <ArtifactNode Label="Shipping" Category="CodeSchema_Project" Id="(Assembly=../../Extensions/Shipping)">
+            <Category Ref="SolutionFolder" />
+          </ArtifactNode>
+          <ExpandedNode Id="(Assembly=VirtoCommerce.SimpleShippingGateway)" Label="VirtoCommerce.SimpleShippingGateway.dll" Category="CodeSchema_Assembly">
+            <Category Ref="FileSystem.Category.FileOfType.dll" />
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+        </reference>
+        <reference Id="cc4b134c-8038-4af7-83c5-1e14dbe83541" name="Workflow">
+          <ArtifactNode Label="Workflow" Category="CodeSchema_Project" Id="(Assembly=../../Extensions/Workflow)">
+            <Category Ref="SolutionFolder" />
+          </ArtifactNode>
+          <ExpandedNode Id="(Assembly=VirtoCommerce.OrderWorkflowActivities)" Label="VirtoCommerce.OrderWorkflowActivities.dll" Category="CodeSchema_Assembly">
+            <Category Ref="FileSystem.Category.FileOfType.dll" />
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+          <ExpandedNode Id="(Assembly=VirtoCommerce.OrderWorkflow)" Label="VirtoCommerce.OrderWorkflow.dll" Category="CodeSchema_Assembly">
+            <Category Ref="FileSystem.Category.FileOfType.dll" />
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+        </reference>
+      </references>
+    </layer>
+    <layer Id="f1b00e28-bd4a-4d12-b52b-982941a2eab4" name="Setup &amp; Configuration">
+      <dependencyToLayers>
+        <dependencyFromLayerToLayer Id="7cbb888d-11fa-4f9b-b9bf-36f4c70677d8" direction="Forward">
+          <layerMoniker Id="3601bd82-b662-4b2f-9779-20c95e5adbcb" />
+        </dependencyFromLayerToLayer>
+        <dependencyFromLayerToLayer Id="bb173765-a12d-418b-ad51-fa6039a69032" direction="Forward">
+          <layerMoniker Id="df834da9-360d-4cf7-a7e5-8e8885b968ae" />
+        </dependencyFromLayerToLayer>
+        <dependencyFromLayerToLayer Id="90f47976-36b3-4b92-856d-14c5df30cf4e" direction="Forward">
+          <layerMoniker Id="71bec407-371d-43f6-8184-bee250b9b496" />
+        </dependencyFromLayerToLayer>
+      </dependencyToLayers>
+      <references>
+        <reference Id="0871c492-f59d-4c6f-9305-d44c5b858049" name="VirtoCommerce.PowerShell">
+          <ArtifactNode Label="VirtoCommerce.PowerShell" Category="CodeSchema_Project" Id="(Assembly=../../Setup/VirtoCommerce.PowerShell/VirtoCommerce.PowerShell.csproj)">
+            <Category Ref="File" />
+          </ArtifactNode>
+          <ExpandedNode Id="(Assembly=VirtoCommerce.PowerShell)" Label="VirtoCommerce.PowerShell.dll" Category="CodeSchema_Assembly">
+            <Category Ref="FileSystem.Category.FileOfType.dll" />
+            <LinkCategory Ref="Produces" />
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+        </reference>
+      </references>
+    </layer>
+  </layers>
+</layerModel>

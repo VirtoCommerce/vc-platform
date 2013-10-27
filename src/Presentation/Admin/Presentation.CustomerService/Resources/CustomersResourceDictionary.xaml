@@ -1,0 +1,48 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    
+
+	<ControlTemplate x:Key="DeleteButtonControlTemplate" TargetType="Button">
+		<Border x:Name="rootBorder" Height="21" Width="21">
+			<Grid>
+                <Image Source="/VirtoCommerce.ManagementClient.Customers;component/Resources/images/icon_delete.png" Width="16" Height="16"/>
+			</Grid>
+		</Border>
+		<ControlTemplate.Triggers>
+			<Trigger Property="IsMouseOver" Value="True">
+				<Setter TargetName="rootBorder" Property="Background" Value="LightGray"/>
+			</Trigger>
+			<Trigger Property="IsPressed" Value="True">
+				<Setter TargetName="rootBorder" Property="Background" Value="Gray"/>
+			</Trigger>
+		</ControlTemplate.Triggers>
+	</ControlTemplate>
+
+
+ 	
+	
+	
+	<!--Brushes-->
+    <Color x:Key="Virto_DataGrid_ColumnHeader_Order_Background_Color">#00F8F8F8</Color>
+    <SolidColorBrush x:Key="Virto_Customers_Detail_Background_Brush" Color="#F8F8F8"/>
+
+    <!--CommunicationControl-->
+	
+	<SolidColorBrush x:Key="Virto_Customers_CommunicationControl_ListViewItem_BorderBrush_Normal_Brush" Color="Gray"/>
+    <SolidColorBrush x:Key="Virto_Customers_CommunicationControl_ListViewItem_Note_Background_Normal_Brush" Color="#FFF6D9"/>
+    <SolidColorBrush x:Key="Virto_Customers_CommunicationControl_ListViewItem_Note_BorderBrush_Normal_Brush" Color="#FFE387"/>
+
+	<SolidColorBrush x:Key="Virto_Customers_CommunicationControl_ListViewItem_Background_MouseOver_Brush" Color="#E3E3E3"/>
+	<SolidColorBrush x:Key="Virto_Customers_CommunicationControl_ListViewItem_Background_IsSelected_Brush" Color="#D3D3D3"/>
+
+	<SolidColorBrush x:Key="Virto_Customers_CommunicationControl_ListViewItem_Note_Background_MouseOver_Brush" Color="#FFFFAF"/>
+	<SolidColorBrush x:Key="Virto_Customers_CommunicationControl_ListViewItem_Note_Background_IsSelected_Brush" Color="#FFFF9B"/>
+	
+	<!--CommunicationControl-->
+	
+	<!--Brushes-->
+
+    <!-- Resource dictionary entries should be defined here. -->
+</ResourceDictionary>

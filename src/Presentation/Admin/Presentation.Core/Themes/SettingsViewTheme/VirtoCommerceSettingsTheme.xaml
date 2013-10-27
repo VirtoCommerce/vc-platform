@@ -1,0 +1,152 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:prism="http://www.codeplex.com/prism"
+    
+    xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls"
+    xmlns:core_Converters="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Converters"
+    xmlns:core_dialogs="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Dialogs"
+    xmlns:ei="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
+
+    mc:Ignorable="d">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/Icons.xaml"/>
+        <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/BaseTheme/WPF_BaseTheme.xaml"/>
+        <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/BaseTheme/VCF_BaseTheme.xaml"/>
+        <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/SettingsViewTheme/VirtoCommerceSettingsThemeBrushes.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter" />
+    <core_Converters:ApplicationResourceConverter x:Key="applicationResourceConverter" />
+    <core_Converters:TextCaseConverter x:Key="textCaseConverter" />
+
+
+    <!--TextBlocks-->
+
+    <Style x:Key="Virto_TextBlock_CommonTitle_Style" TargetType="TextBlock" BasedOn="{StaticResource Virto_Base_TextBlock_Style}">
+        <Setter Property="FontSize" Value="26"/>
+        <Setter Property="Margin" Value="4,12,4,8"></Setter>
+    </Style>
+
+    <!--TextBlocks-->
+
+
+
+    <!--TextBoxes-->
+    <Style x:Key="Virto_Multiline_WatermarkedTextBox_Style" TargetType="{x:Type core_controls:WatermarkedTextBox}" BasedOn="{StaticResource Virto_Base_Multiline_WatermarkedTextBox_Style}"/>
+
+
+    <!--Buttons-->
+
+    <Style x:Key="Virto_ToolButton_Style" TargetType="Button" BasedOn="{StaticResource Virto_Base_Button_Style}">
+        <Setter Property="Background" Value="{DynamicResource Virto_ToolButton_Normal_Background_Brush}"/>
+        <Setter Property="Height" Value="25"/>
+        <Setter Property="Width" Value="35"/>
+    </Style>
+
+    <!--Buttons-->
+
+
+
+    <!--ListBox-->
+    <!--ListBox-->
+
+
+    <!--TabControl-->
+
+    <Style x:Key="Virto_TabControlHorizontal_Style" TargetType="TabControl" BasedOn="{StaticResource Virto_Base_TabControlHorizontal_Style}"></Style>
+
+    <Style x:Key="Virto_SubTabControl_Horizontal_Style" TargetType="{x:Type core_controls:HorizontalTabDefaultView}" BasedOn="{StaticResource Virto_Base_SubTabControl_Horizontal_Style}">
+        <Setter Property="Background" Value="{StaticResource Virto_Window_Background_Brush}" />
+        <Setter Property="Margin" Value="0"/>
+    </Style>
+
+    <!--TabControl-->
+
+
+
+    <!--Toolbar-->
+    <Style x:Key="Virto_ToolbarItemsControl_Style" TargetType="ItemsControl" BasedOn="{StaticResource Virto_Base_ToolbarItemsControl_Style}"/>
+
+    <!--Separator-->
+    <Style x:Key="Virto_VerticalSeparator_Style" TargetType="Separator" BasedOn="{StaticResource Virto_Base_VerticalSeparator_Style}"></Style>
+
+    <Style x:Key="Virto_HorizontalSeparator_Style" TargetType="Separator" BasedOn="{StaticResource Virto_Base_HorizontalSeparator_Style}"></Style>
+    <!--Separator-->
+
+    <!--HeaderedContentControl-->
+    <Style x:Key="Virto_HeaderedContentBlock_Style" TargetType="HeaderedContentControl" BasedOn="{StaticResource Virto_Base_HeaderedContentBlock_Style}"/>
+
+
+    <!-- Window -->
+    <Style x:Key="Virto_Window_Style" TargetType="{x:Type UserControl}">
+        <Setter Property="Background" Value="{StaticResource Virto_Window_Background_Brush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type UserControl}" >
+                    <Grid Background="{TemplateBinding Background}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!--<i:Interaction.Triggers>
+                            <prism:InteractionRequestTrigger SourceObject="{Binding CancelConfirmRequest, Mode=OneWay}">
+                                <core_dialogs:InteractionDialogAction DialogType="{x:Type core_dialogs:AcceptChangesLocalModalInteractionDialog}" />
+                            </prism:InteractionRequestTrigger>
+                        </i:Interaction.Triggers>-->
+
+                        <Grid Margin="50,70,10,6">
+                            <ContentControl Content="{TemplateBinding Content}"/>
+                        </Grid>
+
+                        <!--footer -->
+                        <!--<Rectangle Grid.Row="1" Fill="#FF111111" />
+						<StackPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2" Height="50" HorizontalAlignment="Right">
+							<FrameworkElement.Resources>
+								<Style TargetType="{x:Type core_controls:MetroButton}" BasedOn="{StaticResource {x:Type core_controls:MetroButton}}">
+									<Setter Property="Margin" Value="0,6,14,6"/>
+									<Setter Property="BorderBrush" Value="Red"/>
+									<Setter Property="Foreground" Value="White"/>
+									<Setter Property="Padding" Value="4"/>
+								</Style>
+							</FrameworkElement.Resources>
+							<core_controls:MetroButton Header="SAVE" Width="80" Command="{Binding SaveChangesCommand}">
+                                            <core_controls:VectorImage ImageResource="{StaticResource Icon_Button_Submit}" Height="12" Width="12" Foreground="#FF00CC5E" />
+							</core_controls:MetroButton>
+							<core_controls:MetroButton Header="CLOSE" Width="80" Command="{Binding CancelCommand}">
+                                            <core_controls:VectorImage ImageResource="{StaticResource Icon_Button_Close}" Height="11" Width="11" Foreground="White" Margin="1,1,0,0" />
+							</core_controls:MetroButton>
+						</StackPanel>-->
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!-- Window -->
+
+    <!--default styles-->
+    <Style TargetType="TextBlock" BasedOn="{StaticResource Virto_Base_TextBlock_Style}">
+        <Setter Property="Margin" Value="4,12,4,8"></Setter>
+        <Setter Property="FontSize" Value="15"/>
+    </Style>
+    <Style TargetType="ComboBox" BasedOn="{StaticResource Virto_Base_ComboBox_Style}">
+        <Setter Property="Padding" Value="10,0,0,0"/>
+        <Setter Property="FontSize" Value="14"/>
+    </Style>
+    <Style TargetType="Button" BasedOn="{StaticResource Virto_Base_Button_Style}">
+        <Setter Property="Padding" Value="7,3"></Setter>
+        <Setter Property="BorderThickness" Value="2"/>
+    </Style>
+
+    <Style TargetType="{x:Type DataGrid}" BasedOn="{StaticResource Virto_Base_DataGrid_Style}">
+        <Setter Property='IsSynchronizedWithCurrentItem' Value='True'/>
+        <Setter Property="Margin" Value="0,0,0,4"/>
+    </Style>
+    <!--default styles-->
+
+</ResourceDictionary>

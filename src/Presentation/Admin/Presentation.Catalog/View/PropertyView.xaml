@@ -1,0 +1,214 @@
+﻿<base:ViewBase xmlns:base="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure;assembly=VirtoCommerce.ManagementClient.Core"
+         x:Class="VirtoCommerce.ManagementClient.Catalog.View.PropertyView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+            xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
+            xmlns:collections="clr-namespace:System.Collections;assembly=mscorlib"
+            xmlns:inf_behavior="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Behaviors;assembly=VirtoCommerce.ManagementClient.Core"
+            xmlns:interaction_dialog="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Dialogs;assembly=VirtoCommerce.ManagementClient.Core"
+            xmlns:Presentation_Core_Infrastructure_Converters="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Converters;assembly=VirtoCommerce.ManagementClient.Core"
+            xmlns:prism="http://www.codeplex.com/prism"
+            xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
+            xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+            xmlns:sys="clr-namespace:System;assembly=mscorlib"
+            mc:Ignorable="d" Width="800" Height="500">
+	<base:ViewBase.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="Views/GridView.xaml"/>
+				<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/DialogViewTheme/VirtoCommerceDialogTheme.xaml"/>
+			</ResourceDictionary.MergedDictionaries>
+			<Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource {x:Type CheckBox}}">
+				<Setter Property="Margin" Value="0,12,0,0"/>
+			</Style>
+
+			<Presentation_Core_Infrastructure_Converters:CultureConverter x:Key="cultureConverter" />
+		</ResourceDictionary>
+	</base:ViewBase.Resources>
+
+	<Grid>
+		<i:Interaction.Triggers>
+			<prism:InteractionRequestTrigger SourceObject="{Binding CommonConfirmRequest, Mode=OneWay}">
+				<interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:ConfirmationLocalModalInteractionDialog}" />
+			</prism:InteractionRequestTrigger>
+		</i:Interaction.Triggers>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition/>
+		</Grid.RowDefinitions>
+
+		<TextBlock Grid.Row="0" Text="Property created here can be used by categories and items for extra values" Grid.ColumnSpan="3" />
+
+		<Grid Grid.Row="1">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="250"/>
+				<ColumnDefinition Width="40"/>
+				<ColumnDefinition />
+			</Grid.ColumnDefinitions>
+
+			<Grid Grid.Column="0" VerticalAlignment="Top">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="*"/>
+				</Grid.RowDefinitions>
+
+				<TextBlock Grid.Row="0" Text="* Property Id:"/>
+				<TextBox Grid.Row="1" Text="{Binding InnerItem.PropertyId, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+				<TextBlock Grid.Row="2" Text="* Property Name:" />
+				<TextBox Grid.Row="3" Text="{Binding InnerItem.Name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+				<TextBlock Grid.Row="4" Text="* Property Type:" />
+
+				<core_controls:NullItemSelectorAdapter Grid.Row="5" ItemsSource="{Binding PropertyTypes}" IsAddingNullItemsFirst="True">
+					<core_controls:NullItemSelectorAdapter.NullItems>
+						<collections:ArrayList>
+							<sys:String>Select Property Type</sys:String>
+						</collections:ArrayList>
+					</core_controls:NullItemSelectorAdapter.NullItems>
+					<ComboBox SelectedValue="{Binding InnerItem.PropertyValueType, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource propertyValueConverter}, ConverterParameter=Int2PropertyValueType}">
+						<ComboBox.ItemTemplate>
+							<DataTemplate>
+								<Grid>
+									<TextBlock x:Name="textBlock" Text="{Binding }" />
+								</Grid>
+								<DataTemplate.Triggers>
+									<MultiDataTrigger>
+										<MultiDataTrigger.Conditions>
+											<Condition Binding="{Binding Text, ElementName=textBlock}" Value="Select Property Type" />
+											<Condition Binding="{Binding IsDropDownOpen, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" Value="False" />
+										</MultiDataTrigger.Conditions>
+										<Setter TargetName="textBlock" Property="FontStyle" Value="Italic" />
+									</MultiDataTrigger>
+								</DataTemplate.Triggers>
+							</DataTemplate>
+						</ComboBox.ItemTemplate>
+						<!--<i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <ei:ChangePropertyAction PropertyName="PropertyValueType" TargetObject="{Binding}" Value="{Binding SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>-->
+					</ComboBox>
+				</core_controls:NullItemSelectorAdapter>
+
+				<CheckBox Grid.Row="6" Content="Required" IsChecked="{Binding InnerItem.IsRequired}" />
+				<CheckBox Grid.Row="7" Content="Dictionary" IsChecked="{Binding InnerItem.IsEnum}" />
+				<CheckBox Grid.Row="8" Content="Multi Value" IsChecked="{Binding InnerItem.IsMultiValue}" IsEnabled="{Binding InnerItem.IsEnum}" />
+				<CheckBox Grid.Row="9" Content="Multi Language" IsChecked="{Binding InnerItem.IsLocaleDependant}" Name="chkIsLocaleDependant" />
+			</Grid>
+
+			<Grid Grid.Column="2">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="0.5*" />
+					<RowDefinition Height="0.5*" />
+				</Grid.RowDefinitions>
+
+				<Grid Grid.Row="0">
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="*"/>
+					</Grid.RowDefinitions>
+					<TextBlock Grid.Row="0" Text="Dictionary Property values" IsEnabled="{Binding InnerItem.IsEnum}" />
+					<ItemsControl Grid.Row="1" Style="{StaticResource Virto_ToolbarItemsControl_Style}" IsEnabled="{Binding InnerItem.IsEnum}">
+						<core_controls:MetroButton Command="{Binding ValueAddCommand}" Header="ADD" >
+							<Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/add.png" Width="14"/>
+						</core_controls:MetroButton>
+						<core_controls:MetroButton Command="{Binding ValueEditCommand}" CommandParameter="{Binding SelectedItem, ElementName=PropertyValuesList}" Header="EDIT">
+							<Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/check.png" Width="14"/>
+						</core_controls:MetroButton>
+						<core_controls:MetroButton Command="{Binding ValueDeleteCommand}" CommandParameter="{Binding SelectedItem, ElementName=PropertyValuesList}" Header="REMOVE">
+							<Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/cancel.png" Width="14"/>
+						</core_controls:MetroButton>
+					</ItemsControl>
+
+					<DataGrid Grid.Row="2" x:Name="PropertyValuesList" ItemsSource="{Binding InnerItem.PropertyValues}"
+                            IsEnabled="{Binding InnerItem.IsEnum}">
+						<DataGrid.Columns>
+							<DataGridTextColumn Header="Value" Width="*">
+								<DataGridTextColumn.Binding>
+									<!--MultiBinding is used as work-around binding to self. ValueType is a fake property but UI updates because of it -->
+									<MultiBinding Converter="{StaticResource propertyValueConverter}">
+										<Binding />
+										<Binding Path="ValueType"/>
+									</MultiBinding>
+								</DataGridTextColumn.Binding>
+							</DataGridTextColumn>
+							<DataGridTextColumn Header="Language" Binding="{Binding Locale, Converter={StaticResource cultureConverter}}" />
+						</DataGrid.Columns>
+
+						<DataGrid.RowStyle>
+							<Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
+								<Setter Property="inf_behavior:MouseDoubleClickBehavior.DoubleClickCommand" Value="{Binding DataContext.ValueEditCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}" />
+								<Setter Property="inf_behavior:MouseDoubleClickBehavior.CommandArgument" Value="{Binding SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}" />
+							</Style>
+						</DataGrid.RowStyle>
+
+						<i:Interaction.Triggers>
+							<i:EventTrigger EventName="SelectionChanged">
+								<ei:CallMethodAction TargetObject="{Binding ValueEditCommand}" MethodName="RaiseCanExecuteChanged"/>
+								<ei:CallMethodAction TargetObject="{Binding ValueDeleteCommand}" MethodName="RaiseCanExecuteChanged"/>
+							</i:EventTrigger>
+						</i:Interaction.Triggers>
+					</DataGrid>
+				</Grid>
+
+				<Grid Grid.Row="1">
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="*"/>
+					</Grid.RowDefinitions>
+
+					<!--ATTRIBUTES-->
+					<TextBlock Grid.Row="0" Text="Property attributes"/>
+					<ItemsControl Grid.Row="1" Style="{StaticResource Virto_ToolbarItemsControl_Style}">
+						<core_controls:MetroButton Command="{Binding AttributeAddCommand}" Header="ADD" >
+							<Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/add.png" Width="14"/>
+						</core_controls:MetroButton>
+						<core_controls:MetroButton Command="{Binding AttributeEditCommand}" CommandParameter="{Binding SelectedItem, ElementName=PropertyAttributesList}" Header="EDIT">
+							<Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/check.png" Width="14"/>
+						</core_controls:MetroButton>
+						<core_controls:MetroButton Command="{Binding AttributeDeleteCommand}" CommandParameter="{Binding SelectedItem, ElementName=PropertyAttributesList}" Header="REMOVE">
+							<Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/cancel.png" Width="14"/>
+						</core_controls:MetroButton>
+					</ItemsControl>
+					<DataGrid Grid.Row="2" x:Name="PropertyAttributesList" ItemsSource="{Binding InnerItem.PropertyAttributes}"
+                        HorizontalAlignment="Stretch">
+						<DataGrid.Columns>
+							<DataGridTextColumn Header="Name" Binding="{Binding PropertyAttributeName}" Width="*" />
+							<DataGridTextColumn Header="Value" Binding="{Binding PropertyAttributeValue}" Width="*" />
+						</DataGrid.Columns>
+
+						<DataGrid.RowStyle>
+							<Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
+								<Setter Property="inf_behavior:MouseDoubleClickBehavior.DoubleClickCommand" Value="{Binding DataContext.AttributeEditCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}" />
+								<Setter Property="inf_behavior:MouseDoubleClickBehavior.CommandArgument" Value="{Binding SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}" />
+							</Style>
+						</DataGrid.RowStyle>
+
+						<i:Interaction.Triggers>
+							<i:EventTrigger EventName="SelectionChanged">
+								<ei:CallMethodAction TargetObject="{Binding AttributeEditCommand}" MethodName="RaiseCanExecuteChanged"/>
+								<ei:CallMethodAction TargetObject="{Binding AttributeDeleteCommand}" MethodName="RaiseCanExecuteChanged"/>
+							</i:EventTrigger>
+						</i:Interaction.Triggers>
+					</DataGrid>
+
+				</Grid>
+
+			</Grid>
+
+		</Grid>
+	</Grid>
+
+</base:ViewBase>

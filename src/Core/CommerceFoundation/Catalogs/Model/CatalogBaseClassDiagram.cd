@@ -1,0 +1,168 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="VirtoCommerce.Foundation.Catalogs.Model.Item" Collapsed="true">
+    <Position X="9.25" Y="7.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="CategoryItemRelations" Type="VirtoCommerce.Foundation.Catalogs.Model.CategoryItemRelation">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.794" Y="0.318" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AMBiYIAAGBABAAQNkAAgoAQhCCEAJAkiBIgAAMEAIhg=</HashCode>
+      <FileName>Catalogs\Model\Item.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Catalog" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="CategoryItemRelations" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Catalogs.Model.CatalogBase">
+    <Position X="4.75" Y="6.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAQAAAAQIAAAAIAQAAAAAAAABABAAAAABAAg=</HashCode>
+      <FileName>Catalogs\Model\CatalogBase.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="CategoryBases" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Catalogs.Model.Catalog">
+    <Position X="6.75" Y="9.5" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="PropertySets" Type="VirtoCommerce.Foundation.Catalogs.Model.PropertySet">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.357" Y="0.35" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAARAABAAAAAAAAAAAAAAAAEAAIAAAAAAAAA=</HashCode>
+      <FileName>Catalogs\Model\Catalog.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="CatalogLanguages" />
+      <Property Name="PropertySets" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Catalogs.Model.VirtualCatalog" Collapsed="true">
+    <Position X="3.5" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Catalogs\Model\VirtualCatalog.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Catalogs.Model.CategoryBase">
+    <Position X="12.5" Y="6.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="LinkedCategories" Type="VirtoCommerce.Foundation.Catalogs.Model.LinkedCategory" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="12.844" Y="9.848" />
+        <Point X="12.844" Y="10.117" />
+        <Point X="11.5" Y="10.117" />
+        <Point X="11.5" Y="11" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.963" Y="0.893" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAgAMEQAgAIABAAAAAIgACAAAAADgAAg=</HashCode>
+      <FileName>Catalogs\Model\CategoryBase.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="LinkedCategories" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Catalogs.Model.Category">
+    <Position X="13.25" Y="10.75" Width="2.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AIAgAAAACAAAAAAAAAAAIAQgCAAAMAAAAIAAAEAAAAA=</HashCode>
+      <FileName>Catalogs\Model\Category.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Catalogs.Model.LinkedCategory">
+    <Position X="11.25" Y="11" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAQAABAAAAABAAAAAAAAAAEAAAAIAAAAA=</HashCode>
+      <FileName>Catalogs\Model\LinkedCategory.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Catalogs.Model.CatalogLanguage" Collapsed="true">
+    <Position X="3.5" Y="10.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAAAAIAAAABAQBAAAAAAAAAEAAAAAAAAg=</HashCode>
+      <FileName>Catalogs\Model\CatalogLanguage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Catalogs.Model.CategoryItemRelation" Collapsed="true">
+    <Position X="9.25" Y="9.25" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="Catalog" Type="VirtoCommerce.Foundation.Catalogs.Model.CatalogBase" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="9.25" Y="9.385" />
+        <Point X="8.875" Y="9.385" />
+        <Point X="8.875" Y="8.375" />
+        <Point X="6.25" Y="8.375" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIABAgAMgQAAAAABAAAAAAAAAAAAAEiACAg=</HashCode>
+      <FileName>Catalogs\Model\CategoryItemRelation.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Category" />
+      <Property Name="Catalog" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Catalogs.Model.PropertySet">
+    <Position X="7" Y="11.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAgAAAACAAAgBAIAAAAIAQBAAAAAAAAAAAAgAAAAAg=</HashCode>
+      <FileName>Catalogs\Model\PropertySet.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="PropertySetProperties" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Catalogs.Model.PropertySetProperty" Collapsed="true">
+    <Position X="3.5" Y="13" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAgAACACAAAAAAEAQAAAAAAAAAAEgAAAIAABQAAAAA=</HashCode>
+      <FileName>Catalogs\Model\PropertySetProperty.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="VirtoCommerce.Foundation.Catalogs.Model.WeightUnitOfMeasure">
+    <Position X="3.5" Y="11.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAABAAAAAAAAAA=</HashCode>
+      <FileName>Catalogs\Model\WeightUnitOfMeasure.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -1,0 +1,69 @@
+﻿@model OrderReturnItem
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("input#IsSelected_@Model.LineItemId").change(function () {
+
+            var fieldsId = "#row-for-@Model.LineItemId";
+
+            if ($(this).is(":checked")) {
+
+                $(fieldsId).fadeIn();
+            }
+            else {
+                $(fieldsId).fadeOut();
+            }
+        });
+        $("input#IsSelected_@Model.LineItemId").change();
+
+        initQtySpinner("#@ViewData.TemplateInfo.GetFullHtmlFieldId("Quantity")", "@Model.MinQty", "@Model.MaxQty");
+    });
+</script>
+
+@Html.HiddenFor(m => m.LineItemId)
+
+<li class="item" style="padding:20px 0;">
+    <table>
+        <tr>
+            <td style="padding-right: 20px;">
+                @Html.CheckBoxFor(m => m.IsSelected, new { @class = "checkbox", id="IsSelected_" + Model.LineItemId })
+            </td>
+            <td style="padding-right: 20px;">
+                <a href="@Url.ItemUrl(Model.LineItemModel.CatalogItem.Item, Model.LineItemModel.ParentCatalogItem)" title="@Model.LineItemModel.DisplayName" class="product-image">
+                    <img src="@Url.Image(Model.LineItemModel.CatalogItem.Item, "primaryimage")" width="50" height="50" onerror="this.onerror=null;this.src='@Href("~/Content/themes/default/images/blank.png")';" /></a>
+            </td>
+            <td style="padding-right: 20px; width:100%;">
+                <a href="@Url.ItemUrl(Model.LineItemModel.CatalogItem.Item, Model.LineItemModel.ParentCatalogItem)" title="@Model.LineItemModel.DisplayName">@Model.LineItemModel.DisplayName</a>
+            </td>
+        </tr>
+        <tr id="row-for-@Model.LineItemId" style="display:none;">
+            <td></td>
+            <td colspan="3">
+                <ul class="form-list" style="padding-top:20px">
+                    <li class="fields">
+                        <div>
+                            @Html.LabelForEx(m => m.ReturnReason)
+                            <div class="input-box">
+                                @Html.DropDownListFor(m => m.ReturnReason, OrderReturns.ReturnReasons, new { })
+                            </div>
+                            @Html.ValidationMessageFor(m => m.ReturnReason)
+                        </div>
+                    </li>
+                    <li>
+                        <div>
+                            @Html.LabelForEx(m => m.Quantity)
+                            <div class="input-box">
+                                @Html.TextBoxFor(m => m.Quantity, new { @class="qty"})
+                                @Html.HiddenFor(m => m.MinQty)
+                                @Html.HiddenFor(m => m.MaxQty)
+                            </div>
+                            @Html.ValidationMessageFor(m => m.Quantity)
+                        </div>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+    </table>
+</li>
+
+

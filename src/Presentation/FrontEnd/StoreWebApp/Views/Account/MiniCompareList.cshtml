@@ -1,0 +1,32 @@
+﻿@model CompareListModel
+@{
+	Layout = null;
+}
+<div id="CompareListContainer">
+ @if (Model.LineItems != null && Model.LineItems.Length > 0)
+ {
+	<ol id="compare-items">
+		@for (var i = 0; i < Model.LineItems.Count(); i++)
+		{
+			@Html.DisplayFor(m => m.LineItems[i], "CompareLineItem")
+		}
+
+	</ol>
+	<div class="actions noborder">
+		@Ajax.ActionLink("Clear All".Localize(), "ClearCompareList", "Cart", 
+		new AjaxOptions
+		  {
+			  HttpMethod = "POST", 
+			  Confirm = "Are you sure you would like to remove this item from the compare products?".Localize(), 
+			  OnSuccess = "VirtoCart.onCompareListUpdate"
+		  })
+		<button onclick="$.popup('/Account/Compare')" class="button" title="@("Compare".LocalizeHtml())" type="button">
+			<span><span>@("Compare".LocalizeHtml())</span></span>
+		</button>
+	</div>
+ }
+ else
+ {
+	 <p class="empty">@("You have no items in your compare list.".LocalizeHtml())</p>
+ }
+</div>

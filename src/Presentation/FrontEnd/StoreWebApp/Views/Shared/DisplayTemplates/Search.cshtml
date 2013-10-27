@@ -1,0 +1,25 @@
+﻿                @{Html.BeginForm("Index", "Search", FormMethod.Get);}
+                <div class="form-search">
+                    <label for="search">
+                        @("Search".LocalizeHtml())</label>
+                    <input id="search" type="text" name="q" value="" class="input-text" />
+                    <button type="submit" title="@("Search".LocalizeHtml())" class="button">
+                        <span><span>@("Go".LocalizeHtml())</span></span></button>
+                    <div id="search_autocomplete" class="search-autocomplete">
+                    </div>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                        	if ($("input#search"))
+							{
+                            $("input#search").autocomplete({
+                                minLength: 3,
+                                source: '@Url.Action("Find", "Search")',
+                                select: function (event, ui) {
+                                    document.location.href = ui.item.url;
+                                }
+                            });
+							}
+                        });
+                    </script>
+                </div>
+                @{Html.EndForm();}

@@ -1,0 +1,78 @@
+﻿<UserControl x:Class="VirtoCommerce.ManagementClient.Core.Controls.StatusIndicator.StatusIndicator"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" mc:Ignorable="d"
+			 xmlns:core_Converters="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Converters"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:localVM="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls.StatusIndicator.ViewModel"
+             xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls"
+             d:DesignHeight="30" d:DesignWidth="100">
+
+	<FrameworkElement.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Controls/StatusIndicator/ControlResources.xaml"/>
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</FrameworkElement.Resources>
+
+	<FrameworkElement.Style>
+		<Style TargetType="UserControl">
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type UserControl}">
+						<Grid>
+							<Rectangle Name="backfill" Fill="#44FFFFFF" Visibility="Collapsed" />
+							<ContentPresenter />
+						</Grid>
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsMouseOver" Value="True">
+								<Setter TargetName="backfill" Property="Visibility" Value="Visible"/>
+							</Trigger>
+							<DataTrigger Binding="{Binding IsDetailsVisible}" Value="true">
+								<Setter TargetName="backfill" Property="Visibility" Value="Visible"/>
+							</DataTrigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+			<Style.Triggers>
+				<DataTrigger Binding="{Binding Messages.Count}" Value="0">
+					<Setter Property="Visibility" Value="Hidden"/>
+				</DataTrigger>
+			</Style.Triggers>
+		</Style>
+	</FrameworkElement.Style>
+
+	<Border Padding="4,0,8,0">
+		<i:Interaction.Triggers>
+			<i:EventTrigger EventName="MouseDown">
+				<i:InvokeCommandAction Command="{Binding ToggleDetailsCommand}" />
+			</i:EventTrigger>
+		</i:Interaction.Triggers>
+
+		<DockPanel d:DataContext="{d:DesignInstance localVM:StatusIndicatorViewModel}">
+			<DockPanel Visibility="{Binding IsWarning, Converter={x:Static core_Converters:ToVisibilityConverter.Current}}">
+				<TextBlock Text="{Binding CountWarnings}" Margin="4,0" />
+				<ContentControl Content="{StaticResource ProgressIndicatorWarning}" />
+			</DockPanel>
+
+			<DockPanel Visibility="{Binding IsIndicatorVisible, Converter={x:Static core_Converters:ToVisibilityConverter.Current}}">
+				<TextBlock Text="{Binding CountNonWarnings}" Margin="8,0,4,0" />
+				<Grid>
+					<core_controls:SprocketControl HorizontalAlignment="Center" VerticalAlignment="Top" TickColor="LawnGreen"
+                                  MinWidth="20" Width="20" Height="20" Progress="100"
+                                  TickWidth="2"
+                                  TickCount="9"
+                                  StartAngle="-90"
+                                  IsIndeterminate="{Binding IsRunningExist}"
+                                  Interval="100" 
+                                  LowestAlpha="50"
+                                  AlphaTicksPercentage="50" />
+					<ContentControl Content="{StaticResource ProgressIndicatorError}" Height="12" Visibility="{Binding IsError, Converter={x:Static core_Converters:ToVisibilityConverter.Current}}" />
+				</Grid>
+			</DockPanel>
+		</DockPanel>
+	</Border>
+</UserControl>

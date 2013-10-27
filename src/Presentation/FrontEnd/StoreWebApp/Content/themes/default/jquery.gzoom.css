@@ -1,0 +1,98 @@
+﻿/* miniZoomPan styles */
+.gzoomwrap {
+  float:left;
+  margin:0 10px 0 0;
+}
+.minizoompan {
+  background: #fff;
+  position: relative; /* always set to relative or offset() won't work */
+  border: 1px solid lightgray;
+  padding: 0;
+  margin: 0;
+}
+
+.minizoompan span.loader { /* the loader label*/
+  position:absolute;
+  left:0;
+  top:0;
+  z-index: 1;
+  display: none;
+  color: #000;
+  background: #fff;
+  font: normal 9px Arial, Verdana;
+  padding: 3px;
+}
+.minizoompan .zoomIcon { /* the zoom icon */
+  position:absolute;
+  cursor:pointer;
+  left:0;
+  top:0;
+  z-index: 1;
+  display: none;
+}
+
+.gzoombutton {
+  float:left;
+  cursor:pointer;
+}
+.gzoomSlider {
+  float:left;
+  margin:3px 5px 0 5px;
+}
+
+#gzoomoverlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 90;
+	width: 100%;
+	height: 500px;
+}
+#gzoomlbox {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 100;
+	text-align: center;
+	line-height: 0;
+}
+#gzoomlbox a img { 
+  border: none; 
+}
+#imagebox {
+	position: relative;
+	background-color: #fff;
+	width: 250px;
+	height: 250px;
+	margin: 0 auto;
+}
+#gzoom-cont-img { padding: 10px; }
+
+#lboximgdatacontainer {
+	font: 10px Verdana, Helvetica, sans-serif;
+	background-color: #fff;
+	margin: 0 auto;
+	line-height: 1.4em;
+	overflow: auto;
+	width: 100%;
+	padding: 0 10px 0;
+	padding: 0 10px 10px 10px; 
+	color:#666;
+}
+#gzoomloading {
+	position: absolute;
+	top: 40%;
+	left: 0%;
+	height: 25%;
+	width: 100%;
+	text-align: center;
+	line-height: 0;
+}
+
+#lboximgdatacontainer #gzoomlbox-image-details { 
+	width: 70%; 
+	float: left; 
+	text-align: left; 
+}	
+#gzoom-image-caption { font-weight: bold; }

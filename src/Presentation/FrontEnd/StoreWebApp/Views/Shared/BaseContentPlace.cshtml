@@ -1,0 +1,34 @@
+﻿@model VirtoCommerce.Web.Models.BannerModel
+@{
+    Layout = null;
+}
+
+@foreach (var item in Model.Items)
+{
+
+    if (item.ContentTypeId == DynamicContentType.Html.ToString())
+	{
+		@Html.DisplayForModel("RawHtml", new { Model = new RawHtmlModel(item)})
+	}
+
+    if (item.ContentTypeId == DynamicContentType.Flash.ToString())
+	{
+		@Html.DisplayForModel("Flash", new { Model = new FlashModel(item) })
+	}
+
+    if (item.ContentTypeId == DynamicContentType.ImageNonClickable.ToString())
+	{
+		@Html.DisplayForModel("ImageNoClick", new { Model = new ImageNonClickableModel(item) })
+	}
+
+    if (item.ContentTypeId == DynamicContentType.ImageClickable.ToString())
+	{
+		@Html.DisplayForModel("ImageClick", new { Model = new ImageClickableModel(item) })
+	}
+    
+    if (item.ContentTypeId == DynamicContentType.ProductWithImageAndPrice.ToString())
+	{
+		@Html.DisplayForModel("ProductImageAndPrice", new { Model = new ProductWithImageAndPriceModel(item) })
+	}    
+
+}

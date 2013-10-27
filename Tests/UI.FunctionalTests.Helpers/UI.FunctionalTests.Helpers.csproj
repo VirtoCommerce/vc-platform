@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{DE81746A-92B8-4458-8313-1AD8C699D696}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UI.FunctionalTests.Helpers</RootNamespace>
+    <AssemblyName>UI.FunctionalTests.Helpers</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.Edm, Version=5.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Data.Edm.5.4.0\lib\net40\Microsoft.Data.Edm.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.OData, Version=5.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Data.OData.5.4.0\lib\net40\Microsoft.Data.OData.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.Services, Version=5.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Data.Services.5.4.0\lib\net40\Microsoft.Data.Services.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.Services.Client, Version=5.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.Data.Services.Client.5.4.0\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Spatial, Version=5.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\System.Spatial.5.4.0\lib\net40\System.Spatial.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Catalog\TestCatalogBuilder.cs" />
+    <Compile Include="Common\FunctionalUITestBase.cs" />
+    <Compile Include="Common\RepositoryHelper.cs" />
+    <Compile Include="Common\TestServiceManager.cs" />
+    <Compile Include="Common\TestDSServices.cs" />
+    <Compile Include="DynamicContent\ContentPublishing\ContentPublishingHelper.cs" />
+    <Compile Include="DynamicContent\ContentPublishing\ExpressionBuilderHelper.cs" />
+    <Compile Include="Marketing\PromotionBuilderHelper.cs" />
+    <Compile Include="Marketing\CartPromotionExpressionBuilderHelper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Core\CommerceFoundation\CommerceFoundation.csproj">
+      <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
+      <Name>CommerceFoundation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\Core\CommerceFoundation.Data\CommerceFoundation.Data.csproj">
+      <Project>{bb168a74-0f1e-43be-a616-134902238b80}</Project>
+      <Name>CommerceFoundation.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\Extensions\Setup\VirtoCommerce.PowerShell\VirtoCommerce.PowerShell.csproj">
+      <Project>{98748b0a-4c04-4e70-a4ef-7cbae5959d18}</Project>
+      <Name>VirtoCommerce.PowerShell</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\Presentation\Admin\Presentation.Core\Presentation.Core.csproj">
+      <Project>{d821e0c3-5d53-429b-af8f-785e77b82fe0}</Project>
+      <Name>Presentation.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\Presentation\Admin\Presentation.DynamicContent\Presentation.DynamicContent.csproj">
+      <Project>{64fa8a5f-a814-49f3-9661-aa05aad59913}</Project>
+      <Name>Presentation.DynamicContent</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\Presentation\Admin\Presentation.Marketing\Presentation.Marketing.csproj">
+      <Project>{315535F9-143C-41F0-8554-93708DD1091F}</Project>
+      <Name>Presentation.Marketing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\FunctionalTests\FunctionalTests.csproj">
+      <Project>{3e38a90d-0cac-40f5-a62a-28ff92b410d2}</Project>
+      <Name>FunctionalTests</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

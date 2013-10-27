@@ -1,0 +1,65 @@
+﻿@model OrderReturns
+@{
+    ViewBag.Title = Html.Title("Return Order".Localize());
+    Layout = "_Layout.cshtml";
+}
+
+@Html.ValidationSummary(true)
+@if (Model.OrderReturnItems.Count == 0)
+{
+    <div class="std">
+        @("There are no items to return ".LocalizeHtml())
+    </div>
+    <div class="buttons-set">
+        <p class="back-link"><a class="back-link" href="@Url.Action("Orders", "Account")"><small>« </small>@("Back".LocalizeHtml())</a></p>
+    </div>
+}
+else
+{
+    using (Html.BeginForm())
+    {
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(m => m.OrderId)
+        <h2>@("Please enter your details below to complete your order return request.".LocalizeHtml())</h2>
+    <table style="width: 100%; padding-top: 30px;">
+        <tr>
+            <td>
+                <div class="fieldset">
+                    <ul class="form-list">
+                        <li class="fields">
+                            <div>
+                                @Html.LabelForEx(m => m.ReturnFromAddressId)
+                                <div class="input-box">
+                                    @Html.DropDownListFor(m => m.ReturnFromAddressId, Model.Addresses)
+                                </div>
+                                @Html.ActionLink("Create new address".Localize(), "AddressEdit")
+                            </div>
+                        </li>
+                        <li>
+                            <div>
+                                @Html.LabelFor(m => m.Comment, "Comments:".Localize())
+                                <div class="input-box">
+                                    @Html.TextAreaFor(m => m.Comment)
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </td>
+            <td>
+                <ol>
+                    @for (var index = 0; index < Model.OrderReturnItems.Count; index++)
+                    {
+                        @Html.EditorFor(m => m.OrderReturnItems[index])
+                    }
+                </ol>
+            </td>
+        </tr>
+    </table>
+    <div class="buttons-set">
+        <p class="required">* @("Required Fields".LocalizeHtml())</p>
+        <p class="back-link"><a class="back-link" href="@Url.Action("Orders", "Account")"><small>« </small>@("Back".LocalizeHtml())</a></p>
+        <button id="send" name="send" title="Submit" class="button" type="submit"><span><span>@("Submit".LocalizeHtml())</span></span></button>
+    </div>
+    }
+}

@@ -1,0 +1,70 @@
+﻿@model IEnumerable<VirtoCommerce.Foundation.Orders.Model.RmaRequest>
+@{
+    ViewBag.Title = Html.Title("My Returns".Localize());
+    Layout = "_Layout.cshtml";
+}
+
+<div class="page-title">
+    <h1>@("Order Return(s)".LocalizeHtml())</h1>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="std">
+        @("You have not returned any items.".LocalizeHtml())
+    </div>
+}
+else
+{
+    <table style="width: 100%;">
+        @foreach (var rmaReturn in Model)
+        {
+            <tr>
+                <td>
+                    <div>
+                        <b>@("Creation Date:".LocalizeHtml())</b>
+                        @if (rmaReturn.Created.HasValue)
+                        {
+                            @rmaReturn.Created.Value.ToString("MMMM dd, yyyy")
+                        }
+
+                    </div>
+                    <div>
+                        <b>@("Return Authorization #:".LocalizeHtml())</b>
+                        @rmaReturn.AuthorizationCode
+                    </div>
+                    <div>
+                        <b>@("Order #:".LocalizeHtml())</b>
+                        @rmaReturn.Order.TrackingNumber
+                    </div>
+                </td>
+                <td>
+                    <div>
+                        <b>@("Items:".LocalizeHtml())</b>
+                    </div>
+                    <ul style="list-style: outside">
+                        @foreach (var orderItem in rmaReturn.RmaReturnItems)
+                        {
+                            <li>
+                                @string.Format("{0:0}: {1}", orderItem.RmaLineItems[0].ReturnQuantity, orderItem.RmaLineItems[0].LineItem.DisplayName)
+                                <br />
+                                @("Status:".LocalizeHtml()) @orderItem.ItemState.Localize()
+                            </li>
+                        }
+                    </ul>
+                </td>
+            </tr>
+            if (!Model.Last().Equals(rmaReturn))
+            {
+            <tr>
+                <td colspan="2">
+                    <div class="spacer"></div>
+                </td>
+            </tr>
+            }
+        }
+    </table>
+}
+<div class="buttons-set">
+    <p class="back-link"><a class="back-link" href="@Url.Action("Orders", "Account")"><small>« </small>@("Back".LocalizeHtml())</a></p>
+</div>

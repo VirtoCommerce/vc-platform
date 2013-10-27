@@ -1,0 +1,149 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+					xmlns:PresentationOptions="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
+					xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+					mc:Ignorable="PresentationOptions"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+
+
+    <!--Common brushes-->
+	<SolidColorBrush x:Key="Virto_HighLightText_Foreground_Brush" Color="#FF1BA1E2" PresentationOptions:Freeze="true"/>
+    <!--Common brushes-->
+
+
+    <!--Buttons brushes-->
+    <!--<SolidColorBrush x:Key="Virto_Button_Background_Normal_Brush" Color="#004D5F"/>-->
+	<SolidColorBrush x:Key="Virto_Button_Background_Normal_Brush" Color="#3296D4" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_Button_Foreground_Normal_Brush" Color="White" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_Button_BorderBrush_Normal_Brush" Color="White" PresentationOptions:Freeze="true"/>
+
+	<SolidColorBrush x:Key="Virto_Button_Background_Pressed_Brush" Color="#4D4D4D" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_Button_Background_MouseOver_Brush" Color="Black" PresentationOptions:Freeze="true"/>
+
+	<SolidColorBrush x:Key="Virto_Button_Foreground_MouseOver_Brush" Color="White" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_Button_Foreground_Pressed_Brush" Color="White" PresentationOptions:Freeze="true"/>
+
+	<SolidColorBrush x:Key="Virto_ToolButton_Normal_Background_Brush" Color="#DDDDDD" PresentationOptions:Freeze="true"/>
+
+    <!--Buttons brushes-->
+    
+    
+    <!--Windows brushes-->
+	<SolidColorBrush x:Key="Virto_Wizard_Window_Background_Brush" Color="#FFFAFAFF" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_Wizard_Window_Foreground_Brush" Color="Black" PresentationOptions:Freeze="true"/>
+
+    <!--Windows brushes-->
+
+    <!--ProgressBar brushes-->
+	<SolidColorBrush x:Key="Virto_ProgressBar_Background_Brush" Color="LightGray" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_ProgressBar_Foreground_Brush" Color="#3296D4" PresentationOptions:Freeze="true"/>
+    <!--ProgressBar brushes-->
+
+
+    <!--Combobox brushes-->
+	<SolidColorBrush x:Key="Virto_ComboboxItem_Content_MouseOver_Foreground" Color="Black" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_ComboboxItem_MouseOver_Background" Color="#DDDDDD" PresentationOptions:Freeze="true"/>
+
+	<SolidColorBrush x:Key="Virto_ComboBox_Normal_Background" Color="White" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_ComboBox_Unfocused_BorderBrush" Color="#767676" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_ComboBox_MouseOver-Focused_BorderBrush" Color="#3296D4" PresentationOptions:Freeze="true"/>
+    <!--Combobox brushes-->
+    
+    
+    <!--TextBox brushes-->
+
+	<SolidColorBrush x:Key="Virto_TextBox_Foreground_Brush" Color="Black" PresentationOptions:Freeze="true" />
+	<SolidColorBrush x:Key="Virto_TextBox_Background_Brush" Color="#FFF7F7F0" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_TextBox_Border_Brush" Color="#777777" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_TextBox_BorderDisable_Brush" Color="Gray" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_TextBox_BorderMouseOver_Brush" Color="#FF1BA1E2" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_TextBox_BorderValid_Brush" Color="Black" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_TextBox_BorderInvalidFocused_Brush" Color="Transparent" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_TextBox_BorderInvalidUnfocused_Brush" Color="Transparent" PresentationOptions:Freeze="true"/>
+    <!--TextBox brushes-->
+
+    <!-- SearchTextBox and Watermark brashes -->
+	<SolidColorBrush x:Key="Virto_TextBox_Watermark_Foreground_Brush" Color="#A9000000" PresentationOptions:Freeze="true" />
+	<SolidColorBrush x:Key="Virto_TextBox_Watermark_Background_Brush" Color="White" PresentationOptions:Freeze="true"/>
+    <!-- SearchTextBox and Watermark brashes -->
+
+    <!-- SearchTextBox brashes -->
+	<SolidColorBrush x:Key="Virto_TextBox_Search_IconBorder_Brush" PresentationOptions:Freeze="true" />
+	<SolidColorBrush x:Key="Virto_TextBox_Search_IconBackground_Brush" PresentationOptions:Freeze="true" />
+	<SolidColorBrush x:Key="Virto_TextBox_Search_IconBorder_MouseOver_Brush" Color="#BFFFFFFF" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_TextBox_Search_IconBackground_MouseOver_Brush" Color="Black" PresentationOptions:Freeze="true"/>
+    <!-- SearchTextBox brashes -->
+
+    <!--CHeckBox brushes-->
+	<SolidColorBrush x:Key="Virto_CheckBox_Border_Brush" Color="#777777" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_CheckBox_Background_Brush" Color="White" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_CheckBox_Content_Default_Foreground_Brush" Color="#FF1BA1E2" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_CheckBox_Content_MouseOver_Foreground_Brush" Color="#3296D4" PresentationOptions:Freeze="true"/>
+    <!--CHeckBox brushes-->
+
+    <!--RadioButton brushes-->
+	<SolidColorBrush x:Key="Virto_RadioButton_Ellipse_Checked_Stroke" Color="#FF7D7D7D" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_RadioButton_Ellipse_MouseOver_Stroke" Color="#3296D4" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_RadioButton_Content_Default_Foreground" Color="#3296D4" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_RadioButton_Content_MouseOver_Foreground" Color="#3296D4" PresentationOptions:Freeze="true"/>
+    <!--RadioButton brushes-->
+
+
+    <!--DatePicker brushes-->
+	<SolidColorBrush x:Key="Virto_DatePicker_Border_Default_Brush" Color="#45000000" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_DatePicker_DisabledVisual_Brush" Color="#A5FFFFFF" PresentationOptions:Freeze="true"/>
+    <!--DatePicker brushes-->
+
+    <!--ScrollBar brushes-->
+	<SolidColorBrush x:Key="Virto_Scroll_Backround_Brush" Color="Transparent" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_Scroll_RepeatButton_Backround_Brush" Color="#A6A6A6" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_Scroll_RepeatButton_Foreground_Brush" Color="#D4D4D4" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_Scroll_Thumb_Backround_Brush" Color="#A5A5A5" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_Scroll_Dragging_Backround_Brush" Color="Transparent" PresentationOptions:Freeze="true"/>
+
+    <!--ScrollBar brushes-->
+
+    
+    <!--ListBox brushes-->
+	<SolidColorBrush x:Key="Virto_ListBoxItem_Background_Brush" Color="#FFFFFF" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_ListBoxItem_Border_Brush" Color="Transparent" PresentationOptions:Freeze="true"/>
+
+	<SolidColorBrush x:Key="Virto_ListBoxItem_IsSelected_Background_Brush" Color="#A0A9A9A9" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_ListBoxItem_IsSelected_Border_Brush" Color="#4BFFFFFF" PresentationOptions:Freeze="true"/>
+
+	<SolidColorBrush x:Key="Virto_ListBoxItem_MouseOver_Background_Brush" Color="#A9A9A9" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_ListBoxItem_MouseOver_Border_Brush" Color="#3397D5" PresentationOptions:Freeze="true"/>
+
+
+    <!--ListBox brushes-->
+
+    <!--DataGrid -->
+	<SolidColorBrush x:Key="Virto_DataGrid_HorizontalLines_Brush" Color="#444444" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_DataGrid_VerticalLines_Brush" Color="Transparent" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_DataGrid_AlternatingRow_Background_Brush" Color="#F6F6F6" PresentationOptions:Freeze="true"/>
+
+	<SolidColorBrush x:Key="Virto_DataGrid_Header_Foreground_Brush" Color="Black" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_DataGrid_Header_Background_Brush" Color="#C7C7C7" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_DataGrid_Header_Hover_Background_Brush" Color="#B8B8B8" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_DataGrid_RowSelected_Background_Brush" Color="#25000000" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_DataGrid_RowHover_Background_Brush" Color="#08000000" PresentationOptions:Freeze="true"/>
+
+	<SolidColorBrush x:Key="Virto_DataGrid_RowHeader_Border_Brush" Color="#000000" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_DataGrid_RowHeader_Background_Brush" Color="Transparent" PresentationOptions:Freeze="true"/>
+
+	<SolidColorBrush x:Key="Virto_DataGrid_ColumnHeader_Border_Brush" Color="#C7C7C7" PresentationOptions:Freeze="true"/>
+    <!--DataGrid -->
+
+    <!--Toolbar-->
+	<SolidColorBrush x:Key="Virto_Toolbar_Background_Brush" Color="#C7C7C7" PresentationOptions:Freeze="true"/>
+    <!--toolbar-->
+
+    <!--Separator-->
+	<SolidColorBrush x:Key="Virto_Separator_Foreground_Brush" Color="#3b3b3b" PresentationOptions:Freeze="true"/>
+	<SolidColorBrush x:Key="Virto_Separator_Background_Brush" Color="#6e6e6e" PresentationOptions:Freeze="true"/>
+    <!--Separator-->
+
+
+  
+
+</ResourceDictionary>

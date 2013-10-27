@@ -1,0 +1,93 @@
+﻿@using VirtoCommerce.Foundation.Stores.Model
+@model LogOnModel
+@{
+    ViewBag.Title = Html.Title("Log On".Localize());
+}
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<div class="main-container col1-layout">
+    <div class="main">
+        <div class="col-main">
+            <div class="account-login">
+                <div class="page-title">
+                    <h1>@("Login or Create an Account".LocalizeHtml())</h1>
+                </div>
+                @using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "Login was unsuccessful. Please correct the errors and try again.".Localize())
+                    <div class="col2-set">
+                        <div class="col-1 new-users">
+                            <div class="content">
+                                <h2>
+                                    @("New Customers".LocalizeHtml())</h2>
+                                <p>
+                                    @("By creating an account with our store, you will be able to move through the checkout process faster, store multiple shipping addresses, view and track your orders in your account and more.".LocalizeHtml())</p>
+                            </div>
+                            <div class="buttons-set">
+                                <button onclick="window.location='@Url.Action("Register")';" class="button" title="@("Create an Account".LocalizeHtml())" type="button">
+                                    <span><span>@("Create an Account".LocalizeHtml())</span></span></button>
+                            </div>
+                        </div>
+                        <div class="col-2 registered-users">
+                            <div class="content">
+                                <h2>
+                                    @("Registered Customers".LocalizeHtml())</h2>
+                                <p>
+                                    @("If you have an account with us, please log in.".LocalizeHtml())</p>
+                                <ul class="form-list">
+                                    <li>
+                                        @Html.LabelForEx(m=>m.UserName,"Email Address")
+                                        <div class="input-box">
+                                            @Html.TextBoxFor(m => m.UserName, new { @class = "input-text required-entry validate-email" })
+                                            @Html.ValidationMessageFor(m => m.UserName)
+                                        </div>
+                                    </li>
+                                    <li>
+                                         @Html.LabelForEx(m=>m.Password)
+                                        <div class="input-box">
+                                            @Html.PasswordFor(m => m.Password, new { @class = "input-text required-entry validate-password" })
+                                            @Html.ValidationMessageFor(m => m.Password)
+                                        </div>
+                                    </li>
+                                    <li class="control">                    
+                                        <div class="input-box">
+                                            @Html.CheckBoxFor(m=>m.RememberMe, new { @class = "checkbox" })
+                                            </div>
+                                            @Html.LabelFor(m=>m.RememberMe, "Remember Me".Localize())
+                                    </li>
+                                </ul>
+                                <p class="required">
+                                    * @("Required Fields".LocalizeHtml())</p>
+
+                            <div class="buttons-set">
+                                <a class="f-left" href="@Url.Action("ForgotPassword", "Account")">
+                                    @("Forgot Your Password?".LocalizeHtml())</a>
+                                <button id="send2" name="send" title="@("Login".LocalizeHtml())" class="button" type="submit">
+                                    <span><span>@("Login".LocalizeHtml())</span></span></button>
+                            </div>
+
+                            </div>
+                        </div>
+                    </div>
+                }
+				
+				@if (StoreHelper.StoreClient.GetCurrentStore().StoreState == StoreState.Open.GetHashCode())
+				{
+					<div class="col2-set">
+						<div class="col-1 new-users">
+						</div>
+						<div class="col-2 registered-users">
+							<p>
+								<div class="content">
+									<h2>@("Use another service to log in.".LocalizeHtml())</h2>
+									@Html.Action("ExternalLoginsList", new {ViewBag.ReturnUrl})
+								</div>
+							</p>
+						</div>
+					</div>
+				}
+            </div>
+        </div>
+    </div>
+</div>

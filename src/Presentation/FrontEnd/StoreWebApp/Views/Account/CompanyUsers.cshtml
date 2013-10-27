@@ -1,0 +1,40 @@
+﻿@model VirtoCommerce.Web.Models.CompanyUserListModel
+@{
+	ViewBag.Title = "companyusers";
+	Layout = "_Layout.cshtml";
+}
+<div class="dashboard">
+	<div class="page-title">
+		<h1>Company Users</h1>
+	</div>
+	<div>
+		<a href="@Url.Action("CompanyUserNew", "Account")">New User</a>
+	</div>
+	<table class="data-table cart-table">
+		<colgroup>
+			<col>
+			<col width="1">
+			<col width="1">
+			<col width="1">
+			<col width="1">
+		</colgroup>
+		<thead>
+			<tr class="first last">
+				<th>Name</th>
+				<th>Status</th>
+				<th>Last Logged In</th>
+				<th>Role</th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			@for (var i = 0; i < Model.Users.Count(); i++)
+			{
+				<tr>
+					@Html.DisplayFor(m => m.Users[i], "User")
+				</tr>
+			}
+		</tbody>
+	</table>
+
+</div>

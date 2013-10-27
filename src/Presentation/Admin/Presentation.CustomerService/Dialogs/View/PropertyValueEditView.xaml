@@ -1,0 +1,39 @@
+﻿<UserControl x:Class="VirtoCommerce.ManagementClient.Customers.Dialogs.View.PropertyValueEditView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:extToolkit="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
+             mc:Ignorable="d" d:DesignHeight="100">
+	<FrameworkElement.Resources>
+		<ResourceDictionary>
+			<BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter" />
+		</ResourceDictionary>
+	</FrameworkElement.Resources>
+
+	<Grid>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="Auto" />
+			<ColumnDefinition Width="20" />
+			<ColumnDefinition />
+		</Grid.ColumnDefinitions>
+
+		<TextBlock Grid.Column="0" Text="{Binding InnerItem.Name, StringFormat={}{0}:}" />
+
+		<TextBox Grid.Column="2" Visibility="{Binding IsShortStringValue, Converter={StaticResource booleanToVisibilityConverter}}"
+                 Text="{Binding InnerItem.ShortTextValue, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+		<core_controls:WatermarkedTextBox Grid.Column="2" VerticalContentAlignment="Top" Style="{StaticResource Virto_Multiline_WatermarkedTextBox_Style}"
+				 Visibility="{Binding IsLongStringValue, Converter={StaticResource booleanToVisibilityConverter}}"
+                 Text="{Binding InnerItem.LongTextValue, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+                 AcceptsReturn="True" Height="90" Width="241"/>
+		<extToolkit:DecimalUpDown Grid.Column="2" Visibility="{Binding IsDecimalValue, Converter={StaticResource booleanToVisibilityConverter}}"
+                 Value="{Binding InnerItem.DecimalValue, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+		<extToolkit:IntegerUpDown Grid.Column="2" Visibility="{Binding IsIntegerValue, Converter={StaticResource booleanToVisibilityConverter}}"
+                 Value="{Binding InnerItem.IntegerValue, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+		<CheckBox Grid.Column="2" Visibility="{Binding IsBooleanValue, Converter={StaticResource booleanToVisibilityConverter}}"
+                IsChecked="{Binding InnerItem.BooleanValue, ValidatesOnDataErrors=True, UpdateSourceTrigger=Default}" VerticalAlignment="Top" />
+		<DatePicker Grid.Column="2" Visibility="{Binding IsDateTimeValue, Converter={StaticResource booleanToVisibilityConverter}}" 
+                SelectedDate="{Binding InnerItem.DateTimeValue, ValidatesOnDataErrors=True, UpdateSourceTrigger=Default}" Width="150" HorizontalAlignment="Right" />
+	</Grid>
+</UserControl>

@@ -1,0 +1,46 @@
+﻿<inf:ViewBase x:Class="VirtoCommerce.ManagementClient.DynamicContent.View.Wizard.CreateContentPublishingSetExpressionsView"
+              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+              xmlns:prism="http://www.codeplex.com/prism"
+              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+              xmlns:system="clr-namespace:System;assembly=mscorlib"
+              xmlns:inf="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure;assembly=VirtoCommerce.ManagementClient.Core"
+              xmlns:controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
+              xmlns:dialogs="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Dialogs;assembly=VirtoCommerce.ManagementClient.Core"
+              xmlns:dynamicContentModel="clr-namespace:VirtoCommerce.Foundation.Marketing.Model.DynamicContent;assembly=VirtoCommerce.Foundation"
+              mc:Ignorable="d"
+              Width="600" MinHeight="380">
+    
+    <FrameworkElement.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/WizardViewTheme/VirtoCommerceWizardTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <ObjectDataProvider x:Key="ItemTypes" ObjectType="{x:Type system:Enum}" MethodName="GetValues">
+                <ObjectDataProvider.MethodParameters>
+                    <x:TypeExtension TypeName="dynamicContentModel:DynamicContentType" />
+                </ObjectDataProvider.MethodParameters>
+            </ObjectDataProvider>
+        </ResourceDictionary>
+    </FrameworkElement.Resources>
+    
+    <i:Interaction.Triggers>
+        <prism:InteractionRequestTrigger SourceObject="{Binding CommonConfirmRequest, Mode=OneWay}">
+            <dialogs:InteractionDialogAction DialogType="{x:Type dialogs:ConfirmationLocalModalInteractionDialog}" />
+        </prism:InteractionRequestTrigger>
+    </i:Interaction.Triggers>
+    
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid>              
+            <ItemsControl ItemsSource="{Binding ExpressionElementBlock.Children}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <controls:ExpressionBuilder RootExpression="{Binding }" />
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>      
+        </Grid>
+    </ScrollViewer>
+</inf:ViewBase>

@@ -1,0 +1,282 @@
+﻿@using VirtoCommerce.Web.Virto.Helpers
+@model CheckoutModel
+@{
+    ViewBag.Title = Html.Title("Express Checkout".Localize());
+}
+<script type="text/javascript">
+	var v_regions = @Html.JsonSerialize(Model.BillingAddress.ScriptCountryRegions)
+	$(document).ready(function() {
+		$("#checkout-address input:not([type='hidden']),#checkout-address select").each(function() {
+			$(this).bind("change", function ()
+			{
+				//Workaround: wait some time for other change events to complete
+				setTimeout(function ()
+				{
+					VirtoCheckout.submitChanges();
+				}, 200);
+				
+			});
+		});
+	});
+</script>
+
+<script src="~/Scripts/v/virto-checkout.js" type="text/javascript"></script>
+<link href="~/Content/themes/default/checkout.css" rel="stylesheet" type="text/css" media="all" />
+
+<div class="main-container col1-layout">
+    <div class="main">
+        <!-- start center -->
+        <div class="col-main" id="main">
+            <!-- start content -->
+            <ul class="messages" id="messages">
+            </ul>
+
+            @Html.ValidationSummary(true)
+            @using (Html.BeginForm("ProcessCheckout", "Checkout", FormMethod.Post, new { id = "onestepcheckout-form" }))
+            {
+				
+            <fieldset style="margin: 0;" class="group-select">
+                <h1 class="onestepcheckout-title">
+                    @("Express Checkout Lane".LocalizeHtml())</h1>
+                <p class="onestepcheckout-description">
+                    @("Please enter your details below to complete your purchase.".LocalizeHtml())</p>
+                @if (!UserHelper.CustomerSession.IsRegistered)
+                {
+                <p class="onestepcheckout-login-link">
+					@{Html.RenderPartial("PopupBase", Model);}
+                </p>
+                }
+                <div class="onestepcheckout-threecolumns checkoutcontainer onestepcheckout-skin-generic ">
+                    <div class="onestepcheckout-column-left" id="checkout-address">
+                        <div id="billing_address">
+                            <ul>
+                                <li>
+                                    <p class="onestepcheckout-numbers onestepcheckout-numbers-1">
+                                        @("Billing address".LocalizeHtml())</p>
+                                </li>
+                                <!-- Logged in -->
+                                @if (UserHelper.CustomerSession.IsRegistered && Model.AddressBook.Addresses != null && Model.AddressBook.Addresses.Any())
+                                {
+                                <li>
+                                    <script type="text/javascript">    //&lt;![CDATA[
+                                        //$(VirtoCheckout.bindAddressSelector("billing-address-select"));
+                                        //]]&gt;</script>
+                                    <label for="BillingAddressId">
+                                        @("Select a billing address from your address book or enter a new address.".LocalizeHtml())</label>
+                                    <div class="input-box">
+                                        <select title="" class="address-select" id="BillingAddressId" onchange="VirtoCheckout.addressChanged(!this.value, 'billing')" name="AddressBook.BillingAddressId">
+                                            @foreach (var addr in Model.AddressBook.Addresses)
+                                            {
+                                                <option value="@addr.AddressId">@addr</option>
+                                            }
+                                            <option value="">@("New Address".LocalizeHtml())</option>
+                                        </select>
+                                    </div>
+                                </li>
+                                }
+
+                                <li>
+                                    <div>
+                                        <ul id="billing_address_list" style="@(Model.AddressBook.Addresses != null && Model.AddressBook.Addresses.Any() ? "display: none" : "")">
+                                            @Html.EditorFor(m => m.BillingAddress, "Address")
+                                            @Html.HiddenFor(m => m.AddressBook.BillingAddressId)
+                                            @if (!UserHelper.CustomerSession.IsRegistered)
+                                            {
+                                            <li class="clearfix">
+                                                <div class="input-box">
+                                                    @Html.CheckBoxFor(m => m.CreateAccount, new { onclick = "VirtoCheckout.toggleAccount();" })
+                                                    @Html.LabelFor(m => m.CreateAccount, "Create an account for later use".Localize())
+                                                </div>
+                                            </li>
+                                            <li style="display: none;" id="onestepcheckout-li-password">
+                                                <div class="input-box input-password">
+                                                    @Html.LabelFor(m => m.Password, "Password".Localize())<br/>
+                                                    @Html.PasswordFor(m => m.Password, new { @class = "input-text" })
+                                                </div>
+                                                <div class="input-box input-password">
+                                                    @Html.LabelFor(m => m.ConfirmPassword, "Confirm password".Localize())<br/>
+                                                    @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "input-text" })
+                                                </div>
+                                                <script type="text/javascript">//&lt;![CDATA[
+                                                    $(VirtoCheckout.bindAccount());
+                                                    //]]&gt;</script>
+                                            </li>
+                                            }
+                                            else
+                                            {
+                                                <li>@Html.CheckBoxFor(m => m.AddressBook.SaveBillingAddress, null)
+                                                @Html.LabelFor(m => m.AddressBook.SaveBillingAddress, "Save in address book".Localize())
+                                                </li>
+                                            }
+                                        </ul>
+                                   </div>
+                                </li>
+                                <li>
+                                    <div class="input-box input-different-shipping">
+                                    @Html.CheckBoxFor(m => m.UseForShipping, new { onclick = "VirtoCheckout.toggleAddress();" })
+                                    @Html.LabelFor(m => m.UseForShipping, "Ship to the same address".Localize())
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div style="display: none" id="shipping_address">
+                            <ul>
+                                <li class="shipping-address-title">@("Shipping address".LocalizeHtml())</li>
+                                <!-- Logged in -->
+                                @if (UserHelper.CustomerSession.IsRegistered && Model.AddressBook.Addresses != null && Model.AddressBook.Addresses.Any())
+                                {
+                                <li>
+                                    <label for="ShippingAddressId">
+                                        @("Select a shipping address from your address book or enter a new address.".LocalizeHtml())</label>
+                                    <div class="input-box">
+                                        <select title="" class="address-select" onchange="VirtoCheckout.addressChanged(!this.value, 'shipping')"
+                                            id="ShippingAddressId" name="AddressBook.ShippingAddressId">
+                                            @foreach (var addr in Model.AddressBook.Addresses)
+                                            {
+                                                <option value="@addr.AddressId">@addr.FirstName @addr.LastName, @addr.Line1 @addr.Line2, @addr.City, @addr.StateProvince @addr.PostalCode, @addr.CountryName</option>
+                                            }
+                                            <option value="">@("New Address".LocalizeHtml())</option>
+                                        </select>
+                                    </div>
+                                </li>
+                                }
+                                <li id="shipping_address_list" style="@(Model.AddressBook.Addresses != null && Model.AddressBook.Addresses.Any() ? "display: none" : "")">
+                                    <div id="">
+                                        <ul>
+                                           @Html.EditorFor(m => m.ShippingAddress, "Address")
+                                             <li>@Html.CheckBoxFor(m => m.AddressBook.SaveShippingAddress, null)
+                                              @Html.LabelFor(m => m.AddressBook.SaveShippingAddress, "Save in address book".Localize())
+                                            </li>
+                                        </ul>
+                                        <!-- END LIST OF SHIPPIING FIELDS -->
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="onestepcheckout-column-middle">
+                        <div class="onestepcheckout-shipping-method">
+                            <p class="onestepcheckout-numbers onestepcheckout-numbers-2">
+                                @("Shipping method".LocalizeHtml())</p>
+                            <div class="onestepcheckout-shipping-method-block" id="shipping-methods">
+                                <script type="text/javascript">//&lt;![CDATA[
+                                    $(VirtoCheckout.updateShipments());
+                                    //]]&gt;</script>
+                                
+                            </div>
+                        </div>
+                        <p class="onestepcheckout-numbers onestepcheckout-numbers-3">
+                            @("Payment method".LocalizeHtml())</p>
+	                    <div class="payment-methods" id="payment-methods">
+		                    @("Select shipping method".LocalizeHtml())
+	                    </div>
+                        <div style="display: none;" id="payment-tool-tip" class="tool-tip">
+                            <div class="btn-close">
+                                <a id="payment-tool-tip-close" href="#">
+                                    <img alt="Close" src="@Url.Content("~/Content/themes/default/images/btn_window_close.gif")"/></a>
+                            </div>
+                            <div class="block-content">
+                                <img alt="@("Card Verification Number Visual Reference".LocalizeHtml())" src="@Url.Content("~/Content/themes/default/images/cvv.gif")">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="onestepcheckout-column-right">
+                        <p class="onestepcheckout-numbers onestepcheckout-numbers-4">
+                            @("Review your order".LocalizeHtml())</p>
+                        <div class="onestepcheckout-summary" id="checkout-cart">
+                        <script type="text/javascript">//&lt;![CDATA[
+                            $(VirtoCheckout.updateCart());
+                            //]]&gt;</script>
+                        </div>
+                        @using(Html.BeginForm()){
+                        <div class="onestepcheckout-coupons">
+                            <div style="display: none;" id="coupon-notice"></div>
+                            @Html.LabelFor(m => m.CouponCode, "Coupon code:".Localize())<br/>
+                            @Html.TextBoxFor(m => m.CouponCode, new {@class = "input-text"})
+                            <br/>
+                            <div class="buttons-set">
+                            <button type="button" class="button" id="onestepcheckout-coupon-add" onclick="VirtoCart.updateCoupon($(this).closest('form'),function(context){VirtoCheckout.updateCart();});">
+                                <span><span>@("Apply Coupon".LocalizeHtml())</span></span></button>
+@*                            <button style="display: none;" type="button" class="form-button-alt" id="onestepcheckout-coupon-remove">
+                                <span>Cancel Coupon</span></button>*@
+                             </div>
+                        </div>
+                        }
+                        <div class="onestepcheckout-comments">
+                            @Html.LabelFor(m => m.Comments, "Comments".Localize())<br/>
+                            @Html.TextAreaFor(m => m.Comments)
+                        </div>
+                        <div id="onestepcheckout-giftmessages">
+                            <div class="onestepcheckout-giftmessagecontainer">
+                                <div class="onestepcheckout-giftmessages">
+                                    <div class="inner-box">
+                                        <div class="input-checkbox">
+                                            @Html.CheckBoxFor(m => m.IncludeGiftMessage, new { onclick = "VirtoCheckout.toggleGiftMessage();" })
+                                            @Html.LabelFor(m => m.IncludeGiftMessage, "Add a gift message to my order".Localize())
+                                        </div>
+                                    </div>
+                                    <div id="allow-gift-message-container" class="gift-box" style="display: none;">
+                                        <div class="scroll-box">
+                                            <fieldset class="group-select">
+                                                @Html.EditorFor(m => m.GiftMessage, "GiftMessage")
+                                            </fieldset>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <script type="text/javascript">//&lt;![CDATA[
+                            $(VirtoCheckout.bindAddresses());
+                            $(VirtoCheckout.bindGiftMessage());
+                            //]]&gt;</script>
+                        <div class="onestepcheckout-enable-terms">
+                            @Html.CheckBoxFor(m=>m.AcceptTerms)
+                            <label for="AcceptTerms">
+                                @("I accept the <a href='#' target='_blank' id='onestepcheckout-toc-link'>Terms and Conditions</a>".LocalizeHtml())</label><br />
+                            @Html.ValidationMessageFor(m => m.AcceptTerms, "This a required field".Localize())
+                        </div>
+                        <div class="onestepcheckout-extraproducts">
+                            <ul>
+                                <li>
+                                    <input type="checkbox" id="id_extra_product_6" name="extra_products_6" class="onestepcheckout-extra-product">
+                                    &nbsp;
+                                    <label for="id_extra_product_6">
+                                        @("Gift wrap".LocalizeHtml()) <span><span class="price">$5.00</span></span>
+                                    </label>
+                                </li>
+                            </ul>
+                        </div>
+                        <div id="" class="onestepcheckout-feedback">
+                            <label for="id_feedback">
+                                @("How did you hear about us?".LocalizeHtml())</label><br>
+                            <select id="id_feedback" name="onestepcheckout-feedback" style="">
+                                <option value="">@("Please choose".LocalizeHtml())</option>
+                                <option value="Google">@("Google".LocalizeHtml())</option>
+                                <option value="Facebook">@("Facebook".LocalizeHtml())</option>
+                                <option value="Twitter">@("Twitter".LocalizeHtml())</option>
+                                <option value="other">@("Other".LocalizeHtml())</option>
+                            </select>
+                        </div>
+                        <script type="text/javascript">//&lt;![CDATA[
+                            $(VirtoCheckout.bindFeedback());
+                            //]]&gt;</script>
+                        <div style="display: none;" class="onestepcheckout-feedback-freetext" id="id_feedback_freetext_div">
+                            @Html.LabelFor(m => m.FeedbackMessage, "Please specify:".Localize())<br/>
+                            @Html.TextAreaFor(m => m.FeedbackMessage)
+                        </div>
+                        <div class="onestepcheckout-place-order">
+                            <a class="large orange onestepcheckout-button" href="javascript:VirtoCheckout.submitCheckout()" id="onestepcheckout-place-order">@("Place order now".LocalizeHtml())</a>
+                        </div>
+                    </div>
+                    <div style="clear: both;">
+                        &nbsp;</div>
+                </div>
+            </fieldset>
+            }
+            <div style="display: none;" id="loading-process">
+            </div>
+            <!-- end content -->
+        </div>
+        <!-- end center -->
+    </div>
+</div>

@@ -1,0 +1,10 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+	<system:Double x:Key="TileSize">150</system:Double>
+	<system:Double x:Key="TileDoubleSize">310</system:Double>
+	<system:Double x:Key="TileTripleSize">470</system:Double>
+
+
+</ResourceDictionary>

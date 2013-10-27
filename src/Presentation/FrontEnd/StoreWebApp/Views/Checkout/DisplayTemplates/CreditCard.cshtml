@@ -1,0 +1,41 @@
+﻿@model PaymentModel
+<ul class="form-list" id="payment_form_ccsave">
+    <li>
+        <div class="input-box">
+            @Html.LabelForEx(m => m.CustomerName)
+            @Html.TextBoxFor(m => m.CustomerName, new { @class = "input-text" })
+        </div>
+    </li>
+    <li>
+        <div class="input-box">
+            @Html.LabelForEx(m => m.CardType)
+            @Html.DropDownListFor(m => m.CardType, new SelectList(Model.CardTypes, "Value", "Name"))
+        </div>
+    </li>
+    <li>
+        <div class="input-box">
+            @Html.LabelForEx(m => m.CardNumber)
+            @Html.TextBoxFor(m => m.CardNumber, new { @class = "input-text" })
+        </div>
+    </li>
+    <li>
+        @Html.LabelForEx(m => m.ExpirationMonth)
+        <div class="input-box">
+            <div class="v-fix">
+                @Html.DropDownListFor(m => m.ExpirationMonth, new SelectList(Model.Months, "Value", "Name"))                
+            </div>
+            <div class="v-fix">
+                @Html.DropDownListFor(m => m.ExpirationYear, new SelectList(Model.Years, "Value", "Name"))
+            </div>
+        </div>
+    </li>
+    <li>
+        <div class="input-box">
+			@Html.LabelForEx(m => m.CardVerificationNumber)
+            <div class="v-fix">
+	            @Html.PasswordFor(m => m.CardVerificationNumber, new { @class = "input-text" })
+            </div>
+            &nbsp;<a class="cvv-what-is-this" href="#">@("What is this?".LocalizeHtml())</a>
+        </div>
+    </li>
+</ul>

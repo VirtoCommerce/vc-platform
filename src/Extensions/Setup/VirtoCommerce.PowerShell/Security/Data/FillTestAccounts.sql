@@ -1,0 +1,4 @@
+﻿INSERT INTO [webpages_Membership] ([UserId],[CreateDate],[ConfirmationToken],[IsConfirmed],[LastPasswordFailureDate],[PasswordFailuresSinceLastSuccess],[Password],[PasswordChangedDate],[PasswordSalt],[PasswordVerificationToken],[PasswordVerificationTokenExpirationDate]) VALUES (2,N'20130213 08:26:44.540',NULL,1,NULL,0,N'AHQSmKnSLYrzj9vtdDWWnUXojjpmuDW2cHvWloGL9UL3TC9UCfBmbIuR2YCyg4BpNg==',N'20130213 08:26:44.540',N'',NULL,NULL);
+GO
+INSERT INTO [Account] ([StoreId],[MemberId],[UserName],[RegisterType],[AccountState],[LastModified],[Created],[Discriminator]) VALUES (N'SampleStore',N'2',N'test',2,1,NULL,NULL,'Account');
+GO

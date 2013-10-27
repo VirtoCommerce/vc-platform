@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="VirtoCommerce.Foundation.Customers.Model.PropertyValueBase" Collapsed="true">
+    <Position X="6.5" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAEAAAAAEEBUQAMCQAAAgkAAAAAAAAAAQAkAA=</HashCode>
+      <FileName>Customers\Model\PropertyValueBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Customers.Model.CasePropertyValue">
+    <Position X="5" Y="2.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAABA=</HashCode>
+      <FileName>Customers\Model\CasePropertyValue.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Case" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Customers.Model.ContactPropertyValue">
+    <Position X="7.5" Y="2.25" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAAACAAAAAAAAAAAAAEAAAAAAAAAAAA=</HashCode>
+      <FileName>Customers\Model\ContactPropertyValue.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Contact" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Customers.Model.Case" Collapsed="true">
+    <Position X="5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAkQAAEFgIwQEQEGVAUgEAAAIAAAAEEAQAAABAADBQ=</HashCode>
+      <FileName>Customers\Model\Case.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Customers.Model.Contact" Collapsed="true">
+    <Position X="7.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAEAMIIGCMAAKAAgAEQAAQEAQECAAAAAAEAAAgAAIg=</HashCode>
+      <FileName>Customers\Model\Contact.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Customers.Model.CasePropertySet">
+    <Position X="0.5" Y="1.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>gAAAAgAAAAAAAABEAQAAIAQAAAAAAAAAAABAAAAAAAA=</HashCode>
+      <FileName>Customers\Model\CasePropertySet.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="CaseProperties" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Customers.Model.CaseProperty">
+    <Position X="3.25" Y="1.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>oAAAAgAAAAAAAEAEAQAAIAQAAACAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Customers\Model\CaseProperty.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="VirtoCommerce.Foundation.Customers.Model.PropertyValueType">
+    <Position X="9.75" Y="1" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAgAAEAAAQAgAAAAAAAAAAAAAAAAAgQAAAAAAAAAAAA=</HashCode>
+      <FileName>Customers\Model\PropertyValueType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

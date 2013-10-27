@@ -1,0 +1,10 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
+                    xmlns:localViewModel="clr-namespace:VirtoCommerce.ManagementClient.Main.ViewModel;assembly=VirtoCommerce.ManagementClient.Main"
+                    xmlns:localView="clr-namespace:VirtoCommerce.ManagementClient.Main.View;assembly=VirtoCommerce.ManagementClient.Main">
+
+    <DataTemplate DataType="{x:Type localViewModel:MainHomeViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localView:MainHomeView}"/>
+    </DataTemplate>
+</ResourceDictionary>

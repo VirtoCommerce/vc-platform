@@ -1,0 +1,19 @@
+﻿@{
+    ViewBag.Title = "Shopping Cart".Localize();
+}
+<div class="main-container col1-layout">
+    <div class="main">
+        <div class="col-main">
+            <div class="page-title">
+                <h1>
+                    @("Shopping Cart is Empty".LocalizeHtml())</h1>
+            </div>
+            <div class="cart-empty">
+                <p>
+                    @("You have no items in your shopping cart.".LocalizeHtml())</p>
+                <p>
+                    @("Click <a href='{0}'>here</a> to continue shopping.".LocalizeHtml(Url.Action("Index","Home")))</p>
+            </div>
+        </div>
+    </div>
+</div>

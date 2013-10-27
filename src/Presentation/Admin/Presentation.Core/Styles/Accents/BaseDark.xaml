@@ -1,0 +1,29 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <!--
+
+    <Color x:Key="BlackColor">#CFB591</Color>
+    <Color x:Key="WhiteColor">#596063</Color>
+
+    <Color x:Key="NormalForegroundColor">#FF000000</Color>
+    <Color x:Key="HoverForegroundColor">#FFFFFFFF</Color>
+    
+    <Color x:Key="Gray5">#FF7e7e7e</Color>
+    <Color x:Key="Gray7">#FF2f2f2f</Color>
+    <Color x:Key="Gray8">#FF454545</Color>
+    -->
+
+    <Color x:Key="GrayNormal">#FF7D7D7D</Color>
+    <Color x:Key="GrayHover">#FFAAAAAA</Color>
+</ResourceDictionary>
+    
+    
+<!--
+    
+Colors:
+    52423B
+    AB8E6F
+    CFB591
+    B09E78
+    635F4B
+    -->

@@ -1,0 +1,2 @@
+﻿@model CurrenciesModel
+@Html.DropDownList("currency", new SelectList(Model.Currencies, "CurrencyCode", "CurrencyName", Model.SelectedCurrency), new { @onchange="VirtoCommerce.changeCurrency(this.value);"})

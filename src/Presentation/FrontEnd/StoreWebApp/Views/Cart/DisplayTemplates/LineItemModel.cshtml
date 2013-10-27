@@ -1,0 +1,23 @@
+﻿@model LineItemModel
+@{ 
+	var cartType = "cart".Localize();
+	if (Request["name"] == CartHelper.WishListName)
+	{
+			cartType = "wish list".Localize();		
+	}
+	else if (Request["name"] == CartHelper.CompareListName)
+	{
+		cartType = "compare list".Localize();
+	}
+}
+    <div id="entry-thickbox">
+        <div class="row">
+            <div class="image">
+                <img id="image" src="@Url.Image(Model.CatalogItem.Item, "primaryimage")" width="47" height="55" alt="" onerror="this.onerror=null;this.src='@Href("~/Content/themes/default/images/blank.png")';" />
+            </div>
+	        <div class="desc">
+		        @("The product <a href='{0}'>{1}</a> has been added to your {2}.".LocalizeHtml(Url.ItemUrl(Model.CatalogItem.Item, Model.ParentCatalogItem),Model.DisplayName,cartType))
+	        </div>
+        </div>
+    </div>
+

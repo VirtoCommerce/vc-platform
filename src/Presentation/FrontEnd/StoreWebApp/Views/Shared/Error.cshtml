@@ -1,0 +1,39 @@
+﻿@model System.Web.Mvc.HandleErrorInfo
+@{
+    ViewBag.Title = "Error";
+}
+        <div class="main-container col1-layout">
+            <div class="main">
+                <div class="col-main">
+                    <br />
+            <div class="page-title"><h1>We couldn't process your request</h1></div>
+                 <h2 class="sub-title">Please try again or press a back button.</h2>
+
+    @{
+        if (Request.IsLocal)
+        {
+            if (@Model != null && @Model.Exception != null)
+            {
+        <h3>
+            Exception was : @Model.Exception.Message</h3>
+        <h4>
+            Stack Trace: @Model.Exception.StackTrace</h4>
+            }
+            else
+            {
+        <h3>
+            Exception was null</h3>
+            }
+        }
+        else
+        {
+        <h4>
+            The Error has been reported to the Administrator</h4>
+        }
+    }
+
+                                                <div class="clearer">
+                        </div>                        
+                </div>
+            </div>
+        </div>

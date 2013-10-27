@@ -1,0 +1,80 @@
+﻿<Activity mc:Ignorable="sap sap2010 sads" x:Class="VirtoCommerce.OrderWorkflow.CalculateReturnTotalsWorkflow"
+ xmlns="http://schemas.microsoft.com/netfx/2009/xaml/activities"
+ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+ xmlns:mca="clr-namespace:Microsoft.CSharp.Activities;assembly=System.Activities"
+ xmlns:sads="http://schemas.microsoft.com/netfx/2010/xaml/activities/debugger"
+ xmlns:sap="http://schemas.microsoft.com/netfx/2009/xaml/activities/presentation"
+ xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
+ xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
+ xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
+ xmlns:vffw="clr-namespace:VirtoCommerce.Foundation.Frameworks.Workflow;assembly=VirtoCommerce.Foundation"
+ xmlns:vfom="clr-namespace:VirtoCommerce.Foundation.Orders.Model;assembly=VirtoCommerce.Foundation"
+ xmlns:vo="clr-namespace:VirtoCommerce.OrderWorkflow;assembly=VirtoCommerce.OrderWorkflowActivities"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+  <x:Members>
+    <x:Property Name="OrderGroupArgument" Type="InArgument(vfom:OrderGroup)" />
+    <x:Property Name="ResultArgument" Type="InOutArgument(vffw:WorkflowResult)" />
+  </x:Members>
+  <sap2010:ExpressionActivityEditor.ExpressionActivityEditor>C#</sap2010:ExpressionActivityEditor.ExpressionActivityEditor>
+  <sap2010:WorkflowViewState.IdRef>VirtoCommerce.OrderWorkflow.CalculateReturnTotalsWorkflow_1</sap2010:WorkflowViewState.IdRef>
+  <TextExpression.NamespacesForImplementation>
+    <sco:Collection x:TypeArguments="x:String">
+      <x:String>System</x:String>
+      <x:String>System.Collections.Generic</x:String>
+      <x:String>System.Data</x:String>
+      <x:String>System.Linq</x:String>
+      <x:String>System.Text</x:String>
+      <x:String>VirtoCommerce.Foundation.Orders.Model</x:String>
+      <x:String>VirtoCommerce.Foundation.Frameworks.Workflow</x:String>
+    </sco:Collection>
+  </TextExpression.NamespacesForImplementation>
+  <TextExpression.ReferencesForImplementation>
+    <sco:Collection x:TypeArguments="AssemblyReference">
+      <AssemblyReference>Microsoft.Practices.ServiceLocation</AssemblyReference>
+      <AssemblyReference>System</AssemblyReference>
+      <AssemblyReference>System.Activities</AssemblyReference>
+      <AssemblyReference>System.Core</AssemblyReference>
+      <AssemblyReference>System.Runtime.Serialization</AssemblyReference>
+      <AssemblyReference>System.ServiceModel</AssemblyReference>
+      <AssemblyReference>System.ServiceModel.Activities</AssemblyReference>
+      <AssemblyReference>System.Xaml</AssemblyReference>
+      <AssemblyReference>System.Xml.Linq</AssemblyReference>
+      <AssemblyReference>System.Data.DataSetExtensions</AssemblyReference>
+      <AssemblyReference>Microsoft.CSharp</AssemblyReference>
+      <AssemblyReference>System.Data</AssemblyReference>
+      <AssemblyReference>System.Xml</AssemblyReference>
+      <AssemblyReference>VirtoCommerce.Foundation</AssemblyReference>
+      <AssemblyReference>VirtoCommerce.OrderWorkflowActivities</AssemblyReference>
+      <AssemblyReference>mscorlib</AssemblyReference>
+      <AssemblyReference>VirtoCommerce.OrderWorkflow</AssemblyReference>
+    </sco:Collection>
+  </TextExpression.ReferencesForImplementation>
+  <Sequence sap2010:WorkflowViewState.IdRef="Sequence_1">
+    <vo:CalculateReturnTotalsActivity sap2010:WorkflowViewState.IdRef="CalculateReturnTotalsActivity_1">
+      <vo:CalculateReturnTotalsActivity.OrderGroupArgument>
+        <InArgument x:TypeArguments="vfom:OrderGroup">
+          <mca:CSharpValue x:TypeArguments="vfom:OrderGroup">OrderGroupArgument</mca:CSharpValue>
+        </InArgument>
+      </vo:CalculateReturnTotalsActivity.OrderGroupArgument>
+      <vo:CalculateReturnTotalsActivity.ResultArgument>
+        <InArgument x:TypeArguments="vffw:WorkflowResult">
+          <mca:CSharpValue x:TypeArguments="vffw:WorkflowResult">ResultArgument</mca:CSharpValue>
+        </InArgument>
+      </vo:CalculateReturnTotalsActivity.ResultArgument>
+    </vo:CalculateReturnTotalsActivity>
+    <sads:DebugSymbol.Symbol>d25FOlxQcm9qZWt0YWlcVkNGXGJyYW5jaGVzXG1ldHJvLXJlZGVzaWduLWJyYW5jaFxFeHRlbnNpb25zXFdvcmtmbG93XE9yZGVyV29ya2Zsb3dcQ2FsY3VsYXRlVG90YWxzV29ya2Zsb3cueGFtbAQ0A0IOAgEBNQVAKAIBAjgLOGICAQY9Cz1iAgED</sads:DebugSymbol.Symbol>
+  </Sequence>
+  <sap2010:WorkflowViewState.ViewStateManager>
+    <sap2010:ViewStateManager>
+      <sap2010:ViewStateData Id="CalculateReturnTotalsActivity_1" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="222,146">
+        <sap:WorkflowViewStateService.ViewState>
+          <scg:Dictionary x:TypeArguments="x:String, x:Object">
+            <x:Boolean x:Key="IsExpanded">True</x:Boolean>
+          </scg:Dictionary>
+        </sap:WorkflowViewStateService.ViewState>
+      </sap2010:ViewStateData>
+      <sap2010:ViewStateData Id="VirtoCommerce.OrderWorkflow.CalculateReturnTotalsWorkflow_1" sap:VirtualizedContainerService.HintSize="262,226" />
+    </sap2010:ViewStateManager>
+  </sap2010:WorkflowViewState.ViewStateManager>
+</Activity>

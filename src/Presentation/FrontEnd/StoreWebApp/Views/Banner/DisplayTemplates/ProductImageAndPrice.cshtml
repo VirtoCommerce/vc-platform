@@ -1,0 +1,11 @@
+﻿@using VirtoCommerce.Client
+@{
+    Layout = null;
+	var currentModel = ViewData["Model"] as ProductWithImageAndPriceModel;
+}
+
+@if (currentModel != null)
+{
+    @Html.Action("DisplayItemByIdNoCache", "Catalog", new { itemId = currentModel.ProductCode, displayOptions = ItemDisplayOptions.ItemMedium})
+}
+

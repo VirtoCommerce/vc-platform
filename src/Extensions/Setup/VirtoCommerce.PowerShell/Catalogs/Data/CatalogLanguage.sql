@@ -1,0 +1,3 @@
+﻿INSERT INTO [CatalogLanguage] ([CatalogLanguageId],[Language],[CatalogId],[LastModified],[Created],[Discriminator]) VALUES (N'Appleen-us',N'en-us',N'Apple',N'20120319 21:55:12.750',N'20120319 21:55:12.750',N'CatalogLanguage');
+INSERT INTO [CatalogLanguage] ([CatalogLanguageId],[Language],[CatalogId],[LastModified],[Created],[Discriminator]) VALUES (N'Samsungen-us',N'en-us',N'Samsung',N'20120319 21:55:12.637',N'20120319 21:55:12.637',N'CatalogLanguage');
+INSERT INTO [CatalogLanguage] ([CatalogLanguageId],[Language],[CatalogId],[LastModified],[Created],[Discriminator]) VALUES (N'Sonyen-us',N'en-us',N'Sony',N'20120319 21:55:12.007',N'20120319 21:55:12.007',N'CatalogLanguage');

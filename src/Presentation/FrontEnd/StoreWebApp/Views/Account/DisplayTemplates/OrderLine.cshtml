@@ -1,0 +1,26 @@
+﻿@model VirtoCommerce.Foundation.Orders.Model.Order
+ <tr class="first last odd">
+                    <td>
+                        @Model.TrackingNumber
+                    </td>
+                    <td>
+                        <span class="nobr">@Model.Created.Value.ToShortDateString()</span>
+                    </td>
+                    <td>
+                        @Model.CustomerName
+                    </td>
+                    <td>
+                        <span class="price">@StoreHelper.FormatCurrency(Model.Total, Model.BillingCurrency)</span>
+                    </td>
+                    <td>
+                        <em>@Model.Status.Localize()</em>
+                    </td>
+                    <td class="a-center last">
+                        <span class="nobr">
+                            @Html.ActionLink("View", "ViewOrder", new { orderId = Model.OrderGroupId })<span class="separator">|</span>
+                            @Html.ActionLink("Reorder", "Reorder", new { orderId = Model.OrderGroupId }) <span class="separator">|</span>
+                            @Html.ActionLink("Return", "OrderReturn", new { orderId = Model.OrderGroupId })
+
+                        </span>
+                    </td>
+                </tr>          

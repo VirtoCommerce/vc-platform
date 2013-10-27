@@ -1,0 +1,173 @@
+﻿@using VirtoCommerce.Web.Virto.Helpers
+@model CartModel
+@{
+    ViewBag.Title = Html.Title("Shopping Cart".Localize());
+}
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        //Hide cart suggested dynamic content when there is nothing there
+	    if($.trim($("#crosssell-products-list li").html()).length == 0){
+	        $("#cartSuggestDynamic").hide();
+	    }
+    });
+</script>
+
+
+<div class="main-container col1-layout">
+    <div class="main">
+        <div class="col-main">
+            <div class="cart">
+                <div class="page-title title-buttons">
+                    <h1>@("Shopping Cart".LocalizeHtml())</h1>
+                    <ul class="checkout-types">
+                        <li>
+                            <button type="button" title="@("Proceed to Checkout".LocalizeHtml())" class="button btn-proceed-checkout btn-checkout" onclick="VirtoCart.checkout();">
+                                <span><span>@("Proceed to Checkout".LocalizeHtml())</span></span></button>
+                        </li>
+                    </ul>
+                </div>
+                <ul class="messages" id="messages">
+                </ul>
+                @{using (Html.BeginForm("Update", "Cart", FormMethod.Post))
+                  {
+                    <fieldset>
+                        <table id="shopping-cart-table" class="data-table cart-table">
+                            <col width="1" />
+                            <col />
+                            <col width="1" />
+                            <col width="1" />
+                            <col width="1" />
+                            <col width="1" />
+                            <col width="1" />
+                            <thead>
+                                <tr>
+                                    <th rowspan="1">&nbsp;
+                                    </th>
+                                    <th rowspan="1">
+                                        <span class="nobr">@("Product Name".LocalizeHtml())</span>
+                                    </th>
+                                    <th rowspan="1"></th>
+                                    <th class="a-center" colspan="1">
+                                        <span class="nobr">@("Unit Price".LocalizeHtml())</span>
+                                    </th>
+                                    <th rowspan="1" class="a-center">@("Qty".LocalizeHtml())
+                                    </th>
+                                    <th class="a-center" colspan="1">@("Subtotal".LocalizeHtml())
+                                    </th>
+                                    <th rowspan="1" class="a-center">&nbsp;
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="50" class="a-right">
+                                        <button type="button" title="@("Continue Shopping".LocalizeHtml())" class="button btn-continue" onclick="$.redirect('@UserHelper.CustomerSession.LastShoppingPage');">
+                                            <span><span>@("Continue Shopping".LocalizeHtml())</span></span></button>
+                                        <button type="submit" value="clear" name="cartbutton" title="@("Clear Shopping Cart".LocalizeHtml())" class="button btn-update">
+                                            <span><span>@("Clear Shopping Cart".LocalizeHtml())</span></span></button>
+                                        <button type="submit" value="update" name="cartbutton" title="@("Update Shopping Cart".LocalizeHtml())" class="button btn-update">
+                                            <span><span>@("Update Shopping Cart".LocalizeHtml())</span></span></button>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                @{ Html.RenderPartial("LineItems", Model); }
+                            </tbody>
+                        </table>
+                    </fieldset>
+                    
+                  }}
+                <div class="cart-collaterals">
+                    <div class="col2-set">
+                        <div class="col-1" id="cartSuggestDynamic">
+                            <div class="crosssell">
+                                <h2>@("Based on your selection, you may be interested in the following items:".LocalizeHtml())</h2>
+                                <ul id="crosssell-products-list">
+                                    <li class="item">
+                                        @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "CartSuggest" });}
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            @using (Html.BeginForm())
+                            {
+								@Html.Hidden("renderItems", true)
+                                <div class="discount">
+                                    <h2>@("Discount Codes".LocalizeHtml())</h2>
+                                    <div class="discount-form">
+                                        <label for="CouponCode">@("Enter your coupon code if you have one.".LocalizeHtml())</label>
+                                        @*<input type="hidden" name="remove" id="remove-coupone" value="0" />*@
+                                        <div class="input-box">
+                                            @Html.TextBoxFor(m => m.CouponCode, new { @class = "input-text" })
+                                        </div>
+                                        <div class="buttons-set">
+                                            <button type="button" title="@("Apply Coupon".LocalizeHtml())" class="button" onclick="VirtoCart.updateCoupon($(this).closest('form'),function(context){$('#shopping-cart-table tbody').html(context.LineItemsView);});"
+                                                value="ApplyCoupon">
+                                                <span><span>@("Apply Coupon".LocalizeHtml())</span></span></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            @Html.EditorFor(m => m.ShippingEstimateModel, "ShippingEstimate")
+                            <div class="totals">
+                                <table id="shopping-cart-totals-table">
+                                    <col />
+                                    <col width="100" />
+                                    <tbody>
+                                        <tr>
+                                            <td class="a-right" colspan="1">@("Subtotal".LocalizeHtml())
+                                            </td>
+                                            <td class="a-right">
+                                                <span class="price" id="cart-subtotal">
+                                                    @Model.SubTotalPriceFormatted</span>
+                                            </td>
+                                        </tr>
+	                                    <tr id="shippingRow" style="display:none;">
+		                                    <td class="a-right" colspan="1">@("Shipping".LocalizeHtml())
+		                                    </td>
+		                                    <td class="a-right">
+			                                    <span class="price" id="cart-shipping">
+				                                    @Model.ShippingPriceFormatted</span>
+		                                    </td>
+	                                    </tr>
+										<tr>
+											<td class="a-right" colspan="1">@("Tax total".LocalizeHtml())
+											</td>
+											<td class="a-right">
+												<span class="price" id="cart-taxl">
+													@Model.TaxTotalPriceFormatted</span>
+											</td>
+										</tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td class="a-right" colspan="1">
+                                                <strong>@("Grand Total".LocalizeHtml())</strong>
+                                            </td>
+                                            <td class="a-right">
+                                                <strong><span class="price" id="cart-total">@Model.TotalPriceFormatted</span></strong>
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                                <ul class="checkout-types">
+                                    <li>
+                                        <button type="button" title="@("Proceed to Checkout".LocalizeHtml())" class="button btn-proceed-checkout btn-checkout"
+                                            onclick="VirtoCart.checkout();">
+                                            <span><span>@("Proceed to Checkout".LocalizeHtml())</span></span></button>
+                                    </li>
+                                    <!--
+                                    <li><a href="checkout/multishipping/" title="Checkout with Multiple Addresses">Checkout with Multiple Addresses</a> </li>
+                                    -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

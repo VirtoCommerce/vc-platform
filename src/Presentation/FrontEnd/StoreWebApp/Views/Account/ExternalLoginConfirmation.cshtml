@@ -1,0 +1,96 @@
+﻿@model RegisterExternalLoginModel
+@{
+    ViewBag.Title = Html.Title("Register");
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        if ($("#CreateLocalLogin").is(":checked") == false)
+            VirtoCommerce.disableAll($("#passwords"));
+    });
+
+    function setPasswordForm(obj, arg) {
+        if (arg) {
+            VirtoCommerce.enableAll($("#passwords"));
+            $('#passwords').show();
+            $('#NewPassword').addClass('required-entry');
+            $('#NewPassword').addClass('validate-password');
+            $('#ConfirmPassword').addClass('required-entry');
+            $('#ConfirmPassword').addClass('validate-password');
+
+        } else {
+            VirtoCommerce.disableAll($("#passwords"));
+            $('#passwords').hide();
+            $('#NewPassword').removeClass('required-entry');
+            $('#NewPassword').removeClass('validate-password');
+            $('#ConfirmPassword').removeClass('required-entry');
+            $('#ConfirmPassword').removeClass('validate-password');
+        }
+    }
+</script>
+<div class="main-container col1-layout">
+    <div class="main">
+        <div class="col-main">
+            <div class="page-title">
+                <h1>@("Associate your {0} account.".LocalizeHtml((string)ViewBag.ProviderDisplayName))</h1>
+            </div>
+
+            @using (Html.BeginForm("ExternalLoginConfirmation", "Account", new { ViewBag.ReturnUrl }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+
+                <div class="fieldset">
+                    <h2 class="legend">Association Form</h2>
+                    <p>
+                        @(@"You've successfully authenticated with <strong>{0}</strong>.
+            Please enter a user name for this site below and click the Confirm button to finish
+            logging in.".LocalizeHtml((string)ViewBag.ProviderDisplayName))
+                    </p>
+                    <ul class="form-list">
+                        <li class="fields">
+                            <div class="field name-firstname">
+                                @Html.LabelFor(m => m.UserName)
+                                @Html.TextBoxFor(m => m.UserName, new { @class = "input-text" })
+                                @Html.ValidationMessageFor(m => m.UserName)
+                            </div>
+                        </li>
+                        <li class="control">
+                            <p>
+                                @("You can create new local account by specifying password." +
+                                  "You can also associate external login with exisitng local user name by providing correct password.".LocalizeHtml())
+                            </p>
+                            @Html.CheckBoxFor(m => m.CreateLocalLogin, new { onclick = "setPasswordForm(this, this.checked);" })
+                            @Html.LabelFor(m => m.CreateLocalLogin)
+                        </li>
+                    </ul>
+                    <ul class="form-list" id="passwords" style="display: @(Model.CreateLocalLogin ? "block" : "none");">
+                        <li class="fields">
+                            <div class="field">
+                                @Html.LabelForEx(m => m.NewPassword)
+                                @Html.PasswordFor(m => m.NewPassword, new { @class = "input-text" })
+                                @Html.ValidationMessageFor(m => m.NewPassword)
+                            </div>
+                        </li>
+                        <li class="fields">
+                            <div class="field">
+                                @Html.LabelForEx(m => m.ConfirmPassword)
+                                @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "input-text" })
+                                @Html.ValidationMessageFor(m => m.ConfirmPassword)
+                            </div>
+                        </li>
+                    </ul>
+                    @Html.HiddenFor(m => m.ExternalLoginData)
+                </div>
+                <div class="buttons-set">
+                    <button type="submit" value="Register" class="button"><span><span>@("Confirm Registration".LocalizeHtml())</span></span></button>
+                </div>      
+
+            }
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

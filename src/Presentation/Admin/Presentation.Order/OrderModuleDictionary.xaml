@@ -1,0 +1,212 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
+                    xmlns:localView="clr-namespace:VirtoCommerce.ManagementClient.Order.View"
+                    xmlns:localWizardViewModel="clr-namespace:VirtoCommerce.ManagementClient.Order.ViewModel.Wizard.Implementations"
+                    xmlns:localWizardView="clr-namespace:VirtoCommerce.ManagementClient.Order.View.Wizard"
+                    xmlns:settingsView="clr-namespace:VirtoCommerce.ManagementClient.Order.View.Settings"
+                    xmlns:settingsWizardView="clr-namespace:VirtoCommerce.ManagementClient.Order.View.Settings.Wizard"
+                    xmlns:implementations="clr-namespace:VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Wizard.Implementations"
+                    xmlns:settingsViewModel1="clr-namespace:VirtoCommerce.ManagementClient.Order.ViewModel.Settings.PaymentMethods.Implementations"
+                    xmlns:settings="clr-namespace:VirtoCommerce.ManagementClient.Order.ViewModel.Settings"
+                    xmlns:implementations1="clr-namespace:VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Taxes.Implementations"
+                    xmlns:settingsViewModel2="clr-namespace:VirtoCommerce.ManagementClient.Order.ViewModel.Settings.TaxCategories.Implementations"
+                    xmlns:implementations2="clr-namespace:VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Jurisdictions.Implementations"
+                    xmlns:settingsViewModel3="clr-namespace:VirtoCommerce.ManagementClient.Order.ViewModel.Settings.JurisdictionGroups.Implementations"
+                    xmlns:implementations3="clr-namespace:VirtoCommerce.ManagementClient.Order.ViewModel.Settings.ShippingMethods.Implementations"
+                    xmlns:settingsViewModel4="clr-namespace:VirtoCommerce.ManagementClient.Order.ViewModel.Settings.ShippingOptions.Implementations"
+                    xmlns:implementations4="clr-namespace:VirtoCommerce.ManagementClient.Order.ViewModel.Settings.ShippingPackages.Implementations"
+                    xmlns:paymentMethods="clr-namespace:VirtoCommerce.ManagementClient.Order.View.Settings.PaymentMethods"
+                    xmlns:taxes="clr-namespace:VirtoCommerce.ManagementClient.Order.View.Settings.Taxes"
+                    xmlns:taxCategories="clr-namespace:VirtoCommerce.ManagementClient.Order.View.Settings.TaxCategories"
+                    xmlns:jurisdictions="clr-namespace:VirtoCommerce.ManagementClient.Order.View.Settings.Jurisdictions"
+                    xmlns:jurisdictionGroups="clr-namespace:VirtoCommerce.ManagementClient.Order.View.Settings.JurisdictionGroups"
+                    xmlns:shippingOptions="clr-namespace:VirtoCommerce.ManagementClient.Order.View.Settings.ShippingOptions"
+                    xmlns:shippingMethods="clr-namespace:VirtoCommerce.ManagementClient.Order.View.Settings.ShippingMethods"
+                    xmlns:shippingPackages="clr-namespace:VirtoCommerce.ManagementClient.Order.View.Settings.ShippingPackages"
+                    xmlns:localViewModel="clr-namespace:VirtoCommerce.ManagementClient.Order.ViewModel.Implementations">
+
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/SettingsViewTheme/VirtoCommerceSettingsTheme.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <DataTemplate DataType="{x:Type localViewModel:OrderHomeViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localView:OrderHomeView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type localViewModel:OrderViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localView:OrderView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type localViewModel:OrderAddressViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localView:OrderAddressView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type localViewModel:OrderContactViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localView:OrderContactView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type localViewModel:LineItemAddViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localView:LineItemAddView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type localViewModel:LineItemViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localView:LineItemView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type settingsViewModel1:PaymentMethodsSettingsViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type paymentMethods:PaymentMethodsSettingsView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type settingsViewModel1:PaymentMethodViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type paymentMethods:PaymentMethodEditView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type localWizardViewModel:PaymentMethodOverviewStepViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localWizardView:PaymentMethodOverviewStepView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type localWizardViewModel:PaymentMethodPropertiesStepViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localWizardView:GatewayPropertyValuesStepView}"/>
+    </DataTemplate>
+
+    <!-- payment-->
+	<DataTemplate DataType="{x:Type localWizardViewModel:RefundDetailsStepViewModel}">
+		<core_controls:CacheContentControl Type="{x:Type localWizardView:RefundDetailsStepView}"/>
+    </DataTemplate>
+	<DataTemplate DataType="{x:Type localWizardViewModel:RefundSummaryStepViewModel}">
+		<core_controls:CacheContentControl Type="{x:Type localWizardView:RefundSummaryStepView}"/>
+    </DataTemplate>
+	<DataTemplate DataType="{x:Type localWizardViewModel:PaymentMethodStepViewModel}">
+		<core_controls:CacheContentControl Type="{x:Type localWizardView:PaymentMethodStepView}"/>
+	</DataTemplate>
+	<DataTemplate DataType="{x:Type localWizardViewModel:PaymentDetailsStepViewModel}">
+		<core_controls:CacheContentControl Type="{x:Type localWizardView:PaymentDetailsStepView}"/>
+	</DataTemplate>
+
+	<DataTemplate DataType="{x:Type localViewModel:SplitShipmentViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localView:SplitShipmentView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type localWizardViewModel:ReturnItemViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localWizardView:ReturnItemView}"/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type localWizardViewModel:RmaRequestReturnItemsStepViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localWizardView:RmaRequestReturnItemsStepView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type localWizardViewModel:RmaRequestRefundStepViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localWizardView:RmaRequestRefundStepView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type localWizardViewModel:ExchangeOrderStepViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localWizardView:ExchangeOrderStepView}"/>
+    </DataTemplate>
+
+    <!--general languages-->
+    <DataTemplate DataType="{x:Type implementations:GeneralLanguagesStepViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type settingsWizardView:GeneralLanguagesStepView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type settings:GeneralLanguageViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type settingsView:GeneralLanguageView}"/>
+    </DataTemplate>
+
+    <!--taxes-->
+    <DataTemplate DataType="{x:Type implementations1:TaxesMainSettingsViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type core_controls:HorizontalTabDefaultView}">
+            <core_controls:CacheContentControl.Resources>
+                <Style TargetType="{x:Type core_controls:HorizontalTabDefaultView}" BasedOn="{StaticResource Virto_SubTabControl_Horizontal_Style}">
+                </Style>
+            </core_controls:CacheContentControl.Resources>
+        </core_controls:CacheContentControl>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type implementations1:TaxSettingsViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type taxes:TaxSettingsView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type implementations:TaxOverviewStepViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type settingsWizardView:TaxOverviewStepView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type implementations1:TaxViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type taxes:TaxView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type implementations1:TaxValueViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type taxes:TaxValueView}"/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type settingsViewModel2:TaxCategorySettingsViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type taxCategories:TaxCategorySettingsView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type implementations:TaxCategoryOverviewStepViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type taxCategories:TaxCategoryView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type settingsViewModel2:TaxCategoryViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type taxCategories:TaxCategoryView}"/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type implementations2:JurisdictionSettingsViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type jurisdictions:JurisdictionSettingsView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type implementations:JurisdictionOverviewStepViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type jurisdictions:JurisdictionView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type implementations2:JurisdictionViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type jurisdictions:JurisdictionView}"/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type settingsViewModel3:JurisdictionGroupSettingsViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type jurisdictionGroups:JurisdictionGroupSettingsView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type implementations:JurisdictionGroupOverviewStepViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type jurisdictionGroups:JurisdictionGroupView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type settingsViewModel3:JurisdictionGroupViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type jurisdictionGroups:JurisdictionGroupView}"/>
+    </DataTemplate>
+    
+    <!--Shipping Settings-->
+    <DataTemplate DataType="{x:Type implementations3:ShippingMainSettingsViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type core_controls:HorizontalTabDefaultView}">
+            <core_controls:CacheContentControl.Resources>
+                <Style TargetType="{x:Type core_controls:HorizontalTabDefaultView}" BasedOn="{StaticResource Virto_SubTabControl_Horizontal_Style}"/>
+            </core_controls:CacheContentControl.Resources>
+        </core_controls:CacheContentControl>
+    </DataTemplate>
+    <!--Shipping Option-->
+    <DataTemplate DataType="{x:Type settingsViewModel4:ShippingOptionSettingsViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type shippingOptions:ShippingOptionSettingsView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type localWizardViewModel:ShippingOptionOverviewStepViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localWizardView:ShippingOptionOverviewStepView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type localWizardViewModel:ShippingOptionPackagesStepViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localWizardView:ShippingOptionPackagesStepView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type settingsViewModel4:ShippingOptionViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type shippingOptions:ShippingOptionView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type settingsViewModel4:ShippingOptionAddShippingPackageViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type shippingOptions:ShippingOptionAddShippingPackageView}"/>
+    </DataTemplate>
+    <!--Shipping Method-->
+    <DataTemplate DataType="{x:Type implementations3:ShippingMethodSettingsViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type shippingMethods:ShippingMethodSettingsView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type localWizardViewModel:ShippingMethodOverviewStepViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localWizardView:ShippingMethodOverviewStepView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type localWizardViewModel:ShippingMethodSettingsStepViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localWizardView:ShippingMethodSettingsStepView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type implementations3:ShippingMethodViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type shippingMethods:ShippingMethodView}"/>
+    </DataTemplate>
+
+    <!--Shipping Package-->
+    <DataTemplate DataType="{x:Type implementations4:ShippingPackageSettingsViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type shippingPackages:ShippingPackageSettingsView}"/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type implementations4:PackagingViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type shippingPackages:PackagingView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type localWizardViewModel:PackagingOverviewStepViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localWizardView:PackagingOverviewStepView}"/>
+    </DataTemplate>
+
+
+	<!--Brushes-->
+	<SolidColorBrush x:Key="OrderDetailItemMenuBrush" Color="#FF4500"/>
+	<SolidColorBrush x:Key="SettingsDetailItemMenuBrush" Color="#AAAAAA"/>
+	<!--Brushes-->
+
+</ResourceDictionary>

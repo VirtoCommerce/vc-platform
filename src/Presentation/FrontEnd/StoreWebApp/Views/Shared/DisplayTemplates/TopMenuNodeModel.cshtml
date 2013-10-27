@@ -1,0 +1,89 @@
+﻿@model SiteMapNodeModel
+@using System.Web.Mvc.Html
+@using VirtoCommerce.Client
+
+
+@if (Model.IsCurrentNode && Model.SourceMetadata["HtmlHelper"].ToString() != "MvcSiteMapProvider.Web.Html.MenuHelper")
+{ 
+    <b>@Model.Title.Localize()</b>
+}
+else if (Model.IsClickable)
+{ 
+    <a href="@Model.Url" class="drop">@Model.Title.Localize()</a>
+}
+else
+{ 
+    <b>@Model.Title.Localize()</b>
+}
+
+@if (Model.Title == "TV & Video")
+{
+    <div class="dropdown_4columns">
+        <table>
+            <tr>
+                <td>
+                    <div class="col_3">
+                        <h2>@("Top products".LocalizeHtml())</h2>
+                    </div>
+                    <div class="col_3">
+						<table>
+							<tr>
+								<td>
+									@{Html.RenderAction("DisplayItemById", "Catalog", new { itemId = "v-b004nzb8tu", name = "Menu", responseGroups = ItemResponseGroups.ItemSmall | ItemResponseGroups.ItemEditorialReviews, displayOptions = ItemDisplayOptions.ItemAvailability | ItemDisplayOptions.ItemPrice});}
+								</td>
+							</tr>
+							<tr>
+								<td>
+									@{Html.RenderAction("DisplayItemById", "Catalog", new { itemId = "951752ca-6abc-4bad-96a7-7f1739c04da0", parentItemId = "v-b001fa1nuk", name = "Menu", forcedActive = true, responseGroups = ItemResponseGroups.ItemSmall | ItemResponseGroups.ItemEditorialReviews, displayOptions = ItemDisplayOptions.ItemAvailability | ItemDisplayOptions.ItemPrice });}
+								</td>
+							</tr>
+						</table>
+                    </div>
+                    <div class="col_3">
+                        <h2>@("TV & Video".LocalizeHtml())</h2>
+                    </div>
+                    <div class="col_1">
+                        <h3>@("By Brand".LocalizeHtml())</h3>
+                        <ul class="greybox">
+                            <li><a href="@Url.SetParameter(Url.Content(@"~/c/tv-video"), "f_Brand", "samsung")">Samsung</a></li>
+                            <li><a href="@Url.SetParameter(Url.Content(@"c/tv-video"), "f_Brand", "sony")">Sony</a></li>
+                            <li><a href="@Url.SetParameter(Url.Content(@"c/tv-video"), "f_Brand", "lg")">LG</a></li>
+                            <li><a href="@Url.SetParameter(Url.Content(@"c/tv-video"), "f_Brand", "apple")">Apple</a></li>
+                        </ul>
+
+                    </div>
+                    <div class="col_1">
+                        <h3>@("By Color".LocalizeHtml())</h3>
+                        <ul class="greybox">
+                            <li><a href="@Url.SetParameter(Url.Content(@"c/tv-video"), "f_color", "black")">@("Black".LocalizeHtml())</a></li>
+                            <li><a href="@Url.SetParameter(Url.Content(@"c/tv-video"), "f_color", "white")">@("White".LocalizeHtml())</a></li>
+                            <li><a href="@Url.SetParameter(Url.Content(@"c/tv-video"), "f_color", "red")">@("Red".LocalizeHtml())</a></li>
+                            <li><a href="@Url.SetParameter(Url.Content(@"c/tv-video"), "f_color", "silver")">@("Silver".LocalizeHtml())</a></li>
+                        </ul>
+
+                    </div>
+                    <div class="col_1">
+                        <h3>@("By Price".LocalizeHtml())</h3>
+                        <ul class="greybox">
+                            <li><a href="@Url.SetParameter(Url.Content(@"c/tv-video"), "f_price", "0-200")">@("Cheaper than".LocalizeHtml()) $200</a></li>
+                            <li><a href="@Url.SetParameter(Url.Content(@"c/tv-video"), "f_price", "200-600")">$200 - $600</a></li>
+                            <li><a href="@Url.SetParameter(Url.Content(@"c/tv-video"), "f_price", "600-1000")">$600 - $1000</a></li>
+                            <li><a href="@Url.SetParameter(Url.Content(@"c/tv-video"), "f_price", "over-1000")">@("Over".LocalizeHtml()) $1000</a></li>
+                        </ul>
+                    </div>
+                </td>
+                <td style="border-left: 1px dashed #2c304c; padding-left:5px;">
+                    <div class="col_1">
+                        <h2>@("Related".LocalizeHtml())</h2>
+                    </div>
+                    <div class="col_1">
+                        @if (Model.Children.Any())
+                        {
+                            @Html.DisplayFor(m => Model.Children)
+                        }
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </div>
+}

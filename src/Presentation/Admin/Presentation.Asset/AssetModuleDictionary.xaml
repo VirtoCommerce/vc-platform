@@ -1,0 +1,11 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
+                    xmlns:localView="clr-namespace:VirtoCommerce.ManagementClient.Asset.View"
+                    xmlns:implementations="clr-namespace:VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations">
+
+    <DataTemplate DataType="{x:Type implementations:PickAssetViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localView:PickAssetView}"/>
+    </DataTemplate>
+
+</ResourceDictionary>

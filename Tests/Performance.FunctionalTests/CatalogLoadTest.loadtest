@@ -1,0 +1,1670 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LoadTest Name="CatalogLoadTest" Description="" Owner="" storage="e:\projects\vcf\main\community\tests\performance.functionaltests\catalogloadtest.loadtest" Priority="2147483647" Enabled="true" CssProjectStructure="" CssIteration="" DeploymentItemsEditable="" WorkItemIds="" TraceLevel="None" CurrentRunConfig="Run Settings1" Id="c96cc455-0599-48f3-8419-275ab625f072" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <Scenarios>
+    <Scenario Name="Catalog Browsing Scenario" DelayBetweenIterations="0" PercentNewUsers="0" IPSwitching="true" TestMixType="PercentageOfTestsStarted" ApplyDistributionToPacingDelay="true" MaxTestIterations="0" DisableDuringWarmup="false" DelayStartTime="0" AllowedAgents="">
+      <ThinkProfile Value="0" Pattern="Off" />
+      <LoadProfile Pattern="GoalBased" InitialUsers="2" MachineName="GREENMACHINE" CategoryName="LoadTest:Request" CounterName="Avg. Response Time" InstanceName="_Total" MinUserCount="1" MaxUserCount="1000" MaxUserCountIncrease="5" MaxUserCountDecrease="5" MinTargetValue="9" MaxTargetValue="10" HigherValuesBetter="false" StopAdjustingAtGoal="false" />
+      <TestMix>
+        <TestProfile Name="CatalogBrowseCoded" Path="bin\debug\commercefoundation.performancetests.dll" Id="688b6258-deb1-0995-f3a4-55f26501ca9a" Percentage="100" Type="Microsoft.VisualStudio.TestTools.WebStress.CodedWebTestElement, Microsoft.VisualStudio.QualityTools.LoadTest, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+      </TestMix>
+      <BrowserMix>
+        <BrowserProfile Percentage="100">
+          <Browser Name="Chrome 2" MaxConnections="6">
+            <Headers>
+              <Header Name="User-Agent" Value="Mozilla/5.0 (Windows; U; Windows NT 5.1;) AppleWebKit/530.1 (KHTML, like Gecko) Chrome/2.0.169.1 Safari/530.1" />
+              <Header Name="Accept" Value="*/*" />
+              <Header Name="Accept-Language" Value="{{$IEAcceptLanguage}}" />
+              <Header Name="Accept-Encoding" Value="gzip,deflate" />
+              <Header Name="Accept-Charset" Value="ISO-8859-1,*,utf-8" />
+            </Headers>
+          </Browser>
+        </BrowserProfile>
+      </BrowserMix>
+      <NetworkMix>
+        <NetworkProfile Percentage="100">
+          <Network Name="LAN" BandwidthInKbps="1000000" NetworkProfileConfigurationXml="&lt;Emulation&gt;&lt;VirtualChannel name=&quot;defaultChannel&quot;&gt;&lt;FilterList/&gt;&lt;VirtualLink instances=&quot;1&quot; name=&quot;defaultLink&quot;&gt;&lt;LinkRule dir=&quot;upstream&quot;&gt;&lt;Bandwidth&gt;&lt;Speed unit=&quot;kbps&quot;&gt;1000000&lt;/Speed&gt;&lt;/Bandwidth&gt;&lt;/LinkRule&gt;&lt;LinkRule dir=&quot;downstream&quot;&gt;&lt;Bandwidth&gt;&lt;Speed unit=&quot;kbps&quot;&gt;1000000&lt;/Speed&gt;&lt;/Bandwidth&gt;&lt;/LinkRule&gt;&lt;/VirtualLink&gt;&lt;/VirtualChannel&gt;&lt;/Emulation&gt;" />
+        </NetworkProfile>
+      </NetworkMix>
+    </Scenario>
+  </Scenarios>
+  <CounterSets>
+    <CounterSet Name="LoadTest" CounterSetType="LoadTest" LocId="">
+      <CounterCategories>
+        <CounterCategory Name="LoadTest:Scenario">
+          <Counters>
+            <Counter Name="User Load" HigherIsBetter="true" />
+            <Counter Name="Tests Running" HigherIsBetter="true" />
+          </Counters>
+        </CounterCategory>
+        <CounterCategory Name="LoadTest:Test">
+          <Counters>
+            <Counter Name="Total Tests" HigherIsBetter="true" />
+            <Counter Name="Passed Tests" HigherIsBetter="true" />
+            <Counter Name="Failed Tests" />
+            <Counter Name="Tests/Sec" HigherIsBetter="true" />
+            <Counter Name="Passed Tests/Sec" HigherIsBetter="true" />
+            <Counter Name="Failed Tests/Sec" />
+            <Counter Name="Avg. Requests/Test" HigherIsBetter="true" />
+            <Counter Name="Avg. Test Time" />
+            <Counter Name="% Time in LoadTestPlugin" />
+            <Counter Name="% Time in WebTest code" />
+            <Counter Name="% Time in Rules" />
+          </Counters>
+        </CounterCategory>
+        <CounterCategory Name="LoadTest:Transaction">
+          <Counters>
+            <Counter Name="Total Transactions" HigherIsBetter="true" />
+            <Counter Name="Avg. Transaction Time" />
+            <Counter Name="Avg. Response Time" />
+            <Counter Name="Transactions/Sec" HigherIsBetter="true" />
+          </Counters>
+        </CounterCategory>
+        <CounterCategory Name="LoadTest:Errors">
+          <Counters>
+            <Counter Name="Http Errors" />
+            <Counter Name="Validation Rule Errors" />
+            <Counter Name="Extraction Rule Errors" />
+            <Counter Name="Requests Timed Out" />
+            <Counter Name="Exceptions" />
+            <Counter Name="Total Errors" />
+            <Counter Name="Errors/Sec" />
+            <Counter Name="Threshold Violations/Sec" />
+          </Counters>
+        </CounterCategory>
+        <CounterCategory Name="LoadTest:Page">
+          <Counters>
+            <Counter Name="Total Pages" HigherIsBetter="true" />
+            <Counter Name="Avg. Page Time" />
+            <Counter Name="Page Response Time Goal" HigherIsBetter="true" />
+            <Counter Name="% Pages Meeting Goal" HigherIsBetter="true" />
+            <Counter Name="Pages/Sec" HigherIsBetter="true" />
+          </Counters>
+        </CounterCategory>
+        <CounterCategory Name="LoadTest:Request">
+          <Counters>
+            <Counter Name="Total Requests" HigherIsBetter="true" />
+            <Counter Name="Passed Requests" HigherIsBetter="true" />
+            <Counter Name="Failed Requests" />
+            <Counter Name="Cached Requests" HigherIsBetter="true" />
+            <Counter Name="Requests/Sec" HigherIsBetter="true" />
+            <Counter Name="Passed Requests/Sec" HigherIsBetter="true" />
+            <Counter Name="Failed Requests/Sec" />
+            <Counter Name="Avg. First Byte Time" />
+            <Counter Name="Avg. Response Time" />
+            <Counter Name="Avg. Connection Wait Time">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareCounters, Microsoft.VisualStudio.QualityTools.LoadTest, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+                  <RuleParameters>
+                    <RuleParameter Name="DependentCategory" Value="LoadTest:Page" />
+                    <RuleParameter Name="DependentCounter" Value="Avg. Page Time" />
+                    <RuleParameter Name="DependentInstance" Value="_Total" />
+                    <RuleParameter Name="AlertIfOver" Value="True" />
+                    <RuleParameter Name="WarningThreshold" Value="0.25" />
+                    <RuleParameter Name="CriticalThreshold" Value="0.5" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="Avg. Content Length" />
+          </Counters>
+        </CounterCategory>
+        <CounterCategory Name="LoadTest:LogEntries">
+          <Counters>
+            <Counter Name="Total Log Entries" />
+            <Counter Name="Log Entries/Sec" />
+          </Counters>
+        </CounterCategory>
+      </CounterCategories>
+    </CounterSet>
+    <CounterSet Name="Controller" CounterSetType="Controller" LocId="CounterSet_Controller">
+      <CounterCategories>
+        <CounterCategory Name="Memory">
+          <Counters>
+            <Counter Name="% Committed Bytes In Use" Range="100" />
+            <Counter Name="Available MBytes" RangeGroup="Memory Bytes" HigherIsBetter="true">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="False" />
+                    <RuleParameter Name="WarningThreshold" Value="100" />
+                    <RuleParameter Name="CriticalThreshold" Value="50" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="Page Faults/sec" />
+            <Counter Name="Pages/sec" />
+            <Counter Name="Pool Paged Bytes" RangeGroup="Memory Bytes" />
+            <Counter Name="Pool Nonpaged bytes" RangeGroup="Memory Bytes" />
+          </Counters>
+        </CounterCategory>
+        <CounterCategory Name="Network Interface">
+          <Counters>
+            <Counter Name="Bytes Received/sec" RangeGroup="Network Bytes" />
+            <Counter Name="Bytes Sent/sec" RangeGroup="Network Bytes" />
+            <Counter Name="Output Queue Length">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="True" />
+                    <RuleParameter Name="WarningThreshold" Value="1.5" />
+                    <RuleParameter Name="CriticalThreshold" Value="2" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="Packets Received/sec" RangeGroup="Network Packets" />
+            <Counter Name="Packets Sent/sec" RangeGroup="Network Packets" />
+            <Counter Name="Current Bandwidth" RangeGroup="Network Bytes" />
+            <Counter Name="Bytes Total/sec" RangeGroup="Network Bytes">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareCounters, Microsoft.VisualStudio.QualityTools.LoadTest, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+                  <RuleParameters>
+                    <RuleParameter Name="DependentCategory" Value="Network Interface" />
+                    <RuleParameter Name="DependentCounter" Value="Current Bandwidth" />
+                    <RuleParameter Name="DependentInstance" Value="" />
+                    <RuleParameter Name="AlertIfOver" Value="True" />
+                    <RuleParameter Name="WarningThreshold" Value="0.6" />
+                    <RuleParameter Name="CriticalThreshold" Value="0.7" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+          </Counters>
+          <Instances>
+            <Instance Name="*" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name="PhysicalDisk">
+          <Counters>
+            <Counter Name="% Disk Read Time" Range="100" />
+            <Counter Name="% Disk Time" Range="100" />
+            <Counter Name="% Disk Write Time" Range="100" />
+            <Counter Name="% Idle Time" Range="100" HigherIsBetter="true">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="False" />
+                    <RuleParameter Name="WarningThreshold" Value="40" />
+                    <RuleParameter Name="CriticalThreshold" Value="20" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="Avg. Disk Bytes/Read" RangeGroup="DiskBytesRate" />
+            <Counter Name="Avg. Disk Bytes/Transfer" RangeGroup="DiskBytesRate" />
+            <Counter Name="Avg. Disk Bytes/Write" RangeGroup="DiskBytesRate" />
+            <Counter Name="Avg. Disk Queue Length" RangeGroup="Disk Queue Length" />
+            <Counter Name="Avg. Disk Read Queue Length" RangeGroup="Disk Queue Length" />
+            <Counter Name="Avg. Disk Write Queue Length" RangeGroup="Disk Queue Length" />
+            <Counter Name="Current Disk Queue Length" RangeGroup="Disk Queue Length" />
+            <Counter Name="Avg. Disk sec/Read" RangeGroup="Disk sec" />
+            <Counter Name="Avg. Disk sec/Transfer" RangeGroup="Disk sec" />
+            <Counter Name="Avg. Disk sec/Write" RangeGroup="Disk sec" />
+            <Counter Name="Disk Bytes/sec" RangeGroup="Disk Bytes sec" />
+            <Counter Name="Disk Read Bytes/sec" RangeGroup="Disk Bytes sec" />
+            <Counter Name="Disk Reads/sec" RangeGroup="Disk Transfers sec" />
+            <Counter Name="Disk Transfers/sec" RangeGroup="Disk Transfers sec" />
+            <Counter Name="Disk Write Bytes/sec" RangeGroup="Disk Bytes sec" />
+            <Counter Name="Disk Writes/sec" RangeGroup="Disk Transfers sec" />
+            <Counter Name="Split IO/Sec" RangeGroup="Disk Transfers sec" />
+          </Counters>
+          <Instances>
+            <Instance Name="*" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name="Processor">
+          <Counters>
+            <Counter Name="% Processor Time" Range="100">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="True" />
+                    <RuleParameter Name="WarningThreshold" Value="75" />
+                    <RuleParameter Name="CriticalThreshold" Value="90" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="% Privileged Time" Range="100" />
+            <Counter Name="% User Time" Range="100" />
+          </Counters>
+          <Instances>
+            <Instance Name="_Total" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name="System">
+          <Counters>
+            <Counter Name="Context Switches/sec" />
+            <Counter Name="Processes" />
+            <Counter Name="Processor Queue Length" />
+            <Counter Name="Threads" />
+          </Counters>
+        </CounterCategory>
+        <CounterCategory Name="Process">
+          <Counters>
+            <Counter Name="% Processor Time" RangeGroup="Processor Time" />
+            <Counter Name="% Privileged Time" RangeGroup="Processor Time" />
+            <Counter Name="% User Time" RangeGroup="Processor Time" />
+            <Counter Name="Handle Count" />
+            <Counter Name="Thread Count" />
+            <Counter Name="Private Bytes" RangeGroup="Memory Bytes" />
+            <Counter Name="Virtual Bytes" RangeGroup="Memory Bytes" />
+            <Counter Name="Working Set" RangeGroup="Memory Bytes" />
+          </Counters>
+          <Instances>
+            <Instance Name="QTController" />
+          </Instances>
+        </CounterCategory>
+      </CounterCategories>
+      <DefaultCountersForAutomaticGraphs>
+        <DefaultCounter CategoryName="Processor" CounterName="% Processor Time" InstanceName="_Total" GraphName="" />
+        <DefaultCounter CategoryName="Memory" CounterName="Available MBytes" InstanceName="" GraphName="" />
+      </DefaultCountersForAutomaticGraphs>
+    </CounterSet>
+    <CounterSet Name="Agent" CounterSetType="Agent" LocId="CounterSet_Agent">
+      <CounterCategories>
+        <CounterCategory Name="Memory">
+          <Counters>
+            <Counter Name="% Committed Bytes In Use" Range="100" />
+            <Counter Name="Available MBytes" RangeGroup="Memory Bytes" HigherIsBetter="true">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="False" />
+                    <RuleParameter Name="WarningThreshold" Value="100" />
+                    <RuleParameter Name="CriticalThreshold" Value="50" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="Page Faults/sec" />
+            <Counter Name="Pages/sec" />
+            <Counter Name="Pool Paged Bytes" RangeGroup="Memory Bytes" />
+            <Counter Name="Pool Nonpaged bytes" RangeGroup="Memory Bytes" />
+          </Counters>
+        </CounterCategory>
+        <CounterCategory Name="Network Interface">
+          <Counters>
+            <Counter Name="Bytes Received/sec" RangeGroup="Network Bytes" />
+            <Counter Name="Bytes Sent/sec" RangeGroup="Network Bytes" />
+            <Counter Name="Output Queue Length">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="True" />
+                    <RuleParameter Name="WarningThreshold" Value="1.5" />
+                    <RuleParameter Name="CriticalThreshold" Value="2" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="Packets Received/sec" RangeGroup="Network Packets" />
+            <Counter Name="Packets Sent/sec" RangeGroup="Network Packets" />
+            <Counter Name="Current Bandwidth" RangeGroup="Network Bytes" />
+            <Counter Name="Bytes Total/sec" RangeGroup="Network Bytes">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareCounters, Microsoft.VisualStudio.QualityTools.LoadTest, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+                  <RuleParameters>
+                    <RuleParameter Name="DependentCategory" Value="Network Interface" />
+                    <RuleParameter Name="DependentCounter" Value="Current Bandwidth" />
+                    <RuleParameter Name="DependentInstance" Value="" />
+                    <RuleParameter Name="AlertIfOver" Value="True" />
+                    <RuleParameter Name="WarningThreshold" Value="0.6" />
+                    <RuleParameter Name="CriticalThreshold" Value="0.7" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+          </Counters>
+          <Instances>
+            <Instance Name="*" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name="PhysicalDisk">
+          <Counters>
+            <Counter Name="% Disk Read Time" Range="100" />
+            <Counter Name="% Disk Time" Range="100" />
+            <Counter Name="% Disk Write Time" Range="100" />
+            <Counter Name="% Idle Time" Range="100" HigherIsBetter="true">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="False" />
+                    <RuleParameter Name="WarningThreshold" Value="40" />
+                    <RuleParameter Name="CriticalThreshold" Value="20" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="Avg. Disk Bytes/Read" RangeGroup="DiskBytesRate" />
+            <Counter Name="Avg. Disk Bytes/Transfer" RangeGroup="DiskBytesRate" />
+            <Counter Name="Avg. Disk Bytes/Write" RangeGroup="DiskBytesRate" />
+            <Counter Name="Avg. Disk Queue Length" RangeGroup="Disk Queue Length" />
+            <Counter Name="Avg. Disk Read Queue Length" RangeGroup="Disk Queue Length" />
+            <Counter Name="Avg. Disk Write Queue Length" RangeGroup="Disk Queue Length" />
+            <Counter Name="Current Disk Queue Length" RangeGroup="Disk Queue Length" />
+            <Counter Name="Avg. Disk sec/Read" RangeGroup="Disk sec" />
+            <Counter Name="Avg. Disk sec/Transfer" RangeGroup="Disk sec" />
+            <Counter Name="Avg. Disk sec/Write" RangeGroup="Disk sec" />
+            <Counter Name="Disk Bytes/sec" RangeGroup="Disk Bytes sec" />
+            <Counter Name="Disk Read Bytes/sec" RangeGroup="Disk Bytes sec" />
+            <Counter Name="Disk Reads/sec" RangeGroup="Disk Transfers sec" />
+            <Counter Name="Disk Transfers/sec" RangeGroup="Disk Transfers sec" />
+            <Counter Name="Disk Write Bytes/sec" RangeGroup="Disk Bytes sec" />
+            <Counter Name="Disk Writes/sec" RangeGroup="Disk Transfers sec" />
+            <Counter Name="Split IO/Sec" RangeGroup="Disk Transfers sec" />
+          </Counters>
+          <Instances>
+            <Instance Name="*" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name="Processor">
+          <Counters>
+            <Counter Name="% Processor Time" Range="100">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="True" />
+                    <RuleParameter Name="WarningThreshold" Value="75" />
+                    <RuleParameter Name="CriticalThreshold" Value="90" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="% Privileged Time" Range="100" />
+            <Counter Name="% User Time" Range="100" />
+          </Counters>
+          <Instances>
+            <Instance Name="0" />
+            <Instance Name="_Total" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name="System">
+          <Counters>
+            <Counter Name="Context Switches/sec" />
+            <Counter Name="Processes" />
+            <Counter Name="Processor Queue Length" />
+            <Counter Name="Threads" />
+          </Counters>
+        </CounterCategory>
+        <CounterCategory Name="Process">
+          <Counters>
+            <Counter Name="% Processor Time" RangeGroup="Processor Time" />
+            <Counter Name="% Privileged Time" RangeGroup="Processor Time" />
+            <Counter Name="% User Time" RangeGroup="Processor Time" />
+            <Counter Name="Handle Count" />
+            <Counter Name="Thread Count" />
+            <Counter Name="Private Bytes" RangeGroup="Memory Bytes" />
+            <Counter Name="Virtual Bytes" RangeGroup="Memory Bytes" />
+            <Counter Name="Working Set" RangeGroup="Memory Bytes" />
+          </Counters>
+          <Instances>
+            <Instance Name="devenv" />
+            <Instance Name="QTAgentService" />
+            <Instance Name="QTAgent" />
+            <Instance Name="QTAgent32" />
+            <Instance Name="QTDCAgent" />
+            <Instance Name="QTDCAgent32" />
+          </Instances>
+        </CounterCategory>
+      </CounterCategories>
+      <DefaultCountersForAutomaticGraphs>
+        <DefaultCounter CategoryName="Processor" CounterName="% Processor Time" InstanceName="0" GraphName="" RunType="Local" />
+        <DefaultCounter CategoryName="Processor" CounterName="% Processor Time" InstanceName="_Total" GraphName="" RunType="Remote" />
+        <DefaultCounter CategoryName="Memory" CounterName="Available MBytes" InstanceName="" GraphName="" />
+      </DefaultCountersForAutomaticGraphs>
+    </CounterSet>
+    <CounterSet Name="ASP.NET" CounterSetType="ASP.NET" LocId="CounterSet_AspDotNet">
+      <CounterCategories>
+        <CounterCategory Name="Memory">
+          <Counters>
+            <Counter Name="% Committed Bytes In Use" Range="100" />
+            <Counter Name="Available MBytes" RangeGroup="Memory Bytes" HigherIsBetter="true">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="False" />
+                    <RuleParameter Name="WarningThreshold" Value="100" />
+                    <RuleParameter Name="CriticalThreshold" Value="50" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="Page Faults/sec" />
+            <Counter Name="Pages/sec" />
+            <Counter Name="Pool Paged Bytes" RangeGroup="Memory Bytes" />
+            <Counter Name="Pool Nonpaged bytes" RangeGroup="Memory Bytes" />
+          </Counters>
+        </CounterCategory>
+        <CounterCategory Name="Network Interface">
+          <Counters>
+            <Counter Name="Bytes Received/sec" RangeGroup="Network Bytes" />
+            <Counter Name="Bytes Sent/sec" RangeGroup="Network Bytes" />
+            <Counter Name="Output Queue Length">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="True" />
+                    <RuleParameter Name="WarningThreshold" Value="1.5" />
+                    <RuleParameter Name="CriticalThreshold" Value="2" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="Packets Received/sec" RangeGroup="Network Packets" />
+            <Counter Name="Packets Sent/sec" RangeGroup="Network Packets" />
+            <Counter Name="Current Bandwidth" RangeGroup="Network Bytes" />
+            <Counter Name="Bytes Total/sec" RangeGroup="Network Bytes">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareCounters, Microsoft.VisualStudio.QualityTools.LoadTest, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+                  <RuleParameters>
+                    <RuleParameter Name="DependentCategory" Value="Network Interface" />
+                    <RuleParameter Name="DependentCounter" Value="Current Bandwidth" />
+                    <RuleParameter Name="DependentInstance" Value="" />
+                    <RuleParameter Name="AlertIfOver" Value="True" />
+                    <RuleParameter Name="WarningThreshold" Value="0.6" />
+                    <RuleParameter Name="CriticalThreshold" Value="0.7" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+          </Counters>
+          <Instances>
+            <Instance Name="*" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name="PhysicalDisk">
+          <Counters>
+            <Counter Name="% Disk Read Time" Range="100" />
+            <Counter Name="% Disk Time" Range="100" />
+            <Counter Name="% Disk Write Time" Range="100" />
+            <Counter Name="% Idle Time" Range="100" HigherIsBetter="true">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="False" />
+                    <RuleParameter Name="WarningThreshold" Value="40" />
+                    <RuleParameter Name="CriticalThreshold" Value="20" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="Avg. Disk Bytes/Read" RangeGroup="DiskBytesRate" />
+            <Counter Name="Avg. Disk Bytes/Transfer" RangeGroup="DiskBytesRate" />
+            <Counter Name="Avg. Disk Bytes/Write" RangeGroup="DiskBytesRate" />
+            <Counter Name="Avg. Disk Queue Length" RangeGroup="Disk Queue Length" />
+            <Counter Name="Avg. Disk Read Queue Length" RangeGroup="Disk Queue Length" />
+            <Counter Name="Avg. Disk Write Queue Length" RangeGroup="Disk Queue Length" />
+            <Counter Name="Current Disk Queue Length" RangeGroup="Disk Queue Length" />
+            <Counter Name="Avg. Disk sec/Read" RangeGroup="Disk sec" />
+            <Counter Name="Avg. Disk sec/Transfer" RangeGroup="Disk sec" />
+            <Counter Name="Avg. Disk sec/Write" RangeGroup="Disk sec" />
+            <Counter Name="Disk Bytes/sec" RangeGroup="Disk Bytes sec" />
+            <Counter Name="Disk Read Bytes/sec" RangeGroup="Disk Bytes sec" />
+            <Counter Name="Disk Reads/sec" RangeGroup="Disk Transfers sec" />
+            <Counter Name="Disk Transfers/sec" RangeGroup="Disk Transfers sec" />
+            <Counter Name="Disk Write Bytes/sec" RangeGroup="Disk Bytes sec" />
+            <Counter Name="Disk Writes/sec" RangeGroup="Disk Transfers sec" />
+            <Counter Name="Split IO/Sec" RangeGroup="Disk Transfers sec" />
+          </Counters>
+          <Instances>
+            <Instance Name="*" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name="Processor">
+          <Counters>
+            <Counter Name="% Processor Time" Range="100">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="True" />
+                    <RuleParameter Name="WarningThreshold" Value="75" />
+                    <RuleParameter Name="CriticalThreshold" Value="90" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="% Privileged Time" Range="100" />
+            <Counter Name="% User Time" Range="100" />
+          </Counters>
+          <Instances>
+            <Instance Name="_Total" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name="System">
+          <Counters>
+            <Counter Name="Context Switches/sec" />
+            <Counter Name="Processes" />
+            <Counter Name="Processor Queue Length" />
+            <Counter Name="Threads" />
+          </Counters>
+        </CounterCategory>
+        <CounterCategory Name="Process">
+          <Counters>
+            <Counter Name="% Processor Time" RangeGroup="Processor Time" />
+            <Counter Name="% Privileged Time" RangeGroup="Processor Time" />
+            <Counter Name="% User Time" RangeGroup="Processor Time" />
+            <Counter Name="Handle Count" />
+            <Counter Name="Thread Count" />
+            <Counter Name="Private Bytes" RangeGroup="Memory Bytes" />
+            <Counter Name="Virtual Bytes" RangeGroup="Memory Bytes" />
+            <Counter Name="Working Set" RangeGroup="Memory Bytes" />
+          </Counters>
+          <Instances>
+            <Instance Name="w3wp" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name=".NET CLR Interop">
+          <Counters>
+            <Counter Name="# of CCWs" />
+            <Counter Name="# of marshalling" />
+            <Counter Name="# of Stubs" />
+          </Counters>
+          <Instances>
+            <Instance Name="_Global_" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name=".NET CLR JIT">
+          <Counters>
+            <Counter Name="# of Methods Jitted" />
+            <Counter Name="% Time in Jit" Range="100">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="True" />
+                    <RuleParameter Name="WarningThreshold" Value="25" />
+                    <RuleParameter Name="CriticalThreshold" Value="50" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+          </Counters>
+          <Instances>
+            <Instance Name="_Global_" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name=".NET CLR Loading">
+          <Counters>
+            <Counter Name="Bytes in Loader Heap" />
+            <Counter Name="Current appdomains" />
+            <Counter Name="Current Assemblies" />
+            <Counter Name="Current Classes Loaded" />
+            <Counter Name="Rate of appdomains" />
+            <Counter Name="Rate of appdomains unloaded" />
+            <Counter Name="Total # of Load Failures" />
+            <Counter Name="Rate of Assemblies" />
+            <Counter Name="Rate of Classes Loaded" />
+          </Counters>
+          <Instances>
+            <Instance Name="_Global_" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name=".NET CLR LocksAndThreads">
+          <Counters>
+            <Counter Name="# of current logical Threads" />
+            <Counter Name="# of current physical Threads" />
+            <Counter Name="Contention Rate / sec">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="True" />
+                    <RuleParameter Name="WarningThreshold" Value="80" />
+                    <RuleParameter Name="CriticalThreshold" Value="120" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="Current Queue Length" />
+          </Counters>
+          <Instances>
+            <Instance Name="_Global_" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name=".NET CLR Memory">
+          <Counters>
+            <Counter Name="# Bytes in all Heaps" />
+            <Counter Name="# GC Handles" />
+            <Counter Name="# Gen 0 Collections" />
+            <Counter Name="# Gen 1 Collections" />
+            <Counter Name="# Gen 2 Collections" />
+            <Counter Name="# Induced GC" />
+            <Counter Name="# of Pinned Objects" />
+            <Counter Name="# of Sink Blocks in use" />
+            <Counter Name="# Total committed Bytes" />
+            <Counter Name="# Total reserved Bytes" />
+            <Counter Name="% Time in GC" Range="100">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="True" />
+                    <RuleParameter Name="WarningThreshold" Value="10" />
+                    <RuleParameter Name="CriticalThreshold" Value="25" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="Gen 0 heap size" />
+            <Counter Name="Gen 1 heap size" />
+            <Counter Name="Gen 2 heap size" />
+            <Counter Name="Large Object Heap size" />
+          </Counters>
+          <Instances>
+            <Instance Name="_Global_" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name=".NET CLR Remoting">
+          <Counters>
+            <Counter Name="Remote Calls/sec" HigherIsBetter="true" />
+            <Counter Name="Total Remote Calls" HigherIsBetter="true" />
+          </Counters>
+          <Instances>
+            <Instance Name="_Global_" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name=".NET CLR Security">
+          <Counters>
+            <Counter Name="% Time in RT checks" Range="100">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="True" />
+                    <RuleParameter Name="WarningThreshold" Value="5" />
+                    <RuleParameter Name="CriticalThreshold" Value="10" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="Stack Walk Depth" />
+            <Counter Name="Total Runtime Checks" />
+          </Counters>
+          <Instances>
+            <Instance Name="_Global_" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name="ASP.NET">
+          <Counters>
+            <Counter Name="Application Restarts" />
+            <Counter Name="Applications Running" />
+            <Counter Name="Request Execution Time" />
+            <Counter Name="Request Wait Time">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="True" />
+                    <RuleParameter Name="WarningThreshold" Value="500" />
+                    <RuleParameter Name="CriticalThreshold" Value="1000" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="Requests Current" />
+            <Counter Name="Requests Queued">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="True" />
+                    <RuleParameter Name="WarningThreshold" Value="1" />
+                    <RuleParameter Name="CriticalThreshold" Value="10" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="Requests Rejected" />
+            <Counter Name="State Server Sessions Active" />
+            <Counter Name="Worker Process Restarts" />
+            <Counter Name="Worker Processes Running" />
+          </Counters>
+        </CounterCategory>
+        <CounterCategory Name="ASP.NET Applications">
+          <Counters>
+            <Counter Name="Anonymous Requests/Sec" />
+            <Counter Name="Cache API Entries" />
+            <Counter Name="Cache API Hit Ratio" HigherIsBetter="true" />
+            <Counter Name="Cache API Turnover Rate" />
+            <Counter Name="Cache Total Entries" />
+            <Counter Name="Cache Total Hit Ratio" HigherIsBetter="true" />
+            <Counter Name="Cache Total Turnover Rate" />
+            <Counter Name="Compilations Total" />
+            <Counter Name="Debugging Requests" />
+            <Counter Name="Errors Total/Sec">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareCounters, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="True" />
+                    <RuleParameter Name="WarningThreshold" Value="0.01" />
+                    <RuleParameter Name="CriticalThreshold" Value="0.10" />
+                    <RuleParameter Name="DependentCounter" Value="Requests/Sec" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="Errors Unhandled During Execution/Sec">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareCounters, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="True" />
+                    <RuleParameter Name="WarningThreshold" Value="0.01" />
+                    <RuleParameter Name="CriticalThreshold" Value="0.10" />
+                    <RuleParameter Name="DependentCounter" Value="Requests/Sec" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="Output Cache Entries" />
+            <Counter Name="Output Cache Hit Ratio" HigherIsBetter="true" />
+            <Counter Name="Output Cache Turnover rate" />
+            <Counter Name="Pipeline Instance Count" />
+            <Counter Name="Requests Executing" />
+            <Counter Name="Requests In Application Queue" />
+            <Counter Name="Requests Succeeded" HigherIsBetter="true" />
+            <Counter Name="Requests/Sec" HigherIsBetter="true" />
+            <Counter Name="Sessions Active" />
+            <Counter Name="Transactions/Sec" HigherIsBetter="true" />
+          </Counters>
+          <Instances>
+            <Instance Name="__Total__" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name="Web Service">
+          <Counters>
+            <Counter Name="Bytes Received/sec" HigherIsBetter="true" />
+            <Counter Name="Bytes Sent/sec" HigherIsBetter="true" />
+            <Counter Name="Connection Attempts/sec" HigherIsBetter="true" />
+            <Counter Name="Current Connections" HigherIsBetter="true" />
+            <Counter Name="Get Requests/sec" HigherIsBetter="true" />
+            <Counter Name="ISAPI Extension Requests/sec" HigherIsBetter="true" />
+            <Counter Name="Post Requests/sec" HigherIsBetter="true" />
+            <Counter Name="Total Method Requests/sec" HigherIsBetter="true" />
+          </Counters>
+          <Instances>
+            <Instance Name="_Total" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name=".NET CLR Data">
+          <Counters>
+            <Counter Name="SqlClient: Current # connection pools" />
+            <Counter Name="SqlClient: Current # pooled and nonpooled connections" />
+            <Counter Name="SqlClient: Current # pooled connections" />
+            <Counter Name="SqlClient: Peak # pooled connections" />
+            <Counter Name="SqlClient: Total # failed commands" />
+            <Counter Name="SqlClient: Total # failed connects" />
+          </Counters>
+          <Instances>
+            <Instance Name="*" />
+          </Instances>
+        </CounterCategory>
+      </CounterCategories>
+      <DefaultCountersForAutomaticGraphs>
+        <DefaultCounter CategoryName="Processor" CounterName="% Processor Time" InstanceName="_Total" GraphName="" />
+        <DefaultCounter CategoryName="Memory" CounterName="Available MBytes" InstanceName="" GraphName="" />
+      </DefaultCountersForAutomaticGraphs>
+    </CounterSet>
+    <CounterSet Name="IIS" CounterSetType="IIS" LocId="CounterSet_IIS">
+      <CounterCategories>
+        <CounterCategory Name="Memory">
+          <Counters>
+            <Counter Name="% Committed Bytes In Use" Range="100" />
+            <Counter Name="Available MBytes" RangeGroup="Memory Bytes" HigherIsBetter="true">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="False" />
+                    <RuleParameter Name="WarningThreshold" Value="100" />
+                    <RuleParameter Name="CriticalThreshold" Value="50" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="Page Faults/sec" />
+            <Counter Name="Pages/sec" />
+            <Counter Name="Pool Paged Bytes" RangeGroup="Memory Bytes" />
+            <Counter Name="Pool Nonpaged bytes" RangeGroup="Memory Bytes" />
+          </Counters>
+        </CounterCategory>
+        <CounterCategory Name="Network Interface">
+          <Counters>
+            <Counter Name="Bytes Received/sec" RangeGroup="Network Bytes" />
+            <Counter Name="Bytes Sent/sec" RangeGroup="Network Bytes" />
+            <Counter Name="Output Queue Length">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="True" />
+                    <RuleParameter Name="WarningThreshold" Value="1.5" />
+                    <RuleParameter Name="CriticalThreshold" Value="2" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="Packets Received/sec" RangeGroup="Network Packets" />
+            <Counter Name="Packets Sent/sec" RangeGroup="Network Packets" />
+            <Counter Name="Current Bandwidth" RangeGroup="Network Bytes" />
+            <Counter Name="Bytes Total/sec" RangeGroup="Network Bytes">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareCounters, Microsoft.VisualStudio.QualityTools.LoadTest, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+                  <RuleParameters>
+                    <RuleParameter Name="DependentCategory" Value="Network Interface" />
+                    <RuleParameter Name="DependentCounter" Value="Current Bandwidth" />
+                    <RuleParameter Name="DependentInstance" Value="" />
+                    <RuleParameter Name="AlertIfOver" Value="True" />
+                    <RuleParameter Name="WarningThreshold" Value="0.6" />
+                    <RuleParameter Name="CriticalThreshold" Value="0.7" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+          </Counters>
+          <Instances>
+            <Instance Name="*" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name="PhysicalDisk">
+          <Counters>
+            <Counter Name="% Disk Read Time" Range="100" />
+            <Counter Name="% Disk Time" Range="100" />
+            <Counter Name="% Disk Write Time" Range="100" />
+            <Counter Name="% Idle Time" Range="100" HigherIsBetter="true">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="False" />
+                    <RuleParameter Name="WarningThreshold" Value="40" />
+                    <RuleParameter Name="CriticalThreshold" Value="20" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="Avg. Disk Bytes/Read" RangeGroup="DiskBytesRate" />
+            <Counter Name="Avg. Disk Bytes/Transfer" RangeGroup="DiskBytesRate" />
+            <Counter Name="Avg. Disk Bytes/Write" RangeGroup="DiskBytesRate" />
+            <Counter Name="Avg. Disk Queue Length" RangeGroup="Disk Queue Length" />
+            <Counter Name="Avg. Disk Read Queue Length" RangeGroup="Disk Queue Length" />
+            <Counter Name="Avg. Disk Write Queue Length" RangeGroup="Disk Queue Length" />
+            <Counter Name="Current Disk Queue Length" RangeGroup="Disk Queue Length" />
+            <Counter Name="Avg. Disk sec/Read" RangeGroup="Disk sec" />
+            <Counter Name="Avg. Disk sec/Transfer" RangeGroup="Disk sec" />
+            <Counter Name="Avg. Disk sec/Write" RangeGroup="Disk sec" />
+            <Counter Name="Disk Bytes/sec" RangeGroup="Disk Bytes sec" />
+            <Counter Name="Disk Read Bytes/sec" RangeGroup="Disk Bytes sec" />
+            <Counter Name="Disk Reads/sec" RangeGroup="Disk Transfers sec" />
+            <Counter Name="Disk Transfers/sec" RangeGroup="Disk Transfers sec" />
+            <Counter Name="Disk Write Bytes/sec" RangeGroup="Disk Bytes sec" />
+            <Counter Name="Disk Writes/sec" RangeGroup="Disk Transfers sec" />
+            <Counter Name="Split IO/Sec" RangeGroup="Disk Transfers sec" />
+          </Counters>
+          <Instances>
+            <Instance Name="*" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name="Processor">
+          <Counters>
+            <Counter Name="% Processor Time" Range="100">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="True" />
+                    <RuleParameter Name="WarningThreshold" Value="75" />
+                    <RuleParameter Name="CriticalThreshold" Value="90" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="% Privileged Time" Range="100" />
+            <Counter Name="% User Time" Range="100" />
+          </Counters>
+          <Instances>
+            <Instance Name="_Total" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name="System">
+          <Counters>
+            <Counter Name="Context Switches/sec" />
+            <Counter Name="Processes" />
+            <Counter Name="Processor Queue Length" />
+            <Counter Name="Threads" />
+          </Counters>
+        </CounterCategory>
+        <CounterCategory Name="Process">
+          <Counters>
+            <Counter Name="% Processor Time" RangeGroup="Processor Time" />
+            <Counter Name="% Privileged Time" RangeGroup="Processor Time" />
+            <Counter Name="% User Time" RangeGroup="Processor Time" />
+            <Counter Name="Handle Count" />
+            <Counter Name="Thread Count" />
+            <Counter Name="Private Bytes" RangeGroup="Memory Bytes" />
+            <Counter Name="Virtual Bytes" RangeGroup="Memory Bytes" />
+            <Counter Name="Working Set" RangeGroup="Memory Bytes" />
+          </Counters>
+          <Instances>
+            <Instance Name="w3wp" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name="Active Server Pages">
+          <Counters>
+            <Counter Name="Errors/Sec" />
+            <Counter Name="Request Bytes In Total" RangeGroup="ASP Request Bytes" />
+            <Counter Name="Request Bytes Out Total" RangeGroup="ASP Request Bytes" />
+            <Counter Name="Request Execution Time" />
+            <Counter Name="Request Wait Time" />
+            <Counter Name="Requests Executing" />
+            <Counter Name="Requests Queued">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="True" />
+                    <RuleParameter Name="WarningThreshold" Value="1" />
+                    <RuleParameter Name="CriticalThreshold" Value="25" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="Requests Succeeded" RangeGroup="ASP Requests" HigherIsBetter="true" />
+            <Counter Name="Requests Total" RangeGroup="ASP Requests" HigherIsBetter="true" />
+            <Counter Name="Requests/Sec" HigherIsBetter="true" />
+            <Counter Name="Sessions Current" />
+            <Counter Name="Transactions/Sec" HigherIsBetter="true" />
+          </Counters>
+        </CounterCategory>
+        <CounterCategory Name="Web Service">
+          <Counters>
+            <Counter Name="Bytes Received/sec" RangeGroup="IIS Bytes" HigherIsBetter="true" />
+            <Counter Name="Bytes Sent/sec" RangeGroup="IIS Bytes" HigherIsBetter="true" />
+            <Counter Name="Bytes Total/sec" RangeGroup="IIS Bytes" HigherIsBetter="true" />
+            <Counter Name="Connection Attempts/sec" HigherIsBetter="true" />
+            <Counter Name="Current Connections" HigherIsBetter="true" />
+            <Counter Name="Get Requests/sec" RangeGroup="IIS Requests" HigherIsBetter="true" />
+            <Counter Name="ISAPI Extension Requests/sec" HigherIsBetter="true" />
+            <Counter Name="Post Requests/sec" RangeGroup="IIS Requests" HigherIsBetter="true" />
+            <Counter Name="Total Method Requests/sec" RangeGroup="IIS Requests" HigherIsBetter="true" />
+          </Counters>
+          <Instances>
+            <Instance Name="_Total" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name=".NET CLR Data">
+          <Counters>
+            <Counter Name="SqlClient: Current # connection pools" />
+          </Counters>
+        </CounterCategory>
+      </CounterCategories>
+      <DefaultCountersForAutomaticGraphs>
+        <DefaultCounter CategoryName="Processor" CounterName="% Processor Time" InstanceName="_Total" GraphName="" />
+        <DefaultCounter CategoryName="Memory" CounterName="Available MBytes" InstanceName="" GraphName="" />
+        <DefaultCounter CategoryName="Web Service" CounterName="Bytes Total/sec" InstanceName="_Total" GraphName="" />
+        <DefaultCounter CategoryName="Web Service" CounterName="Total Method Requests/sec" InstanceName="_Total" GraphName="" />
+      </DefaultCountersForAutomaticGraphs>
+    </CounterSet>
+    <CounterSet Name="SQL" CounterSetType="SQL" LocId="CounterSet_SQL">
+      <CounterCategories>
+        <CounterCategory Name="Memory">
+          <Counters>
+            <Counter Name="% Committed Bytes In Use" Range="100" />
+            <Counter Name="Available MBytes" RangeGroup="Memory Bytes" HigherIsBetter="true">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="False" />
+                    <RuleParameter Name="WarningThreshold" Value="100" />
+                    <RuleParameter Name="CriticalThreshold" Value="50" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="Page Faults/sec" />
+            <Counter Name="Pages/sec" />
+            <Counter Name="Pool Paged Bytes" RangeGroup="Memory Bytes" />
+            <Counter Name="Pool Nonpaged bytes" RangeGroup="Memory Bytes" />
+          </Counters>
+        </CounterCategory>
+        <CounterCategory Name="Network Interface">
+          <Counters>
+            <Counter Name="Bytes Received/sec" RangeGroup="Network Bytes" />
+            <Counter Name="Bytes Sent/sec" RangeGroup="Network Bytes" />
+            <Counter Name="Output Queue Length">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="True" />
+                    <RuleParameter Name="WarningThreshold" Value="1.5" />
+                    <RuleParameter Name="CriticalThreshold" Value="2" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="Packets Received/sec" RangeGroup="Network Packets" />
+            <Counter Name="Packets Sent/sec" RangeGroup="Network Packets" />
+            <Counter Name="Current Bandwidth" RangeGroup="Network Bytes" />
+            <Counter Name="Bytes Total/sec" RangeGroup="Network Bytes">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareCounters, Microsoft.VisualStudio.QualityTools.LoadTest, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+                  <RuleParameters>
+                    <RuleParameter Name="DependentCategory" Value="Network Interface" />
+                    <RuleParameter Name="DependentCounter" Value="Current Bandwidth" />
+                    <RuleParameter Name="DependentInstance" Value="" />
+                    <RuleParameter Name="AlertIfOver" Value="True" />
+                    <RuleParameter Name="WarningThreshold" Value="0.6" />
+                    <RuleParameter Name="CriticalThreshold" Value="0.7" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+          </Counters>
+          <Instances>
+            <Instance Name="*" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name="PhysicalDisk">
+          <Counters>
+            <Counter Name="% Disk Read Time" Range="100" />
+            <Counter Name="% Disk Time" Range="100" />
+            <Counter Name="% Disk Write Time" Range="100" />
+            <Counter Name="% Idle Time" Range="100" HigherIsBetter="true">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="False" />
+                    <RuleParameter Name="WarningThreshold" Value="40" />
+                    <RuleParameter Name="CriticalThreshold" Value="20" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="Avg. Disk Bytes/Read" RangeGroup="DiskBytesRate" />
+            <Counter Name="Avg. Disk Bytes/Transfer" RangeGroup="DiskBytesRate" />
+            <Counter Name="Avg. Disk Bytes/Write" RangeGroup="DiskBytesRate" />
+            <Counter Name="Avg. Disk Queue Length" RangeGroup="Disk Queue Length" />
+            <Counter Name="Avg. Disk Read Queue Length" RangeGroup="Disk Queue Length" />
+            <Counter Name="Avg. Disk Write Queue Length" RangeGroup="Disk Queue Length" />
+            <Counter Name="Current Disk Queue Length" RangeGroup="Disk Queue Length" />
+            <Counter Name="Avg. Disk sec/Read" RangeGroup="Disk sec" />
+            <Counter Name="Avg. Disk sec/Transfer" RangeGroup="Disk sec" />
+            <Counter Name="Avg. Disk sec/Write" RangeGroup="Disk sec" />
+            <Counter Name="Disk Bytes/sec" RangeGroup="Disk Bytes sec" />
+            <Counter Name="Disk Read Bytes/sec" RangeGroup="Disk Bytes sec" />
+            <Counter Name="Disk Reads/sec" RangeGroup="Disk Transfers sec" />
+            <Counter Name="Disk Transfers/sec" RangeGroup="Disk Transfers sec" />
+            <Counter Name="Disk Write Bytes/sec" RangeGroup="Disk Bytes sec" />
+            <Counter Name="Disk Writes/sec" RangeGroup="Disk Transfers sec" />
+            <Counter Name="Split IO/Sec" RangeGroup="Disk Transfers sec" />
+          </Counters>
+          <Instances>
+            <Instance Name="*" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name="Processor">
+          <Counters>
+            <Counter Name="% Processor Time" Range="100">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="True" />
+                    <RuleParameter Name="WarningThreshold" Value="75" />
+                    <RuleParameter Name="CriticalThreshold" Value="90" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="% Privileged Time" Range="100" />
+            <Counter Name="% User Time" Range="100" />
+          </Counters>
+          <Instances>
+            <Instance Name="_Total" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name="System">
+          <Counters>
+            <Counter Name="Context Switches/sec" />
+            <Counter Name="Processes" />
+            <Counter Name="Processor Queue Length" />
+            <Counter Name="Threads" />
+          </Counters>
+        </CounterCategory>
+        <CounterCategory Name="Process">
+          <Counters>
+            <Counter Name="% Processor Time" RangeGroup="Processor Time" />
+            <Counter Name="% Privileged Time" RangeGroup="Processor Time" />
+            <Counter Name="% User Time" RangeGroup="Processor Time" />
+            <Counter Name="Handle Count" />
+            <Counter Name="Thread Count" />
+            <Counter Name="Private Bytes" RangeGroup="Memory Bytes" />
+            <Counter Name="Virtual Bytes" RangeGroup="Memory Bytes" />
+            <Counter Name="Working Set" RangeGroup="Memory Bytes" />
+          </Counters>
+          <Instances>
+            <Instance Name="sqlservr" />
+            <Instance Name="sqlmangr" />
+            <Instance Name="sqlwriter" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name="SQLServer:Access Methods">
+          <Counters>
+            <Counter Name="Full Scans/sec" RangeGroup="Scan Rate" />
+            <Counter Name="Index Searches/sec" />
+            <Counter Name="Page Splits/sec" RangeGroup="Page Rate" />
+            <Counter Name="Pages Allocated/sec" RangeGroup="Page Rate" />
+            <Counter Name="Probe Scans/sec" RangeGroup="Scan Rate" />
+            <Counter Name="Range Scans/sec" RangeGroup="Scan Rate" />
+            <Counter Name="Table Lock Escalations/sec" />
+          </Counters>
+        </CounterCategory>
+        <CounterCategory Name="SQLServer:Buffer Partition">
+          <Counters>
+            <Counter Name="Free list empty/sec" />
+            <Counter Name="Free list requests/sec" />
+            <Counter Name="Free pages" />
+          </Counters>
+          <Instances>
+            <Instance Name="*" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name="SQLServer:Databases">
+          <Counters>
+            <Counter Name="Active Transactions" />
+            <Counter Name="Log Cache Hit Ratio" HigherIsBetter="true" />
+            <Counter Name="Log Cache Reads/sec" RangeGroup="SQL Cache Rates" />
+            <Counter Name="Log Flush Waits/sec" RangeGroup="SQL Cache Rates" />
+            <Counter Name="Log Flushes/sec" RangeGroup="SQL Cache Rates" />
+            <Counter Name="Log Truncations" />
+            <Counter Name="Transactions/sec" HigherIsBetter="true" />
+          </Counters>
+          <Instances>
+            <Instance Name="_Total" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name="SQLServer:General Statistics">
+          <Counters>
+            <Counter Name="Logins/sec" HigherIsBetter="true" />
+            <Counter Name="Logouts/sec" HigherIsBetter="true" />
+            <Counter Name="User Connections" HigherIsBetter="true" />
+          </Counters>
+        </CounterCategory>
+        <CounterCategory Name="SQLServer:Latches">
+          <Counters>
+            <Counter Name="Average Latch Wait Time (ms)" />
+            <Counter Name="Latch Waits/sec" />
+          </Counters>
+        </CounterCategory>
+        <CounterCategory Name="SQLServer:Locks">
+          <Counters>
+            <Counter Name="Average Wait Time (ms)" />
+            <Counter Name="Lock Timeouts/sec" />
+            <Counter Name="Lock Wait Time (ms)" />
+            <Counter Name="Lock Waits/sec" />
+            <Counter Name="Number of Deadlocks/sec" />
+          </Counters>
+          <Instances>
+            <Instance Name="_Total" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name="SQLServer:SQL Statistics">
+          <Counters>
+            <Counter Name="Auto-Param Attempts/sec" RangeGroup="SQL AutoParam Rate" />
+            <Counter Name="Batch Requests/sec" />
+            <Counter Name="Failed Auto-Params/sec" RangeGroup="SQL AutoParam Rate" />
+            <Counter Name="Safe Auto-Params/sec" RangeGroup="SQL AutoParam Rate" />
+            <Counter Name="SQL Compilations/sec" RangeGroup="SQL Compilations Rate" />
+            <Counter Name="SQL Re-Compilations/sec" RangeGroup="SQL Compilations Rate" />
+            <Counter Name="Unsafe Auto-Params/sec" RangeGroup="SQL AutoParam Rate" />
+          </Counters>
+        </CounterCategory>
+      </CounterCategories>
+      <DefaultCountersForAutomaticGraphs>
+        <DefaultCounter CategoryName="Processor" CounterName="% Processor Time" InstanceName="_Total" GraphName="" />
+        <DefaultCounter CategoryName="Memory" CounterName="Available MBytes" InstanceName="" GraphName="" />
+        <DefaultCounter CategoryName="SQLServer:Databases" CounterName="Transactions/sec" InstanceName="_Total" GraphName="" />
+      </DefaultCountersForAutomaticGraphs>
+    </CounterSet>
+    <CounterSet Name="Application" CounterSetType="Application" LocId="CounterSet_Application">
+      <CounterCategories>
+        <CounterCategory Name="Memory">
+          <Counters>
+            <Counter Name="% Committed Bytes In Use" Range="100" />
+            <Counter Name="Available MBytes" RangeGroup="Memory Bytes" HigherIsBetter="true">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="False" />
+                    <RuleParameter Name="WarningThreshold" Value="100" />
+                    <RuleParameter Name="CriticalThreshold" Value="50" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="Page Faults/sec" />
+            <Counter Name="Pages/sec" />
+            <Counter Name="Pool Paged Bytes" RangeGroup="Memory Bytes" />
+            <Counter Name="Pool Nonpaged bytes" RangeGroup="Memory Bytes" />
+          </Counters>
+        </CounterCategory>
+        <CounterCategory Name="Network Interface">
+          <Counters>
+            <Counter Name="Bytes Received/sec" RangeGroup="Network Bytes" />
+            <Counter Name="Bytes Sent/sec" RangeGroup="Network Bytes" />
+            <Counter Name="Output Queue Length">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="True" />
+                    <RuleParameter Name="WarningThreshold" Value="1.5" />
+                    <RuleParameter Name="CriticalThreshold" Value="2" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="Packets Received/sec" RangeGroup="Network Packets" />
+            <Counter Name="Packets Sent/sec" RangeGroup="Network Packets" />
+            <Counter Name="Current Bandwidth" RangeGroup="Network Bytes" />
+            <Counter Name="Bytes Total/sec" RangeGroup="Network Bytes">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareCounters, Microsoft.VisualStudio.QualityTools.LoadTest, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+                  <RuleParameters>
+                    <RuleParameter Name="DependentCategory" Value="Network Interface" />
+                    <RuleParameter Name="DependentCounter" Value="Current Bandwidth" />
+                    <RuleParameter Name="DependentInstance" Value="" />
+                    <RuleParameter Name="AlertIfOver" Value="True" />
+                    <RuleParameter Name="WarningThreshold" Value="0.6" />
+                    <RuleParameter Name="CriticalThreshold" Value="0.7" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+          </Counters>
+          <Instances>
+            <Instance Name="*" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name="PhysicalDisk">
+          <Counters>
+            <Counter Name="% Disk Read Time" Range="100" />
+            <Counter Name="% Disk Time" Range="100" />
+            <Counter Name="% Disk Write Time" Range="100" />
+            <Counter Name="% Idle Time" Range="100" HigherIsBetter="true">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="False" />
+                    <RuleParameter Name="WarningThreshold" Value="40" />
+                    <RuleParameter Name="CriticalThreshold" Value="20" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="Avg. Disk Bytes/Read" RangeGroup="DiskBytesRate" />
+            <Counter Name="Avg. Disk Bytes/Transfer" RangeGroup="DiskBytesRate" />
+            <Counter Name="Avg. Disk Bytes/Write" RangeGroup="DiskBytesRate" />
+            <Counter Name="Avg. Disk Queue Length" RangeGroup="Disk Queue Length" />
+            <Counter Name="Avg. Disk Read Queue Length" RangeGroup="Disk Queue Length" />
+            <Counter Name="Avg. Disk Write Queue Length" RangeGroup="Disk Queue Length" />
+            <Counter Name="Current Disk Queue Length" RangeGroup="Disk Queue Length" />
+            <Counter Name="Avg. Disk sec/Read" RangeGroup="Disk sec" />
+            <Counter Name="Avg. Disk sec/Transfer" RangeGroup="Disk sec" />
+            <Counter Name="Avg. Disk sec/Write" RangeGroup="Disk sec" />
+            <Counter Name="Disk Bytes/sec" RangeGroup="Disk Bytes sec" />
+            <Counter Name="Disk Read Bytes/sec" RangeGroup="Disk Bytes sec" />
+            <Counter Name="Disk Reads/sec" RangeGroup="Disk Transfers sec" />
+            <Counter Name="Disk Transfers/sec" RangeGroup="Disk Transfers sec" />
+            <Counter Name="Disk Write Bytes/sec" RangeGroup="Disk Bytes sec" />
+            <Counter Name="Disk Writes/sec" RangeGroup="Disk Transfers sec" />
+            <Counter Name="Split IO/Sec" RangeGroup="Disk Transfers sec" />
+          </Counters>
+          <Instances>
+            <Instance Name="*" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name="Processor">
+          <Counters>
+            <Counter Name="% Processor Time" Range="100">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="True" />
+                    <RuleParameter Name="WarningThreshold" Value="75" />
+                    <RuleParameter Name="CriticalThreshold" Value="90" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="% Privileged Time" Range="100" />
+            <Counter Name="% User Time" Range="100" />
+          </Counters>
+          <Instances>
+            <Instance Name="_Total" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name="System">
+          <Counters>
+            <Counter Name="Context Switches/sec" />
+            <Counter Name="Processes" />
+            <Counter Name="Processor Queue Length" />
+            <Counter Name="Threads" />
+          </Counters>
+        </CounterCategory>
+        <CounterCategory Name="Process">
+          <Counters>
+            <Counter Name="% Processor Time" RangeGroup="Processor Time" />
+            <Counter Name="% Privileged Time" RangeGroup="Processor Time" />
+            <Counter Name="% User Time" RangeGroup="Processor Time" />
+            <Counter Name="Handle Count" />
+            <Counter Name="Thread Count" />
+            <Counter Name="Private Bytes" RangeGroup="Memory Bytes" />
+            <Counter Name="Virtual Bytes" RangeGroup="Memory Bytes" />
+            <Counter Name="Working Set" RangeGroup="Memory Bytes" />
+          </Counters>
+          <Instances>
+            <Instance Name="*" />
+          </Instances>
+        </CounterCategory>
+      </CounterCategories>
+      <DefaultCountersForAutomaticGraphs>
+        <DefaultCounter CategoryName="Processor" CounterName="% Processor Time" InstanceName="_Total" GraphName="" />
+        <DefaultCounter CategoryName="Memory" CounterName="Available MBytes" InstanceName="" GraphName="" />
+      </DefaultCountersForAutomaticGraphs>
+    </CounterSet>
+    <CounterSet Name=".NET Application" CounterSetType=".NET Application" LocId="CounterSet_DotNetApplication">
+      <CounterCategories>
+        <CounterCategory Name="Memory">
+          <Counters>
+            <Counter Name="% Committed Bytes In Use" Range="100" />
+            <Counter Name="Available MBytes" RangeGroup="Memory Bytes" HigherIsBetter="true">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="False" />
+                    <RuleParameter Name="WarningThreshold" Value="100" />
+                    <RuleParameter Name="CriticalThreshold" Value="50" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="Page Faults/sec" />
+            <Counter Name="Pages/sec" />
+            <Counter Name="Pool Paged Bytes" RangeGroup="Memory Bytes" />
+            <Counter Name="Pool Nonpaged bytes" RangeGroup="Memory Bytes" />
+          </Counters>
+        </CounterCategory>
+        <CounterCategory Name="Network Interface">
+          <Counters>
+            <Counter Name="Bytes Received/sec" RangeGroup="Network Bytes" />
+            <Counter Name="Bytes Sent/sec" RangeGroup="Network Bytes" />
+            <Counter Name="Output Queue Length">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="True" />
+                    <RuleParameter Name="WarningThreshold" Value="1.5" />
+                    <RuleParameter Name="CriticalThreshold" Value="2" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="Packets Received/sec" RangeGroup="Network Packets" />
+            <Counter Name="Packets Sent/sec" RangeGroup="Network Packets" />
+            <Counter Name="Current Bandwidth" RangeGroup="Network Bytes" />
+            <Counter Name="Bytes Total/sec" RangeGroup="Network Bytes">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareCounters, Microsoft.VisualStudio.QualityTools.LoadTest, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+                  <RuleParameters>
+                    <RuleParameter Name="DependentCategory" Value="Network Interface" />
+                    <RuleParameter Name="DependentCounter" Value="Current Bandwidth" />
+                    <RuleParameter Name="DependentInstance" Value="" />
+                    <RuleParameter Name="AlertIfOver" Value="True" />
+                    <RuleParameter Name="WarningThreshold" Value="0.6" />
+                    <RuleParameter Name="CriticalThreshold" Value="0.7" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+          </Counters>
+          <Instances>
+            <Instance Name="*" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name="PhysicalDisk">
+          <Counters>
+            <Counter Name="% Disk Read Time" Range="100" />
+            <Counter Name="% Disk Time" Range="100" />
+            <Counter Name="% Disk Write Time" Range="100" />
+            <Counter Name="% Idle Time" Range="100" HigherIsBetter="true">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="False" />
+                    <RuleParameter Name="WarningThreshold" Value="40" />
+                    <RuleParameter Name="CriticalThreshold" Value="20" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="Avg. Disk Bytes/Read" RangeGroup="DiskBytesRate" />
+            <Counter Name="Avg. Disk Bytes/Transfer" RangeGroup="DiskBytesRate" />
+            <Counter Name="Avg. Disk Bytes/Write" RangeGroup="DiskBytesRate" />
+            <Counter Name="Avg. Disk Queue Length" RangeGroup="Disk Queue Length" />
+            <Counter Name="Avg. Disk Read Queue Length" RangeGroup="Disk Queue Length" />
+            <Counter Name="Avg. Disk Write Queue Length" RangeGroup="Disk Queue Length" />
+            <Counter Name="Current Disk Queue Length" RangeGroup="Disk Queue Length" />
+            <Counter Name="Avg. Disk sec/Read" RangeGroup="Disk sec" />
+            <Counter Name="Avg. Disk sec/Transfer" RangeGroup="Disk sec" />
+            <Counter Name="Avg. Disk sec/Write" RangeGroup="Disk sec" />
+            <Counter Name="Disk Bytes/sec" RangeGroup="Disk Bytes sec" />
+            <Counter Name="Disk Read Bytes/sec" RangeGroup="Disk Bytes sec" />
+            <Counter Name="Disk Reads/sec" RangeGroup="Disk Transfers sec" />
+            <Counter Name="Disk Transfers/sec" RangeGroup="Disk Transfers sec" />
+            <Counter Name="Disk Write Bytes/sec" RangeGroup="Disk Bytes sec" />
+            <Counter Name="Disk Writes/sec" RangeGroup="Disk Transfers sec" />
+            <Counter Name="Split IO/Sec" RangeGroup="Disk Transfers sec" />
+          </Counters>
+          <Instances>
+            <Instance Name="*" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name="Processor">
+          <Counters>
+            <Counter Name="% Processor Time" Range="100">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="True" />
+                    <RuleParameter Name="WarningThreshold" Value="75" />
+                    <RuleParameter Name="CriticalThreshold" Value="90" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="% Privileged Time" Range="100" />
+            <Counter Name="% User Time" Range="100" />
+          </Counters>
+          <Instances>
+            <Instance Name="_Total" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name="System">
+          <Counters>
+            <Counter Name="Context Switches/sec" />
+            <Counter Name="Processes" />
+            <Counter Name="Processor Queue Length" />
+            <Counter Name="Threads" />
+          </Counters>
+        </CounterCategory>
+        <CounterCategory Name="Process">
+          <Counters>
+            <Counter Name="% Processor Time" RangeGroup="Processor Time" />
+            <Counter Name="% Privileged Time" RangeGroup="Processor Time" />
+            <Counter Name="% User Time" RangeGroup="Processor Time" />
+            <Counter Name="Handle Count" />
+            <Counter Name="Thread Count" />
+            <Counter Name="Private Bytes" RangeGroup="Memory Bytes" />
+            <Counter Name="Virtual Bytes" RangeGroup="Memory Bytes" />
+            <Counter Name="Working Set" RangeGroup="Memory Bytes" />
+          </Counters>
+          <Instances>
+            <Instance Name="*" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name=".NET CLR Interop">
+          <Counters>
+            <Counter Name="# of CCWs" />
+            <Counter Name="# of marshalling" />
+            <Counter Name="# of Stubs" />
+          </Counters>
+          <Instances>
+            <Instance Name="_Global_" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name=".NET CLR JIT">
+          <Counters>
+            <Counter Name="# of Methods Jitted" />
+            <Counter Name="% Time in Jit" Range="100">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="True" />
+                    <RuleParameter Name="WarningThreshold" Value="25" />
+                    <RuleParameter Name="CriticalThreshold" Value="50" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="Standard Jit Failures" />
+          </Counters>
+          <Instances>
+            <Instance Name="_Global_" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name=".NET CLR Loading">
+          <Counters>
+            <Counter Name="Bytes in Loader Heap" />
+            <Counter Name="Current appdomains" />
+            <Counter Name="Current Assemblies" />
+            <Counter Name="Current Classes Loaded" />
+            <Counter Name="Rate of appdomains" />
+            <Counter Name="Rate of appdomains unloaded" />
+            <Counter Name="Total # of Load Failures" />
+            <Counter Name="Rate of Assemblies" />
+            <Counter Name="Rate of Classes Loaded" />
+            <Counter Name="Rate of Load Failures" />
+          </Counters>
+          <Instances>
+            <Instance Name="_Global_" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name=".NET CLR LocksAndThreads">
+          <Counters>
+            <Counter Name="# of current logical Threads" RangeGroup="CLR Threads" />
+            <Counter Name="# of current physical Threads" RangeGroup="CLR Threads" />
+            <Counter Name="Contention Rate / sec">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="True" />
+                    <RuleParameter Name="WarningThreshold" Value="80" />
+                    <RuleParameter Name="CriticalThreshold" Value="120" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="Current Queue Length">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="True" />
+                    <RuleParameter Name="WarningThreshold" Value="5" />
+                    <RuleParameter Name="CriticalThreshold" Value="10" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+          </Counters>
+          <Instances>
+            <Instance Name="_Global_" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name=".NET CLR Memory">
+          <Counters>
+            <Counter Name="# Bytes in all Heaps" RangeGroup="CLR Memory Bytes" />
+            <Counter Name="# GC Handles" />
+            <Counter Name="# Gen 0 Collections" RangeGroup="CLR Memory Collections" />
+            <Counter Name="# Gen 1 Collections" RangeGroup="CLR Memory Collections" />
+            <Counter Name="# Gen 2 Collections" RangeGroup="CLR Memory Collections" />
+            <Counter Name="# Induced GC" RangeGroup="CLR Memory Collections" />
+            <Counter Name="# of Pinned Objects" />
+            <Counter Name="# of Sink Blocks in use" />
+            <Counter Name="# Total committed Bytes" RangeGroup="CLR Memory Bytes" />
+            <Counter Name="# Total reserved Bytes" RangeGroup="CLR Memory Bytes" />
+            <Counter Name="% Time in GC" Range="100">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="True" />
+                    <RuleParameter Name="WarningThreshold" Value="10" />
+                    <RuleParameter Name="CriticalThreshold" Value="25" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="Gen 0 heap size" RangeGroup="CLR Heap Size" />
+            <Counter Name="Gen 1 heap size" RangeGroup="CLR Heap Size" />
+            <Counter Name="Gen 2 heap size" RangeGroup="CLR Heap Size" />
+            <Counter Name="Large Object Heap size" RangeGroup="CLR Heap Size" />
+          </Counters>
+          <Instances>
+            <Instance Name="_Global_" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name=".NET CLR Remoting">
+          <Counters>
+            <Counter Name="Remote Calls/sec" />
+            <Counter Name="Total Remote Calls" />
+          </Counters>
+          <Instances>
+            <Instance Name="_Global_" />
+          </Instances>
+        </CounterCategory>
+        <CounterCategory Name=".NET CLR Security">
+          <Counters>
+            <Counter Name="% Time in RT checks" Range="100">
+              <ThresholdRules>
+                <ThresholdRule Classname="Microsoft.VisualStudio.TestTools.WebStress.Rules.ThresholdRuleCompareConstant, Microsoft.VisualStudio.QualityTools.LoadTest">
+                  <RuleParameters>
+                    <RuleParameter Name="AlertIfOver" Value="True" />
+                    <RuleParameter Name="WarningThreshold" Value="5" />
+                    <RuleParameter Name="CriticalThreshold" Value="10" />
+                  </RuleParameters>
+                </ThresholdRule>
+              </ThresholdRules>
+            </Counter>
+            <Counter Name="Stack Walk Depth" />
+            <Counter Name="Total Runtime Checks" />
+          </Counters>
+          <Instances>
+            <Instance Name="_Global_" />
+          </Instances>
+        </CounterCategory>
+      </CounterCategories>
+      <DefaultCountersForAutomaticGraphs>
+        <DefaultCounter CategoryName="Processor" CounterName="% Processor Time" InstanceName="_Total" GraphName="" />
+        <DefaultCounter CategoryName="Memory" CounterName="Available MBytes" InstanceName="" GraphName="" />
+      </DefaultCountersForAutomaticGraphs>
+    </CounterSet>
+  </CounterSets>
+  <RunConfigurations>
+    <RunConfiguration Name="Run Settings1" Description="" ResultsStoreType="Database" TimingDetailsStorage="AllIndividualDetails" SaveTestLogsOnError="true" SaveTestLogsFrequency="0" MaxErrorDetails="200" MaxErrorsPerType="1000" MaxThresholdViolations="1000" MaxRequestUrlsReported="1000" UseTestIterations="false" RunDuration="600" WarmupTime="0" CoolDownTime="0" TestIterations="100" WebTestConnectionModel="ConnectionPerUser" WebTestConnectionPoolSize="50" SampleRate="5" ValidationLevel="Low" SqlTracingConnectString="" SqlTracingConnectStringDisplayValue="" SqlTracingDirectory="" SqlTracingEnabled="false" SqlTracingFileCount="2" SqlTracingRolloverEnabled="true" SqlTracingMinimumDuration="500" RunUnitTestsInAppDomain="true" RigType="">
+      <CounterSetMappings>
+        <CounterSetMapping ComputerName="[CONTROLLER MACHINE]">
+          <CounterSetReferences>
+            <CounterSetReference CounterSetName="LoadTest" />
+            <CounterSetReference CounterSetName="Controller" />
+          </CounterSetReferences>
+        </CounterSetMapping>
+        <CounterSetMapping ComputerName="[AGENT MACHINES]">
+          <CounterSetReferences>
+            <CounterSetReference CounterSetName="Agent" />
+          </CounterSetReferences>
+        </CounterSetMapping>
+      </CounterSetMappings>
+      <ContextParameters>
+        <ContextParameter Name="Website" Value="http://virtocommerce-test.cloudapp.net" />
+      </ContextParameters>
+    </RunConfiguration>
+  </RunConfigurations>
+</LoadTest>

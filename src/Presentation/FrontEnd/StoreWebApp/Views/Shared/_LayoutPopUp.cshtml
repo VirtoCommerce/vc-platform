@@ -1,0 +1,38 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+	<title>@ViewBag.Title</title>
+	@Styles.Render("~/Content/themes/base/css")
+    @Styles.Render("~/Content/themes/default/s")
+    <link href="@Url.Content("~/Content/themes/default/print.css")" rel="stylesheet" type="text/css" media="print" />
+
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+
+	<base href="@Url.Content("~")" />
+	
+	<script type="text/javascript">
+		$(document).ready(function() {
+			window.isPopup = true;
+		});
+	</script>
+</head>
+<body class="page-popup catalog-product-compare-index">
+    <div>
+        <div class="page-title title-buttons">
+            <h1>@ViewBag.Title</h1>
+            <a class="link-print" onclick="window.print(); return false;" href="#">Print This Page</a>
+        </div>
+
+        @RenderBody()
+    </div>
+
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jquerymisc")
+</body>
+</html>

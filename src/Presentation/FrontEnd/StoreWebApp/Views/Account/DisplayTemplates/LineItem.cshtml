@@ -1,0 +1,31 @@
+﻿@model VirtoCommerce.Foundation.Orders.Model.LineItem
+<tr class="border first last" id="order-item-row-86154">
+    <td>
+        <h3 class="product-name">@Model.DisplayName</h3>
+        <dl class="item-options">
+            @foreach (var option in Model.Options)
+            { 
+            <dt>@option.OptionName</dt>
+            <dd>
+                @option.OptionValue
+            </dd>
+            }
+        </dl>
+    </td>
+    <td class="nobr">@Model.CatalogItemId
+    </td>
+    <td class="a-right">
+        <span class="price-excl-tax"><span class="cart-price"><span class="price">@StoreHelper.FormatCurrency(Model.PlacedPrice, Model.OrderForm.OrderGroup.BillingCurrency)</span>
+        </span></span>
+        <br>
+    </td>
+    <td class="a-right">
+        <span class="nobr">@("Ordered:".LocalizeHtml()) <strong>@Model.Quantity</strong><br>
+        </span>
+    </td>
+    <td class="a-right last">
+        <span class="price-excl-tax"><span class="cart-price"><span class="price">@StoreHelper.FormatCurrency(Model.ExtendedPrice, Model.OrderForm.OrderGroup.BillingCurrency)</span>
+        </span></span>
+        <br>
+    </td>
+</tr>

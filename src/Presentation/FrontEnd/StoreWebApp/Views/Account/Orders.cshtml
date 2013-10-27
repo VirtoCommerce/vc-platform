@@ -1,0 +1,23 @@
+﻿@model VirtoCommerce.Foundation.Orders.Model.Order[]
+@{
+    ViewBag.Title = Html.Title("My Orders".Localize());
+    Layout = "_Layout.cshtml";
+}
+<div class="page-title">
+    <h1>@("My Orders".LocalizeHtml())</h1>
+</div>
+
+@if (Model == null || !Model.Any())
+{
+	<p>@("You have placed no orders.".LocalizeHtml())</p>
+}
+else
+{
+	@Html.DisplayForModel("OrdersPager")
+	@Html.DisplayForModel("Orders")
+	@Html.DisplayForModel("OrdersPager")
+}
+    
+<div class="buttons-set">
+    <p class="back-link"><a href="#"><small>« </small>@("Back".LocalizeHtml())</a></p>
+</div>

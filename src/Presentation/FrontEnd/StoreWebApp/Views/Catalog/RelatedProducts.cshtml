@@ -1,0 +1,17 @@
+﻿@model AssociationGroup
+<div class="block block-related">
+    <div class="block-title">
+        <strong><span>@Model.Description.LocalizeHtml()</span></strong>
+    </div>
+    <div class="block-content">
+	    <p class="block-subtitle">
+		    @("Check items to add to the cart or <a href='#' {0}>select all</a>".LocalizeHtml("onclick=\"$('input[type=checkbox].related-checkbox').attr('checked',true); return false;\""))
+	    </p>
+        <ol class="mini-products-list" id="block-related">          
+            @foreach(var association in Model.Associations.OrderBy(a=>a.Priority))
+            {
+                @Html.Action("AssociatedItem", new { itemId = association.ItemId, name = "relateditem", associationType = association.AssociationType })
+            }                
+        </ol>
+    </div>
+</div>

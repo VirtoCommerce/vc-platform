@@ -1,0 +1,1649 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<layerModel xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" xmlns:dm1="http://schemas.microsoft.com/dsltools/SimpleShapesModel" dslVersion="1.0.0.0" Id="d2ca43ff-1ac6-44da-8159-9515cfd83744" xmlns="http://schemas.microsoft.com/VisualStudio/TeamArchitect/LayerDesigner">
+  <layers>
+    <layer Id="40bce8a6-e7e9-4922-8de9-04de592b8215" name="Azure">
+      <references>
+        <reference Id="72986bc4-865a-4b48-aad0-f64d6487629b" name="Azure">
+          <ArtifactNode Label="Azure" Category="CodeSchema_Project" Id="(Assembly=../../Presentation/Azure)">
+            <Category Ref="SolutionFolder" />
+          </ArtifactNode>
+          <ExpandedNode Id="(Assembly=VirtoCommerce.JobWorkerRole)" Label="VirtoCommerce.JobWorkerRole.dll" Category="CodeSchema_Assembly">
+            <Category Ref="FileSystem.Category.FileOfType.dll" />
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+        </reference>
+      </references>
+    </layer>
+    <layer Id="84dc2825-3aaa-44a0-a657-6995960dcc05" name="Commerce Foundation API">
+      <childLayers>
+        <layer Id="6bbdfc17-429f-4acb-88f4-d9785d25278d" name="Catalogs">
+          <references>
+            <reference Id="9c79c0d6-9c96-48e9-a719-37d11d5248f4" name="Catalogs">
+              <ArtifactNode Label="Catalogs" Category="CodeSchema_ProjectItem" Id="(Assembly=../../CommerceFoundation.Core/CommerceFoundation.csproj File=../../CommerceFoundation.Core/Catalogs/)">
+                <Category Ref="ProjectFolder" />
+              </ArtifactNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs Type=CatalogConnection)" Label="CatalogConnection" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs Type=CacheConfiguration)" Label="CacheConfiguration" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs Type=CatalogConfiguration)" Label="CatalogConfiguration" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs Type=CatalogOutlineBuilder)" Label="CatalogOutlineBuilder" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Factories Type=CatalogEntityFactory)" Label="CatalogEntityFactory" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Factories Type=ICatalogEntityFactory)" Label="ICatalogEntityFactory" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=Association)" Label="Association" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=AssociationGroup)" Label="AssociationGroup" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=AssociationTypes)" Label="AssociationTypes" Category="CodeSchema_Struct">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=AvailabilityRule)" Label="AvailabilityRule" Category="CodeSchema_Enum">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=Bundle)" Label="Bundle" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=Catalog)" Label="Catalog" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=CatalogBase)" Label="CatalogBase" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=CatalogLanguage)" Label="CatalogLanguage" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=Category)" Label="Category" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=CategoryBase)" Label="CategoryBase" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=CategoryItemRelation)" Label="CategoryItemRelation" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=CategoryPropertyValue)" Label="CategoryPropertyValue" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=DynamicKit)" Label="DynamicKit" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=EditorialReview)" Label="EditorialReview" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=Item)" Label="Item" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=ItemAsset)" Label="ItemAsset" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=ItemPropertyValue)" Label="ItemPropertyValue" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=ItemRelation)" Label="ItemRelation" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=ItemRelationType)" Label="ItemRelationType" Category="CodeSchema_Struct">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=ItemType)" Label="ItemType" Category="CodeSchema_Enum">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=LengthUnitOfMeasure)" Label="LengthUnitOfMeasure" Category="CodeSchema_Enum">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=LinkedCategory)" Label="LinkedCategory" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=Package)" Label="Package" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=Packaging)" Label="Packaging" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=Price)" Label="Price" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=Pricelist)" Label="Pricelist" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=PricelistAssignment)" Label="PricelistAssignment" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=Product)" Label="Product" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=Property)" Label="Property" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=PropertyAttribute)" Label="PropertyAttribute" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=PropertySet)" Label="PropertySet" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=PropertySetProperty)" Label="PropertySetProperty" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=PropertyTargetType)" Label="PropertyTargetType" Category="CodeSchema_Enum">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=PropertyValue)" Label="PropertyValue" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=PropertyValueBase)" Label="PropertyValueBase" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=PropertyValueType)" Label="PropertyValueType" Category="CodeSchema_Enum">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=ReviewState)" Label="ReviewState" Category="CodeSchema_Enum">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=Sku)" Label="Sku" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=TaxCategory)" Label="TaxCategory" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=VirtualCatalog)" Label="VirtualCatalog" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Model Type=WeightUnitOfMeasure)" Label="WeightUnitOfMeasure" Category="CodeSchema_Enum">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Repositories Type=ICatalogRepository)" Label="ICatalogRepository" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Repositories Type=IPricelistRepository)" Label="IPricelistRepository" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Search Type=CatalogItemSearchCriteria)" Label="CatalogItemSearchCriteria" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Search Type=CatalogItemSearchResults)" Label="CatalogItemSearchResults" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Services Type=CatalogService)" Label="CatalogService" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Services Type=ICatalogService)" Label="ICatalogService" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Services Type=IEvaluationPolicy)" Label="IEvaluationPolicy" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Services Type=IPriceListAssignmentEvaluationContext)" Label="IPriceListAssignmentEvaluationContext" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Services Type=IPriceListAssignmentEvaluator)" Label="IPriceListAssignmentEvaluator" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Services Type=PriceListAssignmentEvaluator)" Label="PriceListAssignmentEvaluator" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Catalogs.Services Type=PriceListAssignmentEvaluationContext)" Label="PriceListAssignmentEvaluationContext" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+            </reference>
+          </references>
+        </layer>
+        <layer Id="5a586c4a-71f8-4f71-ad63-c17d3ab268ab" name="Customers">
+          <references>
+            <reference Id="033180bd-dd7f-4061-8fc8-0638140c575c" name="Customers">
+              <ArtifactNode Label="Customers" Category="CodeSchema_ProjectItem" Id="(Assembly=../../CommerceFoundation.Core/CommerceFoundation.csproj File=../../CommerceFoundation.Core/Customers/)">
+                <Category Ref="ProjectFolder" />
+              </ArtifactNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers Type=CustomerServiceConnection)" Label="CustomerServiceConnection" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers Type=CacheConfiguration)" Label="CacheConfiguration" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers Type=CustomerConfiguration)" Label="CustomerConfiguration" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers Type=CustomerSession)" Label="CustomerSession" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers.Factories Type=CustomerEntityFactory)" Label="CustomerEntityFactory" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers.Factories Type=ICustomerEntityFactory)" Label="ICustomerEntityFactory" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers.Model Type=Address)" Label="Address" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers.Model Type=AddressType)" Label="AddressType" Category="CodeSchema_Enum">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers.Model Type=Attachment)" Label="Attachment" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers.Model Type=AttachmentType)" Label="AttachmentType" Category="CodeSchema_Enum">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers.Model Type=Case)" Label="Case" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers.Model Type=CaseFilterType)" Label="CaseFilterType" Category="CodeSchema_Enum">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers.Model Type=CasePriority)" Label="CasePriority" Category="CodeSchema_Enum">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers.Model Type=CaseSearchResult)" Label="CaseSearchResult" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers.Model Type=CaseStatus)" Label="CaseStatus" Category="CodeSchema_Enum">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers.Model Type=CaseType)" Label="CaseType" Category="CodeSchema_Enum">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers.Model Type=CommunicationItem)" Label="CommunicationItem" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers.Model Type=Contact)" Label="Contact" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers.Model Type=Contract)" Label="Contract" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers.Model Type=ContractState)" Label="ContractState" Category="CodeSchema_Enum">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers.Model Type=Email)" Label="Email" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers.Model Type=EmailItem)" Label="EmailItem" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers.Model Type=EmailType)" Label="EmailType" Category="CodeSchema_Enum">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers.Model Type=FileType)" Label="FileType" Category="CodeSchema_Enum">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers.Model Type=KnowledgeBaseArticle)" Label="KnowledgeBaseArticle" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers.Model Type=KnowledgeBaseGroup)" Label="KnowledgeBaseGroup" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers.Model Type=Label)" Label="Label" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers.Model Type=Member)" Label="Member" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers.Model Type=MemberRelation)" Label="MemberRelation" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers.Model Type=Note)" Label="Note" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers.Model Type=Organization)" Label="Organization" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers.Model Type=OrganizationType)" Label="OrganizationType" Category="CodeSchema_Enum">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers.Model Type=Phone)" Label="Phone" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers.Model Type=PhoneCallItem)" Label="PhoneCallItem" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers.Model Type=PhoneNumberType)" Label="PhoneNumberType" Category="CodeSchema_Enum">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers.Model Type=PhoneType)" Label="PhoneType" Category="CodeSchema_Enum">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers.Model Type=SearchCaseCriteria)" Label="SearchCaseCriteria" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Customers.Repositories Type=ICustomerRepository)" Label="ICustomerRepository" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+            </reference>
+          </references>
+        </layer>
+        <layer Id="d5f01d1f-2849-4b47-b14d-493ea72bd181" name="Importing">
+          <references>
+            <reference Id="15716c71-76fe-4586-bf76-c689f725bfb2" name="Importing">
+              <ArtifactNode Label="Importing" Category="CodeSchema_ProjectItem" Id="(Assembly=../../CommerceFoundation.Core/CommerceFoundation.csproj File=../../CommerceFoundation.Core/Importing/)">
+                <Category Ref="ProjectFolder" />
+              </ArtifactNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Importing.Csv Type=CSVParser)" Label="CSVParser" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Importing.Csv Type=CsvReader)" Label="CsvReader" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Importing.Csv Type=CsvStream)" Label="CsvStream" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Importing.Csv Type=CsvWriter)" Label="CsvWriter" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Importing.Factories Type=IImportJobEntityFactory)" Label="IImportJobEntityFactory" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Importing.Factories Type=ImportJobEntityFactory)" Label="ImportJobEntityFactory" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Importing.Model Type=AssociationImporter)" Label="AssociationImporter" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Importing.Model Type=CategoryImporter)" Label="CategoryImporter" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Importing.Model Type=ColumnMapping)" Label="ColumnMapping" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Importing.Model Type=EntityImporterBase)" Label="EntityImporterBase" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Importing.Model Type=IEntityImporter)" Label="IEntityImporter" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Importing.Model Type=ImportAction)" Label="ImportAction" Category="CodeSchema_Enum">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Importing.Model Type=ImportItem)" Label="ImportItem" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Importing.Model Type=ImportJob)" Label="ImportJob" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Importing.Model Type=ImportResult)" Label="ImportResult" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Importing.Model Type=ItemImporter)" Label="ItemImporter" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Importing.Model Type=MappingItem)" Label="MappingItem" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Importing.Model Type=NamedStringList)" Label="NamedStringList" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Importing.Model Type=PriceImporter)" Label="PriceImporter" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Importing.Repositories Type=IImportRepository)" Label="IImportRepository" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Importing.Services Type=IImportService)" Label="IImportService" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Importing.Services Type=ImportService)" Label="ImportService" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+            </reference>
+          </references>
+        </layer>
+        <layer Id="f3da4793-fa5a-4df9-bac1-f961f019ae60" name="Inventories">
+          <references>
+            <reference Id="52671ed7-6f58-44f1-b089-99e946844dc5" name="Inventories">
+              <ArtifactNode Label="Inventories" Category="CodeSchema_ProjectItem" Id="(Assembly=../../CommerceFoundation.Core/CommerceFoundation.csproj File=../../CommerceFoundation.Core/Inventories/)">
+                <Category Ref="ProjectFolder" />
+              </ArtifactNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Inventories.Factories Type=IInventoryEntityFactory)" Label="IInventoryEntityFactory" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Inventories.Factories Type=InventoryEntityFactory)" Label="InventoryEntityFactory" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Inventories Type=InventoryConfiguration)" Label="InventoryConfiguration" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Inventories Type=CacheConfiguration)" Label="CacheConfiguration" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Inventories Type=InventoryConnection)" Label="InventoryConnection" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Inventories.Model Type=Inventory)" Label="Inventory" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Inventories.Model Type=InventoryStatus)" Label="InventoryStatus" Category="CodeSchema_Enum">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Inventories.Repositories Type=IInventoryRepository)" Label="IInventoryRepository" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+            </reference>
+          </references>
+        </layer>
+        <layer Id="a0d68a53-9b1e-4938-a12c-d13ddaceb47e" name="Marketing">
+          <references>
+            <reference Id="af35a2fd-1ace-4dde-b9e4-98454ddbd298" name="Marketing">
+              <ArtifactNode Label="Marketing" Category="CodeSchema_ProjectItem" Id="(Assembly=../../CommerceFoundation.Core/CommerceFoundation.csproj File=../../CommerceFoundation.Core/Marketing/)">
+                <Category Ref="ProjectFolder" />
+              </ArtifactNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.DynamicContent Type=DynamicContentConfiguration)" Label="DynamicContentConfiguration" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.DynamicContent Type=DynamicContentConnection)" Label="DynamicContentConnection" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.DynamicContent Type=CacheConfiguration)" Label="CacheConfiguration" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Factories Type=DynamicContentEntityFactory)" Label="DynamicContentEntityFactory" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Factories Type=IDynamicContentEntityFactory)" Label="IDynamicContentEntityFactory" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Factories Type=IMarketingEntityFactory)" Label="IMarketingEntityFactory" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Factories Type=MarketingEntityFactory)" Label="MarketingEntityFactory" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing Type=CacheConfiguration)" Label="CacheConfiguration" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing Type=MarketingConfiguration)" Label="MarketingConfiguration" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing Type=MarketingConnection)" Label="MarketingConnection" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model Type=CartPromotion)" Label="CartPromotion" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model Type=CatalogPromotion)" Label="CatalogPromotion" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model Type=Coupon)" Label="Coupon" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model Type=CouponSet)" Label="CouponSet" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model Type=DefaultPromotionEvaluator)" Label="DefaultPromotionEvaluator" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model.DynamicContent Type=DynamicContentCondition)" Label="DynamicContentCondition" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model.DynamicContent Type=DynamicContentEvaluationContext)" Label="DynamicContentEvaluationContext" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model.DynamicContent Type=DynamicContentEvaluator)" Label="DynamicContentEvaluator" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model.DynamicContent Type=DynamicContentItem)" Label="DynamicContentItem" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model.DynamicContent Type=DynamicContentItemProperty)" Label="DynamicContentItemProperty" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model.DynamicContent Type=DynamicContentPlace)" Label="DynamicContentPlace" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model.DynamicContent Type=DynamicContentPublishingGroup)" Label="DynamicContentPublishingGroup" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model.DynamicContent Type=DynamicContentType)" Label="DynamicContentType" Category="CodeSchema_Enum">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model.DynamicContent Type=IDynamicContentEvaluationContext)" Label="IDynamicContentEvaluationContext" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model.DynamicContent Type=IDynamicContentEvaluator)" Label="IDynamicContentEvaluator" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model.DynamicContent Type=PropertyValueBase)" Label="PropertyValueBase" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model.DynamicContent Type=PublishingGroupContentItem)" Label="PublishingGroupContentItem" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model.DynamicContent Type=PublishingGroupContentPlace)" Label="PublishingGroupContentPlace" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model Type=ExclusivityType)" Label="ExclusivityType" Category="CodeSchema_Enum">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model Type=IEvaluationPolicy)" Label="IEvaluationPolicy" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model Type=IPromotionEntryPopulate)" Label="IPromotionEntryPopulate" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model Type=IPromotionEvaluationContext)" Label="IPromotionEvaluationContext" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model Type=IPromotionEvaluator)" Label="IPromotionEvaluator" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model Type=IPromotionUsageProvider)" Label="IPromotionUsageProvider" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model.Policies Type=CartSubtotalRewardCombinePolicy)" Label="CartSubtotalRewardCombinePolicy" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model.Policies Type=GlobalExclusivityPolicy)" Label="GlobalExclusivityPolicy" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model.Policies Type=GroupExclusivityPolicy)" Label="GroupExclusivityPolicy" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model.Policies Type=ShipmentRewardCombinePolicy)" Label="ShipmentRewardCombinePolicy" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model Type=Promotion)" Label="Promotion" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model Type=PromotionEntry)" Label="PromotionEntry" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model Type=PromotionEntryPopulate)" Label="PromotionEntryPopulate" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model Type=PromotionEntrySet)" Label="PromotionEntrySet" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model Type=PromotionEvaluationContext)" Label="PromotionEvaluationContext" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model Type=PromotionEvaluationContextExtension)" Label="PromotionEvaluationContextExtension" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model Type=PromotionRecord)" Label="PromotionRecord" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model Type=PromotionType)" Label="PromotionType" Category="CodeSchema_Struct">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model Type=PromotionUsage)" Label="PromotionUsage" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model Type=PromotionUsageProvider)" Label="PromotionUsageProvider" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model Type=PropertyValueType)" Label="PropertyValueType" Category="CodeSchema_Enum">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model Type=CartSubtotalReward)" Label="CartSubtotalReward" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model Type=CatalogItemReward)" Label="CatalogItemReward" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model Type=PromotionReward)" Label="PromotionReward" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model Type=RewardAmountType)" Label="RewardAmountType" Category="CodeSchema_Enum">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model Type=ShipmentReward)" Label="ShipmentReward" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model Type=Segment)" Label="Segment" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Model Type=SegmentSet)" Label="SegmentSet" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Repositories Type=IDynamicContentRepository)" Label="IDynamicContentRepository" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Repositories Type=IMarketingRepository)" Label="IMarketingRepository" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Services Type=DynamicContentService)" Label="DynamicContentService" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Services Type=IDynamicContentService)" Label="IDynamicContentService" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Services Type=IMarketingService)" Label="IMarketingService" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Marketing.Services Type=MarketingService)" Label="MarketingService" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+            </reference>
+          </references>
+        </layer>
+        <layer Id="93db0534-db78-4dd6-9457-a9168c355906" name="Orders">
+          <references>
+            <reference Id="97e9d286-5285-431e-8145-af902f49380f" name="Orders">
+              <ArtifactNode Label="Orders" Category="CodeSchema_ProjectItem" Id="(Assembly=../../CommerceFoundation.Core/CommerceFoundation.csproj File=../../CommerceFoundation.Core/Orders/)">
+                <Category Ref="ProjectFolder" />
+              </ArtifactNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.CQRS.Handlers Type=RebuildIndexHandler)" Label="RebuildIndexHandler" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.CQRS.Handlers Type=SaveChangesHandler)" Label="SaveChangesHandler" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.CQRS.Messages Type=SaveCatalogCategoryChangesMessage)" Label="SaveCatalogCategoryChangesMessage" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.CQRS.Messages Type=SaveCatalogChangesMessage)" Label="SaveCatalogChangesMessage" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.CQRS.Messages Type=SaveCatalogItemChangesMessage)" Label="SaveCatalogItemChangesMessage" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.CQRS.Messages Type=SaveOrderGroupChangesMessage)" Label="SaveOrderGroupChangesMessage" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.CQRS.Messages Type=SavePaymentMethodChangesMessage)" Label="SavePaymentMethodChangesMessage" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Exceptions Type=OrderException)" Label="OrderException" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Exceptions Type=PaymentException)" Label="PaymentException" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Exceptions Type=(Name=ErrorType ParentType=PaymentException))" Label="PaymentException‎.ErrorType" Category="CodeSchema_Struct">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Factories Type=IOrderEntityFactory)" Label="IOrderEntityFactory" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Factories Type=OrderEntityFactory)" Label="OrderEntityFactory" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Model Type=CashCardPayment)" Label="CashCardPayment" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Model.Countries Type=Country)" Label="Country" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Model.Countries Type=Region)" Label="Region" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Model Type=CreditCardPayment)" Label="CreditCardPayment" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Model Type=Discount)" Label="Discount" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Model Type=ExchangePayment)" Label="ExchangePayment" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Model Type=GiftCartPayment)" Label="GiftCartPayment" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Model Type=InvoicePayment)" Label="InvoicePayment" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Model.Jurisdiction Type=Jurisdiction)" Label="Jurisdiction" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Model.Jurisdiction Type=JurisdictionGroup)" Label="JurisdictionGroup" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Model Type=LineItem)" Label="LineItem" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Model Type=LineItemDiscount)" Label="LineItemDiscount" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Model Type=LineItemOption)" Label="LineItemOption" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Model Type=Order)" Label="Order" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Model Type=OrderAddress)" Label="OrderAddress" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Model Type=OrderForm)" Label="OrderForm" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Model Type=OrderFormDiscount)" Label="OrderFormDiscount" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Model Type=OrderGroup)" Label="OrderGroup" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Model Type=OtherPayment)" Label="OtherPayment" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Model Type=Payment)" Label="Payment" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Model.PaymentMethod Type=PaymentMethod)" Label="PaymentMethod" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Model Type=PaymentType)" Label="PaymentType" Category="CodeSchema_Enum">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Model Type=RmaLineItem)" Label="RmaLineItem" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Model Type=RmaRequest)" Label="RmaRequest" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Model Type=RmaReturnItem)" Label="RmaReturnItem" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Model Type=Shipment)" Label="Shipment" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Model Type=ShipmentDiscount)" Label="ShipmentDiscount" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Model Type=ShipmentItem)" Label="ShipmentItem" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Model.ShippingMethod Type=ShippingMethod)" Label="ShippingMethod" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Model.ShippingMethod Type=ShippingMethodCase)" Label="ShippingMethodCase" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Model.ShippingMethod Type=ShippingOption)" Label="ShippingOption" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Model.ShippingMethod Type=ShippingPackage)" Label="ShippingPackage" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Model Type=ShippingRate)" Label="ShippingRate" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Model Type=ShoppingCart)" Label="ShoppingCart" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Model.Taxes Type=Tax)" Label="Tax" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Model.Taxes Type=TaxValue)" Label="TaxValue" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders Type=CacheConfiguration)" Label="CacheConfiguration" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders Type=OrderConnection)" Label="OrderConnection" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders Type=OrderConfiguration)" Label="OrderConfiguration" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders Type=OrderWorkflowResult)" Label="OrderWorkflowResult" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Repositories Type=ICountryRepository)" Label="ICountryRepository" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Repositories Type=IOrderRepository)" Label="IOrderRepository" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Repositories Type=IPaymentMethodRepository)" Label="IPaymentMethodRepository" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Repositories Type=IShippingRepository)" Label="IShippingRepository" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Repositories Type=ITaxRepository)" Label="ITaxRepository" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Search Type=OrderSearchCriteria)" Label="OrderSearchCriteria" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Search Type=OrderSearchResults)" Label="OrderSearchResults" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Services Type=IOrderService)" Label="IOrderService" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Services Type=IPaymentGateway)" Label="IPaymentGateway" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Services Type=IShippingGateway)" Label="IShippingGateway" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Orders.Services Type=OrderService)" Label="OrderService" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+            </reference>
+          </references>
+        </layer>
+        <layer Id="46b1753a-a98a-4645-bf53-28468e56cf08" name="Reviews">
+          <references>
+            <reference Id="e2324061-d04d-46ef-a68d-83bceadfe6d9" name="Reviews">
+              <ArtifactNode Label="Reviews" Category="CodeSchema_ProjectItem" Id="(Assembly=../../CommerceFoundation.Core/CommerceFoundation.csproj File=../../CommerceFoundation.Core/Reviews/)">
+                <Category Ref="ProjectFolder" />
+              </ArtifactNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Reviews.Factories Type=IReviewEntityFactory)" Label="IReviewEntityFactory" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Reviews.Factories Type=ReviewEntityFactory)" Label="ReviewEntityFactory" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Reviews.Model.Management Type=ReviewFieldSchema)" Label="ReviewFieldSchema" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Reviews.Model.Management Type=ReviewSchema)" Label="ReviewSchema" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Reviews.Model.Management Type=Subscription)" Label="Subscription" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Reviews.Model.Management Type=UserBlacklist)" Label="UserBlacklist" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Reviews.Model Type=MediaContent)" Label="MediaContent" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Reviews.Model Type=ReportAbuseElement)" Label="ReportAbuseElement" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Reviews.Model Type=ReportElementBase)" Label="ReportElementBase" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Reviews.Model Type=ReportHelpfulElement)" Label="ReportHelpfulElement" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Reviews.Model Type=Review)" Label="Review" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Reviews.Model Type=ReviewComment)" Label="ReviewComment" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Reviews.Model Type=ReviewException)" Label="ReviewException" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Reviews.Model Type=ReviewFieldValue)" Label="ReviewFieldValue" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Reviews.Model Type=ReviewStatus)" Label="ReviewStatus" Category="CodeSchema_Enum">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Reviews.Repositories Type=IReviewRepository)" Label="IReviewRepository" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Reviews Type=ReviewConfiguration)" Label="ReviewConfiguration" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Reviews Type=ReviewConnection)" Label="ReviewConnection" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Reviews Type=CacheConfiguration)" Label="CacheConfiguration" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Reviews.Services Type=IReviewService)" Label="IReviewService" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Reviews.Services Type=ReviewService)" Label="ReviewService" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+            </reference>
+          </references>
+        </layer>
+        <layer Id="96006e74-d2e4-4b5b-8b0d-c5f07af14141" name="Search">
+          <references>
+            <reference Id="e5f98de8-8324-43b8-9ca8-f3576b32c7df" name="Search">
+              <ArtifactNode Label="Search" Category="CodeSchema_ProjectItem" Id="(Assembly=../../CommerceFoundation.Core/CommerceFoundation.csproj File=../../CommerceFoundation.Core/Search/)">
+                <Category Ref="ProjectFolder" />
+              </ArtifactNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search.CQRS Type=InMemoryQueueReader)" Label="InMemoryQueueReader" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search.CQRS Type=InMemoryQueueWriter)" Label="InMemoryQueueWriter" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search.CQRS Type=(Name=MemoryQueue GenericParameterCount=1))" Label="MemoryQueue‎&lt;T‎&gt;" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search.CQRS Type=MemoryQueueClient)" Label="MemoryQueueClient" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search.CQRS Type=SearchIndexMessageHandler)" Label="SearchIndexMessageHandler" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search Type=DocumentField)" Label="DocumentField" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search Type=DocumentPublisher)" Label="DocumentPublisher" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search.Facets Type=Facet)" Label="Facet" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search.Facets Type=FacetGroup)" Label="FacetGroup" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search.Facets Type=(Name=FacetCollection GenericParameterCount=1))" Label="FacetCollection‎&lt;T‎&gt;" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search.Factories Type=ISearchEntityFactory)" Label="ISearchEntityFactory" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search.Factories Type=SearchEntityFactory)" Label="SearchEntityFactory" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search Type=IDocument)" Label="IDocument" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search Type=IDocumentField)" Label="IDocumentField" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search Type=IDocumentSet)" Label="IDocumentSet" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search Type=IndexBuildException)" Label="IndexBuildException" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search Type=IndexNotFoundException)" Label="IndexNotFoundException" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search Type=IndexStore)" Label="IndexStore" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search Type=IndexType)" Label="IndexType" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search Type=ISearchCriteria)" Label="ISearchCriteria" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search Type=ISearchFilter)" Label="ISearchFilter" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search Type=ISearchFilterValue)" Label="ISearchFilterValue" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search Type=ISearchIndexBuilder)" Label="ISearchIndexBuilder" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search Type=ISearchIndexController)" Label="ISearchIndexController" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search Type=(Name=ISearchIndexDocumentCreator GenericParameterCount=1))" Label="ISearchIndexDocumentCreator‎&lt;T‎&gt;" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search Type=ISearchIndexPartitionCreator)" Label="ISearchIndexPartitionCreator" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search Type=ISearchProvider)" Label="ISearchProvider" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search Type=ISearchQueryBuilder)" Label="ISearchQueryBuilder" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search Type=ISearchResults)" Label="ISearchResults" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search.Model Type=BuildSettings)" Label="BuildSettings" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search.Model Type=BuildStatus)" Label="BuildStatus" Category="CodeSchema_Enum">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search Type=OperationType)" Label="OperationType" Category="CodeSchema_Enum">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search Type=Partition)" Label="Partition" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search.Repositories Type=IBuildSettingsRepository)" Label="IBuildSettingsRepository" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search Type=ResultDocument)" Label="ResultDocument" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search Type=ResultDocumentSet)" Label="ResultDocumentSet" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search.Schemas Type=PriceRangeFilter)" Label="PriceRangeFilter" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search.Schemas Type=FilteredBrowsing)" Label="FilteredBrowsing" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search.Schemas Type=RangeFilterValue)" Label="RangeFilterValue" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search.Schemas Type=AttributeFilter)" Label="AttributeFilter" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search.Schemas Type=FilterValueDisplay)" Label="FilterValueDisplay" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search.Schemas Type=RangeFilter)" Label="RangeFilter" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search.Schemas Type=AttributeFilterValue)" Label="AttributeFilterValue" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search Type=CacheConfiguration)" Label="CacheConfiguration" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search Type=SearchConnection)" Label="SearchConnection" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search Type=SearchConfiguration)" Label="SearchConfiguration" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search Type=SearchCriteriaBase)" Label="SearchCriteriaBase" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search Type=SearchEventArgs)" Label="SearchEventArgs" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search Type=SearchException)" Label="SearchException" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Data.Search Type=SearchIndexController)" Label="SearchIndexController" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Data.Search Type=(Name=QueueName ParentType=SearchIndexController))" Label="SearchIndexController‎.QueueName" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search Type=SearchIndexEventArgs)" Label="SearchIndexEventArgs" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search Type=SearchIndexMessage)" Label="SearchIndexMessage" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search Type=SearchIndexStatusMessage)" Label="SearchIndexStatusMessage" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search Type=SearchResults)" Label="SearchResults" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search Type=SearchSort)" Label="SearchSort" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search Type=SearchSortField)" Label="SearchSortField" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search.Services Type=ISearchService)" Label="ISearchService" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Search.Services Type=SearchService)" Label="SearchService" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+            </reference>
+          </references>
+        </layer>
+        <layer Id="bd6e0428-8653-4b04-a7a8-aadee6bfc0ff" name="Security">
+          <references>
+            <reference Id="2a7bdfdf-589f-4eb3-a932-c7df9cd61c95" name="Security">
+              <ArtifactNode Label="Security" Category="CodeSchema_ProjectItem" Id="(Assembly=../../CommerceFoundation.Core/CommerceFoundation.csproj File=../../CommerceFoundation.Core/Security/)">
+                <Category Ref="ProjectFolder" />
+              </ArtifactNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Security.Factories Type=ISecurityEntityFactory)" Label="ISecurityEntityFactory" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Security.Factories Type=SecurityEntityFactory)" Label="SecurityEntityFactory" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Security.Model Type=Account)" Label="Account" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Security.Model Type=AccountState)" Label="AccountState" Category="CodeSchema_Enum">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Security.Model Type=Permission)" Label="Permission" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Security.Model Type=PredefinedPermissions)" Label="PredefinedPermissions" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Secutiry.Model Type=RegisterType)" Label="RegisterType" Category="CodeSchema_Enum">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Security.Model Type=Role)" Label="Role" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Security.Model Type=RoleAssignment)" Label="RoleAssignment" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Security.Repositories Type=ISecurityRepository)" Label="ISecurityRepository" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Security Type=AuthenticationConnection)" Label="AuthenticationConnection" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Security Type=SecurityConfiguration)" Label="SecurityConfiguration" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Security Type=SecurityConnection)" Label="SecurityConnection" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Security.Services Type=AuthenticationService)" Label="AuthenticationService" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Security.Services Type=IAuthenticationService)" Label="IAuthenticationService" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Security.Services Type=ISecurityService)" Label="ISecurityService" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Security.Services Type=SecurityService)" Label="SecurityService" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+            </reference>
+          </references>
+        </layer>
+        <layer Id="7ec4b439-948f-4fcd-947d-3398bbec5fa0" name="Stores">
+          <references>
+            <reference Id="6f2327de-7bea-4a15-8e54-3c58617c27b8" name="Stores">
+              <ArtifactNode Label="Stores" Category="CodeSchema_ProjectItem" Id="(Assembly=../../CommerceFoundation.Core/CommerceFoundation.csproj File=../../CommerceFoundation.Core/Stores/)">
+                <Category Ref="ProjectFolder" />
+              </ArtifactNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Stores.Factories Type=IStoreEntityFactory)" Label="IStoreEntityFactory" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Stores.Factories Type=StoreEntityFactory)" Label="StoreEntityFactory" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Stores.Model Type=CreditCardSavePolicy)" Label="CreditCardSavePolicy" Category="CodeSchema_Enum">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Stores.Model Type=FulfillmentCenter)" Label="FulfillmentCenter" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Stores.Model Type=Store)" Label="Store" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Stores.Model Type=StoreCardType)" Label="StoreCardType" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Stores.Model Type=StoreCurrency)" Label="StoreCurrency" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Stores.Model Type=StoreLanguage)" Label="StoreLanguage" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Stores.Model Type=StoreLinkedStore)" Label="StoreLinkedStore" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Stores.Model Type=StorePaymentGateway)" Label="StorePaymentGateway" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Stores.Model Type=StoreSetting)" Label="StoreSetting" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Stores.Model Type=StoreState)" Label="StoreState" Category="CodeSchema_Enum">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Stores.Model Type=StoreTaxCode)" Label="StoreTaxCode" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Stores.Model Type=StoreTaxJurisdiction)" Label="StoreTaxJurisdiction" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Stores.Repositories Type=IFulfillmentCenterRepository)" Label="IFulfillmentCenterRepository" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Stores.Repositories Type=IStoreRepository)" Label="IStoreRepository" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Stores.Services Type=IStoreService)" Label="IStoreService" Category="CodeSchema_Interface">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Stores.Services Type=StoreService)" Label="StoreService" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Stores Type=StoreConfiguration)" Label="StoreConfiguration" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Stores Type=StoreConnection)" Label="StoreConnection" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation Namespace=VirtoCommerce.Foundation.Stores Type=CacheConfiguration)" Label="CacheConfiguration" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+            </reference>
+          </references>
+        </layer>
+      </childLayers>
+      <references>
+        <reference Id="db7c2d90-3f45-4fc1-b8b4-0302279ba2ea" name="CommerceFoundation">
+          <ArtifactNode Label="CommerceFoundation" Category="CodeSchema_Project" Id="(Assembly=../../CommerceFoundation.Core/CommerceFoundation.csproj)">
+            <Category Ref="File" />
+          </ArtifactNode>
+          <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation)" Label="VirtoCommerce.Foundation.dll" Category="CodeSchema_Assembly">
+            <Category Ref="FileSystem.Category.FileOfType.dll" />
+            <LinkCategory Ref="Produces" />
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+        </reference>
+      </references>
+    </layer>
+    <layer Id="2e037f77-a828-4078-b488-cf4dfed279ac" name="Commerce Foundation Data API">
+      <dependencyToLayers>
+        <dependencyFromLayerToLayer Id="11ec6f2e-875d-4c56-b0a5-118184a5e805" direction="Forward">
+          <layerMoniker Id="84dc2825-3aaa-44a0-a657-6995960dcc05" />
+        </dependencyFromLayerToLayer>
+      </dependencyToLayers>
+      <childLayers>
+        <layer Id="cfbc8deb-1463-4d09-925c-1cfe2ae7b4a5" name="Asset">
+          <references>
+            <reference Id="c7d827d3-b5f8-46de-89c7-5471286958c2" name="Asset">
+              <ArtifactNode Label="Asset" Category="CodeSchema_ProjectItem" Id="(Assembly=../../CommerceFoundation.Data/CommerceFoundation.Data.csproj File=../../CommerceFoundation.Data/Asset/)">
+                <Category Ref="ProjectFolder" />
+              </ArtifactNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Asset Type=AzureBlobAssetRepository)" Label="AzureBlobAssetRepository" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Asset Type=AzureBlobStorageHelper)" Label="AzureBlobStorageHelper" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Asset Type=SuppressFlushForStream)" Label="SuppressFlushForStream" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+            </reference>
+          </references>
+        </layer>
+        <layer Id="a0622db3-cf19-4700-b424-04cbded5c8b3" name="Catalogs">
+          <references>
+            <reference Id="17a86aaf-9fbb-4915-b7c4-e19e9babbe15" name="Catalogs">
+              <ArtifactNode Label="Catalogs" Category="CodeSchema_ProjectItem" Id="(Assembly=../../CommerceFoundation.Data/CommerceFoundation.Data.csproj File=../../CommerceFoundation.Data/Catalogs/)">
+                <Category Ref="ProjectFolder" />
+              </ArtifactNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Catalogs Type=AzureCQRSCatalogRepository)" Label="AzureCQRSCatalogRepository" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Catalogs Type=DSCatalogClient)" Label="DSCatalogClient" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Catalogs Type=DSCatalogService)" Label="DSCatalogService" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Catalogs Type=EFCatalogRepository)" Label="EFCatalogRepository" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Catalogs.Migrations Type=Initial)" Label="Initial" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Catalogs.Migrations Type=Configuration)" Label="Configuration" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+            </reference>
+          </references>
+        </layer>
+        <layer Id="c5b26f4a-98c4-44b6-97c6-076340cabb8b" name="Marketing">
+          <references>
+            <reference Id="7c7fd063-db81-4e57-a644-49c9793eb922" name="Marketing">
+              <ArtifactNode Label="Marketing" Category="CodeSchema_ProjectItem" Id="(Assembly=../../CommerceFoundation.Data/CommerceFoundation.Data.csproj File=../../CommerceFoundation.Data/Marketing/)">
+                <Category Ref="ProjectFolder" />
+              </ArtifactNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Marketing Type=DSDynamicContentClient)" Label="DSDynamicContentClient" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Marketing Type=DSDynamicContentService)" Label="DSDynamicContentService" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Marketing Type=DSMarketingClient)" Label="DSMarketingClient" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Marketing Type=DSMarketingService)" Label="DSMarketingService" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Marketing Type=EFDynamicContentRepository)" Label="EFDynamicContentRepository" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Marketing Type=EFMarketingRepository)" Label="EFMarketingRepository" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Marketing.Migrations.Content Type=Initial)" Label="Initial" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Marketing.Migrations.Content Type=Configuration)" Label="Configuration" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Marketing.Migrations.Promotion Type=Initial)" Label="Initial" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Marketing.Migrations.Promotion Type=Configuration)" Label="Configuration" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+            </reference>
+          </references>
+        </layer>
+        <layer Id="d05e9614-55d1-46e8-b39a-9d1683dde696" name="Customers">
+          <references>
+            <reference Id="a3c78159-e3d8-4188-84ac-638acf9ef3f8" name="Customers">
+              <ArtifactNode Label="Customers" Category="CodeSchema_ProjectItem" Id="(Assembly=../../CommerceFoundation.Data/CommerceFoundation.Data.csproj File=../../CommerceFoundation.Data/Customers/)">
+                <Category Ref="ProjectFolder" />
+              </ArtifactNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Customers Type=DSCustomerClient)" Label="DSCustomerClient" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Customers Type=DSCustomerService)" Label="DSCustomerService" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Customers Type=EFCustomerRepository)" Label="EFCustomerRepository" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Customers.Migrations Type=Initial)" Label="Initial" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Customers.Migrations Type=Configuration)" Label="Configuration" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+            </reference>
+          </references>
+        </layer>
+        <layer Id="629d9667-d534-43e3-a300-61c1312d3fe6" name="Inventories">
+          <references>
+            <reference Id="13c2e18f-71e0-4467-ae60-29d34164472f" name="Inventories">
+              <ArtifactNode Label="Inventories" Category="CodeSchema_ProjectItem" Id="(Assembly=../../CommerceFoundation.Data/CommerceFoundation.Data.csproj File=../../CommerceFoundation.Data/Inventories/)">
+                <Category Ref="ProjectFolder" />
+              </ArtifactNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Inventories Type=DSInventoryClient)" Label="DSInventoryClient" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Inventories Type=DSInventoryService)" Label="DSInventoryService" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Inventories Type=EFInventoryRepository)" Label="EFInventoryRepository" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Inventories.Migrations Type=Initial)" Label="Initial" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Inventories.Migrations Type=Configuration)" Label="Configuration" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+            </reference>
+          </references>
+        </layer>
+        <layer Id="13dc2886-6f5e-4bd1-aa6e-504fdce83a8a" name="Orders">
+          <references>
+            <reference Id="27f8f6f1-961e-4ac8-8385-3107f47a2bae" name="Orders">
+              <ArtifactNode Label="Orders" Category="CodeSchema_ProjectItem" Id="(Assembly=../../CommerceFoundation.Data/CommerceFoundation.Data.csproj File=../../CommerceFoundation.Data/Orders/)">
+                <Category Ref="ProjectFolder" />
+              </ArtifactNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Orders Type=AzureCQRSOrderRepository)" Label="AzureCQRSOrderRepository" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Orders Type=AzureCQRSPaymentMethodRepository)" Label="AzureCQRSPaymentMethodRepository" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Orders Type=DSOrderClient)" Label="DSOrderClient" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Orders Type=DSOrderService)" Label="DSOrderService" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Orders Type=EFOrderRepository)" Label="EFOrderRepository" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Orders.Migrations Type=Initial)" Label="Initial" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Orders.Migrations Type=Configuration)" Label="Configuration" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+            </reference>
+          </references>
+        </layer>
+        <layer Id="1c677886-8b6d-4815-a1f4-656d9708e800" name="Reviews">
+          <references>
+            <reference Id="bdcee97b-fb6d-49f7-acf5-41bf8f46195a" name="Reviews">
+              <ArtifactNode Label="Reviews" Category="CodeSchema_ProjectItem" Id="(Assembly=../../CommerceFoundation.Data/CommerceFoundation.Data.csproj File=../../CommerceFoundation.Data/Reviews/)">
+                <Category Ref="ProjectFolder" />
+              </ArtifactNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Reviews Type=DSReviewClient)" Label="DSReviewClient" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Reviews Type=DSReviewService)" Label="DSReviewService" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Reviews Type=EFReviewRepository)" Label="EFReviewRepository" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Reviews.Migrations Type=Initial)" Label="Initial" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Reviews.Migrations Type=Configuration)" Label="Configuration" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+            </reference>
+          </references>
+        </layer>
+        <layer Id="a85a447f-828d-4c0b-badf-bf4446a88609" name="Search">
+          <references>
+            <reference Id="92ebdab8-1d30-4a5e-98ff-463cdf6bb52b" name="Search">
+              <ArtifactNode Label="Search" Category="CodeSchema_ProjectItem" Id="(Assembly=../../CommerceFoundation.Data/CommerceFoundation.Data.csproj File=../../CommerceFoundation.Data/Search/)">
+                <Category Ref="ProjectFolder" />
+              </ArtifactNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Search Type=DSSearchClient)" Label="DSSearchClient" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Search Type=DSSearchService)" Label="DSSearchService" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Search Type=EFSearchRepository)" Label="EFSearchRepository" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Search.Migrations Type=Initial)" Label="Initial" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Search.Migrations Type=Configuration)" Label="Configuration" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+            </reference>
+          </references>
+        </layer>
+        <layer Id="c20948cb-217a-497c-9479-7d655f7a3da8" name="Security">
+          <references>
+            <reference Id="7f825f46-1d73-434c-b3cc-6294cd7a0234" name="Security">
+              <ArtifactNode Label="Security" Category="CodeSchema_ProjectItem" Id="(Assembly=../../CommerceFoundation.Data/CommerceFoundation.Data.csproj File=../../CommerceFoundation.Data/Security/)">
+                <Category Ref="ProjectFolder" />
+              </ArtifactNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Security Type=DSSecurityClient)" Label="DSSecurityClient" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Security Type=DSSecurityService)" Label="DSSecurityService" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Security Type=EFSecurityRepository)" Label="EFSecurityRepository" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Security.Migrations Type=Initial)" Label="Initial" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Security.Migrations Type=Configuration)" Label="Configuration" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+            </reference>
+          </references>
+        </layer>
+        <layer Id="13009e7b-1263-4446-afea-67e52d301536" name="Stores">
+          <references>
+            <reference Id="d061925c-dca5-4cfd-9bbb-7553b75b33ff" name="Stores">
+              <ArtifactNode Label="Stores" Category="CodeSchema_ProjectItem" Id="(Assembly=../../CommerceFoundation.Data/CommerceFoundation.Data.csproj File=../../CommerceFoundation.Data/Stores/)">
+                <Category Ref="ProjectFolder" />
+              </ArtifactNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Stores Type=DSStoreClient)" Label="DSStoreClient" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Stores Type=DSStoreService)" Label="DSStoreService" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Stores Type=EFStoreRepository)" Label="EFStoreRepository" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Stores.Migrations Type=Initial)" Label="Initial" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data Namespace=VirtoCommerce.Foundation.Data.Stores.Migrations Type=Configuration)" Label="Configuration" Category="CodeSchema_Class">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+            </reference>
+          </references>
+        </layer>
+      </childLayers>
+      <references>
+        <reference Id="014b837d-f238-4849-8927-02137136f12e" name="CommerceFoundation.Data">
+          <ArtifactNode Label="CommerceFoundation.Data" Category="CodeSchema_Project" Id="(Assembly=../../CommerceFoundation.Data/CommerceFoundation.Data.csproj)">
+            <Category Ref="File" />
+          </ArtifactNode>
+          <ExpandedNode Id="(Assembly=VirtoCommerce.Foundation.Data)" Label="VirtoCommerce.Foundation.Data.dll" Category="CodeSchema_Assembly">
+            <Category Ref="FileSystem.Category.FileOfType.dll" />
+            <LinkCategory Ref="Produces" />
+            <LinkCategory Ref="Represents" />
+          </ExpandedNode>
+        </reference>
+      </references>
+    </layer>
+    <layer Id="6d0ea1c3-e461-495b-8a05-bf4926ba69ae" name="Setup">
+      <dependencyToLayers>
+        <dependencyFromLayerToLayer Id="5e2797a2-318d-4eb2-b205-cb18a393feba" direction="Forward">
+          <layerMoniker Id="84dc2825-3aaa-44a0-a657-6995960dcc05" />
+        </dependencyFromLayerToLayer>
+      </dependencyToLayers>
+      <childLayers>
+        <layer Id="0b8369bc-b9d1-467d-8fe9-b65a4ad16373" name="VirtoCommerce.PowerShell">
+          <references>
+            <reference Id="1037e83c-d683-48b0-8446-88b228a3d59f" name="VirtoCommerce.PowerShell">
+              <ArtifactNode Label="VirtoCommerce.PowerShell" Category="CodeSchema_Project" Id="(Assembly=../../Setup/VirtoCommerce.PowerShell/VirtoCommerce.PowerShell.csproj)">
+                <Category Ref="File" />
+              </ArtifactNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.PowerShell)" Label="VirtoCommerce.PowerShell.dll" Category="CodeSchema_Assembly">
+                <Category Ref="FileSystem.Category.FileOfType.dll" />
+                <LinkCategory Ref="Produces" />
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+            </reference>
+          </references>
+        </layer>
+      </childLayers>
+    </layer>
+    <layer Id="502ad8cb-f906-4bcc-8df8-b301317eaba6" name="Extensions">
+      <dependencyToLayers>
+        <dependencyFromLayerToLayer Id="32fc5b5e-07ae-41b5-a509-7ae430510511" direction="Forward">
+          <layerMoniker Id="84dc2825-3aaa-44a0-a657-6995960dcc05" />
+        </dependencyFromLayerToLayer>
+      </dependencyToLayers>
+      <childLayers>
+        <layer Id="b841101c-67d2-47f7-9e85-3b7f809280a1" name="Shipping">
+          <references>
+            <reference Id="53924421-5537-435f-964c-9c0345882052" name="Shipping">
+              <ArtifactNode Label="Shipping" Category="CodeSchema_Project" Id="(Assembly=../../Extensions/Shipping)">
+                <Category Ref="SolutionFolder" />
+              </ArtifactNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.SimpleShippingGateway)" Label="VirtoCommerce.SimpleShippingGateway.dll" Category="CodeSchema_Assembly">
+                <Category Ref="FileSystem.Category.FileOfType.dll" />
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+            </reference>
+          </references>
+        </layer>
+        <layer Id="0111eb72-0c60-46ab-9b7d-ac59393110e1" name="Jobs">
+          <references>
+            <reference Id="95493cd9-9e89-47b0-9309-875af23f4b90" name="Jobs">
+              <ArtifactNode Label="Jobs" Category="CodeSchema_Project" Id="(Assembly=../../Extensions/Jobs)">
+                <Category Ref="SolutionFolder" />
+              </ArtifactNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Scheduling)" Label="VirtoCommerce.Scheduling.dll" Category="CodeSchema_Assembly">
+                <Category Ref="FileSystem.Category.FileOfType.dll" />
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+            </reference>
+          </references>
+        </layer>
+        <layer Id="c59336fc-ae8d-4574-9f3e-7ccbd7e2a968" name="Cache">
+          <references>
+            <reference Id="8ab87383-30bf-41a3-bda0-ba9af3e89fc9" name="Cache">
+              <ArtifactNode Label="Cache" Category="CodeSchema_Project" Id="(Assembly=../../Extensions/Cache)">
+                <Category Ref="SolutionFolder" />
+              </ArtifactNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Caching.AppFabric)" Label="VirtoCommerce.Caching.AppFabric.dll" Category="CodeSchema_Assembly">
+                <Category Ref="FileSystem.Category.FileOfType.dll" />
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Caching.HttpCache)" Label="VirtoCommerce.Caching.HttpCache.dll" Category="CodeSchema_Assembly">
+                <Category Ref="FileSystem.Category.FileOfType.dll" />
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+            </reference>
+          </references>
+        </layer>
+        <layer Id="9eb17a97-89e1-4424-a1cd-8bc6ce5b1ba7" name="Search">
+          <references>
+            <reference Id="2e9db16e-9449-4657-be71-aecd834adf65" name="Search">
+              <ArtifactNode Label="Search" Category="CodeSchema_Project" Id="(Assembly=../../Extensions/Search)">
+                <Category Ref="SolutionFolder" />
+              </ArtifactNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Search.Index)" Label="VirtoCommerce.Search.Index.dll" Category="CodeSchema_Assembly">
+                <Category Ref="FileSystem.Category.FileOfType.dll" />
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.ElasticSearchProvider)" Label="VirtoCommerce.ElasticSearchProvider.dll" Category="CodeSchema_Assembly">
+                <Category Ref="FileSystem.Category.FileOfType.dll" />
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+            </reference>
+          </references>
+        </layer>
+        <layer Id="55132915-8ac7-4818-9ca2-fca9c9093765" name="Workflow">
+          <references>
+            <reference Id="a7d94570-a2d2-43e5-b1f5-63ff53a0b155" name="Workflow">
+              <ArtifactNode Label="Workflow" Category="CodeSchema_Project" Id="(Assembly=../../Extensions/Workflow)">
+                <Category Ref="SolutionFolder" />
+              </ArtifactNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.OrderWorkflowActivities)" Label="VirtoCommerce.OrderWorkflowActivities.dll" Category="CodeSchema_Assembly">
+                <Category Ref="FileSystem.Category.FileOfType.dll" />
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.OrderWorkflow)" Label="VirtoCommerce.OrderWorkflow.dll" Category="CodeSchema_Assembly">
+                <Category Ref="FileSystem.Category.FileOfType.dll" />
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+            </reference>
+          </references>
+        </layer>
+        <layer Id="03d4a95d-b2b1-4fd0-ab3d-33bd23fda316" name="Payments">
+          <references>
+            <reference Id="090a45c4-f2d3-4cb2-b52d-c598a95c197b" name="Payments">
+              <ArtifactNode Label="Payments" Category="CodeSchema_Project" Id="(Assembly=../../Extensions/Payments)">
+                <Category Ref="SolutionFolder" />
+              </ArtifactNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.PaymentGateways)" Label="VirtoCommerce.PaymentGateways.dll" Category="CodeSchema_Assembly">
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+            </reference>
+          </references>
+        </layer>
+      </childLayers>
+    </layer>
+    <layer Id="3efcf495-3998-45e1-a778-4917e11147b9" name="Web">
+      <childLayers>
+        <layer Id="1442c02e-7fca-49d7-b838-0d6bd65132dc" name="Frontend Sample">
+          <references>
+            <reference Id="1eb99a30-d96f-4960-9727-c457e8a6c4fd" name="StoreWebApp">
+              <ArtifactNode Label="StoreWebApp" Category="CodeSchema_Project" Id="(Assembly=../../CommerceFoundation.Presentation/FrontEnd/StoreWebApp/StoreWebApp.csproj)">
+                <Category Ref="File" />
+              </ArtifactNode>
+              <ExpandedNode Id="(Assembly=VirtoCommerce.Web)" Label="VirtoCommerce.Web.dll" Category="CodeSchema_Assembly">
+                <Category Ref="FileSystem.Category.FileOfType.dll" />
+                <LinkCategory Ref="Produces" />
+                <LinkCategory Ref="Represents" />
+              </ExpandedNode>
+            </reference>
+          </references>
+        </layer>
+      </childLayers>
+    </layer>
+  </layers>
+</layerModel>

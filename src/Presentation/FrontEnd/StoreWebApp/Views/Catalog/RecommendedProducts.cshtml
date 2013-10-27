@@ -1,0 +1,16 @@
+﻿@model AssociationGroup
+<div class="block block-related">
+    <div class="block-content">
+        <p class="block-subtitle">@("You may also be interested in the following product(s)".LocalizeHtml())</p>
+        <table class="mini-products-grid" id="upsell-product-table">
+            <tbody>
+                <tr>
+                    @foreach (var association in Model.Associations.OrderBy(a => a.Priority))
+                    {
+                        @Html.Action("AssociatedItem", new { itemId = association.ItemId, name = "recommendeditem" })
+                    }
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

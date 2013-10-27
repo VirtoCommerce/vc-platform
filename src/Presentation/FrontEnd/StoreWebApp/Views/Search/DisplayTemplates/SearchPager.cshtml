@@ -1,0 +1,99 @@
+﻿@using System.Globalization
+@model PagerModel
+@{
+    var pageSizes = new List<int?> {8, 16, 32};
+    var totalPageCount = ((Model.TotalCount - 1)/Model.RecordsPerPage) + 1;
+
+    const int pageGroupSize = 10;
+    int startPage;
+    if (Model.CurrentPage%pageGroupSize > 0)
+    {
+        startPage = Model.CurrentPage - Model.CurrentPage%pageGroupSize + 1;
+    }
+    else
+    {
+        startPage = Model.CurrentPage - pageGroupSize + 1;
+    }
+
+    var endPage = (startPage + pageGroupSize) > totalPageCount ? totalPageCount : (startPage + pageGroupSize) - 1;
+
+    var routeData = new RouteValueDictionary();
+    var queryString = ViewContext.HttpContext.Request.QueryString;
+    if (queryString != null)
+    {
+        foreach (var key in from string key in queryString.Keys 
+                               where key != null && !routeData.ContainsKey(key) 
+                               let value = queryString[key] 
+                               select key)
+        {
+            routeData[key] = queryString[key];
+        }
+    }
+}
+<div class="pager">
+	<p class="amount">
+		@("Items {0} to {1} of {2} total".LocalizeHtml(Model.DisplayStartingRecord,Model.DisplayEndingRecord,Model.TotalCount))
+	</p>
+    @if (totalPageCount > 1 || Model.RecordsPerPage == 0 || Model.RecordsPerPage > pageSizes.First())
+    {
+        <div class="limiter">
+            <label>
+                @("Show".LocalizeHtml())</label>
+            <select onchange=" $.open(this.value) ">
+                @foreach (int size in pageSizes.OrderBy(p => p))
+                {
+                    @Html.SelectOption(Url.SetParameters(new {pageSize = size, p = size * (Model.CurrentPage - 1) + 1 > Model.TotalCount ? 1 : Model.CurrentPage }), Model.RecordsPerPage == size, size.ToString(CultureInfo.InvariantCulture))
+                }
+            </select>
+            @("per page".LocalizeHtml())
+        </div>
+    }
+    <div class="pages">
+        <strong>@("Page:".LocalizeHtml())</strong>
+        <ol>
+            @if (Model.CurrentPage > 1)
+            {
+                <li><a class="previous i-previous" href="@Url.SetParameter("p", Model.CurrentPage - 1)"
+                       title="@("Previous".LocalizeHtml())">
+                        <img src="@Url.Content("~/Content/themes/default/images/pager_arrow_left.gif")"
+                             alt="@("Previous".LocalizeHtml())" class="v-middle" />
+                    </a></li>
+            }
+            @for (var index = startPage; index <= endPage; index++)
+            {
+                if (index == Model.CurrentPage)
+                {
+                    @:<li class="current">@index</li>
+                }
+                else
+                {
+                    @:<li><a href="@Url.SetParameter("p", index)">@index.ToString()</a></li>
+                }
+            }
+            @if (Model.CurrentPage < totalPageCount)
+            {
+                <li><a class="next i-next" href="@Url.SetParameter("p", Model.CurrentPage + 1)"
+                       title="Next">
+                        <img src="@Url.Content("~/Content/themes/default/images/pager_arrow_right.gif")"
+                             alt="Next" class="v-middle" />
+                    </a></li>
+            }
+        </ol>
+        <div class='sortByContainer'>
+            <label>@("Sort By".LocalizeHtml())</label>
+            <select onchange=" $.open(this.value) ">
+                @foreach (var sort in Model.SortValues)
+                {
+                    if (sort.Equals(Model.SelectedSort))
+                    {
+                        <option value="@Url.SetParameter("sort", sort)" selected="selected">@sort</option>
+                    }
+                    else
+                    {
+                        <option value="@Url.SetParameter("sort", sort)">@sort</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+</div>

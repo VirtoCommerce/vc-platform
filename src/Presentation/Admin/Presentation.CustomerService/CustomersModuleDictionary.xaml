@@ -1,0 +1,125 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+				xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+				xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
+				xmlns:CustomersViews="clr-namespace:VirtoCommerce.ManagementClient.Customers.View"
+				xmlns:CustomersViewModels="clr-namespace:VirtoCommerce.ManagementClient.Customers.ViewModel"
+				xmlns:ViewModelHelpers="clr-namespace:VirtoCommerce.ManagementClient.Customers.ViewModel.Helpers"
+				xmlns:ViewHelpers="clr-namespace:VirtoCommerce.ManagementClient.Customers.View.Helpers"
+				xmlns:Controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
+				xmlns:implementations="clr-namespace:VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations"
+				xmlns:CustomersViewModelSettingsWizard="clr-namespace:VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.Wizard.Implementations"
+				xmlns:CustomersViewSettings="clr-namespace:VirtoCommerce.ManagementClient.Customers.View.Settings"
+				xmlns:CustomersViewSettingsWizard="clr-namespace:VirtoCommerce.ManagementClient.Customers.View.Settings.Wizard"
+				xmlns:DialogsViewModel="clr-namespace:VirtoCommerce.ManagementClient.Customers.Dialogs.ViewModel.Implementations"
+				xmlns:DialogsView="clr-namespace:VirtoCommerce.ManagementClient.Customers.Dialogs.View"
+				xmlns:CustomersViewModelSettings1="clr-namespace:VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CasePropertySets.Implementations"
+				xmlns:implementations1="clr-namespace:VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseRules.Implementations"
+				xmlns:CustomersViewModelSettings2="clr-namespace:VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseTemplates.Implementations"
+				xmlns:implementations2="clr-namespace:VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseLabels.Implementations"
+				xmlns:settings="clr-namespace:VirtoCommerce.ManagementClient.Customers.ViewModel.Settings">
+
+    <ResourceDictionary.MergedDictionaries>
+        <!--TODO why we added two themes-->
+        <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/HomeViewTheme/VirtoCommerceHomeTheme.xaml"/>
+        <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/SettingsViewTheme/VirtoCommerceSettingsTheme.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <DataTemplate DataType="{x:Type implementations:CustomersMainViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type core_controls:HorizontalTabDefaultView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type implementations:CustomersHomeViewModel}">
+        <Controls:CacheContentControl Type="{x:Type CustomersViews:CustomersHomeView}"/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type implementations:CustomersDetailViewModel}">
+        <Controls:CacheContentControl Type="{x:Type CustomersViews:CustomersDetailView}"/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type implementations:CaseDetailViewModel}">
+        <Controls:CacheContentControl Type="{x:Type CustomersViews:CaseDetailView}" />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type ViewModelHelpers:CommunicationItemNoteViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type ViewHelpers:CommunicationItemNoteView}" />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type implementations:CustomerDetailViewModel}">
+        <Controls:CacheContentControl Type="{x:Type CustomersViews:CustomerDetailView}"/>
+    </DataTemplate>
+
+    <!--Search-->
+    <DataTemplate DataType="{x:Type implementations:SearchHomeViewModel}">
+        <Controls:CacheContentControl Type="{x:Type CustomersViews:SearchHomeView}"/>
+    </DataTemplate>
+
+    <!--Dialogs-->
+    <DataTemplate DataType="{x:Type DialogsViewModel:AddressDialogViewModel}">
+        <Controls:CacheContentControl Type="{x:Type DialogsView:AddressDialogView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type DialogsViewModel:PhoneNumberDialogViewModel}">
+        <Controls:CacheContentControl Type="{x:Type DialogsView:PhoneNumberDialogView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type DialogsViewModel:EmailDialogViewModel}">
+        <Controls:CacheContentControl Type="{x:Type DialogsView:EmailDialogView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type DialogsViewModel:CreateCustomerDialogViewModel}">
+        <Controls:CacheContentControl Type="{x:Type DialogsView:CreateCustomerDialogView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type DialogsViewModel:CreateUserDialogViewModel}">
+        <Controls:CacheContentControl Type="{x:Type DialogsView:CreateUserDialogView}"/>
+    </DataTemplate>
+
+
+    <!--Settings-->
+    <DataTemplate DataType="{x:Type settings:CustomersMainSettingsViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type core_controls:HorizontalTabDefaultView}">
+            <core_controls:CacheContentControl.Resources>
+                <Style TargetType="{x:Type core_controls:HorizontalTabDefaultView}" BasedOn="{StaticResource Virto_SubTabControl_Horizontal_Style}" />
+            </core_controls:CacheContentControl.Resources>
+        </core_controls:CacheContentControl>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type implementations2:LabelsSettingsViewModel}">
+        <Controls:CacheContentControl Type="{x:Type CustomersViewSettings:LabelsSettingsView}" />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type implementations2:LabelViewModel}">
+        <Controls:CacheContentControl Type="{x:Type CustomersViewSettings:LabelView}" />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type implementations1:CaseRulesSettingsViewModel}">
+        <Controls:CacheContentControl Type="{x:Type CustomersViewSettings:CaseRulesSettingsView}" />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type implementations1:CaseRuleViewModel}">
+        <Controls:CacheContentControl Type="{x:Type CustomersViewSettings:CaseRuleView}" />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type CustomersViewModelSettingsWizard:CaseRuleOverviewStepViewModel}">
+        <Controls:CacheContentControl Type="{x:Type CustomersViewSettingsWizard:CaseRuleOverviewStepView}" />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type CustomersViewModelSettings1:CasePropertySetsSettingsViewModel}">
+        <Controls:CacheContentControl Type="{x:Type CustomersViewSettings:CasePropertySetsSettingsView}" />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type CustomersViewModelSettings1:CasePropertySetViewModel}">
+        <Controls:CacheContentControl Type="{x:Type CustomersViewSettings:CasePropertySetView}" />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type CustomersViewModelSettings1:CasePropertyViewModel}">
+        <Controls:CacheContentControl Type="{x:Type CustomersViewSettings:CasePropertyView}" />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type CustomersViewModelSettings2:CaseTemplatesSettingsViewModel}">
+        <Controls:CacheContentControl Type="{x:Type CustomersViewSettings:CaseSubjectsSettingsView}" />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type CustomersViewModelSettings2:CaseTemplateViewModel}">
+        <Controls:CacheContentControl Type="{x:Type CustomersViewSettings:CaseSubjectView}" />
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type CustomersViewModelSettings2:CaseTemplatePropertyViewModel}">
+        <Controls:CacheContentControl Type="{x:Type CustomersViewSettings:CaseSubjectPropertyView}" />
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type settings:MultiLineEditViewModel}">
+        <Controls:CacheContentControl Type="{x:Type CustomersViewSettings:MultiLineEditView}" />
+    </DataTemplate>
+	
+	
+	<SolidColorBrush x:Key="CustomerDetailMenuItemBrush" Color="#F89A2D"/>
+	<SolidColorBrush x:Key="SettingsDetailItemMenuBrush" Color="#AAAAAA"/>
+	
+</ResourceDictionary>

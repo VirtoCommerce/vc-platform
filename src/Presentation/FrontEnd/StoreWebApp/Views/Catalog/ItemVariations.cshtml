@@ -1,0 +1,51 @@
+﻿@using VirtoCommerce.Client
+@model VariationsModel
+
+@if (Model.Variations.Any())
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("div.variations select").change(function (source) {
+                loadVariations("@Model.ParentItemId", null, source.target);
+            });
+
+            var form = $("div.variations").closest("form");
+            form.removeData('validator');
+            form.removeData('unobtrusiveValidation');
+            $.validator.unobtrusive.parse(form);
+        });
+    </script>
+    
+        @Html.HiddenFor(m => m.SelectedVariationId)
+        <h2>Available variations:</h2>
+        <div class="variations">
+            @foreach (var variation in Model.Variations)
+            {
+                <div class="variation block-content">
+                    <p style="margin: 11px 0 0;"><b>@variation.Name</b></p>
+
+                    <select name="@variation.Name" id="@variation.Name" data-val-required="The field is required." data-val="true">
+                        @foreach (var item in variation.Items)
+                        {
+                            var isSelected = item.Selected ? "selected=selected" : "";
+
+                            <option value="@item.Value" @isSelected>@item.Text</option>
+                        }
+                    </select>
+                    <br />
+                    <span data-valmsg-replace="true" data-valmsg-for="@variation.Name" class="field-validation-valid"></span>
+
+@*                    @Html.DropDownListFor(m => variation.Value, variation.Items, new { id = variation.Name})
+                    <br />
+                    @Html.ValidationMessageFor(m => variation.Value)*@
+                </div>
+            }
+        </div>
+        <div class="variation-item">
+            @if (!string.IsNullOrEmpty(Model.SelectedVariationId))
+            {
+                @Html.Action("DisplayItemById", new { itemId = Model.SelectedVariationId, parentItemId = Model.ParentItemId, name = "variation", forcedActive = true, responseGroups = ItemResponseGroups.ItemLarge, displayOptions = ItemDisplayOptions.ItemLarge})
+            }
+        </div>
+
+}

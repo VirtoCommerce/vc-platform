@@ -1,0 +1,7 @@
+﻿@model VirtoCommerce.Foundation.Orders.Model.Order
+@{
+    ViewBag.Title = Html.Title(String.Format("Order #{0} - {1}", Model.TrackingNumber, Model.Status));
+    Layout = "~/Views/Shared/_LayoutPopUp.cshtml";
+    @Html.DisplayForModel(new { View = "Print" })
+}
+

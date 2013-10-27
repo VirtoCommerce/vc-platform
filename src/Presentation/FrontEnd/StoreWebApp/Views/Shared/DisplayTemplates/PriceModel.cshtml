@@ -1,0 +1,26 @@
+﻿@model PriceModel
+
+@if (Model.Type == PriceType.Sale)
+{
+    <p class="old-price">
+        <span class="price-label">@("Regular Price:".LocalizeHtml())</span> <span class="price">@Model.ListPriceFormatted</span>
+    </p>
+    <p class="special-price">
+        <span class="price-label">@("Special Price:".LocalizeHtml())</span> <span class="price">@Model.SalePriceFormatted</span>
+    </p>
+}
+else if(Model.Type == PriceType.Regular)
+{
+    <p class="regular-price">
+        @Model.PriceTitle.LocalizeHtml()&nbsp;<span class="price">@Model.ListPriceFormatted</span>
+    </p>
+}
+<!--
+    <p class="price-from">
+        <span class="price-label">From:</span> <span class="price">@Model.ListPriceFormatted</span>
+    </p>
+    <p class="price-to">
+        <span class="price-label">To:</span> <span class="price">@Model.SalePriceFormatted</span>
+    </p>
+
+-->

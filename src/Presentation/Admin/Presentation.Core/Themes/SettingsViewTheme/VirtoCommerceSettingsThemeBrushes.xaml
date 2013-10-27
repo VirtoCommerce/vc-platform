@@ -1,0 +1,55 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+					xmlns:PresentationOptions="http://schemas.microsoft.com/winfx/2006/xaml/presentation/options"
+					xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+					mc:Ignorable="PresentationOptions"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+
+	<!-- Window -->
+	<SolidColorBrush x:Key="Virto_Window_Background_Brush" Color="White" PresentationOptions:Freeze="true" />
+	<SolidColorBrush x:Key="Virto_Wizard_Window_Background_Brush" Color="#FFFAFAFF" PresentationOptions:Freeze="true"/> 
+    <!-- Window -->
+
+
+    <!--2. TextBlock brushes-->
+	<SolidColorBrush x:Key="Virto_Text_Default_Brush" Color="#444444" PresentationOptions:Freeze="true"/>
+    <!--TextBlock brushes-->
+
+
+
+    <!--4. SearchTextBox and Watermark brashes -->
+    <!--4.2 -->
+	<SolidColorBrush x:Key="Virto_TextBox_Watermark_Background_Brush" Color="White" PresentationOptions:Freeze="true"/>
+    <!-- SearchTextBox and Watermark brashes -->
+
+
+    <!--6. Buttons brushes-->
+    <!--6.1 -->
+	<SolidColorBrush x:Key="Virto_Button_Background_Normal_Brush" Color="#3296D4" PresentationOptions:Freeze="true"/>
+
+    <!--6.4 -->
+	<SolidColorBrush x:Key="Virto_Button_Background_MouseOver_Brush" Color="Black" PresentationOptions:Freeze="true"/>
+    <!--6.5 -->
+	<SolidColorBrush x:Key="Virto_Button_Background_Pressed_Brush" Color="#4D4D4D" PresentationOptions:Freeze="true"/>
+
+	<SolidColorBrush x:Key="Virto_ToolButton_Normal_Background_Brush" Color="#DDDDDD" PresentationOptions:Freeze="true"/>
+    <!--Buttons brushes-->
+
+
+
+
+    <!--15. ListBox-->
+    <!--15.3 -->
+	<SolidColorBrush x:Key="Virto_ListBoxItem_MouseOver_Background_Brush" Color="#A9A9A9" PresentationOptions:Freeze="true"/>
+    <!--15.4 -->
+	<SolidColorBrush x:Key="Virto_ListBoxItem_MouseOver_Border_Brush" Color="#3397D5" PresentationOptions:Freeze="true"/>
+    <!--15.5 -->
+	<SolidColorBrush x:Key="Virto_ListBoxItem_IsSelected_Background_Brush" Color="#A0A9A9A9" PresentationOptions:Freeze="true"/>
+    <!--ListBox-->
+
+ 
+    <!--Common brushes-->
+	<SolidColorBrush x:Key="Virto_HighLightText_Foreground_Brush" Color="#FF1BA1E2" PresentationOptions:Freeze="true"/>
+    <!--Common brushes-->
+
+</ResourceDictionary>

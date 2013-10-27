@@ -1,0 +1,24 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
+                    xmlns:localViewModel="clr-namespace:VirtoCommerce.ManagementClient.Reviews.ViewModel"
+                    xmlns:localView="clr-namespace:VirtoCommerce.ManagementClient.Reviews.View"
+                    xmlns:implementations="clr-namespace:VirtoCommerce.ManagementClient.Reviews.ViewModel.Implementations">
+
+	<ResourceDictionary.MergedDictionaries>
+		<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/SettingsViewTheme/VirtoCommerceSettingsTheme.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <DataTemplate DataType="{x:Type implementations:ReviewsHomeViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localView:ReviewsHomeView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type implementations:ReviewEditViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localView:ReviewEditView}"/>
+    </DataTemplate>
+
+
+	<!--Brushes-->
+	<SolidColorBrush x:Key="ReviewDetailItemMenuBrush" Color="#5085D7"/>
+	<!--Brushes-->
+
+</ResourceDictionary>

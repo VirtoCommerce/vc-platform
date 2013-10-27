@@ -1,0 +1,12 @@
+﻿@model VirtoCommerce.Web.Models.LineItemModel
+        <tr>
+            <td class="name">
+                @Model.DisplayName
+            </td>
+            <td class="qty">
+                @Model.Quantity
+            </td>
+            <td class="total">
+                <span class="price">@Model.FormattedExtendedPrice</span>
+            </td>
+        </tr>

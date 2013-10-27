@@ -1,0 +1,15 @@
+﻿@model VirtoCommerce.Foundation.Orders.Model.Order[]
+
+<div class="pager">
+	<p class="amount">
+		<strong>@Model.Count() @("Item(s)".LocalizeHtml())</strong>
+	</p>
+	<div class="limiter">
+		<label>@("Show".LocalizeHtml())</label>
+		<select onchange="setLocation(this.value)">
+			<option value="#" selected="selected">10</option>
+			<option value="#">20</option>
+			<option value="#">50</option>
+		</select>@("per page".LocalizeHtml())
+	</div>
+</div>

@@ -1,0 +1,53 @@
+﻿@model CatalogItemWithPriceModel
+
+<script type="text/javascript">
+	$(document).ready(function ()
+	{
+		//Update main image
+		$("#imageContainer img.primaryimage").attr("src", "@Url.Image(Model.CatalogItem.Item, "primaryimage")");
+		$("#imageContainer img.primaryimage").attr("onerror", "this.onerror=null;this.src='@Href("~/Content/themes/default/images/blank.png")';");
+
+		$(".jqzoom").unbind();
+		$(".jqzoom").attr("href", "@Url.Image(Model.CatalogItem.Item, "primaryimage")");
+		//Reset large image
+		$(".jqzoom")[0].largeimageloaded = false;
+
+		initJqZoom();
+		//Update main price
+		@{Model.Price.PriceTitle = "Price:".Localize();}
+		$("#mainPrice").html('@Html.Raw(Html.DisplayFor(model => model.Price).ToString().Replace(Environment.NewLine, ""))');
+		$("#mainProductName h1").html('@Model.DisplayName');
+		$("p.in-stock span").text("@Model.Availability.AvailabilityString");
+		
+		//Update properties
+		$("#product_tabs_additional_contents_list").html($('#temp_variation_properties').html());
+		$('#temp_variation_properties').remove();
+		$("#AddToCart").load('@Html.Raw(Url.Action("AddToCart", "Cart", new {itemId = Model.CatalogItem.ItemId, parentItemId = Model.CatalogItem.ParentItemId}))');
+	
+		if ($('#qty').length != 0)
+		{
+			initQtySpinner("#qty", "@((int)(Model.Availability.MinQuantity))", "@((int)(Model.Availability.MaxQuantity))");
+     		
+			@if (!Model.Availability.IsAvailable)
+			{
+				@:$("#qty").spinner("disable");
+			}
+			else
+			{
+				@:$("#qty").spinner("enable");
+			}
+
+			$('#qty').attr("data-val-range-min", '@((int)Model.Availability.MinQuantity)');
+			$('#qty').attr("data-val-range-max", '@((int)Model.Availability.MaxQuantity)');
+			$('#qty').attr("data-val-range", "@("Select quantity in range".LocalizeHtml())" + " @string.Format("{0:#} - {1:#}", Model.Availability.MinQuantity, @Model.Availability.MaxQuantity)");
+			var $form = $('#qty').resetValidation();
+			$form.removeData('validator');
+			$form.removeData('unobtrusiveValidation');
+			$.validator.unobtrusive.parse("#" + $form.attr("id"));
+		}
+	});
+</script>
+
+<div id="temp_variation_properties"style="display: none;">
+	@{ Html.RenderPartial("ItemProperties", Model.CatalogItem); }
+</div>

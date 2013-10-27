@@ -1,0 +1,26 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebUI.FunctionalTests", "WebUI.FunctionalTests\WebUI.FunctionalTests.csproj", "{74037F82-F9F0-4951-ABDF-951E68F31A68}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdminUI.FunctionalTests", "AdminUI.FunctionalTests\AdminUI.FunctionalTests.csproj", "{992E6FDE-115F-47E2-8C12-52DC4ED6C6E3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{74037F82-F9F0-4951-ABDF-951E68F31A68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74037F82-F9F0-4951-ABDF-951E68F31A68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74037F82-F9F0-4951-ABDF-951E68F31A68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74037F82-F9F0-4951-ABDF-951E68F31A68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{992E6FDE-115F-47E2-8C12-52DC4ED6C6E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{992E6FDE-115F-47E2-8C12-52DC4ED6C6E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{992E6FDE-115F-47E2-8C12-52DC4ED6C6E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{992E6FDE-115F-47E2-8C12-52DC4ED6C6E3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,55 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
+                    xmlns:localView="clr-namespace:VirtoCommerce.ManagementClient.Marketing.View"
+                    xmlns:localWizardView="clr-namespace:VirtoCommerce.ManagementClient.Marketing.View.Wizard"
+                    xmlns:implementations="clr-namespace:VirtoCommerce.ManagementClient.Marketing.ViewModel.Implementations"
+                    xmlns:localWizardViewModel1="clr-namespace:VirtoCommerce.ManagementClient.Marketing.ViewModel.Wizard.Implementations"
+                    xmlns:interfaces="clr-namespace:VirtoCommerce.ManagementClient.Marketing.ViewModel.Wizard.Interfaces">
+    <ResourceDictionary.MergedDictionaries>
+		<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/HomeViewTheme/VirtoCommerceHomeTheme.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+    
+
+    <DataTemplate DataType="{x:Type implementations:MainMarketingViewModel}">
+		<core_controls:CacheContentControl Type="{x:Type core_controls:HorizontalTabDefaultView}"/>
+	</DataTemplate>
+    
+    <!--promotions views-->
+    <DataTemplate DataType="{x:Type implementations:MarketingHomeViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localView:MarketingHomeView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type implementations:CartPromotionViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localView:CartPromotionView}"/>
+    </DataTemplate>
+    
+    <!--wizard steps-->
+    <DataTemplate DataType="{x:Type localWizardViewModel1:CartPromotionOverviewStepViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localWizardView:CartPromotionOverviewStepView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type localWizardViewModel1:CartPromotionExpressionStepViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localWizardView:PromotionExpressionStepView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type localWizardViewModel1:CartPromotionCouponStepViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localWizardView:CartPromotionCouponStepView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type interfaces:ItemTypeSelectionStepViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localWizardView:ItemTypeSelectionStepView}"/>
+    </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type implementations:CatalogPromotionViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localView:CatalogPromotionView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type localWizardViewModel1:CatalogPromotionOverviewStepViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localWizardView:CatalogPromotionOverviewStepView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type localWizardViewModel1:CatalogPromotionExpressionStepViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localWizardView:PromotionExpressionStepView}"/>
+    </DataTemplate>
+
+	<!--Brushes-->
+	<SolidColorBrush x:Key="MarketingDetailItemMenuBrush" Color="#F4BD1A"/>
+	<!--Brushes-->
+
+
+</ResourceDictionary>

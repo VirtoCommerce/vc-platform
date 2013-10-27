@@ -1,0 +1,94 @@
+﻿@model ChangeAccountInfoModel
+@{
+    ViewBag.Title = Html.Title("Account Information".Localize());
+    Layout = "_Layout.cshtml";
+}
+<script type="text/javascript">
+    function setPasswordForm(obj, arg) {
+        if (arg) {
+            $('#OldPassword').parents('div.fieldset').show();
+            $('#OldPassword').addClass('required-entry');
+            $('#NewPassword').addClass('required-entry');
+            $('#confirmation').addClass('required-entry');
+
+        } else {
+            $('#OldPassword').parents('div.fieldset').hide();
+            $('#OldPassword').removeClass('required-entry');
+            $('#NewPassword').removeClass('required-entry');
+            $('#confirmation').removeClass('required-entry');
+        }
+    }
+</script>
+<div class="dashboard">
+    <div class="page-title">
+        <h1>@("Edit Account Information".LocalizeHtml())</h1>
+    </div>
+    @using (Html.BeginForm())
+    {
+        @Html.ValidationSummary(false)
+        @Html.AntiForgeryToken()
+        <div class="fieldset">
+            <h2 class="legend">@("Account Information".LocalizeHtml())</h2>
+            <ul class="form-list">
+                <li class="fields">
+                    <div class="customer-name">
+                        <div class="field name-firstname">
+                            @Html.LabelForEx(m=>m.FullName)
+	                        <div class="input-box">
+		                        @Html.TextBoxFor(m => m.FullName, new { @class = "input-text" })
+	                        </div>
+                        </div>
+                    </div>
+                </li>
+                <li>
+					@Html.LabelForEx(m=>m.Email)
+                    <div class="input-box">
+                        @Html.TextBoxFor(m => m.Email, new { @class = "input-text" })  
+                    </div>
+                </li>
+                <li class="control">
+                    <input type="checkbox" class="checkbox" title="@("Change Password".LocalizeHtml())" onclick="setPasswordForm(this, this.checked)"
+                        value="1" id="ChangePassword" name="ChangePassword" />
+                    <label for="ChangePassword">@("Change Password".LocalizeHtml())</label>
+
+                </li>
+            </ul>
+        </div>
+        <div style="display: none;" class="fieldset">
+            <h2 class="legend">@("Change Password".LocalizeHtml())</h2>
+            <ul class="form-list">
+                <li>
+					@Html.LabelForEx(m=>m.OldPassword)
+                    <div class="input-box">
+                         @Html.PasswordFor(m => m.OldPassword, new { @class = "input-text" })
+                    </div>
+                </li>
+                <li class="fields">
+                    <div class="field">
+                        @Html.LabelForEx(m=>m.NewPassword)
+                        <div class="input-box">
+                            @Html.PasswordFor(m => m.NewPassword, new { @class = "input-text" })
+                        </div>
+                    </div>
+                    <div class="field">
+						@Html.LabelForEx(m=>m.ConfirmPassword)
+                        <div class="input-box">
+                            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "input-text" })
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="buttons-set">
+            <p class="required">
+                * @("Required Fields".LocalizeHtml())
+            </p>
+            <p class="back-link">
+                <a href="@Url.Action("Index","Account")"><small>« </small>
+                    @("Back".LocalizeHtml())</a>
+            </p>
+            <button class="button" title="Save" type="submit">
+                <span><span>@("Save".LocalizeHtml())</span></span></button>
+        </div>
+    }
+</div>

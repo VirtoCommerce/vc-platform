@@ -1,0 +1,5 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+@Html.Action("SearchResultsByKeywords", "search", new { keywords = Request.QueryString["q"] })

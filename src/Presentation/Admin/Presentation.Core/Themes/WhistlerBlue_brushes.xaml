@@ -1,0 +1,154 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Theme -->
+    <SolidColorBrush x:Key="ThemeBackgroundBrush" Color="White" />
+    <SolidColorBrush x:Key="ThemeForegroundBrush" Color="Black" />
+
+    <!-- Color Palette -->
+    <SolidColorBrush x:Key="OutsideFontColor" Color="#FF000000"/>
+    <SolidColorBrush x:Key="ButtonFontColor" Color="#FF042271"/>
+    <Color x:Key="Focus">#FF04CCFF</Color>
+    <Color x:Key="HyperlinkFocus">#FF2B54BA</Color>
+    <Color x:Key="Calendar">#FF0066CC</Color>
+    <Color x:Key="PressStroke1">#FF1D415C</Color>
+    <Color x:Key="PressStroke2">#FF2C628B</Color>
+    <Color x:Key="TabStroke">#FF4F8BB9</Color>
+    <Color x:Key="DataSortArrow">#3F2C628B</Color>
+    <!--PressStroke2, 25%-->
+    <Color x:Key="DropLocate">#FF6392C8</Color>
+    <Color x:Key="TreeviewArrowNorm">#FF76D5FD</Color>
+    <Color x:Key="TreeviewArrowOver">#FFC1EFF8</Color>
+    <Color x:Key="TreeviewArrowCheck">#FF6380EE</Color>
+    <Color x:Key="ExpandArrowStroke">#FF688DC4</Color>
+    <Color x:Key="Arrow">#FF425080</Color>
+    <Color x:Key="Arrow2">#FF7682E4</Color>
+    <Color x:Key="TextBkgSelection">#FF309AFF</Color>
+    <Color x:Key="TextboxOver1">#FF5296BD</Color>
+    <Color x:Key="TextboxOver2">#FFC2E4F6</Color>
+    <Color x:Key="TextboxPress1">#FF3B79AC</Color>
+    <Color x:Key="TextboxPress2">#FFB2DBED</Color>
+    <Color x:Key="ItemOver1">#FFF4FAFD</Color>
+    <Color x:Key="ItemOver2">#FFCFEDFD</Color>
+    <Color x:Key="ItemOverStroke">#FFD8F0FA</Color>
+    <Color x:Key="ItemSelectStroke">#b9b9b9</Color>
+    <Color x:Key="Over1">#FFE2F5FF</Color>
+    <Color x:Key="Over2">#FFC0E7FC</Color>
+    <Color x:Key="Over3">#FF9EDDFF</Color>
+    <Color x:Key="Press1">#FF759FB6</Color>
+    <Color x:Key="Press2">#FFB6E0F6</Color>
+    <Color x:Key="Press3">#FF9DD5F4</Color>
+    <Color x:Key="PressHighlight">#FF387599</Color>
+    <Color x:Key="ButtonHighlightMid">#0095D9FF</Color>
+    <Color x:Key="ButtonHighlightMid2">#9935A6E6</Color>
+    <!--60%-->
+    <Color x:Key="ButtonHighlightMid3">#A535A6E6</Color>
+    <!--65%-->
+    <Color x:Key="RadioIcon1">#FF90D5E5</Color>
+    <Color x:Key="RadioIcon2">#FF28A2D1</Color>
+    <Color x:Key="RadioIcon3">#FF1898D1</Color>
+    <Color x:Key="RadioIcon4">#FF0F83C7</Color>
+    <Color x:Key="RadioIconOver1">#FF1EBEFF</Color>
+    <Color x:Key="RadioIconOver2">#FF13A2F3</Color>
+    <Color x:Key="RadioIconPress1">#99759FB6</Color>
+    <!--Press1, 60%-->
+    <Color x:Key="RadioIconPress2">#FF4B8DAF</Color>
+    <Color x:Key="RadioStroke">#FF275674</Color>
+    <Color x:Key="CheckInnerOver">#FF79C6F9</Color>
+    <Color x:Key="CheckInnerOver2">#FFAFDEFD</Color>
+    <Color x:Key="CheckInnerPress">#FF5EB6F7</Color>
+    <Color x:Key="CheckInnerPress2">#FF90CFFC</Color>
+    <Color x:Key="CheckOutterOver">#FF5989A5</Color>
+    <Color x:Key="CheckOutterOver2">#FFDEF9FA</Color>
+    <Color x:Key="ThumbPress1">#FF6CBBE5</Color>
+    <Color x:Key="ThumbPress2">#FF50A1CC</Color>
+    <Color x:Key="ExpanderOver1">#FFB1E7FE</Color>
+    <Color x:Key="ExpanderOver2">#FFEAFFFF</Color>
+    <Color x:Key="ExpanderOver3">#A56EB4F6</Color>
+    <Color x:Key="ExpanderMid">#009DD5F4</Color>
+    <!--Press3, 0%-->
+    <Color x:Key="ExpanderPress1">#FF80CEFF</Color>
+    <Color x:Key="ExpanderPress2">#FF2D84CF</Color>
+    <Color x:Key="ThumbDivetOver">#E5387599</Color>
+    <!--PressHighlight, 20%-->
+    <Color x:Key="ThumbDivetFill1">#199DD5F4</Color>
+    <!--Press3, 10%-->
+    <Color x:Key="ThumbDivetFill2">#33387599</Color>
+    <!--PressHighlight, 20%-->
+    <!-- End Color Palette-->
+
+
+    <!-- Communal Static Resources -->
+    <SolidColorBrush x:Key="btnFocus" Color="{StaticResource Focus}"/>
+    <SolidColorBrush x:Key="btnPressStroke1" Color="{StaticResource PressStroke1}"/>
+    <SolidColorBrush x:Key="btnPressStroke2" Color="{StaticResource PressStroke2}"/>
+
+    <LinearGradientBrush x:Key="btnPressBorder" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="{StaticResource PressStroke1}" Offset="0"/>
+        <GradientStop Color="{StaticResource PressStroke2}" Offset="1"/>
+    </LinearGradientBrush>
+
+    <SolidColorBrush x:Key="hyperlinkPress" Color="{StaticResource HyperlinkFocus}"/>
+    <SolidColorBrush x:Key="calendarBtnFill" Color="{StaticResource Over2}"/>
+    <SolidColorBrush x:Key="calendarTodayStroke" Color="{StaticResource Calendar}"/>
+    <SolidColorBrush x:Key="treeviewArrowUnchecked" Color="{StaticResource TreeviewArrowNorm}"/>
+    <SolidColorBrush x:Key="treeviewArrowHover" Color="{StaticResource TreeviewArrowOver}"/>
+    <SolidColorBrush x:Key="treeviewArrowChecked" Color="{StaticResource TreeviewArrowCheck}"/>
+
+    <SolidColorBrush x:Key="TextBackgroundSelection" Color="{StaticResource TextBkgSelection}"/>
+    <SolidColorBrush x:Key="TextBoxOverBrush" Color="{StaticResource TextboxOver1}"/>
+    <SolidColorBrush x:Key="TextBoxPressBrush" Color="{StaticResource TextboxPress1}"/>
+
+    <LinearGradientBrush x:Key="TextBoxOver" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="{StaticResource TextboxOver1}" Offset="0"/>
+        <GradientStop Color="{StaticResource TextboxOver2}" Offset="0.355"/>
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="TextBoxFocus" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="{StaticResource TextboxPress1}" Offset="0"/>
+        <GradientStop Color="{StaticResource TextboxPress2}" Offset="0.355"/>
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="TextBoxNorm" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="#FFABAEB3" Offset="0"/>
+        <GradientStop Color="#FFE2E8EE" Offset="0.355"/>
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="grayGradient" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="#FFFFFFFF" Offset="0"/>
+        <GradientStop Color="#FFEDEDED" Offset="0.171"/>
+        <GradientStop Color="#FFE7E7E7" Offset="0.5"/>
+        <GradientStop Color="#FFDCDCDC" Offset="0.51"/>
+        <GradientStop Color="#FFEAEBEC" Offset="1"/>
+    </LinearGradientBrush>
+
+    <SolidColorBrush x:Key="hoverStroke" Color="{StaticResource ItemOverStroke}"/>
+    <SolidColorBrush x:Key="selectedStroke" Color="{StaticResource ItemSelectStroke}"/>
+
+    <SolidColorBrush x:Key="hoverGradient" Color="#E8E8E8" />
+
+    <LinearGradientBrush x:Key="hoverGradientVertical" EndPoint="1,0.5" StartPoint="0,0.5">
+        <GradientStop Color="{StaticResource ItemOver1}" Offset="0.5"/>
+        <GradientStop Color="{StaticResource Over1}" Offset="0.5"/>
+        <GradientStop Color="{StaticResource ItemOver2}" Offset="1"/>
+    </LinearGradientBrush>
+
+    <SolidColorBrush x:Key="BtnOverFill" Color="#E2E2E2" />
+    <LinearGradientBrush x:Key="BtnPressFill" EndPoint="0.5,1" StartPoint="0.5,0">
+        <GradientStop Color="{StaticResource Press1}" Offset="0"/>
+        <GradientStop Color="{StaticResource Press2}" Offset="0.152"/>
+        <GradientStop Color="{StaticResource Over2}" Offset="0.5"/>
+        <GradientStop Color="{StaticResource Press3}" Offset="0.509"/>
+    </LinearGradientBrush>
+
+
+    <!-- datagrid specific resources -->
+    <SolidColorBrush x:Key="HeaderSeparator" Color="#FFD7D5D8" />
+    <SolidColorBrush x:Key="GridBorder" Color="#FFD6D7D6" />
+    <SolidColorBrush x:Key="dropLocator" Color="{StaticResource DropLocate}" />
+    <LinearGradientBrush x:Key="sortArrow" EndPoint="0.725,0.832" StartPoint="0.275,0.168">
+        <GradientStop Color="{StaticResource PressStroke2}"/>
+        <GradientStop Color="{StaticResource DataSortArrow}" Offset="1"/>
+    </LinearGradientBrush>
+    <SolidColorBrush x:Key="HorizontalVerticalGridLinesBrush">#59D6D7D6</SolidColorBrush>
+
+    <SolidColorBrush x:Key="AlternatingRowBackground" Color="#F6F6F6"/>
+</ResourceDictionary>

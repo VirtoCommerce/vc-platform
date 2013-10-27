@@ -1,0 +1,24 @@
+﻿@model GiftMessageModel
+<ul class="no-padding">
+    <li>
+        <div class="input-box">
+            <label for="gift-message-whole-from">
+                From</label><br/>
+            @Html.TextBoxFor(m => m.From, new { @class = "input-text" })
+            @Html.ValidationMessageFor(m => m.From, "This a required field")
+        </div>
+        <div class="input-box input-box-last">
+            <label for="gift-message-whole-to">
+                To</label><br/>
+            @Html.TextBoxFor(m => m.To, new { @class = "input-text" })
+            @Html.ValidationMessageFor(m => m.To, "This a required field")
+        </div>
+    </li>
+    <li>
+        <label for="gift-message-whole-message">
+            Message</label>
+        <br/>
+        @Html.TextAreaFor(m => m.Message, new { @class = "input-text giftmessage-area", cols = "40", rows = "5" })
+        @Html.ValidationMessageFor(m => m.Message, "This a required field")
+    </li>
+</ul>
