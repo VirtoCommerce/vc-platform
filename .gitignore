@@ -19,7 +19,7 @@ build/
 !packages/*/build/
 
 # Virto Commerce ES Search
-!es/bin/
+!es/bin/*
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
