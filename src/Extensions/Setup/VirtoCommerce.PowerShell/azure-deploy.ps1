@@ -455,6 +455,7 @@ Function deploy-admin
 
 
 #Import-Module "C:\Program Files (x86)\Microsoft SDKs\Windows Azure\PowerShell\Azure\*.psd1"
+Write-Output "Import-AzurePublishSettingsFile $common_publishsettingsfile"
 Import-AzurePublishSettingsFile $common_publishsettingsfile
 #if ($LASTEXITCODE -ne 0)
 #{
