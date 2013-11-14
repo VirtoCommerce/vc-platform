@@ -1,0 +1,301 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="VirtoCommerce.Foundation.Marketing.Model.CartPromotion">
+    <Position X="10.75" Y="8.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAEAAAAAAQAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Marketing\Model\CartPromotion.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Marketing.Model.CatalogPromotion">
+    <Position X="12.5" Y="8.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>Marketing\Model\CatalogPromotion.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Marketing.Model.Coupon">
+    <Position X="16.5" Y="3.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAABAAABAAAAAIAAAiAAAAAAAAAAgAAQAAAAAAAAA=</HashCode>
+      <FileName>Marketing\Model\Coupon.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Marketing.Model.CouponSet">
+    <Position X="14" Y="3.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEAAAAAAACIAQAAAAAAAAAAQAAAAAAAAQ=</HashCode>
+      <FileName>Marketing\Model\CouponSet.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Coupons" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Marketing.Model.DefaultPromotionEvaluator" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="18.75" Y="4.5" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAIBAAAAAgAAEAAAAAAAAAAAQAAAAAAAAAAA=</HashCode>
+      <FileName>Marketing\Model\DefaultPromotionEvaluator.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Marketing.Model.Promotion">
+    <Position X="10.75" Y="3.25" Width="2.25" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="Coupon" Type="VirtoCommerce.Foundation.Marketing.Model.Coupon">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.191" Y="0.048" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="SegmentSet" Type="VirtoCommerce.Foundation.Marketing.Model.SegmentSet">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.145" Y="0.048" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AIJAEhAGAJCgEAYOAQAiJAQgAAAQIAAEAQAAAEAQAAA=</HashCode>
+      <FileName>Marketing\Model\Promotion.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Coupon" />
+      <Property Name="CouponSet" />
+      <Property Name="SegmentSet" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Rewards" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Marketing.Model.PromotionEntry" BaseTypeListCollapsed="true">
+    <Position X="4.5" Y="8" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAACAEAAAAAAACQIAAAAAAAAAAAAAAAAAgAAAIxg=</HashCode>
+      <FileName>Marketing\Model\PromotionEntry.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Marketing.Model.PromotionEntryPopulate" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="18.75" Y="3.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAAAAAAAAAAAAAAAQAQAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Marketing\Model\PromotionEntryPopulate.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Marketing.Model.PromotionEntrySet">
+    <Position X="4.5" Y="5.75" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="Entries" Type="VirtoCommerce.Foundation.Marketing.Model.PromotionEntry">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="-0.483" Y="0.2" Height="0.182" Width="0.804" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAABAAAIAAAAACABAAAAAAAAAAAAAAQAABAAAAAAAAA=</HashCode>
+      <FileName>Marketing\Model\PromotionEntrySet.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Entries" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Marketing.Model.PromotionRecord">
+    <Position X="4.5" Y="3.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="Reward" Type="VirtoCommerce.Foundation.Marketing.Model.PromotionReward">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.386" Y="0.098" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="TargetEntriesSet" Type="VirtoCommerce.Foundation.Marketing.Model.PromotionEntrySet">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.577" Y="0.525" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="AffectedEntriesSet" Type="VirtoCommerce.Foundation.Marketing.Model.PromotionEntrySet">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.891" Y="0.246" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAEAAAIAAQAAAAAAAAAAAgAAQgAAAAAAAQA=</HashCode>
+      <FileName>Marketing\Model\PromotionRecord.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Reward" />
+      <Property Name="TargetEntriesSet" />
+      <Property Name="AffectedEntriesSet" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Marketing.Model.PromotionUsage">
+    <Position X="16.5" Y="8.5" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="Promotion" Type="VirtoCommerce.Foundation.Marketing.Model.Promotion">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.343" Y="0.072" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAQAACABAQAAACAACAAQAEEAAACAAAAAAAAAAAEAA=</HashCode>
+      <FileName>Marketing\Model\PromotionUsage.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Promotion" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Marketing.Model.PromotionUsageProvider" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="18.75" Y="5.5" Width="2" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIBAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Marketing\Model\PromotionUsageProvider.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Marketing.Model.Segment">
+    <Position X="16.5" Y="6" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AApAAgAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAA=</HashCode>
+      <FileName>Marketing\Model\Segment.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Marketing.Model.SegmentSet">
+    <Position X="14" Y="6" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="Segments" Type="VirtoCommerce.Foundation.Marketing.Model.Segment">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.246" Y="0.04" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AABAAgAAAAAAAAAAAAAAIAQAACAAAAAAAAAAAAQAAAA=</HashCode>
+      <FileName>Marketing\Model\SegmentSet.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Segments" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Marketing.Model.PromotionReward">
+    <Position X="7.5" Y="3.25" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAACQBAAIACGAAAwAACAAAAAAgAAAAAEAAAABAA=</HashCode>
+      <FileName>Marketing\Model\Rewards\PromotionReward.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Marketing.Model.CartSubtotalReward" Collapsed="true">
+    <Position X="6.5" Y="7" Width="1.75" />
+    <InheritanceLine Type="VirtoCommerce.Foundation.Marketing.Model.PromotionReward" FixedToPoint="true">
+      <Path>
+        <Point X="8.375" Y="5.963" />
+        <Point X="8.375" Y="6.614" />
+        <Point X="7.188" Y="6.614" />
+        <Point X="7.188" Y="7" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Marketing\Model\Rewards\CartSubtotalReward.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Marketing.Model.CatalogItemReward">
+    <Position X="8.5" Y="7" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>EAhEIAAAAgAEAgIAAAAAAAAAAAAAAAABQIACAACAQIA=</HashCode>
+      <FileName>Marketing\Model\Rewards\CatalogItemReward.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="VirtoCommerce.Foundation.Marketing.Model.ShipmentReward">
+    <Position X="6.5" Y="8.5" Width="1.75" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <InheritanceLine Type="VirtoCommerce.Foundation.Marketing.Model.PromotionReward" ManuallyRouted="true">
+      <Path>
+        <Point X="8.375" Y="5.963" />
+        <Point X="8.375" Y="6.614" />
+        <Point X="8.373" Y="6.614" />
+        <Point X="8.373" Y="9.246" />
+        <Point X="8.25" Y="9.246" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAABAAA=</HashCode>
+      <FileName>Marketing\Model\Rewards\ShipmentReward.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="VirtoCommerce.Foundation.Marketing.Model.PromotionType" Collapsed="true">
+    <Position X="18.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAACAIA=</HashCode>
+      <FileName>Marketing\Model\PromotionType.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="VirtoCommerce.Foundation.Marketing.Model.ExclusivityType" Collapsed="true">
+    <Position X="18.75" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAAA=</HashCode>
+      <FileName>Marketing\Model\ExclusivityType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="VirtoCommerce.Foundation.Marketing.Model.PromotionStatus" Collapsed="true">
+    <Position X="18.75" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAACAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>Marketing\Model\PromotionStatus.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="VirtoCommerce.Foundation.Marketing.Model.PropertyValueType" Collapsed="true">
+    <Position X="18.75" Y="8.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAgAAEAAAQAgAAAAAAAAAAAAAAAAAhQAAAAAAAAACAA=</HashCode>
+      <FileName>Marketing\Model\PropertyValueType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
