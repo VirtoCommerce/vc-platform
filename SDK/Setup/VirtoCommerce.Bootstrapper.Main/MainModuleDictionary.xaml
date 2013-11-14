@@ -1,0 +1,26 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:localViews="clr-namespace:VirtoCommerce.Bootstrapper.Main.Views"
+                    xmlns:localViewModels="clr-namespace:VirtoCommerce.Bootstrapper.Main.ViewModels">
+    <DataTemplate DataType="{x:Type localViewModels:MainViewModel}">
+        <localViews:MainView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type localViewModels:HelpViewModel}">
+        <localViews:HelpView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type localViewModels:LayoutStepViewModel}">
+        <localViews:LayoutStepView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type localViewModels:InstallationStepViewModel}">
+        <localViews:InstallationStepView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type localViewModels:ModificationStepViewModel}">
+        <localViews:ModificationStepView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type localViewModels:OperationProgressStepViewModel}">
+        <localViews:OperationProgressStepView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type localViewModels:OperationCompletedStepViewModel}">
+        <localViews:OperationCompletedStepView/>
+    </DataTemplate>
+</ResourceDictionary>

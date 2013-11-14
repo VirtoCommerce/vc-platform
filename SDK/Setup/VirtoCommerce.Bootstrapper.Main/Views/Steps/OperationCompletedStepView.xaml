@@ -1,0 +1,115 @@
+﻿<UserControl x:Class="VirtoCommerce.Bootstrapper.Main.Views.OperationCompletedStepView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"  
+             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:localInfrastructure="clr-namespace:VirtoCommerce.Bootstrapper.Main.Infrastructure"
+             xmlns:localViewModels="clr-namespace:VirtoCommerce.Bootstrapper.Main.ViewModels"
+             xmlns:localProperties="clr-namespace:VirtoCommerce.Bootstrapper.Main.Properties"
+             xmlns:custom="clr-namespace:VirtoCommerce.Bootstrapper.Main.Infrastructure.Extensions"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance localViewModels:OperationCompletedStepViewModel, IsDesignTimeCreatable=True}"
+             d:DesignWidth="450" d:DesignHeight="400">
+	<UserControl.Resources>
+		<BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter" />
+	</UserControl.Resources>
+	
+	<Grid Margin="30,40,30,70">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="0.75*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="0.75*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="{x:Static localProperties:Resources.Successful}"
+                   Visibility="Collapsed"
+                   HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Margin="10,0">
+            <i:Interaction.Triggers>
+                <ei:DataTrigger Binding="{Binding Result, Mode=OneWay}" Comparison="Equal" Value="{x:Static localInfrastructure:OperationResult.Successful}">
+                    <ei:ChangePropertyAction PropertyName="Visibility" Value="{x:Static Visibility.Visible}"/>
+                </ei:DataTrigger>
+            </i:Interaction.Triggers>
+        </TextBlock>
+
+        <TextBlock Text="{x:Static localProperties:Resources.SuccessfulInstall}" Grid.Row="0"
+                   Visibility="{Binding IsLaunchConfigurationWizardAvailable, Converter={StaticResource booleanToVisibilityConverter}}"
+                   HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Margin="10,0">
+        </TextBlock>
+
+		<TextBlock Text="{x:Static localProperties:Resources.SuccessfulSearchInstall}" Grid.Row="0"
+                   Visibility="{Binding IsSearchInstalledSuccessfully, Converter={StaticResource booleanToVisibilityConverter}}"
+                   HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Margin="10,0">
+		</TextBlock>
+		
+		<CheckBox Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Center"
+                  Visibility="{Binding IsLaunchConfigurationWizardAvailable, Converter={StaticResource booleanToVisibilityConverter}}" Margin="20,0,0,0"
+                  Content="{x:Static localProperties:Resources.LaunchConfiguration}"
+                  IsChecked="{Binding LaunchConfigurationWizard, Mode=TwoWay}">
+        </CheckBox>
+
+        <TextBlock Text="{x:Static localProperties:Resources.Cancelled}"
+                   Visibility="Collapsed"
+                   HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Margin="10,0">
+            <i:Interaction.Triggers>
+                <ei:DataTrigger Binding="{Binding Result, Mode=OneWay}" Comparison="Equal" Value="{x:Static localInfrastructure:OperationResult.Cancelled}">
+                    <ei:ChangePropertyAction PropertyName="Visibility" Value="{x:Static Visibility.Visible}"/>
+                </ei:DataTrigger>
+            </i:Interaction.Triggers>
+        </TextBlock>
+		<TextBlock Visibility="Collapsed"
+                   HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Margin="10,0">
+			<Run Text="{x:Static localProperties:Resources.Failed}"/>
+            <LineBreak/>
+			<LineBreak/>
+            <Run Text="{x:Static localProperties:Resources.TextBeforeTroubleshootLink}"/>
+			<LineBreak/>
+            <Hyperlink NavigateUri="{Binding TroubleshootUri}" custom:HyperlinkExtensions.IsExternal="true">
+                <Run Text="{x:Static localProperties:Resources.LinkHere}"/>
+            </Hyperlink>
+            <Run Text="{x:Static localProperties:Resources.TextAfterTroubleshootLink}"/>
+			<LineBreak/>
+			<Hyperlink NavigateUri="{Binding SDK_LogsUri}" custom:HyperlinkExtensions.IsExternal="true">
+                <Run Text="{x:Static localProperties:Resources.LinkHere}"/>
+            </Hyperlink>
+            <Run Text="{x:Static localProperties:Resources.TextAfterSDKLogLink}"/>
+			<LineBreak/>
+			<Hyperlink NavigateUri="{Binding VirtoCommerce_LogsUri}" custom:HyperlinkExtensions.IsExternal="true">
+                <Run Text="{x:Static localProperties:Resources.LinkHere}"/>
+            </Hyperlink>
+            <Run Text="{x:Static localProperties:Resources.TextAfterVirtoCommerceLogLink}"/>
+			<LineBreak/>
+			<Hyperlink NavigateUri="{Binding JRE_LogsUri}" custom:HyperlinkExtensions.IsExternal="true">
+                <Run Text="{x:Static localProperties:Resources.LinkHere}"/>
+            </Hyperlink>
+            <Run Text="{x:Static localProperties:Resources.TextAfterJRELogLink}"/>
+			<LineBreak/>
+			<Hyperlink NavigateUri="{Binding Search_LogsUri}" custom:HyperlinkExtensions.IsExternal="true">
+                <Run Text="{x:Static localProperties:Resources.LinkHere}"/>
+            </Hyperlink>
+            <Run Text="{x:Static localProperties:Resources.TextAfterSearchLogLink}"/>	
+			<LineBreak/>
+			<LineBreak/>
+            <Run Text="{Binding Message}"/>
+			<i:Interaction.Triggers>
+                <ei:DataTrigger Binding="{Binding Result, Mode=OneWay}" Comparison="Equal" Value="{x:Static localInfrastructure:OperationResult.Failed}">
+                    <ei:ChangePropertyAction PropertyName="Visibility" Value="{x:Static Visibility.Visible}"/>
+                </ei:DataTrigger>
+            </i:Interaction.Triggers>
+		</TextBlock>
+		<TextBlock Text="{x:Static localProperties:Resources.Downgrade}"
+                   Visibility="Collapsed"
+                   HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Margin="10,0">
+            <i:Interaction.Triggers>
+                <ei:DataTrigger Binding="{Binding Result, Mode=OneWay}" Comparison="Equal" Value="{x:Static localInfrastructure:OperationResult.Downgrade}">
+                    <ei:ChangePropertyAction PropertyName="Visibility" Value="{x:Static Visibility.Visible}"/>
+                </ei:DataTrigger>
+            </i:Interaction.Triggers>
+        </TextBlock>
+    </Grid>
+</UserControl>

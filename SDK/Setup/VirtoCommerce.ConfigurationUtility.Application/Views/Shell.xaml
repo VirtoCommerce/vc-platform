@@ -1,0 +1,82 @@
+﻿<controls:MetroWindow x:Class="VirtoCommerce.ConfigurationUtility.Application.Views.Shell"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:cal="http://www.codeplex.com/CompositeWPF"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:base="clr-namespace:VirtoCommerce.ManagementClient.Core;assembly=VirtoCommerce.ManagementClient.Core"
+                      xmlns:controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
+                      xmlns:localViewModels="clr-namespace:VirtoCommerce.ConfigurationUtility.Application.ViewModels"
+                      xmlns:localProperties="clr-namespace:VirtoCommerce.ConfigurationUtility.Application.Properties"
+                      xmlns:presentationInfrastructure="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure;assembly=VirtoCommerce.ManagementClient.Core"
+                      mc:Ignorable="d"
+                      d:DataContext="{d:DesignInstance localViewModels:ShellViewModel, IsDesignTimeCreatable=True}"
+                      Title="{x:Static localProperties:Resources.Title}"
+                      Style="{DynamicResource Virto_Shell_Window_Style}"
+                      ResizeMode="CanResizeWithGrip"
+                      Width="800" Height="550">
+    <FrameworkElement.DataContext>
+        <localViewModels:ShellViewModel/>
+    </FrameworkElement.DataContext>
+    <FrameworkElement.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/ShellViewTheme/VirtoCommerceShellTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+			<DataTemplate DataType="{x:Type presentationInfrastructure:ViewTitleBase}">
+				<DockPanel LastChildFill="False">
+					<TextBlock Text="{Binding SubTitle, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource Virto_Shell_TextBlock_SubTitle_Style}" DockPanel.Dock="Top" />
+					<TextBlock Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource Virto_Shell_TextBlock_Title_Style}" DockPanel.Dock="Top" />
+				</DockPanel>
+			</DataTemplate>
+
+		</ResourceDictionary>
+    </FrameworkElement.Resources>
+    <Grid Margin="0,-25,0,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="*" />
+			<RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <DockPanel Grid.Row="0"
+                   Margin="5,0"
+                   HorizontalAlignment="Left"
+                   Width="120" Height="30">
+            <Image Source="/Resources/VirtoCommerce.png"/>
+            <TextBlock Foreground="White"
+                       Text="Virto Commerce"
+                       LineHeight="14"
+                       LineStackingStrategy="BlockLineHeight"
+                       TextWrapping="Wrap"
+                       DockPanel.Dock="Bottom"
+                       Margin="5,0" />
+        </DockPanel>
+		<Grid Grid.Row="1">
+			<TabControl  x:Name="MainRegion"
+                    cal:RegionManager.RegionName="{x:Static base:RegionNames.MainRegion}"
+                    Background="Transparent" BorderThickness="0"
+                    FocusManager.IsFocusScope="True"
+                    TabStripPlacement="Top"
+                    Margin="2" Padding="0">
+				<TabControl.ItemContainerStyle>
+					<Style TargetType="TabItem">
+						<Setter Property="BorderThickness" Value="0"/>
+						<Setter Property="Template">
+							<Setter.Value>
+								<ControlTemplate TargetType="TabItem"/>
+							</Setter.Value>
+						</Setter>
+					</Style>
+				</TabControl.ItemContainerStyle>
+			</TabControl>
+			<ContentControl Content="{Binding ElementName=MainRegion, Path=SelectedContent.ViewTitle, Mode=OneWay}"  Height="70" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="50,0,0,0"/>
+		</Grid>
+		
+		<Grid Grid.Row="2">
+            <DockPanel Height="17">
+                <TextBlock DockPanel.Dock="Left" Text="{Binding Path=AssemblyVersion, UpdateSourceTrigger=PropertyChanged, StringFormat='Version: {0}', TargetNullValue='', FallbackValue=''}" Foreground="Gray"  Margin="10,0,20,3"></TextBlock>
+            </DockPanel>
+		</Grid>
+    </Grid>
+</controls:MetroWindow>

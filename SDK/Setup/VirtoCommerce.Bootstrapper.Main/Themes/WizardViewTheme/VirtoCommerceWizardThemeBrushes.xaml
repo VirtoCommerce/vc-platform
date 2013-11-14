@@ -1,0 +1,44 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--Buttons brushes-->
+    <SolidColorBrush x:Key="Virto_Button_Foreground_Normal_Brush" Color="White"/>
+    <SolidColorBrush x:Key="Virto_Button_BorderBrush_Normal_Brush" Color="White"/>
+
+    <SolidColorBrush x:Key="Virto_Button_Background_Pressed_Brush" Color="#B2B2B2"/>
+    <SolidColorBrush x:Key="Virto_Button_Background_MouseOver_Brush" Color="White"/>
+
+    <SolidColorBrush x:Key="Virto_Button_Foreground_MouseOver_Brush" Color="Black"/>
+    <SolidColorBrush x:Key="Virto_Button_Foreground_Pressed_Brush" Color="Black"/>
+    <!--Buttons brushes-->
+    
+    <!--Windows brushes-->
+    <SolidColorBrush x:Key="Virto_Wizard_Window_Background_Brush" Color="#FF111111"/>
+    <SolidColorBrush x:Key="Virto_Wizard_Window_Foreground_Brush" Color="White"/>
+    
+    <!--Windows brushes-->
+
+    <!--ProgressBar brushes-->
+    <SolidColorBrush x:Key="Virto_ProgressBar_Background_Brush" Color="DimGray"/>
+    <!--ProgressBar brushes-->
+    
+    <!--TextBox brushes-->
+    <SolidColorBrush x:Key="Virto_TextBox_Foreground_Brush" Color="White" />
+    <SolidColorBrush x:Key="Virto_TextBox_Background_Brush" Color="#FF212121"/>
+    <SolidColorBrush x:Key="Virto_TextBox_Border_Brush" Color="#888888"/>
+    <SolidColorBrush x:Key="Virto_TextBox_BorderDisable_Brush" Color="Gray"/>
+    <SolidColorBrush x:Key="Virto_TextBox_BorderValid_Brush" Color="White"/>
+    <SolidColorBrush x:Key="Virto_TextBox_BorderInvalidFocused_Brush" Color="Transparent"/>
+    <SolidColorBrush x:Key="Virto_TextBox_BorderInvalidUnfocused_Brush" Color="Transparent"/>
+    <!--TextBox brushes-->
+
+    <!--CHeckBox brushes-->
+    <SolidColorBrush x:Key="Virto_CheckBox_Border_Brush" Color="#888888"/>
+    <SolidColorBrush x:Key="Virto_CheckBox_Background_Brush" Color="Black"/>
+    <!--CHeckBox brushes-->
+
+    <!--RadioButton brushes-->
+    <SolidColorBrush x:Key="Virto_RadioButton_Ellipse_Checked_Stroke" Color="#FF828282"/>
+    <!--RadioButton brushes-->
+
+</ResourceDictionary>

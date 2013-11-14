@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?include "../VirtoCommerce.Installer/shared.wxi"?>
+<?define UpgradeCode="{9d4e5ed4-1e43-4539-b8ac-03a2eff18def}"?>
+<?define VirtoCommerceMSI = "VirtoCommerce"?>
+<?define VirtoCommerceSearchMSI = "VirtoCommerceSearch"?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util='http://schemas.microsoft.com/wix/UtilExtension'>
+  <Bundle Name="Virto Commerce $(var.DisplayVersion) SDK" Manufacturer="VirtoCommerce" Version="$(var.ProductVersion)" UpgradeCode="$(var.UpgradeCode)" SplashScreenSourceFile="splash.bmp"
+          HelpUrl="http://support.virtocommerce.com" UpdateUrl="http://virtocommerce.com" AboutUrl="http://virtocommerce.com" Copyright="VirtoCommerce (c) All rights reserved." Compressed="yes">
+    <BootstrapperApplicationRef Id="ManagedBootstrapperApplicationHost">
+      <?define SdkDownloadUrl = "http://assets.virtocommerce.com/software/1.0/sdk"?>
+      <?if $(var.Configuration) = LocalDebug ?>
+        <?define AnyCPUOutDir = "$(var.OutDir)..\..\..\..\VirtoCommerce.Bootstrapper.UI\bin\$(var.Configuration)"?>
+        <?define ElasticSearchOutDir = "$(var.OutDir)..\..\..\..\VirtoCommerce.ElasticSearch\bin\$(var.Configuration)\$(var.Platform)\"?>
+        <?define VirtoCommerceOutDir = "$(var.OutDir)..\..\..\..\VirtoCommerce.Installer\bin\$(var.Configuration)\$(var.Platform)\"?>
+        <?define SharedDir = "$(var.OutDir)..\..\..\..\VirtoCommerce.Bootstrapper\shared"?>
+      <?else ?>
+        <?define AnyCPUOutDir = "$(var.OutDir)..\..\$(var.Configuration)"?>
+        <?define ElasticSearchOutDir = "$(var.OutDir)"?>
+        <?define VirtoCommerceOutDir = "$(var.OutDir)"?>
+        <?define SharedDir = "C:\Builds\1\VCF\VirtoCommerce\Shared"?>
+      <?endif ?>
+      
+      <Payload SourceFile="..\VirtoCommerce.Installer\License.rtf" Compressed="yes" />
+      <Payload Name="BootstrapperCore.config" SourceFile="$(var.AnyCPUOutDir)\Installer.config" Compressed="yes" />
+      <Payload SourceFile="$(var.AnyCPUOutDir)\BootstrapperCore.dll" Compressed="yes" />
+      <Payload SourceFile="$(var.AnyCPUOutDir)\ExpressionSerialization.dll" Compressed="yes" />
+      <Payload SourceFile="$(var.AnyCPUOutDir)\Microsoft.Expression.Interactions.dll" Compressed="yes" />
+      <Payload SourceFile="$(var.AnyCPUOutDir)\Microsoft.Practices.Prism.dll" Compressed="yes" />
+      <Payload SourceFile="$(var.AnyCPUOutDir)\Microsoft.Practices.Prism.Interactivity.dll" Compressed="yes" />
+      <Payload SourceFile="$(var.AnyCPUOutDir)\Microsoft.Practices.Prism.UnityExtensions.dll" Compressed="yes" />
+      <Payload SourceFile="$(var.AnyCPUOutDir)\Microsoft.Practices.ServiceLocation.dll" Compressed="yes" />
+      <?ifdef Debug ?>
+        <Payload SourceFile="$(var.AnyCPUOutDir)\Microsoft.Practices.ServiceLocation.pdb" Compressed="yes" />
+      <?endif?>
+      <Payload SourceFile="$(var.AnyCPUOutDir)\Microsoft.Practices.Unity.dll" Compressed="yes" />
+      <Payload SourceFile="$(var.AnyCPUOutDir)\Microsoft.Practices.Unity.Configuration.dll" Compressed="yes" />
+      <Payload SourceFile="$(var.AnyCPUOutDir)\System.Windows.Interactivity.dll" Compressed="yes" />
+      <Payload SourceFile="$(var.AnyCPUOutDir)\Xceed.Wpf.DataGrid.dll" Compressed="yes" />
+      <Payload SourceFile="$(var.AnyCPUOutDir)\Xceed.Wpf.Toolkit.dll" Compressed="yes" />
+      <Payload SourceFile="$(var.AnyCPUOutDir)\VirtoCommerce.ManagementClient.Core.dll" Compressed="yes" />
+      <?ifdef Debug ?>
+        <Payload SourceFile="$(var.AnyCPUOutDir)\VirtoCommerce.ManagementClient.Core.pdb" Compressed="yes" />
+      <?endif?>
+      <Payload SourceFile="$(var.AnyCPUOutDir)\VirtoCommerce.Bootstrapper.Main.dll" Compressed="yes" />
+      <?ifdef Debug ?>
+        <Payload SourceFile="$(var.AnyCPUOutDir)\VirtoCommerce.Bootstrapper.Main.pdb" Compressed="yes" />
+      <?endif?>
+      <Payload SourceFile="$(var.AnyCPUOutDir)\VirtoCommerce.Bootstrapper.UI.dll" Compressed="yes" />
+      <?ifdef Debug ?>
+        <Payload SourceFile="$(var.AnyCPUOutDir)\VirtoCommerce.Bootstrapper.UI.pdb" Compressed="yes" />
+      <?endif?>
+    
+    </BootstrapperApplicationRef>
+
+    <Variable Name="Mydir" Type="string" Value="[TARGETDIR]" />
+    <Variable Name="InstallSdk" Type="string" Value="True" />
+    <Variable Name="InstallElasticSearch" Type="string" Value="True" />
+    <?if $(var.Platform) = x64 ?>
+      <Variable Name="InstallFolder" Type="string" Value="[ProgramFiles64Folder]VirtoCommerce $(var.DisplayVersion)" />
+      <WixVariable Id="WixBundleLayoutDirectory" Value="[ProgramFiles64Folder]VirtoCommerce $(var.DisplayVersion)\Setup"/>
+      <util:RegistrySearch Variable="ElasticSearchInstalled" Root="HKLM" Key="SOFTWARE\Apache Software Foundation\Procrun 2.0\virtocommerce.elasticsearch" Result="exists" Win64="yes"/>
+      <util:RegistrySearch Variable="JavaInstalled_x64" Root="HKLM" Key="SOFTWARE\JavaSoft\Java Runtime Environment\1.7" Result="exists" Win64="yes"/>
+      <util:RegistrySearch Variable="JavaInstalled_x64_Version" Root="HKLM" Key="SOFTWARE\JavaSoft\Java Runtime Environment" Value="CurrentVersion" Result="value" Win64="yes"/>
+    <?else ?>
+      <Variable Name="InstallFolder" Type="string" Value="[ProgramFilesFolder]VirtoCommerce $(var.DisplayVersion)" />
+      <WixVariable Id="WixBundleLayoutDirectory" Value="[ProgramFilesFolder]VirtoCommerce $(var.DisplayVersion)\Setup"/>
+      <util:RegistrySearch Variable="ElasticSearchInstalled" Root="HKLM" Key="SOFTWARE\Apache Software Foundation\Procrun 2.0\virtocommerce.elasticsearch" Result="exists"/>
+      <util:RegistrySearch Variable="JavaInstalled_x86" Root="HKLM" Key="SOFTWARE\JavaSoft\Java Runtime Environment\1.7" Result="exists"/>
+      <util:RegistrySearch Variable="JavaInstalled_x86_Version" Root="HKLM" Key="SOFTWARE\JavaSoft\Java Runtime Environment" Value="CurrentVersion" Result="value"/>
+    <?endif ?>     
+    
+    <Chain>
+      <PackageGroupRef Id="NetFx45Web"/>
+      <RollbackBoundary />
+
+      <MsiPackage SourceFile="$(var.VirtoCommerceOutDir)VirtoCommerce.msi" Id="$(var.VirtoCommerceMSI)" Visible="no" Vital="yes" Compressed="yes" InstallCondition="InstallSdk = &quot;True&quot;">
+        <MsiProperty Name="INSTALLFOLDER" Value="[InstallFolder]" />
+      </MsiPackage>
+
+      <!-- AND (JavaInstalled_x64_Version > &quot;1.6&quot; -->
+      <!-- install jre7 if one is not installed already -->
+      
+      <?if $(var.Platform) = x64 ?>
+        <ExePackage Id="JRE7" Cache="yes"
+                Compressed="no" Vital="yes" PerMachine ="yes" InstallCondition="(InstallElasticSearch = &quot;True&quot;) AND NOT (JavaInstalled_x64 AND JavaInstalled_x64_Version > &quot;1.6&quot;)"
+                Name="jre-7u17-windows-x64.exe" DownloadUrl="$(var.SdkDownloadUrl)/jre-7u17-windows-x64.exe" InstallCommand="/s">
+          <RemotePayload ProductName="Java Runtime Environment (JRE) 1.7" Description="Java Runtime 1.7" Version="7.0.170.2" Size="33003424" Hash="eac554818507609480e8a890e232b3a8b0b2f55e"/>
+        </ExePackage>
+      <?else ?>
+        <ExePackage Id="JRE7" Cache="yes" Vital="yes"
+              Compressed="no" PerMachine ="yes" InstallCondition="(InstallElasticSearch = &quot;True&quot;) AND NOT (JavaInstalled_x86 AND JavaInstalled_x86_Version > &quot;1.6&quot;)"
+              Name="jre-7u17-windows-i586.exe" DownloadUrl="$(var.SdkDownloadUrl)/jre-7u17-windows-i586.exe" InstallCommand="/s">
+          <RemotePayload ProductName="Java Runtime Environment (JRE) 1.7" Description="Java Runtime 1.7" Version="7.0.170.2" Size="31521184" Hash="7b2cd00ec4c57396642afcc463e6d895772925a8"/>
+        </ExePackage>
+      <?endif ?>
+
+      
+      <!-- IIS Express can only be installed in the correct bit, so it won't install 32bit on 64 bit environment -->
+      <MsiPackage Id="iisexpress_8_0_RTM_x64.msi" InstallCondition="(VersionNT64)" Vital="yes" Name="iisexpress_8_0_RTM_x64.msi" ForcePerMachine="yes" DisplayName="IIS 8.0 Express" Cache="yes" Compressed="yes" DownloadUrl="$(var.SdkDownloadUrl)/iisexpress_8_0_RTM_x64_en-US.msi" SourceFile="$(var.SharedDir)/iisexpress_8_0_RTM_x64_en-US.msi">
+      </MsiPackage>
+      
+      <MsiPackage Id="iisexpress_8_0_RTM_x86.msi" InstallCondition="(NOT VersionNT64)" Vital="yes" Name="iisexpress_8_0_RTM_x86.msi" DisplayName="IIS 8.0 Express" ForcePerMachine="yes" Cache="yes" Compressed="yes" DownloadUrl="$(var.SdkDownloadUrl)/iisexpress_8_0_RTM_x86_en-US.msi" SourceFile="$(var.SharedDir)/iisexpress_8_0_RTM_x86_en-US.msi">
+      </MsiPackage>
+
+      <!-- install elastic search -->
+      <MsiPackage SourceFile="$(var.ElasticSearchOutDir)VirtoCommerce.Search.msi" Id="$(var.VirtoCommerceSearchMSI)" Visible="yes" Vital="yes" Compressed="yes" InstallCondition="InstallElasticSearch = &quot;True&quot;">
+        <MsiProperty Name="INSTALLFOLDER" Value="[InstallFolder]" />
+      </MsiPackage>
+    </Chain>
+  </Bundle>
+</Wix>

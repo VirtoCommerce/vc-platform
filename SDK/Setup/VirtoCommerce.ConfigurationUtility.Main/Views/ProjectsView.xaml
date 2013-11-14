@@ -1,0 +1,183 @@
+﻿<base:ViewBase x:Class="VirtoCommerce.ConfigurationUtility.Main.Views.ProjectsView"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:core_DataVirtualization="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.DataVirtualization;assembly=VirtoCommerce.ManagementClient.Core"
+			 xmlns:core_Converters="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Converters;assembly=VirtoCommerce.ManagementClient.Core"
+			 xmlns:inf_behavior="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Behaviors;assembly=VirtoCommerce.ManagementClient.Core"
+			 xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+			 xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
+			 xmlns:interactionRequest="clr-namespace:Microsoft.Practices.Prism.Interactivity.InteractionRequest;assembly=Microsoft.Practices.Prism.Interactivity"
+			 xmlns:dialogs="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Dialogs;assembly=VirtoCommerce.ManagementClient.Core"
+			 xmlns:ei="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
+			 xmlns:base="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure;assembly=VirtoCommerce.ManagementClient.Core"
+			  xmlns:localVM="clr-namespace:VirtoCommerce.ConfigurationUtility.Main.ViewModels"
+			 mc:Ignorable="d" Style="{DynamicResource Virto_Window_Style}"
+			 d:DesignHeight="400" d:DesignWidth="600">
+	<FrameworkElement.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/themes/settingsviewtheme/virtocommercesettingstheme.xaml"/>
+			</ResourceDictionary.MergedDictionaries>
+
+			<Style x:Key="buttonTileStyle" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+				<Setter Property="Height" Value="150"/>
+				<Setter Property="Width" Value="150"/>
+				<Setter Property="VerticalAlignment" Value="Top"/>
+				<Setter Property="SnapsToDevicePixels" Value="True"/>
+				<Setter Property="Template">
+					<Setter.Value>
+						<ControlTemplate TargetType="Button">
+							<Border x:Name="rootBorder" Background="#2394CF">
+								<ContentPresenter VerticalAlignment="Center" HorizontalAlignment="Center"/>
+							</Border>
+							<ControlTemplate.Triggers>
+								<Trigger Property="IsMouseOver" Value="True">
+									<Setter TargetName="rootBorder" Property="Background" Value="#2D9ED9"/>
+								</Trigger>
+							</ControlTemplate.Triggers>
+						</ControlTemplate>
+					</Setter.Value>
+				</Setter>
+			</Style>
+
+		</ResourceDictionary>
+	</FrameworkElement.Resources>
+
+	<Grid x:Name="LayoutRoot" Margin="0,0,0,0" d:DataContext="{d:DesignInstance localVM:ProjectsViewModel}">
+		<i:Interaction.Triggers>
+			<interactionRequest:InteractionRequestTrigger SourceObject="{Binding CommonWizardDialogRequest, Mode=OneWay}">
+				<dialogs:InteractionDialogAction DialogType="{x:Type dialogs:WizardDialog}"/>
+			</interactionRequest:InteractionRequestTrigger>
+			<interactionRequest:InteractionRequestTrigger SourceObject="{Binding CommonConfirmRequest, Mode=OneWay}">
+				<dialogs:InteractionDialogAction DialogType="{x:Type dialogs:ConfirmationLocalModalInteractionDialog}" />
+			</interactionRequest:InteractionRequestTrigger>
+		</i:Interaction.Triggers>
+
+		<Grid Margin="0,0,0,0">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition />
+			</Grid.RowDefinitions>
+
+			<ItemsControl Grid.Row="0" Style="{StaticResource Virto_ToolbarItemsControl_Style}">
+				<core_controls:MetroButton x:Name="selectedProjectMenuButton" Margin="0,0,10,0"
+						ToolTip="Show menu for selected project" ContextMenuOpening="SelectedProjectMenuButton_OnContextMenuOpening" Header="ACTIONS"
+						Tag="{Binding Path=DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}">
+					<Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/arrow_down.png" Width="18" />
+					<core_controls:MetroButton.ContextMenu>
+						<ContextMenu Placement="Bottom">
+							<MenuItem Header="Browse" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu},
+								Path=PlacementTarget.Tag.MenuItemBrowseCommand}"/>
+							<MenuItem Header="Commerce Manager" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu},
+								Path=PlacementTarget.Tag.MenuItemAdminCommand}"/>
+							<MenuItem Header="Explore" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu},
+								Path=PlacementTarget.Tag.MenuItemExploreCommand}"/>
+							<MenuItem Header="Edit in Visual Studio" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu},
+								Path=PlacementTarget.Tag.MenuItemEditVSCommand}"/>
+							<MenuItem Header="Remove" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu},
+								Path=PlacementTarget.Tag.MenuItemRemoveCommand}"/>
+						</ContextMenu>
+					</core_controls:MetroButton.ContextMenu>
+					<i:Interaction.Triggers>
+						<i:EventTrigger EventName="Click">
+							<ei:ChangePropertyAction TargetObject="{Binding ContextMenu, ElementName=selectedProjectMenuButton}" PropertyName="PlacementTarget" Value="{Binding ElementName=selectedProjectMenuButton, Mode=OneWay}"/>
+							<ei:ChangePropertyAction TargetObject="{Binding ContextMenu, ElementName=selectedProjectMenuButton}" PropertyName="IsOpen" Value="True"/>
+						</i:EventTrigger>
+					</i:Interaction.Triggers>
+				</core_controls:MetroButton>
+				<core_controls:MetroButton Command="{Binding ItemAddCommand}" Header="ADD" ToolTip="Creates new Virto Commerce project">
+					<Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/add.png" Width="14"/>
+				</core_controls:MetroButton>
+				<core_controls:MetroButton Command="{Binding MenuItemRemoveCommand}" Header="REMOVE" ToolTip="Delete selected">
+					<Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/cancel.png" Width="14"/>
+				</core_controls:MetroButton>
+				<core_controls:MetroButton Command="{Binding ItemHelpCommand}" Header="HELP" ToolTip="Go to documentation site">
+					<Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/help.png" Width="20"/>
+				</core_controls:MetroButton>
+			</ItemsControl>
+
+			<DataGrid x:Name="ItemsDataGrid" Grid.Row="1" ItemsSource="{Binding Items}" SelectedItem="{Binding SelectedProject, Mode=TwoWay}">
+				<DataGrid.Columns>
+					<DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+					<DataGridTextColumn Header="URL" Binding="{Binding BrowseUrl}" />
+					<DataGridTextColumn Header="Location" Binding="{Binding Location}" Width="*"/>
+					<DataGridTextColumn Header="Status" Binding="{Binding Status}" />
+					<DataGridTextColumn Header="Version" Binding="{Binding Version}" />
+					<DataGridTextColumn Header="Created On" Binding="{Binding Created}" />
+				</DataGrid.Columns>
+				<DataGrid.RowStyle>
+					<Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">
+						<Setter Property="inf_behavior:MouseDoubleClickBehavior.DoubleClickCommand" Value="{Binding DataContext.MenuItemBrowseCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}" />
+						<Setter Property="Tag" Value="{Binding Path=DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"/>
+						<Setter Property="ContextMenu">
+							<Setter.Value>
+								<ContextMenu>
+									<MenuItem Header="Browse" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu},
+								Path=PlacementTarget.Tag.MenuItemBrowseCommand}"/>
+									<MenuItem Header="Commerce Manager" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu},
+								Path=PlacementTarget.Tag.MenuItemAdminCommand}"/>
+									<MenuItem Header="Explore" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu},
+								Path=PlacementTarget.Tag.MenuItemExploreCommand}"/>
+									<MenuItem Header="Edit in Visual Studio" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu},
+								Path=PlacementTarget.Tag.MenuItemEditVSCommand}"/>
+									<MenuItem Header="Remove" Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu},
+								Path=PlacementTarget.Tag.MenuItemRemoveCommand}"/>
+								</ContextMenu>
+							</Setter.Value>
+						</Setter>
+					</Style>
+				</DataGrid.RowStyle>
+				<DataGrid.Style>
+					<Style TargetType="DataGrid" BasedOn="{StaticResource {x:Type DataGrid}}">
+						<Setter Property="Visibility" Value="Visible"/>
+						<Style.Triggers>
+							<DataTrigger Binding="{Binding Path=Items.Count, UpdateSourceTrigger=PropertyChanged}" Value="0">
+								<Setter Property="Visibility" Value="Collapsed"/>
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+				</DataGrid.Style>
+				<i:Interaction.Behaviors>
+					<inf_behavior:DataGridScrollIntoViewBehavior/>
+				</i:Interaction.Behaviors>
+			</DataGrid>
+
+			<Grid Grid.Row="1">
+				<Grid.Style>
+					<Style TargetType="Grid">
+						<Setter Property="Visibility" Value="Collapsed"/>
+						<Style.Triggers>
+							<DataTrigger Binding="{Binding Path=Items.Count, UpdateSourceTrigger=PropertyChanged}" Value="0">
+								<Setter Property="Visibility" Value="Visible"/>
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+				</Grid.Style>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition/>
+				</Grid.ColumnDefinitions>
+
+				<Button Grid.Column="0" Style="{StaticResource buttonTileStyle}" Command="{Binding ItemAddCommand}" HorizontalAlignment="Center"
+						Margin="10,10,5,10" ToolTip="Creates new Virto Commerce project">
+					<TextBlock Text="CREATE NEW PROJECT" TextWrapping="Wrap" HorizontalAlignment="Center" TextAlignment="Center"
+							   Foreground="White"/>
+				</Button>
+
+				<!--
+				<Button Grid.Column="1" Style="{StaticResource buttonTileStyle}"
+						Margin="5,10,10,10" ToolTip="Open selected site in browser">
+					<TextBlock Text="IMPORT EXISTING VIRTO COMMERCE PROJECT" TextWrapping="Wrap" HorizontalAlignment="Center"
+							   Foreground="White"/>
+				</Button>
+                -->
+
+			</Grid>
+		</Grid>
+		<core_DataVirtualization:LoadingMetroAnimation Grid.RowSpan="3" Visibility="{Binding ShowLoadingAnimation, TargetNullValue=Hidden, FallbackValue=Hidden, Converter={x:Static core_Converters:ToVisibilityConverter.Current}}" 
+				AnimationScale="Large" BackgroundColor="#33111111"/>
+	</Grid>
+</base:ViewBase>

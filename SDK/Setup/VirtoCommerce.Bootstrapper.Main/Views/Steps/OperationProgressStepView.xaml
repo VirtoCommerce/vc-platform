@@ -1,0 +1,44 @@
+﻿<UserControl x:Class="VirtoCommerce.Bootstrapper.Main.Views.OperationProgressStepView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:localViewModels="clr-namespace:VirtoCommerce.Bootstrapper.Main.ViewModels"
+             xmlns:localProperties="clr-namespace:VirtoCommerce.Bootstrapper.Main.Properties"
+             xmlns:controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
+             mc:Ignorable="d"
+             d:DataContext="{d:DesignInstance localViewModels:OperationProgressStepViewModel, IsDesignTimeCreatable=True}"
+             d:DesignWidth="450" d:DesignHeight="500">
+	<Grid Margin="30,40,30,70">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="Auto"/>
+			<RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="1"
+                   Text="{x:Static localProperties:Resources.OperationProgress}"
+                   Margin="10,10,10,30"/>
+		<TextBlock Grid.Row="2" Text="{Binding ComponentMessageAction, Mode=OneWay}" Margin="10,0,10,0" VerticalAlignment="Bottom"/>
+        <ProgressBar Grid.Row="3" Value="{Binding ComponentProgress, Mode=OneWay}" Margin="10,0" Height="7"/>
+        <TextBlock Grid.Row="4" Text="{Binding ComponentMessage, Mode=OneWay}" Margin="10,8,10,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+
+		<TextBlock Grid.Row="6" Text="{Binding MessageAction, Mode=OneWay}" Margin="10,0,10,0" VerticalAlignment="Bottom"/>
+        <ProgressBar Grid.Row="7" Value="{Binding Progress, Mode=OneWay}" Margin="10,0" Height="7"/>
+        <TextBlock Grid.Row="8" Text="{Binding Message, Mode=OneWay}" Margin="10,8,10,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+
+		<controls:FluidProgressBar Grid.Row="9" HorizontalAlignment="Stretch" Margin="0,50,0,0"
+            VerticalAlignment="Stretch" Foreground="#51A3FD"
+            DotWidth="3" DotHeight="3" DotRadiusX="0" DotRadiusY="0"
+            Oscillate="False" TotalDuration="00:00:04.4" ReverseDuration="00:00:02.9"
+            KeyFrameA="0.33" KeyFrameB="0.63" DurationA="00:00:00.50"
+            DurationB="00:00:01.50" DurationC="00:00:00.50" Delay="00:00:00.15"/>
+    </Grid>
+</UserControl>

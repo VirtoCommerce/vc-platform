@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>3.7</ProductVersion>
+    <ProjectGuid>7acd94bc-cbef-4a44-ba24-978656a606b7</ProjectGuid>
+    <SchemaVersion>2.0</SchemaVersion>
+    <OutputName>VirtoCommerce</OutputName>
+    <OutputType>Package</OutputType>
+    <OutputPath>bin\$(Configuration)\$(Platform)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\$(Platform)\</IntermediateOutputPath>
+    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
+    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DefineConstants>Debug;FrontendSourcePath=%25TEMP%25\FrontEnd;FrontendCatalogPath=%25TEMP%25\Catalog;ConfigSourcePath=%25TEMP%25\Configuration;SqlScriptSourcePath=%25TEMP%25\Database;AdminPath=%25TEMP%25\Admin;Version=1_0_0_13</DefineConstants>
+    <WixVariables>Configuration=Debug</WixVariables>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DefineConstants>Debug;FrontendSourcePath=%25TEMP%25\FrontEnd;FrontendCatalogPath=%25TEMP%25\Catalog;ConfigSourcePath=%25TEMP%25\Configuration;SqlScriptSourcePath=%25TEMP%25\Database;AdminPath=%25TEMP%25\Admin;Version=1_0_0_13</DefineConstants>
+    <WixVariables>Configuration=Debug</WixVariables>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'LocalDebug|x64' ">
+    <DefineConstants>Debug;FrontendSourcePath=%25TEMP%25\FrontEnd;FrontendCatalogPath=%25TEMP%25\Catalog;ConfigSourcePath=%25TEMP%25\Configuration;SqlScriptSourcePath=%25TEMP%25\Database;AdminPath=%25TEMP%25\Admin;Version=1_0_0_13</DefineConstants>
+    <WixVariables>Configuration=Debug</WixVariables>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DefineConstants>FrontendSourcePath=%25TEMP%25\FrontEnd;FrontendCatalogPath=%25TEMP%25\Catalog;ConfigSourcePath=%25TEMP%25\Configuration;SqlScriptSourcePath=%25TEMP%25\Database;AdminPath=%25TEMP%25\Admin;Version=1_0_0_13</DefineConstants>
+    <WixVariables>Configuration=Release</WixVariables>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <DefineConstants>FrontendSourcePath=%25TEMP%25\FrontEnd;FrontendCatalogPath=%25TEMP%25\Catalog;ConfigSourcePath=%25TEMP%25\Configuration;SqlScriptSourcePath=%25TEMP%25\Database;AdminPath=%25TEMP%25\Admin;Version=1_0_0_13</DefineConstants>
+    <WixVariables>Configuration=Release</WixVariables>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'LocalDebug|x86' ">
+    <DefineConstants>FrontendSourcePath=%25TEMP%25\FrontEnd;FrontendCatalogPath=%25TEMP%25\Catalog;ConfigSourcePath=%25TEMP%25\Configuration;SqlScriptSourcePath=%25TEMP%25\Database;AdminPath=%25TEMP%25\Admin;Version=1_0_0_13</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Configuration.wxs" />
+    <Compile Include="Catalog.wxs" />
+    <Compile Include="Admin.wxs" />
+    <Compile Include="Frontend.wxs" />
+    <Compile Include="Product.wxs" />
+    <Compile Include="Database.wxs" />
+  </ItemGroup>
+  <ItemGroup>
+    <WixExtension Include="WixUtilExtension">
+      <HintPath>$(WixExtDir)\WixUtilExtension.dll</HintPath>
+      <Name>WixUtilExtension</Name>
+    </WixExtension>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="License.rtf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Distro\VirtoCommerceManager.appref-ms" />
+    <Content Include="local.cmd" />
+    <Content Include="Shared.wxi" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Distro" />
+  </ItemGroup>
+  <Import Project="$(WixTargetsPath)" />
+</Project>

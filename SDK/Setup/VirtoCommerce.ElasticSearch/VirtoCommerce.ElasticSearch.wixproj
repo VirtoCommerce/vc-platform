@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>3.7</ProductVersion>
+    <ProjectGuid>bca6f7df-23af-48d0-aa28-fcaf33fdcec8</ProjectGuid>
+    <SchemaVersion>2.0</SchemaVersion>
+    <OutputName>VirtoCommerce.Search</OutputName>
+    <OutputType>Package</OutputType>
+    <OutputPath>bin\$(Configuration)\$(Platform)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\$(Platform)\</IntermediateOutputPath>
+    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
+    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DefineConstants>Debug;X86</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DefineConstants>Debug;X64</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DefineConstants>
+    </DefineConstants>
+    <WixVariables>Configuration=Release</WixVariables>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <DefineConstants>
+    </DefineConstants>
+    <WixVariables>Configuration=Release</WixVariables>
+    <Cultures />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'LocalDebug|x86' ">
+    <DefineConstants>Debug;X86 LOCAL</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'LocalDebug|x64' ">
+    <DefineConstants>Debug;X64 LOCAL</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Product.wxs" />
+  </ItemGroup>
+  <ItemGroup>
+    <WixExtension Include="WixUtilExtension">
+      <HintPath>$(WixExtDir)\WixUtilExtension.dll</HintPath>
+      <Name>WixUtilExtension</Name>
+    </WixExtension>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Distro" />
+    <Folder Include="Distro\bin\" />
+    <Folder Include="Distro\bin\x64\" />
+    <Folder Include="Distro\bin\x86\" />
+    <Folder Include="Distro\config\" />
+    <Folder Include="Distro\lib\" />
+    <Folder Include="Distro\lib\sigar\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\VirtoCommerce.Installer\Shared.wxi">
+      <Link>Shared.wxi</Link>
+    </Content>
+    <Content Include="Distro\bin\elasticsearch.bat" />
+    <Content Include="Distro\bin\plugin.bat" />
+    <Content Include="Distro\bin\x64\elasticsearchw.exe" />
+    <Content Include="Distro\bin\x86\elasticsearchw.exe" />
+    <Content Include="Distro\config\elasticsearch.yml" />
+    <Content Include="Distro\config\logging.yml" />
+    <Content Include="Distro\lib\elasticsearch-0.20.5.jar" />
+    <Content Include="Distro\lib\elasticsearchw-uninstall.cmd" />
+    <Content Include="Distro\lib\elasticsearchw-update.cmd" />
+    <Content Include="Distro\lib\elasticsearchw.jar" />
+    <Content Include="Distro\lib\jna-3.3.0.jar" />
+    <Content Include="Distro\lib\log4j-1.2.17.jar" />
+    <Content Include="Distro\lib\lucene-analyzers-3.6.2.jar" />
+    <Content Include="Distro\lib\lucene-core-3.6.2.jar" />
+    <Content Include="Distro\lib\lucene-highlighter-3.6.2.jar" />
+    <Content Include="Distro\lib\lucene-memory-3.6.2.jar" />
+    <Content Include="Distro\lib\lucene-queries-3.6.2.jar" />
+    <Content Include="Distro\lib\sigar\sigar-1.6.4.jar" />
+    <Content Include="Distro\lib\sigar\sigar-amd64-winnt.dll" />
+    <Content Include="Distro\lib\sigar\sigar-x86-winnt.dll" />
+    <Content Include="Distro\lib\snappy-java-1.0.4.1.jar" />
+    <Content Include="Distro\LICENSE.txt" />
+    <Content Include="Distro\NOTICE.txt" />
+  </ItemGroup>
+  <Import Project="$(WixTargetsPath)" />
+  <!--
+	To modify your build process, add your task inside one of the targets below and uncomment it.
+	Other similar extension points exist, see Wix.targets.
+	<Target Name="BeforeBuild">
+	</Target>
+	<Target Name="AfterBuild">
+	</Target>
+	-->
+</Project>

@@ -1,0 +1,186 @@
+﻿<UserControl x:Class="VirtoCommerce.ConfigurationUtility.Main.Views.ConfigurationWizardView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+             xmlns:prism="http://www.codeplex.com/prism"
+             xmlns:controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
+             xmlns:dialogs="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Dialogs;assembly=VirtoCommerce.ManagementClient.Core"
+             xmlns:virtualization="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.DataVirtualization;assembly=VirtoCommerce.ManagementClient.Core"
+             xmlns:localProperties="clr-namespace:VirtoCommerce.ConfigurationUtility.Main.Properties"
+             xmlns:localViewModels="clr-namespace:VirtoCommerce.ConfigurationUtility.Main.ViewModels"
+             Style="{DynamicResource Virto_View_Style}"
+             d:DataContext="{d:DesignInstance localViewModels:ConfigurationWizardViewModel, IsDesignTimeCreatable=True}"
+             d:DesignWidth="600" d:DesignHeight="450"
+             mc:Ignorable="d">
+    <FrameworkElement.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/WizardViewTheme/VirtoCommerceWizardTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </FrameworkElement.Resources>
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.Resources>
+            <Style x:Key="WizardButtonStyle" BasedOn="{StaticResource {x:Type Button}}" TargetType="{x:Type Button}">
+                <Setter Property="Margin" Value="10,5,0,5"/>
+                <Setter Property="Width" Value="94"/>
+                <Setter Property="Height" Value="30"/>
+            </Style>
+            <Style x:Key="CollapsedWhenDisabledButtonStyle" BasedOn="{StaticResource WizardButtonStyle}" TargetType="{x:Type Button}">
+                <Style.Triggers>
+                    <Trigger Property="IsEnabled" Value="False">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </Grid.Resources>
+        <!--<TextBlock Grid.Column="0" Grid.ColumnSpan="5"
+                   Grid.Row="0"
+                   Foreground="Black"
+                   Text="{Binding ViewTitle.Title}"
+                   Style="{StaticResource Virto_TextBlock_CommonTitle_Style}"
+                   />-->
+        <controls:MetroButton Grid.Column="0" Grid.Row="0"
+                              Foreground="Black"
+                              Command="{Binding MovePreviousCommand}"
+                              EllipseHeight="30" x:Name="BackTopButton">
+            <Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/back.png" Width="16" Height="16"/>
+        </controls:MetroButton>
+        <TextBlock Grid.Column="1" Grid.ColumnSpan="4"
+                   Grid.Row="0"
+                   Foreground="Black"
+                   FontSize="20"
+                   VerticalAlignment="Center" HorizontalAlignment="Left">
+            <TextBlock.Text>
+                <MultiBinding StringFormat="{x:Static localProperties:Resources.Step}">
+                    <Binding Path="CurrentStepNumber"/>
+                    <Binding Path="TotalStepsCount"/>
+                    <Binding Path="CurrentStep.Description"/>
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
+        <Separator Grid.Column="0" Grid.ColumnSpan="5"
+                   Grid.Row="1"
+                   VerticalAlignment="Top"
+                   Style="{StaticResource Virto_HorizontalSeparator_Style}" />
+        <TextBlock Grid.Column="0" Grid.ColumnSpan="5"
+                   Grid.Row="1"
+                   Text="{Binding CurrentStep.Comment}"
+                   Margin="0,15,0,0">
+            <TextBlock.Style>
+                <Style BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="{x:Type TextBlock}">
+                    <Setter Property="Foreground" Value="Black" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding CurrentStep.Comment}" Value="">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </TextBlock.Style>
+        </TextBlock>
+        <ContentControl x:Name="CurrentStep"
+                        Grid.Column="0" Grid.ColumnSpan="5"
+                        Grid.Row="2"
+                        Content="{Binding CurrentStep}"
+                        Margin="0,0,0,5"
+                        Visibility="Visible">
+            <i:Interaction.Triggers>
+                <ei:DataTrigger Binding="{Binding CurrentStep.IsInitializing}" Value="True">
+                    <ei:ChangePropertyAction TargetName="CurrentStep" PropertyName="Visibility" Value="{x:Static Visibility.Hidden}"/>
+                    <ei:ChangePropertyAction TargetName="LoadingAnimation" PropertyName="Visibility" Value="{x:Static Visibility.Visible}"/>
+                </ei:DataTrigger>
+                <ei:DataTrigger Binding="{Binding CurrentStep.IsTestConnection}" Value="True">
+                    <ei:ChangePropertyAction TargetName="BackButton" PropertyName="IsEnabled" Value="False"/>
+                    <ei:ChangePropertyAction TargetName="BackTopButton" PropertyName="IsEnabled" Value="False"/>
+                    <ei:ChangePropertyAction TargetName="CurrentStep" PropertyName="Visibility" Value="{x:Static Visibility.Hidden}"/>
+                    <ei:ChangePropertyAction TargetName="TestingAnimation" PropertyName="Visibility" Value="{x:Static Visibility.Visible}"/>
+                </ei:DataTrigger>
+            </i:Interaction.Triggers>
+        </ContentControl>
+        <virtualization:LoadingAnimation x:Name="LoadingAnimation"
+                                         Grid.Column="0" Grid.ColumnSpan="5"
+                                         Grid.Row="2"
+                                         Margin="0,0,0,5"
+                                         Visibility="Hidden">
+            <i:Interaction.Triggers>
+                <ei:DataTrigger Binding="{Binding CurrentStep.IsInitializing}" Value="False">
+                    <ei:ChangePropertyAction TargetName="CurrentStep" PropertyName="Visibility" Value="{x:Static Visibility.Visible}"/>
+                    <ei:ChangePropertyAction TargetName="LoadingAnimation" PropertyName="Visibility" Value="{x:Static Visibility.Hidden}"/>
+                </ei:DataTrigger>
+            </i:Interaction.Triggers>
+        </virtualization:LoadingAnimation>
+        <virtualization:LoadingMetroAnimation x:Name="TestingAnimation"
+                                         Grid.Column="0" Grid.ColumnSpan="5"
+                                         Grid.Row="2"
+                                         Margin="0,0,0,5"
+                                         Visibility="Hidden" ShowText="True" Text="{x:Static localProperties:Resources.TestConnectionWaiting}" AnimationColor="Black">
+            <i:Interaction.Triggers>
+                <ei:DataTrigger Binding="{Binding CurrentStep.IsTestConnection}" Value="False">
+                    <ei:ChangePropertyAction TargetName="BackButton" PropertyName="IsEnabled" Value="True"/>
+                    <ei:ChangePropertyAction TargetName="BackTopButton" PropertyName="IsEnabled" Value="True"/>
+                    <ei:ChangePropertyAction TargetName="CurrentStep" PropertyName="Visibility" Value="{x:Static Visibility.Visible}"/>
+                    <ei:ChangePropertyAction TargetName="TestingAnimation" PropertyName="Visibility" Value="{x:Static Visibility.Hidden}"/>
+                </ei:DataTrigger>
+            </i:Interaction.Triggers>
+        </virtualization:LoadingMetroAnimation>
+            <Separator Grid.Column="0" Grid.ColumnSpan="5"
+                   Grid.Row="2"
+                   Style="{StaticResource Virto_HorizontalSeparator_Style}"
+                   VerticalAlignment="Bottom"/>
+        <Button Grid.Column="2" Grid.Row="4" x:Name="BackButton"
+                Content="{x:Static localProperties:Resources.Back}"
+                Command="{Binding MovePreviousCommand}"
+                Style="{StaticResource CollapsedWhenDisabledButtonStyle}" />
+        <Button x:Name="NextFinish"
+                Grid.Column="3" Grid.Row="3"
+                Content="{x:Static localProperties:Resources.Next}"
+                Command="{Binding MoveNextCommand}"
+                Style="{StaticResource WizardButtonStyle}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Click">
+                    <i:Interaction.Behaviors>
+                        <ei:ConditionBehavior>
+                            <ei:ConditionalExpression>
+                                <ei:ComparisonCondition LeftOperand="{Binding CurrentStep.IsLast}" RightOperand="True" />
+                                <ei:ComparisonCondition LeftOperand="{Binding CurrentStep.IsValid}" RightOperand="True" />
+                            </ei:ConditionalExpression>
+                        </ei:ConditionBehavior>
+                    </i:Interaction.Behaviors>
+                    <ei:CallMethodAction MethodName="Configure" TargetObject="{Binding}" />
+                </i:EventTrigger>
+                <ei:DataTrigger Binding="{Binding CurrentStep.IsLast}" Value="True">
+                    <ei:ChangePropertyAction PropertyName="Content" TargetObject="{Binding ElementName=NextFinish, Mode=OneWay}" Value="{x:Static localProperties:Resources.Configure}" />
+                </ei:DataTrigger>
+                <ei:DataTrigger Binding="{Binding CurrentStep.IsLast}" Value="False">
+                    <ei:ChangePropertyAction PropertyName="Content" TargetObject="{Binding ElementName=NextFinish, Mode=OneWay}" Value="{x:Static localProperties:Resources.Next}" />
+                </ei:DataTrigger>
+            </i:Interaction.Triggers>
+        </Button>
+        <Button Grid.Column="4" Grid.Row="3"
+                Content="{x:Static localProperties:Resources.Cancel}"
+                Command="{Binding CancelCommand}"
+                Style="{StaticResource WizardButtonStyle}">
+            <i:Interaction.Triggers>
+                <prism:InteractionRequestTrigger SourceObject="{Binding CancelConfirmRequest, Mode=OneWay}">
+                    <dialogs:InteractionDialogAction DialogType="{x:Type dialogs:ConfirmationLocalModalInteractionDialog}" />
+                </prism:InteractionRequestTrigger>
+            </i:Interaction.Triggers>
+        </Button>
+    </Grid>
+</UserControl>

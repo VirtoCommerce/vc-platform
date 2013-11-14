@@ -1,0 +1,29 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
+                    xmlns:localViewModels="clr-namespace:VirtoCommerce.ConfigurationUtility.Main.ViewModels"
+                    xmlns:localViews="clr-namespace:VirtoCommerce.ConfigurationUtility.Main.Views"
+                    xmlns:implementations="clr-namespace:VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementations"
+                    xmlns:steps="clr-namespace:VirtoCommerce.ConfigurationUtility.Main.Views.Steps">
+    <DataTemplate DataType="{x:Type localViewModels:ConfigurationWizardViewModel}">
+        <localViews:ConfigurationWizardView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type implementations:ProjectLocationStepViewModel}">
+        <controls:CacheContentControl Type="{x:Type steps:ProjectLocationStepView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type implementations:DatabaseSettingsStepViewModel}">
+        <controls:CacheContentControl Type="{x:Type steps:DatabaseSettingsStepView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type implementations:ElasticSearchSettingsStepViewModel}">
+        <controls:CacheContentControl Type="{x:Type steps:ElasticSearchSettingsStepView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type implementations:ConfirmationStepViewModel}">
+        <controls:CacheContentControl Type="{x:Type steps:ConfirmationStepView}"/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type localViewModels:ConfigurationViewModel}">
+        <localViews:ConfigurationView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type localViewModels:ProjectsViewModel}">
+        <localViews:ProjectsView/>
+    </DataTemplate>
+</ResourceDictionary>
