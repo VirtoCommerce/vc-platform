@@ -13,6 +13,7 @@ namespace VirtoCommerce.ConfigurationUtility.Tests
 {
     public class ConfigurationScenarios
     {
+        /*
         [Fact]
         public void ProcessProjectReferences()
         {
@@ -35,5 +36,6 @@ namespace VirtoCommerce.ConfigurationUtility.Tests
             //var ctx = new CodeActivityContext();
 
         }
+         * */
     }
 }

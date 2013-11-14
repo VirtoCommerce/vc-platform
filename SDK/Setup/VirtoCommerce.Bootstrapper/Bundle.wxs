@@ -18,7 +18,7 @@
         <?define AnyCPUOutDir = "$(var.OutDir)..\..\$(var.Configuration)"?>
         <?define ElasticSearchOutDir = "$(var.OutDir)"?>
         <?define VirtoCommerceOutDir = "$(var.OutDir)"?>
-        <?define SharedDir = "C:\Builds\1\VCF\VirtoCommerce\Shared"?>
+        <?define SharedDir = "e:\Work\Projects\VCF\Jenkins\distr"?>
       <?endif ?>
       
       <Payload SourceFile="..\VirtoCommerce.Installer\License.rtf" Compressed="yes" />

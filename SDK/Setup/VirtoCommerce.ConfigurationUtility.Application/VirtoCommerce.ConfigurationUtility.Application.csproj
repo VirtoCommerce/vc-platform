@@ -104,11 +104,11 @@
       <ItemGroup>
         <Reference Include="VirtoCommerce.Foundation, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
           <SpecificVersion>False</SpecificVersion>
-          <HintPath>..\..\..\src\Core\CommerceFoundation\bin\Debug\VirtoCommerce.Foundation.dll</HintPath>
+          <HintPath>..\..\..\src\Core\CommerceFoundation\bin\$(Configuration)\VirtoCommerce.Foundation.dll</HintPath>
         </Reference>
         <Reference Include="VirtoCommerce.ManagementClient.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
           <SpecificVersion>False</SpecificVersion>
-          <HintPath>..\..\..\src\Presentation\Admin\Presentation.Core\bin\Debug\VirtoCommerce.ManagementClient.Core.dll</HintPath>
+          <HintPath>..\..\..\src\Presentation\Admin\Presentation.Core\bin\$(Configuration)\VirtoCommerce.ManagementClient.Core.dll</HintPath>
         </Reference>
       </ItemGroup>
     </When>
