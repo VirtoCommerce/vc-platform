@@ -1,4 +1,4 @@
-Virto Commerce Community Edition
+EXPERIMENTAL BRANCH, NOT LIVE YET - Virto Commerce Community Edition
 ============
 
 Virto Commerce Community Source Code, this is not a latest source code, please download 
