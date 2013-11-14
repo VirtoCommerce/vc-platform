@@ -7,96 +7,100 @@ namespace VirtoCommerce.Scheduling.LogicalCall
 {
     public class TraceContext : ITraceContext
     {
-        private readonly TraceContextConfiguration configuration;
-        private readonly string header;
-        private readonly TraceBuffer traceBuffer;
-        private readonly TraceSource traceSource;
+        private readonly TraceContextConfiguration _configuration;
+        private readonly string _header;
+        private readonly TraceBuffer _traceBuffer;
+        private readonly TraceSource _traceSource;
+        private readonly Action<string, TraceEventType> _trace;
+        private DateTime _startDateTime;
+
         public TraceContext(
             TraceContextConfiguration configuration, 
             ContextName contextName,
-            Guid corellationToken,
+            Guid correlationToken,
             TraceSource traceSource)
         {
-            this.configuration = configuration;
-            this.header = contextName.Value + "#" + corellationToken.ToString("D");
-            this.traceBuffer = new TraceBuffer(
-                (message, eventType, date) => traceSource.TraceEvent(
-                    eventType, 0, header + " Trace ("+date.ToString(CultureInfo.InvariantCulture)+"):"+message)
-                );
-            this.traceSource = traceSource;
-            if (this.configuration.BufferizeCatchExceptionAndFlash)
-                this.trace = (m,e) => traceBuffer.Trace(m, TraceEventType.Information);
+            _configuration = configuration;
+            _header = string.Format("{0}#{1}", contextName.Value, correlationToken.ToString("D"));
+            _traceBuffer = new TraceBuffer((message, eventType, date) => traceSource.TraceEvent(eventType, 0, 
+                string.Format("{0} Trace ({1}):{2}", _header, date.ToString(CultureInfo.InvariantCulture), message)));
+            _traceSource = traceSource;
+
+            if (_configuration.BufferizeCatchExceptionAndFlash)
+            {
+                _trace = (m, e) => _traceBuffer.Trace(m, TraceEventType.Information);
+            }
             else
-                this.trace = (m, e) => traceSource.TraceEvent(e, 0, header + " Trace " + m);
-                
+            {
+                _trace = (m, e) => traceSource.TraceEvent(e, 0, string.Format("{0} Trace {1}", _header, m));
+            }
+
         }
 
         public TraceContext(string traceSourceName)
         {
-            this.traceSource = new TraceSource(traceSourceName);
-            this.configuration = new TraceContextConfiguration
+            _traceSource = new TraceSource(traceSourceName);
+            _configuration = new TraceContextConfiguration
             {
                 Activity = true,
                 Trace = false,
                 BufferizeCatchExceptionAndFlash = false,
                 Configs = new Dictionary<string, string>()
             };
-            this.header = "DefaultContext";
-            this.traceBuffer = new TraceBuffer(
-                (message, eventType, date) => traceSource.TraceEvent(
-                    eventType, 0, header + " Trace (" + date.ToString(CultureInfo.InvariantCulture) + "):" + message)
-                );
-            if (!this.configuration.BufferizeCatchExceptionAndFlash)
-                this.trace = (m,e) => traceSource.TraceEvent(e, 0, header + " Trace " + m);
+            _header = "DefaultContext";
+            _traceBuffer = new TraceBuffer((message, eventType, date) => _traceSource.TraceEvent(eventType, 0, 
+                string.Format("{0} Trace ({1}):{2}", _header, date.ToString(CultureInfo.InvariantCulture), message)));
+            if (!_configuration.BufferizeCatchExceptionAndFlash)
+            {
+                _trace = (m, e) => _traceSource.TraceEvent(e, 0, string.Format("{0} Trace {1}", _header, m));
+            }
             else
-                this.trace = (m,e) => traceBuffer.Trace(m, e);
+            {
+                _trace = (m, e) => _traceBuffer.Trace(m, e);
+            }
         }
-
-        private DateTime startDateTime;
 
         public void FlashTraceBuffer()
         {
-            this.traceBuffer.Flash();
+            _traceBuffer.Flash();
         }
 
         public void ActivityStart()
         {
-            if (configuration.Activity)
+            if (_configuration.Activity)
             {
-                startDateTime = DateTime.Now;
-                traceSource.TraceEvent(TraceEventType.Start, 0, header + " " + "Started at " + startDateTime.ToString(CultureInfo.InvariantCulture));
+                _startDateTime = DateTime.Now;
+                _traceSource.TraceEvent(TraceEventType.Start, 0, string.Format("{0} Started at {1}",_header,_startDateTime.ToString(CultureInfo.InvariantCulture)));
             }
         }
 
         public void ActivityFinish(bool success)
         {
-            if (configuration.Activity)
+            if (_configuration.Activity)
             {
-                var duration = (DateTime.Now - startDateTime);
-                var durationText = Math.Floor(duration.TotalMinutes) + "m." + duration.Seconds + "s." + duration.Milliseconds;
-                if (success)
-                    traceSource.TraceEvent(TraceEventType.Stop, 0, header + " " + "Finished! Duration=" + durationText);
-                else
-                    traceSource.TraceEvent(TraceEventType.Stop, 0, header + " " + "Finished with Error! Duration=" + durationText);
+                var duration = DateTime.Now - _startDateTime;
+                var durationText = string.Format("{0}m. {1}s. {2}", Math.Floor(duration.TotalMinutes), duration.Seconds, duration.Milliseconds);
+                _traceSource.TraceEvent(TraceEventType.Stop, 0, success
+                                            ? string.Format("{0} Finished! Duration={1}", _header, durationText)
+                                            : string.Format("{0} Finished with Error! Duration={1}", _header, durationText));
             }
         }
 
-        private readonly Action<string, TraceEventType> trace;
         public bool IsTraceEnabled
         {
-            get { return trace != null; }
+            get { return _trace != null; }
         }
 
         public void Trace(string message)
         {
-            if (configuration.Trace)
-                trace(message, TraceEventType.Information);
+            if (_configuration.Trace)
+                _trace(message, TraceEventType.Information);
         }
 
         public void Error(string message)
         {
             //if (configuration.Trace)
-            trace(message,TraceEventType.Error);
+            _trace(message,TraceEventType.Error);
         }
 
         public Action<T> PerformanceCounter<T>(string name)
@@ -107,14 +111,14 @@ namespace VirtoCommerce.Scheduling.LogicalCall
         public T ResolveConfig<T>() where T : IResolvableConfig, new()
         {
             string propertiesText;
-            var @value = new T();
-            bool success = configuration.Configs.TryGetValue(typeof(T).Name, out propertiesText);
+            var value = new T();
+            var success = _configuration.Configs.TryGetValue(typeof(T).Name, out propertiesText);
             if (success)
             {
-                Dictionary<string, string> propertiesDictionary = PairsParser.Parse(propertiesText);
-                @value.Initialize(propertiesDictionary);
+                var propertiesDictionary = PairsParser.Parse(propertiesText);
+                value.Initialize(propertiesDictionary);
             }
-            return @value;
+            return value;
         }
     }
 }

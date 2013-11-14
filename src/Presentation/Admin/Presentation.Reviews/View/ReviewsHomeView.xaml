@@ -18,11 +18,9 @@
 	xmlns:core_common="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Common;assembly=VirtoCommerce.ManagementClient.Core"
 	xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
 	xmlns:interaction_dialog="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Dialogs;assembly=VirtoCommerce.ManagementClient.Core"
-	xmlns:dd="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.DragDrop;assembly=VirtoCommerce.ManagementClient.Core"
 	xmlns:Presentation_Infrastructure_Converters="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Converters;assembly=VirtoCommerce.ManagementClient.Core"
-
-	mc:Ignorable="d" 
-	d:DesignWidth="900" d:DesignHeight="500">
+	Style="{StaticResource Virto_HomeView_Style}"
+	mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="500">
 
     <UserControl.Resources>
         <ResourceDictionary>

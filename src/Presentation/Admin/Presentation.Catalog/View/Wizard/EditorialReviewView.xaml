@@ -24,8 +24,6 @@
 			<ResourceDictionary.MergedDictionaries>
 				<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/WizardViewTheme/VirtoCommerceWizardTheme.xaml"/>
 			</ResourceDictionary.MergedDictionaries>
-
-			<catalogInfrastructure:ReviewStateConverter x:Key="reviewStateConverter" />
 		</ResourceDictionary>
 	   
 	</UserControl.Resources>
@@ -46,6 +44,12 @@
 										<RowDefinition Height="Auto"/>
 									</Grid.RowDefinitions>
 
+									<UIElement.InputBindings>
+										<KeyBinding Command="{Binding SaveChangesCommand}" Key="S" Modifiers="Control" />
+										<KeyBinding Command="{Binding CancelCommand}" Key="Escape" />
+										<KeyBinding Command="{Binding CancelCommand}" Key="F4" Modifiers="Control" />
+									</UIElement.InputBindings>
+									
 									<i:Interaction.Triggers>
 										<prism:InteractionRequestTrigger SourceObject="{Binding CancelConfirmRequest, Mode=OneWay}">
 											<core_dialogs:InteractionDialogAction DialogType="{x:Type core_dialogs:AcceptChangesLocalModalInteractionDialog}" />

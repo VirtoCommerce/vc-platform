@@ -38,14 +38,17 @@
 								<Border Background="#495461" Height="55" d:DataContext="{d:DesignInstance localVM:StatusMessageViewModel}">
 									<DockPanel LastChildFill="False" Margin="20,0,20,0">
 										<Grid>
-											<ContentControl Content="{StaticResource ProgressIndicatorWarning}" Visibility="{Binding IsWarning, Converter={x:Static core_Converters:ToVisibilityConverter.Current}}"/>
-
+											<!--progress indicator-->
 											<core_controls:SprocketControl VerticalAlignment="Center" TickColor="LawnGreen"
 													MinWidth="20" Width="20" Height="20" TickWidth="2" TickCount="9" Interval="100" LowestAlpha="50" AlphaTicksPercentage="50"
 													IsIndeterminate="{Binding IsRunning}" Progress="{Binding Progress}"
-													Visibility="{Binding IsProgressOrSuccess, Converter={x:Static core_Converters:ToVisibilityConverter.Current}}" />
+													Visibility="{Binding IsRunning, Converter={x:Static core_Converters:ToVisibilityConverter.Current}}" />
+											<!--result icon-->
+											<core_controls:VectorImage ImageResource="{StaticResource ProgressIndicatorSuccess}" Height="16" Width="16" Margin="2,2,2,0" Foreground="LawnGreen" Visibility="{Binding IsSuccess, Converter={x:Static core_Converters:ToVisibilityConverter.Current}}" />
+											<ContentControl Content="{StaticResource ProgressIndicatorWarning}" Visibility="{Binding IsWarning, Converter={x:Static core_Converters:ToVisibilityConverter.Current}}"/>
 											<ContentControl Content="{StaticResource ProgressIndicatorError}" Visibility="{Binding IsError, Converter={x:Static core_Converters:ToVisibilityConverter.Current}}" Width="20" Margin="0,1" />											
 										</Grid>
+										
 										<TextBlock Text="{Binding Progress, StringFormat={}{0}%}" Margin="8,0,0,0" Foreground="White" VerticalAlignment="Center" Visibility="{Binding IsProgressVisible, Converter={x:Static core_Converters:ToVisibilityConverter.Current}}" />
 
 										<core_controls:MetroButton Header="OK" DockPanel.Dock="Right" Margin="16,0,0,0" Foreground="White" Command="{Binding DataContext.MessageDismissCommand, RelativeSource={RelativeSource AncestorType=ItemsPresenter}}" CommandParameter="{Binding StatusMessageId}" Visibility="{Binding IsRunning, Converter={x:Static core_Converters:ToVisibilityConverter.Current}, ConverterParameter='i'}">

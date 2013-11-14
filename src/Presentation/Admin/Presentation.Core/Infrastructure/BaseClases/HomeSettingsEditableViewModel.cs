@@ -120,35 +120,37 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure
 			{
 				if (x.Confirmed)
 				{
-					OnUIThread(() => { ShowLoadingAnimation = true; });
+					ShowLoadingAnimation = true;
 
 					try
 					{
+						bool success = false;
 						await Task.Run(() =>
 							{
 								var vm = (x.Content as ISupportWizardSave);
 								if (vm != null)
 								{
-									vm.PrepareAndSave();
+									success = vm.PrepareAndSave();
 								}
 								else
 								{
 									repository.Add(item);
 									repository.UnitOfWork.Commit();
-								}
+									success = true;
+								}								
 							});
-						OnUIThread(() =>
-							{
-								Items.Add(item);
-								var view = CollectionViewSource.GetDefaultView(Items);
-								view.MoveCurrentTo(item);
-							});
+
+						if (success)
+						{
+							Items.Add(item);
+							var view = CollectionViewSource.GetDefaultView(Items);
+							view.MoveCurrentTo(item);
+						}
 					}
 					finally
 					{
-						OnUIThread(() => { ShowLoadingAnimation = false; });
+						ShowLoadingAnimation = false;
 					}
-
 				}
 			});
 		}

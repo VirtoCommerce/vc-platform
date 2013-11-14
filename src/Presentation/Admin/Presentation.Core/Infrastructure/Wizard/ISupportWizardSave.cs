@@ -1,11 +1,11 @@
-﻿using System.Threading.Tasks;
-
+﻿
 namespace VirtoCommerce.ManagementClient.Core.Infrastructure.Wizard
 {
 	public interface ISupportWizardSave
 	{
-		void PrepareAndSave();
+		bool PrepareAndSave();
 	}
+
 	public interface ISupportWizardPrepare
 	{
 		void Prepare();

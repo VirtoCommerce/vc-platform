@@ -12,6 +12,10 @@
     <AssemblyName>CommerceSite</AssemblyName>
     <StartDevelopmentStorage>True</StartDevelopmentStorage>
     <Name>CommerceSite</Name>
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
     <UseIISExpressByDefault>False</UseIISExpressByDefault>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">

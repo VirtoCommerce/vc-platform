@@ -10,7 +10,7 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure
 	/// Base class for Setting HomeViewModel.
 	/// Contains collection of presentation Items.
 	/// Implements Refresh commands.
-	/// Implement ISupportDelayInitialization (Load data when View showed )
+	/// Implement ISupportDelayInitialization (Load data when View is shown )
 	/// </summary>
 	/// <typeparam name="T">Class of HomeView list presentation item</typeparam>
 	public abstract class HomeSettingsViewModel<T> : ViewModelBase, ISupportDelayInitialization, IHomeSettingsViewModel
@@ -90,7 +90,7 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure
 		protected abstract object LoadData();
 
 		/// <summary>
-		/// Refresh Item after it edited in DetailView
+		/// Refresh Item after it was edited in DetailView
 		/// </summary>
 		/// <param name="item"></param>
 		public abstract void RefreshItem(object item);

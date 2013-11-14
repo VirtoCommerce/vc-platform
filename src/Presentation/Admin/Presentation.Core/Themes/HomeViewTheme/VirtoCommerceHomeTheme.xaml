@@ -82,7 +82,7 @@
 	<Style x:Key="Virto_ToolbarItemsControl_Style" TargetType="ItemsControl" BasedOn="{StaticResource Virto_Base_ToolbarItemsControl_Style}"/>
 
     <!--TabControls-->
-    <Style x:Key="Virto_TabControlHorizontal_Style" TargetType="TabControl" BasedOn="{StaticResource Virto_Base_TabControlHorizontal_Style}"></Style>
+    <Style x:Key="Virto_TabControlHorizontal_Style" TargetType="TabControl" BasedOn="{StaticResource Virto_Base_TabControlHorizontal_Style}" />
 
     <!--Separator-->
     <Style x:Key="Virto_VerticalSeparator_Style" TargetType="Separator" BasedOn="{StaticResource Virto_Base_VerticalSeparator_Style}"></Style>
@@ -302,10 +302,30 @@
 			</Setter.Value>
 		</Setter>
 	</Style>
+
+	<Style x:Key="Virto_HomeView_Style" TargetType="{x:Type UserControl}">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type UserControl}">
+					<Border>
+						<UIElement.InputBindings>
+							<KeyBinding Command="{Binding ItemAddCommand}" Key="Insert" />
+							<KeyBinding Command="{Binding ItemAddCommand}" Modifiers="Control" Key="N" />
+							<KeyBinding Command="{Binding ItemDeleteCommand}" Key="Delete" />
+							<KeyBinding Command="{Binding RefreshItemsCommand}" Key="F5" />
+							<KeyBinding Command="{Binding RefreshItemsCommand}" Modifiers="Control" Key="R" />
+						</UIElement.InputBindings>
+						<ContentPresenter />
+					</Border>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	<!--<Style TargetType="{x:Type UserControl}" BasedOn="{StaticResource Virto_HomeView_Style}" />-->
 	
+	<!--default styles-->
 	
-    <!--default styles-->
-    <Style TargetType="TextBlock" BasedOn="{StaticResource Virto_Base_TextBlock_Style}">
+	<Style TargetType="TextBlock" BasedOn="{StaticResource Virto_Base_TextBlock_Style}">
         <Setter Property="Margin" Value="0,8,0,4"/>
     </Style>
     <Style TargetType="Button" BasedOn="{StaticResource Virto_Base_Button_Style}">

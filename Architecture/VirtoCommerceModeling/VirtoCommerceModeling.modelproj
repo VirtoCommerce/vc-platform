@@ -9,6 +9,10 @@
     <ArchitectureToolsVersion>2.0.0.0</ArchitectureToolsVersion>
     <Name>VirtoCommerceModeling</Name>
     <RootNamespace>VirtoCommerceModeling</RootNamespace>
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>

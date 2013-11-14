@@ -455,24 +455,20 @@ Function deploy-admin
 
 
 #Import-Module "C:\Program Files (x86)\Microsoft SDKs\Windows Azure\PowerShell\Azure\*.psd1"
-Write-Output "Import-AzurePublishSettingsFile $common_publishsettingsfile"
 Import-AzurePublishSettingsFile $common_publishsettingsfile
 #if ($LASTEXITCODE -ne 0)
 #{
 #	throw "Failed to import publish settings file"
 #}
 
-Write-Output "Set-AzureSubscription -DefaultSubscription $common_subscriptionname"
 Set-AzureSubscription -DefaultSubscription $common_subscriptionname
 
-Write-Output "Set-AzureSubscription -CurrentStorageAccount $common_storageaccount -SubscriptionName $common_subscriptionname"
 Set-AzureSubscription -CurrentStorageAccount $common_storageaccount -SubscriptionName $common_subscriptionname
 
 # Clear out any previous Windows Azure subscription details in the current context (just to be safe).
 # Select-AzureSubscription -Clear
 
 # Select (by friendly name entered in the 'Set-AzureSubscription' cmdlet) the Windows Azure subscription to use.
-Write-Output "Select-AzureSubscription $common_subscriptionname"
 Select-AzureSubscription $common_subscriptionname
 
 Build

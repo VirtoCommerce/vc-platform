@@ -87,6 +87,12 @@
 			</prism:InteractionRequestTrigger>
 		</i:Interaction.Triggers>
 
+		<UIElement.InputBindings>
+			<KeyBinding Command="{Binding SaveChangesCommand}" Key="S" Modifiers="Control" />
+			<KeyBinding Command="{Binding CancelCommand}" Key="Escape" />
+			<KeyBinding Command="{Binding CancelCommand}" Key="F4" Modifiers="Control" />
+		</UIElement.InputBindings>
+
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="*" />

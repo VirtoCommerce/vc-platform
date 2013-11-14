@@ -1,15 +1,15 @@
 ﻿using System;
+using System.Configuration;
+using System.Threading.Tasks;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Unity;
+using VirtoCommerce.Foundation.Data.Infrastructure;
+using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Foundation.Security;
+using VirtoCommerce.Foundation.Security.Services;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Dialogs;
 using VirtoCommerce.ManagementClient.Security.Model;
-using VirtoCommerce.Foundation.Security.Services;
-using System.Threading.Tasks;
-using System.Configuration;
-using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.Foundation.Security;
-using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.ManagementClient.Security.ViewModel.Interfaces;
 
 namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
@@ -32,7 +32,7 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 		}
 
 		#region Constructor
-		
+
 		public LoginViewModel(IUnityContainer container)
 		{
 			LoginCommand = new DelegateCommand<object>(ProcessLogin, CanLogin);
@@ -148,7 +148,7 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 		}
 
 		#endregion
-		
+
 		#region Private methods
 
 		private bool CanLogin(object arg)
@@ -270,16 +270,31 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 		{
 			try
 			{
+				string parameterUserName = null;
+				string parameterBaseUrl = null;
+
+				// Get the ActivationArguments from the SetupInformation property of the domain.
+				var activationData = AppDomain.CurrentDomain.SetupInformation.ActivationArguments.ActivationData;
+				if (activationData != null && activationData.Length > 0)
+				{
+					parameterBaseUrl = activationData[0];
+				}
+
 				var globalConfigService = _container.Resolve<IGlobalConfigService>();
 				if (globalConfigService != null)
 				{
-					OnUIThread(() =>
-						{
-							UserName = (string)globalConfigService.Get("UserName");
-							BaseUrl = (string)globalConfigService.Get("BaseUrl");
-						});
+					parameterUserName = (string)globalConfigService.Get("UserName");
+					parameterBaseUrl = parameterBaseUrl ?? (string)globalConfigService.Get("BaseUrl");
 				}
 
+				if (!string.IsNullOrEmpty(parameterUserName) || !string.IsNullOrEmpty(parameterBaseUrl))
+				{
+					OnUIThread(() =>
+					{
+						UserName = parameterUserName;
+						BaseUrl = parameterBaseUrl;
+					});
+				}
 			}
 			catch
 			{

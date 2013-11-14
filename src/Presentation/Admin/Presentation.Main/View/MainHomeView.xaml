@@ -6,14 +6,17 @@
 			 xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
              xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
              xmlns:core_Converters="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Converters;assembly=VirtoCommerce.ManagementClient.Core"
-			 mc:Ignorable="d" d:DesignHeight="1000" d:DesignWidth="9000">
+             xmlns:localVM="clr-namespace:VirtoCommerce.ManagementClient.Main.ViewModel"
+             xmlns:ei="clr-namespace:Microsoft.Expression.Interactivity.Core;assembly=Microsoft.Expression.Interactions"
+             xmlns:core_virtualization="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.DataVirtualization;assembly=VirtoCommerce.ManagementClient.Core"
+             mc:Ignorable="d" d:DesignHeight="1000" d:DesignWidth="9000">
 
 	<UserControl.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Main;component/View/TileTemplates/TileDataTemplates.xaml"/>
-            </ResourceDictionary.MergedDictionaries>            
-        </ResourceDictionary>
+				<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Main;component/View/TileTemplates/TileDataTemplates.xaml"/>
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
 	</UserControl.Resources>
 
 
@@ -31,21 +34,20 @@
 
 
 		<!--Content-->
-		<Grid Grid.Row="1" Margin="0,40,0,0" VerticalAlignment="Stretch">
-			<ScrollViewer PreviewMouseWheel="ScrollViewer_HorizontalScroll_MouseWheel" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto" Margin="0,0,0,0"
-						>
+		<Grid Grid.Row="1" Margin="0,40,0,0" VerticalAlignment="Stretch" d:DataContext="{d:DesignInstance localVM:MainHomeViewModel}">
+			<ScrollViewer PreviewMouseWheel="ScrollViewer_HorizontalScroll_MouseWheel" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalScrollBarVisibility="Disabled" HorizontalScrollBarVisibility="Auto" Margin="0">
 				<StackPanel Orientation="Horizontal" Margin="60,0,0,0">
 					<StackPanel.Resources>
 						<Style TargetType="Border" BasedOn="{StaticResource Virto_Border_Dashboard_Tile_Style}"/>
-                        <Style TargetType="core_controls:VectorImage" BasedOn="{StaticResource {x:Type core_controls:VectorImage}}">
-                            <Setter Property="Height" Value="70"/>
-                            <Setter Property="Width" Value="70"/>
-                            <Setter Property="HorizontalAlignment" Value="Center"/>
-                            <Setter Property="VerticalAlignment" Value="Center"/>
-                        </Style>
+						<Style TargetType="core_controls:VectorImage" BasedOn="{StaticResource {x:Type core_controls:VectorImage}}">
+							<Setter Property="Height" Value="70"/>
+							<Setter Property="Width" Value="70"/>
+							<Setter Property="HorizontalAlignment" Value="Center"/>
+							<Setter Property="VerticalAlignment" Value="Center"/>
+						</Style>
 					</StackPanel.Resources>
-
-					<Grid Margin="0,0,40,0" Visibility="{Binding Path=DataContext.CatalogTiles.Count, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}, Converter={x:Static core_Converters:ToVisibilityConverter.Current}}">
+				
+					<Grid Margin="0,0,40,0" Visibility="{Binding CatalogTiles.Count, Converter={x:Static core_Converters:ToVisibilityConverter.Current}}">
 						<Grid.RowDefinitions>
 							<RowDefinition Height="auto"/>
 							<RowDefinition Height="*"/>
@@ -54,12 +56,12 @@
 						<TextBlock Grid.Row="0" Text="Merchandise Management" Style="{StaticResource Virto_TextBlock_Dashboard_TileGroup_Header_Style}">
 							<i:Interaction.Triggers>
 								<i:EventTrigger EventName="MouseUp">
-								   <i:InvokeCommandAction Command="{Binding Path=DataContext.NavigateToCatalogCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}}"/>
+								   <i:InvokeCommandAction Command="{Binding NavigateToCatalogCommand}"/>
 									<i:InvokeCommandAction Command="{Binding DataContext.CloseMainMenuCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type core_controls:MetroWindow}}}"/>
 								</i:EventTrigger>
 							</i:Interaction.Triggers>
 						</TextBlock>
-						<ItemsControl Grid.Row="1" ItemsSource="{Binding Path=DataContext.CatalogTiles, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}}">
+						<ItemsControl Grid.Row="1" ItemsSource="{Binding CatalogTiles}">
 							<ItemsControl.ItemsPanel>
 								<ItemsPanelTemplate>
 									<core_controls:TilePanel Height="480" AlignOnLesserEdge="True" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top"/>
@@ -68,7 +70,7 @@
 						</ItemsControl>
 					</Grid>
 
-					<Grid Margin="0,0,40,0" Visibility="{Binding Path=DataContext.MarketingTiles.Count, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}, Converter={x:Static core_Converters:ToVisibilityConverter.Current}}">
+					<Grid Margin="0,0,40,0" Visibility="{Binding MarketingTiles.Count, Converter={x:Static core_Converters:ToVisibilityConverter.Current}}">
 						<Grid.RowDefinitions>
 							<RowDefinition Height="auto"/>
 							<RowDefinition Height="*"/>
@@ -77,12 +79,12 @@
 						<TextBlock Grid.Row="0" Text="Marketing" Style="{StaticResource Virto_TextBlock_Dashboard_TileGroup_Header_Style}">
 							<i:Interaction.Triggers>
 								<i:EventTrigger EventName="MouseUp">
-								   <i:InvokeCommandAction Command="{Binding Path=DataContext.NavigateToMarketingCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}}"/>
+								   <i:InvokeCommandAction Command="{Binding NavigateToMarketingCommand}"/>
 									<i:InvokeCommandAction Command="{Binding DataContext.CloseMainMenuCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type core_controls:MetroWindow}}}"/>
 								</i:EventTrigger>
 							</i:Interaction.Triggers>
 						</TextBlock>
-						<ItemsControl Grid.Row="1" ItemsSource="{Binding Path=DataContext.MarketingTiles, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}}">
+						<ItemsControl Grid.Row="1" ItemsSource="{Binding MarketingTiles}">
 							<ItemsControl.ItemsPanel>
 								<ItemsPanelTemplate>
 									<core_controls:TilePanel Height="480" AlignOnLesserEdge="True" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top"/>
@@ -91,29 +93,29 @@
 						</ItemsControl>
 					</Grid>
 
-                    <Grid Margin="0,0,40,0" Visibility="{Binding Path=DataContext.OrderTiles.Count, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}, Converter={x:Static core_Converters:ToVisibilityConverter.Current}}">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0" Text="Order Management" Style="{StaticResource Virto_TextBlock_Dashboard_TileGroup_Header_Style}">
+					<Grid Margin="0,0,40,0" Visibility="{Binding OrderTiles.Count, Converter={x:Static core_Converters:ToVisibilityConverter.Current}}">
+						<Grid.RowDefinitions>
+							<RowDefinition Height="auto"/>
+							<RowDefinition Height="*"/>
+						</Grid.RowDefinitions>
+						<TextBlock Grid.Row="0" Text="Order Management" Style="{StaticResource Virto_TextBlock_Dashboard_TileGroup_Header_Style}">
 							<i:Interaction.Triggers>
  							    <i:EventTrigger EventName="MouseUp">
 									<i:InvokeCommandAction Command="{Binding DataContext.CloseMainMenuCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type core_controls:MetroWindow}}}"/>
-								    <i:InvokeCommandAction Command="{Binding Path=DataContext.NavigateToOrdersCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}}"/>
+								    <i:InvokeCommandAction Command="{Binding NavigateToOrdersCommand}"/>
 								</i:EventTrigger>
 							</i:Interaction.Triggers>
-                        </TextBlock>
-                        <ItemsControl Grid.Row="1" ItemsSource="{Binding Path=DataContext.OrderTiles, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}}">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <core_controls:TilePanel Height="480" AlignOnLesserEdge="True" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+						</TextBlock>
+						<ItemsControl Grid.Row="1" ItemsSource="{Binding OrderTiles}">
+							<ItemsControl.ItemsPanel>
+								<ItemsPanelTemplate>
+									<core_controls:TilePanel Height="480" AlignOnLesserEdge="True" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 								</ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                        </ItemsControl>
-                    </Grid>
+							</ItemsControl.ItemsPanel>
+						</ItemsControl>
+					</Grid>
 
-					<Grid Margin="0,0,40,0" Visibility="{Binding Path=DataContext.CustomerTiles.Count, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}, Converter={x:Static core_Converters:ToVisibilityConverter.Current}}">
+					<Grid Margin="0,0,40,0" Visibility="{Binding CustomerTiles.Count, Converter={x:Static core_Converters:ToVisibilityConverter.Current}}">
 						<Grid.RowDefinitions>
 							<RowDefinition Height="auto"/>
 							<RowDefinition Height="*"/>
@@ -122,12 +124,12 @@
 						<TextBlock Grid.Row="0" Text="Customer Service" Style="{StaticResource Virto_TextBlock_Dashboard_TileGroup_Header_Style}">
 							<i:Interaction.Triggers>
 								<i:EventTrigger EventName="MouseUp">
-								   <i:InvokeCommandAction Command="{Binding Path=DataContext.NavigateToCustomersCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}}"/>
+								   <i:InvokeCommandAction Command="{Binding NavigateToCustomersCommand}"/>
 									<i:InvokeCommandAction Command="{Binding DataContext.CloseMainMenuCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type core_controls:MetroWindow}}}"/>
 								</i:EventTrigger>
 							</i:Interaction.Triggers>
 						</TextBlock>
-						<ItemsControl Grid.Row="1" ItemsSource="{Binding Path=DataContext.CustomerTiles, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}}">
+						<ItemsControl Grid.Row="1" ItemsSource="{Binding CustomerTiles}">
 							<ItemsControl.ItemsPanel>
 								<ItemsPanelTemplate>
 									<core_controls:TilePanel Height="480" AlignOnLesserEdge="True" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top"/>
@@ -135,31 +137,61 @@
 							</ItemsControl.ItemsPanel>
 						</ItemsControl>
 					</Grid>
-					
-					<Grid Margin="0,0,40,0" Visibility="{Binding Path=DataContext.SettingTiles.Count, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}, Converter={x:Static core_Converters:ToVisibilityConverter.Current}}">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
 
-                        <TextBlock Grid.Row="0" Text="Settings" Style="{StaticResource Virto_TextBlock_Dashboard_TileGroup_Header_Style}">
+					<Grid Margin="0,0,40,0" Visibility="{Binding SettingTiles.Count, Converter={x:Static core_Converters:ToVisibilityConverter.Current}}">
+						<Grid.RowDefinitions>
+							<RowDefinition Height="auto"/>
+							<RowDefinition Height="*"/>
+						</Grid.RowDefinitions>
+
+						<TextBlock Grid.Row="0" Text="Settings" Style="{StaticResource Virto_TextBlock_Dashboard_TileGroup_Header_Style}">
 							<i:Interaction.Triggers>
 								<i:EventTrigger EventName="MouseUp">
-								   <i:InvokeCommandAction Command="{Binding Path=DataContext.NavigateToSettingsCommand, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}}"/>
+								   <i:InvokeCommandAction Command="{Binding NavigateToSettingsCommand}"/>
 									<i:InvokeCommandAction Command="{Binding DataContext.CloseMainMenuCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type core_controls:MetroWindow}}}"/>
 								</i:EventTrigger>
 							</i:Interaction.Triggers>
-                        </TextBlock>
-						<ItemsControl Grid.Row="1" ItemsSource="{Binding Path=DataContext.SettingTiles, RelativeSource={RelativeSource Mode=FindAncestor,AncestorType=UserControl}}">
+						</TextBlock>
+						<ItemsControl Grid.Row="1" ItemsSource="{Binding SettingTiles}">
 							<ItemsControl.ItemsPanel>
 								<ItemsPanelTemplate>
-                                    <core_controls:TilePanel Height="480" AlignOnLesserEdge="True" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+									<core_controls:TilePanel Height="480" AlignOnLesserEdge="True" Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top"/>
 								</ItemsPanelTemplate>
 							</ItemsControl.ItemsPanel>
 						</ItemsControl>
-                    </Grid>
+					</Grid>
 
-                </StackPanel>
+					<!--news tile-->
+					<Grid Margin="0,0,40,0">
+						<Grid.RowDefinitions>
+							<RowDefinition Height="auto"/>
+							<RowDefinition Height="*"/>
+						</Grid.RowDefinitions>
+
+						<TextBlock Text="Announcements" Style="{StaticResource Virto_TextBlock_Dashboard_TileGroup_Header_Style}">
+							<i:Interaction.Triggers>
+								<i:EventTrigger EventName="MouseUp">
+									<i:InvokeCommandAction Command="{x:Static localVM:MainHomeViewModel.StartWithShellExecuteCommand}" CommandParameter="{Binding AllNewsUrl}" />
+								</i:EventTrigger>
+							</i:Interaction.Triggers>
+						</TextBlock>
+
+						<ContentPresenter Grid.Row="1" Content="{Binding NewsTile}" />
+						<core_virtualization:LoadingMetroAnimation Grid.Row="1" AnimationColor="White" AnimationScale="Medium">
+							<FrameworkElement.Style>
+								<Style TargetType="FrameworkElement">
+									<Setter Property="Visibility" Value="Collapsed"/>
+									<Style.Triggers>
+										<DataTrigger Binding="{Binding NewsTile.NewsList}" Value="{x:Null}">
+											<Setter Property="Visibility" Value="Visible"/>
+										</DataTrigger>
+									</Style.Triggers>
+								</Style>
+							</FrameworkElement.Style>
+						</core_virtualization:LoadingMetroAnimation>
+					</Grid>
+
+				</StackPanel>
 			</ScrollViewer>
 		</Grid>
 		<!--Content-->

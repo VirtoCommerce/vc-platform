@@ -1,25 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Net;
+using System.Reflection;
+using System.ServiceModel.Syndication;
 using System.Threading.Tasks;
+using System.Xml;
 using Microsoft.Practices.Prism.Commands;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Tiles;
+using VirtoCommerce.ManagementClient.Main.Infrastructure;
+using VirtoCommerce.ManagementClient.Security.ViewModel.Interfaces;
 
 namespace VirtoCommerce.ManagementClient.Main.ViewModel
 {
 	public class MainHomeViewModel : ViewModelBase, IMainHomeViewModel, ISupportDelayInitialization
 	{
-
 		#region Dependencies
 
 		private readonly IAppConfigRepository _repository;
 		private readonly TileManager _tileManager;
 		private readonly NavigationManager _navManager;
+		private readonly ILoginViewModel _loginViewModel;
 
 		#endregion
 
@@ -33,11 +41,12 @@ namespace VirtoCommerce.ManagementClient.Main.ViewModel
 
 		#region ctor
 
-		public MainHomeViewModel(IAppConfigRepository repository, NavigationManager navManager, TileManager tileManager)
+		public MainHomeViewModel(IAppConfigRepository repository, NavigationManager navManager, TileManager tileManager, ILoginViewModel loginViewModel)
 		{
 			_repository = repository;
 			_tileManager = tileManager;
 			_navManager = navManager;
+			_loginViewModel = loginViewModel;
 
 			PopulateTiles();
 			CommandsInit();
@@ -55,8 +64,6 @@ namespace VirtoCommerce.ManagementClient.Main.ViewModel
 			NavigateToMarketingCommand = new DelegateCommand(NavigateToMarketing);
 			NavigateToSettingsCommand = new DelegateCommand(NavigateToSettings);
 		}
-
-
 
 		#endregion
 
@@ -137,7 +144,6 @@ namespace VirtoCommerce.ManagementClient.Main.ViewModel
 
 		#region private methods
 
-
 		private void GetStatisticForOrders()
 		{
 			var statItem = StatisticsList.FirstOrDefault(st => st.Key.Contains("Primary"));
@@ -147,7 +153,6 @@ namespace VirtoCommerce.ManagementClient.Main.ViewModel
 				tile.TileNumber = statItem.Value;
 				tile.TileTitle = statItem.Name;
 			}
-
 		}
 
 		private void GetStatisticForChartLastYear()
@@ -189,7 +194,6 @@ namespace VirtoCommerce.ManagementClient.Main.ViewModel
 					Int32.TryParse(statistic.Value, out val);
 					tile.SeriasArrays2.Add(statistic.Name, val);
 				}
-
 			}
 		}
 
@@ -197,25 +201,86 @@ namespace VirtoCommerce.ManagementClient.Main.ViewModel
 
 		#region Tiles
 
+		public string AllNewsUrl { get; private set; }
+		public INewsTileItem NewsTile { get; private set; }
 		public List<ITileItem> CustomerTiles { get; private set; }
 		public List<ITileItem> OrderTiles { get; private set; }
 		public List<ITileItem> CatalogTiles { get; private set; }
 		public List<ITileItem> MarketingTiles { get; private set; }
 		public List<ITileItem> SettingTiles { get; private set; }
 
+		const string newsFeedUrl = "http://virtocommerce.com/news-rss";
+
 		private void PopulateTiles()
 		{
-			OnUIThread(() =>
+			// news section
+			AllNewsUrl = "http://virtocommerce.com/"; // main news web page
+			_tileManager.AddTile(new NewsTileItem()
+			{
+				IdModule = NavigationNames.MenuName,
+				IdTile = "NewsFeed",
+				Height = (double)TileSize.Triple,
+				Width = (double)TileSize.Double,
+				IdColorSchema = TileColorSchemas.Schema3,
+				Refresh = async (tileItem) =>
 				{
-					CustomerTiles = _tileManager.GetTilesByIdModule("CustomersMenu"); //TODO: replace to const
-					OrderTiles = _tileManager.GetTilesByIdModule("OrderMenu"); //TODO: replace to const
-					CatalogTiles = _tileManager.GetTilesByIdModule("CatalogMenu"); //TODO: replace to const
-					MarketingTiles = _tileManager.GetTilesByIdModule("MarketingMenu"); //TODO: replace to const
-					SettingTiles = _tileManager.GetTilesByIdModule("ConfigurationMenu"); //TODO: replace to const
-				});
+					var currTile = tileItem as INewsTileItem;
+					if (currTile != null && currTile.NewsList == null)
+					{
+						try
+						{
+							currTile.NewsList = await Task.Run(() =>
+								{
+									var assembly = Assembly.GetExecutingAssembly();
+									var webRequest = (HttpWebRequest)WebRequest.Create(newsFeedUrl);
+
+									webRequest.UserAgent = "Commerce Manager";
+									webRequest.Headers.Add("InformationalVersion", assembly.GetInformationalVersion());
+									webRequest.Headers.Add("FileVersion", assembly.GetFileVersion());
+									webRequest.Headers.Add("Is64BitOperatingSystem", Environment.Is64BitOperatingSystem.ToString());
+									webRequest.Headers.Add("OSVersion", Environment.OSVersion.ToString());
+									webRequest.Headers.Add("SiteUrl", _loginViewModel.BaseUrl);
+									
+									using (var reader = new XmlTextReader(webRequest.GetResponse().GetResponseStream()))
+									{
+										var feed = SyndicationFeed.Load(reader);
+										return feed.Items;
+									}
+								});
+						}
+						catch { }
+					}
+				}
+			});
+
+			// get all registered tiles
+			OnUIThread(() =>
+			{
+				NewsTile = _tileManager.GetTile("NewsFeed") as INewsTileItem;
+				CustomerTiles = _tileManager.GetTilesByIdModule(Customers.NavigationNames.MenuName);
+				OrderTiles = _tileManager.GetTilesByIdModule(Order.NavigationNames.MenuName);
+				CatalogTiles = _tileManager.GetTilesByIdModule(Catalog.NavigationNames.MenuName);
+				MarketingTiles = _tileManager.GetTilesByIdModule(Marketing.NavigationNames.MenuName);
+				SettingTiles = _tileManager.GetTilesByIdModule(Configuration.NavigationNames.MenuName);
+			});
 		}
 
 		#endregion
 
+		private static DelegateCommand<string> _startWithShellExecuteCommand;
+
+		// general process starter command
+		public static DelegateCommand<string> StartWithShellExecuteCommand
+		{
+			get
+			{
+				return _startWithShellExecuteCommand ?? (_startWithShellExecuteCommand = new DelegateCommand<string>(
+					argument =>
+					{
+						// workaround for chrome issue https://code.google.com/p/chromium/issues/detail?id=156400
+						Process.Start(new ProcessStartInfo("explorer.exe", argument));
+					}));
+			}
+		}
 	}
 }

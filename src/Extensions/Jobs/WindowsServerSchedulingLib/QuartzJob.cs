@@ -14,8 +14,9 @@ namespace VirtoCommerce.Scheduling.Windows
 			var jobActivity = ((Func<IJobActivity>)realization)();
 			var traceContext = (TraceContext)data["context"];
 		    var parameters = (IDictionary<string, string>) data["parameters"];
+            var getAudit = (Func<DateTime, Action<string>>)data["getAudit"];
 
-            JobActivityTool.ControlledExecution(jobActivity, traceContext, null, parameters);
+            JobActivityTool.ControlledExecution(jobActivity, traceContext, getAudit(DateTime.Now), parameters);
 		}
 	}
 }

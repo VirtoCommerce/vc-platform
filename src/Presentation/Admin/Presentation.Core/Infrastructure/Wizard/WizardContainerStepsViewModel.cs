@@ -15,7 +15,7 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure.Wizard
 
 		#region ISupportWizardSave
 
-		public void PrepareAndSave()
+		public bool PrepareAndSave()
 		{
 			BeforePrepareSteps();
 			foreach (var step in AllRegisteredSteps)
@@ -32,6 +32,7 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure.Wizard
 			{
 				vm.SaveWithoutUIChanges();
 			}
+			return true;
 		}
 
 		#endregion

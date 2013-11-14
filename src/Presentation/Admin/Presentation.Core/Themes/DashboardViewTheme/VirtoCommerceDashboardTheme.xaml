@@ -59,11 +59,11 @@
 
     <Style TargetType="TextBlock" x:Key="Virto_TextBlock_Dashboard_TileContentText_Style" BasedOn="{StaticResource {x:Type TextBlock}}">
         <Setter Property="SnapsToDevicePixels" Value="True"/>
-        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="FontSize" Value="14"/>
         <Setter Property="TextOptions.TextFormattingMode" Value="Display"/>
-        <Setter Property="FontWeight" Value="Light"/>
-        <!--<Setter Property="TextOptions.TextRenderingMode" Value="Aliased"/>-->
-        <Setter Property="Margin" Value="12,2,0,0"/>
+        <!--<Setter Property="FontWeight" Value="Light"/>-->
+        <!--<Setter Property="TextOptions.TextRenderingMode" Value="ClearType"/>-->
+        <Setter Property="Margin" Value="12,4,0,0"/>
     </Style>
 
     <Style TargetType="Border" x:Key="Virto_Border_Dashboard_Tile_Style">

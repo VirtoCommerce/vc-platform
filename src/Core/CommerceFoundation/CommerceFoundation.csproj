@@ -12,6 +12,10 @@
     <AssemblyName>VirtoCommerce.Foundation</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -720,7 +724,10 @@
     <None Include="Catalogs\Model\PropertyClassDiagram.cd" />
     <None Include="Customers\CustomersClassDiagram.cd" />
     <None Include="Customers\Model\CasePropertyDiagram.cd" />
+    <None Include="Marketing\Model\DynamicContent\DynamicContentDiagram.cd" />
     <None Include="Marketing\Model\MarketingClassDiagram.cd" />
+    <None Include="Marketing\Model\MarketingClassDiagram2.cd" />
+    <None Include="Orders\Model\OrderClassDiagram.cd" />
     <None Include="Orders\OrderClassDiagram.cd" />
     <None Include="packages.config" />
     <None Include="Search\Schemas\Filters.cd" />

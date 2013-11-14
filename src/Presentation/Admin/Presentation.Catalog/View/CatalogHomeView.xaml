@@ -22,6 +22,7 @@
     xmlns:behaviors="clr-namespace:VirtoCommerce.ManagementClient.Catalog.Infrastructure.Behaviors"
     xmlns:dataVirtualization="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.DataVirtualization;assembly=VirtoCommerce.ManagementClient.Core"
     xmlns:implementations="clr-namespace:VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementations"
+	Style="{StaticResource Virto_HomeView_Style}"
     mc:Ignorable="d" 
 	d:DesignWidth="900" d:DesignHeight="500">
 
@@ -528,11 +529,6 @@
 								  BorderBrush="{StaticResource Virto_Splitter_BorderBrush_Brush}" ResizeDirection="Columns" Background="{x:Null}"
 								  Visibility="{Binding ElementName=expandedTab, Path=IsExpanded, Converter={x:Static Presentation_Infrastructure_Converters:ToVisibilityConverter.Current}}"/>
 		</Grid>
-
-
-
-		<dataVirtualization:LoadingMetroAnimation AnimationScale="Large" AnimationColor="{StaticResource Virto_LoadingMetroAnimation_AnimationColor_Brush}" BackgroundColor="{StaticResource Virto_LoadingMetroAnimation_BackgroundColor_Brush}"
-            Visibility="{Binding Path=DataContext.ShowLoadingAnimation, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Converter={x:Static Presentation_Infrastructure_Converters:ToVisibilityConverter.Current}}"/>
 	</Grid>
 
 </UserControl>

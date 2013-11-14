@@ -175,6 +175,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			set { _IsInitializingItemCategories = value; OnPropertyChanged(); }
 		}
 
+		private const int TabIndexOverview = 0;
 		private const int TabIndexProperties = 1;
 
 		private int _selectedTabIndex;
@@ -259,13 +260,32 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 		protected override bool IsValidForSave()
 		{
+			var result = InnerItem.Validate();
+
+			// Code should be unique in scope of catalog
+			var isCodeValid = true;
+			if (InnerItem.Code != OriginalItem.Code)
+			{
+				var count = ItemRepository.Items
+										  .Where(x =>
+											  x.CatalogId == InnerItem.CatalogId && x.Code == InnerItem.Code && x.ItemId != InnerItem.ItemId)
+										  .Count();
+
+				if (count > 0)
+				{
+					InnerItem.SetError("Code", "An item with this Code already exists in this catalog", true);
+					SelectedTabIndex = TabIndexOverview;
+					isCodeValid = false;
+				}
+			}
+
 			var isPropertyValuesValid = CategoryViewModel.ValidatePropertiesAndValues(PropertiesAndValues);
-			if (!isPropertyValuesValid)
+			if (!isPropertyValuesValid && isCodeValid)
 			{
 				SelectedTabIndex = TabIndexProperties;
 			}
 
-			return InnerItem.Validate() && isPropertyValuesValid;
+			return result && isPropertyValuesValid && isCodeValid;
 		}
 
 		/// <summary>

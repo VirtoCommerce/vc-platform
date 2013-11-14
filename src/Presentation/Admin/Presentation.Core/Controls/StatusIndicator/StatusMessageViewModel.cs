@@ -41,7 +41,7 @@ namespace VirtoCommerce.ManagementClient.Core.Controls.StatusIndicator.ViewModel
 				OnPropertyChanged("IsRunning");
 				OnPropertyChanged("IsWarning");
 				OnPropertyChanged("IsError");
-				OnPropertyChanged("IsProgressOrSuccess");
+				OnPropertyChanged("IsSuccess");
 				OnPropertyChanged("IsProgressVisible");
 			}
 		}
@@ -72,9 +72,9 @@ namespace VirtoCommerce.ManagementClient.Core.Controls.StatusIndicator.ViewModel
 			get { return State == StatusMessageState.Error; }
 		}
 
-		public bool IsProgressOrSuccess
+		public bool IsSuccess
 		{
-			get { return State == StatusMessageState.InProgress || State == StatusMessageState.Success; }
+			get { return State == StatusMessageState.Success; }
 		}
 	}
 }

@@ -154,6 +154,10 @@
 		</Grid>
 
 		<Grid Grid.Column="0" Grid.ColumnSpan="6" Grid.Row="1" Margin="0">
+			<UIElement.InputBindings>
+				<KeyBinding Command="{Binding BackCommand}" Key="Back" />
+			</UIElement.InputBindings>
+			
 			<!--Main Region-->
 			<TabControl x:Name="MainRegion" cal:RegionManager.RegionName="{x:Static presentationCore:RegionNames.MainRegion}"
                     Background="Transparent" TabStripPlacement="Top" BorderThickness="0" Padding="0" Margin="0" VerticalAlignment="Stretch"

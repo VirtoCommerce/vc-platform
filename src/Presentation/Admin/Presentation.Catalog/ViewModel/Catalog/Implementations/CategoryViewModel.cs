@@ -186,6 +186,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		public DelegateCommand<object> PropertyValueEditCommand { get; private set; }
 		public DelegateCommand<object> PropertyValueDeleteCommand { get; private set; }
 
+		private const int TabIndexOverview = 0;
 		private const int TabIndexProperties = 1;
 
 		private int _selectedTabIndex;
@@ -278,15 +279,34 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 		protected override bool IsValidForSave()
 		{
+			var result = InnerItem.Validate();
+
+			// Code should be unique in scope of catalog
+			var isCodeValid = true;
+			if (InnerItem.Code != OriginalItem.Code)
+			{
+				var count = ItemRepository.Categories
+										  .Where(x =>
+											  x.CatalogId == InnerItem.CatalogId && x.Code == InnerItem.Code && x.CategoryId != InnerItem.CategoryId)
+										  .Count();
+
+				if (count > 0)
+				{
+					InnerItem.SetError("Code", "A category with this Code already exists in this catalog", true);
+					SelectedTabIndex = TabIndexOverview;
+					isCodeValid = false;
+				}
+			}
+
 			var isPropertyValuesValid = ValidatePropertiesAndValues(PropertiesAndValues);
-			if (!isPropertyValuesValid)
+			if (!isPropertyValuesValid && isCodeValid)
 			{
 				SelectedTabIndex = TabIndexProperties;
 			}
 
-			return InnerItem.Validate() && isPropertyValuesValid;
+			return result && isPropertyValuesValid && isCodeValid;
 		}
-		
+
 		protected override void AfterSaveChangesUI()
 		{
 			// just basic properties inject is enough. Injecting collections can generate repository errors.

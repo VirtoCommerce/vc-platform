@@ -115,7 +115,7 @@
                         <PasswordBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" common:PasswordHelper.Attach="True" HorizontalAlignment="Stretch"  
 							common:PasswordHelper.Password="{Binding Password, Mode=TwoWay}" Margin="0,5,0,5">
                             <PasswordBox.InputBindings>
-                                <KeyBinding Key="Enter" Command="{Binding LoginCommand}" CommandParameter="{Binding Password}"/>
+                                <KeyBinding Key="Enter" Command="{Binding LoginCommand}" />
                             </PasswordBox.InputBindings>
                         </PasswordBox>
 						<core_controls:WatermarkedTextBox  Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"

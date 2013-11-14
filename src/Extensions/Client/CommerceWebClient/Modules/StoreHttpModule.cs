@@ -20,11 +20,11 @@ namespace VirtoCommerce.Web.Client.Modules
         /// <summary>
         /// The store cookie
         /// </summary>
-		private const string StoreCookie = "vcf.store";
+        protected virtual string StoreCookie { get { return "vcf.store"; } }
         /// <summary>
         /// The currency cookie
         /// </summary>
-		private const string CurrencyCookie = "vcf.currency";
+        protected virtual string CurrencyCookie { get { return "vcf.currency"; } }
 
         /// <summary>
         /// You will need to configure this module in the Web.config file of your

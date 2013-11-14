@@ -510,7 +510,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 		private void DoSearchAllItems()
 		{
-			_isInSearchAllMode = true;
+			_isInSearchAllMode = !string.IsNullOrEmpty(SearchFilterAll);
 			ListItemsSource.Refresh();
 			RefreshCaption();
 		}
@@ -727,11 +727,8 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 				}
 				else if (_isInSearchAllMode) // quick search from a single textbox
 				{
-					if (!string.IsNullOrEmpty(SearchFilterAll))
-					{
-						canQuery = true;
-						query = query.Where(x => x.Name.Contains(SearchFilterAll) || x.Code.Contains(SearchFilterAll));
-					}
+					canQuery = true;
+					query = query.Where(x => x.Name.Contains(SearchFilterAll) || x.Code.Contains(SearchFilterAll));
 				}
 				else if (_isInSearchMode) // if simple search was performed
 				{
@@ -993,7 +990,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 					subTitle = "BROWSING    \"" + path.ToUpper() + "\"";
 				}
 			}
-			if (_isInSearchAllMode && !string.IsNullOrEmpty(SearchFilterAll))
+			if (_isInSearchAllMode)
 			{
 				subTitle += (String.IsNullOrEmpty(SearchFilterAll) ? "" : "      ") + "SEARCH RESULTS FOR   \"" + SearchFilterAll.ToUpper() + "\"";
 			}
