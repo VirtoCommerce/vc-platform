@@ -97,23 +97,12 @@
       <HintPath>..\..\packages\Extended.Wpf.Toolkit.1.9.0\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <Choose>
-    <When Condition="'$(BuildingInsideVisualStudio)' == 'true'">
       <ItemGroup>
         <Reference Include="VirtoCommerce.ManagementClient.Core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
           <SpecificVersion>False</SpecificVersion>
           <HintPath>..\..\..\src\Presentation\Admin\Presentation.Core\bin\$(Configuration)\VirtoCommerce.ManagementClient.Core.dll</HintPath>
         </Reference>
       </ItemGroup>
-    </When>
-    <Otherwise>
-      <ItemGroup>
-        <Reference Include="VirtoCommerce.ManagementClient.Core">
-          <HintPath>$(OutDir)VirtoCommerce.ManagementClient.Core.dll</HintPath>
-        </Reference>
-      </ItemGroup>
-    </Otherwise>
-  </Choose>
   <ItemGroup>
     <Compile Include="..\..\..\src\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
