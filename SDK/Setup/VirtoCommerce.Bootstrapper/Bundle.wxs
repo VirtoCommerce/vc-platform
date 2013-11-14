@@ -12,7 +12,9 @@
       <?define AnyCPUOutDir = "$(var.OutDir)..\..\..\..\VirtoCommerce.Bootstrapper.UI\bin\$(var.Configuration)"?>
       <?define ElasticSearchOutDir = "$(var.OutDir)..\..\..\..\VirtoCommerce.ElasticSearch\bin\$(var.Configuration)\$(var.Platform)\"?>
       <?define VirtoCommerceOutDir = "$(var.OutDir)..\..\..\..\VirtoCommerce.Installer\bin\$(var.Configuration)\$(var.Platform)\"?>
-      <?define SharedDir = "$(var.OutDir)..\..\..\..\VirtoCommerce.Bootstrapper\shared"?>
+      
+      <!-- must set environment variable to point to resources directory -->
+      <?define SharedDir = "[%VC_RES]\distr"?>
       
       <Payload SourceFile="..\VirtoCommerce.Installer\License.rtf" Compressed="yes" />
       <Payload Name="BootstrapperCore.config" SourceFile="$(var.AnyCPUOutDir)\Installer.config" Compressed="yes" />
