@@ -9,17 +9,10 @@
           HelpUrl="http://support.virtocommerce.com" UpdateUrl="http://virtocommerce.com" AboutUrl="http://virtocommerce.com" Copyright="VirtoCommerce (c) All rights reserved." Compressed="yes">
     <BootstrapperApplicationRef Id="ManagedBootstrapperApplicationHost">
       <?define SdkDownloadUrl = "http://assets.virtocommerce.com/software/1.0/sdk"?>
-      <?if $(var.Configuration) = LocalDebug ?>
-        <?define AnyCPUOutDir = "$(var.OutDir)..\..\..\..\VirtoCommerce.Bootstrapper.UI\bin\$(var.Configuration)"?>
-        <?define ElasticSearchOutDir = "$(var.OutDir)..\..\..\..\VirtoCommerce.ElasticSearch\bin\$(var.Configuration)\$(var.Platform)\"?>
-        <?define VirtoCommerceOutDir = "$(var.OutDir)..\..\..\..\VirtoCommerce.Installer\bin\$(var.Configuration)\$(var.Platform)\"?>
-        <?define SharedDir = "$(var.OutDir)..\..\..\..\VirtoCommerce.Bootstrapper\shared"?>
-      <?else ?>
-        <?define AnyCPUOutDir = "$(var.OutDir)..\..\$(var.Configuration)"?>
-        <?define ElasticSearchOutDir = "$(var.OutDir)"?>
-        <?define VirtoCommerceOutDir = "$(var.OutDir)"?>
-        <?define SharedDir = "e:\Work\Projects\VCF\Jenkins\distr"?>
-      <?endif ?>
+      <?define AnyCPUOutDir = "$(var.OutDir)..\..\..\..\VirtoCommerce.Bootstrapper.UI\bin\$(var.Configuration)"?>
+      <?define ElasticSearchOutDir = "$(var.OutDir)..\..\..\..\VirtoCommerce.ElasticSearch\bin\$(var.Configuration)\$(var.Platform)\"?>
+      <?define VirtoCommerceOutDir = "$(var.OutDir)..\..\..\..\VirtoCommerce.Installer\bin\$(var.Configuration)\$(var.Platform)\"?>
+      <?define SharedDir = "$(var.OutDir)..\..\..\..\VirtoCommerce.Bootstrapper\shared"?>
       
       <Payload SourceFile="..\VirtoCommerce.Installer\License.rtf" Compressed="yes" />
       <Payload Name="BootstrapperCore.config" SourceFile="$(var.AnyCPUOutDir)\Installer.config" Compressed="yes" />
