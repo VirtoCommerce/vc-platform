@@ -11,7 +11,7 @@ namespace VirtoCommerce.Foundation.Search
     [DataContract/*,Serializable*/]
     public class SearchResults : ISearchResults
     {
-        IDocumentSet[] _Documents = null;
+        ResultDocumentSet[] _Documents = null;
         [DataMember]
         ISearchCriteria _SearchCriteria = null;
 
@@ -68,7 +68,7 @@ namespace VirtoCommerce.Foundation.Search
         }
 
         [DataMember]
-        public virtual IDocumentSet[] Documents
+        public virtual ResultDocumentSet[] Documents
         {
             get { return _Documents; }
             set { _Documents = value; }
@@ -160,7 +160,7 @@ namespace VirtoCommerce.Foundation.Search
 			return entries;
 		}
 
-        public SearchResults(ISearchCriteria criteria, IDocumentSet[] documents)
+        public SearchResults(ISearchCriteria criteria, ResultDocumentSet[] documents)
         {
             _SearchCriteria = criteria;
             _Documents = documents;

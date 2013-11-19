@@ -94,6 +94,7 @@ namespace VirtoCommerce.Web
     using VirtoCommerce.Foundation.Data.Azure.Asset;
     using VirtoCommerce.Foundation.Data.Azure.CQRS;
     using VirtoCommerce.Foundation.Data.Azure.Common;
+    using VirtoCommerce.Search.Providers.Lucene;
 
     /// <summary>
     /// Specifies the Unity configuration for the main container.
@@ -201,17 +202,27 @@ namespace VirtoCommerce.Web
             #endregion
 
             #region Search
-            container.RegisterInstance<ISearchConnection>(
-                new SearchConnection(
-                    ConnectionHelper.GetConnectionString("SearchConnectionString")));
+
+            var searchConnection = new SearchConnection(ConnectionHelper.GetConnectionString("SearchConnectionString"));
+            container.RegisterInstance<ISearchConnection>(searchConnection);
             container.RegisterType<ISearchService, SearchService>(new HierarchicalLifetimeManager());
             container.RegisterType<ISearchIndexController, SearchIndexController>();
             container.RegisterType<IBuildSettingsRepository, EFSearchRepository>();
             container.RegisterType<ISearchEntityFactory, SearchEntityFactory>(new ContainerControlledLifetimeManager());
-            container.RegisterType<ISearchProvider, ElasticSearchProvider>();
-            container.RegisterType<ISearchQueryBuilder, ElasticSearchQueryBuilder>();
             container.RegisterType<ISearchIndexBuilder, CatalogItemIndexBuilder>("catalogitem");
 
+            // If provider specified as lucene, use lucene libraries, otherwise use default, which is elastic search
+            if (searchConnection.Provider == "lucene")
+            {
+                // Lucene Search implementation
+                container.RegisterType<ISearchProvider, LuceneSearchProvider>();
+                container.RegisterType<ISearchQueryBuilder, LuceneSearchQueryBuilder>();               
+            }
+            else
+            {
+                container.RegisterType<ISearchProvider, ElasticSearchProvider>();
+                container.RegisterType<ISearchQueryBuilder, ElasticSearchQueryBuilder>();               
+            }
             #endregion
 
             #region Assets

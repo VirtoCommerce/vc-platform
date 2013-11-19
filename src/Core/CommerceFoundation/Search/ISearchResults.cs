@@ -24,6 +24,6 @@ namespace VirtoCommerce.Foundation.Search
         /// <value>The facet groups.</value>
         FacetGroup[] FacetGroups { get; set; }
 
-        IDocumentSet[] Documents {get;}
+        ResultDocumentSet[] Documents {get;}
     }
 }

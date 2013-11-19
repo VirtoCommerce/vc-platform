@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using VirtoCommerce.Foundation.Search.Model;
 using System.Runtime.Serialization;
 using VirtoCommerce.Foundation.Search.Schemas;
 
@@ -50,7 +49,7 @@ namespace VirtoCommerce.Foundation.Search
         {
             get
             {
-                StringBuilder key = new StringBuilder();
+                var key = new StringBuilder();
 
                 key.Append("_dc:" + this.DocumentType);
                 key.Append("_st:" + this.StartingRecord.ToString());

@@ -189,7 +189,7 @@ namespace VirtoCommerce.Search.Providers.Elastic
 			documents.Documents = docList.ToArray();
 
 			// Create search results object
-			var results = new SearchResults(criteria, new IDocumentSet[] { documents });
+			var results = new SearchResults(criteria, new [] { documents });
 
 			// Now add facet results
 			var groups = new List<FacetGroup>();
@@ -305,15 +305,6 @@ namespace VirtoCommerce.Search.Providers.Elastic
 			}
 
 			results.FacetGroups = groups.ToArray();
-
-			/*
-			// Populate spell checking results
-			foreach (var sc in resultDocs.SpellChecking)
-			{
-				results.Suggestions = sc.Suggestions.ToList<string>().ToArray();
-			}
-			 * */
-
 			return results;
 		}
 
@@ -500,32 +491,6 @@ namespace VirtoCommerce.Search.Providers.Elastic
 		{
 			return String.Format("{0}.{1}", scope.ToLower(), documentType);
 		}
-
-/*
-		private string GetElasticSearchTypeFromType(Type t)
-		{
-			if (t == typeof(string))
-				return "string";
-			if (t.IsValueType)
-			{
-				switch (t.Name)
-				{
-					case "Int32":
-						return "integer";
-					case "Int64":
-						return "long";
-					case "Single":
-						return "float";
-					case "Decimal":
-					case "Double":
-						return "double";
-					case "DateTime":
-						return "date";
-				}
-			}
-			return null;
-		}
-*/
 
 		private string GetDescription(ISearchFilterValue value, string locale)
 		{

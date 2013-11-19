@@ -146,7 +146,9 @@
     <Compile Include="Repository\CatalogQueryScenarios.cs" />
     <Compile Include="Reviews\MigrationScenarios.cs" />
     <Compile Include="Reviews\ReviewScenarios.cs" />
+    <Compile Include="Search\LuceneScenarios.cs" />
     <Compile Include="Search\MigrationScenarios.cs" />
+    <Compile Include="Search\SearchHelper.cs" />
     <Compile Include="Security\MigrationScenarios.cs" />
     <Compile Include="Security\SecurityScenarios.cs" />
     <Compile Include="Stores\MigrationScenarios.cs" />
@@ -260,6 +262,10 @@
     <ProjectReference Include="..\..\src\Extensions\Search\IndexingProviders\VirtoCommerce.Search.Index.csproj">
       <Project>{9f5493c4-0080-4bb5-9c12-25d0cdbea2dd}</Project>
       <Name>VirtoCommerce.Search.Index</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\Extensions\Search\LuceneSearchProvider\LuceneSearchProvider.csproj">
+      <Project>{4882f43b-ae8d-489b-911b-7f9a1d526715}</Project>
+      <Name>LuceneSearchProvider</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\Extensions\Shipping\SimpleShippingGateway\SimpleShippingGateway.csproj">
       <Project>{2ad827aa-165d-4c13-8aea-108f9fa6e96c}</Project>

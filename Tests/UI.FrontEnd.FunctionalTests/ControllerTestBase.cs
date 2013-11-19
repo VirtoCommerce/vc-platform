@@ -337,7 +337,7 @@ namespace UI.FrontEnd.FunctionalTests
 				documents.Documents = docList.ToArray();
 
 				// Create search results object
-				return new SearchResults(criteria, new IDocumentSet[] { documents });
+                return new SearchResults(criteria, new [] { documents });
 			}
 
 			public void Index(string scope, string documentType, IDocument document)

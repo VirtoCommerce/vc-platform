@@ -17,13 +17,6 @@ namespace VirtoCommerce.Search.Providers.Elastic
         {
             var query = new BoolQuery<ESDocument>();
 
-            /* we do not need to filter by language since it is done on catalog and store levels
-            if (criteria.Locale != null)
-            {
-                //query.Must(m => m.Term(t => t.Field("__loc").Value(criteria.Locale)));
-            }
-             * */
-
             #region Filters
             if (criteria.CurrentFilterValues != null)
             {
@@ -99,7 +92,6 @@ namespace VirtoCommerce.Search.Providers.Elastic
 
 				if (!String.IsNullOrEmpty(c.Catalog))
 				{
-
 					AddQuery("catalog", query, c.Catalog);
 				}
             }

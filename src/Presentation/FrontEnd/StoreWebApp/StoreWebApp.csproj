@@ -787,6 +787,10 @@
       <Project>{9F5493C4-0080-4BB5-9C12-25D0CDBEA2DD}</Project>
       <Name>VirtoCommerce.Search.Index</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\Extensions\Search\LuceneSearchProvider\LuceneSearchProvider.csproj">
+      <Project>{4882f43b-ae8d-489b-911b-7f9a1d526715}</Project>
+      <Name>LuceneSearchProvider</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Extensions\Shipping\SimpleShippingGateway\SimpleShippingGateway.csproj">
       <Project>{2ad827aa-165d-4c13-8aea-108f9fa6e96c}</Project>
       <Name>SimpleShippingGateway</Name>

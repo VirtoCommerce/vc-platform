@@ -8,7 +8,7 @@ using VirtoCommerce.Foundation.Frameworks;
 namespace VirtoCommerce.Foundation.Catalogs.Search
 {
 	[DataContract]
-	public class CatalogItemSearchCriteria : SearchCriteriaBase
+	public class CatalogItemSearchCriteria : KeywordSearchCriteria
 	{
 		/// <summary>
 		/// Gets the default sort order.
@@ -166,15 +166,6 @@ namespace VirtoCommerce.Foundation.Catalogs.Search
 		{
 			get { return _endDate; }
 			set { ChangeState(); _endDate = value; }
-		}
-
-		private string _searchPhrase = String.Empty;
-
-		[DataMember]
-		public string SearchPhrase
-		{
-			get { return _searchPhrase; }
-			set { ChangeState(); _searchPhrase = value; }
 		}
 
 		/// <summary>

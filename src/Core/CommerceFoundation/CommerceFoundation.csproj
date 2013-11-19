@@ -335,6 +335,7 @@
     <Compile Include="PlatformTools\VirtoCommerceTraceSource.cs" />
     <Compile Include="PlatformTools\ILogger.cs" />
     <Compile Include="Search\ISearchConnection.cs" />
+    <Compile Include="Search\KeywordSearchCriteria.cs" />
     <Compile Include="Search\SearchConnection.cs" />
     <Compile Include="Security\Model\AccountState.cs" />
     <Compile Include="Security\Model\RegisterType.cs" />

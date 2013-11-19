@@ -33,6 +33,8 @@ using VirtoCommerce.Search.Index;
 
 namespace VirtoCommerce.PowerShell.SearchSetup.Cmdlet
 {
+    using VirtoCommerce.Search.Providers.Lucene;
+
     [CLSCompliant(false)]
     [Cmdlet(VerbsData.Update, "Virto-Search-Index", SupportsShouldProcess = true)]
     public class UpdateSearchIndex : DomainCommand
@@ -112,13 +114,24 @@ namespace VirtoCommerce.PowerShell.SearchSetup.Cmdlet
             container.RegisterType<ICatalogEntityFactory, CatalogEntityFactory>(new ContainerControlledLifetimeManager());
 
             container.RegisterType<ICatalogService, CatalogService>();
-            container.RegisterType<ISearchProvider, ElasticSearchProvider>();
-            container.RegisterType<ISearchQueryBuilder, ElasticSearchQueryBuilder>();
             container.RegisterType<ISearchIndexBuilder, CatalogItemIndexBuilder>("catalogitem");
             container.RegisterType<ILogOperationFactory, LogOperationFactory>();
             container.RegisterType<ISearchEntityFactory, SearchEntityFactory>(new ContainerControlledLifetimeManager());
             container.RegisterType<ISearchIndexController, SearchIndexController>();
             container.RegisterType<ICacheRepository, HttpCacheRepository>();
+
+            if (searchConnection.Provider == "lucene")
+            {
+                // Lucene Search implementation
+                container.RegisterType<ISearchProvider, LuceneSearchProvider>();
+                container.RegisterType<ISearchQueryBuilder, LuceneSearchQueryBuilder>();
+            }
+            else
+            {
+                container.RegisterType<ISearchProvider, ElasticSearchProvider>();
+                container.RegisterType<ISearchQueryBuilder, ElasticSearchQueryBuilder>();
+            }
+
 
             // register instances here
             container.RegisterInstance<ISearchConnection>(searchConnection);

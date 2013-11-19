@@ -141,6 +141,10 @@
       <Project>{9f5493c4-0080-4bb5-9c12-25d0cdbea2dd}</Project>
       <Name>VirtoCommerce.Search.Index</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Search\LuceneSearchProvider\LuceneSearchProvider.csproj">
+      <Project>{4882F43B-AE8D-489B-911B-7F9A1D526715}</Project>
+      <Name>LuceneSearchProvider</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="azure-db.ps1" />

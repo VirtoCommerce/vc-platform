@@ -1,22 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using VirtoCommerce.Foundation.Catalogs.Search;
-using VirtoCommerce.Foundation.Search;
-
+﻿
 namespace VirtoCommerce.Foundation.Search
 {
     public class DocumentPublisher
     {
         readonly ISearchProvider _search = null;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DocumentPublisher"/> class.
+        /// </summary>
+        /// <param name="search">The search.</param>
         public DocumentPublisher(ISearchProvider search)
         {
             _search = search;
         }
 
+        /// <summary>
+        /// Submits the documents.
+        /// </summary>
+        /// <param name="scope">The scope.</param>
+        /// <param name="documentType">Type of the document.</param>
+        /// <param name="documents">The documents.</param>
         public void SubmitDocuments(string scope, string documentType, IDocument[] documents)
         {
             foreach (var doc in documents)
@@ -25,14 +27,15 @@ namespace VirtoCommerce.Foundation.Search
             }
 
             _search.Commit(scope);
-
-            /*
-            var criteria = new CatalogItemSearchCriteria();
-            var results = _search.Search(scope, criteria);
-            Trace.TraceInformation("Total items : " + results.TotalCount);
-             * */
+            _search.Close(scope, documentType);
         }
 
+        /// <summary>
+        /// Removes the documents.
+        /// </summary>
+        /// <param name="scope">The scope.</param>
+        /// <param name="documentType">Type of the document.</param>
+        /// <param name="documents">The documents.</param>
         public void RemoveDocuments(string scope, string documentType, string[] documents)
         {
             foreach (var doc in documents)

@@ -18,7 +18,8 @@ namespace VirtoCommerce.PowerShell.Tests
             //DropDatabase();
             var publisher = new UpdateSearchIndex();
             var sqlConnnection = "Server=(local);Database=VirtoCommerce;Trusted_Connection=True;MultipleActiveResultSets=True";
-            publisher.Index(new SearchConnection(dataSource: "localhost:9200", scope: "default"), sqlConnnection, null, true);
+            //publisher.Index(new SearchConnection(dataSource: "localhost:9200", scope: "default"), sqlConnnection, null, true);
+            publisher.Index(new SearchConnection(dataSource: "temp", scope: "default", provider: "lucene"), sqlConnnection, null, true);
         }
     }
 }

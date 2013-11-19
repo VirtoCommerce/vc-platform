@@ -17,5 +17,13 @@ namespace VirtoCommerce.Foundation.Search
         string DataSource { get; }
         string Scope { get; }
 
+        /// <summary>
+        /// Gets the provider for the search, can be ElasticSearch, Lucene
+        /// </summary>
+        /// <value>
+        /// The provider.
+        /// </value>
+        string Provider { get; }
+
     }
 }
