@@ -62,6 +62,8 @@ using VirtoCommerce.Web.Client.Services.Assets;
 
 namespace VirtoCommerce.Scheduling.Windows
 {
+    using VirtoCommerce.Search.Providers.Lucene;
+
     public static class Bootstrapper
     {
         public static IUnityContainer Initialize()
@@ -98,16 +100,27 @@ namespace VirtoCommerce.Scheduling.Windows
             #endregion
 
             #region Search
-            var connectionString = ConnectionHelper.GetConnectionString("SearchConnectionString");
-            container.RegisterInstance<ISearchConnection>(new SearchConnection(connectionString));
+            var searchConnection = new SearchConnection(ConnectionHelper.GetConnectionString("SearchConnectionString"));
+            container.RegisterInstance<ISearchConnection>(searchConnection);
 
             container.RegisterType<ISearchService, SearchService>(new HierarchicalLifetimeManager());
             container.RegisterType<ISearchIndexController, SearchIndexController>();
             container.RegisterType<IBuildSettingsRepository, EFSearchRepository>();
             container.RegisterType<ISearchEntityFactory, SearchEntityFactory>(new ContainerControlledLifetimeManager());
-            container.RegisterType<ISearchQueryBuilder, ElasticSearchQueryBuilder>();
             container.RegisterType<ISearchIndexBuilder, CatalogItemIndexBuilder>("catalogitem");
-            container.RegisterType<ISearchProvider, ElasticSearchProvider>();
+
+            // If provider specified as lucene, use lucene libraries, otherwise use default, which is elastic search
+            if (searchConnection.Provider == "lucene")
+            {
+                // Lucene Search implementation
+                container.RegisterType<ISearchProvider, LuceneSearchProvider>();
+                container.RegisterType<ISearchQueryBuilder, LuceneSearchQueryBuilder>();
+            }
+            else
+            {
+                container.RegisterType<ISearchProvider, ElasticSearchProvider>();
+                container.RegisterType<ISearchQueryBuilder, ElasticSearchQueryBuilder>();
+            }
 
             #endregion
 

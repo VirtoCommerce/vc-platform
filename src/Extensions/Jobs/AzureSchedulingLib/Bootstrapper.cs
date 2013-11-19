@@ -118,14 +118,27 @@ namespace VirtoCommerce.Scheduling.Azure
 				Logger.Error("connectionString is null");
 			}
 
-			container.RegisterInstance<ISearchConnection>(new SearchConnection(connectionString));
+            var searchConnection = new SearchConnection(connectionString);
+            container.RegisterInstance<ISearchConnection>(searchConnection);
+
 			container.RegisterType<ISearchService, SearchService>(new HierarchicalLifetimeManager());
 			container.RegisterType<ISearchIndexController, SearchIndexController>();
 			container.RegisterType<IBuildSettingsRepository, EFSearchRepository>();
 			container.RegisterType<ISearchEntityFactory, SearchEntityFactory>(new ContainerControlledLifetimeManager());
-			container.RegisterType<ISearchQueryBuilder, ElasticSearchQueryBuilder>();
 			container.RegisterType<ISearchIndexBuilder, CatalogItemIndexBuilder>("catalogitem");
-			container.RegisterType<ISearchProvider, ElasticSearchProvider>();
+
+            // If provider specified as lucene, use lucene libraries, otherwise use default, which is elastic search
+            if (searchConnection.Provider == "lucene")
+            {
+                // Lucene Search implementation
+                container.RegisterType<ISearchProvider, LuceneSearchProvider>();
+                container.RegisterType<ISearchQueryBuilder, LuceneSearchQueryBuilder>();
+            }
+            else
+            {
+                container.RegisterType<ISearchProvider, ElasticSearchProvider>();
+                container.RegisterType<ISearchQueryBuilder, ElasticSearchQueryBuilder>();
+            }
 
 			#endregion
 
