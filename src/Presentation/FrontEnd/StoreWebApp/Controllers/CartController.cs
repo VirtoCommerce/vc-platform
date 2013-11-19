@@ -111,15 +111,16 @@ namespace VirtoCommerce.Web.Controllers
 			return RemoveFrom(lineItemId, CartHelper.CartName, false, sourceView);
 		}
 
-		/// <summary>
-		/// Removes from wish list.
-		/// </summary>
-		/// <param name="lineItemId">The line item identifier.</param>
-		/// <returns>ActionResult.</returns>
-		[HttpPost]
-		public ActionResult RemoveFromWishList(string lineItemId)
+	    /// <summary>
+	    /// Removes from wish list.
+	    /// </summary>
+	    /// <param name="lineItemId">The line item identifier.</param>
+	    /// <param name="sourceView"></param>
+	    /// <returns>ActionResult.</returns>
+	    [HttpPost]
+		public ActionResult RemoveFromWishList(string lineItemId, string sourceView = "")
 		{
-			return RemoveFrom(lineItemId, CartHelper.WishListName);
+			return RemoveFrom(lineItemId, CartHelper.WishListName, false, sourceView);
 		}
 
 		/// <summary>
@@ -197,11 +198,10 @@ namespace VirtoCommerce.Web.Controllers
 
 			if (!helper.IsEmpty)
 			{
-				foreach (var item in helper.LineItems.Where(item => item.LineItemId == lineItemId || clear))
+				foreach (var item in helper.LineItems.Where(item => item.LineItemId == lineItemId || clear).ToArray())
 				{
 					name = item.DisplayName;
 					helper.Remove(item);
-					break;
 				}
 			}
 
@@ -213,7 +213,7 @@ namespace VirtoCommerce.Web.Controllers
 
 			SaveChanges(helper);
 
-			var renderView = sourceView.Equals("MiniCart") && !helper.LineItems.Any() ? "MiniCartEmpty" : sourceView;
+            var renderView = !string.IsNullOrEmpty(sourceView) && sourceView.Equals("MiniCart") && !helper.LineItems.Any() ? "MiniCartEmpty" : sourceView;
 
 			// Display the confirmation message
 			var results = new CartRemoveModel
@@ -223,8 +223,9 @@ namespace VirtoCommerce.Web.Controllers
 					CartSubTotal = StoreHelper.FormatCurrency(helper.Cart.Subtotal, helper.Cart.BillingCurrency),
 					CartTotal = StoreHelper.FormatCurrency(helper.Cart.Total, helper.Cart.BillingCurrency),
 					CartCount = helper.LineItems.Count(),
-					LineItemsView = RenderRazorViewToString(renderView, helper.CreateCartModel(true)),
-					DeleteSource = sourceView
+                    LineItemsView = !string.IsNullOrEmpty(sourceView) ? RenderRazorViewToString(renderView, helper.CreateCartModel(true)) : "",
+					DeleteSource = sourceView,
+                    DeleteId = lineItemId
 				};
 
 			return Json(results);

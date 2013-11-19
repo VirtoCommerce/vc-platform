@@ -177,20 +177,19 @@ VirtoCart.prototype = {
 		}
 		
 		// Update the page elements
-		if (context.LineItemsView != null && context.LineItemsView.length > 0)
-		{
-			
-			if ($("#shopping-cart-table").length != 0) {
-				$("#shopping-cart-table tbody").html(context.LineItemsView);
-			}
-			
-			if ($("#MiniCartContainer").length > 0)
-			{
-				$("#MiniCartContainer").html(context.LineItemsView);
-			}
+		if (context.LineItemsView != null && context.LineItemsView.length > 0) {
+
+		    if ($("#shopping-cart-table").length != 0) {
+		        $("#shopping-cart-table tbody").html(context.LineItemsView);
+		    }
+
+		    if ($("#MiniCartContainer").length > 0) {
+		        $("#MiniCartContainer").html(context.LineItemsView);
+		    }
+		} else {
+		    $('#row-' + context.DeleteId).fadeOut('slow');
 		}
-		//$('#row-' + context.DeleteId).fadeOut('slow');
-		//$('#cart-status').text('Cart (' + data.CartCount + ')');
+
 		$('#cart-count').html(context.CartCount + ' items');
 		$('#cart-subtotal').html(context.CartSubTotal);
 		$('#cart-total').html(context.CartTotal);
