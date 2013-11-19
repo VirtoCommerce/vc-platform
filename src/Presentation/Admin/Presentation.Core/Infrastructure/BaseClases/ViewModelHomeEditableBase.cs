@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.ManagementClient.Core.Infrastructure.Common;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Wizard;
 
 namespace VirtoCommerce.ManagementClient.Core.Infrastructure
@@ -245,6 +246,19 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure
 						}
 					});
 			}
+		}
+
+		protected virtual IEnumerable<GestureActionName> GetGestureNames()
+		{
+			yield return GestureActionName.add;
+			yield return GestureActionName.delete;
+		}
+
+		protected override IEnumerable<ActionBinding> GetActionBindings()
+		{
+			yield return new ActionBinding { Command = ItemAddCommand, Name = GestureActionName.add };
+			// yield return new ActionBinding { Command = ItemDeleteCommand, Name = GestureActionName.delete };
+			yield return new ActionBinding { Command = ItemDeleteCommand, Name = GestureActionName.delete };
 		}
 	}
 }

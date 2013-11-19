@@ -202,6 +202,8 @@
     <Compile Include="Infrastructure\Common\BindingFromStringBehavior.cs" />
     <Compile Include="Infrastructure\Common\ComparableDataTrigger.cs" />
     <Compile Include="Infrastructure\Common\FocusHelper.cs" />
+    <Compile Include="Infrastructure\Common\GestureActionName.cs" />
+    <Compile Include="Infrastructure\Common\InputBindings.cs" />
     <Compile Include="Infrastructure\Common\RequiredFieldHelper.cs" />
     <Compile Include="Infrastructure\Behaviors\TextBlockAdorner.cs" />
     <Compile Include="Infrastructure\Behaviors\WatermarkComboBoxBehavior.cs" />

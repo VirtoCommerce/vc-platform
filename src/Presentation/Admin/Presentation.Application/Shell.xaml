@@ -53,7 +53,7 @@
 		<StaticResourceExtension ResourceKey="WindowViewModel"/>
 	</presentationControls:MetroWindow.DataContext>
 
-	<Grid Background="{x:Null}" Margin="0,-25,0,0">
+	<Grid Background="{x:Null}" Margin="0,-25,0,0" Loaded="FrameworkElement_OnLoaded">
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="*"/>
 			<ColumnDefinition Width="75"/>

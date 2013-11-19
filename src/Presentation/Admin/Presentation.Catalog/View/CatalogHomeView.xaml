@@ -58,7 +58,7 @@
 		</ResourceDictionary>
 	</UserControl.Resources>
 
-	<Grid>
+	<Grid d:DataContext="{d:DesignInstance implementations:CatalogHomeViewModel}">
 		<i:Interaction.Triggers>
 			<prism:InteractionRequestTrigger SourceObject="{Binding CommonWizardDialogRequest, Mode=OneWay}">
 				<interaction_dialog:InteractionDialogAction x:Name="Create_Category_Wizard" DialogType="{x:Type interaction_dialog:WizardDialog}" />
@@ -144,11 +144,18 @@
 							</Style.Triggers>
 						</Style>
 					</core_controls:VirtualFolderItemList.Style>
+					<ListView.InputBindings>
+						<KeyBinding Command="{Binding ItemDeleteCommand}" CommandParameter="{Binding SelectedItems, ElementName=CatalogItemList}" Key="Delete" />
+					</ListView.InputBindings>
 					<i:Interaction.Triggers>
 						<i:EventTrigger EventName="SelectionChanged">
 							<ei:CallMethodAction TargetObject="{Binding ItemMoveCommand}" MethodName="RaiseCanExecuteChanged"/>
 							<ei:CallMethodAction TargetObject="{Binding ItemDuplicateCommand}" MethodName="RaiseCanExecuteChanged"/>
 							<ei:CallMethodAction TargetObject="{Binding ItemDeleteCommand}" MethodName="RaiseCanExecuteChanged"/>
+						</i:EventTrigger>
+						<i:EventTrigger EventName="Load">
+							<ei:CallMethodAction MethodName="Focus" />
+							<ei:ChangePropertyAction PropertyName="Background" Value="Red" />
 						</i:EventTrigger>
 					</i:Interaction.Triggers>
 				</core_controls:VirtualFolderItemList>
