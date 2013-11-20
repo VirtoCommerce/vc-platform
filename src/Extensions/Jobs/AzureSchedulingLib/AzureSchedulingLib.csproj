@@ -96,6 +96,10 @@
       <Project>{9179B790-1F77-475F-B6EF-0B567D5CE8E0}</Project>
       <Name>CommerceClient</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Search\LuceneSearchProvider\LuceneSearchProvider.csproj">
+      <Project>{4882f43b-ae8d-489b-911b-7f9a1d526715}</Project>
+      <Name>LuceneSearchProvider</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SchedulingLib\SchedulingLib.csproj">
       <Project>{7BF794D6-39B2-4A69-9371-F35DF8D53E88}</Project>
       <Name>SchedulingLib</Name>

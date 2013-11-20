@@ -42,5 +42,9 @@
 		/// </summary>
 		/// <value>The line items view.</value>
 		public string LineItemsView { get; set; }
+        /// <summary>
+        /// Deleted lineItem id
+        /// </summary>
+        public string DeleteId { get; set; }
 	}
 }

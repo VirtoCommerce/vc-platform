@@ -66,6 +66,7 @@ namespace VirtoCommerce.Scheduling.Azure
 {
     using VirtoCommerce.Foundation.Data.Azure.Asset;
     using VirtoCommerce.Foundation.Data.Azure.CQRS;
+	using VirtoCommerce.Search.Providers.Lucene;
 
     public static class Bootstrapper
 	{
