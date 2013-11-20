@@ -13,7 +13,7 @@
 
     public class LuceneScenarios
     {
-        private string _LuceneStorageDir = "c:\\windows\\temp\\lucene";
+        private string _LuceneStorageDir = "temp\\lucene";
 
         [Fact]
         public void Can_create_lucene_index()
