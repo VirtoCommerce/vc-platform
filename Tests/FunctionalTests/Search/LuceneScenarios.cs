@@ -1,7 +1,5 @@
 ﻿namespace FunctionalTests.Search
 {
-    using System;
-    using System.Collections.Generic;
     using System.IO;
 
     using VirtoCommerce.Foundation.Catalogs.Search;
@@ -27,7 +25,7 @@
         [Fact]
         public void Can_find_item_lucene()
         {
-            var directory = "e:\\temp\\lucene";
+            var directory = "c:\\windows\\temp\\lucene";
             var scope = "default";
             var queryBuilder = new LuceneSearchQueryBuilder();
             var conn = new SearchConnection(directory, scope);
@@ -62,7 +60,7 @@
         [Fact]
         public void Can_get_item_facets_lucene()
         {
-            var directory = "e:\\temp\\lucene";
+            var directory = "c:\\windows\\temp\\lucene";
             var scope = "default";
             var queryBuilder = new LuceneSearchQueryBuilder();
             var conn = new SearchConnection(directory, scope);
