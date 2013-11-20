@@ -64,6 +64,7 @@
         [Fact, Trait("type", "lucene")]
         public void Can_get_item_facets_lucene()
         {
+            Debug.Listeners.Add(new DefaultTraceListener());
             var scope = "default";
             var queryBuilder = new LuceneSearchQueryBuilder();
             var conn = new SearchConnection(_LuceneStorageDir, scope);
