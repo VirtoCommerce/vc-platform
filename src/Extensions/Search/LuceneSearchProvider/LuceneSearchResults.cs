@@ -181,7 +181,12 @@ namespace VirtoCommerce.Search.Providers.Lucene
         {
             var spell = new SpellChecker(reader.Directory());
             spell.IndexDictionary(new LuceneDictionary(reader, fieldName));
-            return spell.SuggestSimilar(word, 2);
+            var similarWords = spell.SuggestSimilar(word, 2);
+
+            // now make sure to close the spell checker
+            spell.Close();
+
+            return similarWords;
         }
 
         /// <summary>

@@ -85,7 +85,9 @@
             {
                 foreach (var val in field.Values)
                 {
-                    doc.Add(new Field(field.Name, LuceneQueryHelper.ConvertDecimalToSortable((decimal)val), store, index));
+                    var numericField = new NumericField(field.Name, store, index != Field.Index.NO);
+                    numericField.SetDoubleValue(double.Parse(val.ToString()));
+                    doc.Add(numericField);
                 }
             }
             else if (field.Value is DateTime) // parse dates
@@ -99,13 +101,15 @@
             }
             else // try detecting the type
             {
+                // TODO: instead of auto detecting, use meta data information
                 decimal t = 0;
                 if (Decimal.TryParse(field.Value.ToString(), out t))
                 {
                     foreach (var val in field.Values)
                     {
-                        doc.Add(
-                            new Field(field.Name, LuceneQueryHelper.ConvertDecimalToSortable(Decimal.Parse(val.ToString())), store, index));
+                        var numericField = new NumericField(field.Name, store, index != Field.Index.NO);
+                        numericField.SetDoubleValue(double.Parse(val.ToString()));
+                        doc.Add(numericField);
                     }
                 }
                 else

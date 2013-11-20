@@ -14,24 +14,13 @@ namespace VirtoCommerce.Search.Providers.Lucene
     using VirtoCommerce.Foundation.Search.Schemas;
 
     using global::Lucene.Net.Search;
+    using global::Lucene.Net.Util;
 
     #endregion
 
     public class LuceneQueryHelper
     {
         #region Public Methods and Operators
-        /// <summary>
-        ///     Converts the decimal to sortable.
-        /// </summary>
-        /// <param name="input">The input.</param>
-        /// <returns></returns>
-        public static string ConvertDecimalToSortable(decimal input)
-        {
-            var field = new NumericField("");
-            field.SetFloatValue((float)input);
-            return field.StringValue;
-        }
-
         /// <summary>
         ///     Converts to searchable.
         /// </summary>
@@ -64,7 +53,7 @@ namespace VirtoCommerce.Search.Providers.Lucene
 
             if (value is decimal)
             {
-                return ConvertDecimalToSortable((decimal)value);
+                return NumericUtils.DoubleToPrefixCoded(double.Parse(value.ToString()));
             }
 
             if (value.GetType() != typeof(int) || value.GetType() != typeof(long) || value.GetType() != typeof(double))
@@ -72,9 +61,7 @@ namespace VirtoCommerce.Search.Providers.Lucene
                 return value.ToString();
             }
 
-            var field = new NumericField("");
-            field.SetDoubleValue(long.Parse(value.ToString()));
-            return field.StringValue;
+            return NumericUtils.DoubleToPrefixCoded((double)value);
         }
 
         /// <summary>
@@ -136,7 +123,8 @@ namespace VirtoCommerce.Search.Providers.Lucene
             var upper = upperbound == null ? String.Empty : upperbound.ToString();
             if (String.IsNullOrEmpty(upper))
             {
-                upper = NumberTools.MAX_STRING_VALUE;
+                upper = NumericUtils.FloatToPrefixCoded(float.MaxValue);
+                //upper = NumberTools.MAX_STRING_VALUE;
             }
             else
             {
