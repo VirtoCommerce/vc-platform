@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Windows;
+using Microsoft.Practices.Prism.Commands;
 using VirtoCommerce.ConfigurationUtility.Main.Infrastructure;
 using VirtoCommerce.ConfigurationUtility.Main.Properties;
 using VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Interfaces;
@@ -11,7 +12,7 @@ using VirtoCommerce.PowerShell.SearchSetup.Cmdlet;
 
 namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementations
 {
-	public class ElasticSearchSettingsStepViewModel : WizardStepViewModelBase, IElasticSearchSettingsStepViewModel
+	public class SearchSettingsStepViewModel : WizardStepViewModelBase, ISearchSettingsStepViewModel
 	{
 		#region const
 		public string ScopeDescription
@@ -33,7 +34,7 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 		#region Constructors
 
 #if DESIGN
-        public ElasticSearchSettingsStepViewModel()
+        public SearchSettingsStepViewModel()
         {
             if (IsInDesignMode)
             {
@@ -42,7 +43,7 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
         }
 #endif
 
-		public ElasticSearchSettingsStepViewModel(IConfirmationStepViewModel confirmationViewModel)
+		public SearchSettingsStepViewModel(IConfirmationStepViewModel confirmationViewModel)
 		{
 			_confirmationViewModel = confirmationViewModel;
 
@@ -54,6 +55,8 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 			IsInitializing = true;
 			IndexScope = SampleScope;
 			IndexesLocation = SearchLocation;
+			IsSearchProviderElastic = true;
+			BrowseCommand = new DelegateCommand<object>(x => Browse());
 			IsInitializing = false;
 		}
 
@@ -63,7 +66,7 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 
 		public override string Description
 		{
-			get { return Resources.ElasticSearchSettings; }
+			get { return Resources.SearchSettings; }
 		}
 
 		public override bool IsValid
@@ -82,7 +85,7 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 
 		public string Action
 		{
-			get { return Resources.ElasticSearchSettingsAction; }
+			get { return Resources.SearchSettingsAction; }
 		}
 
 		public string Message { get; private set; }
@@ -94,8 +97,8 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 			Result = null; // sets result to InProgress
 			try
 			{
-				// Update ElasticSearch index
-				new UpdateSearchIndex().Index(_confirmationViewModel.ElasticSearchConnection, _confirmationViewModel.DatabaseConnectionString, null, true);
+				// Update Search index
+				new UpdateSearchIndex().Index(_confirmationViewModel.SearchConnection, _confirmationViewModel.DatabaseConnectionString, null, true);
 				ct.ThrowIfCancellationRequested();
 
 				Result = OperationResult.Successful;
@@ -110,7 +113,7 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 				MessageBox.Show(e.StackTrace);
 #endif
 
-				Message = string.Format("{0} {1}: {2}", Resources.ElasticSearchSettingsAction, Resources.Failed, e.ExpandExceptionMessage());
+				Message = string.Format("{0} {1}: {2}", Resources.SearchSettingsAction, Resources.Failed, e.ExpandExceptionMessage());
 				Result = OperationResult.Failed;
 				throw;
 			}
@@ -119,7 +122,7 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 		public void Cancel()
 		{
 			Result = OperationResult.Cancelling;
-				
+
 			// TODO: implement cancellation
 			Result = OperationResult.Cancelled;
 		}
@@ -130,7 +133,7 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 			private set
 			{
 				_result = value;
-				OnUIThread(() => _result.UpdateState(Configuration, Resources.ElasticSearchSettingsAction));
+				OnUIThread(() => _result.UpdateState(Configuration, Resources.SearchSettingsAction));
 			}
 		}
 
@@ -138,7 +141,29 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 
 		#endregion
 
-		#region Implementation of IElasticSearchSettingsStepViewModel
+		#region Implementation of ISearchSettingsStepViewModel
+
+		public bool IsSearchProviderElastic
+		{
+			get { return _isSearchProviderElastic; }
+			set
+			{
+				_isSearchProviderElastic = value;
+				OnPropertyChanged();
+				OnConnectionStringChanges();
+			}
+		}
+
+		public bool IsSearchProviderLucene
+		{
+			get { return !_isSearchProviderElastic; }
+			set
+			{
+				_isSearchProviderElastic = !value;
+				OnPropertyChanged();
+				OnConnectionStringChanges();
+			}
+		}
 
 		public string IndexesLocation
 		{
@@ -154,6 +179,36 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 		}
 
 		private string _indexesLocation;
+
+		public DelegateCommand<object> BrowseCommand { get; private set; }
+
+		private void Browse()
+		{
+			var browserDialog = new System.Windows.Forms.FolderBrowserDialog
+			{
+				RootFolder = Environment.SpecialFolder.MyComputer,
+				SelectedPath = LuceneFolderLocation,
+				ShowNewFolderButton = true
+			};
+
+			var result = browserDialog.ShowDialog();
+			if (result == System.Windows.Forms.DialogResult.OK)
+			{
+				LuceneFolderLocation = browserDialog.SelectedPath;
+			}
+		}
+
+		public string LuceneFolderLocation
+		{
+			get { return _luceneFolderLocation; }
+			set
+			{
+				_luceneFolderLocation = value;
+				OnPropertyChanged();
+				OnIsValidChanged();
+				OnConnectionStringChanges();
+			}
+		}
 
 		public string IndexScope
 		{
@@ -184,10 +239,22 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 
 		private void OnConnectionStringChanges()
 		{
-			_confirmationViewModel.ElasticSearchConnection = new SearchConnection(IndexesLocation, IndexScope);
+			SearchConnection searchConnection;
+			if (IsSearchProviderLucene)
+			{
+				searchConnection = new SearchConnection(LuceneFolderLocation, IndexScope, "lucene");
+			}
+			else
+			{
+				searchConnection = new SearchConnection(IndexesLocation, IndexScope);
+			}
+
+			_confirmationViewModel.SearchConnection = searchConnection;
 		}
 
 		private string _indexScope;
+		private bool _isSearchProviderElastic;
+		private string _luceneFolderLocation;
 
 		public IConfigurationViewModel Configuration { get; set; }
 

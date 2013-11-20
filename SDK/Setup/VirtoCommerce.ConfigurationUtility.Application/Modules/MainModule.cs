@@ -50,7 +50,7 @@ namespace VirtoCommerce.ConfigurationUtility.Main
 			_container.RegisterType<IConfigurationWizardViewModel, ConfigurationWizardViewModel>();
 			_container.RegisterType<IProjectLocationStepViewModel, ProjectLocationStepViewModel>();
 			_container.RegisterType<IDatabaseSettingsStepViewModel, DatabaseSettingsStepViewModel>();
-			_container.RegisterType<IElasticSearchSettingsStepViewModel, ElasticSearchSettingsStepViewModel>();
+			_container.RegisterType<ISearchSettingsStepViewModel, SearchSettingsStepViewModel>();
 			_container.RegisterType<IConfirmationStepViewModel, ConfirmationStepViewModel>();
 			_container.RegisterType<IConfigurationViewModel, ConfigurationViewModel>();
 			_container.RegisterType<IProjectRepository, ProjectsRepository>();

@@ -16,7 +16,7 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels
 		#region Dependencies
 		private readonly IProjectLocationStepViewModel _projectLocationStepViewModel;
 		private readonly IDatabaseSettingsStepViewModel _databaseSettingsStepViewModel;
-		private readonly IElasticSearchSettingsStepViewModel _elasticSearchSettingsStepViewModel;
+		private readonly ISearchSettingsStepViewModel _searchSettingsStepViewModel;
 		private readonly NavigationManager _navigationManager;
 		#endregion
 
@@ -28,7 +28,7 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels
 			{
 				Steps.Add(new KeyValuePair<string, string>(Resources.ProjectLocationAction, Resources.Completed));
 				Steps.Add(new KeyValuePair<string, string>(Resources.DatabaseSettingsAction, Resources.InProgress));
-				Steps.Add(new KeyValuePair<string, string>(Resources.ElasticSearchSettingsAction, Resources.Pending));
+				Steps.Add(new KeyValuePair<string, string>(Resources.SearchSettingsAction, Resources.Pending));
 			}
 		}
 #endif
@@ -36,15 +36,15 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels
 		public ConfigurationViewModel(
 			IProjectLocationStepViewModel projectLocationViewModel,
 			IDatabaseSettingsStepViewModel databaseViewModel,
-			IElasticSearchSettingsStepViewModel searchViewModel,
+			ISearchSettingsStepViewModel searchViewModel,
 			NavigationManager navigationManager)
 		{
 			_projectLocationStepViewModel = projectLocationViewModel;
 			_projectLocationStepViewModel.Configuration = this;
 			_databaseSettingsStepViewModel = databaseViewModel;
 			_databaseSettingsStepViewModel.Configuration = this;
-			_elasticSearchSettingsStepViewModel = searchViewModel;
-			_elasticSearchSettingsStepViewModel.Configuration = this;
+			_searchSettingsStepViewModel = searchViewModel;
+			_searchSettingsStepViewModel.Configuration = this;
 
 			_navigationManager = navigationManager;
 
@@ -67,7 +67,7 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels
 				{
 					new KeyValuePair<string, string>(Resources.ProjectLocationAction, Resources.Pending),
 					new KeyValuePair<string, string>(Resources.DatabaseSettingsAction, Resources.Pending),
-					new KeyValuePair<string, string>(Resources.ElasticSearchSettingsAction, Resources.Pending)
+					new KeyValuePair<string, string>(Resources.SearchSettingsAction, Resources.Pending)
 				};
 		}
 

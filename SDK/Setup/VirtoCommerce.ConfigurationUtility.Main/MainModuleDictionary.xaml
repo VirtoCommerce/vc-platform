@@ -14,8 +14,8 @@
     <DataTemplate DataType="{x:Type implementations:DatabaseSettingsStepViewModel}">
         <controls:CacheContentControl Type="{x:Type steps:DatabaseSettingsStepView}"/>
     </DataTemplate>
-    <DataTemplate DataType="{x:Type implementations:ElasticSearchSettingsStepViewModel}">
-        <controls:CacheContentControl Type="{x:Type steps:ElasticSearchSettingsStepView}"/>
+    <DataTemplate DataType="{x:Type implementations:SearchSettingsStepViewModel}">
+        <controls:CacheContentControl Type="{x:Type steps:SearchSettingsStepView}"/>
     </DataTemplate>
     <DataTemplate DataType="{x:Type implementations:ConfirmationStepViewModel}">
         <controls:CacheContentControl Type="{x:Type steps:ConfirmationStepView}"/>
