@@ -1,6 +1,7 @@
 ﻿namespace FunctionalTests.Search
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
 
@@ -67,6 +68,7 @@
             var queryBuilder = new LuceneSearchQueryBuilder();
             var conn = new SearchConnection(_LuceneStorageDir, scope);
             var provider = new LuceneSearchProvider(queryBuilder, conn);
+            Debug.WriteLine("Lucene connection: {0}", conn.ToString());
 
             if (Directory.Exists(_LuceneStorageDir))
             {
