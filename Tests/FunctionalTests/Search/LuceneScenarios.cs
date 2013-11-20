@@ -60,7 +60,7 @@
             Directory.Delete(_LuceneStorageDir, true);
         }
 
-        [Fact]
+        [Fact, Trait("type", "lucene")]
         public void Can_get_item_facets_lucene()
         {
             var scope = "default";
