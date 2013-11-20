@@ -40,8 +40,8 @@
             </Grid.RowDefinitions>
 
             <ItemsControl Grid.Row="0" Style="{StaticResource Virto_ToolbarItemsControl_Style}">
-                <core_controls:MetroButton Command="{Binding ItemRebuildCommand}" CommandParameter="{Binding SelectedItem, ElementName=ItemsDataGrid}" Header="REBUILD" ToolTip="Edit Item">
-                    <Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/refresh.png" Width="14"/>
+				<core_controls:MetroButton Command="{Binding ItemRebuildCommand}" CommandParameter="{Binding SelectedItem, ElementName=ItemsDataGrid}" Header="REBUILD" ToolTip="Rebuild selected Index">
+					<core_controls:VectorImage ImageResource="{StaticResource Icon_Button_RefreshList}" Width="14" Height="14" />
                 </core_controls:MetroButton>
             </ItemsControl>
 
