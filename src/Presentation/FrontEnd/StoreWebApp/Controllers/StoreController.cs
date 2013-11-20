@@ -1,6 +1,7 @@
 ﻿#region
 
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 using VirtoCommerce.Client;
@@ -46,7 +47,7 @@ namespace VirtoCommerce.Web.Controllers
             var store = _storeClient.GetCurrentStore();
 
             var currencies =
-                (from c in store.Currencies select new CurrencyModel(c.CurrencyCode, c.CurrencyCode)).ToArray();
+                (from c in store.Currencies select new CurrencyModel(c.CurrencyCode, c.CurrencyCode.GetCurrencyName())).ToArray();
 
             var currenciesModel = new CurrenciesModel(UserHelper.CustomerSession.Currency, currencies);
             return PartialView("Currencies", currenciesModel);

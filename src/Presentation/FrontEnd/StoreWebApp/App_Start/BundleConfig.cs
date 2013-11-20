@@ -39,6 +39,12 @@ namespace VirtoCommerce.Web
 			bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
 						"~/Scripts/modernizr-*"));
 
+            bundles.Add(new ScriptBundle("~/bundles/responsive").Include(
+                "~/Scripts/responsive/virto.slider.js",
+                "~/Scripts/responsive/camera*",
+                "~/Scripts/responsive/jquery.easing.{version}.js"
+                ));
+
 			bundles.Add(new StyleBundle("~/Content/themes/default/s").Include(
 				"~/Content/themes/default/styles.css",
 				"~/Content/themes/default/widgets.css",
@@ -67,6 +73,14 @@ namespace VirtoCommerce.Web
 						"~/Content/themes/base/jquery.ui.tooltip.css",
 						"~/Content/themes/base/jquery.ui.spinner.css",
 						"~/Content/themes/base/jquery.ui.menu.css"));
+
+            bundles.Add(new StyleBundle("~/Content/themes/responsive/css").Include(
+                "~/Content/themes/responsive/reset.css",
+                "~/Content/themes/responsive/main.css",
+                "~/Content/themes/responsive/responsive.css",
+                "~/Content/themes/responsive/camera.css",
+                "~/Content/themes/default/flags.css"
+                ));
 		}
 	}
 }

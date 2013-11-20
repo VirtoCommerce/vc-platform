@@ -1,0 +1,62 @@
+input[type="text"],
+input[type="password"],
+textarea,
+select
+{
+	border: 1px solid #e0e0e0;
+    height: 19px;
+    padding: 4px 7px;
+
+    -webkit-border-radius: 2px;
+       -moz-border-radius: 2px;
+    		border-radius: 2px;
+
+    -webkit-box-shadow: 0 0 5px 0 #eaeaea inset;
+       -moz-box-shadow: 0 0 5px 0 #eaeaea inset;
+    		box-shadow: 0 0 5px 0 #eaeaea inset;
+}
+
+select
+{
+	height: auto;
+}
+
+	select option
+	{
+		padding: 0 10px 0 0;
+	}
+
+.control-group
+{
+	margin: 0 0 10px;
+}
+
+.button-group
+{
+	margin: 0 0 25px;
+}
+
+	.control-group label
+	{
+		display: block;
+		margin: 0 0 5px;
+	}
+
+		.control-group label sup
+		{
+			font-size: 12px;
+			vertical-align: top;
+		}
+
+	.control-group input,
+	.control-group textarea
+	{
+		width: 260px;
+	}
+
+	.control-group textarea
+	{
+		height: 120px;
+		max-width: 260px;
+		min-width: 260px;
+	}
