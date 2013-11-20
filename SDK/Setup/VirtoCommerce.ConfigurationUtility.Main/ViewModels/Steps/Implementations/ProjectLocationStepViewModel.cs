@@ -16,7 +16,7 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 	{
 		#region Dependencies
 		private readonly IConfirmationStepViewModel _confirmationViewModel;
-		private readonly IElasticSearchSettingsStepViewModel _searchViewModel;
+		private readonly ISearchSettingsStepViewModel _searchViewModel;
 		private readonly IDatabaseSettingsStepViewModel _databaseViewModel;
 
 		#endregion
@@ -37,7 +37,7 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 #endif
 
 
-		public ProjectLocationStepViewModel(IConfirmationStepViewModel confirmationViewModel, IElasticSearchSettingsStepViewModel searchViewModel, IDatabaseSettingsStepViewModel databaseViewModel)
+		public ProjectLocationStepViewModel(IConfirmationStepViewModel confirmationViewModel, ISearchSettingsStepViewModel searchViewModel, IDatabaseSettingsStepViewModel databaseViewModel)
 		{
 			_confirmationViewModel = confirmationViewModel;
 			_searchViewModel = searchViewModel;
@@ -116,7 +116,7 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 
 				// Fix connection strings
 				new InitializeFrontEndConfigs().Initialize(ProjectLocation, _confirmationViewModel.DatabaseConnectionString,
-														   _confirmationViewModel.ElasticSearchConnection.ToString());
+														   _confirmationViewModel.SearchConnection.ToString());
 
 				// Create desktop shortcut
 
@@ -177,7 +177,6 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 			get
 			{
 				var _projectLocation = String.Format("{0}{1}{2}", ProjectPath, Path.DirectorySeparatorChar, ProjectName);
-				_confirmationViewModel.ProjectLocation = _projectLocation;
 				return _projectLocation;
 			}
 		}
@@ -190,6 +189,8 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 				_projectName = value;
 				_searchViewModel.IndexScope = value;
 				_databaseViewModel.DatabaseName = value;
+				_searchViewModel.LuceneFolderLocation = Path.Combine(ProjectLocation, "App_Data\\Virto\\Search");
+				_confirmationViewModel.ProjectLocation = ProjectLocation;
 				OnPropertyChanged();
 				OnPropertyChanged("ProjectLocation");
 				OnIsValidChanged();
@@ -204,6 +205,8 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 			set
 			{
 				_projectPath = value;
+				_searchViewModel.LuceneFolderLocation = Path.Combine(ProjectLocation, "App_Data\\Virto\\Search");
+				_confirmationViewModel.ProjectLocation = ProjectLocation;
 				OnPropertyChanged();
 				OnPropertyChanged("ProjectLocation");
 				OnPropertyChanged("ProjectName");

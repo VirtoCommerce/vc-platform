@@ -23,12 +23,6 @@
                 <Setter Property="Content" Value="{Binding ViewModel}" />
             </Style>
         </TabControl.ItemContainerStyle>
-
-        <!--<i:Interaction.Triggers>
-            <i:EventTrigger EventName="SelectionChanged" SourceObject="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=TabControl}}">
-                <i:InvokeCommandAction Command="{Binding TabChangedCommand}" CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TabControl}}}"/>
-            </i:EventTrigger>
-        </i:Interaction.Triggers>-->
     </TabControl>
 
 </base:ViewBase>

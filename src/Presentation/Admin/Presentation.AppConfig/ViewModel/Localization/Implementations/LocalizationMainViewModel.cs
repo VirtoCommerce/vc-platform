@@ -23,7 +23,9 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 			{
 				SubItems.Add(new ItemTypeHomeTab { IdTab = Configuration.NavigationNames.HomeName, Caption = "Import", ViewModel = importVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("parentViewModel", this)) });
 			}
-			CurrentTab = SubItems[0];
+
+			if (SubItems.Count > 0)
+				CurrentTab = SubItems[0];
 		}
 	}
 }

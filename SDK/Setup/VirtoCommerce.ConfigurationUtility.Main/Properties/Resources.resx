@@ -147,7 +147,7 @@
   <data name="DatabaseSettingsAction" xml:space="preserve">
     <value>Configuring SQL Server</value>
   </data>
-  <data name="ElasticSearchSettingsAction" xml:space="preserve">
+  <data name="SearchSettingsAction" xml:space="preserve">
     <value>Configuring Search</value>
   </data>
   <data name="Failed" xml:space="preserve">
@@ -174,8 +174,8 @@
   <data name="DatabaseConnectionString" xml:space="preserve">
     <value>Database connection string</value>
   </data>
-  <data name="ElasticSearchIndexesLocation" xml:space="preserve">
-    <value>Search Server URL</value>
+  <data name="SearchConfiguration" xml:space="preserve">
+    <value>Search Server configuration</value>
   </data>
   <data name="ProjectLocation" xml:space="preserve">
     <value>Project location</value>
@@ -195,7 +195,7 @@
   <data name="DatabaseSettings" xml:space="preserve">
     <value>Database settings</value>
   </data>
-  <data name="ElasticSearchSettings" xml:space="preserve">
+  <data name="SearchSettings" xml:space="preserve">
     <value>Search Server settings</value>
   </data>
   <data name="DatabaseName" xml:space="preserve">
@@ -275,5 +275,14 @@
   </data>
   <data name="ProjectLocationError" xml:space="preserve">
     <value>Incorrect project location path</value>
+  </data>
+  <data name="ElasticSearchProvider" xml:space="preserve">
+    <value>Elastic</value>
+  </data>
+  <data name="LuceneSearchIndexesLocation" xml:space="preserve">
+    <value>Search storage location</value>
+  </data>
+  <data name="LuceneSearchProvider" xml:space="preserve">
+    <value>Lucene</value>
   </data>
 </root>

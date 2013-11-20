@@ -214,29 +214,11 @@ namespace VirtoCommerce.ConfigurationUtility.Main.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Search Server URL.
+        ///   Looks up a localized string similar to Elastic.
         /// </summary>
-        public static string ElasticSearchIndexesLocation {
+        public static string ElasticSearchProvider {
             get {
-                return ResourceManager.GetString("ElasticSearchIndexesLocation", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Search Server settings.
-        /// </summary>
-        public static string ElasticSearchSettings {
-            get {
-                return ResourceManager.GetString("ElasticSearchSettings", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Configuring Search.
-        /// </summary>
-        public static string ElasticSearchSettingsAction {
-            get {
-                return ResourceManager.GetString("ElasticSearchSettingsAction", resourceCulture);
+                return ResourceManager.GetString("ElasticSearchProvider", resourceCulture);
             }
         }
         
@@ -358,6 +340,24 @@ namespace VirtoCommerce.ConfigurationUtility.Main.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Search storage location.
+        /// </summary>
+        public static string LuceneSearchIndexesLocation {
+            get {
+                return ResourceManager.GetString("LuceneSearchIndexesLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lucene.
+        /// </summary>
+        public static string LuceneSearchProvider {
+            get {
+                return ResourceManager.GetString("LuceneSearchProvider", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Next &gt;&gt;.
         /// </summary>
         public static string Next {
@@ -435,6 +435,33 @@ namespace VirtoCommerce.ConfigurationUtility.Main.Properties {
         public static string ProjectLocationError {
             get {
                 return ResourceManager.GetString("ProjectLocationError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search Server configuration.
+        /// </summary>
+        public static string SearchConfiguration {
+            get {
+                return ResourceManager.GetString("SearchConfiguration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search Server settings.
+        /// </summary>
+        public static string SearchSettings {
+            get {
+                return ResourceManager.GetString("SearchSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Configuring Search.
+        /// </summary>
+        public static string SearchSettingsAction {
+            get {
+                return ResourceManager.GetString("SearchSettingsAction", resourceCulture);
             }
         }
         

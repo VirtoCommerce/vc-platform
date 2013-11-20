@@ -102,12 +102,12 @@
       <HintPath>..\..\packages\Extended.Wpf.Toolkit.1.9.0\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
     </Reference>
   </ItemGroup>
-      <ItemGroup>
-        <Reference Include="VirtoCommerce.ManagementClient.Core, Version=1.0.1000.0, Culture=neutral, processorArchitecture=MSIL">
-          <SpecificVersion>False</SpecificVersion>
-          <HintPath>..\..\..\src\Presentation\Admin\Presentation.Core\bin\$(Configuration)\VirtoCommerce.ManagementClient.Core.dll</HintPath>
-        </Reference>
-      </ItemGroup>
+  <ItemGroup>
+    <Reference Include="VirtoCommerce.ManagementClient.Core, Version=1.0.1000.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\src\Presentation\Admin\Presentation.Core\bin\$(Configuration)\VirtoCommerce.ManagementClient.Core.dll</HintPath>
+    </Reference>
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\..\src\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
@@ -145,12 +145,12 @@
     <Compile Include="ViewModels\ProjectsViewModel.cs" />
     <Compile Include="ViewModels\Steps\Implementations\ConfirmationStepViewModel.cs" />
     <Compile Include="ViewModels\Steps\Implementations\DatabaseSettingsStepViewModel.cs" />
-    <Compile Include="ViewModels\Steps\Implementations\ElasticSearchSettingsStepViewModel.cs" />
+    <Compile Include="ViewModels\Steps\Implementations\SearchSettingsStepViewModel.cs" />
     <Compile Include="ViewModels\Steps\Implementations\ProjectLocationStepViewModel.cs" />
     <Compile Include="ViewModels\Steps\Interfaces\IConfigureStep.cs" />
     <Compile Include="ViewModels\Steps\Interfaces\IConfirmationStepViewModel.cs" />
     <Compile Include="ViewModels\Steps\Interfaces\IDatabaseSettingsStepViewModel.cs" />
-    <Compile Include="ViewModels\Steps\Interfaces\IElasticSearchSettingsStepViewModel.cs" />
+    <Compile Include="ViewModels\Steps\Interfaces\ISearchSettingsStepViewModel.cs" />
     <Compile Include="ViewModels\Steps\Interfaces\IProjectLocationStepViewModel.cs" />
     <Compile Include="Views\ConfigurationView.xaml.cs">
       <DependentUpon>ConfigurationView.xaml</DependentUpon>
@@ -167,19 +167,19 @@
     <Compile Include="Views\Steps\DatabaseSettingsStepView.xaml.cs">
       <DependentUpon>DatabaseSettingsStepView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Steps\ElasticSearchSettingsStepView.xaml.cs">
-      <DependentUpon>ElasticSearchSettingsStepView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\Steps\ProjectLocationStepView.xaml.cs">
       <DependentUpon>ProjectLocationStepView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Steps\SearchSettingsStepView.cs" />
     <EmbeddedResource Include="Properties\Resources.ru-RU.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.ru-RU.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
@@ -213,9 +213,9 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Steps\ElasticSearchSettingsStepView.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Views\Steps\SearchSettingsStepView.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Steps\ProjectLocationStepView.xaml">
       <SubType>Designer</SubType>
