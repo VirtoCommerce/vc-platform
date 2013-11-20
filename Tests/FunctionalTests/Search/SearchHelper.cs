@@ -38,7 +38,7 @@ namespace FunctionalTests.Search
             doc.Add(new DocumentField("color", color, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
             doc.Add(new DocumentField("catalog", "goods", new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
             doc.Add(new DocumentField("size", size, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
-            doc.Add(new DocumentField("currency", "goods", new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
+            doc.Add(new DocumentField("currency", "USD", new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
 
             doc.Add(new DocumentField("__content", name, new[] { IndexStore.YES, IndexType.ANALYZED }));
 

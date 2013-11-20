@@ -13,7 +13,7 @@
 
     public class LuceneScenarios
     {
-        private string _LuceneStorageDir = "temp\\lucene";
+        private string _LuceneStorageDir = Path.Combine(Path.GetTempPath(), "lucene");
 
         [Fact]
         public void Can_create_lucene_index()
