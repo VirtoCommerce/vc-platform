@@ -1,9 +1,20 @@
 ﻿@model SiteMapNodeModel
-@using System.Web.Mvc.Html
-@using VirtoCommerce.Client
 
+@if (Model.IsCurrentNode && Model.SourceMetadata["HtmlHelper"].ToString() != "MvcSiteMapProvider.Web.Html.MenuHelper")  { 
+    <b>@Model.Title.Localize()</b>
+}
+else if (Model.IsClickable)
+{
+    <a href="@Model.Url">
+        <span>@Model.Title.Localize()</span>
+    </a>
+}
+else
+{
+    <b>@Model.Title.Localize()</b>
+}
 
-@if (Model.IsCurrentNode && Model.SourceMetadata["HtmlHelper"].ToString() != "MvcSiteMapProvider.Web.Html.MenuHelper")
+@*@if (Model.IsCurrentNode && Model.SourceMetadata["HtmlHelper"].ToString() != "MvcSiteMapProvider.Web.Html.MenuHelper")
 { 
     <b>@Model.Title.Localize()</b>
 }
@@ -86,4 +97,4 @@ else
             </tr>
         </table>
     </div>
-}
+}*@

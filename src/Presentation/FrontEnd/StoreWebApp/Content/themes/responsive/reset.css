@@ -150,3 +150,7 @@ textarea
     float: right;
     margin: 7px 30px 0 0;
 }
+
+#logoutForm {
+    display: inline;
+}

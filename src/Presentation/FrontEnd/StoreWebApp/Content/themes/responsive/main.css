@@ -382,7 +382,7 @@ button span
 						visibility: hidden;
 						z-index: 1;
 
-						filer: alpha(opacity = 0);
+						filter: alpha(opacity = 0);
 
 						-webkit-box-shadow: 0 0 10px 0 rgba(0, 0, 0, .15);
 						   -moz-box-shadow: 0 0 10px 0 rgba(0, 0, 0, .15);
@@ -449,7 +449,7 @@ button span
 								text-transform: none;
 							}
 
-								.header .menu li .sub-menu ul.level0 li.level1.dropdown a span
+								.header .menu li .sub-menu ul.level0 li.level1 a span
 								{
 									display: none;
 								}

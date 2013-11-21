@@ -42,78 +42,7 @@
                                 <span></span>
                                 <span></span>
                             </a>
-                            <ul role="navigation" class="menu">
-                                <li>
-                                    <a href=""><span>TV &amp; Video</span></a>
-                                </li>
-                                <li><a href=""><span>Audio &amp; MP3</span></a></li>
-                                <li class="dropdown">
-                                    <a><span>Cameras</span></a>
-                                    <div class="sub-menu">
-                                        <ul class="level0 clearfix">
-                                            <li class="level1 dropdown">
-                                                <img alt="" src="images/menu/mobiles.png">
-                                                <a href="">Smartphones<span>+</span></a>
-                                                <ul class="level1">
-                                                    <li class="level2"><a href="">Sample</a></li>
-                                                    <li class="level2"><a href="">Apple</a></li>
-                                                    <li class="level2"><a href="">Samsung</a></li>
-                                                    <li class="level2"><a href="">BlackBerry</a></li>
-                                                    <li class="level2"><a href="">Motorola</a></li>
-                                                    <li class="level2"><a href="">Nokia</a></li>
-                                                    <li class="level2"><a href="">HTC</a></li>
-                                                </ul>
-                                            </li>
-                                            <li class="level1 dropdown">
-                                                <img alt="" src="images/menu/accessories.png">
-                                                <a href="">Accessories<span>+</span></a>
-                                                <ul class="level1">
-                                                    <li class="level2"><a href="">Headsets</a></li>
-                                                    <li class="level2"><a href="">Batteries</a></li>
-                                                    <li class="level2"><a href="">Screen Protectors</a></li>
-                                                    <li class="level2"><a href="">Memory Cards</a></li>
-                                                    <li class="level2"><a href="">Cables &amp; Adapters</a></li>
-                                                    <li class="level2"><a href="">Chargers</a></li>
-                                                    <li class="level2"><a href="">Cases</a></li>
-                                                </ul>
-                                            </li>
-                                            <li class="level1 dropdown">
-                                                <img alt="" src="images/menu/cameras.png">
-                                                <a href="">Cameras<span>+</span></a>
-                                                <ul class="level1">
-                                                    <li class="level2"><a href="">Digital Cameras</a></li>
-                                                    <li class="level2"><a href="">Camcorders</a></li>
-                                                    <li class="level2"><a href="">Lenses</a></li>
-                                                    <li class="level2"><a href="">Filters</a></li>
-                                                    <li class="level2"><a href="">Tripods</a></li>
-                                                </ul>
-                                            </li>
-                                            <li class="level1 dropdown">
-                                                <img alt="" src="images/menu/computers.png">
-                                                <a href="">Computers<span>+</span></a>
-                                                <ul class="level1">
-                                                    <li class="level2"><a href="">Laptops</a></li>
-                                                    <li class="level2"><a href="">Hard Drives</a></li>
-                                                    <li class="level2"><a href="">Monitors</a></li>
-                                                    <li class="level2"><a href="">Processors</a></li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="fade"></div>
-                                </li>
-                                <li><a href=""><span>Computers &amp; Tablets</span></a></li>
-                                <li><a href=""><span>Accessories</span></a></li>
-                                <li class="more">
-                                    <a><span>More</span></a>
-                                    <div class="sub-menu">
-                                        <ul>
-                                            <li><a href="">Computers &amp; Tablets</a></li>
-                                            <li><a href="">Accessories</a></li>
-                                        </ul>
-                                    </div>
-                                </li>
-                            </ul>
+                            @Html.MvcSiteMap().Menu(false, true, false)
                         </div>
                         <div class="head-top-block">
                             <a class="control"></a>

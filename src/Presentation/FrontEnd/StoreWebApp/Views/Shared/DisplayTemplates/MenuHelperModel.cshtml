@@ -2,12 +2,18 @@
 @using System.Web.Mvc.Html
 @using MvcSiteMapProvider.Web.Html.Models
 
-<ul id="nav">
-    @foreach (var node in Model.Nodes) { 
-        <li class="level0">@Html.DisplayFor(m => node, "TopMenuNodeModel") 
-@*            @if (node.Children.Any()) {
-                @Html.DisplayFor(m => node.Children)
-            }*@
+
+<ul class="menu" role="navigation">
+    @foreach (var node in Model.Nodes)
+    { 
+        <li>
+            @Html.DisplayFor(m => node, "TopMenuNodeModel")
+            @if (node.Children.Any())
+            {
+                <div class="sub-menu">
+                    @Html.DisplayFor(m => node.Children, "SiteMapNodeModelList", new { level = 0 })
+                </div>
+            }
         </li>
     }
 </ul>

@@ -118,8 +118,12 @@
 		});
 
 		// Events for dropdowns
-		$('.header .nav .menu li.dropdown > a').click(function (){
-			$(this).parent().toggleClass('opened');
+		$('.header .nav .menu li.dropdown > a').click(function (event)
+		{
+		    //if ($(".nav .control").is(":hidden") == false) {
+		    //    event.preventDefault();
+		    //}
+		    $(this).parent().toggleClass('opened');
 		});
 
 		// Events for dropdown sub menu
