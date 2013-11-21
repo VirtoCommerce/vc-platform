@@ -152,7 +152,7 @@
 			}
 			else
 			{
-				$('header').removeClass('fixed');
+				$('.header').removeClass('fixed');
 			}
 		});
 	};

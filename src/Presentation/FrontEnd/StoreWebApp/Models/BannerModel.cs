@@ -121,7 +121,7 @@ namespace VirtoCommerce.Web.Models
         {
             foreach (var prop in item.PropertyValues)
             {
-                if (String.Equals(prop.Name, "ImageUrl", StringComparison.InvariantCultureIgnoreCase))
+                if (String.Equals(prop.Name, "ImageFilePath", StringComparison.InvariantCultureIgnoreCase))
                 {
                     ImageUrl = prop.LongTextValue;
                 }

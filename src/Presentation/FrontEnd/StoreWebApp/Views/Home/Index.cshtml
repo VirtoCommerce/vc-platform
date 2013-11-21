@@ -2,24 +2,50 @@
     Layout = "../Shared/_LayoutNew.cshtml";
     ViewBag.Title = Html.Title("Home".Localize());
 }
-        <div class="main-container col1-layout">
-            <div class="main">
-                <div class="col-main">
-                    <div class="std">
-                        <div style="float: left; width: 653px;">
-                             @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeMain" });}
-                        </div>
-                        <div style="float: right; width: 280px;">
-                            <div style="margin: 0 0 10px;">
-                                @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeRightTop" });}
-                            </div>
-                            <div>
-                                @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeRightBottom" });}
-                             </div>
-                        </div>
-                        <div class="clearer">
-                        </div>                        
+
+@section scripts
+{
+    <script>
+        $(function ()
+        {
+            $('.main-slider .container').camera({
+                loader: 'bar',
+                playPause: false,
+                barPosition: 'top',
+                loaderColor: '#322C29',
+                loaderBgColor: 'rgba(0, 0, 0, 0)',
+                height: '25%'
+            });
+
+            $('.main-slider .container').removeAttr('style');
+            $('.main-slider .container').css('display', 'block');
+        });
+    </script>
+}
+
+@section Slider{
+    <div class="main-slider">
+        @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "MainSlider" });}
+    </div>
+}
+<div class="main-container col1-layout">
+    <div class="main">
+        <div class="col-main">
+            <div class="std">
+                <div style="float: left; width: 653px;">
+                    @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeMain" });}
+                </div>
+                <div style="float: right; width: 280px;">
+                    <div style="margin: 0 0 10px;">
+                        @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeRightTop" });}
                     </div>
+                    <div>
+                        @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeRightBottom" });}
+                    </div>
+                </div>
+                <div class="clearer">
                 </div>
             </div>
         </div>
+    </div>
+</div>

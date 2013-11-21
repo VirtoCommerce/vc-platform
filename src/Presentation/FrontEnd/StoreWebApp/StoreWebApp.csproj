@@ -798,6 +798,8 @@
     <Content Include="Views\Checkout\DisplayTemplates\Unknown.cshtml" />
     <Content Include="Views\Cart\LineItems.cshtml" />
     <Content Include="Views\Shared\_LayoutNew.cshtml" />
+    <Content Include="Views\Banner\DisplayTemplates\ImageNoClickSlide.cshtml" />
+    <Content Include="Views\Banner\DisplayTemplates\ImageClickSlide.cshtml" />
     <None Include="Web.Azure.config" />
   </ItemGroup>
   <ItemGroup>
