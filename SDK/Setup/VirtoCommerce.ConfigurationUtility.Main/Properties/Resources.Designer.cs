@@ -124,6 +124,15 @@ namespace VirtoCommerce.ConfigurationUtility.Main.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Search Provider.
+        /// </summary>
+        public static string ChooseSearchProvider {
+            get {
+                return ResourceManager.GetString("ChooseSearchProvider", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Completed.
         /// </summary>
         public static string Completed {
@@ -214,7 +223,7 @@ namespace VirtoCommerce.ConfigurationUtility.Main.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Elastic.
+        ///   Looks up a localized string similar to Elastic Search.
         /// </summary>
         public static string ElasticSearchProvider {
             get {

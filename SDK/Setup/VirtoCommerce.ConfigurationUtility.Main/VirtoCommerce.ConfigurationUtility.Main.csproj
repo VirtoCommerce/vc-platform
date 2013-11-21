@@ -170,7 +170,9 @@
     <Compile Include="Views\Steps\ProjectLocationStepView.xaml.cs">
       <DependentUpon>ProjectLocationStepView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Steps\SearchSettingsStepView.cs" />
+    <Compile Include="Views\Steps\SearchSettingsStepView.cs">
+	  <DependentUpon>SearchSettingsStepView.xaml</DependentUpon>
+	  </Compile>
     <EmbeddedResource Include="Properties\Resources.ru-RU.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.ru-RU.Designer.cs</LastGenOutput>

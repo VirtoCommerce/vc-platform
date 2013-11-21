@@ -26,14 +26,17 @@
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
 			<RowDefinition Height="Auto"/>
-			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
-		<RadioButton Content="{x:Static localProperties:Resources.ElasticSearchProvider}"
+
+		<TextBlock Text="{Binding Source={x:Static localProperties:Resources.ChooseSearchProvider}, StringFormat='{}{0} :'}" Margin="0,5"/>
+		<StackPanel Grid.Row="1">
+			<RadioButton Content="{x:Static localProperties:Resources.ElasticSearchProvider}"
                      IsChecked="{Binding IsSearchProviderElastic, Mode=TwoWay}"
                      GroupName="SearchProvider" Margin="10" />
-		<RadioButton Grid.Row="1" Content="{x:Static localProperties:Resources.LuceneSearchProvider}"
+			<RadioButton Content="{x:Static localProperties:Resources.LuceneSearchProvider}"
                      IsChecked="{Binding IsSearchProviderLucene, Mode=TwoWay}"
                      GroupName="SearchProvider" Margin="10" />
+		</StackPanel>
 
 		<TextBlock Grid.Row="2" Text="{Binding Path=ScopeDescription}" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,20,0,0"/>
 		<TextBlock Grid.Row="3" Text="{Binding Source={x:Static localProperties:Resources.IndexScope}, StringFormat='{}{0} :'}" Margin="0,5"/>
@@ -46,7 +49,6 @@
 		<StackPanel Grid.Row="6" Visibility="{Binding IsSearchProviderLucene, Converter={x:Static converters:ToVisibilityConverter.Current}}" Margin="0">
 			<TextBlock Text="{Binding Source={x:Static localProperties:Resources.LuceneSearchIndexesLocation}, StringFormat='{}{0} :'}" Margin="0,5" />
 			<TextBox Text="{Binding LuceneFolderLocation, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Margin="0,5" />
-			<Button Content="{x:Static localProperties:Resources.Browse}" Command="{Binding BrowseCommand}" Margin="0,5" HorizontalAlignment="Right"/>
 		</StackPanel>
 	</Grid>
 </UserControl>

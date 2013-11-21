@@ -277,12 +277,15 @@
     <value>Incorrect project location path</value>
   </data>
   <data name="ElasticSearchProvider" xml:space="preserve">
-    <value>Elastic</value>
+    <value>Elastic Search</value>
   </data>
   <data name="LuceneSearchIndexesLocation" xml:space="preserve">
     <value>Search storage location</value>
   </data>
   <data name="LuceneSearchProvider" xml:space="preserve">
     <value>Lucene</value>
+  </data>
+  <data name="ChooseSearchProvider" xml:space="preserve">
+    <value>Search Provider</value>
   </data>
 </root>

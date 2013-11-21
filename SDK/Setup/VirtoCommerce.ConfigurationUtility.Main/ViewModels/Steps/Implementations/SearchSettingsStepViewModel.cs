@@ -56,7 +56,7 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 			IndexScope = SampleScope;
 			IndexesLocation = SearchLocation;
 			IsSearchProviderElastic = true;
-			BrowseCommand = new DelegateCommand<object>(x => Browse());
+			LuceneFolderLocation = "~/app_data/Virto/search";
 			IsInitializing = false;
 		}
 
@@ -179,25 +179,7 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 		}
 
 		private string _indexesLocation;
-
-		public DelegateCommand<object> BrowseCommand { get; private set; }
-
-		private void Browse()
-		{
-			var browserDialog = new System.Windows.Forms.FolderBrowserDialog
-			{
-				RootFolder = Environment.SpecialFolder.MyComputer,
-				SelectedPath = LuceneFolderLocation,
-				ShowNewFolderButton = true
-			};
-
-			var result = browserDialog.ShowDialog();
-			if (result == System.Windows.Forms.DialogResult.OK)
-			{
-				LuceneFolderLocation = browserDialog.SelectedPath;
-			}
-		}
-
+		
 		public string LuceneFolderLocation
 		{
 			get { return _luceneFolderLocation; }
@@ -205,7 +187,6 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 			{
 				_luceneFolderLocation = value;
 				OnPropertyChanged();
-				OnIsValidChanged();
 				OnConnectionStringChanges();
 			}
 		}
