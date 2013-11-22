@@ -79,17 +79,17 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 
 		private string _databaseConnectionString;
 
-		public SearchConnection ElasticSearchConnection
+		public SearchConnection SearchConnection
 		{
-			get { return _elasticSearchConnection; }
+			get { return _searchConnection; }
 			set
 			{
-				_elasticSearchConnection = value;
+				_searchConnection = value;
 				OnPropertyChanged();
 			}
 		}
 
-		private SearchConnection _elasticSearchConnection;
+		private SearchConnection _searchConnection;
 
 
 		#endregion

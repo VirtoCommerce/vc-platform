@@ -145,7 +145,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Search
 		private DateTime _startDate = DateTime.UtcNow;
 
 		/// <summary>
-		/// Gets or sets the start date.
+		/// Gets or sets the start date. The date must be in UTC format as that is format indexes are stored in.
 		/// </summary>
 		/// <value>The start date.</value>
 		[DataMember]
@@ -158,7 +158,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Search
 		private DateTime? _endDate;
 
 		/// <summary>
-		/// Gets or sets the end date.
+        /// Gets or sets the end date. The date must be in UTC format as that is format indexes are stored in.
 		/// </summary>
 		/// <value>The end date.</value>
 		[DataMember]

@@ -1,8 +1,8 @@
 ﻿namespace VirtoCommerce.ConfigurationUtility.Main.Views.Steps
 {
-    public partial class ElasticSearchSettingsStepView
+    public partial class SearchSettingsStepView
     {
-        public ElasticSearchSettingsStepView()
+		public SearchSettingsStepView()
         {
             InitializeComponent();
         }

@@ -3,6 +3,7 @@
     using System;
     using System.Runtime.Serialization;
 
+    [DataContract]
     public class KeywordSearchCriteria : SearchCriteriaBase
     {
         private string _SearchPhrase = String.Empty;
