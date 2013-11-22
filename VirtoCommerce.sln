@@ -219,6 +219,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{479FE5
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FunctionalTests", "Tests\FunctionalTests\FunctionalTests.csproj", "{3E38A90D-0CAC-40F5-A62A-28FF92B410D2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4882F43B-AE8D-489B-911B-7F9A1D526715} = {4882F43B-AE8D-489B-911B-7F9A1D526715}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI.FunctionalTests", "Tests\UI.FunctionalTests\UI.FunctionalTests.csproj", "{5B1C8E63-A8D4-4EF1-A1A3-842DE452BE0D}"
 EndProject
