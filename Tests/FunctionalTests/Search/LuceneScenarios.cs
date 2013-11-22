@@ -16,7 +16,7 @@
     {
         private string _LuceneStorageDir = Path.Combine(Path.GetTempPath(), "lucene");
 
-        [Fact]
+        [Fact, Trait("type", "lucene")]
         public void Can_create_lucene_index()
         {
             var scope = "default";
@@ -27,7 +27,7 @@
             Directory.Delete(_LuceneStorageDir, true);
         }
 
-        [Fact]
+        [Fact, Trait("type", "lucene")]
         public void Can_find_item_lucene()
         {
             var scope = "default";
