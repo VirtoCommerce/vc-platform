@@ -1,31 +1,31 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <mvcSiteMap xmlns="http://mvcsitemap.codeplex.com/schemas/MvcSiteMap-File-3.0" enableLocalization="true">
   <mvcSiteMapNode title="Home" controller="Home" action="Index" changeFrequency="Always" updatePriority="Normal">
-    <mvcSiteMapNode title="TV &amp; Video" url="~/c/tv-video">
-      <mvcSiteMapNode title="Audio &amp; MP3" url="~/c/audio-mp3" imageUrl="~/Content/themes/responsive/images/menu/mobiles.png">
-        <mvcSiteMapNode title="Samsung" url="~/c/audio-mp3?f_Brand=samsung" />
-        <mvcSiteMapNode title="Sony" url="~/c/audio-mp3?f_Brand=sony" />
-        <mvcSiteMapNode title="Apple" url="~/c/audio-mp3?f_Brand=apple" />
+    <mvcSiteMapNode title="TV &amp; Video" action="Display" controller="Catalog" code="tv-video">
+      <mvcSiteMapNode title="Audio &amp; MP3" code="audio-mp3" imageUrl="~/Content/themes/responsive/images/menu/mobiles.png">
+        <mvcSiteMapNode title="Samsung" code="audio-mp3" f_Brand="samsung"/>
+        <mvcSiteMapNode title="Sony" code="audio-mp3" f_Brand="sony" />
+        <mvcSiteMapNode title="Apple" code="audio-mp3" f_Brand="apple" />
       </mvcSiteMapNode>
-      <mvcSiteMapNode title="Computers" url="~/c/computers-tablets" imageUrl="~/Content/themes/responsive/images/menu/computers.png">
-        <mvcSiteMapNode title="Samsung" url="~/c/computers-tablets?f_Brand=samsung" />
-        <mvcSiteMapNode title="Sony" url="~/c/computers-tablets?f_Brand=sony" />
-        <mvcSiteMapNode title="Apple" url="~/c/computers-tablets?f_Brand=apple" />
+      <mvcSiteMapNode title="Computers" code="computers-tablets" imageUrl="~/Content/themes/responsive/images/menu/computers.png">
+        <mvcSiteMapNode title="Samsung" code="computers-tablets" f_Brand="samsung"/>
+        <mvcSiteMapNode title="Sony" code="computers-tablets" f_Brand="sony" />
+        <mvcSiteMapNode title="Apple" code="computers-tablets" f_Brand="apple" />
       </mvcSiteMapNode>
-      <mvcSiteMapNode title="Cameras" url="~/c/cameras" imageUrl="~/Content/themes/responsive/images/menu/cameras.png">
-        <mvcSiteMapNode title="Samsung" url="~/c/cameras?f_Brand=samsung" />
-        <mvcSiteMapNode title="Sony" url="~/c/cameras?f_Brand=sony" />
+      <mvcSiteMapNode title="Cameras" code="cameras" imageUrl="~/Content/themes/responsive/images/menu/cameras.png">
+        <mvcSiteMapNode title="Samsung" code="cameras" f_Brand="samsung"/>
+        <mvcSiteMapNode title="Sony" code="cameras" f_Brand="sony" />
       </mvcSiteMapNode>
-      <mvcSiteMapNode title="Accessories" url="~/c/accessories" imageUrl="~/Content/themes/responsive/images/menu/accessories.png">
-        <mvcSiteMapNode title="Samsung" url="~/c/accessories?f_Brand=samsung" />
-        <mvcSiteMapNode title="Sony" url="~/c/accessories?f_Brand=sony" />
-        <mvcSiteMapNode title="Apple" url="~/c/accessories?f_Brand=apple" />
+      <mvcSiteMapNode title="Accessories" code="accessories" imageUrl="~/Content/themes/responsive/images/menu/accessories.png">
+        <mvcSiteMapNode title="Samsung" code="accessories" f_Brand="samsung"/>
+        <mvcSiteMapNode title="Sony" code="accessories" f_Brand="sony" />
+        <mvcSiteMapNode title="Apple" code="accessories" f_Brand="apple" />
       </mvcSiteMapNode>
     </mvcSiteMapNode>
-    <mvcSiteMapNode title="Audio &amp; MP3" url="~/c/audio-mp3"/>
-    <mvcSiteMapNode title="Cameras" url="~/c/cameras"/>
-    <mvcSiteMapNode title="Computers &amp; Tablets" url="~/c/computers-tablets"/>
-    <mvcSiteMapNode title="Accessories" url="~/c/accessories"/>
+    <mvcSiteMapNode title="Audio &amp; MP3" action="Display" controller="Catalog" code="audio-mp3"/>
+    <mvcSiteMapNode title="Cameras" action="Display" controller="Catalog" code="cameras"/>
+    <mvcSiteMapNode title="Computers &amp; Tablets" action="Display" controller="Catalog" code="computers-tablets"/>
+    <mvcSiteMapNode title="Accessories" action="Display" controller="Catalog" code="accessories"/>
 
     <mvcSiteMapNode title="Account Dashboard" controller="Account" action="Index" visibility="account,!*"/>
     <mvcSiteMapNode title="Account Information" controller="Account" action="Edit" visibility="account,!*"/>

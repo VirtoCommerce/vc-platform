@@ -43,16 +43,16 @@ namespace VirtoCommerce.Web.Controllers
         }
 
         // GET: /Catalog/
-		/// <summary>
-		/// Displays the catalog by specified URL.
-		/// </summary>
-		/// <param name="url">The URL.</param>
-		/// <returns>ActionResult.</returns>
-		/// <exception cref="System.Web.HttpException">404;Category not found</exception>
-		[CustomOutputCache(CacheProfile = "CatalogCache", VaryByCustom = "store;currency;cart")]
-        public ActionResult Display(string url)
+	    /// <summary>
+	    /// Displays the catalog by specified URL.
+	    /// </summary>
+	    /// <param name="code">The category code</param>
+	    /// <returns>ActionResult.</returns>
+	    /// <exception cref="System.Web.HttpException">404;Category not found</exception>
+	    [CustomOutputCache(CacheProfile = "CatalogCache", VaryByCustom = "store;currency;cart")]
+        public ActionResult Display(string code)
         {
-            var category = _catalogClient.GetCategory(url);
+            var category = _catalogClient.GetCategory(code);
             if (category != null && category.IsActive)
             {
                 // set the context variable
@@ -67,16 +67,16 @@ namespace VirtoCommerce.Web.Controllers
 			throw new HttpException(404, "Category not found");
         }
 
-		/// <summary>
-		/// Displays the item.
-		/// </summary>
-		/// <param name="url">The URL.</param>
-		/// <returns>ActionResult.</returns>
-		/// <exception cref="System.Web.HttpException">404;Item not found</exception>
-        [CustomOutputCache(CacheProfile = "CatalogCache", VaryByCustom = "store;currency;cart")]
-        public ActionResult DisplayItem(string url)
+	    /// <summary>
+	    /// Displays the item.
+	    /// </summary>
+	    /// <param name="code">Item code</param>
+	    /// <returns>ActionResult.</returns>
+	    /// <exception cref="System.Web.HttpException">404;Item not found</exception>
+	    [CustomOutputCache(CacheProfile = "CatalogCache", VaryByCustom = "store;currency;cart")]
+        public ActionResult DisplayItem(string code)
         {
-			var itemModel = CatalogHelper.CreateCatalogModel(url);
+            var itemModel = CatalogHelper.CreateCatalogModel(code);
 
             if (ReferenceEquals(itemModel, null))
             {

@@ -85,7 +85,7 @@ button span
 		background: #fff;
 		height: 127px;
 		position: relative;
-		z-index: 5000;
+		z-index: 100;
 	}
 
 		.head-top

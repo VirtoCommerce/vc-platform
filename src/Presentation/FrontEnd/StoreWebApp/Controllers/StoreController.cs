@@ -110,5 +110,21 @@ namespace VirtoCommerce.Web.Controllers
                                        UserHelper.CustomerSession.CustomerName
                                    }).ToExpando());
         }
+
+        /// <summary>
+        /// Quicks the access.
+        /// </summary>
+        /// <returns>ActionResult.</returns>
+        public ActionResult CartOptions()
+        {
+            var compareListHelper = new CartHelper(CartHelper.CompareListName);
+            var cartHelper = new CartHelper(CartHelper.CartName);
+            return PartialView("CartOptions",
+                               (new
+                               {
+                                   Cart = cartHelper.CreateCartModel(true),
+                                   CompareList = compareListHelper.CreateCompareModel()
+                               }).ToExpando());
+        }
     }
 }

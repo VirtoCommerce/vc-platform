@@ -4,7 +4,7 @@
 
 
 @if (Model.IsCurrentNode && Model.SourceMetadata["HtmlHelper"].ToString() != "MvcSiteMapProvider.Web.Html.MenuHelper")  { 
-    <b>@Model.Title.Localize()</b>
+    <span>@Model.Title.Localize()</span>
 }
 else if (Model.IsClickable)
 {

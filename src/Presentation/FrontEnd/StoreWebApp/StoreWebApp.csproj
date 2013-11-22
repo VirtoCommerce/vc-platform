@@ -679,7 +679,7 @@
       <SubType>
       </SubType>
     </Content>
-    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Shared\_LayoutOld.cshtml" />
     <Content Include="Views\Account\_Layout.cshtml" />
     <Content Include="Views\Account\AddressBook.cshtml" />
     <Content Include="Views\Account\AddressEdit.cshtml" />
@@ -797,9 +797,14 @@
     <Content Include="Views\Account\DisplayTemplates\OrdersPager.cshtml" />
     <Content Include="Views\Checkout\DisplayTemplates\Unknown.cshtml" />
     <Content Include="Views\Cart\LineItems.cshtml" />
-    <Content Include="Views\Shared\_LayoutNew.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Banner\DisplayTemplates\ImageNoClickSlide.cshtml" />
     <Content Include="Views\Banner\DisplayTemplates\ImageClickSlide.cshtml" />
+    <Content Include="Views\Store\CartOptions.cshtml" />
+    <Content Include="Views\Shared\MiniCompareList.cshtml" />
+    <Content Include="Views\Shared\MiniCart.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\CompareLineItem.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\MiniLineItem.cshtml" />
     <None Include="Web.Azure.config" />
   </ItemGroup>
   <ItemGroup>

@@ -26,12 +26,3 @@
     }
 
 </ul>
-
-@if (UserHelper.CustomerSession.IsRegistered)
-{
-    <p id="quickAccessTitle" class="welcome-msg">@string.Format("Welcome {0}!".Localize(), Model.CustomerName)</p>
-}
-else
-{
-    <p id="quickAccessTitle" class="welcome-msg">@("Welcome!".LocalizeHtml())</p>
-}

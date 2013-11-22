@@ -1241,7 +1241,7 @@ namespace VirtoCommerce.Web.Controllers
         public ActionResult MiniCompareList()
         {
             var ch = new CartHelper(CartHelper.CompareListName);
-            var cm = CreateCompareModel(ch);
+            var cm = ch.CreateCompareModel();
             return PartialView(cm);
         }
 
@@ -1253,30 +1253,11 @@ namespace VirtoCommerce.Web.Controllers
         public ActionResult Compare()
         {
             var ch = new CartHelper(CartHelper.CompareListName);
-            var cm = CreateCompareModel(ch);
+            var cm = ch.CreateCompareModel();
             return View(cm);
         }
 
-        /// <summary>
-        /// Creates the compare model.
-        /// </summary>
-        /// <param name="cartHelper">The cart helper.</param>
-        /// <returns>CompareListModel.</returns>
-        private CompareListModel CreateCompareModel(CartHelper cartHelper)
-        {
-            var lineItemModels = new LineItemModel[0];
-            var items = _catalogClient.GetItems(cartHelper.LineItems.Select(li => li.CatalogItemId).ToArray());
-
-            if (items != null)
-            {
-                lineItemModels = cartHelper.LineItems.Join(items, li => li.CatalogItemId, i => i.ItemId,
-                                                               (li, item) =>
-                                                               new LineItemModel(li, item,
-                                                                                 _catalogClient.GetItem(li.ParentCatalogItemId))).ToArray();
-            }
-
-            return new CompareListModel(lineItemModels);
-        }
+       
 
         #endregion
 

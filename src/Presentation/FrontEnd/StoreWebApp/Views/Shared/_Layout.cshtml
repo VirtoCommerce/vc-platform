@@ -1,172 +1,258 @@
 ﻿@using System.Reflection
 @using VirtoCommerce.Foundation.Frameworks.Extensions
+@using VirtoCommerce.Web.Virto.Helpers
 <!DOCTYPE html>
 <html>
 <head lang="en">
-	<meta charset="utf-8" />
-	<title>@ViewBag.Title</title>
-	<meta name="viewport" content="width=device-width" />
-	@Styles.Render("~/Content/themes/base/css")
-	@Styles.Render("~/Content/themes/default/s")
-	@Scripts.Render("~/bundles/modernizr")
-	@Scripts.Render("~/bundles/jquery")
-	<base href="~/" />
-</head>
-<body class="cms-index-index cms-home">
-	@if (Session["HideDemoNotice"] == null || !(bool)Session["HideDemoNotice"])
- {
-		<div class="demo-notice-container" onclick="VirtoCommerce.hideDemoNotice();">
-			<div style="height: 25px;"></div>
-			<div class="demo-notice">
-				<div class="close-demo-notice">×</div>
-				<p class="msg">
-					@("This is a demo store. Any orders placed through this store will <span>NOT</span> be honored or fulfilled.".LocalizeHtml())
-				</p>
-			</div>
-		</div>
- }
-    <div class="page">
-        <div class="header-container">
-            <div class="header">
-                <a href="@Url.Content("~/")" title="Demo Store" class="logo"><strong>Virto Commerce</strong><img src="@Url.Content("~/Content/themes/default/images/logo.png")"
-                                                                                                                 alt="Virto Commerce" /></a>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/themes/base/css")
+    @Styles.Render("~/Content/themes/responsive/css")
+    <link type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700&subset=latin,cyrillic-ext,cyrillic" />
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/responsive")
+    <base href="~/" />
 
-                <p class="top-promo">@{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "TopPromo" });}</p>
-                <div class="nav-container">
-                    @Html.MvcSiteMap().Menu(false, true, false)
-                </div>
-            </div>
-            <div class="language-bar quick-access">
-                @{Html.RenderPartial("Languages");}
-            </div>
-            <div class="quick-access-bar">
-                @{Html.RenderAction("QuickAccess", "Store");}
-            </div>
-            <div class="top-bar">
-                @Html.MvcSiteMap().SiteMapPath()
-                @Html.Display("", "search")
-            </div>
-        </div>
-        @RenderBody()
-        <div class="footer-container">
-            <div class="footer">
-                <div class="f-right">
-                    @{Html.RenderAction("StorePicker", "Store");}
-                </div>
-                <div class="f-left">
-                    <ul>
-                        <li><a href="#">@("About Us".LocalizeHtml())</a></li>
-                        <li class="last"><a href="#">@("Customer Service".LocalizeHtml())</a></li>
-                    </ul>
-                    <ul class="links">
-                        <li class="first"><a href="#"
-                                             title="@("Site Map".LocalizeHtml())">@("Site Map".LocalizeHtml())</a></li>
-                        <li><a href="#" title="@("Search Terms".LocalizeHtml())">@("Search Terms".LocalizeHtml())</a></li>
-                        <li><a href="#" title="@("Advanced Search".LocalizeHtml())">@("Advanced Search".LocalizeHtml())</a></li>
-                        <li><a href="#" title="@("Contact Us".LocalizeHtml())">@("Contact Us".LocalizeHtml())</a></li>
-                        <li class="last"><a href="#" title="@("RSS".LocalizeHtml())" class="link-rss">@("RSS".LocalizeHtml())</a></li>
-                    </ul>
-                    <form action="#" method="post"
-                          id="newsletter-validate-detail">
-                        <div class="form-subscribe">
-                            <label for="newsletter">@("Newsletter Sign-up:".LocalizeHtml())</label>
-                            <div class="input-box">
-                                <input type="text" name="email" id="newsletter" title="@("Sign up for our newsletter".LocalizeHtml())"
-                                       class="input-text required-entry validate-email" />
-                            </div>
-                            <button type="submit" title="@("Submit".LocalizeHtml())" class="button">
-                                <span><span>@("Submit".LocalizeHtml())</span></span></button>
+</head>
+<body>
+    <div id="layout">
+        <div class="header-wrap">
+            <div class="head-top">
+                <div class="rubber clearfix">
+                    <div class="grid_6">
+                        <div class="head-switch language">
+                            @{Html.RenderPartial("Languages");}
                         </div>
-                    </form>
-                    <p class="bugs">
-                        @("Version:".LocalizeHtml()) @Html.Version() - <a href="http://support.virtocommerce.com"
-                                                                          onclick="this.target='_blank'"><strong>@("Report Issues".LocalizeHtml())</strong></a>
-                    </p>
+                        <div class="head-switch currency">
+                            @{Html.RenderAction("Currencies", "Store");}
+                        </div>
+                            @if (UserHelper.CustomerSession.IsRegistered)
+                            {
+                                <p class="welcome-msg">@string.Format("Welcome {0}!".Localize(), UserHelper.CustomerSession.CustomerName)</p>
+                            }
+                            else
+                            {
+                                <p id="quickAccessTitle" class="welcome-msg">@("Welcome!".LocalizeHtml())</p>
+                            }
+                    </div>
+                    <div class="grid_6">
+                        @{Html.RenderAction("QuickAccess", "Store");}
+                    </div>
+                </div>
+            </div>
+            <header role="banner" class="header">
+                <div class="rubber clearfix">
+                    <div class="grid_12">
+                        <h1>Virto Commerce</h1>
+                        <div class="nav">
+                            <a class="control">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </a>
+                            @Html.MvcSiteMap().Menu(false, true, false)
+                        </div>
+                        <div class="head-top-block">
+                            <a class="control"></a>
+                            <div class="search">
+                                @Html.Display("", "search")
+                            </div>
+                            <div class="cart-options">
+                                @{ Html.RenderAction("CartOptions", "Store"); }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+        </div>
+        @RenderSection("Slider", false)
+        <div class="article-wrap">
+            <article role="main" class="article clearfix">
+                <div class="page-nav">
+                    <div class="rubber">
+                        @Html.MvcSiteMap().SiteMapPath()
+                    </div>
+                </div>
+                @RenderBody()
+            </article>
+        </div>
+        <div class="footer-wrap">
+            <div class="banners">
+                <div class="rubber clearfix">
+                    <div class="grid_6 banner shipping">
+                        <a title="Free shipping on orders over $50" href="">Free shipping on orders over $50
+							</a>
+                    </div>
+                    <div class="grid_6 banner callback">
+                        <a title="Call us! toll free 8-800-123-1234" href="">Call us! toll free <span>8-800-123-1234</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="info">
+                <div class="rubber clearfix">
+                    <div class="grid_3">
+                        <a class="control"></a>
+                        <h2>Facebook</h2>
+                        <div class="content">
+                            <div class="fb">
+                                <img alt="" src="images/fb.png">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="grid_3">
+                        <a class="control"></a>
+                        <h2>From twitter</h2>
+                        <div class="content">
+                            <ul class="twitter-list">
+                                <li>RT <a target="_blank" href="http://www.twitter.com/WPCocktail">@@WPCocktail</a>: Gallery post formats, Custom Background, Thumbnails size &amp; lightbox settings for each post... Elegance <a target="_blank" href="http://twitter.com/search?q=%23Wordpress">#Wordpress</a>
+                                    <span class="date">1 minute ago</span>
+                                </li>
+                                <li>Change the way your store look in minutes - check Shopper <a target="_blank" href="http://twitter.com/search?q=%23Magento">#Magento</a> <a target="_blank" href="http://twitter.com/search?q=%23Theme">#Theme</a>
+                                    <span class="date">1 hour ago</span>
+                                </li>
+                            </ul>
+                            <footer>
+                                <p>Follow us <a target="_blank" href="https://twitter.com/queldoreithemes">on Twitter</a></p>
+                            </footer>
+                        </div>
+                    </div>
+                    <div class="grid_3">
+                        <a class="control"></a>
+                        <h2>Information</h2>
+                        <div class="content">
+                            <ul>
+                                <li>Veritatis et quasi architecto</li>
+                                <li>Beatae vitae dicta sunt explicabo</li>
+                                <li>Nemo enim ipsam voluptatem quia</li>
+                                <li>Voluptas sit aspernatur</li>
+                                <li>Aut odit aut, sed quia consequunt</li>
+                                <li>Umagni dolores eos qui ratione</li>
+                                <li>Voluptatem sequi nesciunt.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="grid_3">
+                        <a class="control"></a>
+                        <h2>Contacts</h2>
+                        <div class="content">
+                            <address>
+                                <p>Lingeries Store</p>
+                                <p>34 New Clity 5655, Excel Tower</p>
+                                <p>OPG Rpad, 4538FH</p>
+                            </address>
+                            <hr>
+                            <p>+1 800 123 1234</p>
+                            <hr>
+                            <p><a href="mailto: mail@lipsum.com">mail@lipsum.com</a></p>
+                            <ul class="social clearfix">
+                                <li class="tw"><a target="blank" href="http://twitter.com/queldorei"><span>Twitter</span></a></li>
+                                <li class="fb"><a target="blank" href="http://facebook.com/queldorei"><span>Facebook</span></a></li>
+                                <li class="mail"><a href="mailto:mail@lipsum.com"><span>Email</span></a></li>
+                                <li class="plus"><a target="blank" href="http://plus.google.com/u/0/111109476451145065018"><span>Google</span></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer role="contentinfo" class="footer rubber clearfix">
+                <div class="grid_6">
                     <address>
-                        <a href="http://virtocommerce.com" target="_blank">@("© 2013 VirtoCommerce Demo Store. All Rights Reserved.".LocalizeHtml())</a>
+                        @("Version:".LocalizeHtml()) @Html.Version() - <a href="http://support.virtocommerce.com"
+                            onclick="this.target='_blank'"><strong>@("Report Issues".LocalizeHtml())</strong></a>
+                        &copy; 2013 Powered by <a href="">Virto Commerce</a>
                     </address>
                 </div>
-            </div>
+                <div class="grid_6">
+                    <ul class="links">
+                        <li><a href="http://shopper.queldorei.com/index.php/" title="About Us">About Us</a></li>
+                        <li><a href="http://shopper.queldorei.com/index.php/" title="Delivery &amp; Returns">Delivery &amp; Returns</a></li>
+                        <li><a href="http://shopper.queldorei.com/index.php/" title="Terms &amp; Conditions">Terms &amp; Conditions</a></li>
+                        <li><a href="http://shopper.queldorei.com/index.php/contacts/" title="Contact Us">Contact Us</a></li>
+                    </ul>
+                </div>
+            </footer>
         </div>
     </div>
-    
-    <div class="virto-brand-container">
-        <div class="virto-brand">
-            <a href="http://www.virtocommerce.com"><img alt="VirtoCommerce" src="@Url.Content("~/Content/themes/default/images/brand.png")"></a>
-            <h4><a href="http://www.virtocommerce.com">@("Powered by<br/> Virto Commerce".LocalizeHtml())</a></h4>
-        </div>
+
+    <div id="search_autocomplete" class="search-autocomplete">
     </div>
+
+
     @Scripts.Render("~/bundles/jqueryui")
-	@Scripts.Render("~/bundles/jqueryval")
-	@Scripts.Render("~/bundles/jquerymisc")
-	@RenderSection("scripts", required: false)
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jquerymisc")
+    <script src="~/Scripts/responsive/main.js" type="text/javascript"></script>
+    @RenderSection("scripts", required: false)
 
-	@if (SettingsHelper.GetSettings("FollowServices").Any())
-	{
-		<!-- AddThis Smart Layers BEGIN -->
-		<!-- Go to http://www.addthis.com/get/smart-layers to customize -->
-		<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-51ec4b273d0b77ad"></script>
-		<script type="text/javascript">
+    @if (SettingsHelper.GetSettings("FollowServices").Any())
+    {
+        <!-- AddThis Smart Layers BEGIN -->
+        <!-- Go to http://www.addthis.com/get/smart-layers to customize -->
+        <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-51ec4b273d0b77ad"></script>
+        <script type="text/javascript">
 
-		// this will be called once all Smart Layers have been rendered
-			var callback = function(smartlayer) {
-				// remove all layers currently on the page
-				smartlayer.destroy();
+            // this will be called once all Smart Layers have been rendered
+            var callback = function (smartlayer)
+            {
+                // remove all layers currently on the page
+                smartlayer.destroy();
 
-				var layers = {
-					'theme': 'transparent',
-					'follow': {
-						'services': [],
-						//'title': 'Follow',
-						'postFollowTitle': '@("Thanks for following!".LocalizeHtml())',
-						'postFollowRecommendedMsg': '@("Recommended for you".LocalizeHtml())',
-						'mobile': true,
-						'theme': 'transparent'
-					}
-				};
+                var layers = {
+                    'theme': 'transparent',
+                    'follow': {
+                        'services': [],
+                        //'title': 'Follow',
+                        'postFollowTitle': '@("Thanks for following!".LocalizeHtml())',
+                        'postFollowRecommendedMsg': '@("Recommended for you".LocalizeHtml())',
+                        'mobile': true,
+                        'theme': 'transparent'
+                    }
+                };
 
-				@foreach (var follow in SettingsHelper.GetSettings("FollowServices"))
-				{
-					var followStrSplit = follow.ToString().Split(new[] {":"}, StringSplitOptions.RemoveEmptyEntries);
+                    @foreach (var follow in SettingsHelper.GetSettings("FollowServices"))
+                    {
+                        var followStrSplit = follow.ToString().Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
 
-					<text>
-				layers.follow.services.push({
+                        <text>
+                layers.follow.services.push({
 						@if (followStrSplit.Length > 0)
-						{
-							@:'service': '@followStrSplit[0]'
-						}
+      {
+						    @:'service': '@followStrSplit[0]'
+                                                                				    						}
 						@if (followStrSplit.Length > 1)
-						{
-							@:, 'id': '@followStrSplit[1]'
-						}
+      {
+						    @:, 'id': '@followStrSplit[1]'
+                                                                				    						}
 						@if (followStrSplit.Length > 2)
-						{
-							@:, 'usertype': '@followStrSplit[2]'
-						}
-				    });
+      {
+						    @:, 'usertype': '@followStrSplit[2]'
+                                                                				    						}
+                });
 				</text>
-				}
+                    }
 
-				// now render Recommended and What's Next Layers
-				window.addthis.layers(layers);
-			};
+                // now render Recommended and What's Next Layers
+                window.addthis.layers(layers);
+            };
 
-			addthis.layers({
-				'theme': 'transparent',
-				'share': {}
-			}, callback);
+            addthis.layers({
+                'theme': 'transparent',
+                'share': {}
+            }, callback);
 
-		</script>
-		<!-- AddThis Smart Layers END -->
-	}
+        </script>
+        <!-- AddThis Smart Layers END -->
+    }
 
-	@{
-		var firstOrDefault = StoreHelper.GetSettings("AnalyticsField").FirstOrDefault() ?? 
-							 (object)SettingsHelper.GetSettings("AnalyticsField").FirstOrDefault();
-		if (firstOrDefault != null)
-		{
-			@Html.Raw(firstOrDefault.ToString())
-		}
-	}
+    @{
+        var firstOrDefault = StoreHelper.GetSettings("AnalyticsField").FirstOrDefault() ??
+                             (object)SettingsHelper.GetSettings("AnalyticsField").FirstOrDefault();
+        if (firstOrDefault != null)
+        {
+        @Html.Raw(firstOrDefault.ToString())
+        }
+    }
 </body>
 </html>
