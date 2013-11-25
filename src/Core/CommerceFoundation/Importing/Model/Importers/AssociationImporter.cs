@@ -27,11 +27,7 @@ namespace VirtoCommerce.Foundation.Importing.Model
 					SystemProperties.First(prop => prop.Name == "SourceCatalogId").EnumValues.Add(cat.Name);
 					SystemProperties.First(prop => prop.Name == "TargetCatalogId").EnumValues.Add(cat.Name);
 				});
-			foreach(var associatonType in Enum.GetValues(typeof(AssociationTypes)))
-			{
-				SystemProperties.First(prop => prop.Name == "AssociationType")
-								.EnumValues.Add(associatonType.ToString());
-			}
+			
 		}
 
 		private void InitializeSystemProperties()
@@ -44,6 +40,11 @@ namespace VirtoCommerce.Foundation.Importing.Model
 			var associationTarget = new ImportProperty { Name = "TargetId", DisplayName = "Target item", IsRequiredProperty = true, IsEntityProperty = true, EntityImporterId = Name };
 			var associationSourceCatalogId = new ImportProperty { Name = "SourceCatalogId", DisplayName = "Source item catalog", IsRequiredProperty = false, IsEntityProperty = false, EntityImporterId = Name, IsEnumValuesProperty = true};
 			var associationTargetCatalogId = new ImportProperty { Name = "TargetCatalogId", DisplayName = "Target item catalog", IsRequiredProperty = false, IsEntityProperty = false, EntityImporterId = Name, IsEnumValuesProperty = true };
+
+			foreach (var associatonType in Enum.GetValues(typeof(AssociationTypes)))
+			{
+				associationType.EnumValues.Add(associatonType.ToString());
+			}
 
 			AddSystemProperties(action, associationType,
 				associationPriority, associationGroupName,

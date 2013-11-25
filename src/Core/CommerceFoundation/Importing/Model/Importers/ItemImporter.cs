@@ -30,14 +30,14 @@ namespace VirtoCommerce.Foundation.Importing.Model
 		{
 			var action = new ImportProperty { Name = "Action", DisplayName = "Action", IsRequiredProperty = true, IsEntityProperty = false, EntityImporterId = Name, DefaultValue = "Insert", IsEnumValuesProperty = true, EnumValues = { "Insert", "Insert & Update", "Update", "Delete" } };
 			var itemName = new ImportProperty { Name = "Name", DisplayName = "Name", IsRequiredProperty = true, IsEntityProperty = true, EntityImporterId = Name };
-			var itemStartDate = new ImportProperty { Name = "StartDate", DisplayName = "Start Date", IsRequiredProperty = true, IsEntityProperty = true, EntityImporterId = Name };
+			var itemStartDate = new ImportProperty { Name = "StartDate", DisplayName = "Start Date", IsRequiredProperty = false, IsEntityProperty = true, EntityImporterId = Name, DefaultValue = DateTime.Today.ToShortDateString() };
 			var itemEndDate = new ImportProperty { Name = "EndDate", DisplayName = "End Date", IsRequiredProperty = false, IsEntityProperty = true, EntityImporterId = Name };
-			var itemIsActive = new ImportProperty { Name = "IsActive", DisplayName = "Is Active", IsRequiredProperty = false, IsEntityProperty = true, EntityImporterId = Name, IsEnumValuesProperty = true, EnumValues = { "True", "False" } };
-			var itemIsBuyable = new ImportProperty { Name = "IsBuyable", DisplayName = "Is Buyable", IsRequiredProperty = false, IsEntityProperty = true, EntityImporterId = Name, IsEnumValuesProperty = true, EnumValues = { "True", "False" } };
-			var itemAvailabilityRule = new ImportProperty { Name = "AvailabilityRule", DisplayName = "Availability Rule", IsRequiredProperty = true, IsEntityProperty = true, EntityImporterId = Name };
+			var itemIsActive = new ImportProperty { Name = "IsActive", DisplayName = "Is Active", IsRequiredProperty = false, IsEntityProperty = true, EntityImporterId = Name, IsEnumValuesProperty = true, EnumValues = { "True", "False" }, DefaultValue = "True" };
+			var itemIsBuyable = new ImportProperty { Name = "IsBuyable", DisplayName = "Is Buyable", IsRequiredProperty = false, IsEntityProperty = true, EntityImporterId = Name, IsEnumValuesProperty = true, EnumValues = { "True", "False" }, DefaultValue = "True" };
+			var itemAvailabilityRule = new ImportProperty { Name = "AvailabilityRule", DisplayName = "Availability Rule", IsRequiredProperty = false, IsEntityProperty = true, EntityImporterId = Name, IsEnumValuesProperty = true, DefaultValue = AvailabilityRule.Always.ToString() }; //Always available by default
 			var itemMinQuantity = new ImportProperty { Name = "MinQuantity", DisplayName = "Minimum quantity", IsRequiredProperty = true, IsEntityProperty = true, EntityImporterId = Name, DefaultValue = "1" };
 			var itemMaxQuantity = new ImportProperty { Name = "MaxQuantity", DisplayName = "Maximum quantity", IsRequiredProperty = true, IsEntityProperty = true, EntityImporterId = Name, DefaultValue = "1" };
-			var itemTrackInventory = new ImportProperty { Name = "TrackInventory", DisplayName = "Track Inventory", IsRequiredProperty = false, IsEntityProperty = true, EntityImporterId = Name };
+			var itemTrackInventory = new ImportProperty { Name = "TrackInventory", DisplayName = "Track Inventory", IsRequiredProperty = false, IsEntityProperty = true, EntityImporterId = Name, IsEnumValuesProperty = true, EnumValues = { "True", "False" }, DefaultValue = "False" };
 			var itemWeight = new ImportProperty { Name = "Weight", DisplayName = "Weight", IsRequiredProperty = false, IsEntityProperty = true, EntityImporterId = Name };
 			var itemPackageType = new ImportProperty { Name = "PackageType", DisplayName = "Package Type", IsRequiredProperty = false, IsEntityProperty = true, EntityImporterId = Name };
 			var itemTaxCategory = new ImportProperty { Name = "TaxCategory", DisplayName = "Tax Category", IsRequiredProperty = false, IsEntityProperty = true, EntityImporterId = Name };
@@ -46,8 +46,14 @@ namespace VirtoCommerce.Foundation.Importing.Model
 			var itemAsset = new ImportProperty { Name = "ItemAsset", DisplayName = "Asset", IsRequiredProperty = false, IsEntityProperty = false, EntityImporterId = Name };
 			var itemEditorialReview = new ImportProperty { Name = "EditorialReview", DisplayName = "Editorial review", IsRequiredProperty = false, IsEntityProperty = false, EntityImporterId = Name };
 
+			foreach (var availabilityRule in Enum.GetValues(typeof(AvailabilityRule)))
+			{
+				itemAvailabilityRule.EnumValues.Add(availabilityRule.ToString());
+			}
+
 			if (Name == ImportEntityType.Product.ToString() || Name == ImportEntityType.Bundle.ToString())
 			{
+				itemIsBuyable.DefaultValue = "False";
 				AddSystemProperties(
 					action, itemName,
 					itemStartDate, itemEndDate, itemIsActive,
@@ -57,6 +63,7 @@ namespace VirtoCommerce.Foundation.Importing.Model
 			}
 			else
 			{
+				itemIsActive.DefaultValue = "False";
 				AddSystemProperties(
 					action, itemName,
 					itemStartDate, itemEndDate, itemIsActive,
@@ -76,7 +83,12 @@ namespace VirtoCommerce.Foundation.Importing.Model
 			var taxCategory = systemValues.SingleOrDefault(x => x.Name == "TaxCategory") != null ? systemValues.Single(x => x.Name == "TaxCategory").Value : null;
 			var categoryId = systemValues.SingleOrDefault(x => x.Name == "CategoryId") != null ? systemValues.Single(x => x.Name == "CategoryId").Value : null;
 			var itemCode = systemValues.SingleOrDefault(x => x.Name == "Code") != null ? systemValues.Single(x => x.Name == "Code").Value : null;
-
+			var availability = systemValues.SingleOrDefault(x => x.Name == "AvailabilityRule") != null ? systemValues.Single(x => x.Name == "AvailabilityRule").Value : null;
+			if (availability != null)
+			{
+				var number = (int)((AvailabilityRule)Enum.Parse(typeof(AvailabilityRule), availability));
+				systemValues.SingleOrDefault(x => x.Name == "AvailabilityRule").Value = number.ToString();
+			}
 
 
 			switch (action)

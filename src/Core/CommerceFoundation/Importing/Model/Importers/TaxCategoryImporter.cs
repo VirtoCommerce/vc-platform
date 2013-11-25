@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using VirtoCommerce.Foundation.Catalogs.Factories;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Catalogs.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
@@ -19,7 +20,7 @@ namespace VirtoCommerce.Foundation.Importing.Model
 		private void InitializeSystemProperties()
 		{
 			var action = new ImportProperty { Name = "Action", DisplayName = "Action", IsRequiredProperty = true, IsEntityProperty = false, EntityImporterId = Name, DefaultValue = "Insert", IsEnumValuesProperty = true, EnumValues = { "Insert", "Insert & Update", "Update", "Delete" } };
-			var taxCategoryId = new ImportProperty { Name = "TaxCategoryId", DisplayName = "Category Id", IsRequiredProperty = true, IsEntityProperty = true, EntityImporterId = Name };
+			var taxCategoryId = new ImportProperty { Name = "TaxCategoryId", DisplayName = "Tax Category Id", IsRequiredProperty = false, IsEntityProperty = true, EntityImporterId = Name };
 			var categoryName = new ImportProperty { Name = "Name", DisplayName = "Name", IsRequiredProperty = true, IsEntityProperty = true, EntityImporterId = Name };
 			
 			AddSystemProperties(
@@ -80,8 +81,10 @@ namespace VirtoCommerce.Foundation.Importing.Model
 		private TaxCategory InitializeItem(TaxCategory item, IEnumerable<ImportItem> systemValues)
 		{
 			if (item == null)
-				item = new TaxCategory();
+				item = new CatalogEntityFactory().CreateEntity<TaxCategory>();
 			var itemProperties = item.GetType().GetProperties();
+			if (string.IsNullOrEmpty(systemValues.First(x => x.Name == "TaxCategoryId").Value))
+				systemValues.First(x => x.Name == "TaxCategoryId").Value = item.TaxCategoryId;
 			systemValues.ToList().ForEach(x => SetPropertyValue(item, itemProperties.FirstOrDefault(y => y.Name == x.Name), x.Value));
 
 			return item;

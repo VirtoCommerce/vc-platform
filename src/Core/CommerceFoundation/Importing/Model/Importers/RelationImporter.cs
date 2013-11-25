@@ -27,6 +27,7 @@ namespace VirtoCommerce.Foundation.Importing.Model
 					SystemProperties.First(prop => prop.Name == "SourceCatalogId").EnumValues.Add(cat.Name);
 					SystemProperties.First(prop => prop.Name == "TargetCatalogId").EnumValues.Add(cat.Name);
 				});
+
 			SystemProperties.First(prop => prop.Name == "RelationTypeId").EnumValues.Add(ItemRelationType.Sku);
 			SystemProperties.First(prop => prop.Name == "RelationTypeId").EnumValues.Add(ItemRelationType.Category);
 			SystemProperties.First(prop => prop.Name == "RelationTypeId").EnumValues.Add(ItemRelationType.BundleItem);
