@@ -11,19 +11,21 @@
 @if (images.Length > 1)
 {
     //Wrap images to slider when there are several of them
-    <div class="container">
-        @foreach (var item in images)
-        {
-            if (item.ContentTypeId == DynamicContentType.ImageNonClickable.ToString())
+    <div class="main-slider">
+        <div class="container">
+            @foreach (var item in images)
             {
-            @Html.DisplayForModel("ImageNoClickSlide", new { Model = new ImageNonClickableModel(item) })
-            }
+                if (item.ContentTypeId == DynamicContentType.ImageNonClickable.ToString())
+                {
+                @Html.DisplayForModel("ImageNoClickSlide", new { Model = new ImageNonClickableModel(item) })
+                }
 
-            if (item.ContentTypeId == DynamicContentType.ImageClickable.ToString())
-            {
-            @Html.DisplayForModel("ImageClickSlide", new { Model = new ImageClickableModel(item) })
+                if (item.ContentTypeId == DynamicContentType.ImageClickable.ToString())
+                {
+                @Html.DisplayForModel("ImageClickSlide", new { Model = new ImageClickableModel(item) })
+                }
             }
-        }
+        </div>
     </div>
 }
 

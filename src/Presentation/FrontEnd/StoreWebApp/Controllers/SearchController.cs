@@ -118,7 +118,7 @@ namespace VirtoCommerce.Web.Controllers
             foreach (var filter in filters)
             {
                 // Check if we already filtering
-                if (parameters.Facets.ContainsKey(filter.Key))
+                if (parameters.Facets.Keys.Any(k=> k.Equals(filter.Key, StringComparison.OrdinalIgnoreCase)))
                     continue;
 
                 criteria.Add(filter);
@@ -145,7 +145,8 @@ namespace VirtoCommerce.Web.Controllers
             }
 
             // Perform search
-            var sort = parameters.Sort; //CommonHelper.GetCookieValue("sortcookie");
+            var sort = parameters.Sort;
+		    var sortOrder = parameters.SortOrder;
 
             if (String.IsNullOrEmpty(sort))
             {
@@ -156,13 +157,24 @@ namespace VirtoCommerce.Web.Controllers
                 StoreHelper.SetCookie("sortcookie", sort, DateTime.Now.AddMonths(1));
             }
 
+		    if (String.IsNullOrEmpty(sortOrder))
+		    {
+		        sortOrder = StoreHelper.GetCookieValue("sortordercookie");
+		    }
+		    else
+		    {
+                StoreHelper.SetCookie("sortordercookie", sortOrder, DateTime.Now.AddMonths(1));
+		    }
+
+            bool isDescending = "desc".Equals(sortOrder, StringComparison.OrdinalIgnoreCase);
+
             SearchSort sortObject = null;
 
             if (!String.IsNullOrEmpty(sort))
             {
                 if (sort.Equals("name", StringComparison.OrdinalIgnoreCase))
                 {
-                    sortObject = new SearchSort("name");
+                    sortObject = new SearchSort("name", isDescending);
                 }
                 else if (sort.Equals("price", StringComparison.OrdinalIgnoreCase))
                 {
@@ -172,7 +184,8 @@ namespace VirtoCommerce.Web.Controllers
                                                                                             criteria.Currency.ToLower(),
                                                                                             priceList.ToLower()))
                                                                               {
-                                                                                  IgnoredUnmapped = true
+                                                                                  IgnoredUnmapped = true,
+                                                                                  IsDescending = isDescending
                                                                               })
                                                        .ToArray());
                 }
@@ -256,7 +269,8 @@ namespace VirtoCommerce.Web.Controllers
                     StartingRecord = criteria.StartingRecord,
                     DisplayStartingRecord = criteria.StartingRecord + 1,
                     SortValues = new[] {"Position".Localize(), "Name".Localize(), "Price".Localize()},
-                    SelectedSort = sort
+                    SelectedSort = sort,
+                    SortOrder = isDescending ? "desc" : "asc"
                 };
 
             var end = criteria.StartingRecord + criteria.RecordsToRetrieve;
@@ -391,7 +405,7 @@ namespace VirtoCommerce.Web.Controllers
                 // Now load items from repository
                 var currentItems = _catalogClient.GetItems(uniqueKeys.ToArray(), cacheResults,
                                                            ItemResponseGroups.ItemAssets |
-                                                           ItemResponseGroups.ItemProperties);
+                                                           ItemResponseGroups.ItemProperties | ItemResponseGroups.ItemEditorialReviews);
 
                 items.AddRange(currentItems.OrderBy(i => itemsOrderedList.IndexOf(i.ItemId)));
                 dbItemCount = currentItems.Length;

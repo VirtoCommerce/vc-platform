@@ -7,6 +7,7 @@
     <meta charset="utf-8" />
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/themes/base/css")
+    @Styles.Render("~/Content/themes/default/s")
     @Styles.Render("~/Content/themes/responsive/css")
     <link type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700&subset=latin,cyrillic-ext,cyrillic" />
     @Scripts.Render("~/bundles/modernizr")
@@ -27,14 +28,14 @@
                         <div class="head-switch currency">
                             @{Html.RenderAction("Currencies", "Store");}
                         </div>
-                            @if (UserHelper.CustomerSession.IsRegistered)
-                            {
-                                <p class="welcome-msg">@string.Format("Welcome {0}!".Localize(), UserHelper.CustomerSession.CustomerName)</p>
-                            }
-                            else
-                            {
-                                <p id="quickAccessTitle" class="welcome-msg">@("Welcome!".LocalizeHtml())</p>
-                            }
+                        @if (UserHelper.CustomerSession.IsRegistered)
+                        {
+                            <p class="welcome-msg">@string.Format("Welcome {0}!".Localize(), UserHelper.CustomerSession.CustomerName)</p>
+                        }
+                        else
+                        {
+                            <p id="quickAccessTitle" class="welcome-msg">@("Welcome!".LocalizeHtml())</p>
+                        }
                     </div>
                     <div class="grid_6">
                         @{Html.RenderAction("QuickAccess", "Store");}
@@ -74,7 +75,9 @@
                         @Html.MvcSiteMap().SiteMapPath()
                     </div>
                 </div>
-                @RenderBody()
+                <div class="rubber">
+                    @RenderBody()
+                </div>
             </article>
         </div>
         <div class="footer-wrap">
@@ -185,6 +188,24 @@
     @Scripts.Render("~/bundles/jquerymisc")
     <script src="~/Scripts/responsive/main.js" type="text/javascript"></script>
     @RenderSection("scripts", required: false)
+    
+    <!-- Process sliders -->
+    <script type="text/javascript">
+        $(function ()
+        {
+            $('.main-slider .container').camera({
+                loader: 'bar',
+                playPause: false,
+                barPosition: 'top',
+                loaderColor: '#322C29',
+                loaderBgColor: 'rgba(0, 0, 0, 0)',
+                height: '25%'
+            });
+
+            $('.main-slider .container').removeAttr('style');
+            $('.main-slider .container').css('display', 'block');
+        });
+    </script>
 
     @if (SettingsHelper.GetSettings("FollowServices").Any())
     {
@@ -220,15 +241,15 @@
 						@if (followStrSplit.Length > 0)
       {
 						    @:'service': '@followStrSplit[0]'
-                                                                				    						}
+                                                                                                        				    						}
 						@if (followStrSplit.Length > 1)
       {
 						    @:, 'id': '@followStrSplit[1]'
-                                                                				    						}
+                                                                                                        				    						}
 						@if (followStrSplit.Length > 2)
       {
 						    @:, 'usertype': '@followStrSplit[2]'
-                                                                				    						}
+                                                                                                        				    						}
                 });
 				</text>
                     }

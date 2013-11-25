@@ -61,7 +61,7 @@
         <a onclick="Reviews.vote('${Id}', true); return false;" href="#" class="pr-review-helpful-text-link">@("Yes".LocalizeHtml())</a>&nbsp;/&nbsp;
         <a onclick="Reviews.vote('${Id}', false); return false;" href="#" class="pr-review-helpful-text-link">@("No".LocalizeHtml())</a>
     </p>
-    <div id="review_feedback_${Id}" class="title"></div>
+    <div id="review_feedback_${Id}" class="review-title"></div>
     <p>
         <a href="#" onclick="$('#comment_for_${Id}').show(); $('#report_abuse_for_${Id}').hide(); return false;">@("write a comment".LocalizeHtml())</a>
         <span class="separator">|</span>
@@ -183,7 +183,7 @@
         <div class="pr-review-most-helpful">
             <p>(<span id="positive_comment_${Id}">${PositiveFeedbackCount}</span> @("of".LocalizeHtml()) <span id="total_feedback_comment_${Id}">${PositiveFeedbackCount + NegativeFeedbackCount}</span> @("customers found this comment helpful".LocalizeHtml()))</p>
         </div>
-        <div class="title">@("Comment by".LocalizeHtml()) <b>${Reviewer.NickName}</b> @("on".LocalizeHtml()) ${GetShortDate(CreatedDateTime)}</div>
+        <div class="review-title">@("Comment by".LocalizeHtml()) <b>${Reviewer.NickName}</b> @("on".LocalizeHtml()) ${GetShortDate(CreatedDateTime)}</div>
         <p>
             ${Comment}
         </p>
@@ -192,7 +192,7 @@
             <a onclick="Reviews.votecomment('${Id}', true); return false;" href="#" class="pr-review-helpful-text-link">@("Yes".LocalizeHtml())</a>&nbsp;/&nbsp;
             <a onclick="Reviews.votecomment('${Id}', false); return false;" href="#" class="pr-review-helpful-text-link">@("No".LocalizeHtml())</a>
         </p>
-        <div id="comment_feedback_${Id}" class="title"></div>
+        <div id="comment_feedback_${Id}" class="review-title"></div>
         <p><a href="#" onclick="$('#report_abuse_for_${Id}').show(); return false;">@("report abuse".LocalizeHtml())</a></p>
     </div>
     <div class="cl"></div>

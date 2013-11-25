@@ -1,97 +1,64 @@
 ﻿@model CatalogItemSearchModel
-           
-<div class="main-container col2-left-layout">
-    <div class="main">
-        <div class="col-main">
-                <ul class="messages" id="messages">
-                </ul>
-            <div class="page-title category-title">
-                <a href="#"
-                    class="link-rss">@("Subscribe to RSS Feed".LocalizeHtml())</a>
-                <h1>@ViewBag.Title</h1>
-            </div>
-            @if (Model.Pager.TotalCount == 0)
-            {
-            <p class="note-msg">@("There are no results available.".LocalizeHtml())</p>
-            }
-            else
-            {
-            <div class="category-products">
-	            <div class="toolbar">
-		            @Html.DisplayFor(model => model.Pager, "SearchPager")
-	            </div>
-                    @{
-                var index = 0;   
-                    }
-                    @foreach (var item in Model.CatalogItems)
-                    {
-                        if (index % 4 == 0)
-                        {
-                            @:<ul class="products-grid">
-                            @:<li class="item first">
-                        }
-                        else if ((index + 1) % 4 == 0)
-                        {
-                            @:<li class="item last">
-                        }
-                        else
-                        {
-                            @:<li class="item">
-                        }
-                        @Html.DisplayFor(model => item, "SearchItem")
-                        index = index + 1;
-                        if (index % 4 == 0 || index == Model.CatalogItems.Count())
-                        {
-                            @:</li>
-                            @:</ul>
-                        }
-                        else
-                        {
-                            @:</li>
-                        }
 
-                    }
-	            <div class="toolbar-bottom">
-		            <div class="toolbar">@Html.DisplayFor(model => model.Pager, "SearchPager")</div>
-	            </div>
-            </div>
-            }
+<div class="content">
+    <div class="category-products">
+        <div class="category-image">
+            @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "CategoryTop" });}
         </div>
-        <div class="col-left sidebar">
-            <div class="block block-currency">
-                <div class="block-title">
-                    <strong><span>@("Select Your Currency.".LocalizeHtml())</span></strong>
-                </div>
-                <div class="block-content">
-                    @{Html.RenderAction("Currencies", "Store");}
-                </div>
-            </div>
-            <div class="block block-layered-nav">
-                @Html.DisplayFor(m => m, "FilterPanel")
-            </div>
-            <div class="block block-cart">
-                <div class="block-title">
-                    <strong><span>@("My Cart".LocalizeHtml())</span></strong>
-                </div>
-                <div class="block-content">
-                    @{Html.RenderAction("MiniView", "Cart");}
-                </div>
-            </div>
-            <div class="block block-list block-compare">
-                <div class="block-title">
-                    <strong><span>@("Compare Products".LocalizeHtml())</span></strong>
-                </div>
-                <div class="block-content">
-					@{Html.RenderAction("MiniCompareList", "Account");}
-                </div>
-            </div>
+        <div class="toolbar">
+            @Html.DisplayFor(model => model.Pager, "SearchPager")
+        </div>
+        <div class="grid selected">
+            <ul class="products-list grid">
+                @foreach (var item in Model.CatalogItems)
+                {
+                    string itemClass = "item";
+                    if (item.CatalogItem.Item.Created.HasValue && item.CatalogItem.Item.Created.Value.AddDays(1) >= DateTime.UtcNow)
+                    {
+                        itemClass = string.Concat(@itemClass, " ", "new");
+                    }
+                    if (item.Price.Type == PriceType.Sale)
+                    {
+                        itemClass = string.Concat(@itemClass, " ", "sale");
+                    }
+                    <li class="@itemClass">
+                        <div class="inner">
+                            @Html.DisplayFor(model => item, "SearchItem")
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
+        <div class="list">
+            <ul class="products-list list">
+                @foreach (var item in Model.CatalogItems)
+                {
+                    string itemClass = "item";
+                    if (item.CatalogItem.Item.Created.HasValue && item.CatalogItem.Item.Created.Value.AddDays(1) >= DateTime.UtcNow)
+                    {
+                        itemClass = string.Concat(@itemClass, " ", "new");
+                    }
+                    if (item.Price.Type == PriceType.Sale)
+                    {
+                        itemClass = string.Concat(@itemClass, " ", "sale");
+                    }
+                    <li class="@itemClass">
+                        <div class="inner">
+                            @Html.DisplayFor(model => item, "SearchListItem")
+                        </div>
+                    </li>
+                }
+            </ul>
+        </div>
+        <div class="toolbar">
+            @Html.DisplayFor(model => model.Pager, "SearchPager")
         </div>
     </div>
 </div>
-<script type="text/javascript">
-	$(window).load(function () {
-		$('#slider').nivoSlider({
-			pauseTime: 5000
-		});
-	});
-</script>
+<div class="sidebar">
+    @if (Model.SelectedFilters != null && Model.SelectedFilters.Count > 0)
+    {
+        @Html.DisplayFor(m => m, "CurrentFilterPanel")
+    }
+    @Html.DisplayFor(m => m, "FilterPanel")
+</div>

@@ -1,15 +1,25 @@
 ﻿@model CatalogItemWithPriceModel
 
 <a href="@Url.ItemUrl(Model.CatalogItem.Item, Model.CatalogItem.ParentItemId)" title="@Model.DisplayName" class="product-image">
-    <img src="@Url.Image(Model.CatalogItem.Item, "primaryimage")" width="170" height="170" alt="@Model.DisplayName" onerror="this.onerror=null;this.src='@Href("~/Content/themes/default/images/blank.png")';" /></a>
-<h2 class="product-name">
-    <a href="@Url.ItemUrl(Model.CatalogItem.Item, Model.CatalogItem.ParentItemId)" title="@Model.DisplayName">@Model.DisplayName</a></h2>
-<div class="price-box">
-    @if (Model.Price != null){
+    <figure>
+        <img src="@Url.Image(Model.CatalogItem.Item, "primaryimage")" alt="@Model.DisplayName" onerror="this.onerror=null;this.src='@Href("~/Content/themes/default/images/blank.png")';" />
+    </figure>
+</a>
+<div class="product-info">
+    <span class="title">@Model.DisplayName</span>
+    <div class="ratings">
+        <div class="rating">
+            <div style="width: 100%;" class="mask"></div>
+        </div>
+    </div>
+    @if (Model.Price != null)
+    {
         @Html.DisplayFor(model => model.Price)
     }
-</div>
-<div class="actions">
-    @{Html.RenderPartial("AddToCart", Model, new ViewDataDictionary { { "View", "List" } });}
-    @{Html.RenderPartial("AddToLinks", Model);}
+    <div class="cart">
+        @{Html.RenderPartial("AddToCart", Model, new ViewDataDictionary { { "View", "List" } });}
+    </div>
+    <ul class="add-to-links">
+        @{Html.RenderPartial("AddToLinks", Model);}
+    </ul>
 </div>

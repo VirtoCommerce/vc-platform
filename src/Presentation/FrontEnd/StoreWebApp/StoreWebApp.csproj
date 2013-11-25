@@ -805,6 +805,8 @@
     <Content Include="Views\Shared\MiniCart.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\CompareLineItem.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\MiniLineItem.cshtml" />
+    <Content Include="Views\Search\DisplayTemplates\CurrentFilterPanel.cshtml" />
+    <Content Include="Views\Search\DisplayTemplates\SearchListItem.cshtml" />
     <None Include="Web.Azure.config" />
   </ItemGroup>
   <ItemGroup>

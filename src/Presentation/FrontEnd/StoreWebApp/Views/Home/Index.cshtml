@@ -3,30 +3,9 @@
     ViewBag.Title = Html.Title("Home".Localize());
 }
 
-@section scripts
-{
-    <script>
-        $(function ()
-        {
-            $('.main-slider .container').camera({
-                loader: 'bar',
-                playPause: false,
-                barPosition: 'top',
-                loaderColor: '#322C29',
-                loaderBgColor: 'rgba(0, 0, 0, 0)',
-                height: '25%'
-            });
-
-            $('.main-slider .container').removeAttr('style');
-            $('.main-slider .container').css('display', 'block');
-        });
-    </script>
-}
 
 @section Slider{
-    <div class="main-slider">
         @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "MainSlider" });}
-    </div>
 }
 <div class="main-container col1-layout">
     <div class="main">

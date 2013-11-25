@@ -5,10 +5,22 @@
  {
 	 case "List":
 		 if (Model != null && Model.Availability != null && Model.Availability.IsAvailable && Model.Price != null && (Model.Price.SalePrice.HasValue || Model.Price.ListPrice.HasValue))
-		 {
-			 <button type="button" title="@("Add to Cart".LocalizeHtml())" class="button btn-cart" onclick="VirtoCart.addToCart('Item added to cart', '@Url.Encode(Model.CatalogItem.ItemId)', '@Url.Encode(Model.CatalogItem.ParentItemId)', 1)">
-				 <span><span>@("Add to Cart".LocalizeHtml())</span></span>
+		 {        
+			 <button type="button" title="@("Add to Cart".Localize())" onclick="VirtoCart.addToCart('Item added to cart', '@Url.Encode(Model.CatalogItem.ItemId)', '@Url.Encode(Model.CatalogItem.ParentItemId)', 1)">
+				 @("Add to Cart".Localize())
 			 </button>
+		 }
+		 else
+		 {
+			 <div style="color:#ff0000; font-weight: bold; text-align: left;">@("Not for sale".LocalizeHtml())</div>
+		 }
+		 break;
+    case "ListLink":
+		 if (Model != null && Model.Availability != null && Model.Availability.IsAvailable && Model.Price != null && (Model.Price.SalePrice.HasValue || Model.Price.ListPrice.HasValue))
+		 {        
+			 <a href="" title="@("Add to Cart".Localize())" onclick="return VirtoCart.addToCart('Item added to cart', '@Url.Encode(Model.CatalogItem.ItemId)', '@Url.Encode(Model.CatalogItem.ParentItemId)', 1)">
+				 @("Add to Cart".Localize())
+			 </a>
 		 }
 		 else
 		 {

@@ -47,7 +47,7 @@ namespace VirtoCommerce.Web.Helpers
         }
 
 		/// <summary>
-		/// Equalses the or null empty.
+		/// Equals or is null or empty.
 		/// </summary>
 		/// <param name="str1">The STR1.</param>
 		/// <param name="str2">The STR2.</param>

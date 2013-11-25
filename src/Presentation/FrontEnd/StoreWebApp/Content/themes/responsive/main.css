@@ -1112,6 +1112,7 @@ button span
 							.article .products-list .item .inner .product-image figure
 							{
 								overflow: hidden;
+                                 min-height: 250px; /* Added by Adomas*/
 							}
 
 								.article .products-list .item .inner .product-image img
@@ -1306,6 +1307,11 @@ button span
 							{
 								display: block;
 								padding: 0 40px 0 0;
+                                /*Added by Adomas*/
+							    overflow: hidden;
+							    white-space: nowrap;
+							    text-overflow: ellipsis;
+                                /*End by Adomas*/
 							}
 
 							.article .products-list.grid .item:hover .inner .title
@@ -1313,6 +1319,10 @@ button span
 								display: block;
 								padding: 0;
 								text-align: center;
+                                 /*Added by Adomas*/
+                                white-space: normal;
+							    text-overflow: clip;
+                                /*End by Adomas*/
 							}
 
 							.article .products-no-effects .products-list.grid .item .inner .title

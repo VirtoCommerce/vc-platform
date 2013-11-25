@@ -46,16 +46,17 @@ namespace VirtoCommerce.Web
                 ));
 
 			bundles.Add(new StyleBundle("~/Content/themes/default/s").Include(
-				"~/Content/themes/default/styles.css",
+				//"~/Content/themes/default/styles.css",
 				"~/Content/themes/default/widgets.css",
 				"~/Content/themes/default/thickbox.css",
-				"~/Content/themes/default/jquery.ui.autocomplete.css",
-				"~/Content/themes/default/jquery.jqzoom.css",
-				"~/Content/themes/default/redesign.css",
+				//"~/Content/themes/default/jquery.ui.autocomplete.css",
+				//"~/Content/themes/default/jquery.jqzoom.css",
+				//"~/Content/themes/default/redesign.css",
 				"~/Content/themes/default/rateit.css",
 				"~/Content/themes/default/flags.css",
-				"~/Content/themes/default/virto_reviews.css",
-				"~/Content/themes/default/nivo-slider.css"));
+				"~/Content/themes/default/virto_reviews.css"
+				//"~/Content/themes/default/nivo-slider.css"
+                ));
 
 			bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
 						"~/Content/themes/base/jquery.ui.core.css",
@@ -78,8 +79,7 @@ namespace VirtoCommerce.Web
                 "~/Content/themes/responsive/reset.css",
                 "~/Content/themes/responsive/main.css",
                 "~/Content/themes/responsive/responsive.css",
-                "~/Content/themes/responsive/camera.css",
-                "~/Content/themes/default/flags.css"
+                "~/Content/themes/responsive/camera.css"
                 ));
 		}
 	}
