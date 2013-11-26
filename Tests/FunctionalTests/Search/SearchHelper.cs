@@ -31,14 +31,14 @@ namespace FunctionalTests.Search
             doc.Add(new DocumentField("__hidden", "false", new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
             doc.Add(new DocumentField("code", "prd12321", new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
             doc.Add(new DocumentField("name", name, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
-            doc.Add(new DocumentField("startdate", DateTime.Now, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
+            doc.Add(new DocumentField("startdate", DateTime.UtcNow, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
             doc.Add(new DocumentField("enddate", DateTime.MaxValue, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
             doc.Add(new DocumentField("price_usd_default", price, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
             doc.Add(new DocumentField("price_usd_default_value", price.ToString(), new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
             doc.Add(new DocumentField("color", color, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
             doc.Add(new DocumentField("catalog", "goods", new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
             doc.Add(new DocumentField("size", size, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
-            doc.Add(new DocumentField("currency", "goods", new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
+            doc.Add(new DocumentField("currency", "USD", new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
 
             doc.Add(new DocumentField("__content", name, new[] { IndexStore.YES, IndexType.ANALYZED }));
 

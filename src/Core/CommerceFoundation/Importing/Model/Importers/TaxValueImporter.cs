@@ -20,7 +20,7 @@ namespace VirtoCommerce.Foundation.Importing.Model
 		private void InitializeSystemProperties()
 		{
 			var action = new ImportProperty { Name = "Action", DisplayName = "Action", IsRequiredProperty = true, IsEntityProperty = false, EntityImporterId = Name, DefaultValue = "Insert", IsEnumValuesProperty = true, EnumValues = { "Insert", "Insert & Update", "Update", "Delete" } };
-			var taxId = new ImportProperty { Name = "TaxId", DisplayName = "Tax Id", IsRequiredProperty = true, IsEntityProperty = true, EntityImporterId = Name };
+			var taxId = new ImportProperty { Name = "TaxId", DisplayName = "Tax Id", IsRequiredProperty = false, IsEntityProperty = true, EntityImporterId = Name };
 			var taxName = new ImportProperty { Name = "TaxName", DisplayName = "Tax Name", IsRequiredProperty = true, IsEntityProperty = true, EntityImporterId = Name };
 			var taxType = new ImportProperty { Name = "TaxType", DisplayName = "Tax type", IsRequiredProperty = true, IsEntityProperty = true, EntityImporterId = Name };
 			var taxSortOrder = new ImportProperty { Name = "SortOrder", DisplayName = "Sort order", IsRequiredProperty = false, IsEntityProperty = true, EntityImporterId = Name };

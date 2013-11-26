@@ -59,6 +59,7 @@ namespace VirtoCommerce.Foundation.Importing.Services
 					new ItemImporter() { Name = "Package"},
 					new PriceImporter(_catalogRepository),
 					new AssociationImporter(_catalogRepository),
+					new RelationImporter(_catalogRepository),
 					new CategoryImporter(),
 					new LocalizationImporter(),
 					new TaxValueImporter(),

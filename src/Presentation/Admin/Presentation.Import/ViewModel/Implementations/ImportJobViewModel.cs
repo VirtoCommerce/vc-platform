@@ -400,6 +400,7 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 								new ItemImporter(ImportEntityType.DynamicKit.ToString()), 
 								new CategoryImporter(), 
 								new AssociationImporter(_catalogRepositoryFactory.GetRepositoryInstance()), 
+								new RelationImporter(_catalogRepositoryFactory.GetRepositoryInstance()), 
 								new LocalizationImporter(),
 								new PriceImporter(_catalogRepositoryFactory.GetRepositoryInstance()),
 								new ItemAssetImporter(),

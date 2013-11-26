@@ -296,6 +296,7 @@
     <Compile Include="Frameworks\Workflow\Services\ActivityInvoker.cs" />
     <Compile Include="Importing\ImportConfiguration.cs" />
     <Compile Include="Importing\Model\ImportEntityType.cs" />
+    <Compile Include="Importing\Model\Importers\RelationImporter.cs" />
     <Compile Include="Importing\Model\Importers\LocalizationImporter.cs" />
     <Compile Include="Importing\Model\Importers\ItemAssetImporter.cs" />
     <Compile Include="Importing\Model\Importers\JurisdictionGroupImporter.cs" />

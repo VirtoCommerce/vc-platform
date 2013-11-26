@@ -17,6 +17,8 @@ namespace VirtoCommerce.PowerShell.Orders
 		protected override void Seed(EFOrderRepository context)
 		{
 			CreateCountries(context);
+			CreatePaymentMethods(context);
+			CreateShippingMethods(context);
 			base.Seed(context);
 		}
 
@@ -374,6 +376,557 @@ namespace VirtoCommerce.PowerShell.Orders
 			}
 
 			return country;
+		}
+
+		#endregion
+
+		#region Payments & Shippings
+		private void CreateShippingMethods(EFOrderRepository repository)
+		{
+			var gateways = CreateShippingGateways();
+			gateways.ForEach(repository.Add);
+
+			var shippingMethods = new List<ShippingMethod>
+				{
+					new ShippingMethod
+						{
+							ShippingMethodId = "FreeShipping",
+							Name = "FreeShipping",
+							DisplayName = "Free Shipping",
+							Description = "Free Shipping",
+							Currency = "USD",
+							BasePrice = 0,
+							IsActive = true
+						},
+					new ShippingMethod
+						{
+							ShippingMethodId = "FlatRate",
+							Name = "FlatRate",
+							DisplayName = "Flat Rate",
+							Description = "Flat Rate",
+							Currency = "USD",
+							BasePrice = 10,
+							IsActive = true
+						}
+				};
+
+			var option = new ShippingOption { Name = "default", Description = "Default", ShippingGateway = gateways[0] };
+			option.ShippingMethods.Add(shippingMethods[0]);
+
+			var option2 = new ShippingOption { Name = "default2", Description = "Default2", ShippingGateway = gateways[0] };
+			option2.ShippingMethods.Add(shippingMethods[1]);
+
+			repository.Add(option);
+			repository.Add(option2);
+
+			foreach (var sm in shippingMethods)
+			{
+				var methodLanguage = new ShippingMethodLanguage
+				{
+					DisplayName = sm.Description,
+					LanguageCode = "en-US",
+					ShippingMethodId = sm.ShippingMethodId,
+				};
+
+				sm.ShippingMethodLanguages.Add(methodLanguage);
+
+				foreach (var pm in repository.PaymentMethods)
+				{
+					pm.PaymentMethodShippingMethods.Add(new PaymentMethodShippingMethod
+					{
+						PaymentMethodId = pm.PaymentMethodId,
+						ShippingMethodId = sm.ShippingMethodId
+					});
+				}
+			}
+
+			repository.UnitOfWork.Commit();
+		}
+
+		private void CreatePaymentMethods(EFOrderRepository repository)
+		{
+			var paymentGateways = CreatePaymentGateways();
+			paymentGateways.ForEach(repository.Add);
+
+			var paymentMethods = new List<PaymentMethod>
+				{
+					new PaymentMethod
+						{
+							Description = "Paypal",
+							Name = "Paypal",
+							PaymentGateway = paymentGateways[0],
+							IsActive = true
+						},
+					new PaymentMethod
+						{
+							Description = "Pay by phone",
+							Name = "Phone",
+							PaymentGateway = paymentGateways[1],
+							IsActive = true
+						},
+					new PaymentMethod
+						{
+							Description = "Credit Card",
+							Name = "CreditCard",
+							IsActive = true
+						},
+					new PaymentMethod
+						{
+							Description = "Use contract negotiated credit available for the organization",
+							Name = "Credit",
+							IsActive = true
+							//PaymentGateway = paymentGateways[0]
+						}
+				};
+
+			foreach (var pm in paymentMethods)
+			{
+				repository.Add(pm);
+
+				//Setup test config for Authorize.Net
+				if (pm.Name == "CreditCard")
+				{
+					pm.PaymentGateway = paymentGateways.First(pg => pg.GatewayId == "gwAuthorizeNet");
+					pm.PaymentMethodPropertyValues.Add(new PaymentMethodPropertyValue
+					{
+						ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+						Name = "MerchantLogin",
+						ShortTextValue = "87WmkB7W"
+					});
+					pm.PaymentMethodPropertyValues.Add(new PaymentMethodPropertyValue
+					{
+						ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+						Name = "MerchantPassword",
+						ShortTextValue = "8hAuD275892cBFcb"
+					});
+					pm.PaymentMethodPropertyValues.Add(new PaymentMethodPropertyValue
+					{
+						ValueType = GatewayProperty.ValueTypes.Boolean.GetHashCode(),
+						Name = "TestMode",
+						BooleanValue = true
+					});
+					pm.PaymentMethodPropertyValues.Add(new PaymentMethodPropertyValue
+					{
+						ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+						Name = "GatewayURL",
+						ShortTextValue = "https://test.authorize.net/gateway/transact.dll"
+					});
+				}
+
+				var methodLanguage = new PaymentMethodLanguage
+				{
+					DisplayName = pm.Description,
+					LanguageCode = "en-US",
+					PaymentMethodId = pm.PaymentMethodId,
+				};
+
+				pm.PaymentMethodLanguages.Add(methodLanguage);
+			}
+
+			repository.UnitOfWork.Commit();
+		}
+
+		private List<ShippingGateway> CreateShippingGateways()
+		{
+			var gateways = new List<ShippingGateway>
+				{
+					new ShippingGateway
+						{
+							ClassType = "VirtoCommerce.Shipping.SimpleShippingGateway, VirtoCommerce.SimpleShippingGateway",
+							Name = "SimpleShippingGateway"
+						}
+				};
+
+			gateways[0].GatewayProperties.Add(new GatewayProperty { DisplayName = "Currency", Name = "Currency", ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode() });
+			gateways[0].GatewayProperties.Add(new GatewayProperty { DisplayName = "Include VAT", Name = "IncludeVAT", ValueType = GatewayProperty.ValueTypes.Boolean.GetHashCode() });
+			var property = new GatewayProperty { DisplayName = "Dictionary Values", Name = "DictionaryParam", ValueType = GatewayProperty.ValueTypes.DictionaryKey.GetHashCode() };
+			property.GatewayPropertyDictionaryValues.Add(new GatewayPropertyDictionaryValue { DisplayName = "parameter 1", Value = "p01" });
+			property.GatewayPropertyDictionaryValues.Add(new GatewayPropertyDictionaryValue { DisplayName = "parameter 3", Value = "p03" });
+			gateways[0].GatewayProperties.Add(property);
+			return gateways;
+		}
+
+		private List<PaymentGateway> CreatePaymentGateways()
+		{
+			var paymentGateways = new List<PaymentGateway>
+				{
+					new PaymentGateway
+						{
+							ClassType = "VirtoCommerce.PaymentGateways.DefaultPaymentGateway, VirtoCommerce.PaymentGateways",
+							Name = "DefaultPaymentGateway",
+							SupportsRecurring = false
+						},
+					new PaymentGateway
+						{
+							ClassType = "VirtoCommerce.PaymentGateways.DefaultPaymentGateway, VirtoCommerce.PaymentGateways",
+							Name = "Gateway 2",
+							SupportsRecurring = true
+						}
+				};
+
+			paymentGateways.ForEach(x =>
+			{
+				x.GatewayProperties.Add(new GatewayProperty
+				{
+					DisplayName = "Secure URL",
+					Name = "URL",
+					ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode()
+				});
+				x.GatewayProperties.Add(new GatewayProperty
+				{
+					DisplayName = "Allow unencrypted data",
+					Name = "IsAllowUnencrypted",
+					ValueType = GatewayProperty.ValueTypes.Boolean.GetHashCode()
+				});
+			});
+
+			var property0 = new GatewayProperty
+			{
+				DisplayName = "Status",
+				Name = "Status",
+				ValueType = GatewayProperty.ValueTypes.DictionaryKey.GetHashCode(),
+				IsRequired = true,
+			};
+
+			property0.GatewayPropertyDictionaryValues.Add(new GatewayPropertyDictionaryValue
+			{
+				DisplayName = "Idle",
+				Value = "Idle"
+			});
+			property0.GatewayPropertyDictionaryValues.Add(new GatewayPropertyDictionaryValue
+			{
+				DisplayName = "Processing in progress",
+				Value = "InProgress"
+			});
+			property0.GatewayPropertyDictionaryValues.Add(new GatewayPropertyDictionaryValue
+			{
+				DisplayName = "Paused",
+				Value = "Paused"
+			});
+
+			paymentGateways[0].GatewayProperties.Add(property0);
+
+			SetuptIchargeGateway(paymentGateways);
+
+			return paymentGateways;
+		}
+
+		private class IchargeInfo
+		{
+			public int TransactionTypes { get; set; }
+			public string Code { get; set; }
+			public string Name { get; set; }
+		}
+
+		private void SetuptIchargeGateway(List<PaymentGateway> gateways)
+		{
+			//Commented gateways are no longer in service.
+			var ichargeGateways = new List<IchargeInfo>
+				{
+					//new IchargeInfo { Code="gwNoGateway", Name = "No Gateway"},
+					new IchargeInfo { Code="gwAuthorizeNet", Name="Authorize.Net", TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					//new IchargeInfo { Code="gwDPI", Name="DPI Link", TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization)},
+					new IchargeInfo { Code="gwEprocessing", Name="eProcessing Transparent Databse Engine", TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwGoRealTime", Name="GoRealTime (Full-pass)", TransactionTypes = (int)(TransactionType.Sale)},
+					//new IchargeInfo { Code="gwIBill", Name="IBill Processing Plus", TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit)},
+					new IchargeInfo { Code="gwIntellipay", Name="Intellipay ExpertLink", TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization) },
+					//new IchargeInfo { Code="gwIOnGate", Name="Iongate",TransactionTypes = (int)(TransactionType.Sale)},
+					new IchargeInfo { Code="gwITransact", Name="iTransact RediCharge",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization)},
+					new IchargeInfo { Code="gwNetBilling", Name="NetBilling DirectMode",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwPayFlowPro", Name="Verisign PayFlow Pro",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					//new IchargeInfo { Code="gwPayready", Name="Payready Link",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization)},
+					//new IchargeInfo { Code="gwViaKlix", Name="NOVA's Viaklix",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Credit)},
+					new IchargeInfo { Code="gwUSAePay", Name="USA ePay CGI Transaction Gateway",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwPlugNPay", Name="Plug 'n Pay",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwPlanetPayment", Name="Planet Payment iPay",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwMPCS", Name="MPCS",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwRTWare", Name="RTWare",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwECX", Name="ECX",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwBankOfAmerica", Name="Bank of America eStores",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization)},
+					new IchargeInfo { Code="gwInnovative", Name="Innovative Gateway",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwMerchantAnywhere", Name="Merchant Anywhere",TransactionTypes = (int)(TransactionType.Sale)},
+					new IchargeInfo { Code="gwSkipjack", Name="SkipJack", TransactionTypes = (int)(TransactionType.Sale | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwECHOnline", Name="ECHOnline",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit)},
+					new IchargeInfo { Code="gw3DSI", Name="3 Delta Systems (3DSI) EC-Linx",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture)},
+					new IchargeInfo { Code="gwTrustCommerce", Name="TrustCommerce",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwPSIGate", Name="PSIGate",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture)},
+					new IchargeInfo { Code="gwPayFuse", Name="PayFuse",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwPayFlowLink", Name="PayFlowLink",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture)},
+					new IchargeInfo { Code="gwOrbital", Name="Paymentech Orbital Gateway",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwLinkPoint", Name="LinkPoint",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwMoneris", Name="Moneris eSelect Plus Canada",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwUSight", Name="uSight Gateway Post-Auth",TransactionTypes = (int)(TransactionType.Sale)},
+					new IchargeInfo { Code="gwFastTransact", Name="Fast Transact VeloCT",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit)},
+					new IchargeInfo { Code="gwNetworkMerchants", Name="NetworkMerchants",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwOgone", Name="Ogone DirectLink",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Credit)},
+					new IchargeInfo { Code="gwEFSNet", Name="Concord EFSNet",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)}, //(Depreciated, use LinkPoint) 
+					new IchargeInfo { Code="gwPRIGate", Name="TransFirst Transaction Central Classic",TransactionTypes = (int)(TransactionType.Sale)},
+					new IchargeInfo { Code="gwProtx", Name="Protx",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)}, //(Depreciated, use SagePay (67) instead)
+					new IchargeInfo { Code="gwOptimal", Name="Optimal Payments / FirePay Direct Payment Protocol",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwMerchantPartners", Name="Merchant Partners",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwCyberCash", Name="CyberCash ",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture)},
+					new IchargeInfo { Code="gwFirstData", Name="First Data Global Gateway (Linkpoint)",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwYourPay", Name="YourPay",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)}, //(Depreciated, use Linkpoint (42) instead) 
+					new IchargeInfo { Code="gwACHPAyments", Name="ACH Payments AGI",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwPaymentsGateway", Name="Payments Gateway AGI",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwCyberSource", Name="Cyber Source SOAP API",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwEway", Name="eWay XML API (Australia)",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwGoEMerchant", Name="goEmerchant XML",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					//new IchargeInfo { Code="gwPayStream", Name="PayStream Web Services (SOAP) Interface (Australia)",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit)},
+					new IchargeInfo { Code="gwTransFirst", Name="TransFirst eLink",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwChase", Name="Chase Merchant Services (Linkpoint)",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwPSIGateXML", Name="PSIGate XML Interface",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwNexCommerce", Name="Thompson Merchant Services NexCommerce (iTransact mode)",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization)},
+					new IchargeInfo { Code="gwWorldPay", Name="WorldPay Select Junior Invisible",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization)},
+					new IchargeInfo { Code="gwTransactionCentral", Name="TransFirst Transaction Central",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwPaygea", Name="Paygea",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit)},
+					new IchargeInfo { Code="gwSterling", Name="Sterling SPOT API",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwPayJunction", Name="PayJunction Trinity Gateway",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwSECPay", Name="SECPay (United Kingdom) API Solution",TransactionTypes = (int)(TransactionType.Sale)},
+					new IchargeInfo { Code="gwPaymentExpress", Name="Payment Express PXPost",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit)},
+					new IchargeInfo { Code="gwMyVirtualMerchant", Name="Elavon/NOVA/My Virtual Merchant",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit)},
+					new IchargeInfo { Code="gwSagePayments", Name="Sage Payment Solutions",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwSecurePay", Name="SecurePay",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwMonerisUSA", Name="Moneris eSelect Plus USA",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwBeanstream", Name="Beanstream Process Transaction API",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwVerifi", Name="Verifi Direct-Post API",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwSagePay", Name="SagePay Direct",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwMerchantESolutions", Name="Merchant E-Solutions Payment Gateway",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwPayLeap", Name="PayLeap Web Services API",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwPayPoint", Name="PayPoint.net",TransactionTypes = (int)(TransactionType.Sale)},
+					new IchargeInfo { Code="gwWorldPayXML", Name="Worldpay XML",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwProPay", Name="ProPay Merchant Services API",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit)},
+					new IchargeInfo { Code="gwQBMS", Name="Intuit QuickBooks Merchant Services (QBMS)",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwHeartland", Name="Heartland POS Gateway",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwLitle", Name="Litle Online Gateway",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwBrainTree", Name="BrainTree DirectPost (Server-to-Server) Gateway",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwJetPay", Name="JetPay Gateway",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwSterlingXML", Name="Sterling XML Gateway",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwLandmark", Name="Landmark Flat File HTTPS Post",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwHSBC", Name="HSBC XML API",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwBluePay", Name="BluePay 2.0 Post",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwAdyen", Name="Adyen API Payments",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwBarclay", Name="Barclay XML API",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwPayTrace", Name="PayTrace Payment Gateway",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwYKC", Name="YKC Gateway",TransactionTypes = (int)(TransactionType.Sale)},
+					new IchargeInfo { Code="gwCyberbit", Name="Cyberbit Gateway",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit)},
+					new IchargeInfo { Code="gwGoToBilling", Name="GoToBilling Gateway",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwTransNationalBankcard", Name="TransNational Bankcard",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwNetbanx", Name="Netbanx",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit)},
+					new IchargeInfo { Code="gwMIT", Name="MIT",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Credit)},
+					new IchargeInfo { Code="gwDataCash", Name="DataCash",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwACHFederal", Name="ACH Federal",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					new IchargeInfo { Code="gwGlobalIris", Name="Global Iris (HSBC)",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+				};
+
+			foreach (var ichargeInfo in ichargeGateways)
+			{
+				var icGateway = new PaymentGateway
+				{
+					GatewayId = ichargeInfo.Code,
+					ClassType = "VirtoCommerce.PaymentGateways.ICharge.IchargePaymentGateway, VirtoCommerce.PaymentGateways",
+					Name = ichargeInfo.Name,
+					SupportsRecurring = false,
+					SupportedTransactionTypes = ichargeInfo.TransactionTypes
+				};
+
+				icGateway.GatewayProperties.Add(new GatewayProperty
+				{
+					DisplayName = "Merchant's Gateway login",
+					Name = "MerchantLogin",
+					ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+					IsRequired = true,
+				});
+
+				icGateway.GatewayProperties.Add(new GatewayProperty
+				{
+					DisplayName = "Merchant's Gateway password",
+					Name = "MerchantPassword",
+					ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+					IsRequired = true,
+				});
+
+				icGateway.GatewayProperties.Add(new GatewayProperty
+				{
+					DisplayName = "Default URL for a specific Gateway.",
+					Name = "GatewayURL",
+					ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+					IsRequired = false
+				});
+				var testMode = new GatewayProperty
+				{
+					DisplayName = "Identifies if transaction is in test mode",
+					Name = "TestMode",
+					ValueType = GatewayProperty.ValueTypes.Boolean.GetHashCode()
+				};
+
+				switch (ichargeInfo.Code)
+				{
+					case "gwAuthorizeNet":
+					case "gwPlanetPayment":
+					case "gwMPCS":
+					case "gwRTWare":
+					case "gwECX":
+						icGateway.GatewayProperties.Add(new GatewayProperty
+						{
+							DisplayName = "Extra security key for Authorize.Net's AIM (3.1) protocol.",
+							Name = "AIMHashSecret",
+							ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+							IsRequired = true
+						});
+						icGateway.GatewayProperties.Add(testMode);
+						break;
+					case "gwViaKlix":
+						icGateway.GatewayProperties.Add(new GatewayProperty
+						{
+							DisplayName = "SSL user id",
+							Name = "ssl_user_id",
+							ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+							IsRequired = true
+						});
+						break;
+					case "gwBankOfAmerica":
+						icGateway.GatewayProperties.Add(new GatewayProperty
+						{
+							DisplayName = "HTTP Referer header allowed in your Bank of America store security settings",
+							Name = "referer",
+							ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+							IsRequired = true
+						});
+						break;
+					case "gwInnovative":
+						icGateway.GatewayProperties.Add(new GatewayProperty
+						{
+							DisplayName = "Test override errors",
+							Name = "test_override_errors",
+							ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+							IsRequired = false
+						});
+						icGateway.GatewayProperties.Add(testMode);
+						break;
+					case "gwPayFuse":
+						icGateway.GatewayProperties.Add(new GatewayProperty
+						{
+							DisplayName = "PayFuse requires this additional merchant property.",
+							Name = "MerchantAlias",
+							ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+							IsRequired = false
+						});
+						icGateway.GatewayProperties.Add(testMode);
+						break;
+					case "gwYourPay":
+					case "gwFirstData":
+					case "gwLinkPoint":
+						icGateway.GatewayProperties.Add(new GatewayProperty
+						{
+							DisplayName = "SSL Certificate store",
+							Name = "SSLCertStore",
+							ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+							IsRequired = true
+						});
+						icGateway.GatewayProperties.Add(new GatewayProperty
+						{
+							DisplayName = "SSL Certificate store",
+							Name = "SSLCertStore",
+							ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+							IsRequired = true
+						});
+						icGateway.GatewayProperties.Add(new GatewayProperty
+						{
+							DisplayName = "SSL Certificate subject",
+							Name = "SSLCertSubject",
+							ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+							IsRequired = true
+						});
+						icGateway.GatewayProperties.Add(new GatewayProperty
+						{
+							DisplayName = "SSL Certificate encoded",
+							Name = "SSLCertEncoded",
+							ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+							IsRequired = true
+						});
+						if (ichargeInfo.Code.Equals("gwLinkPoint"))
+						{
+							icGateway.GatewayProperties.Add(testMode);
+						}
+						break;
+					case "gwProtx":
+						icGateway.GatewayProperties.Add(new GatewayProperty
+						{
+							DisplayName = "RelatedSecurityKey special fields required for Credit",
+							Name = "RelatedSecurityKey",
+							ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+							IsRequired = true
+						});
+						icGateway.GatewayProperties.Add(new GatewayProperty
+						{
+							DisplayName = "RelatedVendorTXCode special fields required for Credit",
+							Name = "RelatedVendorTXCode",
+							ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+							IsRequired = true
+						});
+						icGateway.GatewayProperties.Add(new GatewayProperty
+						{
+							DisplayName = "TXAuthNo special fields required for Captures",
+							Name = "RelatedTXAuthNo",
+							ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+							IsRequired = true
+						});
+						break;
+					case "gwOptimal":
+						icGateway.GatewayProperties.Add(new GatewayProperty
+						{
+							DisplayName = "Optimal Gateway also requires an additional account field",
+							Name = "account",
+							ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+							IsRequired = true
+						});
+						break;
+					case "gwPayStream":
+						icGateway.GatewayProperties.Add(new GatewayProperty
+						{
+							DisplayName = "CustomerID",
+							Name = "CustomerID",
+							ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+							IsRequired = true
+						});
+						icGateway.GatewayProperties.Add(new GatewayProperty
+						{
+							DisplayName = "ZoneID",
+							Name = "ZoneID",
+							ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+							IsRequired = true
+						});
+						icGateway.GatewayProperties.Add(new GatewayProperty
+						{
+							DisplayName = "Username",
+							Name = "Username",
+							ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+							IsRequired = true
+						});
+						break;
+					case "gwUSAePay":
+					case "gwECHOnline":
+					case "gwTrustCommerce":
+					case "gwPSIGate":
+					case "gwEway":
+					case "gwTransFirst":
+					case "gwPSIGateXML":
+					case "gwWorldPay":
+					case "gwPaymentExpress":
+					case "gwPayLeap":
+					case "gwSterlingXML":
+					case "gwHSBC":
+					case "gwBluePay":
+					case "gwBarclay":
+					case "gwPayTrace":
+					case "gwGoToBilling":
+						icGateway.GatewayProperties.Add(testMode);
+						break;
+				}
+
+				gateways.Add(icGateway);
+			}
 		}
 		#endregion
 	}

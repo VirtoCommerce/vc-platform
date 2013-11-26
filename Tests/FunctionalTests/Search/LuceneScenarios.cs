@@ -1,6 +1,7 @@
 ﻿namespace FunctionalTests.Search
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
 
@@ -13,9 +14,9 @@
 
     public class LuceneScenarios
     {
-        private string _LuceneStorageDir = "temp\\lucene";
+        private string _LuceneStorageDir = Path.Combine(Path.GetTempPath(), "lucene");
 
-        [Fact]
+        [Fact, Trait("type", "lucene")]
         public void Can_create_lucene_index()
         {
             var scope = "default";
@@ -26,7 +27,7 @@
             Directory.Delete(_LuceneStorageDir, true);
         }
 
-        [Fact]
+        [Fact, Trait("type", "lucene")]
         public void Can_find_item_lucene()
         {
             var scope = "default";
@@ -60,13 +61,14 @@
             Directory.Delete(_LuceneStorageDir, true);
         }
 
-        [Fact]
+        [Fact, Trait("type", "lucene")]
         public void Can_get_item_facets_lucene()
         {
             var scope = "default";
             var queryBuilder = new LuceneSearchQueryBuilder();
             var conn = new SearchConnection(_LuceneStorageDir, scope);
             var provider = new LuceneSearchProvider(queryBuilder, conn);
+            Debug.WriteLine("Lucene connection: {0}", conn.ToString());
 
             if (Directory.Exists(_LuceneStorageDir))
             {

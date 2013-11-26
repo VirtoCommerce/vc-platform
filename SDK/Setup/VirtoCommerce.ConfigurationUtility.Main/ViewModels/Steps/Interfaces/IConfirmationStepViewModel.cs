@@ -11,6 +11,6 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Interfaces
 
         string DatabaseConnectionString { get; set; }
 
-        SearchConnection ElasticSearchConnection { get; set; }
+        SearchConnection SearchConnection { get; set; }
     }
 }

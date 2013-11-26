@@ -20,7 +20,7 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels
 		#region Dependencies
 		private readonly IProjectLocationStepViewModel _projectLocationStepViewModel;
 		private readonly IDatabaseSettingsStepViewModel _databaseSettingsStepViewModel;
-		private readonly IElasticSearchSettingsStepViewModel _elasticSearchSettingsStepViewModel;
+		private readonly ISearchSettingsStepViewModel _searchSettingsStepViewModel;
 		private readonly IConfigurationViewModel _configurationViewModel;
 		private readonly IConfirmationStepViewModel _confirmationViewModel;
 		private readonly NavigationManager _navigationManager;
@@ -35,7 +35,7 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels
 			IRepositoryFactory<IProjectRepository> projectRepositoryFactory,
 			IViewModelsFactory<IProjectLocationStepViewModel> projectLocationStepVmFactory,
 			IViewModelsFactory<IDatabaseSettingsStepViewModel> databaseSettingsStepVmFactory,
-			IViewModelsFactory<IElasticSearchSettingsStepViewModel> elasticSearchSettingsStepVmFactory,
+			IViewModelsFactory<ISearchSettingsStepViewModel> searchSettingsStepVmFactory,
 			IViewModelsFactory<IConfigurationViewModel> configurationVmFactory,
 			IViewModelsFactory<IConfirmationStepViewModel> confirmationStepVmFactory,
 			NavigationManager navigationManager
@@ -49,8 +49,8 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels
 			_confirmationViewModel = confirmationStepVmFactory.GetViewModelInstance();
 			var confirmParam = new KeyValuePair<string, object>("confirmationViewModel", _confirmationViewModel);
 
-			_elasticSearchSettingsStepViewModel = elasticSearchSettingsStepVmFactory.GetViewModelInstance(confirmParam);
-			var searchParam = new KeyValuePair<string, object>("searchViewModel", _elasticSearchSettingsStepViewModel);
+			_searchSettingsStepViewModel = searchSettingsStepVmFactory.GetViewModelInstance(confirmParam);
+			var searchParam = new KeyValuePair<string, object>("searchViewModel", _searchSettingsStepViewModel);
 
 			_databaseSettingsStepViewModel = databaseSettingsStepVmFactory.GetViewModelInstance(confirmParam);
 			var dbParam = new KeyValuePair<string, object>("databaseViewModel", _databaseSettingsStepViewModel);
@@ -81,14 +81,14 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels
 			{
 				RegisterStep(new ProjectLocationStepViewModel());
 				RegisterStep(new DatabaseSettingsStepViewModel());
-				RegisterStep(new ElasticSearchSettingsStepViewModel());
+				RegisterStep(new SearchSettingsStepViewModel());
 				RegisterStep(new ConfirmationStepViewModel());
 				return;
 			}
 #endif
 			RegisterStep(_projectLocationStepViewModel);
 			RegisterStep(_databaseSettingsStepViewModel);
-			RegisterStep(_elasticSearchSettingsStepViewModel);
+			RegisterStep(_searchSettingsStepViewModel);
 			RegisterStep(_confirmationViewModel);
 		}
 
@@ -132,7 +132,7 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels
 			var taskDbAndSearch = Task.Factory.StartNew(() =>
 			{
 				_databaseSettingsStepViewModel.Configure(token);
-				_elasticSearchSettingsStepViewModel.Configure(token);
+				_searchSettingsStepViewModel.Configure(token);
 			}, token);
 			taskLocation.ContinueWith(x => tokenSource.Cancel(), TaskContinuationOptions.OnlyOnFaulted);
 
@@ -160,7 +160,7 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels
 					{
 						Task.Factory.StartNew(() => _projectLocationStepViewModel.Cancel()),
 						Task.Factory.StartNew(() => _databaseSettingsStepViewModel.Cancel()),
-						Task.Factory.StartNew(() => _elasticSearchSettingsStepViewModel.Cancel())
+						Task.Factory.StartNew(() => _searchSettingsStepViewModel.Cancel())
 					};
 
 				try
@@ -174,13 +174,13 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels
 
 			if (_projectLocationStepViewModel.Result == OperationResult.Failed ||
 				_databaseSettingsStepViewModel.Result == OperationResult.Failed ||
-				_elasticSearchSettingsStepViewModel.Result == OperationResult.Failed)
+				_searchSettingsStepViewModel.Result == OperationResult.Failed)
 			{
 				_configurationViewModel.Result = OperationResult.Failed;
 			}
 			else if (_projectLocationStepViewModel.Result == OperationResult.Cancelled ||
 					 _databaseSettingsStepViewModel.Result == OperationResult.Cancelled ||
-					 _elasticSearchSettingsStepViewModel.Result == OperationResult.Cancelled)
+					 _searchSettingsStepViewModel.Result == OperationResult.Cancelled)
 			{
 				_configurationViewModel.Result = OperationResult.Cancelled;
 			}
@@ -189,7 +189,7 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels
 			{
 				_configurationViewModel.Message = _projectLocationStepViewModel.Message + Environment.NewLine +
 											  _databaseSettingsStepViewModel.Message + Environment.NewLine +
-											  _elasticSearchSettingsStepViewModel.Message;
+											  _searchSettingsStepViewModel.Message;
 			}
 			else
 			{

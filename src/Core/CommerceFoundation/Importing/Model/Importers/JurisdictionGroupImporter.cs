@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Foundation.Orders.Factories;
 using VirtoCommerce.Foundation.Orders.Model.Jurisdiction;
 using VirtoCommerce.Foundation.Orders.Repositories;
 
@@ -19,7 +20,7 @@ namespace VirtoCommerce.Foundation.Importing.Model
 		private void InitializeSystemProperties()
 		{
 			var action = new ImportProperty { Name = "Action", DisplayName = "Action", IsRequiredProperty = true, IsEntityProperty = false, EntityImporterId = Name, DefaultValue = "Insert", IsEnumValuesProperty = true, EnumValues = { "Insert", "Insert & Update", "Update", "Delete" } };
-			var jurisdictionGroupId = new ImportProperty { Name = "JurisdictionGroupId", DisplayName = "Jurisdiction group Id", IsRequiredProperty = true, IsEntityProperty = true, EntityImporterId = Name };
+			var jurisdictionGroupId = new ImportProperty { Name = "JurisdictionGroupId", DisplayName = "Jurisdiction group Id", IsRequiredProperty = false, IsEntityProperty = true, EntityImporterId = Name };			
 			var jurisdictionGroupName = new ImportProperty { Name = "DisplayName", DisplayName = "Display Name", IsRequiredProperty = true, IsEntityProperty = true, EntityImporterId = Name };
 			var jurisdictionGroupType = new ImportProperty { Name = "JurisdictionType", DisplayName = "Jurisdiction group Type", IsRequiredProperty = true, IsEntityProperty = true, EntityImporterId = Name, DefaultValue = "All", IsEnumValuesProperty = true, EnumValues = { "All", "Shipping", "Taxes" } };
 			var code = new ImportProperty { Name = "Code", DisplayName = "Jurisdiction Group Code", IsRequiredProperty = true, IsEntityProperty = true, EntityImporterId = Name };
@@ -40,35 +41,37 @@ namespace VirtoCommerce.Foundation.Importing.Model
 			switch (action)
 			{
 				case ImportAction.Insert:
-					var itemI = systemValues.FirstOrDefault(y => y.Name == "JurisdictionGroupId");
+					var itemI = systemValues.FirstOrDefault(y => y.Name == "Code");
+
 					if (itemI != null)
 					{
-						var originalItem = _repository.JurisdictionGroups.Where(x => x.JurisdictionGroupId == itemI.Value);
-						if (originalItem.Count() == 0)
+						var originalItem = _repository.JurisdictionGroups.Where(x => x.Code == itemI.Value).FirstOrDefault();
+						if (originalItem == null)
 						{
-							var addItem = InitializeItem(null, systemValues);
+							var addItem = InitializeItem(null, systemValues);							
 							_repository.Add(addItem);
+							originalItem = addItem;
 						}
-					}
-					
-					var jurisdictionCode = systemValues.First(x => x.Name == "JurisdictionCode").Value;
 
-					if (jurisdictionCode != null)
-					{
-						var originalItem = _repository.Jurisdictions.Where(x => x.Code == jurisdictionCode).SingleOrDefault();
-						if (originalItem != null)
+						var jurisdictionCode = systemValues.First(x => x.Name == "JurisdictionCode").Value;
+
+						if (jurisdictionCode != null)
 						{
-							var relation = new JurisdictionRelation() { JurisdictionId = originalItem.JurisdictionId, JurisdictionGroupId = itemI.Value};
-							_repository.Add(relation);
+							var jItem = _repository.Jurisdictions.Where(x => x.Code == jurisdictionCode).SingleOrDefault();
+							if (jItem != null)
+							{
+								var relation = new JurisdictionRelation() { JurisdictionId = jItem.JurisdictionId, JurisdictionGroupId = originalItem.JurisdictionGroupId };
+								_repository.Add(relation);
+							}
 						}
 					}
 
 					break;
 				case ImportAction.InsertAndReplace:
-					var itemR = systemValues.FirstOrDefault(y => y.Name == "JurisdictionGroupId");
+					var itemR = systemValues.FirstOrDefault(y => y.Name == "Code");
 					if (itemR != null)
 					{
-						var originalItem = _repository.JurisdictionGroups.Where(x => x.JurisdictionGroupId == itemR.Value).SingleOrDefault();
+						var originalItem = _repository.JurisdictionGroups.Where(x => x.Code == itemR.Value).SingleOrDefault();
 						if (originalItem != null)
 							_repository.Remove(originalItem);
 					}
@@ -77,10 +80,10 @@ namespace VirtoCommerce.Foundation.Importing.Model
 					_repository.Add(replaceItem);
 					break;
 				case ImportAction.Update:
-					var itemU = systemValues.FirstOrDefault(y => y.Name == "JurisdictionGroupId");
+					var itemU = systemValues.FirstOrDefault(y => y.Name == "JurisdictionCode");
 					if (itemU != null)
 					{
-						var origItem = _repository.JurisdictionGroups.Where(x => x.JurisdictionGroupId == itemU.Value).SingleOrDefault();
+						var origItem = _repository.JurisdictionGroups.Where(x => x.Code == itemU.Value).SingleOrDefault();
 						if (origItem != null)
 						{
 							InitializeItem(origItem, systemValues);
@@ -89,10 +92,10 @@ namespace VirtoCommerce.Foundation.Importing.Model
 					}
 					break;
 				case ImportAction.Delete:
-					var itemD = systemValues.FirstOrDefault(y => y.Name == "JurisdictionGroupId");
+					var itemD = systemValues.FirstOrDefault(y => y.Name == "JurisdictionCode");
 					if (itemD != null)
 					{
-						var deleteItem = _repository.JurisdictionGroups.Where(x => x.JurisdictionGroupId == itemD.Value).SingleOrDefault();
+						var deleteItem = _repository.JurisdictionGroups.Where(x => x.Code == itemD.Value).SingleOrDefault();
 						if (deleteItem != null)
 							_repository.Remove(deleteItem);
 					}
@@ -109,7 +112,7 @@ namespace VirtoCommerce.Foundation.Importing.Model
 		private static JurisdictionGroup InitializeItem(JurisdictionGroup item, IEnumerable<ImportItem> systemValues)
 		{
 			if (item == null)
-				item = new JurisdictionGroup();
+				item = new OrderEntityFactory().CreateEntity<JurisdictionGroup>();
 			var itemProperties = item.GetType().GetProperties();
 			systemValues.ToList().ForEach(x => SetPropertyValue(item, itemProperties.FirstOrDefault(y => y.Name == x.Name), x.Value));
 

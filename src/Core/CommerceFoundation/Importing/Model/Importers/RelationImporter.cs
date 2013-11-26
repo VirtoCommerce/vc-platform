@@ -8,47 +8,45 @@ using VirtoCommerce.Foundation.Frameworks;
 
 namespace VirtoCommerce.Foundation.Importing.Model
 {
-	public class AssociationImporter : EntityImporterBase
+	public class RelationImporter : EntityImporterBase
 	{
 		#region const
-		private const string notUniqueTargetError = "Target item with code - {0} has matches in catalogs: {1}. Specify catalog property.";
-		private const string notUniqueSourceError = "Source item with code - {0} has matches in catalogs: {1}. Specify catalog property.";
+		private const string notUniqueTargetError = "Parent item with code - {0} has matches in catalogs: {1}. Specify catalog property.";
+		private const string notUniqueSourceError = "Child item with code - {0} has matches in catalogs: {1}. Specify catalog property.";
 		#endregion
 
 		private ICatalogRepository _repository;
 
-		public AssociationImporter(ICatalogRepository catalogRepository)
+		public RelationImporter(ICatalogRepository catalogRepository)
 		{
 			_repository = catalogRepository;
-			Name = ImportEntityType.Association.ToString();
+			Name = ImportEntityType.ItemRelation.ToString();
 			InitializeSystemProperties();
 			_repository.Catalogs.ToList().ForEach(cat =>
 				{ 
 					SystemProperties.First(prop => prop.Name == "SourceCatalogId").EnumValues.Add(cat.Name);
 					SystemProperties.First(prop => prop.Name == "TargetCatalogId").EnumValues.Add(cat.Name);
 				});
-			
+
+			SystemProperties.First(prop => prop.Name == "RelationTypeId").EnumValues.Add(ItemRelationType.Sku);
+			SystemProperties.First(prop => prop.Name == "RelationTypeId").EnumValues.Add(ItemRelationType.Category);
+			SystemProperties.First(prop => prop.Name == "RelationTypeId").EnumValues.Add(ItemRelationType.BundleItem);
+			SystemProperties.First(prop => prop.Name == "RelationTypeId").EnumValues.Add(ItemRelationType.PackageItem);
 		}
 
 		private void InitializeSystemProperties()
 		{
 			var action = new ImportProperty { Name = "Action", DisplayName = "Action", IsRequiredProperty = true, IsEntityProperty = false, EntityImporterId = Name, DefaultValue = "Insert", IsEnumValuesProperty = true, EnumValues = { "Insert", "Insert & Update", "Update", "Delete" }, HasDefaultValue = true };
-			var associationType = new ImportProperty { Name = "AssociationType", DisplayName = "Association Type", IsRequiredProperty = false, IsEntityProperty = true, EntityImporterId = Name, DefaultValue = AssociationTypes.optional.ToString(), IsEnumValuesProperty = true, HasDefaultValue = true };
-			var associationPriority = new ImportProperty { Name = "Priority", DisplayName = "Priority", IsRequiredProperty = false, IsEntityProperty = true, EntityImporterId = Name, DefaultValue = "1" };
-			var associationGroupName = new ImportProperty { Name = "GroupName", DisplayName = "Association group name", IsRequiredProperty = false, IsEntityProperty = false, EntityImporterId = Name };
-			var associationSource = new ImportProperty { Name = "ItemId", DisplayName = "Source item", IsRequiredProperty = true, IsEntityProperty = true, EntityImporterId = Name };
-			var associationTarget = new ImportProperty { Name = "TargetId", DisplayName = "Target item", IsRequiredProperty = true, IsEntityProperty = true, EntityImporterId = Name };
-			var associationSourceCatalogId = new ImportProperty { Name = "SourceCatalogId", DisplayName = "Source item catalog", IsRequiredProperty = false, IsEntityProperty = false, EntityImporterId = Name, IsEnumValuesProperty = true};
-			var associationTargetCatalogId = new ImportProperty { Name = "TargetCatalogId", DisplayName = "Target item catalog", IsRequiredProperty = false, IsEntityProperty = false, EntityImporterId = Name, IsEnumValuesProperty = true };
-
-			foreach (var associatonType in Enum.GetValues(typeof(AssociationTypes)))
-			{
-				associationType.EnumValues.Add(associatonType.ToString());
-			}
-
-			AddSystemProperties(action, associationType,
-				associationPriority, associationGroupName,
-				associationSource, associationTarget, associationSourceCatalogId, associationTargetCatalogId);
+			var relationType = new ImportProperty { Name = "RelationTypeId", DisplayName = "Relation Type", IsRequiredProperty = true, IsEntityProperty = true, EntityImporterId = Name, DefaultValue = ItemRelationType.Sku, IsEnumValuesProperty = true, HasDefaultValue = true };
+			var relationGroupName = new ImportProperty { Name = "GroupName", DisplayName = "Relation group", IsRequiredProperty = false, IsEntityProperty = false, EntityImporterId = Name };
+			var relationParent = new ImportProperty { Name = "ParentId", DisplayName = "Parent item", IsRequiredProperty = true, IsEntityProperty = true, EntityImporterId = Name };
+			var relationChild = new ImportProperty { Name = "ChildId", DisplayName = "Child item", IsRequiredProperty = true, IsEntityProperty = true, EntityImporterId = Name };
+			var relationSourceCatalogId = new ImportProperty { Name = "SourceCatalogId", DisplayName = "Source item catalog", IsRequiredProperty = false, IsEntityProperty = false, EntityImporterId = Name, IsEnumValuesProperty = true};
+			var relationTargetCatalogId = new ImportProperty { Name = "TargetCatalogId", DisplayName = "Target item catalog", IsRequiredProperty = false, IsEntityProperty = false, EntityImporterId = Name, IsEnumValuesProperty = true };
+			var relationQuantity = new ImportProperty { Name = "Quantity", DisplayName = "Quantity", IsRequiredProperty = false, IsEntityProperty = true, EntityImporterId = Name };
+			
+			AddSystemProperties(action, relationType,
+				relationGroupName, relationParent, relationChild, relationSourceCatalogId, relationTargetCatalogId, relationQuantity);
 		}
 
 		public override string Import(string catalogId, string propertySetId, ImportItem[] systemValues, ImportItem[] customValues, IRepository repository)
@@ -62,10 +60,10 @@ namespace VirtoCommerce.Foundation.Importing.Model
 			{
 				case ImportAction.Insert:
 					var group = systemValues.First(y => y.Name == "GroupName").Value;
-					var target = systemValues.First(y => y.Name == "TargetId").Value;
-					var source = systemValues.First(y => y.Name == "ItemId").Value;
+					var child = systemValues.First(y => y.Name == "ChildId").Value;
+					var parent = systemValues.First(y => y.Name == "ParentId").Value;
 					
-					var sourceItems = _repository.Items.Where(x => x.ItemId == source || x.Code == source).ToList();
+					var sourceItems = _repository.Items.Where(x => x.ItemId == parent || x.Code == parent).ToList();
 					
 					Item sourceItem;
 
@@ -82,7 +80,7 @@ namespace VirtoCommerce.Foundation.Importing.Model
 						{
 							var catNames = string.Empty;
 							sourceItems.ForEach(x => catNames = catNames + x.CatalogId + ", ");
-							_error = string.Format(notUniqueSourceError, source, catNames);
+							_error = string.Format(notUniqueSourceError, parent, catNames);
 							return _error;
 						}
 					}
@@ -92,7 +90,7 @@ namespace VirtoCommerce.Foundation.Importing.Model
 						sourceItem = sourceItems.FirstOrDefault();
 					}
 
-					var targetItems = _repository.Items.Where(x => x.ItemId == target || x.Code == target).ToList();
+					var targetItems = _repository.Items.Where(x => x.ItemId == child || x.Code == child).ToList();
 					
 					Item targetItem;
 
@@ -109,7 +107,7 @@ namespace VirtoCommerce.Foundation.Importing.Model
 						{
 							var catNames = string.Empty;
 							targetItems.ForEach(x => catNames = catNames + x.CatalogId + ", ");
-							_error = string.Format(notUniqueTargetError, target, catNames);
+							_error = string.Format(notUniqueTargetError, child, catNames);
 							return _error;
 						}
 					}
@@ -121,22 +119,10 @@ namespace VirtoCommerce.Foundation.Importing.Model
 					
 					if (!string.IsNullOrEmpty(group) && targetItem != null && sourceItem != null)
 					{
-						var associationGroup = _repository.Associations.Where(x => x.AssociationGroup.Name == group && x.ItemId == targetItem.ItemId).SingleOrDefault();
-						string groupId;
-						if (associationGroup == null)
-						{
-							var addGroup = new AssociationGroup() { ItemId = targetItem.ItemId, Name = group };
-							_repository.Add(addGroup);
-							groupId = addGroup.AssociationGroupId;
-						}
-						else
-						{
-							groupId = associationGroup.AssociationGroupId;
-						}
-
 						var addItem = InitializeItem(null, systemValues);
-						((Association)addItem).AssociationGroupId = groupId;
-						((Association)addItem).ItemId = sourceItem.ItemId;
+						((ItemRelation)addItem).GroupName = group;
+						((ItemRelation)addItem).ParentItemId = sourceItem.ItemId;
+						((ItemRelation)addItem).ChildItemId = targetItem.ItemId;
 						
 						_repository.Add(addItem);
 					}
@@ -146,7 +132,7 @@ namespace VirtoCommerce.Foundation.Importing.Model
 					}
 					break;
 				case ImportAction.InsertAndReplace:
-					var itemR = systemValues.FirstOrDefault(y => y.Name == "AssociationId");
+					var itemR = systemValues.FirstOrDefault(y => y.Name == "ItemRelationId");
 					if (itemR != null)
 					{
 						var originalItem = _repository.Associations.Where(x => x.ItemId == itemR.Value).SingleOrDefault();
@@ -157,10 +143,10 @@ namespace VirtoCommerce.Foundation.Importing.Model
 					repository.Add(replaceItem);
 					break;
 				case ImportAction.Update:
-					var itemU = systemValues.FirstOrDefault(y => y.Name == "AssociationId");
+					var itemU = systemValues.FirstOrDefault(y => y.Name == "ItemRelationId");
 					if (itemU != null)
 					{
-						var origItem = _repository.Associations.Where(x => x.ItemId == itemU.Value).SingleOrDefault();
+						var origItem = _repository.ItemRelations.Where(x => x.ItemRelationId == itemU.Value).SingleOrDefault();
 						if (origItem != null)
 						{
 							InitializeItem(origItem, systemValues);
@@ -169,10 +155,10 @@ namespace VirtoCommerce.Foundation.Importing.Model
 					}
 					break;
 				case ImportAction.Delete:
-					var itemD = systemValues.FirstOrDefault(y => y.Name == "AssociationId");
+					var itemD = systemValues.FirstOrDefault(y => y.Name == "ItemRelationId");
 					if (itemD != null)
 					{
-						var deleteItem = _repository.Associations.Where(x => x.ItemId == itemD.Value).SingleOrDefault();
+						var deleteItem = _repository.ItemRelations.Where(x => x.ItemRelationId == itemD.Value).SingleOrDefault();
 						if (deleteItem != null)
 							_repository.Remove(deleteItem);
 					}

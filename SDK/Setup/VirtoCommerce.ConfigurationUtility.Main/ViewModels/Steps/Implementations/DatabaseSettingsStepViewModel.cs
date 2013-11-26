@@ -49,6 +49,7 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 			IsInitializing = true;
 			InstallSamples = true;
 			IsNotTestedConnection = true;
+			ServerAuthentication = SqlServerAuthentication.WindowsAuthentication;
 
 			await Task.Run(() =>
 			{

@@ -31,28 +31,19 @@
         </Grid.RowDefinitions>
         <Grid.Resources>
             <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
-                <Setter Property="Margin" Value="5"/>
-            </Style>
+				<Setter Property="Margin" Value="5"/>
+			</Style>
         </Grid.Resources>
-        <TextBlock Grid.Row="1" FontWeight="Bold">
-            <Run Text="{x:Static localProperties:Resources.ProjectLocation}"/>
-            <Run Text=":"/>
-        </TextBlock>
+		<TextBlock Grid.Row="1" Text="{Binding Source={x:Static localProperties:Resources.ProjectLocation}, StringFormat='{}{0} :'}" FontWeight="Bold" />
 		<TextBlock Grid.Row="2" Text="{Binding ProjectLocation}" TextWrapping="Wrap"/>
-        <TextBlock Grid.Row="3" FontWeight="Bold">
-            <Run Text="{x:Static localProperties:Resources.SqlServerAuthentication}"/>
-            <Run Text=":"/>
-        </TextBlock>
-        <TextBlock Grid.Row="4" Text="{Binding SqlServerAuthentication}"/>
-        <TextBlock Grid.Row="5" FontWeight="Bold">
-            <Run Text="{x:Static localProperties:Resources.DatabaseConnectionString}"/>
-            <Run Text=":"/>
-        </TextBlock>
+
+		<TextBlock Grid.Row="3" Text="{Binding Source={x:Static localProperties:Resources.DBAuthenticationMode}, StringFormat='{}{0} :'}" FontWeight="Bold" />
+		<TextBlock Grid.Row="4" Text="{Binding SqlServerAuthentication}"/>
+
+		<TextBlock Grid.Row="5" Text="{Binding Source={x:Static localProperties:Resources.DatabaseConnectionString}, StringFormat='{}{0} :'}" FontWeight="Bold" />
         <TextBlock Grid.Row="6" Text="{Binding DatabaseConnectionString}" TextWrapping="Wrap"/>
-        <TextBlock Grid.Row="7" FontWeight="Bold">
-            <Run Text="{x:Static localProperties:Resources.ElasticSearchIndexesLocation}"/>
-            <Run Text=":"/>
-        </TextBlock>
-        <TextBlock Grid.Row="8" Text="{Binding ElasticSearchConnection}"/>
-    </Grid>
+
+		<TextBlock Grid.Row="7" Text="{Binding Source={x:Static localProperties:Resources.SearchConfiguration}, StringFormat='{}{0} :'}" FontWeight="Bold" />
+		<TextBlock Grid.Row="8" Text="{Binding SearchConnection}" TextWrapping="Wrap"/>
+	</Grid>
 </UserControl>

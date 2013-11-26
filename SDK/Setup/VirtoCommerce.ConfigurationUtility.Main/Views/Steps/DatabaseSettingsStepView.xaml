@@ -54,7 +54,7 @@
                   Text="{Binding Path=Server, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" 
 				  IsEnabled="{Binding Path=IsComboBoxEnabled}"/>
 		<TextBlock Grid.Column="2" Grid.Row="1"
-                   Margin="5,5,0,5">
+                   Margin="0,5">
 			<Run Text="{x:Static localProperties:Resources.DatabaseName}"/>
 			<Run Text=":"/>
 		</TextBlock>

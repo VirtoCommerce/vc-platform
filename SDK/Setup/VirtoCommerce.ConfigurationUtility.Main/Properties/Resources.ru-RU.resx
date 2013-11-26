@@ -147,7 +147,7 @@
   <data name="DatabaseSettingsAction" xml:space="preserve">
     <value>Настройка SQL Сервера</value>
   </data>
-  <data name="ElasticSearchSettingsAction" xml:space="preserve">
+  <data name="SearchSettingsAction" xml:space="preserve">
     <value>Настройка сервера поиска</value>
   </data>
   <data name="Failed" xml:space="preserve">
@@ -174,8 +174,8 @@
   <data name="DatabaseConnectionString" xml:space="preserve">
     <value>Строка подключения базы данных</value>
   </data>
-  <data name="ElasticSearchIndexesLocation" xml:space="preserve">
-    <value>URL сервера поиска</value>
+  <data name="SearchConfiguration" xml:space="preserve">
+    <value>Сервер поиска</value>
   </data>
   <data name="ProjectLocation" xml:space="preserve">
     <value>Местонахождение проекта</value>
@@ -195,7 +195,7 @@
   <data name="DatabaseSettings" xml:space="preserve">
     <value>Настройки базы данных</value>
   </data>
-  <data name="ElasticSearchSettings" xml:space="preserve">
+  <data name="SearchSettings" xml:space="preserve">
     <value>Настройки сервера настройки</value>
   </data>
   <data name="DatabaseName" xml:space="preserve">
