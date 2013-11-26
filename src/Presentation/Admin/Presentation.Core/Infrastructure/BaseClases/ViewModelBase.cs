@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
@@ -6,8 +7,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Threading;
-using VirtoCommerce.ManagementClient.Core.Infrastructure.Dialogs;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Common;
+using VirtoCommerce.ManagementClient.Core.Infrastructure.Dialogs;
 
 namespace VirtoCommerce.ManagementClient.Core.Infrastructure
 {
@@ -45,7 +46,7 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure
 		#endregion // Constructor
 
 		#region Properties
-		
+
 		/// <summary>
 		/// indicates if data processing is in progress (loading, saving)
 		/// </summary>
@@ -262,9 +263,9 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure
 
 		public static IOrderedQueryable<T> ApplySortDescriptions<T>(IQueryable<T> query, SortDescriptionCollection sortDescriptions)
 		{
-			var orderedItems = sortDescriptions[0].Direction == ListSortDirection.Ascending ? 
-				                                 query.OrderBy(sortDescriptions[0].PropertyName) : 
-				                                 query.OrderByDescending(sortDescriptions[0].PropertyName);
+			var orderedItems = sortDescriptions[0].Direction == ListSortDirection.Ascending ?
+												 query.OrderBy(sortDescriptions[0].PropertyName) :
+												 query.OrderByDescending(sortDescriptions[0].PropertyName);
 			return orderedItems;
 		}
 
@@ -314,5 +315,24 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure
 			ErrorDialog.ShowErrorDialog(string.Format("{0}\n{1}", msg, ex.Message), ex.ToString(), string.Format("{0}\n{1}", msg, ex), false);
 		}
 
+		// private InputBindings _inputBindings;
+
+		protected virtual IEnumerable<ActionBinding> GetActionBindings()
+		{
+			yield break;
+		}
+
+		public void InitializeGestures()
+		{
+			InputBindings.RegisterCommands(GetActionBindings(), this.GetHashCode());
+		}
+		//public void InitializeGestures(InputBindingCollection inputBindings, ActionBinding[] entries)
+		//{
+		//	if (_inputBindings == null)
+		//	{
+		//		_inputBindings = new InputBindings(inputBindings);
+		//		_inputBindings.RegisterCommands(GetActionBindings(), entries);
+		//	}
+		//}
 	}
 }

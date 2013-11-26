@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<bindings>
+	<binding action="refresh">
+		<gesture>F5</gesture>
+	</binding>	
+	<binding action="add">
+		<gesture>Insert</gesture>
+		<gesture>Ctrl+N</gesture>
+	</binding>
+	<binding action="delete">
+		<!--<gesture>Delete</gesture>-->
+		<gesture>F8</gesture>
+	</binding>
+	<binding action="navigateback">
+		<gesture>Back</gesture>
+	</binding>
+</bindings>

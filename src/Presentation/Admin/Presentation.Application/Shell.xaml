@@ -53,7 +53,7 @@
 		<StaticResourceExtension ResourceKey="WindowViewModel"/>
 	</presentationControls:MetroWindow.DataContext>
 
-	<Grid Background="{x:Null}" Margin="0,-25,0,0">
+	<Grid Background="{x:Null}" Margin="0,-25,0,0" Loaded="FrameworkElement_OnLoaded">
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="*"/>
 			<ColumnDefinition Width="75"/>
@@ -159,12 +159,14 @@
 			</UIElement.InputBindings>
 			
 			<!--Main Region-->
-			<TabControl x:Name="MainRegion" cal:RegionManager.RegionName="{x:Static presentationCore:RegionNames.MainRegion}"
+			<TabControl x:Name="MainRegion" cal:RegionManager.RegionName="{x:Static presentationCore:RegionNames.MainRegion}" PreviewKeyDown="UIElement_OnPreviewKeyDown"
                     Background="Transparent" TabStripPlacement="Top" BorderThickness="0" Padding="0" Margin="0" VerticalAlignment="Stretch"
                             FocusManager.IsFocusScope="True"  SelectedItem="{Binding SelectedItem, Mode=TwoWay}">
 				<TabControl.ItemContainerStyle>
 					<Style TargetType="TabItem">
 						<Setter Property="BorderThickness" Value="0"/>
+						<!--IsTabStop prevents from Left and Right key pressing to navigate-->
+						<Setter Property="IsTabStop" Value="False"/>
 						<Setter Property="Template">
 							<Setter.Value>
 								<ControlTemplate TargetType="TabItem">

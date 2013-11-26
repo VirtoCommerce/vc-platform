@@ -6,7 +6,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls" 
 	
-    mc:Ignorable="d">
-    <!-- other properties defined in styles: (default) and Virto_MetroSubTabControl_Horizontal_Style-->
-	<TabControl ItemsSource="{Binding SubItems}" SelectedItem="{Binding CurrentTab}" Padding="0" ClipToBounds="False"/>
+    mc:Ignorable="d" d:DataContext="{d:DesignInstance base:SubTabsDefaultViewModel}">
+    <!-- other properties defined in styles: (default) and Virto_SubTabControl_Horizontal_Style-->
+	<TabControl Name="tabControl" ItemsSource="{Binding SubItems}" SelectedItem="{Binding CurrentTab}" Padding="0" ClipToBounds="False" Loaded="FrameworkElement_OnLoaded" />
 </base:ViewBase>
