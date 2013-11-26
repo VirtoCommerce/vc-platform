@@ -9,7 +9,7 @@ cmd.exe /c rmdir /s /q "%TEMP%\Admin"
 
 ECHO create frontend temp
 cmd.exe /c robocopy "../../../src/Presentation/FrontEnd/StoreWebApp" "%TEMP%\FrontEnd" /s /purge /xd "obj" "Service References" "Storage" "App_Data" /xf *.user *.vspscc *.pdb *.xml packages.config
-cmd.exe /c robocopy "../../../src/Presentation/FrontEnd/StoreWebApp/App_Data" "%TEMP%\FrontEnd/App_Data" /s /purge /xd "admin" "catalog"
+cmd.exe /c robocopy "../../../src/Presentation/FrontEnd/StoreWebApp/App_Data" "%TEMP%\FrontEnd/App_Data" /s /purge /xd "admin" "catalog" "search" "logs"
 cmd.exe /c xcopy "..\..\..\src\GlobalAssemblyInfo.cs" "%TEMP%\FrontEnd\Properties"
 cmd.exe /c robocopy "../../../src/Presentation/FrontEnd/StoreWebApp/App_Data/Virto/Storage/catalog" "%TEMP%\Catalog" /s /purge
 
