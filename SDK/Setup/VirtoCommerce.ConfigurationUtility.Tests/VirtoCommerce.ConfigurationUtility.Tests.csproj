@@ -57,6 +57,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\src\Extensions\Setup\VirtoCommerce.PowerShell\bin\Debug\VirtoCommerce.Foundation.dll</HintPath>
     </Reference>
+    <Reference Include="VirtoCommerce.ManagementClient.Core">
+      <HintPath>..\..\..\src\Presentation\Admin\Presentation.Core\bin\Debug\VirtoCommerce.ManagementClient.Core.dll</HintPath>
+    </Reference>
     <Reference Include="xunit, Version=1.9.2.1705, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\xunit.1.9.2\lib\net20\xunit.dll</HintPath>
