@@ -171,6 +171,16 @@ namespace VirtoCommerce.ManagementClient
 			}
 		}
 
+		private void UIElement_OnPreviewKeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.Key == Key.Tab && Keyboard.Modifiers.HasFlag(ModifierKeys.Control)
+				// || e.Key == Key.Home
+				|| e.Key == Key.End)
+			{
+				e.Handled = true;
+			}
+		}
+
 		private void UIElement_OnPreviewKeyUp(object sender, KeyEventArgs e)
 		{
 			var aaa = Keyboard.FocusedElement;
