@@ -534,6 +534,7 @@
     <Content Include="Content\themes\default\images\widgets\i_widget-link.gif" />
     <Content Include="Content\themes\default\images\zoomloader.gif" />
     <Content Include="Content\themes\responsive\camera.css" />
+    <Content Include="Content\themes\responsive\custom.css" />
     <Content Include="Content\themes\responsive\forms.css" />
     <Content Include="Content\themes\responsive\grid.css" />
     <Content Include="Content\themes\responsive\images\arrow_about.png" />
@@ -687,7 +688,6 @@
     <Content Include="Views\Account\ChangeAccountInfo.cshtml" />
     <Content Include="Views\Account\Compare.cshtml" />
     <Content Include="Views\Account\AccountInfo.cshtml" />
-    <Content Include="Views\Account\DisplayTemplates\CompareLineItem.cshtml" />
     <Content Include="Views\Account\DisplayTemplates\LineItem.cshtml" />
     <Content Include="Views\Account\Edit.cshtml" />
     <Content Include="Views\Account\EditorTemplates\LineItem.cshtml" />
@@ -695,7 +695,6 @@
     <Content Include="Views\Account\Index.cshtml" />
     <Content Include="Views\Account\LogOn.cshtml" />
     <Content Include="Views\Account\LogOnAsync.cshtml" />
-    <Content Include="Views\Account\MiniCompareList.cshtml" />
     <Content Include="Views\Account\OrderAddress.cshtml" />
     <Content Include="Views\Account\Orders.cshtml" />
     <Content Include="Views\Account\OrderView.cshtml" />
@@ -709,12 +708,9 @@
     <Content Include="Views\Banner\DisplayTemplates\RawHtml.cshtml" />
     <Content Include="Views\Cart\Add.cshtml" />
     <Content Include="Views\Cart\EditorTemplates\LineItem.cshtml" />
-    <Content Include="Views\Cart\EditorTemplates\MiniLineItem.cshtml" />
     <Content Include="Views\Cart\EditorTemplates\ShippingEstimate.cshtml" />
     <Content Include="Views\Cart\Empty.cshtml" />
     <Content Include="Views\Cart\Index.cshtml" />
-    <Content Include="Views\Cart\MiniCart.cshtml" />
-    <Content Include="Views\Cart\MiniCartEmpty.cshtml" />
     <Content Include="Views\Catalog\Category.cshtml" />
     <Content Include="Views\Catalog\Item.cshtml" />
     <Content Include="Views\Catalog\Menu.cshtml" />

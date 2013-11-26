@@ -1,0 +1,38 @@
+.welcome-msg {
+    color: #666666;
+    float: left;
+    margin-top: 7px;
+}
+
+#logoutForm {
+    display: inline;
+}
+
+.search-autocomplete {
+    z-index: 999;
+}
+
+    .search-autocomplete ul {
+        border: 1px solid #999;
+        background-color: #f9f5f0;
+    }
+
+    .search-autocomplete li {
+        text-align: left;
+        border-bottom: 1px solid #f4eee7;
+        padding: 2px 8px 1px 8px;
+        cursor: pointer;
+    }
+
+        .search-autocomplete li .amount {
+            float: right;
+            font-weight: bold;
+        }
+
+        .search-autocomplete li.odd {
+            background-color: #f6f6f6;
+        }
+
+        .search-autocomplete li.selected {
+            background-color: #ecf9ea;
+        }

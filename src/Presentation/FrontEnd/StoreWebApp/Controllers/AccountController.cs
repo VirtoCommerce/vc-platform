@@ -1285,7 +1285,7 @@ namespace VirtoCommerce.Web.Controllers
         {
             var customerId = _webSecurity.GetUserId(userName);
             var contact = _userClient.GetCustomer(customerId.ToString(CultureInfo.InvariantCulture), false);
-            var account = _userClient.GetAccountByUserName(userName);
+            //var account = _userClient.GetAccountByUserName(userName);
 
             if (contact != null)
             {

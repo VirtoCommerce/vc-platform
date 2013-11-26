@@ -68,7 +68,7 @@ VirtoCommerce.prototype = {
 			url: VirtoCommerce.url('/store/quickaccess', true),
 			success: function (data)
 			{
-				$("div.quick-access-bar").html(data);
+				$("ul.head-links").parent().html(data);
 			}
 		});
 	},
@@ -177,40 +177,24 @@ VirtoCart.prototype = {
 		}
 		
 		// Update the page elements
-		if (context.LineItemsView != null && context.LineItemsView.length > 0) {
-
-		    if ($("#shopping-cart-table").length != 0) {
-		        $("#shopping-cart-table tbody").html(context.LineItemsView);
+		if (context.LineItemsView != null && context.LineItemsView.length > 0)
+		{
+		    if (context.DeleteSource == "MiniCart") {
+		        if ($(".cart .popup").length > 0) {
+		            $(".cart .popup").html(context.LineItemsView);
+		        }
+		        $('#cart-count').html(context.CartCount);
+		        $('#cart-subtotal').html(context.CartSubTotal);
+		        $('#cart-total').html(context.CartTotal);
 		    }
-
-		    if ($("#MiniCartContainer").length > 0) {
-		        $("#MiniCartContainer").html(context.LineItemsView);
+		    else if (context.DeleteSource == "MiniCompareList") {
+		        $('.compare .popup').html(context.LineItemsView);
 		    }
 		} else {
 		    $('#row-' + context.DeleteId).fadeOut('slow');
-		}
-
-		$('#cart-count').html(context.CartCount + ' items');
-		$('#cart-subtotal').html(context.CartSubTotal);
-		$('#cart-total').html(context.CartTotal);
-		$('#messages').html("<li class=\"success-msg\"><ul><li><span>" + context.Message + "</span></li></ul></li>");
-		//$('#update-message').parent().css({ display: "block" });
+		}	
 		VirtoCommerce.updateQuickLinks();
-	},
-
-	onCompareListUpdate: function (context)
-	{
-		if (context.CartCount == 0)
-		{
-			"You have no items in your compare list.".Localize(function (translation)
-			{
-				$('#CompareListContainer').html('<p class="empty">' + translation + '</p>');
-			});
-		} else
-		{
-			$('li#compare-' + context.DeleteId).fadeOut('slow');
-			$('#messages').html("<li class=\"success-msg\"><ul><li><span>" + context.Message + "</span></li></ul></li>");
-		}
+		alert(context.Message);
 	},
 
 	add: function (name, title, itemId, parentItemId, quantity, relatedItems)
@@ -232,7 +216,7 @@ VirtoCart.prototype = {
 			return false;
 		}
 
-		var url = VirtoCommerce.url('/Cart/Add') + '?height=120&width=500&name=' + name + '&itemId=' + itemId + '&quantity=' + quantity;
+		var url = VirtoCommerce.url('/Cart/Add') + '?name=' + name + '&itemId=' + itemId + '&quantity=' + quantity;
 		
 		if (parentItemId != undefined && parentItemId.length > 0)
 		{
@@ -249,15 +233,22 @@ VirtoCart.prototype = {
 				}
 			}
 		}
-		title.Localize(function (titleLoc)
-		{
-			tb_show(titleLoc, url, false);
-		});
+	    
+		$.ajax({
+		    type: 'POST',
+		    url: url,
+		    cache: false,
+		    success: function (context)
+		    {
+		        VirtoCart.updateMiniCart(context.CartName);
+		        if (context.CartName != VirtoCart.CompareListName) {
+		            $('#cart-count').html(context.CartCount);
+		            VirtoCommerce.updateQuickLinks();
+		        }
+		        //Show success message
+		        alert(context.Message);
 
-
-		$('#TB_window').bind('unload', function ()
-		{
-			VirtoCommerce.updateQuickLinks();
+		    }
 		});
 
 		return false;
@@ -334,12 +325,12 @@ VirtoCart.prototype = {
 
 	updateMiniCart: function (name)
 	{
-		var placeholder = $("#MiniCartContainer");
+	    var placeholder = $(".cart .popup");
 		var urlForData = '/Cart/MiniView';
 
 		if (name == this.CompareListName)
 		{
-			placeholder = $("#CompareListContainer");
+			placeholder = $(".compare .popup");
 			urlForData = '/Account/MiniCompareList';
 		}
 
@@ -349,7 +340,7 @@ VirtoCart.prototype = {
 				// if at least one item in cart exists
 				if (placeholder)
 				{
-					placeholder.parent().html(data);
+					placeholder.html(data);
 				} else
 				{
 					// if cart is empty

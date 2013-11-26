@@ -4,30 +4,33 @@
     Layout = null;
 }
 
-@if(Model.LineItems != null && Model.LineItems.Length > 0)
+@if (Model.LineItems != null && Model.LineItems.Length > 0)
 {
-    <div id="MiniCartContainer">
-        @using (Ajax.BeginForm(new AjaxOptions {UpdateTargetId = "MiniCartContainer"}))
+    <p>
+        @("Recently added item(s)".Localize())
+    </p>
+    <ul class="cart-list">
+        @for (var i = 0; i < Model.LineItems.Count(); i++)
         {
-            <div class="summary">
-                <p class="amount">
-                    @("There are".LocalizeHtml()) <a href="@Url.Action("Index", "Cart")"><span id="cart-count">@Model.LineItems.Count() @("items".LocalizeHtml())</span></a> @("in your cart".LocalizeHtml()).</p>
-                <p class="subtotal">
-                    <span class="label">@("Cart Subtotal:".LocalizeHtml())</span> <span class="price" id="cart-subtotal">@Model.SubTotalPriceFormatted</span>
-                </p>
-            </div>
-            <p class="block-subtitle">
-                @("Recently added item(s)".LocalizeHtml())</p>
-            <ol class="mini-products-list" id="cart-sidebar">
-                @for (var i = 0; i < Model.LineItems.Count(); i++)
-                {
-                    @Html.EditorFor(m => Model.LineItems[i], "MiniLineItem", new {index = i, total = Model.LineItems.Count()})
-                }
-            </ol>
+            @Html.EditorFor(m => Model.LineItems[i], "MiniLineItem", new { index = i, total = Model.LineItems.Count() })
         }
+    </ul>
+    <div class="subtotal">
+        <div class="inner">
+            <p>@("Subtotal:".Localize())&nbsp;<span id="cart-subtotal">@Model.SubTotalPriceFormatted</span></p>
+        </div>
     </div>
+    <div class="buttons clearfix">
+        <button onclick="$.open('@Url.Action("Index", "Cart")')">
+            <span>@("View cart".Localize())</span>
+        </button>
+        <button onclick="$.open('@Url.Action("Index", "Checkout")')">
+            <span>@("Continue to checkout".Localize())</span>
+        </button>
+    </div>  
 }
 else
 {
     <p>@("You have no items in your shopping cart.".LocalizeHtml())</p>
 }
+

@@ -101,6 +101,10 @@
 
 				$('.level1 > a', self).append('<span>+</span>');
 			}
+
+			$('.arrow').remove();
+			$('li.dropdown > a').append('<span class="arrow"></span>');
+			$('.level1 .arrow, .level2 .arrow').remove();
 		});
 
 		// For mobile nav
@@ -118,12 +122,13 @@
 		});
 
 		// Events for dropdowns
-		$('.header .nav .menu li.dropdown > a').click(function (event)
-		{
-		    //if ($(".nav .control").is(":hidden") == false) {
-		    //    event.preventDefault();
-		    //}
-		    $(this).parent().toggleClass('opened');
+		$('.header .nav .menu li.dropdown > a .arrow').click(function (){
+		    $(this).parent().parent().toggleClass('opened');
+		    return false;
+		});
+
+		$('.header .nav .menu li.dropdown .fade').click(function (){
+			$(this).parent().removeClass('opened');
 		});
 
 		// Events for dropdown sub menu

@@ -10,6 +10,10 @@
 		/// </summary>
 		/// <value>The delete source.</value>
 		public string DeleteSource { get; set; }
+        /// <summary>
+        /// Deleted lineItem id
+        /// </summary>
+        public string DeleteId { get; set; }
     }
 
 	/// <summary>
@@ -43,8 +47,8 @@
 		/// <value>The line items view.</value>
 		public string LineItemsView { get; set; }
         /// <summary>
-        /// Deleted lineItem id
+        /// Cart name
         /// </summary>
-        public string DeleteId { get; set; }
+        public string CartName { get; set; }
 	}
 }

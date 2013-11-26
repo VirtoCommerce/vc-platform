@@ -23,7 +23,8 @@ a.top,
 .article .product-view .product-info .product-image .products-previews .nav li a,
 .article .product-view .product-info .product-shop .add-to-cart button,
 .article .product-view .product-info .product-shop .add-to-links li a:before,
-.article .product-view .product-other .product-additional .nav li a
+.article .product-view .product-other .product-additional .nav li a,
+.article .cart table tbody td.product-actions a
 {
 	-webkit-transition: all .3s ease-in-out 0s;
 	   -moz-transition: all .3s ease-in-out 0s;

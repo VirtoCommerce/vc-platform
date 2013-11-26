@@ -79,7 +79,8 @@ namespace VirtoCommerce.Web
                 "~/Content/themes/responsive/reset.css",
                 "~/Content/themes/responsive/main.css",
                 "~/Content/themes/responsive/responsive.css",
-                "~/Content/themes/responsive/camera.css"
+                "~/Content/themes/responsive/camera.css",
+                "~/Content/themes/responsive/custom.css"
                 ));
 		}
 	}
