@@ -53,7 +53,7 @@ namespace VirtoCommerce.Web.Client.Modules
                 context.BeginRequest +=
                     delegate
                     {
-                        if (!HttpContext.Current.Request.Url.PathAndQuery.StartsWith("/virto/admin"))
+                        if (!HttpContext.Current.Request.RawUrl.EndsWith("/virto/admin"))
                         {
                             HttpContext.Current.Response.Redirect("~/virto/admin");
                         }
