@@ -18,7 +18,7 @@ namespace VirtoCommerce.Web.Controllers.Api
     /// <summary>
     /// Class ReviewController.
     /// </summary>
-	[LocalizeWebApi]
+    [LocalizeWebApi]
     public class ReviewController : ApiController
     {
         /// <summary>
@@ -141,18 +141,16 @@ namespace VirtoCommerce.Web.Controllers.Api
         /// <param name="id">The identifier.</param>
         /// <returns>System.Object.</returns>
         [HttpGet]
-        public object GetReviewTotals(string id)
+        [Queryable(MaxNodeCount = 500)]
+        public IQueryable<ReviewTotals> GetReviewTotals()
         {
-            var result = new ReviewTotals();
-            var reviews = _repository.Reviews.Where(r => r.ItemId == id && r.Status == (int)ReviewStatus.Approved);
-
-            result.TotalReviews = reviews.Count();
-            if (result.TotalReviews > 0)
-            {
-                result.AverageRating = Math.Round(reviews.Average(r => r.OverallRating), 1);
-            }
-
-            return result;
+            return _repository.Reviews.Where(r => r.Status == (int)ReviewStatus.Approved).GroupBy(r => r.ItemId)
+                    .Select(g => new ReviewTotals
+                    {
+                        TotalReviews = g.Count(),
+                        AverageRating = g.Any() ? Math.Round(g.Average(r => r.OverallRating), 1) : 0,
+                        ItemId = g.Key
+                    });
         }
 
         /// <summary>

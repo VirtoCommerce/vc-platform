@@ -566,10 +566,13 @@
     <Content Include="Content\themes\responsive\images\icons\bullet.gif" />
     <Content Include="Content\themes\responsive\images\icons\bullet.png" />
     <Content Include="Content\themes\responsive\images\icons\callback.png" />
+    <Content Include="Content\themes\responsive\images\icons\cart-empty.png" />
     <Content Include="Content\themes\responsive\images\icons\cart.png" />
     <Content Include="Content\themes\responsive\images\icons\cart_listing.png" />
     <Content Include="Content\themes\responsive\images\icons\compare.png" />
     <Content Include="Content\themes\responsive\images\icons\dropdown-arrow.png" />
+    <Content Include="Content\themes\responsive\images\icons\edit-mini.png" />
+    <Content Include="Content\themes\responsive\images\icons\edit.png" />
     <Content Include="Content\themes\responsive\images\icons\email.png" />
     <Content Include="Content\themes\responsive\images\icons\grid-mode.gif" />
     <Content Include="Content\themes\responsive\images\icons\icon_cart_listing_mask.png" />
@@ -580,6 +583,7 @@
     <Content Include="Content\themes\responsive\images\icons\shipping.png" />
     <Content Include="Content\themes\responsive\images\icons\social.png" />
     <Content Include="Content\themes\responsive\images\icons\switch.png" />
+    <Content Include="Content\themes\responsive\images\icons\trash.png" />
     <Content Include="Content\themes\responsive\images\icons\twitter.png" />
     <Content Include="Content\themes\responsive\images\icons\wishlist.png" />
     <Content Include="Content\themes\responsive\images\labels.png" />
@@ -622,7 +626,6 @@
     <Content Include="App_Data\Virto\Configuration\Import.config" />
     <Content Include="App_Data\Virto\Configuration\AppConfig.config" />
     <Content Include="App_Data\Virto\Configuration\Asset.config" />
-    <Content Include="Mvc.sitemap" />
     <Content Include="App_Data\Virto\Configuration\services.local.config">
       <SubType>Designer</SubType>
     </Content>

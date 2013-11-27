@@ -9,7 +9,7 @@
         var currentTip = $("#Rating option:selected").text();
         $('#ratingTip').text(currentTip);
 
-        $('div#rating2').rateit({ resetable: false });
+        $('div#rating2').rateit({ resetable: false, starwidth: 11, starheight: 11 });
         $("div#rating2").bind('over', function(event, value) {
             var currentTip = $("#Rating option:selected").text();
             if (value != undefined) {

@@ -17,7 +17,7 @@ div.rateit div.rateit-range
     display: -moz-inline-box;
     display: inline-block;
     background: url(images/star.gif);
-    height: 16px;
+    height: 11px;
 }
 
 /* for IE 6 */
@@ -46,32 +46,32 @@ div.rateit div.rateit-hover-rtl, div.rateit div.rateit-selected-rtl
 
 div.rateit div.rateit-hover
 {
-    background: url(images/star.gif) left -32px;
+    background: url(images/star.gif) left -22px;
 }
 
 div.rateit div.rateit-hover-rtl
 {
-    background-position: right -32px;
+    background-position: right -22px;
 }
 
 div.rateit div.rateit-selected
 {
-    background: url(images/star.gif) left -16px;
+    background: url(images/star.gif) left -11px;
 }
 
 div.rateit div.rateit-selected-rtl
 {
-    background-position: right -16px;
+    background-position: right -11px;
 }
 
 div.rateit div.rateit-preset
 {
-    background: url(images/star.gif) left -48px;
+    background: url(images/star.gif) left -33px;
 }
 
 div.rateit div.rateit-preset-rtl
 {
-    background: url(images/star.gif) left -48px;
+    background: url(images/star.gif) left -33px;
 }
 
 div.rateit div.rateit-reset

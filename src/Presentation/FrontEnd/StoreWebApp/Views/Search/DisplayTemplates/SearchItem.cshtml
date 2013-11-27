@@ -8,9 +8,7 @@
 <div class="product-info">
     <span class="title">@Model.DisplayName</span>
     <div class="ratings">
-        <div class="rating">
-            <div style="width: 100%;" class="mask"></div>
-        </div>
+        <div id="rateit-@Model.CatalogItem.ItemId"></div>
     </div>
     @if (Model.Price != null)
     {

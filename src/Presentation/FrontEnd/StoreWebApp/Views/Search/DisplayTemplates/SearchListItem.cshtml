@@ -13,14 +13,15 @@
             @Html.DisplayFor(model => model.Price)
         }
         <div class="ratings">
-            <div class="rating">
-                <div style="width: 100%;" class="mask"></div>
-            </div>
+            <div id="rateit-@Model.CatalogItem.ItemId"></div>
         </div>
         <div class="ratings-links">
             <ul>
-                <li><a href="">1 Review(s)</a></li>
-                <li><a href="">Add Your Review</a></li>
+                <li><a href="@Url.ItemUrl(Model.CatalogItem.Item, Model.CatalogItem.ParentItemId)">
+                        <span id="totalreviews-@Model.CatalogItem.ItemId">0</span>&nbsp;@("Review(s)".Localize())
+                    </a>
+                </li>
+                <li><a href="" id="addreview-@Model.CatalogItem.ItemId">@("Add Your Review".Localize())</a></li>
             </ul>
         </div>
     </div>

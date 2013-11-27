@@ -76,18 +76,18 @@ Reviews =
         $.ajax({
 
             type: "GET",
-            url: VirtoCommerce.url("/api/review/GetReviewTotals/" + Reviews.currentItemId),
+            url: VirtoCommerce.url("/api/review/GetReviewTotals?$filter=ItemId eq '" + Reviews.currentItemId) + "'",
             dataType: "json",
             success: function (data) {
-                Reviews.TotalReviews = data.TotalReviews;
-                $(".pr-review-count-number").text(data.TotalReviews);
-                $(".pr-review-average").text(data.AverageRating);
+                Reviews.TotalReviews = data[0].TotalReviews;
+                $(".pr-review-count-number").text(data[0].TotalReviews);
+                $(".pr-review-average").text(data[0].AverageRating);
 
-                if (data.TotalReviews > 0) {
+                if (data[0].TotalReviews > 0) {
                     $("#review_rating_header_stars").show();
                     //$("#review_rating_header_stars .pr-stars").css("background-position", "0 " + (-19 * Math.round(data.AverageRating)) +"px");
-                    $("#review_rating_header_stars .pr-stars").rateit({ resetable: false, readonly: true, value: data.AverageRating.toFixed(1) });
-                    $("#review_rating_header_stars .pr-rating").text(data.AverageRating.toFixed(1));
+                    $("#review_rating_header_stars .pr-stars").rateit({ resetable: false, readonly: true, value: data[0].AverageRating.toFixed(1), starwidth: 11, starheight: 11 });
+                    $("#review_rating_header_stars .pr-rating").text(data[0].AverageRating.toFixed(1));
                     $("#product_tabs_reviews_contents_empty").hide();
                     $("#product_tabs_reviews_contents_list").show();
                     $("#show_reviews_link").show();
@@ -132,7 +132,7 @@ Reviews =
 
                 $(Reviews.container + " .pr-review-rating").each(function () {
                     var rating = $(this).find(".pr-rating").text();
-                    $(this).find(".pr-stars").rateit({ resetable: false, readonly: true, value: rating });
+                    $(this).find(".pr-stars").rateit({ resetable: false, readonly: true, value: rating, starwidth: 11, starheight: 11  });
                 });
 
                 
@@ -320,7 +320,7 @@ Reviews =
 
         previewContainer.find(".pr-review-rating").each(function () {
             var rating = $(this).find(".pr-rating").text();
-            $(this).find(".pr-stars").rateit({ resetable: false, readonly: true, value: rating });
+            $(this).find(".pr-stars").rateit({ resetable: false, readonly: true, value: rating, starwidth: 11, starheight: 11 });
         });
 
         previewContainer.fadeIn(2000);
@@ -330,6 +330,21 @@ Reviews =
 
         //unbind clicks
         previewContainer.find("[onclick]").attr("onclick", "return false;");
+    },
+    catalogReviews: function(filter) {
+        $.ajax({
+            type: "GET",
+            url: VirtoCommerce.url("/api/review/GetReviewTotals?$filter=" + filter),
+            dataType: "json",
+            success: function (data)
+            {
+                for (var i = 0; i < data.length; i++)
+                {
+                    $("[id='rateit-" + data[i].ItemId + "']").rateit({ resetable: false, readonly: true, value: data[i].AverageRating.toFixed(1), starwidth: 11, starheight: 11 });
+                    $("[id='totalreviews-" + data[i].ItemId + "']").text(data[i].TotalReviews);
+                }
+            }
+        });
     }
 };
 

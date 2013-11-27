@@ -30,10 +30,10 @@
 		    var isAuthorized = '@UserHelper.CustomerSession.IsRegistered';
 
 			if (isAuthorized == "True") {
-				tb_show('@("Create Review".LocalizeHtml())', "@Url.Action("AddReview", "Catalog", new { id = Model.CatalogItem.ItemId, height = 550 })", false);
+				tb_show('@("Create Review".Localize())', "@Url.Action("AddReview", "Catalog", new { id = Model.CatalogItem.ItemId, height = 550 })", false);
 			}
 			else {
-				tb_show('@("Login or Create New Account".LocalizeHtml())', "@Url.Action("LogOnAsync", "Account")", false);
+				tb_show('@("Login or Create New Account".Localize())', "@Url.Action("LogOnAsync", "Account")", false);
 			}
 
 			return false;
@@ -44,80 +44,80 @@
 
 <script type="text/x-jquery-tmpl" id="reviewTemplate">
     <div class="pr-review-most-helpful">
-        <p>(<span id="positive_review_${Id}">${PositiveFeedbackCount}</span> @("of".LocalizeHtml()) <span id="total_feedback_review_${Id}">${PositiveFeedbackCount + NegativeFeedbackCount}</span> @("customers found this review helpful".LocalizeHtml()))</p>
+        <p>(<span id="positive_review_${Id}">${PositiveFeedbackCount}</span> @("of".Localize()) <span id="total_feedback_review_${Id}">${PositiveFeedbackCount + NegativeFeedbackCount}</span> @("customers found this review helpful".Localize()))</p>
     </div>
     <div class="pr-review-rating">
         <div class="pr-stars">&nbsp;</div>
         <span class="pr-rating pr-rounded">${parseInt(Rating).toFixed(1)}</span>
         <p class="pr-review-rating-headline">${RatingComment}</p>
     </div>
-    <h3>Review by <span>${Reviewer.NickName}</span> {{if IsVerifiedBuyer}}<span class="verified">@("Verified Buyer".LocalizeHtml())</span>{{/if}}</h3>
+    <h3>Review by <span>${Reviewer.NickName}</span> {{if IsVerifiedBuyer}}<span class="verified">@("Verified Buyer".Localize())</span>{{/if}}</h3>
     <p class="date">${GetShortDateAndTime(CreatedDateTime)}</p>
     <div class="pr-review-text">
         <p class="pr-comments">${ReviewText.Text}</p>
     </div>
     <p class="pr-review-helpful-text">
-        @("Was this review helpful?".LocalizeHtml())&nbsp;
-        <a onclick="Reviews.vote('${Id}', true); return false;" href="#" class="pr-review-helpful-text-link">@("Yes".LocalizeHtml())</a>&nbsp;/&nbsp;
-        <a onclick="Reviews.vote('${Id}', false); return false;" href="#" class="pr-review-helpful-text-link">@("No".LocalizeHtml())</a>
+        @("Was this review helpful?".Localize())&nbsp;
+        <a onclick="Reviews.vote('${Id}', true); return false;" href="#" class="pr-review-helpful-text-link">@("Yes".Localize())</a>&nbsp;/&nbsp;
+        <a onclick="Reviews.vote('${Id}', false); return false;" href="#" class="pr-review-helpful-text-link">@("No".Localize())</a>
     </p>
     <div id="review_feedback_${Id}" class="review-title"></div>
     <p>
-        <a href="#" onclick="$('#comment_for_${Id}').show(); $('#report_abuse_for_${Id}').hide(); return false;">@("write a comment".LocalizeHtml())</a>
+        <a href="#" onclick="$('#comment_for_${Id}').show(); $('#report_abuse_for_${Id}').hide(); return false;">@("write a comment".Localize())</a>
         <span class="separator">|</span>
-        <a href="#" onclick="$('#report_abuse_for_${Id}').show(); $('#comment_for_${Id}').hide(); return false;">@("report abuse".LocalizeHtml())</a>
+        <a href="#" onclick="$('#report_abuse_for_${Id}').show(); $('#comment_for_${Id}').hide(); return false;">@("report abuse".Localize())</a>
     </p>
 
     <div id="report_abuse_for_${Id}" class="report_abuse">
         @using (Html.BeginForm("reportabuse", "api/review", FormMethod.Post, new { id = "abuse_${Id}" }))
-		{
+        {
             
-            <h3>@("Please let us know what kind of issue this is".LocalizeHtml()):</h3>
+            <h3>@("Please let us know what kind of issue this is".Localize()):</h3>
             <ul class="form-list">
                 <li class="control">
                     <input type="radio" class="radio" value="profane" name="Reason">
-                    <label>@("Profanity".LocalizeHtml())</label>
+                    <label>@("Profanity".Localize())</label>
                 </li>
                 <li class="control">
                     <input type="radio" class="radio" value="wrong_product" name="Reason">
-                    <label>@("Wrong product".LocalizeHtml())</label>
+                    <label>@("Wrong product".Localize())</label>
                 </li>
                 <li class="control">
                     <input type="radio" class="radio" value="spam" name="Reason">
-                    <label>@("Spam".LocalizeHtml())</label>
+                    <label>@("Spam".Localize())</label>
                 </li>
                 <li class="control">
                     <input type="radio" class="radio" value="duplicate" name="Reason">
-                    <label>@("Duplicate".LocalizeHtml())</label>
+                    <label>@("Duplicate".Localize())</label>
                 </li>
                 <li class="control">
                     <input type="radio" class="radio" value="copyright" name="Reason">
-                    <label>@("Copyright violation".LocalizeHtml())</label>
+                    <label>@("Copyright violation".Localize())</label>
                 </li>
                 <li class="control">
                     <input type="radio" class="radio" value="not_review" name="Reason">
-                    <label>@("Not a product review".LocalizeHtml())</label>
+                    <label>@("Not a product review".Localize())</label>
                 </li>
                 <li class="control">
                     <input type="radio" class="radio" value="image_issue" name="Reason">
-                    <label>@("Problem with image".LocalizeHtml())</label>
+                    <label>@("Problem with image".Localize())</label>
                 </li>
                 <li class="control">
                     <input type="radio" class="radio" value="other" name="Reason">
-                    <label>@("Other".LocalizeHtml())</label>
+                    <label>@("Other".Localize())</label>
                 </li>
                 <li>
                     <span data-valmsg-replace="true" data-valmsg-for="Reason" class="field-validation-valid"></span>
                 </li>
                 <li>
-                    <label class="required"><em>*</em>@("Email Address".LocalizeHtml()):</label>
+                    <label class="required"><em>*</em>@("Email Address".Localize()):</label>
                     <div class="input-box">
                         <input type="text" maxlength="80" name="Email" class="input-text">
                     </div>
                     <span data-valmsg-replace="true" data-valmsg-for="Email" class="field-validation-valid"></span>
                 </li>
                 <li>
-                    <label>@("Comments".LocalizeHtml()):</label>
+                    <label>@("Comments".Localize()):</label>
                     <div class="input-box">
                         <textarea rows="3" cols="30" name="Comment"></textarea>
                     </div>
@@ -127,29 +127,29 @@
             <input type="hidden" value="True" name="IsReview" />
             <input type="button" class="post" value="Submit" onclick="Reviews.flag('${Id}');" />
             <input type="button" class="post" value="Cancel" onclick="$('#report_abuse_for_${Id}').hide(); return false;" />
-		}
+        }
     </div>
 
     <div class="write_a_comment" id="comment_for_${Id}">
         @using (Html.BeginForm("comment", "api/review", FormMethod.Post, new { id = "comment_${Id}" }))
-		{
-            <h3>@("Your comment".LocalizeHtml()):</h3>
+        {
+            <h3>@("Your comment".Localize()):</h3>
 
             <ul class="form-list">
                 <li>
-                    <label for="AuthorName" class="required"><em>*</em>@("Author".LocalizeHtml()):</label>
+                    <label for="AuthorName" class="required"><em>*</em>@("Author".Localize()):</label>
                     <div class="input-box">
                         @Html.TextBox("AuthorName", UserHelper.CustomerSession.CustomerName, new { @class = "input-text" })
                     </div>
                 </li>
                 <li>
-                    <label for="AuthorLocation">@("Location".LocalizeHtml()):</label>
+                    <label for="AuthorLocation">@("Location".Localize()):</label>
                     <div class="input-box">
                         @Html.TextBox("AuthorLocation", "", new { @class = "input-text" })
                     </div>
                 </li>
                 <li>
-                    <label for="Comment" class="required"><em>*</em>@("Comment".LocalizeHtml()):</label>
+                    <label for="Comment" class="required"><em>*</em>@("Comment".Localize()):</label>
                     <div class="input-box">
                         @Html.TextArea("Comment")
                     </div>
@@ -158,93 +158,94 @@
             <input type="hidden" value="${Id}" name="Id" />
             <input type="button" class="post" value="Submit" onclick="Reviews.comment('${Id}');" />
             <input type="button" class="post" value="Cancel" onclick="$('#comment_for_${Id}').hide(); return false;" />
-		}
+        }
     </div>
 
     <div class="cl"></div>
 
     {{if TotalComments > 0}}
-        <div id="show_all_comment_for_${Id}">
-            <i>@("There are".LocalizeHtml()) <b>${TotalComments}</b> @("comments in total".LocalizeHtml())</i>
-            {{if Comments.length < TotalComments }}
-                <a href="#" onclick="Reviews.showAllComments('${Id}'); return false;">@("Show all".LocalizeHtml())</a>
-            {{/if}}
-        </div>
+    <div id="show_all_comment_for_${Id}">
+        <i>@("There are".Localize()) <b>${TotalComments}</b> @("comments in total".Localize())</i>
+        {{if Comments.length < TotalComments }}
+        <a href="#" onclick="Reviews.showAllComments('${Id}'); return false;">@("Show all".Localize())</a>
+        {{/if}}
+    </div>
     {{/if}}
     {{if Comments}}
-        <div id="comments_container_${Id}">
-            {{tmpl(Comments) "#commentTemplate"}}
-        </div>
+    <div id="comments_container_${Id}">
+        {{tmpl(Comments) "#commentTemplate"}}
+    </div>
     {{/if}}
     <div class="spacer"></div>
 </script>
+
 <script type="text/x-jquery-tmpl" id="commentTemplate">
     <div id="comment_${Id}" class="comment">
         <div class="pr-review-most-helpful">
-            <p>(<span id="positive_comment_${Id}">${PositiveFeedbackCount}</span> @("of".LocalizeHtml()) <span id="total_feedback_comment_${Id}">${PositiveFeedbackCount + NegativeFeedbackCount}</span> @("customers found this comment helpful".LocalizeHtml()))</p>
+            <p>(<span id="positive_comment_${Id}">${PositiveFeedbackCount}</span> @("of".Localize()) <span id="total_feedback_comment_${Id}">${PositiveFeedbackCount + NegativeFeedbackCount}</span> @("customers found this comment helpful".Localize()))</p>
         </div>
-        <div class="review-title">@("Comment by".LocalizeHtml()) <b>${Reviewer.NickName}</b> @("on".LocalizeHtml()) ${GetShortDate(CreatedDateTime)}</div>
+        <div class="review-title">@("Comment by".Localize()) <b>${Reviewer.NickName}</b> @("on".Localize()) ${GetShortDate(CreatedDateTime)}</div>
         <p>
             ${Comment}
         </p>
         <p class="pr-review-helpful-text">
-            @("Was this comment helpful?".LocalizeHtml())&nbsp;
-            <a onclick="Reviews.votecomment('${Id}', true); return false;" href="#" class="pr-review-helpful-text-link">@("Yes".LocalizeHtml())</a>&nbsp;/&nbsp;
-            <a onclick="Reviews.votecomment('${Id}', false); return false;" href="#" class="pr-review-helpful-text-link">@("No".LocalizeHtml())</a>
+            @("Was this comment helpful?".Localize())&nbsp;
+            <a onclick="Reviews.votecomment('${Id}', true); return false;" href="#" class="pr-review-helpful-text-link">@("Yes".Localize())</a>&nbsp;/&nbsp;
+            <a onclick="Reviews.votecomment('${Id}', false); return false;" href="#" class="pr-review-helpful-text-link">@("No".Localize())</a>
         </p>
         <div id="comment_feedback_${Id}" class="review-title"></div>
-        <p><a href="#" onclick="$('#report_abuse_for_${Id}').show(); return false;">@("report abuse".LocalizeHtml())</a></p>
+        <p><a href="#" onclick="$('#report_abuse_for_${Id}').show(); return false;">@("report abuse".Localize())</a></p>
     </div>
     <div class="cl"></div>
     <div id="report_abuse_for_${Id}" class="report_abuse">
         @using (Html.BeginForm("reportabuse", "api/review", FormMethod.Post, new { id = "abuse_${Id}" }))
 		{          
-            <h3>@("Please let us know what kind of issue this is".LocalizeHtml()):</h3>
+            <h3>@("Please let us know what kind of issue this is".Localize()):</h3>
             <ul class="form-list">
                 <li class="control">
                     <input type="radio" class="radio" value="profane" name="Reason">
-                    <label>@("Profanity".LocalizeHtml())</label>
+                    <label>@("Profanity".Localize())</label>
                 </li>
                 <li class="control">
                     <input type="radio" class="radio" value="wrong_product" name="Reason">
-                    <label>@("Wrong product".LocalizeHtml())</label>
+                    <label>@("Wrong product".Localize())</label>
                 </li>
                 <li class="control">
                     <input type="radio" class="radio" value="spam" name="Reason">
-                    <label>@("Spam".LocalizeHtml())</label>
+                    <label>@("Spam".Localize())</label>
                 </li>
                 <li class="control">
                     <input type="radio" class="radio" value="duplicate" name="Reason">
-                    <label>@("Duplicate".LocalizeHtml())</label>
+                    <label>@("Duplicate".Localize())</label>
                 </li>
                 <li class="control">
                     <input type="radio" class="radio" value="copyright" name="Reason">
-                    <label>@("Copyright violation".LocalizeHtml())</label>
+                    <label>@("Copyright violation".Localize())</label>
                 </li>
                 <li class="control">
                     <input type="radio" class="radio" value="not_review" name="Reason">
-                    <label>@("Not a product review".LocalizeHtml())</label>
+                    <label>@("Not a product review".Localize())</label>
                 </li>
                 <li class="control">
                     <input type="radio" class="radio" value="image_issue" name="Reason">
-                    <label>@("Problem with image".LocalizeHtml())</label>
+                    <label>@("Problem with image".Localize())</label>
                 </li>
                 <li class="control">
                     <input type="radio" class="radio" value="other" name="Reason">
-                    <label>@("Other".LocalizeHtml())</label>
+                    <label>@("Other".Localize())</label>
                 </li>
                 <li>
                     <span data-valmsg-replace="true" data-valmsg-for="Reason" class="field-validation-valid"></span>
                 </li>
                 <li>
-                    <label class="required"><em>*</em>@("Email Address".LocalizeHtml()):</label>
+                    <label class="required"><em>*</em>@("Email Address".Localize()):</label>
                     <div class="input-box">
                         <input type="text" maxlength="80" name="Email" class="input-text">
                     </div>
                     <span data-valmsg-replace="true" data-valmsg-for="Email" class="field-validation-valid"></span>
                 </li>
                 <li>
-                    <label>@("Comments".LocalizeHtml()):</label>
+                    <label>@("Comments".Localize()):</label>
                     <div class="input-box">
                         <textarea rows="3" cols="30" name="Comment"></textarea>
                     </div>
@@ -276,9 +277,9 @@
                             </div>
                             <div class="ratings">
                                 <p class="rating-links">
-                                    <a href="#" class="add_reviews_link">@("Add Your Review".LocalizeHtml())</a>
+                                    <a href="#" class="add_reviews_link">@("Add Your Review".Localize())</a>
                                     <span class="separator" style="display:none;">|</span>
-                                    <a href="#" id="show_reviews_link" style="display:none;"><span class="pr-review-count-number"></span>&nbsp;@("Review(s)".LocalizeHtml())</a>
+                                    <a href="#" id="show_reviews_link" style="display:none;"><span class="pr-review-count-number"></span>&nbsp;@("Review(s)".Localize())</a>
                                 </p>
                                 <div id="review_rating_header_stars" class="pr-review-rating no-display">
                                     <div class="pr-stars" title="rating">&nbsp;</div>
@@ -296,13 +297,13 @@
                             </div>
 	                        <div class="add-to-box">
 		                        <div class="add-to-cart">
-			                        <label for="qty">@("Qty".LocalizeHtml()):</label>
+			                        <label for="qty">@("Qty".Localize()):</label>
 			                        <input type="text" name="qty" id="qty" maxlength="12" value="1" title="Quantity" class="input-text qty noborder" 
 			                               data-val-required="The quantity field is required." 
 			                               data-val-range-min="@((int)(Model.Availability.MinQuantity))" 
 			                               data-val-range-max="@((int)(Model.Availability.MaxQuantity))" 
-			                               data-val-range="@("Select quantity in range".LocalizeHtml()) @string.Format("{0:#} - {1:#}", Model.Availability.MinQuantity, @Model.Availability.MaxQuantity)" 
-			                               data-val-number="@("Quantity must be a number.".LocalizeHtml())" 
+			                               data-val-range="@("Select quantity in range".Localize()) @string.Format("{0:#} - {1:#}", Model.Availability.MinQuantity, @Model.Availability.MaxQuantity)" 
+			                               data-val-number="@("Quantity must be a number.".Localize())" 
 			                               data-val="true" />
 										<div id="AddToCart">
 				                        	@{Html.RenderPartial("AddToCart", Model, new ViewDataDictionary { { "View", "Details" } });}
@@ -322,7 +323,7 @@
 								}
 							}
                             <div class="short-description">
-                                <h2>@("Quick Overview".LocalizeHtml())</h2>
+                                <h2>@("Quick Overview".Localize())</h2>
                                 <div class="std">
                                     @if (Model.CatalogItem.EditorialReviews != null && Model.CatalogItem.EditorialReviews.Length > 0)
 									{
@@ -373,13 +374,13 @@
                 </div>
                 <div class="product-collateral">
                     <ul class="product-tabs">
-                        <li id="product_tabs_description" class="active first"><a href="javascript:void(0)">@("Product Description".LocalizeHtml())</a></li>
-                        <li id="product_tabs_upsell_products" class=""><a href="javascript:void(0)">@("Accessories".LocalizeHtml())</a></li>
-                        <li id="product_tabs_additional" class=""><a href="javascript:void(0)">@("Additional Information".LocalizeHtml())</a></li>
-                        <li id="product_tabs_reviews" class=""><a href="javascript:void(0)">@("Reviews".LocalizeHtml())</a></li>
+                        <li id="product_tabs_description" class="active first"><a href="javascript:void(0)">@("Product Description".Localize())</a></li>
+                        <li id="product_tabs_upsell_products" class=""><a href="javascript:void(0)">@("Accessories".Localize())</a></li>
+                        <li id="product_tabs_additional" class=""><a href="javascript:void(0)">@("Additional Information".Localize())</a></li>
+                        <li id="product_tabs_reviews" class=""><a href="javascript:void(0)">@("Reviews".Localize())</a></li>
                     </ul>
                     <div class="product-tabs-content" id="product_tabs_description_contents">
-                        <h2>@("Details".LocalizeHtml())</h2>
+                        <h2>@("Details".Localize())</h2>
                         <div class="std">
                             @if (Model.CatalogItem.EditorialReviews != null && Model.CatalogItem.EditorialReviews.Length > 0)
 							{
@@ -399,34 +400,34 @@
                         </div>
                     </div>
                     <div class="product-tabs-content" id="product_tabs_additional_contents">
-	                    <h2>@("Additional Information".LocalizeHtml())</h2>
+	                    <h2>@("Additional Information".Localize())</h2>
 						<div id="product_tabs_additional_contents_list">
 							@{Html.RenderPartial("ItemProperties", Model.CatalogItem);}
 						</div>
                     </div>
                     <div class="product-tabs-content" id="product_tabs_reviews_contents">
-                        <h2>@("Customer Reviews".LocalizeHtml())</h2>
+                        <h2>@("Customer Reviews".Localize())</h2>
                         <div id="product_tabs_reviews_contents_empty" class="std">
-                            @("There are no reviews. Be first and".LocalizeHtml()) <a href="#" class="add_reviews_link">@("Add Your Review".LocalizeHtml())</a>
+                            @("There are no reviews. Be first and".Localize()) <a href="#" class="add_reviews_link">@("Add Your Review".Localize())</a>
                         </div>
                         <div id="product_tabs_reviews_contents_list" class="std no-display">
                             <section class="featured">
                                 <div class="content-wrapper pr-review-sort">
                                     <div class="pr-review-sort-wrapper">
                                         <p class="pr-review-count">
-                                            @("Reviewed by".LocalizeHtml()) <span class="pr-review-count-number"></span>&nbsp;@("customers with average rating -".LocalizeHtml()) <span class="pr-review-average"></span>
+                                            @("Reviewed by".Localize()) <span class="pr-review-count-number"></span>&nbsp;@("customers with average rating -".Localize()) <span class="pr-review-average"></span>
                                         </p>
                                         <div class="pr-review-sort-box">
                                             <p class="pr-review-sort-by">
-                                                @("Sort by".LocalizeHtml())
+                                                @("Sort by".Localize())
                                             </p>
                                             <select id="sortList">
-                                                <option value="date_new">@("Newest".LocalizeHtml())</option>
-                                                <option value="date_old">@("Oldest".LocalizeHtml())</option>
-                                                <option value="rating_high">@("Highest rating".LocalizeHtml())</option>
-                                                <option value="rating_low">@("Lowest rating".LocalizeHtml())</option>
-                                                <option value="helpful_high" selected="selected">@("Most helpful".LocalizeHtml())</option>
-                                                <option value="helpful_low">@("Least helpful".LocalizeHtml())</option>
+                                                <option value="date_new">@("Newest".Localize())</option>
+                                                <option value="date_old">@("Oldest".Localize())</option>
+                                                <option value="rating_high">@("Highest rating".Localize())</option>
+                                                <option value="rating_low">@("Lowest rating".Localize())</option>
+                                                <option value="helpful_high" selected="selected">@("Most helpful".Localize())</option>
+                                                <option value="helpful_low">@("Least helpful".Localize())</option>
                                             </select>
                                         </div>
                                     </div>
@@ -434,14 +435,14 @@
                                 <div class="content-wrapper pr-pagination-top">
                                     <div class="pr-page-count-wrapper">
                                         <p class="pr-page-count">
-                                            @("Displaying reviews".LocalizeHtml()) <strong></strong>
+                                            @("Displaying reviews".Localize()) <strong></strong>
                                         </p>
                                     </div>
                                     <div class="pr-page-nav-wrapper">
                                         <p class="pr-page-nav">
-                                            <span class="pr-page-prev">« @("Previous".LocalizeHtml())</span>
+                                            <span class="pr-page-prev">« @("Previous".Localize())</span>
                                             <span class="pr-divider">| </span>
-                                            <span class="pr-page-next">@("Next".LocalizeHtml()) »</span>
+                                            <span class="pr-page-next">@("Next".Localize()) »</span>
                                         </p>
                                     </div>
                                 </div>
@@ -457,7 +458,7 @@
             @{Html.RenderAction("Association", new { item = Model.CatalogItem, templateName = "RelatedProducts", groupName = "Related Items" });}
             <div class="block block-cart">
                 <div class="block-title">
-                    <strong><span>@("My Cart".LocalizeHtml())</span></strong>
+                    <strong><span>@("My Cart".Localize())</span></strong>
                 </div>
                 <div class="block-content">
                     @{Html.RenderAction("MiniView", "Cart");}
@@ -465,7 +466,7 @@
             </div>
             <div class="block block-list block-compare">
                 <div class="block-title">
-                    <strong><span>@("Compare Products".LocalizeHtml())</span></strong>
+                    <strong><span>@("Compare Products".Localize())</span></strong>
                 </div>
                 <div class="block-content">
                     @{Html.RenderAction("MiniCompareList", "Account");}
