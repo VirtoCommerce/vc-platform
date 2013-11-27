@@ -1,10 +1,10 @@
-﻿using Microsoft.WindowsAzure;
+﻿using System.Data.SqlClient;
+using System.Diagnostics;
+using System.Web.Configuration;
+using Microsoft.WindowsAzure;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using VirtoCommerce.Foundation.AppConfig;
 
 namespace VirtoCommerce.Foundation.Data.Infrastructure
 {
@@ -13,6 +13,49 @@ namespace VirtoCommerce.Foundation.Data.Infrastructure
     public class ConnectionHelper
     {
         private static ConcurrentDictionary<string,string> _dictionary = new ConcurrentDictionary<string, string>();
+        public static string SqlConnectionString
+        {
+            get
+            {
+                return GetConnectionString(AppConfigConfiguration.Instance.Connection.SqlConnectionStringName);
+            }
+            set
+            {
+                SetConnectionString(AppConfigConfiguration.Instance.Connection.SqlConnectionStringName, value);
+            }
+        }
+
+        private static bool? _databaseInstalled = null;
+        public static bool IsDatabaseInstalled
+        {
+            get
+            {
+                if (_databaseInstalled == null)
+                {
+                    TestSqlConnection();
+                }
+
+                return _databaseInstalled != null && _databaseInstalled.Value;
+            }
+        }
+
+        public static void TestSqlConnection()
+        {
+            try
+            {
+                using (var connection = new SqlConnection(SqlConnectionString))
+                {
+                    connection.Open();
+                    connection.Close();
+                    _databaseInstalled = true;
+                }
+            }
+            catch (Exception err)
+            {
+                Trace.TraceError(err.Message);
+                _databaseInstalled = false;
+            }
+        }
 
         /// <summary>
         /// Gets the connection string.
@@ -50,6 +93,14 @@ namespace VirtoCommerce.Foundation.Data.Infrastructure
             }
 
             return settingValue;
+        }
+
+        public static void SetConnectionString(string name, string connectionString)
+        {
+            var configFile = WebConfigurationManager.OpenWebConfiguration("~");
+            var section = (ConnectionStringsSection)configFile.GetSection("connectionStrings");
+            section.ConnectionStrings[name].ConnectionString = connectionString;
+            configFile.Save(ConfigurationSaveMode.Modified);
         }
     }
 }

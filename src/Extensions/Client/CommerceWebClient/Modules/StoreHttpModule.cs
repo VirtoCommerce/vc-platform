@@ -3,12 +3,12 @@ using System.Linq;
 using System.Web;
 using System.Web.Security;
 using VirtoCommerce.Foundation.Customers.Model;
+using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Stores.Model;
 using System.Web.Mvc;
 using System.Configuration;
 using VirtoCommerce.Client;
 using VirtoCommerce.Web.Client.Helpers;
-
 
 namespace VirtoCommerce.Web.Client.Modules
 {
@@ -40,12 +40,26 @@ namespace VirtoCommerce.Web.Client.Modules
         /// Initializes a module and prepares it to handle requests.
         /// </summary>
         /// <param name="context">An <see cref="T:System.Web.HttpApplication" /> that provides access to the methods, properties, and events common to all application objects within an ASP.NET application</param>
-		public override void Init(HttpApplication context)
-		{
-            context.BeginRequest += OnBeginRequest;
-			context.PostAcquireRequestState += OnPostAcquireRequestState;
-			context.AuthenticateRequest += OnAuthenticateRequest;
-		}
+        public override void Init(HttpApplication context)
+        {
+            if (ConnectionHelper.IsDatabaseInstalled)
+            {
+                context.BeginRequest += OnBeginRequest;
+                context.PostAcquireRequestState += OnPostAcquireRequestState;
+                context.AuthenticateRequest += OnAuthenticateRequest;
+            }
+            else
+            {
+                context.BeginRequest +=
+                    delegate
+                    {
+                        if (!HttpContext.Current.Request.Url.PathAndQuery.StartsWith("/virto/admin"))
+                        {
+                            HttpContext.Current.Response.Redirect("~/virto/admin");
+                        }
+                    };
+            }
+        }
 
         /// <summary>
         /// Called when [authenticate request].

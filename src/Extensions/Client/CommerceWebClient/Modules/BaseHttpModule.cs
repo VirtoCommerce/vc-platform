@@ -40,7 +40,8 @@ namespace VirtoCommerce.Web.Client.Modules
                 path.StartsWith(appPath + "error") ||
 				path.StartsWith(appPath + "asset") ||
                 path.StartsWith(appPath + "virto/dataservices") ||
-                path.StartsWith(appPath + "virto/services"))
+                path.StartsWith(appPath + "virto/services") ||
+                path.StartsWith(appPath + "virto/admin"))
             {
                 return true;
             }

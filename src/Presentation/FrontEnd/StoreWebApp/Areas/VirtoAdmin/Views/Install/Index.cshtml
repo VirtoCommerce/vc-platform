@@ -1,0 +1,72 @@
+﻿@model VirtoCommerce.Web.Areas.VirtoAdmin.Models.InstallModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Web administration area</title>
+</head>
+<body>
+    <div>
+        @using (Html.BeginForm("Start","Install",new {area="VirtoAdmin"}, FormMethod.Post))
+        {
+            <p>Virto commerce</p>
+            <hr/>
+            <p>Database setup</p>
+            if (!string.IsNullOrEmpty(Model.StatusMessage))
+            {
+                <div>
+                    <p>@Model.StatusMessage</p>
+                </div>
+            }
+            
+            <div>
+                <label>Server</label>
+                <input name="DataSource" value="@Model.DataSource"/>
+            </div>
+            <div>
+                <label>Database name</label>
+                <input name="InitialCatalog" value="@Model.InitialCatalog"/>
+            </div>
+            <div>
+                <label>Administration user name</label>
+                <input name="SaUser" value="@Model.SaUser"/>
+            </div>
+            <div>
+                <label>Administration user password</label>
+                <input name="SaPassword" type="password" value="@Model.SaPassword"/>
+            </div>
+            <div>
+                <label>Database user name</label>
+                <input name="UserName" value="@Model.UserName"/>
+            </div>
+            <div>
+                <label>Database user password</label>
+                <input name="UserPassword" value="@Model.UserPassword"/>
+            </div>
+            <div>
+                <label>Generate sample data</label>
+                <!-- Html.CheckBoxFor(m=>m.SetupSampleData) -->
+                <input name="SetupSampleData" id="SetupSampleData" type="checkbox" data-val="false" value="false"/>
+            </div>
+            <div>
+                <input type="submit" value="Create database"/>
+            </div>
+            <hr/>
+            <p>Administration application</p>
+            <div>
+                <a href="http://assets.virtocommerce.com/software/1.0/admin/VirtoCommerce.application#VirtoCommerce.application, Culture=neutral, PublicKeyToken=daec1fcaccc0d1ab, processorArchitecture=msil">Virto Commerce Manager</a>
+            </div>
+            <hr/>
+        }
+        @using (Html.BeginForm("Restart", "Install", new { area = "VirtoAdmin" }, FormMethod.Post))
+        {
+            <input type="submit" value="Restart"/>
+        }
+    </div>
+</body>
+</html>
