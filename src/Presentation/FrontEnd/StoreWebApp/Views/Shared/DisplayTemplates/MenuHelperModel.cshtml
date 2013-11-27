@@ -5,13 +5,14 @@
 
 <ul class="menu" role="navigation">
     @foreach (var node in Model.Nodes)
-    { 
-        <li>
+    {
+        bool last = Model.Nodes.IndexOf(node) == (Model.Nodes.Count - 1);
+        <li class="@(last ? "more" : "")">
             @Html.DisplayFor(m => node, "TopMenuNodeModel")
             @if (node.Children.Any())
             {
                 <div class="sub-menu">
-                    @Html.DisplayFor(m => node.Children, "SiteMapNodeModelList", new { level = 0 })
+                    @Html.DisplayFor(m => node.Children, "SiteMapNodeModelList", new { level = 0, last })
                 </div>
                 <div class="fade"></div>
             }

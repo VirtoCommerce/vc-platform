@@ -1,12 +1,15 @@
 ﻿@model MvcSiteMapProvider.Web.Html.Models.SiteMapNodeModelList
 @using System.Web.Mvc.Html
 @using MvcSiteMapProvider.Web.Html.Models
-<ul class="@(ViewBag.level == 0 ? "level0 clearfix" : "level"+ViewBag.level)">
-    @foreach (var node in Model) { 
-        <li class="@("level"+(ViewBag.level + 1))">
-            @Html.DisplayFor(m => node) 
-            @if (node.Children.Any()) {
-                @Html.DisplayFor(m => node.Children, "SiteMapNodeModelList", new {level = ViewBag.level + 1})
+
+<ul class="@(ViewBag.last ? "" : "level" + ViewBag.level)">
+    @foreach (var node in Model)
+    { 
+        <li class="@("level" + (ViewBag.level + 1))">
+            @Html.DisplayFor(m => node)
+            @if (node.Children.Any())
+            {
+                @Html.DisplayFor(m => node.Children, "SiteMapNodeModelList", new { level = ViewBag.level + 1, last = false })
             }
         </li>
     }

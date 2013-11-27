@@ -26,6 +26,11 @@
     <mvcSiteMapNode title="Cameras" action="Display" controller="Catalog" code="cameras"/>
     <mvcSiteMapNode title="Computers &amp; Tablets" action="Display" controller="Catalog" code="computers-tablets"/>
     <mvcSiteMapNode title="Accessories" action="Display" controller="Catalog" code="accessories"/>
+    <!-- Special last node when not all items fit in menu -->
+    <mvcSiteMapNode title="More" controller="Home" action="Index">
+      <mvcSiteMapNode title="Computers &amp; Tablets" action="Display" controller="Catalog" code="computers-tablets"/>
+      <mvcSiteMapNode title="Accessories" action="Display" controller="Catalog" code="accessories"/>
+    </mvcSiteMapNode>
 
     <mvcSiteMapNode title="Account Dashboard" controller="Account" action="Index" visibility="account,!*"/>
     <mvcSiteMapNode title="Account Information" controller="Account" action="Edit" visibility="account,!*"/>
