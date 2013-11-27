@@ -1,5 +1,7 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using Microsoft.Practices.Prism.Commands;
+using VirtoCommerce.ManagementClient.Core.Infrastructure.Common;
 
 namespace VirtoCommerce.ManagementClient.Core.Infrastructure
 {
@@ -52,6 +54,12 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure
 		protected virtual void RaiseSearchCommand()
 		{
 			Refresh();
+		}
+
+		protected override IEnumerable<ActionBinding> GetActionBindings()
+		{
+			yield return new ActionBinding { Command = RefreshItemsCommand, Name = GestureActionName.refresh };
+			yield return new ActionBinding { Command = SearchItemsCommand, Name = GestureActionName.find };
 		}
 
 		#endregion

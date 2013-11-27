@@ -877,6 +877,8 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 						RefreshCaption();
 					});
 			}
+
+			OnUIThread(InitializeGestures);
 			_parentViewModel.ViewTitle = _viewTitle as CatalogHomeTitleViewModel;
 		}
 

@@ -308,13 +308,13 @@
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type UserControl}">
 					<Border>
-						<UIElement.InputBindings>
+						<!--<UIElement.InputBindings>
 							<KeyBinding Command="{Binding ItemAddCommand}" Key="Insert" />
 							<KeyBinding Command="{Binding ItemAddCommand}" Modifiers="Control" Key="N" />
 							<KeyBinding Command="{Binding ItemDeleteCommand}" Key="Delete" />
 							<KeyBinding Command="{Binding RefreshItemsCommand}" Key="F5" />
 							<KeyBinding Command="{Binding RefreshItemsCommand}" Modifiers="Control" Key="R" />
-						</UIElement.InputBindings>
+						</UIElement.InputBindings>-->
 						<ContentPresenter />
 					</Border>
 				</ControlTemplate>
