@@ -183,6 +183,7 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 			{
 				OnUIThread(()=>ListItemsSource = new VirtualList<IImportJobViewModel>(this, 25, SynchronizationContext.Current));
 			}
+			OnUIThread(InitializeGestures);
 		}
 
 		#endregion

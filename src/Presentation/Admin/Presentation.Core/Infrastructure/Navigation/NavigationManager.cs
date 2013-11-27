@@ -163,9 +163,9 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation
             {
                 throw new ArgumentNullException("navItem");
             }
-
+			
             var content = navItem.Content;
-
+			
             //check that navigation item already registered
             var alreadyExistNavItem = GetNavigationItemByName(navItem.Name) != null;
 
@@ -213,7 +213,7 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation
                 var openTracking = content as IOpenTracking;
                 openTracking.IsActive = true;
             }
-
+			
             //Initialize before open
             if (content is ISupportDelayInitialization)
             {
@@ -244,9 +244,13 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation
             }
 
 
+			if (content is ViewModelBase)
+			{
+				((ViewModelBase)content).InitializeGestures();
+			}
+
 
             //Show view
-
             Application.Current.Dispatcher.Invoke(DispatcherPriority.Normal, (Action) delegate
                 {
 
