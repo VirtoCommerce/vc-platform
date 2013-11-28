@@ -41,6 +41,7 @@ Param(
         # controlling parameters, allow deploying subset of features, shown in the order they are executed
 		$build = $true,
 		$build_params,
+		$build_config = 'Release',
         $deploy_database = $true,
         $deploy_search = $true,
         $deploy_scheduler = $true,
@@ -63,7 +64,7 @@ $search_elasticsearchdistro = "$build_solutiondir\Tools\ElasticSearch"
 $scheduler_workerroleconfig = "$build_solutiondir\src\Azure\WorkerRoles\Scheduler\AzureScheduler"
 $frontend_workerroleconfig = "$build_solutiondir\src\Azure\WebRoles\Frontend\CommerceSite"
 
-$build_configuration = 'Release' # build configuration to use
+$build_configuration = $build_config # build configuration to use
 
 #*************** LESS OFTEN CHANGED SETTINGS
 
