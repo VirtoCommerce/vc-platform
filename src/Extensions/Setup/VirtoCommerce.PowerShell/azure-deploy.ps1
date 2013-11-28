@@ -38,8 +38,9 @@ Param(
         $vcfpowershellfile,
         $region = 'West US',
 		$slot = 'Production',
-        # controlling parameters, allow deploying subset of features, shown in the orde they are executed
+        # controlling parameters, allow deploying subset of features, shown in the order they are executed
 		$build = $true,
+		$build_params,
         $deploy_database = $true,
         $deploy_search = $true,
         $deploy_scheduler = $true,
@@ -252,21 +253,21 @@ Function Build
 
         # build
         write-progress -id 1 -activity "Solution Build" -status "Cleaning in Progress"
-        & "$global:buildexe_path\MSBuild.exe" $build_solutionname /m /t:clean
+        & "$global:buildexe_path\MSBuild.exe" $build_solutionname /m /t:clean $build_params
         if ($LASTEXITCODE -ne 0)
         {
           throw "Build Failed"
         }
 
         write-progress -id 1 -activity "Solution Build" -status "Building in Progress"
-        & "$global:buildexe_path\MSBuild.exe" $build_solutionname /m /t:build /p:Configuration="$build_configuration" /Property:ApplicationVersion=$PublishApplicationVersion /Property:MinimumRequiredVersion=$PublishApplicationVersion
+        & "$global:buildexe_path\MSBuild.exe" $build_solutionname /m /t:build /p:Configuration="$build_configuration" /Property:ApplicationVersion=$PublishApplicationVersion /Property:MinimumRequiredVersion=$PublishApplicationVersion $build_params
         if ($LASTEXITCODE -ne 0)
         {
           throw "Build Failed"
         }
 
         write-progress -id 1 -activity "Solution Build" -status "Publishing in Progress"
-        & "$global:buildexe_path\MSBuild.exe" $build_solutionname /m /t:Publish /p:InstallUrl=$admin_installcontainer/$admin_blobprefix/ /p:Configuration="$build_configuration" /p:TargetProfile=Cloud /Property:PublishDir="$build_path\" /Property:ApplicationVersion=$PublishApplicationVersion /Property:MinimumRequiredVersion=$PublishApplicationVersion
+        & "$global:buildexe_path\MSBuild.exe" $build_solutionname /m /t:Publish /p:InstallUrl=$admin_installcontainer/$admin_blobprefix/ /p:Configuration="$build_configuration" /p:TargetProfile=Cloud /Property:PublishDir="$build_path\" /Property:ApplicationVersion=$PublishApplicationVersion /Property:MinimumRequiredVersion=$PublishApplicationVersion $build_params
         if ($LASTEXITCODE -ne 0)
         {
           throw "Build Failed"
