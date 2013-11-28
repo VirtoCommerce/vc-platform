@@ -41,7 +41,7 @@ Param(
         # controlling parameters, allow deploying subset of features, shown in the order they are executed
 		$build = $true,
 		$build_params,
-		$build_config = 'Release'
+		$build_config = 'Release',
         $deploy_database = $true,
         $deploy_search = $true,
         $deploy_scheduler = $true,
