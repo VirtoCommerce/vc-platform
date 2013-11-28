@@ -41,7 +41,7 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
         public ActionResult Restart()
         {
             HttpRuntime.UnloadAppDomain();
-            return this.Redirect("/");
+            return this.Redirect("~/");
         }
 
         private void SetupDb(InstallModel model)
