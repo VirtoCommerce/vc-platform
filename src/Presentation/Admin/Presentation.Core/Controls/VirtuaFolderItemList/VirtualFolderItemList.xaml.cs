@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using VirtoCommerce.ManagementClient.Core.Infrastructure.DataVirtualization;
 
 namespace VirtoCommerce.ManagementClient.Core.Controls
 {
@@ -21,10 +22,10 @@ namespace VirtoCommerce.ManagementClient.Core.Controls
 
 		public VirtualFolderItemList()
 		{
+			InitializeComponent();
+
 			this.Loaded += VirtualFolderItemList_Loaded;
 			this.Unloaded += VirtualFolderItemList_Unloaded;
-
-			InitializeComponent();
 		}
 
 		#endregion
@@ -33,6 +34,8 @@ namespace VirtoCommerce.ManagementClient.Core.Controls
 
 		void VirtualFolderItemList_Loaded(object sender, RoutedEventArgs e)
 		{
+			this.SetValue(VirtualListLoadingIndicator.IsAttachedProperty, true);
+
 			if (scrollViewer == null)
 				scrollViewer = GetScrollViewer(this);
 
@@ -44,6 +47,8 @@ namespace VirtoCommerce.ManagementClient.Core.Controls
 
 		void VirtualFolderItemList_Unloaded(object sender, RoutedEventArgs e)
 		{
+			this.SetValue(VirtualListLoadingIndicator.IsAttachedProperty, false);
+
 			if (scrollViewer == null)
 				scrollViewer = GetScrollViewer(this);
 
