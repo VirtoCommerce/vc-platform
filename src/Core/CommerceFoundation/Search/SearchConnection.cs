@@ -94,7 +94,7 @@ namespace VirtoCommerce.Foundation.Search
         {
             get
             {
-                if (_Parameters != null) return _Parameters["provider"];
+                if (_Parameters != null && _Parameters.ContainsKey("provider")) return _Parameters["provider"];
                 return "default";
             }
             private set
