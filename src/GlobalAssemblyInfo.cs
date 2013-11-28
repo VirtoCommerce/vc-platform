@@ -12,9 +12,9 @@ using System.Reflection;
 [assembly: AssemblyCompany("VirtoCommerce")]
 [assembly: AssemblyProduct("Virto Commerce 1.5")]
 [assembly: AssemblyCopyright("Copyright © VirtoCommerce 2011-2013")]
-[assembly: AssemblyFileVersion("1.5.625.0")]
-[assembly: AssemblyVersion("1.5.0.0")]
-[assembly: AssemblyInformationalVersion("1.5")]
+[assembly: AssemblyFileVersion("1.6.625.0")]
+[assembly: AssemblyVersion("1.6.0.0")]
+[assembly: AssemblyInformationalVersion("1.6")]
 
 #if DEBUG
 [assembly: AssemblyConfiguration("Debug")]
