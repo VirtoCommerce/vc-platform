@@ -175,7 +175,7 @@ namespace VirtoCommerce.Web.Virto.Helpers
 
 					if (display.HasFlag(ItemDisplayOptions.ItemPrice))
 					{
-						var lowestPrice = PriceListClient.GetLowestPrice(itemId, 1);
+                        var lowestPrice = PriceListClient.GetLowestPrice(itemId, itemAvaiability !=null ? itemAvaiability.MinQuantity : 1);
 						var tags = new Hashtable
 							{
 								{

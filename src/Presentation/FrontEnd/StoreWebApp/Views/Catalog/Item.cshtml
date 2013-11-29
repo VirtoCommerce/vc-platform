@@ -1,7 +1,7 @@
 ﻿@using VirtoCommerce.Web.Virto.Helpers
 @model CatalogItemWithPriceModel
 @{
-	ViewBag.Title = Html.Title(Model.DisplayName);
+    ViewBag.Title = Html.Title(Model.DisplayName);
 }
 
 <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-tmpl-min.js")"></script>
@@ -9,34 +9,41 @@
 <script type="text/javascript" src="@Url.Content("~/Scripts/v/virto-reviews.js")"></script>
 
 <script type="text/javascript">
-	$(document).ready(function () {
+    $(document).ready(function ()
+    {
 
-		initItemPage();
-		var spinner = initQtySpinner("#qty", "@((int)(Model.Availability.MinQuantity))", "@((int)(Model.Availability.MaxQuantity))");
+        initItemPage();
+        var spinner = initQtySpinner("#qty", "@((int)(Model.Availability.MinQuantity))", "@((int)(Model.Availability.MaxQuantity))");
 		spinner.parent().css("float", "left");
 		spinner.parent().css("margin-right", "5px");
 
 		@if (!Model.Availability.IsAvailable)
-		{
-            //@:$("button.btn-cart").attr("disabled", "disabled");
-            @:$("#qty").spinner("disable");
-        }
-	    
-		loadVariations("@Model.CatalogItem.ItemId", "@Request.QueryString["variationId"]");
+        {
+		    @:$("#qty").spinner("disable");
+		}
+        else
+        {
+		    @:$("#qty").val("@Math.Round(Model.Availability.MinQuantity,0)");
+		}
 
-		Reviews.init({ container: "#reviewsTemplateContainer", currentItemId: "@Model.CatalogItem.ItemId" });
+	    loadVariations("@Model.CatalogItem.ItemId", "@Request.QueryString["variationId"]");
 
-		$(".add_reviews_link").on('click', function () {
-		    var isAuthorized = '@UserHelper.CustomerSession.IsRegistered';
+	    Reviews.init({ container: "#reviewsTemplateContainer", currentItemId: "@Model.CatalogItem.ItemId" });
 
-			if (isAuthorized == "True") {
-				tb_show('@("Create Review".LocalizeHtml())', "@Url.Action("AddReview", "Catalog", new { id = Model.CatalogItem.ItemId, height = 550 })", false);
+	    $(".add_reviews_link").on('click', function ()
+	    {
+	        var isAuthorized = '@UserHelper.CustomerSession.IsRegistered';
+
+		    if (isAuthorized == "True")
+		    {
+		        tb_show('@("Create Review".LocalizeHtml())', "@Url.Action("AddReview", "Catalog", new { id = Model.CatalogItem.ItemId, height = 550 })", false);
 			}
-			else {
-				tb_show('@("Login or Create New Account".LocalizeHtml())', "@Url.Action("LogOnAsync", "Account")", false);
+			else
+			{
+			    tb_show('@("Login or Create New Account".LocalizeHtml())', "@Url.Action("LogOnAsync", "Account")", false);
 			}
 
-			return false;
+		    return false;
 		});
 	});
 </script>
@@ -70,7 +77,7 @@
 
     <div id="report_abuse_for_${Id}" class="report_abuse">
         @using (Html.BeginForm("reportabuse", "api/review", FormMethod.Post, new { id = "abuse_${Id}" }))
-		{
+        {
             
             <h3>@("Please let us know what kind of issue this is".LocalizeHtml()):</h3>
             <ul class="form-list">
@@ -127,12 +134,12 @@
             <input type="hidden" value="True" name="IsReview" />
             <input type="button" class="post" value="Submit" onclick="Reviews.flag('${Id}');" />
             <input type="button" class="post" value="Cancel" onclick="$('#report_abuse_for_${Id}').hide(); return false;" />
-		}
+        }
     </div>
 
     <div class="write_a_comment" id="comment_for_${Id}">
         @using (Html.BeginForm("comment", "api/review", FormMethod.Post, new { id = "comment_${Id}" }))
-		{
+        {
             <h3>@("Your comment".LocalizeHtml()):</h3>
 
             <ul class="form-list">
@@ -158,7 +165,7 @@
             <input type="hidden" value="${Id}" name="Id" />
             <input type="button" class="post" value="Submit" onclick="Reviews.comment('${Id}');" />
             <input type="button" class="post" value="Cancel" onclick="$('#comment_for_${Id}').hide(); return false;" />
-		}
+        }
     </div>
 
     <div class="cl"></div>
@@ -198,7 +205,7 @@
     <div class="cl"></div>
     <div id="report_abuse_for_${Id}" class="report_abuse">
         @using (Html.BeginForm("reportabuse", "api/review", FormMethod.Post, new { id = "abuse_${Id}" }))
-		{          
+        {          
             <h3>@("Please let us know what kind of issue this is".LocalizeHtml()):</h3>
             <ul class="form-list">
                 <li class="control">
@@ -254,7 +261,7 @@
             <input type="hidden" value="False" name="IsReview" />
             <input type="button" class="post" value="Submit" onclick="Reviews.flag('${Id}');" />
             <input type="button" class="post" value="Cancel" onclick="$('#report_abuse_for_${Id}').hide(); return false;" />
-		}
+        }
     </div>
 </script>
 
@@ -277,8 +284,8 @@
                             <div class="ratings">
                                 <p class="rating-links">
                                     <a href="#" class="add_reviews_link">@("Add Your Review".LocalizeHtml())</a>
-                                    <span class="separator" style="display:none;">|</span>
-                                    <a href="#" id="show_reviews_link" style="display:none;"><span class="pr-review-count-number"></span>&nbsp;@("Review(s)".LocalizeHtml())</a>
+                                    <span class="separator" style="display: none;">|</span>
+                                    <a href="#" id="show_reviews_link" style="display: none;"><span class="pr-review-count-number"></span>&nbsp;@("Review(s)".LocalizeHtml())</a>
                                 </p>
                                 <div id="review_rating_header_stars" class="pr-review-rating no-display">
                                     <div class="pr-stars" title="rating">&nbsp;</div>
@@ -294,65 +301,65 @@
                             <div class="item-variations" id="item-variations">
                                 @*@Html.Action("ItemVariations", new { itemId = Model.CatalogItem.ItemId, name = "itemvariations" })*@
                             </div>
-	                        <div class="add-to-box">
-		                        <div class="add-to-cart">
-			                        <label for="qty">@("Qty".LocalizeHtml()):</label>
-			                        <input type="text" name="qty" id="qty" maxlength="12" value="1" title="Quantity" class="input-text qty noborder" 
+                            <div class="add-to-box">
+                                <div class="add-to-cart">
+                                    <label for="qty">@("Qty".LocalizeHtml()):</label>
+                                    <input type="text" name="qty" id="qty" maxlength="12" value="1" title="Quantity" class="input-text qty noborder" 
 			                               data-val-required="The quantity field is required." 
 			                               data-val-range-min="@((int)(Model.Availability.MinQuantity))" 
 			                               data-val-range-max="@((int)(Model.Availability.MaxQuantity))" 
 			                               data-val-range="@("Select quantity in range".LocalizeHtml()) @string.Format("{0:#} - {1:#}", Model.Availability.MinQuantity, @Model.Availability.MaxQuantity)" 
 			                               data-val-number="@("Quantity must be a number.".LocalizeHtml())" 
 			                               data-val="true" />
-										<div id="AddToCart">
-				                        	@{Html.RenderPartial("AddToCart", Model, new ViewDataDictionary { { "View", "Details" } });}
-										</div>
+                                    <div id="AddToCart">
+                                        @{Html.RenderPartial("AddToCart", Model, new ViewDataDictionary { { "View", "Details" } });}
+                                    </div>
 
-			                        <br />
-			                        <span data-valmsg-replace="true" data-valmsg-for="qty" class="field-validation-valid" style="float: left;"></span>
-		                        </div>
-		                        <span class="or">OR</span>
-		                        @{Html.RenderPartial("AddToLinks", Model);}
-	                        </div>
-							@{
-								var firstOrDefault = SettingsHelper.GetSettings("ShareButtonsHtml").FirstOrDefault();
-								if (firstOrDefault != null)
-								{
-									@Html.Raw(firstOrDefault.ToString())
-								}
-							}
+                                    <br />
+                                    <span data-valmsg-replace="true" data-valmsg-for="qty" class="field-validation-valid" style="float: left;"></span>
+                                </div>
+                                <span class="or">OR</span>
+                                @{Html.RenderPartial("AddToLinks", Model);}
+                            </div>
+                            @{
+                                var firstOrDefault = SettingsHelper.GetSettings("ShareButtonsHtml").FirstOrDefault();
+                                if (firstOrDefault != null)
+                                {
+                                @Html.Raw(firstOrDefault.ToString())
+                                }
+                            }
                             <div class="short-description">
                                 <h2>@("Quick Overview".LocalizeHtml())</h2>
                                 <div class="std">
                                     @if (Model.CatalogItem.EditorialReviews != null && Model.CatalogItem.EditorialReviews.Length > 0)
-									{
-										foreach (var review in Model.CatalogItem.EditorialReviews)
-										{
-											if (review.Source == "Product Description")
-											{
+                                    {
+                                        foreach (var review in Model.CatalogItem.EditorialReviews)
+                                        {
+                                            if (review.Source == "Product Description")
+                                            {
                                         @Html.Raw(review.Content)
-											}
-										}
+                                            }
+                                        }
 
-									}
+                                    }
                                 </div>
                             </div>
                         </div>
                         <div class="product-img-box">
                             <div id="imageContainer" class="product-image product-image-zoom">
                                 <a href="@Url.Image(Model.CatalogItem.Item, "primaryimage")" rel="gal1" class="jqzoom">
-	                                <img id="image" class="primaryimage" src="@Url.Image(Model.CatalogItem.Item, "primaryimage")" alt="" title="" style="width:300px;" 
+                                    <img id="image" class="primaryimage" src="@Url.Image(Model.CatalogItem.Item, "primaryimage")" alt="" title="" style="width:300px;" 
 										onerror="this.onerror=null;this.src='@Href("~/Content/themes/default/images/blank.png")';$('a.jqzoom').attr('href','@Href("~/Content/themes/default/images/blank.png")');" />
                                 </a>
                             </div>
                             @if (Model.CatalogItem.ItemAssets.Count(a => a.GroupName.Equals("primaryimage") || a.GroupName.Equals("images")) > 1)
-							{ 
+                            { 
                                 <div class="more-views">
                                     <h2>More Views</h2>
                                     <ul>
-                                        @foreach (var asset in Model.CatalogItem.ItemAssets.OrderBy(x=>x.SortOrder).Where(a => a.GroupName.Equals("primaryimage") || a.GroupName.Equals("images")))
-										{
-											var thumClass = asset.GroupName.Equals("primaryimage") ? "zoomThumbActive" : "";
+                                        @foreach (var asset in Model.CatalogItem.ItemAssets.OrderBy(x => x.SortOrder).Where(a => a.GroupName.Equals("primaryimage") || a.GroupName.Equals("images")))
+                                        {
+                                            var thumClass = asset.GroupName.Equals("primaryimage") ? "zoomThumbActive" : "";
                                             <li>
                                                 <a class="@thumClass" href='javascript:void(0);' rel="
                                                     {gallery: 'gal1', 
@@ -362,10 +369,10 @@
                                                     <img src="@Url.ImageThumbnail(asset)" width="66" height="66">
                                                 </a>
                                             </li>
-										}
+                                        }
                                     </ul>
                                 </div>
-							}
+                            }
                         </div>
                         <div class="clearer">
                         </div>
@@ -382,15 +389,15 @@
                         <h2>@("Details".LocalizeHtml())</h2>
                         <div class="std">
                             @if (Model.CatalogItem.EditorialReviews != null && Model.CatalogItem.EditorialReviews.Length > 0)
-							{
-								foreach (var review in Model.CatalogItem.EditorialReviews)
-								{
-									if (review.Source == "Amazon.com Product Description")
-									{
-										 @Html.Raw(review.Content)
-									}
-								}
-							}
+                            {
+                                foreach (var review in Model.CatalogItem.EditorialReviews)
+                                {
+                                    if (review.Source == "Amazon.com Product Description")
+                                    {
+                                @Html.Raw(review.Content)
+                                    }
+                                }
+                            }
                         </div>
                     </div>
                     <div class="product-tabs-content" id="product_tabs_upsell_products_contents">
@@ -399,10 +406,10 @@
                         </div>
                     </div>
                     <div class="product-tabs-content" id="product_tabs_additional_contents">
-	                    <h2>@("Additional Information".LocalizeHtml())</h2>
-						<div id="product_tabs_additional_contents_list">
-							@{Html.RenderPartial("ItemProperties", Model.CatalogItem);}
-						</div>
+                        <h2>@("Additional Information".LocalizeHtml())</h2>
+                        <div id="product_tabs_additional_contents_list">
+                            @{Html.RenderPartial("ItemProperties", Model.CatalogItem);}
+                        </div>
                     </div>
                     <div class="product-tabs-content" id="product_tabs_reviews_contents">
                         <h2>@("Customer Reviews".LocalizeHtml())</h2>
