@@ -99,11 +99,11 @@
 				<!-- Quantity -->
 				<StackPanel Grid.Row="0" Grid.Column="0" IsEnabled="{Binding InnerItem.IsBuyable}">
 					<TextBlock Text="Min. Quantity:" />
-					<extToolkit:IntegerUpDown Value="{Binding InnerItem.MinQuantity}" />
+					<extToolkit:IntegerUpDown Value="{Binding InnerItem.MinQuantity}" Maximum="{Binding InnerItem.MaxQuantity}"/>
 				</StackPanel>
 				<StackPanel Grid.Row="1" Grid.Column="0" IsEnabled="{Binding InnerItem.IsBuyable}">
 					<TextBlock Text="Max. Quantity:" />
-					<extToolkit:IntegerUpDown Value="{Binding InnerItem.MaxQuantity}" />
+					<extToolkit:IntegerUpDown Value="{Binding InnerItem.MaxQuantity}" Minimum="{Binding InnerItem.MinQuantity}" />
 				</StackPanel>
 				
 				<!-- Tax category -->

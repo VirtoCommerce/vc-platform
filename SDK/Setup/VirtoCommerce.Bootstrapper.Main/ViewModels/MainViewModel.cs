@@ -49,8 +49,8 @@ namespace VirtoCommerce.Bootstrapper.Main.ViewModels
             }
 #endif
 			ViewTitle = new ViewTitleBase { Title = Resources.SDKTitle };
-
-			CancelCommand = new DelegateCommand<object>(x => Cancel(), x => !IsInitializing && !CurrentStep.IsLast);
+			Cancelled = false;
+			CancelCommand = new DelegateCommand<object>(x => Cancel(), x => !IsInitializing && !CurrentStep.IsLast && !Cancelled);
 			CancelConfirmRequest = new InteractionRequest<Confirmation>();
 
 			OKDialogRequest = new InteractionRequest<Notification>();
@@ -81,7 +81,7 @@ namespace VirtoCommerce.Bootstrapper.Main.ViewModels
 			IsInitializing = true;
 
 			PropertyChanged += OnPropertyChanged;
-
+			Cancelled = false;
 			_installer = installer;
 			_engine = engine;
 
@@ -97,7 +97,12 @@ namespace VirtoCommerce.Bootstrapper.Main.ViewModels
 
 		#region IMainViewModel implementation
 
-		public bool Cancelled { get; private set; }
+		private bool _cancelled;
+		public bool Cancelled
+		{
+			get { return _cancelled; }
+			private set { _cancelled = value; OnPropertyChanged(); }
+		}
 
 		public DelegateCommand<object> CancelCommand { get; private set; }
 
@@ -112,6 +117,7 @@ namespace VirtoCommerce.Bootstrapper.Main.ViewModels
 				{
 					_engine.Log(LogLevel.Error, Resources.Cancelled);
 					Cancelled = true;
+					CancelCommand.RaiseCanExecuteChanged();
 					if (!IsApplying && !CurrentStep.IsLast)
 					{
 						_engine.Log(LogLevel.Error, Resources.Cancelled);
