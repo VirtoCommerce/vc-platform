@@ -194,9 +194,9 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 			{
 				var configurationFolder = Path.GetFullPath(Path.Combine(Path.GetDirectoryName(typeof(ConfigurationWizardViewModel).Assembly.Location), @"..\Resources\Database"));
 				var connectionString = _confirmationViewModel.DatabaseConnectionString;
-
+				
 				// Configure database
-				new PublishAppConfigDatabase().Publish(connectionString, null, InstallSamples); // publish AppConfig first as it contains system tables
+				new PublishAppConfigDatabase().Publish(connectionString, _confirmationViewModel.SearchConnection.Scope, InstallSamples); // publish AppConfig first as it contains system tables
 				ct.ThrowIfCancellationRequested();
 				new PublishStoreDatabase().Publish(connectionString, null, InstallSamples);
 				ct.ThrowIfCancellationRequested();
