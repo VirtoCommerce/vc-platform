@@ -1,6 +1,28 @@
 ﻿@using VirtoCommerce.Web.Virto.Helpers
 @model CatalogItemSearchModel
 
+@helper RenderItems(string templateName)
+{
+    foreach (var item in Model.CatalogItems)
+    {
+        var itemClass = "item";
+        if (item.CatalogItem.Item.Created.HasValue && item.CatalogItem.Item.Created.Value.AddDays(1) >= DateTime.UtcNow)
+        {
+            itemClass = string.Concat(@itemClass, " ", "new");
+        }
+        if (item.Price != null && item.Price.Type == PriceType.Sale)
+        {
+            itemClass = string.Concat(@itemClass, " ", "sale");
+        }
+    <li class="@itemClass">
+        <div class="inner">
+            @Html.DisplayFor(model => item, templateName)
+        </div>
+    </li>
+    }
+}
+
+
 <script type="text/javascript" src="@Url.Content("~/Scripts/v/virto-reviews.js")"></script>
 <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-tmpl-min.js")"></script>
 
@@ -16,11 +38,11 @@
         @foreach (var item in Model.CatalogItems)
         {
             <text>
-                $("[id='addreview-@item.CatalogItem.ItemId']").on('click', function ()
-                {
-                    if (isAuthorized == "True")
-                    {
-                        tb_show('@("Create Review".LocalizeHtml())', "@Url.Action("AddReview", "Catalog", new { id = item.CatalogItem.ItemId, height = 550 })", false);
+        $("[id='addreview-@item.CatalogItem.ItemId']").on('click', function ()
+        {
+            if (isAuthorized == "True")
+            {
+                tb_show('@("Create Review".LocalizeHtml())', "@Url.Action("AddReview", "Catalog", new { id = item.CatalogItem.ItemId, height = 550 })", false);
                     }
                     else
                     {
@@ -29,7 +51,7 @@
 
                     return false;
                 });
-            </text>
+        </text>
         }
 
 
@@ -183,44 +205,12 @@
         </div>
         <div class="grid selected">
             <ul class="products-list grid">
-                @foreach (var item in Model.CatalogItems)
-                {
-                    string itemClass = "item";
-                    if (item.CatalogItem.Item.Created.HasValue && item.CatalogItem.Item.Created.Value.AddDays(1) >= DateTime.UtcNow)
-                    {
-                        itemClass = string.Concat(@itemClass, " ", "new");
-                    }
-                    if (item.Price.Type == PriceType.Sale)
-                    {
-                        itemClass = string.Concat(@itemClass, " ", "sale");
-                    }
-                    <li class="@itemClass">
-                        <div class="inner">
-                            @Html.DisplayFor(model => item, "SearchItem")
-                        </div>
-                    </li>
-                }
+                @RenderItems("SearchItem")
             </ul>
         </div>
         <div class="list">
             <ul class="products-list list">
-                @foreach (var item in Model.CatalogItems)
-                {
-                    string itemClass = "item";
-                    if (item.CatalogItem.Item.Created.HasValue && item.CatalogItem.Item.Created.Value.AddDays(1) >= DateTime.UtcNow)
-                    {
-                        itemClass = string.Concat(@itemClass, " ", "new");
-                    }
-                    if (item.Price.Type == PriceType.Sale)
-                    {
-                        itemClass = string.Concat(@itemClass, " ", "sale");
-                    }
-                    <li class="@itemClass">
-                        <div class="inner">
-                            @Html.DisplayFor(model => item, "SearchListItem")
-                        </div>
-                    </li>
-                }
+                @RenderItems("SearchListItem")
             </ul>
         </div>
         <div class="toolbar">
