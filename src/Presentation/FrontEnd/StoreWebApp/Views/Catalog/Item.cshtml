@@ -9,7 +9,8 @@
 <script type="text/javascript" src="@Url.Content("~/Scripts/v/virto-reviews.js")"></script>
 
 <script type="text/javascript">
-	$(document).ready(function () {
+    $(document).ready(function ()
+    {
 
 		initItemPage();
 		var spinner = initQtySpinner("#qty", "@((int)(Model.Availability.MinQuantity))", "@((int)(Model.Availability.MaxQuantity))");
@@ -18,15 +19,19 @@
 
 		@if (!Model.Availability.IsAvailable)
 		{
-            //@:$("button.btn-cart").attr("disabled", "disabled");
             @:$("#qty").spinner("disable");
         }
+        else
+        {
+		    @:$("#qty").val("@Math.Round(Model.Availability.MinQuantity,0)");
+		}
 	    
 		loadVariations("@Model.CatalogItem.ItemId", "@Request.QueryString["variationId"]");
 
 		Reviews.init({ container: "#reviewsTemplateContainer", currentItemId: "@Model.CatalogItem.ItemId" });
 
-		$(".add_reviews_link").on('click', function () {
+	    $(".add_reviews_link").on('click', function ()
+	    {
 		    var isAuthorized = '@UserHelper.CustomerSession.IsRegistered';
 
 			if (isAuthorized == "True") {
@@ -70,7 +75,7 @@
 
     <div id="report_abuse_for_${Id}" class="report_abuse">
         @using (Html.BeginForm("reportabuse", "api/review", FormMethod.Post, new { id = "abuse_${Id}" }))
-        {
+		{
             
             <h3>@("Please let us know what kind of issue this is".Localize()):</h3>
             <ul class="form-list">
@@ -127,12 +132,12 @@
             <input type="hidden" value="True" name="IsReview" />
             <input type="button" class="post" value="Submit" onclick="Reviews.flag('${Id}');" />
             <input type="button" class="post" value="Cancel" onclick="$('#report_abuse_for_${Id}').hide(); return false;" />
-        }
+		}
     </div>
 
     <div class="write_a_comment" id="comment_for_${Id}">
         @using (Html.BeginForm("comment", "api/review", FormMethod.Post, new { id = "comment_${Id}" }))
-        {
+		{
             <h3>@("Your comment".Localize()):</h3>
 
             <ul class="form-list">
@@ -158,23 +163,23 @@
             <input type="hidden" value="${Id}" name="Id" />
             <input type="button" class="post" value="Submit" onclick="Reviews.comment('${Id}');" />
             <input type="button" class="post" value="Cancel" onclick="$('#comment_for_${Id}').hide(); return false;" />
-        }
+		}
     </div>
 
     <div class="cl"></div>
 
     {{if TotalComments > 0}}
-    <div id="show_all_comment_for_${Id}">
+        <div id="show_all_comment_for_${Id}">
         <i>@("There are".Localize()) <b>${TotalComments}</b> @("comments in total".Localize())</i>
-        {{if Comments.length < TotalComments }}
+            {{if Comments.length < TotalComments }}
         <a href="#" onclick="Reviews.showAllComments('${Id}'); return false;">@("Show all".Localize())</a>
-        {{/if}}
-    </div>
+            {{/if}}
+        </div>
     {{/if}}
     {{if Comments}}
-    <div id="comments_container_${Id}">
-        {{tmpl(Comments) "#commentTemplate"}}
-    </div>
+        <div id="comments_container_${Id}">
+            {{tmpl(Comments) "#commentTemplate"}}
+        </div>
     {{/if}}
     <div class="spacer"></div>
 </script>
@@ -351,7 +356,7 @@
                                 <div class="more-views">
                                     <h2>More Views</h2>
                                     <ul>
-                                        @foreach (var asset in Model.CatalogItem.ItemAssets.OrderBy(x=>x.SortOrder).Where(a => a.GroupName.Equals("primaryimage") || a.GroupName.Equals("images")))
+                                        @foreach (var asset in Model.CatalogItem.ItemAssets.OrderBy(x => x.SortOrder).Where(a => a.GroupName.Equals("primaryimage") || a.GroupName.Equals("images")))
 										{
 											var thumClass = asset.GroupName.Equals("primaryimage") ? "zoomThumbActive" : "";
                                             <li>

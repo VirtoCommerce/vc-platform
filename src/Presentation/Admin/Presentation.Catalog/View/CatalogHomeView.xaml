@@ -381,7 +381,7 @@
 						<core_controls:VectorImage ImageResource="{StaticResource Icon_Button_Filter}" Height="18" Width="18" />
 					</TabItem.Header>
 					<DockPanel>
-						<TextBlock DockPanel.Dock="Top" Text="SAVE FILTERS" Margin="0,5" Style="{DynamicResource Virto_TextBlock_TabTitle_Style}" />
+						<TextBlock DockPanel.Dock="Top" Text="SAVED FILTERS" Margin="0,5" Style="{DynamicResource Virto_TextBlock_TabTitle_Style}" />
 
 						<Button Style="{x:Null}" Cursor="Hand" Command="{Binding QueryCreateCommand}" DockPanel.Dock="Top">
 							<Button.Template>
