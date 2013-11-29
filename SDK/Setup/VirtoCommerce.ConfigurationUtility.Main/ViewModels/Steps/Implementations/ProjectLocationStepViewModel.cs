@@ -22,7 +22,7 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 		#endregion
 
 		private const string CommerceProjectName = "SampleProject";
-		private const string CommerceProjectPath = "Virto Commerce 1.5\\Projects";
+		private const string CommerceProjectPath = "Virto Commerce 1.6\\Projects";
 		#region Constructors
 
 #if DESIGN // TODO: Replace with Debug compilation condition and IsInDesignMode runtime condition
