@@ -97,8 +97,20 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 			Result = null; // sets result to InProgress
 			try
 			{
+			    var searchConnection = _confirmationViewModel.SearchConnection;
 				// Update Search index
-				new UpdateSearchIndex().Index(_confirmationViewModel.SearchConnection, _confirmationViewModel.DatabaseConnectionString, null, true);
+                
+                // handle special case for lucene, resolve relative path to the actual folder
+                if (searchConnection.Provider.Equals(
+                    "lucene", StringComparison.OrdinalIgnoreCase) && searchConnection.DataSource.StartsWith("~/"))
+                {
+                    var dataSource = searchConnection.DataSource.Replace(
+                        "~/", _confirmationViewModel.ProjectLocation + "\\");
+
+                    searchConnection = new SearchConnection(dataSource, searchConnection.Scope, searchConnection.Provider);
+                }
+
+                new UpdateSearchIndex().Index(searchConnection, _confirmationViewModel.DatabaseConnectionString, null, true);
 				ct.ThrowIfCancellationRequested();
 
 				Result = OperationResult.Successful;
