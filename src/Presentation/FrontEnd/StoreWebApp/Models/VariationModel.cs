@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
+using VirtoCommerce.Client;
 using VirtoCommerce.Foundation.Catalogs.Model;
+using VirtoCommerce.Web.Virto.Helpers;
 
 namespace VirtoCommerce.Web.Models
 {
@@ -214,6 +216,14 @@ namespace VirtoCommerce.Web.Models
             get
             {
                 return _selectedVariationCandidates.Count == 1 ? _selectedVariationCandidates.First() : null;
+            }
+        }
+
+        public CatalogItemWithPriceModel CatalogItem
+        {
+            get
+            {
+                return string.IsNullOrEmpty(SelectedVariationId) ? null : CatalogHelper.CreateCatalogModel(SelectedVariationId, ParentItemId, forcedActive: true);
             }
         }
 

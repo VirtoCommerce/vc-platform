@@ -41,13 +41,13 @@
 			 Model.Price != null && 
 			 (Model.Price.SalePrice.HasValue || Model.Price.ListPrice.HasValue))))
 		 {
-			 <button type="button" title="@("Add to Cart".LocalizeHtml())" class="button btn-cart" onclick="return VirtoCart.addToCartClick('@((Model.CatalogItem != null) ? Model.CatalogItem.ItemId : "")','@((Model.CatalogItem != null) ? Model.CatalogItem.ParentItemId : "")'); ">
-				 <span><span>@("Add to Cart".LocalizeHtml())</span></span>
+			 <button type="button" title="@("Add to Cart".Localize())" onclick="return VirtoCart.addToCartClick('@((Model.CatalogItem != null) ? Model.CatalogItem.ItemId : "")','@((Model.CatalogItem != null) ? Model.CatalogItem.ParentItemId : "")'); ">
+				 <span>@("Add to Cart".Localize())</span>
 			 </button>
 		 }
 		 else
 		 {
-			 <div style="color:#ff0000; font-weight: bold; text-align: left;">@("Not for sale".LocalizeHtml())</div>
+			 <div style="color:#ff0000; font-weight: bold; text-align: left;">@("Not for sale".Localize())</div>
 		 }
 		 break;
  }

@@ -6,11 +6,11 @@
     foreach (var item in Model.CatalogItems)
     {
         var itemClass = "item";
-        if (item.CatalogItem.Item.Created.HasValue && item.CatalogItem.Item.Created.Value.AddDays(1) >= DateTime.UtcNow)
+        if (item.IsNew)
         {
             itemClass = string.Concat(@itemClass, " ", "new");
         }
-        if (item.Price != null && item.Price.Type == PriceType.Sale)
+        if (item.IsSale)
         {
             itemClass = string.Concat(@itemClass, " ", "sale");
         }
@@ -26,23 +26,29 @@
 <script type="text/javascript" src="@Url.Content("~/Scripts/v/virto-reviews.js")"></script>
 <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-tmpl-min.js")"></script>
 
-<script type="text/javascript">
+@if (Model.Pager.TotalCount == 0)
+{
+    <p class="note-msg">@("There are no results available.".LocalizeHtml())</p>
+}
+else
+{
+    <script type="text/javascript">
 
-    var filter = "@Html.Raw(Model.CatalogItems.Select(i => i.CatalogItem.ItemId).Aggregate((x, y) => (x.Contains("or ItemId eq") ? x : string.Format("ItemId eq '{0}'", x)) + string.Format(" or ItemId eq '{0}'", y)))";
+        var filter = "@Html.Raw(Model.CatalogItems.Select(i => i.CatalogItem.ItemId).Aggregate((x, y) => (x.Contains("or ItemId eq") ? x : string.Format("ItemId eq '{0}'", x)) + string.Format(" or ItemId eq '{0}'", y)))";
 
-    $(function ()
-    {
-        Reviews.catalogReviews(filter);
-        var isAuthorized = '@UserHelper.CustomerSession.IsRegistered';
-        
-        @foreach (var item in Model.CatalogItems)
+        $(function ()
         {
-            <text>
-        $("[id='addreview-@item.CatalogItem.ItemId']").on('click', function ()
-        {
-            if (isAuthorized == "True")
+            Reviews.catalogReviews(filter);
+            var isAuthorized = '@UserHelper.CustomerSession.IsRegistered';
+
+            @foreach (var item in Model.CatalogItems)
             {
-                tb_show('@("Create Review".LocalizeHtml())', "@Url.Action("AddReview", "Catalog", new { id = item.CatalogItem.ItemId, height = 550 })", false);
+                <text>
+            $("[id='addreview-@item.CatalogItem.ItemId']").on('click', function ()
+            {
+                if (isAuthorized == "True")
+                {
+                    tb_show('@("Create Review".LocalizeHtml())', "@Url.Action("AddReview", "Catalog", new { id = item.CatalogItem.ItemId, height = 550 })", false);
                     }
                     else
                     {
@@ -51,173 +57,174 @@
 
                     return false;
                 });
-        </text>
-        }
+            </text>
+            }
 
 
-    });
-</script>
+        });
+    </script>
 
-<script type="text/x-jquery-tmpl" id="reviewTemplate">
-    <div class="pr-review-most-helpful">
-        <p>(<span id="positive_review_${Id}">${PositiveFeedbackCount}</span> @("of".Localize()) <span id="total_feedback_review_${Id}">${PositiveFeedbackCount + NegativeFeedbackCount}</span> @("customers found this review helpful".Localize()))</p>
-    </div>
-    <div class="pr-review-rating">
-        <div class="pr-stars">&nbsp;</div>
-        <span class="pr-rating pr-rounded">${parseInt(Rating).toFixed(1)}</span>
-        <p class="pr-review-rating-headline">${RatingComment}</p>
-    </div>
-    <h3>Review by <span>${Reviewer.NickName}</span> {{if IsVerifiedBuyer}}<span class="verified">@("Verified Buyer".Localize())</span>{{/if}}</h3>
-    <p class="date">${GetShortDateAndTime(CreatedDateTime)}</p>
-    <div class="pr-review-text">
-        <p class="pr-comments">${ReviewText.Text}</p>
-    </div>
-    <p class="pr-review-helpful-text">
-        @("Was this review helpful?".Localize())&nbsp;
-        <a onclick="Reviews.vote('${Id}', true); return false;" href="#" class="pr-review-helpful-text-link">@("Yes".Localize())</a>&nbsp;/&nbsp;
-        <a onclick="Reviews.vote('${Id}', false); return false;" href="#" class="pr-review-helpful-text-link">@("No".Localize())</a>
-    </p>
-    <div id="review_feedback_${Id}" class="review-title"></div>
-    <p>
-        <a href="#" onclick="$('#comment_for_${Id}').show(); $('#report_abuse_for_${Id}').hide(); return false;">@("write a comment".Localize())</a>
-        <span class="separator">|</span>
-        <a href="#" onclick="$('#report_abuse_for_${Id}').show(); $('#comment_for_${Id}').hide(); return false;">@("report abuse".Localize())</a>
-    </p>
+    <script type="text/x-jquery-tmpl" id="reviewTemplate">
+        <div class="pr-review-most-helpful">
+            <p>(<span id="positive_review_${Id}">${PositiveFeedbackCount}</span> @("of".Localize()) <span id="total_feedback_review_${Id}">${PositiveFeedbackCount + NegativeFeedbackCount}</span> @("customers found this review helpful".Localize()))</p>
+        </div>
+        <div class="pr-review-rating">
+            <div class="pr-stars">&nbsp;</div>
+            <span class="pr-rating pr-rounded">${parseInt(Rating).toFixed(1)}</span>
+            <p class="pr-review-rating-headline">${RatingComment}</p>
+        </div>
+        <h3>Review by <span>${Reviewer.NickName}</span> {{if IsVerifiedBuyer}}<span class="verified">@("Verified Buyer".Localize())</span>{{/if}}</h3>
+        <p class="date">${GetShortDateAndTime(CreatedDateTime)}</p>
+        <div class="pr-review-text">
+            <p class="pr-comments">${ReviewText.Text}</p>
+        </div>
+        <p class="pr-review-helpful-text">
+            @("Was this review helpful?".Localize())&nbsp;
+            <a onclick=" Reviews.vote('${Id}', true); return false; " href="#" class="pr-review-helpful-text-link">@("Yes".Localize())</a>&nbsp;/&nbsp;
+            <a onclick=" Reviews.vote('${Id}', false); return false; " href="#" class="pr-review-helpful-text-link">@("No".Localize())</a>
+        </p>
+        <div id="review_feedback_${Id}" class="review-title"></div>
+        <p>
+            <a href="#" onclick=" $('#comment_for_${Id}').show(); $('#report_abuse_for_${Id}').hide(); return false; ">@("write a comment".Localize())</a>
+            <span class="separator">|</span>
+            <a href="#" onclick=" $('#report_abuse_for_${Id}').show(); $('#comment_for_${Id}').hide(); return false; ">@("report abuse".Localize())</a>
+        </p>
 
-    <div id="report_abuse_for_${Id}" class="report_abuse">
-        @using (Html.BeginForm("reportabuse", "api/review", FormMethod.Post, new { id = "abuse_${Id}" }))
-        {
-            
-            <h3>@("Please let us know what kind of issue this is".Localize()):</h3>
-            <ul class="form-list">
-                <li class="control">
-                    <input type="radio" class="radio" value="profane" name="Reason">
-                    <label>@("Profanity".Localize())</label>
-                </li>
-                <li class="control">
-                    <input type="radio" class="radio" value="wrong_product" name="Reason">
-                    <label>@("Wrong product".Localize())</label>
-                </li>
-                <li class="control">
-                    <input type="radio" class="radio" value="spam" name="Reason">
-                    <label>@("Spam".Localize())</label>
-                </li>
-                <li class="control">
-                    <input type="radio" class="radio" value="duplicate" name="Reason">
-                    <label>@("Duplicate".Localize())</label>
-                </li>
-                <li class="control">
-                    <input type="radio" class="radio" value="copyright" name="Reason">
-                    <label>@("Copyright violation".Localize())</label>
-                </li>
-                <li class="control">
-                    <input type="radio" class="radio" value="not_review" name="Reason">
-                    <label>@("Not a product review".Localize())</label>
-                </li>
-                <li class="control">
-                    <input type="radio" class="radio" value="image_issue" name="Reason">
-                    <label>@("Problem with image".Localize())</label>
-                </li>
-                <li class="control">
-                    <input type="radio" class="radio" value="other" name="Reason">
-                    <label>@("Other".Localize())</label>
-                </li>
-                <li>
-                    <span data-valmsg-replace="true" data-valmsg-for="Reason" class="field-validation-valid"></span>
-                </li>
-                <li>
-                    <label class="required"><em>*</em>@("Email Address".Localize()):</label>
-                    <div class="input-box">
-                        <input type="text" maxlength="80" name="Email" class="input-text">
-                    </div>
-                    <span data-valmsg-replace="true" data-valmsg-for="Email" class="field-validation-valid"></span>
-                </li>
-                <li>
-                    <label>@("Comments".Localize()):</label>
-                    <div class="input-box">
-                        <textarea rows="3" cols="30" name="Comment"></textarea>
-                    </div>
-                </li>
-            </ul>
-            <input type="hidden" value="${Id}" name="Id" />
-            <input type="hidden" value="True" name="IsReview" />
-            <input type="button" class="post" value="Submit" onclick="Reviews.flag('${Id}');" />
-            <input type="button" class="post" value="Cancel" onclick="$('#report_abuse_for_${Id}').hide(); return false;" />
-        }
-    </div>
+        <div id="report_abuse_for_${Id}" class="report_abuse">
+            @using (Html.BeginForm("reportabuse", "api/review", FormMethod.Post, new { id = "abuse_${Id}" }))
+            {
 
-    <div class="write_a_comment" id="comment_for_${Id}">
-        @using (Html.BeginForm("comment", "api/review", FormMethod.Post, new { id = "comment_${Id}" }))
-        {
-            <h3>@("Your comment".Localize()):</h3>
+                <h3>@("Please let us know what kind of issue this is".Localize()):</h3>
+                <ul class="form-list">
+                    <li class="control">
+                        <input type="radio" class="radio" value="profane" name="Reason">
+                        <label>@("Profanity".Localize())</label>
+                    </li>
+                    <li class="control">
+                        <input type="radio" class="radio" value="wrong_product" name="Reason">
+                        <label>@("Wrong product".Localize())</label>
+                    </li>
+                    <li class="control">
+                        <input type="radio" class="radio" value="spam" name="Reason">
+                        <label>@("Spam".Localize())</label>
+                    </li>
+                    <li class="control">
+                        <input type="radio" class="radio" value="duplicate" name="Reason">
+                        <label>@("Duplicate".Localize())</label>
+                    </li>
+                    <li class="control">
+                        <input type="radio" class="radio" value="copyright" name="Reason">
+                        <label>@("Copyright violation".Localize())</label>
+                    </li>
+                    <li class="control">
+                        <input type="radio" class="radio" value="not_review" name="Reason">
+                        <label>@("Not a product review".Localize())</label>
+                    </li>
+                    <li class="control">
+                        <input type="radio" class="radio" value="image_issue" name="Reason">
+                        <label>@("Problem with image".Localize())</label>
+                    </li>
+                    <li class="control">
+                        <input type="radio" class="radio" value="other" name="Reason">
+                        <label>@("Other".Localize())</label>
+                    </li>
+                    <li>
+                        <span data-valmsg-replace="true" data-valmsg-for="Reason" class="field-validation-valid"></span>
+                    </li>
+                    <li>
+                        <label class="required"><em>*</em>@("Email Address".Localize()):</label>
+                        <div class="input-box">
+                            <input type="text" maxlength="80" name="Email" class="input-text">
+                        </div>
+                        <span data-valmsg-replace="true" data-valmsg-for="Email" class="field-validation-valid"></span>
+                    </li>
+                    <li>
+                        <label>@("Comments".Localize()):</label>
+                        <div class="input-box">
+                            <textarea rows="3" cols="30" name="Comment"></textarea>
+                        </div>
+                    </li>
+                </ul>
+                <input type="hidden" value="${Id}" name="Id" />
+                <input type="hidden" value="True" name="IsReview" />
+                <input type="button" class="post" value="Submit" onclick=" Reviews.flag('${Id}'); " />
+                <input type="button" class="post" value="Cancel" onclick=" $('#report_abuse_for_${Id}').hide(); return false; " />
+            }
+        </div>
 
-            <ul class="form-list">
-                <li>
-                    <label for="AuthorName" class="required"><em>*</em>@("Author".Localize()):</label>
-                    <div class="input-box">
-                        @Html.TextBox("AuthorName", UserHelper.CustomerSession.CustomerName, new { @class = "input-text" })
-                    </div>
-                </li>
-                <li>
-                    <label for="AuthorLocation">@("Location".Localize()):</label>
-                    <div class="input-box">
-                        @Html.TextBox("AuthorLocation", "", new { @class = "input-text" })
-                    </div>
-                </li>
-                <li>
-                    <label for="Comment" class="required"><em>*</em>@("Comment".Localize()):</label>
-                    <div class="input-box">
-                        @Html.TextArea("Comment")
-                    </div>
-                </li>
-            </ul>
-            <input type="hidden" value="${Id}" name="Id" />
-            <input type="button" class="post" value="Submit" onclick="Reviews.comment('${Id}');" />
-            <input type="button" class="post" value="Cancel" onclick="$('#comment_for_${Id}').hide(); return false;" />
-        }
-    </div>
+        <div class="write_a_comment" id="comment_for_${Id}">
+            @using (Html.BeginForm("comment", "api/review", FormMethod.Post, new { id = "comment_${Id}" }))
+            {
+                <h3>@("Your comment".Localize()):</h3>
 
-    <div class="cl"></div>
+                <ul class="form-list">
+                    <li>
+                        <label for="AuthorName" class="required"><em>*</em>@("Author".Localize()):</label>
+                        <div class="input-box">
+                            @Html.TextBox("AuthorName", UserHelper.CustomerSession.CustomerName, new { @class = "input-text" })
+                        </div>
+                    </li>
+                    <li>
+                        <label for="AuthorLocation">@("Location".Localize()):</label>
+                        <div class="input-box">
+                            @Html.TextBox("AuthorLocation", "", new { @class = "input-text" })
+                        </div>
+                    </li>
+                    <li>
+                        <label for="Comment" class="required"><em>*</em>@("Comment".Localize()):</label>
+                        <div class="input-box">
+                            @Html.TextArea("Comment")
+                        </div>
+                    </li>
+                </ul>
+                <input type="hidden" value="${Id}" name="Id" />
+                <input type="button" class="post" value="Submit" onclick=" Reviews.comment('${Id}'); " />
+                <input type="button" class="post" value="Cancel" onclick=" $('#comment_for_${Id}').hide(); return false; " />
+            }
+        </div>
 
-    {{if TotalComments > 0}}
-    <div id="show_all_comment_for_${Id}">
-        <i>@("There are".Localize()) <b>${TotalComments}</b> @("comments in total".Localize())</i>
-        {{if Comments.length < TotalComments }}
-        <a href="#" onclick="Reviews.showAllComments('${Id}'); return false;">@("Show all".Localize())</a>
+        <div class="cl"></div>
+
+        {{if TotalComments > 0}}
+        <div id="show_all_comment_for_${Id}">
+            <i>@("There are".Localize()) <b>${TotalComments}</b> @("comments in total".Localize())</i>
+            {{if Comments.length < TotalComments }}
+            <a href="#" onclick=" Reviews.showAllComments('${Id}'); return false; ">@("Show all".Localize())</a>
+            {{/if}}
+        </div>
         {{/if}}
-    </div>
-    {{/if}}
-    {{if Comments}}
-    <div id="comments_container_${Id}">
-        {{tmpl(Comments) "#commentTemplate"}}
-    </div>
-    {{/if}}
-    <div class="spacer"></div>
-</script>
+        {{if Comments}}
+        <div id="comments_container_${Id}">
+            {{tmpl(Comments) "#commentTemplate"}}
+        </div>
+        {{/if}}
+        <div class="spacer"></div>
+    </script>
 
-<div class="content">
-    <div class="category-products">
-        <div class="category-image">
-            @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "CategoryTop" });}
-        </div>
-        <div class="toolbar">
-            @Html.DisplayFor(model => model.Pager, "SearchPager")
-        </div>
-        <div class="grid selected">
-            <ul class="products-list grid">
-                @RenderItems("SearchItem")
-            </ul>
-        </div>
-        <div class="list">
-            <ul class="products-list list">
-                @RenderItems("SearchListItem")
-            </ul>
-        </div>
-        <div class="toolbar">
-            @Html.DisplayFor(model => model.Pager, "SearchPager")
+    <div class="content">
+        <div class="category-products">
+            <div class="category-image">
+                @{ Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "CategoryTop" }); }
+            </div>
+            <div class="toolbar">
+                @Html.DisplayFor(model => model.Pager, "SearchPager")
+            </div>
+            <div class="grid selected">
+                <ul class="products-list grid">
+                    @RenderItems("SearchItem")
+                </ul>
+            </div>
+            <div class="list">
+                <ul class="products-list list">
+                    @RenderItems("SearchListItem")
+                </ul>
+            </div>
+            <div class="toolbar">
+                @Html.DisplayFor(model => model.Pager, "SearchPager")
+            </div>
         </div>
     </div>
-</div>
+}
 <div class="sidebar">
     @if (Model.SelectedFilters != null && Model.SelectedFilters.Count > 0)
     {
@@ -225,3 +232,4 @@
     }
     @Html.DisplayFor(m => m, "FilterPanel")
 </div>
+

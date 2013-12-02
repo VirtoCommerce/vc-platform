@@ -534,6 +534,7 @@
     <Content Include="Content\themes\default\images\widgets\i_widget-link.gif" />
     <Content Include="Content\themes\default\images\zoomloader.gif" />
     <Content Include="Content\themes\responsive\camera.css" />
+    <Content Include="Content\themes\responsive\cloudzoom.css" />
     <Content Include="Content\themes\responsive\custom.css" />
     <Content Include="Content\themes\responsive\forms.css" />
     <Content Include="Content\themes\responsive\grid.css" />
@@ -633,6 +634,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
+    <Content Include="Scripts\cloudzoom.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -895,11 +897,11 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
+          <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>2359</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-		  <IISUrl>http://localhost:2359/</IISUrl>
+          <IISUrl>http://localhost:2359/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

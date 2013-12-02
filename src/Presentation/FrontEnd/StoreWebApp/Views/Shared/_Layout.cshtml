@@ -73,6 +73,7 @@
                 <div class="page-nav">
                     <div class="rubber">
                         @Html.MvcSiteMap().SiteMapPath()
+                        @RenderSection("PageTitle", false)
                     </div>
                 </div>
                 <div class="rubber">
@@ -100,7 +101,7 @@
                         <h2>Facebook</h2>
                         <div class="content">
                             <div class="fb">
-                                <img alt="" src="images/fb.png">
+                                <img alt="" src="@Url.Content("~/Content/themes/responsive/images/fb.png")">
                             </div>
                         </div>
                     </div>

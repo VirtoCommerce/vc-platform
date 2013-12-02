@@ -389,6 +389,22 @@ namespace VirtoCommerce.Web.Models
             }
         }
 
+	    public bool IsNew
+	    {
+	        get
+	        {
+	            return CatalogItem.Item.Created.HasValue && CatalogItem.Item.Created.Value.AddDays(1) >= DateTime.UtcNow;
+	        }
+	    }
+
+	    public bool IsSale
+	    {
+	        get
+	        {
+	            return Price != null && Price.Type == PriceType.Sale;
+	        }
+	    }
+
 		/// <summary>
 		/// Gets the <see cref="System.String"/> with the specified name.
 		/// </summary>

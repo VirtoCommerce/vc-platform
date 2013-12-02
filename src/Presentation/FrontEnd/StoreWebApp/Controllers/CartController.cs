@@ -284,7 +284,7 @@ namespace VirtoCommerce.Web.Controllers
 
             var results = new CartJsonModel
             {
-                Message = string.Format("{0} line items added to your {1}".Localize(), addedLineItems.Count, name),
+                Message = string.Format("{0} items added to your {1}".Localize(), addedLineItems.Sum(li =>li.Quantity), name),
                 CartSubTotal = StoreHelper.FormatCurrency(helper.Cart.Subtotal, helper.Cart.BillingCurrency),
                 CartTotal = StoreHelper.FormatCurrency(helper.Cart.Total, helper.Cart.BillingCurrency),
                 CartCount = helper.LineItems.Count(),

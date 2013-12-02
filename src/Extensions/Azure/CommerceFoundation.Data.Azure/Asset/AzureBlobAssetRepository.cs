@@ -834,8 +834,9 @@
         /// Resolves the URL.
         /// </summary>
         /// <param name="assetId">The asset id.</param>
+        /// <param name="thumb">is thumbnail</param>
         /// <returns>formatted string url including path to a storage server</returns>
-        public string ResolveUrl(string assetId)
+        public string ResolveUrl(string assetId, bool thumb)
         {
             var root = AzureConfiguration.Instance.AzureStorageAccount.BlobEndpoint.AbsoluteUri;
 

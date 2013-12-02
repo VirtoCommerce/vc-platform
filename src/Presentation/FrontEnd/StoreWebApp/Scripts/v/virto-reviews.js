@@ -78,22 +78,23 @@ Reviews =
             type: "GET",
             url: VirtoCommerce.url("/api/review/GetReviewTotals?$filter=ItemId eq '" + Reviews.currentItemId) + "'",
             dataType: "json",
-            success: function (data) {
-                Reviews.TotalReviews = data[0].TotalReviews;
-                $(".pr-review-count-number").text(data[0].TotalReviews);
-                $(".pr-review-average").text(data[0].AverageRating);
+            success: function (data)
+            {
+                if (data.length > 0) {
+                    Reviews.TotalReviews = data[0].TotalReviews;
+                    $(".pr-review-count-number").text(Reviews.TotalReviews);
 
-                if (data[0].TotalReviews > 0) {
-                    $("#review_rating_header_stars").show();
-                    //$("#review_rating_header_stars .pr-stars").css("background-position", "0 " + (-19 * Math.round(data.AverageRating)) +"px");
-                    $("#review_rating_header_stars .pr-stars").rateit({ resetable: false, readonly: true, value: data[0].AverageRating.toFixed(1), starwidth: 11, starheight: 11 });
-                    $("#review_rating_header_stars .pr-rating").text(data[0].AverageRating.toFixed(1));
-                    $("#product_tabs_reviews_contents_empty").hide();
-                    $("#product_tabs_reviews_contents_list").show();
-                    $("#show_reviews_link").show();
-                    $("#show_reviews_link").siblings(".separator").show();
-                }
-                else {
+                    if (data[0].TotalReviews > 0) {
+                        //$("#review_rating_header_stars").show();
+                        //$("#review_rating_header_stars .pr-stars").css("background-position", "0 " + (-19 * Math.round(data.AverageRating)) +"px");
+                        $(".rating").attr("title", data[0].AverageRating);
+                        $(".rating").rateit({ resetable: false, readonly: true, value: data[0].AverageRating.toFixed(1), starwidth: 11, starheight: 11 });
+                        //$("#review_rating_header_stars .pr-rating").text(data[0].AverageRating.toFixed(1));
+                        $("#product_tabs_reviews_contents_empty").hide();
+                        $("#product_tabs_reviews_contents_list").show();
+                        $("#show_reviews_link").show();
+                    }
+                } else {
                     $("#product_tabs_reviews_contents_empty").show();
                     $("#product_tabs_reviews_contents_list").hide();
                 }
@@ -106,7 +107,7 @@ Reviews =
         Reviews.CurrentSort = sort;
         Reviews.PageIndex = pageIndex == undefined ? this.PageIndex : pageIndex;
 
-        var reviewsUrl = "/api/review?$top=" + this.PageSize;
+        var reviewsUrl = "/api/review/get?$top=" + this.PageSize;
         reviewsUrl = reviewsUrl + "&$skip=" + (this.PageSize * this.PageIndex);
         reviewsUrl = reviewsUrl + "&$filter=ItemId eq '" + Reviews.currentItemId + "'";
 

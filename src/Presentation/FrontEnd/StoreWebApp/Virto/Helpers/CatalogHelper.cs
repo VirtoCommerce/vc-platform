@@ -8,7 +8,9 @@ using Omu.ValueInjecter;
 using VirtoCommerce.Client;
 using VirtoCommerce.Foundation.Catalogs;
 using VirtoCommerce.Foundation.Catalogs.Model;
+using VirtoCommerce.Foundation.Customers;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
+using VirtoCommerce.Web.Client.Globalization;
 using VirtoCommerce.Web.Models;
 
 namespace VirtoCommerce.Web.Virto.Helpers
@@ -77,6 +79,44 @@ namespace VirtoCommerce.Web.Virto.Helpers
 
 				model.Properties = new PropertiesModel(properties);
 			}
+
+            //Find item category
+		    if (item.CategoryItemRelations != null)
+		    {          
+		        string categoryId = null;
+                foreach (var rel in item.CategoryItemRelations)
+                {
+                    if (rel.CatalogId == UserHelper.CustomerSession.CatalogId)
+                    {
+                        categoryId = rel.CategoryId;
+                        break;
+                    }
+
+                    var category = CatalogClient.GetCategoryById(rel.CategoryId);
+
+                    if (category == null) 
+                        continue;
+
+                    var linkedCategory = category.LinkedCategories.FirstOrDefault(
+                        link => link.CatalogId == UserHelper.CustomerSession.CatalogId);
+
+                    if (linkedCategory == null) 
+                        continue;
+
+                    categoryId = linkedCategory.CategoryId;
+                    break;
+                }
+
+                if (!string.IsNullOrEmpty(categoryId))
+                {
+                    var category = CatalogClient.GetCategoryById(categoryId);
+                    var cat = category as Category;
+                    if (cat != null)
+                    {
+                        model.CategoryName = cat.Name.Localize();
+                    }
+                }
+		    }
 
 			return model;
 		}

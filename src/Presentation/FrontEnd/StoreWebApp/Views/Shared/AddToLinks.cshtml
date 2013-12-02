@@ -1,18 +1,25 @@
-﻿@model CatalogItemWithPriceModel
+﻿@using System.Web.UI.WebControls
+@model CatalogItemWithPriceModel
 
 @if (Model != null)
 {
-    <li>
+    <li class="wishlist">
         <a href="#" onclick="return VirtoCart.addToWishList('@("Item added to wish list".LocalizeHtml())', '@Url.Encode(Model.CatalogItem.ItemId)','@Url.Encode(Model.CatalogItem.ParentItemId)', 1)">
-            <span>+</span>
+            @if (!string.Equals(ViewData["View"], "Details"))
+            {
+                <span>+</span>
+            }
             @("Add to Wishlist".Localize())
         </a>
     </li>
     if (!ViewData.Keys.Contains("NoCompare"))
     {
-    <li>
+    <li class="compare">
         <a href="#" onclick="return VirtoCart.addToCompareList('@("Item added to compare list".LocalizeHtml())', '@Url.Encode(Model.CatalogItem.ItemId)','@Url.Encode(Model.CatalogItem.ParentItemId)', 1)">
-            <span>+</span>
+              @if (!string.Equals(ViewData["View"], "Details"))
+              {
+                  <span>+</span>
+              }
             @("Add to Compare".Localize())
         </a>
     </li>

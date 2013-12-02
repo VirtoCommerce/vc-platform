@@ -37,6 +37,16 @@ namespace VirtoCommerce.Web.Models
             set;
         }
 
+        /// <summary>
+        /// Gets or sets the CategoryName.
+        /// </summary>
+        /// <value>The name.</value>
+        public string CategoryName
+        {
+            get;
+            set;
+        }
+
 		/// <summary>
 		/// Gets or sets the start date.
 		/// </summary>

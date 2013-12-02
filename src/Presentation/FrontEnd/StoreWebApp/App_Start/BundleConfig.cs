@@ -26,8 +26,9 @@ namespace VirtoCommerce.Web
 
 			bundles.Add(new ScriptBundle("~/bundles/jquerymisc").Include(
 			"~/Scripts/v/virto-jquery.js",
-			"~/Scripts/jquery-jqzoom.js",
+			//"~/Scripts/jquery-jqzoom.js",
 				//"~/Scripts/jquery.gzoom.js",
+             "~/Scripts/cloudzoom.js",
 			"~/Scripts/jquery.nivo.slider.js",
 			"~/Scripts/jquery.rateit.js",
 			"~/Scripts/jquery-thickbox.js",
@@ -53,8 +54,8 @@ namespace VirtoCommerce.Web
 				//"~/Content/themes/default/jquery.jqzoom.css",
 				//"~/Content/themes/default/redesign.css",
 				"~/Content/themes/default/rateit.css",
-				"~/Content/themes/default/flags.css",
-				"~/Content/themes/default/virto_reviews.css"
+				"~/Content/themes/default/flags.css"
+				//"~/Content/themes/default/virto_reviews.css"
 				//"~/Content/themes/default/nivo-slider.css"
                 ));
 
@@ -80,7 +81,8 @@ namespace VirtoCommerce.Web
                 "~/Content/themes/responsive/main.css",
                 "~/Content/themes/responsive/responsive.css",
                 "~/Content/themes/responsive/camera.css",
-                "~/Content/themes/responsive/custom.css"
+                "~/Content/themes/responsive/custom.css",
+                "~/Content/themes/responsive/cloudzoom.css"
                 ));
 		}
 	}

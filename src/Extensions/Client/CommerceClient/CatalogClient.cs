@@ -136,7 +136,7 @@ namespace VirtoCommerce.Client
         }
 
         /// <summary>
-        /// Gets the item. Additionaly filters by catalog
+        /// Gets the item. Additionally filters by catalog
         /// </summary>
         /// <param name="id">The id of item.</param>
         /// <param name="responseGroup">The response group.</param>
