@@ -11,10 +11,13 @@ using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Inventories.Model;
 using VirtoCommerce.Foundation.Inventories.Repositories;
+using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.Foundation.Stores.Model;
 using VirtoCommerce.Foundation.Stores.Repositories;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.DataVirtualization;
+using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
+using VirtoCommerce.ManagementClient.Core.Infrastructure.Tiles;
 using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.FulfillmentCenters.Interfaces;
 using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Inventory.Interfaces;
 
@@ -27,6 +30,9 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Inventory.Impleme
 		private readonly IRepositoryFactory<IInventoryRepository> _inventoryRepositoryFactory;
 		private readonly IReceiveInventoryViewModel _receiveInventoryVm;
 		private readonly IViewModelsFactory<IInventoryViewModel> _itemVmFactory;
+		private readonly IAuthenticationContext _authContext;
+		private readonly INavigationManager _navManager;
+		private readonly TileManager _tileManager;
 		#endregion
 
 		public DelegateCommand AddInventoryListCommand
@@ -40,12 +46,16 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Inventory.Impleme
 			IViewModelsFactory<IInventoryViewModel> itemVmFactory,
 			IReceiveInventoryViewModel receiveInventoryVm,
 			IRepositoryFactory<IInventoryRepository> inventoryRepositoryFactory,
-			IRepositoryFactory<IFulfillmentCenterRepository> fulfillmentCenterRepositoryFactory)
+			IRepositoryFactory<IFulfillmentCenterRepository> fulfillmentCenterRepositoryFactory,
+			IAuthenticationContext authContext, INavigationManager navManager, TileManager tileManager)
 		{
 			_fulfillmentCenterRepositoryFactory = fulfillmentCenterRepositoryFactory;
 			_inventoryRepositoryFactory = inventoryRepositoryFactory;
 			_receiveInventoryVm = receiveInventoryVm;
 			_itemVmFactory = itemVmFactory;
+			_authContext = authContext;
+			_navManager = navManager;
+			_tileManager = tileManager;
 
 			CommonConfirmRequest = new InteractionRequest<Confirmation>();
 			CommonNotifyRequest = new InteractionRequest<Notification>();
@@ -55,6 +65,8 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Inventory.Impleme
 			SearchFilterCatalogs = new ObservableCollection<CatalogBase>();
 			ClearFiltersCommand = new DelegateCommand(DoClearFilters);
 			SearchItemsCommand = new DelegateCommand(DoSearchItems);
+
+			PopulateTiles();
 		}
 		#endregion
 
@@ -251,9 +263,9 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Inventory.Impleme
 		{
 			if (SearchFilterFulfillments.Count == 0)
 			{
-				UpdateFulfillmentCenterFilter();	
+				UpdateFulfillmentCenterFilter();
 			}
-			
+
 			if (SelectedInventoryItems == null)
 			{
 				OnUIThread(() => SelectedInventoryItems = new VirtualList<IInventoryViewModel>(this, 25, SynchronizationContext.Current));
@@ -285,6 +297,36 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Inventory.Impleme
 			OnSpecifiedPropertyChanged("SearchFilterName");
 			OnSpecifiedPropertyChanged("SearchFilterCatalog");
 		}
+
+		private void PopulateTiles()
+		{
+			if (_tileManager == null)
+				return;
+
+			if (_authContext.CheckPermission(PredefinedPermissions.FulfillmentInventoryManage))
+			{
+				_tileManager.AddTile(new IconTileItem
+				{
+					IdModule = Catalog.NavigationNames.MenuName,
+					IdTile = "Fulfillments",
+					TileIconSource = "Icon_Module_Fulfillment",
+					TileTitle = "FULFILLMENT",
+					Order = 6,
+					IdColorSchema = TileColorSchemas.Schema3,
+					NavigateCommand = new DelegateCommand(NavigateHome)
+				});
+			}
+		}
+
+		private void NavigateHome()
+		{
+			var navigationData = _navManager.GetNavigationItemByName(NavigationNames.HomeName);
+			if (navigationData != null)
+			{
+				_navManager.Navigate(navigationData);
+			}
+		}
+
 		#endregion
 	}
 }
