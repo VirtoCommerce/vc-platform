@@ -8,8 +8,11 @@ using System.Web.Optimization;
 using System.Web.Profile;
 using System.Web.Routing;
 using System.Web.Security;
+using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 using VirtoCommerce.Client;
+using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Web.Client.Helpers;
+using VirtoCommerce.Web.Client.Modules;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Models.Binders;
 using VirtoCommerce.Web.Virto.Helpers;
@@ -30,15 +33,22 @@ namespace VirtoCommerce.Web
         {
             AreaRegistration.RegisterAllAreas();
 
-            WebApiConfig.Register(GlobalConfiguration.Configuration);
-            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);
-            BundleConfig.RegisterBundles(BundleTable.Bundles);
-            AuthConfig.RegisterAuth();
-            ModelBinders.Binders[typeof(SearchParameters)] = new SearchParametersBinder();
+            if (ConnectionHelper.IsDatabaseInstalled)
+            {
+                WebApiConfig.Register(GlobalConfiguration.Configuration);
+                FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+                RouteConfig.RegisterRoutes(RouteTable.Routes);
+                BundleConfig.RegisterBundles(BundleTable.Bundles);
+            
+                AuthConfig.RegisterAuth();
+                DynamicModuleUtility.RegisterModule(typeof(StoreHttpModule));
+                DynamicModuleUtility.RegisterModule(typeof(MarketingHttpModule));
 
-            ModelValidatorProviders.Providers.RemoveAt(0);
-            ModelValidatorProviders.Providers.Insert(0, new VirtoDataAnnotationsModelValidatorProvider());
+                ModelBinders.Binders[typeof (SearchParameters)] = new SearchParametersBinder();
+
+                ModelValidatorProviders.Providers.RemoveAt(0);
+                ModelValidatorProviders.Providers.Insert(0, new VirtoDataAnnotationsModelValidatorProvider());
+            }
         }
 
 
@@ -169,6 +179,5 @@ namespace VirtoCommerce.Web
 
             return varyString;
         }
-
     }
 }

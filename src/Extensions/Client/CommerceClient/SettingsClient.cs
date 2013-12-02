@@ -19,14 +19,12 @@ namespace VirtoCommerce.Client
         private readonly IAppConfigRepository _appConfigRepository;
         #endregion
 
-
         public SettingsClient(IAppConfigRepository appConfigRepository, ICacheRepository cacheRepository)
         {
             _appConfigRepository = appConfigRepository;
             _cacheRepository = cacheRepository;
             _isEnabled = AppConfigConfiguration.Instance.Cache.IsEnabled;
         }
-
 
         public SettingValue[] GetSettings(string settingName)
         {
@@ -42,5 +40,4 @@ namespace VirtoCommerce.Client
             get { return _cacheHelper ?? (_cacheHelper = new CacheHelper(_cacheRepository)); }
         }
     }
-
 }

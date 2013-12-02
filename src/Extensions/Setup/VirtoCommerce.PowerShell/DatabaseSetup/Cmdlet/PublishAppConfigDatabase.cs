@@ -19,7 +19,7 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
 			base.Publish(dbconnection, data, sample);
 			string connection = dbconnection;
 			SafeWriteDebug("ConnectionString: " + connection);
-
+           
 			using (var db = new EFAppConfigRepository(connection))
 			{
 				if (sample)

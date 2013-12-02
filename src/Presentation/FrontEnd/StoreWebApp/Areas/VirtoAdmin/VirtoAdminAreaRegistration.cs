@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+using VirtoCommerce.Foundation.Data.Infrastructure;
 
 namespace VirtoCommerce.Web.Areas.VirtoAdmin
 {
@@ -14,11 +15,16 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin
 
         public override void RegisterArea(AreaRegistrationContext context)
         {
-            context.MapRoute(
-                "VirtoAdmin_default",
-                "virto/admin/{controller}/{action}/{id}",
-                new { action = "Index", controller = "Install", id = UrlParameter.Optional }
-            );
+            if (!ConnectionHelper.IsDatabaseInstalled)
+            {
+                context.MapRoute(
+                    "Default",
+                    "{controller}/{action}/{id}",
+                    new {action = "Index", controller = "Install", id = UrlParameter.Optional}
+                    );
+
+                
+            }
         }
     }
 }
