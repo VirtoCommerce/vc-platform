@@ -117,7 +117,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.ServiceRuntime, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Storage, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -822,7 +822,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>2359</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-		  <IISUrl>http://localhost:2359/</IISUrl>
+          <IISUrl>http://localhost:2359/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
