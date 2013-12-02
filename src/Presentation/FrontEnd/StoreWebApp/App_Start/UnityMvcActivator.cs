@@ -3,7 +3,6 @@ using System.Web.Http;
 using System.Web.Mvc;
 using Microsoft.Practices.ServiceLocation;
 using Microsoft.Practices.Unity.Mvc;
-using VirtoCommerce.Foundation.Data.Common;
 using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Web.Client;
 

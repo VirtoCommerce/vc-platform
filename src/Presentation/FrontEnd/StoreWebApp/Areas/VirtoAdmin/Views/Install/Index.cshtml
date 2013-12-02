@@ -1,4 +1,6 @@
-﻿@model VirtoCommerce.Web.Areas.VirtoAdmin.Models.InstallModel
+﻿@using VirtoCommerce.Web
+@using VirtoCommerce.Web.Areas.VirtoAdmin.Models
+@model InstallModel
 @{
     Layout = null;
 }
@@ -8,65 +10,117 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Web administration area</title>
-</head>
-<body>
-    <div>
-        @using (Html.BeginForm("Start","Install",new {area="VirtoAdmin"}, FormMethod.Post))
-        {
-            <p>Virto commerce</p>
-            <hr/>
-            <p>Database setup</p>
-            if (!string.IsNullOrEmpty(Model.StatusMessage))
-            {
-                <div>
-                    <p>@Model.StatusMessage</p>
-                </div>
+    <title>VirtoCommerce web administration area</title> 
+    @Styles.Render(BundleConfig.VirtoAdminStyles)
+    @Scripts.Render("~/bundles/jquery")
+    <script type="text/javascript">
+        (function () {
+            function show() {
+                window.setTimeout(function () {
+                    document.getElementById("throbber").style.display = "block";
+                }, 2000);
             }
-            
-            <div>
-                <label>Server</label>
-                <input name="DataSource" value="@Model.DataSource"/>
+
+            if (document.addEventListener) {
+                document.addEventListener("submit", show, false);
+            }
+            else {
+                document.forms[0].attachEvent("onsubmit", show);
+            }
+        })();
+    </script>
+</head>
+    <body>
+        <div id="header">
+            <div id="branding">
+                <h1>VirtoCommerce</h1>
             </div>
-            <div>
-                <label>Database name</label>
-                <input name="InitialCatalog" value="@Model.InitialCatalog"/>
+        </div>
+
+        <div id="main">
+            <div class="zone zone-content">
+                <h1>Get Started</h1>
+
+                <div>
+                    @using (Html.BeginForm("Index","Install",new {area="VirtoAdmin"}, FormMethod.Post))
+                    {
+                        <h2>Database setup</h2>
+                        <div id="inprogress"/>
+                        if (Model.HasStatusMessage)
+                        {
+                            <div class="message-Information">
+                                <p>@Model.StatusMessage</p>
+                                <p>Click @Html.ActionLink("restart", "Restart") to finish installation.</p>
+                            </div>
+                        }
+                        if (Model.HasErrorMessage)
+                        {
+                            <div class="validation-summary-errors">
+                                <p>@Model.ErrorMessage</p>
+                                <p>Open @Html.ActionLink("log file", "DownloadLog") for more details on error.</p>
+                            </div>
+                        }
+                        
+                        <fieldset class="data">
+                            <div>
+                                @Html.LabelFor(m=>m.DataSource)
+                                @Html.TextBoxFor(m=>m.DataSource)
+                                @Html.ValidationMessageFor(m=>m.DataSource)
+                            </div>
+                            <div>
+                                @Html.LabelFor(m=>m.InitialCatalog)
+                                @Html.TextBoxFor(m=>m.InitialCatalog)
+                                @Html.ValidationMessageFor(m=>m.InitialCatalog)
+                            </div>
+                            <div> 
+                                @Html.LabelFor(m=>m.UserName)
+                                @Html.TextBoxFor(m=>m.UserName)
+                                @Html.ValidationMessageFor(m=>m.UserName)
+                            </div>
+                            <div>
+                                @Html.LabelFor(m=>m.UserPassword)
+                                @Html.TextBoxFor(m=>m.UserPassword)
+                                @Html.ValidationMessageFor(m=>m.UserPassword)
+                            </div>
+                            <div>
+                                @Html.LabelFor(m=>m.SaUser)
+                                @Html.TextBoxFor(m=>m.SaUser)
+                            </div>
+                            <div>
+                                @Html.LabelFor(m=>m.SaPassword)
+                                @Html.PasswordFor(m=>m.SaPassword)
+                            </div>
+                            <div>
+                                @Html.LabelFor(m=>m.SetupSampleData)
+                                @Html.CheckBoxFor(m=>m.SetupSampleData)
+                            </div>
+                            <div>
+                                <button name="Action" type="submit" value="@InstallModel.SubmitAction.Save">Save connection parameters</button>
+                                <button name="Action" type="submit" value="@InstallModel.SubmitAction.CreateDb">Create new database</button>
+                                <button name="Action" type="submit" value="@InstallModel.SubmitAction.Restart">Restart application</button>
+                            </div>
+                        </fieldset>
+                        <hr/>
+                        <h2>Install administration application</h2>
+                        <fieldset>
+                            <div>
+                                <p>Click <a href="http://assets.virtocommerce.com/software/1.0/admin/VirtoCommerce.application">here</a> to install Virto Commerce Manager</p>
+                            </div>
+                        </fieldset>
+                    }
+                </div>
             </div>
-            <div>
-                <label>Administration user name</label>
-                <input name="SaUser" value="@Model.SaUser"/>
+        </div>
+        <div id="throbber">
+            <div class="curtain"></div>
+            <div class="curtain-content">
+                <div>
+                    <h1 id="setUpHeader">Creating VirtoCommerce database ...</h1>
+                    <p>
+                        <img src="@Href("../../content/images/inprogress.gif")" alt="" />
+                    </p>
+                </div>
             </div>
-            <div>
-                <label>Administration user password</label>
-                <input name="SaPassword" type="password" value="@Model.SaPassword"/>
-            </div>
-            <div>
-                <label>Database user name</label>
-                <input name="UserName" value="@Model.UserName"/>
-            </div>
-            <div>
-                <label>Database user password</label>
-                <input name="UserPassword" value="@Model.UserPassword"/>
-            </div>
-            <div>
-                <label>Generate sample data</label>
-                <!-- Html.CheckBoxFor(m=>m.SetupSampleData) -->
-                <input name="SetupSampleData" id="SetupSampleData" type="checkbox" data-val="false" value="false"/>
-            </div>
-            <div>
-                <input type="submit" value="Create database"/>
-            </div>
-            <hr/>
-            <p>Administration application</p>
-            <div>
-                <a href="http://assets.virtocommerce.com/software/1.0/admin/VirtoCommerce.application#VirtoCommerce.application, Culture=neutral, PublicKeyToken=daec1fcaccc0d1ab, processorArchitecture=msil">Virto Commerce Manager</a>
-            </div>
-            <hr/>
-        }
-        @using (Html.BeginForm("Restart", "Install", new { area = "VirtoAdmin" }, FormMethod.Post))
-        {
-            <input type="submit" value="Restart"/>
-        }
-    </div>
-</body>
+        </div>
+    </body>
 </html>

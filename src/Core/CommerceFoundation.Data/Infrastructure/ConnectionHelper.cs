@@ -39,7 +39,7 @@ namespace VirtoCommerce.Foundation.Data.Infrastructure
             }
         }
 
-        public static void TestSqlConnection()
+        public static bool TestSqlConnection()
         {
             try
             {
@@ -55,6 +55,8 @@ namespace VirtoCommerce.Foundation.Data.Infrastructure
                 Trace.TraceError(err.Message);
                 _databaseInstalled = false;
             }
+
+            return _databaseInstalled.Value;
         }
 
         /// <summary>

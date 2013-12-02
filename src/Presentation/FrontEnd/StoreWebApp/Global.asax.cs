@@ -32,17 +32,15 @@ namespace VirtoCommerce.Web
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
+            BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             if (ConnectionHelper.IsDatabaseInstalled)
             {
                 WebApiConfig.Register(GlobalConfiguration.Configuration);
                 FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
                 RouteConfig.RegisterRoutes(RouteTable.Routes);
-                BundleConfig.RegisterBundles(BundleTable.Bundles);
-            
+               
                 AuthConfig.RegisterAuth();
-                DynamicModuleUtility.RegisterModule(typeof(StoreHttpModule));
-                DynamicModuleUtility.RegisterModule(typeof(MarketingHttpModule));
 
                 ModelBinders.Binders[typeof (SearchParameters)] = new SearchParametersBinder();
 
