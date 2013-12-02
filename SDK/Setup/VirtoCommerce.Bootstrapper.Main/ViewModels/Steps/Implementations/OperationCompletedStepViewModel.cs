@@ -92,6 +92,8 @@ namespace VirtoCommerce.Bootstrapper.Main.ViewModels
 			}
 		}
 
+		
+
 		#endregion
 
 		#region Windows Installer events
@@ -181,6 +183,8 @@ namespace VirtoCommerce.Bootstrapper.Main.ViewModels
             {
                 _mainVmFactory.GetViewModelInstance().Shutdown((int)SystemErrorCodes.ERROR_CANCELLED);
             }
+			Result = OperationResult.Cancelled;
+			OnPropertyChanged("IsLaunchConfigurationWizardAvailable");
         }
 
         private void Fail()
