@@ -8,8 +8,7 @@ using VirtoCommerce.Foundation.Frameworks.Attributes;
 namespace VirtoCommerce.Foundation.Orders.Model
 {
 	[DataContract]
-	[DataServiceKey("OrderFormValueId")]
-	[EntitySet("OrderFormValues")]
+	[EntitySet("OrderFormPropertyValues")]
 	public class OrderFormPropertyValue : PropertyValueBase
 	{
 		#region Navigation Properties
@@ -35,5 +34,25 @@ namespace VirtoCommerce.Foundation.Orders.Model
 		public virtual OrderForm OrderForm { get; set; }
 
 		#endregion
+
+		public override string ToString()
+		{
+			switch (ValueType)
+			{
+				case (int)OrderFormValueType.Boolean:
+					return BooleanValue.ToString();
+				case (int)OrderFormValueType.DateTime:
+					return DateTimeValue.ToString();
+				case (int)OrderFormValueType.Decimal:
+					return DecimalValue.ToString();
+				case (int)OrderFormValueType.Integer:
+					return IntegerValue.ToString();
+				case (int)OrderFormValueType.LongString:
+					return LongTextValue;
+				case (int)OrderFormValueType.ShortString:
+					return ShortTextValue;
+			}
+			return base.ToString();
+		}
 	}
 }

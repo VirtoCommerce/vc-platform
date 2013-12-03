@@ -217,6 +217,7 @@
     <Compile Include="Catalogs\Model\PropertyTargetType.cs" />
     <Compile Include="Catalogs\Model\PropertyAttribute.cs" />
     <Compile Include="Catalogs\Model\PropertyValueType.cs" />
+    <Compile Include="Orders\Model\OrderFormValueType.cs" />
     <Compile Include="Frameworks\PropertyValueBase.cs" />
     <Compile Include="Catalogs\Model\ItemPropertyValue.cs" />
     <Compile Include="Catalogs\Model\ItemRelationType.cs" />

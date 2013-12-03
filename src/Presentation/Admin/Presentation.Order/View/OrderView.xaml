@@ -702,5 +702,24 @@
 				</TabControl.Resources>
 			</TabControl>
 		</TabItem>
+
+		<TabItem x:Name="tabItemOrderFormProperties" Header="Properties" Visibility="{Binding FirstOrderForm.OrderFormPropertyValues.Count, Converter={x:Static Presentation_Core_Infrastructure_Converters:ToVisibilityConverter.Current}}">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+
+				<ItemsControl Style="{StaticResource Virto_ToolbarItemsControl_Style}" />
+
+				<DataGrid Grid.Row="1" ItemsSource="{Binding FirstOrderForm.OrderFormPropertyValues}" Margin="0,0,0,4">
+					<DataGrid.Columns>
+						<DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+						<DataGridTextColumn Header="Value" Binding="{Binding }" Width="*" />
+						<!--<DataGridTextColumn Header="Type" Binding="{Binding ValueType}" />-->
+					</DataGrid.Columns>
+				</DataGrid>
+			</Grid>
+		</TabItem>
 	</TabControl>
 </UserControl>
