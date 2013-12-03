@@ -63,7 +63,16 @@ namespace VirtoCommerce.Bootstrapper.Main.ViewModels
 		{
 			get
 			{
-				return _engine.StringVariables["WixBundleLog_JRE7"];
+				string retVal;
+				try
+				{
+					retVal = _engine.StringVariables["WixBundleLog_JRE7"];
+				}
+				catch
+				{
+					retVal = string.Empty;
+				}
+				return retVal;
 			}
 		}
 
@@ -82,6 +91,8 @@ namespace VirtoCommerce.Bootstrapper.Main.ViewModels
 				return _engine.StringVariables["WixBundleLog_VirtoCommerceSearch"];
 			}
 		}
+
+		
 
 		#endregion
 
@@ -172,6 +183,8 @@ namespace VirtoCommerce.Bootstrapper.Main.ViewModels
             {
                 _mainVmFactory.GetViewModelInstance().Shutdown((int)SystemErrorCodes.ERROR_CANCELLED);
             }
+			Result = OperationResult.Cancelled;
+			OnPropertyChanged("IsLaunchConfigurationWizardAvailable");
         }
 
         private void Fail()

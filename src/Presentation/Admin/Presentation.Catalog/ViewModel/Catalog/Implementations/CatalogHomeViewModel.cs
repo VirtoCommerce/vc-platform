@@ -688,7 +688,12 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		public CatalogBase SearchFilterCatalog { get; set; }
 		public ObservableCollection<CatalogBase> SearchFilterCatalogs { get; set; }
 
-		public ObservableCollection<ItemFilter> AllQueries { get; set; }
+		private ObservableCollection<ItemFilter> _allQueries;
+		public ObservableCollection<ItemFilter> AllQueries
+		{
+			get { return _allQueries; }
+			set { _allQueries = value; OnPropertyChanged(); }
+		}
 
 		public string SearchFilterAll { get; set; }
 

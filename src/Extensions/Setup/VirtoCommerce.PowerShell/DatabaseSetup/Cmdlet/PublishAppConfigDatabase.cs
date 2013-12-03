@@ -22,16 +22,21 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
            
 			using (var db = new EFAppConfigRepository(connection))
 			{
+				SqlAppConfigDatabaseInitializer initializer;
+
 				if (sample)
 				{
 					SafeWriteVerbose("Running sample scripts");
-					new SqlAppConfigSampleDatabaseInitializer().InitializeDatabase(db);
+					initializer = new SqlAppConfigSampleDatabaseInitializer();
 				}
 				else
 				{
 					SafeWriteVerbose("Running minimum scripts");
-					new SqlAppConfigDatabaseInitializer().InitializeDatabase(db);
+					initializer = new SqlAppConfigDatabaseInitializer();
 				}
+
+				initializer.Scope = data;
+				initializer.InitializeDatabase(db);
 			}
 		}
 	}

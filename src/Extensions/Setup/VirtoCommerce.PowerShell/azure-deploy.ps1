@@ -38,8 +38,10 @@ Param(
         $vcfpowershellfile,
         $region = 'West US',
 		$slot = 'Production',
-        # controlling parameters, allow deploying subset of features, shown in the orde they are executed
+        # controlling parameters, allow deploying subset of features, shown in the order they are executed
 		$build = $true,
+		$build_params,
+		$build_config = 'Release',
         $deploy_database = $true,
         $deploy_search = $true,
         $deploy_scheduler = $true,
@@ -62,7 +64,7 @@ $search_elasticsearchdistro = "$build_solutiondir\Tools\ElasticSearch"
 $scheduler_workerroleconfig = "$build_solutiondir\src\Azure\WorkerRoles\Scheduler\AzureScheduler"
 $frontend_workerroleconfig = "$build_solutiondir\src\Azure\WebRoles\Frontend\CommerceSite"
 
-$build_configuration = 'Release' # build configuration to use
+$build_configuration = $build_config # build configuration to use
 
 #*************** LESS OFTEN CHANGED SETTINGS
 
@@ -252,21 +254,21 @@ Function Build
 
         # build
         write-progress -id 1 -activity "Solution Build" -status "Cleaning in Progress"
-        & "$global:buildexe_path\MSBuild.exe" $build_solutionname /m /t:clean
+        & "$global:buildexe_path\MSBuild.exe" $build_solutionname /m /t:clean $build_params
         if ($LASTEXITCODE -ne 0)
         {
           throw "Build Failed"
         }
 
         write-progress -id 1 -activity "Solution Build" -status "Building in Progress"
-        & "$global:buildexe_path\MSBuild.exe" $build_solutionname /m /t:build /p:Configuration="$build_configuration" /Property:ApplicationVersion=$PublishApplicationVersion /Property:MinimumRequiredVersion=$PublishApplicationVersion
+        & "$global:buildexe_path\MSBuild.exe" $build_solutionname /m /t:build /p:Configuration="$build_configuration" /Property:ApplicationVersion=$PublishApplicationVersion /Property:MinimumRequiredVersion=$PublishApplicationVersion $build_params
         if ($LASTEXITCODE -ne 0)
         {
           throw "Build Failed"
         }
 
         write-progress -id 1 -activity "Solution Build" -status "Publishing in Progress"
-        & "$global:buildexe_path\MSBuild.exe" $build_solutionname /m /t:Publish /p:InstallUrl=$admin_installcontainer/$admin_blobprefix/ /p:Configuration="$build_configuration" /p:TargetProfile=Cloud /Property:PublishDir="$build_path\" /Property:ApplicationVersion=$PublishApplicationVersion /Property:MinimumRequiredVersion=$PublishApplicationVersion
+        & "$global:buildexe_path\MSBuild.exe" $build_solutionname /m /t:Publish /p:InstallUrl=$admin_installcontainer/$admin_blobprefix/ /p:Configuration="$build_configuration" /p:TargetProfile=Cloud /Property:PublishDir="$build_path\" /Property:ApplicationVersion=$PublishApplicationVersion /Property:MinimumRequiredVersion=$PublishApplicationVersion $build_params
         if ($LASTEXITCODE -ne 0)
         {
           throw "Build Failed"
