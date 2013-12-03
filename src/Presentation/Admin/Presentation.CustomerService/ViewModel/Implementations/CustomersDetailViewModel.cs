@@ -791,7 +791,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 								};
 
 
-							newValueList.Add(new PropertyValueWithFieldNameEditViewModel(item)
+							newValueList.Add(new PropertyValueWithFieldNameEditViewModel(item, item.Priority)
 								{
 									FieldName = GetPropertyWithoutType(x.FieldName)
 								});
@@ -835,7 +835,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 									ValueType = (int) propertyValueType
 								};
 
-							newValueList.Add(new PropertyValueWithFieldNameEditViewModel(item) { FieldName = x.FieldName });
+							newValueList.Add(new PropertyValueWithFieldNameEditViewModel(item, item.Priority) { FieldName = x.FieldName });
 						}
 					});
 

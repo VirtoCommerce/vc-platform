@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using VirtoCommerce.Foundation.Catalogs.Model;
+using VirtoCommerce.Foundation.Frameworks;
 
 namespace VirtoCommerce.ManagementClient.Catalog.Model
 {

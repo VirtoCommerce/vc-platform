@@ -8,6 +8,7 @@ using Omu.ValueInjecter;
 using VirtoCommerce.Client;
 using VirtoCommerce.Foundation.Catalogs;
 using VirtoCommerce.Foundation.Catalogs.Model;
+using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using VirtoCommerce.Web.Models;
 
@@ -70,7 +71,7 @@ namespace VirtoCommerce.Web.Virto.Helpers
 			{
 				var values = item.ItemPropertyValues;
 				var properties = propertySet.PropertySetProperties.SelectMany(x => values.Where(v => v.Name == x.Property.Name
-					&& !x.Property.PropertyAttributes.Any(pa=> pa.PropertyAttributeName.Equals("Hidden", StringComparison.OrdinalIgnoreCase))
+					&& !x.Property.PropertyAttributes.Any(pa => pa.PropertyAttributeName.Equals("Hidden", StringComparison.OrdinalIgnoreCase))
 					&& (!x.Property.IsLocaleDependant
 					|| string.Equals(v.Locale, CultureInfo.CurrentUICulture.Name, StringComparison.InvariantCultureIgnoreCase))),
 					(r, v) => CreatePropertyModel(r.Priority, r.Property, v, item)).ToArray();
@@ -175,7 +176,7 @@ namespace VirtoCommerce.Web.Virto.Helpers
 
 					if (display.HasFlag(ItemDisplayOptions.ItemPrice))
 					{
-                        var lowestPrice = PriceListClient.GetLowestPrice(itemId, itemAvaiability !=null ? itemAvaiability.MinQuantity : 1);
+						var lowestPrice = PriceListClient.GetLowestPrice(itemId, itemAvaiability != null ? itemAvaiability.MinQuantity : 1);
 						var tags = new Hashtable
 							{
 								{

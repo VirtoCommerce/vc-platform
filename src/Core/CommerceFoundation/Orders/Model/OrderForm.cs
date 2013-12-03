@@ -281,6 +281,13 @@ namespace VirtoCommerce.Foundation.Orders.Model
 			}
 		}
 
+		private ObservableCollection<OrderFormPropertyValue> _OrderFormPropertyValues;
+		[DataMember]
+		public ObservableCollection<OrderFormPropertyValue> OrderFormPropertyValues
+		{
+			get { return _OrderFormPropertyValues ?? (_OrderFormPropertyValues = new ObservableCollection<OrderFormPropertyValue>()); }
+		}
+
 		#endregion
 
 	}

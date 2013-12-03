@@ -151,6 +151,10 @@
     <Compile Include="Customers\Migrations\201304220516289_Initial.Designer.cs">
       <DependentUpon>201304220516289_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Customers\Migrations\201312031417072_PropertyValues.cs" />
+    <Compile Include="Customers\Migrations\201312031417072_PropertyValues.Designer.cs">
+      <DependentUpon>201312031417072_PropertyValues.cs</DependentUpon>
+    </Compile>
     <Compile Include="Customers\Migrations\Configuration.cs" />
     <Compile Include="AppConfig\Migrations\Configuration.cs" />
     <Compile Include="Importing\EFImportingRepository.cs" />
@@ -220,6 +224,10 @@
     <Compile Include="Marketing\Migrations\Content\201308291146308_Update.Designer.cs">
       <DependentUpon>201308291146308_Update.cs</DependentUpon>
     </Compile>
+    <Compile Include="Marketing\Migrations\Content\201312031319146_PropertyValues.cs" />
+    <Compile Include="Marketing\Migrations\Content\201312031319146_PropertyValues.Designer.cs">
+      <DependentUpon>201312031319146_PropertyValues.cs</DependentUpon>
+    </Compile>
     <Compile Include="Marketing\Migrations\Content\Configuration.cs" />
     <Compile Include="Marketing\Migrations\Promotion\201304010533349_Initial.cs" />
     <Compile Include="Marketing\Migrations\Promotion\201304010533349_Initial.Designer.cs">
@@ -233,6 +241,10 @@
     <Compile Include="Orders\Migrations\201308290648071_CreateIndex.cs" />
     <Compile Include="Orders\Migrations\201308290648071_CreateIndex.Designer.cs">
       <DependentUpon>201308290648071_CreateIndex.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Orders\Migrations\201312031342189_PropertyValues.cs" />
+    <Compile Include="Orders\Migrations\201312031342189_PropertyValues.Designer.cs">
+      <DependentUpon>201312031342189_PropertyValues.cs</DependentUpon>
     </Compile>
     <Compile Include="Orders\Migrations\Configuration.cs" />
     <Compile Include="Orders\DSOrderClient.cs" />
@@ -305,6 +317,9 @@
     <EmbeddedResource Include="Customers\Migrations\201304220516289_Initial.resx">
       <DependentUpon>201304220516289_Initial.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Customers\Migrations\201312031417072_PropertyValues.resx">
+      <DependentUpon>201312031417072_PropertyValues.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Importing\Migrations\201302151332357_Initial.resx">
       <DependentUpon>201302151332357_Initial.cs</DependentUpon>
     </EmbeddedResource>
@@ -323,6 +338,9 @@
     <EmbeddedResource Include="Marketing\Migrations\Content\201308291146308_Update.resx">
       <DependentUpon>201308291146308_Update.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Marketing\Migrations\Content\201312031319146_PropertyValues.resx">
+      <DependentUpon>201312031319146_PropertyValues.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Marketing\Migrations\Promotion\201304010533349_Initial.resx">
       <DependentUpon>201304010533349_Initial.cs</DependentUpon>
     </EmbeddedResource>
@@ -331,6 +349,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Orders\Migrations\201308290648071_CreateIndex.resx">
       <DependentUpon>201308290648071_CreateIndex.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Orders\Migrations\201312031342189_PropertyValues.resx">
+      <DependentUpon>201312031342189_PropertyValues.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reviews\Migrations\201304111035422_Initial.resx">
       <DependentUpon>201304111035422_Initial.cs</DependentUpon>

@@ -1,19 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Runtime.Serialization;
-using VirtoCommerce.Foundation.Frameworks;
-using System.Data.Services.Common;
 using System.ComponentModel.DataAnnotations;
+using System.Data.Services.Common;
+using System.Runtime.Serialization;
+using VirtoCommerce.Foundation.Catalogs.Model;
 
-namespace VirtoCommerce.Foundation.Catalogs.Model
+namespace VirtoCommerce.Foundation.Frameworks
 {
 	[DataContract]
 	[DataServiceKey("PropertyValueId")]
 	public abstract class PropertyValueBase : StorageEntity
 	{
-		public PropertyValueBase()
+		protected PropertyValueBase()
 		{
 			_PropertyValueId = GenerateNewKey();
 		}
@@ -30,7 +27,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 			}
 			set
 			{
-				SetValue(ref _PropertyValueId, () => this.PropertyValueId, value);
+				SetValue(ref _PropertyValueId, () => PropertyValueId, value);
 			}
 		}
 
@@ -45,7 +42,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 			}
 			set
 			{
-				SetValue(ref _Alias, () => this.Alias, value);
+				SetValue(ref _Alias, () => Alias, value);
 			}
 		}
 
@@ -60,7 +57,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 			}
 			set
 			{
-				SetValue(ref _Name, () => this.Name, value);
+				SetValue(ref _Name, () => Name, value);
 			}
 		}
 
@@ -75,7 +72,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 			}
 			set
 			{
-				SetValue(ref _KeyValue, () => this.KeyValue, value);
+				SetValue(ref _KeyValue, () => KeyValue, value);
 			}
 		}
 
@@ -90,7 +87,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 			}
 			set
 			{
-				SetValue(ref _ValueType, () => this.ValueType, value);
+				SetValue(ref _ValueType, () => ValueType, value);
 			}
 		}
 
@@ -105,7 +102,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 			}
 			set
 			{
-				SetValue(ref _ShortTextValue, () => this.ShortTextValue, value);
+				SetValue(ref _ShortTextValue, () => ShortTextValue, value);
 			}
 		}
 
@@ -119,7 +116,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 			}
 			set
 			{
-				SetValue(ref _LongTextValue, () => this.LongTextValue, value);
+				SetValue(ref _LongTextValue, () => LongTextValue, value);
 			}
 		}
 
@@ -133,7 +130,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 			}
 			set
 			{
-				SetValue(ref _DecimalValue, () => this.DecimalValue, value);
+				SetValue(ref _DecimalValue, () => DecimalValue, value);
 			}
 		}
 
@@ -147,7 +144,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 			}
 			set
 			{
-				SetValue(ref _IntegerValue, () => this.IntegerValue, value);
+				SetValue(ref _IntegerValue, () => IntegerValue, value);
 			}
 		}
 
@@ -161,7 +158,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 			}
 			set
 			{
-				SetValue(ref _BooleanValue, () => this.BooleanValue, value);
+				SetValue(ref _BooleanValue, () => BooleanValue, value);
 			}
 		}
 
@@ -175,7 +172,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 			}
 			set
 			{
-				SetValue(ref _DateTimeValue, () => this.DateTimeValue, value);
+				SetValue(ref _DateTimeValue, () => DateTimeValue, value);
 			}
 		}
 
@@ -190,28 +187,28 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 			}
 			set
 			{
-				SetValue(ref _Locale, () => this.Locale, value);
+				SetValue(ref _Locale, () => Locale, value);
 			}
 		}
 
-        public override string ToString()
-        {
-            switch(this.ValueType)
-            {
-                case (int)PropertyValueType.Boolean:
-                    return this.BooleanValue.ToString();
-                case (int)PropertyValueType.DateTime:
-                    return this.DateTimeValue.ToString();
-                case (int)PropertyValueType.Decimal:
-                    return this.DecimalValue.ToString();
-                case (int)PropertyValueType.Integer:
-                    return this.IntegerValue.ToString();
-                case (int)PropertyValueType.LongString:
-                    return this.LongTextValue;
-                case (int)PropertyValueType.ShortString:
-                    return this.ShortTextValue;
-            }
-            return base.ToString();
-        }
+		public override string ToString()
+		{
+			switch (ValueType)
+			{
+				case (int)PropertyValueType.Boolean:
+					return BooleanValue.ToString();
+				case (int)PropertyValueType.DateTime:
+					return DateTimeValue.ToString();
+				case (int)PropertyValueType.Decimal:
+					return DecimalValue.ToString();
+				case (int)PropertyValueType.Integer:
+					return IntegerValue.ToString();
+				case (int)PropertyValueType.LongString:
+					return LongTextValue;
+				case (int)PropertyValueType.ShortString:
+					return ShortTextValue;
+			}
+			return base.ToString();
+		}
 	}
 }
