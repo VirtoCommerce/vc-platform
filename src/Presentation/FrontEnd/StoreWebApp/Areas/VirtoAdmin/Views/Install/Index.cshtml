@@ -1,5 +1,6 @@
 ﻿@using VirtoCommerce.Web
 @using VirtoCommerce.Web.Areas.VirtoAdmin.Models
+@using Resource = VirtoCommerce.Web.Areas.VirtoAdmin.Resources.Resource;
 @model InstallModel
 @{
     Layout = null;
@@ -10,7 +11,7 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>VirtoCommerce web administration area</title> 
+    <title>@Resource.InstallPageTitle</title> 
     @Styles.Render(BundleConfig.VirtoAdminStyles)
     @Scripts.Render("~/bundles/jquery")
     <script type="text/javascript">
@@ -36,7 +37,7 @@
                 <h1>VirtoCommerce</h1>
             </div>
         </div>
-
+        @Html.AntiForgeryToken()
         <div id="main">
             <div class="zone zone-content">
                 <h1>Get Started</h1>
@@ -50,14 +51,16 @@
                         {
                             <div class="message-Information">
                                 <p>@Model.StatusMessage</p>
-                                <p>Click @Html.ActionLink("restart", "Restart") to finish installation.</p>
                             </div>
                         }
                         if (Model.HasErrorMessage)
                         {
                             <div class="validation-summary-errors">
                                 <p>@Model.ErrorMessage</p>
+                                @if (Model.IsLogExists)
+                                {
                                 <p>Open @Html.ActionLink("log file", "DownloadLog") for more details on error.</p>
+                                }
                             </div>
                         }
                         
@@ -65,46 +68,48 @@
                             <div>
                                 @Html.LabelFor(m=>m.DataSource)
                                 @Html.TextBoxFor(m=>m.DataSource)
+                                @Html.Label(Resource.DataSourceTip, new { @class = "hint"})
                                 @Html.ValidationMessageFor(m=>m.DataSource)
                             </div>
+                            @if (Model.DbAdminRequired)
+                            {
+                                <div>
+                                    @Html.LabelFor(m=>m.DbAdminUser)
+                                    @Html.TextBoxFor(m=>m.DbAdminUser)
+                                    @Html.Label(Resource.DbAdminUserTip, new { @class = "hint"})
+                                    @Html.ValidationMessageFor(m=>m.DbAdminUser)
+                                </div>
+                                <div>
+                                    @Html.LabelFor(m=>m.DbAdminPassword)
+                                    @Html.PasswordFor(m=>m.DbAdminPassword)
+                                    @Html.Label(Resource.DbAdminPasswordTip, new { @class = "hint"})
+                                    @Html.ValidationMessageFor(m=>m.DbAdminPassword)
+                                </div>
+                            }
                             <div>
                                 @Html.LabelFor(m=>m.InitialCatalog)
                                 @Html.TextBoxFor(m=>m.InitialCatalog)
+                                @Html.Label(Resource.InitialCatalogTip, new { @class = "hint"})
                                 @Html.ValidationMessageFor(m=>m.InitialCatalog)
                             </div>
                             <div> 
-                                @Html.LabelFor(m=>m.UserName)
-                                @Html.TextBoxFor(m=>m.UserName)
-                                @Html.ValidationMessageFor(m=>m.UserName)
+                                @Html.LabelFor(m=>m.DbUserName)
+                                @Html.TextBoxFor(m=>m.DbUserName)
+                                @Html.Label(Resource.DbUserNameTip, new { @class = "hint"})
+                                @Html.ValidationMessageFor(m=>m.DbUserName)
                             </div>
                             <div>
-                                @Html.LabelFor(m=>m.UserPassword)
-                                @Html.TextBoxFor(m=>m.UserPassword)
-                                @Html.ValidationMessageFor(m=>m.UserPassword)
-                            </div>
-                            <div>
-                                @Html.LabelFor(m=>m.SaUser)
-                                @Html.TextBoxFor(m=>m.SaUser)
-                            </div>
-                            <div>
-                                @Html.LabelFor(m=>m.SaPassword)
-                                @Html.PasswordFor(m=>m.SaPassword)
+                                @Html.LabelFor(m=>m.DbUserPassword)
+                                @Html.PasswordFor(m=>m.DbUserPassword,  new { value = Model.DbUserPassword})
+                                @Html.Label(Resource.DbUserPasswordTip, new { @class = "hint"})
+                                @Html.ValidationMessageFor(m=>m.DbUserPassword)
                             </div>
                             <div>
                                 @Html.LabelFor(m=>m.SetupSampleData)
                                 @Html.CheckBoxFor(m=>m.SetupSampleData)
                             </div>
                             <div>
-                                <button name="Action" type="submit" value="@InstallModel.SubmitAction.Save">Save connection parameters</button>
-                                <button name="Action" type="submit" value="@InstallModel.SubmitAction.CreateDb">Create new database</button>
-                                <button name="Action" type="submit" value="@InstallModel.SubmitAction.Restart">Restart application</button>
-                            </div>
-                        </fieldset>
-                        <hr/>
-                        <h2>Install administration application</h2>
-                        <fieldset>
-                            <div>
-                                <p>Click <a href="http://assets.virtocommerce.com/software/1.0/admin/VirtoCommerce.application">here</a> to install Virto Commerce Manager</p>
+                                <button name="Action" type="submit" value="@InstallModel.SubmitAction.CreateDb">@Resource.SetupDatabase</button>
                             </div>
                         </fieldset>
                     }
@@ -115,7 +120,7 @@
             <div class="curtain"></div>
             <div class="curtain-content">
                 <div>
-                    <h1 id="setUpHeader">Creating VirtoCommerce database ...</h1>
+                    <h1 id="setUpHeader">@Resource.LongProcessMessage</h1>
                     <p>
                         <img src="@Href("../../content/images/inprogress.gif")" alt="" />
                     </p>

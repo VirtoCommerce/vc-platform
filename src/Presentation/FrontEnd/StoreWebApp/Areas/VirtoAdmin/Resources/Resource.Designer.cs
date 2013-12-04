@@ -22,7 +22,7 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Resource {
+    public class Resource {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Resources {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("VirtoCommerce.Web.Areas.VirtoAdmin.Resources.Resource", typeof(Resource).Assembly);
@@ -51,7 +51,7 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Resources {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
@@ -61,11 +61,227 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Database already exists. You need to delete it or provide new database name..
         /// </summary>
-        internal static string VirtoCommerce_web_administration_area {
+        public static string DatabaseAlreadyExists {
             get {
-                return ResourceManager.GetString("VirtoCommerce web administration area", resourceCulture);
+                return ResourceManager.GetString("DatabaseAlreadyExists", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Database server.
+        /// </summary>
+        public static string DataSource {
+            get {
+                return ResourceManager.GetString("DataSource", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Database server is required..
+        /// </summary>
+        public static string DataSourceRequiredError {
+            get {
+                return ResourceManager.GetString("DataSourceRequiredError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Location of your database server: server name, IP address, or server\instance.
+        /// </summary>
+        public static string DataSourceTip {
+            get {
+                return ResourceManager.GetString("DataSourceTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Database Administrator Password.
+        /// </summary>
+        public static string DbAdminPassword {
+            get {
+                return ResourceManager.GetString("DbAdminPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Database Administrator Password is required.
+        /// </summary>
+        public static string DbAdminPasswordRequiredError {
+            get {
+                return ResourceManager.GetString("DbAdminPasswordRequiredError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password for the database administrator account.
+        /// </summary>
+        public static string DbAdminPasswordTip {
+            get {
+                return ResourceManager.GetString("DbAdminPasswordTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Database administrator.
+        /// </summary>
+        public static string DbAdminUser {
+            get {
+                return ResourceManager.GetString("DbAdminUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Database administrator account name is required..
+        /// </summary>
+        public static string DbAdminUserRequiredError {
+            get {
+                return ResourceManager.GetString("DbAdminUserRequiredError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Database administrator account is used to create the database and user if they don&apos;t already exist.
+        /// </summary>
+        public static string DbAdminUserTip {
+            get {
+                return ResourceManager.GetString("DbAdminUserTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Administrator access is required to prepare database. Please provide database administrator user name and password..
+        /// </summary>
+        public static string DbServerAdminRequiredException {
+            get {
+                return ResourceManager.GetString("DbServerAdminRequiredException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Database Username.
+        /// </summary>
+        public static string DbUserName {
+            get {
+                return ResourceManager.GetString("DbUserName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User name to access your application database.
+        /// </summary>
+        public static string DbUserNameTip {
+            get {
+                return ResourceManager.GetString("DbUserNameTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Database Password.
+        /// </summary>
+        public static string DbUserPassword {
+            get {
+                return ResourceManager.GetString("DbUserPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password for the Database Username.
+        /// </summary>
+        public static string DbUserPasswordTip {
+            get {
+                return ResourceManager.GetString("DbUserPasswordTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Finish setup.
+        /// </summary>
+        public static string FinalClick {
+            get {
+                return ResourceManager.GetString("FinalClick", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Database Name.
+        /// </summary>
+        public static string InitialCatalog {
+            get {
+                return ResourceManager.GetString("InitialCatalog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Database name is required..
+        /// </summary>
+        public static string InitialCatalogRequiredError {
+            get {
+                return ResourceManager.GetString("InitialCatalogRequiredError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name of the database for VirtoCommerce store.
+        /// </summary>
+        public static string InitialCatalogTip {
+            get {
+                return ResourceManager.GetString("InitialCatalogTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VirtoCommerce installation.
+        /// </summary>
+        public static string InstallPageTitle {
+            get {
+                return ResourceManager.GetString("InstallPageTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Setting up VirtoCommerce store ....
+        /// </summary>
+        public static string LongProcessMessage {
+            get {
+                return ResourceManager.GetString("LongProcessMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Finish setup.
+        /// </summary>
+        public static string SetupDatabase {
+            get {
+                return ResourceManager.GetString("SetupDatabase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create sample store.
+        /// </summary>
+        public static string SetupSampleData {
+            get {
+                return ResourceManager.GetString("SetupSampleData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Database user name is required..
+        /// </summary>
+        public static string UserNameRequiredError {
+            get {
+                return ResourceManager.GetString("UserNameRequiredError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Database user password is required..
+        /// </summary>
+        public static string UserPasswordRequiredError {
+            get {
+                return ResourceManager.GetString("UserPasswordRequiredError", resourceCulture);
             }
         }
     }

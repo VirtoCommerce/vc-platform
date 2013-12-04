@@ -66,8 +66,8 @@ h5 {font-size: 105%;}
 #setUpHeader {font-size: 145%;}
 
 .hint {
-    font-size:60%;
-    font-style:italic;
+    font-size:70%;
+    font-style:normal;
 }
 
 #header {
@@ -148,7 +148,7 @@ fieldset.data legend {
 }
 
 label {
-    display:inline;
+    display:block;
 }
 
 label.forcheckbox {

@@ -1,4 +1,5 @@
-﻿using Microsoft.Practices.ServiceLocation;
+﻿using System.IO;
+using Microsoft.Practices.ServiceLocation;
 using System;
 using System.Linq;
 using System.Web;
@@ -28,13 +29,14 @@ namespace VirtoCommerce.Web
     /// </summary>
     public class MvcApplication : HttpApplication
     {
+        public const string SetupFile = @"App_Data\Virto\Configuration\Setup.txt";
 
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            if (ConnectionHelper.IsDatabaseInstalled)
+            if (IsSetupCompleted)
             {
                 WebApiConfig.Register(GlobalConfiguration.Configuration);
                 FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
@@ -49,7 +51,13 @@ namespace VirtoCommerce.Web
             }
         }
 
-
+        public static bool IsSetupCompleted
+        {
+            get
+            {
+                return !File.Exists(Path.Combine(HttpRuntime.AppDomainAppPath, SetupFile));
+            }
+        }
 
         /// <summary>
         /// Profile migrate from anonymous.

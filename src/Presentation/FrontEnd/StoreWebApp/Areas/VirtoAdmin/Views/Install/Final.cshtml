@@ -1,0 +1,35 @@
+﻿@using VirtoCommerce.Web.Areas.VirtoAdmin.Models
+@using VirtoCommerce.Web.Areas.VirtoAdmin.Resources
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@Resource.InstallPageTitle</title>
+</head>
+<body>
+    <div>
+        <p>VirtoCommerce store database is ready. </p>
+        <p>Getting Started with Virto Commerce
+            Welcome the Virto Commerce Community! Please read this to get started.
+
+            Open Commerce Manager (Admin)
+            Open Commerce Manager application to manage your store.
+
+            Developer Guide
+            To learn more about customizing and developing using Virto Commerce, view our Developer Guide.
+
+            User Guide
+            Want to learn more how to use our software, visit our User Guide.
+
+            Virto Commerce Support Forums
+            If you have questions, suggestions or any issues, head over to our forums.
+        </p>
+    </div>
+    <button name="Action" type="submit" value="@InstallModel.SubmitAction.Restart">@Resource.FinalClick</button>
+</body>
+</html>

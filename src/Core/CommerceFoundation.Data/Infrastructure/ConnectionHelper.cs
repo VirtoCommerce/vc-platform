@@ -1,6 +1,4 @@
-﻿using System.Data.SqlClient;
-using System.Diagnostics;
-using System.Web.Configuration;
+﻿using System.Web.Configuration;
 using Microsoft.WindowsAzure;
 using System;
 using System.Configuration;
@@ -23,40 +21,6 @@ namespace VirtoCommerce.Foundation.Data.Infrastructure
             {
                 SetConnectionString(AppConfigConfiguration.Instance.Connection.SqlConnectionStringName, value);
             }
-        }
-
-        private static bool? _databaseInstalled = null;
-        public static bool IsDatabaseInstalled
-        {
-            get
-            {
-                if (_databaseInstalled == null)
-                {
-                    TestSqlConnection();
-                }
-
-                return _databaseInstalled != null && _databaseInstalled.Value;
-            }
-        }
-
-        public static bool TestSqlConnection()
-        {
-            try
-            {
-                using (var connection = new SqlConnection(SqlConnectionString))
-                {
-                    connection.Open();
-                    connection.Close();
-                    _databaseInstalled = true;
-                }
-            }
-            catch (Exception err)
-            {
-                Trace.TraceError(err.Message);
-                _databaseInstalled = false;
-            }
-
-            return _databaseInstalled.Value;
         }
 
         /// <summary>
