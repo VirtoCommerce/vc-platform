@@ -27,5 +27,27 @@ namespace VirtoCommerce.Foundation.Marketing.Model.DynamicContent
 		public virtual DynamicContentItem DynamicContentItem { get; set; }
 
 		#endregion
+
+		public override string ToString()
+		{
+			switch (ValueType)
+			{
+				case (int)PropertyValueType.Boolean:
+					return BooleanValue.ToString();
+				case (int)PropertyValueType.DateTime:
+					return DateTimeValue.ToString();
+				case (int)PropertyValueType.Decimal:
+					return DecimalValue.ToString();
+				case (int)PropertyValueType.Integer:
+					return IntegerValue.ToString();
+				case (int)PropertyValueType.LongString:
+				case (int)PropertyValueType.Image:
+				case (int)PropertyValueType.Category:
+					return LongTextValue;
+				case (int)PropertyValueType.ShortString:
+					return ShortTextValue;
+			}
+			return base.ToString();
+		}
 	}
 }

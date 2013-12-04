@@ -5,7 +5,6 @@ using System.Runtime.Serialization;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Attributes;
 
-
 namespace VirtoCommerce.Foundation.Catalogs.Model
 {
 	[DataContract]
@@ -54,5 +53,26 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 		public virtual PropertyValue ParentPropertyValue { get; set; }
 
 		#endregion
+
+		public override string ToString()
+		{
+			switch (ValueType)
+			{
+				case (int)PropertyValueType.Boolean:
+					return BooleanValue.ToString();
+				case (int)PropertyValueType.DateTime:
+					return DateTimeValue.ToString();
+				case (int)PropertyValueType.Decimal:
+					return DecimalValue.ToString();
+				case (int)PropertyValueType.Integer:
+					return IntegerValue.ToString();
+				case (int)PropertyValueType.LongString:
+					return LongTextValue;
+				case (int)PropertyValueType.ShortString:
+				case (int)PropertyValueType.Image:
+					return ShortTextValue;
+			}
+			return base.ToString();
+		}
 	}
 }

@@ -34,5 +34,26 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 		[ForeignKey("ItemId")]
 		public virtual Item CatalogItem { get; set; }
 		#endregion
+
+		public override string ToString()
+		{
+			switch (ValueType)
+			{
+				case (int)PropertyValueType.Boolean:
+					return BooleanValue.ToString();
+				case (int)PropertyValueType.DateTime:
+					return DateTimeValue.ToString();
+				case (int)PropertyValueType.Decimal:
+					return DecimalValue.ToString();
+				case (int)PropertyValueType.Integer:
+					return IntegerValue.ToString();
+				case (int)PropertyValueType.LongString:
+					return LongTextValue;
+				case (int)PropertyValueType.ShortString:
+				case (int)PropertyValueType.Image:
+					return ShortTextValue;
+			}
+			return base.ToString();
+		}
 	}
 }

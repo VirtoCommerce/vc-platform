@@ -41,5 +41,25 @@ namespace VirtoCommerce.Foundation.Customers.Model
 		[Parent]
 		public virtual Contact Contact { get; set; }
 		#endregion
+
+		public override string ToString()
+		{
+			switch (ValueType)
+			{
+				case (int)PropertyValueType.Boolean:
+					return BooleanValue.ToString();
+				case (int)PropertyValueType.DateTime:
+					return DateTimeValue.ToString();
+				case (int)PropertyValueType.Decimal:
+					return DecimalValue.ToString();
+				case (int)PropertyValueType.Integer:
+					return IntegerValue.ToString();
+				case (int)PropertyValueType.LongString:
+					return LongTextValue;
+				case (int)PropertyValueType.ShortString:
+					return ShortTextValue;
+			}
+			return base.ToString();
+		}
 	}
 }

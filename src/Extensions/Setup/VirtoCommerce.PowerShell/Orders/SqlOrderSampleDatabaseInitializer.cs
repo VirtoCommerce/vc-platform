@@ -69,7 +69,7 @@ namespace VirtoCommerce.PowerShell.Orders
 												.WithReturns()
 												.WithStatus("InProgress")
 												.WithCustomer(customerId.ToString(CultureInfo.InvariantCulture), _customers[i])
-												.WithOrderFormPropertyValues()
+						// .WithOrderFormPropertyValues()
 												.GetOrder();
 					order.StoreId = "SampleStore";
 					order.OrderForms[0].Shipments[0].ShippingAddressId = order.OrderAddresses[1].OrderAddressId;
@@ -327,21 +327,12 @@ namespace VirtoCommerce.PowerShell.Orders
 		{
 			var rnd = new Random();
 
-			// generate property values for 30% of orders
-			if (rnd.Next(10) < 3)
-			{
-				var item = _entityFactory.CreateEntityForType(typeof(OrderFormPropertyValue)) as OrderFormPropertyValue;
-				item.Name = "referrerId";
-				item.ShortTextValue = "partner-1" + rnd.Next(100);
-				item.ValueType = OrderFormValueType.ShortString.GetHashCode();
-				_order.OrderForms[0].OrderFormPropertyValues.Add(item);
+			var item = _entityFactory.CreateEntityForType(typeof(OrderFormPropertyValue)) as OrderFormPropertyValue;
+			item.Name = "referrerId";
+			item.ShortTextValue = "partner-1" + rnd.Next(100);
+			item.ValueType = OrderFormValueType.ShortString.GetHashCode();
+			_order.OrderForms[0].OrderFormPropertyValues.Add(item);
 
-				item = _entityFactory.CreateEntityForType(typeof(OrderFormPropertyValue)) as OrderFormPropertyValue;
-				item.Name = "otherNumber";
-				item.DecimalValue = rnd.Next(100);
-				item.ValueType = OrderFormValueType.Decimal.GetHashCode();
-				_order.OrderForms[0].OrderFormPropertyValues.Add(item);
-			}
 			return this;
 		}
 

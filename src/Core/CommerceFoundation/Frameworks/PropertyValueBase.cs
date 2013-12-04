@@ -2,7 +2,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Data.Services.Common;
 using System.Runtime.Serialization;
-using VirtoCommerce.Foundation.Catalogs.Model;
 
 namespace VirtoCommerce.Foundation.Frameworks
 {
@@ -189,26 +188,6 @@ namespace VirtoCommerce.Foundation.Frameworks
 			{
 				SetValue(ref _Locale, () => Locale, value);
 			}
-		}
-
-		public override string ToString()
-		{
-			switch (ValueType)
-			{
-				case (int)PropertyValueType.Boolean:
-					return BooleanValue.ToString();
-				case (int)PropertyValueType.DateTime:
-					return DateTimeValue.ToString();
-				case (int)PropertyValueType.Decimal:
-					return DecimalValue.ToString();
-				case (int)PropertyValueType.Integer:
-					return IntegerValue.ToString();
-				case (int)PropertyValueType.LongString:
-					return LongTextValue;
-				case (int)PropertyValueType.ShortString:
-					return ShortTextValue;
-			}
-			return base.ToString();
 		}
 	}
 }
