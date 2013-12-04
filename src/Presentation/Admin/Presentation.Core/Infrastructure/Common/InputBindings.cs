@@ -31,14 +31,14 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure.Common
 
 		public static void RegisterCommands(IEnumerable<ActionBinding> entriesSupported, int objectID)
 		{
-			if (_inputBindings == null)
+			if (_inputBindings == null || _entriesAll == null)
 				return;
 
 			if (_currentVM != objectID)
 			{
 				_currentVM = objectID;
 				DeregisterCommands();
-				
+
 				_entriesAll.Where(x => entriesSupported.Any(y => y.Name == x.Name))
 					.ToList().ForEach(x =>
 						{
