@@ -1096,28 +1096,28 @@
 		margin: 0;
 	}
 
-	.article .cart table,
-	.article .cart table tr,
-	.article .cart table tr td
+	.data-table,
+	.data-table tr,
+	.data-table tr td
 	{
 		display: block;
 	}
 
-	.article .cart table tbody tr + tr td
+	.data-table tbody tr + tr td
 	{
 		border: none;
 	}
 
-	.article .cart table thead,
-	.article .cart table tbody td.product-edit
+	.data-table thead,
+	.data-table tbody td.product-edit
 	{
 		display: none;
 	}
 
-	.article .cart table tbody td,
-	.article .cart table tbody td.product-image,
-	.article .cart table tbody td.product-price,
-	.article .cart table tfoot td
+	.data-table tbody td,
+	.data-table tbody td.product-image,
+	.data-table tbody td.product-price,
+	.data-table tfoot td
 	{
 		padding: 10px;
 		width: 456px;
@@ -1127,19 +1127,19 @@
 				box-sizing: border-box;
 	}
 
-	.article .cart table tbody td.product-price,
-	.article .cart table tbody td.product-qty,
-	.article .cart table tbody td.product-actions
+	.data-table tbody td.product-price,
+	.data-table tbody td.product-qty,
+	.data-table tbody td.product-actions
 	{
 		background: #fafafa;
 	}
 
-	.article .cart table tbody td.product-qty
+	.data-table tbody td.product-qty
 	{
 		padding: 0 10px;
 	}
 
-	.article .cart table tbody td.product-image a
+	.data-table tbody td.product-image a
 	{
 		margin: 0 auto;
 		height: 200px;
@@ -1147,17 +1147,17 @@
 		width: 200px;
 	}
 
-	.article .cart table tbody td.product-image a img
+	.data-table tbody td.product-image a img
 	{
 		max-width: 100%;
 	}
 
-	.article .cart table tbody td.product-name h2
+	.data-table tbody td.product-name h2
 	{
 		font-size: 20px;
 	}
 
-	.article .cart table tbody td .mobile-view
+	.data-table tbody td .mobile-view
 	{
 		display: inline-block;
 		font-weight: bold;
@@ -1165,12 +1165,12 @@
 		width: 100px;
 	}
 
-	.article .cart table tbody td.product-actions a
+	.data-table tbody td.product-actions a
 	{
 		margin: 0 3px;
 	}
 
-	.article .cart table tbody td.product-actions .edit
+	.data-table tbody td.product-actions .edit
 	{
 		display: inline-block;
 	}
@@ -2018,28 +2018,28 @@
 		margin: 0;
 	}
 
-	.article .cart table,
-	.article .cart table tr,
-	.article .cart table tr td
+	.data-table,
+	.data-table tr,
+	.data-table tr td
 	{
 		display: block;
 	}
 
-	.article .cart table tbody tr + tr td
+	.data-table tbody tr + tr td
 	{
 		border: none;
 	}
 
-	.article .cart table thead,
-	.article .cart table tbody td.product-edit
+	.data-table thead,
+	.data-table tbody td.product-edit
 	{
 		display: none;
 	}
 
-	.article .cart table tbody td,
-	.article .cart table tbody td.product-image,
-	.article .cart table tbody td.product-price,
-	.article .cart table tfoot td
+	.data-table tbody td,
+	.data-table tbody td.product-image,
+	.data-table tbody td.product-price,
+	.data-table tfoot td
 	{
 		padding: 10px;
 		width: 300px;
@@ -2049,19 +2049,19 @@
 				box-sizing: border-box;
 	}
 
-	.article .cart table tbody td.product-price,
-	.article .cart table tbody td.product-qty,
-	.article .cart table tbody td.product-actions
+	.data-table tbody td.product-price,
+	.data-table tbody td.product-qty,
+	.data-table tbody td.product-actions
 	{
 		background: #fafafa;
 	}
 
-	.article .cart table tbody td.product-qty
+	.data-table tbody td.product-qty
 	{
 		padding: 0 10px;
 	}
 
-	.article .cart table tbody td.product-image a
+	.data-table tbody td.product-image a
 	{
 		margin: 0 auto;
 		height: 200px;
@@ -2069,17 +2069,17 @@
 		width: 200px;
 	}
 
-	.article .cart table tbody td.product-image a img
+	.data-table tbody td.product-image a img
 	{
 		max-width: 100%;
 	}
 
-	.article .cart table tbody td.product-name h2
+	.data-table tbody td.product-name h2
 	{
 		font-size: 20px;
 	}
 
-	.article .cart table tbody td .mobile-view
+	.data-table tbody td .mobile-view
 	{
 		display: inline-block;
 		font-weight: bold;
@@ -2087,24 +2087,24 @@
 		width: 100px;
 	}
 
-	.article .cart table tbody td.product-actions a
+	.data-table tbody td.product-actions a
 	{
 		margin: 0 3px;
 	}
 
-	.article .cart table tbody td.product-actions .edit
+	.data-table tbody td.product-actions .edit
 	{
 		display: inline-block;
 	}
 
-	.article .cart table tfoot td button
+	.data-table tfoot td button
 	{
 		display: block;
 		padding: 5px 10px;
 		width: 100%;
 	}
 
-	.article .cart table tfoot td button + button
+	.data-table tfoot td button + button
 	{
 		float: none;
 	}

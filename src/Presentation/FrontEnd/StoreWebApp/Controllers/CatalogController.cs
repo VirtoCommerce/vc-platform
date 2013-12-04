@@ -129,7 +129,7 @@ namespace VirtoCommerce.Web.Controllers
 		/// <returns>ActionResult.</returns>
         public ActionResult AssociatedItem(string itemId, string name, string associationType)
         {
-			return DisplayItemById(itemId, name: name, associationType: associationType, displayOptions: ItemDisplayOptions.ItemOnly);
+			return DisplayItemById(itemId, name: name, associationType: associationType);
         }
 
 		/// <summary>

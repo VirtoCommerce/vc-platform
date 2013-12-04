@@ -1,15 +1,14 @@
 ﻿@model CatalogItemWithPriceModel
-<td class="item">
-    <a href="@Url.ItemUrl(Model.CatalogItem.Item, Model.CatalogItem.ParentItemId)" title="@Model.DisplayName"
-                                                                        class="product-image" style="width:125px; height: 125px;" >
-        <img class="primaryimage" src="@Url.Image(Model.CatalogItem.Item, "primaryimage")" width="125" height="125" alt="@Model.CatalogItem.Code" onerror="this.onerror=null;this.src='@Href("~/Content/themes/default/images/blank.png")';" />
-    </a>
-    <p class="product-name">
-        <a href="@Url.ItemUrl(Model.CatalogItem.Item, Model.CatalogItem.ParentItemId)" title="@Model.DisplayName">@Model.DisplayName</a>
-    </p>
-    <div class="price-box">
-        <p class="minimal-price">
-            <span class="price">@Html.DisplayFor(model => model.Price.SalePriceFormatted)</span>
-        </p>
-    </div>
-</td>
+
+<a class="pic" href="@Url.ItemUrl(Model.CatalogItem.Item, Model.CatalogItem.ParentItemId)" title="@Model.DisplayName">
+    <img src="@Url.Image(Model.CatalogItem.Item, "primaryimage")" width="125" height="125" alt="@Model.CatalogItem.Code" onerror="this.onerror=null;this.src='@Href("~/Content/themes/default/images/blank.png")';" />
+</a>
+<a href="@Url.ItemUrl(Model.CatalogItem.Item, Model.CatalogItem.ParentItemId)" style="max-height: 30px; overflow: hidden;">
+    @Model.DisplayName
+</a>
+<label>
+    @if (Model.Price != null)
+    {
+        Write(Model.Price.SalePriceFormatted ?? Model.Price.ListPriceFormatted);
+    }
+</label>

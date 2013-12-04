@@ -79,6 +79,7 @@
                 <div class="rubber">
                     @RenderBody()
                 </div>
+                @RenderSection("Bottom", false)
             </article>
         </div>
         <div class="footer-wrap">
@@ -187,7 +188,6 @@
     @Scripts.Render("~/bundles/jqueryui")
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/jquerymisc")
-    <script src="~/Scripts/responsive/main.js" type="text/javascript"></script>
     @RenderSection("scripts", required: false)
     
     <!-- Process sliders -->

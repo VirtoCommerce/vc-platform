@@ -119,4 +119,18 @@
     	}
     	window.opener.location.href = url;
     };
+
+    $.showPopupMessage = function (message) {
+        var template = '<div class="popup-alert"><a title="Close" class="close">Close</a>' + message + '</div>';
+        $('.popup-alert').remove();
+        $('body').append(template);
+        $('.popup-alert').on('click', function (){
+            $(this).slideUp('slow',function() {
+                $(this).remove();
+            });
+        });
+        window.setTimeout(function () {
+            $('.popup-alert').trigger('click');
+        }, 8000);
+    };
 })(jQuery);

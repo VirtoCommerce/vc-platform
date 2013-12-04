@@ -73,11 +73,11 @@ VirtoCommerce.prototype = {
 		});
 	},
 
-	hideDemoNotice: function ()
-	{
-		$.post(VirtoCommerce.url('/settings/hidedemonotice'));
-		$('.demo-notice-container').fadeOut(function () { $(this).remove(); });
-	},
+	//hideDemoNotice: function ()
+	//{
+	//	$.post(VirtoCommerce.url('/settings/hidedemonotice'));
+	//	$('.demo-notice-container').fadeOut(function () { $(this).remove(); });
+	//},
 
 	///GLOBAL METHODS
 
@@ -117,7 +117,7 @@ VirtoCommerce.prototype = {
 			}
 			else
 			{
-				alert(data.Message);
+				$.showPopupMessage(data.Message);
 			}
 		}
 		catch (ex)
@@ -194,7 +194,7 @@ VirtoCart.prototype = {
 		    $('#row-' + context.DeleteId).fadeOut('slow');
 		}	
 		VirtoCommerce.updateQuickLinks();
-		alert(context.Message);
+		$.showPopupMessage(context.Message);
 	},
 
 	add: function (name, title, itemId, parentItemId, quantity, relatedItems)
@@ -246,7 +246,7 @@ VirtoCart.prototype = {
 		            VirtoCommerce.updateQuickLinks();
 		        }
 		        //Show success message
-		        alert(context.Message);
+		        $.showPopupMessage(context.Message);
 
 		    }
 		});

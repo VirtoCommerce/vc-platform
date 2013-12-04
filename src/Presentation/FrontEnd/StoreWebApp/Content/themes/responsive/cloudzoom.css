@@ -38,12 +38,12 @@
 
 /* A blank image */
 .cloudzoom-blank {
-    background-image:url(blank.png);
+    background-image:url(images/cloudzoom/blank.png);
 }
 
 /* The animated ajax loading image */
 .cloudzoom-ajax-loader {
-    background-image:url(ajax-loader.gif);
+    background-image:url(images/cloudzoom/ajax-loader.gif);
     width:32px;
     height:32px;
 }

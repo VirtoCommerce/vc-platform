@@ -9,6 +9,7 @@
 		window.UI.footerNav();
 		window.Other.selectViewMode();
 		window.Other.openTabs();
+		window.Other.closePopup();
 	});
 
 	window.Other = {};
@@ -85,6 +86,16 @@
 			$('.view-mode a.' + name).addClass('current').siblings().removeClass('current');
 			$('div.' + name).addClass('selected').siblings().removeClass('selected');
 		});
+	};
+
+	window.Other.closePopup = function()
+	{
+		if($('.popup-alert').length >= 1)
+		{
+			$('.popup-alert').on('click', function (){
+				$(this).fadeOut();
+			});
+		}
 	};
 
 
@@ -222,7 +233,7 @@
 
 			self.addClass('selected').siblings().removeClass('selected');
 			slide.eq(index).addClass('selected').siblings().removeClass('selected');
-			block.animate({'margin-left': '-' + index * slide_width + 'px'});
+			block.animate({left: '-' + index * slide_width + 'px'});
 
 			clearInterval(timer);
 			timer = setInterval(animateSlide, countdown);

@@ -1,0 +1,39 @@
+﻿@model CatalogItemWithPriceModel
+
+@{
+    var itemClass = "item";
+    if (Model.IsNew)
+    {
+        itemClass = string.Concat(@itemClass, " ", "new");
+    }
+    if (Model.IsSale)
+    {
+        itemClass = string.Concat(@itemClass, " ", "sale");
+    }
+}
+
+<li class="@itemClass">
+    <div class="inner">
+        <a href="@Url.ItemUrl(Model.CatalogItem.Item, Model.CatalogItem.ParentItemId)" title="@Model.DisplayName" class="product-image">
+            <figure>
+                <img src="@Url.Image(Model.CatalogItem.Item, "primaryimage")" alt="@Model.DisplayName" onerror="this.onerror=null;this.src='@Href("~/Content/themes/default/images/blank.png")';" />
+            </figure>
+        </a>
+        <div class="product-info">
+            <span class="title">@Model.DisplayName</span>
+            <div class="ratings">
+                <div id="rateit-@Model.CatalogItem.ItemId"></div>
+            </div>
+            @if (Model.Price != null)
+            {
+                @Html.DisplayFor(model => model.Price, new { Association = Model as AssociatedCatalogItemWithPriceModel})
+            }
+            <div class="cart">
+                @{Html.RenderPartial("AddToCart", Model, new ViewDataDictionary { { "View", "List" } });}
+            </div>
+            <ul class="add-to-links">
+                @{Html.RenderPartial("AddToLinks", Model);}
+            </ul>
+        </div>
+    </div>
+</li>

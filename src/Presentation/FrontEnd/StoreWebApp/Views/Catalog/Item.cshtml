@@ -55,140 +55,170 @@
 
 
 <script type="text/x-jquery-tmpl" id="reviewTemplate">
-    <div class="pr-review-most-helpful">
-        <p>(<span id="positive_review_${Id}">${PositiveFeedbackCount}</span> @("of".Localize()) <span id="total_feedback_review_${Id}">${PositiveFeedbackCount + NegativeFeedbackCount}</span> @("customers found this review helpful".Localize()))</p>
-    </div>
-    <div class="pr-review-rating">
-        <div class="pr-stars">&nbsp;</div>
-        <span class="pr-rating pr-rounded">${parseInt(Rating).toFixed(1)}</span>
-        <p class="pr-review-rating-headline">${RatingComment}</p>
-    </div>
-    <h3>Review by <span>${Reviewer.NickName}</span> {{if IsVerifiedBuyer}}<span class="verified">@("Verified Buyer".Localize())</span>{{/if}}</h3>
-    <p class="date">${GetShortDateAndTime(CreatedDateTime)}</p>
-    <div class="pr-review-text">
-        <p class="pr-comments">${ReviewText.Text}</p>
-    </div>
-    <p class="pr-review-helpful-text">
-        @("Was this review helpful?".Localize())&nbsp;
-        <a onclick="Reviews.vote('${Id}', true); return false;" href="#" class="pr-review-helpful-text-link">@("Yes".Localize())</a>&nbsp;/&nbsp;
-        <a onclick="Reviews.vote('${Id}', false); return false;" href="#" class="pr-review-helpful-text-link">@("No".Localize())</a>
-    </p>
-    <div id="review_feedback_${Id}" class="review-title"></div>
-    <p>
-        <a href="#" onclick="$('#comment_for_${Id}').show(); $('#report_abuse_for_${Id}').hide(); return false;">@("write a comment".Localize())</a>
-        <span class="separator">|</span>
-        <a href="#" onclick="$('#report_abuse_for_${Id}').show(); $('#comment_for_${Id}').hide(); return false;">@("report abuse".Localize())</a>
-    </p>
-
-    <div id="report_abuse_for_${Id}" class="report_abuse">
-        @using (Html.BeginForm("reportabuse", "api/review", FormMethod.Post, new { id = "abuse_${Id}" }))
-        {
-            
-            <h3>@("Please let us know what kind of issue this is".Localize()):</h3>
-            <ul class="form-list">
-                <li class="control">
-                    <input type="radio" class="radio" value="profane" name="Reason">
-                    <label>@("Profanity".Localize())</label>
-                </li>
-                <li class="control">
-                    <input type="radio" class="radio" value="wrong_product" name="Reason">
-                    <label>@("Wrong product".Localize())</label>
-                </li>
-                <li class="control">
-                    <input type="radio" class="radio" value="spam" name="Reason">
-                    <label>@("Spam".Localize())</label>
-                </li>
-                <li class="control">
-                    <input type="radio" class="radio" value="duplicate" name="Reason">
-                    <label>@("Duplicate".Localize())</label>
-                </li>
-                <li class="control">
-                    <input type="radio" class="radio" value="copyright" name="Reason">
-                    <label>@("Copyright violation".Localize())</label>
-                </li>
-                <li class="control">
-                    <input type="radio" class="radio" value="not_review" name="Reason">
-                    <label>@("Not a product review".Localize())</label>
-                </li>
-                <li class="control">
-                    <input type="radio" class="radio" value="image_issue" name="Reason">
-                    <label>@("Problem with image".Localize())</label>
-                </li>
-                <li class="control">
-                    <input type="radio" class="radio" value="other" name="Reason">
-                    <label>@("Other".Localize())</label>
-                </li>
-                <li>
-                    <span data-valmsg-replace="true" data-valmsg-for="Reason" class="field-validation-valid"></span>
-                </li>
-                <li>
-                    <label class="required"><em>*</em>@("Email Address".Localize()):</label>
-                    <div class="input-box">
-                        <input type="text" maxlength="80" name="Email" class="input-text">
-                    </div>
-                    <span data-valmsg-replace="true" data-valmsg-for="Email" class="field-validation-valid"></span>
-                </li>
-                <li>
-                    <label>@("Comments".Localize()):</label>
-                    <div class="input-box">
-                        <textarea rows="3" cols="30" name="Comment"></textarea>
-                    </div>
-                </li>
+    <div class="review">
+        <p class="helpful">
+            (<span id="positive_review_${Id}">${PositiveFeedbackCount}</span> @("of".Localize()) <span id="total_feedback_review_${Id}">${PositiveFeedbackCount + NegativeFeedbackCount}</span> @("customers found this review helpful".Localize()))
+        </p>
+        <div class="rating-block">
+            <div class="rating">
+            </div>
+            <div class="count">
+                <span class="num">${parseInt(Rating).toFixed(1)}</span>
+                ${RatingComment}									
+            </div>
+        </div>
+        <div class="author">
+            <p class="title">@("Review by".Localize()) <span>${Reviewer.NickName}</span> {{if IsVerifiedBuyer}}<span class="verified">@("Verified Buyer".Localize())</span>{{/if}}</p>
+            <span class="date">${GetShortDateAndTime(CreatedDateTime)}</span>
+        </div>
+        <div class="description">
+            <p>${ReviewText.Text}</p>
+        </div>
+        <div class="vote">
+            <p>@("Was this review helpful?".Localize())</p>
+            <ul>
+                <li><a onclick="Reviews.vote('${Id}', true); return false;" href="#">@("Yes".Localize())</a></li>
+                <li class="divider">/</li>
+                <li><a onclick="Reviews.vote('${Id}', false); return false;" href="#">@("No".Localize())</a></li>
             </ul>
-            <input type="hidden" value="${Id}" name="Id" />
-            <input type="hidden" value="True" name="IsReview" />
-            <input type="button" class="post" value="Submit" onclick="Reviews.flag('${Id}');" />
-            <input type="button" class="post" value="Cancel" onclick="$('#report_abuse_for_${Id}').hide(); return false;" />
-        }
-    </div>
-
-    <div class="write_a_comment" id="comment_for_${Id}">
-        @using (Html.BeginForm("comment", "api/review", FormMethod.Post, new { id = "comment_${Id}" }))
-        {
-            <h3>@("Your comment".Localize()):</h3>
-
-            <ul class="form-list">
-                <li>
-                    <label for="AuthorName" class="required"><em>*</em>@("Author".Localize()):</label>
-                    <div class="input-box">
-                        @Html.TextBox("AuthorName", UserHelper.CustomerSession.CustomerName, new { @class = "input-text" })
-                    </div>
-                </li>
-                <li>
-                    <label for="AuthorLocation">@("Location".Localize()):</label>
-                    <div class="input-box">
-                        @Html.TextBox("AuthorLocation", "", new { @class = "input-text" })
-                    </div>
-                </li>
-                <li>
-                    <label for="Comment" class="required"><em>*</em>@("Comment".Localize()):</label>
-                    <div class="input-box">
-                        @Html.TextArea("Comment")
-                    </div>
-                </li>
+        </div>
+        <div id="review_feedback_${Id}" class="review-title"></div>
+        <div class="feedback">
+            <ul>
+                <li class="comment"><a href="#" onclick="$('#comment_for_${Id}').show(); $('#report_abuse_for_${Id}').hide(); return false;">@("write a comment".Localize())</a></li>
+                <li class="divider">|</li>
+                <li class="abuse"><a href="#" onclick="$('#comment_for_${Id}').hide(); $('#report_abuse_for_${Id}').show(); return false;">@("report abuse".Localize())</a></li>
             </ul>
-            <input type="hidden" value="${Id}" name="Id" />
-            <input type="button" class="post" value="Submit" onclick="Reviews.comment('${Id}');" />
-            <input type="button" class="post" value="Cancel" onclick="$('#comment_for_${Id}').hide(); return false;" />
-        }
-    </div>
+            <div class="feedback-comment" id="comment_for_${Id}">
+                <header>
+                    <h3>@("Your comment".Localize()):</h3>
+                </header>
+                @using (Html.BeginForm("comment", "api/review", FormMethod.Post, new { id = "comment_${Id}" }))
+                {
+                    <div class="control-group">
+                        <label for="AuthorName">@("Author".Localize()): <sup class="required">*</sup></label>
+                        @Html.TextBox("AuthorName", UserHelper.CustomerSession.CustomerName)
+                    </div>
+                    <div class="control-group">
+                        <label for="AuthorLocation">@("Location".Localize()): <sup class="required">*</sup></label>
+                        @Html.TextBox("AuthorLocation")
+                    </div>
+                    <div class="control-group">
+                        <label for="Comment">@("Comment".LocalizeHtml()): <sup class="required">*</sup></label>
+                        <textarea rows="10" cols="30" name="Comment"></textarea>
+                    </div>
+                    <input type="hidden" value="${Id}" name="Id" />
+                    <div class="button-group">
+                        <button type="button" value="Submit" onclick="Reviews.comment('${Id}');">
+                            <span>@("Submit".Localize())</span>
+                        </button>
+                        <button type="button" value="Cancel" onclick="$('#comment_for_${Id}').hide(); return false;" class="btn cancel">
+                            <span>@("Cancel".Localize())</span>
+                        </button>
+                    </div>
+                }
+            </div>
+            <div class="feedback-abuse" id="report_abuse_for_${Id}">
+                <header>
+                    <h3>@("Please let us know what kind of issue this is".Localize()):</h3>
+                </header>
+                @using (Html.BeginForm("reportabuse", "api/review", FormMethod.Post, new { id = "abuse_${Id}" }))
+                {
+                    <ul class="form-list">
+                        <li>
+                            <label>
+                                <input type="radio" value="profane" name="Reason">
+                                @("Profanity".Localize())
+                            </label>
+                        </li>
+                        <li>
+                            <label for="">
+                                <input type="radio" value="wrong_product" name="Reason">
+                                @("Wrong product".Localize())
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="radio" value="spam" name="Reason">
+                                @("Spam".Localize())
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="radio" value="duplicate" name="Reason">
+                                @("Duplicate".Localize())
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="radio" value="copyright" name="Reason">
+                                @("Copyright violation".Localize())<									
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="radio" value="not_review" name="Reason">
+                                @("Not a product review".Localize())
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="radio" value="image_issue" name="Reason">
+                                @("Problem with image".Localize())
 
-    <div class="cl"></div>
+                            </label>
+                        </li>
+                        <li>
+                            <label for="">
+                                <input type="radio" value="other" name="Reason">
+                                @("Other".Localize())
 
-    {{if TotalComments > 0}}
-        <div id="show_all_comment_for_${Id}">
-            <i>@("There are".Localize()) <b>${TotalComments}</b> @("comments in total".Localize())</i>
-            {{if Comments.length < TotalComments }}
+                            </label>
+                        </li>
+                        <li>
+                            <span data-valmsg-replace="true" data-valmsg-for="Reason" class="field-validation-valid"></span>
+                        </li>
+                    </ul>
+                    <div class="control-group">
+                        <label for="">@("Email Address".Localize()): <sup class="required">*</sup></label>
+                        <input type="text" maxlength="80" name="Email">
+                        <span data-valmsg-replace="true" data-valmsg-for="Email" class="field-validation-valid"></span>
+                    </div>
+                    <div class="control-group">
+                        <label for="">@("Comments".Localize()): <sup class="required">*</sup></label>
+                        <textarea rows="10" cols="30" name="Comment"></textarea>
+                    </div>
+                    <input type="hidden" value="${Id}" name="Id" />
+                    <input type="hidden" value="True" name="IsReview" />
+                    <div class="button-group">
+                        <button type="button" value="Submit" onclick="Reviews.flag('${Id}');">
+                            <span>@("Submit".Localize())</span>
+                        </button>
+                        <button type="button" value="Cancel" onclick="$('#report_abuse_for_${Id}').hide(); return false;" class="btn cancel">
+                            <span>@("Cancel".Localize())</span>
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+
+
+
+        {{if TotalComments > 0}}
+    <div id="show_all_comment_for_${Id}">
+        <i>@("There are".Localize()) <b>${TotalComments}</b> @("comments in total".Localize())</i>
+        {{if Comments.length < TotalComments }}
         <a href="#" onclick="Reviews.showAllComments('${Id}'); return false;">@("Show all".Localize())</a>
-            {{/if}}
-        </div>
-    {{/if}}
+        {{/if}}
+    </div>
+        {{/if}}
     {{if Comments}}
-        <div id="comments_container_${Id}">
-            {{tmpl(Comments) "#commentTemplate"}}
-        </div>
-    {{/if}}
+    <div id="comments_container_${Id}">
+        {{tmpl(Comments) "#commentTemplate"}}
+    </div>
+        {{/if}}
     <div class="spacer"></div>
+    </div>
 </script>
 
 <script type="text/x-jquery-tmpl" id="commentTemplate">
@@ -208,65 +238,87 @@
         <div id="comment_feedback_${Id}" class="review-title"></div>
         <p><a href="#" onclick="$('#report_abuse_for_${Id}').show(); return false;">@("report abuse".Localize())</a></p>
     </div>
-    <div class="cl"></div>
-    <div id="report_abuse_for_${Id}" class="report_abuse">
-        @using (Html.BeginForm("reportabuse", "api/review", FormMethod.Post, new { id = "abuse_${Id}" }))
-        {          
+
+    <div class="feedback-abuse" id="report_abuse_for_${Id}">
+        <header>
             <h3>@("Please let us know what kind of issue this is".Localize()):</h3>
+        </header>
+        @using (Html.BeginForm("reportabuse", "api/review", FormMethod.Post, new { id = "abuse_${Id}" }))
+        {
             <ul class="form-list">
-                <li class="control">
-                    <input type="radio" class="radio" value="profane" name="Reason">
-                    <label>@("Profanity".Localize())</label>
+                <li>
+                    <label>
+                        <input type="radio" value="profane" name="Reason">
+                        @("Profanity".Localize())
+                    </label>
                 </li>
-                <li class="control">
-                    <input type="radio" class="radio" value="wrong_product" name="Reason">
-                    <label>@("Wrong product".Localize())</label>
+                <li>
+                    <label for="">
+                        <input type="radio" value="wrong_product" name="Reason">
+                        @("Wrong product".Localize())
+                    </label>
                 </li>
-                <li class="control">
-                    <input type="radio" class="radio" value="spam" name="Reason">
-                    <label>@("Spam".Localize())</label>
+                <li>
+                    <label>
+                        <input type="radio" value="spam" name="Reason">
+                        @("Spam".Localize())
+                    </label>
                 </li>
-                <li class="control">
-                    <input type="radio" class="radio" value="duplicate" name="Reason">
-                    <label>@("Duplicate".Localize())</label>
+                <li>
+                    <label>
+                        <input type="radio" value="duplicate" name="Reason">
+                        @("Duplicate".Localize())
+                    </label>
                 </li>
-                <li class="control">
-                    <input type="radio" class="radio" value="copyright" name="Reason">
-                    <label>@("Copyright violation".Localize())</label>
+                <li>
+                    <label>
+                        <input type="radio" value="copyright" name="Reason">
+                        @("Copyright violation".Localize())<									
+                    </label>
                 </li>
-                <li class="control">
-                    <input type="radio" class="radio" value="not_review" name="Reason">
-                    <label>@("Not a product review".Localize())</label>
+                <li>
+                    <label>
+                        <input type="radio" value="not_review" name="Reason">
+                        @("Not a product review".Localize())
+                    </label>
                 </li>
-                <li class="control">
-                    <input type="radio" class="radio" value="image_issue" name="Reason">
-                    <label>@("Problem with image".Localize())</label>
+                <li>
+                    <label>
+                        <input type="radio" value="image_issue" name="Reason">
+                        @("Problem with image".Localize())
+
+                    </label>
                 </li>
-                <li class="control">
-                    <input type="radio" class="radio" value="other" name="Reason">
-                    <label>@("Other".Localize())</label>
+                <li>
+                    <label for="">
+                        <input type="radio" value="other" name="Reason">
+                        @("Other".Localize())
+
+                    </label>
                 </li>
                 <li>
                     <span data-valmsg-replace="true" data-valmsg-for="Reason" class="field-validation-valid"></span>
                 </li>
-                <li>
-                    <label class="required"><em>*</em>@("Email Address".Localize()):</label>
-                    <div class="input-box">
-                        <input type="text" maxlength="80" name="Email" class="input-text">
-                    </div>
-                    <span data-valmsg-replace="true" data-valmsg-for="Email" class="field-validation-valid"></span>
-                </li>
-                <li>
-                    <label>@("Comments".Localize()):</label>
-                    <div class="input-box">
-                        <textarea rows="3" cols="30" name="Comment"></textarea>
-                    </div>
-                </li>
             </ul>
+            <div class="control-group">
+                <label for="">@("Email Address".Localize()): <sup class="required">*</sup></label>
+                <input type="text" maxlength="80" name="Email">
+                <span data-valmsg-replace="true" data-valmsg-for="Email" class="field-validation-valid"></span>
+            </div>
+            <div class="control-group">
+                <label for="">@("Comments".Localize()): <sup class="required">*</sup></label>
+                <textarea rows="10" cols="30" name="Comment"></textarea>
+            </div>
             <input type="hidden" value="${Id}" name="Id" />
             <input type="hidden" value="False" name="IsReview" />
-            <input type="button" class="post" value="Submit" onclick="Reviews.flag('${Id}');" />
-            <input type="button" class="post" value="Cancel" onclick="$('#report_abuse_for_${Id}').hide(); return false;" />
+            <div class="button-group">
+                <button type="button" value="Submit" onclick="Reviews.flag('${Id}');">
+                    <span>@("Submit".Localize())</span>
+                </button>
+                <button type="button" value="Cancel" onclick="$('#report_abuse_for_${Id}').hide(); return false;" class="btn cancel">
+                    <span>@("Cancel".Localize())</span>
+                </button>
+            </div>
         }
     </div>
 </script>
@@ -292,7 +344,7 @@
                     <div class="product-image@(Model.IsNew ? " new" : Model.IsSale ? " sale" : "")">
                         <figure id="imageContainer">
                             <a href="@Url.Image(Model.CatalogItem.Item, "primaryimage")" rel="gal1">
-                                <img id="image" class="cloudzoom" data-cloudzoom="autoInside:'600',zoomWidth:300,zoomHeight:300" src="@Url.Image(Model.CatalogItem.Item, "primaryimage")" alt="" title="" onerror="this.onerror=null;this.src='@Href("~/Content/themes/default/images/blank.png")';$('a.jqzoom').attr('href','@Href("~/Content/themes/default/images/blank.png")');" />
+                                <img id="image" class="cloudzoom" data-cloudzoom="autoInside:'600',zoomWidth:300,zoomHeight:300,maxMagnification:5" src="@Url.Image(Model.CatalogItem.Item, "primaryimage")" alt="" title="" onerror="this.onerror=null;this.src='@Href("~/Content/themes/default/images/blank.png")';$(this).parent().attr('href','@Href("~/Content/themes/default/images/blank.png")');" />
                             </a>
                         </figure>
 
@@ -390,6 +442,11 @@
                     </div>
                 </form>
             </div>
+            <div class="product-other">
+                <div class="product-additional">
+                    @{Html.RenderAction("Association", new { item = Model.CatalogItem, templateName = "RecommendedProducts", groupName = "Accessories" });}
+                </div>
+            </div>
         </div>
         <div class="product-tabs tabs">
             <ul class="clearfix">
@@ -405,533 +462,58 @@
                     {
                         if (review.Source == "Amazon.com Product Description")
                         {
-                             @Html.Raw(review.Content)
+                    @Html.Raw(review.Content)
                         }
                     }
                 }
             </div>
             <h2 data-index="1" class="head"><a>@("Additional Information".Localize())</a></h2>
             <div id="product_tabs_additional_contents_list" class="tabs-content" style="display: none;">
-               	@{Html.RenderPartial("ItemProperties", Model.CatalogItem);}
+                @{Html.RenderPartial("ItemProperties", Model.CatalogItem);}
             </div>
-            <h2 data-index="2" class="head"><a>Reviews</a></h2>
+            <h2 data-index="2" class="head"><a>@("Reviews".Localize())</a></h2>
             <div class="tabs-content" style="display: none;">
-                <header>
-                    <p class="title">Reviewed by 4 customers with average rating - 4.8</p>
-                    <select id="sortList">
-                        <option value="date_new">Newest</option>
-                        <option value="date_old">Oldest</option>
-                        <option value="rating_high">Highest rating</option>
-                        <option value="rating_low">Lowest rating</option>
-                        <option value="helpful_high" selected="selected">Most helpful</option>
-                        <option value="helpful_low">Least helpful</option>
-                    </select>
-                </header>
-                <div class="review">
-                    <p class="helpful">(<span>0</span> of <span>0</span> customers found this review helpful)</p>
-                    <div class="rating-block">
-                        <div class="rating">
-                            <div style="width: 100%;" class="mask"></div>
-                        </div>
-                        <div class="count">
-                            <span class="num">5.0</span>
-                            Perfect choice...
-										
-                        </div>
-                    </div>
-                    <div class="author">
-                        <p class="title">Review by Loving Daughter</p>
-                        <span class="date">March 25, 2013 at 15:26</span>
-                    </div>
-                    <div class="description">
-                        <p>Perfect choice for a bedroom TV for my 89 year old mother. I read positive reviews and the B&amp;H price was right. They were a dream to work with. [...] She needed help to lift it and set it up, but she's very happy. She thinks the picture is beautiful - nicer than the set in her den. Can't ask for more than that!</p>
-                    </div>
-                    <div class="vote">
-                        <p>Was this review helpful?</p>
-                        <ul>
-                            <li><a href="">Yes</a></li>
-                            <li class="divider">/</li>
-                            <li><a href="">No</a></li>
-                        </ul>
-                    </div>
-                    <div class="feedback">
-                        <ul>
-                            <li class="comment"><a href="">Write on comment</a></li>
-                            <li class="divider">|</li>
-                            <li class="abuse"><a href="">Report abuse</a></li>
-                        </ul>
-                        <div class="feedback-comment" style="display: none;">
-                            <header>
-                                <h3>Your comment:</h3>
-                            </header>
-                            <form action="">
-                                <div class="control-group">
-                                    <label for="">Author: <sup class="required">*</sup></label>
-                                    <input type="text">
-                                </div>
-                                <div class="control-group">
-                                    <label for="">Location:</label>
-                                    <input type="text">
-                                </div>
-                                <div class="control-group">
-                                    <label for="">Comment: <sup class="required">*</sup></label>
-                                    <textarea rows="10" cols="30" id="" name=""></textarea>
-                                </div>
-                                <div class="button-group">
-                                    <button type="button">
-                                        <span>Submit</span>
-                                    </button>
-                                    <button type="button" class="btn cancel">
-                                        <span>Cancel</span>
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="feedback-abuse" style="display: block;">
-                            <header>
-                                <h3>Please let us know what kind of issue this is:</h3>
-                            </header>
-                            <form action="">
-                                <ul class="form-list">
-                                    <li>
-                                        <label for="">
-                                            <input type="radio" id="" name="reason">
-                                            Profanity
-														
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label for="">
-                                            <input type="radio" id="" name="reason">
-                                            Wrong product
-														
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label for="">
-                                            <input type="radio" id="" name="reason">
-                                            Spam
-														
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label for="">
-                                            <input type="radio" id="" name="reason">
-                                            Duplicate
-														
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label for="">
-                                            <input type="radio" id="" name="reason">
-                                            Copyright violation
-														
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label for="">
-                                            <input type="radio" id="" name="reason">
-                                            Not a product review
-														
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label for="">
-                                            <input type="radio" id="" name="reason">
-                                            Problem with image
-														
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label for="">
-                                            <input type="radio" id="" name="reason">
-                                            Other
-														
-                                        </label>
-                                    </li>
-                                </ul>
-                                <div class="control-group">
-                                    <label for="">Email Address: <sup class="required">*</sup></label>
-                                    <input type="text">
-                                </div>
-                                <div class="control-group">
-                                    <label for="">Comments: <sup class="required">*</sup></label>
-                                    <textarea rows="10" cols="30" id="" name=""></textarea>
-                                </div>
-                                <div class="button-group">
-                                    <button type="button">
-                                        <span>Submit</span>
-                                    </button>
-                                    <button type="button" class="btn cancel">
-                                        <span>Cancel</span>
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+                <div id="product_tabs_reviews_contents_empty" class="std">
+                    @("There are no reviews. Be first and".Localize()) <a href="#" class="add_reviews_link">@("Add Your Review".Localize())</a>
                 </div>
-                <div class="review">
-                    <p class="helpful">(<span>0</span> of <span>0</span> customers found this review helpful)</p>
-                    <div class="rating-block">
-                        <div class="rating">
-                            <div style="width: 100%;" class="mask"></div>
-                        </div>
-                        <div class="count">
-                            <span class="num">5.0</span>
-                            Perfect choice...
-										
-                        </div>
-                    </div>
-                    <div class="author">
-                        <p class="title">Review by Loving Daughter</p>
-                        <span class="date">March 25, 2013 at 15:26</span>
-                    </div>
-                    <div class="description">
-                        <p>Perfect choice for a bedroom TV for my 89 year old mother. I read positive reviews and the B&amp;H price was right. They were a dream to work with. [...] She needed help to lift it and set it up, but she's very happy. She thinks the picture is beautiful - nicer than the set in her den. Can't ask for more than that!</p>
-                    </div>
-                    <div class="vote">
-                        <p>Was this review helpful?</p>
-                        <ul>
-                            <li><a href="">Yes</a></li>
-                            <li class="divider">/</li>
-                            <li><a href="">No</a></li>
-                        </ul>
-                    </div>
-                    <div class="feedback">
-                        <ul>
-                            <li class="comment"><a href="">Write on comment</a></li>
-                            <li class="divider">|</li>
-                            <li class="abuse"><a href="">Report abuse</a></li>
-                        </ul>
-                        <div class="feedback-comment" style="display: none;">
-                            <header>
-                                <h3>Your comment:</h3>
-                            </header>
-                            <form action="">
-                                <div class="control-group">
-                                    <label for="">Author: <sup class="required">*</sup></label>
-                                    <input type="text">
-                                </div>
-                                <div class="control-group">
-                                    <label for="">Location:</label>
-                                    <input type="text">
-                                </div>
-                                <div class="control-group">
-                                    <label for="">Comment: <sup class="required">*</sup></label>
-                                    <textarea rows="10" cols="30" id="" name=""></textarea>
-                                </div>
-                                <div class="button-group">
-                                    <button type="button">
-                                        <span>Submit</span>
-                                    </button>
-                                    <button type="button" class="btn cancel">
-                                        <span>Cancel</span>
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="feedback-abuse" style="display: none;">
-                            <header>
-                                <h3>Please let us know what kind of issue this is:</h3>
-                            </header>
-                            <form action="">
-                                <ul class="form-list">
-                                    <li>
-                                        <label for="">
-                                            <input type="radio" id="" name="reason">
-                                            Profanity
-														
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label for="">
-                                            <input type="radio" id="" name="reason">
-                                            Wrong product
-														
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label for="">
-                                            <input type="radio" id="" name="reason">
-                                            Spam
-														
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label for="">
-                                            <input type="radio" id="" name="reason">
-                                            Duplicate
-														
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label for="">
-                                            <input type="radio" id="" name="reason">
-                                            Copyright violation
-														
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label for="">
-                                            <input type="radio" id="" name="reason">
-                                            Not a product review
-														
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label for="">
-                                            <input type="radio" id="" name="reason">
-                                            Problem with image
-														
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label for="">
-                                            <input type="radio" id="" name="reason">
-                                            Other
-														
-                                        </label>
-                                    </li>
-                                </ul>
-                                <div class="control-group">
-                                    <label for="">Email Address: <sup class="required">*</sup></label>
-                                    <input type="text">
-                                </div>
-                                <div class="control-group">
-                                    <label for="">Comments: <sup class="required">*</sup></label>
-                                    <textarea rows="10" cols="30" id="" name=""></textarea>
-                                </div>
-                                <div class="button-group">
-                                    <button type="button">
-                                        <span>Submit</span>
-                                    </button>
-                                    <button type="button" class="btn cancel">
-                                        <span>Cancel</span>
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-@*
-<div class="main-container col2-left-layout">
-    <div class="main">
-        <div class="col-main">
-            <div id="messages">
-            </div>
-            <div class="product-view">
-                <div class="product-essential">
-                    <form action="" method="post" id="product_addtocart_form">
-                        <div class="no-display">
-                            <input type="hidden" name="product" value="51" />
-                            <input type="hidden" name="related_product" id="related-products-field" value="" />
-                        </div>
-                        <div class="product-shop">
-                            <div class="product-name" id="mainProductName">
-                                <h1>@Model.DisplayName</h1>
-                            </div>
-                            <div class="ratings">
-                                <p class="rating-links">
-                                    <a href="#" class="add_reviews_link">@("Add Your Review".Localize())</a>
-                                    <span class="separator" style="display:none;">|</span>
-                                    <a href="#" id="show_reviews_link" style="display:none;"><span class="pr-review-count-number"></span>&nbsp;@("Review(s)".Localize())</a>
+                <div id="product_tabs_reviews_contents_list" style="display: none;">
+                    <header>
+                        <p class="title">@("Reviewed by".Localize()) <span class="pr-review-count-number"></span>&nbsp;@("customers with average rating -".Localize()) <span class="pr-review-average"></span></p>
+                        <select id="sortList">
+                            <option value="date_new">@("Newest".Localize())</option>
+                            <option value="date_old">@("Oldest".Localize())</option>
+                            <option value="rating_high">@("Highest rating".Localize())</option>
+                            <option value="rating_low">@("Lowest rating".Localize())</option>
+                            <option value="helpful_high" selected="selected">@("Most helpful".Localize())</option>
+                            <option value="helpful_low">@("Least helpful".Localize())</option>
+                        </select>
+                        <div class="content-wrapper pr-pagination-top">
+                            <div class="pr-page-count-wrapper">
+                                <p class="pr-page-count">
+                                    @("Displaying reviews".Localize()) <strong></strong>
                                 </p>
-                                <div id="review_rating_header_stars" class="pr-review-rating no-display">
-                                    <div class="pr-stars" title="rating">&nbsp;</div>
-                                    <span class="pr-rating pr-rounded"></span>
-                                </div>
                             </div>
-                            <p class="availability in-stock">
-                                Availability: <span>@Model.Availability.AvailabilityString</span>
-                            </p>
-                            <div class="price-box" id="mainPrice">
-                                @Html.DisplayFor(model => model.Price)
-                            </div>
-                            <div class="item-variations" id="item-variations">
-                                @Html.Action("ItemVariations", new { itemId = Model.CatalogItem.ItemId, name = "itemvariations" })
-                            </div>
-	                        <div class="add-to-box">
-		                        <div class="add-to-cart">
-			                        <label for="qty">@("Qty".Localize()):</label>
-			                        <input type="text" name="qty" id="qty" maxlength="12" value="1" title="Quantity" class="input-text qty noborder" 
-			                               data-val-required="The quantity field is required." 
-			                               data-val-range-min="@((int)(Model.Availability.MinQuantity))" 
-			                               data-val-range-max="@((int)(Model.Availability.MaxQuantity))" 
-			                               data-val-range="@("Select quantity in range".Localize()) @string.Format("{0:#} - {1:#}", Model.Availability.MinQuantity, @Model.Availability.MaxQuantity)" 
-			                               data-val-number="@("Quantity must be a number.".Localize())" 
-			                               data-val="true" />
-										<div id="AddToCart">
-				                        	@{Html.RenderPartial("AddToCart", Model, new ViewDataDictionary { { "View", "Details" } });}
-										</div>
-
-			                        <br />
-			                        <span data-valmsg-replace="true" data-valmsg-for="qty" class="field-validation-valid" style="float: left;"></span>
-		                        </div>
-		                        <span class="or">OR</span>
-		                        @{Html.RenderPartial("AddToLinks", Model);}
-	                        </div>
-							@{
-								var firstOrDefault = SettingsHelper.GetSettings("ShareButtonsHtml").FirstOrDefault();
-								if (firstOrDefault != null)
-								{
-									@Html.Raw(firstOrDefault.ToString())
-								}
-							}
-                            <div class="short-description">
-                                <h2>@("Quick Overview".Localize())</h2>
-                                <div class="std">
-                                    @if (Model.CatalogItem.EditorialReviews != null && Model.CatalogItem.EditorialReviews.Length > 0)
-									{
-										foreach (var review in Model.CatalogItem.EditorialReviews)
-										{
-											if (review.Source == "Product Description")
-											{
-                                        @Html.Raw(review.Content)
-											}
-										}
-
-									}
-                                </div>
+                            <div class="pr-page-nav-wrapper">
+                                <p class="pr-page-nav">
+                                    <span class="pr-page-prev">« @("Previous".Localize())</span>
+                                    <span class="pr-divider">| </span>
+                                    <span class="pr-page-next">@("Next".Localize()) »</span>
+                                </p>
                             </div>
                         </div>
-                        <div class="product-img-box">
-                            <div id="imageContainer" class="product-image product-image-zoom">
-                                <a href="@Url.Image(Model.CatalogItem.Item, "primaryimage")" rel="gal1" class="jqzoom">
-	                                <img id="image" class="primaryimage" src="@Url.Image(Model.CatalogItem.Item, "primaryimage")" alt="" title="" style="width:300px;" 
-										onerror="this.onerror=null;this.src='@Href("~/Content/themes/default/images/blank.png")';$('a.jqzoom').attr('href','@Href("~/Content/themes/default/images/blank.png")');" />
-                                </a>
-                            </div>
-                            @if (Model.CatalogItem.ItemAssets.Count(a => a.GroupName.Equals("primaryimage") || a.GroupName.Equals("images")) > 1)
-							{ 
-                                <div class="more-views">
-                                    <h2>More Views</h2>
-                                    <ul>
-                                        @foreach (var asset in Model.CatalogItem.ItemAssets.OrderBy(x => x.SortOrder).Where(a => a.GroupName.Equals("primaryimage") || a.GroupName.Equals("images")))
-										{
-											var thumClass = asset.GroupName.Equals("primaryimage") ? "zoomThumbActive" : "";
-                                            <li>
-                                                <a class="@thumClass" href='javascript:void(0);' rel="
-                                                    {gallery: 'gal1', 
-                                                    smallimage: '@Url.Image(asset)',
-                                                    largeimage: '@Url.Image(asset)'}"
-                                                    onclick="imageChanged();">
-                                                    <img src="@Url.ImageThumbnail(asset)" width="66" height="66">
-                                                </a>
-                                            </li>
-										}
-                                    </ul>
-                                </div>
-							}
-                        </div>
-                        <div class="clearer">
-                        </div>
-                    </form>
-                </div>
-                <div class="product-collateral">
-                    <ul class="product-tabs">
-                        <li id="product_tabs_description" class="active first"><a href="javascript:void(0)">@("Product Description".Localize())</a></li>
-                        <li id="product_tabs_upsell_products" class=""><a href="javascript:void(0)">@("Accessories".Localize())</a></li>
-                        <li id="product_tabs_additional" class=""><a href="javascript:void(0)">@("Additional Information".Localize())</a></li>
-                        <li id="product_tabs_reviews" class=""><a href="javascript:void(0)">@("Reviews".Localize())</a></li>
-                    </ul>
-                    <div class="product-tabs-content" id="product_tabs_description_contents">
-                        <h2>@("Details".Localize())</h2>
-                        <div class="std">
-                            @if (Model.CatalogItem.EditorialReviews != null && Model.CatalogItem.EditorialReviews.Length > 0)
-							{
-								foreach (var review in Model.CatalogItem.EditorialReviews)
-								{
-									if (review.Source == "Amazon.com Product Description")
-									{
-										 @Html.Raw(review.Content)
-									}
-								}
-							}
-                        </div>
-                    </div>
-                    <div class="product-tabs-content" id="product_tabs_upsell_products_contents">
-                        <div class="box-collateral box-up-sell">
-                            @{Html.RenderAction("Association", new { item = Model.CatalogItem, templateName = "RecommendedProducts", groupName = "Accessories" });}
-                        </div>
-                    </div>
-                    <div class="product-tabs-content" id="product_tabs_additional_contents">
-	                    <h2>@("Additional Information".Localize())</h2>
-						<div id="product_tabs_additional_contents_list">
-							@{Html.RenderPartial("ItemProperties", Model.CatalogItem);}
-						</div>
-                    </div>
-                    <div class="product-tabs-content" id="product_tabs_reviews_contents">
-                        <h2>@("Customer Reviews".Localize())</h2>
-                        <div id="product_tabs_reviews_contents_empty" class="std">
-                            @("There are no reviews. Be first and".Localize()) <a href="#" class="add_reviews_link">@("Add Your Review".Localize())</a>
-                        </div>
-                        <div id="product_tabs_reviews_contents_list" class="std no-display">
-                            <section class="featured">
-                                <div class="content-wrapper pr-review-sort">
-                                    <div class="pr-review-sort-wrapper">
-                                        <p class="pr-review-count">
-                                            @("Reviewed by".Localize()) <span class="pr-review-count-number"></span>&nbsp;@("customers with average rating -".Localize()) <span class="pr-review-average"></span>
-                                        </p>
-                                        <div class="pr-review-sort-box">
-                                            <p class="pr-review-sort-by">
-                                                @("Sort by".Localize())
-                                            </p>
-                                            <select id="sortList">
-                                                <option value="date_new">@("Newest".Localize())</option>
-                                                <option value="date_old">@("Oldest".Localize())</option>
-                                                <option value="rating_high">@("Highest rating".Localize())</option>
-                                                <option value="rating_low">@("Lowest rating".Localize())</option>
-                                                <option value="helpful_high" selected="selected">@("Most helpful".Localize())</option>
-                                                <option value="helpful_low">@("Least helpful".Localize())</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="content-wrapper pr-pagination-top">
-                                    <div class="pr-page-count-wrapper">
-                                        <p class="pr-page-count">
-                                            @("Displaying reviews".Localize()) <strong></strong>
-                                        </p>
-                                    </div>
-                                    <div class="pr-page-nav-wrapper">
-                                        <p class="pr-page-nav">
-                                            <span class="pr-page-prev">« @("Previous".Localize())</span>
-                                            <span class="pr-divider">| </span>
-                                            <span class="pr-page-next">@("Next".Localize()) »</span>
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="content-wrapper" id="reviewsTemplateContainer">
-                                </div>
-                            </section>
-                        </div>
+                    </header>
+                    <div class="content-wrapper" id="reviewsTemplateContainer">
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-left sidebar">
-            @{Html.RenderAction("Association", new { item = Model.CatalogItem, templateName = "RelatedProducts", groupName = "Related Items" });}
-            <div class="block block-cart">
-                <div class="block-title">
-                    <strong><span>@("My Cart".Localize())</span></strong>
-                </div>
-                <div class="block-content">
-                    @{Html.RenderAction("MiniView", "Cart");}
-                </div>
-            </div>
-            <div class="block block-list block-compare">
-                <div class="block-title">
-                    <strong><span>@("Compare Products".Localize())</span></strong>
-                </div>
-                <div class="block-content">
-                    @{Html.RenderAction("MiniCompareList", "Account");}
-                </div>
-            </div>
+        <div class="product-recommend products-no-effects slider-products">
+            @{Html.RenderAction("Association", new { item = Model.CatalogItem, templateName = "RecommendedProducts2", groupName = "Accessories" });}
         </div>
     </div>
 </div>
-*@
+@section Bottom{
+
+    @{Html.RenderAction("Association", new { item = Model.CatalogItem, templateName = "RelatedProducts", groupName = "Related Items" });}
+
+}

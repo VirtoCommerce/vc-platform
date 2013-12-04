@@ -22,6 +22,11 @@ select
 	height: auto;
 }
 
+.normal
+{
+	width: auto;
+}
+
 	select option
 	{
 		padding: 0 10px 0 0;
@@ -30,6 +35,7 @@ select
 .control-group
 {
 	margin: 0 0 10px;
+	overflow: hidden;
 }
 
 .button-group
@@ -60,4 +66,30 @@ select
 		height: 120px;
 		max-width: 260px;
 		min-width: 260px;
+	}
+
+	.field input.error
+	{
+		background: #faebe7;
+		border: 1px dashed #f00;
+	}
+
+	.field span.error
+	{
+		color: #f00;
+		display: block;
+		font-size: 10px;
+		line-height: 13px;
+		margin: 5px 0 0;
+	}
+
+	.control-group .column
+	{
+		float: left;
+		width: 49%;
+	}
+
+	.control-group .column + .column
+	{
+		float: right;
 	}

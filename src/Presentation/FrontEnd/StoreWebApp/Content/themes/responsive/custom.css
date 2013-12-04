@@ -53,78 +53,37 @@
     padding: 10px 0;
 }
 
-/*Data table*/
-.data-table {
-    width: 100%;
+/*Review paging*/
+.pr-pagination-top {
+   border-bottom: 1px solid #CCCCCC;
+    clear: both;
+    height: 15px;
+    padding: 0.5em 0 0.7em;
 }
-.data-table tr.odd {
-    background: none repeat scroll 0 0 #FFFFFF;
+.pr-page-count-wrapper {
+    float: left;
 }
-.data-table tr.even {
-    background: none repeat scroll 0 0 #FCFCFC;
+.pr-page-nav-wrapper {
+    float: right;
+    text-align: right;
+    width: 20%;
 }
-.data-table tr.last th, .data-table tr.last td {
-    border-bottom: 0 none !important;
+.pr-page-prev, .pr-page-next {
+    cursor: pointer;
 }
-.data-table th {
-    font-size: 10px;
-    padding: 2px 8px;
-    text-transform: uppercase;
-    white-space: nowrap;
+.pr-page-prev:hover, .pr-page-next:hover {
+    text-decoration: underline;
 }
-.data-table th.wrap {
-    white-space: normal;
-}
-.data-table th a {
-    color: #FFFFFF;
-}
-.data-table td {
-    padding: 3px 8px;
-}
-.data-table thead, .data-table thead tr {
-    background: none repeat scroll 0 0 #E9E9E9;
-}
-.data-table tfoot {
-    border-bottom: 1px solid #D9DDE3;
-}
-.data-table tfoot tr {
-    background-color: #F3F3F3 !important;
-}
-.data-table tbody th {
-    font-size: 11px;
-    font-weight: bold;
-    padding: 3px 8px;
-    text-transform: none;
-    white-space: normal;
-}
-.data-table tbody th, .data-table tbody td {
-    border-bottom: 1px solid #D9DDE3;
-}
-.data-table tfoot strong {
-    font-size: 14px;
-}
-.data-table tbody.odd tr {
-    background: none repeat scroll 0 0 #FFFFFF;
-}
-.data-table tbody.even tr {
-    background: none repeat scroll 0 0 #FCFCFC;
-}
-.data-table tbody.odd tr td, .data-table tbody.even tr td {
-    border-bottom: 0 none;
-}
-.data-table tbody.odd tr.border td, .data-table tbody.even tr.border td {
-    border-bottom: 1px solid #D9DDE3;
-}
-.data-table tbody td .option-label {
-    font-style: italic;
-    font-weight: bold;
-}
-.data-table tbody td .option-value {
-    padding-left: 10px;
+.pr-page-prev:disabled, .pr-page-next:disabled {
+    cursor: default;
 }
 
-.data-table th {
-    font-weight: normal;
-    text-align: left;
-    vertical-align: top;
+span.price-label
+    {
+     color: #000000 !important;
+    font-size: 25px !important;
+    }
+
+.products-list span.price-label {
+    font-size: 15px;
 }

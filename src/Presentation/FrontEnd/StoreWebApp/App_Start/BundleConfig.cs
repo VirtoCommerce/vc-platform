@@ -29,10 +29,11 @@ namespace VirtoCommerce.Web
 			//"~/Scripts/jquery-jqzoom.js",
 				//"~/Scripts/jquery.gzoom.js",
              "~/Scripts/cloudzoom.js",
-			"~/Scripts/jquery.nivo.slider.js",
+			//"~/Scripts/jquery.nivo.slider.js",
 			"~/Scripts/jquery.rateit.js",
 			"~/Scripts/jquery-thickbox.js",
 			"~/Scripts/v/virto-commerce.js",
+            "~/Scripts/responsive/main.js",
 			"~/Scripts/v/validation.js"));
 
 			// Use the development version of Modernizr to develop with and learn from. Then, when you're
@@ -78,11 +79,12 @@ namespace VirtoCommerce.Web
 
             bundles.Add(new StyleBundle("~/Content/themes/responsive/css").Include(
                 "~/Content/themes/responsive/reset.css",
+                "~/Content/themes/responsive/custom.css",
                 "~/Content/themes/responsive/main.css",
                 "~/Content/themes/responsive/responsive.css",
                 "~/Content/themes/responsive/camera.css",
-                "~/Content/themes/responsive/custom.css",
-                "~/Content/themes/responsive/cloudzoom.css"
+                "~/Content/themes/responsive/cloudzoom.css",
+                "~/Content/themes/responsive/messages.css"
                 ));
 		}
 	}

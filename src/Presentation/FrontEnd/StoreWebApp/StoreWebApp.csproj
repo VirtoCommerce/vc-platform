@@ -544,6 +544,8 @@
     <Content Include="Content\themes\responsive\images\aside\ajax_slider\2.jpg" />
     <Content Include="Content\themes\responsive\images\aside\ajax_slider\3.jpg" />
     <Content Include="Content\themes\responsive\images\category\woman.jpg" />
+    <Content Include="Content\themes\responsive\images\cloudzoom\ajax-loader.gif" />
+    <Content Include="Content\themes\responsive\images\cloudzoom\blank.png" />
     <Content Include="Content\themes\responsive\images\fb.png" />
     <Content Include="Content\themes\responsive\images\flags\en.png" />
     <Content Include="Content\themes\responsive\images\flags\ru.png" />
@@ -578,7 +580,12 @@
     <Content Include="Content\themes\responsive\images\icons\grid-mode.gif" />
     <Content Include="Content\themes\responsive\images\icons\icon_cart_listing_mask.png" />
     <Content Include="Content\themes\responsive\images\icons\list-mode.gif" />
+    <Content Include="Content\themes\responsive\images\icons\msg\error.gif" />
+    <Content Include="Content\themes\responsive\images\icons\msg\note.gif" />
+    <Content Include="Content\themes\responsive\images\icons\msg\notice.gif" />
+    <Content Include="Content\themes\responsive\images\icons\msg\success.gif" />
     <Content Include="Content\themes\responsive\images\icons\rating.png" />
+    <Content Include="Content\themes\responsive\images\icons\remove-popup.png" />
     <Content Include="Content\themes\responsive\images\icons\remove.png" />
     <Content Include="Content\themes\responsive\images\icons\search.png" />
     <Content Include="Content\themes\responsive\images\icons\shipping.png" />
@@ -600,6 +607,7 @@
     <Content Include="Content\themes\responsive\images\slider\slides\2.jpg" />
     <Content Include="Content\themes\responsive\images\slider\slides\3.jpg" />
     <Content Include="Content\themes\responsive\main.css" />
+    <Content Include="Content\themes\responsive\messages.css" />
     <Content Include="Content\themes\responsive\reset.css" />
     <Content Include="Content\themes\responsive\responsive.css" />
     <Content Include="Content\themes\responsive\transition.css" />
@@ -735,7 +743,7 @@
     <Content Include="Views\Checkout\Success.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Search\DisplayTemplates\FilterPanel.cshtml" />
-    <Content Include="Views\Search\DisplayTemplates\SearchItem.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\SearchItem.cshtml" />
     <Content Include="Views\Search\DisplayTemplates\SearchPager.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
     <Content Include="Views\Search\SearchResultsPartial.cshtml" />
@@ -808,6 +816,7 @@
     <Content Include="Views\Shared\EditorTemplates\MiniLineItem.cshtml" />
     <Content Include="Views\Search\DisplayTemplates\CurrentFilterPanel.cshtml" />
     <Content Include="Views\Search\DisplayTemplates\SearchListItem.cshtml" />
+    <Content Include="Views\Catalog\RecommendedProducts2.cshtml" />
     <None Include="Web.Azure.config" />
   </ItemGroup>
   <ItemGroup>

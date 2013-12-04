@@ -7,7 +7,7 @@
 		$("#imageContainer img.cloudzoom").attr("src", "@Url.Image(Model.CatalogItem.Item, "primaryimage")");
 
 		//Update main price
-		@{Model.Price.PriceTitle = "Price:".Localize();}
+@*		@{Model.Price.PriceTitle = "Price:".Localize();}*@
 	    $("#mainPrice").html($('#temp_price').html());
 	    $('#temp_price').remove();
 	    $("header.product-name h1").html('@Model.DisplayName');

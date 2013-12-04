@@ -86,10 +86,9 @@ Reviews =
 
                     if (data[0].TotalReviews > 0) {
                         //$("#review_rating_header_stars").show();
-                        //$("#review_rating_header_stars .pr-stars").css("background-position", "0 " + (-19 * Math.round(data.AverageRating)) +"px");
                         $(".rating").attr("title", data[0].AverageRating);
                         $(".rating").rateit({ resetable: false, readonly: true, value: data[0].AverageRating.toFixed(1), starwidth: 11, starheight: 11 });
-                        //$("#review_rating_header_stars .pr-rating").text(data[0].AverageRating.toFixed(1));
+                        $(".pr-review-average").text(data[0].AverageRating.toFixed(1));
                         $("#product_tabs_reviews_contents_empty").hide();
                         $("#product_tabs_reviews_contents_list").show();
                         $("#show_reviews_link").show();
@@ -131,9 +130,10 @@ Reviews =
                     $.validator.unobtrusive.parse("#" + this.id);
                 });
 
-                $(Reviews.container + " .pr-review-rating").each(function () {
-                    var rating = $(this).find(".pr-rating").text();
-                    $(this).find(".pr-stars").rateit({ resetable: false, readonly: true, value: rating, starwidth: 11, starheight: 11  });
+                $(Reviews.container + " .rating-block").each(function ()
+                {
+                    var rating = $(this).find(".count .num").text();
+                    $(this).find(".rating").rateit({ resetable: false, readonly: true, value: rating, starwidth: 11, starheight: 11  });
                 });
 
                 
@@ -164,7 +164,7 @@ Reviews =
                 //Just for testing add immediatly
                 //$("#commentTemplate").tmpl(comment).appendTo("#comments_container_" + id);
                 "Thank you for your feedback! We will review it and publish.".Localize(function (translation) {
-                	alert(translation);
+                	$.showPopupMessage(translation);
                 });
             },
             error: function (jqXhr) {
@@ -190,7 +190,7 @@ Reviews =
                 tb_remove();
 
                 "Thank you for your feedback! We will review it and publish.".Localize(function (translation) {
-	                alert(translation);
+                    $.showPopupMessage(translation);
                 });
 
                 //update fields
@@ -276,7 +276,7 @@ Reviews =
                 form.resetValidation();
                 "Thank you for your feedback! We will review it and take necessary actions.".Localize(function (translation)
                 {
-                	alert(translation);
+                    $.showPopupMessage(translation);
                 });
             },
             error: function (jqXhr)
@@ -319,9 +319,10 @@ Reviews =
         previewContainer.hide();
         $("#reviewTemplate").tmpl(data).appendTo(previewContainer);
 
-        previewContainer.find(".pr-review-rating").each(function () {
-            var rating = $(this).find(".pr-rating").text();
-            $(this).find(".pr-stars").rateit({ resetable: false, readonly: true, value: rating, starwidth: 11, starheight: 11 });
+        previewContainer.find(".rating-block").each(function ()
+        {
+            var rating = $(this).find(".count .num").text();
+            $(this).find(".rating").rateit({ resetable: false, readonly: true, value: rating, starwidth: 11, starheight: 11 });
         });
 
         previewContainer.fadeIn(2000);

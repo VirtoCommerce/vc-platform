@@ -12,15 +12,15 @@
             </div>
             <h2 class="sub-title">@("Thank you for your purchase!".LocalizeHtml())</h2>
 
-            <p>@("Your order # is:".LocalizeHtml()) @Html.ActionLink(Model.TrackingNumber, "ViewOrder", "Account", new { orderId = Model.OrderGroupId }, new {id="OrderTrackingNumber"}).</p>
+            <p>@("Your order # is:".LocalizeHtml()) @Html.ActionLink(Model.TrackingNumber, "ViewOrder", "Account", new { orderId = Model.OrderGroupId }, new { id = "OrderTrackingNumber" }).</p>
             <p>@("You will receive an order confirmation email with details of your order and a link to track its progress.".LocalizeHtml())</p>
 
 
 
             <div class="buttons-set">
-	            <button onclick="$.redirect('@UserHelper.CustomerSession.LastShoppingPage');" title="@("Continue Shopping".LocalizeHtml())" class="button" type="button">
-		            <span><span>@("Continue Shopping".LocalizeHtml())</span></span>
-	            </button>
+                <button onclick="$.redirect('@UserHelper.CustomerSession.LastShoppingPage');" title="@("Continue Shopping".LocalizeHtml())" class="button" type="button">
+                    <span><span>@("Continue Shopping".LocalizeHtml())</span></span>
+                </button>
             </div>
         </div>
         <div class="col-left sidebar">
@@ -50,11 +50,11 @@
                         <ol id="cart-sidebar-reorder">
                             @foreach (var orderItem in Model.OrderForms.SelectMany(of => of.LineItems))
                             {
-	                            string promotionId;
-								if (PromotionHelper.IsPromotion(orderItem.CatalogItemId, out promotionId) && orderItem.Discounts.Any(x => x.PromotionId == promotionId))
-								{
-									continue;
-								}
+                                string promotionId;
+                                if (PromotionHelper.IsPromotion(orderItem.CatalogItemId, out promotionId) && orderItem.Discounts.Any(x => x.PromotionId == promotionId))
+                                {
+                                    continue;
+                                }
 								
                                 <li class="item last odd">
                                     <input type="checkbox" 
@@ -65,17 +65,19 @@
                                         name="order_items[]">
 
                                     <p class="product-name">
-	                                    <a href="@Url.ItemUrl(orderItem.CatalogItemId, orderItem.ParentCatalogItemId)">
-		                                    @orderItem.DisplayName
-	                                    </a>
+                                        <a href="@Url.ItemUrl(orderItem.CatalogItemId, orderItem.ParentCatalogItemId)">
+                                            @orderItem.DisplayName
+                                        </a>
                                     </p>
                                 </li>
                             }
                         </ol>
                         <div id="cart-sidebar-reorder-advice-container"></div>
                         <div class="actions">
-                            @{Html.RenderPartial("AddToCart", null, new ViewDataDictionary{{"View","Orders"}});}
-                            <a href="@Url.Action("Orders","Account")">@("View All".LocalizeHtml())</a>
+                            <button type="button" title="@("Add to Cart".LocalizeHtml())" class="button btn-cart" onclick="return VirtoCart.addToCartOrdersClick();">
+                                <span><span>@("Add to Cart".Localize())</span></span>
+                            </button>
+                            <a href="@Url.Action("Orders", "Account")">@("View All".LocalizeHtml())</a>
                         </div>
                     </div>
                 </form>

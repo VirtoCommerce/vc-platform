@@ -5,20 +5,7 @@
 {
     foreach (var item in Model.CatalogItems)
     {
-        var itemClass = "item";
-        if (item.IsNew)
-        {
-            itemClass = string.Concat(@itemClass, " ", "new");
-        }
-        if (item.IsSale)
-        {
-            itemClass = string.Concat(@itemClass, " ", "sale");
-        }
-    <li class="@itemClass">
-        <div class="inner">
-            @Html.DisplayFor(model => item, templateName)
-        </div>
-    </li>
+        @Html.DisplayFor(model => item, templateName)
     }
 }
 
@@ -49,14 +36,14 @@ else
                 if (isAuthorized == "True")
                 {
                     tb_show('@("Create Review".LocalizeHtml())', "@Url.Action("AddReview", "Catalog", new { id = item.CatalogItem.ItemId, height = 550 })", false);
-                    }
-                    else
-                    {
-                        tb_show('@("Login or Create New Account".LocalizeHtml())', "@Url.Action("LogOnAsync", "Account")", false);
-                    }
+                }
+                else
+                {
+                    tb_show('@("Login or Create New Account".LocalizeHtml())', "@Url.Action("LogOnAsync", "Account")", false);
+                }
 
-                    return false;
-                });
+                return false;
+            });
             </text>
             }
 

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
 using VirtoCommerce.Client;
 using VirtoCommerce.Foundation.Catalogs.Model;
+using VirtoCommerce.Web.Client.Globalization;
 using VirtoCommerce.Web.Client.Helpers;
 using VirtoCommerce.Web.Models;
 
@@ -39,6 +41,11 @@ namespace VirtoCommerce.Web.Virto.Helpers
             var price = lowestPrice.Sale ?? lowestPrice.List;
             var discount = _client.GetItemDiscountPrice(item, lowestPrice, tags);
             var priceModel = CreatePriceModel(price, price - discount, UserHelper.CustomerSession.Currency);
+            //If has any variations
+	        if (CatalogHelper.CatalogClient.GetItemRelations(item.ItemId).Any())
+	        {
+	            priceModel.PriceTitle = "Starting from:".Localize();
+	        }
             return priceModel;
         }
 

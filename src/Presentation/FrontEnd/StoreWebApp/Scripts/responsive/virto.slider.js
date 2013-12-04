@@ -22,14 +22,17 @@ jQuery.fn.virtoSlider = function(options)
 		// Append navigation
 		$('.nav', this_).remove();
 
-		$(this_).append(
-			'<ul class="nav">' +
-				'<li class="left"><a>Left</a></li>' +
-				'<li class="right"><a>Right</a></li>' +
-			'</ul>'
-		);
+		if (elementCounts > elementVisible)
+		{
+	        $(this_).append(
+	            '<ul class="nav">' +
+	                '<li class="left"><a>Left</a></li>' +
+	                '<li class="right"><a>Right</a></li>' +
+	                '</ul>'
+	        );
+	    }
 
-		// Animation slider
+	    // Animation slider
 		var animateSlider = function(e)
 		{
 			var self = $(this),
