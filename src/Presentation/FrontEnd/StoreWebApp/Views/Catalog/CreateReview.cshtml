@@ -35,11 +35,15 @@
     });
 </script>
 
-<div id="containerUpdateDiv" class="main-container col1-layout">
+<div id="containerUpdateDiv" class="article">
     <div class="page-title">
-	    <h1>@("Create Review".LocalizeHtml())</h1>
+        <h1>@("Create Review".LocalizeHtml())</h1>
     </div>
-    <div id="ReviewPreview" class="preview"></div>
+    <div class="product-tabs">
+        <div class="tabs-content">
+                  <div id="ReviewPreview" class="preview"></div>
+              </div>
+    </div>
 	<div id="addReviewMain" class="main">
 		@using (Html.BeginForm()) 
 		{

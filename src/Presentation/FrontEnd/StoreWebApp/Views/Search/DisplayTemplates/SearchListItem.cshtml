@@ -44,7 +44,7 @@
                 {
                     foreach (var review in Model.CatalogItem.EditorialReviews)
                     {
-                        if (review.Source == "Product Description")
+                        if (review.Source == "QuickReview")
                         {
                             @Html.Raw(review.Content)
                         }
