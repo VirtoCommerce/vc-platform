@@ -50,7 +50,7 @@ namespace VirtoCommerce.Web.Models
                 //Create selections
                 _selectedVariations = new Dictionary<string, SelectionValue>();
                 var relationGroups = relations.Select(rel => rel.GroupName).Distinct();
-                foreach (var prop in selectedVariation.ItemPropertyValues.Where(p => relationGroups.Contains(p.Name)))
+                foreach (var prop in LocalizedProperties(selectedVariation.ItemPropertyValues).Where(p => relationGroups.Contains(p.Name)))
                 {
                     _selectedVariations.Add(prop.Name, new SelectionValue { Value = prop.ToString() });
                 }
@@ -90,7 +90,7 @@ namespace VirtoCommerce.Web.Models
                 {
                     //Iterate through each property in ItemRelation ChildItem
                     var @group = relationGroup;
-                    foreach (var prop in relation.ChildItem.ItemPropertyValues.Where(p => p.Name == @group.Key))
+                    foreach (var prop in LocalizedProperties(relation.ChildItem.ItemPropertyValues).Where(p => p.Name == @group.Key))
                     {
                         var propValue = prop.ToString();
 
@@ -118,7 +118,7 @@ namespace VirtoCommerce.Web.Models
                                     continue;
                                 }
                                 var selProp =
-                                    relation.ChildItem.ItemPropertyValues.FirstOrDefault(p => p.Name == sel.Key);
+                                    LocalizedProperties(relation.ChildItem.ItemPropertyValues).FirstOrDefault(p => string.Equals(p.Name, sel.Key, StringComparison.InvariantCultureIgnoreCase));
                                 if (selProp == null || selProp.ToString().Equals(sel.Value.Value))
                                 {
                                     continue;
@@ -181,12 +181,36 @@ namespace VirtoCommerce.Web.Models
                 //Extra filter by all properties
                 foreach (var itemId in from itemId in _selectedVariationCandidates.ToArray()
                                        let item = relations.Select(r => r.ChildItem).First(i => i.ItemId == itemId)
-                                       where item.ItemPropertyValues.Any(p => this[p.Name] != null && !string.Equals(this[p.Name].Value, p.ToString()))
+                                       where LocalizedProperties(item.ItemPropertyValues).Any(p => this[p.Name] != null && !string.Equals(this[p.Name].Value, p.ToString()))
                                        select itemId)
                 {
                     _selectedVariationCandidates.Remove(itemId);
                 }
             }
+        }
+
+        private IEnumerable<ItemPropertyValue> LocalizedProperties(IEnumerable<ItemPropertyValue> props)
+        {
+            var retVal = new List<ItemPropertyValue>();
+            foreach (var p in props.Where(p => (string.IsNullOrEmpty(p.Locale) ||
+                                               string.Equals(p.Locale, UserHelper.CustomerSession.Language,
+                                                   StringComparison.InvariantCultureIgnoreCase))))
+            {
+                if (string.IsNullOrEmpty(p.Locale))
+                {
+                    if (retVal.Any(x => string.Equals(x.Name, p.Name) && string.Equals(x.Locale, UserHelper.CustomerSession.Language,
+                        StringComparison.InvariantCultureIgnoreCase)))
+                    {
+                        continue;
+                    }
+                }
+                else
+                {
+                    retVal.RemoveAll(x => string.Equals(x.Name, p.Name) && string.IsNullOrEmpty(x.Locale));
+                }
+                retVal.Add(p);
+            }
+            return retVal;
         }
 
         /// <summary>
