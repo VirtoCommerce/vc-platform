@@ -85,9 +85,9 @@ Reviews =
                     $(".pr-review-count-number").text(Reviews.TotalReviews);
 
                     if (data[0].TotalReviews > 0) {
-                        //$("#review_rating_header_stars").show();
-                        $(".rating").attr("title", data[0].AverageRating);
-                        $(".rating").rateit({ resetable: false, readonly: true, value: data[0].AverageRating.toFixed(1), starwidth: 11, starheight: 11 });
+                        $(".product-info .rating").show();
+                        $(".product-info .rating").attr("title", data[0].AverageRating);
+                        $(".product-info .rating").rateit({ resetable: false, readonly: true, value: data[0].AverageRating.toFixed(1), starwidth: 11, starheight: 11 });
                         $(".pr-review-average").text(data[0].AverageRating.toFixed(1));
                         $("#product_tabs_reviews_contents_empty").hide();
                         $("#product_tabs_reviews_contents_list").show();
