@@ -280,9 +280,9 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Row="0" Grid.Column="0" Text="Min. Quantity:"/>
-                            <extToolkit:IntegerUpDown Grid.Row="1" Grid.Column="0" Value="{Binding InnerItem.MinQuantity}"/>
+							<extToolkit:IntegerUpDown Grid.Row="1" Grid.Column="0" Value="{Binding InnerItem.MinQuantity}" Maximum="{Binding InnerItem.MaxQuantity}"/>
                             <TextBlock Grid.Row="0" Grid.Column="2" Text="Max. Quantity:"/>
-                            <extToolkit:IntegerUpDown  Grid.Row="1" Grid.Column="2" Value="{Binding InnerItem.MaxQuantity}" />
+                            <extToolkit:IntegerUpDown  Grid.Row="1" Grid.Column="2" Value="{Binding InnerItem.MaxQuantity}" Minimum="{Binding InnerItem.MinQuantity}" />
                         </Grid>
 
 

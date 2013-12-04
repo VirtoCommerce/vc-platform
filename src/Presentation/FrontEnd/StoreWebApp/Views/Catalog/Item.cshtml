@@ -16,40 +16,40 @@
         var spinner = initQtySpinner("#qty", "@((int)(Model.Availability.MinQuantity))", "@((int)(Model.Availability.MaxQuantity))");
 
 		@if (!Model.Availability.IsAvailable)
-  {
-            @:$("#qty").spinner("disable");
-        }
-  else
-  {
-		    @:$("#qty").val("@Math.Round(Model.Availability.MinQuantity, 0)");
-                }
-
-        loadVariations("@Model.CatalogItem.ItemId", "@Request.QueryString["variationId"]");
-
-        Reviews.init({ container: "#reviewsTemplateContainer", currentItemId: "@Model.CatalogItem.ItemId" });
-
-        $(".add_reviews_link").on('click', function ()
         {
-            var isAuthorized = '@UserHelper.CustomerSession.IsRegistered';
+		    @:$("#qty").spinner("disable");
+		}
+        else
+        {
+		    @:$("#qty").val("@Math.Round(Model.Availability.MinQuantity, 0)");
+		}
 
-            if (isAuthorized == "True")
-            {
+	    loadVariations("@Model.CatalogItem.ItemId", "@Request.QueryString["variationId"]");
+
+	    Reviews.init({ container: "#reviewsTemplateContainer", currentItemId: "@Model.CatalogItem.ItemId" });
+
+	    $(".add_reviews_link").on('click', function ()
+	    {
+	        var isAuthorized = '@UserHelper.CustomerSession.IsRegistered';
+
+		    if (isAuthorized == "True")
+		    {
                 tb_show('@("Create Review".Localize())', "@Url.Action("AddReview", "Catalog", new { id = Model.CatalogItem.ItemId, height = 550 })", false);
-            }
-            else
-            {
+			}
+			else
+			{
                 tb_show('@("Login or Create New Account".Localize())', "@Url.Action("LogOnAsync", "Account")", false);
-            }
+			}
 
-            return false;
-        });
+		    return false;
+		});
 
         // Slider
         $('.products-previews, .slider-products').virtoSlider({ speed: 300 });
         $('.product-additional').virtoSlider({
             elementVisible: 1,
             speed: 350
-        });
+	});
     });
 </script>
 
@@ -61,12 +61,12 @@
         </p>
         <div class="rating-block">
             <div class="rating">
-            </div>
+    </div>
             <div class="count">
                 <span class="num">${parseInt(Rating).toFixed(1)}</span>
                 ${RatingComment}									
-            </div>
-        </div>
+    </div>
+    </div>
         <div class="author">
             <p class="title">@("Review by".Localize()) <span>${Reviewer.NickName}</span> {{if IsVerifiedBuyer}}<span class="verified">@("Verified Buyer".Localize())</span>{{/if}}</p>
             <span class="date">${GetShortDateAndTime(CreatedDateTime)}</span>
@@ -122,63 +122,63 @@
                 <header>
                     <h3>@("Please let us know what kind of issue this is".Localize()):</h3>
                 </header>
-                @using (Html.BeginForm("reportabuse", "api/review", FormMethod.Post, new { id = "abuse_${Id}" }))
-                {
-                    <ul class="form-list">
+        @using (Html.BeginForm("reportabuse", "api/review", FormMethod.Post, new { id = "abuse_${Id}" }))
+        {
+            <ul class="form-list">
                         <li>
                             <label>
                                 <input type="radio" value="profane" name="Reason">
                                 @("Profanity".Localize())
                             </label>
-                        </li>
+                </li>
                         <li>
                             <label for="">
                                 <input type="radio" value="wrong_product" name="Reason">
                                 @("Wrong product".Localize())
                             </label>
-                        </li>
+                </li>
                         <li>
                             <label>
                                 <input type="radio" value="spam" name="Reason">
                                 @("Spam".Localize())
                             </label>
-                        </li>
-                        <li>
+                </li>
+                <li>
                             <label>
                                 <input type="radio" value="duplicate" name="Reason">
                                 @("Duplicate".Localize())
                             </label>
-                        </li>
-                        <li>
+                </li>
+                <li>
                             <label>
                                 <input type="radio" value="copyright" name="Reason">
                                 @("Copyright violation".Localize())<									
                             </label>
-                        </li>
-                        <li>
+                </li>
+                <li>
                             <label>
                                 <input type="radio" value="not_review" name="Reason">
                                 @("Not a product review".Localize())
                             </label>
-                        </li>
-                        <li>
+                </li>
+                <li>
                             <label>
                                 <input type="radio" value="image_issue" name="Reason">
                                 @("Problem with image".Localize())
 
                             </label>
-                        </li>
-                        <li>
+                </li>
+                <li>
                             <label for="">
                                 <input type="radio" value="other" name="Reason">
                                 @("Other".Localize())
 
                             </label>
-                        </li>
-                        <li>
+                </li>
+                <li>
                             <span data-valmsg-replace="true" data-valmsg-for="Reason" class="field-validation-valid"></span>
-                        </li>
-                    </ul>
+                </li>
+            </ul>
                     <div class="control-group">
                         <label for="">@("Email Address".Localize()): <sup class="required">*</sup></label>
                         <input type="text" maxlength="80" name="Email">
@@ -188,7 +188,7 @@
                         <label for="">@("Comments".Localize()): <sup class="required">*</sup></label>
                         <textarea rows="10" cols="30" name="Comment"></textarea>
                     </div>
-                    <input type="hidden" value="${Id}" name="Id" />
+            <input type="hidden" value="${Id}" name="Id" />
                     <input type="hidden" value="True" name="IsReview" />
                     <div class="button-group">
                         <button type="button" value="Submit" onclick="Reviews.flag('${Id}');">
@@ -198,25 +198,25 @@
                             <span>@("Cancel".Localize())</span>
                         </button>
                     </div>
-                }
-            </div>
+        }
+    </div>
         </div>
 
 
 
-        {{if TotalComments > 0}}
-    <div id="show_all_comment_for_${Id}">
+    {{if TotalComments > 0}}
+        <div id="show_all_comment_for_${Id}">
         <i>@("There are".Localize()) <b>${TotalComments}</b> @("comments in total".Localize())</i>
-        {{if Comments.length < TotalComments }}
+            {{if Comments.length < TotalComments }}
         <a href="#" onclick="Reviews.showAllComments('${Id}'); return false;">@("Show all".Localize())</a>
-        {{/if}}
-    </div>
-        {{/if}}
+            {{/if}}
+        </div>
+    {{/if}}
     {{if Comments}}
-    <div id="comments_container_${Id}">
-        {{tmpl(Comments) "#commentTemplate"}}
-    </div>
-        {{/if}}
+        <div id="comments_container_${Id}">
+            {{tmpl(Comments) "#commentTemplate"}}
+        </div>
+    {{/if}}
     <div class="spacer"></div>
     </div>
 </script>
@@ -244,7 +244,7 @@
             <h3>@("Please let us know what kind of issue this is".Localize()):</h3>
         </header>
         @using (Html.BeginForm("reportabuse", "api/review", FormMethod.Post, new { id = "abuse_${Id}" }))
-        {
+        {          
             <ul class="form-list">
                 <li>
                     <label>
@@ -304,11 +304,11 @@
                 <label for="">@("Email Address".Localize()): <sup class="required">*</sup></label>
                 <input type="text" maxlength="80" name="Email">
                 <span data-valmsg-replace="true" data-valmsg-for="Email" class="field-validation-valid"></span>
-            </div>
+                    </div>
             <div class="control-group">
                 <label for="">@("Comments".Localize()): <sup class="required">*</sup></label>
                 <textarea rows="10" cols="30" name="Comment"></textarea>
-            </div>
+                    </div>
             <input type="hidden" value="${Id}" name="Id" />
             <input type="hidden" value="False" name="IsReview" />
             <div class="button-group">
@@ -333,14 +333,14 @@
                 <li class="next"><a href=""><span>Next</span></a></li>
             </ul>
         </div>*@
-    </div>
+            </div>
 }
 
 <div class="rubber">
     <div class="product">
         <div class="product-view clearfix">
             <div class="product-info">
-                <form action="" method="post" id="product_addtocart_form">
+                    <form action="" method="post" id="product_addtocart_form">
                     <div class="product-image@(Model.IsNew ? " new" : Model.IsSale ? " sale" : "")">
                         <figure id="imageContainer">
                             <a href="@Url.Image(Model.CatalogItem.Item, "primaryimage")" rel="gal1">
@@ -369,20 +369,20 @@
                                 </ul>
                             </div>
                         }
-                    </div>
-                    <div class="product-shop">
+                        </div>
+                        <div class="product-shop">
                         <header class="product-name">
-                            <h1>@Model.DisplayName</h1>
+                                <h1>@Model.DisplayName</h1>
                         </header>
-                        @{
-                            var firstOrDefault = SettingsHelper.GetSettings("ShareButtonsHtml").FirstOrDefault();
-                            if (firstOrDefault != null)
-                            {
+                            @{
+                                var firstOrDefault = SettingsHelper.GetSettings("ShareButtonsHtml").FirstOrDefault();
+                                if (firstOrDefault != null)
+                                {
                             <div class="share-links">
                                 @Html.Raw(firstOrDefault.ToString())
                             </div>
+                                }
                             }
-                        }
                         <div class="ratings">
                             <div class="rating">
                             </div>
@@ -404,22 +404,22 @@
                             <span class="in-stock">@Model.Availability.AvailabilityString</span>
                             <span class="sku">SKU: @Model.CatalogItem.Code</span>
                         </div>
-                        <div class="short-description">
+                            <div class="short-description">
                             <p>
-                                @if (Model.CatalogItem.EditorialReviews != null && Model.CatalogItem.EditorialReviews.Length > 0)
-                                {
-                                    foreach (var review in Model.CatalogItem.EditorialReviews)
+                                    @if (Model.CatalogItem.EditorialReviews != null && Model.CatalogItem.EditorialReviews.Length > 0)
                                     {
-                                        if (review.Source == "Product Description")
+                                        foreach (var review in Model.CatalogItem.EditorialReviews)
                                         {
-                                    @Html.Raw(review.Content)
+                                            if (review.Source == "QuickReview")
+                                            {
+                                        @Html.Raw(review.Content)
+                                            }
                                         }
                                     }
-                                }
                             </p>
-                        </div>
+                                </div>
                         <div class="variations clearfix">
-                        </div>
+                            </div>
                         <div class="qty">
                             <label for="qty">@("Qty".Localize()):</label>
                             <input type="text" name="qty" id="qty" maxlength="12" value="1" title="Quantity"
@@ -434,86 +434,86 @@
                         </div>
                         <div class="add-to-cart">
                             @{Html.RenderPartial("AddToCart", Model, new ViewDataDictionary { { "View", "Details" } });}
-                        </div>
+                            </div>
                         <ul class="add-to-links">
                             @{Html.RenderPartial("AddToLinks", Model, new ViewDataDictionary { { "View", "Details" } });}
                             @*                            <li class="email-friend"><a href="">Email to a Friend</a></li>*@
-                        </ul>
-                    </div>
+                                    </ul>
+                                </div>
                 </form>
             </div>
             <div class="product-other">
                 <div class="product-additional">
                     @{Html.RenderAction("Association", new { item = Model.CatalogItem, templateName = "RecommendedProducts", groupName = "Accessories" });}
+                        </div>
+                        </div>
                 </div>
-            </div>
-        </div>
         <div class="product-tabs tabs">
             <ul class="clearfix">
                 <li class="selected"><a>@("Description".Localize())</a></li>
                 <li><a>@("Additional Information".Localize())</a></li>
                 <li id="product_tabs_reviews"><a>@("Reviews".Localize())</a></li>
-            </ul>
+                    </ul>
             <h2 data-index="0" class="head selected"><a>@("Description".Localize())</a></h2>
             <div class="tabs-content" style="display: block;">
-                @if (Model.CatalogItem.EditorialReviews != null && Model.CatalogItem.EditorialReviews.Length > 0)
-                {
-                    foreach (var review in Model.CatalogItem.EditorialReviews)
-                    {
-                        if (review.Source == "Amazon.com Product Description")
-                        {
-                    @Html.Raw(review.Content)
-                        }
-                    }
-                }
-            </div>
+                            @if (Model.CatalogItem.EditorialReviews != null && Model.CatalogItem.EditorialReviews.Length > 0)
+                            {
+                                foreach (var review in Model.CatalogItem.EditorialReviews)
+                                {
+                                    if (review.Source == "FullReview")
+                                    {
+                                @Html.Raw(review.Content)
+                                    }
+                                }
+                            }
+                        </div>
             <h2 data-index="1" class="head"><a>@("Additional Information".Localize())</a></h2>
             <div id="product_tabs_additional_contents_list" class="tabs-content" style="display: none;">
-                @{Html.RenderPartial("ItemProperties", Model.CatalogItem);}
-            </div>
+                            @{Html.RenderPartial("ItemProperties", Model.CatalogItem);}
+                        </div>
             <h2 data-index="2" class="head"><a>@("Reviews".Localize())</a></h2>
             <div class="tabs-content" style="display: none;">
-                <div id="product_tabs_reviews_contents_empty" class="std">
+                        <div id="product_tabs_reviews_contents_empty" class="std">
                     @("There are no reviews. Be first and".Localize()) <a href="#" class="add_reviews_link">@("Add Your Review".Localize())</a>
-                </div>
+                        </div>
                 <div id="product_tabs_reviews_contents_list" style="display: none;">
                     <header>
                         <p class="title">@("Reviewed by".Localize()) <span class="pr-review-count-number"></span>&nbsp;@("customers with average rating -".Localize()) <span class="pr-review-average"></span></p>
-                        <select id="sortList">
+                                            <select id="sortList">
                             <option value="date_new">@("Newest".Localize())</option>
                             <option value="date_old">@("Oldest".Localize())</option>
                             <option value="rating_high">@("Highest rating".Localize())</option>
                             <option value="rating_low">@("Lowest rating".Localize())</option>
                             <option value="helpful_high" selected="selected">@("Most helpful".Localize())</option>
                             <option value="helpful_low">@("Least helpful".Localize())</option>
-                        </select>
-                        <div class="content-wrapper pr-pagination-top">
-                            <div class="pr-page-count-wrapper">
-                                <p class="pr-page-count">
+                                            </select>
+                                <div class="content-wrapper pr-pagination-top">
+                                    <div class="pr-page-count-wrapper">
+                                        <p class="pr-page-count">
                                     @("Displaying reviews".Localize()) <strong></strong>
-                                </p>
-                            </div>
-                            <div class="pr-page-nav-wrapper">
-                                <p class="pr-page-nav">
+                                        </p>
+                                    </div>
+                                    <div class="pr-page-nav-wrapper">
+                                        <p class="pr-page-nav">
                                     <span class="pr-page-prev">« @("Previous".Localize())</span>
-                                    <span class="pr-divider">| </span>
+                                            <span class="pr-divider">| </span>
                                     <span class="pr-page-next">@("Next".Localize()) »</span>
-                                </p>
-                            </div>
-                        </div>
+                                        </p>
+                                    </div>
+                                </div>
                     </header>
-                    <div class="content-wrapper" id="reviewsTemplateContainer">
+                                <div class="content-wrapper" id="reviewsTemplateContainer">
+                                </div>
+                </div>
+                        </div>
                     </div>
+        <div class="product-recommend products-no-effects slider-products">
+            @{Html.RenderAction("Association", new { item = Model.CatalogItem, templateName = "RecommendedProducts2", groupName = "Accessories" });}
                 </div>
             </div>
         </div>
-        <div class="product-recommend products-no-effects slider-products">
-            @{Html.RenderAction("Association", new { item = Model.CatalogItem, templateName = "RecommendedProducts2", groupName = "Accessories" });}
-        </div>
-    </div>
-</div>
 @section Bottom{
 
-    @{Html.RenderAction("Association", new { item = Model.CatalogItem, templateName = "RelatedProducts", groupName = "Related Items" });}
+            @{Html.RenderAction("Association", new { item = Model.CatalogItem, templateName = "RelatedProducts", groupName = "Related Items" });}
 
 }

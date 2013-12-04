@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Configuration;
+using System.Deployment.Application;
 using System.Threading.Tasks;
+using System.Web;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Foundation.Data.Infrastructure;
@@ -51,7 +53,6 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 							GetConnectionStringBaseUrl(SecurityConfiguration.Instance.Connection.DataServiceBaseUriName);
 					}
 					Password = "store";
-
 				});
 #endif
 		}
@@ -215,13 +216,7 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 						logonEvent(this, null);
 					}
 					CurrentUserName = string.Format("{0}", UserName);
-					try
-					{
-						SaveValues();
-					}
-					catch
-					{
-					}
+					SaveValues();
 				}
 			}
 			catch (GetTokenException e)
@@ -252,13 +247,6 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 						globalConfigService.Update("UserName", _userName);
 						globalConfigService.Update("BaseUrl", _baseUrl);
 					}
-
-					// try getting settings from passed arguments
-					var args = AppDomain.CurrentDomain.SetupInformation.ActivationArguments.ActivationData;
-					if (args != null && args.Length > 0)
-					{
-						_baseUrl = args[0];
-					}
 				}
 			}
 			catch
@@ -273,11 +261,23 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 				string parameterUserName = null;
 				string parameterBaseUrl = null;
 
-				// Get the ActivationArguments from the SetupInformation property of the domain.
-				var activationData = AppDomain.CurrentDomain.SetupInformation.ActivationArguments.ActivationData;
-				if (activationData != null && activationData.Length > 0)
+				if (ApplicationDeployment.IsNetworkDeployed)
 				{
-					parameterBaseUrl = activationData[0];
+					var parameter = AppDomain.CurrentDomain.SetupInformation.ActivationArguments.ActivationData[0];
+					string queryString;
+					if (Uri.IsWellFormedUriString(parameter, UriKind.Absolute))
+					{
+						// activating from the web
+						queryString = new Uri(parameter).Query;
+					}
+					else
+					{
+						// in case activating from SDK Configuration Manager
+						queryString = parameter;
+					}
+
+					var nameValueTable = HttpUtility.ParseQueryString(queryString);
+					parameterBaseUrl = nameValueTable.Get("storeurl");
 				}
 
 				var globalConfigService = _container.Resolve<IGlobalConfigService>();

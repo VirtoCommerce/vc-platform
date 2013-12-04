@@ -58,6 +58,21 @@
 
             Assert.True(results.DocCount == 1, String.Format("Returns {0} instead of 1", results.DocCount));
 
+            criteria = new CatalogItemSearchCriteria
+            {
+                SearchPhrase = "sample product ",
+                IsFuzzySearch = true,
+                Catalog = "goods",
+                RecordsToRetrieve = 10,
+                StartingRecord = 0,
+                Pricelists = new string[] { }
+            };
+
+
+            results = provider.Search(scope, criteria);
+
+            Assert.True(results.DocCount == 1, String.Format("\"Sample Product\" search returns {0} instead of 1", results.DocCount));
+
             Directory.Delete(_LuceneStorageDir, true);
         }
 

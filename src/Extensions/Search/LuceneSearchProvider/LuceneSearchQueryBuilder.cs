@@ -78,11 +78,13 @@ namespace VirtoCommerce.Search.Providers.Lucene
                 {
                     if (c.IsFuzzySearch)
                     {
-                        var keywords = Regex.Split(c.SearchPhrase, @"\s+");
+
+                        var keywords = c.SearchPhrase.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                        //var keywords = Regex.Split(c.SearchPhrase, @"\s+");
                         var searchPhrase = string.Empty;
                         searchPhrase = keywords.Aggregate(
                             searchPhrase,
-                            (current, keyword) => current + String.Format("{0}~{1}", keyword, c.FuzzyMinSimilarity));
+                            (current, keyword) => current + String.Format("{0}~{1}", keyword.Replace("~", ""), c.FuzzyMinSimilarity));
 
                         var parser = new QueryParser(u.Version.LUCENE_30, "__content", analyzer)
                                          {
