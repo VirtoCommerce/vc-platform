@@ -225,6 +225,10 @@
     <Compile Include="Marketing\Migrations\Promotion\201304010533349_Initial.Designer.cs">
       <DependentUpon>201304010533349_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Marketing\Migrations\Promotion\201312041337025_AddedUsageProps.cs" />
+    <Compile Include="Marketing\Migrations\Promotion\201312041337025_AddedUsageProps.Designer.cs">
+      <DependentUpon>201312041337025_AddedUsageProps.cs</DependentUpon>
+    </Compile>
     <Compile Include="Marketing\Migrations\Promotion\Configuration.cs" />
     <Compile Include="Orders\Migrations\201305151927300_Initial.cs" />
     <Compile Include="Orders\Migrations\201305151927300_Initial.Designer.cs">
@@ -325,6 +329,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Marketing\Migrations\Promotion\201304010533349_Initial.resx">
       <DependentUpon>201304010533349_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Marketing\Migrations\Promotion\201312041337025_AddedUsageProps.resx">
+      <DependentUpon>201312041337025_AddedUsageProps.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Orders\Migrations\201305151927300_Initial.resx">
       <DependentUpon>201305151927300_Initial.cs</DependentUpon>
