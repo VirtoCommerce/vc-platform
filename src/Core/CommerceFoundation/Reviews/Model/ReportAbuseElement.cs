@@ -40,7 +40,7 @@ namespace VirtoCommerce.Foundation.Reviews.Model
             }
             set
             {
-                SetValue(ref _Email, () => this._Email, value);
+                SetValue(ref _Email, () => this.Email, value);
             }
         }
 
@@ -56,7 +56,7 @@ namespace VirtoCommerce.Foundation.Reviews.Model
             }
             set
             {
-                SetValue(ref _Reason, () => this._Reason, value);
+                SetValue(ref _Reason, () => this.Reason, value);
             }
         }
 	
