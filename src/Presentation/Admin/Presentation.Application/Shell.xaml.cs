@@ -12,7 +12,6 @@ using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Commands;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Common;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Dialogs;
-using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
 
 namespace VirtoCommerce.ManagementClient
 {
@@ -199,7 +198,7 @@ namespace VirtoCommerce.ManagementClient
 			var ctrl = aaa as CacheContentControl;
 			if (ctrl == null)
 			{
-			ctrl = UIHelper.FindVisualChild<CacheContentControl>(aaa as UIElement);
+				ctrl = UIHelper.FindVisualChild<CacheContentControl>(aaa as UIElement);
 			}
 			if (ctrl == null)
 			{
@@ -219,29 +218,27 @@ namespace VirtoCommerce.ManagementClient
 			}
 		}
 
-		//private IEnumerable<ActionBinding> GetActionBindings(ModifierKeys mods, Key key)
-		//{
-		//	var fromObject = NormalizeGesture(mods, key);
-		//	var registeredActions = _entriesAll.Where(x => x.Gestures.Any(y => y == fromObject));
-		//	return registeredActions;
-		//}
-
 		ActionBinding[] entries;
 		KeyGestureConverter gestureConverter;
-		NavigationManager _navigationManager;
+
 		private void InitKeyboardShortcuts()
 		{
 			gestureConverter = new KeyGestureConverter();
-			_navigationManager = ServiceLocator.Current.GetInstance<NavigationManager>();
 
-			var xdoc = XDocument.Load("KeyboardShortcuts.xml");
-			entries = (from item in xdoc.Descendants("binding")
-					   select new ActionBinding
-						   {
-							   Name = (GestureActionName)Enum.Parse(typeof(GestureActionName), (string)item.Attribute("action")),
-							   Gestures = item.Elements("gesture").Select(x => GetGesture(x.Value)).ToArray()
-						   }
-					  ).ToArray();
+			try
+			{
+				var xdoc = XDocument.Load("KeyboardShortcuts.xml");
+				entries = (from item in xdoc.Descendants("binding")
+						   select new ActionBinding
+							   {
+								   Name = (GestureActionName)Enum.Parse(typeof(GestureActionName), (string)item.Attribute("action")),
+								   Gestures = item.Elements("gesture").Select(x => GetGesture(x.Value)).ToArray()
+							   }
+						  ).ToArray();
+			}
+			catch
+			{
+			}
 		}
 
 		private KeyGesture GetGesture(string value)
@@ -269,7 +266,6 @@ namespace VirtoCommerce.ManagementClient
 		{
 			InitKeyboardShortcuts();
 			Core.Infrastructure.Common.InputBindings.Initialize(InputBindings, entries);
-
 		}
 	}
 }
