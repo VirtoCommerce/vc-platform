@@ -221,7 +221,17 @@ namespace VirtoCommerce.Search.Providers.Lucene
                         if (fi.Current != null)
                         {
                             var field = fi.Current;
-                            doc.Add(new DocumentField(field.Name, field.StringValue));
+
+                            // make sure document field doens't exist, if it does, simply add another value
+                            if (doc.ContainsKey(field.Name))
+                            {
+                                var existingField = doc[field.Name] as DocumentField;
+                                existingField.AddValue(field.StringValue);
+                            }
+                            else // add new
+                            {
+                                doc.Add(new DocumentField(field.Name, field.StringValue));
+                            }
                         }
                     }
                 }
