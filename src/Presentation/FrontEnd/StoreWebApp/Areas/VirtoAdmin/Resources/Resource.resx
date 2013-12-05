@@ -136,7 +136,7 @@
     <value>Database Administrator Password is required</value>
   </data>
   <data name="DbAdminUser" xml:space="preserve">
-    <value>Database administrator</value>
+    <value>Database Administrator</value>
   </data>
   <data name="DbAdminUserRequiredError" xml:space="preserve">
     <value>Database administrator account name is required.</value>
@@ -154,7 +154,7 @@
     <value>Password for the Database Username</value>
   </data>
   <data name="FinalClick" xml:space="preserve">
-    <value>Finish setup</value>
+    <value>Finish Setup</value>
   </data>
   <data name="InitialCatalog" xml:space="preserve">
     <value>Database Name</value>

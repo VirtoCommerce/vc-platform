@@ -1,4 +1,5 @@
 ﻿using Microsoft.Web.Infrastructure.DynamicModuleHelper;
+using VirtoCommerce.Foundation.AppConfig;
 using VirtoCommerce.Web.Client.Modules;
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(VirtoCommerce.Web.ModuleConfig), "Start")]
@@ -13,7 +14,7 @@ namespace VirtoCommerce.Web
         /// </summary>
         public static void Start()
         {
-            if (MvcApplication.IsSetupCompleted)
+            if (AppConfigConfiguration.Instance.Setup.IsCompleted)
             {
                 DynamicModuleUtility.RegisterModule(typeof(StoreHttpModule));
                 DynamicModuleUtility.RegisterModule(typeof(MarketingHttpModule));

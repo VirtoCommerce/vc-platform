@@ -1,4 +1,5 @@
 ﻿using System.Web.Mvc;
+using VirtoCommerce.Foundation.AppConfig;
 
 namespace VirtoCommerce.Web.Areas.VirtoAdmin
 {
@@ -14,7 +15,7 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin
 
         public override void RegisterArea(AreaRegistrationContext context)
         {
-            if (!MvcApplication.IsSetupCompleted)
+            if (!AppConfigConfiguration.Instance.Setup.IsCompleted)
             {
                 context.MapRoute(
                     "Default",

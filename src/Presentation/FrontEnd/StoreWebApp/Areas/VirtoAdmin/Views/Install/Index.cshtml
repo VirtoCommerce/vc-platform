@@ -65,14 +65,9 @@
                         }
                         
                         <fieldset class="data">
-                            <div>
-                                @Html.LabelFor(m=>m.DataSource)
-                                @Html.TextBoxFor(m=>m.DataSource)
-                                @Html.Label(Resource.DataSourceTip, new { @class = "hint"})
-                                @Html.ValidationMessageFor(m=>m.DataSource)
-                            </div>
                             @if (Model.DbAdminRequired)
                             {
+                                @Html.HiddenFor(m=>m.DbAdminRequired)
                                 <div>
                                     @Html.LabelFor(m=>m.DbAdminUser)
                                     @Html.TextBoxFor(m=>m.DbAdminUser)
@@ -86,6 +81,12 @@
                                     @Html.ValidationMessageFor(m=>m.DbAdminPassword)
                                 </div>
                             }
+                            <div>
+                                @Html.LabelFor(m=>m.DataSource)
+                                @Html.TextBoxFor(m=>m.DataSource)
+                                @Html.Label(Resource.DataSourceTip, new { @class = "hint"})
+                                @Html.ValidationMessageFor(m=>m.DataSource)
+                            </div>
                             <div>
                                 @Html.LabelFor(m=>m.InitialCatalog)
                                 @Html.TextBoxFor(m=>m.InitialCatalog)

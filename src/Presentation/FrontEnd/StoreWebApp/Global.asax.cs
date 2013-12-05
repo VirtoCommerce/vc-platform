@@ -11,6 +11,7 @@ using System.Web.Routing;
 using System.Web.Security;
 using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 using VirtoCommerce.Client;
+using VirtoCommerce.Foundation.AppConfig;
 using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Web.Client.Helpers;
 using VirtoCommerce.Web.Client.Modules;
@@ -29,14 +30,12 @@ namespace VirtoCommerce.Web
     /// </summary>
     public class MvcApplication : HttpApplication
     {
-        public const string SetupFile = @"App_Data\Virto\Configuration\Setup.txt";
-
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            if (IsSetupCompleted)
+            if (AppConfigConfiguration.Instance.Setup.IsCompleted)
             {
                 WebApiConfig.Register(GlobalConfiguration.Configuration);
                 FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
@@ -48,14 +47,6 @@ namespace VirtoCommerce.Web
 
                 ModelValidatorProviders.Providers.RemoveAt(0);
                 ModelValidatorProviders.Providers.Insert(0, new VirtoDataAnnotationsModelValidatorProvider());
-            }
-        }
-
-        public static bool IsSetupCompleted
-        {
-            get
-            {
-                return !File.Exists(Path.Combine(HttpRuntime.AppDomainAppPath, SetupFile));
             }
         }
 

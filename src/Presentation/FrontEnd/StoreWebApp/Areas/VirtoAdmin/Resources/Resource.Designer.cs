@@ -124,7 +124,7 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Database administrator.
+        ///   Looks up a localized string similar to Database Administrator.
         /// </summary>
         public static string DbAdminUser {
             get {
@@ -196,7 +196,7 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Finish setup.
+        ///   Looks up a localized string similar to Finish Setup.
         /// </summary>
         public static string FinalClick {
             get {
