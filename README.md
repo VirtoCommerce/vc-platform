@@ -6,11 +6,8 @@ only enterprise level e-commerce product fully available under Open Source licen
 with extensive use of MVC, IoC, EF, Azure and many other cutting edge technologies.
 
 Website: http://virtocommerce.com
-
 Documentation: http://docs.virtocommerce.com
-
 Online Demo: http://virtocommerce.com/sandbox
-
 CMS Demo: http://virtocommerce-cms.azurewebsites.net (for admin goto: http://virtocommerce-cms.azurewebsites.net/admin)
 
 
