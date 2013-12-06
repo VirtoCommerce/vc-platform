@@ -17,6 +17,11 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
 		public override void Publish(string dbconnection, string data, bool sample)
 		{
 			base.Publish(dbconnection, data, sample);
+			Publish(dbconnection, data, sample, null);
+		}
+
+		public void Publish(string dbconnection, string data, bool sample, string scope)
+		{
 			string connection = dbconnection;
 			SafeWriteDebug("ConnectionString: " + connection);
 
@@ -35,7 +40,7 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
 					initializer = new SqlAppConfigDatabaseInitializer();
 				}
 
-				initializer.Scope = data;
+				initializer.Scope = scope;
 				initializer.InitializeDatabase(db);
 			}
 		}
