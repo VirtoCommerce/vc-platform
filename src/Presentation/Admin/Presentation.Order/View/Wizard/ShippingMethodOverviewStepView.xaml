@@ -80,7 +80,7 @@
 
             <StackPanel Grid.Row="1">
                 <TextBlock Text="Base price:" />
-                <extToolkit:IntegerUpDown Value="{Binding InnerItem.BasePrice}" />
+				<extToolkit:DecimalUpDown Value="{Binding InnerItem.BasePrice}" Minimum="0" />
             </StackPanel>
         </Grid>
         
