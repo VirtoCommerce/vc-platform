@@ -137,15 +137,24 @@ namespace VirtoCommerce.Foundation.Search
 					var id = (T)Convert.ChangeType(doc[SearchCriteria.KeyField].Value.ToString(), typeof(T));
 					string outline;
 
-					var array = doc[SearchCriteria.OutlineField].Value as IEnumerable;		
+				    var array = doc[SearchCriteria.OutlineField].Values;		
 					if (array != null)
 					{
 						var outlines = new List<string>();
-						var valEnum = array.GetEnumerator();
-						while(valEnum.MoveNext())
-						{
-							outlines.Add(valEnum.Current.ToString());
-						}
+
+                        foreach (var val in array)
+                        {
+                            var enumerate = val as IEnumerable;
+                            if (val is string || enumerate == null)
+					        {
+                                outlines.Add(val.ToString());
+					        }
+					        else
+					        {
+					            outlines.AddRange(from object val1 in enumerate select val1.ToString());
+					        }
+					    }
+
 						outline = String.Join(";", outlines);
 					}
 					else
