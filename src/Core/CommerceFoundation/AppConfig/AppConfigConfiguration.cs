@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Configuration;
 using System.Threading;
+using System.Web.Configuration;
 
 namespace VirtoCommerce.Foundation.AppConfig
 {
 	public class AppConfigConfiguration : ConfigurationSection
 	{
 		private static Lazy<AppConfigConfiguration> _instance = new Lazy<AppConfigConfiguration>(CreateInstance, LazyThreadSafetyMode.ExecutionAndPublication);
+
+        public const string SectionName = "VirtoCommerce/AppConfig";
 
 		public static AppConfigConfiguration Instance
 		{
@@ -16,9 +19,10 @@ namespace VirtoCommerce.Foundation.AppConfig
 			}
 		}
 
-		private static AppConfigConfiguration CreateInstance()
+	    private static AppConfigConfiguration CreateInstance()
 		{
-			return (AppConfigConfiguration)ConfigurationManager.GetSection("VirtoCommerce/AppConfig");
+
+            return (AppConfigConfiguration)ConfigurationManager.GetSection(SectionName);
 		}
 
 		[ConfigurationProperty("Connection", IsRequired = true)]
@@ -38,6 +42,15 @@ namespace VirtoCommerce.Foundation.AppConfig
 				return (SchedulerConnection)this["Scheduler"];
 			}
 		}
+
+        [ConfigurationProperty("Setup", IsRequired = true)]
+        public SetupConfiguration Setup
+	    {
+	        get
+	        {
+                return (SetupConfiguration)this["Setup"];
+	        }
+	    }
 
 		/// <summary>
 		/// Config settings which define where caching is enabled and timeouts related to it.
@@ -304,4 +317,28 @@ namespace VirtoCommerce.Foundation.AppConfig
 		}
 	}
 
+    public class SetupConfiguration : ConfigurationElement
+    {
+        [ConfigurationProperty("completed", IsRequired = true, DefaultValue = true)]
+        public bool IsCompleted
+        {
+            get
+            {
+                return (bool)this["completed"];
+            }
+            set
+            {
+                this["completed"] = value.ToString();
+                var configFile = WebConfigurationManager.OpenWebConfiguration("~");
+                var section = (AppConfigConfiguration)configFile.GetSection(AppConfigConfiguration.SectionName);
+                section.Setup["completed"] = value;
+                configFile.Save(ConfigurationSaveMode.Modified);
+            }
+        }
+
+        public override bool IsReadOnly()
+        {
+            return false;
+        }
+    }
 }

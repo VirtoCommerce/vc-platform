@@ -1,10 +1,8 @@
-﻿using Microsoft.WindowsAzure;
+﻿using System.Web.Configuration;
+using Microsoft.WindowsAzure;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using VirtoCommerce.Foundation.AppConfig;
 
 namespace VirtoCommerce.Foundation.Data.Infrastructure
 {
@@ -13,6 +11,17 @@ namespace VirtoCommerce.Foundation.Data.Infrastructure
     public class ConnectionHelper
     {
         private static ConcurrentDictionary<string,string> _dictionary = new ConcurrentDictionary<string, string>();
+        public static string SqlConnectionString
+        {
+            get
+            {
+                return GetConnectionString(AppConfigConfiguration.Instance.Connection.SqlConnectionStringName);
+            }
+            set
+            {
+                SetConnectionString(AppConfigConfiguration.Instance.Connection.SqlConnectionStringName, value);
+            }
+        }
 
         /// <summary>
         /// Gets the connection string.
@@ -50,6 +59,14 @@ namespace VirtoCommerce.Foundation.Data.Infrastructure
             }
 
             return settingValue;
+        }
+
+        public static void SetConnectionString(string name, string connectionString)
+        {
+            var configFile = WebConfigurationManager.OpenWebConfiguration("~");
+            var section = (ConnectionStringsSection)configFile.GetSection("connectionStrings");
+            section.ConnectionStrings[name].ConnectionString = connectionString;
+            configFile.Save(ConfigurationSaveMode.Modified);
         }
     }
 }

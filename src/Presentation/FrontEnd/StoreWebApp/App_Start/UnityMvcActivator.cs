@@ -3,7 +3,7 @@ using System.Web.Http;
 using System.Web.Mvc;
 using Microsoft.Practices.ServiceLocation;
 using Microsoft.Practices.Unity.Mvc;
-using VirtoCommerce.Foundation.Data.Common;
+using VirtoCommerce.Foundation.AppConfig;
 using VirtoCommerce.Web.Client;
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(VirtoCommerce.Web.UnityWebActivator), "Start")]
@@ -34,7 +34,7 @@ namespace VirtoCommerce.Web
 
 			GlobalConfiguration.Configuration.DependencyResolver = new Unity.WebApi.UnityDependencyResolver(container);
 
-			if (!AzureCommonHelper.IsAzureEnvironment())
+			if (!AzureCommonHelper.IsAzureEnvironment() && AppConfigConfiguration.Instance.Setup.IsCompleted)
 			{
 				SchedulerHost.CreateScheduler(container);
 			}
