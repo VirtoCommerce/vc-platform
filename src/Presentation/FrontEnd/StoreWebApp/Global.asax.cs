@@ -1,4 +1,5 @@
-﻿using Microsoft.Practices.ServiceLocation;
+﻿using System.IO;
+using Microsoft.Practices.ServiceLocation;
 using System;
 using System.Linq;
 using System.Web;
@@ -8,8 +9,12 @@ using System.Web.Optimization;
 using System.Web.Profile;
 using System.Web.Routing;
 using System.Web.Security;
+using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 using VirtoCommerce.Client;
+using VirtoCommerce.Foundation.AppConfig;
+using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Web.Client.Helpers;
+using VirtoCommerce.Web.Client.Modules;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Models.Binders;
 using VirtoCommerce.Web.Virto.Helpers;
@@ -25,23 +30,25 @@ namespace VirtoCommerce.Web
     /// </summary>
     public class MvcApplication : HttpApplication
     {
-
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
-
-            WebApiConfig.Register(GlobalConfiguration.Configuration);
-            FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-            RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-            AuthConfig.RegisterAuth();
-            ModelBinders.Binders[typeof(SearchParameters)] = new SearchParametersBinder();
 
-            ModelValidatorProviders.Providers.RemoveAt(0);
-            ModelValidatorProviders.Providers.Insert(0, new VirtoDataAnnotationsModelValidatorProvider());
+            if (AppConfigConfiguration.Instance.Setup.IsCompleted)
+            {
+                WebApiConfig.Register(GlobalConfiguration.Configuration);
+                FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
+                RouteConfig.RegisterRoutes(RouteTable.Routes);
+               
+                AuthConfig.RegisterAuth();
+
+                ModelBinders.Binders[typeof (SearchParameters)] = new SearchParametersBinder();
+
+                ModelValidatorProviders.Providers.RemoveAt(0);
+                ModelValidatorProviders.Providers.Insert(0, new VirtoDataAnnotationsModelValidatorProvider());
+            }
         }
-
-
 
         /// <summary>
         /// Profile migrate from anonymous.
@@ -169,6 +176,5 @@ namespace VirtoCommerce.Web
 
             return varyString;
         }
-
     }
 }

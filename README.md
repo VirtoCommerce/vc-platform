@@ -12,3 +12,10 @@ Documentation: http://docs.virtocommerce.com
 Online Demo: http://virtocommerce.com/sandbox
 
 CMS Demo: http://virtocommerce-cms.azurewebsites.net (for admin goto: http://virtocommerce-cms.azurewebsites.net/admin)
+
+
+Contributing
+-----------
+We welcome & recognize contributors to Virto Commerce. If you feel that you have a desire and knowledge to extend VC, 
+please let us know. There are many benefits available for our contributers, from special licensing to project
+involvement. Contact us at support@virtocommerce.com for more information.

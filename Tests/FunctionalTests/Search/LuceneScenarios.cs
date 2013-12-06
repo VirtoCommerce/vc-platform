@@ -137,16 +137,19 @@
             Assert.True(redCount == 2, String.Format("Returns {0} facets of red instead of 2", redCount));
 
             var priceCount = GetFacetCount(results, "Price", "0_to_100");
-            Assert.True(priceCount == 2, String.Format("Returns {0} facets of 0_to_100 prices instead of 2", redCount));
+            Assert.True(priceCount == 2, String.Format("Returns {0} facets of 0_to_100 prices instead of 2", priceCount));
 
             var priceCount2 = GetFacetCount(results, "Price", "100_to_700");
-            Assert.True(priceCount2 == 2, String.Format("Returns {0} facets of 100_to_700 prices instead of 2", redCount));
+            Assert.True(priceCount2 == 2, String.Format("Returns {0} facets of 100_to_700 prices instead of 2", priceCount2));
 
             var sizeCount = GetFacetCount(results, "size", "0_to_5");
-            Assert.True(sizeCount == 2, String.Format("Returns {0} facets of 0_to_5 size instead of 2", redCount));
+            Assert.True(sizeCount == 2, String.Format("Returns {0} facets of 0_to_5 size instead of 2", sizeCount));
 
             var sizeCount2 = GetFacetCount(results, "size", "5_to_10");
-            Assert.True(sizeCount2 == 1, String.Format("Returns {0} facets of 5_to_10 size instead of 1", redCount)); // only 1 result because upper bound is not included
+            Assert.True(sizeCount2 == 1, String.Format("Returns {0} facets of 5_to_10 size instead of 1", sizeCount2)); // only 1 result because upper bound is not included
+
+            var outlineCount = results.Documents[0].Documents[0]["__outline"].Values.Count();
+            Assert.True(outlineCount == 2, String.Format("Returns {0} outlines instead of 2", outlineCount));
 
             Directory.Delete(_LuceneStorageDir, true);
         }

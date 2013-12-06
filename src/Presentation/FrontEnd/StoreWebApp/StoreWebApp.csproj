@@ -155,6 +155,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\packages\ValueInjecter.2.3.3\lib\net35\Omu.ValueInjecter.dll</HintPath>
     </Reference>
+    <Reference Include="PdfRpt">
+      <HintPath>..\..\..\..\Shared\PdfRpt.dll</HintPath>
+    </Reference>
     <Reference Include="PlainElastic.Net, Version=1.0.28.0, Culture=neutral, PublicKeyToken=0930e76dfc03b7ac, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Shared\PlainElastic.Net.dll</HintPath>
@@ -178,6 +181,8 @@
     <Reference Include="System.IdentityModel">
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Management" />
+    <Reference Include="System.Management.Automation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Runtime.Serialization">
       <Private>True</Private>
@@ -316,10 +321,19 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\AuthConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\ModuleConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Areas\VirtoAdmin\Controllers\InstallController.cs" />
+    <Compile Include="Areas\VirtoAdmin\Models\InstallModel.cs" />
+    <Compile Include="Areas\VirtoAdmin\Resources\Resource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\VirtoAdmin\VirtoAdminAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\Api\CartController.cs" />
     <Compile Include="Controllers\Api\ReviewController.cs" />
@@ -371,6 +385,9 @@
     <Compile Include="WebRole.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Areas\VirtoAdmin\Content\Images\InProgress.GIF" />
+    <Content Include="Areas\VirtoAdmin\Content\Images\VirtoCommerce.png" />
+    <Content Include="Areas\VirtoAdmin\Content\site.css" />
     <Content Include="Content\themes\base\images\animated-overlay.gif" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -585,9 +602,12 @@
     <Content Include="App_Data\Virto\Configuration\services.local.config">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Areas\VirtoAdmin\Views\Web.config" />
+    <Content Include="Areas\VirtoAdmin\Views\Install\Index.cshtml" />
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Properties\PublishProfiles\WebPI.pubxml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
@@ -757,6 +777,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Virto\Logs\" />
+    <Folder Include="Areas\VirtoAdmin\Views\Shared\" />
     <Folder Include="Views\Catalog\DisplayTemplates\" />
   </ItemGroup>
   <ItemGroup>
@@ -815,6 +836,10 @@
       <Project>{4882f43b-ae8d-489b-911b-7f9a1d526715}</Project>
       <Name>LuceneSearchProvider</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\Extensions\Setup\VirtoCommerce.PowerShell\VirtoCommerce.PowerShell.csproj">
+      <Project>{98748b0a-4c04-4e70-a4ef-7cbae5959d18}</Project>
+      <Name>VirtoCommerce.PowerShell</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Extensions\Shipping\SimpleShippingGateway\SimpleShippingGateway.csproj">
       <Project>{2ad827aa-165d-4c13-8aea-108f9fa6e96c}</Project>
       <Name>SimpleShippingGateway</Name>
@@ -827,6 +852,12 @@
       <Project>{196ff814-152f-416d-82ab-9b1df3323839}</Project>
       <Name>OrderWorkflow</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Areas\VirtoAdmin\Resources\Resource.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -842,7 +873,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>58731</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
