@@ -27,7 +27,7 @@ namespace VirtoCommerce.Foundation.Importing.Model
 			var categoryPriority = new ImportProperty { Name = "Priority", DisplayName = "Priority", IsRequiredProperty = false, IsEntityProperty = true, EntityImporterId = Name, DefaultValue = "1" };
 			var categoryParentId = new ImportProperty { Name = "ParentCategoryId", DisplayName = "Parent category code", IsRequiredProperty = true, IsEntityProperty = true, EntityImporterId = Name };
 			var categoryName = new ImportProperty { Name = "Name", DisplayName = "Category name", IsRequiredProperty = true, IsEntityProperty = true, EntityImporterId = Name };
-			var categoryStartDate = new ImportProperty { Name = "StartDate", DisplayName = "Start date", IsRequiredProperty = false, IsEntityProperty = true, EntityImporterId = Name, DefaultValue = DateTime.Today.ToShortDateString() };
+			var categoryStartDate = new ImportProperty { Name = "StartDate", DisplayName = "Start date", IsRequiredProperty = true, IsEntityProperty = true, EntityImporterId = Name, DefaultValue = DateTime.Today.ToShortDateString() };
 			var categoryEndDate = new ImportProperty { Name = "EndDate", DisplayName = "End date", IsRequiredProperty = false, IsEntityProperty = true, EntityImporterId = Name };
 
 			AddSystemProperties(
