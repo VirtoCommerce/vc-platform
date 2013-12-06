@@ -1,5 +1,4 @@
-﻿@using VirtoCommerce.Web
-@using VirtoCommerce.Web.Areas.VirtoAdmin.Models
+﻿@using VirtoCommerce.Web.Areas.VirtoAdmin.Models
 @using Resource = VirtoCommerce.Web.Areas.VirtoAdmin.Resources.Resource;
 @model InstallModel
 @{
@@ -12,7 +11,7 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>@Resource.InstallPageTitle</title> 
-    @Styles.Render(BundleConfig.VirtoAdminStyles)
+    <link href="~/Areas/VirtoAdmin/Content/site.css" rel="stylesheet" type="text/css" media="all" />
     @Scripts.Render("~/bundles/jquery")
     <script type="text/javascript">
         (function () {

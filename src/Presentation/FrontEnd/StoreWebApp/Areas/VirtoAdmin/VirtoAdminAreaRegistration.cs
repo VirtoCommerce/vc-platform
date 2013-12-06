@@ -22,8 +22,6 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin
                     "{controller}/{action}/{id}",
                     new {action = "Index", controller = "Install", id = UrlParameter.Optional}
                     );
-
-                
             }
         }
     }
