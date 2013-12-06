@@ -2,12 +2,9 @@
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Migrations;
 using System.Linq;
-using DbMigrator = VirtoCommerce.Foundation.Data.Infrastructure.DbMigrator;
 
 namespace VirtoCommerce.PowerShell.DatabaseSetup
 {
-    using System.Data.Common;
-    using System.Data.EntityClient;
     using VirtoCommerce.Foundation.Data.Infrastructure;
 
     /// <summary>

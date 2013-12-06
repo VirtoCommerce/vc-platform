@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Management.Automation;
-using System.Text;
-using System.Threading.Tasks;
 using VirtoCommerce.PowerShell.Stores;
 using VirtoCommerce.Foundation.Data.Stores;
 using VirtoCommerce.Foundation.Data.Stores.Migrations;

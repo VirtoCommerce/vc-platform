@@ -24,6 +24,10 @@ namespace WebPerfTestProject
         public CatalogBrowseCoded()
         {
             this.PreAuthenticate = true;
+        }
+
+        public override IEnumerator<WebTestRequest> GetRequestEnumerator()
+        {
             var url = this.Context["Website"];
             Url = url != null ? url.ToString() : Url;
 
@@ -31,10 +35,7 @@ namespace WebPerfTestProject
             {
                 throw new ArgumentNullException("Make sure to set Url context variable");
             }
-        }
 
-        public override IEnumerator<WebTestRequest> GetRequestEnumerator()
-        {
             // Initialize validation rules that apply to all requests in the WebTest
             if ((this.Context.ValidationLevel >= Microsoft.VisualStudio.TestTools.WebTesting.ValidationLevel.Low))
             {

@@ -118,7 +118,7 @@ namespace VirtoCommerce.Web.Controllers
             foreach (var filter in filters)
             {
                 // Check if we already filtering
-                if (parameters.Facets.Keys.Any(k=> k.Equals(filter.Key, StringComparison.OrdinalIgnoreCase)))
+                if (parameters.Facets.Keys.Any(k => filter.Key.Equals(k, StringComparison.OrdinalIgnoreCase)))
                     continue;
 
                 criteria.Add(filter);

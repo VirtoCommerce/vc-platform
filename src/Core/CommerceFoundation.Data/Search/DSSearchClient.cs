@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using VirtoCommerce.Foundation.Search.Repositories;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Foundation.Search.Factories;

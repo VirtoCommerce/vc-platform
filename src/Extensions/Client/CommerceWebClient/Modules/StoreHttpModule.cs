@@ -9,7 +9,6 @@ using System.Configuration;
 using VirtoCommerce.Client;
 using VirtoCommerce.Web.Client.Helpers;
 
-
 namespace VirtoCommerce.Web.Client.Modules
 {
     /// <summary>
@@ -40,12 +39,12 @@ namespace VirtoCommerce.Web.Client.Modules
         /// Initializes a module and prepares it to handle requests.
         /// </summary>
         /// <param name="context">An <see cref="T:System.Web.HttpApplication" /> that provides access to the methods, properties, and events common to all application objects within an ASP.NET application</param>
-		public override void Init(HttpApplication context)
-		{
+        public override void Init(HttpApplication context)
+        {
             context.BeginRequest += OnBeginRequest;
-			context.PostAcquireRequestState += OnPostAcquireRequestState;
-			context.AuthenticateRequest += OnAuthenticateRequest;
-		}
+            context.PostAcquireRequestState += OnPostAcquireRequestState;
+            context.AuthenticateRequest += OnAuthenticateRequest;
+        }
 
         /// <summary>
         /// Called when [authenticate request].
@@ -169,7 +168,6 @@ namespace VirtoCommerce.Web.Client.Modules
 
                 session.CustomerId = id;
             }
-
         }
 
         /// <summary>

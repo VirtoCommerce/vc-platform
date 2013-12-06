@@ -7,6 +7,8 @@ namespace VirtoCommerce.Web
     /// </summary>
 	public class BundleConfig
 	{
+        public const string VirtoAdminStyles = "~/Content/VirtoAdmin";
+
 		// For more information on Bundling, visit http://go.microsoft.com/fwlink/?LinkId=254725
         /// <summary>
         /// Registers the bundles.
@@ -76,6 +78,10 @@ namespace VirtoCommerce.Web
 						"~/Content/themes/base/jquery.ui.tooltip.css",
 						"~/Content/themes/base/jquery.ui.spinner.css",
 						"~/Content/themes/base/jquery.ui.menu.css"));
+
+            bundles.Add(new StyleBundle(VirtoAdminStyles).Include(
+                "~/Areas/VirtoAdmin/Content/site.css"
+                ));
 
             bundles.Add(new StyleBundle("~/Content/themes/responsive/css").Include(
                 "~/Content/themes/responsive/reset.css",
