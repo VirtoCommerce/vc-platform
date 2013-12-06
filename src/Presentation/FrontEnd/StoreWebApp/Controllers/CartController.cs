@@ -217,16 +217,17 @@ namespace VirtoCommerce.Web.Controllers
             // Display the confirmation message
             var results = new CartRemoveModel
                 {
-                    Message = string.Format("{0} have been removed from your {1}.".Localize(), clear ? "Items ": Server.HtmlEncode(name), cartName),
                     CartSubTotal = StoreHelper.FormatCurrency(helper.Cart.Subtotal, helper.Cart.BillingCurrency),
                     CartTotal = StoreHelper.FormatCurrency(helper.Cart.Total, helper.Cart.BillingCurrency),
                     CartCount = helper.LineItems.Count(),
                     LineItemsView = !string.IsNullOrEmpty(sourceView) ? RenderRazorViewToString(sourceView, cartName == CartHelper.CompareListName ?
                     (object)helper.CreateCompareModel() : helper.CreateCartModel(true)) : "",
-                    DeleteSource = sourceView,
+                    Source = sourceView,
                     DeleteId = lineItemId,
                     CartName = cartName
                 };
+
+            results.Messages.Add(new MessageModel(string.Format("{0} have been removed from your {1}.".Localize(), clear ? "Items " : Server.HtmlEncode(name), cartName)));
 
             return Json(results);
         }
@@ -284,13 +285,14 @@ namespace VirtoCommerce.Web.Controllers
 
             var results = new CartJsonModel
             {
-                Message = string.Format("{0} items added to your {1}".Localize(), addedLineItems.Sum(li =>li.Quantity), name),
                 CartSubTotal = StoreHelper.FormatCurrency(helper.Cart.Subtotal, helper.Cart.BillingCurrency),
                 CartTotal = StoreHelper.FormatCurrency(helper.Cart.Total, helper.Cart.BillingCurrency),
                 CartCount = helper.LineItems.Count(),
                 LineItemsView = null,
                 CartName = name
             };
+
+            results.Messages.Add(new MessageModel(string.Format("{0} items added to your {1}".Localize(), addedLineItems.Sum(li =>li.Quantity), name)));
 
             return Json(results);
         }
@@ -335,20 +337,33 @@ namespace VirtoCommerce.Web.Controllers
             _catalogClient.CustomerSession.CouponCode = couponCode;
             var helper = GetCartHelper(CartHelper.CartName);
             var warnings = SaveChanges(helper);
-            var message = warnings != null && warnings.ContainsKey(WorkflowMessageCodes.COUPON_NOT_APPLIED)
-                              ? warnings[WorkflowMessageCodes.COUPON_NOT_APPLIED]
-                              : null;
 
             // Display the confirmation message
             var results = new CartJsonModel
             {
-                Message = message,
                 CartSubTotal = StoreHelper.FormatCurrency(helper.Cart.Subtotal, helper.Cart.BillingCurrency),
                 CartTotal = StoreHelper.FormatCurrency(helper.Cart.Total, helper.Cart.BillingCurrency),
                 CartCount = helper.LineItems.Count(),
                 LineItemsView = renderItems ? RenderRazorViewToString("LineItems", helper.CreateCartModel(true)) : null,
-                CartName = CartHelper.CartName
+                CartName = CartHelper.CartName,
+                Source = "LineItems"
             };
+
+            if (warnings != null)
+            {
+                foreach (var warning in warnings.Values)
+                {
+                    results.Messages.Add(new MessageModel(warning));
+                }
+            }
+
+            if (warnings == null || !warnings.ContainsKey(WorkflowMessageCodes.COUPON_NOT_APPLIED))
+            {
+                results.Messages.Add(string.IsNullOrEmpty(couponCode)
+                    ? new MessageModel("Coupon has been cleared".Localize())
+                    : new MessageModel("Coupon has been applied".Localize()));
+            }
+
 
             return Json(results);
         }

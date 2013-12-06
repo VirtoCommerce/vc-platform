@@ -484,7 +484,7 @@ namespace VirtoCommerce.Web.Controllers
         {
             var contact = _userClient.GetCurrentCustomer();
             var model = UserHelper.GetCustomerModel(contact);
-            ViewBag.Messages = TempData["success_messages"];
+            ViewBag.Messages = new MessagesModel { new MessageModel((string)TempData["success_messages"]) };
             return View(model);
         }
 

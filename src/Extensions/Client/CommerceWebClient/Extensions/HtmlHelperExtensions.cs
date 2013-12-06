@@ -173,21 +173,15 @@ namespace VirtoCommerce.Web.Client.Extensions
             {
                 return MvcHtmlString.Empty;
             }
-            var sb = new StringBuilder();
+            var sb = new StringBuilder(html.Encode(labelText));
 
             if (metadata.IsRequired && (metadata.IsNullableValueType || !metadata.ModelType.IsValueType))
             {
-                sb.Append("<em>*</em>");
+                sb.Append("<sup class='required'>*</sup>");
             }
-
-            sb.Append(html.Encode(labelText));
 
             var tag = new TagBuilder("label");
 
-            if (metadata.IsRequired)
-            {
-                tag.AddCssClass("required");
-            }
 
             tag.MergeAttributes(htmlAttributes);
             tag.Attributes.Add("for", html.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldId(htmlFieldName));

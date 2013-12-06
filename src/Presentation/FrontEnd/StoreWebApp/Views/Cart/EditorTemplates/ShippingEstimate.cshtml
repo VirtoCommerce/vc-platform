@@ -14,44 +14,34 @@
     var v_regions = @Html.JsonSerialize(Model.ScriptCountryRegions)
 </script>
 
-<div class="shipping">
-    <h2>@("Estimate Shipping and Tax".LocalizeHtml())</h2>
-    <div class="shipping-form">
-        @using (Html.BeginForm())
-        {
-            <p>
-                @("Enter your destination to get a shipping estimate.".LocalizeHtml())
-            </p>
-            <ul class="form-list">
-	            <li>
-		            @Html.LabelForEx(m=>m.Address.CountryCode)
-		            <div class="input-box">
-			            @Html.DropDownListFor(m => m.Address.CountryCode, new SelectList(Model.Countries, "CountryId", "DisplayName"))
-			            @Html.ValidationMessageFor(m => m.Address.CountryCode)
-		            </div>
-	            </li>
-                <li>
-                    @Html.LabelForEx(m=>m.Address.StateProvince)
-                    <div class="input-box">
-                        <select id="region_id" name="region_id" title="@("State/Province".LocalizeHtml())" style="display: none;">
-                            <option value="">@("Please select region, state or province".LocalizeHtml())</option>
-                        </select>
-                        @Html.DropDownList("StateProvinceId", new SelectList(new string[] { "select state/province".Localize() }))
-                        @Html.TextBoxFor(m => m.Address.StateProvince, new { @class = "input-text", style = "display:none" })<br />
-                    </div>
-                </li>
-                <li>
-                    @Html.LabelForEx(m=>m.Address.PostalCode)
-                    <div class="input-box">
-                        @Html.TextBoxFor(m => m.Address.PostalCode, new { @class = "input-text" })
-                    </div>
-                </li>
-            </ul>
-            <div class="buttons-set">
-                <button type="button" title="@("Get a Quote".LocalizeHtml())" class="button" onclick="VirtoCart.submitEstimateShipping($(this).closest('form'));">
-                    <span><span>@("Get a Quote".LocalizeHtml())</span></span></button>
-            </div>
+<span class="title">@("Estimate Shipping and Tax".Localize())</span>
+<p>@("Enter your destination to get a shipping estimate.".Localize())</p>
+@using (Html.BeginForm())
+{
+    <fieldset>
+        <div class="control-group">
+            @Html.LabelForEx(m => m.Address.CountryCode)
+            @Html.DropDownListFor(m => m.Address.CountryCode, new SelectList(Model.Countries, "CountryId", "DisplayName"))
+            @Html.ValidationMessageFor(m => m.Address.CountryCode)
+        </div>
+        <div class="control-group">
+            @Html.LabelForEx(m => m.Address.StateProvince)
+            <select id="region_id" name="region_id" title="@("State/Province".LocalizeHtml())" style="display: none;">
+                <option value="">@("Please select region, state or province".LocalizeHtml())</option>
+            </select>
+            @Html.DropDownList("StateProvinceId", new SelectList(new string[] { "select state/province".Localize() }))
+            @Html.TextBoxFor(m => m.Address.StateProvince, new { @class = "input-text", style = "display:none" })
+        </div>
+        <div class="control-group">
+            @Html.LabelForEx(m => m.Address.PostalCode)
 
-        }
-    </div>
-</div>
+            @Html.TextBoxFor(m => m.Address.PostalCode)
+
+        </div>
+        <div class="button-group">
+            <button type="button" title="@("Get a Quote".Localize())" onclick="VirtoCart.submitEstimateShipping($(this).closest('form'));">
+                <span>@("Get a Quote".Localize())</span>
+            </button>
+        </div>
+    </fieldset>
+}

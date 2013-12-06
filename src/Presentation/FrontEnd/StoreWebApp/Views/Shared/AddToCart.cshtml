@@ -4,7 +4,7 @@
 
 @if(Model !=null)
 {
-    var hasVariations = Model != null && Model.CatalogItem != null && CatalogHelper.CatalogClient.GetItemRelations(Model.CatalogItem.ItemId).Any();
+    var hasVariations = Model != null && Model.CatalogItem != null && Model.CatalogItem.Item is Product && CatalogHelper.CatalogClient.GetItemRelations(Model.CatalogItem.ItemId).Any();
     var canBeAdded = (Model.Availability == null || Model.Availability.IsAvailable) && Model.Price != null && (Model.Price.SalePrice.HasValue || Model.Price.ListPrice.HasValue);
 
     if (hasVariations)

@@ -5,11 +5,6 @@
 	/// </summary>
     public class CartRemoveModel : CartJsonModel
     {
-		/// <summary>
-		/// Gets or sets the delete source.
-		/// </summary>
-		/// <value>The delete source.</value>
-		public string DeleteSource { get; set; }
         /// <summary>
         /// Deleted lineItem id
         /// </summary>
@@ -21,11 +16,20 @@
 	/// </summary>
 	public class CartJsonModel
 	{
+	    public CartJsonModel()
+	    {
+	        Messages = new MessagesModel();
+	    }
+        /// <summary>
+        /// Gets or sets the source.
+        /// </summary>
+        /// <value>The delete source.</value>
+        public string Source { get; set; }
 		/// <summary>
 		/// Gets or sets the message.
 		/// </summary>
 		/// <value>The message.</value>
-		public string Message { get; set; }
+		public MessagesModel Messages { get; set; }
 		/// <summary>
 		/// Gets or sets the cart sub total.
 		/// </summary>

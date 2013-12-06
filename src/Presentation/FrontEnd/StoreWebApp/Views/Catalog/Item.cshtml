@@ -2,6 +2,7 @@
 @model CatalogItemWithPriceModel
 @{
     ViewBag.Title = Html.Title(Model.DisplayName);
+    ViewBag.PageTitle = Model.CatalogItem.CategoryName;
 }
 
 <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-tmpl-min.js")"></script>
@@ -323,15 +324,12 @@
 
 @section PageTitle
 {
-    <div class="title clearfix">
-        <p>@Model.CatalogItem.CategoryName</p>
         @*        <div class="page-item-nav">
             <ul>
                 <li class="prev"><a href=""><span>Previous</span></a></li>
                 <li class="next"><a href=""><span>Next</span></a></li>
             </ul>
         </div>*@
-            </div>
 }
 
 <div class="rubber">

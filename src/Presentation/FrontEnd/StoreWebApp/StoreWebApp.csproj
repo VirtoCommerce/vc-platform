@@ -350,6 +350,7 @@
     <Compile Include="Models\CustomerModels.cs" />
     <Compile Include="Models\LineItemModel.cs" />
     <Compile Include="Models\LineItemUpdateModel.cs" />
+    <Compile Include="Models\MessageModel.cs" />
     <Compile Include="Models\OrderReturns.cs" />
     <Compile Include="Models\PriceModel.cs" />
     <Compile Include="Models\ReviewModel.cs" />
@@ -583,6 +584,7 @@
     <Content Include="Content\themes\responsive\images\goods\thumbs\2.jpg" />
     <Content Include="Content\themes\responsive\images\goods\thumbs\3.jpg" />
     <Content Include="Content\themes\responsive\images\icons\arrows\arrow_about.png" />
+    <Content Include="Content\themes\responsive\images\icons\arrows\arrow_button.png" />
     <Content Include="Content\themes\responsive\images\icons\arrows\arrow_footer.png" />
     <Content Include="Content\themes\responsive\images\icons\arrows\arrow_switch.png" />
     <Content Include="Content\themes\responsive\images\icons\arrows\arrow_top.png" />

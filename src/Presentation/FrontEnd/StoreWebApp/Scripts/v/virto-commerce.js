@@ -115,9 +115,8 @@ VirtoCommerce.prototype = {
 
 				validator.showErrors(errors); // show the errors using the validator object
 			}
-			else
-			{
-				$.showPopupMessage(data.Message);
+			else if (context.Message != undefined) {
+			        $.showPopupMessage(data.Message);
 			}
 		}
 		catch (ex)
@@ -151,6 +150,18 @@ VirtoCommerce.prototype = {
 		{
 			return baseHref + url.substr(1);
 		}
+	},
+	processMessages: function(context) {
+	    //Show success message
+	    if (context !=null && context.Messages != undefined && context.Messages.length > 0)
+	    {
+	        var joiner = [];
+	        for (var x = 0; x < context.Messages.length; x++)
+	        {
+	            joiner.push(context.Messages[x].Text);
+	        }
+	        $.showPopupMessage(joiner.join("<br/>"));
+	    }
 	}
 };
 var VirtoCommerce = new VirtoCommerce();
@@ -170,7 +181,7 @@ VirtoCart.prototype = {
 
 	onUpdate: function (context)
 	{
-		if (context.CartCount == 0 && context.DeleteSource == "LineItems")
+		if (context.CartCount == 0 && context.Source == "LineItems")
 		{
 			location.reload();
 			return;
@@ -179,7 +190,7 @@ VirtoCart.prototype = {
 		// Update the page elements
 		if (context.LineItemsView != null && context.LineItemsView.length > 0)
 		{
-		    if (context.DeleteSource == "MiniCart") {
+		    if (context.Source == "MiniCart") {
 		        if ($(".cart .popup").length > 0) {
 		            $(".cart .popup").html(context.LineItemsView);
 		        }
@@ -187,14 +198,19 @@ VirtoCart.prototype = {
 		        $('#cart-subtotal').html(context.CartSubTotal);
 		        $('#cart-total').html(context.CartTotal);
 		    }
-		    else if (context.DeleteSource == "MiniCompareList") {
+		    else if (context.Source == "MiniCompareList") {
 		        $('.compare .popup').html(context.LineItemsView);
+		    }
+		    else if (context.Source == "LineItems") {
+		        $('#shopping-cart-table tbody').html(context.LineItemsView);
+		        $('cart-subtotal').html(context.CartSubTotal);
+		        $('#cart-total').html(context.CartTotal);
 		    }
 		} else {
 		    $('#row-' + context.DeleteId).fadeOut('slow');
 		}	
 		VirtoCommerce.updateQuickLinks();
-		$.showPopupMessage(context.Message);
+		VirtoCommerce.processMessages(context);
 	},
 
 	add: function (name, title, itemId, parentItemId, quantity, relatedItems)
@@ -246,7 +262,7 @@ VirtoCart.prototype = {
 		            VirtoCommerce.updateQuickLinks();
 		        }
 		        //Show success message
-		        $.showPopupMessage(context.Message);
+		        VirtoCommerce.processMessages(context);
 
 		    }
 		});
@@ -359,23 +375,13 @@ VirtoCart.prototype = {
 			dataType: 'JSON',
 			success: function (context)
 			{
-				couponUpdated(context, onSuccess);
+			    onSuccess(context);
 			},
 			error: function (jqXhr)
 			{
 				VirtoCommerce.extractErrors(jqXhr, validator);
 			}
 		});
-
-		function couponUpdated(context, successCallback)
-		{
-			if (context.Message != undefined && context.Message.length > 0)
-			{
-				$('#messages').html("<li class=\"notice-msg\"><ul><li><span>" + context.Message + "</span></li></ul></li>");
-			}
-			
-			successCallback(context);	
-		}
 	},
 
 	submitEstimateShipping: function (form)
@@ -396,7 +402,7 @@ VirtoCart.prototype = {
 				success: function (bestShipment)
 				{
 					$("#shippingRow").fadeIn(1000);
-					$("#shippingRow span.price").html("(" + bestShipment.DisplayName + ") " + bestShipment.PriceFormatted);
+					$("#cart-shipping").html("(" + bestShipment.DisplayName + ") " + bestShipment.PriceFormatted);
 					$("#cart-total").html(bestShipment.TotalCartPriceFormatted);
 				},
 				error: function (jqXhr)

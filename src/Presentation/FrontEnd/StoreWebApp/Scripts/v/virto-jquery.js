@@ -120,8 +120,10 @@
     	window.opener.location.href = url;
     };
 
-    $.showPopupMessage = function (message) {
-        var template = '<div class="popup-alert"><a title="Close" class="close">Close</a>' + message + '</div>';
+    $.showPopupMessage = function (message)
+    {
+        var timestamp = new Date().getTime();
+        var template = '<div class="popup-alert" id="' + timestamp + '"><a title="Close" class="close">Close</a>' + message + '</div>';
         $('.popup-alert').remove();
         $('body').append(template);
         $('.popup-alert').on('click', function (){
@@ -130,7 +132,7 @@
             });
         });
         window.setTimeout(function () {
-            $('.popup-alert').trigger('click');
+            $('#' + timestamp).trigger('click');
         }, 8000);
     };
 })(jQuery);

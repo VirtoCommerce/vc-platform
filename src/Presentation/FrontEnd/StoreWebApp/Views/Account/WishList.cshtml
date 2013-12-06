@@ -5,27 +5,27 @@
     Layout = "_Layout.cshtml";
 }
 <script type="text/javascript">
-	function focusComment(obj) {
-	    if (obj.value == '@UserHelper.DefaultCommentInWishList') {
-			obj.value = '';
-		} else if (obj.value == '') {
-		    obj.value = '@UserHelper.DefaultCommentInWishList';
-		}
-	}
+    function focusComment(obj) {
+        if (obj.value == '@UserHelper.DefaultCommentInWishList') {
+            obj.value = '';
+        } else if (obj.value == '') {
+            obj.value = '@UserHelper.DefaultCommentInWishList';
+        }
+    }
 
-	function AddAllToCart() {
-		$('#ActionTypeField')[0].value = '@UserHelper.AddToCartAction';
-		return true;
-	}
+    function AddAllToCart() {
+        $('#ActionTypeField')[0].value = '@UserHelper.AddToCartAction';
+        return true;
+    }
 
-	$(document).ready(function () {
-		$('.commentArea').each(function () {
-			if ($(this)[0].value == "")
-			    $(this)[0].value = "@UserHelper.DefaultCommentInWishList";
-		});
-	});
+    $(document).ready(function () {
+        $('.commentArea').each(function () {
+            if ($(this)[0].value == "")
+                $(this)[0].value = "@UserHelper.DefaultCommentInWishList";
+        });
+    });
 </script>
-<ul id="messages" class="messages"> </ul>
+
 <div class="my-wishlist">
 	
     <div class="page-title title-buttons">

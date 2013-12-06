@@ -1,20 +1,9 @@
-﻿@model CustomerModel
+﻿@using Microsoft.Ajax.Utilities
+@model CustomerModel
 @{
     ViewBag.Title = Html.Title("Account Dashboard".Localize());
     Layout = "_Layout.cshtml";
 }
-
-<ul id="messages" class="messages">
-	@if (ViewBag.Messages != null)
-	{
-		foreach (var message in ViewBag.Messages)
-		{
-			<li class="notice-msg">
-				<ul><li><span>@message</span></li></ul>
-			</li>
-		}
-	}
-</ul>
 
 <div class="dashboard">
     <div class="page-title">
@@ -23,17 +12,19 @@
     </div>
     <div class="welcome-msg">
         <p class="hello">
-            <strong>@("Hello".LocalizeHtml()), @Model.FullName!</strong></p>
+            <strong>@("Hello".LocalizeHtml()), @Model.FullName!</strong>
+        </p>
         <p>
             @(@"From your My Account Dashboard you have the ability to view a snapshot of your recent
             account activity and update your account information. Select a link below to view
-            or edit information.".LocalizeHtml())</p>
+            or edit information.".LocalizeHtml())
+        </p>
     </div>
     <!-- recent orders -->
     @{Html.RenderAction("RecentOrders");}
     <!-- account info -->
-	@{Html.RenderAction("AccountInfo");}
-	
-	@{Html.RenderAction("RemoveExternalLogins");}
+    @{Html.RenderAction("AccountInfo");}
+
+    @{Html.RenderAction("RemoveExternalLogins");}
 
 </div>
