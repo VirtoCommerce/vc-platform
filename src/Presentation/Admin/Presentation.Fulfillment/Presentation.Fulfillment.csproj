@@ -101,7 +101,7 @@
     </Reference>
     <Reference Include="PdfRpt, Version=1.9.0.0, Culture=neutral, PublicKeyToken=9aed730b935239dd, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Shared\PdfRpt.dll</HintPath>
+      <HintPath>..\..\..\..\packages\PdfReport.1.9\lib\PdfRpt.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
