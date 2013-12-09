@@ -102,17 +102,22 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 				var contentFolder =
 					Path.GetFullPath(Path.Combine(Path.GetDirectoryName(typeof(ConfigurationWizardViewModel).Assembly.Location),
 												  @"..\Resources\FrontEnd"));
-				var catalogImagesFolder =
-					Path.GetFullPath(Path.Combine(Path.GetDirectoryName(typeof(ConfigurationWizardViewModel).Assembly.Location),
-												  @"..\Resources\Catalog"));
 
 				// Copy template to project location
 				DirectoryExtensions.Copy(new DirectoryInfo(contentFolder), new DirectoryInfo(ProjectLocation));
 				ct.ThrowIfCancellationRequested();
-				// Copy test data images
-				DirectoryExtensions.Copy(new DirectoryInfo(catalogImagesFolder),
-										 new DirectoryInfo(string.Format("{0}\\App_Data\\Virto\\Storage\\Catalog", ProjectLocation)));
-				ct.ThrowIfCancellationRequested();
+
+				if (_databaseViewModel.InstallSamples)
+				{
+					var catalogImagesFolder =
+						Path.GetFullPath(Path.Combine(Path.GetDirectoryName(typeof(ConfigurationWizardViewModel).Assembly.Location),
+													  @"..\Resources\Catalog"));
+
+					// Copy test data images
+					DirectoryExtensions.Copy(new DirectoryInfo(catalogImagesFolder),
+											 new DirectoryInfo(string.Format("{0}\\App_Data\\Virto\\Storage\\Catalog", ProjectLocation)));
+					ct.ThrowIfCancellationRequested();
+				}
 
 				// Fix connection strings
 				new InitializeFrontEndConfigs().Initialize(ProjectLocation, _confirmationViewModel.DatabaseConnectionString,
