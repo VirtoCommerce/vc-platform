@@ -289,6 +289,11 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 
 				if (!string.IsNullOrEmpty(parameterUserName) || !string.IsNullOrEmpty(parameterBaseUrl))
 				{
+					if (!string.IsNullOrEmpty(parameterBaseUrl))
+					{
+						parameterBaseUrl = parameterBaseUrl.Replace('\\', '/');
+					}
+
 					OnUIThread(() =>
 					{
 						UserName = parameterUserName;
