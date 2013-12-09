@@ -3,28 +3,41 @@
     ViewBag.Title = Html.Title("Home".Localize());
 }
 
-
 @section Slider{
-        @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "MainSlider" });}
+    @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "MainSlider" });}
 }
-<div class="main-container col1-layout">
-    <div class="main">
-        <div class="col-main">
-            <div class="std">
-                <div style="float: left; width: 653px;">
-                    @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeMain" });}
-                </div>
-                <div style="float: right; width: 280px;">
-                    <div style="margin: 0 0 10px;">
-                        @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeRightTop" });}
-                    </div>
-                    <div>
-                        @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeRightBottom" });}
-                    </div>
-                </div>
-                <div class="clearer">
-                </div>
-            </div>
-        </div>
+
+<div class="home content">
+    <div class="products featured">
+        <header>
+            <h2>@("Featured Products".Localize())</h2>
+        </header>
+        <ul class="products-list grid">
+            @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeFeaturedProducts" });}
+        </ul>
+    </div>
+    <div class="products slider-products">
+        <header>
+            <h2>@("Staff pick".Localize())</h2>
+        </header>
+        <ul class="products-list slider-list grid">
+            @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeStaffPick" });}
+        </ul>
+    </div>
+    <div class="products slider-products">
+        <header>
+            <h2>@("New Products".Localize())</h2>
+        </header>
+        <ul class="products-list slider-list grid">
+            @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeNewProducts" });}
+        </ul>
     </div>
 </div>
+@*<div class="home sidebar">
+    <aside class="block">
+        @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeRightTop" });}
+    </aside>
+    <aside class="block">
+        @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeRightBottom" });}
+    </aside>
+</div>*@

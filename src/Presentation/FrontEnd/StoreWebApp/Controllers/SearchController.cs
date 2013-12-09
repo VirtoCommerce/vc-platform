@@ -170,13 +170,9 @@ namespace VirtoCommerce.Web.Controllers
 
             SearchSort sortObject = null;
 
-            if (!String.IsNullOrEmpty(sort))
+            if (!String.IsNullOrEmpty(sort) && !sort.Equals("position", StringComparison.OrdinalIgnoreCase))
             {
-                if (sort.Equals("name", StringComparison.OrdinalIgnoreCase))
-                {
-                    sortObject = new SearchSort("name", isDescending);
-                }
-                else if (sort.Equals("price", StringComparison.OrdinalIgnoreCase))
+                if (sort.Equals("price", StringComparison.OrdinalIgnoreCase))
                 {
                     sortObject = new SearchSort(session.Pricelists.Select(priceList =>
                                                                           new SearchSortField(
@@ -188,6 +184,10 @@ namespace VirtoCommerce.Web.Controllers
                                                                                   IsDescending = isDescending
                                                                               })
                                                        .ToArray());
+                }
+                else
+                {
+                    sortObject = new SearchSort(sort, isDescending);
                 }
             }
 
@@ -317,14 +317,15 @@ namespace VirtoCommerce.Web.Controllers
             return GetModelFromCriteria(criteria, parameters);
         }
 
-		/// <summary>
-		/// Searches within category.
-		/// </summary>
-		/// <param name="category">The category.</param>
-		/// <param name="parameters">The parameters.</param>
-		/// <returns>ActionResult.</returns>
-        [CustomOutputCache(CacheProfile = "SearchCache", VaryByCustom = "store;currency;cart")]
-        public ActionResult SearchResultsWithinCategory(Category category, SearchParameters parameters)
+	    /// <summary>
+	    /// Searches within category.
+	    /// </summary>
+	    /// <param name="category">The category.</param>
+	    /// <param name="parameters">The parameters.</param>
+	    /// <param name="name"></param>
+	    /// <returns>ActionResult.</returns>
+	    [CustomOutputCache(CacheProfile = "SearchCache", VaryByCustom = "store;currency;cart")]
+        public ActionResult SearchResultsWithinCategory(Category category, SearchParameters parameters, string name = "SearchResultsPartial")
         {
             ViewBag.Title = category.Name.Localize();
 
@@ -333,7 +334,7 @@ namespace VirtoCommerce.Web.Controllers
                                                 _catalogClient.BuildCategoryOutline(
                                                     UserHelper.CustomerSession.CatalogId, category)));
             var results = SearchResults(criteria, parameters);
-            return PartialView("SearchResultsPartial", results);
+            return PartialView(name, results);
         }
 
 		/// <summary>

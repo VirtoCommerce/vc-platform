@@ -155,9 +155,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\packages\ValueInjecter.2.3.3\lib\net35\Omu.ValueInjecter.dll</HintPath>
     </Reference>
-    <Reference Include="PdfRpt">
-      <HintPath>..\..\..\..\Shared\PdfRpt.dll</HintPath>
-    </Reference>
     <Reference Include="PlainElastic.Net, Version=1.0.28.0, Culture=neutral, PublicKeyToken=0930e76dfc03b7ac, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\Shared\PlainElastic.Net.dll</HintPath>
@@ -789,7 +786,7 @@
     <Content Include="Views\Checkout\Success.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Search\DisplayTemplates\FilterPanel.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\SearchItem.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Item.cshtml" />
     <Content Include="Views\Search\DisplayTemplates\SearchPager.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
     <Content Include="Views\Search\SearchResultsPartial.cshtml" />
@@ -863,12 +860,15 @@
     <Content Include="Views\Search\DisplayTemplates\CurrentFilterPanel.cshtml" />
     <Content Include="Views\Search\DisplayTemplates\SearchListItem.cshtml" />
     <Content Include="Views\Catalog\RecommendedProducts2.cshtml" />
+    <Content Include="Views\Banner\DisplayTemplates\CategoryUrl.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\SearchItems.cshtml" />
     <None Include="Web.Azure.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Virto\Logs\" />
     <Folder Include="Areas\VirtoAdmin\Views\Shared\" />
     <Folder Include="Views\Catalog\DisplayTemplates\" />
+    <Folder Include="Views\XmlSiteMap\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

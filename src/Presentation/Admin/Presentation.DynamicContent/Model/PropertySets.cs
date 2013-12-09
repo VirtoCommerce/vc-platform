@@ -102,14 +102,22 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.Model
 					break;
 				case DynamicContentType.CategoryUrl:
 					var propCatUrl = new DynamicContentItemProperty();
-					propCatUrl.Name = "CategoryId";
+					propCatUrl.Name = "CategoryCode";
 					propCatUrl.ValueType = (int)PropertyValueType.Category;
 
 					var propCatUrl1 = new DynamicContentItemProperty();
 					propCatUrl1.Name = "Title";
 					propCatUrl1.ValueType = (int)PropertyValueType.LongString;
 
-					retVal = new List<DynamicContentItemProperty>() { propCatUrl, propCatUrl1 };
+                    var propCatSort = new DynamicContentItemProperty();
+                    propCatSort.Name = "SortField";
+                    propCatSort.ValueType = (int)PropertyValueType.ShortString;
+
+                    var propCatItemsCount = new DynamicContentItemProperty();
+                    propCatItemsCount.Name = "ItemCount";
+                    propCatItemsCount.ValueType = (int)PropertyValueType.Integer;
+
+                    retVal = new List<DynamicContentItemProperty>() { propCatUrl, propCatUrl1, propCatSort, propCatItemsCount };
 					break;
 				case DynamicContentType.Undefined:
 					break;

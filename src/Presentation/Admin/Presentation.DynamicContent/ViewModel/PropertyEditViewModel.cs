@@ -155,7 +155,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel
 					if (x.Confirmed)
 					{
 						var category = (catalogModel.Category)itemVM.SelectedItem;
-						InnerItem.LongTextValue = category.CategoryId;
+						InnerItem.LongTextValue = category.Code;
 						InnerItem.Alias = category.Name;
 						SelectedCategoryName = InnerItem.Alias;
 						OnPropertyChanged("SelectedCategoryName");

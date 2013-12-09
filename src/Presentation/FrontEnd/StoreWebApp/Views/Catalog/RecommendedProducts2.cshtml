@@ -12,7 +12,7 @@
     <ul class="products-list slider-list grid">
         @foreach (var association in associations)
         {
-            @Html.Action("AssociatedItem", new { itemId = association.ItemId, name = "displaytemplates/searchItem" })
+            @Html.Action("AssociatedItem", new { itemId = association.ItemId, name = "displaytemplates/Item" })
         }
     </ul>
 </div>

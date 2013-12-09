@@ -56,5 +56,10 @@
     {
     @Html.DisplayForModel("ProductImageAndPrice", new { Model = new ProductWithImageAndPriceModel(item) })
     }
+    
+    if (item.ContentTypeId == DynamicContentType.CategoryUrl.ToString())
+    {
+    @Html.DisplayForModel("CategoryUrl", new { Model = new CategoryUrlModel(item) })
+    }
 
 }

@@ -9,7 +9,7 @@
             <ul class="products-list slider-list grid">
                 @foreach (var association in Model.Associations.OrderBy(a => a.Priority))
                 {
-                    @Html.Action("AssociatedItem", new { itemId = association.ItemId, name = "displaytemplates/searchitem", associationType = association.AssociationType })
+                    @Html.Action("AssociatedItem", new { itemId = association.ItemId, name = "displaytemplates/Item", associationType = association.AssociationType })
                 }
             </ul>
         </div>
