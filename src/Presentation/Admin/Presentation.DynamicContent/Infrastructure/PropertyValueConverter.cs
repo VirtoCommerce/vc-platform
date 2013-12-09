@@ -48,6 +48,5 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.Infrastructure
 
 			return retVal;
 		}
-
 	}
 }

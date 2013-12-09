@@ -198,6 +198,8 @@ namespace VirtoCommerce.Foundation.Marketing.Model.DynamicContent
         {
             switch(this.ValueType)
             {
+				case (int)PropertyValueType.Category:
+					return this.LongTextValue.ToString();
                 case (int)PropertyValueType.Boolean:
                     return this.BooleanValue.ToString();
                 case (int)PropertyValueType.DateTime:
