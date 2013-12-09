@@ -158,23 +158,23 @@ namespace VirtoCommerce.Web.Controllers
 
             SearchSort sortObject = null;
 
-            if (!String.IsNullOrEmpty(sort))
+            if (!String.IsNullOrEmpty(sort) && !sort.Equals("position", StringComparison.OrdinalIgnoreCase))
             {
-                if (sort.Equals("name", StringComparison.OrdinalIgnoreCase))
-                {
-                    sortObject = new SearchSort("name");
-                }
-                else if (sort.Equals("price", StringComparison.OrdinalIgnoreCase))
+                if (sort.Equals("price", StringComparison.OrdinalIgnoreCase))
                 {
                     sortObject = new SearchSort(session.Pricelists.Select(priceList =>
-                                                                          new SearchSortField(
-                                                                              String.Format("price_{0}_{1}",
-                                                                                            criteria.Currency.ToLower(),
-                                                                                            priceList.ToLower()))
-                                                                              {
-                                                                                  IgnoredUnmapped = true
-                                                                              })
-                                                       .ToArray());
+                        new SearchSortField(
+                            String.Format("price_{0}_{1}",
+                                criteria.Currency.ToLower(),
+                                priceList.ToLower()))
+                        {
+                            IgnoredUnmapped = true
+                        })
+                        .ToArray());
+                }
+                else
+                {
+                    sortObject = new SearchSort(sort);
                 }
             }
 
