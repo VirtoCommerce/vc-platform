@@ -184,8 +184,8 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels
 		protected override object LoadData()
 		{
 			var repository = _projectRepositoryFactory.GetRepositoryInstance();
-			var list = repository.Projects.ToList();
-
+			var list = repository.Projects.OrderByDescending(x => x.Created).ToList();
+			
 			// now go through each project and check the version and if it is online (directory is available)
 			foreach (var project in list)
 			{
