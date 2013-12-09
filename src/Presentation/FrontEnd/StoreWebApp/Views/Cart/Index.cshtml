@@ -15,7 +15,7 @@
             $("#cartSuggestDynamic").remove();
         } else
         {
-            $(".columns .grid_4").switchClass("grid_4", "grid_3");
+            //$(".columns .grid_4").switchClass("grid_4", "grid_3");
         }
     });
 </script>
@@ -75,16 +75,6 @@
                     
       }}
     <div class="columns clearfix">
-        <div class="grid_3" id="cartSuggestDynamic">
-            <div class="cart-block">
-                <span class="title">@("You may also be interested in:".Localize())</span>
-                <ul id="crosssell-products-list">
-                    <li class="item">
-                        @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "CartSuggest" });}
-                    </li>
-                </ul>
-            </div>
-        </div>
         <div class="grid_4">
             <div class="cart-block">
                 @Html.EditorFor(m => m.ShippingEstimateModel, "ShippingEstimate")
@@ -103,7 +93,7 @@
                         </div>
                         <div class="button-group">
                             <button type="button" title="@("Apply Coupon".Localize())" 
-                                onclick="VirtoCart.updateCoupon($(this).closest('form'),function(context){VirtoCart.onUpdate(context);});"
+                                    onclick="VirtoCart.updateCoupon($(this).closest('form'),function(context){VirtoCart.onUpdate(context);});"
                                     value="ApplyCoupon">
                                 <span>@("Apply Coupon".Localize())</span>
                             </button>
@@ -122,13 +112,13 @@
                     <tbody>
                         <tr>
                             <td>@("Subtotal".Localize())</td>
-                            <td id ="cart-subtotal">@Model.SubTotalPriceFormatted</td>
+                            <td id="cart-subtotal">@Model.SubTotalPriceFormatted</td>
                         </tr>
-                           <tr id="shippingRow" style="display: none;">
-                                <td>@("Shipping".LocalizeHtml())
-                                </td>
-                               <td id="cart-shipping">@Model.ShippingPriceFormatted</td>
-                            </tr>
+                        <tr id="shippingRow" style="display: none;">
+                            <td>@("Shipping".LocalizeHtml())
+                            </td>
+                            <td id="cart-shipping">@Model.ShippingPriceFormatted</td>
+                        </tr>
                     </tbody>
                     <tfoot>
                         <tr>
@@ -143,9 +133,17 @@
                             <span>@("Proceed to checkout".Localize())</span>
                         </button>
                     </li>
-@*                    <li><a href="">Checkout with Multiple Addresses</a></li>*@
+                    @*                    <li><a href="">Checkout with Multiple Addresses</a></li>*@
                 </ul>
             </div>
+        </div>
+    </div>
+    <div id="cartSuggestDynamic" style="padding: 15px;">
+        <div class="cart-block">
+            <span class="title">@("You may also be interested in:".Localize())</span>
+            <ul id="crosssell-products-list" class="products-list grid" style="padding-bottom: 0;">
+                @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "CartSuggest" });}
+            </ul>
         </div>
     </div>
 </div>
