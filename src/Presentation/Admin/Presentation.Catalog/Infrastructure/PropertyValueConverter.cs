@@ -109,12 +109,6 @@ namespace VirtoCommerce.ManagementClient.Catalog.Infrastructure
 		#region IMultiValueConverter
 		public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
-			//object parameterObject = null;
-			//if (values.Length > 0 && values[1] is Property)
-			//{
-			//    parameterObject = values[1];
-			//}
-
 			return Convert(values[0], targetType, parameter, culture);
 		}
 

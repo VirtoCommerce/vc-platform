@@ -20,6 +20,8 @@ using VirtoCommerce.Foundation.Orders.Repositories;
 using VirtoCommerce.Foundation.Data.Orders;
 using VirtoCommerce.ManagementClient.DynamicContent.ViewModel.Wizard.Implementations;
 using VirtoCommerce.ManagementClient.DynamicContent.ViewModel.Wizard.Interfaces;
+using VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementations;
+using VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Interfaces;
 
 namespace VirtoCommerce.ManagementClient.DynamicContent
 {

@@ -94,16 +94,27 @@
                 <DataGrid Grid.Row="1" x:Name="PropertiesList" ItemsSource="{Binding InnerItem.PropertyValues}" Margin="0,0,0,4">
 						<DataGrid.Columns>
 							<DataGridTextColumn Header="Name" Binding="{Binding Name}" />
-							<DataGridTextColumn Header="Value" Binding="{Binding LongTextValue, Converter={StaticResource propertyValueConverter}}" />
-						</DataGrid.Columns>
-
+						<DataGridTextColumn Header="Value">
+							<DataGridTextColumn.Binding>
+								<MultiBinding Converter="{StaticResource propertyValueConverter}">
+									<Binding />
+									<Binding Path="LongTextValue"/>
+									<Binding Path="ShortTextValue"/>
+									<Binding Path="DecimalValue"/>
+									<Binding Path="BooleanValue"/>
+									<Binding Path="IntegerValue"/>
+									<Binding Path="DateTimeValue"/>
+									<Binding Path="Alias"/>
+								</MultiBinding>
+							</DataGridTextColumn.Binding>
+						</DataGridTextColumn>
+					</DataGrid.Columns>
 						<DataGrid.RowStyle>
-                        <Style TargetType="DataGridRow"  BasedOn="{StaticResource {x:Type DataGridRow}}">
+							<Style TargetType="DataGridRow"  BasedOn="{StaticResource {x:Type DataGridRow}}">
 								<Setter Property="inf_behavior:MouseDoubleClickBehavior.DoubleClickCommand" Value="{Binding DataContext.PropertyValueEditCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}" />
 								<Setter Property="inf_behavior:MouseDoubleClickBehavior.CommandArgument" Value="{Binding SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}" />
 							</Style>
 						</DataGrid.RowStyle>
-
 						<i:Interaction.Triggers>
 							<i:EventTrigger EventName="SelectionChanged">
 								<ei:CallMethodAction TargetObject="{Binding }" MethodName="RaiseCanExecuteChanged"/>

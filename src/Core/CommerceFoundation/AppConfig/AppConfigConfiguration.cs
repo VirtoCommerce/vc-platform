@@ -52,6 +52,15 @@ namespace VirtoCommerce.Foundation.AppConfig
 	        }
 	    }
 
+        [ConfigurationProperty("availableModules")]
+        public ModulesCollection AvailableModules
+        {
+            get
+            {
+                return (ModulesCollection)this["availableModules"] ?? new ModulesCollection();
+            }
+        }
+
 		/// <summary>
 		/// Config settings which define where caching is enabled and timeouts related to it.
 		/// </summary>
@@ -339,6 +348,67 @@ namespace VirtoCommerce.Foundation.AppConfig
         public override bool IsReadOnly()
         {
             return false;
+        }
+    }
+
+    public class ModuleConfigurationElement : ConfigurationElement
+    {
+
+        [ConfigurationProperty("name", IsRequired = true)]
+        public string Name
+        {
+            get
+            {
+                return (string)base["name"];
+            }
+            set
+            {
+                this["name"] = value;
+            }
+        }
+
+        [ConfigurationProperty("type", IsRequired = true)]
+        public string Type
+        {
+            get
+            {
+                return (string)base["type"];
+            }
+            set
+            {
+                base["type"] = value;
+            }
+        }
+
+
+    }
+
+    public class ModulesCollection : ConfigurationElementCollection
+    {
+        public ModuleConfigurationElement this[int index]
+        {
+            get
+            {
+                return base.BaseGet(index) as ModuleConfigurationElement;
+            }
+            set
+            {
+                if (base.BaseGet(index) != null)
+                {
+                    base.BaseRemoveAt(index);
+                }
+                this.BaseAdd(index, value);
+            }
+        }
+
+        protected override ConfigurationElement CreateNewElement()
+        {
+            return new ModuleConfigurationElement();
+        }
+
+        protected override object GetElementKey(ConfigurationElement element)
+        {
+            return ((ModuleConfigurationElement)element).Name;
         }
     }
 }

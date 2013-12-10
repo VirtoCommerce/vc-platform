@@ -3,6 +3,7 @@ using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using VirtoCommerce.Foundation.Marketing.Model;
 using VirtoCommerce.Foundation.Marketing.Model.DynamicContent;
 using VirtoCommerce.ManagementClient.Asset.ViewModel.Interfaces;
+using VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Interfaces;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using catalogModel = VirtoCommerce.Foundation.Catalogs.Model;
 
@@ -146,7 +147,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel
 		{
 			var itemVM = _searchCategoryVmFactory.GetViewModelInstance();
 
-			itemVM.SearchModifier = SearchCategoryModifier.RealCatalogsOnly;
+			itemVM.SearchModifier = SearchCategoryModifier.UserCanChangeSearchCatalog;
 			itemVM.InitializeForOpen();
 			CommonConfirmRequest.Raise(
 				new ConditionalConfirmation(() => itemVM.SelectedItem != null) { Content = itemVM, Title = "Select Category" },

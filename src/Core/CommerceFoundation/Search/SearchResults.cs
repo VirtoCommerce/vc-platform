@@ -162,7 +162,9 @@ namespace VirtoCommerce.Foundation.Search
 						outline = doc[SearchCriteria.OutlineField].Value.ToString();
 					}
 
-					entries.Add(id, outline);
+                    // THIS SHOULD NEVER HAPPEN!!!
+                    if (!entries.ContainsKey(id))
+					    entries.Add(id, outline);
 				}
 			}
 

@@ -21,6 +21,7 @@ using VirtoCommerce.ManagementClient.DynamicContent.Model;
 using VirtoCommerce.Foundation.Marketing.Model.DynamicContent;
 using VirtoCommerce.ManagementClient.DynamicContent.ViewModel.ContentPublishing.Interfaces;
 using VirtoCommerce.ManagementClient.DynamicContent.ViewModel.Wizard.Interfaces;
+using VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Interfaces;
 
 namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.ContentPublishing.Implementations
 {

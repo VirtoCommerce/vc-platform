@@ -37,6 +37,11 @@ namespace VirtoCommerce.Web.Models.Binders
 		/// </summary>
         private static readonly Regex FacetRegex = new Regex("^f_", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
+        protected virtual NameValueCollection GetParams(ControllerContext controllerContext)
+	    {
+            return controllerContext.HttpContext.Request.QueryString;
+	    }
+
 		/// <summary>
 		/// Binds the model to a value by using the specified controller context and binding context.
 		/// </summary>
@@ -44,26 +49,27 @@ namespace VirtoCommerce.Web.Models.Binders
 		/// <param name="bindingContext">The binding context.</param>
 		/// <returns>The bound value.</returns>
         public object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
-		{
+        {
+		  
 		    var parameters = bindingContext.ValueProvider.GetValue(bindingContext.ModelName);
             var sp = parameters != null ? parameters.RawValue as SearchParameters : null;
 		    if (sp == null)
 		    {
-		        var qs = controllerContext.HttpContext.Request.QueryString;
-		        var qsDict = NvToDict(qs);
+            var qs = GetParams(controllerContext);
+            var qsDict = NvToDict(qs);
 		        sp = new SearchParameters
-		        {
-		            FreeSearch = qs["q"].EmptyToNull(),
-		            PageIndex = qs["p"].TryParse(1),
-		            PageSize = qs["pageSize"].TryParse(DefaultPageSize),
-		            Sort = qs["sort"].EmptyToNull(),
+            {
+                FreeSearch = qs["q"].EmptyToNull(),
+                PageIndex = qs["p"].TryParse(1),
+                PageSize = qs["pageSize"].TryParse(DefaultPageSize),
+                Sort = qs["sort"].EmptyToNull(),
 		            SortOrder = qs["sortorder"].EmptyToNull(),
-		            Facets = qsDict.Where(k => FacetRegex.IsMatch(k.Key))
-		                .Select(k => k.WithKey(FacetRegex.Replace(k.Key, "")))
-		                .ToDictionary()
-		        };
+                Facets = qsDict.Where(k => FacetRegex.IsMatch(k.Key))
+                    .Select(k => k.WithKey(FacetRegex.Replace(k.Key, "")))
+                    .ToDictionary()
+            };
 		    }
-		    return sp;
+            return sp;
         }
     }
 }

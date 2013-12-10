@@ -166,11 +166,9 @@
     <Compile Include="ViewModel\IPropertyEditViewModel.cs" />
     <Compile Include="ViewModel\ContentPublishing\Implementations\ContentPublishingHomeViewModel.cs" />
     <Compile Include="ViewModel\DynamicContent\Implementations\DynamicContentItemViewModel.cs" />
-    <Compile Include="ViewModel\ISearchCategoryViewModel.cs" />
     <Compile Include="ViewModel\PropertyEditViewModel.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ViewModel\SearchCategoryViewModel.cs" />
     <Compile Include="ViewModel\Wizard\Implementations\CreateContentPublishingItemViewModel.cs" />
     <Compile Include="ViewModel\Wizard\Interfaces\ICreateContentPublishingItemViewModel.cs" />
     <Compile Include="ViewModel\Wizard\Implementations\CreateDynamicContentItemViewModel.cs" />

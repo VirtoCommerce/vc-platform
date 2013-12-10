@@ -201,6 +201,12 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.DynamicContent
 			var originalItem = (DynamicContentItemProperty)originalItemObject;
 			switch ((PropertyValueType)originalItem.ValueType)
 			{
+				case PropertyValueType.Integer:
+					OnUIThread(() => InnerItem.PropertyValues.First(y => y.Name == originalItem.Name).IntegerValue = Int32.MinValue);
+					break;
+				case PropertyValueType.Decimal:
+					OnUIThread(() => InnerItem.PropertyValues.First(y => y.Name == originalItem.Name).DecimalValue = Decimal.MinValue);
+					break;
 				case PropertyValueType.ShortString:
 					InnerItem.PropertyValues.First(x => x.Name == originalItem.Name).ShortTextValue = null;
 					break;
@@ -229,14 +235,22 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.DynamicContent
 				{
 					switch ((PropertyValueType)item.ValueType)
 					{
-
+						case PropertyValueType.Integer:
+							OnUIThread(() => InnerItem.PropertyValues.First(y => y.Name == item.Name).IntegerValue = item.IntegerValue);
+							break;
+						case PropertyValueType.Decimal:
+							OnUIThread(() => InnerItem.PropertyValues.First(y => y.Name == item.Name).DecimalValue = item.DecimalValue);
+							break;
 						case PropertyValueType.ShortString:
 							OnUIThread(() => InnerItem.PropertyValues.First(y => y.Name == item.Name).ShortTextValue = item.ShortTextValue);
 							break;
-						case PropertyValueType.Image:
-						case PropertyValueType.Category:
+						case PropertyValueType.Image:						
 						case PropertyValueType.LongString:
 							OnUIThread(() => InnerItem.PropertyValues.First(y => y.Name == item.Name).LongTextValue = item.LongTextValue);
+							break;
+						case PropertyValueType.Category:
+							OnUIThread(() => InnerItem.PropertyValues.First(y => y.Name == item.Name).LongTextValue = item.LongTextValue);
+							OnUIThread(() => InnerItem.PropertyValues.First(y => y.Name == item.Name).Alias = item.Alias);
 							break;
 					}
 				}

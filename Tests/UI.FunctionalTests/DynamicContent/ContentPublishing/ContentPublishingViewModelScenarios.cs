@@ -10,6 +10,7 @@ using VirtoCommerce.Foundation.Marketing.Model.DynamicContent;
 using VirtoCommerce.Foundation.Marketing.Repositories;
 using VirtoCommerce.Foundation.Orders.Repositories;
 using VirtoCommerce.Foundation.Stores.Repositories;
+using VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Interfaces;
 using VirtoCommerce.ManagementClient.DynamicContent.ViewModel;
 using VirtoCommerce.ManagementClient.DynamicContent.ViewModel.ContentPublishing.Implementations;
 using VirtoCommerce.ManagementClient.DynamicContent.ViewModel.Wizard.Implementations;
