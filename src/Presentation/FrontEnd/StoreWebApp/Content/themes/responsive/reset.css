@@ -35,11 +35,6 @@ body
 
 /* Clearfix 
 ====================================*/
-.clearifx
-{
-	display: inline-block;
-}
-
 .clearfix:after
 {
 	clear: both;

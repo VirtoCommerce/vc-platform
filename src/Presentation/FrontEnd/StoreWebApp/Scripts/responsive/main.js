@@ -10,6 +10,7 @@
 		window.Other.selectViewMode();
 		window.Other.openTabs();
 		window.Other.closePopup();
+		window.Other.close_();
 	});
 
 	window.Other = {};
@@ -19,13 +20,24 @@
 
 
 	/* ----------------Other---------------- */
-	window.Other.closestObject = function(visibleEl, hideEl, callBack)
+
+	/**
+	 * Hide or Remove all hideEl
+	 */
+	window.Other.closestObject = function(visibleEl, hideEl, callBack, action)
 	{
 		$('body').click(function (e){
 
 			if($(e.target).closest(visibleEl).length === 0)
 			{
-				$(hideEl).hide();
+				if(action == 'remove')
+				{
+					$(hideEl).remove();
+				}
+				else
+				{
+					$(hideEl).hide();
+				}
 
 				if(typeof callBack === 'function')
 				{
@@ -96,6 +108,20 @@
 				$(this).fadeOut();
 			});
 		}
+	};
+
+	window.Other.close_ = function()
+	{
+		$('body').delegate('.close', 'click', function (){
+			$(this).parent().remove();
+
+			if($('.fade-block').length)
+			{
+				$('.fade-block').remove();
+			}
+
+			return false;
+		});
 	};
 
 

@@ -648,6 +648,7 @@
     <Content Include="Content\themes\responsive\images\slider\slides\3.jpg" />
     <Content Include="Content\themes\responsive\main.css" />
     <Content Include="Content\themes\responsive\messages.css" />
+    <Content Include="Content\themes\responsive\popup.css" />
     <Content Include="Content\themes\responsive\reset.css" />
     <Content Include="Content\themes\responsive\responsive.css" />
     <Content Include="Content\themes\responsive\transition.css" />

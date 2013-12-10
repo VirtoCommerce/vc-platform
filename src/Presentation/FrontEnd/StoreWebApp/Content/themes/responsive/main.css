@@ -1,5 +1,6 @@
 @import "grid.css";
 @import "forms.css";
+@import "popup.css";
 @import "transition.css";
 
 .rubber
@@ -45,6 +46,11 @@ button
 button + button
 {
 	float: right;
+}
+
+.cart button + button
+{
+	margin: 0 0 0 10px;
 }
 
 	button span
@@ -313,7 +319,7 @@ button + button
 				background: url(images/logo.png) no-repeat scroll 0 0;
 				color: transparent;
 				height: 46px;
-				margin: 25px 0 0;
+				margin: 25px 0;
 				overflow: hidden;
 				text-indent: 100%;
 				width: 123px;
@@ -763,7 +769,10 @@ button + button
 								background: #fff;
 								border-top: 4px solid #322c29;
 								color: #7b7b7b;
+								left: auto;
+								height: auto;
 								line-height: 18px;
+								margin: 0;
 								opacity: 0;
 								padding: 16px;
 								position: absolute;
@@ -782,6 +791,10 @@ button + button
 								-webkit-border-radius: 2px;
 								   -moz-border-radius: 2px;
 										border-radius: 2px;
+
+								-webkit-box-sizing: content-box;
+								   -moz-box-sizing: content-box;
+										box-sizing: content-box;
 
 								-webkit-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.15);
 								   -moz-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.15);
@@ -1018,6 +1031,11 @@ button + button
 									.head-top-block .cart-options ul li .popup .buttons button + button:hover span
 									{
 										background: #322c29;
+									}
+
+									.head-top-block .cart-options ul li .popup .buttons button + button
+									{
+										margin: 0;
 									}
 
 	/* --- Slider --- */
@@ -1303,6 +1321,7 @@ button + button
 					{
 						display: inline-block;
 						margin: 0 15px 30px;
+						min-height: 350px;
 						position: relative;
 						vertical-align: top;
 						width: 270px;
@@ -1431,12 +1450,14 @@ button + button
 
 							.article .products-list .item .inner .product-image figure
 							{
+								height: 250px;
 								overflow: hidden;
 							}
 
 								.article .products-list .item .inner .product-image img
 								{
 									display: block;
+									margin: 0 auto;
 									max-height: 100%;
 									max-width: 100%;
 								}
@@ -1563,8 +1584,14 @@ button + button
 									display: inline-block;
 									height: 35px;
 									line-height: 35px;
+									padding: 0;
 									position: static;
 									width: auto;
+								}
+
+								.article .products-list.list .item .inner .product-info .button-container ul li:before
+								{
+									display: none;
 								}
 
 								.article .products-list.list .item .inner .product-info .button-container ul li + li
@@ -1629,7 +1656,9 @@ button + button
 
 							.article .products-no-effects .products-list.grid .item .inner .title
 							{
+								overflow: hidden;
 								text-align: left;
+								white-space: nowrap;
 							}
 
 							.article .products-list.grid .item .inner .ratings
@@ -1777,6 +1806,7 @@ button + button
 							.article .products-list .item .inner .product-info .cart
 							{
 								height: 35px;
+								margin: 0;
 								position: absolute;
 								right: 0;
 								top: 0;
@@ -2407,7 +2437,7 @@ button + button
 
 								.article .cart .cart-block table tfoot td
 								{
-									font-size: 20px;
+									font-size: 24px;
 									text-transform: uppercase;
 								}
 
@@ -2779,6 +2809,8 @@ button + button
 							.article .product-view .product-info .product-image figure img
 							{
 								display: block;
+								margin: 0 auto;
+								max-height: 100%;
 								max-width: 100%;
 							}
 
@@ -3218,6 +3250,9 @@ button + button
 										color: #322c29;
 										display: block;
 										margin: 10px 5px;
+										overflow: hidden;
+										text-overflow: ellipsis;
+										white-space: nowrap;
 									}
 
 									.article .product-view .product-other .product-additional ul ul li a:hover
@@ -3488,11 +3523,21 @@ button + button
 							margin: 0 0 15px;
 						}
 
+						.article .product-tabs .tabs-content .review .response .author
+						{
+							margin: 5px 0 15px;
+						}
+
 							.article .product-tabs .tabs-content .review .author .title
 							{
 								font-family: 'Open Sans';
 								font-size: 18px;
 								margin: 0;
+							}
+
+							.article .product-tabs .tabs-content .review .response .author .title
+							{
+								font-size: 12px;
 							}
 
 							.article .product-tabs .tabs-content .review .author .date
@@ -3505,6 +3550,11 @@ button + button
 						{
 							margin: 0 0 15px;
 						}
+
+							.article .product-tabs .tabs-content .review .response .description p
+							{
+								font-size: 11px;
+							}
 
 							.article .product-tabs .tabs-content .review .vote p,
 							.article .product-tabs .tabs-content .review .vote ul li
@@ -3550,6 +3600,11 @@ button + button
 									margin: 0 5px;
 								}
 
+									.article .product-tabs .tabs-content .review .feedback ul li a
+									{
+										font-size: 11px;
+									}
+
 							.article .product-tabs .tabs-content .review .feedback .feedback-comment,
 							.article .product-tabs .tabs-content .review .feedback .feedback-abuse
 							{
@@ -3576,6 +3631,24 @@ button + button
 											float: left;
 											margin: 0 0 0 -20px;
 										}
+
+								.article .product-tabs .tabs-content .review .feedback button + button
+								{
+									float: none;
+								}
+
+						.article .product-tabs .tabs-content .review .response
+						{
+							background: none repeat scroll 0 0 #f5f5f5;
+						    border: 1px solid #eee;
+						    margin: 10px 0 0 20px;
+						    padding: 15px;
+						    width: 400px;
+
+						    -webkit-border-radius: 5px;
+						       -moz-border-radius: 5px;
+						    		border-radius: 5px;
+						}
 
 		/* --- Related products --- */
 		.article .related-products
@@ -3629,90 +3702,32 @@ button + button
 		/* --- Checkout --- */
 		.article .checkout
 		{
-			padding: 0 0 30px;
+			padding: 30px 0;
 		}
 
-			.article .checkout .steps
+			.article .checkout header
 			{
-				counter-reset: numbers;
-				margin: 25px 15px;
-				word-spacing: -4px;
+				line-height: 55px;
+				margin: 0 0 20px;
 			}
 
-				.article .checkout .steps li
+				.article .checkout header h2
 				{
-					display: inline-block;
-					height: 55px;
-					line-height: 55px;
-					word-spacing: 0;
+					letter-spacing: -1.2px;
 				}
 
-				.article .checkout .steps li:nth-last-child(2),
-				.article .checkout .steps li:nth-last-child(2) ~ li
-				{
-					width: 50%;
-				}
-
-				.article .checkout .steps li:nth-last-child(3),
-				.article .checkout .steps li:nth-last-child(3) ~ li
-				{
-					width: 33.3333%;
-				}
-
-				.article .checkout .steps li:nth-last-child(4),
-				.article .checkout .steps li:nth-last-child(4) ~ li
-				{
-					width: 25%;
-				}
-
-				.article .checkout .steps li:nth-last-child(5),
-				.article .checkout .steps li:nth-last-child(5) ~ li
-				{
-					width: 20%;
-				}
-
-				.article .checkout .steps li:nth-last-child(6),
-				.article .checkout .steps li:nth-last-child(6) ~ li
-				{
-					width: 16.6666%;
-				}
-
-					.article .checkout .steps li a
+					.article .checkout header h2 span
 					{
-						color: #dbdbdb;
-						cursor: default;
-						display: inline-block;
-						padding: 0 0 0 65px;
-						position: relative;
-					}
-
-					.article .checkout .steps li.allow a,
-					.article .checkout .steps li.selected a
-					{
-						color: #322C29;
-						cursor: pointer;
-					}
-
-					.article .checkout .steps li.selected a
-					{
-						cursor: default;
-					}
-
-					.article .checkout .steps li a:before
-					{
-						background: #dbdbdb;
+						background: #322c29;
 						color: #fff;
-						content: counter(numbers);
-						counter-increment: numbers;
-						font-family: 'Open Sans';
-						font-size: 30px;
-						font-weight: 300;
+						display: inline-block;
+						font-size: 32px;
 						height: 55px;
+						letter-spacing: 0;
 						line-height: 52px;
-						left: 0;
-						position: absolute;
+						margin: 0 11px 0 0;
 						text-align: center;
-						top: 0;
+						vertical-align: top;
 						width: 55px;
 
 						-webkit-border-radius: 50%;
@@ -3720,140 +3735,125 @@ button + button
 								border-radius: 50%;
 					}
 
-					.article .checkout .steps li.allow a:before
-					{
-						background: #322C29;
-					}
-
-					.article .checkout .steps li.allow a:hover:before,
-					.article .checkout .steps li.selected a:before
-					{
-						background: #5bd2ec;
-					}
-
-						.article .checkout .steps li a span
-						{
-							display: inline-block;
-							font-size: 16px;
-							line-height: 16px;
-							letter-spacing: -.7px;
-							vertical-align: middle;
-						}
-
-			.article .checkout .content,
-			.article .checkout .sidebar
+			.article .checkout .control-group.account,
+			.article .checkout .shipping
 			{
-				margin: 0;
+				display: none;
 			}
 
-				.article .checkout .steps-content .add-info-block.register,
-				.article .checkout .steps-content .add-info-block.login
+			.article .checkout .shipping
+			{
+				margin: 20px 0 0;
+			}
+
+			.article .checkout .control-group.account
+			{
+				margin: 0 0 20px;
+			}
+
+				.article .checkout .control-group input,
+				.article .checkout .control-group select
 				{
-					float: left;
-					width: 420px;
+					height: 29px;
+					width: 100%;
 
 					-webkit-box-sizing: border-box;
 					   -moz-box-sizing: border-box;
 							box-sizing: border-box;
 				}
 
-					.article .checkout .steps-content > li + li
+				.article .checkout .control-group input.address
+				{
+					margin: 10px 0 0;
+				}
+
+					.article .checkout label.control
 					{
+						clear: both;
+						color: #838382;
+						cursor: pointer;
+						float: left;
+						display: block;
+						font-size: 11px;
+						line-height: 29px;
+						margin: 0;
+					}
+
+						.article .checkout label.control input
+						{
+							float: left;
+							height: auto;
+							margin: 7px 5px 0 0;
+							width: auto;
+						}
+
+			.article .checkout .shipping-method
+			{
+				margin: 0 0 25px;
+			}
+
+			.article .checkout .methods .flat-rate,
+			.article .checkout .methods .free-shipping
+			{
+				display: none;
+			}
+
+				.article .checkout .pay-list li
+				{
+					
+				}
+
+					.article .checkout .pay-list li .info
+					{
+						clear: both;
 						display: none;
+						float: left;
+						margin: 10px 0 0;
+						width: 100%;
 					}
 
-					.article .checkout .steps-content .add-info-block form
-					{
-						margin: 20px 0 0;
-					}
-
-						.article .checkout .steps-content .add-info-block .control
+						.article .checkout .pay-list li .info p + p
 						{
-							display: inline-block;
+							margin: 10px 0 0;
 						}
 
-							.article .checkout .steps-content .add-info-block label input
-							{
-								float: left;
-								height: auto;
-								margin: 0 10px 0 0;
-								width: auto;
-							}
+			.checkout .card-info
+			{
+				cursor: help;
+			}
 
-							.article .checkout .steps-content .add-info-block form button + button
-							{
-								float: none;
-							}
+			.checkout .data-table
+			{
+				margin: 0 0 20px;
+			}
 
-							.article .checkout .steps-content .add-info-block input,
-							.article .checkout .steps-content .add-info-block select
-							{
-								height: 29px;
-								width: 100%;
+				.checkout .data-table tfoot td
+				{
+					-webkit-box-shadow: 0 4px 6px -4px rgba(0, 0, 0, .15) inset;
+					   -moz-box-shadow: 0 4px 6px -4px rgba(0, 0, 0, .15) inset;
+							box-shadow: 0 4px 6px -4px rgba(0, 0, 0, .15) inset;
+				}
 
-								-webkit-box-sizing: border-box;
-								   -moz-box-sizing: border-box;
-										box-sizing: border-box;
-							}
+			.checkout .block
+			{
+				margin: 10px 0 0;
+				overflow: hidden;
+			}
 
-					.article .checkout .steps-content .add-info-block ul
-					{
-						margin: 15px 0;
-					}
+				.checkout .block input
+				{
+					margin: 0 0 10px;
+				}
 
-						.article .checkout .steps-content .add-info-block .sp-methods
-						{
-							margin: 0;
-						}
+				.checkout .block textarea
+				{
+					max-width: 100%;
+					min-width: 100%;
 
-							.article .checkout .steps-content .add-info-block .sp-methods li
-							{
-								font-weight: bold;
-								margin: 3px 0;
-							}
-
-							.article .checkout .steps-content .add-info-block .sp-methods li + li
-							{
-								color: #666;
-							}
-
-							.article .checkout .steps-content .add-info-block .credit-card
-							{
-								display: none;
-							}
-
-							.article .checkout .steps-content .add-info-block .data-table
-							{
-								margin: 0 0 10px;
-							}
-
-								.article .checkout .steps-content .add-info-block .data-table tfoot
-								{
-									-webkit-box-shadow: none;
-									   -moz-box-shadow: none;
-											box-shadow: none;
-								}
-
-									.article .checkout .steps-content .add-info-block .data-table tfoot td
-									{
-										text-align: right;
-
-										-webkit-box-shadow: 0 4px 6px -4px rgba(0, 0, 0, .15) inset;
-										   -moz-box-shadow: 0 4px 6px -4px rgba(0, 0, 0, .15) inset;
-												box-shadow: 0 4px 6px -4px rgba(0, 0, 0, .15) inset;
-									}
-
-							.article .checkout .steps-content .add-info-block .sample-text
-							{
-								background: #f5f5f5;
-								margin: 0 0 10px;
-								padding: 10px;
-							}
-
-							.article .checkout .steps-content .add-info-block .forgot-item
-							{
-								margin: 0 0 10px;
-							}
+					-webkit-box-sizing: border-box;
+					   -moz-box-sizing: border-box;
+							box-sizing: border-box;
+				}
 
 		/* --- Empty --- */
 		.article .empty
@@ -4090,7 +4090,7 @@ button + button
 				ul.list li:before
 				{
 					color: #5bd2ec;
-					/*content: '·';*/
+					content: '·';
 					font-family: 'Times New Roman';
 					font-size: 70px;
 					left: 0;

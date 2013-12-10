@@ -4,6 +4,7 @@ textarea,
 select
 {
 	border: 1px solid #e0e0e0;
+	font-family: 'Open Sans';
 	font-size: 12px;
     height: 19px;
     padding: 4px 7px;
@@ -68,25 +69,24 @@ select
 		min-width: 260px;
 	}
 
-	.field input.error
+	.control-group input.error
 	{
 		background: #faebe7;
-		border: 1px dashed #f00;
+		border: 1px dashed #eb340a;
 	}
 
-	.field span.error
+	.control-group span.error
 	{
-		color: #f00;
+		color: #eb340a;
 		display: block;
-		font-size: 10px;
-		line-height: 13px;
-		margin: 5px 0 0;
+		font-size: 11px;
+		margin: 5px 0;
 	}
 
 	.control-group .column
 	{
 		float: left;
-		width: 49%;
+		width: 48%;
 	}
 
 	.control-group .column + .column
