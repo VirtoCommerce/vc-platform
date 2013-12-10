@@ -5,7 +5,7 @@ using VirtoCommerce.Foundation.Marketing.Model.DynamicContent;
 
 namespace VirtoCommerce.ManagementClient.DynamicContent.Infrastructure
 {
-	public class PropertyValueConverter : IValueConverter
+	public class PropertyValueConverter : IValueConverter, IMultiValueConverter
 	{
 		private static readonly ThreadLocal<PropertyValueConverter> Instance = new ThreadLocal<PropertyValueConverter>(() => new PropertyValueConverter());
 		public static PropertyValueConverter Current
@@ -48,5 +48,17 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.Infrastructure
 
 			return retVal;
 		}
+
+		#region IMultiValueConverter
+		public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+		{
+			return Convert(values[0], targetType, parameter, culture);
+		}
+
+		public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
+		{
+			throw new NotImplementedException();
+		}
+		#endregion
 	}
 }

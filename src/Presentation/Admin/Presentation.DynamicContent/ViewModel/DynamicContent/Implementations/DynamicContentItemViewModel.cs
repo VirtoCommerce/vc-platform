@@ -216,7 +216,6 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.DynamicContent
 					InnerItem.PropertyValues.First(x => x.Name == originalItem.Name).LongTextValue = null;
 					break;
 			}
-			OnUIThread(() => OnPropertyChanged("InnerItem"));
 		}
 
 		private void RaisePropertyValueEditInteractionRequest(DynamicContentItemProperty originalItem)
@@ -245,13 +244,15 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.DynamicContent
 						case PropertyValueType.ShortString:
 							OnUIThread(() => InnerItem.PropertyValues.First(y => y.Name == item.Name).ShortTextValue = item.ShortTextValue);
 							break;
-						case PropertyValueType.Image:
-						case PropertyValueType.Category:
+						case PropertyValueType.Image:						
 						case PropertyValueType.LongString:
 							OnUIThread(() => InnerItem.PropertyValues.First(y => y.Name == item.Name).LongTextValue = item.LongTextValue);
 							break;
+						case PropertyValueType.Category:
+							OnUIThread(() => InnerItem.PropertyValues.First(y => y.Name == item.Name).LongTextValue = item.LongTextValue);
+							OnUIThread(() => InnerItem.PropertyValues.First(y => y.Name == item.Name).Alias = item.Alias);
+							break;
 					}
-					OnUIThread(() => OnPropertyChanged("InnerItem"));
 				}
 			});
 		}

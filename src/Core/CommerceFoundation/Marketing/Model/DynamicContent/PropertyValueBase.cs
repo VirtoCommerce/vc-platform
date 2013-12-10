@@ -199,7 +199,7 @@ namespace VirtoCommerce.Foundation.Marketing.Model.DynamicContent
             switch(this.ValueType)
             {
 				case (int)PropertyValueType.Category:
-					return this.LongTextValue.ToString();
+					return this.Alias;
                 case (int)PropertyValueType.Boolean:
                     return this.BooleanValue.ToString();
                 case (int)PropertyValueType.DateTime:
@@ -209,9 +209,9 @@ namespace VirtoCommerce.Foundation.Marketing.Model.DynamicContent
                 case (int)PropertyValueType.Integer:
                     return this.IntegerValue.ToString();
                 case (int)PropertyValueType.LongString:
-                    return this.LongTextValue.ToString();
+                    return this.LongTextValue;
                 case (int)PropertyValueType.ShortString:
-                    return this.ShortTextValue.ToString();
+                    return this.ShortTextValue;
             }
             return base.ToString();
         }

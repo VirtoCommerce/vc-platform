@@ -10,6 +10,7 @@ using System;
 using VirtoCommerce.Foundation.Marketing.Model.DynamicContent;
 using VirtoCommerce.ManagementClient.DynamicContent.ViewModel.ContentPublishing.Implementations;
 using VirtoCommerce.ManagementClient.DynamicContent.ViewModel.Wizard.Interfaces;
+using VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Interfaces;
 
 namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.Wizard.Implementations
 {
