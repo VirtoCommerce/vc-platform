@@ -33,11 +33,15 @@
         </ul>
     </div>
 </div>
-@*<div class="home sidebar">
+<div class="home sidebar">
     <aside class="block">
-        @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeRightTop" });}
+        <span class="title">@("Newsletter Sign-up".Localize())</span>
+        <p>@("Sign up for our newsletter".Localize())</p>
+        <form action="#" method="post" id="newsletter-validate-detail">
+            <input type="text" name="email" id="newsletter" title="@("Sign up for our newsletter".Localize())"class="required-entry validate-email" />
+            <button type="submit">
+                <span>@("subscribe".Localize())</span>
+            </button>
+        </form>
     </aside>
-    <aside class="block">
-        @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeRightBottom" });}
-    </aside>
-</div>*@
+</div>

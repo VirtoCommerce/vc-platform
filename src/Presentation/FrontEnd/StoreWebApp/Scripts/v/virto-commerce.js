@@ -364,14 +364,13 @@ VirtoCart.prototype = {
 			}, "html");
 	},
 
-	updateCoupon: function (form, onSuccess)
+	updateCoupon: function (code, renderItems, onSuccess)
 	{
-		data = VirtoCommerce.deserializeForm(form);
 
 		$.ajax({
 			type: 'POST',
 			url: VirtoCommerce.url('/cart/applyCoupon'),
-			data: data,
+			data: {couponCode : code, renderItems: renderItems},
 			dataType: 'JSON',
 			success: function (context)
 			{

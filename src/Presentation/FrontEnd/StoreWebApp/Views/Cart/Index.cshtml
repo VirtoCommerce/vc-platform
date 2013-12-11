@@ -84,22 +84,16 @@
             <div class="cart-block">
                 <span class="title">@("Discount Codes".Localize())</span>
                 <p>@("Enter your coupon code if you have one.".Localize())</p>
-                @using (Html.BeginForm())
-                {
-                    @Html.Hidden("renderItems", true)
-                    <fieldset>
-                        <div class="control-group">
-                            @Html.TextBoxFor(m => m.CouponCode)
-                        </div>
-                        <div class="button-group">
-                            <button type="button" title="@("Apply Coupon".Localize())" 
-                                    onclick="VirtoCart.updateCoupon($(this).closest('form'),function(context){VirtoCart.onUpdate(context);});"
+                <div class="control-group">
+                    @Html.TextBoxFor(m => m.CouponCode)
+                </div>
+                <div class="button-group">
+                    <button type="button" title="@("Apply Coupon".Localize())" 
+                                    onclick="VirtoCart.updateCoupon($('#CouponCode').val(), true, function(context){VirtoCart.onUpdate(context);});"
                                     value="ApplyCoupon">
-                                <span>@("Apply Coupon".Localize())</span>
-                            </button>
-                        </div>
-                    </fieldset>
-                }
+                        <span>@("Apply Coupon".Localize())</span>
+                    </button>
+                </div>
             </div>
         </div>
         <div class="grid_4">

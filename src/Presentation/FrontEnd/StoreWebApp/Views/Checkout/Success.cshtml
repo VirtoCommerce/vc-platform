@@ -1,87 +1,15 @@
 ﻿@using VirtoCommerce.Web.Virto.Helpers
 @model VirtoCommerce.Foundation.Orders.Model.Order
 @{
+    ViewBag.PageTitle = "Your order has been received.".Localize();
     ViewBag.Title = "Success".Localize();
 }
 
-<div class="main-container col2-left-layout">
-    <div class="main">
-        <div class="col-main">
-            <div class="page-title">
-                <h1>@("Your order has been received".LocalizeHtml())</h1>
-            </div>
-            <h2 class="sub-title">@("Thank you for your purchase!".LocalizeHtml())</h2>
-
-            <p>@("Your order # is:".LocalizeHtml()) @Html.ActionLink(Model.TrackingNumber, "ViewOrder", "Account", new { orderId = Model.OrderGroupId }, new { id = "OrderTrackingNumber" }).</p>
-            <p>@("You will receive an order confirmation email with details of your order and a link to track its progress.".LocalizeHtml())</p>
-
-
-
-            <div class="buttons-set">
-                <button onclick="$.redirect('@UserHelper.CustomerSession.LastShoppingPage');" title="@("Continue Shopping".LocalizeHtml())" class="button" type="button">
-                    <span><span>@("Continue Shopping".LocalizeHtml())</span></span>
-                </button>
-            </div>
-        </div>
-        <div class="col-left sidebar">
-            <div class="block block-cart">
-                <div class="block-title">
-                    <strong><span>@("My Cart".LocalizeHtml())</span></strong>
-                </div>
-                <div class="block-content">
-                    @{Html.RenderAction("MiniView", "Cart");}
-                </div>
-            </div>
-            <div class="block block-list block-compare">
-                <div class="block-title">
-                    <strong><span>@("Compare Products".LocalizeHtml())</span></strong>
-                </div>
-                <div class="block-content">
-                    @{Html.RenderAction("MiniCompareList", "Account");}
-                </div>
-            </div>
-            <div class="block block-reorder">
-                <div class="block-title">
-                    <strong><span>@("My Orders".LocalizeHtml())</span></strong>
-                </div>
-                <form id="reorder-validate-detail" action="#" method="post">
-                    <div class="block-content">
-                        <p class="block-subtitle">@("Last Ordered Items".LocalizeHtml())</p>
-                        <ol id="cart-sidebar-reorder">
-                            @foreach (var orderItem in Model.OrderForms.SelectMany(of => of.LineItems))
-                            {
-                                string promotionId;
-                                if (PromotionHelper.IsPromotion(orderItem.CatalogItemId, out promotionId) && orderItem.Discounts.Any(x => x.PromotionId == promotionId))
-                                {
-                                    continue;
-                                }
-								
-                                <li class="item last odd">
-                                    <input type="checkbox" 
-                                        class="checkbox validate-one-required-by-name" 
-                                        title="@("Add to Cart".LocalizeHtml())" 
-                                        value="@orderItem.CatalogItemId" 
-                                        id="reorder_item_@orderItem.CatalogItemId" 
-                                        name="order_items[]">
-
-                                    <p class="product-name">
-                                        <a href="@Url.ItemUrl(orderItem.CatalogItemId, orderItem.ParentCatalogItemId)">
-                                            @orderItem.DisplayName
-                                        </a>
-                                    </p>
-                                </li>
-                            }
-                        </ol>
-                        <div id="cart-sidebar-reorder-advice-container"></div>
-                        <div class="actions">
-                            <button type="button" title="@("Add to Cart".LocalizeHtml())" class="button btn-cart" onclick="return VirtoCart.addToCartOrdersClick();">
-                                <span><span>@("Add to Cart".Localize())</span></span>
-                            </button>
-                            <a href="@Url.Action("Orders", "Account")">@("View All".LocalizeHtml())</a>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+<div class="empty normal">
+    <h3>@("Thank you for your purchase!".Localize())</h3>
+    <p>@("Your order # is:".LocalizeHtml()) @Html.ActionLink(Model.TrackingNumber, "ViewOrder", "Account", new { orderId = Model.OrderGroupId }, new { id = "OrderTrackingNumber" }).</p>
+    <p>@("You will receive an order confirmation email with details of your order and a link to track its progress.".Localize())</p>
+    <button onclick="$.redirect('@UserHelper.CustomerSession.LastShoppingPage');" title="@("Continue Shopping".Localize())">
+        <span>@("Continue Shopping".Localize())</span>
+    </button>
 </div>

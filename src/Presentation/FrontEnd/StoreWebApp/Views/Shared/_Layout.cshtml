@@ -81,7 +81,7 @@
                     </div>
                 </div>
                 <div class="rubber">
-                    <ul id="messages" class="messages">
+                    <ul id="messages" class="messages" style="@(ViewBag.Messages !=null ?"":"display:none;")">
                         @{
                             var model = ViewBag.Messages as MessagesModel;
 

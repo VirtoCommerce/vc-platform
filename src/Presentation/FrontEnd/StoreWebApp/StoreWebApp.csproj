@@ -585,6 +585,7 @@
     <Content Include="Content\themes\responsive\images\category\woman.jpg" />
     <Content Include="Content\themes\responsive\images\cloudzoom\ajax-loader.gif" />
     <Content Include="Content\themes\responsive\images\cloudzoom\blank.png" />
+    <Content Include="Content\themes\responsive\images\cvv.gif" />
     <Content Include="Content\themes\responsive\images\fb.png" />
     <Content Include="Content\themes\responsive\images\flags\en.png" />
     <Content Include="Content\themes\responsive\images\flags\ru.png" />
