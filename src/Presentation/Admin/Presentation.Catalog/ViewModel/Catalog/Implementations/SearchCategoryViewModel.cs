@@ -55,7 +55,8 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 		public void InitializeForOpen()
 		{
-			CanChangeSearchCatalog = SearchModifier.HasFlag(SearchCategoryModifier.UserCanChangeSearchCatalog);
+			CanChangeSearchCatalog = SearchModifier.HasFlag(SearchCategoryModifier.UserCanChangeSearchCatalog)
+									 || (!(_catalogInfo is CatalogBase) && string.IsNullOrEmpty(_catalogInfo as string));
 
 			if (_catalogInfo is CatalogBase && !CanChangeSearchCatalog)
 			{
@@ -143,6 +144,10 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 				if (!String.IsNullOrEmpty(SearchCatalogId))
 				{
 					query = query.Where(x => x.CatalogId == SearchCatalogId);
+				}
+				else if (SearchModifier.HasFlag(SearchCategoryModifier.RealCatalogsOnly))
+				{
+					query = query.Where(x => x.Catalog is catalogModel.Catalog);
 				}
 
 				overallCount = query.Count();
