@@ -18,7 +18,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Interfaces
     [Flags]
     public enum SearchCategoryModifier
     {
-        RealCatalogsOnly,
-        UserCanChangeSearchCatalog
+		RealCatalogsOnly = 1 << 0,
+		UserCanChangeSearchCatalog = 1 << 1
     }
 }
