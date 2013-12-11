@@ -1,4 +1,6 @@
-﻿using Microsoft.Web.Infrastructure.DynamicModuleHelper;
+﻿using System;
+using System.Linq;
+using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 using VirtoCommerce.Foundation.AppConfig;
 using VirtoCommerce.Web.Client.Modules;
 
@@ -16,8 +18,19 @@ namespace VirtoCommerce.Web
         {
             if (AppConfigConfiguration.Instance.Setup.IsCompleted)
             {
-                DynamicModuleUtility.RegisterModule(typeof(StoreHttpModule));
-                DynamicModuleUtility.RegisterModule(typeof(MarketingHttpModule));
+                foreach (var module in AppConfigConfiguration.Instance.AvailableModules.Cast<ModuleConfigurationElement>())
+                {
+                    try
+                    {
+                        var type = Type.GetType(module.Type);
+                        DynamicModuleUtility.RegisterModule(type);
+                    }
+                    catch
+                    {
+                        //Skip module on error if config is wrong
+                    }
+                  
+                }
             }
         }
     }

@@ -37,6 +37,11 @@ namespace VirtoCommerce.Web.Models.Binders
 		/// </summary>
         private static readonly Regex FacetRegex = new Regex("^f_", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
+        protected virtual NameValueCollection GetParams(ControllerContext controllerContext)
+	    {
+            return controllerContext.HttpContext.Request.QueryString;
+	    }
+
 		/// <summary>
 		/// Binds the model to a value by using the specified controller context and binding context.
 		/// </summary>
@@ -44,8 +49,8 @@ namespace VirtoCommerce.Web.Models.Binders
 		/// <param name="bindingContext">The binding context.</param>
 		/// <returns>The bound value.</returns>
         public object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
-        {
-            var qs = controllerContext.HttpContext.Request.QueryString;
+		{
+		    var qs = GetParams(controllerContext);
             var qsDict = NvToDict(qs);
             var sp = new SearchParameters
             {
