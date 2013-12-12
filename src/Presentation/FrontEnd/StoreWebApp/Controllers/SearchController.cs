@@ -168,7 +168,8 @@ namespace VirtoCommerce.Web.Controllers
                                 criteria.Currency.ToLower(),
                                 priceList.ToLower()))
                         {
-                            IgnoredUnmapped = true
+                            IgnoredUnmapped = true,
+                            DataType = SearchSortField.FLOAT
                         })
                         .ToArray());
                 }
