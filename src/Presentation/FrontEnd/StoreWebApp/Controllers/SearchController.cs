@@ -169,7 +169,7 @@ namespace VirtoCommerce.Web.Controllers
                                 priceList.ToLower()))
                         {
                             IgnoredUnmapped = true,
-                            DataType = SearchSortField.FLOAT
+                            DataType = SearchSortField.DOUBLE
                         })
                         .ToArray());
                 }

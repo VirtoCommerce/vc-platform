@@ -270,7 +270,7 @@ namespace VirtoCommerce.Search.Providers.Lucene
                         null,
                         numDocs,
                         new Sort(
-                            fields.Select(field => new SortField(field.DataType == SortField.FLOAT ? field.FieldName + "_value" : field.FieldName, field.DataType, field.IsDescending))
+                            fields.Select(field => new SortField(field.FieldName, field.DataType, field.IsDescending))
                                   .ToArray()));
                 }
                 else
