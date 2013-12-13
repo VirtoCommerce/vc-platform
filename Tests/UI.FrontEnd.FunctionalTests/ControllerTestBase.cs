@@ -89,8 +89,8 @@ using VirtoCommerce.PowerShell.DatabaseSetup;
 using VirtoCommerce.Search.Index;
 using VirtoCommerce.Search.Providers.Elastic;
 using VirtoCommerce.Web.Client;
-using VirtoCommerce.Web.Client.Globalization;
-using VirtoCommerce.Web.Client.Globalization.Repository;
+using VirtoCommerce.Client.Globalization;
+using VirtoCommerce.Client.Globalization.Repository;
 using VirtoCommerce.Web.Client.Security;
 using VirtoCommerce.Web.Client.Services.Assets;
 using VirtoCommerce.Web.Client.Services.Emails;
@@ -98,7 +98,6 @@ using VirtoCommerce.Web.Client.Services.Listeners;
 using VirtoCommerce.Web.Client.Services.Security;
 using VirtoCommerce.Web.Client.Services.Sequences;
 using VirtoCommerce.Web.Client.Services.Templates;
-using VirtoCommerce.Web.Helpers;
 using VirtoCommerce.Web.Virto.Helpers;
 using VirtoCommerce.Web.Virto.Helpers.Payments;
 

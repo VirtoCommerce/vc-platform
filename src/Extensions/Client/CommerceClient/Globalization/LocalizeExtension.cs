@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using System.Web.Mvc;
 using Microsoft.Practices.ServiceLocation;
 
-namespace VirtoCommerce.Web.Client.Globalization
+namespace VirtoCommerce.Client.Globalization
 {
     /// <summary>
     /// Class LocalizeExtension.
@@ -34,16 +33,6 @@ namespace VirtoCommerce.Web.Client.Globalization
 			return source.Localize((string)null);
 		}
 
-        /// <summary>
-        /// Localizes the HTML.
-        /// </summary>
-        /// <param name="source">The source.</param>
-        /// <param name="format">The format.</param>
-        /// <returns>localized MvcHtmlString.</returns>
-		public static MvcHtmlString LocalizeHtml(this string source, params object[] format)
-		{
-			return new MvcHtmlString(string.Format(source.Localize((string)null), format));
-		}
 
         /// <summary>
         /// Localizes the specified source.

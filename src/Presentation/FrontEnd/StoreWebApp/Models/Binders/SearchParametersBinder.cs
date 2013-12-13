@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using System.Collections.Specialized;
-using VirtoCommerce.Web.Helpers;
+using VirtoCommerce.Client.Extensions;
 using System.Text.RegularExpressions;
 using VirtoCommerce.Web.Client.Extensions;
 

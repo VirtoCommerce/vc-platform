@@ -4,12 +4,10 @@ using System;
 using System.Linq;
 using System.Web.Mvc;
 using VirtoCommerce.Client;
-using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.Foundation.Stores.Model;
 using VirtoCommerce.Web.Client.Extensions;
 using VirtoCommerce.Web.Client.Extensions.Filters;
 using VirtoCommerce.Web.Client.Helpers;
-using VirtoCommerce.Web.Helpers;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Virto.Helpers;
 

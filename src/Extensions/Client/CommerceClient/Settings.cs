@@ -7,9 +7,9 @@
 // 
 #endregion
 using System;
-using VirtoCommerce.Web.Helpers;
+using VirtoCommerce.Client.Extensions;
 
-namespace VirtoCommerce.Web.Client
+namespace VirtoCommerce.Client
 {
     /// <summary>
     /// Class Settings.

@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Linq;
 
-namespace VirtoCommerce.Web.Client.Globalization
+namespace VirtoCommerce.Client.Globalization
 {
     /// <summary>
     /// Class ElementCategory.

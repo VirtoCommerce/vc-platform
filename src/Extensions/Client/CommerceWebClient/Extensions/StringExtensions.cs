@@ -1,60 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Web.Mvc;
+using VirtoCommerce.Client.Globalization;
 
-namespace VirtoCommerce.Web.Helpers
+namespace VirtoCommerce.Web.Client.Extensions
 {
     public static class StringExtensions
     {
-        public static int TryParse(this string u, int defaultValue)
-        {
-            try
-            {
-                return int.Parse(u);
-            }
-            catch
-            {
-                return defaultValue;
-            }
-        }
-
-        public static int TryParse(this string u)
-        {
-            return TryParse(u, 0);
-        }
-
         /// <summary>
-        /// Like null coalescing operator (??) but including empty strings
+        /// Localizes the HTML.
         /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
-        public static string IfNullOrEmpty(this string a, string b)
+        /// <param name="source">The source.</param>
+        /// <param name="format">The format.</param>
+        /// <returns>localized MvcHtmlString.</returns>
+        public static MvcHtmlString LocalizeHtml(this string source, params object[] format)
         {
-            return string.IsNullOrEmpty(a) ? b : a;
+            return new MvcHtmlString(string.Format(source.Localize((string)null), format));
         }
 
-        /// <summary>
-        /// If <paramref name="a"/> is empty, returns null
-        /// </summary>
-        /// <param name="a"></param>
-        /// <returns></returns>
-        public static string EmptyToNull(this string a)
-        {
-            return string.IsNullOrEmpty(a) ? null : a;
-        }
-
-		/// <summary>
-		/// Equalses the or null empty.
-		/// </summary>
-		/// <param name="str1">The STR1.</param>
-		/// <param name="str2">The STR2.</param>
-		/// <param name="comparisonType">Type of the comparison.</param>
-		/// <returns></returns>
-		public static bool EqualsOrNullEmpty(this string str1, string str2, StringComparison comparisonType)
-		{
-			return String.Compare(str1 ?? "", str2 ?? "", comparisonType) == 0;
-		}
     }
 }
