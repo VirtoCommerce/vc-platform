@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace VirtoCommerce.Web.Client.Globalization.Repository
+namespace VirtoCommerce.Client.Globalization.Repository
 {
     /// <summary>
     /// Class CacheElementRepository.

@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace VirtoCommerce.Web.Client.Globalization
+namespace VirtoCommerce.Client.Globalization
 {
     /// <summary>
     /// Class DirectoryCreateException.

@@ -6,7 +6,7 @@ using VirtoCommerce.Client;
 using VirtoCommerce.Foundation.Customers;
 using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Foundation.Customers.Services;
-using VirtoCommerce.Web.Client.Globalization;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Web.Models;
 
 namespace VirtoCommerce.Web.Virto.Helpers

@@ -8,7 +8,6 @@ using VirtoCommerce.Foundation.Orders.Model.Countries;
 using VirtoCommerce.Foundation.Orders.Model.ShippingMethod;
 using VirtoCommerce.Web.Client.Extensions.Validation;
 using VirtoCommerce.Web.Client.Helpers;
-using VirtoCommerce.Web.Helpers;
 using VirtoCommerce.Web.Virto.Helpers;
 using VirtoCommerce.Web.Virto.Helpers.Popup;
 

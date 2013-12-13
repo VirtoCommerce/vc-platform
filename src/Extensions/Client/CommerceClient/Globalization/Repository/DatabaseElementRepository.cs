@@ -5,9 +5,8 @@ using VirtoCommerce.Foundation.AppConfig;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.Web.Helpers;
 
-namespace VirtoCommerce.Web.Client.Globalization.Repository
+namespace VirtoCommerce.Client.Globalization.Repository
 {
     /// <summary>
     /// Class DatabaseElementRepository.

@@ -10,7 +10,7 @@ using VirtoCommerce.Foundation.Catalogs;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Customers;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
-using VirtoCommerce.Web.Client.Globalization;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Web.Models;
 
 namespace VirtoCommerce.Web.Virto.Helpers

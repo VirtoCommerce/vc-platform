@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 
-namespace VirtoCommerce.Web.Client.Globalization
+namespace VirtoCommerce.Client.Globalization
 {
     /// <summary>
     /// Class ElementCacheKeyEqualityComparer.

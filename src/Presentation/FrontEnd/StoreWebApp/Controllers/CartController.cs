@@ -7,9 +7,8 @@ using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Orders.Model;
 using VirtoCommerce.Web.Client.Extensions;
 using VirtoCommerce.Web.Client.Extensions.Filters;
-using VirtoCommerce.Web.Client.Globalization;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Web.Client.Helpers;
-using VirtoCommerce.Web.Helpers;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Virto.Helpers;
 

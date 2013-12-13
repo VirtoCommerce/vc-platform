@@ -8,7 +8,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Script.Serialization;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
-using VirtoCommerce.Web.Client.Globalization;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Web.Client.Helpers;
 
 namespace VirtoCommerce.Web.Client.Extensions

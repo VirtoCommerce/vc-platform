@@ -13,7 +13,7 @@ using VirtoCommerce.Foundation.Orders.Model;
 using VirtoCommerce.Foundation.Orders.Services;
 using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.Web.Client.Extensions.Filters;
-using VirtoCommerce.Web.Client.Globalization;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Web.Client.Helpers;
 using VirtoCommerce.Web.Client.Security;
 using VirtoCommerce.Web.Client.Services.Security;

@@ -4,7 +4,6 @@ using System.Linq;
 using VirtoCommerce.Foundation.Orders.Model;
 using VirtoCommerce.Foundation.Orders.Model.ShippingMethod;
 using VirtoCommerce.Web.Client.Helpers;
-using VirtoCommerce.Web.Helpers;
 using VirtoCommerce.Web.Models;
 
 namespace VirtoCommerce.Web.Virto.Helpers

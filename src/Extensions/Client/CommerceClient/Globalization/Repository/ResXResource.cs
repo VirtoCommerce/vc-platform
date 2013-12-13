@@ -5,9 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Xml.Linq;
-using VirtoCommerce.Web.Helpers;
+using VirtoCommerce.Client.Extensions;
 
-namespace VirtoCommerce.Web.Client.Globalization.Repository
+namespace VirtoCommerce.Client.Globalization.Repository
 {
     /// <summary>
     /// Class ResXResourceFileHelper.
@@ -93,7 +93,7 @@ namespace VirtoCommerce.Web.Client.Globalization.Repository
         /// <summary>
         /// Creates the dir.
         /// </summary>
-        /// <exception cref="VirtoCommerce.Web.Client.Globalization.DirectoryCreateException"></exception>
+        /// <exception cref="VirtoCommerce..Client.Globalization.DirectoryCreateException"></exception>
         private void CreateDir()
         {
             if (Directory.Exists(_path) == false)

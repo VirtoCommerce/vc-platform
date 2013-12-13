@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace VirtoCommerce.Web.Client.Globalization
+namespace VirtoCommerce.Client.Globalization
 {
     /// <summary>
     /// Class Element.

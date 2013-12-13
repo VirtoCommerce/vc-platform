@@ -4,27 +4,19 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Web.Mvc;
-using Omu.ValueInjecter;
 using VirtoCommerce.Client;
-using VirtoCommerce.Foundation.Catalogs;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Catalogs.Search;
-using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using VirtoCommerce.Foundation.PlatformTools;
 using VirtoCommerce.Foundation.Search;
 using VirtoCommerce.Web.Client.Extensions;
 using VirtoCommerce.Web.Client.Extensions.Filters;
-using VirtoCommerce.Web.Client.Globalization;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Web.Client.Helpers;
-using VirtoCommerce.Web.Helpers;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Virto.Helpers;
-using VirtoCommerce.Web.Virto.Helpers.MVC;
 
 #endregion
 
@@ -175,15 +167,16 @@ namespace VirtoCommerce.Web.Controllers
                 if (sort.Equals("price", StringComparison.OrdinalIgnoreCase))
                 {
                     sortObject = new SearchSort(session.Pricelists.Select(priceList =>
-                                                                          new SearchSortField(
-                                                                              String.Format("price_{0}_{1}",
-                                                                                            criteria.Currency.ToLower(),
-                                                                                            priceList.ToLower()))
-                                                                              {
-                                                                                  IgnoredUnmapped = true,
-                                                                                  IsDescending = isDescending
-                                                                              })
-                                                       .ToArray());
+                        new SearchSortField(
+                            String.Format("price_{0}_{1}",
+                                criteria.Currency.ToLower(),
+                                priceList.ToLower()))
+                        {
+                            IgnoredUnmapped = true,
+                            IsDescending = isDescending,
+                            DataType = SearchSortField.DOUBLE
+                        })
+                        .ToArray());
                 }
                 else
                 {
@@ -317,14 +310,14 @@ namespace VirtoCommerce.Web.Controllers
             return GetModelFromCriteria(criteria, parameters);
         }
 
-	    /// <summary>
-	    /// Searches within category.
-	    /// </summary>
-	    /// <param name="category">The category.</param>
-	    /// <param name="parameters">The parameters.</param>
+		/// <summary>
+		/// Searches within category.
+		/// </summary>
+		/// <param name="category">The category.</param>
+		/// <param name="parameters">The parameters.</param>
 	    /// <param name="name"></param>
-	    /// <returns>ActionResult.</returns>
-	    [CustomOutputCache(CacheProfile = "SearchCache", VaryByCustom = "store;currency;cart")]
+		/// <returns>ActionResult.</returns>
+        [CustomOutputCache(CacheProfile = "SearchCache", VaryByCustom = "store;currency;cart")]
         public ActionResult SearchResultsWithinCategory(Category category, SearchParameters parameters, string name = "SearchResultsPartial")
         {
             ViewBag.Title = category.Name.Localize();

@@ -190,17 +190,6 @@
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\Validation\RequiredIfAttribute.cs" />
     <Compile Include="Extensions\ViewExtensions.cs" />
-    <Compile Include="Globalization\CurrencyInfo.cs" />
-    <Compile Include="Globalization\DirectoryCreateException.cs" />
-    <Compile Include="Globalization\Element.cs" />
-    <Compile Include="Globalization\ElementCacheKey.cs" />
-    <Compile Include="Globalization\IElementRepository.cs" />
-    <Compile Include="Globalization\LocalizeExtension.cs" />
-    <Compile Include="Globalization\LocalizeHelper.cs" />
-    <Compile Include="Globalization\Repository\CacheElementRepository.cs" />
-    <Compile Include="Globalization\Repository\DatabaseElementRepository.cs" />
-    <Compile Include="Globalization\Repository\ResXResource.cs" />
-    <Compile Include="Globalization\Repository\XmlElementRepository.cs" />
     <Compile Include="Helpers\CartHelper.cs" />
     <Compile Include="Helpers\SettingsHelper.cs" />
     <Compile Include="Helpers\PromotionHelper.cs" />
@@ -228,7 +217,6 @@
     <Compile Include="Services\Sequences\SequenceService.cs" />
     <Compile Include="Services\Templates\ProcessedTemplate.cs" />
     <Compile Include="Services\Templates\TemplateService.cs" />
-    <Compile Include="Settings.cs" />
     <Compile Include="UnityDependencyResolverServiceLocatorProvider.cs" />
   </ItemGroup>
   <ItemGroup>

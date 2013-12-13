@@ -120,22 +120,14 @@ namespace VirtoCommerce.Search.Providers.Lucene
 
             var currency = criteria.Currency.ToLower();
 
-            var upper = upperbound == null ? String.Empty : upperbound.ToString();
-            if (String.IsNullOrEmpty(upper))
-            {
-                upper = NumericUtils.FloatToPrefixCoded(float.MaxValue);
-                //upper = NumberTools.MAX_STRING_VALUE;
-            }
-            else
-            {
-                upper = ConvertToSearchable(upperbound);
-            }
+            var upper = upperbound == null ? NumericUtils.LongToPrefixCoded(long.MaxValue) : ConvertToSearchable(upperbound);
 
             // format is "fieldname_store_currency_pricelist"
             string[] pls = null;
-            if (criteria is CatalogItemSearchCriteria)
+            var searchCriteria = criteria as CatalogItemSearchCriteria;
+            if (searchCriteria != null)
             {
-                pls = ((CatalogItemSearchCriteria)criteria).Pricelists;
+                pls = searchCriteria.Pricelists;
             }
 
             var parentPriceList = String.Empty;

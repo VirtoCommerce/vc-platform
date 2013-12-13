@@ -5,7 +5,7 @@ using System.Text;
 using VirtoCommerce.Client;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Catalogs.Search;
-using VirtoCommerce.Web.Client.Globalization;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Web.Client.Helpers;
 using VirtoCommerce.Web.Virto.Helpers;
 

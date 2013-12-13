@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 
-namespace VirtoCommerce.Web.Client.Globalization
+namespace VirtoCommerce.Client.Globalization
 {
     /// <summary>
     /// Class LocalizeHelper.
@@ -49,7 +49,7 @@ namespace VirtoCommerce.Web.Client.Globalization
                 {
                     foreach (Match match in Regex.Matches(content, pattern))
                     {
-                        match.Groups["s"].Value.LocalizeHtml();
+                        match.Groups["s"].Value.Localize();
                     }
                 }
             }
