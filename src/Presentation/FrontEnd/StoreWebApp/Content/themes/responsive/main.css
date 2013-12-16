@@ -3218,7 +3218,7 @@ button + button
 
 								.article .product-view .product-other .product-additional ul ul li
 								{
-									height: 205px;
+									height: 150px;
 									margin: 5px 5px 20px;
 									width: 125px;
 								}
@@ -3243,6 +3243,8 @@ button + button
 										{
 											display: block;
 											max-width: 100%;
+                                            margin: 0 auto;
+                                            max-height: 80px;
 										}
 
 									.article .product-view .product-other .product-additional ul ul li a

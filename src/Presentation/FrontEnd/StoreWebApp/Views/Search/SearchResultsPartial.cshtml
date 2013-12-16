@@ -15,7 +15,15 @@
 
 @if (Model.Pager.TotalCount == 0)
 {
-    <p class="note-msg">@("There are no results available.".LocalizeHtml())</p>
+    <div class="content">
+        <ul class="messages">
+            <li class="notice">
+                <ul>
+                    <li><span>@("There are no results available.".Localize())</span></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
 }
 else
 {
