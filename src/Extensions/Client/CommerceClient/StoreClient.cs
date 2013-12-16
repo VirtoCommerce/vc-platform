@@ -120,7 +120,18 @@ namespace VirtoCommerce.Client
         {
             return Helper.Get(
                 string.Format(StoreCacheKey, "all"),
-                () => _storeRepository.Stores.ExpandAll().ToArray(),
+                () =>
+                {
+                    try
+                    {
+                        return _storeRepository.Stores.ExpandAll().ToArray();
+                    }
+                    catch
+                    {
+
+                        return new Store[0];
+                    }
+                },
                 StoreConfiguration.Instance.Cache.StoreTimeout,
                 _isEnabled);
         }

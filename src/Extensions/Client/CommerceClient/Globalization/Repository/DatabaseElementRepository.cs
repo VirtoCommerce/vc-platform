@@ -106,8 +106,17 @@ namespace VirtoCommerce.Client.Globalization.Repository
         /// <param name="culture">The culture.</param>
         /// <returns>Element.</returns>
 		public Element Get(string name, string category, string culture)
-		{
-			var loc = GetLocalization(name, category, culture);
+        {
+            Localization loc = null;
+
+            try
+            {
+                loc = GetLocalization(name, category, culture);
+            }
+            catch
+            {
+                //If db is down simply continue as if loc not exists
+            }
 
 			return loc == null ? null
 					   : new Element

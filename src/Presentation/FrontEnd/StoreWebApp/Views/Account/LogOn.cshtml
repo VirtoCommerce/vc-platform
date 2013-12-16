@@ -16,6 +16,7 @@
                 {
                     @Html.AntiForgeryToken()
                     @Html.ValidationSummary(true, "Login was unsuccessful. Please correct the errors and try again.".Localize())
+
                     <div class="col2-set">
                         <div class="col-1 new-users">
                             <div class="content">
@@ -36,15 +37,24 @@
                                 <p>
                                     @("If you have an account with us, please log in.".LocalizeHtml())</p>
                                 <ul class="form-list">
+                                    @if (!string.IsNullOrEmpty(Model.ImpersonatedUserName))
+                                    {
+                                        <li>
+                                            @Html.LabelForEx(m => m.ImpersonatedUserName, "Login on behalf of user")
+                                            <div class="input-box">
+                                                @Html.TextBoxFor(m => m.ImpersonatedUserName, new {@class = "input-text required-entry validate-email"})
+                                            </div>
+                                        </li>
+                                    }
                                     <li>
-                                        @Html.LabelForEx(m=>m.UserName,"Email Address")
+                                        @Html.LabelForEx(m=>m.UserName,"Email Address/User name")
                                         <div class="input-box">
                                             @Html.TextBoxFor(m => m.UserName, new { @class = "input-text required-entry validate-email" })
                                             @Html.ValidationMessageFor(m => m.UserName)
                                         </div>
                                     </li>
                                     <li>
-                                         @Html.LabelForEx(m=>m.Password)
+                                        @Html.LabelForEx(m=>m.Password)
                                         <div class="input-box">
                                             @Html.PasswordFor(m => m.Password, new { @class = "input-text required-entry validate-password" })
                                             @Html.ValidationMessageFor(m => m.Password)
@@ -53,8 +63,8 @@
                                     <li class="control">                    
                                         <div class="input-box">
                                             @Html.CheckBoxFor(m=>m.RememberMe, new { @class = "checkbox" })
-                                            </div>
-                                            @Html.LabelFor(m=>m.RememberMe, "Remember Me".Localize())
+                                        </div>
+                                        @Html.LabelFor(m=>m.RememberMe, "Remember Me".Localize())
                                     </li>
                                 </ul>
                                 <p class="required">
@@ -64,7 +74,7 @@
                                 <a class="f-left" href="@Url.Action("ForgotPassword", "Account")">
                                     @("Forgot Your Password?".LocalizeHtml())</a>
                                 <button id="send2" name="send" title="@("Login".LocalizeHtml())" class="button" type="submit">
-                                    <span><span>@("Login".LocalizeHtml())</span></span></button>
+                                    <span><span>@("Login".Localize())</span></span></button>
                             </div>
 
                             </div>

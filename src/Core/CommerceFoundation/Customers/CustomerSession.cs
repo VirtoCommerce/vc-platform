@@ -73,6 +73,29 @@ namespace VirtoCommerce.Foundation.Customers
             get;set;
         }
 
+        public string CsrUsername
+        {
+            get
+            {
+                if (HttpContext.Current != null && HttpContext.Current.Session != null)
+                {
+                    return HttpContext.Current.Session["CsrUsername"] as string;
+                }
+                return Thread.GetData(Thread.GetNamedDataSlot("CsrUsername")) as string;
+            }
+            set
+            {
+                if (HttpContext.Current != null && HttpContext.Current.Session != null)
+                {
+                    HttpContext.Current.Session["CsrUsername"] = value;
+                }
+                else
+                {
+                    Thread.SetData(Thread.GetNamedDataSlot("CsrUsername"), value);
+                }
+            }
+        }
+
         /// <summary>
         /// Gets or sets the name of the customer.
         /// </summary>

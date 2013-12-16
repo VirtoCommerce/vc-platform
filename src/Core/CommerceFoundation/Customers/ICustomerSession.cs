@@ -40,6 +40,11 @@ namespace VirtoCommerce.Foundation.Customers
         string Username { get; set; }
 
         /// <summary>
+        ///  Gets or sets the username, used by customer service representative.
+        /// </summary>
+        string CsrUsername { get; set; }
+
+        /// <summary>
         /// Gets or sets the name of the customer. Used to display the name of the currently logged in customer.
         /// </summary>
         /// <value>

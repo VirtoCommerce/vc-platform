@@ -75,7 +75,7 @@ namespace VirtoCommerce.Web
 			_traceSource.Info("SchedulerHost.Start finished");
         }
 
-        public void Stop(bool immediate) //...may be it is better to ignore immediate calls
+        public void Stop(bool immediate = false) //...may be it is better to ignore immediate calls
         {
 			_traceSource.Info("SchedulerHost constructor started");
 	        try

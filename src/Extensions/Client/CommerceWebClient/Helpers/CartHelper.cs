@@ -300,6 +300,10 @@ namespace VirtoCommerce.Web.Client.Helpers
 			foreach (var newOf in order.OrderForms)
 			{
 				newOf.Name = "Default";
+			    if (!string.IsNullOrEmpty(CustomerSession.CsrUsername))
+			    {
+                    //TODO: Add order form property CSR username is saved in the order form property called "Purchased By CSR"
+			    }
 			}
 
 			return order;

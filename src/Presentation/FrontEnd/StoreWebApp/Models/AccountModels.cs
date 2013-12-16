@@ -91,6 +91,12 @@ namespace VirtoCommerce.Web.Models
         [Display(Name = "User name")]
         public string UserName { get; set; }
 
+        /// <summary>
+        /// Gets or sets the name of the impersonated user.
+        /// </summary>
+        /// <value>The name of the impersonated user.</value>
+        public string ImpersonatedUserName { get; set; }
+
 		/// <summary>
 		/// Gets or sets the password.
 		/// </summary>
