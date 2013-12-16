@@ -58,20 +58,26 @@ namespace VirtoCommerce.Web.Controllers
         {
             var stores = _storeClient.GetStores();
 
-            var model = new StoresModel
-                {
-                    Stores = (from store in stores
-							  where IsStoreVisible(store)
-                              select new StoreModel
-                                  {
-                                      Id = store.StoreId, 
-                                      Name = store.Name, 
-                                      Url = String.IsNullOrEmpty(store.Url) ? 
-                                      Url.Content(String.Format("~/?store={0}", store.StoreId)) : store.Url
-                                  }).ToArray(),
-                    SelectedStore = UserHelper.CustomerSession.StoreId
-                };
-			return model.Stores.Any() ? PartialView("StorePicker", model): null;
+		    if (stores.Any())
+		    {
+		        var model = new StoresModel
+		        {
+		            Stores = (from store in stores
+		                where IsStoreVisible(store)
+		                select new StoreModel
+		                {
+		                    Id = store.StoreId,
+		                    Name = store.Name,
+		                    Url = String.IsNullOrEmpty(store.Url)
+		                        ? Url.Content(String.Format("~/?store={0}", store.StoreId))
+		                        : store.Url
+		                }).ToArray(),
+		            SelectedStore = UserHelper.CustomerSession.StoreId
+		        };
+
+                return model.Stores.Any() ? PartialView("StorePicker", model) : null;
+		    }
+		    return null;
         }
 
 		/// <summary>

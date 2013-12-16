@@ -107,12 +107,7 @@ namespace VirtoCommerce.Web.Client.Modules
                 //Redirect to login page users that are not authenticated but try to navigate to restricted store
                 if (store.StoreState == StoreState.RestrictedAccess.GetHashCode())
                 {
-                    var loginUrlWithoutAppPath = FormsAuthentication.LoginUrl.Substring(context.Request.ApplicationPath.Length);
-                    if (!HttpContext.Current.Request.RawUrl.EndsWith(loginUrlWithoutAppPath, StringComparison.InvariantCultureIgnoreCase) &&
-                        !HttpContext.Current.Request.RawUrl.EndsWith("Account/Register", StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        HttpContext.Current.Response.Redirect(FormsAuthentication.LoginUrl);
-                    }
+                    RedirectToLogin(context);
                 }
                 else if (store.StoreState == StoreState.Closed.GetHashCode())
                 {
@@ -207,7 +202,12 @@ namespace VirtoCommerce.Web.Client.Modules
 
             // now save store in the cookie
             StoreHelper.SetCookie(StoreCookie, session.StoreId, DateTime.Now.AddMonths(1), false);
-            StoreHelper.SetCookie(CurrencyCookie, currency, DateTime.Now.AddMonths(1));           
+            StoreHelper.SetCookie(CurrencyCookie, currency, DateTime.Now.AddMonths(1));
+
+            if (context.Request.QueryString.AllKeys.Any(x => x.Equals("loginas", StringComparison.OrdinalIgnoreCase)))
+            {
+                RedirectToLogin(context);
+            }
         }
 
 		#region Helper Methods
@@ -217,11 +217,10 @@ namespace VirtoCommerce.Web.Client.Modules
         /// <param name="context">The context.</param>
         protected virtual void RedirectToLogin(HttpContext context)
         {
-            var loginUrlWithoutAppPath = FormsAuthentication.LoginUrl.Substring(context.Request.ApplicationPath.Length);
-            if (!context.Request.RawUrl.EndsWith(loginUrlWithoutAppPath, StringComparison.InvariantCultureIgnoreCase) &&
-                !context.Request.RawUrl.EndsWith("Account/Register", StringComparison.InvariantCultureIgnoreCase))
+            if (!context.Request.Url.AbsolutePath.Equals(FormsAuthentication.LoginUrl, StringComparison.InvariantCultureIgnoreCase) &&
+                !context.Request.Url.AbsolutePath.Equals(VirtualPathUtility.ToAbsolute("~/Account/Register"), StringComparison.InvariantCultureIgnoreCase))
             {
-                context.Response.Redirect(FormsAuthentication.LoginUrl);
+                context.Response.Redirect(FormsAuthentication.LoginUrl + context.Request.Url.Query);
             }
         }
 

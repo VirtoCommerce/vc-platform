@@ -99,12 +99,18 @@ namespace VirtoCommerce.Web.Controllers
         /// Logs on.
         /// </summary>
         /// <param name="returnUrl">The return URL.</param>
+        /// <param name="loginAs">Impersonate user name</param>
         /// <returns>ActionResult.</returns>
         [AllowAnonymous]
-        public ActionResult LogOn(string returnUrl)
+        public ActionResult LogOn(string returnUrl, string loginAs)
         {
+            var model = new LogOnModel();
+            if (!string.IsNullOrEmpty(loginAs))
+            {
+                model.ImpersonatedUserName = loginAs;
+            }
             ViewBag.ReturnUrl = returnUrl;
-            return View();
+            return View(model);
         }
 
         /// <summary>
@@ -160,12 +166,25 @@ namespace VirtoCommerce.Web.Controllers
         public ActionResult LogOn(LogOnModel model, string returnUrl)
         {
             var errorMessage = "The user name or password provided is incorrect.";
-            if (ModelState.IsValid && _webSecurity.Login(model.UserName, model.Password, model.RememberMe))
+            if (ModelState.IsValid)
             {
-                if (StoreHelper.IsUserAuthorized(model.UserName, out errorMessage))
+                if (string.IsNullOrEmpty(model.ImpersonatedUserName))
                 {
-                    OnPostLogon(model.UserName);
-                    return RedirectToLocal(returnUrl);
+                    if (_webSecurity.Login(model.UserName, model.Password, model.RememberMe) && StoreHelper.IsUserAuthorized(model.UserName, out errorMessage))
+                    {
+                        OnPostLogon(model.UserName);
+                        return RedirectToLocal(returnUrl);
+                    }
+                }
+                else
+                {
+                    if (_webSecurity.LoginAs(model.ImpersonatedUserName, model.UserName, model.Password, out errorMessage, model.RememberMe)
+                        && StoreHelper.IsUserAuthorized(model.UserName, out errorMessage) 
+                        && StoreHelper.IsUserAuthorized(model.ImpersonatedUserName, out errorMessage))
+                    {
+                        OnPostLogon(model.ImpersonatedUserName, model.UserName);
+                        return RedirectToLocal(returnUrl);
+                    }
                 }
             }
 
@@ -1300,16 +1319,21 @@ namespace VirtoCommerce.Web.Controllers
         /// <summary>
         /// After user has logged in do some actions
         /// </summary>
-        private void OnPostLogon(string userName)
+        private void OnPostLogon(string userName, string csrUserName = null)
         {
             var customerId = _webSecurity.GetUserId(userName);
             var contact = _userClient.GetCustomer(customerId.ToString(CultureInfo.InvariantCulture), false);
-            var account = _userClient.GetAccountByUserName(userName);
+
+            if (!string.IsNullOrEmpty(csrUserName))
+            {
+                UserHelper.CustomerSession.CsrUsername = csrUserName;
+            }
 
             if (contact != null)
             {
                 var lastVisited = contact.ContactPropertyValues.FirstOrDefault(x => x.Name == ContactPropertyValueName.LastVisit);
 
+             
                 if (lastVisited != null)
                 {
                     lastVisited.DateTimeValue = DateTime.UtcNow;
@@ -1323,6 +1347,18 @@ namespace VirtoCommerce.Web.Controllers
                             ValueType = PropertyValueType.DateTime.GetHashCode()
                         };
                     contact.ContactPropertyValues.Add(lastVisited);
+                }
+
+                if (!string.IsNullOrEmpty(csrUserName))
+                {
+                    var lastVisitedByCsr = new ContactPropertyValue
+                    {
+                        Name = ContactPropertyValueName.LastVisitCSR,
+                        DateTimeValue = DateTime.UtcNow,
+                        ShortTextValue = string.Format("CSR username: {0}", csrUserName),
+                        ValueType = PropertyValueType.DateTime.GetHashCode()
+                    };
+                    contact.ContactPropertyValues.Add(lastVisitedByCsr);
                 }
                 _userClient.SaveCustomerChanges();
             }

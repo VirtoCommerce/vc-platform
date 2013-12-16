@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Web.Security;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Security;
 using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.Foundation.Security.Repositories;
@@ -56,12 +57,83 @@ namespace VirtoCommerce.Web.Client.Services.Security
             var account = _securityRepository.Accounts.FirstOrDefault(
                 a => a.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase));
 
-            if (account == null 
+            if (account == null
                 || !account.AccountState.GetHashCode().Equals(AccountState.Approved.GetHashCode()))
             {
                 return false;
             }
             return WebSecurity.Login(userName, password, persistCookie);
+        }
+
+        /// <summary>
+        /// Special login case for customer service representative (CSR)
+        /// </summary>
+        /// <param name="userName">customer user name</param>
+        /// <param name="csrUserName">CSR user name</param>
+        /// <param name="password">CSR password</param>
+        /// <param name="errrorMessage"></param>
+        /// <param name="persistCookie">if set to <c>true</c> [persist cookie].</param>
+        /// <returns><c>true</c> if success, <c>false</c> otherwise.</returns>
+        public bool LoginAs(string userName, string csrUserName, string password, out string errrorMessage, bool persistCookie = false)
+        {
+            errrorMessage = null;
+            var csrAccount = _securityRepository.Accounts.FirstOrDefault(
+                a => a.UserName.Equals(csrUserName, StringComparison.OrdinalIgnoreCase));
+
+            if (!Membership.ValidateUser(csrUserName, password))
+            {
+                errrorMessage = "CSR user name or password incorrect.";
+                return false;
+            }
+
+            if (csrAccount == null
+            || !csrAccount.AccountState.GetHashCode().Equals(AccountState.Approved.GetHashCode()))
+            {
+                errrorMessage = "CSR account is not valid.";
+                return false;
+            }
+
+            if (csrAccount.RegisterType != (int) RegisterType.Administrator)
+            {
+                //Check if CSR has permission to login as
+                var hasPermission = false;
+
+                foreach (
+                    var assignment in
+                        _securityRepository.RoleAssignments.Where(x => x.AccountId == csrAccount.AccountId)
+                            .Expand("Role/RolePermissions"))
+                {
+                    hasPermission = assignment.Role != null && assignment.Role.RolePermissions.Any(p =>
+                        p.PermissionId.Equals(PredefinedPermissions.CustomersLoginAsCustomer,
+                            StringComparison.OrdinalIgnoreCase));
+                    if (hasPermission)
+                    {
+                        break;
+                    }
+                }
+
+                if (!hasPermission)
+                {
+                    errrorMessage = "CSR has no permission to login as other user.";
+                    return false;
+                }
+            }
+
+            //Check user account
+            var account = _securityRepository.Accounts.FirstOrDefault(
+               a => a.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase));
+
+            if (account == null
+                || !account.AccountState.GetHashCode().Equals(AccountState.Approved.GetHashCode()))
+            {
+                errrorMessage = "User account is not valid";
+                return false;
+            }
+
+            //Authenticate user
+            FormsAuthentication.SetAuthCookie(userName, persistCookie);
+
+            return true;
         }
 
         /// <summary>
@@ -118,7 +190,7 @@ namespace VirtoCommerce.Web.Client.Services.Security
         public bool ResetPassword(string userName, string newPassword)
         {
             var token = WebSecurity.GeneratePasswordResetToken(userName);
-			return WebSecurity.ResetPassword(token, newPassword);
+            return WebSecurity.ResetPassword(token, newPassword);
         }
 
         /// <summary>

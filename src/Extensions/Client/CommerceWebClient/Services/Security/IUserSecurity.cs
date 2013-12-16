@@ -13,6 +13,17 @@
         /// <param name="persistCookie">if set to <c>true</c> [persist cookie].</param>
         /// <returns><c>true</c> if success, <c>false</c> otherwise.</returns>
         bool Login(string userName, string password, bool persistCookie = false);
+
+        /// <summary>
+        /// Special login case for customer service representative (CSR)
+        /// </summary>
+        /// <param name="userName">customer user name</param>
+        /// <param name="csrUserName">CSR user name</param>
+        /// <param name="password">CSR password</param>
+        /// <param name="errormessage">Error from method</param>
+        /// <param name="persistCookie">if set to <c>true</c> [persist cookie].</param>
+        /// <returns><c>true</c> if success, <c>false</c> otherwise.</returns>
+        bool LoginAs(string userName, string csrUserName, string password, out string errormessage, bool persistCookie = false);
         /// <summary>
         /// Logouts this user.
         /// </summary>
