@@ -12,7 +12,7 @@ namespace VirtoCommerce.PowerShell.Tests
 {
     public class DatabaseScenarios : DbTestBase
     {
-        private string _PowerShellRootFolder = @"e:\Projects\VCF\main\Community\src\Extensions\Setup\VirtoCommerce.PowerShell";
+        private string _PowerShellRootFolder = @"e:\Projects\Git\vc-community\src\Extensions\Setup\VirtoCommerce.PowerShell";
 
         private string PowerShellRootFolder
         {
@@ -29,6 +29,16 @@ namespace VirtoCommerce.PowerShell.Tests
             var publisher = new PublishCustomerDatabase();
             publisher.Publish(TestDatabase.ConnectionString, PowerShellRootFolder, true);
             Assert.True(TableExists("Contract"));
+            DropDatabase();
+        }
+
+        [Fact]
+        public void Can_setup_catalog_database()
+        {
+            DropDatabase();
+            var publisher = new PublishCatalogDatabase();
+            publisher.Publish(TestDatabase.ConnectionString, PowerShellRootFolder, true);
+            Assert.True(TableExists("Catalog"));
             DropDatabase();
         }
 
