@@ -871,7 +871,6 @@
     <Folder Include="App_Data\Virto\Logs\" />
     <Folder Include="Areas\VirtoAdmin\Views\Shared\" />
     <Folder Include="Views\Catalog\DisplayTemplates\" />
-    <Folder Include="Views\XmlSiteMap\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

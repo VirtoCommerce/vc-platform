@@ -1017,7 +1017,7 @@ namespace VirtoCommerce.Web.Controllers
                 var user = _userClient.GetAccountByUserName(model.UserName.ToLower());
 
                 //If user has local account then password must be correct in order to associate it with external account
-                if (user != null && _oAuthSecurity.HasLocalAccount(user.MemberId))
+                if (user != null && _oAuthSecurity.HasLocalAccount(user.AccountId.ToString()))
                 {
                     if (user.StoreId != UserHelper.CustomerSession.StoreId)
                     {
@@ -1075,7 +1075,7 @@ namespace VirtoCommerce.Web.Controllers
                         });
                     }
                     //Create internal login
-                    if (model.CreateLocalLogin && !_oAuthSecurity.HasLocalAccount(user.MemberId))
+                    if (model.CreateLocalLogin && !_oAuthSecurity.HasLocalAccount(user.AccountId.ToString()))
                     {
                         _webSecurity.CreateAccount(model.UserName, model.NewPassword);
                     }
@@ -1149,16 +1149,6 @@ namespace VirtoCommerce.Web.Controllers
         #endregion
 
         #region Change Account / Password actions
-
-        /// <summary>
-        /// Forgot the password view.
-        /// </summary>
-        /// <returns>ActionResult.</returns>
-        [AllowAnonymous]
-        public ActionResult ForgotPassword()
-        {
-            return View();
-        }
 
         /// <summary>
         /// Forgot password post.

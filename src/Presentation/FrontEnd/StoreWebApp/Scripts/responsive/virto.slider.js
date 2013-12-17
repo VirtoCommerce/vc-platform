@@ -24,15 +24,15 @@ jQuery.fn.virtoSlider = function(options)
 
 		if (elementCounts > elementVisible)
 		{
-	        $(this_).append(
-	            '<ul class="nav">' +
-	                '<li class="left"><a>Left</a></li>' +
-	                '<li class="right"><a>Right</a></li>' +
-	                '</ul>'
-	        );
+		$(this_).append(
+			'<ul class="nav">' +
+				'<li class="left"><a>Left</a></li>' +
+				'<li class="right"><a>Right</a></li>' +
+			'</ul>'
+		);
 	    }
 
-	    // Animation slider
+		// Animation slider
 		var animateSlider = function(e)
 		{
 			var self = $(this),

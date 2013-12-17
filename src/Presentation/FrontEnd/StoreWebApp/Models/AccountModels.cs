@@ -156,11 +156,8 @@ namespace VirtoCommerce.Web.Models
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
-        /*
-        [Required]
-        [Display(Name = "User name")]
-        public string UserName { get; set; }
-         * */
+        [Display(Name = "Sign up for news")]
+        public bool SignUpForNews { get; set; }
 
 		/// <summary>
 		/// Gets or sets the email.
@@ -187,8 +184,7 @@ namespace VirtoCommerce.Web.Models
 		/// <value>The confirm password.</value>
         [DataType(DataType.Password)]
         [Display(Name = "Confirm password")]
-        [System.ComponentModel.DataAnnotations.Compare("Password",
-            ErrorMessage = "The password and confirmation password do not match.")]
+        [System.ComponentModel.DataAnnotations.Compare("Password",ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
     }
 

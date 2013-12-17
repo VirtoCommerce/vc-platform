@@ -822,7 +822,7 @@ button + button
 							    width: 0;
 							}
 
-								/* --- Compare --- */
+                            /* --- Compare --- */
 								.head-top-block .cart-options ul li .popup > .compare-list
 								{
 									margin: 0 0 10px;
@@ -1074,6 +1074,119 @@ button + button
 	{
 
 	}
+
+		.article .account
+		{
+			margin: 0 auto;
+			padding: 60px 0;
+			width: 300px;
+		}
+
+			.article .account .add-info-block
+			{
+				margin: 0;
+				padding: 0;
+				text-align: center;
+			}
+
+				.article .account .add-info-block .title
+				{
+					font-size: 21px;
+				}
+
+				.article .account .add-info-block .slider
+				{
+					overflow: hidden;
+				}
+
+					.article .account .add-info-block .slider ul
+					{
+						width: 600px;
+					}
+
+						.article .account .add-info-block .slider li
+						{
+							float: left;
+							width: 300px;
+						}
+
+							.article .account .add-info-block form
+							{
+								padding: 25px 20px;
+							}
+
+								.article .account .add-info-block .control-group
+								{
+									margin: 0 0 20px;
+								}
+
+								.article .account .add-info-block .button-group
+								{
+									margin: 0 0 15px;
+								}
+
+									.article .account .add-info-block input
+									{
+										height: 29px;
+										width: 100%;
+
+										-webkit-box-sizing: border-box;
+										   -moz-box-sizing: border-box;
+												box-sizing: border-box;
+									}
+
+								.article .account .add-info-block a
+								{
+									cursor: pointer;
+								}
+
+				.article .account .add-info-block .new-users
+				{
+					padding: 10px 0;
+
+					-webkit-box-shadow: 0 5px 6px -4px rgba(0, 0, 0, .15) inset;
+					   -moz-box-shadow: 0 5px 6px -4px rgba(0, 0, 0, .15) inset;
+							box-shadow: 0 5px 6px -4px rgba(0, 0, 0, .15) inset;
+				}
+
+					.article .account .add-info-block .new-users button span
+					{
+						background: #322C29;
+					}
+
+					.article .account .add-info-block .new-users button:hover span
+					{
+						background: #5Bd2ec;
+					}
+
+				.article .account .add-info-block fieldset
+				{
+					margin: 0;
+				}
+
+					.article .account .add-info-block fieldset legend
+					{
+						display: block;
+						font-family: 'Open Sans';
+						font-size: 18px;
+						margin: 0 0 10px;
+						text-transform: uppercase;
+						width: 100%;
+					}
+
+						.article .account .add-info-block .control-group label.control
+						{
+							cursor: pointer;
+							display: inline-block;
+							line-height: 30px;
+						}
+
+							.article .account .add-info-block .control-group label.control input
+							{
+								float: left;
+								margin: 0 10px 0 0;
+								width: auto;
+							}
 
 		.article .columns
 		{
@@ -2343,6 +2456,14 @@ button + button
 						text-transform: uppercase;
 					}
 
+						.article .sidebar .block .title small,
+						.article .cart .cart-block .title small,
+						.add-info-block .title small
+						{
+							color: #999;
+							font-size: 15px;
+						}
+
 					.article .cart .cart-block .title
 					{
 						font-size: 20px;
@@ -2471,12 +2592,19 @@ button + button
 						.article .sidebar .block ol li
 						{
 							background: url(images/icons/bullet.gif) no-repeat scroll 3px 50%;
-							line-height: 18px;
+							line-height: 20px;
 							padding: 0 0 0 15px;
 
 							-webkit-transition: all .15s linear 0s;
 							   -moz-transition: all .15s linear 0s;
 									transition: all .15s linear 0s;
+						}
+
+						.article .sidebar .block ol li.current
+						{
+							-webkit-transition: none;
+							   -moz-transition: none;
+									transition: none;
 						}
 
 						.article .sidebar .block ol.currently li
@@ -2517,6 +2645,11 @@ button + button
 						.article .sidebar .block ol li:hover
 						{
 							background-position: 5px 50%;
+						}
+
+						.article .sidebar .block ol li.current:hover
+						{
+							background-position: 3px 50%;
 						}
 
 							.article .sidebar .block ol li a
@@ -3884,6 +4017,63 @@ button + button
 			{
 				margin: 5px 0;
 			}
+
+		/* --- Cabinet --- */
+		.article .content .cabinet
+		{
+			margin: 0 15px;
+		}
+
+			.article .content .cabinet .data-table .product-image
+			{
+				text-align: center;
+			}
+
+				.article .content .cabinet .data-table .product-image .title
+				{
+					border: none;
+					height: auto;
+					line-height: 20px;
+					margin: 5px 0;
+				}
+
+				.article .content .cabinet .data-table .product-image .price
+				{
+					color: #5Bd2ec;
+					font-size: 16px;
+				}
+
+			.article .content .cabinet .data-table textarea
+			{
+				height: 110px;
+				width: 100%;
+
+				-webkit-box-sizing: border-box;
+				   -moz-box-sizing: border-box;
+						box-sizing: border-box;
+			}
+
+			.article .content .cabinet .data-table button
+			{
+				margin: 10px 0;
+				white-space: nowrap;
+			}
+
+				.article .content .cabinet .data-table button span
+				{
+					font-size: 13px;
+				}
+
+			.article .content .cabinet .buttons
+			{
+				margin: 20px 0;
+			}
+
+				.article .content .cabinet .buttons button + button
+				{
+					float: none;
+					margin: 0 0 0 1px;
+				}
 
 
 	/* --- Footer --- */

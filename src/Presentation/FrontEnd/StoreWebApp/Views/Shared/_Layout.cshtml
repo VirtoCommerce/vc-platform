@@ -126,9 +126,16 @@
                         <a class="control"></a>
                         <h2>Facebook</h2>
                         <div class="content">
-                            <div class="fb">
+                            @*                            <div class="fb">
                                 <img alt="" src="@Url.Content("~/Content/themes/responsive/images/fb.png")">
-                            </div>
+                            </div>*@
+                            <div class="fb-like-box" 
+                                 data-href="http://www.facebook.com/VirtoWay" 
+                                 data-colorscheme="light" 
+                                 data-show-faces="true" 
+                                 data-header="false" 
+                                 data-stream="false" 
+                                data-show-border="false"></div>
                         </div>
                     </div>
                     <div class="grid_3">
@@ -150,37 +157,36 @@
                     </div>
                     <div class="grid_3">
                         <a class="control"></a>
-                        <h2>Information</h2>
+                        <h2>@("Information".Localize())</h2>
                         <div class="content">
                             <ul>
-                                <li>Veritatis et quasi architecto</li>
-                                <li>Beatae vitae dicta sunt explicabo</li>
-                                <li>Nemo enim ipsam voluptatem quia</li>
-                                <li>Voluptas sit aspernatur</li>
-                                <li>Aut odit aut, sed quia consequunt</li>
-                                <li>Umagni dolores eos qui ratione</li>
-                                <li>Voluptatem sequi nesciunt.</li>
+                                <li>Build your business the way you want with our flexible, customizable platform</li>
+                                <li>Expand globally with new online stores that launch in a matter of days, not months</li>
+                                <li>Market products in endless ways with different catalogue and product types</li>
+                                <li>Target customers with unique promotions, pricing, and dynamic content</li>
+                                <li>Manage stores with the clean, intuitive back-end system</li>
                             </ul>
                         </div>
                     </div>
                     <div class="grid_3">
                         <a class="control"></a>
-                        <h2>Contacts</h2>
+                        <h2>@("Contacts".Localize())</h2>
                         <div class="content">
                             <address>
-                                <p>Lingeries Store</p>
-                                <p>34 New Clity 5655, Excel Tower</p>
-                                <p>OPG Rpad, 4538FH</p>
+                                <p>Los Angeles, New York, USA</p>
+                                <p>Vilnius, Lithuania</p>
+                                <p>Kaliningrad, Russia</p>
+                                <p>Beijing, China</p>
                             </address>
                             <hr>
-                            <p>+1 800 123 1234</p>
+                            <p>+1 (323) 570.5588</p>
                             <hr>
-                            <p><a href="mailto: mail@lipsum.com">mail@lipsum.com</a></p>
+                            <p><a href="mailto:sales@virtocommerce.com">sales@virtocommerce.com</a></p>
                             <ul class="social clearfix">
-                                <li class="tw"><a target="blank" href="http://twitter.com/queldorei"><span>Twitter</span></a></li>
-                                <li class="fb"><a target="blank" href="http://facebook.com/queldorei"><span>Facebook</span></a></li>
-                                <li class="mail"><a href="mailto:mail@lipsum.com"><span>Email</span></a></li>
-                                <li class="plus"><a target="blank" href="http://plus.google.com/u/0/111109476451145065018"><span>Google</span></a></li>
+                                <li class="tw"><a target="blank" href="http://twitter.com/VirtoCommerce"><span>Twitter</span></a></li>
+                                <li class="fb"><a target="blank" href="http://facebook.com/virtoway"><span>Facebook</span></a></li>
+                                <li class="mail"><a href="mailto:support@virtocommerce.com"><span>Email</span></a></li>
+                                <li class="plus"><a target="blank" href="http://plus.google.com/u/0/110275588520785121043"><span>Google</span></a></li>
                             </ul>
                         </div>
                     </div>
@@ -189,9 +195,9 @@
             <footer role="contentinfo" class="footer rubber clearfix">
                 <div class="grid_6">
                     <address>
-                        @("Version:".LocalizeHtml()) @Html.Version() - <a href="http://support.virtocommerce.com"
-                            onclick="this.target='_blank'"><strong>@("Report Issues".LocalizeHtml())</strong></a>
-                        &copy; 2013 Powered by <a href="">Virto Commerce</a>
+                        @("Version:".Localize()) @Html.Version() - <a href="http://support.virtocommerce.com"
+                            onclick="this.target='_blank'"><strong>@("Report Issues".Localize())</strong></a>
+                        &copy; 2013 @("Powered by".Localize()) <a href="http://virtocommerce.com">Virto Commerce</a>
                     </address>
                 </div>
                 <div class="grid_6">
@@ -214,6 +220,20 @@
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/jquerymisc")
     @RenderSection("scripts", required: false)
+    
+
+    <!-- Facebook -->
+    <div id="fb-root"></div>
+    <script type="text/javascript">
+        (function (d, s, id)
+        {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en-US/all.js#xfbml=1";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
 
     <!-- Process sliders -->
     <script type="text/javascript">
@@ -260,7 +280,7 @@
                     }
                 };
 
-                    @foreach (var follow in SettingsHelper.GetSettings("FollowServices"))
+                @foreach (var follow in SettingsHelper.GetSettings("FollowServices"))
                     {
                         var followStrSplit = follow.ToString().Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
 
