@@ -550,5 +550,5 @@ function bindDropDownList(e, targetDropDownList)
 
 function initQtySpinner(id, min, max, isAvailable)
 {
-	return $(id).spinner({ min: min, max: max });
+    return $(id).spinner({ min: min, max: max, numberFormat: 'n0' });
 }

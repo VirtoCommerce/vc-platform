@@ -434,7 +434,8 @@
                                    data-val-range-min="@((int)(Model.Availability.MinQuantity))" 
                                    data-val-range-max="@((int)(Model.Availability.MaxQuantity))" 
                                    data-val-range="@("Select quantity in range".Localize()) @string.Format("{0:#} - {1:#}", Model.Availability.MinQuantity, @Model.Availability.MaxQuantity)" 
-                                   data-val-number="@("Quantity must be a number.".Localize())" 
+                                   data-val-regex-pattern="^\d{@Math.Floor(Math.Log10((int)Model.Availability.MinQuantity)  + 1),@Math.Floor(Math.Log10((int)Model.Availability.MaxQuantity)  + 1)}$"
+                                   data-val-regex="@("Quantity must be a positive integer".Localize())" 
                                    data-val="true" />
                             <br />
                             <span data-valmsg-replace="true" data-valmsg-for="qty" class="field-validation-valid" style="float: left;"></span>
