@@ -1,6 +1,11 @@
 ﻿@using VirtoCommerce.Web.Virto.Helpers
 @model CatalogItemWithPriceModel
 
+@helper NoSaleResult()
+{
+     <span class="no-sale">@("Not for Sale".Localize())</span>
+}
+
 
 @if(Model !=null)
 {
@@ -21,37 +26,37 @@
             case "List":
                 if (canBeAdded)
                 {
-                    <button type="button" title="@("Add to Cart".Localize())" onclick=" VirtoCart.addToCart('Item added to cart', '@Url.Encode(Model.CatalogItem.ItemId)', '@Url.Encode(Model.CatalogItem.ParentItemId)', 1) ">
+                    <button type="button" title="@("Add to Cart".Localize())" onclick="VirtoCart.addToCart('Item added to cart', '@Url.Encode(Model.CatalogItem.ItemId)', '@Url.Encode(Model.CatalogItem.ParentItemId)', 1) ">
                         @("Add to Cart".Localize())
                     </button>
                 }
                 else
                 {
-                    <div style="color: #ff0000; font-weight: bold; text-align: left;">@("Not for sale".LocalizeHtml())</div>
+                    @NoSaleResult()
                 }
                 break;
             case "ListLink":
                 if (canBeAdded)
                 {
-                    <a href="" title="@("Add to Cart".Localize())" onclick=" return VirtoCart.addToCart('Item added to cart', '@Url.Encode(Model.CatalogItem.ItemId)', '@Url.Encode(Model.CatalogItem.ParentItemId)', 1) ">
+                    <a href="" title="@("Add to Cart".Localize())" onclick="return VirtoCart.addToCart('Item added to cart', '@Url.Encode(Model.CatalogItem.ItemId)', '@Url.Encode(Model.CatalogItem.ParentItemId)', 1) ">
                         @("Add to Cart".Localize())
                     </a>
                 }
                 else
                 {
-                    <div style="color: #ff0000; font-weight: bold; text-align: left;">@("Not for sale".LocalizeHtml())</div>
+                    @NoSaleResult()
                 }
                 break;
             default:
                 if (canBeAdded)
                 {
-                    <button type="button" title="@("Add to Cart".Localize())" onclick=" return VirtoCart.addToCartClick('@((Model.CatalogItem != null) ? Model.CatalogItem.ItemId : "")', '@((Model.CatalogItem != null) ? Model.CatalogItem.ParentItemId : "")'); ">
+                    <button type="button" title="@("Add to Cart".Localize())" onclick="return VirtoCart.addToCartClick('@((Model.CatalogItem != null) ? Model.CatalogItem.ItemId : "")', '@((Model.CatalogItem != null) ? Model.CatalogItem.ParentItemId : "")');">
                         <span>@("Add to Cart".Localize())</span>
                     </button>
                 }
                 else
                 {
-                    <div style="color: #ff0000; font-weight: bold; text-align: left;">@("Not for sale".Localize())</div>
+                     @NoSaleResult()
                 }
                 break;
         }
