@@ -63,6 +63,25 @@ select
 			vertical-align: top;
 		}
 
+	.control-group .control
+	{
+		float: left;
+	}
+
+		.control label
+		{
+			cursor: pointer;
+			display: block;
+			line-height: 30px;
+		}
+
+			.control label input
+			{
+				float: left;
+				margin: 0 10px 0 0;
+				width: auto !important;
+			}
+
 	.control-group input,
 	.control-group textarea
 	{

@@ -246,7 +246,10 @@ namespace VirtoCommerce.Web.Virto.Helpers
 			return null;
 		}
 
-
+        public static AssociationGroup Association(ItemModel item, string groupName)
+        {
+            return item.AssociationGroups.FirstOrDefault(ag => ag.Name.Equals(groupName, StringComparison.OrdinalIgnoreCase));
+        }
 
 
 	}

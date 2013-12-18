@@ -9,20 +9,5 @@
     <li>@{Html.RenderPartial("WishListLink", Model.WishList as CartModel);}</li>
     <li>@{Html.RenderPartial("CartLink", Model.Cart as CartModel);}</li>
     <li><a href="@Url.Action("Index", "Checkout")" title="@("Checkout".LocalizeHtml())" class="top-link-checkout">@("Checkout".LocalizeHtml())</a></li>
-
-    @if (UserHelper.CustomerSession.IsRegistered)
-    {
-        <li class=" last">
-            @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
-            {
-                @Html.AntiForgeryToken()
-                <a href="javascript:document.getElementById('logoutForm').submit()">@("Log off".LocalizeHtml())</a>
-            }
-        </li>
-    }
-    else
-    {
-        <li class=" last">@Html.ActionLink("Log In".Localize(), "LogOn", "Account")</li>
-    }
-
+    @{Html.RenderPartial("_LogOnPartial");}
 </ul>
