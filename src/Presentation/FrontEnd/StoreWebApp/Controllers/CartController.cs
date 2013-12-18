@@ -255,6 +255,8 @@ namespace VirtoCommerce.Web.Controllers
                 name = CartHelper.CartName;
             }
 
+            var helper = new CartHelper(name);
+
             var catalogItem = _catalogClient.GetItem(itemId);
             var parentItem = !string.IsNullOrEmpty(parentItemId) ? _catalogClient.GetItem(parentItemId) : null;
 
@@ -280,7 +282,8 @@ namespace VirtoCommerce.Web.Controllers
                 UserHelper.CustomerSession.LastShoppingPage = Request.UrlReferrer.AbsoluteUri;
             }
 
-            var helper = new CartHelper(name);
+            helper.ClearCache();
+            helper = new CartHelper(name);
 
             var results = new CartJsonModel
             {

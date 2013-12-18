@@ -204,7 +204,7 @@ namespace VirtoCommerce.Web.Client.Modules
             StoreHelper.SetCookie(StoreCookie, session.StoreId, DateTime.Now.AddMonths(1), false);
             StoreHelper.SetCookie(CurrencyCookie, currency, DateTime.Now.AddMonths(1));
 
-            if (context.Request.QueryString.AllKeys.Any(x => x.Equals("loginas", StringComparison.OrdinalIgnoreCase)))
+            if (context.Request.QueryString.AllKeys.Any(x => string.Equals(x, "loginas", StringComparison.OrdinalIgnoreCase)))
             {
                 RedirectToLogin(context);
             }

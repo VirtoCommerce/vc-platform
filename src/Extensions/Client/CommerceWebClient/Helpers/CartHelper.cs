@@ -577,6 +577,19 @@ namespace VirtoCommerce.Web.Client.Helpers
 			//Cart.AddressId = String.Empty;
 		}
 
+        public virtual void ClearCache(string name = "__all", string userId = null)
+        {
+            if (userId == null)
+            {
+                userId = CustomerSession.CustomerId;
+            }
+
+            foreach (var key in HttpContext.Current.Items.Keys.Cast<string>().Where(k => k.Equals(GetCacheKey(name, userId))).ToArray())
+            {
+                HttpContext.Current.Items[key] = null;
+            }
+        }
+
         /// <summary>
         /// Saves the changes.
         /// </summary>
@@ -772,7 +785,7 @@ namespace VirtoCommerce.Web.Client.Helpers
 
 			// it is less expansive to do check if cart exists first then load all the data
 			// preload all user carts
-			if (allCarts == null)
+            if (allCarts == null || allCarts.Length == 0)
 			{
 				var query = (repo.ShoppingCarts.Where(
 					c => c.StoreId.Equals(storeId, StringComparison.OrdinalIgnoreCase) &&

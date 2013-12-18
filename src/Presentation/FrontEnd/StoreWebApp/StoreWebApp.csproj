@@ -865,6 +865,7 @@
     <Content Include="Views\Catalog\RecommendedProducts2.cshtml" />
     <Content Include="Views\Banner\DisplayTemplates\CategoryUrl.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\SearchItems.cshtml" />
+    <Content Include="Views\Shared\_LayoutBase.cshtml" />
     <None Include="Web.Azure.config" />
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,7 @@
 ﻿@using VirtoCommerce.Web.Virto.Helpers
 @model CheckoutModel
 @{
+    Layout = "../Shared/_LayoutBase.cshtml";
     ViewBag.PageTitle = "Checkout".Localize();
     ViewBag.Title = Html.Title((string)ViewBag.PageTitle);
     var hasAddresses = Model.AddressBook.Addresses != null && Model.AddressBook.Addresses.Any();
@@ -194,7 +195,7 @@
                     </div>
                 </div>
                 <div class="block">
-                    <label class="control" for="IncludeGiftMessage">
+                    <label class="control">
                         @Html.CheckBoxFor(m => m.IncludeGiftMessage, new { onclick = "VirtoCheckout.toggleGiftMessage();" })
                         @("Add a gift message to my order".Localize())
 
@@ -202,7 +203,7 @@
                     <div id="allow-gift-message-container" style="display: none; clear: both;">
                         @Html.EditorFor(m => m.GiftMessage, "GiftMessage")
                     </div>
-                    <label class="control" for="AcceptTerms">
+                    <label class="control">
                         @Html.CheckBoxFor(m => m.AcceptTerms)
                         @("I accept the <a href='{0}' target='_blank'>Terms and Conditions</a>".LocalizeHtml("#"))
                         @Html.ValidationMessageFor(m => m.AcceptTerms)
@@ -214,7 +215,7 @@
                 </div>
                 <div class="block">
                     <div class="control-group">
-                        <label for="">@("How did you hear about us?".Localize())</label>
+                        <label>@("How did you hear about us?".Localize())</label>
                         <select id="id_feedback" name="onestepcheckout-feedback">
                             <option value="">@("Please choose".Localize())</option>
                             <option value="Google">@("Google".Localize())</option>

@@ -752,12 +752,10 @@ namespace VirtoCommerce.Web.Controllers
             if (model.OrderReturnItems.Count == 0)
             {
                 foreach (var ori in from li in order.OrderForms.SelectMany(of => of.LineItems)
-                                    where rmaLis.All(r => r.LineItemId != li.LineItemId)
                                     let item = _catalogClient.GetItem(li.CatalogItemId)
                                     let parentItem = _catalogClient.GetItem(li.ParentCatalogItemId)
-                                    select new LineItemModel(li, item, parentItem)
-                                        into liModel
-                                        select new OrderReturnItem(liModel))
+                                    where item != null && rmaLis.All(r => r.LineItemId != li.LineItemId)
+                                    select new OrderReturnItem(new LineItemModel(li, item, parentItem)))
                 {
                     model.OrderReturnItems.Add(ori);
                 }
@@ -863,7 +861,18 @@ namespace VirtoCommerce.Web.Controllers
         [AllowAnonymous]
         public ActionResult RegisterAsync()
         {
-            return RedirectToAction("Register");
+            return PartialView("Register");
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult RegisterAsync(RegisterModel model)
+        {
+            Register(model);
+            return ModelState.IsValid ? 
+                (ActionResult)RedirectToAction("Index", "Checkout") : 
+                View("Register", model);
         }
 
         /// <summary>
