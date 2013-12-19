@@ -12,6 +12,7 @@ using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Orders.Model;
 using VirtoCommerce.Foundation.Orders.Services;
 using VirtoCommerce.Foundation.Security.Model;
+using VirtoCommerce.Web.Client.Extensions;
 using VirtoCommerce.Web.Client.Extensions.Filters;
 using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Web.Client.Helpers;
@@ -503,7 +504,13 @@ namespace VirtoCommerce.Web.Controllers
         {
             var contact = _userClient.GetCurrentCustomer();
             var model = UserHelper.GetCustomerModel(contact);
-            ViewBag.Messages = new MessagesModel { new MessageModel((string)TempData["success_messages"]) };
+            if (!string.IsNullOrEmpty(TempData["success_messages"] as string))
+            {
+                this.SharedViewBag().Messages = new MessagesModel
+                {
+                    new MessageModel((string) TempData["success_messages"])
+                };
+            }
             return View(model);
         }
 
@@ -511,10 +518,10 @@ namespace VirtoCommerce.Web.Controllers
         /// View customer orders
         /// </summary>
         /// <returns>ActionResult.</returns>
-        public ActionResult Orders()
+        public ActionResult Orders(int? limit)
         {
             var orders = _orderClient.GetAllCustomerOrders(UserHelper.CustomerSession.CustomerId,
-                                                           UserHelper.CustomerSession.StoreId);
+                                                           UserHelper.CustomerSession.StoreId, limit);
             return View("Orders", orders != null ? orders.ToArray() : null);
         }
 
@@ -1191,14 +1198,15 @@ namespace VirtoCommerce.Web.Controllers
         /// Updates the wish list.
         /// </summary>
         /// <param name="lineItems">The line items.</param>
+        /// <param name="action">Action to perform</param>
         /// <returns>ActionResult.</returns>
         [HttpPost]
-        public ActionResult UpdateWishList(List<LineItemUpdateModel> lineItems)
+        public ActionResult UpdateWishList(List<LineItemUpdateModel> lineItems, string action)
         {
             var ch = new CartHelper(CartHelper.CartName);
             var helper = new CartHelper(CartHelper.WishListName);
 
-            if (Request.Form["ActionType"] == UserHelper.AddToCartAction)
+            if (action == UserHelper.AddToCartAction)
             {
                 //add all to cart
                 foreach (var lineItem in lineItems)

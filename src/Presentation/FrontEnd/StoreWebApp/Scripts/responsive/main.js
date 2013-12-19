@@ -11,8 +11,9 @@
 		window.Other.openTabs();
 		window.Other.closePopup();
 		window.Other.close_();
+		window.Other.FormPopup();
 	});
-
+	
 	window.Other = {};
 	window.UI = {};
 
@@ -122,6 +123,26 @@
 
 			return false;
 		});
+	};
+
+	window.Other.FormPopup = function()
+	{
+		$('*[rel=popup]').click(function (){
+			var url = ($(this).attr('href') ? $(this).prop('href') : $(this).data('link'));
+
+			$('body').prepend('<div class="fade-block"></div>');
+			$('.fade-block').after('<div class="form-popup"></div>');
+
+			$('.form-popup').load(url, function (){
+				$('.form-popup').prepend('<a class="close">x</a>');
+
+				window.UI.FormSlider();
+			});
+
+			return false;
+		});
+
+		window.Other.closestObject('.form-popup', '.form-popup, .fade-block');
 	};
 
 
@@ -280,6 +301,30 @@
 			slide.eq(index).addClass('selected').siblings().removeClass('selected');
 			block.stop(true, true).animate({left: '-' + index * slide_width + 'px'});
 		}
+	};
+
+	window.UI.FormSlider = function()
+	{
+		var block = $('.form-popup .slider ul'),
+			element = $(' > li', block),
+			count = element.length,
+			width = block.width();
+
+		block.width(count * width);
+		element.width(width);
+
+		$('.form-popup .nav-group button').click(function (){
+			var name = $(this).prop('class');
+
+			if (name == 'login')
+			{
+				block.animate({'margin-left': '-' + width + 'px'}, 'normal');
+			}
+			else
+			{
+				block.animate({'margin-left': '0'}, 'normal');
+			}
+		});
 	};
 
 	window.UI.scrollTop = function()

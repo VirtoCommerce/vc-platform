@@ -120,7 +120,7 @@ namespace VirtoCommerce.Web.Controllers
         [HttpPost]
         public ActionResult RemoveFromWishList(string lineItemId, string sourceView = "WishList")
         {
-            return RemoveFrom(lineItemId, CartHelper.WishListName, false, sourceView);
+            return RemoveFrom(lineItemId, CartHelper.WishListName, false, sourceView, false);
         }
 
         /// <summary>
@@ -188,9 +188,10 @@ namespace VirtoCommerce.Web.Controllers
         /// <param name="cartName">Name of the cart.</param>
         /// <param name="clear">if set to <c>true</c> [clear] all cart.</param>
         /// <param name="sourceView">The source view. View that initiated remove action.</param>
+        /// <param name="renderView">True if partial view should be rendered</param>
         /// <returns>ActionResult.</returns>
         [HttpPost]
-        public ActionResult RemoveFrom(string lineItemId, string cartName, bool clear = false, string sourceView = "LineItems")
+        public ActionResult RemoveFrom(string lineItemId, string cartName, bool clear = false, string sourceView = "LineItems", bool renderView = true)
         {
             var helper = GetCartHelper(cartName);
 
@@ -219,7 +220,7 @@ namespace VirtoCommerce.Web.Controllers
                     CartSubTotal = StoreHelper.FormatCurrency(helper.Cart.Subtotal, helper.Cart.BillingCurrency),
                     CartTotal = StoreHelper.FormatCurrency(helper.Cart.Total, helper.Cart.BillingCurrency),
                     CartCount = helper.LineItems.Count(),
-                    LineItemsView = !string.IsNullOrEmpty(sourceView) ? RenderRazorViewToString(sourceView, cartName == CartHelper.CompareListName ?
+                    LineItemsView = renderView && !string.IsNullOrEmpty(sourceView) ? RenderRazorViewToString(sourceView, cartName == CartHelper.CompareListName ?
                     (object)helper.CreateCompareModel() : helper.CreateCartModel(true)) : "",
                     Source = sourceView,
                     DeleteId = lineItemId,

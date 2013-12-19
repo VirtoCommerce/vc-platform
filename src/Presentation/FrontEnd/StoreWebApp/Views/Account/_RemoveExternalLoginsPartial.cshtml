@@ -2,40 +2,37 @@
 
 @if (Model.Count > 0)
 {
-	<div class="box">
-		<div class="box-title">
-			<h3>Registered external logins</h3>
-		</div>
-		<div class="box-content block">
-			<table>
-				<tbody>
-					@foreach (var externalLogin in Model)
-					{
-						<tr>
-							<td>@externalLogin.ProviderDisplayName</td>
-							<td>
-								@if (ViewBag.ShowRemoveButton)
-								{
-									using (Html.BeginForm("Disassociate", "Account"))
-									{
-										@Html.AntiForgeryToken()
-										<fieldset>
-											@Html.Hidden("provider", externalLogin.Provider)
-											@Html.Hidden("providerUserId", externalLogin.ProviderUserId)
-											<input type="submit" value="Remove" class="btn-remove noborder" style="cursor: pointer;"
-											       title="@("Remove {0} credential from your account".LocalizeHtml(externalLogin.ProviderDisplayName))" />
-										</fieldset>
-									}
+    <div class="block clearfix">
+        <div class="title">
+            <span>@("Registered external logins".Localize())</span>
+        </div>
+        <div class="info">
+            <table>
+                <tbody>
+                    @foreach (var externalLogin in Model)
+                    {
+                        <tr>
+                            <td>@externalLogin.ProviderDisplayName</td>
+                            <td>
+                                @if (ViewBag.ShowRemoveButton)
+                                {
+                                    using (Html.BeginForm("Disassociate", "Account"))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        @Html.Hidden("provider", externalLogin.Provider)
+                                        @Html.Hidden("providerUserId", externalLogin.ProviderUserId)
+                                        <input type="submit" value="Remove" class="trash" title="@("Remove {0} credential from your account".LocalizeHtml(externalLogin.ProviderDisplayName))" />
+                                    }
+                                }
+                                else
+                                {
+                                    @: &nbsp;
 								}
-								else
-								{
-									@: &nbsp;
-								}
-							</td>
-						</tr>
-					}
-				</tbody>
-			</table>
-			</div>
-	</div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 }

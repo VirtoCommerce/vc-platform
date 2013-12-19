@@ -156,7 +156,43 @@ namespace VirtoCommerce.Web.Client.Extensions
 			return new MvcHtmlString(String.Format("{0} (Build {1})", assembly.GetInformationalVersion(), assembly.GetFileVersion()));
 		}
 
-		/// <summary>
+        #region PageData
+
+        [ThreadStatic]
+        private static ControllerBase _pageDataController;
+        [ThreadStatic]
+        private static PageData _pageData;
+
+        /// <summary>
+        /// ViewBag shared in parent controller. Everything set from partial views is visible here
+        /// </summary>
+        /// <param name="html"></param>
+        /// <returns></returns>
+        public static dynamic SharedViewBag(this HtmlHelper html)
+        {
+            ControllerBase controller = html.ViewContext.Controller;
+            return SharedViewBag(html.ViewContext.Controller);
+        }
+
+
+        public static dynamic SharedViewBag(this ControllerBase controller)
+        {
+            while (controller.ControllerContext.IsChildAction)
+            {
+                controller = controller.ControllerContext.ParentActionViewContext.Controller;
+            }
+            if (_pageDataController == controller)
+            {
+                return _pageData;
+            }
+            _pageDataController = controller;
+            _pageData = new PageData(() => controller.ViewData);
+            return _pageData;
+        }
+
+        #endregion
+
+        /// <summary>
 		/// Labels the helper.
 		/// </summary>
 		/// <param name="html">The HTML.</param>

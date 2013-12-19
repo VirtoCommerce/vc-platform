@@ -141,7 +141,7 @@ button + button
 /* --- General --- */
 #layout
 {
-	
+	min-height: 100%;
 }
 
 	/* --- Compare page --- */
@@ -337,9 +337,18 @@ button + button
 					}
 
 		/* --- Links --- */
-		.head-links
+		.head-links,
+		.head-top .welcome
 		{
 			float: right;
+		}
+
+		.head-top .welcome
+		{
+			color: #999;
+			font-size: 11px;
+			line-height: 30px;
+			padding: 0 20px 0 0;
 		}
 
 			.head-links li
@@ -1073,121 +1082,82 @@ button + button
 	/* --- Main --- */
 	.article
 	{
-
+		position: relative;
 	}
+
+		.article .col
+		{
+			float: left;
+			width: 48.5%;
+		}
+
+		.article .col.reg .info
+		{
+			min-height: 215px;
+		}
+
+		.article .col + .col
+		{
+			float: right;
+		}
+
+		.article .col .title,
+		.article .content .cabinet .block .title
+		{
+			background: #fff;
+			border: 1px solid #eee;
+			overflow: hidden;
+			padding: 5px 10px;
+			text-align: right;
+		}
+
+			.article .col .title span,
+			.article .content .cabinet .block .title span
+			{
+				float: left;
+				font-weight: bold;
+			}
+
+			.article .col .title a,
+			.article .content .cabinet .block .title a
+			{
+				font-size: 10px;
+				text-transform: uppercase;
+			}
+
+			.article .info button + button
+			{
+				float: none;
+			}
+
+		.article .col .info,
+		.article .content .cabinet .block .info
+		{
+			padding: 15px 10px;
+		}
+
+		.article .col.reg .buttons
+		{
+			padding: 0 10px;
+		}
+
+			.article .col .info input,
+			.article .content .cabinet .block .info input,
+			.article .col .info select,
+			.article .content .cabinet .block .info select
+			{
+				height: 29px;
+				width: 100%;
+
+				-webkit-box-sizing: border-box;
+				   -moz-box-sizing: border-box;
+						box-sizing: border-box;
+			}
 
 		.article .account
 		{
-			margin: 0 auto;
-			padding: 60px 0;
-			width: 300px;
+			margin: 20px 0;
 		}
-
-			.article .account .add-info-block
-			{
-				margin: 0;
-				padding: 0;
-				text-align: center;
-			}
-
-				.article .account .add-info-block .title
-				{
-					font-size: 21px;
-				}
-
-				.article .account .add-info-block .slider
-				{
-					overflow: hidden;
-				}
-
-					.article .account .add-info-block .slider ul
-					{
-						width: 600px;
-					}
-
-						.article .account .add-info-block .slider li
-						{
-							float: left;
-							width: 300px;
-						}
-
-							.article .account .add-info-block form
-							{
-								padding: 25px 20px;
-							}
-
-								.article .account .add-info-block .control-group
-								{
-									margin: 0 0 20px;
-								}
-
-								.article .account .add-info-block .button-group
-								{
-									margin: 0 0 15px;
-								}
-
-									.article .account .add-info-block input
-									{
-										height: 29px;
-										width: 100%;
-
-										-webkit-box-sizing: border-box;
-										   -moz-box-sizing: border-box;
-												box-sizing: border-box;
-									}
-
-								.article .account .add-info-block a
-								{
-									cursor: pointer;
-								}
-
-				.article .account .add-info-block .new-users
-				{
-					padding: 10px 0;
-
-					-webkit-box-shadow: 0 5px 6px -4px rgba(0, 0, 0, .15) inset;
-					   -moz-box-shadow: 0 5px 6px -4px rgba(0, 0, 0, .15) inset;
-							box-shadow: 0 5px 6px -4px rgba(0, 0, 0, .15) inset;
-				}
-
-					.article .account .add-info-block .new-users button span
-					{
-						background: #322C29;
-					}
-
-					.article .account .add-info-block .new-users button:hover span
-					{
-						background: #5Bd2ec;
-					}
-
-				.article .account .add-info-block fieldset
-				{
-					margin: 0;
-				}
-
-					.article .account .add-info-block fieldset legend
-					{
-						display: block;
-						font-family: 'Open Sans';
-						font-size: 18px;
-						margin: 0 0 10px;
-						text-transform: uppercase;
-						width: 100%;
-					}
-
-						.article .account .add-info-block .control-group label.control
-						{
-							cursor: pointer;
-							display: inline-block;
-							line-height: 30px;
-						}
-
-							.article .account .add-info-block .control-group label.control input
-							{
-								float: left;
-								margin: 0 10px 0 0;
-								width: auto;
-							}
 
 		.article .columns
 		{
@@ -1362,7 +1332,8 @@ button + button
 					margin: 0 0 20px;
 				}
 
-				.article .content .cabinet p
+				.article .content .cabinet p,
+				.article .col p
 				{
 					margin: 0 0 10px;
 				}
@@ -4040,6 +4011,17 @@ button + button
 			margin: 0 15px 30px;
 		}
 
+			.article .content .cabinet .order-title
+			{
+				background: #666;
+				color: #fff;
+				display: inline-block;
+				font-size: 13px;
+				font-weight: bold;
+				margin: 0 0 15px;
+				padding: 5px 15px;
+			}
+
 			.article .content .cabinet .data-table .product-image
 			{
 				text-align: center;
@@ -4126,73 +4108,25 @@ button + button
 				margin: 0;
 			}
 
-				.article .content .cabinet .block .col
+				.article .content .cabinet .buttons
 				{
-					float: left;
-					width: 48.5%;
+					padding: 0 10px;
 				}
 
-				.article .content .cabinet .block .col + .col
+				.article .content .cabinet .block .order-list
 				{
-					float: right;
+					
 				}
 
-					.article .content .cabinet .block .title
+					.article .content .cabinet .block .order-list li
 					{
-						background: #fff;
-						border: 1px solid #eee;
-						overflow: hidden;
-						padding: 5px 10px;
-						text-align: right;
+						line-height: 16px;
 					}
 
-						.article .content .cabinet .block .title span
-						{
-							float: left;
-							font-weight: bold;
-						}
-
-						.article .content .cabinet .block .title a
-						{
-							font-size: 10px;
-							text-transform: uppercase;
-						}
-
-					.article .content .cabinet .block .info
+					.article .content .cabinet .block .order-list li + li
 					{
-						padding: 15px 10px;
+						margin: 5px 0 0;
 					}
-
-						.article .content .cabinet .block .info input,
-						.article .content .cabinet .block .info select
-						{
-							height: 29px;
-							width: 100%;
-
-							-webkit-box-sizing: border-box;
-							   -moz-box-sizing: border-box;
-									box-sizing: border-box;
-						}
-
-					.article .content .cabinet .buttons
-					{
-						padding: 0 10px;
-					}
-
-					.article .content .cabinet .block .order-list
-					{
-						
-					}
-
-						.article .content .cabinet .block .order-list li
-						{
-							line-height: 16px;
-						}
-
-						.article .content .cabinet .block .order-list li + li
-						{
-							margin: 5px 0 0;
-						}
 
 			/* --- Pager --- */
 			.article .content .cabinet .pager
@@ -4228,6 +4162,11 @@ button + button
 	.footer-wrap
 	{
 		background: #322c29;
+	}
+
+	.bg-form .footer-wrap
+	{
+		margin: -58px 0 0;
 	}
 
 		/* --- Banners --- */
@@ -4589,6 +4528,16 @@ button + button
 			box-shadow: 0 0 8px rgba(0, 0, 0, .15);
 }
 
+	.data-table caption
+	{
+		background: #fff;
+	    border: 1px solid #eee;
+	    font-weight: bold;
+	    margin: 10px 0 0;
+	    padding: 5px 0 5px 10px;
+	    text-align: left;
+	}
+
 	.data-table thead
 	{
 		background: #fafafa;
@@ -4609,7 +4558,7 @@ button + button
 		background: #fff;
 	}
 
-	.data-table tfoot
+	.data-table tfoot td
 	{
 		background: #fafafa;
 

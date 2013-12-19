@@ -1,15 +1,10 @@
-.welcome-msg {
-    color: #666666;
-    float: left;
-    margin-top: 7px;
-}
 
 #logoutForm {
     display: inline;
 }
 
 .search-autocomplete {
-    z-index: 999;
+    z-index: 5555;
 }
 
     .search-autocomplete ul {

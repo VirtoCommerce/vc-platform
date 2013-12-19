@@ -1,33 +1,15 @@
 ﻿@{
-    Layout = "../Shared/_SideBarLayout.cshtml";
+    Layout = "../Shared/_Layout.cshtml";
 }
-<div class="my-account">
+
+<div class="content">
+    <div class="cabinet">
     @RenderBody()
 </div>
-@section SideBarContent {
-    <div class="block block-account">
-        <div class="block-title">
-            <strong><span>@("My Account".LocalizeHtml())</span></strong>
-        </div>
-        <div class="block-content">
-            @Html.Partial("SideMenu")
-        </div>
-    </div>
-    @*@{Html.RenderAction("CompanyMenu", "Account");}*@
-    <div class="block block-cart">
-        <div class="block-title">
-            <strong><span>@("My Cart".LocalizeHtml())</span></strong>
-        </div>
-        <div class="block-content">
-            @{Html.RenderAction("MiniView", "Cart");}
-        </div>
-    </div>
-    <div class="block block-list block-compare">
-        <div class="block-title">
-            <strong><span>@("Compare Products".LocalizeHtml())</span></strong>
-        </div>
-        <div class="block-content">
-			@{Html.RenderAction("MiniCompareList", "Account");}
-        </div>
-    </div>
-}
+</div>
+<div class="sidebar">
+    <aside class="block">
+        <span class="title">@("My Account".Localize())</span>
+        @Html.MvcSiteMap().Menu("sidemenu", false, true, false, "account")
+    </aside>
+</div>

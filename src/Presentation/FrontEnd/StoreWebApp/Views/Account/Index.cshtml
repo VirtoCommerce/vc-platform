@@ -1,30 +1,23 @@
-﻿@using Microsoft.Ajax.Utilities
-@model CustomerModel
+﻿@model CustomerModel
 @{
-    ViewBag.Title = Html.Title("Account Dashboard".Localize());
+    ViewBag.PageTitle = SiteMap.CurrentNode != null ? SiteMap.CurrentNode.Title.Localize() : "Dashboard".Localize();
+    ViewBag.Title = Html.Title(ViewBag.PageTitle as string);
     Layout = "_Layout.cshtml";
 }
 
-<div class="dashboard">
-    <div class="page-title">
-        <h1>
-            @("My Dashboard".LocalizeHtml())</h1>
-    </div>
-    <div class="welcome-msg">
-        <p class="hello">
-            <strong>@("Hello".LocalizeHtml()), @Model.FullName!</strong>
-        </p>
-        <p>
-            @(@"From your My Account Dashboard you have the ability to view a snapshot of your recent
+<p><b>@("Hello, {0}!".LocalizeHtml(@Model.FullName))</b></p>
+<p>
+    @(@"From your My Account Dashboard you have the ability to view a snapshot of your recent
             account activity and update your account information. Select a link below to view
-            or edit information.".LocalizeHtml())
-        </p>
-    </div>
-    <!-- recent orders -->
+            or edit information.".Localize())
+</p>
+
+<!-- recent orders -->
+<div class="block">
     @{Html.RenderAction("RecentOrders");}
-    <!-- account info -->
-    @{Html.RenderAction("AccountInfo");}
-
-    @{Html.RenderAction("RemoveExternalLogins");}
-
 </div>
+<!-- account info -->
+@{Html.RenderAction("AccountInfo");}
+
+@{Html.RenderAction("RemoveExternalLogins");}
+

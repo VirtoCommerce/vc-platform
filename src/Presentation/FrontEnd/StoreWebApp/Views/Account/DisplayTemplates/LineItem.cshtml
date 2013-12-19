@@ -1,31 +1,30 @@
 ﻿@model VirtoCommerce.Foundation.Orders.Model.LineItem
-<tr class="border first last" id="order-item-row-86154">
-    <td>
-        <h3 class="product-name">@Model.DisplayName</h3>
+<tr>
+    <td class="product-name">
+        <span class="mobile-view">@("Product Name<".Localize())</span>
+        <span>@Model.DisplayName</span>
         <dl class="item-options">
             @foreach (var option in Model.Options)
             { 
-            <dt>@option.OptionName</dt>
-            <dd>
-                @option.OptionValue
-            </dd>
+                <dt>@option.OptionName</dt>
+                <dd>@option.OptionValue</dd>
             }
         </dl>
     </td>
-    <td class="nobr">@Model.CatalogItemId
+    <td>
+        <span class="mobile-view">@("SKU".Localize())</span>
+        <span>@Model.CatalogItemId</span>
     </td>
-    <td class="a-right">
-        <span class="price-excl-tax"><span class="cart-price"><span class="price">@StoreHelper.FormatCurrency(Model.PlacedPrice, Model.OrderForm.OrderGroup.BillingCurrency)</span>
-        </span></span>
-        <br>
+    <td>
+        <span class="mobile-view">@("Price".Localize())</span>
+        <span>@StoreHelper.FormatCurrency(Model.PlacedPrice, Model.OrderForm.OrderGroup.BillingCurrency)</span>
     </td>
-    <td class="a-right">
-        <span class="nobr">@("Ordered:".LocalizeHtml()) <strong>@Model.Quantity</strong><br>
-        </span>
+    <td>
+        <span class="mobile-view">@("Quantity".Localize())</span>
+        <span>@("Ordered: {0}".LocalizeHtml(Model.Quantity))</span>
     </td>
-    <td class="a-right last">
-        <span class="price-excl-tax"><span class="cart-price"><span class="price">@StoreHelper.FormatCurrency(Model.ExtendedPrice, Model.OrderForm.OrderGroup.BillingCurrency)</span>
-        </span></span>
-        <br>
+    <td>
+        <span class="mobile-view">@("Subtotal".Localize())</span>
+        <span>@StoreHelper.FormatCurrency(Model.ExtendedPrice, Model.OrderForm.OrderGroup.BillingCurrency)</span>
     </td>
 </tr>

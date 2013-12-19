@@ -1,15 +1,29 @@
 ﻿@model VirtoCommerce.Foundation.Orders.Model.Order[]
 
+@{
+    var pageLimits = new[] {10, 20, 50};
+}
+
 <div class="pager">
-	<p class="amount">
-		<strong>@Model.Count() @("Item(s)".LocalizeHtml())</strong>
-	</p>
-	<div class="limiter">
-		<label>@("Show".LocalizeHtml())</label>
-		<select onchange="setLocation(this.value)">
-			<option value="#" selected="selected">10</option>
-			<option value="#">20</option>
-			<option value="#">50</option>
-		</select>@("per page".LocalizeHtml())
-	</div>
+    <span class="amount">@Model.Count() @("Item(s)".Localize())</span>
+    <div class="limiter">
+        <span>@("Show".Localize())</span>
+        <select name="limit" id="" onchange="$.redirect(this.value)">
+            @for (int i = 0; i< pageLimits.Length; i++)
+            {;
+                var selected = "";
+                int currentLimit;;
+                if (Request.QueryString["limit"] != null && int.TryParse(Request.QueryString["limit"], out currentLimit) && currentLimit == pageLimits[i])
+                {
+                    selected = "selected=\"selected\"";
+                }
+                else if (i == 0)
+                {
+                    selected = "selected=\"selected\"";
+                }
+                <option value="@Url.Action("Orders", new { limit = pageLimits[i] })" @selected>@pageLimits[i]</option>
+            }
+        </select>
+        <span>@("per page".Localize())</span>
+    </div>
 </div>

@@ -454,6 +454,7 @@
 
 	.article .content .cabinet .data-table colgroup,
 	.article .content .cabinet .data-table tbody tr,
+	.article .content .cabinet .data-table tfoot tr,
 	.article .content .cabinet .data-table tbody tr td
 	{
 		display: block;
@@ -473,9 +474,15 @@
 	    vertical-align: middle;
 	}
 
-	.article .content .cabinet .data-table tbody tr td
+	.article .content .cabinet .data-table tbody tr td,
+	.article .content .cabinet .data-table tfoot tr td
 	{
 		padding: 10px;
+	}
+
+	.article .content .cabinet .data-table tfoot tr td
+	{
+		width: 100%;
 	}
 
 	.article .content .cabinet .data-table tbody tr td.product-image a
@@ -578,6 +585,13 @@
 }
 
 @media only screen and (min-width: 480px) and (max-width: 767px) {
+	.form-popup
+	{
+		margin: -285px 0 0 -150px;
+		position: absolute;
+		width: 300px;
+	}
+
 	.rubber
 	{
 		width: auto;
@@ -1351,6 +1365,18 @@
 		width: 456px;
 	}
 
+	.article .account .col
+	{
+		float: none;
+		margin: 0 auto 20px;
+		width: 456px;
+	}
+
+	.article .col.reg .info
+	{
+		min-height: 0;
+	}
+
 	/* --- Footer --- */
 	.footer-wrap .banners
 	{
@@ -1428,6 +1454,7 @@
 
 	.article .content .cabinet .data-table colgroup,
 	.article .content .cabinet .data-table tbody tr,
+	.article .content .cabinet .data-table tfoot tr,
 	.article .content .cabinet .data-table tbody tr td
 	{
 		display: block;
@@ -1447,9 +1474,15 @@
 	    vertical-align: middle;
 	}
 
-	.article .content .cabinet .data-table tbody tr td
+	.article .content .cabinet .data-table tbody tr td,
+	.article .content .cabinet .data-table tfoot tr td
 	{
 		padding: 10px;
+	}
+
+	.article .content .cabinet .data-table tfoot tr td
+	{
+		width: 100%;
 	}
 
 	.article .content .cabinet .data-table tbody tr td.product-image a
@@ -1666,6 +1699,16 @@
 	    margin: -68px 0 0 -135px;
 	    width: 270px;
 	}
+
+	.form-popup
+	{
+		left: 0;
+	    margin: 30px auto;
+	    position: relative;
+	    top: 0;
+	    width: 300px;
+	}
+
 
 	.rubber
 	{
@@ -2563,6 +2606,7 @@
 
 	.article .content .cabinet .data-table colgroup,
 	.article .content .cabinet .data-table tbody tr,
+	.article .content .cabinet .data-table tfoot tr,
 	.article .content .cabinet .data-table tbody tr td
 	{
 		display: block;
@@ -2582,9 +2626,15 @@
 	    vertical-align: middle;
 	}
 
-	.article .content .cabinet .data-table tbody tr td
+	.article .content .cabinet .data-table tbody tr td,
+	.article .content .cabinet .data-table tfoot tr td
 	{
 		padding: 10px;
+	}
+
+	.article .content .cabinet .data-table tfoot tr td
+	{
+		width: 100%;
 	}
 
 	.article .content .cabinet .data-table tbody tr td.product-image a
@@ -2681,6 +2731,24 @@
 	.article .content .cabinet
 	{
 		margin: 0 0 30px;
+	}
+
+	.article .account .col
+	{
+		float: none;
+		margin: 0 auto 20px;
+		width: 300px;
+	}
+
+	.article .col.reg .info
+	{
+		min-height: 0;
+	}
+
+	.article .account button
+	{
+		margin: 0 0 5px;
+		width: 100%;
 	}
 
 	/* --- Footer --- */

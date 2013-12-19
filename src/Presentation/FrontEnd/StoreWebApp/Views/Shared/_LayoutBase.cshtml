@@ -21,24 +21,25 @@
         <div class="header-wrap">
             <div class="head-top">
                 <div class="rubber clearfix">
-                    <div class="grid_6">
+                    <div class="grid_4">
                         <div class="head-switch language">
                             @{Html.RenderPartial("Languages");}
                         </div>
                         <div class="head-switch currency">
                             @{Html.RenderAction("Currencies", "Store");}
                         </div>
+                     
+                    </div>
+                    <div class="grid_8">
+                        @{Html.RenderAction("QuickAccess", "Store");}        
                         @if (UserHelper.CustomerSession.IsRegistered)
                         {
-                            <p class="welcome-msg">@string.Format("Welcome {0}!".Localize(), UserHelper.CustomerSession.CustomerName)</p>
+                            <p class="welcome">@string.Format("Welcome {0}!".Localize(), UserHelper.CustomerSession.CustomerName)</p>
                         }
                         else
                         {
-                            <p id="quickAccessTitle" class="welcome-msg">@("Welcome!".LocalizeHtml())</p>
+                            <p id="quickAccessTitle" class="welcome">@("Welcome!".Localize())</p>
                         }
-                    </div>
-                    <div class="grid_6">
-                        @{Html.RenderAction("QuickAccess", "Store");}
                     </div>
                 </div>
             </div>
@@ -70,23 +71,24 @@
                     </div>
                 </div>
                 <div class="rubber">
-                    <ul id="messages" class="messages" style="@(ViewBag.Messages !=null ?"":"display:none;")">
+                    @{
+                        var messages = Html.SharedViewBag().Messages as MessagesModel;
+                    }
+                    <ul id="messages" class="messages" style="@(messages !=null && messages.Any() ? "" : "display:none;")">
                         @{
-                            var model = ViewBag.Messages as MessagesModel;
-
-                            if (model != null)
+                            if (messages != null && messages.Any())
                             {
 
-                                foreach (var messageGrp in model.GroupBy(m => m.Type))
+                                foreach (var messageGrp in messages.GroupBy(m => m.Type))
                                 {
-                            <li class="@messageGrp.Key">
-                                <ul>
-                                    @foreach (var message in messageGrp)
-                                    {
-                                        <li><span>@message.Text</span></li>
-                                    }
-                                </ul>
-                            </li>
+                                    <li class="@messageGrp.Key.ToString().ToLower()">
+                                        <ul>
+                                            @foreach (var message in messageGrp)
+                                            {
+                                                <li><span>@message.Text</span></li>
+                                            }
+                                        </ul>
+                                    </li>
                                 }
                             }
                         }

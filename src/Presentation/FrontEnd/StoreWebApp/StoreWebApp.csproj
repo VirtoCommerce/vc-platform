@@ -767,7 +767,6 @@
     <Content Include="Views\Account\OrderView.cshtml" />
     <Content Include="Views\Account\RecentOrders.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
-    <Content Include="Views\Account\SideMenu.cshtml" />
     <Content Include="Views\Account\WishList.cshtml" />
     <Content Include="Views\Banner\DisplayTemplates\Flash.cshtml" />
     <Content Include="Views\Banner\DisplayTemplates\ImageClick.cshtml" />
@@ -811,7 +810,6 @@
     </Content>
     <Content Include="Views\Shared\_LayoutPopUp.cshtml" />
     <Content Include="Views\Shared\_LogOnPartial.cshtml" />
-    <Content Include="Views\Shared\_SideBarLayout.cshtml" />
     <Content Include="Views\Shared\AddToCart.cshtml" />
     <Content Include="Views\Shared\AddToLinks.cshtml" />
     <Content Include="Views\Shared\BaseContentPlace.cshtml" />

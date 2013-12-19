@@ -66,6 +66,7 @@ select
 	.control-group .control
 	{
 		float: left;
+		line-height: 30px;
 	}
 
 		.control label

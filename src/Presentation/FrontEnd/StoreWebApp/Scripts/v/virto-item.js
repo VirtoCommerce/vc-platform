@@ -2,14 +2,26 @@
     CloudZoom.quickStart();
 
     // initialize tabs
+    window.setTimeout(function ()
+    {
+        if($(location.hash).length > 0)
+            scrollToTab(location.hash);
+    }, 100);
+
 
     $("#show_reviews_link").on('click', function () {
-        //Trigger Review tab click
-        $("#product_tabs_reviews").trigger("click");
+        scrollToTab('#product_tabs_reviews');
+    });
+    
+ 
+    function scrollToTab(id)
+    {
+        //Trigger tab click
+        $(id).trigger("click");
         //Scroll down to reviews
         $("html, body").animate({ scrollTop: $(".tabs").offset().top });
         return false;
-    });
+    }
 }
 
 
