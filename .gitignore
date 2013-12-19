@@ -153,3 +153,11 @@ $RECYCLE.BIN/
 
 # Mac crap
 .DS_Store
+/packages
+/SDK/packages
+/SDK/Setup/VirtoCommerce.Bootstrapper/distr
+/SDK/Setup/VirtoCommerce.ConfigurationUtility.Application/bin/Resources
+/SDK/Setup/VirtoCommerce.ElasticSearch/Distro
+/src/Presentation/FrontEnd/StoreWebApp/App_Data/Virto/Storage/Catalog
+/src/Presentation/FrontEnd/StoreWebApp/App_Data/Virto/search/default-catalogitem
+/src/Presentation/FrontEnd/StoreWebApp/bin
