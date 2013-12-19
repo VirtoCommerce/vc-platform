@@ -2,12 +2,12 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Services.Common;
 using System.Runtime.Serialization;
-using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Attributes;
 
 namespace VirtoCommerce.Foundation.Catalogs.Model
 {
 	[DataContract]
+	[DataServiceKey("PropertyValueId")]
 	[EntitySet("PropertyValues")]
 	public class PropertyValue : PropertyValueBase
 	{

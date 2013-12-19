@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading;
 using System.Windows.Data;
 using VirtoCommerce.Foundation.Catalogs.Model;
-using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.ManagementClient.Catalog.Model;
 
 namespace VirtoCommerce.ManagementClient.Catalog.Infrastructure

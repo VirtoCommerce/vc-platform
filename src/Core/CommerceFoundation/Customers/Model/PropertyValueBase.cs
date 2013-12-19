@@ -2,52 +2,35 @@
 using System.ComponentModel.DataAnnotations;
 using System.Data.Services.Common;
 using System.Runtime.Serialization;
+using VirtoCommerce.Foundation.Frameworks;
 
-namespace VirtoCommerce.Foundation.Frameworks
+namespace VirtoCommerce.Foundation.Customers.Model
 {
 	[DataContract]
 	[DataServiceKey("PropertyValueId")]
 	public abstract class PropertyValueBase : StorageEntity
 	{
-		protected PropertyValueBase()
+		public PropertyValueBase()
 		{
 			_PropertyValueId = GenerateNewKey();
 		}
 
 		private string _PropertyValueId;
 		[Key]
-		[StringLength(128)]
+		[StringLength(128, ErrorMessage = "Only 128 characters allowed.")]
 		[DataMember]
 		public string PropertyValueId
 		{
-			get
-			{
-				return _PropertyValueId;
-			}
+			get { return _PropertyValueId; }
 			set
 			{
 				SetValue(ref _PropertyValueId, () => PropertyValueId, value);
 			}
 		}
 
-		private string _Alias;
-		[DataMember]
-		[StringLength(64, ErrorMessage = "Only 64 characters allowed.")]
-		public string Alias
-		{
-			get
-			{
-				return _Alias;
-			}
-			set
-			{
-				SetValue(ref _Alias, () => Alias, value);
-			}
-		}
-
 		private string _Name;
 		[DataMember]
-		[StringLength(64, ErrorMessage = "Only 64 characters allowed.")]
+		[StringLength(128, ErrorMessage = "Only 128 characters allowed.")]
 		public string Name
 		{
 			get
@@ -56,22 +39,7 @@ namespace VirtoCommerce.Foundation.Frameworks
 			}
 			set
 			{
-				SetValue(ref _Name, () => Name, value);
-			}
-		}
-
-		private string _KeyValue;
-		[DataMember]
-		[StringLength(128)]
-		public string KeyValue
-		{
-			get
-			{
-				return _KeyValue;
-			}
-			set
-			{
-				SetValue(ref _KeyValue, () => KeyValue, value);
+				SetValue(ref _Name, () => this.Name, value);
 			}
 		}
 
@@ -86,7 +54,7 @@ namespace VirtoCommerce.Foundation.Frameworks
 			}
 			set
 			{
-				SetValue(ref _ValueType, () => ValueType, value);
+				SetValue(ref _ValueType, () => this.ValueType, value);
 			}
 		}
 
@@ -101,7 +69,7 @@ namespace VirtoCommerce.Foundation.Frameworks
 			}
 			set
 			{
-				SetValue(ref _ShortTextValue, () => ShortTextValue, value);
+				SetValue(ref _ShortTextValue, () => this.ShortTextValue, value);
 			}
 		}
 
@@ -115,7 +83,7 @@ namespace VirtoCommerce.Foundation.Frameworks
 			}
 			set
 			{
-				SetValue(ref _LongTextValue, () => LongTextValue, value);
+				SetValue(ref _LongTextValue, () => this.LongTextValue, value);
 			}
 		}
 
@@ -129,7 +97,7 @@ namespace VirtoCommerce.Foundation.Frameworks
 			}
 			set
 			{
-				SetValue(ref _DecimalValue, () => DecimalValue, value);
+				SetValue(ref _DecimalValue, () => this.DecimalValue, value);
 			}
 		}
 
@@ -143,7 +111,7 @@ namespace VirtoCommerce.Foundation.Frameworks
 			}
 			set
 			{
-				SetValue(ref _IntegerValue, () => IntegerValue, value);
+				SetValue(ref _IntegerValue, () => this.IntegerValue, value);
 			}
 		}
 
@@ -157,7 +125,7 @@ namespace VirtoCommerce.Foundation.Frameworks
 			}
 			set
 			{
-				SetValue(ref _BooleanValue, () => BooleanValue, value);
+				SetValue(ref _BooleanValue, () => this.BooleanValue, value);
 			}
 		}
 
@@ -171,23 +139,42 @@ namespace VirtoCommerce.Foundation.Frameworks
 			}
 			set
 			{
-				SetValue(ref _DateTimeValue, () => DateTimeValue, value);
+				SetValue(ref _DateTimeValue, () => this.DateTimeValue, value);
 			}
 		}
 
-		private string _Locale;
-		[StringLength(64, ErrorMessage = "Only 64 characters allowed.")]
+		private int _Priority;
 		[DataMember]
-		public string Locale
+		public int Priority
 		{
 			get
 			{
-				return _Locale;
+				return _Priority;
 			}
 			set
 			{
-				SetValue(ref _Locale, () => Locale, value);
+				SetValue(ref _Priority, () => Priority, value);
 			}
+		}
+
+		public override string ToString()
+		{
+			switch (ValueType)
+			{
+				case (int)PropertyValueType.Boolean:
+					return BooleanValue.ToString();
+				case (int)PropertyValueType.DateTime:
+					return DateTimeValue.ToString();
+				case (int)PropertyValueType.Decimal:
+					return DecimalValue.ToString();
+				case (int)PropertyValueType.Integer:
+					return IntegerValue.ToString();
+				case (int)PropertyValueType.LongString:
+					return LongTextValue;
+				case (int)PropertyValueType.ShortString:
+					return ShortTextValue;
+			}
+			return base.ToString();
 		}
 	}
 }

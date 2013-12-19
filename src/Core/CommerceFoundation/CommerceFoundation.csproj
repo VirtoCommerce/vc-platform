@@ -217,8 +217,9 @@
     <Compile Include="Catalogs\Model\PropertyTargetType.cs" />
     <Compile Include="Catalogs\Model\PropertyAttribute.cs" />
     <Compile Include="Catalogs\Model\PropertyValueType.cs" />
+    <Compile Include="Orders\Model\OrderFormPropertyValue.cs" />
     <Compile Include="Orders\Model\OrderFormValueType.cs" />
-    <Compile Include="Frameworks\PropertyValueBase.cs" />
+    <Compile Include="Catalogs\Model\PropertyValueBase.cs" />
     <Compile Include="Catalogs\Model\ItemPropertyValue.cs" />
     <Compile Include="Catalogs\Model\ItemRelationType.cs" />
     <Compile Include="Catalogs\Model\EditorialReview.cs" />
@@ -255,6 +256,7 @@
     <Compile Include="Customers\Model\CaseTemplate.cs" />
     <Compile Include="Customers\Model\CaseTemplateProperty.cs" />
     <Compile Include="Customers\Model\PropertyValueType.cs" />
+    <Compile Include="Customers\Model\PropertyValueBase.cs" />
     <Compile Include="Customers\Model\ContactPropertyValue.cs" />
     <Compile Include="Customers\Model\MemberRelation.cs" />
     <Compile Include="Customers\Model\PublicReplyItem.cs" />
@@ -311,7 +313,7 @@
     <Compile Include="Orders\Model\Gateways\GatewayPropertyDictionaryValue.cs" />
     <Compile Include="Orders\Model\Gateways\GatewayProperty.cs" />
     <Compile Include="Orders\Model\PaymentMethod\PaymentGateway.cs" />
-    <Compile Include="Orders\Model\OrderFormPropertyValue.cs" />
+    <Compile Include="Orders\Model\PropertyValueBase.cs" />
     <Compile Include="Orders\Model\RmaLineItemState.cs" />
     <Compile Include="Orders\Model\Fulfillment\Picklist.cs" />
     <Compile Include="Orders\Model\OrderStatus.cs" />
@@ -493,6 +495,7 @@
     <Compile Include="Marketing\Factories\MarketingEntityFactory.cs" />
     <Compile Include="Marketing\MarketingConfiguration.cs" />
     <Compile Include="Marketing\Model\DefaultPromotionEvaluator.cs" />
+    <Compile Include="Marketing\Model\DynamicContent\PropertyValueBase.cs" />
     <Compile Include="Marketing\Model\DynamicContent\PublishingGroupContentPlace.cs" />
     <Compile Include="Marketing\Model\DynamicContent\PublishingGroupContentItem.cs" />
     <Compile Include="Marketing\Model\DynamicContent\DynamicContentEvaluationContext.cs" />
