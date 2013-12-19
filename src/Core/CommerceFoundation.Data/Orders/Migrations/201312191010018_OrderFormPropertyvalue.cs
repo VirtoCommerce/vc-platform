@@ -2,7 +2,7 @@ namespace VirtoCommerce.Foundation.Data.Orders.Migrations
 {
 	using System.Data.Entity.Migrations;
 
-	public partial class PropertyValues : DbMigration
+	public partial class OrderFormPropertyvalue : DbMigration
 	{
 		public override void Up()
 		{
@@ -14,7 +14,6 @@ namespace VirtoCommerce.Foundation.Data.Orders.Migrations
 						OrderFormId = c.String(maxLength: 128),
 						Alias = c.String(maxLength: 64),
 						Name = c.String(maxLength: 64),
-						KeyValue = c.String(maxLength: 128),
 						ValueType = c.Int(nullable: false),
 						ShortTextValue = c.String(maxLength: 512),
 						LongTextValue = c.String(),

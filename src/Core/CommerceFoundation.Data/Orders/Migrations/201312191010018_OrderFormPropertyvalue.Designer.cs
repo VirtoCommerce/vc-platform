@@ -5,13 +5,13 @@ namespace VirtoCommerce.Foundation.Data.Orders.Migrations
     using System.Data.Entity.Migrations.Infrastructure;
     using System.Resources;
     
-    public sealed partial class PropertyValues : IMigrationMetadata
+    public sealed partial class OrderFormPropertyvalue : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(PropertyValues));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(OrderFormPropertyvalue));
         
         string IMigrationMetadata.Id
         {
-            get { return "201312031342189_PropertyValues"; }
+            get { return "201312191010018_OrderFormPropertyvalue"; }
         }
         
         string IMigrationMetadata.Source

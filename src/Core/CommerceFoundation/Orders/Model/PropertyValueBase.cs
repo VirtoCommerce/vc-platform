@@ -62,21 +62,6 @@ namespace VirtoCommerce.Foundation.Orders.Model
 			}
 		}
 
-		private string _KeyValue;
-		[DataMember]
-		[StringLength(128)]
-		public string KeyValue
-		{
-			get
-			{
-				return _KeyValue;
-			}
-			set
-			{
-				SetValue(ref _KeyValue, () => KeyValue, value);
-			}
-		}
-
 		private int _ValueType;
 		[Required]
 		[DataMember]

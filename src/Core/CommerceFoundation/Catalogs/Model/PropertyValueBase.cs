@@ -193,20 +193,21 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 
 		public override string ToString()
 		{
-			switch (this.ValueType)
+			switch (ValueType)
 			{
 				case (int)PropertyValueType.Boolean:
-					return this.BooleanValue.ToString();
+					return BooleanValue.ToString();
 				case (int)PropertyValueType.DateTime:
-					return this.DateTimeValue.ToString();
+					return DateTimeValue.ToString();
 				case (int)PropertyValueType.Decimal:
-					return this.DecimalValue.ToString();
+					return DecimalValue.ToString();
 				case (int)PropertyValueType.Integer:
-					return this.IntegerValue.ToString();
+					return IntegerValue.ToString();
 				case (int)PropertyValueType.LongString:
-					return this.LongTextValue;
+					return LongTextValue;
 				case (int)PropertyValueType.ShortString:
-					return this.ShortTextValue;
+				case (int)PropertyValueType.Image:
+					return ShortTextValue;
 			}
 			return base.ToString();
 		}

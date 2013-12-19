@@ -234,9 +234,9 @@
     <Compile Include="Orders\Migrations\201308290648071_CreateIndex.Designer.cs">
       <DependentUpon>201308290648071_CreateIndex.cs</DependentUpon>
     </Compile>
-    <Compile Include="Orders\Migrations\201312031342189_PropertyValues.cs" />
-    <Compile Include="Orders\Migrations\201312031342189_PropertyValues.Designer.cs">
-      <DependentUpon>201312031342189_PropertyValues.cs</DependentUpon>
+    <Compile Include="Orders\Migrations\201312191010018_OrderFormPropertyvalue.cs" />
+    <Compile Include="Orders\Migrations\201312191010018_OrderFormPropertyvalue.Designer.cs">
+      <DependentUpon>201312191010018_OrderFormPropertyvalue.cs</DependentUpon>
     </Compile>
     <Compile Include="Orders\Migrations\Configuration.cs" />
     <Compile Include="Orders\DSOrderClient.cs" />
@@ -336,8 +336,8 @@
     <EmbeddedResource Include="Orders\Migrations\201308290648071_CreateIndex.resx">
       <DependentUpon>201308290648071_CreateIndex.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Orders\Migrations\201312031342189_PropertyValues.resx">
-      <DependentUpon>201312031342189_PropertyValues.cs</DependentUpon>
+    <EmbeddedResource Include="Orders\Migrations\201312191010018_OrderFormPropertyvalue.resx">
+      <DependentUpon>201312191010018_OrderFormPropertyvalue.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reviews\Migrations\201304111035422_Initial.resx">
       <DependentUpon>201304111035422_Initial.cs</DependentUpon>

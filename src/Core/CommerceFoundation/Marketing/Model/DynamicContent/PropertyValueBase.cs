@@ -193,20 +193,22 @@ namespace VirtoCommerce.Foundation.Marketing.Model.DynamicContent
 
 		public override string ToString()
 		{
-			switch (this.ValueType)
+			switch (ValueType)
 			{
 				case (int)PropertyValueType.Boolean:
-					return this.BooleanValue.ToString();
+					return BooleanValue.ToString();
 				case (int)PropertyValueType.DateTime:
-					return this.DateTimeValue.ToString();
+					return DateTimeValue.ToString();
 				case (int)PropertyValueType.Decimal:
-					return this.DecimalValue.ToString();
+					return DecimalValue.ToString();
 				case (int)PropertyValueType.Integer:
-					return this.IntegerValue.ToString();
+					return IntegerValue.ToString();
 				case (int)PropertyValueType.LongString:
-					return this.LongTextValue.ToString();
+				case (int)PropertyValueType.Image:
+				case (int)PropertyValueType.Category:
+					return LongTextValue;
 				case (int)PropertyValueType.ShortString:
-					return this.ShortTextValue.ToString();
+					return ShortTextValue;
 			}
 			return base.ToString();
 		}
