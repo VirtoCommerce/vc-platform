@@ -4,7 +4,6 @@ using System.Data.Services.Common;
 using System.Runtime.Serialization;
 using VirtoCommerce.Foundation.Frameworks.Attributes;
 
-
 namespace VirtoCommerce.Foundation.Catalogs.Model
 {
 	[DataContract]

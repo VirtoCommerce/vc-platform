@@ -5,9 +5,7 @@ using System.Linq;
 using VirtoCommerce.Foundation.Data.Orders;
 using VirtoCommerce.Foundation.Orders.Factories;
 using VirtoCommerce.Foundation.Orders.Model;
-using VirtoCommerce.Foundation.Orders.Model.Gateways;
 using VirtoCommerce.Foundation.Orders.Model.PaymentMethod;
-using VirtoCommerce.Foundation.Orders.Model.ShippingMethod;
 
 namespace VirtoCommerce.PowerShell.Orders
 {
@@ -71,6 +69,7 @@ namespace VirtoCommerce.PowerShell.Orders
 												.WithReturns()
 												.WithStatus("InProgress")
 												.WithCustomer(customerId.ToString(CultureInfo.InvariantCulture), _customers[i])
+						// .WithOrderFormPropertyValues()
 												.GetOrder();
 					order.StoreId = "SampleStore";
 					order.OrderForms[0].Shipments[0].ShippingAddressId = order.OrderAddresses[1].OrderAddressId;
@@ -323,6 +322,20 @@ namespace VirtoCommerce.PowerShell.Orders
 			_order.CustomerName = name;
 			return this;
 		}
+
+		public MockOrderBuilder WithOrderFormPropertyValues()
+		{
+			var rnd = new Random();
+
+			var item = _entityFactory.CreateEntityForType(typeof(OrderFormPropertyValue)) as OrderFormPropertyValue;
+			item.Name = "referrerId";
+			item.ShortTextValue = "partner-1" + rnd.Next(100);
+			item.ValueType = OrderFormValueType.ShortString.GetHashCode();
+			_order.OrderForms[0].OrderFormPropertyValues.Add(item);
+
+			return this;
+		}
+
 		public Order GetOrder()
 		{
 			return _order;
@@ -371,6 +384,5 @@ namespace VirtoCommerce.PowerShell.Orders
 			}
 			return retVal.ToArray();
 		}
-
 	}
 }

@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.ComponentModel.DataAnnotations;
+using System.Data.Services.Common;
 using System.Runtime.Serialization;
 using VirtoCommerce.Foundation.Frameworks;
-using System.Data.Services.Common;
-using System.ComponentModel.DataAnnotations;
 
 namespace VirtoCommerce.Foundation.Marketing.Model.DynamicContent
 {
@@ -196,22 +193,22 @@ namespace VirtoCommerce.Foundation.Marketing.Model.DynamicContent
 
         public override string ToString()
         {
-            switch(this.ValueType)
+			switch (ValueType)
             {
-				case (int)PropertyValueType.Category:
-					return this.Alias;
                 case (int)PropertyValueType.Boolean:
-                    return this.BooleanValue.ToString();
+					return BooleanValue.ToString();
                 case (int)PropertyValueType.DateTime:
-                    return this.DateTimeValue.ToString();
+					return DateTimeValue.ToString();
                 case (int)PropertyValueType.Decimal:
-                    return this.DecimalValue.ToString();
+					return DecimalValue.ToString();
                 case (int)PropertyValueType.Integer:
-                    return this.IntegerValue.ToString();
+					return IntegerValue.ToString();
                 case (int)PropertyValueType.LongString:
-                    return this.LongTextValue;
+				case (int)PropertyValueType.Image:
+				case (int)PropertyValueType.Category:
+					return LongTextValue;
                 case (int)PropertyValueType.ShortString:
-                    return this.ShortTextValue;
+					return ShortTextValue;
             }
             return base.ToString();
         }

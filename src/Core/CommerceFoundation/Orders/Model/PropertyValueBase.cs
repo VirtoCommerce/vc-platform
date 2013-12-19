@@ -2,9 +2,10 @@
 using System.ComponentModel.DataAnnotations;
 using System.Data.Services.Common;
 using System.Runtime.Serialization;
+using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Frameworks;
 
-namespace VirtoCommerce.Foundation.Catalogs.Model
+namespace VirtoCommerce.Foundation.Orders.Model
 {
 	[DataContract]
 	[DataServiceKey("PropertyValueId")]
@@ -27,7 +28,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 			}
 			set
 			{
-				SetValue(ref _PropertyValueId, () => this.PropertyValueId, value);
+				SetValue(ref _PropertyValueId, () => PropertyValueId, value);
 			}
 		}
 
@@ -42,7 +43,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 			}
 			set
 			{
-				SetValue(ref _Alias, () => this.Alias, value);
+				SetValue(ref _Alias, () => Alias, value);
 			}
 		}
 
@@ -57,22 +58,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 			}
 			set
 			{
-				SetValue(ref _Name, () => this.Name, value);
-			}
-		}
-
-		private string _KeyValue;
-		[DataMember]
-		[StringLength(128)]
-		public string KeyValue
-		{
-			get
-			{
-				return _KeyValue;
-			}
-			set
-			{
-				SetValue(ref _KeyValue, () => this.KeyValue, value);
+				SetValue(ref _Name, () => Name, value);
 			}
 		}
 
@@ -87,7 +73,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 			}
 			set
 			{
-				SetValue(ref _ValueType, () => this.ValueType, value);
+				SetValue(ref _ValueType, () => ValueType, value);
 			}
 		}
 
@@ -102,7 +88,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 			}
 			set
 			{
-				SetValue(ref _ShortTextValue, () => this.ShortTextValue, value);
+				SetValue(ref _ShortTextValue, () => ShortTextValue, value);
 			}
 		}
 
@@ -116,7 +102,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 			}
 			set
 			{
-				SetValue(ref _LongTextValue, () => this.LongTextValue, value);
+				SetValue(ref _LongTextValue, () => LongTextValue, value);
 			}
 		}
 
@@ -130,7 +116,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 			}
 			set
 			{
-				SetValue(ref _DecimalValue, () => this.DecimalValue, value);
+				SetValue(ref _DecimalValue, () => DecimalValue, value);
 			}
 		}
 
@@ -144,7 +130,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 			}
 			set
 			{
-				SetValue(ref _IntegerValue, () => this.IntegerValue, value);
+				SetValue(ref _IntegerValue, () => IntegerValue, value);
 			}
 		}
 
@@ -158,7 +144,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 			}
 			set
 			{
-				SetValue(ref _BooleanValue, () => this.BooleanValue, value);
+				SetValue(ref _BooleanValue, () => BooleanValue, value);
 			}
 		}
 
@@ -172,7 +158,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 			}
 			set
 			{
-				SetValue(ref _DateTimeValue, () => this.DateTimeValue, value);
+				SetValue(ref _DateTimeValue, () => DateTimeValue, value);
 			}
 		}
 
@@ -187,7 +173,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 			}
 			set
 			{
-				SetValue(ref _Locale, () => this.Locale, value);
+				SetValue(ref _Locale, () => Locale, value);
 			}
 		}
 
@@ -206,7 +192,6 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 				case (int)PropertyValueType.LongString:
 					return LongTextValue;
 				case (int)PropertyValueType.ShortString:
-				case (int)PropertyValueType.Image:
 					return ShortTextValue;
 			}
 			return base.ToString();

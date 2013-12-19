@@ -527,7 +527,7 @@
 			</Grid>
 		</TabItem>
 
-		<TabItem x:Name="tabItemRmaRequests" Header="Return / Exchange" Visibility="{Binding IsRmaRequestsPresent, Converter={StaticResource booleanToVisibilityConverter}}">
+		<TabItem x:Name="tabItemRmaRequests" Header="Return / Exchange" Visibility="{Binding RmaRequestViewModels.Count, Converter={x:Static Presentation_Core_Infrastructure_Converters:ToVisibilityConverter.Current}, FallbackValue=Collapsed}">
 			<TabControl ItemsSource="{Binding RmaRequestViewModels}" IsSynchronizedWithCurrentItem="True">
 				<TabControl.Resources>
 					<Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}">
@@ -701,6 +701,25 @@
 					</Style>
 				</TabControl.Resources>
 			</TabControl>
+		</TabItem>
+
+		<TabItem x:Name="tabItemOrderFormProperties" Header="Properties" Visibility="{Binding FirstOrderForm.OrderFormPropertyValues.Count, Converter={x:Static Presentation_Core_Infrastructure_Converters:ToVisibilityConverter.Current}, FallbackValue=Collapsed}">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+
+				<ItemsControl Style="{StaticResource Virto_ToolbarItemsControl_Style}" />
+
+				<DataGrid Grid.Row="1" ItemsSource="{Binding FirstOrderForm.OrderFormPropertyValues}" Margin="0,0,0,4">
+					<DataGrid.Columns>
+						<DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+						<DataGridTextColumn Header="Value" Binding="{Binding }" Width="*" />
+						<!--<DataGridTextColumn Header="Type" Binding="{Binding ValueType}" />-->
+					</DataGrid.Columns>
+				</DataGrid>
+			</Grid>
 		</TabItem>
 	</TabControl>
 </UserControl>
