@@ -46,12 +46,14 @@ header, footer, aside, nav, article { display: block; }
 
 html {height: 100%;}
 
+/*
 body {
     font: normal 100% Segoe UI,Trebuchet,Arial,Sans-Serif;
     height: 100%;
     text-align:left;
     color:#333;
 }
+    */
 
 /* ---------- Headings and defaults ---------- */
 
@@ -74,6 +76,7 @@ h5 {font-size: 105%;}
     background:#2d2f25;
     width:100%;
     height:40px;
+    padding-top:5px;
     margin-bottom:20px;
 }
 
@@ -367,4 +370,97 @@ input.input-validation-error{
 
 .hidden {
 	display: none;
+}
+
+
+
+.columns .column figure img {
+    border: 1px solid #999999;
+    padding: 2px;
+}
+img {
+    border: medium none;
+}
+img {
+    height: auto;
+    max-width: 100%;
+}
+img {
+    vertical-align: top;
+}
+
+
+.main .columns .column figure {
+    display: inline-block;
+    margin: 0 0 10px;
+}
+
+
+
+#success {
+    line-height: 20px;
+    color: #727272;
+    font-family: 'Open Sans';
+    font-size: 100%;
+    font-weight: 400;
+    font-style: normal;
+}
+
+
+a {
+    color: #727272;
+    cursor: pointer;
+    outline: medium none;
+    text-decoration: none;
+}
+
+
+#success {
+    margin:0 auto 40px;
+    width:800px;
+}
+
+.main .columns {
+}
+
+.main .columns .column .inner {
+    margin: 0 0 0 30px;
+}
+
+.main .columns .column {
+    float: left;
+    width: 50%;
+}
+
+
+h4 {
+    font-size: 18px;
+    color: #464646;
+    font-weight: normal;
+    line-height: 1.2em;
+    font-family: 'Open Sans';
+}
+
+p {
+    line-height: 20px;
+    margin: 15px 0;
+}
+
+.btn {
+    -moz-box-sizing: border-box;
+    background-image: linear-gradient(#FFFFFF, #E0E0E0);
+    border: 1px solid #DDDDDD;
+    border-radius: 3px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25), 0 0 3px #FFFFFF inset;
+    color: #666666;
+    display: inline-block;
+    font-family: 'Open Sans';
+    font-weight: 500;
+    padding: 5px 13px 7px;
+    text-decoration: none;
+    text-shadow: 0 1px 1px #FFFFFF;
+}
+
+a {
+    transition: color 0.2s ease 0s;
 }
