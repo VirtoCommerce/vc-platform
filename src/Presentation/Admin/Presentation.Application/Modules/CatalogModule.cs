@@ -4,8 +4,11 @@ using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Unity;
+using VirtoCommerce.Foundation.AppConfig.Factories;
+using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Catalogs.Factories;
 using VirtoCommerce.Foundation.Catalogs.Repositories;
+using VirtoCommerce.Foundation.Data.AppConfig;
 using VirtoCommerce.Foundation.Data.Catalogs;
 using VirtoCommerce.Foundation.Data.Importing;
 using VirtoCommerce.Foundation.Data.Orders;
@@ -14,6 +17,7 @@ using VirtoCommerce.Foundation.Importing;
 using VirtoCommerce.Foundation.Importing.Factories;
 using VirtoCommerce.Foundation.Importing.Repositories;
 using VirtoCommerce.Foundation.Importing.Services;
+using VirtoCommerce.Foundation.Orders.Factories;
 using VirtoCommerce.Foundation.Orders.Repositories;
 using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementations;
@@ -87,9 +91,7 @@ namespace VirtoCommerce.ManagementClient.Catalog
 		#endregion
 
 		protected void RegisterViewsAndServices()
-		{
-			//_container.LoadConfiguration(CatalogConfiguration.Instance.UnityContainerName);
-
+		{			
 			_container.RegisterType<ICatalogEntityFactory, CatalogEntityFactory>(new ContainerControlledLifetimeManager());
 			_container.RegisterType<ICatalogRepository, DSCatalogClient>();
 			_container.RegisterType<IPricelistRepository, DSCatalogClient>();
@@ -101,6 +103,12 @@ namespace VirtoCommerce.ManagementClient.Catalog
 			_container.RegisterType<ICatalogRepository, VirtoCommerce.ManagementClient.Catalog.Services.MockCatalogService>(new ContainerControlledLifetimeManager());
 			_container.RegisterType<IPriceListRepository, MockCatalogService>(new ContainerControlledLifetimeManager());
 #else
+			_container.RegisterType<IOrderEntityFactory, OrderEntityFactory>();
+			_container.RegisterType<IOrderRepository, DSOrderClient>();
+			_container.RegisterType<IAppConfigEntityFactory, AppConfigEntityFactory>();
+			_container.RegisterType<IAppConfigRepository, DSAppConfigClient>();
+			_container.RegisterType<ITaxRepository, DSOrderClient>();
+
 			_container.RegisterService<IImportService>(
 				_container.Resolve<IServiceConnectionFactory>().GetConnectionString(ImportConfiguration.Instance.ImportingService.ServiceUri),
 				ImportConfiguration.Instance.ImportingService.WSEndPointName

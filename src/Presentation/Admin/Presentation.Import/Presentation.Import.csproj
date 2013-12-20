@@ -101,13 +101,12 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="ViewModel\Implementations\ColumnMappingViewModel.cs" />
+    <Compile Include="ViewModel\Implementations\ImportProgress.cs" />
     <Compile Include="ViewModel\Interfaces\IColumnMappingViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\IImportJobHomeViewModel.cs" />
-    <Compile Include="ViewModel\Interfaces\IImportJobProgressViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\IImportJobRunViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\IImportJobViewModel.cs" />
     <Compile Include="ViewModel\Implementations\ImportJobHomeViewModel.cs" />
-    <Compile Include="ViewModel\Implementations\ImportJobProgressViewModel.cs" />
     <Compile Include="ViewModel\Implementations\ImportJobRunViewModel.cs" />
     <Compile Include="ViewModel\Implementations\ImportJobViewModel.cs" />
     <Compile Include="ViewModel\Wizard\CreateImportJobViewModels.cs" />
@@ -117,9 +116,6 @@
     </Compile>
     <Compile Include="View\ImportJobHomeView.xaml.cs">
       <DependentUpon>ImportJobHomeView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\ImportJobProgressView.xaml.cs">
-      <DependentUpon>ImportJobProgressView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\ImportJobRunView.xaml.cs">
       <DependentUpon>ImportJobRunView.xaml</DependentUpon>
@@ -154,10 +150,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\ImportJobHomeView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="View\ImportJobProgressView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

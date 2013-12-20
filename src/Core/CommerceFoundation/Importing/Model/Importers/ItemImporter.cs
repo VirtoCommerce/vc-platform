@@ -96,7 +96,7 @@ namespace VirtoCommerce.Foundation.Importing.Model
 				case ImportAction.Insert:
 					if (_repository.Items.Where(item => item.CatalogId == containerId && item.Code == itemCode).FirstOrDefault() != null)
 					{
-						_error = "Item with the code {0} already exist";
+						_error = string.Format("Item with the code {0} already exist", itemCode);
 					}
 					else
 					{
