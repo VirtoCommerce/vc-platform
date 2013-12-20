@@ -159,6 +159,6 @@ $RECYCLE.BIN/
 /SDK/Setup/VirtoCommerce.ConfigurationUtility.Application/bin/Resources
 /SDK/Setup/VirtoCommerce.ElasticSearch/Distro/data/elasticsearch/nodes/0
 /SDK/Setup/VirtoCommerce.ElasticSearch/Distro/logs
-/src/Presentation/FrontEnd/StoreWebApp/App_Data/Virto/search/default-catalogitem
+/src/Presentation/FrontEnd/StoreWebApp/App_Data/Virto/search
 /src/Presentation/FrontEnd/StoreWebApp/App_Data/Virto/Storage
 /src/Presentation/FrontEnd/StoreWebApp/bin
