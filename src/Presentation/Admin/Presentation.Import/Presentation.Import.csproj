@@ -101,7 +101,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="ViewModel\Implementations\ColumnMappingViewModel.cs" />
-    <Compile Include="ViewModel\Implementations\ImportProgress.cs" />
+    <Compile Include="Model\ImportProgress.cs" />
     <Compile Include="ViewModel\Interfaces\IColumnMappingViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\IImportJobHomeViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\IImportJobRunViewModel.cs" />
