@@ -1,7 +1,7 @@
 ﻿@model VirtoCommerce.Foundation.Orders.Model.Order[]
 
 @{
-    var pageLimits = new[] {10, 20, 50};
+    var pageLimits = new[] {5, 10, 20, 50};
 }
 
 <div class="pager">
@@ -9,20 +9,20 @@
     <div class="limiter">
         <span>@("Show".Localize())</span>
         <select name="limit" id="" onchange="$.redirect(this.value)">
-            @for (int i = 0; i< pageLimits.Length; i++)
-            {;
+            @{var noSelected = true;}
+
+            @foreach (int limit in pageLimits)
+            {
                 var selected = "";
-                int currentLimit;;
-                if (Request.QueryString["limit"] != null && int.TryParse(Request.QueryString["limit"], out currentLimit) && currentLimit == pageLimits[i])
+                int currentLimit;
+                if (Request.QueryString["limit"] != null && int.TryParse(Request.QueryString["limit"], out currentLimit) && currentLimit == limit)
                 {
+                    noSelected = false;
                     selected = "selected=\"selected\"";
                 }
-                else if (i == 0)
-                {
-                    selected = "selected=\"selected\"";
-                }
-                <option value="@Url.Action("Orders", new { limit = pageLimits[i] })" @selected>@pageLimits[i]</option>
+                <option value="@Url.Action("Orders", new { limit })" @selected>@limit</option>
             }
+            <option value="@Url.Action("Orders")" @(noSelected?"selected=\"selected\"":"")>@("All".Localize())</option>
         </select>
         <span>@("per page".Localize())</span>
     </div>

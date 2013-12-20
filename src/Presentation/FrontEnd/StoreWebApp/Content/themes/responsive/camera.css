@@ -385,7 +385,7 @@
 }
 
 .camera_thumbs_cont ul li > img {
-	border-color: 1px solid #000;
+	border: 1px solid #000;
 }
 /*AMBER SKIN*/
 .camera_amber_skin .camera_prevThumbs div {

@@ -46,7 +46,7 @@
             Please enter a user name for this site below and click the Confirm button to finish
             logging in.".LocalizeHtml((string)ViewBag.ProviderDisplayName))
             </p>
-            <br/>
+            <br />
             <fieldset>
                 <legend>@("Association Form".Localize())</legend>
                 <div class="control-group">
@@ -55,10 +55,12 @@
                     @Html.ValidationMessageFor(m => m.UserName)
                 </div>
                 <div class="control-group">
-                    <label class="control">
-                        @Html.CheckBoxFor(m => m.CreateLocalLogin, new { onclick = "setPasswordForm(this, this.checked);" })
-                        <span>@("Create/Use local account?".Localize())</span>
-                    </label>
+                    <div class="control">
+                        <label>
+                            @Html.CheckBoxFor(m => m.CreateLocalLogin, new { onclick = "setPasswordForm(this, this.checked);" })
+                            <span>@("Create/Use local account?".Localize())</span>
+                        </label>
+                    </div>
                 </div>
             </fieldset>
             <fieldset id="passwords" style="display: @(Model.CreateLocalLogin ? "block" : "none");">
@@ -85,70 +87,3 @@
         }
     </div>
 </div>
-@*<div class="main-container col1-layout">
-    <div class="main">
-        <div class="col-main">
-            <div class="page-title">
-                <h1>@("Associate your {0} account.".LocalizeHtml((string)ViewBag.ProviderDisplayName))</h1>
-            </div>
-
-            @using (Html.BeginForm("ExternalLoginConfirmation", "Account", new { ViewBag.ReturnUrl }))
-            {
-                @Html.AntiForgeryToken()
-                @Html.ValidationSummary(true)
-
-                <div class="fieldset">
-                    <h2 class="legend">Association Form</h2>
-                    <p>
-                        @(@"You've successfully authenticated with <strong>{0}</strong>.
-            Please enter a user name for this site below and click the Confirm button to finish
-            logging in.".LocalizeHtml((string)ViewBag.ProviderDisplayName))
-                    </p>
-                    <ul class="form-list">
-                        <li class="fields">
-                            <div class="field name-firstname">
-                                @Html.LabelFor(m => m.UserName)
-                                @Html.TextBoxFor(m => m.UserName, new { @class = "input-text" })
-                                @Html.ValidationMessageFor(m => m.UserName)
-                            </div>
-                        </li>
-                        <li class="control">
-                            <p>
-                                @("You can create new local account by specifying password." +
-                                  "You can also associate external login with exisitng local user name by providing correct password.".LocalizeHtml())
-                            </p>
-                            @Html.CheckBoxFor(m => m.CreateLocalLogin, new { onclick = "setPasswordForm(this, this.checked);" })
-                            @Html.LabelFor(m => m.CreateLocalLogin)
-                        </li>
-                    </ul>
-                    <ul class="form-list" id="passwords" style="display: @(Model.CreateLocalLogin ? "block" : "none");">
-                        <li class="fields">
-                            <div class="field">
-                                @Html.LabelForEx(m => m.NewPassword)
-                                @Html.PasswordFor(m => m.NewPassword, new { @class = "input-text" })
-                                @Html.ValidationMessageFor(m => m.NewPassword)
-                            </div>
-                        </li>
-                        <li class="fields">
-                            <div class="field">
-                                @Html.LabelForEx(m => m.ConfirmPassword)
-                                @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "input-text" })
-                                @Html.ValidationMessageFor(m => m.ConfirmPassword)
-                            </div>
-                        </li>
-                    </ul>
-                    @Html.HiddenFor(m => m.ExternalLoginData)
-                </div>
-                <div class="buttons-set">
-                    <button type="submit" value="Register" class="button"><span><span>@("Confirm Registration".LocalizeHtml())</span></span></button>
-                </div>      
-
-            }
-
-        </div>
-    </div>
-</div>*@
-
-@*@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}*@

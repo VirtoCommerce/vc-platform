@@ -26,7 +26,7 @@ else
         $(function ()
         {
             Reviews.catalogReviews(filter);
-            var isAuthorized = '@UserHelper.CustomerSession.IsRegistered';
+@*            var isAuthorized = '@UserHelper.CustomerSession.IsRegistered';
 
             @foreach (var item in Model.CatalogItems)
             {
@@ -35,7 +35,7 @@ else
             {
                 if (isAuthorized == "True")
                 {
-                    tb_show('@("Create Review".LocalizeHtml())', "@Url.Action("AddReview", "Catalog", new { id = item.CatalogItem.ItemId, height = 550 })", false);
+                    tb_show('@("Create Review".Localize())', "@Url.Action("AddReview", "Catalog", new { id = item.CatalogItem.ItemId, height = 550 })", false);
                 }
                 else
                 {
@@ -45,7 +45,7 @@ else
                 return false;
             });
             </text>
-            }
+            }*@
 
 
         });

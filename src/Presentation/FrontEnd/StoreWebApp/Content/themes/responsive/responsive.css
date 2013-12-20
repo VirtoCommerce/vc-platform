@@ -88,9 +88,25 @@
 		margin: 0 0 30px;
 	}
 
+	.article .no-recommend ~ .product-recommend
+	{
+		display: none;
+	}
+
 	.article .product-view .product-other
 	{
 		display: none;
+	}
+
+	.article .product-view.no-recommend .product-info .product-shop
+	{
+		width: 328px;
+	}
+
+	.article .product-view.no-recommend .product-info .product-shop .add-to-links li + li
+	{
+		display: block;
+		margin: 0 0 10px;
 	}
 
 	.article .checkout .steps-content .add-info-block.register,
@@ -112,11 +128,6 @@
 	{
 		display: block;
 		margin: 0 auto 5px;
-	}
-
-	.article .content .cabinet .head-order + .block.border
-	{
-		display: block !important;
 	}
 }
 
@@ -172,6 +183,11 @@
 	.header .menu li .sub-menu ul.level0 li.level1
 	{
 		width: 23%;
+	}
+
+	.search-autocomplete
+	{
+		left: 0;
 	}
 
 	/* --- Article --- */
@@ -300,6 +316,11 @@
 		width: 35px;
 	}
 
+	.article .products-list.grid .item:hover .inner .product-info .cart .no-sale
+	{
+		display: none;
+	}
+
 	.article .products-list.list .item .inner .product-info .button-container ul li
 	{
 		display: block;
@@ -378,6 +399,11 @@
 		width: 100%;
 	}
 
+	.article .product-view.no-recommend .product-info .product-shop
+	{
+		width: 100%;
+	}
+
 	.article .product-view .product-info .product-image
 	{
 		float: none;
@@ -402,6 +428,11 @@
 	.article .product-recommend
 	{
 		display: block;
+	}
+
+	.article .no-recommend ~ .product-recommend
+	{
+		display: none;
 	}
 
 	.article .cart
@@ -915,6 +946,12 @@
 		right: 10px;
 	}
 
+	.search-autocomplete
+	{
+		left: 0;
+		width: 360px;
+	}
+
 	.main-slider
 	{
 		height: 0;
@@ -1041,6 +1078,11 @@
 		width: 35px;
 	}
 
+	.article .products-list.grid .item:hover .inner .product-info .cart .no-sale
+	{
+		display: none;
+	}
+
 	.article .products-list.list .item .inner .product-image
 	{
 		float: none;
@@ -1151,6 +1193,17 @@
 		width: 100%;
 	}
 
+	.article .product-view.no-recommend .product-info .product-shop
+	{
+		width: 100%;
+	}
+
+	.article .product-view.no-recommend .product-info .product-shop .add-to-links li + li
+	{
+		display: block;
+		margin: 0 0 10px;
+	}
+
 	.article .product-view .product-info .product-image .products-previews .scroll ul li
 	{
 		width: 178px;
@@ -1210,6 +1263,11 @@
 	.article .product-recommend
 	{
 		display: block;
+	}
+
+	.article .no-recommend ~ .product-recommend
+	{
+		display: none;
 	}
 
 	.page-nav .title
@@ -1354,8 +1412,7 @@
 	.article .sidebar .block
 	{
 		float: left;
-		margin: 0 0 30px;
-		width: 260px;
+		width: 230px;
 	}
 
 	/* --- Checkout --- */
@@ -1536,7 +1593,6 @@
 
 	.article .content .cabinet .buttons
 	{
-		margin: 0 0 15px;
 		text-align: center;
 	}
 
@@ -1708,7 +1764,6 @@
 	    top: 0;
 	    width: 300px;
 	}
-
 
 	.rubber
 	{
@@ -2095,6 +2150,12 @@
 		display: none;
 	}
 
+	.search-autocomplete
+	{
+		left: -50px;
+		width: 300px;
+	}
+
 	.main-slider
 	{
 		height: 0;
@@ -2226,6 +2287,11 @@
 		width: 35px;
 	}
 
+	.article .products-list.grid .item:hover .inner .product-info .cart .no-sale
+	{
+		display: none;
+	}
+
 	.article .products-list.list .item .inner .product-image
 	{
 		float: none;
@@ -2336,6 +2402,17 @@
 		width: 100%;
 	}
 
+	.article .product-view.no-recommend .product-info .product-shop
+	{
+		width: 100%;
+	}
+
+	.article .product-view.no-recommend .product-info .product-shop .add-to-links li + li
+	{
+		display: block;
+		margin: 0 0 10px;
+	}
+
 	.article .product-view .product-info .product-image .products-previews .scroll ul li
 	{
 		width: 178px;
@@ -2395,6 +2472,11 @@
 	.article .product-recommend
 	{
 		display: block;
+	}
+
+	.article .no-recommend ~ .product-recommend
+	{
+		display: none;
 	}
 
 	.page-nav .title
@@ -2686,7 +2768,6 @@
 
 	.article .content .cabinet .buttons
 	{
-		margin: 0 0 15px;
 		text-align: center;
 	}
 
@@ -2702,8 +2783,10 @@
 
 	.article .content .cabinet .block.border
 	{
+		background: #fff;
 		display: none;
 		margin: -2px 0 0;
+		padding: 10px;
 		position: relative;
 		z-index: 2;
 
@@ -2723,8 +2806,7 @@
 
 	.article .sidebar .block
 	{
-		margin: 0 0 30px;
-		width: 260px;
+		width: 230px;
 	}
 
 	/* --- Cabinet --- */
@@ -2743,12 +2825,6 @@
 	.article .col.reg .info
 	{
 		min-height: 0;
-	}
-
-	.article .account button
-	{
-		margin: 0 0 5px;
-		width: 100%;
 	}
 
 	/* --- Footer --- */

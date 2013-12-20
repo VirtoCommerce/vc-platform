@@ -1,21 +1,23 @@
 ﻿@using VirtoCommerce.Foundation.Orders.Model
-@model VirtoCommerce.Foundation.Orders.Model.Order
+@model Order
 
-@if ((string)ViewData["View"] == "Default")
-{
-    <div class="title-buttons">
-        <span class="nobr">
-            @Html.ActionLink("Reorder", "Reorder", new { orderId = Model.OrderGroupId, @class = "link-reorder" })
-            <span class="separator">|</span>
-            @Html.ActionLink("Return", "OrderReturn", new { orderId = Model.OrderGroupId })
-            <span class="separator">|</span>
-            <a href="#" class="link-print" onclick="$.popup('@Url.Action("PrintOrder", new { orderId = Model.OrderGroupId })'); return false;">@("Print".LocalizeHtml())</a>
-        </span>
-    </div>
-}
-
-
-<span class="order-title">@("Order Information".Localize())</span>
+<header class="head">
+    <span class="order-title">@("Order information".Localize())</span>
+    @if ((string)ViewData["View"] == "Default")
+    {
+        <ul role="navigation">
+            <li class="reorder">
+                @Html.ActionLink("Reorder".Localize(), "Reorder", new { orderId = Model.OrderGroupId },new {title="Reorder".Localize()})
+            </li>
+            <li class="return">
+                @Html.ActionLink("Return".Localize(), "OrderReturn", new { orderId = Model.OrderGroupId },new {title="Return".Localize()})
+            </li>
+            <li class="print">
+                <a href="#" title=@("Print".Localize()) onclick="$.popup('@Url.Action("PrintOrder", new { orderId = Model.OrderGroupId })'); return false;">@("Print".Localize())</a>
+            </li>
+        </ul>
+    }
+</header>
 <p>@("Order Date:".Localize()) @Model.Created.Value.ToString("MMMM d, yyyy")</p>
 <div class="block clearfix">
     <div class="col">

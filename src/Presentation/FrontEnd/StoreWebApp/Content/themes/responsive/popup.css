@@ -75,6 +75,7 @@
 		height: 570px;
 		left: 50%;
 		margin: -285px 0 0 -285px;
+		overflow: auto;
 		position: fixed;
 		top: 50%;
 		width: 570px;

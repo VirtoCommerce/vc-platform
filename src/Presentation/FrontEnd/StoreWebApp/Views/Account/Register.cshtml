@@ -16,23 +16,25 @@
                 <div class="control-group">
                     @Html.LabelForEx(m => m.FirstName)
                     @Html.TextBoxFor(m => m.FirstName)
-                    @Html.ValidationMessageFor(m=>m.FirstName)
+                    @Html.ValidationMessageFor(m => m.FirstName)
                 </div>
                 <div class="control-group">
                     @Html.LabelForEx(m => m.LastName)
                     @Html.TextBoxFor(m => m.LastName)
-                    @Html.ValidationMessageFor(m=>m.LastName)
+                    @Html.ValidationMessageFor(m => m.LastName)
                 </div>
                 <div class="control-group">
                     @Html.LabelForEx(m => m.Email)
                     @Html.TextBoxFor(m => m.Email)
-                    @Html.ValidationMessageFor(m=>m.Email)
+                    @Html.ValidationMessageFor(m => m.Email)
                 </div>
                 <div class="control-group">
-                    <label class="control" for="is_subscribed">
-                        @Html.CheckBoxFor(m=>m.SignUpForNews)
-                        <span>@("Sign Up for Newsletter".Localize())</span>
-                    </label>
+                    <div class="control">
+                        <label>
+                            @Html.CheckBoxFor(m => m.SignUpForNews)
+                            <span>@("Sign Up for Newsletter".Localize())</span>
+                        </label>
+                    </div>
                 </div>
             </fieldset>
             <fieldset>
@@ -40,12 +42,12 @@
                 <div class="control-group">
                     @Html.LabelForEx(m => m.Password)
                     @Html.PasswordFor(m => m.Password)
-                    @Html.ValidationMessageFor(m=>m.Password)
+                    @Html.ValidationMessageFor(m => m.Password)
                 </div>
                 <div class="control-group">
                     @Html.LabelForEx(m => m.ConfirmPassword)
                     @Html.PasswordFor(m => m.ConfirmPassword)
-                    @Html.ValidationMessageFor(m=>m.ConfirmPassword)
+                    @Html.ValidationMessageFor(m => m.ConfirmPassword)
                 </div>
                 <div class="control-group">
                     <p class="required">* @("Required Fields".Localize())</p>

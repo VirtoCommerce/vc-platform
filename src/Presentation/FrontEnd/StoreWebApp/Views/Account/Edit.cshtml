@@ -1,94 +1,99 @@
 ﻿@model ChangeAccountInfoModel
 @{
-    ViewBag.Title = Html.Title("Account Information".Localize());
+    ViewBag.PageTitle = SiteMap.CurrentNode != null ? SiteMap.CurrentNode.Title.Localize() : "Account Information".Localize();
+    ViewBag.Title = Html.Title(ViewBag.PageTitle as string);
     Layout = "_Layout.cshtml";
 }
 <script type="text/javascript">
-    function setPasswordForm(obj, arg) {
-        if (arg) {
-            $('#OldPassword').parents('div.fieldset').show();
+    function setPasswordForm(obj, arg)
+    {
+        if (arg)
+        {
+            VirtoCommerce.enableAll($(".change-pass"));
+            $('fieldset.change-pass').show();
             $('#OldPassword').addClass('required-entry');
             $('#NewPassword').addClass('required-entry');
             $('#confirmation').addClass('required-entry');
 
-        } else {
-            $('#OldPassword').parents('div.fieldset').hide();
+        } else
+        {
+            VirtoCommerce.disableAll($(".change-pass"));
+            $('fieldset.change-pass').hide();
             $('#OldPassword').removeClass('required-entry');
             $('#NewPassword').removeClass('required-entry');
             $('#confirmation').removeClass('required-entry');
         }
     }
 </script>
-<div class="dashboard">
-    <div class="page-title">
-        <h1>@("Edit Account Information".LocalizeHtml())</h1>
-    </div>
-    @using (Html.BeginForm())
-    {
-        @Html.ValidationSummary(false)
-        @Html.AntiForgeryToken()
-        <div class="fieldset">
-            <h2 class="legend">@("Account Information".LocalizeHtml())</h2>
-            <ul class="form-list">
-                <li class="fields">
-                    <div class="customer-name">
-                        <div class="field name-firstname">
-                            @Html.LabelForEx(m=>m.FullName)
-	                        <div class="input-box">
-		                        @Html.TextBoxFor(m => m.FullName, new { @class = "input-text" })
-	                        </div>
-                        </div>
-                    </div>
-                </li>
-                <li>
-					@Html.LabelForEx(m=>m.Email)
-                    <div class="input-box">
-                        @Html.TextBoxFor(m => m.Email, new { @class = "input-text" })  
-                    </div>
-                </li>
-                <li class="control">
-                    <input type="checkbox" class="checkbox" title="@("Change Password".LocalizeHtml())" onclick="setPasswordForm(this, this.checked)"
-                        value="1" id="ChangePassword" name="ChangePassword" />
-                    <label for="ChangePassword">@("Change Password".LocalizeHtml())</label>
 
-                </li>
-            </ul>
-        </div>
-        <div style="display: none;" class="fieldset">
-            <h2 class="legend">@("Change Password".LocalizeHtml())</h2>
-            <ul class="form-list">
-                <li>
-					@Html.LabelForEx(m=>m.OldPassword)
-                    <div class="input-box">
-                         @Html.PasswordFor(m => m.OldPassword, new { @class = "input-text" })
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <div class="block">
+            <div class="title">
+                <span>@("Account Information".Localize())</span>
+            </div>
+            <div class="info clearfix">
+                <div class="col">
+                    <div class="control-group">
+                        @Html.LabelForEx(m => m.FullName)
+                        @Html.TextBoxFor(m => m.FullName)
+                        @Html.ValidationMessageFor(m => m.FullName)
                     </div>
-                </li>
-                <li class="fields">
-                    <div class="field">
-                        @Html.LabelForEx(m=>m.NewPassword)
-                        <div class="input-box">
-                            @Html.PasswordFor(m => m.NewPassword, new { @class = "input-text" })
+                    <div class="control-group">
+                        <div class="control">
+                            <label for="ChangePassword">
+                                <input type="checkbox" title="@("Change Password".Localize())" onclick="setPasswordForm(this, this.checked)" value="1" id="ChangePassword" name="ChangePassword" />
+                                <span>@("Change Password".Localize())</span>
+                            </label>
                         </div>
                     </div>
-                    <div class="field">
-						@Html.LabelForEx(m=>m.ConfirmPassword)
-                        <div class="input-box">
-                            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "input-text" })
-                        </div>
+                </div>
+                <div class="col">
+                    <div class="control-group">
+                        @Html.LabelForEx(m => m.Email)
+                        @Html.TextBoxFor(m => m.Email)
+                        @Html.ValidationMessageFor(m => m.Email)
                     </div>
-                </li>
-            </ul>
+                </div>
+            </div>
         </div>
-        <div class="buttons-set">
-            <p class="required">
-                * @("Required Fields".LocalizeHtml())
-            </p>
-            <p class="back-link">
-                <a href="@Url.Action("Index","Account")"><small>« </small>
-                    @("Back".LocalizeHtml())</a>
-            </p>
-            <button class="button" title="Save" type="submit">
-                <span><span>@("Save".LocalizeHtml())</span></span></button>
+    </fieldset>
+    <fieldset class="change-pass" style="display: none;">
+        <div class="block">
+            <div class="title">
+                <span>@("Change Password".Localize())</span>
+            </div>
+            <div class="info clearfix">
+                <div class="col">
+                    <div class="control-group">
+                        @Html.LabelForEx(m => m.OldPassword)
+                        @Html.PasswordFor(m => m.OldPassword)
+                        @Html.ValidationMessageFor(m => m.OldPassword)
+                    </div>
+                    <div class="control-group">
+                        @Html.LabelForEx(m => m.NewPassword)
+                        @Html.PasswordFor(m => m.NewPassword)
+                        @Html.ValidationMessageFor(m => m.NewPassword)
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="control-group">
+                        @Html.LabelForEx(m => m.ConfirmPassword)
+                        @Html.PasswordFor(m => m.ConfirmPassword)
+                        @Html.ValidationMessageFor(m => m.ConfirmPassword)
+                    </div>
+                </div>
+            </div>
         </div>
-    }
-</div>
+    </fieldset>
+    <div class="buttons">
+        <p class="required">* @("Required Fields".Localize())</p>
+        <button>
+            <span>@("Save".Localize())</span>
+        </button>
+        <a href="@Url.Action("Index", "Account")" class="back">« @("Back".Localize())</a>
+    </div>
+}

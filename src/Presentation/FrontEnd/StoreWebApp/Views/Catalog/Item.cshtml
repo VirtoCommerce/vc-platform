@@ -451,12 +451,12 @@
                 </form>
             </div>
 
-            @{ var associationGroup = CatalogHelper.Association(Model.CatalogItem, "Accessories"); }
+            @{ var associationGroup = CatalogHelper.Association(Model.CatalogItem, "Related Items"); }
             @if (associationGroup != null)
             {
                 <div class="product-other">
                     <div class="product-additional">
-                        @{ Html.RenderPartial("RecommendedProducts", associationGroup); }
+                        @{ Html.RenderPartial("RelatedProducts", associationGroup); }
                     </div>
                 </div>
             }
@@ -529,13 +529,13 @@
         {
             <div class="product-recommend products-no-effects slider-products">
 
-                @{ Html.RenderPartial("RecommendedProducts2", associationGroup); }
+                @{ Html.RenderPartial("RelatedProducts2", associationGroup); }
             </div>
          }
     </div>
 </div>
 @section Bottom{
     
-    @{Html.RenderAction("Association", new { item = Model.CatalogItem, templateName = "RelatedProducts", groupName = "Related Items" });}
+    @{Html.RenderAction("Association", new { item = Model.CatalogItem, templateName = "RecommendedProducts", groupName = "Accessories" });}
 
 }

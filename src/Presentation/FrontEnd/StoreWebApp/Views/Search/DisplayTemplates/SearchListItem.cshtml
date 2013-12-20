@@ -1,4 +1,5 @@
-﻿@model CatalogItemWithPriceModel
+﻿@using VirtoCommerce.Web.Virto.Helpers
+@model CatalogItemWithPriceModel
 
 @{
     var itemClass = "item";
@@ -35,7 +36,7 @@
                             <span id="totalreviews-@Model.CatalogItem.ItemId">0</span>&nbsp;@("Review(s)".Localize())
                         </a>
                         </li>
-                        <li><a href="" id="addreview-@Model.CatalogItem.ItemId">@("Add Your Review".Localize())</a></li>
+                        <li><a href="@(UserHelper.CustomerSession.IsRegistered ? Url.Action("AddReview", "Catalog", new { id = Model.CatalogItem.ItemId}) : Url.Action("LogOnAsync", "Account"))" rel="popup">@("Add Your Review".Localize())</a></li>
                     </ul>
                 </div>
             </div>

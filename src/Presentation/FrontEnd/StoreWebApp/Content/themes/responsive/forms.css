@@ -92,7 +92,9 @@ select
 	.control-group textarea
 	{
 		height: 120px;
+		max-height: 120px;
 		max-width: 260px;
+		min-height: 120px;
 		min-width: 260px;
 	}
 

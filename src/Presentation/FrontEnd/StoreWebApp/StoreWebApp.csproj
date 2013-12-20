@@ -614,26 +614,34 @@
     <Content Include="Content\themes\responsive\images\icons\cart.png" />
     <Content Include="Content\themes\responsive\images\icons\cart_listing.png" />
     <Content Include="Content\themes\responsive\images\icons\compare.png" />
+    <Content Include="Content\themes\responsive\images\icons\date.png" />
     <Content Include="Content\themes\responsive\images\icons\dropdown-arrow.png" />
     <Content Include="Content\themes\responsive\images\icons\edit-mini.png" />
     <Content Include="Content\themes\responsive\images\icons\edit.png" />
     <Content Include="Content\themes\responsive\images\icons\email.png" />
     <Content Include="Content\themes\responsive\images\icons\grid-mode.gif" />
     <Content Include="Content\themes\responsive\images\icons\icon_cart_listing_mask.png" />
+    <Content Include="Content\themes\responsive\images\icons\items.png" />
     <Content Include="Content\themes\responsive\images\icons\list-mode.gif" />
     <Content Include="Content\themes\responsive\images\icons\msg\error.gif" />
     <Content Include="Content\themes\responsive\images\icons\msg\note.gif" />
     <Content Include="Content\themes\responsive\images\icons\msg\notice.gif" />
     <Content Include="Content\themes\responsive\images\icons\msg\success.gif" />
+    <Content Include="Content\themes\responsive\images\icons\order.png" />
+    <Content Include="Content\themes\responsive\images\icons\print.gif" />
+    <Content Include="Content\themes\responsive\images\icons\print.png" />
     <Content Include="Content\themes\responsive\images\icons\rating.png" />
     <Content Include="Content\themes\responsive\images\icons\remove-popup.png" />
     <Content Include="Content\themes\responsive\images\icons\remove.png" />
+    <Content Include="Content\themes\responsive\images\icons\reorder.png" />
+    <Content Include="Content\themes\responsive\images\icons\return.png" />
     <Content Include="Content\themes\responsive\images\icons\search.png" />
     <Content Include="Content\themes\responsive\images\icons\shipping.png" />
     <Content Include="Content\themes\responsive\images\icons\social.png" />
     <Content Include="Content\themes\responsive\images\icons\switch.png" />
     <Content Include="Content\themes\responsive\images\icons\trash.png" />
     <Content Include="Content\themes\responsive\images\icons\twitter.png" />
+    <Content Include="Content\themes\responsive\images\icons\view.png" />
     <Content Include="Content\themes\responsive\images\icons\wishlist.png" />
     <Content Include="Content\themes\responsive\images\labels.png" />
     <Content Include="Content\themes\responsive\images\logo.png" />
@@ -650,6 +658,7 @@
     <Content Include="Content\themes\responsive\main.css" />
     <Content Include="Content\themes\responsive\messages.css" />
     <Content Include="Content\themes\responsive\popup.css" />
+    <Content Include="Content\themes\responsive\print.css" />
     <Content Include="Content\themes\responsive\reset.css" />
     <Content Include="Content\themes\responsive\responsive.css" />
     <Content Include="Content\themes\responsive\transition.css" />
@@ -738,7 +747,6 @@
       <SubType>
       </SubType>
     </Content>
-    <Content Include="Views\Shared\_LayoutOld.cshtml" />
     <Content Include="Views\Account\_Layout.cshtml" />
     <Content Include="Views\Account\AddressBook.cshtml" />
     <Content Include="Views\Account\AddressEdit.cshtml" />
@@ -771,8 +779,7 @@
     <Content Include="Views\Catalog\Category.cshtml" />
     <Content Include="Views\Catalog\Item.cshtml" />
     <Content Include="Views\Catalog\Menu.cshtml" />
-    <Content Include="Views\Catalog\RelatedItem.cshtml" />
-    <Content Include="Views\Catalog\RelatedProducts.cshtml" />
+    <Content Include="Views\Catalog\RecommendedProducts.cshtml" />
     <Content Include="Views\Checkout\Cart.cshtml" />
     <Content Include="Views\Checkout\DisplayTemplates\Credit.cshtml" />
     <Content Include="Views\Checkout\DisplayTemplates\CreditCard.cshtml" />
@@ -826,8 +833,8 @@
     <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
     <Content Include="Views\Account\_RemoveExternalLoginsPartial.cshtml" />
     <Content Include="Views\Catalog\CreateReview.cshtml" />
-    <Content Include="Views\Catalog\RecommendedProducts.cshtml" />
-    <Content Include="Views\Catalog\RecommendedItem.cshtml" />
+    <Content Include="Views\Catalog\RelatedProducts.cshtml" />
+    <Content Include="Views\Catalog\RelatedItem.cshtml" />
     <Content Include="Views\Catalog\ItemProperties.cshtml" />
     <Content Include="Views\Catalog\ItemVariations.cshtml" />
     <Content Include="Views\Catalog\Variation.cshtml" />
@@ -859,7 +866,7 @@
     <Content Include="Views\Shared\EditorTemplates\MiniLineItem.cshtml" />
     <Content Include="Views\Search\DisplayTemplates\CurrentFilterPanel.cshtml" />
     <Content Include="Views\Search\DisplayTemplates\SearchListItem.cshtml" />
-    <Content Include="Views\Catalog\RecommendedProducts2.cshtml" />
+    <Content Include="Views\Catalog\RelatedProducts2.cshtml" />
     <Content Include="Views\Banner\DisplayTemplates\CategoryUrl.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\SearchItems.cshtml" />
     <Content Include="Views\Shared\_LayoutBase.cshtml" />

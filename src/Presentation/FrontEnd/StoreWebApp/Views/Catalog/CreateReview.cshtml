@@ -4,30 +4,36 @@
 <script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"> </script>
 
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(document).ready(function ()
+    {
 
         var currentTip = $("#Rating option:selected").text();
         $('#ratingTip').text(currentTip);
 
         $('div#rating2').rateit({ resetable: false, starwidth: 11, starheight: 11 });
-        $("div#rating2").bind('over', function(event, value) {
+        $("div#rating2").bind('over', function (event, value)
+        {
             var currentTip = $("#Rating option:selected").text();
-            if (value != undefined) {
+            if (value != undefined)
+            {
                 var currentTip = $("#Rating option[value='" + value + "']").text();
             }
             $('#ratingTip').text(currentTip);
         });
-        $("div#rating2").bind('rated', function(event, value) {
+        $("div#rating2").bind('rated', function (event, value)
+        {
             var currentTip = $("#Rating option[value='" + value + "']").text();
             $('#ratingTip').text(currentTip);
         });
 
-        $('#SaveReview').on('click', function() {
+        $('#SaveReview').on('click', function ()
+        {
             var form = $("#addReviewMain form");
             Reviews.review(form);
         });
 
-        $('#Preview').on('click', function() {
+        $('#Preview').on('click', function ()
+        {
             var form = $("#addReviewMain form");
             var previewContainer = $("#ReviewPreview");
             Reviews.reviewPreview(form, previewContainer);
@@ -35,30 +41,29 @@
     });
 </script>
 
-<div id="containerUpdateDiv" class="article">
-    <div class="page-title">
-        <h1>@("Create Review".LocalizeHtml())</h1>
-    </div>
-    <div class="product-tabs">
-        <div class="tabs-content">
-                  <div id="ReviewPreview" class="preview"></div>
-              </div>
-    </div>
-	<div id="addReviewMain" class="main">
-		@using (Html.BeginForm()) 
-		{
-			<ul class="form-list extend">
-				<li>
-					<label class="required" for="RatingComment"><em>*</em>@("Review headline".LocalizeHtml()):</label>
-					<div class="input-box">
-						@Html.TextBoxFor(m => m.RatingComment, new {@class = "input-text"})
+<div id="containerUpdateDiv">
+    <div id="ReviewPreview" class="preview"></div>
+    <div id="addReviewMain">
+        @using (Html.BeginForm())
+        {
 
-					</div>
-				</li>
-				<li>
-					<label class="required" for="Rating"><em>*</em>@("Rating:".LocalizeHtml())</label>
-					<div class="input-box" style="padding-top: 5px;">
-						@Html.DropDownListFor(model => model.Rating, new[]
+            //Fields required for preview   
+            <input type="hidden" name="CreatedDateTime" value="@DateTime.Now.ToString("s")" />
+            @Html.HiddenFor(m => m.TotalComments)
+            @Html.HiddenFor(m => m.ItemId)
+            @Html.HiddenFor(m => m.PositiveFeedbackCount)
+            @Html.HiddenFor(m => m.NegativeFeedbackCount)
+
+            <div class="title">
+                <span>@("Create Review".Localize())</span>
+            </div>
+            <div class="control-group">
+                @Html.LabelForEx(m => m.RatingComment)
+                @Html.TextBoxFor(m => m.RatingComment)
+            </div>
+            <div class="control-group">
+                @Html.LabelForEx(m => m.Rating)
+                @Html.DropDownListFor(model => model.Rating, new[]
 							{
 								new SelectListItem {Text = "Click to rate product".Localize(), Value = "0"},
 								new SelectListItem {Text = "Not Good".Localize(), Value = "1"},
@@ -67,55 +72,42 @@
 								new SelectListItem {Text = "That's Good Stuff".Localize(), Value = "4"},
 								new SelectListItem {Text = "Perfect. It doesn't get any better".Localize(), Value = "5"}
 							}, (string)null)
-						<div id="rating2" data-rateit-backingfld="select#Rating" style="cursor: pointer;"></div>
-						<span id="ratingTip" style="padding-left: 20px;"></span>
-						<br />@Html.ValidationMessageFor(model => model.Rating)
-					</div>
-				</li>
-				<li>
-					<label class="required" for="Reviewer.NickName"><em>*</em>@("Author".LocalizeHtml())</label>
-					<div class="input-box">
-						@Html.TextBoxFor(m => m.Reviewer.NickName, new {@class = "input-text"})
-					</div>
-				</li>
-				<li>
-					<label class="required" for="Reviewer.Address"><em>*</em>@("Your location".LocalizeHtml()):</label>
-					<div class="input-box">
-						@Html.TextBoxFor(m => m.Reviewer.Address, Model.Reviewer.Address, new {@class = "input-text"})
-					</div>
-				</li>
-				<li>
-					<label class="required" for="ReviewText.Text"><em>*</em>@("Comments".LocalizeHtml())</label>
-					<div class="input-box">
-						@Html.TextAreaFor(m => m.ReviewText.Text)
-					</div>
-				</li>
-			</ul>
-
-			<p class="required">* @("Required Fields".LocalizeHtml())</p>
-
-			//Fields required for preview   
-			<input type="hidden" name="CreatedDateTime" value="@DateTime.Now.ToString("s")" />
-			@Html.HiddenFor(m => m.TotalComments)
-			@Html.HiddenFor(m => m.ItemId)
-
-			//@Html.HiddenFor(m => m.Comments);
-			@Html.HiddenFor(m => m.PositiveFeedbackCount)
-			@Html.HiddenFor(m => m.NegativeFeedbackCount)
-            
-
-			<div class="buttons-set" style="margin-top: 0px;">
-				<button id="Preview" name="save" title="@("How it will look like?".LocalizeHtml())" class="button" type="button">
-					<span>
-						<span>@("Preview".LocalizeHtml())</span>
-					</span>
-				</button>
-				<button id="SaveReview" name="save" title="@("Add Review".LocalizeHtml())" class="button" type="button">
-					<span>
-						<span>@("Save".LocalizeHtml())</span>
-					</span>
-				</button>
-			</div>
-		}
-	</div>
+                <div id="rating2" data-rateit-backingfld="select#Rating" style="cursor: pointer;"></div>
+                <span id="ratingTip" style="padding-left: 20px;"></span>
+                <br />@Html.ValidationMessageFor(model => model.Rating)
+                @*		        <div class="ratings">
+		            <div class="rating">
+		                <div class="mask" style="width: 0%;"></div>
+		            </div>
+		        </div>*@
+            </div>
+            <div class="control-group">
+                @Html.LabelForEx(m => m.Reviewer.NickName)
+                @Html.TextBoxFor(m => m.Reviewer.NickName)
+            </div>
+            <div class="control-group">
+                @Html.LabelForEx(m => m.Reviewer.Address)
+                @Html.TextBoxFor(m => m.Reviewer.Address)
+            </div>
+            <div class="control-group">
+                @Html.LabelForEx(m => m.Comments)
+                @Html.TextAreaFor(m => m.ReviewText.Text, new { rows = 10, cols = 30 })
+            </div>
+            <div class="control-group">
+                <p class="required">* @("Required Fields".Localize())</p>
+            </div>
+            <div class="button-group">
+                <button id="Preview" name="save" title="@("How it will look like?".Localize())" type="button">
+                    <span>
+                        @("Preview".Localize())
+                    </span>
+                </button>
+                <button id="SaveReview" name="save" title="@("Add Review".Localize())" type="button">
+                    <span>
+                        @("Save".Localize())
+                    </span>
+                </button>
+            </div>
+        }
+    </div>
 </div>

@@ -1,17 +1,14 @@
-﻿@model AssociatedCatalogItemWithPriceModel
-<li class="item">
-    <input type="checkbox" class="checkbox related-checkbox" id="related-checkbox-@Model.CatalogItem.ItemId"
-        name="related_products[]" value="@Model.CatalogItem.ItemId" @(Model.IsRequired? "checked=checked disabled" : string.Empty) />
-    <div class="product">
-        <a href="@Url.ItemUrl(Model.CatalogItem.Item, Model.CatalogItem.ParentItemId)" title="@Model.DisplayName" class="product-image">
-            <img src="@Url.Image(Model.CatalogItem.Item, "primaryimage")" alt="@Model.DisplayName" onerror="this.onerror=null;this.src='@Href("~/Content/themes/default/images/blank.png")';" /></a>
-        <div class="product-details">
-            <p class="product-name">
-                <a href="@Url.ItemUrl(Model.CatalogItem.Item, Model.CatalogItem.ParentItemId)" title="@Model.DisplayName">@Model.DisplayName</a></p>
-            <div class="price-box">
-                @Html.DisplayFor(model => model.Price.SalePriceFormatted)
-            </div>
-            @{Html.RenderPartial("AddToLinks", Model);}
-        </div>
-    </div>
-</li>
+﻿@model CatalogItemWithPriceModel
+
+<a class="pic" href="@Url.ItemUrl(Model.CatalogItem.Item, Model.CatalogItem.ParentItemId)" title="@Model.DisplayName">
+    <img src="@Url.Image(Model.CatalogItem.Item, "primaryimage")" alt="@Model.CatalogItem.Code" onerror="this.onerror=null;this.src='@Href("~/Content/themes/default/images/blank.png")';" />
+</a>
+<a href="@Url.ItemUrl(Model.CatalogItem.Item, Model.CatalogItem.ParentItemId)">
+    @Model.DisplayName
+</a>
+<label>
+    @if (Model.Price != null)
+    {
+        @Html.DisplayFor(m => m.Price, new { Association = Model as AssociatedCatalogItemWithPriceModel})
+    }
+</label>

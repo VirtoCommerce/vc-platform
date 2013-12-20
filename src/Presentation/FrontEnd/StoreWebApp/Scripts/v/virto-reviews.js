@@ -187,7 +187,7 @@ Reviews =
             dataType: 'JSON',
             success: function (newReview) {
                 //close dialog
-                tb_remove();
+                $('.form-popup, .fade-block').hide();
 
                 "Thank you for your feedback! We will review it and publish.".Localize(function (translation) {
                     $.showPopupMessage(translation);

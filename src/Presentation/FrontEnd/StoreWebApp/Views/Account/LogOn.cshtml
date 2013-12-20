@@ -14,7 +14,8 @@
             $('.article .account .add-info-block .slider ul').animate({ 'margin-left': margin }, 600);
         });
 
-        $('.external').click(function() {
+        $('.external').click(function ()
+        {
             $('.external-login').slideDown();
             $(this).hide();
         });
@@ -49,10 +50,12 @@
                             @Html.ValidationMessageFor(m => m.Password)
                         </div>
                         <div class="control-group">
-                            <label class="control">
-                                @Html.CheckBoxFor(m => m.RememberMe)
-                                <span>@("Remember Me".Localize())</span>
-                            </label>
+                            <div class="control">
+                                <label>
+                                    @Html.CheckBoxFor(m => m.RememberMe)
+                                    <span>@("Remember Me".Localize())</span>
+                                </label>
+                            </div>
                         </div>
                         <div class="button-group">
                             <button type="submit">
@@ -72,7 +75,7 @@
                 <button onclick="$.redirect('@Url.Action("Register")');" title="@("Create an Account".Localize())">
                     <span>@("Register".Localize())</span>
                 </button>
-                </div>
+            </div>
             <a class="external">@("External login?".Localize())</a>
             @if (StoreHelper.StoreClient.GetCurrentStore().StoreState == StoreState.Open.GetHashCode())
             {

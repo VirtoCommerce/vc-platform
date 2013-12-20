@@ -130,13 +130,15 @@
 		$('*[rel=popup]').click(function (){
 			var url = ($(this).attr('href') ? $(this).prop('href') : $(this).data('link'));
 
+			$('.fade-block, .form-popup').remove();
+
 			$('body').prepend('<div class="fade-block"></div>');
 			$('.fade-block').after('<div class="form-popup"></div>');
 
 			$('.form-popup').load(url, function (){
 				$('.form-popup').prepend('<a class="close">x</a>');
 
-				window.UI.FormSlider();
+				//window.UI.FormSlider();
 			});
 
 			return false;
@@ -181,8 +183,8 @@
 
 		// Events for dropdowns
 		$('.header .nav .menu li.dropdown > a .arrow').click(function (){
-		    $(this).parent().parent().toggleClass('opened');
-		    return false;
+			$(this).parent().parent().toggleClass('opened');
+			return false;
 		});
 
 		$('.header .nav .menu li.dropdown .fade').click(function (){
@@ -219,7 +221,7 @@
 			}
 			else
 			{
-				$('.header').removeClass('fixed');
+				$('header').removeClass('fixed');
 			}
 		});
 	};
