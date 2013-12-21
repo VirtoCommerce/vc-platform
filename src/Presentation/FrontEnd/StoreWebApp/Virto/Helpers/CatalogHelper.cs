@@ -15,7 +15,9 @@ using VirtoCommerce.Web.Models;
 
 namespace VirtoCommerce.Web.Virto.Helpers
 {
-	/// <summary>
+    using VirtoCommerce.Foundation.Catalogs.Services;
+
+    /// <summary>
 	/// Class CatalogHelper.
 	/// </summary>
 	public class CatalogHelper
@@ -46,6 +48,11 @@ namespace VirtoCommerce.Web.Virto.Helpers
 		{
 			get { return DependencyResolver.Current.GetService<MarketingHelper>(); }
 		}
+
+        public static ICatalogOutlineBuilder OutlineBuilder
+        {
+            get { return DependencyResolver.Current.GetService<ICatalogOutlineBuilder>(); }
+        }
 
 		/// <summary>
 		/// Creates the item model.
@@ -220,9 +227,8 @@ namespace VirtoCommerce.Web.Virto.Helpers
 							{
 								{
 									"Outline",
-									CatalogOutlineBuilder.BuildCategoryOutline(CatalogClient.CatalogRepository,
-									                                           CatalogClient.CustomerSession.CatalogId, item)
-								}
+                                    OutlineBuilder.BuildCategoryOutline(CatalogClient.CustomerSession.CatalogId, item).ToString()
+                                }
 							};
 						priceModel = MarketingHelper.GetItemPriceModel(item, lowestPrice, tags);
 					}

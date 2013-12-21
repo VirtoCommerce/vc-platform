@@ -103,7 +103,9 @@ using VirtoCommerce.Web.Virto.Helpers.Payments;
 
 namespace UI.FrontEnd.FunctionalTests
 {
-	public abstract class ControllerTestBase : FunctionalTestBase, IDisposable
+    using VirtoCommerce.Foundation.Catalogs;
+
+    public abstract class ControllerTestBase : FunctionalTestBase, IDisposable
 	{
 		public const string CatalogDatabaseName = "CatalogTest";
 		public const string AppConfigDatabaseName = "AppConfigTest";
@@ -458,6 +460,7 @@ namespace UI.FrontEnd.FunctionalTests
 			container.RegisterType<ICatalogEntityFactory, CatalogEntityFactory>(new ContainerControlledLifetimeManager());
 
 			container.RegisterType<ICatalogRepository, EFCatalogRepository>(new InjectionConstructor(CatalogDatabaseName));
+            container.RegisterType<ICatalogOutlineBuilder, CatalogOutlineBuilder>();
 			container.RegisterType<IPricelistRepository, EFCatalogRepository>(new InjectionConstructor(CatalogDatabaseName));
 			container.RegisterType<ICatalogService, CatalogService>();
 			container.RegisterType<IPriceListAssignmentEvaluator, PriceListAssignmentEvaluator>();

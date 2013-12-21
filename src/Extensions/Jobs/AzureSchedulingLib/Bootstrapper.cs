@@ -64,6 +64,7 @@ using VirtoCommerce.Search.Providers.Elastic;
 
 namespace VirtoCommerce.Scheduling.Azure
 {
+    using VirtoCommerce.Foundation.Catalogs;
     using VirtoCommerce.Foundation.Data.Azure.Asset;
     using VirtoCommerce.Foundation.Data.Azure.CQRS;
 	using VirtoCommerce.Search.Providers.Lucene;
@@ -159,6 +160,7 @@ namespace VirtoCommerce.Scheduling.Azure
             container.RegisterType<ICatalogEntityFactory, CatalogEntityFactory>(new ContainerControlledLifetimeManager());
 
             container.RegisterType<ICatalogRepository, EFCatalogRepository>();
+            container.RegisterType<ICatalogOutlineBuilder, CatalogOutlineBuilder>();
             container.RegisterType<IPricelistRepository, EFCatalogRepository>();
             container.RegisterType<ICatalogService, CatalogService>();
             container.RegisterType<IPriceListAssignmentEvaluator, PriceListAssignmentEvaluator>();

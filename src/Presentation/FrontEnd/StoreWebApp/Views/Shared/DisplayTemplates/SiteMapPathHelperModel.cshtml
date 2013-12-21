@@ -2,7 +2,7 @@
 @using System.Web.Mvc.Html
 @using System.Linq
 @using MvcSiteMapProvider.Web.Html.Models
-
+@using VirtoCommerce.Web.Virto.Helpers
 @if (Model.Count() > 1)
 {
     <div class="breadcrumbs">
@@ -10,7 +10,7 @@
             @foreach (var node in Model)
             { 
                 <li>
-                    @Html.DisplayFor(m => node)
+                    @Html.DisplayFor(m => node, "SiteMapPathNodeModel")
                 </li>
             }
         </ul>

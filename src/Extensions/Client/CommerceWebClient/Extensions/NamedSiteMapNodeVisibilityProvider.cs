@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.Practices.ServiceLocation;
 using MvcSiteMapProvider;
-using MvcSiteMapProvider.Extensibility;
 using VirtoCommerce.Foundation.Customers;
 using VirtoCommerce.Foundation.Customers.Services;
 using VirtoCommerce.Foundation.Security.Model;
@@ -14,6 +12,8 @@ using VirtoCommerce.Web.Client.Helpers;
 
 namespace VirtoCommerce.Web.Client.Extensions
 {
+    using System.Linq;
+
     /// <summary>
     /// Filtered SiteMapNode Visibility Provider.
     /// 
@@ -22,7 +22,7 @@ namespace VirtoCommerce.Web.Client.Extensions
     /// Rules are parsed left-to-right, first match wins. Asterisk can be used to match any control. Exclamation mark can be used to negate a match.
     /// </summary>
     public class NamedSiteMapNodeVisibilityProvider
-        : ISiteMapNodeVisibilityProvider
+        : SiteMapNodeVisibilityProviderBase
     {
         #region ISiteMapNodeVisibilityProvider Members
 
@@ -41,38 +41,39 @@ namespace VirtoCommerce.Web.Client.Extensions
 			}
 		}
 
+
         /// <summary>
         /// Determines whether the node is visible.
         /// </summary>
         /// <param name="node">The node.</param>
-        /// <param name="context">The context.</param>
         /// <param name="sourceMetadata">The source metadata.</param>
         /// <returns>
-        /// 	<c>true</c> if the specified node is visible; otherwise, <c>false</c>.
+        ///   <c>true</c> if the specified node is visible; otherwise, <c>false</c>.
         /// </returns>
-        public bool IsVisible(SiteMapNode node, HttpContext context, IDictionary<string, object> sourceMetadata)
+        public override bool IsVisible(ISiteMapNode node, IDictionary<string, object> sourceMetadata)
         {
             // Convert to MvcSiteMapNode
-            var mvcNode = node as MvcSiteMapNode;
+            var mvcNode = node as MvcSiteMapProvider.SiteMapNode;
 
 	        if (mvcNode != null)
 	        {
 		        var menu = String.Empty;
+	            var context = HttpContext.Current;
 		        if (context.Items.Contains("menu"))
 			        menu = context.Items["menu"].ToString();
 
 		        // Is a visibility attribute specified?
-		        var visibility = mvcNode["visibility"];
+		        var visibility = GetValue(mvcNode, "visibility");
 		        if (string.IsNullOrEmpty(visibility) && !String.IsNullOrEmpty(menu))
 			        return false;
 
-		        if (mvcNode.MetaAttributes.ContainsKey("permissions"))
+		        if (mvcNode.Attributes.ContainsKey("permissions"))
 		        {
                     if (!CustomerSession.IsRegistered)
 				        return false;
 
 			        var allPermissions =
-				        mvcNode.MetaAttributes["permissions"].Split(',').Select(x => new Permission {PermissionId = x});
+				        GetValue(mvcNode, "permissions").Split(',').Select(x => new Permission {PermissionId = x});
 			        if (
 				        allPermissions.Any(
 					        permission => !SecurityService.CheckMemberPermission(StoreHelper.CustomerSession.CustomerId, permission)))
@@ -94,7 +95,7 @@ namespace VirtoCommerce.Web.Client.Extensions
 			        }
 		        }
 
-		        var stores = mvcNode["stores"];
+		        var stores = GetValue(mvcNode, "stores");
 		        if (!string.IsNullOrEmpty(stores))
 		        {
 			        if(!stores.Trim().Split(new[] {',', ';'}, StringSplitOptions.RemoveEmptyEntries)
@@ -107,6 +108,16 @@ namespace VirtoCommerce.Web.Client.Extensions
 
 	        // Still nothing? Then it's OK!
             return true;
+        }
+
+        private string GetValue(ISiteMapNode node, string key)
+        {
+            if (node.Attributes.ContainsKey(key))
+            {
+                return node.Attributes[key] as string;
+            }
+
+            return null;
         }
         #endregion
     }

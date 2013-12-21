@@ -324,8 +324,8 @@ namespace VirtoCommerce.Web.Controllers
 
             var criteria = new CatalogItemSearchCriteria();
             criteria.Outlines.Add(String.Format("{0}*",
-                                                _catalogClient.BuildCategoryOutline(
-                                                    UserHelper.CustomerSession.CatalogId, category)));
+                                                _catalogClient.BuildCategoryOutline(UserHelper.CustomerSession.CatalogId, category)
+                                                ));
             var results = SearchResults(criteria, parameters);
             return PartialView(name, results);
         }

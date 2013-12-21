@@ -243,7 +243,7 @@ namespace VirtoCommerce.Web.Controllers
         /// <param name="relatedItemId">The related items identifier.</param>
         /// <returns>ActionResult.</returns>
         [HttpPost]
-        public ActionResult Add(string name, string itemId, string parentItemId, decimal? quantity, string[] relatedItemId)
+        public ActionResult Add(string name, string itemId, string parentItemId, decimal? quantity, string[] relatedItemId = null)
         {
             decimal qty = 1;
             if (quantity.HasValue)

@@ -62,6 +62,7 @@ using VirtoCommerce.Web.Client.Services.Assets;
 
 namespace VirtoCommerce.Scheduling.Windows
 {
+    using VirtoCommerce.Foundation.Catalogs;
     using VirtoCommerce.Search.Providers.Lucene;
 
     public static class Bootstrapper
@@ -140,6 +141,7 @@ namespace VirtoCommerce.Scheduling.Windows
             container.RegisterType<ICatalogEntityFactory, CatalogEntityFactory>(new ContainerControlledLifetimeManager());
 
             container.RegisterType<ICatalogRepository, EFCatalogRepository>();
+            container.RegisterType<ICatalogOutlineBuilder, CatalogOutlineBuilder>();
             container.RegisterType<IPricelistRepository, EFCatalogRepository>();
             container.RegisterType<ICatalogService, CatalogService>();
             container.RegisterType<IPriceListAssignmentEvaluator, PriceListAssignmentEvaluator>();

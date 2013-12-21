@@ -50,6 +50,7 @@ namespace VirtoCommerce.Client
         private readonly ICatalogService _catalogService;
         private readonly IInventoryRepository _inventoryRepository;
         private readonly ISearchConnection _searchConnection;
+        private readonly ICatalogOutlineBuilder _catalogOutlineBuilder;
         #endregion
 
         public CatalogClient(ICatalogRepository catalogRepository, 
@@ -57,6 +58,7 @@ namespace VirtoCommerce.Client
             ICustomerSessionService customerSession, 
             ICacheRepository cacheRepository,
             IInventoryRepository inventoryRepository,
+            ICatalogOutlineBuilder catalogOutlineBuilder = null,
             ISearchConnection searchConnection = null)
         {
             _catalogService = catalogService;
@@ -65,6 +67,7 @@ namespace VirtoCommerce.Client
             _customerSession = customerSession;
             _inventoryRepository = inventoryRepository;
             _searchConnection = searchConnection;
+            _catalogOutlineBuilder = catalogOutlineBuilder;
             _isEnabled = CatalogConfiguration.Instance.Cache.IsEnabled;
         }
 
@@ -112,9 +115,9 @@ namespace VirtoCommerce.Client
 				_isEnabled && useCache);
 		}
 
-		public string BuildCategoryOutline(string catalogId, CategoryBase category)
+		public CatalogOutline BuildCategoryOutline(string catalogId, CategoryBase category)
         {
-            return CatalogOutlineBuilder.BuildCategoryOutline(_catalogRepository, catalogId, category);
+            return _catalogOutlineBuilder.BuildCategoryOutline(catalogId, category);
         }
 
         #region Item Methods

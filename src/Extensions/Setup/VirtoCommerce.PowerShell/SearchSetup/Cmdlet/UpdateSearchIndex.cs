@@ -33,6 +33,7 @@ using VirtoCommerce.Search.Index;
 
 namespace VirtoCommerce.PowerShell.SearchSetup.Cmdlet
 {
+    using VirtoCommerce.Foundation.Catalogs;
     using VirtoCommerce.Search.Providers.Lucene;
 
     [CLSCompliant(false)]
@@ -138,6 +139,7 @@ namespace VirtoCommerce.PowerShell.SearchSetup.Cmdlet
 
             var catalogRepository = new EFCatalogRepository(connectionString);
             container.RegisterInstance<ICatalogRepository>(catalogRepository);
+            container.RegisterType<ICatalogOutlineBuilder, CatalogOutlineBuilder>();
             container.RegisterInstance<IPricelistRepository>(catalogRepository);
             container.RegisterInstance<IOperationLogRepository>(new OperationLogContext(connectionString));
             container.RegisterInstance<IBuildSettingsRepository>(new EFSearchRepository(connectionString));

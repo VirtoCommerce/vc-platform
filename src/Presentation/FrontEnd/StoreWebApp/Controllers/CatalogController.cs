@@ -14,7 +14,9 @@ using ContextFieldConstants = VirtoCommerce.Foundation.Frameworks.ContextFieldCo
 
 namespace VirtoCommerce.Web.Controllers
 {
-	/// <summary>
+    using MvcSiteMapProvider.Web.Mvc.Filters;
+
+    /// <summary>
 	/// Class CatalogController.
 	/// </summary>
 	[Localize]
@@ -74,6 +76,7 @@ namespace VirtoCommerce.Web.Controllers
 	    /// <returns>ActionResult.</returns>
 	    /// <exception cref="System.Web.HttpException">404;Item not found</exception>
 	    [CustomOutputCache(CacheProfile = "CatalogCache", VaryByCustom = "store;currency;cart")]
+        [SiteMapTitle("DisplayName", Target = AttributeTarget.CurrentNode)]
         public ActionResult DisplayItem(string code)
         {
             var itemModel = CatalogHelper.CreateCatalogModel(code);
@@ -82,6 +85,9 @@ namespace VirtoCommerce.Web.Controllers
             {
                 throw new HttpException(404, "Item not found");
             }
+
+            // set page name that can be used by sitepath
+            UserHelper.CustomerSession["pagename"] = itemModel.DisplayName;
 
             return View(GetDisplayTemplate(TargetTypes.Item, itemModel.CatalogItem), itemModel);
         }

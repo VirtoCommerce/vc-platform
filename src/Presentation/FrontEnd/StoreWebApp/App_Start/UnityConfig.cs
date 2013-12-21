@@ -91,6 +91,7 @@ using VirtoCommerce.Web.Virto.Helpers.Payments;
 
 namespace VirtoCommerce.Web
 {
+    using VirtoCommerce.Foundation.Catalogs;
     using VirtoCommerce.Foundation.Data.Azure.Asset;
     using VirtoCommerce.Foundation.Data.Azure.CQRS;
     using VirtoCommerce.Foundation.Data.Azure.Common;
@@ -182,6 +183,8 @@ namespace VirtoCommerce.Web
             {
                 container.RegisterType<IEmailService, NetEmailService>();
             }
+
+            container.RegisterType<ICatalogOutlineBuilder, CatalogOutlineBuilder>();
 
             #region Interceptors
 

@@ -22,6 +22,8 @@ using VirtoCommerce.Foundation.Search.Services;
 
 namespace VirtoCommerce.Web.Client.Helpers
 {
+    using VirtoCommerce.Foundation.Catalogs.Services;
+
     /// <summary>
     /// Cart helper class used to simplify cart operations.
     /// The cart is automatically cached in the current Http Context.
@@ -122,6 +124,11 @@ namespace VirtoCommerce.Web.Client.Helpers
 		{
 			get { return ServiceLocator.Current.GetInstance<ICustomerSessionService>(); }
 		}
+
+        public ICatalogOutlineBuilder CatalogOutlineBuilder
+        {
+            get { return ServiceLocator.Current.GetInstance<ICatalogOutlineBuilder>(); }
+        }
 
         /// <summary>
         /// Gets the customer session.
@@ -538,7 +545,8 @@ namespace VirtoCommerce.Web.Client.Helpers
 			lineItem.Quantity = quantity;
 			lineItem.Catalog = CustomerSession.CatalogId;
 			lineItem.FulfillmentCenterId = StoreHelper.StoreClient.GetCurrentStore().FulfillmentCenterId;
-			lineItem.CatalogOutline = CatalogOutlineBuilder.BuildCategoryOutline(CatalogClient.CatalogRepository, CustomerSession.CatalogId, item);
+			//lineItem.CatalogOutline = CatalogOutlineBuilder.BuildCategoryOutline(CatalogClient.CatalogRepository, CustomerSession.CatalogId, item);
+            lineItem.CatalogOutline = CatalogOutlineBuilder.BuildCategoryOutline(CustomerSessionService.CustomerSession.CatalogId, item).ToString();
 
 			return lineItem;
 		}

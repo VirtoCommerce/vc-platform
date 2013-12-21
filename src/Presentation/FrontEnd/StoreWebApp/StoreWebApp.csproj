@@ -140,9 +140,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\packages\WindowsAzure.Storage.2.1.0.0\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
     </Reference>
-    <Reference Include="MvcSiteMapProvider, Version=3.3.6.0, Culture=neutral, PublicKeyToken=1923abe4657913cc, processorArchitecture=MSIL">
+    <Reference Include="MvcSiteMapProvider, Version=4.4.6.0, Culture=neutral, PublicKeyToken=1923abe4657913cc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\packages\MvcSiteMapProvider.3.3.6.0\lib\net40\MvcSiteMapProvider.dll</HintPath>
+      <HintPath>..\..\..\..\packages\MvcSiteMapProvider.MVC4.Core.4.4.6\lib\net45\MvcSiteMapProvider.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -691,6 +691,7 @@
     </Content>
     <Content Include="Areas\VirtoAdmin\Views\Web.config" />
     <Content Include="Areas\VirtoAdmin\Views\Install\Index.cshtml" />
+    <Content Include="Mvc.sitemap" />
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -870,6 +871,9 @@
     <Content Include="Views\Banner\DisplayTemplates\CategoryUrl.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\SearchItems.cshtml" />
     <Content Include="Views\Shared\_LayoutBase.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\MetaRobotsHelperModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\CanonicalHelperModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\SiteMapPathNodeModel.cshtml" />
     <None Include="Web.Azure.config" />
   </ItemGroup>
   <ItemGroup>
