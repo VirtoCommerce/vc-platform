@@ -14,6 +14,7 @@ using ContextFieldConstants = VirtoCommerce.Foundation.Frameworks.ContextFieldCo
 
 namespace VirtoCommerce.Web.Controllers
 {
+    using MvcSiteMapProvider;
     using MvcSiteMapProvider.Web.Mvc.Filters;
 
     /// <summary>
@@ -61,6 +62,7 @@ namespace VirtoCommerce.Web.Controllers
                 var set = UserHelper.CustomerSession.GetCustomerTagSet();
                 set.Add(ContextFieldConstants.CategoryId, new Tag(category.CategoryId));
 				UserHelper.CustomerSession.CategoryId = category.CategoryId;
+                UserHelper.CustomerSession.LastShoppingPage = this.Request.Url.AbsoluteUri;
 
                 // display category
                 return View(GetDisplayTemplate(TargetTypes.Category, category), category);
@@ -76,7 +78,7 @@ namespace VirtoCommerce.Web.Controllers
 	    /// <returns>ActionResult.</returns>
 	    /// <exception cref="System.Web.HttpException">404;Item not found</exception>
 	    [CustomOutputCache(CacheProfile = "CatalogCache", VaryByCustom = "store;currency;cart")]
-        [SiteMapTitle("DisplayName", Target = AttributeTarget.CurrentNode)]
+        //[SiteMapTitle("DisplayName", Target = AttributeTarget.CurrentNode)]
         public ActionResult DisplayItem(string code)
         {
             var itemModel = CatalogHelper.CreateCatalogModel(code);
@@ -86,8 +88,33 @@ namespace VirtoCommerce.Web.Controllers
                 throw new HttpException(404, "Item not found");
             }
 
-            // set page name that can be used by sitepath
-            UserHelper.CustomerSession["pagename"] = itemModel.DisplayName;
+	        if (SiteMaps.Current != null)
+	        {
+	            var node = SiteMaps.Current.CurrentNode;
+
+                if (Request.UrlReferrer != null && Request.UrlReferrer.AbsoluteUri.StartsWith(Request.Url.GetLeftPart(UriPartial.Authority)))
+                {
+                    node.RootNode.Attributes["ShowBack"] = true;
+
+                    if (Request.UrlReferrer.AbsoluteUri.Equals(Request.Url.AbsoluteUri))
+                    {
+                        UserHelper.CustomerSession.LastShoppingPage = Url.Content("~/");
+                    }
+                    else
+                    {
+                        UserHelper.CustomerSession.LastShoppingPage = Request.UrlReferrer.AbsoluteUri;
+                    }
+                    
+                }
+                
+	            if (node != null && node.ParentNode != null && itemModel.CatalogItem.CatalogOutlines != null
+	                && itemModel.CatalogItem.CatalogOutlines.Outlines.Count > 0)
+	            {
+	                node.Attributes["Outline"] = itemModel.CatalogItem.CatalogOutlines.Outlines[0];
+	            }
+
+	            node.Title = itemModel.DisplayName;
+	        }
 
             return View(GetDisplayTemplate(TargetTypes.Item, itemModel.CatalogItem), itemModel);
         }

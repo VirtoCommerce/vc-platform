@@ -6,7 +6,9 @@ using VirtoCommerce.Foundation.Catalogs.Model;
 
 namespace VirtoCommerce.Web.Models
 {
-	/// <summary>
+    using VirtoCommerce.Foundation.Catalogs.Services;
+
+    /// <summary>
 	/// Class ItemModel.
 	/// </summary>
     public class ItemModel
@@ -162,6 +164,8 @@ namespace VirtoCommerce.Web.Models
 		/// </summary>
 		/// <value>The properties.</value>
         public PropertiesModel Properties { get; set; }
+
+        public CatalogOutlines CatalogOutlines { get; set; }
     }
 
 	/// <summary>

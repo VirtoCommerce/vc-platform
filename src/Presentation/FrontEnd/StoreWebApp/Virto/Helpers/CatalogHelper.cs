@@ -212,6 +212,13 @@ namespace VirtoCommerce.Web.Virto.Helpers
 					//ItemRelation[] variations = null;
 					ItemAvailabilityModel itemAvaiability = null;
 
+                    if (display.HasFlag(ItemDisplayOptions.ItemPropertySets))
+                    {
+                        propertySet = CatalogClient.GetPropertySet(item.PropertySetId);
+                        //variations = CatalogClient.GetItemRelations(itemId);
+                    }
+
+                    var itemModel = CreateItemModel(item, propertySet);
 
 					if (display.HasFlag(ItemDisplayOptions.ItemAvailability))
 					{
@@ -223,24 +230,32 @@ namespace VirtoCommerce.Web.Virto.Helpers
 					if (display.HasFlag(ItemDisplayOptions.ItemPrice))
 					{
                         var lowestPrice = PriceListClient.GetLowestPrice(itemId, itemAvaiability !=null ? itemAvaiability.MinQuantity : 1);
+					    var outlines = OutlineBuilder.BuildCategoryOutline(CatalogClient.CustomerSession.CatalogId, item);
 						var tags = new Hashtable
 							{
 								{
 									"Outline",
-                                    OutlineBuilder.BuildCategoryOutline(CatalogClient.CustomerSession.CatalogId, item).ToString()
+                                    outlines.ToString()
                                 }
 							};
 						priceModel = MarketingHelper.GetItemPriceModel(item, lowestPrice, tags);
+					    itemModel.CatalogOutlines = outlines;
+
+                        // get the category name
+                        if (outlines.Outlines.Count > 0)
+                        {
+                            var outline = outlines.Outlines[0];
+                            if (outline.Categories.Count > 0)
+                            {
+                                var category = outline.Categories.OfType<Category>().Reverse().FirstOrDefault();
+                                if (category != null)
+                                {
+                                    itemModel.CategoryName = category.Name;
+                                }
+                            }
+                        }
 					}
-
-
-					if (display.HasFlag(ItemDisplayOptions.ItemPropertySets))
-					{
-						propertySet = CatalogClient.GetPropertySet(item.PropertySetId);
-						//variations = CatalogClient.GetItemRelations(itemId);
-					}
-
-					var itemModel = CreateItemModel(item, propertySet);
+				
 					itemModel.ParentItemId = parentItemId;
 
 					return string.IsNullOrEmpty(associationType)

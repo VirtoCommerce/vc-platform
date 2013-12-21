@@ -342,7 +342,7 @@ namespace VirtoCommerce.Client
             {
                 if (category is LinkedCategory)
                 {
-                    category = _catalogRepository.Categories.FirstOrDefault(x => 
+                    category = _catalogRepository.Categories.OfType<Category>().Expand(p=>p.CategoryPropertyValues).FirstOrDefault(x => 
                         (x.CatalogId == ((LinkedCategory)category).LinkedCatalogId) 
                         && (x.CategoryId.Equals(id, StringComparison.OrdinalIgnoreCase)));
                 }
