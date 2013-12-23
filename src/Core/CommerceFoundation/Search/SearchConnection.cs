@@ -22,7 +22,7 @@ namespace VirtoCommerce.Foundation.Search
         /// <param name="connectionString">The connection string. Can be something like this: "server=localhost:9200;scope=default", can have additional parameters separated by commas</param>
         public SearchConnection(string connectionString)
         {
-            if (String.IsNullOrEmpty(connectionString))
+            if (String.IsNullOrEmpty(connectionString) || connectionString.Equals("SearchConnectionString", StringComparison.OrdinalIgnoreCase))
             {
                 connectionString = "server=~/app_data/Virto/search;scope=default;provider=lucene";
             }
