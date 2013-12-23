@@ -44,7 +44,10 @@ namespace VirtoCommerce.Foundation.Data.Infrastructure
 
                 if (connectionStringVal == null) // we haven't found any setting, so it must be a connection string
                 {
-                    //settingValue = nameOrConnectionString;
+                    if (nameOrConnectionString.Contains("=")) // we only accept value as connection string if it contains "=" sign
+                    {
+                        settingValue = nameOrConnectionString;
+                    }
                 }
                 else
                 {
