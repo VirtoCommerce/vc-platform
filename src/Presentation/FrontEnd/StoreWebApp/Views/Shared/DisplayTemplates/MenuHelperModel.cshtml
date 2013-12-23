@@ -3,10 +3,11 @@
 @using MvcSiteMapProvider.Web.Html.Models
 @{
     SiteMapNodeModelList moreNodes = null;
-    if (Model.Nodes.Count > 4)
+    int showCount = 3;
+    if (Model.Nodes.Count > showCount)
     {
         moreNodes = new SiteMapNodeModelList();
-        var nodes = Model.Nodes.AsQueryable().Reverse().Take(2).Reverse().ToArray();
+        var nodes = Model.Nodes.AsQueryable().Skip(showCount).Take(Model.Nodes.Count - showCount).ToArray();
         moreNodes.AddRange(nodes);
     }
 }
@@ -25,16 +26,14 @@
             }
         </li>
     }
-
-        <li class="more">
-    
     @if (moreNodes != null)
     {
-        <a><span>@("More".Localize())</span></a>
-        <div class="sub-menu">
-            @Html.DisplayFor(m => moreNodes, "SiteMapNodeModelList", new { level = 0, last = true })
-        </div>
-        <div class="fade"></div>
+        <li class="more">
+            <a><span>@("More".Localize())</span></a>
+            <div class="sub-menu">
+                @Html.DisplayFor(m => moreNodes, "SiteMapNodeModelList", new { level = 0, last = true })
+            </div>
+            <div class="fade"></div>
+        </li>
     }
-        </li>   
 </ul>
