@@ -92,28 +92,35 @@ namespace VirtoCommerce.Web.Controllers
 	        {
 	            var node = SiteMaps.Current.CurrentNode;
 
-                if (Request.UrlReferrer != null && Request.UrlReferrer.AbsoluteUri.StartsWith(Request.Url.GetLeftPart(UriPartial.Authority)))
-                {
-                    node.RootNode.Attributes["ShowBack"] = true;
-
-                    if (Request.UrlReferrer.AbsoluteUri.Equals(Request.Url.AbsoluteUri))
-                    {
-                        UserHelper.CustomerSession.LastShoppingPage = Url.Content("~/");
-                    }
-                    else
-                    {
-                        UserHelper.CustomerSession.LastShoppingPage = Request.UrlReferrer.AbsoluteUri;
-                    }
-                    
-                }
-                
-	            if (node != null && node.ParentNode != null && itemModel.CatalogItem.CatalogOutlines != null
-	                && itemModel.CatalogItem.CatalogOutlines.Outlines.Count > 0)
+	            if (Request.UrlReferrer != null &&
+	                Request.UrlReferrer.AbsoluteUri.StartsWith(Request.Url.GetLeftPart(UriPartial.Authority)))
 	            {
-	                node.Attributes["Outline"] = itemModel.CatalogItem.CatalogOutlines.Outlines[0];
+	                if (node != null)
+	                {
+	                    node.RootNode.Attributes["ShowBack"] = true;
+	                }
+
+	                if (Request.UrlReferrer.AbsoluteUri.Equals(Request.Url.AbsoluteUri))
+	                {
+	                    UserHelper.CustomerSession.LastShoppingPage = Url.Content("~/");
+	                }
+	                else
+	                {
+	                    UserHelper.CustomerSession.LastShoppingPage = Request.UrlReferrer.AbsoluteUri;
+	                }
+
 	            }
 
-	            node.Title = itemModel.DisplayName;
+                if (node != null)
+                {
+                    if (node.ParentNode != null && itemModel.CatalogItem.CatalogOutlines != null
+                        && itemModel.CatalogItem.CatalogOutlines.Outlines.Count > 0)
+                    {
+
+                        node.Attributes["Outline"] = itemModel.CatalogItem.CatalogOutlines.Outlines[0];
+                    }
+                    node.Title = itemModel.DisplayName;
+                }
 	        }
 
             return View(GetDisplayTemplate(TargetTypes.Item, itemModel.CatalogItem), itemModel);

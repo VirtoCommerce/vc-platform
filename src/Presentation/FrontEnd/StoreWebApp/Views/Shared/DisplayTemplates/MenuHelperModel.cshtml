@@ -4,15 +4,14 @@
 
 
 <ul class="menu" role="navigation">
-    @foreach (var node in Model.Nodes)
+    @foreach (var node in Model.Nodes.Where(n=>!n.Attributes.ContainsKey("showInTopMenu") || string.Equals(n.Attributes["showInTopMenu"].ToString(),"true", StringComparison.OrdinalIgnoreCase)))
     {
-        bool last = Model.Nodes.IndexOf(node) == (Model.Nodes.Count - 1);
-        <li class="@(last ? "more" : "")">
+        <li class="@(node.Attributes.ContainsKey("cssClass") ? node.Attributes["cssClass"] : "")">
             @Html.DisplayFor(m => node, "TopMenuNodeModel")
             @if (node.Children.Any())
             {
                 <div class="sub-menu">
-                    @Html.DisplayFor(m => node.Children, "SiteMapNodeModelList", new { level = 0, last })
+                    @Html.DisplayFor(m => node.Children, "SiteMapNodeModelList", new { level = 0, last = Model.Nodes.IndexOf(node) == (Model.Nodes.Count - 1) })
                 </div>
                 <div class="fade"></div>
             }
