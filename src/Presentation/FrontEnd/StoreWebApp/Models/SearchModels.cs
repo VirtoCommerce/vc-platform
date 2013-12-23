@@ -393,7 +393,7 @@ namespace VirtoCommerce.Web.Models
 	    {
 	        get
 	        {
-	            return CatalogItem.Item.Created.HasValue && CatalogItem.Item.Created.Value.AddDays(1) >= DateTime.UtcNow;
+	            return CatalogItem.Item.LastModified.HasValue && CatalogItem.Item.LastModified.Value.AddMonths(1) >= DateTime.UtcNow;
 	        }
 	    }
 
