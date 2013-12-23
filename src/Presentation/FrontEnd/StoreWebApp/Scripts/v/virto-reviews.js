@@ -325,13 +325,13 @@ Reviews =
             $(this).find(".rating").rateit({ resetable: false, readonly: true, value: rating, starwidth: 11, starheight: 11 });
         });
 
-        previewContainer.fadeIn(2000);
-
         //Hide comments
-        previewContainer.find("[id$=comments_container_]").hide();
+        previewContainer.find(".feedback").remove();
 
         //unbind clicks
         previewContainer.find("[onclick]").attr("onclick", "return false;");
+        
+        previewContainer.fadeIn(2000);
     },
     catalogReviews: function(filter) {
         $.ajax({

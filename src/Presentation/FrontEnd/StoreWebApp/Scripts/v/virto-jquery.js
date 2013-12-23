@@ -126,13 +126,18 @@
         var template = '<div class="popup-alert" id="' + timestamp + '"><a title="Close" class="close">Close</a>' + message + '</div>';
         $('.popup-alert').remove();
         $('body').append(template);
-        $('.popup-alert').on('click', function (){
-            $(this).slideUp('slow',function() {
-                $(this).remove();
-            });
+        $('#' + timestamp).on('click', function () {
+            closePopup(this);
         });
         window.setTimeout(function () {
-            $('#' + timestamp).trigger('click');
+            closePopup('#' + timestamp);
         }, 8000);
+        
+        function closePopup(popup) {
+            $(popup).slideUp('slow', function ()
+            {
+                $(popup).remove();
+            });
+        }
     };
 })(jQuery);

@@ -450,7 +450,8 @@
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.tooltip.min.css" />
     <Content Include="Content\themes\default\checkout.css" />
-    <Content Include="Content\themes\default\flags.css" />
+    <Content Include="Content\themes\default\thickbox.css" />
+    <Content Include="Content\themes\responsive\flags.css" />
     <Content Include="Content\themes\default\images\blank.gif" />
     <Content Include="Content\themes\default\images\brand.png" />
     <Content Include="Content\themes\default\images\flags.png" />
@@ -460,11 +461,11 @@
     <Content Include="Content\themes\default\menu.css" />
     <Content Include="Content\themes\default\nivo-slider.css" />
     <Content Include="Content\themes\default\print.css" />
-    <Content Include="Content\themes\default\rateit.css" />
+    <Content Include="Content\themes\responsive\images\flags\flags.png" />
+    <Content Include="Content\themes\responsive\rateit.css" />
     <Content Include="Content\themes\default\redesign.css" />
     <Content Include="Content\themes\default\styles-ie.css" />
     <Content Include="Content\themes\default\styles.css" />
-    <Content Include="Content\themes\default\thickbox.css" />
     <Content Include="Content\themes\default\virto_reviews.css" />
     <Content Include="Content\themes\default\widgets.css" />
     <Content Include="Content\themes\default\images\ajax-loader.gif" />
@@ -587,8 +588,6 @@
     <Content Include="Content\themes\responsive\images\cloudzoom\blank.png" />
     <Content Include="Content\themes\responsive\images\cvv.gif" />
     <Content Include="Content\themes\responsive\images\fb.png" />
-    <Content Include="Content\themes\responsive\images\flags\en.png" />
-    <Content Include="Content\themes\responsive\images\flags\ru.png" />
     <Content Include="Content\themes\responsive\images\goods\1.jpg" />
     <Content Include="Content\themes\responsive\images\goods\2.jpg" />
     <Content Include="Content\themes\responsive\images\goods\3.jpg" />

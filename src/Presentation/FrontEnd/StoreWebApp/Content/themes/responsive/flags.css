@@ -1,7 +1,7 @@
 .flag {
     width: 16px;
     height: 11px;
-    background: url(images/flags.png) no-repeat;
+    background: url(images/flags/flags.png) no-repeat;
     vertical-align: middle;
     float: left;
     left: 10px;

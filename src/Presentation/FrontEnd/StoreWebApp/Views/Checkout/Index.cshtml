@@ -14,6 +14,7 @@
 	{
 	    $(VirtoCheckout.bindAddresses());
 	    $(VirtoCheckout.bindGiftMessage());
+	    $(VirtoCheckout.bindAccount());
 	    $("#checkout-address input:not([type='hidden']),#checkout-address select").each(function ()
 	    {
 	        $(this).bind("change", function ()
@@ -83,9 +84,6 @@
                                         @Html.LabelFor(m => m.ConfirmPassword)
                                         @Html.PasswordFor(m => m.ConfirmPassword)
                                     </div>
-                                    <script type="text/javascript">//&lt;![CDATA[
-                                        $(VirtoCheckout.bindAccount());
-                                        //]]&gt;</script>
                                 </div>
                             }
                             else

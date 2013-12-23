@@ -37,12 +37,17 @@
             var form = $("#addReviewMain form");
             var previewContainer = $("#ReviewPreview");
             Reviews.reviewPreview(form, previewContainer);
+            $('#containerUpdateDiv .product-tabs').fadeIn(2000);
         });
     });
 </script>
 
-<div id="containerUpdateDiv">
-    <div id="ReviewPreview" class="preview"></div>
+<div id="containerUpdateDiv" class="article">
+    <div class="product-tabs" style="margin-bottom: 0; display: none;">
+        <div class="tabs-content" style="margin-top: 10px">
+            <div id="ReviewPreview"></div>
+        </div>
+    </div>
     <div id="addReviewMain">
         @using (Html.BeginForm())
         {
@@ -64,14 +69,14 @@
             <div class="control-group">
                 @Html.LabelForEx(m => m.Rating)
                 @Html.DropDownListFor(model => model.Rating, new[]
-							{
-								new SelectListItem {Text = "Click to rate product".Localize(), Value = "0"},
-								new SelectListItem {Text = "Not Good".Localize(), Value = "1"},
-								new SelectListItem {Text = "Needs That Special Something".Localize(), Value = "2"},
-								new SelectListItem {Text = "Average, Ordinary".Localize(), Value = "3"},
-								new SelectListItem {Text = "That's Good Stuff".Localize(), Value = "4"},
-								new SelectListItem {Text = "Perfect. It doesn't get any better".Localize(), Value = "5"}
-							}, (string)null)
+                {
+                    new SelectListItem {Text = "Click to rate product".Localize(), Value = "0"},
+                    new SelectListItem {Text = "Not Good".Localize(), Value = "1"},
+                    new SelectListItem {Text = "Needs That Special Something".Localize(), Value = "2"},
+                    new SelectListItem {Text = "Average, Ordinary".Localize(), Value = "3"},
+                    new SelectListItem {Text = "That's Good Stuff".Localize(), Value = "4"},
+                    new SelectListItem {Text = "Perfect. It doesn't get any better".Localize(), Value = "5"}
+                }, (string)null)
                 <div id="rating2" data-rateit-backingfld="select#Rating" style="cursor: pointer;"></div>
                 <span id="ratingTip" style="padding-left: 20px;"></span>
                 <br />@Html.ValidationMessageFor(model => model.Rating)

@@ -136,7 +136,7 @@
 			$('.fade-block').after('<div class="form-popup"></div>');
 
 			$('.form-popup').load(url, function (){
-				$('.form-popup').prepend('<a class="close">x</a>');
+				//$('.form-popup').prepend('<a class="close">x</a>');
 
 				//window.UI.FormSlider();
 			});

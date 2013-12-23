@@ -1,48 +1,11 @@
-﻿<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="utf-8" />
-    <title>@ViewBag.Title</title>
-    <meta name="viewport" content="width=device-width" />
-    @Styles.Render("~/Content/themes/default/s")
-	@Styles.Render("~/Content/themes/base/css")
-    @Scripts.Render("~/bundles/modernizr")
-    @Scripts.Render("~/bundles/jquery")
-    <base href="~/" />
-</head>
-<body class="cms-index-index cms-home">
-    <p class="demo-notice">
-        This is a demo store. Any orders placed through this store will not be honored or
-        fulfilled.</p>
-    <div class="page">
-        <div class="header-container">
-            <div class="header">
-                <a href="@Url.Content("~/")" title="Demo Store" class="logo"><strong>
-                    Virto Commerce</strong><img src="@Url.Content("~/Content/themes/default/images/logo.png")"
-                        alt="Virto Commerce" /></a>
-                <div class="nav-container">
-                </div>
-            </div>
-        </div>
-        @RenderBody()
-        <div class="footer-container">
-            <div class="footer">
-	            <div class="f-right">
-		            @{Html.RenderAction("StorePicker", "Store");}
-	            </div>
-                <div class="f-left">
-                    <p class="bugs">
-                        Version: @Html.Version() - <a href="http://support.virtocommerce.com"
-                            onclick="this.target='_blank'"><strong>Report Issues</strong></a></p>
-                    <address>
-                        © 2012 VirtoCommerce Demo Store. All Rights Reserved.</address>
-                </div>
-            </div>
-        </div>
-    </div>
-    @Scripts.Render("~/bundles/jqueryui")
-    @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/bundles/jquerymisc")
-    @RenderSection("scripts", required: false)
-</body>
-</html>
+﻿@{
+    Layout = "_LayoutBase.cshtml";
+}
+
+<!-- Section rewriting -->
+@this.RedefineSection("Slider")
+@this.RedefineSection("PageTitle")
+@this.RedefineSection("scripts")
+@this.RedefineSection("Bottom")
+
+@RenderBody()

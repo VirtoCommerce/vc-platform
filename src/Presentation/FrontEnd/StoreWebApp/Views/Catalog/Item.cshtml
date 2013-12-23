@@ -29,22 +29,6 @@
 
         Reviews.init({ container: "#reviewsTemplateContainer", currentItemId: "@Model.CatalogItem.ItemId" });
 
-        $(".add_reviews_link").on('click', function ()
-        {
-            var isAuthorized = '@UserHelper.CustomerSession.IsRegistered';
-
-	        if (isAuthorized == "True")
-	        {
-	            tb_show('@("Create Review".Localize())', "@Url.Action("AddReview", "Catalog", new { id = Model.CatalogItem.ItemId, height = 550 })", false);
-		    }
-		    else
-		    {
-		        tb_show('@("Login or Create New Account".Localize())', "@Url.Action("LogOnAsync", "Account")", false);
-		    }
-
-	        return false;
-	    });
-
         // Slider
         $('.products-previews').virtoSlider({ speed: 300 });
         $('.product-additional').virtoSlider({
@@ -335,12 +319,12 @@
 
 @section PageTitle
 {
-								<div class="page-item-nav">
-									<ul>
-										<li class="prev"><a href=""><span>Previous</span></a></li>
-										<li class="next"><a href=""><span>Next</span></a></li>
-									</ul>
-								</div>
+    <div class="page-item-nav">
+        <ul>
+            <li class="prev"><a href=""><span>@("Previous".Localize())</span></a></li>
+            <li class="next"><a href=""><span>@("Next".Localize())</span></a></li>
+        </ul>
+    </div>
 }
 
 <div class="rubber">
@@ -385,9 +369,9 @@
                             var firstOrDefault = SettingsHelper.GetSettings("ShareButtonsHtml").FirstOrDefault();
                             if (firstOrDefault != null)
                             {
-                                <div class="share-links">
-                                    @Html.Raw(firstOrDefault.ToString())
-                                </div>
+                            <div class="share-links">
+                                @Html.Raw(firstOrDefault.ToString())
+                            </div>
                             }
                         }
                         <div class="ratings">
@@ -402,7 +386,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#" class="add_reviews_link">@("Add Your Review".Localize())</a>
+                                    <a href="@(UserHelper.CustomerSession.IsRegistered ? Url.Action("AddReview", "Catalog", new { id = Model.CatalogItem.ItemId }) : Url.Action("LogOnAsync", "Account"))" rel="popup">@("Add Your Review".Localize())</a>
                                 </li>
                             </ul>
                         </div>
@@ -419,7 +403,7 @@
                                     {
                                         if (review.Source == "QuickReview")
                                         {
-                                            @Html.Raw(review.Content)
+                                    @Html.Raw(review.Content)
                                         }
                                     }
                                 }
@@ -460,7 +444,7 @@
                     </div>
                 </div>
             }
-            
+
             else
             {
                 <script>$(function () { $(".article .product-view").addClass('no-recommend'); })</script>
@@ -480,7 +464,7 @@
                     {
                         if (review.Source == "FullReview")
                         {
-                            @Html.Raw(review.Content)
+                    @Html.Raw(review.Content)
                         }
                     }
                 }
@@ -531,11 +515,11 @@
 
                 @{ Html.RenderPartial("RelatedProducts2", associationGroup); }
             </div>
-         }
+        }
     </div>
 </div>
 @section Bottom{
-    
+
     @{Html.RenderAction("Association", new { item = Model.CatalogItem, templateName = "RecommendedProducts", groupName = "Accessories" });}
 
 }

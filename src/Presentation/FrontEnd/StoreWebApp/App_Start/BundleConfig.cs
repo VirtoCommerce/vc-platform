@@ -28,12 +28,8 @@ namespace VirtoCommerce.Web
 
 			bundles.Add(new ScriptBundle("~/bundles/jquerymisc").Include(
 			"~/Scripts/v/virto-jquery.js",
-			//"~/Scripts/jquery-jqzoom.js",
-				//"~/Scripts/jquery.gzoom.js",
-             "~/Scripts/cloudzoom.js",
-			//"~/Scripts/jquery.nivo.slider.js",
+            "~/Scripts/cloudzoom.js",
 			"~/Scripts/jquery.rateit.js",
-			"~/Scripts/jquery-thickbox.js",
 			"~/Scripts/v/virto-commerce.js",
             "~/Scripts/responsive/main.js",
 			"~/Scripts/v/validation.js"));
@@ -45,21 +41,8 @@ namespace VirtoCommerce.Web
 
             bundles.Add(new ScriptBundle("~/bundles/responsive").Include(
                 "~/Scripts/responsive/virto.slider.js",
-                "~/Scripts/responsive/camera*",
+                "~/Scripts/responsive/camera.js",
                 "~/Scripts/responsive/jquery.easing.{version}.js"
-                ));
-
-			bundles.Add(new StyleBundle("~/Content/themes/default/s").Include(
-				//"~/Content/themes/default/styles.css",
-				"~/Content/themes/default/widgets.css",
-				"~/Content/themes/default/thickbox.css",
-				//"~/Content/themes/default/jquery.ui.autocomplete.css",
-				//"~/Content/themes/default/jquery.jqzoom.css",
-				//"~/Content/themes/default/redesign.css",
-				"~/Content/themes/default/rateit.css",
-				"~/Content/themes/default/flags.css"
-				//"~/Content/themes/default/virto_reviews.css"
-				//"~/Content/themes/default/nivo-slider.css"
                 ));
 
 			bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
@@ -90,7 +73,9 @@ namespace VirtoCommerce.Web
                 "~/Content/themes/responsive/responsive.css",
                 "~/Content/themes/responsive/camera.css",
                 "~/Content/themes/responsive/cloudzoom.css",
-                "~/Content/themes/responsive/messages.css"
+                "~/Content/themes/responsive/messages.css",
+                "~/Content/themes/responsive/rateit.css",
+                "~/Content/themes/responsive/flags.css"
                 ));
 		}
 	}
