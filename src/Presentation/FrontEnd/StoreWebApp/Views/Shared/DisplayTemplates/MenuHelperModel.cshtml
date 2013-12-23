@@ -1,20 +1,40 @@
 ﻿@model MvcSiteMapProvider.Web.Html.Models.MenuHelperModel
 @using System.Web.Mvc.Html
 @using MvcSiteMapProvider.Web.Html.Models
-
+@{
+    SiteMapNodeModelList moreNodes = null;
+    if (Model.Nodes.Count > 4)
+    {
+        moreNodes = new SiteMapNodeModelList();
+        var nodes = Model.Nodes.AsQueryable().Reverse().Take(2).Reverse().ToArray();
+        moreNodes.AddRange(nodes);
+    }
+}
 
 <ul class="menu" role="navigation">
-    @foreach (var node in Model.Nodes.Where(n=>!n.Attributes.ContainsKey("showInTopMenu") || string.Equals(n.Attributes["showInTopMenu"].ToString(),"true", StringComparison.OrdinalIgnoreCase)))
+    @foreach (var node in Model.Nodes)
     {
-        <li class="@(node.Attributes.ContainsKey("cssClass") ? node.Attributes["cssClass"] : "")">
+        <li>
             @Html.DisplayFor(m => node, "TopMenuNodeModel")
             @if (node.Children.Any())
             {
                 <div class="sub-menu">
-                    @Html.DisplayFor(m => node.Children, "SiteMapNodeModelList", new { level = 0, last = Model.Nodes.IndexOf(node) == (Model.Nodes.Count - 1) })
+                    @Html.DisplayFor(m => node.Children, "SiteMapNodeModelList", new { level = 0, last = false })
                 </div>
                 <div class="fade"></div>
             }
         </li>
     }
+
+        <li class="more">
+    
+    @if (moreNodes != null)
+    {
+        <a><span>@("More".Localize())</span></a>
+        <div class="sub-menu">
+            @Html.DisplayFor(m => moreNodes, "SiteMapNodeModelList", new { level = 0, last = true })
+        </div>
+        <div class="fade"></div>
+    }
+        </li>   
 </ul>

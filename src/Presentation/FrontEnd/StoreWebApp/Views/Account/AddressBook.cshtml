@@ -1,6 +1,6 @@
 ﻿@model OrderAddressModel
 @{
-    ViewBag.PageTitle = SiteMap.Provider.CurrentNode != null ? SiteMap.Provider.CurrentNode.Title.Localize() : "Address Book".Localize();
+    ViewBag.PageTitle = SiteMaps.Current.CurrentNode != null ? SiteMaps.Current.CurrentNode.Title.Localize() : "Address Book".Localize();
     ViewBag.Title = Html.Title(ViewBag.PageTitle as string);
     Layout = "_Layout.cshtml";
 }

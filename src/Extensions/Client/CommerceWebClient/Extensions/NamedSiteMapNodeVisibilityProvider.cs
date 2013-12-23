@@ -58,14 +58,11 @@ namespace VirtoCommerce.Web.Client.Extensions
 	        if (mvcNode != null)
 	        {
 		        var menu = String.Empty;
-	            var context = HttpContext.Current;
-		        if (context.Items.Contains("menu"))
-			        menu = context.Items["menu"].ToString();
+                if (sourceMetadata != null && sourceMetadata.ContainsKey("name"))
+                    menu = sourceMetadata["name"].ToString();
 
 		        // Is a visibility attribute specified?
 		        var visibility = GetValue(mvcNode, "visibility");
-		        if (string.IsNullOrEmpty(visibility) && !String.IsNullOrEmpty(menu))
-			        return false;
 
 		        if (mvcNode.Attributes.ContainsKey("permissions"))
 		        {

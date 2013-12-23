@@ -1,6 +1,6 @@
 ﻿@model ChangeAccountInfoModel
 @{
-    ViewBag.PageTitle = SiteMap.CurrentNode != null ? SiteMap.CurrentNode.Title.Localize() : "Account Information".Localize();
+    ViewBag.PageTitle = SiteMaps.Current.CurrentNode != null ? SiteMaps.Current.CurrentNode.Title.Localize() : "Account Information".Localize();
     ViewBag.Title = Html.Title(ViewBag.PageTitle as string);
     Layout = "_Layout.cshtml";
 }

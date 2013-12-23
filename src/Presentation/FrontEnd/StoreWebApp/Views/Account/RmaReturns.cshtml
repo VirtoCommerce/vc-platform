@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<VirtoCommerce.Foundation.Orders.Model.RmaRequest>
 @{
-    ViewBag.PageTitle = SiteMap.CurrentNode != null ? SiteMap.CurrentNode.Title.Localize() : "Returns".Localize();
+    ViewBag.PageTitle = SiteMaps.Current.CurrentNode != null ? SiteMaps.Current.CurrentNode.Title.Localize() : "Returns".Localize();
     ViewBag.Title = Html.Title(ViewBag.PageTitle as string);
     Layout = "_Layout.cshtml";
 }
