@@ -10,6 +10,6 @@
 <div class="sidebar">
     <aside class="block">
         <span class="title">@("My Account".Localize())</span>
-        @Html.MvcSiteMap().Menu("sidemenu", false, true, false, "account")
+        @Html.MvcSiteMap().Menu("sidemenu", SiteMaps.Current.FindSiteMapNodeFromKey("account"), true, true, new { name = "account" })
     </aside>
 </div>

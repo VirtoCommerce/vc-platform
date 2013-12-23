@@ -11,18 +11,13 @@ namespace VirtoCommerce.Web.Client.Extensions
     {
         public static MvcHtmlString Menu(this MvcSiteMapHtmlHelper helper, string templateName, bool startFromCurrentNode, bool startingNodeInChildLevel, bool showStartingNode, string menu)
         {
+            var meta = new Dictionary<string, object>();
             if (!String.IsNullOrEmpty(menu))
             {
-                if (HttpContext.Current.Items.Contains("menu"))
-                    HttpContext.Current.Items["menu"] = menu;
-                else
-                    HttpContext.Current.Items.Add("menu", menu);
+                meta.Add("menu", menu);
             }
-
-            MvcHtmlString str = helper.Menu(templateName, startFromCurrentNode, startingNodeInChildLevel, showStartingNode);
-
-            if (!String.IsNullOrEmpty(menu))
-                HttpContext.Current.Items.Remove("menu");
+           
+            var str = helper.Menu(templateName, helper.SiteMap.FindSiteMapNodeFromKey(menu), true, false, 1, meta);
 
             return str;
         }
