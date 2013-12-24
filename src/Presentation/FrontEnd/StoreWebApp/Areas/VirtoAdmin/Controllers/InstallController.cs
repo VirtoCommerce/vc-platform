@@ -68,7 +68,7 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
             {
                 return View(model);
             }
-            try
+            //try
             {
                 if (CreateDb(model))
                 {
@@ -76,10 +76,12 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
                     return Restart();
                 }
             }
+            /*
             catch (Exception err)
             {
                 model.ErrorMessage = err.Message;
             }
+             * */
             return View(model);
         }
 
@@ -139,13 +141,14 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
             model.ClearMessages();
             Trace.Listeners.Add(traceListener);
             
-            try
+            //try
             {
                 SetupDb(model);
                 model.StatusMessage = "Database successfully created.";
                 AppConfigConfiguration.Instance.Setup.IsCompleted = true;
                 result = true;
             }
+            /*
             catch (AutomaticMigrationsDisabledException err)
             {
                 log.Append(err.Message);
@@ -156,6 +159,7 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
                 log.Append(err.Message);
                 model.ErrorMessage = err.Message;
             }
+             * */
             
             Session["log"] = log.ToString();
             Trace.Listeners.Remove(traceListener);
