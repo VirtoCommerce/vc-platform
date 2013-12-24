@@ -20,34 +20,9 @@
 else
 {
     <script type="text/javascript">
-
-        var filter = "@Html.Raw(Model.CatalogItems.Select(i => i.CatalogItem.ItemId).Aggregate((x, y) => (x.Contains("or ItemId eq") ? x : string.Format("ItemId eq '{0}'", x)) + string.Format(" or ItemId eq '{0}'", y)))";
-
         $(function ()
         {
-            Reviews.catalogReviews(filter);
-@*            var isAuthorized = '@UserHelper.CustomerSession.IsRegistered';
-
-            @foreach (var item in Model.CatalogItems)
-            {
-                <text>
-            $("[id='addreview-@item.CatalogItem.ItemId']").on('click', function ()
-            {
-                if (isAuthorized == "True")
-                {
-                    tb_show('@("Create Review".Localize())', "@Url.Action("AddReview", "Catalog", new { id = item.CatalogItem.ItemId, height = 550 })", false);
-                }
-                else
-                {
-                    tb_show('@("Login or Create New Account".LocalizeHtml())', "@Url.Action("LogOnAsync", "Account")", false);
-                }
-
-                return false;
-            });
-            </text>
-            }*@
-
-
+            Reviews.catalogReviews("@Html.Raw(Model.CatalogItems.Select(i => i.CatalogItem.ItemId).Aggregate((x, y) => (x.Contains("or ItemId eq") ? x : string.Format("ItemId eq '{0}'", x)) + string.Format(" or ItemId eq '{0}'", y)))");
         });
     </script>
     <script type="text/x-jquery-tmpl" id="reviewTemplate">

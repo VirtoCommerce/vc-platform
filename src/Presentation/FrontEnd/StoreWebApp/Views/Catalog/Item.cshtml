@@ -5,6 +5,11 @@
     ViewBag.PageTitle = Model.CatalogItem.CategoryName;
 }
 
+@helper RenderAddReview()
+{
+      <a href="@(UserHelper.CustomerSession.IsRegistered ? Url.Action("AddReview", "Catalog", new { id = Model.CatalogItem.ItemId }) : Url.Action("LogOnAsync", "Account"))" rel="popup">@("Add Your Review".Localize())</a>
+}
+
 <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-tmpl-min.js")"></script>
 <script type="text/javascript" src="@Url.Content("~/Scripts/v/virto-item.js")"></script>
 <script type="text/javascript" src="@Url.Content("~/Scripts/v/virto-reviews.js")"></script>
@@ -386,7 +391,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="@(UserHelper.CustomerSession.IsRegistered ? Url.Action("AddReview", "Catalog", new { id = Model.CatalogItem.ItemId }) : Url.Action("LogOnAsync", "Account"))" rel="popup">@("Add Your Review".Localize())</a>
+                                    @RenderAddReview()
                                 </li>
                             </ul>
                         </div>
@@ -444,7 +449,6 @@
                     </div>
                 </div>
             }
-
             else
             {
                 <script>$(function () { $(".article .product-view").addClass('no-recommend'); })</script>
@@ -464,7 +468,7 @@
                     {
                         if (review.Source == "FullReview")
                         {
-                    @Html.Raw(review.Content)
+                            @Html.Raw(review.Content)
                         }
                     }
                 }
@@ -476,7 +480,7 @@
             <h2 data-index="2" class="head"><a>@("Reviews".Localize())</a></h2>
             <div class="tabs-content" style="display: none;">
                 <div id="product_tabs_reviews_contents_empty" class="std">
-                    @("There are no reviews. Be first and".Localize()) <a href="#" class="add_reviews_link">@("Add Your Review".Localize())</a>
+                    @("There are no reviews. Be first and".Localize()) @RenderAddReview()
                 </div>
                 <div id="product_tabs_reviews_contents_list" style="display: none;">
                     <header>
