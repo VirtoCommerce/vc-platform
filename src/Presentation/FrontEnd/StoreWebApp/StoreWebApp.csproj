@@ -469,6 +469,8 @@
     <Content Include="Content\themes\default\nivo-slider.css" />
     <Content Include="Content\themes\default\print.css" />
     <Content Include="Content\themes\responsive\images\flags\flags.png" />
+    <Content Include="Content\themes\responsive\images\icons\rateit\delete.gif" />
+    <Content Include="Content\themes\responsive\images\icons\rateit\star.gif" />
     <Content Include="Content\themes\responsive\rateit.css" />
     <Content Include="Content\themes\default\redesign.css" />
     <Content Include="Content\themes\default\styles-ie.css" />
