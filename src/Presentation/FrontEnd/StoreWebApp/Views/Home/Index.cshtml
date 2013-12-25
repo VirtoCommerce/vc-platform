@@ -8,20 +8,20 @@
 }
 
 <div class="home content">
-    <div class="products featured">
-        <header>
-            <h2>@("Featured Products".Localize())</h2>
-        </header>
-        <ul class="products-list grid">
-            @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeFeaturedProducts" });}
-        </ul>
-    </div>
     <div class="products slider-products">
         <header>
             <h2>@("Staff pick".Localize())</h2>
         </header>
         <ul class="products-list slider-list grid">
             @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeStaffPick" });}
+        </ul>
+    </div>    
+    <div class="products featured">
+        <header>
+            <h2>@("Featured Products".Localize())</h2>
+        </header>
+        <ul class="products-list grid">
+            @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeFeaturedProducts" });}
         </ul>
     </div>
     <div class="products slider-products">
