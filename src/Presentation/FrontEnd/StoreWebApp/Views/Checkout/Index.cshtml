@@ -1,7 +1,7 @@
 ﻿@using VirtoCommerce.Web.Virto.Helpers
 @model CheckoutModel
 @{
-    Layout = "../Shared/_LayoutBase.cshtml";
+    Layout = Layout = "~/Views/Shared/_LayoutBase.cshtml";
     ViewBag.PageTitle = "Checkout".Localize();
     ViewBag.Title = Html.Title((string)ViewBag.PageTitle);
     var hasAddresses = Model.AddressBook.Addresses != null && Model.AddressBook.Addresses.Any();

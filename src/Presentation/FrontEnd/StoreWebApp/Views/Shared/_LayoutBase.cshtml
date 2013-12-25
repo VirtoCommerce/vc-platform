@@ -155,17 +155,20 @@
     <script type="text/javascript">
         $(function ()
         {
-            $('.main-slider .container').camera({
-                loader: 'bar',
-                playPause: false,
-                barPosition: 'top',
-                loaderColor: '#322C29',
-                loaderBgColor: 'rgba(0, 0, 0, 0)',
-                height: '25%'
-            });
+            if ($('.main-slider .container').length > 0)
+            {
+                $('.main-slider .container').camera({
+                    loader: 'bar',
+                    playPause: false,
+                    barPosition: 'top',
+                    loaderColor: '#322C29',
+                    loaderBgColor: 'rgba(0, 0, 0, 0)',
+                    height: '25%'
+                });
 
-            $('.main-slider .container').removeAttr('style');
-            $('.main-slider .container').css('display', 'block');
+                $('.main-slider .container').removeAttr('style');
+                $('.main-slider .container').css('display', 'block');
+            }
             
             $('.slider-products').virtoSlider();
         });

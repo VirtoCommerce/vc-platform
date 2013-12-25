@@ -69,6 +69,10 @@ namespace VirtoCommerce.Web
             bundles.Add(new StyleBundle("~/Content/themes/responsive/css").Include(
                 "~/Content/themes/responsive/reset.css",
                 "~/Content/themes/responsive/custom.css",
+                "~/Content/themes/responsive/grid.css",
+                "~/Content/themes/responsive/forms.css",
+                "~/Content/themes/responsive/popup.css",
+                "~/Content/themes/responsive/transition.css",
                 "~/Content/themes/responsive/main.css",
                 "~/Content/themes/responsive/responsive.css",
                 "~/Content/themes/responsive/camera.css",
