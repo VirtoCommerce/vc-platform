@@ -66,20 +66,20 @@ namespace VirtoCommerce.Web
                 "~/Areas/VirtoAdmin/Content/site.css"
                 ));
 
-            bundles.Add(new StyleBundle("~/Content/themes/responsive/css").Include(
-                "~/Content/themes/responsive/reset.css",
-                "~/Content/themes/responsive/custom.css",
-                "~/Content/themes/responsive/grid.css",
-                "~/Content/themes/responsive/forms.css",
-                "~/Content/themes/responsive/popup.css",
-                "~/Content/themes/responsive/transition.css",
-                "~/Content/themes/responsive/main.css",
-                "~/Content/themes/responsive/responsive.css",
-                "~/Content/themes/responsive/camera.css",
-                "~/Content/themes/responsive/cloudzoom.css",
-                "~/Content/themes/responsive/messages.css",
-                "~/Content/themes/responsive/rateit.css",
-                "~/Content/themes/responsive/flags.css"
+            bundles.Add(new StyleBundle("~/Content/themes/default/css").Include(
+                "~/Content/themes/default/reset.css",
+                "~/Content/themes/default/custom.css",
+                "~/Content/themes/default/grid.css",
+                "~/Content/themes/default/forms.css",
+                "~/Content/themes/default/popup.css",
+                "~/Content/themes/default/transition.css",
+                "~/Content/themes/default/main.css",
+                "~/Content/themes/default/responsive.css",
+                "~/Content/themes/default/camera.css",
+                "~/Content/themes/default/cloudzoom.css",
+                "~/Content/themes/default/messages.css",
+                "~/Content/themes/default/rateit.css",
+                "~/Content/themes/default/flags.css"
                 ));
 		}
 	}

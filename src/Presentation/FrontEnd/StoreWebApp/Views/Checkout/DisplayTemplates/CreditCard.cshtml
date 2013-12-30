@@ -7,7 +7,7 @@
         $('.checkout .card-info').click(function ()
         {
             $('body').prepend('<div class="fade-block"></div>');
-            $('.fade-block').after('<div class="cvv popup"><a class="close">&times;</a><img src="@Url.Content("~/Content/themes/responsive/images/cvv.gif")" alt="" /></div>');
+            $('.fade-block').after('<div class="cvv popup"><a class="close">&times;</a><img src="@Url.Content("~/Content/themes/default/images/cvv.gif")" alt="" /></div>');
         });
         window.Other.closestObject('.cvv.popup, .card-info', '.fade-block, .cvv.popup', '', 'remove');
     });
