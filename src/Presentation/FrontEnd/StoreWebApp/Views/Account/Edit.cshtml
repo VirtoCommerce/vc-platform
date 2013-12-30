@@ -2,7 +2,6 @@
 @{
     ViewBag.PageTitle = SiteMaps.Current.CurrentNode != null ? SiteMaps.Current.CurrentNode.Title.Localize() : "Account Information".Localize();
     ViewBag.Title = Html.Title(ViewBag.PageTitle as string);
-    Layout = "_Layout.cshtml";
 }
 <script type="text/javascript">
     function setPasswordForm(obj, arg)

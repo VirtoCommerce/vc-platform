@@ -2,7 +2,6 @@
 @{
     ViewBag.PageTitle = SiteMaps.Current.CurrentNode != null ? SiteMaps.Current.CurrentNode.Title.Localize() : "Orders".Localize();
     ViewBag.Title = Html.Title(ViewBag.PageTitle as string);
-    Layout = "_Layout.cshtml";
 }
 
 @if (Model == null || !Model.Any())

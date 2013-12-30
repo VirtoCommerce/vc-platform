@@ -2,7 +2,6 @@
 @{
     ViewBag.PageTitle = SiteMaps.Current.CurrentNode != null ? SiteMaps.Current.CurrentNode.Title.Localize() : "Dashboard".Localize();
     ViewBag.Title = Html.Title(ViewBag.PageTitle as string);
-    Layout = "_Layout.cshtml";
 }
 
 <p><b>@("Hello, {0}!".LocalizeHtml(@Model.FullName))</b></p>

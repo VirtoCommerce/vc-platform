@@ -2,7 +2,6 @@
 @{
     ViewBag.PageTitle = SiteMaps.Current.CurrentNode != null ? SiteMaps.Current.CurrentNode.Title.Localize() : "Address Book".Localize();
     ViewBag.Title = Html.Title(ViewBag.PageTitle as string);
-    Layout = "_Layout.cshtml";
 }
 
 <button type="button" title="@("Add New Address".LocalizeHtml())" onclick="window.location='@Url.Action("AddressEdit", "Account")';">

@@ -2,6 +2,5 @@
 @{
     ViewBag.PageTitle = String.Format("Order #{0} - {1}", Model.TrackingNumber, Model.Status);
     ViewBag.Title = Html.Title(ViewBag.PageTitle as string);
-    Layout = "_Layout.cshtml";
     @Html.DisplayForModel(new { View = "Default"})
 }
