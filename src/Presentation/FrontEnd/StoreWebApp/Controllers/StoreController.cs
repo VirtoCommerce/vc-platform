@@ -4,6 +4,7 @@ using System;
 using System.Linq;
 using System.Web.Mvc;
 using VirtoCommerce.Client;
+using VirtoCommerce.Client.Extensions;
 using VirtoCommerce.Foundation.Stores.Model;
 using VirtoCommerce.Web.Client.Extensions;
 using VirtoCommerce.Web.Client.Extensions.Filters;
@@ -44,7 +45,7 @@ namespace VirtoCommerce.Web.Controllers
             var store = _storeClient.GetCurrentStore();
 
             var currencies =
-                (from c in store.Currencies select new CurrencyModel(c.CurrencyCode, c.CurrencyCode)).ToArray();
+                (from c in store.Currencies select new CurrencyModel(c.CurrencyCode, c.CurrencyCode.GetCurrencyName())).ToArray();
 
             var currenciesModel = new CurrenciesModel(UserHelper.CustomerSession.Currency, currencies);
             return PartialView("Currencies", currenciesModel);
@@ -112,6 +113,22 @@ namespace VirtoCommerce.Web.Controllers
                                        WishList = wishListHelper.CreateCartModel(true),
                                        UserHelper.CustomerSession.CustomerName
                                    }).ToExpando());
+        }
+
+        /// <summary>
+        /// Quicks the access.
+        /// </summary>
+        /// <returns>ActionResult.</returns>
+        public ActionResult CartOptions()
+        {
+            var compareListHelper = new CartHelper(CartHelper.CompareListName);
+            var cartHelper = new CartHelper(CartHelper.CartName);
+            return PartialView("CartOptions",
+                               (new
+                               {
+                                   Cart = cartHelper.CreateCartModel(true),
+                                   CompareList = compareListHelper.CreateCompareModel()
+                               }).ToExpando());
         }
     }
 }

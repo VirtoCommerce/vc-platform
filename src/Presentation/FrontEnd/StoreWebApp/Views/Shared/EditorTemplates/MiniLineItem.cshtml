@@ -1,0 +1,26 @@
+﻿@model LineItemModel
+<li class="item" id="@String.Format("row-{0}", Model.LineItemId)">
+    <a href="@Url.ItemUrl(Model.CatalogItem.Item, Model.ParentCatalogItem)" title="@Model.DisplayName" class="product-image">
+        <img src="@Url.Image(Model.CatalogItem.Item, "primaryimage")" alt="@Model.DisplayName" onerror="this.onerror=null;this.src='@Href("~/Content/themes/default/images/blank.png")';" /></a>
+    <div class="product-details">
+        @if (!Model.IsPromotion)
+        {
+            <ul class="buttons">
+                <li class="edit">@Html.ActionLink(" ", "Configure", "Cart",
+                                                     new { lineItemId = Model.LineItemId },
+                                                     new { title = "Edit item".Localize() })</li>
+                <li class="remove">@Ajax.ActionLink(" ", "Remove", "Cart",
+                                       new { lineItemId = Model.LineItemId, sourceView = "MiniCart" },
+                                       new AjaxOptions
+                                       {
+                                           HttpMethod = "POST",
+                                           Confirm = "Are you sure you would like to remove this item from the shopping cart?".Localize(),
+                                           OnSuccess = "VirtoCart.onUpdate"
+                                       })</li>
+            </ul>
+        }
+
+        <p><a href="@Url.ItemUrl(Model.CatalogItem.Item, Model.ParentCatalogItem)">@Model.DisplayName</a></p>
+        <p><span class="count">@Model.Quantity</span> x <span class="price">@Model.FormattedPlacedPrice</span></p>
+    </div>
+</li>

@@ -31,26 +31,26 @@ namespace VirtoCommerce.Web
 
 			routes.MapRoute(
 			   "Item_ln",
-			   "{lang}/p/{url}",
+			   "{lang}/p/{code}",
 			   new { controller = "Catalog", action = "DisplayItem" },
 			   new { lang = "[a-z]{2}(-[A-Z]{2})?" });
 
             routes.MapRoute(
                 "Item",
-                "p/{url}",
+                "p/{code}",
                 new { controller = "Catalog", action = "DisplayItem" }
             );
 
 			routes.MapRoute(
 			   "Catalog_ln",
-			   "{lang}/c/{url}",
+               "{lang}/c/{code}",
 			   new { controller = "Catalog", action = "Display" },
 			   new { lang = "[a-z]{2}(-[A-Z]{2})?" }
 		   );
 
             routes.MapRoute(
                 "Catalog",
-                "c/{url}",
+                "c/{code}",
                 new { controller = "Catalog", action = "Display" }
                 //, new { IsRootAction = new IsRootActionConstraint() }  // Route Constraint
             );

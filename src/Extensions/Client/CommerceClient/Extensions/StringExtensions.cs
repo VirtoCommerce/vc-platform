@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using System.Linq;
 
 namespace VirtoCommerce.Client.Extensions
 {
@@ -53,5 +55,26 @@ namespace VirtoCommerce.Client.Extensions
 		{
 			return String.Compare(str1 ?? "", str2 ?? "", comparisonType) == 0;
 		}
+
+        public static string GetCurrencyName(this string isoCurrencySymbol)
+        {
+            return CultureInfo
+                .GetCultures(CultureTypes.AllCultures)
+                .Where(c => !c.IsNeutralCulture)
+                .Select(culture =>
+                {
+                    try
+                    {
+                        return new RegionInfo(culture.LCID);
+                    }
+                    catch
+                    {
+                        return null;
+                    }
+                })
+                .Where(ri => ri != null && ri.ISOCurrencySymbol == isoCurrencySymbol)
+                .Select(ri => ri.CurrencyNativeName)
+                .FirstOrDefault() ?? isoCurrencySymbol;
+        }
     }
 }

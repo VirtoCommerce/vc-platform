@@ -36,6 +36,7 @@ namespace VirtoCommerce.Web.Models
 		/// <value>The old password.</value>
         [DataType(DataType.Password)]
         [Display(Name = "Current password")]
+        [RequiredIf("ChangePassword", true)]
         public string OldPassword { get; set; }
 
 		/// <summary>
@@ -45,6 +46,7 @@ namespace VirtoCommerce.Web.Models
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "New password")]
+        [RequiredIf("ChangePassword", true)]
         public string NewPassword { get; set; }
 
 		/// <summary>
@@ -53,8 +55,8 @@ namespace VirtoCommerce.Web.Models
 		/// <value>The confirm password.</value>
         [DataType(DataType.Password)]
         [Display(Name = "Confirm new password")]
-        [System.Web.Mvc.Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match."
-            )]
+        [System.Web.Mvc.Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match." )]
+        [RequiredIf("ChangePassword", true)]
         public string ConfirmPassword { get; set; }
 
 		/// <summary>
@@ -156,11 +158,8 @@ namespace VirtoCommerce.Web.Models
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
-        /*
-        [Required]
-        [Display(Name = "User name")]
-        public string UserName { get; set; }
-         * */
+        [Display(Name = "Sign up for news")]
+        public bool SignUpForNews { get; set; }
 
 		/// <summary>
 		/// Gets or sets the email.
@@ -187,8 +186,7 @@ namespace VirtoCommerce.Web.Models
 		/// <value>The confirm password.</value>
         [DataType(DataType.Password)]
         [Display(Name = "Confirm password")]
-        [System.ComponentModel.DataAnnotations.Compare("Password",
-            ErrorMessage = "The password and confirmation password do not match.")]
+        [System.ComponentModel.DataAnnotations.Compare("Password",ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
     }
 

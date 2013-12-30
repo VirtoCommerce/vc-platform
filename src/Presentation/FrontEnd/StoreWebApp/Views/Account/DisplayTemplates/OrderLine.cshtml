@@ -1,26 +1,54 @@
-﻿@model VirtoCommerce.Foundation.Orders.Model.Order
- <tr class="first last odd">
-                    <td>
-                        @Model.TrackingNumber
-                    </td>
-                    <td>
-                        <span class="nobr">@Model.Created.Value.ToShortDateString()</span>
-                    </td>
-                    <td>
-                        @Model.CustomerName
-                    </td>
-                    <td>
-                        <span class="price">@StoreHelper.FormatCurrency(Model.Total, Model.BillingCurrency)</span>
-                    </td>
-                    <td>
-                        <em>@Model.Status.Localize()</em>
-                    </td>
-                    <td class="a-center last">
-                        <span class="nobr">
-                            @Html.ActionLink("View", "ViewOrder", new { orderId = Model.OrderGroupId })<span class="separator">|</span>
-                            @Html.ActionLink("Reorder", "Reorder", new { orderId = Model.OrderGroupId }) <span class="separator">|</span>
-                            @Html.ActionLink("Return", "OrderReturn", new { orderId = Model.OrderGroupId })
+﻿@using VirtoCommerce.Foundation.Orders.Model
+@model VirtoCommerce.Foundation.Orders.Model.Order
 
-                        </span>
-                    </td>
-                </tr>          
+@{
+    var statusClass = Model.Status.ToLower();
+    OrderStatus status;
+    if (Enum.TryParse(Model.Status, out status))
+    {
+        switch (status)
+        {
+            case OrderStatus.AwaitingExchange:
+            case OrderStatus.InProgress:
+            case OrderStatus.OnHold:
+            case OrderStatus.PartiallyShipped:
+                statusClass = "progress";
+                break;
+            case OrderStatus.Cancelled:
+                statusClass = "pending";
+                break;
+
+            default:
+                statusClass = Model.Status.ToLower();
+                break;
+
+        }
+    }
+}
+<tr>
+    <td>
+        <span class="mobile-view">@("Order".Localize())</span>
+        <span>@Model.TrackingNumber</span>
+    </td>
+    <td>
+        <span class="mobile-view">@("Date".Localize())</span>
+        <span>@Model.Created.Value.ToShortDateString()</span>
+    </td>
+    <td>
+        <span class="mobile-view">@("Ship to".Localize())</span>
+        <span>@Model.CustomerName</span>
+    </td>
+    <td>
+        <span class="mobile-view">@("Order total".Localize())</span>
+        <span>@StoreHelper.FormatCurrency(Model.Total, Model.BillingCurrency)</span>
+    </td>
+    <td>
+        <span class="mobile-view">@("Order status".Localize())</span>
+        <span class="@statusClass">@Model.Status.Localize()</span>
+    </td>
+    <td class="product-actions">
+        @Html.ActionLink("View", "ViewOrder", new { orderId = Model.OrderGroupId }, new { @class = "view" })
+        @Html.ActionLink("Reorder", "Reorder", new { orderId = Model.OrderGroupId }, new { @class = "reorder" })
+        @Html.ActionLink("Return", "OrderReturn", new { orderId = Model.OrderGroupId }, new { @class = "return" })
+    </td>
+</tr>

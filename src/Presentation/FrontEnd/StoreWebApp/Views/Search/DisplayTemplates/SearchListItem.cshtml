@@ -1,0 +1,65 @@
+﻿@using VirtoCommerce.Web.Virto.Helpers
+@model CatalogItemWithPriceModel
+
+@{
+    var itemClass = "item";
+    if (Model.IsNew)
+    {
+        itemClass = string.Concat(@itemClass, " ", "new");
+    }
+    if (Model.IsSale)
+    {
+        itemClass = string.Concat(@itemClass, " ", "sale");
+    }
+}
+
+<li class="@itemClass">
+    <div class="inner">
+        <a href="@Url.ItemUrl(Model.CatalogItem.Item, Model.CatalogItem.ParentItemId)" title="@Model.DisplayName" class="product-image">
+            <figure>
+                <img src="@Url.Image(Model.CatalogItem.Item, "primaryimage")" alt="@Model.DisplayName" onerror="this.onerror=null;this.src='@Href("~/Content/themes/default/images/blank.png")';" />
+            </figure>
+        </a>
+        <div class="product-info">
+            <a class="product-name" href="@Url.ItemUrl(Model.CatalogItem.Item, Model.CatalogItem.ParentItemId)">@Model.DisplayName</a>
+            <div class="price-container">
+                @if (Model.Price != null)
+                {
+                    @Html.DisplayFor(model => model.Price)
+                }
+                <div class="ratings">
+                    <div id="rateit-@Model.CatalogItem.ItemId"></div>
+                </div>
+                <div class="ratings-links">
+                    <ul>
+                        <li><a href="@Url.ItemUrl(Model.CatalogItem.Item, Model.CatalogItem.ParentItemId)#product_tabs_reviews">
+                            <span id="totalreviews-@Model.CatalogItem.ItemId">0</span>&nbsp;@("Review(s)".Localize())
+                        </a>
+                        </li>
+                        <li><a href="@(UserHelper.CustomerSession.IsRegistered ? Url.Action("AddReview", "Catalog", new { id = Model.CatalogItem.ItemId}) : Url.Action("LogOnAsync", "Account"))" rel="popup">@("Add Your Review".Localize())</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="description">
+                @if (Model.CatalogItem.EditorialReviews != null && Model.CatalogItem.EditorialReviews.Length > 0)
+                {
+                    foreach (var review in Model.CatalogItem.EditorialReviews)
+                    {
+                        if (review.Source == "QuickReview")
+                        {
+                            @Html.Raw(review.Content)
+                        }
+                    }
+                }
+            </div>
+            <div class="button-container">
+                <ul>
+                    <li class="cart">
+                        @{Html.RenderPartial("AddToCart", Model, new ViewDataDictionary { { "View", "ListLink" } });}
+                    </li>
+                    @{Html.RenderPartial("AddToLinks", Model);}
+                </ul>
+            </div>
+        </div>
+    </div>
+</li>

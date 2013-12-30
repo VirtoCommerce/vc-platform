@@ -7,19 +7,18 @@
 }
 else
 {
-    using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = ViewBag.ReturnUrl }))
+    using (Html.BeginForm("ExternalLogin", "Account", new { ViewBag.ReturnUrl }))
     {
     @Html.AntiForgeryToken()
-    <fieldset id="socialLoginList">
-        <legend>@("Log in using another service".LocalizeHtml())</legend>
-        <p>
+
+    <span class="title">@("Log in using another service".Localize())</span>
+    <p>
         @foreach (var p in Model)
         {          
-            <button type="submit" name="provider" style="border: 0" value="@p.AuthenticationClient.ProviderName" title="@("Log in using your {0} account".LocalizeHtml(p.DisplayName))">
-                <img alt="@p.DisplayName" style="border: 0" src="@Href(String.Format("~/content/themes/default/images/social/{0}.png", p.AuthenticationClient.ProviderName))"/>
-             </button>
+            <button type="submit" name="provider" value="@p.AuthenticationClient.ProviderName" title="@("Log in using your {0} account".LocalizeHtml(p.DisplayName))">
+                <img alt="@p.DisplayName" src="@Href(String.Format("~/content/themes/default/images/social/{0}.png", p.AuthenticationClient.ProviderName))"/>
+            </button>
         }
-        </p>
-    </fieldset>
+    </p>
     }
 }

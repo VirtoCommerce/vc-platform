@@ -33,13 +33,13 @@ namespace VirtoCommerce.Web.Client.Extensions
 		{
 			const string defaultImage = "blank.png";
 
-			return helper.Content(asset == null ? String.Format("~/Content/themes/default/images/{0}", defaultImage) : AssetUrl(asset));
+			return helper.Content(asset == null ? String.Format("~/Content/themes/default/images/{0}", defaultImage) : AssetUrl(asset, true));
 		}
 
-		private static string AssetUrl(ItemAsset asset)
+		private static string AssetUrl(ItemAsset asset, bool thumb = false)
 		{
 			var service = ServiceLocator.Current.GetInstance<IAssetUrl>();
-			return service.ResolveUrl(asset.AssetId);
+            return service.ResolveUrl(asset.AssetId, thumb);
 		}
 
 		private static ItemAsset FindItemAsset(IEnumerable<ItemAsset> assets, string name)

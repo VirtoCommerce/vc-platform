@@ -1,85 +1,76 @@
-﻿@model VirtoCommerce.Foundation.Orders.Model.Order
+﻿@using VirtoCommerce.Foundation.Orders.Model
+@model Order
 
-@if ((string)ViewData["View"] == "Default")
-{
-    <div class="page-title">
-        <h1>@("Order".LocalizeHtml()) #@Model.TrackingNumber - @Model.Status.Localize()</h1>
-    </div>
-    <div class="title-buttons">
-        <span class="nobr">
-            @Html.ActionLink("Reorder", "Reorder", new { orderId = Model.OrderGroupId, @class = "link-reorder" })
-            <span class="separator">|</span>
-            @Html.ActionLink("Return", "OrderReturn", new { orderId = Model.OrderGroupId })
-            <span class="separator">|</span>
-            <a href="#" class="link-print" onclick="$.popup('@Url.Action("PrintOrder", new { orderId = Model.OrderGroupId })'); return false;">@("Print".LocalizeHtml())</a>
-        </span>
-    </div>
-}
-<dl class="order-info">
-    <dt>@("About This Order:".LocalizeHtml())</dt>
-    <dd>
-        <ul id="order-info-tabs">
-            <li class="current first last">@("Order Information".LocalizeHtml())</li>
+<header class="head">
+    <span class="order-title">@("Order information".Localize())</span>
+    @if ((string)ViewData["View"] == "Default")
+    {
+        <ul role="navigation">
+            <li class="reorder">
+                @Html.ActionLink("Reorder".Localize(), "Reorder", new { orderId = Model.OrderGroupId },new {title="Reorder".Localize()})
+            </li>
+            <li class="return">
+                @Html.ActionLink("Return".Localize(), "OrderReturn", new { orderId = Model.OrderGroupId },new {title="Return".Localize()})
+            </li>
+            <li class="print">
+                <a href="#" title=@("Print".Localize()) onclick="$.popup('@Url.Action("PrintOrder", new { orderId = Model.OrderGroupId })'); return false;">@("Print".Localize())</a>
+            </li>
         </ul>
-    </dd>
-</dl>
-<p class="order-date">@("Order Date:".LocalizeHtml()) @Model.Created.Value.ToString("MMMM d, yyyy")</p>
-<div class="col2-set order-info-box">
-    <div class="col-1">
-        <div class="box">
-            <div class="box-title">
-                <h2>@("Shipping Address".LocalizeHtml())</h2>
-            </div>
-            <div class="box-content">
-                @{Html.RenderAction("OrderAddress", new { order = Model, type = "shipping" });}
-            </div>
+    }
+</header>
+<p>@("Order Date:".Localize()) @Model.Created.Value.ToString("MMMM d, yyyy")</p>
+<div class="block clearfix">
+    <div class="col">
+        <div class="title">
+            <span>@("Shipping Address".Localize())</span>
         </div>
-    </div>
-    <div class="col-2">
-        <div class="box">
-            <div class="box-title">
-                <h2>@("Shipping Method".LocalizeHtml())</h2>
-            </div>
-            <div class="box-content">
-                @if (Model.OrderForms != null && Model.OrderForms.Count > 0 && Model.OrderForms[0].Shipments != null && Model.OrderForms[0].Shipments.Count > 0)
-                {
-                    @Model.OrderForms[0].Shipments[0].ShippingMethodName
-                }
-            </div>
-        </div>
-    </div>
-</div>
-<div class="col2-set order-info-box">
-    <div class="col-1">
-        <div class="box">
-            <div class="box-title">
-                <h2>@("Billing Address".LocalizeHtml())</h2>
-            </div>
-            <div class="box-content">
-                @{Html.RenderAction("OrderAddress", new { order = Model, type = "billing" });}
-            </div>
-        </div>
-    </div>
-    <div class="col-2">
-        <div class="box box-payment">
-            <div class="box-title">
-                <h2>@("Payment Method".LocalizeHtml())</h2>
-            </div>
-            <div class="box-content">
-                <p>@("Check / Money order".LocalizeHtml())</p>
-                <p><strong>@("Make Check payable to:".LocalizeHtml())</strong> Nobody</p>
-                <p><strong>@("Send Check to:".LocalizeHtml())</strong></p>
-                <address class="checkmo-mailing-address">
-                    @("Please do not send anything this is a test store!!!".LocalizeHtml())       
-                </address>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="order-items order-details">
-    <h2 class="table-caption">@("Items Ordered".LocalizeHtml())</h2>
+        <div class="info">
+            @{Html.RenderAction("OrderAddress", new { order = Model, type = "shipping" });}
 
-    <table class="data-table" id="my-orders-table" summary="Items Ordered">
+        </div>
+    </div>
+    <div class="col">
+        <div class="title">
+            <span>@("Shipping Method".Localize())</span>
+        </div>
+        <div class="info">
+            @if (Model.OrderForms != null)
+            {
+                foreach (var sm in Model.OrderForms.SelectMany(of => of.Shipments))
+                {
+                <p>@sm.ShippingMethodName</p>
+                }
+            }
+        </div>
+    </div>
+</div>
+<div class="block clearfix">
+    <div class="col">
+        <div class="title">
+            <span>@("Billing Address".Localize())</span>
+        </div>
+        <div class="info">
+            @{Html.RenderAction("OrderAddress", new { order = Model, type = "billing" });}
+        </div>
+    </div>
+    <div class="col">
+        <div class="title">
+            <span>@("Payment Method".Localize())</span>
+        </div>
+        <div class="info">
+            @if (Model.OrderForms != null)
+            {
+                foreach (var pm in Model.OrderForms.SelectMany(of => of.Payments))
+                {
+                <p>@pm.PaymentMethodName</p>
+                }
+            }
+        </div>
+    </div>
+</div>
+<div class="block clearfix">
+    <table class="data-table">
+        <caption>@("Items Ordered".Localize())</caption>
         <colgroup>
             <col>
             <col width="1">
@@ -88,60 +79,40 @@
             <col width="1">
         </colgroup>
         <thead>
-            <tr class="first last">
-                <th>@("Product Name".LocalizeHtml())</th>
-                <th>@("SKU".LocalizeHtml())</th>
-                <th class="a-right">@("Price".LocalizeHtml())</th>
-                <th class="a-center">@("Qty".LocalizeHtml())</th>
-                <th class="a-right">@("Subtotal".LocalizeHtml())</th>
+            <tr>
+                <th align="left">@("Product Name".Localize())</th>
+                <th>@("SKU".Localize())</th>
+                <th>@("Price".Localize())</th>
+                <th>@("Qty".Localize())</th>
+                <th>@("Subtotal".Localize())</th>
             </tr>
         </thead>
-        <tfoot>
-            <tr class="subtotal first">
-                <td colspan="4" class="a-right">@("Subtotal".LocalizeHtml())</td>
-                <td class="last a-right">
-                    <span class="price">@StoreHelper.FormatCurrency(Model.Subtotal, Model.BillingCurrency)</span></td>
-            </tr>
-	        <tr class="shipping">
-		        <td colspan="4" class="a-right">
-			        @("Shipping &amp; Handling".LocalizeHtml())
-		        </td>
-		        <td class="last a-right">
-			        <span class="price">@StoreHelper.FormatCurrency(Model.ShippingTotal, Model.BillingCurrency)</span>
-		        </td>
-	        </tr>
-			<tr class="shipping">
-	            <td colspan="4" class="a-right">
-		            @("Tax total".LocalizeHtml())
-	            </td>
-                <td class="last a-right">
-	                <span class="price">@StoreHelper.FormatCurrency(Model.TaxTotal, Model.BillingCurrency)</span>
-                </td>
-            </tr>
-            <tr class="grand_total last">
-                <td colspan="4" class="a-right">
-                    <strong>@("Grand Total".LocalizeHtml())</strong>
-                </td>
-                <td class="last a-right">
-                    <strong><span class="price">@StoreHelper.FormatCurrency(Model.Total, Model.BillingCurrency)</span></strong>
-                </td>
-            </tr>
-        </tfoot>
-        <tbody class="odd">
-
-            @foreach (var orderForm in Model.OrderForms)
+        <tbody>
+            @foreach (var lineItem in Model.OrderForms.SelectMany(orderForm => orderForm.LineItems))
             {
-                foreach (var lineItem in orderForm.LineItems)
-                {
                 @Html.DisplayFor(m => lineItem, "LineItem")
-                }
             }
         </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="4" align="right">@("Subtotal".Localize())</td>
+                <td>@StoreHelper.FormatCurrency(Model.Subtotal, Model.BillingCurrency)</td>
+            </tr>
+            <tr>
+                <td colspan="4" align="right">@("Shipping & Handling".Localize())</td>
+                <td>@StoreHelper.FormatCurrency(Model.ShippingTotal, Model.BillingCurrency)</td>
+            </tr>
+            <tr>
+                <td colspan="4" align="right">@("Tax Total".Localize())</td>
+                <td>@StoreHelper.FormatCurrency(Model.TaxTotal, Model.BillingCurrency)</td>
+            </tr>
+            <tr>
+                <td class="grand" colspan="4" align="right">@("Grand Total".Localize())</td>
+                <td class="grand">@StoreHelper.FormatCurrency(Model.Total, Model.BillingCurrency)</td>
+            </tr>
+        </tfoot>
     </table>
-    <div class="buttons-set">
-        <p class="back-link">
-
-            <a href="@Url.Action("Orders")"><small>« </small>@("Back to My Orders".LocalizeHtml())</a>
-        </p>
-    </div>
+</div>
+<div class="buttons clearfix">
+    <a href="@Url.Action("Orders")" class="back">« @("Back to My Orders".Localize())</a>
 </div>

@@ -12,6 +12,8 @@ using VirtoCommerce.Foundation.Frameworks;
 
 namespace VirtoCommerce.Search.Index
 {
+    using VirtoCommerce.Foundation.Catalogs.Services;
+
     public class CatalogItemDocumentCreator : ISearchIndexDocumentCreator<Partition>
     {
         #region Cache Constants
@@ -40,6 +42,14 @@ namespace VirtoCommerce.Search.Index
         public IPricelistRepository PriceListRepository { get; private set; }
 
         /// <summary>
+        /// Gets the outline builder.
+        /// </summary>
+        /// <value>
+        /// The outline builder.
+        /// </value>
+        public ICatalogOutlineBuilder OutlineBuilder { get; private set; }
+
+        /// <summary>
         /// Gets the cache repository.
         /// </summary>
         /// <value>
@@ -48,16 +58,18 @@ namespace VirtoCommerce.Search.Index
         public ICacheRepository CacheRepository { get; private set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CatalogItemDocumentCreator"/> class.
+        /// Initializes a new instance of the <see cref="CatalogItemDocumentCreator" /> class.
         /// </summary>
         /// <param name="catalogRepository">The catalog repository.</param>
         /// <param name="pricelistRepository">The pricelist repository.</param>
+        /// <param name="catalogOutlinebuilder">The catalog outline builder.</param>
         /// <param name="cacheRepository">The cache repository.</param>
-        public CatalogItemDocumentCreator(ICatalogRepository catalogRepository, IPricelistRepository pricelistRepository, ICacheRepository cacheRepository)
+        public CatalogItemDocumentCreator(ICatalogRepository catalogRepository, IPricelistRepository pricelistRepository, ICatalogOutlineBuilder catalogOutlinebuilder,  ICacheRepository cacheRepository)
         {
             CatalogRepository = catalogRepository;
             PriceListRepository = pricelistRepository;
             CacheRepository = cacheRepository;
+            OutlineBuilder = catalogOutlinebuilder;
         }
 
         /// <summary>
@@ -232,7 +244,7 @@ namespace VirtoCommerce.Search.Index
 			doc.Add(new DocumentField("catalog", catalogId.ToLower(), new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
 
             // get category path
-			var outline = CatalogOutlineBuilder.BuildCategoryOutline(CatalogRepository,catalogId, category);
+			var outline = OutlineBuilder.BuildCategoryOutline(catalogId, category).ToString();
             doc.Add(new DocumentField("__outline", outline.ToLower(), new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
 
             // Now index all linked categories

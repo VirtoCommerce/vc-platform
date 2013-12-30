@@ -6,14 +6,6 @@
     public class PriceModel
     {
 		/// <summary>
-		/// Initializes a new instance of the <see cref="PriceModel"/> class.
-		/// </summary>
-        public PriceModel()
-        {
-            PriceTitle = "Price:";
-        }
-
-		/// <summary>
 		/// Gets or sets the list price.
 		/// </summary>
 		/// <value>The list price.</value>

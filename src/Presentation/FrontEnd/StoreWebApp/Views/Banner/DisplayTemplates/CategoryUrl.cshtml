@@ -1,0 +1,21 @@
+﻿@using VirtoCommerce.Web.Virto.Helpers
+@{
+    Layout = null;
+    var currentModel = ViewData["Model"] as CategoryUrlModel;
+}
+
+@if (currentModel != null)
+{
+    var category = CatalogHelper.CatalogClient.GetCategory(currentModel.CategoryCode);
+    if (category != null && category.IsActive)
+    {
+        @Html.Action("SearchResultsWithinCategory", "Search",
+        new
+        {
+            category,
+            parameters = new SearchParameters { Sort = currentModel.SortField, PageSize = currentModel.ItemCount},
+            name = "DisplayTemplates/SearchItems"
+        })
+    }
+}
+

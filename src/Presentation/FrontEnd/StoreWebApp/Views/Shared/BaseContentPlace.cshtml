@@ -1,34 +1,65 @@
 ﻿@model VirtoCommerce.Web.Models.BannerModel
 @{
     Layout = null;
+
+    var images = Model.Items.Where(i => i.ContentTypeId.Equals(DynamicContentType.ImageClickable.ToString())
+                                        || i.ContentTypeId.Equals(DynamicContentType.ImageNonClickable.ToString())).ToArray();
+
+    var restContent = images.Length > 1 ? Model.Items.Except(images) : Model.Items;
 }
 
-@foreach (var item in Model.Items)
+@if (images.Length > 1)
+{
+    //Wrap images to slider when there are several of them
+    <div class="main-slider">
+        <div class="container">
+            @foreach (var item in images)
+            {
+                if (item.ContentTypeId == DynamicContentType.ImageNonClickable.ToString())
+                {
+                @Html.DisplayForModel("ImageNoClickSlide", new { Model = new ImageNonClickableModel(item) })
+                }
+
+                if (item.ContentTypeId == DynamicContentType.ImageClickable.ToString())
+                {
+                @Html.DisplayForModel("ImageClickSlide", new { Model = new ImageClickableModel(item) })
+                }
+            }
+        </div>
+    </div>
+}
+
+@foreach (var item in restContent)
 {
 
     if (item.ContentTypeId == DynamicContentType.Html.ToString())
-	{
-		@Html.DisplayForModel("RawHtml", new { Model = new RawHtmlModel(item)})
-	}
+    { 
+    @Html.DisplayForModel("RawHtml", new { Model = new RawHtmlModel(item) })
+    }
 
     if (item.ContentTypeId == DynamicContentType.Flash.ToString())
-	{
-		@Html.DisplayForModel("Flash", new { Model = new FlashModel(item) })
-	}
+    {
+    @Html.DisplayForModel("Flash", new { Model = new FlashModel(item) })
+    }
 
     if (item.ContentTypeId == DynamicContentType.ImageNonClickable.ToString())
-	{
-		@Html.DisplayForModel("ImageNoClick", new { Model = new ImageNonClickableModel(item) })
-	}
+    {
+    @Html.DisplayForModel("ImageNoClick", new { Model = new ImageNonClickableModel(item) })
+    }
 
     if (item.ContentTypeId == DynamicContentType.ImageClickable.ToString())
-	{
-		@Html.DisplayForModel("ImageClick", new { Model = new ImageClickableModel(item) })
-	}
-    
+    {
+    @Html.DisplayForModel("ImageClick", new { Model = new ImageClickableModel(item) })
+    }
+
     if (item.ContentTypeId == DynamicContentType.ProductWithImageAndPrice.ToString())
-	{
-		@Html.DisplayForModel("ProductImageAndPrice", new { Model = new ProductWithImageAndPriceModel(item) })
-	}    
+    {
+    @Html.DisplayForModel("ProductImageAndPrice", new { Model = new ProductWithImageAndPriceModel(item) })
+    }
+    
+    if (item.ContentTypeId == DynamicContentType.CategoryUrl.ToString())
+    {
+    @Html.DisplayForModel("CategoryUrl", new { Model = new CategoryUrlModel(item) })
+    }
 
 }

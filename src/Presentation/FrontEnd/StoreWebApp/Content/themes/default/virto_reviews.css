@@ -28,7 +28,7 @@
     .bigstars div {
         width: 204px;
         height: 38px;
-        background: url(big_stars.png) no-repeat bottom left;
+        background: url(images/big_stars.png) no-repeat bottom left;
         position: absolute;
         left: 0px;
         top: 0px;
@@ -57,7 +57,7 @@
     .smallstars div {
         width: 102px;
         height: 19px;
-        background: url(big_stars.png) no-repeat bottom left;
+        background: url(images/big_stars.png) no-repeat bottom left;
         position: absolute;
         left: 0px;
         top: 0px;
@@ -177,7 +177,7 @@
     display: none;
 }
 
-.title {
+.review-title {
     font-style: italic;
     color: #888;
     font-size: 10px;

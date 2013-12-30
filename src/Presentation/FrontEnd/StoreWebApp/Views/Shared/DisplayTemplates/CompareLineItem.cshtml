@@ -1,0 +1,11 @@
+﻿@model LineItemModel
+<li id='compare-@Model.LineItemId'>
+    @Html.HiddenFor(m => m.LineItemId)
+    @Ajax.ActionLink("Remove item".Localize(), "RemoveFromCompareList", "Cart", new { lineItemId = Model.LineItemId }, new AjaxOptions
+    {
+        HttpMethod = "POST",
+        Confirm = "Are you sure you would like to remove this item from the comparing list?".Localize(),
+        OnSuccess = "VirtoCart.onUpdate"
+    }, new { @class = "remove" })
+    <a class="product-name" href="@Url.ItemUrl(Model.CatalogItem.Item, Model.ParentCatalogItem)">@Model.DisplayName</a>
+</li>

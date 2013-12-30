@@ -129,19 +129,20 @@
     <Reference Include="Microsoft.WindowsAzure.Configuration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\packages\Microsoft.WindowsAzure.ConfigurationManager.2.0.1.0\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Diagnostics, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-      <Private>True</Private>
+    <Reference Include="Microsoft.WindowsAzure.Diagnostics, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\Shared\Microsoft.WindowsAzure.Diagnostics.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.ServiceRuntime, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+    <Reference Include="Microsoft.WindowsAzure.ServiceRuntime, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\..\Shared\Microsoft.WindowsAzure.ServiceRuntime.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Storage, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\packages\WindowsAzure.Storage.2.1.0.0\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
     </Reference>
-    <Reference Include="MvcSiteMapProvider, Version=3.3.6.0, Culture=neutral, PublicKeyToken=1923abe4657913cc, processorArchitecture=MSIL">
+    <Reference Include="MvcSiteMapProvider, Version=4.4.6.0, Culture=neutral, PublicKeyToken=1923abe4657913cc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\packages\MvcSiteMapProvider.3.3.6.0\lib\net40\MvcSiteMapProvider.dll</HintPath>
+      <HintPath>..\..\..\..\packages\MvcSiteMapProvider.MVC4.Core.4.4.6\lib\net45\MvcSiteMapProvider.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -180,7 +181,10 @@
     </Reference>
     <Reference Include="System.Management" />
     <Reference Include="System.Management.Automation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\packages\Microsoft.AspNet.WebApi.Client.4.0.20710.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization">
       <Private>True</Private>
     </Reference>
@@ -291,6 +295,10 @@
     <Reference Include="Unity.WebApi">
       <HintPath>..\..\..\..\packages\Unity.WebAPI.0.10\lib\net40\Unity.WebApi.dll</HintPath>
     </Reference>
+    <Reference Include="VirtoCommerce.OrderWorkflow, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Shared\VirtoCommerce.OrderWorkflow.dll</HintPath>
+    </Reference>
     <Reference Include="WebActivatorEx">
       <HintPath>..\..\..\..\packages\WebActivatorEx.2.0.3\lib\net40\WebActivatorEx.dll</HintPath>
     </Reference>
@@ -361,6 +369,7 @@
     <Compile Include="Models\CustomerModels.cs" />
     <Compile Include="Models\LineItemModel.cs" />
     <Compile Include="Models\LineItemUpdateModel.cs" />
+    <Compile Include="Models\MessageModel.cs" />
     <Compile Include="Models\OrderReturns.cs" />
     <Compile Include="Models\PriceModel.cs" />
     <Compile Include="Models\ReviewModel.cs" />
@@ -448,7 +457,8 @@
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.tooltip.min.css" />
     <Content Include="Content\themes\default\checkout.css" />
-    <Content Include="Content\themes\default\flags.css" />
+    <Content Include="Content\themes\default\thickbox.css" />
+    <Content Include="Content\themes\responsive\flags.css" />
     <Content Include="Content\themes\default\images\blank.gif" />
     <Content Include="Content\themes\default\images\brand.png" />
     <Content Include="Content\themes\default\images\flags.png" />
@@ -458,11 +468,13 @@
     <Content Include="Content\themes\default\menu.css" />
     <Content Include="Content\themes\default\nivo-slider.css" />
     <Content Include="Content\themes\default\print.css" />
-    <Content Include="Content\themes\default\rateit.css" />
+    <Content Include="Content\themes\responsive\images\flags\flags.png" />
+    <Content Include="Content\themes\responsive\images\icons\rateit\delete.gif" />
+    <Content Include="Content\themes\responsive\images\icons\rateit\star.gif" />
+    <Content Include="Content\themes\responsive\rateit.css" />
     <Content Include="Content\themes\default\redesign.css" />
     <Content Include="Content\themes\default\styles-ie.css" />
     <Content Include="Content\themes\default\styles.css" />
-    <Content Include="Content\themes\default\thickbox.css" />
     <Content Include="Content\themes\default\virto_reviews.css" />
     <Content Include="Content\themes\default\widgets.css" />
     <Content Include="Content\themes\default\images\ajax-loader.gif" />
@@ -526,7 +538,6 @@
     <Content Include="Content\themes\default\images\i_rss.gif" />
     <Content Include="Content\themes\default\images\line-gradient.gif" />
     <Content Include="Content\themes\default\images\loading.gif" />
-    <Content Include="Content\themes\default\images\logo.gif" />
     <Content Include="Content\themes\default\images\logo.png" />
     <Content Include="Content\themes\default\images\magnifier_handle.gif" />
     <Content Include="Content\themes\default\images\menu_bg.jpg" />
@@ -571,6 +582,80 @@
     <Content Include="Content\themes\default\images\validation_advice_bg.gif" />
     <Content Include="Content\themes\default\images\widgets\i_widget-link.gif" />
     <Content Include="Content\themes\default\images\zoomloader.gif" />
+    <Content Include="Content\themes\responsive\camera.css" />
+    <Content Include="Content\themes\responsive\cloudzoom.css" />
+    <Content Include="Content\themes\responsive\custom.css" />
+    <Content Include="Content\themes\responsive\forms.css" />
+    <Content Include="Content\themes\responsive\grid.css" />
+    <Content Include="Content\themes\responsive\images\arrow_about.png" />
+    <Content Include="Content\themes\responsive\images\arrow_top.png" />
+    <Content Include="Content\themes\responsive\images\cloudzoom\ajax-loader.gif" />
+    <Content Include="Content\themes\responsive\images\cloudzoom\blank.png" />
+    <Content Include="Content\themes\responsive\images\cvv.gif" />
+    <Content Include="Content\themes\responsive\images\icons\arrows\arrow_about.png" />
+    <Content Include="Content\themes\responsive\images\icons\arrows\arrow_button.png" />
+    <Content Include="Content\themes\responsive\images\icons\arrows\arrow_footer.png" />
+    <Content Include="Content\themes\responsive\images\icons\arrows\arrow_switch.png" />
+    <Content Include="Content\themes\responsive\images\icons\arrows\arrow_top.png" />
+    <Content Include="Content\themes\responsive\images\icons\arrows\page-nav.png" />
+    <Content Include="Content\themes\responsive\images\icons\arrows\pager.png" />
+    <Content Include="Content\themes\responsive\images\icons\arrows\sort.png" />
+    <Content Include="Content\themes\responsive\images\icons\breadcrumb.gif" />
+    <Content Include="Content\themes\responsive\images\icons\bullet.gif" />
+    <Content Include="Content\themes\responsive\images\icons\bullet.png" />
+    <Content Include="Content\themes\responsive\images\icons\callback.png" />
+    <Content Include="Content\themes\responsive\images\icons\cart-empty.png" />
+    <Content Include="Content\themes\responsive\images\icons\cart.png" />
+    <Content Include="Content\themes\responsive\images\icons\cart_listing.png" />
+    <Content Include="Content\themes\responsive\images\icons\compare.png" />
+    <Content Include="Content\themes\responsive\images\icons\date.png" />
+    <Content Include="Content\themes\responsive\images\icons\dropdown-arrow.png" />
+    <Content Include="Content\themes\responsive\images\icons\edit-mini.png" />
+    <Content Include="Content\themes\responsive\images\icons\edit.png" />
+    <Content Include="Content\themes\responsive\images\icons\email.png" />
+    <Content Include="Content\themes\responsive\images\icons\grid-mode.gif" />
+    <Content Include="Content\themes\responsive\images\icons\icon_cart_listing_mask.png" />
+    <Content Include="Content\themes\responsive\images\icons\items.png" />
+    <Content Include="Content\themes\responsive\images\icons\list-mode.gif" />
+    <Content Include="Content\themes\responsive\images\icons\msg\error.gif" />
+    <Content Include="Content\themes\responsive\images\icons\msg\note.gif" />
+    <Content Include="Content\themes\responsive\images\icons\msg\notice.gif" />
+    <Content Include="Content\themes\responsive\images\icons\msg\success.gif" />
+    <Content Include="Content\themes\responsive\images\icons\order.png" />
+    <Content Include="Content\themes\responsive\images\icons\print.gif" />
+    <Content Include="Content\themes\responsive\images\icons\print.png" />
+    <Content Include="Content\themes\responsive\images\icons\rating.png" />
+    <Content Include="Content\themes\responsive\images\icons\remove-popup.png" />
+    <Content Include="Content\themes\responsive\images\icons\remove.png" />
+    <Content Include="Content\themes\responsive\images\icons\reorder.png" />
+    <Content Include="Content\themes\responsive\images\icons\return.png" />
+    <Content Include="Content\themes\responsive\images\icons\search.png" />
+    <Content Include="Content\themes\responsive\images\icons\shipping.png" />
+    <Content Include="Content\themes\responsive\images\icons\social.png" />
+    <Content Include="Content\themes\responsive\images\icons\switch.png" />
+    <Content Include="Content\themes\responsive\images\icons\trash.png" />
+    <Content Include="Content\themes\responsive\images\icons\twitter.png" />
+    <Content Include="Content\themes\responsive\images\icons\view.png" />
+    <Content Include="Content\themes\responsive\images\icons\wishlist.png" />
+    <Content Include="Content\themes\responsive\images\labels.png" />
+    <Content Include="Content\themes\responsive\images\logo.png" />
+    <Content Include="Content\themes\responsive\images\menu\accessories.png" />
+    <Content Include="Content\themes\responsive\images\menu\cameras.png" />
+    <Content Include="Content\themes\responsive\images\menu\computers.png" />
+    <Content Include="Content\themes\responsive\images\menu\mobiles.png" />
+    <Content Include="Content\themes\responsive\images\slider\arrows.png" />
+    <Content Include="Content\themes\responsive\images\slider\blank.gif" />
+    <Content Include="Content\themes\responsive\images\slider\camera-loader.gif" />
+    <Content Include="Content\themes\responsive\images\slider\slides\1.jpg" />
+    <Content Include="Content\themes\responsive\images\slider\slides\2.jpg" />
+    <Content Include="Content\themes\responsive\images\slider\slides\3.jpg" />
+    <Content Include="Content\themes\responsive\main.css" />
+    <Content Include="Content\themes\responsive\messages.css" />
+    <Content Include="Content\themes\responsive\popup.css" />
+    <Content Include="Content\themes\responsive\print.css" />
+    <Content Include="Content\themes\responsive\reset.css" />
+    <Content Include="Content\themes\responsive\responsive.css" />
+    <Content Include="Content\themes\responsive\transition.css" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="App_Data\Virto\Configuration\Catalog.config" />
@@ -595,17 +680,18 @@
     <Content Include="App_Data\Virto\Configuration\Import.config" />
     <Content Include="App_Data\Virto\Configuration\AppConfig.config" />
     <Content Include="App_Data\Virto\Configuration\Asset.config" />
-    <Content Include="Mvc.sitemap" />
     <Content Include="App_Data\Virto\Configuration\services.local.config">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Areas\VirtoAdmin\Views\Web.config" />
     <Content Include="Areas\VirtoAdmin\Views\Install\Index.cshtml" />
+    <Content Include="Mvc.sitemap" />
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Properties\PublishProfiles\WebPI.pubxml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
+    <Content Include="Scripts\cloudzoom.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -628,6 +714,10 @@
     <Content Include="Scripts\knockout-2.1.0.debug.js" />
     <Content Include="Scripts\knockout-2.1.0.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
+    <Content Include="Scripts\responsive\camera.js" />
+    <Content Include="Scripts\responsive\jquery.easing.1.3.js" />
+    <Content Include="Scripts\responsive\main.js" />
+    <Content Include="Scripts\responsive\virto.slider.js" />
     <Content Include="Scripts\v\validation.js" />
     <Content Include="Scripts\v\virto-checkout.js" />
     <Content Include="Scripts\v\virto-commerce.js" />
@@ -652,7 +742,6 @@
       <SubType>
       </SubType>
     </Content>
-    <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Account\_Layout.cshtml" />
     <Content Include="Views\Account\AddressBook.cshtml" />
     <Content Include="Views\Account\AddressEdit.cshtml" />
@@ -660,7 +749,6 @@
     <Content Include="Views\Account\ChangeAccountInfo.cshtml" />
     <Content Include="Views\Account\Compare.cshtml" />
     <Content Include="Views\Account\AccountInfo.cshtml" />
-    <Content Include="Views\Account\DisplayTemplates\CompareLineItem.cshtml" />
     <Content Include="Views\Account\DisplayTemplates\LineItem.cshtml" />
     <Content Include="Views\Account\Edit.cshtml" />
     <Content Include="Views\Account\EditorTemplates\LineItem.cshtml" />
@@ -668,13 +756,11 @@
     <Content Include="Views\Account\Index.cshtml" />
     <Content Include="Views\Account\LogOn.cshtml" />
     <Content Include="Views\Account\LogOnAsync.cshtml" />
-    <Content Include="Views\Account\MiniCompareList.cshtml" />
     <Content Include="Views\Account\OrderAddress.cshtml" />
     <Content Include="Views\Account\Orders.cshtml" />
     <Content Include="Views\Account\OrderView.cshtml" />
     <Content Include="Views\Account\RecentOrders.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
-    <Content Include="Views\Account\SideMenu.cshtml" />
     <Content Include="Views\Account\WishList.cshtml" />
     <Content Include="Views\Banner\DisplayTemplates\Flash.cshtml" />
     <Content Include="Views\Banner\DisplayTemplates\ImageClick.cshtml" />
@@ -682,17 +768,13 @@
     <Content Include="Views\Banner\DisplayTemplates\RawHtml.cshtml" />
     <Content Include="Views\Cart\Add.cshtml" />
     <Content Include="Views\Cart\EditorTemplates\LineItem.cshtml" />
-    <Content Include="Views\Cart\EditorTemplates\MiniLineItem.cshtml" />
     <Content Include="Views\Cart\EditorTemplates\ShippingEstimate.cshtml" />
     <Content Include="Views\Cart\Empty.cshtml" />
     <Content Include="Views\Cart\Index.cshtml" />
-    <Content Include="Views\Cart\MiniCart.cshtml" />
-    <Content Include="Views\Cart\MiniCartEmpty.cshtml" />
     <Content Include="Views\Catalog\Category.cshtml" />
     <Content Include="Views\Catalog\Item.cshtml" />
     <Content Include="Views\Catalog\Menu.cshtml" />
-    <Content Include="Views\Catalog\RelatedItem.cshtml" />
-    <Content Include="Views\Catalog\RelatedProducts.cshtml" />
+    <Content Include="Views\Catalog\RecommendedProducts.cshtml" />
     <Content Include="Views\Checkout\Cart.cshtml" />
     <Content Include="Views\Checkout\DisplayTemplates\Credit.cshtml" />
     <Content Include="Views\Checkout\DisplayTemplates\CreditCard.cshtml" />
@@ -707,7 +789,7 @@
     <Content Include="Views\Checkout\Success.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Search\DisplayTemplates\FilterPanel.cshtml" />
-    <Content Include="Views\Search\DisplayTemplates\SearchItem.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Item.cshtml" />
     <Content Include="Views\Search\DisplayTemplates\SearchPager.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
     <Content Include="Views\Search\SearchResultsPartial.cshtml" />
@@ -721,7 +803,6 @@
     </Content>
     <Content Include="Views\Shared\_LayoutPopUp.cshtml" />
     <Content Include="Views\Shared\_LogOnPartial.cshtml" />
-    <Content Include="Views\Shared\_SideBarLayout.cshtml" />
     <Content Include="Views\Shared\AddToCart.cshtml" />
     <Content Include="Views\Shared\AddToLinks.cshtml" />
     <Content Include="Views\Shared\BaseContentPlace.cshtml" />
@@ -747,8 +828,8 @@
     <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
     <Content Include="Views\Account\_RemoveExternalLoginsPartial.cshtml" />
     <Content Include="Views\Catalog\CreateReview.cshtml" />
-    <Content Include="Views\Catalog\RecommendedProducts.cshtml" />
-    <Content Include="Views\Catalog\RecommendedItem.cshtml" />
+    <Content Include="Views\Catalog\RelatedProducts.cshtml" />
+    <Content Include="Views\Catalog\RelatedItem.cshtml" />
     <Content Include="Views\Catalog\ItemProperties.cshtml" />
     <Content Include="Views\Catalog\ItemVariations.cshtml" />
     <Content Include="Views\Catalog\Variation.cshtml" />
@@ -770,6 +851,23 @@
     <Content Include="Views\Account\DisplayTemplates\OrdersPager.cshtml" />
     <Content Include="Views\Checkout\DisplayTemplates\Unknown.cshtml" />
     <Content Include="Views\Cart\LineItems.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Banner\DisplayTemplates\ImageNoClickSlide.cshtml" />
+    <Content Include="Views\Banner\DisplayTemplates\ImageClickSlide.cshtml" />
+    <Content Include="Views\Store\CartOptions.cshtml" />
+    <Content Include="Views\Shared\MiniCompareList.cshtml" />
+    <Content Include="Views\Shared\MiniCart.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\CompareLineItem.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\MiniLineItem.cshtml" />
+    <Content Include="Views\Search\DisplayTemplates\CurrentFilterPanel.cshtml" />
+    <Content Include="Views\Search\DisplayTemplates\SearchListItem.cshtml" />
+    <Content Include="Views\Catalog\RelatedProducts2.cshtml" />
+    <Content Include="Views\Banner\DisplayTemplates\CategoryUrl.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\SearchItems.cshtml" />
+    <Content Include="Views\Shared\_LayoutBase.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\MetaRobotsHelperModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\CanonicalHelperModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\SiteMapPathNodeModel.cshtml" />
     <None Include="Web.Azure.config" />
   </ItemGroup>
   <ItemGroup>
@@ -845,10 +943,6 @@
       <Project>{930184f0-9508-4c17-8aae-1141a00c43a5}</Project>
       <Name>OrderWorkflowActivities</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\Extensions\Workflow\OrderWorkflow\OrderWorkflow.csproj">
-      <Project>{196ff814-152f-416d-82ab-9b1df3323839}</Project>
-      <Name>OrderWorkflow</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Areas\VirtoAdmin\Resources\Resource.resx">
@@ -872,7 +966,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>58731</DevelopmentServerPort>
+          <DevelopmentServerPort>53866</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:2359/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>

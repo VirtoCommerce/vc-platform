@@ -5,29 +5,30 @@
 <html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8" />
-	<title>@ViewBag.Title</title>
-	@Styles.Render("~/Content/themes/base/css")
-    @Styles.Render("~/Content/themes/default/s")
-    <link href="@Url.Content("~/Content/themes/default/print.css")" rel="stylesheet" type="text/css" media="print" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/themes/base/css")
+    @Styles.Render("~/Content/themes/responsive/css")
+    <link href="@Url.Content("~/Content/themes/responsive/print.css")" rel="stylesheet" type="text/css" media="print" />
+    <link type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700&subset=latin,cyrillic-ext,cyrillic" />
 
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
 
-	<base href="@Url.Content("~")" />
-	
-	<script type="text/javascript">
-		$(document).ready(function() {
-			window.isPopup = true;
-		});
-	</script>
-</head>
-<body class="page-popup catalog-product-compare-index">
-    <div>
-        <div class="page-title title-buttons">
-            <h1>@ViewBag.Title</h1>
-            <a class="link-print" onclick="window.print(); return false;" href="#">Print This Page</a>
-        </div>
+    <base href="@Url.Content("~")" />
 
+    <script type="text/javascript">
+        $(document).ready(function ()
+        {
+            window.isPopup = true;
+        });
+    </script>
+</head>
+<body>
+    <div class="compare page-print">
+        <header>
+            <h1>@ViewBag.Title</h1>
+            <a onclick="window.print(); return false;" href="" class="print">Print this page</a>
+        </header>
         @RenderBody()
     </div>
 

@@ -12,6 +12,7 @@ using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Orders.Model;
 using VirtoCommerce.Foundation.Orders.Services;
 using VirtoCommerce.Foundation.Security.Model;
+using VirtoCommerce.Web.Client.Extensions;
 using VirtoCommerce.Web.Client.Extensions.Filters;
 using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Web.Client.Helpers;
@@ -169,13 +170,13 @@ namespace VirtoCommerce.Web.Controllers
             if (ModelState.IsValid)
             {
                 if (string.IsNullOrEmpty(model.ImpersonatedUserName))
-                {
+            {
                     if (_webSecurity.Login(model.UserName, model.Password, model.RememberMe) && StoreHelper.IsUserAuthorized(model.UserName, out errorMessage))
-                    {
-                        OnPostLogon(model.UserName);
-                        return RedirectToLocal(returnUrl);
-                    }
+                {
+                    OnPostLogon(model.UserName);
+                    return RedirectToLocal(returnUrl);
                 }
+            }
                 else
                 {
                     if (_webSecurity.LoginAs(model.ImpersonatedUserName, model.UserName, model.Password, out errorMessage, model.RememberMe)
@@ -503,7 +504,13 @@ namespace VirtoCommerce.Web.Controllers
         {
             var contact = _userClient.GetCurrentCustomer();
             var model = UserHelper.GetCustomerModel(contact);
-            ViewBag.Messages = TempData["success_messages"];
+            if (!string.IsNullOrEmpty(TempData["success_messages"] as string))
+            {
+                this.SharedViewBag().Messages = new MessagesModel
+                {
+                    new MessageModel((string) TempData["success_messages"])
+                };
+            }
             return View(model);
         }
 
@@ -511,10 +518,10 @@ namespace VirtoCommerce.Web.Controllers
         /// View customer orders
         /// </summary>
         /// <returns>ActionResult.</returns>
-        public ActionResult Orders()
+        public ActionResult Orders(int? limit)
         {
             var orders = _orderClient.GetAllCustomerOrders(UserHelper.CustomerSession.CustomerId,
-                                                           UserHelper.CustomerSession.StoreId);
+                                                           UserHelper.CustomerSession.StoreId, limit);
             return View("Orders", orders != null ? orders.ToArray() : null);
         }
 
@@ -752,12 +759,10 @@ namespace VirtoCommerce.Web.Controllers
             if (model.OrderReturnItems.Count == 0)
             {
                 foreach (var ori in from li in order.OrderForms.SelectMany(of => of.LineItems)
-                                    where rmaLis.All(r => r.LineItemId != li.LineItemId)
                                     let item = _catalogClient.GetItem(li.CatalogItemId)
                                     let parentItem = _catalogClient.GetItem(li.ParentCatalogItemId)
-                                    select new LineItemModel(li, item, parentItem)
-                                        into liModel
-                                        select new OrderReturnItem(liModel))
+                                    where item != null && rmaLis.All(r => r.LineItemId != li.LineItemId)
+                                    select new OrderReturnItem(new LineItemModel(li, item, parentItem)))
                 {
                     model.OrderReturnItems.Add(ori);
                 }
@@ -863,7 +868,18 @@ namespace VirtoCommerce.Web.Controllers
         [AllowAnonymous]
         public ActionResult RegisterAsync()
         {
-            return RedirectToAction("Register");
+            return PartialView("Register");
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult RegisterAsync(RegisterModel model)
+        {
+            Register(model);
+            return ModelState.IsValid ? 
+                (ActionResult)RedirectToAction("Index", "Checkout") : 
+                View("Register", model);
         }
 
         /// <summary>
@@ -1017,7 +1033,7 @@ namespace VirtoCommerce.Web.Controllers
                 var user = _userClient.GetAccountByUserName(model.UserName.ToLower());
 
                 //If user has local account then password must be correct in order to associate it with external account
-                if (user != null && _oAuthSecurity.HasLocalAccount(user.MemberId))
+                if (user != null && _oAuthSecurity.HasLocalAccount(user.AccountId.ToString()))
                 {
                     if (user.StoreId != UserHelper.CustomerSession.StoreId)
                     {
@@ -1075,7 +1091,7 @@ namespace VirtoCommerce.Web.Controllers
                         });
                     }
                     //Create internal login
-                    if (model.CreateLocalLogin && !_oAuthSecurity.HasLocalAccount(user.MemberId))
+                    if (model.CreateLocalLogin && !_oAuthSecurity.HasLocalAccount(user.AccountId.ToString()))
                     {
                         _webSecurity.CreateAccount(model.UserName, model.NewPassword);
                     }
@@ -1151,16 +1167,6 @@ namespace VirtoCommerce.Web.Controllers
         #region Change Account / Password actions
 
         /// <summary>
-        /// Forgot the password view.
-        /// </summary>
-        /// <returns>ActionResult.</returns>
-        [AllowAnonymous]
-        public ActionResult ForgotPassword()
-        {
-            return View();
-        }
-
-        /// <summary>
         /// Forgot password post.
         /// </summary>
         /// <param name="model">The model.</param>
@@ -1192,14 +1198,15 @@ namespace VirtoCommerce.Web.Controllers
         /// Updates the wish list.
         /// </summary>
         /// <param name="lineItems">The line items.</param>
+        /// <param name="action">Action to perform</param>
         /// <returns>ActionResult.</returns>
         [HttpPost]
-        public ActionResult UpdateWishList(List<LineItemUpdateModel> lineItems)
+        public ActionResult UpdateWishList(List<LineItemUpdateModel> lineItems, string action)
         {
             var ch = new CartHelper(CartHelper.CartName);
             var helper = new CartHelper(CartHelper.WishListName);
 
-            if (Request.Form["ActionType"] == UserHelper.AddToCartAction)
+            if (action == UserHelper.AddToCartAction)
             {
                 //add all to cart
                 foreach (var lineItem in lineItems)
@@ -1260,7 +1267,7 @@ namespace VirtoCommerce.Web.Controllers
         public ActionResult MiniCompareList()
         {
             var ch = new CartHelper(CartHelper.CompareListName);
-            var cm = CreateCompareModel(ch);
+            var cm = ch.CreateCompareModel();
             return PartialView(cm);
         }
 
@@ -1272,30 +1279,11 @@ namespace VirtoCommerce.Web.Controllers
         public ActionResult Compare()
         {
             var ch = new CartHelper(CartHelper.CompareListName);
-            var cm = CreateCompareModel(ch);
+            var cm = ch.CreateCompareModel();
             return View(cm);
         }
 
-        /// <summary>
-        /// Creates the compare model.
-        /// </summary>
-        /// <param name="cartHelper">The cart helper.</param>
-        /// <returns>CompareListModel.</returns>
-        private CompareListModel CreateCompareModel(CartHelper cartHelper)
-        {
-            var lineItemModels = new LineItemModel[0];
-            var items = _catalogClient.GetItems(cartHelper.LineItems.Select(li => li.CatalogItemId).ToArray());
 
-            if (items != null)
-            {
-                lineItemModels = cartHelper.LineItems.Join(items, li => li.CatalogItemId, i => i.ItemId,
-                                                               (li, item) =>
-                                                               new LineItemModel(li, item,
-                                                                                 _catalogClient.GetItem(li.ParentCatalogItemId))).ToArray();
-            }
-
-            return new CompareListModel(lineItemModels);
-        }
 
         #endregion
 

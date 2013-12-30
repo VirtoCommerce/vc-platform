@@ -517,7 +517,7 @@ namespace VirtoCommerce.Web.Controllers
         {
             model.ButtonText = "Already registered? Click here to login.";
             model.Type = PopupType.LinkButton;
-            model.ViewName = "/Account/LogOnAsync";
+            model.ViewName = "~/Account/LogOnAsync";
             model.PopupTitle = "Login or Create New Account";
 
             var countries = _countryClient.GetAllCountries();

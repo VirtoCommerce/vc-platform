@@ -119,4 +119,25 @@
     	}
     	window.opener.location.href = url;
     };
+
+    $.showPopupMessage = function (message)
+    {
+        var timestamp = new Date().getTime();
+        var template = '<div class="popup-alert" id="' + timestamp + '"><a title="Close" class="close">Close</a>' + message + '</div>';
+        $('.popup-alert').remove();
+        $('body').append(template);
+        $('#' + timestamp).on('click', function () {
+            closePopup(this);
+        });
+        window.setTimeout(function () {
+            closePopup('#' + timestamp);
+        }, 8000);
+        
+        function closePopup(popup) {
+            $(popup).slideUp('slow', function ()
+            {
+                $(popup).remove();
+            });
+        }
+    };
 })(jQuery);

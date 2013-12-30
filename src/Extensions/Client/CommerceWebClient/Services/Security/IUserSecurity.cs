@@ -51,13 +51,15 @@
         /// <param name="newPassword">The new password.</param>
         /// <returns><c>true</c> if success, <c>false</c> otherwise.</returns>
         bool ChangePassword(string userName, string currentPassword, string newPassword);
+
         /// <summary>
         /// Resets the password. Should only be used by the super admin user.
         /// </summary>
         /// <param name="userName">Name of the user.</param>
         /// <param name="newPassword">The new password.</param>
+        /// <param name="token">Password reset token</param>
         /// <returns><c>true</c> if success, <c>false</c> otherwise.</returns>
-        bool ResetPassword(string userName, string newPassword);
+        bool ResetPassword(string userName, string newPassword, string token = null);
         /// <summary>
         /// Creates the account.
         /// </summary>

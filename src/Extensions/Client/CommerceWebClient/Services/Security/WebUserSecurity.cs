@@ -186,11 +186,12 @@ namespace VirtoCommerce.Web.Client.Services.Security
         /// </summary>
         /// <param name="userName">Name of the user.</param>
         /// <param name="newPassword">The new password.</param>
+        /// <param name="resetToken">Password reset token</param>
         /// <returns><c>true</c> if success, <c>false</c> otherwise.</returns>
-        public bool ResetPassword(string userName, string newPassword)
+        public bool ResetPassword(string userName, string newPassword, string resetToken = null)
         {
-            var token = WebSecurity.GeneratePasswordResetToken(userName);
-            return WebSecurity.ResetPassword(token, newPassword);
+            resetToken = resetToken ?? WebSecurity.GeneratePasswordResetToken(userName);
+            return WebSecurity.ResetPassword(resetToken, newPassword);
         }
 
         /// <summary>

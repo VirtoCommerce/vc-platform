@@ -14,7 +14,10 @@ using ContextFieldConstants = VirtoCommerce.Foundation.Frameworks.ContextFieldCo
 
 namespace VirtoCommerce.Web.Controllers
 {
-	/// <summary>
+    using MvcSiteMapProvider;
+    using MvcSiteMapProvider.Web.Mvc.Filters;
+
+    /// <summary>
 	/// Class CatalogController.
 	/// </summary>
 	[Localize]
@@ -43,22 +46,23 @@ namespace VirtoCommerce.Web.Controllers
         }
 
         // GET: /Catalog/
-		/// <summary>
-		/// Displays the catalog by specified URL.
-		/// </summary>
-		/// <param name="url">The URL.</param>
-		/// <returns>ActionResult.</returns>
-		/// <exception cref="System.Web.HttpException">404;Category not found</exception>
-		[CustomOutputCache(CacheProfile = "CatalogCache", VaryByCustom = "store;currency;cart")]
-        public ActionResult Display(string url)
+	    /// <summary>
+	    /// Displays the catalog by specified URL.
+	    /// </summary>
+	    /// <param name="code">The category code</param>
+	    /// <returns>ActionResult.</returns>
+	    /// <exception cref="System.Web.HttpException">404;Category not found</exception>
+	    [CustomOutputCache(CacheProfile = "CatalogCache", VaryByCustom = "store;currency;cart")]
+        public ActionResult Display(string code)
         {
-            var category = _catalogClient.GetCategory(url);
+            var category = _catalogClient.GetCategory(code);
             if (category != null && category.IsActive)
             {
                 // set the context variable
                 var set = UserHelper.CustomerSession.GetCustomerTagSet();
                 set.Add(ContextFieldConstants.CategoryId, new Tag(category.CategoryId));
 				UserHelper.CustomerSession.CategoryId = category.CategoryId;
+                UserHelper.CustomerSession.LastShoppingPage = this.Request.Url.AbsoluteUri;
 
                 // display category
                 return View(GetDisplayTemplate(TargetTypes.Category, category), category);
@@ -67,21 +71,57 @@ namespace VirtoCommerce.Web.Controllers
 			throw new HttpException(404, "Category not found");
         }
 
-		/// <summary>
-		/// Displays the item.
-		/// </summary>
-		/// <param name="url">The URL.</param>
-		/// <returns>ActionResult.</returns>
-		/// <exception cref="System.Web.HttpException">404;Item not found</exception>
-        [CustomOutputCache(CacheProfile = "CatalogCache", VaryByCustom = "store;currency;cart")]
-        public ActionResult DisplayItem(string url)
+	    /// <summary>
+	    /// Displays the item.
+	    /// </summary>
+	    /// <param name="code">Item code</param>
+	    /// <returns>ActionResult.</returns>
+	    /// <exception cref="System.Web.HttpException">404;Item not found</exception>
+	    [CustomOutputCache(CacheProfile = "CatalogCache", VaryByCustom = "store;currency;cart")]
+        //[SiteMapTitle("DisplayName", Target = AttributeTarget.CurrentNode)]
+        public ActionResult DisplayItem(string code)
         {
-			var itemModel = CatalogHelper.CreateCatalogModel(url);
+            var itemModel = CatalogHelper.CreateCatalogModel(code);
 
             if (ReferenceEquals(itemModel, null))
             {
                 throw new HttpException(404, "Item not found");
             }
+
+	        if (SiteMaps.Current != null)
+	        {
+	            var node = SiteMaps.Current.CurrentNode;
+
+	            if (Request.UrlReferrer != null &&
+	                Request.UrlReferrer.AbsoluteUri.StartsWith(Request.Url.GetLeftPart(UriPartial.Authority)))
+	            {
+	                if (node != null)
+	                {
+	                    node.RootNode.Attributes["ShowBack"] = true;
+	                }
+
+	                if (Request.UrlReferrer.AbsoluteUri.Equals(Request.Url.AbsoluteUri))
+	                {
+	                    UserHelper.CustomerSession.LastShoppingPage = Url.Content("~/");
+	                }
+	                else
+	                {
+	                    UserHelper.CustomerSession.LastShoppingPage = Request.UrlReferrer.AbsoluteUri;
+	                }
+
+	            }
+
+                if (node != null)
+                {
+                    if (node.ParentNode != null && itemModel.CatalogItem.CatalogOutlines != null
+                        && itemModel.CatalogItem.CatalogOutlines.Outlines.Count > 0)
+                    {
+
+                        node.Attributes["Outline"] = itemModel.CatalogItem.CatalogOutlines.Outlines[0];
+                    }
+                    node.Title = itemModel.DisplayName;
+                }
+	        }
 
             return View(GetDisplayTemplate(TargetTypes.Item, itemModel.CatalogItem), itemModel);
         }
@@ -129,7 +169,7 @@ namespace VirtoCommerce.Web.Controllers
 		/// <returns>ActionResult.</returns>
         public ActionResult AssociatedItem(string itemId, string name, string associationType)
         {
-			return DisplayItemById(itemId, name: name, associationType: associationType, displayOptions: ItemDisplayOptions.ItemOnly);
+			return DisplayItemById(itemId, name: name, associationType: associationType);
         }
 
 		/// <summary>

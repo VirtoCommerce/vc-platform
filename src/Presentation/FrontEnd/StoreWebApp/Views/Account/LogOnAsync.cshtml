@@ -1,95 +1,72 @@
-﻿@model LogOnModel
+﻿@using VirtoCommerce.Foundation.Stores.Model
+@model LogOnModel
 @{
     Layout = null;
 }
-<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
 <script type="text/javascript">
-	function RegisterAsyncButtonHandler() {
-		$('#RegisterAsyncButton')[0].click();
-	}
+    //function RegisterAsyncButtonHandler() {
+    //    $('#RegisterAsyncButton')[0].click();
+    //}
+    $('.account .add-info-block .slider li a').click(function ()
+    {
+        var name = $(this).prop('class');
+        var margin = name == 'forgot' ? '-300px' : '0';
+        $('.article .account .add-info-block .slider ul').animate({ 'margin-left': margin }, 600);
+    });
 </script>
-<div id="containerUpdateDiv" class="main-container col1-layout">
-    <div class="main">
-        <div class="col-main">
-            <div class="account-login">
-                <div class="page-title">
-                    <h1>
-                        Login or Create an Account</h1>
+
+<div class="article">
+    <div class="account" id="containerUpdateDiv">
+        <div class="add-info-block">
+            <div class="slider">
+                <ul class="clearfix">
+                    <li>
+                        @using (Ajax.BeginForm("LogOnAsync", "Account", new AjaxOptions { UpdateTargetId = "containerUpdateDiv" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true, "Login was unsuccessful. Please correct the errors and try again.".Localize())
+                            <span class="title">@("Sign In".Localize())</span>  
+                            <div class="control-group">
+                                @Html.LabelForEx(m => m.UserName, "Email Address")
+                                @Html.TextBoxFor(m => m.UserName)
+                                @Html.ValidationMessageFor(m => m.UserName)
+                            </div>
+                            <div class="control-group">
+                                @Html.LabelForEx(m => m.Password)
+                                @Html.PasswordFor(m => m.Password)
+                                @Html.ValidationMessageFor(m => m.Password)
+                            </div>
+                            <div class="control-group">
+                                <div class="control">
+                                    <label>
+                                        @Html.CheckBoxFor(m => m.RememberMe)
+                                        <span>@("Remember Me".Localize())</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="button-group">
+                                <button type="submit">
+                                    <span>@("Login".Localize())</span>
+                                </button>
+                            </div>
+                            <a class="forgot">@("Forgot Your Password?".Localize())</a>
+                        }
+                    </li>
+                    <li>
+                        @{ Html.RenderPartial("ForgotPassword", new ForgotPasswordModel()); }
+                    </li>
+                </ul>
+            </div>
+            <div class="new-users">
+                <div class="button-group">
+                    @using (Ajax.BeginForm("RegisterAsync", "Account", new AjaxOptions { UpdateTargetId = "containerUpdateDiv", HttpMethod = "GET" }))
+                    {
+                        <button type="submit" title="@("Create an Account".Localize())">
+                            <span>@("Register".Localize())</span>
+                        </button>
+                    }
                 </div>
-                @using (Ajax.BeginForm("LogOnAsync", "Account", new AjaxOptions { UpdateTargetId = "containerUpdateDiv" }))
-                {
-                    @Html.MyValidationSummary(true, "Login was unsuccessful. Please correct the errors and try again.")
-                    <div class="col2-set">
-                        <div class="col-1 new-users">
-                            <div class="content">
-                                <h2>
-                                    New Customers</h2>
-                                <p>
-                                    By creating an account with our store, you will be able to move through the checkout
-                                    process faster, store multiple shipping addresses, view and track your orders in
-                                    your account and more.</p>
-                            </div>
-                        </div>
-                        <div class="col-2 registered-users">
-                            <div class="content">
-                                <h2>
-                                    Registered Customers</h2>
-                                <p>
-                                    If you have an account with us, please log in.</p>
-                                <ul class="form-list">
-                                    <li>
-                                        <label class="required" for="email">
-                                            <em>*</em>Email Address</label>
-                                        <div class="input-box">
-                                            @Html.TextBoxFor(m => m.UserName, new { @class = "input-text required-entry validate-email" })
-                                            @Html.ValidationMessageFor(m => m.UserName)
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <label class="required" for="pass">
-                                            <em>*</em>Password</label>
-                                        <div class="input-box">
-                                            @Html.PasswordFor(m => m.Password, new { @class = "input-text required-entry validate-password" })
-                                            @Html.ValidationMessageFor(m => m.Password)
-                                        </div>
-                                    </li>
-                                    <li class="control">                    
-                                        <div class="input-box">
-                                            @Html.CheckBoxFor(m=>m.RememberMe, new { @class = "checkbox" })
-                                            </div>
-                                            @Html.LabelFor(m=>m.RememberMe, "Remember Me")
-                                    </li>
-                                </ul>
-                                <p class="required">
-                                    * Required Fields</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col2-set">
-                        <div class="col-1 new-users">
-                            <div class="buttons-set">
-								<button class="button" title="Create an Account" type="button" onclick="RegisterAsyncButtonHandler()">
-									<span><span>Create an Account</span></span>
-								</button>
-                            </div>
-						</div>
-                        <div class="col-2 registered-users">
-                            <div class="buttons-set">
-                                <a class="f-left" href="@Url.Action("ForgotPassword", "Account")">
-                                    Forgot Your Password?</a>
-                                <button id="send2" name="send" title="Login" class="button" type="submit">
-                                    <span><span>Login</span></span></button>
-                            </div>
-                        </div>
-                    </div>
-                }
-
-			@using (Ajax.BeginForm("RegisterAsync", "Account", new AjaxOptions { UpdateTargetId = "containerUpdateDiv" }))
-			{
-				<input type="submit" style="display: none;" id="RegisterAsyncButton" />
-			}
             </div>
         </div>
     </div>

@@ -11,6 +11,6 @@ namespace VirtoCommerce.Foundation.Assets.Services
     /// </summary>
     public interface IAssetUrl
     {
-        string ResolveUrl(string assetId);
+        string ResolveUrl(string assetId, bool thumb = false);
     }
 }

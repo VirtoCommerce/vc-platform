@@ -8,12 +8,16 @@ using Omu.ValueInjecter;
 using VirtoCommerce.Client;
 using VirtoCommerce.Foundation.Catalogs;
 using VirtoCommerce.Foundation.Catalogs.Model;
+using VirtoCommerce.Foundation.Customers;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Web.Models;
 
 namespace VirtoCommerce.Web.Virto.Helpers
 {
-	/// <summary>
+    using VirtoCommerce.Foundation.Catalogs.Services;
+
+    /// <summary>
 	/// Class CatalogHelper.
 	/// </summary>
 	public class CatalogHelper
@@ -44,6 +48,11 @@ namespace VirtoCommerce.Web.Virto.Helpers
 		{
 			get { return DependencyResolver.Current.GetService<MarketingHelper>(); }
 		}
+
+        public static ICatalogOutlineBuilder OutlineBuilder
+        {
+            get { return DependencyResolver.Current.GetService<ICatalogOutlineBuilder>(); }
+        }
 
 		/// <summary>
 		/// Creates the item model.
@@ -77,6 +86,44 @@ namespace VirtoCommerce.Web.Virto.Helpers
 
 				model.Properties = new PropertiesModel(properties);
 			}
+
+            //Find item category
+		    if (item.CategoryItemRelations != null)
+		    {          
+		        string categoryId = null;
+                foreach (var rel in item.CategoryItemRelations)
+                {
+                    if (rel.CatalogId == UserHelper.CustomerSession.CatalogId)
+                    {
+                        categoryId = rel.CategoryId;
+                        break;
+                    }
+
+                    var category = CatalogClient.GetCategoryById(rel.CategoryId);
+
+                    if (category == null) 
+                        continue;
+
+                    var linkedCategory = category.LinkedCategories.FirstOrDefault(
+                        link => link.CatalogId == UserHelper.CustomerSession.CatalogId);
+
+                    if (linkedCategory == null) 
+                        continue;
+
+                    categoryId = linkedCategory.CategoryId;
+                    break;
+                }
+
+                if (!string.IsNullOrEmpty(categoryId))
+                {
+                    var category = CatalogClient.GetCategoryById(categoryId);
+                    var cat = category as Category;
+                    if (cat != null)
+                    {
+                        model.CategoryName = cat.Name.Localize();
+                    }
+                }
+		    }
 
 			return model;
 		}
@@ -165,6 +212,13 @@ namespace VirtoCommerce.Web.Virto.Helpers
 					//ItemRelation[] variations = null;
 					ItemAvailabilityModel itemAvaiability = null;
 
+                    if (display.HasFlag(ItemDisplayOptions.ItemPropertySets))
+                    {
+                        propertySet = CatalogClient.GetPropertySet(item.PropertySetId);
+                        //variations = CatalogClient.GetItemRelations(itemId);
+                    }
+
+                    var itemModel = CreateItemModel(item, propertySet);
 
 					if (display.HasFlag(ItemDisplayOptions.ItemAvailability))
 					{
@@ -176,25 +230,32 @@ namespace VirtoCommerce.Web.Virto.Helpers
 					if (display.HasFlag(ItemDisplayOptions.ItemPrice))
 					{
                         var lowestPrice = PriceListClient.GetLowestPrice(itemId, itemAvaiability !=null ? itemAvaiability.MinQuantity : 1);
+					    var outlines = OutlineBuilder.BuildCategoryOutline(CatalogClient.CustomerSession.CatalogId, item);
 						var tags = new Hashtable
 							{
 								{
 									"Outline",
-									CatalogOutlineBuilder.BuildCategoryOutline(CatalogClient.CatalogRepository,
-									                                           CatalogClient.CustomerSession.CatalogId, item)
-								}
+                                    outlines.ToString()
+                                }
 							};
 						priceModel = MarketingHelper.GetItemPriceModel(item, lowestPrice, tags);
+					    itemModel.CatalogOutlines = outlines;
+
+                        // get the category name
+                        if (outlines.Outlines.Count > 0)
+                        {
+                            var outline = outlines.Outlines[0];
+                            if (outline.Categories.Count > 0)
+                            {
+                                var category = outline.Categories.OfType<Category>().Reverse().FirstOrDefault();
+                                if (category != null)
+                                {
+                                    itemModel.CategoryName = category.Name;
+                                }
+                            }
+                        }
 					}
-
-
-					if (display.HasFlag(ItemDisplayOptions.ItemPropertySets))
-					{
-						propertySet = CatalogClient.GetPropertySet(item.PropertySetId);
-						//variations = CatalogClient.GetItemRelations(itemId);
-					}
-
-					var itemModel = CreateItemModel(item, propertySet);
+				
 					itemModel.ParentItemId = parentItemId;
 
 					return string.IsNullOrEmpty(associationType)
@@ -206,7 +267,10 @@ namespace VirtoCommerce.Web.Virto.Helpers
 			return null;
 		}
 
-
+        public static AssociationGroup Association(ItemModel item, string groupName)
+        {
+            return item.AssociationGroups.FirstOrDefault(ag => ag.Name.Equals(groupName, StringComparison.OrdinalIgnoreCase));
+        }
 
 
 	}

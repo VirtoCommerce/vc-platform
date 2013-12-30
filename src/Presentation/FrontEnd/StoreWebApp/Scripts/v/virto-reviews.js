@@ -76,24 +76,24 @@ Reviews =
         $.ajax({
 
             type: "GET",
-            url: VirtoCommerce.url("/api/review/GetReviewTotals/" + Reviews.currentItemId),
+            url: VirtoCommerce.url("/api/review/GetReviewTotals?$filter=ItemId eq '" + Reviews.currentItemId) + "'",
             dataType: "json",
-            success: function (data) {
-                Reviews.TotalReviews = data.TotalReviews;
-                $(".pr-review-count-number").text(data.TotalReviews);
-                $(".pr-review-average").text(data.AverageRating);
+            success: function (data)
+            {
+                if (data.length > 0) {
+                    Reviews.TotalReviews = data[0].TotalReviews;
+                    $(".pr-review-count-number").text(Reviews.TotalReviews);
 
-                if (data.TotalReviews > 0) {
-                    $("#review_rating_header_stars").show();
-                    //$("#review_rating_header_stars .pr-stars").css("background-position", "0 " + (-19 * Math.round(data.AverageRating)) +"px");
-                    $("#review_rating_header_stars .pr-stars").rateit({ resetable: false, readonly: true, value: data.AverageRating.toFixed(1) });
-                    $("#review_rating_header_stars .pr-rating").text(data.AverageRating.toFixed(1));
-                    $("#product_tabs_reviews_contents_empty").hide();
-                    $("#product_tabs_reviews_contents_list").show();
-                    $("#show_reviews_link").show();
-                    $("#show_reviews_link").siblings(".separator").show();
-                }
-                else {
+                    if (data[0].TotalReviews > 0) {
+                        $(".product-info .rating").show();
+                        $(".product-info .rating").attr("title", data[0].AverageRating);
+                        $(".product-info .rating").rateit({ resetable: false, readonly: true, value: data[0].AverageRating.toFixed(1), starwidth: 11, starheight: 11 });
+                        $(".pr-review-average").text(data[0].AverageRating.toFixed(1));
+                        $("#product_tabs_reviews_contents_empty").hide();
+                        $("#product_tabs_reviews_contents_list").show();
+                        $("#show_reviews_link").show();
+                    }
+                } else {
                     $("#product_tabs_reviews_contents_empty").show();
                     $("#product_tabs_reviews_contents_list").hide();
                 }
@@ -106,7 +106,7 @@ Reviews =
         Reviews.CurrentSort = sort;
         Reviews.PageIndex = pageIndex == undefined ? this.PageIndex : pageIndex;
 
-        var reviewsUrl = "/api/review?$top=" + this.PageSize;
+        var reviewsUrl = "/api/review/get?$top=" + this.PageSize;
         reviewsUrl = reviewsUrl + "&$skip=" + (this.PageSize * this.PageIndex);
         reviewsUrl = reviewsUrl + "&$filter=ItemId eq '" + Reviews.currentItemId + "'";
 
@@ -130,9 +130,10 @@ Reviews =
                     $.validator.unobtrusive.parse("#" + this.id);
                 });
 
-                $(Reviews.container + " .pr-review-rating").each(function () {
-                    var rating = $(this).find(".pr-rating").text();
-                    $(this).find(".pr-stars").rateit({ resetable: false, readonly: true, value: rating });
+                $(Reviews.container + " .rating-block").each(function ()
+                {
+                    var rating = $(this).find(".count .num").text();
+                    $(this).find(".rating").rateit({ resetable: false, readonly: true, value: rating, starwidth: 11, starheight: 11  });
                 });
 
                 
@@ -163,7 +164,7 @@ Reviews =
                 //Just for testing add immediatly
                 //$("#commentTemplate").tmpl(comment).appendTo("#comments_container_" + id);
                 "Thank you for your feedback! We will review it and publish.".Localize(function (translation) {
-                	alert(translation);
+                	$.showPopupMessage(translation);
                 });
             },
             error: function (jqXhr) {
@@ -186,10 +187,10 @@ Reviews =
             dataType: 'JSON',
             success: function (newReview) {
                 //close dialog
-                tb_remove();
+                $('.form-popup, .fade-block').hide();
 
                 "Thank you for your feedback! We will review it and publish.".Localize(function (translation) {
-	                alert(translation);
+                    $.showPopupMessage(translation);
                 });
 
                 //update fields
@@ -275,7 +276,7 @@ Reviews =
                 form.resetValidation();
                 "Thank you for your feedback! We will review it and take necessary actions.".Localize(function (translation)
                 {
-                	alert(translation);
+                    $.showPopupMessage(translation);
                 });
             },
             error: function (jqXhr)
@@ -318,18 +319,34 @@ Reviews =
         previewContainer.hide();
         $("#reviewTemplate").tmpl(data).appendTo(previewContainer);
 
-        previewContainer.find(".pr-review-rating").each(function () {
-            var rating = $(this).find(".pr-rating").text();
-            $(this).find(".pr-stars").rateit({ resetable: false, readonly: true, value: rating });
+        previewContainer.find(".rating-block").each(function ()
+        {
+            var rating = $(this).find(".count .num").text();
+            $(this).find(".rating").rateit({ resetable: false, readonly: true, value: rating, starwidth: 11, starheight: 11 });
         });
 
-        previewContainer.fadeIn(2000);
-
         //Hide comments
-        previewContainer.find("[id$=comments_container_]").hide();
+        previewContainer.find(".feedback").remove();
 
         //unbind clicks
         previewContainer.find("[onclick]").attr("onclick", "return false;");
+        
+        previewContainer.fadeIn(2000);
+    },
+    catalogReviews: function(filter) {
+        $.ajax({
+            type: "GET",
+            url: VirtoCommerce.url("/api/review/GetReviewTotals?$filter=" + filter),
+            dataType: "json",
+            success: function (data)
+            {
+                for (var i = 0; i < data.length; i++)
+                {
+                    $("[id='rateit-" + data[i].ItemId + "']").rateit({ resetable: false, readonly: true, value: data[i].AverageRating.toFixed(1), starwidth: 11, starheight: 11 });
+                    $("[id='totalreviews-" + data[i].ItemId + "']").text(data[i].TotalReviews);
+                }
+            }
+        });
     }
 };
 

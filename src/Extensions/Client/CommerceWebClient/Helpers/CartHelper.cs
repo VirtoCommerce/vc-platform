@@ -22,6 +22,8 @@ using VirtoCommerce.Foundation.Search.Services;
 
 namespace VirtoCommerce.Web.Client.Helpers
 {
+    using VirtoCommerce.Foundation.Catalogs.Services;
+
     /// <summary>
     /// Cart helper class used to simplify cart operations.
     /// The cart is automatically cached in the current Http Context.
@@ -122,6 +124,11 @@ namespace VirtoCommerce.Web.Client.Helpers
 		{
 			get { return ServiceLocator.Current.GetInstance<ICustomerSessionService>(); }
 		}
+
+        public ICatalogOutlineBuilder CatalogOutlineBuilder
+        {
+            get { return ServiceLocator.Current.GetInstance<ICatalogOutlineBuilder>(); }
+        }
 
         /// <summary>
         /// Gets the customer session.
@@ -538,7 +545,8 @@ namespace VirtoCommerce.Web.Client.Helpers
 			lineItem.Quantity = quantity;
 			lineItem.Catalog = CustomerSession.CatalogId;
 			lineItem.FulfillmentCenterId = StoreHelper.StoreClient.GetCurrentStore().FulfillmentCenterId;
-			lineItem.CatalogOutline = CatalogOutlineBuilder.BuildCategoryOutline(CatalogClient.CatalogRepository, CustomerSession.CatalogId, item);
+			//lineItem.CatalogOutline = CatalogOutlineBuilder.BuildCategoryOutline(CatalogClient.CatalogRepository, CustomerSession.CatalogId, item);
+            lineItem.CatalogOutline = CatalogOutlineBuilder.BuildCategoryOutline(CustomerSessionService.CustomerSession.CatalogId, item).ToString();
 
 			return lineItem;
 		}
@@ -576,6 +584,19 @@ namespace VirtoCommerce.Web.Client.Helpers
 
 			//Cart.AddressId = String.Empty;
 		}
+
+        public virtual void ClearCache(string name = "__all", string userId = null)
+        {
+            if (userId == null)
+            {
+                userId = CustomerSession.CustomerId;
+            }
+
+            foreach (var key in HttpContext.Current.Items.Keys.Cast<string>().Where(k => k.Equals(GetCacheKey(name, userId))).ToArray())
+            {
+                HttpContext.Current.Items[key] = null;
+            }
+        }
 
         /// <summary>
         /// Saves the changes.
@@ -772,7 +793,7 @@ namespace VirtoCommerce.Web.Client.Helpers
 
 			// it is less expansive to do check if cart exists first then load all the data
 			// preload all user carts
-			if (allCarts == null)
+            if (allCarts == null || allCarts.Length == 0)
 			{
 				var query = (repo.ShoppingCarts.Where(
 					c => c.StoreId.Equals(storeId, StringComparison.OrdinalIgnoreCase) &&

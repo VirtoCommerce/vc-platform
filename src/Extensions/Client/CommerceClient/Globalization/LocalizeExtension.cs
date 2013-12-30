@@ -33,6 +33,17 @@ namespace VirtoCommerce.Client.Globalization
 			return source.Localize((string)null);
 		}
 
+        /// <summary>
+        /// Localizes the specified source.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="format">string format</param>
+        /// <returns>localized string</returns>
+        public static string Localize(this string source, params object[] format)
+        {
+            return string.Format(source.Localize((string)null), format);
+        }
+
 
         /// <summary>
         /// Localizes the specified source.

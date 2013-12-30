@@ -1,0 +1,18 @@
+﻿@model AssociationGroup
+
+@{
+    var associations = Model.Associations.OrderBy(a => a.Priority).ToList();
+}
+
+<header>
+    <h2>@("Related Products".Localize())</h2>
+</header>
+
+<div class="scroll">
+    <ul class="products-list slider-list grid">
+        @foreach (var association in associations)
+        {
+            @Html.Action("AssociatedItem", new { itemId = association.ItemId, name = "displaytemplates/Item", associationType = association.AssociationType })
+        }
+    </ul>
+</div>

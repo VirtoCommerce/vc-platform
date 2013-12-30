@@ -1,172 +1,110 @@
-﻿@using System.Reflection
-@using VirtoCommerce.Foundation.Frameworks.Extensions
-<!DOCTYPE html>
-<html>
-<head lang="en">
-	<meta charset="utf-8" />
-	<title>@ViewBag.Title</title>
-	<meta name="viewport" content="width=device-width" />
-	@Styles.Render("~/Content/themes/base/css")
-	@Styles.Render("~/Content/themes/default/s")
-	@Scripts.Render("~/bundles/modernizr")
-	@Scripts.Render("~/bundles/jquery")
-	<base href="~/" />
-</head>
-<body class="cms-index-index cms-home">
-	@if (Session["HideDemoNotice"] == null || !(bool)Session["HideDemoNotice"])
- {
-		<div class="demo-notice-container" onclick="VirtoCommerce.hideDemoNotice();">
-			<div style="height: 25px;"></div>
-			<div class="demo-notice">
-				<div class="close-demo-notice">×</div>
-				<p class="msg">
-					@("This is a demo store. Any orders placed through this store will <span>NOT</span> be honored or fulfilled.".LocalizeHtml())
-				</p>
-			</div>
-		</div>
- }
-    <div class="page">
-        <div class="header-container">
-            <div class="header">
-                <a href="@Url.Content("~/")" title="Demo Store" class="logo"><strong>Virto Commerce</strong><img src="@Url.Content("~/Content/themes/default/images/logo.png")"
-                                                                                                                 alt="Virto Commerce" /></a>
+﻿@{
+    Layout = "_LayoutBase.cshtml";
+}
 
-                <p class="top-promo">@{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "TopPromo" });}</p>
-                <div class="nav-container">
-                    @Html.MvcSiteMap().Menu(false, true, false)
-                </div>
-            </div>
-            <div class="language-bar quick-access">
-                @{Html.RenderPartial("Languages");}
-            </div>
-            <div class="quick-access-bar">
-                @{Html.RenderAction("QuickAccess", "Store");}
-            </div>
-            <div class="top-bar">
-                @Html.MvcSiteMap().SiteMapPath()
-                @Html.Display("", "search")
-            </div>
+<!-- Section rewriting -->
+@this.RedefineSection("Slider")
+@this.RedefineSection("PageTitle")
+@this.RedefineSection("scripts")
+@this.RedefineSection("Bottom")
+
+@RenderBody()
+
+@section Navigation
+{
+    <div class="nav">
+        <a class="control">
+            <span></span>
+            <span></span>
+            <span></span>
+        </a>
+        @Html.MvcSiteMap().Menu(SiteMaps.Current.FindSiteMapNodeFromKey("home"), true, false, 3, true, new { name = "MainMenu" })
+    </div>
+}
+
+@section MiniActions
+{
+    <div class="head-top-block">
+        <a class="control"></a>
+        <div class="search">
+            @Html.Display("", "search")
         </div>
-        @RenderBody()
-        <div class="footer-container">
-            <div class="footer">
-                <div class="f-right">
-                    @{Html.RenderAction("StorePicker", "Store");}
+        <div class="cart-options">
+            @{ Html.RenderAction("CartOptions", "Store"); }
+        </div>
+    </div>
+}
+
+@section Info{
+    <div class="info">
+        <div class="rubber clearfix">
+            <div class="grid_3">
+                <a class="control"></a>
+                <h2>Facebook</h2>
+                <div class="content">
+                    <div class="fb-like-box"
+                        data-href="http://facebook.com/virtocommerce"
+                        data-colorscheme="light"
+                        data-show-faces="true"
+                        data-header="false"
+                        data-stream="false"
+                        data-show-border="false">
+                    </div>
                 </div>
-                <div class="f-left">
+            </div>
+            <div class="grid_3">
+                <a class="control"></a>
+                <h2>From twitter</h2>
+                <div class="content">
+                    <ul class="twitter-list">
+                        <li>Check our step-by-step tutorial "Build your own store" with @@VirtoCommerce <a href="http://docs.virtocommerce.com/display/vc1devguide/New+Store+getting+started#NewStoregettingstarted-Introduction">http://bit.ly/1cmRD4z</a>  #ecommerce
+                            <span class="date">1 minute ago</span>
+                        </li>
+                        <li>An e-commerce authentication system moves to the checkout page - Internet Retailer <a href="http://www.internetretailer.com/2013/11/07/e-commerce-authentication-system-moves-checkout-page">http://shar.es/8vqwU</a>
+                            <span class="date">1 hour ago</span>
+                        </li>
+                    </ul>
+                    <footer>
+                        <p>Follow us <a target="_blank" href="https://twitter.com/virtocommerce">on Twitter</a></p>
+                    </footer>
+                </div>
+            </div>
+            <div class="grid_3">
+                <a class="control"></a>
+                <h2>@("Information".Localize())</h2>
+                <div class="content">
                     <ul>
-                        <li><a href="#">@("About Us".LocalizeHtml())</a></li>
-                        <li class="last"><a href="#">@("Customer Service".LocalizeHtml())</a></li>
+                        <li>Build your business the way you want with our flexible, customizable platform</li>
+                        <li>Expand globally with new online stores that launch in a matter of days, not months</li>
+                        <li>Market products in endless ways with different catalogue and product types</li>
+                        <li>Target customers with unique promotions, pricing, and dynamic content</li>
+                        <li>Manage stores with the clean, intuitive back-end system</li>
                     </ul>
-                    <ul class="links">
-                        <li class="first"><a href="#"
-                                             title="@("Site Map".LocalizeHtml())">@("Site Map".LocalizeHtml())</a></li>
-                        <li><a href="#" title="@("Search Terms".LocalizeHtml())">@("Search Terms".LocalizeHtml())</a></li>
-                        <li><a href="#" title="@("Advanced Search".LocalizeHtml())">@("Advanced Search".LocalizeHtml())</a></li>
-                        <li><a href="#" title="@("Contact Us".LocalizeHtml())">@("Contact Us".LocalizeHtml())</a></li>
-                        <li class="last"><a href="#" title="@("RSS".LocalizeHtml())" class="link-rss">@("RSS".LocalizeHtml())</a></li>
-                    </ul>
-                    <form action="#" method="post"
-                          id="newsletter-validate-detail">
-                        <div class="form-subscribe">
-                            <label for="newsletter">@("Newsletter Sign-up:".LocalizeHtml())</label>
-                            <div class="input-box">
-                                <input type="text" name="email" id="newsletter" title="@("Sign up for our newsletter".LocalizeHtml())"
-                                       class="input-text required-entry validate-email" />
-                            </div>
-                            <button type="submit" title="@("Submit".LocalizeHtml())" class="button">
-                                <span><span>@("Submit".LocalizeHtml())</span></span></button>
-                        </div>
-                    </form>
-                    <p class="bugs">
-                        @("Version:".LocalizeHtml()) @Html.Version() - <a href="http://support.virtocommerce.com"
-                                                                          onclick="this.target='_blank'"><strong>@("Report Issues".LocalizeHtml())</strong></a>
-                    </p>
+                </div>
+            </div>
+            <div class="grid_3">
+                <a class="control"></a>
+                <h2>@("Contacts".Localize())</h2>
+                <div class="content">
                     <address>
-                        <a href="http://virtocommerce.com" target="_blank">@("© 2013 VirtoCommerce Demo Store. All Rights Reserved.".LocalizeHtml())</a>
+                        <p>Los Angeles, New York, USA</p>
+                        <p>Vilnius, Lithuania</p>
+                        <p>Kaliningrad, Russia</p>
+                        <p>Beijing, China</p>
                     </address>
+                    <hr>
+                    <p>+1 (323) 570.5588</p>
+                    <hr>
+                    <p><a href="mailto:sales@virtocommerce.com">sales@virtocommerce.com</a></p>
+                    <ul class="social clearfix">
+                        <li class="tw"><a target="blank" href="http://twitter.com/VirtoCommerce"><span>Twitter</span></a></li>
+                        <li class="fb"><a target="blank" href="http://facebook.com/virtocommerce"><span>Facebook</span></a></li>
+                        <li class="mail"><a href="mailto:support@virtocommerce.com"><span>Email</span></a></li>
+                        <li class="plus"><a target="blank" href="http://plus.google.com/u/0/110275588520785121043"><span>Google</span></a></li>
+                    </ul>
                 </div>
             </div>
         </div>
     </div>
-    
-    <div class="virto-brand-container">
-        <div class="virto-brand">
-            <a href="http://www.virtocommerce.com"><img alt="VirtoCommerce" src="@Url.Content("~/Content/themes/default/images/brand.png")"></a>
-            <h4><a href="http://www.virtocommerce.com">@("Powered by<br/> Virto Commerce".LocalizeHtml())</a></h4>
-        </div>
-    </div>
-    @Scripts.Render("~/bundles/jqueryui")
-	@Scripts.Render("~/bundles/jqueryval")
-	@Scripts.Render("~/bundles/jquerymisc")
-	@RenderSection("scripts", required: false)
 
-	@if (SettingsHelper.GetSettings("FollowServices").Any())
-	{
-		<!-- AddThis Smart Layers BEGIN -->
-		<!-- Go to http://www.addthis.com/get/smart-layers to customize -->
-		<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-51ec4b273d0b77ad"></script>
-		<script type="text/javascript">
-
-		// this will be called once all Smart Layers have been rendered
-			var callback = function(smartlayer) {
-				// remove all layers currently on the page
-				smartlayer.destroy();
-
-				var layers = {
-					'theme': 'transparent',
-					'follow': {
-						'services': [],
-						//'title': 'Follow',
-						'postFollowTitle': '@("Thanks for following!".LocalizeHtml())',
-						'postFollowRecommendedMsg': '@("Recommended for you".LocalizeHtml())',
-						'mobile': true,
-						'theme': 'transparent'
-					}
-				};
-
-				@foreach (var follow in SettingsHelper.GetSettings("FollowServices"))
-				{
-					var followStrSplit = follow.ToString().Split(new[] {":"}, StringSplitOptions.RemoveEmptyEntries);
-
-					<text>
-				layers.follow.services.push({
-						@if (followStrSplit.Length > 0)
-						{
-							@:'service': '@followStrSplit[0]'
-						}
-						@if (followStrSplit.Length > 1)
-						{
-							@:, 'id': '@followStrSplit[1]'
-						}
-						@if (followStrSplit.Length > 2)
-						{
-							@:, 'usertype': '@followStrSplit[2]'
-						}
-				    });
-				</text>
-				}
-
-				// now render Recommended and What's Next Layers
-				window.addthis.layers(layers);
-			};
-
-			addthis.layers({
-				'theme': 'transparent',
-				'share': {}
-			}, callback);
-
-		</script>
-		<!-- AddThis Smart Layers END -->
-	}
-
-	@{
-		var firstOrDefault = StoreHelper.GetSettings("AnalyticsField").FirstOrDefault() ?? 
-							 (object)SettingsHelper.GetSettings("AnalyticsField").FirstOrDefault();
-		if (firstOrDefault != null)
-		{
-			@Html.Raw(firstOrDefault.ToString())
-		}
-	}
-</body>
-</html>
+}

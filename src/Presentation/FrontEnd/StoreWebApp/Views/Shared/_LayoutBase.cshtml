@@ -1,0 +1,246 @@
+﻿@using System.Reflection
+@using VirtoCommerce.Foundation.Frameworks.Extensions
+@using VirtoCommerce.Web.Virto.Helpers
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/themes/base/css")
+    @Styles.Render("~/Content/themes/responsive/css")
+    <link type="text/css" rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,700&subset=latin,cyrillic-ext,cyrillic" />
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/responsive")
+    <base href="~/" />
+
+</head>
+<body>
+    <div id="layout">
+        <div class="header-wrap">
+            <div class="head-top">
+                <div class="rubber clearfix">
+                    <div class="grid_4">
+                        <div class="head-switch language">
+                            @{Html.RenderPartial("Languages");}
+                        </div>
+                        <div class="head-switch currency">
+                            @{Html.RenderAction("Currencies", "Store");}
+                        </div>
+                     
+                    </div>
+                    <div class="grid_8">
+                        @{Html.RenderAction("QuickAccess", "Store");}        
+                        @if (UserHelper.CustomerSession.IsRegistered)
+                        {
+                            <p class="welcome">@string.Format("Welcome {0}!".Localize(), UserHelper.CustomerSession.CustomerName)</p>
+                        }
+                        else
+                        {
+                            <p id="quickAccessTitle" class="welcome">@("Welcome!".Localize())</p>
+                        }
+                    </div>
+                </div>
+            </div>
+            <header role="banner" class="header">
+                <div class="rubber clearfix">
+                    <div class="grid_12">
+                        <p class="">
+                            <a href="@Url.Content("~")">Virto Commerce</a>
+                        </p>
+                        @RenderSection("Navigation",false)
+                        @RenderSection("MiniActions",false)
+                    </div>
+                </div>
+            </header>
+        </div>
+        @RenderSection("Slider", false)
+        <div class="article-wrap">
+            <article role="main" class="article clearfix">
+                <div class="page-nav">
+                    <div class="rubber">
+                        @Html.MvcSiteMap().SiteMapPath()
+                        @if (!string.IsNullOrEmpty(ViewBag.PageTitle as string) || IsSectionDefined("PageTitle"))
+                        {
+                            <div class="title clearfix">
+                                <p>@ViewBag.PageTitle</p>
+                                @RenderSection("PageTitle", false)
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="rubber">
+                    @{
+                        var messages = Html.SharedViewBag().Messages as MessagesModel;
+                    }
+                    <ul id="messages" class="messages" style="@(messages !=null && messages.Any() ? "" : "display:none;")">
+                        @{
+                            if (messages != null && messages.Any())
+                            {
+
+                                foreach (var messageGrp in messages.GroupBy(m => m.Type))
+                                {
+                                    <li class="@messageGrp.Key.ToString().ToLower()">
+                                        <ul>
+                                            @foreach (var message in messageGrp)
+                                            {
+                                                <li><span>@message.Text</span></li>
+                                            }
+                                        </ul>
+                                    </li>
+                                }
+                            }
+                        }
+                    </ul>
+                    @RenderBody()
+                </div>
+                @RenderSection("Bottom", false)
+            </article>
+        </div>
+        <div class="footer-wrap">
+            <div class="banners">
+                <div class="rubber clearfix">
+                    <div class="grid_6 banner shipping">
+                        <a title="Free shipping on orders over $50" href="">Free shipping on orders over $50
+                        </a>
+                    </div>
+                    <div class="grid_6 banner callback">
+                        <a title="Call us! toll free 8-800-123-1234" href="">Call us! toll free <span>8-800-123-1234</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            @RenderSection("Info",false)
+            <footer role="contentinfo" class="footer rubber clearfix">
+                <div class="grid_6">
+                    <address>
+                        @("Version:".Localize()) @Html.Version() - <a href="http://support.virtocommerce.com"
+                            onclick="this.target='_blank'"><strong>@("Report Issues".Localize())</strong></a>
+                        &copy; 2013 @("Powered by".Localize()) <a href="http://virtocommerce.com">Virto Commerce</a>
+                    </address>
+                </div>
+                <div class="grid_6">
+                    <ul class="links">
+                        <li><a href="#" title="About Us">@("About Us".Localize())</a></li>
+                        <li><a href="#" title="Delivery &amp; Returns">@("Delivery & Returns".Localize())</a></li>
+                        <li><a href="#" title="Terms &amp; Conditions">@("Terms & Conditions".Localize())</a></li>
+                        <li><a href="#" title="Contact Us">@("Contact Us".Localize())</a></li>
+                    </ul>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jquerymisc")
+    @RenderSection("scripts", required: false)
+    
+
+    <!-- Facebook -->
+    <div id="fb-root"></div>
+    <script type="text/javascript">
+        (function (d, s, id)
+        {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en-US/all.js#xfbml=1";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
+
+    <!-- Process sliders -->
+    <script type="text/javascript">
+        $(function ()
+        {
+            if ($('.main-slider .container').length > 0)
+            {
+                $('.main-slider .container').camera({
+                    loader: 'bar',
+                    playPause: false,
+                    barPosition: 'top',
+                    loaderColor: '#322C29',
+                    loaderBgColor: 'rgba(0, 0, 0, 0)',
+                    height: '25%'
+                });
+
+                $('.main-slider .container').removeAttr('style');
+                $('.main-slider .container').css('display', 'block');
+            }
+            
+            $('.slider-products').virtoSlider();
+        });
+    </script>
+
+    @if (SettingsHelper.GetSettings("FollowServices").Any())
+    {
+        <!-- AddThis Smart Layers BEGIN -->
+        <!-- Go to http://www.addthis.com/get/smart-layers to customize -->
+        <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-51ec4b273d0b77ad"></script>
+        <script type="text/javascript">
+
+            // this will be called once all Smart Layers have been rendered
+            var callback = function (smartlayer)
+            {
+                // remove all layers currently on the page
+                smartlayer.destroy();
+
+                var layers = {
+                    'theme': 'transparent',
+                    'follow': {
+                        'services': [],
+                        //'title': 'Follow',
+                        'postFollowTitle': '@("Thanks for following!".LocalizeHtml())',
+                        'postFollowRecommendedMsg': '@("Recommended for you".LocalizeHtml())',
+                        'mobile': true,
+                        'theme': 'transparent'
+                    }
+                };
+
+                @foreach (var follow in SettingsHelper.GetSettings("FollowServices"))
+                    {
+                        var followStrSplit = follow.ToString().Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
+
+                        <text>
+                layers.follow.services.push({
+						@if (followStrSplit.Length > 0)
+      {
+						    @:'service': '@followStrSplit[0]'
+                                                                                                                                                				    						}
+						@if (followStrSplit.Length > 1)
+      {
+						    @:, 'id': '@followStrSplit[1]'
+                                                                                                                                                				    						}
+						@if (followStrSplit.Length > 2)
+      {
+						    @:, 'usertype': '@followStrSplit[2]'
+                                                                                                                                                				    						}
+                });
+				</text>
+                    }
+
+                // now render Recommended and What's Next Layers
+                window.addthis.layers(layers);
+            };
+
+            addthis.layers({
+                'theme': 'transparent',
+                'share': {}
+            }, callback);
+
+        </script>
+        <!-- AddThis Smart Layers END -->
+    }
+
+    @{
+        var firstOrDefault = StoreHelper.GetSettings("AnalyticsField").FirstOrDefault() ??
+                             (object)SettingsHelper.GetSettings("AnalyticsField").FirstOrDefault();
+        if (firstOrDefault != null)
+        {
+        @Html.Raw(firstOrDefault.ToString())
+        }
+    }
+</body>
+</html>
