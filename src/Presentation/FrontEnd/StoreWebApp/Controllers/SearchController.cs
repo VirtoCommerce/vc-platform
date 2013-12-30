@@ -320,13 +320,13 @@ namespace VirtoCommerce.Web.Controllers
         [CustomOutputCache(CacheProfile = "SearchCache", VaryByCustom = "store;currency;cart")]
         public ActionResult SearchResultsWithinCategory(Category category, SearchParameters parameters, string name = "SearchResultsPartial")
         {
-            ViewBag.Title = category.Name.Localize();
-
             var criteria = new CatalogItemSearchCriteria();
-            criteria.Outlines.Add(String.Format("{0}*",
-                                                _catalogClient.BuildCategoryOutline(UserHelper.CustomerSession.CatalogId, category)
-                                                ));
-            var results = SearchResults(criteria, parameters);
+		    if (category != null)
+		    {
+		        ViewBag.Title = category.Name.Localize();		      
+                criteria.Outlines.Add(String.Format("{0}*",_catalogClient.BuildCategoryOutline(UserHelper.CustomerSession.CatalogId, category)));
+		    }
+		    var results = SearchResults(criteria, parameters);
             return PartialView(name, results);
         }
 

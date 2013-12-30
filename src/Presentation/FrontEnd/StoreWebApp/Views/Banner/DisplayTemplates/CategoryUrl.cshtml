@@ -7,7 +7,7 @@
 @if (currentModel != null)
 {
     var category = CatalogHelper.CatalogClient.GetCategory(currentModel.CategoryCode);
-    if (category != null && category.IsActive)
+    if (string.IsNullOrEmpty(currentModel.CategoryCode) || category != null && category.IsActive)
     {
         @Html.Action("SearchResultsWithinCategory", "Search",
         new
