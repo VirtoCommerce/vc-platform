@@ -109,6 +109,10 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 				// Copy template to project location
 				DirectoryExtensions.Copy(new DirectoryInfo(contentFolder), new DirectoryInfo(ProjectLocation));
 				ct.ThrowIfCancellationRequested();
+
+				// create initial folders: Uploads
+				Directory.CreateDirectory(Path.Combine(ProjectLocation, "App_Data\\Virto\\Storage\\Uploads"));
+
 				// Copy test data images
 				DirectoryExtensions.Copy(new DirectoryInfo(catalogImagesFolder),
 										 new DirectoryInfo(string.Format("{0}\\App_Data\\Virto\\Storage\\Catalog", ProjectLocation)));
