@@ -60,8 +60,9 @@ namespace VirtoCommerce.ManagementClient.Core.Controls
 
         void AddNewExpression_Click(object sender, RoutedEventArgs args)
         {
+            
             // executing code on GUI thread in order to close the context menu before adding a child
-            Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
+            Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
             {
 				///this is not the best way to add element to the context but it works
 				if (((MenuItem)sender).DataContext is TypedExpressionElementBase)
@@ -95,7 +96,7 @@ namespace VirtoCommerce.ManagementClient.Core.Controls
         void SelectNewValue_Click(object sender, RoutedEventArgs args)
         {
             // executing code on GUI thread in order to close the context menu before adding a child
-            Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
+            Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
             {
                 var control = sender as FrameworkElement;
 
@@ -115,7 +116,7 @@ namespace VirtoCommerce.ManagementClient.Core.Controls
 		void SelectDictNewValue_Click(object sender, RoutedEventArgs args)
 		{
 			// executing code on GUI thread in order to close the context menu before adding a child
-			Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
+            Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
 			{
 				var control = sender as FrameworkElement;
 
