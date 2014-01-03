@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using VirtoCommerce.ManagementClient.Configuration.Model;
+using VirtoCommerce.ManagementClient.Configuration.Properties;
 using VirtoCommerce.ManagementClient.Configuration.ViewModel.Interfaces;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
@@ -20,7 +21,7 @@ namespace VirtoCommerce.ManagementClient.Configuration.ViewModel.Implementations
 		public ConfigurationHomeViewModel(NavigationManager navigationManager)
 		{
 			_navigationManager = navigationManager;
-			ViewTitle = new ViewTitleBase { Title = "Settings" };
+			ViewTitle = new ViewTitleBase { Title = Resources.Settings };
 		}
 
 		private ConfigurationSection _currentTab;

@@ -69,6 +69,9 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WpfLocalization">
+      <HintPath>..\..\..\..\Shared\WpfLocalization.dll</HintPath>
+    </Reference>
     <Reference Include="Xceed.Wpf.DataGrid">
       <HintPath>..\..\..\..\packages\Extended.Wpf.Toolkit.1.9.0\lib\net40\Xceed.Wpf.DataGrid.dll</HintPath>
     </Reference>
@@ -132,6 +135,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

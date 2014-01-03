@@ -9,6 +9,7 @@ using Microsoft.Practices.Unity;
 using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
+using VirtoCommerce.ManagementClient.Security.Properties;
 using VirtoCommerce.ManagementClient.Security.ViewModel.Implementations;
 using VirtoCommerce.ManagementClient.Security.ViewModel.Interfaces;
 using VirtoCommerce.Foundation.Data.Security;
@@ -94,7 +95,7 @@ namespace VirtoCommerce.ManagementClient.Security
                 var menuNavItem = new NavigationMenuItem(NavigationNames.MenuName);
                 menuNavItem.NavigateCommand =
                     new DelegateCommand<NavigationItem>((x) => { _navigationManager.Navigate(homeNavItem); });
-                menuNavItem.Caption = "Users";
+                menuNavItem.Caption = Resources.Users;
                 menuNavItem.ImageResourceKey = "Icon_Module_Security";
                 menuNavItem.ItemBackground = Color.FromRgb(64, 159, 216);
                 menuNavItem.Order = 101;

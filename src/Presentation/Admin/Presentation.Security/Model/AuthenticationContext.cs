@@ -5,6 +5,7 @@ using System.Security.Claims;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.Foundation.Security.Services;
 using VirtoCommerce.Foundation.Security.Model;
+using VirtoCommerce.ManagementClient.Security.Properties;
 
 
 namespace VirtoCommerce.ManagementClient.Security.Model
@@ -276,7 +277,7 @@ namespace VirtoCommerce.ManagementClient.Security.Model
                     }
                     if (exception == null && String.IsNullOrEmpty(newToken))
                     {
-                        exception = new GetTokenException("Login or password is incorrect");
+                        exception = new GetTokenException(Resources.errorLogin_or_password_is_incorrect);
                     }
                     if (exception != null)
                     {

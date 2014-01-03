@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Converters;
 using VirtoCommerce.Foundation.Security.Model;
+using VirtoCommerce.ManagementClient.Security.Properties;
 
 namespace VirtoCommerce.ManagementClient.Security.Infrastructure
 {
@@ -14,9 +15,9 @@ namespace VirtoCommerce.ManagementClient.Security.Infrastructure
             // TODO take localized texts from resources
             textResources = new Dictionary<AccountState, string>
                 {
-                    {AccountState.Approved, "Approved"},
-                    {AccountState.Rejected, "Rejected"},
-                    {AccountState.PendingApproval, "Pending Approval"}
+                    {AccountState.Approved, Resources.Approved},
+                    {AccountState.Rejected, Resources.Rejected},
+                    {AccountState.PendingApproval, Resources.Pending_Approval}
                 };
         }
 

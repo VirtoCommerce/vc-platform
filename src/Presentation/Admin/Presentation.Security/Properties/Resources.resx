@@ -117,144 +117,193 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Entity_column" xml:space="preserve">
-    <value>Entity column:</value>
+  <data name="AccountState" xml:space="preserve">
+    <value>Account State:</value>
+  </data>
+  <data name="ApproveUser" xml:space="preserve">
+    <value>Approve User</value>
+  </data>
+  <data name="Baseurl" xml:space="preserve">
+    <value>Base url</value>
+  </data>
+  <data name="ChangePassword" xml:space="preserve">
+    <value>Change Password</value>
+  </data>
+  <data name="Create_account" xml:space="preserve">
+    <value>Create account</value>
+  </data>
+  <data name="IsAdministrator" xml:space="preserve">
+    <value>Is Administrator</value>
+  </data>
+  <data name="login" xml:space="preserve">
+    <value>Log in</value>
+  </data>
+  <data name="loginAct" xml:space="preserve">
+    <value>Log in</value>
+  </data>
+  <data name="RejectUser" xml:space="preserve">
+    <value>Reject User</value>
+  </data>
+  <data name="ResetPassword" xml:space="preserve">
+    <value>Reset Password</value>
+  </data>
+  <data name="Roles" xml:space="preserve">
+    <value>Roles</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Username:</value>
+  </data>
+  <data name="Account" xml:space="preserve">
+    <value>Account</value>
+  </data>
+  <data name="wiz_User_general_information" xml:space="preserve">
+    <value>Enter User general information.</value>
+  </data>
+  <data name="error_occurred_when_trying_to_change_password" xml:space="preserve">
+    <value>An error occurred when trying to change password: {0}</value>
+  </data>
+  <data name="error_occurred_when_trying_to_reset" xml:space="preserve">
+    <value>An error occurred when trying to reset password: {0}</value>
+  </data>
+  <data name="Set_Roles" xml:space="preserve">
+    <value>Set Roles</value>
+  </data>
+  <data name="Account_details" xml:space="preserve">
+    <value>Enter Account details</value>
+  </data>
+  <data name="Administrator" xml:space="preserve">
+    <value>Administrator</value>
+  </data>
+  <data name="Approved" xml:space="preserve">
+    <value>Approved</value>
+  </data>
+  <data name="Rejected" xml:space="preserve">
+    <value>Rejected</value>
+  </data>
+  <data name="Pending_Approval" xml:space="preserve">
+    <value>Pending Approval</value>
+  </data>
+  <data name="Guest_User" xml:space="preserve">
+    <value>Guest User</value>
+  </data>
+  <data name="Registered_User" xml:space="preserve">
+    <value>Registered User</value>
+  </data>
+  <data name="Site_Administrator" xml:space="preserve">
+    <value>Site Administrator</value>
+  </data>
+  <data name="Users" xml:space="preserve">
+    <value>Users</value>
+  </data>
+  <data name="USER_MANAGEMENT" xml:space="preserve">
+    <value>USER MANAGEMENT</value>
+  </data>
+  <data name="Accounts" xml:space="preserve">
+    <value>Accounts</value>
+  </data>
+  <data name="Role" xml:space="preserve">
+    <value>Role</value>
+  </data>
+  <data name="Create_role" xml:space="preserve">
+    <value>Create role</value>
+  </data>
+  <data name="errorLogin_or_password_is_incorrect" xml:space="preserve">
+    <value>Login or password is incorrect</value>
+  </data>
+  <data name="wiz_Role_information" xml:space="preserve">
+    <value>Enter Role information.</value>
+  </data>
+  <data name="groupCustomer_Service" xml:space="preserve">
+    <value>Customer Service</value>
+  </data>
+  <data name="groupOrders" xml:space="preserve">
+    <value>Orders</value>
+  </data>
+  <data name="groupCatalog" xml:space="preserve">
+    <value>Catalog</value>
+  </data>
+  <data name="groupPricing" xml:space="preserve">
+    <value>Pricing</value>
+  </data>
+  <data name="groupMarketing" xml:space="preserve">
+    <value>Marketing</value>
+  </data>
+  <data name="groupFulfillment" xml:space="preserve">
+    <value>Fulfillment</value>
+  </data>
+  <data name="groupUsers" xml:space="preserve">
+    <value>Users</value>
+  </data>
+  <data name="groupShopper" xml:space="preserve">
+    <value>Shopper</value>
+  </data>
+  <data name="groupSettings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="error_occurred_when_trying_to_load_Permissions" xml:space="preserve">
+    <value>An error occurred when trying to load Permissions for: {0}</value>
+  </data>
+  <data name="New_Password_repeat" xml:space="preserve">
+    <value>* New Password repeat:</value>
+  </data>
+  <data name="OldPassword" xml:space="preserve">
+    <value>* Old Password:</value>
     <comment>TextBlock.Text</comment>
   </data>
-  <data name="Locale" xml:space="preserve">
-    <value>Locale:</value>
+  <data name="New_Password" xml:space="preserve">
+    <value>* New Password:</value>
     <comment>TextBlock.Text</comment>
   </data>
-  <data name="CSV_column" xml:space="preserve">
-    <value>CSV column:</value>
+  <data name="Password" xml:space="preserve">
+    <value>* Password:</value>
     <comment>TextBlock.Text</comment>
   </data>
-  <data name="Custom_value" xml:space="preserve">
-    <value>Custom value:</value>
+  <data name="Password_repeat" xml:space="preserve">
+    <value>* Password repeat:</value>
     <comment>TextBlock.Text</comment>
   </data>
-  <data name="Value_format_0_stands_for_value" xml:space="preserve">
-    <value>Value format ({0} - stands for value):</value>
+  <data name="Username_req" xml:space="preserve">
+    <value>* Username:</value>
     <comment>TextBlock.Text</comment>
   </data>
-  <data name="Enter_custom_value" xml:space="preserve">
-    <value>Enter custom value...</value>
-    <comment>core_controls:WatermarkedTextBox.WatermarkText</comment>
+  <data name="Available_roles" xml:space="preserve">
+    <value>Available roles</value>
+    <comment>controls:MultiSelectControl.AvailableTitle</comment>
   </data>
-  <data name="Enter_value_formatting_if_req" xml:space="preserve">
-    <value>Enter value formatting if required...</value>
-    <comment>core_controls:WatermarkedTextBox.WatermarkText</comment>
+  <data name="Assigned_roles" xml:space="preserve">
+    <value>Assigned roles</value>
+    <comment>controls:MultiSelectControl.CurrentTitle</comment>
   </data>
-  <data name="Create_Import_Job" xml:space="preserve">
-    <value>Create Import Job</value>
-    <comment>core_controls:MetroButton.ToolTip</comment>
-  </data>
-  <data name="RUN" xml:space="preserve">
-    <value>RUN</value>
-    <comment>core_controls:MetroButton.Header</comment>
-  </data>
-  <data name="Run_selected_import_Job" xml:space="preserve">
-    <value>Run selected import Job</value>
-    <comment>core_controls:MetroButton.ToolTip</comment>
-  </data>
-  <data name="ImportNameInFilter" xml:space="preserve">
-    <value>Name</value>
-    <comment>TextBlock.Text</comment>
-  </data>
-  <data name="Import_Job_Name" xml:space="preserve">
-    <value>Import Job Name:</value>
-    <comment>TextBlock.Text</comment>
-  </data>
-  <data name="CSV_file" xml:space="preserve">
-    <value>CSV file:</value>
-    <comment>TextBlock.Text</comment>
-  </data>
-  <data name="File_not_selected" xml:space="preserve">
-    <value>File not selected...</value>
-    <comment>core_controls:WatermarkedTextBox.WatermarkText</comment>
-  </data>
-  <data name="Select_file" xml:space="preserve">
-    <value>Select file...</value>
-    <comment>Button.Content</comment>
-  </data>
-  <data name="Enter_name" xml:space="preserve">
-    <value>Enter name...</value>
-    <comment>core_controls:SearchTextBox.LabelText</comment>
-  </data>
-  <data name="Mapping" xml:space="preserve">
-    <value>Mapping</value>
-    <comment>TabItem.Header</comment>
-  </data>
-  <data name="Edit_column_mapping" xml:space="preserve">
-    <value>Edit column mapping</value>
-    <comment>controls:MetroButton.ToolTip</comment>
-  </data>
-  <data name="Clear_column_mapping" xml:space="preserve">
-    <value>Clear column mapping</value>
-    <comment>controls:MetroButton.ToolTip</comment>
-  </data>
-  <data name="Entity_property" xml:space="preserve">
-    <value>Entity property</value>
-    <comment>DataGridTextColumn.Header</comment>
-  </data>
-  <data name="Format_value" xml:space="preserve">
-    <value>Format value</value>
-    <comment>DataGridTextColumn.Header</comment>
-  </data>
-  <data name="Locale_" xml:space="preserve">
-    <value>Locale</value>
-    <comment>DataGridTextColumn.Header</comment>
-  </data>
-  <data name="CSV_column_" xml:space="preserve">
-    <value>CSV column</value>
-    <comment>DataGridTextColumn.Header</comment>
-  </data>
-  <data name="Custom_value_" xml:space="preserve">
-    <value>Custom value</value>
-    <comment>DataGridTextColumn.Header</comment>
-  </data>
-  <data name="Importing_item_data_type" xml:space="preserve">
-    <value>* Importing item data type:</value>
-    <comment>TextBlock.Text</comment>
-  </data>
-  <data name="Property_set" xml:space="preserve">
-    <value>Property set:</value>
-    <comment>TextBlock.Text</comment>
-  </data>
-  <data name="job_Name_req" xml:space="preserve">
+  <data name="Role_Name" xml:space="preserve">
     <value>* Name:</value>
     <comment>TextBlock.Text</comment>
   </data>
-  <data name="Errors_allowed_during_import" xml:space="preserve">
-    <value>* Errors allowed during import:</value>
-    <comment>TextBlock.Text</comment>
+  <data name="Available_permissions" xml:space="preserve">
+    <value>Available permissions</value>
+    <comment>controls:MultiSelectControl.AvailableTitle</comment>
   </data>
-  <data name="Catalog" xml:space="preserve">
-    <value>* Catalog:</value>
-    <comment>TextBlock.Text</comment>
+  <data name="Assigned_permissions" xml:space="preserve">
+    <value>Assigned permissions</value>
+    <comment>controls:MultiSelectControl.CurrentTitle</comment>
   </data>
-  <data name="CSV_Template_File" xml:space="preserve">
-    <value>* CSV Template File:</value>
-    <comment>TextBlock.Text</comment>
+  <data name="Register_Type" xml:space="preserve">
+    <value>Register Type</value>
+    <comment>GridViewColumn.Header</comment>
   </data>
-  <data name="Column_delimiter" xml:space="preserve">
-    <value>* Column delimiter:</value>
-    <comment>TextBlock.Text</comment>
+  <data name="Account_State" xml:space="preserve">
+    <value>Account State</value>
+    <comment>GridViewColumn.Header</comment>
   </data>
-  <data name="Enter_custom_delimiter" xml:space="preserve">
-    <value>Enter custom delimiter...</value>
-    <comment>controls:WatermarkedTextBox.WatermarkText</comment>
+  <data name="Username_plain" xml:space="preserve">
+    <value>Username</value>
+    <comment>GridViewColumn.Header</comment>
   </data>
-  <data name="Start_index" xml:space="preserve">
-    <value>Start index:</value>
-    <comment>TextBlock.Text</comment>
-  </data>
-  <data name="Import_count_import_all_by_def" xml:space="preserve">
-    <value>Import count (import all by default):</value>
-    <comment>TextBlock.Text</comment>
-  </data>
-  <data name="ImportNameInList" xml:space="preserve">
+  <data name="Role_Name_plain" xml:space="preserve">
     <value>Name</value>
     <comment>GridViewColumn.Header</comment>
+  </data>
+  <data name="Welcome" xml:space="preserve">
+    <value> Welcome</value>
+    <comment>TextBlock.Text</comment>
   </data>
 </root>

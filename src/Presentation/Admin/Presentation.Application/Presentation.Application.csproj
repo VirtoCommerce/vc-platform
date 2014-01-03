@@ -199,6 +199,9 @@
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WpfLocalization">
+      <HintPath>..\..\..\..\Shared\WpfLocalization.dll</HintPath>
+    </Reference>
     <Reference Include="WpfRichText.Ex">
       <HintPath>..\..\..\..\Shared\WpfRichText.Ex.dll</HintPath>
     </Reference>
@@ -271,6 +274,7 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>VirtoCommerce.Properties</CustomToolNamespace>
     </EmbeddedResource>
     <None Include="App.config">
       <SubType>Designer</SubType>

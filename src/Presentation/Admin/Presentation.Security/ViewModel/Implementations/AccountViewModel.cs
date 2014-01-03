@@ -7,19 +7,19 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
-using Microsoft.Practices.ServiceLocation;
 using Omu.ValueInjecter;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
-using VirtoCommerce.ManagementClient.Core.Controls;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
-using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
-using VirtoCommerce.ManagementClient.Security.ViewModel.Interfaces;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Security.Factories;
 using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.Foundation.Security.Repositories;
 using VirtoCommerce.Foundation.Security.Services;
+using VirtoCommerce.ManagementClient.Core.Controls;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
+using VirtoCommerce.ManagementClient.Security.Properties;
+using VirtoCommerce.ManagementClient.Security.ViewModel.Interfaces;
 
 namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 {
@@ -42,10 +42,10 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 		/// </summary>
 		public AccountViewModel(
 			IRepositoryFactory<ISecurityRepository> repositoryFactory,
-			ISecurityEntityFactory entityFactory, 
-			IAuthenticationContext authContext, 
-			INavigationManager navManager, 
-			IViewModelsFactory<IPasswordChangeViewModel> passwordVmFactory, 
+			ISecurityEntityFactory entityFactory,
+			IAuthenticationContext authContext,
+			INavigationManager navManager,
+			IViewModelsFactory<IPasswordChangeViewModel> passwordVmFactory,
 			Account item,
 			ISecurityService securityService)
 			: base(entityFactory, item, false)
@@ -57,7 +57,7 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 			_passwordVmFactory = passwordVmFactory;
 			ViewTitle = new ViewTitleBase()
 				{
-					Title = "Account",
+					Title = Properties.Resources.Account,
 					SubTitle = (item != null && !string.IsNullOrEmpty(item.UserName)) ? item.UserName.ToUpper(CultureInfo.InvariantCulture) : ""
 				};
 
@@ -145,8 +145,8 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 		{
 			return new RefusedConfirmation
 			{
-				Content = "Save changes '" + DisplayName + "'?",
-				Title = "Action confirmation"
+				Content = string.Format(Core.Properties.Resources.Save_changes_to, DisplayName),
+				Title = Core.Properties.Resources.Action_confirmation
 			};
 		}
 
@@ -227,7 +227,7 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 		{
 			get
 			{
-				return "Enter User general information.";
+				return Properties.Resources.wiz_User_general_information;
 			}
 		}
 		#endregion
@@ -297,12 +297,12 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 
 		private void RaisePasswordChangeRequest()
 		{
-			RaisePasswordChangeRequest("Change Password", true);
+			RaisePasswordChangeRequest(Resources.ChangePassword, true);
 		}
 
 		private void RaisePasswordResetRequest()
 		{
-			RaisePasswordChangeRequest("Reset Password", false);
+			RaisePasswordChangeRequest(Resources.ResetPassword, false);
 		}
 
 		private void RaisePasswordChangeRequest(string title, bool isPasswordChanging)
@@ -310,7 +310,7 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 			var itemVM = _passwordVmFactory.GetViewModelInstance(
 				new KeyValuePair<string, object>("isPasswordChanging", isPasswordChanging)
 				);
-			var confirmation = new ConditionalConfirmation {Title = title, Content = itemVM};
+			var confirmation = new ConditionalConfirmation { Title = title, Content = itemVM };
 
 			CommonConfirmRequest.Raise(confirmation, (x) =>
 			{
@@ -318,17 +318,17 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 				{
 					try
 					{
-						
-							if (isPasswordChanging)
-								_securityService.ChangePassword(InnerItem.UserName, itemVM.OldPassword, itemVM.Password);
-							else
-								_securityService.ResetPassword(InnerItem.UserName, itemVM.Password);
+
+						if (isPasswordChanging)
+							_securityService.ChangePassword(InnerItem.UserName, itemVM.OldPassword, itemVM.Password);
+						else
+							_securityService.ResetPassword(InnerItem.UserName, itemVM.Password);
 					}
 					catch (Exception ex)
 					{
-						var message = string.Format(isPasswordChanging ? 
-							"An error occurred when trying to change password: {0}" : 
-							"An error occurred when trying to reset password: {0}", ex.InnerException.Message);
+						var message = string.Format(isPasswordChanging ?
+							Resources.error_occurred_when_trying_to_change_password :
+							Resources.error_occurred_when_trying_to_reset, ex.InnerException.Message);
 
 						ShowErrorDialog(ex, message);
 					}

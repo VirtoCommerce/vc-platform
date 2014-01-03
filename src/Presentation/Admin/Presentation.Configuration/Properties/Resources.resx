@@ -117,67 +117,30 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ADD" xml:space="preserve">
-    <value>ADD</value>
-  </data>
-  <data name="confirm_delete" xml:space="preserve">
-    <value>Are you sure you want to delete '{0}'?</value>
-  </data>
-  <data name="CreateNew" xml:space="preserve">
-    <value>Create new item</value>
-  </data>
-  <data name="Delete" xml:space="preserve">
-    <value>Delete</value>
-  </data>
-  <data name="DeleteSelected" xml:space="preserve">
-    <value>Delete selected Items</value>
-  </data>
-  <data name="REFRESH" xml:space="preserve">
-    <value>REFRESH</value>
-  </data>
-  <data name="RefreshTooltip" xml:space="preserve">
-    <value>Refresh</value>
-  </data>
-  <data name="REMOVE" xml:space="preserve">
-    <value>REMOVE</value>
-  </data>
-  <data name="Summary" xml:space="preserve">
-    <value>Summary</value>
-  </data>
-  <data name="Action_confirmation" xml:space="preserve">
-    <value>Action confirmation</value>
-  </data>
-  <data name="Save_changes_to" xml:space="preserve">
-    <value>Save changes to '{0}'?</value>
-  </data>
-  <data name="Save_changes" xml:space="preserve">
-    <value>Save changes '{0}'?</value>
-  </data>
-  <data name="error_occurred_when_trying_to_load" xml:space="preserve">
-    <value>An error occurred when trying to load {0}</value>
-  </data>
-  <data name="DUPLICATE" xml:space="preserve">
-    <value>DUPLICATE</value>
+  <data name="REBUILD" xml:space="preserve">
+    <value>REBUILD</value>
     <comment>core_controls:MetroButton.Header</comment>
   </data>
-  <data name="Duplicate_selected_Items" xml:space="preserve">
-    <value>Duplicate selected Items</value>
+  <data name="Rebuild_selected_Index" xml:space="preserve">
+    <value>Rebuild selected Index</value>
     <comment>core_controls:MetroButton.ToolTip</comment>
   </data>
-  <data name="NARROW_YOUR_RESULTS" xml:space="preserve">
-    <value>NARROW YOUR RESULTS</value>
-    <comment>TextBlock.Text</comment>
+  <data name="Index_Name" xml:space="preserve">
+    <value>Index Name</value>
+    <comment>DataGridTextColumn.Header</comment>
   </data>
-  <data name="Clear" xml:space="preserve">
-    <value>Clear</value>
-    <comment>Button.Content</comment>
+  <data name="Last_Updated" xml:space="preserve">
+    <value>Last Updated</value>
+    <comment>DataGridTextColumn.Header</comment>
   </data>
-  <data name="Apply_filters" xml:space="preserve">
-    <value>Apply filters</value>
-    <comment>Button.Content</comment>
+  <data name="Status" xml:space="preserve">
+    <value>Status</value>
+    <comment>DataGridTextColumn.Header</comment>
   </data>
-  <data name="EDIT" xml:space="preserve">
-    <value>EDIT</value>
-    <comment>controls:MetroButton.Header</comment>
+	<data name="Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+	<data name="Are_you_sure_you_want_to_rebuild_index" xml:space="preserve">
+    <value>Are you sure you want to rebuild index '{0}'?</value>
   </data>
 </root>

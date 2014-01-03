@@ -5,7 +5,9 @@
             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
             xmlns:localViewWizard="clr-namespace:VirtoCommerce.ManagementClient.Security.View.Wizard"
             xmlns:localInfrastructure="clr-namespace:VirtoCommerce.ManagementClient.Security.Infrastructure"
-             
+			xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Security.Properties"
+			LocalizationScope.ResourceManager="{ResourceManager res:Resources}"
+			 
             xmlns:controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
             xmlns:interaction_dialog="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Dialogs;assembly=VirtoCommerce.ManagementClient.Core"
             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
@@ -13,61 +15,60 @@
             mc:Ignorable="d" 
             Style="{DynamicResource Virto_Window_Style}"
             d:DesignHeight="600" d:DesignWidth="800">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/DetailViewTheme/VirtoCommerceDetailTheme.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
+	<UserControl.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/DetailViewTheme/VirtoCommerceDetailTheme.xaml"/>
+			</ResourceDictionary.MergedDictionaries>
 
-            <Style TargetType="Button" BasedOn="{StaticResource Virto_Button_Secondary_Style}">
-                <Setter Property="Margin" Value="0,2" />
-                <Setter Property="Width" Value="130" />
-            </Style>
+			<Style TargetType="Button" BasedOn="{StaticResource Virto_Button_Secondary_Style}">
+				<Setter Property="Margin" Value="0,2" />
+				<Setter Property="Width" Value="130" />
+			</Style>
 
-            <localInfrastructure:AccountStateConverter x:Key="accountStateConverter" />
-        </ResourceDictionary>
-    </UserControl.Resources>
+			<localInfrastructure:AccountStateConverter x:Key="accountStateConverter" />
+		</ResourceDictionary>
+	</UserControl.Resources>
 
-    <i:Interaction.Triggers>
-        <prism:InteractionRequestTrigger SourceObject="{Binding CommonConfirmRequest, Mode=OneWay}">
-            <interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:DisableableLocalModalInteractionDialog}" />
-        </prism:InteractionRequestTrigger>
-    </i:Interaction.Triggers>
+	<i:Interaction.Triggers>
+		<prism:InteractionRequestTrigger SourceObject="{Binding CommonConfirmRequest, Mode=OneWay}">
+			<interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:DisableableLocalModalInteractionDialog}" />
+		</prism:InteractionRequestTrigger>
+	</i:Interaction.Triggers>
 
-    <TabControl x:Name="tabControl" Style="{DynamicResource Virto_TabControlHorizontal_Style}">
-        <TabItem x:Name="tabItemSummary" Header="Summary">
-            <!--<localViewWizard:AccountOverviewView HorizontalAlignment="Left"/>-->
-            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                <Grid HorizontalAlignment="Left" Width="600">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="auto" />
-                        <ColumnDefinition Width="20" />
-                        <ColumnDefinition />
-                        <ColumnDefinition Width="40" />
-                        <ColumnDefinition Width="auto" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0" Text="Username:" />
-                    <controls:WatermarkedTextBox Grid.Row="1" Grid.ColumnSpan="3" Text="{Binding InnerItem.UserName, Mode=OneTime}" IsReadOnly="True" />
-                    <TextBlock Grid.Row="2" Text="Account State:" />
-                    <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding InnerItem.AccountState, Converter={StaticResource accountStateConverter}}" />
-                    <CheckBox Grid.Row="3" IsChecked="{Binding IsAdministrator, Mode=TwoWay}" Content="Is Administrator" IsEnabled="{Binding IsAdministratorCheckable}" Grid.ColumnSpan="3" />
+	<TabControl x:Name="tabControl" Style="{DynamicResource Virto_TabControlHorizontal_Style}">
+		<TabItem x:Name="tabItemSummary" LocalizationScope.ResourceManager="{ResourceManager AssemblyName=VirtoCommerce.ManagementClient.Core, BaseName=VirtoCommerce.ManagementClient.Core.Properties.Resources}" Header="{Loc Summary}">
+			<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+				<Grid HorizontalAlignment="Left" Width="600" LocalizationScope.ResourceManager="{ResourceManager res:Resources}">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="auto" />
+						<ColumnDefinition Width="20" />
+						<ColumnDefinition />
+						<ColumnDefinition Width="40" />
+						<ColumnDefinition Width="auto" />
+					</Grid.ColumnDefinitions>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+					</Grid.RowDefinitions>
+					<TextBlock Text="{Loc Username}" />
+					<controls:WatermarkedTextBox Grid.Row="1" Grid.ColumnSpan="3" Text="{Binding InnerItem.UserName, Mode=OneTime}" IsReadOnly="True" />
+					<TextBlock Grid.Row="2" Text="{Loc AccountState}" />
+					<TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding InnerItem.AccountState, Converter={StaticResource accountStateConverter}}" />
+					<CheckBox Grid.Row="3" IsChecked="{Binding IsAdministrator, Mode=TwoWay}" Content="{Loc IsAdministrator}" IsEnabled="{Binding IsAdministratorCheckable}" Grid.ColumnSpan="3" />
 
-                    <Button Grid.Row="0" Grid.Column="4" Command="{Binding ApproveCommand}" Content="Approve User" Visibility="{Binding IsEnabled, RelativeSource={RelativeSource Self}, Converter={StaticResource booleanToVisibilityConverter}}"/>
-                    <Button Grid.Row="0" Grid.Column="4" Command="{Binding RejectCommand}" Content="Reject User" Visibility="{Binding IsEnabled, RelativeSource={RelativeSource Self}, Converter={StaticResource booleanToVisibilityConverter}}"/>
+					<Button Grid.Row="0" Grid.Column="4" Command="{Binding ApproveCommand}" Content="{Loc ApproveUser}" Visibility="{Binding IsEnabled, RelativeSource={RelativeSource Self}, Converter={StaticResource booleanToVisibilityConverter}}"/>
+					<Button Grid.Row="0" Grid.Column="4" Command="{Binding RejectCommand}" Content="{Loc RejectUser}" Visibility="{Binding IsEnabled, RelativeSource={RelativeSource Self}, Converter={StaticResource booleanToVisibilityConverter}}"/>
 
-                    <Button Grid.Row="1" Grid.Column="4" Command="{Binding PasswordChangeCommand}" Content="Change Password" Visibility="{Binding IsEnabled, RelativeSource={RelativeSource Self}, Converter={StaticResource booleanToVisibilityConverter}}"/>
-                    <Button Grid.Row="1" Grid.Column="4" Command="{Binding PasswordResetCommand}" Content="Reset Password" Visibility="{Binding IsEnabled, RelativeSource={RelativeSource Self}, Converter={StaticResource booleanToVisibilityConverter}}"/>
-                </Grid>
-            </ScrollViewer>
-        </TabItem>
-        <TabItem Header="Roles">
-            <localViewWizard:AccountRolesView HorizontalAlignment="Left"/>
-        </TabItem>
-    </TabControl>
+					<Button Grid.Row="1" Grid.Column="4" Command="{Binding PasswordChangeCommand}" Content="{Loc ChangePassword}" Visibility="{Binding IsEnabled, RelativeSource={RelativeSource Self}, Converter={StaticResource booleanToVisibilityConverter}}"/>
+					<Button Grid.Row="1" Grid.Column="4" Command="{Binding PasswordResetCommand}" Content="{Loc ResetPassword}" Visibility="{Binding IsEnabled, RelativeSource={RelativeSource Self}, Converter={StaticResource booleanToVisibilityConverter}}"/>
+				</Grid>
+			</ScrollViewer>
+		</TabItem>
+		<TabItem Header="{Loc Roles}">
+			<localViewWizard:AccountRolesView HorizontalAlignment="Left"/>
+		</TabItem>
+	</TabControl>
 </UserControl>

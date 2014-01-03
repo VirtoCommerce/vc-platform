@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Converters;
 using VirtoCommerce.Foundation.Security.Model;
+using VirtoCommerce.ManagementClient.Security.Properties;
 
 namespace VirtoCommerce.ManagementClient.Security.Infrastructure
 {
@@ -14,10 +15,10 @@ namespace VirtoCommerce.ManagementClient.Security.Infrastructure
 			// TODO take localized texts from resources
             textResources = new Dictionary<RegisterType, string>
                 {
-                    {RegisterType.Administrator, "Administrator"},
-                    {RegisterType.GuestUser, "Guest User"},
-                    {RegisterType.RegisteredUser, "Registered user"},
-                    {RegisterType.SiteAdministrator, "Site Administrator"}
+                    {RegisterType.Administrator, Resources.Administrator},
+                    {RegisterType.GuestUser, Resources.Guest_User},
+                    {RegisterType.RegisteredUser, Resources.Registered_User},
+                    {RegisterType.SiteAdministrator, Resources.Site_Administrator}
                 };
 		}
 

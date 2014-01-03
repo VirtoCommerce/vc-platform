@@ -7,6 +7,7 @@ using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.Foundation.Search.Model;
 using VirtoCommerce.Foundation.Search.Repositories;
 using System.Threading;
+using VirtoCommerce.ManagementClient.Core.Properties;
 
 namespace VirtoCommerce.ManagementClient.Configuration.ViewModel.Implementations
 {
@@ -75,8 +76,8 @@ namespace VirtoCommerce.ManagementClient.Configuration.ViewModel.Implementations
         {
             var confirmation = new ConditionalConfirmation
             {
-                Content = string.Format("Are you sure you want to rebuild index '{0}'?", item.DocumentType),
-                Title = "Rebuild confirmation"
+                Content = string.Format(Properties.Resources.Are_you_sure_you_want_to_rebuild_index, item.DocumentType),
+				Title = Resources.Action_confirmation
             };
 
             if (IsActive)

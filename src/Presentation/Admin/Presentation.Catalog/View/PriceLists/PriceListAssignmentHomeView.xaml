@@ -80,7 +80,7 @@
 				<core_controls:MetroButton Command="{Binding ItemAddCommand}" Header="ADD" ToolTip="Create Price List Assignment">
 					<Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/add.png" Width="14" />
 				</core_controls:MetroButton>
-                <core_controls:MetroButton Command="{Binding ItemDeleteCommand}" CommandParameter="{Binding SelectedItems, ElementName=ItemList}" Header="REMOVE" ToolTip="Delete selected">
+				<core_controls:MetroButton Command="{Binding ItemDeleteCommand}" CommandParameter="{Binding SelectedItems, ElementName=ItemList}" Header="REMOVE" ToolTip="Delete selected Items">
 					<Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/cancel.png" Width="14" />
 				</core_controls:MetroButton>
 			</ItemsControl>

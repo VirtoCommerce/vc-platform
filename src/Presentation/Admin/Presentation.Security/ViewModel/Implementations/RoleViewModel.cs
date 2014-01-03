@@ -11,6 +11,7 @@ using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
 using VirtoCommerce.ManagementClient.Security.Model;
+using VirtoCommerce.ManagementClient.Security.Properties;
 using VirtoCommerce.ManagementClient.Security.ViewModel.Helpers;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Security.Factories;
@@ -40,7 +41,7 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 			_navManager = navManager;
 			ViewTitle = new ViewTitleBase()
 				{
-					Title = "Role",
+					Title = Resources.Role,
 					SubTitle =
 						(item != null && !string.IsNullOrEmpty(item.Name)) ? item.Name.ToUpper(CultureInfo.InvariantCulture) : ""
 				};
@@ -124,8 +125,8 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 		{
 			return new RefusedConfirmation
 			{
-				Content = "Save changes '" + DisplayName + "'?",
-				Title = "Action confirmation"
+				Content = string.Format(Core.Properties.Resources.Save_changes, DisplayName),
+				Title = Core.Properties.Resources.Action_confirmation
 			};
 		}
 
@@ -194,7 +195,7 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 			}
 			catch (Exception ex)
 			{
-				ShowErrorDialog(ex, string.Format("An error occurred when trying to load {0}", ExceptionContextIdentity));
+				ShowErrorDialog(ex, string.Format(Core.Properties.Resources.error_occurred_when_trying_to_load, ExceptionContextIdentity));
 			}
 		}
 
@@ -418,7 +419,7 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 		{
 			get
 			{
-				return "Enter Role information.";
+				return Resources.wiz_Role_information;
 			}
 		}
 		#endregion
@@ -444,22 +445,22 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 
 					retVal = new[]
 						{
-							CreatePermissionGroupViewModel("Customer Service", allPermissions,
+							CreatePermissionGroupViewModel(Resources.groupCustomer_Service, allPermissions,
 							                               PredefinedPermissions.ListCustomerServicePermissions()),
-							CreatePermissionGroupViewModel("Orders", allPermissions, PredefinedPermissions.ListOrdersPermissions()),
-							CreatePermissionGroupViewModel("Catalog", allPermissions, PredefinedPermissions.ListCatalogPermissions()),
-							CreatePermissionGroupViewModel("Pricing", allPermissions, PredefinedPermissions.ListPricingPermissions()),
-							CreatePermissionGroupViewModel("Marketing", allPermissions, PredefinedPermissions.ListMarketingPermissions()),
-							CreatePermissionGroupViewModel("Fulfillment", allPermissions, PredefinedPermissions.ListFulfillmentPermissions()),
-							CreatePermissionGroupViewModel("Users", allPermissions, PredefinedPermissions.ListUsersPermissions()),
-							CreatePermissionGroupViewModel("Shopper", allPermissions, PredefinedPermissions.ListShopperPermissions()),
-							CreatePermissionGroupViewModel("Settings", allPermissions, PredefinedPermissions.ListSettingsPermissions())
+							CreatePermissionGroupViewModel(Resources.groupOrders, allPermissions, PredefinedPermissions.ListOrdersPermissions()),
+							CreatePermissionGroupViewModel(Resources.groupCatalog, allPermissions, PredefinedPermissions.ListCatalogPermissions()),
+							CreatePermissionGroupViewModel(Resources.groupPricing, allPermissions, PredefinedPermissions.ListPricingPermissions()),
+							CreatePermissionGroupViewModel(Resources.groupMarketing, allPermissions, PredefinedPermissions.ListMarketingPermissions()),
+							CreatePermissionGroupViewModel(Resources.groupFulfillment, allPermissions, PredefinedPermissions.ListFulfillmentPermissions()),
+							CreatePermissionGroupViewModel(Resources.groupUsers, allPermissions, PredefinedPermissions.ListUsersPermissions()),
+							CreatePermissionGroupViewModel(Resources.groupShopper, allPermissions, PredefinedPermissions.ListShopperPermissions()),
+							CreatePermissionGroupViewModel(Resources.groupSettings, allPermissions, PredefinedPermissions.ListSettingsPermissions())
 						};
 				}
 			}
 			catch (Exception ex)
 			{
-				ShowErrorDialog(ex, string.Format("An error occurred when trying to load Permissions for: {0}", ExceptionContextIdentity));
+				ShowErrorDialog(ex, string.Format(Resources.error_occurred_when_trying_to_load_Permissions, ExceptionContextIdentity));
 			}
 			return retVal;
 		}

@@ -2,104 +2,105 @@
 using System.Linq;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Security.Factories;
+using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.Foundation.Security.Repositories;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Wizard;
-using VirtoCommerce.Foundation.Security.Model;
+using VirtoCommerce.ManagementClient.Security.Properties;
 using VirtoCommerce.ManagementClient.Security.ViewModel.Implementations;
 using VirtoCommerce.ManagementClient.Security.ViewModel.Wizard.Interfaces;
 
 namespace VirtoCommerce.ManagementClient.Security.ViewModel.Wizard.Implementations
 {
-    public class CreateAccountViewModel : WizardViewModelBare, ICreateAccountViewModel
-    {
-        public CreateAccountViewModel(IViewModelsFactory<IAccountOverviewStepViewModel> overviewVmFactory, IViewModelsFactory<IAccountRolesStepViewModel> rolesVmFactory, Account item)
-        {
+	public class CreateAccountViewModel : WizardViewModelBare, ICreateAccountViewModel
+	{
+		public CreateAccountViewModel(IViewModelsFactory<IAccountOverviewStepViewModel> overviewVmFactory, IViewModelsFactory<IAccountRolesStepViewModel> rolesVmFactory, Account item)
+		{
 			var itemParameter = new KeyValuePair<string, object>("item", item);
 			RegisterStep(overviewVmFactory.GetViewModelInstance(itemParameter));
 			RegisterStep(rolesVmFactory.GetViewModelInstance(itemParameter));
 		}
-		
-        #region ICreateAccountViewModel Members
 
-        public string Password
-        {
-            get { return AllRegisteredSteps.OfType<IAccountOverviewStepViewModel>().First().Password; }
-        }
+		#region ICreateAccountViewModel Members
 
-        #endregion
-    }
+		public string Password
+		{
+			get { return AllRegisteredSteps.OfType<IAccountOverviewStepViewModel>().First().Password; }
+		}
 
-    public class AccountOverviewStepViewModel : AccountViewModel, IAccountOverviewStepViewModel
-    {
-        public AccountOverviewStepViewModel(IRepositoryFactory<ISecurityRepository> repositoryFactory, ISecurityEntityFactory entityFactory, Account item)
-            : base(repositoryFactory, entityFactory, item)
-        {
-        }
+		#endregion
+	}
 
-        #region WizardViewModelBase overrides
+	public class AccountOverviewStepViewModel : AccountViewModel, IAccountOverviewStepViewModel
+	{
+		public AccountOverviewStepViewModel(IRepositoryFactory<ISecurityRepository> repositoryFactory, ISecurityEntityFactory entityFactory, Account item)
+			: base(repositoryFactory, entityFactory, item)
+		{
+		}
 
-        private string _Password;
-        public string Password
-        {
-            get { return _Password; }
-            set { _Password = value; OnPropertyChanged(); OnIsValidChanged(); }
-        }
+		#region WizardViewModelBase overrides
 
-        private string _Password1;
-        public string Password1
-        {
-            get { return _Password1; }
-            set { _Password1 = value; OnPropertyChanged(); OnIsValidChanged(); }
-        }
+		private string _Password;
+		public string Password
+		{
+			get { return _Password; }
+			set { _Password = value; OnPropertyChanged(); OnIsValidChanged(); }
+		}
 
-        public override string Description
-        {
-            get { return "Enter Account details"; }
-        }
+		private string _Password1;
+		public string Password1
+		{
+			get { return _Password1; }
+			set { _Password1 = value; OnPropertyChanged(); OnIsValidChanged(); }
+		}
 
-        public override bool IsValid
-        {
-            get
-            {
-                bool retval;
-                bool doNotifyChanges = false;
-                InnerItem.Validate(doNotifyChanges);
-                retval = InnerItem.Errors.Count == 0;
-                InnerItem.Errors.Clear();
+		public override string Description
+		{
+			get { return Resources.Account_details; }
+		}
 
-                retval = retval
-                    && !string.IsNullOrWhiteSpace(Password) && Password == Password1;
-                return retval;
-            }
-        }
-        #endregion
-    }
+		public override bool IsValid
+		{
+			get
+			{
+				bool retval;
+				bool doNotifyChanges = false;
+				InnerItem.Validate(doNotifyChanges);
+				retval = InnerItem.Errors.Count == 0;
+				InnerItem.Errors.Clear();
 
-    public class AccountRolesStepViewModel : AccountViewModel, IAccountRolesStepViewModel
-    {
-        public AccountRolesStepViewModel(IRepositoryFactory<ISecurityRepository> repositoryFactory, ISecurityEntityFactory entityFactory, Account item)
-            : base(repositoryFactory, entityFactory, item)
-        {
-        }
+				retval = retval
+					&& !string.IsNullOrWhiteSpace(Password) && Password == Password1;
+				return retval;
+			}
+		}
+		#endregion
+	}
 
-        #region WizardViewModelBase overrides
+	public class AccountRolesStepViewModel : AccountViewModel, IAccountRolesStepViewModel
+	{
+		public AccountRolesStepViewModel(IRepositoryFactory<ISecurityRepository> repositoryFactory, ISecurityEntityFactory entityFactory, Account item)
+			: base(repositoryFactory, entityFactory, item)
+		{
+		}
 
-        public override string Description
-        {
-            get { return "Set Roles"; }
-        }
+		#region WizardViewModelBase overrides
 
-        public override bool IsValid
-        {
-            get { return true; }
-        }
+		public override string Description
+		{
+			get { return Resources.Set_Roles; }
+		}
 
-        public override bool IsLast
-        {
-            get { return true; }
-        }
-        #endregion
+		public override bool IsValid
+		{
+			get { return true; }
+		}
+
+		public override bool IsLast
+		{
+			get { return true; }
+		}
+		#endregion
 
 		#region ViewModelDetailBase
 
@@ -111,5 +112,5 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Wizard.Implementatio
 
 		#endregion
 
-    }
+	}
 }

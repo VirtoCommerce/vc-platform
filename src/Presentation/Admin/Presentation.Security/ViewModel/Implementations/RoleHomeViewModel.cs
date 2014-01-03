@@ -4,6 +4,7 @@ using System.Linq;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.DataVirtualization;
+using VirtoCommerce.ManagementClient.Security.Properties;
 using VirtoCommerce.ManagementClient.Security.ViewModel.Interfaces;
 using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.Foundation.Security.Repositories;
@@ -49,7 +50,7 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 
             var itemVM = _wizardVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", item));
 
-			var confirmation = new Confirmation { Title = "Create role", Content = itemVM };
+			var confirmation = new Confirmation { Title = Resources.Create_role, Content = itemVM };
 			ItemAdd(confirmation);
 		}
 
