@@ -79,5 +79,17 @@ namespace VirtoCommerce.PowerShell.Cmdlet
                 Trace.WriteLine(text);
             }
         }
+
+        public void SafeWriteProgress(ProgressRecord progress)
+        {
+            if (CommandRuntime != null)
+            {
+                WriteProgress(progress);
+            }
+            else
+            {
+                Trace.WriteLine(progress.StatusDescription);
+            }
+        }
     }
 }

@@ -32,10 +32,15 @@ namespace VirtoCommerce.PowerShell.SearchSetup
                 if (consume.Message is SearchIndexMessage)
                 {
                     var msg = consume.Message as SearchIndexMessage;
-                    var displayMessage = String.Format("Processing document {0} of {1} - {2}%", msg.Partition.Start, msg.Partition.Total, (int)(msg.Partition.Start * 100 / msg.Partition.Total));
+                    var displayMessage = String.Format(
+                        "Processing document {0} of {1} - {2}%",
+                        msg.Partition.Start,
+                        msg.Partition.Total,
+                        (int)(msg.Partition.Start * 100 / msg.Partition.Total));
                     _progress.StatusDescription = displayMessage;
-                    _progress.PercentComplete = (int)(msg.Partition.Start * 100/msg.Partition.Total);
-                    _command.WriteProgress(_progress);
+                    _progress.PercentComplete = (int)(msg.Partition.Start * 100 / msg.Partition.Total);
+
+                    _command.SafeWriteProgress(_progress);
                 }
             }
         }

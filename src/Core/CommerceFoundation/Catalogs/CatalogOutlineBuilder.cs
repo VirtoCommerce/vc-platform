@@ -14,7 +14,6 @@ namespace VirtoCommerce.Foundation.Catalogs
     {
         private readonly ICatalogRepository _catalogRepository;
         private readonly ICacheRepository _cacheRepository;
-        private readonly bool _isEnabled;
         private const string CatalogCacheKey = "C:C:{0}";
         public const string CategoryIdCacheKey = "C:CTID:{0}:{1}";
 
@@ -103,7 +102,7 @@ namespace VirtoCommerce.Foundation.Catalogs
             return Helper.Get(
                 string.Format(CatalogCacheKey, catalogId),
                 () => (query).SingleOrDefault(),
-                CatalogConfiguration.Instance.Cache.CatalogTimeout,
+                new TimeSpan(0, 0, 30),
                 useCache);
         }
 
@@ -112,8 +111,8 @@ namespace VirtoCommerce.Foundation.Catalogs
             return Helper.Get(
                 string.Format(CategoryIdCacheKey, catalogId, categoryId),
                 () => GetCategoryByIdInternal(categoryId),
-                CatalogConfiguration.Instance.Cache.CategoryTimeout,
-                _isEnabled && useCache);
+                new TimeSpan(0,0,30),
+                useCache);
         }
 
         private CategoryBase GetCategoryByIdInternal(string id)
@@ -158,7 +157,6 @@ namespace VirtoCommerce.Foundation.Catalogs
                 }
             }
 
-            // TODO: return array
             return String.Join(";", retVal.ToArray());
         }
 
