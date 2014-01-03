@@ -254,7 +254,7 @@ Function Build
 
         # build
         write-progress -id 1 -activity "Solution Build" -status "Cleaning in Progress"
-        & "$global:buildexe_path\MSBuild.exe" $build_solutionname /m /t:clean $build_params
+        & "$global:buildexe_path\MSBuild.exe" $build_solutionname /m /t:clean $build_params /p:Configuration="$build_configuration"
         if ($LASTEXITCODE -ne 0)
         {
           throw "Build Failed"
