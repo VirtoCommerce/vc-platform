@@ -201,18 +201,18 @@ Function update-config
 Function deploy-database
 {	
     write-progress -id 1 -activity "SQL Database Deployment" -status "In progress"
-    Write-Output "$(Get-Date –f $timeStampFormat) - SQL Database Deployment: In progress"
+    Write-Output "$(Get-Date -f $timeStampFormat) - SQL Database Deployment: In progress"
 
     . ".\azure-db.ps1" -db_servername $db_servername -db_serverlogin $db_serverlogin -db_serverpassword $db_serverpassword -db_databasename $db_databasename -selectedSubscription $common_subscriptionname -publishSettingsFile $common_publishsettingsfile -setupModulePath $common_vcfpowershellfile
 
     write-progress -id 1 -activity "SQL Database Deployment" -status "Finished"
-    Write-Output "$(Get-Date –f $timeStampFormat) - SQL Database Deployment: Finished"
+    Write-Output "$(Get-Date -f $timeStampFormat) - SQL Database Deployment: Finished"
 }
 
 Function deploy-frontend
 {
     write-progress -id 1 -activity "Frontend Deployment" -status "In progress"
-    Write-Output "$(Get-Date –f $timeStampFormat) - Frontend Deployment: In progress"
+    Write-Output "$(Get-Date -f $timeStampFormat) - Frontend Deployment: In progress"
 
 	& xcopy "$frontend_workerroleconfig\$common_serviceconfig" "$common_configfolder\CommerceSite\" /Y
     if ($LASTEXITCODE -ne 0)
@@ -224,13 +224,13 @@ Function deploy-frontend
 
     Write-Host "*** Starting Windows CommerceSite Azure deployment process ***"
     . ".\azure-service-publish.ps1" -serviceName $frontend_servicename -storageAccountName $common_storageaccount -storageAccountKey $common_storagekey -cloudConfigLocation $common_configfolder\CommerceSite\$common_serviceconfig -packageLocation $build_path\$frontend_packagename -selectedSubscription $common_subscriptionname -publishSettingsFile $common_publishsettingsfile -subscriptionId $common_subscriptionid -slot $common_slot -location $common_region
-        if (! $?)
+        if (! $?)	
         {
           throw "Frontend deployment failed"
         }
 
     write-progress -id 1 -activity "Frontend Deployment" -status "Finished"
-    Write-Output "$(Get-Date –f $timeStampFormat) - Frontend Deployment: Finished"
+    Write-Output "$(Get-Date -f $timeStampFormat) - Frontend Deployment: Finished"
 }
 
 Function Build
@@ -242,10 +242,10 @@ Function Build
 		Write-Host "MSBUILD 4.0 Path = $buildexe_path"
 
         write-progress -id 1 -activity "Solution Build" -status "In progress"
-        Write-Output "$(Get-Date –f $timeStampFormat) - Solution Build: In progress"
+        Write-Output "$(Get-Date -f $timeStampFormat) - Solution Build: In progress"
 
         $now = Get-Date
-        $PublishApplicationVersion = "1.0.$($now.DayOfYear).$($now.Hour)$($now.Minute)" # get latest checkin version and put it as a version number or a datetime
+        $PublishApplicationVersion = "1.6.$($now.DayOfYear).$($now.Hour)$($now.Minute)" # get latest checkin version and put it as a version number or a datetime
         Write-Host "Version: $PublishApplicationVersion"
 
         # clean the build directory
@@ -254,7 +254,7 @@ Function Build
 
         # build
         write-progress -id 1 -activity "Solution Build" -status "Cleaning in Progress"
-        & "$global:buildexe_path\MSBuild.exe" $build_solutionname /m /t:clean $build_params
+        & "$global:buildexe_path\MSBuild.exe" $build_solutionname /m /t:clean $build_params /p:Configuration="$build_configuration"
         if ($LASTEXITCODE -ne 0)
         {
           throw "Build Failed"
@@ -277,7 +277,7 @@ Function Build
         build-search
 
         write-progress -id 1 -activity "Solution Build" -status "Finished"
-        Write-Output "$(Get-Date –f $timeStampFormat) - Solution Build: Finished"
+        Write-Output "$(Get-Date -f $timeStampFormat) - Solution Build: Finished"
     }    
 }
 
@@ -288,7 +288,7 @@ Function build-search
 	Write-Host "MSBUILD 4.0 Path = $buildexe_path"
 
     write-progress -id 1 -activity "Search Build" -status "In progress"
-    Write-Output "$(Get-Date –f $timeStampFormat) - Search Build: In progress"
+    Write-Output "$(Get-Date -f $timeStampFormat) - Search Build: In progress"
 
 	# set the azure sdk 2.1 home folder
 	$azureSDKPath = (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Microsoft SDKs\ServiceHosting\v2.1" -Name InstallPath).InstallPath
@@ -301,7 +301,7 @@ Function build-search
     }
 
     write-progress -id 1 -activity "Search Build" -status "Copy JRE7"
-    Write-Output "$(Get-Date –f $timeStampFormat) - Search Build: Copy JRE7 defined at ""$Env:JAVA_HOME"""
+    Write-Output "$(Get-Date -f $timeStampFormat) - Search Build: Copy JRE7 defined at ""$Env:JAVA_HOME"""
 
     $JRE_HOME = $Env:JAVA_HOME
 
@@ -315,11 +315,11 @@ Function build-search
        throw "XCOPY failed"
     }
 
-    Write-Output "$(Get-Date –f $timeStampFormat) - Search Build: Copy ES Distribution"
+    Write-Output "$(Get-Date -f $timeStampFormat) - Search Build: Copy ES Distribution"
     write-progress -id 1 -activity "Search Build" -status "Copy ES Distribution"
     echo "N" | xcopy "$search_elasticsearchdistro\*.*" "$search_workerrolehome\bin\$build_configuration\es\" /E /Q
 
-    Write-Output "$(Get-Date –f $timeStampFormat) - Search Build: CS Packing"
+    Write-Output "$(Get-Date -f $timeStampFormat) - Search Build: CS Packing"
     write-progress -id 1 -activity "Search Build" -status "cspack running"
     & "$azureSDKPath\bin\cspack.exe" $search_workerroleconfig\ServiceDefinition.csdef "/role:ESWorkerRole;$search_workerrolehome/bin/$build_configuration;VirtoCommerce.Azure.ESWorkerRole.dll" "/rolePropertiesFile:ESWorkerRole;$search_workerrolehome\AzureRoleProperties.txt" "/out:$build_path/ElasticSearch.cspkg"
     if ($LASTEXITCODE -ne 0)
@@ -328,7 +328,7 @@ Function build-search
     }
 
     write-progress -id 1 -activity "Search Build" -status "Finished"
-    Write-Output "$(Get-Date –f $timeStampFormat) - Search Build: Finished"
+    Write-Output "$(Get-Date -f $timeStampFormat) - Search Build: Finished"
 }
 
 Function deploy-search
@@ -336,7 +336,7 @@ Function deploy-search
     build-search
 
     write-progress -id 1 -activity "Search Deployment" -status "In progress"
-    Write-Output "$(Get-Date –f $timeStampFormat) - Search Deployment: In progress"
+    Write-Output "$(Get-Date -f $timeStampFormat) - Search Deployment: In progress"
 
 	& xcopy "$search_workerroleconfig\$common_serviceconfig" "$common_configfolder\Search\" /Y
     if ($LASTEXITCODE -ne 0)
@@ -353,14 +353,14 @@ Function deploy-search
         }
 
     write-progress -id 1 -activity "Search Deployment" -status "Finished"
-    Write-Output "$(Get-Date –f $timeStampFormat) - Search Deployment: Finished"
+    Write-Output "$(Get-Date -f $timeStampFormat) - Search Deployment: Finished"
 }
 
 
 Function deploy-scheduler
 {
     write-progress -id 1 -activity "Scheduler Deployment" -status "In progress"
-    Write-Output "$(Get-Date –f $timeStampFormat) - Scheduler Deployment: In progress"
+    Write-Output "$(Get-Date -f $timeStampFormat) - Scheduler Deployment: In progress"
 
 	& xcopy "$scheduler_workerroleconfig\$common_serviceconfig" "$common_configfolder\Scheduler\" /Y
     update-config $common_configfolder\Scheduler\$common_serviceconfig
@@ -372,20 +372,20 @@ Function deploy-scheduler
         }
 
     write-progress -id 1 -activity "Scheduler Deployment" -status "Finished"
-    Write-Output "$(Get-Date –f $timeStampFormat) - Scheduler Deployment: Finished"
+    Write-Output "$(Get-Date -f $timeStampFormat) - Scheduler Deployment: Finished"
 }
 
 
 Function create-storage
 {
     write-progress -id 1 -activity "Checking storage account $common_storageaccount" -status "In progress"
-    Write-Output "$(Get-Date –f $timeStampFormat) - Checking storage account {$common_storageaccount}: In progress"
+    Write-Output "$(Get-Date -f $timeStampFormat) - Checking storage account {$common_storageaccount}: In progress"
 
-    $temp_storageaccount = Get-AzureStorageAccount –StorageAccountName $common_storageaccount -ErrorAction SilentlyContinue
+    $temp_storageaccount = Get-AzureStorageAccount -StorageAccountName $common_storageaccount -ErrorAction SilentlyContinue
     if($temp_storageaccount -eq $null)
     {
         write-progress -id 1 -activity "Checking container $storageaccount" -status "Creating new"
-        Write-Output "$(Get-Date –f $timeStampFormat) - Checking storage account {$common_storageaccount}: Creating new"
+        Write-Output "$(Get-Date -f $timeStampFormat) - Checking storage account {$common_storageaccount}: Creating new"
 
         New-AzureStorageAccount -StorageAccountName $common_storageaccount -Label $common_storageaccount -Location $common_region
         if ($LASTEXITCODE -ne 0)
@@ -405,29 +405,29 @@ Function create-container
 		$permission = "Off"
     )
     write-progress -id 1 -activity "Checking container $container_name" -status "In progress"
-    Write-Output "$(Get-Date –f $timeStampFormat) - Checking container {$container_name}: In progress"
+    Write-Output "$(Get-Date -f $timeStampFormat) - Checking container {$container_name}: In progress"
 
     create-storage
 
     Write-Output $common_storageaccount
-    $destContext = New-AzureStorageContext –StorageAccountName $common_storageaccount -StorageAccountKey $common_storagekey
+    $destContext = New-AzureStorageContext -StorageAccountName $common_storageaccount -StorageAccountKey $common_storagekey
 
     $temp_container = Get-AzureStorageContainer -Name $container_name -Context $destContext -ErrorAction SilentlyContinue
     if($temp_container -eq $null)
     {
         write-progress -id 1 -activity "Checking container $container_name" -status "Creating new"
-        Write-Output "$(Get-Date –f $timeStampFormat) - Checking container {$container_name}: Creating new"       
+        Write-Output "$(Get-Date -f $timeStampFormat) - Checking container {$container_name}: Creating new"       
         New-AzureStorageContainer -Name $container_name -Permission $permission -Context $destContext
     }
 
     write-progress -id 1 -activity "Checking container" -status "Finished"
-    Write-Output "$(Get-Date –f $timeStampFormat) - Checking container {$container_name}: Finished"
+    Write-Output "$(Get-Date -f $timeStampFormat) - Checking container {$container_name}: Finished"
 }
 
 Function deploy-admin
 {
     write-progress -id 1 -activity "Admin Deployment" -status "In progress"
-    Write-Output "$(Get-Date –f $timeStampFormat) - Admin Deployment: In progress"
+    Write-Output "$(Get-Date -f $timeStampFormat) - Admin Deployment: In progress"
 
     $wpf_applicationfiles = "$build_path\Application Files"
     $temp_application = "$build_path\Application"
@@ -452,7 +452,7 @@ Function deploy-admin
     #Remove-Item -Path "$wpf_applicationfiles" -Recurse -Force -ErrorAction Ignore
 
     write-progress -id 1 -activity "Admin Deployment" -status "Finished"
-    Write-Output "$(Get-Date –f $timeStampFormat) - Admin Deployment: Finished"
+    Write-Output "$(Get-Date -f $timeStampFormat) - Admin Deployment: Finished"
 }   
 
 

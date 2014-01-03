@@ -21,16 +21,38 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
     public class InstallController : Web.Controllers.ControllerBase
     {
         public ActionResult Index()
-        {           
-            var model = new InstallModel();
-            var csBuilder = new SqlConnectionStringBuilder(GetSetupConnectionString());
-            model.DataSource = csBuilder.DataSource;
-            model.InitialCatalog = csBuilder.InitialCatalog;
-            model.DbUserName = csBuilder.UserID;
-            model.DbUserPassword = csBuilder.Password;
-            model.SetupSampleData = true;
+        {
+            if (AppConfigConfiguration.Instance.Setup.IsCompleted)
+            {
+                return this.Success();
+            }
+            else
+            {
+                var model = new InstallModel();
+                var csBuilder = new SqlConnectionStringBuilder(GetSetupConnectionString());
+                model.DataSource = csBuilder.DataSource;
+                model.InitialCatalog = csBuilder.InitialCatalog;
+                model.DbUserName = csBuilder.UserID;
+                model.DbUserPassword = csBuilder.Password;
+                model.SetupSampleData = true;
 
-            return View(model);
+                return View(model);               
+            }
+        }
+
+        public ActionResult Success()
+        {
+            var successModel = new SuccessModel();
+
+            var url = string.Format(
+                "{0}://{1}{2}{3}",
+                (Request.IsSecureConnection) ? "https" : "http",
+                Request.Url.Host,
+                (Request.Url.Port == 80) ? "" : ":" + Request.Url.Port.ToString(),
+                VirtualPathUtility.ToAbsolute("~/"));
+
+            successModel.Website = String.Format("{0}", url);
+            return this.View("Success", successModel);            
         }
 
         [HttpPost]
@@ -187,7 +209,7 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
         public ActionResult Restart()
         {
             HttpRuntime.UnloadAppDomain();
-            return this.Redirect("~/");
+            return this.Success();
         }
 
         public FileResult DownloadLog()

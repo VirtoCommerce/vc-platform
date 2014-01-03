@@ -23,6 +23,14 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin
                     new {action = "Index", controller = "Install", id = UrlParameter.Optional}
                     );
             }
+            else
+            {
+                context.MapRoute(
+                    "AdminDefault",
+                    "admin",
+                    new { action = "Index", controller = "Install", id = UrlParameter.Optional }
+                    );                
+            }
         }
     }
 }

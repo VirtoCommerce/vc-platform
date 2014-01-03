@@ -80,7 +80,9 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Models
                     DataSource = this.DataSource,
                     InitialCatalog = this.InitialCatalog,
                     UserID = this.DbUserName,
-                    Password = this.DbUserPassword
+                    Password = this.DbUserPassword,
+                    ConnectTimeout = 420,
+                    MultipleActiveResultSets = true
                 };
             }
         }

@@ -333,6 +333,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\VirtoAdmin\Controllers\InstallController.cs" />
     <Compile Include="Areas\VirtoAdmin\Models\InstallModel.cs" />
+    <Compile Include="Areas\VirtoAdmin\Models\SuccessModel.cs" />
     <Compile Include="Areas\VirtoAdmin\Resources\Resource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -391,6 +392,8 @@
     <Compile Include="WebRole.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Areas\VirtoAdmin\Content\Images\demo-console.png" />
+    <Content Include="Areas\VirtoAdmin\Content\Images\demo-frontend.png" />
     <Content Include="Areas\VirtoAdmin\Content\Images\InProgress.GIF" />
     <Content Include="Areas\VirtoAdmin\Content\Images\VirtoCommerce.png" />
     <Content Include="Areas\VirtoAdmin\Content\site.css" />
@@ -571,6 +574,7 @@
     </Content>
     <Content Include="Areas\VirtoAdmin\Views\Web.config" />
     <Content Include="Areas\VirtoAdmin\Views\Install\Index.cshtml" />
+    <Content Include="Areas\VirtoAdmin\Views\Install\Success.cshtml" />
     <Content Include="Mvc.sitemap" />
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
