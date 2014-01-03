@@ -242,10 +242,10 @@ Function Build
 		Write-Host "MSBUILD 4.0 Path = $buildexe_path"
 
         write-progress -id 1 -activity "Solution Build" -status "In progress"
-        Write-Output "$(Get-Date �f $timeStampFormat) - Solution Build: In progress"
+        Write-Output "$(Get-Date -f $timeStampFormat) - Solution Build: In progress"
 
         $now = Get-Date
-        $PublishApplicationVersion = "1.1.$($now.DayOfYear).$($now.Hour)$($now.Minute)" # get latest checkin version and put it as a version number or a datetime
+        $PublishApplicationVersion = "1.6.$($now.DayOfYear).$($now.Hour)$($now.Minute)" # get latest checkin version and put it as a version number or a datetime
         Write-Host "Version: $PublishApplicationVersion"
 
         # clean the build directory
