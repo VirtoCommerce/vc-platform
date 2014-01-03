@@ -224,7 +224,7 @@ Function deploy-frontend
 
     Write-Host "*** Starting Windows CommerceSite Azure deployment process ***"
     . ".\azure-service-publish.ps1" -serviceName $frontend_servicename -storageAccountName $common_storageaccount -storageAccountKey $common_storagekey -cloudConfigLocation $common_configfolder\CommerceSite\$common_serviceconfig -packageLocation $build_path\$frontend_packagename -selectedSubscription $common_subscriptionname -publishSettingsFile $common_publishsettingsfile -subscriptionId $common_subscriptionid -slot $common_slot -location $common_region
-        if (! $?)
+        if (! $?)	
         {
           throw "Frontend deployment failed"
         }
