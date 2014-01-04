@@ -110,7 +110,7 @@ Function deploy-folder
 #Import-Module "C:\Program Files (x86)\Microsoft SDKs\Windows Azure\PowerShell\Azure\*.psd1"
 Import-AzurePublishSettingsFile $common_publishsettingsfile
 
-Set-AzureSubscription -DefaultSubscription $common_subscriptionname
+Set-AzureSubscription -Default $common_subscriptionname
 
 Set-AzureSubscription -CurrentStorageAccount $common_storageaccount -SubscriptionName $common_subscriptionname
 

@@ -463,7 +463,7 @@ Import-AzurePublishSettingsFile $common_publishsettingsfile
 #	throw "Failed to import publish settings file"
 #}
 
-Set-AzureSubscription -DefaultSubscription $common_subscriptionname
+Set-AzureSubscription -Default $common_subscriptionname
 
 Set-AzureSubscription -CurrentStorageAccount $common_storageaccount -SubscriptionName $common_subscriptionname
 

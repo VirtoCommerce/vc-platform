@@ -58,7 +58,7 @@ Function run-database-scripts
 #Import-Module "C:\Program Files (x86)\Microsoft SDKs\Windows Azure\PowerShell\Azure\*.psd1"
 Import-AzurePublishSettingsFile $publishSettingsFile
 
-Set-AzureSubscription -DefaultSubscription $selectedSubscription
+Set-AzureSubscription -Default $selectedSubscription
 
 ##Set-AzureSubscription -CurrentStorageAccount $storageAccountName -SubscriptionName $selectedSubscription
 
