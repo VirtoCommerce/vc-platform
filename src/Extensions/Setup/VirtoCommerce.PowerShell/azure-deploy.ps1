@@ -290,9 +290,9 @@ Function build-search
     write-progress -id 1 -activity "Search Build" -status "In progress"
     Write-Output "$(Get-Date -f $timeStampFormat) - Search Build: In progress"
 
-	# set the azure sdk 2.1 home folder
-	$azureSDKPath = (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Microsoft SDKs\ServiceHosting\v2.1" -Name InstallPath).InstallPath
-	Write-Host "Azure SDK 2.1 Path = $azureSDKPath"
+	# set the azure sdk 2.2 home folder
+	$azureSDKPath = (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Microsoft SDKs\ServiceHosting\v2.2" -Name InstallPath).InstallPath
+	Write-Host "Azure SDK 2.2 Path = $azureSDKPath"
 
     & "$global:buildexe_path\MSBuild.exe" $search_workerrolehome\ESWorkerRole.csproj /p:Configuration=$build_configuration
     if ($LASTEXITCODE -ne 0)
