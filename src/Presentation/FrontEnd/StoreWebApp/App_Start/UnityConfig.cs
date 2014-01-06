@@ -19,7 +19,6 @@ using VirtoCommerce.Foundation.Customers.Services;
 using VirtoCommerce.Foundation.Data.AppConfig;
 using VirtoCommerce.Foundation.Data.Asset;
 using VirtoCommerce.Foundation.Data.Catalogs;
-using VirtoCommerce.Foundation.Data.Common;
 using VirtoCommerce.Foundation.Data.Customers;
 using VirtoCommerce.Foundation.Data.Importing;
 using VirtoCommerce.Foundation.Data.Infrastructure;
@@ -61,6 +60,7 @@ using VirtoCommerce.Foundation.Orders.Factories;
 using VirtoCommerce.Foundation.Orders.Repositories;
 using VirtoCommerce.Foundation.Orders.Services;
 using VirtoCommerce.Foundation.Orders.StateMachines;
+using VirtoCommerce.Foundation.Reporting.Services;
 using VirtoCommerce.Foundation.Reviews.Factories;
 using VirtoCommerce.Foundation.Reviews.Repositories;
 using VirtoCommerce.Foundation.Search;
@@ -326,6 +326,11 @@ namespace VirtoCommerce.Web
             container.RegisterType<IStoreService, StoreService>();
             container.RegisterType<IStoreRepository, EFStoreRepository>();
 
+            #endregion
+
+            #region Reporting
+
+            container.RegisterType<IReportingService, ReportingService>();
             #endregion
 
             #endregion

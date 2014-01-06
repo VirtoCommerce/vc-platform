@@ -5,7 +5,6 @@ using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using VirtoCommerce.Foundation.AppConfig;
@@ -20,6 +19,14 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
 {
     public class InstallController : Web.Controllers.ControllerBase
     {
+        private string currentPath;
+        public static string status;
+
+        public InstallController()
+        {
+            currentPath = System.Web.HttpContext.Current.Request.PhysicalApplicationPath;
+        }
+
         public ActionResult Index()
         {           
             var model = new InstallModel();
@@ -33,32 +40,59 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
             return View(model);
         }
 
+        public delegate void AsyncProcessCaller(InstallModel model);
+
         [HttpPost]
-        public ActionResult Index(InstallModel model)
+        public JsonResult Index(InstallModel model)
         {
             if (model == null)
             {
                 model = new InstallModel();
             }
-
+            
             CustomValidateModel(model);
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return new JsonResult { ContentType = "application/json", Data = RenderPartialViewToString("SetupFormPartial", model) };
             }
+
+                status = "WORKING";
+                var caller = new AsyncProcessCaller(AsyncProcess);
+                caller.BeginInvoke(model, null, null);
+
+            return new JsonResult { ContentType = "application/json", Data = RenderPartialViewToString("SetupFormPartial", model) };
+        }
+
+        private void AsyncProcess(InstallModel model)
+        {
             try
             {
                 if (CreateDb(model))
                 {
                     UpdateIndex(model);
-                    return Restart();
+                    Restart();
+                    model.ClearMessages();
+                    model.StatusMessage = "Database created successfully";
+                    status = "DONE";
+                }
+                else
+                {
+                    status = "FAILED";
                 }
             }
             catch (Exception err)
             {
                 model.ErrorMessage = err.Message;
+                status = "FAILED";
+              //  HttpContext.Application["InstallError"] = err.Message;
             }
-            return View(model);
+        }
+
+        public JsonResult AsyncStatus()
+        {
+           // var status = HttpContext.Application["InstallStatus"];
+      //      var error = HttpContext.Application["InstallError"];
+            return Json(new { Status = status }, JsonRequestBehavior.AllowGet);
         }
 
         private void UpdateIndex(InstallModel model)
@@ -135,7 +169,7 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
                 model.ErrorMessage = err.Message;
             }
             
-            Session["log"] = log.ToString();
+           // Session["log"] = log.ToString();
             Trace.Listeners.Remove(traceListener);
             return result;
         }
@@ -211,7 +245,7 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
                 throw new Exception("'Master' is reserved for system database, please provide other database name.");
             }
 
-            dataFolder = Path.Combine(System.Web.HttpContext.Current.Request.PhysicalApplicationPath ?? "/", dataFolder);
+            dataFolder = Path.Combine(currentPath ?? "/", dataFolder);
             ConnectionHelper.SqlConnectionString = csBuilder.ConnectionString;
 
             // Configure database   
@@ -296,6 +330,22 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
             {
                 cmd.CommandText = string.Format(sqlCommand, args);
                 cmd.ExecuteNonQuery();
+            }
+        }
+
+        protected string RenderPartialViewToString(string viewName, object model)
+        {
+            if (string.IsNullOrEmpty(viewName))
+                viewName = ControllerContext.RouteData.GetRequiredString("action");
+
+            ViewData.Model = model;
+
+            using (StringWriter sw = new StringWriter())
+            {
+                ViewEngineResult viewResult = ViewEngines.Engines.FindPartialView(ControllerContext, viewName);
+                ViewContext viewContext = new ViewContext(ControllerContext, viewResult.View, ViewData, TempData, sw);
+                viewResult.View.Render(viewContext, sw);
+                return sw.GetStringBuilder().ToString();
             }
         }
     }

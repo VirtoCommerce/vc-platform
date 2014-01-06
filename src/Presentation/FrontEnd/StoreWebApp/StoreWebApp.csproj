@@ -593,7 +593,9 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="App_Data\Virto\Configuration\Import.config" />
-    <Content Include="App_Data\Virto\Configuration\AppConfig.config" />
+    <Content Include="App_Data\Virto\Configuration\AppConfig.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="App_Data\Virto\Configuration\Asset.config" />
     <Content Include="Mvc.sitemap" />
     <Content Include="App_Data\Virto\Configuration\services.local.config">
@@ -601,6 +603,8 @@
     </Content>
     <Content Include="Areas\VirtoAdmin\Views\Web.config" />
     <Content Include="Areas\VirtoAdmin\Views\Install\Index.cshtml" />
+    <Content Include="App_Data\Virto\Configuration\Reporting.config" />
+    <Content Include="Areas\VirtoAdmin\Views\Install\SetupFormPartial.cshtml" />
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -872,7 +876,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>58731</DevelopmentServerPort>
+          <DevelopmentServerPort>2238</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:2359/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
