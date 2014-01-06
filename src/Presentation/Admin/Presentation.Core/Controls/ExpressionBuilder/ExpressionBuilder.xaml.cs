@@ -5,6 +5,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using Xunit;
 
 namespace VirtoCommerce.ManagementClient.Core.Controls
 {
@@ -61,7 +62,7 @@ namespace VirtoCommerce.ManagementClient.Core.Controls
         void AddNewExpression_Click(object sender, RoutedEventArgs args)
         {
             // executing code on GUI thread in order to close the context menu before adding a child
-            Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
+            Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
             {
 				///this is not the best way to add element to the context but it works
 				if (((MenuItem)sender).DataContext is TypedExpressionElementBase)
@@ -95,14 +96,18 @@ namespace VirtoCommerce.ManagementClient.Core.Controls
         void SelectNewValue_Click(object sender, RoutedEventArgs args)
         {
             // executing code on GUI thread in order to close the context menu before adding a child
-            Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
+            Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
             {
-                var control = sender as FrameworkElement;
-
+                Assert.NotNull(sender);
+                var control = (FrameworkElement)sender;
+                Assert.NotNull(control);
                 DependencyObject depObj = control;
+
                 while (!(depObj is ContextMenu))
                 {
+                    Assert.NotNull(depObj);
                     depObj = VisualTreeHelper.GetParent(depObj);
+                    Assert.NotNull(depObj);
                 }
 
                 var menuItem = (ContextMenu)depObj;
@@ -112,10 +117,11 @@ namespace VirtoCommerce.ManagementClient.Core.Controls
             }));
         }
 
-		void SelectDictNewValue_Click(object sender, RoutedEventArgs args)
+
+        void SelectDictNewValue_Click(object sender, RoutedEventArgs args)
 		{
 			// executing code on GUI thread in order to close the context menu before adding a child
-			Dispatcher.BeginInvoke(DispatcherPriority.Background, new Action(() =>
+			Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
 			{
 				var control = sender as FrameworkElement;
 

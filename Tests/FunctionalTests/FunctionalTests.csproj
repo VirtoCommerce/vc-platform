@@ -143,6 +143,7 @@
     <Compile Include="Orders\MigrationScenarios.cs" />
     <Compile Include="Orders\OrderScenarios.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reporting\RdlFileParsingScenarios.cs" />
     <Compile Include="Repository\CatalogQueryScenarios.cs" />
     <Compile Include="Reviews\MigrationScenarios.cs" />
     <Compile Include="Reviews\ReviewScenarios.cs" />
@@ -213,6 +214,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
+    <EmbeddedResource Include="Reporting\Resources\TestReport_v2.rdlc" />
+    <EmbeddedResource Include="Reporting\Resources\ReportWithoutDataSources.rdlc" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Core\CommerceFoundation\CommerceFoundation.csproj">

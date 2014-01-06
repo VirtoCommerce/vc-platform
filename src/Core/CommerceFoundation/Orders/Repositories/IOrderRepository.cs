@@ -17,6 +17,5 @@ namespace VirtoCommerce.Foundation.Orders.Repositories
         IQueryable<Payment> Payments { get; }
         IQueryable<Jurisdiction> Jurisdictions { get; }
         IQueryable<JurisdictionGroup> JurisdictionGroups { get; }
-        
     }
 }

@@ -180,6 +180,7 @@
     <Reference Include="System.Windows.Controls.Layout.Toolkit">
       <HintPath>..\..\..\..\packages\WPFToolkit.3.5.50211.1\lib\System.Windows.Controls.Layout.Toolkit.dll</HintPath>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\packages\Prism.4.1.0.0\lib\NET40\System.Windows.Interactivity.dll</HintPath>
@@ -199,6 +200,7 @@
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsFormsIntegration" />
     <Reference Include="WpfRichText.Ex">
       <HintPath>..\..\..\..\Shared\WpfRichText.Ex.dll</HintPath>
     </Reference>
@@ -233,6 +235,7 @@
     <Compile Include="Modules\MainModule.cs" />
     <Compile Include="Modules\MarketingModule.cs" />
     <Compile Include="Modules\OrderModule.cs" />
+    <Compile Include="Modules\ReportingModule.cs" />
     <Compile Include="Modules\ReviewsModule.cs" />
     <Compile Include="Modules\FulfillmentModule.cs" />
     <Compile Include="Shell.xaml.cs">
@@ -316,6 +319,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="Reporting.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
@@ -397,6 +403,10 @@
     <ProjectReference Include="..\Presentation.Order\Presentation.Order.csproj">
       <Project>{F0497F8D-B4A3-4B02-9BED-804FC332E8A3}</Project>
       <Name>Presentation.Order</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Presentation.Reporting\Presentation.Reporting.csproj">
+      <Project>{2044B7A5-4050-4745-A430-6E29D7AB47C9}</Project>
+      <Name>Presentation.Reporting</Name>
     </ProjectReference>
     <ProjectReference Include="..\Presentation.Reviews\Presentation.Reviews.csproj">
       <Project>{414e17f3-7333-4c6e-9dc6-09f1614ba047}</Project>

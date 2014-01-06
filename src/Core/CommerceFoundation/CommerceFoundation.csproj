@@ -125,6 +125,9 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="VirtoCommerce.Foundation.Data">
+      <HintPath>..\CommerceFoundation.Data\bin\Debug\VirtoCommerce.Foundation.Data.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
@@ -335,6 +338,12 @@
     <Compile Include="PlatformTools\Logger.cs" />
     <Compile Include="PlatformTools\VirtoCommerceTraceSource.cs" />
     <Compile Include="PlatformTools\ILogger.cs" />
+    <Compile Include="Reporting\Helpers\RdlFile.cs" />
+    <Compile Include="Reporting\Model\ReportFolder.cs" />
+    <Compile Include="Reporting\Model\ReportInfo.cs" />
+    <Compile Include="Reporting\ReportingConfiguration.cs" />
+    <Compile Include="Reporting\Services\IReportingService.cs" />
+    <Compile Include="Reporting\Services\ReportingService.cs" />
     <Compile Include="Search\ISearchConnection.cs" />
     <Compile Include="Search\KeywordSearchCriteria.cs" />
     <Compile Include="Search\SearchConnection.cs" />
