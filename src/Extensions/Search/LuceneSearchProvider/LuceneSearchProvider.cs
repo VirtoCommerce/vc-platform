@@ -255,7 +255,7 @@ namespace VirtoCommerce.Search.Providers.Lucene
 
             var q = (Query)this.QueryBuilder.BuildQuery(criteria);
 
-            Debug.WriteLine("Search Lucene Query:{0}", q.ToString());
+            Debug.WriteLine("Search Lucene Query:{0}", (object)q.ToString());
 
             try
             {

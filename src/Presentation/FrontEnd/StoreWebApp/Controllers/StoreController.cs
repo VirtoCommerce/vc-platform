@@ -73,7 +73,8 @@ namespace VirtoCommerce.Web.Controllers
 		                        ? Url.Content(String.Format("~/?store={0}", store.StoreId))
 		                        : store.Url
 		                }).ToArray(),
-		            SelectedStore = UserHelper.CustomerSession.StoreId
+		            SelectedStore = UserHelper.CustomerSession.StoreId,
+                    SelectedStoreName = UserHelper.CustomerSession.StoreName
 		        };
 
                 return model.Stores.Any() ? PartialView("StorePicker", model) : null;

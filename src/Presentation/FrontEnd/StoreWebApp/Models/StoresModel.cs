@@ -10,6 +10,8 @@
 		/// </summary>
 		/// <value>The selected store.</value>
         public string SelectedStore { get; set; }
+
+        public string SelectedStoreName { get; set; }
 		/// <summary>
 		/// Gets or sets the stores.
 		/// </summary>
