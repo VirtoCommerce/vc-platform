@@ -167,23 +167,23 @@
 								<TextBlock Grid.Row="0" Grid.Column="2">
 									<TextBlock.Text>
 										<MultiBinding StringFormat="{}{0} {1} " FallbackValue="N/A" TargetNullValue="N/A">
-											<Binding Path="FirstAddress.FirstName" />
-											<Binding Path="FirstAddress.LastName" />
+											<Binding Path="BillingAddress.FirstName" />
+											<Binding Path="BillingAddress.LastName" />
 										</MultiBinding>
 									</TextBlock.Text>
 								</TextBlock>
 								<TextBlock Grid.Row="1" Grid.Column="2" TextWrapping="Wrap">
 									<TextBlock.Text>
 										<MultiBinding Converter="{StaticResource OrderAddressConverter}" Mode="OneWay" FallbackValue="N/A" TargetNullValue="N/A">
-											<Binding Path="FirstAddress" />
-											<Binding Path="FirstAddress.OrderAddressId" />
+											<Binding Path="BillingAddress" />
+											<Binding Path="BillingAddress.OrderAddressId" />
 										</MultiBinding>
 									</TextBlock.Text>
 								</TextBlock>
-								<TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding FirstAddress.DaytimePhoneNumber, FallbackValue='N/A', TargetNullValue='N/A'}"/>
+								<TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding BillingAddress.DaytimePhoneNumber, FallbackValue='N/A', TargetNullValue='N/A'}"/>
 							</Grid>
 
-							<Button Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Edit address..." ToolTip="Edit address" Command="{Binding EditAddressCommand}" CommandParameter="{Binding FirstAddress}"
+							<Button Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Edit address..." ToolTip="Edit address" Command="{Binding EditAddressCommand}" CommandParameter="{Binding BillingAddress}"
 											DataContext="{Binding Path=DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"/>
 
 						</Grid>
