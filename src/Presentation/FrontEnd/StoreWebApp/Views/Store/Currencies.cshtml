@@ -1,7 +1,7 @@
 ﻿@model CurrenciesModel
 
 
-<span>Currency: <span class="current">@Model.SelectedCurrency</span></span>
+<span>@("Currency".Localize()): <span class="current">@Model.SelectedCurrency</span></span>
 <ul>
     @foreach (var curr in Model.Currencies)
     {       
