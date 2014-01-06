@@ -117,7 +117,11 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.Model
                     propCatItemsCount.Name = "ItemCount";
                     propCatItemsCount.ValueType = (int)PropertyValueType.Integer;
 
-                    retVal = new List<DynamicContentItemProperty>() { propCatUrl, propCatUrl1, propCatSort, propCatItemsCount };
+					var propCatItemsNew = new DynamicContentItemProperty();
+                    propCatItemsNew.Name = "NewItems";
+                    propCatItemsNew.ValueType = (int)PropertyValueType.Boolean;
+
+                    retVal = new List<DynamicContentItemProperty>() { propCatUrl, propCatUrl1, propCatSort, propCatItemsCount, propCatItemsNew };
 					break;
 				case DynamicContentType.Undefined:
 					break;
