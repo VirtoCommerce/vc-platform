@@ -20,16 +20,18 @@
         <div class="header-wrap">
             <div class="head-top">
                 <div class="rubber clearfix">
-                    <div class="grid_4">
+                    <div class="grid_6">
+                        <div class="head-switch store">
+                            @{Html.RenderAction("StorePicker", "Store");}
+                        </div>        
                         <div class="head-switch language">
                             @{Html.RenderPartial("Languages");}
                         </div>
                         <div class="head-switch currency">
                             @{Html.RenderAction("Currencies", "Store");}
-                        </div>
-                     
+                        </div>        
                     </div>
-                    <div class="grid_8">
+                    <div class="grid_6">
                         @{Html.RenderAction("QuickAccess", "Store");}        
                         @if (UserHelper.CustomerSession.IsRegistered)
                         {

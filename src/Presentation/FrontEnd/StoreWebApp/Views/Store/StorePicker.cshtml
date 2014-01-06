@@ -1,11 +1,16 @@
 ﻿@using Newtonsoft.Json
 @model StoresModel
-<div class="store-switcher">
-    <label for="select-store">@("Select Store:".LocalizeHtml())</label>
-    @Html.DropDownList("SelectedStore", new SelectList(Model.Stores, "Id", "Name", Model.SelectedStore), new {@onchange = "VirtoCommerce.changeStore(this.value);"})
-    <script>
-        $(function() {
-            VirtoCommerce.Stores = @Html.Raw(JsonConvert.SerializeObject(Model.Stores));
+<script>
+    $(function() {
+        VirtoCommerce.Stores = @Html.Raw(JsonConvert.SerializeObject(Model.Stores));
         });
-    </script>   
-</div>
+</script>
+<span>@("Store".Localize()): <span class="current">@Model.SelectedStoreName</span></span>
+<ul>
+    @foreach (var curr in Model.Stores)
+    {       
+        <li class="@(curr.Id == Model.SelectedStore ? "selected" : "")">
+            <a href="@curr.Url">@curr.Name</a>
+        </li>
+    }
+</ul>
