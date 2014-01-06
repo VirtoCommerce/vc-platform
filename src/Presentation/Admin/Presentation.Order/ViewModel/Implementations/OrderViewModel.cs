@@ -214,7 +214,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 				Recalculate();
 
 				// RaiseCanExecuteChanged();
-				OnPropertyChanged("FirstAddress");
+				OnPropertyChanged("BillingAddress");
 				OnPropertyChanged("FirstOrderForm");
 				OnPropertyChanged("PaidTotal");
 			});
@@ -651,16 +651,17 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 
 		#region VirtoCommerce.ManagementClient Properties
 
-		public OrderAddress FirstAddress
+		public OrderAddress BillingAddress
 		{
 			get
 			{
 				OrderAddress result = null;
 
-				if (InnerItem != null && InnerItem.OrderAddresses != null && InnerItem.OrderAddresses.Count > 0)
+				if (InnerItem != null)
 				{
-					result = InnerItem.OrderAddresses[0];
-					result.OrderGroup = InnerItem;
+					result = InnerItem.OrderAddresses.FirstOrDefault(x => x.Name == "Billing");
+					if (result != null)
+						result.OrderGroup = InnerItem;
 				}
 
 				return result;

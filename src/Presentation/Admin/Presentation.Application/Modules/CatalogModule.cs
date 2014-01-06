@@ -1,4 +1,6 @@
-﻿using System;
+﻿#region Usings
+
+using System;
 using System.Windows;
 using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
@@ -29,6 +31,7 @@ using VirtoCommerce.ManagementClient.Catalog.ViewModel.Wizard;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
 
+#endregion
 
 namespace VirtoCommerce.ManagementClient.Catalog
 {
@@ -59,13 +62,14 @@ namespace VirtoCommerce.ManagementClient.Catalog
 
 				_navManager.RegisterNavigationItem(homeNavItem);
 
-				var menuNavItem = new NavigationMenuItem(NavigationNames.MenuName);
-				menuNavItem.NavigateCommand =
-					new DelegateCommand<NavigationItem>((x) => _navManager.Navigate(homeNavItem));
-				menuNavItem.Caption = "Catalogs"; //catalogs
-				menuNavItem.ImageResourceKey = "Icon_Module_Catalogs";
-				menuNavItem.Order = 30;
-				menuNavItem.ItemBackground = Color.FromRgb(80, 133, 215);
+				var menuNavItem = new NavigationMenuItem(NavigationNames.MenuName)
+					{
+						NavigateCommand = new DelegateCommand<NavigationItem>((x) => _navManager.Navigate(homeNavItem)),
+						Caption = "Catalogs",
+						ImageResourceKey = "Icon_Module_Catalogs",
+						Order = 30,
+						ItemBackground = Color.FromRgb(80, 133, 215)
+					};
 				_navManager.RegisterNavigationItem(menuNavItem);
 			}
 
@@ -77,13 +81,14 @@ namespace VirtoCommerce.ManagementClient.Catalog
 				var homeNavItemPriceList = new NavigationItem(NavigationNames.HomeNamePriceList, homeViewModel);
 				_navManager.RegisterNavigationItem(homeNavItemPriceList);
 
-				var menuNavItem = new NavigationMenuItem(NavigationNames.MenuNamePriceList);
-				menuNavItem.NavigateCommand =
-					new DelegateCommand<NavigationItem>((x) => { _navManager.Navigate(homeNavItemPriceList); });
-				menuNavItem.Caption = "Price Lists";
-				menuNavItem.ImageResourceKey = "Icon_Module_PriceLists";
-				menuNavItem.ItemBackground = Color.FromRgb(211, 66, 58);
-				menuNavItem.Order = 31;
+				var menuNavItem = new NavigationMenuItem(NavigationNames.MenuNamePriceList)
+					{
+						NavigateCommand = new DelegateCommand<NavigationItem>((x) => _navManager.Navigate(homeNavItemPriceList)),
+						Caption = "Price Lists",
+						ImageResourceKey = "Icon_Module_PriceLists",
+						ItemBackground = Color.FromRgb(211, 66, 58),
+						Order = 31
+					};
 				_navManager.RegisterNavigationItem(menuNavItem);
 			}
 		}
