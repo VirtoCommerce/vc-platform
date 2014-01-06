@@ -4438,6 +4438,20 @@ button + button
 				margin: -14px 0 0;
 			}
 
+            .footer-wrap .banners .banner.giftcard a:after
+			{
+				background: url(images/icons/gift.png) no-repeat scroll 0 0;
+				left: 14px;
+				margin: -16px 0 0;
+			}
+
+            .footer-wrap .banners .banner.insurance a:after
+			{
+				background: url(images/icons/insurance.png) no-repeat scroll 0 0;
+				left: 12px;
+				margin: -14px 0 0;
+			}
+
 			.footer-wrap .banners .banner a:after,
 			.footer-wrap .banners .banner a:before
 			{

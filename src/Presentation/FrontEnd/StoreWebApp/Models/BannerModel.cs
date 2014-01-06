@@ -228,6 +228,11 @@ namespace VirtoCommerce.Web.Models
                 {
                     ItemCount = prop.IntegerValue;
                 }
+
+                if (String.Equals(prop.Name, "NewItems", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    NewItemsOnly = prop.BooleanValue;
+                }
             }
         }
 
@@ -242,6 +247,8 @@ namespace VirtoCommerce.Web.Models
         public int ItemCount { get; set; }
 
         public string Title { get; set; }
+
+        public bool NewItemsOnly { get; set; }
 
     }
 }

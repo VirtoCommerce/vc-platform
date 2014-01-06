@@ -310,17 +310,18 @@ namespace VirtoCommerce.Web.Controllers
             return GetModelFromCriteria(criteria, parameters);
         }
 
-		/// <summary>
-		/// Searches within category.
-		/// </summary>
-		/// <param name="category">The category.</param>
-		/// <param name="parameters">The parameters.</param>
-	    /// <param name="name"></param>
-		/// <returns>ActionResult.</returns>
-        [CustomOutputCache(CacheProfile = "SearchCache", VaryByCustom = "store;currency;cart")]
-        public ActionResult SearchResultsWithinCategory(Category category, SearchParameters parameters, string name = "SearchResultsPartial")
+	    /// <summary>
+	    /// Searches within category.
+	    /// </summary>
+	    /// <param name="category">The category.</param>
+	    /// <param name="parameters">The parameters.</param>
+	    /// <param name="name">Partial view name</param>
+	    /// <param name="criteria">Search criteria</param>
+	    /// <returns>ActionResult.</returns>
+	    [CustomOutputCache(CacheProfile = "SearchCache", VaryByCustom = "store;currency;cart")]
+        public ActionResult SearchResultsWithinCategory(Category category, SearchParameters parameters, string name = "SearchResultsPartial", CatalogItemSearchCriteria criteria = null)
         {
-            var criteria = new CatalogItemSearchCriteria();
+            criteria = criteria ?? new CatalogItemSearchCriteria();
 		    if (category != null)
 		    {
 		        ViewBag.Title = category.Name.Localize();		      
