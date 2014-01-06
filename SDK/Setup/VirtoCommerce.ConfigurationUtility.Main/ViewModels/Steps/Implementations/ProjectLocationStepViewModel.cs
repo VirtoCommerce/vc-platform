@@ -107,23 +107,19 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 				DirectoryExtensions.Copy(new DirectoryInfo(contentFolder), new DirectoryInfo(ProjectLocation));
 				ct.ThrowIfCancellationRequested();
 
+				// create initial folders: import
+				Directory.CreateDirectory(Path.Combine(ProjectLocation, "App_Data\\Virto\\Storage\\import"));
+				
 				if (_databaseViewModel.InstallSamples)
 				{
-				var catalogImagesFolder =
-					Path.GetFullPath(Path.Combine(Path.GetDirectoryName(typeof(ConfigurationWizardViewModel).Assembly.Location),
-												  @"..\Resources\Catalog"));
+					var catalogImagesFolder =
+						Path.GetFullPath(Path.Combine(Path.GetDirectoryName(typeof(ConfigurationWizardViewModel).Assembly.Location),
+													  @"..\Resources\Catalog"));
 
-				// Copy template to project location
-				DirectoryExtensions.Copy(new DirectoryInfo(contentFolder), new DirectoryInfo(ProjectLocation));
-				ct.ThrowIfCancellationRequested();
-
-				// create initial folders: Uploads
-				Directory.CreateDirectory(Path.Combine(ProjectLocation, "App_Data\\Virto\\Storage\\Uploads"));
-
-				// Copy test data images
-				DirectoryExtensions.Copy(new DirectoryInfo(catalogImagesFolder),
-										 new DirectoryInfo(string.Format("{0}\\App_Data\\Virto\\Storage\\Catalog", ProjectLocation)));
-				ct.ThrowIfCancellationRequested();
+					// Copy test data images
+					DirectoryExtensions.Copy(new DirectoryInfo(catalogImagesFolder),
+											 new DirectoryInfo(string.Format("{0}\\App_Data\\Virto\\Storage\\Catalog", ProjectLocation)));
+					ct.ThrowIfCancellationRequested();
 				}
 
 				// Fix connection strings
