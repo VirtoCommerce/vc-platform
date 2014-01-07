@@ -12,6 +12,23 @@ INSERT INTO [DynamicContentItemProperty] ([PropertyValueId],[DynamicContentItemI
 INSERT INTO [DynamicContentItemProperty] ([PropertyValueId],[DynamicContentItemId],[Alias],[Name],[KeyValue],[ValueType],[ShortTextValue],[LongTextValue],[DecimalValue],[IntegerValue],[BooleanValue],[DateTimeValue],[Locale],[LastModified],[Created]) VALUES (N'3b164e29-3fd4-4729-a643-3a2d315a847a',N'de20df18-422c-4198-8ffa-88c980d46cc6',NULL,N'ProductCode',NULL,0,NULL,N'v-b001fa1nuk',0.00,0,0,NULL,NULL,N'20131209 11:11:59.153',N'20131209 11:11:59.153');
 INSERT INTO [DynamicContentItemProperty] ([PropertyValueId],[DynamicContentItemId],[Alias],[Name],[KeyValue],[ValueType],[ShortTextValue],[LongTextValue],[DecimalValue],[IntegerValue],[BooleanValue],[DateTimeValue],[Locale],[LastModified],[Created]) VALUES (N'3c378420-0b1d-45cb-b929-f3a44364eaef',N'b195be79-3a5e-4e3d-a0ae-64f4c8e59bb0',NULL,N'ImageUrl',N'ImageUrl',2,NULL,N'~/Content/themes/default/images/samsung_tv.jpg',0.00,0,0,NULL,NULL,N'20130408 07:22:25.357',N'20130207 01:28:39.743');
 INSERT INTO [DynamicContentItemProperty] ([PropertyValueId],[DynamicContentItemId],[Alias],[Name],[KeyValue],[ValueType],[ShortTextValue],[LongTextValue],[DecimalValue],[IntegerValue],[BooleanValue],[DateTimeValue],[Locale],[LastModified],[Created]) VALUES (N'400dfa97-dcab-46c7-955b-0247f613ff2f',N'c8c16610-9691-456c-b0a1-204a9191a2a9',NULL,N'TargetUrl',NULL,0,NULL,N'~/c/cameras',0.00,0,0,NULL,NULL,N'20130207 21:16:04.193',N'20130207 21:11:00.570');
+INSERT INTO [DynamicContentItemProperty] ([PropertyValueId],[DynamicContentItemId],[Alias],[Name],[KeyValue],[ValueType],[ShortTextValue],[LongTextValue],[DecimalValue],[IntegerValue],[BooleanValue],[DateTimeValue],[Locale],[LastModified],[Created]) VALUES (N'48be8d75-ba8e-4b11-844c-029724a169eb',N'd1c213ed-30e9-4f9f-a615-d640e06bd2f1',NULL,N'RawHtml',NULL,0,NULL,N'<div class="grid_3">
+                <a class="control"></a>
+                <h2>From twitter</h2>
+                <div class="content">
+                    <ul class="twitter-list">
+                        <li>Check our step-by-step tutorial "Build your own store" with @VirtoCommerce <a href="http://docs.virtocommerce.com/display/vc1devguide/New+Store+getting+started#NewStoregettingstarted-Introduction">http://bit.ly/1cmRD4z</a>  #ecommerce
+                            <span class="date">1 minute ago</span>
+                        </li>
+                        <li>An e-commerce authentication system moves to the checkout page - Internet Retailer <a href="http://www.internetretailer.com/2013/11/07/e-commerce-authentication-system-moves-checkout-page">http://shar.es/8vqwU</a>
+                            <span class="date">1 hour ago</span>
+                        </li>
+                    </ul>
+                    <footer>
+                        <p>Follow us <a href="https://twitter.com/virtocommerce" target="_blank">on Twitter</a></p>
+                    </footer>
+                </div>
+            </div>',0.00,0,0,NULL,NULL,N'20140107 13:49:44.410',N'20140107 13:49:44.410');
 INSERT INTO [DynamicContentItemProperty] ([PropertyValueId],[DynamicContentItemId],[Alias],[Name],[KeyValue],[ValueType],[ShortTextValue],[LongTextValue],[DecimalValue],[IntegerValue],[BooleanValue],[DateTimeValue],[Locale],[LastModified],[Created]) VALUES (N'4a145c92-7a9d-4df0-b8d6-9f9f8584091a',N'16e53247-80ce-443c-877c-3b9025daf52f',NULL,N'TargetUrl',N'TargetUrl',0,NULL,N'~/c/computers-tablets',0.00,0,0,NULL,NULL,N'20130207 01:28:39.743',N'20130207 01:28:39.743');
 INSERT INTO [DynamicContentItemProperty] ([PropertyValueId],[DynamicContentItemId],[Alias],[Name],[KeyValue],[ValueType],[ShortTextValue],[LongTextValue],[DecimalValue],[IntegerValue],[BooleanValue],[DateTimeValue],[Locale],[LastModified],[Created]) VALUES (N'5acb6d44-150c-496a-8c9f-0f4eb48f1950',N'40494d2a-e56e-4dc8-aea9-0d3a326d2ff6',NULL,N'ItemCount',NULL,4,NULL,NULL,0.00,9,0,NULL,NULL,N'20131209 13:43:19.267',N'20131209 13:43:19.267');
 INSERT INTO [DynamicContentItemProperty] ([PropertyValueId],[DynamicContentItemId],[Alias],[Name],[KeyValue],[ValueType],[ShortTextValue],[LongTextValue],[DecimalValue],[IntegerValue],[BooleanValue],[DateTimeValue],[Locale],[LastModified],[Created]) VALUES (N'5d0eb631-b85b-4576-8fd6-8d5b780f688e',N'55b1519e-b321-43e1-8970-5183817170dd',NULL,N'ProductCode',NULL,0,NULL,N'v-b005tuqv0e',0.00,0,0,NULL,NULL,N'20130326 14:55:52.713',N'20130326 14:55:52.713');
