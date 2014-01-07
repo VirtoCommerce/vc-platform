@@ -1,0 +1,7 @@
+<MSDeploy.iisApp> 
+	<iisapp path="VirtoCommerce" />
+	<setAcl path="VirtoCommerce" setAclAccess="Read, Write, Modify" />
+	
+	<dbFullSql path="installSQL1.sql" transacted="false" />
+	<dbFullSql path="installSQL2.sql" transacted="false" />
+</MSDeploy.iisApp>
