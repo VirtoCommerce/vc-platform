@@ -246,7 +246,7 @@ Function Build
         Write-Output "$(Get-Date -f $timeStampFormat) - Solution Build: In progress"
 
         $now = Get-Date
-        $PublishApplicationVersion = "1.6.$($now.DayOfYear).$($now.Hour)$($now.Minute)" # get latest checkin version and put it as a version number or a datetime
+        $PublishApplicationVersion = "$admin_version.$($now.DayOfYear).$($now.Hour)$($now.Minute)" # get latest checkin version and put it as a version number or a datetime
         Write-Host "Version: $PublishApplicationVersion"
 
         # clean the build directory
