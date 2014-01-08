@@ -28,7 +28,7 @@ else
                 @Html.ActionLink("Create new address".Localize(), "AddressEdit", "Account", null, new { rel = "popup" })
             </div>
             <div class="control-group">
-                @Html.LabelFor(m => m.Comment, "Comments:".Localize())
+                @Html.LabelForEx(m => m.Comment)
                 @Html.TextAreaFor(m => m.Comment, 10, 30, null)
             </div>
         </div>

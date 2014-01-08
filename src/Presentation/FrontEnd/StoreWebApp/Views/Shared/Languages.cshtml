@@ -1,10 +1,9 @@
 ﻿@using System.Globalization
 @{
-    var currentValues = ViewContext.RouteData.Values;
-    var tempValues = new RouteValueDictionary();
-    foreach (var item in currentValues)
+    var tempValues = new RouteValueDictionary(ViewContext.RouteData.Values);
+    foreach (var key in Request.QueryString.Keys.Cast<string>())
     {
-        tempValues.Add(item.Key, item.Value);
+        tempValues.Add(key, Request.QueryString[key]);
     }
 
     var store = StoreHelper.StoreClient.GetCurrentStore();

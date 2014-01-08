@@ -166,7 +166,7 @@ namespace VirtoCommerce.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOn(LogOnModel model, string returnUrl)
         {
-            var errorMessage = "The user name or password provided is incorrect.";
+            string errorMessage = null;
             if (ModelState.IsValid)
             {
                 if (string.IsNullOrEmpty(model.ImpersonatedUserName))
@@ -189,8 +189,12 @@ namespace VirtoCommerce.Web.Controllers
                 }
             }
 
+
+            errorMessage = string.IsNullOrEmpty(errorMessage)
+                ? "The user name or password provided is incorrect.".Localize()
+                : errorMessage.Localize();
             // If we got this far, something failed, redisplay form
-            ModelState.AddModelError("", string.IsNullOrEmpty(errorMessage) ? "The user name or password provided is incorrect." : errorMessage);
+            ModelState.AddModelError("", errorMessage);
             return View(model);
         }
 
@@ -647,7 +651,7 @@ namespace VirtoCommerce.Web.Controllers
 
             if (!string.Equals(order.Status, OrderStatus.Completed.ToString(), StringComparison.OrdinalIgnoreCase))
             {
-                ModelState.AddModelError("", "Cannot return items, because order is not completed");
+                ModelState.AddModelError("", "Cannot return items, because order is not completed".Localize());
                 return View(new OrderReturns());
             }
 
@@ -1242,10 +1246,7 @@ namespace VirtoCommerce.Web.Controllers
                         continue;
                     }
 
-                    if (lineItem.Comment != UserHelper.DefaultCommentInWishList)
-                    {
-                        li.Comment = lineItem.Comment;
-                    }
+                    li.Comment = lineItem.Comment;
                     li.Quantity = lineItem.Quantity;
                 }
             }
