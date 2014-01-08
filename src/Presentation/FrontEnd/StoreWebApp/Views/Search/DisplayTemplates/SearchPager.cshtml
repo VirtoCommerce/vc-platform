@@ -35,17 +35,17 @@
     <div class="sort-by switch">
         <div class="title">
             <label>@("Sort By".Localize())</label>
-            <span class="current">@Model.SelectedSort</span>
+            <span class="current">@Model.SelectedSort.Localize()</span>
             <select onchange="$.open(this.value) ">
                 @foreach (var sort in Model.SortValues)
                 {
-                    if (sort.Equals(Model.SelectedSort))
+                    if (sort.Equals(Model.SelectedSort, StringComparison.OrdinalIgnoreCase))
                     {
-                        <option value="@Url.SetParameter("sort", sort)" selected="selected">@sort</option>
+                        <option value="@Url.SetParameter("sort", sort)" selected="selected">@sort.Localize()</option>
                     }
                     else
                     {
-                        <option value="@Url.SetParameter("sort", sort)">@sort</option>
+                        <option value="@Url.SetParameter("sort", sort)">@sort.Localize()</option>
                     }
                 }
             </select>
@@ -55,7 +55,7 @@
                 @foreach (var sort in Model.SortValues)
                 {
                     <li>
-                        <a href="@Url.SetParameter("sort", sort)">@sort</a>
+                        <a href="@Url.SetParameter("sort", sort)">@sort.Localize()</a>
                     </li>
                 }
             </ul>

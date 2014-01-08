@@ -16,7 +16,8 @@
             category,
             parameters = new SearchParameters { Sort = currentModel.SortField, PageSize = currentModel.ItemCount},
             name = "DisplayTemplates/SearchItems",
-            criteria = currentModel.NewItemsOnly ? new CatalogItemSearchCriteria {StartDateFrom = DateTime.UtcNow.AddMonths(-1)} : null
+            criteria = currentModel.NewItemsOnly ? new CatalogItemSearchCriteria {StartDateFrom = DateTime.UtcNow.AddMonths(-1)} : null,
+            savePreferences = false
         })
     }
 }

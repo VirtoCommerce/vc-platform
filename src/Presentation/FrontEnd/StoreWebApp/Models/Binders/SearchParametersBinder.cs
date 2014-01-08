@@ -15,11 +15,6 @@ namespace VirtoCommerce.Web.Models.Binders
     public class SearchParametersBinder : IModelBinder
     {
 		/// <summary>
-		/// The default page size
-		/// </summary>
-        public const int DefaultPageSize = SearchParameters.DefaultPageSize;
-
-		/// <summary>
 		/// Name values to dictionary.
 		/// </summary>
 		/// <param name="nv">The nv.</param>
@@ -61,7 +56,7 @@ namespace VirtoCommerce.Web.Models.Binders
             {
                 FreeSearch = qs["q"].EmptyToNull(),
                 PageIndex = qs["p"].TryParse(1),
-                PageSize = qs["pageSize"].TryParse(DefaultPageSize),
+                PageSize = qs["pageSize"].TryParse(0),
                 Sort = qs["sort"].EmptyToNull(),
 		            SortOrder = qs["sortorder"].EmptyToNull(),
                 Facets = qsDict.Where(k => FacetRegex.IsMatch(k.Key))
