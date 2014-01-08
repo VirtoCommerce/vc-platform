@@ -32,7 +32,7 @@ namespace VirtoCommerce.Web.Virto.Helpers
 		/// <summary>
 		/// The default comment in wish list
 		/// </summary>
-        public static string DefaultCommentInWishList = "Please, enter your comments...".Localize();
+        public static string DefaultCommentInWishList = "Please, enter your comments...";
 
         #region Cache Constants
 

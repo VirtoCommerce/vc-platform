@@ -10,7 +10,7 @@
         <span class="price">@Model.FormattedPlacedPrice</span>
     </td>
     <td>
-        @Html.TextAreaFor(m => m.Comment, new { placeholder = UserHelper.DefaultCommentInWishList, @cols = "20", @rows = "5" })
+        @Html.TextAreaFor(m => m.Comment, new { placeholder = UserHelper.DefaultCommentInWishList.Localize(), @cols = "20", @rows = "5" })
     </td>
     <td align="center">
         <span class="nobr">
