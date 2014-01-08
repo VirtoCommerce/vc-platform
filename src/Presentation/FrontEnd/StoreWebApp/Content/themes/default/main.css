@@ -1193,8 +1193,8 @@ button + button
 
 			.article .col .info input,
 			.article .content .cabinet .block .info input,
-			.article .col select,
-			.article .content .cabinet select
+			.article .col .info select,
+			.article .content .cabinet .block .info select
 			{
 				height: 29px;
 				width: 100%;
