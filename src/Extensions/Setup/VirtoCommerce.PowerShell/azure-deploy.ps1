@@ -38,6 +38,7 @@ Param(
         $vcfpowershellfile,
         $region = 'West US',
 		$slot = 'Production',
+		$admin_version = '1.0',
         # controlling parameters, allow deploying subset of features, shown in the order they are executed
 		$build = $true,
 		$build_params,
@@ -81,7 +82,7 @@ $build_path = "$common_deploymentdir\BuildTemp"
 $build_solutionname = "$build_solutiondir\VirtoCommerce.sln"
 
 # admin settings
-$admin_blobprefix = "1.0/admin"
+$admin_blobprefix = "$admin_version/admin"
 $admin_installcontainer = "http://$common_storageaccount.blob.core.windows.net/software"
 
 # frontend settings
@@ -435,15 +436,15 @@ Function deploy-admin
     Write-Output "Remove-Item -Path ""$temp_application"" -Recurse -Force"
     Remove-Item -Path "$temp_application" -Recurse -Force -ErrorAction Ignore
     New-Item -ItemType directory -Path $temp_application
-    New-Item -ItemType directory -Path $temp_application/1.0
-    New-Item -ItemType directory -Path $temp_application/1.0/admin
+    New-Item -ItemType directory -Path $temp_application/$admin_version
+    New-Item -ItemType directory -Path $temp_application/$admin_version/admin
     
-    Write-Output "XCopy ""$build_path\Application Files"" ""$temp_application\1.0\admin"" /E /Y /Q"
+    Write-Output "XCopy ""$build_path\Application Files"" ""$temp_application\$admin_version\admin"" /E /Y /Q"
 
-    XCopy "$build_path\Application Files\*" "$temp_application\1.0\admin\Application Files\" /E /Y /Q
+    XCopy "$build_path\Application Files\*" "$temp_application\$admin_version\admin\Application Files\" /E /Y /Q
     
-    Copy-Item -Path "$build_path\setup.exe" -Destination $temp_application/1.0/admin
-    Copy-Item -Path "$build_path\VirtoCommerce.application" -Destination $temp_application/1.0/admin
+    Copy-Item -Path "$build_path\setup.exe" -Destination $temp_application/$admin_version/admin
+    Copy-Item -Path "$build_path\VirtoCommerce.application" -Destination $temp_application/$admin_version/admin
     Copy-Item -Path "$build_path\VirtoCommerce.application" -Destination $temp_application
 
     ls "$temp_application" -File -Recurse | Set-AzureStorageBlobContent -Container "software" -Verbose -ConcurrentTaskCount 2 -Force
