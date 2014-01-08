@@ -43,32 +43,16 @@
                 <h2>Facebook</h2>
                 <div class="content">
                     <div class="fb-like-box"
-                        data-href="http://facebook.com/virtocommerce"
-                        data-colorscheme="light"
-                        data-show-faces="true"
-                        data-header="false"
-                        data-stream="false"
-                        data-show-border="false">
+                         data-href="http://facebook.com/virtocommerce"
+                         data-colorscheme="light"
+                         data-show-faces="true"
+                         data-header="false"
+                         data-stream="false"
+                         data-show-border="false">
                     </div>
                 </div>
             </div>
-            <div class="grid_3">
-                <a class="control"></a>
-                <h2>From twitter</h2>
-                <div class="content">
-                    <ul class="twitter-list">
-                        <li>Check our step-by-step tutorial "Build your own store" with @@VirtoCommerce <a href="http://docs.virtocommerce.com/display/vc1devguide/New+Store+getting+started#NewStoregettingstarted-Introduction">http://bit.ly/1cmRD4z</a>  #ecommerce
-                            <span class="date">1 minute ago</span>
-                        </li>
-                        <li>An e-commerce authentication system moves to the checkout page - Internet Retailer <a href="http://www.internetretailer.com/2013/11/07/e-commerce-authentication-system-moves-checkout-page">http://shar.es/8vqwU</a>
-                            <span class="date">1 hour ago</span>
-                        </li>
-                    </ul>
-                    <footer>
-                        <p>Follow us <a target="_blank" href="https://twitter.com/virtocommerce">on Twitter</a></p>
-                    </footer>
-                </div>
-            </div>
+             @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "FooterPromo" });}
             <div class="grid_3">
                 <a class="control"></a>
                 <h2>@("Information".Localize())</h2>

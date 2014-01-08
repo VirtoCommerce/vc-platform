@@ -459,6 +459,7 @@
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.tooltip.min.css" />
     <Content Include="Content\themes\default\flags.css" />
+    <Content Include="Content\themes\default\images\blank.gif" />
     <Content Include="Content\themes\default\images\flags\flags.png" />
     <Content Include="Content\themes\default\images\icons\gift.png" />
     <Content Include="Content\themes\default\images\icons\insurance.png" />
