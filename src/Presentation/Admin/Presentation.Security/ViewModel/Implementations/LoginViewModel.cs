@@ -261,7 +261,7 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 				string parameterUserName = null;
 				string parameterBaseUrl = null;
 
-				if (ApplicationDeployment.IsNetworkDeployed)
+				if (ApplicationDeployment.IsNetworkDeployed && AppDomain.CurrentDomain.SetupInformation.ActivationArguments.ActivationData != null)
 				{
 					var parameter = AppDomain.CurrentDomain.SetupInformation.ActivationArguments.ActivationData[0];
 					string queryString;
