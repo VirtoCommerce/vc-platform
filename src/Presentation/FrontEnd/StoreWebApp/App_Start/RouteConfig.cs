@@ -1,5 +1,10 @@
-﻿using System.Web.Mvc;
+﻿using System.Collections.Generic;
+using System.Configuration;
+using System.Web.DynamicData;
+using System.Web.Mvc;
 using System.Web.Routing;
+using VirtoCommerce.Web.Client.Extensions.RouteHandlers;
+using VirtoCommerce.Web.Client.Extensions.Routing;
 
 namespace VirtoCommerce.Web
 {
@@ -8,6 +13,17 @@ namespace VirtoCommerce.Web
     /// </summary>
     public class RouteConfig
     {
+
+        private static RouteValueDictionary CreateRouteValueDictionary(object values)
+        {
+            var dictionary = values as IDictionary<string, object>;
+            if (dictionary != null)
+            {
+                return new RouteValueDictionary(dictionary);
+            }
+
+            return new RouteValueDictionary(values);
+        }
         /// <summary>
         /// Registers the routes.
         /// </summary>
@@ -21,59 +37,50 @@ namespace VirtoCommerce.Web
 
             routes.MapRoute(
                 "FailWhale",
-                "FailWhale/{action}/{id}", new
-                {
-                    controller = "Error",
-                    action = "FailWhale",
-                    id = UrlParameter.Optional
-                }
-            );
-
-			routes.MapRoute(
-			   "Item_ln",
-			   "{lang}/p/{code}",
-			   new { controller = "Catalog", action = "DisplayItem" },
-			   new { lang = "[a-z]{2}(-[A-Z]{2})?" });
+                "FailWhale/{action}/{id}", new { controller = "Error", action = "FailWhale", id = UrlParameter.Optional });
 
             routes.MapRoute(
-                "Item",
-                "p/{code}",
-                new { controller = "Catalog", action = "DisplayItem" }
-            );
+              "Assets",
+              "asset/{*path}",
+              new { controller = "Asset", action = "Index", path = UrlParameter.Optional }
+          );
 
-			routes.MapRoute(
-			   "Catalog_ln",
-               "{lang}/c/{code}",
-			   new { controller = "Catalog", action = "Display" },
-			   new { lang = "[a-z]{2}(-[A-Z]{2})?" }
-		   );
+            routes.MapRoute("Store", "{lang}/{store}",
+               new { controller = "Home", action = "Index" },
+               new { lang = "[a-z]{2}(-[A-Z]{2})?" });
 
-            routes.MapRoute(
-                "Catalog",
-                "c/{code}",
-                new { controller = "Catalog", action = "Display" }
-                //, new { IsRootAction = new IsRootActionConstraint() }  // Route Constraint
-            );
+
+            routes.Add("Item", new ItemRoute("{lang}/{store}/{category}/{item}",
+                CreateRouteValueDictionary(new { controller = "Catalog", action = "DisplayItem", store = ConfigurationManager.AppSettings["DefaultStore"] }),
+                CreateRouteValueDictionary(new { lang = "[a-z]{2}(-[A-Z]{2})?" }),
+                new ItemRouteHandler()));
+
+            #region Legacy routes for compatibility
 
             routes.MapRoute(
-                "Assets",
-                "asset/{*path}",
-                new { controller = "Asset", action = "Index", path = UrlParameter.Optional }
-            );
-
-			routes.MapRoute(
-			  "Localization", // Route name
-			  "{lang}/{controller}/{action}/{id}", // URL with parameters
-			  new { controller = "Home", action = "Index", id = UrlParameter.Optional }, // Parameter defaults
-			  new { lang = "[a-z]{2}(-[A-Z]{2})?" },
-			  new[] { "VirtoCommerce.Web.Controllers" });
+              "Item_legacy",
+              "p/{item}",
+              new { controller = "Catalog", action = "DisplayItem" });
 
             routes.MapRoute(
-                "Default", // Route name
-                "{controller}/{action}/{id}", // URL with parameters
-                new { controller = "Home", action = "Index", id = UrlParameter.Optional }, // Parameter defaults
-                new[] { "VirtoCommerce.Web.Controllers" }
-            );
+                "Item_legacy_ln",
+                "{lang}/p/{item}",
+                new { controller = "Catalog", action = "DisplayItem" },
+                new { lang = "[a-z]{2}(-[A-Z]{2})?" });
+
+            #endregion
+
+            routes.Add("Catalog", new CategoryRoute("{lang}/{store}/{*category}",
+                CreateRouteValueDictionary(new { controller = "Catalog", action = "Display", store = ConfigurationManager.AppSettings["DefaultStore"] }),
+                CreateRouteValueDictionary(new { lang = "[a-z]{2}(-[A-Z]{2})?" }),
+                new CategoryRouteHandler()));
+
+            routes.MapRoute(
+              "Localization", // Route name
+              "{lang}/{controller}/{action}/{id}", // URL with parameters
+              new { controller = "Home", action = "Index", id = UrlParameter.Optional }, // Parameter defaults
+              new { lang = "[a-z]{2}(-[A-Z]{2})?" },
+              new[] { "VirtoCommerce.Web.Controllers" });
         }
     }
 }

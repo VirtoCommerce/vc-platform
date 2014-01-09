@@ -22,7 +22,7 @@
                          if (category is Category)
                          {
                              <li>
-                                 @Html.ActionLink((category as Category).Name, "Display", "Catalog", new {code = category.Code}, null)
+                                 @Html.ActionLink((category as Category).Name, "Display", "Catalog", new {category = category.Code}, null)
                              </li>
                          }
                      }

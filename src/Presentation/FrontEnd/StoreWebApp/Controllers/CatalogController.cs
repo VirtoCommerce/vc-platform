@@ -49,23 +49,23 @@ namespace VirtoCommerce.Web.Controllers
 	    /// <summary>
 	    /// Displays the catalog by specified URL.
 	    /// </summary>
-	    /// <param name="code">The category code</param>
+        /// <param name="category">The category code</param>
 	    /// <returns>ActionResult.</returns>
 	    /// <exception cref="System.Web.HttpException">404;Category not found</exception>
 	    [CustomOutputCache(CacheProfile = "CatalogCache", VaryByCustom = "store;currency;cart")]
-        public ActionResult Display(string code)
+        public ActionResult Display(string category)
         {
-            var category = _catalogClient.GetCategory(code);
-            if (category != null && category.IsActive)
+            var categoryBase = _catalogClient.GetCategory(category);
+            if (categoryBase != null && categoryBase.IsActive)
             {
                 // set the context variable
                 var set = UserHelper.CustomerSession.GetCustomerTagSet();
-                set.Add(ContextFieldConstants.CategoryId, new Tag(category.CategoryId));
-				UserHelper.CustomerSession.CategoryId = category.CategoryId;
+                set.Add(ContextFieldConstants.CategoryId, new Tag(categoryBase.CategoryId));
+                UserHelper.CustomerSession.CategoryId = categoryBase.CategoryId;
                 UserHelper.CustomerSession.LastShoppingPage = this.Request.Url.AbsoluteUri;
 
                 // display category
-                return View(GetDisplayTemplate(TargetTypes.Category, category), category);
+                return View(GetDisplayTemplate(TargetTypes.Category, categoryBase), categoryBase);
             }
 
 			throw new HttpException(404, "Category not found");
@@ -74,14 +74,14 @@ namespace VirtoCommerce.Web.Controllers
 	    /// <summary>
 	    /// Displays the item.
 	    /// </summary>
-	    /// <param name="code">Item code</param>
+        /// <param name="item">Item code</param>
 	    /// <returns>ActionResult.</returns>
 	    /// <exception cref="System.Web.HttpException">404;Item not found</exception>
 	    [CustomOutputCache(CacheProfile = "CatalogCache", VaryByCustom = "store;currency;cart")]
         //[SiteMapTitle("DisplayName", Target = AttributeTarget.CurrentNode)]
-        public ActionResult DisplayItem(string code)
+        public ActionResult DisplayItem(string item)
         {
-            var itemModel = CatalogHelper.CreateCatalogModel(code);
+            var itemModel = CatalogHelper.CreateCatalogModel(item);
 
             if (ReferenceEquals(itemModel, null))
             {

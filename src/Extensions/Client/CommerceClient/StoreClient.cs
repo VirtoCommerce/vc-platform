@@ -136,6 +136,13 @@ namespace VirtoCommerce.Client
                 _isEnabled);
         }
 
+        public string GetStoreIdFromUrl(string[] urlSegments)
+        {
+            var allStores = GetStores();
+            var stores = allStores.Where(s => urlSegments.Contains(s.StoreId)).ToArray();
+            return stores.Length > 0 ? stores[0].StoreId : String.Empty;
+        }
+
         /// <summary>
         /// Gets the store id by URL.
         /// </summary>
@@ -143,9 +150,10 @@ namespace VirtoCommerce.Client
         /// <returns></returns>
         public string GetStoreIdByUrl(string url)
         {
-            var allstores = GetStores();
+            var allStores = GetStores();
             url = url.ToLower();
-            var stores = (from s in allstores where 
+            var stores = (from s in allStores
+                          where 
 							  (!string.IsNullOrEmpty(s.Url) && url.Contains(s.Url)) || 
 							  (!string.IsNullOrEmpty(s.SecureUrl) && url.Contains(s.SecureUrl)) select s).ToArray();
 

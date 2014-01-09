@@ -271,8 +271,9 @@ namespace VirtoCommerce.Web.Client.Modules
         protected virtual Store GetStore(HttpContext context)
 		{
 			var loadDefault = true;
-			var storeid = context.Request.QueryString["store"];
 			var storeClient = DependencyResolver.Current.GetService<StoreClient>();
+            //var storeid = context.Request.QueryString["store"];
+            var storeid = storeClient.GetStoreIdFromUrl(context.Request.Url.Segments);
 			Store store = null;
 
 			if (String.IsNullOrEmpty(storeid))
