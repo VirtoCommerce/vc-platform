@@ -1,5 +1,6 @@
 ﻿using System;
 using VirtoCommerce.Client;
+using VirtoCommerce.Client.Extensions;
 using VirtoCommerce.Foundation.Orders.Model;
 using coreModel = VirtoCommerce.Foundation.Orders.Model;
 
@@ -26,22 +27,13 @@ namespace VirtoCommerce.ManagementClient.Order.Model
 
 		public static string GetCurrentStatus(this Shipment item, OrderGroup order)
 		{
-			var retVal = ShipmentStatus.InventoryAssigned;
-
 			// shipment inherits onHold status from the order
 			if (order.GetCurrentStatus() == (int)OrderStatus.OnHold)
 			{
-				retVal = ShipmentStatus.OnHold;
+				return ShipmentStatus.OnHold.ToString();
 			}
-			else
-			{
-				ShipmentStatus parsedVal;
-				if (Enum.TryParse(item.Status, out parsedVal))
-				{
-					retVal = parsedVal;
-				}
-			}
-			return retVal.ToString();
+
+		    return string.IsNullOrEmpty(item.Status) ? ShipmentStatus.InventoryAssigned.ToString() : item.Status;
 		}
 
 		public static void SetCurrentStatus(this Shipment item, int value, OrderClient client)

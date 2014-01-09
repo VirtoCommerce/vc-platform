@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using VirtoCommerce.Foundation.Orders.Model;
+﻿using VirtoCommerce.Foundation.Orders.Model;
 
 namespace VirtoCommerce.Client.Orders.StateMachines
 {
@@ -19,19 +15,19 @@ namespace VirtoCommerce.Client.Orders.StateMachines
 			var shippedState = RegisterStatus(ShipmentStatus.Shipped.ToString());
 
 			//AwaitingInventory -> Cancelled, InventoryAssigned, OnHold
-			awaitingInventoryState.RegisterTransitions(new StateTransitionDef<string>[] { canceledState, inventoryAssignedState, onHoldState });
+			awaitingInventoryState.RegisterTransitions(new[] { canceledState, inventoryAssignedState, onHoldState });
 
 			//InventoryAssigned -> Cancelled,  OnHold, Released
-			inventoryAssignedState.RegisterTransitions(new StateTransitionDef<string>[] { canceledState, releasedState, onHoldState });
+			inventoryAssignedState.RegisterTransitions(new[] { canceledState, releasedState, onHoldState });
 
 			//OnHold -> AwaitingInventory, InventoryAssigned, Packing, Released
-			onHoldState.RegisterTransitions(new StateTransitionDef<string>[] { awaitingInventoryState, inventoryAssignedState, packingState, releasedState });
+			onHoldState.RegisterTransitions(new[] { awaitingInventoryState, inventoryAssignedState, packingState, releasedState });
 
 			//Packing -> Cancelled, OnHold, Shipped
-			packingState.RegisterTransitions(new StateTransitionDef<string>[] { canceledState, onHoldState, shippedState });
+			packingState.RegisterTransitions(new[] { canceledState, onHoldState, shippedState });
 
 			//Released -> Cancelled, OnHold, Packing
-			releasedState.RegisterTransitions(new StateTransitionDef<string>[] { canceledState, onHoldState, packingState, });
+			releasedState.RegisterTransitions(new[] { canceledState, onHoldState, packingState, });
 		}
 	}
 }
