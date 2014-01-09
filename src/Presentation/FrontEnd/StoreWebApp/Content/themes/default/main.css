@@ -218,7 +218,7 @@ button + button
 	.header-wrap
 	{
 		background: #fff;
-		height: 127px;
+		/*height: 127px;*/
 		position: relative;
 		z-index: 5000;
 	}
@@ -1193,8 +1193,8 @@ button + button
 
 			.article .col .info input,
 			.article .content .cabinet .block .info input,
-			.article .col select,
-			.article .content .cabinet select
+			.article .col .info select,
+			.article .content .cabinet .block .info select
 			{
 				height: 29px;
 				width: 100%;

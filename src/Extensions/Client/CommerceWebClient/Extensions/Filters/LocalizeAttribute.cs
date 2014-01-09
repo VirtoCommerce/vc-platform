@@ -74,6 +74,8 @@ namespace VirtoCommerce.Web.Client.Extensions.Filters
 			if (!string.IsNullOrWhiteSpace(CustomerSession.Language) && !Thread.CurrentThread.CurrentUICulture.Name.Equals(CustomerSession.Language, StringComparison.InvariantCultureIgnoreCase))
 			{
 				Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture(CustomerSession.Language);
+                //Change CurrentCulture so that dates and numbers are formated too
+                Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture(CustomerSession.Language);
 			}
 			// set the lang value into route data
 			filterContext.RouteData.Values["lang"] = CustomerSession.Language;
