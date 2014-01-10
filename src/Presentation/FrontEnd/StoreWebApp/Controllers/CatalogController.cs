@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using MvcSiteMapProvider;
 using VirtoCommerce.Client;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.Catalogs.Model;
@@ -14,13 +15,9 @@ using ContextFieldConstants = VirtoCommerce.Foundation.Frameworks.ContextFieldCo
 
 namespace VirtoCommerce.Web.Controllers
 {
-    using MvcSiteMapProvider;
-    using MvcSiteMapProvider.Web.Mvc.Filters;
-
     /// <summary>
 	/// Class CatalogController.
 	/// </summary>
-	[Localize]
 	public class CatalogController : ControllerBase
     {
 		/// <summary>

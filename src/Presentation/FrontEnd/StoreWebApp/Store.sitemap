@@ -37,7 +37,7 @@
       <mvcSiteMapNode title="My Returns" controller="Account" action="RmaReturns"/>
     </mvcSiteMapNode>
 
-    <mvcSiteMapNode title="Details" controller="Catalog" action="DisplayItem" preservedRouteParameters="item"></mvcSiteMapNode>
+    <mvcSiteMapNode title="Details" controller="Catalog" action="DisplayItem" preservedRouteParameters="item,category,store,lang"></mvcSiteMapNode>
   </mvcSiteMapNode>
   
 </mvcSiteMap>

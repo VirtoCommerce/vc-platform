@@ -6,7 +6,6 @@ namespace VirtoCommerce.Web.Controllers
 	/// <summary>
 	/// Class ErrorController.
 	/// </summary>
-	[Localize]
 	public class ErrorController : ControllerBase
     {
         //

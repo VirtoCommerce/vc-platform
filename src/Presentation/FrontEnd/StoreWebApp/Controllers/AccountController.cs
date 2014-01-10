@@ -28,7 +28,6 @@ namespace VirtoCommerce.Web.Controllers
     /// Class AccountController.
     /// </summary>
     [Authorize]
-    [Localize]
     public class AccountController : ControllerBase
     {
         /// <summary>

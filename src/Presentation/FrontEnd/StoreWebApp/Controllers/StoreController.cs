@@ -19,7 +19,6 @@ namespace VirtoCommerce.Web.Controllers
     /// <summary>
     /// Class StoreController.
     /// </summary>
-    [Localize]
     public class StoreController : ControllerBase
     {
         /// <summary>

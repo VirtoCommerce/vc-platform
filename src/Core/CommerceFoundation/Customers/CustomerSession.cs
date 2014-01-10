@@ -157,7 +157,7 @@ namespace VirtoCommerce.Foundation.Customers
 				{
 					_languageCode = GetCookieValue("vcf.Language");
 				}
-				return _languageCode;
+				return !string.IsNullOrEmpty(_languageCode) ? _languageCode.ToLower() : null;
 			}
 			set
 			{

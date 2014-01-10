@@ -11,7 +11,6 @@ namespace VirtoCommerce.Web.Controllers
 	/// <summary>
 	/// Class BannerController.
 	/// </summary>
-	[Localize]
 	public class BannerController : ControllerBase
     {
 		/// <summary>

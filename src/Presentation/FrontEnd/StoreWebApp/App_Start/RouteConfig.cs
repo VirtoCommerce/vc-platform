@@ -45,42 +45,34 @@ namespace VirtoCommerce.Web
               new { controller = "Asset", action = "Index", path = UrlParameter.Optional }
           );
 
-            routes.MapRoute("Store", "{lang}/{store}",
-               new { controller = "Home", action = "Index" },
-               new { lang = "[a-z]{2}(-[A-Z]{2})?" });
-
-
             routes.Add("Item", new ItemRoute("{lang}/{store}/{category}/{item}",
                 CreateRouteValueDictionary(new { controller = "Catalog", action = "DisplayItem", store = ConfigurationManager.AppSettings["DefaultStore"] }),
-                CreateRouteValueDictionary(new { lang = "[a-z]{2}(-[A-Z]{2})?" }),
+                CreateRouteValueDictionary(new { lang = "[a-z]{2}(-[A-Z]{2})?"}),
                 new ItemRouteHandler()));
 
-            #region Legacy routes for compatibility
-
-            routes.MapRoute(
-              "Item_legacy",
-              "p/{item}",
-              new { controller = "Catalog", action = "DisplayItem" });
-
-            routes.MapRoute(
-                "Item_legacy_ln",
-                "{lang}/p/{item}",
-                new { controller = "Catalog", action = "DisplayItem" },
-                new { lang = "[a-z]{2}(-[A-Z]{2})?" });
-
-            #endregion
-
-            routes.Add("Catalog", new CategoryRoute("{lang}/{store}/{*category}",
+            routes.Add("Catalog", new CategoryRoute("{lang}/{store}/{category}",
                 CreateRouteValueDictionary(new { controller = "Catalog", action = "Display", store = ConfigurationManager.AppSettings["DefaultStore"] }),
                 CreateRouteValueDictionary(new { lang = "[a-z]{2}(-[A-Z]{2})?" }),
                 new CategoryRouteHandler()));
 
+            routes.Add("Store", new StoreRoute("{lang}/{store}",
+                CreateRouteValueDictionary(new { controller = "Home", action = "Index" }),
+                CreateRouteValueDictionary(new { lang = "[a-z]{2}(-[A-Z]{2})?" }), new MvcRouteHandler()));
+
+            //Other actions
             routes.MapRoute(
-              "Localization", // Route name
+              "Default", // Route name
               "{lang}/{controller}/{action}/{id}", // URL with parameters
               new { controller = "Home", action = "Index", id = UrlParameter.Optional }, // Parameter defaults
               new { lang = "[a-z]{2}(-[A-Z]{2})?" },
               new[] { "VirtoCommerce.Web.Controllers" });
+
+            //Needed for some post requests
+            routes.MapRoute(
+                "Default_Fallback", // Route name
+                "{controller}/{action}/{id}", // URL with parameters
+                new { controller = "Home", action = "Index", id = UrlParameter.Optional }, // Parameter defaults
+                new[] { "VirtoCommerce.Web.Controllers" });
         }
     }
 }

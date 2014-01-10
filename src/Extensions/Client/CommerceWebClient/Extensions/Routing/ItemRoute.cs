@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Web.Routing;
 using VirtoCommerce.Web.Client.Extensions.RouteHandlers;
 
 namespace VirtoCommerce.Web.Client.Extensions.Routing
 {
-    public class ItemRoute : Route
+    public class ItemRoute : CategoryRoute
     {
         public ItemRoute(string url, IRouteHandler routeHandler)
             : base(url, routeHandler)
@@ -27,11 +29,33 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing
         {
         }
 
+        public override RouteData GetRouteData(HttpContextBase httpContext)
+        {
+            var retVal = base.GetRouteData(httpContext);
+
+            if (retVal != null)
+            {
+                if (!retVal.Values.ContainsKey("item") || retVal.Values["item"] == null)
+                {
+                    retVal = null;
+                }
+                else
+                {
+                    var item = retVal.Values["item"].ToString();
+                    retVal.Values["item"] = SeoDecode(item, ItemRouteHandler.ItemMappings);
+                }
+            }
+            return retVal;
+        }
+
+
         public override VirtualPathData GetVirtualPath(RequestContext requestContext, RouteValueDictionary values)
         {
-            if (requestContext.RouteData.Values["item"] == null)
-                return null;
-
+            if (values.ContainsKey("item") && values["item"] != null)
+            {
+                var item = values["item"].ToString();
+                values["item"] = SeoEncode(item, ItemRouteHandler.ItemMappings);
+            }
             return base.GetVirtualPath(requestContext, values);
         }
     }

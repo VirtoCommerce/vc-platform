@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Web.Routing;
 using VirtoCommerce.Web.Client.Extensions.RouteHandlers;
 
 namespace VirtoCommerce.Web.Client.Extensions.Routing
 {
-    public class CategoryRoute : Route
+    public class CategoryRoute : StoreRoute
     {
         public CategoryRoute(string url, IRouteHandler routeHandler)
             : base(url, routeHandler)
@@ -27,20 +28,32 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing
         {
         }
 
+        public override RouteData GetRouteData(HttpContextBase httpContext)
+        {
+            var retVal =  base.GetRouteData(httpContext);
+
+            if (retVal != null)
+            {
+                if (!retVal.Values.ContainsKey("category") || retVal.Values["category"] == null)
+                {
+                    retVal = null;
+                }
+                else
+                {
+                    var item = retVal.Values["category"].ToString();
+                    retVal.Values["category"] = SeoDecode(item, CategoryRouteHandler.CatMappings);
+                }
+            }
+           
+            return retVal;
+        }
+
         public override VirtualPathData GetVirtualPath(RequestContext requestContext, RouteValueDictionary values)
         {
-            if (requestContext.RouteData.Values["category"] == null)
-                return null;
-
             if (values.ContainsKey("category") && values["category"] != null)
             {
                 var category = values["category"].ToString();
-
-                //Check if category can be reversed
-                if (CategoryRouteHandler.Mappings.ContainsValue(category))
-                {
-                    values["category"] = CategoryRouteHandler.Mappings.FirstOrDefault(x => x.Value == category).Key;
-                }
+                values["category"] = SeoEncode(category, CategoryRouteHandler.CatMappings);
             }
             return base.GetVirtualPath(requestContext, values);
         }

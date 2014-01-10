@@ -26,9 +26,9 @@
             return ToString(";");
         }
 
-        public string ToString(string separator)
+        public string ToString(string separator, string field = "CategoryId")
         {
-            return String.Join(separator, Outlines.Select(m => m.ToString()));
+            return String.Join(separator, Outlines.Select(m => m.ToString(separator, field)));
         }
     }
 
@@ -47,10 +47,10 @@
             return ToString("/");
         }
 
-        public string ToString(string separator)
+        public string ToString(string separator, string field = "CategoryId")
         {
             var ret = this.CatalogId;
-            return this.Categories.Aggregate(ret, (current, category) => current + String.Format("{0}{1}", separator, category.CategoryId));
+            return this.Categories.Aggregate(ret, (current, category) => current + String.Format("{0}{1}", separator, category.GetType().GetProperty(field).GetValue(category) ));
         }
     }
 }

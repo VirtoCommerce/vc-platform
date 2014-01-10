@@ -4,12 +4,15 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using VirtoCommerce.Web.Client.Extensions.Filters;
 
 namespace VirtoCommerce.Web.Controllers
 {
 	/// <summary>
 	/// Class ControllerBase.
 	/// </summary>
+	[Localize]
+    [Canonicalized]
 	public abstract class ControllerBase : Controller
 	{
 		/// <summary>

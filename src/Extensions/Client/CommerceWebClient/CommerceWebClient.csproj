@@ -174,6 +174,7 @@
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\ExceptionExtensions.cs" />
     <Compile Include="Extensions\ExpandoExtensions.cs" />
+    <Compile Include="Extensions\Filters\CanonicalizedAttribute.cs" />
     <Compile Include="Extensions\Filters\CustomOutputCacheAttribute.cs" />
     <Compile Include="Extensions\Filters\LocalizeWebApiAttribute.cs" />
     <Compile Include="Extensions\Filters\LocalizeAttribute.cs" />
@@ -184,6 +185,7 @@
     <Compile Include="Extensions\RouteHandlers\ItemRouteHandler.cs" />
     <Compile Include="Extensions\RouteHandlers\CategoryRouteHandler.cs" />
     <Compile Include="Extensions\Routing\CategoryRoute.cs" />
+    <Compile Include="Extensions\Routing\StoreRoute.cs" />
     <Compile Include="Extensions\Routing\ItemRoute.cs" />
     <Compile Include="Extensions\SectionExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />

@@ -25,7 +25,6 @@ namespace VirtoCommerce.Web.Controllers
 	/// <summary>
 	/// Class SearchController.
 	/// </summary>
-	[Localize]
 	public class SearchController : ControllerBase
     {
 		/// <summary>

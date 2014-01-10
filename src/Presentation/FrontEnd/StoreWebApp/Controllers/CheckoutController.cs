@@ -21,7 +21,6 @@ namespace VirtoCommerce.Web.Controllers
 	/// <summary>
 	/// Class CheckoutController.
 	/// </summary>
-	[Localize]
 	public class CheckoutController : ControllerBase
     {
 		/// <summary>

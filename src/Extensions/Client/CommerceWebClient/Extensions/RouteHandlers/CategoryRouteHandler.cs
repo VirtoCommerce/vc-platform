@@ -14,7 +14,7 @@ namespace VirtoCommerce.Web.Client.Extensions.RouteHandlers
     public class CategoryRouteHandler : MvcRouteHandler
     {
         //Temp test data
-        public static Dictionary<string, string> Mappings = new Dictionary<string, string> { 
+        public static Dictionary<string, string> CatMappings = new Dictionary<string, string> { 
         { "audio", "audio-mp3" }, 
         { "video", "tv-video" }, 
         { "computers", "computers-tablets" }, };
@@ -23,9 +23,9 @@ namespace VirtoCommerce.Web.Client.Extensions.RouteHandlers
         {
             var category = requestContext.RouteData.Values["category"].ToString();
 
-            if (Mappings.ContainsKey(category))
+            if (CatMappings.Keys.Any(x => x.Equals(category, StringComparison.OrdinalIgnoreCase)))
             {
-                category = Mappings[category];
+                category = CatMappings.First(x => x.Key.Equals(category, StringComparison.OrdinalIgnoreCase)).Value;
             }
 
             //Category is accessded by code parameter
