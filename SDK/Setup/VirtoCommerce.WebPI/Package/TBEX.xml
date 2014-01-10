@@ -10,7 +10,7 @@
     <AddLink InDashboard="True" InLearn="True">
       <Title>Open Commerce Manager (Admin)</Title>
       <Description>Open Commerce Manager application to manage your store.</Description>
-      <Uri>http://virtocommerce.com/webpi/admin</Uri>
+      <Uri>/admin</Uri>
       <ImageUri>http://virtocommerce.com/logo</ImageUri>
     </AddLink>
 	<AddLink InDashboard="True" InLearn="True">
@@ -35,7 +35,7 @@
   <Ribbon>
     <AddRibbonButton>
       <Label>Admin</Label> 
-      <Uri>http://virtocommerce.com/webpi/admin</Uri>
+      <Uri>/admin</Uri>
       <ImageUri>http://virtocommerce.com/logo</ImageUri> 
      </AddRibbonButton>
     <AddRibbonButton>
