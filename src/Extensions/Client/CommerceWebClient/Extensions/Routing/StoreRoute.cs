@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
 using System.Web;
 using System.Web.Routing;
-using VirtoCommerce.Client;
-using VirtoCommerce.Web.Client.Extensions.RouteHandlers;
+using VirtoCommerce.Foundation.AppConfig.Model;
+using VirtoCommerce.Foundation.Stores.Model;
 using VirtoCommerce.Web.Client.Helpers;
 
 namespace VirtoCommerce.Web.Client.Extensions.Routing
@@ -34,8 +31,8 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing
 
         public override VirtualPathData GetVirtualPath(RequestContext requestContext, RouteValueDictionary values)
         {
-            var retVal =  base.GetVirtualPath(requestContext, values);
-            return retVal;
+            ModifyVirtualPath(requestContext, values, SeoUrlKeywordTypes.Store);
+            return base.GetVirtualPath(requestContext, values);
         }
 
         public override RouteData GetRouteData(HttpContextBase httpContext)
@@ -46,9 +43,10 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing
             {
                 var requestPath = httpContext.Request.AppRelativeCurrentExecutionFilePath.Substring(2) +
                                   httpContext.Request.PathInfo;
-                var pathSegments = requestPath.Split(new[] {'/'}, StringSplitOptions.RemoveEmptyEntries);
+                var pathSegments = requestPath.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
                 RouteValueDictionary values = null;
 
+                //If route does not have any language or store add defaults to route data
                 if (pathSegments.Length < 2)
                 {
                     values = new RouteValueDictionary();
@@ -62,7 +60,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing
                             StoreHelper.StoreClient.GetCurrentStore().DefaultLanguage);
                         values.Add("store", StoreHelper.CustomerSession.StoreId);
                     }
-                    //if store is missing
+                        //if store is missing
                     else if (pathSegments.Length == 1)
                     {
                         values.Add("store", StoreHelper.CustomerSession.StoreId);
@@ -107,21 +105,45 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing
                     }
                 }
             }
-            else
-            {
-                var storeId = routeData.Values["store"].ToString();
 
-                //If such store does not exist this route is not valid
-                if (StoreHelper.StoreClient.GetStoreById(storeId) == null)
-                {
-                    return null;
-                }
+            //Decode route value
+            var store = routeData.Values["store"].ToString();
+            routeData.Values["store"] = SettingsHelper.SeoDecode(store, SeoUrlKeywordTypes.Store, routeData.Values["lang"].ToString());
+
+            var storeId = routeData.Values["store"].ToString();
+
+            //If such store does not exist this route is not valid
+            if (StoreHelper.StoreClient.GetStoreById(storeId) == null)
+            {
+                return null;
             }
 
-            return routeData; 
+            return routeData;
         }
 
-        private bool ProcessConstraints(HttpContextBase httpContext, RouteValueDictionary values, RouteDirection routeDirection)
+        protected void ModifyVirtualPath(RequestContext requestContext, RouteValueDictionary values, SeoUrlKeywordTypes type)
+        {
+            string routeValueKey = type.ToString().ToLower();
+
+            if (values.ContainsKey(routeValueKey) && values[routeValueKey] != null)
+            {
+                values[routeValueKey] = SettingsHelper.SeoEncode(values[routeValueKey].ToString(), type);
+            }
+            else if (requestContext.RouteData.Values.ContainsKey(routeValueKey))
+            {
+                var valueEncoded = SettingsHelper.SeoEncode(requestContext.RouteData.Values[routeValueKey].ToString(), type);
+                if (!values.ContainsKey(routeValueKey))
+                {
+                    values.Add(routeValueKey, valueEncoded);
+                }
+                else
+                {
+                    values[routeValueKey] = valueEncoded;
+                }
+            }
+        }
+
+        protected bool ProcessConstraints(HttpContextBase httpContext, RouteValueDictionary values, RouteDirection routeDirection)
         {
             if (Constraints != null)
             {
@@ -134,18 +156,6 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing
                 }
             }
             return true;
-        }
-
-        protected string SeoEncode(string value, Dictionary<string,string> mappings)
-        {
-            var mapping = mappings.Where(x => x.Value.Equals(value, StringComparison.CurrentCultureIgnoreCase)).ToArray();
-            return mapping.Any() ? mapping.First().Key : value;
-        }
-
-        protected string SeoDecode(string key, Dictionary<string, string> mappings)
-        {
-            var mapping = mappings.Where(x => x.Key.Equals(key, StringComparison.CurrentCultureIgnoreCase)).ToArray();
-            return mapping.Any() ? mapping.First().Value : key;
         }
     }
 }

@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Web;
 using System.Web.Routing;
-using VirtoCommerce.Web.Client.Extensions.RouteHandlers;
+using VirtoCommerce.Foundation.AppConfig.Model;
+using VirtoCommerce.Web.Client.Helpers;
 
 namespace VirtoCommerce.Web.Client.Extensions.Routing
 {
@@ -30,31 +29,27 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing
 
         public override RouteData GetRouteData(HttpContextBase httpContext)
         {
-            var retVal =  base.GetRouteData(httpContext);
+            var routeData = base.GetRouteData(httpContext);
 
-            if (retVal != null)
+            if (routeData != null)
             {
-                if (!retVal.Values.ContainsKey("category") || retVal.Values["category"] == null)
+                if (!routeData.Values.ContainsKey("category") || routeData.Values["category"] == null)
                 {
-                    retVal = null;
+                    routeData = null;
                 }
                 else
                 {
-                    var item = retVal.Values["category"].ToString();
-                    retVal.Values["category"] = SeoDecode(item, CategoryRouteHandler.CatMappings);
+                    var category = routeData.Values["category"].ToString();
+                    routeData.Values["category"] = SettingsHelper.SeoDecode(category, SeoUrlKeywordTypes.Category, routeData.Values["lang"].ToString());
                 }
             }
-           
-            return retVal;
+
+            return routeData;
         }
 
         public override VirtualPathData GetVirtualPath(RequestContext requestContext, RouteValueDictionary values)
         {
-            if (values.ContainsKey("category") && values["category"] != null)
-            {
-                var category = values["category"].ToString();
-                values["category"] = SeoEncode(category, CategoryRouteHandler.CatMappings);
-            }
+            ModifyVirtualPath(requestContext, values, SeoUrlKeywordTypes.Category);
             return base.GetVirtualPath(requestContext, values);
         }
     }

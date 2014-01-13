@@ -1,16 +1,16 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
 using System.Web.Routing;
 using Microsoft.Practices.ServiceLocation;
-using System;
-using System.Collections.Generic;
-using System.Web.Mvc;
 using VirtoCommerce.Client;
+using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.Assets.Services;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Catalogs.Services;
 using VirtoCommerce.Foundation.Customers;
 using VirtoCommerce.Foundation.Customers.Services;
-using VirtoCommerce.Web.Client.Extensions.RouteHandlers;
 using VirtoCommerce.Web.Client.Helpers;
 
 namespace VirtoCommerce.Web.Client.Extensions
@@ -93,34 +93,39 @@ namespace VirtoCommerce.Web.Client.Extensions
           
             if (parent != null)
             {
-                string parentId = ItemRouteHandler.ItemMappings.ContainsValue(parent.ItemId)
-                    ? ItemRouteHandler.ItemMappings.First(x => x.Value == parent.ItemId).Key
-                    : parent.ItemId;
+                string parentId = SettingsHelper.SeoEncode(parent.ItemId, SeoUrlKeywordTypes.Item);
 
                 routeValues.Add("item", parentId);
                 if (item != null)
                 {
-                    string itemId = ItemRouteHandler.ItemMappings.ContainsValue(item.ItemId)
-                        ? ItemRouteHandler.ItemMappings.First(x => x.Value == item.ItemId).Key
-                        : item.ItemId;
+                    string itemId = SettingsHelper.SeoEncode(item.ItemId, SeoUrlKeywordTypes.Item);
                     routeValues.Add("variationId", itemId);
                 }
-                routeValues.Add("category", OutlineBuilder.BuildCategoryOutline(CustomerSession.CatalogId, parent).Outlines[0].Categories.OfType<Category>().Last().Code);
+                routeValues.Add("category", GetCategoryCode(item));
                 return helper.RouteUrl("Item", routeValues);
             }
 
             if (item != null)
             {
-                string itemId = ItemRouteHandler.ItemMappings.ContainsValue(item.ItemId)
-                ? ItemRouteHandler.ItemMappings.First(x => x.Value == item.ItemId).Key
-                : item.ItemId;
+                string itemId = SettingsHelper.SeoEncode(item.ItemId, SeoUrlKeywordTypes.Item);
 
                 routeValues.Add("item", itemId);
-                routeValues.Add("category", OutlineBuilder.BuildCategoryOutline(CustomerSession.CatalogId, item).Outlines[0].Categories.OfType<Category>().Last().Code);
+                routeValues.Add("category", GetCategoryCode(item));
                 return helper.RouteUrl("Item", routeValues);
             }
 
             return string.Empty;
+        }
+
+        private static string GetCategoryCode(Item item)
+        {
+            var outlines = OutlineBuilder.BuildCategoryOutline(CustomerSession.CatalogId, item);
+            if (outlines.Outlines.Count > 0)
+            {
+                return outlines.Outlines[0].Categories.OfType<Category>().Last().Code;
+            }
+
+            return "undefined";
         }
     }
 }

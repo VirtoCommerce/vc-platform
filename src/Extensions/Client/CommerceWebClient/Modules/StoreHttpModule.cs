@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Security;
+using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Foundation.Stores.Model;
 using System.Web.Mvc;
@@ -273,7 +275,7 @@ namespace VirtoCommerce.Web.Client.Modules
 			var loadDefault = true;
 			var storeClient = DependencyResolver.Current.GetService<StoreClient>();
             //var storeid = context.Request.QueryString["store"];
-            var storeid = storeClient.GetStoreIdFromUrl(context.Request.Url.Segments);
+            var storeid = GetStoreIdFromUrl(context.Request.Url.Segments);
 			Store store = null;
 
 			if (String.IsNullOrEmpty(storeid))
@@ -361,5 +363,15 @@ namespace VirtoCommerce.Web.Client.Modules
 			return currency;
 		}
 		#endregion
+
+        private string GetStoreIdFromUrl(IEnumerable<string> urlSegments)
+        {
+            var storeClient = DependencyResolver.Current.GetService<StoreClient>();
+            var allStores = storeClient.GetStores();
+            var stores = allStores.Where(s => urlSegments.Any(x=> !string.IsNullOrEmpty(x) && 
+                HttpUtility.UrlDecode(x).Equals(SettingsHelper.SeoEncode(s.StoreId, SeoUrlKeywordTypes.Store), 
+                StringComparison.InvariantCultureIgnoreCase))).ToArray();
+            return stores.Length > 0 ? stores[0].StoreId : String.Empty;
+        }
 	}
 }

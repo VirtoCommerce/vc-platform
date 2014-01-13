@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Configuration;
-using System.Web.DynamicData;
 using System.Web.Mvc;
 using System.Web.Routing;
-using VirtoCommerce.Web.Client.Extensions.RouteHandlers;
 using VirtoCommerce.Web.Client.Extensions.Routing;
 
 namespace VirtoCommerce.Web
@@ -48,16 +46,17 @@ namespace VirtoCommerce.Web
             routes.Add("Item", new ItemRoute("{lang}/{store}/{category}/{item}",
                 CreateRouteValueDictionary(new { controller = "Catalog", action = "DisplayItem", store = ConfigurationManager.AppSettings["DefaultStore"] }),
                 CreateRouteValueDictionary(new { lang = "[a-z]{2}(-[A-Z]{2})?"}),
-                new ItemRouteHandler()));
+                new MvcRouteHandler()));
 
             routes.Add("Catalog", new CategoryRoute("{lang}/{store}/{category}",
                 CreateRouteValueDictionary(new { controller = "Catalog", action = "Display", store = ConfigurationManager.AppSettings["DefaultStore"] }),
                 CreateRouteValueDictionary(new { lang = "[a-z]{2}(-[A-Z]{2})?" }),
-                new CategoryRouteHandler()));
+                new MvcRouteHandler()));
 
             routes.Add("Store", new StoreRoute("{lang}/{store}",
                 CreateRouteValueDictionary(new { controller = "Home", action = "Index" }),
-                CreateRouteValueDictionary(new { lang = "[a-z]{2}(-[A-Z]{2})?" }), new MvcRouteHandler()));
+                CreateRouteValueDictionary(new { lang = "[a-z]{2}(-[A-Z]{2})?" }), 
+                new MvcRouteHandler()));
 
             //Other actions
             routes.MapRoute(

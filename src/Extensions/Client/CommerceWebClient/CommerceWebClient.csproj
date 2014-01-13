@@ -182,8 +182,6 @@
     <Compile Include="Extensions\HtmlHelperExtensions.cs" />
     <Compile Include="Extensions\MenuHelperExtensions.cs" />
     <Compile Include="Extensions\NamedSiteMapNodeVisibilityProvider.cs" />
-    <Compile Include="Extensions\RouteHandlers\ItemRouteHandler.cs" />
-    <Compile Include="Extensions\RouteHandlers\CategoryRouteHandler.cs" />
     <Compile Include="Extensions\Routing\CategoryRoute.cs" />
     <Compile Include="Extensions\Routing\StoreRoute.cs" />
     <Compile Include="Extensions\Routing\ItemRoute.cs" />

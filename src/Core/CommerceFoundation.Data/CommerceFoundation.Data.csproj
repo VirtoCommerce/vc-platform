@@ -133,6 +133,10 @@
     <Compile Include="AppConfig\Migrations\201307260640417_SchedulerUpdate.Designer.cs">
       <DependentUpon>201307260640417_SchedulerUpdate.cs</DependentUpon>
     </Compile>
+    <Compile Include="AppConfig\Migrations\201401130952595_Seo.cs" />
+    <Compile Include="AppConfig\Migrations\201401130952595_Seo.Designer.cs">
+      <DependentUpon>201401130952595_Seo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Asset\FileSystemBlobAssetRepository.cs" />
     <Compile Include="Catalogs\Migrations\201303190742259_Initial.cs" />
     <Compile Include="Catalogs\Migrations\201303190742259_Initial.Designer.cs">
@@ -296,6 +300,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AppConfig\Migrations\201307260640417_SchedulerUpdate.resx">
       <DependentUpon>201307260640417_SchedulerUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AppConfig\Migrations\201401130952595_Seo.resx">
+      <DependentUpon>201401130952595_Seo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Catalogs\Migrations\201303190742259_Initial.resx">
       <DependentUpon>201303190742259_Initial.cs</DependentUpon>

@@ -131,6 +131,7 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AppConfig\Model\ContextFieldConstants.cs" />
+    <Compile Include="AppConfig\Model\SeoUrlKeywordTypes.cs" />
     <Compile Include="AppConfig\Model\DisplayTemplateMapping.cs" />
     <Compile Include="AppConfig\Model\DisplayTemplateEvaluationContext.cs" />
     <Compile Include="AppConfig\Model\DisplayTemplateEvaluator.cs" />
@@ -145,6 +146,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AppConfig\Model\ObjectLock.cs" />
+    <Compile Include="AppConfig\Model\SeoUrlKeyword.cs" />
     <Compile Include="AppConfig\Model\Sequence.cs" />
     <Compile Include="AppConfig\Model\TargetEntry.cs" />
     <Compile Include="AppConfig\Model\Statistic.cs" />

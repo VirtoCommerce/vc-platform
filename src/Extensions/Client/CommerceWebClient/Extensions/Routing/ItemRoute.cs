@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Web;
 using System.Web.Routing;
-using VirtoCommerce.Web.Client.Extensions.RouteHandlers;
+using VirtoCommerce.Foundation.AppConfig.Model;
+using VirtoCommerce.Web.Client.Helpers;
 
 namespace VirtoCommerce.Web.Client.Extensions.Routing
 {
@@ -31,31 +29,27 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing
 
         public override RouteData GetRouteData(HttpContextBase httpContext)
         {
-            var retVal = base.GetRouteData(httpContext);
+            var routeData = base.GetRouteData(httpContext);
 
-            if (retVal != null)
+            if (routeData != null)
             {
-                if (!retVal.Values.ContainsKey("item") || retVal.Values["item"] == null)
+                if (!routeData.Values.ContainsKey("item") || routeData.Values["item"] == null)
                 {
-                    retVal = null;
+                    routeData = null;
                 }
                 else
                 {
-                    var item = retVal.Values["item"].ToString();
-                    retVal.Values["item"] = SeoDecode(item, ItemRouteHandler.ItemMappings);
+                    var item = routeData.Values["item"].ToString();
+                    routeData.Values["item"] = SettingsHelper.SeoDecode(item, SeoUrlKeywordTypes.Item, routeData.Values["lang"].ToString());
                 }
             }
-            return retVal;
+            return routeData;
         }
 
 
         public override VirtualPathData GetVirtualPath(RequestContext requestContext, RouteValueDictionary values)
         {
-            if (values.ContainsKey("item") && values["item"] != null)
-            {
-                var item = values["item"].ToString();
-                values["item"] = SeoEncode(item, ItemRouteHandler.ItemMappings);
-            }
+            ModifyVirtualPath(requestContext, values, SeoUrlKeywordTypes.Item);
             return base.GetVirtualPath(requestContext, values);
         }
     }
