@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using Microsoft.Practices.ServiceLocation;
 using VirtoCommerce.Client;
@@ -72,7 +73,6 @@ namespace VirtoCommerce.Web.Client.Helpers
             return SeoKeyword(language, value, type);
         }
 
-
         /// <summary>
         /// Decodes the given SEO keyword to original value.
         /// </summary>
@@ -89,26 +89,73 @@ namespace VirtoCommerce.Web.Client.Helpers
             return SeoKeyword(language, keyword, type, false);
         }
 
-
-        private static string SeoKeyword(string language, string val, SeoUrlKeywordTypes type, bool getKeyword = true)
+      
+        private static string SeoKeyword(string language, string val, SeoUrlKeywordTypes type, bool encode = true)
         {
-            var seoKeyword = getKeyword
-                ? SeoKeywordClient.GetSeoKeyword(type, language, keywordvalue: val)
-                : SeoKeywordClient.GetSeoKeyword(type, language, val);
+            var langInfo = TryGetCultureInfo(language);
+            language = langInfo != null ? langInfo.Name : language;
+
+            var seoKeywords = encode
+                ? SeoKeywordClient.GetSeoKeywords(type, keywordvalue: val)
+                : SeoKeywordClient.GetSeoKeywords(type, keyword:val);
+
+            //Filter keywords with valid language
+            seoKeywords = seoKeywords.Where(x => TryGetCultureInfo(x.Language) != null).ToArray();
 
             //If not found for given langauge try default store language
-            if (seoKeyword == null)
+            if (seoKeywords.Length != 0)
             {
-                var store = StoreHelper.StoreClient.GetCurrentStore();
-                if (store != null &&
-                    !store.DefaultLanguage.Equals(language, StringComparison.OrdinalIgnoreCase))
+                var seoKeyword = seoKeywords.FirstOrDefault(x => x.Language.Equals(language, StringComparison.InvariantCultureIgnoreCase));
+
+                if (seoKeyword != null)
                 {
-                    seoKeyword = getKeyword
-                  ? SeoKeywordClient.GetSeoKeyword(type, store.DefaultLanguage, keywordvalue: val)
-                  : SeoKeywordClient.GetSeoKeyword(type, store.DefaultLanguage, val);
+                    return encode ? seoKeyword.Keyword : seoKeyword.KeywordValue;
+                }
+
+                //Default language failover scenario
+                var store = StoreHelper.StoreClient.GetCurrentStore();
+
+                if (store != null && !store.DefaultLanguage.Equals(language, StringComparison.OrdinalIgnoreCase))
+                {
+                    seoKeyword = seoKeywords.FirstOrDefault(x => x.Language.Equals(store.DefaultLanguage, StringComparison.InvariantCultureIgnoreCase));
+
+                    //If we managed to decode in default language need to check if same value was not encoded in original language   
+                    if (seoKeyword != null)
+                    {
+                        //If we are encodoing simply encode it in default language, because not found in original language
+                        if (encode)
+                        {
+                            return seoKeyword.Keyword;
+                        }
+
+                        //If it was encoded in original language it should not allow to decode in default language.
+                        //ex.: say in in english we have category keyword video with value tv-video and in russian there is also same value with keyword videoRussian
+                        //If requested language is russian and keyword video we would get null, but default language (suppose is english) would return tv-video
+                        var originalKeyword =
+                            SeoKeywordClient.GetSeoKeywords(type, language, keywordvalue: seoKeyword.KeywordValue)
+                                .FirstOrDefault();
+
+                        if (originalKeyword == null)
+                        {
+                            return seoKeyword.KeywordValue;
+                        }
+                    }
                 }
             }
-            return seoKeyword != null ? getKeyword ? seoKeyword.Keyword : seoKeyword.KeywordValue : val;
+
+            return val;
+        }
+
+        private static CultureInfo TryGetCultureInfo(string languageCode)
+        {
+            try
+            {
+                return CultureInfo.CreateSpecificCulture(languageCode);
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         /// <summary>

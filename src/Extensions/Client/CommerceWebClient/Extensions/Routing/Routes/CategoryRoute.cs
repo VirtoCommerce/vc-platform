@@ -1,9 +1,10 @@
 ﻿using System.Web;
 using System.Web.Routing;
 using VirtoCommerce.Foundation.AppConfig.Model;
+using VirtoCommerce.Foundation.Stores.Model;
 using VirtoCommerce.Web.Client.Helpers;
 
-namespace VirtoCommerce.Web.Client.Extensions.Routing
+namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
 {
     public class CategoryRoute : StoreRoute
     {
@@ -41,6 +42,14 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing
                 {
                     var category = routeData.Values["category"].ToString();
                     routeData.Values["category"] = SettingsHelper.SeoDecode(category, SeoUrlKeywordTypes.Category, routeData.Values["lang"].ToString());
+
+                    //Check if category is valid
+                    var dbCategory = CartHelper.CatalogClient.GetCategory(routeData.Values["category"].ToString());
+
+                    if (dbCategory == null)
+                    {
+                        return null;
+                    }
                 }
             }
 

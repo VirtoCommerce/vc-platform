@@ -26,18 +26,19 @@ namespace VirtoCommerce.Client
             _isEnabled = AppConfigConfiguration.Instance.Cache.IsEnabled;
         }
 
-        public SeoUrlKeyword GetSeoKeyword(SeoUrlKeywordTypes type, string language, string keyword = null, string keywordvalue = null)
+        public SeoUrlKeyword[] GetSeoKeywords(SeoUrlKeywordTypes type, string language = null, string keyword = null, string keywordvalue = null)
         {
             if (keyword == null && keywordvalue == null)
             {
                 throw new ArgumentNullException("keyword","Keyword or KeywordValue must be provided");
             }
-            return CacheHelper.Get(string.Format(SeoKeywordCacheKey, type, language, keyword ?? "", keywordvalue ?? ""),
+            return CacheHelper.Get(string.Format(SeoKeywordCacheKey, type, language ?? "", keyword ?? "", keywordvalue ?? ""),
                 () => _appConfigRepository.SeoUrlKeywords
-                    .FirstOrDefault(s => language.Equals(s.Language, StringComparison.OrdinalIgnoreCase) && (int)type == s.KeywordType && s.IsActive &&
-                    (keyword == null || keyword.Equals(s.Keyword, StringComparison.OrdinalIgnoreCase)) &&
-                     (keywordvalue == null || keywordvalue.Equals(s.KeywordValue, StringComparison.OrdinalIgnoreCase))), 
-                     AppConfigConfiguration.Instance.Cache.SettingsTimeout, _isEnabled);
+                    .Where(s => (language == null || language.Equals(s.Language, StringComparison.OrdinalIgnoreCase)) && 
+                        (keyword == null || keyword.Equals(s.Keyword, StringComparison.OrdinalIgnoreCase)) &&
+                        (keywordvalue == null || keywordvalue.Equals(s.KeywordValue, StringComparison.OrdinalIgnoreCase)) &&
+                        (int)type == s.KeywordType && 
+                        s.IsActive).ToArray(), AppConfigConfiguration.Instance.Cache.SettingsTimeout, _isEnabled);
         }
 
         CacheHelper _cacheHelper;

@@ -3,7 +3,7 @@ using System.Web.Routing;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Web.Client.Helpers;
 
-namespace VirtoCommerce.Web.Client.Extensions.Routing
+namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
 {
     public class ItemRoute : CategoryRoute
     {

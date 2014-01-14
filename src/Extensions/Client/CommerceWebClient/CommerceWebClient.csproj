@@ -182,9 +182,15 @@
     <Compile Include="Extensions\HtmlHelperExtensions.cs" />
     <Compile Include="Extensions\MenuHelperExtensions.cs" />
     <Compile Include="Extensions\NamedSiteMapNodeVisibilityProvider.cs" />
-    <Compile Include="Extensions\Routing\CategoryRoute.cs" />
-    <Compile Include="Extensions\Routing\StoreRoute.cs" />
-    <Compile Include="Extensions\Routing\ItemRoute.cs" />
+    <Compile Include="Extensions\RedirectRouteExtensions.cs" />
+    <Compile Include="Extensions\RouteValueDictionaryExtensions.cs" />
+    <Compile Include="Extensions\Routing\HttpHandlers\DelegateHttpHandler.cs" />
+    <Compile Include="Extensions\Routing\HttpHandlers\RedirectHttpHandler.cs" />
+    <Compile Include="Extensions\Routing\Routes\CategoryRoute.cs" />
+    <Compile Include="Extensions\Routing\Routes\NormalizeRoute.cs" />
+    <Compile Include="Extensions\Routing\Routes\RedirectRoute.cs" />
+    <Compile Include="Extensions\Routing\Routes\StoreRoute.cs" />
+    <Compile Include="Extensions\Routing\Routes\ItemRoute.cs" />
     <Compile Include="Extensions\SectionExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
@@ -196,6 +202,7 @@
     <Compile Include="Extensions\Validation\RequiredIfAttribute.cs" />
     <Compile Include="Extensions\ViewExtensions.cs" />
     <Compile Include="Helpers\CartHelper.cs" />
+    <Compile Include="Helpers\SearchHelper.cs" />
     <Compile Include="Helpers\SettingsHelper.cs" />
     <Compile Include="Helpers\PromotionHelper.cs" />
     <Compile Include="Helpers\StoreHelper.cs" />

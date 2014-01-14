@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Globalization;
+using System.Linq;
 using System.Web;
 using System.Web.Routing;
 using VirtoCommerce.Foundation.AppConfig.Model;
-using VirtoCommerce.Foundation.Stores.Model;
 using VirtoCommerce.Web.Client.Helpers;
 
-namespace VirtoCommerce.Web.Client.Extensions.Routing
+namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
 {
     public class StoreRoute : Route
     {
@@ -31,6 +32,16 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing
 
         public override VirtualPathData GetVirtualPath(RequestContext requestContext, RouteValueDictionary values)
         {
+            if (!values.ContainsKey("lang"))
+            {
+                values.Add("lang",
+                            StoreHelper.CustomerSession.Language ??
+                            StoreHelper.StoreClient.GetCurrentStore().DefaultLanguage);
+            }
+            if (!values.ContainsKey("store"))
+            {
+                values.Add("store", StoreHelper.CustomerSession.StoreId);
+            }
             ModifyVirtualPath(requestContext, values, SeoUrlKeywordTypes.Store);
             return base.GetVirtualPath(requestContext, values);
         }
@@ -63,6 +74,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing
                         //if store is missing
                     else if (pathSegments.Length == 1)
                     {
+                        values.Add("lang", pathSegments[0]);
                         values.Add("store", StoreHelper.CustomerSession.StoreId);
                     }
                 }
@@ -97,24 +109,41 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing
                 }
 
                 // Copy the remaining default values
-                foreach (var value in Defaults)
+                foreach (var value in Defaults.Where(value => !routeData.Values.ContainsKey(value.Key)))
                 {
-                    if (!routeData.Values.ContainsKey(value.Key))
-                    {
-                        routeData.Values.Add(value.Key, value.Value);
-                    }
+                    routeData.Values.Add(value.Key, value.Value);
                 }
             }
 
+            if (!routeData.Values.ContainsKey("store") || !routeData.Values.ContainsKey("lang"))
+            {
+                return null;
+            }
             //Decode route value
             var store = routeData.Values["store"].ToString();
             routeData.Values["store"] = SettingsHelper.SeoDecode(store, SeoUrlKeywordTypes.Store, routeData.Values["lang"].ToString());
 
             var storeId = routeData.Values["store"].ToString();
+            var dbStore = StoreHelper.StoreClient.GetStoreById(storeId);
 
             //If such store does not exist this route is not valid
-            if (StoreHelper.StoreClient.GetStoreById(storeId) == null)
+            if (dbStore == null)
             {
+                return null;
+            }
+
+            try
+            {
+                var culture = CultureInfo.CreateSpecificCulture(routeData.Values["lang"].ToString());
+                if(!dbStore.Languages.Any(l=>l.LanguageCode.Equals(culture.Name)))
+                {
+                    //Store does not support this language
+                    return null;
+                }
+            }
+            catch
+            {
+                //Language is not valid
                 return null;
             }
 
@@ -145,17 +174,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing
 
         protected bool ProcessConstraints(HttpContextBase httpContext, RouteValueDictionary values, RouteDirection routeDirection)
         {
-            if (Constraints != null)
-            {
-                foreach (var constraintsItem in Constraints)
-                {
-                    if (!ProcessConstraint(httpContext, constraintsItem.Value, constraintsItem.Key, values, routeDirection))
-                    {
-                        return false;
-                    }
-                }
-            }
-            return true;
+            return Constraints == null || Constraints.All(constraintsItem => ProcessConstraint(httpContext, constraintsItem.Value, constraintsItem.Key, values, routeDirection));
         }
     }
 }

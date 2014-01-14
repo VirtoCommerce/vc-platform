@@ -22,17 +22,33 @@ namespace VirtoCommerce.Web.Client.Extensions.Filters
 
                     // don't 'rewrite' POST requests
                     if (context.Request.RequestType == "GET" && !filterContext.IsChildAction)
-                    {
-                        // check for any upper-case letters:
-                        if (path != path.ToLower(CultureInfo.InvariantCulture))
-                        {
-                            needRedirect = true;
-                        }
-
+                    {                   
                         // make sure request ends with a "/"
                         if (path.EndsWith("/"))
                         {
                             needRedirect = true;
+                        }
+
+                        //make language code allways be five symbols
+                        if (filterContext.RouteData.Values.ContainsKey("lang"))
+                        {
+                            if (filterContext.RouteData.Values["lang"] as string != null)
+                            {
+                                if (filterContext.RouteData.Values["lang"].ToString().Length < 5)
+                                {
+                                    try
+                                    {
+                                        var cult = CultureInfo.CreateSpecificCulture(
+                                            filterContext.RouteData.Values["lang"].ToString());
+                                        path = path.Replace(filterContext.RouteData.Values["lang"].ToString(), cult.Name);
+                                        needRedirect = true;
+                                    }
+                                    catch
+                                    {
+                                        //Something wrong with language??
+                                    }
+                                }
+                            }
                         }
                     }
 
