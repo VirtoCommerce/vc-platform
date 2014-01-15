@@ -211,6 +211,7 @@
     <Compile Include="Helpers\SettingsHelper.cs" />
     <Compile Include="Helpers\PromotionHelper.cs" />
     <Compile Include="Helpers\StoreHelper.cs" />
+    <Compile Include="Extensions\ItemExtensions.cs" />
     <Compile Include="Modules\BaseHttpModule.cs" />
     <Compile Include="Modules\MarketingHttpModule.cs" />
     <Compile Include="Modules\StoreHttpModule.cs" />

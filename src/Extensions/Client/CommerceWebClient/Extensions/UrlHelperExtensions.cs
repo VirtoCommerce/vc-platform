@@ -18,23 +18,9 @@ namespace VirtoCommerce.Web.Client.Extensions
     public static class UrlHelperExtensions
     {
 
-        public static ICatalogOutlineBuilder OutlineBuilder
-        {
-            get { return DependencyResolver.Current.GetService<ICatalogOutlineBuilder>(); }
-        }
-
         public static CatalogClient CatalogClient
         {
             get { return DependencyResolver.Current.GetService<CatalogClient>(); }
-        }
-
-        public static ICustomerSession CustomerSession
-        {
-            get
-            {
-                var session = ServiceLocator.Current.GetInstance<ICustomerSessionService>();
-                return session.CustomerSession;
-            }
         }
 
         public static string Image(this UrlHelper helper, Item item, string name)
@@ -101,7 +87,7 @@ namespace VirtoCommerce.Web.Client.Extensions
                     string itemId = SettingsHelper.SeoEncode(item.ItemId, SeoUrlKeywordTypes.Item);
                     routeValues.Add("variationId", itemId);
                 }
-                routeValues.Add("category", GetCategoryCode(item));
+                routeValues.Add("category", item.GetItemCategoryRouteValue());
                 return helper.RouteUrl("Item", routeValues);
             }
 
@@ -110,22 +96,11 @@ namespace VirtoCommerce.Web.Client.Extensions
                 string itemId = SettingsHelper.SeoEncode(item.ItemId, SeoUrlKeywordTypes.Item);
 
                 routeValues.Add("item", itemId);
-                routeValues.Add("category", GetCategoryCode(item));
+                routeValues.Add("category", item.GetItemCategoryRouteValue());
                 return helper.RouteUrl("Item", routeValues);
             }
 
             return string.Empty;
-        }
-
-        private static string GetCategoryCode(Item item)
-        {
-            var outlines = OutlineBuilder.BuildCategoryOutline(CustomerSession.CatalogId, item);
-            if (outlines.Outlines.Count > 0)
-            {
-                return outlines.Outlines[0].Categories.OfType<Category>().Last().Code;
-            }
-
-            return "undefined";
         }
     }
 }

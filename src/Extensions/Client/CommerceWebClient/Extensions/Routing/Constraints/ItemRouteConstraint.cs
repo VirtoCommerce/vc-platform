@@ -35,7 +35,27 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Constraints
             var encoded = values[parameterName].ToString();
             var decoded = SettingsHelper.SeoDecode(encoded, SeoUrlKeywordTypes.Item, values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : null);
 
-            return CatalogClient.GetItem(decoded) != null;
+            var item = CatalogClient.GetItem(decoded);
+
+            if (item == null)
+            {
+                return false;
+            }
+
+            //Check if category is correct
+            if (values.ContainsKey(Constants.Category))
+            {
+                var routeVal = item.GetItemCategoryRouteValue();
+                encoded = values[Constants.Category].ToString();
+                decoded = SettingsHelper.SeoDecode(encoded, SeoUrlKeywordTypes.Category, values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : null);
+
+                if (!routeVal.Equals(decoded, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 }
