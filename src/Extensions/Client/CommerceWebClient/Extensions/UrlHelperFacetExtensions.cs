@@ -8,17 +8,29 @@ namespace VirtoCommerce.Web.Client.Extensions
 {
     public static class UrlHelperFacetExtensions
     {
+        public static string FacetPrefix = "f_";
+
+        public static string GetFacetKey(this UrlHelper helper, string field)
+        {
+            return string.Concat(FacetPrefix, field);
+        }
+
         public static string SetFacet(this UrlHelper helper, string field, string value)
         {
-            return helper.SetParameters(helper.RequestContext.HttpContext.Request.RawUrl, new Dictionary<string, object> {
-                {string.Format("f_{0}", field), value},
-                {"p", 1},
+            return helper.SetFacet(helper.RequestContext.HttpContext.Request.RawUrl, field, value);
+        }
+
+        public static string SetFacet(this UrlHelper helper, string url, string field, string value)
+        {
+            return helper.SetParameters(url, new Dictionary<string, object> {
+                {helper.GetFacetKey(field), value},
+                {"p", 1}
             });
         }
-        
+     
         public static string RemoveFacet(this UrlHelper helper, string field)
         {
-            var noFacet = helper.RemoveParametersUrl(helper.RequestContext.HttpContext.Request.RawUrl, string.Format("f_{0}", field));
+            var noFacet = helper.RemoveParametersUrl(helper.RequestContext.HttpContext.Request.RawUrl, helper.GetFacetKey(field));
             return helper.SetParameter(noFacet, "p", "1");
         }
 
@@ -33,7 +45,7 @@ namespace VirtoCommerce.Web.Client.Extensions
             List<string> keysToRemove = new List<string>();
             foreach (var p in qs)
             {
-                if(p.Key.StartsWith("f_"))
+                if (p.Key.StartsWith(FacetPrefix))
                     keysToRemove.Add(p.Key);
             }
 
@@ -77,6 +89,23 @@ namespace VirtoCommerce.Web.Client.Extensions
             foreach (var p in parameters)
                 qs[p.Key] = p.Value.ToNullOrString();
             return parts[0] + "?" + DictToQuerystring(qs);
+        }
+
+        /// <summary>
+        /// Sets/changes an url's query string parameters.
+        /// </summary>
+        /// <param name="helper">The helper.</param>
+        /// <param name="query">The query.</param>
+        /// <param name="parameters">The parameters.</param>
+        /// <returns></returns>
+        public static string SetQueryParameters(this UrlHelper helper, string query, IDictionary<string, object> parameters)
+        {
+            var qs = ParseQueryString(query);
+            foreach (var p in parameters)
+            {
+                qs[p.Key] = p.Value.ToNullOrString();
+            }
+            return DictToQuerystring(qs);
         }
 
         /// <summary>

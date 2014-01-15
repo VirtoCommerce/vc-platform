@@ -49,7 +49,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Filters
 		{
 			base.OnActionExecuting(filterContext);
 
-			var lang = filterContext.RouteData.Values["lang"] as string;
+            var lang = filterContext.RouteData.Values[Routing.Constants.Language] as string;
 			if (!string.IsNullOrWhiteSpace(lang))
 			{
 				// set the culture from the route data (url)
@@ -78,7 +78,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Filters
                 Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture(CustomerSession.Language);
 			}
 			// set the lang value into route data
-			filterContext.RouteData.Values["lang"] = CustomerSession.Language;
+            //filterContext.RouteData.Values[Routing.Constants.Language] = CustomerSession.Language;
 		}
 	}
 }

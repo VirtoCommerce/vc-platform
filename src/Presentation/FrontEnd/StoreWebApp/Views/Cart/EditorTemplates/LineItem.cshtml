@@ -29,7 +29,7 @@
         @if (Model.LineItem.Discounts != null && Model.LineItem.Discounts.Count > 0)
         {
             <dl class="item-options">
-                <dt>@("Discounts:".LocalizeHtml())</dt>
+                <dt>@("Discounts:".Localize())</dt>
                 @foreach (var discount in Model.LineItem.Discounts)
                 { 
                     <dd>@discount.DisplayMessage</dd>

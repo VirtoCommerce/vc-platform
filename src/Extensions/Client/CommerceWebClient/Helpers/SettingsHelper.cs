@@ -62,15 +62,11 @@ namespace VirtoCommerce.Web.Client.Helpers
         /// </summary>
         /// <param name="value">The value.</param>
         /// <param name="type">The type.</param>
+        /// <param name="language">The language.</param>
         /// <returns></returns>
-        public static string SeoEncode(string value, SeoUrlKeywordTypes type)
+        public static string SeoEncode(string value, SeoUrlKeywordTypes type, string language = null)
         {
-            return SeoEncode(value, type,CustomerSession.Language);
-        }
-
-        public static string SeoEncode(string value, SeoUrlKeywordTypes type, string language)
-        {
-            return SeoKeyword(language, value, type);
+            return SeoKeyword(language ?? CustomerSession.Language, value, type);
         }
 
         /// <summary>
@@ -78,15 +74,11 @@ namespace VirtoCommerce.Web.Client.Helpers
         /// </summary>
         /// <param name="keyword">The keyword.</param>
         /// <param name="type">The type.</param>
+        /// <param name="language">The language.</param>
         /// <returns></returns>
-        public static string SeoDecode(string keyword, SeoUrlKeywordTypes type)
+        public static string SeoDecode(string keyword, SeoUrlKeywordTypes type, string language = null)
         {
-            return SeoDecode(keyword, type, CustomerSession.Language);
-        }
-
-        public static string SeoDecode(string keyword, SeoUrlKeywordTypes type,string language)
-        {
-            return SeoKeyword(language, keyword, type, false);
+            return SeoKeyword(language ?? CustomerSession.Language, keyword, type, false);
         }
 
       

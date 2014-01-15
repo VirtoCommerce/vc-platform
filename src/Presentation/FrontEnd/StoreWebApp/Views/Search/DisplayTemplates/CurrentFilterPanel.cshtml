@@ -8,9 +8,9 @@
             @foreach (var filter in Model.SelectedFilters)
             {
                 <li>
-                    <span class="label">@filter.Filter.Name.LocalizeHtml():</span>
+                    <span class="label">@filter.Filter.Name.Localize():</span>
                     <span class="value">@filter.Facet.Name</span>
-                    <a class="remove" title="@("Remove This Item".LocalizeHtml())" href="@Url.RemoveFacet(filter.Filter.Key)">@("Remove This Item".LocalizeHtml())</a>
+                    <a class="remove" title="@("Remove This Item".Localize())" href="@Url.RemoveFacet(filter.Filter.Key)">@("Remove This Item".Localize())</a>
                 </li>
             }
         </ol>

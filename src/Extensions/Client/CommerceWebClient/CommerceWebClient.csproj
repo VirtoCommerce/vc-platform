@@ -184,6 +184,11 @@
     <Compile Include="Extensions\NamedSiteMapNodeVisibilityProvider.cs" />
     <Compile Include="Extensions\RedirectRouteExtensions.cs" />
     <Compile Include="Extensions\RouteValueDictionaryExtensions.cs" />
+    <Compile Include="Extensions\Routing\Constants.cs" />
+    <Compile Include="Extensions\Routing\Constraints\CategoryRouteConstraint.cs" />
+    <Compile Include="Extensions\Routing\Constraints\LanguageRouteConstraint.cs" />
+    <Compile Include="Extensions\Routing\Constraints\StoreRouteConstraint.cs" />
+    <Compile Include="Extensions\Routing\Constraints\ItemRouteConstraint.cs" />
     <Compile Include="Extensions\Routing\HttpHandlers\DelegateHttpHandler.cs" />
     <Compile Include="Extensions\Routing\HttpHandlers\RedirectHttpHandler.cs" />
     <Compile Include="Extensions\Routing\Routes\CategoryRoute.cs" />

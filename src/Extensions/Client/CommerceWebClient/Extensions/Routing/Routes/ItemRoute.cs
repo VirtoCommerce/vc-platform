@@ -33,14 +33,16 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
 
             if (routeData != null)
             {
-                if (!routeData.Values.ContainsKey("item") || routeData.Values["item"] == null)
+                //If there is no item in route, then route is not valid
+                if (!routeData.Values.ContainsKey(Constants.Item) || routeData.Values[Constants.Item] == null)
                 {
                     routeData = null;
                 }
                 else
                 {
-                    var item = routeData.Values["item"].ToString();
-                    routeData.Values["item"] = SettingsHelper.SeoDecode(item, SeoUrlKeywordTypes.Item, routeData.Values["lang"].ToString());
+                    //Decode the value
+                    var item = routeData.Values[Constants.Item].ToString();
+                    routeData.Values[Constants.Item] = SettingsHelper.SeoDecode(item, SeoUrlKeywordTypes.Item, routeData.Values[Constants.Language].ToString());
                 }
             }
             return routeData;

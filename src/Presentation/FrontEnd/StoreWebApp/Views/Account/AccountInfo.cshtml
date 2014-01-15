@@ -37,7 +37,7 @@
                 Html.RenderAction("AddressView", "Account", new { address = Model.BillingAddress });
                 <p>
                     <a href="@Url.Action("AddressEdit", "Account", new { userId = Model.CurrentUser.MemberId, addressId = Model.BillingAddress.AddressId })">
-                        @("Edit Address".LocalizeHtml())
+                        @("Edit Address".Localize())
                     </a>
                 </p>
             }
@@ -55,7 +55,7 @@
                 Html.RenderAction("AddressView", "Account", new { address = Model.ShippingAddress });
                 <p>
                     <a href="@Url.Action("AddressEdit", "Account", new { userId = Model.CurrentUser.MemberId, addressId = Model.ShippingAddress.AddressId })">
-                        @("Edit Address".LocalizeHtml())
+                        @("Edit Address".Localize())
                     </a>
                 </p>
             }

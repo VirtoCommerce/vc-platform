@@ -4,7 +4,7 @@
     ViewBag.Title = Html.Title(ViewBag.PageTitle as string);
 }
 
-<button type="button" title="@("Add New Address".LocalizeHtml())" onclick="window.location='@Url.Action("AddressEdit", "Account")';">
+<button type="button" title="@("Add New Address".Localize())" onclick="window.location='@Url.Action("AddressEdit", "Account")';">
     <span>@("Add New Address".Localize())</span>
 </button>
 <div class="block clearfix">

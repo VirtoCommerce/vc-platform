@@ -19,7 +19,7 @@
                                 @Html.AntiForgeryToken()
                                 @Html.Hidden("provider", externalLogin.Provider)
                                 @Html.Hidden("providerUserId", externalLogin.ProviderUserId)
-                                <a href="#" onclick="$(this).closest('form').submit(); return false;" title="@("Remove {0} credential from your account".LocalizeHtml(externalLogin.ProviderDisplayName))" class="remove">@("Remove".Localize())</a>
+                                <a href="#" onclick="$(this).closest('form').submit(); return false;" title="@("Remove {0} credential from your account".Localize((object)externalLogin.ProviderDisplayName))" class="remove">@("Remove".Localize())</a>
                             }
                         }
                     </li>

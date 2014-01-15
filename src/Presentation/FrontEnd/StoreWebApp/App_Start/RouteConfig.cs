@@ -5,6 +5,7 @@ using System.Web.Routing;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Web.Client.Extensions;
 using VirtoCommerce.Web.Client.Extensions.Routing;
+using VirtoCommerce.Web.Client.Extensions.Routing.Constraints;
 using VirtoCommerce.Web.Client.Extensions.Routing.Routes;
 
 namespace VirtoCommerce.Web
@@ -46,56 +47,72 @@ namespace VirtoCommerce.Web
               new { controller = "Asset", action = "Index", path = UrlParameter.Optional }
           );
 
-            var itemRoute = new NormalizeRoute(new ItemRoute("{lang}/{store}/{category}/{item}",
+            var itemRoute = new NormalizeRoute(
+                new ItemRoute(Constants.ItemRoute,
                 CreateRouteValueDictionary(
                     new
                     {
                         controller = "Catalog",
-                        action = "DisplayItem",
-                        store = ConfigurationManager.AppSettings["DefaultStore"]
+                        action = "DisplayItem"
                     }),
-                CreateRouteValueDictionary(new {lang = "[a-z]{2}(-[A-Z]{2})?"}),
-                new MvcRouteHandler())
-                {
-                    DataTokens = new RouteValueDictionary { { "namespaces", new[] { "VirtoCommerce.Web.Controllers" } } }
-                });
+                    new RouteValueDictionary
+                    {
+                        {Constants.Language, new LanguageRouteConstraint()},
+                        {Constants.Store, new StoreRouteConstraint()},
+                        {Constants.Category, new CategoryRouteConstraint()},
+                        {Constants.Item, new ItemRouteConstraint()}
+                    },
+                    new RouteValueDictionary { { "namespaces", new[] { "VirtoCommerce.Web.Controllers" } } },
+                new MvcRouteHandler()));
 
-            var categoryRoute = new NormalizeRoute(new CategoryRoute("{lang}/{store}/{category}",
+            var categoryRoute = new NormalizeRoute(
+                new CategoryRoute(Constants.CategoryRoute,
                 CreateRouteValueDictionary(
                     new
                     {
                         controller = "Catalog",
-                        action = "Display",
-                        store = ConfigurationManager.AppSettings["DefaultStore"]
+                        action = "Display"
                     }),
-                CreateRouteValueDictionary(new {lang = "[a-z]{2}(-[A-Z]{2})?"}),
-                new MvcRouteHandler())
-                {
-                    DataTokens = new RouteValueDictionary { { "namespaces", new[] { "VirtoCommerce.Web.Controllers" } } }
-                });
+                 new RouteValueDictionary
+                    {
+                        {Constants.Language, new LanguageRouteConstraint()},
+                        {Constants.Store, new StoreRouteConstraint()},
+                        {Constants.Category, new CategoryRouteConstraint()}
+                    },
+                new RouteValueDictionary { { "namespaces", new[] { "VirtoCommerce.Web.Controllers" } } },
+                new MvcRouteHandler()));
 
-            var storeRoute = new NormalizeRoute(new StoreRoute("{lang}/{store}",
-                CreateRouteValueDictionary(new {controller = "Home", action = "Index"}),
-                CreateRouteValueDictionary(new {lang = "[a-z]{2}(-[A-Z]{2})?"}),
-                new MvcRouteHandler())
-                {
-                    DataTokens = new RouteValueDictionary { { "namespaces", new[] { "VirtoCommerce.Web.Controllers" } } }
-                });
+            var storeRoute = new NormalizeRoute(
+                new StoreRoute(Constants.StoreRoute,
+                 new RouteValueDictionary
+                    {
+                        {"controller", "Home"},
+                        {"action", "Index"}
+                    },
+                new RouteValueDictionary
+                    {
+                        {Constants.Language, new LanguageRouteConstraint()},
+                        {Constants.Store, new StoreRouteConstraint()}
+                    },
+                new RouteValueDictionary { { "namespaces", new[] { "VirtoCommerce.Web.Controllers" } } },
+                new MvcRouteHandler()));
 
             routes.Add("Item", itemRoute);
-            routes.Add("Catalog", categoryRoute);
+            routes.Add("Category", categoryRoute);
             routes.Add("Store", storeRoute);
 
             //Legacy redirects
-            routes.Redirect(r => r.MapRoute("old_Category", "c/{category}")).To(categoryRoute);
-            routes.Redirect(r => r.MapRoute("old_Item", "p/{item}")).To(itemRoute);
+            routes.Redirect(r => r.MapRoute("old_Category", string.Format("c/{{{0}}}", Constants.Category))).To(categoryRoute);
+            routes.Redirect(r => r.MapRoute("old_Item", string.Format("p/{{{0}}}", Constants.Item))).To(itemRoute);
 
-            var otherRoute = new NormalizeRoute(new Route("{lang}/{controller}/{action}/{id}",
+            var otherRoute = new NormalizeRoute(new Route(string.Format("{{{0}}}/{{controller}}/{{action}}/{{id}}", Constants.Language),
                 CreateRouteValueDictionary(new { id = UrlParameter.Optional }),
-                CreateRouteValueDictionary(new { lang = "[a-z]{2}(-[A-Z]{2})?" }), new MvcRouteHandler())
-            {
-                DataTokens = new RouteValueDictionary { { "namespaces", new[] { "VirtoCommerce.Web.Controllers" } } }
-            });
+                new RouteValueDictionary
+                    {
+                        {Constants.Language, new LanguageRouteConstraint()}
+                    },
+                    new RouteValueDictionary { { "namespaces", new[] { "VirtoCommerce.Web.Controllers" } } },
+                    new MvcRouteHandler()));
 
             //Other actions
             routes.Add("Default", otherRoute);
@@ -106,8 +123,6 @@ namespace VirtoCommerce.Web
                 "{controller}/{action}/{id}", // URL with parameters
                 new
                 {
-                    //controller = "Home", 
-                    //action = "Index", 
                     id = UrlParameter.Optional
                 }, // Parameter defaults
                 new[] { "VirtoCommerce.Web.Controllers" });

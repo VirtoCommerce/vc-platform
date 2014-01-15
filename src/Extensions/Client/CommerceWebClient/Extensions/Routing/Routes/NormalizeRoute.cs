@@ -57,20 +57,20 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
             else if (internalRoute is CategoryRoute)
             {
                 //For category route we don't need item in query
-                values.Remove("item");
+                values.Remove(Constants.Item);
             }
             else if (internalRoute is StoreRoute)
             {
                 //For store route we don't need item and category in query
-                values.Remove("item");
-                values.Remove("category");
+                values.Remove(Constants.Item);
+                values.Remove(Constants.Category);
             }
             else
             {
                 //For other routes we don't need any additional values
-                values.Remove("item");
-                values.Remove("category");
-                values.Remove("store");
+                values.Remove(Constants.Item);
+                values.Remove(Constants.Category);
+                values.Remove(Constants.Store);
             }
 
 
@@ -102,7 +102,8 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
                 }
                 virtualPath += queryPart;
 
-                vpd.VirtualPath = virtualPath;
+                //Decode virtualPath to show nicely cyrillic url
+                vpd.VirtualPath = HttpUtility.UrlDecode(virtualPath);
             }
             return vpd;
         }

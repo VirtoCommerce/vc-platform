@@ -23,5 +23,5 @@
 @*@Html.ValidationMessage(ViewData.ModelMetadata, new { name = ViewData["name"] })*@
 @if (!string.IsNullOrEmpty(ViewData.ModelMetadata.Description))
 {
-    <em class="tip">@Html.Raw(ViewData.ModelMetadata.Description.LocalizeHtml())</em>
+    <em class="tip">@Html.Raw(ViewData.ModelMetadata.Description.Localize())</em>
 }

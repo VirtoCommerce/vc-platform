@@ -51,7 +51,7 @@
         <tbody>
             <tr>
                 <td>
-                    <span class="nobr">@("Description".LocalizeHtml())</span>
+                    <span class="nobr">@("Description".Localize())</span>
                 </td>
                 @foreach (var li in Model.LineItems)
                 {
@@ -62,7 +62,7 @@
             </tr>
             <tr class="odd">
                 <td>
-                    <span class="nobr">@("SKU".LocalizeHtml())</span>
+                    <span class="nobr">@("SKU".Localize())</span>
                 </td>
                 @foreach (var li in Model.LineItems)
                 {

@@ -1,4 +1,6 @@
 ﻿@using System.Globalization
+@using DotNetOpenAuth.OpenId.Extensions.SimpleRegistration
+@using RouteConstatnts = VirtoCommerce.Web.Client.Extensions.Routing
 @using VirtoCommerce.Foundation.AppConfig.Model
 @{
     var tempValues = new RouteValueDictionary(ViewContext.RouteData.Values);
@@ -19,11 +21,17 @@
         @foreach (var lang in store.Languages)
         {
             var culture = CultureInfo.CreateSpecificCulture(lang.LanguageCode);
-            tempValues["lang"] = culture.Name;
-            tempValues["store"] = SettingsHelper.SeoEncode(StoreHelper.CustomerSession.StoreId, SeoUrlKeywordTypes.Store, culture.Name);
-            if (tempValues.ContainsKey("category") && tempValues["category"] as string != null)
+            tempValues[RouteConstatnts.Constants.Language] = culture.Name;
+            tempValues[RouteConstatnts.Constants.Store] = SettingsHelper.SeoEncode(StoreHelper.CustomerSession.StoreId, SeoUrlKeywordTypes.Store, culture.Name);
+            
+            if (tempValues.ContainsKey(RouteConstatnts.Constants.Category) && tempValues[RouteConstatnts.Constants.Category] as string != null)
             {
-                tempValues["category"] = SettingsHelper.SeoEncode(SettingsHelper.SeoDecode(tempValues["category"].ToString(), SeoUrlKeywordTypes.Category), SeoUrlKeywordTypes.Category, culture.Name);
+                tempValues[RouteConstatnts.Constants.Category] = SettingsHelper.SeoEncode(SettingsHelper.SeoDecode(tempValues[RouteConstatnts.Constants.Category].ToString(), SeoUrlKeywordTypes.Category), SeoUrlKeywordTypes.Category, culture.Name);
+            }
+
+            if (tempValues.ContainsKey(RouteConstatnts.Constants.Item) && tempValues[RouteConstatnts.Constants.Item] as string != null)
+            {
+                tempValues[RouteConstatnts.Constants.Item] = SettingsHelper.SeoEncode(SettingsHelper.SeoDecode(tempValues[RouteConstatnts.Constants.Item].ToString(), SeoUrlKeywordTypes.Item), SeoUrlKeywordTypes.Item, culture.Name);
             }
             
             var countryCode = culture.Name.Substring(culture.Name.IndexOf('-') + 1).ToLowerInvariant();

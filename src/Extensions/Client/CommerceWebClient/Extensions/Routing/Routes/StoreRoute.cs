@@ -32,15 +32,15 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
 
         public override VirtualPathData GetVirtualPath(RequestContext requestContext, RouteValueDictionary values)
         {
-            if (!values.ContainsKey("lang"))
+            if (!values.ContainsKey(Constants.Language))
             {
-                values.Add("lang",
+                values.Add(Constants.Language,
                             StoreHelper.CustomerSession.Language ??
                             StoreHelper.StoreClient.GetCurrentStore().DefaultLanguage);
             }
-            if (!values.ContainsKey("store"))
+            if (!values.ContainsKey(Constants.Store))
             {
-                values.Add("store", StoreHelper.CustomerSession.StoreId);
+                values.Add(Constants.Store, StoreHelper.CustomerSession.StoreId);
             }
             ModifyVirtualPath(requestContext, values, SeoUrlKeywordTypes.Store);
             return base.GetVirtualPath(requestContext, values);
@@ -66,16 +66,16 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
                     //If both store and languange are missing
                     if (pathSegments.Length == 0)
                     {
-                        values.Add("lang",
+                        values.Add(Constants.Language,
                             StoreHelper.CustomerSession.Language ??
                             StoreHelper.StoreClient.GetCurrentStore().DefaultLanguage);
-                        values.Add("store", StoreHelper.CustomerSession.StoreId);
+                        values.Add(Constants.Store, StoreHelper.CustomerSession.StoreId);
                     }
                         //if store is missing
                     else if (pathSegments.Length == 1)
                     {
-                        values.Add("lang", pathSegments[0]);
-                        values.Add("store", StoreHelper.CustomerSession.StoreId);
+                        values.Add(Constants.Language, pathSegments[0]);
+                        values.Add(Constants.Store, StoreHelper.CustomerSession.StoreId);
                     }
                 }
 
@@ -115,37 +115,9 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
                 }
             }
 
-            if (!routeData.Values.ContainsKey("store") || !routeData.Values.ContainsKey("lang"))
-            {
-                return null;
-            }
             //Decode route value
-            var store = routeData.Values["store"].ToString();
-            routeData.Values["store"] = SettingsHelper.SeoDecode(store, SeoUrlKeywordTypes.Store, routeData.Values["lang"].ToString());
-
-            var storeId = routeData.Values["store"].ToString();
-            var dbStore = StoreHelper.StoreClient.GetStoreById(storeId);
-
-            //If such store does not exist this route is not valid
-            if (dbStore == null)
-            {
-                return null;
-            }
-
-            try
-            {
-                var culture = CultureInfo.CreateSpecificCulture(routeData.Values["lang"].ToString());
-                if(!dbStore.Languages.Any(l=>l.LanguageCode.Equals(culture.Name)))
-                {
-                    //Store does not support this language
-                    return null;
-                }
-            }
-            catch
-            {
-                //Language is not valid
-                return null;
-            }
+            var store = routeData.Values[Constants.Store].ToString();
+            routeData.Values[Constants.Store] = SettingsHelper.SeoDecode(store, SeoUrlKeywordTypes.Store, routeData.Values[Constants.Language].ToString());
 
             return routeData;
         }

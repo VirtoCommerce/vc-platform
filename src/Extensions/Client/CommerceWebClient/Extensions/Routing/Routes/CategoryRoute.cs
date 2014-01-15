@@ -34,22 +34,14 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
 
             if (routeData != null)
             {
-                if (!routeData.Values.ContainsKey("category") || routeData.Values["category"] == null)
+                if (!routeData.Values.ContainsKey(Constants.Category) || routeData.Values[Constants.Category] == null)
                 {
                     routeData = null;
                 }
                 else
                 {
-                    var category = routeData.Values["category"].ToString();
-                    routeData.Values["category"] = SettingsHelper.SeoDecode(category, SeoUrlKeywordTypes.Category, routeData.Values["lang"].ToString());
-
-                    //Check if category is valid
-                    var dbCategory = CartHelper.CatalogClient.GetCategory(routeData.Values["category"].ToString());
-
-                    if (dbCategory == null)
-                    {
-                        return null;
-                    }
+                    var category = routeData.Values[Constants.Category].ToString();
+                    routeData.Values[Constants.Category] = SettingsHelper.SeoDecode(category, SeoUrlKeywordTypes.Category, routeData.Values[Constants.Language].ToString());
                 }
             }
 
