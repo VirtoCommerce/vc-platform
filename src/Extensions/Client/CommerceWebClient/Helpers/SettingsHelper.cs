@@ -66,7 +66,8 @@ namespace VirtoCommerce.Web.Client.Helpers
         /// <returns></returns>
         public static string SeoEncode(string value, SeoUrlKeywordTypes type, string language = null)
         {
-            return SeoKeyword(language ?? CustomerSession.Language, value, type);
+            var seoKeyword = SeoKeyword(value, type, language);
+            return seoKeyword != null ? seoKeyword.Keyword : value;
         }
 
         /// <summary>
@@ -78,16 +79,18 @@ namespace VirtoCommerce.Web.Client.Helpers
         /// <returns></returns>
         public static string SeoDecode(string keyword, SeoUrlKeywordTypes type, string language = null)
         {
-            return SeoKeyword(language ?? CustomerSession.Language, keyword, type, false);
+            var seoKeyword = SeoKeyword(keyword, type, language, false);
+            return seoKeyword !=null ? seoKeyword.KeywordValue : keyword;
         }
 
-      
-        private static string SeoKeyword(string language, string val, SeoUrlKeywordTypes type, bool encode = true)
+
+        public static SeoUrlKeyword SeoKeyword(string val, SeoUrlKeywordTypes type, string language = null, bool byValue = true)
         {
+            language = language ?? CustomerSession.Language;
             var langInfo = TryGetCultureInfo(language);
             language = langInfo != null ? langInfo.Name : language;
 
-            var seoKeywords = encode
+            var seoKeywords = byValue
                 ? SeoKeywordClient.GetSeoKeywords(type, keywordvalue: val)
                 : SeoKeywordClient.GetSeoKeywords(type, keyword:val);
 
@@ -101,7 +104,7 @@ namespace VirtoCommerce.Web.Client.Helpers
 
                 if (seoKeyword != null)
                 {
-                    return encode ? seoKeyword.Keyword : seoKeyword.KeywordValue;
+                    return seoKeyword;
                 }
 
                 //Default language failover scenario
@@ -115,9 +118,9 @@ namespace VirtoCommerce.Web.Client.Helpers
                     if (seoKeyword != null)
                     {
                         //If we are encodoing simply encode it in default language, because not found in original language
-                        if (encode)
+                        if (byValue)
                         {
-                            return seoKeyword.Keyword;
+                            return seoKeyword;
                         }
 
                         //If it was encoded in original language it should not allow to decode in default language.
@@ -129,13 +132,13 @@ namespace VirtoCommerce.Web.Client.Helpers
 
                         if (originalKeyword == null)
                         {
-                            return seoKeyword.KeywordValue;
+                            return seoKeyword;
                         }
                     }
                 }
             }
 
-            return val;
+            return null;
         }
 
         private static CultureInfo TryGetCultureInfo(string languageCode)

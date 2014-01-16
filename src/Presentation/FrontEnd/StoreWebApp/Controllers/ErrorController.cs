@@ -1,5 +1,4 @@
 ﻿using System.Web.Mvc;
-using VirtoCommerce.Web.Client.Extensions.Filters;
 
 namespace VirtoCommerce.Web.Controllers
 {

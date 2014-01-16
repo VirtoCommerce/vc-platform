@@ -197,15 +197,17 @@ namespace VirtoCommerce.Web.Virto.Helpers
         /// <returns>
         /// CatalogItemWithPriceModel.
         /// </returns>
-		public static CatalogItemWithPriceModel CreateCatalogModel(string itemId, string parentItemId = null, string associationType = null, bool forcedActive = false, ItemResponseGroups responseGroups = ItemResponseGroups.ItemLarge, ItemDisplayOptions display = ItemDisplayOptions.ItemLarge, bool byItemCode = false)
+		public static CatalogItemWithPriceModel CreateCatalogModel(string itemId, 
+            string parentItemId = null, 
+            string associationType = null, 
+            bool forcedActive = false, 
+            ItemResponseGroups responseGroups = ItemResponseGroups.ItemLarge, 
+            ItemDisplayOptions display = ItemDisplayOptions.ItemLarge, 
+            bool byItemCode = false)
 		{
-			//1. find item id by url
-			//2. find item in search by id if catalog is virtual
-			//3. retrieve item from master category by id and category name
 
             var dbItem = CatalogClient.GetItem(itemId, responseGroups,
                                               UserHelper.CustomerSession.CatalogId, bycode: byItemCode);
-
             if (dbItem != null)
 			{
 

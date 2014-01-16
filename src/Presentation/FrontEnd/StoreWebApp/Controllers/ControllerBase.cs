@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
+using VirtoCommerce.Foundation.AppConfig.Model;
+using VirtoCommerce.Web.Client.Extensions;
 using VirtoCommerce.Web.Client.Extensions.Filters;
+using VirtoCommerce.Web.Client.Extensions.Routing;
+using VirtoCommerce.Web.Client.Helpers;
 
 namespace VirtoCommerce.Web.Controllers
 {
@@ -33,5 +34,39 @@ namespace VirtoCommerce.Web.Controllers
 				return sw.GetStringBuilder().ToString().Replace(Environment.NewLine, string.Empty);
 			}
 		}
+
+	    protected override void OnActionExecuted(ActionExecutedContext filterContext)
+	    {
+	        if (!filterContext.Canceled && filterContext.Result != null && !ControllerContext.IsChildAction)
+	        {
+                FillViewBagWithMetadata(filterContext, Constants.Store);
+                FillViewBagWithMetadata(filterContext, Constants.Category);
+                FillViewBagWithMetadata(filterContext, Constants.Item);
+	        }
+	    }
+
+	    protected virtual void FillViewBagWithMetadata(ActionExecutedContext filterContext, string routeKey)
+	    {
+            if (filterContext.RouteData.Values.ContainsKey(routeKey))
+            {
+                var routeValue = filterContext.RouteData.Values[routeKey] as string;
+                if (!String.IsNullOrEmpty(routeValue))
+                {
+                    SeoUrlKeywordTypes type;
+                    if (Enum.TryParse(routeKey, true, out type))
+                    {
+                        var keyword = SettingsHelper.SeoKeyword(routeValue, type);
+
+                        if (keyword != null)
+                        {
+                            ViewBag.MetaDescription = keyword.MetaDescription;
+                            ViewBag.Title = keyword.Title;
+                            ViewBag.MetaKeywords = keyword.MetaKeywords;
+                        }
+                    }
+                }
+            }
+	    }
+
 	}
 }
