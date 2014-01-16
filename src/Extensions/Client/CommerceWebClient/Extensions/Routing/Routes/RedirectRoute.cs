@@ -13,12 +13,12 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
         {
         }
 
-        public RedirectRoute(RouteBase sourceRoute, RouteBase targetRoute, bool permanent, RouteValueDictionary additionalRouteValues)
+        public RedirectRoute(RouteBase sourceRoute, RouteBase targetRoute, bool permanent, Func<RequestContext, RouteValueDictionary> additionalRouteValues)
         {
             SourceRoute = sourceRoute;
             TargetRoute = targetRoute;
             Permanent = permanent;
-            AdditionalRouteValues = additionalRouteValues;
+            AdditionalRouteValuesFunc = additionalRouteValues;
         }
 
         public RouteBase SourceRoute
@@ -39,7 +39,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
             set;
         }
 
-        public RouteValueDictionary AdditionalRouteValues
+        public Func<RequestContext, RouteValueDictionary> AdditionalRouteValuesFunc
         {
             get;
             private set;
@@ -66,7 +66,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
 
         public RedirectRoute To(RouteBase targetRoute)
         {
-            return To(targetRoute, null);
+            return To(targetRoute, x => null);
         }
 
         public RedirectRoute To(RouteBase targetRoute, object routeValues)
@@ -75,6 +75,11 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
         }
 
         public RedirectRoute To(RouteBase targetRoute, RouteValueDictionary routeValues)
+        {
+            return To(targetRoute, x => routeValues);
+        }
+
+        public RedirectRoute To(RouteBase targetRoute, Func<RequestContext, RouteValueDictionary> routeValues)
         {
             if (targetRoute == null)
             {
@@ -89,11 +94,11 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
             TargetRoute = targetRoute;
 
             // Set once only
-            if (AdditionalRouteValues != null)
+            if (AdditionalRouteValuesFunc != null)
             {
                 throw new InvalidOperationException(/* TODO */);
             }
-            AdditionalRouteValues = routeValues;
+            AdditionalRouteValuesFunc = routeValues;
             return this;
         }
 
@@ -101,7 +106,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
         {
             var requestRouteValues = requestContext.RouteData.Values;
 
-            var routeValues = AdditionalRouteValues.Merge(requestRouteValues);
+            var routeValues = AdditionalRouteValuesFunc(requestContext).Merge(requestRouteValues);
 
             var vpd = TargetRoute.GetVirtualPath(requestContext, routeValues);
             if (vpd != null)

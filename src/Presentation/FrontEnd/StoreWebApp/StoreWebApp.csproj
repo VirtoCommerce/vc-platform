@@ -362,10 +362,8 @@
     <Compile Include="Models\CartModel.cs" />
     <Compile Include="Models\AddressCartModel.cs" />
     <Compile Include="Models\CartRemoveModel.cs" />
-    <Compile Include="Models\CartUpdateModel.cs" />
     <Compile Include="Models\CatalogModels.cs" />
     <Compile Include="Models\CheckoutModels.cs" />
-    <Compile Include="Models\CurrenciesModel.cs" />
     <Compile Include="Models\CustomerModels.cs" />
     <Compile Include="Models\LineItemModel.cs" />
     <Compile Include="Models\LineItemUpdateModel.cs" />
@@ -375,7 +373,6 @@
     <Compile Include="Models\ReviewModel.cs" />
     <Compile Include="Models\SearchModels.cs" />
     <Compile Include="Models\StoreModel.cs" />
-    <Compile Include="Models\StoresModel.cs" />
     <Compile Include="Models\CurrencyModel.cs" />
     <Compile Include="Models\VariationModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -760,6 +757,8 @@
     <Content Include="Views\Shared\DisplayTemplates\MetaRobotsHelperModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\CanonicalHelperModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\SiteMapPathNodeModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\ReviewTemplate.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\ReviewCommentTemplate.cshtml" />
     <None Include="Web.Azure.config" />
   </ItemGroup>
   <ItemGroup>

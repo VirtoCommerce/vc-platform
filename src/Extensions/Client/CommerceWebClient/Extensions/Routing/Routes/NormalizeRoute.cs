@@ -48,8 +48,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
                 return null;
             }
 
-
-            //Some very specific code that maybe could be refactored later
+            //TODO: Some very specific code that should be refactored later
             if (internalRoute is ItemRoute)
             {
                 //For item route we need all params

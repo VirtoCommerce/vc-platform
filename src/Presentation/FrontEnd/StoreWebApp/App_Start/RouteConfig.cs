@@ -7,6 +7,7 @@ using VirtoCommerce.Web.Client.Extensions;
 using VirtoCommerce.Web.Client.Extensions.Routing;
 using VirtoCommerce.Web.Client.Extensions.Routing.Constraints;
 using VirtoCommerce.Web.Client.Extensions.Routing.Routes;
+using VirtoCommerce.Web.Virto.Helpers;
 
 namespace VirtoCommerce.Web
 {
@@ -103,7 +104,20 @@ namespace VirtoCommerce.Web
 
             //Legacy redirects
             routes.Redirect(r => r.MapRoute("old_Category", string.Format("c/{{{0}}}", Constants.Category))).To(categoryRoute);
-            routes.Redirect(r => r.MapRoute("old_Item", string.Format("p/{{{0}}}", Constants.Item))).To(itemRoute);
+            routes.Redirect(r => r.MapRoute("old_Item", string.Format("p/{{{0}}}", Constants.Item))).To(itemRoute,
+                x =>
+                {
+                    //Resolve item category dynamically
+                    if (x.RouteData.Values.ContainsKey(Constants.Item))
+                    {
+                        var item = CatalogHelper.CatalogClient.GetItem(x.RouteData.Values[Constants.Item].ToString());
+                        if (item != null)
+                        {
+                            return new RouteValueDictionary {{Constants.Category, item.GetItemCategoryRouteValue()}};
+                        }
+                    };
+                    return null;
+                });
 
             var otherRoute = new NormalizeRoute(new Route(string.Format("{{{0}}}/{{controller}}/{{action}}/{{id}}", Constants.Language),
                 CreateRouteValueDictionary(new { id = UrlParameter.Optional }),
