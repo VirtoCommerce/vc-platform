@@ -97,7 +97,7 @@ namespace UI.FrontEnd.FunctionalTests.Catalog
 			session.CategoryId = category.CategoryId;
 
 			var controller = (CatalogController)DependencyResolver.Current.GetService(typeof(CatalogController));
-			var result = controller.DisplayItem(item.ItemId) as ViewResult;
+			var result = controller.DisplayItem(item.Code) as ViewResult;
 			var model = result.Model as CatalogItemWithPriceModel;
 
 			Assert.Equal(result.ViewName, "Item"); //Default view

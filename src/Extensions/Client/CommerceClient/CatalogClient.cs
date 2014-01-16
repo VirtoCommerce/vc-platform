@@ -28,6 +28,7 @@ namespace VirtoCommerce.Client
         public const string ChildCategoriesCacheKey = "C:CT:{0}:p:{1}";
         //public const string ItemCacheKey = "C:I:{0}:g:{1}";
         public const string ItemsCacheKey = "C:Is:{0}:g:{1}";
+        public const string ItemsCodeCacheKey = "C:Isc:{0}:g:{1}";
         public const string ItemsSearchCacheKey = "C:Is:{0}:{1}";
         public const string ItemsQueryCacheKey = "C:Is:{0}";
         public const string PriceListCacheKey = "C:PL:{0}";
@@ -121,16 +122,32 @@ namespace VirtoCommerce.Client
         }
 
         #region Item Methods
-        public Item GetItem(string id, bool useCache = true)
+
+        /// <summary>
+        /// Gets the item.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="useCache">if set to <c>true</c> [use cache].</param>
+        /// <param name="bycode">if set to <c>true</c> [bycode].</param>
+        /// <returns></returns>
+        public Item GetItem(string id, bool useCache = true, bool bycode = false)
         {
-            return GetItem(id, ItemResponseGroups.ItemSmall, useCache);
+            return GetItem(id, ItemResponseGroups.ItemSmall, useCache, bycode);
         }
 
-        public Item GetItem(string id, ItemResponseGroups responseGroup, bool useCache = true)
+        /// <summary>
+        /// Gets the item.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="responseGroup">The response group.</param>
+        /// <param name="useCache">if set to <c>true</c> [use cache].</param>
+        /// <param name="bycode">if set to <c>true</c> [bycode].</param>
+        /// <returns></returns>
+        public Item GetItem(string id, ItemResponseGroups responseGroup, bool useCache = true, bool bycode = false)
         {
             if (!string.IsNullOrEmpty(id))
             {
-                var items = GetItems(new[] { id }, useCache, responseGroup);
+                var items = bycode ? GetItemsByCode(new[] { id }, useCache, responseGroup) : GetItems(new[] { id }, useCache, responseGroup);
                 if (items != null && items.Any())
                     return items[0];
             }
@@ -145,10 +162,11 @@ namespace VirtoCommerce.Client
         /// <param name="responseGroup">The response group.</param>
         /// <param name="catalogId">The catalog id.</param>
         /// <param name="useCache">if set to <c>true</c> uses cache.</param>
+        /// <param name="bycode">if set to <c>true</c> get item by code.</param>
         /// <returns></returns>
-        public Item GetItem(string id, ItemResponseGroups responseGroup, string catalogId, bool useCache = true)
+        public Item GetItem(string id, ItemResponseGroups responseGroup, string catalogId, bool useCache = true, bool bycode = false)
         {
-            var item = GetItem(id, responseGroup, useCache);
+            var item = GetItem(id, responseGroup, useCache, bycode);
 
             if (item != null)
             {
@@ -196,7 +214,27 @@ namespace VirtoCommerce.Client
             query = IncludeGroups(query, responseGroup);
 
             return Helper.Get(
-                string.Format(ItemsCacheKey, CacheHelper.CreateCacheKey("", ids), responseGroup.ToString()),
+                string.Format(ItemsCacheKey, CacheHelper.CreateCacheKey("", ids), responseGroup),
+                () => (query).ToArray(),
+                CatalogConfiguration.Instance.Cache.ItemTimeout,
+                _isEnabled && useCache);
+        }
+
+        public Item[] GetItemsByCode(string[] ids)
+        {
+            return GetItemsByCode(ids, true, ItemResponseGroups.ItemSmall);
+        }
+
+        public Item[] GetItemsByCode(string[] codes, bool useCache, ItemResponseGroups responseGroup)
+        {
+            if (codes == null || !codes.Any())
+                return null;
+
+            var query = _catalogRepository.Items.Where(x => codes.Contains(x.Code));
+            query = IncludeGroups(query, responseGroup);
+
+            return Helper.Get(
+                string.Format(ItemsCodeCacheKey, CacheHelper.CreateCacheKey("", codes), responseGroup),
                 () => (query).ToArray(),
                 CatalogConfiguration.Instance.Cache.ItemTimeout,
                 _isEnabled && useCache);

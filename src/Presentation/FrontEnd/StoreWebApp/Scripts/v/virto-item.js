@@ -36,12 +36,14 @@ function errorMsg(xhr, ajaxOptions, thrownError) {
     });
 }
 
-function loadVariations(parentItemId, variationId, dropdown) {
+function loadVariations(parentItemId, variation, dropdown)
+{
 
     var url = VirtoCommerce.url("/Catalog/ItemVariations") + "?itemId=" + parentItemId + "&name=itemvariations";
 
-    if (variationId != undefined && variationId.length > 0) {
-        url += "&variationId=" + variationId;
+    if (variation != undefined && variation.length > 0)
+    {
+        url += "&variation=" + variation;
     }
 
     $.each($("div.variations select"), function () {

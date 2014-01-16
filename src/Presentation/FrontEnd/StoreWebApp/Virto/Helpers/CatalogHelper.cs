@@ -184,28 +184,32 @@ namespace VirtoCommerce.Web.Virto.Helpers
 			return model;
 		}
 
-		/// <summary>
-		/// Creates the catalog model.
-		/// </summary>
-		/// <param name="itemId">The item identifier.</param>
-		/// <param name="parentItemId">The parent item identifier.</param>
-		/// <param name="associationType">Type of the association.</param>
-		/// <param name="forcedActive">if set to <c>true</c> [forced active].</param>
-		/// <param name="responseGroups">The response groups.</param>
-		/// <param name="display">The display.</param>
-		/// <returns>CatalogItemWithPriceModel.</returns>
-		public static CatalogItemWithPriceModel CreateCatalogModel(string itemId, string parentItemId = null, string associationType = null, bool forcedActive = false, ItemResponseGroups responseGroups = ItemResponseGroups.ItemLarge, ItemDisplayOptions display = ItemDisplayOptions.ItemLarge)
+        /// <summary>
+        /// Creates the catalog model.
+        /// </summary>
+        /// <param name="itemId">The item identifier.</param>
+        /// <param name="parentItemId">The parent item identifier.</param>
+        /// <param name="associationType">Type of the association.</param>
+        /// <param name="forcedActive">if set to <c>true</c> [forced active].</param>
+        /// <param name="responseGroups">The response groups.</param>
+        /// <param name="display">The display.</param>
+        /// <param name="byItemCode">if set to <c>true</c> gets item by code.</param>
+        /// <returns>
+        /// CatalogItemWithPriceModel.
+        /// </returns>
+		public static CatalogItemWithPriceModel CreateCatalogModel(string itemId, string parentItemId = null, string associationType = null, bool forcedActive = false, ItemResponseGroups responseGroups = ItemResponseGroups.ItemLarge, ItemDisplayOptions display = ItemDisplayOptions.ItemLarge, bool byItemCode = false)
 		{
 			//1. find item id by url
 			//2. find item in search by id if catalog is virtual
 			//3. retrieve item from master category by id and category name
 
-			var item = CatalogClient.GetItem(itemId, responseGroups,
-											  UserHelper.CustomerSession.CatalogId);
+            var dbItem = CatalogClient.GetItem(itemId, responseGroups,
+                                              UserHelper.CustomerSession.CatalogId, bycode: byItemCode);
 
-			if (item != null)
+            if (dbItem != null)
 			{
-				if (item.IsActive || forcedActive)
+
+                if (dbItem.IsActive || forcedActive)
 				{
 					PriceModel priceModel = null;
 					PropertySet propertySet = null;
@@ -214,23 +218,23 @@ namespace VirtoCommerce.Web.Virto.Helpers
 
                     if (display.HasFlag(ItemDisplayOptions.ItemPropertySets))
                     {
-                        propertySet = CatalogClient.GetPropertySet(item.PropertySetId);
+                        propertySet = CatalogClient.GetPropertySet(dbItem.PropertySetId);
                         //variations = CatalogClient.GetItemRelations(itemId);
                     }
 
-                    var itemModel = CreateItemModel(item, propertySet);
+                    var itemModel = CreateItemModel(dbItem, propertySet);
 
 					if (display.HasFlag(ItemDisplayOptions.ItemAvailability))
 					{
 						var fulfillmentCenter = UserHelper.StoreClient.GetCurrentStore().FulfillmentCenterId;
-						var availability = CatalogClient.GetItemAvailability(itemId, fulfillmentCenter);
+						var availability = CatalogClient.GetItemAvailability(dbItem.ItemId, fulfillmentCenter);
 						itemAvaiability = new ItemAvailabilityModel(availability);
 					}
 
 					if (display.HasFlag(ItemDisplayOptions.ItemPrice))
 					{
-                        var lowestPrice = PriceListClient.GetLowestPrice(itemId, itemAvaiability !=null ? itemAvaiability.MinQuantity : 1);
-					    var outlines = OutlineBuilder.BuildCategoryOutline(CatalogClient.CustomerSession.CatalogId, item);
+                        var lowestPrice = PriceListClient.GetLowestPrice(dbItem.ItemId, itemAvaiability != null ? itemAvaiability.MinQuantity : 1);
+					    var outlines = OutlineBuilder.BuildCategoryOutline(CatalogClient.CustomerSession.CatalogId, dbItem);
 						var tags = new Hashtable
 							{
 								{
@@ -238,7 +242,7 @@ namespace VirtoCommerce.Web.Virto.Helpers
                                     outlines.ToString()
                                 }
 							};
-						priceModel = MarketingHelper.GetItemPriceModel(item, lowestPrice, tags);
+                        priceModel = MarketingHelper.GetItemPriceModel(dbItem, lowestPrice, tags);
 					    itemModel.CatalogOutlines = outlines;
 
                         // get the category name

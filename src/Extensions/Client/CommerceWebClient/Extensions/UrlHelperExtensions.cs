@@ -79,13 +79,13 @@ namespace VirtoCommerce.Web.Client.Extensions
           
             if (parent != null)
             {
-                string parentId = SettingsHelper.SeoEncode(parent.ItemId, SeoUrlKeywordTypes.Item);
+                string parentCode = SettingsHelper.SeoEncode(parent.Code, SeoUrlKeywordTypes.Item);
 
-                routeValues.Add("item", parentId);
+                routeValues.Add("item", parentCode);
                 if (item != null)
                 {
-                    string itemId = SettingsHelper.SeoEncode(item.ItemId, SeoUrlKeywordTypes.Item);
-                    routeValues.Add("variationId", itemId);
+                    string itemCode = SettingsHelper.SeoEncode(item.Code, SeoUrlKeywordTypes.Item);
+                    routeValues.Add("variation", itemCode);
                 }
                 routeValues.Add("category", item.GetItemCategoryRouteValue());
                 return helper.RouteUrl("Item", routeValues);
@@ -93,9 +93,9 @@ namespace VirtoCommerce.Web.Client.Extensions
 
             if (item != null)
             {
-                string itemId = SettingsHelper.SeoEncode(item.ItemId, SeoUrlKeywordTypes.Item);
+                string itemCode = SettingsHelper.SeoEncode(item.Code, SeoUrlKeywordTypes.Item);
 
-                routeValues.Add("item", itemId);
+                routeValues.Add("item", itemCode);
                 routeValues.Add("category", item.GetItemCategoryRouteValue());
                 return helper.RouteUrl("Item", routeValues);
             }

@@ -30,7 +30,7 @@
 		    @:$("#qty").val("@Math.Round(Model.Availability.MinQuantity, 0)");
 		}
 
-        loadVariations("@Model.CatalogItem.ItemId", "@Request.QueryString["variationId"]");
+        loadVariations("@Model.CatalogItem.ItemId", "@Request.QueryString["variation"]");
 
         Reviews.init({ container: "#reviewsTemplateContainer", currentItemId: "@Model.CatalogItem.ItemId" });
 
