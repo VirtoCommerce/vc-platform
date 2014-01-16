@@ -45,17 +45,16 @@ namespace VirtoCommerce.Web
             routes.MapRoute(
               "Assets",
               "asset/{*path}",
-              new { controller = "Asset", action = "Index", path = UrlParameter.Optional }
-          );
+              new { controller = "Asset", action = "Index", path = UrlParameter.Optional });
 
             var itemRoute = new NormalizeRoute(
                 new ItemRoute(Constants.ItemRoute,
-                CreateRouteValueDictionary(
-                    new
+                    new RouteValueDictionary
                     {
-                        controller = "Catalog",
-                        action = "DisplayItem"
-                    }),
+                        {"controller", "Catalog"},
+                        {"action", "DisplayItem"},
+                        {Constants.Language, UrlParameter.Optional}
+                    },
                     new RouteValueDictionary
                     {
                         {Constants.Language, new LanguageRouteConstraint()},
@@ -68,12 +67,12 @@ namespace VirtoCommerce.Web
 
             var categoryRoute = new NormalizeRoute(
                 new CategoryRoute(Constants.CategoryRoute,
-                CreateRouteValueDictionary(
-                    new
+                    new RouteValueDictionary
                     {
-                        controller = "Catalog",
-                        action = "Display"
-                    }),
+                        {"controller", "Catalog"},
+                        {"action", "Display"},
+                        {Constants.Language, UrlParameter.Optional}
+                    },
                  new RouteValueDictionary
                     {
                         {Constants.Language, new LanguageRouteConstraint()},
@@ -113,23 +112,20 @@ namespace VirtoCommerce.Web
                         var item = CatalogHelper.CatalogClient.GetItem(x.RouteData.Values[Constants.Item].ToString(), bycode: true);
                         if (item != null)
                         {
-                            return new RouteValueDictionary {{Constants.Category, item.GetItemCategoryRouteValue()}};
+                            return new RouteValueDictionary { { Constants.Category, item.GetItemCategoryRouteValue() } };
                         }
                     };
                     return null;
                 });
 
-            var otherRoute = new NormalizeRoute(new Route(string.Format("{{{0}}}/{{controller}}/{{action}}/{{id}}", Constants.Language),
-                CreateRouteValueDictionary(new { id = UrlParameter.Optional }),
-                new RouteValueDictionary
-                    {
-                        {Constants.Language, new LanguageRouteConstraint()}
-                    },
-                    new RouteValueDictionary { { "namespaces", new[] { "VirtoCommerce.Web.Controllers" } } },
-                    new MvcRouteHandler()));
+            var defaultRoute = new NormalizeRoute(new Route(string.Format("{{{0}}}/{{controller}}/{{action}}/{{id}}", Constants.Language),
+                new RouteValueDictionary { { "id", UrlParameter.Optional } },
+                new RouteValueDictionary { { Constants.Language, new LanguageRouteConstraint() } },
+                new RouteValueDictionary { { "namespaces", new[] { "VirtoCommerce.Web.Controllers" } } },
+                new MvcRouteHandler()));
 
             //Other actions
-            routes.Add("Default", otherRoute);
+            routes.Add("Default", defaultRoute);
 
             //Needed for some post requests
             routes.MapRoute(

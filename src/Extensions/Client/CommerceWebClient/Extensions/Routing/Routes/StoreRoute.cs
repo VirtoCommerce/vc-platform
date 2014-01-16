@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Routing;
 using VirtoCommerce.Foundation.AppConfig.Model;
+using VirtoCommerce.Web.Client.Extensions.Routing.Constraints;
 using VirtoCommerce.Web.Client.Helpers;
 
 namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
@@ -55,35 +56,100 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
                 var requestPath = httpContext.Request.AppRelativeCurrentExecutionFilePath.Substring(2) +
                                   httpContext.Request.PathInfo;
                 var pathSegments = requestPath.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
-                RouteValueDictionary values = null;
+
+                var values = new RouteValueDictionary();
 
                 //If route does not have any language or store add defaults to route data
-                if (pathSegments.Length < 2)
+
+                //If both store and languange are missing
+                if (pathSegments.Length == 0)
                 {
-                    values = new RouteValueDictionary();
+                    values.Add(Constants.Language,
+                        StoreHelper.CustomerSession.Language ??
+                        StoreHelper.StoreClient.GetCurrentStore().DefaultLanguage);
+                    values.Add(Constants.Store, StoreHelper.CustomerSession.StoreId);
+                }
+                else
+                {
+                    //Check if some values match constraint for language or store
+                    var languageConstraint = new LanguageRouteConstraint();
+                    var storeConstraint = new StoreRouteConstraint();
 
-
-                    //If both store and languange are missing
-                    if (pathSegments.Length == 0)
+                    var languageFound = false;
+                    if (languageConstraint.Match(httpContext, this, Constants.Language,
+                        new RouteValueDictionary { { Constants.Language, pathSegments[0] } }.Merge(values), RouteDirection.IncomingRequest))
+                    {
+                        languageFound = true;
+                        values.Add(Constants.Language, pathSegments[0]);
+                    }
+                    else
                     {
                         values.Add(Constants.Language,
-                            StoreHelper.CustomerSession.Language ??
-                            StoreHelper.StoreClient.GetCurrentStore().DefaultLanguage);
+                        StoreHelper.CustomerSession.Language ??
+                        StoreHelper.StoreClient.GetCurrentStore().DefaultLanguage);
+                    }
+
+                    var storeFound = false;
+                    var storeCandidate = !languageFound
+                        ? pathSegments[0]
+                        : pathSegments.Length > 1 ? pathSegments[1] : null;
+
+                    if (!string.IsNullOrEmpty(storeCandidate) && storeConstraint.Match(httpContext, this, Constants.Store,
+                       new RouteValueDictionary { { Constants.Store, storeCandidate } }.Merge(values), RouteDirection.IncomingRequest))
+                    {
+                        storeFound = true;
+                        values.Add(Constants.Store, storeCandidate);
+                    }
+                    else
+                    {
                         values.Add(Constants.Store, StoreHelper.CustomerSession.StoreId);
                     }
-                        //if store is missing
-                    else if (pathSegments.Length == 1)
+
+                    //Shift remaining route values
+                    if (pathSegments.Length == 1 && !languageFound && !storeFound)
                     {
-                        values.Add(Constants.Language, pathSegments[0]);
-                        values.Add(Constants.Store, StoreHelper.CustomerSession.StoreId);
+                        //there was one segment not mapped to lang or store
+                        values.Add(Constants.Category, pathSegments[0]);
+
+                    }
+                    else if (pathSegments.Length >= 2)
+                    {
+                        //Both lang and store not found
+                        if (!languageFound & !storeFound)
+                        {
+                            values.Add(Constants.Category, pathSegments[0]);
+                            values.Add(Constants.Item, pathSegments[1]);
+                        }
+                        //etiher lang or store found
+                        else if (languageFound ^ storeFound)
+                        {
+                            values.Add(Constants.Category, pathSegments[1]);
+                            if (pathSegments.Length > 2)
+                            {
+                                values.Add(Constants.Item, pathSegments[2]);
+                            }
+                        }
+                        else
+                        {
+                            if (pathSegments.Length > 2)
+                            {
+                                values.Add(Constants.Category, pathSegments[2]);
+                            }
+                            if (pathSegments.Length > 3)
+                            {
+                                values.Add(Constants.Item, pathSegments[3]);
+                            }
+                        }
+                    }
+
+                    //Store route cannot contain item or category
+                    if (GetType() == typeof(StoreRoute) && (values.ContainsKey(Constants.Item) || values.ContainsKey(Constants.Category)))
+                    {
+                        return null;
                     }
                 }
 
-                if (values == null)
-                {
-                    // If we got back a null value set, that means the URL did not match
-                    return null;
-                }
+
 
                 routeData = new RouteData(this, RouteHandler);
 

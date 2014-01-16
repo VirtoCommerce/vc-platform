@@ -31,6 +31,23 @@ namespace VirtoCommerce.Web.Client.Extensions.Filters
                     // don't 'rewrite' POST requests
                     if (context.Request.RequestType == "GET" && !filterContext.IsChildAction)
                     {
+
+                        //Make sure we allways use same virtual path as Route provides
+                        var routePath = filterContext.RouteData.Route.GetVirtualPath(filterContext.RequestContext,
+                            filterContext.RouteData.Values);
+
+                        if (routePath != null && !string.IsNullOrEmpty(routePath.VirtualPath))
+                        {
+                            var appRelativeRoutePath = HttpUtility.UrlDecode(string.Concat(context.Request.ApplicationPath, "/",
+                                routePath.VirtualPath));
+
+                            if (!string.IsNullOrEmpty(appRelativeRoutePath) && !appRelativeRoutePath.Equals(path, StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                path = appRelativeRoutePath;
+                                needRedirect = true;
+                            }
+                        }
+
                         //Process query string
                         if (!string.IsNullOrEmpty(query))
                         {

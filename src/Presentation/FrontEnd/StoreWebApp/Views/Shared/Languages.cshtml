@@ -6,7 +6,10 @@
     var tempValues = new RouteValueDictionary(ViewContext.RouteData.Values);
     foreach (var key in Request.QueryString.Keys.Cast<string>())
     {
-        tempValues.Add(key, Request.QueryString[key]);
+        if (!tempValues.ContainsKey(key))
+        {
+            tempValues.Add(key, Request.QueryString[key]);
+        }
     }
 
     var store = StoreHelper.StoreClient.GetCurrentStore();
