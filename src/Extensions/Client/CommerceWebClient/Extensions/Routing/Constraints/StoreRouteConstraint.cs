@@ -30,8 +30,15 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Constraints
 
         public bool Match(HttpContextBase httpContext, Route route, string parameterName, RouteValueDictionary values, RouteDirection routeDirection)
         {
+            //Url generation should allow empty store value
+            if (routeDirection == RouteDirection.UrlGeneration)
+            {
+                return true;
+            }
             if (!values.ContainsKey(parameterName))
+            {
                 return false;
+            }
 
             var encoded = values[parameterName].ToString();
             var decoded = SettingsHelper.SeoDecode(encoded, SeoUrlKeywordTypes.Store, values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : null);

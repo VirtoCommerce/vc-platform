@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Routing;
@@ -11,9 +10,13 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
 {
     public class StoreRoute : Route
     {
+
+        private Object thisLock = new Object();
+
         public StoreRoute(string url, IRouteHandler routeHandler)
             : base(url, routeHandler)
         {
+
         }
 
         public StoreRoute(string url, RouteValueDictionary defaults, IRouteHandler routeHandler)
@@ -39,12 +42,42 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
                             StoreHelper.CustomerSession.Language ??
                             StoreHelper.StoreClient.GetCurrentStore().DefaultLanguage);
             }
+
             if (!values.ContainsKey(Constants.Store))
             {
                 values.Add(Constants.Store, StoreHelper.CustomerSession.StoreId);
             }
-            ModifyVirtualPath(requestContext, values, SeoUrlKeywordTypes.Store);
-            return base.GetVirtualPath(requestContext, values);
+
+            var storeId = values[Constants.Store].ToString();
+            var store = StoreHelper.StoreClient.GetStoreById(storeId);
+
+            //Need to be in lock to make sure other thread does not change originalUrl in this block
+            lock (thisLock)
+            {
+                var originalUrl = Url;
+
+                //If for request store URL is used do not show it in path
+                if (store != null && (!string.IsNullOrEmpty(store.Url) || !string.IsNullOrEmpty(store.SecureUrl)))
+                {
+                    Url = Url.Replace(string.Format("/{{{0}}}", Constants.Store), "");
+                    values.Remove(Constants.Store);
+                }
+                else
+                {
+                    ModifyVirtualPath(requestContext, values, SeoUrlKeywordTypes.Store);
+                }
+
+
+                var retVal = base.GetVirtualPath(requestContext, values);
+
+                //Restore original URL
+                if (!string.IsNullOrEmpty(originalUrl) && !originalUrl.Equals(Url))
+                {
+                    Url = originalUrl;
+                }
+
+                return retVal;
+            }
         }
 
         public override RouteData GetRouteData(HttpContextBase httpContext)

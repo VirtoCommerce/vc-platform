@@ -13,6 +13,13 @@ namespace VirtoCommerce.Web.Client.Extensions.Filters
 {
     public class CanonicalizedAttribute : ActionFilterAttribute
     {
+        private readonly bool _usePermanentRedirect;
+
+        public CanonicalizedAttribute() : this(true) { }
+        public CanonicalizedAttribute(bool usePermanentRedirect)
+        {
+            _usePermanentRedirect = usePermanentRedirect;
+        }
 
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
@@ -178,7 +185,14 @@ namespace VirtoCommerce.Web.Client.Extensions.Filters
 
             newLocation = newLocation.ToLower(CultureInfo.InvariantCulture);
 
-            context.Response.RedirectPermanent(newLocation + query, true);
+            if (_usePermanentRedirect)
+            {
+                context.Response.RedirectPermanent(newLocation + query, true);
+            }
+            else
+            {
+                context.Response.Redirect(newLocation + query, true);
+            }
         }
 
     }
