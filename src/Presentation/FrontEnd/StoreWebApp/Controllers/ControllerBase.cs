@@ -55,13 +55,14 @@ namespace VirtoCommerce.Web.Controllers
                     SeoUrlKeywordTypes type;
                     if (Enum.TryParse(routeKey, true, out type))
                     {
-                        var keyword = SettingsHelper.SeoKeyword(routeValue, type);
+                        var keyword = SettingsHelper.SeoKeyword(routeValue, type, byValue: false);
 
                         if (keyword != null)
                         {
                             ViewBag.MetaDescription = keyword.MetaDescription;
                             ViewBag.Title = keyword.Title;
                             ViewBag.MetaKeywords = keyword.MetaKeywords;
+                            ViewBag.ImageAltDescription = keyword.ImageAltDescription;
                         }
                     }
                 }

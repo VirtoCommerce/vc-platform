@@ -8,7 +8,7 @@
 
     public interface ICatalogOutlineBuilder
     {
-        CatalogOutlines BuildCategoryOutline(string catalogId, Item item, bool useCache = true);
+        CatalogOutlines BuildCategoryOutline(string catalogId, string itemId, bool useCache = true);
         CatalogOutline BuildCategoryOutline(string catalogId, CategoryBase category, bool useCache = true);
     }
 

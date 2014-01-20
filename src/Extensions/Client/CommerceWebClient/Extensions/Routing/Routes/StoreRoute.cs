@@ -104,7 +104,8 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
                 }
                 else
                 {
-                    //Check if some values match constraint for language or store
+                    //Check if some values match constraint for language or store. The expected route is {lang}/{store}/...
+                    //But Language and/or store can be skipped then defaults or current values are used
                     var languageConstraint = new LanguageRouteConstraint();
                     var storeConstraint = new StoreRouteConstraint();
 

@@ -4,18 +4,23 @@ using System.Linq;
 using VirtoCommerce.Foundation.Catalogs.Repositories;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
+using VirtoCommerce.Foundation.Catalogs.Services;
+using VirtoCommerce.Foundation.Frameworks;
 
 namespace VirtoCommerce.Foundation.Catalogs
 {
-    using VirtoCommerce.Foundation.Catalogs.Services;
-    using VirtoCommerce.Foundation.Frameworks;
 
     public class CatalogOutlineBuilder : ICatalogOutlineBuilder
     {
+
+        private CacheHelper _cacheHelper;
         private readonly ICatalogRepository _catalogRepository;
         private readonly ICacheRepository _cacheRepository;
         private const string CatalogCacheKey = "C:C:{0}";
-        public const string CategoryIdCacheKey = "C:CTID:{0}:{1}";
+        private const string CategoryIdCacheKey = "C:CTID:{0}:{1}";
+        private const string CategoryItemRelationsCacheKey = "CR:CTID:IID:{0}:{1}";
+        private const string LinkedCategoriesCacheKey = "CL:CTID:IID:{0}:{1}";
+        private readonly TimeSpan _cacheTimeout = TimeSpan.FromMinutes(1);
 
         public CatalogOutlineBuilder(ICatalogRepository catalogRepository, ICacheRepository cacheRepository)
         {
@@ -23,7 +28,12 @@ namespace VirtoCommerce.Foundation.Catalogs
             _cacheRepository = cacheRepository;
         }
 
-        public CatalogOutlines BuildCategoryOutline(string catalogId, Item item, bool useCache)
+        private CacheHelper Helper
+        {
+            get { return _cacheHelper ?? (_cacheHelper = new CacheHelper(_cacheRepository)); }
+        }
+
+        public CatalogOutlines BuildCategoryOutline(string catalogId, string itemId, bool useCache)
         {
             var retVal = new List<CatalogOutline>();
 
@@ -31,9 +41,7 @@ namespace VirtoCommerce.Foundation.Catalogs
 
             if (catalog is Catalog)
             {
-                // TODO: item should already have relations defined, make sure to use those instead of loading new
-                var categoryRelations = _catalogRepository.CategoryItemRelations.Expand(x => x.Category)
-                    .Where(c => c.ItemId == item.ItemId && c.CatalogId == catalogId).ToArray();
+                var categoryRelations = GetCategoryItemRelations(itemId, catalogId);
 
                 if (categoryRelations.Any())
                 {
@@ -44,11 +52,7 @@ namespace VirtoCommerce.Foundation.Catalogs
             }
             else if (catalog is VirtualCatalog)
             {
-                // TODO: item should already have relations defined, make sure to use those instead of loading new
-                var linkedCategories = _catalogRepository.CategoryItemRelations
-                    .Where(ci => ci.ItemId == item.ItemId)
-                    .SelectMany(c => c.Category.LinkedCategories)
-                    .Where(lc => lc.CatalogId == catalogId).ToArray();
+                var linkedCategories = GetLinkedCategories(itemId, catalogId);
 
                 if (linkedCategories.Any())
                 {
@@ -56,8 +60,6 @@ namespace VirtoCommerce.Foundation.Catalogs
                         linkedCategories.Select(cat => BuildCategoryOutline(cat.CatalogId, cat, useCache)));
                 }
             }
-
-            // TODO: return array
 
             var outlines = new CatalogOutlines();
             outlines.Outlines.AddRange(retVal);
@@ -69,30 +71,27 @@ namespace VirtoCommerce.Foundation.Catalogs
             // recurring adding elements
             var categories = new List<CategoryBase>();
 
-            BuildCategoryOutlineRecursive(ref categories, catalogId, category, useCache);
+            BuildCategoryOutline(ref categories, catalogId, category, useCache);
 
-            var outline = new CatalogOutline() { CatalogId = catalogId };
+            var outline = new CatalogOutline { CatalogId = catalogId };
             outline.Categories.AddRange(categories);
 
             return outline;
         }
 
         #region Private Methods
-        private void BuildCategoryOutlineRecursive(ref List<CategoryBase> categories, string catalogId, CategoryBase category, bool useCache = true)
+
+        private void BuildCategoryOutline(ref List<CategoryBase> categories, string catalogId, CategoryBase category, bool useCache = true)
         {
-            categories.Insert(0, category);
+            while (true)
+            {
+                categories.Insert(0, category);
 
-            if (String.IsNullOrEmpty(category.ParentCategoryId)) return;
+                if (String.IsNullOrEmpty(category.ParentCategoryId)) return;
 
-            var parent = GetCategoryById(catalogId, category.ParentCategoryId, useCache);
-            BuildCategoryOutlineRecursive(ref categories, catalogId, parent, useCache);
-        }
-
-        CacheHelper _cacheHelper;
-
-        private CacheHelper Helper
-        {
-            get { return _cacheHelper ?? (_cacheHelper = new CacheHelper(_cacheRepository)); }
+                var parent = GetCategoryById(catalogId, category.ParentCategoryId, useCache);
+                category = parent;
+            }
         }
 
         private CatalogBase GetCatalog(string catalogId, bool useCache = true)
@@ -102,7 +101,7 @@ namespace VirtoCommerce.Foundation.Catalogs
             return Helper.Get(
                 string.Format(CatalogCacheKey, catalogId),
                 () => (query).SingleOrDefault(),
-                new TimeSpan(0, 0, 30),
+                _cacheTimeout,
                 useCache);
         }
 
@@ -111,8 +110,34 @@ namespace VirtoCommerce.Foundation.Catalogs
             return Helper.Get(
                 string.Format(CategoryIdCacheKey, catalogId, categoryId),
                 () => GetCategoryByIdInternal(categoryId),
-                new TimeSpan(0,0,30),
+                _cacheTimeout,
                 useCache);
+        }
+
+        private CategoryItemRelation[] GetCategoryItemRelations(string itemId, string catalogId, bool useCache = true)
+        {
+            var query = _catalogRepository.CategoryItemRelations.Expand(x => x.Category)
+                   .Where(c => c.ItemId == itemId && c.CatalogId == catalogId);
+
+            return Helper.Get(
+               string.Format(CategoryItemRelationsCacheKey, catalogId, itemId),
+               () => (query).ToArray(),
+               _cacheTimeout,
+               useCache);
+        }
+
+        private LinkedCategory[] GetLinkedCategories(string itemId, string catalogId, bool useCache = true)
+        {
+            var query = _catalogRepository.CategoryItemRelations
+                .Where(ci => ci.ItemId == itemId)
+                .SelectMany(c => c.Category.LinkedCategories)
+                .Where(lc => lc.CatalogId == catalogId);
+
+            return Helper.Get(
+               string.Format(LinkedCategoriesCacheKey, catalogId, itemId),
+               () => (query).ToArray(),
+               _cacheTimeout,
+               useCache);
         }
 
         private CategoryBase GetCategoryByIdInternal(string id)

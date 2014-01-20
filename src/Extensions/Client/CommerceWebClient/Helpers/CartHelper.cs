@@ -547,7 +547,7 @@ namespace VirtoCommerce.Web.Client.Helpers
 			lineItem.Catalog = CustomerSession.CatalogId;
 			lineItem.FulfillmentCenterId = StoreHelper.StoreClient.GetCurrentStore().FulfillmentCenterId;
 			//lineItem.CatalogOutline = CatalogOutlineBuilder.BuildCategoryOutline(CatalogClient.CatalogRepository, CustomerSession.CatalogId, item);
-            lineItem.CatalogOutline = CatalogOutlineBuilder.BuildCategoryOutline(CustomerSessionService.CustomerSession.CatalogId, item).ToString();
+            lineItem.CatalogOutline = CatalogOutlineBuilder.BuildCategoryOutline(CustomerSessionService.CustomerSession.CatalogId, item.ItemId).ToString();
 
 			return lineItem;
 		}
@@ -794,7 +794,7 @@ namespace VirtoCommerce.Web.Client.Helpers
 
 			// it is less expansive to do check if cart exists first then load all the data
 			// preload all user carts
-            if (allCarts == null || allCarts.Length == 0)
+            if (allCarts == null)
 			{
 				var query = (repo.ShoppingCarts.Where(
 					c => c.StoreId.Equals(storeId, StringComparison.OrdinalIgnoreCase) &&

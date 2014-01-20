@@ -38,7 +38,7 @@ namespace VirtoCommerce.Client
                         (keyword == null || keyword.Equals(s.Keyword, StringComparison.OrdinalIgnoreCase)) &&
                         (keywordvalue == null || keywordvalue.Equals(s.KeywordValue, StringComparison.OrdinalIgnoreCase)) &&
                         (int)type == s.KeywordType && 
-                        s.IsActive).ToArray(), AppConfigConfiguration.Instance.Cache.SettingsTimeout, _isEnabled);
+                        s.IsActive).ToArray(), AppConfigConfiguration.Instance.Cache.SeoKeywordsTimeout, _isEnabled);
         }
 
         CacheHelper _cacheHelper;

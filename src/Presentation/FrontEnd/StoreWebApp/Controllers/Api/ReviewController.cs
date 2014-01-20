@@ -31,6 +31,11 @@ namespace VirtoCommerce.Web.Controllers.Api
         private readonly IReviewRepository _repository;
 
         /// <summary>
+        /// The _review client
+        /// </summary>
+        private readonly ReviewClient _reviewClient;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ReviewController"/> class.
         /// </summary>
         public ReviewController()
@@ -38,13 +43,15 @@ namespace VirtoCommerce.Web.Controllers.Api
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ReviewController"/> class.
+        /// Initializes a new instance of the <see cref="ReviewController" /> class.
         /// </summary>
         /// <param name="reviewRepository">The review repository.</param>
+        /// <param name="reviewClient">The review client.</param>
         /// <param name="orderClient">The order client.</param>
-        public ReviewController(IReviewRepository reviewRepository, OrderClient orderClient)
+        public ReviewController(IReviewRepository reviewRepository, ReviewClient reviewClient, OrderClient orderClient)
         {
             _repository = reviewRepository;
+            _reviewClient = reviewClient;
             _orderClient = orderClient;
         }
 
@@ -56,7 +63,7 @@ namespace VirtoCommerce.Web.Controllers.Api
         [HttpGet]
         public IQueryable<MReview> Get()
         {
-            return _repository.Reviews.Where(r => r.Status == 2)
+            return _reviewClient.GetReviews()
                 .Select(r => new MReview
                 {
                     ItemId = r.ItemId,
@@ -104,7 +111,7 @@ namespace VirtoCommerce.Web.Controllers.Api
                             Id = r.AuthorId,
                             NickName = r.AuthorName
                         }
-                });
+                }).AsQueryable();
         }
 
         /// <summary>
@@ -116,8 +123,7 @@ namespace VirtoCommerce.Web.Controllers.Api
         [HttpGet]
         public IQueryable<MReviewComment> GetComments(string id)
         {
-            return _repository.ReviewComments
-                              .Where(r => r.ReviewId == id && r.Status == (int)ReviewStatus.Approved)
+            return _reviewClient.GetReviewComments(id)
                               .Select(rc => new MReviewComment
                                   {
                                       Id = rc.ReviewCommentId,
@@ -132,7 +138,7 @@ namespace VirtoCommerce.Web.Controllers.Api
                                               Id = rc.AuthorId,
                                               NickName = rc.AuthorName
                                           }
-                                  });
+                                  }).AsQueryable();
         }
 
         /// <summary>
@@ -144,13 +150,13 @@ namespace VirtoCommerce.Web.Controllers.Api
         [Queryable(MaxNodeCount = 500)]
         public IQueryable<ReviewTotals> GetReviewTotals()
         {
-            return _repository.Reviews.Where(r => r.Status == (int)ReviewStatus.Approved).GroupBy(r => r.ItemId)
+            return _reviewClient.GetReviews().GroupBy(r => r.ItemId)
                     .Select(g => new ReviewTotals
                     {
                         TotalReviews = g.Count(),
                         AverageRating = g.Any() ? Math.Round(g.Average(r => r.OverallRating), 1) : 0,
                         ItemId = g.Key
-                    });
+                    }).AsQueryable();
         }
 
         /// <summary>

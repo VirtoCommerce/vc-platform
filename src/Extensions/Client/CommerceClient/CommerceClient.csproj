@@ -63,6 +63,7 @@
     <Compile Include="Builders\Orders\LineItemBuilder.cs" />
     <Compile Include="Builders\Orders\OrderBuilder.cs" />
     <Compile Include="CatalogClient.cs" />
+    <Compile Include="ReviewClient.cs" />
     <Compile Include="SeoKeywordClient.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Globalization\CurrencyInfo.cs" />

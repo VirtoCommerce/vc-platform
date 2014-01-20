@@ -1,4 +1,5 @@
-﻿@using VirtoCommerce.Web.Virto.Helpers
+﻿@using System.Web.UI.WebControls
+@using VirtoCommerce.Web.Virto.Helpers
 @model CatalogItemWithPriceModel
 @{
     ViewBag.Title = Html.Title(Model.DisplayName);
@@ -43,8 +44,8 @@
     });
 </script>
 
-@Html.DisplayForModel("ReviewTemplate");
-@Html.DisplayForModel("ReviewCommentTemplate");
+@Html.DisplayForModel("ReviewTemplate")
+@Html.DisplayForModel("ReviewCommentTemplate")
 
 
 @section PageTitle
@@ -67,7 +68,7 @@
                     <div class="product-image@(Model.IsNew ? " new" : Model.IsSale ? " sale" : "")">
                         <figure id="imageContainer">
                             <a href="@Url.Image(Model.CatalogItem.Item, "primaryimage")" rel="gal1">
-                                <img id="image" class="cloudzoom" data-cloudzoom="autoInside:'600',zoomWidth:300,zoomHeight:300,maxMagnification:5" src="@Url.Image(Model.CatalogItem.Item, "primaryimage")" alt="" title="" onerror="this.onerror=null;this.src='@Href("~/Content/themes/default/images/blank.png")';$(this).parent().attr('href','@Href("~/Content/themes/default/images/blank.png")');" />
+                                <img id="image" class="cloudzoom" data-cloudzoom="autoInside:'600',zoomWidth:300,zoomHeight:300,maxMagnification:5" src="@Url.Image(Model.CatalogItem.Item, "primaryimage")" alt="@ViewBag.ImageAltDescription" title="@ViewBag.ImageAltDescription" onerror="this.onerror=null;this.src='@Href("~/Content/themes/default/images/blank.png")';$(this).parent().attr('href','@Href("~/Content/themes/default/images/blank.png")');" />
                             </a>
                         </figure>
 
@@ -135,7 +136,7 @@
                                     {
                                         if (review.Source == "QuickReview")
                                         {
-                                    @Html.Raw(review.Content)
+                                            @Html.Raw(review.Content)
                                         }
                                     }
                                 }

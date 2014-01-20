@@ -28,7 +28,7 @@ namespace VirtoCommerce.Web.Client.Extensions
 
         public static string GetItemCategoryRouteValue(this Item item)
         {
-            var outlines = OutlineBuilder.BuildCategoryOutline(CustomerSession.CatalogId, item);
+            var outlines = OutlineBuilder.BuildCategoryOutline(CustomerSession.CatalogId, item.ItemId);
             if (outlines.Outlines.Count > 0)
             {
                 return outlines.Outlines[0].Categories.OfType<Category>().Last().Code;

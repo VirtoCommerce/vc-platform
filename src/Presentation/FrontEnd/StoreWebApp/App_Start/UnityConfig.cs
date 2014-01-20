@@ -347,6 +347,7 @@ namespace VirtoCommerce.Web
             container.RegisterType<SettingsClient>();
             container.RegisterType<SequencesClient>();
             container.RegisterType<SeoKeywordClient>();
+            container.RegisterType<ReviewClient>();
             container.RegisterType<IPaymentOption, CreditCardOption>("creditcard");
 
             #endregion

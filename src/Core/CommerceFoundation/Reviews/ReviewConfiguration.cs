@@ -147,6 +147,25 @@ namespace VirtoCommerce.Foundation.Reviews
         }
 
         /// <summary>
+        /// Gets or sets the reviews timeout.
+        /// </summary>
+        /// <value>
+        /// The reviews timeout.
+        /// </value>
+        [ConfigurationProperty("reviewsTimeout", IsRequired = false, DefaultValue = "0:2:0")]
+        public TimeSpan ReviewsTimeout
+        {
+            get
+            {
+                return (TimeSpan)this["reviewsTimeout"];
+            }
+            set
+            {
+                this["reviewsTimeout"] = value.ToString();
+            }
+        }
+
+        /// <summary>
         /// Gets a value indicating whether the <see cref="T:System.Configuration.ConfigurationElement"/> object is read-only.
         /// </summary>
         /// <returns>
