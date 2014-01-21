@@ -144,7 +144,6 @@
     <Compile Include="Orders\OrderScenarios.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reporting\RdlFileParsingScenarios.cs" />
-    <Compile Include="Reporting\ReportDefinition.cs" />
     <Compile Include="Repository\CatalogQueryScenarios.cs" />
     <Compile Include="Reviews\MigrationScenarios.cs" />
     <Compile Include="Reviews\ReviewScenarios.cs" />
