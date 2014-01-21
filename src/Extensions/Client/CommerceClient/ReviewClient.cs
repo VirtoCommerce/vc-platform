@@ -10,7 +10,7 @@ namespace VirtoCommerce.Client
     public class ReviewClient
     {
         #region Cache Constants
-        public const string ReviewsCacheKey = "R:all";
+        public const string ReviewsCacheKey = "R:{0}";
         public const string ReviewCommentsCacheKey = "RC:{0}";
         #endregion
 
@@ -31,10 +31,13 @@ namespace VirtoCommerce.Client
         /// Gets the reviews.
         /// </summary>
         /// <returns></returns>
-        public Review[] GetReviews()
+        public Review[] GetReviews(string itemId)
         {
-            var query = _reviewRepository.Reviews.Where(r => r.Status == (int) ReviewStatus.Approved).ExpandAll();
-            return CacheHelper.Get(string.Format(ReviewsCacheKey),
+            var query = _reviewRepository.Reviews.Where(r => 
+                (string.IsNullOrEmpty(itemId) || r.ItemId == itemId)
+                && r.Status == (int)ReviewStatus.Approved).ExpandAll();
+
+            return CacheHelper.Get(string.Format(ReviewsCacheKey, string.IsNullOrEmpty(itemId) ? "all" : itemId),
                 query.ToArray, 
                 ReviewConfiguration.Instance.Cache.ReviewsTimeout, 
                 _isEnabled);

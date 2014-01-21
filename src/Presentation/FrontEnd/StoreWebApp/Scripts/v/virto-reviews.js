@@ -76,7 +76,7 @@ Reviews =
         $.ajax({
 
             type: "GET",
-            url: VirtoCommerce.url("/api/review/GetReviewTotals?$filter=ItemId eq '" + Reviews.currentItemId) + "'",
+            url: VirtoCommerce.url("/api/review/GetReviewTotals/" + Reviews.currentItemId),
             dataType: "json",
             success: function (data)
             {
@@ -106,9 +106,9 @@ Reviews =
         Reviews.CurrentSort = sort;
         Reviews.PageIndex = pageIndex == undefined ? this.PageIndex : pageIndex;
 
-        var reviewsUrl = "/api/review/get?$top=" + this.PageSize;
+        var reviewsUrl = "/api/review/get/" + Reviews.currentItemId + "/?$top=" + this.PageSize;
         reviewsUrl = reviewsUrl + "&$skip=" + (this.PageSize * this.PageIndex);
-        reviewsUrl = reviewsUrl + "&$filter=ItemId eq '" + Reviews.currentItemId + "'";
+        //reviewsUrl = reviewsUrl + "&$filter=ItemId eq '" + Reviews.currentItemId + "'";
 
         if (sort != undefined && sort != "") {
             reviewsUrl = reviewsUrl + "&$orderby=" + sort;

@@ -58,12 +58,15 @@ namespace VirtoCommerce.Web.Controllers.Api
         /// <summary>
         /// Gets this instance.
         /// </summary>
-        /// <returns>IQueryable{MReview}.</returns>
+        /// <param name="id">The item identifier.</param>
+        /// <returns>
+        /// IQueryable{MReview}.
+        /// </returns>
         [Queryable]
         [HttpGet]
-        public IQueryable<MReview> Get()
+        public IQueryable<MReview> Get(string id)
         {
-            return _reviewClient.GetReviews()
+            return _reviewClient.GetReviews(id)
                 .Select(r => new MReview
                 {
                     ItemId = r.ItemId,
@@ -144,13 +147,15 @@ namespace VirtoCommerce.Web.Controllers.Api
         /// <summary>
         /// Gets the review totals.
         /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <returns>System.Object.</returns>
+        /// <param name="id">The item identifier.</param>
+        /// <returns>
+        /// ReviewTotals querable
+        /// </returns>
         [HttpGet]
         [Queryable(MaxNodeCount = 500)]
-        public IQueryable<ReviewTotals> GetReviewTotals()
+        public IQueryable<ReviewTotals> GetReviewTotals(string id = null)
         {
-            return _reviewClient.GetReviews().GroupBy(r => r.ItemId)
+            return _reviewClient.GetReviews(id).GroupBy(r => r.ItemId)
                     .Select(g => new ReviewTotals
                     {
                         TotalReviews = g.Count(),
