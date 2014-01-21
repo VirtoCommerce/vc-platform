@@ -260,6 +260,7 @@
     <Compile Include="Infrastructure\IAppSettings.cs" />
     <Compile Include="Infrastructure\IAuthenticationContext.cs" />
     <Compile Include="Infrastructure\ICollectionChange.cs" />
+    <Compile Include="Infrastructure\IEntityExportable.cs" />
     <Compile Include="Infrastructure\IExpressionViewModel.cs" />
     <Compile Include="Infrastructure\DataVirtualization\LoadingAnimation.xaml.cs">
       <DependentUpon>LoadingAnimation.xaml</DependentUpon>
