@@ -3,18 +3,25 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Practices.Prism.Commands;
+using Microsoft.Win32;
 using VirtoCommerce.Foundation.AppConfig.Factories;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Interfaces;
 using VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Model;
+using VirtoCommerce.Foundation.Frameworks.Csv;
+using System.IO;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using VirtoCommerce.ManagementClient.Core.Controls.StatusIndicator.Model;
+using VirtoCommerce.ManagementClient.Core.Infrastructure.EventAggregation;
 
 namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implementations
 {
-	public class LocalizationHomeViewModel : HomeSettingsViewModel<LocalizationGroup>, ILocalizationHomeViewModel
+	public class LocalizationHomeViewModel : HomeSettingsViewModel<LocalizationGroup>, ILocalizationHomeViewModel, IEntityExportable
 	{
 		#region Dependencies
 
@@ -30,9 +37,19 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 		{
 			_editVmFactory = editVmFactory;
 			_repositoryFactory = repositoryFactory;
+			InitCommands();
+		}
+
+		#endregion
+
+		#region Commands init
+
+		private void InitCommands()
+		{
 			ItemEditCommand = new DelegateCommand<LocalizationGroup>(RaiseItemEditInteractionRequest, CanRaiseItemEditExecute);
 			ClearFiltersCommand = new DelegateCommand(DoClearFilters);
 			SearchItemsCommand = new DelegateCommand(DoSearchItems);
+			ListExportCommand = new DelegateCommand(RaiseExportCommand, CanExecuteExport);
 		}
 
 		#endregion
@@ -53,6 +70,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 			OnPropertyChanged("IsUntranslatedOnly");
 			OnPropertyChanged("OriginalLanguage");
 			OnPropertyChanged("TranslateLanguage");
+			RaiseCanExecuteChanged();
 		}
 
 		private void DoSearchItems()
@@ -70,7 +88,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 		#endregion
 
 		#region HomeSettingsViewModel members
-
+		
 		protected override object LoadData()
 		{
 			var items = new List<LocalizationGroup>();
@@ -156,13 +174,14 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 			//		});
 			//	}
 			//}
-		}
+		}		
 
 		public override void RaiseCanExecuteChanged()
 		{
 			ItemEditCommand.RaiseCanExecuteChanged();
+			ListExportCommand.RaiseCanExecuteChanged();
 		}
-
+		
 		#endregion
 
 		#region Public members
@@ -248,6 +267,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 		#region Commands
 
 		public DelegateCommand<LocalizationGroup> ItemEditCommand { get; private set; }
+		public DelegateCommand ListExportCommand { get; private set; }
 
 		private void RaiseItemEditInteractionRequest(LocalizationGroup item)
 		{
@@ -265,7 +285,106 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 				   !string.IsNullOrEmpty(item.TranslateLocalization.LanguageCode);
 		}
 
+		private bool CanExecuteExport()
+		{
+			return Items != null && Items.Any();
+		}
 
+
+		#endregion
+		
+		#region IEntityExportable Members
+
+		private void RaiseExportCommand()
+		{
+			var filePath = ShowSaveDialog();
+
+			if (!string.IsNullOrEmpty(filePath))
+			{
+				Task.Run(() =>
+					{
+						var id = Guid.NewGuid().ToString();
+
+						var statusUpdate = new StatusMessage
+							{
+								ShortText = string.Format("Localization export to '{0}'.", filePath),
+								StatusMessageId = id
+							};
+						EventSystem.Publish(statusUpdate);
+
+						PerformExportAsync(id, filePath);
+
+					});
+			}
+		}
+		
+		#endregion
+
+		#region Auxilliary methods
+
+		private void PerformExportAsync(string id, string filePath)
+		{
+			try
+			{
+				using (var textWriter = File.CreateText(filePath))
+				{
+					var csvWriter = new CsvWriter(textWriter, ",");
+					csvWriter.WriteRow(new List<string> { "Name", OriginalLangName, string.Format("LanguageCode ({0})", TranslateLanguage), string.Format("Value - {0}", TranslateLangName) },
+					                   false);
+					var itemsCount = Items.Count();
+					foreach (var item in Items.Select((value, index) => new {value, index}))
+					{
+						csvWriter.WriteRow(item.value.ToExportCollection(), true);
+						var statusUpdate = new StatusMessage
+							{
+								Details = string.Format("Exported {0} of {1}.", item.index, itemsCount),
+								StatusMessageId = id
+							};
+						EventSystem.Publish(statusUpdate);
+
+					}
+				}
+
+				var finalStatus = new StatusMessage
+				{
+					ShortText = string.Format("Localization export to '{0}' finished successfully.", filePath),
+					StatusMessageId = id,
+					State = StatusMessageState.Success
+				};
+				EventSystem.Publish(finalStatus);
+			}
+			catch (Exception ex)
+			{
+				var finalStatus = new StatusMessage
+				{
+					ShortText = string.Format("Error occured during localization export to '{0}'.", filePath),
+					StatusMessageId = id,
+					State = StatusMessageState.Error,
+					Details = ex.Message
+				};
+				EventSystem.Publish(finalStatus);
+			}
+		}
+
+		private string ShowSaveDialog()
+		{
+			var dialog = new SaveFileDialog()
+			{
+				FileName = string.Format("From {0} to {1}", OriginalLanguage, TranslateLanguage),
+				Filter = "Comma separated Files(*.csv)|*.csv|All(*.*)|*"
+			};
+
+			string retVal = null;
+
+			if (dialog.ShowDialog() == true && !string.IsNullOrEmpty(dialog.FileName))
+			{
+				retVal = dialog.FileName;
+				if (string.IsNullOrEmpty(Path.GetExtension(retVal)))
+					retVal = string.Format("{0}.csv", retVal);
+			}
+
+			return  retVal;
+		}
 		#endregion
 
 	}

@@ -35,6 +35,7 @@ namespace VirtoCommerce.Foundation.Importing.Services
 		private readonly IOrderRepository _orderRepository;
 		private readonly IAssetService _assetProvider;
 		private readonly IAppConfigRepository _appConfigRepository;
+		private readonly IRepositoryFactory<IAppConfigRepository> _appConfigRepositoryFactory;
 		#endregion
 
 		#region privates
@@ -44,12 +45,13 @@ namespace VirtoCommerce.Foundation.Importing.Services
 
 		#region constructor
 
-		public ImportService(IImportRepository importRepository, IAssetService blobProvider, ICatalogRepository catalogRepository, IOrderRepository orderRepository, IAppConfigRepository appConfigRepository)
+		public ImportService(IImportRepository importRepository, IAssetService blobProvider, ICatalogRepository catalogRepository, IOrderRepository orderRepository, IAppConfigRepository appConfigRepository, IRepositoryFactory<IAppConfigRepository> appConfigRepositoryFactory)
 		{
 			_orderRepository = orderRepository;
 			_catalogRepository = catalogRepository;
 			_importJobRepository = importRepository;
 			_appConfigRepository = appConfigRepository;
+			_appConfigRepositoryFactory = appConfigRepositoryFactory;
 			_assetProvider = blobProvider;
 
 			_entityImporters = new List<IEntityImporter>
@@ -221,7 +223,7 @@ namespace VirtoCommerce.Foundation.Importing.Services
 								var rep = IsTaxImport(importer.Name) ? _orderRepository : (IRepository) _catalogRepository;
 
 								if (importer.Name == ImportEntityType.Localization.ToString())
-									rep = _appConfigRepository;
+									rep = _appConfigRepositoryFactory.GetRepositoryInstance();
 
 								var res = importer.Import(job.CatalogId, job.PropertySetId, systemValues, customValues, rep);
 								result.CurrentProgress = reader.CurrentPosition;
