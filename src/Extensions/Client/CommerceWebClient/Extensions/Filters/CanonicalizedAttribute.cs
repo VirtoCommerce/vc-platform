@@ -27,7 +27,14 @@ namespace VirtoCommerce.Web.Client.Extensions.Filters
 
             if (context.Request.Url != null)
             {
-                var path = HttpUtility.UrlDecode(context.Request.Url.AbsolutePath);
+                var baseUri = string.Format(
+                    "{0}://{1}{2}",
+                    context.Request.Url.Scheme,
+                    context.Request.Url.Host,
+                    context.Request.Url.Port == 80 ? "" : ":" + context.Request.Url.Port);
+
+                var path = HttpUtility.UrlDecode(string.Concat(baseUri, context.Request.Url.AbsolutePath));
+                //var path = HttpUtility.UrlDecode(context.Request.Url.AbsolutePath);
 
                 if (!string.IsNullOrEmpty(path))
                 {
@@ -45,12 +52,11 @@ namespace VirtoCommerce.Web.Client.Extensions.Filters
 
                         if (routePath != null && !string.IsNullOrEmpty(routePath.VirtualPath))
                         {
-                            var appRelativeRoutePath = HttpUtility.UrlDecode(string.Concat(context.Request.ApplicationPath, "/",
-                                routePath.VirtualPath));
+                            var absoluteRoutePath = HttpUtility.UrlDecode(string.Concat(baseUri, context.Request.ApplicationPath, context.Request.ApplicationPath != "/" ? "/" : "", routePath.VirtualPath));
 
-                            if (!string.IsNullOrEmpty(appRelativeRoutePath) && !appRelativeRoutePath.Equals(path, StringComparison.InvariantCultureIgnoreCase))
+                            if (!string.IsNullOrEmpty(absoluteRoutePath) && !absoluteRoutePath.Equals(path, StringComparison.InvariantCultureIgnoreCase))
                             {
-                                path = appRelativeRoutePath;
+                                path = absoluteRoutePath;
                                 needRedirect = true;
                             }
                         }

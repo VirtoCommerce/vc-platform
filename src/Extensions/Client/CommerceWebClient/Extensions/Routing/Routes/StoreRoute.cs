@@ -176,8 +176,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
                         }
                     }
 
-                    //Store route cannot contain item or category
-                    if (GetType() == typeof(StoreRoute) && (values.ContainsKey(Constants.Item) || values.ContainsKey(Constants.Category)))
+                    if (values.Keys.Any(key => !Url.Contains(key)))
                     {
                         return null;
                     }
