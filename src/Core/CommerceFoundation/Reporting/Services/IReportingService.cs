@@ -13,7 +13,7 @@ namespace VirtoCommerce.Foundation.Reporting.Services
         Stream GetReportFile(string reportFileName);
 
         [OperationContract]
-        DataSet GetReportData(string reportFileName);
+        DataSet GetReportData(string reportFileName, IDictionary<string, object> parameters = null);
 
         [OperationContract]
         IEnumerable<ReportInfo> GetReportsList(string folder = "");

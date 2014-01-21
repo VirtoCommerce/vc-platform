@@ -4,17 +4,10 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
-	xmlns:interaction_dialog="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Dialogs;assembly=VirtoCommerce.ManagementClient.Core"
-	xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
-	xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
-	xmlns:prism="http://www.codeplex.com/prism" 
-	xmlns:Presentation_Core_Infrastructure_Converters="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Converters;assembly=VirtoCommerce.ManagementClient.Core"
-    xmlns:inf_behavior="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Behaviors;assembly=VirtoCommerce.ManagementClient.Core"
-    xmlns:securityModule="clr-namespace:VirtoCommerce.Foundation.Security.Model;assembly=VirtoCommerce.Foundation"
-    xmlns:implementations="clr-namespace:VirtoCommerce.ManagementClient.Reporting.ViewModel.Implementations"
+             xmlns:Presentation_Core_Infrastructure_Converters="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Converters;assembly=VirtoCommerce.ManagementClient.Core"
+             xmlns:implementations="clr-namespace:VirtoCommerce.ManagementClient.Reporting.ViewModel.Implementations"
     xmlns:rv="clr-namespace:Microsoft.Reporting.WinForms;assembly=Microsoft.ReportViewer.WinForms"
-    xmlns:dataVirtualization="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.DataVirtualization;assembly=VirtoCommerce.ManagementClient.Core"
-    mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
+             mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
 	d:DataContext="{d:DesignInstance implementations:ReportViewModel, IsDesignTimeCreatable=False}"
 	Style="{DynamicResource Virto_Window_Style}">
     
@@ -26,12 +19,40 @@
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
 	</UserControl.Resources>
-    
     <Grid>
-        <WindowsFormsHost>
-            <rv:ReportViewer x:Name="_reportViewer" Visible="False"/>
-        </WindowsFormsHost>
-        <dataVirtualization:LoadingMetroAnimation d:IsHidden="false"  AnimationScale="Large" BackgroundColor="#33111111"
-						Visibility="Visible" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="300"/>
+            <ColumnDefinition Width="21"/>
+            <ColumnDefinition Style="{DynamicResource CollapsableColumn}" MinWidth="22" Width="300"/>
+        </Grid.ColumnDefinitions>
+        <Grid  x:Name="content">
+            <WindowsFormsHost>
+                <rv:ReportViewer x:Name="_reportViewer" Dock="Fill"/>
+            </WindowsFormsHost>
+        </Grid>
+        <GridSplitter Grid.Column="1" BorderThickness="1" Width="1" Height="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Center"
+                                  BorderBrush="{StaticResource Virto_Splitter_BorderBrush_Brush}" ResizeDirection="Columns" Background="{x:Null}"
+                                  Visibility="{Binding ElementName=expandedTab, Path=IsExpanded, Converter={x:Static Presentation_Core_Infrastructure_Converters:ToVisibilityConverter.Current}}"/>
+        <core_controls:ExpandedTabControl Grid.Column="2" x:Name="expandedTab"  Padding="10" Focusable="False" VerticalAlignment="Stretch">
+            <TabItem>
+                <TabItem.Header>
+                    <core_controls:VectorImage ImageResource="{StaticResource Icon_Button_Filter}" Height="18" Width="18" Foreground="Black"/>
+                </TabItem.Header>
+
+                <DockPanel x:Name="left_pane" LastChildFill="True">
+                    <TextBlock DockPanel.Dock="Top" Text="ENTER REPORT PARAMETERS" Margin="0,5" Style="{DynamicResource Virto_TextBlock_TabTitle_Style}"/>
+                    <Grid DockPanel.Dock="Top" Name="rdlParameters">
+
+                   </Grid>
+
+
+                    <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,8,0,0">
+                        <Button Command="{Binding ClearFiltersCommand}" Content="Clear filters" />
+                        <Button Margin="6,0,0,0" Command="{Binding GenerateReportCommand}" Content="Generate">
+                        </Button>
+                    </StackPanel>
+                </DockPanel>
+            </TabItem>
+        </core_controls:ExpandedTabControl>
     </Grid>
 </UserControl>

@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using Microsoft.WindowsAzure;
 using VirtoCommerce.Foundation.Assets.Model;
 using VirtoCommerce.Foundation.Assets.Repositories;
-using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Reporting.Helpers;
 using VirtoCommerce.Foundation.Reporting.Model;
@@ -90,28 +92,35 @@ namespace VirtoCommerce.Foundation.Reporting.Services
             }
         }
 
-
         public Stream GetReportFile(string reportFileName)
         {
             return _blobStorageProvider.OpenReadOnly(reportFileName);
         }
 
-        public DataSet GetReportData(string reportFileName)
+        public DataSet GetReportData(string reportFileName, IDictionary<string, object> parameters = null)
         {
             DataSet data = new DataSet();
-            var report = new RdlFile(GetReportFile(reportFileName));
+            var report = RdlType.Load(GetReportFile(reportFileName));
+
+            report.UpdateReportParameters(parameters);
+
             foreach(var dataSet in report.DataSets)
             {
-                var connectionString = ConnectionHelper.GetConnectionString(dataSet.DataSource.Name);
+                var connectionString = GetConnectionString(dataSet.Query.DataSourceName);
                 if (string.IsNullOrWhiteSpace(connectionString))
                 {
-                    connectionString = dataSet.DataSource.ConnectionString;
+                    var firstOrDefault = report.DataSources.FirstOrDefault(d=>d.Name == dataSet.Query.DataSourceName);
+                    if (firstOrDefault != null)
+                    {
+                        connectionString = firstOrDefault.ConnectionProperties.ConnectString;
+                    }
                 }
 
-                using (var dbConnection = new SqlConnection(connectionString))
+                using (var dbConnection = new SqlConnection(connectionString??string.Empty))
                 {
                     dbConnection.Open();
-                    var table = ExecuteSQL(dbConnection, dataSet.CommandText);
+                    var queryParameters = report.GetDataSetQueryParameters(dataSet.Name);
+                    var table = ExecuteSQL(dbConnection, dataSet.Query.CommandText, queryParameters);
                     table.TableName = dataSet.Name;
                     data.Tables.Add(table);
                 }
@@ -120,17 +129,41 @@ namespace VirtoCommerce.Foundation.Reporting.Services
             return data;
         }
 
-        private DataTable ExecuteSQL(SqlConnection dbConn, string sqlCommand, params object[] args)
+        private DataTable ExecuteSQL(SqlConnection dbConn, string sqlCommand, IDictionary<string, object> parameters = null)
         {
             using (var cmd = dbConn.CreateCommand())
             {
-                cmd.CommandText = string.Format(sqlCommand, args);
+                cmd.CommandText = string.Format(sqlCommand);
+
+                if (parameters != null)
+                {
+                    foreach (var p in parameters)
+                    {
+                        cmd.Parameters.AddWithValue(p.Key, p.Value);
+                    }
+                }
+
                 var adapter = new SqlDataAdapter(cmd);
                 DataTable table = new DataTable();
                 adapter.Fill(table);
                
                 return table;
             }
+        }
+
+        public string GetConnectionString(string nameOrConnectionString)
+        {
+            // try getting a settings first
+            var settingValue = CloudConfigurationManager.GetSetting(nameOrConnectionString);
+
+            if (String.IsNullOrEmpty(settingValue))
+            {
+                var connectionStringVal = ConfigurationManager.ConnectionStrings[nameOrConnectionString];
+
+                settingValue = connectionStringVal == null ? string.Empty : connectionStringVal.ConnectionString;
+            }
+
+            return settingValue;
         }
     }
 }

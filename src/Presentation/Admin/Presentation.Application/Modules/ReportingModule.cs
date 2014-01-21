@@ -38,13 +38,14 @@ namespace VirtoCommerce.ManagementClient.Reporting
             navigationManager.RegisterNavigationItem(homeNavItem);
 
             //Register menu view
-            var menuNavItem = new NavigationMenuItem(NavigationNames.MenuName);
-            menuNavItem.NavigateCommand =
-                new DelegateCommand<NavigationItem>((x) => navigationManager.Navigate(homeNavItem));
-            menuNavItem.Caption = "Reports";
-            menuNavItem.ImageResourceKey = "Icon_Module_Reporting";
-            menuNavItem.ItemBackground = Colors.OrangeRed;
-            menuNavItem.Order = 51;
+            var menuNavItem = new NavigationMenuItem(NavigationNames.MenuName)
+            {
+                NavigateCommand = new DelegateCommand<NavigationItem>((x) => navigationManager.Navigate(homeNavItem)),
+                Caption = "Reports",
+                ImageResourceKey = "Icon_Module_Reporting",
+                ItemBackground = Colors.LightSlateGray,
+                Order = 51
+            };
 
             navigationManager.RegisterNavigationItem(menuNavItem);
         }
