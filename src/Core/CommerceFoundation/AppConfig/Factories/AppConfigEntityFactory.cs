@@ -19,6 +19,7 @@ namespace VirtoCommerce.Foundation.AppConfig.Factories
 		    RegisterStorageType(typeof (EmailTemplateLanguage), "EmailTemplateLanguage");
 			RegisterStorageType(typeof(DisplayTemplateMapping), "DisplayTemplateMapping");
 			RegisterStorageType(typeof(Localization), "Localization");
+			RegisterStorageType(typeof(SeoUrlKeyword), "SeoUrlKeyword");
 		}
 	}
 }
