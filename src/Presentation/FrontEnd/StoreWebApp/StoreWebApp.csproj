@@ -642,7 +642,7 @@
     <Content Include="Views\Account\DisplayTemplates\LineItem.cshtml" />
     <Content Include="Views\Account\Edit.cshtml" />
     <Content Include="Views\Account\EditorTemplates\LineItem.cshtml" />
-    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Account\DisplayTemplates\ForgotPassword.cshtml" />
     <Content Include="Views\Account\Index.cshtml" />
     <Content Include="Views\Account\LogOn.cshtml" />
     <Content Include="Views\Account\LogOnAsync.cshtml" />
@@ -760,6 +760,7 @@
     <Content Include="Views\Shared\DisplayTemplates\SiteMapPathNodeModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\ReviewTemplate.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\ReviewCommentTemplate.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
     <None Include="Web.Azure.config" />
   </ItemGroup>
   <ItemGroup>
