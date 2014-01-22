@@ -35,7 +35,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Constraints
             {
                 return true;
             }
-            if (!values.ContainsKey(parameterName))
+            if (!values.ContainsKey(parameterName) || values[parameterName] as string ==  null)
             {
                 return false;
             }

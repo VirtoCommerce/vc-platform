@@ -29,7 +29,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Constraints
 
         public bool Match(HttpContextBase httpContext, Route route, string parameterName, RouteValueDictionary values, RouteDirection routeDirection)
         {
-            if (!values.ContainsKey(parameterName))
+            if (!values.ContainsKey(parameterName) || values[parameterName] as string == null)
                 return false;
 
             var encoded = values[parameterName].ToString();

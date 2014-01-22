@@ -1,4 +1,5 @@
 ﻿using System.Web.Optimization;
+using VirtoCommerce.Web.Virto.Helpers.MVC;
 
 namespace VirtoCommerce.Web
 {
@@ -45,7 +46,7 @@ namespace VirtoCommerce.Web
                 "~/Scripts/responsive/jquery.easing.{version}.js"
                 ));
 
-			bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
+            bundles.Add(new Bundle("~/Content/themes/base/css", new CssMinifyFix()).Include(
 						"~/Content/themes/base/jquery.ui.core.css",
 						"~/Content/themes/base/jquery.ui.resizable.css",
 						"~/Content/themes/base/jquery.ui.selectable.css",
@@ -62,11 +63,7 @@ namespace VirtoCommerce.Web
 						"~/Content/themes/base/jquery.ui.spinner.css",
 						"~/Content/themes/base/jquery.ui.menu.css"));
 
-            bundles.Add(new StyleBundle(VirtoAdminStyles).Include(
-                "~/Areas/VirtoAdmin/Content/site.css"
-                ));
-
-            bundles.Add(new StyleBundle("~/Content/themes/default/css").Include(
+            bundles.Add(new Bundle("~/Content/themes/default/css", new CssMinifyFix()).Include(
                 "~/Content/themes/default/reset.css",
                 "~/Content/themes/default/custom.css",
                 "~/Content/themes/default/grid.css",
@@ -81,6 +78,11 @@ namespace VirtoCommerce.Web
                 "~/Content/themes/default/rateit.css",
                 "~/Content/themes/default/flags.css"
                 ));
+
+            //Admin part
+            bundles.Add(new StyleBundle(VirtoAdminStyles).Include(
+            "~/Areas/VirtoAdmin/Content/site.css"
+            ));
 		}
 	}
 }
