@@ -6,7 +6,7 @@ using VirtoCommerce.Foundation.Frameworks;
 namespace VirtoCommerce.Foundation.AppConfig.Model
 {
     [DataContract]
-    [EntitySet("SeoUrlKeyword")]
+    [EntitySet("SeoUrlKeywords")]
     [DataServiceKey("SeoUrlKeywordId")]
     public class SeoUrlKeyword : StorageEntity
     {
