@@ -15,6 +15,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 		private readonly IViewModelsFactory<IStoreTaxesStepViewModel> _taxesVmFactory;
 		private readonly IViewModelsFactory<IStorePaymentsStepViewModel> _paymentsVmFactory;
 		private readonly IViewModelsFactory<IStoreNavigationStepViewModel> _navigationVmFactory;
+		//private readonly IViewModelsFactory<IStoreSeoStepViewModel> _seoVmFactory;
 
 		#endregion
 
@@ -24,6 +25,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 			IViewModelsFactory<IStoreTaxesStepViewModel> taxesVmFactory,
 			IViewModelsFactory<IStorePaymentsStepViewModel> paymentsVmFactory,
 			IViewModelsFactory<IStoreNavigationStepViewModel> navigationVmFactory,
+			//IViewModelsFactory<IStoreSeoStepViewModel> seoVmFactory,
 			Store item)
 		{
 			_overviewVmFactory = overviewVmFactory;
@@ -31,6 +33,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 			_taxesVmFactory = taxesVmFactory;
 			_paymentsVmFactory = paymentsVmFactory;
 			_navigationVmFactory = navigationVmFactory;
+			//_seoVmFactory = seoVmFactory;
 			CreateWizardSteps(item);
 		}
 
@@ -43,12 +46,14 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 			var TaxesStepViewModel = _taxesVmFactory.GetViewModelInstance(itemParameter);
 			var PaymentsStepViewModel = _paymentsVmFactory.GetViewModelInstance(itemParameter);
 			var NavigationStepViewModel = _navigationVmFactory.GetViewModelInstance(itemParameter);
+			//var SeoStepViewModel = _seoVmFactory.GetViewModelInstance(itemParameter);
 
 			RegisterStep(OverviewStepViewModel);
 			RegisterStep(LocalizationStepViewModel);
 			RegisterStep(TaxesStepViewModel);
 			RegisterStep(PaymentsStepViewModel);
 			RegisterStep(NavigationStepViewModel);
+			//RegisterStep(SeoStepViewModel);
 		}
 	}
 }

@@ -34,6 +34,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 		private readonly IViewModelsFactory<IStoreNavigationStepViewModel> _navigationVmFactory;
 		private readonly IViewModelsFactory<IStoreSettingStepViewModel> _settingVmFactory;
 		private readonly IViewModelsFactory<IStoreLinkedStoresStepViewModel> _linkedStoresVmFactory;
+		private readonly IViewModelsFactory<IStoreSeoStepViewModel> _seoVmFactory;
 
 		#endregion
 
@@ -48,6 +49,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 			IViewModelsFactory<IStoreNavigationStepViewModel> navigationVmFactory,
 			IViewModelsFactory<IStoreSettingStepViewModel> settingVmFactory,
 			IViewModelsFactory<IStoreLinkedStoresStepViewModel> linkedStoresVmFactory,
+			IViewModelsFactory<IStoreSeoStepViewModel> seoVmFactory,
 			IHomeSettingsViewModel parent,
 			INavigationManager navManager, Store item)
 			: base(entityFactory, item, false)
@@ -63,6 +65,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 			_navigationVmFactory = navigationVmFactory;
 			_settingVmFactory = settingVmFactory;
 			_linkedStoresVmFactory = linkedStoresVmFactory;
+			_seoVmFactory = seoVmFactory;
 
 			OpenItemCommand = new DelegateCommand(() => _navManager.Navigate(NavigationData));
 		}
@@ -163,6 +166,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 				InitLinkedStep();
 				InitSettingsStep();
 				InitNavigationStep();
+				InitSeoStep();
 			}
 		}
 
@@ -231,8 +235,6 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 					PaymentsStepViewModel.AvailableStorePaymentGateways.ForEach(x => x.PropertyChanged += ViewModel_PropertyChanged);
 				}
 			}
-
-
 		}
 
 		protected override void CloseSubscriptionUI()
@@ -313,6 +315,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 		public IStoreLinkedStoresStepViewModel LinkedStoresStepViewModel { get; private set; }
 		public IStoreSettingStepViewModel SettingsStepViewModel { get; private set; }
 		public IStoreNavigationStepViewModel NavigationStepViewModel { get; private set; }
+		public IStoreSeoStepViewModel SeoStepViewModel { get; private set; }
 
 		private bool _IsInitializingOverview;
 		public bool IsInitializingOverview
@@ -566,7 +569,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 
 		#endregion
 
-		#region Proteckted init methods
+		#region Protected init methods
 
 		protected void InitOverviewStep()
 		{
@@ -631,6 +634,15 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 					_navigationVmFactory.GetViewModelInstance(itemParameter);
 			(NavigationStepViewModel as StoreNavigationStepViewModel).InitializePropertiesForViewing();
 			OnPropertyChanged("NavigationStepViewModel");
+		}
+
+		protected void InitSeoStep()
+		{
+			var itemParameter = new KeyValuePair<string, object>("item", InnerItem);
+			SeoStepViewModel =
+					_seoVmFactory.GetViewModelInstance(itemParameter);
+			(SeoStepViewModel as StoreSeoStepViewModel).InitializePropertiesForViewing();
+			OnPropertyChanged("SeoStepViewModel");
 		}
 
 		#endregion

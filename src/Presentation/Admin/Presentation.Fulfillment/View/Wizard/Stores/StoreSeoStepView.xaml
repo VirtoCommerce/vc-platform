@@ -1,0 +1,111 @@
+﻿<base:ViewBase x:Class="VirtoCommerce.ManagementClient.Fulfillment.View.Wizard.Stores.StoreSeoStepView"
+			xmlns:base="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure;assembly=VirtoCommerce.ManagementClient.Core"
+			 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+			xmlns:sys="clr-namespace:System;assembly=mscorlib"
+			   xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
+            xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+			xmlns:commerceFoundationStoresModel="clr-namespace:VirtoCommerce.Foundation.Stores.Model;assembly=VirtoCommerce.Foundation"
+			xmlns:Presentation_Core_Infrastructure_Converters="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Converters;assembly=VirtoCommerce.ManagementClient.Core"
+			xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"			   
+			xmlns:fulfillmentInfrastructure="clr-namespace:VirtoCommerce.ManagementClient.Fulfillment.Infrastructure"
+			   xmlns:common="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Common;assembly=VirtoCommerce.ManagementClient.Core"
+			   mc:Ignorable="d"
+			>
+
+	<FrameworkElement.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/WizardViewTheme/VirtoCommerceWizardTheme.xaml"/>
+			</ResourceDictionary.MergedDictionaries>
+
+			<Presentation_Core_Infrastructure_Converters:InvertedBoolConverter x:Key="invertedBoolConverter" FalseValue="True" TrueValue="False" />
+			<Presentation_Core_Infrastructure_Converters:CultureConverter x:Key="cultureConverter" />
+		</ResourceDictionary>
+	</FrameworkElement.Resources>
+
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="auto"/>
+			<RowDefinition/>
+		</Grid.RowDefinitions>
+
+		<ItemsControl Grid.Row="0" Style="{StaticResource Virto_ToolbarItemsControl_Style}" HorizontalContentAlignment="Stretch">
+			<core_controls:MetroButton x:Name="langFilterButton" Header="{Binding FilterSeoLanguage, Converter={StaticResource cultureConverter}}">
+				<core_controls:MetroButton.ContextMenu>
+					<ContextMenu ItemsSource="{Binding InnerItemStoreLanguages}">
+						<ContextMenu.ItemContainerStyle>
+							<Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
+								<Setter Property="Header" Value="{Binding Converter={StaticResource cultureConverter}}" />
+								<Setter Property="Command" Value="{Binding PlacementTarget.DataContext.SeoLocalesFilterCommand, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" />
+								<Setter Property="CommandParameter" Value="{Binding }" />
+							</Style>
+						</ContextMenu.ItemContainerStyle>
+					</ContextMenu>
+				</core_controls:MetroButton.ContextMenu>
+				<i:Interaction.Triggers>
+					<i:EventTrigger EventName="Click">
+						<ei:ChangePropertyAction TargetObject="{Binding ContextMenu, ElementName=langFilterButton}" PropertyName="PlacementTarget" Value="{Binding ElementName=langFilterButton, Mode=OneWay}"/>
+						<ei:ChangePropertyAction TargetObject="{Binding ContextMenu, ElementName=langFilterButton}" PropertyName="IsOpen" Value="True"/>
+					</i:EventTrigger>
+				</i:Interaction.Triggers>
+				<core_controls:VectorImage ImageResource="{StaticResource Icon_Button_Filter}" Width="13" Height="12" Margin="1,2,0,0" />
+			</core_controls:MetroButton>
+		</ItemsControl>
+
+		<Grid Grid.Row="1" Width="600" HorizontalAlignment="Left">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="auto" />
+				<RowDefinition Height="auto" />
+				<RowDefinition Height="auto" />
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition />
+				<ColumnDefinition Width="40"/>
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+
+			<StackPanel>
+				<TextBlock Text="URL Keyword:" />
+				<TextBlock Margin="0,2,0,0" Style="{StaticResource Virto_Base_TextBlock_Watermark_Style}" TextTrimming="CharacterEllipsis">
+					<TextBlock.Text>
+						<MultiBinding StringFormat="http://{0}/{1}">
+							<Binding Path="CurrentSeoKeyword.Language" />
+							<Binding Path="CurrentSeoKeyword.Keyword" />
+						</MultiBinding>
+					</TextBlock.Text>
+					<TextBlock.ToolTip>
+						<MultiBinding StringFormat="http://{0}/{1}">
+							<Binding Path="CurrentSeoKeyword.Language" />
+							<Binding Path="CurrentSeoKeyword.Keyword" />
+						</MultiBinding>
+					</TextBlock.ToolTip>
+				</TextBlock>
+				<core_controls:WatermarkedTextBox Margin="0,4,0,0" Text="{Binding CurrentSeoKeyword.Keyword, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
+			</StackPanel>
+
+			<StackPanel Grid.Column="2">
+				<TextBlock Text="Page Title:" />
+				<CheckBox Content="Use default" IsChecked="{Binding UseDefaultTitle}" />
+				<core_controls:WatermarkedTextBox Margin="0,4,0,0" IsEnabled="{Binding UseDefaultTitle, Converter={StaticResource invertedBoolConverter}}" Text="{Binding CurrentSeoKeyword.Title, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
+			</StackPanel>
+
+			<StackPanel Grid.Row="1">
+				<TextBlock Text="Meta description:" />
+				<CheckBox Content="Use default" IsChecked="{Binding UseDefaultMetaDescription}" />
+				<core_controls:WatermarkedTextBox Margin="0,4,0,0" IsEnabled="{Binding UseDefaultMetaDescription, Converter={StaticResource invertedBoolConverter}}" Text="{Binding CurrentSeoKeyword.MetaDescription, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Style="{StaticResource Virto_Multiline_WatermarkedTextBox_Style}" Height="120"/>
+			</StackPanel>
+
+			<StackPanel Grid.Row="1" Grid.Column="2">
+				<TextBlock Text="Image alternative text:" />
+				<CheckBox Content="Use default" IsChecked="{Binding UseDefaultImageText}" />
+				<core_controls:WatermarkedTextBox Margin="0,4,0,0" IsEnabled="{Binding UseDefaultImageText, Converter={StaticResource invertedBoolConverter}}" Text="{Binding CurrentSeoKeyword.ImageAltDescription, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+
+			</StackPanel>
+
+			<CheckBox Grid.Row="2" Margin="0,24,0,0" Content="Is active" IsChecked="{Binding CurrentSeoKeyword.IsActive, Mode=TwoWay}" />
+		</Grid>
+	</Grid>
+</base:ViewBase>

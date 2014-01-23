@@ -165,6 +165,7 @@
     <Compile Include="ViewModel\Rma%27s\Interfaces\IRmaViewModel.cs" />
     <Compile Include="ViewModel\Rma%27s\Implementations\RmaHomeViewModel.cs" />
     <Compile Include="ViewModel\Rma%27s\Implementations\RmaViewModel.cs" />
+    <Compile Include="ViewModel\Settings\Stores\Wizard\Implementations\StoreSeoStepViewModel.cs" />
     <Compile Include="ViewModel\Wizard\Implementations\CreatePicklistStepViewModel.cs" />
     <Compile Include="ViewModel\Wizard\Interfaces\ICreatePicklistStepViewModel.cs" />
     <Compile Include="ViewModel\Wizard\Implementations\CreatePicklistWizardViewModel.cs" />
@@ -243,6 +244,9 @@
     </Compile>
     <Compile Include="View\FulfillmentCenters\FulfillmentCentersSettingsView.xaml.cs">
       <DependentUpon>FulfillmentCentersSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Wizard\Stores\StoreSeoStepView.xaml.cs">
+      <DependentUpon>StoreSeoStepView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Wizard\Stores\StoreTaxesStepView.xaml.cs">
       <DependentUpon>StoreTaxesStepView.xaml</DependentUpon>
@@ -360,6 +364,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\Views\GridView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Wizard\Stores\StoreSeoStepView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

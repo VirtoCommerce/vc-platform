@@ -26,6 +26,7 @@
 
 			<inf:PropertyValueConverter x:Key="propertyValueConverter" />
 			<Presentation_Core_Infrastructure_Converters:BoolToStringConverter x:Key="boolToYesNoConverter" FalseValue="No" TrueValue="Yes" />
+			<Presentation_Core_Infrastructure_Converters:InvertedBoolConverter x:Key="invertedBoolConverter" FalseValue="True" TrueValue="False" />
 			<Presentation_Core_Infrastructure_Converters:CultureConverter x:Key="cultureConverter" />
 		</ResourceDictionary>
 	</UserControl.Resources>
@@ -158,6 +159,94 @@
 						</i:EventTrigger>
 					</i:Interaction.Triggers>
 				</DataGrid>
+			</Grid>
+		</TabItem>
+
+		<!-- SEO tab -->
+		<TabItem x:Name="tabSeoData" Header="SEO" core_behavior:PermissionBehavior.PermissionId="{x:Static securityModule:PredefinedPermissions.CatalogCategoriesManage}" core_behavior:PermissionBehavior.DenyVisibility="Visible">
+			<Grid>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="auto"/>
+					<RowDefinition/>
+				</Grid.RowDefinitions>
+				
+				<ItemsControl Grid.Row="0" Style="{StaticResource Virto_ToolbarItemsControl_Style}" HorizontalContentAlignment="Stretch">
+					<core_controls:MetroButton x:Name="langFilterButton" Header="{Binding FilterSeoLanguage, Converter={StaticResource cultureConverter}}">
+						<core_controls:MetroButton.ContextMenu>
+							<ContextMenu ItemsSource="{Binding InnerItemCatalogLanguages}">
+								<ContextMenu.ItemContainerStyle>
+									<Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
+										<Setter Property="Header" Value="{Binding Converter={StaticResource cultureConverter}}" />
+										<Setter Property="Command" Value="{Binding PlacementTarget.DataContext.SeoLocalesFilterCommand, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" />
+										<Setter Property="CommandParameter" Value="{Binding }" />
+									</Style>
+								</ContextMenu.ItemContainerStyle>
+							</ContextMenu>
+						</core_controls:MetroButton.ContextMenu>
+						<i:Interaction.Triggers>
+							<i:EventTrigger EventName="Click">
+								<ei:ChangePropertyAction TargetObject="{Binding ContextMenu, ElementName=langFilterButton}" PropertyName="PlacementTarget" Value="{Binding ElementName=langFilterButton, Mode=OneWay}"/>
+								<ei:ChangePropertyAction TargetObject="{Binding ContextMenu, ElementName=langFilterButton}" PropertyName="IsOpen" Value="True"/>
+							</i:EventTrigger>
+						</i:Interaction.Triggers>
+						<core_controls:VectorImage ImageResource="{StaticResource Icon_Button_Filter}" Width="13" Height="12" Margin="1,2,0,0" />
+					</core_controls:MetroButton>
+				</ItemsControl>
+
+				<ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+					<Grid HorizontalAlignment="Left" Width="600" >
+						<Grid.RowDefinitions>
+							<RowDefinition Height="auto" />
+							<RowDefinition Height="auto" />
+							<RowDefinition Height="auto" />
+						</Grid.RowDefinitions>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition />
+							<ColumnDefinition Width="40"/>
+							<ColumnDefinition Width="*" />
+						</Grid.ColumnDefinitions>
+
+						<StackPanel>
+							<TextBlock Text="URL Keyword:" />
+							<TextBlock Margin="0,12,0,0" Style="{StaticResource Virto_Base_TextBlock_Watermark_Style}" TextTrimming="CharacterEllipsis">
+								<TextBlock.Text>
+									<MultiBinding StringFormat="http://{0}/store/{1}">
+										<Binding Path="CurrentSeoKeyword.Language" />
+										<Binding Path="CurrentSeoKeyword.Keyword" />
+									</MultiBinding>
+								</TextBlock.Text>
+								<TextBlock.ToolTip>
+									<MultiBinding StringFormat="http://{0}/store/{1}">
+										<Binding Path="CurrentSeoKeyword.Language" />
+										<Binding Path="CurrentSeoKeyword.Keyword" />
+									</MultiBinding>
+								</TextBlock.ToolTip>
+							</TextBlock>
+							<core_controls:WatermarkedTextBox Margin="0,6,0,0" Text="{Binding CurrentSeoKeyword.Keyword, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
+						</StackPanel>
+
+						<StackPanel Grid.Column="2">
+							<TextBlock Text="Page Title:" />
+							<CheckBox Content="Use default" IsChecked="{Binding UseDefaultTitle}" />
+							<core_controls:WatermarkedTextBox Margin="0,4,0,0" IsEnabled="{Binding UseDefaultTitle, Converter={StaticResource invertedBoolConverter}}" Text="{Binding CurrentSeoKeyword.Title, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
+						</StackPanel>
+
+						<StackPanel Grid.Row="1">
+							<TextBlock Text="Meta description:" />
+							<CheckBox Content="Use default" IsChecked="{Binding UseDefaultMetaDescription}" />
+							<core_controls:WatermarkedTextBox Margin="0,4,0,0" IsEnabled="{Binding UseDefaultMetaDescription, Converter={StaticResource invertedBoolConverter}}" Text="{Binding CurrentSeoKeyword.MetaDescription, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Style="{StaticResource Virto_Multiline_WatermarkedTextBox_Style}" Height="120"/>
+						</StackPanel>
+
+						<StackPanel Grid.Row="1" Grid.Column="2">
+							<TextBlock Text="Image alternative text:" />
+							<CheckBox Content="Use default" IsChecked="{Binding UseDefaultImageText}" />
+							<core_controls:WatermarkedTextBox Margin="0,4,0,0" IsEnabled="{Binding UseDefaultImageText, Converter={StaticResource invertedBoolConverter}}" Text="{Binding CurrentSeoKeyword.ImageAltDescription, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+								
+						</StackPanel>
+
+						<CheckBox Grid.Row="2" Margin="0,24,0,0" Content="Is active" IsChecked="{Binding CurrentSeoKeyword.IsActive, Mode=TwoWay}" />
+					</Grid>
+				</ScrollViewer>
 			</Grid>
 		</TabItem>
 	</TabControl>

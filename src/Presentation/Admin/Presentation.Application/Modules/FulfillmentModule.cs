@@ -129,6 +129,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment
 			_container.RegisterType<IStoreLinkedStoresStepViewModel, StoreLinkedStoresStepViewModel>();
 			_container.RegisterType<IStoreSettingStepViewModel, StoreSettingsStepViewModel>();
 			_container.RegisterType<IStoreNavigationStepViewModel, StoreNavigationStepViewModel>();
+			_container.RegisterType<IStoreSeoStepViewModel, StoreSeoStepViewModel>();
 
 			_container.RegisterType<IStoreSettingViewModel, StoreSettingViewModel>();
 

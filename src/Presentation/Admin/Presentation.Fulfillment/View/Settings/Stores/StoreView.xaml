@@ -53,6 +53,12 @@
                 <ContentPresenter Content="{Binding NavigationStepViewModel}" Margin="0,0,20,0"/>
             </ScrollViewer>
         </TabItem>
-    </TabControl>
+
+		<TabItem x:Name="tabSeo" Header="SEO">
+			<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="0,10,0,0">
+				<ContentPresenter Content="{Binding SeoStepViewModel}" Margin="0,0,20,0"/>
+			</ScrollViewer>
+		</TabItem>
+	</TabControl>
 
 </base:ViewBase>

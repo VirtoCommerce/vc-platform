@@ -15,6 +15,10 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 	{
 	}
 
+	public interface IStoreSeoStepViewModel : IWizardStep
+	{
+	}
+
 	public interface IStoreLocalizationStepViewModel : IWizardStep
 	{
 	}

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Catalogs.Factories;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Catalogs.Repositories;
@@ -48,7 +49,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Wizard
 		protected CategoryStepModel stepModel;
 
 		protected CategoryStepViewModel(IRepositoryFactory<ICatalogRepository> repositoryFactory, IViewModelsFactory<IPropertyValueBaseViewModel> vmFactory, ICatalogEntityFactory entityFactory, CategoryStepModel itemModel)
-			: base(repositoryFactory, vmFactory, entityFactory, itemModel.InnerItem, itemModel.InnerItem.Catalog)
+			: base(null, repositoryFactory, vmFactory, entityFactory, itemModel.InnerItem, itemModel.InnerItem.Catalog)
 		{
 			stepModel = itemModel;
 		}
