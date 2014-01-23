@@ -89,7 +89,7 @@ namespace VirtoCommerce.Web.Controllers
                                  IUserSecurity webSecurity,
                                  IOAuthWebSecurity oAuthSecurity,
                                  IOrderService orderService,
-                                 ITemplateService templateService, 
+                                 ITemplateService templateService,
                                  IEmailService emailService)
         {
             _catalogClient = catalogClient;
@@ -180,17 +180,17 @@ namespace VirtoCommerce.Web.Controllers
             if (ModelState.IsValid)
             {
                 if (string.IsNullOrEmpty(model.ImpersonatedUserName))
-            {
-                    if (_webSecurity.Login(model.UserName, model.Password, model.RememberMe) && StoreHelper.IsUserAuthorized(model.UserName, out errorMessage))
                 {
-                    OnPostLogon(model.UserName);
-                    return RedirectToLocal(returnUrl);
+                    if (_webSecurity.Login(model.UserName, model.Password, model.RememberMe) && StoreHelper.IsUserAuthorized(model.UserName, out errorMessage))
+                    {
+                        OnPostLogon(model.UserName);
+                        return RedirectToLocal(returnUrl);
+                    }
                 }
-            }
                 else
                 {
                     if (_webSecurity.LoginAs(model.ImpersonatedUserName, model.UserName, model.Password, out errorMessage, model.RememberMe)
-                        && StoreHelper.IsUserAuthorized(model.UserName, out errorMessage) 
+                        && StoreHelper.IsUserAuthorized(model.UserName, out errorMessage)
                         && StoreHelper.IsUserAuthorized(model.ImpersonatedUserName, out errorMessage))
                     {
                         OnPostLogon(model.ImpersonatedUserName, model.UserName);
@@ -884,8 +884,8 @@ namespace VirtoCommerce.Web.Controllers
         public ActionResult RegisterAsync(RegisterModel model)
         {
             Register(model);
-            return ModelState.IsValid ? 
-                (ActionResult)RedirectToAction("Index", "Checkout") : 
+            return ModelState.IsValid ?
+                (ActionResult)RedirectToAction("Index", "Checkout") :
                 View("Register", model);
         }
 
@@ -1191,7 +1191,14 @@ namespace VirtoCommerce.Web.Controllers
 
                     if (account == null)
                     {
-                         TempData[GetMessageTempKey(MessageType.Error)] = new[]{"Such account does not exist in our database".Localize()};
+                        TempData[GetMessageTempKey(MessageType.Error)] = new[] { "Such account does not exist in our database".Localize() };
+                        return RedirectToAction("LogOn");
+                    }
+
+                    if (account.RegisterType == (int)RegisterType.Administrator || account.RegisterType == (int)RegisterType.SiteAdministrator)
+                    {
+                        //The message is tricky in purpose so that no one could guess admins username!!!
+                        TempData[GetMessageTempKey(MessageType.Error)] = new[] { "Such account does not exist in our database".Localize() };
                         return RedirectToAction("LogOn");
                     }
 
@@ -1206,14 +1213,14 @@ namespace VirtoCommerce.Web.Controllers
                     var email = UserHelper.GetCustomerModel(contact).Email ?? model.UserName;
 
                     //Get template
-                    var context = new Dictionary<string, object>() { { "ResetPasswordTemplate", new ResetPasswordTemplate{ Url = linkUrl, Username = userName} } };
+                    var context = new Dictionary<string, object>() { { "ResetPasswordTemplate", new ResetPasswordTemplate { Url = linkUrl, Username = userName } } };
                     var template = _templateService.ProcessTemplate("forgot-password", context, CultureInfo.CreateSpecificCulture(UserHelper.CustomerSession.Language));
 
                     //Create email message
                     var emailMessage = new EmailMessage();
                     emailMessage.To.Add(email);
 
-                
+
                     if (template != null)
                     {
                         emailMessage.Html = template.Body;
@@ -1221,6 +1228,7 @@ namespace VirtoCommerce.Web.Controllers
                     }
                     else
                     {
+                        //Use default template
                         emailMessage.Html =
                             string.Format(
                                 "<b>{0}</b> <br/><br/> To change your password, click on the following link:<br/> <br/> <a href='{1}'>{1}</a> <br/>",
@@ -1233,7 +1241,7 @@ namespace VirtoCommerce.Web.Controllers
                     //Send email
                     _emailService.SendEmail(emailMessage);
 
-                    TempData[GetMessageTempKey(MessageType.Success)] = new[]{"The reset password link was generated. Check you email to reset password".Localize()};
+                    TempData[GetMessageTempKey(MessageType.Success)] = new[] { "The reset password link was generated. Check you email to reset password.".Localize() };
                 }
                 catch (Exception ex)
                 {
@@ -1265,7 +1273,7 @@ namespace VirtoCommerce.Web.Controllers
                         return RedirectToAction("LogOn");
                     }
 
-                    ModelState.AddModelError("Token","Password reset failed. Either invalid or expired token. Please try to reset password again".Localize());
+                    ModelState.AddModelError("Token", "Password reset failed. Either invalid or expired token. Please try to reset password again".Localize());
                 }
                 catch (Exception ex)
                 {
@@ -1414,7 +1422,7 @@ namespace VirtoCommerce.Web.Controllers
             {
                 var lastVisited = contact.ContactPropertyValues.FirstOrDefault(x => x.Name == ContactPropertyValueName.LastVisit);
 
-             
+
                 if (lastVisited != null)
                 {
                     lastVisited.DateTimeValue = DateTime.UtcNow;
