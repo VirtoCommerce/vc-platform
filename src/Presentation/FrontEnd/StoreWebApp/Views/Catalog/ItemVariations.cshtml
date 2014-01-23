@@ -26,12 +26,20 @@
                 <div class="variation">
                     <p>@variation.Name</p>
 
-                    <select name="@variation.Name" id="@variation.Name" data-val-required="The field is required." data-val="true">
+                    @{
+                        var selltem = variation.Items.FirstOrDefault(s => s.Selected);
+                        var currentStyle = selltem != null && !string.IsNullOrEmpty(selltem.Value)
+                                           && variation.Name.Equals("Color", StringComparison.OrdinalIgnoreCase) ?
+                                           string.Format("style=background:{0}", selltem.Value) : "";
+                    }
+
+                    <select name="@variation.Name" id="@variation.Name" data-val-required="The field is required." data-val="true" @currentStyle>
                         @foreach (var item in variation.Items)
                         {
                             var isSelected = item.Selected ? "selected=selected" : "";
+                            var style = variation.Name.Equals("Color", StringComparison.OrdinalIgnoreCase) ? string.Format("style=background:{0}", item.Value) : "";
 
-                            <option value="@item.Value" @isSelected>@item.Text</option>
+                            <option value="@item.Value" @isSelected @style>@item.Text</option>
                         }
                     </select>
                     <br />
