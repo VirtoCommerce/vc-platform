@@ -19,6 +19,7 @@ using VirtoCommerce.Foundation.Orders.Model;
 using VirtoCommerce.Foundation.Orders.Repositories;
 using VirtoCommerce.Foundation.Orders.Services;
 using VirtoCommerce.Foundation.Search.Services;
+using VirtoCommerce.Web.Client.Extensions;
 
 namespace VirtoCommerce.Web.Client.Helpers
 {
@@ -513,7 +514,7 @@ namespace VirtoCommerce.Web.Client.Helpers
 				var relations = CatalogClient.GetItemRelations(parent.ItemId);
 
 				var relationGroups = relations.Select(rel => rel.GroupName).Distinct();
-				foreach (var prop in item.ItemPropertyValues.Where(p => relationGroups.Contains(p.Name)))
+                foreach (var prop in item.ItemPropertyValues.LocalizedProperties().Where(p => relationGroups.Contains(p.Name)))
 				{
 					var option = new LineItemOption
 						{

@@ -38,7 +38,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Filters
 
                 if (!string.IsNullOrEmpty(path))
                 {
-                    var query = context.Request.Url.Query;
+                    var query = HttpUtility.UrlDecode(context.Request.Url.Query);
                     var queryString = context.Request.QueryString;
                     var needRedirect = false;
 
@@ -95,7 +95,9 @@ namespace VirtoCommerce.Web.Client.Extensions.Filters
                                 newQuery = string.Concat("?", newQuery);
                             }
 
-                            if (!string.Equals(query, newQuery))
+                            newQuery = HttpUtility.UrlDecode(newQuery);
+
+                            if (!string.Equals(query, newQuery, StringComparison.InvariantCultureIgnoreCase))
                             {
                                 query = newQuery;
                                 needRedirect = true;

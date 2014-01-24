@@ -1,11 +1,13 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Web.Mvc;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Web.Client.Extensions;
 using VirtoCommerce.Web.Client.Extensions.Filters;
 using VirtoCommerce.Web.Client.Extensions.Routing;
 using VirtoCommerce.Web.Client.Helpers;
+using VirtoCommerce.Web.Models;
 
 namespace VirtoCommerce.Web.Controllers
 {
@@ -43,6 +45,37 @@ namespace VirtoCommerce.Web.Controllers
                 FillViewBagWithMetadata(filterContext, Constants.Category);
                 FillViewBagWithMetadata(filterContext, Constants.Item);
 	        }
+
+            //Process messages
+            var messages = new MessagesModel();
+	        var hasMessages = Enum.GetNames(typeof (MessageType)).Aggregate(false, (current, typeName) =>
+                current | ProcessMessages((MessageType)Enum.Parse(typeof(MessageType), typeName), messages));
+	        if (hasMessages)
+	        {
+	            this.SharedViewBag().Messages = messages;
+	        }
+	    }
+
+	    private bool ProcessMessages(MessageType type, MessagesModel messages)
+	    {
+            var messagesTmp = TempData[GetMessageTempKey(type)] as string[];
+	        var foundAny = false;
+
+            if (messagesTmp != null)
+            {
+                foreach (var messageTmp in messagesTmp)
+                {
+                    messages.Add(new MessageModel(messageTmp, type));
+                    foundAny = true;
+                }
+            }
+
+	        return foundAny;
+	    }
+
+	    public string GetMessageTempKey(MessageType type)
+	    {
+	        return string.Format("{0}_messages", type);
 	    }
 
 	    protected virtual void FillViewBagWithMetadata(ActionExecutedContext filterContext, string routeKey)

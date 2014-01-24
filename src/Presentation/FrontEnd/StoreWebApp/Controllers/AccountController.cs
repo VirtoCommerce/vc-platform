@@ -8,15 +8,16 @@ using System.Web.Security;
 using Omu.ValueInjecter;
 using VirtoCommerce.Client;
 using VirtoCommerce.Foundation.Customers.Model;
+using VirtoCommerce.Foundation.Frameworks.Email;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
+using VirtoCommerce.Foundation.Frameworks.Templates;
 using VirtoCommerce.Foundation.Orders.Model;
 using VirtoCommerce.Foundation.Orders.Services;
 using VirtoCommerce.Foundation.Security.Model;
-using VirtoCommerce.Web.Client.Extensions;
-using VirtoCommerce.Web.Client.Extensions.Filters;
 using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Web.Client.Helpers;
 using VirtoCommerce.Web.Client.Security;
+using VirtoCommerce.Web.Client.Services.Emails;
 using VirtoCommerce.Web.Client.Services.Security;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Virto.Helpers;
@@ -50,6 +51,10 @@ namespace VirtoCommerce.Web.Controllers
         /// The _order service
         /// </summary>
         private readonly IOrderService _orderService;
+
+        private readonly ITemplateService _templateService;
+        private readonly IEmailService _emailService;
+
         /// <summary>
         /// The _settings client
         /// </summary>
@@ -64,7 +69,7 @@ namespace VirtoCommerce.Web.Controllers
         private readonly IUserSecurity _webSecurity;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AccountController"/> class.
+        /// Initializes a new instance of the <see cref="AccountController" /> class.
         /// </summary>
         /// <param name="catalogClient">The catalog client.</param>
         /// <param name="userClient">The user client.</param>
@@ -74,6 +79,8 @@ namespace VirtoCommerce.Web.Controllers
         /// <param name="webSecurity">The web security.</param>
         /// <param name="oAuthSecurity">The o authentication security.</param>
         /// <param name="orderService">The order service.</param>
+        /// <param name="templateService">The template service.</param>
+        /// <param name="emailService">The email service.</param>
         public AccountController(CatalogClient catalogClient,
                                  UserClient userClient,
                                  CountryClient countryClient,
@@ -81,7 +88,9 @@ namespace VirtoCommerce.Web.Controllers
                                  SettingsClient settingsClient,
                                  IUserSecurity webSecurity,
                                  IOAuthWebSecurity oAuthSecurity,
-                                 IOrderService orderService)
+                                 IOrderService orderService,
+                                 ITemplateService templateService,
+                                 IEmailService emailService)
         {
             _catalogClient = catalogClient;
             _userClient = userClient;
@@ -91,6 +100,8 @@ namespace VirtoCommerce.Web.Controllers
             _webSecurity = webSecurity;
             _oAuthSecurity = oAuthSecurity;
             _orderService = orderService;
+            _templateService = templateService;
+            _emailService = emailService;
         }
 
         #region Authentication Methods
@@ -169,17 +180,17 @@ namespace VirtoCommerce.Web.Controllers
             if (ModelState.IsValid)
             {
                 if (string.IsNullOrEmpty(model.ImpersonatedUserName))
-            {
-                    if (_webSecurity.Login(model.UserName, model.Password, model.RememberMe) && StoreHelper.IsUserAuthorized(model.UserName, out errorMessage))
                 {
-                    OnPostLogon(model.UserName);
-                    return RedirectToLocal(returnUrl);
+                    if (_webSecurity.Login(model.UserName, model.Password, model.RememberMe) && StoreHelper.IsUserAuthorized(model.UserName, out errorMessage))
+                    {
+                        OnPostLogon(model.UserName);
+                        return RedirectToLocal(returnUrl);
+                    }
                 }
-            }
                 else
                 {
                     if (_webSecurity.LoginAs(model.ImpersonatedUserName, model.UserName, model.Password, out errorMessage, model.RememberMe)
-                        && StoreHelper.IsUserAuthorized(model.UserName, out errorMessage) 
+                        && StoreHelper.IsUserAuthorized(model.UserName, out errorMessage)
                         && StoreHelper.IsUserAuthorized(model.ImpersonatedUserName, out errorMessage))
                     {
                         OnPostLogon(model.ImpersonatedUserName, model.UserName);
@@ -483,14 +494,14 @@ namespace VirtoCommerce.Web.Controllers
                 {
                     if (changePasswordSucceeded)
                     {
-                        TempData["success_messages"] = new[] { "Password was succesfully changed!".Localize() };
+                        TempData[GetMessageTempKey(MessageType.Success)] = new[] { "Password was succesfully changed!".Localize() };
                         return RedirectToAction("Index");
                     }
                     ModelState.AddModelError("", "The current password is incorrect or the new password is invalid.");
                 }
                 else
                 {
-                    TempData["success_messages"] = new[] { "Your account was succesfully updated!".Localize() };
+                    TempData[GetMessageTempKey(MessageType.Success)] = new[] { "Your account was succesfully updated!".Localize() };
                     return RedirectToAction("Index");
                 }
             }
@@ -507,13 +518,6 @@ namespace VirtoCommerce.Web.Controllers
         {
             var contact = _userClient.GetCurrentCustomer();
             var model = UserHelper.GetCustomerModel(contact);
-            if (!string.IsNullOrEmpty(TempData["success_messages"] as string))
-            {
-                this.SharedViewBag().Messages = new MessagesModel
-                {
-                    new MessageModel((string) TempData["success_messages"])
-                };
-            }
             return View(model);
         }
 
@@ -880,8 +884,8 @@ namespace VirtoCommerce.Web.Controllers
         public ActionResult RegisterAsync(RegisterModel model)
         {
             Register(model);
-            return ModelState.IsValid ? 
-                (ActionResult)RedirectToAction("Index", "Checkout") : 
+            return ModelState.IsValid ?
+                (ActionResult)RedirectToAction("Index", "Checkout") :
                 View("Register", model);
         }
 
@@ -1179,8 +1183,105 @@ namespace VirtoCommerce.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ForgotPassword(ForgotPasswordModel model)
         {
-            //TODO: not implemented
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var account = _userClient.GetAccountByUserName(model.UserName);
+
+                    if (account == null)
+                    {
+                        TempData[GetMessageTempKey(MessageType.Error)] = new[] { "Such account does not exist in our database".Localize() };
+                        return RedirectToAction("LogOn");
+                    }
+
+                    if (account.RegisterType == (int)RegisterType.Administrator || account.RegisterType == (int)RegisterType.SiteAdministrator)
+                    {
+                        //The message is tricky in purpose so that no one could guess admins username!!!
+                        TempData[GetMessageTempKey(MessageType.Error)] = new[] { "Such account does not exist in our database".Localize() };
+                        return RedirectToAction("LogOn");
+                    }
+
+                    //Get reset token
+                    var token = _webSecurity.GeneratePasswordResetToken(model.UserName);
+
+                    //Collect data
+                    var contact = _userClient.GetCustomer(account.MemberId);
+                    var linkUrl = Url.Action("ResetPassword", "Account", new { token }, Request.Url.Scheme);
+                    var userName = contact != null ? contact.FullName : model.UserName;
+                    //User name can also be an email in most cases
+                    var email = UserHelper.GetCustomerModel(contact).Email ?? model.UserName;
+
+                    //Get template
+                    var context = new Dictionary<string, object>() { { "ResetPasswordTemplate", new ResetPasswordTemplate { Url = linkUrl, Username = userName } } };
+                    var template = _templateService.ProcessTemplate("forgot-password", context, CultureInfo.CreateSpecificCulture(UserHelper.CustomerSession.Language));
+
+                    //Create email message
+                    var emailMessage = new EmailMessage();
+                    emailMessage.To.Add(email);
+
+
+                    if (template != null)
+                    {
+                        emailMessage.Html = template.Body;
+                        emailMessage.Subject = template.Subject;
+                    }
+                    else
+                    {
+                        //Use default template
+                        emailMessage.Html =
+                            string.Format(
+                                "<b>{0}</b> <br/><br/> To change your password, click on the following link:<br/> <br/> <a href='{1}'>{1}</a> <br/>",
+                                userName,
+                                linkUrl);
+
+                        emailMessage.Subject = "Reset password";
+                    }
+
+                    //Send email
+                    _emailService.SendEmail(emailMessage);
+
+                    TempData[GetMessageTempKey(MessageType.Success)] = new[] { "The reset password link was generated. Check you email to reset password.".Localize() };
+                }
+                catch (Exception ex)
+                {
+                    TempData[GetMessageTempKey(MessageType.Error)] = new[] { ex.Message };
+                }
+            }
             return RedirectToAction("LogOn");
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult ResetPassword(string token)
+        {
+            return View(new ResetPasswordModel(token));
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult ResetPassword(ResetPasswordModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    if (_webSecurity.ResetPasswordWithToken(model.Token, model.NewPassword))
+                    {
+                        TempData[GetMessageTempKey(MessageType.Success)] = new[] { "Your password has been succesfully changed. You can now login using new password".Localize() };
+                        return RedirectToAction("LogOn");
+                    }
+
+                    ModelState.AddModelError("Token", "Password reset failed. Either invalid or expired token. Please try to reset password again".Localize());
+                }
+                catch (Exception ex)
+                {
+                    TempData[GetMessageTempKey(MessageType.Error)] = new[] { ex.Message };
+                }
+            }
+
+            return View(model);
         }
 
         #endregion
@@ -1321,7 +1422,7 @@ namespace VirtoCommerce.Web.Controllers
             {
                 var lastVisited = contact.ContactPropertyValues.FirstOrDefault(x => x.Name == ContactPropertyValueName.LastVisit);
 
-             
+
                 if (lastVisited != null)
                 {
                     lastVisited.DateTimeValue = DateTime.UtcNow;
