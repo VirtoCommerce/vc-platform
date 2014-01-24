@@ -29,12 +29,16 @@
             
             if (tempValues.ContainsKey(RouteConstatnts.Constants.Category) && tempValues[RouteConstatnts.Constants.Category] as string != null)
             {
-                tempValues[RouteConstatnts.Constants.Category] = SettingsHelper.SeoEncode(SettingsHelper.SeoDecode(tempValues[RouteConstatnts.Constants.Category].ToString(), SeoUrlKeywordTypes.Category), SeoUrlKeywordTypes.Category, culture.Name);
+                tempValues[RouteConstatnts.Constants.Category] = SettingsHelper.SeoEncodeMultiVal(
+                    SettingsHelper.SeoDecodeMultiVal(ViewContext.RouteData.Values[RouteConstatnts.Constants.Category].ToString()
+                    , SeoUrlKeywordTypes.Category), SeoUrlKeywordTypes.Category, culture.Name);
             }
 
             if (tempValues.ContainsKey(RouteConstatnts.Constants.Item) && tempValues[RouteConstatnts.Constants.Item] as string != null)
             {
-                tempValues[RouteConstatnts.Constants.Item] = SettingsHelper.SeoEncode(SettingsHelper.SeoDecode(tempValues[RouteConstatnts.Constants.Item].ToString(), SeoUrlKeywordTypes.Item), SeoUrlKeywordTypes.Item, culture.Name);
+                tempValues[RouteConstatnts.Constants.Item] = SettingsHelper.SeoEncode(
+                    SettingsHelper.SeoDecode(ViewContext.RouteData.Values[RouteConstatnts.Constants.Item].ToString()
+                    , SeoUrlKeywordTypes.Item), SeoUrlKeywordTypes.Item, culture.Name);
             }
             
             var countryCode = culture.Name.Substring(culture.Name.IndexOf('-') + 1).ToLowerInvariant();

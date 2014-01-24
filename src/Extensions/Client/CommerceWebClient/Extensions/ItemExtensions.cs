@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using Microsoft.Practices.ServiceLocation;
 using VirtoCommerce.Foundation.Catalogs.Model;
@@ -28,13 +29,14 @@ namespace VirtoCommerce.Web.Client.Extensions
 
         public static string GetItemCategoryRouteValue(this Item item)
         {
-            var outlines = OutlineBuilder.BuildCategoryOutline(CustomerSession.CatalogId, item.ItemId);
-            if (outlines.Outlines.Count > 0)
-            {
-                return outlines.Outlines[0].Categories.OfType<Category>().Last().Code;
-            }
+            var outlines = item.GetItemCategoryBrowsingOutlines();
+            return outlines.Any() ? outlines.First().ToString() : "undefined";
+        }
 
-            return "undefined";
+        public static BrowsingOutline[] GetItemCategoryBrowsingOutlines(this Item item)
+        {
+            var outlines = OutlineBuilder.BuildCategoryOutline(CustomerSession.CatalogId, item.ItemId);
+            return outlines.Select(o => new BrowsingOutline(o)).ToArray();
         }
     }
 }

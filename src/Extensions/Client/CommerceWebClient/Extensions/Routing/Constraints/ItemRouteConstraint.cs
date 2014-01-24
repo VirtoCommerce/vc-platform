@@ -16,26 +16,20 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Constraints
     /// <summary>
     /// Route constraint checks if item exists in database
     /// </summary>
-    public class ItemRouteConstraint : IRouteConstraint
+    public class ItemRouteConstraint : BaseRouteConstraint
     {
-        /// <summary>
-        /// Gets the catalog client.
-        /// </summary>
-        /// <value>The catalog client.</value>
-        private CatalogClient CatalogClient
-        {
-            get { return DependencyResolver.Current.GetService<CatalogClient>(); }
-        }
 
-        public bool Match(HttpContextBase httpContext, Route route, string parameterName, RouteValueDictionary values, RouteDirection routeDirection)
+        protected override bool IsMatch(HttpContextBase httpContext, Route route, string parameterName, RouteValueDictionary values, RouteDirection routeDirection)
         {
-            if (!values.ContainsKey(parameterName) || values[parameterName] as string == null)
+            if (!base.IsMatch(httpContext, route, parameterName, values, routeDirection))
+            {
                 return false;
+            }
 
             var encoded = values[parameterName].ToString();
             var decoded = SettingsHelper.SeoDecode(encoded, SeoUrlKeywordTypes.Item, values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : null);
 
-            var item = CatalogClient.GetItem(decoded, bycode: true);
+            var item = CartHelper.CatalogClient.GetItem(decoded, bycode: true);
 
             if (item == null)
             {
@@ -45,14 +39,10 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Constraints
             //Check if category is correct
             if (values.ContainsKey(Constants.Category))
             {
-                var routeVal = item.GetItemCategoryRouteValue();
                 encoded = values[Constants.Category].ToString();
-                decoded = SettingsHelper.SeoDecode(encoded, SeoUrlKeywordTypes.Category, values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : null);
+                decoded = SettingsHelper.SeoDecodeMultiVal(encoded, SeoUrlKeywordTypes.Category, values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : null);
 
-                if (!routeVal.Equals(decoded, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    return false;
-                }
+                return item.GetItemCategoryBrowsingOutlines().All(outline => ValidateCategoryPath(outline, decoded));
             }
 
             return true;
