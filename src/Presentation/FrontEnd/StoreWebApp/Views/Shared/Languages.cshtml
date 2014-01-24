@@ -29,8 +29,8 @@
             
             if (tempValues.ContainsKey(RouteConstatnts.Constants.Category) && tempValues[RouteConstatnts.Constants.Category] as string != null)
             {
-                tempValues[RouteConstatnts.Constants.Category] = SettingsHelper.SeoEncodeMultiVal(
-                    SettingsHelper.SeoDecodeMultiVal(ViewContext.RouteData.Values[RouteConstatnts.Constants.Category].ToString()
+                tempValues[RouteConstatnts.Constants.Category] = SettingsHelper.SeoEncode(
+                    SettingsHelper.SeoDecode(ViewContext.RouteData.Values[RouteConstatnts.Constants.Category].ToString()
                     , SeoUrlKeywordTypes.Category), SeoUrlKeywordTypes.Category, culture.Name);
             }
 

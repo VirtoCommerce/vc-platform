@@ -43,7 +43,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Constraints
             }
 
             var encoded = values[parameterName].ToString();
-            var decoded = SettingsHelper.SeoDecode(encoded, SeoUrlKeywordTypes.Store, values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : null);
+            var decoded = SettingsHelper.SeoDecode(encoded, SeoUrlKeywordTypes.Store, values.ContainsKey(Constants.Language) ? values[Constants.Language] as string : null);
             var dbStore = StoreClient.GetStoreById(decoded);
 
             if (dbStore == null)
