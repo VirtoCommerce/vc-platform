@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Globalization;
 using System.Linq;
 using Microsoft.Practices.ServiceLocation;
@@ -70,6 +71,12 @@ namespace VirtoCommerce.Web.Client.Helpers
             return seoKeyword != null ? seoKeyword.Keyword : value;
         }
 
+        public static string SeoEncodeMultiVal(string value, SeoUrlKeywordTypes type, string language = null, char seperator = '/')
+        {
+            var encoded = value.Split(new[] { seperator }).Select(x => SeoEncode(x, type, language)).ToList();
+            return string.Join(seperator.ToString(CultureInfo.InvariantCulture), encoded);
+        }
+
         /// <summary>
         /// Decodes the given SEO keyword to original value.
         /// </summary>
@@ -81,6 +88,12 @@ namespace VirtoCommerce.Web.Client.Helpers
         {
             var seoKeyword = SeoKeyword(keyword, type, language, false);
             return seoKeyword !=null ? seoKeyword.KeywordValue : keyword;
+        }
+
+        public static string SeoDecodeMultiVal(string keyword, SeoUrlKeywordTypes type, string language = null, char seperator = '/')
+        {
+            var decoded = keyword.Split(new[] { seperator }).Select(x =>SeoDecode(x, type,language)).ToList();
+            return string.Join(seperator.ToString(CultureInfo.InvariantCulture), decoded);
         }
 
 

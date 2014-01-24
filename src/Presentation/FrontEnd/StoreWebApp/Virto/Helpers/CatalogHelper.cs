@@ -236,7 +236,7 @@ namespace VirtoCommerce.Web.Virto.Helpers
 					if (display.HasFlag(ItemDisplayOptions.ItemPrice))
 					{
                         var lowestPrice = PriceListClient.GetLowestPrice(dbItem.ItemId, itemAvaiability != null ? itemAvaiability.MinQuantity : 1);
-                        var outlines = OutlineBuilder.BuildCategoryOutline(CatalogClient.CustomerSession.CatalogId, itemId);
+                        var outlines = OutlineBuilder.BuildCategoryOutline(CatalogClient.CustomerSession.CatalogId, dbItem.ItemId);
 						var tags = new Hashtable
 							{
 								{
@@ -248,9 +248,9 @@ namespace VirtoCommerce.Web.Virto.Helpers
 					    itemModel.CatalogOutlines = outlines;
 
                         // get the category name
-                        if (outlines.Outlines.Count > 0)
+                        if (outlines.Count > 0)
                         {
-                            var outline = outlines.Outlines[0];
+                            var outline = outlines[0];
                             if (outline.Categories.Count > 0)
                             {
                                 var category = outline.Categories.OfType<Category>().Reverse().FirstOrDefault();

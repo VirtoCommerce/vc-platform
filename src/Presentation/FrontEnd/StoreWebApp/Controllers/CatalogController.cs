@@ -6,6 +6,7 @@ using MvcSiteMapProvider;
 using VirtoCommerce.Client;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.Catalogs.Model;
+using VirtoCommerce.Foundation.Catalogs.Services;
 using VirtoCommerce.Foundation.Frameworks.Tagging;
 using VirtoCommerce.Web.Client.Extensions.Filters;
 using VirtoCommerce.Web.Models;
@@ -50,9 +51,9 @@ namespace VirtoCommerce.Web.Controllers
 	    /// <returns>ActionResult.</returns>
 	    /// <exception cref="System.Web.HttpException">404;Category not found</exception>
 	    [CustomOutputCache(CacheProfile = "CatalogCache", VaryByCustom = "store;currency;cart")]
-        public ActionResult Display(string category)
+        public ActionResult Display(CategoryPathModel category)
         {
-            var categoryBase = _catalogClient.GetCategory(category);
+            var categoryBase = _catalogClient.GetCategory(category.Category);
             if (categoryBase != null && categoryBase.IsActive)
             {
                 // set the context variable
@@ -110,10 +111,10 @@ namespace VirtoCommerce.Web.Controllers
                 if (node != null)
                 {
                     if (node.ParentNode != null && itemModel.CatalogItem.CatalogOutlines != null
-                        && itemModel.CatalogItem.CatalogOutlines.Outlines.Count > 0)
+                        && itemModel.CatalogItem.CatalogOutlines.Count > 0)
                     {
 
-                        node.Attributes["Outline"] = itemModel.CatalogItem.CatalogOutlines.Outlines[0];
+                        node.Attributes["Outline"] = new BrowsingOutline(itemModel.CatalogItem.CatalogOutlines[0]);
                     }
                     node.Title = itemModel.DisplayName;
                 }

@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using VirtoCommerce.Client;
 using VirtoCommerce.Foundation.AppConfig.Model;
+using VirtoCommerce.Foundation.Catalogs.Services;
 using VirtoCommerce.Web.Client.Helpers;
 
 namespace VirtoCommerce.Web.Client.Extensions.Routing.Constraints
@@ -16,26 +17,26 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Constraints
     /// <summary>
     /// Route constraint checks if category exists in database
     /// </summary>
-    public class CategoryRouteConstraint : IRouteConstraint
+    public class CategoryRouteConstraint : BaseRouteConstraint
     {
-        /// <summary>
-        /// Gets the catalog client.
-        /// </summary>
-        /// <value>The catalog client.</value>
-        private CatalogClient CatalogClient
-        {
-            get { return DependencyResolver.Current.GetService<CatalogClient>(); }
-        }
 
-        public bool Match(HttpContextBase httpContext, Route route, string parameterName, RouteValueDictionary values, RouteDirection routeDirection)
+        protected override bool IsMatch(HttpContextBase httpContext, Route route, string parameterName, RouteValueDictionary values, RouteDirection routeDirection)
         {
-            if (!values.ContainsKey(parameterName))
+            if (!base.IsMatch(httpContext, route, parameterName, values, routeDirection))
+            {
                 return false;
+            }
 
             var encoded = values[parameterName].ToString();
-            var decoded = SettingsHelper.SeoDecode(encoded, SeoUrlKeywordTypes.Category, values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : null);
+            var decoded = SettingsHelper.SeoDecodeMultiVal(encoded, SeoUrlKeywordTypes.Category, 
+                values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : null);
 
-            return CatalogClient.GetCategory(decoded) != null;
+            var childCategryCode = decoded.Split(new[] {'/'}).Last();
+
+            var outline = new BrowsingOutline(CartHelper.CatalogOutlineBuilder.BuildCategoryOutline(StoreHelper.CustomerSession.CatalogId, CartHelper.CatalogClient.GetCategory(childCategryCode)));
+
+            return ValidateCategoryPath(outline, decoded);
         }
+
     }
 }

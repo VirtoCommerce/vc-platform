@@ -1,6 +1,9 @@
-﻿using System.Web;
+﻿using System;
+using System.Linq;
+using System.Web;
 using System.Web.Routing;
 using VirtoCommerce.Foundation.AppConfig.Model;
+using VirtoCommerce.Foundation.Catalogs.Services;
 using VirtoCommerce.Web.Client.Helpers;
 
 namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
@@ -51,8 +54,30 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
 
         public override VirtualPathData GetVirtualPath(RequestContext requestContext, RouteValueDictionary values)
         {
-            ModifyVirtualPath(requestContext, values, SeoUrlKeywordTypes.Item);
+            EncodeVirtualPath(requestContext, values, SeoUrlKeywordTypes.Item);
             return base.GetVirtualPath(requestContext, values);
+        }
+
+        protected override string ModifyCategoryPath(RouteValueDictionary values)
+        {
+            var itemEncoded = values[Constants.Item] as string;
+
+            if (string.IsNullOrEmpty(itemEncoded))
+                return null;
+
+            var itemCode = SettingsHelper.SeoDecode(itemEncoded, SeoUrlKeywordTypes.Item);
+
+            var item = CartHelper.CatalogClient.GetItem(itemCode, bycode: true);
+
+            if (item == null)
+            {
+                return null;
+            }
+
+            //TODO: should find closest match to current path
+            var outline = item.GetItemCategoryRouteValue();
+
+            return outline;
         }
     }
 }

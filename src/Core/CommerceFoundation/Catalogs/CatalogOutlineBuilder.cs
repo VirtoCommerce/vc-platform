@@ -35,7 +35,7 @@ namespace VirtoCommerce.Foundation.Catalogs
 
         public CatalogOutlines BuildCategoryOutline(string catalogId, string itemId, bool useCache)
         {
-            var retVal = new List<CatalogOutline>();
+            var outlines = new CatalogOutlines();
 
             var catalog = GetCatalog(catalogId, useCache);
 
@@ -45,7 +45,7 @@ namespace VirtoCommerce.Foundation.Catalogs
 
                 if (categoryRelations.Any())
                 {
-                    retVal.AddRange(
+                    outlines.AddRange(
                         categoryRelations.Select(
                             categoryRelation => BuildCategoryOutline(catalogId, categoryRelation.Category, useCache)));
                 }
@@ -56,13 +56,11 @@ namespace VirtoCommerce.Foundation.Catalogs
 
                 if (linkedCategories.Any())
                 {
-                    retVal.AddRange(
+                    outlines.AddRange(
                         linkedCategories.Select(cat => BuildCategoryOutline(cat.CatalogId, cat, useCache)));
                 }
             }
 
-            var outlines = new CatalogOutlines();
-            outlines.Outlines.AddRange(retVal);
             return outlines;
         }
 
@@ -70,11 +68,12 @@ namespace VirtoCommerce.Foundation.Catalogs
         {
             // recurring adding elements
             var categories = new List<CategoryBase>();
-
-            BuildCategoryOutline(ref categories, catalogId, category, useCache);
-
             var outline = new CatalogOutline { CatalogId = catalogId };
-            outline.Categories.AddRange(categories);
+            if (category != null)
+            {
+                BuildCategoryOutline(ref categories, catalogId, category, useCache);
+                outline.Categories.AddRange(categories);
+            }
 
             return outline;
         }

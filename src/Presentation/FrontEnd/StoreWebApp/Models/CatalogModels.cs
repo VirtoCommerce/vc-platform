@@ -2,7 +2,9 @@
 using System.Globalization;
 using System.Linq;
 using System.Collections.Generic;
+using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.Catalogs.Model;
+using VirtoCommerce.Web.Client.Helpers;
 
 namespace VirtoCommerce.Web.Models
 {
@@ -486,5 +488,22 @@ namespace VirtoCommerce.Web.Models
             }
             return base.ToString();
         }
+    }
+
+    public class CategoryPathModel
+    {
+        private string _url;
+
+        public string Url
+        {
+            get { return _url; }
+            set
+            {
+                Category = value.Split(new[] { '/' }).Last();
+                _url = value;
+            }
+        }
+
+        public string Category { get; set; }
     }
 }

@@ -44,6 +44,8 @@ namespace VirtoCommerce.Web
                 AuthConfig.RegisterAuth();
 
                 ModelBinders.Binders[typeof (SearchParameters)] = new SearchParametersBinder();
+                ModelBinders.Binders[typeof(CategoryPathModel)] = new CategoryPathModelBinder();
+
 
                 ModelValidatorProviders.Providers.RemoveAt(0);
                 ModelValidatorProviders.Providers.Insert(0, new VirtoDataAnnotationsModelValidatorProvider());

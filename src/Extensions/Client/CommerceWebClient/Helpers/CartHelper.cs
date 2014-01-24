@@ -121,12 +121,12 @@ namespace VirtoCommerce.Web.Client.Helpers
         /// Gets the customer session service.
         /// </summary>
         /// <value>The customer session service.</value>
-		public ICustomerSessionService CustomerSessionService
+        public static ICustomerSessionService CustomerSessionService
 		{
 			get { return ServiceLocator.Current.GetInstance<ICustomerSessionService>(); }
 		}
 
-        public ICatalogOutlineBuilder CatalogOutlineBuilder
+        public static ICatalogOutlineBuilder CatalogOutlineBuilder
         {
             get { return ServiceLocator.Current.GetInstance<ICatalogOutlineBuilder>(); }
         }
