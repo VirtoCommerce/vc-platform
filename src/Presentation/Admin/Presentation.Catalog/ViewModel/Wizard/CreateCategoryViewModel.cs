@@ -147,16 +147,31 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Wizard
 
 		protected override void InnerItem_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
 		{
-			if (e.PropertyName == "Name")
+			switch (e.PropertyName)
 			{
-				// code gets a value of Name initially
-				InnerItem.Code = InnerItem.Name;
-			}
-			else if (e.PropertyName == "PropertySetId")
-			{
-				SetupPropertiesAndValues(InnerItem.PropertySet, InnerItem.CategoryPropertyValues, stepModel.InnerItemCatalogLanguages, PropertiesAndValues, IsWizardMode);
+				case "Name":
+					{
+
+						const string invalidCodeCharacters = @"$+;=%{}[]|\/@ ~#!^*&()?:'<>,";
+
+						var name = InnerItem.Name;
+
+						//replace invalid characters in the name with - if any
+						foreach (var ch in invalidCodeCharacters.ToCharArray())
+						{
+							name = name.Replace(ch, '-');
+						}
+
+						// code gets a value of Name initially
+						InnerItem.Code = name;
+					}
+					break;
+				case "PropertySetId":
+					SetupPropertiesAndValues(InnerItem.PropertySet, InnerItem.CategoryPropertyValues, stepModel.InnerItemCatalogLanguages, PropertiesAndValues, IsWizardMode);
+					break;
 			}
 		}
+
 		#endregion
 	}
 

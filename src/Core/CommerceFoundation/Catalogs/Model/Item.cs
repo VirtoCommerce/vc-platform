@@ -213,7 +213,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
         [DataMember]
         [StringLength(64)]
         [Required]
-		//[CustomValidation(typeof(Item), "ValidateItemCode", ErrorMessage = "Code can't contain spaces and special characters")]
+		[CustomValidation(typeof(Item), "ValidateItemCode", ErrorMessage = @"Code can't contain $+;=%{}[]|\/@ ~#!^*&()?:'<>, characters")]
         public string Code
         {
             get
@@ -339,9 +339,9 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 				return new ValidationResult("Code can't be empty");
 			}
 
-			string invalidNameCharacters = @"\/@ ~#!^*&()?:'<>,";
+			const string invalidCodeCharacters = @"$+;=%{}[]|\/@ ~#!^*&()?:'<>,";
 
-			if (value.IndexOfAny(invalidNameCharacters.ToCharArray()) > -1)
+			if (value.IndexOfAny(invalidCodeCharacters.ToCharArray()) > -1)
 			{
 				return new ValidationResult((@"Code must be valid"));
 			}

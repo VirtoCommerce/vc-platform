@@ -1,4 +1,6 @@
-﻿using System;
+﻿#region Usings
+
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -21,6 +23,8 @@ using VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Interfaces;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
 using catalogModel = VirtoCommerce.Foundation.Catalogs.Model;
+
+#endregion
 
 namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementations
 {
@@ -418,7 +422,23 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			}
 			else
 			{
-				InnerItemCatalogLanguages = new List<string> { _parentCatalog.DefaultLanguage };
+				using (var appConfigRepository = _appConfigRepositoryFactory.GetRepositoryInstance())
+				{
+					var languages = appConfigRepository.Settings.Where(s => s.Name == "Languages").Expand(x => x.SettingValues).First().SettingValues;
+
+					InnerItemCatalogLanguages = new List<string>();
+					if (languages.Any())
+					{
+						foreach (var settingValue in languages)
+						{
+							InnerItemCatalogLanguages.Add(settingValue.ToString());
+						}
+					}
+					else
+					{
+						InnerItemCatalogLanguages.Add(_parentCatalog.DefaultLanguage);
+					}
+				}
 			}
 
 			OnUIThread(() =>
