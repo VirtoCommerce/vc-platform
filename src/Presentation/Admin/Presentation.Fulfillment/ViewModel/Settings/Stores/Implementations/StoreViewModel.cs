@@ -132,6 +132,9 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 
 		protected override bool IsValidForSave()
 		{
+			if (SeoStepViewModel != null)
+				return InnerItem.Validate() && SeoStepViewModel.IsValid;
+
 			return InnerItem.Validate();
 		}
 
@@ -194,6 +197,12 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 				OriginalItem.InjectFrom<CloneInjection>(InnerItem);
 				_parent.RefreshItem(OriginalItem);
 			}
+
+			if (SeoStepViewModel != null)
+			{
+				if (SeoStepViewModel.CurrentSeoKeyword != null)
+					SeoStepViewModel.UpdateSeoKeywords();
+			}
 		}
 
 		protected override void SetSubscriptionUI()
@@ -234,6 +243,12 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 				{
 					PaymentsStepViewModel.AvailableStorePaymentGateways.ForEach(x => x.PropertyChanged += ViewModel_PropertyChanged);
 				}
+			}
+
+			if (SeoStepViewModel != null)
+			{
+				if (SeoStepViewModel.SeoKeywords != null)
+					SeoStepViewModel.SeoKeywords.ForEach(keyword => keyword.PropertyChanged += ViewModel_PropertyChanged);				
 			}
 		}
 
@@ -276,6 +291,12 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 					PaymentsStepViewModel.AvailableStorePaymentGateways.ForEach(x => x.PropertyChanged -= ViewModel_PropertyChanged);
 				}
 			}
+
+			if (SeoStepViewModel != null)
+			{
+				if (SeoStepViewModel.SeoKeywords != null)
+					SeoStepViewModel.SeoKeywords.ForEach(keyword => keyword.PropertyChanged -= ViewModel_PropertyChanged);
+			}
 		}
 
 		#endregion
@@ -289,7 +310,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 				bool result = false;
 
 				result = InnerItem.Validate(false) && !string.IsNullOrEmpty(InnerItem.Name);
-
+				
 				return result;
 			}
 		}

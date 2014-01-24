@@ -3,6 +3,7 @@ using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Wizard;
 using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Wizard.Implementations;
 using VirtoCommerce.Foundation.Stores.Model;
+using VirtoCommerce.Foundation.AppConfig.Model;
 
 namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Wizard.Interfaces
 {
@@ -17,6 +18,9 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 
 	public interface IStoreSeoStepViewModel : IWizardStep
 	{
+		List<SeoUrlKeyword> SeoKeywords { get; }
+		SeoUrlKeyword CurrentSeoKeyword { get; }
+		void UpdateSeoKeywords();
 	}
 
 	public interface IStoreLocalizationStepViewModel : IWizardStep

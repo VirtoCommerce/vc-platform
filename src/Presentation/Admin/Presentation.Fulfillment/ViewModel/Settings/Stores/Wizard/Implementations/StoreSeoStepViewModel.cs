@@ -12,6 +12,8 @@ using VirtoCommerce.Foundation.Stores.Model;
 using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Implementations;
 using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Wizard.Interfaces;
 using Omu.ValueInjecter;
+using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Interfaces;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
 
 namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Wizard.Implementations
 {
@@ -29,8 +31,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 			_appConfigRepositoryFactory = appConfigRepositoryFactory;
 			SeoLocalesFilterCommand = new DelegateCommand<string>(RaiseSeoLocalesFilter);
 		}
-
-		
+				
 		#region IWizardStep Members
 
 		public override bool IsValid
@@ -148,10 +149,9 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 		void CurrentSeoKeyword_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
 		{
 			_seoModified = true;
-			OnViewModelPropertyChangedUI(null, null);
 		}
 
-		private void UpdateSeoKeywords()
+		public void UpdateSeoKeywords()
 		{
 			//if any SEO keyword modified update or add it
 			if (_seoModified)
@@ -195,6 +195,8 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 
 		protected override void InitializePropertiesForViewing()
 		{
+			InnerItemStoreLanguages = InnerItem.Languages.Select(x => x.LanguageCode).ToList();
+
 			using (var _appConfigRepository = _appConfigRepositoryFactory.GetRepositoryInstance())
 			{
 				SeoKeywords =
@@ -202,10 +204,18 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 						keyword =>
 						keyword.KeywordValue.Equals(InnerItem.StoreId) && keyword.KeywordType.Equals((int)SeoUrlKeywordTypes.Store))
 										.ToList();
+
 			}
 
-			InnerItemStoreLanguages = InnerItem.Languages.Select(x => x.LanguageCode).ToList();
-
+			InnerItemStoreLanguages.ForEach(locale => 
+				{
+					if (!SeoKeywords.Any(keyword => keyword.Language.Equals(locale)))
+					{
+						var newSeoKeyword = new SeoUrlKeyword { Language = locale, IsActive = true, KeywordType = (int)SeoUrlKeywordTypes.Store, KeywordValue = InnerItem.StoreId, Created = DateTime.UtcNow };
+						SeoKeywords.Add(newSeoKeyword);
+					}
+				});
+			
 			// filter values by locale
 			SeoLocalesFilterCommand.Execute(InnerItem.DefaultLanguage);
 		}
