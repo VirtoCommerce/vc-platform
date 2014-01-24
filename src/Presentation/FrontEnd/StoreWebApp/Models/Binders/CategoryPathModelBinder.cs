@@ -23,7 +23,7 @@ namespace VirtoCommerce.Web.Models.Binders
                     var lang = routeData.Values.ContainsKey(Constants.Language)
                         ? routeData.Values[Constants.Language] as string
                         : null;
-                    sp.Url = SettingsHelper.SeoDecodeMultiVal(category, SeoUrlKeywordTypes.Category, lang);
+                    sp.Url = SettingsHelper.SeoDecode(category, SeoUrlKeywordTypes.Category, lang);
                 }
             }
             return sp;

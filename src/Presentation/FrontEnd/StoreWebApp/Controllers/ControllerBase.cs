@@ -6,6 +6,7 @@ using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Web.Client.Extensions;
 using VirtoCommerce.Web.Client.Extensions.Filters;
 using VirtoCommerce.Web.Client.Extensions.Routing;
+using VirtoCommerce.Web.Client.Extensions.Routing.Routes;
 using VirtoCommerce.Web.Client.Helpers;
 using VirtoCommerce.Web.Models;
 
@@ -41,9 +42,7 @@ namespace VirtoCommerce.Web.Controllers
 	    {
 	        if (!filterContext.Canceled && filterContext.Result != null && !ControllerContext.IsChildAction)
 	        {
-                FillViewBagWithMetadata(filterContext, Constants.Store);
-                FillViewBagWithMetadata(filterContext, Constants.Category);
-                FillViewBagWithMetadata(filterContext, Constants.Item);
+	            FillViewBagWithMetadata(filterContext);
 	        }
 
             //Process messages
@@ -78,28 +77,40 @@ namespace VirtoCommerce.Web.Controllers
 	        return string.Format("{0}_messages", type);
 	    }
 
-	    protected virtual void FillViewBagWithMetadata(ActionExecutedContext filterContext, string routeKey)
+	    protected virtual bool FillViewBagWithMetadata(ActionExecutedContext filterContext)
 	    {
-            if (filterContext.RouteData.Values.ContainsKey(routeKey))
-            {
-                var routeValue = filterContext.RouteData.Values[routeKey] as string;
-                if (!String.IsNullOrEmpty(routeValue))
-                {
-                    SeoUrlKeywordTypes type;
-                    if (Enum.TryParse(routeKey, true, out type))
-                    {
-                        var keyword = SettingsHelper.SeoKeyword(routeValue, type, byValue: false);
+            var storeRoute = filterContext.RouteData.Route as StoreRoute;
 
-                        if (keyword != null)
-                        {
-                            ViewBag.MetaDescription = keyword.MetaDescription;
-                            ViewBag.Title = keyword.Title;
-                            ViewBag.MetaKeywords = keyword.MetaKeywords;
-                            ViewBag.ImageAltDescription = keyword.ImageAltDescription;
-                        }
-                    }
-                }
-            }
+	        if (storeRoute != null)
+	        {
+	            string routeKey = storeRoute.GetMainRouteKey();
+
+	            if (filterContext.RouteData.Values.ContainsKey(routeKey))
+	            {
+	                var routeValue = filterContext.RouteData.Values[routeKey] as string;
+	                if (!String.IsNullOrEmpty(routeValue))
+	                {
+	                    SeoUrlKeywordTypes type;
+	                    if (Enum.TryParse(routeKey, true, out type))
+	                    {
+	                        var lastIsVal = routeValue.Split(new[] {'/'}, StringSplitOptions.RemoveEmptyEntries).Last();
+	                        var keyword = SettingsHelper.SeoKeyword(lastIsVal, type, byValue: false);
+
+	                        if (keyword != null)
+	                        {
+	                            ViewBag.MetaDescription = keyword.MetaDescription;
+	                            ViewBag.Title = keyword.Title;
+	                            ViewBag.MetaKeywords = keyword.MetaKeywords;
+	                            ViewBag.ImageAltDescription = keyword.ImageAltDescription;
+
+	                            return true;
+	                        }
+	                    }
+	                }
+	            }
+	        }
+
+	        return false;
 	    }
 
 	}

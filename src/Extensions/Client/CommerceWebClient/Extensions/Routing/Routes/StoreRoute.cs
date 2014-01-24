@@ -231,7 +231,8 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
 
             //Decode route value
             var store = routeData.Values[Constants.Store].ToString();
-            routeData.Values[Constants.Store] = SettingsHelper.SeoDecode(store, SeoUrlKeywordTypes.Store, routeData.Values[Constants.Language].ToString());
+            routeData.Values[Constants.Store] = SettingsHelper.SeoDecode(store, SeoUrlKeywordTypes.Store, 
+                routeData.Values.ContainsKey(Constants.Language) ? routeData.Values[Constants.Language] as string : null);
 
             return routeData;
         }
@@ -239,11 +240,17 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
         protected virtual void EncodeVirtualPath(RequestContext requestContext, RouteValueDictionary values, SeoUrlKeywordTypes type)
         {
             string routeValueKey = type.ToString().ToLower();
+            var language = values.ContainsKey(Constants.Language) ? values[Constants.Language] as string : null;
 
             if (values.ContainsKey(routeValueKey) && values[routeValueKey] != null)
             {
-                values[routeValueKey] = SettingsHelper.SeoEncodeMultiVal(values[routeValueKey].ToString(), type);
+                values[routeValueKey] = SettingsHelper.SeoEncode(values[routeValueKey].ToString(), type, language);
             }
+        }
+
+        public virtual string GetMainRouteKey()
+        {
+            return Constants.Store;
         }
 
         protected bool ProcessConstraints(HttpContextBase httpContext, RouteValueDictionary values, RouteDirection routeDirection)

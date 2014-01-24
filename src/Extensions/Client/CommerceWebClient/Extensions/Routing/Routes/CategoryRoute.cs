@@ -47,7 +47,8 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
                 else
                 {
                     var category = routeData.Values[Constants.Category].ToString();
-                    routeData.Values[Constants.Category] = SettingsHelper.SeoDecodeMultiVal(category, SeoUrlKeywordTypes.Category, routeData.Values[Constants.Language].ToString());
+                    routeData.Values[Constants.Category] = SettingsHelper.SeoDecode(category, SeoUrlKeywordTypes.Category,
+                        routeData.Values.ContainsKey(Constants.Language) ? routeData.Values[Constants.Language] as string : null);
                 }
             }
 
@@ -91,7 +92,8 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
             if (string.IsNullOrEmpty(childCategryEncoded))
                 return null;
 
-            var childCategryCode = SettingsHelper.SeoDecode(childCategryEncoded, SeoUrlKeywordTypes.Category);
+            var childCategryCode = SettingsHelper.SeoDecode(childCategryEncoded, SeoUrlKeywordTypes.Category, 
+                values.ContainsKey(Constants.Language) ? values[Constants.Language] as string : null);
             var outline =
                 new BrowsingOutline(
                     CartHelper.CatalogOutlineBuilder.BuildCategoryOutline(
@@ -99,6 +101,12 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
                         CartHelper.CatalogClient.GetCategory(childCategryCode)));
 
             return outline.ToString();
+        }
+
+
+        public override string GetMainRouteKey()
+        {
+            return Constants.Category;
         }
 
     }

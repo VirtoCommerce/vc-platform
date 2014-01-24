@@ -28,7 +28,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Constraints
             }
 
             var encoded = values[parameterName].ToString();
-            var decoded = SettingsHelper.SeoDecodeMultiVal(encoded, SeoUrlKeywordTypes.Category, 
+            var decoded = SettingsHelper.SeoDecode(encoded, SeoUrlKeywordTypes.Category, 
                 values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : null);
 
             var childCategryCode = decoded.Split(new[] {'/'}).Last();

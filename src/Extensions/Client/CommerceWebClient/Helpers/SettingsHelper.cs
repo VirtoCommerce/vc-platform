@@ -65,16 +65,16 @@ namespace VirtoCommerce.Web.Client.Helpers
         /// <param name="type">The type.</param>
         /// <param name="language">The language.</param>
         /// <returns></returns>
-        public static string SeoEncode(string value, SeoUrlKeywordTypes type, string language = null)
+        public static string SeoEncode(string value, SeoUrlKeywordTypes type, string language = null, char seperator = '/')
+        {
+            var encoded = value.Split(new[] { seperator }).Select(x => SeoEncodeInternal(x, type, language)).ToList();
+            return string.Join(seperator.ToString(CultureInfo.InvariantCulture), encoded);
+        }
+
+        private static string SeoEncodeInternal(string value, SeoUrlKeywordTypes type, string language = null)
         {
             var seoKeyword = SeoKeyword(value, type, language);
             return seoKeyword != null ? seoKeyword.Keyword : value;
-        }
-
-        public static string SeoEncodeMultiVal(string value, SeoUrlKeywordTypes type, string language = null, char seperator = '/')
-        {
-            var encoded = value.Split(new[] { seperator }).Select(x => SeoEncode(x, type, language)).ToList();
-            return string.Join(seperator.ToString(CultureInfo.InvariantCulture), encoded);
         }
 
         /// <summary>
@@ -84,16 +84,16 @@ namespace VirtoCommerce.Web.Client.Helpers
         /// <param name="type">The type.</param>
         /// <param name="language">The language.</param>
         /// <returns></returns>
-        public static string SeoDecode(string keyword, SeoUrlKeywordTypes type, string language = null)
+        public static string SeoDecode(string keyword, SeoUrlKeywordTypes type, string language = null, char seperator = '/')
         {
-            var seoKeyword = SeoKeyword(keyword, type, language, false);
-            return seoKeyword !=null ? seoKeyword.KeywordValue : keyword;
+            var decoded = keyword.Split(new[] { seperator }).Select(x => SeoDecodeInternal(x, type, language)).ToList();
+            return string.Join(seperator.ToString(CultureInfo.InvariantCulture), decoded);
         }
 
-        public static string SeoDecodeMultiVal(string keyword, SeoUrlKeywordTypes type, string language = null, char seperator = '/')
+        private static string SeoDecodeInternal(string keyword, SeoUrlKeywordTypes type, string language = null)
         {
-            var decoded = keyword.Split(new[] { seperator }).Select(x =>SeoDecode(x, type,language)).ToList();
-            return string.Join(seperator.ToString(CultureInfo.InvariantCulture), decoded);
+            var seoKeyword = SeoKeyword(keyword, type, language, false);
+            return seoKeyword != null ? seoKeyword.KeywordValue : keyword;
         }
 
 

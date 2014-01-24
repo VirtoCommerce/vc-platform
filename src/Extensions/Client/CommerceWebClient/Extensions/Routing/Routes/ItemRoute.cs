@@ -45,7 +45,8 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
                 {
                     //Decode the value
                     var item = routeData.Values[Constants.Item].ToString();
-                    routeData.Values[Constants.Item] = SettingsHelper.SeoDecode(item, SeoUrlKeywordTypes.Item, routeData.Values[Constants.Language].ToString());
+                    routeData.Values[Constants.Item] = SettingsHelper.SeoDecode(item, SeoUrlKeywordTypes.Item, 
+                        routeData.Values.ContainsKey(Constants.Language) ? routeData.Values[Constants.Language] as string : null);
                 }
             }
             return routeData;
@@ -65,7 +66,8 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
             if (string.IsNullOrEmpty(itemEncoded))
                 return null;
 
-            var itemCode = SettingsHelper.SeoDecode(itemEncoded, SeoUrlKeywordTypes.Item);
+            var itemCode = SettingsHelper.SeoDecode(itemEncoded, SeoUrlKeywordTypes.Item, 
+                values.ContainsKey(Constants.Language) ? values[Constants.Language] as string : null);
 
             var item = CartHelper.CatalogClient.GetItem(itemCode, bycode: true);
 
@@ -78,6 +80,11 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
             var outline = item.GetItemCategoryRouteValue();
 
             return outline;
+        }
+
+        public override string GetMainRouteKey()
+        {
+            return Constants.Item;
         }
     }
 }

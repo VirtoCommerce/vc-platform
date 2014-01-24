@@ -27,7 +27,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Constraints
             }
 
             var encoded = values[parameterName].ToString();
-            var decoded = SettingsHelper.SeoDecode(encoded, SeoUrlKeywordTypes.Item, values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : null);
+            var decoded = SettingsHelper.SeoDecode(encoded, SeoUrlKeywordTypes.Item, values.ContainsKey(Constants.Language) ? values[Constants.Language] as string : null);
 
             var item = CartHelper.CatalogClient.GetItem(decoded, bycode: true);
 
@@ -40,7 +40,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Constraints
             if (values.ContainsKey(Constants.Category))
             {
                 encoded = values[Constants.Category].ToString();
-                decoded = SettingsHelper.SeoDecodeMultiVal(encoded, SeoUrlKeywordTypes.Category, values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : null);
+                decoded = SettingsHelper.SeoDecode(encoded, SeoUrlKeywordTypes.Category, values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : null);
 
                 return item.GetItemCategoryBrowsingOutlines().All(outline => ValidateCategoryPath(outline, decoded));
             }
