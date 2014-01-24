@@ -213,7 +213,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
         [DataMember]
         [StringLength(64)]
         [Required]
-		[CustomValidation(typeof(Item), "ValidateItemCode", ErrorMessage = "Code can't contain spaces and special characters")]
+		//[CustomValidation(typeof(Item), "ValidateItemCode", ErrorMessage = "Code can't contain spaces and special characters")]
         public string Code
         {
             get
