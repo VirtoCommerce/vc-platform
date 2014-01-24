@@ -313,7 +313,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			}
 
 			//seo is valid if was modified, seo keyword is not empty, or if all properties ar empty
-			var allSeoValid = !_seoModified || SeoKeywords.All(keyword => !string.IsNullOrEmpty(keyword.Keyword) || (string.IsNullOrEmpty(keyword.ImageAltDescription) && string.IsNullOrEmpty(keyword.Title) && string.IsNullOrEmpty(keyword.MetaDescription)));
+			var allSeoValid = !_seoModified || SeoKeywords.All(keyword => keyword.Validate() || (string.IsNullOrEmpty(keyword.Keyword) && string.IsNullOrEmpty(keyword.ImageAltDescription) && string.IsNullOrEmpty(keyword.Title) && string.IsNullOrEmpty(keyword.MetaDescription)));
 
 			return result && isPropertyValuesValid && isCodeValid && allSeoValid;
 		}
@@ -340,10 +340,11 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 				}
 			}
 
-			UpdateSeoKeywords();
 			// just basic properties inject is enough. Injecting collections can generate repository errors.
 			OriginalItem.InjectFrom(InnerItem);
 			_parentTreeVM.RefreshUI();
+
+			UpdateSeoKeywords();
 		}
 
 		protected override RefusedConfirmation CancelConfirm()
@@ -569,25 +570,27 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 						{
 							if (!string.IsNullOrEmpty(keyword.Keyword))
 							{
-								var originalKeyword =
+								var originalKeywords =
 									appConfigRepository.SeoUrlKeywords.Where(
 										seoKeyword =>
-										seoKeyword.SeoUrlKeywordId.Equals(keyword.SeoUrlKeywordId)).FirstOrDefault();
+										keyword.SeoUrlKeywordId == seoKeyword.SeoUrlKeywordId);
 
-								if (originalKeyword != null)
+								if (originalKeywords.Count() > 0)
 								{
+									var originalKeyword = originalKeywords.FirstOrDefault();
 									originalKeyword.InjectFrom(keyword);
 									appConfigRepository.Update(originalKeyword);
+									appConfigRepository.UnitOfWork.Commit();
 								}
 								else
 								{
 									var addKeyword = new SeoUrlKeyword();
 									addKeyword.InjectFrom(keyword);
 									appConfigRepository.Add(addKeyword);
+									appConfigRepository.UnitOfWork.Commit();
 								}
 							}
 						});
-					appConfigRepository.UnitOfWork.Commit();
 				}
 				_seoModified = false;
 			}

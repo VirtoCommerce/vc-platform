@@ -1,6 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Data.Services.Common;
 using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
 using VirtoCommerce.Foundation.Frameworks;
 
 namespace VirtoCommerce.Foundation.AppConfig.Model
@@ -57,6 +59,7 @@ namespace VirtoCommerce.Foundation.AppConfig.Model
         [StringLength(255)]
         [DataMember]
         [Required]
+		[CustomValidation(typeof(SeoUrlKeyword), "ValidateKeywordUrl", ErrorMessage = "Keyword must be valid URL")]
         public string Keyword
         {
             get { return _keyword; }
@@ -168,5 +171,26 @@ namespace VirtoCommerce.Foundation.AppConfig.Model
             get { return _imageAltDescription; }
             set { SetValue(ref _imageAltDescription, () => ImageAltDescription, value); }
         }
+
+		public static ValidationResult ValidateKeywordUrl(string value, ValidationContext context)
+		{
+			if (value == null || string.IsNullOrEmpty(value))
+			{
+				return new ValidationResult("Keyword can't be empty");
+			}
+
+			//var regex = new Regex(@"^([a-zA-Z0-9\~\!\@\#\$\%\^\&\*\(\)_\-\=\+\\\/\?\.\:\;\'\,]*)?$");
+
+			string invalidNameCharacters = @"\/@ ~#!^*&()?:'<>,";
+
+			if (value.IndexOfAny(invalidNameCharacters.ToCharArray()) > -1)
+			{
+				return new ValidationResult((@"Keyword must be valid URL"));
+			}
+			else
+			{
+				return ValidationResult.Success;
+			}
+		}
     }
 }

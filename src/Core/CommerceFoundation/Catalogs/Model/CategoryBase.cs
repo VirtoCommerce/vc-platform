@@ -41,6 +41,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 		[Required(ErrorMessage = "Field 'Category Code' is required.")]
 		[DataMember]
         [StringLength(64)]
+		[CustomValidation(typeof(CategoryBase), "ValidateCategoryCode", ErrorMessage = "Code can't contain spaces and special characters")]
 		public string Code
 		{
 			get
@@ -141,6 +142,25 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 		public override string ToString()
 		{
 			return CategoryId;
+		}
+
+		public static ValidationResult ValidateCategoryCode(string value, ValidationContext context)
+		{
+			if (value == null || string.IsNullOrEmpty(value))
+			{
+				return new ValidationResult("Code can't be empty");
+			}
+
+			string invalidNameCharacters = @"\/@ ~#!^*&()?:'<>,";
+
+			if (value.IndexOfAny(invalidNameCharacters.ToCharArray()) > -1)
+			{
+				return new ValidationResult((@"Code must be valid"));
+			}
+			else
+			{
+				return ValidationResult.Success;
+			}
 		}
 	}
 }
