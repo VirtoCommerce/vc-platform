@@ -10,12 +10,14 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Constraints
     /// <summary>
     /// Route constraint checks if language is correct
     /// </summary>
-    public class LanguageRouteConstraint : IRouteConstraint
+    public class LanguageRouteConstraint : BaseRouteConstraint
     {
-        public bool Match(HttpContextBase httpContext, Route route, string parameterName, RouteValueDictionary values, RouteDirection routeDirection)
+        protected override bool IsMatch(HttpContextBase httpContext, Route route, string parameterName, RouteValueDictionary values, RouteDirection routeDirection)
         {
-            if (!values.ContainsKey(parameterName) || values[parameterName] as string == null)
+            if (!base.IsMatch(httpContext, route, parameterName, values, routeDirection))
+            {
                 return false;
+            }
 
             //First check that language matches regex pattern
             object parameterValue; 

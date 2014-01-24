@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Routing;
@@ -64,7 +65,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
                 }
                 else
                 {
-                    ModifyVirtualPath(requestContext, values, SeoUrlKeywordTypes.Store);
+                    EncodeVirtualPath(requestContext, values, SeoUrlKeywordTypes.Store);
                 }
 
 
@@ -82,13 +83,22 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
 
         public override RouteData GetRouteData(HttpContextBase httpContext)
         {
+            //Check if MVC can resolve route by itself
             var routeData = base.GetRouteData(httpContext);
 
+            //Otherwise lets resolve ourselves
             if (routeData == null)
             {
                 var requestPath = httpContext.Request.AppRelativeCurrentExecutionFilePath.Substring(2) +
                                   httpContext.Request.PathInfo;
                 var pathSegments = requestPath.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+
+                //Store route can only have up to 2 segments
+                //Other routes have unlimited number of segments due to category path
+                if (GetType() == typeof (StoreRoute) && pathSegments.Length > Url.Split(new[] {'/'}).Length)
+                {
+                    return null;
+                }
 
                 var values = new RouteValueDictionary();
 
@@ -139,40 +149,45 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
                         values.Add(Constants.Store, StoreHelper.CustomerSession.StoreId);
                     }
 
-                    //Shift remaining route values
-                    if (pathSegments.Length == 1 && !languageFound && !storeFound)
+                    int startIndex;
+                    //Both lang and store not found
+                    if (!languageFound & !storeFound)
                     {
-                        //there was one segment not mapped to lang or store
-                        values.Add(Constants.Category, pathSegments[0]);
-
+                        startIndex = 0;
                     }
-                    else if (pathSegments.Length >= 2)
+                    //either lang or store found
+                    else if (languageFound ^ storeFound)
                     {
-                        //Both lang and store not found
-                        if (!languageFound & !storeFound)
+                        startIndex = 1;
+                    }
+                    else
+                    {
+                        startIndex = 2;
+                    }
+
+                    if (pathSegments.Length > startIndex)
+                    {
+                        var categoryParseEndIndex = pathSegments.Length;
+
+                        if (GetType() == typeof(ItemRoute))
                         {
-                            values.Add(Constants.Category, pathSegments[0]);
-                            values.Add(Constants.Item, pathSegments[1]);
+                            categoryParseEndIndex = pathSegments.Length - 1;
+                            //Last must be item code
+                            values.Add(Constants.Item, pathSegments[categoryParseEndIndex]);
                         }
-                        //etiher lang or store found
-                        else if (languageFound ^ storeFound)
+                        //Parse category path
+                        if (categoryParseEndIndex > startIndex)
                         {
-                            values.Add(Constants.Category, pathSegments[1]);
-                            if (pathSegments.Length > 2)
+                            var categoryPath = string.Empty;
+                            for (var i = startIndex; i < categoryParseEndIndex; i++)
                             {
-                                values.Add(Constants.Item, pathSegments[2]);
+                                if (!string.IsNullOrEmpty(categoryPath))
+                                {
+                                    categoryPath += "/";
+                                }
+                                categoryPath += pathSegments[i];
                             }
-                        }
-                        else
-                        {
-                            if (pathSegments.Length > 2)
-                            {
-                                values.Add(Constants.Category, pathSegments[2]);
-                            }
-                            if (pathSegments.Length > 3)
-                            {
-                                values.Add(Constants.Item, pathSegments[3]);
-                            }
+                            values.Add(Constants.Category, categoryPath);
                         }
                     }
 
@@ -221,25 +236,13 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
             return routeData;
         }
 
-        protected void ModifyVirtualPath(RequestContext requestContext, RouteValueDictionary values, SeoUrlKeywordTypes type)
+        protected virtual void EncodeVirtualPath(RequestContext requestContext, RouteValueDictionary values, SeoUrlKeywordTypes type)
         {
             string routeValueKey = type.ToString().ToLower();
 
             if (values.ContainsKey(routeValueKey) && values[routeValueKey] != null)
             {
-                values[routeValueKey] = SettingsHelper.SeoEncode(values[routeValueKey].ToString(), type);
-            }
-            else if (requestContext.RouteData.Values.ContainsKey(routeValueKey))
-            {
-                var valueEncoded = SettingsHelper.SeoEncode(requestContext.RouteData.Values[routeValueKey].ToString(), type);
-                if (!values.ContainsKey(routeValueKey))
-                {
-                    values.Add(routeValueKey, valueEncoded);
-                }
-                else
-                {
-                    values[routeValueKey] = valueEncoded;
-                }
+                values[routeValueKey] = SettingsHelper.SeoEncodeMultiVal(values[routeValueKey].ToString(), type);
             }
         }
 

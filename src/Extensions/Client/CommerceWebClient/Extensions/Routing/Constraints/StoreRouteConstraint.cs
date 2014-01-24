@@ -17,7 +17,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Constraints
     /// <summary>
     /// Route constraint checks if store exists in database
     /// </summary>
-    public class StoreRouteConstraint : IRouteConstraint
+    public class StoreRouteConstraint : BaseRouteConstraint
     {
         /// <summary>
         /// Gets the catalog client.
@@ -28,14 +28,16 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Constraints
             get { return DependencyResolver.Current.GetService<StoreClient>(); }
         }
 
-        public bool Match(HttpContextBase httpContext, Route route, string parameterName, RouteValueDictionary values, RouteDirection routeDirection)
+        protected override bool IsMatch(HttpContextBase httpContext, Route route, string parameterName, RouteValueDictionary values, RouteDirection routeDirection)
         {
             //Url generation should allow empty store value
+
             if (routeDirection == RouteDirection.UrlGeneration)
             {
                 return true;
             }
-            if (!values.ContainsKey(parameterName) || values[parameterName] as string ==  null)
+
+            if (!base.IsMatch(httpContext, route, parameterName, values, routeDirection))
             {
                 return false;
             }

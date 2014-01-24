@@ -358,6 +358,7 @@
     </Compile>
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\BannerModel.cs" />
+    <Compile Include="Models\Binders\CategoryPathModelBinder.cs" />
     <Compile Include="Models\Binders\SearchParametersBinder.cs" />
     <Compile Include="Models\CartModel.cs" />
     <Compile Include="Models\AddressCartModel.cs" />

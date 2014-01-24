@@ -40,7 +40,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing
         {
             get
             {
-                return string.Format("{{{0}}}/{{{1}}}/{{{2}}}/{{{3}}}", Language, Store, Category, Item);
+                return string.Format("{0}/{{{1}}}", CategoryRoute, Item);
             }
         }
 
@@ -54,7 +54,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing
         {
             get
             {
-                return string.Format("{{{0}}}/{{{1}}}/{{{2}}}", Language, Store, Category);
+                return string.Format("{0}/{{{1}}}", StoreRoute, Category);
             }
         }
 

@@ -185,6 +185,7 @@
     <Compile Include="Extensions\RedirectRouteExtensions.cs" />
     <Compile Include="Extensions\RouteValueDictionaryExtensions.cs" />
     <Compile Include="Extensions\Routing\Constants.cs" />
+    <Compile Include="Extensions\Routing\Constraints\BaseRouteConstraint.cs" />
     <Compile Include="Extensions\Routing\Constraints\CategoryRouteConstraint.cs" />
     <Compile Include="Extensions\Routing\Constraints\LanguageRouteConstraint.cs" />
     <Compile Include="Extensions\Routing\Constraints\StoreRouteConstraint.cs" />
