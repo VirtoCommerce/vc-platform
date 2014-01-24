@@ -831,10 +831,14 @@
 									</MultiBinding>
 								</TextBlock.Text>
 								<TextBlock.ToolTip>
-									<MultiBinding StringFormat="http://{0}/store/{1}">
-										<Binding Path="CurrentSeoKeyword.Language" />
-										<Binding Path="CurrentSeoKeyword.Keyword" />
-									</MultiBinding>
+									<TextBlock Style="{StaticResource Virto_Base_TextBlock_Watermark_Style}">
+										<TextBlock.Text>
+											<MultiBinding StringFormat="http://{0}/store/category/{1}">
+												<Binding Path="CurrentSeoKeyword.Language" />
+												<Binding Path="CurrentSeoKeyword.Keyword" />
+											</MultiBinding>
+										</TextBlock.Text>
+									</TextBlock>
 								</TextBlock.ToolTip>
 							</TextBlock>
 							<core_controls:WatermarkedTextBox Margin="0,6,0,0" Text="{Binding CurrentSeoKeyword.Keyword, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
