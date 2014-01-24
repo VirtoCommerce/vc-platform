@@ -320,6 +320,26 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 		protected override void AfterSaveChangesUI()
 		{
+			//if item code changed - need to update SEO KeywordValue property, if any
+			if (!OriginalItem.Code.Equals(InnerItem.Code))
+			{
+				if (SeoKeywords.Any(kw => !string.IsNullOrEmpty(kw.Keyword)))
+				{
+					if (CurrentSeoKeyword != null)
+						CurrentSeoKeyword.PropertyChanged -= CurrentSeoKeyword_PropertyChanged;
+
+					_seoModified = true;
+					SeoKeywords.ForEach(keyword =>
+					{
+						if (!string.IsNullOrEmpty(keyword.Keyword))
+							keyword.KeywordValue = InnerItem.Code;
+					});
+
+					if (CurrentSeoKeyword != null)
+						CurrentSeoKeyword.PropertyChanged -= CurrentSeoKeyword_PropertyChanged;
+				}
+			}
+
 			UpdateSeoKeywords();
 			// just basic properties inject is enough. Injecting collections can generate repository errors.
 			OriginalItem.InjectFrom(InnerItem);
@@ -552,8 +572,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 								var originalKeyword =
 									appConfigRepository.SeoUrlKeywords.Where(
 										seoKeyword =>
-										seoKeyword.KeywordValue.Equals(keyword.KeywordValue) && seoKeyword.Language.Equals(keyword.Language))
-									                   .FirstOrDefault();
+										seoKeyword.SeoUrlKeywordId.Equals(keyword.SeoUrlKeywordId)).FirstOrDefault();
 
 								if (originalKeyword != null)
 								{
