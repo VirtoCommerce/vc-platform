@@ -41,7 +41,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 		[Required(ErrorMessage = "Field 'Category Code' is required.")]
 		[DataMember]
         [StringLength(64)]
-		[CustomValidation(typeof(CategoryBase), "ValidateCategoryCode", ErrorMessage = "Code can't contain spaces and special characters")]
+		//[CustomValidation(typeof(CategoryBase), "ValidateCategoryCode", ErrorMessage = "Code can't contain spaces and special characters")]
 		public string Code
 		{
 			get
