@@ -160,7 +160,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 						{
 							var originalKeyword =
 								appConfigRepository.SeoUrlKeywords.Where(
-									seoKeyword =>
+									seoKeyword => true &&
 									seoKeyword.SeoUrlKeywordId.Equals(keyword.SeoUrlKeywordId))
 												   .FirstOrDefault();
 
@@ -183,6 +183,13 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 			}
 		}
 
+		private void ResetProperties()
+		{
+			_useCustomImageText = false;
+			_useCustomMetaDescription = false;
+			_useCustomTitle = false;
+		}
+
 		private bool _seoModified;
 
 		private string _filterSeoLanguage;
@@ -196,7 +203,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 			{
 				_filterSeoLanguage = value;
 				OnPropertyChanged();
-
+				ResetProperties();
 				OnPropertyChanged("UseCustomTitle");
 				OnPropertyChanged("UseCustomMetaDescription");
 				OnPropertyChanged("UseCustomImageText");
