@@ -49,7 +49,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Wizard
 		protected CategoryStepModel stepModel;
 
 		protected CategoryStepViewModel(IRepositoryFactory<ICatalogRepository> repositoryFactory, IViewModelsFactory<IPropertyValueBaseViewModel> vmFactory, ICatalogEntityFactory entityFactory, CategoryStepModel itemModel)
-			: base(null, repositoryFactory, vmFactory, entityFactory, itemModel.InnerItem, itemModel.InnerItem.Catalog)
+			: base(repositoryFactory, vmFactory, entityFactory, itemModel.InnerItem, itemModel.InnerItem.Catalog)
 		{
 			stepModel = itemModel;
 		}

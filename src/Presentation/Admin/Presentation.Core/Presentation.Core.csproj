@@ -332,6 +332,7 @@
     <Compile Include="Infrastructure\IViewModelsFactory.cs" />
     <Compile Include="Infrastructure\Navigation\INavigationManager.cs" />
     <Compile Include="Infrastructure\NotifyPropertyChanged.cs" />
+    <Compile Include="Infrastructure\PropertyComparer.cs" />
     <Compile Include="Infrastructure\RefusedConfirmation.cs" />
     <Compile Include="Infrastructure\Converters\CurrencyConverter.cs" />
     <Compile Include="Infrastructure\Dialogs\InteractionDialogBase.cs" />
