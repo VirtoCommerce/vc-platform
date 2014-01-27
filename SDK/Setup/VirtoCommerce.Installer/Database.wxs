@@ -3,195 +3,195 @@
     <Fragment>
         <DirectoryRef Id="Resources">
             <Directory Id="dir8D6B39F6DA4B09BDE7B6638AC22AFDF2" Name="Database">
-                <Component Id="cmp030BD057B02EAE6F8E8AA6DE97AFE904" Guid="{1F514C78-8922-4ED8-8F7D-C57A59435B34}">
+                <Component Id="cmp030BD057B02EAE6F8E8AA6DE97AFE904" Guid="{E03BD476-7FBE-407F-B627-6D6CDCAC3097}">
                     <File Id="filC612D34499873D8E617D6E28E62D4A91" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\dblogin.sql" />
                 </Component>
                 <Directory Id="dir8F675AF2A42335768C63FB04A9170174" Name="AppConfig">
                     <Directory Id="dir636E1AA7FD378824C20532547D3A46B5" Name="Data">
-                        <Component Id="cmp49934FF17B7C2CD404273BC4539F49A0" Guid="{4023FDC1-92A5-46B8-9E6E-683B03160E4B}">
+                        <Component Id="cmp49934FF17B7C2CD404273BC4539F49A0" Guid="{3FD7757F-8EE7-49F4-96BB-C1C73E950B92}">
                             <File Id="fil7559F1F57F418D8848AD58AD9B766B43" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\AppConfig\Data\DisplayTemplateMapping.sql" />
                         </Component>
-                        <Component Id="cmp369AE496359936EAD0FD2C7C95A2706D" Guid="{516AD37D-F5C9-4C2E-8ADF-EA1357F08EE4}">
+                        <Component Id="cmp369AE496359936EAD0FD2C7C95A2706D" Guid="{54C1EC4C-047A-48E3-84D8-7E9D35DDAA73}">
                             <File Id="fil9BF0E8A5CE5E311CBA8F5C11D9C4EC68" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\AppConfig\Data\EmailTemplate.sql" />
                         </Component>
-                        <Component Id="cmp9BA6E90677968E09244D9B93E85D1AFF" Guid="{F504B08F-BF1B-40C7-8C48-117078B504FA}">
+                        <Component Id="cmp9BA6E90677968E09244D9B93E85D1AFF" Guid="{C4623791-DF07-44AA-AD13-5791A9ABE124}">
                             <File Id="fil8602B36901CB152B4C5AD16A8F691556" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\AppConfig\Data\EmailTemplateLanguage.sql" />
                         </Component>
-                        <Component Id="cmp808EAAA462BCD9905EB0987501BD92AC" Guid="{7C21761F-7303-430A-ABC5-908B5E2E4927}">
+                        <Component Id="cmp808EAAA462BCD9905EB0987501BD92AC" Guid="{4EC40FB7-76AA-4A01-8B01-AF80DBAB91C1}">
                             <File Id="fil34DC2C2B84BB697C31BB1706E8BC389A" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\AppConfig\Data\JobParameter.sql" />
                         </Component>
-                        <Component Id="cmp16EE537C00E93579088193A40E30E89E" Guid="{0D076FA8-09E3-45B6-9CED-060B11B644F8}">
+                        <Component Id="cmp16EE537C00E93579088193A40E30E89E" Guid="{FCDE39F4-B541-425E-8755-AD5854B116E4}">
                             <File Id="fil81509DD7E8EAEF9A062F63B19A9F199B" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\AppConfig\Data\Localization.sql" />
                         </Component>
-                        <Component Id="cmpC3826CEFDF3866332EA405D72DF93536" Guid="{70550BFB-4F06-435D-BFCF-FCA0F4C34577}">
+                        <Component Id="cmpC3826CEFDF3866332EA405D72DF93536" Guid="{30EEB981-87B4-47D0-A51A-A9F646F19661}">
                             <File Id="fil604B7CF3293EA03CD77789FF1CA38D77" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\AppConfig\Data\SeoUrlKeyword.sql" />
                         </Component>
-                        <Component Id="cmpFA450058E2A0A7B4B886D905A3131C0A" Guid="{158A3DF2-AEC7-4605-841D-64136D9AE868}">
+                        <Component Id="cmpFA450058E2A0A7B4B886D905A3131C0A" Guid="{100F7F8B-396B-4840-AF6F-2425CF4DDC42}">
                             <File Id="fil86A04712A271939D8A833FDD5D09AC41" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\AppConfig\Data\Setting.sql" />
                         </Component>
-                        <Component Id="cmpF996EF9A8FD70F70770C170EA39EF585" Guid="{1B58CD3C-B30A-43B1-93F7-EE2ABF0C54B9}">
+                        <Component Id="cmpF996EF9A8FD70F70770C170EA39EF585" Guid="{6EA354D0-41D8-4C78-8DFD-1BE266C46AB2}">
                             <File Id="filE6F9EE10CD5923B6158FB6482EE1CF48" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\AppConfig\Data\SettingValue.sql" />
                         </Component>
-                        <Component Id="cmp0505B644FFAA16C98D6EE77A5DCF956C" Guid="{EDBA88AE-E07D-4C57-B461-73CA53A50915}">
+                        <Component Id="cmp0505B644FFAA16C98D6EE77A5DCF956C" Guid="{1FA67556-1EE0-4E15-89CB-2CD5D967DEC6}">
                             <File Id="filE10BB9D570C87277CD6AC6DD03B4614A" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\AppConfig\Data\Statistic.sql" />
                         </Component>
-                        <Component Id="cmp55364D34F4671DE2E7A5AD24DC6021BC" Guid="{0046C8C2-F88B-41A9-9D08-BB7F9D9BE392}">
+                        <Component Id="cmp55364D34F4671DE2E7A5AD24DC6021BC" Guid="{DE978719-B61C-4705-B518-7C5FE153FDEF}">
                             <File Id="fil4708A756A70596C2643225D473B8E330" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\AppConfig\Data\SystemJob.sql" />
                         </Component>
                     </Directory>
                 </Directory>
                 <Directory Id="dir39ED6C9CB64A3484E1B1F6DFD0BC64FD" Name="Catalogs">
                     <Directory Id="dir06C3289905A8198D301242DC08809949" Name="Data">
-                        <Component Id="cmp9AFCBF257C01651A89F16CF156B392C3" Guid="{3B85B28A-576B-4292-8947-5F6E0BFF1E3F}">
+                        <Component Id="cmp9AFCBF257C01651A89F16CF156B392C3" Guid="{4F006DBA-F99F-4C48-A6A6-2A61613116B0}">
                             <File Id="fil9488ABA798EE0E2EFF9B2C29A92C94E3" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Catalogs\Data\Association.sql" />
                         </Component>
-                        <Component Id="cmp00A9083CD2A354A888177A5E38A337DC" Guid="{F02C6CAB-F160-4707-9A11-A0FF0C91E98F}">
+                        <Component Id="cmp00A9083CD2A354A888177A5E38A337DC" Guid="{AB45332F-0E49-43FC-A5F7-A5C7C69A6B52}">
                             <File Id="filAD427442677047EB1F81A4805E36640F" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Catalogs\Data\AssociationGroup.sql" />
                         </Component>
-                        <Component Id="cmpE1C60F2BC46568DD26D03CA17B6224F4" Guid="{7539F1B1-FFC3-4AEE-8EC0-EC11344E7D13}">
+                        <Component Id="cmpE1C60F2BC46568DD26D03CA17B6224F4" Guid="{C678212B-68CC-4452-8E41-FC8BB9A4A212}">
                             <File Id="fil3ED13916C959E0049448C3F7A1D4E381" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Catalogs\Data\Catalog.sql" />
                         </Component>
-                        <Component Id="cmp5260E9D1AC6272500DEA01386D058FCB" Guid="{68FB2DC8-4A5C-444A-AFA1-F07B23E3A0E2}">
+                        <Component Id="cmp5260E9D1AC6272500DEA01386D058FCB" Guid="{E32E841E-C466-4258-AF80-E7ECF32AE845}">
                             <File Id="fil2FDF1D3C3253D6FF15559E644B0C9950" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Catalogs\Data\CatalogBase.sql" />
                         </Component>
-                        <Component Id="cmpBBC923AA9E71ABF6B8DB5893E6036890" Guid="{D94059F8-8036-4797-97BA-E501A87B73A0}">
+                        <Component Id="cmpBBC923AA9E71ABF6B8DB5893E6036890" Guid="{27ED4E53-1EDC-4B9E-BA10-1E580B7FDCB0}">
                             <File Id="filD97113165AC4139FD0952DA630A11AE1" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Catalogs\Data\CatalogLanguage.sql" />
                         </Component>
-                        <Component Id="cmp10F8E733AD4FF6ECE4B5CEC1A4B7D512" Guid="{BBBC6A15-6190-4082-80AD-63AF0C35CB76}">
+                        <Component Id="cmp10F8E733AD4FF6ECE4B5CEC1A4B7D512" Guid="{D64C5FB3-F78B-4421-BA11-CB8AC8EF5443}">
                             <File Id="fil8A868905BB4F3728B42638A543C6815F" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Catalogs\Data\Category.sql" />
                         </Component>
-                        <Component Id="cmp324390212E5E7E3BF56DE23102ED044B" Guid="{D81FB4B8-41C2-481C-88F7-E9053EAD52A0}">
+                        <Component Id="cmp324390212E5E7E3BF56DE23102ED044B" Guid="{A19701DD-FFA0-4D01-B3E8-D33628679EFF}">
                             <File Id="fil1C863548C14095DED6C90AABC2E51E75" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Catalogs\Data\CategoryBase.sql" />
                         </Component>
-                        <Component Id="cmp936984A4AE26C11C29F51341C004A77C" Guid="{14E2C118-B3A9-4903-91C8-3DC88097C426}">
+                        <Component Id="cmp936984A4AE26C11C29F51341C004A77C" Guid="{5CEBFCA2-AD38-4285-98B4-0F5EEA91642A}">
                             <File Id="fil54754060BF07862003DB96DE76AA6746" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Catalogs\Data\CategoryItemRelation.sql" />
                         </Component>
-                        <Component Id="cmp08FDB4C60C4AC29EA534A19E3EB5C102" Guid="{28C1A8C8-C977-4838-A736-8AE78C507506}">
+                        <Component Id="cmp08FDB4C60C4AC29EA534A19E3EB5C102" Guid="{1D2FC7A5-82C6-44E8-9112-9D206C55E259}">
                             <File Id="fil09077736FE1EDFA0BC6E0280AC912BF2" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Catalogs\Data\EditorialReview.sql" />
                         </Component>
-                        <Component Id="cmpF502B8AFF5EDD327FA7FCC53E558B8AC" Guid="{F92C738E-0A0C-4AE9-8E92-3421191785E4}">
+                        <Component Id="cmpF502B8AFF5EDD327FA7FCC53E558B8AC" Guid="{A0C1164B-F638-448E-B311-614A0726F602}">
                             <File Id="fil4466692E220FA193459BC07A8735D1EF" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Catalogs\Data\Item.sql" />
                         </Component>
-                        <Component Id="cmpC32F717B630F9FF2A290180D00732075" Guid="{9D69B4B7-2FA5-4718-ADFA-0E7383DFA2EF}">
+                        <Component Id="cmpC32F717B630F9FF2A290180D00732075" Guid="{8A72603C-CE3A-48F1-B93E-FAA90F5294A9}">
                             <File Id="fil45797AD98331D8DBBF2147D849004BE8" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Catalogs\Data\ItemAsset.sql" />
                         </Component>
-                        <Component Id="cmpECB9E6CC1F45C8FDE2DB9FD1E5972D17" Guid="{788B3C0A-1117-4C00-9EB5-6590DCCD61BE}">
+                        <Component Id="cmpECB9E6CC1F45C8FDE2DB9FD1E5972D17" Guid="{EB12ECE8-7879-4ED3-88A5-ECE451426F87}">
                             <File Id="fil71EBD358ADA182732B529CC8F2973C13" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Catalogs\Data\ItemPropertyValue.sql" />
                         </Component>
-                        <Component Id="cmp8393727EC2C8DCF133DA4BE3DF1AA36A" Guid="{F30BC801-7340-4AB4-B85A-1CC876B7508D}">
+                        <Component Id="cmp8393727EC2C8DCF133DA4BE3DF1AA36A" Guid="{17B723C2-C92E-439A-95F3-B1F486DDE43F}">
                             <File Id="fil79E9F804DD347471DB45ACE8A2DE4123" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Catalogs\Data\ItemRelation.sql" />
                         </Component>
-                        <Component Id="cmp4265EFE79FF9A436691E08DD5BA8B486" Guid="{C668AD03-8D1F-4254-B681-EE8220834E8E}">
+                        <Component Id="cmp4265EFE79FF9A436691E08DD5BA8B486" Guid="{37B26562-0183-43BB-BE83-FAC5BA00F25E}">
                             <File Id="fil2D79DEECE9973881D2F19123488B1933" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Catalogs\Data\LinkedCategory.sql" />
                         </Component>
-                        <Component Id="cmp1ACDE97728B290CA785E06089E1AFE56" Guid="{24412155-6AF7-4DF4-987E-14CF01E4399C}">
+                        <Component Id="cmp1ACDE97728B290CA785E06089E1AFE56" Guid="{9C49C2AE-2F47-42AE-9B1B-B9D957C17242}">
                             <File Id="fil91F57E56D6940EC8B23CB989FFE952B5" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Catalogs\Data\Price.sql" />
                         </Component>
-                        <Component Id="cmp4AAAEEA5F62EDA678D1F2C4468757ED0" Guid="{BF5F1873-CCAB-4509-B231-6BB3162BACAD}">
+                        <Component Id="cmp4AAAEEA5F62EDA678D1F2C4468757ED0" Guid="{1A2F30E6-EF55-4744-8F0F-3EE9FC325C6C}">
                             <File Id="fil3D2EA11370A27EC8F30A4DAD3946611C" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Catalogs\Data\Pricelist.sql" />
                         </Component>
-                        <Component Id="cmpF998D8CF56997DF79A1B7029FF46C705" Guid="{90902BAF-9CCC-4EAA-AFF9-441A7B65787D}">
+                        <Component Id="cmpF998D8CF56997DF79A1B7029FF46C705" Guid="{2DC7A430-EAC8-4F89-BB82-47CA12B4AB63}">
                             <File Id="filF50308C054F4090583FBB227178543FB" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Catalogs\Data\PricelistAssignment.sql" />
                         </Component>
-                        <Component Id="cmpFFD920A783DAC35C459DC7D6A626727F" Guid="{2EB317F9-1BE5-4828-83C4-49F030AC8807}">
+                        <Component Id="cmpFFD920A783DAC35C459DC7D6A626727F" Guid="{ECF55BDD-59ED-4FEF-ADFA-2AE9312EDC1F}">
                             <File Id="fil14F52F83C7213F36BAE1CD39941DA0FC" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Catalogs\Data\Property.sql" />
                         </Component>
-                        <Component Id="cmp7A7A237FB45CEE05EBD1F2342CB95613" Guid="{CD7DA52A-7392-4334-9878-ABFD7D441F56}">
+                        <Component Id="cmp7A7A237FB45CEE05EBD1F2342CB95613" Guid="{4E586C3F-9FAE-494C-97F2-C6B61EE60363}">
                             <File Id="fil9DCAEB8F76508B6F2621FAFA34A6EB65" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Catalogs\Data\PropertyAttribute.sql" />
                         </Component>
-                        <Component Id="cmp6863BB5145AAA9948D1775FF3A03D274" Guid="{47E48DA3-8818-4C64-8FE5-2B4653D694BD}">
+                        <Component Id="cmp6863BB5145AAA9948D1775FF3A03D274" Guid="{00F53743-7A87-416E-9D0E-730BA55A4455}">
                             <File Id="fil4298CC5532D31496E6E7F7A01CF69A60" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Catalogs\Data\PropertySet.sql" />
                         </Component>
-                        <Component Id="cmp9DA7171705F12953D462F8799F0B5AE1" Guid="{534A88D3-4A3C-4A81-8298-55B52A6F0AD0}">
+                        <Component Id="cmp9DA7171705F12953D462F8799F0B5AE1" Guid="{BB201495-E1ED-44C0-B5F1-185B9EE6CB1D}">
                             <File Id="filED81B60447EA31D3900C654B2C5902E5" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Catalogs\Data\PropertySetProperty.sql" />
                         </Component>
-                        <Component Id="cmpBF497AA4C84F68DC9CCBE5A89F84EE05" Guid="{FB300D91-81A6-4301-9D6A-7829EB33E07E}">
+                        <Component Id="cmpBF497AA4C84F68DC9CCBE5A89F84EE05" Guid="{95D323DA-0538-4002-BA62-CFFDA51A24AE}">
                             <File Id="fil61F4B23CFE07FDC6E2AEA06B92897BB6" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Catalogs\Data\TaxCategory.sql" />
                         </Component>
-                        <Component Id="cmpD5E7C7CA6BFB8A18F2D098E368A04E94" Guid="{17FFEDD3-3BDF-41AA-AE31-E3BDE3966036}">
+                        <Component Id="cmpD5E7C7CA6BFB8A18F2D098E368A04E94" Guid="{0CCA0946-7D14-4289-9EB2-E4FAFD3207BA}">
                             <File Id="filD00579842AC5729C7641240934171E97" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Catalogs\Data\VirtualCatalog.sql" />
                         </Component>
                     </Directory>
                 </Directory>
                 <Directory Id="dir52A5FF56114E5D2753712EFAF9932E00" Name="Customers">
                     <Directory Id="dir71D685C68634BF0B824CFDBA67CF90A1" Name="Data">
-                        <Component Id="cmpBBC8C83221E3095D468EC38BD88AD867" Guid="{3AE0FE73-EB62-401B-A20E-8C05E1BE99D6}">
+                        <Component Id="cmpBBC8C83221E3095D468EC38BD88AD867" Guid="{45731E88-D78A-4ADF-91A0-E2E5BBF77EBA}">
                             <File Id="filCC897BA8EFD2788C32E7D8519C0A8686" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Customers\Data\FillRequiredCaseProperty.sql" />
                         </Component>
                     </Directory>
                 </Directory>
                 <Directory Id="dir33D574555327476C56A1BF8F5F06C974" Name="Marketing">
                     <Directory Id="dirFFCD79072CE114E0CF8B11CD805184C1" Name="Data">
-                        <Component Id="cmpD4A1814A7080F8CA338730F9F255D534" Guid="{65438270-508E-4163-9D1B-0D5F8F2C6DB6}">
+                        <Component Id="cmpD4A1814A7080F8CA338730F9F255D534" Guid="{BFCFFD0F-9002-4FDC-BBD1-0BFA67ADA6B8}">
                             <File Id="filF3AEC2B88B6FB58357BFC20739F5F0AA" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Marketing\Data\Coupon.sql" />
                         </Component>
-                        <Component Id="cmp82520A79A7525EB65248066148DF5E1F" Guid="{971BAC22-8B99-42D3-9041-221864A722F4}">
+                        <Component Id="cmp82520A79A7525EB65248066148DF5E1F" Guid="{610FC793-9758-4248-B249-CCA94A052E28}">
                             <File Id="fil2FC4F276D85C67B301707ED515F78328" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Marketing\Data\DynamicContentItem.sql" />
                         </Component>
-                        <Component Id="cmp8E0EFC47F5B442DDA29A5CC32DC9B3BD" Guid="{0653D71F-0089-45BF-AC70-F5F3CE04929B}">
+                        <Component Id="cmp8E0EFC47F5B442DDA29A5CC32DC9B3BD" Guid="{6568C58A-877F-4B97-919C-078DB8C0BB64}">
                             <File Id="filE4A686BD66CB80998D800DEEA4BBEEF3" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Marketing\Data\DynamicContentItemProperty.sql" />
                         </Component>
-                        <Component Id="cmp8FD762090B96286AF43DE3B1364E8669" Guid="{1CE53F84-67FF-4C8C-A223-6B70773AC7FA}">
+                        <Component Id="cmp8FD762090B96286AF43DE3B1364E8669" Guid="{C1BDD281-FF94-4609-A27A-69708A92A956}">
                             <File Id="fil11F57351E01FDED1AD259A4F6C0585DD" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Marketing\Data\DynamicContentPlace.sql" />
                         </Component>
-                        <Component Id="cmp38E1A18DAF35D77AB4492A5E10A3A3AB" Guid="{6C2CB28B-2D50-45E8-BA39-0EF578153770}">
+                        <Component Id="cmp38E1A18DAF35D77AB4492A5E10A3A3AB" Guid="{092B395E-52AC-47D0-B3F9-2F71BBAB7A5A}">
                             <File Id="fil3878F5E2C7872999A89E6C89C68DF872" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Marketing\Data\DynamicContentPublishingGroup.sql" />
                         </Component>
-                        <Component Id="cmp9848B16B15805F015A789654BE9676F3" Guid="{6292B067-A7D0-48BF-94B4-9146A516CB69}">
+                        <Component Id="cmp9848B16B15805F015A789654BE9676F3" Guid="{B7CA32A3-2A1A-4862-857F-F120C2F75095}">
                             <File Id="filD50D225C6973BD76DB1076A89155175C" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Marketing\Data\Promotion.sql" />
                         </Component>
-                        <Component Id="cmp35B8EC94FD533A907BD06E65B0DBE3D8" Guid="{1EA58E85-DC57-4890-9ADB-9CDDC49791DB}">
+                        <Component Id="cmp35B8EC94FD533A907BD06E65B0DBE3D8" Guid="{08C7C8F9-DC01-4B09-BE36-BFC11F9EFE85}">
                             <File Id="filDDE5A9D32E04620282102EDB9F8DD64F" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Marketing\Data\PromotionReward.sql" />
                         </Component>
-                        <Component Id="cmpEA1E57222DEF56DD01D643CBB5D3DF04" Guid="{93B01E6E-7733-4982-99AD-17A57B298ACB}">
+                        <Component Id="cmpEA1E57222DEF56DD01D643CBB5D3DF04" Guid="{D4716E17-1EDD-4783-99E0-7AF90193A794}">
                             <File Id="fil8A02A7B08F0375BDA46047DB84FE20EF" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Marketing\Data\PublishingGroupContentItem.sql" />
                         </Component>
-                        <Component Id="cmpDFA02A17DB4AE2A633079D4B9563406A" Guid="{7F4EF869-1F87-4E51-A4F3-8C4D500B59E4}">
+                        <Component Id="cmpDFA02A17DB4AE2A633079D4B9563406A" Guid="{BCAF48F3-9DA2-4823-AC61-E732722F217B}">
                             <File Id="filC085E4D1DEF2AC6C96EA492037C5B115" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Marketing\Data\PublishingGroupContentPlace.sql" />
                         </Component>
                     </Directory>
                 </Directory>
                 <Directory Id="dir170D942D66C426A8A36D102C1A764D17" Name="Orders">
                     <Directory Id="dir6AB3D680E6C95CD5C85FC3AE72242305" Name="Data">
-                        <Component Id="cmp6EED40958D06A996FD5C060A9CE86A2B" Guid="{58383FD7-DD21-42DB-BB3C-FE36B6C0229D}">
+                        <Component Id="cmp6EED40958D06A996FD5C060A9CE86A2B" Guid="{C34F2459-56FC-43E2-A6FA-C93D9FCCC1D5}">
                             <File Id="fil71B9A555192D2519498394CF3FC852C9" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Orders\Data\Jurisdiction.sql" />
                         </Component>
-                        <Component Id="cmp2BACF6FD2C4EC3AB1D5B1E236AF537F8" Guid="{2CAFC818-527F-4A2C-BE6F-1A3952D66370}">
+                        <Component Id="cmp2BACF6FD2C4EC3AB1D5B1E236AF537F8" Guid="{024D222F-A9AC-4B40-BCF8-14CA4D899AE7}">
                             <File Id="fil93FA7BF974FB05BC504A74BDDDF234AD" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Orders\Data\JurisdictionGroup.sql" />
                         </Component>
-                        <Component Id="cmpE2C5F11EF3AA8F5032BC5080F4885ED6" Guid="{6E61C932-3B1F-4D34-B10F-ED4822DBFBC4}">
+                        <Component Id="cmpE2C5F11EF3AA8F5032BC5080F4885ED6" Guid="{1EFA8181-4A13-4B02-807E-C2249126DBC9}">
                             <File Id="fil355FAEA3FA0FD0A31CAB9A27DFD98874" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Orders\Data\JurisdictionRelation.sql" />
                         </Component>
-                        <Component Id="cmpFEDB97019888055DBDC76D32B2BA76A3" Guid="{0FCEC375-4D3D-4222-BD78-A5545E4CFD62}">
+                        <Component Id="cmpFEDB97019888055DBDC76D32B2BA76A3" Guid="{8020D52E-9559-489B-BFC5-0396A60DD049}">
                             <File Id="fil1A6F976F5D433FA05871E4E5C36F3A37" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Orders\Data\Tax.sql" />
                         </Component>
-                        <Component Id="cmp4D6B89400EF34DCC8BF2925F0BB54D38" Guid="{C975A889-9DBD-4A88-A047-A3FBD16066A3}">
+                        <Component Id="cmp4D6B89400EF34DCC8BF2925F0BB54D38" Guid="{06BB97F1-91BA-4FC9-ACAC-6A950070C387}">
                             <File Id="filABDD4CDAB001DBFB5D57CC16A6075C67" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Orders\Data\TaxValue.sql" />
                         </Component>
                     </Directory>
                 </Directory>
                 <Directory Id="dir8158F0622B5EE5E6FE34C635A2E2170F" Name="Reviews">
                     <Directory Id="dir5B3E4905891071A602645CBCF2583D48" Name="Data">
-                        <Component Id="cmp2677AB3C182C243F907393FE0C94FB71" Guid="{F045580E-218D-4BAE-975C-FB8E83CD3BFB}">
+                        <Component Id="cmp2677AB3C182C243F907393FE0C94FB71" Guid="{92563B00-08D8-454E-B1DF-F4A29644FA2B}">
                             <File Id="fil92713741F37A4A55F7089CC6B530F8B9" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Reviews\Data\Review.sql" />
                         </Component>
-                        <Component Id="cmpF3775A0C5A0145C85761446607C70FE1" Guid="{7C920E15-ADC0-4CFA-8DB5-C2FEF7F6233D}">
+                        <Component Id="cmpF3775A0C5A0145C85761446607C70FE1" Guid="{89CD9E1D-FFC7-4271-B3E6-5BDA7795327E}">
                             <File Id="fil658AC50B052663E448BEE3B25EA94E48" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Reviews\Data\ReviewComment.sql" />
                         </Component>
-                        <Component Id="cmpC7F9B15841A77B10A9FB51CF80910B24" Guid="{81AAFD71-9E8D-438D-BC53-5F78E4B537FB}">
+                        <Component Id="cmpC7F9B15841A77B10A9FB51CF80910B24" Guid="{0383D200-2931-460A-B352-079A7F53A5D8}">
                             <File Id="filF0E710468F67547332D9A5FB7F46EE3A" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Reviews\Data\ReviewFieldValue.sql" />
                         </Component>
                     </Directory>
                 </Directory>
                 <Directory Id="dirF7F3A62270826E2A4E40F4381A419385" Name="Security">
                     <Directory Id="dir26B1AC357DFAFE12280B874A235FE0B2" Name="Data">
-                        <Component Id="cmp5BA5B4355F9071D271A4370BA56FDBBD" Guid="{B5C74FB2-5E02-4171-B683-B361CEB1AB42}">
+                        <Component Id="cmp5BA5B4355F9071D271A4370BA56FDBBD" Guid="{2C845E8C-D716-4876-8760-EE93F8482977}">
                             <File Id="filF740C0B6617F07619B9B26449F16E48A" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Security\Data\FillRequiredCaseProperties.sql" />
                         </Component>
-                        <Component Id="cmp091FADDB2A8E99B0D50980F0BE13FA23" Guid="{825C5E4A-D4D3-459C-B4B1-B97CADEDE6C9}">
+                        <Component Id="cmp091FADDB2A8E99B0D50980F0BE13FA23" Guid="{0A27C232-7840-4D43-9414-4F2948C09A52}">
                             <File Id="filFE96B5A3A1492437DA5A96D8CF2670FC" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Security\Data\FillTestAccounts.sql" />
                         </Component>
-                        <Component Id="cmp38F4460F2EB6878F65D9234BC30A4557" Guid="{7D84195C-F1BF-4F15-AD35-2CB1C9D01904}">
+                        <Component Id="cmp38F4460F2EB6878F65D9234BC30A4557" Guid="{DD85527C-B01F-4526-8F9D-C3F3BA8D57DF}">
                             <File Id="fil3F10A3B8804C9A909F454E92DCE9FD38" KeyPath="yes" Source="$(var.SqlScriptSourcePath)\Security\Data\SimpleMembership.sql" />
                         </Component>
                     </Directory>
