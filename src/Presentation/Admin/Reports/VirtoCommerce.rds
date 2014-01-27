@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RptDataSource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="VirtoCommerce">
+  <ConnectionProperties>
+    <Extension>SQL</Extension>
+    <ConnectString>Data Source=(local);Initial Catalog=VirtoCommerce</ConnectString>
+    <IntegratedSecurity>true</IntegratedSecurity>
+    <Prompt>Specify a user name and password for data source VC</Prompt>
+  </ConnectionProperties>
+  <DataSourceID>6612d827-357f-493b-a35e-0fc81411ff92</DataSourceID>
+</RptDataSource>

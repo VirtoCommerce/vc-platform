@@ -1,4 +1,4 @@
-﻿<presentationControls:MetroWindow x:Class="VirtoCommerce.ManagementClient.Shell"
+﻿<presentationControls:MetroWindow
                                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                                   xmlns:cal="http://www.codeplex.com/CompositeWPF"
@@ -11,6 +11,7 @@
                                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                                   xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
                                   xmlns:StatusIndicator="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls.StatusIndicator;assembly=VirtoCommerce.ManagementClient.Core"
+                                  xmlns:View="clr-namespace:VirtoCommerce.ManagementClient.Main.View;assembly=VirtoCommerce.ManagementClient.Main" x:Class="VirtoCommerce.ManagementClient.Shell"
                                   mc:Ignorable="d"
                                   ElementState.Mode="Persist"
                                   ElementState.UId="DemoWindow"
@@ -18,199 +19,206 @@
                                   Style="{DynamicResource Virto_Shell_Window_Style}"
                                   MinHeight="500" MinWidth="570">
 
-	<Window.Resources>
-		<ResourceDictionary>
-			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/Icons.xaml"/>
-				<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/ShellViewTheme/VirtoCommerceShellTheme.xaml"/>
-				<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/ShellViewTheme/VirtoCommerceShellThemeBrushes.xaml"/>
-			</ResourceDictionary.MergedDictionaries>
+    <presentationControls:MetroWindow.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/Icons.xaml"/>
+                <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/ShellViewTheme/VirtoCommerceShellTheme.xaml"/>
+                <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/ShellViewTheme/VirtoCommerceShellThemeBrushes.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
 
-			<localViewModel:ShellViewModel x:Key="WindowViewModel"/>
+            <localViewModel:ShellViewModel x:Key="WindowViewModel"/>
 
-			<Style TargetType="TextBlock" BasedOn="{StaticResource Virto_Shell_TextBlock_Caption_Style}"/>
+            <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Virto_Shell_TextBlock_Caption_Style}"/>
 
-			<DataTemplate DataType="{x:Type presentationInfrastructure:ViewTitleBase}">
-				<DockPanel LastChildFill="False">
-					<TextBlock Text="{Binding SubTitle, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource Virto_Shell_TextBlock_SubTitle_Style}" DockPanel.Dock="Top" />
-					<TextBlock Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource Virto_Shell_TextBlock_Title_Style}" DockPanel.Dock="Top" />
-				</DockPanel>
-			</DataTemplate>
-		</ResourceDictionary>
-	</Window.Resources>
+            <DataTemplate DataType="{x:Type presentationInfrastructure:ViewTitleBase}">
+                <DockPanel LastChildFill="False">
+                    <TextBlock Text="{Binding SubTitle, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource Virto_Shell_TextBlock_SubTitle_Style}" DockPanel.Dock="Top" />
+                    <TextBlock Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource Virto_Shell_TextBlock_Title_Style}" DockPanel.Dock="Top" />
+                </DockPanel>
+            </DataTemplate>
+        </ResourceDictionary>
+    </presentationControls:MetroWindow.Resources>
 
-	<i:Interaction.Triggers>
-		<i:EventTrigger EventName="SizeChanged" >
-			<i:InvokeCommandAction Command="{Binding WindowResizeCommand}" />
-		</i:EventTrigger>
-		<i:EventTrigger EventName="Loaded" >
-			<i:InvokeCommandAction Command="{Binding WindowResizeCommand}" />
-		</i:EventTrigger>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="SizeChanged" >
+            <i:InvokeCommandAction Command="{Binding WindowResizeCommand}" />
+        </i:EventTrigger>
+        <i:EventTrigger EventName="Loaded" >
+            <i:InvokeCommandAction Command="{Binding WindowResizeCommand}" />
+        </i:EventTrigger>
 
-	</i:Interaction.Triggers>
+    </i:Interaction.Triggers>
 
-	<presentationControls:MetroWindow.DataContext>
-		<StaticResourceExtension ResourceKey="WindowViewModel"/>
-	</presentationControls:MetroWindow.DataContext>
+    <presentationControls:MetroWindow.DataContext>
+        <StaticResource ResourceKey="WindowViewModel"/>
+    </presentationControls:MetroWindow.DataContext>
 
-	<Grid Background="{x:Null}" Margin="0,-25,0,0" Loaded="FrameworkElement_OnLoaded">
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="*"/>
-			<ColumnDefinition Width="75"/>
-		</Grid.ColumnDefinitions>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="30" />
-			<RowDefinition Height="*" />
-			<RowDefinition Height="auto" />
-		</Grid.RowDefinitions>
+    <Grid x:Name="MainShellGrid" Background="{x:Null}" Margin="0,-25,0,0" Loaded="FrameworkElement_OnLoaded">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="75"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
 
-		<Grid Grid.Column="0" Margin="50,0,0,0" WindowChrome.IsHitTestVisibleInChrome="True">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition Width="*"/>
-				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition Width="Auto"/>
-				<ColumnDefinition Width="Auto"/>
-			</Grid.ColumnDefinitions>
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="MouseUp">
+                <i:InvokeCommandAction Command="{Binding CloseMainMenuCommand}"/>
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
 
-			<!--New Modules Selector Button-->
-			<Grid Grid.Column="0" Margin="-50,0,0,0" HorizontalAlignment="Left" Background="Black">
-				<Grid.Style>
-					<Style TargetType="Grid">
-						<Setter Property="Visibility" Value="Visible"/>
-						<Style.Triggers>
-							<DataTrigger Binding="{Binding ElementName=MenuRegion, Path=Items.Count}" Value="0">
-								<Setter Property="Visibility" Value="Collapsed"/>
-							</DataTrigger>
-						</Style.Triggers>
-					</Style>
-				</Grid.Style>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="auto"/>
-					<ColumnDefinition Width="5"/>
-					<ColumnDefinition Width="auto"/>
-				</Grid.ColumnDefinitions>
+        <Grid Grid.Column="0" Margin="50,0,0,0" WindowChrome.IsHitTestVisibleInChrome="True">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
 
-				<Button Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="auto" Background="Black" 
-                        Height="30" Command="{Binding GoToDashboardCommand}" Padding="0" Margin="5,0" Cursor="Hand" ToolTip="Click to go to Dashboard"
-                        Style="{StaticResource Virto_Shell_ToolButton_Style}">
+            <!--New Modules Selector Button-->
+            <Grid Grid.Column="0" Margin="-50,0,0,0" HorizontalAlignment="Left" Background="Black">
+                <Grid.Style>
+                    <Style TargetType="{x:Type Grid}">
+                        <Setter Property="Visibility" Value="Visible"/>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Items.Count, ElementName=MenuRegion}" Value="0">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Grid.Style>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="5"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
 
-					<DockPanel Width="120">
-						<Image Source="/Resources/VirtoCommerce.png"/>
-						<TextBlock Text="Virto Commerce" Margin="5,0" DockPanel.Dock="Bottom" TextWrapping="Wrap" LineHeight="14" LineStackingStrategy="BlockLineHeight" />
-					</DockPanel>
-				</Button>
+                <Button Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="auto" Background="Black" 
+					Height="30" Command="{Binding GoToDashboardCommand}" Padding="0" Margin="5,0" Cursor="Hand" ToolTip="Click to go to Dashboard"
+					Style="{StaticResource Virto_Shell_ToolButton_Style}">
 
-				<Border Grid.Column="1" Height="20" Width="1" Background="White"/>
+                    <DockPanel Width="120">
+                        <Image Source="/Resources/VirtoCommerce.png"/>
+                        <TextBlock Text="Virto Commerce" Margin="5,0" DockPanel.Dock="Bottom" TextWrapping="Wrap" LineHeight="14" LineStackingStrategy="BlockLineHeight" />
+                    </DockPanel>
+                </Button>
 
-				<Button Grid.Column="2" Command="{Binding ShowMainMenuCommand}" Style="{StaticResource Virto_Shell_ToolButton_Style}"
-                        ToolTip="Show main menu" Cursor="Hand">
-					<DockPanel>
-						<TextBlock Text="" Margin="2,0"/>
+                <Border Grid.Column="1" Height="20" Width="1" Background="White"/>
 
-						<Path Width="15" Stroke="White" StrokeThickness="2" >
-							<Path.Data>
-								<PathGeometry>
-									<PathFigure StartPoint="0,6"  IsClosed="False" IsFilled="False">
-										<LineSegment Point="5,12"/>
-										<LineSegment Point="10,6"/>
-									</PathFigure>
-								</PathGeometry>
-							</Path.Data>
-						</Path>
-					</DockPanel>
-				</Button>
+                <Button Grid.Column="2" Command="{Binding ShowMainMenuCommand}" Style="{StaticResource Virto_Shell_ToolButton_Style}"
+					ToolTip="Show main menu" Cursor="Hand">
+                    <DockPanel>
+                        <TextBlock Text="" Margin="2,0"/>
 
-			</Grid>
+                        <Path Width="15" Stroke="White" StrokeThickness="2" >
+                            <Path.Data>
+                                <PathGeometry>
+                                    <PathFigure StartPoint="0,6"  IsClosed="False" IsFilled="False">
+                                        <LineSegment Point="5,12"/>
+                                        <LineSegment Point="10,6"/>
+                                    </PathFigure>
+                                </PathGeometry>
+                            </Path.Data>
+                        </Path>
+                    </DockPanel>
+                </Button>
 
-			<!--Main Menu-->
-			<Menu Grid.Column="1" ItemsSource="{Binding HorizontalDocs, UpdateSourceTrigger=PropertyChanged}" ItemContainerStyle="{StaticResource Virto_MenuItem_MainMenuDocuments_Horizontal_Style}" Background="{x:Null}"/>
-			<Menu Grid.Column="2" Style="{StaticResource Virto_Shell_MainMenu_Menu_Style}" Visibility="{Binding IsVerticalMenuShow, Converter={x:Static core_Converters:ToVisibilityConverter.Current}}">
-				<MenuItem Style="{x:Null}" ItemsSource="{Binding VerticalDocs}" ItemContainerStyle="{StaticResource Virto_MenuItem_MainMenuDocuments_Vertical_Style}" Cursor="Hand">
-					<MenuItem.Header>
-						<TextBlock Text="..." Margin="5,0" Padding="5,0" FontSize="24" Background="{StaticResource Virto_MainMenu_Background_Brush}"/>
-					</MenuItem.Header>
-				</MenuItem>
-			</Menu>
-			<Grid Grid.Column="5" Margin="0,0,20,0">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="Auto"/>
-					<ColumnDefinition/>
-				</Grid.ColumnDefinitions>
-				<Button Style="{x:Null}" Grid.Column="1" Margin="0" VerticalAlignment="Center" Visibility="{Binding Path=IsMessageShow, Converter={x:Static core_Converters:ToVisibilityConverter.Current}}"
-                        Command="{Binding Path=NavigateToCustomersCommand}" Cursor="Hand" ToolTip="Click to go to Customer service">
-					<Button.Template>
-						<ControlTemplate TargetType="{x:Type Button}">
-							<presentationControls:VectorImage ImageResource="{StaticResource Icon_Message}" Width="22" Height="22" VerticalAlignment="Center"/>
-						</ControlTemplate>
-					</Button.Template>
-				</Button>
-				<TextBlock Grid.Column="0" x:Name="tbNumAssignedCases" Text="{Binding Path=NumAssignedCases, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}"
-                    VerticalAlignment="Center" HorizontalAlignment="Center" Margin="3,3,4,6" FontSize="14" />
-			</Grid>
-			<TextBlock Grid.Column="6" Text="{Binding Path=UserName, UpdateSourceTrigger=PropertyChanged, TargetNullValue=''}" VerticalAlignment="Center"/>
-		</Grid>
+            </Grid>
 
-		<Grid Grid.Column="0" Grid.ColumnSpan="6" Grid.Row="1" Margin="0">
-			<UIElement.InputBindings>
-				<KeyBinding Command="{Binding BackCommand}" Key="Back" />
-			</UIElement.InputBindings>
-			
-			<!--Main Region-->
-			<TabControl x:Name="MainRegion" cal:RegionManager.RegionName="{x:Static presentationCore:RegionNames.MainRegion}" PreviewKeyDown="UIElement_OnPreviewKeyDown"
-                    Background="Transparent" TabStripPlacement="Top" BorderThickness="0" Padding="0" Margin="0" VerticalAlignment="Stretch"
-                            FocusManager.IsFocusScope="True"  SelectedItem="{Binding SelectedItem, Mode=TwoWay}">
-				<TabControl.ItemContainerStyle>
-					<Style TargetType="TabItem">
-						<Setter Property="BorderThickness" Value="0"/>
-						<!--IsTabStop prevents from Left and Right key pressing to navigate-->
-						<Setter Property="IsTabStop" Value="False"/>
-						<Setter Property="Template">
-							<Setter.Value>
-								<ControlTemplate TargetType="TabItem">
-								</ControlTemplate>
-							</Setter.Value>
-						</Setter>
-					</Style>
-				</TabControl.ItemContainerStyle>
-			</TabControl>
-			<!--Main Region-->
+            <!--Main Menu-->
+            <Menu Grid.Column="1" ItemsSource="{Binding HorizontalDocs, UpdateSourceTrigger=PropertyChanged}" ItemContainerStyle="{StaticResource Virto_MenuItem_MainMenuDocuments_Horizontal_Style}" Background="{x:Null}"/>
+            <Menu Grid.Column="2" Style="{StaticResource Virto_Shell_MainMenu_Menu_Style}" Visibility="{Binding IsVerticalMenuShow, Converter={x:Static core_Converters:ToVisibilityConverter.Current}}">
+                <MenuItem Style="{x:Null}" ItemsSource="{Binding VerticalDocs}" ItemContainerStyle="{StaticResource Virto_MenuItem_MainMenuDocuments_Vertical_Style}" Cursor="Hand">
+                    <MenuItem.Header>
+                        <TextBlock Text="..." Margin="5,0" Padding="5,0" FontSize="24" Background="{StaticResource Virto_MainMenu_Background_Brush}"/>
+                    </MenuItem.Header>
+                </MenuItem>
+            </Menu>
+            <Grid Grid.Column="5" Margin="0,0,20,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Button Style="{x:Null}" Grid.Column="1" Margin="0" VerticalAlignment="Center" Visibility="{Binding IsMessageShow, Converter={x:Static core_Converters:ToVisibilityConverter.Current}}"
+					Command="{Binding NavigateToCustomersCommand}" Cursor="Hand" ToolTip="Click to go to Customer service">
+                    <Button.Template>
+                        <ControlTemplate TargetType="{x:Type Button}">
+                            <presentationControls:VectorImage ImageResource="{StaticResource Icon_Message}" Width="22" Height="22" VerticalAlignment="Center"/>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+                <TextBlock Grid.Column="0" x:Name="tbNumAssignedCases" Text="{Binding NumAssignedCases, TargetNullValue='', UpdateSourceTrigger=PropertyChanged}"
+					VerticalAlignment="Center" HorizontalAlignment="Center" Margin="3,3,4,6" FontSize="14" />
+            </Grid>
+            <TextBlock Grid.Column="6" Text="{Binding UserName, TargetNullValue='', UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center"/>
+        </Grid>
+        <Grid Grid.Column="0" Grid.ColumnSpan="5" Grid.Row="0" Grid.RowSpan="2" >
+            <Popup  VerticalOffset="160" HorizontalOffset="0" Width="{Binding ElementName=MainShellGrid, Path=ActualWidth}"
+				IsOpen="{Binding IsMainMenuVisible}" StaysOpen="False" AllowsTransparency="True" Placement="Top">
+                <ListView  x:Name="MenuRegion"  Background="Black" Style="{StaticResource Virto_Shell_ItemsControl_TileMainMenu_Style}"
+                            cal:RegionManager.RegionName="{x:Static presentationCore:RegionNames.MenuRegion}"
+				            ScrollViewer.CanContentScroll="False" PreviewMouseWheel="MainMenu_OnPreviewMouseWheel"
+					        Height="160" VerticalAlignment="Top"  Panel.ZIndex="100">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="MouseUp">
+                            <i:InvokeCommandAction Command="{Binding CloseMainMenuCommand}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </ListView>
+            </Popup>
+        </Grid>
+        <Grid Grid.Column="0" Grid.ColumnSpan="6" Grid.Row="1" Margin="0">
+            <Grid.InputBindings>
+                <KeyBinding Command="{Binding BackCommand}" Key="Back" />
+            </Grid.InputBindings>
 
-			<!--"Back" button under Main region-->
-			<presentationControls:MetroButton SnapsToDevicePixels="True" Command="{Binding BackCommand}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,28,0,0"
-                                      Visibility="{Binding ElementName=MainRegion, Path=SelectedContent.IsBackTrackingDisabled,  Converter={x:Static core_Converters:ToVisibilityConverter.Current},ConverterParameter=i}"
-                                     Style="{StaticResource {x:Type presentationControls:MetroButton}}" EllipseHeight="30">
+            <!--Main Region-->
 
-				<Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/back.png" Width="16" Height="16"/>
-			</presentationControls:MetroButton>
-			<ContentControl  Content="{Binding ElementName=MainRegion, Path=SelectedContent.ViewTitle, Mode=OneWay}"  Height="70" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="50,0,0,0"/>
-			<!--"Back" button under Main region-->
-		</Grid>
-		<ListView x:Name="MenuRegion" Grid.Column="0" Grid.ColumnSpan="5" Grid.Row="0" Grid.RowSpan="2" Background="Black" Margin="0,-165,0,0" Style="{StaticResource Virto_Shell_ItemsControl_TileMainMenu_Style}"
-                          Height="160" VerticalAlignment="Top" cal:RegionManager.RegionName="{x:Static presentationCore:RegionNames.MenuRegion}"
-                ScrollViewer.CanContentScroll="False" PreviewMouseWheel="MainMenu_OnPreviewMouseWheel">
-			<i:Interaction.Triggers>
-				<i:EventTrigger EventName="MouseUp">
-					<i:InvokeCommandAction Command="{Binding CloseMainMenuCommand}"/>
-				</i:EventTrigger>
-			</i:Interaction.Triggers>
-		</ListView>
+            <!--"Back" button under Main region-->
+            <!--Main Region-->
+            <TabControl x:Name="MainRegion" cal:RegionManager.RegionName="{x:Static presentationCore:RegionNames.MainRegion}" PreviewKeyDown="UIElement_OnPreviewKeyDown"
+				Background="Transparent" TabStripPlacement="Top" BorderThickness="0" Padding="0" Margin="0" VerticalAlignment="Stretch"
+				FocusManager.IsFocusScope="True"  SelectedItem="{Binding SelectedItem, Mode=TwoWay}">
+                <TabControl.ItemContainerStyle>
+                    <Style TargetType="{x:Type TabItem}">
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <!--IsTabStop prevents from Left and Right key pressing to navigate-->
+                        <Setter Property="IsTabStop" Value="False"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type TabItem}"/>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </TabControl.ItemContainerStyle>
+            </TabControl>
 
-		<StatusIndicator:StatusDetails Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Bottom" />
+            <!--"Back" button under Main region-->
+            <presentationControls:MetroButton SnapsToDevicePixels="True" Command="{Binding BackCommand}" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,28,0,0"
+				Visibility="{Binding SelectedContent.IsBackTrackingDisabled, ConverterParameter=i, Converter={x:Static core_Converters:ToVisibilityConverter.Current}, ElementName=MainRegion}"
+				Style="{StaticResource {x:Type presentationControls:MetroButton}}" EllipseHeight="30">
 
-		<!--bottom status bar-->
-		<DockPanel Grid.Row="2" Grid.ColumnSpan="2">
-			<TextBlock Text="{Binding Path=AssemblyVersion, UpdateSourceTrigger=PropertyChanged, StringFormat='Version: {0}', TargetNullValue='', FallbackValue=''}" Foreground="Gray"  Margin="10,0,20,3"></TextBlock>
-			<TextBlock Text="{Binding Path=BaseUrl, UpdateSourceTrigger=PropertyChanged, StringFormat='Connected to: {0}', TargetNullValue='', FallbackValue=''}" Foreground="Gray" Margin="0,0,20,3"></TextBlock>
-			<StatusIndicator:StatusIndicator HorizontalAlignment="Right" Margin="30,0" />
-		</DockPanel>
+                <Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/back.png" Width="16" Height="16"/>
+            </presentationControls:MetroButton>
+            <ContentControl  Content="{Binding SelectedContent.ViewTitle, ElementName=MainRegion, Mode=OneWay}"  Height="70" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="50,0,0,0"/>
+        </Grid>
 
-		<i:Interaction.Triggers>
-			<i:EventTrigger EventName="MouseUp">
-				<i:InvokeCommandAction Command="{Binding CloseMainMenuCommand}"/>
-			</i:EventTrigger>
-		</i:Interaction.Triggers>
-	</Grid>
+
+        <StatusIndicator:StatusDetails Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Bottom" />
+
+        <!--bottom status bar-->
+        <DockPanel Grid.Row="2" Grid.ColumnSpan="2">
+            <TextBlock Text="{Binding AssemblyVersion, FallbackValue='', StringFormat=Version: \{0\}, TargetNullValue='', UpdateSourceTrigger=PropertyChanged}" Foreground="Gray"  Margin="10,0,20,3"/>
+            <TextBlock Text="{Binding BaseUrl, FallbackValue='', StringFormat=Connected to: \{0\}, TargetNullValue='', UpdateSourceTrigger=PropertyChanged}" Foreground="Gray" Margin="0,0,20,3"/>
+            <StatusIndicator:StatusIndicator HorizontalAlignment="Right" Margin="30,0" />
+        </DockPanel>
+
+    </Grid>
 </presentationControls:MetroWindow>

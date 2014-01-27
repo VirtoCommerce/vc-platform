@@ -2,6 +2,9 @@
 using System.Windows;
 using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Unity;
+using VirtoCommerce.ManagementClient.Asset.Dialogs.ViewModel;
+using VirtoCommerce.ManagementClient.Asset.Dialogs.ViewModel.Implementations;
+using VirtoCommerce.ManagementClient.Asset.Dialogs.ViewModel.Interfaces;
 using VirtoCommerce.ManagementClient.Asset.Factories;
 using VirtoCommerce.Foundation.Assets;
 using VirtoCommerce.Foundation.Assets.Factories;
@@ -47,6 +50,7 @@ namespace VirtoCommerce.ManagementClient.Asset
 
             // pick single asset
             _container.RegisterType<IPickAssetViewModel, PickAssetViewModel>(new ContainerControlledLifetimeManager());
+            _container.RegisterType<IInputNameDialogViewModel, InputNameDialogViewModel>();
 
             var resources = new ResourceDictionary
 	            {

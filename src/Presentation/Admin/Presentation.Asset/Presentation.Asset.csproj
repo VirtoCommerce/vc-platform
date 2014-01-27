@@ -78,6 +78,11 @@
     <Compile Include="..\..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Dialogs\ViewModel\Implementations\InputNameDialogViewModel.cs" />
+    <Compile Include="Dialogs\ViewModel\Interfaces\IInputNameDialogViewModel.cs" />
+    <Compile Include="Dialogs\View\InputNameDialogView.xaml.cs">
+      <DependentUpon>InputNameDialogView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Factories\AssetEntityFactoryExt.cs" />
     <Compile Include="Infrastructure\FileSizeConverter.cs" />
     <Compile Include="Model\AssetType.cs" />
@@ -136,6 +141,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Dialogs\View\InputNameDialogView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\PickAssetView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -154,6 +163,7 @@
   <ItemGroup>
     <Resource Include="Resources\images\container.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
