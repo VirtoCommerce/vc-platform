@@ -53,7 +53,7 @@
 			</core_controls:MetroButton>
 		</ItemsControl>
 
-		<Grid Grid.Row="1" Width="500" HorizontalAlignment="Left">
+		<Grid Grid.Row="1" Width="600" HorizontalAlignment="Left">
 			<Grid.RowDefinitions>
 				<RowDefinition Height="auto" />
 				<RowDefinition Height="auto" />

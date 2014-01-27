@@ -107,8 +107,9 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 				DirectoryExtensions.Copy(new DirectoryInfo(contentFolder), new DirectoryInfo(ProjectLocation));
 				ct.ThrowIfCancellationRequested();
 
-				// create initial folders: import
+				// create initial folders: import, reports
 				Directory.CreateDirectory(Path.Combine(ProjectLocation, "App_Data\\Virto\\Storage\\import"));
+				Directory.CreateDirectory(Path.Combine(ProjectLocation, "App_Data\\Virto\\Storage\\reports"));
 				
 				if (_databaseViewModel.InstallSamples)
 				{

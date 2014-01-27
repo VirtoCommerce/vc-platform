@@ -62,8 +62,6 @@ namespace VirtoCommerce.ManagementClient.Reporting.ViewModel.Implementations
         }
 
         private IEnumerable<ReportFolder> _reportFolder ;
-        private IViewModel _selectedReportFolderItem;
-
         public IEnumerable<ReportFolder> ReportFolder
         {
             get { return _reportFolder; }

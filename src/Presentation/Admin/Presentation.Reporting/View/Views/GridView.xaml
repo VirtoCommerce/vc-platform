@@ -9,8 +9,6 @@
 		<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/HomeViewTheme/VirtoCommerceHomeTheme.xaml"/>
 	</ResourceDictionary.MergedDictionaries>
     
-	<Presentation_Core_Infrastructure_Converters:BoolToStringConverter x:Key="boolToYesNoConverter" FalseValue="No" TrueValue="Yes" />
-
 	<!--Reporting HOME main items list-->
     <GridView x:Key="reportingGridViewView" ColumnHeaderContainerStyle="{StaticResource Virto_GridView_ColumnHeader_ContainerStyle}"
 			VirtualizingStackPanel.IsVirtualizing="True"
