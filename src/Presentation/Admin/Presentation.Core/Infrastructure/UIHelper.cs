@@ -10,7 +10,9 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure
 			var retVal = default(T);
 			while (obj != null)
 			{
-				obj = VisualTreeHelper.GetParent(obj);
+                //obj = VisualTreeHelper.GetParent(obj);
+			    obj = GetParent(obj);
+
 				var ancessor = obj as T;
 				if (ancessor != null)
 				{
@@ -21,7 +23,24 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure
 			return retVal;
 		}
 
-		public static T FindAncestor<T>(this UIElement obj) where T : UIElement
+	    private static DependencyObject GetParent(object obj)
+	    {
+            ContentElement contentElement = obj as ContentElement;
+            if (contentElement != null)
+            {
+                return ContentOperations.GetParent(contentElement);
+            }
+            
+            FrameworkElement frameworkElement = obj as FrameworkElement;
+            if (frameworkElement != null && frameworkElement.Parent != null)
+	        {
+	            return frameworkElement.Parent;
+	        }
+
+	        return VisualTreeHelper.GetParent(obj as DependencyObject);
+	    }
+
+	    public static T FindAncestor<T>(this UIElement obj) where T : UIElement
 		{
 			return FindAncestor<T>((DependencyObject)obj);
 		}

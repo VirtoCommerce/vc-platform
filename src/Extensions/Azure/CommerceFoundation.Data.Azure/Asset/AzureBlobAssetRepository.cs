@@ -592,7 +592,7 @@
         {
             if (entry.EntryState == EntryState.Added)
             {
-                this.GenereateEntityKey(entry.Entity as StorageEntity);
+            //    this.GenereateEntityKey(entry.Entity as StorageEntity);
             }
 
             if ((entry.EntryState & (EntryState.Unchanged | EntryState.Detached)) != entry.EntryState)
@@ -601,28 +601,30 @@
                 {
                     var folder = entry.Entity as Folder;
 
-                    var directory =
-                        this.CurrentCloudBlobClient.ListBlobs(folder.FolderId, false, BlobListingDetails.None)
-                                              .FirstOrDefault() as CloudBlobDirectory;
-                    //var directory = CurrentCloudBlobClient.GetBlobDirectoryReference(folder.FolderId);
-                    var cloudBlob =
-                        directory.GetBlockBlobReference(String.Format("{0}{1}", folder.FolderId, "placeholder"));
+                    //var directory =
+                    //    this.CurrentCloudBlobClient.ListBlobs(folder.FolderId, false, BlobListingDetails.None)
+                    //                          .FirstOrDefault() as CloudBlobDirectory;
+                  
+                    ////var directory = CurrentCloudBlobClient.GetBlobDirectoryReference(folder.FolderId);
+                    //var cloudBlob =
+                    //    directory.GetBlockBlobReference(String.Format("{0}{1}", folder.FolderId, "placeholder"));
 
-                    this.MapFolder2CloudBlobDirectory(folder, directory);
+                    //this.MapFolder2CloudBlobDirectory(folder, directory);
 
                     switch (entry.EntryState)
                     {
                         case EntryState.Modified:
                             break;
                         case EntryState.Added:
-                            directory.Container.CreateIfNotExists();
-                            cloudBlob.UploadFromStream(new MemoryStream(new byte[] { }));
-                            cloudBlob.SetProperties();
-                            cloudBlob.SetMetadata();
+                            //CloudBlobDirectory directory;
+                            //directory.Container.CreateIfNotExists();
+                            //cloudBlob.UploadFromStream(new MemoryStream(new byte[] { }));
+                            //cloudBlob.SetProperties();
+                            //cloudBlob.SetMetadata();
                             break;
                         case EntryState.Deleted:
-                            directory.Container.Delete();
-                            cloudBlob.Delete();
+                            //directory.Container.Delete();
+                            //cloudBlob.Delete();
                             break;
                     }
                 }

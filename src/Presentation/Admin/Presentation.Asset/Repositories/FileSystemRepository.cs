@@ -154,7 +154,6 @@ namespace VirtoCommerce.ManagementClient.Asset.Services
 			throw new NotImplementedException();
 		}
 
-
 		public void Add<T>(T item) where T : class
 		{
 			ChangeTracker.Add(item);
