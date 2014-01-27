@@ -22,7 +22,9 @@ else
     <script type="text/javascript">
         $(function ()
         {
-            Reviews.catalogReviews("@Html.Raw(Model.CatalogItems.Select(i => i.CatalogItem.ItemId).Aggregate((x, y) => (x.Contains("or ItemId eq") ? x : string.Format("ItemId eq '{0}'", x)) + string.Format(" or ItemId eq '{0}'", y)))");
+            @if (Model.CatalogItems.Any()){
+                @:Reviews.catalogReviews("@Html.Raw(Model.CatalogItems.Select(i => i.CatalogItem.ItemId).Aggregate((x, y) => (x.Contains("or ItemId eq") ? x : string.Format("ItemId eq '{0}'", x)) + string.Format(" or ItemId eq '{0}'", y)))");
+            }
         });
     </script>
    @Html.DisplayForModel("ReviewTemplate");
