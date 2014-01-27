@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using VirtoCommerce.Foundation.Assets.Model;
+﻿using VirtoCommerce.Foundation.Assets.Model;
 using VirtoCommerce.Foundation.Frameworks;
 
 namespace VirtoCommerce.Foundation.Assets.Repositories
@@ -11,5 +10,7 @@ namespace VirtoCommerce.Foundation.Assets.Repositories
 		Folder[] GetChildrenFolders(string folderId);
 		FolderItem[] GetChildrenFolderItems(string folderId);
 	    Folder CreateFolder(string folderName, string parentId = null);
+	    void Delete(string id);
+	    void Rename(string id, string name);
 	}
 }

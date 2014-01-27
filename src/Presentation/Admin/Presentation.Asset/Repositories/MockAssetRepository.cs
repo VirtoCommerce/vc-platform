@@ -94,6 +94,16 @@ namespace VirtoCommerce.ManagementClient.Asset.Repositories
             return null;
         }
 
+        public void Delete(string id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Rename(string id, string name)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
         
 		#region IRepository Members

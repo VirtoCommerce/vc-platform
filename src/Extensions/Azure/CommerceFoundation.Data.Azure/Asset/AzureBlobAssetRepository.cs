@@ -1,4 +1,9 @@
-﻿namespace VirtoCommerce.Foundation.Data.Azure.Asset
+﻿using System.Threading.Tasks;
+using Microsoft.Practices.ObjectBuilder2;
+using Microsoft.WindowsAzure.StorageClient;
+using Newtonsoft.Json.Schema;
+
+namespace VirtoCommerce.Foundation.Data.Azure.Asset
 {
     using Microsoft.Practices.Unity;
     using Microsoft.WindowsAzure.Storage;
@@ -326,6 +331,41 @@
             return folder;
         }
 
+        public void Delete(string id)
+        {
+            var container = CurrentCloudBlobClient.GetContainerReference(GetContainer(id));
+            var listOfBlobs = container.ListBlobs(GetPrefix(id));
+
+            Parallel.ForEach(listOfBlobs, item =>
+            {
+                var blob = CurrentCloudBlobClient.GetBlobReferenceFromServer(item.StorageUri);
+                blob.Delete();
+            });
+        }
+
+        public async void Rename(string id, string name)
+        {
+            var container = CurrentCloudBlobClient.GetContainerReference(GetContainer(id));
+            var prefix = GetPrefix(id);
+            int index = prefix.LastIndexOf(CurrentCloudBlobClient.DefaultDelimiter, 1, StringComparison.Ordinal);
+            var names = prefix.Split(new []{CurrentCloudBlobClient.DefaultDelimiter}, StringSplitOptions.RemoveEmptyEntries);
+            names[names.Length - 1] = name;
+            var newPrefix = names.JoinStrings(CurrentCloudBlobClient.DefaultDelimiter);
+            if (prefix.EndsWith(CurrentCloudBlobClient.DefaultDelimiter))
+            {
+                newPrefix += CurrentCloudBlobClient.DefaultDelimiter;
+            }
+            var listOfBlobs = container.ListBlobs(prefix);
+
+            Parallel.ForEach(listOfBlobs, item =>
+            {
+                var oldBlob = CurrentCloudBlobClient.GetBlobReferenceFromServer(item.StorageUri);
+                var newBlob = container.GetBlockBlobReference(oldBlob.Name.Replace(prefix, newPrefix));
+                newBlob.StartCopyFromBlob(item.Uri);
+                oldBlob.Delete();
+            });
+        }
+
         public IUnitOfWork UnitOfWork
         {
             get { return this; }
@@ -624,27 +664,12 @@
 
         private void SaveEntryChanges(TrackingEntry entry)
         {
-            if (entry.EntryState == EntryState.Added)
-            {
-            //    this.GenereateEntityKey(entry.Entity as StorageEntity);
-            }
-
             if ((entry.EntryState & (EntryState.Unchanged | EntryState.Detached)) != entry.EntryState)
             {
                 if (entry.Entity is Folder)
                 {
                     var folder = entry.Entity as Folder;
 
-                    //var directory =
-                    //    this.CurrentCloudBlobClient.ListBlobs(folder.FolderId, false, BlobListingDetails.None)
-                    //                          .FirstOrDefault() as CloudBlobDirectory;
-                  
-                    ////var directory = CurrentCloudBlobClient.GetBlobDirectoryReference(folder.FolderId);
-                    //var cloudBlob =
-                    //    directory.GetBlockBlobReference(String.Format("{0}{1}", folder.FolderId, "placeholder"));
-
-                    //this.MapFolder2CloudBlobDirectory(folder, directory);
-                    
                     switch (entry.EntryState)
                     {
                         case EntryState.Modified:
@@ -881,6 +906,16 @@
 
         public string Combine(string path1, string path2)
         {
+            if (string.IsNullOrWhiteSpace(path1))
+            {
+                path1 = string.Empty;
+            }
+
+            if (string.IsNullOrWhiteSpace(path2))
+            {
+                path2 = string.Empty;
+            }
+
             if (path2.StartsWith(CurrentCloudBlobClient.DefaultDelimiter))
             {
                 path2 = path2.Substring(1);

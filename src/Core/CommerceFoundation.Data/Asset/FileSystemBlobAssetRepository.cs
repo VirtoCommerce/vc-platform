@@ -280,6 +280,38 @@ namespace VirtoCommerce.Foundation.Data.Asset
 	        return folder;
 	    }
 
+	    public void Delete(string id)
+	    {
+            object item = GetFolderItemById(id) ?? (object)GetFolderById(id);
+
+            if (item != null)
+            {
+                Remove(item);
+                Commit();
+            }
+	    }
+
+	    public void Rename(string id, string name)
+	    {
+            object item = GetFolderItemById(id);
+
+            if (item != null)
+            {
+                ((FolderItem)item).Name = name;
+                Update(item);
+                UnitOfWork.Commit();
+                return;
+            }
+
+            item = GetFolderById(id);
+            if (item != null)
+            {
+                ((Folder)item).Name = name;
+                Update(item);
+                UnitOfWork.Commit();
+            }
+	    }
+
 	    public IUnitOfWork UnitOfWork
 		{
 			get { return this; }

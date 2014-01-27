@@ -144,8 +144,18 @@ namespace VirtoCommerce.ManagementClient.Asset.Services
             return null;
         }
 
+	    public void Delete(string id)
+	    {
+	        throw new NotImplementedException();
+	    }
 
-		public IUnitOfWork UnitOfWork
+	    public void Rename(string id, string name)
+	    {
+	        throw new NotImplementedException();
+	    }
+
+
+	    public IUnitOfWork UnitOfWork
 		{
 			get { return this; }
 		}

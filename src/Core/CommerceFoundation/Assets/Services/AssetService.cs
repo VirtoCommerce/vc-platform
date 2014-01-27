@@ -67,13 +67,7 @@ namespace VirtoCommerce.Foundation.Assets.Services
 
 	    public void Delete(string id)
 	    {
-            object item = GetFolderItemById(id) ?? (object)GetFolderById(id);
-
-	        if (item != null)
-	        {
-                AssetRepository.Remove(item);
-	            AssetRepository.UnitOfWork.Commit();
-	        }
+           AssetRepository.Delete(id);
 	    }
 
         public Folder CreateFolder(string folderName, string parentFolderId)
@@ -83,23 +77,7 @@ namespace VirtoCommerce.Foundation.Assets.Services
 
 	    public void Rename(string id, string name)
 	    {
-	        object item = GetFolderItemById(id);
-
-	        if (item != null)
-	        {
-	            ((FolderItem) item).Name = name;
-                AssetRepository.Update(item);
-                AssetRepository.UnitOfWork.Commit();
-                return;
-	        }
-
-            item = GetFolderById(id);
-            if (item != null)
-            {
-                ((Folder)item).Name = name;
-                AssetRepository.Update(item);
-                AssetRepository.UnitOfWork.Commit();
-            }
+            AssetRepository.Rename(id, name);
 	    }
 
 	    #endregion
