@@ -62,7 +62,7 @@ namespace FunctionalTests.Repository
 			var catalogBuilder = CatalogBuilder.BuildCatalog(catalogId).WithCategory("category").WithProducts(20);
 			for (int i = 0; i < 5; i++)
 			{
-				catalogBuilder = catalogBuilder.WithCategory("category " + i, "code " + i);
+				catalogBuilder = catalogBuilder.WithCategory("category " + i, "code-" + i);
 			}
 			var catalog = catalogBuilder.GetCatalog();
 			var items = catalogBuilder.GetItems();
