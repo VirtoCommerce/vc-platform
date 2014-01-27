@@ -37,7 +37,8 @@ namespace VirtoCommerce.Foundation.Reporting.Services
             }
             List<ReportInfo> list = new List<ReportInfo>();
             var folderObj = _assetRepository.GetFolderById(folder);
-            GetReportItems(list, folderObj);
+			if (folderObj != null)
+				GetReportItems(list, folderObj);
 
             return list;
         }
