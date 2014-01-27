@@ -58,7 +58,6 @@ namespace VirtoCommerce.Web.Client.Services.Security
             if (MembershipProvider.Login(userName, password))
             {
                 Account account;
-
                 // now check authorization, only administrators and site administrators can access this service                
                 var isAuthorized = IsAuthorized(userName, out account, RegisterType.Administrator, RegisterType.SiteAdministrator);
 

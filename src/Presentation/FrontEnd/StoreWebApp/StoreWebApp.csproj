@@ -577,6 +577,7 @@
     <Content Include="Areas\VirtoAdmin\Views\Install\Index.cshtml" />
     <Content Include="Areas\VirtoAdmin\Views\Install\Success.cshtml" />
     <Content Include="Mvc.sitemap" />
+    <Content Include="App_Data\Virto\Configuration\Reporting.config" />
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>

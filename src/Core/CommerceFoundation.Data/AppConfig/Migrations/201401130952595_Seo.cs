@@ -26,7 +26,7 @@ namespace VirtoCommerce.Foundation.Data.AppConfig.Migrations
                         Discriminator = c.String(maxLength: 128),
                     })
                 .PrimaryKey(t => t.SeoUrlKeywordId)
-                .Index(f => f.Keyword, true);
+                .Index(f => new {f.Keyword, f.KeywordType, f.Language, f.IsActive}, true);
         }
 
         public override void Down()
