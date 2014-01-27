@@ -17,7 +17,7 @@ namespace VirtoCommerce.Foundation.Reporting.Services
     [UnityInstanceProviderServiceBehaviorAttribute]
     public class ReportingService : IReportingService
     {
-        public const string RootFolder = "Reports";
+        public const string RootFolder = "reports";
 
         private readonly IBlobStorageProvider _blobStorageProvider;
         private readonly IAssetRepository _assetRepository;
@@ -26,6 +26,7 @@ namespace VirtoCommerce.Foundation.Reporting.Services
         {
             _blobStorageProvider = blobStorageProvider;
             _assetRepository = assetRepository;
+            _assetRepository.CreateFolder(RootFolder);
         }
 
         public IEnumerable<ReportInfo> GetReportsList(string folder = RootFolder)

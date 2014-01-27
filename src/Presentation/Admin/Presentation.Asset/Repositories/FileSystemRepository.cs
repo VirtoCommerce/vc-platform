@@ -139,6 +139,12 @@ namespace VirtoCommerce.ManagementClient.Asset.Services
 		}
 
 
+        public Folder CreateFolder(string folderName, string parentId = null)
+        {
+            return null;
+        }
+
+
 		public IUnitOfWork UnitOfWork
 		{
 			get { return this; }
@@ -353,5 +359,5 @@ namespace VirtoCommerce.ManagementClient.Asset.Services
 
 			return retVal;
 		}
-	}
+    }
 }

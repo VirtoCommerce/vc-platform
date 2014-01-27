@@ -76,17 +76,9 @@ namespace VirtoCommerce.Foundation.Assets.Services
 	        }
 	    }
 
-	    public Folder CreateFolder(string parentFolderId, string folderName)
+        public Folder CreateFolder(string folderName, string parentFolderId)
 	    {
-	        Folder folder = new Folder
-	        {
-                ParentFolderId = parentFolderId,
-                Name = folderName
-	        };
-            
-            AssetRepository.Add(folder);
-	        AssetRepository.UnitOfWork.Commit();
-	        return folder;
+	        return AssetRepository.CreateFolder(folderName, parentFolderId);
 	    }
 
 	    public void Rename(string id, string name)

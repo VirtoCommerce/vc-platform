@@ -25,6 +25,7 @@
     {
         public const string DefaultBlobContainerName = "default-container";
         private const string ThumbMetadataKey = "ThumbImage";
+        private const string DirectoryPlaceHolder = "placeholder.$$$";
 
         private readonly string _connectionString;
         private readonly List<Action> _delayedActions = new List<Action>();
@@ -269,7 +270,7 @@
             List<FolderItem> retVal =
                 this.ChangeTracker.TrackingEntries.Select(x => x.Entity)
                              .OfType<FolderItem>()
-                             .Where(x => x.FolderId == folderId)
+                             .Where(x => x.FolderId == folderId && x.Name != DirectoryPlaceHolder)
                              .ToList();
             if (!retVal.Any())
             {
@@ -284,12 +285,45 @@
                     string folderItemTypeName = this._entityFactory.GetEntityTypeStringName(typeof(FolderItem));
                     var folderItem = this._entityFactory.CreateEntityForType(folderItemTypeName) as FolderItem;
                     this.MapCloudBlob2FolderItem(cloudBlob, folderItem);
-                    retVal.Add(folderItem);
-
-                    this.ChangeTracker.Attach(folderItem);
+                    if (folderItem != null && folderItem.Name != DirectoryPlaceHolder)
+                    {
+                        retVal.Add(folderItem);
+                        this.ChangeTracker.Attach(folderItem);
+                    }
                 }
             }
             return retVal.ToArray();
+        }
+
+        public Folder CreateFolder(string folderName, string parentId = null)
+        {
+            var folder = new Folder();
+            CloudBlobContainer container;
+            if (string.IsNullOrWhiteSpace(parentId))
+            {
+                container = CurrentCloudBlobClient.GetContainerReference(folderName.ToLower());
+                container.CreateIfNotExists();
+                MapCloudBlobContainer2Folder(container, folder);
+            }
+            else
+            {
+                var path = Combine(parentId, folderName);
+                string containerName = GetContainer(path);
+                string prefix = GetPrefix(path);
+
+                container = CurrentCloudBlobClient.GetContainerReference(containerName);
+                
+                if (!container.ListBlobs(prefix).Any())
+                {
+                    container.GetBlockBlobReference(Combine(prefix, DirectoryPlaceHolder)).UploadText(string.Empty);
+                }
+                var directory = container.GetDirectoryReference(prefix);
+
+                MapCloudBlobDirectory2Folder(directory, folder);
+            }
+
+            ChangeTracker.Attach(folder);
+            return folder;
         }
 
         public IUnitOfWork UnitOfWork
@@ -610,7 +644,7 @@
                     //    directory.GetBlockBlobReference(String.Format("{0}{1}", folder.FolderId, "placeholder"));
 
                     //this.MapFolder2CloudBlobDirectory(folder, directory);
-
+                    
                     switch (entry.EntryState)
                     {
                         case EntryState.Modified:
@@ -843,6 +877,53 @@
             var root = AzureConfiguration.Instance.AzureStorageAccount.BlobEndpoint.AbsoluteUri;
 
             return String.Format("{0}{1}", root.EndsWith("/") ? root : root + "/", assetId);
+        }
+
+        public string Combine(string path1, string path2)
+        {
+            if (path2.StartsWith(CurrentCloudBlobClient.DefaultDelimiter))
+            {
+                path2 = path2.Substring(1);
+            }
+
+            return path1.EndsWith(CurrentCloudBlobClient.DefaultDelimiter)
+                ? path1 + path2
+                : path1 + CurrentCloudBlobClient.DefaultDelimiter + path2;
+        }
+
+        public string GetContainer(string path)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                return string.Empty;
+            }
+
+            string container = path;
+            int index = path.TrimStart().IndexOf(CurrentCloudBlobClient.DefaultDelimiter, 1, StringComparison.Ordinal);
+            if (index >= 0)
+            {
+                container = path.Substring(0, index);
+            }
+
+            return container;
+        }
+
+        public string GetPrefix(string path)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                return string.Empty;
+            }
+
+            path = path.TrimStart();
+            string prefix = string.Empty;
+            int index = path.TrimStart().IndexOf(CurrentCloudBlobClient.DefaultDelimiter, 1, StringComparison.Ordinal);
+            if (index >= 0 && index < path.Length)
+            {
+                prefix = path.Substring(index + 1);
+            }
+
+            return prefix;
         }
     }
 }

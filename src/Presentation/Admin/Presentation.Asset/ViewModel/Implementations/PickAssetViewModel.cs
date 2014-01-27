@@ -280,7 +280,7 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
                     if (inputNameDialogViewModel != null)
                     {
                         var newFolderName = inputNameDialogViewModel.InputText;
-                        _assetRepository.CreateFolder(ParentItem.InnerItemID, newFolderName);
+                        _assetRepository.CreateFolder(newFolderName, ParentItem.InnerItemID);
                         LoadItems();
                     }
                 }
