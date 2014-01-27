@@ -7,6 +7,7 @@ using Microsoft.Practices.Unity;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Reporting;
 using VirtoCommerce.Foundation.Reporting.Services;
+using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
 using VirtoCommerce.ManagementClient.Reporting.ViewModel.Implementations;
@@ -29,25 +30,27 @@ namespace VirtoCommerce.ManagementClient.Reporting
         {
             RegisterViewsAndServices();
             RegisterConfigurationViews();
-
-            var navigationManager = _container.Resolve<NavigationManager>();
-            //Register home view
-            var homeViewModel = _container.Resolve<IReportingHomeViewModel>();
-            var homeNavItem = new NavigationItem(NavigationNames.HomeName, homeViewModel);
-
-            navigationManager.RegisterNavigationItem(homeNavItem);
-
-            //Register menu view
-            var menuNavItem = new NavigationMenuItem(NavigationNames.MenuName)
+            if (_authContext.CheckPermission(PredefinedPermissions.ReportingViewReports))
             {
-                NavigateCommand = new DelegateCommand<NavigationItem>((x) => navigationManager.Navigate(homeNavItem)),
-                Caption = "Reports",
-                ImageResourceKey = "Icon_Module_Reporting",
-                ItemBackground = Colors.LightSlateGray,
-                Order = 51
-            };
+                var navigationManager = _container.Resolve<NavigationManager>();
+                //Register home view
+                var homeViewModel = _container.Resolve<IReportingHomeViewModel>();
+                var homeNavItem = new NavigationItem(NavigationNames.HomeName, homeViewModel);
 
-            navigationManager.RegisterNavigationItem(menuNavItem);
+                navigationManager.RegisterNavigationItem(homeNavItem);
+
+                //Register menu view
+                var menuNavItem = new NavigationMenuItem(NavigationNames.MenuName)
+                {
+                    NavigateCommand = new DelegateCommand<NavigationItem>((x) => navigationManager.Navigate(homeNavItem)),
+                    Caption = "Reports",
+                    ImageResourceKey = "Icon_Module_Reporting",
+                    ItemBackground = Colors.LightSlateGray,
+                    Order = 51
+                };
+
+                navigationManager.RegisterNavigationItem(menuNavItem);
+            }
         }
 
         private void RegisterViewsAndServices()

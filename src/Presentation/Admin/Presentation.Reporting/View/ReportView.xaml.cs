@@ -27,7 +27,7 @@ namespace VirtoCommerce.ManagementClient.Reporting.View
             Dispatcher.BeginInvoke(DispatcherPriority.Loaded, new Action(() =>
             {
                 viewModel = DataContext as IReportViewModel;
-
+                
                 if (viewModel != null)
                 {
                     viewModel.RefreshReport += (o, args) => RefreshReport();

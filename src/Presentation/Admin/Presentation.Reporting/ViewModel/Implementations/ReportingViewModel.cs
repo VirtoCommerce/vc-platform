@@ -6,6 +6,7 @@ using Microsoft.Practices.Prism.Commands;
 using VirtoCommerce.Foundation.Reporting.Helpers;
 using VirtoCommerce.Foundation.Reporting.Services;
 using VirtoCommerce.Foundation.Reviews.Factories;
+using VirtoCommerce.ManagementClient.Asset.ViewModel.Interfaces;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
 using VirtoCommerce.ManagementClient.Reporting.ViewModel.Interfaces;
@@ -13,7 +14,7 @@ using VirtoCommerce.Foundation.Reporting.Model;
 
 namespace VirtoCommerce.ManagementClient.Reporting.ViewModel.Implementations
 {
-    public class ReportViewModel : ViewModelDetailBase<ReportInfo>, IReportViewModel
+    public class ReportViewModel : ViewModelDetailAndWizardBase<ReportInfo>, IReportViewModel
     {
         private readonly INavigationManager _navManager;
         private readonly IReportingService _reportingService;
@@ -24,12 +25,12 @@ namespace VirtoCommerce.ManagementClient.Reporting.ViewModel.Implementations
             IReviewEntityFactory entityFactory,
             INavigationManager navManager,
             IReportingService reportingService,
+            IViewModelsFactory<IPickAssetViewModel> assetVmFactory,
             ReportInfo item)
-            : base(entityFactory, item)
+            : base(entityFactory, item, false)
         {
             _navManager = navManager;
             _reportingService = reportingService;
-
             OpenItemCommand = new DelegateCommand(() => _navManager.Navigate(NavigationData));
             GenerateReportCommand = new DelegateCommand(RaiseGenerateCommand);
             ClearParametersCommand = new DelegateCommand(RaiseClearParameters);
@@ -123,7 +124,7 @@ namespace VirtoCommerce.ManagementClient.Reporting.ViewModel.Implementations
         {
             if (RefreshReport != null)
             {
-               OnUIThread( ()=>RefreshReport(this, EventArgs.Empty) );
+                OnUIThread(() => RefreshReport(this, EventArgs.Empty));
             }
         }
 

@@ -277,11 +277,13 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 
 		private void AddPermissionToRole(Permission permToAdd)
 		{
-			RolePermission perm = new RolePermission();
-			perm.PermissionId = permToAdd.PermissionId;
-			perm.RoleId = InnerItem.RoleId;
+			RolePermission perm = new RolePermission
+			{
+			    PermissionId = permToAdd.PermissionId, 
+                RoleId = InnerItem.RoleId
+			};
 
-			InnerItem.RolePermissions.Add(perm);
+		    InnerItem.RolePermissions.Add(perm);
 			//			OnViewModelPropertyChangedUI(null, null);
 		}
 
@@ -451,10 +453,11 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 							CreatePermissionGroupViewModel("Pricing", allPermissions, PredefinedPermissions.ListPricingPermissions()),
 							CreatePermissionGroupViewModel("Marketing", allPermissions, PredefinedPermissions.ListMarketingPermissions()),
 							CreatePermissionGroupViewModel("Fulfillment", allPermissions, PredefinedPermissions.ListFulfillmentPermissions()),
+                            CreatePermissionGroupViewModel("Reporting", allPermissions, PredefinedPermissions.ListReportingPermissions()),
 							CreatePermissionGroupViewModel("Users", allPermissions, PredefinedPermissions.ListUsersPermissions()),
 							CreatePermissionGroupViewModel("Shopper", allPermissions, PredefinedPermissions.ListShopperPermissions()),
 							CreatePermissionGroupViewModel("Settings", allPermissions, PredefinedPermissions.ListSettingsPermissions())
-						};
+                        };
 				}
 			}
 			catch (Exception ex)

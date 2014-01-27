@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using Microsoft.Reporting.WinForms;
 
 namespace VirtoCommerce.ManagementClient.Reporting.View
 {

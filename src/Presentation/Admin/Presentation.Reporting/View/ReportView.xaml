@@ -10,24 +10,46 @@
              mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
 	d:DataContext="{d:DesignInstance implementations:ReportViewModel, IsDesignTimeCreatable=False}"
 	Style="{DynamicResource Virto_Window_Style}">
-    
+
     <UserControl.Resources>
-		<ResourceDictionary>
-			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Reporting;component/View/Views/GridView.xaml"/>
-				<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/HomeViewTheme/VirtoCommerceHomeTheme.xaml"/>
-			</ResourceDictionary.MergedDictionaries>
-		</ResourceDictionary>
-	</UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Reporting;component/View/Views/GridView.xaml"/>
+                <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/HomeViewTheme/VirtoCommerceHomeTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <Style x:Key="CollapsableColumn" TargetType="{x:Type ColumnDefinition}">
+                <Setter Property="ColumnDefinition.Width" Value="200" />
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding ElementName=expandedTab, Path=IsExpanded}" Value="False">
+                        <DataTrigger.EnterActions>
+                            <BeginStoryboard Name="BeginStoryboard1">
+                                <Storyboard>
+                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Width">
+                                        <ObjectAnimationUsingKeyFrames.KeyFrames>
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static GridLength.Auto}" />
+                                        </ObjectAnimationUsingKeyFrames.KeyFrames>
+                                    </ObjectAnimationUsingKeyFrames>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </DataTrigger.EnterActions>
+                        <DataTrigger.ExitActions>
+                            <RemoveStoryboard BeginStoryboardName="BeginStoryboard1" />
+                        </DataTrigger.ExitActions>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" MinWidth="300"/>
             <ColumnDefinition Width="21"/>
             <ColumnDefinition Style="{DynamicResource CollapsableColumn}" MinWidth="22" Width="300"/>
         </Grid.ColumnDefinitions>
-        <Grid  x:Name="content">
-            <WindowsFormsHost>
-                <rv:ReportViewer x:Name="_reportViewer" Dock="Fill"/>
+        <Grid  x:Name="content" Background="Azure">
+            <WindowsFormsHost Panel.ZIndex="1">
+                <rv:ReportViewer x:Name="_reportViewer" AutoSize="True"/>
             </WindowsFormsHost>
         </Grid>
         <GridSplitter Grid.Column="1" BorderThickness="1" Width="1" Height="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Center"
@@ -41,10 +63,7 @@
 
                 <DockPanel x:Name="left_pane" LastChildFill="True">
                     <TextBlock DockPanel.Dock="Top" Text="ENTER REPORT PARAMETERS" Margin="0,5" Style="{DynamicResource Virto_TextBlock_TabTitle_Style}"/>
-                    <Grid DockPanel.Dock="Top" Name="rdlParameters">
-
-                   </Grid>
-
+                    <Grid DockPanel.Dock="Top" Name="rdlParameters"></Grid>
 
                     <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,8,0,0">
                         <Button Command="{Binding ClearFiltersCommand}" Content="Clear filters" />

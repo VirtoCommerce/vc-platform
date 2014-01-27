@@ -6,6 +6,8 @@ using System.Windows.Controls;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using VirtoCommerce.Foundation.Reporting.Services;
+using VirtoCommerce.Foundation.Security.Model;
+using VirtoCommerce.ManagementClient.Asset.ViewModel.Interfaces;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.DataVirtualization;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
@@ -19,22 +21,26 @@ namespace VirtoCommerce.ManagementClient.Reporting.ViewModel.Implementations
     {
         public IList<TreeViewItem> ReportItemsTree { get; private set; }
         public DelegateCommand<object> GenerateReportCommand { get; private set; }
+        public DelegateCommand UploadReportCommand { get; private set; }
         public DelegateCommand<object> TreeViewSelectedItemChangedCommand { get; private set; }
         public InteractionRequest<Notification> CommonNotifyRequest { get; private set; }
 
         private readonly IReportingService _reportService;
         private readonly IViewModelsFactory<IReportViewModel> _itemVmFactory;
+        private readonly IViewModelsFactory<IPickAssetViewModel> _assetVmFactory;
         private readonly IAuthenticationContext _authContext;
         private readonly INavigationManager _navManager;
 
         public ReportingHomeViewModel(
             IReportingService reportService, 
             IViewModelsFactory<IReportViewModel> itemVmFactory,
+            IViewModelsFactory<IPickAssetViewModel> assetVmFactory,
             IAuthenticationContext authContext,
             INavigationManager navManager)
         {
             _reportService = reportService;
             _itemVmFactory = itemVmFactory;
+            _assetVmFactory = assetVmFactory;
             _navManager = navManager;
             _authContext = authContext;
 
@@ -43,7 +49,6 @@ namespace VirtoCommerce.ManagementClient.Reporting.ViewModel.Implementations
                 Title = "Reports",
                 SubTitle = ""
             };
-            
             CommandsInits();
         }
 
@@ -64,14 +69,34 @@ namespace VirtoCommerce.ManagementClient.Reporting.ViewModel.Implementations
             get { return _reportFolder; }
         }
 
+        public bool AllowReportUpload
+        {
+            get { return _authContext.CheckPermission(PredefinedPermissions.ReportingUploadReports); }
+        }
+
         public object SelectedTreeItem { get; private set; }
 
         private void CommandsInits()
         {
             RefreshItemsCommand = new DelegateCommand(RaiseRefreshCommand);
             GenerateReportCommand = new DelegateCommand<object>(RaiseGenerateCommand);
+            UploadReportCommand = new DelegateCommand(RaiseUploadCommand);
             TreeViewSelectedItemChangedCommand = new DelegateCommand<object>(TreeViewSelectedItemChanged);
             CommonNotifyRequest = new InteractionRequest<Notification>();
+        }
+
+        private void RaiseUploadCommand()
+        {
+            var assetVM = _assetVmFactory.GetViewModelInstance();
+            CommonConfirmRequest.Raise(
+            new ConditionalConfirmation(assetVM.Validate) { Content = assetVM, Title = "Manage reports assets" },
+            (x) =>
+            {
+                if (x.Confirmed)
+                {
+                    RaiseRefreshCommand();
+                }
+            });
         }
 
         private void RaiseGenerateCommand(object item)
@@ -87,7 +112,7 @@ namespace VirtoCommerce.ManagementClient.Reporting.ViewModel.Implementations
                     new KeyValuePair<string, object>("item", reportItem)
                     );
                 var confirmation = new Confirmation { Content = itemVM, Title = "Generate report" };
-               CommonWizardDialogRequest.Raise(confirmation);
+                ItemAdd(confirmation);
             }
         }
 

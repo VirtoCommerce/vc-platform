@@ -51,6 +51,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
@@ -81,6 +82,10 @@
     <ProjectReference Include="..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
       <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
       <Name>CommerceFoundation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Presentation.Asset\Presentation.Asset.csproj">
+      <Project>{6950a1ab-1fab-4fe4-abfc-a878180a4240}</Project>
+      <Name>Presentation.Asset</Name>
     </ProjectReference>
     <ProjectReference Include="..\Presentation.Core\Presentation.Core.csproj">
       <Project>{d821e0c3-5d53-429b-af8f-785e77b82fe0}</Project>
