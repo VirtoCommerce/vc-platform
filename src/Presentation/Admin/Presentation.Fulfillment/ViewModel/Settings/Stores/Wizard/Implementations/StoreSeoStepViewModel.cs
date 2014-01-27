@@ -161,7 +161,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 							var originalKeyword =
 								appConfigRepository.SeoUrlKeywords.Where(
 									seoKeyword =>
-									seoKeyword.KeywordValue.Equals(keyword.SeoUrlKeywordId))
+									seoKeyword.SeoUrlKeywordId.Equals(keyword.SeoUrlKeywordId))
 												   .FirstOrDefault();
 
 							if (originalKeyword != null)

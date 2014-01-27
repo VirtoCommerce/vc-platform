@@ -9,5 +9,6 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Interfaces
 		List<SeoUrlKeyword> SeoKeywords { get; }
 		SeoUrlKeyword CurrentSeoKeyword { get; }
 		void UpdateSeoKeywords();
+		void UpdateKeywordValueCode(string newCode);
 	}
 }

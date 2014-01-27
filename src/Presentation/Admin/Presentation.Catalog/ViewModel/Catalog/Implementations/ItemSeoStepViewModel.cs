@@ -12,6 +12,7 @@ using VirtoCommerce.Foundation.Frameworks.Extensions;
 using Omu.ValueInjecter;
 using VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Interfaces;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 
 namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementations
 {
@@ -143,6 +144,11 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			OnViewModelPropertyChangedUI(null, null);
 		}
 
+		public void UpdateKeywordValueCode(string newCode)
+		{
+			SeoKeywords.ForEach(x => x.KeywordValue = newCode);
+		}
+
 		public void UpdateSeoKeywords()
 		{
 			//if item code changed - need to update SEO KeywordValue property, if any
@@ -177,12 +183,12 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 							var originalKeyword =
 								appConfigRepository.SeoUrlKeywords.Where(
 									seoKeyword =>
-									seoKeyword.KeywordValue.Equals(keyword.KeywordValue) && seoKeyword.Language.Equals(keyword.Language) && seoKeyword.IsActive)
+									seoKeyword.SeoUrlKeywordId.Equals(keyword.SeoUrlKeywordId))
 												   .FirstOrDefault();
 
 							if (originalKeyword != null)
 							{
-								originalKeyword.InjectFrom(keyword);
+								originalKeyword.InjectFrom<CloneInjection>(keyword);
 								appConfigRepository.Update(originalKeyword);
 							}
 							else
