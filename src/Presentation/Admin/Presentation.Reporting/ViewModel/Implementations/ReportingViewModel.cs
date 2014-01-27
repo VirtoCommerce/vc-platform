@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.IO;
 using Microsoft.Practices.Prism.Commands;
@@ -124,7 +125,8 @@ namespace VirtoCommerce.ManagementClient.Reporting.ViewModel.Implementations
         {
             if (RefreshReport != null)
             {
-                OnUIThread(() => RefreshReport(this, EventArgs.Empty));
+                ShowLoadingAnimation = true;
+                PerformTasksInBackgroundWorker(()=>RefreshReport(this, EventArgs.Empty), ()=>ShowLoadingAnimation = false);
             }
         }
 

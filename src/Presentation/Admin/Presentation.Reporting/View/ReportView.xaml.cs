@@ -1,6 +1,8 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -24,23 +26,20 @@ namespace VirtoCommerce.ManagementClient.Reporting.View
 
         void ReportView_Loaded(object sender, RoutedEventArgs e)
         {
-            Dispatcher.BeginInvoke(DispatcherPriority.Loaded, new Action(() =>
-            {
-                viewModel = DataContext as IReportViewModel;
+            viewModel = DataContext as IReportViewModel;
                 
-                if (viewModel != null)
+            if (viewModel != null)
+            {
+                viewModel.RefreshReport += (o, args) => RefreshReport();
+                if (viewModel.ReportType.HasReportParameters)
                 {
-                    viewModel.RefreshReport += (o, args) => RefreshReport();
-                    if (viewModel.ReportType.HasReportParameters)
-                    {
-                        PrepareFilters();
-                    }
-                    else
-                    {
-                        RefreshReport();
-                    }
+                    PrepareFilters();
                 }
-            }));
+                else
+                {
+                    RefreshReport();
+                }
+            }
         }
 
 	    private void PrepareFilters()
@@ -119,25 +118,31 @@ namespace VirtoCommerce.ManagementClient.Reporting.View
 	        return paramControl;
 	    }
 
+	    private void PrepareReport()
+	    {
+            _reportViewer.ProcessingMode = ProcessingMode.Local;
+            _reportViewer.LocalReport.LoadReportDefinition(viewModel.ReportDefinition);
+            _reportViewer.LocalReport.DataSources.Clear();
+            _reportViewer.LocalReport.SetParameters(
+                viewModel.ReportType.ReportParameters.Select(r => new ReportParameter(r.Name, r.Value == null ? null : r.Value.ToString()))
+                );
+            foreach (DataTable table in viewModel.GetReportDataSet().Tables)
+            {
+                var ds = new ReportDataSource(table.TableName, table);
+
+                _reportViewer.LocalReport.DataSources.Add(ds);
+            }
+	    }
+
 	    private void RefreshReport()
 	    {
-	        Dispatcher.BeginInvoke(DispatcherPriority.Loaded, new Action(() =>
+            Dispatcher.Invoke(() => ReportsHost.Visibility = Visibility.Hidden );
+	        PrepareReport();
+	        Dispatcher.Invoke(delegate
 	        {
-	            _reportViewer.ProcessingMode = ProcessingMode.Local;
-	            _reportViewer.LocalReport.LoadReportDefinition(viewModel.ReportDefinition);
-	            _reportViewer.LocalReport.DataSources.Clear();
-	            _reportViewer.LocalReport.SetParameters(
-	                viewModel.ReportType.ReportParameters.Select(r => new ReportParameter(r.Name, r.Value == null?null:r.Value.ToString()))
-	                );
-	            foreach (DataTable table in viewModel.GetReportDataSet().Tables)
-	            {
-	                var ds = new ReportDataSource(table.TableName, table);
-
-	                _reportViewer.LocalReport.DataSources.Add(ds);
-	            }
-
 	            _reportViewer.RefreshReport();
-	        }));
+	            ReportsHost.Visibility = Visibility.Visible;
+	        });
 	    }
 	}
 }
