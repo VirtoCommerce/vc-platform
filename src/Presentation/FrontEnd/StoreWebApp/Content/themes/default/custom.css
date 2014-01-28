@@ -41,9 +41,9 @@
     overflow: hidden;
 }
 
-.validation-summary-errors ul, .validation-summary-errors li {
-    width: auto !important;
-}
+    .validation-summary-errors ul, .validation-summary-errors li {
+        width: auto !important;
+    }
 
 .share-links {
     padding: 10px 0;
@@ -107,3 +107,26 @@ div.loading-ajax {
     .external-login .title {
         font-size: 18px !important;
     }
+
+
+.color-pallete {
+    margin-top: 10px;
+}
+
+.color-box:first-child {
+    margin-left: 0;
+}
+
+.color-box:hover {
+    border: 1px solid #088;
+}
+
+.color-box {
+    height: 25px;
+    width: 25px;
+    cursor: pointer;
+    float: left;
+    margin: 2px 0 0 5px;
+    border: 1px solid #ECECEA;
+    box-shadow: 0 0 3px 0 #888;
+}

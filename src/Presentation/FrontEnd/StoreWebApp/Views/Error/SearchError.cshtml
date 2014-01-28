@@ -1,9 +1,30 @@
-﻿@model HandleErrorInfo
+﻿@using VirtoCommerce.Web.Virto.Helpers
+@model HandleErrorInfo
 @{
     Layout = "~/Views/Shared/_ErrorLayout.cshtml";
     ViewBag.Title = "Search error".Localize();
 }
 
+@section HeadTop
+{
+    <div class="rubber clearfix">
+        <div class="grid_6">
+            <div class="head-switch store">
+                @{Html.RenderAction("StorePicker", "Store");}
+            </div>
+            <div class="head-switch language">
+                @{Html.RenderPartial("Languages");}
+            </div>
+        </div>
+        <div class="grid_6">
+            @{Html.RenderAction("QuickAccess", "Store");}
+            @if (UserHelper.CustomerSession.IsRegistered)
+            {
+                <p class="welcome">@UserHelper.CustomerSession.CustomerName</p>
+            }
+        </div>
+    </div>
+}
 <div class="empty normal">
     <h2>@("Search is not working".Localize())</h2>
     <p>

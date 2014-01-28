@@ -24,7 +24,7 @@
         <div class="header-wrap">
             <div class="head-top">
                 <div class="rubber clearfix">
-                    <div class="grid_5">
+                    <div class="grid_6">
                         <div class="head-switch store">
                             @{Html.RenderAction("StorePicker", "Store");}
                         </div>        
@@ -35,15 +35,11 @@
                             @{Html.RenderAction("Currencies", "Store");}
                         </div>        
                     </div>
-                    <div class="grid_7">
+                    <div class="grid_6">
                         @{Html.RenderAction("QuickAccess", "Store");}        
                         @if (UserHelper.CustomerSession.IsRegistered)
                         {
-                            <p class="welcome">@string.Format("Welcome {0}!".Localize(), UserHelper.CustomerSession.CustomerName)</p>
-                        }
-                        else
-                        {
-                            <p id="quickAccessTitle" class="welcome">@("Welcome!".Localize())</p>
+                            <p class="welcome">@UserHelper.CustomerSession.CustomerName</p>
                         }
                     </div>
                 </div>
