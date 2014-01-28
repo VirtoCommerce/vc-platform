@@ -14,7 +14,7 @@
              xmlns:interfaces="clr-namespace:VirtoCommerce.Foundation.Reporting.Model;assembly=VirtoCommerce.Foundation"
              xmlns:interactionRequest="http://www.codeplex.com/prism"
              mc:Ignorable="d" 
-             d:DesignWidth="640" d:DesignHeight="480" Style="{DynamicResource Virto_Window_Style}" Loaded="UserControl_Loaded">
+             d:DesignWidth="640" d:DesignHeight="480" Style="{DynamicResource Virto_Window_Style}">
 
     <UserControl.Resources>
         <ResourceDictionary>

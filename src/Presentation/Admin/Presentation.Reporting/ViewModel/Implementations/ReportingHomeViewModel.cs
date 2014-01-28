@@ -86,6 +86,7 @@ namespace VirtoCommerce.ManagementClient.Reporting.ViewModel.Implementations
         private void RaiseUploadCommand()
         {
             var assetVM = _assetVmFactory.GetViewModelInstance();
+            assetVM.RootItemId = "reports";
             CommonConfirmRequest.Raise(
             new ConditionalConfirmation(assetVM.Validate) { Content = assetVM, Title = "Manage reports assets" },
             (x) =>
