@@ -266,7 +266,53 @@ namespace VirtoCommerce.Foundation.Data.Asset
 			return retVal.ToArray();
 		}
 
-		public IUnitOfWork UnitOfWork
+	    public Folder CreateFolder(string folderName, string parentId = null)
+	    {
+	        var fullName = Absolute(Path.Combine(parentId ?? "", folderName));
+	        var folder = new Folder {Name = folderName};
+	        if (!Directory.Exists(fullName))
+	        {
+	            Directory.CreateDirectory(fullName);   
+	        }
+
+            MapFileSystemBlobDirectory2Folder(fullName, folder);
+            ChangeTracker.Attach(folder);
+	        return folder;
+	    }
+
+	    public void Delete(string id)
+	    {
+            object item = GetFolderItemById(id) ?? (object)GetFolderById(id);
+
+            if (item != null)
+            {
+                Remove(item);
+                Commit();
+            }
+	    }
+
+	    public void Rename(string id, string name)
+	    {
+            object item = GetFolderItemById(id);
+
+            if (item != null)
+            {
+                ((FolderItem)item).Name = name;
+                Update(item);
+                UnitOfWork.Commit();
+                return;
+            }
+
+            item = GetFolderById(id);
+            if (item != null)
+            {
+                ((Folder)item).Name = name;
+                Update(item);
+                UnitOfWork.Commit();
+            }
+	    }
+
+	    public IUnitOfWork UnitOfWork
 		{
 			get { return this; }
 		}
@@ -346,7 +392,7 @@ namespace VirtoCommerce.Foundation.Data.Asset
 		protected virtual void MapFileSystemBlobDirectory2Folder(string directory, Folder folder)
 		{
 			var dInfo = new DirectoryInfo(directory);
-
+            
 			//Copy properties
 			folder.LastModified = dInfo.LastWriteTimeUtc;
 			//Convert folder uri to Name, and ParentId properties

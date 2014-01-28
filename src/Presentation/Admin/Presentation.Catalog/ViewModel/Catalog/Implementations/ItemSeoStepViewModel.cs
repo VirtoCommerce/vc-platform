@@ -6,18 +6,17 @@ using Microsoft.Practices.Prism.Commands;
 using VirtoCommerce.Foundation.AppConfig.Factories;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
+using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
-using VirtoCommerce.Foundation.Stores.Model;
-using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Implementations;
-using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Wizard.Interfaces;
 using Omu.ValueInjecter;
-using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Interfaces;
+using VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Interfaces;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 
-namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Wizard.Implementations
+namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementations
 {
-	public class StoreSeoStepViewModel : StoreViewModel, IStoreSeoStepViewModel
+	public class ItemSeoStepViewModel : ItemViewModel, IItemSeoStepViewModel
 	{
 		#region Dependencies
 
@@ -26,11 +25,12 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 		
 		#endregion
 
-		public StoreSeoStepViewModel(IRepositoryFactory<IAppConfigRepository> appConfigRepositoryFactory, IAppConfigEntityFactory appConfigEntityFactory, Store item)
-			: base(null, null, item)
+		public ItemSeoStepViewModel(IRepositoryFactory<IAppConfigRepository> appConfigRepositoryFactory, IAppConfigEntityFactory appConfigEntityFactory, Item item, IEnumerable<string> languages)
+			: base(null, null, null, null, item, null, null)
 		{
 			_appConfigRepositoryFactory = appConfigRepositoryFactory;
 			_appConfigEntityFactory = appConfigEntityFactory;
+			InnerItemCatalogLanguages = languages.ToList();
 			SeoLocalesFilterCommand = new DelegateCommand<string>(RaiseSeoLocalesFilter);
 		}
 				
@@ -56,7 +56,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 		{
 			get
 			{
-				return "Enter store SEO information.";
+				return "Enter item SEO information.";
 			}
 		}
 		#endregion
@@ -124,15 +124,11 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 				CurrentSeoKeyword.PropertyChanged -= CurrentSeoKeyword_PropertyChanged;
 
 			CurrentSeoKeyword =
-				SeoKeywords.FirstOrDefault(keyword => keyword.Language.Equals(locale, StringComparison.InvariantCultureIgnoreCase));
+				SeoKeywords.FirstOrDefault(keyword => keyword.Language.Equals(locale, StringComparison.InvariantCultureIgnoreCase) && keyword.IsActive);
 
 			if (CurrentSeoKeyword == null)
 			{
-				CurrentSeoKeyword = _appConfigEntityFactory.CreateEntity<SeoUrlKeyword>();
-				CurrentSeoKeyword.Language = locale;
-				CurrentSeoKeyword.IsActive = true;
-				CurrentSeoKeyword.KeywordType = (int)SeoUrlKeywordTypes.Store;
-				CurrentSeoKeyword.KeywordValue = InnerItem.StoreId;
+				CurrentSeoKeyword = new SeoUrlKeyword { Language = locale, IsActive = true, KeywordType = (int)SeoUrlKeywordTypes.Item, KeywordValue = InnerItem.Code, Created = DateTime.UtcNow};
 				SeoKeywords.Add(CurrentSeoKeyword);
 			}
 
@@ -141,14 +137,47 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 
 			FilterSeoLanguage = locale;
 		}
+
+		private void ResetProperties()
+		{
+			_useCustomImageText = false;
+			_useCustomMetaDescription = false;
+			_useCustomTitle = false;
+		}
 		
 		void CurrentSeoKeyword_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
 		{
 			_seoModified = true;
+			OnViewModelPropertyChangedUI(null, null);
+		}
+
+		public void UpdateKeywordValueCode(string newCode)
+		{
+			SeoKeywords.ForEach(x => x.KeywordValue = newCode);
 		}
 
 		public void UpdateSeoKeywords()
 		{
+			//if item code changed - need to update SEO KeywordValue property, if any
+			if (!OriginalItem.Code.Equals(InnerItem.Code))
+			{
+				if (SeoKeywords.Any(kw => !string.IsNullOrEmpty(kw.Keyword)))
+				{
+					if (CurrentSeoKeyword != null)
+						CurrentSeoKeyword.PropertyChanged -= CurrentSeoKeyword_PropertyChanged;
+
+					_seoModified = true;
+					SeoKeywords.ForEach(keyword =>
+					{
+						if (!string.IsNullOrEmpty(keyword.Keyword))
+							keyword.KeywordValue = InnerItem.Code;
+					});
+
+					if (CurrentSeoKeyword != null)
+						CurrentSeoKeyword.PropertyChanged -= CurrentSeoKeyword_PropertyChanged;
+				}
+			}
+
 			//if any SEO keyword modified update or add it
 			if (_seoModified)
 			{
@@ -166,7 +195,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 
 							if (originalKeyword != null)
 							{
-								originalKeyword.InjectFrom(keyword);
+								originalKeyword.InjectFrom<CloneInjection>(keyword);
 								appConfigRepository.Update(originalKeyword);
 							}
 							else
@@ -181,13 +210,6 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 				}
 				_seoModified = false;
 			}
-		}
-
-		private void ResetProperties()
-		{
-			_useCustomImageText = false;
-			_useCustomMetaDescription = false;
-			_useCustomTitle = false;
 		}
 
 		private bool _seoModified;
@@ -215,36 +237,33 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 
 		protected override void InitializePropertiesForViewing()
 		{
-			InnerItemStoreLanguages = InnerItem.Languages.Select(x => x.LanguageCode).ToList();
-
 			using (var _appConfigRepository = _appConfigRepositoryFactory.GetRepositoryInstance())
 			{
 				SeoKeywords =
 					_appConfigRepository.SeoUrlKeywords.Where(
 						keyword =>
-						keyword.KeywordValue.Equals(InnerItem.StoreId) && keyword.KeywordType.Equals((int)SeoUrlKeywordTypes.Store))
+						keyword.KeywordValue.Equals(InnerItem.Code) && keyword.KeywordType.Equals((int)SeoUrlKeywordTypes.Item))
 										.ToList();
-
 			}
 
-			InnerItemStoreLanguages.ForEach(locale => 
+			InnerItemCatalogLanguages.ForEach(locale => 
 				{
 					if (!SeoKeywords.Any(keyword => keyword.Language.Equals(locale)))
 					{
-						var newSeoKeyword = new SeoUrlKeyword { Language = locale, IsActive = true, KeywordType = (int)SeoUrlKeywordTypes.Store, KeywordValue = InnerItem.StoreId, Created = DateTime.UtcNow };
+						var newSeoKeyword = new SeoUrlKeyword { Language = locale, IsActive = true, KeywordType = (int)SeoUrlKeywordTypes.Item, KeywordValue = InnerItem.Code, Created = DateTime.UtcNow };
 						SeoKeywords.Add(newSeoKeyword);
 					}
 				});
-			
+
 			// filter values by locale
-			SeoLocalesFilterCommand.Execute(InnerItem.DefaultLanguage);
+			SeoLocalesFilterCommand.Execute(InnerItem.Catalog.DefaultLanguage);
 		}
 
 		#region Auxilliary methods
 
 		private bool ValidateKeywords()
 		{
-			bool retVal = true;
+			var retVal = true;
 			var keywords = SeoKeywords.Where(key => !string.IsNullOrEmpty(key.Keyword)).ToList();
 			if (keywords.Any())
 			{
@@ -262,7 +281,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 
 							if (count > 0)
 							{
-								keyword.SetError("Keyword", "Store with the same Keyword and Language already exists", true);
+								keyword.SetError("Keyword", "Item with the same Keyword and Language already exists", true);
 								CurrentSeoKeyword = keyword;
 								RaiseSeoLocalesFilter(keyword.Language);
 								retVal = false;

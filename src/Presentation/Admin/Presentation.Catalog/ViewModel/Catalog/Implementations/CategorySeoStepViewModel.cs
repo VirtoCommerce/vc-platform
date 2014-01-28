@@ -6,31 +6,35 @@ using Microsoft.Practices.Prism.Commands;
 using VirtoCommerce.Foundation.AppConfig.Factories;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
+using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
-using VirtoCommerce.Foundation.Stores.Model;
-using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Implementations;
-using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Wizard.Interfaces;
 using Omu.ValueInjecter;
-using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Interfaces;
+using VirtoCommerce.Foundation.Stores.Model;
+using VirtoCommerce.Foundation.Stores.Repositories;
+using VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Interfaces;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using catalogModel = VirtoCommerce.Foundation.Catalogs.Model;
+using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 
-namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Wizard.Implementations
+namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementations
 {
-	public class StoreSeoStepViewModel : StoreViewModel, IStoreSeoStepViewModel
+	public class CategorySeoStepViewModel : CategoryViewModel, ICategorySeoStepViewModel
 	{
 		#region Dependencies
 
 		private readonly IRepositoryFactory<IAppConfigRepository> _appConfigRepositoryFactory;
 		private readonly IAppConfigEntityFactory _appConfigEntityFactory;
-		
+		private readonly IRepositoryFactory<IStoreRepository> _storeRepositoryFactory;
 		#endregion
 
-		public StoreSeoStepViewModel(IRepositoryFactory<IAppConfigRepository> appConfigRepositoryFactory, IAppConfigEntityFactory appConfigEntityFactory, Store item)
-			: base(null, null, item)
+		public CategorySeoStepViewModel(IRepositoryFactory<IStoreRepository> storeRepositoryFactory, IRepositoryFactory<IAppConfigRepository> appConfigRepositoryFactory, IAppConfigEntityFactory appConfigEntityFactory, Category item, IEnumerable<string> languages, CatalogBase parentCatalog)
+			: base(null, null, null, item, parentCatalog)
 		{
 			_appConfigRepositoryFactory = appConfigRepositoryFactory;
 			_appConfigEntityFactory = appConfigEntityFactory;
+			_storeRepositoryFactory = storeRepositoryFactory;
+			InnerItemCatalogLanguages = languages.ToList();
 			SeoLocalesFilterCommand = new DelegateCommand<string>(RaiseSeoLocalesFilter);
 		}
 				
@@ -56,15 +60,13 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 		{
 			get
 			{
-				return "Enter store SEO information.";
+				return "Enter category SEO information.";
 			}
 		}
 		#endregion
 
 		#region SEO tab
-
-		public List<string> InnerItemStoreLanguages { get; private set; }
-
+		
 		public List<SeoUrlKeyword> SeoKeywords { get; private set; }
 
 		private SeoUrlKeyword _currentSeoKeyword;
@@ -124,15 +126,11 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 				CurrentSeoKeyword.PropertyChanged -= CurrentSeoKeyword_PropertyChanged;
 
 			CurrentSeoKeyword =
-				SeoKeywords.FirstOrDefault(keyword => keyword.Language.Equals(locale, StringComparison.InvariantCultureIgnoreCase));
+				SeoKeywords.FirstOrDefault(keyword => keyword.Language.Equals(locale, StringComparison.InvariantCultureIgnoreCase) && keyword.IsActive);
 
 			if (CurrentSeoKeyword == null)
 			{
-				CurrentSeoKeyword = _appConfigEntityFactory.CreateEntity<SeoUrlKeyword>();
-				CurrentSeoKeyword.Language = locale;
-				CurrentSeoKeyword.IsActive = true;
-				CurrentSeoKeyword.KeywordType = (int)SeoUrlKeywordTypes.Store;
-				CurrentSeoKeyword.KeywordValue = InnerItem.StoreId;
+				CurrentSeoKeyword = CreateSeoUrlKeyword(locale);
 				SeoKeywords.Add(CurrentSeoKeyword);
 			}
 
@@ -145,6 +143,12 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 		void CurrentSeoKeyword_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
 		{
 			_seoModified = true;
+			OnViewModelPropertyChangedUI(null, null);
+		}
+
+		public void UpdateKeywordValueCode(string newCode)
+		{
+			SeoKeywords.ForEach(x => x.KeywordValue = newCode);
 		}
 
 		public void UpdateSeoKeywords()
@@ -166,12 +170,12 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 
 							if (originalKeyword != null)
 							{
-								originalKeyword.InjectFrom(keyword);
+								originalKeyword.InjectFrom<CloneInjection>(keyword);
 								appConfigRepository.Update(originalKeyword);
 							}
 							else
 							{
-								var addKeyword = _appConfigEntityFactory.CreateEntity<SeoUrlKeyword>();
+								var addKeyword = CreateSeoUrlKeyword(keyword.Language);
 								addKeyword.InjectFrom(keyword);
 								appConfigRepository.Add(addKeyword);
 							}
@@ -215,36 +219,55 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 
 		protected override void InitializePropertiesForViewing()
 		{
-			InnerItemStoreLanguages = InnerItem.Languages.Select(x => x.LanguageCode).ToList();
-
 			using (var _appConfigRepository = _appConfigRepositoryFactory.GetRepositoryInstance())
 			{
 				SeoKeywords =
 					_appConfigRepository.SeoUrlKeywords.Where(
 						keyword =>
-						keyword.KeywordValue.Equals(InnerItem.StoreId) && keyword.KeywordType.Equals((int)SeoUrlKeywordTypes.Store))
+						keyword.KeywordValue.Equals(InnerItem.Code) && keyword.KeywordType.Equals((int)SeoUrlKeywordTypes.Category))
 										.ToList();
-
 			}
 
-			InnerItemStoreLanguages.ForEach(locale => 
+			var innerItemCatalog = _parentCatalog as catalogModel.Catalog;
+			if (innerItemCatalog == null)
+			{
+				using (var storeRepository = _storeRepositoryFactory.GetRepositoryInstance())
 				{
-					if (!SeoKeywords.Any(keyword => keyword.Language.Equals(locale)))
+					var languages =
+						storeRepository.Stores.Where(store => store.Catalog == _parentCatalog.CatalogId)
+						               .Expand(store => store.Languages).ToList();
+
+					var customComparer = new PropertyComparer<StoreLanguage>("LanguageCode");
+					var lang = languages.SelectMany(x => x.Languages).Distinct(customComparer);
+
+					InnerItemCatalogLanguages = new List<string>();
+					if (lang.Any())
 					{
-						var newSeoKeyword = new SeoUrlKeyword { Language = locale, IsActive = true, KeywordType = (int)SeoUrlKeywordTypes.Store, KeywordValue = InnerItem.StoreId, Created = DateTime.UtcNow };
-						SeoKeywords.Add(newSeoKeyword);
+						foreach (var l in lang)
+						{
+							InnerItemCatalogLanguages.Add(l.LanguageCode);
+						}
 					}
-				});
+				}
+			}
 			
+			InnerItemCatalogLanguages.ForEach(locale =>
+			{
+				if (!SeoKeywords.Any(keyword => keyword.Language.Equals(locale)))
+				{
+					SeoKeywords.Add(CreateSeoUrlKeyword(locale));
+				}
+			});
+
 			// filter values by locale
-			SeoLocalesFilterCommand.Execute(InnerItem.DefaultLanguage);
+			SeoLocalesFilterCommand.Execute(_parentCatalog.DefaultLanguage);
 		}
 
 		#region Auxilliary methods
 
 		private bool ValidateKeywords()
 		{
-			bool retVal = true;
+			var retVal = true;
 			var keywords = SeoKeywords.Where(key => !string.IsNullOrEmpty(key.Keyword)).ToList();
 			if (keywords.Any())
 			{
@@ -262,7 +285,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 
 							if (count > 0)
 							{
-								keyword.SetError("Keyword", "Store with the same Keyword and Language already exists", true);
+								keyword.SetError("Keyword", "Category with the same Keyword and Language already exists", true);
 								CurrentSeoKeyword = keyword;
 								RaiseSeoLocalesFilter(keyword.Language);
 								retVal = false;
@@ -274,6 +297,19 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 
 			return retVal;
 		}
+
+		private SeoUrlKeyword CreateSeoUrlKeyword(string locale)
+		{
+			var newSeoKeyword = _appConfigEntityFactory.CreateEntity<SeoUrlKeyword>();
+			newSeoKeyword.Language = locale;
+			newSeoKeyword.IsActive = true;
+			newSeoKeyword.KeywordType = (int)SeoUrlKeywordTypes.Category;
+			newSeoKeyword.KeywordValue = InnerItem.Code;
+			newSeoKeyword.Created = DateTime.UtcNow;
+
+			return newSeoKeyword;
+		}
+
 		#endregion
 	}
 }

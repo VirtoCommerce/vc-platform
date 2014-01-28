@@ -14,9 +14,9 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </base:ViewBase.Resources>
-    
 
-    <TabControl x:Name="tabControl" Tag="Store" Style="{StaticResource Virto_TabControlHorizontal_Style}">
+
+	<TabControl x:Name="tabControl" Tag="Store" Style="{StaticResource Virto_TabControlHorizontal_Style}" SelectedIndex="{Binding SelectedTabIndex}">
         <TabItem x:Name="tabSummary" Header="Summary" Tag="{Binding IsInitializingOverview}">
             <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="0,10,0,0">
                 <!--<ContentControl Content="{Binding AllRegisteredSteps[0]}" Margin="0,-1,0,-10" />-->

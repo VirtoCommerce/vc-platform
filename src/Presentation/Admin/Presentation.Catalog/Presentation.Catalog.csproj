@@ -181,10 +181,14 @@
     <Compile Include="NavigationNames.cs" />
     <Compile Include="Services\MockCatalogService.cs" />
     <Compile Include="ViewModel\Catalog\Implementations\CatalogDeleteViewModel.cs" />
+    <Compile Include="ViewModel\Catalog\Implementations\CategorySeoStepViewModel.cs" />
     <Compile Include="ViewModel\Catalog\Implementations\LinkedCategoryViewModel.cs" />
+    <Compile Include="ViewModel\Catalog\Implementations\ItemSeoStepViewModel.cs" />
     <Compile Include="ViewModel\Catalog\Implementations\TreeCatalogViewModel.cs" />
     <Compile Include="ViewModel\Catalog\Implementations\TreeCategoryViewModel.cs" />
+    <Compile Include="ViewModel\Catalog\Interfaces\ICategorySeoStepViewModel.cs" />
     <Compile Include="ViewModel\Catalog\Interfaces\ICatalogDeleteViewModel.cs" />
+    <Compile Include="ViewModel\Catalog\Interfaces\IItemSeoStepViewModel.cs" />
     <Compile Include="ViewModel\Catalog\Interfaces\ILinkedCategoryViewModel.cs" />
     <Compile Include="ViewModel\Catalog\Interfaces\ITreeCategoryViewModel.cs" />
     <Compile Include="ViewModel\Catalog\Interfaces\ITreeVirtualCatalogViewModel.cs" />
@@ -357,6 +361,9 @@
     <Compile Include="View\Wizard\ItemTypeSelectionStepView.xaml.cs">
       <DependentUpon>ItemTypeSelectionStepView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\Wizard\SeoStepView.xaml.cs">
+      <DependentUpon>SeoStepView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Wizard\VirtualCatalogOverviewStepView.xaml.cs">
       <DependentUpon>VirtualCatalogOverviewStepView.xaml</DependentUpon>
     </Compile>
@@ -507,6 +514,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\Wizard\ItemTypeSelectionStepView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Wizard\SeoStepView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

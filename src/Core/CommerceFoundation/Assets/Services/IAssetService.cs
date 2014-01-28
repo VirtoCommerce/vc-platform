@@ -32,7 +32,7 @@ namespace VirtoCommerce.Foundation.Assets.Services
 		[OperationContract]
 		bool Exists(string blobKey);
         [OperationContract]
-        Folder CreateFolder(string parentFolderId, string folderName);
+        Folder CreateFolder(string folderName, string parentFolderId);
         [OperationContract]
         void  Rename(string id, string name);
         [OperationContract]

@@ -21,6 +21,10 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 	public class StoreViewModel : ViewModelDetailAndWizardBase<Store>, IStoreViewModel
 	{
 
+		#region Const
+		const int SeoTabIndex = 7;
+		#endregion
+
 		#region Dependencies
 
 		private readonly INavigationManager _navManager;
@@ -74,6 +78,17 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 			: base(entityFactory, item, true)
 		{
 			_repositoryFactory = repositoryFactory;
+		}
+
+		#endregion
+
+		#region Properties
+
+		private int _selectedTabIndex;
+		public int SelectedTabIndex
+		{
+			get { return _selectedTabIndex; }
+			protected set { _selectedTabIndex = value; OnPropertyChanged(); }
 		}
 
 		#endregion
@@ -133,7 +148,12 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 		protected override bool IsValidForSave()
 		{
 			if (SeoStepViewModel != null)
-				return InnerItem.Validate() && SeoStepViewModel.IsValid;
+			{
+				var isSeoValid = SeoStepViewModel.IsValid;
+				if (!isSeoValid)
+					SelectedTabIndex = SeoTabIndex;
+				return InnerItem.Validate() && isSeoValid;
+			}
 
 			return InnerItem.Validate();
 		}

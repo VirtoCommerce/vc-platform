@@ -110,7 +110,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Wizard
 			IAuthenticationContext authContext,
 			ItemStepModel itemModel,
 			IViewModelsFactory<IPriceViewModel> priceVmFactory)
-			: base(null, repositoryFactory, pricelistRepositoryFactory, vmFactory, entityFactory, itemModel.InnerItem, authContext, priceVmFactory)
+			: base(repositoryFactory, pricelistRepositoryFactory, vmFactory, entityFactory, itemModel.InnerItem, authContext, priceVmFactory)
 		{
 			stepModel = itemModel;
 		}

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
@@ -18,6 +19,8 @@ using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Catalogs.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
+using VirtoCommerce.Foundation.Stores.Model;
+using VirtoCommerce.Foundation.Stores.Repositories;
 using VirtoCommerce.ManagementClient.Catalog.Model;
 using VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Interfaces;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
@@ -33,21 +36,22 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		private readonly ITreeCategoryViewModel _parentTreeVM;
 		private readonly IRepositoryFactory<ICatalogRepository> _repositoryFactory;
 		private readonly IViewModelsFactory<IPropertyValueBaseViewModel> _propertyValueVmFactory;
-		private readonly IRepositoryFactory<IAppConfigRepository> _appConfigRepositoryFactory;
+		private readonly IViewModelsFactory<ICategorySeoStepViewModel> _seoVmFactory;
 		private readonly INavigationManager _navManager;
 
-		private readonly CatalogBase _parentCatalog;
+		protected readonly CatalogBase _parentCatalog;
 
 		/// <summary>
 		/// public. For viewing
 		/// </summary>
-		public CategoryViewModel(IRepositoryFactory<IAppConfigRepository> appConfigRepositoryFactory, IViewModelsFactory<IPropertyValueBaseViewModel> propertyValueVmFactory, ICatalogEntityFactory entityFactory,
+		public CategoryViewModel(IViewModelsFactory<ICategorySeoStepViewModel> seoVmFactory, IViewModelsFactory<IPropertyValueBaseViewModel> propertyValueVmFactory, ICatalogEntityFactory entityFactory,
 			IRepositoryFactory<ICatalogRepository> repositoryFactory, Category item,
 			ITreeCategoryViewModel parentTreeVM, INavigationManager navManager)
-			: this(appConfigRepositoryFactory, repositoryFactory, propertyValueVmFactory, entityFactory, item, CatalogHomeViewModel.GetCatalog(parentTreeVM), false)
+			: this(repositoryFactory, propertyValueVmFactory, entityFactory, item, CatalogHomeViewModel.GetCatalog(parentTreeVM), false)
 		{
 			_parentTreeVM = parentTreeVM;
 			_navManager = navManager;
+			_seoVmFactory = seoVmFactory;
 
 			ViewTitle = new ViewTitleBase
 				{
@@ -63,21 +67,19 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		/// <summary>
 		/// protected. For a step
 		/// </summary>
-		protected CategoryViewModel(IRepositoryFactory<IAppConfigRepository> appConfigRepositoryFactory, IRepositoryFactory<ICatalogRepository> repositoryFactory, IViewModelsFactory<IPropertyValueBaseViewModel> propertyValueVmFactory, ICatalogEntityFactory entityFactory, Category item, CatalogBase parentCatalog)
-			: this(appConfigRepositoryFactory, repositoryFactory, propertyValueVmFactory, entityFactory, item, parentCatalog, true)
+		protected CategoryViewModel(IRepositoryFactory<ICatalogRepository> repositoryFactory, IViewModelsFactory<IPropertyValueBaseViewModel> propertyValueVmFactory, ICatalogEntityFactory entityFactory, Category item, CatalogBase parentCatalog)
+			: this(repositoryFactory, propertyValueVmFactory, entityFactory, item, parentCatalog, true)
 		{
 		}
 
-		private CategoryViewModel(IRepositoryFactory<IAppConfigRepository> appConfigRepositoryFactory, IRepositoryFactory<ICatalogRepository> repositoryFactory, IViewModelsFactory<IPropertyValueBaseViewModel> propertyValueVmFactory, ICatalogEntityFactory entityFactory, Category item, CatalogBase parentCatalog, bool isWizardMode)
+		private CategoryViewModel(IRepositoryFactory<ICatalogRepository> repositoryFactory, IViewModelsFactory<IPropertyValueBaseViewModel> propertyValueVmFactory, ICatalogEntityFactory entityFactory, Category item, CatalogBase parentCatalog, bool isWizardMode)
 			: base(entityFactory, item, isWizardMode)
 		{
 			_propertyValueVmFactory = propertyValueVmFactory;
 			_repositoryFactory = repositoryFactory;
 			_parentCatalog = parentCatalog;
-			_appConfigRepositoryFactory = appConfigRepositoryFactory;
 
 			PropertiesLocalesFilterCommand = new DelegateCommand<string>(RaisePropertiesLocalesFilter);
-			SeoLocalesFilterCommand = new DelegateCommand<string>(RaiseSeoLocalesFilter);
 			PropertyValueEditCommand = new DelegateCommand<object>(RaisePropertyValueEditInteractionRequest, x => x != null);
 			PropertyValueDeleteCommand = new DelegateCommand<object>(RaisePropertyValueDeleteInteractionRequest, x => x != null);
 		}
@@ -198,6 +200,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 		private const int TabIndexOverview = 0;
 		private const int TabIndexProperties = 1;
+		private const int TabIndexSeo = 2;
 
 		private int _selectedTabIndex;
 		public int SelectedTabIndex
@@ -243,7 +246,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 			InitializePropertiesAndValues();
 
-			InitializeSeoKeywords();
+			InitSeoStep();
 		}
 
 		private NavigationItem _navigationData;
@@ -281,12 +284,24 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		{
 			InnerItem.PropertyChanged += InnerItem_PropertyChanged;
 			//InnerItem.CategoryPropertyValues.CollectionChanged += ViewModel_PropertyChanged;
+
+			if (SeoStepViewModel != null)
+			{
+				if (SeoStepViewModel.SeoKeywords != null)
+					SeoStepViewModel.SeoKeywords.ForEach(keyword => keyword.PropertyChanged += ViewModel_PropertyChanged);
+			}
 		}
 
 		protected override void CloseSubscriptionUI()
 		{
 			InnerItem.PropertyChanged -= InnerItem_PropertyChanged;
 			//InnerItem.CategoryPropertyValues.CollectionChanged -= ViewModel_PropertyChanged;
+
+			if (SeoStepViewModel != null)
+			{
+				if (SeoStepViewModel.SeoKeywords != null)
+					SeoStepViewModel.SeoKeywords.ForEach(keyword => keyword.PropertyChanged -= ViewModel_PropertyChanged);
+			}
 		}
 
 		protected override bool IsValidForSave()
@@ -315,40 +330,29 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			{
 				SelectedTabIndex = TabIndexProperties;
 			}
+			
+			var seoIsValid = true;
+			if (SeoStepViewModel != null)
+			{
+				seoIsValid = SeoStepViewModel.IsValid;
+				if (!seoIsValid)
+					SelectedTabIndex = TabIndexSeo;
+			}
 
-			//seo is valid if was modified, seo keyword is not empty, or if all properties ar empty
-			var allSeoValid = !_seoModified || SeoKeywords.All(keyword => keyword.Validate() || (string.IsNullOrEmpty(keyword.Keyword) && string.IsNullOrEmpty(keyword.ImageAltDescription) && string.IsNullOrEmpty(keyword.Title) && string.IsNullOrEmpty(keyword.MetaDescription)));
-
-			return result && isPropertyValuesValid && isCodeValid && allSeoValid;
+			return result && isPropertyValuesValid && isCodeValid && seoIsValid;
 		}
 
 		protected override void AfterSaveChangesUI()
 		{
-			//if item code changed - need to update SEO KeywordValue property, if any
-			if (!OriginalItem.Code.Equals(InnerItem.Code))
+			if (SeoStepViewModel != null)
 			{
-				if (SeoKeywords.Any(kw => !string.IsNullOrEmpty(kw.Keyword)))
-				{
-					if (CurrentSeoKeyword != null)
-						CurrentSeoKeyword.PropertyChanged -= CurrentSeoKeyword_PropertyChanged;
-
-					_seoModified = true;
-					SeoKeywords.ForEach(keyword =>
-					{
-						if (!string.IsNullOrEmpty(keyword.Keyword))
-							keyword.KeywordValue = InnerItem.Code;
-					});
-
-					if (CurrentSeoKeyword != null)
-						CurrentSeoKeyword.PropertyChanged -= CurrentSeoKeyword_PropertyChanged;
-				}
+				if (SeoStepViewModel.CurrentSeoKeyword != null)
+					SeoStepViewModel.UpdateSeoKeywords();
 			}
 
 			// just basic properties inject is enough. Injecting collections can generate repository errors.
 			OriginalItem.InjectFrom(InnerItem);
 			_parentTreeVM.RefreshUI();
-
-			UpdateSeoKeywords();
 		}
 
 		protected override RefusedConfirmation CancelConfirm()
@@ -387,6 +391,8 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 		protected virtual void InnerItem_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
 		{
+			if (e.PropertyName == "Code")
+				SeoStepViewModel.UpdateKeywordValueCode(InnerItem.Code);
 			if (e.PropertyName == "PropertySetId")
 			{
 				SetupPropertiesAndValues(InnerItem.PropertySet, InnerItem.CategoryPropertyValues, InnerItemCatalogLanguages, PropertiesAndValues, IsWizardMode);
@@ -398,7 +404,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 		public bool IsCatalogLanguageFilteringEnabled { get { return _parentCatalog is catalogModel.Catalog; } }
 		public string FilterLanguage { get; private set; }
-		public List<string> InnerItemCatalogLanguages { get; private set; }
+		public List<string> InnerItemCatalogLanguages { get; protected set; }
 		public ObservableCollection<PropertyAndPropertyValueBase> PropertiesAndValues { get; protected set; }
 		public DelegateCommand<string> PropertiesLocalesFilterCommand { get; private set; }
 
@@ -422,22 +428,9 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			}
 			else
 			{
-				using (var appConfigRepository = _appConfigRepositoryFactory.GetRepositoryInstance())
+				if (InnerItemCatalogLanguages == null)
 				{
-					var languages = appConfigRepository.Settings.Where(s => s.Name == "Languages").Expand(x => x.SettingValues).First().SettingValues;
-
-					InnerItemCatalogLanguages = new List<string>();
-					if (languages.Any())
-					{
-						foreach (var settingValue in languages)
-						{
-							InnerItemCatalogLanguages.Add(settingValue.ToString());
-						}
-					}
-					else
-					{
-						InnerItemCatalogLanguages.Add(_parentCatalog.DefaultLanguage);
-					}
+					InnerItemCatalogLanguages = new List<string> {_parentCatalog.DefaultLanguage};
 				}
 			}
 
@@ -451,6 +444,8 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 				SetupPropertiesAndValues(InnerItem.PropertySet, InnerItem.CategoryPropertyValues, InnerItemCatalogLanguages, PropertiesAndValues, IsWizardMode);
 			});
 		}
+
+
 
 		// function duplicated in ItemViewModel
 		private void RaisePropertiesLocalesFilter(string locale)
@@ -475,150 +470,18 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 		#region SEO tab
 
-		public List<SeoUrlKeyword> SeoKeywords { get; private set; }
+		public ICategorySeoStepViewModel SeoStepViewModel { get; private set; }
 
-		private SeoUrlKeyword _currentSeoKeyword;
-		public SeoUrlKeyword CurrentSeoKeyword 
+		protected void InitSeoStep()
 		{
-			get { return _currentSeoKeyword; } 
-			set 
-			{ 
-				_currentSeoKeyword = value;
-				OnPropertyChanged("CurrentSeoKeyword");
-			} 
+			var itemParameter = new KeyValuePair<string, object>("item", InnerItem);
+			var languagesParameter = new KeyValuePair<string, object>("languages", InnerItemCatalogLanguages);
+			var parentCat = new KeyValuePair<string, object>("parentCatalog", _parentCatalog);
+			SeoStepViewModel =
+					_seoVmFactory.GetViewModelInstance(itemParameter, languagesParameter, parentCat);
+			(SeoStepViewModel as CategorySeoStepViewModel).InitializePropertiesForViewing();
+			OnPropertyChanged("SeoStepViewModel");
 		}
-		
-		private bool _useDefaultMetaDescription = true;
-		public bool UseDefaultMetaDescription
-		{
-			get { return _useDefaultMetaDescription && (CurrentSeoKeyword != null && string.IsNullOrEmpty(CurrentSeoKeyword.MetaDescription)); }
-			set
-			{
-				_useDefaultMetaDescription = value;
-				if (value && !string.IsNullOrEmpty(CurrentSeoKeyword.MetaDescription))
-					CurrentSeoKeyword.MetaDescription = null;
-				OnPropertyChanged("UseDefaultMetaDescription");
-			}
-		}
-
-		private bool _useDefaultTitle = true;
-		public bool UseDefaultTitle
-		{
-			get { return _useDefaultTitle && (CurrentSeoKeyword != null && string.IsNullOrEmpty(CurrentSeoKeyword.Title)); }
-			set
-			{
-				_useDefaultTitle = value;
-				if (value && !string.IsNullOrEmpty(CurrentSeoKeyword.Title))
-					CurrentSeoKeyword.Title = null;
-				OnPropertyChanged("UseDefaultTitle");
-			}
-		}
-
-		private bool _useDefaultImageText = true;
-		public bool UseDefaultImageText
-		{
-			get { return _useDefaultImageText && (CurrentSeoKeyword != null && string.IsNullOrEmpty(CurrentSeoKeyword.ImageAltDescription)); }
-			set 
-			{ 
-				_useDefaultImageText = value;
-				if (value && !string.IsNullOrEmpty(CurrentSeoKeyword.ImageAltDescription))
-					CurrentSeoKeyword.ImageAltDescription = null;
-				OnPropertyChanged("UseDefaultImageText");
-			}
-		}
-
-		private void InitializeSeoKeywords()
-		{
-			using (var _appConfigRepository = _appConfigRepositoryFactory.GetRepositoryInstance())
-			{
-				SeoKeywords =
-					_appConfigRepository.SeoUrlKeywords.Where(
-						keyword =>
-						keyword.KeywordValue.Equals(InnerItem.Code) && keyword.KeywordType.Equals((int) SeoUrlKeywordTypes.Category))
-					                    .ToList();
-			}
-			// filter values by locale
-			SeoLocalesFilterCommand.Execute(_parentCatalog.DefaultLanguage);
-			
-		}
-
-		private void RaiseSeoLocalesFilter(string locale)
-		{
-			//detach property changed
-			if (CurrentSeoKeyword != null)
-				CurrentSeoKeyword.PropertyChanged -= CurrentSeoKeyword_PropertyChanged;
-
-			CurrentSeoKeyword =
-				SeoKeywords.FirstOrDefault(keyword => keyword.Language.Equals(locale, StringComparison.InvariantCultureIgnoreCase));
-			
-			if (CurrentSeoKeyword == null)
-			{
-				CurrentSeoKeyword = new SeoUrlKeyword { Language = locale, IsActive = true, KeywordType = (int)SeoUrlKeywordTypes.Category, KeywordValue = InnerItem.Code, Created = DateTime.UtcNow };
-				SeoKeywords.Add(CurrentSeoKeyword);
-			}
-
-			//attach property changed
-			CurrentSeoKeyword.PropertyChanged += CurrentSeoKeyword_PropertyChanged;
-
-			FilterSeoLanguage = locale;
-			OnPropertyChanged("FilterSeoLanguage");
-
-			_useDefaultTitle = true;
-			OnPropertyChanged("UseDefaultTitle");
-
-			_useDefaultMetaDescription = true;
-			OnPropertyChanged("UseDefaultMetaDescription");
-
-			_useDefaultImageText = true;
-			OnPropertyChanged("UseDefaultImageText");
-		}
-
-		void CurrentSeoKeyword_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
-		{
-			_seoModified = true;
-			OnViewModelPropertyChangedUI(null, null);
-		}
-
-		private void UpdateSeoKeywords()
-		{
-			//if any SEO keyword modified update or add it
-			if (_seoModified)
-			{
-				using (var appConfigRepository = _appConfigRepositoryFactory.GetRepositoryInstance())
-				{
-					SeoKeywords.ForEach(keyword =>
-						{
-							if (!string.IsNullOrEmpty(keyword.Keyword))
-							{
-								var originalKeywords =
-									appConfigRepository.SeoUrlKeywords.Where(
-										seoKeyword =>
-										keyword.SeoUrlKeywordId == seoKeyword.SeoUrlKeywordId);
-
-								if (originalKeywords.Count() > 0)
-								{
-									var originalKeyword = originalKeywords.FirstOrDefault();
-									originalKeyword.InjectFrom(keyword);
-									appConfigRepository.Update(originalKeyword);
-									appConfigRepository.UnitOfWork.Commit();
-								}
-								else
-								{
-									var addKeyword = new SeoUrlKeyword();
-									addKeyword.InjectFrom(keyword);
-									appConfigRepository.Add(addKeyword);
-									appConfigRepository.UnitOfWork.Commit();
-								}
-							}
-						});
-				}
-				_seoModified = false;
-			}
-		}
-
-		private bool _seoModified;
-		public string FilterSeoLanguage { get; private set; }
-		public DelegateCommand<string> SeoLocalesFilterCommand { get; private set; }
 
 		#endregion
 

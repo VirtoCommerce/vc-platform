@@ -59,7 +59,7 @@ namespace VirtoCommerce.Foundation.AppConfig.Model
         [StringLength(255)]
         [DataMember]
         [Required]
-		[CustomValidation(typeof(SeoUrlKeyword), "ValidateKeywordUrl", ErrorMessage = @"Keyword can't contain $+;=%{}[]|\/@ ~#!^*&()?:'<>, characters")]
+		[CustomValidation(typeof(SeoUrlKeyword), "ValidateKeywordUrl", ErrorMessage = @"Keyword can't contain $+;=%{}[]|\/@ ~#!^*&?:'<>, characters")]
         public string Keyword
         {
             get { return _keyword; }
@@ -179,7 +179,7 @@ namespace VirtoCommerce.Foundation.AppConfig.Model
 				return new ValidationResult("Keyword can't be empty");
 			}
 
-			const string invalidKeywordCharacters = @"$+;=%{}[]|\/@ ~#!^*&()?:'<>,";
+			const string invalidKeywordCharacters = @"$+;=%{}[]|\/@ ~#!^*&?:'<>,";
 
 			if (value.IndexOfAny(invalidKeywordCharacters.ToCharArray()) > -1)
 			{
