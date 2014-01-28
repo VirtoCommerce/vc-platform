@@ -48,6 +48,19 @@ namespace VirtoCommerce.Web.Client.Modules
             return false;
         }
 
+        public virtual bool IsAjax
+        {
+            get
+            {
+                var request = HttpContext.Current.Request;
+                if (request == null)
+                {
+                    return false;
+                }
+                return (request["X-Requested-With"] == "XMLHttpRequest") || ((request.Headers != null) && (request.Headers["X-Requested-With"] == "XMLHttpRequest"));
+            }
+        }
+
         /// <summary>
         /// Disposes of the resources (other than memory) used by the module that implements <see cref="T:System.Web.IHttpModule" />.
         /// </summary>
