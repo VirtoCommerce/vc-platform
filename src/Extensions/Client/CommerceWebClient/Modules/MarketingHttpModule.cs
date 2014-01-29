@@ -49,7 +49,7 @@ namespace VirtoCommerce.Web.Client.Modules
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         void context_PostAcquireRequestState(object sender, EventArgs e)
         {
-            if (IsResourceFile() || IsAjax)
+            if (IsResourceFile())
                 return;
 
             var application = (HttpApplication)sender;
