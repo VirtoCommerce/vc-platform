@@ -68,7 +68,7 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Models
         {
             ErrorMessage = "";
             StatusMessage = "";
-            //HttpContext.Current.Session["log"] = null;
+            HttpContext.Current.Session["log"] = null;
         }
 
         public SqlConnectionStringBuilder ConnectionStringBuilder
