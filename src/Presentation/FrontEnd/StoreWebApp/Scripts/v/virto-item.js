@@ -39,7 +39,7 @@ function errorMsg(xhr, ajaxOptions, thrownError) {
 function loadVariations(parentItemId, variation, dropdown)
 {
 
-    var url = VirtoCommerce.url("/Catalog/ItemVariations") + "?itemId=" + parentItemId + "&name=itemvariations";
+    var url = VirtoCommerce.url("/catalog/itemvariations") + "?itemId=" + parentItemId + "&name=itemvariations";
 
     if (variation != undefined && variation.length > 0)
     {

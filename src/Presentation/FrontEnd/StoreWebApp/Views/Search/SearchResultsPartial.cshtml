@@ -25,6 +25,11 @@ else
             @if (Model.CatalogItems.Any()){
                 @:Reviews.catalogReviews("@Html.Raw(Model.CatalogItems.Select(i => i.CatalogItem.ItemId).Aggregate((x, y) => (x.Contains("or ItemId eq") ? x : string.Format("ItemId eq '{0}'", x)) + string.Format(" or ItemId eq '{0}'", y)))");
             }
+
+            var viewClass = VirtoCommerce.getCookie("categoryListView");
+            viewClass = viewClass == "" ? "list" : viewClass;
+            window.setTimeout(function() { $('div.view-mode a.' + viewClass).trigger('click'); }, 100);
+
         });
     </script>
    @Html.DisplayForModel("ReviewTemplate");
@@ -37,7 +42,7 @@ else
             <div class="toolbar">
                 @Html.DisplayFor(model => model.Pager, "SearchPager")
             </div>
-            <div class="grid selected">
+            <div class="grid">
                 <ul class="products-list grid">
                     @RenderItems("Item")
                 </ul>

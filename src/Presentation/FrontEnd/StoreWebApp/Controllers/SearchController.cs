@@ -136,14 +136,14 @@ namespace VirtoCommerce.Web.Controllers
             }
 
             // Perform search
-            var sort = parameters.Sort;
+            var sort = string.IsNullOrEmpty(parameters.Sort) ? "position" : parameters.Sort;
 		    var sortOrder = parameters.SortOrder;
 
             bool isDescending = "desc".Equals(sortOrder, StringComparison.OrdinalIgnoreCase);
 
             SearchSort sortObject = null;
 
-            if (!String.IsNullOrEmpty(sort) && !sort.Equals("position", StringComparison.OrdinalIgnoreCase))
+            if (!sort.Equals("position", StringComparison.OrdinalIgnoreCase))
             {
                 if (sort.Equals("price", StringComparison.OrdinalIgnoreCase))
                 {

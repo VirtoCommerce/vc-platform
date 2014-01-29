@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using System.Web.WebPages;
 using DotNetOpenAuth.OpenId.Extensions.SimpleRegistration;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Web.Client.Helpers;
@@ -25,6 +26,12 @@ namespace VirtoCommerce.Web.Client.Extensions.Filters
         {
             var context = filterContext.HttpContext;
 
+            // don't 'rewrite' POST requests, child action and ajax requests
+            if (context.Request.RequestType != "GET" || filterContext.IsChildAction || context.Request.IsAjaxRequest())
+            {
+                return;
+            }
+
             if (context.Request.Url != null)
             {
                 var baseUri = string.Format(
@@ -34,17 +41,12 @@ namespace VirtoCommerce.Web.Client.Extensions.Filters
                     context.Request.Url.Port == 80 ? "" : ":" + context.Request.Url.Port);
 
                 var path = HttpUtility.UrlDecode(string.Concat(baseUri, context.Request.Url.AbsolutePath));
-                //var path = HttpUtility.UrlDecode(context.Request.Url.AbsolutePath);
 
                 if (!string.IsNullOrEmpty(path))
                 {
                     var query = HttpUtility.UrlDecode(context.Request.Url.Query);
                     var queryString = context.Request.QueryString;
                     var needRedirect = false;
-
-                    // don't 'rewrite' POST requests
-                    if (context.Request.RequestType == "GET" && !filterContext.IsChildAction)
-                    {
 
                         //Make sure we allways use same virtual path as Route provides
                         var routePath = filterContext.RouteData.Route.GetVirtualPath(filterContext.RequestContext,
@@ -146,7 +148,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Filters
                         {
                             needRedirect = true;
                         }
-                    }
+                    
 
                     if (needRedirect)
                     {
