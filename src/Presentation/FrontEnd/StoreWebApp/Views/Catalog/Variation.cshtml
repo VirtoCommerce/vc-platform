@@ -3,16 +3,15 @@
 <script type="text/javascript">
 	$(document).ready(function ()
 	{
-		//Update main image
-		$("#imageContainer img.cloudzoom").attr("src", "@Url.Image(Model.CatalogItem.Item, "primaryimage")");
+	    //Update main image
+	    var cloudZoom = $("#imageContainer img.cloudzoom").data("CloudZoom");
+	    cloudZoom.loadImage('@Url.Image(Model.CatalogItem.Item, "primaryimage")', '@Url.Image(Model.CatalogItem.Item, "primaryimage")');
 
 		//Update main price
 @*		@{Model.Price.PriceTitle = "Price:".Localize();}*@
 	    $("#mainPrice").html($('#temp_price').html());
 	    $('#temp_price').remove();
 	    $("header.product-name h1").html('@Model.DisplayName');
-
-	    CloudZoom.quickStart();
 	    
         //Handle availability
 	    $("span.in-stock").text("@Model.Availability.AvailabilityString");

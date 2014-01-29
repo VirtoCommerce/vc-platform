@@ -1,5 +1,5 @@
 ﻿function initItemPage() {
-    CloudZoom.quickStart();
+    window.CloudZoom.quickStart();
 
     // initialize tabs
     window.setTimeout(function ()

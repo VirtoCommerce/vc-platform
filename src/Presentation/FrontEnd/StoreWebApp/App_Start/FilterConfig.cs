@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using VirtoCommerce.Foundation.Search;
 using VirtoCommerce.Search.Providers.Elastic;
 using VirtoCommerce.Web.Client.Extensions;
 
@@ -57,7 +58,7 @@ namespace VirtoCommerce.Web
                 statusCode = (int)HttpStatusCode.Forbidden;
             }
 
-            if (filterContext.Exception.Is<ElasticSearchException>())
+            if (filterContext.Exception.Is<SearchException>())
             {
                 errorPage = "~/Views/Error/SearchError.cshtml";
             }
