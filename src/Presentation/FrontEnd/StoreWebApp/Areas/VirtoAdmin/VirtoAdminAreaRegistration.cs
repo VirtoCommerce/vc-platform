@@ -20,6 +20,20 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin
 
         public override void RegisterArea(AreaRegistrationContext context)
         {
+            var adminRoute = new Route("admin",
+                new RouteValueDictionary 
+                { 
+                    {"controller", "Install"},
+                    {"action", "Index"} 
+                },
+                null,
+                new RouteValueDictionary { 
+                    {"area", AreaName},
+                },
+                new MvcRouteHandler());
+
+            context.Routes.Add(adminRoute);
+
             if (!AppConfigConfiguration.Instance.Setup.IsCompleted)
             {
                 var defaultRoute = new Route("{controller}/{action}/{id}",
@@ -35,21 +49,8 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin
                       new MvcRouteHandler());
 
                 context.Routes.Add(defaultRoute);
+                context.Routes.Redirect(r => r.MapRoute("redirect", "{*returnUrl}")).To(adminRoute);
             }
-
-            var adminRoute = new Route("admin",
-                    new RouteValueDictionary { 
-                          {"controller", "Install"},
-                          {"action", "Index"} 
-                      },
-                      null,
-                      new RouteValueDictionary { 
-                          {"area", AreaName},
-                      },
-                    new MvcRouteHandler());
-
-            context.Routes.Add(adminRoute);
-            context.Routes.Redirect(r => r.MapRoute("redirect", "{*returnUrl}")).To(adminRoute);
         }
     }
 
