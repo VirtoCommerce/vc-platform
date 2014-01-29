@@ -29,16 +29,15 @@ namespace VirtoCommerce.Foundation.Reporting.Services
             _assetRepository.CreateFolder(RootFolder);
         }
 
-        public IEnumerable<ReportInfo> GetReportsList(string folder = RootFolder)
+        public IEnumerable<ReportInfo> GetReportsList(string folderId = RootFolder)
         {
-            if (string.IsNullOrWhiteSpace(folder))
+            if (string.IsNullOrWhiteSpace(folderId))
             {
-                folder = RootFolder;
+                folderId = RootFolder;
             }
+
             List<ReportInfo> list = new List<ReportInfo>();
-            var folderObj = _assetRepository.GetFolderById(folder);
-			if (folderObj != null)
-				GetReportItems(list, folderObj);
+            GetReportItems(list, folderId);
 
             return list;
         }
@@ -49,8 +48,8 @@ namespace VirtoCommerce.Foundation.Reporting.Services
             var folder = _assetRepository.GetFolderById(RootFolder);
             var root = new ReportFolder
             {
-                FolderName = folder.Name,
-                FullPath = folder.FolderId,
+                FolderName = folder.Name.ToUpper(),
+                FolderId = folder.FolderId,
                 SubFoldersList = new List<ReportFolder>()
             }; 
             foldersList.Add(root);
@@ -68,7 +67,7 @@ namespace VirtoCommerce.Foundation.Reporting.Services
                         var subFolder = new ReportFolder
                         {
                             FolderName = f.Name,
-                            FullPath = f.FolderId,
+                            FolderId = f.FolderId,
                             SubFoldersList = new List<ReportFolder>()
                         };
                         GetFolders(subFolder.SubFoldersList as List<ReportFolder>, f);
@@ -78,9 +77,9 @@ namespace VirtoCommerce.Foundation.Reporting.Services
                 );
         }
 
-        private void GetReportItems(List<ReportInfo> list, Folder folder)
+        private void GetReportItems(List<ReportInfo> list, string folderId)
         {
-            list.AddRange( _assetRepository.GetChildrenFolderItems(folder.FolderId)
+            list.AddRange(_assetRepository.GetChildrenFolderItems(folderId)
                 //.Where(w=>Path.GetExtension(w.Name)==".rdl")
                 .Select(f=>new ReportInfo
                 {
@@ -88,9 +87,9 @@ namespace VirtoCommerce.Foundation.Reporting.Services
                     AssetPath = f.FolderItemId
                 }).ToList() );
 
-            foreach (var childFolder in _assetRepository.GetChildrenFolders(folder.FolderId))
+            foreach (var childFolder in _assetRepository.GetChildrenFolders(folderId))
             {
-                GetReportItems(list, childFolder);
+                GetReportItems(list, childFolder.FolderId);
             }
         }
 

@@ -39,6 +39,7 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 		{
 			_assetRepository = assetRepository;
             _inputNameVmFactory = inputNameVmFactory;
+            AssetPickMode = true;
 
 			AddressBarItems = new ObservableCollection<AssetEntitySearchViewModelBase>();
 			SelectedFolderItems = new ObservableCollection<AssetEntitySearchViewModelBase>();
@@ -105,6 +106,8 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 	        get { return _selectedItem != null; }
 	    }
 
+        public bool AssetPickMode { get; set; }
+
 	    private object _selectedItem;
 		public object ItemListSelectedItem
 		{
@@ -158,7 +161,7 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 
 		public bool Validate()
 		{
-			return SelectedAsset != null;
+            return !AssetPickMode || SelectedAsset != null;
 		}
 
 		#endregion

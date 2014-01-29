@@ -7,7 +7,7 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Interfaces
 	{
 		FolderItem SelectedAsset { get; }
         string RootItemId { get; set; }
-
-		bool Validate();
+        bool AssetPickMode { get; set; }
+	    bool Validate();
 	}
 }

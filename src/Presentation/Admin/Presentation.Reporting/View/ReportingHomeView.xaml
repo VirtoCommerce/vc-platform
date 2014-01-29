@@ -68,10 +68,10 @@
 
             <!--Toolbar-->
             <ItemsControl Grid.Row="0" Style="{StaticResource Virto_ToolbarItemsControl_Style}">
-                <controls:MetroButton x:Name="btnUpload" Command="{Binding UploadReportCommand}" Header="UPLOAD" ToolTip="Refresh" Margin="3,0,28,0" >
-                    <controls:VectorImage ImageResource="{StaticResource Icon_Button_Upload}" Width="14" Height="14" />
+                <controls:MetroButton x:Name="btnUpload" Command="{Binding UploadReportCommand}" Header="MANAGE" ToolTip="Refresh" Margin="3,0,28,0" >
+                    <controls:VectorImage ImageResource="{StaticResource Icon_Button_Manage}" Width="14" Height="14" />
                 </controls:MetroButton>
-                <controls:MetroButton x:Name="btnGenerate" Command="{Binding GenerateReportCommand}" CommandParameter="{Binding SelectedItem, ElementName=ReportItemsList}" Header="GENERATE" ToolTip="Refresh" Margin="3,0,28,0" >
+                <controls:MetroButton x:Name="btnGenerate" Command="{Binding GenerateReportCommand}" CommandParameter="{Binding SelectedItem, ElementName=ReportItemsList}" Header="GENERATE" ToolTip="Refresh" Margin="3,0,28,0" IsEnabled="{Binding IsReportSelected}" >
                     <controls:VectorImage ImageResource="{StaticResource Icon_Button_Generate}" Width="14" Height="14" />
                 </controls:MetroButton>
                 <controls:MetroButton x:Name="btnRefresh" Command="{Binding RefreshItemsCommand}" Header="REFRESH" ToolTip="Refresh" Margin="3,0,28,0" >
@@ -116,20 +116,27 @@
                 </TabItem.Header>
                 <DockPanel>
                     <Grid DockPanel.Dock="Top">
-                        <controls:VirtualFolderTree ItemsSource="{Binding ReportFolder}" 
+                        <controls:VirtualFolderTree x:Name="ReportsFoldersTree" ItemsSource="{Binding ReportFolder}" 
                                                     BorderBrush="{x:Null}" BorderThickness="0" Background="{x:Null}" Margin="0,0,0,-48"
                                                     behaviors:TreeViewSelectedItemBehavior.SelectedItemChangedHandler="{Binding Path=DataContext.TreeViewSelectedItemChangedCommand, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}">
-                            <controls:VirtualFolderTree.ItemTemplate>
-                                <HierarchicalDataTemplate ItemsSource="{Binding SubFoldersList}" DataType="{x:Type interfaces:ReportFolder}">
-                                    <TextBlock Text="{Binding FolderName}" Style="{StaticResource Virto_TextBlock_TreeNode_Style}"/>
+                            
+                                <controls:VirtualFolderTree.ItemTemplate>
+                                    <HierarchicalDataTemplate ItemsSource="{Binding SubFoldersList}" DataType="{x:Type interfaces:ReportFolder}">
+                                        <DockPanel HorizontalAlignment="Stretch">
+                                        <controls:VectorImage ImageResource="{StaticResource Icon_Folder}" Height="14" Width="14" Margin="0,0,4,0" Foreground="{DynamicResource Virto_HighLightText_Foreground_Brush}"/>
+                                        <TextBlock Text="{Binding FolderName}" Style="{StaticResource Virto_TextBlock_TreeNode_Style}"/>
+                                    </DockPanel>
                                 </HierarchicalDataTemplate>
+                                
                             </controls:VirtualFolderTree.ItemTemplate>
+                            
                             <controls:VirtualFolderTree.ItemContainerStyle>
                                 <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
                                     <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
                                     <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
                                 </Style>
                             </controls:VirtualFolderTree.ItemContainerStyle>
+                           
                         </controls:VirtualFolderTree>
                     </Grid>
                 </DockPanel>
