@@ -36,7 +36,6 @@
                 <h1>Virto Commerce</h1>
             </div>
         </div>
-        @Html.AntiForgeryToken()
         <div id="main">
             <div class="zone zone-content">
                 <h1>Get Started</h1>
@@ -44,6 +43,7 @@
                 <div>
                     @using (Html.BeginForm("Index","Install",new {area="VirtoAdmin"}, FormMethod.Post))
                     {
+                        @Html.AntiForgeryToken()
                         <h2>Database setup</h2>
                         <div id="inprogress"/>
                         if (Model.HasStatusMessage)

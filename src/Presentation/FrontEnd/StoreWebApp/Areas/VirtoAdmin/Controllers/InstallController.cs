@@ -18,7 +18,7 @@ using VirtoCommerce.Web.Areas.VirtoAdmin.Resources;
 
 namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
 {
-    public class InstallController : Web.Controllers.ControllerBase
+    public class InstallController : Controller
     {
         public ActionResult Index()
         {
@@ -56,6 +56,7 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Index(InstallModel model)
         {
             if (model == null)
