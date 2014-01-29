@@ -1,5 +1,4 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 
 namespace VirtoCommerce.ManagementClient.Reporting.View
 {
@@ -11,16 +10,6 @@ namespace VirtoCommerce.ManagementClient.Reporting.View
         public ReportingHomeView()
         {
             InitializeComponent();
-        }
-
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
-        {
-            
-        }
-
-        private void TreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-            
         }
     }
 }

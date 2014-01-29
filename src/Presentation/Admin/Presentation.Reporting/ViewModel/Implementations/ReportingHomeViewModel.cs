@@ -57,19 +57,20 @@ namespace VirtoCommerce.ManagementClient.Reporting.ViewModel.Implementations
             OnUIThread(delegate()
             {
                 ListItemsSource = new VirtualList<IReportViewModel>(this, SynchronizationContext.Current);
-                _reportFolder = _reportService.GetReportsFolders();
+                ReportFolder = _reportService.GetReportsFolders();
             });
         }
 
-        private IEnumerable<ReportFolder> _reportFolder ;
-        public IEnumerable<ReportFolder> ReportFolder
-        {
-            get { return _reportFolder; }
-        }
+        public IEnumerable<ReportFolder> ReportFolder { get; set; }
 
         public bool AllowReportUpload
         {
             get { return _authContext.CheckPermission(PredefinedPermissions.ReportingUploadReports); }
+        }
+
+        public bool IsReportSelected
+        {
+            get { return true; }
         }
 
         public object SelectedTreeItem { get; private set; }
@@ -86,6 +87,8 @@ namespace VirtoCommerce.ManagementClient.Reporting.ViewModel.Implementations
         private void RaiseUploadCommand()
         {
             var assetVM = _assetVmFactory.GetViewModelInstance();
+            assetVM.RootItemId = ReportingService.RootFolder;
+            assetVM.AssetPickMode = false;
             CommonConfirmRequest.Raise(
             new ConditionalConfirmation(assetVM.Validate) { Content = assetVM, Title = "Manage reports assets" },
             (x) =>
@@ -110,7 +113,12 @@ namespace VirtoCommerce.ManagementClient.Reporting.ViewModel.Implementations
                     new KeyValuePair<string, object>("item", reportItem)
                     );
                 var confirmation = new Confirmation { Content = itemVM, Title = "Generate report" };
-                ItemAdd(confirmation);
+                CommonWizardDialogRequest.Raise(confirmation, (x) =>
+                {
+                    if (x.Confirmed)
+                    {
+                    }
+                });
             }
         }
 
@@ -127,6 +135,8 @@ namespace VirtoCommerce.ManagementClient.Reporting.ViewModel.Implementations
         protected override void RaiseRefreshCommand()
         {
             ListItemsSource.Refresh();
+            ReportFolder = _reportService.GetReportsFolders();
+            OnPropertyChanged("ReportFolder");
         }
 
         protected override bool CanItemAddExecute()
@@ -141,12 +151,10 @@ namespace VirtoCommerce.ManagementClient.Reporting.ViewModel.Implementations
 
         protected override void RaiseItemAddInteractionRequest()
         {
-            
         }
 
         protected override void RaiseItemDeleteInteractionRequest(IList selectedItemsList)
         {
-
         }
 
         public bool CanSort {
@@ -160,7 +168,7 @@ namespace VirtoCommerce.ManagementClient.Reporting.ViewModel.Implementations
 
             if (selectedFolder != null)
             {
-                reportFolder = selectedFolder.FullPath;
+                reportFolder = selectedFolder.FolderId;
             }
 
             var retVal = new List<IReportViewModel>();

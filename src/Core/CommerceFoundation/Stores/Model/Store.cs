@@ -8,7 +8,6 @@ using System.Data.Services.Common;
 using System.ComponentModel.DataAnnotations;
 using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations.Schema;
-using DataAnnotationsExtensions;
 
 namespace VirtoCommerce.Foundation.Stores.Model
 {

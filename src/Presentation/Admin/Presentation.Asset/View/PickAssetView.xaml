@@ -91,8 +91,8 @@
             <Button Content="Refresh" Command="{Binding RefreshCommand}"/>
 		    <Button Content="Upload"  Command="{Binding UploadCommand}" VerticalAlignment="Top" Margin="0,12,0,0" />
             <Button Content="Create folder"  Command="{Binding CreateFolderCommand}" VerticalAlignment="Top" Margin="0,12,0,0" />
-            <Button Content="Rename"  Command="{Binding RenameCommand}" VerticalAlignment="Top" Margin="0,12,0,0" />
-            <Button Content="Delete"  Command="{Binding DeleteCommand}" CommandParameter="{Binding }" VerticalAlignment="Top" Margin="0,12,0,0" />
+            <Button Content="Rename"  Command="{Binding RenameCommand}" IsEnabled="{Binding IsItemSelected}" VerticalAlignment="Top" Margin="0,12,0,0" />
+            <Button Content="Delete"  Command="{Binding DeleteCommand}" IsEnabled="{Binding IsItemSelected}" CommandParameter="{Binding }" VerticalAlignment="Top" Margin="0,12,0,0" />
 
             <Border  BorderThickness="1" VerticalAlignment="Top" Margin="0,12,0,0">
 			    <Image Height="100" Width="100" Source="{Binding SelectedAssetImageSource, Mode=OneWay}" />
@@ -133,7 +133,7 @@
 			</DataGrid.ColumnHeaderStyle>
 		</DataGrid>
 
-		<Grid Grid.Row="2" Margin="0,12,0,8">
+        <Grid Grid.Row="2" Margin="0,12,0,8" Visibility="{Binding AssetPickMode, Converter={x:Static core_Converters:ToVisibilityConverter.Current}}">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="Auto"/>
 				<ColumnDefinition/>

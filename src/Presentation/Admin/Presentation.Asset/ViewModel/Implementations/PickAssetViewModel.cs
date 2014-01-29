@@ -1,4 +1,5 @@
-﻿using Microsoft.Practices.Prism.Commands;
+﻿using System.Linq.Expressions;
+using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using System;
 using System.Collections.Generic;
@@ -38,6 +39,7 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 		{
 			_assetRepository = assetRepository;
             _inputNameVmFactory = inputNameVmFactory;
+            AssetPickMode = true;
 
 			AddressBarItems = new ObservableCollection<AssetEntitySearchViewModelBase>();
 			SelectedFolderItems = new ObservableCollection<AssetEntitySearchViewModelBase>();
@@ -71,7 +73,17 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 
 		#region Properties
 
-		private AssetEntitySearchViewModelBase _parentItem;
+	    public string RootItemId
+	    {
+	        get { return _rootItemId; }
+	        set
+	        {
+	            _rootItemId = value;
+                ParentItem = new FolderSearchViewModel(new Folder{FolderId = value, Name = value}, null);
+	        }
+	    }
+
+	    private AssetEntitySearchViewModelBase _parentItem;
 		public AssetEntitySearchViewModelBase ParentItem
 		{
 			get
@@ -89,6 +101,13 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 		public ObservableCollection<AssetEntitySearchViewModelBase> SelectedFolderItems { get; private set; }
 		public ObservableCollection<AssetEntitySearchViewModelBase> AddressBarItems { get; private set; }
 
+	    public bool IsItemSelected
+	    {
+	        get { return _selectedItem != null; }
+	    }
+
+        public bool AssetPickMode { get; set; }
+
 	    private object _selectedItem;
 		public object ItemListSelectedItem
 		{
@@ -103,6 +122,8 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 				}
 				else
 					SelectedAsset = null;
+
+                OnPropertyChanged("IsItemSelected");
 			}
 		}
 
@@ -140,7 +161,7 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 
 		public bool Validate()
 		{
-			return SelectedAsset != null;
+            return !AssetPickMode || SelectedAsset != null;
 		}
 
 		#endregion
@@ -174,27 +195,23 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 
 		private void UpdateAddressBar()
 		{
-			var idx = AddressBarItems.IndexOf(ParentItem);
-			// going UP
-			if (idx > -1)
-			{
-				while (AddressBarItems.Count > idx + 1)
-					AddressBarItems.RemoveAt(AddressBarItems.Count - 1);
-			}
-			else // going DOWN
-			{
-				AddressBarItems.Add(ParentItem);
-			}
+            AddressBarItems.Clear();
+		    var parent = ParentItem;
+		    while (parent!= null)
+		    {
+                AddressBarItems.Insert(0, parent);
+                parent = parent.Parent;
+		    }
 		}
 
 		private void LoadItems()
 		{
-			//ShowLoadingAnimation = true;
+			ShowLoadingAnimation = true;
 			var items = new List<AssetEntitySearchViewModelBase>();
 			var worker = new BackgroundWorker();
             worker.DoWork += (o, ea) =>
             {
-				if (!string.IsNullOrEmpty(ParentItem.InnerItemID))
+				if (!string.IsNullOrEmpty(ParentItem.InnerItemID) && ParentItem.InnerItemID != RootItemId)
 				{
 					items.Add(new RootSearchViewModel(ParentItem.Parent));
 				}
@@ -264,7 +281,6 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 				ParentItem = ((RootSearchViewModel)obj).Parent ?? (AssetEntitySearchViewModelBase)obj;
 			}
 		}
-
 
         private void RaiseCreateFolderRequest()
         {
@@ -437,7 +453,9 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 		}
 
 		private string _namePathDelimiter;
-		private string NamePathDelimiter
+	    private string _rootItemId;
+
+	    private string NamePathDelimiter
 		{
 			get
 			{

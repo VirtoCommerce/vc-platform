@@ -20,7 +20,7 @@
                 <DataTemplate>
                     <StackPanel Margin="6,4,0,2" Orientation="Horizontal" Height="18">
                         <core_controls:VectorImage Height="18" Width="18" Foreground="{DynamicResource Virto_HighLightText_Foreground_Brush}" 
-                                                   ImageSource="{Binding Data.IconSource}"/>
+                                                   ImageSource="Icon_Report"/>
                         <Border HorizontalAlignment="Stretch" Margin="8,0,0,0">
                             <StackPanel VerticalAlignment="Center">
                                 <TextBlock Text="{Binding Data.DisplayName}"  FontWeight="DemiBold" 

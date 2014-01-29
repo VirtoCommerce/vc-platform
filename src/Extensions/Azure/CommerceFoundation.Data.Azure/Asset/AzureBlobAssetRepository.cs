@@ -194,7 +194,7 @@ namespace VirtoCommerce.Foundation.Data.Azure.Asset
             if (retVal == null)
             {
                 var cloudBlob = CurrentCloudBlobClient.GetBlobReferenceFromServer(GetUri(itemId)) as CloudBlockBlob;
-                if (cloudBlob.Exists())
+                if (cloudBlob != null && cloudBlob.Exists())
                 {
                     string folderItemTypeName = this._entityFactory.GetEntityTypeStringName(typeof(FolderItem));
                     retVal = this._entityFactory.CreateEntityForType(folderItemTypeName) as FolderItem;
@@ -219,12 +219,13 @@ namespace VirtoCommerce.Foundation.Data.Azure.Asset
             //if(folderId == null)
             //    throw new ArgumentNullException("folderId");
 
-            List<Folder> retVal =
-                this.ChangeTracker.TrackingEntries.Select(x => x.Entity)
-                             .OfType<Folder>()
-                             .Where(x => x.ParentFolderId == folderId)
-                             .ToList();
-            if (!retVal.Any())
+            //todo: created, deleted or modified folders are not reflected to changetracker
+            List<Folder> retVal = new List<Folder>();
+            //    this.ChangeTracker.TrackingEntries.Select(x => x.Entity)
+            //                 .OfType<Folder>()
+            //                 .Where(x => x.ParentFolderId == folderId)
+            //                 .ToList();
+            //if (!retVal.Any())
             {
                 string folderTypeName = this._entityFactory.GetEntityTypeStringName(typeof(Folder));
 
@@ -302,7 +303,8 @@ namespace VirtoCommerce.Foundation.Data.Azure.Asset
 
         public Folder CreateFolder(string folderName, string parentId = null)
         {
-            var folder = new Folder();
+            string folderTypeName = this._entityFactory.GetEntityTypeStringName(typeof(Folder));
+            var folder = this._entityFactory.CreateEntityForType(folderTypeName) as Folder;
             CloudBlobContainer container;
             if (string.IsNullOrWhiteSpace(parentId))
             {
@@ -501,7 +503,7 @@ namespace VirtoCommerce.Foundation.Data.Azure.Asset
 
             //Copy properties
 
-            folderItem.FolderItemId = cloudBlob.Uri.AbsolutePath.Substring(1);
+            folderItem.FolderItemId = cloudBlob.Uri.LocalPath.Substring(1);
             //folderItem.FolderItemId = String.Format("{0}{1}{2}{3}", cloudBlob.Container.Name, CurrentCloudBlobClient.DefaultDelimiter, cloudBlob.Parent != null ? cloudBlob.Parent.Prefix : "", cloudBlob.Name);
             folderItem.FolderId = String.Format("{0}{1}{2}", cloudBlob.Container.Name,
                                                 this.CurrentCloudBlobClient.DefaultDelimiter,
