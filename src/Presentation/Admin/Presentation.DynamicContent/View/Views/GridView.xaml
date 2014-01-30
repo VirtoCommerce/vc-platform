@@ -58,7 +58,7 @@
 		<GridViewColumn Header="Created" core_common:GridViewColumnResize.Width="1*" Width="100">
 			<GridViewColumn.CellTemplate>
 				<DataTemplate>
-					<TextBlock Text="{Binding Data.InnerItem.Created, StringFormat=d}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}"/>
+					<TextBlock Text="{Binding Data.InnerItem.Created, StringFormat=R}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}"/>
 				</DataTemplate>
 			</GridViewColumn.CellTemplate>
 		</GridViewColumn>
@@ -100,7 +100,7 @@
 		<GridViewColumn Header="Start date" core_common:GridViewColumnResize.Width="8*" Width="87.3">
 			<GridViewColumn.CellTemplate>
 				<DataTemplate>
-					<TextBlock Text="{Binding Data.InnerItem.StartDate, StringFormat=d, Converter={StaticResource dateVisibilityConverter}}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
+					<TextBlock Text="{Binding Data.InnerItem.StartDate, StringFormat=R, Converter={StaticResource dateVisibilityConverter}}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
 				</DataTemplate>
 			</GridViewColumn.CellTemplate>
 		</GridViewColumn>
@@ -108,7 +108,7 @@
 		<GridViewColumn Header="End date" core_common:GridViewColumnResize.Width="8*" Width="87.3">
 			<GridViewColumn.CellTemplate>
 				<DataTemplate>
-					<TextBlock  Text="{Binding Data.InnerItem.EndDate, StringFormat=d, Converter={StaticResource dateVisibilityConverter}}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
+					<TextBlock  Text="{Binding Data.InnerItem.EndDate, StringFormat=R, Converter={StaticResource dateVisibilityConverter}}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
 				</DataTemplate>
 			</GridViewColumn.CellTemplate>
 		</GridViewColumn>
@@ -142,6 +142,6 @@
 	<GridView x:Key="searchCategoryGridViewView" ColumnHeaderContainerStyle="{StaticResource Virto_GridView_ColumnHeader_ContainerStyle}">
 		<GridViewColumn Header="Category Code" core_common:GridViewColumnResize.Width="15*" Width="280.3" DisplayMemberBinding="{Binding Data.Code}" />
 		<GridViewColumn Header="Name" core_common:GridViewColumnResize.Width="15*" Width="280.3" DisplayMemberBinding="{Binding Data.Name}" />
-		<GridViewColumn Header="Enable Date" core_common:GridViewColumnResize.Width="15*" Width="280.3" DisplayMemberBinding="{Binding Data.StartDate, StringFormat=d}" />
+		<GridViewColumn Header="Enable Date" core_common:GridViewColumnResize.Width="15*" Width="280.3" DisplayMemberBinding="{Binding Data.StartDate, StringFormat=R}" />
 	</GridView>
 </ResourceDictionary>
