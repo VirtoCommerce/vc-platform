@@ -102,23 +102,17 @@ namespace VirtoCommerce.ManagementClient.Reporting.ViewModel.Implementations
 
         private void RaiseGenerateCommand(object item)
         {
-            if (item == null)
-            {
-                CommonNotifyRequest.Raise(new Notification {Content = "Select report to generate.", Title = "Error"});
-            }
-            else
+            if (item != null)
             {
                 var reportItem = ((VirtualListItem<IReportViewModel>)item).Data.InnerItem;
                 var itemVM = _itemVmFactory.GetViewModelInstance(
                     new KeyValuePair<string, object>("item", reportItem)
                     );
-                var confirmation = new Confirmation { Content = itemVM, Title = "Generate report" };
-                CommonWizardDialogRequest.Raise(confirmation, (x) =>
+                var openTracking = itemVM as IOpenTracking;
+                if (openTracking != null)
                 {
-                    if (x.Confirmed)
-                    {
-                    }
-                });
+                    openTracking.OpenItemCommand.Execute();
+                }
             }
         }
 

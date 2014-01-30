@@ -13,6 +13,7 @@
              xmlns:local="clr-namespace:VirtoCommerce.ManagementClient.Reporting.ViewModel.Interfaces"
              xmlns:interfaces="clr-namespace:VirtoCommerce.Foundation.Reporting.Model;assembly=VirtoCommerce.Foundation"
              xmlns:interactionRequest="http://www.codeplex.com/prism"
+             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
              mc:Ignorable="d" 
              d:DesignWidth="640" d:DesignHeight="480" Style="{DynamicResource Virto_Window_Style}">
 
@@ -71,7 +72,7 @@
                 <controls:MetroButton x:Name="btnUpload" Command="{Binding UploadReportCommand}" Header="MANAGE" ToolTip="Refresh" Margin="3,0,28,0" >
                     <controls:VectorImage ImageResource="{StaticResource Icon_Button_Manage}" Width="14" Height="14" />
                 </controls:MetroButton>
-                <controls:MetroButton x:Name="btnGenerate" Command="{Binding GenerateReportCommand}" CommandParameter="{Binding SelectedItem, ElementName=ReportItemsList}" Header="GENERATE" ToolTip="Refresh" Margin="3,0,28,0" IsEnabled="{Binding IsReportSelected}" >
+                <controls:MetroButton x:Name="btnGenerate" Command="{Binding GenerateReportCommand}" CommandParameter="{Binding SelectedItem, ElementName=ReportItemsList}" Header="GENERATE" ToolTip="Refresh" Margin="3,0,28,0">
                     <controls:VectorImage ImageResource="{StaticResource Icon_Button_Generate}" Width="14" Height="14" />
                 </controls:MetroButton>
                 <controls:MetroButton x:Name="btnRefresh" Command="{Binding RefreshItemsCommand}" Header="REFRESH" ToolTip="Refresh" Margin="3,0,28,0" >
@@ -101,6 +102,15 @@
                         </Style.Triggers>
                     </Style>
                 </controls:VirtualFolderItemList.Style>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <ei:CallMethodAction TargetObject="{Binding (implementations:ReportingHomeViewModel.GenerateReportCommand)}" MethodName="RaiseCanExecuteChanged"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="Load">
+                        <ei:CallMethodAction MethodName="Focus" />
+                        <ei:ChangePropertyAction PropertyName="Background" Value="Red" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
             </controls:VirtualFolderItemList>
 
             <TextBlock Text="{Binding ListItemsSource.TotalItemsCount, StringFormat='Items: {0}'}" Grid.Row="2" HorizontalAlignment="Right" Margin="0" VerticalAlignment="Bottom" Padding="0,1,0,0" />

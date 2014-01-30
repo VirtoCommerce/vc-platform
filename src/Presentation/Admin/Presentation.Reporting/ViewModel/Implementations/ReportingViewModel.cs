@@ -7,7 +7,6 @@ using Microsoft.Practices.Prism.Commands;
 using VirtoCommerce.Foundation.Reporting.Helpers;
 using VirtoCommerce.Foundation.Reporting.Services;
 using VirtoCommerce.Foundation.Reviews.Factories;
-using VirtoCommerce.ManagementClient.Asset.ViewModel.Interfaces;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
 using VirtoCommerce.ManagementClient.Reporting.ViewModel.Interfaces;
@@ -26,7 +25,6 @@ namespace VirtoCommerce.ManagementClient.Reporting.ViewModel.Implementations
             IReviewEntityFactory entityFactory,
             INavigationManager navManager,
             IReportingService reportingService,
-            IViewModelsFactory<IPickAssetViewModel> assetVmFactory,
             ReportInfo item)
             : base(entityFactory, item, false)
         {

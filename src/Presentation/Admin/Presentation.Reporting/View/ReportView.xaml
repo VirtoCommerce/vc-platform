@@ -69,7 +69,7 @@
                         <Grid DockPanel.Dock="Top" Name="rdlParameters"></Grid>
 
                         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="0,8,0,0">
-                            <Button Command="{Binding ClearFiltersCommand}" Content="Clear filters" />
+                            <Button Command="{Binding ClearParametersCommand}" Content="Clear filters" />
                             <Button Margin="6,0,0,0" Command="{Binding GenerateReportCommand}" Content="Generate">
                             </Button>
                         </StackPanel>
