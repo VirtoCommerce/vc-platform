@@ -96,7 +96,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		private string GetNavigateBaseUri()
 		{
 			var stringBuilder = new StringBuilder();
-			var categoryOutline = _catalogBuilder.BuildCategoryOutline(InnerItem.CatalogId, InnerItem);
+			var categoryOutline = _catalogBuilder.BuildCategoryOutlineWithDSClient(InnerItem.CatalogId, InnerItem);
 			if (categoryOutline != null)
 			{
 				using (var storeRepo = _storeRepositoryFactory.GetRepositoryInstance())

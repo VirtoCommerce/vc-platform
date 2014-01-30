@@ -754,7 +754,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Frameworks\Seo\" />
     <Folder Include="Inventories\Services\" />
   </ItemGroup>
   <ItemGroup>
