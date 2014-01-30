@@ -12,7 +12,6 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>@Resource.InstallPageTitle</title>
-    <link href="~/Areas/VirtoAdmin/Content/site.css" rel="stylesheet" type="text/css" media="all" />
     @Styles.Render(BundleConfig.VirtoAdminStyles)
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
@@ -22,34 +21,70 @@
     <script src="~/signalr/hubs"></script>
 
     <script type="text/javascript">
-        $(function() {
+        $(function ()
+        {
+            //Enable logging
+            $.connection.hub.logging = true;
+            $.connection.hub.connectionSlow(function ()
+            {
+               // $(".console").append('<p style="color:red">Hub: slow connection...</p>');
+            });
+            $.connection.hub.reconnecting(function ()
+            {
+               // $(".console").append('<p style="color:red">Hub: reconnecting...</p>');
+            });
+            $.connection.hub.reconnected(function ()
+            {
+                //$(".console").append('<p style="color:green">Hub: reconnected...</p>');
+            });
             // Declare a proxy to reference the hub. 
             var setup = $.connection.setupWorker;
 
             // Create a function that the hub can call to broadcast messages.
-            setup.client.traceMessage = function(message) {
-                $('#setUpHeader').text(message);
-                $(".console").append(message);
-            };
-            
-            setup.client.traceMessageLine = function (message)
+            setup.client.traceMessage = function (message, newLine)
             {
                 $('#setUpHeader').text(message);
-                $(".console").append("<br/><br/>");
+                if (newLine)
+                {
+                    $(".console").append("<br/><br/>");
+                } else
+                {
+                    $(".console").append("<br/>");
+                }
                 $(".console").append(message);
+                $(".console").animate({ scrollTop: $('.console')[0].scrollHeight }, 1000);
             };
 
-            setup.client.otherMessage = function(message, selector) {
+            setup.client.success = function (message)
+            {
+                $("#throbber").hide();
+                $.redirect('@Url.Action("Complete")');
+            };
+
+            setup.client.failure = function (message)
+            {
+                $("#throbber").hide();
+                $(".validation-summary-errors").append("<p>" + message + "</p>");
+                $(".validation-summary-errors").show();
+            };
+
+
+            setup.client.otherMessage = function (message, selector)
+            {
                 $(selector).append("<p>" + message + "</p>");
                 $(selector).show();
             };
 
             // Start the connection.
-            $.connection.hub.start().done(function () {
+            $.connection.hub.start({ transport: ['webSockets', 'serverSentEvents', 'longPolling'] }).done(function ()
+            {
                 //Make submit in ajax
-                $('form').submit(function() {
+                $('form').submit(function ()
+                {
                     var validator = $(this).validate();
-                    if (validator.valid()) {
+                    var model = $(this).serializeObject();
+                    if (validator.valid())
+                    {
 
                         $("#throbber").show();
                         $(".console").show();
@@ -61,11 +96,14 @@
                             data: $(this).serialize(),
                             success: function (result)
                             {
-                                
-                                $("#throbber").hide();
                                 if (result.Success)
                                 {
-                                    $.redirect('@Url.Action("Complete")');
+                                    //The time out is needed for connection to be established with signalR
+                                    //TODO: should be possible to do by waiting for connection ready?
+                                    window.setTimeout(function ()
+                                    {
+                                        setup.server.doWork(model);
+                                    }, 1000);
                                 } else
                                 {
                                     $(".validation-summary-errors").append("<p>" + result.Message + "</p>");
@@ -168,12 +206,14 @@
     <div id="throbber">
         <div class="curtain"></div>
         <div class="curtain-content">
-            <div>
+            @*            <div>
                 <h1 id="setUpHeader">@Resource.LongProcessMessage</h1>
                 <p>
                     <img src="@Href("../../content/images/inprogress.gif")" alt="" />
                 </p>
-            </div>
+            </div>*@
+            
+            <div class="console big"></div>
         </div>
     </div>
 </body>

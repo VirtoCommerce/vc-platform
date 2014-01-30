@@ -101,8 +101,10 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
 
             try
             {
-                CreateDb(model);
-                UpdateIndex(model);
+                var connectionString = PrepareDb(model);
+                Trace.TraceInformation("Saving database connection string to web.config.");
+                //After saving connection string signalR needs some time to reconnect
+                ConnectionHelper.SqlConnectionString = connectionString;
 
             }
             catch (Exception ex)
@@ -117,21 +119,6 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
 
             return Json(new { Success = true });
 
-        }
-
-        private void UpdateIndex(InstallModel model)
-        {
-            var searchConnection = new SearchConnection(ConnectionHelper.GetConnectionString("SearchConnectionString"));
-            if (searchConnection.Provider.Equals(
-                    "lucene", StringComparison.OrdinalIgnoreCase) && searchConnection.DataSource.StartsWith("~/"))
-            {
-                var dataSource = searchConnection.DataSource.Replace(
-                    "~/", HttpRuntime.AppDomainAppPath + "\\");
-
-                searchConnection = new SearchConnection(dataSource, searchConnection.Scope, searchConnection.Provider);
-            }
-
-            new UpdateSearchIndex().Index(searchConnection, model.ConnectionStringBuilder.ConnectionString, null, true);
         }
 
         private void CustomValidateModel(InstallModel model)
@@ -149,13 +136,6 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
             }
         }
 
-
-        private void CreateDb(InstallModel model)
-        {
-            SetupDb(model);
-            SetupWorker.DisplayInfoMessage("Database successfully created.");
-
-        }
 
         private string PrepareDb(InstallModel model)
         {
@@ -198,62 +178,13 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
                 throw new Exception(Resource.DbServerAdminRequiredException);
             }
 
-            return csBuilder.ConnectionString;
-        }
-
-        public FileResult DownloadLog()
-        {
-            byte[] data = Encoding.UTF8.GetBytes(Session["log"] as string ?? "");
-            return new FileContentResult(data, "text")
-            {
-                FileDownloadName = string.Format("vc_log_{0}", DateTime.Now.ToString("yyyyMMddHHmmss"))
-            };
-        }
-
-        private void SetupDb(InstallModel model)
-        {
-            var csBuilder = model.ConnectionStringBuilder;
-            var connectionString = PrepareDb(model);
-            var installSamples = model.SetupSampleData;
-            var dataFolder = @"App_Data\Virto\SampleData\Database";
 
             if (csBuilder.InitialCatalog.ToLower() == "master")
             {
                 throw new Exception("'Master' is reserved for system database, please provide other database name.");
             }
 
-            dataFolder = Path.Combine(System.Web.HttpContext.Current.Request.PhysicalApplicationPath ?? "/", dataFolder);
-            ConnectionHelper.SqlConnectionString = csBuilder.ConnectionString;
-
-            // Configure database   
-            Trace.TraceInformation("Creating database and system tables.");
-            new PublishAppConfigDatabase().Publish(connectionString, null, installSamples); // publish AppConfig first as it contains system tables
-            Trace.TraceInformation("Creating 'Store' module tables.");
-            new PublishStoreDatabase().Publish(connectionString, null, installSamples);
-            Trace.TraceInformation("Creating 'Catalog' module tables.");
-            new PublishCatalogDatabase().Publish(connectionString, dataFolder, installSamples);
-            Trace.TraceInformation("Creating 'Import' module tables.");
-            new PublishImportDatabase().Publish(connectionString, dataFolder, installSamples);
-            Trace.TraceInformation("Creating 'Customer' module tables.");
-            new PublishCustomerDatabase().Publish(connectionString, null, installSamples);
-            Trace.TraceInformation("Creating 'Inventory' module tables.");
-            new PublishInventoryDatabase().Publish(connectionString, null, installSamples);
-            Trace.TraceInformation("Creating 'Log' module tables.");
-            new PublishLogDatabase().Publish(connectionString, null, installSamples);
-            Trace.TraceInformation("Creating 'Marketing' module tables.");
-            new PublishMarketingDatabase().Publish(connectionString, null, installSamples);
-            Trace.TraceInformation("Creating 'Order' module tables.");
-            new PublishOrderDatabase().Publish(connectionString, null, installSamples);
-            Trace.TraceInformation("Creating 'Review' module tables.");
-            new PublishReviewDatabase().Publish(connectionString, null, installSamples);
-            Trace.TraceInformation("Creating 'Search' module tables.");
-            new PublishSearchDatabase().Publish(connectionString, null, installSamples);
-            Trace.TraceInformation("Creating 'Security' module tables.");
-            new PublishSecurityDatabase().Publish(connectionString, dataFolder, installSamples);
-
-            Trace.TraceInformation("Saving database connection string to web.config.");
-
-            Trace.TraceInformation("Database created.");
+            return csBuilder.ConnectionString;
         }
 
         private void AddUserToDatabase(string connectionString, string userId, string password, string dbRole = "db_owner")
