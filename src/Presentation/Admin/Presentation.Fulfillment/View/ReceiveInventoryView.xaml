@@ -77,7 +77,7 @@
 					</DataGridTemplateColumn.CellEditingTemplate>
 					<DataGridTemplateColumn.CellTemplate>
 						<DataTemplate>
-							<TextBlock Text="{Binding Sku}"/>
+							<TextBlock Text="{Binding Sku}" TextTrimming="CharacterEllipsis"/>
 						</DataTemplate>
 					</DataGridTemplateColumn.CellTemplate>
 				</DataGridTemplateColumn>

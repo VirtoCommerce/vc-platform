@@ -10,6 +10,22 @@
 	<marketingInfrastructure:PromotionTypeConverter x:Key="promotionTypeConverter" />
 	<marketingInfrastructure:PromotionStateConverter x:Key="promotionStateConverter" />
 
+	<DataTemplate x:Key="typeColumnTemplate">
+		<TextBlock Text="{Binding Data.OriginalItem, Converter={StaticResource promotionTypeConverter}}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
+	</DataTemplate>
+
+	<DataTemplate x:Key="statusColumnTemplate">
+		<TextBlock Text="{Binding Data.OriginalItem, Converter={StaticResource promotionStateConverter}}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
+	</DataTemplate>
+
+	<DataTemplate x:Key="startDateColumnTemplate">
+		<TextBlock Text="{Binding Data.OriginalItem.StartDate, StringFormat=R}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
+	</DataTemplate>
+
+	<DataTemplate x:Key="endDateColumnTemplate">
+		<TextBlock Text="{Binding Data.OriginalItem.EndDate, StringFormat=R}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
+	</DataTemplate>
+
 	<GridView x:Key="gridViewView"
 				ColumnHeaderContainerStyle="{StaticResource Virto_GridView_ColumnHeader_ContainerStyle}"
 				VirtualizingStackPanel.IsVirtualizing="True"
@@ -34,10 +50,10 @@
 			</GridViewColumn.CellTemplate>
 		</GridViewColumn>
 
-		<GridViewColumn Header="Type" DisplayMemberBinding="{Binding Data.OriginalItem, Converter={StaticResource promotionTypeConverter}}" core_common:GridViewColumnResize.Width="*" Width="87.1" />
-		<GridViewColumn Header="State" DisplayMemberBinding="{Binding Data.OriginalItem, Converter={StaticResource promotionStateConverter}}" core_common:GridViewColumnResize.Width="*" Width="87.1" />
-		<GridViewColumn Header="Start Date" DisplayMemberBinding="{Binding Data.OriginalItem.StartDate, StringFormat=d}" core_common:GridViewColumnResize.Width="2*" Width="174.3" />
-		<GridViewColumn Header="Expiration Date" DisplayMemberBinding="{Binding Data.OriginalItem.EndDate, StringFormat=d}" core_common:GridViewColumnResize.Width="2*" Width="174.3" />
+		<GridViewColumn Header="Type" CellTemplate="{StaticResource typeColumnTemplate}" core_common:GridViewColumnResize.Width="*" Width="87.1" />
+		<GridViewColumn Header="State" CellTemplate="{StaticResource statusColumnTemplate}" core_common:GridViewColumnResize.Width="*" Width="87.1" />
+		<GridViewColumn Header="Start Date" CellTemplate="{StaticResource startDateColumnTemplate}" core_common:GridViewColumnResize.Width="2*" Width="174.3" />
+		<GridViewColumn Header="Expiration Date" CellTemplate="{StaticResource endDateColumnTemplate}" core_common:GridViewColumnResize.Width="2*" Width="174.3" />
 	</GridView>
 
 </ResourceDictionary>

@@ -56,7 +56,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		{
 			get
 			{
-				return ValidateKeywords() && (!_seoModified || SeoKeywords.All(keyword => keyword.Validate() || (string.IsNullOrEmpty(keyword.Keyword) && string.IsNullOrEmpty(keyword.ImageAltDescription) && string.IsNullOrEmpty(keyword.Title) && string.IsNullOrEmpty(keyword.MetaDescription))));
+				return ValidateKeywords() && (!_seoModified || SeoKeywords.All(keyword => (string.IsNullOrEmpty(keyword.Keyword) && string.IsNullOrEmpty(keyword.ImageAltDescription) && string.IsNullOrEmpty(keyword.Title) && string.IsNullOrEmpty(keyword.MetaDescription)) || keyword.Validate()));
 			}
 		}
 
@@ -79,14 +79,18 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 		#region SEO tab
 
+		private readonly SeoUrlKeyword _originalKeyword = new SeoUrlKeyword();
 		private string _navigateUri;
 		public string NavigateUri
 		{
 			get
 			{
 				if (string.IsNullOrEmpty(_navigateUri))
+				{
 					_navigateUri = GetNavigateBaseUri();
-				return !string.IsNullOrEmpty(_navigateUri) ? string.Format("{0}/{1}", _navigateUri, string.IsNullOrEmpty(CurrentSeoKeyword.Keyword) ? CurrentSeoKeyword.KeywordValue : CurrentSeoKeyword.Keyword) : null;
+				}
+				_originalKeyword.InjectFrom(CurrentSeoKeyword);
+				return !string.IsNullOrEmpty(_navigateUri) ? string.Format("{0}/{1}", _navigateUri, string.IsNullOrEmpty(_originalKeyword.Keyword) ? _originalKeyword.KeywordValue : _originalKeyword.Keyword) : null;
 			}
 		}
 
@@ -104,10 +108,10 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 						var storeUrl = string.IsNullOrEmpty(store.Url) ? store.SecureUrl : store.Url;
 
 						if (!string.IsNullOrEmpty(storeUrl))
-							stringBuilder.AppendFormat("{0}/{1}", storeUrl, CurrentSeoKeyword.Language.ToLowerInvariant());
+							stringBuilder.AppendFormat("{0}{1}{2}", storeUrl, storeUrl.EndsWith("/") ? null : "/", CurrentSeoKeyword.Language.ToLowerInvariant());
 						else
 						{
-							stringBuilder.AppendFormat("{0}/{1}/", _loginViewModel.BaseUrl, CurrentSeoKeyword.Language.ToLowerInvariant());
+							stringBuilder.AppendFormat("{0}{1}{2}/", _loginViewModel.BaseUrl, _loginViewModel.BaseUrl.EndsWith("/") ? null : "/", CurrentSeoKeyword.Language.ToLowerInvariant());
 
 							using (var seoRepo = _appConfigRepositoryFactory.GetRepositoryInstance())
 							{
@@ -218,11 +222,11 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 				CurrentSeoKeyword = new SeoUrlKeyword { Language = locale, IsActive = true, KeywordType = (int)SeoUrlKeywordTypes.Item, KeywordValue = InnerItem.Code, Created = DateTime.UtcNow};
 				SeoKeywords.Add(CurrentSeoKeyword);
 			}
+			
+			FilterSeoLanguage = locale;
 
 			//attach property changed
 			CurrentSeoKeyword.PropertyChanged += CurrentSeoKeyword_PropertyChanged;
-
-			FilterSeoLanguage = locale;
 		}
 
 		private void ResetProperties()
@@ -235,7 +239,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		void CurrentSeoKeyword_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
 		{
 			_seoModified = true;
-			OnViewModelPropertyChangedUI(null, null);
+			//OnViewModelPropertyChangedUI(null, null);
 		}
 
 		public void UpdateKeywordValueCode(string newCode)
@@ -295,6 +299,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 					});
 					appConfigRepository.UnitOfWork.Commit();
 				}
+				OnPropertyChanged("NavigateUri");
 				_seoModified = false;
 			}
 		}
