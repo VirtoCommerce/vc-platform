@@ -1,12 +1,8 @@
-﻿using System;
-using System.ComponentModel;
-using System.Data;
+﻿using System.Data;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Threading;
 using Microsoft.Reporting.WinForms;
 using VirtoCommerce.Foundation.Reporting.Helpers;
 using VirtoCommerce.ManagementClient.Reporting.ViewModel.Interfaces;
@@ -31,6 +27,8 @@ namespace VirtoCommerce.ManagementClient.Reporting.View
             if (viewModel != null)
             {
                 viewModel.RefreshReport += (o, args) => RefreshReport();
+                viewModel.ClearParameters += (o, args) => PrepareFilters();
+
                 if (viewModel.ReportType.HasReportParameters)
                 {
                     PrepareFilters();

@@ -59,7 +59,7 @@ namespace VirtoCommerce.Client
 	                        startCounter = sequence.Value;
 
 							//Sequence in database has expired?
-	                        if (sequence.LastModified.HasValue && sequence.LastModified.Value.Date < DateTime.Now.Date)
+	                        if (sequence.LastModified.HasValue && sequence.LastModified.Value.Date < DateTime.UtcNow.Date)
 	                        {
 		                        startCounter = 0;
 	                        }
