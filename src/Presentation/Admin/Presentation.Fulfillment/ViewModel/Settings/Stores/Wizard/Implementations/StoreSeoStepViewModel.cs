@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text;
 using Microsoft.Practices.Prism.Commands;
 using VirtoCommerce.Foundation.AppConfig.Factories;
 using VirtoCommerce.Foundation.AppConfig.Model;
@@ -14,6 +15,7 @@ using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Wizar
 using Omu.ValueInjecter;
 using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Interfaces;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using VirtoCommerce.ManagementClient.Security.ViewModel.Interfaces;
 
 namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Wizard.Implementations
 {
@@ -23,15 +25,23 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 
 		private readonly IRepositoryFactory<IAppConfigRepository> _appConfigRepositoryFactory;
 		private readonly IAppConfigEntityFactory _appConfigEntityFactory;
+		private readonly ILoginViewModel _loginViewModel;
 		
 		#endregion
 
-		public StoreSeoStepViewModel(IRepositoryFactory<IAppConfigRepository> appConfigRepositoryFactory, IAppConfigEntityFactory appConfigEntityFactory, Store item)
+		public StoreSeoStepViewModel(ILoginViewModel loginViewModel, IRepositoryFactory<IAppConfigRepository> appConfigRepositoryFactory, IAppConfigEntityFactory appConfigEntityFactory, Store item)
 			: base(null, null, item)
 		{
 			_appConfigRepositoryFactory = appConfigRepositoryFactory;
 			_appConfigEntityFactory = appConfigEntityFactory;
+			_loginViewModel = loginViewModel;
 			SeoLocalesFilterCommand = new DelegateCommand<string>(RaiseSeoLocalesFilter);
+			NavigateToUrlCommand = new DelegateCommand(RaiseNavigateToUrl);
+		}
+
+		private void RaiseNavigateToUrl()
+		{
+			System.Diagnostics.Process.Start(NavigateUri);
 		}
 				
 		#region IWizardStep Members
@@ -63,6 +73,22 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 
 		#region SEO tab
 
+		public string NavigateUri
+		{
+			get
+			{
+				var stringBuilder = new StringBuilder();
+
+				var storeUrl = string.IsNullOrEmpty(InnerItem.Url) ? InnerItem.SecureUrl : InnerItem.Url;
+
+				if (!string.IsNullOrEmpty(storeUrl))
+					stringBuilder.AppendFormat("{0}/{1}/{2}", storeUrl, CurrentSeoKeyword.Language.ToLowerInvariant(), string.IsNullOrEmpty(CurrentSeoKeyword.Keyword) ? InnerItem.StoreId : CurrentSeoKeyword.Keyword);
+				else
+					stringBuilder.AppendFormat("{0}/{1}/{2}", _loginViewModel.BaseUrl, CurrentSeoKeyword.Language.ToLowerInvariant(), string.IsNullOrEmpty(CurrentSeoKeyword.Keyword) ? InnerItem.StoreId : CurrentSeoKeyword.Keyword);
+				return stringBuilder.ToString();
+			}
+		}
+		
 		public List<string> InnerItemStoreLanguages { get; private set; }
 
 		public List<SeoUrlKeyword> SeoKeywords { get; private set; }
@@ -75,6 +101,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 			{
 				_currentSeoKeyword = value;
 				OnPropertyChanged();
+				OnPropertyChanged("NavigateUri");
 			}
 		}
 
@@ -179,6 +206,8 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 					});
 					appConfigRepository.UnitOfWork.Commit();
 				}
+
+				OnPropertyChanged("NavigateUri");
 				_seoModified = false;
 			}
 		}
@@ -210,6 +239,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 			}
 		}
 		public DelegateCommand<string> SeoLocalesFilterCommand { get; private set; }
+		public DelegateCommand NavigateToUrlCommand { get; private set; }
 
 		#endregion
 

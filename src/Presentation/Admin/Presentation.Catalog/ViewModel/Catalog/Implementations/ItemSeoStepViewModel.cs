@@ -2,17 +2,21 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text;
 using Microsoft.Practices.Prism.Commands;
 using VirtoCommerce.Foundation.AppConfig.Factories;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Catalogs.Model;
+using VirtoCommerce.Foundation.Catalogs.Services;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using Omu.ValueInjecter;
+using VirtoCommerce.Foundation.Stores.Repositories;
 using VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Interfaces;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
+using VirtoCommerce.ManagementClient.Security.ViewModel.Interfaces;
 
 namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementations
 {
@@ -22,16 +26,28 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 		private readonly IRepositoryFactory<IAppConfigRepository> _appConfigRepositoryFactory;
 		private readonly IAppConfigEntityFactory _appConfigEntityFactory;
+		private readonly ICatalogOutlineBuilder _catalogBuilder;
+		private readonly IRepositoryFactory<IStoreRepository> _storeRepositoryFactory;
+		private readonly ILoginViewModel _loginViewModel;
 		
 		#endregion
 
-		public ItemSeoStepViewModel(IRepositoryFactory<IAppConfigRepository> appConfigRepositoryFactory, IAppConfigEntityFactory appConfigEntityFactory, Item item, IEnumerable<string> languages)
+		public ItemSeoStepViewModel(ILoginViewModel loginViewModel, ICatalogOutlineBuilder catalogBuilder, IRepositoryFactory<IStoreRepository> storeRepositoryFactory, IRepositoryFactory<IAppConfigRepository> appConfigRepositoryFactory, IAppConfigEntityFactory appConfigEntityFactory, Item item, IEnumerable<string> languages)
 			: base(null, null, null, null, item, null, null)
 		{
 			_appConfigRepositoryFactory = appConfigRepositoryFactory;
 			_appConfigEntityFactory = appConfigEntityFactory;
+			_storeRepositoryFactory = storeRepositoryFactory;
+			_catalogBuilder = catalogBuilder;
+			_loginViewModel = loginViewModel;
 			InnerItemCatalogLanguages = languages.ToList();
 			SeoLocalesFilterCommand = new DelegateCommand<string>(RaiseSeoLocalesFilter);
+			NavigateToUrlCommand = new DelegateCommand(RaiseNavigateToUrl);
+		}
+
+		private void RaiseNavigateToUrl()
+		{
+			System.Diagnostics.Process.Start(NavigateUri);
 		}
 				
 		#region IWizardStep Members
@@ -63,6 +79,75 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 		#region SEO tab
 
+		private string _navigateUri;
+		public string NavigateUri
+		{
+			get
+			{
+				if (string.IsNullOrEmpty(_navigateUri))
+					_navigateUri = GetNavigateBaseUri();
+				return !string.IsNullOrEmpty(_navigateUri) ? string.Format("{0}/{1}", _navigateUri, string.IsNullOrEmpty(CurrentSeoKeyword.Keyword) ? CurrentSeoKeyword.KeywordValue : CurrentSeoKeyword.Keyword) : null;
+			}
+		}
+
+		private string GetNavigateBaseUri()
+		{
+			var stringBuilder = new StringBuilder();
+			var categoryOutlines = _catalogBuilder.BuildCategoryOutlineWithDSClient(InnerItem.CatalogId, InnerItem.Code);
+			if (categoryOutlines != null && categoryOutlines.Any())
+			{
+				using (var storeRepo = _storeRepositoryFactory.GetRepositoryInstance())
+				{
+					var store = storeRepo.Stores.Where(x => x.Catalog.Equals(categoryOutlines.First().CatalogId)).FirstOrDefault();
+					if (store != null)
+					{
+						var storeUrl = string.IsNullOrEmpty(store.Url) ? store.SecureUrl : store.Url;
+
+						if (!string.IsNullOrEmpty(storeUrl))
+							stringBuilder.AppendFormat("{0}/{1}", storeUrl, CurrentSeoKeyword.Language.ToLowerInvariant());
+						else
+						{
+							stringBuilder.AppendFormat("{0}/{1}/", _loginViewModel.BaseUrl, CurrentSeoKeyword.Language.ToLowerInvariant());
+
+							using (var seoRepo = _appConfigRepositoryFactory.GetRepositoryInstance())
+							{
+								var storeSeo = seoRepo.SeoUrlKeywords.Where(
+									x => x.KeywordValue == store.StoreId && x.Language == CurrentSeoKeyword.Language)
+													  .FirstOrDefault() ??
+											   seoRepo.SeoUrlKeywords.Where(
+												   x => x.KeywordValue == store.StoreId && x.Language == store.DefaultLanguage)
+													  .FirstOrDefault();
+								if (storeSeo != null)
+								{
+									stringBuilder.AppendFormat("{0}", storeSeo.Keyword);
+								}
+							}
+						}
+
+					}
+				}
+
+				if (!string.IsNullOrEmpty(stringBuilder.ToString()) && categoryOutlines.First().Categories.Any())
+				{
+					using (var seoRepo = _appConfigRepositoryFactory.GetRepositoryInstance())
+					{
+						categoryOutlines.First().Categories.ForEach(cat =>
+						{
+							var storeSeo = seoRepo.SeoUrlKeywords.Where(
+								x => x.KeywordValue == cat.Code && x.Language == CurrentSeoKeyword.Language)
+													.FirstOrDefault() ??
+											seoRepo.SeoUrlKeywords.Where(
+												x => x.KeywordValue == cat.Code && x.Language == InnerItem.Catalog.DefaultLanguage)
+													.FirstOrDefault();
+							stringBuilder.AppendFormat("/{0}", storeSeo != null ? storeSeo.Keyword : cat.Code);
+						});
+					}
+				}
+			}
+
+			return stringBuilder.ToString();
+		}
+
 		public List<string> InnerItemStoreLanguages { get; private set; }
 
 		public List<SeoUrlKeyword> SeoKeywords { get; private set; }
@@ -75,6 +160,8 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			{
 				_currentSeoKeyword = value;
 				OnPropertyChanged();
+				_navigateUri = null;
+				OnPropertyChanged("NavigateUri");
 			}
 		}
 
@@ -231,7 +318,9 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 				OnPropertyChanged("UseCustomImageText");
 			}
 		}
+
 		public DelegateCommand<string> SeoLocalesFilterCommand { get; private set; }
+		public DelegateCommand NavigateToUrlCommand { get; private set; }
 
 		#endregion
 

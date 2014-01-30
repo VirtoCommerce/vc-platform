@@ -70,21 +70,13 @@
 			<TextBlock Text="URL Keyword:" VerticalAlignment="Top" Margin="0,8,0,0"/>
 			<StackPanel Grid.Column="2" Margin="0,8,0,0">
 				<core_controls:WatermarkedTextBox Text="{Binding CurrentSeoKeyword.Keyword, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
-				<TextBlock Margin="0,4,0,0" Style="{StaticResource Virto_Base_TextBlock_Watermark_Style}" TextTrimming="CharacterEllipsis">
-					<TextBlock.Text>
-						<MultiBinding StringFormat="http://store/{0}/{1}">
-							<Binding Path="CurrentSeoKeyword.Language" />
-							<Binding Path="CurrentSeoKeyword.Keyword" />
-						</MultiBinding>
-					</TextBlock.Text>
+				<TextBlock Margin="0,4,0,0" Style="{StaticResource Virto_Base_TextBlock_Watermark_Style}">
+					<Hyperlink Command="{Binding Path=NavigateToUrlCommand}">
+						<TextBlock Text="{Binding Path=NavigateUri}" TextTrimming="CharacterEllipsis"/>
+					</Hyperlink>
 					<TextBlock.ToolTip>
 						<TextBlock Style="{StaticResource Virto_Base_TextBlock_Watermark_Style}">
-							<TextBlock.Text>
-								<MultiBinding StringFormat="http://store/{0}/{1}">
-									<Binding Path="CurrentSeoKeyword.Language" />
-									<Binding Path="CurrentSeoKeyword.Keyword" />
-								</MultiBinding>
-							</TextBlock.Text>
+							<TextBlock Text="{Binding Path=NavigateUri}"/>
 						</TextBlock>
 					</TextBlock.ToolTip>
 				</TextBlock>

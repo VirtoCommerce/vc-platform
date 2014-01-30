@@ -8,8 +8,10 @@ using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Foundation.AppConfig.Factories;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
+using VirtoCommerce.Foundation.Catalogs;
 using VirtoCommerce.Foundation.Catalogs.Factories;
 using VirtoCommerce.Foundation.Catalogs.Repositories;
+using VirtoCommerce.Foundation.Catalogs.Services;
 using VirtoCommerce.Foundation.Data.AppConfig;
 using VirtoCommerce.Foundation.Data.Catalogs;
 using VirtoCommerce.Foundation.Data.Importing;
@@ -156,6 +158,7 @@ namespace VirtoCommerce.ManagementClient.Catalog
 			_container.RegisterType<ICategoryViewModel, CategoryViewModel>();
 			_container.RegisterType<ILinkedCategoryViewModel, LinkedCategoryViewModel>();
 			_container.RegisterType<IItemViewModel, ItemViewModel>();
+			_container.RegisterType<ICatalogOutlineBuilder, CatalogOutlineBuilder>();
 
 			_container.RegisterType<IVirtualCatalogViewModel, VirtualCatalogViewModel>();
 
