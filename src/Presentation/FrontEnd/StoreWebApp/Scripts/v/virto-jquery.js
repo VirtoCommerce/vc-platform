@@ -78,12 +78,16 @@
     $.redirect = function (url, params) {
 
         url = url || window.location.href || '';
-        url = url.match(/\?/) ? url : url + '?';
 
-        for (var key in params) {
-            var re = RegExp(';?' + key + '=?[^&;]*', 'g');
-            url = url.replace(re, '');
-            url += '&' + key + '=' + params[key];
+        if (params != undefined && params.length > 0)
+        {
+            url = url.match(/\?/) ? url : url + '?';
+
+            for (var key in params) {
+                var re = RegExp(';?' + key + '=?[^&;]*', 'g');
+                url = url.replace(re, '');
+                url += '&' + key + '=' + params[key];
+            }
         }
 
         // cleanup url 

@@ -4,17 +4,24 @@ using System.Data.Entity.Migrations.Infrastructure;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.AspNet.SignalR;
 using VirtoCommerce.Foundation.AppConfig;
 using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Search;
+using VirtoCommerce.OrderWorkflow;
 using VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet;
 using VirtoCommerce.PowerShell.SearchSetup.Cmdlet;
+using VirtoCommerce.Web.Areas.VirtoAdmin.Helpers;
 using VirtoCommerce.Web.Areas.VirtoAdmin.Models;
 using VirtoCommerce.Web.Areas.VirtoAdmin.Resources;
+using VirtoCommerce.Web.Client.Extensions.Filters;
 
 namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
 {
@@ -24,20 +31,17 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
         {
             if (AppConfigConfiguration.Instance.Setup.IsCompleted)
             {
-                return this.Success();
+                return Success();
             }
-            else
-            {
-                var model = new InstallModel();
-                var csBuilder = new SqlConnectionStringBuilder(GetSetupConnectionString());
-                model.DataSource = csBuilder.DataSource;
-                model.InitialCatalog = csBuilder.InitialCatalog;
-                model.DbUserName = csBuilder.UserID;
-                model.DbUserPassword = csBuilder.Password;
-                model.SetupSampleData = true;
+            var model = new InstallModel();
+            var csBuilder = new SqlConnectionStringBuilder(GetSetupConnectionString());
+            model.DataSource = csBuilder.DataSource;
+            model.InitialCatalog = csBuilder.InitialCatalog;
+            model.DbUserName = csBuilder.UserID;
+            model.DbUserPassword = csBuilder.Password;
+            model.SetupSampleData = true;
 
-                return View(model);               
-            }
+            return View(model);
         }
 
         public ActionResult Success()
@@ -52,36 +56,62 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
                 VirtualPathUtility.ToAbsolute("~/"));
 
             successModel.Website = String.Format("{0}", url);
-            return this.View("Success", successModel);            
+            return this.View("Success", successModel);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Index(InstallModel model)
+        public ActionResult Complete()
         {
-            if (model == null)
-            {
-                model = new InstallModel();
-            }
+            AppConfigConfiguration.Instance.Setup.IsCompleted = true;
+            HttpRuntime.UnloadAppDomain();
+            return Success();
+        }
 
+
+
+        [HttpPost]
+        [ValidateAjax]
+        public JsonResult Index(InstallModel model)
+        {
             CustomValidateModel(model);
+
             if (!ModelState.IsValid)
             {
-                return View(model);
+                var errorModel =
+                       from x in ModelState.Keys
+                       where ModelState[x].Errors.Count > 0
+                       select new
+                       {
+                           key = x,
+                           errors = ModelState[x].Errors.
+                                                  Select(y => y.ErrorMessage).
+                                                  ToArray()
+                       };
+
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(errorModel);
             }
+
+            var traceListener = new SignalRTraceListener();
+            Trace.Listeners.Add(traceListener);
+
             try
             {
-                if (CreateDb(model))
-                {
-                    UpdateIndex(model);
-                    return Restart();
-                }
+                CreateDb(model);
+                UpdateIndex(model);
+
             }
-            catch (Exception err)
+            catch (Exception ex)
             {
-                model.ErrorMessage = err.Message;
+                Trace.TraceError(ex.Message);
+                return Json(new { Success = false, ex.Message });
             }
-            return View(model);
+            finally
+            {
+                Trace.Listeners.Remove(traceListener);
+            }
+
+            return Json(new { Success = true });
+
         }
 
         private void UpdateIndex(InstallModel model)
@@ -101,73 +131,51 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
 
         private void CustomValidateModel(InstallModel model)
         {
-            if (model.DbAdminRequired && string.IsNullOrWhiteSpace(model.DbAdminPassword))
+            if (model.DbAdminRequired)
             {
-                ModelState.AddModelError("DbAdminPassword", Resource.DbAdminPasswordRequiredError);
-            }
-
-            if (model.DbAdminRequired && string.IsNullOrWhiteSpace(model.DbAdminUser))
-            {
-                ModelState.AddModelError("DbAdminUser", Resource.DbAdminUserRequiredError);
+                if (string.IsNullOrWhiteSpace(model.DbAdminPassword))
+                {
+                    ModelState.AddModelError("DbAdminPassword", Resource.DbAdminPasswordRequiredError);
+                }
+                if (string.IsNullOrWhiteSpace(model.DbAdminUser))
+                {
+                    ModelState.AddModelError("DbAdminUser", Resource.DbAdminUserRequiredError);
+                }
             }
         }
 
         private string GetSetupConnectionString()
         {
-           // var setupFile = MvcApplication.SetupFile;
+            // var setupFile = MvcApplication.SetupFile;
             var connectionString = ConnectionHelper.SqlConnectionString;
 
-      /*      if (System.IO.File.Exists(setupFile))
-            {
-                var setupContent = System.IO.File.ReadAllText(setupFile);
-                var mm=Regex.Match(setupContent, @"(?<=\s*SqlConnectionString:\s+)[^\s].*[^\r\n]");
+            /*      if (System.IO.File.Exists(setupFile))
+                  {
+                      var setupContent = System.IO.File.ReadAllText(setupFile);
+                      var mm=Regex.Match(setupContent, @"(?<=\s*SqlConnectionString:\s+)[^\s].*[^\r\n]");
 
-                if (mm.Success)
-                {
-                    connectionString = mm.Value;
-                }
+                      if (mm.Success)
+                      {
+                          connectionString = mm.Value;
+                      }
 
-                ConnectionHelper.SqlConnectionString = connectionString;
-            }*/
+                      ConnectionHelper.SqlConnectionString = connectionString;
+                  }*/
             return connectionString;
         }
 
-        private bool CreateDb(InstallModel model)
+        private void CreateDb(InstallModel model)
         {
-            bool result = false;
-            StringBuilder log = new StringBuilder();
-            var traceListener = new DelimitedListTraceListener(new StringWriter(log));
-            model.ClearMessages();
-            Trace.Listeners.Add(traceListener);
-            
-            try
-            {
-                SetupDb(model);
-                model.StatusMessage = "Database successfully created.";
-                AppConfigConfiguration.Instance.Setup.IsCompleted = true;
-                result = true;
-            }
-            catch (AutomaticMigrationsDisabledException err)
-            {
-                log.Append(err.Message);
-                model.ErrorMessage = Resource.DatabaseAlreadyExists;
-            }
-            catch (Exception err)
-            {
-                log.Append(err.Message);
-                model.ErrorMessage = err.Message;
-            }
-            
-            Session["log"] = log.ToString();
-            Trace.Listeners.Remove(traceListener);
-            return result;
+            SetupDb(model);
+            SetupWorker.DisplayInfoMessage("Database successfully created.");
+
         }
 
         private string PrepareDb(InstallModel model)
         {
             var csBuilder = model.ConnectionStringBuilder;
-            Trace.TraceInformation("Checking connection availability. Connection string: {0}", csBuilder.ConnectionString);
-           
+            SetupWorker.SendMessage("Checking connection availability. Connection string: {0}", csBuilder.ConnectionString);
+
             var success = CheckDb(csBuilder.ConnectionString);
 
             if (success)
@@ -207,12 +215,6 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
             return csBuilder.ConnectionString;
         }
 
-        public ActionResult Restart()
-        {
-            HttpRuntime.UnloadAppDomain();
-            return this.Success();
-        }
-
         public FileResult DownloadLog()
         {
             byte[] data = Encoding.UTF8.GetBytes(Session["log"] as string ?? "");
@@ -225,7 +227,7 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
         private void SetupDb(InstallModel model)
         {
             var csBuilder = model.ConnectionStringBuilder;
-            var connectionString = PrepareDb(model); 
+            var connectionString = PrepareDb(model);
             var installSamples = model.SetupSampleData;
             var dataFolder = @"App_Data\Virto\SampleData\Database";
 
@@ -240,10 +242,8 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
             // Configure database   
             Trace.TraceInformation("Creating database and system tables.");
             new PublishAppConfigDatabase().Publish(connectionString, null, installSamples); // publish AppConfig first as it contains system tables
-
             Trace.TraceInformation("Creating 'Store' module tables.");
-            var db = new PublishStoreDatabase(); db.Publish(connectionString, null, installSamples);
-            
+            new PublishStoreDatabase().Publish(connectionString, null, installSamples);
             Trace.TraceInformation("Creating 'Catalog' module tables.");
             new PublishCatalogDatabase().Publish(connectionString, dataFolder, installSamples);
             Trace.TraceInformation("Creating 'Import' module tables.");
@@ -266,13 +266,13 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
             new PublishSecurityDatabase().Publish(connectionString, dataFolder, installSamples);
 
             Trace.TraceInformation("Saving database connection string to web.config.");
-           
+
             Trace.TraceInformation("Database created.");
         }
 
         private void AddUserToDatabase(string connectionString, string userId, string password, string dbRole = "db_owner")
         {
-            using (var dbConn = new SqlConnection(connectionString) )
+            using (var dbConn = new SqlConnection(connectionString))
             {
                 Trace.TraceInformation("Creating user and adding it to database.");
                 dbConn.Open();
@@ -290,7 +290,7 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
                 dbConn.ChangeDatabase(databaseName);
                 ExecuteSQL(dbConn, "CREATE USER [{0}] FOR LOGIN {0}", userId);
                 ExecuteSQL(dbConn, "EXEC sp_addrolemember '{1}', '{0}'", userId, dbRole);
-                
+
                 dbConn.Close();
             }
         }

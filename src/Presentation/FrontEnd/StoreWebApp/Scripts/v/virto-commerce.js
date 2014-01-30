@@ -110,12 +110,12 @@ VirtoCommerce.prototype = {
 
                 for (var i = 0; i < data.length; i++)
                 { // add each error to the errors object
-                    errors[data[i].Key] = data[i].Value;
+                    errors[data[i].key] = data[i].errors[0];
                 }
 
                 validator.showErrors(errors); // show the errors using the validator object
             }
-            else if (context.Message != undefined)
+            else if (data.Message != undefined)
             {
                 $.showPopupMessage(data.Message);
             }

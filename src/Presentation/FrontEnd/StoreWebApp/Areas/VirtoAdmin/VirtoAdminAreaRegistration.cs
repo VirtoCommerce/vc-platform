@@ -46,6 +46,9 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin
                     {
                         {"controller", new ControllerConstraint()},
                     },
+                     new RouteValueDictionary { 
+                        {"area", AreaName}
+                     },
                       new MvcRouteHandler());
 
                 context.Routes.Add(defaultRoute);
