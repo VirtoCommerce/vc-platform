@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using Microsoft.AspNet.SignalR;
+using VirtoCommerce.Foundation.Data.AppConfig;
 using VirtoCommerce.Web.Areas.VirtoAdmin.Models;
 
 namespace VirtoCommerce.Web.Areas.VirtoAdmin.Helpers

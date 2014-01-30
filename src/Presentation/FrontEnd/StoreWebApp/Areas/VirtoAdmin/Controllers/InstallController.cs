@@ -34,7 +34,7 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
                 return Success();
             }
             var model = new InstallModel();
-            var csBuilder = new SqlConnectionStringBuilder(GetSetupConnectionString());
+            var csBuilder = new SqlConnectionStringBuilder(ConnectionHelper.SqlConnectionString);
             model.DataSource = csBuilder.DataSource;
             model.InitialCatalog = csBuilder.InitialCatalog;
             model.DbUserName = csBuilder.UserID;
@@ -56,13 +56,18 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
                 VirtualPathUtility.ToAbsolute("~/"));
 
             successModel.Website = String.Format("{0}", url);
-            return this.View("Success", successModel);
+            return View("Success", successModel);
         }
 
         public ActionResult Complete()
         {
-            AppConfigConfiguration.Instance.Setup.IsCompleted = true;
-            HttpRuntime.UnloadAppDomain();
+            new Thread(() =>
+            {
+                //wait for page to load
+                Thread.Sleep(2000);
+                AppConfigConfiguration.Instance.Setup.IsCompleted = true;
+                HttpRuntime.UnloadAppDomain();
+            }).Start();
             return Success();
         }
 
@@ -144,25 +149,6 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
             }
         }
 
-        private string GetSetupConnectionString()
-        {
-            // var setupFile = MvcApplication.SetupFile;
-            var connectionString = ConnectionHelper.SqlConnectionString;
-
-            /*      if (System.IO.File.Exists(setupFile))
-                  {
-                      var setupContent = System.IO.File.ReadAllText(setupFile);
-                      var mm=Regex.Match(setupContent, @"(?<=\s*SqlConnectionString:\s+)[^\s].*[^\r\n]");
-
-                      if (mm.Success)
-                      {
-                          connectionString = mm.Value;
-                      }
-
-                      ConnectionHelper.SqlConnectionString = connectionString;
-                  }*/
-            return connectionString;
-        }
 
         private void CreateDb(InstallModel model)
         {
@@ -174,7 +160,7 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
         private string PrepareDb(InstallModel model)
         {
             var csBuilder = model.ConnectionStringBuilder;
-            SetupWorker.SendMessage("Checking connection availability. Connection string: {0}", csBuilder.ConnectionString);
+            SetupWorker.SendMessageLine("Checking connection availability. Connection string: {0}", csBuilder.ConnectionString);
 
             var success = CheckDb(csBuilder.ConnectionString);
 

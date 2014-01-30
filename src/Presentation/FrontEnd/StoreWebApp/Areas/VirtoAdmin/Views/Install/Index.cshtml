@@ -32,10 +32,10 @@
                 $(".console").append(message);
             };
             
-            setup.client.traceMessage = function (message)
+            setup.client.traceMessageLine = function (message)
             {
                 $('#setUpHeader').text(message);
-                $(".console").append("<br/>");
+                $(".console").append("<br/><br/>");
                 $(".console").append(message);
             };
 
@@ -45,7 +45,7 @@
             };
 
             // Start the connection.
-            $.connection.hub.start().done(function() {
+            $.connection.hub.start().done(function () {
                 //Make submit in ajax
                 $('form').submit(function() {
                     var validator = $(this).validate();
