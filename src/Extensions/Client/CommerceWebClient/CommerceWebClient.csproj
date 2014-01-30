@@ -179,6 +179,7 @@
     <Compile Include="Extensions\Filters\LocalizeWebApiAttribute.cs" />
     <Compile Include="Extensions\Filters\LocalizeAttribute.cs" />
     <Compile Include="Extensions\Filters\ModelValidationFilterAttribute.cs" />
+    <Compile Include="Extensions\Filters\ValidateAjaxAttribute.cs" />
     <Compile Include="Extensions\HtmlHelperExtensions.cs" />
     <Compile Include="Extensions\MenuHelperExtensions.cs" />
     <Compile Include="Extensions\NamedSiteMapNodeVisibilityProvider.cs" />

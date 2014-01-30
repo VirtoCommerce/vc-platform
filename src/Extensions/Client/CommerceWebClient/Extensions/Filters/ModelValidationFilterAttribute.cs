@@ -22,10 +22,20 @@ namespace VirtoCommerce.Web.Client.Extensions.Filters
             var modelState = actionExecutedContext.ActionContext.ModelState;
             if (!modelState.IsValid)
             {
-                var errors = modelState
-                    .Where(s => s.Value.Errors.Count > 0)
-                    .Select(s => new KeyValuePair<string, string>(s.Key.Substring(s.Key.IndexOf(".") + 1), s.Value.Errors.First().ErrorMessage.Localize()))
-                    .ToArray();
+                var errors =
+                      from x in modelState.Keys
+                      where modelState[x].Errors.Count > 0
+                      select new
+                      {
+                          key = x,
+                          errors = modelState[x].Errors.
+                                                 Select(y => y.ErrorMessage).
+                                                 ToArray()
+                      };
+                //var errors = modelState
+                //    .Where(s => s.Value.Errors.Count > 0)
+                //    .Select(s => new KeyValuePair<string, string>(s.Key.Substring(s.Key.IndexOf(".") + 1), s.Value.Errors.First().ErrorMessage.Localize()))
+                //    .ToArray();
 
                 actionExecutedContext.Response = actionExecutedContext.Request.CreateResponse(HttpStatusCode.BadRequest, errors);
             }

@@ -8,7 +8,7 @@ namespace VirtoCommerce.Web
     /// </summary>
 	public class BundleConfig
 	{
-        public const string VirtoAdminStyles = "~/Content/VirtoAdmin";
+        public const string VirtoAdminStyles = "~/Content/VirtoAdmin/styles";
 
 		// For more information on Bundling, visit http://go.microsoft.com/fwlink/?LinkId=254725
         /// <summary>
@@ -44,6 +44,14 @@ namespace VirtoCommerce.Web
                 "~/Scripts/responsive/virto.slider.js",
                 "~/Scripts/responsive/camera.js",
                 "~/Scripts/responsive/jquery.easing.{version}.js"
+                ));
+
+            //SignalR
+            bundles.Add(new ScriptBundle("~/bundles/admin").Include(
+                 "~/Scripts/v/virto-jquery.js",
+                "~/Scripts/jquery.signalR-{version}.js",
+                "~/Scripts/v/virto-commerce.js",
+                "~/Scripts/v/validation.js"
                 ));
 
             bundles.Add(new Bundle("~/Content/themes/base/css", new CssMinifyFix()).Include(

@@ -464,3 +464,17 @@ p {
 a {
     transition: color 0.2s ease 0s;
 }
+
+.console {
+    background-color: #012456;
+    color: #FFFFFF;
+    display: block;
+    float: left;
+    font-family: Lucida Console;
+    font-size: 12px;
+    height: 300px;
+    margin: 10px 0;
+    overflow: auto;
+    width: 600px;
+    display: none;
+}
