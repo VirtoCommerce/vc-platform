@@ -72,7 +72,7 @@
                 <controls:MetroButton x:Name="btnUpload" Command="{Binding UploadReportCommand}" Header="MANAGE" ToolTip="Refresh" Margin="3,0,28,0" >
                     <controls:VectorImage ImageResource="{StaticResource Icon_Button_Manage}" Width="14" Height="14" />
                 </controls:MetroButton>
-                <controls:MetroButton x:Name="btnGenerate" Command="{Binding GenerateReportCommand}" CommandParameter="{Binding SelectedItem, ElementName=ReportItemsList}" Header="GENERATE" ToolTip="Refresh" Margin="3,0,28,0">
+                <controls:MetroButton x:Name="btnGenerate" Command="{Binding GenerateReportCommand}" CommandParameter="{Binding SelectedItem, ElementName=ReportItemsList}" Header="GENERATE" ToolTip="Refresh" Margin="3,0,28,0" >
                     <controls:VectorImage ImageResource="{StaticResource Icon_Button_Generate}" Width="14" Height="14" />
                 </controls:MetroButton>
                 <controls:MetroButton x:Name="btnRefresh" Command="{Binding RefreshItemsCommand}" Header="REFRESH" ToolTip="Refresh" Margin="3,0,28,0" >
@@ -104,7 +104,7 @@
                 </controls:VirtualFolderItemList.Style>
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectionChanged">
-                        <ei:CallMethodAction TargetObject="{Binding (implementations:ReportingHomeViewModel.GenerateReportCommand)}" MethodName="RaiseCanExecuteChanged"/>
+                        <ei:CallMethodAction TargetObject="{Binding GenerateReportCommand}" MethodName="RaiseCanExecuteChanged"/>
                     </i:EventTrigger>
                     <i:EventTrigger EventName="Load">
                         <ei:CallMethodAction MethodName="Focus" />
