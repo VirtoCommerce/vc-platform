@@ -145,10 +145,10 @@
 										</Style.Triggers>
 									</Style>
 								</TextBlock.Style>
-							<Hyperlink Command="{Binding Path=TakeItCommand}">
-								<TextBlock Text="take it" FontSize="13"/>
-							</Hyperlink>
-						</TextBlock>
+								<Hyperlink Command="{Binding Path=TakeItCommand}">
+									<TextBlock Text="take it" FontSize="13"/>
+								</Hyperlink>
+							</TextBlock>
 
 							<ComboBox Grid.Row="1" Grid.ColumnSpan="2" BorderBrush="#B0BBBF" ItemsSource="{Binding AssignedUserList}" common:RequiredFieldHelper.IsRequired="True"
 							SelectedItem="{Binding Path=SelectedAssignedUser, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" DisplayMemberPath="UserName"

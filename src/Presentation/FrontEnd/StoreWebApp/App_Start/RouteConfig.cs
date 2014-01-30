@@ -16,17 +16,6 @@ namespace VirtoCommerce.Web
     /// </summary>
     public class RouteConfig
     {
-
-        private static RouteValueDictionary CreateRouteValueDictionary(object values)
-        {
-            var dictionary = values as IDictionary<string, object>;
-            if (dictionary != null)
-            {
-                return new RouteValueDictionary(dictionary);
-            }
-
-            return new RouteValueDictionary(values);
-        }
         /// <summary>
         /// Registers the routes.
         /// </summary>

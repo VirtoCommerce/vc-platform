@@ -128,10 +128,9 @@ namespace VirtoCommerce.Foundation.Catalogs
         private LinkedCategory[] GetLinkedCategories(string itemId, string catalogId, bool useCache = true)
         {
             var query = _catalogRepository.CategoryItemRelations
-                .Where(ci => ci.ItemId == itemId)
-                .SelectMany(c => c.Category.LinkedCategories)
-                .Where(lc => lc.CatalogId == catalogId);
-
+				.Where(ci => ci.ItemId == itemId).ToList().SelectMany(c => c.Category.LinkedCategories).Where(lc => lc.CatalogId == catalogId);
+                
+			
             return Helper.Get(
                string.Format(LinkedCategoriesCacheKey, catalogId, itemId),
                () => (query).ToArray(),
@@ -141,7 +140,7 @@ namespace VirtoCommerce.Foundation.Catalogs
 
         private CategoryBase GetCategoryByIdInternal(string id)
         {
-            return _catalogRepository.Categories.FirstOrDefault(x => x.CategoryId.Equals(id, StringComparison.OrdinalIgnoreCase));
+			return _catalogRepository.Categories.Where(x => x.CategoryId.Equals(id, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
         }
         #endregion
 
