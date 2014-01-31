@@ -2,9 +2,9 @@
 
 namespace VirtoCommerce.ManagementClient.Fulfillment.View.Wizard.Stores
 {
-    public partial class StoreSeoStepView : ViewBase
+    public partial class SeoStepView : ViewBase
 	{
-		public StoreSeoStepView()
+		public SeoStepView()
 		{
 			InitializeComponent();
 		}

@@ -1440,7 +1440,6 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			var languagesParameter = new KeyValuePair<string, object>("languages", InnerItemCatalogLanguages);
 			SeoStepViewModel =
 					_seoVmFactory.GetViewModelInstance(itemParameter, languagesParameter);
-			//(SeoStepViewModel as ItemSeoViewModel).InitializePropertiesForViewing();
 			OnPropertyChanged("SeoStepViewModel");
 		}
 		

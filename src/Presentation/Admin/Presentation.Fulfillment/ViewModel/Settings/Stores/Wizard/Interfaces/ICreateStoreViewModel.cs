@@ -15,14 +15,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 	public interface IStoreOverviewStepViewModel : IWizardStep
 	{
 	}
-
-	public interface IStoreSeoStepViewModel : IWizardStep
-	{
-		List<SeoUrlKeyword> SeoKeywords { get; }
-		SeoUrlKeyword CurrentSeoKeyword { get; }
-		void UpdateSeoKeywords();
-	}
-
+	
 	public interface IStoreLocalizationStepViewModel : IWizardStep
 	{
 	}

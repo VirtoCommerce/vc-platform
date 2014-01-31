@@ -22,7 +22,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 	{
 
 		#region Const
-		const int SeoTabIndex = 7;
+		const int SeoTabIndex = 2;
 		#endregion
 
 		#region Dependencies
@@ -38,7 +38,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 		private readonly IViewModelsFactory<IStoreNavigationStepViewModel> _navigationVmFactory;
 		private readonly IViewModelsFactory<IStoreSettingStepViewModel> _settingVmFactory;
 		private readonly IViewModelsFactory<IStoreLinkedStoresStepViewModel> _linkedStoresVmFactory;
-		private readonly IViewModelsFactory<IStoreSeoStepViewModel> _seoVmFactory;
+		private readonly IViewModelsFactory<ISeoViewModel> _seoVmFactory;
 
 		#endregion
 
@@ -53,7 +53,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 			IViewModelsFactory<IStoreNavigationStepViewModel> navigationVmFactory,
 			IViewModelsFactory<IStoreSettingStepViewModel> settingVmFactory,
 			IViewModelsFactory<IStoreLinkedStoresStepViewModel> linkedStoresVmFactory,
-			IViewModelsFactory<IStoreSeoStepViewModel> seoVmFactory,
+			IViewModelsFactory<ISeoViewModel> seoVmFactory,
 			IHomeSettingsViewModel parent,
 			INavigationManager navManager, Store item)
 			: base(entityFactory, item, false)
@@ -220,8 +220,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 
 			if (SeoStepViewModel != null)
 			{
-				if (SeoStepViewModel.CurrentSeoKeyword != null)
-					SeoStepViewModel.UpdateSeoKeywords();
+				SeoStepViewModel.UpdateSeoKeywords();
 			}
 		}
 
@@ -271,7 +270,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 					SeoStepViewModel.SeoKeywords.ForEach(keyword => keyword.PropertyChanged += ViewModel_PropertyChanged);				
 			}
 		}
-
+		
 		protected override void CloseSubscriptionUI()
 		{
 			if (InnerItem != null)
@@ -356,7 +355,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 		public IStoreLinkedStoresStepViewModel LinkedStoresStepViewModel { get; private set; }
 		public IStoreSettingStepViewModel SettingsStepViewModel { get; private set; }
 		public IStoreNavigationStepViewModel NavigationStepViewModel { get; private set; }
-		public IStoreSeoStepViewModel SeoStepViewModel { get; private set; }
+		public ISeoViewModel SeoStepViewModel { get; private set; }
 
 		private bool _IsInitializingOverview;
 		public bool IsInitializingOverview
@@ -680,9 +679,9 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 		protected void InitSeoStep()
 		{
 			var itemParameter = new KeyValuePair<string, object>("item", InnerItem);
+			var languagesParameter = new KeyValuePair<string, object>("languages", InnerItem.Languages.Select(x => x.LanguageCode));
 			SeoStepViewModel =
-					_seoVmFactory.GetViewModelInstance(itemParameter);
-			(SeoStepViewModel as StoreSeoStepViewModel).InitializePropertiesForViewing();
+					_seoVmFactory.GetViewModelInstance(itemParameter, languagesParameter);
 			OnPropertyChanged("SeoStepViewModel");
 		}
 

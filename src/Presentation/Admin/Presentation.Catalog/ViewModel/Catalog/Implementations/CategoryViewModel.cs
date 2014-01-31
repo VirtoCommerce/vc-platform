@@ -499,7 +499,6 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			var parentCat = new KeyValuePair<string, object>("parentCatalog", _parentCatalog);
 			SeoStepViewModel =
 					_seoVmFactory.GetViewModelInstance(itemParameter, languagesParameter, parentCat);
-			//(SeoStepViewModel as CategorySeoViewModel).InitializePropertiesForViewing();
 			OnPropertyChanged("SeoStepViewModel");
 		}
 

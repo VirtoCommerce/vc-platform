@@ -37,6 +37,7 @@
     <TargetFrameworkProfile />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <FodyPath>..\..\..\..\packages\Fody.1.20.0.0</FodyPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -105,6 +106,10 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="PropertyChanged">
+      <HintPath>..\..\..\..\packages\PropertyChanged.Fody.1.45.0.0\Lib\NET35\PropertyChanged.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -146,6 +151,7 @@
     <Compile Include="Infrastructure\Converters\ShipmentsValuesConverter.cs" />
     <Compile Include="Infrastructure\Converters\StoreSettingValueConverter.cs" />
     <Compile Include="Infrastructure\Converters\StoreStatesConverter.cs" />
+    <Compile Include="Model\SeoUrlKeyword.cs" />
     <Compile Include="Model\ShipmentItem.cs" />
     <Compile Include="Reports\SlipPdfReport.cs" />
     <Compile Include="Reports\PicklistPdfReport.cs" />
@@ -165,7 +171,9 @@
     <Compile Include="ViewModel\Rma%27s\Interfaces\IRmaViewModel.cs" />
     <Compile Include="ViewModel\Rma%27s\Implementations\RmaHomeViewModel.cs" />
     <Compile Include="ViewModel\Rma%27s\Implementations\RmaViewModel.cs" />
-    <Compile Include="ViewModel\Settings\Stores\Wizard\Implementations\StoreSeoStepViewModel.cs" />
+    <Compile Include="ViewModel\Settings\Stores\Implementations\SeoViewModelBase.cs" />
+    <Compile Include="ViewModel\Settings\Stores\Interfaces\ISeoViewModel.cs" />
+    <Compile Include="ViewModel\Settings\Stores\Implementations\StoreSeoViewModel.cs" />
     <Compile Include="ViewModel\Wizard\Implementations\CreatePicklistStepViewModel.cs" />
     <Compile Include="ViewModel\Wizard\Interfaces\ICreatePicklistStepViewModel.cs" />
     <Compile Include="ViewModel\Wizard\Implementations\CreatePicklistWizardViewModel.cs" />
@@ -245,8 +253,8 @@
     <Compile Include="View\FulfillmentCenters\FulfillmentCentersSettingsView.xaml.cs">
       <DependentUpon>FulfillmentCentersSettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Wizard\Stores\StoreSeoStepView.xaml.cs">
-      <DependentUpon>StoreSeoStepView.xaml</DependentUpon>
+    <Compile Include="View\Wizard\Stores\SeoStepView.xaml.cs">
+      <DependentUpon>SeoStepView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Wizard\Stores\StoreTaxesStepView.xaml.cs">
       <DependentUpon>StoreTaxesStepView.xaml</DependentUpon>
@@ -371,7 +379,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\Wizard\Stores\StoreSeoStepView.xaml">
+    <Page Include="View\Wizard\Stores\SeoStepView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -413,6 +421,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Fody.targets" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -437,9 +446,12 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="FodyWeavers.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Import Project="Fody.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

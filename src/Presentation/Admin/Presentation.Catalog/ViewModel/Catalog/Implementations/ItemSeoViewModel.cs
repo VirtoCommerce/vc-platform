@@ -49,10 +49,10 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 						var storeUrl = string.IsNullOrEmpty(store.Url) ? store.SecureUrl : store.Url;
 
 						if (!string.IsNullOrEmpty(storeUrl))
-							stringBuilder.AppendFormat("{0}{1}{2}", storeUrl, storeUrl.EndsWith("/") ? null : "/", keyword.Language.ToLowerInvariant());
+							stringBuilder.AppendFormat("{0}{1}{2}", storeUrl, storeUrl.EndsWith("/") ? null : "/", keyword.Language.ToLower());
 						else
 						{
-							stringBuilder.AppendFormat("{0}{1}{2}/", _loginViewModel.BaseUrl, _loginViewModel.BaseUrl.EndsWith("/") ? null : "/", keyword.Language.ToLowerInvariant());
+							stringBuilder.AppendFormat("{0}{1}{2}/", _loginViewModel.BaseUrl, _loginViewModel.BaseUrl.EndsWith("/") ? null : "/", keyword.Language.ToLower());
 
 							using (var seoRepo = _appConfigRepositoryFactory.GetRepositoryInstance())
 							{
