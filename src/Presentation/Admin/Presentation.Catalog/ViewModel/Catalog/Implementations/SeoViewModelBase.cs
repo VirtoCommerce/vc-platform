@@ -60,7 +60,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			{
 				return string.IsNullOrEmpty(CurrentSeoKeyword.BaseUrl)
 					                ? string.Empty
-									: string.Format("{0}/{1}", CurrentSeoKeyword.BaseUrl, string.IsNullOrEmpty(CurrentSeoKeyword.Keyword) ? string.IsNullOrEmpty(SeoKeywords.First(x => x.Language.Equals(_defaultLanguage, StringComparison.OrdinalIgnoreCase)).Keyword) ? CurrentSeoKeyword.KeywordValue : SeoKeywords.First(x => x.Language.Equals(_defaultLanguage, StringComparison.OrdinalIgnoreCase)).Keyword : CurrentSeoKeyword.Keyword);
+									: string.Format("{0}/{1}", CurrentSeoKeyword.BaseUrl, string.IsNullOrEmpty(CurrentSeoKeyword.Keyword) ? string.IsNullOrEmpty(SeoKeywords.First(x => x.Language.Equals(_defaultLanguage, StringComparison.OrdinalIgnoreCase)).Keyword) ? CurrentSeoKeyword.KeywordValue : SeoKeywords.First(x => x.Language.Equals(_defaultLanguage, StringComparison.OrdinalIgnoreCase)).Keyword : CurrentSeoKeyword.Keyword).ToLower();
 			}
 		}
 
@@ -82,7 +82,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		{
 			get
 			{
-				return "Enter item SEO information.";
+				return "Enter SEO information.";
 			}
 		}
 
@@ -225,7 +225,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			{
 				_appConfigRepository.SeoUrlKeywords.Where(
 					keyword =>
-					keyword.KeywordValue.Equals(_keywordValue) && keyword.KeywordType.Equals((int) _keywordType) && keyword.IsActive)
+					keyword.KeywordValue.Equals(_keywordValue, StringComparison.InvariantCultureIgnoreCase) && keyword.KeywordType.Equals((int) _keywordType) && keyword.IsActive)
 									.ToList().ForEach(seo =>
 										{
 											var newSeo = new SeoUrlKeyword(seo);
@@ -236,15 +236,15 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 			_availableLanguages.ForEach(locale => 
 				{
-					if (!SeoKeywords.Any(keyword => keyword.Language.ToLowerInvariant().Equals(locale.ToLowerInvariant())))
+					if (!SeoKeywords.Any(keyword => keyword.Language.Equals(locale, StringComparison.InvariantCultureIgnoreCase)))
 					{
 						var newSeoKeyword = new SeoUrlKeyword { Language = locale, KeywordType = (int)_keywordType, KeywordValue = _keywordValue };
 						newSeoKeyword.BaseUrl = BuildBaseUrl(newSeoKeyword);
 						SeoKeywords.Add(newSeoKeyword);
 					}
 				});
-			
-			SeoLocalesFilterCommand.Execute(SeoKeywords.First(x => x.Language.ToLowerInvariant().Equals(_defaultLanguage.ToLowerInvariant())));
+
+			SeoLocalesFilterCommand.Execute(SeoKeywords.First(x => x.Language.Equals(_defaultLanguage, StringComparison.InvariantCultureIgnoreCase)));
 		}
 
 		protected abstract string BuildBaseUrl(SeoUrlKeyword keyword);
@@ -309,14 +309,14 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 						{
 							var count = appConfigRepository.SeoUrlKeywords
 														   .Where(x =>
-																  x.SeoUrlKeywordId != keyword.SeoUrlKeywordId &&
-																  x.Keyword == keyword.Keyword && x.KeywordType == keyword.KeywordType && x.Language == keyword.Language && x.IsActive)
+																  !x.SeoUrlKeywordId.Equals(keyword.SeoUrlKeywordId, StringComparison.InvariantCultureIgnoreCase) &&
+																  x.Keyword.Equals(keyword.Keyword, StringComparison.InvariantCultureIgnoreCase) && x.KeywordType == keyword.KeywordType && x.Language.Equals(keyword.Language, StringComparison.InvariantCultureIgnoreCase) && x.IsActive)
 														   .Count();
 
 							if (count > 0)
 							{
-								keyword.SetError("Keyword", "Item with the same Keyword and Language already exists", false);
-								if (keyword.SeoUrlKeywordId.Equals(CurrentSeoKeyword.SeoUrlKeywordId))
+								keyword.SetError("Keyword", string.Format("{0} with the same Keyword and Language already exists", _keywordType.ToString()), false);
+								if (keyword.SeoUrlKeywordId.Equals(CurrentSeoKeyword.SeoUrlKeywordId, StringComparison.InvariantCultureIgnoreCase))
 									OnPropertyChanged("CurrentSeoKeyword");
 								retVal = false;
 							}

@@ -293,7 +293,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			{
 				seoIsValid = SeoStepViewModel.IsValid;
 				if (!seoIsValid)
-					SelectedTabIndex = (InnerItem is Bundle) ? 7 : 8;
+					SelectedTabIndex = (InnerItem is Bundle) ? 2 : 3;
 			}
 			
 			return result && isPropertyValuesValid && isCodeValid && seoIsValid;

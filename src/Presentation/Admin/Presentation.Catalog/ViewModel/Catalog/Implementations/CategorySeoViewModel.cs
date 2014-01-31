@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using VirtoCommerce.Foundation.AppConfig.Factories;
@@ -51,26 +52,25 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 						var storeUrl = string.IsNullOrEmpty(store.Url) ? store.SecureUrl : store.Url;
 
 						if (!string.IsNullOrEmpty(storeUrl))
-							stringBuilder.AppendFormat("{0}/{1}", storeUrl, keyword.Language.ToLowerInvariant());
+							stringBuilder.AppendFormat("{0}{1}{2}", storeUrl, storeUrl.EndsWith("/") ? null : "/", keyword.Language.ToLowerInvariant());
 						else
 						{
-							stringBuilder.AppendFormat("{0}/{1}/", _loginViewModel.BaseUrl, keyword.Language.ToLowerInvariant());
-							
+							stringBuilder.AppendFormat("{0}{1}{2}/", _loginViewModel.BaseUrl, _loginViewModel.BaseUrl.EndsWith("/") ? null : "/", keyword.Language.ToLowerInvariant());
+
 							using (var seoRepo = _appConfigRepositoryFactory.GetRepositoryInstance())
 							{
 								var storeSeo = seoRepo.SeoUrlKeywords.Where(
 									x => x.KeywordValue == store.StoreId && x.Language == keyword.Language)
-								                      .FirstOrDefault() ??
-								               seoRepo.SeoUrlKeywords.Where(
-									               x => x.KeywordValue == store.StoreId && x.Language == store.DefaultLanguage)
-								                      .FirstOrDefault();
+													  .FirstOrDefault() ??
+											   seoRepo.SeoUrlKeywords.Where(
+												   x => x.KeywordValue == store.StoreId && x.Language == store.DefaultLanguage)
+													  .FirstOrDefault();
 								if (storeSeo != null)
 								{
 									stringBuilder.AppendFormat("{0}", storeSeo.Keyword);
 								}
 							}
 						}
-
 					}
 				}
 
@@ -86,7 +86,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 										x => x.KeywordValue == cat.Code && x.Language == keyword.Language)
 									                      .FirstOrDefault() ??
 									               seoRepo.SeoUrlKeywords.Where(
-										               x => x.KeywordValue == cat.Code && x.Language == _category.Catalog.DefaultLanguage)
+										               x => x.KeywordValue.Equals(cat.Code, StringComparison.InvariantCultureIgnoreCase) && x.Language.Equals(_catalog.CatalogId, StringComparison.InvariantCultureIgnoreCase))
 									                      .FirstOrDefault();
 									stringBuilder.AppendFormat("/{0}", storeSeo != null ? storeSeo.Keyword : cat.Code);
 								}
