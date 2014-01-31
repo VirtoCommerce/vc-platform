@@ -56,7 +56,7 @@
 	<DataTemplate DataType="{x:Type localWizardViewModel:CategoryPropertiesStepViewModel}">
 		<core_controls:CacheContentControl Type="{x:Type localWizardView:PropertiesAndValuesStepView}"/>
 	</DataTemplate>
-	<DataTemplate DataType="{x:Type implementations:CategorySeoStepViewModel}">
+	<DataTemplate DataType="{x:Type implementations:CategorySeoViewModel}">
 		<core_controls:CacheContentControl Type="{x:Type localWizardView:SeoStepView}"/>
 	</DataTemplate>
 
@@ -81,7 +81,7 @@
 	<DataTemplate DataType="{x:Type localWizardViewModel:EditorialReviewViewModel}">
 		<core_controls:CacheContentControl Type="{x:Type localWizardView:EditorialReviewView}"/>
 	</DataTemplate>
-	<DataTemplate DataType="{x:Type implementations:ItemSeoStepViewModel}">
+	<DataTemplate DataType="{x:Type implementations:ItemSeoViewModel}">
 		<core_controls:CacheContentControl Type="{x:Type localWizardView:SeoStepView}"/>
 	</DataTemplate>
 

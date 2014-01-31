@@ -133,7 +133,7 @@ namespace VirtoCommerce.ManagementClient.Catalog
 			_container.RegisterType<ICreateCategoryViewModel, CreateCategoryViewModel>();
 			_container.RegisterType<ICategoryOverviewStepViewModel, CategoryOverviewStepViewModel>();
 			_container.RegisterType<ICategoryPropertiesStepViewModel, CategoryPropertiesStepViewModel>();
-			_container.RegisterType<ICategorySeoStepViewModel, CategorySeoStepViewModel>();
+			_container.RegisterType<ICategorySeoViewModel, CategorySeoViewModel>();
 
 			//Create Item Wizard
 			_container.RegisterType<ICreateItemViewModel, CreateItemViewModel>();
@@ -141,7 +141,7 @@ namespace VirtoCommerce.ManagementClient.Catalog
 			_container.RegisterType<IItemOverviewStepViewModel, ItemOverviewStepViewModel>();
 			_container.RegisterType<IItemPropertiesStepViewModel, ItemPropertiesStepViewModel>();
 			_container.RegisterType<IItemPricingStepViewModel, ItemPricingStepViewModel>();
-			_container.RegisterType<IItemSeoStepViewModel, ItemSeoStepViewModel>();
+			_container.RegisterType<IItemSeoViewModel, ItemSeoViewModel>();
 
 			// tree
 			_container.RegisterType<ITreeCatalogViewModel, TreeCatalogViewModel>();
