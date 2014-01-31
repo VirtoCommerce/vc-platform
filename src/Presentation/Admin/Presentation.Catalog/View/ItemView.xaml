@@ -482,6 +482,13 @@
             </Grid>
         </TabItem>
 
+		<!-- SEO tab -->
+		<TabItem x:Name="tabSeoData" Header="SEO">
+			<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0,10,0,0">
+				<ContentPresenter Content="{Binding SeoStepViewModel}" Margin="0,0,20,0"/>
+			</ScrollViewer>
+		</TabItem>
+		
         <!--RELATIONS-->
         <TabItem x:Name="tabRelations" Header="{Binding InnerItem, Converter={StaticResource itemPresentationValueConverter}, ConverterParameter=RelationsTabHeader, FallbackValue=Relations}" Tag="{Binding IsInitializingItemRelations}">
             <Grid>
@@ -776,12 +783,6 @@
                 </TabControl>
             </DockPanel>
         </TabItem>
-
-		<!-- SEO tab -->
-		<TabItem x:Name="tabSeoData" Header="SEO">
-			<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="0,10,0,0">
-				<ContentPresenter Content="{Binding SeoStepViewModel}" Margin="0,0,20,0"/>
-			</ScrollViewer>
-		</TabItem>
+		
 	</TabControl>
 </UserControl>

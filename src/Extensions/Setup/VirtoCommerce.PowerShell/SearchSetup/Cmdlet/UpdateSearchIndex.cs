@@ -121,7 +121,7 @@ namespace VirtoCommerce.PowerShell.SearchSetup.Cmdlet
             container.RegisterType<ISearchIndexController, SearchIndexController>();
             container.RegisterType<ICacheRepository, HttpCacheRepository>();
 
-            if (searchConnection.Provider == "lucene")
+            if (string.Equals(searchConnection.Provider, SearchProviders.Lucene.ToString(), StringComparison.OrdinalIgnoreCase))
             {
                 // Lucene Search implementation
                 container.RegisterType<ISearchProvider, LuceneSearchProvider>();
