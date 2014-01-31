@@ -26,7 +26,7 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Helpers
         public override void WriteLine(string message)
         {
             _sb.AppendLine(message);
-            SetupWorker.SendMessage(message);
+            SetupWorker.SendMessageLine(message);
         }
     }
 }
