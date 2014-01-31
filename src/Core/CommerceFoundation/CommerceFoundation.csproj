@@ -354,6 +354,7 @@
     <Compile Include="Search\ISearchConnection.cs" />
     <Compile Include="Search\KeywordSearchCriteria.cs" />
     <Compile Include="Search\SearchConnection.cs" />
+    <Compile Include="Search\SearchProviders.cs" />
     <Compile Include="Security\Model\AccountState.cs" />
     <Compile Include="Security\Model\RegisterType.cs" />
     <Compile Include="Frameworks\BaseEvaluationContext.cs" />
