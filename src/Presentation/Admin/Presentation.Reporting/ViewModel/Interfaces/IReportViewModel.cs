@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.IO;
 using System.Windows.Forms;
@@ -18,5 +19,7 @@ namespace VirtoCommerce.ManagementClient.Reporting.ViewModel.Interfaces
         ReportInfo InnerItem { get; }
         event EventHandler RefreshReport; 
         event EventHandler ClearParameters;
+        void ReloadReportData(bool reloadFromDb = true);
+        bool UIPrepared { get; set; }
     }
 }

@@ -321,7 +321,41 @@ GROUP BY Shipment.ShippingMethodName</CommandText>
                 <Paragraph>
                   <TextRuns>
                     <TextRun>
-                      <Value>Shipping statistics</Value>
+                      <Value>Shipping statistics (</Value>
+                      <Style>
+                        <FontFamily>Verdana</FontFamily>
+                        <FontSize>14pt</FontSize>
+                        <Color>White</Color>
+                      </Style>
+                    </TextRun>
+                    <TextRun>
+                      <Value>=Parameters!StartDate.Value</Value>
+                      <Style>
+                        <FontFamily>Verdana</FontFamily>
+                        <FontSize>14pt</FontSize>
+                        <Format>yyyy-MM-dd</Format>
+                        <Color>White</Color>
+                      </Style>
+                    </TextRun>
+                    <TextRun>
+                      <Value> - </Value>
+                      <Style>
+                        <FontFamily>Verdana</FontFamily>
+                        <FontSize>14pt</FontSize>
+                        <Color>White</Color>
+                      </Style>
+                    </TextRun>
+                    <TextRun>
+                      <Value>=Parameters!EndDate.Value</Value>
+                      <Style>
+                        <FontFamily>Verdana</FontFamily>
+                        <FontSize>14pt</FontSize>
+                        <Format>yyyy-MM-dd</Format>
+                        <Color>White</Color>
+                      </Style>
+                    </TextRun>
+                    <TextRun>
+                      <Value>)</Value>
                       <Style>
                         <FontFamily>Verdana</FontFamily>
                         <FontSize>14pt</FontSize>

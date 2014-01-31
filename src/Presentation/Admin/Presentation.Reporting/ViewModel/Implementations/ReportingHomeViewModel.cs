@@ -10,7 +10,6 @@ using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.ManagementClient.Asset.ViewModel.Interfaces;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.DataVirtualization;
-using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
 using VirtoCommerce.ManagementClient.Reporting.ViewModel.Interfaces;
 using VirtoCommerce.Foundation.Reporting.Model;
 using System.Threading;
@@ -29,19 +28,16 @@ namespace VirtoCommerce.ManagementClient.Reporting.ViewModel.Implementations
         private readonly IViewModelsFactory<IReportViewModel> _itemVmFactory;
         private readonly IViewModelsFactory<IPickAssetViewModel> _assetVmFactory;
         private readonly IAuthenticationContext _authContext;
-        private readonly INavigationManager _navManager;
 
         public ReportingHomeViewModel(
             IReportingService reportService, 
             IViewModelsFactory<IReportViewModel> itemVmFactory,
             IViewModelsFactory<IPickAssetViewModel> assetVmFactory,
-            IAuthenticationContext authContext,
-            INavigationManager navManager)
+            IAuthenticationContext authContext)
         {
             _reportService = reportService;
             _itemVmFactory = itemVmFactory;
             _assetVmFactory = assetVmFactory;
-            _navManager = navManager;
             _authContext = authContext;
 
             ViewTitle = new ViewTitleBase()
@@ -78,7 +74,11 @@ namespace VirtoCommerce.ManagementClient.Reporting.ViewModel.Implementations
         private void CommandsInits()
         {
             RefreshItemsCommand = new DelegateCommand(RaiseRefreshCommand);
-            GenerateReportCommand = new DelegateCommand<object>(RaiseGenerateCommand);
+            GenerateReportCommand = new DelegateCommand<object>(delegate(object o)
+            {
+                ShowLoadingAnimation = true;
+                ExecuteAsync(() => RaiseGenerateCommand(o), () => ShowLoadingAnimation = false);
+            });
             UploadReportCommand = new DelegateCommand(RaiseUploadCommand);
             TreeViewSelectedItemChangedCommand = new DelegateCommand<object>(TreeViewSelectedItemChanged);
             CommonNotifyRequest = new InteractionRequest<Notification>();

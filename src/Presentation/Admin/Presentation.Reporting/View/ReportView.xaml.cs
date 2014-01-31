@@ -1,10 +1,12 @@
-﻿using System.Data;
+﻿using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using Microsoft.Reporting.WinForms;
 using VirtoCommerce.Foundation.Reporting.Helpers;
+using VirtoCommerce.ManagementClient.Core.Controls;
 using VirtoCommerce.ManagementClient.Reporting.ViewModel.Interfaces;
 using Xceed.Wpf.Toolkit;
 
@@ -23,24 +25,26 @@ namespace VirtoCommerce.ManagementClient.Reporting.View
         void ReportView_Loaded(object sender, RoutedEventArgs e)
         {
             viewModel = DataContext as IReportViewModel;
-                
-            if (viewModel != null)
+
+            if (viewModel != null && !viewModel.UIPrepared)
             {
                 viewModel.RefreshReport += (o, args) => RefreshReport();
-                viewModel.ClearParameters += (o, args) => PrepareFilters();
-
+                _reportViewer.ReportRefresh += (o, args) =>viewModel.ReloadReportData();
                 if (viewModel.ReportType.HasReportParameters)
                 {
-                    PrepareFilters();
+                    PrepareParameters();
                 }
                 else
                 {
-                    RefreshReport();
+                    expandedTab.Collapse();
                 }
+
+                viewModel.ReloadReportData(false);
+                viewModel.UIPrepared = true;
             }
         }
 
-	    private void PrepareFilters()
+	    private void PrepareParameters()
 	    {
             rdlParameters.Children.Clear();
             rdlParameters.RowDefinitions.Clear();
@@ -55,23 +59,9 @@ namespace VirtoCommerce.ManagementClient.Reporting.View
 	            };
 
 	            var paramValueBind = new Binding("Value"){ Source = viewModel.ReportType.ReportParameters[paramId++]};
-                Control paramControl;
-	            if (parameter.HasValidValues)
-	            {
-	                paramControl = new ComboBox()
-	                {
-	                    ItemsSource = viewModel.ReportType.GetReportParameterValidValues(parameter.Name),
-                        SelectedValuePath = "Value",
-                        DisplayMemberPath = "Key"
-	                };
-                    
-                    paramControl.SetBinding(ComboBox.SelectedValueProperty, paramValueBind);
-	            }
-	            else
-	            {
-	                paramControl= GetControlByType(parameter, paramValueBind);
-	            }
-	       
+
+                Control paramControl= GetControlByType(parameter, paramValueBind);
+
                 Grid.SetRow(label, row++);
                 Grid.SetRow(paramControl, row++);
 
@@ -85,58 +75,86 @@ namespace VirtoCommerce.ManagementClient.Reporting.View
 	    private Control GetControlByType(RdlType.ReportParameterType parameter, Binding paramValueBind)
 	    {
             Control paramControl = new TextBox();
+	        BindingExpressionBase expr = null;
 
-            switch (parameter.DataType)
-            {
-                case RdlType.ReportParameterType.DataTypeEnum.DateTime:
-                    paramControl = new DatePicker();
-                    paramControl.SetBinding(DatePicker.SelectedDateProperty, paramValueBind);
-                    break;
+	        if (parameter.HasValidValues)
+	        {
+	            paramControl = new ComboBox()
+	            {
+	                ItemsSource = viewModel.ReportType.GetReportParameterValidValues(parameter.Name),
+	                SelectedValuePath = "Value",
+	                DisplayMemberPath = "Key"
+	            };
 
-                case RdlType.ReportParameterType.DataTypeEnum.Boolean:
-                    paramControl = new CheckBox();
-                    paramControl.SetBinding(CheckBox.IsCheckedProperty, paramValueBind);
-                    break;
+	            expr = paramControl.SetBinding(ComboBox.SelectedValueProperty, paramValueBind);
+	        }
+	        else
+	        {
 
-                case RdlType.ReportParameterType.DataTypeEnum.Integer:
-                    paramControl = new IntegerUpDown();
-                    paramControl.SetBinding(IntegerUpDown.ValueProperty, paramValueBind);
-                    break;
+	            switch (parameter.DataType)
+	            {
+	                case RdlType.ReportParameterType.DataTypeEnum.DateTime:
+	                    paramControl = new DatePicker();
+	                    expr = paramControl.SetBinding(DatePicker.SelectedDateProperty, paramValueBind);
+	                    break;
 
-                case RdlType.ReportParameterType.DataTypeEnum.Float:
-                    paramControl = new DecimalUpDown();
-                    paramControl.SetBinding(DecimalUpDown.ValueProperty, paramValueBind);
-                    break;
+	                case RdlType.ReportParameterType.DataTypeEnum.Boolean:
+	                    paramControl = new CheckBox();
+	                    expr = paramControl.SetBinding(CheckBox.IsCheckedProperty, paramValueBind);
+	                    break;
 
-                default:
-                    paramControl.SetBinding(TextBox.TextProperty, paramValueBind);
-                    break;
-            }
+	                case RdlType.ReportParameterType.DataTypeEnum.Integer:
+	                    paramControl = new IntegerUpDown();
+	                    expr = paramControl.SetBinding(IntegerUpDown.ValueProperty, paramValueBind);
+	                    break;
 
+	                case RdlType.ReportParameterType.DataTypeEnum.Float:
+	                    paramControl = new DecimalUpDown();
+	                    expr = paramControl.SetBinding(DecimalUpDown.ValueProperty, paramValueBind);
+	                    break;
+
+	                default:
+	                    expr = paramControl.SetBinding(TextBox.TextProperty, paramValueBind);
+	                    break;
+	            }
+	        }
+           
+	        viewModel.ClearParameters += (sender, args) => expr.UpdateTarget();
 	        return paramControl;
 	    }
 
 	    private void PrepareReport()
 	    {
-            _reportViewer.ProcessingMode = ProcessingMode.Local;
-            _reportViewer.LocalReport.LoadReportDefinition(viewModel.ReportDefinition);
-            _reportViewer.LocalReport.DataSources.Clear();
-            _reportViewer.LocalReport.SetParameters(
-                viewModel.ReportType.ReportParameters.Select(r => new ReportParameter(r.Name, r.Value == null ? null : r.Value.ToString()))
-                );
-            foreach (DataTable table in viewModel.GetReportDataSet().Tables)
-            {
-                var ds = new ReportDataSource(table.TableName, table);
+	        Dispatcher.Invoke(() => _reportViewer.Reset());
 
-                _reportViewer.LocalReport.DataSources.Add(ds);
-            }
+	        if (viewModel.ReportType.ReportParametersAreValid)
+	        {
+	            _reportViewer.ProcessingMode = ProcessingMode.Local;
+	            _reportViewer.LocalReport.LoadReportDefinition(viewModel.ReportDefinition);
+	            _reportViewer.LocalReport.DataSources.Clear();
+	            _reportViewer.LocalReport.SetParameters(
+	                viewModel.ReportType.ReportParameters.Select(
+	                    r => new ReportParameter(r.Name, r.Value == null ? null : r.Value.ToString()))
+	                );
+	            foreach (DataTable table in viewModel.GetReportDataSet().Tables)
+	            {
+	                var ds = new ReportDataSource(table.TableName, table);
+
+	                _reportViewer.LocalReport.DataSources.Add(ds);
+	            }
+	        }
 	    }
 
 	    private void RefreshReport()
 	    {
-            Dispatcher.Invoke(() => ReportsHost.Visibility = Visibility.Hidden );
-	        PrepareReport();
-	        Dispatcher.Invoke(delegate
+            Dispatcher.Invoke(delegate
+            {
+                ReportsHost.Visibility = Visibility.Hidden;
+            });
+
+            PrepareReport();
+
+            Dispatcher.Invoke(delegate
 	        {
 	            _reportViewer.RefreshReport();
 	            ReportsHost.Visibility = Visibility.Visible;

@@ -40,5 +40,9 @@ namespace VirtoCommerce.ManagementClient.Core.Controls
             }
         }
 
+        public void Collapse()
+        {
+            IsExpanded = false;
+        }
     }
 }
