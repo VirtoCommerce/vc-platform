@@ -100,26 +100,3 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		}
 	}
 }
-
-//var innerItemCatalog = _parentCatalog as catalogModel.Catalog;
-//			if (innerItemCatalog == null)
-//			{
-//				using (var storeRepository = _storeRepositoryFactory.GetRepositoryInstance())
-//				{
-//					var languages =
-//						storeRepository.Stores.Where(store => store.Catalog == _parentCatalog.CatalogId)
-//									   .Expand(store => store.Languages).ToList();
-
-//					var customComparer = new PropertyComparer<StoreLanguage>("LanguageCode");
-//					var lang = languages.SelectMany(x => x.Languages).Distinct(customComparer);
-
-//					InnerItemCatalogLanguages = new List<string>();
-//					if (lang.Any())
-//					{
-//						foreach (var l in lang)
-//						{
-//							InnerItemCatalogLanguages.Add(l.LanguageCode);
-//						}
-//					}
-//				}
-//			}

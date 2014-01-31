@@ -33,10 +33,13 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 {
 	public class CategoryViewModel : ViewModelDetailAndWizardBase<Category>, ICategoryViewModel
 	{
+		#region Dependencies
+		#endregion
 		private readonly ITreeCategoryViewModel _parentTreeVM;
 		private readonly IRepositoryFactory<ICatalogRepository> _repositoryFactory;
 		private readonly IViewModelsFactory<IPropertyValueBaseViewModel> _propertyValueVmFactory;
 		private readonly IViewModelsFactory<ICategorySeoViewModel> _seoVmFactory;
+		private readonly IRepositoryFactory<IStoreRepository> _storeRepositoryFactory;
 		private readonly INavigationManager _navManager;
 
 		protected readonly CatalogBase _parentCatalog;
@@ -44,7 +47,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		/// <summary>
 		/// public. For viewing
 		/// </summary>
-		public CategoryViewModel(IViewModelsFactory<ICategorySeoViewModel> seoVmFactory, IViewModelsFactory<IPropertyValueBaseViewModel> propertyValueVmFactory, ICatalogEntityFactory entityFactory,
+		public CategoryViewModel(IRepositoryFactory<IStoreRepository> storeRepositoryFactory, IViewModelsFactory<ICategorySeoViewModel> seoVmFactory, IViewModelsFactory<IPropertyValueBaseViewModel> propertyValueVmFactory, ICatalogEntityFactory entityFactory,
 			IRepositoryFactory<ICatalogRepository> repositoryFactory, Category item,
 			ITreeCategoryViewModel parentTreeVM, INavigationManager navManager)
 			: this(repositoryFactory, propertyValueVmFactory, entityFactory, item, CatalogHomeViewModel.GetCatalog(parentTreeVM), false)
@@ -52,6 +55,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			_parentTreeVM = parentTreeVM;
 			_navManager = navManager;
 			_seoVmFactory = seoVmFactory;
+			_storeRepositoryFactory = storeRepositoryFactory;
 
 			ViewTitle = new ViewTitleBase
 				{
@@ -427,10 +431,27 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			}
 			else
 			{
-				if (InnerItemCatalogLanguages == null)
+				using (var storeRepository = _storeRepositoryFactory.GetRepositoryInstance())
 				{
-					InnerItemCatalogLanguages = new List<string> {_parentCatalog.DefaultLanguage};
+					var languages =
+						storeRepository.Stores.Where(store => store.Catalog == _parentCatalog.CatalogId)
+										.Expand(store => store.Languages).ToList();
+
+					var customComparer = new PropertyComparer<StoreLanguage>("LanguageCode");
+					var lang = languages.SelectMany(x => x.Languages).Distinct(customComparer);
+
+					InnerItemCatalogLanguages = new List<string>();
+					if (lang.Any())
+					{
+						foreach (var l in lang)
+						{
+							InnerItemCatalogLanguages.Add(l.LanguageCode);
+						}
+					}
 				}
+
+				if (!InnerItemCatalogLanguages.Any(x => x.Equals(_parentCatalog.DefaultLanguage, StringComparison.InvariantCultureIgnoreCase)))
+					InnerItemCatalogLanguages.Add(_parentCatalog.DefaultLanguage);
 			}
 
 			OnUIThread(() =>
