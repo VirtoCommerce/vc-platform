@@ -53,9 +53,8 @@
                 <WindowsFormsHost x:Name="ReportsHost" Panel.ZIndex="1">
                     <rv:ReportViewer x:Name="_reportViewer" AutoSize="True"/>
                 </WindowsFormsHost>
-
             </Grid>
-            <GridSplitter Grid.Column="1" BorderThickness="1" Width="1" Height="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Center"
+            <GridSplitter x:Name="Splitter" Grid.Column="1" BorderThickness="1" Width="1" Height="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Center"
                                   BorderBrush="{StaticResource Virto_Splitter_BorderBrush_Brush}" ResizeDirection="Columns" Background="{x:Null}"
                                   Visibility="{Binding ElementName=expandedTab, Path=IsExpanded, Converter={x:Static Presentation_Core_Infrastructure_Converters:ToVisibilityConverter.Current}}"/>
             <core_controls:ExpandedTabControl Grid.Column="2" x:Name="expandedTab"  Padding="10" Focusable="False" VerticalAlignment="Stretch">

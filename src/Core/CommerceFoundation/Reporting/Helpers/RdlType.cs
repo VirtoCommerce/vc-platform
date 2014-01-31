@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.ModelConfiguration.Configuration;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -121,7 +122,36 @@ namespace VirtoCommerce.Foundation.Reporting.Helpers
                 get { return ValidValues != null && ValidValues.ParameterValues.Any(); }
             }
 
-            public object Value { get; set; }
+            private object _value;
+            public object Value {
+                get { return _value; }
+                set
+                {
+                    switch (DataType)
+                    {
+                        case DataTypeEnum.Boolean:
+                            _value = (value is bool) ? value : Convert.ToBoolean(value);
+                            break;
+                        case DataTypeEnum.DateTime:
+                            _value = (value is DateTime) ? value : Convert.ToDateTime(value);
+                            break;
+                        case DataTypeEnum.Float:
+                            _value = (value is Double)
+                                ? value
+                                : Convert.ToDouble(value);
+                            break;
+                        case DataTypeEnum.Integer:
+                            _value = (value is int) ? value : Convert.ToInt32(value);
+                            break;
+                        case DataTypeEnum.String:
+                            _value = value.ToString();
+                            break;
+                        default:
+                            _value = value;
+                            break;
+                    }
+                }
+            }
         }
 
         public string Description;
@@ -160,6 +190,11 @@ namespace VirtoCommerce.Foundation.Reporting.Helpers
         public bool HasReportParameters
         {
             get { return ReportParameters.Any(r => r.Visible); }
+        }
+
+        public bool ReportParametersAreValid
+        {
+            get { return ReportParameters.TrueForAll(p => p.AllowBlank || p.Value != null); }
         }
 
         public void UpdateReportParameters(IDictionary<string, object> parameters)
