@@ -64,6 +64,37 @@ namespace VirtoCommerce.Foundation.Catalogs
             return outlines;
         }
 
+		public CatalogOutlines BuildCategoryOutlineWithDSClient(string catalogId, string itemId, bool useCache)
+		{
+			var outlines = new CatalogOutlines();
+
+			var catalog = GetCatalog(catalogId, useCache);
+
+			if (catalog is Catalog)
+			{
+				var categoryRelations = GetCategoryItemRelations(itemId, catalogId);
+
+				if (categoryRelations.Any())
+				{
+					outlines.AddRange(
+						categoryRelations.Select(
+							categoryRelation => BuildCategoryOutlineWithDSClient(catalogId, categoryRelation.Category, useCache)));
+				}
+			}
+			else if (catalog is VirtualCatalog)
+			{
+				var linkedCategories = GetLinkedCategoriesWithDSClient(itemId, catalogId);
+
+				if (linkedCategories.Any())
+				{
+					outlines.AddRange(
+						linkedCategories.Select(cat => BuildCategoryOutlineWithDSClient(cat.CatalogId, cat, useCache)));
+				}
+			}
+
+			return outlines;
+		}
+		
         public CatalogOutline BuildCategoryOutline(string catalogId, CategoryBase category, bool useCache = true)
         {
             // recurring adding elements
@@ -91,38 +122,7 @@ namespace VirtoCommerce.Foundation.Catalogs
 
 			return outline;
 		}
-
-		public CatalogOutlines BuildCategoryOutlineWithDSClient(string catalogId, string itemId, bool useCache)
-		{
-			var outlines = new CatalogOutlines();
-
-			var catalog = GetCatalog(catalogId, useCache);
-
-			if (catalog is Catalog)
-			{
-				var categoryRelations = GetCategoryItemRelations(itemId, catalogId);
-
-				if (categoryRelations.Any())
-				{
-					outlines.AddRange(
-						categoryRelations.Select(
-							categoryRelation => BuildCategoryOutline(catalogId, categoryRelation.Category, useCache)));
-				}
-			}
-			else if (catalog is VirtualCatalog)
-			{
-				var linkedCategories = GetLinkedCategoriesWithDSClient(itemId, catalogId);
-
-				if (linkedCategories.Any())
-				{
-					outlines.AddRange(
-						linkedCategories.Select(cat => BuildCategoryOutlineWithDSClient(cat.CatalogId, cat, useCache)));
-				}
-			}
-
-			return outlines;
-		}
-
+				
         #region Private Methods
 
         private void BuildCategoryOutline(ref List<CategoryBase> categories, string catalogId, CategoryBase category, bool useCache = true)
