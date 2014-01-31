@@ -47,7 +47,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		private readonly IViewModelsFactory<IItemRelationViewModel> _itemRelationVmFactory;
 		private readonly IViewModelsFactory<IEditorialReviewViewModel> _reviewVmFactory;
 		private readonly IViewModelsFactory<ICategoryItemRelationViewModel> _categoryVmFactory;
-		private readonly IViewModelsFactory<IItemSeoStepViewModel> _seoVmFactory;
+		private readonly IViewModelsFactory<IItemSeoViewModel> _seoVmFactory;
 		private readonly INavigationManager _navManager;
 
 		#endregion
@@ -58,7 +58,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		/// public. For viewing
 		/// </summary>
 		public ItemViewModel(
-			IViewModelsFactory<IItemSeoStepViewModel> seoVmFactory,
+			IViewModelsFactory<IItemSeoViewModel> seoVmFactory,
 			IRepositoryFactory<ICatalogRepository> repositoryFactory,
 			IRepositoryFactory<IPricelistRepository> pricelistRepositoryFactory, IViewModelsFactory<IPropertyValueBaseViewModel> propertyValueVmFactory,
 			IViewModelsFactory<IPriceViewModel> priceVmFactory, IViewModelsFactory<IItemAssetViewModel> assetVmFactory,
@@ -293,7 +293,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			{
 				seoIsValid = SeoStepViewModel.IsValid;
 				if (!seoIsValid)
-					SelectedTabIndex = (InnerItem is Bundle) ? 7 : 8;
+					SelectedTabIndex = (InnerItem is Bundle) ? 2 : 3;
 			}
 			
 			return result && isPropertyValuesValid && isCodeValid && seoIsValid;
@@ -432,8 +432,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 			if (SeoStepViewModel != null)
 			{
-				if (SeoStepViewModel.CurrentSeoKeyword != null)
-					SeoStepViewModel.UpdateSeoKeywords();
+				SeoStepViewModel.UpdateSeoKeywords();
 			}
 		}
 		
@@ -1433,7 +1432,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 		#region SEO tab
 
-		public IItemSeoStepViewModel SeoStepViewModel { get; private set; }
+		public IItemSeoViewModel SeoStepViewModel { get; private set; }
 
 		protected void InitSeoStep()
 		{
@@ -1441,7 +1440,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			var languagesParameter = new KeyValuePair<string, object>("languages", InnerItemCatalogLanguages);
 			SeoStepViewModel =
 					_seoVmFactory.GetViewModelInstance(itemParameter, languagesParameter);
-			(SeoStepViewModel as ItemSeoStepViewModel).InitializePropertiesForViewing();
+			//(SeoStepViewModel as ItemSeoViewModel).InitializePropertiesForViewing();
 			OnPropertyChanged("SeoStepViewModel");
 		}
 		
