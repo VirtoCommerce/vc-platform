@@ -1,5 +1,6 @@
 #region Imports
 
+using System;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Caching.HttpCache;
 using VirtoCommerce.Client.Orders.StateMachines;
@@ -111,7 +112,7 @@ namespace VirtoCommerce.Scheduling.Windows
             container.RegisterType<ISearchIndexBuilder, CatalogItemIndexBuilder>("catalogitem");
 
             // If provider specified as lucene, use lucene libraries, otherwise use default, which is elastic search
-            if (searchConnection.Provider == "lucene")
+            if (string.Equals(searchConnection.Provider,SearchProviders.Lucene.ToString(), StringComparison.OrdinalIgnoreCase))
             {
                 // Lucene Search implementation
                 container.RegisterType<ISearchProvider, LuceneSearchProvider>();

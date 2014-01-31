@@ -1,23 +1,14 @@
 ﻿using System;
 using System.Data.Entity;
-using System.Data.Entity.Migrations.Infrastructure;
 using System.Data.SqlClient;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Web;
 using System.Web.Mvc;
-using Microsoft.AspNet.SignalR;
 using VirtoCommerce.Foundation.AppConfig;
 using VirtoCommerce.Foundation.Data.Infrastructure;
-using VirtoCommerce.Foundation.Search;
-using VirtoCommerce.OrderWorkflow;
-using VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet;
-using VirtoCommerce.PowerShell.SearchSetup.Cmdlet;
 using VirtoCommerce.Web.Areas.VirtoAdmin.Helpers;
 using VirtoCommerce.Web.Areas.VirtoAdmin.Models;
 using VirtoCommerce.Web.Areas.VirtoAdmin.Resources;
@@ -74,6 +65,7 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
 
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [ValidateAjax]
         public JsonResult Index(InstallModel model)
         {

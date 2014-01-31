@@ -24,18 +24,22 @@
         $(function ()
         {
             //Enable logging
-            $.connection.hub.logging = true;
+            //$.connection.hub.logging = true;
             $.connection.hub.connectionSlow(function ()
             {
-               // $(".console").append('<p style="color:red">Hub: slow connection...</p>');
+                //$(".console").append('<p style="color:red">Hub: slow connection...</p>');
             });
             $.connection.hub.reconnecting(function ()
             {
-               // $(".console").append('<p style="color:red">Hub: reconnecting...</p>');
+                //$(".console").append('<p style="color:red">Hub: reconnecting...</p>');
             });
             $.connection.hub.reconnected(function ()
             {
                 //$(".console").append('<p style="color:green">Hub: reconnected...</p>');
+            });
+            $.connection.hub.disconnected(function ()
+            {
+                //$(".console").append('<p style="color:red">Hub: diconected...</p>');
             });
             // Declare a proxy to reference the hub. 
             var setup = $.connection.setupWorker;
@@ -43,7 +47,6 @@
             // Create a function that the hub can call to broadcast messages.
             setup.client.traceMessage = function (message, newLine)
             {
-                $('#setUpHeader').text(message);
                 if (newLine)
                 {
                     $(".console").append("<br/><br/>");
@@ -52,7 +55,7 @@
                     $(".console").append("<br/>");
                 }
                 $(".console").append(message);
-                $(".console").animate({ scrollTop: $('.console')[0].scrollHeight }, 1000);
+                $(".console.big").animate({ scrollTop: $(".console.big")[0].scrollHeight }, 'fast');
             };
 
             setup.client.success = function (message)
@@ -66,6 +69,7 @@
                 $("#throbber").hide();
                 $(".validation-summary-errors").append("<p>" + message + "</p>");
                 $(".validation-summary-errors").show();
+                $(".console").show();
             };
 
 
@@ -87,33 +91,53 @@
                     {
 
                         $("#throbber").show();
-                        $(".console").show();
+                        //$(".console.big").show();
                         $(".console").empty();
                         $(".validation-summary-errors").empty();
                         $.ajax({
                             url: this.action,
                             type: this.method,
                             data: $(this).serialize(),
+                            timeout: 60000,//1min
                             success: function (result)
                             {
                                 if (result.Success)
                                 {
                                     //The time out is needed for connection to be established with signalR
-                                    //TODO: should be possible to do by waiting for connection ready?
-                                    window.setTimeout(function ()
-                                    {
-                                        setup.server.doWork(model);
+                                    window.setTimeout(function() {
+
+                                        function waitForConnection() {
+                                            if ($.connection.hub.state != $.connection.connectionState.connected) {
+                                                window.setTimeout(waitForConnection(), 100);
+                                            } else {
+                                                setup.server.doWork(model);
+                                            }
+                                        }
+                                        waitForConnection();
                                     }, 1000);
+
                                 } else
                                 {
+                                    $(".console").show();
+                                    $("#throbber").hide();
                                     $(".validation-summary-errors").append("<p>" + result.Message + "</p>");
                                     $(".validation-summary-errors").show();
                                 }
                             },
-                            error: function (jqXhr)
+                            error: function (jqXhr, t)
                             {
+                                $(".console").show();
                                 $("#throbber").hide();
-                                VirtoCommerce.extractErrors(jqXhr, validator);
+                                
+                                if (t === "timeout")
+                                {
+                                    alert("Timeout!");
+                                }
+                                else
+                                {
+
+                                    VirtoCommerce.extractErrors(jqXhr, validator);
+                                }
                             }
                         });
                     }
@@ -137,6 +161,7 @@
             <div>
                 @using (Html.BeginForm("Index", "Install", new { area = "VirtoAdmin" }, FormMethod.Post))
                 {
+                    @Html.AntiForgeryToken()
                     <h2>Database setup</h2>
                     <div id="inprogress" />
                         

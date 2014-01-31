@@ -104,7 +104,7 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Helpers
         {
             var searchConnection = new SearchConnection(ConnectionHelper.GetConnectionString("SearchConnectionString"));
             if (searchConnection.Provider.Equals(
-                    "lucene", StringComparison.OrdinalIgnoreCase) && searchConnection.DataSource.StartsWith("~/"))
+                    SearchProviders.Lucene.ToString(), StringComparison.OrdinalIgnoreCase) && searchConnection.DataSource.StartsWith("~/"))
             {
                 var dataSource = searchConnection.DataSource.Replace(
                     "~/", HttpRuntime.AppDomainAppPath + "\\");
