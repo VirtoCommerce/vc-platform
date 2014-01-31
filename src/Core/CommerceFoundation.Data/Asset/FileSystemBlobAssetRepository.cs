@@ -297,18 +297,18 @@ namespace VirtoCommerce.Foundation.Data.Asset
 
             if (item != null)
             {
-                ((FolderItem)item).Name = name;
-                Update(item);
-                UnitOfWork.Commit();
+                var oldItemPath = Absolute(id);
+                var newItemPath = Path.Combine(Path.GetDirectoryName(oldItemPath) ?? String.Empty, name);
+                File.Move(oldItemPath, newItemPath);
                 return;
             }
 
             item = GetFolderById(id);
             if (item != null)
             {
-                ((Folder)item).Name = name;
-                Update(item);
-                UnitOfWork.Commit();
+                var oldFolderPath = Absolute(id);
+                var newFolderPath = Path.Combine(Path.GetDirectoryName(oldFolderPath) ?? String.Empty, name);
+                Directory.Move(oldFolderPath, newFolderPath);
             }
 	    }
 
