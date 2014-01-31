@@ -17,6 +17,11 @@ namespace VirtoCommerce.Foundation.Reporting.Helpers
                 return DateTime.Now;
             }
 
+            public static DateTime Today()
+            {
+                return DateTime.Today;
+            }
+
             public static int Day(DateTime date)
             {
                 return date.Day;
