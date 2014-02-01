@@ -26,6 +26,10 @@ Param(
         $frontend_servicename,
         [parameter(Mandatory=$true)]
         $scheduler_servicename,
+	  	[parameter(Mandatory=$false)]
+		$db_recreate = $true,
+	  	[parameter(Mandatory=$false)]
+		$db_customsqlfolder,
         [parameter(Mandatory=$true)]
         $db_servername,
         [parameter(Mandatory=$true)]
@@ -81,6 +85,16 @@ else
 $build_path = "$common_deploymentdir\BuildTemp"
 $build_solutionname = "$build_solutiondir\VirtoCommerce.sln"
 
+# db settings
+if($db_customsqlfolder -eq $null)
+{
+    $common_dbcustomfolder = "$solutiondir\DeploymentSQL"
+}
+else
+{
+    $common_dbcustomfolder = "$db_customsqlfolder"
+}
+
 # admin settings
 $admin_blobprefix = "$admin_version/admin"
 $admin_installcontainer = "http://$common_storageaccount.blob.core.windows.net/software"
@@ -116,7 +130,7 @@ $global:buildexe_path = $null
 # EXECUTION CODE, DO NOT MODIFY ANYTHING BELOW
 Function Deploy
 {
-    if($deploy_database -or $deploy_search -or $deploy_frontend -or $deploy_scheduler -or $deploy_admin)
+    if($deploy_search -or $deploy_frontend -or $deploy_scheduler -or $deploy_admin)
     {
         create-container -container_name "mydeployments"
         create-container -container_name "software" -permission "Blob"
@@ -204,7 +218,7 @@ Function deploy-database
     write-progress -id 1 -activity "SQL Database Deployment" -status "In progress"
     Write-Output "$(Get-Date -f $timeStampFormat) - SQL Database Deployment: In progress"
 
-    . ".\azure-db.ps1" -db_servername $db_servername -db_serverlogin $db_serverlogin -db_serverpassword $db_serverpassword -db_databasename $db_databasename -selectedSubscription $common_subscriptionname -publishSettingsFile $common_publishsettingsfile -setupModulePath $common_vcfpowershellfile
+    . ".\azure-db.ps1" -db_recreate $db_recreate -db_customFolder $common_dbcustomfolder -db_servername $db_servername -db_serverlogin $db_serverlogin -db_serverpassword $db_serverpassword -db_databasename $db_databasename -selectedSubscription $common_subscriptionname -publishSettingsFile $common_publishsettingsfile -setupModulePath $common_vcfpowershellfile
 
     write-progress -id 1 -activity "SQL Database Deployment" -status "Finished"
     Write-Output "$(Get-Date -f $timeStampFormat) - SQL Database Deployment: Finished"

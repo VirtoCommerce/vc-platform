@@ -24,6 +24,10 @@ Param(
         $frontend_servicename,
         [parameter(Mandatory=$true)]
         $scheduler_servicename,
+		[parameter(Mandatory=$false)]
+		$db_recreate = "True",
+	  	[parameter(Mandatory=$false)]
+		$db_customsqldir,
         [parameter(Mandatory=$true)]
         $db_servername,
         [parameter(Mandatory=$true)]
@@ -43,7 +47,7 @@ Param(
 		[parameter(Mandatory=$true)]
 		$solutiondir,
 		$vcfpowershellfile,
-		$build = $false,
+		$build = "False",
 		$build_params,
 		$build_config = 'Release',
 		$admin_version = '1.0'
@@ -53,11 +57,15 @@ cls
 # single threaded
 # $build = $false
 
+$deploy_dbrecreate = $true
+$deploy_build = $false
+
 $deploy_database = $true
 $deploy_search = $true
 $deploy_frontend = $true
 $deploy_scheduler = $true
 $deploy_admin = $true
+
 
 if($deploydatabase -eq "False") 
 { 
@@ -84,5 +92,15 @@ if($deployadmin -eq "False")
     $deploy_admin = $false
 }
 
+if($db_recreate -eq "False") 
+{
+    $deploy_dbrecreate = $false
+}
+
+if($build -eq "True") 
+{
+    $deploy_build = $true
+}
+
 Set-Location "$solutiondir\src\extensions\Setup\VirtoCommerce.PowerShell"
-. ".\azure-deploy.ps1" -deploymentdir $deploymentdir -solutiondir $solutiondir -storageaccount $storageaccount -subscriptionname $subscriptionname -search_servicename $search_servicename -frontend_servicename $frontend_servicename -scheduler_servicename $scheduler_servicename -db_servername $db_servername -db_serverlogin $db_serverlogin -db_serverpassword $db_serverpassword -db_databasename $db_databasename -build $build -build_params $build_params -build_config $build_config -deploy_database $deploy_database -publishsettingsfile $publishsettingsfile -vcfpowershellfile $vcfpowershellfile -region $region -slot $slot -admin_version $admin_version -deploy_search $deploy_search -deploy_scheduler $deploy_scheduler -deploy_frontend $deploy_frontend -deploy_admin $deploy_admin
+. ".\azure-deploy.ps1" -db_customsqlfolder $db_customsqldir -db_recreate $deploy_dbrecreate -deploymentdir $deploymentdir -solutiondir $solutiondir -storageaccount $storageaccount -subscriptionname $subscriptionname -search_servicename $search_servicename -frontend_servicename $frontend_servicename -scheduler_servicename $scheduler_servicename -db_servername $db_servername -db_serverlogin $db_serverlogin -db_serverpassword $db_serverpassword -db_databasename $db_databasename -build $deploy_build -build_params $build_params -build_config $build_config -deploy_database $deploy_database -publishsettingsfile $publishsettingsfile -vcfpowershellfile $vcfpowershellfile -region $region -slot $slot -admin_version $admin_version -deploy_search $deploy_search -deploy_scheduler $deploy_scheduler -deploy_frontend $deploy_frontend -deploy_admin $deploy_admin

@@ -154,6 +154,7 @@
     <None Include="azure-upload-file.ps1" />
     <None Include="CodeSnippets\LocalizationJs.snippet" />
     <None Include="CodeSnippets\LocalizationHtmlRep.snippet" />
+    <None Include="db-custom.ps1" />
     <None Include="deploy-tfs.ps1" />
     <None Include="CodeSnippets\LocalizationHtml.snippet" />
     <None Include="deploy.ps1" />
