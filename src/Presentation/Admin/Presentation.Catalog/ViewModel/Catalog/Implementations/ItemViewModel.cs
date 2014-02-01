@@ -432,7 +432,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 			if (SeoStepViewModel != null)
 			{
-				SeoStepViewModel.UpdateSeoKeywords();
+				SeoStepViewModel.SaveSeoKeywordsChanges();
 			}
 		}
 		
@@ -675,7 +675,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		protected virtual void InnerItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
 			if (e.PropertyName == "Code")
-				SeoStepViewModel.UpdateKeywordValueCode(InnerItem.Code);
+				SeoStepViewModel.ChangeKeywordValue(InnerItem.Code);
 			if (e.PropertyName == "PropertySetId")
 			{
 				CategoryViewModel.SetupPropertiesAndValues(InnerItem.PropertySet, InnerItem.ItemPropertyValues, InnerItemCatalogLanguages, PropertiesAndValues, IsWizardMode);

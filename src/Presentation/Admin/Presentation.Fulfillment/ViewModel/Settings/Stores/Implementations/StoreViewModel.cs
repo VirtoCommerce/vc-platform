@@ -219,9 +219,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 			}
 
 			if (SeoStepViewModel != null)
-			{
-				SeoStepViewModel.UpdateSeoKeywords();
-			}
+				SeoStepViewModel.SaveSeoKeywordsChanges();
 		}
 
 		protected override void SetSubscriptionUI()

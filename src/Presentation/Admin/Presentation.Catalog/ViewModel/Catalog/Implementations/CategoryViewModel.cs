@@ -350,7 +350,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		{
 			if (SeoStepViewModel != null)
 			{
-				SeoStepViewModel.UpdateSeoKeywords();
+				SeoStepViewModel.SaveSeoKeywordsChanges();
 			}
 
 			// just basic properties inject is enough. Injecting collections can generate repository errors.
@@ -395,7 +395,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		protected virtual void InnerItem_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
 		{
 			if (e.PropertyName == "Code")
-				SeoStepViewModel.UpdateKeywordValueCode(InnerItem.Code);
+				SeoStepViewModel.ChangeKeywordValue(InnerItem.Code);
 			if (e.PropertyName == "PropertySetId")
 			{
 				SetupPropertiesAndValues(InnerItem.PropertySet, InnerItem.CategoryPropertyValues, InnerItemCatalogLanguages, PropertiesAndValues, IsWizardMode);

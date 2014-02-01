@@ -86,24 +86,68 @@
 
 			<TextBlock Text="Page Title:" Grid.Row="2" VerticalAlignment="Top" Margin="0,24,0,0"/>
 			<StackPanel Grid.Row="2" Grid.Column="2" Margin="0,24,0,0" HorizontalAlignment="Left">
+				<StackPanel.Resources>
+					<Style TargetType="{x:Type core_controls:WatermarkedTextBox}" BasedOn="{StaticResource Virto_Base_WatermarkTextBox_Style}">
+						<Style.Triggers>
+							<DataTrigger Binding="{Binding IsChecked, ElementName=rbTitleOverride}" Value="True" >
+								<Setter Property="FocusManager.FocusedElement" Value="{Binding RelativeSource={RelativeSource Self}}" />
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+				</StackPanel.Resources>
 				<RadioButton Content="Use default" IsChecked="{Binding UseCustomTitle, Converter={StaticResource invertedBoolConverter}}" Grid.Column="2" />
-				<RadioButton Content="Override" IsChecked="{Binding UseCustomTitle}" Margin="0,8,0,0"/>
-				<core_controls:WatermarkedTextBox Margin="0,4,0,0" Width="500" WatermarkText="Enter page title..." IsEnabled="{Binding UseCustomTitle}" Text="{Binding CurrentSeoKeyword.Title, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
+				<RadioButton Content="Override" x:Name="rbTitleOverride" IsChecked="{Binding UseCustomTitle}" Margin="0,8,0,0"/>
+				<core_controls:WatermarkedTextBox Margin="0,4,0,0" Width="500" WatermarkText="Enter page title..." IsEnabled="{Binding IsChecked, ElementName=rbTitleOverride}" Text="{Binding CurrentSeoKeyword.Title, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
+					<i:Interaction.Triggers>
+						<i:EventTrigger EventName="LostFocus">
+							<i:InvokeCommandAction Command="{Binding UpdateCustomProperties}"/>
+						</i:EventTrigger>
+					</i:Interaction.Triggers>
+				</core_controls:WatermarkedTextBox>
 			</StackPanel>
 
 			<TextBlock Text="Meta description:" VerticalAlignment="Top" Grid.Row="3" Margin="0,24,0,0"/>
-
 			<StackPanel Grid.Row="3" Grid.Column="2" Margin="0,24,0,0" HorizontalAlignment="Left">
+				<StackPanel.Resources>
+					<Style TargetType="{x:Type core_controls:WatermarkedTextBox}" BasedOn="{StaticResource Virto_Multiline_WatermarkedTextBox_Style}">
+						<Style.Triggers>
+							<DataTrigger Binding="{Binding IsChecked, ElementName=rbDescriptionOverride}" Value="True" >
+								<Setter Property="FocusManager.FocusedElement" Value="{Binding RelativeSource={RelativeSource Self}}" />
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+				</StackPanel.Resources>
 				<RadioButton Content="Use default" IsChecked="{Binding UseCustomMetaDescription, Converter={StaticResource invertedBoolConverter}}"  />
-				<RadioButton Content="Override" IsChecked="{Binding UseCustomMetaDescription}" Margin="0,8,0,0"/>
-				<core_controls:WatermarkedTextBox Grid.Column="2" Width="500" Margin="0,4,0,0" WatermarkText="Enter meta description..." IsEnabled="{Binding UseCustomMetaDescription}" Text="{Binding CurrentSeoKeyword.MetaDescription, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Style="{StaticResource Virto_Multiline_WatermarkedTextBox_Style}" Height="120"/>
+				<RadioButton Content="Override" x:Name="rbDescriptionOverride" IsChecked="{Binding UseCustomMetaDescription}" Margin="0,8,0,0"/>
+				<core_controls:WatermarkedTextBox Grid.Column="2" Width="500" Margin="0,4,0,0" WatermarkText="Enter meta description..." IsEnabled="{Binding IsChecked, ElementName=rbDescriptionOverride}" Text="{Binding CurrentSeoKeyword.MetaDescription, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Height="120">
+					<i:Interaction.Triggers>
+						<i:EventTrigger EventName="LostFocus">
+							<i:InvokeCommandAction Command="{Binding UpdateCustomProperties}"/>
+						</i:EventTrigger>
+					</i:Interaction.Triggers>
+				</core_controls:WatermarkedTextBox>
 			</StackPanel>
 
 			<TextBlock Text="Image alternative text:" VerticalAlignment="Top" Grid.Row="4" Margin="0,24,0,0"/>
 			<StackPanel Grid.Row="4" Grid.Column="2" Margin="0,24,0,0" HorizontalAlignment="Left">
+				<StackPanel.Resources>
+					<Style TargetType="{x:Type core_controls:WatermarkedTextBox}" BasedOn="{StaticResource Virto_Base_WatermarkTextBox_Style}">
+						<Style.Triggers>
+							<DataTrigger Binding="{Binding IsChecked, ElementName=rbImageOverride}" Value="True" >
+								<Setter Property="FocusManager.FocusedElement" Value="{Binding RelativeSource={RelativeSource Self}}" />
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+				</StackPanel.Resources>
 				<RadioButton Content="Use default" IsChecked="{Binding UseCustomImageText, Converter={StaticResource invertedBoolConverter}}" />
-				<RadioButton Content="Override" IsChecked="{Binding UseCustomImageText}" Margin="0,8,0,0" />
-				<core_controls:WatermarkedTextBox Width="500" Margin="0,4,0,0" WatermarkText="Enter image alternative text..." IsEnabled="{Binding UseCustomImageText}" Text="{Binding CurrentSeoKeyword.ImageAltDescription, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+				<RadioButton x:Name="rbImageOverride" Content="Override" IsChecked="{Binding UseCustomImageText}" Margin="0,8,0,0" />
+				<core_controls:WatermarkedTextBox x:Name="tbImageText" Width="500" Margin="0,4,0,0" WatermarkText="Enter image alternative text..." IsEnabled="{Binding IsChecked, ElementName=rbImageOverride}" Text="{Binding CurrentSeoKeyword.ImageAltDescription, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
+					<i:Interaction.Triggers>
+						<i:EventTrigger EventName="LostFocus">
+							<i:InvokeCommandAction Command="{Binding UpdateCustomProperties}"/>
+						</i:EventTrigger>
+					</i:Interaction.Triggers>
+				</core_controls:WatermarkedTextBox>
 			</StackPanel>
 		</Grid>
 	</Grid>

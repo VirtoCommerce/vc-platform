@@ -8,7 +8,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Interfaces
 	{
 		List<SeoUrlKeyword> SeoKeywords { get; }
 		bool IsValid { get; }
-		void UpdateKeywordValueCode(string newCode);
-		void UpdateSeoKeywords();
+		void ChangeKeywordValue(string newCode);
+		void SaveSeoKeywordsChanges();
 	}
 }

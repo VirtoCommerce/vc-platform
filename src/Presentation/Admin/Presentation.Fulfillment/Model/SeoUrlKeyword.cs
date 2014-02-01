@@ -6,56 +6,72 @@ using ObjectModel = VirtoCommerce.Foundation.AppConfig.Model;
 namespace VirtoCommerce.ManagementClient.Fulfillment.Model
 {
 	[ImplementPropertyChanged]
-    public class SeoUrlKeyword : StorageEntity
-    {
+	public class SeoUrlKeyword : StorageEntity
+	{
 		//invalid keyword characters
 		const string InvalidKeywordCharacters = @"$+;=%{}[]|\/@ ~#!^*&?:'<>,";
 
-        public SeoUrlKeyword()
+		public SeoUrlKeyword()
 		{
 			SeoUrlKeywordId = GenerateNewKey();
+		}
+
+		public SeoUrlKeyword(string locale, int keywordType, string keywordValue)
+		{
+			SeoUrlKeywordId = GenerateNewKey();
+			Language = locale;
+			KeywordType = keywordType;
+			KeywordValue = keywordValue;
+			IsChanged = false;
 		}
 
 		public SeoUrlKeyword(ObjectModel.SeoUrlKeyword originalKeyword)
 		{
 			this.InjectFrom(originalKeyword);
+			IsChanged = false;
 		}
-		
+
+		[DoNotSetChanged]
+		[DoNotNotify]
 		public string SeoUrlKeywordId { get; set; }
-        public string Language { get; set; }
-        public string Keyword { get; set; }
+		public string Language { get; set; }
+		public string Keyword { get; set; }
 		public string KeywordValue { get; set; }
-        public int KeywordType { get; set; }
+		public int KeywordType { get; set; }
 		public string Title { get; set; }
-        public string MetaDescription { get; set; }
-        public string ImageAltDescription { get; set; }
+		public string MetaDescription { get; set; }
+		public string ImageAltDescription { get; set; }
 
-		public bool IsModified { get; set; }
-	    public string BaseUrl { get; set; }
+		[DoNotNotify]
+		public bool IsChanged { get; set; }
 
-	    private bool _isValid;
-	   
+		[DoNotNotify]
+		[DoNotSetChanged]
+		public string BaseUrl { get; set; }
+
 		public override bool Validate()
 		{
-			if (!IsModified)
+			if (!IsChanged)
 				return true;
 
-			_isValid = !string.IsNullOrEmpty(Keyword) || (string.IsNullOrEmpty(ImageAltDescription) && string.IsNullOrEmpty(Title) && string.IsNullOrEmpty(MetaDescription));
+			var _isValid = !string.IsNullOrEmpty(Keyword) || (string.IsNullOrEmpty(ImageAltDescription) && string.IsNullOrEmpty(Title) && string.IsNullOrEmpty(MetaDescription));
 
 			if (_isValid)
 			{
-				ClearError("Keyword");
 				if (!string.IsNullOrEmpty(Keyword))
 				{
 					_isValid = !(Keyword.IndexOfAny(InvalidKeywordCharacters.ToCharArray()) > -1);
 					if (!_isValid)
-						SetError("Keyword", string.Format(@"Keyword can't contain {0} characters", InvalidKeywordCharacters), false);
+						SetError("Keyword", string.Format(@"Keyword can't contain {0} characters", InvalidKeywordCharacters), true);
 				}
 			}
 			else
-				SetError("Keyword", @"Keyword is required", false);
-			
+				SetError("Keyword", @"Keyword is required", true);
+
+			if (_isValid)
+				ClearError("Keyword");
+
 			return _isValid;
 		}
-    }
+	}
 }

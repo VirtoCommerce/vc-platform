@@ -8,7 +8,6 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 	{
 		List<SeoUrlKeyword> SeoKeywords { get; }
 		bool IsValid { get; }
-		void UpdateKeywordValueCode(string newCode);
-		void UpdateSeoKeywords();
+		void SaveSeoKeywordsChanges();
 	}
 }
