@@ -291,7 +291,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type core_controls:WatermarkedTextBox}">
-                    <Border x:Name="Bd" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" MaxHeight="{TemplateBinding Height}" Background="{TemplateBinding Background}" 
+                    <Border x:Name="Bd" Width="{TemplateBinding Width}" MaxWidth="{TemplateBinding Width}" Height="{TemplateBinding Height}" MaxHeight="{TemplateBinding Height}" Background="{TemplateBinding Background}" 
 							BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" >
                         <Grid Margin="0" ClipToBounds="True">
                             <ScrollViewer x:Name="PART_ContentHost" 
