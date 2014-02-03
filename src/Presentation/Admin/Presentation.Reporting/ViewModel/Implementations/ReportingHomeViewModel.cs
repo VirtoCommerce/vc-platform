@@ -59,9 +59,9 @@ namespace VirtoCommerce.ManagementClient.Reporting.ViewModel.Implementations
 
         public IEnumerable<ReportFolder> ReportFolder { get; set; }
 
-        public bool AllowReportUpload
+        public bool AllowReportManage
         {
-            get { return _authContext.CheckPermission(PredefinedPermissions.ReportingUploadReports); }
+            get { return _authContext.CheckPermission(PredefinedPermissions.ReportingManageReports); }
         }
 
         public bool IsReportSelected
@@ -79,7 +79,8 @@ namespace VirtoCommerce.ManagementClient.Reporting.ViewModel.Implementations
                 ShowLoadingAnimation = true;
                 ExecuteAsync(() => RaiseGenerateCommand(o), () => ShowLoadingAnimation = false);
             });
-            UploadReportCommand = new DelegateCommand(RaiseUploadCommand);
+
+            UploadReportCommand = new DelegateCommand(RaiseUploadCommand, () => _authContext.CheckPermission(PredefinedPermissions.ReportingManageReports));
             TreeViewSelectedItemChangedCommand = new DelegateCommand<object>(TreeViewSelectedItemChanged);
             CommonNotifyRequest = new InteractionRequest<Notification>();
         }

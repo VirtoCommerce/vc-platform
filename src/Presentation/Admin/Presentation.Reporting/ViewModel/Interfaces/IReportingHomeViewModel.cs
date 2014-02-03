@@ -7,6 +7,6 @@ namespace VirtoCommerce.ManagementClient.Reporting.ViewModel.Interfaces
     public interface IReportingHomeViewModel : IViewModel
     {
         IEnumerable<ReportFolder> ReportFolder { get; }
-        bool AllowReportUpload { get; }
+        bool AllowReportManage { get; }
     }
 }

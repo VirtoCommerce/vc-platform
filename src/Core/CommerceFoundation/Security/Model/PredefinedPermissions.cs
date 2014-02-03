@@ -62,7 +62,7 @@ namespace VirtoCommerce.Foundation.Security.Model
             FulfillmentReturnsManage = "fulfillment:returns:manage",
 
             ReportingViewReports = "reporting:view",
-            ReportingUploadReports = "reporting:upload",
+            ReportingManageReports = "reporting:manage",
 
             SecurityAccounts = "security:accounts:manage",
             SecurityRoles = "security:roles:manage",
@@ -151,7 +151,7 @@ namespace VirtoCommerce.Foundation.Security.Model
             Name_FulfillmentReturnsManage = "Edit Returns and Exchanges",
 
             Name_ReportingViewReports = "View reports",
-            Name_ReportingUploadReports = "Upload reports",
+            Name_ReportingManageReports = "Manage reports",
 
             Name_SecurityAccounts = "Manage Accounts",
             Name_SecurityRoles = "Manage Roles",
@@ -250,7 +250,7 @@ namespace VirtoCommerce.Foundation.Security.Model
 					new Permission {PermissionId = FulfillmentReturnsManage, Name = Name_FulfillmentReturnsManage},
 
                     new Permission {PermissionId = ReportingViewReports, Name = Name_ReportingViewReports},
-                    new Permission {PermissionId = ReportingUploadReports, Name = Name_ReportingUploadReports},
+                    new Permission {PermissionId = ReportingManageReports, Name = Name_ReportingManageReports},
 
 					new Permission {PermissionId = SecurityAccounts, Name = Name_SecurityAccounts},
 					new Permission {PermissionId = SecurityRoles, Name = Name_SecurityRoles},
@@ -375,7 +375,7 @@ namespace VirtoCommerce.Foundation.Security.Model
             return new List<string>
             {
                 ReportingViewReports,
-                ReportingUploadReports
+                ReportingManageReports
             };
         }
 

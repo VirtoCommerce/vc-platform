@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNet.SignalR;
-using VirtoCommerce.Foundation.Data.AppConfig;
+using Microsoft.AspNet.SignalR.Hubs;
 using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Search;
 using VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet;
@@ -17,7 +14,6 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Helpers
 {
     public class SetupWorker : Hub
     {
-
         public static void SendMessage(string msg, params object[] format)
         {
             var context = GlobalHost.ConnectionManager.GetHubContext<SetupWorker>();
@@ -72,7 +68,7 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Helpers
         {
             var dataFolder = @"App_Data\Virto\SampleData\Database";
             dataFolder = Path.Combine(System.Web.HttpContext.Current.Request.PhysicalApplicationPath ?? "/", dataFolder);
-
+            Trace.TraceInformation("Setting sample data path: {0}", dataFolder);
             // Configure database   
             Trace.TraceInformation("Creating database and system tables.");
             new PublishAppConfigDatabase().Publish(connectionString, null, installSamples); // publish AppConfig first as it contains system tables

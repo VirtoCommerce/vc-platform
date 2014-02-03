@@ -19,7 +19,7 @@ namespace FunctionalTests.Reporting
         [Fact]
         public void Expression_parser_test()
         {
-            var expr = new RdlExpression("=DateAdd(\"d\",-1, Now())")
+            var expr = new RdlExpression("=DateAdd(\"d\",-1, Today())")
             {
                 GetParameterValue = (p) => 12
             };
