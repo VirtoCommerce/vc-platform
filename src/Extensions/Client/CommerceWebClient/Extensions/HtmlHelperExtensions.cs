@@ -107,11 +107,11 @@ namespace VirtoCommerce.Web.Client.Extensions
 		/// <param name="title">The title.</param>
 		/// <returns>MvcHtmlString.</returns>
         public static MvcHtmlString Title(this HtmlHelper htmlHelper, string title)
-        {
-            return Title(htmlHelper, title, "{0} | {1}");
-        }
+		{
+		    return MvcHtmlString.Create(htmlHelper.ViewBag.Title as string != null ? ((string)htmlHelper.ViewBag.Title).Title() : title.Title());
+		}
 
-		/// <summary>
+	    /// <summary>
 		/// Titles the specified HTML helper.
 		/// </summary>
 		/// <param name="htmlHelper">The HTML helper.</param>
@@ -120,13 +120,7 @@ namespace VirtoCommerce.Web.Client.Extensions
 		/// <returns>MvcHtmlString.</returns>
         public static MvcHtmlString Title(this HtmlHelper htmlHelper, string title, string formatString)
         {
-            string storeName = StoreHelper.CustomerSession.StoreName;
-            if (!String.IsNullOrEmpty(storeName))
-            {
-                return MvcHtmlString.Create(String.Format(formatString, title, storeName));
-            }
-
-            return MvcHtmlString.Create(title);
+            return MvcHtmlString.Create(htmlHelper.ViewBag.Title as string != null ? ((string)htmlHelper.ViewBag.Title).Title(formatString) : title.Title(formatString));
         }
 
 		/// <summary>

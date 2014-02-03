@@ -8,19 +8,14 @@
 
     public interface ICatalogOutlineBuilder
     {
-        CatalogOutlines BuildCategoryOutline(string catalogId, Item item, bool useCache = true);
+        CatalogOutlines BuildCategoryOutline(string catalogId, string itemId, bool useCache = true);
         CatalogOutline BuildCategoryOutline(string catalogId, CategoryBase category, bool useCache = true);
+		CatalogOutlines BuildCategoryOutlineWithDSClient(string catalogId, string itemId, bool useCache = true);
+		CatalogOutline BuildCategoryOutlineWithDSClient(string catalogId, CategoryBase category, bool useCache = true);
     }
 
-    public class CatalogOutlines
+    public class CatalogOutlines : List<CatalogOutline>
     {
-        public List<CatalogOutline> Outlines { get; private set; }
-
-        public CatalogOutlines()
-        {
-            Outlines = new List<CatalogOutline>();
-        }
-
         public override string ToString()
         {
             return ToString(";");
@@ -28,7 +23,7 @@
 
         public string ToString(string separator)
         {
-            return String.Join(separator, Outlines.Select(m => m.ToString()));
+            return String.Join(separator, this.Select(m => m.ToString(separator)));
         }
     }
 
@@ -49,8 +44,38 @@
 
         public string ToString(string separator)
         {
-            var ret = this.CatalogId;
-            return this.Categories.Aggregate(ret, (current, category) => current + String.Format("{0}{1}", separator, category.CategoryId));
+            return Categories.Aggregate(CatalogId, 
+                (current, category) => current + String.Format("{0}{1}",separator, category.CategoryId));
+        }
+    }
+
+    /// <summary>
+    /// The CatalogOutline wrapper that is used for item browsing.
+    /// It includes only Category type.
+    /// </summary>
+    public class BrowsingOutline
+    {
+        public readonly CatalogOutline FullOutline;
+
+        public List<Category> Categories { get; private set; }
+
+        public BrowsingOutline(CatalogOutline fullOutline)
+        {
+            FullOutline = fullOutline;
+            Categories = fullOutline.Categories.OfType<Category>().ToList();
+        }
+
+        public override string ToString()
+        {
+            return ToString("/");
+        }
+
+        public string ToString(string separator, string field = "Code")
+        {
+            return Categories.Aggregate("",
+                (current, category) => current + String.Format("{0}{1}",
+                    string.IsNullOrEmpty(current) ? string.Empty : separator,
+                    category.GetType().GetProperty(field).GetValue(category)));
         }
     }
 }

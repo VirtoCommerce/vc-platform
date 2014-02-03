@@ -25,6 +25,7 @@
     <TrackFileAccess>false</TrackFileAccess>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <FodyPath>..\..\..\..\packages\Fody.1.20.0.0</FodyPath>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -97,6 +98,10 @@
     </Reference>
     <Reference Include="PresentationFramework.Aero" />
     <Reference Include="PresentationFramework.Classic" />
+    <Reference Include="PropertyChanged">
+      <HintPath>..\..\..\..\packages\PropertyChanged.Fody.1.45.0.0\Lib\NET35\PropertyChanged.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="RequestEngine">
       <HintPath>..\..\..\..\Shared\RequestEngine.dll</HintPath>
     </Reference>
@@ -145,6 +150,7 @@
     <Compile Include="..\..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Model\SeoUrlKeyword.cs" />
     <Compile Include="ViewModel\Catalog\Implementations\CatalogImportJobHomeViewModel.cs" />
     <Compile Include="Infrastructure\Behaviors\TreeViewSelectedItemBehavior.cs" />
     <Compile Include="Infrastructure\BoolToValueConverters.cs" />
@@ -181,10 +187,16 @@
     <Compile Include="NavigationNames.cs" />
     <Compile Include="Services\MockCatalogService.cs" />
     <Compile Include="ViewModel\Catalog\Implementations\CatalogDeleteViewModel.cs" />
+    <Compile Include="ViewModel\Catalog\Implementations\CategorySeoViewModel.cs" />
+    <Compile Include="ViewModel\Catalog\Implementations\SeoViewModelBase.cs" />
     <Compile Include="ViewModel\Catalog\Implementations\LinkedCategoryViewModel.cs" />
+    <Compile Include="ViewModel\Catalog\Implementations\ItemSeoViewModel.cs" />
     <Compile Include="ViewModel\Catalog\Implementations\TreeCatalogViewModel.cs" />
     <Compile Include="ViewModel\Catalog\Implementations\TreeCategoryViewModel.cs" />
+    <Compile Include="ViewModel\Catalog\Interfaces\IItemSeoViewModel.cs" />
+    <Compile Include="ViewModel\Catalog\Interfaces\ICategorySeoViewModel.cs" />
     <Compile Include="ViewModel\Catalog\Interfaces\ICatalogDeleteViewModel.cs" />
+    <Compile Include="ViewModel\Catalog\Interfaces\ISeoViewModel.cs" />
     <Compile Include="ViewModel\Catalog\Interfaces\ILinkedCategoryViewModel.cs" />
     <Compile Include="ViewModel\Catalog\Interfaces\ITreeCategoryViewModel.cs" />
     <Compile Include="ViewModel\Catalog\Interfaces\ITreeVirtualCatalogViewModel.cs" />
@@ -357,6 +369,9 @@
     <Compile Include="View\Wizard\ItemTypeSelectionStepView.xaml.cs">
       <DependentUpon>ItemTypeSelectionStepView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\Wizard\SeoStepView.xaml.cs">
+      <DependentUpon>SeoStepView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Wizard\VirtualCatalogOverviewStepView.xaml.cs">
       <DependentUpon>VirtualCatalogOverviewStepView.xaml</DependentUpon>
     </Compile>
@@ -510,6 +525,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="View\Wizard\SeoStepView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="View\Wizard\VirtualCatalogOverviewStepView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -558,6 +577,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="Fody.targets" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -595,8 +615,12 @@
       <Name>Presentation.Security</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="FodyWeavers.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Import Project="Fody.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -25,10 +25,7 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 
         public override string DisplayName
         {
-            get
-            {
-                return "..";
-            }
+            get { return ".."; }
         }
 
         public override DateTime? Modified

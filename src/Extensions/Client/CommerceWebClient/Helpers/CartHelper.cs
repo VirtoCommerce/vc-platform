@@ -19,6 +19,7 @@ using VirtoCommerce.Foundation.Orders.Model;
 using VirtoCommerce.Foundation.Orders.Repositories;
 using VirtoCommerce.Foundation.Orders.Services;
 using VirtoCommerce.Foundation.Search.Services;
+using VirtoCommerce.Web.Client.Extensions;
 
 namespace VirtoCommerce.Web.Client.Helpers
 {
@@ -120,12 +121,12 @@ namespace VirtoCommerce.Web.Client.Helpers
         /// Gets the customer session service.
         /// </summary>
         /// <value>The customer session service.</value>
-		public ICustomerSessionService CustomerSessionService
+        public static ICustomerSessionService CustomerSessionService
 		{
 			get { return ServiceLocator.Current.GetInstance<ICustomerSessionService>(); }
 		}
 
-        public ICatalogOutlineBuilder CatalogOutlineBuilder
+        public static ICatalogOutlineBuilder CatalogOutlineBuilder
         {
             get { return ServiceLocator.Current.GetInstance<ICatalogOutlineBuilder>(); }
         }
@@ -513,7 +514,7 @@ namespace VirtoCommerce.Web.Client.Helpers
 				var relations = CatalogClient.GetItemRelations(parent.ItemId);
 
 				var relationGroups = relations.Select(rel => rel.GroupName).Distinct();
-				foreach (var prop in item.ItemPropertyValues.Where(p => relationGroups.Contains(p.Name)))
+                foreach (var prop in item.ItemPropertyValues.LocalizedProperties().Where(p => relationGroups.Contains(p.Name)))
 				{
 					var option = new LineItemOption
 						{
@@ -547,7 +548,7 @@ namespace VirtoCommerce.Web.Client.Helpers
 			lineItem.Catalog = CustomerSession.CatalogId;
 			lineItem.FulfillmentCenterId = StoreHelper.StoreClient.GetCurrentStore().FulfillmentCenterId;
 			//lineItem.CatalogOutline = CatalogOutlineBuilder.BuildCategoryOutline(CatalogClient.CatalogRepository, CustomerSession.CatalogId, item);
-            lineItem.CatalogOutline = CatalogOutlineBuilder.BuildCategoryOutline(CustomerSessionService.CustomerSession.CatalogId, item).ToString();
+            lineItem.CatalogOutline = CatalogOutlineBuilder.BuildCategoryOutline(CustomerSessionService.CustomerSession.CatalogId, item.ItemId).ToString();
 
 			return lineItem;
 		}
@@ -794,7 +795,7 @@ namespace VirtoCommerce.Web.Client.Helpers
 
 			// it is less expansive to do check if cart exists first then load all the data
 			// preload all user carts
-            if (allCarts == null || allCarts.Length == 0)
+            if (allCarts == null)
 			{
 				var query = (repo.ShoppingCarts.Where(
 					c => c.StoreId.Equals(storeId, StringComparison.OrdinalIgnoreCase) &&

@@ -17,14 +17,12 @@
                 }
                  if (node.Attributes.ContainsKey("Outline"))
                  {
-                     foreach (var category in ((CatalogOutline)node.Attributes["Outline"]).Categories)
+                     foreach (var category in ((BrowsingOutline)node.Attributes["Outline"]).Categories)
                      {
-                         if (category is Category)
-                         {
-                             <li>
-                                 @Html.ActionLink((category as Category).Name, "Display", "Catalog", new {code = category.Code}, null)
-                             </li>
-                         }
+
+                        <li>
+                            @Html.ActionLink((category as Category).Name, "Display", "Catalog", new { category = category.Code }, null)
+                        </li>
                      }
                  }
                 <li>

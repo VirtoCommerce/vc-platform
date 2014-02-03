@@ -1,0 +1,110 @@
+﻿<script type="text/x-jquery-tmpl" id="commentTemplate">
+    <div id="comment_${Id}" class="response">
+        <p class="helpful">(<span id="positive_comment_${Id}">${PositiveFeedbackCount}</span> @("of".Localize()) <span id="total_feedback_comment_${Id}">${PositiveFeedbackCount + NegativeFeedbackCount}</span> @("customers found this comment helpful".Localize()))</p>
+        <div class="author">
+            <p class="title">@("Comment by".Localize()) ${Reviewer.NickName}</p>
+            <span class="date">${GetShortDate(CreatedDateTime)}</span>
+        </div>
+        <div class="description">
+            <p>
+                ${Comment}
+            </p>
+        </div>
+        <div class="vote">
+            <p>@("Was this comment helpful?".Localize())</p>
+            <ul>
+                <li><a onclick="Reviews.votecomment('${Id}', true); return false;" href="#">@("Yes".Localize())</a></li>
+                <li class="divider">/</li>
+                <li><a onclick="Reviews.votecomment('${Id}', false); return false;" href="#">@("No".Localize())</a></li>
+            </ul>
+        </div>
+        <div id="comment_feedback_${Id}"></div>
+        <div class="feedback">
+            <ul>
+                <li class="abuse"><a href="#" onclick="$('#report_abuse_for_${Id}').show(); return false;">@("report abuse".Localize())</a></li>
+            </ul>
+            <div class="feedback-abuse" id="report_abuse_for_${Id}">
+                <header>
+                    <h3>@("Please let us know what kind of issue this is".Localize()):</h3>
+                </header>
+                @using (Html.BeginForm("reportabuse", "api/review", FormMethod.Post, new { id = "abuse_${Id}" }))
+                {          
+                    <ul class="form-list">
+                        <li>
+                            <label>
+                                <input type="radio" value="profane" name="Reason">
+                                @("Profanity".Localize())
+                            </label>
+                        </li>
+                        <li>
+                            <label for="">
+                                <input type="radio" value="wrong_product" name="Reason">
+                                @("Wrong product".Localize())
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="radio" value="spam" name="Reason">
+                                @("Spam".Localize())
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="radio" value="duplicate" name="Reason">
+                                @("Duplicate".Localize())
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="radio" value="copyright" name="Reason">
+                                @("Copyright violation".Localize())<									
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="radio" value="not_review" name="Reason">
+                                @("Not a product review".Localize())
+                            </label>
+                        </li>
+                        <li>
+                            <label>
+                                <input type="radio" value="image_issue" name="Reason">
+                                @("Problem with image".Localize())
+
+                            </label>
+                        </li>
+                        <li>
+                            <label for="">
+                                <input type="radio" value="other" name="Reason">
+                                @("Other".Localize())
+
+                            </label>
+                        </li>
+                        <li>
+                            <span data-valmsg-replace="true" data-valmsg-for="Reason" class="field-validation-valid"></span>
+                        </li>
+                    </ul>
+                    <div class="control-group">
+                        <label for="">@("Email Address".Localize()): <sup class="required">*</sup></label>
+                        <input type="text" maxlength="80" name="Email">
+                        <span data-valmsg-replace="true" data-valmsg-for="Email" class="field-validation-valid"></span>
+                    </div>
+                    <div class="control-group">
+                        <label for="">@("Comments".Localize()): <sup class="required">*</sup></label>
+                        <textarea rows="10" cols="30" name="Comment"></textarea>
+                    </div>
+                    <input type="hidden" value="${Id}" name="Id" />
+                    <input type="hidden" value="False" name="IsReview" />
+                    <div class="button-group">
+                        <button type="button" value="Submit" onclick="Reviews.flag('${Id}');">
+                            <span>@("Submit".Localize())</span>
+                        </button>
+                        <button type="button" value="Cancel" onclick="$('#report_abuse_for_${Id}').hide(); return false;" class="btn cancel">
+                            <span>@("Cancel".Localize())</span>
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</script>

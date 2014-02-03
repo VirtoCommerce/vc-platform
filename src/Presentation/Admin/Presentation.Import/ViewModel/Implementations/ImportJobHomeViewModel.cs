@@ -294,7 +294,7 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 				var finished = false;
 				while (!finished)
 				{
-					await Task.Delay(TimeSpan.FromMilliseconds(10));
+					await Task.Delay(TimeSpan.FromMilliseconds(100));
 					
 					var res = _importService.GetImportResult(jobEntity.ImportJob.ImportJobId);
 					progress.Report(new ImportProgress

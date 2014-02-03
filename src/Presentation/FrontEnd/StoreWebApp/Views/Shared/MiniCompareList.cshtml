@@ -12,8 +12,8 @@
     </ul>
 
     <div class="compare-actions">
-        <button onclick="$.popup('/Account/Compare')" title="@("Compare".LocalizeHtml())" type="button">
-            <span>@("Compare".LocalizeHtml())</span>
+        <button onclick="$.popup('/Account/Compare')" title="@("Compare".Localize())" type="button">
+            <span>@("Compare".Localize())</span>
         </button>
         <div class="clear">
             @Ajax.ActionLink("Clear All".Localize(), "ClearCompareList", "Cart",
@@ -28,5 +28,5 @@
 }
 else
 {
-    <p class="empty">@("You have no items in your compare list.".LocalizeHtml())</p>
+    <p class="empty">@("You have no items in your compare list.".Localize())</p>
 }

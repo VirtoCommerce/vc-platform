@@ -4,8 +4,10 @@
 @if (Model.Variations.Any())
 {
     <script type="text/javascript">
-        $(document).ready(function () {
-            $("div.variation select").change(function (source) {
+        $(document).ready(function ()
+        {
+            $("div.variation select").change(function (source)
+            {
                 loadVariations("@Model.ParentItemId", null, source.target);
             });
 
@@ -16,34 +18,48 @@
             @if (Model.CatalogItem == null)
             {
                 @:$("span.in-stock").hide();
-            }
+                        }
         });
     </script>
     
-        @Html.HiddenFor(m => m.SelectedVariationId)
+    @Html.HiddenFor(m => m.SelectedVariationId)
             foreach (var variation in Model.Variations)
             {
-                <div class="variation">
-                    <p>@variation.Name</p>
+    <div class="variation">
+        <p>@variation.Name</p>
 
-                    <select name="@variation.Name" id="@variation.Name" data-val-required="The field is required." data-val="true">
-                        @foreach (var item in variation.Items)
-                        {
-                            var isSelected = item.Selected ? "selected=selected" : "";
+        <select name="@variation.Name" id="@variation.Name" data-val-required="The field is required." data-val="true">
+            @foreach (var item in variation.Items)
+            {
+                var isSelected = item.Selected ? "selected=selected" : "";
 
-                            <option value="@item.Value" @isSelected>@item.Text</option>
-                        }
-                    </select>
-                    <br />
-                    <span data-valmsg-replace="true" data-valmsg-for="@variation.Name" class="field-validation-valid"></span>
-                </div>
+                <option value="@item.Value" @isSelected>@item.Text</option>
+            }
+        </select>
+        <span data-valmsg-replace="true" data-valmsg-for="@variation.Name" class="field-validation-valid"></span>
+        
+        @*Show color pallete*@
+        @if (variation.Name.Equals("Color", StringComparison.OrdinalIgnoreCase))
+        {
+            <ul class="color-pallete">
+                 @foreach (var item in variation.Items)
+                 {
+                     if (!string.IsNullOrEmpty(@item.Value))
+                     {
+                         <li style="background-color: @item.Value;" class="color-box" onclick="$('select#@variation.Name').val('@item.Value').change();"></li>
+                     }
+                 }
+                <li class="clearfix"></li>
+            </ul>
+        }
+    </div>
             }
     
-        <div class="variation-item">
-            @if (Model.CatalogItem != null)
-            {
-                Html.RenderPartial("Variation", Model.CatalogItem);
-            }
-        </div>
+    <div class="variation-item">
+        @if (Model.CatalogItem != null)
+        {
+            Html.RenderPartial("Variation", Model.CatalogItem);
+        }
+    </div>
 
 }

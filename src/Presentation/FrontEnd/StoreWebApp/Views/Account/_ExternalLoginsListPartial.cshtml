@@ -15,7 +15,7 @@ else
     <p>
         @foreach (var p in Model)
         {          
-            <button type="submit" name="provider" value="@p.AuthenticationClient.ProviderName" title="@("Log in using your {0} account".LocalizeHtml(p.DisplayName))">
+            <button type="submit" name="provider" value="@p.AuthenticationClient.ProviderName" title="@("Log in using your {0} account".Localize((object)p.DisplayName))">
                 <img alt="@p.DisplayName" src="@Href(String.Format("~/content/themes/default/images/social/{0}.png", p.AuthenticationClient.ProviderName))"/>
             </button>
         }

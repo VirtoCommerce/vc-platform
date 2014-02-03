@@ -1,4 +1,6 @@
-﻿namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Model
+﻿using System.Collections.Generic;
+
+namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Model
 {
     public class LocalizationGroup
     {
@@ -25,6 +27,17 @@
                 return OriginalLocalization.Name + OriginalLocalization.LanguageCode + TranslateLocalization.LanguageCode;
             }
         }
+		
+		public IEnumerable<string> ToExportCollection()
+		{
+			return new List<string>
+				{
+					string.IsNullOrEmpty(Name) ? string.Empty : Name,
+					string.IsNullOrEmpty(OriginalValue) ? string.Empty : OriginalValue,
+					string.IsNullOrEmpty(TranslateLocalization.LanguageCode) ? string.Empty : TranslateLocalization.LanguageCode,
+					string.IsNullOrEmpty(TranslateValue) ? string.Empty : TranslateValue
+				};
+		}
 
     }
 }

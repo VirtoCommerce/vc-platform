@@ -60,6 +60,21 @@
         /// <param name="token">Password reset token</param>
         /// <returns><c>true</c> if success, <c>false</c> otherwise.</returns>
         bool ResetPassword(string userName, string newPassword, string token = null);
+
+        /// <summary>
+        /// Generates the password reset token that can be sent via email.
+        /// </summary>
+        /// <param name="userName">Name of the user.</param>
+        /// <returns></returns>
+        string GeneratePasswordResetToken(string userName);
+
+        /// <summary>
+        /// Resets the password by using a password reset token.
+        /// </summary>
+        /// <param name="resetToken">The reset token.</param>
+        /// <param name="newPassword">The new password.</param>
+        /// <returns></returns>
+        bool ResetPasswordWithToken(string resetToken, string newPassword);
         /// <summary>
         /// Creates the account.
         /// </summary>

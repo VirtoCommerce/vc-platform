@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using VirtoCommerce.Foundation.Assets.Model;
-using System.ServiceModel;
+﻿using VirtoCommerce.Foundation.Assets.Model;
 using VirtoCommerce.Foundation.Frameworks;
 
 namespace VirtoCommerce.Foundation.Assets.Repositories
@@ -14,5 +9,8 @@ namespace VirtoCommerce.Foundation.Assets.Repositories
 		FolderItem GetFolderItemById(string itemId);
 		Folder[] GetChildrenFolders(string folderId);
 		FolderItem[] GetChildrenFolderItems(string folderId);
+	    Folder CreateFolder(string folderName, string parentId = null);
+	    void Delete(string id);
+	    void Rename(string id, string name);
 	}
 }

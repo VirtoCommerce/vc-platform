@@ -10,7 +10,7 @@
 else if (ViewBag.HideLabel == null || !ViewBag.HideLabel)
 {
 	<label for="@ViewData.TemplateInfo.GetFullHtmlFieldId(propertyName)">
-		@ViewData.ModelMetadata.GetDisplayName().LocalizeHtml()
+		@ViewData.ModelMetadata.GetDisplayName().Localize()
 		@if (ViewData.ModelMetadata.IsRequired){<span class="required">*</span>}
 	</label>     
 }

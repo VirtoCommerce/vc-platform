@@ -25,7 +25,6 @@ namespace VirtoCommerce.Web.Controllers
 	/// <summary>
 	/// Class SearchController.
 	/// </summary>
-	[Localize]
 	public class SearchController : ControllerBase
     {
 		/// <summary>
@@ -137,14 +136,14 @@ namespace VirtoCommerce.Web.Controllers
             }
 
             // Perform search
-            var sort = parameters.Sort;
+            var sort = string.IsNullOrEmpty(parameters.Sort) ? "position" : parameters.Sort;
 		    var sortOrder = parameters.SortOrder;
 
             bool isDescending = "desc".Equals(sortOrder, StringComparison.OrdinalIgnoreCase);
 
             SearchSort sortObject = null;
 
-            if (!String.IsNullOrEmpty(sort) && !sort.Equals("position", StringComparison.OrdinalIgnoreCase))
+            if (!sort.Equals("position", StringComparison.OrdinalIgnoreCase))
             {
                 if (sort.Equals("price", StringComparison.OrdinalIgnoreCase))
                 {
@@ -285,19 +284,19 @@ namespace VirtoCommerce.Web.Controllers
 	    /// <summary>
 	    /// Searches within category.
 	    /// </summary>
-	    /// <param name="category">The category.</param>
+        /// <param name="cat">The category.</param>
 	    /// <param name="parameters">The parameters.</param>
 	    /// <param name="name">Partial view name</param>
 	    /// <param name="criteria">Search criteria</param>
 	    /// <returns>ActionResult.</returns>
 	    [CustomOutputCache(CacheProfile = "SearchCache", VaryByCustom = "store;currency;cart")]
-        public ActionResult SearchResultsWithinCategory(Category category, SearchParameters parameters, string name = "SearchResultsPartial", CatalogItemSearchCriteria criteria = null, bool savePreferences = true)
+        public ActionResult SearchResultsWithinCategory(Category cat, SearchParameters parameters, string name = "SearchResultsPartial", CatalogItemSearchCriteria criteria = null, bool savePreferences = true)
         {
             criteria = criteria ?? new CatalogItemSearchCriteria();
-		    if (category != null)
+		    if (cat != null)
 		    {
-		        ViewBag.Title = category.Name.Localize();		      
-                criteria.Outlines.Add(String.Format("{0}*",_catalogClient.BuildCategoryOutline(UserHelper.CustomerSession.CatalogId, category)));
+		        ViewBag.Title = cat.Name.Localize();
+                criteria.Outlines.Add(String.Format("{0}*", _catalogClient.BuildCategoryOutline(UserHelper.CustomerSession.CatalogId, cat)));
 		    }
 
 	        if (savePreferences)

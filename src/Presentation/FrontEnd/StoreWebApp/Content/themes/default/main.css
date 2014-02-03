@@ -282,7 +282,7 @@ button + button
 				padding: 14px;
 				position: absolute;
 				visibility: hidden;
-				z-index: 1;
+				z-index: 5;
 
 				filter: alpha(opacity = 0);
 
@@ -345,13 +345,12 @@ button + button
 			float: right;
 		}
 
-		.head-top .welcome
-		{
-			color: #999;
-			font-size: 11px;
-			line-height: 30px;
-			padding: 0 20px 0 0;
-		}
+            .head-top .welcome {
+                color: #999;
+                font-size: 11px;
+                line-height: 30px;
+                padding: 0 20px 0 0;
+            }
 
 			.head-links li
 			{

@@ -22,7 +22,7 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 		#endregion
 
 		private const string CommerceProjectName = "SampleProject";
-		private const string CommerceProjectPath = "Virto Commerce 1.7\\Projects";
+		private const string CommerceProjectPath = "Virto Commerce 1.8\\Projects";
 		#region Constructors
 
 #if DESIGN // TODO: Replace with Debug compilation condition and IsInDesignMode runtime condition
@@ -107,8 +107,9 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 				DirectoryExtensions.Copy(new DirectoryInfo(contentFolder), new DirectoryInfo(ProjectLocation));
 				ct.ThrowIfCancellationRequested();
 
-				// create initial folders: import
+				// create initial folders: import, reports
 				Directory.CreateDirectory(Path.Combine(ProjectLocation, "App_Data\\Virto\\Storage\\import"));
+				Directory.CreateDirectory(Path.Combine(ProjectLocation, "App_Data\\Virto\\Storage\\reports"));
 				
 				if (_databaseViewModel.InstallSamples)
 				{

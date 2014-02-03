@@ -531,7 +531,7 @@ namespace VirtoCommerce.OrderWorkflow
 					MinQuantity = sku.MinQuantity,
 					PlacedPrice = price != null ? (price.Sale ?? price.List) : 0,
 					ListPrice = price != null ? (price.Sale ?? price.List) : 0,
-                    CatalogOutline = OutlineBuilder.BuildCategoryOutline(CustomerSessionService.CustomerSession.CatalogId, sku).ToString()
+                    CatalogOutline = OutlineBuilder.BuildCategoryOutline(CustomerSessionService.CustomerSession.CatalogId, sku.ItemId).ToString()
 				};
 
 			return retVal;

@@ -10,9 +10,11 @@ using Microsoft.Practices.Unity;
 using VirtoCommerce.Foundation.Assets;
 using VirtoCommerce.Foundation.Assets.Factories;
 using VirtoCommerce.Foundation.Assets.Model;
+using VirtoCommerce.Foundation.Assets.Model.Exceptions;
 using VirtoCommerce.Foundation.Assets.Repositories;
 using VirtoCommerce.Foundation.Assets.Services;
 using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
 
 namespace VirtoCommerce.Foundation.Data.Asset
 {
@@ -264,7 +266,53 @@ namespace VirtoCommerce.Foundation.Data.Asset
 			return retVal.ToArray();
 		}
 
-		public IUnitOfWork UnitOfWork
+	    public Folder CreateFolder(string folderName, string parentId = null)
+	    {
+	        var fullName = Absolute(Path.Combine(parentId ?? "", folderName));
+	        var folder = new Folder {Name = folderName};
+	        if (!Directory.Exists(fullName))
+	        {
+	            Directory.CreateDirectory(fullName);   
+	        }
+
+            MapFileSystemBlobDirectory2Folder(fullName, folder);
+            ChangeTracker.Attach(folder);
+	        return folder;
+	    }
+
+	    public void Delete(string id)
+	    {
+            object item = GetFolderItemById(id) ?? (object)GetFolderById(id);
+
+            if (item != null)
+            {
+                Remove(item);
+                Commit();
+            }
+	    }
+
+	    public void Rename(string id, string name)
+	    {
+            object item = GetFolderItemById(id);
+
+            if (item != null)
+            {
+                var oldItemPath = Absolute(id);
+                var newItemPath = Path.Combine(Path.GetDirectoryName(oldItemPath) ?? String.Empty, name);
+                File.Move(oldItemPath, newItemPath);
+                return;
+            }
+
+            item = GetFolderById(id);
+            if (item != null)
+            {
+                var oldFolderPath = Absolute(id);
+                var newFolderPath = Path.Combine(Path.GetDirectoryName(oldFolderPath) ?? String.Empty, name);
+                Directory.Move(oldFolderPath, newFolderPath);
+            }
+	    }
+
+	    public IUnitOfWork UnitOfWork
 		{
 			get { return this; }
 		}
@@ -305,17 +353,37 @@ namespace VirtoCommerce.Foundation.Data.Asset
 
 		public int Commit()
 		{
-			return 0;
+            foreach (Action delayedAction in this._delayedActions)
+            {
+                try
+                {
+                    delayedAction();
+                }
+                catch (Exception e)
+                {
+                    throw new AssetStorageException(e.Message, e);
+                }
+            }
+            this._delayedActions.Clear();
+
+            this.ChangeTracker.MarkAllUnchanged();
+            return 0;
 		}
 
 		public void CommitAndRefreshChanges()
 		{
+            this.Commit();
 
+            this.ChangeTracker.Dispose();
+
+            this.ChangeTracker = this.CreateChangeTracker();
 		}
 
 		public void RollbackChanges()
 		{
+            this.ChangeTracker.Dispose();
 
+            this.ChangeTracker = this.CreateChangeTracker();
 		}
 
 		#endregion
@@ -324,7 +392,7 @@ namespace VirtoCommerce.Foundation.Data.Asset
 		protected virtual void MapFileSystemBlobDirectory2Folder(string directory, Folder folder)
 		{
 			var dInfo = new DirectoryInfo(directory);
-
+            
 			//Copy properties
 			folder.LastModified = dInfo.LastWriteTimeUtc;
 			//Convert folder uri to Name, and ParentId properties
@@ -422,47 +490,127 @@ namespace VirtoCommerce.Foundation.Data.Asset
 
 		private ObservableChangeTracker CreateChangeTracker()
 		{
-			var retVal = new ObservableChangeTracker();
-
-			retVal.AddNewOneToManyRelationAction = (source, property, target) =>
+			var retVal = new ObservableChangeTracker
 			{
-				var folder = source as Folder;
-				if (folder != null && property == "SubFolders")
-				{
-					if (folder.FolderId != null)
-					{
-						((Folder)target).ParentFolderId = folder.FolderId;
-					}
-				}
-				else if (folder != null && property == "FolderItems")
-				{
-					if (folder.FolderId != null)
-					{
-						((FolderItem)target).FolderId = folder.FolderId;
-					}
-				}
+                AddAction = (x) =>
+                {
+                    var entry = this.ChangeTracker.GetTrackingEntry(x);
+                    this._delayedActions.Add(() => this.SaveEntryChanges(entry));
+                },
+                UpdateAction = (x) =>
+                {
+                    var entry = this.ChangeTracker.GetTrackingEntry(x);
+                    entry.EntryState = EntryState.Detached;
+                    var clonedEntry = new TrackingEntry
+                    {
+                        Entity = x.DeepClone(new AssetEntityFactory()),
+                        EntryState = EntryState.Modified
+                    };
+                    this._delayedActions.Add(() => this.SaveEntryChanges(clonedEntry));
+                },
+                RemoveAction = (x) =>
+                {
+                    var entry = this.ChangeTracker.GetTrackingEntry(x);
+                    entry.EntryState = EntryState.Detached;
+                    var clonedEntry = new TrackingEntry
+                    {
+                        Entity = x.DeepClone(new AssetEntityFactory()),
+                        EntryState = EntryState.Deleted
+                    };
+                    this._delayedActions.Add(() => this.SaveEntryChanges(clonedEntry));
+                },
+			    AddNewOneToManyRelationAction = (source, property, target) =>
+			    {
+			        var folder = source as Folder;
+			        if (folder != null && property == "SubFolders")
+			        {
+			            if (folder.FolderId != null)
+			            {
+			                ((Folder) target).ParentFolderId = folder.FolderId;
+			            }
+			        }
+			        else if (folder != null && property == "FolderItems")
+			        {
+			            if (folder.FolderId != null)
+			            {
+			                ((FolderItem) target).FolderId = folder.FolderId;
+			            }
+			        }
+			    },
+			    PropertyChangedAction = (source, property, target) =>
+			    {
+			        var folder = source as Folder;
+			        if (folder != null && property == "FolderId")
+			        {
+			            foreach (var subFolder in folder.Subfolders)
+			            {
+			                subFolder.ParentFolderId = folder.FolderId;
+			            }
+			            foreach (var folderItem in folder.FolderItems)
+			            {
+			                folderItem.FolderId = folder.FolderId;
+			            }
+			        }
+			    }
 			};
 
-			retVal.PropertyChangedAction = (source, property, target) =>
-			{
-				var folder = source as Folder;
-				if (folder != null && property == "FolderId")
-				{
-					foreach (var subFolder in folder.Subfolders)
-					{
-						subFolder.ParentFolderId = folder.FolderId;
-					}
-					foreach (var folderItem in folder.FolderItems)
-					{
-						folderItem.FolderId = folder.FolderId;
-					}
-				}
-			};
-
-			return retVal;
+		    return retVal;
 		}
 
-		private static void GenerateNewImage(Image source, int width, int height, string fileName)
+	    private void SaveEntryChanges(TrackingEntry entry)
+	    {
+            if (entry.EntryState == EntryState.Added)
+            {
+            }
+
+            if ((entry.EntryState & (EntryState.Unchanged | EntryState.Detached)) != entry.EntryState)
+            {
+                if (entry.Entity is Folder)
+                {
+                    var folder = entry.Entity as Folder;
+ 
+                    switch (entry.EntryState)
+                    {
+                        case EntryState.Modified:
+                            var oldFolderPath = Absolute(folder.FolderId);
+                            var newFolderPath = Path.Combine(Path.GetDirectoryName(oldFolderPath)??String.Empty, folder.Name);
+                            Directory.Move(oldFolderPath, newFolderPath);
+                            break;
+                        case EntryState.Added:
+                            var newFolder = Path.Combine(Absolute(folder.ParentFolderId), folder.Name);
+                            Directory.CreateDirectory(newFolder);
+                            break;
+                        case EntryState.Deleted:
+                            var folderPathToRemove = Absolute(folder.FolderId);
+                            Directory.Delete(folderPathToRemove, true);
+                            break;
+                    }
+                }
+                else if (entry.Entity is FolderItem)
+                {
+                    var folderItem = entry.Entity as FolderItem;
+
+                    switch (entry.EntryState)
+                    {
+                        case EntryState.Added:
+                        case EntryState.Modified:
+
+                            break;
+                        case EntryState.Deleted:
+                            var item = Absolute(folderItem.FolderItemId);
+                            File.Delete(item);
+                            var thumbFile = GenerateThumbnailPath(item);
+                            if (File.Exists(thumbFile))
+                            {
+                                File.Delete(thumbFile);
+                            }
+                            break;
+                    }
+                }
+            }
+	    }
+
+	    private static void GenerateNewImage(Image source, int width, int height, string fileName)
 		{
 			var newSize = new SizeF(width, (float)height * source.Height / source.Width);
 			var target = new Bitmap((int)newSize.Width, (int)newSize.Height);

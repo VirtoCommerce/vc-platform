@@ -8,7 +8,6 @@ namespace VirtoCommerce.Web.Controllers
 	/// <summary>
 	/// Class SettingsController.
 	/// </summary>
-	[Localize]
 	public class SettingsController : ControllerBase
     {
 		/// <summary>

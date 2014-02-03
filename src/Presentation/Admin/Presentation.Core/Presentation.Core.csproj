@@ -119,6 +119,9 @@
     <Reference Include="Xceed.Wpf.Toolkit">
       <HintPath>..\..\..\..\packages\Extended.Wpf.Toolkit.1.9.0\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
     </Reference>
+    <Reference Include="xunit">
+      <HintPath>..\..\..\..\packages\xunit.1.9.2\lib\net20\xunit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\..\GlobalAssemblyInfo.cs">
@@ -198,6 +201,7 @@
     <Compile Include="Infrastructure\Behaviors\DataGridScrollIntoViewBehavior.cs" />
     <Compile Include="Infrastructure\Behaviors\EnterKeyDownBehavior.cs" />
     <Compile Include="Infrastructure\Behaviors\PermissionBehavior.cs" />
+    <Compile Include="Infrastructure\Behaviors\TreeViewSelectedItemBehavior.cs" />
     <Compile Include="Infrastructure\Common\AttachedInputBindingsHelper.cs" />
     <Compile Include="Infrastructure\Common\BindingFromStringBehavior.cs" />
     <Compile Include="Infrastructure\Common\ComparableDataTrigger.cs" />
@@ -260,6 +264,7 @@
     <Compile Include="Infrastructure\IAppSettings.cs" />
     <Compile Include="Infrastructure\IAuthenticationContext.cs" />
     <Compile Include="Infrastructure\ICollectionChange.cs" />
+    <Compile Include="Infrastructure\IEntityExportable.cs" />
     <Compile Include="Infrastructure\IExpressionViewModel.cs" />
     <Compile Include="Infrastructure\DataVirtualization\LoadingAnimation.xaml.cs">
       <DependentUpon>LoadingAnimation.xaml</DependentUpon>
@@ -331,6 +336,7 @@
     <Compile Include="Infrastructure\IViewModelsFactory.cs" />
     <Compile Include="Infrastructure\Navigation\INavigationManager.cs" />
     <Compile Include="Infrastructure\NotifyPropertyChanged.cs" />
+    <Compile Include="Infrastructure\PropertyComparer.cs" />
     <Compile Include="Infrastructure\RefusedConfirmation.cs" />
     <Compile Include="Infrastructure\Converters\CurrencyConverter.cs" />
     <Compile Include="Infrastructure\Dialogs\InteractionDialogBase.cs" />

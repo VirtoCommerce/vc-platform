@@ -3,16 +3,15 @@
 <script type="text/javascript">
 	$(document).ready(function ()
 	{
-		//Update main image
-		$("#imageContainer img.cloudzoom").attr("src", "@Url.Image(Model.CatalogItem.Item, "primaryimage")");
+	    //Update main image
+	    var cloudZoom = $("#imageContainer img.cloudzoom").data("CloudZoom");
+	    cloudZoom.loadImage('@Url.Image(Model.CatalogItem.Item, "primaryimage")', '@Url.Image(Model.CatalogItem.Item, "primaryimage")');
 
 		//Update main price
 @*		@{Model.Price.PriceTitle = "Price:".Localize();}*@
 	    $("#mainPrice").html($('#temp_price').html());
 	    $('#temp_price').remove();
 	    $("header.product-name h1").html('@Model.DisplayName');
-
-	    CloudZoom.quickStart();
 	    
         //Handle availability
 	    $("span.in-stock").text("@Model.Availability.AvailabilityString");
@@ -38,7 +37,7 @@
 
 			$('#qty').attr("data-val-range-min", '@((int)Model.Availability.MinQuantity)');
 			$('#qty').attr("data-val-range-max", '@((int)Model.Availability.MaxQuantity)');
-		    $('#qty').attr("data-val-range", "@("Select quantity in range".LocalizeHtml())" + " @string.Format("{0:#} - {1:#}", Model.Availability.MinQuantity, @Model.Availability.MaxQuantity)");
+		    $('#qty').attr("data-val-range", "@("Select quantity in range".Localize())" + " @string.Format("{0:#} - {1:#}", Model.Availability.MinQuantity, @Model.Availability.MaxQuantity)");
 		    $('#qty').attr("data-val-regex-pattern", '@string.Format(@"^\\d{{{0},{1}}}$",Math.Log10((int)Model.Availability.MinQuantity)  + 1,Math.Log10((int)Model.Availability.MaxQuantity)  + 1)');
 			var $form = $('#qty').resetValidation();
 			$form.removeData('validator');

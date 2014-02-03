@@ -91,6 +91,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\packages\Lucene.Net.Contrib.3.0.3\lib\net40\Lucene.Net.Contrib.SpellChecker.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core">
+      <HintPath>..\..\..\..\packages\Microsoft.AspNet.SignalR.Core.2.0.2\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb">
+      <HintPath>..\..\..\..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.0.2\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Data.Edm, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -107,6 +113,15 @@
     <Reference Include="Microsoft.Data.Services.Client, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\packages\Microsoft.Data.Services.Client.5.6.0\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin">
+      <HintPath>..\..\..\..\packages\Microsoft.Owin.2.0.2\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb">
+      <HintPath>..\..\..\..\packages\Microsoft.Owin.Host.SystemWeb.2.0.2\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security">
+      <HintPath>..\..\..\..\packages\Microsoft.Owin.Security.2.0.2\lib\net45\Microsoft.Owin.Security.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -154,6 +169,9 @@
     <Reference Include="Omu.ValueInjecter, Version=2.3.3.0, Culture=neutral, PublicKeyToken=c7694541b0ac80e4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\packages\ValueInjecter.2.3.3\lib\net35\Omu.ValueInjecter.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin">
+      <HintPath>..\..\..\..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
     <Reference Include="PlainElastic.Net, Version=1.0.28.0, Culture=neutral, PublicKeyToken=0930e76dfc03b7ac, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -327,10 +345,13 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\ModuleConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\SignalRStartup.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\VirtoAdmin\Controllers\InstallController.cs" />
+    <Compile Include="Areas\VirtoAdmin\Helpers\SignalRTraceListener.cs" />
+    <Compile Include="Areas\VirtoAdmin\Helpers\SetupWorker.cs" />
     <Compile Include="Areas\VirtoAdmin\Models\InstallModel.cs" />
     <Compile Include="Areas\VirtoAdmin\Models\SuccessModel.cs" />
     <Compile Include="Areas\VirtoAdmin\Resources\Resource.Designer.cs">
@@ -358,14 +379,13 @@
     </Compile>
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\BannerModel.cs" />
+    <Compile Include="Models\Binders\CategoryPathModelBinder.cs" />
     <Compile Include="Models\Binders\SearchParametersBinder.cs" />
     <Compile Include="Models\CartModel.cs" />
     <Compile Include="Models\AddressCartModel.cs" />
     <Compile Include="Models\CartRemoveModel.cs" />
-    <Compile Include="Models\CartUpdateModel.cs" />
     <Compile Include="Models\CatalogModels.cs" />
     <Compile Include="Models\CheckoutModels.cs" />
-    <Compile Include="Models\CurrenciesModel.cs" />
     <Compile Include="Models\CustomerModels.cs" />
     <Compile Include="Models\LineItemModel.cs" />
     <Compile Include="Models\LineItemUpdateModel.cs" />
@@ -375,18 +395,18 @@
     <Compile Include="Models\ReviewModel.cs" />
     <Compile Include="Models\SearchModels.cs" />
     <Compile Include="Models\StoreModel.cs" />
-    <Compile Include="Models\StoresModel.cs" />
     <Compile Include="Models\CurrencyModel.cs" />
     <Compile Include="Models\VariationModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Virto\Helpers\CartHelperExtensions.cs" />
     <Compile Include="Virto\Helpers\CatalogHelper.cs" />
     <Compile Include="Virto\Helpers\MarketingHelper.cs" />
+    <Compile Include="Virto\Helpers\MVC\CssMinifyFix.cs" />
     <Compile Include="Virto\Helpers\MVC\VirtoDataAnnotationsModelValidatorProvider.cs" />
     <Compile Include="Virto\Helpers\Payments\CreditCardOption.cs" />
     <Compile Include="Virto\Helpers\Payments\IPaymentOption.cs" />
     <Compile Include="Virto\Helpers\Popup\PopupBase.cs" />
-    <Compile Include="Virto\Helpers\SearchHelper.cs" />
+    <Compile Include="Virto\Helpers\SearchHelperExtensions.cs" />
     <Compile Include="Virto\Helpers\UserHelper.cs" />
     <Compile Include="WebRole.cs" />
   </ItemGroup>
@@ -578,6 +598,7 @@
     <Content Include="Areas\VirtoAdmin\Views\Install\Index.cshtml" />
     <Content Include="Areas\VirtoAdmin\Views\Install\Success.cshtml" />
     <Content Include="Mvc.sitemap" />
+    <Content Include="App_Data\Virto\Configuration\Reporting.config" />
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -597,6 +618,8 @@
     <Content Include="Scripts\jquery.nivo.slider.js" />
     <Content Include="Scripts\jquery.rateit.js" />
     <Content Include="Scripts\jquery.rateit.min.js" />
+    <Content Include="Scripts\jquery.signalR-2.0.2.js" />
+    <Content Include="Scripts\jquery.signalR-2.0.2.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
@@ -644,7 +667,7 @@
     <Content Include="Views\Account\DisplayTemplates\LineItem.cshtml" />
     <Content Include="Views\Account\Edit.cshtml" />
     <Content Include="Views\Account\EditorTemplates\LineItem.cshtml" />
-    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Account\DisplayTemplates\ForgotPassword.cshtml" />
     <Content Include="Views\Account\Index.cshtml" />
     <Content Include="Views\Account\LogOn.cshtml" />
     <Content Include="Views\Account\LogOnAsync.cshtml" />
@@ -760,6 +783,9 @@
     <Content Include="Views\Shared\DisplayTemplates\MetaRobotsHelperModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\CanonicalHelperModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\SiteMapPathNodeModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\ReviewTemplate.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\ReviewCommentTemplate.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
     <None Include="Web.Azure.config" />
   </ItemGroup>
   <ItemGroup>
@@ -840,6 +866,7 @@
     <EmbeddedResource Include="Areas\VirtoAdmin\Resources\Resource.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
@@ -856,7 +883,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
+          <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>53866</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

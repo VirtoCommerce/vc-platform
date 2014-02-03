@@ -5,7 +5,6 @@ using System.Data.Services.Common;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
-using DataAnnotationsExtensions;
 using VirtoCommerce.Foundation.Frameworks;
 
 namespace VirtoCommerce.Foundation.Reviews.Model.Management

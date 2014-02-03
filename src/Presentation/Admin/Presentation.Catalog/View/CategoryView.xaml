@@ -26,6 +26,7 @@
 
 			<inf:PropertyValueConverter x:Key="propertyValueConverter" />
 			<Presentation_Core_Infrastructure_Converters:BoolToStringConverter x:Key="boolToYesNoConverter" FalseValue="No" TrueValue="Yes" />
+			<Presentation_Core_Infrastructure_Converters:InvertedBoolConverter x:Key="invertedBoolConverter" FalseValue="True" TrueValue="False" />
 			<Presentation_Core_Infrastructure_Converters:CultureConverter x:Key="cultureConverter" />
 		</ResourceDictionary>
 	</UserControl.Resources>
@@ -159,6 +160,13 @@
 					</i:Interaction.Triggers>
 				</DataGrid>
 			</Grid>
+		</TabItem>
+
+		<!-- SEO tab -->
+		<TabItem x:Name="tabSeoData" Header="SEO" core_behavior:PermissionBehavior.PermissionId="{x:Static securityModule:PredefinedPermissions.CatalogCategoriesManage}" core_behavior:PermissionBehavior.DenyVisibility="Visible">
+			<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Margin="0,10,0,0">
+				<ContentPresenter Content="{Binding SeoStepViewModel}" Margin="0,0,20,0"/>
+			</ScrollViewer>
 		</TabItem>
 	</TabControl>
 </UserControl>

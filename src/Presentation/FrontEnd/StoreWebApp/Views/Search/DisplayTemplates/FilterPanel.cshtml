@@ -7,15 +7,35 @@
         {
             <dt>@group.Name.Localize()</dt>
             <dd>
-                <ol>
-                    @foreach (var facet in group.Facets)
-                    {
+                @if (group.Name.Equals("Color", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    <ol>
+
                         <li>
-                            <a href="@Url.SetFacet(group.Key, facet.Key)">@facet.Name</a> 
-                            <span>(@facet.Count)</span>
+                            <ul>
+                                @foreach (var facet in group.Facets)
+                                {
+                                    <li style="background: @facet.Name;" class="filter-color-box color-box" title="@facet.Name (@facet.Count)">
+                                        <a href="@Url.SetFacet(group.Key, facet.Key)"></a>
+                                    </li>
+                                }
+                                <li class="clearfix" style="background: none;"></li>
+                            </ul>
                         </li>
-                    }
-                </ol>
+                    </ol>
+                }
+                else
+                {
+                    <ol>
+                        @foreach (var facet in group.Facets)
+                        {
+                            <li>
+                                <a href="@Url.SetFacet(group.Key, facet.Key)">@facet.Name</a>
+                                <span>(@facet.Count)</span>
+                            </li>
+                        }
+                    </ol>
+                }
             </dd>
         }
     </dl>

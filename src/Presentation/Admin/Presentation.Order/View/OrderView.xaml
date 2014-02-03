@@ -293,7 +293,7 @@
 																		</DataTemplate>
 																	</DataGridTemplateColumn.CellTemplate>
 																</DataGridTemplateColumn>
-																<DataGridTextColumn Header="Quantity" Binding="{Binding Quantity, StringFormat={}{0:0.##}}" Width="0.2*"/>
+																<DataGridTextColumn Header="Quantity" Binding="{Binding Quantity, StringFormat={}{0:0.##}}" Width="0.2*"/>																	
 																<DataGridTextColumn Header="Price" Binding="{Binding LineItem.ListPrice, Converter={StaticResource CurrencyConverter}}" Width="0.23*"/>
 																<DataGridTextColumn Header="Total" FontWeight="Bold" Width="0.27*">
 																	<DataGridTextColumn.Binding>

@@ -1,4 +1,5 @@
-﻿using Microsoft.Practices.Prism.Commands;
+﻿using System.Linq.Expressions;
+using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ using System.Windows.Media.Imaging;
 using VirtoCommerce.Foundation.Assets.Model;
 using VirtoCommerce.Foundation.Assets.Services;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
+using VirtoCommerce.ManagementClient.Asset.Dialogs.ViewModel.Interfaces;
 using VirtoCommerce.ManagementClient.Asset.Model;
 using VirtoCommerce.ManagementClient.Asset.ViewModel.Interfaces;
 using VirtoCommerce.ManagementClient.Core.Controls.StatusIndicator.Model;
@@ -27,14 +29,17 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 
 		private readonly IAssetService _assetRepository;
 		private IFileDialogService fileDialogService;
-
+        private readonly IViewModelsFactory<IInputNameDialogViewModel> _inputNameVmFactory;
+        public InteractionRequest<ConditionalConfirmation> InputNameDialogRequest { get; private set; }
 		#endregion
 
 		#region ctor
 
-		public PickAssetViewModel(IAssetService assetRepository)
+        public PickAssetViewModel(IAssetService assetRepository, IViewModelsFactory<IInputNameDialogViewModel> inputNameVmFactory)
 		{
 			_assetRepository = assetRepository;
+            _inputNameVmFactory = inputNameVmFactory;
+            AssetPickMode = true;
 
 			AddressBarItems = new ObservableCollection<AssetEntitySearchViewModelBase>();
 			SelectedFolderItems = new ObservableCollection<AssetEntitySearchViewModelBase>();
@@ -42,12 +47,16 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 			OpenItemCommand = new DelegateCommand<object>(RaiseOpenItemRequest);
 			RefreshCommand = new DelegateCommand(LoadItems);
 			UploadCommand = new DelegateCommand(RaiseUploadRequest, () => ParentItem.Type == AssetType.Container || ParentItem.Type == AssetType.Folder);
-
+            CreateFolderCommand = new DelegateCommand(RaiseCreateFolderRequest);
+            RenameCommand = new DelegateCommand(RaiseRenameRequest);
+		    DeleteCommand = new DelegateCommand(RaiseDeleteRequest);
 			ParentItem = new RootSearchViewModel(null);
 			CommonConfirmRequest = new InteractionRequest<Confirmation>();
+
+            InputNameDialogRequest = new InteractionRequest<ConditionalConfirmation>();
 		}
 
-		#endregion
+	    #endregion
 
 		public InteractionRequest<Confirmation> CommonConfirmRequest { get; private set; }
 
@@ -56,12 +65,25 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 		public DelegateCommand<object> OpenItemCommand { get; private set; }
 		public DelegateCommand RefreshCommand { get; private set; }
 		public DelegateCommand UploadCommand { get; private set; }
+        public DelegateCommand CreateFolderCommand { get; private set; }
+        public DelegateCommand DeleteCommand { get; private set; }
+	    public DelegateCommand RenameCommand { get; private set; }
 
-		#endregion
+	    #endregion
 
 		#region Properties
 
-		private AssetEntitySearchViewModelBase _parentItem;
+	    public string RootItemId
+	    {
+	        get { return _rootItemId; }
+	        set
+	        {
+	            _rootItemId = value;
+                ParentItem = new FolderSearchViewModel(new Folder{FolderId = value, Name = value}, null);
+	        }
+	    }
+
+	    private AssetEntitySearchViewModelBase _parentItem;
 		public AssetEntitySearchViewModelBase ParentItem
 		{
 			get
@@ -79,11 +101,20 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 		public ObservableCollection<AssetEntitySearchViewModelBase> SelectedFolderItems { get; private set; }
 		public ObservableCollection<AssetEntitySearchViewModelBase> AddressBarItems { get; private set; }
 
+	    public bool IsItemSelected
+	    {
+	        get { return _selectedItem != null; }
+	    }
+
+        public bool AssetPickMode { get; set; }
+
+	    private object _selectedItem;
 		public object ItemListSelectedItem
 		{
-			get { return null; }
+            get { return _selectedItem; }
 			set
 			{
+			    _selectedItem = value;
 				if (value is IFileSearchViewModel)
 				{
 					var itemVM = value as IFileSearchViewModel;
@@ -91,6 +122,8 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 				}
 				else
 					SelectedAsset = null;
+
+                OnPropertyChanged("IsItemSelected");
 			}
 		}
 
@@ -128,7 +161,7 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 
 		public bool Validate()
 		{
-			return SelectedAsset != null;
+            return !AssetPickMode || SelectedAsset != null;
 		}
 
 		#endregion
@@ -162,28 +195,23 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 
 		private void UpdateAddressBar()
 		{
-			var idx = AddressBarItems.IndexOf(ParentItem);
-			// going UP
-			if (idx > -1)
-			{
-				while (AddressBarItems.Count > idx + 1)
-					AddressBarItems.RemoveAt(AddressBarItems.Count - 1);
-			}
-			else // going DOWN
-			{
-				AddressBarItems.Add(ParentItem);
-			}
+            AddressBarItems.Clear();
+		    var parent = ParentItem;
+		    while (parent!= null)
+		    {
+                AddressBarItems.Insert(0, parent);
+                parent = parent.Parent;
+		    }
 		}
 
 		private void LoadItems()
 		{
 			ShowLoadingAnimation = true;
-
 			var items = new List<AssetEntitySearchViewModelBase>();
 			var worker = new BackgroundWorker();
-			worker.DoWork += (o, ea) =>
-			{
-				if (!string.IsNullOrEmpty(ParentItem.InnerItemID))
+            worker.DoWork += (o, ea) =>
+            {
+				if (!string.IsNullOrEmpty(ParentItem.InnerItemID) && ParentItem.InnerItemID != RootItemId)
 				{
 					items.Add(new RootSearchViewModel(ParentItem.Parent));
 				}
@@ -207,12 +235,13 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 					UpdateAddressBar();
 				});
 			};
+            
 			worker.RunWorkerCompleted += (o, ea) =>
 			{
 				ShowLoadingAnimation = false;
 			};
 
-			worker.RunWorkerAsync();
+		    worker.RunWorkerAsync();
 		}
 
 		private async void UpdateImagePreview()
@@ -253,13 +282,92 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 			}
 		}
 
+        private void RaiseCreateFolderRequest()
+        {
+            var inputVm = _inputNameVmFactory.GetViewModelInstance();
+            
+            var confirmation = new ConditionalConfirmation { Title = "Enter new folder name", Content = inputVm };
+
+            InputNameDialogRequest.Raise(confirmation, (x) =>
+            {
+                if (x.Confirmed)
+                {
+                    var inputNameDialogViewModel = x.Content as IInputNameDialogViewModel;
+                    if (inputNameDialogViewModel != null)
+                    {
+                        var newFolderName = inputNameDialogViewModel.InputText;
+                        _assetRepository.CreateFolder(newFolderName, ParentItem.InnerItemID);
+                        LoadItems();
+                    }
+                }
+            });
+        }
+
+        private void RaiseRenameRequest()
+        {
+            if (ItemListSelectedItem is FileSearchViewModel ||
+                ItemListSelectedItem is FolderSearchViewModel)
+            {
+                var item = (AssetEntitySearchViewModelBase)ItemListSelectedItem;
+                var title = ItemListSelectedItem is FileSearchViewModel
+                   ? "Enter new file name"
+                   : "Enter new folder name";
+                var inputVm = _inputNameVmFactory.GetViewModelInstance();
+                inputVm.InputText = item.DisplayName;
+                var confirmation = new ConditionalConfirmation {Title = title, Content = inputVm};
+
+                InputNameDialogRequest.Raise(confirmation, (x) =>
+                {
+                    if (x.Confirmed)
+                    {
+                        var inputNameDialogViewModel = x.Content as IInputNameDialogViewModel;
+                        if (inputNameDialogViewModel != null)
+                        {
+                            var newFolderName = inputNameDialogViewModel.InputText;
+                            _assetRepository.Rename(item.InnerItemID, newFolderName);
+                            LoadItems();
+                        }
+                    }
+                });
+            }
+        }
+
+        private void RaiseDeleteRequest()
+        {
+            if (ItemListSelectedItem is FileSearchViewModel ||
+                ItemListSelectedItem is FolderSearchViewModel)
+            {
+                var item = (AssetEntitySearchViewModelBase)ItemListSelectedItem;
+                var message = ItemListSelectedItem is FileSearchViewModel
+                    ? "Are you sure you want to delete file '{0}'?"
+                    : "Are you sure you want to delete folder '{0}' and all its files and subfolders?";
+
+                var confirmation = new ConditionalConfirmation
+                {
+                    Content = string.Format(message, item.DisplayName),
+                    Title = "Delete confirmation"
+                };
+
+                CommonConfirmRequest.Raise(confirmation, (x) =>
+                {
+                    if (x.Confirmed)
+                    {
+                        _assetRepository.Delete(item.InnerItemID);
+                        LoadItems();
+                    }
+                });
+            }
+        }
+
 		private void RaiseUploadRequest()
 		{
-			IEnumerable<FileType> fileTypes = new FileType[] {
+			IEnumerable<FileType> fileTypes = new[] {
                 new FileType("all files", ".*"),
                 new FileType("jpg image", ".jpg"),
                 new FileType("bmp image", ".bmp"),
-                new FileType("png image", ".png")
+                new FileType("png image", ".png"),
+                new FileType("Report", ".rld"),
+                new FileType("Report", ".rldc") 
             };
 
 			if (fileDialogService == null)
@@ -345,7 +453,9 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 		}
 
 		private string _namePathDelimiter;
-		private string NamePathDelimiter
+	    private string _rootItemId;
+
+	    private string NamePathDelimiter
 		{
 			get
 			{

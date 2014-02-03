@@ -54,6 +54,7 @@
         <Setter Property="Margin" Value="0,2"/>
         <Setter Property="FontSize" Value="13"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
+		<Setter Property="TextTrimming" Value="CharacterEllipsis" />
 	</Style>
 	
 	<!--TextBlocks-->
@@ -135,7 +136,7 @@
     <Style x:Key="Virto_GridView_ColumnHeader_ContainerStyle" TargetType="{x:Type GridViewColumnHeader}" BasedOn="{StaticResource Virto_GridView_ColumnHeader_Style}">
         <Style.Resources>
             <DataTemplate DataType="{x:Type system:String}">
-                <TextBlock Text="{Binding Converter={StaticResource textCaseConverter}}" FontWeight="Bold" FontSize="11" />
+				<TextBlock Text="{Binding Converter={StaticResource textCaseConverter}}" FontWeight="Bold" FontSize="11" TextTrimming="CharacterEllipsis" ToolTip="{Binding Converter={StaticResource textCaseConverter}}"/>
             </DataTemplate>
         </Style.Resources>
         <Setter Property="HorizontalContentAlignment" Value="Left"/>

@@ -162,3 +162,5 @@ $RECYCLE.BIN/
 /src/Presentation/FrontEnd/StoreWebApp/App_Data/Virto/search
 /src/Presentation/FrontEnd/StoreWebApp/App_Data/Virto/Storage
 /src/Presentation/FrontEnd/StoreWebApp/bin
+/Tools/ElasticSearch
+/VirtoCommerce.sln.GhostDoc.xml

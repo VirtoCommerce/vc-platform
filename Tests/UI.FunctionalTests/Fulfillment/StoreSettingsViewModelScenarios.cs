@@ -205,7 +205,7 @@ namespace CommerceFoundation.UI.FunctionalTests.Fulfillment
 			}
 
 
-			var detailStoreViewModel = new StoreViewModel(repositoryFactory, entityFactory, overviewVmFactory, localizationVmFactory, taxesVmFactory, paymentsVmFactory, navigationVmFactory, settingVmFactory, linkedStoresVmFactory, null,
+			var detailStoreViewModel = new StoreViewModel(repositoryFactory, entityFactory, overviewVmFactory, localizationVmFactory, taxesVmFactory, paymentsVmFactory, navigationVmFactory, settingVmFactory, linkedStoresVmFactory, null, null,
 				navigationManager, item);
 			Assert.NotNull(detailStoreViewModel);
 			detailStoreViewModel.InitializeForOpen();
@@ -255,7 +255,7 @@ namespace CommerceFoundation.UI.FunctionalTests.Fulfillment
 
 			//edit various properties
 
-			var detailStoreViewModel2 = new StoreViewModel(repositoryFactory, entityFactory, overviewVmFactory, localizationVmFactory, taxesVmFactory, paymentsVmFactory, navigationVmFactory, settingVmFactory, linkedStoresVmFactory, null,
+			var detailStoreViewModel2 = new StoreViewModel(repositoryFactory, entityFactory, overviewVmFactory, localizationVmFactory, taxesVmFactory, paymentsVmFactory, navigationVmFactory, settingVmFactory, linkedStoresVmFactory, null, null,
 			   navigationManager, item);
 			Assert.NotNull(detailStoreViewModel2);
 			detailStoreViewModel2.InitializeForOpen();

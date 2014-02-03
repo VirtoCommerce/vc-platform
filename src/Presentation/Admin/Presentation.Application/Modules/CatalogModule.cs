@@ -8,8 +8,10 @@ using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Foundation.AppConfig.Factories;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
+using VirtoCommerce.Foundation.Catalogs;
 using VirtoCommerce.Foundation.Catalogs.Factories;
 using VirtoCommerce.Foundation.Catalogs.Repositories;
+using VirtoCommerce.Foundation.Catalogs.Services;
 using VirtoCommerce.Foundation.Data.AppConfig;
 using VirtoCommerce.Foundation.Data.Catalogs;
 using VirtoCommerce.Foundation.Data.Importing;
@@ -131,6 +133,7 @@ namespace VirtoCommerce.ManagementClient.Catalog
 			_container.RegisterType<ICreateCategoryViewModel, CreateCategoryViewModel>();
 			_container.RegisterType<ICategoryOverviewStepViewModel, CategoryOverviewStepViewModel>();
 			_container.RegisterType<ICategoryPropertiesStepViewModel, CategoryPropertiesStepViewModel>();
+			_container.RegisterType<ICategorySeoViewModel, CategorySeoViewModel>();
 
 			//Create Item Wizard
 			_container.RegisterType<ICreateItemViewModel, CreateItemViewModel>();
@@ -138,6 +141,7 @@ namespace VirtoCommerce.ManagementClient.Catalog
 			_container.RegisterType<IItemOverviewStepViewModel, ItemOverviewStepViewModel>();
 			_container.RegisterType<IItemPropertiesStepViewModel, ItemPropertiesStepViewModel>();
 			_container.RegisterType<IItemPricingStepViewModel, ItemPricingStepViewModel>();
+			_container.RegisterType<IItemSeoViewModel, ItemSeoViewModel>();
 
 			// tree
 			_container.RegisterType<ITreeCatalogViewModel, TreeCatalogViewModel>();
@@ -154,6 +158,7 @@ namespace VirtoCommerce.ManagementClient.Catalog
 			_container.RegisterType<ICategoryViewModel, CategoryViewModel>();
 			_container.RegisterType<ILinkedCategoryViewModel, LinkedCategoryViewModel>();
 			_container.RegisterType<IItemViewModel, ItemViewModel>();
+			_container.RegisterType<ICatalogOutlineBuilder, CatalogOutlineBuilder>();
 
 			_container.RegisterType<IVirtualCatalogViewModel, VirtualCatalogViewModel>();
 

@@ -1,46 +1,62 @@
-﻿using System;
+﻿#region Usings
+
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Omu.ValueInjecter;
+using VirtoCommerce.Foundation.AppConfig.Model;
+using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Catalogs.Factories;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Catalogs.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
+using VirtoCommerce.Foundation.Stores.Model;
+using VirtoCommerce.Foundation.Stores.Repositories;
 using VirtoCommerce.ManagementClient.Catalog.Model;
 using VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Interfaces;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
 using catalogModel = VirtoCommerce.Foundation.Catalogs.Model;
 
+#endregion
+
 namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementations
 {
 	public class CategoryViewModel : ViewModelDetailAndWizardBase<Category>, ICategoryViewModel
 	{
+		#region Dependencies
+		#endregion
 		private readonly ITreeCategoryViewModel _parentTreeVM;
 		private readonly IRepositoryFactory<ICatalogRepository> _repositoryFactory;
 		private readonly IViewModelsFactory<IPropertyValueBaseViewModel> _propertyValueVmFactory;
+		private readonly IViewModelsFactory<ICategorySeoViewModel> _seoVmFactory;
+		private readonly IRepositoryFactory<IStoreRepository> _storeRepositoryFactory;
 		private readonly INavigationManager _navManager;
 
-		private readonly CatalogBase _parentCatalog;
+		protected readonly CatalogBase _parentCatalog;
 
 		/// <summary>
 		/// public. For viewing
 		/// </summary>
-		public CategoryViewModel(IViewModelsFactory<IPropertyValueBaseViewModel> propertyValueVmFactory, ICatalogEntityFactory entityFactory,
+		public CategoryViewModel(IRepositoryFactory<IStoreRepository> storeRepositoryFactory, IViewModelsFactory<ICategorySeoViewModel> seoVmFactory, IViewModelsFactory<IPropertyValueBaseViewModel> propertyValueVmFactory, ICatalogEntityFactory entityFactory,
 			IRepositoryFactory<ICatalogRepository> repositoryFactory, Category item,
 			ITreeCategoryViewModel parentTreeVM, INavigationManager navManager)
 			: this(repositoryFactory, propertyValueVmFactory, entityFactory, item, CatalogHomeViewModel.GetCatalog(parentTreeVM), false)
 		{
 			_parentTreeVM = parentTreeVM;
 			_navManager = navManager;
+			_seoVmFactory = seoVmFactory;
+			_storeRepositoryFactory = storeRepositoryFactory;
+
 			ViewTitle = new ViewTitleBase
 				{
 					Title = "Category",
@@ -188,6 +204,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 		private const int TabIndexOverview = 0;
 		private const int TabIndexProperties = 1;
+		private const int TabIndexSeo = 2;
 
 		private int _selectedTabIndex;
 		public int SelectedTabIndex
@@ -232,6 +249,8 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			InitializePropertySets();
 
 			InitializePropertiesAndValues();
+
+			InitSeoStep();
 		}
 
 		private NavigationItem _navigationData;
@@ -269,12 +288,24 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		{
 			InnerItem.PropertyChanged += InnerItem_PropertyChanged;
 			//InnerItem.CategoryPropertyValues.CollectionChanged += ViewModel_PropertyChanged;
+
+			if (SeoStepViewModel != null)
+			{
+				if (SeoStepViewModel.SeoKeywords != null)
+					SeoStepViewModel.SeoKeywords.ForEach(keyword => keyword.PropertyChanged += ViewModel_PropertyChanged);
+			}
 		}
 
 		protected override void CloseSubscriptionUI()
 		{
 			InnerItem.PropertyChanged -= InnerItem_PropertyChanged;
 			//InnerItem.CategoryPropertyValues.CollectionChanged -= ViewModel_PropertyChanged;
+
+			if (SeoStepViewModel != null)
+			{
+				if (SeoStepViewModel.SeoKeywords != null)
+					SeoStepViewModel.SeoKeywords.ForEach(keyword => keyword.PropertyChanged -= ViewModel_PropertyChanged);
+			}
 		}
 
 		protected override bool IsValidForSave()
@@ -303,15 +334,27 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			{
 				SelectedTabIndex = TabIndexProperties;
 			}
+			
+			var seoIsValid = true;
+			if (SeoStepViewModel != null)
+			{
+				seoIsValid = SeoStepViewModel.IsValid;
+				if (!seoIsValid)
+					SelectedTabIndex = TabIndexSeo;
+			}
 
-			return result && isPropertyValuesValid && isCodeValid;
+			return result && isPropertyValuesValid && isCodeValid && seoIsValid;
 		}
 
 		protected override void AfterSaveChangesUI()
 		{
+			if (SeoStepViewModel != null)
+			{
+				SeoStepViewModel.SaveSeoKeywordsChanges();
+			}
+
 			// just basic properties inject is enough. Injecting collections can generate repository errors.
 			OriginalItem.InjectFrom(InnerItem);
-
 			_parentTreeVM.RefreshUI();
 		}
 
@@ -351,6 +394,8 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 		protected virtual void InnerItem_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
 		{
+			if (e.PropertyName == "Code")
+				SeoStepViewModel.ChangeKeywordValue(InnerItem.Code);
 			if (e.PropertyName == "PropertySetId")
 			{
 				SetupPropertiesAndValues(InnerItem.PropertySet, InnerItem.CategoryPropertyValues, InnerItemCatalogLanguages, PropertiesAndValues, IsWizardMode);
@@ -362,7 +407,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 		public bool IsCatalogLanguageFilteringEnabled { get { return _parentCatalog is catalogModel.Catalog; } }
 		public string FilterLanguage { get; private set; }
-		public List<string> InnerItemCatalogLanguages { get; private set; }
+		public List<string> InnerItemCatalogLanguages { get; protected set; }
 		public ObservableCollection<PropertyAndPropertyValueBase> PropertiesAndValues { get; protected set; }
 		public DelegateCommand<string> PropertiesLocalesFilterCommand { get; private set; }
 
@@ -386,7 +431,27 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			}
 			else
 			{
-				InnerItemCatalogLanguages = new List<string> { _parentCatalog.DefaultLanguage };
+				using (var storeRepository = _storeRepositoryFactory.GetRepositoryInstance())
+				{
+					var languages =
+						storeRepository.Stores.Where(store => store.Catalog == _parentCatalog.CatalogId)
+										.Expand(store => store.Languages).ToList();
+
+					var customComparer = new PropertyComparer<StoreLanguage>("LanguageCode");
+					var lang = languages.SelectMany(x => x.Languages).Distinct(customComparer);
+
+					InnerItemCatalogLanguages = new List<string>();
+					if (lang.Any())
+					{
+						foreach (var l in lang)
+						{
+							InnerItemCatalogLanguages.Add(l.LanguageCode);
+						}
+					}
+				}
+
+				if (!InnerItemCatalogLanguages.Any(x => x.Equals(_parentCatalog.DefaultLanguage, StringComparison.InvariantCultureIgnoreCase)))
+					InnerItemCatalogLanguages.Add(_parentCatalog.DefaultLanguage);
 			}
 
 			OnUIThread(() =>
@@ -399,6 +464,8 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 				SetupPropertiesAndValues(InnerItem.PropertySet, InnerItem.CategoryPropertyValues, InnerItemCatalogLanguages, PropertiesAndValues, IsWizardMode);
 			});
 		}
+
+
 
 		// function duplicated in ItemViewModel
 		private void RaisePropertiesLocalesFilter(string locale)
@@ -417,6 +484,22 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 			FilterLanguage = locale;
 			OnPropertyChanged("FilterLanguage");
+		}
+
+		#endregion
+
+		#region SEO tab
+
+		public ICategorySeoViewModel SeoStepViewModel { get; private set; }
+
+		protected void InitSeoStep()
+		{
+			var itemParameter = new KeyValuePair<string, object>("item", InnerItem);
+			var languagesParameter = new KeyValuePair<string, object>("languages", InnerItemCatalogLanguages);
+			var parentCat = new KeyValuePair<string, object>("parentCatalog", _parentCatalog);
+			SeoStepViewModel =
+					_seoVmFactory.GetViewModelInstance(itemParameter, languagesParameter, parentCat);
+			OnPropertyChanged("SeoStepViewModel");
 		}
 
 		#endregion

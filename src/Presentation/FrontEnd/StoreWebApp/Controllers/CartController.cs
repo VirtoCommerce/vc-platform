@@ -17,7 +17,6 @@ namespace VirtoCommerce.Web.Controllers
     /// <summary>
     /// Class CartController.
     /// </summary>
-    [Localize]
     public class CartController : ControllerBase
     {
         #region Private Fields

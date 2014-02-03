@@ -1,4 +1,5 @@
-﻿using Microsoft.WindowsAzure;
+﻿using System.Globalization;
+using Microsoft.WindowsAzure;
 using System;
 using System.Linq;
 using System.Threading;
@@ -166,7 +167,7 @@ namespace VirtoCommerce.Web.Client.Services.Security
         /// </returns>
         public string GetUserId(string userName)
         {
-            return WebSecurity.GetUserId(userName).ToString();
+            return WebSecurity.GetUserId(userName).ToString(CultureInfo.InvariantCulture);
         }
 
         /// <summary>
@@ -190,7 +191,28 @@ namespace VirtoCommerce.Web.Client.Services.Security
         /// <returns><c>true</c> if success, <c>false</c> otherwise.</returns>
         public bool ResetPassword(string userName, string newPassword, string resetToken = null)
         {
-            resetToken = resetToken ?? WebSecurity.GeneratePasswordResetToken(userName);
+            resetToken = resetToken ?? GeneratePasswordResetToken(userName);
+            return ResetPasswordWithToken(resetToken, newPassword);
+        }
+
+        /// <summary>
+        /// Generates the password reset token.
+        /// </summary>
+        /// <param name="userName">Name of the user.</param>
+        /// <returns></returns>
+        public string GeneratePasswordResetToken(string userName)
+        {
+            return WebSecurity.GeneratePasswordResetToken(userName);
+        }
+
+        /// <summary>
+        /// Resets the password by using a password reset token.
+        /// </summary>
+        /// <param name="resetToken">The reset token.</param>
+        /// <param name="newPassword">The new password.</param>
+        /// <returns></returns>
+        public bool ResetPasswordWithToken(string resetToken, string newPassword)
+        {
             return WebSecurity.ResetPassword(resetToken, newPassword);
         }
 

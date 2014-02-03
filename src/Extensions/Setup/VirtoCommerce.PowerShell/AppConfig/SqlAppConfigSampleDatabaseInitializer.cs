@@ -21,6 +21,7 @@ namespace VirtoCommerce.PowerShell.AppConfig
 			// fill db with sample data
             RunCommand(context, "Statistic.sql", "AppConfig");
             RunCommand(context, "DisplayTemplateMapping.sql", "AppConfig");
+            RunCommand(context, "SeoUrlKeyword.sql", "AppConfig");
         }
 	}
 }

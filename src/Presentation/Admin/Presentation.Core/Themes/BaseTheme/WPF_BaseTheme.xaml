@@ -1886,7 +1886,8 @@
                                    Opacity="0" IsHitTestVisible="false"/>
 						<ContentPresenter Margin="{TemplateBinding Padding}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Content="{TemplateBinding Content}" 
-                                          ContentTemplate="{TemplateBinding ContentTemplate}" Cursor="{TemplateBinding Cursor}"/>
+                                          ContentTemplate="{TemplateBinding ContentTemplate}" Cursor="{TemplateBinding Cursor}">
+						</ContentPresenter>
 						<Rectangle x:Name="RightGridLine" VerticalAlignment="Stretch" Width="1" Grid.Column="1" />
 					</Grid>
 				</ControlTemplate>
@@ -1894,6 +1895,7 @@
 		</Setter>
 	</Style>
 
+	
 	<!--DataGrid Row-->
 	<Style x:Key='Virto_Base_DataGridRow_Style' TargetType="{x:Type DataGridRow}">
 		<Setter Property="Background" Value="Transparent" />
