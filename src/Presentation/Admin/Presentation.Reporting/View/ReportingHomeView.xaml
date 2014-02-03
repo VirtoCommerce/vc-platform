@@ -69,7 +69,7 @@
 
             <!--Toolbar-->
             <ItemsControl Grid.Row="0" Style="{StaticResource Virto_ToolbarItemsControl_Style}">
-                <controls:MetroButton x:Name="btnUpload" Command="{Binding UploadReportCommand}" Header="MANAGE" ToolTip="Refresh" Margin="3,0,28,0" >
+                <controls:MetroButton x:Name="btnManage" Command="{Binding UploadReportCommand}" Header="MANAGE" ToolTip="Refresh" Margin="3,0,28,0" >
                     <controls:VectorImage ImageResource="{StaticResource Icon_Button_Manage}" Width="14" Height="14" />
                 </controls:MetroButton>
                 <controls:MetroButton x:Name="btnGenerate" Command="{Binding GenerateReportCommand}" CommandParameter="{Binding SelectedItem, ElementName=ReportItemsList}" Header="GENERATE" ToolTip="Refresh" Margin="3,0,28,0" >
