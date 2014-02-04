@@ -433,21 +433,6 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.ReportViewer.11.0">
-      <Visible>False</Visible>
-      <ProductName>Microsoft Report Viewer 2012 Runtime</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.SqlServer.SQLSysClrTypes.11.0.x64">
-      <Visible>False</Visible>
-      <ProductName>Microsoft® System CLR Types for SQL Server® 2012 %28x64%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.SqlServer.SQLSysClrTypes.11.0.x86">
-      <Visible>False</Visible>
-      <ProductName>Microsoft® System CLR Types for SQL Server® 2012 %28x86%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Windows.Installer.4.5">
       <Visible>False</Visible>
       <ProductName>Windows Installer 4.5</ProductName>
