@@ -97,8 +97,8 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 			{
 				if (repository != null)
 				{
-					if (!string.IsNullOrEmpty(OriginalLanguage) && OriginalLanguage.Length == 5 &&
-						!string.IsNullOrEmpty(TranslateLanguage) && TranslateLanguage.Length == 5)
+					if (!string.IsNullOrEmpty(OriginalLanguage) && OriginalLanguage.Length >= 2 &&
+						!string.IsNullOrEmpty(TranslateLanguage) && TranslateLanguage.Length >= 2)
 					{
 						var names = repository.Localizations.ToList().Select(x => x.Name).Distinct();
 						var translateItems =
