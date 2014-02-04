@@ -337,6 +337,20 @@ button, input.button, x:-moz-any-link {
         filter: alpha(opacity=90);
     }
 
+    #throbber .curtain-content 
+{
+    position:absolute;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+}
+#throbber .curtain-content div.progress {
+    text-align:center;
+    margin-top:150px;
+    color:White;
+}
+
 .message, .validation-summary-errors {
     margin: 10px 0 4px 0;
     padding: 4px;
@@ -522,11 +536,9 @@ a {
 }
 
     .console.big {
-        display: block;
-        height: 100%;
-        margin: 80px auto;
-        padding: 50px 100px 100px;
-        position: absolute;
-        top: 0;
-        height: 50%;
+display: block;
+    left: 31%;
+        padding: 50px;
+    position: absolute;
+        text-align: left;
     }

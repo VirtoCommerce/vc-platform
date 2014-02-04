@@ -104,12 +104,16 @@
                                 if (result.Success)
                                 {
                                     //The time out is needed for connection to be established with signalR
-                                    window.setTimeout(function() {
+                                    window.setTimeout(function ()
+                                    {
 
-                                        function waitForConnection() {
-                                            if ($.connection.hub.state != $.connection.connectionState.connected) {
+                                        function waitForConnection()
+                                        {
+                                            if ($.connection.hub.state != $.connection.connectionState.connected)
+                                            {
                                                 window.setTimeout(waitForConnection(), 100);
-                                            } else {
+                                            } else
+                                            {
                                                 setup.server.doWork(model);
                                             }
                                         }
@@ -128,7 +132,7 @@
                             {
                                 $(".console").show();
                                 $("#throbber").hide();
-                                
+
                                 if (t === "timeout")
                                 {
                                     alert("Timeout!");
@@ -231,14 +235,14 @@
     <div id="throbber">
         <div class="curtain"></div>
         <div class="curtain-content">
-            @*            <div>
+            <div class="progress">
                 <h1 id="setUpHeader">@Resource.LongProcessMessage</h1>
                 <p>
                     <img src="@Href("../../content/images/inprogress.gif")" alt="" />
                 </p>
-            </div>*@
-            
-            <div class="console big"></div>
+                
+               <div class="console big"></div>
+            </div>
         </div>
     </div>
 </body>

@@ -46,12 +46,12 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Helpers
             try
             {
                 SetupDb(ConnectionHelper.SqlConnectionString, model.SetupSampleData);
-                Trace.TraceInformation("Database successfully created.");
+                SendMessageLine("Database successfully created.");
                 UpdateIndex(model);
             }
             catch (Exception ex)
             {
-                Trace.TraceError(ex.Message);
+                SendMessageLine(ex.Message);
                 Clients.All.failure(ex.Message);
                 return;
             }
@@ -68,31 +68,31 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Helpers
         {
             var dataFolder = @"App_Data\Virto\SampleData\Database";
             dataFolder = Path.Combine(System.Web.HttpContext.Current.Request.PhysicalApplicationPath ?? "/", dataFolder);
-            Trace.TraceInformation("Setting sample data path: {0}", dataFolder);
+            SendMessageLine("Setting sample data path: {0}", dataFolder);
             // Configure database   
-            Trace.TraceInformation("Creating database and system tables.");
+            SendMessageLine("Creating database and system tables.");
             new PublishAppConfigDatabase().Publish(connectionString, null, installSamples); // publish AppConfig first as it contains system tables
-            Trace.TraceInformation("Creating 'Store' module tables.");
+            SendMessageLine("Creating 'Store' module tables.");
             new PublishStoreDatabase().Publish(connectionString, null, installSamples);
-            Trace.TraceInformation("Creating 'Catalog' module tables.");
+            SendMessageLine("Creating 'Catalog' module tables.");
             new PublishCatalogDatabase().Publish(connectionString, dataFolder, installSamples);
-            Trace.TraceInformation("Creating 'Import' module tables.");
+            SendMessageLine("Creating 'Import' module tables.");
             new PublishImportDatabase().Publish(connectionString, dataFolder, installSamples);
-            Trace.TraceInformation("Creating 'Customer' module tables.");
+            SendMessageLine("Creating 'Customer' module tables.");
             new PublishCustomerDatabase().Publish(connectionString, null, installSamples);
-            Trace.TraceInformation("Creating 'Inventory' module tables.");
+            SendMessageLine("Creating 'Inventory' module tables.");
             new PublishInventoryDatabase().Publish(connectionString, null, installSamples);
-            Trace.TraceInformation("Creating 'Log' module tables.");
+            SendMessageLine("Creating 'Log' module tables.");
             new PublishLogDatabase().Publish(connectionString, null, installSamples);
-            Trace.TraceInformation("Creating 'Marketing' module tables.");
+            SendMessageLine("Creating 'Marketing' module tables.");
             new PublishMarketingDatabase().Publish(connectionString, null, installSamples);
-            Trace.TraceInformation("Creating 'Order' module tables.");
+            SendMessageLine("Creating 'Order' module tables.");
             new PublishOrderDatabase().Publish(connectionString, null, installSamples);
-            Trace.TraceInformation("Creating 'Review' module tables.");
+            SendMessageLine("Creating 'Review' module tables.");
             new PublishReviewDatabase().Publish(connectionString, null, installSamples);
-            Trace.TraceInformation("Creating 'Search' module tables.");
+            SendMessageLine("Creating 'Search' module tables.");
             new PublishSearchDatabase().Publish(connectionString, null, installSamples);
-            Trace.TraceInformation("Creating 'Security' module tables.");
+            SendMessageLine("Creating 'Security' module tables.");
             new PublishSecurityDatabase().Publish(connectionString, dataFolder, installSamples);
         }
 
@@ -108,6 +108,7 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Helpers
                 searchConnection = new SearchConnection(dataSource, searchConnection.Scope, searchConnection.Provider);
             }
 
+            SendMessageLine("Updating search index...");
             new UpdateSearchIndex().Index(searchConnection, model.ConnectionStringBuilder.ConnectionString, null, true);
         }
     }

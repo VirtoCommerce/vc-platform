@@ -602,6 +602,7 @@
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Properties\PublishProfiles\testwebpi.pubxml" />
     <None Include="Properties\PublishProfiles\WebPI.pubxml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
     <Content Include="Scripts\cloudzoom.js" />
