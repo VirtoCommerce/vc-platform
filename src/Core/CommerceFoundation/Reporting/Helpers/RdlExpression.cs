@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using Microsoft.VisualBasic;
 
 namespace VirtoCommerce.Foundation.Reporting.Helpers
 {
@@ -12,45 +13,194 @@ namespace VirtoCommerce.Foundation.Reporting.Helpers
     {
         public class Functions
         {
+            #region Date/Time functions
+
+            /// <summary>
+            /// Returns a Date value containing the current date and time according to your system.  
+            /// </summary>
+            /// <returns></returns>
             public static DateTime Now()
             {
                 return DateTime.Now;
             }
 
+            /// <summary>
+            /// Returns or sets a Date value containing the current date according to your system.
+            /// </summary>
+            /// <returns></returns>
             public static DateTime Today()
             {
                 return DateTime.Today;
             }
 
-            public static int Day(DateTime date)
-            {
-                return date.Day;
-            }
-
+            /// <summary>
+            /// Returns a Date value containing a date and time value to which a specified time interval has been added.
+            /// </summary>
+            /// <param name="interval"></param>
+            /// <param name="value"></param>
+            /// <param name="dateTime"></param>
+            /// <returns></returns>
             public static DateTime DateAdd(string interval, decimal value, DateTime dateTime)
             {
-                return DateAdd(interval, (double)value, dateTime);
+                return DateAdd(interval, (double) value, dateTime);
             }
 
+            /// <summary>
+            /// Returns a Date value containing a date and time value to which a specified time interval has been added.
+            /// </summary>
+            /// <param name="interval"></param>
+            /// <param name="value"></param>
+            /// <param name="dateTime"></param>
+            /// <returns></returns>
             public static DateTime DateAdd(string interval, int value, DateTime dateTime)
             {
-                return DateAdd(interval, (double)value, dateTime);
+                return DateAdd(interval, (double) value, dateTime);
             }
 
+            /// <summary>
+            /// Returns a Date value containing a date and time value to which a specified time interval has been added.
+            /// </summary>
+            /// <param name="interval"></param>
+            /// <param name="value"></param>
+            /// <param name="dateTime"></param>
+            /// <returns></returns>
             public static DateTime DateAdd(string interval, double value, DateTime dateTime)
             {
-                switch (interval)
-                {
-                    case "d":
-                        return dateTime.AddDays((double)value);
-                    case "m":
-                        return dateTime.AddMonths((int)value);
-                    case "yyyy":
-                        return dateTime.AddYears((int)value);
-                }
-
-                return dateTime;
+                return DateAndTime.DateAdd(interval, value, dateTime);
             }
+
+            /// <summary>
+            /// Returns a Date value representing a specified year, month, and day, with the time information set to midnight (00:00:00).
+            /// </summary>
+            /// <param name="year"></param>
+            /// <param name="month"></param>
+            /// <param name="day"></param>
+            /// <returns></returns>
+            public static DateTime DateSerial(int year, int month, int day)
+            {
+                return DateAndTime.DateSerial(year, month, day);
+            }
+
+            /// <summary>
+            /// Returns or sets a String value representing the current date according to your system.
+            /// </summary>
+            /// <returns></returns>
+            public static string DateString()
+            {
+                return DateAndTime.DateString;
+            }
+
+            /// <summary>
+            /// Returns a Date value containing the date information represented by a string, with the time information set to midnight (00:00:00). 
+            /// </summary>
+            /// <returns></returns>
+            public static DateTime DateValue(string value)
+            {
+                return DateAndTime.DateValue(value);
+            }
+
+            /// <summary>
+            /// Returns a Long value specifying the number of time intervals between two Date values.  
+            /// </summary>
+            /// <param name="dateTime1"></param>
+            /// <param name="dateTime2"></param>
+            /// <returns></returns>
+            public static long DateDiff(string interval, DateTime dateTime1, DateTime dateTime2)
+            {
+                return DateAndTime.DateDiff(interval, dateTime1, dateTime2);
+            }
+
+            /// <summary>
+            /// Returns a Date value containing a date and time value to which a specified time interval has been added. 
+            /// </summary>
+            /// <param name="interval"></param>
+            /// <param name="dateTime"></param>
+            /// <returns></returns>
+            public static int DatePart(string interval, DateTime dateTime)
+            {
+                return DateAndTime.DatePart(interval, dateTime);
+            }
+
+            /// <summary>
+            /// Returns an Integer value from 1 through 31 representing the day of the month.
+            /// </summary>
+            /// <param name="dateTime"></param>
+            /// <returns></returns>
+            public static int Day(DateTime dateTime)
+            {
+                return dateTime.Day;
+            }
+
+            /// <summary>
+            /// Returns a string expression representing a date/time value.
+            /// </summary>
+            /// <returns></returns>
+            public static string FormatDateTime(DateTime dateTime, DateFormat format)
+            {
+                return string.Empty;
+            }
+
+            /// <summary>
+            /// Returns an Integer value from 0 through 23 representing the hour of the day.
+            /// </summary>
+            /// <param name="dateTime"></param>
+            /// <returns></returns>
+            public static int Hour(DateTime dateTime)
+            {
+                return dateTime.Hour;
+            }
+
+            /// <summary>
+            /// Returns an Integer value from 0 through 23 representing the hour of the day.
+            /// </summary>
+            /// <param name="dateTime"></param>
+            /// <returns></returns>
+            public static int Minute(DateTime dateTime)
+            {
+                return dateTime.Minute;
+            }
+
+            /// <summary>
+            /// Returns an Integer value from 1 through 12 representing the month of the year. 
+            /// </summary>
+            /// <param name="dateTime"></param>
+            /// <returns></returns>
+            public static int Month(DateTime dateTime)
+            {
+                return dateTime.Month;
+            }
+
+            /// <summary>
+            /// Returns a String value containing the name of the specified month. 
+            /// </summary>
+            /// <param name="dateTime"></param>
+            /// <returns></returns>
+            public static string MonthName(DateTime dateTime, bool abbriviate)
+            {
+                return DateAndTime.MonthName(dateTime.Month, abbriviate);
+            }
+
+            /// <summary>
+            /// Returns an Integer value from 0 through 59 representing the second of the minute.  
+            /// </summary>
+            /// <param name="dateTime"></param>
+            /// <returns></returns>
+            public static int Second(DateTime dateTime)
+            {
+                return dateTime.Second;
+            }
+
+            /// <summary>
+            /// Returns an Integer value from 1 through 9999 representing the year.     
+            /// </summary>
+            /// <param name="dateTime"></param>
+            /// <returns></returns>
+            public static int Year(DateTime dateTime)
+            {
+                return dateTime.Year;
+            }
+
+            #endregion
 
             public static string Join(string text1, string text2)
             {
@@ -426,6 +576,7 @@ namespace VirtoCommerce.Foundation.Reporting.Helpers
                         {
                             args.Add(paramExpr);
                         }
+
                         return Expression.Call(typeof(Functions), function, null, args.ToArray());
 
                     case EndingReason.ListSeparator:
