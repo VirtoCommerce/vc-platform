@@ -42,7 +42,7 @@ namespace VirtoCommerce.Foundation.Reporting.Helpers
             /// <returns></returns>
             public static DateTime DateAdd(string interval, decimal value, DateTime dateTime)
             {
-                return DateAdd(interval, (double)value, dateTime);
+                return DateAdd(interval, (double) value, dateTime);
             }
 
             /// <summary>
@@ -54,7 +54,7 @@ namespace VirtoCommerce.Foundation.Reporting.Helpers
             /// <returns></returns>
             public static DateTime DateAdd(string interval, int value, DateTime dateTime)
             {
-                return DateAdd(interval, (double)value, dateTime);
+                return DateAdd(interval, (double) value, dateTime);
             }
 
             /// <summary>
@@ -67,6 +67,36 @@ namespace VirtoCommerce.Foundation.Reporting.Helpers
             public static DateTime DateAdd(string interval, double value, DateTime dateTime)
             {
                 return DateAndTime.DateAdd(interval, value, dateTime);
+            }
+
+            /// <summary>
+            /// Returns a Date value representing a specified year, month, and day, with the time information set to midnight (00:00:00).
+            /// </summary>
+            /// <param name="year"></param>
+            /// <param name="month"></param>
+            /// <param name="day"></param>
+            /// <returns></returns>
+            public static DateTime DateSerial(int year, int month, int day)
+            {
+                return DateAndTime.DateSerial(year, month, day);
+            }
+
+            /// <summary>
+            /// Returns or sets a String value representing the current date according to your system.
+            /// </summary>
+            /// <returns></returns>
+            public static string DateString()
+            {
+                return DateAndTime.DateString;
+            }
+
+            /// <summary>
+            /// Returns a Date value containing the date information represented by a string, with the time information set to midnight (00:00:00). 
+            /// </summary>
+            /// <returns></returns>
+            public static DateTime DateValue(string value)
+            {
+                return DateAndTime.DateValue(value);
             }
 
             /// <summary>
@@ -99,6 +129,15 @@ namespace VirtoCommerce.Foundation.Reporting.Helpers
             public static int Day(DateTime dateTime)
             {
                 return dateTime.Day;
+            }
+
+            /// <summary>
+            /// Returns a string expression representing a date/time value.
+            /// </summary>
+            /// <returns></returns>
+            public static string FormatDateTime(DateTime dateTime, DateFormat format)
+            {
+                return string.Empty;
             }
 
             /// <summary>
