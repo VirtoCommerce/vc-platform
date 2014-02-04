@@ -23,12 +23,12 @@
     <Utf8Output>true</Utf8Output>
     <ExpressionBlendVersion>4.0.20525.0</ExpressionBlendVersion>
     <TrackFileAccess>false</TrackFileAccess>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <PublishUrl>c:\!\publish\</PublishUrl>
+    <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
-    <InstallFrom>Unc</InstallFrom>
+    <InstallFrom>Web</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
     <UpdateMode>Foreground</UpdateMode>
     <UpdateInterval>7</UpdateInterval>
@@ -36,7 +36,7 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>true</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>\\localhost\Publish\</InstallUrl>
+    <InstallUrl>http://assets.virtocommerce.com/software/1.0/admin/</InstallUrl>
     <SupportUrl>http://support.virtocommerce.com</SupportUrl>
     <ErrorReportUrl>http://virtocommerce.com</ErrorReportUrl>
     <ProductName>Virto Commerce Manager</ProductName>
@@ -405,7 +405,7 @@
       <Name>Presentation.Order</Name>
     </ProjectReference>
     <ProjectReference Include="..\Presentation.Reporting\Presentation.Reporting.csproj">
-      <Project>{2044b7a5-4050-4745-a430-6e29d7ab47c9}</Project>
+      <Project>{2044B7A5-4050-4745-A430-6E29D7AB47C9}</Project>
       <Name>Presentation.Reporting</Name>
     </ProjectReference>
     <ProjectReference Include="..\Presentation.Reviews\Presentation.Reviews.csproj">
