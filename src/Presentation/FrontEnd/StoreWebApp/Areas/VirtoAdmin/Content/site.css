@@ -347,7 +347,7 @@ button, input.button, x:-moz-any-link {
 }
 #throbber .curtain-content div.progress {
     text-align:center;
-    margin-top:150px;
+    padding: 250px;
     color:White;
 }
 
@@ -535,10 +535,3 @@ a {
     display: none;
 }
 
-    .console.big {
-display: block;
-    left: 31%;
-        padding: 50px;
-    position: absolute;
-        text-align: left;
-    }

@@ -55,7 +55,12 @@
                     $(".console").append("<br/>");
                 }
                 $(".console").append(message);
-                $(".console.big").animate({ scrollTop: $(".console.big")[0].scrollHeight }, 'fast');
+                $(".console").animate({ scrollTop: $(".console")[0].scrollHeight }, 'fast');
+            };
+            
+            setup.client.friendlyMessage = function (message) {
+                setup.client.traceMessage(message, true);
+                $('#setUpHeader').text(message);
             };
 
             setup.client.success = function (message)
@@ -69,14 +74,6 @@
                 $("#throbber").hide();
                 $(".validation-summary-errors").append("<p>" + message + "</p>");
                 $(".validation-summary-errors").show();
-                $(".console").show();
-            };
-
-
-            setup.client.otherMessage = function (message, selector)
-            {
-                $(selector).append("<p>" + message + "</p>");
-                $(selector).show();
             };
 
             // Start the connection.
@@ -91,8 +88,8 @@
                     {
 
                         $("#throbber").show();
-                        //$(".console.big").show();
                         $(".console").empty();
+                        $(".console").show();
                         $(".validation-summary-errors").empty();
                         $.ajax({
                             url: this.action,
@@ -240,8 +237,6 @@
                 <p>
                     <img src="@Href("../../content/images/inprogress.gif")" alt="" />
                 </p>
-                
-               <div class="console big"></div>
             </div>
         </div>
     </div>

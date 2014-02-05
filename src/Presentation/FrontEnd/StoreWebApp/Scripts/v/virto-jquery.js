@@ -79,7 +79,7 @@
 
         url = url || window.location.href || '';
 
-        if (params != undefined && params.length > 0)
+        if (params != undefined)
         {
             url = url.match(/\?/) ? url : url + '?';
 
