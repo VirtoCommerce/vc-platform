@@ -1408,7 +1408,7 @@ namespace VirtoCommerce.Web.Controllers
         /// <summary>
         /// After user has logged in do some actions
         /// </summary>
-        private void OnPostLogon(string userName, string csrUserName = null)
+        public void OnPostLogon(string userName, string csrUserName = null)
         {
             var customerId = _webSecurity.GetUserId(userName);
             var contact = _userClient.GetCustomer(customerId.ToString(CultureInfo.InvariantCulture), false);
@@ -1459,7 +1459,7 @@ namespace VirtoCommerce.Web.Controllers
         /// <param name="model">The registration model.</param>
         /// <param name="errorMessage">The error message that occured during regustration.</param>
         /// <returns>true when user is registered and logged in</returns>
-        private bool Register(RegisterModel model, out string errorMessage)
+        public bool Register(RegisterModel model, out string errorMessage)
         {
             errorMessage = string.Empty;
 

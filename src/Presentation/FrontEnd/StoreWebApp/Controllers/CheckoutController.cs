@@ -202,90 +202,94 @@ namespace VirtoCommerce.Web.Controllers
 		        ModelState.AddModelError("", ex.Message);
 				return View("Index", checkoutModel);
 	        }
+
 	        Ch.SaveChanges();
 
-            // Create order
+		    if (UserHelper.CustomerSession.IsRegistered)
+		    {
+		        var orgs = _userClient.GetOrganizationsForCurrentUser();
+		        if (orgs != null)
+		        {
+		            var org = orgs.SingleOrDefault();
+		            if (org != null)
+		                Ch.Cart.OrganizationId = org.MemberId;
+		        }
+
+		        var user = _userClient.GetCurrentCustomer(false);
+
+
+		        // Save addresses to customer address book
+		        if (checkoutModel.AddressBook.SaveBillingAddress)
+		        {
+		            var billing = ConvertToCustomerAddress(checkoutModel.BillingAddress.Address);
+		            billing.AddressId = Guid.NewGuid().ToString();
+		            user.Addresses.Add(billing);
+		        }
+		        if (checkoutModel.AddressBook.SaveShippingAddress)
+		        {
+		            var shipping = ConvertToCustomerAddress(checkoutModel.ShippingAddress.Address);
+		            shipping.AddressId = Guid.NewGuid().ToString();
+		            user.Addresses.Add(shipping);
+		        }
+
+		        //Save last ordered date&time to customer profile
+		        var lastOrdered = user.ContactPropertyValues.FirstOrDefault(x => x.Name == ContactPropertyValueName.LastOrder);
+
+		        if (lastOrdered != null)
+		        {
+		            lastOrdered.DateTimeValue = DateTime.UtcNow;
+		        }
+		        else
+		        {
+		            user.ContactPropertyValues.Add(new ContactPropertyValue
+		            {
+		                DateTimeValue = DateTime.UtcNow,
+		                Name = ContactPropertyValueName.LastOrder,
+		                ValueType = PropertyValueType.DateTime.GetHashCode()
+		            });
+		        }
+
+		        _userClient.SaveCustomerChanges();
+		    }
+		    else if (checkoutModel.CreateAccount)
+		        {
+
+
+		            var regModel = new RegisterModel();
+
+		            regModel.InjectFrom(checkoutModel, checkoutModel.BillingAddress.Address);
+
+		            //Save billing address to book
+		            var billing = ConvertToCustomerAddress(checkoutModel.BillingAddress.Address);
+		            billing.AddressId = Guid.NewGuid().ToString();
+		            regModel.Addresses.Add(billing);
+
+		            //save shipping address to book
+		            if (!checkoutModel.UseForShipping)
+		            {
+		                var shipping = ConvertToCustomerAddress(checkoutModel.ShippingAddress.Address);
+		                shipping.AddressId = Guid.NewGuid().ToString();
+		                regModel.Addresses.Add(shipping);
+		            }
+
+                    //This is workaround solution instead od redirecting to register action in controller
+                    var accountController = (AccountController)DependencyResolver.Current.GetService(typeof(AccountController));
+		            string message;
+
+		            if (!accountController.Register(regModel, out message))
+		            {
+		                ModelState.AddModelError("", message);
+		                return View("Index", checkoutModel);
+		            }
+
+		            accountController.OnPostLogon(regModel.Email);            
+		        }
+
+		    // Create order
             var order = Ch.SaveAsOrder();
 
             if (HttpContext.Session != null)
                 HttpContext.Session["LatestOrderId"] = order.OrderGroupId;
-
-            if (UserHelper.CustomerSession.IsRegistered)
-            {
-                var orgs = _userClient.GetOrganizationsForCurrentUser();
-                if (orgs != null)
-                {
-                    var org = orgs.SingleOrDefault();
-                    if (org != null)
-                        Ch.Cart.OrganizationId = org.MemberId;
-                }
-            }
-
-            if (UserHelper.CustomerSession.IsRegistered)
-            {
-                var user = _userClient.GetCurrentCustomer(false);
-
-
-                // Save addresses to customer address book
-                if (checkoutModel.AddressBook.SaveBillingAddress)
-                {
-                    var billing = ConvertToCustomerAddress(checkoutModel.BillingAddress.Address);
-                    billing.AddressId = Guid.NewGuid().ToString();
-                    user.Addresses.Add(billing);
-                }
-                if (checkoutModel.AddressBook.SaveShippingAddress)
-                {
-                    var shipping = ConvertToCustomerAddress(checkoutModel.ShippingAddress.Address);
-                    shipping.AddressId = Guid.NewGuid().ToString();
-                    user.Addresses.Add(shipping);
-                }
-
-				//Save last ordered date&time to customer profile
-				var lastOrdered = user.ContactPropertyValues.FirstOrDefault(x => x.Name == ContactPropertyValueName.LastOrder);
-
-				if (lastOrdered != null)
-				{
-					lastOrdered.DateTimeValue = DateTime.UtcNow;
-				}
-				else
-				{
-					user.ContactPropertyValues.Add(new ContactPropertyValue
-					{
-						DateTimeValue = DateTime.UtcNow,
-						Name = ContactPropertyValueName.LastOrder,
-						ValueType = PropertyValueType.DateTime.GetHashCode()
-					});
-				}
-
-                _userClient.SaveCustomerChanges();
-            }
-
-            //Create account for later use
-            if (!UserHelper.CustomerSession.IsRegistered && checkoutModel.CreateAccount)
-            {
-                var regModel = new RegisterModel
-                    {
-                        ActionResult = RedirectToAction("ProcessCheckout", "Checkout", new { id = order.OrderGroupId })
-                    };
-
-                regModel.InjectFrom(checkoutModel, checkoutModel.BillingAddress.Address);
-
-				//Save billing address to book
-	            var billing = ConvertToCustomerAddress(checkoutModel.BillingAddress.Address);
-				billing.AddressId = Guid.NewGuid().ToString();
-				regModel.Addresses.Add(billing);
-
-				//save shipping address to book
-				if (!checkoutModel.UseForShipping)
-				{
-					var shipping = ConvertToCustomerAddress(checkoutModel.ShippingAddress.Address);
-					shipping.AddressId = Guid.NewGuid().ToString();
-					regModel.Addresses.Add(shipping);
-				}
-
-                TempData["RegisterModel"] = regModel;
-                return RedirectToAction("Register", "Account");
-            }
 
             // display success screen
             return RedirectToAction("ProcessCheckout", "Checkout", new { id = order.OrderGroupId });
