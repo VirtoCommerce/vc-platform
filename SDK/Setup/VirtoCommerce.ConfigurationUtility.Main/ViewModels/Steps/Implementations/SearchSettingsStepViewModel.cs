@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading;
 using System.Windows;
-using Microsoft.Practices.Prism.Commands;
 using VirtoCommerce.ConfigurationUtility.Main.Infrastructure;
 using VirtoCommerce.ConfigurationUtility.Main.Properties;
 using VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Interfaces;
@@ -97,20 +96,20 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 			Result = null; // sets result to InProgress
 			try
 			{
-			    var searchConnection = _confirmationViewModel.SearchConnection;
+				var searchConnection = _confirmationViewModel.SearchConnection;
 				// Update Search index
-                
-                // handle special case for lucene, resolve relative path to the actual folder
-                if (searchConnection.Provider.Equals(
-                    "lucene", StringComparison.OrdinalIgnoreCase) && searchConnection.DataSource.StartsWith("~/"))
-                {
-                    var dataSource = searchConnection.DataSource.Replace(
-                        "~/", _confirmationViewModel.ProjectLocation + "\\");
 
-                    searchConnection = new SearchConnection(dataSource, searchConnection.Scope, searchConnection.Provider);
-                }
+				// handle special case for lucene, resolve relative path to the actual folder
+				if (searchConnection.Provider.Equals(
+					"lucene", StringComparison.OrdinalIgnoreCase) && searchConnection.DataSource.StartsWith("~/"))
+				{
+					var dataSource = searchConnection.DataSource.Replace(
+						"~/", _confirmationViewModel.ProjectLocation + "\\");
 
-                new UpdateSearchIndex().Index(searchConnection, _confirmationViewModel.DatabaseConnectionString, null, true);
+					searchConnection = new SearchConnection(dataSource, searchConnection.Scope, searchConnection.Provider);
+				}
+
+				new UpdateSearchIndex().Index(searchConnection, _confirmationViewModel.DatabaseConnectionString, null, true);
 				ct.ThrowIfCancellationRequested();
 
 				Result = OperationResult.Successful;
@@ -191,7 +190,7 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 		}
 
 		private string _indexesLocation;
-		
+
 		public string LuceneFolderLocation
 		{
 			get { return _luceneFolderLocation; }
@@ -224,6 +223,8 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 			set
 			{
 				_indexScope = value;
+				if (!string.IsNullOrEmpty(_indexScope))
+					_indexScope = _indexScope.ToLower();
 				OnPropertyChanged();
 				OnIsValidChanged();
 				OnConnectionStringChanges();
