@@ -120,6 +120,8 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel
 		private void RaiseItemPickInteractionRequest()
 		{
 			var itemVM = _pickAssetVmFactory.GetViewModelInstance();
+            itemVM.AssetPickMode = true;
+            itemVM.RootItemId = null;
 
 			CommonConfirmRequest.Raise(
 				new ConditionalConfirmation(() => itemVM.SelectedAsset != null) { Content = itemVM, Title = "Select an asset" },
