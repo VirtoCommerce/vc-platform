@@ -218,29 +218,39 @@ namespace VirtoCommerce.Foundation.Importing.Services
 
 							if ((result.ProcessedRecordsCount < count || count <= 0) && processed >= startIndex && ((processed - startIndex) % skip == 0))
 							{
-								var systemValues = MapColumns(job.PropertiesMap.Where(prop => prop.IsSystemProperty), csvNames, csvValues);
-								var customValues = MapColumns(job.PropertiesMap.Where(prop => !prop.IsSystemProperty), csvNames, csvValues);
-								
-								var rep = IsTaxImport(importer.Name) ? _orderRepository : (IRepository) _catalogRepository;
-
-								if (importer.Name == ImportEntityType.Localization.ToString() || importer.Name == ImportEntityType.Seo.ToString())
-									rep = _appConfigRepositoryFactory.GetRepositoryInstance();
-
-								var res = importer.Import(job.CatalogId, job.PropertySetId, systemValues, customValues, rep);
-								result.CurrentProgress = reader.CurrentPosition;
-								
-								if (string.IsNullOrEmpty(res))
+								var systemValues = MapColumns(job.PropertiesMap.Where(prop => prop.IsSystemProperty), csvNames, csvValues,  result);
+								var customValues = MapColumns(job.PropertiesMap.Where(prop => !prop.IsSystemProperty), csvNames, csvValues, result);
+								if (systemValues != null && customValues != null)
 								{
-									rep.UnitOfWork.Commit();
-									result.ProcessedRecordsCount++;
+									var rep = IsTaxImport(importer.Name) ? _orderRepository : (IRepository)_catalogRepository;
+
+									if (importer.Name == ImportEntityType.Localization.ToString() || importer.Name == ImportEntityType.Seo.ToString())
+										rep = _appConfigRepositoryFactory.GetRepositoryInstance();
+
+									var res = importer.Import(job.CatalogId, job.PropertySetId, systemValues, customValues, rep);
+									result.CurrentProgress = reader.CurrentPosition;
+
+									if (string.IsNullOrEmpty(res))
+									{
+										rep.UnitOfWork.Commit();
+										result.ProcessedRecordsCount++;
+									}
+									else
+									{
+										result.ErrorsCount++;
+										if (result.Errors == null)
+											result.Errors = new List<string>();
+										result.Errors.Add(string.Format("Row: {0}, Error: {1}", result.ProcessedRecordsCount + result.ErrorsCount, res));
+
+										//check if errors amount reached the allowed errors limit if yes do not save made changes.
+										if (result.ErrorsCount >= job.MaxErrorsCount)
+										{
+											break;
+										}
+									}
 								}
 								else
 								{
-									result.ErrorsCount++;
-									if (result.Errors == null)
-										result.Errors = new List<string>();
-									result.Errors.Add(string.Format("Row: {0}, Error: {1}", result.ProcessedRecordsCount + result.ErrorsCount, res));
-
 									//check if errors amount reached the allowed errors limit if yes do not save made changes.
 									if (result.ErrorsCount >= job.MaxErrorsCount)
 									{
@@ -307,14 +317,14 @@ namespace VirtoCommerce.Foundation.Importing.Services
 			return csvNamesAndIndexes;
 		}
 
-		private static ImportItem[] MapColumns(IEnumerable<MappingItem> mappingItems, IReadOnlyDictionary<string, int> csvNamesAndIndexes, IList<string> csvValues)
+		private static ImportItem[] MapColumns(IEnumerable<MappingItem> mappingItems, IReadOnlyDictionary<string, int> csvNamesAndIndexes, IList<string> csvValues, ImportResult result)
 		{
 			var csvNamesAndValues = new List<ImportItem>();
 
 			if (mappingItems != null)
 			{
 				foreach (var mappingItem in mappingItems)
-				{
+				{					
 					var importItem = new ImportItem {Name = mappingItem.EntityColumnName, Locale = mappingItem.Locale};
 					if (mappingItem.CsvColumnName != null && csvNamesAndIndexes.ContainsKey(mappingItem.CsvColumnName))
 					{
@@ -325,6 +335,15 @@ namespace VirtoCommerce.Foundation.Importing.Services
 
 						if (!string.IsNullOrEmpty(mappingItem.StringFormat))
 							importItem.Value = string.Format(mappingItem.StringFormat, importItem.Value);
+
+						if (mappingItem.IsRequired && string.IsNullOrEmpty(importItem.Value))
+						{
+							if (result.Errors == null)
+								result.Errors = new List<string>();
+							result.Errors.Add(string.Format("Row: {0}, Property: {1}, Error: {2}", result.ProcessedRecordsCount + result.ErrorsCount, mappingItem.DisplayName, "The value for required property not provided"));							
+							result.ErrorsCount++;
+							return null;
+						}
 					}
 					else if (mappingItem.CustomValue != null)
 					{
