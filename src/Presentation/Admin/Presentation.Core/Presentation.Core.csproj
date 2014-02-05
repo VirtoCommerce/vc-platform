@@ -232,6 +232,7 @@
     <Compile Include="Infrastructure\Converters\IsIClosableConverter.cs" />
     <Compile Include="Infrastructure\Converters\IsNecessaryTypeConverter.cs" />
     <Compile Include="Infrastructure\Converters\IsNullConverter.cs" />
+    <Compile Include="Infrastructure\Converters\StringToVisibilityConverter.cs" />
     <Compile Include="Infrastructure\Converters\TextCaseConverter.cs" />
     <Compile Include="Infrastructure\Converters\ToVisibilityConverter.cs" />
     <Compile Include="Infrastructure\CollectionChangeGeneral.cs" />

@@ -239,7 +239,7 @@ namespace VirtoCommerce.ManagementClient.Main.ViewModel
 									webRequest.Headers.Add("FileVersion", assembly.GetFileVersion());
 									webRequest.Headers.Add("Is64BitOperatingSystem", Environment.Is64BitOperatingSystem.ToString());
 									webRequest.Headers.Add("OSVersion", Environment.OSVersion.ToString());
-									webRequest.Headers.Add("SiteUrl", _loginViewModel.BaseUrl);
+									webRequest.Headers.Add("SiteUrl", _loginViewModel.CurrentUser.BaseUrl);
 									
 									using (var reader = new XmlTextReader(webRequest.GetResponse().GetResponseStream()))
 									{

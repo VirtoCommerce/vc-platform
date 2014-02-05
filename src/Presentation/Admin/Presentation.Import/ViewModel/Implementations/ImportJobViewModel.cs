@@ -407,7 +407,8 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 								new TaxCategoryImporter(),
 								new JurisdictionImporter(),
 								new JurisdictionGroupImporter(),
-								new TaxValueImporter()
+								new TaxValueImporter(),
+								new SeoImporter()
 							}.ToArray();
 					}
 

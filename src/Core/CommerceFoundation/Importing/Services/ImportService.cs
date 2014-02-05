@@ -70,7 +70,8 @@ namespace VirtoCommerce.Foundation.Importing.Services
 					new ItemAssetImporter(),
 					new TaxCategoryImporter(),
 					new JurisdictionImporter(),
-					new JurisdictionGroupImporter()
+					new JurisdictionGroupImporter(),
+					new SeoImporter()
 				};
 
 			_importResults = new Dictionary<string, ImportResult>();
@@ -222,7 +223,7 @@ namespace VirtoCommerce.Foundation.Importing.Services
 								
 								var rep = IsTaxImport(importer.Name) ? _orderRepository : (IRepository) _catalogRepository;
 
-								if (importer.Name == ImportEntityType.Localization.ToString())
+								if (importer.Name == ImportEntityType.Localization.ToString() || importer.Name == ImportEntityType.Seo.ToString())
 									rep = _appConfigRepositoryFactory.GetRepositoryInstance();
 
 								var res = importer.Import(job.CatalogId, job.PropertySetId, systemValues, customValues, rep);

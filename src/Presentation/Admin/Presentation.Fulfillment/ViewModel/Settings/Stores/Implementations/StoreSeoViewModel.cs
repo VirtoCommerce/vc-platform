@@ -50,7 +50,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 			if (!string.IsNullOrEmpty(storeUrl))
 				stringBuilder.AppendFormat("{0}{1}{2}", storeUrl, storeUrl.EndsWith("/") ? null : "/", keyword.Language.ToLower());
 			else
-				stringBuilder.AppendFormat("{0}{1}{2}", _loginViewModel.BaseUrl, _loginViewModel.BaseUrl.EndsWith("/") ? null : "/", keyword.Language.ToLower());
+				stringBuilder.AppendFormat("{0}{1}{2}", _loginViewModel.CurrentUser.BaseUrl, _loginViewModel.CurrentUser.BaseUrl.EndsWith("/") ? null : "/", keyword.Language.ToLower());
 			return stringBuilder.ToString();
 		}					
 	}
