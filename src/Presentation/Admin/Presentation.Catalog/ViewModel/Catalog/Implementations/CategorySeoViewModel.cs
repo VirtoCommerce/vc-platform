@@ -55,7 +55,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 							stringBuilder.AppendFormat("{0}{1}{2}", storeUrl, storeUrl.EndsWith("/") ? null : "/", keyword.Language.ToLowerInvariant());
 						else
 						{
-							stringBuilder.AppendFormat("{0}{1}{2}/", _loginViewModel.BaseUrl, _loginViewModel.BaseUrl.EndsWith("/") ? null : "/", keyword.Language.ToLowerInvariant());
+							stringBuilder.AppendFormat("{0}{1}{2}/", _loginViewModel.CurrentUser.BaseUrl, _loginViewModel.CurrentUser.BaseUrl.EndsWith("/") ? null : "/", keyword.Language.ToLowerInvariant());
 
 							using (var seoRepo = _appConfigRepositoryFactory.GetRepositoryInstance())
 							{

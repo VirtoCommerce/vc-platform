@@ -63,9 +63,9 @@
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="LogonViewRequestedEvent"  SourceObject="{Binding Path=DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}">
             <ei:ChangePropertyAction PropertyName="UserName" TargetObject="{Binding DataContext, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type core_controls:MetroWindow}}}" 
-                                     Value="{Binding Path=CurrentUserName}"/>
+                                     Value="{Binding Path=CurrentUser.CurrentUserName}"/>
             <ei:ChangePropertyAction PropertyName="BaseUrl" TargetObject="{Binding DataContext, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type core_controls:MetroWindow}}}" 
-                                     Value="{Binding Path=BaseUrl}"/>
+                                     Value="{Binding Path=CurrentUser.BaseUrl}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
@@ -91,7 +91,7 @@
                             </Style>
                         </TextBlock.Style>
                     </TextBlock>
-                    <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding UserName, Mode=OneWay}"  Visibility="{Binding AuthProgress, UpdateSourceTrigger=PropertyChanged,  Converter={x:Static Presentation_Infrastructure_Converters:ToVisibilityConverter.Current}}">
+					<TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding CurrentUser.Username, Mode=OneWay}"  Visibility="{Binding AuthProgress, UpdateSourceTrigger=PropertyChanged,  Converter={x:Static Presentation_Infrastructure_Converters:ToVisibilityConverter.Current}}">
                         <TextBlock.Style>
 							<Style BasedOn="{StaticResource Virto_TextBlock_CommonTitle_Style}" TargetType="TextBlock">
                                 <Setter Property="Margin" Value="10,10,0,5"></Setter>
@@ -111,15 +111,19 @@
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
 						<core_controls:WatermarkedTextBox  Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" WatermarkText="Username" Margin="0,5,0,5"
-								Text="{Binding UserName}" />
+								Text="{Binding CurrentUser.Username, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
                         <PasswordBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" common:PasswordHelper.Attach="True" HorizontalAlignment="Stretch"  
-							common:PasswordHelper.Password="{Binding Password, Mode=TwoWay}" Margin="0,5,0,5">
+							common:PasswordHelper.Password="{Binding CurrentUser.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Margin="0,5,0,5">
                             <PasswordBox.InputBindings>
                                 <KeyBinding Key="Enter" Command="{Binding LoginCommand}" />
                             </PasswordBox.InputBindings>
                         </PasswordBox>
 						<core_controls:WatermarkedTextBox  Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
-														   WatermarkText="Base url" Margin="0,5,0,5" Text="{Binding BaseUrl, UpdateSourceTrigger=PropertyChanged}"/>
+														   WatermarkText="Base url" Margin="0,5,0,5" Text="{Binding CurrentUser.BaseUrl, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
+							<core_controls:WatermarkedTextBox.InputBindings>
+								<KeyBinding Key="Enter" Command="{Binding LoginCommand}" />
+							</core_controls:WatermarkedTextBox.InputBindings>
+						</core_controls:WatermarkedTextBox>
 					</Grid>
                     <ScrollViewer Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" MaxHeight="200" VerticalScrollBarVisibility="Auto" Margin="5,0,10,10" VerticalAlignment="Center" HorizontalAlignment="Left">
                         <TextBlock  Foreground="OrangeRed" Text="{Binding Error}"  TextWrapping="Wrap" TextAlignment="Justify" MaxWidth="300" />
