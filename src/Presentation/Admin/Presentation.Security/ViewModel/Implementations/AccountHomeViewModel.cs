@@ -16,9 +16,12 @@ using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.Foundation.Security.Repositories;
 using VirtoCommerce.Foundation.Security.Services;
 using VirtoCommerce.ManagementClient.Security.ViewModel.Wizard.Interfaces;
+using System;
+using PropertyChanged;
 
 namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 {
+	[ImplementPropertyChanged]
 	class AccountHomeViewModel : ViewModelHomeEditableBase<Account>, IAccountHomeViewModel, IVirtualListLoader<IAccountViewModel>, ISupportDelayInitialization
     {
         #region Dependencies
@@ -33,7 +36,9 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 
         #endregion
 
-        public AccountHomeViewModel(
+		#region Constructor
+		
+		public AccountHomeViewModel(
 			ISecurityService securityService,
 			IRepositoryFactory<ISecurityRepository> securityRepository,
 			IViewModelsFactory<IAccountViewModel> itemVmFactory,
@@ -50,12 +55,34 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 	        _navManager = navManager;
 	        _tileManager = tileManager;
 
+			ClearFiltersCommand = new DelegateCommand(DoClearFilters);
             PopulateTiles();
         }
 
-        #region ViewModelHomeEditableBase
+		#endregion
 
-        protected override bool CanItemAddExecute()
+		#region SearchFields
+		public string SearchFilterAccountName { get; set; }
+		public object SearchFilterType { get; set; }
+		public object SearchFilterStatus { get; set; }
+		#endregion
+
+		#region Commands
+		public DelegateCommand ClearFiltersCommand { get; private set; }
+		#endregion
+
+		#region Private methods
+		private void DoClearFilters()
+		{
+			SearchFilterType = null;
+			SearchFilterStatus = null;
+			SearchFilterAccountName = null;
+		}
+		#endregion
+
+		#region ViewModelHomeEditableBase
+
+		protected override bool CanItemAddExecute()
         {
             return true;
         }
@@ -173,12 +200,27 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 
             using (var repository = _securityRepository.GetRepositoryInstance())
             {
-                var query = repository.Accounts;
+                var query = repository.Accounts.Expand(x => x.RoleAssignments);
 
                 if (!string.IsNullOrEmpty(SearchKeyword))
                 {
-                    query = query.Where(a => a.UserName.Contains(SearchKeyword));
+                    query = query.Where(a => a.UserName.Contains(SearchKeyword) || a.MemberId.Contains(SearchKeyword) || a.RoleAssignments.Any(x => x.Role.Name.Contains(SearchKeyword)));
                 }
+
+				if (SearchFilterStatus is AccountState)
+				{
+					query = query.Where(x => x.AccountState == (int) ((AccountState) SearchFilterStatus));
+				}
+
+				if (SearchFilterType is RegisterType)
+				{
+					query = query.Where(x => x.RegisterType == (int)((RegisterType) SearchFilterType));
+				}
+
+				if (!string.IsNullOrEmpty(SearchFilterAccountName))
+				{
+					query = query.Where(x => x.UserName.Contains(SearchFilterAccountName));
+				}
 
                 overallCount = query.Count();
 
