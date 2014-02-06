@@ -27,9 +27,11 @@ using VirtoCommerce.Foundation.Importing.Services;
 using VirtoCommerce.Foundation.Importing.Factories;
 using catalogModel = VirtoCommerce.Foundation.Catalogs.Model;
 using System.Threading.Tasks;
+using PropertyChanged;
 
 namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 {
+	[ImplementPropertyChanged]
 	public class ImportJobViewModel : ViewModelDetailAndWizardBase<ImportJob>, IImportJobViewModel
 	{
 		#region const
@@ -52,19 +54,7 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 		#endregion
 
 		#region Properties
-		private ImportEntityType[] _entityImporters;
-		public ImportEntityType[] EntityImporters
-		{
-			get
-			{
-				return _entityImporters;
-			}
-			private set
-			{
-				_entityImporters = value;
-				OnPropertyChanged();
-			}
-		}
+		public ImportEntityType[] EntityImporters { get; private set; }
 
 		private static readonly ColumnDelimiter[] _columnDelimiters = new[] { 
 				new ColumnDelimiter{ DisplayName = "Auto", Value="?" },
@@ -90,35 +80,12 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 			get { return _textQualifiers; }
 		}
 
-		private PropertySet[] _propertySets;
-		public PropertySet[] PropertySets
-		{
-			get
-			{
-				return _propertySets;
-			}
-			private set
-			{
-				_propertySets = value;
-				OnPropertyChanged();
-				OnPropertyChanged("IsPropertySetSelectable");
-			}
-		}
+		[AlsoNotifyFor("IsPropertySetSelectable")]
+		public PropertySet[] PropertySets { get; set; }
 
-		private CatalogBase[] _catalogs;
-		public CatalogBase[] Catalogs
-		{
-			get
-			{
-				return _catalogs;
-			}
-			private set
-			{
-				_catalogs = value;
-				OnPropertyChanged();
-			}
-		}
+		public CatalogBase[] Catalogs { get; set; }
 
+		[DoNotNotify]
 		public virtual string[] CsvFileColumns { get; set; }
 		#endregion
 
@@ -158,6 +125,22 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 			}
 		}
 
+		private bool _ignoreErrors;
+		public bool IgnoreErrors
+		{
+			get
+			{
+				return _ignoreErrors;
+			}
+			set
+			{
+				_ignoreErrors = true;
+				InnerItem.MaxErrorsCount = -1;
+				OnPropertyChanged();
+			}
+
+		}
+
 		public bool IsPropertySetSelectable
 		{
 			get
@@ -170,6 +153,10 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 					InnerItem.EntityImporter == ImportEntityType.Package.ToString());
 			}
 		}
+
+		public string ErrorText { get; set; }
+		public bool IsError { get; set; }
+
 		#endregion
 
 		#region constructor
@@ -471,7 +458,13 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 		#endregion
 
 		#region private methods
-		
+
+		private void RaiseCanExecuteChanged()
+		{
+			ItemEditCommand.RaiseCanExecuteChanged();
+			ItemClearCommand.RaiseCanExecuteChanged();
+		}
+
 		private void CommandInit()
 		{
 			FilePickCommand = new DelegateCommand(RaiseFilePickInteractionRequest);
@@ -550,10 +543,7 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 		}
 
 		private EntityImporterBase[] AvailableImporters;
-
-		public string ErrorText { get; set; }
-		public bool IsError { get; set; }
-
+		
 		private string[] GetCsvColumns()
 		{
 			string[] retVal = null;
@@ -573,8 +563,6 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 			{
 				IsError = true;
 				ErrorText = string.Format("File '{0}' doesn't exist", InnerItem.TemplatePath);
-				OnSpecifiedPropertyChanged("IsError");
-				OnSpecifiedPropertyChanged("ErrorText");
 			}
 			return retVal;
 		}
@@ -766,18 +754,7 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 		}
 
 		#endregion
-
-		#region IImportJobViewModel Members
-
-		public void RaiseCanExecuteChanged()
-		{
-			ItemEditCommand.RaiseCanExecuteChanged();
-			ItemClearCommand.RaiseCanExecuteChanged();
-		}
-
-
-		#endregion
-
+		
 		#region IWizardStep Members
 
 		public override bool IsLast

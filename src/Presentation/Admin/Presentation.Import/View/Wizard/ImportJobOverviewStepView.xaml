@@ -91,7 +91,9 @@
 
 			<!-- Errors -->
 			<TextBlock Grid.Row="6" Text="* Errors allowed during import:" />
-			<extToolkit:IntegerUpDown Grid.Row="7" Minimum="0" Value="{Binding InnerItem.MaxErrorsCount, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+			<StackPanel Grid.Row="7">
+				<extToolkit:IntegerUpDown Minimum="0" Value="{Binding InnerItem.MaxErrorsCount, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+			</StackPanel>
 
 			<!-- Import step -->
 			<TextBlock Grid.Row="8" Text="{Binding InnerItem.ImportStep, StringFormat='Import step (import every {0} entry):'}" />
