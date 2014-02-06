@@ -23,7 +23,7 @@ namespace VirtoCommerce.Client
         public const string SearchCacheKey = "S:{0}:{1}";
         public const string CatalogCacheKey = "C:C:{0}";
         public const string CategoryCacheKey = "C:CT:{0}:{1}";
-		public const string CategoryItemRelationCacheKey = "C:CTIREL:{0}";
+        public const string CategoryItemRelationCacheKey = "C:CTIREL:{0}";
         public const string CategoryIdCacheKey = "C:CTID:{0}:{1}";
         public const string ChildCategoriesCacheKey = "C:CT:{0}:p:{1}";
         //public const string ItemCacheKey = "C:I:{0}:g:{1}";
@@ -33,14 +33,14 @@ namespace VirtoCommerce.Client
         public const string ItemsQueryCacheKey = "C:Is:{0}";
         public const string PriceListCacheKey = "C:PL:{0}";
         public const string ItemVariationsCacheKey = "C:V:{0}";
-		public const string ItemInvetoriesCacheKey = "C:INV:{0}:{1}";
+        public const string ItemInvetoriesCacheKey = "C:INV:{0}:{1}";
 
         public const string PricesCacheKey = "C:P:{0}";
         public const string ItemPricesCacheKey = "C:P:{0}:{1}";
         public const string PricelistAssignmentCacheKey = "C:PLA:{0}";
 
         public const string PropertiesCacheKey = "C:PR:{0}";
-		public const string PropertyValueCacheKey = "C:PRV:{0}:{1}:{2}";
+        public const string PropertyValueCacheKey = "C:PRV:{0}:{1}:{2}:{3}";
         #endregion
 
         #region Private Variables
@@ -54,9 +54,9 @@ namespace VirtoCommerce.Client
         private readonly ICatalogOutlineBuilder _catalogOutlineBuilder;
         #endregion
 
-        public CatalogClient(ICatalogRepository catalogRepository, 
-            ICatalogService catalogService, 
-            ICustomerSessionService customerSession, 
+        public CatalogClient(ICatalogRepository catalogRepository,
+            ICatalogService catalogService,
+            ICustomerSessionService customerSession,
             ICacheRepository cacheRepository,
             IInventoryRepository inventoryRepository,
             ICatalogOutlineBuilder catalogOutlineBuilder = null,
@@ -80,13 +80,13 @@ namespace VirtoCommerce.Client
             }
         }
 
-		public ICatalogRepository CatalogRepository
-		{
-			get
-			{
-				return _catalogRepository;
-			}
-		}
+        public ICatalogRepository CatalogRepository
+        {
+            get
+            {
+                return _catalogRepository;
+            }
+        }
 
         public CatalogBase GetCatalog(string catalogId, bool useCache = true)
         {
@@ -99,24 +99,24 @@ namespace VirtoCommerce.Client
                 _isEnabled && useCache);
         }
 
-		/// <summary>
-		/// Gets CategoryItemRelations by item id
-		/// </summary>
-		/// <param name="itemId"></param>
-		/// <param name="useCache"></param>
-		/// <returns></returns>
-		public CategoryItemRelation[] GetCategoryItemRelations(string itemId, bool useCache = true)
-		{
-			var query = _catalogRepository.CategoryItemRelations.Where(x => x.ItemId.Equals(itemId, StringComparison.OrdinalIgnoreCase));
+        /// <summary>
+        /// Gets CategoryItemRelations by item id
+        /// </summary>
+        /// <param name="itemId"></param>
+        /// <param name="useCache"></param>
+        /// <returns></returns>
+        public CategoryItemRelation[] GetCategoryItemRelations(string itemId, bool useCache = true)
+        {
+            var query = _catalogRepository.CategoryItemRelations.Where(x => x.ItemId.Equals(itemId, StringComparison.OrdinalIgnoreCase));
 
-			return Helper.Get(
-				string.Format(CategoryItemRelationCacheKey, itemId),
-				() => (query).ToArray(),
-				CatalogConfiguration.Instance.Cache.CategoryTimeout,
-				_isEnabled && useCache);
-		}
+            return Helper.Get(
+                string.Format(CategoryItemRelationCacheKey, itemId),
+                () => (query).ToArray(),
+                CatalogConfiguration.Instance.Cache.CategoryTimeout,
+                _isEnabled && useCache);
+        }
 
-		public CatalogOutline BuildCategoryOutline(string catalogId, CategoryBase category)
+        public CatalogOutline BuildCategoryOutline(string catalogId, CategoryBase category)
         {
             return _catalogOutlineBuilder.BuildCategoryOutline(catalogId, category);
         }
@@ -173,14 +173,14 @@ namespace VirtoCommerce.Client
                 if (item.CatalogId == catalogId)
                     return item;
 
-	            var relations = item.CategoryItemRelations.ToArray();
+                var relations = item.CategoryItemRelations.ToArray();
 
-				if (!responseGroup.HasFlag(ItemResponseGroups.ItemCategories))
-				{
-					relations = GetCategoryItemRelations(id);
-				}
+                if (!responseGroup.HasFlag(ItemResponseGroups.ItemCategories))
+                {
+                    relations = GetCategoryItemRelations(id);
+                }
 
-				foreach (var rel in relations)
+                foreach (var rel in relations)
                 {
                     if (rel.CatalogId == catalogId)
                         return item;
@@ -242,32 +242,32 @@ namespace VirtoCommerce.Client
 
         private IQueryable<Item> IncludeGroups(IQueryable<Item> query, ItemResponseGroups responseGroups)
         {
-	        if (responseGroups.HasFlag(ItemResponseGroups.ItemAssets))
-	        {
-		        query = query.Expand(p => p.ItemAssets);
-	        }
+            if (responseGroups.HasFlag(ItemResponseGroups.ItemAssets))
+            {
+                query = query.Expand(p => p.ItemAssets);
+            }
 
-	        if (responseGroups.HasFlag(ItemResponseGroups.ItemAssociations))
+            if (responseGroups.HasFlag(ItemResponseGroups.ItemAssociations))
             {
                 query = query.Expand(p => p.AssociationGroups.Select(a => a.Associations.Select(s => s.CatalogItem)));
             }
 
             if (responseGroups.HasFlag(ItemResponseGroups.ItemCategories))
             {
-	            query = query.Expand(p => p.CategoryItemRelations);
+                query = query.Expand(p => p.CategoryItemRelations);
             }
 
             if (responseGroups.HasFlag(ItemResponseGroups.ItemEditorialReviews))
             {
-	            query = query.Expand(p => p.EditorialReviews);
+                query = query.Expand(p => p.EditorialReviews);
             }
 
-	        if (responseGroups.HasFlag(ItemResponseGroups.ItemProperties))
-	        {
-		        query = query.Expand(p => p.ItemPropertyValues);
-	        }
+            if (responseGroups.HasFlag(ItemResponseGroups.ItemProperties))
+            {
+                query = query.Expand(p => p.ItemPropertyValues);
+            }
 
-	        return query;
+            return query;
         }
         #endregion
 
@@ -284,47 +284,85 @@ namespace VirtoCommerce.Client
             return Helper.Get(
                 string.Format(PropertiesCacheKey, "all"),
                 () => (from p in _catalogRepository.PropertySets select p)
-					.Expand("PropertySetProperties/Property/PropertyValues")
-					.Expand("PropertySetProperties/Property/PropertyAttributes")
-					.ToArray(),
+                    .Expand("PropertySetProperties/Property/PropertyValues")
+                    .Expand("PropertySetProperties/Property/PropertyAttributes")
+                    .ToArray(),
                 CatalogConfiguration.Instance.Cache.PropertiesTimeout,
                 _isEnabled && useCache);
         }
 
-        public ItemPropertyValue GetPropertyValueByName(Item item, string name, string locale = "", bool useCache = true)
+        public PropertyValueBase GetPropertyValueByName(StorageEntity storageEntity, string name, bool expandProperties = false, string locale = "", bool useCache = true)
         {
-			return Helper.Get(
-			   string.Format(PropertyValueCacheKey, item.ItemId, name, locale),
-			   () =>
-				   {
-					   if (string.IsNullOrEmpty(locale))
-					   {
-						   locale = CultureInfo.CurrentUICulture.Name;
-					   }
+            string id;
+            string catalogId;
+            IEnumerable<PropertyValueBase> properties;
 
-					   var avaialbleProps = (from p in item.ItemPropertyValues
-											 where p.Name.Equals(name, StringComparison.OrdinalIgnoreCase)
-											 select p).ToArray();
+            var item = storageEntity as Item;
+            var category = storageEntity as Category;
 
-					   var catalog = GetCatalog(item.CatalogId);
+            if (item != null)
+            {
+                id = item.ItemId;
+                catalogId = item.CatalogId;
+                properties = item.ItemPropertyValues;
+            }
+            else if (category != null)
+            {
+               
+                id = category.CategoryId;
+                catalogId = category.CatalogId;
+                properties = category.CategoryPropertyValues;
+                if (!properties.Any() && expandProperties)
+                {
+                    //This will return expanded category with properties
+                    category = GetCategoryByIdInternal(id) as Category;
 
-					   if (avaialbleProps.Any())
-					   {
+                    if(category !=null)
+                    {
+                        properties = category.CategoryPropertyValues;
+                    }
+                }
 
-						   return (from p in avaialbleProps
-								   where string.IsNullOrEmpty(p.Locale) || locale.Equals(p.Locale, StringComparison.InvariantCultureIgnoreCase)
-								   select p).FirstOrDefault() ??
+            }
+            else
+            {
+                return null;
+            }
 
-								   (from p in avaialbleProps
-									where string.IsNullOrEmpty(p.Locale) ||
-									catalog.DefaultLanguage.Equals(p.Locale, StringComparison.InvariantCultureIgnoreCase)
-									select p).FirstOrDefault();
-					   }
 
-					   return null;
-				   },
-			   CatalogConfiguration.Instance.Cache.PropertiesTimeout,
-			   _isEnabled && useCache);	
+            if (string.IsNullOrEmpty(locale))
+            {
+                locale = CultureInfo.CurrentUICulture.Name;
+            }
+
+            return Helper.Get(
+               string.Format(PropertyValueCacheKey, id, name, locale, storageEntity.GetType().Name),
+               () =>
+               {
+
+                   var avaialbleProps = (from p in properties
+                                         where p.Name.Equals(name, StringComparison.OrdinalIgnoreCase)
+                                         select p).ToArray();
+
+                   var catalog = GetCatalog(catalogId);
+
+                   if (avaialbleProps.Any())
+                   {
+
+                       return (from p in avaialbleProps
+                               where string.IsNullOrEmpty(p.Locale) || locale.Equals(p.Locale, StringComparison.InvariantCultureIgnoreCase)
+                               select p).FirstOrDefault() ??
+
+                               (from p in avaialbleProps
+                                where string.IsNullOrEmpty(p.Locale) ||
+                                catalog.DefaultLanguage.Equals(p.Locale, StringComparison.InvariantCultureIgnoreCase)
+                                select p).FirstOrDefault();
+                   }
+
+                   return null;
+               },
+               CatalogConfiguration.Instance.Cache.PropertiesTimeout,
+               _isEnabled && useCache);
         }
 
         public Property[] GetProperties(bool useCache = true)
@@ -364,8 +402,8 @@ namespace VirtoCommerce.Client
             {
                 if (category is LinkedCategory)
                 {
-                    category = _catalogRepository.Categories.FirstOrDefault(x => 
-                        (x.CatalogId == ((LinkedCategory)category).LinkedCatalogId) 
+                    category = _catalogRepository.Categories.FirstOrDefault(x =>
+                        (x.CatalogId == ((LinkedCategory)category).LinkedCatalogId)
                         && (x.Code.Equals(code, StringComparison.OrdinalIgnoreCase)));
                 }
             }
@@ -375,21 +413,31 @@ namespace VirtoCommerce.Client
 
         private CategoryBase GetCategoryByIdInternal(string id)
         {
-            var category = _catalogRepository.Categories.Expand(c=>c.LinkedCategories).FirstOrDefault(x => x.CategoryId.Equals(id, StringComparison.OrdinalIgnoreCase));
-            if (category != null && category.IsActive)
+            //Get simple category
+            CategoryBase category = _catalogRepository.Categories.OfType<Category>()
+                .Expand(c => c.LinkedCategories)
+                .Expand(c => c.CategoryPropertyValues)
+                .FirstOrDefault(x => x.CategoryId.Equals(id, StringComparison.OrdinalIgnoreCase));
+
+            if (category == null)
             {
-                if (category is LinkedCategory)
+                //Get linked category
+                category = _catalogRepository.Categories.OfType<LinkedCategory>()
+                    .Expand(c => c.LinkedCategories)
+                    .FirstOrDefault(x => x.CategoryId.Equals(id, StringComparison.OrdinalIgnoreCase));
+                if (category != null && category.IsActive)
                 {
-                    category = _catalogRepository.Categories.OfType<Category>().Expand(p=>p.CategoryPropertyValues).FirstOrDefault(x => 
-                        (x.CatalogId == ((LinkedCategory)category).LinkedCatalogId) 
-                        && (x.CategoryId.Equals(id, StringComparison.OrdinalIgnoreCase)));
+                    //Get simple category from linked catalog
+                    category = _catalogRepository.Categories.OfType<Category>()
+                        .Expand(p => p.CategoryPropertyValues)
+                        .FirstOrDefault(x => (x.CatalogId == ((LinkedCategory)category).LinkedCatalogId) && (x.CategoryId.Equals(id, StringComparison.OrdinalIgnoreCase)));
                 }
             }
 
             return category;
         }
 
-        
+
 
         public CategoryBase GetCategory(string code, bool useCache = true)
         {
@@ -450,7 +498,7 @@ namespace VirtoCommerce.Client
         public Inventory GetItemInventory(string itemId, string fulfillmentCenterId)
         {
             return Helper.Get(String.Format(ItemInvetoriesCacheKey, itemId, fulfillmentCenterId),
-                () =>  _inventoryRepository.Inventories.SingleOrDefault(i => i.FulfillmentCenterId.Equals(fulfillmentCenterId, StringComparison.OrdinalIgnoreCase) &&
+                () => _inventoryRepository.Inventories.SingleOrDefault(i => i.FulfillmentCenterId.Equals(fulfillmentCenterId, StringComparison.OrdinalIgnoreCase) &&
                                                                          i.Sku.Equals(itemId, StringComparison.OrdinalIgnoreCase)),
                 CatalogConfiguration.Instance.Cache.ItemTimeout,
                 _isEnabled);
@@ -462,126 +510,126 @@ namespace VirtoCommerce.Client
         /// <param name="itemIds">The item ids.</param>
         /// <param name="fulfillmentCenterId">The fulfillment center id.</param>
         /// <returns></returns>
-		public IEnumerable<Inventory> GetItemInventories(string[] itemIds, string fulfillmentCenterId)
-		{
-			return Helper.Get(String.Format(ItemInvetoriesCacheKey, CacheHelper.CreateCacheKey("", itemIds), fulfillmentCenterId),
-				() => _inventoryRepository.Inventories.Where(i => i.FulfillmentCenterId.Equals(fulfillmentCenterId, StringComparison.OrdinalIgnoreCase) && itemIds.Contains(i.Sku)).ToArray(),
-				CatalogConfiguration.Instance.Cache.ItemCollectionTimeout,
-				_isEnabled);
-		}
-
-		/// <summary>
-		/// Get item availability collection for given items
-		/// </summary>
-		/// <param name="itemIds"></param>
-		/// <param name="fulfillmentCenterId"></param>
-		/// <returns></returns>
-	    public ItemAvailability[] GetItemAvailability(string[] itemIds, string fulfillmentCenterId)
-	    {
-		    var inventories = GetItemInventories(itemIds, fulfillmentCenterId);
-		    return GetItems(itemIds).Select(item => 
-				GetItemAvailabilityInternal(item, inventories.SingleOrDefault(i => i.Sku == item.ItemId))).ToArray();
-	    }
-
-	    /// <summary>
-	    /// Gets the item availability.
-	    /// </summary>
-	    /// <param name="itemId">The item id.</param>
-	    /// <param name="fulfillmentCenterId">The fulfillment center id.</param>
-	    /// <returns></returns>
-	    public ItemAvailability GetItemAvailability(string itemId, string fulfillmentCenterId)
+        public IEnumerable<Inventory> GetItemInventories(string[] itemIds, string fulfillmentCenterId)
         {
-            var item = GetItem(itemId);
-			var inventory = item.TrackInventory ? GetItemInventory(itemId, fulfillmentCenterId) : null;
-		    return GetItemAvailabilityInternal(item, inventory);
+            return Helper.Get(String.Format(ItemInvetoriesCacheKey, CacheHelper.CreateCacheKey("", itemIds), fulfillmentCenterId),
+                () => _inventoryRepository.Inventories.Where(i => i.FulfillmentCenterId.Equals(fulfillmentCenterId, StringComparison.OrdinalIgnoreCase) && itemIds.Contains(i.Sku)).ToArray(),
+                CatalogConfiguration.Instance.Cache.ItemCollectionTimeout,
+                _isEnabled);
         }
 
-		private ItemAvailability GetItemAvailabilityInternal(Item item, Inventory inventory)
-		{
-			var retVal = new ItemAvailability 
-			{
-				MinQuantity = item.MinQuantity, 
-				MaxQuantity = item.MaxQuantity, 
-				ItemId = item.ItemId 
-			};
+        /// <summary>
+        /// Get item availability collection for given items
+        /// </summary>
+        /// <param name="itemIds"></param>
+        /// <param name="fulfillmentCenterId"></param>
+        /// <returns></returns>
+        public ItemAvailability[] GetItemAvailability(string[] itemIds, string fulfillmentCenterId)
+        {
+            var inventories = GetItemInventories(itemIds, fulfillmentCenterId);
+            return GetItems(itemIds).Select(item =>
+                GetItemAvailabilityInternal(item, inventories.SingleOrDefault(i => i.Sku == item.ItemId))).ToArray();
+        }
 
-			if (item.IsBuyable 
-				&& item.StartDate < CustomerSession.CurrentDateTime
-				&& (!item.EndDate.HasValue || item.EndDate > CustomerSession.CurrentDateTime))
-			{
-				if (item.TrackInventory)
-				{
-					if (inventory != null && (InventoryStatus)inventory.Status == InventoryStatus.Enabled)
-					{
-						var inStock = inventory.InStockQuantity - inventory.ReservedQuantity;
+        /// <summary>
+        /// Gets the item availability.
+        /// </summary>
+        /// <param name="itemId">The item id.</param>
+        /// <param name="fulfillmentCenterId">The fulfillment center id.</param>
+        /// <returns></returns>
+        public ItemAvailability GetItemAvailability(string itemId, string fulfillmentCenterId)
+        {
+            var item = GetItem(itemId);
+            var inventory = item.TrackInventory ? GetItemInventory(itemId, fulfillmentCenterId) : null;
+            return GetItemAvailabilityInternal(item, inventory);
+        }
 
-						if (inStock > 0
-						    && (item.AvailabilityRule == (int)AvailabilityRule.Always
-						        || item.AvailabilityRule == (int)AvailabilityRule.WhenInStock))
-						{
-							retVal.MaxQuantity = inStock;
-							retVal.Availability = ItemStoreAvailabity.InStore;
-							retVal.MaxQuantity = Math.Max(retVal.MinQuantity, retVal.MaxQuantity);
-							retVal.MinQuantity = Math.Min(retVal.MinQuantity, retVal.MaxQuantity);
-							return retVal;
-						}
-						if (inventory.AllowBackorder
-						    && inventory.BackorderAvailabilityDate.HasValue
-						    && (item.AvailabilityRule == (int)AvailabilityRule.Always
-						        || item.AvailabilityRule == (int)AvailabilityRule.OnBackorder))
-						{
-							retVal.MaxQuantity = inStock + inventory.BackorderQuantity;
+        private ItemAvailability GetItemAvailabilityInternal(Item item, Inventory inventory)
+        {
+            var retVal = new ItemAvailability
+            {
+                MinQuantity = item.MinQuantity,
+                MaxQuantity = item.MaxQuantity,
+                ItemId = item.ItemId
+            };
 
-							if (retVal.MaxQuantity > 0)
-							{
-								retVal.Availability = ItemStoreAvailabity.AvailableForBackOrder;
-								retVal.Date = inventory.BackorderAvailabilityDate;
-								retVal.MaxQuantity = Math.Max(retVal.MinQuantity, retVal.MaxQuantity);
-								retVal.MinQuantity = Math.Min(retVal.MinQuantity, retVal.MaxQuantity);
-								return retVal;
-							}
-						}
+            if (item.IsBuyable
+                && item.StartDate < CustomerSession.CurrentDateTime
+                && (!item.EndDate.HasValue || item.EndDate > CustomerSession.CurrentDateTime))
+            {
+                if (item.TrackInventory)
+                {
+                    if (inventory != null && (InventoryStatus)inventory.Status == InventoryStatus.Enabled)
+                    {
+                        var inStock = inventory.InStockQuantity - inventory.ReservedQuantity;
 
-						if (inventory.AllowPreorder
-						    && inventory.PreorderAvailabilityDate.HasValue)
-						{
+                        if (inStock > 0
+                            && (item.AvailabilityRule == (int)AvailabilityRule.Always
+                                || item.AvailabilityRule == (int)AvailabilityRule.WhenInStock))
+                        {
+                            retVal.MaxQuantity = inStock;
+                            retVal.Availability = ItemStoreAvailabity.InStore;
+                            retVal.MaxQuantity = Math.Max(retVal.MinQuantity, retVal.MaxQuantity);
+                            retVal.MinQuantity = Math.Min(retVal.MinQuantity, retVal.MaxQuantity);
+                            return retVal;
+                        }
+                        if (inventory.AllowBackorder
+                            && inventory.BackorderAvailabilityDate.HasValue
+                            && (item.AvailabilityRule == (int)AvailabilityRule.Always
+                                || item.AvailabilityRule == (int)AvailabilityRule.OnBackorder))
+                        {
+                            retVal.MaxQuantity = inStock + inventory.BackorderQuantity;
 
-							retVal.MaxQuantity = inventory.PreorderQuantity;
+                            if (retVal.MaxQuantity > 0)
+                            {
+                                retVal.Availability = ItemStoreAvailabity.AvailableForBackOrder;
+                                retVal.Date = inventory.BackorderAvailabilityDate;
+                                retVal.MaxQuantity = Math.Max(retVal.MinQuantity, retVal.MaxQuantity);
+                                retVal.MinQuantity = Math.Min(retVal.MinQuantity, retVal.MaxQuantity);
+                                return retVal;
+                            }
+                        }
 
-							if (retVal.MaxQuantity > 0 &&
-							    (item.AvailabilityRule == (int)AvailabilityRule.Always ||
-							     item.AvailabilityRule == (int)AvailabilityRule.OnPreorder))
-							{
-								retVal.Availability = ItemStoreAvailabity.AvailableForPreOrder;
-								retVal.Date = inventory.PreorderAvailabilityDate;
-								retVal.MaxQuantity = Math.Max(retVal.MinQuantity, retVal.MaxQuantity);
-								retVal.MinQuantity = Math.Min(retVal.MinQuantity, retVal.MaxQuantity);
-								return retVal;
-							}
-						}
-					}
-				}
-				else
-				{
-					retVal.MaxQuantity = item.MaxQuantity;
-					if (retVal.MaxQuantity > 0
-					    && (item.AvailabilityRule == (int)AvailabilityRule.Always
-					        || item.AvailabilityRule == (int)AvailabilityRule.WhenInStock))
-					{
-						retVal.Availability = ItemStoreAvailabity.InStore;
-					}
-					retVal.MaxQuantity = Math.Max(retVal.MinQuantity, retVal.MaxQuantity);
-					retVal.MinQuantity = Math.Min(retVal.MinQuantity, retVal.MaxQuantity);
-				}		
-			}
+                        if (inventory.AllowPreorder
+                            && inventory.PreorderAvailabilityDate.HasValue)
+                        {
 
-			return retVal;
-		}
+                            retVal.MaxQuantity = inventory.PreorderQuantity;
+
+                            if (retVal.MaxQuantity > 0 &&
+                                (item.AvailabilityRule == (int)AvailabilityRule.Always ||
+                                 item.AvailabilityRule == (int)AvailabilityRule.OnPreorder))
+                            {
+                                retVal.Availability = ItemStoreAvailabity.AvailableForPreOrder;
+                                retVal.Date = inventory.PreorderAvailabilityDate;
+                                retVal.MaxQuantity = Math.Max(retVal.MinQuantity, retVal.MaxQuantity);
+                                retVal.MinQuantity = Math.Min(retVal.MinQuantity, retVal.MaxQuantity);
+                                return retVal;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    retVal.MaxQuantity = item.MaxQuantity;
+                    if (retVal.MaxQuantity > 0
+                        && (item.AvailabilityRule == (int)AvailabilityRule.Always
+                            || item.AvailabilityRule == (int)AvailabilityRule.WhenInStock))
+                    {
+                        retVal.Availability = ItemStoreAvailabity.InStore;
+                    }
+                    retVal.MaxQuantity = Math.Max(retVal.MinQuantity, retVal.MaxQuantity);
+                    retVal.MinQuantity = Math.Min(retVal.MinQuantity, retVal.MaxQuantity);
+                }
+            }
+
+            return retVal;
+        }
 
         #endregion
 
         CacheHelper _cacheHelper;
-        
+
 
         public CacheHelper Helper
         {
@@ -617,8 +665,8 @@ namespace VirtoCommerce.Client
         public DateTime? Date { get; set; }
         public ItemStoreAvailabity Availability { get; set; }
         public decimal MaxQuantity { get; set; }
-		public decimal MinQuantity { get; set; }
-	    public string ItemId { get; set; }
+        public decimal MinQuantity { get; set; }
+        public string ItemId { get; set; }
 
         public bool IsAvailable
         {
