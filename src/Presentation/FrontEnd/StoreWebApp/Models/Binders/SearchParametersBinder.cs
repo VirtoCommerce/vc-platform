@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using System.Collections.Specialized;
-using VirtoCommerce.Web.Helpers;
+using VirtoCommerce.Client.Extensions;
 using System.Text.RegularExpressions;
 using VirtoCommerce.Web.Client.Extensions;
 
@@ -14,11 +14,6 @@ namespace VirtoCommerce.Web.Models.Binders
 	/// </summary>
     public class SearchParametersBinder : IModelBinder
     {
-		/// <summary>
-		/// The default page size
-		/// </summary>
-        public const int DefaultPageSize = SearchParameters.DefaultPageSize;
-
 		/// <summary>
 		/// Name values to dictionary.
 		/// </summary>
@@ -37,6 +32,11 @@ namespace VirtoCommerce.Web.Models.Binders
 		/// </summary>
         private static readonly Regex FacetRegex = new Regex("^f_", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
+        protected virtual NameValueCollection GetParams(ControllerContext controllerContext)
+	    {
+            return controllerContext.HttpContext.Request.QueryString;
+	    }
+
 		/// <summary>
 		/// Binds the model to a value by using the specified controller context and binding context.
 		/// </summary>
@@ -45,18 +45,25 @@ namespace VirtoCommerce.Web.Models.Binders
 		/// <returns>The bound value.</returns>
         public object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
         {
-            var qs = controllerContext.HttpContext.Request.QueryString;
+		  
+		    var parameters = bindingContext.ValueProvider.GetValue(bindingContext.ModelName);
+            var sp = parameters != null ? parameters.RawValue as SearchParameters : null;
+		    if (sp == null)
+		    {
+            var qs = GetParams(controllerContext);
             var qsDict = NvToDict(qs);
-            var sp = new SearchParameters
+		        sp = new SearchParameters
             {
                 FreeSearch = qs["q"].EmptyToNull(),
                 PageIndex = qs["p"].TryParse(1),
-                PageSize = qs["pageSize"].TryParse(DefaultPageSize),
+                PageSize = qs["pageSize"].TryParse(0),
                 Sort = qs["sort"].EmptyToNull(),
+		            SortOrder = qs["sortorder"].EmptyToNull(),
                 Facets = qsDict.Where(k => FacetRegex.IsMatch(k.Key))
                     .Select(k => k.WithKey(FacetRegex.Replace(k.Key, "")))
                     .ToDictionary()
             };
+		    }
             return sp;
         }
     }

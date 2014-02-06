@@ -2,23 +2,19 @@
 @{
     ViewContext.FormContext = new FormContext();
 }
-<dl class="shipment-methods">
-    @foreach (var method in Model.Shipments)
+@foreach (var method in Model.Shipments)
+{
+    var htmlOptions = new Dictionary<string, object> { { "id", String.Format("s_method_{0}", method.Id) } };
+    if (method.IsCurrent)
     {
-        <dd>@method.DisplayName</dd>
-        <dt style="margin-bottom: 5px;">
-            @{
-                var htmlOptions = new Dictionary<string, object> {{"id", String.Format("s_method_{0}", method.Id)}};
-                if (method.IsCurrent)
-                {
-                    htmlOptions.Add("checked","");
-                }
-               }
-            @Html.RadioButtonFor(m => m.ShippingMethod, method.Id, htmlOptions)
-            <label for="@String.Format("s_method_{0}", method.Id)">@method.DisplayName <strong><span
-                class="price">@method.PriceFormatted</span> </strong>
-            </label>
-        </dt>        
+        htmlOptions.Add("checked", "checked");
     }
-</dl>
+    <div class="control-group">
+        <label>@method.DisplayName</label>
+        <label for="@String.Format("s_method_{0}", method.Id)" class="control">
+            @Html.RadioButtonFor(m => m.ShippingMethod, method.Id, htmlOptions)
+            @method.DisplayName <b>@method.PriceFormatted</b>
+        </label>
+    </div>  
+}
 @Html.ValidationMessageFor(m => m.ShippingMethod)

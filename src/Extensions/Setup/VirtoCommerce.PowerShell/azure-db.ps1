@@ -1,6 +1,10 @@
 # Script builds and deploys frontend azure package.
 Param(  
-  	[parameter(Mandatory=$true)]
+	  	[parameter(Mandatory=$false)]
+		$db_recreate = $true,
+	  	[parameter(Mandatory=$true)]
+		$db_customFolder,
+	  	[parameter(Mandatory=$true)]
 		$db_servername,
         [parameter(Mandatory=$true)]
 		$db_serverlogin,
@@ -18,10 +22,9 @@ Param(
 
 function setup-database
 {
-    Write-Output "Started SQL Database Setup"
+    Write-Output "$(Get-Date -f $timeStampFormat) Started SQL Database Setup"
     remove-create-database
-    run-database-scripts
-    Write-Output "Finished SQL Database Setup"
+    Write-Output "$(Get-Date -f $timeStampFormat) Finished SQL Database Setup"
 }
 
 Function remove-create-database
@@ -34,16 +37,49 @@ Function remove-create-database
 
     Write-Output "$(Get-Date –f $timeStampFormat) - SQL Database Deployment: checking if database exists"
     $db = Get-AzureSqlDatabase $ctx -DatabaseName "$db_databasename" -ErrorAction SilentlyContinue
-    if ($db -ne $null)
+
+	$isnewdb = $false # tracks if we created new db
+
+    if ($db -ne $null) # remove existing database if one already exists to start from scratch
     {
-        Write-Output "$(Get-Date –f $timeStampFormat) - SQL Database Deployment: database exists, removing ..."
-        Remove-AzureSqlDatabase $ctx -DatabaseName "$db_databasename" -Force
+		if($db_recreate)  # if we running complete recreate, then remove the database
+		{
+			Write-Output "$(Get-Date –f $timeStampFormat) - SQL Database Deployment: database exists, removing ..."
+			Remove-AzureSqlDatabase $ctx -DatabaseName "$db_databasename" -Force
+			$isnewdb = $true
+		}
     }
-    else
+	else
+	{
+		$isnewdb = $true
+	}
+
+	<# no need to create db, it is created by database scripts cmdlets
+    else # no database, create new one
     {
         Write-Output "$(Get-Date –f $timeStampFormat) - SQL Database Deployment: no database found, creating new"
         $db = New-AzureSqlDatabase $ctx -DatabaseName $db_databasename
     }
+	#>
+
+	# run db fresh install scripts
+	if($isnewdb)
+	{
+		run-database-scripts
+	}
+
+	run-database-custom-scripts -db_created $isnewdb
+}
+
+function run-database-custom-scripts
+{
+    Param(
+  	    [parameter(Mandatory=$true)]
+		$db_created
+     )  
+
+    Write-Output "$(Get-Date –f $timeStampFormat) - SQL Database Deployment: running database custom scripts"
+	. ".\db-custom.ps1" -db_created $db_created -scriptsFolder $db_customFolder -db_servername "tcp:$db_servername.database.windows.net,1433" -db_serverlogin $db_serverlogin -db_serverpassword $db_serverpassword -db_databasename $db_databasename
 }
 
 Function run-database-scripts
@@ -53,9 +89,7 @@ Function run-database-scripts
     . ".\setup-database.ps1" -dbconnection $db_connectionstring -moduleFile $setupModulePath
 }
 
-
 #Write-Output "Running Azure Imports"
-#Import-Module "C:\Program Files (x86)\Microsoft SDKs\Windows Azure\PowerShell\Azure\*.psd1"
 Import-AzurePublishSettingsFile $publishSettingsFile
 
 Set-AzureSubscription -DefaultSubscription $selectedSubscription

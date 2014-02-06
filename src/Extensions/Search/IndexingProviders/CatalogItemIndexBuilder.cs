@@ -9,6 +9,8 @@ using VirtoCommerce.Foundation.Frameworks.Logging;
 
 namespace VirtoCommerce.Search.Index
 {
+    using VirtoCommerce.Foundation.Catalogs.Services;
+
     public class CatalogItemIndexBuilder : ISearchIndexBuilder
     {
         /// <summary>
@@ -36,6 +38,14 @@ namespace VirtoCommerce.Search.Index
         /// The search provider.
         /// </value>
         public ISearchProvider SearchProvider { get; private set; }
+
+        /// <summary>
+        /// Gets the outline builder.
+        /// </summary>
+        /// <value>
+        /// The outline builder.
+        /// </value>
+        public ICatalogOutlineBuilder OutlineBuilder { get; private set; }
 
         /// <summary>
         /// Gets the cache repository.
@@ -66,13 +76,15 @@ namespace VirtoCommerce.Search.Index
         /// <param name="catalogRepository">The catalog repository.</param>
         /// <param name="priceListRepository">The price list repository.</param>
         /// <param name="logRepository">The log repository.</param>
+        /// <param name="catalogOutlinebuilder">The catalog outlinebuilder.</param>
         /// <param name="cacheRepository">The cache repository.</param>
-        public CatalogItemIndexBuilder(ISearchProvider searchProvider, ICatalogRepository catalogRepository, IPricelistRepository priceListRepository, IOperationLogRepository logRepository, ICacheRepository cacheRepository)
+        public CatalogItemIndexBuilder(ISearchProvider searchProvider, ICatalogRepository catalogRepository, IPricelistRepository priceListRepository, IOperationLogRepository logRepository, ICatalogOutlineBuilder catalogOutlinebuilder, ICacheRepository cacheRepository)
         {
             CatalogRepository = catalogRepository;
             PriceListRepository = priceListRepository;
             SearchProvider = searchProvider;
             LogRepository = logRepository;
+            OutlineBuilder = catalogOutlinebuilder;
             CacheRepository = cacheRepository;
         }
 
@@ -116,7 +128,7 @@ namespace VirtoCommerce.Search.Index
         /// <returns></returns>
         public IEnumerable<IDocument> CreateDocuments<T>(T input)
         {
-            var docCreator = new CatalogItemDocumentCreator(CatalogRepository, PriceListRepository, CacheRepository);
+            var docCreator = new CatalogItemDocumentCreator(CatalogRepository, PriceListRepository, OutlineBuilder, CacheRepository);
 
             // create index docs
             return docCreator.CreateDocument(input as Partition);

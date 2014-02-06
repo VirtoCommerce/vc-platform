@@ -1,41 +1,64 @@
 ﻿@using VirtoCommerce.Web.Virto.Helpers
 @model CatalogItemWithPriceModel
 
-@switch ((string)ViewData["View"])
- {
-	 case "List":
-		 if (Model != null && Model.Availability != null && Model.Availability.IsAvailable && Model.Price != null && (Model.Price.SalePrice.HasValue || Model.Price.ListPrice.HasValue))
-		 {
-			 <button type="button" title="@("Add to Cart".LocalizeHtml())" class="button btn-cart" onclick="VirtoCart.addToCart('Item added to cart', '@Url.Encode(Model.CatalogItem.ItemId)', '@Url.Encode(Model.CatalogItem.ParentItemId)', 1)">
-				 <span><span>@("Add to Cart".LocalizeHtml())</span></span>
-			 </button>
-		 }
-		 else
-		 {
-			 <div style="color:#ff0000; font-weight: bold; text-align: left;">@("Not for sale".LocalizeHtml())</div>
-		 }
-		 break;
-	 case "Orders":
-		 <button type="button" title="@("Add to Cart".LocalizeHtml())" class="button btn-cart" onclick="return VirtoCart.addToCartOrdersClick();">
-			 <span><span>@("Add to Cart".LocalizeHtml())</span></span>
-		 </button>
-		 break;
-	 default:
-		 if (Model != null && 
-			 ((Model.CatalogItem !=null 
-			 && CatalogHelper.CatalogClient.GetItemRelations(Model.CatalogItem.ItemId).Any()) || //check if item has variations
-			 (Model.Availability != null && 
-			 Model.Availability.IsAvailable && 
-			 Model.Price != null && 
-			 (Model.Price.SalePrice.HasValue || Model.Price.ListPrice.HasValue))))
-		 {
-			 <button type="button" title="@("Add to Cart".LocalizeHtml())" class="button btn-cart" onclick="return VirtoCart.addToCartClick('@((Model.CatalogItem != null) ? Model.CatalogItem.ItemId : "")','@((Model.CatalogItem != null) ? Model.CatalogItem.ParentItemId : "")'); ">
-				 <span><span>@("Add to Cart".LocalizeHtml())</span></span>
-			 </button>
-		 }
-		 else
-		 {
-			 <div style="color:#ff0000; font-weight: bold; text-align: left;">@("Not for sale".LocalizeHtml())</div>
-		 }
-		 break;
- }
+@helper NoSaleResult()
+{
+     <span class="no-sale">@("Not for Sale".Localize())</span>
+}
+
+
+@if(Model !=null)
+{
+    var hasVariations = Model != null && Model.CatalogItem != null && Model.CatalogItem.Item is Product && CatalogHelper.CatalogClient.GetItemRelations(Model.CatalogItem.ItemId).Any();
+    var canBeAdded = (Model.Availability == null || Model.Availability.IsAvailable) && Model.Price != null && Model.Price.Type != PriceType.None;
+
+    if (hasVariations)
+    {
+        if (Model.Price != null && !string.Equals(ViewData["View"] as string,"Details"))
+        {
+            //@Html.DisplayFor(m => m.Price)
+        }
+    }
+    else
+    {
+        switch ((string) ViewData["View"])
+        {
+            case "List":
+                if (canBeAdded)
+                {
+                    <button type="button" title="@("Add to Cart".Localize())" onclick="VirtoCart.addToCart('Item added to cart', '@Url.Encode(Model.CatalogItem.ItemId)', '@Url.Encode(Model.CatalogItem.ParentItemId)', 1) ">
+                        @("Add to Cart".Localize())
+                    </button>
+                }
+                else
+                {
+                    @NoSaleResult()
+                }
+                break;
+            case "ListLink":
+                if (canBeAdded)
+                {
+                    <a href="" title="@("Add to Cart".Localize())" onclick="return VirtoCart.addToCart('Item added to cart', '@Url.Encode(Model.CatalogItem.ItemId)', '@Url.Encode(Model.CatalogItem.ParentItemId)', 1) ">
+                        @("Add to Cart".Localize())
+                    </a>
+                }
+                else
+                {
+                    @NoSaleResult()
+                }
+                break;
+            default:
+                if (canBeAdded)
+                {
+                    <button type="button" title="@("Add to Cart".Localize())" onclick="return VirtoCart.addToCartClick('@((Model.CatalogItem != null) ? Model.CatalogItem.ItemId : "")', '@((Model.CatalogItem != null) ? Model.CatalogItem.ParentItemId : "")');">
+                        <span>@("Add to Cart".Localize())</span>
+                    </button>
+                }
+                else
+                {
+                     @NoSaleResult()
+                }
+                break;
+        }
+    }
+}

@@ -27,6 +27,7 @@
 
             <catalogInfrastructure:ReviewStateConverter x:Key="reviewStateConverter" />
             <catalogInfrastructure:ItemPresentationValueConverter x:Key="itemPresentationValueConverter" />
+			<Presentation_Core_Infrastructure_Converters:InvertedBoolConverter x:Key="invertedBoolConverter" FalseValue="True" TrueValue="False" />
 
             <Style x:Key="AssociationGroup_TabItemStyle" TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}">
                 <Setter Property="Padding" Value="10,0,4,0" />
@@ -481,6 +482,13 @@
             </Grid>
         </TabItem>
 
+		<!-- SEO tab -->
+		<TabItem x:Name="tabSeoData" Header="SEO">
+			<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0,10,0,0">
+				<ContentPresenter Content="{Binding SeoStepViewModel}" Margin="0,0,20,0"/>
+			</ScrollViewer>
+		</TabItem>
+		
         <!--RELATIONS-->
         <TabItem x:Name="tabRelations" Header="{Binding InnerItem, Converter={StaticResource itemPresentationValueConverter}, ConverterParameter=RelationsTabHeader, FallbackValue=Relations}" Tag="{Binding IsInitializingItemRelations}">
             <Grid>
@@ -775,6 +783,6 @@
                 </TabControl>
             </DockPanel>
         </TabItem>
-
-    </TabControl>
+		
+	</TabControl>
 </UserControl>

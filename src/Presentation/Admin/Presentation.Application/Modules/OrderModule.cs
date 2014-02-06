@@ -1,4 +1,6 @@
-﻿using System;
+﻿#region Usings
+
+using System;
 using System.Windows;
 using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
@@ -45,6 +47,8 @@ using VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Wizard.Interfaces;
 using VirtoCommerce.ManagementClient.Order.ViewModel.Wizard.Implementations;
 using VirtoCommerce.ManagementClient.Order.ViewModel.Wizard.Interfaces;
 
+#endregion
+
 namespace VirtoCommerce.ManagementClient.Order
 {
 	public class OrderModule : IModule
@@ -89,12 +93,7 @@ namespace VirtoCommerce.ManagementClient.Order
 		#endregion
 
 		protected void RegisterViewsAndServices()
-		{
-			// _container.LoadConfiguration(OrderConfiguration.Instance.UnityContainerName);
-
-			//For testing purposes override certificate checks
-			//ServicePointManager.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => true;
-
+		{			
 			_container.RegisterType<IOrderEntityFactory, OrderEntityFactory>(new ContainerControlledLifetimeManager());
 			_container.RegisterType<IOrderStateController, OrderStateController>();
 			_container.RegisterType<ICacheRepository, HttpCacheRepository>();
@@ -117,14 +116,6 @@ namespace VirtoCommerce.ManagementClient.Order
 						  .GetConnectionString(OrderConfiguration.Instance.OrderServiceConnection.ServiceUri, OrderConfiguration.Instance.OrderServiceConnection.ForceHttps),
 				OrderConfiguration.Instance.OrderServiceConnection.WSEndPointName);
 
-			////Mock service
-			//_container.RegisterType<IOrderRepository, MockOrderService>(new ContainerControlledLifetimeManager());
-			//_container.RegisterType<ICountryRepository, MockOrderService>(new ContainerControlledLifetimeManager());
-			//_container.RegisterType<IPaymentMethodRepository, MockOrderService>(new ContainerControlledLifetimeManager());
-			//_container.RegisterType<IShippingRepository, MockOrderService>(new ContainerControlledLifetimeManager());
-			//_container.RegisterType<ITaxRepository, MockOrderService>(new ContainerControlledLifetimeManager());
-
-			//  _container.RegisterType<ICustomerRepository, MockCustomerRepository>(new ContainerControlledLifetimeManager());
 			//Import
 			_container.RegisterType<ITaxImportHomeViewModel, TaxImportJobHomeViewModel>();
 

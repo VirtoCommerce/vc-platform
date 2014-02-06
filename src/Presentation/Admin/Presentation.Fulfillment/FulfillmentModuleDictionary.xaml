@@ -98,8 +98,11 @@
     <DataTemplate DataType="{x:Type localWizardViewModel2:StoreNavigationStepViewModel}">
         <core_controls:CacheContentControl Type="{x:Type localWizardView1:StoreNavigationStepView}"/>
     </DataTemplate>
+	<DataTemplate DataType="{x:Type implementations2:StoreSeoViewModel}">
+		<core_controls:CacheContentControl Type="{x:Type localWizardView1:SeoStepView}"/>
+	</DataTemplate>
 
-    <DataTemplate DataType="{x:Type implementations2:StoreSettingViewModel}">
+	<DataTemplate DataType="{x:Type implementations2:StoreSettingViewModel}">
         <core_controls:CacheContentControl Type="{x:Type stores:StoreSettingView}"/>
     </DataTemplate>
 

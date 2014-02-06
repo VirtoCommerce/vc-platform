@@ -19,6 +19,7 @@
     <SccProvider>SAK</SccProvider>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <FodyPath>..\..\..\..\packages\Fody.1.20.0.0</FodyPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -49,6 +50,10 @@
     </Reference>
     <Reference Include="Omu.ValueInjecter">
       <HintPath>..\..\..\..\packages\ValueInjecter.2.3.3\lib\net35\Omu.ValueInjecter.dll</HintPath>
+    </Reference>
+    <Reference Include="PropertyChanged">
+      <HintPath>..\..\..\..\packages\PropertyChanged.Fody.1.45.0.0\Lib\NET35\PropertyChanged.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -101,13 +106,12 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="ViewModel\Implementations\ColumnMappingViewModel.cs" />
+    <Compile Include="Model\ImportProgress.cs" />
     <Compile Include="ViewModel\Interfaces\IColumnMappingViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\IImportJobHomeViewModel.cs" />
-    <Compile Include="ViewModel\Interfaces\IImportJobProgressViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\IImportJobRunViewModel.cs" />
     <Compile Include="ViewModel\Interfaces\IImportJobViewModel.cs" />
     <Compile Include="ViewModel\Implementations\ImportJobHomeViewModel.cs" />
-    <Compile Include="ViewModel\Implementations\ImportJobProgressViewModel.cs" />
     <Compile Include="ViewModel\Implementations\ImportJobRunViewModel.cs" />
     <Compile Include="ViewModel\Implementations\ImportJobViewModel.cs" />
     <Compile Include="ViewModel\Wizard\CreateImportJobViewModels.cs" />
@@ -117,9 +121,6 @@
     </Compile>
     <Compile Include="View\ImportJobHomeView.xaml.cs">
       <DependentUpon>ImportJobHomeView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\ImportJobProgressView.xaml.cs">
-      <DependentUpon>ImportJobProgressView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\ImportJobRunView.xaml.cs">
       <DependentUpon>ImportJobRunView.xaml</DependentUpon>
@@ -137,6 +138,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="Fody.targets" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -154,10 +156,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\ImportJobHomeView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="View\ImportJobProgressView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -196,8 +194,12 @@
       <Name>Presentation.Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="FodyWeavers.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Import Project="Fody.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

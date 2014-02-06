@@ -41,7 +41,7 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup
                 }
             }
             else
-                throw new FileNotFoundException(fileName);
+                throw new FileNotFoundException(string.Format("File '{0}' is missing.",fileName));
         }
 
         protected virtual string ReadSql(string fileName, string modelName)

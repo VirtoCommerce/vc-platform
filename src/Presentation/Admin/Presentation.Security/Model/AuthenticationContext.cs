@@ -285,7 +285,6 @@ namespace VirtoCommerce.ManagementClient.Security.Model
 
                 }
                 Debug.WriteLine("Exit from critical section of getting token"); 
-
             }
         }
 

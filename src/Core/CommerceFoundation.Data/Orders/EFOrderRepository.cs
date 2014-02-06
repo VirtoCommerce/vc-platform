@@ -300,7 +300,7 @@ namespace VirtoCommerce.Foundation.Data.Orders
 		}
 
 		/// <summary>
-		/// TPTs the maping.
+		/// TPTs the mapping.
 		/// </summary>
 		/// <param name="modelBuilder">The model builder.</param>
 		private void TPTMaping(DbModelBuilder modelBuilder)

@@ -70,14 +70,16 @@ namespace VirtoCommerce.ManagementClient.Fulfillment
 
 					navigationManager.RegisterNavigationItem(homeNavItem);
 
-					var menuNavItem = new NavigationMenuItem(NavigationNames.MenuName);
-					menuNavItem.NavigateCommand = new DelegateCommand<NavigationItem>((x) => { navigationManager.Navigate(homeNavItem); });
-					menuNavItem.Caption = "Fulfillment";
-					menuNavItem.ImageResourceKey = "Icon_Module_Fulfillment";
-					menuNavItem.ItemBackground = Colors.DarkOliveGreen;
-					menuNavItem.Order = 60;
+					var menuNavItem = new NavigationMenuItem(NavigationNames.MenuName)
+					{
+					    NavigateCommand = new DelegateCommand<NavigationItem>((x) => { navigationManager.Navigate(homeNavItem); }),
+					    Caption = "Fulfillment",
+					    ImageResourceKey = "Icon_Module_Fulfillment",
+					    ItemBackground = Colors.DarkOliveGreen,
+					    Order = 60
+					};
 
-					navigationManager.RegisterNavigationItem(menuNavItem);
+				    navigationManager.RegisterNavigationItem(menuNavItem);
 				}
 			}
 		}
@@ -129,6 +131,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment
 			_container.RegisterType<IStoreLinkedStoresStepViewModel, StoreLinkedStoresStepViewModel>();
 			_container.RegisterType<IStoreSettingStepViewModel, StoreSettingsStepViewModel>();
 			_container.RegisterType<IStoreNavigationStepViewModel, StoreNavigationStepViewModel>();
+			_container.RegisterType<ISeoViewModel, StoreSeoViewModel>();
 
 			_container.RegisterType<IStoreSettingViewModel, StoreSettingViewModel>();
 

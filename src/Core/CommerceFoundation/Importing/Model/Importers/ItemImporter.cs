@@ -30,7 +30,7 @@ namespace VirtoCommerce.Foundation.Importing.Model
 		{
 			var action = new ImportProperty { Name = "Action", DisplayName = "Action", IsRequiredProperty = true, IsEntityProperty = false, EntityImporterId = Name, DefaultValue = "Insert", IsEnumValuesProperty = true, EnumValues = { "Insert", "Insert & Update", "Update", "Delete" } };
 			var itemName = new ImportProperty { Name = "Name", DisplayName = "Name", IsRequiredProperty = true, IsEntityProperty = true, EntityImporterId = Name };
-			var itemStartDate = new ImportProperty { Name = "StartDate", DisplayName = "Start Date", IsRequiredProperty = false, IsEntityProperty = true, EntityImporterId = Name, DefaultValue = DateTime.Today.ToShortDateString() };
+			var itemStartDate = new ImportProperty { Name = "StartDate", DisplayName = "Start Date", IsRequiredProperty = true, IsEntityProperty = true, EntityImporterId = Name, DefaultValue = DateTime.Today.ToShortDateString() };
 			var itemEndDate = new ImportProperty { Name = "EndDate", DisplayName = "End Date", IsRequiredProperty = false, IsEntityProperty = true, EntityImporterId = Name };
 			var itemIsActive = new ImportProperty { Name = "IsActive", DisplayName = "Is Active", IsRequiredProperty = false, IsEntityProperty = true, EntityImporterId = Name, IsEnumValuesProperty = true, EnumValues = { "True", "False" }, DefaultValue = "True" };
 			var itemIsBuyable = new ImportProperty { Name = "IsBuyable", DisplayName = "Is Buyable", IsRequiredProperty = false, IsEntityProperty = true, EntityImporterId = Name, IsEnumValuesProperty = true, EnumValues = { "True", "False" }, DefaultValue = "True" };
@@ -96,7 +96,7 @@ namespace VirtoCommerce.Foundation.Importing.Model
 				case ImportAction.Insert:
 					if (_repository.Items.Where(item => item.CatalogId == containerId && item.Code == itemCode).FirstOrDefault() != null)
 					{
-						_error = "Item with the code {0} already exist";
+						_error = string.Format("Item with the code {0} already exist", itemCode);
 					}
 					else
 					{

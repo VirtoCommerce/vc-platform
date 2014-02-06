@@ -81,7 +81,7 @@
 	<Style x:Key="Virto_GridView_ColumnHeader_ContainerStyle" TargetType="{x:Type GridViewColumnHeader}" BasedOn="{StaticResource Virto_GridView_ColumnHeader_Style}">
 		<Style.Resources>
 			<DataTemplate DataType="{x:Type system:String}">
-				<TextBlock Text="{Binding}" FontWeight="Bold" FontSize="11" />
+				<TextBlock Text="{Binding}" FontWeight="Bold" FontSize="11" TextTrimming="CharacterEllipsis" ToolTip="{Binding Converter={StaticResource textCaseConverter}}"/>
 			</DataTemplate>
 		</Style.Resources>
 		<Setter Property="HorizontalContentAlignment" Value="Left"/>

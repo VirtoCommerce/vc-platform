@@ -61,32 +61,48 @@
     </TypeIdentifier>
   </Class>
   <Class Name="VirtoCommerce.Foundation.Orders.Model.OrderForm">
-    <Position X="7.5" Y="10.25" Width="1.5" />
+    <Position X="7.25" Y="10.25" Width="2" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
+    <AssociationLine Name="LineItems" Type="VirtoCommerce.Foundation.Orders.Model.LineItem" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7.25" Y="13.375" />
+        <Point X="5" Y="13.375" />
+        <Point X="5" Y="13.75" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.833" Y="0.425" />
+      </MemberNameLabel>
+    </AssociationLine>
     <AssociationLine Name="Discounts" Type="VirtoCommerce.Foundation.Orders.Model.OrderFormDiscount">
       <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
-        <Position X="-0.289" Y="0.239" Height="0.182" Width="0.936" />
+        <Position X="-0.373" Y="0.26" Height="0.182" Width="0.936" />
       </MemberNameLabel>
     </AssociationLine>
     <AssociationLine Name="Payments" Type="VirtoCommerce.Foundation.Orders.Model.Payment" FixedFromPoint="true" FixedToPoint="true">
       <Path>
-        <Point X="8.688" Y="10.25" />
-        <Point X="8.688" Y="10" />
-        <Point X="11.75" Y="10" />
+        <Point X="8.834" Y="10.25" />
+        <Point X="8.834" Y="10" />
+        <Point X="12" Y="10" />
       </Path>
     </AssociationLine>
+    <AssociationLine Name="OrderFormPropertyValues" Type="VirtoCommerce.Foundation.Orders.Model.OrderFormPropertyValue">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.51" Y="0.302" />
+      </MemberNameLabel>
+    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>AAcAEAEEAAxUABQCACiC4QSACAAASAAABgAgAAAAAAA=</HashCode>
+      <HashCode>AAcAEAEEAAxUABQCIGiC4QSACAAASAAABgAgAAAAAAA=</HashCode>
       <FileName>Orders\Model\OrderForm.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
-      <Property Name="Discounts" />
       <Property Name="LineItems" />
+      <Property Name="Discounts" />
       <Property Name="Payments" />
       <Property Name="Shipments" />
+      <Property Name="OrderFormPropertyValues" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="VirtoCommerce.Foundation.Orders.Model.OrderFormDiscount">
@@ -100,19 +116,19 @@
     </TypeIdentifier>
   </Class>
   <Class Name="VirtoCommerce.Foundation.Orders.Model.OrderGroup">
-    <Position X="10" Y="10.75" Width="1.5" />
+    <Position X="10.25" Y="10.75" Width="1.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
-    <AssociationLine Name="OrderAddresses" Type="VirtoCommerce.Foundation.Orders.Model.OrderAddress">
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="0.602" Y="0.123" />
-      </MemberNameLabel>
-    </AssociationLine>
     <AssociationLine Name="OrderForms" Type="VirtoCommerce.Foundation.Orders.Model.OrderForm">
       <MemberNameLabel ManuallyPlaced="true">
         <Position X="-0.019" Y="0.086" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="OrderAddresses" Type="VirtoCommerce.Foundation.Orders.Model.OrderAddress">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.602" Y="0.123" />
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
@@ -120,8 +136,8 @@
       <FileName>Orders\Model\OrderGroup.cs</FileName>
     </TypeIdentifier>
     <ShowAsCollectionAssociation>
-      <Property Name="OrderAddresses" />
       <Property Name="OrderForms" />
+      <Property Name="OrderAddresses" />
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="VirtoCommerce.Foundation.Orders.Model.RmaLineItem">
@@ -244,7 +260,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="VirtoCommerce.Foundation.Orders.Model.Payment">
-    <Position X="11.75" Y="7.75" Width="2" />
+    <Position X="12" Y="7.75" Width="2" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
       <Compartment Name="Methods" Collapsed="true" />
@@ -273,6 +289,16 @@
       <Property Name="Shipments" />
     </ShowAsCollectionAssociation>
   </Class>
+  <Class Name="VirtoCommerce.Foundation.Orders.Model.OrderFormPropertyValue">
+    <Position X="7" Y="15" Width="2" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAEAAAAAAAAAAAAIAAABAAAAAAAAAA=</HashCode>
+      <FileName>Orders\Model\OrderFormPropertyValue.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Enum Name="VirtoCommerce.Foundation.Orders.Model.OrderStatus" Collapsed="true">
     <Position X="17" Y="9.25" Width="1.5" />
     <TypeIdentifier>
@@ -281,24 +307,31 @@
     </TypeIdentifier>
   </Enum>
   <Enum Name="VirtoCommerce.Foundation.Orders.Model.RmaLineItemState" Collapsed="true">
-    <Position X="17" Y="10.75" Width="1.5" />
+    <Position X="17" Y="11.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAACABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Orders\Model\RmaLineItemState.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Enum Name="VirtoCommerce.Foundation.Orders.Model.RmaRequestStatus" Collapsed="true">
-    <Position X="16.75" Y="10" Width="1.75" />
+    <Position X="16.75" Y="10.75" Width="1.75" />
     <TypeIdentifier>
       <HashCode>gAAAAAAAAAAAAAIAgAAAAAAAAAAAAAAAACAAAAAAAAA=</HashCode>
       <FileName>Orders\Model\RmaRequestStatus.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Enum Name="VirtoCommerce.Foundation.Orders.Model.ShipmentStatus" Collapsed="true">
-    <Position X="17" Y="11.5" Width="1.5" />
+    <Position X="17" Y="12.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAACAAAAgAQAAAAAAAAAAAAAEBAEAAAAAAAAA=</HashCode>
       <FileName>Orders\Model\ShipmentStatus.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="VirtoCommerce.Foundation.Orders.Model.OrderFormValueType" Collapsed="true">
+    <Position X="16.75" Y="10" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAgAAEAAAQAgAAAAAAAAAAAAAAAAAgQAAAAAAAAAAAA=</HashCode>
+      <FileName>Orders\Model\OrderFormValueType.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Font Name="Segoe UI" Size="9" />

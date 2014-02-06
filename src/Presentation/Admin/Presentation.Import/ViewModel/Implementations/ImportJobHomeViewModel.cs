@@ -1,13 +1,18 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Importing.Factories;
+using VirtoCommerce.Foundation.Importing.Services;
 using VirtoCommerce.Foundation.Security.Model;
+using VirtoCommerce.ManagementClient.Core.Controls.StatusIndicator.Model;
+using VirtoCommerce.ManagementClient.Core.Infrastructure.EventAggregation;
 using VirtoCommerce.ManagementClient.Import.Model;
 using VirtoCommerce.ManagementClient.Import.ViewModel.Interfaces;
 using VirtoCommerce.ManagementClient.Import.ViewModel.Wizard;
@@ -28,12 +33,12 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 		private readonly IViewModelsFactory<ICreateImportJobViewModel> _wizardVmFactory;
 		private readonly IViewModelsFactory<IImportJobRunViewModel> _runVmFactory;
 		private readonly IViewModelsFactory<IImportJobViewModel> _itemVmFactory;
-		private readonly IViewModelsFactory<IImportJobProgressViewModel> _progressVmFactory;
 		private readonly IAuthenticationContext _authContext;
+		private readonly IImportService _importService;
 		private readonly SubTabsDefaultViewModel _parentViewModel;
-
+		
 		#endregion
-
+		
 		public string HomeMenuName { get; set; }
 
 		#region Constructor
@@ -42,9 +47,9 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 			IViewModelsFactory<ICreateImportJobViewModel> wizardVmFactory,
 			IViewModelsFactory<IImportJobRunViewModel> runVmFactory,
 			IViewModelsFactory<IImportJobViewModel> itemVmFactory,
-			IViewModelsFactory<IImportJobProgressViewModel> progressVmFactory,
 			IImportJobEntityFactory entityFactory, 
-			IAuthenticationContext authContext, 
+			IAuthenticationContext authContext,
+			IImportService importService,
 			SubTabsDefaultViewModel parentViewModel
 			)
 		{
@@ -52,10 +57,10 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 			_importRepository = importRepository;
 			_wizardVmFactory = wizardVmFactory;
 			_runVmFactory = runVmFactory;
-			_progressVmFactory = progressVmFactory;
 			_itemVmFactory = itemVmFactory;
 			_authContext = authContext;
 			_parentViewModel = parentViewModel;
+			_importService = importService;
 
 			AvailableImporters = (ImportEntityType[]) Enum.GetValues(typeof(ImportEntityType));
 
@@ -206,26 +211,112 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 					);
 
 				var confirmation = new ConditionalConfirmation(itemVM.Validate) { Content = itemVM, Title = "Run Import Job" };
-				CommonConfirmRequest.Raise(confirmation, (x) =>
+				CommonConfirmRequest.Raise(confirmation, async (x) =>
 				{
 					if (x.Confirmed)
 					{
-						var progressVM = _progressVmFactory.GetViewModelInstance(
-							new KeyValuePair<string, object>("jobEntity", jobEntity)
-							);
-						var progress = new Confirmation { Content = progressVM, Title = "Import job run status" };
-						ImportJobRunRequest.Raise(progress);
+						await Task.Run(() =>
+							{
+								var id = Guid.NewGuid().ToString();
+
+								var statusUpdate = new StatusMessage
+									{
+										ShortText = string.Format("File '{0}' import.", Path.GetFileName(jobEntity.SourceFile)),
+										StatusMessageId = id
+									};
+								EventSystem.Publish(statusUpdate);
+
+								var progress = new Progress<ImportProgress>();
+								progress.ProgressChanged += ImportProgressChanged;
+								PerformImportAsync(id, jobEntity, progress);
+							});
 					}
 				});
 			}
 		}
 
+		private static void ImportProgressChanged(object sender, ImportProgress e)
+		{
+			if (e != null && e.ImportEntity != null && e.ImportResult != null)
+			{
+				if (!e.ImportResult.IsFinished)
+				{
+					var statusUpdate = new StatusMessage
+						{
+							ShortText =
+								string.Format("File '{0}' import. Processed {1} items.", Path.GetFileName(e.ImportEntity.SourceFile),
+								              e.Processed),
+							Details = e.ImportResult.Errors != null ?
+								e.ImportResult.Errors.Cast<object>()
+								 .Where(val => val != null)
+								 .Aggregate(string.Empty, (current, val) => current + (val.ToString() + Environment.NewLine)) : string.Empty,
+							StatusMessageId = e.StatusId
+						};
+					EventSystem.Publish(statusUpdate);
+				}
+				else
+				{
+					if (e.ImportResult.Errors != null)
+					{
+						var statusUpdate = new StatusMessage
+							{
+								ShortText = string.Format("File '{0}' imported with errors", Path.GetFileName(e.ImportEntity.SourceFile)),
+								StatusMessageId = e.StatusId,
+								Details = e.ImportResult.Errors.Cast<object>()
+								           .Where(val => val != null)
+								           .Aggregate(string.Empty, (current, val) => current + (val.ToString() + Environment.NewLine)),
+								State = StatusMessageState.Error
+							};
+						EventSystem.Publish(statusUpdate);
+					}
+					else
+					{
+						var statusUpdate = new StatusMessage
+							{
+								ShortText = string.Format("File '{0}' imported successfully", Path.GetFileName(e.ImportEntity.SourceFile)),
+								StatusMessageId = e.StatusId,
+								State = StatusMessageState.Success
+							};
+						EventSystem.Publish(statusUpdate);
+					}
+				}
+			}
+		}
+		
+		
+		private async void PerformImportAsync(string id, ImportEntity jobEntity, IProgress<ImportProgress> progress)
+		{
+			var task = new Task(() => _importService.RunImportJob(jobEntity.ImportJob.ImportJobId, jobEntity.SourceFile));
+			task.Start();
+			
+			if (progress != null)
+			{
+				var finished = false;
+				while (!finished)
+				{
+					await Task.Delay(TimeSpan.FromMilliseconds(100));
+					
+					var res = _importService.GetImportResult(jobEntity.ImportJob.ImportJobId);
+					progress.Report(new ImportProgress
+						{
+							ImportEntity = jobEntity,
+							ImportResult = res,
+							StatusId = id,
+							Processed = res == null ? 0 : res.ProcessedRecordsCount + res.ErrorsCount
+						});
+
+					if (res != null && res.IsFinished)
+						finished = true;
+				}
+			}
+		}
+		
 		private void RaiseItemDuplicateInteractionRequest(IList selectedItemsList)
 		{
 			// initial checks
 			if (selectedItemsList == null)
 			{
-				CommonNotifyRequest.Raise(new Notification {Content = "Select import job to run.", Title = "Error"});
+				CommonNotifyRequest.Raise(new Notification {Content = "Select import job to duplicate.", Title = "Error"});
 			}
 			else
 			{
@@ -241,6 +332,46 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 			OnPropertyChanged("SearchFilterName");
 		}
 		
+		#endregion
+
+		#region Import progress
+		
+		private ImportResult _result;
+		public ImportResult Result
+		{
+			get
+			{
+				return _result;
+			}
+			set
+			{
+				_result = value;
+				OnPropertyChanged();
+				OnPropertyChanged("Processed");
+				OnPropertyChanged("Errors");
+			}
+		}
+
+		public int Processed
+		{
+			get
+			{
+				return Result != null ? Result.ProcessedRecordsCount + Result.ErrorsCount : 0;
+			}
+		}
+
+		public string Errors
+		{
+			get
+			{
+				if (Result != null && Result.ErrorsCount > 0)
+				{
+					return Result.Errors.Cast<object>().Where(val => val != null).Aggregate(string.Empty, (current, val) => current + (val.ToString() + Environment.NewLine));
+				}
+				return string.Empty;
+			}
+		}
+
 		#endregion
 
 	}

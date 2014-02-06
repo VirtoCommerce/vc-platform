@@ -42,7 +42,7 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <WarningLevel>1</WarningLevel>
     <CodeAnalysisRuleSet>..\..\Strict.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
     <UseVSHostingProcess>true</UseVSHostingProcess>
@@ -71,21 +71,21 @@
     <Reference Include="ExpressionSerialization">
       <HintPath>..\..\..\Shared\ExpressionSerialization.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Data.Edm, Version=5.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Data.Edm, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\Microsoft.Data.Edm.5.4.0\lib\net40\Microsoft.Data.Edm.dll</HintPath>
+      <HintPath>..\..\..\packages\Microsoft.Data.Edm.5.6.0\lib\net40\Microsoft.Data.Edm.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Data.OData, Version=5.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Data.OData, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\Microsoft.Data.OData.5.4.0\lib\net40\Microsoft.Data.OData.dll</HintPath>
+      <HintPath>..\..\..\packages\Microsoft.Data.OData.5.6.0\lib\net40\Microsoft.Data.OData.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Data.Services, Version=5.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Data.Services, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\Microsoft.Data.Services.5.4.0\lib\net40\Microsoft.Data.Services.dll</HintPath>
+      <HintPath>..\..\..\packages\Microsoft.Data.Services.5.6.0\lib\net40\Microsoft.Data.Services.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Data.Services.Client, Version=5.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Data.Services.Client, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\Microsoft.Data.Services.Client.5.4.0\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
+      <HintPath>..\..\..\packages\Microsoft.Data.Services.Client.5.6.0\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation">
       <HintPath>..\..\..\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
@@ -97,6 +97,10 @@
     <Reference Include="Microsoft.Practices.Unity.Configuration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\Unity.3.0.1304.1\lib\Net45\Microsoft.Practices.Unity.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Microsoft.WindowsAzure.Configuration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Microsoft.WindowsAzure.ConfigurationManager.2.0.1.0\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
     </Reference>
     <Reference Include="Omu.ValueInjecter, Version=2.3.3.0, Culture=neutral, PublicKeyToken=c7694541b0ac80e4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -113,9 +117,9 @@
     <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Web" />
-    <Reference Include="System.Spatial, Version=5.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Spatial, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\System.Spatial.5.4.0\lib\net40\System.Spatial.dll</HintPath>
+      <HintPath>..\..\..\packages\System.Spatial.5.6.0\lib\net40\System.Spatial.dll</HintPath>
     </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -131,6 +135,7 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AppConfig\Model\ContextFieldConstants.cs" />
+    <Compile Include="AppConfig\Model\SeoUrlKeywordTypes.cs" />
     <Compile Include="AppConfig\Model\DisplayTemplateMapping.cs" />
     <Compile Include="AppConfig\Model\DisplayTemplateEvaluationContext.cs" />
     <Compile Include="AppConfig\Model\DisplayTemplateEvaluator.cs" />
@@ -145,6 +150,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AppConfig\Model\ObjectLock.cs" />
+    <Compile Include="AppConfig\Model\SeoUrlKeyword.cs" />
     <Compile Include="AppConfig\Model\Sequence.cs" />
     <Compile Include="AppConfig\Model\TargetEntry.cs" />
     <Compile Include="AppConfig\Model\Statistic.cs" />
@@ -171,6 +177,7 @@
     <Compile Include="Assets\Services\IAssetUrl.cs" />
     <Compile Include="Assets\Services\UploadStreamInfo.cs" />
     <Compile Include="Catalogs\CatalogConfiguration.cs" />
+    <Compile Include="Catalogs\Services\ICatalogOutlineBuilder.cs" />
     <Compile Include="Customers\Model\ContactPropertyValueName.cs" />
     <Compile Include="Customers\CustomerConfiguration.cs" />
     <Compile Include="Customers\CustomerSession.cs" />
@@ -217,6 +224,9 @@
     <Compile Include="Catalogs\Model\PropertyTargetType.cs" />
     <Compile Include="Catalogs\Model\PropertyAttribute.cs" />
     <Compile Include="Catalogs\Model\PropertyValueType.cs" />
+    <Compile Include="Importing\Model\Importers\SeoImporter.cs" />
+    <Compile Include="Orders\Model\OrderFormPropertyValue.cs" />
+    <Compile Include="Orders\Model\OrderFormValueType.cs" />
     <Compile Include="Catalogs\Model\PropertyValueBase.cs" />
     <Compile Include="Catalogs\Model\ItemPropertyValue.cs" />
     <Compile Include="Catalogs\Model\ItemRelationType.cs" />
@@ -312,6 +322,7 @@
     <Compile Include="Orders\Model\Gateways\GatewayPropertyDictionaryValue.cs" />
     <Compile Include="Orders\Model\Gateways\GatewayProperty.cs" />
     <Compile Include="Orders\Model\PaymentMethod\PaymentGateway.cs" />
+    <Compile Include="Orders\Model\PropertyValueBase.cs" />
     <Compile Include="Orders\Model\RmaLineItemState.cs" />
     <Compile Include="Orders\Model\Fulfillment\Picklist.cs" />
     <Compile Include="Orders\Model\OrderStatus.cs" />
@@ -336,9 +347,17 @@
     <Compile Include="PlatformTools\Logger.cs" />
     <Compile Include="PlatformTools\VirtoCommerceTraceSource.cs" />
     <Compile Include="PlatformTools\ILogger.cs" />
+    <Compile Include="Reporting\Helpers\RdlExpression.cs" />
+    <Compile Include="Reporting\Helpers\RdlType.cs" />
+    <Compile Include="Reporting\Model\ReportFolder.cs" />
+    <Compile Include="Reporting\Model\ReportInfo.cs" />
+    <Compile Include="Reporting\ReportingConfiguration.cs" />
+    <Compile Include="Reporting\Services\IReportingService.cs" />
+    <Compile Include="Reporting\Services\ReportingService.cs" />
     <Compile Include="Search\ISearchConnection.cs" />
     <Compile Include="Search\KeywordSearchCriteria.cs" />
     <Compile Include="Search\SearchConnection.cs" />
+    <Compile Include="Search\SearchProviders.cs" />
     <Compile Include="Security\Model\AccountState.cs" />
     <Compile Include="Security\Model\RegisterType.cs" />
     <Compile Include="Frameworks\BaseEvaluationContext.cs" />
@@ -739,7 +758,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Frameworks\Seo\" />
     <Folder Include="Inventories\Services\" />
   </ItemGroup>
   <ItemGroup>

@@ -32,8 +32,8 @@
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
 		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="Auto"/>
-			<ColumnDefinition/>
+			<ColumnDefinition Width="3*"/>
+			<ColumnDefinition Width="7*"/>
 		</Grid.ColumnDefinitions>
 
 		<TextBlock Grid.Row="0" Grid.Column="0" Text="Entity column:" />

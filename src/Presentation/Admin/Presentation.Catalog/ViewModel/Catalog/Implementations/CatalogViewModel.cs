@@ -292,6 +292,8 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			// just basic properties inject is enough. Injecting collections can generate repository errors.
 			OriginalItem.InjectFrom(InnerItem);
 
+
+
 			_parentTreeVM.RefreshUI();
 		}
 

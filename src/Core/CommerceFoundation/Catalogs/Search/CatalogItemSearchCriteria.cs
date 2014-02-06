@@ -155,6 +155,21 @@ namespace VirtoCommerce.Foundation.Catalogs.Search
 			set { ChangeState(); _startDate = value; }
 		}
 
+        private DateTime? _startDateFrom;
+
+        /// <summary>
+        /// Gets or sets the start date from filter. Used for filtering new products. The date must be in UTC format as that is format indexes are stored in.
+        /// </summary>
+        /// <value>The start date from.</value>
+        [DataMember]
+        public DateTime? StartDateFrom
+        {
+            get { return _startDateFrom; }
+            set { ChangeState(); _startDateFrom = value; }
+        }
+
+
+
 		private DateTime? _endDate;
 
 		/// <summary>

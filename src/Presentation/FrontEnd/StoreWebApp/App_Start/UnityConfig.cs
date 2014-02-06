@@ -2,6 +2,8 @@ using System;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Caching.HttpCache;
 using VirtoCommerce.Client;
+using VirtoCommerce.Client.Globalization;
+using VirtoCommerce.Client.Globalization.Repository;
 using VirtoCommerce.Client.Orders.StateMachines;
 using VirtoCommerce.Foundation.AppConfig.Factories;
 using VirtoCommerce.Foundation.AppConfig.Model;
@@ -10,6 +12,7 @@ using VirtoCommerce.Foundation.AppConfig.Services;
 using VirtoCommerce.Foundation.Assets.Factories;
 using VirtoCommerce.Foundation.Assets.Repositories;
 using VirtoCommerce.Foundation.Assets.Services;
+using VirtoCommerce.Foundation.Catalogs;
 using VirtoCommerce.Foundation.Catalogs.Factories;
 using VirtoCommerce.Foundation.Catalogs.Repositories;
 using VirtoCommerce.Foundation.Catalogs.Services;
@@ -18,6 +21,9 @@ using VirtoCommerce.Foundation.Customers.Repositories;
 using VirtoCommerce.Foundation.Customers.Services;
 using VirtoCommerce.Foundation.Data.AppConfig;
 using VirtoCommerce.Foundation.Data.Asset;
+using VirtoCommerce.Foundation.Data.Azure.Asset;
+using VirtoCommerce.Foundation.Data.Azure.Common;
+using VirtoCommerce.Foundation.Data.Azure.CQRS;
 using VirtoCommerce.Foundation.Data.Catalogs;
 using VirtoCommerce.Foundation.Data.Common;
 using VirtoCommerce.Foundation.Data.Customers;
@@ -61,6 +67,7 @@ using VirtoCommerce.Foundation.Orders.Factories;
 using VirtoCommerce.Foundation.Orders.Repositories;
 using VirtoCommerce.Foundation.Orders.Services;
 using VirtoCommerce.Foundation.Orders.StateMachines;
+using VirtoCommerce.Foundation.Reporting.Services;
 using VirtoCommerce.Foundation.Reviews.Factories;
 using VirtoCommerce.Foundation.Reviews.Repositories;
 using VirtoCommerce.Foundation.Search;
@@ -77,8 +84,7 @@ using VirtoCommerce.Foundation.Stores.Services;
 using VirtoCommerce.Scheduling.Jobs;
 using VirtoCommerce.Search.Index;
 using VirtoCommerce.Search.Providers.Elastic;
-using VirtoCommerce.Web.Client.Globalization;
-using VirtoCommerce.Web.Client.Globalization.Repository;
+using VirtoCommerce.Search.Providers.Lucene;
 using VirtoCommerce.Web.Client.Security;
 using VirtoCommerce.Web.Client.Services.Assets;
 using VirtoCommerce.Web.Client.Services.Emails;
@@ -91,11 +97,6 @@ using VirtoCommerce.Web.Virto.Helpers.Payments;
 
 namespace VirtoCommerce.Web
 {
-    using VirtoCommerce.Foundation.Data.Azure.Asset;
-    using VirtoCommerce.Foundation.Data.Azure.CQRS;
-    using VirtoCommerce.Foundation.Data.Azure.Common;
-    using VirtoCommerce.Search.Providers.Lucene;
-
     /// <summary>
     /// Specifies the Unity configuration for the main container.
     /// </summary>
@@ -183,6 +184,8 @@ namespace VirtoCommerce.Web
                 container.RegisterType<IEmailService, NetEmailService>();
             }
 
+            container.RegisterType<ICatalogOutlineBuilder, CatalogOutlineBuilder>();
+
             #region Interceptors
 
             // register interceptors
@@ -212,7 +215,7 @@ namespace VirtoCommerce.Web
             container.RegisterType<ISearchIndexBuilder, CatalogItemIndexBuilder>("catalogitem");
 
             // If provider specified as lucene, use lucene libraries, otherwise use default, which is elastic search
-            if (searchConnection.Provider == "lucene")
+            if (string.Equals(searchConnection.Provider, SearchProviders.Lucene.ToString(), StringComparison.OrdinalIgnoreCase))
             {
                 // Lucene Search implementation
                 container.RegisterType<ISearchProvider, LuceneSearchProvider>();
@@ -328,6 +331,11 @@ namespace VirtoCommerce.Web
 
             #endregion
 
+            #region Reporting
+
+            container.RegisterType<IReportingService, ReportingService>();
+            #endregion
+
             #endregion
 
             #region MVC Helpers
@@ -345,6 +353,8 @@ namespace VirtoCommerce.Web
             container.RegisterType<DisplayTemplateClient>();
             container.RegisterType<SettingsClient>();
             container.RegisterType<SequencesClient>();
+            container.RegisterType<SeoKeywordClient>();
+            container.RegisterType<ReviewClient>();
             container.RegisterType<IPaymentOption, CreditCardOption>("creditcard");
 
             #endregion

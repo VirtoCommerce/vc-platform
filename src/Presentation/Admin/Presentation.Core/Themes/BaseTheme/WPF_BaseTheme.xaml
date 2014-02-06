@@ -4,8 +4,7 @@
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
     xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-    
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls"
     xmlns:core_Converters="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Converters"
     xmlns:inf_behavior="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Behaviors"
@@ -18,6 +17,9 @@
 	<ResourceDictionary.MergedDictionaries>
 		<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/BaseTheme/BaseThemeBrushes.xaml"/>
 	</ResourceDictionary.MergedDictionaries>
+
+	<core_Converters:StringToVisibilityConverter x:Key="StringToVisibilityConverter" />
+	<core_Converters:StringToVisibilityConverter x:Key="StringToOppositeVisibilityConverter" OppositeStringValue="True" />
 
 	<Style x:Key="Virto_InputControl_Style" TargetType="{x:Type Control}">
 		<Setter Property="Background" Value="{DynamicResource Virto_TextBox_Background_Brush}"/>
@@ -407,6 +409,7 @@
 		<Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
 		<Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
 		<Setter Property="common:PasswordboxWatermarkTextHelper.IsMonitoring" Value="True"/>
+		<Setter Property="Validation.ErrorTemplate" Value="{StaticResource Virto_TextBox_ErrorTemplate_ControlTemplate}"/>
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="PasswordBox">
@@ -449,12 +452,114 @@
 			</Trigger>
 		</Style.Triggers>
 	</Style>
+	
+	<!-- Windows 8 password box -->
 
-	<!--********* TextBoxs-->
+	<Style x:Key="RevealButtonStyle" TargetType="{x:Type Button}">
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Grid>
+						<Border x:Name="PasswordRevealGlyphBorder" Background="Transparent" Margin="1,1,3,1"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+							<TextBlock x:Name="GlyphElement" Foreground="Black" VerticalAlignment="Center" HorizontalAlignment="Center"
+                                        Text="&#xE052;" FontFamily="Segoe UI Symbol" Margin="3,0"
+                                        FontSize="{TemplateBinding FontSize}" />
+						</Border>
+					</Grid>
+					<ControlTemplate.Triggers>
+						<DataTrigger Binding="{Binding ElementName=GlyphElement, Path=IsMouseOver}" Value="True">
+							<Setter TargetName="PasswordRevealGlyphBorder" Property="Background" Value="Gainsboro" />
+						</DataTrigger>
+						<DataTrigger Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsPressed}" Value="True">
+							<Setter TargetName="PasswordRevealGlyphBorder" Property="Background" Value="Black" />
+							<Setter TargetName="GlyphElement" Property="Foreground" Value="White" />
+						</DataTrigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
 
+	<Style x:Key="Win8PasswordBoxStyle" TargetType="{x:Type PasswordBox}" BasedOn="{StaticResource Virto_InputControl_Style}">
+		<Setter Property="Padding" Value="1"/>
+		<Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
+		<Setter Property="HorizontalContentAlignment" Value="Left"/>
+		<Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+		<Setter Property="AllowDrop" Value="true"/>
+		<Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
+		<Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+		<Setter Property="common:PasswordboxWatermarkTextHelper.IsMonitoring" Value="True"/>
+		<Setter Property="Validation.ErrorTemplate" Value="{StaticResource Virto_TextBox_ErrorTemplate_ControlTemplate}"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type PasswordBox}">
+					<Border x:Name="OuterBorder"
+                          BorderBrush="{TemplateBinding BorderBrush}"
+                          BorderThickness="{TemplateBinding BorderThickness}"
+                          Background="{TemplateBinding Background}"
+                          SnapsToDevicePixels="true">
+						<Grid VerticalAlignment="Center">
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition />
+								<ColumnDefinition Width="Auto" />
+							</Grid.ColumnDefinitions>
+							<ScrollViewer x:Name="PART_ContentHost" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+							<TextBox x:Name="RevealedPassword"
+                                    Text="{TemplateBinding common:PasswordHelper.Password}"
+                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                    VerticalContentAlignment="Center"
+                                    Padding="{TemplateBinding Padding}"
+                                    Margin="{TemplateBinding Padding}"
+                                    Background="{TemplateBinding Background}"
+                                    Visibility="Hidden" BorderThickness="0" IsReadOnly="True" FontFamily="Segoe UI" />
+							<TextBlock x:Name="TextBoxHint"
+                                      Text="Password"
+                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                      Visibility="{Binding ElementName=RevealedPassword, Path=Text, Converter={StaticResource StringToOppositeVisibilityConverter}}" 
+									  Style="{StaticResource Virto_Base_TextBlock_Watermark_Style}"/>
+							<Button x:Name="RevealButton"
+                                  Grid.Column="1" SnapsToDevicePixels="True"
+                                  Style="{StaticResource RevealButtonStyle}"
+                              Visibility="{Binding ElementName=RevealedPassword, Path=Text, Converter={StaticResource StringToVisibilityConverter}}" />
+						</Grid>
+					</Border>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsMouseOver" Value="True">
+							<Setter Property="BorderBrush" Value="{DynamicResource Virto_TextBox_BorderMouseOver_Brush}" />
+						</Trigger>
+						<Trigger Property="IsEnabled" Value="False">
+							<Setter Property="Opacity" Value="0.3" />
+							<Setter Property="BorderBrush" Value="{DynamicResource Virto_TextBox_BorderDisable_Brush}" />
+							<Setter Property="Background" TargetName="OuterBorder" Value="{StaticResource {x:Static SystemColors.ControlBrushKey}}" />
+							<Setter Property="Foreground" Value="{StaticResource {x:Static SystemColors.GrayTextBrushKey}}" />
+							<Setter Property="Opacity" TargetName="RevealButton" Value="0.5" />
+							<Setter Property="Text" TargetName="TextBoxHint" Value="{}{disabled} "/>
+						</Trigger>
+						<Trigger Property="IsFocused" Value="True">
+							<Setter Property="BorderBrush" Value="{DynamicResource Virto_TextBox_BorderMouseOver_Brush}" />
+						</Trigger>
+						<Trigger Property="common:PasswordboxWatermarkTextHelper.HasText" Value="False">
+							<Setter TargetName="TextBoxHint" Property="Visibility" Value="Visible"/>
+						</Trigger>
+						<Trigger Property="common:PasswordboxWatermarkTextHelper.HasText" Value="True">
+							<Setter Property="Background" TargetName="OuterBorder" Value="{DynamicResource Virto_TextBox_Watermark_Background_Brush}" />
+						</Trigger>
+						<Trigger Property="IsKeyboardFocusWithin" Value="True">
+							<Setter Property="Visibility" TargetName="TextBoxHint" Value="Hidden" />
+							<Setter Property="BorderBrush" Value="{DynamicResource Virto_TextBox_BorderMouseOver_Brush}" />
+							<Setter Property="Background" TargetName="OuterBorder" Value="{DynamicResource Virto_TextBox_Watermark_Background_Brush}" />
+						</Trigger>						
+						<DataTrigger Binding="{Binding ElementName=RevealButton, Path=IsPressed}" Value="True">
+							<Setter TargetName="RevealedPassword" Property="Visibility" Value="Visible" />
+						</DataTrigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
 
-
-
+		
 	<!--********* ProgressBar-->
 
 	<Style TargetType="{x:Type ProgressBar}" >
@@ -1886,7 +1991,8 @@
                                    Opacity="0" IsHitTestVisible="false"/>
 						<ContentPresenter Margin="{TemplateBinding Padding}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
                                           VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Content="{TemplateBinding Content}" 
-                                          ContentTemplate="{TemplateBinding ContentTemplate}" Cursor="{TemplateBinding Cursor}"/>
+                                          ContentTemplate="{TemplateBinding ContentTemplate}" Cursor="{TemplateBinding Cursor}">
+						</ContentPresenter>
 						<Rectangle x:Name="RightGridLine" VerticalAlignment="Stretch" Width="1" Grid.Column="1" />
 					</Grid>
 				</ControlTemplate>
@@ -1894,6 +2000,7 @@
 		</Setter>
 	</Style>
 
+	
 	<!--DataGrid Row-->
 	<Style x:Key='Virto_Base_DataGridRow_Style' TargetType="{x:Type DataGridRow}">
 		<Setter Property="Background" Value="Transparent" />
@@ -2539,7 +2646,8 @@
 	<Style TargetType="TreeViewItem" BasedOn="{StaticResource Virto_Base_TreeViewItem_Style}"/>
 	<Style TargetType="TreeView" BasedOn="{StaticResource Virto_Base_TreeView_Style}"/>
 	<Style TargetType="GroupBox" BasedOn="{StaticResource Virto_Base_GroupBox_Style}"/>
-	<Style TargetType="PasswordBox" BasedOn="{StaticResource Virto_Base_PasswordBox_Style}"/>
+	<!--<Style TargetType="PasswordBox" BasedOn="{StaticResource Virto_Base_PasswordBox_Style}"/>-->
+	<Style TargetType="PasswordBox" BasedOn="{StaticResource Win8PasswordBoxStyle}"/>
 	<Style TargetType="Hyperlink" BasedOn="{StaticResource Virto_Base_Hyperlink_Style}"/>
 	<Style TargetType="ItemsControl" BasedOn="{StaticResource Virto_Base_ItemsControl_Style}"/>
 	<Style TargetType="DataGridColumnHeader" BasedOn="{StaticResource Virto_Base_DataGridColumnHeader_Style}"/>

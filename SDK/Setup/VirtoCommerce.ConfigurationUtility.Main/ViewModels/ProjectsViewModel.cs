@@ -114,9 +114,9 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels
 
 		private void MenuItemAdmin()
 		{
-			var url = SelectedProject.BrowseUrl;
-			if (Uri.IsWellFormedUriString(url, UriKind.Absolute))
+			if (Uri.IsWellFormedUriString(SelectedProject.BrowseUrl, UriKind.Absolute))
 			{
+				var url = string.Format("storeurl={0}", SelectedProject.BrowseUrl);
 				var directory = Path.GetDirectoryName(typeof(ProjectsViewModel).Assembly.Location);
 				var resourcesDir = Path.GetFullPath(Path.Combine(directory, @"..\Resources"));
 				Process.Start(String.Format("{0}\\VirtoCommerceManager.appref-ms", resourcesDir), url);
@@ -184,8 +184,8 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels
 		protected override object LoadData()
 		{
 			var repository = _projectRepositoryFactory.GetRepositoryInstance();
-			var list = repository.Projects.ToList();
-
+			var list = repository.Projects.OrderByDescending(x => x.Created).ToList();
+			
 			// now go through each project and check the version and if it is online (directory is available)
 			foreach (var project in list)
 			{

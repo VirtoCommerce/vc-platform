@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Configuration;
+using System.Deployment.Application;
 using System.Threading.Tasks;
+using System.Web;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Unity;
+using PropertyChanged;
 using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Security;
@@ -14,6 +17,7 @@ using VirtoCommerce.ManagementClient.Security.ViewModel.Interfaces;
 
 namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 {
+	[ImplementPropertyChanged]
 	public class LoginViewModel : ViewModelBase, ILoginViewModel
 	{
 		#region Private fields
@@ -35,127 +39,55 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 
 		public LoginViewModel(IUnityContainer container)
 		{
-			LoginCommand = new DelegateCommand<object>(ProcessLogin, CanLogin);
+			CurrentUser = new Login();
+			CurrentUser.PropertyChanged += login_PropertyChanged;
+			LoginCommand = new DelegateCommand(ProcessLogin, () => CurrentUser.IsValid);
 			_container = container;
 			LoadValues();
 #if DEBUG
 			OnUIThread(() =>
 				{
-					if (string.IsNullOrEmpty(UserName))
+					if (string.IsNullOrEmpty(CurrentUser.Username))
 					{
-						UserName = SecurityModule.UserNameAdmin;
+						CurrentUser.Username = SecurityModule.UserNameAdmin;
 					}
-					if (string.IsNullOrEmpty(BaseUrl))
+					if (string.IsNullOrEmpty(CurrentUser.BaseUrl))
 					{
-						BaseUrl =
+						CurrentUser.BaseUrl =
 							GetConnectionStringBaseUrl(SecurityConfiguration.Instance.Connection.DataServiceBaseUriName);
 					}
-					Password = "store";
-
+					CurrentUser.Password = "store";
 				});
 #endif
+		}
+
+		void login_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+		{
+			LoginCommand.RaiseCanExecuteChanged();
 		}
 
 		#endregion
 
 		#region ILoginViewModel Members
 
-		public DelegateCommand<object> LoginCommand { get; private set; }
+		public DelegateCommand LoginCommand { get; private set; }
 
-		private bool _authProgress;
-		public bool AuthProgress
-		{
-			get
-			{
-				return _authProgress;
-			}
-			private set
-			{
-				_authProgress = value;
-				OnPropertyChanged("IsAnimation");
-				OnPropertyChanged();
-			}
-		}
+		[AlsoNotifyFor("IsAnimation")]
+		public bool AuthProgress { get; set; }
 
-		private string _userName;
-		public string UserName
-		{
-			get { return _userName; }
-			set
-			{
-				_userName = value;
-				OnPropertyChanged();
-				Password = null;
-				LoginCommand.RaiseCanExecuteChanged();
-			}
-		}
-
-		private string _password;
-		public string Password
-		{
-			get { return _password; }
-			set
-			{
-				_password = value;
-				OnPropertyChanged();
-				LoginCommand.RaiseCanExecuteChanged();
-			}
-		}
-
-		private string _baseUrl;
-		public string BaseUrl
-		{
-			get
-			{
-				return _baseUrl;
-			}
-			set
-			{
-				_baseUrl = value;
-				OnPropertyChanged();
-				LoginCommand.RaiseCanExecuteChanged();
-			}
-		}
-
-		private string _currentUserName;
-		public string CurrentUserName
-		{
-			get { return _currentUserName; }
-			set
-			{
-				_currentUserName = value;
-				OnPropertyChanged();
-			}
-		}
-
+		public Login CurrentUser{ get; private set; }
+		
 		public bool IsAnimation
 		{
 			get { return _isUserAuthenticated || AuthProgress; }
 		}
 
-		private string _error;
-		public string Error
-		{
-			get
-			{
-				return _error;
-			}
-			set
-			{
-				_error = value;
-				OnPropertyChanged();
-			}
-		}
+		public string Error { get; set; }
 
 		#endregion
 
 		#region Private methods
-
-		private bool CanLogin(object arg)
-		{
-			return !string.IsNullOrWhiteSpace(UserName) && !string.IsNullOrWhiteSpace(Password) && !string.IsNullOrWhiteSpace(BaseUrl);
-		}
-
+		
 		private void RegisterSecurityServices(string serviceBaseUrl)
 		{
 			var factory = new ServiceConnectionFactory(serviceBaseUrl);
@@ -176,7 +108,7 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 
 		public event EventHandler LogonViewRequestedEvent;
 
-		private async void ProcessLogin(object obj)
+		private async void ProcessLogin()
 		{
 			if (AuthProgress)
 			{
@@ -184,11 +116,10 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 			}
 			AuthProgress = true;
 			Error = null;
-			CurrentUserName = null;
 			try
 			{
 
-				var serviceBaseUrl = BaseUrl.ToLower();
+				var serviceBaseUrl = CurrentUser.BaseUrl.ToLower();
 
 				if (!serviceBaseUrl.EndsWith("/"))
 				{
@@ -203,25 +134,18 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 
 				RegisterSecurityServices(serviceBaseUrl);
 				var authenticationContext = _container.Resolve<IAuthenticationContext>();
-				_isUserAuthenticated = await Task.Run(() => authenticationContext.Login(UserName, Password, serviceBaseUrl));
+				_isUserAuthenticated = await Task.Run(() => authenticationContext.Login(CurrentUser.Username, CurrentUser.Password, serviceBaseUrl));
 
 				if (_isUserAuthenticated)
 				{
 					OnPropertyChanged("IsAnimation");
-					CurrentUserName = authenticationContext.CurrentUserName;
+					CurrentUser.CurrentUserName = authenticationContext.CurrentUserName;
 					var logonEvent = LogonViewRequestedEvent;
 					if (logonEvent != null)
 					{
 						logonEvent(this, null);
 					}
-					CurrentUserName = string.Format("{0}", UserName);
-					try
-					{
-						SaveValues();
-					}
-					catch
-					{
-					}
+					SaveValues();
 				}
 			}
 			catch (GetTokenException e)
@@ -244,20 +168,13 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 		{
 			try
 			{
-				if (!string.IsNullOrEmpty(_userName) && !string.IsNullOrEmpty(_password) && !string.IsNullOrEmpty(_baseUrl))
+				if (!string.IsNullOrEmpty(CurrentUser.Username) && !string.IsNullOrEmpty(CurrentUser.Password) && !string.IsNullOrEmpty(CurrentUser.BaseUrl))
 				{
 					var globalConfigService = _container.Resolve<IGlobalConfigService>();
 					if (globalConfigService != null)
 					{
-						globalConfigService.Update("UserName", _userName);
-						globalConfigService.Update("BaseUrl", _baseUrl);
-					}
-
-					// try getting settings from passed arguments
-					var args = AppDomain.CurrentDomain.SetupInformation.ActivationArguments.ActivationData;
-					if (args != null && args.Length > 0)
-					{
-						_baseUrl = args[0];
+						globalConfigService.Update("UserName", CurrentUser.Username);
+						globalConfigService.Update("BaseUrl", CurrentUser.BaseUrl);
 					}
 				}
 			}
@@ -271,13 +188,25 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 			try
 			{
 				string parameterUserName = null;
-				string parameterBaseUrl = null;
+				string parameterBaseUrl = null;				
 
-				// Get the ActivationArguments from the SetupInformation property of the domain.
-				var activationData = AppDomain.CurrentDomain.SetupInformation.ActivationArguments.ActivationData;
-				if (activationData != null && activationData.Length > 0)
+				if (ApplicationDeployment.IsNetworkDeployed && AppDomain.CurrentDomain.SetupInformation.ActivationArguments.ActivationData != null)
 				{
-					parameterBaseUrl = activationData[0];
+					var parameter = AppDomain.CurrentDomain.SetupInformation.ActivationArguments.ActivationData[0];
+					string queryString;
+					if (Uri.IsWellFormedUriString(parameter, UriKind.Absolute))
+					{
+						// activating from the web
+						queryString = new Uri(parameter).Query;
+					}
+					else
+					{
+						// in case activating from SDK Configuration Manager
+						queryString = parameter;
+					}
+
+					var nameValueTable = HttpUtility.ParseQueryString(queryString);
+					parameterBaseUrl = nameValueTable.Get("storeurl");
 				}
 
 				var globalConfigService = _container.Resolve<IGlobalConfigService>();
@@ -289,10 +218,15 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 
 				if (!string.IsNullOrEmpty(parameterUserName) || !string.IsNullOrEmpty(parameterBaseUrl))
 				{
+					if (!string.IsNullOrEmpty(parameterBaseUrl))
+					{
+						parameterBaseUrl = parameterBaseUrl.Replace('\\', '/');
+					}
+
 					OnUIThread(() =>
 					{
-						UserName = parameterUserName;
-						BaseUrl = parameterBaseUrl;
+						CurrentUser.Username = parameterUserName;
+						CurrentUser.BaseUrl = parameterBaseUrl;
 					});
 				}
 			}

@@ -4,19 +4,13 @@
 }
 @if (Model.Type == PopupType.Button)
 {
-	<button type="button" class="button @Model.ButtonCssClass" title="@Model.ButtonText" onclick="tb_show('test', '@Model.ViewName', false)">
-		<span><span>
-			@Model.ButtonText
-		</span></span>
-	</button>
+    <button type="button" class="button @Model.ButtonCssClass" title="@Model.ButtonText" rel="popup" data-link="@Url.Content(Model.ViewName)">
+        <span>
+            @Model.ButtonText
+        </span>
+    </button>
 }
 else
 {
-	<script type="text/javascript">
-		function showPopup(url) {
-		    var urlPopup = VirtoCommerce.url(url);
-			tb_show("@Model.PopupTitle", urlPopup, false);
-		}
-	</script>
-	<a onclick="showPopup('@Model.ViewName'); return false;" class="@Model.ButtonCssClass" href="#">@Model.ButtonText</a>
+    <a rel="popup" class="@Model.ButtonCssClass" href="@Url.Content(Model.ViewName)">@Model.ButtonText</a>
 }

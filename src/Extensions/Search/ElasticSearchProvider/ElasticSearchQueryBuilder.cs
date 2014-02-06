@@ -73,6 +73,14 @@ namespace VirtoCommerce.Search.Providers.Elastic
                     .Range(r => r.Field("startdate").To(c.StartDate.ToString("s")))
 					);
 
+
+                if (c.StartDateFrom.HasValue)
+                {
+                    query.Must(m => m
+                        .Range(r => r.Field("startdate").From(c.StartDateFrom.Value.ToString("s")))
+                   );
+                }
+
 				if (c.EndDate.HasValue)
 				{
 					query.Must(m => m

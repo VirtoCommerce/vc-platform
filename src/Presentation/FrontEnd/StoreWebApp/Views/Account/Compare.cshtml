@@ -5,14 +5,108 @@
     Layout = "~/Views/Shared/_LayoutPopUp.cshtml";
     var percentColumn = Model.LineItems == null ? 100 : 100 / (Model.LineItems.Count() + 1);
 }
-<script type="text/javascript">
-	$(document).ready(function ()
-	{
-		$('table#product_comparison tbody tr td:last-child').addClass('last');
-	});
-</script>
+
 @if (Model.LineItems != null)
 {
+    <table class="data-table">
+        <colgroup>
+            <col width="1">
+            @foreach (var li in Model.LineItems)
+            {
+                <col width="@percentColumn%" />
+            }
+        </colgroup>
+        <tbody>
+            <tr>
+                <td></td>
+                @foreach (var li in Model.LineItems)
+                {
+                    <td class="product-actions">
+                        @Ajax.ActionLink("Remove item".Localize(), "RemoveFromCompareList", "Cart", new { lineItemId = li.LineItemId }, new AjaxOptions
+                                {
+                                    HttpMethod = "POST",
+                                    Confirm = "Are you sure you would like to remove this item from the comparing list?".Localize(),
+                                    OnSuccess = "window.location.href=window.location.href"
+                                }, new { @class = "trash" })
+                    </td>
+                }
+            </tr>
+        </tbody>
+        <tbody>
+            <tr>
+                <td></td>
+                @foreach (var li in Model.LineItems)
+                {
+                    <td align="center">
+                        <img src="@Url.Image(li.CatalogItem.Item, "primaryimage")" title="" alt="@li.DisplayName" onerror="this.onerror=null;this.src='@Href("~/Content/themes/default/images/blank.png")';" />
+                        <span class="product-name">@li.DisplayName</span>
+                        <span class="price">@li.FormattedPlacedPrice</span>
+                        @{ var catalogModel = CatalogHelper.CreateCatalogModel(li.CatalogItem.ItemId, li.ParentCatalogItem != null ? li.ParentCatalogItem.ItemId : null, forcedActive: true);}
+                        @{ Html.RenderPartial("AddToCart", catalogModel, new ViewDataDictionary { { "View", "Details" } }); }
+                        @{ Html.RenderPartial("AddToLinks", catalogModel, new ViewDataDictionary { { "NoCompare", "1" }, { "View", "Details" } }); }
+                    </td>
+                }
+            </tr>
+        </tbody>
+        <tbody>
+            <tr>
+                <td>
+                    <span class="nobr">@("Description".Localize())</span>
+                </td>
+                @foreach (var li in Model.LineItems)
+                {
+                    <td>
+                        @li.DisplayName
+                    </td>
+                }
+            </tr>
+            <tr class="odd">
+                <td>
+                    <span class="nobr">@("SKU".Localize())</span>
+                </td>
+                @foreach (var li in Model.LineItems)
+                {
+                    <td>
+                        @li.CatalogItem.Code
+                    </td>
+                }
+            </tr>
+            @foreach (var group in Model.AvailableProperties)
+            {
+                <tr>
+                    <td>
+                        <span class="nobr">@group.Key</span>
+                    </td>
+                    @foreach (var li in Model.LineItems)
+                    {
+                        var prop = group.FirstOrDefault(g => g.CatalogItem.ItemId == li.CatalogItem.ItemId);
+                        <td>
+                            @if (prop != null)
+                            {
+                                @prop.ToString()
+                            }
+                            else
+                            {
+                                <span>@("N/A".Localize())</span>
+                            }
+                        </td>
+                    }
+                </tr>
+            }
+            <tr>
+                <td></td>
+                @foreach (var li in Model.LineItems)
+                {
+                    <td align="center">
+                        <span class="price">@li.FormattedPlacedPrice</span>
+                        @{ var catalogModel = CatalogHelper.CreateCatalogModel(li.CatalogItem.ItemId, li.ParentCatalogItem != null ? li.ParentCatalogItem.ItemId : null, forcedActive: true);}
+                        @{ Html.RenderPartial("AddToCart", catalogModel, new ViewDataDictionary { { "View", "Details" } }); }
+                        @{ Html.RenderPartial("AddToLinks", catalogModel, new ViewDataDictionary { { "NoCompare", "1" }, { "View", "Details" } }); }
+                    </td>
+                }
+            </tr>
+        </tbody>
+    </table>@*
     <div>
         <table id="product_comparison" class="data-table compare-table">
             <colgroup>
@@ -133,5 +227,5 @@
                 </tr>
             </tbody>
         </table>
-    </div>
+    </div>*@
 }

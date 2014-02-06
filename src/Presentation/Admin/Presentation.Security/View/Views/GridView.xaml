@@ -15,48 +15,43 @@
     
     <Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Virto_TextBlock_VirtualListView_Style}"/>
 
-    <!--Accounts main items list-->
+	<DataTemplate x:Key="userNameColumnTemplate">
+		<TextBlock Text="{Binding Data.DisplayName}" FontWeight="DemiBold" Foreground="{DynamicResource Virto_HighLightText_Foreground_Brush}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />				
+	</DataTemplate>
+
+	<DataTemplate x:Key="typeColumnTemplate">
+		<TextBlock Text="{Binding Data.OriginalItem.RegisterType, Converter={StaticResource registerTypeConverter}}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
+	</DataTemplate>
+
+	<DataTemplate x:Key="statusColumnTemplate">
+		<TextBlock Text="{Binding Data.OriginalItem.AccountState, Converter={StaticResource accountStateConverter}}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
+	</DataTemplate>
+
+	<!--Accounts main items list-->
     <GridView x:Key="gridViewView"
             ColumnHeaderContainerStyle="{StaticResource Virto_GridView_ColumnHeader_ContainerStyle}"
 			VirtualizingStackPanel.IsVirtualizing="True"
 			VirtualizingStackPanel.VirtualizationMode="Recycling"
 			ScrollViewer.IsDeferredScrollingEnabled="True"
-			core_virtualization:VirtualListLoadingIndicator.IsAttached="True"
-            >
-		<GridViewColumn Header="Username" core_common:GridViewColumnResize.Width="4*" Width="167.6" core_common:GridViewSort.PropertyName="Username">
-            <GridViewColumn.CellTemplate>
-                <DataTemplate>
-                    <StackPanel Margin="6,4,0,2" Orientation="Horizontal" Height="18">
-                        <Border HorizontalAlignment="Stretch" Margin="8,0,0,0">
-                            <StackPanel VerticalAlignment="Center">
-                                <TextBlock Text="{Binding Data.DisplayName}" FontWeight="DemiBold" 
-                                           Foreground="{DynamicResource Virto_HighLightText_Foreground_Brush}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
-                            </StackPanel>
-                        </Border>
-                    </StackPanel>
-                </DataTemplate>
-            </GridViewColumn.CellTemplate>
-        </GridViewColumn>
-                
-        <GridViewColumn Header="Register Type" core_common:GridViewColumnResize.Width="4*" Width="167.6" core_common:GridViewSort.PropertyName="RegisterType">
-            <GridViewColumn.CellTemplate>
-                <DataTemplate>
-					<TextBlock Text="{Binding Data.OriginalItem.RegisterType, Converter={StaticResource registerTypeConverter}}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
-                </DataTemplate>
-            </GridViewColumn.CellTemplate>
-        </GridViewColumn>
-
-        <GridViewColumn Header="Account State" core_common:GridViewColumnResize.Width="4*" Width="167.6" core_common:GridViewSort.PropertyName="AccountState">
-            <GridViewColumn.CellTemplate>
-                <DataTemplate>
-					<TextBlock Text="{Binding Data.OriginalItem.AccountState, Converter={StaticResource accountStateConverter}}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
-                </DataTemplate>
-            </GridViewColumn.CellTemplate>
-        </GridViewColumn>
+			core_virtualization:VirtualListLoadingIndicator.IsAttached="True">
+		<GridViewColumn Header="Username" core_common:GridViewColumnResize.Width="4*" Width="167.6" core_common:GridViewSort.PropertyName="Username" CellTemplate="{StaticResource userNameColumnTemplate}"/>
+		<GridViewColumn Header="Register Type" core_common:GridViewColumnResize.Width="4*" Width="167.6" core_common:GridViewSort.PropertyName="RegisterType" CellTemplate="{StaticResource typeColumnTemplate}"/>
+		<GridViewColumn Header="Account State" core_common:GridViewColumnResize.Width="4*" Width="167.6" core_common:GridViewSort.PropertyName="AccountState" CellTemplate="{StaticResource statusColumnTemplate}"/>
 
     </GridView>
 
-    <!--Roles main items list-->
+	<DataTemplate x:Key="roleNameColumnTemplate">
+		<StackPanel Margin="6,4,0,2" Orientation="Horizontal" Height="18">
+			<Border HorizontalAlignment="Stretch" Margin="8,0,0,0">
+				<StackPanel VerticalAlignment="Center">
+					<TextBlock Text="{Binding Data.OriginalItem.Name}" FontWeight="DemiBold" 
+                                           Foreground="{DynamicResource Virto_HighLightText_Foreground_Brush}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
+				</StackPanel>
+			</Border>
+		</StackPanel>
+	</DataTemplate>
+
+	<!--Roles main items list-->
     <GridView x:Key="gridRoleViewView"
             ColumnHeaderContainerStyle="{StaticResource Virto_GridView_ColumnHeader_ContainerStyle}"
 			VirtualizingStackPanel.IsVirtualizing="True"
@@ -64,25 +59,8 @@
 			ScrollViewer.IsDeferredScrollingEnabled="True"
 			core_virtualization:VirtualListLoadingIndicator.IsAttached="True"
             >
-        <GridViewColumn Header="Name" core_common:GridViewColumnResize.Width="13*" Width="544.8" core_common:GridViewSort.PropertyName="Name">
-            <GridViewColumn.CellTemplate>
-                <DataTemplate>
-                    <StackPanel Margin="6,4,0,2" Orientation="Horizontal" Height="18">
-                        <!--<Viewbox Height="18" Width="18">
-                            <ContentControl VerticalAlignment="Center" Content="{Binding Data.IconSource, Converter={StaticResource applicationResourceConverter}}" />
-                        </Viewbox>-->
-                        <Border HorizontalAlignment="Stretch" Margin="8,0,0,0">
-                            <StackPanel VerticalAlignment="Center">
-								<TextBlock Text="{Binding Data.OriginalItem.Name}" FontWeight="DemiBold" 
-                                           Foreground="{DynamicResource Virto_HighLightText_Foreground_Brush}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
-                            </StackPanel>
-                        </Border>
-                    </StackPanel>
-                </DataTemplate>
-            </GridViewColumn.CellTemplate>
-        </GridViewColumn>
-
-    </GridView>
+		<GridViewColumn Header="Name" core_common:GridViewColumnResize.Width="13*" Width="544.8" core_common:GridViewSort.PropertyName="Name" CellTemplate="{StaticResource roleNameColumnTemplate}"/>
+	</GridView>
 
 
 

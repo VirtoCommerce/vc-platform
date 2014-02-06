@@ -141,7 +141,7 @@ namespace VirtoCommerce.Foundation.Search
         /// </returns>
         public override string ToString()
         {
-            return FieldName + "-" + IsDescending.ToString(); ;
+            return FieldName + "-" + IsDescending.ToString();
         }
     }
 

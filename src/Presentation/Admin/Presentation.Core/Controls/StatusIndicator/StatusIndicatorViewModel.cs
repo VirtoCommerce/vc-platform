@@ -131,7 +131,8 @@ namespace VirtoCommerce.ManagementClient.Core.Controls.StatusIndicator.ViewModel
 						StatusMessageId = message.StatusMessageId,
 						Progress = message.CanReportProgress ? message.Progress : 100,
 						IsProgressVisible = message.CanReportProgress,
-						State = message.State
+						State = message.State,
+						Details = message.Details
 					};
 
 				Messages.Add(item);

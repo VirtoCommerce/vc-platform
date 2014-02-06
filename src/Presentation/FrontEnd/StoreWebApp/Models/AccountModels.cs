@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Runtime.Serialization;
 using System.Web.Mvc;
 using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Web.Client.Extensions.Validation;
@@ -36,6 +37,7 @@ namespace VirtoCommerce.Web.Models
 		/// <value>The old password.</value>
         [DataType(DataType.Password)]
         [Display(Name = "Current password")]
+        [RequiredIf("ChangePassword", true)]
         public string OldPassword { get; set; }
 
 		/// <summary>
@@ -45,6 +47,7 @@ namespace VirtoCommerce.Web.Models
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         [Display(Name = "New password")]
+        [RequiredIf("ChangePassword", true)]
         public string NewPassword { get; set; }
 
 		/// <summary>
@@ -53,8 +56,8 @@ namespace VirtoCommerce.Web.Models
 		/// <value>The confirm password.</value>
         [DataType(DataType.Password)]
         [Display(Name = "Confirm new password")]
-        [System.Web.Mvc.Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match."
-            )]
+        [System.Web.Mvc.Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match." )]
+        [RequiredIf("ChangePassword", true)]
         public string ConfirmPassword { get; set; }
 
 		/// <summary>
@@ -90,6 +93,12 @@ namespace VirtoCommerce.Web.Models
         [Required]
         [Display(Name = "User name")]
         public string UserName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the name of the impersonated user.
+        /// </summary>
+        /// <value>The name of the impersonated user.</value>
+        public string ImpersonatedUserName { get; set; }
 
 		/// <summary>
 		/// Gets or sets the password.
@@ -150,11 +159,8 @@ namespace VirtoCommerce.Web.Models
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
-        /*
-        [Required]
-        [Display(Name = "User name")]
-        public string UserName { get; set; }
-         * */
+        [Display(Name = "Sign up for news")]
+        public bool SignUpForNews { get; set; }
 
 		/// <summary>
 		/// Gets or sets the email.
@@ -181,8 +187,7 @@ namespace VirtoCommerce.Web.Models
 		/// <value>The confirm password.</value>
         [DataType(DataType.Password)]
         [Display(Name = "Confirm password")]
-        [System.ComponentModel.DataAnnotations.Compare("Password",
-            ErrorMessage = "The password and confirmation password do not match.")]
+        [System.ComponentModel.DataAnnotations.Compare("Password",ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
     }
 
@@ -196,10 +201,60 @@ namespace VirtoCommerce.Web.Models
 		/// Gets or sets the email.
 		/// </summary>
 		/// <value>The email.</value>
-        [Display(Name = "Email Address")]
-        [DataType(DataType.EmailAddress)]
+        [Display(Name = "User name")]
         [Required]
-        public string Email { get; set; }
+        public string UserName { get; set; }
+    }
+
+    public class ResetPasswordModel
+    {
+        public ResetPasswordModel(){}
+
+        public ResetPasswordModel(string token)
+        {
+            Token = token;
+        }
+        /// <summary>
+        /// Gets or sets the new password.
+        /// </summary>
+        /// <value>The new password.</value>
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        [Display(Name = "New password")]
+        [RequiredIf("ChangePassword", true)]
+        public string NewPassword { get; set; }
+
+        /// <summary>
+        /// Gets or sets the confirm password.
+        /// </summary>
+        /// <value>The confirm password.</value>
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirm new password")]
+        [System.Web.Mvc.Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+        [RequiredIf("ChangePassword", true)]
+        public string ConfirmPassword { get; set; }
+
+
+        [Required]
+        [Display(Name = "Password reset token")]
+        public string Token { get; set; }
+
+    }
+
+    [DataContract]
+    public class ResetPasswordTemplate
+    {
+        public ResetPasswordTemplate()
+        {
+            AuthorName = "Virto Commerce";
+        }
+
+        [DataMember]
+        public string Url { get; set; }
+        [DataMember]
+        public string Username { get; set; }
+        [DataMember]
+        public string AuthorName { get; set; }
     }
 
 	/// <summary>

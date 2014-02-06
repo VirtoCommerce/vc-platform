@@ -231,7 +231,8 @@ function tb_show(caption, url, imageGroup) {//function called when the user clic
                     $("#TB_load").remove();
                     $("#TB_window").css({ display: "block" });
                 }
-                  } else {
+            } else
+            {
                   $.ajax({
                   	type: 'GET',
                   	url: url,

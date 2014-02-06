@@ -2,6 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
                     xmlns:localViewModel="clr-namespace:VirtoCommerce.ManagementClient.DynamicContent.ViewModel"
+					xmlns:catalogViewModel="clr-namespace:VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementations;assembly=VirtoCommerce.ManagementClient.Catalog"
+					xmlns:catalogView="clr-namespace:VirtoCommerce.ManagementClient.Catalog.View;assembly=VirtoCommerce.ManagementClient.Catalog"
                     xmlns:localView="clr-namespace:VirtoCommerce.ManagementClient.DynamicContent.View"
                     xmlns:localWizardViewModel="clr-namespace:VirtoCommerce.ManagementClient.DynamicContent.ViewModel.Wizard"
                     xmlns:localWizardView="clr-namespace:VirtoCommerce.ManagementClient.DynamicContent.View.Wizard"
@@ -73,8 +75,8 @@
     </DataTemplate>
 
     <!-- Search View -->
-    <DataTemplate DataType="{x:Type localViewModel:SearchCategoryViewModel}">
-        <core_controls:CacheContentControl Type="{x:Type localView:SearchCategoryView}"/>
+	<DataTemplate DataType="{x:Type catalogViewModel:SearchCategoryViewModel}">
+		<core_controls:CacheContentControl Type="{x:Type catalogView:SearchCategoryView}"/>
     </DataTemplate>
 
 	<!--Brushes-->

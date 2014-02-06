@@ -1,0 +1,40 @@
+a
+{
+	-webkit-transition: color .3s ease-in-out 0s;
+	   -moz-transition: color .3s ease-in-out 0s;
+			transition: color .3s ease-in-out 0s;
+}
+
+.head-switch > span,
+.head-switch ul,
+.head-switch ul li a,
+.article .products-list .item:hover .inner .product-info .cart button:before,
+.article .block form button,
+.head-top-block .cart-options ul li.compare a,
+.head-top-block .search .submit,
+.footer-wrap .info .twitter-list li:before,
+.footer-wrap .info .social li a,
+.article .slider-products .nav li a,
+.header .menu li.opened .sub-menu,
+.head-top-block .cart-options ul li.compare a:hover:before,
+.head-top-block .cart-options ul li.cart a:hover:before,
+a.top,
+.article .content .products-list.list .item .inner .product-info .button-container ul li.cart a:before,
+.article .product-view .product-info .product-image .products-previews .nav li a,
+.article .product-view .product-info .product-shop .add-to-cart button,
+.article .product-view .product-info .product-shop .add-to-links li a:before,
+.article .product-view .product-other .product-additional .nav li a,
+.data-table tbody td.product-actions a,
+.article .checkout .steps li a:before
+{
+	-webkit-transition: all .3s ease-in-out 0s;
+	   -moz-transition: all .3s ease-in-out 0s;
+			transition: all .3s ease-in-out 0s;
+}
+
+.header .menu > li > a > span
+{
+	-webkit-transition: all .6s ease-in-out 0s;
+	   -moz-transition: all .6s ease-in-out 0s;
+			transition: all .6s ease-in-out 0s;
+}

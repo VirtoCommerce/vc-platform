@@ -14,6 +14,7 @@
 			 xmlns:inf="clr-namespace:VirtoCommerce.ManagementClient.DynamicContent.Infrastructure"
 			 xmlns:dynamicContent="clr-namespace:VirtoCommerce.Foundation.Marketing.Model.DynamicContent;assembly=VirtoCommerce.Foundation"
 			 d:DesignHeight="450" d:DesignWidth="700"
+			 xmlns:propertiesViewWizard="clr-namespace:VirtoCommerce.ManagementClient.DynamicContent.View.Wizard"
 			Style="{DynamicResource Virto_Window_Style}">
 
 	<UserControl.Resources>
@@ -31,87 +32,20 @@
 		</ResourceDictionary>
 	</UserControl.Resources>
 
-	<i:Interaction.Triggers>
-		<prism:InteractionRequestTrigger SourceObject="{Binding CommonConfirmRequest, Mode=OneWay}">
-			<interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:ConfirmationLocalModalInteractionDialog}" />
-		</prism:InteractionRequestTrigger>
-	</i:Interaction.Triggers>
-
 	<TabControl x:Name="tabControl" Style="{StaticResource Virto_TabControlHorizontal_Style}">
 			<!-- OVERVIEW -->
 			<TabItem x:Name="tabItemSummary" Header="Overview">
-				<Grid Width="400" HorizontalAlignment="Left" >
-					<Grid.RowDefinitions>
-						<RowDefinition Height="Auto"/>
-						<RowDefinition Height="Auto"/>
-						<RowDefinition Height="Auto"/>
-						<RowDefinition Height="Auto"/>
-						<RowDefinition Height="Auto"/>
-						<RowDefinition Height="*"/>
-					</Grid.RowDefinitions>
-
-					<TextBlock Grid.Row="0" Text="Name:"/>
-					<core_controls:WatermarkedTextBox Grid.Row="1" Text="{Binding InnerItem.Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
-
-					<TextBlock Grid.Row="2" Text="Description:" />
-					<core_controls:WatermarkedTextBox Grid.Row="3" Text="{Binding InnerItem.Description, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Style="{StaticResource Virto_Multiline_WatermarkedTextBox_Style}" HorizontalAlignment="Stretch" Height="60"/>
-
-					<Grid Grid.Row="4">
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="Auto"/>
-							<ColumnDefinition Width="10"/>
-							<ColumnDefinition/>
-						</Grid.ColumnDefinitions>
-
-						<TextBlock Grid.Column="0" Text="Content type:" />
-						<TextBlock Grid.Column="2" Text="{Binding InnerItem.ContentTypeId}" Margin="6,12,0,8"/>
-
-					</Grid>
-				</Grid>
-			</TabItem>
+			<ScrollViewer VerticalScrollBarVisibility="Auto">
+				<propertiesViewWizard:CreateDynamicContentOverviewView HorizontalAlignment="Left"/>
+			</ScrollViewer>
+		</TabItem>
 
 			<!--PROPERTIES-->
 			<TabItem x:Name="tabProperties" Header="Properties">
-				<Grid>
-					<Grid.Resources>
-						<inf:PropertyValueConverter x:Key="propertyValueConverter" />
-					</Grid.Resources>
-				
-					<Grid.RowDefinitions>
-						<RowDefinition Height="auto"/>
-						<RowDefinition/>
-					</Grid.RowDefinitions>	
-
-					<ItemsControl Grid.Row="0" Style="{StaticResource Virto_ToolbarItemsControl_Style}" >
-						<core_controls:MetroButton Command="{Binding PropertyValueEditCommand}" CommandParameter="{Binding SelectedItem, ElementName=PropertiesList}" Header="EDIT" ToolTip="Edit Property Value">
-                        <core_controls:VectorImage ImageResource="{StaticResource Icon_Button_Copy}" Width="13" Height="13" Margin="0,0,1,0" />
-                    </core_controls:MetroButton>
-						<core_controls:MetroButton Command="{Binding PropertyValueDeleteCommand}" CommandParameter="{Binding SelectedItem, ElementName=PropertiesList}" Header="CLEAR" ToolTip="Clear Property Value">
-							<Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/cancel.png" Width="14"/>
-						</core_controls:MetroButton>
-					</ItemsControl>
-
-                <DataGrid Grid.Row="1" x:Name="PropertiesList" ItemsSource="{Binding InnerItem.PropertyValues}" Margin="0,0,0,4">
-						<DataGrid.Columns>
-							<DataGridTextColumn Header="Name" Binding="{Binding Name}" />
-							<DataGridTextColumn Header="Value" Binding="{Binding LongTextValue, Converter={StaticResource propertyValueConverter}}" />
-						</DataGrid.Columns>
-
-						<DataGrid.RowStyle>
-                        <Style TargetType="DataGridRow"  BasedOn="{StaticResource {x:Type DataGridRow}}">
-								<Setter Property="inf_behavior:MouseDoubleClickBehavior.DoubleClickCommand" Value="{Binding DataContext.PropertyValueEditCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}" />
-								<Setter Property="inf_behavior:MouseDoubleClickBehavior.CommandArgument" Value="{Binding SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}" />
-							</Style>
-						</DataGrid.RowStyle>
-
-						<i:Interaction.Triggers>
-							<i:EventTrigger EventName="SelectionChanged">
-								<ei:CallMethodAction TargetObject="{Binding }" MethodName="RaiseCanExecuteChanged"/>
-							</i:EventTrigger>
-						</i:Interaction.Triggers>
-					</DataGrid>
-				</Grid>
-			</TabItem>
+			<ScrollViewer VerticalScrollBarVisibility="Auto">
+				<propertiesViewWizard:CreateDynamicContentPropertiesView HorizontalAlignment="Left"/>
+			</ScrollViewer>
+		</TabItem>
 
 		</TabControl>
 </UserControl>

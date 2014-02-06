@@ -2,11 +2,15 @@
 using System.Globalization;
 using System.Linq;
 using System.Collections.Generic;
+using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.Catalogs.Model;
+using VirtoCommerce.Web.Client.Helpers;
 
 namespace VirtoCommerce.Web.Models
 {
-	/// <summary>
+    using VirtoCommerce.Foundation.Catalogs.Services;
+
+    /// <summary>
 	/// Class ItemModel.
 	/// </summary>
     public class ItemModel
@@ -32,6 +36,16 @@ namespace VirtoCommerce.Web.Models
 		/// </summary>
 		/// <value>The name.</value>
         public string Name
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the CategoryName.
+        /// </summary>
+        /// <value>The name.</value>
+        public string CategoryName
         {
             get;
             set;
@@ -152,6 +166,8 @@ namespace VirtoCommerce.Web.Models
 		/// </summary>
 		/// <value>The properties.</value>
         public PropertiesModel Properties { get; set; }
+
+        public CatalogOutlines CatalogOutlines { get; set; }
     }
 
 	/// <summary>
@@ -472,5 +488,22 @@ namespace VirtoCommerce.Web.Models
             }
             return base.ToString();
         }
+    }
+
+    public class CategoryPathModel
+    {
+        private string _url;
+
+        public string Url
+        {
+            get { return _url; }
+            set
+            {
+                Category = value.Split(new[] { '/' }).Last();
+                _url = value;
+            }
+        }
+
+        public string Category { get; set; }
     }
 }

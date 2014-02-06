@@ -26,9 +26,6 @@
     <DataTemplate DataType="{x:Type implementations:ImportJobRunViewModel}">
         <core_controls:CacheContentControl Type="{x:Type localView:ImportJobRunView}"/>
     </DataTemplate>
-    <DataTemplate DataType="{x:Type implementations:ImportJobProgressViewModel}">
-        <core_controls:CacheContentControl Type="{x:Type localView:ImportJobProgressView}"/>
-    </DataTemplate>
     <DataTemplate DataType="{x:Type implementations:ColumnMappingViewModel}">
         <core_controls:CacheContentControl Type="{x:Type localView:ColumnMappingView}"/>
     </DataTemplate>

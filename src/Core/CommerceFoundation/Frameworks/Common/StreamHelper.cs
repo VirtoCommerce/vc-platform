@@ -52,7 +52,5 @@ namespace VirtoCommerce.Foundation.Frameworks.Common
 
 			targetStream.Flush();
 		}
-
-
 	}
 }

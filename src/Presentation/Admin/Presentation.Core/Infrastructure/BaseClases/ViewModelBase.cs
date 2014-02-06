@@ -153,13 +153,15 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure
 			}
 		}
 
-		public static void PerformTasksInBackgroundWorker(Action onDoWork, Action onRunWorkerCompleted)
+		public static void PerformTasksInBackgroundWorker(Action onDoWork, Action onRunWorkerCompleted = null)
 		{
 			using (var backgroundWorker = new BackgroundWorker())
 			{
 				backgroundWorker.DoWork += (sender, args) => onDoWork();
-
-				backgroundWorker.RunWorkerCompleted += (sender, args) => onRunWorkerCompleted();
+			    if (onRunWorkerCompleted != null)
+			    {
+			        backgroundWorker.RunWorkerCompleted += (sender, args) => onRunWorkerCompleted();
+			    }
 				backgroundWorker.RunWorkerAsync();
 			}
 		}

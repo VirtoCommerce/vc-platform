@@ -3,7 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
+using VirtoCommerce.Client;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Catalogs.Model;
+using VirtoCommerce.Web.Client.Extensions;
+using VirtoCommerce.Web.Client.Helpers;
+using VirtoCommerce.Web.Virto.Helpers;
 
 namespace VirtoCommerce.Web.Models
 {
@@ -48,7 +53,7 @@ namespace VirtoCommerce.Web.Models
                 //Create selections
                 _selectedVariations = new Dictionary<string, SelectionValue>();
                 var relationGroups = relations.Select(rel => rel.GroupName).Distinct();
-                foreach (var prop in selectedVariation.ItemPropertyValues.Where(p => relationGroups.Contains(p.Name)))
+                foreach (var prop in selectedVariation.ItemPropertyValues.LocalizedProperties().Where(p => relationGroups.Contains(p.Name)))
                 {
                     _selectedVariations.Add(prop.Name, new SelectionValue { Value = prop.ToString() });
                 }
@@ -88,7 +93,7 @@ namespace VirtoCommerce.Web.Models
                 {
                     //Iterate through each property in ItemRelation ChildItem
                     var @group = relationGroup;
-                    foreach (var prop in relation.ChildItem.ItemPropertyValues.Where(p => p.Name == @group.Key))
+                    foreach (var prop in relation.ChildItem.ItemPropertyValues.LocalizedProperties().Where(p => p.Name == @group.Key))
                     {
                         var propValue = prop.ToString();
 
@@ -116,7 +121,7 @@ namespace VirtoCommerce.Web.Models
                                     continue;
                                 }
                                 var selProp =
-                                    relation.ChildItem.ItemPropertyValues.FirstOrDefault(p => p.Name == sel.Key);
+                                    relation.ChildItem.ItemPropertyValues.LocalizedProperties().FirstOrDefault(p => string.Equals(p.Name, sel.Key, StringComparison.InvariantCultureIgnoreCase));
                                 if (selProp == null || selProp.ToString().Equals(sel.Value.Value))
                                 {
                                     continue;
@@ -179,7 +184,7 @@ namespace VirtoCommerce.Web.Models
                 //Extra filter by all properties
                 foreach (var itemId in from itemId in _selectedVariationCandidates.ToArray()
                                        let item = relations.Select(r => r.ChildItem).First(i => i.ItemId == itemId)
-                                       where item.ItemPropertyValues.Any(p => this[p.Name] != null && !string.Equals(this[p.Name].Value, p.ToString()))
+                                       where item.ItemPropertyValues.LocalizedProperties().Any(p => this[p.Name] != null && !string.Equals(this[p.Name].Value, p.ToString()))
                                        select itemId)
                 {
                     _selectedVariationCandidates.Remove(itemId);
@@ -214,6 +219,14 @@ namespace VirtoCommerce.Web.Models
             get
             {
                 return _selectedVariationCandidates.Count == 1 ? _selectedVariationCandidates.First() : null;
+            }
+        }
+
+        public CatalogItemWithPriceModel CatalogItem
+        {
+            get
+            {
+                return string.IsNullOrEmpty(SelectedVariationId) ? null : CatalogHelper.CreateCatalogModel(SelectedVariationId, ParentItemId, forcedActive: true);
             }
         }
 
@@ -262,7 +275,7 @@ namespace VirtoCommerce.Web.Models
         public VariationGroup(string name)
         {
             //Add empty item
-            Items.Add(new SelectListItem { Text = string.Format("Pick {0}", name), Value = "" });
+            Items.Add(new SelectListItem { Text = "Pick {0}".Localize((object)name), Value = "" });
             Name = name;
         }
 

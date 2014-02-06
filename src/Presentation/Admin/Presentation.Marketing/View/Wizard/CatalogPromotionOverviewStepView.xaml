@@ -19,6 +19,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/WizardViewTheme/VirtoCommerceWizardTheme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+			<localInfrastructure:PromotionStatusConverter x:Key="promotionStatusConverter" />
             <localInfrastructure:ExclusivityTypeConverter x:Key="exclusivityTypeConverter" />
             <ObjectDataProvider x:Key="AvailableExclusivityTypes" ObjectType="{x:Type sys:Enum}" MethodName="GetValues">
                 <ObjectDataProvider.MethodParameters>
@@ -102,6 +103,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+					<RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <!-- Date/time -->
@@ -109,7 +111,9 @@
                 <DatePicker Grid.Row="1" SelectedDate="{Binding InnerItem.StartDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
                 <TextBlock Grid.Row="2" Text="Expiration date/time:" />
                 <DatePicker Grid.Row="3" SelectedDate="{Binding InnerItem.EndDate, Mode=TwoWay, ValidatesOnDataErrors=True}" />
-            </Grid>
+				<CheckBox Content="Is active" IsChecked="{Binding InnerItem.Status, Mode=TwoWay, Converter={StaticResource promotionStatusConverter}}"                              
+                              Grid.Row="4" HorizontalAlignment="Left" Margin="0,12,0,8"/>
+			</Grid>
             <Grid Grid.Column="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -152,8 +156,8 @@
                                 <TextBlock Text="{Binding }" />
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
-                    </ComboBox>
-                </Grid>
+                    </ComboBox>					
+				</Grid>
             </Grid>
         </Grid>
     </Grid>

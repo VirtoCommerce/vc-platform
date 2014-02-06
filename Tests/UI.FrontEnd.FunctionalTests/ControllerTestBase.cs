@@ -89,8 +89,8 @@ using VirtoCommerce.PowerShell.DatabaseSetup;
 using VirtoCommerce.Search.Index;
 using VirtoCommerce.Search.Providers.Elastic;
 using VirtoCommerce.Web.Client;
-using VirtoCommerce.Web.Client.Globalization;
-using VirtoCommerce.Web.Client.Globalization.Repository;
+using VirtoCommerce.Client.Globalization;
+using VirtoCommerce.Client.Globalization.Repository;
 using VirtoCommerce.Web.Client.Security;
 using VirtoCommerce.Web.Client.Services.Assets;
 using VirtoCommerce.Web.Client.Services.Emails;
@@ -98,13 +98,14 @@ using VirtoCommerce.Web.Client.Services.Listeners;
 using VirtoCommerce.Web.Client.Services.Security;
 using VirtoCommerce.Web.Client.Services.Sequences;
 using VirtoCommerce.Web.Client.Services.Templates;
-using VirtoCommerce.Web.Helpers;
 using VirtoCommerce.Web.Virto.Helpers;
 using VirtoCommerce.Web.Virto.Helpers.Payments;
 
 namespace UI.FrontEnd.FunctionalTests
 {
-	public abstract class ControllerTestBase : FunctionalTestBase, IDisposable
+    using VirtoCommerce.Foundation.Catalogs;
+
+    public abstract class ControllerTestBase : FunctionalTestBase, IDisposable
 	{
 		public const string CatalogDatabaseName = "CatalogTest";
 		public const string AppConfigDatabaseName = "AppConfigTest";
@@ -459,6 +460,7 @@ namespace UI.FrontEnd.FunctionalTests
 			container.RegisterType<ICatalogEntityFactory, CatalogEntityFactory>(new ContainerControlledLifetimeManager());
 
 			container.RegisterType<ICatalogRepository, EFCatalogRepository>(new InjectionConstructor(CatalogDatabaseName));
+            container.RegisterType<ICatalogOutlineBuilder, CatalogOutlineBuilder>();
 			container.RegisterType<IPricelistRepository, EFCatalogRepository>(new InjectionConstructor(CatalogDatabaseName));
 			container.RegisterType<ICatalogService, CatalogService>();
 			container.RegisterType<IPriceListAssignmentEvaluator, PriceListAssignmentEvaluator>();

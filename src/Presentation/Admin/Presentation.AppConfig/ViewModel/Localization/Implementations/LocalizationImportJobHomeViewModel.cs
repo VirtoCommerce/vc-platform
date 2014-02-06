@@ -8,6 +8,7 @@ using VirtoCommerce.Foundation.Importing.Model;
 using VirtoCommerce.Foundation.Importing.Repositories;
 using VirtoCommerce.ManagementClient.Import.ViewModel.Interfaces;
 using VirtoCommerce.ManagementClient.Import.ViewModel.Wizard;
+using VirtoCommerce.Foundation.Importing.Services;
 
 namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implementations
 {
@@ -19,12 +20,12 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 			IRepositoryFactory<IImportRepository> importRepository,
 			IViewModelsFactory<ICreateImportJobViewModel> wizardVmFactory,
 			IViewModelsFactory<IImportJobRunViewModel> runVmFactory,
-			IViewModelsFactory<IImportJobViewModel> itemVmFactory,
-			IViewModelsFactory<IImportJobProgressViewModel> progressVmFactory, 
+			IViewModelsFactory<IImportJobViewModel> itemVmFactory, 
 			IImportJobEntityFactory entityFactory,
-			IAuthenticationContext authContext, 
+			IAuthenticationContext authContext,
+			IImportService importService,
 			SubTabsDefaultViewModel parentViewModel)
-			: base(importRepository, wizardVmFactory, runVmFactory, itemVmFactory, progressVmFactory, entityFactory, authContext, parentViewModel)
+			: base(importRepository, wizardVmFactory, runVmFactory, itemVmFactory, entityFactory, authContext, importService, parentViewModel)
 		{
 			AvailableImporters = new[]
 				{

@@ -90,13 +90,10 @@ namespace VirtoCommerce.Foundation.Orders.Model
 		[DataMember]
 		public ObservableCollection<RmaRequest> RmaRequests
 		{
-			get
-			{
-				if (_RmaRequests == null)
-					_RmaRequests = new ObservableCollection<RmaRequest>();
-
-				return _RmaRequests;
-			}
+            get
+            {
+                return _RmaRequests ?? (_RmaRequests = new ObservableCollection<RmaRequest>());
+            }
 		}
 
 		#endregion

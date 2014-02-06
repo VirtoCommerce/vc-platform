@@ -4,27 +4,19 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Web.Mvc;
-using Omu.ValueInjecter;
 using VirtoCommerce.Client;
-using VirtoCommerce.Foundation.Catalogs;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Catalogs.Search;
-using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using VirtoCommerce.Foundation.PlatformTools;
 using VirtoCommerce.Foundation.Search;
 using VirtoCommerce.Web.Client.Extensions;
 using VirtoCommerce.Web.Client.Extensions.Filters;
-using VirtoCommerce.Web.Client.Globalization;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Web.Client.Helpers;
-using VirtoCommerce.Web.Helpers;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Virto.Helpers;
-using VirtoCommerce.Web.Virto.Helpers.MVC;
 
 #endregion
 
@@ -33,7 +25,6 @@ namespace VirtoCommerce.Web.Controllers
 	/// <summary>
 	/// Class SearchController.
 	/// </summary>
-	[Localize]
 	public class SearchController : ControllerBase
     {
 		/// <summary>
@@ -145,36 +136,32 @@ namespace VirtoCommerce.Web.Controllers
             }
 
             // Perform search
-            var sort = parameters.Sort; //CommonHelper.GetCookieValue("sortcookie");
+            var sort = string.IsNullOrEmpty(parameters.Sort) ? "position" : parameters.Sort;
+		    var sortOrder = parameters.SortOrder;
 
-            if (String.IsNullOrEmpty(sort))
-            {
-                sort = StoreHelper.GetCookieValue("sortcookie");
-            }
-            else
-            {
-                StoreHelper.SetCookie("sortcookie", sort, DateTime.Now.AddMonths(1));
-            }
+            bool isDescending = "desc".Equals(sortOrder, StringComparison.OrdinalIgnoreCase);
 
             SearchSort sortObject = null;
 
-            if (!String.IsNullOrEmpty(sort))
+            if (!sort.Equals("position", StringComparison.OrdinalIgnoreCase))
             {
-                if (sort.Equals("name", StringComparison.OrdinalIgnoreCase))
-                {
-                    sortObject = new SearchSort("name");
-                }
-                else if (sort.Equals("price", StringComparison.OrdinalIgnoreCase))
+                if (sort.Equals("price", StringComparison.OrdinalIgnoreCase))
                 {
                     sortObject = new SearchSort(session.Pricelists.Select(priceList =>
-                                                                          new SearchSortField(
-                                                                              String.Format("price_{0}_{1}",
-                                                                                            criteria.Currency.ToLower(),
-                                                                                            priceList.ToLower()))
-                                                                              {
-                                                                                  IgnoredUnmapped = true
-                                                                              })
-                                                       .ToArray());
+                        new SearchSortField(
+                            String.Format("price_{0}_{1}",
+                                criteria.Currency.ToLower(),
+                                priceList.ToLower()))
+                        {
+                            IgnoredUnmapped = true,
+                            IsDescending = isDescending,
+                            DataType = SearchSortField.DOUBLE
+                        })
+                        .ToArray());
+                }
+                else
+                {
+                    sortObject = new SearchSort(sort.ToLower(), isDescending);
                 }
             }
 
@@ -255,8 +242,9 @@ namespace VirtoCommerce.Web.Controllers
                     RecordsPerPage = criteria.RecordsToRetrieve,
                     StartingRecord = criteria.StartingRecord,
                     DisplayStartingRecord = criteria.StartingRecord + 1,
-                    SortValues = new[] {"Position".Localize(), "Name".Localize(), "Price".Localize()},
-                    SelectedSort = sort
+                    SortValues = new[] {"Position", "Name", "Price"},
+                    SelectedSort = sort,
+                    SortOrder = isDescending ? "desc" : "asc"
                 };
 
             var end = criteria.StartingRecord + criteria.RecordsToRetrieve;
@@ -284,17 +272,7 @@ namespace VirtoCommerce.Web.Controllers
         {
             var pageNumber = parameters.PageIndex;
             var pageSize = parameters.PageSize;
-
-            if (pageSize == 0)
-                Int32.TryParse(StoreHelper.GetCookieValue("pagesizecookie"), out pageSize);
-            else
-                StoreHelper.SetCookie("pagesizecookie", pageSize.ToString(CultureInfo.InvariantCulture),
-                                      DateTime.Now.AddMonths(1));
-
-            if (pageSize == 0)
-                pageSize = SearchParameters.DefaultPageSize;
-
-            criteria.Locale = UserHelper.CustomerSession.Language;
+		    criteria.Locale = UserHelper.CustomerSession.Language;
             criteria.Catalog = UserHelper.CustomerSession.CatalogId;
             criteria.RecordsToRetrieve = pageSize;
             criteria.StartingRecord = (pageNumber - 1)*pageSize;
@@ -303,23 +281,31 @@ namespace VirtoCommerce.Web.Controllers
             return GetModelFromCriteria(criteria, parameters);
         }
 
-		/// <summary>
-		/// Searches within category.
-		/// </summary>
-		/// <param name="category">The category.</param>
-		/// <param name="parameters">The parameters.</param>
-		/// <returns>ActionResult.</returns>
-        [CustomOutputCache(CacheProfile = "SearchCache", VaryByCustom = "store;currency;cart")]
-        public ActionResult SearchResultsWithinCategory(Category category, SearchParameters parameters)
+	    /// <summary>
+	    /// Searches within category.
+	    /// </summary>
+        /// <param name="cat">The category.</param>
+	    /// <param name="parameters">The parameters.</param>
+	    /// <param name="name">Partial view name</param>
+	    /// <param name="criteria">Search criteria</param>
+	    /// <returns>ActionResult.</returns>
+	    [CustomOutputCache(CacheProfile = "SearchCache", VaryByCustom = "store;currency;cart")]
+        public ActionResult SearchResultsWithinCategory(Category cat, SearchParameters parameters, string name = "SearchResultsPartial", CatalogItemSearchCriteria criteria = null, bool savePreferences = true)
         {
-            ViewBag.Title = category.Name.Localize();
+            criteria = criteria ?? new CatalogItemSearchCriteria();
+		    if (cat != null)
+		    {
+		        ViewBag.Title = cat.Name.Localize();
+                criteria.Outlines.Add(String.Format("{0}*", _catalogClient.BuildCategoryOutline(UserHelper.CustomerSession.CatalogId, cat)));
+		    }
 
-            var criteria = new CatalogItemSearchCriteria();
-            criteria.Outlines.Add(String.Format("{0}*",
-                                                _catalogClient.BuildCategoryOutline(
-                                                    UserHelper.CustomerSession.CatalogId, category)));
-            var results = SearchResults(criteria, parameters);
-            return PartialView("SearchResultsPartial", results);
+	        if (savePreferences)
+	        {
+	            RestoreSearchPreferences(parameters);
+	        }
+
+	        var results = SearchResults(criteria, parameters);
+            return PartialView(name, results);
         }
 
 		/// <summary>
@@ -340,6 +326,8 @@ namespace VirtoCommerce.Web.Controllers
 				IsFuzzySearch = true, 
 				Catalog = UserHelper.CustomerSession.CatalogId
 			};
+
+		    RestoreSearchPreferences(parameters);
             var results = SearchResults(criteria, parameters);
             return PartialView("SearchResultsPartial", results);
         }
@@ -391,7 +379,7 @@ namespace VirtoCommerce.Web.Controllers
                 // Now load items from repository
                 var currentItems = _catalogClient.GetItems(uniqueKeys.ToArray(), cacheResults,
                                                            ItemResponseGroups.ItemAssets |
-                                                           ItemResponseGroups.ItemProperties);
+                                                           ItemResponseGroups.ItemProperties | ItemResponseGroups.ItemEditorialReviews);
 
                 items.AddRange(currentItems.OrderBy(i => itemsOrderedList.IndexOf(i.ItemId)));
                 dbItemCount = currentItems.Length;
@@ -406,6 +394,55 @@ namespace VirtoCommerce.Web.Controllers
                 (myCriteria.RecordsToRetrieve + myCriteria.StartingRecord) < results.TotalCount);
 
             return items;
-        } 
+        }
+
+        /// <summary>
+        /// Restores the search preferences from cookies.
+        /// </summary>
+        /// <param name="parameters">The parameters.</param>
+        private void RestoreSearchPreferences(SearchParameters parameters)
+        {
+            var pageSize = parameters.PageSize;
+            var sort = parameters.Sort;
+            var sortOrder = parameters.SortOrder;
+
+            if (pageSize == 0)
+            {
+                Int32.TryParse(StoreHelper.GetCookieValue("pagesizecookie"), out pageSize);
+            }
+            else
+            {
+                StoreHelper.SetCookie(
+                    "pagesizecookie", pageSize.ToString(CultureInfo.InvariantCulture), DateTime.Now.AddMonths(1));
+            }
+
+            if (pageSize == 0)
+            {
+                pageSize = SearchParameters.DefaultPageSize;
+            }
+
+            parameters.PageSize = pageSize;
+
+            if (String.IsNullOrEmpty(sort))
+            {
+                sort = StoreHelper.GetCookieValue("sortcookie");
+            }
+            else
+            {
+                StoreHelper.SetCookie("sortcookie", sort, DateTime.Now.AddMonths(1));
+            }
+
+            if (String.IsNullOrEmpty(sortOrder))
+            {
+                sortOrder = StoreHelper.GetCookieValue("sortordercookie");
+            }
+            else
+            {
+                StoreHelper.SetCookie("sortordercookie", sortOrder, DateTime.Now.AddMonths(1));
+            }
+
+            parameters.Sort = sort;
+            parameters.SortOrder = sortOrder;
+        }
     }
 }

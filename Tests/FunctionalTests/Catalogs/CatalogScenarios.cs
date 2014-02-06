@@ -90,7 +90,7 @@ namespace FunctionalTests.Catalogs
 			// create a sub category
 			var subcategory = new Category
 				{
-					Code = "a code",
+					Code = "a-code",
 					Name = "categoryName",
 					StartDate = DateTime.Today,
 					CatalogId = catalogId,
@@ -100,7 +100,7 @@ namespace FunctionalTests.Catalogs
 
 			var linkedCategory = new LinkedCategory
 				{
-					Code = "l code",
+					Code = "l-code",
 					CatalogId = catalogId,
 					LinkedCatalogId = catalogId,
 					LinkedCategoryId = innerItem.CategoryId
@@ -177,7 +177,7 @@ namespace FunctionalTests.Catalogs
 			var catalogBuilder = CatalogBuilder.BuildCatalog(catalogId).WithCategory("category").WithProducts(200);
 			for (int i = 0; i < 10; i++)
 			{
-				catalogBuilder = catalogBuilder.WithCategory("category " + i, "code " + i);
+				catalogBuilder = catalogBuilder.WithCategory("category " + i, "code-" + i);
 			}
 			var catalog = catalogBuilder.GetCatalog();
 			items = catalogBuilder.GetItems();

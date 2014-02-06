@@ -51,7 +51,6 @@ namespace VirtoCommerce.ManagementClient.Import
 			// Importing
 			_container.RegisterType<IImportJobHomeViewModel, ImportJobHomeViewModel>();
 			_container.RegisterType<IImportJobRunViewModel, ImportJobRunViewModel>();
-			_container.RegisterType<IImportJobProgressViewModel, ImportJobProgressViewModel>();
 			_container.RegisterType<IImportJobViewModel, ImportJobViewModel>();
 			_container.RegisterType<IColumnMappingViewModel, ColumnMappingViewModel>();
 			_container.RegisterType<ICreateImportJobViewModel, CreateImportJobViewModel>();

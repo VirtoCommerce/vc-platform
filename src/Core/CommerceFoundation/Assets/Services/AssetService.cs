@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using VirtoCommerce.Foundation.Assets.Model;
 using VirtoCommerce.Foundation.Assets.Repositories;
 using System.IO;
 using VirtoCommerce.Foundation.Frameworks;
@@ -63,6 +64,22 @@ namespace VirtoCommerce.Foundation.Assets.Services
 		{
 			return BlobStorageProvider.Exists(blobKey);
 		}
-		#endregion
+
+	    public void Delete(string id)
+	    {
+           AssetRepository.Delete(id);
+	    }
+
+        public Folder CreateFolder(string folderName, string parentFolderId)
+	    {
+	        return AssetRepository.CreateFolder(folderName, parentFolderId);
+	    }
+
+	    public void Rename(string id, string name)
+	    {
+            AssetRepository.Rename(id, name);
+	    }
+
+	    #endregion
 	}
 }

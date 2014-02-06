@@ -36,6 +36,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
     <Reference Include="Omu.ValueInjecter, Version=2.3.3.0, Culture=neutral, PublicKeyToken=c7694541b0ac80e4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\packages\ValueInjecter.2.3.3\lib\net35\Omu.ValueInjecter.dll</HintPath>
@@ -59,7 +63,22 @@
     <Compile Include="Builders\Orders\LineItemBuilder.cs" />
     <Compile Include="Builders\Orders\OrderBuilder.cs" />
     <Compile Include="CatalogClient.cs" />
+    <Compile Include="ReviewClient.cs" />
+    <Compile Include="SeoKeywordClient.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Globalization\CurrencyInfo.cs" />
+    <Compile Include="Globalization\DirectoryCreateException.cs" />
+    <Compile Include="Globalization\Element.cs" />
+    <Compile Include="Globalization\ElementCacheKey.cs" />
+    <Compile Include="Globalization\IElementRepository.cs" />
+    <Compile Include="Globalization\LocalizeExtension.cs" />
+    <Compile Include="Globalization\LocalizeHelper.cs" />
+    <Compile Include="Globalization\Repository\CacheElementRepository.cs" />
+    <Compile Include="Globalization\Repository\DatabaseElementRepository.cs" />
+    <Compile Include="Globalization\Repository\ResXResource.cs" />
+    <Compile Include="Globalization\Repository\XmlElementRepository.cs" />
     <Compile Include="SequencesClient.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="SettingsClient.cs" />
     <Compile Include="DisplayTemplateClient.cs" />
     <Compile Include="ObjectLockClient.cs" />

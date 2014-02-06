@@ -1,13 +1,17 @@
-﻿@model MvcSiteMapProvider.Web.Html.Models.SiteMapNodeModel
-@using System.Web.Mvc.Html
-@using MvcSiteMapProvider.Web.Html.Models
+﻿@model SiteMapNodeModel
 
 @if (Model.IsCurrentNode)  { 
-    <li class="current"><b>@Model.Title.Localize()</b></li>
+    <li class="current">
+        <b>@Model.Title.Localize()</b>
+    </li>
 }
 else if (Model.IsClickable)
 { 
-    <li class="@String.Format("{0}",ViewBag.Index == ViewBag.Total-1 ? "last" : "")"><a href="@Model.Url ">@Model.Title.Localize()</a></li>
+    <li>
+        <a href="@Model.Url">@Model.Title.Localize()</a>
+    </li>
 } else { 
-    <li class="@String.Format("{0}",ViewBag.Index == ViewBag.Total-1 ? "last" : "")">@Model.Title.Localize()</li>
+    <li>
+        @Model.Title.Localize()
+    </li>
 }

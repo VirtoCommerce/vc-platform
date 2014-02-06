@@ -214,9 +214,8 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 				Recalculate();
 
 				// RaiseCanExecuteChanged();
-				OnPropertyChanged("FirstAddress");
+				OnPropertyChanged("BillingAddress");
 				OnPropertyChanged("FirstOrderForm");
-				OnPropertyChanged("IsRmaRequestsPresent");
 				OnPropertyChanged("PaidTotal");
 			});
 		}
@@ -296,7 +295,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 						if (addressList.Count > 0)
 						{
 							_customerAddress = addressList.FirstOrDefault(x => x.Type == AddressType.Primary.ToString()) ??
-							                   addressList.FirstOrDefault();
+											   addressList.FirstOrDefault();
 
 							OnPropertyChanged();
 						}
@@ -405,7 +404,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 				new KeyValuePair<string, object>("innerOrder", InnerItem),
 				new KeyValuePair<string, object>("rmaRequest", rmaRequest));
 
-			var confirmation = new Confirmation {Title = "Create RMA request", Content = itemVM};
+			var confirmation = new Confirmation { Title = "Create RMA request", Content = itemVM };
 			CommonOrderWizardDialogInteractionRequest.Raise(confirmation, (x) =>
 			{
 				if (x.Confirmed)
@@ -448,7 +447,6 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 					SetAllSubscription();
 
 					// show created RmaRequest item
-					OnPropertyChanged("IsRmaRequestsPresent");
 					SelectedTabIndex = ReturnsTabIndex;
 				}
 			});
@@ -475,7 +473,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 				new KeyValuePair<string, object>("innerOrder", InnerItem),
 				new KeyValuePair<string, object>("rmaRequest", rmaRequest));
 
-			var confirmation = new Confirmation {Title = "Create an exchange Order", Content = itemVM};
+			var confirmation = new Confirmation { Title = "Create an exchange Order", Content = itemVM };
 			CommonOrderWizardDialogInteractionRequest.Raise(confirmation, (x) =>
 			{
 				if (x.Confirmed)
@@ -527,7 +525,6 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 					SetAllSubscription();
 
 					// show created RmaRequest item
-					OnPropertyChanged("IsRmaRequestsPresent");
 					SelectedTabIndex = ReturnsTabIndex;
 
 					// open newly created ExchangeOrder
@@ -546,7 +543,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 				, new KeyValuePair<string, object>("defaultAmount", decimal.Zero)
 				);
 
-			var confirmation = new ConditionalConfirmation {Title = "Create Refund", Content = itemVM};
+			var confirmation = new ConditionalConfirmation { Title = "Create Refund", Content = itemVM };
 			CommonOrderWizardDialogInteractionRequest.Raise(confirmation, x =>
 			{
 				if (x.Confirmed)
@@ -560,7 +557,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 		{
 			var itemVM = _wizardPaymentVmFactory.GetViewModelInstance();
 
-			var confirmation = new ConditionalConfirmation {Title = "Create payment", Content = itemVM};
+			var confirmation = new ConditionalConfirmation { Title = "Create payment", Content = itemVM };
 			CommonOrderWizardDialogInteractionRequest.Raise(confirmation, (x) =>
 			{
 				if (x.Confirmed)
@@ -604,7 +601,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 				var itemClone = item.DeepClone(EntityFactory as IKnownSerializationTypes);
 				var itemVM = _addressVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("addressItem", itemClone));
 
-				var confirmation = new Confirmation {Title = "Edit order address", Content = itemVM};
+				var confirmation = new Confirmation { Title = "Edit order address", Content = itemVM };
 
 				// CommonOrderCommandConfirmRequest.Raise(confirmation, (x) =>
 				DisableableCommandConfirmRequest.Raise(confirmation, (x) =>
@@ -632,7 +629,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 
 				var itemVM = _contactVmFactory.GetViewModelInstance(parameters);
 
-				var confirmation = new ConditionalConfirmation {Title = "Edit customer profile", Content = itemVM};
+				var confirmation = new ConditionalConfirmation { Title = "Edit customer profile", Content = itemVM };
 
 				CommonOrderCommandConfirmRequest.Raise(confirmation, (x) =>
 									{
@@ -654,16 +651,17 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 
 		#region VirtoCommerce.ManagementClient Properties
 
-		public OrderAddress FirstAddress
+		public OrderAddress BillingAddress
 		{
 			get
 			{
 				OrderAddress result = null;
 
-				if (InnerItem != null && InnerItem.OrderAddresses != null && InnerItem.OrderAddresses.Count > 0)
+				if (InnerItem != null)
 				{
-					result = InnerItem.OrderAddresses[0];
-					result.OrderGroup = InnerItem;
+					result = InnerItem.OrderAddresses.FirstOrDefault(x => x.Name == "Billing");
+					if (result != null)
+						result.OrderGroup = InnerItem;
 				}
 
 				return result;
@@ -683,11 +681,6 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 
 				return result;
 			}
-		}
-
-		public bool IsRmaRequestsPresent
-		{
-			get { return InnerItem.RmaRequests.Count > 0; }
 		}
 
 		private int _selectedTabIndex;

@@ -21,7 +21,7 @@ namespace VirtoCommerce.PowerShell.Security
 
         private void CreateSimpleMembership(EFSecurityRepository context)
         {
-			RunCommand(context, "SimpleMembership.sql", "Security");
+            RunCommand(context, "SimpleMembership.sql", "Security");
         }
 
         private void CreatePermissions(EFSecurityRepository client)
@@ -47,6 +47,7 @@ namespace VirtoCommerce.PowerShell.Security
 	                PredefinedPermissions.CustomersCreateResetPasswords,
 	                PredefinedPermissions.CustomersSuspendAccounts,
 	                PredefinedPermissions.CustomersCreateContactAccount,
+                    PredefinedPermissions.CustomersLoginAsCustomer,
 					PredefinedPermissions.OrdersAll,
 					PredefinedPermissions.OrdersCreateOrderReturns,
 					PredefinedPermissions.OrdersCompleteOrderReturns,
@@ -106,7 +107,7 @@ namespace VirtoCommerce.PowerShell.Security
                     PredefinedPermissions.SettingsJurisdictionGroups,
                     PredefinedPermissions.SettingsTaxCategories,
                     PredefinedPermissions.SettingsTaxImport}, client);
-			CreateRole(PredefinedPermissions.Role_PrivateShopper, allPermissions, new List<string> { 
+            CreateRole(PredefinedPermissions.Role_PrivateShopper, allPermissions, new List<string> { 
                     PredefinedPermissions.ShopperRestrictedAccess,}, client);
 
             client.UnitOfWork.Commit();

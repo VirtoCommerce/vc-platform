@@ -73,34 +73,42 @@ namespace VirtoCommerce.ManagementClient.Order.Infrastructure.Converters
 		            }
 		            break;
 	            case "ShipmentStatus":
-		            {
-			            var currentStatus = (ShipmentStatus)Enum.Parse(typeof(ShipmentStatus), value.ToString());
-			            switch (currentStatus)
-			            {
-				            case ShipmentStatus.AwaitingInventory:
-					            imageName = "Icon_AwaitingInventory";
-					            break;
-				            case ShipmentStatus.Cancelled:
-					            imageName = "Icon_Cancelled";
-					            break;
-				            case ShipmentStatus.InventoryAssigned:
-					            imageName = "Icon_Inventoryassigned";
-					            break;
-				            case ShipmentStatus.OnHold:
-					            imageName = "Icon_Hold";
-					            break;
-				            case ShipmentStatus.Packing:
-					            imageName = "Icon_Packing";
-					            break;
-				            case ShipmentStatus.Released:
-					            imageName = "Icon_Released";
-					            break;
-				            case ShipmentStatus.Shipped:
-					            imageName = "Icon_Completed";
-					            break;
-			            }
-		            }
-		            break;
+                {
+                    try
+                    {
+                        var currentStatus = (ShipmentStatus) Enum.Parse(typeof (ShipmentStatus), value.ToString());
+                        switch (currentStatus)
+                        {
+                            case ShipmentStatus.AwaitingInventory:
+                                imageName = "Icon_AwaitingInventory";
+                                break;
+                            case ShipmentStatus.Cancelled:
+                                imageName = "Icon_Cancelled";
+                                break;
+                            case ShipmentStatus.InventoryAssigned:
+                                imageName = "Icon_Inventoryassigned";
+                                break;
+                            case ShipmentStatus.OnHold:
+                                imageName = "Icon_Hold";
+                                break;
+                            case ShipmentStatus.Packing:
+                                imageName = "Icon_Packing";
+                                break;
+                            case ShipmentStatus.Released:
+                                imageName = "Icon_Released";
+                                break;
+                            case ShipmentStatus.Shipped:
+                                imageName = "Icon_Completed";
+                                break;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        imageName = string.Empty;
+                    }
+
+                    break;
+                }
             }
 
             return imageName;

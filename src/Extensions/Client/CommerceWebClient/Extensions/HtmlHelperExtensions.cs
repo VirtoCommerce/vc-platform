@@ -8,7 +8,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Script.Serialization;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
-using VirtoCommerce.Web.Client.Globalization;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Web.Client.Helpers;
 
 namespace VirtoCommerce.Web.Client.Extensions
@@ -107,11 +107,11 @@ namespace VirtoCommerce.Web.Client.Extensions
 		/// <param name="title">The title.</param>
 		/// <returns>MvcHtmlString.</returns>
         public static MvcHtmlString Title(this HtmlHelper htmlHelper, string title)
-        {
-            return Title(htmlHelper, title, "{0} | {1}");
-        }
+		{
+		    return MvcHtmlString.Create(htmlHelper.ViewBag.Title as string != null ? ((string)htmlHelper.ViewBag.Title).Title() : title.Title());
+		}
 
-		/// <summary>
+	    /// <summary>
 		/// Titles the specified HTML helper.
 		/// </summary>
 		/// <param name="htmlHelper">The HTML helper.</param>
@@ -120,13 +120,7 @@ namespace VirtoCommerce.Web.Client.Extensions
 		/// <returns>MvcHtmlString.</returns>
         public static MvcHtmlString Title(this HtmlHelper htmlHelper, string title, string formatString)
         {
-            string storeName = StoreHelper.CustomerSession.StoreName;
-            if (!String.IsNullOrEmpty(storeName))
-            {
-                return MvcHtmlString.Create(String.Format(formatString, title, storeName));
-            }
-
-            return MvcHtmlString.Create(title);
+            return MvcHtmlString.Create(htmlHelper.ViewBag.Title as string != null ? ((string)htmlHelper.ViewBag.Title).Title(formatString) : title.Title(formatString));
         }
 
 		/// <summary>
@@ -156,7 +150,43 @@ namespace VirtoCommerce.Web.Client.Extensions
 			return new MvcHtmlString(String.Format("{0} (Build {1})", assembly.GetInformationalVersion(), assembly.GetFileVersion()));
 		}
 
-		/// <summary>
+        #region PageData
+
+        [ThreadStatic]
+        private static ControllerBase _pageDataController;
+        [ThreadStatic]
+        private static PageData _pageData;
+
+        /// <summary>
+        /// ViewBag shared in parent controller. Everything set from partial views is visible here
+        /// </summary>
+        /// <param name="html"></param>
+        /// <returns></returns>
+        public static dynamic SharedViewBag(this HtmlHelper html)
+        {
+            ControllerBase controller = html.ViewContext.Controller;
+            return SharedViewBag(html.ViewContext.Controller);
+        }
+
+
+        public static dynamic SharedViewBag(this ControllerBase controller)
+        {
+            while (controller.ControllerContext.IsChildAction)
+            {
+                controller = controller.ControllerContext.ParentActionViewContext.Controller;
+            }
+            if (_pageDataController == controller)
+            {
+                return _pageData;
+            }
+            _pageDataController = controller;
+            _pageData = new PageData(() => controller.ViewData);
+            return _pageData;
+        }
+
+        #endregion
+
+        /// <summary>
 		/// Labels the helper.
 		/// </summary>
 		/// <param name="html">The HTML.</param>
@@ -173,21 +203,15 @@ namespace VirtoCommerce.Web.Client.Extensions
             {
                 return MvcHtmlString.Empty;
             }
-            var sb = new StringBuilder();
+            var sb = new StringBuilder(html.Encode(labelText));
 
             if (metadata.IsRequired && (metadata.IsNullableValueType || !metadata.ModelType.IsValueType))
             {
-                sb.Append("<em>*</em>");
+                sb.Append("<sup class='required'>*</sup>");
             }
-
-            sb.Append(html.Encode(labelText));
 
             var tag = new TagBuilder("label");
 
-            if (metadata.IsRequired)
-            {
-                tag.AddCssClass("required");
-            }
 
             tag.MergeAttributes(htmlAttributes);
             tag.Attributes.Add("for", html.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldId(htmlFieldName));

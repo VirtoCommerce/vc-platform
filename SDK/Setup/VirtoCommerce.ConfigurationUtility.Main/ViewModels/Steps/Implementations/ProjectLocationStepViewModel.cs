@@ -22,7 +22,7 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 		#endregion
 
 		private const string CommerceProjectName = "SampleProject";
-		private const string CommerceProjectPath = "Virto Commerce 1.6\\Projects";
+		private const string CommerceProjectPath = "Virto Commerce 1.8\\Projects";
 		#region Constructors
 
 #if DESIGN // TODO: Replace with Debug compilation condition and IsInDesignMode runtime condition
@@ -102,17 +102,26 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 				var contentFolder =
 					Path.GetFullPath(Path.Combine(Path.GetDirectoryName(typeof(ConfigurationWizardViewModel).Assembly.Location),
 												  @"..\Resources\FrontEnd"));
-				var catalogImagesFolder =
-					Path.GetFullPath(Path.Combine(Path.GetDirectoryName(typeof(ConfigurationWizardViewModel).Assembly.Location),
-												  @"..\Resources\Catalog"));
 
 				// Copy template to project location
 				DirectoryExtensions.Copy(new DirectoryInfo(contentFolder), new DirectoryInfo(ProjectLocation));
 				ct.ThrowIfCancellationRequested();
-				// Copy test data images
-				DirectoryExtensions.Copy(new DirectoryInfo(catalogImagesFolder),
-										 new DirectoryInfo(string.Format("{0}\\App_Data\\Virto\\Storage\\Catalog", ProjectLocation)));
-				ct.ThrowIfCancellationRequested();
+
+				// create initial folders: import, reports
+				Directory.CreateDirectory(Path.Combine(ProjectLocation, "App_Data\\Virto\\Storage\\import"));
+				Directory.CreateDirectory(Path.Combine(ProjectLocation, "App_Data\\Virto\\Storage\\reports"));
+				
+				if (_databaseViewModel.InstallSamples)
+				{
+					var catalogImagesFolder =
+						Path.GetFullPath(Path.Combine(Path.GetDirectoryName(typeof(ConfigurationWizardViewModel).Assembly.Location),
+													  @"..\Resources\Catalog"));
+
+					// Copy test data images
+					DirectoryExtensions.Copy(new DirectoryInfo(catalogImagesFolder),
+											 new DirectoryInfo(string.Format("{0}\\App_Data\\Virto\\Storage\\Catalog", ProjectLocation)));
+					ct.ThrowIfCancellationRequested();
+				}
 
 				// Fix connection strings
 				new InitializeFrontEndConfigs().Initialize(ProjectLocation, _confirmationViewModel.DatabaseConnectionString,

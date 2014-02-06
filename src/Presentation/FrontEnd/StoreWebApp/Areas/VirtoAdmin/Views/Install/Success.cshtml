@@ -1,0 +1,88 @@
+﻿@using VirtoCommerce.Web.Areas.VirtoAdmin.Models
+@using Resource = VirtoCommerce.Web.Areas.VirtoAdmin.Resources.Resource;
+@model SuccessModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@Resource.InstallPageTitle</title>
+    <link href="~/Areas/VirtoAdmin/Content/site.css" rel="stylesheet" type="text/css" media="all" />
+    @Scripts.Render("~/bundles/jquery")
+</head>
+<body>
+    <div id="header">
+        <div id="branding">
+            <h1>Virto Commerce</h1>
+        </div>
+    </div>
+    <div id="success">
+        <div class="zone zone-content">
+            <h1>Installation Successful!</h1>
+            <br/>
+            <p>
+                Your installation has been completed, you can now either browse the frontend or download and login into the management console (Commerce Manager) to customize your store.
+            </p>
+
+            <div class="main rubber" role="main">
+
+                <var start="true" edittype="html" datatype="RichText" positionid="BE94J" positionname="Html:&lt;sectio..." style="display: none;"></var>
+                <section>
+                    <article>
+                        <div class="columns clearfix">
+                            <div class="column">
+                                <div class="inner">
+                                    <figure>
+                                        <img src="@Href("../../content/images/demo-frontend.png")" alt="" /></figure>
+                                    <h4>Frontend</h4>
+                                    <p>Explore front end written using MVC4/Razor. It utilizes jquery for dynamically loading cart elements, updating reviews and many other things. Make sure to check one page checkout, product page with dynamic variations, faceted search and dynamic contents features.</p>
+                                    <a href="@Model.Website" target="_blank" class="btn">Open Frontend</a>
+                                </div>
+                            </div>
+                            <div class="column">
+                                <div class="inner">
+                                    <figure>
+                                        <img src="@Href("../../content/images/demo-console.png")" alt="" /></figure>
+                                    <h4>Administration</h4>
+                                    <p>Virto Commerce uses WPF application for administration. Native application allows for much better user experience compared to more traditional web application. It utilizes Click Once technology, so updates are seamless.</p>
+                                    <p>To connect to the store please use:</p>
+                                    <p>login: <b>admin</b></p>
+                                    <p>pass: <b>store</b></p>
+                                    <p>url: <b>@Model.Website</b></p>
+                                    <p></p>
+                                    <a href="http://assets.virtocommerce.com/software/1.8/admin/setup.exe" target="_blank" class="btn">Download Commerce Manager</a>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                </section>
+                <var end="true" style="display: none;"></var>
+
+                <div class="columns form-elements center clearfix">
+                    <div class="column">
+                        <div class="inner">
+                            <br/><br/><br/><br/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div id="throbber">
+        <div class="curtain"></div>
+        <div class="curtain-content">
+            <div>
+                <h1 id="setUpHeader">@Resource.LongProcessMessage</h1>
+                <p>
+                    <img src="@Href("../../content/images/inprogress.gif")" alt="" />
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

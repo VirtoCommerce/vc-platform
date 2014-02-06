@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.ComponentModel.DataAnnotations;
+using System.Data.Services.Common;
 using System.Runtime.Serialization;
 using VirtoCommerce.Foundation.Frameworks;
-using System.Data.Services.Common;
-using System.ComponentModel.DataAnnotations;
 
 namespace VirtoCommerce.Foundation.Catalogs.Model
 {
@@ -194,24 +191,25 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 			}
 		}
 
-        public override string ToString()
-        {
-            switch(this.ValueType)
-            {
-                case (int)PropertyValueType.Boolean:
-                    return this.BooleanValue.ToString();
-                case (int)PropertyValueType.DateTime:
-                    return this.DateTimeValue.ToString();
-                case (int)PropertyValueType.Decimal:
-                    return this.DecimalValue.ToString();
-                case (int)PropertyValueType.Integer:
-                    return this.IntegerValue.ToString();
-                case (int)PropertyValueType.LongString:
-                    return this.LongTextValue;
-                case (int)PropertyValueType.ShortString:
-                    return this.ShortTextValue;
-            }
-            return base.ToString();
-        }
+		public override string ToString()
+		{
+			switch (ValueType)
+			{
+				case (int)PropertyValueType.Boolean:
+					return BooleanValue.ToString();
+				case (int)PropertyValueType.DateTime:
+					return DateTimeValue.ToString();
+				case (int)PropertyValueType.Decimal:
+					return DecimalValue.ToString();
+				case (int)PropertyValueType.Integer:
+					return IntegerValue.ToString();
+				case (int)PropertyValueType.LongString:
+					return LongTextValue;
+				case (int)PropertyValueType.ShortString:
+				case (int)PropertyValueType.Image:
+					return ShortTextValue;
+			}
+			return base.ToString();
+		}
 	}
 }

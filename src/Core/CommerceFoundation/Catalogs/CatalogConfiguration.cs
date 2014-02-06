@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Configuration;
 using System.Threading;
 
@@ -131,7 +128,7 @@ namespace VirtoCommerce.Foundation.Catalogs
 		/// <value>
 		/// 	<c>true</c> if this instance is enabled; otherwise, <c>false</c>.
 		/// </value>
-		[ConfigurationProperty("enabled", IsRequired = true, DefaultValue = true)]
+		[ConfigurationProperty("enabled", IsRequired = false, DefaultValue = true)]
 		public bool IsEnabled
 		{
 			get
@@ -149,7 +146,7 @@ namespace VirtoCommerce.Foundation.Catalogs
 		/// automatically refreshed in memory (in seconds).
 		/// </summary>
 		/// <value>The catalog collection timeout.</value>
-		[ConfigurationProperty("catalogTimeout", IsRequired = true)]
+        [ConfigurationProperty("catalogTimeout", IsRequired = false, DefaultValue = "00:00:30")]
 		public TimeSpan CatalogTimeout
 		{
 			get
@@ -167,7 +164,7 @@ namespace VirtoCommerce.Foundation.Catalogs
 		/// automatically refreshed in memory (in seconds).
 		/// </summary>
 		/// <value>The catalog collection timeout.</value>
-		[ConfigurationProperty("itemCollectionTimeout", IsRequired = true)]
+        [ConfigurationProperty("itemCollectionTimeout", IsRequired = false, DefaultValue = "00:00:30")]
 		public TimeSpan ItemCollectionTimeout
 		{
 			get
@@ -185,7 +182,7 @@ namespace VirtoCommerce.Foundation.Catalogs
 		/// automatically refreshed in memory (in seconds).
 		/// </summary>
 		/// <value>The catalog entry timeout.</value>
-		[ConfigurationProperty("itemTimeout", IsRequired = true)]
+        [ConfigurationProperty("itemTimeout", IsRequired = false, DefaultValue = "00:00:30")]
 		public TimeSpan ItemTimeout
 		{
 			get
@@ -203,7 +200,7 @@ namespace VirtoCommerce.Foundation.Catalogs
 		/// automatically refreshed in memory (in seconds).
 		/// </summary>
 		/// <value>The catalog collection timeout.</value>
-		[ConfigurationProperty("categoryCollectionTimeout", IsRequired = true)]
+        [ConfigurationProperty("categoryCollectionTimeout", IsRequired = false, DefaultValue = "00:00:30")]
 		public TimeSpan CategoryCollectionTimeout
 		{
 			get
@@ -221,7 +218,7 @@ namespace VirtoCommerce.Foundation.Catalogs
 		/// automatically refreshed in memory (in seconds).
 		/// </summary>
 		/// <value>The catalog node timeout.</value>
-		[ConfigurationProperty("categoryTimeout", IsRequired = true)]
+        [ConfigurationProperty("categoryTimeout", IsRequired = false, DefaultValue = "00:00:30")]
 		public TimeSpan CategoryTimeout
 		{
 			get
@@ -234,7 +231,7 @@ namespace VirtoCommerce.Foundation.Catalogs
 			}
 		}
 
-		[ConfigurationProperty("pricelistTimeout", IsRequired = true)]
+        [ConfigurationProperty("pricelistTimeout", IsRequired = false, DefaultValue = "00:00:30")]
 		public TimeSpan PricelistTimeout
 		{
 			get
@@ -247,7 +244,7 @@ namespace VirtoCommerce.Foundation.Catalogs
 			}
 		}
 
-		[ConfigurationProperty("pricesTimeout", IsRequired = true)]
+        [ConfigurationProperty("pricesTimeout", IsRequired = false, DefaultValue = "00:00:30")]
 		public TimeSpan PricesTimeout
 		{
 			get
@@ -273,7 +270,7 @@ namespace VirtoCommerce.Foundation.Catalogs
 			}
 		}
 
-		[ConfigurationProperty("propertiesTimeout", IsRequired = true)]
+		[ConfigurationProperty("propertiesTimeout", IsRequired = false, DefaultValue = "00:00:30")]
 		public TimeSpan PropertiesTimeout
 		{
 			get

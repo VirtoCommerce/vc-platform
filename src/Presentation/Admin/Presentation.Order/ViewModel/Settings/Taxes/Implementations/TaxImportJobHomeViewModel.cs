@@ -8,6 +8,7 @@ using VirtoCommerce.Foundation.Importing.Repositories;
 using VirtoCommerce.ManagementClient.Import.ViewModel.Interfaces;
 using VirtoCommerce.ManagementClient.Import.ViewModel.Wizard;
 using VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Taxes.Interfaces;
+using VirtoCommerce.Foundation.Importing.Services;
 
 namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Taxes.Implementations
 {
@@ -20,11 +21,11 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Taxes.Implemen
 			IViewModelsFactory<ICreateImportJobViewModel> wizardVmFactory,
 			IViewModelsFactory<IImportJobRunViewModel> runVmFactory,
 			IViewModelsFactory<IImportJobViewModel> itemVmFactory,
-			IViewModelsFactory<IImportJobProgressViewModel> progressVmFactory,
 			IImportJobEntityFactory entityFactory,
-			IAuthenticationContext authContext, 
+			IAuthenticationContext authContext,
+			IImportService importService,
 			SubTabsDefaultViewModel parentViewModel)
-			: base(importRepository, wizardVmFactory, runVmFactory, itemVmFactory, progressVmFactory, entityFactory, authContext, parentViewModel)
+			: base(importRepository, wizardVmFactory, runVmFactory, itemVmFactory, entityFactory, authContext, importService, parentViewModel)
 		{
 			AvailableImporters = new[]
 				{
@@ -36,8 +37,5 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Taxes.Implemen
 			DefaultImporter = AvailableImporters.First().ToString();
 		}
 		#endregion
-
-		
-
     }
 }

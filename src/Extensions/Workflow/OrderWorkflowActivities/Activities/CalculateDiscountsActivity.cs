@@ -16,7 +16,11 @@ using cust = VirtoCommerce.Foundation.Customers.Services;
 
 namespace VirtoCommerce.OrderWorkflow
 {
-	/// <summary>
+    using VirtoCommerce.Foundation.Catalogs.Services;
+
+    using IEvaluationPolicy = VirtoCommerce.Foundation.Marketing.Model.IEvaluationPolicy;
+
+    /// <summary>
 	/// Calculates and adds discounts to the current order. Discounts included are: catalog, order and shipping.
 	/// </summary>
 	public class CalculateDiscountsActivity : OrderActivityBase
@@ -74,6 +78,12 @@ namespace VirtoCommerce.OrderWorkflow
 			get { return _priceListRepository ?? (_priceListRepository = ServiceLocator.GetInstance<IPricelistRepository>()); }
 		}
 
+        ICatalogOutlineBuilder _catalogOutlineBuilder;
+        private ICatalogOutlineBuilder OutlineBuilder
+        {
+            get { return _catalogOutlineBuilder ?? (_catalogOutlineBuilder = ServiceLocator.GetInstance<ICatalogOutlineBuilder>()); }
+        }
+
 		private ICacheRepository CacheRepository
 		{
 			get
@@ -91,7 +101,8 @@ namespace VirtoCommerce.OrderWorkflow
 			IMarketingRepository marketingRepository,
 			IPricelistRepository priceListRepository,
 			IPromotionEntryPopulate entryPopulate,
-			IPromotionUsageProvider promotionUsageProvider)
+			IPromotionUsageProvider promotionUsageProvider,
+            ICatalogOutlineBuilder catalogOutlineBuilder)
 		{
 			_catalogRepository = catalogRepository;
 			_marketingRepository = marketingRepository;
@@ -99,6 +110,7 @@ namespace VirtoCommerce.OrderWorkflow
 			_promotionUsageProvider = promotionUsageProvider;
 			_priceListRepository = priceListRepository;
 			_customerSessionService = customerService;
+		    _catalogOutlineBuilder = catalogOutlineBuilder;
 		}
 
 		protected override void Execute(System.Activities.CodeActivityContext context)
@@ -519,7 +531,7 @@ namespace VirtoCommerce.OrderWorkflow
 					MinQuantity = sku.MinQuantity,
 					PlacedPrice = price != null ? (price.Sale ?? price.List) : 0,
 					ListPrice = price != null ? (price.Sale ?? price.List) : 0,
-					CatalogOutline = CatalogOutlineBuilder.BuildCategoryOutline(CatalogRepository, CustomerSessionService.CustomerSession.CatalogId, sku)
+                    CatalogOutline = OutlineBuilder.BuildCategoryOutline(CustomerSessionService.CustomerSession.CatalogId, sku.ItemId).ToString()
 				};
 
 			return retVal;

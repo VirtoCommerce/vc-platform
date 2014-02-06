@@ -46,7 +46,7 @@ namespace VirtoCommerce.Search.Providers.Lucene
             {
                 var c = criteria as CatalogItemSearchCriteria;
                 var datesFilterStart = new TermRangeQuery(
-                    "startdate", null, DateTools.DateToString(c.StartDate, DateTools.Resolution.SECOND), false, true);
+                    "startdate", c.StartDateFrom.HasValue ? DateTools.DateToString(c.StartDateFrom.Value, DateTools.Resolution.SECOND) : null, DateTools.DateToString(c.StartDate, DateTools.Resolution.SECOND), false, true);
                 query.Add(datesFilterStart, Occur.MUST);
 
                 if (c.EndDate.HasValue)

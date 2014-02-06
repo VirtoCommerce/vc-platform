@@ -66,21 +66,21 @@
       <HintPath>..\..\..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="Microsoft.Data.Edm, Version=5.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Data.Edm, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\Microsoft.Data.Edm.5.4.0\lib\net40\Microsoft.Data.Edm.dll</HintPath>
+      <HintPath>..\..\..\packages\Microsoft.Data.Edm.5.6.0\lib\net40\Microsoft.Data.Edm.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Data.OData, Version=5.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Data.OData, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\Microsoft.Data.OData.5.4.0\lib\net40\Microsoft.Data.OData.dll</HintPath>
+      <HintPath>..\..\..\packages\Microsoft.Data.OData.5.6.0\lib\net40\Microsoft.Data.OData.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Data.Services, Version=5.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Data.Services, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\Microsoft.Data.Services.5.4.0\lib\net40\Microsoft.Data.Services.dll</HintPath>
+      <HintPath>..\..\..\packages\Microsoft.Data.Services.5.6.0\lib\net40\Microsoft.Data.Services.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Data.Services.Client, Version=5.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Data.Services.Client, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\Microsoft.Data.Services.Client.5.4.0\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
+      <HintPath>..\..\..\packages\Microsoft.Data.Services.Client.5.6.0\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation">
       <HintPath>..\..\..\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
@@ -94,7 +94,7 @@
       <HintPath>..\..\..\packages\Unity.3.0.1304.1\lib\Net45\Microsoft.Practices.Unity.Configuration.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Configuration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Microsoft.WindowsAzure.ConfigurationManager.2.0.1.0\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
+      <HintPath>..\..\..\packages\Microsoft.WindowsAzure.ConfigurationManager.2.0.3\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -105,9 +105,9 @@
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Web" />
-    <Reference Include="System.Spatial, Version=5.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Spatial, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\System.Spatial.5.4.0\lib\net40\System.Spatial.dll</HintPath>
+      <HintPath>..\..\..\packages\System.Spatial.5.6.0\lib\net40\System.Spatial.dll</HintPath>
     </Reference>
     <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
@@ -132,6 +132,10 @@
     <Compile Include="AppConfig\Migrations\201307260640417_SchedulerUpdate.cs" />
     <Compile Include="AppConfig\Migrations\201307260640417_SchedulerUpdate.Designer.cs">
       <DependentUpon>201307260640417_SchedulerUpdate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="AppConfig\Migrations\201401130952595_Seo.cs" />
+    <Compile Include="AppConfig\Migrations\201401130952595_Seo.Designer.cs">
+      <DependentUpon>201401130952595_Seo.cs</DependentUpon>
     </Compile>
     <Compile Include="Asset\FileSystemBlobAssetRepository.cs" />
     <Compile Include="Catalogs\Migrations\201303190742259_Initial.cs" />
@@ -238,6 +242,10 @@
     <Compile Include="Orders\Migrations\201308290648071_CreateIndex.Designer.cs">
       <DependentUpon>201308290648071_CreateIndex.cs</DependentUpon>
     </Compile>
+    <Compile Include="Orders\Migrations\201312191010018_OrderFormPropertyvalue.cs" />
+    <Compile Include="Orders\Migrations\201312191010018_OrderFormPropertyvalue.Designer.cs">
+      <DependentUpon>201312191010018_OrderFormPropertyvalue.cs</DependentUpon>
+    </Compile>
     <Compile Include="Orders\Migrations\Configuration.cs" />
     <Compile Include="Orders\DSOrderClient.cs" />
     <Compile Include="Orders\DSOrderService.cs" />
@@ -297,6 +305,9 @@
     <EmbeddedResource Include="AppConfig\Migrations\201307260640417_SchedulerUpdate.resx">
       <DependentUpon>201307260640417_SchedulerUpdate.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="AppConfig\Migrations\201401130952595_Seo.resx">
+      <DependentUpon>201401130952595_Seo.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Catalogs\Migrations\201303190742259_Initial.resx">
       <DependentUpon>201303190742259_Initial.cs</DependentUpon>
     </EmbeddedResource>
@@ -338,6 +349,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Orders\Migrations\201308290648071_CreateIndex.resx">
       <DependentUpon>201308290648071_CreateIndex.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Orders\Migrations\201312191010018_OrderFormPropertyvalue.resx">
+      <DependentUpon>201312191010018_OrderFormPropertyvalue.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reviews\Migrations\201304111035422_Initial.resx">
       <DependentUpon>201304111035422_Initial.cs</DependentUpon>

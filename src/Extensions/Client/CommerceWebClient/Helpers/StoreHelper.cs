@@ -1,4 +1,5 @@
-﻿using Microsoft.Practices.ServiceLocation;
+﻿using System.Diagnostics.Eventing.Reader;
+using Microsoft.Practices.ServiceLocation;
 using System;
 using System.Collections.Specialized;
 using System.Linq;
@@ -160,6 +161,12 @@ namespace VirtoCommerce.Web.Client.Helpers
 
 			return isAuthorized;
 		}
+
+        public static string GetDefaultLanguageCode()
+        {
+            var store = StoreClient.GetCurrentStore();
+            return store != null ? store.DefaultLanguage : "";
+        }
 
 
 		#endregion

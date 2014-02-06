@@ -2,9 +2,11 @@
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using MvcSiteMapProvider;
 using VirtoCommerce.Client;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.Catalogs.Model;
+using VirtoCommerce.Foundation.Catalogs.Services;
 using VirtoCommerce.Foundation.Frameworks.Tagging;
 using VirtoCommerce.Web.Client.Extensions.Filters;
 using VirtoCommerce.Web.Models;
@@ -14,10 +16,9 @@ using ContextFieldConstants = VirtoCommerce.Foundation.Frameworks.ContextFieldCo
 
 namespace VirtoCommerce.Web.Controllers
 {
-	/// <summary>
+    /// <summary>
 	/// Class CatalogController.
 	/// </summary>
-	[Localize]
 	public class CatalogController : ControllerBase
     {
 		/// <summary>
@@ -43,45 +44,81 @@ namespace VirtoCommerce.Web.Controllers
         }
 
         // GET: /Catalog/
-		/// <summary>
-		/// Displays the catalog by specified URL.
-		/// </summary>
-		/// <param name="url">The URL.</param>
-		/// <returns>ActionResult.</returns>
-		/// <exception cref="System.Web.HttpException">404;Category not found</exception>
-		[CustomOutputCache(CacheProfile = "CatalogCache", VaryByCustom = "store;currency;cart")]
-        public ActionResult Display(string url)
+	    /// <summary>
+	    /// Displays the catalog by specified URL.
+	    /// </summary>
+        /// <param name="category">The category code</param>
+	    /// <returns>ActionResult.</returns>
+	    /// <exception cref="System.Web.HttpException">404;Category not found</exception>
+	    [CustomOutputCache(CacheProfile = "CatalogCache", VaryByCustom = "store;currency;cart")]
+        public ActionResult Display(CategoryPathModel category)
         {
-            var category = _catalogClient.GetCategory(url);
-            if (category != null && category.IsActive)
+            var categoryBase = _catalogClient.GetCategory(category.Category);
+            if (categoryBase != null && categoryBase.IsActive)
             {
                 // set the context variable
                 var set = UserHelper.CustomerSession.GetCustomerTagSet();
-                set.Add(ContextFieldConstants.CategoryId, new Tag(category.CategoryId));
-				UserHelper.CustomerSession.CategoryId = category.CategoryId;
+                set.Add(ContextFieldConstants.CategoryId, new Tag(categoryBase.CategoryId));
+                UserHelper.CustomerSession.CategoryId = categoryBase.CategoryId;
+                UserHelper.CustomerSession.LastShoppingPage = this.Request.Url.AbsoluteUri;
 
                 // display category
-                return View(GetDisplayTemplate(TargetTypes.Category, category), category);
+                return View(GetDisplayTemplate(TargetTypes.Category, categoryBase), categoryBase);
             }
 
 			throw new HttpException(404, "Category not found");
         }
 
-		/// <summary>
-		/// Displays the item.
-		/// </summary>
-		/// <param name="url">The URL.</param>
-		/// <returns>ActionResult.</returns>
-		/// <exception cref="System.Web.HttpException">404;Item not found</exception>
-        [CustomOutputCache(CacheProfile = "CatalogCache", VaryByCustom = "store;currency;cart")]
-        public ActionResult DisplayItem(string url)
+	    /// <summary>
+	    /// Displays the item by code.
+	    /// </summary>
+        /// <param name="item">Item code</param>
+	    /// <returns>ActionResult.</returns>
+	    /// <exception cref="System.Web.HttpException">404;Item not found</exception>
+	    [CustomOutputCache(CacheProfile = "CatalogCache", VaryByCustom = "store;currency;cart")]
+        public ActionResult DisplayItem(string item)
         {
-			var itemModel = CatalogHelper.CreateCatalogModel(url);
+            var itemModel = CatalogHelper.CreateCatalogModel(item, byItemCode: true);
 
             if (ReferenceEquals(itemModel, null))
             {
                 throw new HttpException(404, "Item not found");
             }
+
+	        if (SiteMaps.Current != null)
+	        {
+	            var node = SiteMaps.Current.CurrentNode;
+
+	            if (Request.UrlReferrer != null &&
+	                Request.UrlReferrer.AbsoluteUri.StartsWith(Request.Url.GetLeftPart(UriPartial.Authority)))
+	            {
+	                if (node != null)
+	                {
+	                    node.RootNode.Attributes["ShowBack"] = true;
+	                }
+
+	                if (Request.UrlReferrer.AbsoluteUri.Equals(Request.Url.AbsoluteUri))
+	                {
+	                    UserHelper.CustomerSession.LastShoppingPage = Url.Content("~/");
+	                }
+	                else
+	                {
+	                    UserHelper.CustomerSession.LastShoppingPage = Request.UrlReferrer.AbsoluteUri;
+	                }
+
+	            }
+
+                if (node != null)
+                {
+                    if (node.ParentNode != null && itemModel.CatalogItem.CatalogOutlines != null
+                        && itemModel.CatalogItem.CatalogOutlines.Count > 0)
+                    {
+
+                        node.Attributes["Outline"] = new BrowsingOutline(itemModel.CatalogItem.CatalogOutlines[0]);
+                    }
+                    node.Title = itemModel.DisplayName;
+                }
+	        }
 
             return View(GetDisplayTemplate(TargetTypes.Item, itemModel.CatalogItem), itemModel);
         }
@@ -92,14 +129,14 @@ namespace VirtoCommerce.Web.Controllers
 		/// <param name="itemId">The item identifier.</param>
 		/// <param name="name">The name.</param>
 		/// <param name="selections">The selections.</param>
-		/// <param name="variationId">The variation identifier.</param>
+		/// <param name="variation">The selected variation item code.</param>
 		/// <returns>ActionResult.</returns>
 		[CustomOutputCache(CacheProfile = "CatalogCache")]
         public ActionResult ItemVariations(string itemId, string name, string[] selections = null,
-                                           string variationId = null)
+                                           string variation = null)
         {
             var variations = _catalogClient.GetItemRelations(itemId);
-            var selectedVariation = string.IsNullOrEmpty(variationId) ? null : _catalogClient.GetItem(variationId);
+            var selectedVariation = string.IsNullOrEmpty(variation) ? null : _catalogClient.GetItem(variation, bycode: true);
             var model = new VariationsModel(variations, selections, selectedVariation);
             return PartialView(name, model);
         }
@@ -129,7 +166,7 @@ namespace VirtoCommerce.Web.Controllers
 		/// <returns>ActionResult.</returns>
         public ActionResult AssociatedItem(string itemId, string name, string associationType)
         {
-			return DisplayItemById(itemId, name: name, associationType: associationType, displayOptions: ItemDisplayOptions.ItemOnly);
+			return DisplayItemById(itemId, name: name, associationType: associationType);
         }
 
 		/// <summary>

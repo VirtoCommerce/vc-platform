@@ -1,25 +1,18 @@
-﻿using System.Globalization;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Waf.Applications.Services;
 using System.Waf.VirtoCommerce.ManagementClient.Services;
 using System.Windows.Data;
-using Omu.ValueInjecter;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Linq;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
-using Microsoft.Practices.ServiceLocation;
-using VirtoCommerce.Foundation.Security.Model;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
-using VirtoCommerce.ManagementClient.Core.Infrastructure.EventAggregation;
-using VirtoCommerce.ManagementClient.Customers.Dialogs.ViewModel.Implementations;
-using VirtoCommerce.ManagementClient.Customers.Dialogs.ViewModel.Interfaces;
-using VirtoCommerce.ManagementClient.Customers.Infrastructure.Controls;
-using VirtoCommerce.ManagementClient.Customers.Model.Enumerations;
+using Omu.ValueInjecter;
 using VirtoCommerce.Foundation.Customers.Factories;
 using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Foundation.Customers.Repositories;
@@ -27,8 +20,16 @@ using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Orders.Model;
 using VirtoCommerce.Foundation.Orders.Repositories;
+using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.Foundation.Security.Repositories;
 using VirtoCommerce.Foundation.Security.Services;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using VirtoCommerce.ManagementClient.Core.Infrastructure.EventAggregation;
+using VirtoCommerce.ManagementClient.Customers.Dialogs.ViewModel.Implementations;
+using VirtoCommerce.ManagementClient.Customers.Dialogs.ViewModel.Interfaces;
+using VirtoCommerce.ManagementClient.Customers.Infrastructure.Controls;
+using VirtoCommerce.ManagementClient.Customers.Model.Enumerations;
+using VirtoCommerce.ManagementClient.Security.ViewModel.Interfaces;
 
 namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 {
@@ -38,6 +39,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 		#region Fields
 
 		private Contact _innerItem;
+		private string _currentContactStoreId;
 
 		#endregion
 
@@ -56,18 +58,20 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 		private readonly IViewModelsFactory<ICreateUserDialogViewModel> _wizardUserVmFactory;
 		private readonly IViewModelsFactory<IEmailDialogViewModel> _emailVmFactory;
 		private readonly IViewModelsFactory<IPhoneNumberDialogViewModel> _phoneVmFactory;
+		private readonly ILoginViewModel _loginViewModel;
 		private readonly ISecurityService _securityService;
 
 		#endregion
 
 		#region Constructor
 
-		public CustomerDetailViewModel(ISecurityService securityService, IViewModelsFactory<IPhoneNumberDialogViewModel> phoneVmFactory, IViewModelsFactory<IEmailDialogViewModel> emailVmFactory, IViewModelsFactory<ICreateUserDialogViewModel> wizardUserVmFactory, IViewModelsFactory<IAddressDialogViewModel> addressVmFactory, ICustomerEntityFactory entityFactory, 
+		public CustomerDetailViewModel(ISecurityService securityService, IViewModelsFactory<IPhoneNumberDialogViewModel> phoneVmFactory, IViewModelsFactory<IEmailDialogViewModel> emailVmFactory, IViewModelsFactory<ICreateUserDialogViewModel> wizardUserVmFactory, IViewModelsFactory<IAddressDialogViewModel> addressVmFactory, ICustomerEntityFactory entityFactory,
 			IAuthenticationContext authContext, CustomersDetailViewModel parentViewModel, Contact innerContact,
 			ICustomerRepository customerRepository, IRepositoryFactory<ISecurityRepository> securityRepositoryFactory,
-			IRepositoryFactory<ICountryRepository> countryRepositoryFactory, IRepositoryFactory<IOrderRepository> orderRepositoryFactory)
+			IRepositoryFactory<ICountryRepository> countryRepositoryFactory, IRepositoryFactory<IOrderRepository> orderRepositoryFactory, ILoginViewModel loginViewModel)
 		{
 			_securityService = securityService;
+			_loginViewModel = loginViewModel;
 			_parentViewModel = parentViewModel;
 			_authContext = authContext;
 			_customerRepository = customerRepository;
@@ -113,6 +117,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 
 			CreateLoginPasswordCommand = new DelegateCommand(CreateLoginPassword, () => _authContext.CheckPermission(PredefinedPermissions.CustomersCreateResetPasswords));
 			ResetCustomerPasswordCommand = new DelegateCommand(ResetCustomerPassword, () => _authContext.CheckPermission(PredefinedPermissions.CustomersCreateResetPasswords));
+			LoginOnBehalfCommand = new DelegateCommand(LoginOnBehalf, () => IsLoginOnBehalfShow);
 			SuspendAccessCommand = new DelegateCommand(SuspendAccess, () => _authContext.CheckPermission(PredefinedPermissions.CustomersSuspendAccounts));
 			RestoreAccessCommand = new DelegateCommand(RestoreAccess, () => _authContext.CheckPermission(PredefinedPermissions.CustomersSuspendAccounts));
 
@@ -242,16 +247,15 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 
 		private async void HasCurrentContactLoginAndSuspendAccessCheck()
 		{
-
 			CurrentContactHasLogin = await Task.Run(() =>
 			{
-
 				var user =
 					SecurityRepository.Accounts.Where(a => a.MemberId == InnerItem.MemberId).SingleOrDefault();
 
 				if (user != null)
 				{
 					CurrentContactLoginUserName = user.UserName;
+					_currentContactStoreId = user.StoreId;
 					return true;
 				}
 				return false;
@@ -316,6 +320,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 
 		public DelegateCommand CreateLoginPasswordCommand { get; private set; }
 		public DelegateCommand ResetCustomerPasswordCommand { get; private set; }
+		public DelegateCommand LoginOnBehalfCommand { get; private set; }
 		public DelegateCommand SuspendAccessCommand { get; private set; }
 		public DelegateCommand RestoreAccessCommand { get; private set; }
 
@@ -424,7 +429,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 
 				var itemVm = _addressVmFactory.GetViewModelInstance(parameters.ToArray());
 
-				var confirmation = new ConditionalConfirmation {Title = "Enter address details", Content = itemVm};
+				var confirmation = new ConditionalConfirmation { Title = "Enter address details", Content = itemVm };
 
 				AddAddressPhoneEmailInteractioNRequest.Raise(confirmation,
 					(x) =>
@@ -448,7 +453,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 			{
 				var itemVm = _phoneVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", new Phone()));
 
-				var confirmation = new ConditionalConfirmation {Title = "Enter phone details", Content = itemVm};
+				var confirmation = new ConditionalConfirmation { Title = "Enter phone details", Content = itemVm };
 
 				AddAddressPhoneEmailInteractioNRequest.Raise(confirmation,
 					(x) =>
@@ -472,7 +477,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 			{
 				var itemVm = _emailVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", new Email()));
 
-				var confirmation = new ConditionalConfirmation {Title = "Enter email details", Content = itemVm};
+				var confirmation = new ConditionalConfirmation { Title = "Enter email details", Content = itemVm };
 
 				AddAddressPhoneEmailInteractioNRequest.Raise(confirmation,
 					(x) =>
@@ -511,7 +516,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 
 				var itemVm = _addressVmFactory.GetViewModelInstance(parameters.ToArray());
 
-				var confirmation = new ConditionalConfirmation {Title = "Enter address details", Content = itemVm};
+				var confirmation = new ConditionalConfirmation { Title = "Enter address details", Content = itemVm };
 
 				AddAddressPhoneEmailInteractioNRequest.Raise(confirmation,
 					(x) =>
@@ -544,7 +549,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 
 				var itemVm = _phoneVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", phoneToEdit));
 
-				var confirmation = new ConditionalConfirmation {Title = "Enter phone details", Content = itemVm};
+				var confirmation = new ConditionalConfirmation { Title = "Enter phone details", Content = itemVm };
 
 				AddAddressPhoneEmailInteractioNRequest.Raise(confirmation,
 					(x) =>
@@ -580,7 +585,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 
 				var itemVm = _emailVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", emailToEdit));
 
-				var confirmation = new ConditionalConfirmation {Title = "Enter email details", Content = itemVm};
+				var confirmation = new ConditionalConfirmation { Title = "Enter email details", Content = itemVm };
 
 				AddAddressPhoneEmailInteractioNRequest.Raise(confirmation,
 					(x) =>
@@ -613,8 +618,8 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 					_wizardUserVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("operationType",
 						CreateUserDialogOperationType.CreateLogin));
 
-				var confirmation = new ConditionalConfirmation {Title = "Enter login details", Content = itemVm};
-				
+				var confirmation = new ConditionalConfirmation { Title = "Enter login details", Content = itemVm };
+
 				SelectStoreRequest.Raise(confirmation,
 					async (x) =>
 					{
@@ -650,7 +655,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 						CreateUserDialogOperationType
 							.ResetPassword));
 
-				var confirmation = new ConditionalConfirmation {Title = "Enter new password", Content = itemVm};
+				var confirmation = new ConditionalConfirmation { Title = "Enter new password", Content = itemVm };
 
 				SelectStoreRequest.Raise(confirmation,
 					async (x) =>
@@ -675,6 +680,13 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 			}
 		}
 
+		private void LoginOnBehalf()
+		{
+			var url = string.Format("{0}?loginAs={1}&store={2}", _loginViewModel.CurrentUser.BaseUrl, CurrentContactLoginUserName, _currentContactStoreId);
+			// open the browser
+			Process.Start(url);
+		}
+
 		private void SuspendAccess()
 		{
 			if (CommonConfirmRequest != null)
@@ -697,7 +709,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 							}
 							catch (Exception ex)
 							{
-								ShowErrorDialog(ex,string.Format("An error occurred when trying to suspend access: {0}", ex.InnerException.Message));
+								ShowErrorDialog(ex, string.Format("An error occurred when trying to suspend access: {0}", ex.InnerException.Message));
 							}
 						}
 					});
@@ -1095,6 +1107,11 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 			get { return _authContext.CheckPermission(PredefinedPermissions.CustomersCreateResetPasswords) && !CurrentContactHasLogin; }
 		}
 
+		public bool IsLoginOnBehalfShow
+		{
+			get { return _authContext.CheckPermission(PredefinedPermissions.CustomersLoginAsCustomer) && CurrentContactHasLogin; }
+		}
+
 		public bool IsResetPasswordShow
 		{
 			get { return _authContext.CheckPermission(PredefinedPermissions.CustomersCreateResetPasswords) && CurrentContactHasLogin; }
@@ -1111,9 +1128,9 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 					{
 						OnPropertyChanged();
 						OnPropertyChanged("IsCreateLoginPasswordShow");
+						OnPropertyChanged("IsLoginOnBehalfShow");
 						OnPropertyChanged("IsResetPasswordShow");
 					});
-
 			}
 		}
 

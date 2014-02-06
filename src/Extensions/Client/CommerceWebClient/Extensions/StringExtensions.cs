@@ -1,60 +1,44 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+using System.Web.Mvc;
+using VirtoCommerce.Client.Globalization;
+using VirtoCommerce.Web.Client.Helpers;
 
-namespace VirtoCommerce.Web.Helpers
+namespace VirtoCommerce.Web.Client.Extensions
 {
     public static class StringExtensions
     {
-        public static int TryParse(this string u, int defaultValue)
+        /// <summary>
+        /// Localizes the HTML.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="format">The format.</param>
+        /// <returns>localized MvcHtmlString.</returns>
+        public static MvcHtmlString LocalizeHtml(this string source, params object[] format)
         {
-            try
-            {
-                return int.Parse(u);
-            }
-            catch
-            {
-                return defaultValue;
-            }
-        }
-
-        public static int TryParse(this string u)
-        {
-            return TryParse(u, 0);
+            return new MvcHtmlString(string.Format(source.Localize((string)null), format));
         }
 
         /// <summary>
-        /// Like null coalescing operator (??) but including empty strings
+        /// Titles the specified title.
         /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
+        /// <param name="title">The title.</param>
         /// <returns></returns>
-        public static string IfNullOrEmpty(this string a, string b)
+        public static string Title(this string title)
         {
-            return string.IsNullOrEmpty(a) ? b : a;
+            return Title(title, "{0} | {1}");
         }
 
         /// <summary>
-        /// If <paramref name="a"/> is empty, returns null
+        /// Titles the specified title.
         /// </summary>
-        /// <param name="a"></param>
+        /// <param name="title">The title.</param>
+        /// <param name="formatString">The format string.</param>
         /// <returns></returns>
-        public static string EmptyToNull(this string a)
+        public static string Title(this string title, string formatString)
         {
-            return string.IsNullOrEmpty(a) ? null : a;
+            var storeName = StoreHelper.CustomerSession.StoreName;
+            return String.IsNullOrEmpty(storeName) ? title : String.Format(formatString, title, storeName);
         }
 
-		/// <summary>
-		/// Equalses the or null empty.
-		/// </summary>
-		/// <param name="str1">The STR1.</param>
-		/// <param name="str2">The STR2.</param>
-		/// <param name="comparisonType">Type of the comparison.</param>
-		/// <returns></returns>
-		public static bool EqualsOrNullEmpty(this string str1, string str2, StringComparison comparisonType)
-		{
-			return String.Compare(str1 ?? "", str2 ?? "", comparisonType) == 0;
-		}
     }
 }

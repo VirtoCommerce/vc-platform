@@ -1,25 +1,24 @@
 ﻿using System;
+using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.ManagementClient.AppConfig.ViewModel.DisplayTemplates.Interfaces;
 using VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Interfaces;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
-using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.ManagementClient.Core.Controls;
-using System.Collections.Generic;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
 
 namespace VirtoCommerce.ManagementClient.AppConfig.Model
 {
-    [Serializable]
-    public class CategorySelectElement : TypedExpressionElementBase
-    {
-        private CustomSelectorElement _valueSelectorEl;
-        private const string ElementLabel = "Items of category";
-        private const string SelectLabel = "select category";
+	[Serializable]
+	public class CategorySelectElement : TypedExpressionElementBase
+	{
+		private CustomSelectorElement _valueSelectorEl;
+		private const string ElementLabel = "Items of category";
+		private const string SelectLabel = "select category";
 
 		public CategorySelectElement(IExpressionViewModel expressionViewModel)
 			: base(ElementLabel, expressionViewModel)
-        {
-            _valueSelectorEl = WithCustomSelect(ValueSelector, SelectLabel) as CustomSelectorElement;
-        }
+		{
+			_valueSelectorEl = WithCustomSelect(ValueSelector, SelectLabel) as CustomSelectorElement;
+		}
 
 		public CategorySelectElement(string elementLabel, IExpressionViewModel expressionViewModel)
 			: base(elementLabel, expressionViewModel)
@@ -27,26 +26,25 @@ namespace VirtoCommerce.ManagementClient.AppConfig.Model
 			_valueSelectorEl = WithCustomSelect(ValueSelector, SelectLabel) as CustomSelectorElement;
 		}
 
-        public string SelectedCategoryId
-        {
-            get
-            {
-                return Convert.ToString(_valueSelectorEl.InputValue);
-            }
-            set
-            {
-                _valueSelectorEl.InputValue = value;
-            }
-        }
-		
-        private Func<object> ValueSelector
-        {
-            get
-            {
-                return () =>
-                {
-					var catalogId = string.Empty;
-					var itemVM = ((IDisplayTemplateViewModel)ExpressionViewModel).SearchCategoryVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("searchType", string.Empty));
+		public string SelectedCategoryId
+		{
+			get
+			{
+				return Convert.ToString(_valueSelectorEl.InputValue);
+			}
+			set
+			{
+				_valueSelectorEl.InputValue = value;
+			}
+		}
+
+		private Func<object> ValueSelector
+		{
+			get
+			{
+				return () =>
+				{
+					var itemVM = ((IDisplayTemplateViewModel)ExpressionViewModel).SearchCategoryVmFactory.GetViewModelInstance();
 					itemVM.SearchModifier = SearchCategoryModifier.RealCatalogsOnly;
 					itemVM.InitializeForOpen();
 					((IDisplayTemplateViewModel)ExpressionViewModel).CommonConfirmRequest.Raise(
@@ -62,14 +60,14 @@ namespace VirtoCommerce.ManagementClient.AppConfig.Model
 						});
 
 					return SelectedCategoryId;
-                };
-            }
-        }
+				};
+			}
+		}
 
 		public override void InitializeAfterDeserialized(IExpressionViewModel expressionViewModel)
 		{
 			base.InitializeAfterDeserialized(expressionViewModel);
 			_valueSelectorEl.ValueSelector = ValueSelector;
 		}
-    }
+	}
 }

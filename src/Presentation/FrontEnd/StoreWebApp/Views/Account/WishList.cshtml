@@ -1,101 +1,59 @@
 ﻿@using VirtoCommerce.Web.Virto.Helpers
 @model CartModel
 @{
-    ViewBag.Title = Html.Title("My Wishlist".Localize());
-    Layout = "_Layout.cshtml";
+    ViewBag.PageTitle = SiteMaps.Current.CurrentNode != null ? SiteMaps.Current.CurrentNode.Title.Localize() : "Wishlst".Localize();
+    ViewBag.Title = Html.Title(ViewBag.PageTitle as string);
 }
-<script type="text/javascript">
-	function focusComment(obj) {
-	    if (obj.value == '@UserHelper.DefaultCommentInWishList') {
-			obj.value = '';
-		} else if (obj.value == '') {
-		    obj.value = '@UserHelper.DefaultCommentInWishList';
-		}
-	}
-
-	function AddAllToCart() {
-		$('#ActionTypeField')[0].value = '@UserHelper.AddToCartAction';
-		return true;
-	}
-
-	$(document).ready(function () {
-		$('.commentArea').each(function () {
-			if ($(this)[0].value == "")
-			    $(this)[0].value = "@UserHelper.DefaultCommentInWishList";
-		});
-	});
-</script>
-<ul id="messages" class="messages"> </ul>
-<div class="my-wishlist">
-	
-    <div class="page-title title-buttons">
-                <h1>@("My Wishlist".LocalizeHtml())</h1>
-    </div>
 @if (Model.LineItems == null || !Model.LineItems.Any())
- {
-	<p>@("You have no items in your wishlist.".LocalizeHtml())</p>
- }
- else
- {
-	using (Html.BeginForm("UpdateWishList", "Account", FormMethod.Post)) {
-		<input type="hidden" name="ActionType" value="" id="ActionTypeField" />
-		<table id="wishlist-table" class="data-table">
-			<colgroup>
-				<col width="1">
-				<col />
-				<col width="1">
-				<col width="1">
-				<col width="1">
-			</colgroup>
-			<thead>
-				<tr class="first last">
-					<th>
-						@("Product".LocalizeHtml())
-					</th>
-					<th>
-						@("Comment".LocalizeHtml())
-					</th>
-					<th class="a-center">
-						<span class="nobr">@("Added On".LocalizeHtml())</span>
-					</th>
-					<th class="a-center">
-						<span class="nobr">@("Add to Cart".LocalizeHtml())</span>
-					</th>
-					<th>
-						&nbsp;
-					</th>
-				</tr>
-			</thead>
-			<tbody>
-				@for (var i = 0; i < Model.LineItems.Count(); i++)
-				{
-					@Html.EditorFor(m => m.LineItems[i], "lineItem")
-				}
-			</tbody>
-		</table>
-	 
- 		<div class="buttons-set buttons-set2">
-@*			<a href="@Url.Action("ShareWishList", "Account")">
-				<button class="button btn-share" title="Share Wishlist" type="button">
-					<span><span>Share Wishlist</span></span>
-				</button>
-			</a>*@
+{
+    Html.SharedViewBag().Messages = new MessagesModel {new MessageModel("You have no items in your wishlist.".Localize(), MessageType.Notice)};
+}
+else
+{
+    using (Html.BeginForm("UpdateWishList", "Account", FormMethod.Post))
+    {
+        @Html.Hidden("ActionType")
 
-			<button class="button btn-add" title="Add All to Cart"
-					type="submit" onclick="AddAllToCart();">
-					<span><span>@("Add All to Cart".LocalizeHtml())</span></span>
-			</button>
+        <table class="data-table">
+            <colgroup>
+                <col width="1">
+                <col>
+                <col width="1">
+                <col width="1">
+                <col width="1">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>
+                        @("Product".Localize())
+                    </th>
+                    <th>
+                        @("Comment".Localize())
+                    </th>
+                    <th>
+                        @("Added On".Localize())
+                    </th>
+                    <th>
+                        @("Add to Cart".Localize())
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (var i = 0; i < Model.LineItems.Count(); i++)
+                {
+                    @Html.EditorFor(m => m.LineItems[i], "lineItem")
+                }
+            </tbody>
+        </table>
+        <div class="buttons">
+            <button title="@("Add All to Cart".Localize())" type="submit" name="action" value="@UserHelper.AddToCartAction">
+                <span>@("Add All to Cart".Localize())</span>
+            </button>
 
-			<button class="button btn-update" title="Update Wishlist"
-				type="submit">
-				<span><span>@("Update Wishlist".LocalizeHtml())</span></span>
-			</button>
-			
-		</div>
-	 }
- }
-</div>
-
-<div class="buttons-set">
-    <p class="back-link"><a href="#"><small>« </small>@("Back".LocalizeHtml())</a></p>
-</div>
+            <button title="@("Update Wishlist".Localize())" type="submit" name="action">
+                <span>@("Update Wishlist".Localize())</span>
+            </button>
+        </div>
+    }
+}

@@ -89,8 +89,8 @@ VirtoCheckout.prototype = {
     paymentChanged: function (payment) {
 	    var pm = $(payment);
 	    //this.updateShipments(pm.val());
-	    $('dd[name=container_payment_method]').each(function () { $(this).hide(); });
-	    VirtoCommerce.disableAll($("dd[name=container_payment_method]"));
+	    $('[id^=container_payment_method]').each(function () { $(this).hide(); });
+	    VirtoCommerce.disableAll($("[id^=container_payment_method]"));
     	$("#container_payment_method_" + pm.val()).fadeIn();
     	VirtoCommerce.enableAll($("#container_payment_method_" + pm.val()));
     	this.submitChanges();
@@ -129,6 +129,8 @@ VirtoCheckout.prototype = {
 
     bindAddresses: function () {
         this.toggleAddress();
+        this.addressChanged(!$('#ShippingAddressId').val(), 'shipping');
+        this.addressChanged(!$('#BillingAddressId').val(), 'billing');
     },
 
     toggleAddress: function () {

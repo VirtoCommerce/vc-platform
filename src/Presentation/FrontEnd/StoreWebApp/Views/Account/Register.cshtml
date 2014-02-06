@@ -1,86 +1,65 @@
 ﻿@model RegisterModel
 
 @{
-	ViewBag.Title = "Register".Localize();
+    ViewBag.Title = "Register".Localize();
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
-<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
-
-<div class="main-container col1-layout">
-	<div class="main">
-		<div class="col-main">
-			@Html.ValidationSummary(true, "Account creation was unsuccessful. Please correct the errors and try again.".Localize())
-			<div class="account-create">
-				<div class="page-title">
-					<h1>@("Create an Account".LocalizeHtml())</h1>
-				</div>
-				@using (Html.BeginForm())
-				{
-                                
-					@Html.AntiForgeryToken()
-
-					<div class="fieldset">
-						<h2 class="legend">@("Personal Information".LocalizeHtml())</h2>
-						<ul class="form-list">
-							<li class="fields">
-								<div class="customer-name">
-									<div class="field name-firstname">
-										@Html.LabelForEx(m => m.FirstName)
-										<div class="input-box">
-											@Html.TextBoxFor(m => m.FirstName, new { @class = "input-text" })
-										</div>
-									</div>
-									<div class="field name-lastname">
-										@Html.LabelForEx(m => m.LastName)
-										<div class="input-box">
-											@Html.TextBoxFor(m => m.LastName, new { @class = "input-text" })
-										</div>
-									</div>
-								</div>
-							</li>
-							<li>
-								@Html.LabelForEx(m => m.Email)
-								<div class="input-box">
-									@Html.TextBoxFor(m => m.Email, new { @class = "input-text" })
-								</div>
-							</li>
-							<li class="control">
-								<div class="input-box">
-									<input type="checkbox" class="checkbox" id="is_subscribed" value="1" title="@("Sign Up for Newsletter".LocalizeHtml())" name="is_subscribed">
-								</div>
-								<label for="is_subscribed">@("Sign Up for Newsletter".LocalizeHtml())</label>
-							</li>
-						</ul>
-					</div>
-					<div class="fieldset">
-						<h2 class="legend">@("Login Information".LocalizeHtml())</h2>
-						<ul class="form-list">
-							<li class="fields">
-								<div class="field">
-									@Html.LabelForEx(m => m.Password)
-									<div class="input-box">
-										@Html.PasswordFor(m => m.Password, new { @class = "input-text" })
-									</div>
-								</div>
-								<div class="field">
-									@Html.LabelForEx(m => m.ConfirmPassword)
-									<div class="input-box">
-										@Html.PasswordFor(m => m.ConfirmPassword, new { @class = "input-text" })
-									</div>
-								</div>
-							</li>
-						</ul>
-					</div>
-					<div class="buttons-set">
-						<p class="required">* @("Required Fields".LocalizeHtml())</p>
-						<p class="back-link"><a class="back-link" href="@Url.Action("LogOn", "Account")"><small>« </small>@("Back".LocalizeHtml())</a></p>
-						<button id="send2" name="send" title="@("Submit".LocalizeHtml())" class="button" type="submit"><span><span>@("Submit".LocalizeHtml())</span></span></button>
-					</div>
-			}
-			</div>
-		</div>
-	</div>
+<div class="account">
+    <div class="add-info-block">
+        @using (Html.BeginForm())
+        {
+            @Html.ValidationSummary(true, "Account creation was unsuccessful. Please correct the errors and try again.".Localize())
+            @Html.AntiForgeryToken()
+            <span class="title">@("Register".Localize())</span>
+            <fieldset>
+                <legend>@("Personal Information".Localize())</legend>
+                <div class="control-group">
+                    @Html.LabelForEx(m => m.FirstName)
+                    @Html.TextBoxFor(m => m.FirstName)
+                    @Html.ValidationMessageFor(m => m.FirstName)
+                </div>
+                <div class="control-group">
+                    @Html.LabelForEx(m => m.LastName)
+                    @Html.TextBoxFor(m => m.LastName)
+                    @Html.ValidationMessageFor(m => m.LastName)
+                </div>
+                <div class="control-group">
+                    @Html.LabelForEx(m => m.Email)
+                    @Html.TextBoxFor(m => m.Email)
+                    @Html.ValidationMessageFor(m => m.Email)
+                </div>
+                <div class="control-group">
+                    <div class="control">
+                        <label>
+                            @Html.CheckBoxFor(m => m.SignUpForNews)
+                            <span>@("Sign Up for Newsletter".Localize())</span>
+                        </label>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>@("Login Information".Localize())</legend>
+                <div class="control-group">
+                    @Html.LabelForEx(m => m.Password)
+                    @Html.PasswordFor(m => m.Password)
+                    @Html.ValidationMessageFor(m => m.Password)
+                </div>
+                <div class="control-group">
+                    @Html.LabelForEx(m => m.ConfirmPassword)
+                    @Html.PasswordFor(m => m.ConfirmPassword)
+                    @Html.ValidationMessageFor(m => m.ConfirmPassword)
+                </div>
+                <div class="control-group">
+                    <p class="required">* @("Required Fields".Localize())</p>
+                </div>
+                <div class="button-group">
+                    <button type="submit">
+                        <span>@("Submit".Localize())</span>
+                    </button>
+                </div>
+            </fieldset>
+        }
+    </div>
 </div>
 

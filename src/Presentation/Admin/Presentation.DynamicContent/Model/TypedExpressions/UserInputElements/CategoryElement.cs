@@ -4,6 +4,7 @@ using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.ManagementClient.DynamicContent.ViewModel;
 using VirtoCommerce.ManagementClient.Core.Controls;
 using VirtoCommerce.ManagementClient.DynamicContent.ViewModel.ContentPublishing.Interfaces;
+using VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Interfaces;
 
 namespace VirtoCommerce.ManagementClient.DynamicContent.Model
 {

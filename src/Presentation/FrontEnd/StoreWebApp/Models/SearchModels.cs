@@ -5,7 +5,7 @@ using System.Text;
 using VirtoCommerce.Client;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Catalogs.Search;
-using VirtoCommerce.Web.Client.Globalization;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Web.Client.Helpers;
 using VirtoCommerce.Web.Virto.Helpers;
 
@@ -171,6 +171,12 @@ namespace VirtoCommerce.Web.Models
 		/// </summary>
 		/// <value>The selected sort.</value>
         public string SelectedSort { get; set; }
+
+        /// <summary>
+        /// Gets or sets the selected sort order.
+        /// </summary>
+        /// <value>The selected sort order.</value>
+        public string SortOrder { get; set; }
     }
 
 	/// <summary>
@@ -383,6 +389,22 @@ namespace VirtoCommerce.Web.Models
             }
         }
 
+	    public bool IsNew
+	    {
+	        get
+	        {
+	            return CatalogItem.Item.StartDate.AddMonths(1) >= DateTime.UtcNow;
+	        }
+	    }
+
+	    public bool IsSale
+	    {
+	        get
+	        {
+	            return Price != null && Price.Type == PriceType.Sale;
+	        }
+	    }
+
 		/// <summary>
 		/// Gets the <see cref="System.String"/> with the specified name.
 		/// </summary>
@@ -534,6 +556,12 @@ namespace VirtoCommerce.Web.Models
 		/// </summary>
 		/// <value>The sort.</value>
         public string Sort { get; set; }
+
+        /// <summary>
+        /// Gets or sets the sort order asc or desc.
+        /// </summary>
+        /// <value>True if descending, false if ascending</value>
+        public string SortOrder { get; set; }
 
 		/// <summary>
 		/// Returns a <see cref="System.String" /> that represents this instance.

@@ -136,7 +136,7 @@
                                         Margin="4" VerticalAlignment="Center" Foreground="{TemplateBinding Foreground}" />
                             
                         </Grid>
-                        <Popup x:Name="popup" Placement="Bottom" IsOpen="False" AllowsTransparency="True"  >
+                        <Popup x:Name="popup" Placement="Bottom" IsOpen="False" AllowsTransparency="True" >
                                     <Border Background="Black">
                                         <Grid  Margin="10" MinWidth="150" MaxWidth="350">
                                             <Grid.RowDefinitions>
@@ -393,7 +393,7 @@
             </Setter.Value>
         </Setter>
         <Setter Property="ItemTemplate" Value="{StaticResource Virto_Shell_ItemsControl_TileMainMenu_ItemTemplate}"/>
-        <Style.Triggers>
+        <!-- Style.Triggers>
             <DataTrigger Binding="{Binding Path=IsMainMenuVisible}" Value="True">
                 <DataTrigger.EnterActions>
                     <BeginStoryboard>
@@ -427,7 +427,7 @@
                 </DataTrigger.ExitActions>
                 
             </DataTrigger>
-        </Style.Triggers>
+        </Style.Triggers -->
     </Style>
     
     <!--Tile Main Menu-->

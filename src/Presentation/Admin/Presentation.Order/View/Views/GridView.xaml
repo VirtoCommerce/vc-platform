@@ -11,13 +11,13 @@
     <Presentation_Core_Infrastructure_Converters:CurrencyConverter x:Key="CurrencyConverter"/>
 
     <DataTemplate x:Key="ordersColumn1Template">
-        <StackPanel Margin="6,4,0,8" HorizontalAlignment="Stretch" Orientation="Horizontal">
+        <DockPanel Margin="6,4,0,8" HorizontalAlignment="Stretch">
             <!--<Image Height="36" Stretch="Fill" VerticalAlignment="Center" Source="{Binding Data.InnerItem.CurrentStatus, Converter={x:Static Presentation_Order_Infrastructure_Converters:OrderStatusIconSourceConverter.Current}}" />-->
             <core_controls:VectorImage Height="18" Width="18" Foreground="{DynamicResource Virto_HighLightText_Foreground_Brush}" 
                                                    ImageSource="{Binding Data.IconSource}"/>
             <Border HorizontalAlignment="Stretch" Margin="8,2,0,0" >
-                <StackPanel Height="Auto" Width="Auto">
-                    <TextBlock FontWeight="DemiBold" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}"  Foreground="{DynamicResource Virto_HighLightText_Foreground_Brush}">
+                <DockPanel Height="Auto" Width="Auto">
+                    <TextBlock DockPanel.Dock="Top" FontWeight="DemiBold" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}"  Foreground="{DynamicResource Virto_HighLightText_Foreground_Brush}">
                         <TextBlock.Text>
                             <MultiBinding StringFormat="{}{0} by {1}">
                                 <Binding Path="Data.InnerItem.TrackingNumber" />
@@ -25,10 +25,10 @@
                             </MultiBinding>
                         </TextBlock.Text>
                     </TextBlock>
-                    <TextBlock HorizontalAlignment="Left" Text="{Binding Data.InnerItem.Status}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
-                </StackPanel>
+                    <TextBlock DockPanel.Dock="Top" HorizontalAlignment="Left" Text="{Binding Data.InnerItem.Status}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
+                </DockPanel>
             </Border>
-        </StackPanel>
+        </DockPanel>
     </DataTemplate>
 
     <DataTemplate x:Key="ordersColumn2Template">

@@ -78,12 +78,16 @@
     $.redirect = function (url, params) {
 
         url = url || window.location.href || '';
-        url = url.match(/\?/) ? url : url + '?';
 
-        for (var key in params) {
-            var re = RegExp(';?' + key + '=?[^&;]*', 'g');
-            url = url.replace(re, '');
-            url += '&' + key + '=' + params[key];
+        if (params != undefined)
+        {
+            url = url.match(/\?/) ? url : url + '?';
+
+            for (var key in params) {
+                var re = RegExp(';?' + key + '=?[^&;]*', 'g');
+                url = url.replace(re, '');
+                url += '&' + key + '=' + params[key];
+            }
         }
 
         // cleanup url 
@@ -118,5 +122,26 @@
     		window.opener.focus();
     	}
     	window.opener.location.href = url;
+    };
+
+    $.showPopupMessage = function (message)
+    {
+        var timestamp = new Date().getTime();
+        var template = '<div class="popup-alert" id="' + timestamp + '"><a title="Close" class="close">Close</a>' + message + '</div>';
+        $('.popup-alert').remove();
+        $('body').append(template);
+        $('#' + timestamp).on('click', function () {
+            closePopup(this);
+        });
+        window.setTimeout(function () {
+            closePopup('#' + timestamp);
+        }, 8000);
+        
+        function closePopup(popup) {
+            $(popup).slideUp('slow', function ()
+            {
+                $(popup).remove();
+            });
+        }
     };
 })(jQuery);

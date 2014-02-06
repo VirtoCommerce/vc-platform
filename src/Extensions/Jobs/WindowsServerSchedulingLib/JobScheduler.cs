@@ -198,7 +198,12 @@ namespace VirtoCommerce.Scheduling.Windows
             catch (Exception ex)
             {
                 _traceSource.Error(ex.ToString());
-                throw;
+
+                //If database does not exist
+                if (ex is ConfigurationErrorsException)
+                {
+                    Stop();
+                }
             }
         }
 

@@ -589,6 +589,12 @@
                                                        Path=PlacementTarget.Tag.IsCreateLoginPasswordShow, Delay=2000,
                                                        UpdateSourceTrigger=PropertyChanged, Converter={x:Static core_Converters:ToVisibilityConverter.Current}}"/>
 
+									<MenuItem Command="{Binding Path=PlacementTarget.Tag.LoginOnBehalfCommand,
+                                                    RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu}}"
+                                        Header="Login on behalf" ToolTip="Login to store on behalf of this customer"
+                                        Visibility="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=ContextMenu},
+                                                       Path=PlacementTarget.Tag.IsLoginOnBehalfShow, Converter={x:Static core_Converters:ToVisibilityConverter.Current}}"/>
+
 									<MenuItem Command="{Binding PlacementTarget.Tag.ResetCustomerPasswordCommand,
                                                     RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}, Mode=FindAncestor}}"
                                         Header="Reset Password" ToolTip="Reset customer password"

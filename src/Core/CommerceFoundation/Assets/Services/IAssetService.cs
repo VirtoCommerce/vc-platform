@@ -31,5 +31,11 @@ namespace VirtoCommerce.Foundation.Assets.Services
 		Stream OpenReadOnly(string blobKey);
 		[OperationContract]
 		bool Exists(string blobKey);
-    }
+        [OperationContract]
+        Folder CreateFolder(string folderName, string parentFolderId);
+        [OperationContract]
+        void  Rename(string id, string name);
+        [OperationContract]
+        void Delete(string id);
+	}
 }

@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Configuration;
 using System.Threading;
+using System.Web.Configuration;
 
 namespace VirtoCommerce.Foundation.AppConfig
 {
 	public class AppConfigConfiguration : ConfigurationSection
 	{
 		private static Lazy<AppConfigConfiguration> _instance = new Lazy<AppConfigConfiguration>(CreateInstance, LazyThreadSafetyMode.ExecutionAndPublication);
+
+        public const string SectionName = "VirtoCommerce/AppConfig";
 
 		public static AppConfigConfiguration Instance
 		{
@@ -16,9 +19,10 @@ namespace VirtoCommerce.Foundation.AppConfig
 			}
 		}
 
-		private static AppConfigConfiguration CreateInstance()
+	    private static AppConfigConfiguration CreateInstance()
 		{
-			return (AppConfigConfiguration)ConfigurationManager.GetSection("VirtoCommerce/AppConfig");
+
+            return (AppConfigConfiguration)ConfigurationManager.GetSection(SectionName);
 		}
 
 		[ConfigurationProperty("Connection", IsRequired = true)]
@@ -38,6 +42,24 @@ namespace VirtoCommerce.Foundation.AppConfig
 				return (SchedulerConnection)this["Scheduler"];
 			}
 		}
+
+        [ConfigurationProperty("Setup", IsRequired = true)]
+        public SetupConfiguration Setup
+	    {
+	        get
+	        {
+                return (SetupConfiguration)this["Setup"];
+	        }
+	    }
+
+        [ConfigurationProperty("availableModules")]
+        public ModulesCollection AvailableModules
+        {
+            get
+            {
+                return (ModulesCollection)this["availableModules"] ?? new ModulesCollection();
+            }
+        }
 
 		/// <summary>
 		/// Config settings which define where caching is enabled and timeouts related to it.
@@ -278,6 +300,25 @@ namespace VirtoCommerce.Foundation.AppConfig
 			}
 		}
 
+        /// <summary>
+        /// Configuration attribute which determines when the seo keywords values are
+        /// automatically refreshed in memory (in seconds).
+        /// </summary>
+        /// <value>
+        /// The seo keywords timeout.
+        /// </value>
+        [ConfigurationProperty("seoKeywordsTimeout", IsRequired = false, DefaultValue = "0:1:0")]
+		public TimeSpan SeoKeywordsTimeout{
+			get
+			{
+                return (TimeSpan)this["seoKeywordsTimeout"];
+			}
+			set
+			{
+                this["seoKeywordsTimeout"] = value.ToString();
+			}
+		}
+
 
         [ConfigurationProperty("displayTemplatesTimeout", IsRequired = false, DefaultValue = "0:2:0")]
 		public TimeSpan DisplayTemplateMappingsTimeout
@@ -304,4 +345,89 @@ namespace VirtoCommerce.Foundation.AppConfig
 		}
 	}
 
+    public class SetupConfiguration : ConfigurationElement
+    {
+        [ConfigurationProperty("completed", IsRequired = true, DefaultValue = true)]
+        public bool IsCompleted
+        {
+            get
+            {
+                return (bool)this["completed"];
+            }
+            set
+            {
+                this["completed"] = value.ToString();
+                var configFile = WebConfigurationManager.OpenWebConfiguration("~");
+                var section = (AppConfigConfiguration)configFile.GetSection(AppConfigConfiguration.SectionName);
+                section.Setup["completed"] = value;
+                configFile.Save(ConfigurationSaveMode.Modified);
+            }
+        }
+
+        public override bool IsReadOnly()
+        {
+            return false;
+        }
+    }
+
+    public class ModuleConfigurationElement : ConfigurationElement
+    {
+
+        [ConfigurationProperty("name", IsRequired = true)]
+        public string Name
+        {
+            get
+            {
+                return (string)base["name"];
+            }
+            set
+            {
+                this["name"] = value;
+            }
+        }
+
+        [ConfigurationProperty("type", IsRequired = true)]
+        public string Type
+        {
+            get
+            {
+                return (string)base["type"];
+            }
+            set
+            {
+                base["type"] = value;
+            }
+        }
+
+
+    }
+
+    public class ModulesCollection : ConfigurationElementCollection
+    {
+        public ModuleConfigurationElement this[int index]
+        {
+            get
+            {
+                return base.BaseGet(index) as ModuleConfigurationElement;
+            }
+            set
+            {
+                if (base.BaseGet(index) != null)
+                {
+                    base.BaseRemoveAt(index);
+                }
+                this.BaseAdd(index, value);
+            }
+        }
+
+        protected override ConfigurationElement CreateNewElement()
+        {
+            return new ModuleConfigurationElement();
+        }
+
+        protected override object GetElementKey(ConfigurationElement element)
+        {
+            return ((ModuleConfigurationElement)element).Name;
+        }
+    }
 }
