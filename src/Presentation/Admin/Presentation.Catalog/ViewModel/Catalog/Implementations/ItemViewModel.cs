@@ -761,7 +761,9 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 		internal static void RaiseAssetPickInteractionRequest(IViewModelsFactory<IPickAssetViewModel> vmFactory, InteractionRequest<Confirmation> confirmRequest, ICatalogEntityFactory entityFactory, Action<ItemAsset> finalAction)
 		{
-			var itemVM = vmFactory.GetViewModelInstance();
+		    var itemVM = vmFactory.GetViewModelInstance();
+            itemVM.AssetPickMode = true;
+            itemVM.RootItemId = null;
 
 			confirmRequest.Raise(
 				new ConditionalConfirmation(itemVM.Validate) { Content = itemVM, Title = "Select main image" },

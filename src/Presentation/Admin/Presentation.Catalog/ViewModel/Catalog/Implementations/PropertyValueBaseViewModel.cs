@@ -152,7 +152,9 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 		private void RaiseAssetPickInteractionRequest()
 		{
-			var itemVM = _vmFactory.GetViewModelInstance();
+		    var itemVM = _vmFactory.GetViewModelInstance();
+            itemVM.AssetPickMode = true;
+            itemVM.RootItemId = null;
 			
 			CommonConfirmRequest.Raise(
 				new ConditionalConfirmation(itemVM.Validate) { Content = itemVM, Title = "Select property value" },

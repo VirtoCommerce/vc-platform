@@ -20,13 +20,13 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Helpers
         public override void Write(string message)
         {
             _sb.Append(message);
-            SetupWorker.SendMessage(message);
+            SetupWorker.TraceMessage(message);
         }
 
         public override void WriteLine(string message)
         {
             _sb.AppendLine(message);
-            SetupWorker.SendMessageLine(message);
+            SetupWorker.TraceMessageLine(message);
         }
     }
 }

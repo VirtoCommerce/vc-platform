@@ -4,7 +4,6 @@ using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
-using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using VirtoCommerce.Foundation.AppConfig;
@@ -43,7 +42,7 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
                 "{0}://{1}{2}{3}",
                 (Request.IsSecureConnection) ? "https" : "http",
                 Request.Url.Host,
-                (Request.Url.Port == 80) ? "" : ":" + Request.Url.Port.ToString(),
+                (Request.Url.Port == 80) ? "" : ":" + Request.Url.Port,
                 VirtualPathUtility.ToAbsolute("~/"));
 
             successModel.Website = String.Format("{0}", url);
@@ -52,16 +51,10 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
 
         public ActionResult Complete()
         {
-            new Thread(() =>
-            {
-                //wait for page to load
-                Thread.Sleep(2000);
-                AppConfigConfiguration.Instance.Setup.IsCompleted = true;
-                HttpRuntime.UnloadAppDomain();
-            }).Start();
-            return Success();
+            AppConfigConfiguration.Instance.Setup.IsCompleted = true;
+            HttpRuntime.UnloadAppDomain();
+            return RedirectToAction("Index");
         }
-
 
 
         [HttpPost]
@@ -94,14 +87,14 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
             try
             {
                 var connectionString = PrepareDb(model);
-                SetupWorker.SendMessageLine("Saving database connection string to web.config.");
-                //After saving connection string signalR needs some time to reconnect
+                SetupWorker.SendFriendlyMessage("Saving database connection string to web.config.");
+                //After saving connection string signalR needs some time to recycle iis
                 ConnectionHelper.SqlConnectionString = connectionString;
 
             }
             catch (Exception ex)
             {
-                SetupWorker.SendMessageLine(ex.Message);
+                SetupWorker.TraceMessageLine(ex.Message);
                 return Json(new { Success = false, ex.Message });
             }
             finally
@@ -132,7 +125,7 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
         private string PrepareDb(InstallModel model)
         {
             var csBuilder = model.ConnectionStringBuilder;
-            SetupWorker.SendMessageLine("Checking connection availability. Connection string: {0}", csBuilder.ConnectionString);
+            SetupWorker.SendFriendlyMessage("Checking connection availability. Connection string: {0}", csBuilder.ConnectionString);
 
             var success = CheckDb(csBuilder.ConnectionString);
 
@@ -143,7 +136,7 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
 
             if (!string.IsNullOrEmpty(model.DbAdminUser))
             {
-                SetupWorker.SendMessageLine("Trying to connect with administrator user {0}.", model.DbAdminUser);
+                SetupWorker.SendFriendlyMessage("Trying to connect with administrator user {0}.", model.DbAdminUser);
                 // let's try with admin user
                 csBuilder.UserID = model.DbAdminUser;
                 csBuilder.Password = model.DbAdminPassword;
@@ -153,7 +146,7 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
 
             if (!success)
             {
-                SetupWorker.SendMessageLine("Trying to connect with integrated user.");
+                SetupWorker.SendFriendlyMessage("Trying to connect with integrated user.");
                 // let's try with integrated user
                 csBuilder.IntegratedSecurity = true;
                 success = CheckDb(csBuilder.ConnectionString);
@@ -183,7 +176,7 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
         {
             using (var dbConn = new SqlConnection(connectionString))
             {
-                SetupWorker.SendMessageLine("Creating user and adding it to database.");
+                SetupWorker.SendFriendlyMessage("Creating user and adding it to database.");
                 dbConn.Open();
                 var databaseName = dbConn.Database;
                 dbConn.ChangeDatabase("master");
@@ -193,7 +186,7 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
                 }
                 catch (Exception err)
                 {
-                    SetupWorker.SendMessageLine(err.Message);
+                    SetupWorker.TraceMessageLine(err.Message);
                 }
 
                 dbConn.ChangeDatabase(databaseName);
@@ -216,7 +209,7 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Controllers
             }
             catch (Exception err)
             {
-                SetupWorker.SendMessageLine(err.Message);
+                SetupWorker.TraceMessageLine(err.Message);
             }
 
             return result;

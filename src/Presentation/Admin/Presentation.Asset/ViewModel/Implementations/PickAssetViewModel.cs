@@ -35,11 +35,11 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 
 		#region ctor
 
-        public PickAssetViewModel(IAssetService assetRepository, IViewModelsFactory<IInputNameDialogViewModel> inputNameVmFactory)
+        public PickAssetViewModel(IAssetService assetRepository, 
+            IViewModelsFactory<IInputNameDialogViewModel> inputNameVmFactory)
 		{
 			_assetRepository = assetRepository;
             _inputNameVmFactory = inputNameVmFactory;
-            AssetPickMode = true;
 
 			AddressBarItems = new ObservableCollection<AssetEntitySearchViewModelBase>();
 			SelectedFolderItems = new ObservableCollection<AssetEntitySearchViewModelBase>();
@@ -54,6 +54,9 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 			CommonConfirmRequest = new InteractionRequest<Confirmation>();
 
             InputNameDialogRequest = new InteractionRequest<ConditionalConfirmation>();
+
+            AssetPickMode = true;
+            RootItemId = null;
 		}
 
 	    #endregion
@@ -106,7 +109,15 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 	        get { return _selectedItem != null; }
 	    }
 
-        public bool AssetPickMode { get; set; }
+	    public bool AssetPickMode
+	    {
+	        get { return _assetPickMode; }
+	        set
+	        {
+	            _assetPickMode = value;
+	            OnPropertyChanged();
+	        }
+	    }
 
 	    private object _selectedItem;
 		public object ItemListSelectedItem
@@ -192,7 +203,6 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 		}
 
 		#region private members
-
 		private void UpdateAddressBar()
 		{
             AddressBarItems.Clear();
@@ -454,6 +464,7 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 
 		private string _namePathDelimiter;
 	    private string _rootItemId;
+	    private bool _assetPickMode;
 
 	    private string NamePathDelimiter
 		{

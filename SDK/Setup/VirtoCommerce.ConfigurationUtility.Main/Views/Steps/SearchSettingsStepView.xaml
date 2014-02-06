@@ -40,7 +40,7 @@
 
 		<TextBlock Grid.Row="2" Text="{Binding Path=ScopeDescription}" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,20,0,0"/>
 		<TextBlock Grid.Row="3" Text="{Binding Source={x:Static localProperties:Resources.IndexScope}, StringFormat='{}{0} :'}" Margin="0,5"/>
-		<TextBox Grid.Row="4" Text="{Binding Path=IndexScope, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Margin="0,5"/>
+		<TextBox Grid.Row="4" Text="{Binding Path=IndexScope, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, Delay=400}" Margin="0,5" CharacterCasing="Lower" />
 
 		<StackPanel Grid.Row="5" Visibility="{Binding IsSearchProviderElastic, Converter={x:Static converters:ToVisibilityConverter.Current}}" Margin="0">
 			<TextBlock Text="{Binding Source={x:Static localProperties:Resources.IndexesLocation}, StringFormat='{}{0} :'}" Margin="0,5" />

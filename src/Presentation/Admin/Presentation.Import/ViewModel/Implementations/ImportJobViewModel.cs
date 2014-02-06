@@ -665,7 +665,9 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 		private void RaiseFilePickInteractionRequest()
 		{
 			var itemVM = _assetVmFactory.GetViewModelInstance();
-			
+            itemVM.AssetPickMode = true;
+            itemVM.RootItemId = null;
+
 			CommonConfirmRequest.Raise(
 				new ConditionalConfirmation(itemVM.Validate) { Content = itemVM, Title = "Select file" },
 				(x) =>

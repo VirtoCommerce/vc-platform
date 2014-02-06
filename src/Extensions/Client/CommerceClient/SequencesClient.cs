@@ -122,7 +122,7 @@ namespace VirtoCommerce.Client
 
 			public bool HasExpired
 			{
-				get { return _lastGenerationDateTime.HasValue && _lastGenerationDateTime.Value.Date < DateTime.Now.Date; }
+                get { return _lastGenerationDateTime.HasValue && _lastGenerationDateTime.Value.Date < DateTime.UtcNow.Date; }
 			}
 
 		    public bool IsEmpty
@@ -146,7 +146,7 @@ namespace VirtoCommerce.Client
 
 				//This revereses the sequence
 				_sequence = new Stack<string>(generatedItems);
-				_lastGenerationDateTime = DateTime.Now;
+				_lastGenerationDateTime = DateTime.UtcNow;
 			}	
 	    }
 
