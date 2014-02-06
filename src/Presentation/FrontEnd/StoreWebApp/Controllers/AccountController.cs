@@ -152,7 +152,7 @@ namespace VirtoCommerce.Web.Controllers
                     if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
                         && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
                     {
-                        OnPostLogon(model.UserName);
+                        UserHelper.OnPostLogon(model.UserName);
                         return Redirect(returnUrl);
                     }
                     var res = new JavaScriptResult { Script = "location.reload();" };
@@ -183,7 +183,7 @@ namespace VirtoCommerce.Web.Controllers
                 {
                     if (_webSecurity.Login(model.UserName, model.Password, model.RememberMe) && StoreHelper.IsUserAuthorized(model.UserName, out errorMessage))
                     {
-                        OnPostLogon(model.UserName);
+                        UserHelper.OnPostLogon(model.UserName);
                         return RedirectToLocal(returnUrl);
                     }
                 }
@@ -193,7 +193,7 @@ namespace VirtoCommerce.Web.Controllers
                         && StoreHelper.IsUserAuthorized(model.UserName, out errorMessage)
                         && StoreHelper.IsUserAuthorized(model.ImpersonatedUserName, out errorMessage))
                     {
-                        OnPostLogon(model.ImpersonatedUserName, model.UserName);
+                        UserHelper.OnPostLogon(model.ImpersonatedUserName, model.UserName);
                         return RedirectToLocal(returnUrl);
                     }
                 }
@@ -903,13 +903,13 @@ namespace VirtoCommerce.Web.Controllers
             {
                 string error;
 
-                if (!Register(model, out error))
+                if (!UserHelper.Register(model, out error))
                 {
                     ModelState.AddModelError("", error);
                 }
                 else
                 {
-                    OnPostLogon(model.Email);
+                    UserHelper.OnPostLogon(model.Email);
                     return model.ActionResult ?? RedirectToAction("Index", "Home");
                 }
             }
@@ -994,7 +994,7 @@ namespace VirtoCommerce.Web.Controllers
 
             if (_oAuthSecurity.Login(result.Provider, result.ProviderUserId, createPersistentCookie: false))
             {
-                OnPostLogon(result.UserName);
+                UserHelper.OnPostLogon(result.UserName);
                 return RedirectToLocal(returnUrl);
             }
 
@@ -1108,7 +1108,7 @@ namespace VirtoCommerce.Web.Controllers
 
                     if (_oAuthSecurity.Login(provider, providerUserId, false))
                     {
-                        OnPostLogon(model.UserName);
+                        UserHelper.OnPostLogon(model.UserName);
                         return RedirectToLocal(returnUrl);
                     }
 
@@ -1405,152 +1405,7 @@ namespace VirtoCommerce.Web.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        /// <summary>
-        /// After user has logged in do some actions
-        /// </summary>
-        public void OnPostLogon(string userName, string csrUserName = null)
-        {
-            var customerId = _webSecurity.GetUserId(userName);
-            var contact = _userClient.GetCustomer(customerId.ToString(CultureInfo.InvariantCulture), false);
-
-            if (!string.IsNullOrEmpty(csrUserName))
-            {
-                UserHelper.CustomerSession.CsrUsername = csrUserName;
-            }
-
-            if (contact != null)
-            {
-                var lastVisited = contact.ContactPropertyValues.FirstOrDefault(x => x.Name == ContactPropertyValueName.LastVisit);
-
-
-                if (lastVisited != null)
-                {
-                    lastVisited.DateTimeValue = DateTime.UtcNow;
-                }
-                else
-                {
-                    lastVisited = new ContactPropertyValue
-                        {
-                            Name = ContactPropertyValueName.LastVisit,
-                            DateTimeValue = DateTime.UtcNow,
-                            ValueType = PropertyValueType.DateTime.GetHashCode()
-                        };
-                    contact.ContactPropertyValues.Add(lastVisited);
-                }
-
-                if (!string.IsNullOrEmpty(csrUserName))
-                {
-                    var lastVisitedByCsr = new ContactPropertyValue
-                    {
-                        Name = ContactPropertyValueName.LastVisitCSR,
-                        DateTimeValue = DateTime.UtcNow,
-                        ShortTextValue = string.Format("CSR username: {0}", csrUserName),
-                        ValueType = PropertyValueType.DateTime.GetHashCode()
-                    };
-                    contact.ContactPropertyValues.Add(lastVisitedByCsr);
-                }
-                _userClient.SaveCustomerChanges();
-            }
-        }
-
-        /// <summary>
-        /// Registers the specified user.
-        /// </summary>
-        /// <param name="model">The registration model.</param>
-        /// <param name="errorMessage">The error message that occured during regustration.</param>
-        /// <returns>true when user is registered and logged in</returns>
-        public bool Register(RegisterModel model, out string errorMessage)
-        {
-            errorMessage = string.Empty;
-
-            try
-            {
-                var id = Guid.NewGuid().ToString();
-
-                _webSecurity.CreateUserAndAccount(model.Email, model.Password, new
-                {
-                    MemberId = id,
-                    UserHelper.CustomerSession.StoreId,
-                    RegisterType = RegisterType.GuestUser.GetHashCode(),
-                    AccountState = AccountState.Approved.GetHashCode(),
-                    Discriminator = "Account"
-                });
-
-                var contact = new Contact
-                {
-                    MemberId = id,
-                    FullName = String.Format("{0} {1}", model.FirstName, model.LastName)
-                };
-
-                contact.Emails.Add(new Email { Address = model.Email, MemberId = id, Type = EmailType.Primary.ToString() });
-                foreach (var addr in model.Addresses)
-                {
-                    contact.Addresses.Add(addr);
-                }
-
-                _userClient.CreateContact(contact);
-
-                return _webSecurity.Login(model.Email, model.Password);
-            }
-            catch (MembershipCreateUserException e)
-            {
-                errorMessage = ErrorCodeToString(e.StatusCode);
-            }
-            catch (Exception ex)
-            {
-                errorMessage = ex.Message;
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Converts error code to string.
-        /// </summary>
-        /// <param name="createStatus">The create status.</param>
-        /// <returns>System.String.</returns>
-        private static string ErrorCodeToString(MembershipCreateStatus createStatus)
-        {
-            // See http://go.microsoft.com/fwlink/?LinkID=177550 for
-            // a full list of status codes.
-            switch (createStatus)
-            {
-                case MembershipCreateStatus.DuplicateUserName:
-                    return "User name already exists. Please enter a different user name.";
-
-                case MembershipCreateStatus.DuplicateEmail:
-                    return
-                        "A user name for that e-mail address already exists. Please enter a different e-mail address.";
-
-                case MembershipCreateStatus.InvalidPassword:
-                    return "The password provided is invalid. Please enter a valid password value.";
-
-                case MembershipCreateStatus.InvalidEmail:
-                    return "The e-mail address provided is invalid. Please check the value and try again.";
-
-                case MembershipCreateStatus.InvalidAnswer:
-                    return "The password retrieval answer provided is invalid. Please check the value and try again.";
-
-                case MembershipCreateStatus.InvalidQuestion:
-                    return "The password retrieval question provided is invalid. Please check the value and try again.";
-
-                case MembershipCreateStatus.InvalidUserName:
-                    return "The user name provided is invalid. Please check the value and try again.";
-
-                case MembershipCreateStatus.ProviderError:
-                    return
-                        "The authentication provider returned an error. Please verify your entry and try again. If the problem persists, please contact your system administrator.";
-
-                case MembershipCreateStatus.UserRejected:
-                    return
-                        "The user creation request has been canceled. Please verify your entry and try again. If the problem persists, please contact your system administrator.";
-
-                default:
-                    return
-                        "An unknown error occurred. Please verify your entry and try again. If the problem persists, please contact your system administrator.";
-            }
-        }
-
+ 
         /// <summary>
         /// Class ExternalLoginResult.
         /// </summary>

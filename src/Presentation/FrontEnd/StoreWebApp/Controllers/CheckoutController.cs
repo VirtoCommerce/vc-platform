@@ -8,7 +8,6 @@ using VirtoCommerce.Client;
 using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using VirtoCommerce.Foundation.Orders.Model;
-using VirtoCommerce.Web.Client.Extensions.Filters;
 using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Web.Client.Helpers;
 using VirtoCommerce.Web.Models;
@@ -272,17 +271,15 @@ namespace VirtoCommerce.Web.Controllers
 		                regModel.Addresses.Add(shipping);
 		            }
 
-                    //This is workaround solution instead od redirecting to register action in controller
-                    var accountController = (AccountController)DependencyResolver.Current.GetService(typeof(AccountController));
 		            string message;
 
-		            if (!accountController.Register(regModel, out message))
+		            if (!UserHelper.Register(regModel, out message))
 		            {
 		                ModelState.AddModelError("", message);
 		                return View("Index", checkoutModel);
 		            }
 
-		            accountController.OnPostLogon(regModel.Email);            
+		            UserHelper.OnPostLogon(regModel.Email);            
 		        }
 
 		    // Create order
