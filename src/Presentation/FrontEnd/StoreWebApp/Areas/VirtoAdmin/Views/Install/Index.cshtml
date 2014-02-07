@@ -65,13 +65,13 @@
 
             setup.client.success = function (message)
             {
-                $("#throbber").hide();
                 $.redirect('@Url.Action("Complete")');
             };
 
             setup.client.failure = function (message)
             {
                 $("#throbber").hide();
+                $("button[type='submit']").removeAttr("disabled");
                 $(".validation-summary-errors").append("<p>" + message + "</p>");
                 $(".validation-summary-errors").show();
             };
@@ -129,6 +129,7 @@
                             {
                                 $(".console").show();
                                 $("#throbber").hide();
+                                $("button[type='submit']").removeAttr("disabled");
 
                                 if (t === "timeout")
                                 {
@@ -220,7 +221,7 @@
                                 @(Model.SetupSampleData ? "checked=checked" : string.Empty)>
                         </div>
                         <div>
-                            <button name="SubmitButton" type="submit" value="CreateDb">@Resource.SetupDatabase</button>
+                            <button name="SubmitButton" type="submit" value="CreateDb" onclick="$(this).attr('disabled', 'disabled');">@Resource.SetupDatabase</button>
                         </div>
                     </fieldset>
                 }

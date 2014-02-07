@@ -64,36 +64,6 @@ namespace VirtoCommerce.Foundation.Catalogs
             return outlines;
         }
 
-		public CatalogOutlines BuildCategoryOutlineWithDSClient(string catalogId, string itemId, bool useCache)
-		{
-			var outlines = new CatalogOutlines();
-
-			var catalog = GetCatalog(catalogId, useCache);
-
-			if (catalog is Catalog)
-			{
-				var categoryRelations = GetCategoryItemRelations(itemId, catalogId);
-
-				if (categoryRelations.Any())
-				{
-					outlines.AddRange(
-						categoryRelations.Select(
-							categoryRelation => BuildCategoryOutlineWithDSClient(catalogId, categoryRelation.Category, useCache)));
-				}
-			}
-			else if (catalog is VirtualCatalog)
-			{
-				var linkedCategories = GetLinkedCategoriesWithDSClient(itemId, catalogId);
-
-				if (linkedCategories.Any())
-				{
-					outlines.AddRange(
-						linkedCategories.Select(cat => BuildCategoryOutlineWithDSClient(cat.CatalogId, cat, useCache)));
-				}
-			}
-
-			return outlines;
-		}
 		
         public CatalogOutline BuildCategoryOutline(string catalogId, CategoryBase category, bool useCache = true)
         {
@@ -109,19 +79,6 @@ namespace VirtoCommerce.Foundation.Catalogs
             return outline;
         }
 
-		public CatalogOutline BuildCategoryOutlineWithDSClient(string catalogId, CategoryBase category, bool useCache = true)
-		{
-			// recurring adding elements
-			var categories = new List<CategoryBase>();
-			var outline = new CatalogOutline { CatalogId = catalogId };
-			if (category != null)
-			{
-				BuildCategoryOutlineWithDSClient(ref categories, catalogId, category, useCache);
-				outline.Categories.AddRange(categories);
-			}
-
-			return outline;
-		}
 				
         #region Private Methods
 
@@ -137,20 +94,6 @@ namespace VirtoCommerce.Foundation.Catalogs
                 category = parent;
             }
         }
-
-		private void BuildCategoryOutlineWithDSClient(ref List<CategoryBase> categories, string catalogId, CategoryBase category, bool useCache = true)
-		{
-			while (true)
-			{
-				categories.Insert(0, category);
-
-				if (String.IsNullOrEmpty(category.ParentCategoryId))
-					return;
-
-				var parent = GetCategoryByIdWithDSClient(catalogId, category.ParentCategoryId, useCache);
-				category = parent;
-			}
-		}
 
         private CatalogBase GetCatalog(string catalogId, bool useCache = true)
         {
@@ -171,15 +114,6 @@ namespace VirtoCommerce.Foundation.Catalogs
                 _cacheTimeout,
                 useCache);
         }
-
-		private CategoryBase GetCategoryByIdWithDSClient(string catalogId, string categoryId, bool useCache = true)
-		{
-			return Helper.Get(
-				string.Format(CategoryIdCacheKey, catalogId, categoryId),
-				() => GetCategoryByIdInternalWithDSClient(categoryId),
-				_cacheTimeout,
-				useCache);
-		}
 
         private CategoryItemRelation[] GetCategoryItemRelations(string itemId, string catalogId, bool useCache = true)
         {
@@ -221,15 +155,11 @@ namespace VirtoCommerce.Foundation.Catalogs
 			   useCache);
 		}
 
-		private CategoryBase GetCategoryByIdInternalWithDSClient(string id)
+        private CategoryBase GetCategoryByIdInternal(string id)
 		{
 			return _catalogRepository.Categories.Where(x => x.CategoryId.Equals(id, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
 		}
 
-        private CategoryBase GetCategoryByIdInternal(string id)
-        {
-			return _catalogRepository.Categories.FirstOrDefault(x => x.CategoryId.Equals(id, StringComparison.OrdinalIgnoreCase));
-        }
         #endregion
 
         #region Depreciated methods
