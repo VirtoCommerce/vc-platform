@@ -10,8 +10,6 @@
     {
         CatalogOutlines BuildCategoryOutline(string catalogId, string itemId, bool useCache = true);
         CatalogOutline BuildCategoryOutline(string catalogId, CategoryBase category, bool useCache = true);
-		CatalogOutlines BuildCategoryOutlineWithDSClient(string catalogId, string itemId, bool useCache = true);
-		CatalogOutline BuildCategoryOutlineWithDSClient(string catalogId, CategoryBase category, bool useCache = true);
     }
 
     public class CatalogOutlines : List<CatalogOutline>

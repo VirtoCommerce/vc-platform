@@ -79,7 +79,7 @@
                     </td>
                     @foreach (var li in Model.LineItems)
                     {
-                        var prop = group.FirstOrDefault(g => g.CatalogItem.ItemId == li.CatalogItem.ItemId);
+                        var prop = group.FirstOrDefault(g => ((Item)g.CatalogItem).ItemId == li.CatalogItem.ItemId);
                         <td>
                             @if (prop != null)
                             {

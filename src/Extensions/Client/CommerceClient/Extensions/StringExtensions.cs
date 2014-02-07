@@ -8,14 +8,15 @@ namespace VirtoCommerce.Client.Extensions
     {
         public static int TryParse(this string u, int defaultValue)
         {
-            try
+            var retVal = defaultValue;
+
+            if (!string.IsNullOrEmpty(u))
             {
-                return int.Parse(u);
+                int.TryParse(u, out retVal);
             }
-            catch
-            {
-                return defaultValue;
-            }
+
+            return retVal;
+
         }
 
         public static int TryParse(this string u)

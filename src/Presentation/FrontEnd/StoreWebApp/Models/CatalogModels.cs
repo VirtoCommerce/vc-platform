@@ -2,9 +2,9 @@
 using System.Globalization;
 using System.Linq;
 using System.Collections.Generic;
-using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.Catalogs.Model;
-using VirtoCommerce.Web.Client.Helpers;
+using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Web.Virto.Helpers;
 
 namespace VirtoCommerce.Web.Models
 {
@@ -323,7 +323,7 @@ namespace VirtoCommerce.Web.Models
 		/// Gets or sets the catalog item.
 		/// </summary>
 		/// <value>The catalog item.</value>
-		public Item CatalogItem { get; set; }
+		public StorageEntity CatalogItem { get; set; }
 
 		/// <summary>
 		/// Returns a <see cref="System.String" /> that represents this instance.
@@ -471,20 +471,20 @@ namespace VirtoCommerce.Web.Models
 		/// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         public override string ToString()
         {
-            switch (this.ValueType)
+            switch (ValueType)
             {
                 case (int)PropertyValueType.Boolean:
-                    return this.BooleanValue.ToString();
+                    return BooleanValue.ToString();
                 case (int)PropertyValueType.DateTime:
-                    return this.DateTimeValue.ToString();
+                    return DateTimeValue.ToString();
                 case (int)PropertyValueType.Decimal:
-                    return this.DecimalValue.ToString();
+                    return DecimalValue.ToString(CultureInfo.InvariantCulture);
                 case (int)PropertyValueType.Integer:
-                    return this.IntegerValue.ToString();
+                    return IntegerValue.ToString(CultureInfo.InvariantCulture);
                 case (int)PropertyValueType.LongString:
-                    return this.LongTextValue;
+                    return LongTextValue;
                 case (int)PropertyValueType.ShortString:
-                    return this.ShortTextValue;
+                    return ShortTextValue;
             }
             return base.ToString();
         }
@@ -505,5 +505,153 @@ namespace VirtoCommerce.Web.Models
         }
 
         public string Category { get; set; }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public abstract class CategoryBaseModel
+    {
+        /// <summary>
+        /// Gets or sets the category.
+        /// </summary>
+        /// <value>
+        /// The category.
+        /// </value>
+        public CategoryBase Category { get; set; }
+
+        /// <summary>
+        /// Gets or sets the category identifier.
+        /// </summary>
+        /// <value>
+        /// The category identifier.
+        /// </value>
+        public string CategoryId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the code.
+        /// </summary>
+        /// <value>
+        /// The code.
+        /// </value>
+        public string Code { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [is active].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [is active]; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsActive { get; set; }
+
+        /// <summary>
+        /// Gets or sets the priority.
+        /// </summary>
+        /// <value>
+        /// The priority.
+        /// </value>
+        public int Priority { get; set; }
+
+        /// <summary>
+        /// Gets or sets the catalog identifier.
+        /// </summary>
+        /// <value>
+        /// The catalog identifier.
+        /// </value>
+        public string CatalogId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the parent category identifier.
+        /// </summary>
+        /// <value>
+        /// The parent category identifier.
+        /// </value>
+        public string ParentCategoryId { get; set; }
+
+        /// <summary>
+        /// Gets the display name.
+        /// </summary>
+        /// <value>
+        /// The display name.
+        /// </value>
+        public string DisplayName
+        {
+            get
+            {
+                var retValue = Category is Category ? ((Category)Category).Name : Code;
+                var title = CatalogHelper.CatalogClient.GetPropertyValueByName(Category, "Title");
+                if (title != null)
+                {
+                    retValue = title.ToString();
+                }
+                return retValue;
+            }
+        }
+
+        public virtual CatalogBase Catalog { get; set; }
+        public virtual CategoryBase ParentCategory { get; set; }
+        public virtual LinkedCategory[] LinkedCategories { get; set; }
+        public CatalogOutline CatalogOutline { get; set; }
+    }
+
+    public class CategoryModel : CategoryBaseModel
+    {
+
+        /// <summary>
+        /// Gets or sets the name.
+        /// </summary>
+        /// <value>
+        /// The name.
+        /// </value>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the start date.
+        /// </summary>
+        /// <value>
+        /// The start date.
+        /// </value>
+        public DateTime StartDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the end date.
+        /// </summary>
+        /// <value>
+        /// The end date.
+        /// </value>
+        public DateTime? EndDate { get; set; }
+
+        /// <summary>
+        /// Gets or sets the property set identifier.
+        /// </summary>
+        /// <value>
+        /// The property set identifier.
+        /// </value>
+        public string PropertySetId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the property set.
+        /// </summary>
+        /// <value>
+        /// The property set.
+        /// </value>
+        public PropertySet PropertySet { get; set; }
+
+        /// <summary>
+        /// Gets or sets the category property values.
+        /// </summary>
+        /// <value>
+        /// The category property values.
+        /// </value>
+        public CategoryPropertyValue[] CategoryPropertyValues { get; set; }
+
+        /// <summary>
+        /// Gets or sets the properties.
+        /// </summary>
+        /// <value>
+        /// The properties.
+        /// </value>
+        public PropertiesModel Properties { get; set; } 
+
     }
 }
