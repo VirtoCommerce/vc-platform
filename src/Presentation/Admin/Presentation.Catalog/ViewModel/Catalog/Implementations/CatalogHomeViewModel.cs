@@ -10,6 +10,9 @@ using System.Windows;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using RequestEngine;
+using VirtoCommerce.Foundation.AppConfig.Factories;
+using VirtoCommerce.Foundation.AppConfig.Model;
+using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Catalogs.Factories;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Catalogs.Repositories;
@@ -40,6 +43,8 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		private readonly ICatalogEntityFactory _entityFactory;
 		private readonly IRepositoryFactory<ICatalogRepository> _catalogRepository;
 		private readonly IRepositoryFactory<IImportRepository> _importRepository;
+		private readonly IRepositoryFactory<IAppConfigRepository> _seoRepository;
+		private readonly IAppConfigEntityFactory _seoFactory;
 		private readonly ITitleHomeCaptionViewModel _viewTitle;
 		private readonly IViewModelsFactory<IQueryViewModel> _queryVmFactory;
 		private readonly IViewModelsFactory<ICreateCategoryViewModel> _wizardCategoryVmFactory;
@@ -83,8 +88,9 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			getAllCatalogsAction.BeginInvoke(null, null);
 		}
 #endif
-
-		public CatalogHomeViewModel(CatalogMainViewModel parentViewModel, IRepositoryFactory<ICatalogRepository> catalogRepository,
+		#region Constructor
+		
+		public CatalogHomeViewModel(CatalogMainViewModel parentViewModel, IAppConfigEntityFactory seoFactory, IRepositoryFactory<IAppConfigRepository> seoRepository, IRepositoryFactory<ICatalogRepository> catalogRepository,
 			IRepositoryFactory<IImportRepository> importRepository, IViewModelsFactory<ICreateCategoryViewModel> wizardCategoryVmFactory,
 			ITitleHomeCaptionViewModel captionVm, IViewModelsFactory<IQueryViewModel> queryVmFactory, IViewModelsFactory<IItemTypeSelectionStepViewModel> selectionVmFactory,
 			IViewModelsFactory<ICreateCatalogViewModel> wizardCatalogVmFactory, IViewModelsFactory<ICreateVirtualCatalogViewModel> wizardVirtualCatalogVmFactory,
@@ -98,6 +104,8 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			_authContext = authContext;
 			_catalogRepository = catalogRepository;
 			_importRepository = importRepository;
+			_seoRepository = seoRepository;
+			_seoFactory = seoFactory;
 			_navManager = navManager;
 			_tileManager = tileManager;
 
@@ -150,6 +158,8 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 			TreeViewSelectedItemChangedCommand = new DelegateCommand<object>(TreeViewSelectedItemChanged);
 		}
+
+		#endregion
 
 		#region Commands
 
@@ -542,6 +552,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		#endregion
 
 		#region ViewModelHomeEditableBase
+		
 		protected override bool CanItemAddExecute()
 		{
 			return _authContext.CheckPermission(PredefinedPermissions.CatalogItemsManage) && GetCatalog(SelectedCatalogItem) is catalogModel.Catalog;
@@ -599,6 +610,19 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		{
 			if (item is Item)
 			{
+				using (var seoRepository = _seoRepository.GetRepositoryInstance())
+				{					
+					var i = (Item)item;
+					var seo = _seoFactory.CreateEntity<VirtoCommerce.Foundation.AppConfig.Model.SeoUrlKeyword>();
+					seo.KeywordValue = i.Code;
+					seo.Keyword = RemoveRestrictedChars(i.Name);
+					seo.Language = i.Catalog.DefaultLanguage;
+					seo.IsActive = true;
+					seo.KeywordType = (int)SeoUrlKeywordTypes.Item;
+					seoRepository.Add(seo);
+					seoRepository.UnitOfWork.Commit();
+				}
+
 				// Open the item when wizard is complete
 				var itemViewModel = _itemVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", item));
 				var openTracking = (IOpenTracking)itemViewModel;
@@ -608,6 +632,22 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			}
 			else if (item is CategoryBase)
 			{
+				if (item is Category)
+				{
+					using (var seoRepository = _seoRepository.GetRepositoryInstance())
+					{
+						var category = (Category)item;
+						var seo = _seoFactory.CreateEntity<VirtoCommerce.Foundation.AppConfig.Model.SeoUrlKeyword>();
+						seo.KeywordValue = category.Code;
+						seo.Keyword = RemoveRestrictedChars(category.Name);
+						seo.Language = category.Catalog.DefaultLanguage;
+						seo.IsActive = true;
+						seo.KeywordType = (int)SeoUrlKeywordTypes.Category;
+						seoRepository.Add(seo);
+						seoRepository.UnitOfWork.Commit();
+					}
+				}
+
 				var catalogParentEntity = (CatalogEntityViewModelBase)SelectedTreeViewItem;
 				if (catalogParentEntity.IsExpanded)
 					catalogParentEntity.Refresh();
@@ -618,6 +658,17 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			{
 				RefreshTreeItemsCommand.Execute();
 			}
+		}
+
+		const string invalidKeywordCharacters = @"$+;=%{}[]|\/@ ~#!^*&?:'<>,";
+		private string RemoveRestrictedChars(string source)
+		{
+			var target = source;
+			foreach (var ch in invalidKeywordCharacters.ToCharArray())
+			{
+				target = target.Replace(ch, '-');
+			}
+			return target;
 		}
 
 		protected override void RaiseItemDeleteInteractionRequest(IList selectedItemsList)

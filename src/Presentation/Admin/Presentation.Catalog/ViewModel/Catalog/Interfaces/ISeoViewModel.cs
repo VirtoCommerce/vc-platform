@@ -10,5 +10,6 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Interfaces
 		bool IsValid { get; }
 		void ChangeKeywordValue(string newCode);
 		void SaveSeoKeywordsChanges();
+		bool DeleteAllSeoKeywords();
 	}
 }

@@ -18,6 +18,10 @@ using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Wizard;
 using VirtoCommerce.Foundation.Stores.Factories;
 using VirtoCommerce.Foundation.Stores.Model;
 using VirtoCommerce.Foundation.Stores.Repositories;
+using VirtoCommerce.Foundation.AppConfig.Repositories;
+using VirtoCommerce.Foundation.AppConfig.Factories;
+using VirtoCommerce.Foundation.AppConfig.Model;
+using System;
 
 namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Implementations
 {
@@ -28,6 +32,9 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 
 		private readonly NavigationManager _navManager;
 		private readonly IRepositoryFactory<IStoreRepository> _repositoryFactory;
+		private readonly IRepositoryFactory<IAppConfigRepository> _seoRepository;
+		private readonly IViewModelsFactory<IStoreViewModel> _storeVmFactory;
+		private readonly IAppConfigEntityFactory _seoFactory;
 		private readonly IAuthenticationContext _authContext;
 		private readonly TileManager _tileManager;
 		#endregion
@@ -35,6 +42,9 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 		#region Constructor
 
 		public StoresSettingsViewModel(
+			IViewModelsFactory<IStoreViewModel> storeVmFactory,
+			IRepositoryFactory<IAppConfigRepository> seoRepository,
+			IAppConfigEntityFactory seoFactory,
 			IRepositoryFactory<IStoreRepository> repositoryFactory,
 			IStoreEntityFactory entityFactory, 
 			IViewModelsFactory<ICreateStoreViewModel> wizardVmFactory, 
@@ -48,6 +58,9 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 			_navManager = navManager;
 			_tileManager = tileManager;
 			_authContext = authContext;
+			_seoFactory = seoFactory;
+			_seoRepository = seoRepository;
+			_storeVmFactory = storeVmFactory;
 			PopulateTiles();
 
 			LinkedStoreNotifictaionRequest=new InteractionRequest<ConditionalConfirmation>();
@@ -110,7 +123,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 					Title = "Create Store",
 					Content = vm
 				};
-			ItemAdd(item, confirmation, _repositoryFactory.GetRepositoryInstance());
+			ItemAdd(item, confirmation, _repositoryFactory.GetRepositoryInstance());			
 		}
 
 		protected override void RaiseItemEditInteractionRequest(Store item)
@@ -142,7 +155,6 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 					string storeName;
 					if (IsCurrentStoreLinkedToAnotherStore(item.StoreId, out storeName))
 					{
-
 						var linkedConfirmation = new ConditionalConfirmation()
 						{
 							Content =
@@ -162,9 +174,12 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 					OnUIThread(() => { ShowLoadingAnimation = true; });
 					await Task.Run(() =>
 					{
-						repository.Attach(item);
-						repository.Remove(item);
-						repository.UnitOfWork.Commit();
+						if (DeleteSeoKeywords(item))
+						{
+							repository.Attach(item);
+							repository.Remove(item);
+							repository.UnitOfWork.Commit();
+						}
 					});
 					OnUIThread(() =>
 					{
@@ -177,9 +192,56 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 			});
 		}
 
+		private bool DeleteSeoKeywords(Store item)
+		{
+			var retVal = false;
+
+			using (var seoRepository = _seoRepository.GetRepositoryInstance())
+			{
+				seoRepository.SeoUrlKeywords.Where(x => x.KeywordValue.Equals(item.StoreId, StringComparison.InvariantCultureIgnoreCase)).ToList().ForEach(y => seoRepository.Remove(y));
+				seoRepository.UnitOfWork.Commit();
+				retVal = true;
+			}
+
+			return retVal;
+		}
+
+		protected override void AfterItemAddSaved(Store item)
+		{			
+			using (var seoRepository = _seoRepository.GetRepositoryInstance())
+			{
+				var seo = _seoFactory.CreateEntity<VirtoCommerce.Foundation.AppConfig.Model.SeoUrlKeyword>();
+				seo.KeywordValue = item.StoreId;
+				seo.Keyword = RemoveRestrictedChars(item.Name);
+				seo.Language = item.DefaultLanguage;
+				seo.IsActive = true;
+				seo.KeywordType = (int)SeoUrlKeywordTypes.Store;
+				seoRepository.Add(seo);
+				seoRepository.UnitOfWork.Commit();
+			}
+
+			// Open the item when wizard is complete
+			var storeViewModel = _storeVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", item), new KeyValuePair<string, object>("parent", this));
+			var openTracking = (IOpenTracking)storeViewModel;
+			openTracking.OpenItemCommand.Execute();
+
+			base.AfterItemAddSaved(item);			
+		}
+		
 		#endregion
 
-		#region PricateMethods
+		#region Private Methods
+
+		const string invalidKeywordCharacters = @"$+;=%{}[]|\/@ ~#!^*&?:'<>,";
+		private string RemoveRestrictedChars(string source)
+		{
+			var target = source;
+			foreach (var ch in invalidKeywordCharacters.ToCharArray())
+			{
+				target = target.Replace(ch, '-');
+			}
+			return target;
+		}
 
 		private bool IsCurrentStoreLinkedToAnotherStore(string storeId, out string storeName)
 		{

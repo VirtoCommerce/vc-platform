@@ -592,7 +592,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 				Repository.Remove(association);
 			}
 
-			return true;
+			return SeoStepViewModel.DeleteAllSeoKeywords();
 		}
 
 		#endregion
