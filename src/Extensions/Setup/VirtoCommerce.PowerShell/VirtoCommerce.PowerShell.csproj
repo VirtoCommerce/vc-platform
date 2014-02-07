@@ -211,6 +211,7 @@
     <Content Include="Catalogs\Data\VirtualCatalog.sql" />
     <Content Include="Commands.txt" />
     <EmbeddedResource Include="Customers\Data\FillRequiredCaseProperty.sql" />
+    <Content Include="CustomSQL\analytics.oncreate.sql" />
     <Content Include="dblogin.sql" />
     <EmbeddedResource Include="Marketing\Data\PromotionReward.sql" />
     <EmbeddedResource Include="Marketing\Data\Promotion.sql" />
