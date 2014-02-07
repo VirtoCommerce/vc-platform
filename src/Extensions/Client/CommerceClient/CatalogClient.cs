@@ -397,14 +397,24 @@ namespace VirtoCommerce.Client
         #region Category Methods
         private CategoryBase GetCategoryInternal(string catalogId, string code)
         {
-            var category = _catalogRepository.Categories.FirstOrDefault(x => (x.CatalogId == catalogId) && (x.Code.Equals(code, StringComparison.OrdinalIgnoreCase)));
-            if (category != null && category.IsActive)
+            //Get simple category
+            CategoryBase category = _catalogRepository.Categories.OfType<Category>()
+                .Expand(c => c.LinkedCategories)
+                .Expand(c => c.CategoryPropertyValues)
+                .FirstOrDefault(x => (x.CatalogId == catalogId) && (x.Code.Equals(code, StringComparison.OrdinalIgnoreCase)));
+
+            if (category == null)
             {
-                if (category is LinkedCategory)
+                //Get linked category
+                category = _catalogRepository.Categories.OfType<LinkedCategory>()
+                    .Expand(c => c.LinkedCategories)
+                    .FirstOrDefault(x => (x.CatalogId == catalogId) && (x.Code.Equals(code, StringComparison.OrdinalIgnoreCase)));
+                if (category != null && category.IsActive)
                 {
-                    category = _catalogRepository.Categories.FirstOrDefault(x =>
-                        (x.CatalogId == ((LinkedCategory)category).LinkedCatalogId)
-                        && (x.Code.Equals(code, StringComparison.OrdinalIgnoreCase)));
+                    //Get simple category from linked catalog
+                    category = _catalogRepository.Categories.OfType<Category>()
+                        .Expand(p => p.CategoryPropertyValues)
+                        .FirstOrDefault(x => (x.CatalogId == ((LinkedCategory)category).LinkedCatalogId) && (x.Code.Equals(code, StringComparison.OrdinalIgnoreCase)));
                 }
             }
 

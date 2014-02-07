@@ -31,12 +31,14 @@ namespace VirtoCommerce.Web.Controllers
 		/// </summary>
         private readonly DisplayTemplateClient _templateClient;
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="CatalogController"/> class.
-		/// </summary>
-		/// <param name="catalogClient">The catalog client.</param>
-		/// <param name="templateClient">The template client.</param>
-		public CatalogController(CatalogClient catalogClient,
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CatalogController"/> class.
+        /// </summary>
+        /// <param name="catalogClient">The catalog client.</param>
+        /// <param name="templateClient">The template client.</param>
+        /// <param name="outlineBuilder"></param>
+        public CatalogController(CatalogClient catalogClient,
                                  DisplayTemplateClient templateClient)
         {
 			_catalogClient = catalogClient;
@@ -60,10 +62,46 @@ namespace VirtoCommerce.Web.Controllers
                 var set = UserHelper.CustomerSession.GetCustomerTagSet();
                 set.Add(ContextFieldConstants.CategoryId, new Tag(categoryBase.CategoryId));
                 UserHelper.CustomerSession.CategoryId = categoryBase.CategoryId;
-                UserHelper.CustomerSession.LastShoppingPage = this.Request.Url.AbsoluteUri;
+
+                var model = CatalogHelper.CreateCategoryModel(categoryBase);
+
+                if (SiteMaps.Current != null)
+                {
+                    var node = SiteMaps.Current.CurrentNode;
+
+                    if (Request.UrlReferrer != null &&
+                        Request.UrlReferrer.AbsoluteUri.StartsWith(Request.Url.GetLeftPart(UriPartial.Authority)))
+                    {
+                        if (node != null)
+                        {
+                            node.RootNode.Attributes["ShowBack"] = true;
+                        }
+
+                        if (Request.UrlReferrer.AbsoluteUri.Equals(Request.Url.AbsoluteUri))
+                        {
+                            UserHelper.CustomerSession.LastShoppingPage = Url.Content("~/");
+                        }
+                        else
+                        {
+                            UserHelper.CustomerSession.LastShoppingPage = Request.UrlReferrer.AbsoluteUri;
+                        }
+
+                    }
+
+                    if (node != null)
+                    {
+                        if (node.ParentNode != null && model.CatalogOutline !=null)
+                        {
+
+                            node.Attributes["Outline"] = new BrowsingOutline(model.CatalogOutline);
+                        }
+
+                        node.Title = model.DisplayName;
+                    }
+                }
 
                 // display category
-                return View(GetDisplayTemplate(TargetTypes.Category, categoryBase), categoryBase);
+                return View(GetDisplayTemplate(TargetTypes.Category, categoryBase), model);
             }
 
 			throw new HttpException(404, "Category not found");
