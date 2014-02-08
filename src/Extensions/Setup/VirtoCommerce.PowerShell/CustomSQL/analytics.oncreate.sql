@@ -8,7 +8,6 @@
 
 declare @fieldid nvarchar(128)
 select @fieldid = SettingId from [Setting] where Name = 'AnalyticsField'
-select @fieldid
 INSERT INTO [dbo].[SettingValue]
            ([SettingValueId]
            ,[ValueType]
