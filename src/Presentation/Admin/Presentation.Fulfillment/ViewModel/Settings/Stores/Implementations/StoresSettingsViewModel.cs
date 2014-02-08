@@ -198,7 +198,9 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 
 			using (var seoRepository = _seoRepository.GetRepositoryInstance())
 			{
-				seoRepository.SeoUrlKeywords.Where(x => x.KeywordValue.Equals(item.StoreId, StringComparison.InvariantCultureIgnoreCase)).ToList().ForEach(y => seoRepository.Remove(y));
+				var deleteList = seoRepository.SeoUrlKeywords.Where(x => x.KeywordValue.Equals(item.StoreId, StringComparison.InvariantCultureIgnoreCase));
+				if (deleteList.Count() > 0)
+					deleteList.ToList().ForEach(y => seoRepository.Remove(y));
 				seoRepository.UnitOfWork.Commit();
 				retVal = true;
 			}
@@ -210,9 +212,14 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 		{			
 			using (var seoRepository = _seoRepository.GetRepositoryInstance())
 			{
+				var itemName = ReplaceRestrictedChars(item.Name);
+				var checkItem = seoRepository.SeoUrlKeywords.Where(s => s.Keyword.Equals(itemName, StringComparison.InvariantCultureIgnoreCase) &&
+						s.Language.Equals(item.DefaultLanguage, StringComparison.InvariantCultureIgnoreCase) &&
+						s.KeywordType.Equals((int)SeoUrlKeywordTypes.Store)).FirstOrDefault();
+					
 				var seo = _seoFactory.CreateEntity<VirtoCommerce.Foundation.AppConfig.Model.SeoUrlKeyword>();
 				seo.KeywordValue = item.StoreId;
-				seo.Keyword = RemoveRestrictedChars(item.Name);
+				seo.Keyword = checkItem == null ? itemName : "_" + itemName + "_";
 				seo.Language = item.DefaultLanguage;
 				seo.IsActive = true;
 				seo.KeywordType = (int)SeoUrlKeywordTypes.Store;
@@ -233,7 +240,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 		#region Private Methods
 
 		const string invalidKeywordCharacters = @"$+;=%{}[]|\/@ ~#!^*&?:'<>,";
-		private string RemoveRestrictedChars(string source)
+		private string ReplaceRestrictedChars(string source)
 		{
 			var target = source;
 			foreach (var ch in invalidKeywordCharacters.ToCharArray())

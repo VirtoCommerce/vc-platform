@@ -613,9 +613,14 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 				using (var seoRepository = _seoRepository.GetRepositoryInstance())
 				{					
 					var i = (Item)item;
+					var itemName = ReplaceRestrictedChars(i.Name);
+					var checkItem = seoRepository.SeoUrlKeywords.Where(s => s.Keyword.Equals(itemName, StringComparison.InvariantCultureIgnoreCase) &&
+						s.Language.Equals(i.Catalog.DefaultLanguage, StringComparison.InvariantCultureIgnoreCase) &&
+						s.KeywordType.Equals((int)SeoUrlKeywordTypes.Item)).FirstOrDefault();
+					
 					var seo = _seoFactory.CreateEntity<VirtoCommerce.Foundation.AppConfig.Model.SeoUrlKeyword>();
 					seo.KeywordValue = i.Code;
-					seo.Keyword = RemoveRestrictedChars(i.Name);
+					seo.Keyword = checkItem == null ? itemName : "_" + itemName + "_";
 					seo.Language = i.Catalog.DefaultLanguage;
 					seo.IsActive = true;
 					seo.KeywordType = (int)SeoUrlKeywordTypes.Item;
@@ -637,9 +642,14 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 					using (var seoRepository = _seoRepository.GetRepositoryInstance())
 					{
 						var category = (Category)item;
+						var itemName = ReplaceRestrictedChars(category.Name);
+						var checkItem = seoRepository.SeoUrlKeywords.Where(s => s.Keyword.Equals(itemName, StringComparison.InvariantCultureIgnoreCase) &&
+							s.Language.Equals(category.Catalog.DefaultLanguage, StringComparison.InvariantCultureIgnoreCase) &&
+							s.KeywordType.Equals((int)SeoUrlKeywordTypes.Category)).FirstOrDefault();
+
 						var seo = _seoFactory.CreateEntity<VirtoCommerce.Foundation.AppConfig.Model.SeoUrlKeyword>();
 						seo.KeywordValue = category.Code;
-						seo.Keyword = RemoveRestrictedChars(category.Name);
+						seo.Keyword = checkItem == null ? itemName : "_" + itemName + "_";
 						seo.Language = category.Catalog.DefaultLanguage;
 						seo.IsActive = true;
 						seo.KeywordType = (int)SeoUrlKeywordTypes.Category;
@@ -661,7 +671,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		}
 
 		const string invalidKeywordCharacters = @"$+;=%{}[]|\/@ ~#!^*&?:'<>,";
-		private string RemoveRestrictedChars(string source)
+		private string ReplaceRestrictedChars(string source)
 		{
 			var target = source;
 			foreach (var ch in invalidKeywordCharacters.ToCharArray())

@@ -119,9 +119,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 									seoKeyword => true && seoKeyword.SeoUrlKeywordId.Equals(keyword.SeoUrlKeywordId)).FirstOrDefault();
 							if (keywordToRemove != null)
 							{
-								keywordToRemove.KeywordValue = keyword.KeywordValue;
-								keywordToRemove.IsActive = false;
-								appConfigRepository.Update(keywordToRemove);
+								appConfigRepository.Remove(keywordToRemove);
 							}
 						}
 						else
@@ -164,7 +162,9 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			var retVal = false;
 			using (var seoRepository = _appConfigRepositoryFactory.GetRepositoryInstance())
 			{
-				seoRepository.SeoUrlKeywords.Where(x => x.KeywordValue.Equals(_keywordValue, StringComparison.InvariantCultureIgnoreCase)).ToList().ForEach(y => seoRepository.Remove(y));
+				var deleteList = seoRepository.SeoUrlKeywords.Where(x => x.KeywordValue.Equals(_keywordValue, StringComparison.InvariantCultureIgnoreCase));
+				if (deleteList.Any())
+					deleteList.ToList().ForEach(y => seoRepository.Remove(y));
 				seoRepository.UnitOfWork.Commit();
 				retVal = true;
 			}
@@ -255,7 +255,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 					}
 				});
 
-			SeoLocalesFilterCommand.Execute(SeoKeywords.First(x => x.Language.Equals(_defaultLanguage, StringComparison.InvariantCultureIgnoreCase)));
+			SeoLocalesFilterCommand.Execute(SeoKeywords.FirstOrDefault(x => x.Language.Equals(_defaultLanguage, StringComparison.InvariantCultureIgnoreCase)));
 		}
 
 		protected abstract string BuildBaseUrl(SeoUrlKeyword keyword);

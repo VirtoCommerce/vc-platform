@@ -219,7 +219,7 @@ namespace CommerceFoundation.UI.FunctionalTests.Catalogs
 			IAuthenticationContext authContext = new TestAuthenticationContext();
 			INavigationManager navManager = new TestNavigationManager();
 
-			var itemViewModel = new ItemViewModel(null, repositoryFactory, pricelistRepositoryFactory, propertyValueVmFactory, priceVmFactory, assetVmFactory, associationGroupEditVmFactory, associationGroupVmFactory, itemRelationVmFactory, reviewVmFactory, categoryVmFactory, entityFactory, item, authContext, navManager);
+			var itemViewModel = new ItemViewModel(null, null, repositoryFactory, pricelistRepositoryFactory, propertyValueVmFactory, priceVmFactory, assetVmFactory, associationGroupEditVmFactory, associationGroupVmFactory, itemRelationVmFactory, reviewVmFactory, categoryVmFactory, entityFactory, item, authContext, navManager);
 			itemViewModel.InitializeForOpen();
 
 			// property change should set IsModified to true
