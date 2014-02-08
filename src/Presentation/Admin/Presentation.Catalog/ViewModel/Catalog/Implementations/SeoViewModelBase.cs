@@ -156,22 +156,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 				}
 			}
 		}
-
-		public bool DeleteAllSeoKeywords()
-		{
-			var retVal = false;
-			using (var seoRepository = _appConfigRepositoryFactory.GetRepositoryInstance())
-			{
-				var deleteList = seoRepository.SeoUrlKeywords.Where(x => x.KeywordValue.Equals(_keywordValue, StringComparison.InvariantCultureIgnoreCase));
-				if (deleteList.Any())
-					deleteList.ToList().ForEach(y => seoRepository.Remove(y));
-				seoRepository.UnitOfWork.Commit();
-				retVal = true;
-			}
-
-			return retVal;
-		}
-
+		
 		#endregion
 
 		#region Use custom properties
