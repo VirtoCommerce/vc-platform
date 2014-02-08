@@ -32,10 +32,14 @@ Param(
 		$db_customsqlfolder,
         [parameter(Mandatory=$true)]
         $db_servername,
-        [parameter(Mandatory=$true)]
+        [parameter(Mandatory=$true)] # account that db scripts will be running under
         $db_serverlogin,
         [parameter(Mandatory=$true)]
         $db_serverpassword,
+        [parameter(Mandatory=$false)] # account that frontend will be running under
+        $db_serveruserlogin,
+        [parameter(Mandatory=$false)]
+        $db_serveruserpassword,
         [parameter(Mandatory=$true)]
         $db_databasename,
 		$publishsettingsfile,
@@ -186,11 +190,21 @@ Function update-config
 {
     param ($configuration)
 
+	$dbserverlogin = $db_serverlogin
+	$dbserverpassword = $db_serverpassword
+
+	if($db_serveruserlogin -ne $null)
+	{
+		Write-Output "$(Get-Date -f $timeStampFormat) - Found user login/password for database, using them instead"
+		$dbserverlogin = $db_serveruserlogin
+		$dbserverpassword = $db_serveruserpassword
+	}
+
     Write-Output "loading config from $configuration"
     [xml]$temp_serviceConfig = Get-Content $configuration
 
     # set database connection string
-    $temp_connectionstring = "Server=tcp:$db_servername.database.windows.net,1433;Database=$db_databasename;User ID=$db_serverlogin@$db_servername;Password=$db_serverpassword;Trusted_Connection=False;Encrypt=True;Connection Timeout=30;MultipleActiveResultSets=True" 
+    $temp_connectionstring = "Server=tcp:$db_servername.database.windows.net,1433;Database=$db_databasename;User ID=$dbserverlogin@$db_servername;Password=$dbserverpassword;Trusted_Connection=False;Encrypt=True;Connection Timeout=30;MultipleActiveResultSets=True" 
     $temp_serviceConfig.ServiceConfiguration.Role.ConfigurationSettings.Setting |
         ? { $_.name -eq 'VirtoCommerce' } |
         % { if($_ -ne $null) {$_.value = "$temp_connectionstring"} }

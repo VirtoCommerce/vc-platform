@@ -56,8 +56,8 @@ function run
     }
     else
     {
-        # must have the module setup, included with sql 2012
-        Import-Module sqlps
+		# must have the module setup, included with sql 2012
+		Push-Location; Import-Module sqlps; Pop-Location
 
         if($db_created)
         {
@@ -138,13 +138,13 @@ function Get-SqlBatchesFromFile {
 
     $accumulate = @()
 
-    $containsGO = false
+    $containsGO = $false
     foreach($line in (get-content $file)){
       
         if($line -eq "GO") {        
             $accumulate -join "`r`n"
             $accumulate = @()
-            $containsGO = true
+            $containsGO = $true
         } else {
             if($line.Trim().Length -gt 0) # ignore empty strings
             {
