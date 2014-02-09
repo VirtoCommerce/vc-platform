@@ -83,6 +83,8 @@ namespace VirtoCommerce.Client
 
 						//Commit changes
 						sequence.Value = endCounter;
+                        //To ensure that sequence is changed and will be saved on commit
+                        sequence.LastModified = DateTime.UtcNow;
                         _repository.UnitOfWork.Commit();
 
 						//Transaction success
@@ -139,7 +141,7 @@ namespace VirtoCommerce.Client
 				for (var index = startCount; index < endCount; index++)
 				{
 					var strCount = index.ToString(CultureInfo.InvariantCulture).PadLeft(CounterLength, '0');
-					generatedItems.Push(string.Format(IdTemplate, _prefix, DateTime.Now.ToString(DateFormat), strCount));
+					generatedItems.Push(string.Format(IdTemplate, _prefix, DateTime.UtcNow.ToString(DateFormat), strCount));
 				}
 
 				//This revereses the sequence
