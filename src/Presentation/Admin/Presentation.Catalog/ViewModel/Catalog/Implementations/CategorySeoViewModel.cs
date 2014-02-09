@@ -41,7 +41,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		protected override string BuildBaseUrl(Model.SeoUrlKeyword keyword)
 		{
 			var stringBuilder = new StringBuilder();
-			var categoryOutline = _catalogBuilder.BuildCategoryOutlineWithDSClient(_catalog.CatalogId, _category);
+			var categoryOutline = _catalogBuilder.BuildCategoryOutline(_catalog.CatalogId, _category);
 			if (categoryOutline != null)
 			{
 				using (var storeRepo = _storeRepositoryFactory.GetRepositoryInstance())

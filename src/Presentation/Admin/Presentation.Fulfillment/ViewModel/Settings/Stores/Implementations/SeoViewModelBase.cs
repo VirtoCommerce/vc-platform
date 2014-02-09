@@ -118,10 +118,8 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 								appConfigRepository.SeoUrlKeywords.Where(
 									seoKeyword => true && seoKeyword.SeoUrlKeywordId.Equals(keyword.SeoUrlKeywordId)).FirstOrDefault();
 							if (keywordToRemove != null)
-							{
-								keywordToRemove.KeywordValue = keyword.KeywordValue;
-								keywordToRemove.IsActive = false;
-								appConfigRepository.Update(keywordToRemove);
+							{								
+								appConfigRepository.Remove(keywordToRemove);
 							}
 						}
 						else

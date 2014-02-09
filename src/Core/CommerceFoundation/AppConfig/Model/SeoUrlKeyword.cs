@@ -174,7 +174,7 @@ namespace VirtoCommerce.Foundation.AppConfig.Model
 
 		public static ValidationResult ValidateKeywordUrl(string value, ValidationContext context)
 		{
-			if (value == null || string.IsNullOrEmpty(value))
+			if (string.IsNullOrEmpty(value))
 			{
 				return new ValidationResult("Keyword can't be empty");
 			}

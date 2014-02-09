@@ -25,6 +25,7 @@ namespace VirtoCommerce.Foundation.Stores.Model
 		[DataMember]
 		[Key]
 		[StringLength(128, ErrorMessage = "Only 128 characters allowed.")]
+		[CustomValidation(typeof(Store), "ValidateStoreId", ErrorMessage = @"Code is required and can't contain $+;=%{}[]|\/@ ~#!^*&?:'<>, characters")]
 		public string StoreId
 		{
 			get
@@ -407,6 +408,23 @@ namespace VirtoCommerce.Foundation.Stores.Model
 		}
 		#endregion
 
+		public static ValidationResult ValidateStoreId(string value, ValidationContext context)
+		{
+			if (string.IsNullOrEmpty(value))
+			{
+				return new ValidationResult("Code can't be empty");
+			}
 
+			const string invalidKeywordCharacters = @"$+;=%{}[]|\/@ ~#!^*&?:'<>,";
+
+			if (value.IndexOfAny(invalidKeywordCharacters.ToCharArray()) > -1)
+			{
+				return new ValidationResult(@"Code must be valid");
+			}
+			else
+			{
+				return ValidationResult.Success;
+			}
+		}
 	}
 }
