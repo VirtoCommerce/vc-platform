@@ -594,7 +594,7 @@ namespace VirtoCommerce.Web.Client.Helpers
                 userId = CustomerSession.CustomerId;
             }
 
-            foreach (var key in HttpContext.Current.Items.Keys.Cast<string>().Where(k => k.Equals(GetCacheKey(name, userId))).ToArray())
+            foreach (var key in HttpContext.Current.Items.Keys.OfType<string>().Where(k => k.Equals(GetCacheKey(name, userId))).ToArray())
             {
                 HttpContext.Current.Items[key] = null;
             }

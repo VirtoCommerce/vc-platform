@@ -463,7 +463,8 @@ namespace VirtoCommerce.OrderWorkflow
 						PromotionId = reward.PromotionId,
 						DiscountName = reward.Promotion.Name,
 						DisplayMessage = reward.Promotion.Description,
-						OrderFormId = orderForm.OrderFormId
+						OrderFormId = orderForm.OrderFormId,
+                        DiscountCode = reward.Promotion.CouponId ?? reward.Promotion.CouponSetId
 					};
 					orderForm.Discounts.Add(discount);
 				}
@@ -482,7 +483,8 @@ namespace VirtoCommerce.OrderWorkflow
 						PromotionId = reward.PromotionId,
 						DiscountName = reward.Promotion.Name,
 						DisplayMessage = reward.Promotion.Description,
-						LineItemId = lineItem.LineItemId
+						LineItemId = lineItem.LineItemId,
+                        DiscountCode = reward.Promotion.CouponId ?? reward.Promotion.CouponSetId
 					};
 					lineItem.Discounts.Add(discount);
 				}
@@ -500,7 +502,8 @@ namespace VirtoCommerce.OrderWorkflow
 						PromotionId = reward.PromotionId,
 						DiscountName = reward.Promotion.Name,
 						DisplayMessage = reward.Promotion.Description,
-						ShipmentId = shipment.ShipmentId
+						ShipmentId = shipment.ShipmentId,
+                        DiscountCode = reward.Promotion.CouponId ?? reward.Promotion.CouponSetId
 					};
 					shipment.Discounts.Add(discount);
 				}

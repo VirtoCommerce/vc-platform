@@ -7,13 +7,13 @@
  xmlns:sap2010="http://schemas.microsoft.com/netfx/2010/xaml/activities/presentation"
  xmlns:scg="clr-namespace:System.Collections.Generic;assembly=mscorlib"
  xmlns:sco="clr-namespace:System.Collections.ObjectModel;assembly=mscorlib"
- xmlns:vcfw="clr-namespace:VirtoCommerce.Foundation.Frameworks.Workflow;assembly=VirtoCommerce.Foundation"
- xmlns:vcom="clr-namespace:VirtoCommerce.Foundation.Orders.Model;assembly=VirtoCommerce.Foundation"
+ xmlns:vffw="clr-namespace:VirtoCommerce.Foundation.Frameworks.Workflow;assembly=VirtoCommerce.Foundation"
+ xmlns:vfom="clr-namespace:VirtoCommerce.Foundation.Orders.Model;assembly=VirtoCommerce.Foundation"
  xmlns:vo="clr-namespace:VirtoCommerce.OrderWorkflow;assembly=VirtoCommerce.OrderWorkflowActivities"
  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
   <x:Members>
-    <x:Property Name="OrderGroupArgument" Type="InArgument(vcom:OrderGroup)" />
-    <x:Property Name="ResultArgument" Type="InOutArgument(vcfw:WorkflowResult)" />
+    <x:Property Name="OrderGroupArgument" Type="InArgument(vfom:OrderGroup)" />
+    <x:Property Name="ResultArgument" Type="InOutArgument(vffw:WorkflowResult)" />
   </x:Members>
   <mva:VisualBasic.Settings>
     <x:Null />
@@ -38,6 +38,7 @@
       <x:String>VirtoCommerce.Foundation.Frameworks.Workflow</x:String>
       <x:String>System.Windows.Markup</x:String>
       <x:String>System.Activities.Debugger</x:String>
+      <x:String>VirtoCommerce.Foundation.Frameworks</x:String>
     </sco:Collection>
   </TextExpression.NamespacesForImplementation>
   <TextExpression.ReferencesForImplementation>
@@ -59,24 +60,31 @@
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
   <Sequence sap2010:WorkflowViewState.IdRef="Sequence_1">
+    <Sequence.Variables>
+      <Variable x:TypeArguments="x:Boolean" Default="True" Modifiers="ReadOnly" Name="IsCheckout" />
+    </Sequence.Variables>
     <vo:ProcessPaymentActivity DisplayName="ProcessPaymentActivity" sap2010:WorkflowViewState.IdRef="ProcessPaymentActivity_1" OrderGroupArgument="[OrderGroupArgument]" ResultArgument="[ResultArgument]" />
     <vo:CalculateTotalsActivity sap2010:WorkflowViewState.IdRef="CalculateTotalsActivity_1" OrderGroupArgument="[OrderGroupArgument]" ResultArgument="[ResultArgument]" />
     <vo:AdjustInventoryActivity sap2010:WorkflowViewState.IdRef="AdjustInventoryActivity_1" OrderGroupArgument="[OrderGroupArgument]" ResultArgument="[ResultArgument]" />
-    <sads:DebugSymbol.Symbol>d3JFOlxQcm9qZWN0c1xWQ0ZcYnJhbmNoZXNcbWV0cm8tcmVkZXNpZ24tYnJhbmNoXEV4dGVuc2lvbnNcV29ya2Zsb3dcT3JkZXJXb3JrZmxvd1xTaG9wcGluZ0NhcnRDaGVja291dFdvcmtmbG93LnhhbWwKPQNCDgIBAT4FPs4BAgEMPwU/qwECAQdABUCrAQIBAj6TAT6pAQIBDz65AT7LAQIBDT9wP4YBAgEKP5YBP6gBAgEIQHBAhgECAQVAlgFAqAECAQM=</sads:DebugSymbol.Symbol>
+    <vo:RecordPromotionUsageActivity sap2010:WorkflowViewState.IdRef="RecordPromotionUsageActivity_1" OrderGroupArgument="[OrderGroupArgument]" ResultArgument="[ResultArgument]" />
+    <vo:CreateOrderActivity sap2010:WorkflowViewState.IdRef="CreateOrderActivity_1" OrderGroupArgument="[OrderGroupArgument]" ResultArgument="[ResultArgument]" />
+    <sads:DebugSymbol.Symbol>d2dGOlxWaXJ0b1xHaXRcUmVwb3NcdmMtY29tbXVuaXR5XHNyY1xFeHRlbnNpb25zXFdvcmtmbG93XE9yZGVyV29ya2Zsb3dcU2hvcHBpbmdDYXJ0Q2hlY2tvdXRXb3JrZmxvdy54YW1sET4DSA4CAQFANUA7AgECQgVCzgECARdDBUOrAQIBEkQFRKsBAgENRQVFtQECAQhGBUajAQIBA0KTAUKpAQIBGkK5AULLAQIBGENwQ4YBAgEVQ5YBQ6gBAgETRHBEhgECARBElgFEqAECAQ5FekWQAQIBC0WgAUWyAQIBCUZoRn4CAQZGjgFGoAECAQQ=</sads:DebugSymbol.Symbol>
   </Sequence>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
       <sap2010:ViewStateData Id="ProcessPaymentActivity_1" sap:VirtualizedContainerService.HintSize="200,22" />
       <sap2010:ViewStateData Id="CalculateTotalsActivity_1" sap:VirtualizedContainerService.HintSize="200,22" />
       <sap2010:ViewStateData Id="AdjustInventoryActivity_1" sap:VirtualizedContainerService.HintSize="200,22" />
-      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="222,270">
+      <sap2010:ViewStateData Id="RecordPromotionUsageActivity_1" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="CreateOrderActivity_1" sap:VirtualizedContainerService.HintSize="200,22" />
+      <sap2010:ViewStateData Id="Sequence_1" sap:VirtualizedContainerService.HintSize="222,394">
         <sap:WorkflowViewStateService.ViewState>
           <scg:Dictionary x:TypeArguments="x:String, x:Object">
             <x:Boolean x:Key="IsExpanded">True</x:Boolean>
           </scg:Dictionary>
         </sap:WorkflowViewStateService.ViewState>
       </sap2010:ViewStateData>
-      <sap2010:ViewStateData Id="VirtoCommerce.OrderWorkflow.ShoppingCartCheckoutWorkflow_1" sap:VirtualizedContainerService.HintSize="262,350" />
+      <sap2010:ViewStateData Id="VirtoCommerce.OrderWorkflow.ShoppingCartCheckoutWorkflow_1" sap:VirtualizedContainerService.HintSize="262,474" />
     </sap2010:ViewStateManager>
   </sap2010:WorkflowViewState.ViewStateManager>
 </Activity>
