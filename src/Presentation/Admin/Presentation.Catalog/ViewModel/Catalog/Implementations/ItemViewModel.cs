@@ -10,6 +10,7 @@ using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Omu.ValueInjecter;
+using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Catalogs.Factories;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Catalogs.Repositories;
@@ -33,12 +34,13 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 	public class ItemViewModel : ViewModelDetailAndWizardBase<Item>, IItemViewModel
 	{
 		protected IPricelistRepository _priceListRepository;
-
+		
 		#region Dependencies
 
 		private readonly IAuthenticationContext _authContext;
 		private readonly IRepositoryFactory<ICatalogRepository> _repositoryFactory;
 		private readonly IRepositoryFactory<IPricelistRepository> _pricelistRepositoryFactory;
+		private readonly IRepositoryFactory<IAppConfigRepository> _appConfigRepositoryFactory;
 		private readonly IViewModelsFactory<IPropertyValueBaseViewModel> _propertyValueVmFactory;
 		private readonly IViewModelsFactory<IPriceViewModel> _priceVmFactory;
 		private readonly IViewModelsFactory<IItemAssetViewModel> _assetVmFactory;
@@ -58,6 +60,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		/// public. For viewing
 		/// </summary>
 		public ItemViewModel(
+			IRepositoryFactory<IAppConfigRepository> appConfigRepositoryFactory,
 			IViewModelsFactory<IItemSeoViewModel> seoVmFactory,
 			IRepositoryFactory<ICatalogRepository> repositoryFactory,
 			IRepositoryFactory<IPricelistRepository> pricelistRepositoryFactory, IViewModelsFactory<IPropertyValueBaseViewModel> propertyValueVmFactory,
@@ -75,6 +78,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			_reviewVmFactory = reviewVmFactory;
 			_categoryVmFactory = categoryVmFactory;
 			_seoVmFactory = seoVmFactory;
+			_appConfigRepositoryFactory = appConfigRepositoryFactory;
 
 			_navManager = navManager;
 			ViewTitle = new ViewTitleBase { Title = ItemTypeTitle, SubTitle = item.Name.ToUpper() };
@@ -590,6 +594,14 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			foreach (var association in associations)
 			{
 				Repository.Remove(association);
+			}
+
+			using (var seoRepository = _appConfigRepositoryFactory.GetRepositoryInstance())
+			{
+				var deleteList = seoRepository.SeoUrlKeywords.Where(x => x.KeywordValue.Equals(InnerItem.Code, StringComparison.InvariantCultureIgnoreCase));
+				if (deleteList.Count() > 0)
+					deleteList.ToList().ForEach(y => seoRepository.Remove(y));
+				seoRepository.UnitOfWork.Commit();
 			}
 
 			return true;
@@ -1439,7 +1451,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		protected void InitSeoStep()
 		{
 			var itemParameter = new KeyValuePair<string, object>("item", InnerItem);
-			var languagesParameter = new KeyValuePair<string, object>("languages", InnerItemCatalogLanguages);
+			var languagesParameter = new KeyValuePair<string, object>("languages", InnerItemCatalogLanguages == null ? new List<string>() : InnerItemCatalogLanguages);
 			SeoStepViewModel =
 					_seoVmFactory.GetViewModelInstance(itemParameter, languagesParameter);
 			OnPropertyChanged("SeoStepViewModel");

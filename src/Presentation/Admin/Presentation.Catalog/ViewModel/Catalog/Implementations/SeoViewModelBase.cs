@@ -119,9 +119,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 									seoKeyword => true && seoKeyword.SeoUrlKeywordId.Equals(keyword.SeoUrlKeywordId)).FirstOrDefault();
 							if (keywordToRemove != null)
 							{
-								keywordToRemove.KeywordValue = keyword.KeywordValue;
-								keywordToRemove.IsActive = false;
-								appConfigRepository.Update(keywordToRemove);
+								appConfigRepository.Remove(keywordToRemove);
 							}
 						}
 						else
@@ -158,7 +156,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 				}
 			}
 		}
-
+		
 		#endregion
 
 		#region Use custom properties
@@ -242,7 +240,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 					}
 				});
 
-			SeoLocalesFilterCommand.Execute(SeoKeywords.First(x => x.Language.Equals(_defaultLanguage, StringComparison.InvariantCultureIgnoreCase)));
+			SeoLocalesFilterCommand.Execute(SeoKeywords.FirstOrDefault(x => x.Language.Equals(_defaultLanguage, StringComparison.InvariantCultureIgnoreCase)));
 		}
 
 		protected abstract string BuildBaseUrl(SeoUrlKeyword keyword);
