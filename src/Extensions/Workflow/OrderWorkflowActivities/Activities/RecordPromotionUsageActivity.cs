@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Activities;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using VirtoCommerce.Foundation.Catalogs.Repositories;
 using VirtoCommerce.Foundation.Customers.Services;
-using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Marketing.Model;
 using VirtoCommerce.Foundation.Marketing.Repositories;
 using VirtoCommerce.Foundation.Orders.Model;
@@ -24,13 +21,13 @@ namespace VirtoCommerce.OrderWorkflow
 			}
 		}
 
-		Foundation.Customers.Services.ICustomerSessionService _customerSessionService;
-		protected Foundation.Customers.Services.ICustomerSessionService CustomerSessionService
+		ICustomerSessionService _customerSessionService;
+		protected ICustomerSessionService CustomerSessionService
 		{
 			get
 			{
 				return _customerSessionService ??
-					   (_customerSessionService = ServiceLocator.GetInstance<Foundation.Customers.Services.ICustomerSessionService>());
+					   (_customerSessionService = ServiceLocator.GetInstance<ICustomerSessionService>());
 			}
 			set
 			{
@@ -45,14 +42,6 @@ namespace VirtoCommerce.OrderWorkflow
 			set
 			{
 				_marketingRepository = value;
-			}
-		}
-
-		private ICacheRepository CacheRepository
-		{
-			get
-			{
-				return ServiceLocator.GetInstance<ICacheRepository>();
 			}
 		}
 
@@ -92,13 +81,9 @@ namespace VirtoCommerce.OrderWorkflow
 
             var updateStatus = isCheckout ? PromotionUsageStatus.Used : PromotionUsageStatus.Reserved;
 
-            var currentUsages = MarketingRepository.PromotionUsages.Where(
-                p =>
-                    p.MemberId == CustomerSessionService.CustomerSession.CustomerId &&
-                    p.OrderGroupId == CurrentOrderGroup.OrderGroupId).ToList();
+            var currentUsages = MarketingRepository.PromotionUsages.Where(p => p.OrderGroupId == CurrentOrderGroup.OrderGroupId).ToList();
 
             var usedPromotionIds = new List<string>();
-
 
             foreach (var orderForm in CurrentOrderGroup.OrderForms)
             {

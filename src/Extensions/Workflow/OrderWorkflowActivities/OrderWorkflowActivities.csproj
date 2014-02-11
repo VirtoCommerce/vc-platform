@@ -99,7 +99,6 @@
     <Compile Include="Activities\RemoveDiscountActivity.cs" />
     <Compile Include="Activities\ShipmentSplitActivity.cs" />
     <Compile Include="Activities\ValidateLineItemsActivity.cs" />
-    <Compile Include="Activities\CreateOrderActivity.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">

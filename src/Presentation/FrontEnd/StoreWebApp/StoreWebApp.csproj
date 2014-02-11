@@ -312,10 +312,6 @@
     <Reference Include="Unity.WebApi">
       <HintPath>..\..\..\..\packages\Unity.WebAPI.0.10\lib\net40\Unity.WebApi.dll</HintPath>
     </Reference>
-    <Reference Include="VirtoCommerce.OrderWorkflow, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Shared\VirtoCommerce.OrderWorkflow.dll</HintPath>
-    </Reference>
     <Reference Include="WebActivatorEx">
       <HintPath>..\..\..\..\packages\WebActivatorEx.2.0.3\lib\net40\WebActivatorEx.dll</HintPath>
     </Reference>
@@ -861,6 +857,10 @@
     <ProjectReference Include="..\..\..\Extensions\Workflow\OrderWorkflowActivities\OrderWorkflowActivities.csproj">
       <Project>{930184f0-9508-4c17-8aae-1141a00c43a5}</Project>
       <Name>OrderWorkflowActivities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Extensions\Workflow\OrderWorkflow\OrderWorkflow.csproj">
+      <Project>{196ff814-152f-416d-82ab-9b1df3323839}</Project>
+      <Name>OrderWorkflow</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

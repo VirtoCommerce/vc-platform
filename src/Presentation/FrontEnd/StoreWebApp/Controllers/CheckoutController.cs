@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Transactions;
 using System.Web.Mvc;
 using Omu.ValueInjecter;
 using VirtoCommerce.Client;
@@ -270,12 +271,19 @@ namespace VirtoCommerce.Web.Controllers
 
             try
             {
-                // run business rules
-                // After workflow finishes this cart is converted to order
-                var result = Ch.RunWorkflow("ShoppingCartCheckoutWorkflow");
-                if (HttpContext.Session != null)
-                    HttpContext.Session["LatestOrderId"] = result.OrderGroup.OrderGroupId;
-                return RedirectToAction("ProcessCheckout", "Checkout", new { id = result.OrderGroup.OrderGroupId });
+                using (var transaction = new TransactionScope())
+                {
+                    // run business rules
+                    Ch.RunWorkflow("ShoppingCartCheckoutWorkflow");
+                    // Create order
+                    var order = Ch.SaveAsOrder();
+                    if (HttpContext.Session != null)
+                    {
+                        HttpContext.Session["LatestOrderId"] = order.OrderGroupId;
+                    }
+                    transaction.Complete();
+                }
+                return RedirectToAction("ProcessCheckout", "Checkout", new { id = Ch.Cart.OrderGroupId });
             }
             catch (Exception ex)
             {
