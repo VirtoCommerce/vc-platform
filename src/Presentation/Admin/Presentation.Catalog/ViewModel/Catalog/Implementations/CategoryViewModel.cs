@@ -405,7 +405,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 		#region Properties tab
 
-		public bool IsCatalogLanguageFilteringEnabled { get { return _parentCatalog is catalogModel.Catalog; } }
+		public bool IsCatalogLanguageFilteringEnabled { get { return InnerItemCatalogLanguages != null && InnerItemCatalogLanguages.Count() > 1; } }
 		public string FilterLanguage { get; private set; }
 		public List<string> InnerItemCatalogLanguages { get; protected set; }
 		public ObservableCollection<PropertyAndPropertyValueBase> PropertiesAndValues { get; protected set; }
@@ -457,6 +457,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			OnUIThread(() =>
 			{
 				OnPropertyChanged("InnerItemCatalogLanguages");
+				OnPropertyChanged("IsCatalogLanguageFilteringEnabled");
 
 				// filter values by locale
 				PropertiesLocalesFilterCommand.Execute(_parentCatalog.DefaultLanguage);
