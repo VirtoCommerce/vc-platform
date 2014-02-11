@@ -8,30 +8,30 @@ using linq = System.Linq.Expressions;
 namespace VirtoCommerce.ManagementClient.Marketing.Model
 {
 	[Serializable]
-	public class ConditionCartSubtotalLeast : PromotionExpressionBlock
+	public class ConditionLineItemTotal : PromotionExpressionBlock
 	{
-		private readonly UserInputElement _subTotalEl;
+		private readonly UserInputElement _lineItemTotalEl;
 
-		public ConditionCartSubtotalLeast(IExpressionViewModel expressionViewModel)
-			: base("Cart subtotal is []", expressionViewModel)
+		public ConditionLineItemTotal(IExpressionViewModel expressionViewModel)
+			: base("Line item subtotal is []", expressionViewModel)
 		{
-			WithLabel("Cart subtotal is ");
+			WithLabel("Line item subtotal is ");
 			ExactlyLeast = WithElement(new ExactlyLeast()) as ExactlyLeast;
-			_subTotalEl = WithUserInput<decimal>(0, 0) as UserInputElement;
+			_lineItemTotalEl = WithUserInput<decimal>(0, 0) as UserInputElement;
 			WithAvailableExcluding(() => new ItemsInCategory(expressionViewModel));
 			WithAvailableExcluding(() => new ItemsInEntry(expressionViewModel));
 			WithAvailableExcluding(() => new ItemsInSku(expressionViewModel));
 		}
 
-		public decimal SubTotal
+		public decimal LineItemTotal
 		{
 			get
 			{
-				return Convert.ToDecimal(_subTotalEl.InputValue);
+				return Convert.ToDecimal(_lineItemTotalEl.InputValue);
 			}
 			set
 			{
-				_subTotalEl.InputValue = value;
+				_lineItemTotalEl.InputValue = value;
 			}
 		}
 
@@ -41,14 +41,13 @@ namespace VirtoCommerce.ManagementClient.Marketing.Model
 		{
 			var paramX = linq.Expression.Parameter(typeof(IEvaluationContext), "x");
 			var castOp = linq.Expression.MakeUnary(linq.ExpressionType.Convert, paramX, typeof(PromotionEvaluationContext));
-			var subTotal = linq.Expression.Constant(SubTotal);
-			var methodInfo = typeof(PromotionEvaluationContext).GetMethod("GetTotalWithExcludings");
-			var methodCall = linq.Expression.Call(castOp, methodInfo, ExcludingCategoryIds.GetNewArrayExpression(),
+			var lineItemTotal = linq.Expression.Constant(LineItemTotal);
+			var methodInfo = typeof(PromotionEvaluationContext).GetMethod("IsAnyLineItemTotal");
+			var equalsOrAtLeast = ExactlyLeast.IsExactly ? linq.Expression.Constant(true) : linq.Expression.Constant(false);
+			var methodCall = linq.Expression.Call(castOp, methodInfo, lineItemTotal, equalsOrAtLeast, ExcludingCategoryIds.GetNewArrayExpression(),
 																	  ExcludingProductIds.GetNewArrayExpression(), ExcludingSkuIds.GetNewArrayExpression());
 
-			var binaryOp = ExactlyLeast.IsExactly ? linq.Expression.Equal(methodCall, subTotal) : linq.Expression.GreaterThanOrEqual(methodCall, subTotal);
-
-			var retVal = linq.Expression.Lambda<Func<IEvaluationContext, bool>>(binaryOp, paramX);
+			var retVal = linq.Expression.Lambda<Func<IEvaluationContext, bool>>(methodCall, paramX);
 
 			return retVal;
 		}

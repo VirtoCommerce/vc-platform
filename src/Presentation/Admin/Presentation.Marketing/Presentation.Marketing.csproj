@@ -149,6 +149,8 @@
     <Compile Include="Model\TypedExpressions\CartPromotionExpressionBlock.cs" />
     <Compile Include="Model\TypedExpressions\Conditions\ConditionIsEveryone.cs" />
     <Compile Include="Model\TypedExpressions\Conditions\ConditionIsFirstTimeBuyer.cs" />
+    <Compile Include="Model\TypedExpressions\Conditions\ConditionCodeContains.cs" />
+    <Compile Include="Model\TypedExpressions\Conditions\ConditionLineItemTotal.cs" />
     <Compile Include="Model\TypedExpressions\PromotionExpressionBlock.cs" />
     <Compile Include="Model\TypedExpressions\UserInputElements\ItemsInCategory.cs" />
     <Compile Include="Model\TypedExpressions\UserInputElements\ItemsInEntry.cs" />

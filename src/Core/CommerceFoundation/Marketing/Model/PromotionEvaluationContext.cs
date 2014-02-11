@@ -206,6 +206,30 @@ namespace VirtoCommerce.Foundation.Marketing.Model
 							   .Any();
 		}
 
+		public bool IsItemCodeContains(string skuCode, string[] excludingSkuIds)
+		{
+			return LineItems.Where(x => x.EntryCode.Contains(skuCode))
+				.ExcludeSkus(excludingSkuIds)
+				.Any();
+
+		}
+
+		public bool IsAnyLineItemTotal(decimal lineItemTotal, bool isExactly, string[] excludingCategoryIds, string[] excludingProductIds, string[] excludingSkuIds)
+		{
+			if (isExactly)
+				return LineItems.Where(x => x.CostPerEntry * x.Quantity == lineItemTotal)
+					.ExcludeCategories(excludingCategoryIds)
+					.ExcludeProducts(excludingProductIds)
+					.ExcludeSkus(excludingSkuIds)
+					.Any();
+			else
+				return LineItems.Where(x => x.CostPerEntry * x.Quantity >= lineItemTotal)
+					.ExcludeCategories(excludingCategoryIds)
+					.ExcludeProducts(excludingProductIds)
+					.ExcludeSkus(excludingSkuIds)
+					.Any();
+		}
+
 		public bool IsItemInProduct(string productId)
 		{
 			return LineItems.InProducts(new[] { productId }).Any();
