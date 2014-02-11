@@ -45,6 +45,8 @@ namespace VirtoCommerce.OrderWorkflow
 			}
 		}
 
+        public PromotionUsageStatus UsageStatus { get; set; }
+
 		public RecordPromotionUsageActivity()
 		{
 		}
@@ -69,18 +71,6 @@ namespace VirtoCommerce.OrderWorkflow
             if (CurrentOrderGroup == null || CurrentOrderGroup.OrderForms.Count == 0)
                 return;
 
-            var prop = context.DataContext.GetProperties().Find("IsCheckout", true);
-            //This variable is used in ShoppingCartCheckoutWorkflow
-            var isCheckout = false;
-
-            if (prop != null && prop.PropertyType == typeof (bool))
-            {
-                var val = prop.GetValue(context.DataContext);
-                isCheckout = val!=null && (bool)val;
-            }
-
-            var updateStatus = isCheckout ? PromotionUsageStatus.Used : PromotionUsageStatus.Reserved;
-
             var currentUsages = MarketingRepository.PromotionUsages.Where(p => p.OrderGroupId == CurrentOrderGroup.OrderGroupId).ToList();
 
             var usedPromotionIds = new List<string>();
@@ -89,17 +79,17 @@ namespace VirtoCommerce.OrderWorkflow
             {
                 //create records for order form discounts
                 usedPromotionIds.AddRange(orderForm.Discounts
-                    .Select(formDiscount => UpdatePromotionUsage(currentUsages, formDiscount, updateStatus))
+                    .Select(formDiscount => UpdatePromotionUsage(currentUsages, formDiscount))
                     .Select(usage => usage.PromotionId));
 
                 //create records for line item discounts
                 usedPromotionIds.AddRange(orderForm.LineItems.SelectMany(x => x.Discounts)
-                    .Select(lineItemDiscount => UpdatePromotionUsage(currentUsages, lineItemDiscount, updateStatus))
+                    .Select(lineItemDiscount => UpdatePromotionUsage(currentUsages, lineItemDiscount))
                     .Select(usage => usage.PromotionId));
 
                 //create records for shipment discounts
                 usedPromotionIds.AddRange(orderForm.Shipments.SelectMany(x => x.Discounts)
-                   .Select(shipmentDiscount => UpdatePromotionUsage(currentUsages, shipmentDiscount, updateStatus))
+                   .Select(shipmentDiscount => UpdatePromotionUsage(currentUsages, shipmentDiscount))
                    .Select(usage => usage.PromotionId));
             }
 
@@ -114,13 +104,13 @@ namespace VirtoCommerce.OrderWorkflow
             MarketingRepository.UnitOfWork.Commit();
         }
 
-        private PromotionUsage UpdatePromotionUsage(ICollection<PromotionUsage> currentUsages, Discount discount, PromotionUsageStatus status)
+        private PromotionUsage UpdatePromotionUsage(ICollection<PromotionUsage> currentUsages, Discount discount)
         {
             var usage = currentUsages.FirstOrDefault(x => x.PromotionId == discount.PromotionId);
 
             if (usage != null)
             {
-                usage.Status = (int)status;
+                usage.Status = (int)UsageStatus;
                 usage.UsageDate = DateTime.UtcNow;
             }
             else
@@ -131,7 +121,7 @@ namespace VirtoCommerce.OrderWorkflow
                     MemberId = CustomerSessionService.CustomerSession.CustomerId,
                     OrderGroupId = CurrentOrderGroup.OrderGroupId,
                     PromotionId = discount.PromotionId,
-                    Status = (int)status,
+                    Status = (int)UsageStatus,
                     UsageDate = DateTime.UtcNow
                 };
 

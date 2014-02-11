@@ -60,14 +60,11 @@
     </sco:Collection>
   </TextExpression.ReferencesForImplementation>
   <Sequence sap2010:WorkflowViewState.IdRef="Sequence_1">
-    <Sequence.Variables>
-      <Variable x:TypeArguments="x:Boolean" Default="True" Modifiers="ReadOnly" Name="IsCheckout" />
-    </Sequence.Variables>
     <vo:ProcessPaymentActivity DisplayName="ProcessPaymentActivity" sap2010:WorkflowViewState.IdRef="ProcessPaymentActivity_1" OrderGroupArgument="[OrderGroupArgument]" ResultArgument="[ResultArgument]" />
     <vo:CalculateTotalsActivity sap2010:WorkflowViewState.IdRef="CalculateTotalsActivity_1" OrderGroupArgument="[OrderGroupArgument]" ResultArgument="[ResultArgument]" />
     <vo:AdjustInventoryActivity sap2010:WorkflowViewState.IdRef="AdjustInventoryActivity_1" OrderGroupArgument="[OrderGroupArgument]" ResultArgument="[ResultArgument]" />
-    <vo:RecordPromotionUsageActivity sap2010:WorkflowViewState.IdRef="RecordPromotionUsageActivity_1" OrderGroupArgument="[OrderGroupArgument]" ResultArgument="[ResultArgument]" />
-    <sads:DebugSymbol.Symbol>d2dGOlxWaXJ0b1xHaXRcUmVwb3NcdmMtY29tbXVuaXR5XHNyY1xFeHRlbnNpb25zXFdvcmtmbG93XE9yZGVyV29ya2Zsb3dcU2hvcHBpbmdDYXJ0Q2hlY2tvdXRXb3JrZmxvdy54YW1sDj4DRw4CAQFANUA7AgECQgVCzgECARJDBUOrAQIBDUQFRKsBAgEIRQVFtQECAQNCkwFCqQECARVCuQFCywECARNDcEOGAQIBEEOWAUOoAQIBDkRwRIYBAgELRJYBRKgBAgEJRXpFkAECAQZFoAFFsgECAQQ=</sads:DebugSymbol.Symbol>
+    <vo:RecordPromotionUsageActivity sap2010:WorkflowViewState.IdRef="RecordPromotionUsageActivity_1" OrderGroupArgument="[OrderGroupArgument]" ResultArgument="[ResultArgument]" UsageStatus="Used" />
+    <sads:DebugSymbol.Symbol>d2dGOlxWaXJ0b1xHaXRcUmVwb3NcdmMtY29tbXVuaXR5XHNyY1xFeHRlbnNpb25zXFdvcmtmbG93XE9yZGVyV29ya2Zsb3dcU2hvcHBpbmdDYXJ0Q2hlY2tvdXRXb3JrZmxvdy54YW1sDT4DRA4CAQE/BT/OAQIBEUAFQKsBAgEMQQVBqwECAQdCBULIAQIBAj+TAT+pAQIBFD+5AT/LAQIBEkBwQIYBAgEPQJYBQKgBAgENQXBBhgECAQpBlgFBqAECAQhCekKQAQIBBUKgAUKyAQIBAw==</sads:DebugSymbol.Symbol>
   </Sequence>
   <sap2010:WorkflowViewState.ViewStateManager>
     <sap2010:ViewStateManager>
