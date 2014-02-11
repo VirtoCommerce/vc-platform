@@ -18,6 +18,8 @@
       <Setting name="VirtoCommerce" />
       <Setting name="SearchConnectionString" />
       <Setting name="DataConnectionString" />
+      <Setting name="IPAddressRules.Enabled" />
+      <Setting name="IPAddressRules.Settings" />
     </ConfigurationSettings>
     <LocalResources>
       <LocalStorage name="DiagnosticStore" sizeInMB="8192" cleanOnRoleRecycle="false" />
