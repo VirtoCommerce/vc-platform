@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using VirtoCommerce.Foundation.Catalogs.Repositories;
 using VirtoCommerce.Foundation.Customers.Services;
 using VirtoCommerce.Foundation.Marketing.Model;
 using VirtoCommerce.Foundation.Marketing.Repositories;
@@ -11,16 +10,6 @@ namespace VirtoCommerce.OrderWorkflow
 {
     public class RecordPromotionUsageActivity : OrderActivityBase
     {
-        ICatalogRepository _catalogRepository;
-		protected ICatalogRepository CatalogRepository
-		{
-			get { return _catalogRepository ?? (_catalogRepository = ServiceLocator.GetInstance<ICatalogRepository>()); }
-			set
-			{
-				_catalogRepository = value;
-			}
-		}
-
 		ICustomerSessionService _customerSessionService;
 		protected ICustomerSessionService CustomerSessionService
 		{
@@ -51,11 +40,8 @@ namespace VirtoCommerce.OrderWorkflow
 		{
 		}
 
-        public RecordPromotionUsageActivity(ICatalogRepository catalogRepository,
-			ICustomerSessionService customerService,
-			IMarketingRepository marketingRepository)
+        public RecordPromotionUsageActivity(ICustomerSessionService customerService, IMarketingRepository marketingRepository)
 		{
-			_catalogRepository = catalogRepository;
 			_marketingRepository = marketingRepository;
 			_customerSessionService = customerService;
 		}
