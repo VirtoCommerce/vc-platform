@@ -25,11 +25,11 @@ namespace VirtoCommerce.ManagementClient.Marketing.Model
             InitializeExcludings();
         }
 
-        public int NumItem
+        public decimal NumItem
         {
             get
             {
-                return Convert.ToInt32(_numItemEl.InputValue);
+                return Convert.ToDecimal(_numItemEl.InputValue);
             }
             set
             {

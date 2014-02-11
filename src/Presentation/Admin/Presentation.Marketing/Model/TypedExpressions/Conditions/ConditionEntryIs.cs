@@ -34,9 +34,7 @@ namespace VirtoCommerce.ManagementClient.Marketing.Model
 
 
         public override linq.Expression<Func<IEvaluationContext, bool>> GetExpression()
-        {
-            //Func<IPromotionEvaluationContext, bool> predicate = (x) => ((PromotionEvaluationContext)x).IsItemInCategory(SelectedCategoryId, ExcludingCategoryIds, ExcludingProductIds);
-
+        {           
             var paramX = linq.Expression.Parameter(typeof(IEvaluationContext), "x");
             var castOp = linq.Expression.MakeUnary(linq.ExpressionType.Convert, paramX, typeof(PromotionEvaluationContext));
             var methodInfo = typeof(PromotionEvaluationContext).GetMethod("IsItemInProduct");

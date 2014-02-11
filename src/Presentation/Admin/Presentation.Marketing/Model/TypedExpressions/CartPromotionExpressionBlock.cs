@@ -76,10 +76,12 @@ namespace VirtoCommerce.ManagementClient.Marketing.Model
 
             availableElements = new Func<CompositeElement>[] {
 				()=> new ConditionAtNumItemsInCart(ExpressionViewModel),
-				()=> new  ConditionAtNumItemsInCategoryAreInCart(ExpressionViewModel),
-				()=> new  ConditionAtNumItemsOfEntryAreInCart(ExpressionViewModel),
-				()=> new  ConditionCartSubtotalLeast(ExpressionViewModel),
-				()=> new  ConditionCurrencyIs(ExpressionViewModel)
+				()=> new ConditionAtNumItemsInCategoryAreInCart(ExpressionViewModel),
+				()=> new ConditionAtNumItemsOfEntryAreInCart(ExpressionViewModel),
+				()=> new ConditionCodeContains(ExpressionViewModel),
+				()=> new ConditionLineItemTotal(ExpressionViewModel),
+				()=> new ConditionCartSubtotalLeast(ExpressionViewModel),
+				()=> new ConditionCurrencyIs(ExpressionViewModel)
             };
             ConditionCartBlock.WithAvailabeChildren(availableElements);
             ConditionCartBlock.NewChildLabel = "+ add condition";
