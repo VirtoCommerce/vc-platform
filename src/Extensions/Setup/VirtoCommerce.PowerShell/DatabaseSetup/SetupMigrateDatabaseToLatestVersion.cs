@@ -94,7 +94,7 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup
             }
 
             context.Database.Connection.Open();
-            context.Database.ExecuteSqlCommand(
+            context.Database.ExecuteSqlCommand(TransactionalBehavior.DoNotEnsureTransaction,
                 string.Format(@"ALTER DATABASE [{0}] SET RECURSIVE_TRIGGERS ON;", originalDbName));
             context.Database.Connection.ConnectionString = originalConnectionString;
             context.Database.Connection.Close();
