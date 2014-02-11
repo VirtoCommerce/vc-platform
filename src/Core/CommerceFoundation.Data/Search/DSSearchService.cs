@@ -11,9 +11,5 @@ namespace VirtoCommerce.Foundation.Data.Search
     [JsonSupportBehavior]
 	public class DSSearchService : DServiceBase<EFSearchRepository>
     {
-        protected override EFSearchRepository CreateDataSource()
-        {
-            return new EFSearchRepository(new SearchEntityFactory());
-        }
     }
 }

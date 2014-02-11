@@ -64,7 +64,7 @@ namespace FunctionalTests.Orders.Helpers
 	{
 		public const string DatabaseName = "OrdersTest";
 
-		protected override EFOrderRepository CreateDataSource()
+        protected override EFOrderRepository CreateRepository()
 		{
 			return new EFOrderRepository(DatabaseName, new OrderEntityFactory());
 		}

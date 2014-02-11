@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.Entity.Infrastructure;
-using System.Data.Objects;
+using System.Data.Entity.Core.Objects;
 using System.Threading;
 using VirtoCommerce.Foundation.Frameworks.Logging;
 
@@ -12,6 +12,7 @@ namespace VirtoCommerce.Foundation.Data.Infrastructure.Interceptors
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
+    using System.Data.Entity;
 
     public class LogInterceptor : IInterceptor
     {

@@ -27,7 +27,7 @@ namespace FunctionalTests.Reviews
     [JsonSupportBehavior]
     public class TestDSReviewService : ReviewDataService
     {
-        protected override EFReviewRepository CreateDataSource()
+        protected override EFReviewRepository CreateRepository()
         {
             return new EFReviewRepository("ReviewsTest", new ReviewEntityFactory());
         }

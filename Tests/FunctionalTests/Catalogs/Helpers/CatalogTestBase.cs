@@ -18,7 +18,7 @@ namespace FunctionalTests.Catalogs.Helpers
 	{
 		public const string DatabaseName = "CatalogTest";
 
-		protected override EFCatalogRepository CreateDataSource()
+        protected override EFCatalogRepository CreateRepository()
 		{
 			return new EFCatalogRepository(DatabaseName, new CatalogEntityFactory());
 		}

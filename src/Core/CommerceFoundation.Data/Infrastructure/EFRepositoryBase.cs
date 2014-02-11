@@ -7,7 +7,7 @@ using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Migrations;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Data.Entity.Validation;
-using System.Data.Objects;
+using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Reflection;
 using VirtoCommerce.Foundation.Data.Infrastructure;

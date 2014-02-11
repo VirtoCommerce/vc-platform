@@ -5,7 +5,7 @@ using System.Text;
 using System.Data.Entity.Infrastructure;
 using System.Data;
 using System.Data.Entity;
-using System.Data.Objects;
+using System.Data.Entity.Core.Objects;
 
 namespace VirtoCommerce.Foundation.Data.Infrastructure.Interceptors
 {

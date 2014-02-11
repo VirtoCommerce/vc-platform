@@ -17,7 +17,7 @@ namespace FunctionalTests.Marketing
 	[JsonSupportBehavior]
 	public class TestDSDynamicContentService : DSDynamicContentService
 	{
-		protected override EFDynamicContentRepository CreateDataSource()
+		protected override EFDynamicContentRepository CreateRepository()
 		{
 			return new EFDynamicContentRepository("DynamicContentTest", new DynamicContentEntityFactory());
 		}
