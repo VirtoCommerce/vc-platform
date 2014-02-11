@@ -61,6 +61,7 @@ using VirtoCommerce.Foundation.Inventories.Repositories;
 using VirtoCommerce.Foundation.Marketing.Factories;
 using VirtoCommerce.Foundation.Marketing.Model;
 using VirtoCommerce.Foundation.Marketing.Model.DynamicContent;
+using VirtoCommerce.Foundation.Marketing.Model.Policies;
 using VirtoCommerce.Foundation.Marketing.Repositories;
 using VirtoCommerce.Foundation.Marketing.Services;
 using VirtoCommerce.Foundation.Orders.Factories;
@@ -94,6 +95,7 @@ using VirtoCommerce.Web.Client.Services.Sequences;
 using VirtoCommerce.Web.Client.Services.Templates;
 using VirtoCommerce.Web.Virto.Helpers;
 using VirtoCommerce.Web.Virto.Helpers.Payments;
+using IEvaluationPolicy = VirtoCommerce.Foundation.Marketing.Model.IEvaluationPolicy;
 
 namespace VirtoCommerce.Web
 {
@@ -201,6 +203,15 @@ namespace VirtoCommerce.Web
             container.RegisterType<IMarketingEntityFactory, MarketingEntityFactory>();
             container.RegisterType<IPromotionUsageProvider, PromotionUsageProvider>();
             container.RegisterType<IPromotionEntryPopulate, PromotionEntryPopulate>();
+
+            //Register prmotion evaluation policies
+            container.RegisterType<IEvaluationPolicy, GlobalExclusivityPolicy>("global");
+            container.RegisterType<IEvaluationPolicy, GroupExclusivityPolicy>("group");
+            container.RegisterType<IEvaluationPolicy, CartSubtotalRewardCombinePolicy>("cart");
+            container.RegisterType<IEvaluationPolicy, ShipmentRewardCombinePolicy>("shipment");
+
+
+            container.RegisterType<IPromotionEvaluator, DefaultPromotionEvaluator>();
 
             #endregion
 
