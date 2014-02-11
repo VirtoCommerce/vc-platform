@@ -10,7 +10,7 @@
 
 
     $("#show_reviews_link").on('click', function () {
-        scrollToTab('#product_tabs_reviews');
+        return scrollToTab('#product_tabs_reviews');
     });
     
  
