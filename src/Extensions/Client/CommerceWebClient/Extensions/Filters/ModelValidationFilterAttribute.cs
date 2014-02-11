@@ -27,7 +27,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Filters
                       where modelState[x].Errors.Count > 0
                       select new
                       {
-                          key = x,
+                          key = x.Substring(x.IndexOf(".", System.StringComparison.Ordinal) + 1),
                           errors = modelState[x].Errors.
                                                  Select(y => y.ErrorMessage).
                                                  ToArray()
