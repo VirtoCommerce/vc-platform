@@ -5,8 +5,10 @@
     <ConfigurationSettings>
       <Setting name="VirtoCommerce" value="Data Source=(local);Initial Catalog=VirtoCommerce;Persist Security Info=True;User ID=virto;Password=virto;MultipleActiveResultSets=True" />
       <Setting name="SearchConnectionString" value="server=localhost:9200;scope=default" />
-      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="DefaultEndpointsProtocol=https;AccountName=virto2013;AccountKey=NORAVgfhlcDLpGJpOrBEQhxr8nnTTOzrxqUyxKosmYLFeJsatxlXRSxnSvqGxEGvVsvN+/p2MzWZpLSIpnE+vQ==" />
+      <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
       <Setting name="DataConnectionString" value="" />
+      <Setting name="IPAddressRules.Enabled" value="true" />
+      <Setting name="IPAddressRules.Settings" value="ALLOW 80 0.0.0.0;BLOCK 0 2.3.4.5" />
     </ConfigurationSettings>
   </Role>
 </ServiceConfiguration>
