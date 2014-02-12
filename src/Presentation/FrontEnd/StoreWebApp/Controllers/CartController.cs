@@ -294,7 +294,7 @@ namespace VirtoCommerce.Web.Controllers
                 CartName = name
             };
 
-            results.Messages.Add(new MessageModel(string.Format("{0} items added to your {1}".Localize(), addedLineItems.Sum(li =>li.Quantity), name)));
+            results.Messages.Add(new MessageModel(string.Format("{0} items added to your {1}".Localize(), addedLineItems.Sum(li =>li.Quantity), name.Localize())));
 
             return Json(results);
         }
