@@ -50,7 +50,7 @@ namespace VirtoCommerce.Foundation.Importing.Model
 					if (itemR != null)
 					{
 						var originalItem = _repository.Localizations.Where(x => x.LanguageCode == itemR.Value && x.Name == itemRKey.Value).SingleOrDefault();
-						if (originalItem != null)
+						if (originalItem != null) 
 							_repository.Remove(originalItem);
 					}
 
