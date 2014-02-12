@@ -157,6 +157,12 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 		public string ErrorText { get; set; }
 		public bool IsError { get; set; }
 
+		public void RaiseCanExecuteChanged()
+		{
+			ItemEditCommand.RaiseCanExecuteChanged();
+			ItemClearCommand.RaiseCanExecuteChanged();
+		}
+
 		#endregion
 
 		#region constructor
@@ -457,13 +463,7 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 
 		#endregion
 
-		#region private methods
-
-		private void RaiseCanExecuteChanged()
-		{
-			ItemEditCommand.RaiseCanExecuteChanged();
-			ItemClearCommand.RaiseCanExecuteChanged();
-		}
+		#region private
 
 		private void CommandInit()
 		{
