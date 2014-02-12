@@ -197,7 +197,9 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Management" />
-    <Reference Include="System.Management.Automation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Management.Automation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\packages\Microsoft.AspNet.WebApi.Client.4.0.20710.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
@@ -312,10 +314,6 @@
     <Reference Include="Unity.WebApi">
       <HintPath>..\..\..\..\packages\Unity.WebAPI.0.10\lib\net40\Unity.WebApi.dll</HintPath>
     </Reference>
-    <Reference Include="VirtoCommerce.OrderWorkflow, Version=1.6.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Shared\VirtoCommerce.OrderWorkflow.dll</HintPath>
-    </Reference>
     <Reference Include="WebActivatorEx">
       <HintPath>..\..\..\..\packages\WebActivatorEx.2.0.3\lib\net40\WebActivatorEx.dll</HintPath>
     </Reference>
@@ -334,6 +332,10 @@
     <Reference Include="WebMatrix.WebData, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\..\..\..\packages\Microsoft.AspNet.WebPages.WebData.2.0.20710.0\lib\net40\WebMatrix.WebData.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsAzure.IPAddressRules, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Shared\WindowsAzure.IPAddressRules.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -861,6 +863,10 @@
     <ProjectReference Include="..\..\..\Extensions\Workflow\OrderWorkflowActivities\OrderWorkflowActivities.csproj">
       <Project>{930184f0-9508-4c17-8aae-1141a00c43a5}</Project>
       <Name>OrderWorkflowActivities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Extensions\Workflow\OrderWorkflow\OrderWorkflow.csproj">
+      <Project>{196ff814-152f-416d-82ab-9b1df3323839}</Project>
+      <Name>OrderWorkflow</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

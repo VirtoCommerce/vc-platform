@@ -94,8 +94,8 @@ namespace VirtoCommerce.Foundation.Marketing.Model
 			promotions = promotions.Where(x => isValidCouponPredicate(x) || string.IsNullOrEmpty(x.CouponId) && string.IsNullOrEmpty(x.CouponSetId)).ToArray();
 		
 			//Filter promotion by usage limit
-			promotions = promotions.Where(x => x.TotalLimit <= 0 || _usageProvider.GetTotalUsageCount(x.PromotionId) > x.TotalLimit).ToArray();
-			promotions = promotions.Where(x => x.PerCustomerLimit <= 0 || _usageProvider.GetUsagePerCustomerCount(x.PromotionId, context.CustomerId) > x.PerCustomerLimit).ToArray();
+			promotions = promotions.Where(x => x.TotalLimit <= 0 || _usageProvider.GetTotalUsageCount(x.PromotionId) < x.TotalLimit).ToArray();
+			promotions = promotions.Where(x => x.PerCustomerLimit <= 0 || _usageProvider.GetUsagePerCustomerCount(x.PromotionId, context.CustomerId) < x.PerCustomerLimit).ToArray();
 			
 			//TODO: Filter by customer segments
 						

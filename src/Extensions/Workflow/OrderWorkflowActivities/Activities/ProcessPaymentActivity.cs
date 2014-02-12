@@ -61,7 +61,8 @@ namespace VirtoCommerce.OrderWorkflow
 			// Cycle through all Order Forms and check total, it should be equal to total of all payments
 			var paymentTotal = CurrentOrderGroup.OrderForms.SelectMany(orderForm => orderForm.Payments).Sum(payment => payment.Amount);
 
-			if (paymentTotal < CurrentOrderGroup.Total)
+            //Make sure the difference is not because of rounding and more then a cent
+			if (Math.Abs(paymentTotal - CurrentOrderGroup.Total) >= 0.01M)
 			{
                 Trace.TraceError(String.Format("Payment Total Price less that order total price."));
 				RegisterWarning(WorkflowMessageCodes.INVALID_PAYMENT_TOTAL,

@@ -1,7 +1,6 @@
 #region Imports
 
 using System;
-using System.Diagnostics;
 using Microsoft.Practices.ServiceLocation;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Caching.HttpCache;
@@ -18,11 +17,12 @@ using VirtoCommerce.Foundation.Customers.Factories;
 using VirtoCommerce.Foundation.Customers.Repositories;
 using VirtoCommerce.Foundation.Customers.Services;
 using VirtoCommerce.Foundation.Data.AppConfig;
-using VirtoCommerce.Foundation.Data.Asset;
 using VirtoCommerce.Foundation.Data.Catalogs;
 using VirtoCommerce.Foundation.Data.Customers;
 using VirtoCommerce.Foundation.Data.Importing;
 using VirtoCommerce.Foundation.Data.Infrastructure;
+using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
+using VirtoCommerce.Foundation.Data.Marketing;
 using VirtoCommerce.Foundation.Data.Orders;
 using VirtoCommerce.Foundation.Data.Search;
 using VirtoCommerce.Foundation.Data.Security;
@@ -42,6 +42,8 @@ using VirtoCommerce.Foundation.Frameworks.Workflow.Services;
 using VirtoCommerce.Foundation.Importing.Factories;
 using VirtoCommerce.Foundation.Importing.Repositories;
 using VirtoCommerce.Foundation.Importing.Services;
+using VirtoCommerce.Foundation.Marketing.Factories;
+using VirtoCommerce.Foundation.Marketing.Repositories;
 using VirtoCommerce.Foundation.Orders.Factories;
 using VirtoCommerce.Foundation.Orders.Repositories;
 using VirtoCommerce.Foundation.Orders.Services;
@@ -105,9 +107,19 @@ namespace VirtoCommerce.Scheduling.Azure
 			container.RegisterType<ILogOperationFactory, LogOperationFactory>();
 			container.RegisterType<IOperationLogRepository, OperationLogContext>();
 
+            #region Interceptors
+
+            // register interceptors
+            container.RegisterType<IInterceptor, AuditChangeInterceptor>("audit");
+            //container.RegisterType<IInterceptor, LogInterceptor>("log");
+            //container.RegisterType<IInterceptor, EntityEventInterceptor>("events");
+
+            #endregion
+
 			#region Marketing
-            //container.RegisterType<IMarketingRepository, EFMarketingRepository>();
-            //container.RegisterType<IMarketingEntityFactory, MarketingEntityFactory>();
+            //Needed for RemoveExpiredPromotionReservations SystemJob
+            container.RegisterType<IMarketingRepository, EFMarketingRepository>();
+            container.RegisterType<IMarketingEntityFactory, MarketingEntityFactory>();
             //container.RegisterType<IPromotionUsageProvider, PromotionUsageProvider>();
             //container.RegisterType<IPromotionEntryPopulate, PromotionEntryPopulate>();
             //container.RegisterType<IDynamicContentRepository, EFDynamicContentRepository>();

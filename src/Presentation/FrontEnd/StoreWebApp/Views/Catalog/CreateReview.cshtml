@@ -77,14 +77,9 @@
                     new SelectListItem {Text = "That's Good Stuff".Localize(), Value = "4"},
                     new SelectListItem {Text = "Perfect. It doesn't get any better".Localize(), Value = "5"}
                 }, (string)null)
-                <div id="rating2" data-rateit-backingfld="select#Rating" style="cursor: pointer;"></div>
+                <div id="rating2" data-rateit-backingfld="select#Rating" data-role="none" style="cursor: pointer;"></div>
                 <span id="ratingTip" style="padding-left: 20px;"></span>
                 <br />@Html.ValidationMessageFor(model => model.Rating)
-                @*		        <div class="ratings">
-		            <div class="rating">
-		                <div class="mask" style="width: 0%;"></div>
-		            </div>
-		        </div>*@
             </div>
             <div class="control-group">
                 @Html.LabelForEx(m => m.Reviewer.NickName)

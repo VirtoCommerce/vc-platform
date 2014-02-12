@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ServiceDefinition name="CommerceSite" xmlns="http://schemas.microsoft.com/ServiceHosting/2008/10/ServiceDefinition" schemaVersion="2013-10.2.2">
   <WebRole name="StoreWebApp" vmsize="Small">
+    <Runtime executionContext="elevated" />
     <Sites>
       <Site name="Web">
         <Bindings>
@@ -18,6 +19,8 @@
       <Setting name="VirtoCommerce" />
       <Setting name="SearchConnectionString" />
       <Setting name="DataConnectionString" />
+      <Setting name="IPAddressRules.Enabled" />
+      <Setting name="IPAddressRules.Settings" />
     </ConfigurationSettings>
     <LocalResources>
       <LocalStorage name="DiagnosticStore" sizeInMB="8192" cleanOnRoleRecycle="false" />

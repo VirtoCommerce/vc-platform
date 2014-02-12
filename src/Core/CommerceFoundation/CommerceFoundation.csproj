@@ -315,6 +315,7 @@
     <Compile Include="Importing\Model\Importers\TaxValueImporter.cs" />
     <Compile Include="Importing\Model\ImportProperty.cs" />
     <Compile Include="Importing\Services\ImportService.cs" />
+    <Compile Include="Marketing\Model\PromotionUsageStatus.cs" />
     <Compile Include="Marketing\Model\PromotionStatus.cs" />
     <Compile Include="Orders\CreatePaymentResult.cs" />
     <Compile Include="Orders\Model\Gateways\Gateway.cs" />
