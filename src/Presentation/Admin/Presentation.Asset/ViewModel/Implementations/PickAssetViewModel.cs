@@ -31,6 +31,7 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 		private IFileDialogService fileDialogService;
         private readonly IViewModelsFactory<IInputNameDialogViewModel> _inputNameVmFactory;
         public InteractionRequest<ConditionalConfirmation> InputNameDialogRequest { get; private set; }
+        public InteractionRequest<Notification> CommonNotifyRequest { get; private set; }
 		#endregion
 
 		#region ctor
@@ -43,6 +44,8 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 
 			AddressBarItems = new ObservableCollection<AssetEntitySearchViewModelBase>();
 			SelectedFolderItems = new ObservableCollection<AssetEntitySearchViewModelBase>();
+
+            CommonNotifyRequest = new InteractionRequest<Notification>();
 
 			OpenItemCommand = new DelegateCommand<object>(RaiseOpenItemRequest);
 			RefreshCommand = new DelegateCommand(LoadItems);
@@ -371,6 +374,12 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 
 		private void RaiseUploadRequest()
 		{
+            if (ParentItem.Parent == null)
+            {
+                CommonNotifyRequest.Raise(new Notification { Content = "Can not upload files to the root. Please select a folder first.", Title = "Error" });
+                return;
+            }
+
 			IEnumerable<FileType> fileTypes = new[] {
                 new FileType("all files", ".*"),
                 new FileType("jpg image", ".jpg"),
@@ -380,7 +389,7 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
                 new FileType("Report", ".rldc") 
             };
 
-			if (fileDialogService == null)
+		    if (fileDialogService == null)
 				fileDialogService = new System.Waf.VirtoCommerce.ManagementClient.Services.FileDialogService();
 
 			var result = fileDialogService.ShowOpenFileDialog(this, fileTypes);
