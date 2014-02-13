@@ -288,4 +288,7 @@
   <data name="ChooseSearchProvider" xml:space="preserve">
     <value>Search Provider</value>
   </data>
+  <data name="InvalidSearchScope" xml:space="preserve">
+    <value>Search scope cannot contain the following characters: {0}.</value>
+  </data>
 </root>

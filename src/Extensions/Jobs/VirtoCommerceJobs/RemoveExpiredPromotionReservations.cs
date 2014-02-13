@@ -35,7 +35,8 @@ namespace VirtoCommerce.Scheduling.Jobs
 		            {
 		                foreach (var item in expiredPromotions)
 		                {
-		                    item.Status = (int)PromotionUsageStatus.Expired;
+		                    //item.Status = (int)PromotionUsageStatus.Expired;
+                            _marketingRepository.Remove(item);
 		                }
 		                _marketingRepository.UnitOfWork.Commit();
 		            }
