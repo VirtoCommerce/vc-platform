@@ -56,7 +56,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.Model
                         new ConditionalConfirmation(() => itemVM.SelectedItem != null) { Content = itemVM, Title = "Select an Entry" },
                         (x) =>
                         {
-                            if (x.Confirmed)
+                            if (x.Confirmed && itemVM.SelectedItem != null)
                             {
                                 SelectedItemId = itemVM.SelectedItem.ItemId;
                                 _valueSelectorEl.InputDisplayName = itemVM.SelectedItem.Name;
@@ -64,7 +64,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.Model
                                 if (SelectedItemChanged != null)
                                     SelectedItemChanged(ItemSubtypeHelper.GetItemTypeInt(itemVM.SelectedItem));
 
-                                // fake asignment to change IsModified = true
+                                // fake assignment to change IsModified = true
 								((IDisplayTemplateViewModel)ExpressionViewModel).InnerItem.Name = ((IDisplayTemplateViewModel)ExpressionViewModel).InnerItem.Name;
                             }
                         });

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using Microsoft.Practices.Prism.Commands;
+using PropertyChanged;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Catalogs.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
@@ -14,13 +15,13 @@ using VirtoCommerce.ManagementClient.Core.Infrastructure.DataVirtualization;
 
 namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementations
 {
+	[ImplementPropertyChanged]
 	public class SearchItemViewModel : ViewModelBase, ISearchItemViewModel, IVirtualListLoader<Item>
 	{
 		private readonly IRepositoryFactory<ICatalogRepository> _catalogRepository;
 
 		public DelegateCommand ClearFiltersCommand { get; private set; }
 		public DelegateCommand SearchCommand { get; private set; }
-		public DelegateCommand<Item> SelectCommand { get; private set; }
 
 		public string SearchName { get; set; }
 		public string SearchCode { get; set; }
@@ -82,9 +83,8 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 			SearchCommand = new DelegateCommand(DoSearch);
 			ClearFiltersCommand = new DelegateCommand(DoClearFilters);
-			SelectCommand = new DelegateCommand<Item>(RaiseSelectInteractionRequest);
-
 			ListItemsSource = new VirtualList<Item>(this, 20, SynchronizationContext.Current);
+			SelectedItem = null;
 		}
 
 		#region ISearchItemViewModel Members
@@ -94,13 +94,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 		public Item SelectedItem { get; set; }
 
-
-		private ICollectionView _itemsSource;
-		public ICollectionView ListItemsSource
-		{
-			get { return _itemsSource; }
-			private set { _itemsSource = value; OnPropertyChanged(); }
-		}
+		public ICollectionView ListItemsSource { get; private set; }
 
 		#endregion
 
@@ -172,8 +166,6 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 							query = query.Where(c => c.CatalogId == SearchCatalogId);
 						}
 					}
-
-					//query = query.Where(x => x.CatalogId == SearchCatalogId);
 				}
 
 				overallCount = query.Count();
@@ -196,17 +188,8 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		private void DoClearFilters()
 		{
 			SearchName = SearchCode = SearchSKU = null;
-			OnSpecifiedPropertyChanged("SearchName");
-			OnSpecifiedPropertyChanged("SearchCode");
-			OnSpecifiedPropertyChanged("SearchSKU");
 		}
-
-		private void RaiseSelectInteractionRequest(Item item)
-		{
-			SelectedItem = item;
-			// OnCloseViewRequestedEvent(EventArgs.Empty);
-		}
-
+		
 		#endregion
 
 	}

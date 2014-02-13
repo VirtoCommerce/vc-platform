@@ -204,7 +204,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.DisplayTemplates.Im
 		protected override void OnViewModelPropertyChangedUI(object sender, PropertyChangedEventArgs e)
 		{
 			base.OnViewModelPropertyChangedUI(sender, e);
-			if (e != null && e.PropertyName == "TargetType" && !IsWizardMode)
+			if (e != null && e.PropertyName == "TargetType" && (this is IDisplayTemplateConditionsStepViewModel || !IsWizardMode))
 			{
 				((DisplayTemplateExpressionBlock)ExpressionElementBlock).ResetChildren();
 				((DisplayTemplateExpressionBlock)ExpressionElementBlock).InitializeAvailableExpressions(

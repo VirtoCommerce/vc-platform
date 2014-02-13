@@ -59,7 +59,7 @@
 			</Grid.RowDefinitions>
 			<core_controls:VirtualFolderItemList Grid.Row="1"  x:Name="ItemList" ItemsSource="{Binding ListItemsSource}"
 							Style="{StaticResource Virto_VirtualFolderItemList_Style}"
-							SelectedValuePath="Data" SelectionMode="Single" SelectedValue="{Binding SelectedItem,Mode=TwoWay}"
+							SelectedValuePath="Data" SelectionMode="Single" SelectedValue="{Binding SelectedItem}"
 							View="{StaticResource searchItemGridViewView}"
 							ItemContainerStyle="{StaticResource Virto_VirtualListView_WithoutMouseDoubleClick_ItemContainerStyle}" />
         </Grid>
