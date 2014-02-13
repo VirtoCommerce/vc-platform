@@ -1,8 +1,9 @@
-﻿using System;
-using System.IO;
-using System.Threading;
-using Microsoft.Practices.Prism.Commands;
+﻿using Microsoft.Practices.Prism.Commands;
 using Microsoft.Web.Administration;
+using System;
+using System.IO;
+using System.Linq;
+using System.Threading;
 using VirtoCommerce.ConfigurationUtility.Main.Infrastructure;
 using VirtoCommerce.ConfigurationUtility.Main.Properties;
 using VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Interfaces;
@@ -12,18 +13,18 @@ using VirtoCommerce.PowerShell.FrontEndSetup;
 
 namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementations
 {
-	public class ProjectLocationStepViewModel : WizardStepViewModelBase, IProjectLocationStepViewModel
-	{
-		#region Dependencies
-		private readonly IConfirmationStepViewModel _confirmationViewModel;
-		private readonly ISearchSettingsStepViewModel _searchViewModel;
-		private readonly IDatabaseSettingsStepViewModel _databaseViewModel;
+    public class ProjectLocationStepViewModel : WizardStepViewModelBase, IProjectLocationStepViewModel
+    {
+        #region Dependencies
+        private readonly IConfirmationStepViewModel _confirmationViewModel;
+        private readonly ISearchSettingsStepViewModel _searchViewModel;
+        private readonly IDatabaseSettingsStepViewModel _databaseViewModel;
 
-		#endregion
+        #endregion
 
-		private const string CommerceProjectName = "SampleProject";
-		private const string CommerceProjectPath = "Virto Commerce 1.8\\Projects";
-		#region Constructors
+        private const string CommerceProjectName = "SampleProject";
+        private const string CommerceProjectPath = "Virto Commerce 1.8\\Projects";
+        #region Constructors
 
 #if DESIGN // TODO: Replace with Debug compilation condition and IsInDesignMode runtime condition
 		public ProjectLocationStepViewModel()
@@ -37,269 +38,270 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 #endif
 
 
-		public ProjectLocationStepViewModel(IConfirmationStepViewModel confirmationViewModel, ISearchSettingsStepViewModel searchViewModel, IDatabaseSettingsStepViewModel databaseViewModel)
-		{
-			_confirmationViewModel = confirmationViewModel;
-			_searchViewModel = searchViewModel;
-			_databaseViewModel = databaseViewModel;
+        public ProjectLocationStepViewModel(IConfirmationStepViewModel confirmationViewModel, ISearchSettingsStepViewModel searchViewModel, IDatabaseSettingsStepViewModel databaseViewModel)
+        {
+            _confirmationViewModel = confirmationViewModel;
+            _searchViewModel = searchViewModel;
+            _databaseViewModel = databaseViewModel;
 
-			Initialize();
-		}
+            Initialize();
+        }
 
-		private void Initialize()
-		{
-			ProjectPath = string.Format("{0}{1}{2}", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Path.DirectorySeparatorChar, CommerceDirectoryName);
-			ProjectName = CommerceProjectName;
+        private void Initialize()
+        {
+            ProjectPath = string.Format("{0}{1}{2}", Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Path.DirectorySeparatorChar, CommerceDirectoryName);
+            ProjectName = CommerceProjectName;
 
-			BrowseCommand = new DelegateCommand<object>(x => Browse(), x => true);
-		}
+            BrowseCommand = new DelegateCommand<object>(x => Browse(), x => true);
+        }
 
-		#endregion
+        #endregion
 
-		public string CommerceDirectoryName
-		{
-			get { return string.Format(CommerceProjectPath); }
-		}
+        public string CommerceDirectoryName
+        {
+            get { return string.Format(CommerceProjectPath); }
+        }
 
-		#region Overrides of WizardStepViewModelBase
+        #region Overrides of WizardStepViewModelBase
 
-		public override string Description
-		{
-			get { return Resources.ProjectLocation; }
-		}
+        public override string Description
+        {
+            get { return Resources.ProjectLocation; }
+        }
 
-		public override bool IsValid
-		{
-			get
-			{
-				return ValidateProjectPath() && string.IsNullOrEmpty(ValidateProjectName());
-			}
-		}
+        public override bool IsValid
+        {
+            get
+            {
+                return ValidateProjectPath() && string.IsNullOrEmpty(ValidateProjectName());
+            }
+        }
 
-		public override bool IsLast
-		{
-			get { return false; }
-		}
+        public override bool IsLast
+        {
+            get { return false; }
+        }
 
-		#endregion
+        #endregion
 
-		#region Implementation of IConfigureStep
+        #region Implementation of IConfigureStep
 
-		public string Action
-		{
-			get { return Resources.ProjectLocationAction; }
-		}
+        public string Action
+        {
+            get { return Resources.ProjectLocationAction; }
+        }
 
-		public string Message { get; private set; }
+        public string Message { get; private set; }
 
-		public void Configure(CancellationToken ct)
-		{
-			ct.ThrowIfCancellationRequested();
+        public void Configure(CancellationToken ct)
+        {
+            ct.ThrowIfCancellationRequested();
 
-			Result = null; // sets result to InProgress
-			try
-			{
-				var contentFolder =
-					Path.GetFullPath(Path.Combine(Path.GetDirectoryName(typeof(ConfigurationWizardViewModel).Assembly.Location),
-												  @"..\Resources\FrontEnd"));
+            Result = null; // sets result to InProgress
+            try
+            {
+                var contentFolder =
+                    Path.GetFullPath(Path.Combine(Path.GetDirectoryName(typeof(ConfigurationWizardViewModel).Assembly.Location),
+                                                  @"..\Resources\FrontEnd"));
 
-				// Copy template to project location
-				DirectoryExtensions.Copy(new DirectoryInfo(contentFolder), new DirectoryInfo(ProjectLocation));
-				ct.ThrowIfCancellationRequested();
+                // Copy template to project location
+                DirectoryExtensions.Copy(new DirectoryInfo(contentFolder), new DirectoryInfo(ProjectLocation));
+                ct.ThrowIfCancellationRequested();
 
-				// create initial folders: import, reports
-				Directory.CreateDirectory(Path.Combine(ProjectLocation, "App_Data\\Virto\\Storage\\import"));
-				Directory.CreateDirectory(Path.Combine(ProjectLocation, "App_Data\\Virto\\Storage\\reports"));
-				
-				if (_databaseViewModel.InstallSamples)
-				{
-					var catalogImagesFolder =
-						Path.GetFullPath(Path.Combine(Path.GetDirectoryName(typeof(ConfigurationWizardViewModel).Assembly.Location),
-													  @"..\Resources\Catalog"));
+                // create initial folders: import, reports
+                Directory.CreateDirectory(Path.Combine(ProjectLocation, "App_Data\\Virto\\Storage\\import"));
+                Directory.CreateDirectory(Path.Combine(ProjectLocation, "App_Data\\Virto\\Storage\\reports"));
 
-					// Copy test data images
-					DirectoryExtensions.Copy(new DirectoryInfo(catalogImagesFolder),
-											 new DirectoryInfo(string.Format("{0}\\App_Data\\Virto\\Storage\\Catalog", ProjectLocation)));
-					ct.ThrowIfCancellationRequested();
-				}
+                if (_databaseViewModel.InstallSamples)
+                {
+                    var catalogImagesFolder =
+                        Path.GetFullPath(Path.Combine(Path.GetDirectoryName(typeof(ConfigurationWizardViewModel).Assembly.Location),
+                                                      @"..\Resources\Catalog"));
 
-				// Fix connection strings
-				new InitializeFrontEndConfigs().Initialize(ProjectLocation, _confirmationViewModel.DatabaseConnectionString,
-														   _confirmationViewModel.SearchConnection.ToString());
+                    // Copy test data images
+                    DirectoryExtensions.Copy(new DirectoryInfo(catalogImagesFolder),
+                                             new DirectoryInfo(string.Format("{0}\\App_Data\\Virto\\Storage\\Catalog", ProjectLocation)));
+                    ct.ThrowIfCancellationRequested();
+                }
 
-				// Create desktop shortcut
+                // Fix connection strings
+                new InitializeFrontEndConfigs().Initialize(ProjectLocation, _confirmationViewModel.DatabaseConnectionString,
+                                                           _confirmationViewModel.SearchConnection.ToString());
 
-				Result = OperationResult.Successful;
-			}
-			catch (OperationCanceledException)
-			{
-				throw;
-			}
-			catch (Exception e)
-			{
-				Message = string.Format("{0} {1}: {2}", Resources.ProjectLocationAction, Resources.Failed, e.ExpandExceptionMessage());
+                // Create desktop shortcut
 
-				Result = OperationResult.Failed;
-				throw;
-			}
-		}
+                Result = OperationResult.Successful;
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
+                Message = string.Format("{0} {1}: {2}", Resources.ProjectLocationAction, Resources.Failed, e.ExpandExceptionMessage());
 
-		public void Cancel()
-		{
-			Result = OperationResult.Cancelling;
+                Result = OperationResult.Failed;
+                throw;
+            }
+        }
 
-			try
-			{
-				if (Directory.Exists(ProjectLocation))
-				{
-					Directory.Delete(ProjectLocation, true);
-				}
-				Result = OperationResult.Cancelled;
-			}
-			catch (Exception e)
-			{
-				Message = string.Format("{0} {1}: {2}", Resources.ProjectLocationAction, Resources.Failed, e.ExpandExceptionMessage());
-				Result = OperationResult.Failed;
-			}
-		}
+        public void Cancel()
+        {
+            Result = OperationResult.Cancelling;
 
-		public OperationResult? Result
-		{
-			get { return _result; }
-			private set
-			{
-				_result = value;
-				OnUIThread(() => _result.UpdateState(Configuration, Resources.ProjectLocationAction));
-			}
-		}
+            try
+            {
+                if (Directory.Exists(ProjectLocation))
+                {
+                    Directory.Delete(ProjectLocation, true);
+                }
+                Result = OperationResult.Cancelled;
+            }
+            catch (Exception e)
+            {
+                Message = string.Format("{0} {1}: {2}", Resources.ProjectLocationAction, Resources.Failed, e.ExpandExceptionMessage());
+                Result = OperationResult.Failed;
+            }
+        }
 
-		private OperationResult? _result;
+        public OperationResult? Result
+        {
+            get { return _result; }
+            private set
+            {
+                _result = value;
+                OnUIThread(() => _result.UpdateState(Configuration, Resources.ProjectLocationAction));
+            }
+        }
 
-		#endregion
+        private OperationResult? _result;
 
-		#region Implementation of IProjectLocationStepViewModel
+        #endregion
 
-		public IConfigurationViewModel Configuration { get; set; }
+        #region Implementation of IProjectLocationStepViewModel
 
-		public string ProjectLocation
-		{
-			get
-			{
-				var _projectLocation = String.Format("{0}{1}{2}", ProjectPath, Path.DirectorySeparatorChar, ProjectName);
-				return _projectLocation;
-			}
-		}
+        public IConfigurationViewModel Configuration { get; set; }
 
-		public string ProjectName
-		{
-			get { return _projectName; }
-			set
-			{
-				_projectName = value;
-				_searchViewModel.IndexScope = value;
-				_databaseViewModel.DatabaseName = value;
-				_confirmationViewModel.ProjectLocation = ProjectLocation;
-				OnPropertyChanged();
-				OnPropertyChanged("ProjectLocation");
-				OnIsValidChanged();
-			}
-		}
+        public string ProjectLocation
+        {
+            get
+            {
+                return string.Format("{0}{1}{2}", ProjectPath, Path.DirectorySeparatorChar, ProjectName);
+            }
+        }
 
-		private string _projectName;
+        public string ProjectName
+        {
+            get { return _projectName; }
+            set
+            {
+                _projectName = value;
+                _searchViewModel.IndexScope = value;
+                _databaseViewModel.DatabaseName = value;
+                _confirmationViewModel.ProjectLocation = ProjectLocation;
+                OnPropertyChanged();
+                OnPropertyChanged("ProjectLocation");
+                OnIsValidChanged();
+            }
+        }
 
-		public string ProjectPath
-		{
-			get { return _projectPath; }
-			set
-			{
-				_projectPath = value;
-				_confirmationViewModel.ProjectLocation = ProjectLocation;
-				OnPropertyChanged();
-				OnPropertyChanged("ProjectLocation");
-				OnPropertyChanged("ProjectName");
-				OnIsValidChanged();
-			}
-		}
+        private string _projectName;
 
-		private string _projectPath;
+        public string ProjectPath
+        {
+            get { return _projectPath; }
+            set
+            {
+                _projectPath = value;
+                _confirmationViewModel.ProjectLocation = ProjectLocation;
+                OnPropertyChanged();
+                OnPropertyChanged("ProjectLocation");
+                OnPropertyChanged("ProjectName");
+                OnIsValidChanged();
+            }
+        }
 
-		public DelegateCommand<object> BrowseCommand { get; private set; }
+        private string _projectPath;
 
-		private void Browse()
-		{
-			var browserDialog = new System.Windows.Forms.FolderBrowserDialog
-				{
-					RootFolder = Environment.SpecialFolder.MyComputer,
-					SelectedPath = ProjectLocation,
-					ShowNewFolderButton = true
-				};
-			var result = browserDialog.ShowDialog();
+        public DelegateCommand<object> BrowseCommand { get; private set; }
 
-			if (result == System.Windows.Forms.DialogResult.OK)
-			{
-				ProjectPath = browserDialog.SelectedPath;
-			}
-		}
+        private void Browse()
+        {
+            var browserDialog = new System.Windows.Forms.FolderBrowserDialog
+                {
+                    RootFolder = Environment.SpecialFolder.MyComputer,
+                    SelectedPath = ProjectLocation,
+                    ShowNewFolderButton = true
+                };
+            var result = browserDialog.ShowDialog();
 
-		#endregion
+            if (result == System.Windows.Forms.DialogResult.OK)
+            {
+                ProjectPath = browserDialog.SelectedPath;
+            }
+        }
 
-		#region Implementation of IDataErrorInfo
+        #endregion
 
-		public string this[string name]
-		{
-			get
-			{
-				string result = null;
+        #region Implementation of IDataErrorInfo
 
-				if (name == "ProjectName")
-				{
-					result = ValidateProjectName();
-				}
-				else if (name == "ProjectPath" && !ValidateProjectPath())
-				{
-					result = Resources.ProjectLocationError;
-				}
+        public string this[string name]
+        {
+            get
+            {
+                string result = null;
 
-				return result;
-			}
-		}
+                if (name == "ProjectName")
+                {
+                    result = ValidateProjectName();
+                }
+                else if (name == "ProjectPath" && !ValidateProjectPath())
+                {
+                    result = Resources.ProjectLocationError;
+                }
 
-		public string Error
-		{
-			get { return null; }
-		}
+                return result;
+            }
+        }
 
-		#endregion
+        public string Error
+        {
+            get { return null; }
+        }
 
-		readonly char[] invalidNameCharacters = SiteCollection.InvalidSiteNameCharacters();
+        #endregion
 
-		private string ValidateProjectName()
-		{
-			string result = null;
-			if (ProjectName.IndexOfAny(invalidNameCharacters) > -1)
-			{
-				result = string.Format(Resources.InvalidProjectName, string.Join(" ", invalidNameCharacters));
-			}
-			else if (Directory.Exists(ProjectLocation))
-			{
-				result = string.Format(Resources.ProjectAlreadyExists, ProjectName);
-			}
+        readonly static char[] invalidNameCharactersVisible =
+            SiteCollection.InvalidSiteNameCharacters().Union(@"~`!@#$%^&*()+=/?[]{}.,\|".ToArray()).ToArray();
+        readonly static char[] invalidCharactersAll = Path.GetInvalidPathChars().Union(invalidNameCharactersVisible).ToArray();
 
-			return result;
-		}
+        private string ValidateProjectName()
+        {
+            string result = null;
+            if (ProjectName.IndexOfAny(invalidCharactersAll) > -1)
+            {
+                result = string.Format(Resources.InvalidProjectName, string.Join(" ", invalidNameCharactersVisible));
+            }
+            else if (Directory.Exists(ProjectLocation))
+            {
+                result = string.Format(Resources.ProjectAlreadyExists, ProjectName);
+            }
 
-		private bool ValidateProjectPath()
-		{
-			try
-			{
-				//checks if the path is valid
-				new FileInfo(ProjectLocation);
-				return true;
-			}
-			catch //Specified error could be passed according to Exception type
-			{
-			}
-			return false;
-		}
-	}
+            return result;
+        }
+
+        private bool ValidateProjectPath()
+        {
+            try
+            {
+                //checks if the path is valid
+                new FileInfo(ProjectLocation);
+                return true;
+            }
+            catch //Specified error could be passed according to Exception type
+            {
+            }
+            return false;
+        }
+    }
 }

@@ -313,6 +313,15 @@ namespace VirtoCommerce.ConfigurationUtility.Main.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Search scope cannot contain the following characters: {0}..
+        /// </summary>
+        public static string InvalidSearchScope {
+            get {
+                return ResourceManager.GetString("InvalidSearchScope", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid SQL Server authentication login.
         /// </summary>
         public static string InvalidSqlServerAuthenticationLogin {
