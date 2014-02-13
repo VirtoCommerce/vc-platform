@@ -123,6 +123,12 @@ namespace VirtoCommerce.Web.Client.Helpers
                 //Default language failover scenario
                 var store = StoreHelper.StoreClient.GetCurrentStore();
 
+                //Current store can be null when called from StoreHttpModule and store is not yet initialzed
+                if (store == null && type == SeoUrlKeywordTypes.Store)
+                {
+                    store = StoreHelper.StoreClient.GetStoreById(seoKeywords[0].KeywordValue);
+                }
+
                 if (store != null && !store.DefaultLanguage.Equals(language, StringComparison.OrdinalIgnoreCase))
                 {
                     seoKeyword = seoKeywords.FirstOrDefault(x => x.Language.Equals(store.DefaultLanguage, StringComparison.InvariantCultureIgnoreCase));

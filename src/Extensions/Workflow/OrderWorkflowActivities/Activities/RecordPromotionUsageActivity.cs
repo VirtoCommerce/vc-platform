@@ -57,34 +57,26 @@ namespace VirtoCommerce.OrderWorkflow
             if (CurrentOrderGroup == null || CurrentOrderGroup.OrderForms.Count == 0)
                 return;
 
-            var currentUsages = MarketingRepository.PromotionUsages.Where(p => p.OrderGroupId == CurrentOrderGroup.OrderGroupId).ToList();
+            //Remove usages for current orderGroup
+            var usages = MarketingRepository.PromotionUsages.Where(x => x.OrderGroupId == CurrentOrderGroup.OrderGroupId && x.Status != (int)PromotionUsageStatus.Used).ToList();
 
-            var usedPromotionIds = new List<string>();
+            foreach (var promotionUsage in usages)
+            {
+                MarketingRepository.Remove(promotionUsage);
+            }
+
+            var currentUsages = new List<PromotionUsage>();
 
             foreach (var orderForm in CurrentOrderGroup.OrderForms)
             {
                 //create records for order form discounts
-                usedPromotionIds.AddRange(orderForm.Discounts
-                    .Select(formDiscount => UpdatePromotionUsage(currentUsages, formDiscount))
-                    .Select(usage => usage.PromotionId));
+                orderForm.Discounts.ToList().ForEach(formDiscount => UpdatePromotionUsage(currentUsages, formDiscount));
 
                 //create records for line item discounts
-                usedPromotionIds.AddRange(orderForm.LineItems.SelectMany(x => x.Discounts)
-                    .Select(lineItemDiscount => UpdatePromotionUsage(currentUsages, lineItemDiscount))
-                    .Select(usage => usage.PromotionId));
+                orderForm.LineItems.SelectMany(x => x.Discounts).ToList().ForEach(lineItemDiscount => UpdatePromotionUsage(currentUsages, lineItemDiscount));
 
                 //create records for shipment discounts
-                usedPromotionIds.AddRange(orderForm.Shipments.SelectMany(x => x.Discounts)
-                   .Select(shipmentDiscount => UpdatePromotionUsage(currentUsages, shipmentDiscount))
-                   .Select(usage => usage.PromotionId));
-            }
-
-            usedPromotionIds = usedPromotionIds.Distinct().ToList();
-
-            //Expire all unused usages (they could be removed from cart)
-            foreach (var unusedUsage in currentUsages.Where(x => !usedPromotionIds.Contains(x.PromotionId)))
-            {
-                unusedUsage.Status = (int)PromotionUsageStatus.Expired;
+                orderForm.Shipments.SelectMany(x => x.Discounts).ToList().ForEach(shipmentDiscount => UpdatePromotionUsage(currentUsages, shipmentDiscount));
             }
 
             MarketingRepository.UnitOfWork.Commit();
