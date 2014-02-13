@@ -229,19 +229,29 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 					items.Add(new RootSearchViewModel(ParentItem.Parent));
 				}
 
-				switch (ParentItem.Type)
-				{
-					case AssetType.Folder:
-					case AssetType.Container:
-						items.AddRange(_assetRepository.GetChildrenFolders(ParentItem.InnerItemID).Select(x => new FolderSearchViewModel(x, ParentItem)));
-						items.AddRange(_assetRepository.GetChildrenFolderItems(ParentItem.InnerItemID).Select(x => new FileSearchViewModel(x)));
-						break;
-					case AssetType.Parent:
-						items.AddRange(_assetRepository.GetChildrenFolders(ParentItem.InnerItemID).Select(x => new FolderSearchViewModel(x, ParentItem)));
-						break;
-				}
 
-				OnUIThread(() =>
+                switch (ParentItem.Type)
+                {
+                    case AssetType.Folder:
+                    case AssetType.Container:
+                        items.AddRange(
+                            _assetRepository.GetChildrenFolders(ParentItem.InnerItemID)
+                                .Select(x => new FolderSearchViewModel(x, ParentItem)));
+                        if (ParentItem.InnerItemID != null)
+                        {
+                            items.AddRange(
+                                _assetRepository.GetChildrenFolderItems(ParentItem.InnerItemID)
+                                    .Select(x => new FileSearchViewModel(x)));
+                        }
+                        break;
+                    case AssetType.Parent:
+                        items.AddRange(
+                            _assetRepository.GetChildrenFolders(ParentItem.InnerItemID)
+                                .Select(x => new FolderSearchViewModel(x, ParentItem)));
+                        break;
+                }
+
+                OnUIThread(() =>
 				{
 					SelectedFolderItems.SetItems(items);
 
