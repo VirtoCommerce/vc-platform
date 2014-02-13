@@ -54,6 +54,7 @@ namespace VirtoCommerce.PowerShell.Stores
 
 			store.Languages.Add(new StoreLanguage { StoreId = store.StoreId, LanguageCode = "en-US" });
 			store.Languages.Add(new StoreLanguage { StoreId = store.StoreId, LanguageCode = "ru-RU" });
+			store.Languages.Add(new StoreLanguage { StoreId = store.StoreId, LanguageCode = "de-DE" });
 			store.Currencies.Add(new StoreCurrency { StoreId = store.StoreId, CurrencyCode = "USD" });
 			store.Currencies.Add(new StoreCurrency { StoreId = store.StoreId, CurrencyCode = "EUR" });
 			store.DefaultLanguage = "en-US";
