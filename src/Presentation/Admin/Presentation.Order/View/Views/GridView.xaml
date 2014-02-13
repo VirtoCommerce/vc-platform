@@ -17,15 +17,15 @@
                                                    ImageSource="{Binding Data.IconSource}"/>
             <Border HorizontalAlignment="Stretch" Margin="8,2,0,0" >
                 <DockPanel Height="Auto" Width="Auto">
-                    <TextBlock DockPanel.Dock="Top" FontWeight="DemiBold" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}"  Foreground="{DynamicResource Virto_HighLightText_Foreground_Brush}">
-                        <TextBlock.Text>
+                    <TextBox DockPanel.Dock="Top" FontWeight="DemiBold" Style="{StaticResource Virto_TextBox_VirtualListView_Style}" Foreground="{DynamicResource Virto_HighLightText_Foreground_Brush}">
+                        <TextBox.Text>
                             <MultiBinding StringFormat="{}{0} by {1}">
                                 <Binding Path="Data.InnerItem.TrackingNumber" />
                                 <Binding Path="Data.InnerItem.CustomerName" />
                             </MultiBinding>
-                        </TextBlock.Text>
-                    </TextBlock>
-                    <TextBlock DockPanel.Dock="Top" HorizontalAlignment="Left" Text="{Binding Data.InnerItem.Status}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
+                        </TextBox.Text>
+                    </TextBox>
+                    <TextBlock DockPanel.Dock="Top" Text="{Binding Data.InnerItem.Status}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
                 </DockPanel>
             </Border>
         </DockPanel>

@@ -17,709 +17,709 @@
 	d:DataContext="{d:DesignInstance implementations:OrderViewModel, IsDesignTimeCreatable=False}"
 	Style="{DynamicResource Virto_Window_Style}">
 
-	<UserControl.Resources>
-		<ResourceDictionary>
-			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Order;component/Resources/OrdersResourceDictionary.xaml"/>
-				<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Order;component/View/Views/GridView.xaml"/>
-				<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/DetailViewTheme/VirtoCommerceDetailTheme.xaml"/>
-			</ResourceDictionary.MergedDictionaries>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Order;component/Resources/OrdersResourceDictionary.xaml"/>
+                <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Order;component/View/Views/GridView.xaml"/>
+                <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/DetailViewTheme/VirtoCommerceDetailTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
 
-			<converters:OrderAddressConverter x:Key="OrderAddressConverter"/>
-			<!--<converters:AddressConverter x:Key="AddressConverter"/>-->
-			<!--<Presentation_Core_Infrastructure_Converters:CurrencyConverter x:Key="CurrencyConverter"/>-->
-			<Presentation_Core_Infrastructure_Converters:MathConverter x:Key="MathConverter"/>
+            <converters:OrderAddressConverter x:Key="OrderAddressConverter"/>
+            <!--<converters:AddressConverter x:Key="AddressConverter"/>-->
+            <!--<Presentation_Core_Infrastructure_Converters:CurrencyConverter x:Key="CurrencyConverter"/>-->
+            <Presentation_Core_Infrastructure_Converters:MathConverter x:Key="MathConverter"/>
 
-		</ResourceDictionary>
-	</UserControl.Resources>
+        </ResourceDictionary>
+    </UserControl.Resources>
 
-	<i:Interaction.Triggers>
+    <i:Interaction.Triggers>
 
-		<prism:InteractionRequestTrigger SourceObject="{Binding CommonOrderCommandConfirmRequest, Mode=OneWay}">
-			<interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:ConfirmationLocalModalInteractionDialog}" />
-		</prism:InteractionRequestTrigger>
+        <prism:InteractionRequestTrigger SourceObject="{Binding CommonOrderCommandConfirmRequest, Mode=OneWay}">
+            <interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:ConfirmationLocalModalInteractionDialog}" />
+        </prism:InteractionRequestTrigger>
 
-		<prism:InteractionRequestTrigger SourceObject="{Binding DisableableCommandConfirmRequest, Mode=OneWay}">
-			<interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:DisableableLocalModalInteractionDialog}" />
-		</prism:InteractionRequestTrigger>
+        <prism:InteractionRequestTrigger SourceObject="{Binding DisableableCommandConfirmRequest, Mode=OneWay}">
+            <interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:DisableableLocalModalInteractionDialog}" />
+        </prism:InteractionRequestTrigger>
 
-		<prism:InteractionRequestTrigger SourceObject="{Binding CommonOrderWizardDialogInteractionRequest, Mode=OneWay}">
-			<interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:WizardDialog}" />
-		</prism:InteractionRequestTrigger>
+        <prism:InteractionRequestTrigger SourceObject="{Binding CommonOrderWizardDialogInteractionRequest, Mode=OneWay}">
+            <interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:WizardDialog}" />
+        </prism:InteractionRequestTrigger>
 
-	</i:Interaction.Triggers>
+    </i:Interaction.Triggers>
 
-	<TabControl x:Name="tabControl" Tag="Order Details" Style="{DynamicResource Virto_TabControlHorizontal_Style}" SelectedIndex="{Binding SelectedTabIndex}">
-		<!--SUMMARY-->
-		<TabItem x:Name="tabItemSummary" Header="Summary" d:LayoutOverrides="Height" >
+    <TabControl x:Name="tabControl" Tag="Order Details" Style="{DynamicResource Virto_TabControlHorizontal_Style}" SelectedIndex="{Binding SelectedTabIndex}">
+        <!--SUMMARY-->
+        <TabItem x:Name="tabItemSummary" Header="Summary" d:LayoutOverrides="Height" >
 
-			<ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Padding="0,0,15,0">
-				<Grid Margin="5" Width="800" HorizontalAlignment="Left" VerticalAlignment="Top">
-					<Grid.Resources>
-						<Style TargetType="Button" BasedOn="{StaticResource Virto_Button_Secondary_Style}">
-							<Setter Property="Margin" Value="2,4,2,0"></Setter>
-							<Setter Property="Width" Value="94"/>
-						</Style>
-					</Grid.Resources>
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="*"/>
-						<ColumnDefinition Width="*"/>
-					</Grid.ColumnDefinitions>
-					<Grid.RowDefinitions>
-						<RowDefinition Height="*"/>
-						<RowDefinition Height="*"/>
-					</Grid.RowDefinitions>
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" Padding="0,0,15,0">
+                <Grid Margin="5" Width="800" HorizontalAlignment="Left" VerticalAlignment="Top">
+                    <Grid.Resources>
+                        <Style TargetType="Button" BasedOn="{StaticResource Virto_Button_Secondary_Style}">
+                            <Setter Property="Margin" Value="2,4,2,0"></Setter>
+                            <Setter Property="Width" Value="94"/>
+                        </Style>
+                    </Grid.Resources>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
 
-					<HeaderedContentControl Header="Overview" Style="{DynamicResource Virto_HeaderedContentBlock_Style}" Grid.ColumnSpan="2" Padding="5">
-						<Grid DataContext="{Binding InnerItem}">
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition/>
-								<ColumnDefinition Width="Auto"/>
-							</Grid.ColumnDefinitions>
+                    <HeaderedContentControl Header="Overview" Style="{DynamicResource Virto_HeaderedContentBlock_Style}" Grid.ColumnSpan="2" Padding="5">
+                        <Grid DataContext="{Binding InnerItem}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
 
-							<Grid Grid.Column="1" Margin="3,0,0,0" DataContext="{Binding Path=DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}">
-								<Grid.RowDefinitions>
-									<RowDefinition Height="Auto"/>
-									<RowDefinition Height="Auto"/>
-									<RowDefinition Height="Auto"/>
-									<RowDefinition Height="Auto"/>
-									<RowDefinition Height="Auto"/>
-								</Grid.RowDefinitions>
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition/>
-									<ColumnDefinition/>
-								</Grid.ColumnDefinitions>
+                            <Grid Grid.Column="1" Margin="3,0,0,0" DataContext="{Binding Path=DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
 
-								<Button Grid.Row="0" Grid.Column="0" Command="{Binding HoldOrderCommand}" Content="Place 'on hold'" ToolTip="Hold Order"/>
-								<Button Grid.Row="1" Grid.Column="0"  Command="{Binding CancelOrderCommand}" Content="Cancel order" ToolTip="Cancel Order"/>
-								<Button Grid.Row="2" Grid.Column="0" Command="{Binding ReleaseHoldCommand}" Content="Release hold" ToolTip="Release Hold"/>
-								<Button Grid.Row="3" Grid.Column="0" Command="{Binding CreateRmaRequestCommand}" Content="Create return" ToolTip="Create Return"
+                                <Button Grid.Row="0" Grid.Column="0" Command="{Binding HoldOrderCommand}" Content="Place 'on hold'" ToolTip="Hold Order"/>
+                                <Button Grid.Row="1" Grid.Column="0"  Command="{Binding CancelOrderCommand}" Content="Cancel order" ToolTip="Cancel Order"/>
+                                <Button Grid.Row="2" Grid.Column="0" Command="{Binding ReleaseHoldCommand}" Content="Release hold" ToolTip="Release Hold"/>
+                                <Button Grid.Row="3" Grid.Column="0" Command="{Binding CreateRmaRequestCommand}" Content="Create return" ToolTip="Create Return"
 																	  inf_behavior:PermissionBehavior.PermissionId="{x:Static securityModule:PredefinedPermissions.OrdersCreateOrderReturns}"
 																	  inf_behavior:PermissionBehavior.DenyVisibility="Collapsed"/>
-								<Button Grid.Row="3" Grid.Column="1" Command="{Binding CreateExchangeCommand}" Content="Create exchange" ToolTip="Create Exchange" Width="auto"
+                                <Button Grid.Row="3" Grid.Column="1" Command="{Binding CreateExchangeCommand}" Content="Create exchange" ToolTip="Create Exchange" Width="auto"
 																	  inf_behavior:PermissionBehavior.PermissionId="{x:Static securityModule:PredefinedPermissions.OrdersCreateOrderExchange}"
 																	  inf_behavior:PermissionBehavior.DenyVisibility="Collapsed"/>
-								<Button Grid.Row="4" Command="{Binding CreateRefundCommand}" Content="Refund" ToolTip="Make Refund"
+                                <Button Grid.Row="4" Command="{Binding CreateRefundCommand}" Content="Refund" ToolTip="Make Refund"
 																	  inf_behavior:PermissionBehavior.PermissionId="{x:Static securityModule:PredefinedPermissions.OrdersIssueOrderReturns}"
 																	  inf_behavior:PermissionBehavior.DenyVisibility="Collapsed"/>
 
-							</Grid>
+                            </Grid>
 
-							<Grid Grid.Column="0">
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="Auto"/>
-									<ColumnDefinition Width="10"/>
-									<ColumnDefinition/>
-								</Grid.ColumnDefinitions>
-								<Grid.RowDefinitions>
-									<RowDefinition Height="Auto"/>
-									<RowDefinition Height="Auto"/>
-									<RowDefinition Height="Auto"/>
-									<RowDefinition Height="Auto"/>
-									<RowDefinition Height="Auto"/>
-									<RowDefinition Height="Auto"/>
-									<RowDefinition Height="Auto"/>
-								</Grid.RowDefinitions>
+                            <Grid Grid.Column="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="10"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
 
-								<TextBlock Grid.Row="0" Grid.Column="0" Text="Status:" FontWeight="DemiBold" />
-								<TextBlock Grid.Row="1" Grid.Column="0" Text="Order #:" FontWeight="DemiBold"/>
-								<TextBlock Grid.Row="2" Grid.Column="0" Text="Store:"  FontWeight="DemiBold"/>
-								<TextBlock Grid.Row="3" Grid.Column="0" Text="Created:" FontWeight="DemiBold"/>
-								<TextBlock Grid.Row="4" Grid.Column="0" Text="Currency:" FontWeight="DemiBold"/>
-								<TextBlock Grid.Row="5" Grid.Column="0" Text="Order Total:" FontWeight="DemiBold"/>
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Status:" FontWeight="DemiBold" />
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Order #:" FontWeight="DemiBold"/>
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Store:"  FontWeight="DemiBold"/>
+                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Created:" FontWeight="DemiBold"/>
+                                <TextBlock Grid.Row="4" Grid.Column="0" Text="Currency:" FontWeight="DemiBold"/>
+                                <TextBlock Grid.Row="5" Grid.Column="0" Text="Order Total:" FontWeight="DemiBold"/>
 
-								<TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding Status}"/>
-								<TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding TrackingNumber}"/>
-								<TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding StoreId}" />
-								<TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding Created}"/>
-								<TextBlock Grid.Row="4" Grid.Column="2" Text="{Binding BillingCurrency}"/>
-								<TextBlock Grid.Row="5" Grid.Column="2" Text="{Binding Total, Converter={StaticResource CurrencyConverter}}" />
-							</Grid>
+                                <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding Status}"/>
+                                <TextBox   Grid.Row="1" Grid.Column="2" Text="{Binding TrackingNumber}" Style="{StaticResource Virto_TextBox_ReadOnly_StyleThemed}"/>
+                                <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding StoreId}" />
+                                <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding Created}"/>
+                                <TextBlock Grid.Row="4" Grid.Column="2" Text="{Binding BillingCurrency}"/>
+                                <TextBlock Grid.Row="5" Grid.Column="2" Text="{Binding Total, Converter={StaticResource CurrencyConverter}}" />
+                            </Grid>
 
-						</Grid>
-					</HeaderedContentControl>
+                        </Grid>
+                    </HeaderedContentControl>
 
-					<HeaderedContentControl x:Name="billingAddress" Grid.Column="1" Grid.Row="1" BorderThickness="1" BorderBrush="#D4D4D4"
+                    <HeaderedContentControl x:Name="billingAddress" Grid.Column="1" Grid.Row="1" BorderThickness="1" BorderBrush="#D4D4D4"
 												DataContext="{Binding Path=DataContext,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}" Header="Billing Address" VerticalAlignment="Top" MinHeight="136" Style="{DynamicResource Virto_HeaderedContentBlock_Style}" Margin="5,5,5,0">
 
-						<Grid Grid.Column="0">
-							<Grid.RowDefinitions>
-								<RowDefinition/>
-								<RowDefinition Height="Auto"/>
-							</Grid.RowDefinitions>
+                        <Grid Grid.Column="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
 
-							<Grid Grid.Row="0">
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="Auto"/>
-									<ColumnDefinition Width="10"/>
-									<ColumnDefinition/>
-								</Grid.ColumnDefinitions>
-								<Grid.RowDefinitions>
-									<RowDefinition Height="Auto"/>
-									<RowDefinition Height="Auto"/>
-									<RowDefinition Height="Auto"/>
-								</Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="10"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
 
-								<TextBlock Grid.Row="0" Grid.Column="0" Text="Name:" FontWeight="DemiBold"/>
-								<TextBlock Grid.Row="1" Grid.Column="0" Text="Address:" FontWeight="DemiBold"/>
-								<TextBlock Grid.Row="2" Grid.Column="0" Text="Phone Number:" FontWeight="DemiBold"/>
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Name:" FontWeight="DemiBold"/>
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Address:" FontWeight="DemiBold"/>
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Phone Number:" FontWeight="DemiBold"/>
 
-								<TextBlock Grid.Row="0" Grid.Column="2">
-									<TextBlock.Text>
-										<MultiBinding StringFormat="{}{0} {1} " FallbackValue="N/A" TargetNullValue="N/A">
-											<Binding Path="BillingAddress.FirstName" />
-											<Binding Path="BillingAddress.LastName" />
-										</MultiBinding>
-									</TextBlock.Text>
-								</TextBlock>
-								<TextBlock Grid.Row="1" Grid.Column="2" TextWrapping="Wrap">
-									<TextBlock.Text>
-										<MultiBinding Converter="{StaticResource OrderAddressConverter}" Mode="OneWay" FallbackValue="N/A" TargetNullValue="N/A">
-											<Binding Path="BillingAddress" />
-											<Binding Path="BillingAddress.OrderAddressId" />
-										</MultiBinding>
-									</TextBlock.Text>
-								</TextBlock>
-								<TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding BillingAddress.DaytimePhoneNumber, FallbackValue='N/A', TargetNullValue='N/A'}"/>
-							</Grid>
+                                <TextBlock Grid.Row="0" Grid.Column="2">
+                                    <TextBlock.Text>
+                                        <MultiBinding StringFormat="{}{0} {1} " FallbackValue="N/A" TargetNullValue="N/A">
+                                            <Binding Path="BillingAddress.FirstName" />
+                                            <Binding Path="BillingAddress.LastName" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                                <TextBlock Grid.Row="1" Grid.Column="2" TextWrapping="Wrap">
+                                    <TextBlock.Text>
+                                        <MultiBinding Converter="{StaticResource OrderAddressConverter}" Mode="OneWay" FallbackValue="N/A" TargetNullValue="N/A">
+                                            <Binding Path="BillingAddress" />
+                                            <Binding Path="BillingAddress.OrderAddressId" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                                <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding BillingAddress.DaytimePhoneNumber, FallbackValue='N/A', TargetNullValue='N/A'}"/>
+                            </Grid>
 
-							<Button Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Edit address..." ToolTip="Edit address" Command="{Binding EditAddressCommand}" CommandParameter="{Binding BillingAddress}"
+                            <Button Grid.Row="1" VerticalAlignment="Bottom" HorizontalAlignment="Right" Content="Edit address..." ToolTip="Edit address" Command="{Binding EditAddressCommand}" CommandParameter="{Binding BillingAddress}"
 											DataContext="{Binding Path=DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"/>
 
-						</Grid>
+                        </Grid>
 
 
 
-					</HeaderedContentControl>
+                    </HeaderedContentControl>
 
-					<HeaderedContentControl x:Name="customerInfo" Grid.Row="1" Grid.Column="0" BorderThickness="1" BorderBrush="#D4D4D4"
+                    <HeaderedContentControl x:Name="customerInfo" Grid.Row="1" Grid.Column="0" BorderThickness="1" BorderBrush="#D4D4D4"
 												DataContext="{Binding InnerItem, IsAsync=True}" Header="Customer Information" Style="{DynamicResource Virto_HeaderedContentBlock_Style}">
 
-						<Grid>
-							<Grid.RowDefinitions>
-								<RowDefinition/>
-								<RowDefinition Height="Auto"/>
-							</Grid.RowDefinitions>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
 
 
-							<Grid Grid.Row="0">
-								<Grid.ColumnDefinitions>
-									<ColumnDefinition Width="Auto"/>
-									<ColumnDefinition Width="10"/>
-									<ColumnDefinition/>
-								</Grid.ColumnDefinitions>
-								<Grid.RowDefinitions>
-									<RowDefinition Height="Auto"/>
-									<RowDefinition Height="Auto"/>
-									<RowDefinition Height="Auto"/>
-									<RowDefinition Height="Auto"/>
-								</Grid.RowDefinitions>
+                            <Grid Grid.Row="0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="10"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
 
-								<TextBlock Grid.Row="0" Grid.Column="0" Text="Customer Id:" FontWeight="DemiBold"/>
-								<TextBlock Grid.Row="1" Grid.Column="0" Text="Customer Name:" FontWeight="DemiBold"/>
-								<TextBlock Grid.Row="2" Grid.Column="0" Text="Email Address:" FontWeight="DemiBold"/>
-								<TextBlock Grid.Row="3" Grid.Column="0" Text="Phone Number:" FontWeight="DemiBold"/>
+                                <TextBlock Grid.Row="0" Grid.Column="0" Text="Customer Id:" FontWeight="DemiBold"/>
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Customer Name:" FontWeight="DemiBold"/>
+                                <TextBlock Grid.Row="2" Grid.Column="0" Text="Email Address:" FontWeight="DemiBold"/>
+                                <TextBlock Grid.Row="3" Grid.Column="0" Text="Phone Number:" FontWeight="DemiBold"/>
 
-								<TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding CustomerId, TargetNullValue='N/A', FallbackValue='N/A'}"/>
-								<TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding CustomerName, TargetNullValue='N/A', FallbackValue='N/A'}"/>
-								<TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.CustomerAddress.Email, TargetNullValue='no email address', FallbackValue='N/A', IsAsync=True}"/>
-								<!--<TextBlock Grid.Row="3" Grid.Column="2" Text="(324) 321-2345"/>-->
-								<TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.CustomerAddress.DaytimePhoneNumber, TargetNullValue='no phone number', FallbackValue='N/A', IsAsync=True}"/>
+                                <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding CustomerId, TargetNullValue='N/A', FallbackValue='N/A'}"/>
+                                <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding CustomerName, TargetNullValue='N/A', FallbackValue='N/A'}"/>
+                                <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.CustomerAddress.Email, TargetNullValue='no email address', FallbackValue='N/A', IsAsync=True}"/>
+                                <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.CustomerAddress.DaytimePhoneNumber, TargetNullValue='no phone number', FallbackValue='N/A', IsAsync=True}"/>
 
-							</Grid>
+                            </Grid>
 
-							<Button Grid.Row="1" HorizontalAlignment="Right" Content="Open customer profile..." ToolTip="Open Customer Profile" Width="auto"
+                            <Button Grid.Row="1" HorizontalAlignment="Right" Content="Open customer profile..." ToolTip="Open Customer Profile" Width="auto"
 										Command="{Binding Path=OpenCustomerProfileCommand}"
 										DataContext="{Binding Path=DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"/>
 
-						</Grid>
+                        </Grid>
 
 
-					</HeaderedContentControl>
-				</Grid>
-			</ScrollViewer>
-		</TabItem>
+                    </HeaderedContentControl>
+                </Grid>
+            </ScrollViewer>
+        </TabItem>
 
-		<TabItem x:Name="tabItemDetails" Header="Details" >
-			<TabControl ItemsSource="{Binding OrderShipmentViewModels}" IsSynchronizedWithCurrentItem="True" Background="White">
-				<TabControl.Resources>
-					<Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}">
-						<Setter Property="ContentTemplate">
-							<Setter.Value>
-								<DataTemplate>
-									<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-										<Grid Width="800" HorizontalAlignment="Left" VerticalAlignment="Top">
-											<Grid.RowDefinitions>
-												<RowDefinition/>
-												<RowDefinition/>
-											</Grid.RowDefinitions>
+        <TabItem x:Name="tabItemDetails" Header="Details" >
+            <TabControl ItemsSource="{Binding OrderShipmentViewModels}" IsSynchronizedWithCurrentItem="True" Background="White">
+                <TabControl.Resources>
+                    <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}">
+                        <Setter Property="ContentTemplate">
+                            <Setter.Value>
+                                <DataTemplate>
+                                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                                        <Grid Width="800" HorizontalAlignment="Left" VerticalAlignment="Top">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition/>
+                                                <RowDefinition/>
+                                            </Grid.RowDefinitions>
 
-											<Grid x:Name="shipmentDetail">
-												<HeaderedContentControl Header="Shipment Items" Style="{DynamicResource Virto_HeaderedContentBlock_Style}">
-													<Grid>
-														<Grid.RowDefinitions>
-															<RowDefinition Height="auto"/>
-															<RowDefinition Height="*"/>
-														</Grid.RowDefinitions>
-														<ItemsControl Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource Virto_ToolbarItemsControl_Style}"
+                                            <Grid x:Name="shipmentDetail">
+                                                <HeaderedContentControl Header="Shipment Items" Style="{DynamicResource Virto_HeaderedContentBlock_Style}">
+                                                    <Grid>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="auto"/>
+                                                            <RowDefinition Height="*"/>
+                                                        </Grid.RowDefinitions>
+                                                        <ItemsControl Grid.Row="0" Grid.ColumnSpan="2" Style="{StaticResource Virto_ToolbarItemsControl_Style}"
 														
 														>
-															<core_controls:MetroButton Command="{Binding AddLineItemCommand}" Header="ADD" ToolTip="Add Item">
-																<Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/add.png" Width="14"/>
-															</core_controls:MetroButton>
-															<core_controls:MetroButton Command="{Binding MoveLineItemCommand}" CommandParameter="{Binding SelectedItem, ElementName=LineItemsList}"  Header="MOVE" ToolTip="Move Item">
-																<Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/check.png" Width="14"/>
-															</core_controls:MetroButton>
-															<core_controls:MetroButton Command="{Binding RemoveLineItemCommand}" CommandParameter="{Binding SelectedItem, ElementName=LineItemsList}" Header="REMOVE" ToolTip="Remove Item">
-																<Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/cancel.png" Width="14"/>
-															</core_controls:MetroButton>
+                                                            <core_controls:MetroButton Command="{Binding AddLineItemCommand}" Header="ADD" ToolTip="Add Item">
+                                                                <Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/add.png" Width="14"/>
+                                                            </core_controls:MetroButton>
+                                                            <core_controls:MetroButton Command="{Binding MoveLineItemCommand}" CommandParameter="{Binding SelectedItem, ElementName=LineItemsList}"  Header="MOVE" ToolTip="Move Item">
+                                                                <Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/check.png" Width="14"/>
+                                                            </core_controls:MetroButton>
+                                                            <core_controls:MetroButton Command="{Binding RemoveLineItemCommand}" CommandParameter="{Binding SelectedItem, ElementName=LineItemsList}" Header="REMOVE" ToolTip="Remove Item">
+                                                                <Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/cancel.png" Width="14"/>
+                                                            </core_controls:MetroButton>
 
-															<!--TODO: implement ViewLineItemDetailsCommand-->
-															<!--<core_controls:MetroButton Margin="12,0,5,0" Command="{Binding ViewLineItemDetailsCommand}" CommandParameter="{Binding SelectedItem, ElementName=LineItemsList}" Header="DETAILS" ToolTip="View Item Details">
+                                                            <!--TODO: implement ViewLineItemDetailsCommand-->
+                                                            <!--<core_controls:MetroButton Margin="12,0,5,0" Command="{Binding ViewLineItemDetailsCommand}" CommandParameter="{Binding SelectedItem, ElementName=LineItemsList}" Header="DETAILS" ToolTip="View Item Details">
                                                                 <Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/cancel.png" Width="14"/>
                                                             </core_controls:MetroButton>-->
-														</ItemsControl>
+                                                        </ItemsControl>
 
 
-														<DataGrid Grid.Row="1" x:Name="LineItemsList" ItemsSource="{Binding Path=CurrentShipment.ShipmentItems}">
-															<DataGrid.Columns>
-																<DataGridTemplateColumn Header="Name" Width="*">
-																	<DataGridTemplateColumn.CellTemplate>
-																		<DataTemplate>
-																			<StackPanel>
-																				<TextBlock Text="{Binding LineItem.DisplayName}" FontWeight="Bold" Foreground="{DynamicResource Virto_HighLightText_Foreground_Brush}" TextWrapping="Wrap"/>
-																				<TextBlock Text="{Binding LineItem.Description}" TextWrapping="Wrap"/>
-																			</StackPanel>
-																		</DataTemplate>
-																	</DataGridTemplateColumn.CellTemplate>
-																</DataGridTemplateColumn>
-																<DataGridTextColumn Header="Quantity" Binding="{Binding Quantity, StringFormat={}{0:0.##}}" Width="0.2*"/>																	
-																<DataGridTextColumn Header="Price" Binding="{Binding LineItem.ListPrice, Converter={StaticResource CurrencyConverter}}" Width="0.23*"/>
-																<DataGridTextColumn Header="Total" FontWeight="Bold" Width="0.27*">
-																	<DataGridTextColumn.Binding>
-																		<MultiBinding Converter="{StaticResource MathConverter}" ConverterParameter="*" StringFormat="{}{0:c}">
-																			<Binding Path="Quantity" />
-																			<Binding Path="LineItem.ListPrice"/>
-																		</MultiBinding>
-																	</DataGridTextColumn.Binding>
-																</DataGridTextColumn>
-															</DataGrid.Columns>
+                                                        <DataGrid Grid.Row="1" x:Name="LineItemsList" ItemsSource="{Binding Path=CurrentShipment.ShipmentItems}">
+                                                            <DataGrid.Columns>
+                                                                <DataGridTemplateColumn Header="Name" Width="*">
+                                                                    <DataGridTemplateColumn.CellTemplate>
+                                                                        <DataTemplate>
+                                                                            <StackPanel>
+                                                                                <TextBlock Text="{Binding LineItem.DisplayName}" FontWeight="Bold" Foreground="{DynamicResource Virto_HighLightText_Foreground_Brush}" TextWrapping="Wrap"/>
+                                                                                <TextBlock Text="{Binding LineItem.Description}" TextWrapping="Wrap"/>
+                                                                            </StackPanel>
+                                                                        </DataTemplate>
+                                                                    </DataGridTemplateColumn.CellTemplate>
+                                                                </DataGridTemplateColumn>
+                                                                <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity, StringFormat={}{0:0.##}}" Width="0.2*"/>
+                                                                <DataGridTextColumn Header="Price" Binding="{Binding LineItem.ListPrice, Converter={StaticResource CurrencyConverter}}" Width="0.23*"/>
+                                                                <DataGridTextColumn Header="Total" FontWeight="Bold" Width="0.27*">
+                                                                    <DataGridTextColumn.Binding>
+                                                                        <MultiBinding Converter="{StaticResource MathConverter}" ConverterParameter="*" StringFormat="{}{0:c}">
+                                                                            <Binding Path="Quantity" />
+                                                                            <Binding Path="LineItem.ListPrice"/>
+                                                                        </MultiBinding>
+                                                                    </DataGridTextColumn.Binding>
+                                                                </DataGridTextColumn>
+                                                            </DataGrid.Columns>
 
-															<i:Interaction.Triggers>
-																<i:EventTrigger EventName="SelectionChanged">
-																	<ei:CallMethodAction TargetObject="{Binding }" MethodName="RaiseCanExecuteChanged"/>
-																</i:EventTrigger>
-															</i:Interaction.Triggers>
-														</DataGrid>
-													</Grid>
+                                                            <i:Interaction.Triggers>
+                                                                <i:EventTrigger EventName="SelectionChanged">
+                                                                    <ei:CallMethodAction TargetObject="{Binding }" MethodName="RaiseCanExecuteChanged"/>
+                                                                </i:EventTrigger>
+                                                            </i:Interaction.Triggers>
+                                                        </DataGrid>
+                                                    </Grid>
 
-												</HeaderedContentControl>
+                                                </HeaderedContentControl>
 
-												<StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,3,0,0">
-													<StackPanel.Resources>
-														<Style TargetType="Button" BasedOn="{StaticResource Virto_Button_Secondary_Style}">
-															<Setter Property="Width" Value="auto"/>
-															<Setter Property="Height" Value="24"/>
-														</Style>
-													</StackPanel.Resources>
-													<Button Content="Release Shipment" Visibility="{Binding IsEnabled, Converter={StaticResource booleanToVisibilityConverter}, RelativeSource={RelativeSource Self}}" Command="{Binding ReleaseShipmentCommand}" />
-													<Button Content="Complete Shipment" Visibility="{Binding IsEnabled, Converter={StaticResource booleanToVisibilityConverter}, RelativeSource={RelativeSource Self}}" Command="{Binding CompleteShipmentCommand}" />
-													<Button Content="Cancel Shipment" Command="{Binding CancelShipmentCommand}" Margin="10,0,0,0"/>
-												</StackPanel>
-											</Grid>
+                                                <StackPanel Orientation="Horizontal" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="0,3,0,0">
+                                                    <StackPanel.Resources>
+                                                        <Style TargetType="Button" BasedOn="{StaticResource Virto_Button_Secondary_Style}">
+                                                            <Setter Property="Width" Value="auto"/>
+                                                            <Setter Property="Height" Value="24"/>
+                                                        </Style>
+                                                    </StackPanel.Resources>
+                                                    <Button Content="Release Shipment" Visibility="{Binding IsEnabled, Converter={StaticResource booleanToVisibilityConverter}, RelativeSource={RelativeSource Self}}" Command="{Binding ReleaseShipmentCommand}" />
+                                                    <Button Content="Complete Shipment" Visibility="{Binding IsEnabled, Converter={StaticResource booleanToVisibilityConverter}, RelativeSource={RelativeSource Self}}" Command="{Binding CompleteShipmentCommand}" />
+                                                    <Button Content="Cancel Shipment" Command="{Binding CancelShipmentCommand}" Margin="10,0,0,0"/>
+                                                </StackPanel>
+                                            </Grid>
 
-											<Grid Grid.Row="1" Width="800" HorizontalAlignment="Left" VerticalAlignment="Top">
-												<Grid.ColumnDefinitions>
-													<ColumnDefinition/>
-													<ColumnDefinition Width="40"/>
-													<ColumnDefinition/>
-												</Grid.ColumnDefinitions>
+                                            <Grid Grid.Row="1" Width="800" HorizontalAlignment="Left" VerticalAlignment="Top">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition/>
+                                                    <ColumnDefinition Width="40"/>
+                                                    <ColumnDefinition/>
+                                                </Grid.ColumnDefinitions>
 
-												<Grid x:Name="shippingDetails">
-													<HeaderedContentControl Header="Shipping Address" Style="{DynamicResource Virto_HeaderedContentBlock_Style}">
-														<Grid>
-															<Grid.RowDefinitions>
-																<RowDefinition Height="auto"/>
-																<RowDefinition Height="auto"/>
-																<RowDefinition Height="auto"/>
-																<RowDefinition Height="auto"/>
-																<RowDefinition Height="auto"/>
-															</Grid.RowDefinitions>
+                                                <Grid x:Name="shippingDetails">
+                                                    <HeaderedContentControl Header="Shipping Address" Style="{DynamicResource Virto_HeaderedContentBlock_Style}">
+                                                        <Grid>
+                                                            <Grid.RowDefinitions>
+                                                                <RowDefinition Height="auto"/>
+                                                                <RowDefinition Height="auto"/>
+                                                                <RowDefinition Height="auto"/>
+                                                                <RowDefinition Height="auto"/>
+                                                                <RowDefinition Height="auto"/>
+                                                            </Grid.RowDefinitions>
 
-															<TextBlock Grid.Row="0" Text="Shipping Address" />
-															<TextBlock Grid.Row="2" Text="Shipping Method"/>
+                                                            <TextBlock Grid.Row="0" Text="Shipping Address" />
+                                                            <TextBlock Grid.Row="2" Text="Shipping Method"/>
 
-															<ComboBox Grid.Row="1" x:Name="comboboxAddress" ItemsSource="{Binding ParentViewModel.InnerItem.OrderAddresses}" SelectedValuePath="OrderAddressId" SelectedValue="{Binding CurrentShipment.ShippingAddressId, Mode=TwoWay}">
-																<ComboBox.ItemTemplate>
-																	<DataTemplate>
-																		<TextBlock>
-																			<TextBlock.Text>
-																				<MultiBinding Converter="{StaticResource OrderAddressConverter}" Mode="OneWay">
-																					<Binding />
-																					<Binding Path="OrderAddressId" />
-																				</MultiBinding>
-																			</TextBlock.Text>
-																		</TextBlock>
-																	</DataTemplate>
-																</ComboBox.ItemTemplate>
-															</ComboBox>
+                                                            <ComboBox Grid.Row="1" x:Name="comboboxAddress" ItemsSource="{Binding ParentViewModel.InnerItem.OrderAddresses}" SelectedValuePath="OrderAddressId" SelectedValue="{Binding CurrentShipment.ShippingAddressId, Mode=TwoWay}">
+                                                                <ComboBox.ItemTemplate>
+                                                                    <DataTemplate>
+                                                                        <TextBlock>
+                                                                            <TextBlock.Text>
+                                                                                <MultiBinding Converter="{StaticResource OrderAddressConverter}" Mode="OneWay">
+                                                                                    <Binding />
+                                                                                    <Binding Path="OrderAddressId" />
+                                                                                </MultiBinding>
+                                                                            </TextBlock.Text>
+                                                                        </TextBlock>
+                                                                    </DataTemplate>
+                                                                </ComboBox.ItemTemplate>
+                                                            </ComboBox>
 
-															<ComboBox Grid.Row="3" x:Name="comboboxShippingmethod" ItemsSource="{Binding ParentViewModel.AvailableShippingMethods}" SelectedValuePath="ShippingMethodId" SelectedValue="{Binding CurrentShipment.ShippingMethodId, Mode=TwoWay}">
-																<ComboBox.ItemTemplate>
-																	<DataTemplate>
-																		<Grid>
-																			<TextBlock x:Name="textBlock" Text="{Binding DisplayName}" />
-																		</Grid>
-																	</DataTemplate>
-																</ComboBox.ItemTemplate>
-															</ComboBox>
+                                                            <ComboBox Grid.Row="3" x:Name="comboboxShippingmethod" ItemsSource="{Binding ParentViewModel.AvailableShippingMethods}" SelectedValuePath="ShippingMethodId" SelectedValue="{Binding CurrentShipment.ShippingMethodId, Mode=TwoWay}">
+                                                                <ComboBox.ItemTemplate>
+                                                                    <DataTemplate>
+                                                                        <Grid>
+                                                                            <TextBlock x:Name="textBlock" Text="{Binding DisplayName}" />
+                                                                        </Grid>
+                                                                    </DataTemplate>
+                                                                </ComboBox.ItemTemplate>
+                                                            </ComboBox>
 
-															<Button Grid.Row="4" Style="{StaticResource Virto_Button_Secondary_Style}" VerticalAlignment="Bottom" HorizontalAlignment="Right"
+                                                            <Button Grid.Row="4" Style="{StaticResource Virto_Button_Secondary_Style}" VerticalAlignment="Bottom" HorizontalAlignment="Right"
 																Margin="0,10,0,0"
 																DataContext="{Binding Path=DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}"
 																 Command="{Binding EditAddressCommand}" CommandParameter="{Binding SelectedItem, ElementName=comboboxAddress}" Content="Edit address"></Button>
-														</Grid>
-													</HeaderedContentControl>
-												</Grid>
+                                                        </Grid>
+                                                    </HeaderedContentControl>
+                                                </Grid>
 
-												<StackPanel x:Name="shippingSummary" Grid.Column="2">
-													<HeaderedContentControl Header="Shipping Summary" Style="{StaticResource Virto_HeaderedContentBlock_Style}" DataContext="{Binding CurrentShipment}">
-														<Grid>
-															<Grid.ColumnDefinitions>
-																<ColumnDefinition Width="auto"/>
-																<ColumnDefinition Width="10"/>
-																<ColumnDefinition Width="*"/>
-															</Grid.ColumnDefinitions>
-															<Grid.RowDefinitions>
-																<RowDefinition Height="auto"/>
-																<RowDefinition Height="auto"/>
-																<RowDefinition Height="auto"/>
-																<RowDefinition Height="auto"/>
-																<RowDefinition Height="auto"/>
-																<RowDefinition Height="auto"/>
-																<RowDefinition Height="auto"/>
-																<RowDefinition Height="auto"/>
-															</Grid.RowDefinitions>
+                                                <StackPanel x:Name="shippingSummary" Grid.Column="2">
+                                                    <HeaderedContentControl Header="Shipping Summary" Style="{StaticResource Virto_HeaderedContentBlock_Style}" DataContext="{Binding CurrentShipment}">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="auto"/>
+                                                                <ColumnDefinition Width="10"/>
+                                                                <ColumnDefinition Width="*"/>
+                                                            </Grid.ColumnDefinitions>
+                                                            <Grid.RowDefinitions>
+                                                                <RowDefinition Height="auto"/>
+                                                                <RowDefinition Height="auto"/>
+                                                                <RowDefinition Height="auto"/>
+                                                                <RowDefinition Height="auto"/>
+                                                                <RowDefinition Height="auto"/>
+                                                                <RowDefinition Height="auto"/>
+                                                                <RowDefinition Height="auto"/>
+                                                                <RowDefinition Height="auto"/>
+                                                            </Grid.RowDefinitions>
 
-															<TextBlock Grid.Row="0" Grid.Column="0" Text="Item Sub-Total:" FontWeight="DemiBold" />
-															<TextBlock Grid.Row="1" Grid.Column="0" Text="Shipping Cost:" />
-															<TextBlock Grid.Row="2" Grid.Column="0" Text="Less Shipment Discount:" />
-															<TextBlock Grid.Row="3" Grid.Column="0" Text="Total Before Tax:" FontWeight="DemiBold" />
-															<TextBlock Grid.Row="4" Grid.Column="0" Text="Item Taxes:" />
-															<TextBlock Grid.Row="5" Grid.Column="0" Text="Shipping Taxes:" />
-															<TextBlock Grid.Row="6" Grid.Column="0" Text="Shipment Total:"  FontWeight="DemiBold" />
+                                                            <TextBlock Grid.Row="0" Grid.Column="0" Text="Item Sub-Total:" FontWeight="DemiBold" />
+                                                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Shipping Cost:" />
+                                                            <TextBlock Grid.Row="2" Grid.Column="0" Text="Less Shipment Discount:" />
+                                                            <TextBlock Grid.Row="3" Grid.Column="0" Text="Total Before Tax:" FontWeight="DemiBold" />
+                                                            <TextBlock Grid.Row="4" Grid.Column="0" Text="Item Taxes:" />
+                                                            <TextBlock Grid.Row="5" Grid.Column="0" Text="Shipping Taxes:" />
+                                                            <TextBlock Grid.Row="6" Grid.Column="0" Text="Shipment Total:"  FontWeight="DemiBold" />
 
-															<TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding Subtotal, Converter={StaticResource CurrencyConverter}}"/>
-															<TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding ShippingCost, StringFormat=c}" />
-															<TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding ShippingDiscountAmount, Converter={StaticResource CurrencyConverter}}" />
-															<TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding TotalBeforeTax, StringFormat=c}"/>
-															<TextBlock Grid.Row="4" Grid.Column="2" Text="{Binding ItemTaxTotal, Converter={StaticResource CurrencyConverter}}"/>
-															<TextBlock Grid.Row="5" Grid.Column="2" Text="{Binding ShippingTaxTotal, Converter={StaticResource CurrencyConverter}}"/>
-															<TextBlock Grid.Row="6" Grid.Column="2" Text="{Binding ShipmentTotal, Converter={StaticResource CurrencyConverter}}"/>
+                                                            <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding Subtotal, Converter={StaticResource CurrencyConverter}}"/>
+                                                            <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding ShippingCost, StringFormat=c}" />
+                                                            <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding ShippingDiscountAmount, Converter={StaticResource CurrencyConverter}}" />
+                                                            <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding TotalBeforeTax, StringFormat=c}"/>
+                                                            <TextBlock Grid.Row="4" Grid.Column="2" Text="{Binding ItemTaxTotal, Converter={StaticResource CurrencyConverter}}"/>
+                                                            <TextBlock Grid.Row="5" Grid.Column="2" Text="{Binding ShippingTaxTotal, Converter={StaticResource CurrencyConverter}}"/>
+                                                            <TextBlock Grid.Row="6" Grid.Column="2" Text="{Binding ShipmentTotal, Converter={StaticResource CurrencyConverter}}"/>
 
-														</Grid>
-													</HeaderedContentControl>
-												</StackPanel>
-											</Grid>
+                                                        </Grid>
+                                                    </HeaderedContentControl>
+                                                </StackPanel>
+                                            </Grid>
 
-										</Grid>
-									</ScrollViewer>
-								</DataTemplate>
-							</Setter.Value>
-						</Setter>
-						<Setter Property="HeaderTemplate">
-							<Setter.Value>
-								<DataTemplate DataType="implementations:ShipmentViewModel">
-									<Border x:Name="Bd" BorderThickness="1,1,1,0" BorderBrush="#D4D4D4" Height="35" Padding="10,5">
-										<StackPanel SnapsToDevicePixels="true" Orientation="Horizontal">
-											<core_controls:VectorImage ImageSource="{Binding IconSource}" Height="18" Width="18"/>
-											<TextBlock x:Name="Content" FontWeight="Bold" Margin="4,0,0,0">
-												<TextBlock.Text>
-													<MultiBinding StringFormat="# {0}: {1}">
-														<Binding Path="CurrentShipment.ShipmentId" />
-														<Binding Path="CurrentShipment.ShipmentTotal" Converter="{StaticResource CurrencyConverter}" />
-													</MultiBinding>
-												</TextBlock.Text>
-											</TextBlock>
-											<TextBlock Text="{Binding CurrentStatusText, StringFormat=' [{0}]'}" FontStyle="Italic" Foreground="#72b143" Style="{DynamicResource {x:Type TextBlock}}" Margin="4,0,0,0"/>
-											<!--<ContentPresenter x:Name="Content" ContentSource="Header" HorizontalAlignment="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" Margin="4,0,0,0"/>-->
-										</StackPanel>
-									</Border>
-								</DataTemplate>
-							</Setter.Value>
-						</Setter>
-					</Style>
-				</TabControl.Resources>
-			</TabControl>
-		</TabItem>
+                                        </Grid>
+                                    </ScrollViewer>
+                                </DataTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="HeaderTemplate">
+                            <Setter.Value>
+                                <DataTemplate DataType="implementations:ShipmentViewModel">
+                                    <Border x:Name="Bd" BorderThickness="1,1,1,0" BorderBrush="#D4D4D4" Height="35" Padding="10,5">
+                                        <StackPanel SnapsToDevicePixels="true" Orientation="Horizontal">
+                                            <core_controls:VectorImage ImageSource="{Binding IconSource}" Height="18" Width="18"/>
+                                            <TextBlock x:Name="Content" FontWeight="Bold" Margin="4,0,0,0">
+                                                <TextBlock.Text>
+                                                    <MultiBinding StringFormat="# {0}: {1}">
+                                                        <Binding Path="CurrentShipment.ShipmentId" />
+                                                        <Binding Path="CurrentShipment.ShipmentTotal" Converter="{StaticResource CurrencyConverter}" />
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
+                                            <TextBlock Text="{Binding CurrentStatusText, StringFormat=' [{0}]'}" FontStyle="Italic" Foreground="#72b143" Style="{DynamicResource {x:Type TextBlock}}" Margin="4,0,0,0"/>
+                                            <!--<ContentPresenter x:Name="Content" ContentSource="Header" HorizontalAlignment="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" Margin="4,0,0,0"/>-->
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </TabControl.Resources>
+            </TabControl>
+        </TabItem>
 
-		<TabItem x:Name="tabItemPayments" Header="Payments" VerticalAlignment="Bottom" >
-			<Grid>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="800"/>
-					<ColumnDefinition/>
-				</Grid.ColumnDefinitions>
-				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition />
-					<RowDefinition Height="Auto" />
-				</Grid.RowDefinitions>
+        <TabItem x:Name="tabItemPayments" Header="Payments" VerticalAlignment="Bottom" >
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="800"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-				<HeaderedContentControl Style="{DynamicResource Virto_HeaderedContentBlock_Style}"
+                <HeaderedContentControl Style="{DynamicResource Virto_HeaderedContentBlock_Style}"
 							Header="Payment Details" Grid.Row="1" Grid.ColumnSpan="2">
-					<Grid>
-						<Grid.RowDefinitions>
-							<RowDefinition Height="Auto"/>
-							<RowDefinition/>
-						</Grid.RowDefinitions>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
 
-						<ItemsControl Grid.Row="0" Style="{StaticResource Virto_ToolbarItemsControl_Style}">
-							<!--hiding this until further decision-->
-							<!--<core_controls:MetroButton Command="{Binding CreatePaymentCommand}" Header="ADD" ToolTip="Add Payment" >
+                        <ItemsControl Grid.Row="0" Style="{StaticResource Virto_ToolbarItemsControl_Style}">
+                            <!--hiding this until further decision-->
+                            <!--<core_controls:MetroButton Command="{Binding CreatePaymentCommand}" Header="ADD" ToolTip="Add Payment" >
 								<Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/add.png" Width="14"/>
 							</core_controls:MetroButton>-->
-						</ItemsControl>
+                        </ItemsControl>
 
-						<DataGrid Grid.Row="1" x:Name="Payments"
+                        <DataGrid Grid.Row="1" x:Name="Payments"
 									ItemsSource="{Binding FirstOrderForm.Payments}" Margin="0,0,0,4">
-							<DataGrid.Columns>
-								<DataGridTextColumn Header="Payment method" Binding="{Binding Path=PaymentMethodName, TargetNullValue='N/A'}" Foreground="{StaticResource Virto_HighLightText_Foreground_Brush}" Width="*"/>
-								<DataGridTextColumn Header="Transaction type" Binding="{Binding Path=TransactionType, TargetNullValue='N/A'}" Width="*"/>
-								<DataGridTextColumn Header="Amount" Binding="{Binding Path=Amount,Converter={StaticResource CurrencyConverter}, TargetNullValue='N/A'}" Width="*"/>
-								<DataGridTextColumn Header="Created" Binding="{Binding Created, StringFormat=\{0:d\}}" Width="*"/>
-								<DataGridTextColumn Header="Status" Binding="{Binding Path=Status, TargetNullValue='N/A'}" Width="*"/>
-							</DataGrid.Columns>
-						</DataGrid>
-					</Grid>
-				</HeaderedContentControl>
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Payment method" Binding="{Binding Path=PaymentMethodName, TargetNullValue='N/A'}" Foreground="{StaticResource Virto_HighLightText_Foreground_Brush}" Width="*"/>
+                                <DataGridTextColumn Header="Transaction type" Binding="{Binding Path=TransactionType, TargetNullValue='N/A'}" Width="*"/>
+                                <DataGridTextColumn Header="Amount" Binding="{Binding Path=Amount,Converter={StaticResource CurrencyConverter}, TargetNullValue='N/A'}" Width="*"/>
+                                <DataGridTextColumn Header="Created" Binding="{Binding Created, StringFormat=\{0:d\}}" Width="*"/>
+                                <DataGridTextColumn Header="Status" Binding="{Binding Path=Status, TargetNullValue='N/A'}" Width="*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </HeaderedContentControl>
 
-				<HeaderedContentControl Header="Payments Summary" Grid.Row="2" HorizontalAlignment="Left" Style="{DynamicResource Virto_HeaderedContentBlock_Style}">
-					<Grid Margin="0,5,0,15">
-						<Grid.ColumnDefinitions>
-							<ColumnDefinition Width="Auto"/>
-							<ColumnDefinition Width="10"/>
-							<ColumnDefinition/>
-						</Grid.ColumnDefinitions>
-						<Grid.RowDefinitions>
-							<RowDefinition Height="Auto"/>
-							<RowDefinition Height="Auto"/>
-							<RowDefinition Height="Auto"/>
-						</Grid.RowDefinitions>
+                <HeaderedContentControl Header="Payments Summary" Grid.Row="2" HorizontalAlignment="Left" Style="{DynamicResource Virto_HeaderedContentBlock_Style}">
+                    <Grid Margin="0,5,0,15">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="10"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
 
 
-						<TextBlock Grid.Row="0" Grid.Column="0" Text="Ordered Total:" FontWeight="DemiBold"/>
-						<TextBlock Grid.Row="1" Grid.Column="0" Text="Paid Total:" FontWeight="DemiBold" />
-						<TextBlock Grid.Row="2" Grid.Column="0" Text="Balance Due:" FontWeight="DemiBold"/>
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Ordered Total:" FontWeight="DemiBold"/>
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Paid Total:" FontWeight="DemiBold" />
+                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Balance Due:" FontWeight="DemiBold"/>
 
-						<TextBlock Grid.Row="0" Grid.Column="2" x:Name="lblOrderedValue" Text="{Binding InnerItem.OrderForms[0].Total, StringFormat=c}" HorizontalAlignment="Right" />
-						<TextBlock Grid.Row="1" Grid.Column="2" x:Name="lblPaidValue" Text="{Binding PaidTotal, StringFormat=c}" HorizontalAlignment="Right"/>
-						<TextBlock Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right">
-							<TextBlock.Text>
-								<MultiBinding Converter="{StaticResource MathConverter}" ConverterParameter="-" StringFormat="{}{0:c}">
-									<Binding Path="InnerItem.OrderForms[0].Total" />
-									<Binding Path="PaidTotal" />
-								</MultiBinding>
-							</TextBlock.Text>
-						</TextBlock>
-					</Grid>
-				</HeaderedContentControl>
+                        <TextBlock Grid.Row="0" Grid.Column="2" x:Name="lblOrderedValue" Text="{Binding InnerItem.OrderForms[0].Total, StringFormat=c}" HorizontalAlignment="Right" />
+                        <TextBlock Grid.Row="1" Grid.Column="2" x:Name="lblPaidValue" Text="{Binding PaidTotal, StringFormat=c}" HorizontalAlignment="Right"/>
+                        <TextBlock Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right">
+                            <TextBlock.Text>
+                                <MultiBinding Converter="{StaticResource MathConverter}" ConverterParameter="-" StringFormat="{}{0:c}">
+                                    <Binding Path="InnerItem.OrderForms[0].Total" />
+                                    <Binding Path="PaidTotal" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </Grid>
+                </HeaderedContentControl>
 
-			</Grid>
-		</TabItem>
+            </Grid>
+        </TabItem>
 
-		<TabItem x:Name="tabItemRmaRequests" Header="Return / Exchange" Visibility="{Binding RmaRequestViewModels.Count, Converter={x:Static Presentation_Core_Infrastructure_Converters:ToVisibilityConverter.Current}, FallbackValue=Collapsed}">
-			<TabControl ItemsSource="{Binding RmaRequestViewModels}" IsSynchronizedWithCurrentItem="True">
-				<TabControl.Resources>
-					<Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}">
-						<!--<Style.Resources>
+        <TabItem x:Name="tabItemRmaRequests" Header="Return / Exchange" Visibility="{Binding RmaRequestViewModels.Count, Converter={x:Static Presentation_Core_Infrastructure_Converters:ToVisibilityConverter.Current}, FallbackValue=Collapsed}">
+            <TabControl ItemsSource="{Binding RmaRequestViewModels}" IsSynchronizedWithCurrentItem="True">
+                <TabControl.Resources>
+                    <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}">
+                        <!--<Style.Resources>
                             <converters:RmaRequestStatusConverter x:Key="RmaRequestStatusConverter" />
                         </Style.Resources>-->
-						<Setter Property="HeaderTemplate">
-							<Setter.Value>
-								<DataTemplate DataType="implementations:RmaRequestViewModel">
-									<Border x:Name="Bd" BorderThickness="1,1,1,0" Padding="10,5" BorderBrush="#D4D4D4" Height="35">
-										<StackPanel SnapsToDevicePixels="true" Orientation="Horizontal">
-											<Image Source="/VirtoCommerce.ManagementClient.Order;component/Resources/images/box.png" Height="18" Width="18"/>
-											<TextBlock x:Name="Content" FontWeight="Bold" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" Margin="4,0,0,0">
-												<TextBlock.Text>
-													<MultiBinding StringFormat=" {0}">
-														<Binding Path="CurrentRmaRequest.RmaRequestId" />
-													</MultiBinding>
-												</TextBlock.Text>
+                        <Setter Property="HeaderTemplate">
+                            <Setter.Value>
+                                <DataTemplate DataType="implementations:RmaRequestViewModel">
+                                    <Border x:Name="Bd" BorderThickness="1,1,1,0" Padding="10,5" BorderBrush="#D4D4D4" Height="35">
+                                        <StackPanel SnapsToDevicePixels="true" Orientation="Horizontal">
+                                            <Image Source="/VirtoCommerce.ManagementClient.Order;component/Resources/images/box.png" Height="18" Width="18"/>
+                                            <TextBlock x:Name="Content" FontWeight="Bold" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" Margin="4,0,0,0">
+                                                <TextBlock.Text>
+                                                    <MultiBinding StringFormat=" {0}">
+                                                        <Binding Path="CurrentRmaRequest.RmaRequestId" />
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
 												<TextBlock Text="{Binding CurrentStatusText, StringFormat=' [{0}]'}" FontStyle="Italic" Foreground="#72b143" Style="{DynamicResource {x:Type TextBlock}}"
                                                            Margin="4,0,0,0" FontWeight="Normal"/>
 											</TextBlock>
-										</StackPanel>
-									</Border>
-								</DataTemplate>
-							</Setter.Value>
-						</Setter>
-						<Setter Property="ContentTemplate">
-							<Setter.Value>
-								<DataTemplate DataType="implementations:RmaRequestViewModel">
-									<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-										<Grid VerticalAlignment="Top" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=ScrollContentPresenter}}">
-											<i:Interaction.Triggers>
-												<prism:InteractionRequestTrigger SourceObject="{Binding RmaRequestWizardDialogInteractionRequest, Mode=OneWay}">
-													<interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:WizardDialog}" />
-												</prism:InteractionRequestTrigger>
-											</i:Interaction.Triggers>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="ContentTemplate">
+                            <Setter.Value>
+                                <DataTemplate DataType="implementations:RmaRequestViewModel">
+                                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                                        <Grid VerticalAlignment="Top" Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=ScrollContentPresenter}}">
+                                            <i:Interaction.Triggers>
+                                                <prism:InteractionRequestTrigger SourceObject="{Binding RmaRequestWizardDialogInteractionRequest, Mode=OneWay}">
+                                                    <interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:WizardDialog}" />
+                                                </prism:InteractionRequestTrigger>
+                                            </i:Interaction.Triggers>
 
-											<Grid.RowDefinitions>
-												<RowDefinition Height="0.7*"/>
-												<RowDefinition Height="0.3*"/>
-											</Grid.RowDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="0.7*"/>
+                                                <RowDefinition Height="0.3*"/>
+                                            </Grid.RowDefinitions>
 
-											<!--Header="{Binding CurrentRmaRequest.RmaRequestId, StringFormat= {0}}"-->
-											<HeaderedContentControl Style="{DynamicResource Virto_HeaderedContentBlock_Style}" Header="{Binding CurrentRmaRequest.RmaRequestId}">
-												<HeaderedContentControl.HeaderTemplate>
-													<DataTemplate>
-														<Border CornerRadius="0" Margin="4" Padding="4" SnapsToDevicePixels="True">
-															<TextBlock FontSize="15" HorizontalAlignment="Left" Text="{Binding StringFormat='Rma request {0}'}" Margin="1,0,0,0"/>
-														</Border>
-													</DataTemplate>
-												</HeaderedContentControl.HeaderTemplate>
+                                            <!--Header="{Binding CurrentRmaRequest.RmaRequestId, StringFormat= {0}}"-->
+                                            <HeaderedContentControl Style="{DynamicResource Virto_HeaderedContentBlock_Style}" Header="{Binding CurrentRmaRequest.RmaRequestId}">
+                                                <HeaderedContentControl.HeaderTemplate>
+                                                    <DataTemplate>
+                                                        <Border Margin="4" Padding="4" SnapsToDevicePixels="True">
+                                                            <TextBox Text="{Binding StringFormat='Rma request {0}', Mode=OneTime}"
+																	 Margin="1,0,0,0" Style="{StaticResource Virto_TextBox_ReadOnly_StyleThemed}" />
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </HeaderedContentControl.HeaderTemplate>
 
-												<Grid>
-													<Grid.ColumnDefinitions>
-														<ColumnDefinition Width="*"/>
-														<ColumnDefinition Width="auto"/>
-													</Grid.ColumnDefinitions>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="auto"/>
+                                                    </Grid.ColumnDefinitions>
 
-													<Grid Grid.Column="1">
-														<Grid.Resources>
-															<Style TargetType="Button" BasedOn="{StaticResource Virto_Button_Secondary_Style}">
-																<Setter Property="Margin" Value="5,0,5,5"/>
-																<Setter Property="HorizontalAlignment" Value="Left"/>
-															</Style>
-														</Grid.Resources>
-														<Grid.RowDefinitions>
-															<RowDefinition Height="auto"/>
-															<RowDefinition Height="auto"/>
-															<RowDefinition Height="auto"/>
-														</Grid.RowDefinitions>
+                                                    <Grid Grid.Column="1">
+                                                        <Grid.Resources>
+                                                            <Style TargetType="Button" BasedOn="{StaticResource Virto_Button_Secondary_Style}">
+                                                                <Setter Property="Margin" Value="5,0,5,5"/>
+                                                                <Setter Property="HorizontalAlignment" Value="Left"/>
+                                                            </Style>
+                                                        </Grid.Resources>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="auto"/>
+                                                            <RowDefinition Height="auto"/>
+                                                            <RowDefinition Height="auto"/>
+                                                        </Grid.RowDefinitions>
 
-														<Button Grid.Row="0" Content="Cancel" ToolTip="Cancel Rma Request"  Command="{Binding RmaRequestCancelCommand}" 
+                                                        <Button Grid.Row="0" Content="Cancel" ToolTip="Cancel Rma Request"  Command="{Binding RmaRequestCancelCommand}" 
 															inf_behavior:PermissionBehavior.PermissionId="{x:Static securityModule:PredefinedPermissions.OrdersCancelOrderReturns}"
 															inf_behavior:PermissionBehavior.DenyVisibility="Collapsed"/>
-														<Button Grid.Row="1" Content="Complete" ToolTip="Complete Rma Request" Command="{Binding RmaRequestCompleteCommand}"
+                                                        <Button Grid.Row="1" Content="Complete" ToolTip="Complete Rma Request" Command="{Binding RmaRequestCompleteCommand}"
 															inf_behavior:PermissionBehavior.PermissionId="{x:Static securityModule:PredefinedPermissions.OrdersCompleteOrderReturns}"
 															inf_behavior:PermissionBehavior.DenyVisibility="Collapsed"/>
 
-														<Button Grid.Row="2" Width="auto" Content="Create Exchange Order" ToolTip="Create Exchange Order" HorizontalAlignment="Stretch"
+                                                        <Button Grid.Row="2" Width="auto" Content="Create Exchange Order" ToolTip="Create Exchange Order" HorizontalAlignment="Stretch"
 															Command="{Binding ExchangeOrderCreateCommand}"
 															Visibility="{Binding IsExchangeOrderCreateShow, Converter={StaticResource booleanToVisibilityConverter}}"/>
 
-														<Button Grid.Row="2" Width="auto" Content="View Exchange Order" ToolTip="View Exchange Order" Command="{Binding ExchangeOrderViewCommand}"
+                                                        <Button Grid.Row="2" Width="auto" Content="View Exchange Order" ToolTip="View Exchange Order" Command="{Binding ExchangeOrderViewCommand}"
 															Visibility="{Binding IsEnabled, Converter={StaticResource booleanToVisibilityConverter}, RelativeSource={RelativeSource Self}}"
                                                                 HorizontalAlignment="Stretch"/>
-													</Grid>
+                                                    </Grid>
 
-													<DataGrid Grid.Column="0" ItemsSource="{Binding Path=CurrentRmaRequest.RmaReturnItems}">
-														<DataGrid.Columns>
-															<DataGridTextColumn Header="ID" Width="3*" Binding="{Binding RmaLineItems[0].LineItemId}" Foreground="{DynamicResource Virto_HighLightText_Foreground_Brush}"/>
-															<DataGridTextColumn Header="Name" Width="10*" Binding="{Binding RmaLineItems[0].LineItem.DisplayName}" />
-															<DataGridTextColumn Header="List Price" Width="4*" Binding="{Binding RmaLineItems[0].LineItem.ListPrice}"/>
-															<DataGridTextColumn Header="Invoice Price" Binding="{Binding RmaLineItems[0].LineItem.PlacedPrice}"/>
-															<DataGridTextColumn Header="Total" Width="4*">
-																<DataGridTextColumn.Binding>
-																	<MultiBinding Converter="{StaticResource MathConverter}" ConverterParameter="*" StringFormat="{}{0:c}">
-																		<Binding Path="RmaLineItems[0].ReturnQuantity" />
-																		<Binding Path="RmaLineItems[0].LineItem.ListPrice"/>
-																	</MultiBinding>
-																</DataGridTextColumn.Binding>
-															</DataGridTextColumn>
-															<DataGridTextColumn Header="Qty" Width="1*" Binding="{Binding RmaLineItems[0].ReturnQuantity, StringFormat={}{0:0.##}}"/>
-															<DataGridTextColumn Header="Received qty" Width="4*" Binding="{Binding RmaLineItems[0].Quantity, StringFormat={}{0:0.##}}"/>
-															<DataGridTextColumn Header="Return status" Width="6*" Binding="{Binding ItemState}"/>
-															<DataGridTextColumn Header="Condition" Binding="{Binding ReturnCondition}"/>
-														</DataGrid.Columns>
-													</DataGrid>
-												</Grid>
-											</HeaderedContentControl>
+                                                    <DataGrid Grid.Column="0" ItemsSource="{Binding Path=CurrentRmaRequest.RmaReturnItems}">
+                                                        <DataGrid.Columns>
+                                                            <DataGridTextColumn Header="ID" Width="3*" Binding="{Binding RmaLineItems[0].LineItemId}" Foreground="{DynamicResource Virto_HighLightText_Foreground_Brush}"/>
+                                                            <DataGridTextColumn Header="Name" Width="10*" Binding="{Binding RmaLineItems[0].LineItem.DisplayName}" />
+                                                            <DataGridTextColumn Header="List Price" Width="4*" Binding="{Binding RmaLineItems[0].LineItem.ListPrice}"/>
+                                                            <DataGridTextColumn Header="Invoice Price" Binding="{Binding RmaLineItems[0].LineItem.PlacedPrice}"/>
+                                                            <DataGridTextColumn Header="Total" Width="4*">
+                                                                <DataGridTextColumn.Binding>
+                                                                    <MultiBinding Converter="{StaticResource MathConverter}" ConverterParameter="*" StringFormat="{}{0:c}">
+                                                                        <Binding Path="RmaLineItems[0].ReturnQuantity" />
+                                                                        <Binding Path="RmaLineItems[0].LineItem.ListPrice"/>
+                                                                    </MultiBinding>
+                                                                </DataGridTextColumn.Binding>
+                                                            </DataGridTextColumn>
+                                                            <DataGridTextColumn Header="Qty" Width="1*" Binding="{Binding RmaLineItems[0].ReturnQuantity, StringFormat={}{0:0.##}}"/>
+                                                            <DataGridTextColumn Header="Received qty" Width="4*" Binding="{Binding RmaLineItems[0].Quantity, StringFormat={}{0:0.##}}"/>
+                                                            <DataGridTextColumn Header="Return status" Width="6*" Binding="{Binding ItemState}"/>
+                                                            <DataGridTextColumn Header="Condition" Binding="{Binding ReturnCondition}"/>
+                                                        </DataGrid.Columns>
+                                                    </DataGrid>
+                                                </Grid>
+                                            </HeaderedContentControl>
 
-											<Grid Grid.Row="1">
-												<Grid.ColumnDefinitions>
-													<ColumnDefinition Width="auto" />
-													<ColumnDefinition Width="10" />
-													<ColumnDefinition />
-												</Grid.ColumnDefinitions>
-												<HeaderedContentControl Header="Rma Summary" HorizontalAlignment="Left" VerticalAlignment="Top" Height="150" Style="{DynamicResource Virto_HeaderedContentBlock_Style}">
-													<Grid>
-														<Grid.ColumnDefinitions>
-															<ColumnDefinition Width="auto"/>
-															<ColumnDefinition Width="10"/>
-															<ColumnDefinition Width="*"/>
-														</Grid.ColumnDefinitions>
-														<Grid.RowDefinitions>
-															<RowDefinition Height="auto"/>
-															<RowDefinition Height="auto"/>
-															<RowDefinition Height="auto"/>
-														</Grid.RowDefinitions>
+                                            <Grid Grid.Row="1">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="auto" />
+                                                    <ColumnDefinition Width="10" />
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
+                                                <HeaderedContentControl Header="Rma Summary" HorizontalAlignment="Left" VerticalAlignment="Top" Height="150" Style="{DynamicResource Virto_HeaderedContentBlock_Style}">
+                                                    <Grid>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="auto"/>
+                                                            <ColumnDefinition Width="10"/>
+                                                            <ColumnDefinition Width="*"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="auto"/>
+                                                            <RowDefinition Height="auto"/>
+                                                            <RowDefinition Height="auto"/>
+                                                        </Grid.RowDefinitions>
 
-														<TextBlock Grid.Row="0" Grid.Column="0" Text="Return Sub-Total:" FontWeight="Bold" />
-														<TextBlock Grid.Row="1" Grid.Column="0" Text="Refunded:" />
-														<TextBlock Grid.Row="2" Grid.Column="0" Text="Balance Owed:" />
+                                                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Return Sub-Total:" FontWeight="Bold" />
+                                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Refunded:" />
+                                                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Balance Owed:" />
 
-														<TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding CurrentRmaRequest.ItemSubtotal, Converter={StaticResource CurrencyConverter}}" />
-														<TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding CurrentRmaRequest.RefundAmount, Converter={StaticResource CurrencyConverter}}" />
-														<TextBlock Grid.Row="2" Grid.Column="2">
-															<TextBlock.Text>
-																<MultiBinding Converter="{StaticResource MathConverter}" ConverterParameter="-" StringFormat="{}{0:c}">
-																	<Binding Path="CurrentRmaRequest.ItemSubtotal" />
-																	<Binding Path="CurrentRmaRequest.RefundAmount" />
-																</MultiBinding>
-															</TextBlock.Text>
-														</TextBlock>
-													</Grid>
-												</HeaderedContentControl>
+                                                        <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding CurrentRmaRequest.ItemSubtotal, Converter={StaticResource CurrencyConverter}}" />
+                                                        <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding CurrentRmaRequest.RefundAmount, Converter={StaticResource CurrencyConverter}}" />
+                                                        <TextBlock Grid.Row="2" Grid.Column="2">
+                                                            <TextBlock.Text>
+                                                                <MultiBinding Converter="{StaticResource MathConverter}" ConverterParameter="-" StringFormat="{}{0:c}">
+                                                                    <Binding Path="CurrentRmaRequest.ItemSubtotal" />
+                                                                    <Binding Path="CurrentRmaRequest.RefundAmount" />
+                                                                </MultiBinding>
+                                                            </TextBlock.Text>
+                                                        </TextBlock>
+                                                    </Grid>
+                                                </HeaderedContentControl>
 
-												<HeaderedContentControl Header="Comments" Grid.Column="2" Style="{DynamicResource Virto_HeaderedContentBlock_Style}">
-													<Grid>
-														<Grid.RowDefinitions>
-															<RowDefinition />
-															<RowDefinition />
-														</Grid.RowDefinitions>
-														<Grid.ColumnDefinitions>
-															<ColumnDefinition Width="auto" />
-															<ColumnDefinition Width="10" />
-															<ColumnDefinition />
-														</Grid.ColumnDefinitions>
-														<TextBlock Text="Customer comment:" FontWeight="DemiBold"/>
-														<TextBlock Grid.Column="2" Text="{Binding CurrentRmaRequest.Comment}" TextWrapping="Wrap" />
+                                                <HeaderedContentControl Header="Comments" Grid.Column="2" Style="{DynamicResource Virto_HeaderedContentBlock_Style}">
+                                                    <Grid>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition />
+                                                            <RowDefinition />
+                                                        </Grid.RowDefinitions>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="auto" />
+                                                            <ColumnDefinition Width="10" />
+                                                            <ColumnDefinition />
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Text="Customer comment:" FontWeight="DemiBold"/>
+                                                        <TextBlock Grid.Column="2" Text="{Binding CurrentRmaRequest.Comment}" TextWrapping="Wrap" />
 
-														<TextBlock Grid.Row="1" Text="Fulfillment Center comment:" FontWeight="DemiBold" />
-														<TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding CurrentRmaRequest.Notes}" TextWrapping="Wrap" />
-													</Grid>
-												</HeaderedContentControl>
-											</Grid>
-										</Grid>
-									</ScrollViewer>
-								</DataTemplate>
-							</Setter.Value>
-						</Setter>
-					</Style>
-				</TabControl.Resources>
-			</TabControl>
-		</TabItem>
+                                                        <TextBlock Grid.Row="1" Text="Fulfillment Center comment:" FontWeight="DemiBold" />
+                                                        <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding CurrentRmaRequest.Notes}" TextWrapping="Wrap" />
+                                                    </Grid>
+                                                </HeaderedContentControl>
+                                            </Grid>
+                                        </Grid>
+                                    </ScrollViewer>
+                                </DataTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </TabControl.Resources>
+            </TabControl>
+        </TabItem>
 
-		<TabItem x:Name="tabItemOrderFormProperties" Header="Properties" Visibility="{Binding FirstOrderForm.OrderFormPropertyValues.Count, Converter={x:Static Presentation_Core_Infrastructure_Converters:ToVisibilityConverter.Current}, FallbackValue=Collapsed}">
-			<Grid>
-				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition/>
-				</Grid.RowDefinitions>
+        <TabItem x:Name="tabItemOrderFormProperties" Header="Properties" Visibility="{Binding FirstOrderForm.OrderFormPropertyValues.Count, Converter={x:Static Presentation_Core_Infrastructure_Converters:ToVisibilityConverter.Current}, FallbackValue=Collapsed}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
 
-				<ItemsControl Style="{StaticResource Virto_ToolbarItemsControl_Style}" />
+                <ItemsControl Style="{StaticResource Virto_ToolbarItemsControl_Style}" />
 
-				<DataGrid Grid.Row="1" ItemsSource="{Binding FirstOrderForm.OrderFormPropertyValues}" Margin="0,0,0,4">
-					<DataGrid.Columns>
-						<DataGridTextColumn Header="Name" Binding="{Binding Name}" />
-						<DataGridTextColumn Header="Value" Binding="{Binding }" Width="*" />
-						<!--<DataGridTextColumn Header="Type" Binding="{Binding ValueType}" />-->
-					</DataGrid.Columns>
-				</DataGrid>
-			</Grid>
-		</TabItem>
-	</TabControl>
+                <DataGrid Grid.Row="1" ItemsSource="{Binding FirstOrderForm.OrderFormPropertyValues}" Margin="0,0,0,4">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                        <DataGridTextColumn Header="Value" Binding="{Binding }" Width="*" />
+                        <!--<DataGridTextColumn Header="Type" Binding="{Binding ValueType}" />-->
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </TabItem>
+    </TabControl>
 </UserControl>
