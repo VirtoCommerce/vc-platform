@@ -469,13 +469,6 @@ namespace VirtoCommerce.PowerShell.Orders
 							Description = "Credit Card",
 							Name = "CreditCard",
 							IsActive = true
-						},
-					new PaymentMethod
-						{
-							Description = "Use contract negotiated credit available for the organization",
-							Name = "Credit",
-							IsActive = true
-							//PaymentGateway = paymentGateways[0]
 						}
 				};
 
