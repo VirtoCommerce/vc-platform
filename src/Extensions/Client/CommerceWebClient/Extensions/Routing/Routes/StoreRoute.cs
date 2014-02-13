@@ -52,6 +52,14 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
             var storeId = values[Constants.Store].ToString();
             var store = StoreHelper.StoreClient.GetStoreById(storeId);
 
+            //Reset to default language if validation fails
+            var constraint = new StoreRouteConstraint(); 
+            if (!constraint.Match(requestContext.HttpContext, this, Constants.Store, values,
+                RouteDirection.UrlGeneration))
+            {
+                values[Constants.Language] = store.DefaultLanguage;
+            }
+
             //Need to be in lock to make sure other thread does not change originalUrl in this block
             lock (thisLock)
             {
