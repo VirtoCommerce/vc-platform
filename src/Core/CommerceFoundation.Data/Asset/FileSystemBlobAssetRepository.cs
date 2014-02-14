@@ -282,29 +282,43 @@ namespace VirtoCommerce.Foundation.Data.Asset
 
 	    public void Delete(string id)
 	    {
-            object item = GetFolderItemById(id) ?? (object)GetFolderById(id);
+            var itemPath = Absolute(id);
+	        if (File.Exists(itemPath))
+	        {
+                File.Delete(itemPath);
+                var thumbFile = GenerateThumbnailPath(itemPath);
+                if (File.Exists(thumbFile))
+                {
+                    File.Delete(thumbFile);
+                }
 
-            if (item != null)
-            {
-                Remove(item);
-                Commit();
-            }
+                return;
+	        }
+
+	        if (Directory.Exists(itemPath))
+	        {
+                Directory.Delete(itemPath, true);
+	        }
 	    }
 
 	    public void Rename(string id, string name)
 	    {
-            object item = GetFolderItemById(id);
+            var oldItemPath = Absolute(id);
 
-            if (item != null)
+            if (File.Exists(oldItemPath))
             {
-                var oldItemPath = Absolute(id);
                 var newItemPath = Path.Combine(Path.GetDirectoryName(oldItemPath) ?? String.Empty, name);
                 File.Move(oldItemPath, newItemPath);
+                var thumbFile = GenerateThumbnailPath(oldItemPath);
+                if (File.Exists(thumbFile))
+                {
+                    var newthumbFile = GenerateThumbnailPath(newItemPath);
+                    File.Move(thumbFile, newthumbFile);
+                }
                 return;
             }
 
-            item = GetFolderById(id);
-            if (item != null)
+            if (Directory.Exists(oldItemPath))
             {
                 var oldFolderPath = Absolute(id);
                 var newFolderPath = Path.Combine(Path.GetDirectoryName(oldFolderPath) ?? String.Empty, name);
@@ -415,22 +429,24 @@ namespace VirtoCommerce.Foundation.Data.Asset
 			if (fillSmallData)
 			{
 				//Read small data
-				var memoryStream = new MemoryStream();
-
-				try
-				{
-					using (FileStream fileStream = File.OpenRead(localBlob))
-					{
-						memoryStream.SetLength(fileStream.Length);
-						await fileStream.CopyToAsync(memoryStream);
-						//fileStream.Read(memoryStream.GetBuffer(), 0, (int)fileStream.Length);
-					}
-					folderItem.SmallData = memoryStream.ToArray();
-				}
-				catch
-				{
-					//TODO exception
-				}
+			    using (var memoryStream = new MemoryStream())
+			    {
+			        try
+			        {
+			            using (FileStream fileStream = File.OpenRead(localBlob))
+			            {
+			                memoryStream.SetLength(fileStream.Length);
+			                await fileStream.CopyToAsync(memoryStream);
+                            
+			                //fileStream.Read(memoryStream.GetBuffer(), 0, (int)fileStream.Length);
+			            }
+			            folderItem.SmallData = memoryStream.ToArray();
+			        }
+			        catch
+			        {
+			            //TODO exception
+			        }
+			    }
 			}
 		}
 

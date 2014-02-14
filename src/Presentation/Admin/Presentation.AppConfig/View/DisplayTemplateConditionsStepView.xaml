@@ -19,7 +19,7 @@
 
 	<i:Interaction.Triggers>
 		<prism:InteractionRequestTrigger SourceObject="{Binding Path=CommonConfirmRequest}">
-			<interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:DisableableLocalModalInteractionDialog}"/>
+			<interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:ConfirmationLocalModalInteractionDialog}"/>
 		</prism:InteractionRequestTrigger>
 	</i:Interaction.Triggers>
 

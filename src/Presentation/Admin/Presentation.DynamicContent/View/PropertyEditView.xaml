@@ -10,82 +10,83 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                xmlns:extToolkit="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
                mc:Ignorable="d" d:DesignHeight="500" Width="400">
-	<base:ViewBase.Resources>
-		<ResourceDictionary>
-			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/DialogViewTheme/VirtoCommerceDialogTheme.xaml"/>
-			</ResourceDictionary.MergedDictionaries>
-		</ResourceDictionary>
-	</base:ViewBase.Resources>
+    <base:ViewBase.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/DialogViewTheme/VirtoCommerceDialogTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </base:ViewBase.Resources>
 
-	<i:Interaction.Triggers>
-		<prism:InteractionRequestTrigger SourceObject="{Binding CommonConfirmRequest, Mode=OneWay}">
-			<interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:DisableableLocalModalInteractionDialog}" />
-		</prism:InteractionRequestTrigger>
-	</i:Interaction.Triggers>
+    <i:Interaction.Triggers>
+        <prism:InteractionRequestTrigger SourceObject="{Binding CommonConfirmRequest, Mode=OneWay}">
+            <interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:DisableableLocalModalInteractionDialog}" />
+        </prism:InteractionRequestTrigger>
+    </i:Interaction.Triggers>
 
-	<Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto" />
-			<RowDefinition Height="Auto" />
-			<RowDefinition/>
-		</Grid.RowDefinitions>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="43*"/>
+            <RowDefinition Height="57*"/>
+        </Grid.RowDefinitions>
 
-		<TextBlock Grid.Row="0" Text="Enter property value"/>
+        <TextBlock Grid.Row="0" Text="Enter property value"/>
 
-		<TextBox Grid.Row="1" Visibility="{Binding IsShortStringValue, Converter={StaticResource booleanToVisibilityConverter}}"
+        <TextBox Grid.Row="1" Visibility="{Binding IsShortStringValue, Converter={StaticResource booleanToVisibilityConverter}}"
                  Text="{Binding InnerItem.ShortTextValue, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Width="300" />
 
-		<core_controls:WatermarkedTextBox Grid.Row="1"  VerticalContentAlignment="Top" Style="{StaticResource Virto_Multiline_WatermarkedTextBox_Style}"
+        <core_controls:WatermarkedTextBox Grid.Row="1"  VerticalContentAlignment="Top" Style="{StaticResource Virto_Multiline_WatermarkedTextBox_Style}"
 				 Visibility="{Binding IsLongStringValue, Converter={StaticResource booleanToVisibilityConverter}}"
                  Text="{Binding InnerItem.LongTextValue, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
                  AcceptsReturn="True" Height="160"/>
 
-		<extToolkit:DecimalUpDown Grid.Row="1" Visibility="{Binding IsDecimalValue, Converter={StaticResource booleanToVisibilityConverter}}"
+        <extToolkit:DecimalUpDown Grid.Row="1" Visibility="{Binding IsDecimalValue, Converter={StaticResource booleanToVisibilityConverter}}"
                  Value="{Binding InnerItem.DecimalValue, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-		<extToolkit:IntegerUpDown Grid.Row="1" Visibility="{Binding IsIntegerValue, Converter={StaticResource booleanToVisibilityConverter}}"
+        <extToolkit:IntegerUpDown Grid.Row="1" Visibility="{Binding IsIntegerValue, Converter={StaticResource booleanToVisibilityConverter}}"
                  Value="{Binding InnerItem.IntegerValue, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-		<CheckBox Grid.Row="1" Visibility="{Binding IsBooleanValue, Converter={StaticResource booleanToVisibilityConverter}}"
+        <CheckBox Grid.Row="1" Visibility="{Binding IsBooleanValue, Converter={StaticResource booleanToVisibilityConverter}}"
                 IsChecked="{Binding InnerItem.BooleanValue, ValidatesOnDataErrors=True, UpdateSourceTrigger=Default}" VerticalAlignment="Center" />
-		<DatePicker Grid.Row="1" Visibility="{Binding IsDateTimeValue, Converter={StaticResource booleanToVisibilityConverter}}" 
+        <DatePicker Grid.Row="1" Visibility="{Binding IsDateTimeValue, Converter={StaticResource booleanToVisibilityConverter}}" 
                 SelectedDate="{Binding InnerItem.DateTimeValue, ValidatesOnDataErrors=True, UpdateSourceTrigger=Default}" Width="150" Height="22" />
 
-		<Grid Grid.Row="1">
-			<Grid.RowDefinitions>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="Auto"/>
-			</Grid.RowDefinitions>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-			<Grid Grid.Row="0" Visibility="{Binding IsAssetValue, Converter={StaticResource booleanToVisibilityConverter}}">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="*"/>
-					<ColumnDefinition Width="Auto"/>
-				</Grid.ColumnDefinitions>
-				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto"/>
-					<RowDefinition Height="Auto"/>
-				</Grid.RowDefinitions>
+            <Grid Grid.Row="0" Visibility="{Binding IsAssetValue, Converter={StaticResource booleanToVisibilityConverter}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-				<core_controls:WatermarkedTextBox Grid.Column="0" Text="{Binding InnerItem.LongTextValue}" WatermarkText="image not selected" />
-				<Button Grid.Column="1" Content="Select image..." Width="100" Style="{StaticResource Virto_ToolButton_Style}" Margin="10,0,0,0" VerticalAlignment="Center" Command="{Binding AssetPickCommand}" />
+                <core_controls:WatermarkedTextBox Grid.Column="0" Text="{Binding InnerItem.LongTextValue}" WatermarkText="image not selected" />
+                <Button Grid.Column="1" Content="Select image..." Width="100" Style="{StaticResource Virto_ToolButton_Style}" Margin="10,0,0,0" VerticalAlignment="Center" Command="{Binding AssetPickCommand}" />
 
-				<Border Grid.Row="1" Grid.Column="0" BorderThickness="1" Margin="0,7,0,10">
-					<Image Height="100" Width="100" Source="{Binding SelectedAssetImageSource, Mode=OneWay}" />
-				</Border>
-			</Grid>
+                <Border Grid.Row="1" Grid.Column="0" BorderThickness="1" Margin="0,7,0,10">
+                    <Image Height="100" Width="100" Source="{Binding SelectedAssetImageSource, Mode=OneWay}" />
+                </Border>
+            </Grid>
 
-			<Grid Grid.Row="1" Visibility="{Binding IsCategoryValue, Converter={StaticResource booleanToVisibilityConverter}}">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition/>
-					<ColumnDefinition Width="Auto"/>
-				</Grid.ColumnDefinitions>
+            <Grid Grid.Row="1" Visibility="{Binding IsCategoryValue, Converter={StaticResource booleanToVisibilityConverter}}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
-				<core_controls:WatermarkedTextBox Grid.Column="0" Text="{Binding SelectedCategoryName}" WatermarkText="category not selected" IsReadOnly="True"/>
-				<Button Grid.Column="1" Content="Select category..." Width="100" Height="auto" Margin="10,0,0,0" Style="{StaticResource Virto_ToolButton_Style}" VerticalAlignment="Center" Command="{Binding CategoryPickCommand}" />
+                <core_controls:WatermarkedTextBox Grid.Column="0" Text="{Binding SelectedCategoryName}" WatermarkText="category not selected" IsReadOnly="True"/>
+                <Button Grid.Column="1" Content="Select category..." Width="100" Height="auto" Margin="10,0,0,0" Style="{StaticResource Virto_ToolButton_Style}" VerticalAlignment="Center" Command="{Binding CategoryPickCommand}" />
 
-			</Grid>
+            </Grid>
 
-		</Grid>
+        </Grid>
 
-	</Grid>
+    </Grid>
 </base:ViewBase>
