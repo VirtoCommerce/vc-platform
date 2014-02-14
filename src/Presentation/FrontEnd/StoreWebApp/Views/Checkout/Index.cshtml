@@ -30,6 +30,13 @@
 	});
 </script>
 
+@*@section PageTitle
+{
+    <a href="@Url.Action("PaypalExpress")">
+          <img src="https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" align="left" style="margin-right:7px;">
+    </a>
+}*@
+
 <div class="checkout clearfix">
     @Html.ValidationSummary(true)
     @using (Html.BeginForm("ProcessCheckout", "Checkout", FormMethod.Post, new { id = "onestepcheckout-form" }))

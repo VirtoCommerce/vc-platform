@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Globalization;
 using System.Linq;
 using System.Transactions;
 using System.Web.Mvc;
 using Omu.ValueInjecter;
+using PayPal.PayPalAPIInterfaceService;
+using PayPal.PayPalAPIInterfaceService.Model;
 using VirtoCommerce.Client;
 using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
@@ -15,6 +18,7 @@ using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Virto.Helpers;
 using VirtoCommerce.Web.Virto.Helpers.Payments;
 using VirtoCommerce.Web.Virto.Helpers.Popup;
+using AddressType = PayPal.PayPalAPIInterfaceService.Model.AddressType;
 
 namespace VirtoCommerce.Web.Controllers
 {
@@ -193,6 +197,12 @@ namespace VirtoCommerce.Web.Controllers
                 return View("Index", checkoutModel);
             }
 
+            if (checkoutModel.PaymentMethod.Equals("PayPal", StringComparison.OrdinalIgnoreCase))
+            {
+                return PaypalExpress(checkoutModel);
+            }
+
+
             if (UserHelper.CustomerSession.IsRegistered)
             {
                 var orgs = _userClient.GetOrganizationsForCurrentUser();
@@ -291,6 +301,193 @@ namespace VirtoCommerce.Web.Controllers
             }
 
             return View("Index", checkoutModel);
+        }
+
+        public ActionResult PaypalExpress(CheckoutModel model)
+        {
+            // Create request object
+            var request = new SetExpressCheckoutRequestType();
+            var ecDetails = new SetExpressCheckoutRequestDetailsType
+            {
+                CallbackTimeout = "100",
+                ReturnURL = Url.Action("PaypalExpressSuccess", "Checkout", null, "http"),
+                CancelURL = Url.Action("Index", "Checkout", null, "http")
+            };
+
+            // (Optional) Email address of the buyer as entered during checkout. PayPal uses this value to pre-fill the PayPal membership sign-up portion on the PayPal pages.
+            if (!string.IsNullOrEmpty(model.BillingAddress.Address.Email))
+            {
+                ecDetails.BuyerEmail = model.BillingAddress.Address.Email;
+            }
+
+            // (Optional) Determines whether or not the PayPal pages should 
+            //display the shipping address set by you in this SetExpressCheckout request,
+            // not the shipping address on file with PayPal for this buyer. Displaying 
+            // the PayPal street address on file does not allow the buyer to edit that address. 
+            // It is one of the following values:
+            //  0 – The PayPal pages should not display the shipping address.
+            //  1 – The PayPal pages should display the shipping address.
+            if (!model.UseForShipping)
+            {
+                ecDetails.AddressOverride = "1";
+            }
+
+            //Address optional - Display shipping address in PayPal pages
+            //Address not required - Do not display shipping address in PayPal pages
+            //Address required - If shipping address not passed, use value in buyer's profile
+            ecDetails.NoShipping = "2";
+
+            ecDetails.SolutionType = SolutionTypeType.MARK;
+
+            var paymentDetails = new PaymentDetailsType();
+            ecDetails.PaymentDetails.Add(paymentDetails);
+
+            var currency = (CurrencyCodeType)Enum.Parse(typeof(CurrencyCodeType), Ch.CustomerSession.Currency);
+            var format = new CultureInfo("en-US");
+            paymentDetails.ShippingTotal = new BasicAmountType(currency, Ch.Cart.ShippingTotal.ToString("F2", format));
+            paymentDetails.HandlingTotal = new BasicAmountType(currency, Ch.Cart.HandlingTotal.ToString("F2", format));
+            paymentDetails.TaxTotal = new BasicAmountType(currency, Ch.Cart.TaxTotal.ToString("F2", format));
+            paymentDetails.OrderTotal = new BasicAmountType(currency, Ch.OrderForm.Total.ToString("F2", format));
+            paymentDetails.ItemTotal = new BasicAmountType(currency, Ch.Cart.Subtotal.ToString("F2", format));
+            ecDetails.MaxAmount = new BasicAmountType(currency, Ch.Cart.Total.ToString("F2", format));;
+            ecDetails.LocaleCode = Ch.CustomerSession.Language.Substring(0, 2);
+            //paymentDetails.OrderDescription = Ch.Cart.Name;
+
+
+
+            var shippingMethod = Ch.GetShippingMethods(new List<string> { model.ShippingMethod }).First();
+            ecDetails.FlatRateShippingOptions.Add(new ShippingOptionType
+            {
+                ShippingOptionAmount = new BasicAmountType(currency, shippingMethod.Price.ToString("F2", format)), 
+                ShippingOptionIsDefault = "1", 
+                ShippingOptionName = shippingMethod.DisplayName
+            });
+            // It is one of the following values:
+            //   Sale – This is a final sale for which you are requesting payment (default).
+            //   Authorization – This payment is a basic authorization subject to settlement with PayPal Authorization and Capture.
+            //   Order – This payment is an order authorization subject to settlement with PayPal Authorization and Capture.
+            paymentDetails.PaymentAction = PaymentActionCodeType.SALE;
+
+            var modelAddress = model.UseForShipping ? model.BillingAddress.Address : model.ShippingAddress.Address;
+            {
+                var shipAddress = new AddressType();
+                // Person's name associated with this shipping address.
+                // It is required if using a shipping address.
+                // Character length and limitations: 32 single-byte characters
+                shipAddress.Name = string.Format("{0} {1}", modelAddress.FirstName, modelAddress.LastName);
+                //First street address. It is required if using a shipping address.
+                //Character length and limitations: 100 single-byte characters
+                shipAddress.Street1 = modelAddress.Line1;
+                //(Optional) Second street address.
+                //Character length and limitations: 100 single-byte characters
+                shipAddress.Street2 = modelAddress.Line2;
+                //Name of city. It is required if using a shipping address.
+                //Character length and limitations: 40 single-byte characters
+                shipAddress.CityName = modelAddress.City;
+                // State or province. It is required if using a shipping address.
+                // Character length and limitations: 40 single-byte characters
+                shipAddress.StateOrProvince = modelAddress.StateProvince;
+                // Country code. It is required if using a shipping address.
+                //  Character length and limitations: 2 single-byte characters
+                shipAddress.Country = (CountryCodeType)Enum.Parse(typeof(CountryCodeType), modelAddress.CountryCode.Substring(0,2));
+                // U.S. ZIP code or other country-specific postal code. 
+                // It is required if using a U.S. shipping address and may be
+                // required for other countries.
+                // Character length and limitations: 20 single-byte characters
+                shipAddress.PostalCode = modelAddress.PostalCode;
+                //Fix for release
+                shipAddress.Phone = modelAddress.DaytimePhoneNumber;
+
+                ecDetails.PaymentDetails[0].ShipToAddress = shipAddress;
+            }
+
+            // Each payment can include requestDetails about multiple items
+            foreach (var li in Ch.LineItems)
+            {
+                var itemDetails = new PaymentDetailsItemType();
+                itemDetails.Name = li.DisplayName;
+                itemDetails.Amount = new BasicAmountType(currency, li.PlacedPrice.ToString("F2", format));
+                itemDetails.Quantity = Convert.ToInt32(li.Quantity);
+
+                // Indicates whether an item is digital or physical. For digital goods, this field is required and must be set to Digital. It is one of the following values:
+                //   1.Digital
+                //   2.Physical
+                //  This field is available since version 65.1. 
+                itemDetails.ItemCategory = ItemCategoryType.PHYSICAL;
+                //(Optional) Item sales tax.
+                itemDetails.Tax = new BasicAmountType(currency, li.TaxTotal.ToString("F2", format));
+
+                //(Optional) Item description.
+                // Character length and limitations: 127 single-byte characters
+                itemDetails.Description = li.Description;
+
+                paymentDetails.PaymentDetailsItem.Add(itemDetails);
+            }
+
+            request.SetExpressCheckoutRequestDetails = ecDetails;
+
+            // Invoke the API
+            var wrapper = new SetExpressCheckoutReq();
+            wrapper.SetExpressCheckoutRequest = request;
+
+            var configMap = new Dictionary<string, string>();
+
+            // Endpoints are varied depending on whether sandbox OR live is chosen for mode
+            configMap.Add("mode", "sandbox");
+
+            // These values are defaulted in SDK. If you want to override default values, uncomment it and add your value.
+            //configMap.Add("connectionTimeout", "5000");
+            //configMap.Add("requestRetries", "2");
+
+            //configMap.Add("account1.apiUsername", "asu-facilitator_api1.virtoway.com");
+            //configMap.Add("account1.apiPassword", "1392383698");
+            //configMap.Add("account1.apiSignature", "AiPC9BjkCyDFQXbSkoZcgqH3hpacAlLGPhDf.kMuSHnPvtHLLLbglQVe");
+
+            configMap.Add("account1.apiUsername", "jb-us-seller_api1.paypal.com");
+            configMap.Add("account1.apiPassword", "WX4WTU3S8MY44S7F");
+            configMap.Add("account1.apiSignature", "AFcWxV21C7fd0v3bYYYRCpSSRl31A7yDhhsPUU2XhtMoZXsWHFxu-RWy");
+            //configMap.Add("account1.applicationId", "APP-80W284485P519543T");
+            // Optional
+            // configMap.Add("account1.Subject", "");
+
+            // Sample Certificate Credential
+            // configMap.Add("account2.apiUsername", "certuser_biz_api1.paypal.com");
+            // configMap.Add("account2.apiPassword", "D6JNKKULHN3G5B8A");
+            // configMap.Add("account2.apiCertificate", "resource/sdk-cert.p12");
+            // configMap.Add("account2.privateKeyPassword", "password");
+            // Optional
+            // configMap.Add("account2.Subject", "");
+
+            // Create the PayPalAPIInterfaceServiceService service object to make the API call
+            var service = new PayPalAPIInterfaceServiceService(configMap);
+
+            // # API call 
+            // Invoke the SetExpressCheckout method in service wrapper object  
+            var setECResponse = service.SetExpressCheckout(wrapper);
+
+            // Check for API return status
+            if (setECResponse.Ack.Equals(AckCodeType.FAILURE) ||
+               (setECResponse.Errors != null && setECResponse.Errors.Count > 0))
+            {
+                ModelState.AddModelError("", "Paypal failure");
+                foreach (var error in setECResponse.Errors)
+                {
+                    ModelState.AddModelError("", error.LongMessage);
+                }
+            }
+            else
+            {
+               var redirectUrl = string.Format(ConfigurationManager.AppSettings["PAYPAL_REDIRECT_URL"],"_express-checkout&token=" + setECResponse.Token);
+               return Redirect(redirectUrl);
+            }
+
+            return View("Index", model);
+        }
+
+
+        public ActionResult PaypalExpressSuccess()
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

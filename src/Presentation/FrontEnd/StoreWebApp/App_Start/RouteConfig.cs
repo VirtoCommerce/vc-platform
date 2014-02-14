@@ -108,7 +108,7 @@ namespace VirtoCommerce.Web
                 });
 
             var defaultRoute = new NormalizeRoute(new Route(string.Format("{{{0}}}/{{controller}}/{{action}}/{{id}}", Constants.Language),
-                new RouteValueDictionary { { "id", UrlParameter.Optional } },
+                new RouteValueDictionary { { "id", UrlParameter.Optional }, { "action", "Index" } },
                 new RouteValueDictionary { { Constants.Language, new LanguageRouteConstraint() } },
                 new RouteValueDictionary { { "namespaces", new[] { "VirtoCommerce.Web.Controllers" } } },
                 new MvcRouteHandler()));
@@ -122,7 +122,6 @@ namespace VirtoCommerce.Web
                 "{controller}/{action}/{id}", // URL with parameters
                 new
                 {
-                    controller = "Home", 
                     action = "Index", 
                     id = UrlParameter.Optional
                 }, // Parameter defaults
