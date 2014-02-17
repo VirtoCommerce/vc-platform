@@ -224,12 +224,17 @@
     <Compile Include="Catalogs\Model\PropertyTargetType.cs" />
     <Compile Include="Catalogs\Model\PropertyAttribute.cs" />
     <Compile Include="Catalogs\Model\PropertyValueType.cs" />
+<<<<<<< HEAD
     <Compile Include="DataManagement\Model\EntityType.cs" />
     <Compile Include="DataManagement\Model\OperationState.cs" />
     <Compile Include="DataManagement\Model\OperationStatus.cs" />
     <Compile Include="DataManagement\Model\Import\Importers\SeoImporter.cs" />
     <Compile Include="DataManagement\Services\IDataManagementService.cs" />
     <Compile Include="DataManagement\Services\DataManagementService.cs" />
+=======
+    <Compile Include="Importing\Model\Importers\SeoImporter.cs" />
+    <Compile Include="Orders\Extensions\PaymentMethodExtensions.cs" />
+>>>>>>> a818dcea85b3274d3f1801d96ae2fb4d2c8d965e
     <Compile Include="Orders\Model\OrderFormPropertyValue.cs" />
     <Compile Include="Orders\Model\OrderFormValueType.cs" />
     <Compile Include="Catalogs\Model\PropertyValueBase.cs" />

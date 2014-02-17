@@ -49,5 +49,15 @@ namespace VirtoCommerce.Client
 				.Where(x => payments.Contains(x.Name) && (includeInactive || x.IsActive))
 				.OrderBy(x => x.Priority).ToArray();
         }
+
+        public PaymentMethod GetPaymentMethod(string name, bool includeInactive = false)
+        {
+            return _paymentRepository.PaymentMethods
+                .Expand(x => x.PaymentGateway)
+                .Expand(x => x.PaymentMethodPropertyValues)
+				.Where(x => x.Name == name && (includeInactive || x.IsActive))
+				.OrderBy(x => x.Priority).FirstOrDefault();
+        }
+
     }
 }
