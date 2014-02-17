@@ -225,6 +225,7 @@
     <Compile Include="Catalogs\Model\PropertyAttribute.cs" />
     <Compile Include="Catalogs\Model\PropertyValueType.cs" />
     <Compile Include="Importing\Model\Importers\SeoImporter.cs" />
+    <Compile Include="Orders\Extensions\PaymentMethodExtensions.cs" />
     <Compile Include="Orders\Model\OrderFormPropertyValue.cs" />
     <Compile Include="Orders\Model\OrderFormValueType.cs" />
     <Compile Include="Catalogs\Model\PropertyValueBase.cs" />

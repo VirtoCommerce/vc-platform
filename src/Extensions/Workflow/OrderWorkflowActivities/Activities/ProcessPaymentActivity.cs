@@ -4,6 +4,7 @@ using System.Linq;
 using VirtoCommerce.Client;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Orders.Exceptions;
+using VirtoCommerce.Foundation.Orders.Extensions;
 using VirtoCommerce.Foundation.Orders.Model;
 using VirtoCommerce.Foundation.Orders.Model.PaymentMethod;
 using VirtoCommerce.Foundation.Orders.Repositories;
@@ -128,7 +129,7 @@ namespace VirtoCommerce.OrderWorkflow
                     Debug.WriteLine(String.Format("Creating instance of \"{0}\".", type.Name));
 					var provider = (IPaymentGateway)Activator.CreateInstance(type);
 
-					provider.Settings = CreateSettings(paymentMethod);
+                    provider.Settings = paymentMethod.CreateSettings();
 
 					var message = "";
                     Debug.WriteLine(String.Format("Processing the payment."));
@@ -190,11 +191,5 @@ namespace VirtoCommerce.OrderWorkflow
 			}
 		}
 
-		private Dictionary<string, string> CreateSettings(PaymentMethod method)
-		{
-			var settings = method.PaymentMethodPropertyValues.ToDictionary(property => property.Name, property => property.ToString());
-			settings["Gateway"] = method.PaymentGateway.GatewayId;
-			return settings;
-		}
 	}
 }
