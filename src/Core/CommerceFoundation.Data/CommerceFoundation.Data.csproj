@@ -66,26 +66,24 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework.SqlServer">
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Data.Edm, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\Microsoft.Data.Edm.5.6.0\lib\net40\Microsoft.Data.Edm.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Data.OData, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\Microsoft.Data.OData.5.6.0\lib\net40\Microsoft.Data.OData.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Data.Services, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\Microsoft.Data.Services.5.6.0\lib\net40\Microsoft.Data.Services.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Data.Services.Client, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\Microsoft.Data.Services.Client.5.6.0\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.OData.EntityFrameworkProvider">
+    <Reference Include="Microsoft.OData.EntityFrameworkProvider, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\Microsoft.OData.EntityFrameworkProvider.1.0.0-alpha2\lib\net40\Microsoft.OData.EntityFrameworkProvider.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation">
@@ -111,7 +109,6 @@
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Spatial, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\System.Spatial.5.6.0\lib\net40\System.Spatial.dll</HintPath>
     </Reference>
     <Reference Include="System.Transactions" />
@@ -126,52 +123,8 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="AppConfig\Migrations\201303261016034_Initial.cs" />
-    <Compile Include="AppConfig\Migrations\201303261016034_Initial.Designer.cs">
-      <DependentUpon>201303261016034_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="AppConfig\Migrations\201307241448350_Update.cs" />
-    <Compile Include="AppConfig\Migrations\201307241448350_Update.Designer.cs">
-      <DependentUpon>201307241448350_Update.cs</DependentUpon>
-    </Compile>
-    <Compile Include="AppConfig\Migrations\201307260640417_SchedulerUpdate.cs" />
-    <Compile Include="AppConfig\Migrations\201307260640417_SchedulerUpdate.Designer.cs">
-      <DependentUpon>201307260640417_SchedulerUpdate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="AppConfig\Migrations\201401130952595_Seo.cs" />
-    <Compile Include="AppConfig\Migrations\201401130952595_Seo.Designer.cs">
-      <DependentUpon>201401130952595_Seo.cs</DependentUpon>
-    </Compile>
     <Compile Include="Asset\FileSystemBlobAssetRepository.cs" />
-    <Compile Include="Catalogs\Migrations\201303190742259_Initial.cs" />
-    <Compile Include="Catalogs\Migrations\201303190742259_Initial.Designer.cs">
-      <DependentUpon>201303190742259_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Catalogs\Migrations\201308240416263_CreateIndexes.cs" />
-    <Compile Include="Catalogs\Migrations\201308240416263_CreateIndexes.Designer.cs">
-      <DependentUpon>201308240416263_CreateIndexes.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Catalogs\Migrations\201309051329405_CascadeDelete.cs" />
-    <Compile Include="Catalogs\Migrations\201309051329405_CascadeDelete.Designer.cs">
-      <DependentUpon>201309051329405_CascadeDelete.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Catalogs\Migrations\Configuration.cs" />
-    <Compile Include="Customers\Migrations\201304220516289_Initial.cs" />
-    <Compile Include="Customers\Migrations\201304220516289_Initial.Designer.cs">
-      <DependentUpon>201304220516289_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Customers\Migrations\Configuration.cs" />
-    <Compile Include="AppConfig\Migrations\Configuration.cs" />
     <Compile Include="Importing\EFImportingRepository.cs" />
-    <Compile Include="Importing\Migrations\201302151332357_Initial.cs" />
-    <Compile Include="Importing\Migrations\201302151332357_Initial.designer.cs">
-      <DependentUpon>201302151332357_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Importing\Migrations\201308120849597_Update.cs" />
-    <Compile Include="Importing\Migrations\201308120849597_Update.Designer.cs">
-      <DependentUpon>201308120849597_Update.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Importing\Migrations\Configuration.cs" />
     <Compile Include="Importing\DSImportClient.cs" />
     <Compile Include="Importing\DSImportService.cs" />
     <Compile Include="Infrastructure\ConnectionHelper.cs" />
@@ -194,11 +147,6 @@
     <Compile Include="Infrastructure\Interceptors\LogInterceptor.cs" />
     <Compile Include="Infrastructure\Interceptors\IInterceptor.cs" />
     <Compile Include="Infrastructure\Interceptors\InterceptionContext.cs" />
-    <Compile Include="Infrastructure\LogMigrations\201209181945482_Initial.cs" />
-    <Compile Include="Infrastructure\LogMigrations\201209181945482_Initial.Designer.cs">
-      <DependentUpon>201209181945482_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Infrastructure\LogMigrations\Configuration.cs" />
     <Compile Include="Infrastructure\OperationLogContext.cs" />
     <Compile Include="Infrastructure\DSClientBase.cs" />
     <Compile Include="Infrastructure\EFRepositoryBase.cs" />
@@ -210,53 +158,81 @@
     <Compile Include="Inventories\DSInventoryService.cs" />
     <Compile Include="Inventories\EFInventoryRepository.cs" />
     <Compile Include="Infrastructure\JsonSupportBehavior.cs" />
-    <Compile Include="Inventories\Migrations\201302151333500_Initial.cs" />
-    <Compile Include="Inventories\Migrations\201302151333500_Initial.Designer.cs">
-      <DependentUpon>201302151333500_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Inventories\Migrations\Configuration.cs" />
     <Compile Include="Marketing\DSDynamicContentClient.cs" />
     <Compile Include="Marketing\DSDynamicContentService.cs" />
     <Compile Include="Marketing\DSMarketingClient.cs" />
     <Compile Include="Marketing\DSMarketingService.cs" />
     <Compile Include="Marketing\EFDynamicContentRepository.cs" />
     <Compile Include="Marketing\EFMarketingRepository.cs" />
-    <Compile Include="Marketing\Migrations\Content\201304010534157_Initial.cs" />
-    <Compile Include="Marketing\Migrations\Content\201304010534157_Initial.Designer.cs">
-      <DependentUpon>201304010534157_Initial.cs</DependentUpon>
+    <Compile Include="Catalogs\Migrations\Configuration.cs" />
+    <Compile Include="Catalogs\Migrations\201402141547367_Initial.cs" />
+    <Compile Include="Catalogs\Migrations\201402141547367_Initial.Designer.cs">
+      <DependentUpon>201402141547367_Initial.cs</DependentUpon>
     </Compile>
-    <Compile Include="Marketing\Migrations\Content\201308291146308_Update.cs" />
-    <Compile Include="Marketing\Migrations\Content\201308291146308_Update.Designer.cs">
-      <DependentUpon>201308291146308_Update.cs</DependentUpon>
+    <Compile Include="AppConfig\Migrations\Configuration.cs" />
+    <Compile Include="AppConfig\Migrations\201402141554170_Initial.cs" />
+    <Compile Include="AppConfig\Migrations\201402141554170_Initial.Designer.cs">
+      <DependentUpon>201402141554170_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Customers\Migrations\Configuration.cs" />
+    <Compile Include="Customers\Migrations\201402141557167_Initial.cs" />
+    <Compile Include="Customers\Migrations\201402141557167_Initial.Designer.cs">
+      <DependentUpon>201402141557167_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Importing\Migrations\Configuration.cs" />
+    <Compile Include="Importing\Migrations\201402141559293_Initial.cs" />
+    <Compile Include="Importing\Migrations\201402141559293_Initial.Designer.cs">
+      <DependentUpon>201402141559293_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Infrastructure\LogMigrations\Configuration.cs" />
+    <Compile Include="Infrastructure\LogMigrations\201402141605558_Initial.cs" />
+    <Compile Include="Infrastructure\LogMigrations\201402141605558_Initial.Designer.cs">
+      <DependentUpon>201402141605558_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Inventories\Migrations\Configuration.cs" />
+    <Compile Include="Inventories\Migrations\201402141608186_Initial.cs" />
+    <Compile Include="Inventories\Migrations\201402141608186_Initial.Designer.cs">
+      <DependentUpon>201402141608186_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Marketing\Migrations\Content\Configuration.cs" />
-    <Compile Include="Marketing\Migrations\Promotion\201304010533349_Initial.cs" />
-    <Compile Include="Marketing\Migrations\Promotion\201304010533349_Initial.Designer.cs">
-      <DependentUpon>201304010533349_Initial.cs</DependentUpon>
+    <Compile Include="Marketing\Migrations\Content\201402141610395_Initial.cs" />
+    <Compile Include="Marketing\Migrations\Content\201402141610395_Initial.Designer.cs">
+      <DependentUpon>201402141610395_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Marketing\Migrations\Promotion\Configuration.cs" />
-    <Compile Include="Orders\Migrations\201305151927300_Initial.cs" />
-    <Compile Include="Orders\Migrations\201305151927300_Initial.Designer.cs">
-      <DependentUpon>201305151927300_Initial.cs</DependentUpon>
+    <Compile Include="Marketing\Migrations\Promotion\201402141612253_Initial.cs" />
+    <Compile Include="Marketing\Migrations\Promotion\201402141612253_Initial.Designer.cs">
+      <DependentUpon>201402141612253_Initial.cs</DependentUpon>
     </Compile>
-    <Compile Include="Orders\Migrations\201308290648071_CreateIndex.cs" />
-    <Compile Include="Orders\Migrations\201308290648071_CreateIndex.Designer.cs">
-      <DependentUpon>201308290648071_CreateIndex.cs</DependentUpon>
+    <Compile Include="Stores\Migrations\201402141710203_Initial.cs" />
+    <Compile Include="Stores\Migrations\201402141710203_Initial.Designer.cs">
+      <DependentUpon>201402141710203_Initial.cs</DependentUpon>
     </Compile>
-    <Compile Include="Orders\Migrations\201312191010018_OrderFormPropertyvalue.cs" />
-    <Compile Include="Orders\Migrations\201312191010018_OrderFormPropertyvalue.Designer.cs">
-      <DependentUpon>201312191010018_OrderFormPropertyvalue.cs</DependentUpon>
+    <Compile Include="Stores\Migrations\Configuration.cs" />
+    <Compile Include="Security\Migrations\201402141621182_Initial.cs" />
+    <Compile Include="Security\Migrations\201402141621182_Initial.Designer.cs">
+      <DependentUpon>201402141621182_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Security\Migrations\Configuration.cs" />
+    <Compile Include="Search\Migrations\201402141618224_Initial.cs" />
+    <Compile Include="Search\Migrations\201402141618224_Initial.Designer.cs">
+      <DependentUpon>201402141618224_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Search\Migrations\Configuration.cs" />
+    <Compile Include="Reviews\Migrations\201402141616331_Initial.cs" />
+    <Compile Include="Reviews\Migrations\201402141616331_Initial.Designer.cs">
+      <DependentUpon>201402141616331_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Reviews\Migrations\Configuration.cs" />
+    <Compile Include="Orders\Migrations\201402141614217_Initial.cs" />
+    <Compile Include="Orders\Migrations\201402141614217_Initial.Designer.cs">
+      <DependentUpon>201402141614217_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Orders\Migrations\Configuration.cs" />
     <Compile Include="Orders\DSOrderClient.cs" />
     <Compile Include="Orders\DSOrderService.cs" />
     <Compile Include="Orders\EFOrderRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Reviews\Migrations\201304111035422_Initial.cs" />
-    <Compile Include="Reviews\Migrations\201304111035422_Initial.Designer.cs">
-      <DependentUpon>201304111035422_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Reviews\Migrations\Configuration.cs" />
     <Compile Include="Reviews\DSReviewClient.cs" />
     <Compile Include="Reviews\DSReviewService.cs" />
     <Compile Include="Reviews\EFReviewRepository.cs" />
@@ -265,107 +241,17 @@
     <Compile Include="Search\DSSearchClient.cs" />
     <Compile Include="Search\DSSearchService.cs" />
     <Compile Include="Search\EFSearchRepository.cs" />
-    <Compile Include="Search\Migrations\201302151443334_Initial.cs" />
-    <Compile Include="Search\Migrations\201302151443334_Initial.Designer.cs">
-      <DependentUpon>201302151443334_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Search\Migrations\Configuration.cs" />
     <Compile Include="Security\DSSecurityClient.cs" />
     <Compile Include="Security\DSSecurityService.cs" />
     <Compile Include="Security\EFSecurityRepository.cs" />
-    <Compile Include="Security\Migrations\201304010538215_Initial.cs" />
-    <Compile Include="Security\Migrations\201304010538215_Initial.Designer.cs">
-      <DependentUpon>201304010538215_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Security\Migrations\201307241053334_Update.cs" />
-    <Compile Include="Security\Migrations\201307241053334_Update.designer.cs">
-      <DependentUpon>201307241053334_Update.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Security\Migrations\Configuration.cs" />
     <Compile Include="Stores\DSStoreClient.cs" />
     <Compile Include="Stores\DSStoreService.cs" />
     <Compile Include="Stores\EFStoreRepository.cs" />
-    <Compile Include="Stores\Migrations\201302151505112_Initial.cs" />
-    <Compile Include="Stores\Migrations\201302151505112_Initial.Designer.cs">
-      <DependentUpon>201302151505112_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Stores\Migrations\Configuration.cs" />
     <Compile Include="Infrastructure\SchemaVersionContext.cs" />
     <Compile Include="Infrastructure\VersionDatabaseInitializer.cs" />
     <Compile Include="AppConfig\DSAppConfigClient.cs" />
     <Compile Include="AppConfig\DSAppConfigService.cs" />
     <Compile Include="AppConfig\EFAppConfigRepository.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="AppConfig\Migrations\201303261016034_Initial.resx">
-      <DependentUpon>201303261016034_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="AppConfig\Migrations\201307241448350_Update.resx">
-      <DependentUpon>201307241448350_Update.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="AppConfig\Migrations\201307260640417_SchedulerUpdate.resx">
-      <DependentUpon>201307260640417_SchedulerUpdate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="AppConfig\Migrations\201401130952595_Seo.resx">
-      <DependentUpon>201401130952595_Seo.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Catalogs\Migrations\201303190742259_Initial.resx">
-      <DependentUpon>201303190742259_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Catalogs\Migrations\201308240416263_CreateIndexes.resx">
-      <DependentUpon>201308240416263_CreateIndexes.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Catalogs\Migrations\201309051329405_CascadeDelete.resx">
-      <DependentUpon>201309051329405_CascadeDelete.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Customers\Migrations\201304220516289_Initial.resx">
-      <DependentUpon>201304220516289_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Importing\Migrations\201302151332357_Initial.resx">
-      <DependentUpon>201302151332357_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Importing\Migrations\201308120849597_Update.resx">
-      <DependentUpon>201308120849597_Update.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Infrastructure\LogMigrations\201209181945482_Initial.resx">
-      <DependentUpon>201209181945482_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Inventories\Migrations\201302151333500_Initial.resx">
-      <DependentUpon>201302151333500_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Marketing\Migrations\Content\201304010534157_Initial.resx">
-      <DependentUpon>201304010534157_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Marketing\Migrations\Content\201308291146308_Update.resx">
-      <DependentUpon>201308291146308_Update.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Marketing\Migrations\Promotion\201304010533349_Initial.resx">
-      <DependentUpon>201304010533349_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Orders\Migrations\201305151927300_Initial.resx">
-      <DependentUpon>201305151927300_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Orders\Migrations\201308290648071_CreateIndex.resx">
-      <DependentUpon>201308290648071_CreateIndex.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Orders\Migrations\201312191010018_OrderFormPropertyvalue.resx">
-      <DependentUpon>201312191010018_OrderFormPropertyvalue.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reviews\Migrations\201304111035422_Initial.resx">
-      <DependentUpon>201304111035422_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Search\Migrations\201302151443334_Initial.resx">
-      <DependentUpon>201302151443334_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Security\Migrations\201304010538215_Initial.resx">
-      <DependentUpon>201304010538215_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Security\Migrations\201307241053334_Update.resx">
-      <DependentUpon>201307241053334_Update.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Stores\Migrations\201302151505112_Initial.resx">
-      <DependentUpon>201302151505112_Initial.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CommerceFoundation\CommerceFoundation.csproj">
@@ -398,7 +284,50 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Catalogs\Migrations\201402141547367_Initial.resx">
+      <DependentUpon>201402141547367_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AppConfig\Migrations\201402141554170_Initial.resx">
+      <DependentUpon>201402141554170_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Customers\Migrations\201402141557167_Initial.resx">
+      <DependentUpon>201402141557167_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Importing\Migrations\201402141559293_Initial.resx">
+      <DependentUpon>201402141559293_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Infrastructure\LogMigrations\201402141605558_Initial.resx">
+      <DependentUpon>201402141605558_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Inventories\Migrations\201402141608186_Initial.resx">
+      <DependentUpon>201402141608186_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Marketing\Migrations\Content\201402141610395_Initial.resx">
+      <DependentUpon>201402141610395_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Marketing\Migrations\Promotion\201402141612253_Initial.resx">
+      <DependentUpon>201402141612253_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Stores\Migrations\201402141710203_Initial.resx">
+      <DependentUpon>201402141710203_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Security\Migrations\201402141621182_Initial.resx">
+      <DependentUpon>201402141621182_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Search\Migrations\201402141618224_Initial.resx">
+      <DependentUpon>201402141618224_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reviews\Migrations\201402141616331_Initial.resx">
+      <DependentUpon>201402141616331_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Orders\Migrations\201402141614217_Initial.resx">
+      <DependentUpon>201402141614217_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

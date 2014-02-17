@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using VirtoCommerce.Foundation.Reviews.Repositories;
 using System.Data.Entity;
 using VirtoCommerce.Foundation.Reviews;
-using VirtoCommerce.Foundation.Frameworks;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using VirtoCommerce.Foundation.Reviews.Model;
-using System.Data.Entity.ModelConfiguration.Configuration;
-using System.ComponentModel.DataAnnotations;
-using VirtoCommerce.Foundation.Frameworks.Caching;
 using VirtoCommerce.Foundation.Reviews.Factories;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Foundation.Data.Infrastructure;
