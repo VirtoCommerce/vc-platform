@@ -386,10 +386,10 @@ namespace VirtoCommerce.OrderWorkflow
 				switch (reward.AmountTypeId)
 				{
 					case (int)RewardAmountType.Relative:
-						discountAmount = orderSubTotal * reward.Amount * 0.01m;
+						discountAmount = Math.Round(orderSubTotal * reward.Amount * 0.01m,2);
 						break;
 					case (int)RewardAmountType.Absolute:
-						discountAmount = reward.Amount;
+						discountAmount = Math.Round(reward.Amount,2);
 						break;
 				}
 				AddDiscountToEntity(CurrentOrderGroup.OrderForms[0], reward, discountAmount);
@@ -419,11 +419,11 @@ namespace VirtoCommerce.OrderWorkflow
 					var discountAmount = 0m;
 					if (reward.AmountTypeId == (int)RewardAmountType.Relative)
 					{
-						discountAmount = quantity * lineItem.PlacedPrice * reward.Amount * 0.01m;
+						discountAmount = Math.Round(quantity * lineItem.PlacedPrice * reward.Amount * 0.01m,2);
 					}
 					else if (reward.AmountTypeId == (int)RewardAmountType.Absolute)
 					{
-						discountAmount = quantity * reward.Amount;
+						discountAmount = Math.Round(quantity * reward.Amount,2);
 					}
 					discountTotal += discountAmount;
 					AddDiscountToEntity(lineItem, reward, discountAmount);
@@ -449,10 +449,10 @@ namespace VirtoCommerce.OrderWorkflow
 					switch (reward.AmountTypeId)
 					{
 						case (int)RewardAmountType.Relative:
-							discountAmount = shipment.Subtotal * reward.Amount * 0.01m;
+							discountAmount = Math.Round(shipment.Subtotal * reward.Amount * 0.01m,2);
 							break;
 						case (int)RewardAmountType.Absolute:
-							discountAmount = reward.Amount;
+							discountAmount = Math.Round(reward.Amount,2);
 							break;
 					}
 					AddDiscountToEntity(shipment, reward, discountAmount);

@@ -497,7 +497,7 @@ namespace VirtoCommerce.Web.Controllers
                         TempData[GetMessageTempKey(MessageType.Success)] = new[] { "Password was succesfully changed!".Localize() };
                         return RedirectToAction("Index");
                     }
-                    ModelState.AddModelError("", "The current password is incorrect or the new password is invalid.");
+                    ModelState.AddModelError("", @"The current password is incorrect or the new password is invalid.");
                 }
                 else
                 {
@@ -701,7 +701,7 @@ namespace VirtoCommerce.Web.Controllers
             //No items to return
             if (selectedReturnItems.Count == 0)
             {
-                ModelState.AddModelError("", "Select at least one item to return");
+                ModelState.AddModelError("", @"Select at least one item to return");
             }
 
             //If Validation passed create RmaReturns

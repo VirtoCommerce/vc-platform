@@ -148,23 +148,10 @@ namespace VirtoCommerce.Web.Controllers
         [HttpPost]
         public ActionResult SubmitChanges(CheckoutModel checkoutModel)
         {
-            // reset the cart
-            Ch.Reset();
-
-            // Update cart from the post back
-            UpdateCart(checkoutModel);
-
-            // run workflow
-            Ch.RunWorkflow("ShoppingCartPrepareWorkflow");
-
-            // save changes
-            Ch.SaveChanges();
-
-            //Reset
-            _cart = null;
-
+            RecalculateCart(checkoutModel);
             return DisplayCart();
         }
+
 
         /// <summary>
         /// Processes the checkout.
@@ -199,7 +186,7 @@ namespace VirtoCommerce.Web.Controllers
 
             if (checkoutModel.PaymentMethod.Equals("PayPal", StringComparison.OrdinalIgnoreCase))
             {
-                return PaypalExpress(checkoutModel);
+                return PaypalExpress(checkoutModel, SolutionTypeType.MARK);
             }
 
 
@@ -281,178 +268,192 @@ namespace VirtoCommerce.Web.Controllers
 
             if (DoCheckout())
             {
-                return RedirectToAction("ProcessCheckout", "Checkout", new {id = Ch.Cart.OrderGroupId});
+                return RedirectToAction("ProcessCheckout", "Checkout", new { id = Ch.Cart.OrderGroupId });
             }
 
 
             return View("Index", checkoutModel);
         }
 
-        public ActionResult PaypalExpress(CheckoutModel model = null)
+        public ActionResult PaypalExpress(CheckoutModel model, SolutionTypeType solutionType)
         {
-            model = model ?? PrepareCheckoutModel(new CheckoutModel());
-            var payment = _paymentClient.GetPaymentMethod(model.PaymentMethod ?? "Paypal");
-            var configMap = payment.CreateSettings();
-
             // Create request object
             var request = new SetExpressCheckoutRequestType();
             var ecDetails = new SetExpressCheckoutRequestDetailsType
             {
                 CallbackTimeout = "3",
                 ReturnURL = Url.Action("PaypalExpressSuccess", "Checkout", null, "http"),
-                CancelURL = Url.Action("Index", "Checkout", null, "http")
+                CancelURL = Url.Action("Index", "Checkout", null, "http"),
+                SolutionType = solutionType
             };
 
+            var currency = (CurrencyCodeType)Enum.Parse(typeof(CurrencyCodeType), Ch.CustomerSession.Currency);
+            model = PrepareCheckoutModel(model);
+            model.Payments = model.Payments ?? GetPayments().ToArray();
+            var payment = _paymentClient.GetPaymentMethod(model.PaymentMethod ?? "Paypal");
+            var configMap = payment.CreateSettings();
+
+            //Create Shipping methods
+            var shippingMethods = GetShipinngMethodModels();
+            var noShippingMethod = !shippingMethods.Any(x => x.IsCurrent);
+            string currentShippingOption = null;
+
+            for (var i = 0; i < shippingMethods.Length; i++)
+            {
+                var shipping = shippingMethods[i];
+                var shippingOptionIsDefault = "0";
+                if (shipping.IsCurrent || noShippingMethod && i == 0)
+                {
+                    shippingOptionIsDefault = "1";
+                    currentShippingOption = shipping.Method.Name;
+                }
+
+                ecDetails.FlatRateShippingOptions.Add(new ShippingOptionType
+                {
+                    ShippingOptionAmount = new BasicAmountType(currency, FormatMoney(shipping.Price)),
+                    ShippingOptionIsDefault = shippingOptionIsDefault,
+                    ShippingOptionName = shipping.Method.Name,
+                });
+            }
+
+            if (noShippingMethod)
+            {
+                model.ShippingMethod = currentShippingOption;
+                //Must recalculate cart as prices could have changed
+            }
+
+            if (string.IsNullOrEmpty(model.PaymentMethod))
+            {
+                model.PaymentMethod = payment.Name;
+            }
+
+            RecalculateCart(model);
+
             // (Optional) Email address of the buyer as entered during checkout. PayPal uses this value to pre-fill the PayPal membership sign-up portion on the PayPal pages.
-            if (!string.IsNullOrEmpty(model.BillingAddress.Address.Email))
+            if (model.BillingAddress != null && !string.IsNullOrEmpty(model.BillingAddress.Address.Email))
             {
                 ecDetails.BuyerEmail = model.BillingAddress.Address.Email;
             }
 
             ecDetails.NoShipping = "2";
 
-            ecDetails.SolutionType = SolutionTypeType.MARK;
-
-            var paymentDetails = new PaymentDetailsType();
-            ecDetails.PaymentDetails.Add(paymentDetails);
-
-            var currency = (CurrencyCodeType)Enum.Parse(typeof(CurrencyCodeType), Ch.CustomerSession.Currency);
-            var format = new CultureInfo("en-US");
             //paymentDetails.OrderDescription = Ch.Cart.Name;
 
-            if (!model.UseForShipping)
+            AddressModel modelAddress = null;
+
+            if (!model.UseForShipping && model.ShippingAddress != null && DoValidateModel(model.ShippingAddress.Address))
+            {
+                modelAddress = model.ShippingAddress.Address;
+            }
+            else if (model.BillingAddress != null && DoValidateModel(model.BillingAddress.Address))
+            {
+                modelAddress = model.BillingAddress.Address;
+            }
+
+            if (modelAddress != null)
             {
                 ecDetails.AddressOverride = "1";
 
-                var modelAddress = model.UseForShipping ? model.BillingAddress.Address : model.ShippingAddress.Address;
+                var shipAddress = new AddressType
                 {
-                    var shipAddress = new AddressType();
-                    shipAddress.Name = string.Format("{0} {1}", modelAddress.FirstName, modelAddress.LastName);
-                    shipAddress.Street1 = modelAddress.Line1;
-                    shipAddress.Street2 = modelAddress.Line2;
-                    shipAddress.CityName = modelAddress.City;
-                    shipAddress.StateOrProvince = modelAddress.StateProvince;
-                    shipAddress.Country = (CountryCodeType)Enum.Parse(typeof(CountryCodeType), modelAddress.CountryCode.Substring(0, 2));
-                    shipAddress.PostalCode = modelAddress.PostalCode;
-                    shipAddress.Phone = modelAddress.DaytimePhoneNumber;
-                    ecDetails.PaymentDetails[0].ShipToAddress = shipAddress;
-                }
+                    Name = string.Format("{0} {1}", modelAddress.FirstName, modelAddress.LastName),
+                    Street1 = modelAddress.Line1,
+                    Street2 = modelAddress.Line2,
+                    CityName = modelAddress.City,
+                    StateOrProvince = modelAddress.StateProvince,
+                    Country = (CountryCodeType)Enum.Parse(typeof(CountryCodeType), modelAddress.CountryCode.Substring(0, 2)),
+                    PostalCode = modelAddress.PostalCode,
+                    Phone = modelAddress.DaytimePhoneNumber
+                };
+                ecDetails.PaymentDetails[0].ShipToAddress = shipAddress;
             }
 
-            foreach (var shipping in GetShipinngMethodModels())
-            {
-                ecDetails.FlatRateShippingOptions.Add(new ShippingOptionType
-                {
-                    ShippingOptionAmount = new BasicAmountType(currency, shipping.Price.ToString("F2", format)),
-                    ShippingOptionIsDefault = shipping.IsCurrent ? "1" : "0",
-                    ShippingOptionName = shipping.Method.Name,
-                });
-            }
-
-            paymentDetails.PaymentAction = PaymentActionCodeType.SALE;
-
-            // Each payment can include requestDetails about multiple items
-            foreach (var li in Ch.LineItems)
-            {
-                var itemDetails = new PaymentDetailsItemType();
-                itemDetails.Name = li.DisplayName;
-                itemDetails.Amount = new BasicAmountType(currency, li.PlacedPrice.ToString("F2", format));
-                itemDetails.Quantity = (int)li.Quantity;
-                itemDetails.ItemCategory = ItemCategoryType.PHYSICAL;
-                itemDetails.Tax = new BasicAmountType(currency, li.TaxTotal.ToString("F2", format));
-                itemDetails.Description = li.Description;
-                itemDetails.Number = li.CatalogItemCode;
-                itemDetails.ItemURL = Url.ItemUrl(li.CatalogItemId, li.ParentCatalogItemId);
-
-                paymentDetails.PaymentDetailsItem.Add(itemDetails);
-            }
-
-            var discount = Ch.Cart.OrderForms.Sum(c => c.DiscountAmount)
-                + Ch.Cart.OrderForms.SelectMany(c => c.LineItems).Sum(c => c.LineItemDiscountAmount)
-                + Ch.Cart.OrderForms.SelectMany(c => c.Shipments).Sum(c => c.ShippingDiscountAmount);
-
-            if (discount > 0)
-            {
-                var itemDetails = new PaymentDetailsItemType();
-                itemDetails.Name = "Discounts";
-                itemDetails.Amount = new BasicAmountType(currency, (-discount).ToString("F2", format));
-                itemDetails.Quantity = 1;
-                itemDetails.ItemCategory = ItemCategoryType.PHYSICAL;
-                itemDetails.Description = "Discounts applied";
-                itemDetails.PromoCode = Ch.CustomerSession.CouponCode;
-
-                paymentDetails.PaymentDetailsItem.Add(itemDetails);
-            }
-
-            paymentDetails.ShippingTotal = new BasicAmountType(currency, Ch.Cart.ShippingTotal.ToString("F2", format));
-            paymentDetails.HandlingTotal = new BasicAmountType(currency, Ch.Cart.HandlingTotal.ToString("F2", format));
-            paymentDetails.TaxTotal = new BasicAmountType(currency, Ch.Cart.TaxTotal.ToString("F2", format));
-            paymentDetails.OrderTotal = new BasicAmountType(currency, Ch.Cart.Total.ToString("F2", format));
-            paymentDetails.ItemTotal = new BasicAmountType(currency, Ch.LineItems.Sum(x => x.ExtendedPrice).ToString("F2", format));
-            ecDetails.MaxAmount = new BasicAmountType(currency, Ch.Cart.Total.ToString("F2", format));
-
+            ecDetails.PaymentDetails.Add(GetPaypalPaymentDetail(currency, PaymentActionCodeType.SALE));
+            ecDetails.MaxAmount = new BasicAmountType(currency, FormatMoney(Ch.Cart.Total));
             ecDetails.LocaleCode = new RegionInfo(Thread.CurrentThread.CurrentUICulture.LCID).TwoLetterISORegionName;
-
             request.SetExpressCheckoutRequestDetails = ecDetails;
 
-            // Invoke the API
-            var wrapper = new SetExpressCheckoutReq();
-            wrapper.SetExpressCheckoutRequest = request;
 
+            // Invoke the API
+            var wrapper = new SetExpressCheckoutReq { SetExpressCheckoutRequest = request };
 
             // Create the PayPalAPIInterfaceServiceService service object to make the API call
             var service = new PayPalAPIInterfaceServiceService(configMap);
-            var setECResponse = service.SetExpressCheckout(wrapper);
+            var setEcResponse = service.SetExpressCheckout(wrapper);
 
             // Check for API return status
-            if (setECResponse.Ack.Equals(AckCodeType.FAILURE) ||
-               (setECResponse.Errors != null && setECResponse.Errors.Count > 0))
+            if (setEcResponse.Ack.Equals(AckCodeType.FAILURE) ||
+               (setEcResponse.Errors != null && setEcResponse.Errors.Count > 0))
             {
-                ModelState.AddModelError("", "Paypal failure");
-                foreach (var error in setECResponse.Errors)
+                ModelState.AddModelError("", @"Paypal failure");
+
+                foreach (var error in setEcResponse.Errors)
                 {
                     ModelState.AddModelError("", error.LongMessage);
                 }
             }
             else
             {
-                var redirectUrl = string.Format(configMap.ContainsKey("URL") ? configMap["URL"] : "https://www.sandbox.paypal.com/webscr&amp;cmd={0}", "_express-checkout&token=" + setECResponse.Token);
-               Session["checkout_" + setECResponse.Token] = model;
-               return Redirect(redirectUrl);
+                var redirectUrl = string.Format(configMap.ContainsKey("URL") ? configMap["URL"] : "https://www.sandbox.paypal.com/webscr&amp;cmd={0}", "_express-checkout&token=" + setEcResponse.Token);
+                Session["checkout_" + setEcResponse.Token] = model;
+                return Redirect(redirectUrl);
             }
 
             return View("Index", model);
         }
 
-
         public ActionResult PaypalExpressSuccess(string token, string payerID)
         {
+
             var model = (CheckoutModel)Session["checkout_" + token] ?? PrepareCheckoutModel(new CheckoutModel());
+            model.Payments = model.Payments ?? GetPayments().ToArray();
 
             var payment = _paymentClient.GetPaymentMethod(model.PaymentMethod ?? "Paypal");
             var configMap = payment.CreateSettings();
 
             var service = new PayPalAPIInterfaceServiceService(configMap);
 
-            var getECWrapper = new GetExpressCheckoutDetailsReq();
-            getECWrapper.GetExpressCheckoutDetailsRequest = new GetExpressCheckoutDetailsRequestType(token);
-            var getECResponse = service.GetExpressCheckoutDetails(getECWrapper);
+            var getEcWrapper = new GetExpressCheckoutDetailsReq
+            {
+                GetExpressCheckoutDetailsRequest = new GetExpressCheckoutDetailsRequestType(token)
+            };
+            var getEcResponse = service.GetExpressCheckoutDetails(getEcWrapper);
 
-            if (getECResponse.Ack.Equals(AckCodeType.FAILURE) ||
-                (getECResponse.Errors != null && getECResponse.Errors.Count > 0))
+            if (getEcResponse.Ack.Equals(AckCodeType.FAILURE) ||
+                (getEcResponse.Errors != null && getEcResponse.Errors.Count > 0))
             {
                 ModelState.AddModelError("", @"Paypal failure");
-                foreach (var error in getECResponse.Errors)
+                foreach (var error in getEcResponse.Errors)
                 {
                     ModelState.AddModelError("", error.LongMessage);
                 }
             }
             else
             {
-                var details = getECResponse.GetExpressCheckoutDetailsResponseDetails;
-                var paymentDetails = details.PaymentDetails[0];
-                var cartPayment = Ch.OrderForm.Payments.FirstOrDefault(x => x.PaymentMethodName.Equals(payment.Name, StringComparison.OrdinalIgnoreCase));
 
+                var details = getEcResponse.GetExpressCheckoutDetailsResponseDetails;
+                var paymentDetails = details.PaymentDetails[0];
+                var orderId = HttpContext.Session != null ? HttpContext.Session["LatestOrderId"] : Ch.Cart.OrderGroupId;
+
+                if (details.CheckoutStatus.Equals("PaymentActionCompleted", StringComparison.OrdinalIgnoreCase))
+                {
+                    return RedirectToAction("ProcessCheckout", "Checkout", new { id = orderId });
+                }
+
+                model.PaymentMethod = payment.Name;
+                model.ShippingMethod = details.UserSelectedOptions.ShippingOptionName;
+                model.BillingAddress.Address = ConvertToPaypalAddress(paymentDetails.ShipToAddress, "Billing");
+                model.BillingAddress.Address.Email = details.PayerInfo.Payer;
+                model.ShippingAddress.Address = ConvertToPaypalAddress(paymentDetails.ShipToAddress, "Shipping");
+                model.ShippingAddress.Address.Email = details.PayerInfo.Payer;
+
+                Ch.Reset();
+                UpdateCart(model, true);
+                Ch.RunWorkflow("ShoppingCartPrepareWorkflow");
+
+                var cartPayment =
+                    Ch.OrderForm.Payments.FirstOrDefault(
+                        x => x.PaymentMethodName.Equals(payment.Name, StringComparison.OrdinalIgnoreCase));
 
                 if (cartPayment == null)
                 {
@@ -462,8 +463,7 @@ namespace VirtoCommerce.Web.Controllers
                 {
                     cartPayment.ContractId = payerID;
                     cartPayment.AuthorizationCode = token;
-
-                    //TODO extract all details and sync cart
+                    cartPayment.Amount = Ch.Cart.Total;
 
                     if (decimal.Parse(paymentDetails.OrderTotal.value) != Ch.Cart.Total)
                     {
@@ -474,7 +474,7 @@ namespace VirtoCommerce.Web.Controllers
 
                     if (DoCheckout())
                     {
-                        return RedirectToAction("ProcessCheckout", "Checkout", new { id = Ch.Cart.OrderGroupId });
+                        return RedirectToAction("ProcessCheckout", "Checkout", new { id = orderId });
                     }
                 }
 
@@ -482,6 +482,81 @@ namespace VirtoCommerce.Web.Controllers
 
             return View("Index", model);
 
+        }
+
+        private PaymentDetailsType GetPaypalPaymentDetail(CurrencyCodeType currency, PaymentActionCodeType paymentAction)
+        {
+            var paymentDetails = new PaymentDetailsType { PaymentAction = paymentAction };
+            paymentDetails.PaymentDetailsItem.AddRange(GetPaypalPaymentDetailsItemTypes(currency));
+            paymentDetails.ShippingTotal = new BasicAmountType(currency, FormatMoney(Ch.Cart.ShippingTotal));
+            paymentDetails.HandlingTotal = new BasicAmountType(currency, FormatMoney(Ch.Cart.HandlingTotal));
+            paymentDetails.TaxTotal = new BasicAmountType(currency, FormatMoney(Ch.Cart.TaxTotal));
+            paymentDetails.OrderTotal = new BasicAmountType(currency, FormatMoney(Ch.Cart.Total));
+            paymentDetails.ItemTotal = new BasicAmountType(currency, FormatMoney(Ch.LineItems.Sum(x => x.ExtendedPrice)));
+            return paymentDetails;
+        }
+
+        private string FormatMoney(decimal amount)
+        {
+            return amount.ToString("F2", new CultureInfo("en-US"));
+        }
+
+        private IEnumerable<PaymentDetailsItemType> GetPaypalPaymentDetailsItemTypes(CurrencyCodeType currency)
+        {
+            var detais = new List<PaymentDetailsItemType>();
+
+            foreach (var li in Ch.LineItems)
+            {
+                var itemDetails = new PaymentDetailsItemType
+                {
+                    Name = li.DisplayName,
+                    Amount = new BasicAmountType(currency, FormatMoney(li.PlacedPrice)),
+                    Quantity = (int)li.Quantity,
+                    ItemCategory = ItemCategoryType.PHYSICAL,
+                    Tax = new BasicAmountType(currency, FormatMoney(li.TaxTotal)),
+                    Description = li.Description,
+                    Number = li.CatalogItemCode,
+                    ItemURL = Url.ItemUrl(li.CatalogItemId, li.ParentCatalogItemId)
+                };
+
+                detais.Add(itemDetails);
+            }
+
+            var discount = Ch.Cart.OrderForms.Sum(c => c.DiscountAmount)
+                + Ch.Cart.OrderForms.SelectMany(c => c.LineItems).Sum(c => c.LineItemDiscountAmount)
+                + Ch.Cart.OrderForms.SelectMany(c => c.Shipments).Sum(c => c.ShippingDiscountAmount);
+
+            if (discount > 0)
+            {
+                var itemDetails = new PaymentDetailsItemType
+                {
+                    Name = "Discounts",
+                    Amount = new BasicAmountType(currency, FormatMoney(-discount)),
+                    Quantity = 1,
+                    ItemCategory = ItemCategoryType.PHYSICAL,
+                    Description = "Discounts applied",
+                    PromoCode = Ch.CustomerSession.CouponCode
+                };
+
+                detais.Add(itemDetails);
+            }
+
+            return detais;
+        }
+
+        private void RecalculateCart(CheckoutModel checkoutModel)
+        {
+            // reset the cart
+            Ch.Reset();
+
+            // Update cart from the post back
+            UpdateCart(checkoutModel);
+
+            // run workflow
+            Ch.RunWorkflow("ShoppingCartPrepareWorkflow");
+
+            // save changes
+            Ch.SaveChanges();
         }
 
         private bool DoCheckout()
@@ -784,11 +859,11 @@ namespace VirtoCommerce.Web.Controllers
         /// </summary>
         /// <param name="shippingMethod">The shipping method.</param>
         /// <returns>List{PaymentModel}.</returns>
-        private List<PaymentModel> GetPayments(string shippingMethod)
+        private List<PaymentModel> GetPayments(string shippingMethod = null)
         {
             var paymentsString = _storeClient.GetCurrentStore().PaymentGateways.Select(c => c.PaymentGateway).ToArray();
             var methods = _paymentClient.GetAllPaymentsMethods(paymentsString).
-                Where(x => x.PaymentMethodShippingMethods.Any(y => y.ShippingMethodId == shippingMethod));
+                Where(x => shippingMethod == null || x.PaymentMethodShippingMethods.Any(y => y.ShippingMethodId == shippingMethod));
 
             var methodModels = new List<PaymentModel>();
 
@@ -903,6 +978,26 @@ namespace VirtoCommerce.Web.Controllers
             var addr = new Address();
             addr.InjectFrom(address);
             return addr;
+        }
+
+        private static AddressModel ConvertToPaypalAddress(AddressType address, string name)
+        {
+            return new AddressModel
+            {
+                Name = name,
+                FirstName = address.Name,
+                LastName = address.Name,
+                City = address.CityName,
+                CountryCode = address.Country.HasValue
+                    ? address.Country.Value.ToString()
+                    : "USA",
+                DaytimePhoneNumber = address.Phone ?? "PHONE", //This field is required
+                CountryName = address.CountryName,
+                Line1 = address.Street1,
+                Line2 = address.Street2,
+                PostalCode = address.PostalCode,
+                StateProvince = address.StateOrProvince
+            };
         }
 
         /// <summary>

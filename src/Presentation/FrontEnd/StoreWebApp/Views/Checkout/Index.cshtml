@@ -1,4 +1,5 @@
-﻿@using VirtoCommerce.Web.Virto.Helpers
+﻿@using PayPal.PayPalAPIInterfaceService.Model
+@using VirtoCommerce.Web.Virto.Helpers
 @model CheckoutModel
 @{
     Layout = Layout = "~/Views/Shared/_LayoutBase.cshtml";
@@ -30,12 +31,12 @@
 	});
 </script>
 
-@*@section PageTitle
+@section PageTitle
 {
-    <a href="@Url.Action("PaypalExpress")">
+    <a href="@Url.Action("PaypalExpress", new {solutionType = (int)SolutionTypeType.SOLE})">
           <img src="https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" align="left" style="margin-right:7px;">
     </a>
-}*@
+}
 
 <div class="checkout clearfix">
     @Html.ValidationSummary(true)

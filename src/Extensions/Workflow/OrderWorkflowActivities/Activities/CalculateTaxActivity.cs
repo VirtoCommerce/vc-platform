@@ -70,13 +70,11 @@ namespace VirtoCommerce.OrderWorkflow
 			foreach (var form in order.OrderForms)
 			{
 				decimal totalTaxes = 0;
-				decimal shippingTax = 0;
-				decimal itemTax = 0;
 
-				foreach (var shipment in form.Shipments)
+			    foreach (var shipment in form.Shipments)
 				{
-					itemTax = 0;
-					shippingTax = 0;
+					decimal itemTax = 0;
+					decimal shippingTax = 0;
 					foreach (var shipItem in shipment.ShipmentItems)
 					{
 						if (shipItem.LineItem == null)
@@ -104,7 +102,7 @@ namespace VirtoCommerce.OrderWorkflow
 									{
 										if (tax != null)
 										{
-											var taxAmount = shipItem.LineItem.ExtendedPrice*(tax.Percentage/100);
+                                            var taxAmount = Math.Round(shipItem.LineItem.ExtendedPrice * (tax.Percentage / 100), 2);
 											if (tax.Tax.TaxType == (int) TaxTypes.SalesTax)
 											{
 												itemTax += taxAmount;
@@ -113,7 +111,7 @@ namespace VirtoCommerce.OrderWorkflow
 											}
 											else if (tax.Tax.TaxType == (int) TaxTypes.ShippingTax)
 											{
-												shippingTax += shipment.ShippingCost * (tax.Percentage / 100);
+                                                shippingTax += Math.Round(shipment.ShippingCost * (tax.Percentage / 100), 2);
 												totalTaxes += shippingTax;
 											}
 										}

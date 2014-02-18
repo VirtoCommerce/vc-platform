@@ -106,11 +106,11 @@ namespace VirtoCommerce.Client
 				const int quantity = 1;
 				if (reward.AmountTypeId == (int)RewardAmountType.Relative)
 				{
-					discountAmount = quantity*price*reward.Amount*0.01m;
+					discountAmount = Math.Round(quantity*price*reward.Amount*0.01m,2);
 				}
 				else if (reward.AmountTypeId == (int)RewardAmountType.Absolute)
 				{
-					discountAmount = quantity*reward.Amount;
+					discountAmount =  Math.Round(quantity*reward.Amount,2);
 				}
 				discountTotal += discountAmount;
 			}
