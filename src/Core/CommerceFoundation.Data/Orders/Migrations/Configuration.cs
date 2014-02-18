@@ -7,6 +7,8 @@ namespace VirtoCommerce.Foundation.Data.Orders.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
+            MigrationsDirectory = @"Orders\Migrations";
+            ContextKey = "VCF.Orders";
         }
 
         protected override void Seed(VirtoCommerce.Foundation.Data.Orders.EFOrderRepository context)

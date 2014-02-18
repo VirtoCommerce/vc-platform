@@ -7,6 +7,8 @@ namespace VirtoCommerce.Foundation.Data.Marketing.Migrations.Promotion
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
+            MigrationsDirectory = @"Marketing\Migrations\Promotion";
+            ContextKey = "VCF.Marketing.Promotion";
         }
 
         protected override void Seed(VirtoCommerce.Foundation.Data.Marketing.EFMarketingRepository context)

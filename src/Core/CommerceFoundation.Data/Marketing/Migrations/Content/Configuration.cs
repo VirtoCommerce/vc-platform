@@ -7,6 +7,8 @@ namespace VirtoCommerce.Foundation.Data.Marketing.Migrations.Content
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
+            MigrationsDirectory = @"Marketing\Migrations\Content";
+            ContextKey = "VCF.Marketing.Content";
         }
 
         protected override void Seed(VirtoCommerce.Foundation.Data.Marketing.EFDynamicContentRepository context)

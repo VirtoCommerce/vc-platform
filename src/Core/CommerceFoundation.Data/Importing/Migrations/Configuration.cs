@@ -7,6 +7,8 @@ namespace VirtoCommerce.Foundation.Data.Importing.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
+            MigrationsDirectory = @"Importing\Migrations";
+            ContextKey = "VCF.Importing";
         }
 
         protected override void Seed(VirtoCommerce.Foundation.Data.Importing.EFImportingRepository context)

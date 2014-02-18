@@ -7,6 +7,8 @@ namespace VirtoCommerce.Foundation.Data.Inventories.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
+            MigrationsDirectory = @"Inventories\Migrations";
+            ContextKey = "VCF.Inventory";
         }
 
         protected override void Seed(VirtoCommerce.Foundation.Data.Inventories.EFInventoryRepository context)

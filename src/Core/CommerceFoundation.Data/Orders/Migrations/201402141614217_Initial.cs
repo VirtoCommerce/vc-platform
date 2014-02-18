@@ -9,30 +9,30 @@ namespace VirtoCommerce.Foundation.Data.Orders.Migrations
             CreateTable(
                 "dbo.OrderAddress",
                 c => new
-                    {
-                        OrderAddressId = c.String(nullable: false, maxLength: 128),
-                        OrderGroupId = c.String(nullable: false, maxLength: 128),
-                        Name = c.String(nullable: false, maxLength: 512),
-                        FirstName = c.String(nullable: false, maxLength: 128),
-                        LastName = c.String(nullable: false, maxLength: 128),
-                        Organization = c.String(maxLength: 128),
-                        Line1 = c.String(nullable: false, maxLength: 128),
-                        Line2 = c.String(maxLength: 128),
-                        City = c.String(nullable: false, maxLength: 128),
-                        StateProvince = c.String(maxLength: 128),
-                        CountryCode = c.String(nullable: false, maxLength: 128),
-                        CountryName = c.String(maxLength: 64),
-                        PostalCode = c.String(nullable: false, maxLength: 32),
-                        RegionId = c.String(maxLength: 32),
-                        RegionName = c.String(maxLength: 64),
-                        DaytimePhoneNumber = c.String(nullable: false, maxLength: 32),
-                        EveningPhoneNumber = c.String(maxLength: 32),
-                        FaxNumber = c.String(maxLength: 32),
-                        Email = c.String(nullable: false, maxLength: 256),
-                        LastModified = c.DateTime(),
-                        Created = c.DateTime(),
-                        Discriminator = c.String(maxLength: 128),
-                    })
+                {
+                    OrderAddressId = c.String(nullable: false, maxLength: 128),
+                    OrderGroupId = c.String(nullable: false, maxLength: 128),
+                    Name = c.String(nullable: false, maxLength: 512),
+                    FirstName = c.String(nullable: false, maxLength: 128),
+                    LastName = c.String(nullable: false, maxLength: 128),
+                    Organization = c.String(maxLength: 128),
+                    Line1 = c.String(nullable: false, maxLength: 128),
+                    Line2 = c.String(maxLength: 128),
+                    City = c.String(nullable: false, maxLength: 128),
+                    StateProvince = c.String(maxLength: 128),
+                    CountryCode = c.String(nullable: false, maxLength: 128),
+                    CountryName = c.String(maxLength: 64),
+                    PostalCode = c.String(nullable: false, maxLength: 32),
+                    RegionId = c.String(maxLength: 32),
+                    RegionName = c.String(maxLength: 64),
+                    DaytimePhoneNumber = c.String(nullable: false, maxLength: 32),
+                    EveningPhoneNumber = c.String(maxLength: 32),
+                    FaxNumber = c.String(maxLength: 32),
+                    Email = c.String(nullable: false, maxLength: 256),
+                    LastModified = c.DateTime(),
+                    Created = c.DateTime(),
+                    Discriminator = c.String(maxLength: 128),
+                })
                 .PrimaryKey(t => t.OrderAddressId)
                 .ForeignKey("dbo.OrderGroup", t => t.OrderGroupId, cascadeDelete: true)
                 .Index(t => t.OrderGroupId);
@@ -326,7 +326,10 @@ namespace VirtoCommerce.Foundation.Data.Orders.Migrations
                         ExpirationDate = c.DateTime(),
                         Discriminator = c.String(maxLength: 128),
                     })
-                .PrimaryKey(t => t.OrderGroupId);
+                .PrimaryKey(t => t.OrderGroupId)
+                .Index(t => t.Discriminator)
+                .Index(t => t.Created)
+                .Index(t => t.StoreId);
             
             CreateTable(
                 "dbo.RmaRequest",
@@ -772,7 +775,6 @@ namespace VirtoCommerce.Foundation.Data.Orders.Migrations
                 .PrimaryKey(t => t.RegionId)
                 .ForeignKey("dbo.Country", t => t.CountryId, cascadeDelete: true)
                 .Index(t => t.CountryId);
-            
         }
         
         public override void Down()
@@ -855,6 +857,9 @@ namespace VirtoCommerce.Foundation.Data.Orders.Migrations
             DropIndex("dbo.LineItemDiscount", new[] { "LineItemId" });
             DropIndex("dbo.OrderFormDiscount", new[] { "OrderFormId" });
             DropIndex("dbo.OrderAddress", new[] { "OrderGroupId" });
+            DropIndex("dbo.OrderGroup", new[] { "Discriminator" });
+            DropIndex("dbo.OrderGroup", new[] { "Created" });
+            DropIndex("dbo.OrderGroup", new[] { "StoreId" });
             DropTable("dbo.Region");
             DropTable("dbo.Country");
             DropTable("dbo.TaxValue");

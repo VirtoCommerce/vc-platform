@@ -42,7 +42,7 @@ namespace VirtoCommerce.Foundation.Data.Stores
 			: base(nameOrConnectionString, interceptors: interceptors)
 		{
 			_entityFactory = entityFactory;
-			Database.SetInitializer(new ValidateDatabaseInitializer<EFStoreRepository>());
+		    Database.SetInitializer(new ValidateDatabaseInitializer<EFStoreRepository>());
 
 			Configuration.AutoDetectChangesEnabled = true;
 			Configuration.ProxyCreationEnabled = false;

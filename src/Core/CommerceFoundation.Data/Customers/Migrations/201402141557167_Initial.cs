@@ -294,7 +294,7 @@ namespace VirtoCommerce.Foundation.Data.Customers.Migrations
                         Discriminator = c.String(maxLength: 128),
                     })
                 .PrimaryKey(t => t.PropertyValueId)
-                .ForeignKey("dbo.Contact", t => t.ContactId)
+                .ForeignKey("dbo.Contact", t => t.ContactId, cascadeDelete: true)
                 .Index(t => t.ContactId);
             
             CreateTable(

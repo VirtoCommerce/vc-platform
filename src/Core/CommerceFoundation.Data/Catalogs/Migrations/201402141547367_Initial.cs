@@ -24,8 +24,9 @@ namespace VirtoCommerce.Foundation.Data.Catalogs.Migrations
                 .ForeignKey("dbo.CatalogBase", t => t.CatalogId, cascadeDelete: true)
                 .ForeignKey("dbo.CategoryBase", t => t.ParentCategoryId)
                 .Index(t => t.CatalogId)
-                .Index(t => t.ParentCategoryId);
-            
+                .Index(t => t.ParentCategoryId)
+                .Index(t => new {t.Code, t.CatalogId}, unique: true);
+
             CreateTable(
                 "dbo.CategoryPropertyValue",
                 c => new
@@ -47,7 +48,7 @@ namespace VirtoCommerce.Foundation.Data.Catalogs.Migrations
                         Created = c.DateTime(),
                     })
                 .PrimaryKey(t => t.PropertyValueId)
-                .ForeignKey("dbo.Category", t => t.CategoryId)
+                .ForeignKey("dbo.Category", t => t.CategoryId, cascadeDelete: true)
                 .Index(t => t.CategoryId);
             
             CreateTable(
@@ -91,7 +92,7 @@ namespace VirtoCommerce.Foundation.Data.Catalogs.Migrations
                         Discriminator = c.String(maxLength: 128),
                     })
                 .PrimaryKey(t => t.CatalogLanguageId)
-                .ForeignKey("dbo.Catalog", t => t.CatalogId)
+                .ForeignKey("dbo.Catalog", t => t.CatalogId, cascadeDelete: true)
                 .Index(t => t.CatalogId);
             
             CreateTable(
@@ -238,8 +239,9 @@ namespace VirtoCommerce.Foundation.Data.Catalogs.Migrations
                 .ForeignKey("dbo.Item", t => t.ItemId, cascadeDelete: true)
                 .Index(t => t.CatalogId)
                 .Index(t => t.CategoryId)
-                .Index(t => t.ItemId);
-            
+                .Index(t => t.ItemId)
+                .Index(t => t.Discriminator);
+
             CreateTable(
                 "dbo.EditorialReview",
                 c => new
@@ -329,8 +331,11 @@ namespace VirtoCommerce.Foundation.Data.Catalogs.Migrations
                 .ForeignKey("dbo.CatalogBase", t => t.CatalogId)
                 .ForeignKey("dbo.PropertySet", t => t.PropertySetId, cascadeDelete: true)
                 .Index(t => t.CatalogId)
-                .Index(t => t.PropertySetId);
-            
+                .Index(t => t.PropertySetId)
+                .Index(t => new {t.Code, t.CatalogId}, unique: true)
+                .Index(t => t.Discriminator)
+                .Index(t => t.LastModified);
+
             CreateTable(
                 "dbo.ItemRelation",
                 c => new
@@ -370,7 +375,8 @@ namespace VirtoCommerce.Foundation.Data.Catalogs.Migrations
                 .ForeignKey("dbo.Item", t => t.ItemId, cascadeDelete: true)
                 .ForeignKey("dbo.Pricelist", t => t.PricelistId, cascadeDelete: true)
                 .Index(t => t.ItemId)
-                .Index(t => t.PricelistId);
+                .Index(t => t.PricelistId)
+                .Index(t => t.Discriminator);
             
             CreateTable(
                 "dbo.Pricelist",
@@ -437,8 +443,9 @@ namespace VirtoCommerce.Foundation.Data.Catalogs.Migrations
                         Created = c.DateTime(),
                         Discriminator = c.String(maxLength: 128),
                     })
-                .PrimaryKey(t => t.TaxCategoryId);
-            
+                .PrimaryKey(t => t.TaxCategoryId)
+                .Index(t => t.Name, unique: true);
+
             CreateTable(
                 "dbo.VirtualCatalog",
                 c => new
@@ -471,7 +478,7 @@ namespace VirtoCommerce.Foundation.Data.Catalogs.Migrations
                         PropertySetId = c.String(maxLength: 128),
                     })
                 .PrimaryKey(t => t.CategoryId)
-                .ForeignKey("dbo.CategoryBase", t => t.CategoryId)
+                .ForeignKey("dbo.CategoryBase", t => t.CategoryId, cascadeDelete: true)
                 .ForeignKey("dbo.PropertySet", t => t.PropertySetId, cascadeDelete: true)
                 .Index(t => t.CategoryId)
                 .Index(t => t.PropertySetId);
@@ -491,7 +498,52 @@ namespace VirtoCommerce.Foundation.Data.Catalogs.Migrations
                 .Index(t => t.CategoryId)
                 .Index(t => t.LinkedCatalogId)
                 .Index(t => t.LinkedCategoryId);
-            
+
+            //Trigger for deleting categories
+            Sql(@"
+CREATE TRIGGER [TR_CategoryDeleteTrigger] ON [dbo].[Category]
+FOR DELETE
+AS
+BEGIN
+
+IF(EXISTS((SELECT CategoryId FROM [deleted])))
+	BEGIN
+
+		DECLARE @TempParentCategoryId TABLE
+		(
+		   CategoryId nvarchar(128)
+		);
+
+		INSERT INTO @TempParentCategoryId 
+		SELECT CategoryId FROM [dbo].[CategoryBase] 
+		WHERE ParentCategoryId IN (SELECT CategoryId FROM [deleted])
+
+		DELETE FROM [dbo].[Category] WHERE CategoryId IN (SELECT CategoryId FROM @TempParentCategoryId)
+		DELETE FROM [dbo].[LinkedCategory] WHERE LinkedCategoryId IN (SELECT CategoryId FROM [deleted])
+		DELETE FROM [dbo].[LinkedCategory] WHERE CategoryId IN (SELECT CategoryId FROM @TempParentCategoryId)
+		DELETE FROM [dbo].[CategoryItemRelation] WHERE CategoryId IN (SELECT CategoryId FROM [deleted])
+		DELETE FROM [dbo].[CategoryItemRelation] WHERE CategoryId IN (SELECT CategoryId FROM @TempParentCategoryId)
+		DELETE FROM [dbo].[CategoryBase] WHERE ParentCategoryId IN (SELECT CategoryId FROM [deleted])
+	END
+END");
+            //Trigger for deleting Catalog
+            Sql(@"CREATE TRIGGER [dbo].[TR_CatalogDeleteTrigger] ON [dbo].[Catalog]
+INSTEAD OF DELETE
+AS
+BEGIN
+	DELETE FROM [dbo].[Property] WHERE CatalogId IN (SELECT CatalogId FROM [deleted])
+	DELETE FROM [dbo].[PropertySet] WHERE CatalogId IN (SELECT CatalogId FROM [deleted])
+	DELETE FROM [dbo].[Catalog] WHERE CatalogId IN (SELECT CatalogId FROM [deleted])
+END");
+
+            //Trigger for deleting VirtualCatalog
+            Sql(@"CREATE TRIGGER [dbo].[TR_VirtualCatalogDeleteTrigger] ON [dbo].[VirtualCatalog]
+INSTEAD OF DELETE
+AS
+BEGIN
+	DELETE FROM [dbo].[VirtualCatalog] WHERE CatalogId IN (SELECT CatalogId FROM [deleted])
+	DELETE FROM [dbo].[LinkedCategory] WHERE CategoryId IN (SELECT CategoryId FROM [dbo].[CategoryBase] WHERE CatalogId IN (SELECT CatalogId FROM [deleted]))
+END");
         }
         
         public override void Down()
@@ -568,6 +620,14 @@ namespace VirtoCommerce.Foundation.Data.Catalogs.Migrations
             DropIndex("dbo.CategoryPropertyValue", new[] { "CategoryId" });
             DropIndex("dbo.CategoryBase", new[] { "ParentCategoryId" });
             DropIndex("dbo.CategoryBase", new[] { "CatalogId" });
+            DropIndex("Item", new[] { "Code", "CatalogId" });
+            DropIndex("CategoryBase", new[] { "Code", "CatalogId" });
+            DropIndex("TaxCategory", new[] { "Name" });
+            DropIndex("Item", new[] { "Discriminator" });
+            DropIndex("Item", new[] { "LastModified" });
+            DropIndex("CategoryItemRelation", "Discriminator");
+            DropIndex("Price", new[] { "Discriminator" });
+
             DropTable("dbo.LinkedCategory");
             DropTable("dbo.Category");
             DropTable("dbo.Catalog");
@@ -594,6 +654,10 @@ namespace VirtoCommerce.Foundation.Data.Catalogs.Migrations
             DropTable("dbo.PropertySet");
             DropTable("dbo.CategoryPropertyValue");
             DropTable("dbo.CategoryBase");
+
+            Sql(@"DROP TRIGGER [dbo].[TR_CategoryDeleteTrigger]");
+            Sql(@"DROP TRIGGER [dbo].[TR_CatalogDeleteTrigger]");
+            Sql(@"DROP TRIGGER [dbo].[TR_VirtualCatalogDeleteTrigger]");
         }
     }
 }

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace VirtoCommerce.Foundation.Marketing.Model.Policies
 {
@@ -11,7 +9,7 @@ namespace VirtoCommerce.Foundation.Marketing.Model.Policies
 	public class GroupExclusivityPolicy : IEvaluationPolicy
 	{
 		#region IEvaluationPolicy Members
-        int _Priority = 100;
+        int _priority = 100;
         /// <summary>
         /// Gets or sets the priority the policies are executed by. The highest priority is ran first.
         /// </summary>
@@ -22,11 +20,11 @@ namespace VirtoCommerce.Foundation.Marketing.Model.Policies
         {
             get
             {
-                return _Priority;
+                return _priority;
             }
             set
             {
-                _Priority = value;
+                _priority = value;
             }
         }
 
@@ -38,11 +36,11 @@ namespace VirtoCommerce.Foundation.Marketing.Model.Policies
         /// <returns></returns>
 		public PromotionRecord[] FilterPromotions(IPromotionEvaluationContext evaluationContext, PromotionRecord[] records)
 		{
-            List<PromotionRecord> appliedRecords = new List<PromotionRecord>();
+            var appliedRecords = new List<PromotionRecord>();
 
-            Dictionary<string, string> groups = new Dictionary<string, string>();
+            var groups = new Dictionary<string, string>();
 
-            foreach (PromotionRecord record in records)
+            foreach (var record in records)
             {
                 if (!groups.ContainsKey(record.PromotionType)) // we already have exclusive withing a current group, so ignore
                 {

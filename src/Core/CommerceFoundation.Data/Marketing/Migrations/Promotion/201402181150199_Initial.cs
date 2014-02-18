@@ -1,7 +1,7 @@
 using System.Data.Entity.Migrations;
 
 namespace VirtoCommerce.Foundation.Data.Marketing.Migrations.Promotion
-{  
+{   
     public partial class Initial : DbMigration
     {
         public override void Up()
@@ -106,8 +106,8 @@ namespace VirtoCommerce.Foundation.Data.Marketing.Migrations.Promotion
                         CouponSetId = c.String(maxLength: 128),
                         LastModified = c.DateTime(),
                         Created = c.DateTime(),
-                        StoreId = c.String(maxLength: 128),
                         CatalogId = c.String(maxLength: 128),
+                        StoreId = c.String(maxLength: 128),
                         Discriminator = c.String(maxLength: 128),
                     })
                 .PrimaryKey(t => t.PromotionId)
@@ -126,6 +126,8 @@ namespace VirtoCommerce.Foundation.Data.Marketing.Migrations.Promotion
                         MemberId = c.String(maxLength: 128),
                         OrderGroupId = c.String(maxLength: 128),
                         CouponCode = c.String(maxLength: 64),
+                        Status = c.Int(nullable: false, defaultValue:0),
+                        UsageDate = c.DateTime(),
                         PromotionId = c.String(maxLength: 128),
                         LastModified = c.DateTime(),
                         Created = c.DateTime(),

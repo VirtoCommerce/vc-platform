@@ -7,6 +7,8 @@ namespace VirtoCommerce.Foundation.Data.AppConfig.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
+            MigrationsDirectory = @"AppConfig\Migrations";
+            ContextKey = "VCF.AppConfig";
         }
 
         protected override void Seed(VirtoCommerce.Foundation.Data.AppConfig.EFAppConfigRepository context)

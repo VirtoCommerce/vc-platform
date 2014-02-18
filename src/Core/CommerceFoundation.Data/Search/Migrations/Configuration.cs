@@ -7,6 +7,8 @@ namespace VirtoCommerce.Foundation.Data.Search.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
+            MigrationsDirectory = @"Search\Migrations";
+            ContextKey = "VCF.Search";
         }
 
         protected override void Seed(VirtoCommerce.Foundation.Data.Search.EFSearchRepository context)

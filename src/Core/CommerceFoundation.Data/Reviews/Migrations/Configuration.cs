@@ -7,6 +7,8 @@ namespace VirtoCommerce.Foundation.Data.Reviews.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
+            MigrationsDirectory = @"Reviews\Migrations";
+            ContextKey = "VCF.Reviews";
         }
 
         protected override void Seed(VirtoCommerce.Foundation.Data.Reviews.EFReviewRepository context)

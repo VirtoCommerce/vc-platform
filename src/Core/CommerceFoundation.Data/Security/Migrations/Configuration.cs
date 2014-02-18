@@ -7,6 +7,8 @@ namespace VirtoCommerce.Foundation.Data.Security.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
+            MigrationsDirectory = @"Security\Migrations";
+            ContextKey = "VCF.Security";
         }
 
         protected override void Seed(VirtoCommerce.Foundation.Data.Security.EFSecurityRepository context)

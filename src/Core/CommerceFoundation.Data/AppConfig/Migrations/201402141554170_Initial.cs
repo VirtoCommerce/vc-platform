@@ -66,7 +66,7 @@ namespace VirtoCommerce.Foundation.Data.AppConfig.Migrations
                         Description = c.String(maxLength: 256),
                         JobClassType = c.String(nullable: false, maxLength: 1024),
                         JobAssemblyPath = c.String(maxLength: 1024),
-                        LoadFromGac = c.Boolean(nullable: false),
+                        LoadFromGac = c.Boolean(nullable: false, defaultValue: false),
                         IsEnabled = c.Boolean(nullable: false),
                         Schedule = c.String(maxLength: 64),
                         Priority = c.Int(nullable: false),
@@ -108,7 +108,7 @@ namespace VirtoCommerce.Foundation.Data.AppConfig.Migrations
                         EntryLevel = c.Int(nullable: false),
                         Instance = c.String(),
                         TaskScheduleId = c.String(maxLength: 128),
-                        MultipleInstance = c.Boolean(nullable: false),
+                        MultipleInstance = c.Boolean(nullable: false, defaultValue: false),
                         SystemJobId = c.String(nullable: false, maxLength: 128),
                         LastModified = c.DateTime(),
                         Created = c.DateTime(),
@@ -122,7 +122,7 @@ namespace VirtoCommerce.Foundation.Data.AppConfig.Migrations
                 c => new
                     {
                         TaskScheduleId = c.String(nullable: false, maxLength: 128),
-                        SystemJobId = c.String(nullable: false, maxLength: 128),
+                        SystemJobId = c.String(nullable: false, maxLength: 128, defaultValue: string.Empty),
                         Frequency = c.Int(nullable: false),
                         NextScheduledStartTime = c.DateTime(nullable: false),
                         LastModified = c.DateTime(),
@@ -219,7 +219,7 @@ namespace VirtoCommerce.Foundation.Data.AppConfig.Migrations
                     {
                         Name = c.String(nullable: false, maxLength: 128),
                         LanguageCode = c.String(nullable: false, maxLength: 5),
-                        Category = c.String(nullable: false, maxLength: 128),
+                        Category = c.String(nullable: false, maxLength: 128, defaultValue: string.Empty),
                         Value = c.String(nullable: false),
                         LastModified = c.DateTime(),
                         Created = c.DateTime(),
@@ -245,8 +245,8 @@ namespace VirtoCommerce.Foundation.Data.AppConfig.Migrations
                         Created = c.DateTime(),
                         Discriminator = c.String(maxLength: 128),
                     })
-                .PrimaryKey(t => t.SeoUrlKeywordId);
-            
+                .PrimaryKey(t => t.SeoUrlKeywordId)
+                .Index(f => new { f.Keyword, f.KeywordType, f.Language, f.IsActive }, true);
         }
         
         public override void Down()

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace VirtoCommerce.Foundation.Marketing.Model.Policies
 {
@@ -11,7 +9,7 @@ namespace VirtoCommerce.Foundation.Marketing.Model.Policies
 	public class GlobalExclusivityPolicy : IEvaluationPolicy
 	{
 		#region IEvaluationPolicy Members
-        int _Priority = 100;
+        int _priority = 100;
         /// <summary>
         /// Gets or sets the priority the policies are executed by. The highest priority is ran first.
         /// </summary>
@@ -22,11 +20,11 @@ namespace VirtoCommerce.Foundation.Marketing.Model.Policies
         {
             get
             {
-                return _Priority;
+                return _priority;
             }
             set
             {
-                _Priority = value;
+                _priority = value;
             }
         }
 
@@ -39,10 +37,10 @@ namespace VirtoCommerce.Foundation.Marketing.Model.Policies
 		public PromotionRecord[] FilterPromotions(IPromotionEvaluationContext evaluationContext, PromotionRecord[] records)
 		{
             // applied global promotion, set to empty at the beginning
-            string appliedGlobalPromotionId = String.Empty;
-            List<PromotionRecord> appliedRecords = new List<PromotionRecord>();
+            var appliedGlobalPromotionId = String.Empty;
+            var appliedRecords = new List<PromotionRecord>();
 
-            foreach (PromotionRecord record in records)
+            foreach (var record in records)
             {
                 if (appliedGlobalPromotionId == String.Empty)
                 {
@@ -62,18 +60,6 @@ namespace VirtoCommerce.Foundation.Marketing.Model.Policies
             }
 
             return appliedRecords.ToArray();
-            /*
-			var retVal = promotions;
-
-			//Only one global exclusive promotion
-			var globalExlusivityPromotion = promotions.FirstOrDefault(x => x.ExclusionTypeId == (int)ExclusivityType.Global);
-			if (globalExlusivityPromotion != null)
-			{
-				retVal = new Promotion[] { globalExlusivityPromotion };
-			}
-
-			return retVal;
-             * */
 		}
 		#endregion
 

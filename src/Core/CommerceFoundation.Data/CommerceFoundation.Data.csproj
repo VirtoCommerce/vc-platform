@@ -200,9 +200,9 @@
       <DependentUpon>201402141610395_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Marketing\Migrations\Promotion\Configuration.cs" />
-    <Compile Include="Marketing\Migrations\Promotion\201402141612253_Initial.cs" />
-    <Compile Include="Marketing\Migrations\Promotion\201402141612253_Initial.Designer.cs">
-      <DependentUpon>201402141612253_Initial.cs</DependentUpon>
+    <Compile Include="Marketing\Migrations\Promotion\201402181150199_Initial.cs" />
+    <Compile Include="Marketing\Migrations\Promotion\201402181150199_Initial.Designer.cs">
+      <DependentUpon>201402181150199_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Stores\Migrations\201402141710203_Initial.cs" />
     <Compile Include="Stores\Migrations\201402141710203_Initial.Designer.cs">
@@ -309,8 +309,8 @@
     <EmbeddedResource Include="Marketing\Migrations\Content\201402141610395_Initial.resx">
       <DependentUpon>201402141610395_Initial.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Marketing\Migrations\Promotion\201402141612253_Initial.resx">
-      <DependentUpon>201402141612253_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Marketing\Migrations\Promotion\201402181150199_Initial.resx">
+      <DependentUpon>201402181150199_Initial.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Stores\Migrations\201402141710203_Initial.resx">
       <DependentUpon>201402141710203_Initial.cs</DependentUpon>

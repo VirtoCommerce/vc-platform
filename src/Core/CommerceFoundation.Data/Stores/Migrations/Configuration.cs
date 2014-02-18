@@ -2,14 +2,16 @@ using System.Data.Entity.Migrations;
 
 namespace VirtoCommerce.Foundation.Data.Stores.Migrations
 {
-    public sealed class Configuration : DbMigrationsConfiguration<VirtoCommerce.Foundation.Data.Stores.EFStoreRepository>
+    public sealed class Configuration : DbMigrationsConfiguration<EFStoreRepository>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
+            MigrationsDirectory = @"Stores\Migrations";
+            ContextKey = "VCF.Stores";
         }
 
-        protected override void Seed(VirtoCommerce.Foundation.Data.Stores.EFStoreRepository context)
+        protected override void Seed(EFStoreRepository context)
         {
             //  This method will be called after migrating to the latest version.
 

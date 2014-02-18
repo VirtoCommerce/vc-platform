@@ -1,6 +1,6 @@
 # variables
 Param( 
-	$dbconnection = "Server=(local);Database=VirtoCommerceEF6;Integrated Security=True;",
+	$dbconnection = "Server=(local);Database=VirtoCommerce;Integrated Security=True;",
     $datafolder,
     $moduleFile,
     $useSample = $true

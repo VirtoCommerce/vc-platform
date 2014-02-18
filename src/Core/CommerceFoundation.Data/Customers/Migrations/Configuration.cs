@@ -7,6 +7,8 @@ namespace VirtoCommerce.Foundation.Data.Customers.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
+            MigrationsDirectory = @"Customers\Migrations";
+            ContextKey = "VCF.Customers";
         }
 
         protected override void Seed(VirtoCommerce.Foundation.Data.Customers.EFCustomerRepository context)
