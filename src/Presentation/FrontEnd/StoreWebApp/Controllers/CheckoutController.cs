@@ -982,15 +982,39 @@ namespace VirtoCommerce.Web.Controllers
 
         private static AddressModel ConvertToPaypalAddress(AddressType address, string name)
         {
+            var countryCode = "USA";
+            var firstName = address.Name;
+            var lastName = address.Name;
+
+            if (address.Country.HasValue)
+            {
+                try
+                {
+                    //Paypal uses two letter region code, we use 3 letters in jurisdiction
+                    var region = new RegionInfo(address.Country.Value.ToString());
+                    countryCode = region.ThreeLetterISORegionName;
+                }
+                catch
+                {
+                    //use default
+                }
+            }
+
+            var splited = address.Name.Split(new[] { ' ' });
+            if (!string.IsNullOrEmpty(address.Name) && splited.Length > 1)
+            {
+                
+                firstName = splited[0];
+                lastName = splited[1];
+            }
+
             return new AddressModel
             {
                 Name = name,
-                FirstName = address.Name,
-                LastName = address.Name,
+                FirstName = firstName,
+                LastName = lastName,
                 City = address.CityName,
-                CountryCode = address.Country.HasValue
-                    ? address.Country.Value.ToString()
-                    : "USA",
+                CountryCode = countryCode,
                 DaytimePhoneNumber = address.Phone ?? "PHONE", //This field is required
                 CountryName = address.CountryName,
                 Line1 = address.Street1,
