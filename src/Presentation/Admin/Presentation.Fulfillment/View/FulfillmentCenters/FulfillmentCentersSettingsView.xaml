@@ -60,10 +60,10 @@
 
             <DataGrid x:Name="ItemsDataGrid" Grid.Row="1" ItemsSource="{Binding Items, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,4">
                 <DataGrid.Columns>
-					<DataGridTextColumn Header="ID" Binding="{Binding FulfillmentCenterId}" ElementState.UId="FulfillmentList_Column_Id" ElementState.Mode="Persist" Width="{PropertyState Default=1*}" />
-					<DataGridTextColumn Header="Name" Binding="{Binding Name}" ElementState.UId="FulfillmentList_Column_Name" ElementState.Mode="Persist" Width="{PropertyState Default=2*}"/>
-					<DataGridTextColumn Header="Pick Delay (min)" Binding="{Binding PickDelay}" ElementState.UId="FulfillmentList_Column_Delay" ElementState.Mode="Persist" Width="{PropertyState Default=1*}" />
-					<DataGridTextColumn Header="Street" ElementState.UId="FulfillmentList_Column_Street" ElementState.Mode="Persist" Width="{PropertyState Default=2*}" >
+					<DataGridTextColumn Header="ID" Binding="{Binding FulfillmentCenterId}" />
+					<DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+					<DataGridTextColumn Header="Pick Delay (min)" Binding="{Binding PickDelay}" />
+					<DataGridTextColumn Header="Street">
                         <DataGridTextColumn.Binding>
                             <MultiBinding StringFormat="{}{0}, {1}">
                                 <Binding Path="Line1" />
@@ -71,8 +71,8 @@
                             </MultiBinding>
                         </DataGridTextColumn.Binding>
                     </DataGridTextColumn>
-					<DataGridTextColumn Header="City" Binding="{Binding City}" ElementState.UId="FulfillmentList_Column_City" ElementState.Mode="Persist" Width="{PropertyState Default=1*}" />
-					<DataGridTextColumn Header="Country" Binding="{Binding CountryName}" ElementState.UId="FulfillmentList_Column_Country" ElementState.Mode="Persist" Width="{PropertyState Default=1*}" />
+					<DataGridTextColumn Header="City" Binding="{Binding City}"/>
+					<DataGridTextColumn Header="Country" Binding="{Binding CountryName}" />
                 </DataGrid.Columns>
 
                 <DataGrid.RowStyle>

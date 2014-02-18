@@ -344,7 +344,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.PaymentMethods
 									break;
 							}
 
-							if (_selectedGateway.GatewayId == OriginalItem.PaymentGatewayId)
+							if (_selectedGateway.GatewayId == InnerItem.PaymentGatewayId)
 							{
 								// load saved property values
 								var oldValue = InnerItem.PaymentMethodPropertyValues.FirstOrDefault(x1 => x1.Name == x.Name);
