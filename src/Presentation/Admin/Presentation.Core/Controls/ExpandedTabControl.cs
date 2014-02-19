@@ -1,9 +1,6 @@
 ﻿using Microsoft.Practices.Prism.Commands;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Input;
-using System.Windows.Threading;
 
 namespace VirtoCommerce.ManagementClient.Core.Controls
 {
@@ -15,7 +12,7 @@ namespace VirtoCommerce.ManagementClient.Core.Controls
             : base()
         {
             IsExpanded = true;
-            HeaderClickCommand = new DelegateCommand<object>(x => RaiseHeaderClickRequest(x));
+            HeaderClickCommand = new DelegateCommand<object>(RaiseHeaderClickRequest);
         }
 
         private void RaiseHeaderClickRequest(object tabItem)
@@ -23,7 +20,7 @@ namespace VirtoCommerce.ManagementClient.Core.Controls
             IsExpanded = !(IsExpanded && tabItem is TabItem && (tabItem as TabItem).IsSelected);
         }
 
-        private static DependencyPropertyKey IsExpandedPropertyKey =
+        private static readonly DependencyPropertyKey IsExpandedPropertyKey =
             DependencyProperty.RegisterReadOnly(
                 "IsExpanded",
                 typeof(bool),
@@ -43,5 +40,9 @@ namespace VirtoCommerce.ManagementClient.Core.Controls
             }
         }
 
+        public void Collapse()
+        {
+            IsExpanded = false;
+        }
     }
 }

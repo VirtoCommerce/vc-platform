@@ -1,4 +1,6 @@
-﻿using System;
+﻿#region Usings
+
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -16,6 +18,8 @@ using VirtoCommerce.Foundation.Marketing.Repositories;
 using VirtoCommerce.ManagementClient.DynamicContent.ViewModel.DynamicContent.Interfaces;
 using localModel = VirtoCommerce.ManagementClient.DynamicContent.Model;
 using VirtoCommerce.Foundation.Marketing.Model.DynamicContent;
+
+#endregion
 
 namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.DynamicContent.Implementations
 {
@@ -65,6 +69,11 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.DynamicContent
 		{
 			get;
 			private set;
+		}
+
+		public bool IsWizardMode
+		{
+			get { return false; }
 		}
 
 		#region ViewModelBase overrides
@@ -225,9 +234,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.DynamicContent
 				new KeyValuePair<string, object>("item", item)
 				);
 
-			var confirmation = new ConditionalConfirmation();
-			confirmation.Title = "Enter property value";
-			confirmation.Content = itemVM;
+			var confirmation = new ConditionalConfirmation {Title = "Enter property value", Content = itemVM};
 
 			CommonConfirmRequest.Raise(confirmation, (x) =>
 			{
@@ -251,6 +258,9 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.DynamicContent
 						case PropertyValueType.Category:
 							OnUIThread(() => InnerItem.PropertyValues.First(y => y.Name == item.Name).LongTextValue = item.LongTextValue);
 							OnUIThread(() => InnerItem.PropertyValues.First(y => y.Name == item.Name).Alias = item.Alias);
+							break;
+						case PropertyValueType.Boolean:
+							OnUIThread(() => InnerItem.PropertyValues.First(y => y.Name == item.Name).BooleanValue = item.BooleanValue);
 							break;
 					}
 				}

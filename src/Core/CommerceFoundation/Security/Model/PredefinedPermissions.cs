@@ -61,9 +61,11 @@ namespace VirtoCommerce.Foundation.Security.Model
             FulfillmentCompleteShipment = "fulfillment:complete_shipment",
             FulfillmentReturnsManage = "fulfillment:returns:manage",
 
+            ReportingViewReports = "reporting:view",
+            ReportingManageReports = "reporting:manage",
+
             SecurityAccounts = "security:accounts:manage",
             SecurityRoles = "security:roles:manage",
-
 
             SettingsAppConfigSettings = "appconfig:settings:config",
             SettingsAppConfigSystemJobs = "appconfig:system_jobs:config",
@@ -147,6 +149,9 @@ namespace VirtoCommerce.Foundation.Security.Model
             Name_FulfillmentInventoryReceive = "Receive Fulfillment Inventory",
             Name_FulfillmentCompleteShipment = "Complete Shipment",
             Name_FulfillmentReturnsManage = "Edit Returns and Exchanges",
+
+            Name_ReportingViewReports = "View reports",
+            Name_ReportingManageReports = "Manage reports",
 
             Name_SecurityAccounts = "Manage Accounts",
             Name_SecurityRoles = "Manage Roles",
@@ -243,6 +248,9 @@ namespace VirtoCommerce.Foundation.Security.Model
 					new Permission {PermissionId = FulfillmentPicklistsManage, Name = Name_FulfillmentPicklistsManage},
 					new Permission {PermissionId = FulfillmentCompleteShipment, Name = Name_FulfillmentCompleteShipment},
 					new Permission {PermissionId = FulfillmentReturnsManage, Name = Name_FulfillmentReturnsManage},
+
+                    new Permission {PermissionId = ReportingViewReports, Name = Name_ReportingViewReports},
+                    new Permission {PermissionId = ReportingManageReports, Name = Name_ReportingManageReports},
 
 					new Permission {PermissionId = SecurityAccounts, Name = Name_SecurityAccounts},
 					new Permission {PermissionId = SecurityRoles, Name = Name_SecurityRoles},
@@ -360,6 +368,15 @@ namespace VirtoCommerce.Foundation.Security.Model
 					FulfillmentCompleteShipment,
 					FulfillmentReturnsManage
 				};
+        }
+
+        public static List<string> ListReportingPermissions()
+        {
+            return new List<string>
+            {
+                ReportingViewReports,
+                ReportingManageReports
+            };
         }
 
         public static List<string> ListUsersPermissions()

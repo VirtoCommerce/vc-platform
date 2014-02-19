@@ -36,134 +36,88 @@
         </Style.Triggers>
     </Style>
 
-
     <Converters:CaseTypeToImageConverter x:Key="CaseTypeToImageConverter"/>
 
+	<DataTemplate x:Key="agentColumnTemplate">
+		<TextBlock Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" Text="{Binding Path=Data.OriginalItem.AgentName, UpdateSourceTrigger=PropertyChanged}" />
+	</DataTemplate>
 
-    <GridView x:Key="gridViewView"
+	<DataTemplate x:Key="channelColumnTemplate">
+		<StackPanel Margin="2,4,0,2" HorizontalAlignment="Center" Orientation="Horizontal" Height="18">
+			<core_controls:VectorImage x:Name="viCaseIcon" VerticalAlignment="Top" ImageResource="{StaticResource Icon_Button_Filter}" />
+		</StackPanel>
+		<DataTemplate.Triggers>
+			<DataTrigger Binding="{Binding Path=Data.Channel}" Value="Email">
+				<Setter TargetName="viCaseIcon" Property="ImageResource" Value="{StaticResource Icon_Email}"/>
+			</DataTrigger>
+			<DataTrigger Binding="{Binding Path=Data.Channel}" Value="Phone">
+				<Setter TargetName="viCaseIcon" Property="ImageResource" Value="{StaticResource Icon_Phone}"/>
+			</DataTrigger>
+			<DataTrigger Binding="{Binding Path=Data.Channel}" Value="CommerceManager">
+				<Setter TargetName="viCaseIcon" Property="ImageResource" Value="{StaticResource Icon_Commerce_Manager}"/>
+			</DataTrigger>
+		</DataTemplate.Triggers>
+	</DataTemplate>
+
+	<DataTemplate x:Key="titleColumnTemplate">
+		<TextBlock FontWeight="DemiBold" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" Foreground="{DynamicResource Virto_HighLightText_Foreground_Brush}" Text="{Binding Path=Data.OriginalItem.Title, UpdateSourceTrigger=PropertyChanged}" />
+	</DataTemplate>
+
+	<DataTemplate x:Key="fullNameColumnTemplate">
+		<TextBlock FontWeight="DemiBold"  Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" Foreground="{DynamicResource Virto_HighLightText_Foreground_Brush}" Text="{Binding Path=Data.OriginalContact.FullName, UpdateSourceTrigger=PropertyChanged}" />
+	</DataTemplate>
+	
+	<DataTemplate x:Key="statusColumnTemplate">
+		<TextBlock x:Name="txtStatus" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" Text="{Binding Path=Data.Status,Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />		
+		<DataTemplate.Triggers>
+			<DataTrigger Binding="{Binding Path=Data.Status,Mode=OneWay}" Value="{x:Static CustomersModels:CaseStatus.Pending}">
+				<Setter Property="Foreground" TargetName="txtStatus" Value="Red"/>
+			</DataTrigger>
+			<DataTrigger Binding="{Binding Path=Data.Status,Mode=OneWay}" Value="{x:Static CustomersModels:CaseStatus.Resolved}">
+				<Setter Property="Foreground" TargetName="txtStatus" Value="Green"/>
+			</DataTrigger>
+		</DataTemplate.Triggers>
+	</DataTemplate>
+
+	<DataTemplate x:Key="modifiedDateColumnTemplate">
+		<TextBlock Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" Text="{Binding Path=Data.LastModified, StringFormat=R, UpdateSourceTrigger=PropertyChanged, Converter={x:Static Converters:ModifiedDateToPastTimeConverter.Current} ,TargetNullValue='Not modified'}" />
+	</DataTemplate>
+	
+	<GridView x:Key="gridViewView"
                 ColumnHeaderContainerStyle="{StaticResource Virto_GridView_ColumnHeader_ContainerStyle}"
                 VirtualizingStackPanel.IsVirtualizing="True"
                 VirtualizingStackPanel.VirtualizationMode="Recycling"
                 ScrollViewer.IsDeferredScrollingEnabled="True"
-                core_virtualization:VirtualListLoadingIndicator.IsAttached="True"
-                >
-
-        <GridViewColumn Header="Channels" core_common:GridViewColumnResize.Width="4*" Width="45">
-            <GridViewColumn.CellTemplate>
-                <DataTemplate>
-                    <StackPanel Margin="2,4,0,2" HorizontalAlignment="Center" Orientation="Horizontal" Height="18">
-                        <core_controls:VectorImage x:Name="viCaseIcon" VerticalAlignment="Top" ImageResource="{StaticResource Icon_Button_Filter}" />
-                    </StackPanel>
-                    <DataTemplate.Triggers>
-                        <DataTrigger Binding="{Binding Path=Data.Channel}" Value="Email">
-                            <Setter TargetName="viCaseIcon" Property="ImageResource" Value="{StaticResource Icon_Email}"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Path=Data.Channel}" Value="Phone">
-                            <Setter TargetName="viCaseIcon" Property="ImageResource" Value="{StaticResource Icon_Phone}"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Path=Data.Channel}" Value="CommerceManager">
-                            <Setter TargetName="viCaseIcon" Property="ImageResource" Value="{StaticResource Icon_Commerce_Manager}"/>
-                        </DataTrigger>
-                    </DataTemplate.Triggers>
-                </DataTemplate>
-            </GridViewColumn.CellTemplate>
-        </GridViewColumn>
-
-        <GridViewColumn Header="Subject" core_common:GridViewColumnResize.Width="25*" Width="250">
-            <GridViewColumn.CellTemplate>
-                <DataTemplate>
-                    <StackPanel Margin="0,4,0,2" HorizontalAlignment="Stretch" Orientation="Horizontal">
-                        <StackPanel Margin="0,0,0,0" VerticalAlignment="Top">
-                            <TextBlock FontWeight="DemiBold" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" Foreground="{DynamicResource Virto_HighLightText_Foreground_Brush}" >
-									<Run Text="{Binding Path=Data.OriginalItem.Title, UpdateSourceTrigger=PropertyChanged}" />
-                            </TextBlock>
-                        </StackPanel>
-                    </StackPanel>
-                </DataTemplate>
-            </GridViewColumn.CellTemplate>
-        </GridViewColumn>
-
-        <GridViewColumn Header="Customer" core_common:GridViewColumnResize.Width="20*" Width="200">
-            <GridViewColumn.CellTemplate>
-                <DataTemplate>
-                    <StackPanel Margin="0,4,0,2" HorizontalAlignment="Stretch" Orientation="Horizontal">
-                        <TextBlock FontWeight="DemiBold"  Style="{StaticResource Virto_TextBlock_VirtualListView_Style}"  Foreground="{DynamicResource Virto_HighLightText_Foreground_Brush}" >
-									<Run Text="{Binding Path=Data.OriginalContact.FullName, UpdateSourceTrigger=PropertyChanged}" />
-                        </TextBlock>
-                    </StackPanel>
-                </DataTemplate>
-            </GridViewColumn.CellTemplate>
-        </GridViewColumn>
-
-
-
-        <GridViewColumn Header="Status" core_common:GridViewColumnResize.Width="8*" Width="80">
-            <GridViewColumn.CellTemplate>
-                <DataTemplate>
-                    <StackPanel Margin="0,4,0,2" VerticalAlignment="Top" HorizontalAlignment="Stretch" Orientation="Horizontal">
-                        <StackPanel Margin="0,0,0,0" VerticalAlignment="Top">
-                            <TextBlock x:Name="txtStatus" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" >
-									<Run Text="{Binding Path=Data.Status,Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
-                            </TextBlock>
-                        </StackPanel>
-                    </StackPanel>
-                    <DataTemplate.Triggers>
-                        <DataTrigger Binding="{Binding Path=Data.Status,Mode=OneWay}" Value="{x:Static CustomersModels:CaseStatus.Pending}">
-                            <Setter Property="Foreground" TargetName="txtStatus" Value="Red"/>
-                        </DataTrigger>
-                        <DataTrigger Binding="{Binding Path=Data.Status,Mode=OneWay}" Value="{x:Static CustomersModels:CaseStatus.Resolved}">
-                            <Setter Property="Foreground" TargetName="txtStatus" Value="Green"/>
-                        </DataTrigger>
-                    </DataTemplate.Triggers>
-                </DataTemplate>
-            </GridViewColumn.CellTemplate>
-        </GridViewColumn>
-
-        <GridViewColumn Header="Modified" core_common:GridViewColumnResize.Width="10*" Width="130" >
-            <GridViewColumn.CellTemplate>
-                <DataTemplate>
-                    <StackPanel Margin="0,4,0,2" HorizontalAlignment="Stretch" Orientation="Horizontal">
-                        <StackPanel Margin="0,0,0,0" VerticalAlignment="Top">
-                            <TextBlock Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" >
-									<Run Text="{Binding Path=Data.LastModified, UpdateSourceTrigger=PropertyChanged, Converter={x:Static Converters:ModifiedDateToPastTimeConverter.Current} ,TargetNullValue='Not modified'}" />
-                            </TextBlock>
-                        </StackPanel>
-                    </StackPanel>
-                </DataTemplate>
-            </GridViewColumn.CellTemplate>
-        </GridViewColumn>
-
-        <GridViewColumn Header="Assigned" core_common:GridViewColumnResize.Width="10*" Width="100" >
-            <GridViewColumn.CellTemplate>
-                <DataTemplate>
-                    <StackPanel Margin="0,4,0,2" HorizontalAlignment="Stretch" Orientation="Horizontal">
-                        <TextBlock Style="{StaticResource Virto_TextBlock_VirtualListView_Style}">
-									<Run Text="{Binding Path=Data.OriginalItem.AgentName, UpdateSourceTrigger=PropertyChanged}" />
-                        </TextBlock>
-                    </StackPanel>
-                </DataTemplate>
-            </GridViewColumn.CellTemplate>
-        </GridViewColumn>
+                core_virtualization:VirtualListLoadingIndicator.IsAttached="True">
+		<GridViewColumn Header="Channels" core_common:GridViewColumnResize.Width="4*" Width="45" CellTemplate="{StaticResource channelColumnTemplate}"/>
+		<GridViewColumn Header="Subject" core_common:GridViewColumnResize.Width="25*" Width="250" CellTemplate="{StaticResource titleColumnTemplate}" />
+		<GridViewColumn Header="Customer" core_common:GridViewColumnResize.Width="20*" Width="200" CellTemplate="{StaticResource fullNameColumnTemplate}" />
+		<GridViewColumn Header="Status" core_common:GridViewColumnResize.Width="8*" Width="80" CellTemplate="{StaticResource statusColumnTemplate}"/>
+		<GridViewColumn Header="Modified" core_common:GridViewColumnResize.Width="10*" Width="130" CellTemplate="{StaticResource modifiedDateColumnTemplate}"/>
+		<GridViewColumn Header="Assigned" core_common:GridViewColumnResize.Width="10*" Width="100" CellTemplate="{StaticResource agentColumnTemplate}"/>
     </GridView>
 
-    <!--search results list in search tab-->
+	<DataTemplate x:Key="typeColumnTemplate">
+		<TextBlock Text="{Binding Data.Type}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
+	</DataTemplate>
+
+	<DataTemplate x:Key="descriptionColumnTemplate">
+		<TextBlock Text="{Binding Data.Description}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
+	</DataTemplate>
+
+	<DataTemplate x:Key="nameColumnTemplate">
+		<TextBlock Text="{Binding Data.DisplayName}" FontWeight="DemiBold" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" Foreground="{DynamicResource Virto_HighLightText_Foreground_Brush}" />		
+	</DataTemplate>
+
+	<!--search results list in search tab-->
     <GridView x:Key="searchGridViewView"
         ColumnHeaderContainerStyle="{StaticResource Virto_GridView_ColumnHeader_ContainerStyle}"
         VirtualizingStackPanel.IsVirtualizing="True"
         VirtualizingStackPanel.VirtualizationMode="Recycling"
         ScrollViewer.IsDeferredScrollingEnabled="True"
-        core_virtualization:VirtualListLoadingIndicator.IsAttached="True"
-        >
-        <GridViewColumn Header="Name" core_common:GridViewColumnResize.Width="5*" Width="200">
-            <GridViewColumn.CellTemplate>
-                <DataTemplate>
-                    <StackPanel Margin="0,4,0,2" HorizontalAlignment="Stretch" Orientation="Horizontal">
-                        <TextBlock Text="{Binding Data.DisplayName}" FontWeight="DemiBold" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" Foreground="{DynamicResource Virto_HighLightText_Foreground_Brush}" />
-                    </StackPanel>
-                </DataTemplate>
-            </GridViewColumn.CellTemplate>
-        </GridViewColumn>
-        <GridViewColumn Header="Type" Width="67" DisplayMemberBinding="{Binding Data.Type}" />
-        <GridViewColumn Header="Description" core_common:GridViewColumnResize.Width="15*" Width="600" DisplayMemberBinding="{Binding Data.Description}" />
+        core_virtualization:VirtualListLoadingIndicator.IsAttached="True">		
+		<GridViewColumn Header="Name" core_common:GridViewColumnResize.Width="5*" Width="200" CellTemplate="{StaticResource nameColumnTemplate}" />
+		<GridViewColumn Header="Type" Width="67" CellTemplate="{StaticResource typeColumnTemplate}" />
+		<GridViewColumn Header="Description" core_common:GridViewColumnResize.Width="15*" Width="600" CellTemplate="{StaticResource descriptionColumnTemplate}" />
     </GridView>
 </ResourceDictionary>

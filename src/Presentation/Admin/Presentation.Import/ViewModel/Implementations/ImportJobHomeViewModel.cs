@@ -241,15 +241,17 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 			{
 				if (!e.ImportResult.IsFinished)
 				{
+					//IEnumerable<object> errors = null;
+					//if (e.ImportResult.Errors != null)
+					//	errors = e.ImportResult.Errors.Cast<object>();
 					var statusUpdate = new StatusMessage
 						{
 							ShortText =
 								string.Format("File '{0}' import. Processed {1} items.", Path.GetFileName(e.ImportEntity.SourceFile),
-								              e.Processed),
-							Details = e.ImportResult.Errors != null ?
-								e.ImportResult.Errors.Cast<object>()
-								 .Where(val => val != null)
-								 .Aggregate(string.Empty, (current, val) => current + (val.ToString() + Environment.NewLine)) : string.Empty,
+											  e.Processed),
+							//Details = errors != null ?
+							//	errors.Where(val => val != null)
+							//	 .Aggregate(string.Empty, (current, val) => current + (val.ToString() + Environment.NewLine)) : string.Empty,
 							StatusMessageId = e.StatusId
 						};
 					EventSystem.Publish(statusUpdate);
@@ -294,7 +296,7 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 				var finished = false;
 				while (!finished)
 				{
-					await Task.Delay(TimeSpan.FromMilliseconds(10));
+					await Task.Delay(TimeSpan.FromMilliseconds(100));
 					
 					var res = _importService.GetImportResult(jobEntity.ImportJob.ImportJobId);
 					progress.Report(new ImportProgress

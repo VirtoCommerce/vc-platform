@@ -46,7 +46,7 @@
 
         <!-- Content type -->
         <TextBlock Grid.Row="4" Text="Content type:" />
-        <ComboBox Grid.Row="5" x:Name="comboboxItemType" ItemsSource="{Binding Source={StaticResource ItemTypes}}" SelectedValue="{Binding InnerItem.ContentTypeId, Mode=TwoWay, Converter={StaticResource ContentTypeValueConverter}, ConverterParameter=String2ContentType}" >
+		<ComboBox IsEnabled="{Binding Path=IsWizardMode}"  Grid.Row="5" x:Name="comboboxItemType" ItemsSource="{Binding Source={StaticResource ItemTypes}}" SelectedValue="{Binding InnerItem.ContentTypeId, Mode=TwoWay, Converter={StaticResource ContentTypeValueConverter}, ConverterParameter=String2ContentType}" >
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <Grid>

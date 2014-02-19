@@ -1,13 +1,15 @@
 ﻿@using VirtoCommerce.Web.Virto.Helpers
 @if (UserHelper.CustomerSession.IsRegistered)
 {
-    <text>Welcome <strong>@UserHelper.CustomerSession.Username</strong>!
-        @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" })) {
+    <li class=" last">
+        @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
+        {
             @Html.AntiForgeryToken()
-            <a href="javascript:document.getElementById('logoutForm').submit()">Log off</a>
+            <a href="javascript:document.getElementById('logoutForm').submit()">@("Log off".Localize())</a>
         }
-    </text>
+    </li>
 }
-else {
-    @:[ @Html.ActionLink("Log On", "LogOn", "Account") ]
+else
+{
+    <li class=" last">@Html.ActionLink("Log In".Localize(), "LogOn", "Account")</li>
 }

@@ -278,9 +278,11 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 
 		private void AddPermissionToRole(Permission permToAdd)
 		{
-			RolePermission perm = new RolePermission();
-			perm.PermissionId = permToAdd.PermissionId;
-			perm.RoleId = InnerItem.RoleId;
+			RolePermission perm = new RolePermission
+			{
+			    PermissionId = permToAdd.PermissionId, 
+                RoleId = InnerItem.RoleId
+			};
 
 			InnerItem.RolePermissions.Add(perm);
 			//			OnViewModelPropertyChangedUI(null, null);

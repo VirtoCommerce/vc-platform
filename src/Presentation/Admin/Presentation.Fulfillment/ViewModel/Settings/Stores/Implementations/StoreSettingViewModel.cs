@@ -33,38 +33,38 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
         public bool IsShortStringValue
         {
             get { return _IsShortStringValue; }
-            set { _IsShortStringValue = value; OnPropertyChanged("IsShortStringValue"); }
+            set { _IsShortStringValue = value; OnPropertyChanged(); }
         }
         bool _IsLongStringValue;
         public bool IsLongStringValue
         {
             get { return _IsLongStringValue; }
-            set { _IsLongStringValue = value; OnPropertyChanged("IsLongStringValue"); }
+            set { _IsLongStringValue = value; OnPropertyChanged(); }
         }
         bool _IsDecimalValue;
         public bool IsDecimalValue
         {
             get { return _IsDecimalValue; }
-            set { _IsDecimalValue = value; OnPropertyChanged("IsDecimalValue"); }
+            set { _IsDecimalValue = value; OnPropertyChanged(); }
         }
         bool _IsIntegerValue;
 
         public bool IsIntegerValue
         {
             get { return _IsIntegerValue; }
-            set { _IsIntegerValue = value; OnPropertyChanged("IsIntegerValue"); }
+            set { _IsIntegerValue = value; OnPropertyChanged(); }
         }
         bool _IsBooleanValue;
         public bool IsBooleanValue
         {
             get { return _IsBooleanValue; }
-            set { _IsBooleanValue = value; OnPropertyChanged("IsBooleanValue"); }
+            set { _IsBooleanValue = value; OnPropertyChanged(); }
         }
         bool _IsDateTimeValue;
         public bool IsDateTimeValue
         {
             get { return _IsDateTimeValue; }
-            set { _IsDateTimeValue = value; OnPropertyChanged("IsDateTimeValue"); }
+            set { _IsDateTimeValue = value; OnPropertyChanged(); }
         }
 
         #region IStoreSettingViewModel

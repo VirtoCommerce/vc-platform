@@ -37,7 +37,8 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 					ImportEntityType.Package,
 					ImportEntityType.Sku,
 					ImportEntityType.ItemRelation,
-					ImportEntityType.ItemAsset
+					ImportEntityType.ItemAsset,
+					ImportEntityType.Seo
 				};
 			DefaultImporter = AvailableImporters.First().ToString();
 		}

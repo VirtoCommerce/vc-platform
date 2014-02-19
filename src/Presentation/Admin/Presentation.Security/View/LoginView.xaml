@@ -1,19 +1,19 @@
 ﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
      x:Class="VirtoCommerce.ManagementClient.Security.View.LoginView" xmlns:Presentation_Infrastructure_Converters="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Converters;assembly=VirtoCommerce.ManagementClient.Core"
-     xmlns:core_virtualization="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.DataVirtualization;assembly=VirtoCommerce.ManagementClient.Core"
-     xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
-     xmlns:common="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Common;assembly=VirtoCommerce.ManagementClient.Core"
+			 xmlns:core_virtualization="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.DataVirtualization;assembly=VirtoCommerce.ManagementClient.Core"
+             xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
+			 xmlns:common="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Common;assembly=VirtoCommerce.ManagementClient.Core"
      mc:Ignorable="d" VerticalAlignment="Center" LocalizationScope.ResourceManager="{ResourceManager res:Resources}"
      xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Security.Properties">
     <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/WizardViewTheme/VirtoCommerceWizardTheme.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-
-            <Style x:Key="Virto_LoginButton_Style" TargetType="{x:Type Button}">
+			</ResourceDictionary.MergedDictionaries>
+			
+			<Style x:Key="Virto_LoginButton_Style" TargetType="{x:Type Button}">
                 <Setter Property="SnapsToDevicePixels" Value="True" />
                 <Setter Property="Height" Value="30" />
                 <Setter Property="Width" Value="90" />
@@ -23,51 +23,51 @@
                 <Setter Property="Background" Value="#004D5F" />
                 <Setter Property="BorderBrush" Value="White" />
                 <Setter Property="Foreground" Value="White" />
-                <Setter Property="BorderThickness" Value="2"></Setter>
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type Button}">
+				<Setter Property="BorderThickness" Value="2"></Setter>
+				<Setter Property="Template">
+					<Setter.Value>
+						<ControlTemplate TargetType="{x:Type Button}">
                             <Border x:Name="Bd" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="0"
      BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}"
      ClipToBounds="True">
-                                <Border x:Name="innerShadow" BorderThickness="0,0,0,0" Margin="-2">
+								<Border x:Name="innerShadow" BorderThickness="0,0,0,0" Margin="-2">
                                     <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
      VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="{TemplateBinding Padding}"
      TextBlock.Foreground="{TemplateBinding Foreground}">
-                                    </ContentPresenter>
-                                    <Border.RenderTransform>
+									</ContentPresenter>
+									<Border.RenderTransform>
                                         <TranslateTransform x:Name="translateTransform" />
-                                    </Border.RenderTransform>
-                                </Border>
-                            </Border>
-                            <ControlTemplate.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
+									</Border.RenderTransform>
+								</Border>
+							</Border>
+							<ControlTemplate.Triggers>
+								<Trigger Property="IsMouseOver" Value="True">
                                     <Setter Property="Background" Value="#146173" />
-                                </Trigger>
-                                <Trigger Property="IsPressed" Value="True">
+								</Trigger>
+								<Trigger Property="IsPressed" Value="True">
                                     <Setter Property="Background" Value="#287587" />
-                                </Trigger>
-                                <Trigger Property="IsEnabled" Value="False">
+								</Trigger>
+								<Trigger Property="IsEnabled" Value="False">
                                     <Setter Property="Opacity" TargetName="Bd" Value="0.3" />
-                                </Trigger>
-                            </ControlTemplate.Triggers>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
+								</Trigger>
+							</ControlTemplate.Triggers>
+						</ControlTemplate>
+					</Setter.Value>
+				</Setter>
+			</Style>
 
-        </ResourceDictionary>
+		</ResourceDictionary>
     </UserControl.Resources>
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="LogonViewRequestedEvent" SourceObject="{Binding Path=DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}}">
-            <ei:ChangePropertyAction PropertyName="UserName" TargetObject="{Binding DataContext, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type core_controls:MetroWindow}}}"
-                 Value="{Binding Path=CurrentUserName}" />
-            <ei:ChangePropertyAction PropertyName="BaseUrl" TargetObject="{Binding DataContext, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type core_controls:MetroWindow}}}"
-                 Value="{Binding Path=BaseUrl}" />
+            <ei:ChangePropertyAction PropertyName="UserName" TargetObject="{Binding DataContext, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type core_controls:MetroWindow}}}" 
+                                     Value="{Binding Path=CurrentUser.CurrentUserName}"/>
+            <ei:ChangePropertyAction PropertyName="BaseUrl" TargetObject="{Binding DataContext, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type core_controls:MetroWindow}}}" 
+                                     Value="{Binding Path=CurrentUser.BaseUrl}"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
-    <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="#004D5F">
+	<StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Center" Background="#004D5F">
         <Border>
             <StackPanel HorizontalAlignment="Center" Width="400">
                 <Grid>
@@ -83,15 +83,15 @@
                     </Grid.RowDefinitions>
                     <TextBlock Text="{x:Static res:Resources.login}" Grid.Column="0" Grid.Row="0" VerticalAlignment="Top">
                         <TextBlock.Style>
-                            <Style BasedOn="{StaticResource Virto_TextBlock_CommonTitle_Style}" TargetType="TextBlock">
+							<Style BasedOn="{StaticResource Virto_TextBlock_CommonTitle_Style}" TargetType="TextBlock">
                                 <Setter Property="Margin" Value="5,10,0,5"></Setter>
                                 <Setter Property="Foreground" Value="White"></Setter>
                             </Style>
                         </TextBlock.Style>
                     </TextBlock>
-                    <TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding UserName, Mode=OneWay}" Visibility="{Binding AuthProgress, UpdateSourceTrigger=PropertyChanged,  Converter={x:Static Presentation_Infrastructure_Converters:ToVisibilityConverter.Current}}">
+					<TextBlock Grid.Column="1" Grid.Row="0" Text="{Binding CurrentUser.Username, Mode=OneWay}"  Visibility="{Binding AuthProgress, UpdateSourceTrigger=PropertyChanged,  Converter={x:Static Presentation_Infrastructure_Converters:ToVisibilityConverter.Current}}">
                         <TextBlock.Style>
-                            <Style BasedOn="{StaticResource Virto_TextBlock_CommonTitle_Style}" TargetType="TextBlock">
+							<Style BasedOn="{StaticResource Virto_TextBlock_CommonTitle_Style}" TargetType="TextBlock">
                                 <Setter Property="Margin" Value="10,10,0,5"></Setter>
                                 <Setter Property="Foreground" Value="White"></Setter>
                             </Style>
@@ -109,18 +109,21 @@
                             <ColumnDefinition />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <core_controls:WatermarkedTextBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
-     WatermarkText="{x:Static res:Resources.Username}" Margin="0,5,0,5" Text="{Binding UserName}" />
-                        <PasswordBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" common:PasswordHelper.Attach="True"
-                             HorizontalAlignment="Stretch" common:PasswordHelper.Password="{Binding Password, Mode=TwoWay}"
-                             Margin="0,5,0,5">
+                        <core_controls:WatermarkedTextBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" WatermarkText="{x:Static res:Resources.Username}" Margin="0,5,0,5"
+                                Text="{Binding CurrentUser.Username, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
+                        <PasswordBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" common:PasswordHelper.Attach="True" HorizontalAlignment="Stretch" 
+                            common:PasswordHelper.Password="{Binding CurrentUser.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Margin="0,5,0,5">
                             <PasswordBox.InputBindings>
                                 <KeyBinding Key="Enter" Command="{Binding LoginCommand}" />
                             </PasswordBox.InputBindings>
                         </PasswordBox>
-                        <core_controls:WatermarkedTextBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
-     WatermarkText="{x:Static res:Resources.Baseurl}" Margin="0,5,0,5" Text="{Binding BaseUrl, UpdateSourceTrigger=PropertyChanged}" />
-                    </Grid>
+						<core_controls:WatermarkedTextBox  Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"
+														   WatermarkText="{x:Static res:Resources.Baseurl}" Margin="0,5,0,5" Text="{Binding CurrentUser.BaseUrl, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
+							<core_controls:WatermarkedTextBox.InputBindings>
+								<KeyBinding Key="Enter" Command="{Binding LoginCommand}" />
+							</core_controls:WatermarkedTextBox.InputBindings>
+						</core_controls:WatermarkedTextBox>
+					</Grid>
                     <ScrollViewer Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" MaxHeight="200" VerticalScrollBarVisibility="Auto"
                          Margin="5,0,10,10" VerticalAlignment="Center" HorizontalAlignment="Left">
                         <TextBlock Foreground="OrangeRed" Text="{Binding Error}" TextWrapping="Wrap" TextAlignment="Justify"
@@ -128,7 +131,7 @@
                     </ScrollViewer>
 
                     <Grid Grid.Column="1" Grid.Row="1">
-
+						
                         <StackPanel d:IsHidden="True" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center"
                              HorizontalAlignment="Left" Margin="5,0,0,0" Visibility="{Binding AuthProgress, Converter={x:Static Presentation_Infrastructure_Converters:ToVisibilityConverter.Current}}">
                             <Grid>
@@ -136,33 +139,33 @@
                                     <ColumnDefinition Width="Auto" />
                                     <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-
+                               
                                 <TextBlock Text="{x:Static res:Resources.Welcome}" Grid.Column="1">
                                     <TextBlock.Style>
-                                        <Style BasedOn="{StaticResource Virto_TextBlock_CommonTitle_Style}" TargetType="{x:Type TextBlock}">
+										<Style BasedOn="{StaticResource Virto_TextBlock_CommonTitle_Style}" TargetType="{x:Type TextBlock}">
                                             <Setter Property="Margin" Value="0,0,0,0" />
                                             <Setter Property="Foreground" Value="White" />
                                             <Setter Property="FontSize" Value="20" />
                                         </Style>
                                     </TextBlock.Style>
                                 </TextBlock>
-
+                             
 
                                 <core_virtualization:LoadingMetroAnimation AnimationColor="White" Grid.Column="0"
                                      AnimationScale="Small" />
-
+                                
                             </Grid>
-
+                            
                         </StackPanel>
                     </Grid>
                     <Button Grid.Column="2" Grid.Row="2" Margin="0,0,5,5" Padding="0" DockPanel.Dock="Right"
      Command="{Binding LoginCommand}" VerticalAlignment="Bottom" HorizontalAlignment="Right"
      Style="{StaticResource Virto_LoginButton_Style}" IsDefault="True" Visibility="{Binding AuthProgress, UpdateSourceTrigger=PropertyChanged, Converter={x:Static Presentation_Infrastructure_Converters:ToVisibilityConverter.Current}, ConverterParameter='ih'}"
-     AutomationProperties.AutomationId="logonButton">
+							AutomationProperties.AutomationId="logonButton">
                         <TextBlock Margin="0" Text="{x:Static res:Resources.loginAct}" Foreground="White" />
-                    </Button>
+					</Button>
                 </Grid>
-
+          
             </StackPanel>
         </Border>
     </StackPanel>

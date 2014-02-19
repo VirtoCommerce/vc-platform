@@ -1,5 +1,4 @@
-﻿using System.IO;
-using Microsoft.Practices.ServiceLocation;
+﻿using Microsoft.Practices.ServiceLocation;
 using System;
 using System.Linq;
 using System.Web;
@@ -9,12 +8,9 @@ using System.Web.Optimization;
 using System.Web.Profile;
 using System.Web.Routing;
 using System.Web.Security;
-using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 using VirtoCommerce.Client;
 using VirtoCommerce.Foundation.AppConfig;
-using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Web.Client.Helpers;
-using VirtoCommerce.Web.Client.Modules;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Models.Binders;
 using VirtoCommerce.Web.Virto.Helpers;
@@ -44,6 +40,8 @@ namespace VirtoCommerce.Web
                 AuthConfig.RegisterAuth();
 
                 ModelBinders.Binders[typeof (SearchParameters)] = new SearchParametersBinder();
+                ModelBinders.Binders[typeof(CategoryPathModel)] = new CategoryPathModelBinder();
+
 
                 ModelValidatorProviders.Providers.RemoveAt(0);
                 ModelValidatorProviders.Providers.Insert(0, new VirtoDataAnnotationsModelValidatorProvider());

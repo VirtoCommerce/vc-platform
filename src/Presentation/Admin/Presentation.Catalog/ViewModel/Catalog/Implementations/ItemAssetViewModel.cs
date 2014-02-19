@@ -1,6 +1,8 @@
-﻿using Microsoft.Practices.Prism.Commands;
+﻿using System.Collections.Generic;
+using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using VirtoCommerce.Foundation.Catalogs.Model;
+using VirtoCommerce.Foundation.Reporting.Services;
 using VirtoCommerce.ManagementClient.Asset.ViewModel.Interfaces;
 using VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Interfaces;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
@@ -47,7 +49,9 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 		private void RaiseItemPickInteractionRequest()
 		{
-			var itemVM = _vmFactory.GetViewModelInstance();
+		    var itemVM = _vmFactory.GetViewModelInstance();
+            itemVM.AssetPickMode = true;
+		    itemVM.RootItemId = null;
 
 			CommonConfirmRequest.Raise(
 				new ConditionalConfirmation(() => itemVM.SelectedAsset != null) { Content = itemVM, Title = "Select an asset" },

@@ -21,27 +21,30 @@ namespace VirtoCommerce.Client
 
 		private readonly ICacheRepository _cacheRepository;
 		private readonly cust.ICustomerSessionService _customerSession;
-		private readonly IMarketingRepository _marketingRepository;
+	    private readonly IPromotionEvaluator _evaluator;
+	    private readonly IMarketingRepository _marketingRepository;
 		private readonly IPromotionUsageProvider _promotionUsage;
 
 		#endregion
 
 		private CacheHelper _cacheHelper;
 
-		/// <summary>
-		///     Initializes the <see cref="PromotionClient" /> class.
-		/// </summary>
-		/// <param name="marketingRepository">The marketing repository.</param>
-		/// <param name="promotionUsage">The promotion usage.</param>
-		/// <param name="customerSession">The customer session.</param>
-		/// <param name="cacheRepository">The cache repository.</param>
-		public PromotionClient(IMarketingRepository marketingRepository, IPromotionUsageProvider promotionUsage,
-		                       cust.ICustomerSessionService customerSession, ICacheRepository cacheRepository)
+	    /// <summary>
+	    ///     Initializes the <see cref="PromotionClient" /> class.
+	    /// </summary>
+	    /// <param name="marketingRepository">The marketing repository.</param>
+	    /// <param name="promotionUsage">The promotion usage.</param>
+	    /// <param name="customerSession">The customer session.</param>
+	    /// <param name="evaluator"></param>
+	    /// <param name="cacheRepository">The cache repository.</param>
+	    public PromotionClient(IMarketingRepository marketingRepository, IPromotionUsageProvider promotionUsage,
+		                       cust.ICustomerSessionService customerSession, IPromotionEvaluator evaluator, ICacheRepository cacheRepository)
 		{
 			_promotionUsage = promotionUsage;
 			_marketingRepository = marketingRepository;
 			_cacheRepository = cacheRepository;
 			_customerSession = customerSession;
+	        _evaluator = evaluator;
 		}
 
 		public CacheHelper Helper
@@ -72,13 +75,13 @@ namespace VirtoCommerce.Client
 					IsRegisteredUser = session.IsRegistered,
 					IsFirstTimeBuyer = session.IsFirstTimeBuyer
 				};
-			var evaluator = new DefaultPromotionEvaluator(_marketingRepository, _promotionUsage,
-			                                              new IEvaluationPolicy[]
-				                                              {
-					                                              new GlobalExclusivityPolicy(), new CartSubtotalRewardCombinePolicy(),
-					                                              new ShipmentRewardCombinePolicy()
-				                                              }, _cacheRepository);
-			var promotions = evaluator.EvaluatePromotion(evaluationContext);
+            //var evaluator = new DefaultPromotionEvaluator(_marketingRepository, _promotionUsage,
+            //                                              new IEvaluationPolicy[]
+            //                                                  {
+            //                                                      new GlobalExclusivityPolicy(), new CartSubtotalRewardCombinePolicy(),
+            //                                                      new ShipmentRewardCombinePolicy()
+            //                                                  }, _cacheRepository);
+			var promotions = _evaluator.EvaluatePromotion(evaluationContext);
 			var rewards = promotions.SelectMany(x => x.Rewards);
 
 			var lineItemRewards = rewards.OfType<CatalogItemReward>().ToArray();

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VirtoCommerce.Foundation.Orders.Model;
-using VirtoCommerce.Foundation.Orders.StateMachines;
+﻿using VirtoCommerce.Foundation.Orders.StateMachines;
 
 namespace VirtoCommerce.Client.Orders.StateMachines
 {
@@ -18,12 +12,7 @@ namespace VirtoCommerce.Client.Orders.StateMachines
         {
             get
             {
-                if (_OrderStateMachine == null)
-                {
-                    _OrderStateMachine = new OrderStateMachineImpl();
-                }
-
-                return _OrderStateMachine;
+                return _OrderStateMachine ?? (_OrderStateMachine = new OrderStateMachineImpl());
             }
         }
 
@@ -31,12 +20,7 @@ namespace VirtoCommerce.Client.Orders.StateMachines
         {
             get
             {
-                if (_ShipmentStateMachine == null)
-                {
-                    _ShipmentStateMachine = new ShipmentStateMachineImpl();
-                }
-
-                return _ShipmentStateMachine;
+                return _ShipmentStateMachine ?? (_ShipmentStateMachine = new ShipmentStateMachineImpl());
             }
         }
 
@@ -44,12 +28,7 @@ namespace VirtoCommerce.Client.Orders.StateMachines
         {
             get
             {
-                if (_RmaStateMachine == null)
-                {
-                    _RmaStateMachine = new RmaRequestStateMachineImpl();
-                }
-
-                return _RmaStateMachine;
+                return _RmaStateMachine ?? (_RmaStateMachine = new RmaRequestStateMachineImpl());
             }
         }
     }

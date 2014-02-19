@@ -80,6 +80,11 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.Wizard.Impleme
 			get;
 			private set;
 		}
+
+		public bool IsWizardMode
+		{
+			get { return true; }
+		}
 		
 		#region IWizardStep Members
 
@@ -222,6 +227,9 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.Wizard.Impleme
 							break;
 						case coreModel.PropertyValueType.Integer:
 							InnerItem.PropertyValues.First(y => y.Name == item.Name).IntegerValue = item.IntegerValue;
+							break;
+						case coreModel.PropertyValueType.Boolean:
+							InnerItem.PropertyValues.First(y => y.Name == item.Name).BooleanValue = item.BooleanValue;
 							break;
 					}
 

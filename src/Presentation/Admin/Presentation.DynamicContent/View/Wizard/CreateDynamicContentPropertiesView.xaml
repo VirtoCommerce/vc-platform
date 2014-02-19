@@ -6,6 +6,7 @@
               xmlns:prism="http://www.codeplex.com/prism"
               xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
               xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			  xmlns:infLocal="clr-namespace:VirtoCommerce.ManagementClient.DynamicContent.Infrastructure"
               xmlns:inf="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure;assembly=VirtoCommerce.ManagementClient.Core"
               xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
               xmlns:behaviors="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Behaviors;assembly=VirtoCommerce.ManagementClient.Core"
@@ -27,43 +28,54 @@
         </prism:InteractionRequestTrigger>
     </i:Interaction.Triggers>
 
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
+	<Grid>
+		<Grid.Resources>
+			<infLocal:PropertyValueConverter x:Key="propertyValueConverter" />
+		</Grid.Resources>
 
-        <!-- Toolbar -->
-        <ItemsControl Grid.Row="0" Style="{StaticResource Virto_ToolbarItemsControl_Style}" >
-            <core_controls:MetroButton  Command="{Binding PropertyValueEditCommand}" CommandParameter="{Binding SelectedItem, ElementName=PropertiesList}" Header="EDIT" ToolTip="Edit Property Value">
-                <core_controls:VectorImage ImageResource="{StaticResource Icon_Button_Copy}" Width="13" Height="13" Margin="0,0,1,0" />
-            </core_controls:MetroButton>
-            <core_controls:MetroButton Command="{Binding PropertyValueDeleteCommand}" CommandParameter="{Binding SelectedItem, ElementName=PropertiesList}" Header="CLEAR" ToolTip="Clear Property Value">
-                <Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/cancel.png" Width="14"/>
-            </core_controls:MetroButton>
-        </ItemsControl>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="auto"/>
+			<RowDefinition/>
+		</Grid.RowDefinitions>
 
-        <DataGrid Grid.Row="1" x:Name="PropertiesList" ItemsSource="{Binding InnerItem.PropertyValues}" Margin="0,0,0,4" MinHeight="200">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
-                <DataGridTextColumn Header="Value" Binding="{Binding LongTextValue}" />
-            </DataGrid.Columns>
-            <DataGrid.RowStyle>
-                <Style TargetType="DataGridRow"  BasedOn="{StaticResource {x:Type DataGridRow}}">
-                    <Setter Property="behaviors:MouseDoubleClickBehavior.DoubleClickCommand" Value="{Binding DataContext.PropertyValueEditCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}" />
-                    <Setter Property="behaviors:MouseDoubleClickBehavior.CommandArgument" Value="{Binding SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}" />
-                </Style>
-            </DataGrid.RowStyle>
+		<ItemsControl Grid.Row="0" Style="{StaticResource Virto_ToolbarItemsControl_Style}" >
+			<core_controls:MetroButton Command="{Binding PropertyValueEditCommand}" CommandParameter="{Binding SelectedItem, ElementName=PropertiesList}" Header="EDIT" ToolTip="Edit Property Value">
+				<core_controls:VectorImage ImageResource="{StaticResource Icon_Button_Copy}" Width="13" Height="13" Margin="0,0,1,0" />
+			</core_controls:MetroButton>
+			<core_controls:MetroButton Command="{Binding PropertyValueDeleteCommand}" CommandParameter="{Binding SelectedItem, ElementName=PropertiesList}" Header="CLEAR" ToolTip="Clear Property Value">
+				<Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/cancel.png" Width="14"/>
+			</core_controls:MetroButton>
+		</ItemsControl>
 
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="SelectionChanged">
-                    <ei:CallMethodAction TargetObject="{Binding }" MethodName="RaiseCanExecuteChanged"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </DataGrid>
-    </Grid>
+		<DataGrid Grid.Row="1" x:Name="PropertiesList" ItemsSource="{Binding InnerItem.PropertyValues}" Margin="0,0,0,4">
+			<DataGrid.Columns>
+				<DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+				<DataGridTextColumn Header="Value">
+					<DataGridTextColumn.Binding>
+						<MultiBinding Converter="{StaticResource propertyValueConverter}">
+							<Binding />
+							<Binding Path="LongTextValue"/>
+							<Binding Path="ShortTextValue"/>
+							<Binding Path="DecimalValue"/>
+							<Binding Path="BooleanValue"/>
+							<Binding Path="IntegerValue"/>
+							<Binding Path="DateTimeValue"/>
+							<Binding Path="Alias"/>
+						</MultiBinding>
+					</DataGridTextColumn.Binding>
+				</DataGridTextColumn>
+			</DataGrid.Columns>
+			<DataGrid.RowStyle>
+				<Style TargetType="DataGridRow"  BasedOn="{StaticResource {x:Type DataGridRow}}">
+					<Setter Property="behaviors:MouseDoubleClickBehavior.DoubleClickCommand" Value="{Binding DataContext.PropertyValueEditCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}" />
+					<Setter Property="behaviors:MouseDoubleClickBehavior.CommandArgument" Value="{Binding SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}" />
+				</Style>
+			</DataGrid.RowStyle>
+			<i:Interaction.Triggers>
+				<i:EventTrigger EventName="SelectionChanged">
+					<ei:CallMethodAction TargetObject="{Binding }" MethodName="RaiseCanExecuteChanged"/>
+				</i:EventTrigger>
+			</i:Interaction.Triggers>
+		</DataGrid>
+	</Grid>
 </inf:ViewBase>

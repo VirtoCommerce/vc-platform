@@ -59,6 +59,7 @@ namespace VirtoCommerce.Foundation.Data.AppConfig
 			MapEntity<DisplayTemplateMapping>(modelBuilder, toTable: "DisplayTemplateMapping");
 			MapEntity<ObjectLock>(modelBuilder, toTable: "ObjectLock");
 			MapEntity<Localization>(modelBuilder, toTable: "Localization");
+            MapEntity<SeoUrlKeyword>(modelBuilder, toTable: "SeoUrlKeyword");
 			
 			base.OnModelCreating(modelBuilder);
 		}
@@ -72,12 +73,13 @@ namespace VirtoCommerce.Foundation.Data.AppConfig
 
         public IQueryable<Sequence> Sequences
 	    {
-	        get { return GetAsQueryable<Sequence>(); 
-            }
+	        get { return GetAsQueryable<Sequence>(); }
 	    }
 
-		public IQueryable<SystemJobLogEntry> SystemJobLogEntries
-		{ get { return GetAsQueryable<SystemJobLogEntry>(); } }
+	    public IQueryable<SystemJobLogEntry> SystemJobLogEntries
+	    {
+	        get { return GetAsQueryable<SystemJobLogEntry>(); }
+	    }
 
 		public IQueryable<TaskSchedule> TaskSchedules
         {
@@ -118,6 +120,12 @@ namespace VirtoCommerce.Foundation.Data.AppConfig
 		{
 			get { return GetAsQueryable<Localization>(); }
 		}
-		#endregion		
+
+	    public IQueryable<SeoUrlKeyword> SeoUrlKeywords 
+        {
+            get { return GetAsQueryable<SeoUrlKeyword>(); }
+	    }
+
+	    #endregion		
 	}
 }

@@ -1,37 +1,42 @@
 ﻿@model CatalogItemSearchModel
-                <div class="block-title">
-                    <strong><span>@("Shop By".LocalizeHtml())</span></strong>
-                </div>
-                <div class="currently">
-                    @if (Model.SelectedFilters != null && Model.SelectedFilters.Count > 0)
-                    {
-                        <p class="block-subtitle">@("Currently Shopping by:".LocalizeHtml())</p>
-                        <ol>
-                        @foreach (var filter in Model.SelectedFilters)
-                         {
-                            <li><a class="btn-remove" title="@("Remove This Item".LocalizeHtml())" href="@Url.RemoveFacet(filter.Filter.Key)">@("Remove This Item".LocalizeHtml())</a>
-                            <span class="label">@filter.Filter.Name.LocalizeHtml():</span> @filter.Facet.Name</li>
-                         }
 
-                         </ol>
-                    <div class="actions"><a href="@Url.RemoveAllFacets()">@("Clear All".LocalizeHtml())</a></div>
-                    }   
-                </div>
-                <div class="block-content">
-                    @if (Model.FilterGroups != null && Model.FilterGroups.Any())
-                    {
-                    <p class="block-subtitle">@("Shopping Options".LocalizeHtml())</p>
-                    <dl id="narrow-by-list">
-                    @foreach (var group in Model.FilterGroups)
-                    {
-                        @:<dt>@group.Name.LocalizeHtml()</dt>
-                        @:<dd><ol>
-                        foreach (var facet in group.Facets)
+<aside class="block">
+    <span class="title">@("Shop By".Localize())</span>
+    <dl>
+        @foreach (var group in Model.FilterGroups)
+        {
+            <dt>@group.Name.Localize()</dt>
+            <dd>
+                @if (group.Name.Equals("Color", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    <ol>
+
+                        <li>
+                            <ul>
+                                @foreach (var facet in group.Facets)
+                                {
+                                    <li style="background: @facet.Name;" class="filter-color-box color-box" title="@facet.Name (@facet.Count)">
+                                        <a href="@Url.SetFacet(group.Key, facet.Key)"></a>
+                                    </li>
+                                }
+                                <li class="clearfix" style="background: none;"></li>
+                            </ul>
+                        </li>
+                    </ol>
+                }
+                else
+                {
+                    <ol>
+                        @foreach (var facet in group.Facets)
                         {
-                            @:<li><a href="@Url.SetFacet(group.Key, facet.Key)">@facet.Name</a> (@facet.Count)</li>
+                            <li>
+                                <a href="@Url.SetFacet(group.Key, facet.Key)">@facet.Name</a>
+                                <span>(@facet.Count)</span>
+                            </li>
                         }
-                        @:</ol></dd>
-                    }
-                     </dl>
-                    }
-                </div>
+                    </ol>
+                }
+            </dd>
+        }
+    </dl>
+</aside>

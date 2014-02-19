@@ -100,11 +100,15 @@ namespace VirtoCommerce.Client
 			return addr;
 		}
 
-		public IQueryable<Order> GetAllCustomerOrders(string customerId, string storeId)
+        public IQueryable<Order> GetAllCustomerOrders(string customerId, string storeId, int? limit = null)
 		{
 			var orders = _orderRepository.Orders.Where(x => (x.StoreId == storeId) && (x.CustomerId == customerId));
+            if (limit.HasValue)
+            {
+                orders = orders.Take(limit.Value);
+            }
 
-			return (!orders.Any()) ? null : orders;
+            return (!orders.Any()) ? null : orders;
 		}
 
 		public void SaveChanges()

@@ -1,35 +1,12 @@
-﻿@using VirtoCommerce.Web.Virto.Helpers
-@model dynamic
-<div class="quick-access">
-	@if (UserHelper.CustomerSession.IsRegistered)
- {
-		<p id="quickAccessTitle" class="welcome-msg">@string.Format("Welcome {0}!".Localize(), Model.CustomerName)</p>
- }
- else
- {
-		<p id="quickAccessTitle" class="welcome-msg">@("Welcome!".LocalizeHtml())</p>
- }
-	<ul class="links">
-		<li class="first"><a href="@Url.Action("Index", "Account")" title="@("My Account".LocalizeHtml())">
-			@("My Account".LocalizeHtml())</a></li>
-		<li>@{Html.RenderPartial("WishListLink", Model.WishList as CartModel);}</li>
-		<li>@{Html.RenderPartial("CartLink", Model.Cart as CartModel);}</li>
-		<li><a href="@Url.Action("Index", "Checkout")" title="@("Checkout".LocalizeHtml())" class="top-link-checkout">@("Checkout".LocalizeHtml())</a></li>
+﻿@model dynamic
 
-		@if (UserHelper.CustomerSession.IsRegistered)
-  {
-			<li class=" last">
-				@using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
-	{
-					@Html.AntiForgeryToken()
-					<a href="javascript:document.getElementById('logoutForm').submit()">@("Log off".LocalizeHtml())</a>
-	}
-			</li>
-  }
-  else
-  {
-			<li class=" last">@Html.ActionLink("Log In".Localize(), "LogOn", "Account")</li>
-  }
+<ul class="head-links">
+    <li class="first"><a href="@Url.Action("Index", "Account")" title="@("My Account".Localize())">
+        @("My Account".Localize())</a>
 
-	</ul>
-</div>
+    </li>
+    <li>@{Html.RenderPartial("WishListLink", Model.WishList as CartModel);}</li>
+    <li>@{Html.RenderPartial("CartLink", Model.Cart as CartModel);}</li>
+    <li><a href="@Url.Action("Index", "Checkout")" title="@("Checkout".Localize())" class="top-link-checkout">@("Checkout".Localize())</a></li>
+    @{Html.RenderPartial("_LogOnPartial");}
+</ul>

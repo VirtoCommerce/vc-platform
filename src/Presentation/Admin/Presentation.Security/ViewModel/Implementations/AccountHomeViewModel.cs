@@ -17,14 +17,17 @@ using VirtoCommerce.ManagementClient.Core.Infrastructure.Tiles;
 using VirtoCommerce.ManagementClient.Security.Properties;
 using VirtoCommerce.ManagementClient.Security.ViewModel.Interfaces;
 using VirtoCommerce.ManagementClient.Security.ViewModel.Wizard.Interfaces;
+using System;
+using PropertyChanged;
 
 namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 {
+	[ImplementPropertyChanged]
 	class AccountHomeViewModel : ViewModelHomeEditableBase<Account>, IAccountHomeViewModel, IVirtualListLoader<IAccountViewModel>, ISupportDelayInitialization
-	{
-		#region Dependencies
+    {
+        #region Dependencies
 
-		private readonly IAuthenticationContext _authContext;
+        private readonly IAuthenticationContext _authContext;
 		private readonly IRepositoryFactory<ISecurityRepository> _securityRepository;
 		private readonly IViewModelsFactory<IAccountViewModel> _itemVmFactory;
 		private readonly IViewModelsFactory<ICreateAccountViewModel> _wizardVmFactory;
@@ -32,56 +35,80 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 		private readonly TileManager _tileManager;
 		private readonly ISecurityService _securityService;
 
-		#endregion
+        #endregion
 
-		public AccountHomeViewModel(
+		#region Constructor
+		
+        public AccountHomeViewModel(
 			ISecurityService securityService,
 			IRepositoryFactory<ISecurityRepository> securityRepository,
 			IViewModelsFactory<IAccountViewModel> itemVmFactory,
 			IViewModelsFactory<ICreateAccountViewModel> wizardVmFactory,
-			IAuthenticationContext authContext,
-			NavigationManager navManager,
+			IAuthenticationContext authContext, 
+			NavigationManager navManager, 
 			TileManager tileManager)
-		{
-			_authContext = authContext;
-			_securityRepository = securityRepository;
-			_itemVmFactory = itemVmFactory;
-			_wizardVmFactory = wizardVmFactory;
-			_securityService = securityService;
-			_navManager = navManager;
-			_tileManager = tileManager;
+        {
+            _authContext = authContext;
+	        _securityRepository = securityRepository;
+	        _itemVmFactory = itemVmFactory;
+	        _wizardVmFactory = wizardVmFactory;
+	        _securityService = securityService;
+	        _navManager = navManager;
+	        _tileManager = tileManager;
 
-			PopulateTiles();
+			ClearFiltersCommand = new DelegateCommand(DoClearFilters);
+            PopulateTiles();
+        }
+
+		#endregion
+
+		#region SearchFields
+		public string SearchFilterAccountName { get; set; }
+		public object SearchFilterType { get; set; }
+		public object SearchFilterStatus { get; set; }
+		#endregion
+
+		#region Commands
+		public DelegateCommand ClearFiltersCommand { get; private set; }
+		#endregion
+
+		#region Private methods
+		private void DoClearFilters()
+		{
+			SearchFilterType = null;
+			SearchFilterStatus = null;
+			SearchFilterAccountName = null;
 		}
+		#endregion
 
-		#region ViewModelHomeEditableBase
+        #region ViewModelHomeEditableBase
 
-		protected override bool CanItemAddExecute()
-		{
-			return true;
-		}
+        protected override bool CanItemAddExecute()
+        {
+            return true;
+        }
 
-		protected override bool CanItemDeleteExecute(IList x)
-		{
-			return x != null && x.Count > 0;
-		}
+        protected override bool CanItemDeleteExecute(IList x)
+        {
+            return x != null && x.Count > 0;
+        }
 
-		protected override void RaiseItemAddInteractionRequest()
-		{
-			var item = new Account();
-			var itemVM = _wizardVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", item));
+        protected override void RaiseItemAddInteractionRequest()
+        {
+            var item = new Account();
+            var itemVM = _wizardVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", item));
 
 			CommonWizardDialogRequest.Raise(new ConditionalConfirmation { Title = Properties.Resources.Create_account, Content = itemVM }, (x) =>
-			{
-				if (x.Confirmed)
-				{
-					// always create SiteAdministrator in here. Simple users are created in Customers (Cases) module
-					// create via MemberShip without roles
-					_securityService.CreateAdminUser(item.MemberId, item.UserName, itemVM.Password);
+            {
+                if (x.Confirmed)
+                {
+                    // always create SiteAdministrator in here. Simple users are created in Customers (Cases) module
+                    // create via MemberShip without roles
+                    _securityService.CreateAdminUser(item.MemberId, item.UserName, itemVM.Password);
 
-					//Add roles
+                    //Add roles
 					using (var itemRepository = _securityRepository.GetRepositoryInstance())
-					{
+	                {
 						var originalItem = itemRepository.Accounts.Where(a => a.UserName == item.UserName).Expand("RoleAssignments/Role").SingleOrDefault();
 						if (originalItem != null)
 						{
@@ -96,129 +123,144 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 							itemRepository.UnitOfWork.Commit();
 						}
 					}
-					Refresh();
-				}
-			});
-		}
+                    Refresh();
+                }
+            });
+        }
 
-		protected override void RaiseItemDeleteInteractionRequest(IList selectedItemsList)
-		{
-			var selectionCount = selectedItemsList.Count;
-			if (selectionCount > 0)
-			{
-				var selectedItems = selectedItemsList.Cast<VirtualListItem<IAccountViewModel>>();
-				string joinedNames = null;
-				var names = selectedItems.
-					Take(4).
-					Select(x => ((ViewModelBase)x.Data).DisplayName);
+        protected override void RaiseItemDeleteInteractionRequest(IList selectedItemsList)
+        {
+            var selectionCount = selectedItemsList.Count;
+            if (selectionCount > 0)
+            {
+                var selectedItems = selectedItemsList.Cast<VirtualListItem<IAccountViewModel>>();
+                string joinedNames = null;
+                var names = selectedItems.
+                    Take(4).
+                    Select(x => ((ViewModelBase)x.Data).DisplayName);
 
-				joinedNames = string.Join(", ", names);
+                joinedNames = string.Join(", ", names);
 				if (selectionCount > 4)
 					joinedNames += "...";
 
-				CommonConfirmRequest.Raise(new ConditionalConfirmation()
-				{
+                CommonConfirmRequest.Raise(new ConditionalConfirmation()
+                {
 					Content = string.Format(Core.Properties.Resources.confirm_delete, joinedNames),
 					Title = Core.Properties.Resources.Delete
-				},
-				(x) =>
+                },
+                (x) =>
+                {
+                    if (x.Confirmed)
+                    {
+                        selectedItems.ToList().ForEach(y => _securityService.DeleteUser(y.Data.InnerItem.UserName));
+                        Refresh();
+                    }
+                });
+            }
+        }
+
+        #endregion
+
+        #region IAccountHomeViewModel
+
+        private string _searchKeyword = string.Empty;
+        public string SearchKeyword
+        {
+            get { return _searchKeyword; }
+            set { _searchKeyword = value; }
+
+        }
+
+        private ICollectionView _selectedItems;
+        public ICollectionView SelectedItems
+        {
+            get
+            {
+                return _selectedItems;
+            }
+            private set
+            {
+                _selectedItems = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+        #endregion
+
+        #region IVirtualListLoader<ICustomerServiceDetailViewModel> Members
+
+        public bool CanSort
+        {
+            get { return true; }
+        }
+
+        public IList<IAccountViewModel> LoadRange(int startIndex, int count, SortDescriptionCollection sortDescriptions, out int overallCount)
+        {
+            var retVal = new List<IAccountViewModel>();
+
+            using (var repository = _securityRepository.GetRepositoryInstance())
+            {
+                var query = repository.Accounts.Expand(x => x.RoleAssignments);
+
+                if (!string.IsNullOrEmpty(SearchKeyword))
+                {
+                    query = query.Where(a => a.UserName.Contains(SearchKeyword) || a.MemberId.Contains(SearchKeyword) || a.RoleAssignments.Any(x => x.Role.Name.Contains(SearchKeyword)));
+                }
+
+				if (SearchFilterStatus is AccountState)
 				{
-					if (x.Confirmed)
-					{
-						selectedItems.ToList().ForEach(y => _securityService.DeleteUser(y.Data.InnerItem.UserName));
-						Refresh();
-					}
-				});
-			}
-		}
-
-		#endregion
-
-		#region IAccountHomeViewModel
-
-		private string _searchKeyword = string.Empty;
-		public string SearchKeyword
-		{
-			get { return _searchKeyword; }
-			set { _searchKeyword = value; }
-
-		}
-
-		private ICollectionView _selectedItems;
-		public ICollectionView SelectedItems
-		{
-			get
-			{
-				return _selectedItems;
-			}
-			private set
-			{
-				_selectedItems = value;
-				OnPropertyChanged();
-			}
-		}
-
-
-		#endregion
-
-		#region IVirtualListLoader<ICustomerServiceDetailViewModel> Members
-
-		public bool CanSort
-		{
-			get { return true; }
-		}
-
-		public IList<IAccountViewModel> LoadRange(int startIndex, int count, SortDescriptionCollection sortDescriptions, out int overallCount)
-		{
-			var retVal = new List<IAccountViewModel>();
-
-			using (var repository = _securityRepository.GetRepositoryInstance())
-			{
-				var query = repository.Accounts;
-
-				if (!string.IsNullOrEmpty(SearchKeyword))
-				{
-					query = query.Where(a => a.UserName.Contains(SearchKeyword));
+					query = query.Where(x => x.AccountState == (int) ((AccountState) SearchFilterStatus));
 				}
 
-				overallCount = query.Count();
+				if (SearchFilterType is RegisterType)
+				{
+					query = query.Where(x => x.RegisterType == (int)((RegisterType) SearchFilterType));
+				}
 
-				var results = query.OrderBy(c => c.AccountId).Skip(startIndex).Take(count).ToList();
+				if (!string.IsNullOrEmpty(SearchFilterAccountName))
+				{
+					query = query.Where(x => x.UserName.Contains(SearchFilterAccountName));
+                }
 
-				retVal.AddRange(results.Select(item => _itemVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", item))));
-			}
-			return retVal;
-		}
+                overallCount = query.Count();
 
-		#endregion
+                var results = query.OrderBy(c => c.AccountId).Skip(startIndex).Take(count).ToList();
 
-		#region ISupportdelayInitialization
+	            retVal.AddRange(results.Select(item => _itemVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", item))));
+            }
+            return retVal;
+        }
 
-		public void InitializeForOpen()
-		{
-			if (ListItemsSource == null)
-			{
-				OnUIThread(() => ListItemsSource = new VirtualList<IAccountViewModel>(this, 25, SynchronizationContext.Current));
-			}
+        #endregion
 
-		}
+        #region ISupportdelayInitialization
 
-		#endregion
+        public void InitializeForOpen()
+        {
+            if (ListItemsSource == null)
+            {
+                OnUIThread(() => ListItemsSource = new VirtualList<IAccountViewModel>(this, 25, SynchronizationContext.Current));
+            }
 
-		#region Tiles
+        }
 
-		private bool NavigateToTabPage(string id)
-		{
+        #endregion
+
+        #region Tiles
+
+        private bool NavigateToTabPage(string id)
+        {
 			var navigationData = _navManager.GetNavigationItemByName(NavigationNames.HomeName);
-			if (navigationData != null)
-			{
+            if (navigationData != null)
+            {
 				_navManager.Navigate(navigationData);
 				var mainViewModel = _navManager.GetViewFromRegion(navigationData) as SubTabsDefaultViewModel;
 
-				return (mainViewModel != null && mainViewModel.SetCurrentTabById(id));
-			}
-			return false;
-		}
+                return (mainViewModel != null && mainViewModel.SetCurrentTabById(id));
+            }
+            return false;
+        }
 
 		private void PopulateTiles()
 		{
@@ -255,5 +297,5 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 		}
 
 		#endregion
-	}
+    }
 }

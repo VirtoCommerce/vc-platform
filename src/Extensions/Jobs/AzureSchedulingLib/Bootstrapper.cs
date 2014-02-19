@@ -1,7 +1,6 @@
 #region Imports
 
 using System;
-using System.Diagnostics;
 using Microsoft.Practices.ServiceLocation;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Caching.HttpCache;
@@ -18,11 +17,12 @@ using VirtoCommerce.Foundation.Customers.Factories;
 using VirtoCommerce.Foundation.Customers.Repositories;
 using VirtoCommerce.Foundation.Customers.Services;
 using VirtoCommerce.Foundation.Data.AppConfig;
-using VirtoCommerce.Foundation.Data.Asset;
 using VirtoCommerce.Foundation.Data.Catalogs;
 using VirtoCommerce.Foundation.Data.Customers;
 using VirtoCommerce.Foundation.Data.Importing;
 using VirtoCommerce.Foundation.Data.Infrastructure;
+using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
+using VirtoCommerce.Foundation.Data.Marketing;
 using VirtoCommerce.Foundation.Data.Orders;
 using VirtoCommerce.Foundation.Data.Search;
 using VirtoCommerce.Foundation.Data.Security;
@@ -42,6 +42,8 @@ using VirtoCommerce.Foundation.Frameworks.Workflow.Services;
 using VirtoCommerce.Foundation.Importing.Factories;
 using VirtoCommerce.Foundation.Importing.Repositories;
 using VirtoCommerce.Foundation.Importing.Services;
+using VirtoCommerce.Foundation.Marketing.Factories;
+using VirtoCommerce.Foundation.Marketing.Repositories;
 using VirtoCommerce.Foundation.Orders.Factories;
 using VirtoCommerce.Foundation.Orders.Repositories;
 using VirtoCommerce.Foundation.Orders.Services;
@@ -64,6 +66,7 @@ using VirtoCommerce.Search.Providers.Elastic;
 
 namespace VirtoCommerce.Scheduling.Azure
 {
+    using VirtoCommerce.Foundation.Catalogs;
     using VirtoCommerce.Foundation.Data.Azure.Asset;
     using VirtoCommerce.Foundation.Data.Azure.CQRS;
 	using VirtoCommerce.Search.Providers.Lucene;
@@ -104,9 +107,19 @@ namespace VirtoCommerce.Scheduling.Azure
 			container.RegisterType<ILogOperationFactory, LogOperationFactory>();
 			container.RegisterType<IOperationLogRepository, OperationLogContext>();
 
+            #region Interceptors
+
+            // register interceptors
+            container.RegisterType<IInterceptor, AuditChangeInterceptor>("audit");
+            //container.RegisterType<IInterceptor, LogInterceptor>("log");
+            //container.RegisterType<IInterceptor, EntityEventInterceptor>("events");
+
+            #endregion
+
 			#region Marketing
-            //container.RegisterType<IMarketingRepository, EFMarketingRepository>();
-            //container.RegisterType<IMarketingEntityFactory, MarketingEntityFactory>();
+            //Needed for RemoveExpiredPromotionReservations SystemJob
+            container.RegisterType<IMarketingRepository, EFMarketingRepository>();
+            container.RegisterType<IMarketingEntityFactory, MarketingEntityFactory>();
             //container.RegisterType<IPromotionUsageProvider, PromotionUsageProvider>();
             //container.RegisterType<IPromotionEntryPopulate, PromotionEntryPopulate>();
             //container.RegisterType<IDynamicContentRepository, EFDynamicContentRepository>();
@@ -129,7 +142,7 @@ namespace VirtoCommerce.Scheduling.Azure
 			container.RegisterType<ISearchIndexBuilder, CatalogItemIndexBuilder>("catalogitem");
 
             // If provider specified as lucene, use lucene libraries, otherwise use default, which is elastic search
-            if (searchConnection.Provider == "lucene")
+            if (string.Equals(searchConnection.Provider, SearchProviders.Lucene.ToString(), StringComparison.OrdinalIgnoreCase))
             {
                 // Lucene Search implementation
                 container.RegisterType<ISearchProvider, LuceneSearchProvider>();
@@ -159,6 +172,7 @@ namespace VirtoCommerce.Scheduling.Azure
             container.RegisterType<ICatalogEntityFactory, CatalogEntityFactory>(new ContainerControlledLifetimeManager());
 
             container.RegisterType<ICatalogRepository, EFCatalogRepository>();
+            container.RegisterType<ICatalogOutlineBuilder, CatalogOutlineBuilder>();
             container.RegisterType<IPricelistRepository, EFCatalogRepository>();
             container.RegisterType<ICatalogService, CatalogService>();
             container.RegisterType<IPriceListAssignmentEvaluator, PriceListAssignmentEvaluator>();

@@ -1,13 +1,11 @@
 ﻿using System.Web.Mvc;
-using VirtoCommerce.Web.Client.Extensions.Filters;
 
 namespace VirtoCommerce.Web.Controllers
 {
 	/// <summary>
 	/// Class ErrorController.
 	/// </summary>
-	[Localize]
-	public class ErrorController : ControllerBase
+	public class ErrorController : Controller
     {
         //
         // GET: /Error/

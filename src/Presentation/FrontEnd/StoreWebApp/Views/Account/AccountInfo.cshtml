@@ -1,85 +1,68 @@
 ﻿@model OrderAddressModel
-<div class="box-account box-info">
-	<div class="box-head">
-		<h2>
-			@("Account Information".LocalizeHtml())</h2>
-	</div>
-	<div class="col2-set">
-		<div class="col-1">
-			<div class="box">
-				<div class="box-title">
-					<h3>
-						@("Contact Information".LocalizeHtml())</h3>
-					<a href="@Url.Action("Edit", "Account")">@("Edit".LocalizeHtml())</a>
-				</div>
-				<div class="box-content">
-					<p>
-						@Model.CurrentUser.FullName<br>
-						@Model.CurrentUser.Email<br>
-						<a href="@Url.Action("Edit", "Account")">
-							@("Change Password".LocalizeHtml())
-						</a>
-					</p>
-				</div>
-			</div>
-		</div>
-		<div class="col-2">
-			<div class="box">
-				<div class="box-title">
-					<h3>@("Newsletters".LocalizeHtml())</h3>
-					<a href="#">@("Edit".LocalizeHtml())</a>
-				</div>
-				<div class="box-content">
-					<p>
-						@("You are currently not subscribed to any newsletter.".LocalizeHtml())
-					</p>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="col2-set">
-		<div class="box">
-			<div class="box-title">
-				<h3>@("Address Book".LocalizeHtml())</h3>
-				<a href="@Url.Action("AddressBook", "Account")">@("Manage Addresses".LocalizeHtml())</a>
-			</div>
-			<div class="box-content">
-				<div class="col-1">
-					<h4>@("Default Billing Address".LocalizeHtml())</h4>
-					@if (Model.BillingAddress != null)
-	 {
-		 Html.RenderAction("AddressView", "Account", new { address = Model.BillingAddress });
-						<p>
-							<a href="@Url.Action("AddressEdit", "Account", new { userId = Model.CurrentUser.MemberId, addressId = Model.BillingAddress.AddressId })">
-								@("Edit Address".LocalizeHtml())
-							</a>
-						</p>
-	 }
-	 else
-	 {
-						<p>@("You have no Default Billing Address".LocalizeHtml())</p>
-	 }
-
-				</div>
-				<div class="col-2">
-					<h4>@("Default Shipping Address".LocalizeHtml())
-					</h4>
-					@if (Model.ShippingAddress != null)
-	 {
-		 Html.RenderAction("AddressView", "Account", new { address = Model.ShippingAddress });
-						<p>
-							<a href="@Url.Action("AddressEdit", "Account", new { userId = Model.CurrentUser.MemberId, addressId = Model.ShippingAddress.AddressId })">
-								@("Edit Address".LocalizeHtml())
-							</a>
-						</p>
-	 }
-	 else
-	 {
-						<p>@("You have no Default Shipping Address".LocalizeHtml())</p>
-	 }
-
-				</div>
-			</div>
-		</div>
-	</div>
+<div class="block clearfix">
+    <header>
+        <h3>@("Account Information".Localize())</h3>
+    </header>
+    <div class="col">
+        <div class="title">
+            <span>@("Contact Information".Localize())</span>
+            <a href="@Url.Action("Edit", "Account")">@("Edit".Localize())</a>
+        </div>
+        <div class="info">
+            <p>@Model.CurrentUser.FullName<br />@Model.CurrentUser.Email<br />
+            </p>
+            <p><a href="@Url.Action("Edit", "Account")">@("Change Password".Localize())</a></p>
+        </div>
+    </div>
+    <div class="col">
+        <div class="title">
+            <span>@("Newsletters".Localize())</span>
+            <a href="#">@("Edit".Localize())</a>
+        </div>
+        <div class="info">
+            <p>@("You are currently not subscribed to any newsletter.".Localize())</p>
+        </div>
+    </div>
+</div>
+<div class="block clearfix">
+    <div class="title">
+        <span>@("Address Book".Localize())</span>
+        <a href="@Url.Action("AddressBook", "Account")">@("Manage Addresses".Localize())</a>
+    </div>
+    <div class="col">
+        <div class="info">
+            <p><b>@("Default Billing Address".Localize())</b></p>
+            @if (Model.BillingAddress != null)
+            {
+                Html.RenderAction("AddressView", "Account", new { address = Model.BillingAddress });
+                <p>
+                    <a href="@Url.Action("AddressEdit", "Account", new { userId = Model.CurrentUser.MemberId, addressId = Model.BillingAddress.AddressId })">
+                        @("Edit Address".Localize())
+                    </a>
+                </p>
+            }
+            else
+            {
+                <p>@("You have no Default Billing Address".Localize())</p>
+            }
+        </div>
+    </div>
+    <div class="col">
+        <div class="info">
+            <p><b>@("Default Shipping Address".Localize())</b></p>
+            @if (Model.ShippingAddress != null)
+            {
+                Html.RenderAction("AddressView", "Account", new { address = Model.ShippingAddress });
+                <p>
+                    <a href="@Url.Action("AddressEdit", "Account", new { userId = Model.CurrentUser.MemberId, addressId = Model.ShippingAddress.AddressId })">
+                        @("Edit Address".Localize())
+                    </a>
+                </p>
+            }
+            else
+            {
+                <p>@("You have no Default Shipping Address".Localize())</p>
+            }
+        </div>
+    </div>
 </div>

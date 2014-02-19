@@ -18,6 +18,7 @@
 		TaxCategory,
 		TaxValue,
 		ItemAsset,
-		Localization
+		Localization,
+		Seo
 	}
 }

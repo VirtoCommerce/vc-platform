@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Diagnostics;
 
 namespace VirtoCommerce.Client.Orders.StateMachines
 {	
 	public class StateTransitionDef<T>
 	{
 		public T CurrentStatus;
-		private List<StateTransitionDef<T>> _availableTransitions = new List<StateTransitionDef<T>>();
+		private readonly List<StateTransitionDef<T>> _availableTransitions = new List<StateTransitionDef<T>>();
 		
 		public StateTransitionDef(T status)
 		{

@@ -9,13 +9,13 @@
             @Html.DisplayFor(m=>li)
         }
         <div style="text-align: center;">
-	        <button type="button" title="@("Continue Shopping".LocalizeHtml())" class="button btn-cart" onclick="tb_remove(); VirtoCart.updateMiniCart('@Request["name"]'); return false;" style="width:140px;">
-		        <span><span>@("Continue Shopping".LocalizeHtml())</span></span>
+	        <button type="button" title="@("Continue Shopping".Localize())" class="button btn-cart" onclick="tb_remove(); VirtoCart.updateMiniCart('@Request["name"]'); return false;" style="width:140px;">
+		        <span><span>@("Continue Shopping".Localize())</span></span>
 	        </button>
             @if (!String.IsNullOrEmpty(Request["name"]) && Request["name"] == CartHelper.WishListName)
             {
-	            <button type="button" title="@("View My Wish List".LocalizeHtml())" class="button btn-cart" onclick="tb_remove(); $.open('@Url.Action("WishList", "Account")'); return false;" style="width:140px;">
-		            <span><span>@("View My Wish List".LocalizeHtml())</span></span>
+	            <button type="button" title="@("View My Wish List".Localize())" class="button btn-cart" onclick="tb_remove(); $.open('@Url.Action("WishList", "Account")'); return false;" style="width:140px;">
+		            <span><span>@("View My Wish List".Localize())</span></span>
 	            </button>
             }
             else if (Request["name"] == CartHelper.CompareListName)
@@ -23,8 +23,8 @@
             }
             else
             {
-	            <button type="submit" title="@("View My Cart".LocalizeHtml())" class="button btn-cart" onclick="tb_remove(); $.open('@Url.Action("Index", "Cart")'); return false;" style="width:140px;">
-		            <span><span>@("View My Cart".LocalizeHtml())</span></span>
+	            <button type="submit" title="@("View My Cart".Localize())" class="button btn-cart" onclick="tb_remove(); $.open('@Url.Action("Index", "Cart")'); return false;" style="width:140px;">
+		            <span><span>@("View My Cart".Localize())</span></span>
 	            </button>
             }
 

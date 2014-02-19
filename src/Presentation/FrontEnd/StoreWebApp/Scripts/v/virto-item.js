@@ -1,72 +1,27 @@
 ﻿function initItemPage() {
-    initJqZoom();
+    window.CloudZoom.quickStart();
 
     // initialize tabs
-    $("#product_tabs_description").on('click', function () {
-        $('.product-tabs-content').hide();
-        $('.product-tabs li').removeClass('active');
-        $(this).addClass('active');
-        $('#product_tabs_description_contents').show();
-    });
-    $("#product_tabs_upsell_products").on('click', function () {
-        $('.product-tabs-content').hide();
-        $('.product-tabs li').removeClass('active');
-        $(this).addClass('active');
-        $('#product_tabs_upsell_products_contents').show();
-    });
-    $("#product_tabs_additional").on('click', function () {
-        $('.product-tabs-content').hide();
-        $('.product-tabs li').removeClass('active');
-        $(this).addClass('active');
-        $('#product_tabs_additional_contents').show();
-    });
-    $("#product_tabs_product_tags").on('click', function () {
-        $('.product-tabs-content').hide();
-        $('.product-tabs li').removeClass('active');
-        $(this).addClass('active');
-        $('#product_tabs_product_tags_contents').show();
-    });
-    $("#product_tabs_reviews").on('click', function () {
-        $('.product-tabs-content').hide();
-        $('.product-tabs li').removeClass('active');
-        $(this).addClass('active');
-        $('#product_tabs_reviews_contents').show();
-    });
+    window.setTimeout(function ()
+    {
+        if($(location.hash).length > 0)
+            scrollToTab(location.hash);
+    }, 100);
+
 
     $("#show_reviews_link").on('click', function () {
-        //Trigger Review tab click
-        $("#product_tabs_reviews").trigger("click");
-        //Scroll down to reviews
-        $("html, body").animate({ scrollTop: $(".product-collateral").offset().top });
-        return false;
+        return scrollToTab('#product_tabs_reviews');
     });
-}
-
-function initJqZoom() {
-    window.setTimeout(function () {
-        var nh = $('#imageContainer img.primaryimage')[0].offsetHeight;
-        $('#imageContainer').css("height", nh);
-
-        $('.jqzoom').jqzoom({
-            zoomType: 'standard',
-            lens: true,
-            preloadImages: false,
-            alwaysOn: false,
-            zoomWidth: nh,
-            zoomHeight: nh
-            //showEffect: 'fadein',
-            //hideEffect: 'fadeout'
-        });
-    }, 1000);
-}
-
-function imageChanged() {
-
-    window.setTimeout(function () {
-        var nh = $('#imageContainer img.primaryimage')[0].offsetHeight;
-        $('#imageContainer').css("height", nh);
-
-    }, 10);
+    
+ 
+    function scrollToTab(id)
+    {
+        //Trigger tab click
+        $(id).trigger("click");
+        //Scroll down to reviews
+        $("html, body").animate({ scrollTop: $(".tabs").offset().top });
+        return false;
+    }
 }
 
 
@@ -81,12 +36,14 @@ function errorMsg(xhr, ajaxOptions, thrownError) {
     });
 }
 
-function loadVariations(parentItemId, variationId, dropdown) {
+function loadVariations(parentItemId, variation, dropdown)
+{
 
-    var url = VirtoCommerce.url("/Catalog/ItemVariations") + "?itemId=" + parentItemId + "&name=itemvariations";
+    var url = VirtoCommerce.url("/catalog/itemvariations") + "?itemId=" + parentItemId + "&name=itemvariations";
 
-    if (variationId != undefined && variationId.length > 0) {
-        url += "&variationId=" + variationId;
+    if (variation != undefined && variation.length > 0)
+    {
+        url += "&variation=" + variation;
     }
 
     $.each($("div.variations select"), function () {
@@ -115,7 +72,7 @@ function loadVariations(parentItemId, variationId, dropdown) {
         dataType: "html",
         success: function (data) {
             if (data != undefined && data.length > 0) {
-                $("#item-variations").html(data);
+                $(".variations").html(data);
             }
         }
     });

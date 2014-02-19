@@ -17,7 +17,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Catalog;component/View/Views/GridView.xaml"/>
-				<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/DetailViewTheme/VirtoCommerceDetailTheme.xaml"/>
+                <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/DetailViewTheme/VirtoCommerceDetailTheme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <Presentation_Core_Infrastructure_Converters:CultureConverter x:Key="cultureConverter" />
@@ -37,47 +37,47 @@
             <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        
+
         <TabControl Grid.Row="1" x:Name="tabControl" Margin="0,0,0,6" Style="{DynamicResource Virto_TabControlHorizontal_Style}" Tag="Catalog">
-			<!--SUMMARY-->
+            <!--SUMMARY-->
             <TabItem x:Name="tabItemSummary" Header="Summary" VerticalContentAlignment="Top">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                        <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Width="600">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-								<RowDefinition Height="Auto" />
-								<RowDefinition Height="Auto" />
-								<RowDefinition Height="Auto" />
-								<RowDefinition Height="Auto" />
-								<RowDefinition/>
-                            </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="20"/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <TextBlock  Grid.Row="0" Grid.Column="0" Text="Catalog id:" VerticalAlignment="Center"/>
-							<TextBlock  Grid.Row="0" Grid.Column="2" Text="{Binding InnerItem.CatalogId}" VerticalAlignment="Center" />
-                            
-							<TextBlock  Text="* Catalog name:" Grid.Row="1" Grid.ColumnSpan="3"  VerticalAlignment="Center"/>
-                            <core_controls:WatermarkedTextBox Grid.Row="2" Grid.ColumnSpan="3" Text="{Binding InnerItem.Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
-                                                              Width="400" HorizontalAlignment="Left"/>
-                            
-							<TextBlock  Grid.Row="3" Grid.Column="0" Text="Default language:"  VerticalAlignment="Center"/>
-							<TextBlock  Grid.Row="3" Grid.Column="2" Text="{Binding InnerItem.DefaultLanguage, Converter={StaticResource cultureConverter}, Mode=OneWay}" VerticalAlignment="Center"/>
+                    <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Width="600">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="20"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Catalog id:" />
+                        <TextBox   Grid.Row="0" Grid.Column="2" Text="{Binding InnerItem.CatalogId}" Style="{StaticResource Virto_TextBox_ReadOnly_StyleThemed}"/>
 
-							<core_controls:MultiSelectControl Grid.Row="4" Grid.ColumnSpan="3" TextSearchTextPath="DisplayName" Height="350"
+                        <TextBlock  Text="* Catalog name:" Grid.Row="1" Grid.ColumnSpan="3" />
+                        <core_controls:WatermarkedTextBox Grid.Row="2" Grid.ColumnSpan="3" Text="{Binding InnerItem.Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                                                              Width="400" HorizontalAlignment="Left"/>
+
+                        <TextBlock  Grid.Row="3" Grid.Column="0" Text="Default language:" />
+                        <TextBlock  Grid.Row="3" Grid.Column="2" Text="{Binding InnerItem.DefaultLanguage, Converter={StaticResource cultureConverter}, Mode=OneWay}" />
+
+                        <core_controls:MultiSelectControl Grid.Row="4" Grid.ColumnSpan="3" TextSearchTextPath="DisplayName" Height="350"
                                 AvailableTitle="Available languages"
                                 AvailableItems="{Binding AllAvailableLanguages}"
                                 CurrentTitle="Selected languages"
                                 CurrentItems="{Binding InnerItemCatalogLanguages, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}">
-								<core_controls:MultiSelectControl.ObjectsTemplate>
-									<DataTemplate>
+                            <core_controls:MultiSelectControl.ObjectsTemplate>
+                                <DataTemplate>
                                     <TextBlock Text="{Binding DisplayName}"  Style="{StaticResource {x:Type TextBlock}}" Margin="1"/>
-									</DataTemplate>
-								</core_controls:MultiSelectControl.ObjectsTemplate>
-							</core_controls:MultiSelectControl>
-						</Grid>
+                                </DataTemplate>
+                            </core_controls:MultiSelectControl.ObjectsTemplate>
+                        </core_controls:MultiSelectControl>
+                    </Grid>
                 </ScrollViewer>
             </TabItem>
 
@@ -141,7 +141,7 @@
                             <Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/check.png" Width="14"/>
                         </core_controls:MetroButton>
                     </ItemsControl>
-					<DataGrid Grid.Row="1" x:Name="PropertySets" ItemsSource="{Binding InnerItem.PropertySets}" IsSynchronizedWithCurrentItem="False">
+                    <DataGrid Grid.Row="1" x:Name="PropertySets" ItemsSource="{Binding InnerItem.PropertySets}" IsSynchronizedWithCurrentItem="False">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="PropertySet Id" Binding="{Binding PropertySetId}" />
                             <DataGridTextColumn Header="PropertySet name" Binding="{Binding Name}" Width="*" />

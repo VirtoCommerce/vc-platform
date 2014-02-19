@@ -29,7 +29,7 @@
 	</DataTemplate>
 
 	<DataTemplate x:Key="createdTemplate">
-		<TextBlock TextTrimming="CharacterEllipsis" Text="{Binding Data.OriginalItem.Created, StringFormat=d}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
+		<TextBlock TextTrimming="CharacterEllipsis" Text="{Binding Data.OriginalItem.Created, StringFormat=R}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
 	</DataTemplate>
 
 	<DataTemplate x:Key="authorTemplate">

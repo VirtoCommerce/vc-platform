@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Catalogs.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
@@ -25,11 +26,13 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		#region Dependencies
 
 		private readonly IViewModelsFactory<ITreeCategoryViewModel> _treeCategoryVmFactory;
+		private readonly IRepositoryFactory<IAppConfigRepository> _seoRepositoryFactory;
 
 		#endregion
 
 		public TreeCategoryViewModel(
 			CategoryBase item,
+			IRepositoryFactory<IAppConfigRepository> seoRepositoryFactory,
 			IRepositoryFactory<ICatalogRepository> repositoryFactory,
 			IViewModelsFactory<ICategoryViewModel> categoryVmFactory,
 			IViewModelsFactory<ILinkedCategoryViewModel> linkedCategoryVmFactory,
@@ -39,6 +42,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			: base(repositoryFactory, authContext)
 		{
 			_treeCategoryVmFactory = treeCategoryVmFactory;
+			_seoRepositoryFactory = seoRepositoryFactory;
 
 			InnerItem = item;
 			EmbeddedHierarchyEntry = this;
@@ -219,7 +223,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 				if (x.Confirmed)
 				{
 					await Task.Run(() =>
-						{
+						{							
 							repository.Attach(InnerItem);
 							repository.Remove(InnerItem);
 
@@ -230,8 +234,10 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 							try
 							{
-								repository.UnitOfWork.Commit();
-
+								if (DeleteSeoKeywords())
+								{
+									repository.UnitOfWork.Commit();
+								}
 								item = new StatusMessage { ShortText = string.Format("A {0} '{1}' deleted successfully", typeName, DisplayName), StatusMessageId = id, State = StatusMessageState.Success };
 								EventSystem.Publish(item);
 							}
@@ -252,6 +258,22 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 					parentHierarchyVM.Refresh();
 				}
 			});
+		}
+
+		private bool DeleteSeoKeywords()
+		{
+			var retVal = false;
+
+			using(var seoRepository = _seoRepositoryFactory.GetRepositoryInstance())
+			{
+				_repositoryFactory.GetRepositoryInstance().Categories
+					.Where(x => x.ParentCategoryId == InnerItem.CategoryId).ToList().ForEach(y => seoRepository.SeoUrlKeywords.Where(z => z.KeywordValue.Equals(y.Code, StringComparison.InvariantCultureIgnoreCase)).ToList().ForEach(keyword => seoRepository.Remove(keyword)));
+				seoRepository.SeoUrlKeywords.Where(x => x.KeywordValue.Equals(InnerItem.Code, StringComparison.InvariantCultureIgnoreCase)).ToList().ForEach(y => seoRepository.Remove(y));
+				seoRepository.UnitOfWork.Commit();
+				retVal = true;
+			}
+
+			return retVal;
 		}
 
 		#endregion

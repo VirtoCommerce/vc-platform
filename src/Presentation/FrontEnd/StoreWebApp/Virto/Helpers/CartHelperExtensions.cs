@@ -58,6 +58,27 @@ namespace VirtoCommerce.Web.Virto.Helpers
 			return model;
 		}
 
+        /// <summary>
+        /// Creates the compare model.
+        /// </summary>
+        /// <param name="cartHelper">The cart helper.</param>
+        /// <returns>CompareListModel.</returns>
+        public static CompareListModel CreateCompareModel(this CartHelper cartHelper)
+        {
+            var lineItemModels = new LineItemModel[0];
+            var items = CartHelper.CatalogClient.GetItems(cartHelper.LineItems.Select(li => li.CatalogItemId).ToArray());
+
+            if (items != null)
+            {
+                lineItemModels = cartHelper.LineItems.Join(items, li => li.CatalogItemId, i => i.ItemId,
+                                                               (li, item) =>
+                                                               new LineItemModel(li, item,
+                                                                                 CartHelper.CatalogClient.GetItem(li.ParentCatalogItemId))).ToArray();
+            }
+
+            return new CompareListModel(lineItemModels);
+        }
+
 		/// <summary>
 		/// Gets all shipping methods.
 		/// </summary>

@@ -70,6 +70,12 @@ namespace VirtoCommerce.Foundation.Marketing.Model
             set { Storage["EntryId"] = value; }
         }
 
+		public string EntryCode
+		{
+			get { return (string)Storage["EntryCode"]; }
+			set { Storage["EntryCode"] = value; }
+		}
+
         public string ParentEntryId
         {
             get { return (string)Storage["ParentEntryId"]; }

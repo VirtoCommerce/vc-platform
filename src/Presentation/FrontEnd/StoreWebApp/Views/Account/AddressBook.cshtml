@@ -1,67 +1,76 @@
 ﻿@model OrderAddressModel
 @{
-    ViewBag.Title = Html.Title("Address Book".Localize());
-    Layout = "_Layout.cshtml";
+    ViewBag.PageTitle = SiteMaps.Current.CurrentNode != null ? SiteMaps.Current.CurrentNode.Title.Localize() : "Address Book".Localize();
+    ViewBag.Title = Html.Title(ViewBag.PageTitle as string);
 }
 
-<div class="page-title title-buttons">
-    <h1>@("Address Book".LocalizeHtml())</h1>
-    <button type="button" title="@("Add New Address".LocalizeHtml())" class="button" onclick="window.location='@Url.Action("AddressEdit", "Account")';"><span><span>@("Add New Address".LocalizeHtml())</span></span></button>
-</div>
-<div class="col2-set addresses-list">
-	<div class="col-1 addresses-primary">
-		<h2>@("Default Addresses".LocalizeHtml())</h2>
-		<ol>
-			<li class="item">
-					
-				<h3>@("Default Billing Address".LocalizeHtml())</h3>
-				@if (Model.BillingAddress != null)
-				{
-					{Html.RenderAction("AddressView", "Account", new { address = Model.BillingAddress } );}
-					<p><a href="@Url.Action("AddressEdit", "Account", new { userId = Model.CurrentUser.MemberId, addressId = Model.BillingAddress.AddressId })">
-						   @("Change Billing Address".LocalizeHtml())
-					   </a></p>
-				}
-			</li>
-
-			<li class="item">
-					
-                <h3>@("Default Shipping Address".LocalizeHtml())</h3>
-				@if (Model.ShippingAddress != null)
-				{
-				{ Html.RenderAction("AddressView", "Account", new { address = Model.ShippingAddress }); }
-					<p><a href="@Url.Action("AddressEdit", "Account", new { userId = Model.CurrentUser.MemberId, addressId = Model.ShippingAddress.AddressId })">
-						   @("Change Shipping Address".LocalizeHtml())
-					   </a></p>
-				}
-
-			</li>
-		</ol>
+<button type="button" title="@("Add New Address".Localize())" onclick="window.location='@Url.Action("AddressEdit", "Account")';">
+    <span>@("Add New Address".Localize())</span>
+</button>
+<div class="block clearfix">
+    <div class="col">
+        <div class="title">
+            <span>@("Default Billing Address".Localize())</span>
+        </div>
+        @if (Model.BillingAddress != null)
+        {
+            <div class="info">
+                @{Html.RenderAction("AddressView", "Account", new { address = Model.BillingAddress });}
+                <div class="links">
+                    <a href="@Url.Action("AddressEdit", "Account", new { userId = Model.CurrentUser.MemberId, addressId = Model.BillingAddress.AddressId })">
+                        @("Change Billing Address".Localize())
+                    </a>
+                </div>
+            </div>
+        }
     </div>
-    <div class="col-2 addresses-additional">
-        <h2>@("Additional Address Entries".LocalizeHtml())</h2>
-        <ol>
-			@if (Model.OthersAddresses.Length == 0)
-			{
-             <li class="item empty">
-                <p>@("You have no additional address entries in your address book.".LocalizeHtml())</p>
-            </li>
-			}
-			else
-			{
-				foreach (var addr in Model.OthersAddresses)
-				{
-					{ Html.RenderAction("AddressView", "Account", new { address = addr }); }
-					<p>
-						<a href="@Url.Action("AddressEdit", "Account", new { addressId = addr.AddressId })">@("Change Address".LocalizeHtml())</a>
-						&nbsp;|&nbsp;
-						<a onclick="return confirm('@("Delete address?".LocalizeHtml())')" href="@Url.Action("AddressDelete", "Account", new { addressId = addr.AddressId })">@("Delete Address".LocalizeHtml())</a>
-					</p>
-				}
-			}
-        </ol>
+    <div class="col">
+        <div class="title">
+            <span>@("Default Shipping Address".Localize())</span>
+        </div>
+        @if (Model.BillingAddress != null)
+        {
+            <div class="info">
+                @{Html.RenderAction("AddressView", "Account", new { address = Model.ShippingAddress });}
+                <div class="links">
+                    <a href="@Url.Action("AddressEdit", "Account", new { userId = Model.CurrentUser.MemberId, addressId = Model.ShippingAddress.AddressId })">
+                        @("Change Shipping Address".Localize())
+                    </a>
+                </div>
+            </div>
+        }
     </div>
 </div>
-<div class="buttons-set">
-    <p class="back-link"><a href="@Url.Action("Index", "Account")"><small>« </small>@("Back".LocalizeHtml())</a></p>
+<div class="block clearfix">
+    <div class="col">
+        <div class="title">
+            <span>@("Additional Address Entries".Localize())</span>
+        </div>
+        @if (Model.OthersAddresses.Length == 0)
+        {
+            <div class="info">
+                @("You have no additional address entries in your address book.".Localize())
+            </div>
+        }
+        else
+        {
+            foreach (var addr in Model.OthersAddresses)
+            {
+            <div class="info">
+                @{ Html.RenderAction("AddressView", "Account", new { address = addr });}
+                <div class="links">
+                    <a href="@Url.Action("AddressEdit", "Account", new { addressId = addr.AddressId })">
+                        @("Change Address".Localize())
+                    </a>
+                    <a onclick="return confirm('@("Delete address?".Localize())')" href="@Url.Action("AddressDelete", "Account", new { addressId = addr.AddressId })">
+                        @("Delete Address".Localize())
+                    </a>
+                </div>
+            </div>
+            }
+        }
+    </div>
+</div>
+<div class="buttons clearfix">
+    <a href="@Url.Action("Index", "Account")" class="back">« @("Back".Localize())</a>
 </div>

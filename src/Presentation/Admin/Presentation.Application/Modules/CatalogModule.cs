@@ -1,4 +1,6 @@
-﻿using System;
+﻿#region Usings
+
+using System;
 using System.Windows;
 using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
@@ -6,8 +8,10 @@ using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Foundation.AppConfig.Factories;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
+using VirtoCommerce.Foundation.Catalogs;
 using VirtoCommerce.Foundation.Catalogs.Factories;
 using VirtoCommerce.Foundation.Catalogs.Repositories;
+using VirtoCommerce.Foundation.Catalogs.Services;
 using VirtoCommerce.Foundation.Data.AppConfig;
 using VirtoCommerce.Foundation.Data.Catalogs;
 using VirtoCommerce.Foundation.Data.Importing;
@@ -29,6 +33,7 @@ using VirtoCommerce.ManagementClient.Catalog.ViewModel.Wizard;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
 
+#endregion
 
 namespace VirtoCommerce.ManagementClient.Catalog
 {
@@ -59,13 +64,14 @@ namespace VirtoCommerce.ManagementClient.Catalog
 
 				_navManager.RegisterNavigationItem(homeNavItem);
 
-				var menuNavItem = new NavigationMenuItem(NavigationNames.MenuName);
-				menuNavItem.NavigateCommand =
-					new DelegateCommand<NavigationItem>((x) => _navManager.Navigate(homeNavItem));
-				menuNavItem.Caption = "Catalogs"; //catalogs
-				menuNavItem.ImageResourceKey = "Icon_Module_Catalogs";
-				menuNavItem.Order = 30;
-				menuNavItem.ItemBackground = Color.FromRgb(80, 133, 215);
+				var menuNavItem = new NavigationMenuItem(NavigationNames.MenuName)
+					{
+						NavigateCommand = new DelegateCommand<NavigationItem>((x) => _navManager.Navigate(homeNavItem)),
+						Caption = "Catalogs",
+						ImageResourceKey = "Icon_Module_Catalogs",
+						Order = 30,
+						ItemBackground = Color.FromRgb(80, 133, 215)
+					};
 				_navManager.RegisterNavigationItem(menuNavItem);
 			}
 
@@ -77,13 +83,14 @@ namespace VirtoCommerce.ManagementClient.Catalog
 				var homeNavItemPriceList = new NavigationItem(NavigationNames.HomeNamePriceList, homeViewModel);
 				_navManager.RegisterNavigationItem(homeNavItemPriceList);
 
-				var menuNavItem = new NavigationMenuItem(NavigationNames.MenuNamePriceList);
-				menuNavItem.NavigateCommand =
-					new DelegateCommand<NavigationItem>((x) => { _navManager.Navigate(homeNavItemPriceList); });
-				menuNavItem.Caption = "Price Lists";
-				menuNavItem.ImageResourceKey = "Icon_Module_PriceLists";
-				menuNavItem.ItemBackground = Color.FromRgb(211, 66, 58);
-				menuNavItem.Order = 31;
+				var menuNavItem = new NavigationMenuItem(NavigationNames.MenuNamePriceList)
+					{
+						NavigateCommand = new DelegateCommand<NavigationItem>((x) => _navManager.Navigate(homeNavItemPriceList)),
+						Caption = "Price Lists",
+						ImageResourceKey = "Icon_Module_PriceLists",
+						ItemBackground = Color.FromRgb(211, 66, 58),
+						Order = 31
+					};
 				_navManager.RegisterNavigationItem(menuNavItem);
 			}
 		}
@@ -126,6 +133,7 @@ namespace VirtoCommerce.ManagementClient.Catalog
 			_container.RegisterType<ICreateCategoryViewModel, CreateCategoryViewModel>();
 			_container.RegisterType<ICategoryOverviewStepViewModel, CategoryOverviewStepViewModel>();
 			_container.RegisterType<ICategoryPropertiesStepViewModel, CategoryPropertiesStepViewModel>();
+			_container.RegisterType<ICategorySeoViewModel, CategorySeoViewModel>();
 
 			//Create Item Wizard
 			_container.RegisterType<ICreateItemViewModel, CreateItemViewModel>();
@@ -133,6 +141,7 @@ namespace VirtoCommerce.ManagementClient.Catalog
 			_container.RegisterType<IItemOverviewStepViewModel, ItemOverviewStepViewModel>();
 			_container.RegisterType<IItemPropertiesStepViewModel, ItemPropertiesStepViewModel>();
 			_container.RegisterType<IItemPricingStepViewModel, ItemPricingStepViewModel>();
+			_container.RegisterType<IItemSeoViewModel, ItemSeoViewModel>();
 
 			// tree
 			_container.RegisterType<ITreeCatalogViewModel, TreeCatalogViewModel>();
@@ -149,6 +158,7 @@ namespace VirtoCommerce.ManagementClient.Catalog
 			_container.RegisterType<ICategoryViewModel, CategoryViewModel>();
 			_container.RegisterType<ILinkedCategoryViewModel, LinkedCategoryViewModel>();
 			_container.RegisterType<IItemViewModel, ItemViewModel>();
+			_container.RegisterType<ICatalogOutlineBuilder, CatalogOutlineBuilder>();
 
 			_container.RegisterType<IVirtualCatalogViewModel, VirtualCatalogViewModel>();
 

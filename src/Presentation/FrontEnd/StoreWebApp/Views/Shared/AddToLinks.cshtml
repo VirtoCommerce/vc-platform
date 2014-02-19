@@ -2,13 +2,39 @@
 
 @if (Model != null)
 {
-	<ul class="add-to-links">
-		<li>
-			<a href="#" onclick=" return VirtoCart.addToWishList('@("Item added to wish list".LocalizeHtml())', '@Url.Encode(Model.CatalogItem.ItemId)','@Url.Encode(Model.CatalogItem.ParentItemId)', 1)" class="link-wishlist">@("Add to Wishlist".LocalizeHtml())</a></li>
-		@if (!ViewData.Keys.Contains("NoCompare"))
-		{
-			<li><span class="separator">|</span> <a href="#" onclick=" return VirtoCart.addToCompareList('@("Item added to compare list".LocalizeHtml())', '@Url.Encode(Model.CatalogItem.ItemId)','@Url.Encode(Model.CatalogItem.ParentItemId)', 1) "
-			                                        class="link-compare">@("Add to Compare".LocalizeHtml())</a></li>
-		}
-	</ul>
+    if (!ViewData.Keys.Contains("NoCompare"))
+    {
+        @:<li class="wishlist">
+    }
+    else
+    {
+        @:<p>
+    }
+            <a href="#" onclick=" return VirtoCart.addToWishList('@("Item added to wish list".Localize())', '@Url.Encode(Model.CatalogItem.ItemId)', '@Url.Encode(Model.CatalogItem.ParentItemId)', 1) ">
+                @if (!string.Equals(ViewData["View"], "Details"))
+                {
+                    <span>+</span>
+                }
+                @("Add to Wishlist".Localize())
+            </a>
+    if (!ViewData.Keys.Contains("NoCompare"))
+            {
+        @:</li>
+    }
+    else
+    {
+        @:</p>
+    }
+    if (!ViewData.Keys.Contains("NoCompare"))
+    {
+        <li class="compare">
+            <a href="#" onclick="return VirtoCart.addToCompareList('@("Item added to compare list".Localize())', '@Url.Encode(Model.CatalogItem.ItemId)','@Url.Encode(Model.CatalogItem.ParentItemId)', 1)">
+                @if (!string.Equals(ViewData["View"], "Details"))
+                {
+                    <span>+</span>
+                }
+                @("Add to Compare".Localize())
+            </a>
+        </li>
+    }
 }

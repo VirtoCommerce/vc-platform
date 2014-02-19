@@ -139,7 +139,23 @@ namespace VirtoCommerce.ManagementClient.Asset.Services
 		}
 
 
-		public IUnitOfWork UnitOfWork
+        public Folder CreateFolder(string folderName, string parentId = null)
+        {
+            return null;
+        }
+
+	    public void Delete(string id)
+	    {
+	        throw new NotImplementedException();
+	    }
+
+	    public void Rename(string id, string name)
+	    {
+	        throw new NotImplementedException();
+	    }
+
+
+	    public IUnitOfWork UnitOfWork
 		{
 			get { return this; }
 		}
@@ -153,7 +169,6 @@ namespace VirtoCommerce.ManagementClient.Asset.Services
 		{
 			throw new NotImplementedException();
 		}
-
 
 		public void Add<T>(T item) where T : class
 		{
@@ -354,5 +369,5 @@ namespace VirtoCommerce.ManagementClient.Asset.Services
 
 			return retVal;
 		}
-	}
+    }
 }

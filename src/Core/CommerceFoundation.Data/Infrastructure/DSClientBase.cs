@@ -46,11 +46,10 @@ namespace VirtoCommerce.Foundation.Data
 				return _entityFactory.GetEntityTypeByStringName(entitySetName.Split('.').Last());
 			});
 
-
 			IgnoreResourceNotFoundException = true;
-			WritingEntity += new EventHandler<ReadingWritingEntityEventArgs>(DSCatalogClient_WritingEntity);
+			WritingEntity += this.DSCatalogClient_WritingEntity;
 			SendingRequest += DSClientBase_SendingRequest;
-			ReadingEntity += new EventHandler<ReadingWritingEntityEventArgs>(DSCatalogClient_ReadingEntity);
+			ReadingEntity += this.DSCatalogClient_ReadingEntity;
 
 			ChangeTracker = CreateChangeTracker();
 		}

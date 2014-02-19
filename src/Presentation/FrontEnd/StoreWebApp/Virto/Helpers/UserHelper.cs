@@ -1,12 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
+using System.Web.Security;
 using Omu.ValueInjecter;
 using VirtoCommerce.Client;
 using VirtoCommerce.Foundation.Customers;
 using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Foundation.Customers.Services;
-using VirtoCommerce.Client.Globalization;
+using VirtoCommerce.Foundation.Security.Model;
+using VirtoCommerce.Web.Client.Services.Security;
 using VirtoCommerce.Web.Models;
 
 namespace VirtoCommerce.Web.Virto.Helpers
@@ -32,7 +36,7 @@ namespace VirtoCommerce.Web.Virto.Helpers
 		/// <summary>
 		/// The default comment in wish list
 		/// </summary>
-        public static string DefaultCommentInWishList = "Please, enter your comments...".Localize();
+        public static string DefaultCommentInWishList = "Please, enter your comments...";
 
         #region Cache Constants
 
@@ -69,6 +73,11 @@ namespace VirtoCommerce.Web.Virto.Helpers
         public static UserClient UserClient
         {
             get { return DependencyResolver.Current.GetService<UserClient>(); }
+        }
+
+        public static IUserSecurity UserSecurity
+        {
+            get { return DependencyResolver.Current.GetService<IUserSecurity>(); }
         }
 
 		/// <summary>
@@ -214,6 +223,155 @@ namespace VirtoCommerce.Web.Virto.Helpers
             return retVal;
         }
 
+        #endregion
+
+        #region Registration
+
+        /// <summary>
+        /// Registers the specified user.
+        /// </summary>
+        /// <param name="model">The registration model.</param>
+        /// <param name="errorMessage">The error message that occured during regustration.</param>
+        /// <returns>true when user is registered and logged in</returns>
+        public static bool Register(RegisterModel model, out string errorMessage)
+        {
+            errorMessage = string.Empty;
+
+            try
+            {
+                var id = Guid.NewGuid().ToString();
+
+                UserSecurity.CreateUserAndAccount(model.Email, model.Password, new
+                {
+                    MemberId = id,
+                    UserHelper.CustomerSession.StoreId,
+                    RegisterType = RegisterType.GuestUser.GetHashCode(),
+                    AccountState = AccountState.Approved.GetHashCode(),
+                    Discriminator = "Account"
+                });
+
+                var contact = new Contact
+                {
+                    MemberId = id,
+                    FullName = String.Format("{0} {1}", model.FirstName, model.LastName)
+                };
+
+                contact.Emails.Add(new Email { Address = model.Email, MemberId = id, Type = EmailType.Primary.ToString() });
+                foreach (var addr in model.Addresses)
+                {
+                    contact.Addresses.Add(addr);
+                }
+
+                UserClient.CreateContact(contact);
+
+                return UserSecurity.Login(model.Email, model.Password);
+            }
+            catch (MembershipCreateUserException e)
+            {
+                errorMessage = ErrorCodeToString(e.StatusCode);
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// After user has logged in do some actions
+        /// </summary>
+        public static void OnPostLogon(string userName, string csrUserName = null)
+        {
+            var customerId = UserSecurity.GetUserId(userName);
+            var contact = UserClient.GetCustomer(customerId.ToString(CultureInfo.InvariantCulture), false);
+
+            if (!string.IsNullOrEmpty(csrUserName))
+            {
+                CustomerSession.CsrUsername = csrUserName;
+            }
+
+            if (contact != null)
+            {
+                var lastVisited = contact.ContactPropertyValues.FirstOrDefault(x => x.Name == ContactPropertyValueName.LastVisit);
+
+
+                if (lastVisited != null)
+                {
+                    lastVisited.DateTimeValue = DateTime.UtcNow;
+                }
+                else
+                {
+                    lastVisited = new ContactPropertyValue
+                    {
+                        Name = ContactPropertyValueName.LastVisit,
+                        DateTimeValue = DateTime.UtcNow,
+                        ValueType = PropertyValueType.DateTime.GetHashCode()
+                    };
+                    contact.ContactPropertyValues.Add(lastVisited);
+                }
+
+                if (!string.IsNullOrEmpty(csrUserName))
+                {
+                    var lastVisitedByCsr = new ContactPropertyValue
+                    {
+                        Name = ContactPropertyValueName.LastVisitCSR,
+                        DateTimeValue = DateTime.UtcNow,
+                        ShortTextValue = string.Format("CSR username: {0}", csrUserName),
+                        ValueType = PropertyValueType.DateTime.GetHashCode()
+                    };
+                    contact.ContactPropertyValues.Add(lastVisitedByCsr);
+                }
+                UserClient.SaveCustomerChanges();
+            }
+        }
+
+        /// <summary>
+        /// Converts error code to string.
+        /// </summary>
+        /// <param name="createStatus">The create status.</param>
+        /// <returns>System.String.</returns>
+        private static string ErrorCodeToString(MembershipCreateStatus createStatus)
+        {
+            // See http://go.microsoft.com/fwlink/?LinkID=177550 for
+            // a full list of status codes.
+            switch (createStatus)
+            {
+                case MembershipCreateStatus.DuplicateUserName:
+                    return "User name already exists. Please enter a different user name.";
+
+                case MembershipCreateStatus.DuplicateEmail:
+                    return
+                        "A user name for that e-mail address already exists. Please enter a different e-mail address.";
+
+                case MembershipCreateStatus.InvalidPassword:
+                    return "The password provided is invalid. Please enter a valid password value.";
+
+                case MembershipCreateStatus.InvalidEmail:
+                    return "The e-mail address provided is invalid. Please check the value and try again.";
+
+                case MembershipCreateStatus.InvalidAnswer:
+                    return "The password retrieval answer provided is invalid. Please check the value and try again.";
+
+                case MembershipCreateStatus.InvalidQuestion:
+                    return "The password retrieval question provided is invalid. Please check the value and try again.";
+
+                case MembershipCreateStatus.InvalidUserName:
+                    return "The user name provided is invalid. Please check the value and try again.";
+
+                case MembershipCreateStatus.ProviderError:
+                    return
+                        "The authentication provider returned an error. Please verify your entry and try again. If the problem persists, please contact your system administrator.";
+
+                case MembershipCreateStatus.UserRejected:
+                    return
+                        "The user creation request has been canceled. Please verify your entry and try again. If the problem persists, please contact your system administrator.";
+
+                default:
+                    return
+                        "An unknown error occurred. Please verify your entry and try again. If the problem persists, please contact your system administrator.";
+            }
+        }
         #endregion
 
         #endregion

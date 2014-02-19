@@ -6,7 +6,8 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Interfaces
 	public interface IPickAssetViewModel : IViewModel
 	{
 		FolderItem SelectedAsset { get; }
-
-		bool Validate();
+        string RootItemId { get; set; }
+        bool AssetPickMode { get; set; }
+	    bool Validate();
 	}
 }

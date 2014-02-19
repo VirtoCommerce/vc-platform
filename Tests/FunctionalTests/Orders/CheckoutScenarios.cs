@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using FunctionalTests.Orders.Helpers;
 using Microsoft.Practices.ServiceLocation;
 using Microsoft.Practices.Unity;
@@ -8,6 +9,7 @@ using Moq;
 using Omu.ValueInjecter;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Catalogs.Repositories;
+using VirtoCommerce.Foundation.Customers;
 using VirtoCommerce.Foundation.Customers.Services;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Currencies;
@@ -537,9 +539,46 @@ namespace FunctionalTests.Orders
 		public void Can_run_activity_recordpromotionusage()
 		{
 			var orderGroup = CreateCart();
-			var activity = new RecordPromotionUsageActivity();
 
-			InvokeActivity(activity, orderGroup);
+            var promotionId = Guid.NewGuid().ToString();
+            var memberId = Guid.NewGuid().ToString();
+		    const string couponCode = "Test123";
+            const PromotionUsageStatus testStatus = PromotionUsageStatus.Reserved;
+            var lineItemSkuReward = orderGroup.OrderForms[0].LineItems[0];
+
+            lineItemSkuReward.Discounts.Add(new LineItemDiscount()
+            {
+                DiscountAmount = 100,
+                PromotionId = promotionId,
+                DiscountCode = couponCode,
+                LineItemId = lineItemSkuReward.LineItemId
+            });
+
+            var customerSession = new Mock<ICustomerSessionService>();
+            customerSession.Setup(x => x.CustomerSession).Returns(() => new CustomerSession { CustomerId = memberId });
+		    customerSession.SetupAllProperties();
+
+
+		    var usages = new List<PromotionUsage>();
+
+            var mockUnitOfWork = new Mock<IUnitOfWork>();
+            var repository = new Mock<IMarketingRepository>();
+            repository.Setup(x => x.PromotionUsages).Returns(usages.AsQueryable);
+            repository.Setup(x => x.UnitOfWork).Returns(mockUnitOfWork.Object);
+		    repository.Setup(x => x.Add(It.IsAny<PromotionUsage>())).Callback<PromotionUsage>(usages.Add);
+            repository.SetupAllProperties();
+
+            var activity = new RecordPromotionUsageActivity(customerSession.Object, repository.Object)
+            {
+                UsageStatus = testStatus
+            };
+
+		    InvokeActivity(activity, orderGroup);
+
+		    var addedUsage = repository.Object.PromotionUsages.First(x => x.PromotionId == promotionId);
+
+            Assert.True(addedUsage.Status == (int)testStatus, "Wrong promotion usage status");
+            Assert.True(addedUsage.CouponCode.Equals(couponCode), "Wrong promotion usage status");
 		}
 
 		[Fact]

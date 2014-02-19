@@ -15,11 +15,6 @@ namespace VirtoCommerce.Web.Models.Binders
     public class SearchParametersBinder : IModelBinder
     {
 		/// <summary>
-		/// The default page size
-		/// </summary>
-        public const int DefaultPageSize = SearchParameters.DefaultPageSize;
-
-		/// <summary>
 		/// Name values to dictionary.
 		/// </summary>
 		/// <param name="nv">The nv.</param>
@@ -49,19 +44,26 @@ namespace VirtoCommerce.Web.Models.Binders
 		/// <param name="bindingContext">The binding context.</param>
 		/// <returns>The bound value.</returns>
         public object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
-		{
-		    var qs = GetParams(controllerContext);
+        {
+		  
+		    var parameters = bindingContext.ValueProvider.GetValue(bindingContext.ModelName);
+            var sp = parameters != null ? parameters.RawValue as SearchParameters : null;
+		    if (sp == null)
+		    {
+            var qs = GetParams(controllerContext);
             var qsDict = NvToDict(qs);
-            var sp = new SearchParameters
+		        sp = new SearchParameters
             {
                 FreeSearch = qs["q"].EmptyToNull(),
                 PageIndex = qs["p"].TryParse(1),
-                PageSize = qs["pageSize"].TryParse(DefaultPageSize),
+                PageSize = qs["pageSize"].TryParse(0),
                 Sort = qs["sort"].EmptyToNull(),
+		            SortOrder = qs["sortorder"].EmptyToNull(),
                 Facets = qsDict.Where(k => FacetRegex.IsMatch(k.Key))
                     .Select(k => k.WithKey(FacetRegex.Replace(k.Key, "")))
                     .ToDictionary()
             };
+		    }
             return sp;
         }
     }

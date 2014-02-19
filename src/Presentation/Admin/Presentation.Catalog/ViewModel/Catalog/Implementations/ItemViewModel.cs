@@ -10,6 +10,7 @@ using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Omu.ValueInjecter;
+using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Catalogs.Factories;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Catalogs.Repositories;
@@ -33,12 +34,13 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 	public class ItemViewModel : ViewModelDetailAndWizardBase<Item>, IItemViewModel
 	{
 		protected IPricelistRepository _priceListRepository;
-
+		
 		#region Dependencies
 
 		private readonly IAuthenticationContext _authContext;
 		private readonly IRepositoryFactory<ICatalogRepository> _repositoryFactory;
 		private readonly IRepositoryFactory<IPricelistRepository> _pricelistRepositoryFactory;
+		private readonly IRepositoryFactory<IAppConfigRepository> _appConfigRepositoryFactory;
 		private readonly IViewModelsFactory<IPropertyValueBaseViewModel> _propertyValueVmFactory;
 		private readonly IViewModelsFactory<IPriceViewModel> _priceVmFactory;
 		private readonly IViewModelsFactory<IItemAssetViewModel> _assetVmFactory;
@@ -47,6 +49,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		private readonly IViewModelsFactory<IItemRelationViewModel> _itemRelationVmFactory;
 		private readonly IViewModelsFactory<IEditorialReviewViewModel> _reviewVmFactory;
 		private readonly IViewModelsFactory<ICategoryItemRelationViewModel> _categoryVmFactory;
+		private readonly IViewModelsFactory<IItemSeoViewModel> _seoVmFactory;
 		private readonly INavigationManager _navManager;
 
 		#endregion
@@ -57,6 +60,8 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		/// public. For viewing
 		/// </summary>
 		public ItemViewModel(
+			IRepositoryFactory<IAppConfigRepository> appConfigRepositoryFactory,
+			IViewModelsFactory<IItemSeoViewModel> seoVmFactory,
 			IRepositoryFactory<ICatalogRepository> repositoryFactory,
 			IRepositoryFactory<IPricelistRepository> pricelistRepositoryFactory, IViewModelsFactory<IPropertyValueBaseViewModel> propertyValueVmFactory,
 			IViewModelsFactory<IPriceViewModel> priceVmFactory, IViewModelsFactory<IItemAssetViewModel> assetVmFactory,
@@ -72,6 +77,8 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			_itemRelationVmFactory = itemRelationVmFactory;
 			_reviewVmFactory = reviewVmFactory;
 			_categoryVmFactory = categoryVmFactory;
+			_seoVmFactory = seoVmFactory;
+			_appConfigRepositoryFactory = appConfigRepositoryFactory;
 
 			_navManager = navManager;
 			ViewTitle = new ViewTitleBase { Title = ItemTypeTitle, SubTitle = item.Name.ToUpper() };
@@ -285,9 +292,17 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 				SelectedTabIndex = TabIndexProperties;
 			}
 
-			return result && isPropertyValuesValid && isCodeValid;
+			var seoIsValid = true;
+			if (SeoStepViewModel != null)
+			{
+				seoIsValid = SeoStepViewModel.IsValid;
+				if (!seoIsValid)
+					SelectedTabIndex = (InnerItem is Bundle) ? 2 : 3;
+			}
+			
+			return result && isPropertyValuesValid && isCodeValid && seoIsValid;
 		}
-
+		
 		/// <summary>
 		/// Return RefusedConfirmation for Cancel Confirm dialog
 		/// </summary>
@@ -388,6 +403,8 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 				// InitializingPricing tab
 				InitializePricing();
 			});
+
+			InitSeoStep();
 		}
 
 		protected override void BeforeSaveChanges()
@@ -414,10 +431,15 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		protected override void AfterSaveChangesUI()
 		{
 			ItemRelations.CommitChanges();
-
+			
 			OriginalItem.InjectFrom(InnerItem);
-		}
 
+			if (SeoStepViewModel != null)
+			{
+				SeoStepViewModel.SaveSeoKeywordsChanges();
+			}
+		}
+		
 		protected override void SetSubscriptionUI()
 		{
 			InnerItem.PropertyChanged += InnerItem_PropertyChanged;
@@ -446,6 +468,12 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 				});
 
 			ItemRelations.CollectionChanged = ViewModel_PropertyChanged;
+
+			if (SeoStepViewModel != null)
+			{
+				if (SeoStepViewModel.SeoKeywords != null)
+					SeoStepViewModel.SeoKeywords.ForEach(keyword => keyword.PropertyChanged += ViewModel_PropertyChanged);
+			}
 		}
 
 		protected override void CloseSubscriptionUI()
@@ -476,6 +504,12 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 					});
 
 			ItemRelations.Unsubscribe(ViewModel_PropertyChanged);
+
+			if (SeoStepViewModel != null)
+			{
+				if (SeoStepViewModel.SeoKeywords != null)
+					SeoStepViewModel.SeoKeywords.ForEach(keyword => keyword.PropertyChanged -= ViewModel_PropertyChanged);
+			}
 		}
 
 		protected override void DoDuplicate()
@@ -562,6 +596,14 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 				Repository.Remove(association);
 			}
 
+			using (var seoRepository = _appConfigRepositoryFactory.GetRepositoryInstance())
+			{
+				var deleteList = seoRepository.SeoUrlKeywords.Where(x => x.KeywordValue.Equals(InnerItem.Code, StringComparison.InvariantCultureIgnoreCase));
+				if (deleteList.Count() > 0)
+					deleteList.ToList().ForEach(y => seoRepository.Remove(y));
+				seoRepository.UnitOfWork.Commit();
+			}
+
 			return true;
 		}
 
@@ -644,6 +686,8 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 		protected virtual void InnerItem_PropertyChanged(object sender, PropertyChangedEventArgs e)
 		{
+			if (e.PropertyName == "Code")
+				SeoStepViewModel.ChangeKeywordValue(InnerItem.Code);
 			if (e.PropertyName == "PropertySetId")
 			{
 				CategoryViewModel.SetupPropertiesAndValues(InnerItem.PropertySet, InnerItem.ItemPropertyValues, InnerItemCatalogLanguages, PropertiesAndValues, IsWizardMode);
@@ -729,7 +773,9 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 		internal static void RaiseAssetPickInteractionRequest(IViewModelsFactory<IPickAssetViewModel> vmFactory, InteractionRequest<Confirmation> confirmRequest, ICatalogEntityFactory entityFactory, Action<ItemAsset> finalAction)
 		{
-			var itemVM = vmFactory.GetViewModelInstance();
+		    var itemVM = vmFactory.GetViewModelInstance();
+            itemVM.AssetPickMode = true;
+            itemVM.RootItemId = null;
 
 			confirmRequest.Raise(
 				new ConditionalConfirmation(itemVM.Validate) { Content = itemVM, Title = "Select main image" },
@@ -962,7 +1008,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		#region Properties tab
 
 		public string FilterLanguage { get; private set; }
-		public List<string> InnerItemCatalogLanguages { get; private set; }
+		public List<string> InnerItemCatalogLanguages { get; protected set; }
 		public ObservableCollection<PropertyAndPropertyValueBase> PropertiesAndValues { get; protected set; }
 		public DelegateCommand<string> PropertiesLocalesFilterCommand { get; private set; }
 
@@ -1396,6 +1442,21 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 				}
 			});
 		}
+		#endregion
+
+		#region SEO tab
+
+		public IItemSeoViewModel SeoStepViewModel { get; private set; }
+
+		protected void InitSeoStep()
+		{
+			var itemParameter = new KeyValuePair<string, object>("item", InnerItem);
+			var languagesParameter = new KeyValuePair<string, object>("languages", InnerItemCatalogLanguages == null ? new List<string>() : InnerItemCatalogLanguages);
+			SeoStepViewModel =
+					_seoVmFactory.GetViewModelInstance(itemParameter, languagesParameter);
+			OnPropertyChanged("SeoStepViewModel");
+		}
+		
 		#endregion
 
 		protected T CreateEntity<T>()

@@ -43,9 +43,9 @@ namespace VirtoCommerce.Client.Orders.StateMachines
             {
                 result = currentState.AllTransitions.Select(x => x.CurrentStatus);
             }
+
             return result;
         }
-
 
         public bool IsTransitionAvailable(T curentStatus, T newStatus)
         {

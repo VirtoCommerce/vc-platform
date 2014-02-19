@@ -57,9 +57,9 @@ namespace VirtoCommerce.PowerShell.Orders
 
 			var customerId = 1;
 			var rnd = new Random();
-			for (var i = 0; i < _customers.Length - 1; i++) // 20 customers, with 10 orders each
+			for (var i = 0; i < _customers.Length - 1; i++) // 20 customers, with 2 orders each
 			{
-				for (var index = 0; index < 10; index++)
+				for (var index = 0; index < 2; index++)
 				{
 					var order = MockOrderBuilder.BuildOrder()
 												.WithAddresses()

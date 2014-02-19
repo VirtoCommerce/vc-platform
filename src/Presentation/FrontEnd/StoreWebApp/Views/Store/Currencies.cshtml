@@ -1,2 +1,12 @@
 ﻿@model CurrenciesModel
-@Html.DropDownList("currency", new SelectList(Model.Currencies, "CurrencyCode", "CurrencyName", Model.SelectedCurrency), new { @onchange="VirtoCommerce.changeCurrency(this.value);"})
+
+
+<span>@("Currency".Localize()): <span class="current">@Model.SelectedCurrency</span></span>
+<ul>
+    @foreach (var curr in Model.Currencies)
+    {       
+        <li class="@(curr.CurrencyCode == Model.SelectedCurrency ? "selected" : "")">
+            <a href="" onclick="VirtoCommerce.changeCurrency('@curr.CurrencyCode'); return false;">@string.Format("{0} - {1}", curr.CurrencyName, curr.CurrencyCode)</a>
+        </li>
+    }
+</ul>

@@ -20,7 +20,7 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure
 		protected HomeSettingsViewModel(IFactory entityFactory)
 		{
 			EntityFactory = entityFactory;
-			RefreshItemListCommand = new DelegateCommand(RiseRefreshCommand);
+			RefreshItemListCommand = new DelegateCommand(RaiseRefreshCommand);
 		}
 
 		#region IHomeSettingsViewModel
@@ -73,12 +73,13 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure
 					}
 					ShowLoadingAnimation = false;
 				});
+			RaiseCanExecuteChanged();
 		}
 
 		#endregion
 
 
-		private void RiseRefreshCommand()
+		private void RaiseRefreshCommand()
 		{
 			Task.Run(() => InitializeForOpen());
 		}

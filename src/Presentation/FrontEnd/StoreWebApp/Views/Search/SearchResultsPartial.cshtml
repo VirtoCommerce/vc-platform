@@ -1,97 +1,67 @@
-﻿@model CatalogItemSearchModel
-           
-<div class="main-container col2-left-layout">
-    <div class="main">
-        <div class="col-main">
-                <ul class="messages" id="messages">
-                </ul>
-            <div class="page-title category-title">
-                <a href="#"
-                    class="link-rss">@("Subscribe to RSS Feed".LocalizeHtml())</a>
-                <h1>@ViewBag.Title</h1>
-            </div>
-            @if (Model.Pager.TotalCount == 0)
-            {
-            <p class="note-msg">@("There are no results available.".LocalizeHtml())</p>
-            }
-            else
-            {
-            <div class="category-products">
-	            <div class="toolbar">
-		            @Html.DisplayFor(model => model.Pager, "SearchPager")
-	            </div>
-                    @{
-                var index = 0;   
-                    }
-                    @foreach (var item in Model.CatalogItems)
-                    {
-                        if (index % 4 == 0)
-                        {
-                            @:<ul class="products-grid">
-                            @:<li class="item first">
-                        }
-                        else if ((index + 1) % 4 == 0)
-                        {
-                            @:<li class="item last">
-                        }
-                        else
-                        {
-                            @:<li class="item">
-                        }
-                        @Html.DisplayFor(model => item, "SearchItem")
-                        index = index + 1;
-                        if (index % 4 == 0 || index == Model.CatalogItems.Count())
-                        {
-                            @:</li>
-                            @:</ul>
-                        }
-                        else
-                        {
-                            @:</li>
-                        }
+﻿@using VirtoCommerce.Web.Virto.Helpers
+@model CatalogItemSearchModel
 
-                    }
-	            <div class="toolbar-bottom">
-		            <div class="toolbar">@Html.DisplayFor(model => model.Pager, "SearchPager")</div>
-	            </div>
-            </div>
+@helper RenderItems(string templateName)
+{
+    foreach (var item in Model.CatalogItems)
+    {
+    @Html.DisplayFor(model => item, templateName)
+    }
+}
+
+
+<script type="text/javascript" src="@Url.Content("~/Scripts/v/virto-reviews.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery-tmpl-min.js")"></script>
+
+@if (Model.Pager.TotalCount == 0)
+{
+    Html.SharedViewBag().Messages = new MessagesModel { new MessageModel("There are no results available.".Localize(), MessageType.Notice) };
+}
+else
+{
+    <script type="text/javascript">
+        $(function ()
+        {
+            @if (Model.CatalogItems.Any()){
+                @:Reviews.catalogReviews("@Html.Raw(Model.CatalogItems.Select(i => i.CatalogItem.ItemId).Aggregate((x, y) => (x.Contains("or ItemId eq") ? x : string.Format("ItemId eq '{0}'", x)) + string.Format(" or ItemId eq '{0}'", y)))");
             }
-        </div>
-        <div class="col-left sidebar">
-            <div class="block block-currency">
-                <div class="block-title">
-                    <strong><span>@("Select Your Currency.".LocalizeHtml())</span></strong>
-                </div>
-                <div class="block-content">
-                    @{Html.RenderAction("Currencies", "Store");}
-                </div>
+
+            var viewClass = VirtoCommerce.getCookie("categoryListView");
+            viewClass = viewClass == "" ? "list" : viewClass;
+            window.setTimeout(function() { $('div.view-mode a.' + viewClass).trigger('click'); }, 100);
+
+        });
+    </script>
+   @Html.DisplayForModel("ReviewTemplate");
+
+    <div class="content">
+        <div class="category-products">
+            <div class="category-image">
+                @{ Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "CategoryTop" }); }
             </div>
-            <div class="block block-layered-nav">
-                @Html.DisplayFor(m => m, "FilterPanel")
+            <div class="toolbar">
+                @Html.DisplayFor(model => model.Pager, "SearchPager")
             </div>
-            <div class="block block-cart">
-                <div class="block-title">
-                    <strong><span>@("My Cart".LocalizeHtml())</span></strong>
-                </div>
-                <div class="block-content">
-                    @{Html.RenderAction("MiniView", "Cart");}
-                </div>
+            <div class="grid">
+                <ul class="products-list grid">
+                    @RenderItems("Item")
+                </ul>
             </div>
-            <div class="block block-list block-compare">
-                <div class="block-title">
-                    <strong><span>@("Compare Products".LocalizeHtml())</span></strong>
-                </div>
-                <div class="block-content">
-					@{Html.RenderAction("MiniCompareList", "Account");}
-                </div>
+            <div class="list">
+                <ul class="products-list list">
+                    @RenderItems("SearchListItem")
+                </ul>
+            </div>
+            <div class="toolbar">
+                @Html.DisplayFor(model => model.Pager, "SearchPager")
             </div>
         </div>
     </div>
+}
+<div class="sidebar">
+    @if (Model.SelectedFilters != null && Model.SelectedFilters.Count > 0)
+    {
+        @Html.DisplayFor(m => m, "CurrentFilterPanel")
+    }
+    @Html.DisplayFor(m => m, "FilterPanel")
 </div>
-<script type="text/javascript">
-	$(window).load(function () {
-		$('#slider').nivoSlider({
-			pauseTime: 5000
-		});
-	});
-</script>

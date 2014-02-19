@@ -91,22 +91,37 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\packages\Lucene.Net.Contrib.3.0.3\lib\net40\Lucene.Net.Contrib.SpellChecker.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core">
+      <HintPath>..\..\..\..\packages\Microsoft.AspNet.SignalR.Core.2.0.2\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb">
+      <HintPath>..\..\..\..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.0.2\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.Data.Edm, Version=5.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Data.Edm, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\packages\Microsoft.Data.Edm.5.4.0\lib\net40\Microsoft.Data.Edm.dll</HintPath>
+      <HintPath>..\..\..\..\packages\Microsoft.Data.Edm.5.6.0\lib\net40\Microsoft.Data.Edm.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Data.OData, Version=5.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Data.OData, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\packages\Microsoft.Data.OData.5.4.0\lib\net40\Microsoft.Data.OData.dll</HintPath>
+      <HintPath>..\..\..\..\packages\Microsoft.Data.OData.5.6.0\lib\net40\Microsoft.Data.OData.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Data.Services, Version=5.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Data.Services, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\packages\Microsoft.Data.Services.5.4.0\lib\net40\Microsoft.Data.Services.dll</HintPath>
+      <HintPath>..\..\..\..\packages\Microsoft.Data.Services.5.6.0\lib\net40\Microsoft.Data.Services.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Data.Services.Client, Version=5.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.Data.Services.Client, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\packages\Microsoft.Data.Services.Client.5.4.0\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
+      <HintPath>..\..\..\..\packages\Microsoft.Data.Services.Client.5.6.0\lib\net40\Microsoft.Data.Services.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin">
+      <HintPath>..\..\..\..\packages\Microsoft.Owin.2.0.2\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb">
+      <HintPath>..\..\..\..\packages\Microsoft.Owin.Host.SystemWeb.2.0.2\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security">
+      <HintPath>..\..\..\..\packages\Microsoft.Owin.Security.2.0.2\lib\net45\Microsoft.Owin.Security.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -127,25 +142,25 @@
       <HintPath>..\..\..\..\packages\Microsoft.AspNet.WebPages.OAuth.2.0.20710.0\lib\net40\Microsoft.Web.WebPages.OAuth.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Configuration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\..\..\packages\Microsoft.WindowsAzure.ConfigurationManager.2.0.1.0\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
+      <HintPath>..\..\..\..\packages\Microsoft.WindowsAzure.ConfigurationManager.2.0.3\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Diagnostics, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+    <Reference Include="Microsoft.WindowsAzure.Diagnostics, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
       <Private>True</Private>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.ServiceRuntime, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-      <Private>True</Private>
+    <Reference Include="Microsoft.WindowsAzure.ServiceRuntime, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
+      <Private>False</Private>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Storage, Version=2.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="Microsoft.WindowsAzure.Storage, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\packages\WindowsAzure.Storage.2.1.0.0\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
+      <HintPath>..\..\..\..\packages\WindowsAzure.Storage.3.0.1.0\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
     </Reference>
-    <Reference Include="MvcSiteMapProvider, Version=3.3.6.0, Culture=neutral, PublicKeyToken=1923abe4657913cc, processorArchitecture=MSIL">
+    <Reference Include="MvcSiteMapProvider, Version=4.4.6.0, Culture=neutral, PublicKeyToken=1923abe4657913cc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\packages\MvcSiteMapProvider.3.3.6.0\lib\net40\MvcSiteMapProvider.dll</HintPath>
+      <HintPath>..\..\..\..\packages\MvcSiteMapProvider.MVC4.Core.4.4.6\lib\net45\MvcSiteMapProvider.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\packages\Newtonsoft.Json.4.5.11\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\..\..\packages\Newtonsoft.Json.5.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="nsoftware.InPayWeb, Version=5.0.4865.0, Culture=neutral, PublicKeyToken=cdc168f89cffe9cf, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -154,6 +169,9 @@
     <Reference Include="Omu.ValueInjecter, Version=2.3.3.0, Culture=neutral, PublicKeyToken=c7694541b0ac80e4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\packages\ValueInjecter.2.3.3\lib\net35\Omu.ValueInjecter.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin">
+      <HintPath>..\..\..\..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
     <Reference Include="PlainElastic.Net, Version=1.0.28.0, Culture=neutral, PublicKeyToken=0930e76dfc03b7ac, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -179,8 +197,13 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Management" />
-    <Reference Include="System.Management.Automation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Management.Automation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\packages\Microsoft.AspNet.WebApi.Client.4.0.20710.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization">
       <Private>True</Private>
     </Reference>
@@ -190,9 +213,9 @@
     <Reference Include="System.ServiceModel.Web">
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Spatial, Version=5.4.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Spatial, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\packages\System.Spatial.5.4.0\lib\net40\System.Spatial.dll</HintPath>
+      <HintPath>..\..\..\..\packages\System.Spatial.5.6.0\lib\net40\System.Spatial.dll</HintPath>
     </Reference>
     <Reference Include="System.Transactions">
       <Private>True</Private>
@@ -310,6 +333,10 @@
       <Private>True</Private>
       <HintPath>..\..\..\..\packages\Microsoft.AspNet.WebPages.WebData.2.0.20710.0\lib\net40\WebMatrix.WebData.dll</HintPath>
     </Reference>
+    <Reference Include="WindowsAzure.IPAddressRules, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Shared\WindowsAzure.IPAddressRules.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\..\GlobalAssemblyInfo.cs">
@@ -320,11 +347,15 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\ModuleConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\SignalRStartup.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\VirtoAdmin\Controllers\InstallController.cs" />
+    <Compile Include="Areas\VirtoAdmin\Helpers\SignalRTraceListener.cs" />
+    <Compile Include="Areas\VirtoAdmin\Helpers\SetupWorker.cs" />
     <Compile Include="Areas\VirtoAdmin\Models\InstallModel.cs" />
+    <Compile Include="Areas\VirtoAdmin\Models\SuccessModel.cs" />
     <Compile Include="Areas\VirtoAdmin\Resources\Resource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -350,38 +381,40 @@
     </Compile>
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\BannerModel.cs" />
+    <Compile Include="Models\Binders\CategoryPathModelBinder.cs" />
     <Compile Include="Models\Binders\SearchParametersBinder.cs" />
     <Compile Include="Models\CartModel.cs" />
     <Compile Include="Models\AddressCartModel.cs" />
     <Compile Include="Models\CartRemoveModel.cs" />
-    <Compile Include="Models\CartUpdateModel.cs" />
     <Compile Include="Models\CatalogModels.cs" />
     <Compile Include="Models\CheckoutModels.cs" />
-    <Compile Include="Models\CurrenciesModel.cs" />
     <Compile Include="Models\CustomerModels.cs" />
     <Compile Include="Models\LineItemModel.cs" />
     <Compile Include="Models\LineItemUpdateModel.cs" />
+    <Compile Include="Models\MessageModel.cs" />
     <Compile Include="Models\OrderReturns.cs" />
     <Compile Include="Models\PriceModel.cs" />
     <Compile Include="Models\ReviewModel.cs" />
     <Compile Include="Models\SearchModels.cs" />
     <Compile Include="Models\StoreModel.cs" />
-    <Compile Include="Models\StoresModel.cs" />
     <Compile Include="Models\CurrencyModel.cs" />
     <Compile Include="Models\VariationModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Virto\Helpers\CartHelperExtensions.cs" />
     <Compile Include="Virto\Helpers\CatalogHelper.cs" />
     <Compile Include="Virto\Helpers\MarketingHelper.cs" />
+    <Compile Include="Virto\Helpers\MVC\CssMinifyFix.cs" />
     <Compile Include="Virto\Helpers\MVC\VirtoDataAnnotationsModelValidatorProvider.cs" />
     <Compile Include="Virto\Helpers\Payments\CreditCardOption.cs" />
     <Compile Include="Virto\Helpers\Payments\IPaymentOption.cs" />
     <Compile Include="Virto\Helpers\Popup\PopupBase.cs" />
-    <Compile Include="Virto\Helpers\SearchHelper.cs" />
+    <Compile Include="Virto\Helpers\SearchHelperExtensions.cs" />
     <Compile Include="Virto\Helpers\UserHelper.cs" />
     <Compile Include="WebRole.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Areas\VirtoAdmin\Content\Images\demo-console.png" />
+    <Content Include="Areas\VirtoAdmin\Content\Images\demo-frontend.png" />
     <Content Include="Areas\VirtoAdmin\Content\Images\InProgress.GIF" />
     <Content Include="Areas\VirtoAdmin\Content\Images\VirtoCommerce.png" />
     <Content Include="Areas\VirtoAdmin\Content\site.css" />
@@ -447,130 +480,95 @@
     <Content Include="Content\themes\base\minified\jquery.ui.tabs.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.theme.min.css" />
     <Content Include="Content\themes\base\minified\jquery.ui.tooltip.min.css" />
-    <Content Include="Content\themes\default\checkout.css" />
     <Content Include="Content\themes\default\flags.css" />
     <Content Include="Content\themes\default\images\blank.gif" />
-    <Content Include="Content\themes\default\images\brand.png" />
-    <Content Include="Content\themes\default\images\flags.png" />
-    <Content Include="Content\themes\default\jquery.gzoom.css" />
-    <Content Include="Content\themes\default\jquery.jqzoom.css" />
-    <Content Include="Content\themes\default\jquery.ui.autocomplete.css" />
-    <Content Include="Content\themes\default\menu.css" />
-    <Content Include="Content\themes\default\nivo-slider.css" />
-    <Content Include="Content\themes\default\print.css" />
+    <Content Include="Content\themes\default\images\flags\flags.png" />
+    <Content Include="Content\themes\default\images\icons\gift.png" />
+    <Content Include="Content\themes\default\images\icons\insurance.png" />
+    <Content Include="Content\themes\default\images\icons\rateit\delete.gif" />
+    <Content Include="Content\themes\default\images\icons\rateit\star.gif" />
     <Content Include="Content\themes\default\rateit.css" />
-    <Content Include="Content\themes\default\redesign.css" />
-    <Content Include="Content\themes\default\styles-ie.css" />
-    <Content Include="Content\themes\default\styles.css" />
-    <Content Include="Content\themes\default\thickbox.css" />
-    <Content Include="Content\themes\default\virto_reviews.css" />
-    <Content Include="Content\themes\default\widgets.css" />
-    <Content Include="Content\themes\default\images\ajax-loader.gif" />
-    <Content Include="Content\themes\default\images\bg.png" />
-    <Content Include="Content\themes\default\images\big_stars.png" />
-    <Content Include="Content\themes\default\images\bkg_add-to.gif" />
-    <Content Include="Content\themes\default\images\bkg_block-layered-title.gif" />
-    <Content Include="Content\themes\default\images\bkg_body.gif" />
-    <Content Include="Content\themes\default\images\bkg_btn-green.gif" />
-    <Content Include="Content\themes\default\images\bkg_btn-small.gif" />
-    <Content Include="Content\themes\default\images\bkg_btn-small.png" />
-    <Content Include="Content\themes\default\images\bkg_btn.gif" />
-    <Content Include="Content\themes\default\images\bkg_btn.png" />
-    <Content Include="Content\themes\default\images\bkg_cart-totals.gif" />
-    <Content Include="Content\themes\default\images\bkg_collapse-gm.gif" />
-    <Content Include="Content\themes\default\images\bkg_collapse.gif" />
-    <Content Include="Content\themes\default\images\bkg_grid.gif" />
-    <Content Include="Content\themes\default\images\bkg_nav-item-border.gif" />
-    <Content Include="Content\themes\default\images\bkg_nav.gif" />
-    <Content Include="Content\themes\default\images\bkg_nav_parent.gif" />
-    <Content Include="Content\themes\default\images\bkg_nav_top.gif" />
-    <Content Include="Content\themes\default\images\bkg_pipe1.gif" />
-    <Content Include="Content\themes\default\images\bkg_pipe2.gif" />
-    <Content Include="Content\themes\default\images\bkg_pipe3.gif" />
-    <Content Include="Content\themes\default\images\bkg_rating.gif" />
-    <Content Include="Content\themes\default\images\bkg_subtotal.gif" />
-    <Content Include="Content\themes\default\images\bkg_tabs.gif" />
-    <Content Include="Content\themes\default\images\bkg_toolbar.gif" />
-    <Content Include="Content\themes\default\images\bkg_top-promo.gif" />
     <Content Include="Content\themes\default\images\blank.png" />
-    <Content Include="Content\themes\default\images\btn_checkout.gif" />
-    <Content Include="Content\themes\default\images\btn_edit.gif" />
-    <Content Include="Content\themes\default\images\btn_remove.gif" />
-    <Content Include="Content\themes\default\images\btn_trash.gif" />
-    <Content Include="Content\themes\default\images\btn_window_close.gif" />
-    <Content Include="Content\themes\default\images\calendar.gif" />
-    <Content Include="Content\themes\default\images\close.png" />
-    <Content Include="Content\themes\default\images\cvv.gif" />
-    <Content Include="Content\themes\default\images\delete.gif" />
-    <Content Include="Content\themes\default\images\divider.png" />
-    <Content Include="Content\themes\default\images\fam_book_open.png" />
-    <Content Include="Content\themes\default\images\feat-sony.jpg" />
-    <Content Include="Content\themes\default\images\feat.jpg" />
-    <Content Include="Content\themes\default\images\feat_small01.jpg" />
-    <Content Include="Content\themes\default\images\feat_small02.jpg" />
-    <Content Include="Content\themes\default\images\grid-cal.gif" />
-    <Content Include="Content\themes\default\images\home_co1.jpg" />
-    <Content Include="Content\themes\default\images\ipod_shuffle.jpg" />
-    <Content Include="Content\themes\default\images\i_asc_arrow.gif" />
-    <Content Include="Content\themes\default\images\i_availability_only.gif" />
-    <Content Include="Content\themes\default\images\i_availability_only_arrow.gif" />
-    <Content Include="Content\themes\default\images\i_desc_arrow.gif" />
-    <Content Include="Content\themes\default\images\i_msg-error.gif" />
-    <Content Include="Content\themes\default\images\i_msg-note.gif" />
-    <Content Include="Content\themes\default\images\i_msg-success.gif" />
-    <Content Include="Content\themes\default\images\i_notice.gif" />
-    <Content Include="Content\themes\default\images\i_pager-next.gif" />
-    <Content Include="Content\themes\default\images\i_pager-prev.gif" />
-    <Content Include="Content\themes\default\images\i_print.gif" />
-    <Content Include="Content\themes\default\images\i_rss-big.png" />
-    <Content Include="Content\themes\default\images\i_rss.gif" />
-    <Content Include="Content\themes\default\images\line-gradient.gif" />
-    <Content Include="Content\themes\default\images\loading.gif" />
-    <Content Include="Content\themes\default\images\logo.gif" />
-    <Content Include="Content\themes\default\images\logo.png" />
-    <Content Include="Content\themes\default\images\magnifier_handle.gif" />
-    <Content Include="Content\themes\default\images\menu_bg.jpg" />
-    <Content Include="Content\themes\default\images\nav_arrow.png" />
-    <Content Include="Content\themes\default\images\nav_arrow_hover.png" />
-    <Content Include="Content\themes\default\images\nivo\arrows.png" />
-    <Content Include="Content\themes\default\images\nivo\bullets.png" />
-    <Content Include="Content\themes\default\images\nivo\default.css" />
-    <Content Include="Content\themes\default\images\nivo\loading.gif" />
-    <Content Include="Content\themes\default\images\onestepcheckout-error.jpg" />
-    <Content Include="Content\themes\default\images\onestepcheckout-numbers-1.png" />
-    <Content Include="Content\themes\default\images\onestepcheckout-numbers-2.png" />
-    <Content Include="Content\themes\default\images\onestepcheckout-numbers-3.png" />
-    <Content Include="Content\themes\default\images\onestepcheckout-numbers-4.png" />
-    <Content Include="Content\themes\default\images\opc-ajax-loader.gif" />
-    <Content Include="Content\themes\default\images\pager_arrow_left.gif" />
-    <Content Include="Content\themes\default\images\pager_arrow_right.gif" />
-    <Content Include="Content\themes\default\images\samsung_tv.jpg" />
-    <Content Include="Content\themes\default\images\shadow.png" />
-    <Content Include="Content\themes\default\images\slider_bg.gif" />
-    <Content Include="Content\themes\default\images\slider_btn_zoom_in.gif" />
-    <Content Include="Content\themes\default\images\slider_btn_zoom_out.gif" />
-    <Content Include="Content\themes\default\images\small_stars.png" />
-    <Content Include="Content\themes\default\images\small_stars_rate.png" />
     <Content Include="Content\themes\default\images\social\facebook.png" />
     <Content Include="Content\themes\default\images\social\google.png" />
     <Content Include="Content\themes\default\images\social\linkedin.png" />
     <Content Include="Content\themes\default\images\social\openid.png" />
     <Content Include="Content\themes\default\images\social\twitter.png" />
     <Content Include="Content\themes\default\images\social\yahoo.png" />
-    <Content Include="Content\themes\default\images\spacer.gif" />
-    <Content Include="Content\themes\default\images\star.gif" />
-    <Content Include="Content\themes\default\images\subnav_accessories.jpg" />
-    <Content Include="Content\themes\default\images\subnav_hometheater.jpg" />
-    <Content Include="Content\themes\default\images\subnav_lcd.jpg" />
-    <Content Include="Content\themes\default\images\subnav_led.jpg" />
-    <Content Include="Content\themes\default\images\thumbs_down.png" />
-    <Content Include="Content\themes\default\images\thumbs_up.png" />
-    <Content Include="Content\themes\default\images\top-promo-100.gif" />
-    <Content Include="Content\themes\default\images\top-promo-insurance.gif" />
-    <Content Include="Content\themes\default\images\transparent_black.png" />
-    <Content Include="Content\themes\default\images\validation_advice_bg.gif" />
-    <Content Include="Content\themes\default\images\widgets\i_widget-link.gif" />
-    <Content Include="Content\themes\default\images\zoomloader.gif" />
+    <Content Include="Content\themes\default\camera.css" />
+    <Content Include="Content\themes\default\cloudzoom.css" />
+    <Content Include="Content\themes\default\custom.css" />
+    <Content Include="Content\themes\default\forms.css" />
+    <Content Include="Content\themes\default\grid.css" />
+    <Content Include="Content\themes\default\images\arrow_about.png" />
+    <Content Include="Content\themes\default\images\arrow_top.png" />
+    <Content Include="Content\themes\default\images\cloudzoom\ajax-loader.gif" />
+    <Content Include="Content\themes\default\images\cloudzoom\blank.png" />
+    <Content Include="Content\themes\default\images\cvv.gif" />
+    <Content Include="Content\themes\default\images\icons\arrows\arrow_about.png" />
+    <Content Include="Content\themes\default\images\icons\arrows\arrow_button.png" />
+    <Content Include="Content\themes\default\images\icons\arrows\arrow_footer.png" />
+    <Content Include="Content\themes\default\images\icons\arrows\arrow_switch.png" />
+    <Content Include="Content\themes\default\images\icons\arrows\arrow_top.png" />
+    <Content Include="Content\themes\default\images\icons\arrows\page-nav.png" />
+    <Content Include="Content\themes\default\images\icons\arrows\pager.png" />
+    <Content Include="Content\themes\default\images\icons\arrows\sort.png" />
+    <Content Include="Content\themes\default\images\icons\breadcrumb.gif" />
+    <Content Include="Content\themes\default\images\icons\bullet.gif" />
+    <Content Include="Content\themes\default\images\icons\bullet.png" />
+    <Content Include="Content\themes\default\images\icons\callback.png" />
+    <Content Include="Content\themes\default\images\icons\cart-empty.png" />
+    <Content Include="Content\themes\default\images\icons\cart.png" />
+    <Content Include="Content\themes\default\images\icons\cart_listing.png" />
+    <Content Include="Content\themes\default\images\icons\compare.png" />
+    <Content Include="Content\themes\default\images\icons\date.png" />
+    <Content Include="Content\themes\default\images\icons\dropdown-arrow.png" />
+    <Content Include="Content\themes\default\images\icons\edit-mini.png" />
+    <Content Include="Content\themes\default\images\icons\edit.png" />
+    <Content Include="Content\themes\default\images\icons\email.png" />
+    <Content Include="Content\themes\default\images\icons\grid-mode.gif" />
+    <Content Include="Content\themes\default\images\icons\icon_cart_listing_mask.png" />
+    <Content Include="Content\themes\default\images\icons\items.png" />
+    <Content Include="Content\themes\default\images\icons\list-mode.gif" />
+    <Content Include="Content\themes\default\images\icons\msg\error.gif" />
+    <Content Include="Content\themes\default\images\icons\msg\note.gif" />
+    <Content Include="Content\themes\default\images\icons\msg\notice.gif" />
+    <Content Include="Content\themes\default\images\icons\msg\success.gif" />
+    <Content Include="Content\themes\default\images\icons\order.png" />
+    <Content Include="Content\themes\default\images\icons\print.gif" />
+    <Content Include="Content\themes\default\images\icons\print.png" />
+    <Content Include="Content\themes\default\images\icons\rating.png" />
+    <Content Include="Content\themes\default\images\icons\remove-popup.png" />
+    <Content Include="Content\themes\default\images\icons\remove.png" />
+    <Content Include="Content\themes\default\images\icons\reorder.png" />
+    <Content Include="Content\themes\default\images\icons\return.png" />
+    <Content Include="Content\themes\default\images\icons\search.png" />
+    <Content Include="Content\themes\default\images\icons\shipping.png" />
+    <Content Include="Content\themes\default\images\icons\social.png" />
+    <Content Include="Content\themes\default\images\icons\switch.png" />
+    <Content Include="Content\themes\default\images\icons\trash.png" />
+    <Content Include="Content\themes\default\images\icons\twitter.png" />
+    <Content Include="Content\themes\default\images\icons\view.png" />
+    <Content Include="Content\themes\default\images\icons\wishlist.png" />
+    <Content Include="Content\themes\default\images\labels.png" />
+    <Content Include="Content\themes\default\images\logo.png" />
+    <Content Include="Content\themes\default\images\menu\accessories.png" />
+    <Content Include="Content\themes\default\images\menu\cameras.png" />
+    <Content Include="Content\themes\default\images\menu\computers.png" />
+    <Content Include="Content\themes\default\images\menu\mobiles.png" />
+    <Content Include="Content\themes\default\images\slider\arrows.png" />
+    <Content Include="Content\themes\default\images\slider\blank.gif" />
+    <Content Include="Content\themes\default\images\slider\camera-loader.gif" />
+    <Content Include="Content\themes\default\images\slider\slides\1.jpg" />
+    <Content Include="Content\themes\default\images\slider\slides\2.jpg" />
+    <Content Include="Content\themes\default\images\slider\slides\3.jpg" />
+    <Content Include="Content\themes\default\main.css" />
+    <Content Include="Content\themes\default\messages.css" />
+    <Content Include="Content\themes\default\popup.css" />
+    <Content Include="Content\themes\default\print.css" />
+    <Content Include="Content\themes\default\reset.css" />
+    <Content Include="Content\themes\default\responsive.css" />
+    <Content Include="Content\themes\default\transition.css" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="App_Data\Virto\Configuration\Catalog.config" />
@@ -595,17 +593,21 @@
     <Content Include="App_Data\Virto\Configuration\Import.config" />
     <Content Include="App_Data\Virto\Configuration\AppConfig.config" />
     <Content Include="App_Data\Virto\Configuration\Asset.config" />
-    <Content Include="Mvc.sitemap" />
     <Content Include="App_Data\Virto\Configuration\services.local.config">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Areas\VirtoAdmin\Views\Web.config" />
     <Content Include="Areas\VirtoAdmin\Views\Install\Index.cshtml" />
+    <Content Include="Areas\VirtoAdmin\Views\Install\Success.cshtml" />
+    <Content Include="Mvc.sitemap" />
+    <Content Include="App_Data\Virto\Configuration\Reporting.config" />
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Properties\PublishProfiles\testwebpi.pubxml" />
     <None Include="Properties\PublishProfiles\WebPI.pubxml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
+    <Content Include="Scripts\cloudzoom.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
@@ -619,6 +621,8 @@
     <Content Include="Scripts\jquery.nivo.slider.js" />
     <Content Include="Scripts\jquery.rateit.js" />
     <Content Include="Scripts\jquery.rateit.min.js" />
+    <Content Include="Scripts\jquery.signalR-2.0.2.js" />
+    <Content Include="Scripts\jquery.signalR-2.0.2.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
@@ -628,6 +632,10 @@
     <Content Include="Scripts\knockout-2.1.0.debug.js" />
     <Content Include="Scripts\knockout-2.1.0.js" />
     <Content Include="Scripts\modernizr-2.5.3.js" />
+    <Content Include="Scripts\responsive\camera.js" />
+    <Content Include="Scripts\responsive\jquery.easing.1.3.js" />
+    <Content Include="Scripts\responsive\main.js" />
+    <Content Include="Scripts\responsive\virto.slider.js" />
     <Content Include="Scripts\v\validation.js" />
     <Content Include="Scripts\v\virto-checkout.js" />
     <Content Include="Scripts\v\virto-commerce.js" />
@@ -652,7 +660,6 @@
       <SubType>
       </SubType>
     </Content>
-    <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Account\_Layout.cshtml" />
     <Content Include="Views\Account\AddressBook.cshtml" />
     <Content Include="Views\Account\AddressEdit.cshtml" />
@@ -660,21 +667,18 @@
     <Content Include="Views\Account\ChangeAccountInfo.cshtml" />
     <Content Include="Views\Account\Compare.cshtml" />
     <Content Include="Views\Account\AccountInfo.cshtml" />
-    <Content Include="Views\Account\DisplayTemplates\CompareLineItem.cshtml" />
     <Content Include="Views\Account\DisplayTemplates\LineItem.cshtml" />
     <Content Include="Views\Account\Edit.cshtml" />
     <Content Include="Views\Account\EditorTemplates\LineItem.cshtml" />
-    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Account\DisplayTemplates\ForgotPassword.cshtml" />
     <Content Include="Views\Account\Index.cshtml" />
     <Content Include="Views\Account\LogOn.cshtml" />
     <Content Include="Views\Account\LogOnAsync.cshtml" />
-    <Content Include="Views\Account\MiniCompareList.cshtml" />
     <Content Include="Views\Account\OrderAddress.cshtml" />
     <Content Include="Views\Account\Orders.cshtml" />
     <Content Include="Views\Account\OrderView.cshtml" />
     <Content Include="Views\Account\RecentOrders.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
-    <Content Include="Views\Account\SideMenu.cshtml" />
     <Content Include="Views\Account\WishList.cshtml" />
     <Content Include="Views\Banner\DisplayTemplates\Flash.cshtml" />
     <Content Include="Views\Banner\DisplayTemplates\ImageClick.cshtml" />
@@ -682,17 +686,13 @@
     <Content Include="Views\Banner\DisplayTemplates\RawHtml.cshtml" />
     <Content Include="Views\Cart\Add.cshtml" />
     <Content Include="Views\Cart\EditorTemplates\LineItem.cshtml" />
-    <Content Include="Views\Cart\EditorTemplates\MiniLineItem.cshtml" />
     <Content Include="Views\Cart\EditorTemplates\ShippingEstimate.cshtml" />
     <Content Include="Views\Cart\Empty.cshtml" />
     <Content Include="Views\Cart\Index.cshtml" />
-    <Content Include="Views\Cart\MiniCart.cshtml" />
-    <Content Include="Views\Cart\MiniCartEmpty.cshtml" />
     <Content Include="Views\Catalog\Category.cshtml" />
     <Content Include="Views\Catalog\Item.cshtml" />
     <Content Include="Views\Catalog\Menu.cshtml" />
-    <Content Include="Views\Catalog\RelatedItem.cshtml" />
-    <Content Include="Views\Catalog\RelatedProducts.cshtml" />
+    <Content Include="Views\Catalog\RecommendedProducts.cshtml" />
     <Content Include="Views\Checkout\Cart.cshtml" />
     <Content Include="Views\Checkout\DisplayTemplates\Credit.cshtml" />
     <Content Include="Views\Checkout\DisplayTemplates\CreditCard.cshtml" />
@@ -707,7 +707,7 @@
     <Content Include="Views\Checkout\Success.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Search\DisplayTemplates\FilterPanel.cshtml" />
-    <Content Include="Views\Search\DisplayTemplates\SearchItem.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Item.cshtml" />
     <Content Include="Views\Search\DisplayTemplates\SearchPager.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
     <Content Include="Views\Search\SearchResultsPartial.cshtml" />
@@ -721,7 +721,6 @@
     </Content>
     <Content Include="Views\Shared\_LayoutPopUp.cshtml" />
     <Content Include="Views\Shared\_LogOnPartial.cshtml" />
-    <Content Include="Views\Shared\_SideBarLayout.cshtml" />
     <Content Include="Views\Shared\AddToCart.cshtml" />
     <Content Include="Views\Shared\AddToLinks.cshtml" />
     <Content Include="Views\Shared\BaseContentPlace.cshtml" />
@@ -747,8 +746,8 @@
     <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
     <Content Include="Views\Account\_RemoveExternalLoginsPartial.cshtml" />
     <Content Include="Views\Catalog\CreateReview.cshtml" />
-    <Content Include="Views\Catalog\RecommendedProducts.cshtml" />
-    <Content Include="Views\Catalog\RecommendedItem.cshtml" />
+    <Content Include="Views\Catalog\RelatedProducts.cshtml" />
+    <Content Include="Views\Catalog\RelatedItem.cshtml" />
     <Content Include="Views\Catalog\ItemProperties.cshtml" />
     <Content Include="Views\Catalog\ItemVariations.cshtml" />
     <Content Include="Views\Catalog\Variation.cshtml" />
@@ -770,6 +769,26 @@
     <Content Include="Views\Account\DisplayTemplates\OrdersPager.cshtml" />
     <Content Include="Views\Checkout\DisplayTemplates\Unknown.cshtml" />
     <Content Include="Views\Cart\LineItems.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Banner\DisplayTemplates\ImageNoClickSlide.cshtml" />
+    <Content Include="Views\Banner\DisplayTemplates\ImageClickSlide.cshtml" />
+    <Content Include="Views\Store\CartOptions.cshtml" />
+    <Content Include="Views\Shared\MiniCompareList.cshtml" />
+    <Content Include="Views\Shared\MiniCart.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\CompareLineItem.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\MiniLineItem.cshtml" />
+    <Content Include="Views\Search\DisplayTemplates\CurrentFilterPanel.cshtml" />
+    <Content Include="Views\Search\DisplayTemplates\SearchListItem.cshtml" />
+    <Content Include="Views\Catalog\RelatedProducts2.cshtml" />
+    <Content Include="Views\Banner\DisplayTemplates\CategoryUrl.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\SearchItems.cshtml" />
+    <Content Include="Views\Shared\_LayoutBase.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\MetaRobotsHelperModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\CanonicalHelperModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\SiteMapPathNodeModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\ReviewTemplate.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\ReviewCommentTemplate.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
     <None Include="Web.Azure.config" />
   </ItemGroup>
   <ItemGroup>
@@ -854,6 +873,7 @@
     <EmbeddedResource Include="Areas\VirtoAdmin\Resources\Resource.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
@@ -870,9 +890,9 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
+          <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>58731</DevelopmentServerPort>
+          <DevelopmentServerPort>53866</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:2359/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>

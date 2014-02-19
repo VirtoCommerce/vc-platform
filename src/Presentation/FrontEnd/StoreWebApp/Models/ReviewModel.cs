@@ -20,6 +20,8 @@ namespace VirtoCommerce.Web.Models
 		/// </summary>
 		/// <value>The average rating.</value>
         public double AverageRating { get; set; }
+
+        public string ItemId { get; set; }
     }
 
 	/// <summary>

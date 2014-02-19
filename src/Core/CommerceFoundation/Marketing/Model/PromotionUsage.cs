@@ -81,6 +81,33 @@ namespace VirtoCommerce.Foundation.Marketing.Model
 			}
 		}
 
+		private int _status;
+		[DataMember]
+		public int Status
+		{
+			get
+			{
+				return _status;
+			}
+			set
+			{
+				SetValue(ref _status, () => this.Status, value);
+			}
+		}
+
+		private DateTime? _usageDate;
+		[DataMember]
+		public DateTime? UsageDate
+		{
+			get
+			{
+				return _usageDate;
+			}
+			set
+			{
+				SetValue(ref _usageDate, () => this.UsageDate, value);
+			}
+		}
 	
 		#region Navigation Properties
 

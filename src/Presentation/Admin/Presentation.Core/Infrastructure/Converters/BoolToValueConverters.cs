@@ -23,6 +23,7 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure.Converters
     }
 
     public class BoolToStringConverter : BoolToValueConverter<String> { }
+	public class InvertedBoolConverter : BoolToValueConverter<bool> { }
     //public class BoolToBrushConverter : BoolToValueConverter<Brush> { }
     //public class BoolToVisibilityConverter : BoolToValueConverter<Visibility> { }
     //public class BoolToObjectConverter : BoolToValueConverter<Object> { }

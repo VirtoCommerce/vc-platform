@@ -64,7 +64,6 @@ namespace VirtoCommerce.PowerShell.Stores
 			store.TaxCodes.Add(new StoreTaxCode { StoreId = store.StoreId, TaxCode = "Goods" });
 			store.PaymentGateways.Add(new StorePaymentGateway { StoreId = store.StoreId, PaymentGateway = "CreditCard" });
 			store.PaymentGateways.Add(new StorePaymentGateway { StoreId = store.StoreId, PaymentGateway = "Phone" });
-			store.PaymentGateways.Add(new StorePaymentGateway { StoreId = store.StoreId, PaymentGateway = "Credit" });
 			store.PaymentGateways.Add(new StorePaymentGateway { StoreId = store.StoreId, PaymentGateway = "Paypal" });
 
 			store.CardTypes.Add(new StoreCardType { StoreId = store.StoreId, CardType = "Visa" });
