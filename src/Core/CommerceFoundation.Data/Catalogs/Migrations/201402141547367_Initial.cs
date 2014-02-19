@@ -628,6 +628,10 @@ END");
             DropIndex("CategoryItemRelation", "Discriminator");
             DropIndex("Price", new[] { "Discriminator" });
 
+            Sql(@"DROP TRIGGER [dbo].[TR_CategoryDeleteTrigger]");
+            Sql(@"DROP TRIGGER [dbo].[TR_CatalogDeleteTrigger]");
+            Sql(@"DROP TRIGGER [dbo].[TR_VirtualCatalogDeleteTrigger]");
+
             DropTable("dbo.LinkedCategory");
             DropTable("dbo.Category");
             DropTable("dbo.Catalog");
@@ -654,10 +658,6 @@ END");
             DropTable("dbo.PropertySet");
             DropTable("dbo.CategoryPropertyValue");
             DropTable("dbo.CategoryBase");
-
-            Sql(@"DROP TRIGGER [dbo].[TR_CategoryDeleteTrigger]");
-            Sql(@"DROP TRIGGER [dbo].[TR_CatalogDeleteTrigger]");
-            Sql(@"DROP TRIGGER [dbo].[TR_VirtualCatalogDeleteTrigger]");
         }
     }
 }

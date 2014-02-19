@@ -7,6 +7,8 @@ namespace VirtoCommerce.Foundation.Data.Infrastructure.LogMigrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
+            MigrationsDirectory = @"Infrastructure\LogMigrations";
+            ContextKey = "VCF.Logging";
         }
 
         protected override void Seed(VirtoCommerce.Foundation.Data.Infrastructure.OperationLogContext context)
