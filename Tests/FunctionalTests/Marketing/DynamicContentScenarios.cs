@@ -37,7 +37,7 @@ namespace FunctionalTests.Marketing
 		public DynamicContentScenarios()
         {
             _previousDataDirectory = AppDomain.CurrentDomain.GetData("DataDirectory");
-            AppDomain.CurrentDomain.SetData("DataDirectory", Path.GetTempPath());
+            AppDomain.CurrentDomain.SetData("DataDirectory", TempPath);
             _databaseName = "DynamicContentTest";
 			
         }

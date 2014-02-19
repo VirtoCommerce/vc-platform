@@ -47,7 +47,7 @@ namespace FunctionalTests.Reviews
         public ReviewScenarios()
         {
             _previousDataDirectory = AppDomain.CurrentDomain.GetData("DataDirectory");
-            AppDomain.CurrentDomain.SetData("DataDirectory", Path.GetTempPath());
+            AppDomain.CurrentDomain.SetData("DataDirectory", TempPath);
             _databaseName = "ReviewsTest";
             _Service = new TestDataService(typeof(TestDSReviewService));
         }

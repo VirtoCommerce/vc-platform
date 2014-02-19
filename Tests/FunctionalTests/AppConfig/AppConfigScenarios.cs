@@ -24,7 +24,7 @@ namespace FunctionalTests.AppConfig
 		public SecurityScenarios()
 		{
 			_previousDataDirectory = AppDomain.CurrentDomain.GetData("DataDirectory");
-			AppDomain.CurrentDomain.SetData("DataDirectory", Path.GetTempPath());
+            AppDomain.CurrentDomain.SetData("DataDirectory", TempPath);
 			_databaseName = "AppConfigTest";
 		}
 
