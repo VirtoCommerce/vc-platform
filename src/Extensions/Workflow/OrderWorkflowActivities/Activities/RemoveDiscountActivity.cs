@@ -73,6 +73,17 @@ namespace VirtoCommerce.OrderWorkflow
 					shipment.ShipmentItems.Remove(link);
 				}
 			}
+
+            //Remove usages for current orderGroup.
+            var usages = MarketingRepository.PromotionUsages.Where(x => x.OrderGroupId == CurrentOrderGroup.OrderGroupId && x.Status != (int)PromotionUsageStatus.Used).ToList();
+
+            foreach (var promotionUsage in usages)
+            {
+                MarketingRepository.Remove(promotionUsage);
+            }
+
+            //Must clear them before discounts are applied. Otherwise discounts will not be applied correctly
+	        MarketingRepository.UnitOfWork.Commit();
 		}
 	}
 }
