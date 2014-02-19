@@ -17,20 +17,7 @@ namespace VirtoCommerce.Foundation.DataManagement.Model
 			}
 		}
 
-		private OperationState _operationState;
-		public OperationState OperationState 
-		{ 
-			get
-			{
-				if (_operationState == null)
-					_operationState = OperationState.Initiated;
-				return _operationState;
-			}
-			internal set
-			{
-				_operationState = value;
-			}
-		}
+		public OperationState OperationState { get; internal set; }
 		public long Processed { get; internal set; }
 		public long Length { get; internal set; }
 		public long CurrentProgress { get; internal set; }
@@ -38,12 +25,7 @@ namespace VirtoCommerce.Foundation.DataManagement.Model
 		private IList _errors;
 		public IList Errors 
 		{ 
-			get
-			{
-				if (_errors == null)
-					_errors = new List<string>();
-				return _errors;
-			}
+			get { return _errors ?? (_errors = new List<string>()); }
 			internal set
 			{
 				_errors = value;
