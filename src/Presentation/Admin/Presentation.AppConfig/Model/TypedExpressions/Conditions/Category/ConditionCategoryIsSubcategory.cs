@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Linq;
-using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.AppConfig.Model;
-using linq = System.Linq.Expressions;
+using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.ManagementClient.AppConfig.Properties;
 using VirtoCommerce.ManagementClient.Core.Controls;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using linq = System.Linq.Expressions;
 
 
 namespace VirtoCommerce.ManagementClient.AppConfig.Model
@@ -15,11 +16,11 @@ namespace VirtoCommerce.ManagementClient.AppConfig.Model
 		private CategorySelectElement _itemsInCategoryEl;
 
 		public ConditionCategoryIsSubcategory(IExpressionViewModel expressionViewModel)
-			: base("Category is subcategory of []", expressionViewModel)
+			: base(Resources.Category_is_subcategory_of__, expressionViewModel)
 		{
-			WithLabel("Category is subcategory of ");
+			WithLabel(Resources.Category_is_subcategory_of_);
 			_itemsInCategoryEl = WithElement(new CategorySelectElement(expressionViewModel)) as CategorySelectElement;
-			WithAvailableExcluding(() => new CategorySelectElement("Category", expressionViewModel));
+			WithAvailableExcluding(() => new CategorySelectElement(Resources.Category, expressionViewModel));
 		}
 
 		public string SelectedCategoryId
@@ -33,7 +34,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.Model
 				_itemsInCategoryEl.SelectedCategoryId = value;
 			}
 		}
-				
+
 		public linq.Expression<Func<IEvaluationContext, bool>> GetExpression()
 		{
 			linq.ParameterExpression paramX = linq.Expression.Parameter(typeof(IEvaluationContext), "x");
@@ -41,7 +42,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.Model
 			var methodInfo = typeof(DisplayTemplateEvaluationContext).GetMethod("IsCategorySubcategoryOf");
 			var methodCall = linq.Expression.Call(castOp, methodInfo, linq.Expression.Constant(SelectedCategoryId)
 													, ExcludingCategoryIds.GetNewArrayExpression());
-													
+
 			var retVal = linq.Expression.Lambda<Func<IEvaluationContext, bool>>(methodCall, paramX);
 
 			return retVal;

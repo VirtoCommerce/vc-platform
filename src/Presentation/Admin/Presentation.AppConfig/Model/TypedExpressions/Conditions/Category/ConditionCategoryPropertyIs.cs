@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Linq;
-using linq = System.Linq.Expressions;
-using VirtoCommerce.Foundation.Catalogs.Services;
-using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
-using VirtoCommerce.ManagementClient.Core.Controls;
-using System.Reflection;
 using VirtoCommerce.Foundation.AppConfig.Model;
+using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.ManagementClient.AppConfig.Properties;
+using VirtoCommerce.ManagementClient.Core.Controls;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using linq = System.Linq.Expressions;
 
 namespace VirtoCommerce.ManagementClient.AppConfig.Model
 {
@@ -17,7 +15,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.Model
 		private UserInputElement _propEl;
 
 		public ConditionCategoryPropertyIs(IExpressionViewModel expressionViewModel)
-			: base("Category property is [] ", expressionViewModel)
+			: base(Resources.Category_property_is__, expressionViewModel)
 		{
 			WithLabel("Category property is ");
 			_propEl = WithUserInput<string>(string.Empty) as UserInputElement;

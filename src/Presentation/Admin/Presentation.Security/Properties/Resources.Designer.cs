@@ -412,6 +412,15 @@ namespace VirtoCommerce.ManagementClient.Security.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to qw.
+        /// </summary>
+        public static string qw {
+            get {
+                return ResourceManager.GetString("qw", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Register Type.
         /// </summary>
         public static string Register_Type {
@@ -507,6 +516,15 @@ namespace VirtoCommerce.ManagementClient.Security.Properties {
         public static string Site_Administrator {
             get {
                 return ResourceManager.GetString("Site_Administrator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to login.
+        /// </summary>
+        public static string TextBlock_Text {
+            get {
+                return ResourceManager.GetString("TextBlock.Text", resourceCulture);
             }
         }
         

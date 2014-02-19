@@ -306,4 +306,10 @@
     <value> Welcome</value>
     <comment>TextBlock.Text</comment>
   </data>
+  <data name="qw" xml:space="preserve">
+    <value>qw</value>
+  </data>
+  <data name="TextBlock.Text" xml:space="preserve">
+    <value>login</value>
+  </data>
 </root>
