@@ -4,7 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Threading;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
+using VirtoCommerce.Foundation.Assets.Model;
 using VirtoCommerce.Foundation.Catalogs.Repositories;
 using VirtoCommerce.Foundation.Frameworks.Csv;
 using VirtoCommerce.Foundation.Importing.Model;
@@ -29,6 +32,7 @@ namespace VirtoCommerce.Foundation.DataManagement.Services
 		private const string Comma = ",";
 		private const string Tab = "\t";
 		private const string Semicolon = ";";
+		private const string DateFormat = "yyyy.MM.dd HHmm";
 
 		#endregion
 
@@ -177,13 +181,14 @@ namespace VirtoCommerce.Foundation.DataManagement.Services
 
 		public string ExportData(IList<EntityType> exportEntityTypes, string assetPath, IDictionary<string, object> parameters)
 		{
-			var operationStatus = new OperationStatus();
-			operationStatus.OperationState = OperationState.Initiated;
-			
+			var operationStatus = new OperationStatus {OperationState = OperationState.Initiated};
+
 			try
 			{				
 				_operationsList.Add(operationStatus);
 				var tasks  = new List<Task>();
+				var catalogId = parameters["CatalogId"];
+				//var ui = TaskScheduler.FromCurrentSynchronizationContext();
 				foreach (var entityType in exportEntityTypes)
 				{
 					operationStatus.OperationState = OperationState.InProgress;
@@ -197,34 +202,37 @@ namespace VirtoCommerce.Foundation.DataManagement.Services
 							{
 								operationStatus.Errors.Add("Source and target languages should be provided");
 								operationStatus.OperationState = OperationState.Finished;
+								break;
 							}
 							tasks.Add(Task.Factory.StartNew(() => ExportLocalization(sourceLang.ToString(), targetLang.ToString(), operationStatus)));
 							break;
-
 						case EntityType.Catalog:
-							var catalogId = parameters["CatalogId"];
 							if (catalogId == null)
 							{
 								operationStatus.Errors.Add("Catalog id must be provided");
 								operationStatus.OperationState = OperationState.Finished;
+								break;
 							}
-							tasks.Add(Task.Factory.StartNew(() => ExportCatalog(catalogId.ToString(), operationStatus)));
+							tasks.Add(Task.Factory.StartNew(() => ExportItems(catalogId.ToString(), operationStatus)));
+							break;
+						case EntityType.ItemAsset:
+							if (catalogId == null)
+							{
+								operationStatus.Errors.Add("Catalog id must be provided");
+								operationStatus.OperationState = OperationState.Finished;
+								break;
+							}
+							tasks.Add(Task.Factory.StartNew(() => ExportAssets(catalogId.ToString(), operationStatus)));
 							break;
 					}					
 				}
 
-				Task.WaitAll(tasks.ToArray());
-				operationStatus.OperationState = OperationState.Finished;
+				Task.WhenAll(tasks.ToArray()).ContinueWith((x) => 
+					operationStatus.OperationState = OperationState.Finished, TaskScheduler.FromCurrentSynchronizationContext());
 			}
 			catch (Exception ex)
 			{
-				//var finalStatus = new StatusMessage
-				//{
-				//	ShortText = string.Format("Error occured during localization export to '{0}'.", filePath),
-				//	StatusMessageId = id,
-				//	State = StatusMessageState.Error,
-				//	Details = ex.Message
-				//};
+				operationStatus.Errors.Add(string.Format("Export failed: {0}", ex.Message));
 			}
 
 			return operationStatus.OperationId;
@@ -239,21 +247,118 @@ namespace VirtoCommerce.Foundation.DataManagement.Services
 
 		#region Private methods
 
-		private void ExportCatalog(string catalogId, OperationStatus currentOperation)
+		private void ExportItems(string catalogId, OperationStatus currentOperation)
 		{
+			var fileName = string.Format("{0} Items ({1}).csv", catalogId, DateTime.UtcNow.ToString(DateFormat));
+			using (var stream = new MemoryStream())
+			{
+				var textWriter = new StreamWriter(stream, Encoding.UTF8);
+				{
+					var csvWriter = new CsvWriter(textWriter, ",");
+					csvWriter.WriteRow(
+						new List<string>
+							{
+								"Catalog",
+								"Code",
+								"Name",
+								"StartDate",
+								"EndDate",
+								"IsBuyable",
+								"IsActive",
+								"MinQuantity",
+								"MaxQuantity",
+								"Weight",
+								"PackageType",
+								"TaxCategory",
+								"Type"
+							}, false);
+
+					using (var repository = _catalogRepositoryFactory.GetRepositoryInstance())
+					{
+						if (repository != null)
+						{
+							repository.Items.Where(item => item.CatalogId.Equals(catalogId)).ToList().ForEach(item =>
+								{
+									csvWriter.WriteRow(new[]
+										{
+											catalogId,
+											item.Code,
+											item.Name,
+											item.StartDate.ToString(),
+											item.EndDate == null ? string.Empty : item.EndDate.ToString(),
+											item.IsBuyable.ToString(),
+											item.IsActive.ToString(),
+											item.MinQuantity.ToString(),
+											item.MaxQuantity.ToString(),
+											item.Weight.ToString(),
+											item.PackageType == null ? string.Empty : item.PackageType.ToString(),
+											item.TaxCategory == null ? string.Empty : item.TaxCategory.ToString(),
+											item.GetType().Name
+										}, false);
+									currentOperation.Processed++;
+								});
+						}
+					}
+				}
+
+				stream.Seek(0, SeekOrigin.Begin);
+				var uploadError = Upload(fileName, stream);
+				if (!string.IsNullOrEmpty(uploadError))
+					currentOperation.Errors.Add(uploadError);
+			}
+		}
+
+		private void ExportAssets(string catalogId, OperationStatus currentOperation)
+		{
+			var fileName = string.Format("{0} ItemAssets ({1}).csv", catalogId, DateTime.UtcNow.ToString(DateFormat));
+			using (var stream = new MemoryStream())
+			{
+				var textWriter = new StreamWriter(stream, Encoding.UTF8);
+				var csvWriter = new CsvWriter(textWriter, ",");
+
+				csvWriter.WriteRow(new List<string> {"Catalog", "ItemCode", "AssetId", "Group", "Type"}, false);
+
+				using (var repository = _catalogRepositoryFactory.GetRepositoryInstance())
+				{
+					if (repository != null)
+					{
+						repository.Items.Expand(x => x.ItemAssets)
+						          .Where(item => item.CatalogId.Equals(catalogId))
+						          .ToList()
+						          .ForEach(item => item.ItemAssets.ToList().ForEach(asset =>
+							          {
+								          csvWriter.WriteRow(new[] {catalogId, item.Code, asset.AssetId, asset.GroupName, asset.AssetType}, false);
+								          currentOperation.Processed++;
+							          }));
+					}
+				}
+
+				stream.Seek(0, SeekOrigin.Begin);
+				var uploadError = Upload(fileName, stream);
+				if (!string.IsNullOrEmpty(uploadError))
+					currentOperation.Errors.Add(uploadError);
+			}
 
 		}
 
 		private void ExportLocalization(string sourceLanguage, string targetLanguage, OperationStatus currentOperation)
 		{
-			var tempFile = Path.GetTempFileName();
+			var fileName = string.Format("{0} - {1} ({2}).csv", sourceLanguage, targetLanguage, DateTime.UtcNow.ToString(DateFormat));
 
-			using (var textWriter = File.CreateText(tempFile))
+			using (var stream = new MemoryStream())
 			{
+				var textWriter = new StreamWriter(stream, Encoding.UTF8);
 				var csvWriter = new CsvWriter(textWriter, ",");
-				csvWriter.WriteRow(new List<string> { "Name", sourceLanguage, string.Format("LanguageCode ({0})", targetLanguage), string.Format("Value - {0}", targetLanguage) },
-								   false);
-				
+				csvWriter.WriteRow(
+					new List<string>
+						{
+							"Name",
+							sourceLanguage,
+							string.Format("LanguageCode ({0})", targetLanguage),
+							string.Format("Value - {0}", targetLanguage)
+						},
+					false);
+
 				using (var repository = _appConfigRepositoryFactory.GetRepositoryInstance())
 				{
 					if (repository != null)
@@ -270,44 +375,79 @@ namespace VirtoCommerce.Foundation.DataManagement.Services
 							//if ((IsUntranslatedOnly && !isTranslateExists) || !IsUntranslatedOnly)
 							{
 								var original = originalItems.ContainsKey(name)
-													? originalItems[name]
-													: new Localization();
+									               ? originalItems[name]
+									               : new Localization()
+										               {
+											               Name = name,
+											               LanguageCode = sourceLanguage,
+											               Value = string.Empty
+										               };
 								var translated = isTranslateExists
-														? translateItems[name]
-														: new Localization()
-															{
-																Name = original.Name,
-																LanguageCode = targetLanguage,
-																Category = original.Category
-															};
+									                 ? translateItems[name]
+									                 : new Localization()
+										                 {
+											                 Name = original.Name,
+											                 LanguageCode = targetLanguage,
+											                 Category = original.Category,
+											                 Value = string.Empty
+										                 };
 
-								csvWriter.WriteRow(new string[] {name, original.Value, translated.Value}, true);
+								csvWriter.WriteRow(new[] {name, original.Value, translated.Value}, true);
+								currentOperation.Processed++;
 							}
 						}
-						
-						
-						//var statusUpdate = new StatusMessage
-						//{
-						//	Details = string.Format("Exported {0} of {1}.", item.index, itemsCount),
-						//	StatusMessageId = id
-						//};
 					}
 				}
+
+				stream.Seek(0, SeekOrigin.Begin);
+				var uploadError = Upload(fileName, stream);
+				if (!string.IsNullOrEmpty(uploadError))
+					currentOperation.Errors.Add(uploadError);
 			}
 
-			Upload(tempFile);
 		}
 
-		private void Upload(string tempFilePath)
+		private string Upload(string fileName, Stream source)
 		{
+			string retVal = null;
 			using (var info = new UploadStreamInfo())
-			using (var fileStream = File.OpenRead(tempFilePath))
 			{
-				info.FileName = tempFilePath;
-				info.FileByteStream = fileStream;
-				info.Length = fileStream.Length;
-				_assetProvider.Upload(info);
+				Folder folder = null;
+				try
+				{
+					folder = _assetProvider.GetFolderById("export");
+				}
+				catch (Exception e)
+				{
+					retVal = e.Message;
+				}
+				finally
+				{
+					folder = folder ?? _assetProvider.CreateFolder("export", null);
+				}
+
+				if (folder != null)
+				{
+					retVal = null;
+					info.FileName = string.Format("{0}{1}{2}", folder.FolderId, "/", Path.GetFileName(fileName));
+					info.FileByteStream = source;
+					info.Length = source.Length;
+					try
+					{
+						_assetProvider.Upload(info);
+					}
+					catch (Exception e)
+					{
+						retVal = string.Format("Couldn't upload exported file: {0}", e.Message);
+					}
+
+				}
+				else
+				{
+					retVal = string.Format("Export folder not found and can't be created: {0}", retVal);
+				}
 			}
+			return retVal;
 		}
 
 		private StreamReader GetCsvContent(string fileName)

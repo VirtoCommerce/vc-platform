@@ -203,6 +203,9 @@
 																<MenuItem Header="Open Catalog" Command="{Binding OpenItemCommand}"  
 																	  inf_behavior:PermissionBehavior.PermissionId="{x:Static securityModule:PredefinedPermissions.CatalogCatalogsManage}"
 																	  inf_behavior:PermissionBehavior.DenyVisibility="Collapsed"/>
+																<!--<MenuItem Header="Export Catalog" Command="{Binding ExportItemCommand}"  
+																	  inf_behavior:PermissionBehavior.PermissionId="{x:Static securityModule:PredefinedPermissions.CatalogCatalogsManage}"
+																	  inf_behavior:PermissionBehavior.DenyVisibility="Collapsed"/>-->
 																<MenuItem Header="Delete" Command="{Binding PlacementTarget.Tag.TreeItemDeleteCommand, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}" CommandParameter="{Binding }"
 																	  inf_behavior:PermissionBehavior.PermissionId="{x:Static securityModule:PredefinedPermissions.CatalogCatalogsManage}"
 																	  inf_behavior:PermissionBehavior.DenyVisibility="Collapsed">

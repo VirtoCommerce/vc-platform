@@ -11,6 +11,7 @@ using VirtoCommerce.Foundation.Importing.Repositories;
 using VirtoCommerce.Foundation.Data.Importing;
 using VirtoCommerce.Foundation.Importing.Services;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using VirtoCommerce.Foundation.DataManagement.Services;
 
 namespace VirtoCommerce.ManagementClient.Import
 {
@@ -40,6 +41,7 @@ namespace VirtoCommerce.ManagementClient.Import
 			_container.RegisterType<IImportJobEntityFactory, ImportJobEntityFactory>(new ContainerControlledLifetimeManager());
 			_container.RegisterType<IImportRepository, DSImportClient>();
 			_container.RegisterType<IImportService, ImportService>();
+			_container.RegisterType<IDataManagementService, DataManagementService>();
 			
             ResourceDictionary resources = new ResourceDictionary();
             resources.Source = new Uri("/VirtoCommerce.ManagementClient.Import;component/ImportModuleDictionary.xaml", UriKind.Relative);
