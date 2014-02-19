@@ -33,9 +33,9 @@
 
 @section PageTitle
 {
-    <a href="@Url.Action("PaypalExpress", new {solutionType = (int)SolutionTypeType.SOLE})">
-          <img src="https://www.paypal.com/en_US/i/btn/btn_xpressCheckout.gif" align="left" style="margin-right:7px;">
-    </a>
+    @{
+        Html.RenderPartial("PaypalExpressButton");
+    }
 }
 
 <div class="checkout clearfix">

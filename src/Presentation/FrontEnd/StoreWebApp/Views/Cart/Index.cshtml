@@ -24,6 +24,8 @@
     <button class="proceed" onclick="VirtoCart.checkout();">
         <span>@("Proceed to Checkout".Localize())</span>
     </button>
+    <span style="margin: 10px 10px 10px 0; font-weight: bold;">@("Or".Localize())</span>
+    @{ Html.RenderPartial("PaypalExpressButton");}
 }
 
 

@@ -796,6 +796,7 @@
     <Content Include="Views\Shared\DisplayTemplates\ReviewTemplate.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\ReviewCommentTemplate.cshtml" />
     <Content Include="Views\Account\ResetPassword.cshtml" />
+    <Content Include="Views\Shared\PaypalExpressButton.cshtml" />
     <None Include="Web.Azure.config" />
   </ItemGroup>
   <ItemGroup>

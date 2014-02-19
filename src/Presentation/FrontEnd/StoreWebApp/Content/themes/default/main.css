@@ -1395,7 +1395,7 @@ button + button
 					text-transform: uppercase;
 				}
 
-				.page-nav .title p + *
+				.page-nav .title *:not(:first-child)
 				{
 					float: right;
 				}
