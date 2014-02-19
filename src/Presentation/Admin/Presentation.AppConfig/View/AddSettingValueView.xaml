@@ -23,7 +23,9 @@
 		</Grid.RowDefinitions>
 
 		<StackPanel Grid.Row="4" Margin="0,8,0,0" DataContext="{Binding Path=DataContext, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type base:ViewBase}}}">
-			<TextBlock Text="Value:"/>
+            <!--<TextBlock Text="Value:"/>-->
+            <TextBlock Text="{Loc Value:}"/>
+            <TextBlock Text="{Loc 'other Value:'}"/>
 
 			<TextBox Visibility="{Binding IsShortStringValue, Converter={StaticResource booleanToVisibilityConverter}}"
                     Text="{Binding ShortTextValue, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>

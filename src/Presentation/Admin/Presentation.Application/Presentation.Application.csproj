@@ -199,6 +199,7 @@
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsFormsIntegration" />
     <Reference Include="WpfLocalization">
       <HintPath>..\..\..\..\Shared\WpfLocalization.dll</HintPath>
     </Reference>

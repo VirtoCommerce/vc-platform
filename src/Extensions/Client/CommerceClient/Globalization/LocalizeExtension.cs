@@ -94,12 +94,10 @@ namespace VirtoCommerce.Client.Globalization
             }
 
 			var repository = ServiceLocator.Current.GetInstance<IElementRepository>();
-
             var element = repository.Get(key, category, culture.Name);
             if (element == null)
             {
 				element = new Element { Name = key, Category = category, Culture = culture.Name, Value = source };
-
                 repository.Add(element);
             }
             return element;

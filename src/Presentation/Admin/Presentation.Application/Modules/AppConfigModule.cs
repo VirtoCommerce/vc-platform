@@ -2,6 +2,8 @@
 using System.Windows;
 using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Unity;
+using VirtoCommerce.Client.Globalization;
+using VirtoCommerce.Client.Globalization.Repository;
 using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.ManagementClient.AppConfig.ViewModel.AppConfig.Implementations;
 using VirtoCommerce.ManagementClient.AppConfig.ViewModel.AppConfig.Interfaces;
@@ -57,7 +59,11 @@ namespace VirtoCommerce.ManagementClient.AppConfig
 		protected void RegisterViewsAndServices()
 		{
 			_container.RegisterType<IAppConfigEntityFactory, AppConfigEntityFactory>(new ContainerControlledLifetimeManager());
-			_container.RegisterType<IAppConfigRepository, DSAppConfigClient>();
+            _container.RegisterType<IAppConfigRepository, DSAppConfigClient>();
+            var localElements = new XmlElementRepository(@"C:\Users\a\Dropbox\projects\LocalizationPOC\LocalizationClient\resource_temp");
+		    var inst = new CachedDatabaseElementRepository(_container.Resolve<IAppConfigRepository>(), localElements);
+		    _container.RegisterInstance<IElementRepository>(inst);
+            // _container.RegisterType<IElementRepository, >(new ContainerControlledLifetimeManager());
 
 			var resources = new ResourceDictionary
 				{
