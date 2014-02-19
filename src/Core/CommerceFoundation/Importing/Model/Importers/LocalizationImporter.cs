@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using VirtoCommerce.Foundation.AppConfig.Factories;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
@@ -44,10 +46,11 @@ namespace VirtoCommerce.Foundation.Importing.Model
 					break;
 				case ImportAction.InsertAndReplace:
 					var itemR = systemValues.FirstOrDefault(y => y.Name == "LanguageCode");
+					var itemRKey = systemValues.FirstOrDefault(y => y.Name == "Name");
 					if (itemR != null)
 					{
-						var originalItem = _repository.Localizations.Where(x => x.LanguageCode == itemR.Value).SingleOrDefault();
-						if (originalItem != null)
+						var originalItem = _repository.Localizations.Where(x => x.LanguageCode == itemR.Value && x.Name == itemRKey.Value).SingleOrDefault();
+						if (originalItem != null) 
 							_repository.Remove(originalItem);
 					}
 
@@ -56,12 +59,13 @@ namespace VirtoCommerce.Foundation.Importing.Model
 					break;
 				case ImportAction.Update:
 					var itemU = systemValues.FirstOrDefault(y => y.Name == "LanguageCode");
+					var itemUKey = systemValues.FirstOrDefault(y => y.Name == "Name");
 					if (itemU != null)
 					{
-						var origItem = _repository.Localizations.Where(x => x.LanguageCode == itemU.Value).SingleOrDefault();
+						var origItem = _repository.Localizations.Where(x => x.LanguageCode == itemU.Value && x.Name.Equals(itemUKey.Value, StringComparison.Ordinal)).SingleOrDefault();
 						if (origItem != null)
 						{
-							InitializeItem(origItem, systemValues);
+							InitializeItem(origItem, systemValues);							
 							_repository.Update(origItem);
 						}
 					}
@@ -82,7 +86,7 @@ namespace VirtoCommerce.Foundation.Importing.Model
 		private static Localization InitializeItem(Localization item, IEnumerable<ImportItem> systemValues)
 		{
 			if (item == null)
-				item = new Localization();
+				item = new AppConfigEntityFactory().CreateEntity<Localization>();
 			var itemProperties = item.GetType().GetProperties();
 			systemValues.ToList().ForEach(x => SetPropertyValue(item, itemProperties.FirstOrDefault(y => y.Name == x.Name), x.Value));
 

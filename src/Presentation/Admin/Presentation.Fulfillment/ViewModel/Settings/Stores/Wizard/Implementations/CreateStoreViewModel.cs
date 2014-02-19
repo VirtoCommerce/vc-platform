@@ -43,12 +43,14 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 			var TaxesStepViewModel = _taxesVmFactory.GetViewModelInstance(itemParameter);
 			var PaymentsStepViewModel = _paymentsVmFactory.GetViewModelInstance(itemParameter);
 			var NavigationStepViewModel = _navigationVmFactory.GetViewModelInstance(itemParameter);
+			//var SeoStepViewModel = _seoVmFactory.GetViewModelInstance(itemParameter);
 
 			RegisterStep(OverviewStepViewModel);
 			RegisterStep(LocalizationStepViewModel);
 			RegisterStep(TaxesStepViewModel);
 			RegisterStep(PaymentsStepViewModel);
 			RegisterStep(NavigationStepViewModel);
+			//RegisterStep(SeoStepViewModel);
 		}
 	}
 }

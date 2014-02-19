@@ -1,5 +1,6 @@
 #region Imports
 
+using System;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Caching.HttpCache;
 using VirtoCommerce.Client.Orders.StateMachines;
@@ -62,6 +63,7 @@ using VirtoCommerce.Web.Client.Services.Assets;
 
 namespace VirtoCommerce.Scheduling.Windows
 {
+    using VirtoCommerce.Foundation.Catalogs;
     using VirtoCommerce.Search.Providers.Lucene;
 
     public static class Bootstrapper
@@ -110,7 +112,7 @@ namespace VirtoCommerce.Scheduling.Windows
             container.RegisterType<ISearchIndexBuilder, CatalogItemIndexBuilder>("catalogitem");
 
             // If provider specified as lucene, use lucene libraries, otherwise use default, which is elastic search
-            if (searchConnection.Provider == "lucene")
+            if (string.Equals(searchConnection.Provider,SearchProviders.Lucene.ToString(), StringComparison.OrdinalIgnoreCase))
             {
                 // Lucene Search implementation
                 container.RegisterType<ISearchProvider, LuceneSearchProvider>();
@@ -140,6 +142,7 @@ namespace VirtoCommerce.Scheduling.Windows
             container.RegisterType<ICatalogEntityFactory, CatalogEntityFactory>(new ContainerControlledLifetimeManager());
 
             container.RegisterType<ICatalogRepository, EFCatalogRepository>();
+            container.RegisterType<ICatalogOutlineBuilder, CatalogOutlineBuilder>();
             container.RegisterType<IPricelistRepository, EFCatalogRepository>();
             container.RegisterType<ICatalogService, CatalogService>();
             container.RegisterType<IPriceListAssignmentEvaluator, PriceListAssignmentEvaluator>();

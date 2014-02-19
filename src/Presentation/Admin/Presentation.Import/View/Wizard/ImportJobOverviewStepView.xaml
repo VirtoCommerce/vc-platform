@@ -3,9 +3,9 @@
      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:extToolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
      xmlns:prism="http://www.codeplex.com/prism" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:converters="clr-namespace:VirtoCommerce.ManagementClient.Import.Infrastructure"
-     xmlns:inf="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure;assembly=VirtoCommerce.ManagementClient.Core"
-     xmlns:controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
-     xmlns:dialogs="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Dialogs;assembly=VirtoCommerce.ManagementClient.Core"
+              xmlns:inf="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure;assembly=VirtoCommerce.ManagementClient.Core"
+              xmlns:controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
+              xmlns:dialogs="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Dialogs;assembly=VirtoCommerce.ManagementClient.Core"
      mc:Ignorable="d" Width="600" MinHeight="300" VerticalAlignment="Top" HorizontalAlignment="Left"
      xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Import.Properties" LocalizationScope.ResourceManager="{ResourceManager res:Resources}">
     
@@ -57,9 +57,9 @@
 			<!-- Importing type -->
 			<TextBlock Grid.Row="0" Text="{Loc Importing_item_data_type}" Visibility="{Binding IsTypeSelectable, Converter={StaticResource booleanToVisibilityConverter}}" />
 			<ComboBox Grid.Row="1" ItemsSource="{Binding EntityImporters}" IsEnabled="{Binding IsInEditMode}"
-				SelectedValue="{Binding InnerItem.EntityImporter, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged,
-				Converter={StaticResource EntityTypeConverter}}"
-				Visibility="{Binding IsTypeSelectable, Converter={StaticResource booleanToVisibilityConverter}}">
+                          SelectedValue="{Binding InnerItem.EntityImporter, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged, 
+							Converter={StaticResource EntityTypeConverter}}" 
+						  Visibility="{Binding IsTypeSelectable, Converter={StaticResource booleanToVisibilityConverter}}">
 				<i:Interaction.Triggers>
 					<i:EventTrigger EventName="SelectionChanged">
 						<i:InvokeCommandAction Command="{Binding UpdateImportTypeCommand}" CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" />
@@ -69,9 +69,9 @@
 
 			<!-- Property set -->
 			<TextBlock Grid.Row="2" Text="{Loc Property_set}" Visibility="{Binding IsPropertySetSelectable, Converter={StaticResource booleanToVisibilityConverter}}" />
-			<ComboBox Grid.Row="3" ItemsSource="{Binding PropertySets}" SelectedValue="{Binding InnerItem.PropertySetId, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+			<ComboBox Grid.Row="3" ItemsSource="{Binding PropertySets}" SelectedValue="{Binding InnerItem.PropertySetId, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
      SelectedValuePath="PropertySetId" IsEnabled="{Binding IsInEditMode}" DisplayMemberPath="Name"
-     Visibility="{Binding IsPropertySetSelectable, Converter={StaticResource booleanToVisibilityConverter}}">
+							Visibility="{Binding IsPropertySetSelectable, Converter={StaticResource booleanToVisibilityConverter}}">
 				<i:Interaction.Triggers>
 					<i:EventTrigger EventName="SelectionChanged">
 						<i:InvokeCommandAction Command="{Binding UpdatePropertySetCommand}" CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" />
@@ -114,7 +114,7 @@
 			<TextBlock Grid.Row="0" Text="{Loc Catalog}" Visibility="{Binding IsCatalogSelectable, Converter={StaticResource booleanToVisibilityConverter}}" />
 			<ComboBox Grid.Row="1" ItemsSource="{Binding Catalogs}" IsEnabled="{Binding IsInEditMode}"
      DisplayMemberPath="Name" SelectedValuePath="CatalogId" SelectedValue="{Binding InnerItem.CatalogId, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
-     Visibility="{Binding IsCatalogSelectable, Converter={StaticResource booleanToVisibilityConverter}}">
+					  Visibility="{Binding IsCatalogSelectable, Converter={StaticResource booleanToVisibilityConverter}}">
 				<i:Interaction.Triggers>
 					<i:EventTrigger EventName="SelectionChanged">
 						<i:InvokeCommandAction Command="{Binding UpdateCatalogCommand}" CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" />
@@ -143,7 +143,7 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 				<ComboBox ItemsSource="{Binding ColumnDelimiters}" SelectedValue="{Binding InnerItem.ColumnDelimiter, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
-     DisplayMemberPath="DisplayName" SelectedValuePath="Value">
+                                DisplayMemberPath="DisplayName" SelectedValuePath="Value">
 					<i:Interaction.Triggers>
 						<i:EventTrigger EventName="SelectionChanged">
 							<i:InvokeCommandAction Command="{Binding UpdateColumnDelimiterCommand}" CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" />

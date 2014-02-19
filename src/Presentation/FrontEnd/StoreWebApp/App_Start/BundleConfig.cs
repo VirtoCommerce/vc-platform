@@ -1,4 +1,5 @@
 ﻿using System.Web.Optimization;
+using VirtoCommerce.Web.Virto.Helpers.MVC;
 
 namespace VirtoCommerce.Web
 {
@@ -7,7 +8,7 @@ namespace VirtoCommerce.Web
     /// </summary>
 	public class BundleConfig
 	{
-        public const string VirtoAdminStyles = "~/Content/VirtoAdmin";
+        public const string VirtoAdminStyles = "~/Content/VirtoAdmin/styles";
 
 		// For more information on Bundling, visit http://go.microsoft.com/fwlink/?LinkId=254725
         /// <summary>
@@ -28,12 +29,10 @@ namespace VirtoCommerce.Web
 
 			bundles.Add(new ScriptBundle("~/bundles/jquerymisc").Include(
 			"~/Scripts/v/virto-jquery.js",
-			"~/Scripts/jquery-jqzoom.js",
-				//"~/Scripts/jquery.gzoom.js",
-			"~/Scripts/jquery.nivo.slider.js",
+            "~/Scripts/cloudzoom.js",
 			"~/Scripts/jquery.rateit.js",
-			"~/Scripts/jquery-thickbox.js",
 			"~/Scripts/v/virto-commerce.js",
+            "~/Scripts/responsive/main.js",
 			"~/Scripts/v/validation.js"));
 
 			// Use the development version of Modernizr to develop with and learn from. Then, when you're
@@ -41,19 +40,21 @@ namespace VirtoCommerce.Web
 			bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
 						"~/Scripts/modernizr-*"));
 
-			bundles.Add(new StyleBundle("~/Content/themes/default/s").Include(
-				"~/Content/themes/default/styles.css",
-				"~/Content/themes/default/widgets.css",
-				"~/Content/themes/default/thickbox.css",
-				"~/Content/themes/default/jquery.ui.autocomplete.css",
-				"~/Content/themes/default/jquery.jqzoom.css",
-				"~/Content/themes/default/redesign.css",
-				"~/Content/themes/default/rateit.css",
-				"~/Content/themes/default/flags.css",
-				"~/Content/themes/default/virto_reviews.css",
-				"~/Content/themes/default/nivo-slider.css"));
+            bundles.Add(new ScriptBundle("~/bundles/responsive").Include(
+                "~/Scripts/responsive/virto.slider.js",
+                "~/Scripts/responsive/camera.js",
+                "~/Scripts/responsive/jquery.easing.{version}.js"
+                ));
 
-			bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
+            //SignalR
+            bundles.Add(new ScriptBundle("~/bundles/admin").Include(
+                 "~/Scripts/v/virto-jquery.js",
+                "~/Scripts/jquery.signalR-{version}.js",
+                "~/Scripts/v/virto-commerce.js",
+                "~/Scripts/v/validation.js"
+                ));
+
+            bundles.Add(new Bundle("~/Content/themes/base/css", new CssMinifyFix()).Include(
 						"~/Content/themes/base/jquery.ui.core.css",
 						"~/Content/themes/base/jquery.ui.resizable.css",
 						"~/Content/themes/base/jquery.ui.selectable.css",
@@ -70,9 +71,26 @@ namespace VirtoCommerce.Web
 						"~/Content/themes/base/jquery.ui.spinner.css",
 						"~/Content/themes/base/jquery.ui.menu.css"));
 
-            bundles.Add(new StyleBundle(VirtoAdminStyles).Include(
-                "~/Areas/VirtoAdmin/Content/site.css"
+            bundles.Add(new Bundle("~/Content/themes/default/css", new CssMinifyFix()).Include(
+                "~/Content/themes/default/reset.css",
+                "~/Content/themes/default/custom.css",
+                "~/Content/themes/default/grid.css",
+                "~/Content/themes/default/forms.css",
+                "~/Content/themes/default/popup.css",
+                "~/Content/themes/default/transition.css",
+                "~/Content/themes/default/main.css",
+                "~/Content/themes/default/responsive.css",
+                "~/Content/themes/default/camera.css",
+                "~/Content/themes/default/cloudzoom.css",
+                "~/Content/themes/default/messages.css",
+                "~/Content/themes/default/rateit.css",
+                "~/Content/themes/default/flags.css"
                 ));
+
+            //Admin part
+            bundles.Add(new StyleBundle(VirtoAdminStyles).Include(
+            "~/Areas/VirtoAdmin/Content/site.css"
+            ));
 		}
 	}
 }

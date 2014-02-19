@@ -142,9 +142,7 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure
 
 						if (success)
 						{
-							Items.Add(item);
-							var view = CollectionViewSource.GetDefaultView(Items);
-							view.MoveCurrentTo(item);
+							AfterItemAddSaved(item);
 						}
 					}
 					finally
@@ -153,6 +151,13 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure
 					}
 				}
 			});
+		}
+
+		protected virtual void AfterItemAddSaved(T item)
+		{
+			Items.Add(item);
+			var view = CollectionViewSource.GetDefaultView(Items);
+			view.MoveCurrentTo(item);
 		}
 
 		protected virtual void ItemAdd(Confirmation confirmation, IRepository repository, object itemFromRep)
@@ -180,10 +185,8 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure
 								});
 							OnUIThread(() =>
 								{
-									var item = CreateItem(itemFromRep);
-									Items.Add(item);
-									var view = CollectionViewSource.GetDefaultView(Items);
-									view.MoveCurrentTo(item);
+									var item = CreateItem(itemFromRep);									
+									AfterItemAddSaved(item);
 								});
 						}
 						finally

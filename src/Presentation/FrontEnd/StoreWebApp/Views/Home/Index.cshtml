@@ -1,24 +1,47 @@
 ﻿@{
+    Layout = "../Shared/_Layout.cshtml";
     ViewBag.Title = Html.Title("Home".Localize());
 }
-        <div class="main-container col1-layout">
-            <div class="main">
-                <div class="col-main">
-                    <div class="std">
-                        <div style="float: left; width: 653px;">
-                             @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeMain" });}
-                        </div>
-                        <div style="float: right; width: 280px;">
-                            <div style="margin: 0 0 10px;">
-                                @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeRightTop" });}
-                            </div>
-                            <div>
-                                @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeRightBottom" });}
-                             </div>
-                        </div>
-                        <div class="clearer">
-                        </div>                        
-                    </div>
-                </div>
-            </div>
-        </div>
+
+@section Slider{
+    @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "MainSlider" });}
+}
+
+<div class="home content">
+    <div class="products slider-products">
+        <header>
+            <h2>@("Staff pick".Localize())</h2>
+        </header>
+        <ul class="products-list slider-list grid">
+            @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeStaffPick" });}
+        </ul>
+    </div>    
+    <div class="products featured">
+        <header>
+            <h2>@("Featured Products".Localize())</h2>
+        </header>
+        <ul class="products-list grid">
+            @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeFeaturedProducts" });}
+        </ul>
+    </div>
+    <div class="products slider-products">
+        <header>
+            <h2>@("New Products".Localize())</h2>
+        </header>
+        <ul class="products-list slider-list grid">
+            @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeNewProducts" });}
+        </ul>
+    </div>
+</div>
+<div class="home sidebar">
+    <aside class="block">
+        <span class="title">@("Newsletter Sign-up".Localize())</span>
+        <p>@("Sign up for our newsletter".Localize())</p>
+        <form action="#" method="post" id="newsletter-validate-detail">
+            <input type="text" name="email" id="newsletter" title="@("Sign up for our newsletter".Localize())"class="required-entry validate-email" />
+            <button type="submit">
+                <span>@("subscribe".Localize())</span>
+            </button>
+        </form>
+    </aside>
+</div>

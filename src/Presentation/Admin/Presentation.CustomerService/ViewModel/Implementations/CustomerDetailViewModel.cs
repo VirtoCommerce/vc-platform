@@ -682,7 +682,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 
 		private void LoginOnBehalf()
 		{
-			var url = string.Format("{0}?loginAs={1}&store={2}", _loginViewModel.BaseUrl, CurrentContactLoginUserName, _currentContactStoreId);
+			var url = string.Format("{0}?loginAs={1}&store={2}", _loginViewModel.CurrentUser.BaseUrl, CurrentContactLoginUserName, _currentContactStoreId);
 			// open the browser
 			Process.Start(url);
 		}

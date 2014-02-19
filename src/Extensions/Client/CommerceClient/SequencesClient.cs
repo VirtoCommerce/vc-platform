@@ -59,7 +59,7 @@ namespace VirtoCommerce.Client
 	                        startCounter = sequence.Value;
 
 							//Sequence in database has expired?
-	                        if (sequence.LastModified.HasValue && sequence.LastModified.Value.Date < DateTime.Now.Date)
+	                        if (sequence.LastModified.HasValue && sequence.LastModified.Value.Date < DateTime.UtcNow.Date)
 	                        {
 		                        startCounter = 0;
 	                        }
@@ -83,6 +83,8 @@ namespace VirtoCommerce.Client
 
 						//Commit changes
 						sequence.Value = endCounter;
+                        //To ensure that sequence is changed and will be saved on commit
+                        sequence.LastModified = DateTime.UtcNow;
                         _repository.UnitOfWork.Commit();
 
 						//Transaction success
@@ -120,7 +122,7 @@ namespace VirtoCommerce.Client
 
 			public bool HasExpired
 			{
-				get { return _lastGenerationDateTime.HasValue && _lastGenerationDateTime.Value.Date < DateTime.Now.Date; }
+                get { return _lastGenerationDateTime.HasValue && _lastGenerationDateTime.Value.Date < DateTime.UtcNow.Date; }
 			}
 
 		    public bool IsEmpty
@@ -139,12 +141,12 @@ namespace VirtoCommerce.Client
 				for (var index = startCount; index < endCount; index++)
 				{
 					var strCount = index.ToString(CultureInfo.InvariantCulture).PadLeft(CounterLength, '0');
-					generatedItems.Push(string.Format(IdTemplate, _prefix, DateTime.Now.ToString(DateFormat), strCount));
+					generatedItems.Push(string.Format(IdTemplate, _prefix, DateTime.UtcNow.ToString(DateFormat), strCount));
 				}
 
 				//This revereses the sequence
 				_sequence = new Stack<string>(generatedItems);
-				_lastGenerationDateTime = DateTime.Now;
+				_lastGenerationDateTime = DateTime.UtcNow;
 			}	
 	    }
 

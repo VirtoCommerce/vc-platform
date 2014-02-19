@@ -1,15 +1,12 @@
 ﻿@model VirtoCommerce.Foundation.Orders.Model.Order[]
 @{
-    ViewBag.Title = Html.Title("My Orders".Localize());
-    Layout = "_Layout.cshtml";
+    ViewBag.PageTitle = SiteMaps.Current.CurrentNode != null ? SiteMaps.Current.CurrentNode.Title.Localize() : "Orders".Localize();
+    ViewBag.Title = Html.Title(ViewBag.PageTitle as string);
 }
-<div class="page-title">
-    <h1>@("My Orders".LocalizeHtml())</h1>
-</div>
 
 @if (Model == null || !Model.Any())
 {
-	<p>@("You have placed no orders.".LocalizeHtml())</p>
+    Html.SharedViewBag().Messages = new MessagesModel { new MessageModel("You have placed no orders.".Localize(), MessageType.Notice) };
 }
 else
 {
@@ -18,6 +15,8 @@ else
 	@Html.DisplayForModel("OrdersPager")
 }
     
-<div class="buttons-set">
-    <p class="back-link"><a href="#"><small>« </small>@("Back".LocalizeHtml())</a></p>
+<div class="buttons clearfix">
+    <a href="@Url.Action("Index")" class="back">«@("Back".Localize())</a>
 </div>
+
+							

@@ -13,9 +13,10 @@ namespace VirtoCommerce.ManagementClient.Marketing.Model
 		private readonly UserInputElement _subTotalEl;
 
 		public ConditionCartSubtotalLeast(IExpressionViewModel expressionViewModel)
-			: base("Cart subtotal is at least $ []", expressionViewModel)
+			: base("Cart subtotal is []", expressionViewModel)
 		{
-			WithLabel("Cart subtotal is at least $");
+			WithLabel("Cart subtotal is ");
+			ExactlyLeast = WithElement(new ExactlyLeast()) as ExactlyLeast;
 			_subTotalEl = WithUserInput<decimal>(0, 0) as UserInputElement;
 			WithAvailableExcluding(() => new ItemsInCategory(expressionViewModel));
 			WithAvailableExcluding(() => new ItemsInEntry(expressionViewModel));
@@ -34,6 +35,7 @@ namespace VirtoCommerce.ManagementClient.Marketing.Model
 			}
 		}
 
+		public ExactlyLeast ExactlyLeast { get; set; }
 
 		public override linq.Expression<Func<IEvaluationContext, bool>> GetExpression()
 		{
@@ -43,8 +45,8 @@ namespace VirtoCommerce.ManagementClient.Marketing.Model
 			var methodInfo = typeof(PromotionEvaluationContext).GetMethod("GetTotalWithExcludings");
 			var methodCall = linq.Expression.Call(castOp, methodInfo, ExcludingCategoryIds.GetNewArrayExpression(),
 																	  ExcludingProductIds.GetNewArrayExpression(), ExcludingSkuIds.GetNewArrayExpression());
-			
-			var binaryOp = linq.Expression.GreaterThanOrEqual(methodCall, subTotal);
+
+			var binaryOp = ExactlyLeast.IsExactly ? linq.Expression.Equal(methodCall, subTotal) : linq.Expression.GreaterThanOrEqual(methodCall, subTotal);
 
 			var retVal = linq.Expression.Lambda<Func<IEvaluationContext, bool>>(binaryOp, paramX);
 

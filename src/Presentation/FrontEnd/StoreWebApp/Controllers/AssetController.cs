@@ -9,7 +9,6 @@ namespace VirtoCommerce.Web.Controllers
 	/// <summary>
 	/// Class AssetController.
 	/// </summary>
-	[Localize]
 	public class AssetController : ControllerBase
     {
 		/// <summary>

@@ -1,53 +1,35 @@
 ﻿@model CartModel
            
-<table class="onestepcheckout-summary data-table cart-table">
+<table class="data-table">
     <thead>
         <tr>
-            <th class="name">@("Product".LocalizeHtml())</th>
-            <th class="qty">@("Qty".LocalizeHtml())</th>
-            <th class="total">@("Subtotal".LocalizeHtml())</th>
+            <th align="left">@("Product".Localize())</th>
+            <th>@("Qty".Localize())</th>
+            <th align="right">@("Subtotal".Localize())</th>
         </tr>
     </thead>
     <tbody>
-    @for (var i=0;i<Model.LineItems.Count();i++)
-    {
-        @Html.DisplayFor(m => Model.LineItems[i], "LineItem", new { index = i, total = Model.LineItems.Count()})
-    }
+        @for (var i = 0; i < Model.LineItems.Count(); i++)
+        {
+            @Html.DisplayFor(m => Model.LineItems[i], "LineItem", new { index = i, total = Model.LineItems.Count() })
+        }
     </tbody>
-</table>
-<table class="onestepcheckout-totals">
-    <tbody>
+     <tfoot>
         <tr>
-            <td class="title">
-                @("Subtotal".LocalizeHtml())
-            </td>
-            <td class="value">
-                <span class="price">@Model.SubTotalPriceFormatted</span>
-            </td>
+            <td  align="right" colspan="2">@("Subtotal".Localize())</td>
+            <td>@Model.SubTotalPriceFormatted</td>
         </tr>
 	    <tr>
-		    <td class="title">
-			    @("Shipping".LocalizeHtml())
-		    </td>
-		    <td class="value">
-			    <span class="price">@Model.ShippingPriceFormatted</span>
-		    </td>
+		    <td  align="right" colspan="2">@("Shipping".Localize())</td>
+		    <td>@Model.ShippingPriceFormatted</td>
 	    </tr>
 		<tr>
-            <td class="title">
-                @("Tax total".LocalizeHtml())
-            </td>
-            <td class="value">
-                <span class="price">@Model.TaxTotalPriceFormatted</span>
-            </td>
+            <td  align="right" colspan="2">@("Tax total".Localize())</td>
+            <td>@Model.TaxTotalPriceFormatted</td>
         </tr>
-        <tr class="grand-total">
-            <td class="title">
-                @("Grand total".LocalizeHtml())
-            </td>
-            <td class="value">
-                <span class="price">@Model.TotalPriceFormatted</span>
-            </td>
+        <tr>
+            <td  align="right" colspan="2" class="grand">@("Grand total".Localize())</td>
+            <td class="grand">@Model.TotalPriceFormatted</td>
         </tr>
-    </tbody>
+    </tfoot>
 </table>

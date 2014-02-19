@@ -2,17 +2,50 @@
 @using System.Web.Mvc.Html
 @using System.Linq
 @using MvcSiteMapProvider.Web.Html.Models
+@using VirtoCommerce.Foundation.Catalogs.Services
+@using VirtoCommerce.Web.Virto.Helpers
+
+@functions 
+{
+
+    private string GetCategoryName(Category category)
+    {
+        var retValue = category.Name;
+        var title = CatalogHelper.CatalogClient.GetPropertyValueByName(category, "Title", true);
+        if (title != null)
+        {
+            retValue = title.ToString();
+        }
+        return retValue;
+    }
+
+}
+
 @if (Model.Count() > 1)
 {
-<div class="breadcrumbs">
-@foreach (var node in Model)
-{ 
-    <li>@Html.DisplayFor(m => node)
-    @if (node != Model.Last())
-    {
-        <span>/ </span>
-    }
-    </li>
-}
-</div>
+    <div class="breadcrumbs">
+        <ul>
+            
+            @foreach (var node in Model)
+            {
+                if (node.Attributes.ContainsKey("ShowBack"))
+                {
+                    @:<a href="@UserHelper.CustomerSession.LastShoppingPage">< Back to results</a> &nbsp; | &nbsp;        
+                }
+                 if (node.Attributes.ContainsKey("Outline"))
+                 {
+                     foreach (var category in ((BrowsingOutline)node.Attributes["Outline"]).Categories)
+                     {
+
+                        <li>
+                            @Html.ActionLink(GetCategoryName(category), "Display", "Catalog", new { category = category.Code }, null)
+                        </li>
+                     }
+                 }
+                <li>
+                    @Html.DisplayFor(m => node, "SiteMapPathNodeModel")
+                </li>
+            }
+        </ul>
+    </div>
 }

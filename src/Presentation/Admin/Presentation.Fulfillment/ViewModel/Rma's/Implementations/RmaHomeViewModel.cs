@@ -17,9 +17,11 @@ using domainModel = VirtoCommerce.Foundation.Orders.Model.Fulfillment;
 using VirtoCommerce.Foundation.Orders.Model;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
 using System.Threading.Tasks;
+using PropertyChanged;
 
 namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Rmas.Implementations
 {
+	[ImplementPropertyChanged]
     public class RmaHomeViewModel :
 		ViewModelHomeEditableBase<RmaRequest>, 
 		IRmaHomeViewModel, IVirtualListLoader<IRmaViewModel>, ISupportDelayInitialization
@@ -38,12 +40,15 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Rmas.Implementati
 		public object SearchFilterStatus { get; set; }
 		#endregion
 
-
+		#region Properties
+		
 		public string[] AvailableReasons
 		{
 			get;
 			private set;
 		}
+
+		#endregion
 
 		#region Dependencies
 
@@ -102,7 +107,9 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Rmas.Implementati
 		#endregion
 		
 		#region Commands
+
 		public DelegateCommand ClearFiltersCommand { get; private set; }
+
 		#endregion
 
 		#region Requests
@@ -110,6 +117,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Rmas.Implementati
 		#endregion
 
 		#region IRmaHomeViewModel members
+
 		public IMainFulfillmentViewModel ParentViewModel { get; set; }
 
 		#endregion
@@ -197,8 +205,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Rmas.Implementati
         #endregion
 
 		#region private members
-				
-
+		
 		private void DoClearFilters()
 		{
 			SearchFilterAuthorizationCode = null;
@@ -207,19 +214,13 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Rmas.Implementati
 			SearchFilterReason = null;
 			SearchFilterOrderTrackingNumber = null;
 			SearchFilterCustomerName = null;
-
-			OnSpecifiedPropertyChanged("SearchFilterFulfillment");
-			OnSpecifiedPropertyChanged("SearchFilterAuthorizationCode");
-			OnSpecifiedPropertyChanged("SearchFilterItemCode");
-			OnSpecifiedPropertyChanged("SearchFilterItemName");
-			OnSpecifiedPropertyChanged("SearchFilterCustomerName");
-			OnSpecifiedPropertyChanged("SearchFilterOrderTrackingNumber");
-			OnSpecifiedPropertyChanged("SearchFilterReason");
 		}
 
 		#endregion
+
+		#region ViewModelHomeEditableBase overrides
 		
-	    protected override bool CanItemAddExecute()
+		protected override bool CanItemAddExecute()
 	    {
 		    return false;
 	    }
@@ -239,6 +240,8 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Rmas.Implementati
 	    {
 			throw new ApplicationException("Can't delete RmaRequest this way");
 		    //throw new NotImplementedException();
-	    }
+		}
+
+		#endregion
 	}
 }

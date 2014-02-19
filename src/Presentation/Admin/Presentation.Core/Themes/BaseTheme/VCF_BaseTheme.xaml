@@ -291,7 +291,7 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type core_controls:WatermarkedTextBox}">
-                    <Border x:Name="Bd" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" MaxHeight="{TemplateBinding Height}" Background="{TemplateBinding Background}" 
+                    <Border x:Name="Bd" Width="{TemplateBinding Width}" MaxWidth="{TemplateBinding Width}" Height="{TemplateBinding Height}" MaxHeight="{TemplateBinding Height}" Background="{TemplateBinding Background}" 
 							BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" >
                         <Grid Margin="0" ClipToBounds="True">
                             <ScrollViewer x:Name="PART_ContentHost" 
@@ -299,7 +299,7 @@
                             <TextBlock x:Name="WatermarkText" Margin="2" Grid.Column="0" Style="{StaticResource Virto_Base_TextBlock_Watermark_Style}" 
 								   Text="{TemplateBinding WatermarkText}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
 								   Visibility="Hidden"/>
-							<TextBlock Margin="2" Text="{TemplateBinding Text}" x:Name="TrimmedText" TextTrimming="CharacterEllipsis" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+							<TextBlock Margin="2" Text="{TemplateBinding Text}" x:Name="TrimmedText" TextTrimming="CharacterEllipsis" TextWrapping="{TemplateBinding TextWrapping}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                                Style="{StaticResource Virto_Base_TextBlock_Style}" Visibility="Hidden" ToolTip="{TemplateBinding Text}"/>
                         </Grid>
                     </Border>
@@ -341,14 +341,12 @@
     </Style>
 
     <!--Multiline WatermarkedTextBox-->
-    <Style x:Key="Virto_Base_Multiline_WatermarkedTextBox_Style" TargetType="{x:Type core_controls:WatermarkedTextBox}" BasedOn="{StaticResource Virto_Base_WatermarkTextBox_Style}">
+	<Style x:Key="Virto_Base_Multiline_WatermarkedTextBox_Style" TargetType="{x:Type core_controls:WatermarkedTextBox}" BasedOn="{StaticResource Virto_Base_WatermarkTextBox_Style}">
         <Setter Property="AcceptsReturn" Value="True" />
         <Setter Property="TextWrapping" Value="Wrap" />
         <Setter Property="VerticalContentAlignment" Value="Stretch" />
         <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
-        <!--can't set WatermarkText in style because it's overriden in default constructor
-		<Setter Property="WatermarkText" Value="" />-->
-    </Style>
+	</Style>
 
 	<ControlTemplate x:Key="Virto_IntergerUpDown_ErrorTemplate_ControlTemplate">
 		<ControlTemplate.Resources>

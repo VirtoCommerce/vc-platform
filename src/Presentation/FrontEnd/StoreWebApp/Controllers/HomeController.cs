@@ -7,7 +7,6 @@ namespace VirtoCommerce.Web.Controllers
 	/// <summary>
 	/// Class HomeController.
 	/// </summary>
-	[Localize]
 	public class HomeController : ControllerBase
     {
 		/// <summary>

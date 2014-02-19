@@ -1,0 +1,124 @@
+fieldset
+{
+	border: none;
+	margin: 0;
+	padding: 0;
+}
+
+input[type="text"],
+input[type="password"],
+textarea,
+select
+{
+	border: 1px solid #e0e0e0;
+	font-family: 'Open Sans';
+	font-size: 12px;
+    height: 19px;
+    padding: 4px 7px;
+
+    -webkit-border-radius: 2px;
+       -moz-border-radius: 2px;
+    		border-radius: 2px;
+
+    -webkit-box-shadow: 0 0 5px 0 #eaeaea inset;
+       -moz-box-shadow: 0 0 5px 0 #eaeaea inset;
+    		box-shadow: 0 0 5px 0 #eaeaea inset;
+}
+
+select
+{
+	height: auto;
+}
+
+.normal
+{
+	width: auto;
+}
+
+	select option
+	{
+		padding: 0 10px 0 0;
+	}
+
+.control-group
+{
+	margin: 0 0 10px;
+	overflow: hidden;
+}
+
+.button-group
+{
+	margin: 0 0 25px;
+}
+
+	.control-group label
+	{
+		display: block;
+		margin: 0 0 5px;
+	}
+
+		.control-group label sup
+		{
+			font-size: 12px;
+			vertical-align: top;
+		}
+
+	.control-group .control
+	{
+		float: left;
+		line-height: 30px;
+	}
+
+		.control label
+		{
+			cursor: pointer;
+			display: block;
+			line-height: 30px;
+		}
+
+			.control label input
+			{
+				float: left;
+				margin: 0 10px 0 0;
+				width: auto !important;
+			}
+
+	.control-group input,
+	.control-group textarea
+	{
+		width: 260px;
+	}
+
+	.control-group textarea
+	{
+		height: 120px;
+		max-height: 120px;
+		max-width: 260px;
+		min-height: 120px;
+		min-width: 260px;
+	}
+
+	.control-group input.error
+	{
+		background: #faebe7;
+		border: 1px dashed #eb340a;
+	}
+
+	.control-group span.error
+	{
+		color: #eb340a;
+		display: block;
+		font-size: 11px;
+		margin: 5px 0;
+	}
+
+	.control-group .column
+	{
+		float: left;
+		width: 48%;
+	}
+
+	.control-group .column + .column
+	{
+		float: right;
+	}

@@ -120,6 +120,8 @@ namespace VirtoCommerce.ManagementClient.Security
             moduleManager.LoadModule("FulfillmentModule");
             moduleManager.LoadModule("CustomersModule");
 
+            moduleManager.LoadModule("ReportingModule");
+
         }
 
         private void InitializeMainModule()

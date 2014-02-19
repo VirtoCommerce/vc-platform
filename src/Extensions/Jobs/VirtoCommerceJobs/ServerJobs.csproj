@@ -43,6 +43,7 @@
     <Compile Include="..\..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="RemoveExpiredPromotionReservations.cs" />
     <Compile Include="GenerateSearchIndexWork.cs" />
     <Compile Include="ProcessOrderStatusWork.cs" />
     <Compile Include="ProcessSearchIndexWork.cs" />

@@ -17,13 +17,13 @@ namespace VirtoCommerce.Foundation.Marketing.Model
 
 		public int GetTotalUsageCount(string promotionId)
 		{
-			var retVal = _repository.PromotionUsages.Count(x => x.PromotionId == promotionId);
+			var retVal = _repository.PromotionUsages.Count(x => x.PromotionId == promotionId && x.Status != (int)PromotionUsageStatus.Expired);
 			return retVal;
 		}
 
 		public int GetUsagePerCustomerCount(string promotionId, string customerId)
 		{
-			var retVal = _repository.PromotionUsages.Count(x => x.PromotionId == promotionId && x.MemberId == customerId);
+            var retVal = _repository.PromotionUsages.Count(x => x.PromotionId == promotionId && x.MemberId == customerId && x.Status != (int)PromotionUsageStatus.Expired);
 			return retVal;
 		}
 

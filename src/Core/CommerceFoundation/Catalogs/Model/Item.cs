@@ -213,6 +213,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
         [DataMember]
         [StringLength(64)]
         [Required]
+		[CustomValidation(typeof(Item), "ValidateItemCode", ErrorMessage = @"Code can't contain $+;=%{}[]|\/@ ~#!^*&()?:'<>, characters")]
         public string Code
         {
             get
@@ -331,6 +332,23 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 
         #endregion
 
+		public static ValidationResult ValidateItemCode(string value, ValidationContext context)
+		{
+			if (value == null || string.IsNullOrEmpty(value))
+			{
+				return new ValidationResult("Code can't be empty");
+			}
 
+			const string invalidCodeCharacters = @"$+;=%{}[]|\/@ ~#!^*&()?:'<>,";
+
+			if (value.IndexOfAny(invalidCodeCharacters.ToCharArray()) > -1)
+			{
+				return new ValidationResult((@"Code must be valid"));
+			}
+			else
+			{
+				return ValidationResult.Success;
+			}
+		}
     }
 }

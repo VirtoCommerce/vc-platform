@@ -1,0 +1,147 @@
+/* HTML 5 elements 
+====================================*/
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section
+{ 
+	display: block;
+}
+
+*
+{
+	margin: 0;
+	outline: none;
+	padding: 0;
+}
+
+html, body
+{
+	height: 100%;
+	width: 100%;
+}
+
+body
+{
+	background: #fafafa;
+	color: #1b1a19;
+	font-family: Arial;
+	font-size: 12px;
+	line-height: 1.4;
+}
+
+/* Use for tables two lines */
+.nobr
+{
+	white-space: nowrap;
+}
+
+/* Clearfix 
+====================================*/
+.clearfix:after
+{
+	clear: both;
+	content: '';
+	display: block;
+	font-size: 0;
+}
+
+.required
+{
+	color: #eb340a;
+}
+
+/* Images 
+====================================*/
+img
+{
+	border: none;
+}
+
+/* Headings 
+====================================*/
+h1, h2, h3
+{
+	color: rgba(0, 0, 0, 0.75);
+	font-family: 'Open Sans';
+	font-weight: 400;
+	letter-spacing: -.1em;
+	text-transform: uppercase;
+}
+
+h1
+{
+	font-size: 30px;
+	letter-spacing: -1px;
+	line-height: 34px;
+	text-transform: none;
+}
+
+h2
+{
+	font-size: 24px;
+}
+
+h3
+{
+	font-size: 18px;
+}
+
+/* Paragraphs 
+====================================*/
+p
+{
+	
+}
+
+address
+{
+	font-style: normal;
+}
+
+/* Links 
+====================================*/
+a
+{
+	color: #828282;
+	text-decoration: none;
+}
+
+a:visited
+{
+
+}
+
+a:hover,
+.head-links li a:hover
+{
+	color: #5bd2ec;
+}
+
+/* Lists 
+====================================*/
+ul
+{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+ul li
+{
+
+}
+
+/* Tables 
+====================================*/
+table
+{
+	border-collapse: collapse;
+	border-spacing: 0;
+	padding: 0;
+}
+
+/* Forms 
+===================================*/
+input,
+textarea
+{
+	font-family: sans-serif;
+}

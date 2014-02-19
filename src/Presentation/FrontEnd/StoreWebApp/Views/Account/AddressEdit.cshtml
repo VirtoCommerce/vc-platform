@@ -1,36 +1,150 @@
 ﻿@using VirtoCommerce.Web.Virto.Helpers
 @model AddressEditModel
 @{
-	ViewBag.Title = "addressbook";
-	Layout = "_Layout.cshtml";
-	var backUrl = String.IsNullOrEmpty(Request["OrganizationId"]) ? Url.Action("AddressBook", "Account") : Url.Action("CompanyAddressBook", "Account");
+    ViewBag.Title = ViewBag.PageTitle = "Edit Address".Localize();
 }
-<script type="text/javascript" language=javascript>
+<script type="text/javascript" language="javascript">
 
-	$(document).ready(function () {
-		var id = '@ViewData.TemplateInfo.GetFullHtmlFieldId(String.Empty)';
-		var c = new VirtoAddress(id);
-		$('#Address_StateProvinceId option:selected').each(function(){
-			this.selected=false;
-		});
-		$('#Address_StateProvinceId option[value="@Model.Address.StateProvince"]').attr("selected", "selected");
-		$('div.block-content ul li').each(function()
-			{
-				$(this).removeClass('current');
-				if ($(this).html().indexOf('Address Book') > 0)
-				{
-					$(this).addClass('current');
-				}
-				
-			}
-		);		
-	});
-	var v_regions = @Html.JsonSerialize(Model.ScriptCountryRegions);
-</script>
-<script type="text/javascript">
+    $(document).ready(function () {
+        var id = '@ViewData.TemplateInfo.GetFullHtmlFieldId(String.Empty)';
+        var c = new VirtoAddress(id);
+        
+        //$('#Address_StateProvinceId option:selected').each(function(){
+        //    this.selected=false;
+        //});
+        $('#Address_StateProvinceId option[value="@Model.Address.StateProvince"]').attr("selected", "selected");
+        $('#Address_StateProvinceId').trigger('change');
 
+    });
+    var v_regions = @Html.JsonSerialize(Model.ScriptCountryRegions);
 </script>
-<form method="post" action="@Url.Action("AddressEdit", "Account")">
+
+@using (Html.BeginForm("AddressEdit", "Account", FormMethod.Post))
+{
+    @Html.HiddenFor(m => m.Address.AddressId)
+    @Html.HiddenFor(m => m.Address.Name)
+    @Html.HiddenFor(m => m.Address.CountryName)
+    @Html.HiddenFor(m => m.OrganizationId, new { @value = @Request["OrganizationId"] })
+    <fieldset>
+        <div class="block">
+            <div class="title">
+                <span>@("Account Information".Localize())</span>
+            </div>
+            <div class="info clearfix">
+                <div class="col">
+                    <div class="control-group">
+                        @Html.LabelForEx(m => m.Address.FirstName)
+                        @Html.TextBoxFor(m => m.Address.FirstName)
+                        @Html.ValidationMessageFor(m => m.Address.FirstName)
+                    </div>
+                    <div class="control-group">
+                        @Html.LabelForEx(m => m.Address.LastName)
+                        @Html.TextBoxFor(m => m.Address.LastName)
+                        @Html.ValidationMessageFor(m => m.Address.LastName)
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="control-group">
+                        @Html.LabelForEx(m => m.Address.Email)
+                        @Html.TextBoxFor(m => m.Address.Email)
+                        @Html.ValidationMessageFor(m => m.Address.Email)
+                    </div>
+                    <div class="control-group">
+                        @Html.LabelForEx(m => m.Address.DaytimePhoneNumber)
+                        @Html.TextBoxFor(m => m.Address.DaytimePhoneNumber)
+                        @Html.ValidationMessageFor(m => m.Address.DaytimePhoneNumber)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <div class="block">
+            <div class="title">
+                <span>@("Address Information".Localize())</span>
+            </div>
+            <div class="info">
+                <div class="control-group">
+                    @Html.LabelForEx(m => m.Address.Line1)
+                    @Html.TextBoxFor(m => m.Address.Line1)
+                    @Html.ValidationMessageFor(m => m.Address.Line1)
+                    <div class="control-group">
+                        @Html.TextBoxFor(m => m.Address.Line2)
+                        @Html.ValidationMessageFor(m => m.Address.Line2)
+                    </div>
+                    <div class="control-group">
+                        @Html.LabelForEx(m => m.Address.CountryCode)
+                        @Html.DropDownListFor(m => m.Address.CountryCode, new SelectList(Model.Countries, "CountryId", "DisplayName"))
+                        @Html.ValidationMessageFor(m => m.Address.CountryCode)
+                    </div>
+                    <div class="control-group">
+                        <div class="col">
+                            @Html.LabelForEx(m => m.Address.City)
+                            @Html.TextBoxFor(m => m.Address.City)
+                            @Html.ValidationMessageFor(m => m.Address.City)
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="col">
+                            @Html.LabelForEx(m => m.Address.PostalCode)
+                            @Html.TextBoxFor(m => m.Address.PostalCode)
+                            @Html.ValidationMessageFor(m => m.Address.PostalCode)
+                        </div>
+                        <div class="col">
+                            @Html.LabelForEx(m => m.Address.StateProvince)
+                            @Html.DropDownList("Address_StateProvinceId", new SelectList(new[] { "select state/province" }))
+                            @Html.TextBoxFor(m => m.Address.StateProvince, new { style = "display:none" })<br />
+                            @Html.ValidationMessageFor(m => m.Address.StateProvince)
+                        </div>
+                    </div>
+                    <div class="control-group">
+                        <div class="col">
+                            @Html.LabelForEx(m => m.Address.Organization)
+                            @Html.TextBoxFor(m => m.Address.Organization)
+                            @Html.ValidationMessageFor(m => m.Address.Organization)
+                        </div>
+                        <div class="col">
+                            @Html.LabelForEx(m => m.Address.FaxNumber)
+                            @Html.TextBoxFor(m => m.Address.FaxNumber)
+                            @Html.ValidationMessageFor(m => m.Address.FaxNumber)
+                        </div>
+                    </div>
+                    @if (!String.IsNullOrEmpty(Model.Address.AddressId) && Model.Address.Name != null)
+                    {
+                        <div class="control-group">
+                            <div class="control">
+                                @if (!Model.Address.Name.Contains(UserHelper.DefaultBilling))
+                                {<label>
+                                    @Html.CheckBoxFor(m => m.IsDefaultBilling)
+                                    <span>@("Save as Default Billing Address".Localize())</span>
+                                </label>
+                                }
+
+
+                                @if (!Model.Address.Name.Contains(UserHelper.DefaultShipping))
+                                {
+                                    <label>
+                                        @Html.CheckBoxFor(m => m.IsDefaultShipping)
+                                        <span>@("Save as Default Shipping Address".Localize())</span>
+                                    </label>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </fieldset>
+    <div class="buttons">
+        <p class="required">* @("Required Fields".Localize())</p>
+        <button>
+            <span>@("Save Address".Localize())</span>
+        </button>
+        <a href="@Url.Action("AddressBook", "Account")" class="back">« @("Back".Localize())</a>
+    </div>
+}
+
+@*<form method="post" action="@Url.Action("AddressEdit", "Account")">
 	<h1>@("Edit Address".LocalizeHtml())</h1>
 	@Html.HiddenFor(m => m.Address.AddressId)
 	@Html.HiddenFor(m => m.Address.Name)
@@ -84,7 +198,7 @@
 			</li>
 			<li class="wide">
 				<div class="field input-country">
-					@Html.LabelForEx(m=> m.Address.CountryCode)
+					@Html.LabelForEx(m => m.Address.CountryCode)
 					@Html.DropDownListFor(m => m.Address.CountryCode, new SelectList(Model.Countries, "CountryId", "DisplayName"))
 					@Html.ValidationMessageFor(m => m.Address.CountryCode)
 				</div>
@@ -111,32 +225,32 @@
 			</li>
 			<li class="clearfix">
 				<div class="field input-company">
-					@Html.LabelForEx(m=> m.Address.Organization)
+					@Html.LabelForEx(m => m.Address.Organization)
 					@Html.TextBoxFor(m => m.Address.Organization, new { @class = "input-text" })
 					@Html.ValidationMessageFor(m => m.Address.Organization)
 				</div>
 				<div class="field input-fax">
-					@Html.LabelForEx(m=> m.Address.FaxNumber)
+					@Html.LabelForEx(m => m.Address.FaxNumber)
 					@Html.TextBoxFor(m => m.Address.FaxNumber, new { @class = "input-text" })
 					@Html.ValidationMessageFor(m => m.Address.FaxNumber)
 				</div>
 			</li>
 		</ul>
 		@if (!String.IsNullOrEmpty(Model.Address.AddressId) && Model.Address.Name != null)
-		{
-			if (!Model.Address.Name.Contains(UserHelper.DefaultBilling))
-			{
+  {
+      if (!Model.Address.Name.Contains(UserHelper.DefaultBilling))
+      {
 				@Html.CheckBoxFor(m => m.IsDefaultBilling, null)
 				@Html.LabelForEx(m => m.IsDefaultBilling)
-			}
+      }
 			
 			<br />
-			if (!Model.Address.Name.Contains(UserHelper.DefaultShipping))
-			{
+      if (!Model.Address.Name.Contains(UserHelper.DefaultShipping))
+      {
 				@Html.CheckBoxFor(m => m.IsDefaultShipping)
 			    @Html.LabelForEx(m => m.IsDefaultShipping)
-			}
-		}
+      }
+  }
 	</div>
 	<div class="buttons-set">
 		<p class="required">* @("Required Fields".LocalizeHtml())</p>
@@ -145,4 +259,4 @@
 		<small>« </small>@("Back".LocalizeHtml())</a></p>
 		<button class="button" title="@("Save Address".LocalizeHtml())" type="submit"><span><span>@("Save Address".LocalizeHtml())</span></span></button>
 	</div>
-</form>
+</form>*@

@@ -50,7 +50,6 @@ namespace VirtoCommerce.ManagementClient.Marketing.Model
             {
                 return () =>
                 {
-                    // ParameterOverride ParameterValue cannot be null
                     var catalogId = string.IsNullOrEmpty(((IPromotionViewModel) ExpressionViewModel).CatalogId) ? string.Empty : ((IPromotionViewModel) ExpressionViewModel).CatalogId;
 					
                     var itemVM = ((IPromotionViewModel) ExpressionViewModel).SearchItemVmFactory.GetViewModelInstance(

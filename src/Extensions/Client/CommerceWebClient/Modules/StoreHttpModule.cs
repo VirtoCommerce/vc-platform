@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Security;
+using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Foundation.Stores.Model;
 using System.Web.Mvc;
@@ -145,6 +147,9 @@ namespace VirtoCommerce.Web.Client.Modules
                 session.Language = store.DefaultLanguage;
             }
 
+            // release sitemap
+            MvcSiteMapProvider.SiteMaps.ReleaseSiteMap();
+
             // set customer id to anonymousID if nothing is set, it might be overwritten if authentication is successful
             if (String.IsNullOrEmpty(session.CustomerId))
             {
@@ -204,7 +209,7 @@ namespace VirtoCommerce.Web.Client.Modules
             StoreHelper.SetCookie(StoreCookie, session.StoreId, DateTime.Now.AddMonths(1), false);
             StoreHelper.SetCookie(CurrencyCookie, currency, DateTime.Now.AddMonths(1));
 
-            if (context.Request.QueryString.AllKeys.Any(x => x.Equals("loginas", StringComparison.OrdinalIgnoreCase)))
+            if (context.Request.QueryString.AllKeys.Any(x => string.Equals(x, "loginas", StringComparison.OrdinalIgnoreCase)))
             {
                 RedirectToLogin(context);
             }
@@ -268,8 +273,9 @@ namespace VirtoCommerce.Web.Client.Modules
         protected virtual Store GetStore(HttpContext context)
 		{
 			var loadDefault = true;
-			var storeid = context.Request.QueryString["store"];
 			var storeClient = DependencyResolver.Current.GetService<StoreClient>();
+            //var storeid = context.Request.QueryString["store"];
+            var storeid = GetStoreIdFromUrl(context.Request.Url.Segments);
 			Store store = null;
 
 			if (String.IsNullOrEmpty(storeid))
@@ -357,5 +363,38 @@ namespace VirtoCommerce.Web.Client.Modules
 			return currency;
 		}
 		#endregion
+
+        private string GetStoreIdFromUrl(IEnumerable<string> urlSegments)
+        {
+            var storeClient = DependencyResolver.Current.GetService<StoreClient>();
+            var allStores = storeClient.GetStores();
+
+            foreach (var urlSegment in urlSegments)
+            {
+                var storeCandidate = HttpUtility.UrlDecode(urlSegment.Replace("/", ""));
+                if (string.IsNullOrEmpty(storeCandidate))
+                {
+                    continue;
+                }
+
+                storeCandidate = SettingsHelper.SeoDecode(storeCandidate, SeoUrlKeywordTypes.Store);
+
+                if (string.IsNullOrEmpty(storeCandidate))
+                {
+                    continue;
+                }
+
+                var foundStore = allStores.FirstOrDefault(
+                    s => s.StoreId.Equals(storeCandidate, StringComparison.InvariantCultureIgnoreCase));
+
+                if (foundStore != null)
+                {
+                    return foundStore.StoreId;
+                }
+
+            }
+
+            return null;
+        }
 	}
 }

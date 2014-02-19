@@ -1,28 +1,46 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<mvcSiteMap xmlns="http://mvcsitemap.codeplex.com/schemas/MvcSiteMap-File-3.0" enableLocalization="true">
+<mvcSiteMap xmlns="http://mvcsitemap.categoryplex.com/schemas/MvcSiteMap-File-4.0">
   <mvcSiteMapNode title="Home" controller="Home" action="Index" changeFrequency="Always" updatePriority="Normal">
-    <mvcSiteMapNode title="TV &amp; Video" url="~/c/tv-video">
-      <mvcSiteMapNode title="Audio &amp; MP3" url="~/c/audio-mp3" />
-      <mvcSiteMapNode title="Cameras" url="~/c/cameras"/>
-      <mvcSiteMapNode title="Computers &amp; Tablets" url="~/c/computers-tablets"/>
-      <mvcSiteMapNode title="Accessories" url="~/c/accessories"/>
+    <mvcSiteMapNode key="home" title="Home" controller="Home" action="Index" changeFrequency="Always" updatePriority="Normal" visibility="MainMenu,!*">
+      <mvcSiteMapNode title="TV &amp; Video" action="Display" controller="Catalog" category="tv-video">
+        <mvcSiteMapNode title="Audio &amp; MP3" category="audio-mp3" action="Display" imageUrl="~/Content/themes/default/images/menu/mobiles.png">
+          <mvcSiteMapNode title="Samsung" category="audio-mp3" action="Display" f_Brand="samsung"/>
+          <mvcSiteMapNode title="Sony" category="audio-mp3" action="Display" f_Brand="sony" />
+          <mvcSiteMapNode title="Apple" category="audio-mp3" action="Display" f_Brand="apple" />
+        </mvcSiteMapNode>
+        <mvcSiteMapNode title="Computers" category="computers-tablets" action="Display" imageUrl="~/Content/themes/default/images/menu/computers.png">
+          <mvcSiteMapNode title="Samsung" category="computers-tablets" f_Brand="samsung" action="Display"/>
+          <mvcSiteMapNode title="Sony" category="computers-tablets" f_Brand="sony" action="Display" />
+          <mvcSiteMapNode title="Apple" category="computers-tablets" f_Brand="apple" action="Display"/>
+        </mvcSiteMapNode>
+        <mvcSiteMapNode title="Cameras" category="cameras" action="Display" imageUrl="~/Content/themes/default/images/menu/cameras.png">
+          <mvcSiteMapNode title="Samsung" category="cameras" f_Brand="samsung" action="Display"/>
+          <mvcSiteMapNode title="Sony" category="cameras" f_Brand="sony" action="Display" />
+        </mvcSiteMapNode>
+        <mvcSiteMapNode title="Accessories" category="accessories" action="Display" imageUrl="~/Content/themes/default/images/menu/accessories.png">
+          <mvcSiteMapNode title="Samsung" category="accessories" f_Brand="samsung" action="Display" />
+          <mvcSiteMapNode title="Sony" category="accessories" f_Brand="sony" action="Display" />
+          <mvcSiteMapNode title="Apple" category="accessories" f_Brand="apple" action="Display" />
+        </mvcSiteMapNode>
+      </mvcSiteMapNode>
+      <mvcSiteMapNode title="Audio &amp; MP3" action="Display" controller="Catalog" category="audio-mp3"/>
+      <mvcSiteMapNode title="Cameras" action="Display" controller="Catalog" category="cameras"/>
+      <mvcSiteMapNode title="Computers &amp; Tablets" action="Display" controller="Catalog" category="computers-tablets"/>
+      <mvcSiteMapNode title="Accessories" action="Display" controller="Catalog" category="accessories"/>
     </mvcSiteMapNode>
-    <mvcSiteMapNode title="Audio &amp; MP3" url="~/c/audio-mp3"/>
-    <mvcSiteMapNode title="Cameras" url="~/c/cameras"/>
-    <mvcSiteMapNode title="Computers &amp; Tablets" url="~/c/computers-tablets"/>
-    <mvcSiteMapNode title="Accessories" url="~/c/accessories"/>
     
-    <mvcSiteMapNode title="Account Dashboard" controller="Account" action="Index" visibility="account,!*"/>
-    <mvcSiteMapNode title="Account Information" controller="Account" action="Edit" visibility="account,!*"/>
-    <mvcSiteMapNode title="Address Book" controller="Account" action="AddressBook" visibility="account,!*"/>
-    <mvcSiteMapNode title="My Orders" controller="Account" action="Orders" visibility="account,!*"/>
-    <mvcSiteMapNode title="My Wishlist" controller="Account" action="WishList" visibility="account,!*"/>
-    <mvcSiteMapNode title="My Returns" controller="Account" action="RmaReturns" visibility="account,!*"/>
+    <mvcSiteMapNode key="account" title="Account Dashboard" controller="Account" action="Index" visibility="account,!*" changeFrequency="Always">
+      <mvcSiteMapNode title="Account Information" controller="Account" action="Edit"/>
+      <mvcSiteMapNode title="Address Book" controller="Account" action="AddressBook"/>
+      <mvcSiteMapNode title="My Orders" controller="Account" action="Orders"/>
+      <mvcSiteMapNode title="My Wishlist" controller="Account" action="WishList"/>
+      <mvcSiteMapNode title="My Returns" controller="Account" action="RmaReturns"/>
+    </mvcSiteMapNode>
 
-	<!--<mvcSiteMapNode title="Company Dashboard" controller="Account" action="CompanyIndex" visibility="company,!*" permissions="Administrator" />
-	<mvcSiteMapNode title="Company Information" controller="Account" action="CompanyEdit" visibility="company,!*"/>
-	<mvcSiteMapNode title="Orders" controller="Account" action="CompanyOrders" visibility="company,!*"/>
-	<mvcSiteMapNode title="Address Book" controller="Account" action="CompanyAddressBook" visibility="company,!*"/>
-	<mvcSiteMapNode title="Users" controller="Account" action="CompanyUsers" visibility="company,!*"/>-->
+    <!-- Special nodes for building breadcrums-->
+    <mvcSiteMapNode title="Details" controller="Catalog" action="DisplayItem" preservedRouteParameters="item,category,store,lang"></mvcSiteMapNode>
+    <mvcSiteMapNode title="Details" controller="Catalog" action="Display" preservedRouteParameters="category,store,lang"></mvcSiteMapNode>
+    
   </mvcSiteMapNode>
+  
 </mvcSiteMap>

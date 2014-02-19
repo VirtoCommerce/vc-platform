@@ -1,7 +1,8 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Windows;
-using Microsoft.Practices.Prism.Commands;
 using VirtoCommerce.ConfigurationUtility.Main.Infrastructure;
 using VirtoCommerce.ConfigurationUtility.Main.Properties;
 using VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Interfaces;
@@ -12,26 +13,26 @@ using VirtoCommerce.PowerShell.SearchSetup.Cmdlet;
 
 namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementations
 {
-	public class SearchSettingsStepViewModel : WizardStepViewModelBase, ISearchSettingsStepViewModel
-	{
-		#region const
-		public string ScopeDescription
-		{
-			get
-			{
-				return
-					"Search scope allows to narrow searches based on the content sources of items on the portal.\r\nThe scope is set by name. By default each project has it's unique scope defined by the project name but can be modified in this step.";
-			}
-		}
-		private const string SampleScope = "SampleProject";
-		private const string SearchLocation = "http://localhost:9200";
-		#endregion
+    public class SearchSettingsStepViewModel : WizardStepViewModelBase, ISearchSettingsStepViewModel
+    {
+        #region const
+        public string ScopeDescription
+        {
+            get
+            {
+                return
+                    "Search scope allows to narrow searches based on the content sources of items on the portal.\r\nThe scope is set by name. By default each project has it's unique scope defined by the project name but can be modified in this step.";
+            }
+        }
+        private const string SampleScope = "SampleProject";
+        private const string SearchLocation = "http://localhost:9200";
+        #endregion
 
-		#region Dependencies
-		private readonly IConfirmationStepViewModel _confirmationViewModel;
-		#endregion
+        #region Dependencies
+        private readonly IConfirmationStepViewModel _confirmationViewModel;
+        #endregion
 
-		#region Constructors
+        #region Constructors
 
 #if DESIGN
         public SearchSettingsStepViewModel()
@@ -43,63 +44,63 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
         }
 #endif
 
-		public SearchSettingsStepViewModel(IConfirmationStepViewModel confirmationViewModel)
-		{
-			_confirmationViewModel = confirmationViewModel;
+        public SearchSettingsStepViewModel(IConfirmationStepViewModel confirmationViewModel)
+        {
+            _confirmationViewModel = confirmationViewModel;
 
-			Initialize();
-		}
+            Initialize();
+        }
 
-		private void Initialize()
-		{
-			IsInitializing = true;
-			IndexScope = SampleScope;
-			IndexesLocation = SearchLocation;
-			IsSearchProviderElastic = true;
-			LuceneFolderLocation = "~/app_data/Virto/search";
-			IsInitializing = false;
-		}
+        private void Initialize()
+        {
+            IsInitializing = true;
+            IndexScope = SampleScope;
+            IndexesLocation = SearchLocation;
+            IsSearchProviderElastic = true;
+            LuceneFolderLocation = "~/app_data/Virto/search";
+            IsInitializing = false;
+        }
 
-		#endregion
+        #endregion
 
-		#region Overrides of WizardStepViewModelBase
+        #region Overrides of WizardStepViewModelBase
 
-		public override string Description
-		{
-			get { return Resources.SearchSettings; }
-		}
+        public override string Description
+        {
+            get { return Resources.SearchSettings; }
+        }
 
-		public override bool IsValid
-		{
-			get { return Uri.IsWellFormedUriString(IndexesLocation, UriKind.Absolute); }
-		}
+        public override bool IsValid
+        {
+            get { return ValidateIndexesLocation() && string.IsNullOrEmpty(ValidateSearchScope()); }
+        }
 
-		public override bool IsLast
-		{
-			get { return false; }
-		}
+        public override bool IsLast
+        {
+            get { return false; }
+        }
 
-		#endregion
+        #endregion
 
-		#region Implementation of IConfigureStep
+        #region Implementation of IConfigureStep
 
-		public string Action
-		{
-			get { return Resources.SearchSettingsAction; }
-		}
+        public string Action
+        {
+            get { return Resources.SearchSettingsAction; }
+        }
 
-		public string Message { get; private set; }
+        public string Message { get; private set; }
 
-		public void Configure(CancellationToken ct)
-		{
-			ct.ThrowIfCancellationRequested();
+        public void Configure(CancellationToken ct)
+        {
+            ct.ThrowIfCancellationRequested();
 
-			Result = null; // sets result to InProgress
-			try
-			{
-			    var searchConnection = _confirmationViewModel.SearchConnection;
-				// Update Search index
-                
+            Result = null; // sets result to InProgress
+            try
+            {
+                var searchConnection = _confirmationViewModel.SearchConnection;
+                // Update Search index
+
                 // handle special case for lucene, resolve relative path to the actual folder
                 if (searchConnection.Provider.Equals(
                     "lucene", StringComparison.OrdinalIgnoreCase) && searchConnection.DataSource.StartsWith("~/"))
@@ -111,174 +112,188 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
                 }
 
                 new UpdateSearchIndex().Index(searchConnection, _confirmationViewModel.DatabaseConnectionString, null, true);
-				ct.ThrowIfCancellationRequested();
+                ct.ThrowIfCancellationRequested();
 
-				Result = OperationResult.Successful;
-			}
-			catch (OperationCanceledException)
-			{
-				throw;
-			}
-			catch (Exception e)
-			{
+                Result = OperationResult.Successful;
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
+            }
+            catch (Exception e)
+            {
 #if (DEBUG)
-				MessageBox.Show(e.StackTrace);
+                MessageBox.Show(e.StackTrace);
 #endif
 
-				Message = string.Format("{0} {1}: {2}", Resources.SearchSettingsAction, Resources.Failed, e.ExpandExceptionMessage());
-				Result = OperationResult.Failed;
-				throw;
-			}
-		}
+                Message = string.Format("{0} {1}: {2}", Resources.SearchSettingsAction, Resources.Failed, e.ExpandExceptionMessage());
+                Result = OperationResult.Failed;
+                throw;
+            }
+        }
 
-		public void Cancel()
-		{
-			Result = OperationResult.Cancelling;
+        public void Cancel()
+        {
+            Result = OperationResult.Cancelling;
 
-			// TODO: implement cancellation
-			Result = OperationResult.Cancelled;
-		}
+            // TODO: implement cancellation
+            Result = OperationResult.Cancelled;
+        }
 
-		public OperationResult? Result
-		{
-			get { return _result; }
-			private set
-			{
-				_result = value;
-				OnUIThread(() => _result.UpdateState(Configuration, Resources.SearchSettingsAction));
-			}
-		}
+        public OperationResult? Result
+        {
+            get { return _result; }
+            private set
+            {
+                _result = value;
+                OnUIThread(() => _result.UpdateState(Configuration, Resources.SearchSettingsAction));
+            }
+        }
 
-		private OperationResult? _result;
+        private OperationResult? _result;
 
-		#endregion
+        #endregion
 
-		#region Implementation of ISearchSettingsStepViewModel
+        #region Implementation of ISearchSettingsStepViewModel
 
-		public bool IsSearchProviderElastic
-		{
-			get { return _isSearchProviderElastic; }
-			set
-			{
-				_isSearchProviderElastic = value;
-				OnPropertyChanged();
-				OnConnectionStringChanges();
-			}
-		}
+        public bool IsSearchProviderElastic
+        {
+            get { return _isSearchProviderElastic; }
+            set
+            {
+                _isSearchProviderElastic = value;
+                OnPropertyChanged();
+                OnConnectionStringChanges();
+            }
+        }
 
-		public bool IsSearchProviderLucene
-		{
-			get { return !_isSearchProviderElastic; }
-			set
-			{
-				_isSearchProviderElastic = !value;
-				OnPropertyChanged();
-				OnConnectionStringChanges();
-			}
-		}
+        public bool IsSearchProviderLucene
+        {
+            get { return !_isSearchProviderElastic; }
+            set
+            {
+                _isSearchProviderElastic = !value;
+                OnPropertyChanged();
+                OnConnectionStringChanges();
+            }
+        }
 
-		public string IndexesLocation
-		{
-			get { return _indexesLocation; }
+        public string IndexesLocation
+        {
+            get { return _indexesLocation; }
 
-			set
-			{
-				_indexesLocation = value;
-				OnPropertyChanged();
-				OnIsValidChanged();
-				OnConnectionStringChanges();
-			}
-		}
+            set
+            {
+                _indexesLocation = value;
+                OnPropertyChanged();
+                OnIsValidChanged();
+                OnConnectionStringChanges();
+            }
+        }
 
-		private string _indexesLocation;
-		
-		public string LuceneFolderLocation
-		{
-			get { return _luceneFolderLocation; }
-			set
-			{
-				_luceneFolderLocation = value;
-				OnPropertyChanged();
-				OnConnectionStringChanges();
-			}
-		}
+        private string _indexesLocation;
 
-		public string IndexScope
-		{
-			get
-			{
-				//if (String.IsNullOrEmpty(_indexScope))
-				//{
-				//	var projectLocation = _confirmationViewModel.ProjectLocation;
-				//	var scope = "SampleProject";
-				//	if (projectLocation != null)
-				//	{
-				//		scope = projectLocation.Substring(projectLocation.LastIndexOf(Path.DirectorySeparatorChar) + 1);
-				//	}
+        public string LuceneFolderLocation
+        {
+            get { return _luceneFolderLocation; }
+            set
+            {
+                _luceneFolderLocation = value;
+                OnPropertyChanged();
+                OnConnectionStringChanges();
+            }
+        }
 
-				//	return scope;
-				//}
-				return _indexScope;
-			}
+        public string IndexScope
+        {
+            get
+            {
+                return _indexScope;
+            }
 
-			set
-			{
-				_indexScope = value;
-				OnPropertyChanged();
-				OnIsValidChanged();
-				OnConnectionStringChanges();
-			}
-		}
+            set
+            {
+                _indexScope = value;
+                if (!string.IsNullOrEmpty(_indexScope))
+                    _indexScope = _indexScope.ToLower();
+                OnPropertyChanged();
+                OnIsValidChanged();
+                OnConnectionStringChanges();
+            }
+        }
 
-		private void OnConnectionStringChanges()
-		{
-			SearchConnection searchConnection;
-			if (IsSearchProviderLucene)
-			{
-				searchConnection = new SearchConnection(LuceneFolderLocation, IndexScope, "lucene");
-			}
-			else
-			{
-				searchConnection = new SearchConnection(IndexesLocation, IndexScope);
-			}
+        private void OnConnectionStringChanges()
+        {
+            SearchConnection searchConnection;
+            if (IsSearchProviderLucene)
+            {
+                searchConnection = new SearchConnection(LuceneFolderLocation, IndexScope, "lucene");
+            }
+            else
+            {
+                searchConnection = new SearchConnection(IndexesLocation, IndexScope);
+            }
 
-			_confirmationViewModel.SearchConnection = searchConnection;
-		}
+            _confirmationViewModel.SearchConnection = searchConnection;
+        }
 
-		private string _indexScope;
-		private bool _isSearchProviderElastic;
-		private string _luceneFolderLocation;
+        private string _indexScope;
+        private bool _isSearchProviderElastic;
+        private string _luceneFolderLocation;
 
-		public IConfigurationViewModel Configuration { get; set; }
+        public IConfigurationViewModel Configuration { get; set; }
 
-		#endregion
+        #endregion
 
-		#region Implementation of IDataErrorInfo
+        #region Implementation of IDataErrorInfo
 
-		public string this[string name]
-		{
-			get
-			{
-				string result = null;
+        public string this[string name]
+        {
+            get
+            {
+                string result = null;
 
-				if (name == "IndexesLocation")
-				{
-					if (!Uri.IsWellFormedUriString(IndexesLocation, UriKind.Absolute))
-					{
-						result = Resources.InvalidElasticSearchIndexesLocationUrl;
-					}
-				}
+                if (name == "IndexesLocation")
+                {
+                    if (!ValidateIndexesLocation())
+                    {
+                        result = Resources.InvalidElasticSearchIndexesLocationUrl;
+                    }
+                }
+                else if (name == "IndexScope")
+                {
+                    result = ValidateSearchScope();
+                }
 
-				return result;
-			}
-		}
+                return result;
+            }
+        }
 
-		public string Error
-		{
-			get { return null; }
-		}
+        public string Error
+        {
+            get { return null; }
+        }
 
-		#endregion
+        #endregion
 
-	}
+        readonly static char[] invalidNameCharactersVisible = @" ~`!@#$%^&*()+=/?[]{}.,\|".ToArray();
+        readonly static char[] invalidCharactersAll = Path.GetInvalidPathChars().Union(invalidNameCharactersVisible).ToArray();
+
+        private bool ValidateIndexesLocation()
+        {
+            return Uri.IsWellFormedUriString(IndexesLocation, UriKind.Absolute);
+        }
+
+        private string ValidateSearchScope()
+        {
+            string result = null;
+            if (IndexScope.IndexOfAny(invalidCharactersAll) > -1)
+            {
+                result = string.Format(Resources.InvalidSearchScope, string.Join(" ", invalidNameCharactersVisible));
+            }
+
+            return result;
+        }
+
+    }
 }

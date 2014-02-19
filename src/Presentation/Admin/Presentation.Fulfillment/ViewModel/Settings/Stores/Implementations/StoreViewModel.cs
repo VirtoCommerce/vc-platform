@@ -21,6 +21,10 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 	public class StoreViewModel : ViewModelDetailAndWizardBase<Store>, IStoreViewModel
 	{
 
+		#region Const
+		const int SeoTabIndex = 2;
+		#endregion
+
 		#region Dependencies
 
 		private readonly INavigationManager _navManager;
@@ -34,6 +38,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 		private readonly IViewModelsFactory<IStoreNavigationStepViewModel> _navigationVmFactory;
 		private readonly IViewModelsFactory<IStoreSettingStepViewModel> _settingVmFactory;
 		private readonly IViewModelsFactory<IStoreLinkedStoresStepViewModel> _linkedStoresVmFactory;
+		private readonly IViewModelsFactory<ISeoViewModel> _seoVmFactory;
 
 		#endregion
 
@@ -48,6 +53,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 			IViewModelsFactory<IStoreNavigationStepViewModel> navigationVmFactory,
 			IViewModelsFactory<IStoreSettingStepViewModel> settingVmFactory,
 			IViewModelsFactory<IStoreLinkedStoresStepViewModel> linkedStoresVmFactory,
+			IViewModelsFactory<ISeoViewModel> seoVmFactory,
 			IHomeSettingsViewModel parent,
 			INavigationManager navManager, Store item)
 			: base(entityFactory, item, false)
@@ -63,6 +69,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 			_navigationVmFactory = navigationVmFactory;
 			_settingVmFactory = settingVmFactory;
 			_linkedStoresVmFactory = linkedStoresVmFactory;
+			_seoVmFactory = seoVmFactory;
 
 			OpenItemCommand = new DelegateCommand(() => _navManager.Navigate(NavigationData));
 		}
@@ -71,6 +78,17 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 			: base(entityFactory, item, true)
 		{
 			_repositoryFactory = repositoryFactory;
+		}
+
+		#endregion
+
+		#region Properties
+
+		private int _selectedTabIndex;
+		public int SelectedTabIndex
+		{
+			get { return _selectedTabIndex; }
+			protected set { _selectedTabIndex = value; OnPropertyChanged(); }
 		}
 
 		#endregion
@@ -129,6 +147,14 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 
 		protected override bool IsValidForSave()
 		{
+			if (SeoStepViewModel != null)
+			{
+				var isSeoValid = SeoStepViewModel.IsValid;
+				if (!isSeoValid)
+					SelectedTabIndex = SeoTabIndex;
+				return InnerItem.Validate() && isSeoValid;
+			}
+
 			return InnerItem.Validate();
 		}
 
@@ -163,6 +189,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 				InitLinkedStep();
 				InitSettingsStep();
 				InitNavigationStep();
+				InitSeoStep();
 			}
 		}
 
@@ -190,6 +217,9 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 				OriginalItem.InjectFrom<CloneInjection>(InnerItem);
 				_parent.RefreshItem(OriginalItem);
 			}
+
+			if (SeoStepViewModel != null)
+				SeoStepViewModel.SaveSeoKeywordsChanges();
 		}
 
 		protected override void SetSubscriptionUI()
@@ -232,9 +262,13 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 				}
 			}
 
-
+			if (SeoStepViewModel != null)
+			{
+				if (SeoStepViewModel.SeoKeywords != null)
+					SeoStepViewModel.SeoKeywords.ForEach(keyword => keyword.PropertyChanged += ViewModel_PropertyChanged);				
+			}
 		}
-
+		
 		protected override void CloseSubscriptionUI()
 		{
 			if (InnerItem != null)
@@ -274,6 +308,12 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 					PaymentsStepViewModel.AvailableStorePaymentGateways.ForEach(x => x.PropertyChanged -= ViewModel_PropertyChanged);
 				}
 			}
+
+			if (SeoStepViewModel != null)
+			{
+				if (SeoStepViewModel.SeoKeywords != null)
+					SeoStepViewModel.SeoKeywords.ForEach(keyword => keyword.PropertyChanged -= ViewModel_PropertyChanged);
+			}
 		}
 
 		#endregion
@@ -287,7 +327,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 				bool result = false;
 
 				result = InnerItem.Validate(false) && !string.IsNullOrEmpty(InnerItem.Name);
-
+				
 				return result;
 			}
 		}
@@ -313,6 +353,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 		public IStoreLinkedStoresStepViewModel LinkedStoresStepViewModel { get; private set; }
 		public IStoreSettingStepViewModel SettingsStepViewModel { get; private set; }
 		public IStoreNavigationStepViewModel NavigationStepViewModel { get; private set; }
+		public ISeoViewModel SeoStepViewModel { get; private set; }
 
 		private bool _IsInitializingOverview;
 		public bool IsInitializingOverview
@@ -566,7 +607,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 
 		#endregion
 
-		#region Proteckted init methods
+		#region Protected init methods
 
 		protected void InitOverviewStep()
 		{
@@ -631,6 +672,15 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 					_navigationVmFactory.GetViewModelInstance(itemParameter);
 			(NavigationStepViewModel as StoreNavigationStepViewModel).InitializePropertiesForViewing();
 			OnPropertyChanged("NavigationStepViewModel");
+		}
+
+		protected void InitSeoStep()
+		{
+			var itemParameter = new KeyValuePair<string, object>("item", InnerItem);
+			var languagesParameter = new KeyValuePair<string, object>("languages", InnerItem.Languages.Select(x => x.LanguageCode));
+			SeoStepViewModel =
+					_seoVmFactory.GetViewModelInstance(itemParameter, languagesParameter);
+			OnPropertyChanged("SeoStepViewModel");
 		}
 
 		#endregion

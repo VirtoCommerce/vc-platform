@@ -16,6 +16,7 @@ namespace VirtoCommerce.Foundation.AppConfig.Repositories
 		IQueryable<EmailTemplateLanguage> EmailTemplateLanguages { get; }
 		IQueryable<DisplayTemplateMapping> DisplayTemplateMappings { get; }
 		IQueryable<ObjectLock> ObjectLocks { get; }
-		IQueryable<Localization> Localizations { get; } 
+		IQueryable<Localization> Localizations { get; }
+        IQueryable<SeoUrlKeyword> SeoUrlKeywords { get; } 
 	}
 }

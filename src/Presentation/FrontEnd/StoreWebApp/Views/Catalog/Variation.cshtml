@@ -3,26 +3,24 @@
 <script type="text/javascript">
 	$(document).ready(function ()
 	{
-		//Update main image
-		$("#imageContainer img.primaryimage").attr("src", "@Url.Image(Model.CatalogItem.Item, "primaryimage")");
-		$("#imageContainer img.primaryimage").attr("onerror", "this.onerror=null;this.src='@Href("~/Content/themes/default/images/blank.png")';");
+	    //Update main image
+	    var cloudZoom = $("#imageContainer img.cloudzoom").data("CloudZoom");
+	    cloudZoom.loadImage('@Url.Image(Model.CatalogItem.Item, "primaryimage")', '@Url.Image(Model.CatalogItem.Item, "primaryimage")');
 
-		$(".jqzoom").unbind();
-		$(".jqzoom").attr("href", "@Url.Image(Model.CatalogItem.Item, "primaryimage")");
-		//Reset large image
-		$(".jqzoom")[0].largeimageloaded = false;
-
-		initJqZoom();
 		//Update main price
-		@{Model.Price.PriceTitle = "Price:".Localize();}
-		$("#mainPrice").html('@Html.Raw(Html.DisplayFor(model => model.Price).ToString().Replace(Environment.NewLine, ""))');
-		$("#mainProductName h1").html('@Model.DisplayName');
-		$("p.in-stock span").text("@Model.Availability.AvailabilityString");
+@*		@{Model.Price.PriceTitle = "Price:".Localize();}*@
+	    $("#mainPrice").html($('#temp_price').html());
+	    $('#temp_price').remove();
+	    $("header.product-name h1").html('@Model.DisplayName');
+	    
+        //Handle availability
+	    $("span.in-stock").text("@Model.Availability.AvailabilityString");
+	    $("span.in-stock").show();
 		
 		//Update properties
 		$("#product_tabs_additional_contents_list").html($('#temp_variation_properties').html());
 		$('#temp_variation_properties').remove();
-		$("#AddToCart").load('@Html.Raw(Url.Action("AddToCart", "Cart", new {itemId = Model.CatalogItem.ItemId, parentItemId = Model.CatalogItem.ParentItemId}))');
+		$(".add-to-cart").load('@Html.Raw(Url.Action("AddToCart", "Cart", new {itemId = Model.CatalogItem.ItemId, parentItemId = Model.CatalogItem.ParentItemId}))');
 	
 		if ($('#qty').length != 0)
 		{
@@ -39,7 +37,8 @@
 
 			$('#qty').attr("data-val-range-min", '@((int)Model.Availability.MinQuantity)');
 			$('#qty').attr("data-val-range-max", '@((int)Model.Availability.MaxQuantity)');
-			$('#qty').attr("data-val-range", "@("Select quantity in range".LocalizeHtml())" + " @string.Format("{0:#} - {1:#}", Model.Availability.MinQuantity, @Model.Availability.MaxQuantity)");
+		    $('#qty').attr("data-val-range", "@("Select quantity in range".Localize())" + " @string.Format("{0:#} - {1:#}", Model.Availability.MinQuantity, @Model.Availability.MaxQuantity)");
+		    $('#qty').attr("data-val-regex-pattern", '@string.Format(@"^\\d{{{0},{1}}}$",Math.Log10((int)Model.Availability.MinQuantity)  + 1,Math.Log10((int)Model.Availability.MaxQuantity)  + 1)');
 			var $form = $('#qty').resetValidation();
 			$form.removeData('validator');
 			$form.removeData('unobtrusiveValidation');
@@ -49,5 +48,10 @@
 </script>
 
 <div id="temp_variation_properties"style="display: none;">
-	@{ Html.RenderPartial("ItemProperties", Model.CatalogItem); }
+    @{ Html.RenderPartial("ItemProperties", Model.CatalogItem); }
 </div>
+
+<div id="temp_price"style="display: none;">
+    @{ Html.RenderPartial("DisplayTemplates/PriceModel", Model.Price); }
+</div>
+

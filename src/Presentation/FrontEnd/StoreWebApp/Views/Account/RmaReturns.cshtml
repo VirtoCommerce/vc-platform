@@ -1,70 +1,66 @@
 ﻿@model IEnumerable<VirtoCommerce.Foundation.Orders.Model.RmaRequest>
 @{
-    ViewBag.Title = Html.Title("My Returns".Localize());
-    Layout = "_Layout.cshtml";
+    ViewBag.PageTitle = SiteMaps.Current.CurrentNode != null ? SiteMaps.Current.CurrentNode.Title.Localize() : "Returns".Localize();
+    ViewBag.Title = Html.Title(ViewBag.PageTitle as string);
 }
 
-<div class="page-title">
-    <h1>@("Order Return(s)".LocalizeHtml())</h1>
-</div>
+<script type="text/javascript">
+    $(function ()
+    {
+        $('.head-order').click(function ()
+        {
+            if ($(this).next().is(':hidden'))
+            {
+                $(this).addClass('selected').siblings().removeClass('selected');
+                $('.block.border').slideUp('normal');
+                $(this).next().slideDown('normal');
+            }
+            else
+            {
+                $(this).removeClass('selected');
+                $('.block.border').slideUp('normal');
+                $(this).next().slideUp('normal');
+            }
+        });
+    });
+</script>
+
 
 @if (!Model.Any())
 {
-    <div class="std">
-        @("You have not returned any items.".LocalizeHtml())
-    </div>
+    Html.SharedViewBag().Messages = new MessagesModel { new MessageModel("You have not returned any items.".Localize(), MessageType.Notice) };
 }
 else
 {
-    <table style="width: 100%;">
-        @foreach (var rmaReturn in Model)
-        {
-            <tr>
-                <td>
-                    <div>
-                        <b>@("Creation Date:".LocalizeHtml())</b>
-                        @if (rmaReturn.Created.HasValue)
-                        {
-                            @rmaReturn.Created.Value.ToString("MMMM dd, yyyy")
-                        }
-
-                    </div>
-                    <div>
-                        <b>@("Return Authorization #:".LocalizeHtml())</b>
-                        @rmaReturn.AuthorizationCode
-                    </div>
-                    <div>
-                        <b>@("Order #:".LocalizeHtml())</b>
-                        @rmaReturn.Order.TrackingNumber
-                    </div>
-                </td>
-                <td>
-                    <div>
-                        <b>@("Items:".LocalizeHtml())</b>
-                    </div>
-                    <ul style="list-style: outside">
-                        @foreach (var orderItem in rmaReturn.RmaReturnItems)
-                        {
-                            <li>
-                                @string.Format("{0:0}: {1}", orderItem.RmaLineItems[0].ReturnQuantity, orderItem.RmaLineItems[0].LineItem.DisplayName)
-                                <br />
-                                @("Status:".LocalizeHtml()) @orderItem.ItemState.Localize()
-                            </li>
-                        }
-                    </ul>
-                </td>
-            </tr>
-            if (!Model.Last().Equals(rmaReturn))
-            {
-            <tr>
-                <td colspan="2">
-                    <div class="spacer"></div>
-                </td>
-            </tr>
-            }
-        }
-    </table>
+    foreach (var rmaReturn in Model)
+    {
+        <h2 class="head-order">
+            <a>@rmaReturn.Order.TrackingNumber</a>
+        </h2>
+        <div class="block clearfix border">
+            <div class="col">
+                <b>@("Creation Date:".Localize())</b> @rmaReturn.Created.Value.ToString("MMMM dd, yyyy")<br>
+                <b>@("Return Authorization #:".Localize())</b> @rmaReturn.AuthorizationCode<br>
+                <span class="mobile-order"><b>@("Order #:".Localize())</b> @rmaReturn.Order.TrackingNumber</span>
+            </div>
+            <div class="col">
+                <b>@("Items:".Localize())</b>
+                <ul class="order-list">
+                    @foreach (var orderItem in rmaReturn.RmaReturnItems)
+                    {
+                        <li>
+                            @string.Format("{0:0}: {1}", orderItem.RmaLineItems[0].ReturnQuantity, orderItem.RmaLineItems[0].LineItem.DisplayName)
+                            <br />
+                            @("Status:".Localize()) @orderItem.ItemState.Localize()
+                        </li>                                   
+                    }
+                </ul>
+            </div>
+        </div>
+    }
 }
-<div class="buttons-set">
-    <p class="back-link"><a class="back-link" href="@Url.Action("Orders", "Account")"><small>« </small>@("Back".LocalizeHtml())</a></p>
+<div class="buttons clearfix">
+    <a class="back" href="@Url.Action("Orders", "Account")">« @("Back".Localize())</a>
 </div>
+
+

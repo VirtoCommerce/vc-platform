@@ -43,6 +43,7 @@ namespace VirtoCommerce.Foundation.Marketing.Model
 			entry.Owner = item;
 			entry.CatalogId = item.CatalogId;
 			entry.EntryId = item.ItemId;
+			entry.EntryCode = item.Code;
 
 			// Save line item id, so it is easier to distinguish to which item discount is applied
 			entry["Id"] = item.ItemId;
@@ -60,11 +61,12 @@ namespace VirtoCommerce.Foundation.Marketing.Model
 			entry.Outline = lineItem.CatalogOutline;
 			entry.EntryId = lineItem.CatalogItemId;
 			entry.ParentEntryId = lineItem.ParentCatalogItemId;
+			entry.EntryCode = lineItem.CatalogItemCode;
 
 			// Save line item id, so it is easier to distinguish to which item discount is applied
 			entry["LineItemId"] = lineItem.LineItemId;
 			entry["ShippingAddressId"] = lineItem.ShippingAddressId;
-
+			
 			entry["MinQuantity"] = lineItem.MinQuantity;
 			entry["MaxQuantity"] = lineItem.MaxQuantity;
 			entry["LineItemDiscountAmount"] = lineItem.LineItemDiscountAmount;

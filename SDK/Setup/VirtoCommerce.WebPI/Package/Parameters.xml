@@ -1,0 +1,75 @@
+<parameters>
+  	<parameter name="AppPath" description="Full site path where you would like to install your application (i.e., Default Web Site/virtocommerce)" defaultValue="Default Web Site/virtocommerce" tags="iisapp">
+		<parameterEntry type="ProviderPath" scope="iisapp" match="virtocommerce" />
+	</parameter>
+	
+	<!-- This is the parameter that is used to set ACLs, it's set to the application path filled in by the user -->
+	<parameter name="SetAcl0" description="Automatically sets write access for the app" defaultValue="{AppPath}\App_Data" tags="hidden">
+		<parameterEntry type="ProviderPath" scope="setAcl" match="virtocommerce" />
+	</parameter>
+
+	<parameter name="SQL Server" description="Name of the server" defaultValue="(local)" tags="SQL, dbServer" />
+
+	<parameter name="SQL Server Database Name" description="Name of the database which VirtoCommerce should use." defaultValue="VirtoCommerce" tags="SQL, dbName">   
+		<!--<parameterEntry type="TextFile" scope="install.sql" match="PlaceHolderForDb" />		-->
+	</parameter>
+
+	<!-- Prompts for the admin creds and uses it for the administrator connection string. -->
+  	<parameter name="SQL Server Administrator" description="Enter SQL server administrator username." defaultValue="sa" tags="SQL,DbAdminUsername">
+  	</parameter>
+  
+	<!-- Prompts for the admin password and uses it for the administrator connection string.  -->
+	<parameter name="SQL Server Administrator Password" description="Enter SQL server administrator password." tags="DbAdminPassword,Password, SQL">
+	</parameter>
+
+	<!--We recommend creating  a new user for the application instead of using the DB admin credentials . -->
+	<parameter name="Database Username" description="User name to access VirtoCommerce application database." defaultValue="virto" tags="SQL, DbUsername">		
+		<parameterEntry type="TextFile" scope="installSQL1.sql" match="PlaceHolderForUser" />
+		<parameterEntry type="TextFile" scope="installSQL2.sql" match="PlaceHolderForUser" />
+	</parameter>
+
+  	<parameter name="Database Password" description="Password for the database username." tags="New, Password, SQL, DbUserPassword">
+		<parameterEntry type="TextFile" scope="installSQL1.sql" match="PlaceHolderForPassword" />
+  	</parameter>
+
+	<parameter name="Connection String MASTER" tags="NoStore,Hidden,SQL,SQLConnectionString" description="Automatically sets the connection string for the connection request." defaultValue="Data Source={SQL Server};Initial Catalog=MASTER;User Id={SQL Server Administrator};Password={SQL Server Administrator Password}">
+		<parameterEntry type="ProviderPath" scope="dbfullsql" match="installSQL1.sql" />  
+	</parameter>
+
+	<parameter name="Connection String" tags="Hidden,SQL,SQLConnectionString" description="Automatically sets the connection string for the connection request." defaultValue="Data Source={SQL Server};Initial Catalog={SQL Server Database Name};User Id={SQL Server Administrator};Password={SQL Server Administrator Password}">
+		<parameterEntry type="ProviderPath" scope="dbfullsql" match="installSQL2.sql" />  
+	</parameter>
+	
+  <!-- This is the hidden connection string with the newly created db account that is used in the web.config 
+  <parameter name="Connection String for Config" description="Connection string to save into config" 
+             defaultValue="Data Source={SQL Server};Initial Catalog={SQL Server Database Name};Persist Security Info=True;User ID={Database Username};Password='{Database Password}';MultipleActiveResultSets=True;" 
+             tags="SQL,Hidden,NoStore">
+		<parameterEntry type="TextFile" scope="\\App_Data\\Virto\\Configuration\\Setup.txt$" match="(?&lt;=\s*SqlConnectionString:\s+)[^\s].*[^\r\n]" />
+  </parameter> -->
+
+ <!-- This is the hidden connection string with the newly created db account that is used in the web.config -->
+  <parameter name="Sql Connection String for Config" description="Connection string to enter into config" 
+			defaultValue="Data Source={SQL Server};Initial Catalog={SQL Server Database Name};Persist Security Info=True;MultipleActiveResultSets=True;User Id={SQL Server Administrator};Password={SQL Server Administrator Password}" 
+            tags="SQL, Hidden,SQLConnectionString">
+		<parameterEntry type="XmlFile" scope="\\App_Data\\Virto\\Configuration\\connectionStrings.local.config$" match="//connectionStrings/add[@name='VirtoCommerce']/@connectionString" />	
+  </parameter> 
+   
+   <!-- <parameter name="SQLCE Database Preparation" defaultValue="local" 
+             tags="SQLCE, Hidden,NoStore">
+    <parameterEntry type="XmlFile" scope="\\App_Data\\Virto\\Configuration\\connectionStrings.local.config$" match="//connectionStrings/add[@name='VirtoCommerce']/@connectionString" />
+  </parameter>-->
+  
+  <parameter name="Application URL" description="Application url for the site" 
+			defaultValue="http://localhost/VirtoCommerce"  tags="AppURL">
+		<parameterEntry type="XmlFile" scope="\\App_Data\\Virto\\Configuration\\connectionStrings.local.config$" match="//connectionStrings/add[@name='VirtoCommerceDataService']/@connectionString" />
+		
+  </parameter> 
+  <parameter name="Application URL in Config " description="Application url for the site in Config file " 
+			defaultValue="{Application URL}store"  tags="Hidden">
+		<parameterEntry type="XmlFile" scope="\\App_Data\\Virto\\Configuration\\connectionStrings.local.config$" match="//connectionStrings/add[@name='VirtoCommerceDataService']/@connectionString" />
+		
+  </parameter> 
+  
+  
+  <parameter name="Placeholder SQLCE Parameter" description="Parameter with SQLCE tag for correct WebPI install when using SQLCE" defaultValue="Placeholder" tags="Hidden,SQLCE" />
+</parameters>

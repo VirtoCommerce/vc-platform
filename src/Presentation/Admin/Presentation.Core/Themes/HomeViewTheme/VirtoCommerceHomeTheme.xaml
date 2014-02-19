@@ -25,39 +25,44 @@
     <core_Converters:ApplicationResourceConverter x:Key="applicationResourceConverter" />
     <core_Converters:TextCaseConverter x:Key="textCaseConverter" />
 
-	<!--TextBlocks-->
+    <!--TextBlocks-->
 
-	<Style x:Key="Virto_TextBlock_TabTitle_Style" TargetType="TextBlock" BasedOn="{StaticResource Virto_Base_TextBlock_Style}">
-		<Setter Property="FontSize" Value="13"/>
-		<Setter Property="VerticalAlignment" Value="Center"/>
-		<Setter Property="FontWeight" Value="DemiBold"/>
-		<Setter Property="Foreground" Value="{DynamicResource Virto_HighLightText_Foreground_Brush}"/>
-	</Style>
+    <Style x:Key="Virto_TextBlock_TabTitle_Style" TargetType="TextBlock" BasedOn="{StaticResource Virto_Base_TextBlock_Style}">
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="FontWeight" Value="DemiBold"/>
+        <Setter Property="Foreground" Value="{DynamicResource Virto_HighLightText_Foreground_Brush}"/>
+    </Style>
 
-	<Style x:Key="Virto_TextBlock_TreeNode_Style" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Virto_Base_TextBlock_Style}">
-		<Setter Property="FontSize" Value="15"/>
+    <Style x:Key="Virto_TextBlock_TreeNode_Style" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Virto_Base_TextBlock_Style}">
+        <Setter Property="FontSize" Value="15"/>
         <Setter Property="Margin" Value="0,2,2,2"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
         <Setter Property="TextWrapping" Value="NoWrap"/>
     </Style>
 
-	<Style x:Key="Virto_TextBlock_RootTreeNode_Style" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Virto_Base_TextBlock_Style}">
-		<Setter Property="FontSize" Value="16"/>
+    <Style x:Key="Virto_TextBlock_RootTreeNode_Style" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Virto_Base_TextBlock_Style}">
+        <Setter Property="FontSize" Value="16"/>
         <Setter Property="Margin" Value="3,2"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
         <Setter Property="TextWrapping" Value="NoWrap"/>
-	</Style>
+    </Style>
 
-	<Style x:Key="Virto_TextBlock_VirtualListView_Style" TargetType="TextBlock" BasedOn="{StaticResource Virto_Base_TextBlock_Style}">
+    <Style x:Key="Virto_TextBlock_VirtualListView_Style" TargetType="TextBlock" BasedOn="{StaticResource Virto_Base_TextBlock_Style}">
         <Setter Property="Margin" Value="0,2"/>
         <Setter Property="FontSize" Value="13"/>
-        <Setter Property="VerticalAlignment" Value="Center"/>
-	</Style>
-	
-	<!--TextBlocks-->
-	
+        <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+    </Style>
+    <!--TextBlocks-->
+
+    <!--look like Virto_TextBlock_VirtualListView_Style-->
+    <Style x:Key="Virto_TextBox_VirtualListView_Style" TargetType="TextBox" BasedOn="{StaticResource Virto_TextBox_ReadOnly_Style}">
+        <Setter Property="FontFamily" Value="Resources/Fonts/#segoeui"/>
+        <Setter Property="Margin" Value="0,2"/>
+        <Setter Property="FontSize" Value="13"/>
+    </Style>
 
     <!--SearchTextBox-->
     <Style x:Key="Virto_EasySearchTextBox_Style" TargetType="{x:Type core_controls:SearchTextBox}" BasedOn="{StaticResource Virto_Base_EasySearchTextBox_Style}"/>
@@ -65,9 +70,9 @@
     <!--WatermarkTExtBox-->
     <Style x:Key="Virto_Multiline_WatermarkedTextBox_Style" TargetType="{x:Type core_controls:WatermarkedTextBox}" BasedOn="{StaticResource Virto_Base_Multiline_WatermarkedTextBox_Style}"/>
 
-   
+
     <!--Buttons-->
-    
+
     <!--Green button-->
     <Style x:Key="Virto_Button_Secondary_Style" TargetType="Button" BasedOn="{StaticResource Virto_Base_Button_Style}">
         <Setter Property="Background" Value="{DynamicResource Virto_Button_Alternate_Background_Normal_Brush}"/>
@@ -75,11 +80,11 @@
 
     <!--Close button-->
     <Style x:Key="Virto_SmallCloseButton_Style" TargetType="Button" BasedOn="{StaticResource Virto_Base_SmallCloseButton_Style}"/>
-    
+
     <!--Buttons-->
 
     <!--Toolbar-->
-	<Style x:Key="Virto_ToolbarItemsControl_Style" TargetType="ItemsControl" BasedOn="{StaticResource Virto_Base_ToolbarItemsControl_Style}"/>
+    <Style x:Key="Virto_ToolbarItemsControl_Style" TargetType="ItemsControl" BasedOn="{StaticResource Virto_Base_ToolbarItemsControl_Style}"/>
 
     <!--TabControls-->
     <Style x:Key="Virto_TabControlHorizontal_Style" TargetType="TabControl" BasedOn="{StaticResource Virto_Base_TabControlHorizontal_Style}" />
@@ -91,37 +96,37 @@
     <!--Separator-->
 
     <!--Style for all ListView items in VirtualFolderItemList. Except Gridview  -->
-	<Style x:Key="{x:Type ListViewItem}" TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
-		<Setter Property="core_virtualization:VirtualListItemBase.AutoLoad" Value="true" />
-		<Setter Property="Cursor" Value="Hand"/>
-		<Setter Property="Padding" Value="0"/>
-		<Setter Property="Margin" Value="3"/>
-		<Setter Property="Background" Value="{DynamicResource Virto_VirtualListView_Default_Background_Brush}"/>
-		<Setter Property="BorderBrush" Value="{DynamicResource Virto_VirtualListView_BorderBrush_Brush}"/>
-		<Setter Property="Template">
-			<Setter.Value>
-				<ControlTemplate TargetType="{x:Type ListViewItem}">
-					<Border x:Name="Bd"  BorderThickness="1" Padding="0" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" >
+    <Style x:Key="{x:Type ListViewItem}" TargetType="{x:Type ListViewItem}" BasedOn="{StaticResource {x:Type ListBoxItem}}">
+        <Setter Property="core_virtualization:VirtualListItemBase.AutoLoad" Value="true" />
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Margin" Value="3"/>
+        <Setter Property="Background" Value="{DynamicResource Virto_VirtualListView_Default_Background_Brush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource Virto_VirtualListView_BorderBrush_Brush}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ListViewItem}">
+                    <Border x:Name="Bd"  BorderThickness="1" Padding="0" BorderBrush="{TemplateBinding BorderBrush}" Background="{TemplateBinding Background}" >
                         <ContentPresenter Margin="0,0"/>
                     </Border>
-					<ControlTemplate.Triggers>
-						<Trigger Property="IsMouseOver" Value="true">
-							<Setter	Property="Background" TargetName="Bd" Value="{StaticResource Virto_VirtualListView_MouseOver_Background_Brush}"/>
-						</Trigger>
-						<Trigger Property="IsSelected" Value="true">
-							<Setter Property="Background" TargetName="Bd" Value="{StaticResource Virto_VirtualListView_Selected_Background_Brush}"/>
-							<Setter Property="inf_behavior:MouseDoubleClickBehavior.DoubleClickCommand" Value="{Binding Data.OpenItemCommand}" />
-						</Trigger>
-						<Trigger Property="IsEnabled" Value="false">
-							<Setter Property="Opacity" Value="0.3"/>
-						</Trigger>
-					</ControlTemplate.Triggers>
-				</ControlTemplate>
-			</Setter.Value>
-		</Setter>
-	</Style>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter	Property="Background" TargetName="Bd" Value="{StaticResource Virto_VirtualListView_MouseOver_Background_Brush}"/>
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="true">
+                            <Setter Property="Background" TargetName="Bd" Value="{StaticResource Virto_VirtualListView_Selected_Background_Brush}"/>
+                            <Setter Property="inf_behavior:MouseDoubleClickBehavior.DoubleClickCommand" Value="{Binding Data.OpenItemCommand}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter Property="Opacity" Value="0.3"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 
-	<Style x:Key='Virto_GridView_ColumnHeader_Style' TargetType='{x:Type ContentControl}'>
+    <Style x:Key='Virto_GridView_ColumnHeader_Style' TargetType='{x:Type ContentControl}'>
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="Foreground" Value="{DynamicResource Virto_VirtualListView_ColumnHeader_Foreground_Brush}" />
         <Setter Property="Background" Value="{DynamicResource Virto_VirtualListView_ColumnHeader_Background_Brush}"/>
@@ -135,7 +140,7 @@
     <Style x:Key="Virto_GridView_ColumnHeader_ContainerStyle" TargetType="{x:Type GridViewColumnHeader}" BasedOn="{StaticResource Virto_GridView_ColumnHeader_Style}">
         <Style.Resources>
             <DataTemplate DataType="{x:Type system:String}">
-                <TextBlock Text="{Binding Converter={StaticResource textCaseConverter}}" FontWeight="Bold" FontSize="11" />
+                <TextBlock Text="{Binding Converter={StaticResource textCaseConverter}}" FontWeight="Bold" FontSize="11" TextTrimming="CharacterEllipsis" ToolTip="{Binding Converter={StaticResource textCaseConverter}}"/>
             </DataTemplate>
         </Style.Resources>
         <Setter Property="HorizontalContentAlignment" Value="Left"/>
@@ -212,7 +217,7 @@
         </Style.Triggers>
     </Style>
 
-   
+
 
     <Style x:Key="Virto_VirtualListView_Default_ItemContainerStyle" TargetType="{x:Type ListViewItem}">
         <Setter Property="core_virtualization:VirtualListItemBase.AutoLoad" Value="true" />
@@ -237,7 +242,7 @@
                         <Trigger Property="IsEnabled" Value="false">
                             <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
                         </Trigger>
-                       
+
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
@@ -285,47 +290,47 @@
     </Style>
 
     <!--VirtualListView-->
-    
-    
 
-	<Style x:Key="Virto_Window_Style" TargetType="{x:Type UserControl}">
-		<Setter Property="Background" Value="{DynamicResource Virto_Window_Background_Brush}"/>
-		<Setter Property="Template">
-			<Setter.Value>
-				<ControlTemplate TargetType="{x:Type UserControl}">
-					<Grid Background="{TemplateBinding Background}">
-						<Grid Margin="50,70,0,0">
-							<ContentControl Content="{TemplateBinding Content}"/>
-						</Grid>
-					</Grid>
-				</ControlTemplate>
-			</Setter.Value>
-		</Setter>
-	</Style>
 
-	<Style x:Key="Virto_HomeView_Style" TargetType="{x:Type UserControl}">
-		<Setter Property="Template">
-			<Setter.Value>
-				<ControlTemplate TargetType="{x:Type UserControl}">
-					<Border>
-						<!--<UIElement.InputBindings>
+
+    <Style x:Key="Virto_Window_Style" TargetType="{x:Type UserControl}">
+        <Setter Property="Background" Value="{DynamicResource Virto_Window_Background_Brush}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type UserControl}">
+                    <Grid Background="{TemplateBinding Background}">
+                        <Grid Margin="50,70,0,0">
+                            <ContentControl Content="{TemplateBinding Content}"/>
+                        </Grid>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="Virto_HomeView_Style" TargetType="{x:Type UserControl}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type UserControl}">
+                    <Border>
+                        <!--<UIElement.InputBindings>
 							<KeyBinding Command="{Binding ItemAddCommand}" Key="Insert" />
 							<KeyBinding Command="{Binding ItemAddCommand}" Modifiers="Control" Key="N" />
 							<KeyBinding Command="{Binding ItemDeleteCommand}" Key="Delete" />
 							<KeyBinding Command="{Binding RefreshItemsCommand}" Key="F5" />
 							<KeyBinding Command="{Binding RefreshItemsCommand}" Modifiers="Control" Key="R" />
 						</UIElement.InputBindings>-->
-						<ContentPresenter />
-					</Border>
-				</ControlTemplate>
-			</Setter.Value>
-		</Setter>
-	</Style>
-	<!--<Style TargetType="{x:Type UserControl}" BasedOn="{StaticResource Virto_HomeView_Style}" />-->
-	
-	<!--default styles-->
-	
-	<Style TargetType="TextBlock" BasedOn="{StaticResource Virto_Base_TextBlock_Style}">
+                        <ContentPresenter />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--<Style TargetType="{x:Type UserControl}" BasedOn="{StaticResource Virto_HomeView_Style}" />-->
+
+    <!--default styles-->
+
+    <Style TargetType="TextBlock" BasedOn="{StaticResource Virto_Base_TextBlock_Style}">
         <Setter Property="Margin" Value="0,8,0,4"/>
     </Style>
     <Style TargetType="Button" BasedOn="{StaticResource Virto_Base_Button_Style}">

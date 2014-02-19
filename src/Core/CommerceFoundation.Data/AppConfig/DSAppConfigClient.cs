@@ -81,7 +81,12 @@ namespace VirtoCommerce.Foundation.Data.AppConfig
 			get { return GetAsQueryable<Localization>(); }
 		}
 
-		#endregion
+	    public IQueryable<SeoUrlKeyword> SeoUrlKeywords
+	    {
+	        get { return GetAsQueryable<SeoUrlKeyword>(); }
+	    }
+
+	    #endregion
        
     }
 }

@@ -151,8 +151,9 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure
 			}
 		}
 
-		protected void ItemDelete(IList<IViewModelDetailBase> selectedItemsList)
+		protected bool ItemDelete(IList<IViewModelDetailBase> selectedItemsList)
 		{
+			var anyOperationSucceded = true;
 			var selectionCount = selectedItemsList.Count;
 			if (selectionCount > 0)
 			{
@@ -175,13 +176,11 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure
 						if (x.Confirmed)
 						{
 							OnUIThread(() => ShowLoadingAnimation = true);
-							var anyOperationSucceded = false;
 							try
 							{
 								foreach (var item in selectedItemsList.Where(y => y != null))
 								{
-									item.Delete();
-									anyOperationSucceded = true;
+									item.Delete();									
 								}
 							}
 							catch (Exception ex)
@@ -197,9 +196,9 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure
 						}
 					});
 			}
+			return anyOperationSucceded;
 		}
-
-
+		
 		protected void ItemDuplicate(IList<IViewModelDetailBase> selectedItemsList)
 		{
 			var selectionCount = selectedItemsList.Count;

@@ -1,0 +1,36 @@
+﻿@model CartModel
+
+@{
+    Layout = null;
+}
+
+@if (Model.LineItems != null && Model.LineItems.Length > 0)
+{
+    <p>
+        @("Recently added item(s)".Localize())
+    </p>
+    <ul class="cart-list">
+        @for (var i = 0; i < Model.LineItems.Count(); i++)
+        {
+            @Html.EditorFor(m => Model.LineItems[i], "MiniLineItem", new { index = i, total = Model.LineItems.Count() })
+        }
+    </ul>
+    <div class="subtotal">
+        <div class="inner">
+            <p>@("Subtotal:".Localize())&nbsp;<span id="cart-subtotal">@Model.SubTotalPriceFormatted</span></p>
+        </div>
+    </div>
+    <div class="buttons clearfix">
+        <button onclick="$.open('@Url.Action("Index", "Cart")')">
+            <span>@("View cart".Localize())</span>
+        </button>
+        <button onclick="$.open('@Url.Action("Index", "Checkout")')">
+            <span>@("Continue to checkout".Localize())</span>
+        </button>
+    </div>  
+}
+else
+{
+    <p>@("You have no items in your shopping cart.".Localize())</p>
+}
+

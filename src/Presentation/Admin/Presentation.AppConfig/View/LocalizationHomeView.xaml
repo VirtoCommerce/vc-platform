@@ -8,7 +8,8 @@
             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
             xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
                xmlns:inf_behavior="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Behaviors;assembly=VirtoCommerce.ManagementClient.Core"
-               xmlns:core_Converters="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Converters;assembly=VirtoCommerce.ManagementClient.Core"
+               xmlns:securityModule="clr-namespace:VirtoCommerce.Foundation.Security.Model;assembly=VirtoCommerce.Foundation"
+			   xmlns:core_Converters="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Converters;assembly=VirtoCommerce.ManagementClient.Core"
                xmlns:core_DataVirtualization="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.DataVirtualization;assembly=VirtoCommerce.ManagementClient.Core"
                xmlns:sys="clr-namespace:System;assembly=mscorlib"
                xmlns:collections="clr-namespace:System.Collections;assembly=mscorlib"
@@ -68,6 +69,11 @@
 					</core_controls:MetroButton>
 					<core_controls:MetroButton Command="{Binding ItemEditCommand}" CommandParameter="{Binding SelectedItem, ElementName=ItemsDataGrid}" Header="EDIT" ToolTip="Edit Item">
 						<Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/check.png" Width="14"/>
+					</core_controls:MetroButton>
+					<core_controls:MetroButton Command="{Binding ListExportCommand}" Header="EXPORT" ToolTip="Export filtered list" 
+											   inf_behavior:PermissionBehavior.PermissionId="{x:Static securityModule:PredefinedPermissions.CatalogCatalog_Import_JobsRun}"
+                                           inf_behavior:PermissionBehavior.DenyVisibility="Collapsed">
+						<core_controls:VectorImage ImageResource="{StaticResource Icon_Button_Export}" Width="13" Height="13" Margin="0,0,1,0"/>
 					</core_controls:MetroButton>
 				</ItemsControl>
 

@@ -19,9 +19,12 @@ using VirtoCommerce.Foundation.Orders.Model;
 using VirtoCommerce.Foundation.Orders.Repositories;
 using VirtoCommerce.Foundation.Orders.Services;
 using VirtoCommerce.Foundation.Search.Services;
+using VirtoCommerce.Web.Client.Extensions;
 
 namespace VirtoCommerce.Web.Client.Helpers
 {
+    using VirtoCommerce.Foundation.Catalogs.Services;
+
     /// <summary>
     /// Cart helper class used to simplify cart operations.
     /// The cart is automatically cached in the current Http Context.
@@ -118,10 +121,15 @@ namespace VirtoCommerce.Web.Client.Helpers
         /// Gets the customer session service.
         /// </summary>
         /// <value>The customer session service.</value>
-		public ICustomerSessionService CustomerSessionService
+        public static ICustomerSessionService CustomerSessionService
 		{
 			get { return ServiceLocator.Current.GetInstance<ICustomerSessionService>(); }
 		}
+
+        public static ICatalogOutlineBuilder CatalogOutlineBuilder
+        {
+            get { return ServiceLocator.Current.GetInstance<ICatalogOutlineBuilder>(); }
+        }
 
         /// <summary>
         /// Gets the customer session.
@@ -302,7 +310,8 @@ namespace VirtoCommerce.Web.Client.Helpers
 				newOf.Name = "Default";
 			    if (!string.IsNullOrEmpty(CustomerSession.CsrUsername))
 			    {
-                    //TODO: Add order form property CSR username is saved in the order form property called "Purchased By CSR"
+                    //Add order form property CSR username is saved in the order form property called "Purchased By CSR"
+                    newOf.OrderFormPropertyValues.Add(new OrderFormPropertyValue() { ShortTextValue = CustomerSession.CsrUsername, Name = "Purchased By CSR"});
 			    }
 			}
 
@@ -505,7 +514,7 @@ namespace VirtoCommerce.Web.Client.Helpers
 				var relations = CatalogClient.GetItemRelations(parent.ItemId);
 
 				var relationGroups = relations.Select(rel => rel.GroupName).Distinct();
-				foreach (var prop in item.ItemPropertyValues.Where(p => relationGroups.Contains(p.Name)))
+                foreach (var prop in item.ItemPropertyValues.LocalizedProperties().Where(p => relationGroups.Contains(p.Name)))
 				{
 					var option = new LineItemOption
 						{
@@ -538,7 +547,8 @@ namespace VirtoCommerce.Web.Client.Helpers
 			lineItem.Quantity = quantity;
 			lineItem.Catalog = CustomerSession.CatalogId;
 			lineItem.FulfillmentCenterId = StoreHelper.StoreClient.GetCurrentStore().FulfillmentCenterId;
-			lineItem.CatalogOutline = CatalogOutlineBuilder.BuildCategoryOutline(CatalogClient.CatalogRepository, CustomerSession.CatalogId, item);
+			//lineItem.CatalogOutline = CatalogOutlineBuilder.BuildCategoryOutline(CatalogClient.CatalogRepository, CustomerSession.CatalogId, item);
+            lineItem.CatalogOutline = CatalogOutlineBuilder.BuildCategoryOutline(CustomerSessionService.CustomerSession.CatalogId, item.ItemId).ToString();
 
 			return lineItem;
 		}
@@ -576,6 +586,19 @@ namespace VirtoCommerce.Web.Client.Helpers
 
 			//Cart.AddressId = String.Empty;
 		}
+
+        public virtual void ClearCache(string name = "__all", string userId = null)
+        {
+            if (userId == null)
+            {
+                userId = CustomerSession.CustomerId;
+            }
+
+            foreach (var key in HttpContext.Current.Items.Keys.OfType<string>().Where(k => k.Equals(GetCacheKey(name, userId))).ToArray())
+            {
+                HttpContext.Current.Items[key] = null;
+            }
+        }
 
         /// <summary>
         /// Saves the changes.
@@ -772,7 +795,7 @@ namespace VirtoCommerce.Web.Client.Helpers
 
 			// it is less expansive to do check if cart exists first then load all the data
 			// preload all user carts
-			if (allCarts == null)
+            if (allCarts == null)
 			{
 				var query = (repo.ShoppingCarts.Where(
 					c => c.StoreId.Equals(storeId, StringComparison.OrdinalIgnoreCase) &&

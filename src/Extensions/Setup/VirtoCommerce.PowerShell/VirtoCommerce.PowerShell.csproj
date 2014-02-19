@@ -154,6 +154,7 @@
     <None Include="azure-upload-file.ps1" />
     <None Include="CodeSnippets\LocalizationJs.snippet" />
     <None Include="CodeSnippets\LocalizationHtmlRep.snippet" />
+    <None Include="db-custom.ps1" />
     <None Include="deploy-tfs.ps1" />
     <None Include="CodeSnippets\LocalizationHtml.snippet" />
     <None Include="deploy.ps1" />
@@ -179,6 +180,7 @@
     <EmbeddedResource Include="AppConfig\Data\EmailTemplateLanguage.sql" />
     <EmbeddedResource Include="AppConfig\Data\Localization.sql" />
     <EmbeddedResource Include="AppConfig\Data\JobParameter.sql" />
+    <EmbeddedResource Include="AppConfig\Data\SeoUrlKeyword.sql" />
     <Content Include="Catalogs\Data\Association.sql" />
     <Content Include="Catalogs\Data\AssociationGroup.sql" />
     <Content Include="Catalogs\Data\Catalog.sql" />
@@ -209,6 +211,7 @@
     <Content Include="Catalogs\Data\VirtualCatalog.sql" />
     <Content Include="Commands.txt" />
     <EmbeddedResource Include="Customers\Data\FillRequiredCaseProperty.sql" />
+    <Content Include="CustomSQL\analytics.oncreate.sql" />
     <Content Include="dblogin.sql" />
     <EmbeddedResource Include="Marketing\Data\PromotionReward.sql" />
     <EmbeddedResource Include="Marketing\Data\Promotion.sql" />

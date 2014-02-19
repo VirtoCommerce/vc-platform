@@ -300,6 +300,25 @@ namespace VirtoCommerce.Foundation.AppConfig
 			}
 		}
 
+        /// <summary>
+        /// Configuration attribute which determines when the seo keywords values are
+        /// automatically refreshed in memory (in seconds).
+        /// </summary>
+        /// <value>
+        /// The seo keywords timeout.
+        /// </value>
+        [ConfigurationProperty("seoKeywordsTimeout", IsRequired = false, DefaultValue = "0:1:0")]
+		public TimeSpan SeoKeywordsTimeout{
+			get
+			{
+                return (TimeSpan)this["seoKeywordsTimeout"];
+			}
+			set
+			{
+                this["seoKeywordsTimeout"] = value.ToString();
+			}
+		}
+
 
         [ConfigurationProperty("displayTemplatesTimeout", IsRequired = false, DefaultValue = "0:2:0")]
 		public TimeSpan DisplayTemplateMappingsTimeout

@@ -9,18 +9,23 @@
             xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
             xmlns:core_DataVirtualization="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.DataVirtualization;assembly=VirtoCommerce.ManagementClient.Core"
             xmlns:assetInfrastructure="clr-namespace:VirtoCommerce.ManagementClient.Asset.Infrastructure"
-               xmlns:core_Converters="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Converters;assembly=VirtoCommerce.ManagementClient.Core"
-               xmlns:implementations="clr-namespace:VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations"
-               xmlns:prism="clr-namespace:Microsoft.Practices.Prism.Interactivity.InteractionRequest;assembly=Microsoft.Practices.Prism.Interactivity"
-               xmlns:interaction_dialog="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Dialogs;assembly=VirtoCommerce.ManagementClient.Core"
-               mc:Ignorable="d" 
+            xmlns:core_Converters="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Converters;assembly=VirtoCommerce.ManagementClient.Core"
+            xmlns:DialogsViewModel="VirtoCommerce.ManagementClient.Asset.Dialogs.ViewModel.Implementations"
+            xmlns:DialogsView="clr-namespace:VirtoCommerce.ManagementClient.Asset.Dialogs.View"
+            xmlns:implementations="clr-namespace:VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations"
+            xmlns:prism="clr-namespace:Microsoft.Practices.Prism.Interactivity.InteractionRequest;assembly=Microsoft.Practices.Prism.Interactivity"
+            xmlns:interaction_dialog="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Dialogs;assembly=VirtoCommerce.ManagementClient.Core"
+            mc:Ignorable="d" 
             Height="550" Width="800">
 
 	<i:Interaction.Triggers>
 		<prism:InteractionRequestTrigger SourceObject="{Binding CommonConfirmRequest}">
 			<interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:ConfirmationLocalModalInteractionDialog}"/>
 		</prism:InteractionRequestTrigger>
-	</i:Interaction.Triggers>
+        <prism:InteractionRequestTrigger SourceObject="{Binding InputNameDialogRequest, Mode=OneWay}">
+            <interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:DisableableLocalModalInteractionDialog}"/>
+        </prism:InteractionRequestTrigger>
+    </i:Interaction.Triggers>
 
 	<base:ViewBase.Resources>
 		<ResourceDictionary>
@@ -75,21 +80,25 @@
 
 		<ListBox Grid.Column="0" Grid.Row="0" x:Name="AddressBarRegion" ItemsSource="{Binding AddressBarItems}"
 					 ItemContainerStyle="{StaticResource AddressBarContainerStyle}"
-				>
+                 MinHeight="24">
 			<ListBox.ItemsPanel>
 				<ItemsPanelTemplate>
 					<DockPanel HorizontalAlignment="Left" />
 				</ItemsPanelTemplate>
 			</ListBox.ItemsPanel>
 		</ListBox>
-		<Button Content="Refresh" Grid.Column="2" Command="{Binding RefreshCommand}"/>
-		<Button Content="Upload" Grid.Row="1" Grid.Column="2" Command="{Binding UploadCommand}" VerticalAlignment="Top" Margin="0,12,0,0" />
+        <StackPanel  Grid.Row="1" Grid.Column="2">
+            <Button Content="Refresh" Command="{Binding RefreshCommand}"/>
+		    <Button Content="Upload"  Command="{Binding UploadCommand}" VerticalAlignment="Top" Margin="0,12,0,0" />
+            <Button Content="Create folder"  Command="{Binding CreateFolderCommand}" VerticalAlignment="Top" Margin="0,12,0,0" />
+            <Button Content="Rename"  Command="{Binding RenameCommand}" IsEnabled="{Binding IsItemSelected}" VerticalAlignment="Top" Margin="0,12,0,0" />
+            <Button Content="Delete"  Command="{Binding DeleteCommand}" IsEnabled="{Binding IsItemSelected}" CommandParameter="{Binding }" VerticalAlignment="Top" Margin="0,12,0,0" />
 
-		<Border Grid.Row="1" Grid.Column="2" BorderThickness="1" VerticalAlignment="Top" Margin="0,48,0,0">
-			<Image Height="100" Width="100" Source="{Binding SelectedAssetImageSource, Mode=OneWay}" />
-		</Border>
-
-		<DataGrid Grid.Row="1" x:Name="AssetItemList" ItemsSource="{Binding SelectedFolderItems}" SelectedValue="{Binding ItemListSelectedItem, Mode=OneWayToSource}" GridLinesVisibility="None" RowHeaderWidth="0" >
+            <Border  BorderThickness="1" VerticalAlignment="Top" Margin="0,12,0,0">
+			    <Image Height="100" Width="100" Source="{Binding SelectedAssetImageSource, Mode=OneWay}" />
+		    </Border>
+        </StackPanel>
+        <DataGrid Grid.Row="1" Grid.Column="0" x:Name="AssetItemList" ItemsSource="{Binding SelectedFolderItems}" SelectedValue="{Binding ItemListSelectedItem, Mode=OneWayToSource}" GridLinesVisibility="None" RowHeaderWidth="0" >
 			<DataGrid.Columns>
 				<DataGridTemplateColumn Header="Name" Width="*">
 					<DataGridTemplateColumn.CellTemplate>
@@ -124,7 +133,7 @@
 			</DataGrid.ColumnHeaderStyle>
 		</DataGrid>
 
-		<Grid Grid.Row="2" Margin="0,12,0,8">
+        <Grid Grid.Row="2" Margin="0,12,0,8" Visibility="{Binding AssetPickMode, Converter={x:Static core_Converters:ToVisibilityConverter.Current}}">
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="Auto"/>
 				<ColumnDefinition/>

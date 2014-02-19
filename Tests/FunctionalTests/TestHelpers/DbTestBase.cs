@@ -9,7 +9,7 @@ namespace FunctionalTests.TestHelpers
 {
     public class MigrationsTestBase : TestBase
     {
-        public const string DefaultDatabaseName = "VCMigrationsTests";
+        public const string DefaultDatabaseName = "VCMigrationsTestsX";
 
         public TestDatabase TestDatabase { get; private set; }
 

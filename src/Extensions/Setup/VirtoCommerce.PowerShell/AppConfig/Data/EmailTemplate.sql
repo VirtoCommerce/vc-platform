@@ -89,6 +89,61 @@
     </div>
   </xsl:template>
 </xsl:stylesheet>',N'en-US',N'Order notification email template',N'20130514 12:17:28.037',N'20130423 09:49:14.567',N'EmailTemplate');
+INSERT INTO [EmailTemplate] ([EmailTemplateId],[Name],[Type],[Body],[DefaultLanguageCode],[Subject],[LastModified],[Created],[Discriminator]) VALUES (N'5c496513-c7a4-47c3-817f-f8ca5c0cf5dd',N'forgot-password',N'Xsl',N'<?xml version="1.0" encoding="utf-8"?>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt">
+  <xsl:output method="html" />
+  <xsl:template match="/">
+    <html>
+      <head id="Head1">
+        <style type="text/css">
+          #ResetPasswordTemplate {
+          color: #444444;
+          font-family: ''Lucida Grande'',Verdana,Arial,sans-serif;
+          font-size: 12px;
+          line-height: 18px;
+          }
+          h1 {font-size: 20px;}
+          h2 {font-size: 18px;}
+          h3 {font-size: 16px; padding: 2px 2px 2px 2px}
+          .footer {padding: 10px 0 0 0}
+        </style>
+        <title>
+          Reset password
+        </title>
+      </head>
+      <body>
+        <xsl:call-template name="ResetPasswordTemplate"></xsl:call-template>
+      </body>
+    </html>
+  </xsl:template>
+
+  <xsl:template name="ResetPasswordTemplate">
+    <div id="ResetPasswordTemplate">
+      <b>
+        <xsl:value-of select="//ResetPasswordTemplate/Username" />,
+      </b> 
+      <br/><br/> 
+      <div class="body">
+        To change your password, click on the following link:
+        <br/>
+        <a>
+          <xsl:attribute name="href">
+            <xsl:value-of select="//ResetPasswordTemplate/Url"/>
+          </xsl:attribute>
+          <xsl:value-of select="//ResetPasswordTemplate/Url" />
+      </a>
+      </div>
+<br/>
+      <div class="Footer">
+        Best Regards,
+        <br/><xsl:value-of select="//ResetPasswordTemplate/AuthorName" />.
+      </div>
+      <div style="color:#aaaaaa;margin:10px 0 14px 0;padding-top:10px;border-top:1px solid #eeeeee">
+        This email is a service from Your Company.
+      </div>
+    </div>
+  </xsl:template>
+</xsl:stylesheet>',N'en-US',N'Reset password',N'20140122 14:48:38.417',N'20140122 14:36:31.740',N'EmailTemplate');
 INSERT INTO [EmailTemplate] ([EmailTemplateId],[Name],[Type],[Body],[DefaultLanguageCode],[Subject],[LastModified],[Created],[Discriminator]) VALUES (N'78fa9ead-fc4d-4cbd-aba0-456a0ad0b72a',N'case-created-notification',N'Xsl',N'<?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt">
   <xsl:output method="html" />

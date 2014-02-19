@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Data.SqlClient;
-using System.Web;
 using VirtoCommerce.Foundation.Data.Infrastructure;
 using InstallResource = VirtoCommerce.Web.Areas.VirtoAdmin.Resources.Resource;
 
@@ -8,13 +7,6 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Models
 {
     public class InstallModel
     {
-        public enum SubmitAction
-        {
-            Save,
-            CreateDb,
-            Restart
-        }
-
         [Required(ErrorMessageResourceName = "DataSourceRequiredError", ErrorMessageResourceType = typeof(InstallResource))]
         [Display(Name="DataSource", ResourceType = typeof(InstallResource))]
         public string DataSource { get; set; }
@@ -42,35 +34,6 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Models
 
         public bool DbAdminRequired { get; set; }
 
-        public string StatusMessage { get; set; }
-
-        public string ErrorMessage { get; set; }
-
-        public bool HasErrorMessage
-        {
-            get
-            {
-                return !string.IsNullOrEmpty(ErrorMessage);
-            }
-        }
-
-        public bool HasStatusMessage 
-        {
-            get
-            {
-                return !string.IsNullOrEmpty(StatusMessage);
-            }
-        }
-
-        public SubmitAction Action { get; set; }
-
-        public void ClearMessages()
-        {
-            ErrorMessage = "";
-            StatusMessage = "";
-            HttpContext.Current.Session["log"] = null;
-        }
-
         public SqlConnectionStringBuilder ConnectionStringBuilder
         {
             get
@@ -80,17 +43,10 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Models
                     DataSource = this.DataSource,
                     InitialCatalog = this.InitialCatalog,
                     UserID = this.DbUserName,
-                    Password = this.DbUserPassword
+                    Password = this.DbUserPassword,
+                    ConnectTimeout = 420,
+                    MultipleActiveResultSets = true
                 };
-            }
-        }
-
-        public bool IsLogExists
-        {
-            get
-            {
-                var log = HttpContext.Current.Session["log"] as string;
-                return !string.IsNullOrWhiteSpace(log);
             }
         }
     }
