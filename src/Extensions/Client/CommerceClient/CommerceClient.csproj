@@ -76,6 +76,8 @@
     <Compile Include="Globalization\Repository\DatabaseElementRepository.cs" />
     <Compile Include="Globalization\Repository\ResXResource.cs" />
     <Compile Include="Globalization\Repository\XmlElementRepository.cs" />
+    <Compile Include="ReviewClient.cs" />
+    <Compile Include="SeoKeywordClient.cs" />
     <Compile Include="SequencesClient.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SettingsClient.cs" />
