@@ -92,8 +92,13 @@ namespace VirtoCommerce.Client
         /// Saves the changes made to customer repository.
         /// </summary>
         /// <returns></returns>
-        public virtual int SaveCustomerChanges()
+        public virtual int SaveCustomerChanges(string memberId = null)
         {
+            //Remove from cache
+            if (!string.IsNullOrEmpty(memberId))
+            {
+                Helper.Remove(string.Format(CustomerCacheKey, memberId));
+            }
             return _customerRepository.UnitOfWork.Commit();
         }
 
