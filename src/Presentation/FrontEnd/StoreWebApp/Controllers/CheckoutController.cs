@@ -234,7 +234,7 @@ namespace VirtoCommerce.Web.Controllers
                     });
                 }
 
-                _userClient.SaveCustomerChanges();
+                _userClient.SaveCustomerChanges(user.MemberId);
             }
             else if (checkoutModel.CreateAccount)
             {

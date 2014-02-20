@@ -376,7 +376,7 @@ namespace VirtoCommerce.Web.Controllers
                         parent.Addresses.Add(newAddress);
                     }
 
-                    _userClient.SaveCustomerChanges();
+                    _userClient.SaveCustomerChanges(u.MemberId);
                 }
 
                 return RedirectToAction(String.IsNullOrEmpty(model.OrganizationId) ? "AddressBook" : "CompanyAddressBook");
@@ -405,7 +405,7 @@ namespace VirtoCommerce.Web.Controllers
                 if (addr != null)
                 {
                     parent.Addresses.Remove(addr);
-                    _userClient.SaveCustomerChanges();
+                    _userClient.SaveCustomerChanges(u.MemberId);
                 }
             }
 
@@ -488,7 +488,7 @@ namespace VirtoCommerce.Web.Controllers
                     u.Emails.Add(newEmail);
                 }
 
-                _userClient.SaveCustomerChanges();
+                _userClient.SaveCustomerChanges(u.MemberId);
 
                 if (needToChangePassword)
                 {
