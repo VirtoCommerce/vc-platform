@@ -1,4 +1,6 @@
-﻿namespace FunctionalTests.Search
+﻿using FunctionalTests.TestHelpers;
+
+namespace FunctionalTests.Search
 {
     using System;
     using System.Diagnostics;
@@ -14,7 +16,7 @@
 
     public class LuceneScenarios
     {
-        private string _LuceneStorageDir = Path.Combine(Path.GetTempPath(), "lucene");
+        private string _LuceneStorageDir = Path.Combine(FunctionalTestBase.TempPath, "lucene");
 
         [Fact, Trait("type", "lucene")]
         public void Can_create_lucene_index()

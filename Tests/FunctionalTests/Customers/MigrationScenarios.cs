@@ -23,7 +23,7 @@ namespace FunctionalTests.Customers
         public MigrationScenarios()
         {
             _previousDataDirectory = AppDomain.CurrentDomain.GetData("DataDirectory");
-            AppDomain.CurrentDomain.SetData("DataDirectory", Path.GetTempPath());
+            AppDomain.CurrentDomain.SetData("DataDirectory", FunctionalTestBase.TempPath);
             _databaseName = "CustomersTest";
         }
 

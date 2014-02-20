@@ -1,18 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
-using System.Data.Entity.Migrations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VirtoCommerce.Foundation.Data.Catalogs.Migrations;
-using VirtoCommerce.Foundation.Frameworks;
+using System.IO;
+using PlainElastic.Net.Utils;
 
 namespace FunctionalTests.TestHelpers
 {
-    using VirtoCommerce.PowerShell.DatabaseSetup;
-
     public enum RepositoryProvider
     {
         DataService,
@@ -22,6 +14,14 @@ namespace FunctionalTests.TestHelpers
     public abstract class FunctionalTestBase : TestBase
     {
         private RepositoryProvider _provider = RepositoryProvider.EntityFramework;
+
+        public static string TempPath 
+        {
+            get
+            {
+                return Path.GetTempPath();
+            }
+        }
 
         public RepositoryProvider RepositoryProvider
         {

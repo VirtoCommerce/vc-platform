@@ -8,7 +8,7 @@ using System.Data;
 using System.Data.Entity;
 using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
-using System.Data.Objects;
+using System.Data.Entity.Core.Objects;
 
 namespace VirtoCommerce.Foundation.Data
 {

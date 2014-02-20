@@ -64,7 +64,7 @@ namespace FunctionalTests.Orders.Helpers
 	{
 		public const string DatabaseName = "OrdersTest";
 
-		protected override EFOrderRepository CreateDataSource()
+        protected override EFOrderRepository CreateRepository()
 		{
 			return new EFOrderRepository(DatabaseName, new OrderEntityFactory());
 		}
@@ -81,7 +81,7 @@ namespace FunctionalTests.Orders.Helpers
 		protected OrderTestBase()
 		{
 			_previousDataDirectory = AppDomain.CurrentDomain.GetData("DataDirectory");
-			AppDomain.CurrentDomain.SetData("DataDirectory", Path.GetTempPath());
+			AppDomain.CurrentDomain.SetData("DataDirectory", TempPath);
 
 			//_OrderService = new TestService(typeof(OrderService));
 		}

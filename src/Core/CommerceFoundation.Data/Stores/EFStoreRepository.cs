@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using VirtoCommerce.Foundation.Stores.Repositories;
 using VirtoCommerce.Foundation.Stores.Factories;
 using VirtoCommerce.Foundation.Stores;
@@ -45,7 +42,7 @@ namespace VirtoCommerce.Foundation.Data.Stores
 			: base(nameOrConnectionString, interceptors: interceptors)
 		{
 			_entityFactory = entityFactory;
-			Database.SetInitializer(new ValidateDatabaseInitializer<EFStoreRepository>());
+		    Database.SetInitializer(new ValidateDatabaseInitializer<EFStoreRepository>());
 
 			Configuration.AutoDetectChangesEnabled = true;
 			Configuration.ProxyCreationEnabled = false;

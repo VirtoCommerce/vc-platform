@@ -573,7 +573,7 @@ namespace FunctionalTests.Orders
                 UsageStatus = testStatus
             };
 
-		    InvokeActivity(activity, orderGroup);
+			InvokeActivity(activity, orderGroup);
 
 		    var addedUsage = repository.Object.PromotionUsages.First(x => x.PromotionId == promotionId);
 
