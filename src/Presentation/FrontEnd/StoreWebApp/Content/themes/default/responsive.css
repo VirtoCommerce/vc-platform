@@ -1458,6 +1458,18 @@
     .head-top-block .cart-options ul li.count span {
         color: #fff;
     }
+
+    .page-nav {
+        display: none;
+    }
+
+    .article .content {
+        margin-top: 0;
+    }
+
+        .article .content .category-products .toolbar.top {
+            display: none;
+        }
 }
 
 @media only screen and (min-width: 0) and (max-width: 479px) {
@@ -1827,13 +1839,6 @@
             margin: 0;
         }
 
-    .page-nav .title .page-item-nav {
-        display: none;
-    }
-
-    .article .content {
-        margin-top: 30px;
-    }
 
     .article .products-list.grid .item:hover .inner {
         position: static;
