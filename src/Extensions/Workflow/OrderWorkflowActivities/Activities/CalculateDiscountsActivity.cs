@@ -442,17 +442,19 @@ namespace VirtoCommerce.OrderWorkflow
 				if (reward == null)
 					continue;
 
-				var shipment = CurrentOrderGroup.OrderForms[0].Shipments.FirstOrDefault(x => x.ShippingMethodId == reward.ShippingMethodId);
+				var shipment = CurrentOrderGroup.OrderForms[0].Shipments.FirstOrDefault(x => string.IsNullOrEmpty(x.ShippingMethodId) 
+                    || x.ShippingMethodId == reward.ShippingMethodId);
+
 				if (shipment != null)
 				{
 					var discountAmount = 0m;
 					switch (reward.AmountTypeId)
 					{
 						case (int)RewardAmountType.Relative:
-							discountAmount = Math.Round(shipment.Subtotal * reward.Amount * 0.01m,2);
+                            discountAmount = Math.Round(shipment.ShippingCost * reward.Amount * 0.01m, 2);
 							break;
 						case (int)RewardAmountType.Absolute:
-							discountAmount = Math.Round(reward.Amount,2);
+                            discountAmount = Math.Round(reward.Amount, 2);
 							break;
 					}
 					AddDiscountToEntity(shipment, reward, discountAmount);
@@ -477,14 +479,11 @@ namespace VirtoCommerce.OrderWorkflow
 						DiscountName = reward.Promotion.Name,
 						DisplayMessage = reward.Promotion.Description,
 						OrderFormId = orderForm.OrderFormId,
-                        DiscountCode = reward.Promotion.CouponId ?? reward.Promotion.CouponSetId
+                        DiscountCode = reward.Promotion.Coupon !=null ? reward.Promotion.Coupon.Code : null
 					};
 					orderForm.Discounts.Add(discount);
 				}
 				discount.DiscountAmount += discountAmount;
-				// done in calculate total activity
-				// orderForm.DiscountAmount = discount.DiscountAmount;
-
 			}
 			else if (lineItem != null && reward is CatalogItemReward)
 			{
@@ -497,13 +496,11 @@ namespace VirtoCommerce.OrderWorkflow
 						DiscountName = reward.Promotion.Name,
 						DisplayMessage = reward.Promotion.Description,
 						LineItemId = lineItem.LineItemId,
-                        DiscountCode = reward.Promotion.CouponId ?? reward.Promotion.CouponSetId
+                        DiscountCode = reward.Promotion.Coupon != null ? reward.Promotion.Coupon.Code : null
 					};
 					lineItem.Discounts.Add(discount);
 				}
 				discount.DiscountAmount += discountAmount;
-				// done in calculate total activity
-				// lineItem.LineItemDiscountAmount = discount.DiscountAmount;
 			}
 			else if (shipment != null && reward is ShipmentReward)
 			{
@@ -516,13 +513,11 @@ namespace VirtoCommerce.OrderWorkflow
 						DiscountName = reward.Promotion.Name,
 						DisplayMessage = reward.Promotion.Description,
 						ShipmentId = shipment.ShipmentId,
-                        DiscountCode = reward.Promotion.CouponId ?? reward.Promotion.CouponSetId
+                        DiscountCode = reward.Promotion.Coupon != null ? reward.Promotion.Coupon.Code : null
 					};
 					shipment.Discounts.Add(discount);
 				}
 				discount.DiscountAmount += discountAmount;
-				// done in calculate total activity
-				// shipment.ShippingDiscountAmount = discount.DiscountAmount;
 			}
 		}
 

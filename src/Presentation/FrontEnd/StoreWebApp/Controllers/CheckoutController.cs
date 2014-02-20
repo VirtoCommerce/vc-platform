@@ -378,7 +378,7 @@ namespace VirtoCommerce.Web.Controllers
             }
 
             ecDetails.PaymentDetails.Add(GetPaypalPaymentDetail(currency, PaymentActionCodeType.SALE));
-            ecDetails.MaxAmount = new BasicAmountType(currency, FormatMoney(Ch.Cart.Total));
+            ecDetails.MaxAmount = new BasicAmountType(currency, FormatMoney(Math.Max(Ch.Cart.Total, Ch.Cart.Subtotal)));
             ecDetails.LocaleCode = new RegionInfo(Thread.CurrentThread.CurrentUICulture.LCID).TwoLetterISORegionName;
             request.SetExpressCheckoutRequestDetails = ecDetails;
 
@@ -397,7 +397,7 @@ namespace VirtoCommerce.Web.Controllers
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", @"Paypal failure");
+                ModelState.AddModelError("", @"Paypal failure".Localize());
                 ModelState.AddModelError("", ex.Message);
             }
 
@@ -407,7 +407,7 @@ namespace VirtoCommerce.Web.Controllers
                 if (setEcResponse.Ack.Equals(AckCodeType.FAILURE) ||
                     (setEcResponse.Errors != null && setEcResponse.Errors.Count > 0))
                 {
-                    ModelState.AddModelError("", @"Paypal failure");
+                    ModelState.AddModelError("", @"Paypal failure".Localize());
 
                     foreach (var error in setEcResponse.Errors)
                     {
@@ -454,7 +454,7 @@ namespace VirtoCommerce.Web.Controllers
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", @"Paypal failure");
+                ModelState.AddModelError("", @"Paypal failure".Localize());
                 ModelState.AddModelError("", ex.Message);
             }
 
@@ -463,7 +463,7 @@ namespace VirtoCommerce.Web.Controllers
                 if (getEcResponse.Ack.Equals(AckCodeType.FAILURE) ||
                     (getEcResponse.Errors != null && getEcResponse.Errors.Count > 0))
                 {
-                    ModelState.AddModelError("", @"Paypal failure");
+                    ModelState.AddModelError("", @"Paypal failure".Localize());
                     foreach (var error in getEcResponse.Errors)
                     {
                         ModelState.AddModelError("", error.LongMessage);
@@ -500,7 +500,7 @@ namespace VirtoCommerce.Web.Controllers
 
                     if (cartPayment == null)
                     {
-                        ModelState.AddModelError("", @"Shopping cart failure!");
+                        ModelState.AddModelError("", @"Shopping cart failure!".Localize());
                     }
                     else if (ModelState.IsValid)
                     {
@@ -510,7 +510,7 @@ namespace VirtoCommerce.Web.Controllers
 
                         if (decimal.Parse(paymentDetails.OrderTotal.value) != Ch.Cart.Total)
                         {
-                            ModelState.AddModelError("", @"Paypal payment total does not match cart total!");
+                            ModelState.AddModelError("", @"Paypal payment total does not match cart total!".Localize());
                         }
 
                         Ch.SaveChanges();
@@ -536,7 +536,13 @@ namespace VirtoCommerce.Web.Controllers
             paymentDetails.HandlingTotal = new BasicAmountType(currency, FormatMoney(Ch.Cart.HandlingTotal));
             paymentDetails.TaxTotal = new BasicAmountType(currency, FormatMoney(Ch.Cart.TaxTotal));
             paymentDetails.OrderTotal = new BasicAmountType(currency, FormatMoney(Ch.Cart.Total));
-            paymentDetails.ItemTotal = new BasicAmountType(currency, FormatMoney(Ch.LineItems.Sum(x => x.ExtendedPrice)));
+            paymentDetails.ItemTotal = new BasicAmountType(currency, FormatMoney(paymentDetails.PaymentDetailsItem.Sum(x => decimal.Parse(x.Amount.value))));
+
+            var shippingDiscount = Ch.Cart.OrderForms.SelectMany(c => c.Shipments).Sum(c => c.ShippingDiscountAmount);
+            if (shippingDiscount > 0)
+            {
+                paymentDetails.ShippingDiscount = new BasicAmountType(currency, FormatMoney(-shippingDiscount));
+            }
             return paymentDetails;
         }
 
@@ -547,43 +553,37 @@ namespace VirtoCommerce.Web.Controllers
 
         private IEnumerable<PaymentDetailsItemType> GetPaypalPaymentDetailsItemTypes(CurrencyCodeType currency)
         {
-            var detais = new List<PaymentDetailsItemType>();
-
-            foreach (var li in Ch.LineItems)
+            var detais = Ch.LineItems.Select(li => new PaymentDetailsItemType
             {
-                var itemDetails = new PaymentDetailsItemType
-                {
-                    Name = li.DisplayName,
-                    Amount = new BasicAmountType(currency, FormatMoney(li.PlacedPrice)),
-                    Quantity = (int)li.Quantity,
-                    ItemCategory = ItemCategoryType.PHYSICAL,
-                    Tax = new BasicAmountType(currency, FormatMoney(li.TaxTotal)),
-                    Description = li.Description,
-                    Number = li.CatalogItemCode,
-                    ItemURL = Url.ItemUrl(li.CatalogItemId, li.ParentCatalogItemId)
-                };
+                Name = li.DisplayName, 
+                Amount = new BasicAmountType(currency, FormatMoney(li.PlacedPrice)), 
+                Quantity = (int) li.Quantity, 
+                ItemCategory = ItemCategoryType.PHYSICAL,
+                Tax = new BasicAmountType(currency, FormatMoney(li.TaxTotal)), 
+                Description = li.Description, 
+                Number = li.CatalogItemCode, 
+                ItemURL = Url.ItemUrl(li.CatalogItemId, li.ParentCatalogItemId)
+            }).ToList();
 
-                detais.Add(itemDetails);
-            }
-
-            var discount = Ch.Cart.OrderForms.Sum(c => c.DiscountAmount)
-                + Ch.Cart.OrderForms.SelectMany(c => c.LineItems).Sum(c => c.LineItemDiscountAmount)
-                + Ch.Cart.OrderForms.SelectMany(c => c.Shipments).Sum(c => c.ShippingDiscountAmount);
-
-            if (discount > 0)
+            detais.AddRange(Ch.Cart.OrderForms.SelectMany(x => x.Discounts).Select(dicount => new PaymentDetailsItemType
             {
-                var itemDetails = new PaymentDetailsItemType
-                {
-                    Name = "Discounts",
-                    Amount = new BasicAmountType(currency, FormatMoney(-discount)),
-                    Quantity = 1,
-                    ItemCategory = ItemCategoryType.PHYSICAL,
-                    Description = "Discounts applied",
-                    PromoCode = Ch.CustomerSession.CouponCode
-                };
+                Name = dicount.DiscountName, 
+                Amount = new BasicAmountType(currency, FormatMoney(-dicount.DiscountAmount)), 
+                Quantity = 1, 
+                ItemCategory = ItemCategoryType.PHYSICAL, 
+                Description = dicount.DisplayMessage, 
+                PromoCode = dicount.DiscountCode
+            }));
 
-                detais.Add(itemDetails);
-            }
+            detais.AddRange(Ch.Cart.OrderForms.SelectMany(x => x.LineItems).SelectMany(x=>x.Discounts).Select(dicount => new PaymentDetailsItemType
+            {
+                Name = dicount.DiscountName,
+                Amount = new BasicAmountType(currency, FormatMoney(-dicount.DiscountAmount)),
+                Quantity = 1,
+                ItemCategory = ItemCategoryType.PHYSICAL,
+                Description = dicount.DisplayMessage,
+                PromoCode = dicount.DiscountCode
+            }));
 
             return detais;
         }
@@ -779,7 +779,7 @@ namespace VirtoCommerce.Web.Controllers
 
             if (!paymentCreated)
             {
-                errors.Add("Failed to create payment");
+                errors.Add("Failed to create payment".Localize());
             }
 
             #endregion
@@ -1061,7 +1061,7 @@ namespace VirtoCommerce.Web.Controllers
                 LastName = lastName,
                 City = address.CityName,
                 CountryCode = countryCode,
-                DaytimePhoneNumber = address.Phone ?? "PHONE", //This field is required
+                DaytimePhoneNumber = address.Phone ?? "no phone", //This field is required
                 CountryName = address.CountryName,
                 Line1 = address.Street1,
                 Line2 = address.Street2,
