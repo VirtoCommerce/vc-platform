@@ -358,9 +358,6 @@
                     <Component Id="cmpA5D1077FA8637D8AD86196ADA5BFCAC3" Guid="{8D705446-9DEA-49E9-85E8-035F935E6327}">
                         <File Id="fil4597A1749B2458AD28782F62F1907A4E" KeyPath="yes" Source="$(var.FrontendSourcePath)\bin\System.Data.dll" />
                     </Component>
-                    <Component Id="cmpBBD9E7FBB24D0F1853993DF1E7C17F43" Guid="{F1084F3D-8B7F-4433-9F6D-84EB80565C2B}">
-                        <File Id="fil8F40CBE1BC92C2FA233C8C084BB559EB" KeyPath="yes" Source="$(var.FrontendSourcePath)\bin\System.Data.Entity.dll" />
-                    </Component>
                     <Component Id="cmp304FDE2550205E567AB6CF23C2DCF3D1" Guid="{5EF9030A-D72E-43A6-88A6-ACD45044A81E}">
                         <File Id="fil44C61C73540695D2C578F565F638396B" KeyPath="yes" Source="$(var.FrontendSourcePath)\bin\System.EnterpriseServices.dll" />
                     </Component>
@@ -1983,7 +1980,6 @@
             <ComponentRef Id="cmpD4310E6420C3D00CFA02099E7138D975" />
             <ComponentRef Id="cmp5AC628C5751209F473FB61750D95D132" />
             <ComponentRef Id="cmpA5D1077FA8637D8AD86196ADA5BFCAC3" />
-            <ComponentRef Id="cmpBBD9E7FBB24D0F1853993DF1E7C17F43" />
             <ComponentRef Id="cmp304FDE2550205E567AB6CF23C2DCF3D1" />
             <ComponentRef Id="cmpB7682ADE96D0F34A4F0E2BB9E7E7B5DD" />
             <ComponentRef Id="cmpF15D08B6072782D00FAE05FFAF8D34F7" />
