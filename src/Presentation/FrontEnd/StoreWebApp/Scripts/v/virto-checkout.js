@@ -197,6 +197,7 @@ VirtoCheckout.prototype = {
         //alert(form.valid());
         //form.validate();
         if (form.valid()) {
+            window.history.forward();
             form.submit();
         }
     },
