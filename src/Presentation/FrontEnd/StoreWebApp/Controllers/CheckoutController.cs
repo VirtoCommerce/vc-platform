@@ -345,7 +345,9 @@ namespace VirtoCommerce.Web.Controllers
             }
 
             ecDetails.NoShipping = "2";
-
+            ecDetails.PaymentDetails.Add(GetPaypalPaymentDetail(currency, PaymentActionCodeType.SALE));
+            ecDetails.MaxAmount = new BasicAmountType(currency, FormatMoney(Math.Max(Ch.Cart.Total, Ch.Cart.Subtotal)));
+            ecDetails.LocaleCode = new RegionInfo(Thread.CurrentThread.CurrentUICulture.LCID).TwoLetterISORegionName;
             //paymentDetails.OrderDescription = Ch.Cart.Name;
 
             AddressModel modelAddress = null;
@@ -377,9 +379,6 @@ namespace VirtoCommerce.Web.Controllers
                 ecDetails.PaymentDetails[0].ShipToAddress = shipAddress;
             }
 
-            ecDetails.PaymentDetails.Add(GetPaypalPaymentDetail(currency, PaymentActionCodeType.SALE));
-            ecDetails.MaxAmount = new BasicAmountType(currency, FormatMoney(Math.Max(Ch.Cart.Total, Ch.Cart.Subtotal)));
-            ecDetails.LocaleCode = new RegionInfo(Thread.CurrentThread.CurrentUICulture.LCID).TwoLetterISORegionName;
             request.SetExpressCheckoutRequestDetails = ecDetails;
 
 
@@ -1061,7 +1060,7 @@ namespace VirtoCommerce.Web.Controllers
                 LastName = lastName,
                 City = address.CityName,
                 CountryCode = countryCode,
-                DaytimePhoneNumber = address.Phone ?? "no phone", //This field is required
+                DaytimePhoneNumber = address.Phone ?? "none",
                 CountryName = address.CountryName,
                 Line1 = address.Street1,
                 Line2 = address.Street2,
