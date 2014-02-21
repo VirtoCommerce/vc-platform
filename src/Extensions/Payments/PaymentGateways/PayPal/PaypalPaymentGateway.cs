@@ -84,6 +84,7 @@ namespace VirtoCommerce.PaymentGateways
             }
             catch (Exception ex)
             {
+                message = ex.Message;
                 return false;
             }
 

@@ -2352,6 +2352,14 @@
             display: none;
         }
 
+    .article .cart .cart-block {
+        padding: 20px;
+    }
+
+        .article .cart .cart-block .products-list .item {
+            width: 200px;
+        }
+
     .article .sidebar .block {
         width: 230px;
     }
@@ -2409,6 +2417,11 @@
             left: 11px;
             margin: -12px 0 0;
         }
+
+        .footer-wrap .banners .banner.insurance a:after {
+            left: 5px;
+        }
+
 
     .footer-wrap .info {
         padding: 30px 0 0;
