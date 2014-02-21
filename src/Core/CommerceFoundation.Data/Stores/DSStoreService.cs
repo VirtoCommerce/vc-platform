@@ -11,9 +11,5 @@ namespace VirtoCommerce.Foundation.Data.Stores
     [JsonSupportBehavior]
 	public class DSStoreService : DServiceBase<EFStoreRepository>
 	{
-		protected override EFStoreRepository CreateDataSource()
-		{
-			return new EFStoreRepository(new StoreEntityFactory());
-		}
 	}
 }

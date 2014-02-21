@@ -18,7 +18,7 @@ namespace UI.FunctionalTests.Helpers.Common
 	{
 		public const string DatabaseName = "CatalogTest";
 
-		protected override EFCatalogRepository CreateDataSource()
+        protected override EFCatalogRepository CreateRepository()
 		{
 			return new EFCatalogRepository(DatabaseName, new CatalogEntityFactory());
 		}
@@ -29,7 +29,7 @@ namespace UI.FunctionalTests.Helpers.Common
 	{
 		public const string DatabaseName = "AppConfigTest";
 
-		protected override EFAppConfigRepository CreateDataSource()
+		protected override EFAppConfigRepository CreateRepository()
 		{
 			return new EFAppConfigRepository(DatabaseName, new AppConfigEntityFactory());
 		}
@@ -40,7 +40,7 @@ namespace UI.FunctionalTests.Helpers.Common
 	{
 		public const string DatabaseName = "OrderTest";
 
-		protected override EFOrderRepository CreateDataSource()
+        protected override EFOrderRepository CreateRepository()
 		{
 			return new EFOrderRepository(DatabaseName, new OrderEntityFactory());
 		}
@@ -51,7 +51,7 @@ namespace UI.FunctionalTests.Helpers.Common
 	{
 		public const string DatabaseName = "StoreTest";
 
-		protected override EFStoreRepository CreateDataSource()
+        protected override EFStoreRepository CreateRepository()
 		{
 			return new EFStoreRepository(DatabaseName, new StoreEntityFactory());
 		}
@@ -62,7 +62,7 @@ namespace UI.FunctionalTests.Helpers.Common
 	{
 		public const string DatabaseName = "DynamicContentTest";
 
-		protected override EFDynamicContentRepository CreateDataSource()
+        protected override EFDynamicContentRepository CreateRepository()
 		{
 			return new EFDynamicContentRepository(DatabaseName, new DynamicContentEntityFactory());
 		}
@@ -73,7 +73,7 @@ namespace UI.FunctionalTests.Helpers.Common
 	{
 		public const string DatabaseName = "MarketingTest";
 
-		protected override EFMarketingRepository CreateDataSource()
+        protected override EFMarketingRepository CreateRepository()
 		{
 			return new EFMarketingRepository(DatabaseName, new MarketingEntityFactory());
 		}

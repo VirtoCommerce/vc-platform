@@ -11,9 +11,5 @@ namespace VirtoCommerce.Foundation.Data.Marketing
     [JsonSupportBehavior]
 	public class DSMarketingService : DServiceBase<EFMarketingRepository>
 	{
-		protected override EFMarketingRepository CreateDataSource()
-		{
-			return new EFMarketingRepository(new MarketingEntityFactory());
-		}
 	}
 }

@@ -9,9 +9,14 @@ namespace FunctionalTests.TestHelpers
 {
     public class MigrationsTestBase : TestBase
     {
-        public const string DefaultDatabaseName = "VCMigrationsTestsX";
+        public static string DefaultDatabaseName {
+            get
+            {
+                return "VC"+Guid.NewGuid().ToString("N");
+            }
+        }
 
-        public TestDatabase TestDatabase { get; private set; }
+    public TestDatabase TestDatabase { get; private set; }
 
         public InfoContext Info
         {
@@ -68,7 +73,7 @@ namespace FunctionalTests.TestHelpers
         {
             try
             {
-                AppDomain.CurrentDomain.SetData("DataDirectory", Path.GetTempPath());
+                AppDomain.CurrentDomain.SetData("DataDirectory", FunctionalTestBase.TempPath);
                 TestDatabase = new SqlTestDatabase(databaseName);
             }
             catch (Exception e)

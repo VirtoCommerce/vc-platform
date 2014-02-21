@@ -12,10 +12,5 @@ namespace VirtoCommerce.Foundation.Data.Marketing
     [JsonSupportBehavior]
 	public class DSDynamicContentService : DServiceBase<EFDynamicContentRepository>
 	{
-		protected override EFDynamicContentRepository CreateDataSource()
-		{
-			return new EFDynamicContentRepository(new DynamicContentEntityFactory());
-		}
-	
 	}
 }

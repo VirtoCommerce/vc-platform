@@ -7,14 +7,5 @@
     [JsonSupportBehavior]
 	public class DSCatalogService : DServiceBase<EFCatalogRepository>
 	{
-        /// <summary>
-        /// Creates the data source.
-        /// </summary>
-        /// <returns>catalog repository instance</returns>
-		protected override EFCatalogRepository CreateDataSource()
-		{
-            return ServiceLocator.Current.GetInstance<ICatalogRepository>() as EFCatalogRepository;
-			//return new EFCatalogRepository(new CatalogEntityFactory());
-		}
 	}
 }

@@ -15,9 +15,5 @@ namespace VirtoCommerce.Foundation.Data.AppConfig
             config.DataServiceBehavior.MaxProtocolVersion = DataServiceProtocolVersion.V3;
         }
 
-		protected override EFAppConfigRepository CreateDataSource()
-		{
-			return new EFAppConfigRepository(new AppConfigEntityFactory());
-		}
 	}
 }

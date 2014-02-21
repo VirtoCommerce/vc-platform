@@ -1,12 +1,8 @@
+using System.Data.Entity.Migrations;
+
 namespace VirtoCommerce.Foundation.Data.Security.Migrations
 {
-    using System;
-    using System.Data.Entity;
-    using System.Data.Entity.Migrations;
-    using System.Linq;
-    using VirtoCommerce.Foundation.Data.Infrastructure;
-
-    public sealed class Configuration : DbMigrationsConfigurationBase<VirtoCommerce.Foundation.Data.Security.EFSecurityRepository>
+    public sealed class Configuration : DbMigrationsConfiguration<VirtoCommerce.Foundation.Data.Security.EFSecurityRepository>
     {
         public Configuration()
         {

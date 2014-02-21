@@ -1,12 +1,8 @@
+using System.Data.Entity.Migrations;
+
 namespace VirtoCommerce.Foundation.Data.Reviews.Migrations
 {
-    using System;
-    using System.Data.Entity;
-    using System.Data.Entity.Migrations;
-    using System.Linq;
-    using VirtoCommerce.Foundation.Data.Infrastructure;
-
-    public sealed class Configuration : DbMigrationsConfigurationBase<VirtoCommerce.Foundation.Data.Reviews.EFReviewRepository>
+    public sealed class Configuration : DbMigrationsConfiguration<VirtoCommerce.Foundation.Data.Reviews.EFReviewRepository>
     {
         public Configuration()
         {
