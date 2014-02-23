@@ -364,6 +364,23 @@ namespace VirtoCommerce.Foundation.AppConfig
             }
         }
 
+        [ConfigurationProperty("adminUrl", IsRequired = false, DefaultValue = "")]
+        public string AdminUrl
+        {
+            get
+            {
+                return this["adminUrl"].ToString();
+            }
+            set
+            {
+                this["adminUrl"] = value;
+                var configFile = WebConfigurationManager.OpenWebConfiguration("~");
+                var section = (AppConfigConfiguration)configFile.GetSection(AppConfigConfiguration.SectionName);
+                section.Setup["adminUrl"] = value;
+                configFile.Save(ConfigurationSaveMode.Modified);
+            }
+        }
+
         public override bool IsReadOnly()
         {
             return false;
