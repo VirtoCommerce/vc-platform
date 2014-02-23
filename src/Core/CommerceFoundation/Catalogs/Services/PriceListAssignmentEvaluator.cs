@@ -64,7 +64,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Services
             query = query.Where(x => (x.CatalogId == context.CatalogId));
 
             //filter by currency
-            query = query.Where(x => (x.Pricelist.Currency == context.Currency));
+            query = query.Where(x => (x.Pricelist.Currency.Equals(context.Currency, StringComparison.OrdinalIgnoreCase)));
 
 			//filter by date expiration
 			query = query.Where(x => (x.StartDate == null || context.CurrentDate >= x.StartDate) && (x.EndDate == null || x.EndDate >= context.CurrentDate));

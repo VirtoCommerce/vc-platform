@@ -147,17 +147,20 @@ namespace VirtoCommerce.Web.Controllers
             {
                 if (sort.Equals("price", StringComparison.OrdinalIgnoreCase))
                 {
-                    sortObject = new SearchSort(session.Pricelists.Select(priceList =>
-                        new SearchSortField(
-                            String.Format("price_{0}_{1}",
-                                criteria.Currency.ToLower(),
-                                priceList.ToLower()))
-                        {
-                            IgnoredUnmapped = true,
-                            IsDescending = isDescending,
-                            DataType = SearchSortField.DOUBLE
-                        })
-                        .ToArray());
+                    if (session.Pricelists != null)
+                    {
+                        sortObject = new SearchSort(session.Pricelists.Select(priceList =>
+                            new SearchSortField(
+                                String.Format("price_{0}_{1}",
+                                    criteria.Currency.ToLower(),
+                                    priceList.ToLower()))
+                            {
+                                IgnoredUnmapped = true,
+                                IsDescending = isDescending,
+                                DataType = SearchSortField.DOUBLE
+                            })
+                            .ToArray());
+                    }
                 }
                 else
                 {
