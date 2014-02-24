@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using VirtoCommerce.Foundation.AppConfig;
+﻿using VirtoCommerce.Foundation.AppConfig;
 
 namespace VirtoCommerce.Web.Areas.VirtoAdmin.Models
 {
@@ -12,7 +8,10 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Models
 
         public string AdminUrl
         {
-            get { return AppConfigConfiguration.Instance.Setup.AdminUrl; }
+            get
+            {
+                return string.Format(AppConfigConfiguration.Instance.Setup.AdminUrl, Website);
+            }
         }
     }
 }
