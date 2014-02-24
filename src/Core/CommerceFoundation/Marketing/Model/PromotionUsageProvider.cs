@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using VirtoCommerce.Foundation.Marketing.Repositories;
 
 namespace VirtoCommerce.Foundation.Marketing.Model
 {
 	public class PromotionUsageProvider : IPromotionUsageProvider
 	{
-        private IMarketingRepository _repository;
+        private readonly IMarketingRepository _repository;
 		public PromotionUsageProvider(IMarketingRepository repository)
 		{
 			_repository = repository;

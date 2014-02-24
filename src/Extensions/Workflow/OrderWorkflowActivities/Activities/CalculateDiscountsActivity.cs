@@ -66,12 +66,6 @@ namespace VirtoCommerce.OrderWorkflow
 			get { return _promotionEntryPopulate ?? (_promotionEntryPopulate = ServiceLocator.GetInstance<IPromotionEntryPopulate>()); }
 		}
 
-		IPromotionUsageProvider _promotionUsageProvider;
-		private IPromotionUsageProvider PromotionUsageProvider
-		{
-			get { return _promotionUsageProvider ?? (_promotionUsageProvider = ServiceLocator.GetInstance<IPromotionUsageProvider>()); }
-		}
-
 		IPricelistRepository _priceListRepository;
 		private IPricelistRepository PriceListRepository
 		{
@@ -112,14 +106,12 @@ namespace VirtoCommerce.OrderWorkflow
 			IMarketingRepository marketingRepository,
 			IPricelistRepository priceListRepository,
 			IPromotionEntryPopulate entryPopulate,
-			IPromotionUsageProvider promotionUsageProvider,
             ICatalogOutlineBuilder catalogOutlineBuilder,
             IPromotionEvaluator evaluator)
 		{
 			_catalogRepository = catalogRepository;
 			_marketingRepository = marketingRepository;
 			_promotionEntryPopulate = entryPopulate;
-			_promotionUsageProvider = promotionUsageProvider;
 			_priceListRepository = priceListRepository;
 			_customerSessionService = customerService;
 		    _catalogOutlineBuilder = catalogOutlineBuilder;
@@ -148,7 +140,7 @@ namespace VirtoCommerce.OrderWorkflow
 			recordsList.Add(cartRecords);
 
 			// filter policies
-			var allRecords = EvaluatePolicies(recordsList.ToArray());
+			var allRecords = PromotionEvaluator.EvaluatePolicies(recordsList.ToArray());
 
 			//3. Apply discounts
 			var cartSubtotalRewards = (from r in allRecords where r.Reward is CartSubtotalReward select r).ToArray();
@@ -242,13 +234,6 @@ namespace VirtoCommerce.OrderWorkflow
 						};
 
 					//2. Evaluate 
-                    //var evaluator = new DefaultPromotionEvaluator(MarketingRepository, PromotionUsageProvider,
-                    //    new IEvaluationPolicy[]
-                    //        {
-                    //            new GlobalExclusivityPolicy(), 
-                    //            new CartSubtotalRewardCombinePolicy(), 
-                    //            new ShipmentRewardCombinePolicy()
-                    //        }, CacheRepository);
 					var promotions = PromotionEvaluator.EvaluatePromotion(evaluationContext);
 					var rewards = promotions.SelectMany(x => x.Rewards);
 
@@ -265,37 +250,6 @@ namespace VirtoCommerce.OrderWorkflow
 			return records.ToArray();
 		}
 
-		private PromotionRecord[] EvaluatePolicies(PromotionRecord[] records)
-		{
-			var policies = new IEvaluationPolicy[] { new GlobalExclusivityPolicy(), new GroupExclusivityPolicy(), new CartSubtotalRewardCombinePolicy(), new ShipmentRewardCombinePolicy() };
-
-			// make sure to sort the records correctly
-			// 1st: items with a coupon applied
-			// 2nd: catalog items
-			// 3rd: order
-			// 4th: shipping
-
-			records = SortPromotionRecords(records);
-
-			return policies.Aggregate(records, (current, policy) => policy.FilterPromotions(null, current));
-		}
-
-		private PromotionRecord[] SortPromotionRecords(PromotionRecord[] records)
-		{
-			var all = new List<PromotionRecord>();
-			var recordsWithCoupons = from r in records where !String.IsNullOrEmpty(r.Reward.Promotion.CouponId) orderby r.Reward.Promotion.Priority descending select r;
-
-			// all all coupon records first
-			all.Add(recordsWithCoupons);
-
-			var catalogRecords = from r in records where r.PromotionType == PromotionType.CatalogPromotion && !all.Contains(r) orderby r.Reward.Promotion.Priority descending select r;
-			all.Add(catalogRecords);
-
-			var cartRecords = from r in records where r.PromotionType == PromotionType.CartPromotion && !all.Contains(r) orderby r.Reward.Promotion.Priority descending select r;
-			all.Add(cartRecords);
-
-			return all.ToArray();
-		}
 
 		private PromotionEntrySet GetPromotionEntrySetFromOrderForm(OrderForm form)
 		{
