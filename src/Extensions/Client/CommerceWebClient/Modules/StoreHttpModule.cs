@@ -242,18 +242,6 @@ namespace VirtoCommerce.Web.Client.Modules
         }
 
         /// <summary>
-        /// Determines whether [is request authenticated] [the specified context].
-        /// </summary>
-        /// <param name="context">The context.</param>
-        /// <returns>
-        ///   <c>true</c> if [is request authenticated] [the specified context]; otherwise, <c>false</c>.
-        /// </returns>
-        protected virtual bool IsRequestAuthenticated(HttpContext context)
-        {
-            return context.Request.IsAuthenticated;
-        }
-
-        /// <summary>
         /// Gets the name of the request user.
         /// </summary>
         /// <param name="context">The context.</param>

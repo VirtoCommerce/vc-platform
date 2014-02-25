@@ -82,15 +82,18 @@ namespace VirtoCommerce.Web.Client.Modules
             set.Add(ContextFieldConstants.CategoryId, new Tag(session.CategoryId));
 
             //Profile
-            var customer = StoreHelper.UserClient.GetCurrentCustomer();
-            if (customer != null)
+            if (IsRequestAuthenticated(context))
             {
-                if (customer.BirthDate.HasValue)
+                var customer = StoreHelper.UserClient.GetCurrentCustomer();
+                if (customer != null)
                 {
-                    set.Add(ContextFieldConstants.UserAge, new Tag(GetAge(customer.BirthDate.Value)));
+                    if (customer.BirthDate.HasValue)
+                    {
+                        set.Add(ContextFieldConstants.UserAge, new Tag(GetAge(customer.BirthDate.Value)));
+                    }
                 }
             }
-    
+
             PopulateBrowserBehavior(context, session);
             PopulateShoppingCart(context, session);
             PopulateGEOLocation(context, session);

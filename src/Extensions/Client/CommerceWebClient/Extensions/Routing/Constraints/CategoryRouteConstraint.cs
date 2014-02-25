@@ -31,11 +31,18 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Constraints
             var decoded = SettingsHelper.SeoDecode(encoded, SeoUrlKeywordTypes.Category, 
                 values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : null);
 
-            var childCategryCode = decoded.Split(new[] {'/'}).Last();
+            var childCategryCode = decoded.Split(Separator.ToCharArray()).Last();
 
-            var outline = new BrowsingOutline(CartHelper.CatalogOutlineBuilder.BuildCategoryOutline(StoreHelper.CustomerSession.CatalogId, CartHelper.CatalogClient.GetCategory(childCategryCode)));
+            var category = CartHelper.CatalogClient.GetCategory(childCategryCode);
 
-            return ValidateCategoryPath(outline, decoded);
+            if (category == null)
+            {
+                return false;
+            }
+
+            var outline = new BrowsingOutline(CartHelper.CatalogOutlineBuilder.BuildCategoryOutline(StoreHelper.CustomerSession.CatalogId, category));
+
+            return ValidateCategoryPath(outline.ToString(), decoded);
         }
 
     }

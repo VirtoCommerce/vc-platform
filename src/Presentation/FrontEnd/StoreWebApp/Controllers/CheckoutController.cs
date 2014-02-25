@@ -289,7 +289,7 @@ namespace VirtoCommerce.Web.Controllers
                 SolutionType = solutionType
             };
 
-            var currency = (CurrencyCodeType)Enum.Parse(typeof(CurrencyCodeType), Ch.CustomerSession.Currency);
+            var currency = (CurrencyCodeType)Enum.Parse(typeof(CurrencyCodeType), Ch.CustomerSession.Currency.ToUpper());
             model = PrepareCheckoutModel(model);
             model.Payments = model.Payments ?? GetPayments().ToArray();
             var payment = _paymentClient.GetPaymentMethod(model.PaymentMethod ?? "Paypal");
@@ -535,7 +535,9 @@ namespace VirtoCommerce.Web.Controllers
             paymentDetails.HandlingTotal = new BasicAmountType(currency, FormatMoney(Ch.Cart.HandlingTotal));
             paymentDetails.TaxTotal = new BasicAmountType(currency, FormatMoney(Ch.Cart.TaxTotal));
             paymentDetails.OrderTotal = new BasicAmountType(currency, FormatMoney(Ch.Cart.Total));
-            paymentDetails.ItemTotal = new BasicAmountType(currency, FormatMoney(paymentDetails.PaymentDetailsItem.Sum(x => decimal.Parse(x.Amount.value))));
+            paymentDetails.ItemTotal = new BasicAmountType(currency, FormatMoney(Ch.LineItems.Sum(x=>x.ExtendedPrice)));
+            //paymentDetails.ItemTotal = new BasicAmountType(currency, FormatMoney(paymentDetails.PaymentDetailsItem.Sum(x => x.Quantity.HasValue ?
+            //    decimal.Parse(x.Amount.value) * x.Quantity.Value : decimal.Parse(x.Amount.value))));
 
             var shippingDiscount = Ch.Cart.OrderForms.SelectMany(c => c.Shipments).Sum(c => c.ShippingDiscountAmount);
             if (shippingDiscount > 0)

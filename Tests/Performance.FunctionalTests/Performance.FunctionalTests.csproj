@@ -104,7 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\FunctionalTests\Configs\AppConfig.config">
-      <Link>AppConfig.config</Link>
+      <Link>Configs\AppConfig.config</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="..\FunctionalTests\Configs\Catalog.config">

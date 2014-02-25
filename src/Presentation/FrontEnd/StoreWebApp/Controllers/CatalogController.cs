@@ -33,11 +33,10 @@ namespace VirtoCommerce.Web.Controllers
 
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CatalogController"/> class.
+        /// Initializes a new instance of the <see cref="CatalogController" /> class.
         /// </summary>
         /// <param name="catalogClient">The catalog client.</param>
         /// <param name="templateClient">The template client.</param>
-        /// <param name="outlineBuilder"></param>
         public CatalogController(CatalogClient catalogClient,
                                  DisplayTemplateClient templateClient)
         {
