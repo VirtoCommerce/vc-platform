@@ -42,10 +42,12 @@ namespace VirtoCommerce.Web.Virto.Helpers
             var discount = _client.GetItemDiscountPrice(item, lowestPrice, tags);
             var priceModel = CreatePriceModel(price, price - discount, UserHelper.CustomerSession.Currency);
             //If has any variations
+            /* performance too slow with this method, need to store value on indexing instead
 	        if (CatalogHelper.CatalogClient.GetItemRelations(item.ItemId).Any())
 	        {
 	            priceModel.PriceTitle = "Starting from:".Localize();
 	        }
+             * */
             return priceModel;
         }
 

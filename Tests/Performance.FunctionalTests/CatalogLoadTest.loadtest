@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<LoadTest Name="CatalogLoadTest" Description="" Owner="" storage="e:\projects\git\vc-community\tests\performance.functionaltests\catalogloadtest.loadtest" Priority="2147483647" Enabled="true" CssProjectStructure="" CssIteration="" DeploymentItemsEditable="" WorkItemIds="" TraceLevel="None" CurrentRunConfig="Run Settings1" Id="c96cc455-0599-48f3-8419-275ab625f072" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+<LoadTest Name="CatalogLoadTest" Description="" Owner="" storage="e:\projects\git\vc-community-master\tests\performance.functionaltests\catalogloadtest.loadtest" Priority="2147483647" Enabled="true" CssProjectStructure="" CssIteration="" DeploymentItemsEditable="" WorkItemIds="" TraceLevel="None" CurrentRunConfig="Run Settings1" Id="c96cc455-0599-48f3-8419-275ab625f072" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
   <Scenarios>
     <Scenario Name="Catalog Browsing Scenario" DelayBetweenIterations="0" PercentNewUsers="0" IPSwitching="true" TestMixType="PercentageOfTestsStarted" ApplyDistributionToPacingDelay="true" MaxTestIterations="0" DisableDuringWarmup="false" DelayStartTime="0" AllowedAgents="">
       <ThinkProfile Value="0" Pattern="Off" />
@@ -1663,7 +1663,7 @@
         </CounterSetMapping>
       </CounterSetMappings>
       <ContextParameters>
-        <ContextParameter Name="Website" Value="http://virtocommerce-test.cloudapp.net/" />
+        <ContextParameter Name="Website" Value="http://localhost/store/en-us/electronics" />
       </ContextParameters>
     </RunConfiguration>
   </RunConfigurations>
