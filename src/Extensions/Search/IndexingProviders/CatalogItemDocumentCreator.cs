@@ -143,6 +143,15 @@ namespace VirtoCommerce.Search.Index
             doc.Add(new DocumentField("lastmodifieddate", item.LastModified.HasValue ? item.LastModified : DateTime.MaxValue, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
             doc.Add(new DocumentField("catalog", item.CatalogId.ToLower(), new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
 
+            var outlines = OutlineBuilder.BuildCategoryOutline(item.CatalogId, item.ItemId).Select(o => new BrowsingOutline(o)).ToArray();
+            string browsingOutline = null;
+            if (outlines.Any())
+            {
+                browsingOutline = String.Join(";", outlines.Select(m => m.ToString()));
+            }
+            doc.Add(new DocumentField("__browsingoutline", browsingOutline, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
+
+
             // Index categories
             IndexItemCategories(ref doc, item);
 

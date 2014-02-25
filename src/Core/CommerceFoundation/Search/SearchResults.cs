@@ -113,17 +113,17 @@ namespace VirtoCommerce.Foundation.Search
             return entries.ToArray();
         }
 
-		public virtual Dictionary<T, string> GetKeyAndOutlineFieldValueMap<T>()
+		public virtual Dictionary<T, object> GetKeyAndOutlineFieldValueMap<T>()
 		{
 			return Documents == null ? null : GetKeyAndOutlineFieldValueMap<T>(Documents[0].Name);
 		}
 
-	    public virtual Dictionary<T,string> GetKeyAndOutlineFieldValueMap<T>(string documentSetName)
+	    public virtual Dictionary<T,object> GetKeyAndOutlineFieldValueMap<T>(string documentSetName)
 		{
 			if (Documents == null)
 				return null;
 
-			var entries = new Dictionary<T, string>();
+			var entries = new Dictionary<T, object>();
 
 			foreach (var set in Documents)
 			{
@@ -134,37 +134,13 @@ namespace VirtoCommerce.Foundation.Search
 
 				foreach (var doc in set.Documents)
 				{
-					var id = (T)Convert.ChangeType(doc[SearchCriteria.KeyField].Value.ToString(), typeof(T));
-					string outline;
-
-				    var array = doc[SearchCriteria.OutlineField].Values;		
-					if (array != null)
-					{
-						var outlines = new List<string>();
-
-                        foreach (var val in array)
-                        {
-                            var enumerate = val as IEnumerable;
-                            if (val is string || enumerate == null)
-					        {
-                                outlines.Add(val.ToString());
-					        }
-					        else
-					        {
-					            outlines.AddRange(from object val1 in enumerate select val1.ToString());
-					        }
-					    }
-
-						outline = String.Join(";", outlines);
-					}
-					else
-					{
-						outline = doc[SearchCriteria.OutlineField].Value.ToString();
-					}
+                    var id = (T)Convert.ChangeType(doc[SearchCriteria.KeyField].Value.ToString(), typeof(T));
+				    var __outline = GetFieldValue(doc, SearchCriteria.OutlineField);
+                    var __browsingoutline = GetFieldValue(doc, SearchCriteria.BrowsingOutlineField);
 
                     // THIS SHOULD NEVER HAPPEN!!!
                     if (!entries.ContainsKey(id))
-					    entries.Add(id, outline);
+                        entries.Add(id, new { __outline, __browsingoutline });
 				}
 			}
 
@@ -175,6 +151,38 @@ namespace VirtoCommerce.Foundation.Search
         {
             _SearchCriteria = criteria;
             _Documents = documents;
+        }
+
+        private string GetFieldValue(IDocument doc, string fieldName)
+        {
+            string value;
+
+            var array = doc[fieldName].Values;
+            if (array != null)
+            {
+                var outlines = new List<string>();
+
+                foreach (var val in array)
+                {
+                    var enumerate = val as IEnumerable;
+                    if (val is string || enumerate == null)
+                    {
+                        outlines.Add(val.ToString());
+                    }
+                    else
+                    {
+                        outlines.AddRange(from object val1 in enumerate select val1.ToString());
+                    }
+                }
+
+                value = String.Join(";", outlines);
+            }
+            else
+            {
+                value = doc[SearchCriteria.OutlineField].Value.ToString();
+            }
+
+            return value;
         }
     }
 }

@@ -195,6 +195,12 @@ namespace VirtoCommerce.Web.Controllers
                 {
                     PriceModel priceModel = null;
 	                ItemAvailabilityModel availabilityModel = null;
+                    var catalogIdPath = UserHelper.CustomerSession.CatalogId + "/";
+                    var searchTags = results.Items[item.ItemId.ToLower()].ToPropertyDictionary();
+
+                    //Cache outline
+                    HttpContext.Items["browsingoutline_" + item.ItemId] = searchTags[criteria.BrowsingOutlineField].ToString();
+
                     if (prices != null && prices.Any())
                     {
                         var lowestPrice =
@@ -203,10 +209,7 @@ namespace VirtoCommerce.Web.Controllers
                              select p).SingleOrDefault();
                         if (lowestPrice != null)
                         {
-	                        var catalogIdPath = UserHelper.CustomerSession.CatalogId + "/";
-	                        var currentOutline = results.Items[item.ItemId.ToLower()].Split(new[]{';'}, StringSplitOptions.RemoveEmptyEntries)
-								.FirstOrDefault(x => x.StartsWith(catalogIdPath, StringComparison.OrdinalIgnoreCase)) ?? string.Empty;
-
+                            var currentOutline = searchTags[criteria.OutlineField].ToString().Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault(x => x.StartsWith(catalogIdPath, StringComparison.OrdinalIgnoreCase)) ?? string.Empty;
 							var tags = new Hashtable
 							{
 								{

@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using Microsoft.Practices.ServiceLocation;
 using VirtoCommerce.Foundation.Catalogs.Model;
@@ -29,14 +31,26 @@ namespace VirtoCommerce.Web.Client.Extensions
 
         public static string GetItemCategoryRouteValue(this Item item)
         {
-            var outlines = item.GetItemCategoryBrowsingOutlines();
-            return outlines.Any() ? outlines.First().ToString() : "undefined";
+            var outline = HttpContext.Current.Items["browsingoutline_" + item.ItemId] as string;
+
+            if (string.IsNullOrEmpty(outline))
+            {
+                var outlines = item.GetItemCategoryBrowsingOutlines();
+                outline = outlines.Any() ? outlines.First(): "undefined";
+            }
+
+            return outline;
         }
 
-        public static BrowsingOutline[] GetItemCategoryBrowsingOutlines(this Item item)
+        public static string[] GetItemCategoryBrowsingOutlines(this Item item)
         {
-            var outlines = OutlineBuilder.BuildCategoryOutline(CustomerSession.CatalogId, item.ItemId);
-            return outlines.Select(o => new BrowsingOutline(o)).ToArray();
+            var outline = HttpContext.Current.Items["browsingoutline_" + item.ItemId] as string;
+            if (string.IsNullOrEmpty(outline))
+            {
+                var outlines = OutlineBuilder.BuildCategoryOutline(item.CatalogId, item.ItemId);
+                HttpContext.Current.Items["browsingoutline_" + item.ItemId] = outline = String.Join(";", outlines.Select(m => new BrowsingOutline(m).ToString()));
+            }
+            return outline.Split(';');
         }
     }
 }

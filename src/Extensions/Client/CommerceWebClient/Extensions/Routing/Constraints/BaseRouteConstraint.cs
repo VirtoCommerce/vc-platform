@@ -41,20 +41,20 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Constraints
         /// <param name="outline">The outline.</param>
         /// <param name="requestedPath">The requested path. Containing category codes code1/code2/.../codeN</param>
         /// <returns></returns>
-        protected virtual bool ValidateCategoryPath(BrowsingOutline outline, string requestedPath)
+        protected virtual bool ValidateCategoryPath(string outline, string requestedPath)
         {
             var prevCatIndex = -1;
             foreach (var segment in requestedPath.Split(Separator.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
             {
-                var category = outline.Categories.FirstOrDefault(
-                    c => c.Code.Equals(segment, StringComparison.InvariantCultureIgnoreCase));
+                var categories = outline.Split(Separator.ToCharArray()).ToList();
+                var category = categories.FirstOrDefault(c => c.Equals(segment, StringComparison.InvariantCultureIgnoreCase));
 
                 //Category must exist
                 if (category == null)
                 {
                     return false;
                 }
-                var currentCatIndex = outline.Categories.IndexOf(category);
+                var currentCatIndex = categories.IndexOf(category);
 
                 //Segments order must match outline order
                 if (prevCatIndex > 0 && prevCatIndex > currentCatIndex)

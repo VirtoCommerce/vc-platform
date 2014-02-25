@@ -59,6 +59,12 @@ namespace VirtoCommerce.Foundation.Search
 		string OutlineField { get; }
 
         /// <summary>
+        /// Gets the browsing outline field.
+        /// </summary>
+        /// <value>The outline field.</value>
+        string BrowsingOutlineField { get; }
+
+        /// <summary>
         /// Gets the filters.
         /// </summary>
         /// <value>The filters.</value>

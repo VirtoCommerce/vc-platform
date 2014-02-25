@@ -49,7 +49,8 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
                 values.Add(Constants.Store, StoreHelper.CustomerSession.StoreId);
             }
 
-            var storeId = values[Constants.Store].ToString();
+
+            var storeId = SettingsHelper.SeoDecode(values[Constants.Store].ToString(), SeoUrlKeywordTypes.Store, values[Constants.Language] as string);
             var store = StoreHelper.StoreClient.GetStoreById(storeId);
 
             //Reset to default language if validation fails
