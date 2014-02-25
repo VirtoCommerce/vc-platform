@@ -33,7 +33,14 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Constraints
 
             var childCategryCode = decoded.Split(Separator.ToCharArray()).Last();
 
-            var outline = new BrowsingOutline(CartHelper.CatalogOutlineBuilder.BuildCategoryOutline(StoreHelper.CustomerSession.CatalogId, CartHelper.CatalogClient.GetCategory(childCategryCode)));
+            var category = CartHelper.CatalogClient.GetCategory(childCategryCode);
+
+            if (category == null)
+            {
+                return false;
+            }
+
+            var outline = new BrowsingOutline(CartHelper.CatalogOutlineBuilder.BuildCategoryOutline(StoreHelper.CustomerSession.CatalogId, category));
 
             return ValidateCategoryPath(outline.ToString(), decoded);
         }
