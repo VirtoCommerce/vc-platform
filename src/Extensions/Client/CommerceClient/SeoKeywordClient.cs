@@ -34,8 +34,10 @@ namespace VirtoCommerce.Client
                 throw new ArgumentNullException("keyword","Keyword or KeywordValue must be provided");
             }
 
+            var allKeywords = GetAllSeoKeywords();
+
             return
-                GetAllSeoKeywords().Where(
+                allKeywords.Where(
                         s =>
                         (language == null || language.Equals(s.Language, StringComparison.OrdinalIgnoreCase))
                         && (keyword == null || keyword.Equals(s.Keyword, StringComparison.OrdinalIgnoreCase))

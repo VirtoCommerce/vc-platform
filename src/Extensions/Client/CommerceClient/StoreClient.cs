@@ -44,6 +44,12 @@ namespace VirtoCommerce.Client
         /// <returns></returns>
         public Store GetStoreById(string storeId)
         {
+            var allStores = GetStores();
+
+            //return allStores.Where(x => x.StoreId == storeId || storeId == "").FirstOrDefault();
+            return allStores.Where(x => x.StoreId.Equals(storeId, StringComparison.OrdinalIgnoreCase) || storeId == "").FirstOrDefault();
+
+            /*
             return Helper.Get(
                 string.Format(StoreCacheKey, storeId),
                 () => _storeRepository.Stores
@@ -60,6 +66,7 @@ namespace VirtoCommerce.Client
                                       .Where(x => x.StoreId == storeId || storeId == "").FirstOrDefault(),
                 StoreConfiguration.Instance.Cache.StoreTimeout,
                 _isEnabled);
+             * */
         }
 
         /// <summary>
