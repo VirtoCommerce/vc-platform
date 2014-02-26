@@ -201,7 +201,7 @@ namespace VirtoCommerce.Web.Controllers
                     var searchTags = results.Items[item.ItemId.ToLower()].ToPropertyDictionary();
 
                     //Cache outline
-                    HttpContext.Items["browsingoutline_" + item.ItemId] = searchTags[criteria.BrowsingOutlineField].ToString();
+                    HttpContext.Items["browsingoutline_" + item.Code.ToLower()] = searchTags[criteria.BrowsingOutlineField].ToString();
 
                     if (prices != null && prices.Any())
                     {
