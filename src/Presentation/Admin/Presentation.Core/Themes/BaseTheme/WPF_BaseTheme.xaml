@@ -2321,8 +2321,8 @@
     </Style>
     <!--DataGrid -->
 
-    
-    
+
+
     <!--ContexMenu -->
     <Style x:Key="Virto_Base_ContextMenu_Style" TargetType="ContextMenu">
         <Setter Property="SnapsToDevicePixels" Value="True"/>
@@ -2524,7 +2524,7 @@
             <Trigger Property="IsHighlighted" Value="true">
             </Trigger>
             <Trigger Property="IsEnabled" Value="false">
-                <Setter Property="Foreground" Value="{DynamicResource Virto_ContextMenu_Disabled_Foreground_Brush}"/>
+                <Setter Property="Foreground" Value="{StaticResource Virto_ContextMenu_Disabled_Foreground_Brush}"/>
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
@@ -2542,7 +2542,13 @@
                         <ColumnDefinition Width="17"/>
                     </Grid.ColumnDefinitions>
                     <ContentPresenter x:Name="Icon" Margin="1" VerticalAlignment="Center" ContentSource="Icon" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
-                    <ContentPresenter Grid.Column="2" ContentSource="Header" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                    <ContentPresenter Grid.Column="2" ContentSource="Header" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" TextElement.Foreground="{TemplateBinding Foreground}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+                        <ContentPresenter.Resources>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=MenuItem}}" />
+                            </Style>
+                        </ContentPresenter.Resources>
+                    </ContentPresenter>
                     <TextBlock Grid.Column="4" Text="{TemplateBinding InputGestureText}" Margin="{TemplateBinding Padding}"/>
                 </Grid>
             </Border>
@@ -2560,7 +2566,7 @@
             <Trigger Property="IsHighlighted" Value="true">
             </Trigger>
             <Trigger Property="IsEnabled" Value="false">
-                <Setter Property="Foreground" Value="{DynamicResource Virto_ContextMenu_Disabled_Foreground_Brush}"/>
+                <Setter Property="Foreground" Value="{StaticResource Virto_ContextMenu_Disabled_Foreground_Brush}"/>
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
@@ -2581,8 +2587,8 @@
         </Style.Triggers>
     </Style>
     <!--ContexMenu -->
-    
-    
+
+
     <!--Separator-->
     <Style x:Key="Virto_Base_VerticalSeparator_Style" TargetType="{x:Type Separator}">
         <Setter Property="Margin" Value="8,4"/>
@@ -2640,7 +2646,7 @@
     </Style>
     <!--ItemsControl-->
 
-    
+
     <!--default styles. You can redefine any style in inherited theme -->
     <Style TargetType="ContextMenu" BasedOn="{StaticResource Virto_Base_ContextMenu_Style}"/>
     <Style TargetType="MenuItem" BasedOn="{StaticResource Virto_Base_MenuItem_Style}"/>
