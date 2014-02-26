@@ -122,6 +122,15 @@ if(! $?)
 
 #set ok
 
+#create sqldependency
+Write-Host "Create the ASPNETDB SQL Server database for SqlDependency"
+$frameworkDir = $([System.Runtime.InteropServices.RuntimeEnvironment]::GetRuntimeDirectory())
+Set-Alias aspnet_regsql (Join-Path $frameworkDir "aspnet_regsql.exe")
+aspnet_regsql -C $dbconnection -ed -et -t DynamicContentItemProperty
+aspnet_regsql -C $dbconnection -ed -et -t PromotionReward
+
+
+
 ##################################
 
 # cleanup
