@@ -69,15 +69,21 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
             var itemCode = SettingsHelper.SeoDecode(itemEncoded, SeoUrlKeywordTypes.Item, 
                 values.ContainsKey(Constants.Language) ? values[Constants.Language] as string : null);
 
-            var item = CartHelper.CatalogClient.GetItem(itemCode, bycode: true);
+            // try getting outline from context
+            var outline = HttpContext.Current.Items["browsingoutline_" + itemCode.ToLower()] as string;
 
-            if (item == null)
+            if (string.IsNullOrEmpty(outline))
             {
-                return null;
-            }
+                var item = CartHelper.CatalogClient.GetItem(itemCode, bycode: true);
 
-            //TODO: should find closest match to current path
-            var outline = item.GetItemCategoryRouteValue();
+                if (item == null)
+                {
+                    return null;
+                }
+
+                //TODO: should find closest match to current path
+                outline = item.GetItemCategoryRouteValue();
+            }
 
             return outline;
         }

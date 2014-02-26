@@ -1,4 +1,5 @@
-﻿using Microsoft.Practices.ServiceLocation;
+﻿using System;
+using Microsoft.Practices.ServiceLocation;
 using System.Web;
 using VirtoCommerce.Foundation.Customers;
 using VirtoCommerce.Foundation.Customers.Services;
@@ -72,6 +73,17 @@ namespace VirtoCommerce.Web.Client.Modules
                     return false;
                 }
                 return (request["X-Requested-With"] == "XMLHttpRequest") || ((request.Headers != null) && (request.Headers["X-Requested-With"] == "XMLHttpRequest"));
+            }
+        }
+
+        public virtual bool IsWebApi
+        {
+            get
+            {
+                return
+                    HttpContext.Current.Request.RequestContext.RouteData.Route != null &&
+                    HttpContext.Current.Request.RequestContext.RouteData.Route.GetType()
+                        .Name.Equals("HttpWebRoute", StringComparison.OrdinalIgnoreCase);
             }
         }
 

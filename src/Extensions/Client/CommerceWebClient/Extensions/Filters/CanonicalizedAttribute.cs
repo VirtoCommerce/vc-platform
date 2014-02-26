@@ -8,6 +8,7 @@ using System.Web.Routing;
 using System.Web.WebPages;
 using DotNetOpenAuth.OpenId.Extensions.SimpleRegistration;
 using VirtoCommerce.Foundation.AppConfig.Model;
+using VirtoCommerce.Foundation.Search.Schemas;
 using VirtoCommerce.Web.Client.Helpers;
 
 namespace VirtoCommerce.Web.Client.Extensions.Filters
@@ -73,7 +74,8 @@ namespace VirtoCommerce.Web.Client.Extensions.Filters
                             var helper = new SearchHelper(StoreHelper.StoreClient.GetCurrentStore());
                             var urlHelper = new UrlHelper(context.Request.RequestContext);
 
-                            var parameters = helper.Filters.Select(filter => queryString.AllKeys
+                            var parameters = helper.Filters.Where(f => !(f is PriceRangeFilter) || ((PriceRangeFilter)f).Currency.Equals(StoreHelper.CustomerSession.Currency, StringComparison.OrdinalIgnoreCase))
+                                .Select(filter => queryString.AllKeys
                                 .FirstOrDefault(k => k.Equals(urlHelper.GetFacetKey(filter.Key), StringComparison.InvariantCultureIgnoreCase)))
                                 .Where(key => !string.IsNullOrEmpty(key))
                                 .ToDictionary<string, string, object>(key => key, key => queryString[key]);

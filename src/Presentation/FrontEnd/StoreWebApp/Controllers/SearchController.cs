@@ -11,6 +11,7 @@ using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Catalogs.Search;
 using VirtoCommerce.Foundation.PlatformTools;
 using VirtoCommerce.Foundation.Search;
+using VirtoCommerce.Foundation.Search.Schemas;
 using VirtoCommerce.Web.Client.Extensions;
 using VirtoCommerce.Web.Client.Extensions.Filters;
 using VirtoCommerce.Client.Globalization;
@@ -122,7 +123,8 @@ namespace VirtoCommerce.Web.Controllers
             {
                 foreach (var key in facets.Keys)
                 {
-                    var filter = filters.SingleOrDefault(x=>x.Key.Equals(key, StringComparison.OrdinalIgnoreCase));
+                    var filter = filters.SingleOrDefault(x=>x.Key.Equals(key, StringComparison.OrdinalIgnoreCase) 
+                        && (!(x is PriceRangeFilter) || ((PriceRangeFilter)x).Currency.Equals(StoreHelper.CustomerSession.Currency, StringComparison.OrdinalIgnoreCase)));
                     var val =
                         (from v in searchHelper.GetFilterValues(filter) where v.Id == facets[key] select v)
                             .SingleOrDefault();
@@ -199,7 +201,7 @@ namespace VirtoCommerce.Web.Controllers
                     var searchTags = results.Items[item.ItemId.ToLower()].ToPropertyDictionary();
 
                     //Cache outline
-                    HttpContext.Items["browsingoutline_" + item.ItemId] = searchTags[criteria.BrowsingOutlineField].ToString();
+                    HttpContext.Items["browsingoutline_" + item.Code.ToLower()] = searchTags[criteria.BrowsingOutlineField].ToString();
 
                     if (prices != null && prices.Any())
                     {
