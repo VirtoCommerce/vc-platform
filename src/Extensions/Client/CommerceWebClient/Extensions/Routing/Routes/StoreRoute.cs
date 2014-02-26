@@ -56,7 +56,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
             var store = StoreHelper.StoreClient.GetStoreById(storeId);
 
             //Reset to default language if validation fails
-            if (IsValidStoreLanguage(store, values[Constants.Language].ToString()))
+            if (!IsValidStoreLanguage(store, values[Constants.Language].ToString()))
             {
                 values[Constants.Language] = store.DefaultLanguage;
             }
@@ -271,12 +271,18 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
         {
             try
             {
-                var culture = CultureInfo.CreateSpecificCulture(lang);
-                if (!dbStore.Languages.Any(l => l.LanguageCode.Equals(culture.Name, StringComparison.InvariantCultureIgnoreCase)))
+                if (dbStore == null)
                 {
-                    //Store does not support this language
                     return false;
                 }
+
+                var culture = CultureInfo.CreateSpecificCulture(lang);
+                    if (!dbStore.Languages.Any(l => l.LanguageCode.Equals(culture.Name, StringComparison.InvariantCultureIgnoreCase)))
+                    {
+                        //Store does not support this language
+                        return false;
+                    }
+
             }
             catch
             {
