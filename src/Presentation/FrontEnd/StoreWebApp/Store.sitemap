@@ -38,8 +38,8 @@
     </mvcSiteMapNode>
 
     <!-- Special nodes for building breadcrums-->
-    <mvcSiteMapNode title="Details" controller="Catalog" action="DisplayItem" preservedRouteParameters="item,category,store,lang"></mvcSiteMapNode>
-    <mvcSiteMapNode title="Details" controller="Catalog" action="Display" preservedRouteParameters="category,store,lang"></mvcSiteMapNode>
+    <mvcSiteMapNode title="Details" controller="Catalog" action="DisplayItem" preservedRouteParameters="item"></mvcSiteMapNode>
+    <mvcSiteMapNode title="Details" controller="Catalog" action="Display" preservedRouteParameters="category"></mvcSiteMapNode>
     
   </mvcSiteMapNode>
   

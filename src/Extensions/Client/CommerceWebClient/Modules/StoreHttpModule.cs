@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
+using System.Web.Routing;
 using System.Web.Security;
+using VirtoCommerce.Client;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Foundation.Stores.Model;
-using System.Web.Mvc;
-using System.Configuration;
-using VirtoCommerce.Client;
 using VirtoCommerce.Web.Client.Helpers;
 
 namespace VirtoCommerce.Web.Client.Modules
@@ -262,9 +263,12 @@ namespace VirtoCommerce.Web.Client.Modules
 		{
 			var loadDefault = true;
 			var storeClient = DependencyResolver.Current.GetService<StoreClient>();
-            //var storeid = context.Request.QueryString["store"];
-            var storeid = GetStoreIdFromUrl(context.Request.Url.Segments);
-			Store store = null;
+            var storeid = GetStoreIdFromRoute(context.Request.RequestContext.RouteData.Values);
+            if (string.IsNullOrEmpty(storeid))
+            {
+                storeid = GetStoreIdFromUrl(context.Request.Url.Segments);
+            }
+            Store store = null;
 
 			if (String.IsNullOrEmpty(storeid))
 			{
@@ -351,6 +355,15 @@ namespace VirtoCommerce.Web.Client.Modules
 			return currency;
 		}
 		#endregion
+
+        private string GetStoreIdFromRoute(RouteValueDictionary values)
+        {
+            if (values != null && values.ContainsKey(Extensions.Routing.Constants.Store))
+            {
+                return values[Extensions.Routing.Constants.Store].ToString();
+            }
+            return null;
+        }
 
         private string GetStoreIdFromUrl(IEnumerable<string> urlSegments)
         {
