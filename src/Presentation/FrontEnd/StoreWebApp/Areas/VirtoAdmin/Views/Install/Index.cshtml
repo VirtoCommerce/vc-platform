@@ -77,16 +77,15 @@
             };
 
             // Start the connection.
-            $.connection.hub.start({ transport: ['webSockets', 'serverSentEvents', 'longPolling'] }).done(function ()
+            $.connection.hub.start({ transport: ['serverSentEvents', 'longPolling'] }).done(function ()
             {
                 //Make submit in ajax
-                $('form').submit(function ()
-                {
+                $('form').submit(function () {
+                    $("#SubmitButton").attr("disabled", "disabled");
                     var validator = $(this).validate();
                     var model = $(this).serializeObject();
                     if (validator.valid())
                     {
-
                         $("#throbber").show();
                         $(".console").empty();
                         $(".console").show();
@@ -143,6 +142,7 @@
                             }
                         });
                     }
+                    $("#SubmitButton").removeAttr("disabled");
                     return false;
                 });
             });
@@ -221,7 +221,7 @@
                                 @(Model.SetupSampleData ? "checked=checked" : string.Empty)>
                         </div>
                         <div>
-                            <button name="SubmitButton" type="submit" value="CreateDb" onclick="$(this).attr('disabled', 'disabled');">@Resource.SetupDatabase</button>
+                            <button name="SubmitButton" type="submit" value="CreateDb">@Resource.SetupDatabase</button>
                         </div>
                     </fieldset>
                 }
