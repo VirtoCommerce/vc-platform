@@ -19,6 +19,11 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Constraints
                 return false;
             }
 
+            if (routeDirection == RouteDirection.UrlGeneration)
+            {
+                return true;
+            }
+
             //First check that language matches regex pattern
             object parameterValue; 
             values.TryGetValue(parameterName, out parameterValue);
