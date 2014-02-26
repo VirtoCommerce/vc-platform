@@ -25,6 +25,7 @@ namespace VirtoCommerce.PowerShell.Marketing
             RunCommand(context, "DynamicContentPublishingGroup.sql", "Marketing");
             RunCommand(context, "PublishingGroupContentItem.sql", "Marketing");
             RunCommand(context, "PublishingGroupContentPlace.sql", "Marketing");
+            ExecuteCommand(Path.Combine(GetFrameworkDirectory(), "aspnet_regsql.exe"), string.Format("-C \"{0}\" -ed -et -t DynamicContentItemProperty", context.Database.Connection.ConnectionString));
         }
 	}
 }

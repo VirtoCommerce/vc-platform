@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using Microsoft.Win32;
 
 namespace VirtoCommerce.PowerShell.DatabaseSetup
 {
@@ -44,6 +45,31 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup
                 throw new FileNotFoundException(string.Format("File '{0}' is missing.",fileName));
         }
 
+        protected virtual bool ExecuteCommand(string filename, string arguments)
+        {
+            var startInfo = new ProcessStartInfo
+            {
+                CreateNoWindow = true,
+                UseShellExecute = false,
+                FileName = filename,
+                WindowStyle = ProcessWindowStyle.Hidden,
+                Arguments = arguments
+            };
+
+            try
+            {
+                using (var exeProcess = Process.Start(startInfo))
+                {
+                    exeProcess.WaitForExit();
+                }
+            }
+            catch
+            {
+                return false;
+            }
+            return true;
+        }
+
         protected virtual string ReadSql(string fileName, string modelName)
         {
             var asm = Assembly.GetExecutingAssembly();
@@ -55,6 +81,32 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup
             var stream = asm.GetManifestResourceStream(name);
 	        Debug.Assert(stream != null);
             return new StreamReader(stream).ReadToEnd();
+        }
+
+        public static string GetFrameworkDirectory()
+        {
+            // This is the location of the .Net Framework Registry Key
+            const string framworkRegPath = @"Software\Microsoft\.NetFramework";
+
+            // Get a non-writable key from the registry
+            RegistryKey netFramework = Registry.LocalMachine.OpenSubKey(framworkRegPath, false);
+
+            // Retrieve the install root path for the framework
+            if (netFramework != null)
+            {
+                string installRoot = netFramework.GetValue("InstallRoot").ToString();
+
+                // Retrieve the version of the framework executing this program
+                string version = string.Format(@"v{0}.{1}.{2}\",
+                    Environment.Version.Major,
+                    Environment.Version.Minor,
+                    Environment.Version.Build);
+
+                // Return the path of the framework
+                return Path.Combine(installRoot, version);
+            }
+
+            return string.Empty;
         }
     }
 }
