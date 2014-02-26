@@ -315,7 +315,7 @@ namespace VirtoCommerce.Client
                 if (!properties.Any() && expandProperties)
                 {
                     //This will return expanded category with properties
-                    category = GetCategoryByIdInternal(id) as Category;
+                    category = GetCategoryById(id) as Category;
 
                     if(category !=null)
                     {
