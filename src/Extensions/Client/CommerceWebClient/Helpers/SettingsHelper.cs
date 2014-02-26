@@ -194,5 +194,22 @@ namespace VirtoCommerce.Web.Client.Helpers
                 return retVal;
             }
         }
+
+        public static bool ChildOutputCacheEnabled
+        {
+            get
+            {
+                var retVal = true; // if there is no such setting we assume cache enabled
+
+                var settings = GetSettings("ChildOutputCacheEnabled");
+
+                if (settings != null && settings.Length > 0)
+                {
+                    retVal = settings.First().BooleanValue;
+                }
+
+                return retVal;
+            }
+        }
 	}
 }
