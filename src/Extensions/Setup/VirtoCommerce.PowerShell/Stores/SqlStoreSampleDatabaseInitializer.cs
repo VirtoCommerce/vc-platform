@@ -227,6 +227,20 @@ namespace VirtoCommerce.PowerShell.Stores
 			filter.Values = vals.ToArray();
 			filters.Add(filter);
 
+            vals = new List<RangeFilterValue>();
+
+            filter = new PriceRangeFilter { Currency = "EUR", IsLocalized = false };
+
+            vals.Add(CreateRange("Under 100€", "under-100", String.Empty, "100", "en"));
+
+            vals.Add(CreateRange("100€ - 200€", "100-200", "100", "200", "en"));
+            vals.Add(CreateRange("200€ - 600€", "200-600", "200", "600", "en"));
+            vals.Add(CreateRange("600€ - 1000€", "600-1000", "600", "1000", "en"));
+            vals.Add(CreateRange("Over 1000€", "over-1000", "1000", String.Empty, "en"));
+
+            filter.Values = vals.ToArray();
+            filters.Add(filter);
+
 			browsing.Prices = filters.ToArray();
 		}
 

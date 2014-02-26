@@ -22,9 +22,15 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Constraints
 
         protected override bool IsMatch(HttpContextBase httpContext, Route route, string parameterName, RouteValueDictionary values, RouteDirection routeDirection)
         {
+
             if (!base.IsMatch(httpContext, route, parameterName, values, routeDirection))
             {
                 return false;
+            }
+
+            if (routeDirection == RouteDirection.UrlGeneration)
+            {
+                return true;
             }
 
             var encoded = values[parameterName].ToString();

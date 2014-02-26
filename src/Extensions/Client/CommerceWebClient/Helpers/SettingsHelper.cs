@@ -164,12 +164,14 @@ namespace VirtoCommerce.Web.Client.Helpers
         {
             try
             {
-                return CultureInfo.CreateSpecificCulture(languageCode);
+
+                if(!string.IsNullOrEmpty(languageCode))
+                    return CultureInfo.CreateSpecificCulture(languageCode);
             }
             catch
             {
-                return null;
             }
+            return null;
         }
 
         /// <summary>

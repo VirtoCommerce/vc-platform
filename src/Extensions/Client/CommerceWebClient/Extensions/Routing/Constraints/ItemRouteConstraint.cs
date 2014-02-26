@@ -26,6 +26,11 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Constraints
                 return false;
             }
 
+            if (routeDirection == RouteDirection.UrlGeneration)
+            {
+                return true;
+            }
+
             var encoded = values[parameterName].ToString();
             var decoded = SettingsHelper.SeoDecode(encoded, SeoUrlKeywordTypes.Item, values.ContainsKey(Constants.Language) ? values[Constants.Language] as string : null);
 

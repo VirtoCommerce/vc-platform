@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Routing;
 using VirtoCommerce.Foundation.AppConfig.Model;
+using VirtoCommerce.Foundation.Stores.Model;
 using VirtoCommerce.Web.Client.Extensions.Routing.Constraints;
 using VirtoCommerce.Web.Client.Helpers;
 
@@ -54,9 +56,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
             var store = StoreHelper.StoreClient.GetStoreById(storeId);
 
             //Reset to default language if validation fails
-            var constraint = new StoreRouteConstraint(); 
-            if (!constraint.Match(requestContext.HttpContext, this, Constants.Store, values,
-                RouteDirection.UrlGeneration))
+            if (IsValidStoreLanguage(store, values[Constants.Language].ToString()))
             {
                 values[Constants.Language] = store.DefaultLanguage;
             }
@@ -265,6 +265,26 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
         protected bool ProcessConstraints(HttpContextBase httpContext, RouteValueDictionary values, RouteDirection routeDirection)
         {
             return Constraints == null || Constraints.All(constraintsItem => ProcessConstraint(httpContext, constraintsItem.Value, constraintsItem.Key, values, routeDirection));
+        }
+
+        private bool IsValidStoreLanguage(Store dbStore, string lang)
+        {
+            try
+            {
+                var culture = CultureInfo.CreateSpecificCulture(lang);
+                if (!dbStore.Languages.Any(l => l.LanguageCode.Equals(culture.Name, StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    //Store does not support this language
+                    return false;
+                }
+            }
+            catch
+            {
+                //Language is not valid
+                return false;
+            }
+
+            return true;
         }
     }
 }
