@@ -347,24 +347,28 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Pricelists.Implementa
 
 		protected void InitializePrices()
 		{
-			Prices = new ObservableCollection<Price>();
+			var tmpPrices = new List<Price>();
 			PricesMap = new Dictionary<Price, Price>();
 
-			if (InnerItem != null && InnerItem.Prices != null)
+			if (InnerItem != null)
 			{
 				foreach (var price in InnerItem.Prices)
 				{
-
 					// rp: this provoke a lot of unnecessary validation activities
 					// proxyPrice.InjectFrom<CloneInjection>(price);
 					// var proxyPrice = new Price();
 
 					var proxyPrice = Price.Clone(price);
 
-					Prices.Add(proxyPrice);
+					tmpPrices.Add(proxyPrice);
 					PricesMap.Add(proxyPrice, price);
 				}
-				OnSpecifiedPropertyChanged("Prices");
+				
+				OnUIThread(() =>
+					{
+						Prices = new ObservableCollection<Price>(tmpPrices);
+						OnSpecifiedPropertyChanged("Prices");
+					});
 			}
 		}
 
