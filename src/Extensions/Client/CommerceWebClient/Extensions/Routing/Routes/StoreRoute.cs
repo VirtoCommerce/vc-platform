@@ -61,33 +61,32 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
                 values[Constants.Language] = store.DefaultLanguage;
             }
 
-            //Need to be in lock to make sure other thread does not change originalUrl in this block
-            lock (thisLock)
+            if (store != null && (!string.IsNullOrEmpty(store.Url) || !string.IsNullOrEmpty(store.SecureUrl)))
             {
-                var originalUrl = Url;
-
-                //If for request store URL is used do not show it in path
-                if (store != null && (!string.IsNullOrEmpty(store.Url) || !string.IsNullOrEmpty(store.SecureUrl)))
+                //Need to be in lock to make sure other thread does not change originalUrl in this block
+                lock (thisLock)
                 {
-                    Url = Url.Replace(string.Format("/{{{0}}}", Constants.Store), "");
+                    var originalUrl = Url;
+
+                    //If for request store URL is used do not show it in path
+                    Url = Url.Replace(string.Format("/{{{0}}}", Constants.Store), string.Empty);
                     values.Remove(Constants.Store);
+                    
+                    var retVal = base.GetVirtualPath(requestContext, values);
+
+                    //Restore original URL
+                    if (!string.IsNullOrEmpty(originalUrl) && !originalUrl.Equals(Url))
+                    {
+                        Url = originalUrl;
+                    }
+
+                    return retVal;
                 }
-                else
-                {
-                    EncodeVirtualPath(requestContext, values, SeoUrlKeywordTypes.Store);
-                }
-
-
-                var retVal = base.GetVirtualPath(requestContext, values);
-
-                //Restore original URL
-                if (!string.IsNullOrEmpty(originalUrl) && !originalUrl.Equals(Url))
-                {
-                    Url = originalUrl;
-                }
-
-                return retVal;
             }
+
+            EncodeVirtualPath(requestContext, values, SeoUrlKeywordTypes.Store);
+            return base.GetVirtualPath(requestContext, values);
+           
         }
 
         public override RouteData GetRouteData(HttpContextBase httpContext)

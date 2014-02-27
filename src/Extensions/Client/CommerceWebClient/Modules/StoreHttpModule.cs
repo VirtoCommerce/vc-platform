@@ -148,9 +148,6 @@ namespace VirtoCommerce.Web.Client.Modules
                 session.Language = store.DefaultLanguage;
             }
 
-            // release sitemap
-            MvcSiteMapProvider.SiteMaps.ReleaseSiteMap();
-
             // set customer id to anonymousID if nothing is set, it might be overwritten if authentication is successful
             if (String.IsNullOrEmpty(session.CustomerId))
             {

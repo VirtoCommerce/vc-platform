@@ -66,7 +66,7 @@ namespace VirtoCommerce.Web.Controllers
 
                 if (SiteMaps.Current != null)
                 {
-                    var node = SiteMaps.Current.CurrentNode;
+                    var node = GetCurrentSiteMapNode();
 
                     if (Request.UrlReferrer != null &&
                         Request.UrlReferrer.AbsoluteUri.StartsWith(Request.Url.GetLeftPart(UriPartial.Authority)))
@@ -124,7 +124,7 @@ namespace VirtoCommerce.Web.Controllers
 
 	        if (SiteMaps.Current != null)
 	        {
-	            var node = SiteMaps.Current.CurrentNode;
+	            var node = GetCurrentSiteMapNode();
 
 	            if (Request.UrlReferrer != null &&
 	                Request.UrlReferrer.AbsoluteUri.StartsWith(Request.Url.GetLeftPart(UriPartial.Authority)))
@@ -293,6 +293,19 @@ namespace VirtoCommerce.Web.Controllers
 
             var viewName = _templateClient.GetDisplayTemplate(type, set);
             return string.IsNullOrEmpty(viewName) ? type.ToString() : viewName;
+        }
+
+        private ISiteMapNode GetCurrentSiteMapNode()
+        {
+            var node = SiteMaps.Current.CurrentNode;
+
+            if (node == null)
+            {
+                //TODO: The realse is costly so maybe its possible to workaround
+                SiteMaps.ReleaseSiteMap();
+                node = SiteMaps.Current.CurrentNode;
+            }
+            return node;
         }
     }
 }
