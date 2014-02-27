@@ -58,7 +58,8 @@ namespace VirtoCommerce.Foundation.Data.Infrastructure
                 _dictionary.TryAdd(nameOrConnectionString, settingValue);
             }
 
-            return settingValue;
+            return nameOrConnectionString;
+            //return settingValue;
         }
 
         public static void SetConnectionString(string name, string connectionString)

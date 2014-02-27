@@ -127,6 +127,7 @@
     </Compile>
     <Compile Include="AppConfig\AppConfigScenarios.cs" />
     <Compile Include="AppConfig\MigrationScenarios.cs" />
+    <Compile Include="AppConfig\SimpleTest.cs" />
     <Compile Include="Azure\AzureScenarios.cs" />
     <Compile Include="Azure\TestISchedulerDbContext.cs" />
     <Compile Include="Catalogs\Helpers\CatalogBuilder.cs" />
