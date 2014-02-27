@@ -410,6 +410,7 @@
     <Compile Include="Virto\Helpers\CartHelperExtensions.cs" />
     <Compile Include="Virto\Helpers\CatalogHelper.cs" />
     <Compile Include="Virto\Helpers\MarketingHelper.cs" />
+    <Compile Include="Virto\Helpers\MVC\CatalogNodeProvider.cs" />
     <Compile Include="Virto\Helpers\MVC\CssMinifyFix.cs" />
     <Compile Include="Virto\Helpers\MVC\VirtoDataAnnotationsModelValidatorProvider.cs" />
     <Compile Include="Virto\Helpers\Payments\CreditCardOption.cs" />
