@@ -36,7 +36,13 @@ namespace VirtoCommerce.Foundation.Data.Infrastructure
             }
 
             // try getting a settings first
-            var settingValue = CloudConfigurationManager.GetSetting(nameOrConnectionString);
+            var settingValue = String.Empty;
+
+            // check if we running in azure, since the code below cause EF6 to stop disposing of objects
+            if (!String.IsNullOrEmpty(Environment.GetEnvironmentVariable("RoleRoot")))
+            {
+                settingValue = CloudConfigurationManager.GetSetting(nameOrConnectionString);
+            }
 
             if (String.IsNullOrEmpty(settingValue))
             {
@@ -58,8 +64,7 @@ namespace VirtoCommerce.Foundation.Data.Infrastructure
                 _dictionary.TryAdd(nameOrConnectionString, settingValue);
             }
 
-            return nameOrConnectionString;
-            //return settingValue;
+            return settingValue;
         }
 
         public static void SetConnectionString(string name, string connectionString)
