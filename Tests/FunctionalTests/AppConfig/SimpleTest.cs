@@ -9,6 +9,7 @@ namespace FunctionalTests.AppConfig
     using System.Data.Entity;
     using Microsoft.WindowsAzure;
 
+    using VirtoCommerce.Foundation.Data.AppConfig;
     using VirtoCommerce.Foundation.Data.Azure.Common;
 
     using Xunit;
@@ -28,6 +29,13 @@ namespace FunctionalTests.AppConfig
             {
                 var db2 = new SchoolContext();
                 var all = db2.Students.ToArray();
+                db2.Dispose();
+            }
+
+            for (int index = 1; index < 500; index++)
+            {
+                var db2 = new EFAppConfigRepository();
+                var all = db2.Localizations.ToArray();
                 db2.Dispose();
             }
         }
