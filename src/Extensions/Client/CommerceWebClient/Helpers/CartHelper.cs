@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.Practices.ServiceLocation;
 using Omu.ValueInjecter;
 using VirtoCommerce.Client;
-using VirtoCommerce.Foundation.Catalogs;
 using VirtoCommerce.Foundation.Catalogs.Model;
+using VirtoCommerce.Foundation.Catalogs.Services;
 using VirtoCommerce.Foundation.Customers;
 using VirtoCommerce.Foundation.Customers.Services;
 using VirtoCommerce.Foundation.Frameworks.Caching;
@@ -23,10 +24,6 @@ using VirtoCommerce.Web.Client.Extensions;
 
 namespace VirtoCommerce.Web.Client.Helpers
 {
-    using System.Data.Entity;
-
-    using VirtoCommerce.Foundation.Catalogs.Services;
-
     /// <summary>
     /// Cart helper class used to simplify cart operations.
     /// The cart is automatically cached in the current Http Context.
