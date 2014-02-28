@@ -238,9 +238,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
             }
 
             //Decode route value
-            var store = routeData.Values[Constants.Store].ToString();
-            routeData.Values[Constants.Store] = SettingsHelper.SeoDecode(store, SeoUrlKeywordTypes.Store, 
-                routeData.Values.ContainsKey(Constants.Language) ? routeData.Values[Constants.Language] as string : null);
+            DecodeRouteData(routeData.Values, SeoUrlKeywordTypes.Store);
 
             return routeData;
         }
@@ -253,6 +251,23 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
             if (values.ContainsKey(routeValueKey) && values[routeValueKey] != null)
             {
                 values[routeValueKey] = SettingsHelper.SeoEncode(values[routeValueKey].ToString(), type, language);
+            }
+        }
+
+        protected virtual void DecodeRouteData(RouteValueDictionary values, SeoUrlKeywordTypes type)
+        {
+            // Need to skip decoding values in routes temporary because Sitemap calls GetRouteData and compares the values with the ones stored in siteMapNode
+            // Sitemap node is configured to preserve route values and they are encoded. 
+            // If values in current route does not match node route values sitemap fails to resolve current node
+            if (HttpContext.Current.Items.Contains(Constants.SkipSeoDecodeKey) && (bool)HttpContext.Current.Items[Constants.SkipSeoDecodeKey])
+                return;
+
+            string routeValueKey = type.ToString().ToLower();
+            var language = values.ContainsKey(Constants.Language) ? values[Constants.Language] as string : null;
+
+            if (values.ContainsKey(routeValueKey) && values[routeValueKey] != null)
+            {
+                values[routeValueKey] = SettingsHelper.SeoDecode(values[routeValueKey].ToString(), type, language);
             }
         }
 

@@ -9,6 +9,7 @@ using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Catalogs.Services;
 using VirtoCommerce.Foundation.Frameworks.Tagging;
 using VirtoCommerce.Web.Client.Extensions.Filters;
+using VirtoCommerce.Web.Client.Extensions.Routing;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Virto.Helpers;
 using AppConfigContext = VirtoCommerce.Foundation.AppConfig.Model.ContextFieldConstants;
@@ -297,15 +298,18 @@ namespace VirtoCommerce.Web.Controllers
 
         private ISiteMapNode GetCurrentSiteMapNode()
         {
-            var node = SiteMaps.Current.CurrentNode;
-
-            if (node == null)
+            // Need to skip decoding values in routes temporary because Sitemap calls GetRouteData and compares the values with the ones stored in siteMapNode
+            // Sitemap node is configured to preserve route values and they are encoded. 
+            // If values in current route does not match node route values sitemap fails to resolve current node
+            try
             {
-                //TODO: The realse is costly so maybe its possible to workaround
-                SiteMaps.ReleaseSiteMap();
-                node = SiteMaps.Current.CurrentNode;
+                HttpContext.Items.Add(Constants.SkipSeoDecodeKey, true);
+                return SiteMaps.Current.CurrentNode;
             }
-            return node;
+            finally
+            {
+                HttpContext.Items.Remove(Constants.SkipSeoDecodeKey);
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Web;
 using MvcSiteMapProvider;
 using VirtoCommerce.Web.Client.Extensions;
 using VirtoCommerce.Web.Client.Extensions.Routing;
@@ -15,18 +16,12 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC
                 new DynamicNode
                 {
                     Action = "Display",
-                    Controller = "Catalog",
-                    PreservedRouteParameters = new[] {Constants.Category},
-                    ChangeFrequency = ChangeFrequency.Always,
-                    UpdatePriority = UpdatePriority.High
+                    PreservedRouteParameters = new[] {Constants.Language, Constants.Store, Constants.Category},
                 },
                 new DynamicNode
                 {
                     Action = "DisplayItem",
-                    Controller = "Catalog",
-                    PreservedRouteParameters = new[] {Constants.Item},
-                    ChangeFrequency = ChangeFrequency.Always,
-                    UpdatePriority = UpdatePriority.High
+                    PreservedRouteParameters = new[] {Constants.Language, Constants.Store, Constants.Category, Constants.Item},
                 }
             };
         }

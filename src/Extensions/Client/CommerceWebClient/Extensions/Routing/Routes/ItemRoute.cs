@@ -44,9 +44,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
                 else
                 {
                     //Decode the value
-                    var item = routeData.Values[Constants.Item].ToString();
-                    routeData.Values[Constants.Item] = SettingsHelper.SeoDecode(item, SeoUrlKeywordTypes.Item, 
-                        routeData.Values.ContainsKey(Constants.Language) ? routeData.Values[Constants.Language] as string : null);
+                    DecodeRouteData(routeData.Values, SeoUrlKeywordTypes.Item);
                 }
             }
             return routeData;
