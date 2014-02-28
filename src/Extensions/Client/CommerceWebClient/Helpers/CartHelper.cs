@@ -23,6 +23,8 @@ using VirtoCommerce.Web.Client.Extensions;
 
 namespace VirtoCommerce.Web.Client.Helpers
 {
+    using System.Data.Entity;
+
     using VirtoCommerce.Foundation.Catalogs.Services;
 
     /// <summary>
@@ -803,7 +805,7 @@ namespace VirtoCommerce.Web.Client.Helpers
 								 .GroupBy(c => c.Name)
 								 .Select(cartGroup => new CartCount { Name = cartGroup.Key, Count = cartGroup.Count() }));
 
-				allCarts = query.ToArray();
+				allCarts = query.ToArrayAsync().Result;
 				if (HttpContext.Current != null)
 				{
 					HttpContext.Current.Items[cartKey2] = allCarts;

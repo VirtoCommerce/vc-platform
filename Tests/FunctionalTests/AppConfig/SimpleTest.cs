@@ -24,6 +24,7 @@ namespace FunctionalTests.AppConfig
             //CloudConfigurationManager.GetSetting("SchoolContext");
 
             Database.SetInitializer(new MySampleInitialize());
+            
             new SchoolContext().Database.Initialize(false);
             for (int index = 1; index < 500; index++)
             {

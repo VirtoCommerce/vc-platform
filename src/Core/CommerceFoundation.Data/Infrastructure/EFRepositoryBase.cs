@@ -43,6 +43,7 @@ namespace VirtoCommerce.Foundation.Data
 		protected EFRepositoryBase(string nameOrConnectionString, IFactory factory = null, IUnitOfWork unitOfWork = null, IInterceptor[] interceptors = null)
             : base(ConnectionHelper.GetConnectionString(nameOrConnectionString))
 		{
+		    //this.Configuration.UseDatabaseNullSemantics = true;
 			_factory = factory;
 			_unitOfWork = unitOfWork;
 			_interceptors = interceptors;
