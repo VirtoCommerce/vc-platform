@@ -39,7 +39,7 @@ namespace VirtoCommerce.Foundation.Data.Infrastructure
             var settingValue = String.Empty;
 
             // check if we running in azure, since the code below cause EF6 to stop disposing of objects
-            if (!String.IsNullOrEmpty(Environment.GetEnvironmentVariable("RoleRoot")))
+            //if (!String.IsNullOrEmpty(Environment.GetEnvironmentVariable("RoleRoot")))
             {
                 settingValue = CloudConfigurationManager.GetSetting(nameOrConnectionString);
             }
