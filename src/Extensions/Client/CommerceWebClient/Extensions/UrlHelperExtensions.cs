@@ -5,13 +5,8 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using Microsoft.Practices.ServiceLocation;
 using VirtoCommerce.Client;
-using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.Assets.Services;
 using VirtoCommerce.Foundation.Catalogs.Model;
-using VirtoCommerce.Foundation.Catalogs.Services;
-using VirtoCommerce.Foundation.Customers;
-using VirtoCommerce.Foundation.Customers.Services;
-using VirtoCommerce.Web.Client.Helpers;
 
 namespace VirtoCommerce.Web.Client.Extensions
 {
@@ -76,31 +71,38 @@ namespace VirtoCommerce.Web.Client.Extensions
         {
             var routeValues = new RouteValueDictionary();
 
-          
             if (parent != null)
             {
-                string parentCode = SettingsHelper.SeoEncode(parent.Code, SeoUrlKeywordTypes.Item);
-
-                routeValues.Add("item", parentCode);
+                routeValues.Add("item", parent.Code);
                 if (item != null)
                 {
-                    string itemCode = SettingsHelper.SeoEncode(item.Code, SeoUrlKeywordTypes.Item);
-                    routeValues.Add("variation", itemCode);
+                    routeValues.Add("variation", item.Code);
                 }
                 routeValues.Add("category", item.GetItemCategoryRouteValue());
-                return helper.RouteUrl("Item", routeValues);
+            }
+            else if (item != null)
+            {
+                routeValues.Add("item", item.Code);
+                routeValues.Add("category", item.GetItemCategoryRouteValue());
+            }
+            return helper.RouteUrl("Item", routeValues);
+        }
+
+        //This can also be used for quicker but not exact url rendering, however it doesnt add performance boost
+        public static string ItemUrlShort(this UrlHelper helper, Item item, Item parent)
+        {
+            if (parent != null)
+            {
+                return item != null ? string.Format("~/p/{0}?variation={1}", parent.Code, item.Code)
+                    : string.Format("p/{0}", parent.Code);
             }
 
             if (item != null)
             {
-                string itemCode = SettingsHelper.SeoEncode(item.Code, SeoUrlKeywordTypes.Item);
-
-                routeValues.Add("item", itemCode);
-                routeValues.Add("category", item.GetItemCategoryRouteValue());
-                return helper.RouteUrl("Item", routeValues);
+                return string.Format("p/{0}", item.Code);
             }
-
             return string.Empty;
         }
+
     }
 }
