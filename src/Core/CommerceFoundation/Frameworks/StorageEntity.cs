@@ -313,12 +313,15 @@ namespace VirtoCommerce.Foundation.Frameworks
 			{
 				tmp(this, new PropertyChangedEventArgs(propertyName));
 			}
-			PropertyInfo propertyInfo;
-			bool hasValidators = PrepareValidators(propertyName, out propertyInfo);
-			if (hasValidators)
-			{
-				CheckValidationState(propertyInfo, false);
-			}
+            if (Configuration.EnableEntityValidation)
+            {
+                PropertyInfo propertyInfo;
+                bool hasValidators = PrepareValidators(propertyName, out propertyInfo);
+                if (hasValidators)
+                {
+                    CheckValidationState(propertyInfo, false);
+                }
+            }
 		}
 
 		protected virtual void OnPropertyChanging(string propertyName)

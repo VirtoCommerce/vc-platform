@@ -211,7 +211,7 @@ VirtoCart.prototype = {
         // Update the page elements
         if (context.LineItemsView != null && context.LineItemsView.length > 0)
         {
-            if (context.Source == "MiniCart")
+            if (context.Source.toLowerCase() == "MiniCart".toLowerCase())
             {
                 if ($(".cart .popup").length > 0)
                 {
@@ -221,11 +221,11 @@ VirtoCart.prototype = {
                 $('#cart-subtotal').html(context.CartSubTotal);
                 $('#cart-total').html(context.CartTotal);
             }
-            else if (context.Source == "MiniCompareList")
+            else if (context.Source.toLowerCase() == "MiniCompareList".toLowerCase())
             {
                 $('.compare .popup').html(context.LineItemsView);
             }
-            else if (context.Source == "LineItems")
+            else if (context.Source.toLowerCase() == "LineItems".toLowerCase())
             {
                 $('#shopping-cart-table tbody').html(context.LineItemsView);
                 $('#cart-subtotal').html(context.CartSubTotal);
