@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Web.Virto.Helpers;
@@ -510,6 +511,8 @@ namespace VirtoCommerce.Web.Models
     /// <summary>
     /// 
     /// </summary>
+    [DataContract]
+    [KnownType(typeof(CategoryModel))]
     public abstract class CategoryBaseModel
     {
         /// <summary>
@@ -518,6 +521,7 @@ namespace VirtoCommerce.Web.Models
         /// <value>
         /// The category.
         /// </value>
+        [DataMember]
         public CategoryBase Category { get; set; }
 
         /// <summary>
@@ -526,6 +530,7 @@ namespace VirtoCommerce.Web.Models
         /// <value>
         /// The category identifier.
         /// </value>
+        [DataMember]
         public string CategoryId { get; set; }
 
         /// <summary>
@@ -534,6 +539,7 @@ namespace VirtoCommerce.Web.Models
         /// <value>
         /// The code.
         /// </value>
+        [DataMember]
         public string Code { get; set; }
 
         /// <summary>
@@ -542,6 +548,7 @@ namespace VirtoCommerce.Web.Models
         /// <value>
         ///   <c>true</c> if [is active]; otherwise, <c>false</c>.
         /// </value>
+        [DataMember]
         public bool IsActive { get; set; }
 
         /// <summary>
@@ -550,6 +557,7 @@ namespace VirtoCommerce.Web.Models
         /// <value>
         /// The priority.
         /// </value>
+        [DataMember]
         public int Priority { get; set; }
 
         /// <summary>
@@ -558,6 +566,7 @@ namespace VirtoCommerce.Web.Models
         /// <value>
         /// The catalog identifier.
         /// </value>
+        [DataMember]
         public string CatalogId { get; set; }
 
         /// <summary>
@@ -566,6 +575,7 @@ namespace VirtoCommerce.Web.Models
         /// <value>
         /// The parent category identifier.
         /// </value>
+        [DataMember]
         public string ParentCategoryId { get; set; }
 
         /// <summary>
@@ -594,6 +604,7 @@ namespace VirtoCommerce.Web.Models
         public CatalogOutline CatalogOutline { get; set; }
     }
 
+    [DataContract]
     public class CategoryModel : CategoryBaseModel
     {
 
@@ -603,6 +614,7 @@ namespace VirtoCommerce.Web.Models
         /// <value>
         /// The name.
         /// </value>
+        [DataMember]
         public string Name { get; set; }
 
         /// <summary>
@@ -611,6 +623,7 @@ namespace VirtoCommerce.Web.Models
         /// <value>
         /// The start date.
         /// </value>
+        [DataMember]
         public DateTime StartDate { get; set; }
 
         /// <summary>
@@ -619,6 +632,7 @@ namespace VirtoCommerce.Web.Models
         /// <value>
         /// The end date.
         /// </value>
+        [DataMember]
         public DateTime? EndDate { get; set; }
 
         /// <summary>
@@ -627,6 +641,7 @@ namespace VirtoCommerce.Web.Models
         /// <value>
         /// The property set identifier.
         /// </value>
+        [DataMember] 
         public string PropertySetId { get; set; }
 
         /// <summary>
@@ -635,6 +650,7 @@ namespace VirtoCommerce.Web.Models
         /// <value>
         /// The property set.
         /// </value>
+        [DataMember]
         public PropertySet PropertySet { get; set; }
 
         /// <summary>
@@ -643,6 +659,7 @@ namespace VirtoCommerce.Web.Models
         /// <value>
         /// The category property values.
         /// </value>
+        [DataMember]
         public CategoryPropertyValue[] CategoryPropertyValues { get; set; }
 
         /// <summary>
@@ -651,6 +668,7 @@ namespace VirtoCommerce.Web.Models
         /// <value>
         /// The properties.
         /// </value>
+        [DataMember]
         public PropertiesModel Properties { get; set; } 
 
     }

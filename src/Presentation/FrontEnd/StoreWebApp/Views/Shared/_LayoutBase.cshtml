@@ -26,17 +26,17 @@
                 <div class="rubber clearfix">
                     <div class="grid_6">
                         <div class="head-switch store">
-                            @{Html.RenderAction("StorePicker", "Store");}
+                            @{Html.RenderAction("StorePicker", "Store", true);}
                         </div>        
                         <div class="head-switch language">
                             @{Html.RenderPartial("Languages");}
                         </div>
                         <div class="head-switch currency">
-                            @{Html.RenderAction("Currencies", "Store");}
+                            @{Html.RenderAction("Currencies", "Store", true);}
                         </div>        
                     </div>
                     <div class="grid_6">
-                        @{Html.RenderAction("QuickAccess", "Store");}        
+                        @{Html.RenderAction("QuickAccess", "Store", true);}        
                         @if (UserHelper.CustomerSession.IsRegistered)
                         {
                             <p class="welcome">@UserHelper.CustomerSession.CustomerName</p>

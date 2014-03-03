@@ -167,7 +167,7 @@ namespace VirtoCommerce.Foundation.Search
                     var enumerate = val as IEnumerable;
                     if (val is string || enumerate == null)
                     {
-                        outlines.Add(val.ToString());
+                        outlines.Add(val !=null ? val.ToString() : "");
                     }
                     else
                     {

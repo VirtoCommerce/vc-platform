@@ -124,13 +124,13 @@ namespace VirtoCommerce.Web
 
             var varyString = base.GetVaryByCustomString(context, custom) ?? string.Empty;
 
-            varyString += UserHelper.CustomerSession.Language;//allways vary by language
+            //varyString += UserHelper.CustomerSession.Language;//allways vary by language
 
             if (SettingsHelper.OutputCacheEnabled)
             {
                 foreach (var key in custom.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    if (string.Equals(key, "store", StringComparison.OrdinalIgnoreCase))
+                    if (string.Equals(key, "storeparam", StringComparison.OrdinalIgnoreCase))
                     {
                         varyString += UserHelper.CustomerSession.StoreId;
                     }

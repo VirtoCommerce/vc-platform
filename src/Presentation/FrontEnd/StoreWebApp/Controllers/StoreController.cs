@@ -8,6 +8,8 @@ using VirtoCommerce.Client.Extensions;
 using VirtoCommerce.Foundation.Stores.Model;
 using VirtoCommerce.Web.Client.Extensions;
 using VirtoCommerce.Web.Client.Extensions.Filters;
+using VirtoCommerce.Web.Client.Extensions.Filters.Caching;
+using VirtoCommerce.Web.Client.Extensions.Routing;
 using VirtoCommerce.Web.Client.Helpers;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Virto.Helpers;
@@ -39,6 +41,7 @@ namespace VirtoCommerce.Web.Controllers
         /// Show available currencies
         /// </summary>
         /// <returns>ActionResult.</returns>
+        [CustomDonutOutputCache(CacheProfile = "StoreCache", VaryByParam = Constants.Language)]
         public ActionResult Currencies()
         {
             var store = _storeClient.GetCurrentStore();
@@ -54,6 +57,7 @@ namespace VirtoCommerce.Web.Controllers
         /// Shows the available store picker
         /// </summary>
         /// <returns>ActionResult.</returns>
+        [CustomDonutOutputCache(CacheProfile = "StoreCache", VaryByParam = Constants.Language)]
         public ActionResult StorePicker()
         {
             var stores = _storeClient.GetStores();
@@ -102,6 +106,7 @@ namespace VirtoCommerce.Web.Controllers
         /// Quicks the access.
         /// </summary>
         /// <returns>ActionResult.</returns>
+        [CustomDonutOutputCache(CacheProfile = "StoreCache", Duration = 0)]
         public ActionResult QuickAccess()
         {
             var wishListHelper = new CartHelper(CartHelper.WishListName);
@@ -119,6 +124,7 @@ namespace VirtoCommerce.Web.Controllers
         /// Quicks the access.
         /// </summary>
         /// <returns>ActionResult.</returns>
+        [CustomDonutOutputCache(CacheProfile = "StoreCache", Duration = 0)]
         public ActionResult CartOptions()
         {
             var compareListHelper = new CartHelper(CartHelper.CompareListName);

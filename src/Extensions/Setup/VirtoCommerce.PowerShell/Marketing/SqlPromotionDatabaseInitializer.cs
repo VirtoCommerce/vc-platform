@@ -21,8 +21,7 @@ namespace VirtoCommerce.PowerShell.Marketing
             RunCommand(context, "Coupon.sql", "Marketing");
             RunCommand(context, "Promotion.sql", "Marketing");
             RunCommand(context, "PromotionReward.sql", "Marketing");
-            ExecuteCommand(Path.Combine(GetFrameworkDirectory(), "aspnet_regsql.exe"),
-                string.Format("-C \"{0}\" -ed -et -t PromotionReward", context.Database.Connection.ConnectionString));
+            //ExecuteCommand(Path.Combine(GetFrameworkDirectory(), "aspnet_regsql.exe"), string.Format("-C \"{0}\" -ed -et -t PromotionReward", context.Database.Connection.ConnectionString));
         }
 	}
 }

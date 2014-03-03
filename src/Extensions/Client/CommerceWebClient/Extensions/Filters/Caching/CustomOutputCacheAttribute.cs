@@ -14,11 +14,9 @@ using System.Web;
 using System.Web.Configuration;
 using System.Web.Mvc;
 using System.Web.UI;
-using Omu.ValueInjecter;
-using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using VirtoCommerce.Web.Client.Helpers;
 
-namespace VirtoCommerce.Web.Client.Extensions.Filters
+namespace VirtoCommerce.Web.Client.Extensions.Filters.Caching
 {
 	[SuppressMessage("Microsoft.Performance", "CA1813:AvoidUnsealedAttributes", Justification = "Unsealed so that subclassed types can set properties in the default constructor.")]
 	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = false)]

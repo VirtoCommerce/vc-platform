@@ -37,7 +37,7 @@ else
     <div class="content">
         <div class="category-products">
             <div class="category-image">
-                @{ Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "CategoryTop" }); }
+                @{ Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "CategoryTop" }, true); }
             </div>
             <div class="toolbar top">
                 @Html.DisplayFor(model => model.Pager, "SearchPager")

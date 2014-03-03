@@ -2,6 +2,8 @@
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
+using DevTrends.MvcDonutCaching;
+using DevTrends.MvcDonutCaching.Annotations;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Web.Client.Extensions;
 using VirtoCommerce.Web.Client.Extensions.Filters;
@@ -111,7 +113,18 @@ namespace VirtoCommerce.Web.Controllers
 	        }
 
 	        return false;
-	    }
+        }
 
-	}
+        #region Cache
+
+        public OutputCacheManager OutputCacheManager
+        {
+            get;
+            [UsedImplicitly]
+            set;
+        }
+
+        #endregion
+
+    }
 }

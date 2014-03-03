@@ -1,11 +1,10 @@
-﻿#region
-
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
+using DevTrends.MvcDonutCaching;
 using VirtoCommerce.Client;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Catalogs.Search;
@@ -13,13 +12,11 @@ using VirtoCommerce.Foundation.PlatformTools;
 using VirtoCommerce.Foundation.Search;
 using VirtoCommerce.Foundation.Search.Schemas;
 using VirtoCommerce.Web.Client.Extensions;
-using VirtoCommerce.Web.Client.Extensions.Filters;
 using VirtoCommerce.Client.Globalization;
+using VirtoCommerce.Web.Client.Extensions.Filters.Caching;
 using VirtoCommerce.Web.Client.Helpers;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Virto.Helpers;
-
-#endregion
 
 namespace VirtoCommerce.Web.Controllers
 {
@@ -65,7 +62,7 @@ namespace VirtoCommerce.Web.Controllers
 		/// Search home page
 		/// </summary>
 		/// <returns>ActionResult.</returns>
-		[CustomOutputCache(CacheProfile = "SearchCache")]
+		[CustomDonutOutputCache(CacheProfile = "SearchCache")]
         public ActionResult Index()
         {
             return View();
@@ -292,19 +289,20 @@ namespace VirtoCommerce.Web.Controllers
 	    /// <summary>
 	    /// Searches within category.
 	    /// </summary>
-        /// <param name="cat">The category.</param>
+	    /// <param name="cat">The category.</param>
 	    /// <param name="parameters">The parameters.</param>
 	    /// <param name="name">Partial view name</param>
 	    /// <param name="criteria">Search criteria</param>
+	    /// <param name="savePreferences"></param>
 	    /// <returns>ActionResult.</returns>
-	    [CustomOutputCache(CacheProfile = "SearchCache", VaryByCustom = "store;currency;cart")]
-        public ActionResult SearchResultsWithinCategory(Category cat, SearchParameters parameters, string name = "SearchResultsPartial", CatalogItemSearchCriteria criteria = null, bool savePreferences = true)
+	    //[CustomDonutOutputCache(CacheProfile = "SearchCache", VaryByCustom = "currency;cart", Options = OutputCacheOptions.ReplaceDonutsInChildActions)]
+        public ActionResult SearchResultsWithinCategory(CategoryModel cat, SearchParameters parameters, string name = "SearchResultsPartial", CatalogItemSearchCriteria criteria = null, bool savePreferences = true)
         {
             criteria = criteria ?? new CatalogItemSearchCriteria();
 		    if (cat != null)
 		    {
-		        ViewBag.Title = cat.Name.Localize();
-                criteria.Outlines.Add(String.Format("{0}*", _catalogClient.BuildCategoryOutline(UserHelper.CustomerSession.CatalogId, cat)));
+		        ViewBag.Title = cat.DisplayName;
+                criteria.Outlines.Add(String.Format("{0}*", _catalogClient.BuildCategoryOutline(UserHelper.CustomerSession.CatalogId, cat.Category)));
 		    }
 
 	        if (savePreferences)
@@ -322,7 +320,7 @@ namespace VirtoCommerce.Web.Controllers
 		/// <param name="keywords">The keywords.</param>
 		/// <param name="parameters">The parameters.</param>
 		/// <returns>ActionResult.</returns>
-		[CustomOutputCache(CacheProfile = "SearchCache", VaryByCustom = "store")]
+		[CustomDonutOutputCache(CacheProfile = "SearchCache", VaryByCustom = "storeparam")]
         public ActionResult SearchResultsByKeywords(string keywords, SearchParameters parameters)
         {
 			Logger.Info("New search started: " + keywords);
@@ -345,7 +343,7 @@ namespace VirtoCommerce.Web.Controllers
 		/// </summary>
 		/// <param name="term">The term.</param>
 		/// <returns>ActionResult.</returns>
-		[CustomOutputCache(CacheProfile = "SearchCache", VaryByCustom = "store")]
+        [CustomDonutOutputCache(CacheProfile = "SearchCache", VaryByCustom = "storeparam")]
         public ActionResult Find(string term)
         {
 			Logger.Info("New search started: "+term);

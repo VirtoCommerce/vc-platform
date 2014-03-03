@@ -1,6 +1,6 @@
 ﻿using System.Web.Mvc;
-using VirtoCommerce.Web.Client.Extensions.Filters;
-using VirtoCommerce.Web.Virto.Helpers.MVC;
+using DevTrends.MvcDonutCaching;
+using VirtoCommerce.Web.Client.Extensions.Filters.Caching;
 
 namespace VirtoCommerce.Web.Controllers
 {
@@ -13,7 +13,7 @@ namespace VirtoCommerce.Web.Controllers
 		/// Home page
 		/// </summary>
 		/// <returns>ActionResult.</returns>
-		[CustomOutputCache(CacheProfile = "HomeCache")]
+		[CustomDonutOutputCache(CacheProfile = "HomeCache")]
         public ActionResult Index()
         {
             return View();
