@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
 using VirtoCommerce.Foundation.Catalogs;
@@ -215,7 +216,7 @@ namespace VirtoCommerce.Client
 
             return Helper.Get(
                 string.Format(ItemsCacheKey, CacheHelper.CreateCacheKey("", ids), responseGroup),
-                () => (query).ToArray(),
+                () => (query).ToArrayAsync().Result,
                 CatalogConfiguration.Instance.Cache.ItemTimeout,
                 _isEnabled && useCache);
         }
@@ -286,7 +287,7 @@ namespace VirtoCommerce.Client
                 () => (from p in _catalogRepository.PropertySets select p)
                     .Expand("PropertySetProperties/Property/PropertyValues")
                     .Expand("PropertySetProperties/Property/PropertyAttributes")
-                    .ToArray(),
+                    .ToArrayAsync().Result,
                 CatalogConfiguration.Instance.Cache.PropertiesTimeout,
                 _isEnabled && useCache);
         }
