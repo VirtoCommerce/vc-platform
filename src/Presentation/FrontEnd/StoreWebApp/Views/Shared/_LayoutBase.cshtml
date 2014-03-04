@@ -37,10 +37,6 @@
                     </div>
                     <div class="grid_6">
                         @{Html.RenderAction("QuickAccess", "Store", true);}        
-                        @if (UserHelper.CustomerSession.IsRegistered)
-                        {
-                            <p class="welcome">@UserHelper.CustomerSession.CustomerName</p>
-                        }
                     </div>
                 </div>
             </div>
@@ -102,7 +98,7 @@
         <div class="footer-wrap">
             <div class="banners">
                 <div class="rubber clearfix">
-                    @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "BottomLeftPromo" });}
+                    @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "BottomLeftPromo" }, true);}
                     <div class="grid_6 banner callback">
                         <a title="Call us! toll free 8-800-123-1234" href="">Call us! toll free <span>8-800-123-1234</span>
                         </a>

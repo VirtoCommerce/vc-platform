@@ -721,7 +721,6 @@
     <Content Include="Views\Shared\DisplayTemplates\Item.cshtml" />
     <Content Include="Views\Search\DisplayTemplates\SearchPager.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
-    <Content Include="Views\Search\SearchResultsPartial.cshtml" />
     <Content Include="Views\Store\CartLink.cshtml" />
     <Content Include="Views\Store\Currencies.cshtml" />
     <Content Include="Views\Store\QuickAccess.cshtml" />

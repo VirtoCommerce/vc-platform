@@ -176,7 +176,10 @@ namespace VirtoCommerce.Web.Virto.Helpers
 			var desc = String.Empty;
 
             var d = (from f in helper.Filters where f.Key.Equals(key, StringComparison.OrdinalIgnoreCase) && 
-                         (f as PriceRangeFilter == null || ((PriceRangeFilter)f).Currency.Equals(helper.CatalogClient.CustomerSession.Currency)) select f).SingleOrDefault();
+                         (f as PriceRangeFilter == null || 
+                         ((PriceRangeFilter)f).Currency.Equals(helper.CatalogClient.CustomerSession.Currency, StringComparison.OrdinalIgnoreCase)) 
+                     select f).SingleOrDefault();
+
 			if (d != null)
 			{
                 var val = (from v in helper.GetFilterValues(d) where v.Id.Equals(id, StringComparison.OrdinalIgnoreCase) select v).SingleOrDefault();

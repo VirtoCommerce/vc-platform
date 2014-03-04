@@ -7,6 +7,7 @@ using DevTrends.MvcDonutCaching.Annotations;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Web.Client.Extensions;
 using VirtoCommerce.Web.Client.Extensions.Filters;
+using VirtoCommerce.Web.Client.Extensions.Filters.Caching;
 using VirtoCommerce.Web.Client.Extensions.Routing;
 using VirtoCommerce.Web.Client.Extensions.Routing.Routes;
 using VirtoCommerce.Web.Client.Helpers;
@@ -21,6 +22,8 @@ namespace VirtoCommerce.Web.Controllers
     [Canonicalized(Order = 2)]
 	public abstract class ControllerBase : Controller
 	{
+
+	    private OutputCacheManager _cacheManager;
 		/// <summary>
 		/// Renders the razor view to string.
 		/// </summary>
@@ -119,9 +122,10 @@ namespace VirtoCommerce.Web.Controllers
 
         public OutputCacheManager OutputCacheManager
         {
-            get;
-            [UsedImplicitly]
-            set;
+            get {
+                return _cacheManager ??
+                       (_cacheManager = new OutputCacheManager(OutputCache.Instance, new CacheKeyBuilder()));
+            }
         }
 
         #endregion

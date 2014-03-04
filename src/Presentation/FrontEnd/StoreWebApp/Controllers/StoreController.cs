@@ -1,26 +1,22 @@
-﻿#region
-
-using System;
+﻿using System;
 using System.Linq;
 using System.Web.Mvc;
 using VirtoCommerce.Client;
 using VirtoCommerce.Client.Extensions;
 using VirtoCommerce.Foundation.Stores.Model;
 using VirtoCommerce.Web.Client.Extensions;
-using VirtoCommerce.Web.Client.Extensions.Filters;
 using VirtoCommerce.Web.Client.Extensions.Filters.Caching;
 using VirtoCommerce.Web.Client.Extensions.Routing;
 using VirtoCommerce.Web.Client.Helpers;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Virto.Helpers;
 
-#endregion
-
 namespace VirtoCommerce.Web.Controllers
 {
     /// <summary>
     /// Class StoreController.
     /// </summary>
+    [ChildActionOnly]
     public class StoreController : ControllerBase
     {
         /// <summary>
@@ -41,7 +37,7 @@ namespace VirtoCommerce.Web.Controllers
         /// Show available currencies
         /// </summary>
         /// <returns>ActionResult.</returns>
-        [CustomDonutOutputCache(CacheProfile = "StoreCache", VaryByParam = Constants.Language)]
+        [CustomDonutOutputCache(CacheProfile = "StoreCache", VaryByParam = Constants.Language, VaryByCustom = "currency")]
         public ActionResult Currencies()
         {
             var store = _storeClient.GetCurrentStore();
@@ -86,23 +82,6 @@ namespace VirtoCommerce.Web.Controllers
         }
 
         /// <summary>
-        /// Determines whether [is store visible] [the specified store].
-        /// </summary>
-        /// <param name="store">The store.</param>
-        /// <returns><c>true</c> if [is store visible] [the specified store]; otherwise, <c>false</c>.</returns>
-        private bool IsStoreVisible(Store store)
-        {
-            if (UserHelper.CustomerSession.IsRegistered)
-            {
-                string errorMessage;
-                return StoreHelper.IsUserAuthorized(UserHelper.CustomerSession.Username, store.StoreId, out errorMessage);
-            }
-
-            return store.StoreState == StoreState.Open.GetHashCode() ||
-                   store.StoreState == StoreState.RestrictedAccess.GetHashCode();
-        }
-
-        /// <summary>
         /// Quicks the access.
         /// </summary>
         /// <returns>ActionResult.</returns>
@@ -136,5 +115,26 @@ namespace VirtoCommerce.Web.Controllers
                                    CompareList = compareListHelper.CreateCompareModel()
                                }).ToExpando());
         }
+
+        #region Private Helpers
+
+        /// <summary>
+        /// Determines whether [is store visible] [the specified store].
+        /// </summary>
+        /// <param name="store">The store.</param>
+        /// <returns><c>true</c> if [is store visible] [the specified store]; otherwise, <c>false</c>.</returns>
+        private bool IsStoreVisible(Store store)
+        {
+            if (UserHelper.CustomerSession.IsRegistered)
+            {
+                string errorMessage;
+                return StoreHelper.IsUserAuthorized(UserHelper.CustomerSession.Username, store.StoreId, out errorMessage);
+            }
+
+            return store.StoreState == StoreState.Open.GetHashCode() ||
+                   store.StoreState == StoreState.RestrictedAccess.GetHashCode();
+        }
+
+        #endregion
     }
 }

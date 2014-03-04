@@ -530,14 +530,13 @@ namespace VirtoCommerce.Web.Controllers
         private PaymentDetailsType GetPaypalPaymentDetail(CurrencyCodeType currency, PaymentActionCodeType paymentAction)
         {
             var paymentDetails = new PaymentDetailsType { PaymentAction = paymentAction };
-            paymentDetails.PaymentDetailsItem.AddRange(GetPaypalPaymentDetailsItemTypes(currency));
+            decimal itemTotal;
+            paymentDetails.PaymentDetailsItem.AddRange(GetPaypalPaymentDetailsItemTypes(currency, out itemTotal));
+            paymentDetails.ItemTotal = new BasicAmountType(currency, FormatMoney(itemTotal));
             paymentDetails.ShippingTotal = new BasicAmountType(currency, FormatMoney(Ch.Cart.ShippingTotal));
             paymentDetails.HandlingTotal = new BasicAmountType(currency, FormatMoney(Ch.Cart.HandlingTotal));
             paymentDetails.TaxTotal = new BasicAmountType(currency, FormatMoney(Ch.Cart.TaxTotal));
             paymentDetails.OrderTotal = new BasicAmountType(currency, FormatMoney(Ch.Cart.Total));
-            paymentDetails.ItemTotal = new BasicAmountType(currency, FormatMoney(Ch.LineItems.Sum(x=>x.ExtendedPrice)));
-            //paymentDetails.ItemTotal = new BasicAmountType(currency, FormatMoney(paymentDetails.PaymentDetailsItem.Sum(x => x.Quantity.HasValue ?
-            //    decimal.Parse(x.Amount.value) * x.Quantity.Value : decimal.Parse(x.Amount.value))));
 
             var shippingDiscount = Ch.Cart.OrderForms.SelectMany(c => c.Shipments).Sum(c => c.ShippingDiscountAmount);
             if (shippingDiscount > 0)
@@ -552,8 +551,10 @@ namespace VirtoCommerce.Web.Controllers
             return amount.ToString("F2", new CultureInfo("en-US"));
         }
 
-        private IEnumerable<PaymentDetailsItemType> GetPaypalPaymentDetailsItemTypes(CurrencyCodeType currency)
+        private IEnumerable<PaymentDetailsItemType> GetPaypalPaymentDetailsItemTypes(CurrencyCodeType currency, out decimal itemTotal)
         {
+            itemTotal = 0;
+
             var detais = Ch.LineItems.Select(li => new PaymentDetailsItemType
             {
                 Name = li.DisplayName, 
@@ -566,6 +567,10 @@ namespace VirtoCommerce.Web.Controllers
                 ItemURL = Url.ItemUrl(li.CatalogItemId, li.ParentCatalogItemId)
             }).ToList();
 
+            //Item total is sum of line item extended price
+            itemTotal += Ch.LineItems.Sum(li => li.ExtendedPrice);
+
+            //Add order form discounts
             detais.AddRange(Ch.Cart.OrderForms.SelectMany(x => x.Discounts).Select(dicount => new PaymentDetailsItemType
             {
                 Name = dicount.DiscountName, 
@@ -576,6 +581,10 @@ namespace VirtoCommerce.Web.Controllers
                 PromoCode = dicount.DiscountCode
             }));
 
+            //minus cart subtotal discount sum
+            itemTotal -= Ch.Cart.OrderForms.SelectMany(x => x.Discounts).Sum(d => d.DiscountAmount);
+  
+            //Add line item discounts
             detais.AddRange(Ch.Cart.OrderForms.SelectMany(x => x.LineItems).SelectMany(x=>x.Discounts).Select(dicount => new PaymentDetailsItemType
             {
                 Name = dicount.DiscountName,
