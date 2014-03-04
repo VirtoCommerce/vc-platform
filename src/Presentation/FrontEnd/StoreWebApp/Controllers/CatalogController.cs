@@ -53,7 +53,7 @@ namespace VirtoCommerce.Web.Controllers
         /// <param name="category">The category code</param>
 	    /// <returns>ActionResult.</returns>
 	    /// <exception cref="System.Web.HttpException">404;Category not found</exception>
-        [CustomDonutOutputCache(CacheProfile = "CatalogCache", VaryByCustom = "currency;cart")]
+        [CustomDonutOutputCache(CacheProfile = "CatalogCache", VaryByCustom = "currency;filters;pricelist")]
         public ActionResult Display(CategoryPathModel category)
         {
             var categoryBase = _catalogClient.GetCategory(category.Category);

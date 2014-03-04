@@ -16,7 +16,6 @@ namespace VirtoCommerce.Web.Controllers
     /// <summary>
     /// Class StoreController.
     /// </summary>
-    [ChildActionOnly]
     public class StoreController : ControllerBase
     {
         /// <summary>
@@ -37,7 +36,7 @@ namespace VirtoCommerce.Web.Controllers
         /// Show available currencies
         /// </summary>
         /// <returns>ActionResult.</returns>
-        [CustomDonutOutputCache(CacheProfile = "StoreCache", VaryByParam = Constants.Language, VaryByCustom = "currency")]
+        [ChildActionOnly, CustomDonutOutputCache(CacheProfile = "StoreCache", VaryByParam = Constants.Language, VaryByCustom = "currency")]
         public ActionResult Currencies()
         {
             var store = _storeClient.GetCurrentStore();
@@ -53,7 +52,7 @@ namespace VirtoCommerce.Web.Controllers
         /// Shows the available store picker
         /// </summary>
         /// <returns>ActionResult.</returns>
-        [CustomDonutOutputCache(CacheProfile = "StoreCache", VaryByParam = Constants.Language)]
+        [ChildActionOnly, CustomDonutOutputCache(CacheProfile = "StoreCache", VaryByParam = Constants.Language, AnonymousOnly = true)]
         public ActionResult StorePicker()
         {
             var stores = _storeClient.GetStores();
@@ -103,7 +102,7 @@ namespace VirtoCommerce.Web.Controllers
         /// Quicks the access.
         /// </summary>
         /// <returns>ActionResult.</returns>
-        [CustomDonutOutputCache(CacheProfile = "StoreCache", Duration = 0)]
+        [ChildActionOnly, CustomDonutOutputCache(CacheProfile = "StoreCache", Duration = 0)]
         public ActionResult CartOptions()
         {
             var compareListHelper = new CartHelper(CartHelper.CompareListName);
@@ -114,6 +113,25 @@ namespace VirtoCommerce.Web.Controllers
                                    Cart = cartHelper.CreateCartModel(true),
                                    CompareList = compareListHelper.CreateCompareModel()
                                }).ToExpando());
+        }
+
+
+        [ChildActionOnly, CustomDonutOutputCache(CacheProfile = "LayoutStatic")]
+        public ActionResult Info()
+        {
+            return PartialView("_FooterInfo");
+        }
+
+        [ChildActionOnly, CustomDonutOutputCache(CacheProfile = "LayoutStatic")]
+        public ActionResult Footer()
+        {
+            return PartialView("_Footer");
+        }
+
+        [ChildActionOnly, CustomDonutOutputCache(CacheProfile = "LayoutStatic")]
+        public ActionResult Menu()
+        {
+            return PartialView("_Menu");
         }
 
         #region Private Helpers
@@ -136,5 +154,6 @@ namespace VirtoCommerce.Web.Controllers
         }
 
         #endregion
+
     }
 }

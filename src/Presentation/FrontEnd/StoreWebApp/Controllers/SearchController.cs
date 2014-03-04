@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
-using DevTrends.MvcDonutCaching;
 using VirtoCommerce.Client;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Catalogs.Search;
@@ -160,7 +159,7 @@ namespace VirtoCommerce.Web.Controllers
             int dbItemCount = 0;
             int searchRetry = 0;
 
-            CatalogItemSearchCriteria myCriteria = criteria.Clone();
+            var myCriteria = criteria.Clone();
 
             do
             {
@@ -199,7 +198,7 @@ namespace VirtoCommerce.Web.Controllers
         /// Restores the search preferences from cookies.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
-        private void RestoreSearchPreferences(SearchParameters parameters)
+        public static void RestoreSearchPreferences(SearchParameters parameters)
         {
             var pageSize = parameters.PageSize;
             var sort = parameters.Sort;
@@ -445,5 +444,6 @@ namespace VirtoCommerce.Web.Controllers
         }
 
         #endregion
+
     }
 }

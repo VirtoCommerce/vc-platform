@@ -12,14 +12,7 @@
 
 @section Navigation
 {
-    <div class="nav">
-        <a class="control">
-            <span></span>
-            <span></span>
-            <span></span>
-        </a>
-        @Html.MvcSiteMap().Menu(SiteMaps.Current.FindSiteMapNodeFromKey("home"), true, false, 3, true, new { name = "MainMenu" })
-    </div>
+    @{ Html.RenderAction("Menu", "Store", true); }
 }
 
 @section MiniActions
@@ -33,62 +26,4 @@
             @{ Html.RenderAction("CartOptions", "Store", true); }
         </div>
     </div>
-}
-
-@section Info{
-    <div class="info">
-        <div class="rubber clearfix">
-            <div class="grid_3">
-                <a class="control"></a>
-                <h2>Facebook</h2>
-                <div class="content">
-                    <div class="fb-like-box"
-                         data-href="http://facebook.com/virtocommerce"
-                         data-colorscheme="light"
-                         data-show-faces="true"
-                         data-header="false"
-                         data-stream="false"
-                         data-show-border="false">
-                    </div>
-                </div>
-            </div>
-             @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "FooterPromo" }, true);}
-            <div class="grid_3">
-                <a class="control"></a>
-                <h2>@("Information".Localize())</h2>
-                <div class="content">
-                    <ul>
-                        <li>Build your business the way you want with our flexible, customizable platform</li>
-                        <li>Expand globally with new online stores that launch in a matter of days, not months</li>
-                        <li>Market products in endless ways with different catalogue and product types</li>
-                        <li>Target customers with unique promotions, pricing, and dynamic content</li>
-                        <li>Manage stores with the clean, intuitive back-end system</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="grid_3">
-                <a class="control"></a>
-                <h2>@("Contacts".Localize())</h2>
-                <div class="content">
-                    <address>
-                        <p>Los Angeles, New York, USA</p>
-                        <p>Vilnius, Lithuania</p>
-                        <p>Kaliningrad, Russia</p>
-                        <p>Beijing, China</p>
-                    </address>
-                    <hr>
-                    <p>+1 (323) 570.5588</p>
-                    <hr>
-                    <p><a href="mailto:sales@virtocommerce.com">sales@virtocommerce.com</a></p>
-                    <ul class="social clearfix">
-                        <li class="tw"><a target="blank" href="http://twitter.com/VirtoCommerce"><span>Twitter</span></a></li>
-                        <li class="fb"><a target="blank" href="http://facebook.com/virtocommerce"><span>Facebook</span></a></li>
-                        <li class="mail"><a href="mailto:support@virtocommerce.com"><span>Email</span></a></li>
-                        <li class="plus"><a target="blank" href="http://plus.google.com/u/0/110275588520785121043"><span>Google</span></a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-
 }

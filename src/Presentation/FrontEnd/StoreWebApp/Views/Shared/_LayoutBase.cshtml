@@ -95,35 +95,9 @@
                 @RenderSection("Bottom", false)
             </article>
         </div>
-        <div class="footer-wrap">
-            <div class="banners">
-                <div class="rubber clearfix">
-                    @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "BottomLeftPromo" }, true);}
-                    <div class="grid_6 banner callback">
-                        <a title="Call us! toll free 8-800-123-1234" href="">Call us! toll free <span>8-800-123-1234</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            @RenderSection("Info",false)
-            <footer role="contentinfo" class="footer rubber clearfix">
-                <div class="grid_6">
-                    <address>
-                        @("Version:".Localize()) @Html.Version() - <a href="http://support.virtocommerce.com"
-                            onclick="this.target='_blank'"><strong>@("Report Issues".Localize())</strong></a>
-                        &copy; 2014 @("Powered by".Localize()) <a href="http://virtocommerce.com">Virto Commerce</a>
-                    </address>
-                </div>
-                <div class="grid_6">
-                    <ul class="links">
-                        <li><a href="http://virtocommerce.com/about" title="About Us">@("About Us".Localize())</a></li>
-                        <li><a href="#" title="Delivery &amp; Returns">@("Delivery & Returns".Localize())</a></li>
-                        <li><a href="http://virtocommerce.com/enterprise-edition" title="Terms &amp; Conditions">@("Terms & Conditions".Localize())</a></li>
-                        <li><a href="http://virtocommerce.com/contact-us" title="Contact Us">@("Contact Us".Localize())</a></li>
-                    </ul>
-                </div>
-            </footer>
-        </div>
+        @{
+            Html.RenderAction("Footer","Store", true);
+        }
     </div>
 
 

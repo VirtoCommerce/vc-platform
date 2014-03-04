@@ -27,11 +27,11 @@ else
 
             var viewClass = VirtoCommerce.getCookie("categoryListView");
             viewClass = viewClass == "" ? "list" : viewClass;
-            window.setTimeout(function() { $('div.view-mode a.' + viewClass).trigger('click'); }, 100);
+            window.setTimeout(function () { $('div.view-mode a.' + viewClass).trigger('click'); }, 100);
 
         });
     </script>
-   @Html.DisplayForModel("ReviewTemplate")
+    @Html.DisplayForModel("ReviewTemplate")
 
     <div class="content">
         <div class="category-products">
@@ -62,5 +62,6 @@ else
     {
         @Html.DisplayFor(m => m, "CurrentFilterPanel")
     }
-    @Html.DisplayFor(m => m, "FilterPanel")
+
+    @Html.DisplayFor(m => m.FilterGroups, "FilterPanel")
 </div>
