@@ -233,6 +233,7 @@
     <Compile Include="DataManagement\Model\Import\Importers\SeoImporter.cs" />
     <Compile Include="DataManagement\Services\IDataManagementService.cs" />
     <Compile Include="DataManagement\Services\DataManagementService.cs" />
+    <Compile Include="Frameworks\SqlDbConfiguration.cs" />
     <Compile Include="Orders\Extensions\PaymentMethodExtensions.cs" />
     <Compile Include="Orders\Model\OrderFormPropertyValue.cs" />
     <Compile Include="Orders\Model\OrderFormValueType.cs" />

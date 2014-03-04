@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Management.Automation;
 using System.Reflection;
+using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.PowerShell.Cmdlet;
-using VirtoCommerce.Foundation.Data;
 
 namespace VirtoCommerce.PowerShell.DatabaseSetup
 {
@@ -33,9 +34,23 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup
         [Alias("data")]
         public string DataLocation { get; set; }
 
-        public virtual void Publish(string dbconnection, string data, bool sample)
+        [Parameter(HelpMessage = "Sql execution strategy type name")]
+        [Alias("strategy")]
+        public string StrategyType { get; set; }
+
+        public virtual void Publish(string dbconnection, string data, bool sample, string strategy = SqlDbConfiguration.SqlAzureExecutionStrategy)
         {
+            SetDbConfiguration(strategy);
             SafeWriteVerbose("Server: " + dbconnection);
+        }
+
+        public void SetDbConfiguration(string sqlStrategyTypeName)
+        {
+            if (!string.IsNullOrWhiteSpace(sqlStrategyTypeName))
+            {
+                var dbConfig = new SqlDbConfiguration(sqlStrategyTypeName);
+                DbConfiguration.SetConfiguration(dbConfig);
+            }
         }
 
         /// <summary>
@@ -47,7 +62,7 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup
             {
                 SafeWriteVerbose("Version: " + Assembly.GetExecutingAssembly().GetFileVersion());
                 base.ProcessRecord();
-                Publish(DbConnection, DataLocation, SetupSample);
+                Publish(DbConnection, DataLocation, SetupSample, StrategyType);
                 SafeWriteVerbose("Database Published!");
             }
             catch (Exception ex)

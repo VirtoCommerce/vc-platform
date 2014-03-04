@@ -1,4 +1,5 @@
 using System;
+using System.Data.Entity;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Caching.HttpCache;
 using VirtoCommerce.Client;

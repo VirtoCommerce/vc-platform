@@ -10,6 +10,7 @@ using System.Web.Routing;
 using System.Web.Security;
 using VirtoCommerce.Client;
 using VirtoCommerce.Foundation.AppConfig;
+using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Web.Client.Helpers;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Models.Binders;
