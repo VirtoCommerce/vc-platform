@@ -9,7 +9,9 @@ using System.Web.Profile;
 using System.Web.Routing;
 using System.Web.Security;
 using VirtoCommerce.Client;
+using VirtoCommerce.Client.Extensions;
 using VirtoCommerce.Foundation.AppConfig;
+using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Web.Client.Helpers;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Models.Binders;
@@ -138,6 +140,20 @@ namespace VirtoCommerce.Web
                     {
                         varyString += UserHelper.CustomerSession.Currency;
                     }
+                    if (string.Equals(key, "pricelist", StringComparison.OrdinalIgnoreCase))
+                    {
+                        varyString += CacheHelper.CreateCacheKey("_pl", UserHelper.CustomerSession.Pricelists);
+                    }
+                    if (string.Equals(key, "filters", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var qs = Request.QueryString;
+                        var pageSize = qs.AllKeys.Contains("pageSize") ? qs["pageSize"] : StoreHelper.GetCookieValue("pagesizecookie");
+                        var sort = qs.AllKeys.Contains("sort") ? qs["sort"] : StoreHelper.GetCookieValue("sortcookie");
+                        var sortorder = qs.AllKeys.Contains("sortorder") ? qs["sortorder"] : StoreHelper.GetCookieValue("sortordercookie");
+
+                        varyString += string.Format("filters_{0}_{1}_{2}", pageSize, sort, sortorder);
+                    }
+
                     if (string.Equals(key, "cart", StringComparison.OrdinalIgnoreCase))
                     {
                         //This method is called from System.Web.Caching module before customerId set 

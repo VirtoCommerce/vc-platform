@@ -1,9 +1,9 @@
-﻿@model CatalogItemSearchModel
+﻿@model FilterModel[]
 
 <aside class="block">
     <span class="title">@("Shop By".Localize())</span>
     <dl>
-        @foreach (var group in Model.FilterGroups)
+        @foreach (var group in Model)
         {
             <dt>@group.Name.Localize()</dt>
             <dd>

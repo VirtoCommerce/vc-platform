@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using VirtoCommerce.Client;
 using VirtoCommerce.Foundation.Catalogs.Model;
@@ -53,47 +54,62 @@ namespace VirtoCommerce.Web.Models
         public List<SelectedFilterModel> SelectedFilters { get; set; }
     }
 
+    //[KnownType(typeof(FilterModel))]
+    //public class FilterModelList : List<FilterModel>
+    //{
+        
+    //}
+
 	/// <summary>
 	/// Class FilterModel.
 	/// </summary>
+	[DataContract]
+    [KnownType(typeof(FacetModel))]
     public class FilterModel
     {
 		/// <summary>
 		/// Gets or sets the key.
 		/// </summary>
 		/// <value>The key.</value>
+        [DataMember] 
         public string Key { get; set; }
 		/// <summary>
 		/// Gets or sets the name.
 		/// </summary>
 		/// <value>The name.</value>
+        [DataMember] 
         public string Name { get; set; }
 		/// <summary>
 		/// Gets or sets the facets.
 		/// </summary>
 		/// <value>The facets.</value>
+        [DataMember] 
         public FacetModel[] Facets { get; set; }
     }
 
 	/// <summary>
 	/// Class FacetModel.
 	/// </summary>
+    [DataContract]
     public class FacetModel
     {
 		/// <summary>
 		/// Gets or sets the name.
 		/// </summary>
 		/// <value>The name.</value>
+		[DataMember]
         public string Name { get; set; }
 		/// <summary>
 		/// Gets or sets the key.
 		/// </summary>
 		/// <value>The key.</value>
+        [DataMember]
         public string Key { get; set; }
 		/// <summary>
 		/// Gets or sets the count.
 		/// </summary>
 		/// <value>The count.</value>
+        [DataMember] 
         public int Count { get; set; }
     }
 
