@@ -2,7 +2,7 @@
 {
     if (selector == null || selector == 'undefined')
         return;
-    var url = "/Settings/Localize?text=" + this.toString();
+    var url = "/settings/localize?text=" + this.toString();
 
     if (category != null && category != 'undefined')
     {
@@ -72,12 +72,45 @@ VirtoCommerce.prototype = {
             }
         });
     },
+    
+    initSliders: function() {
+        if ($('.main-slider .container').length > 0)
+        {
+            $('.main-slider .container').camera({
+                loader: 'bar',
+                playPause: false,
+                barPosition: 'top',
+                loaderColor: '#322C29',
+                loaderBgColor: 'rgba(0, 0, 0, 0)',
+                height: '25%'
+            });
 
-    //hideDemoNotice: function ()
-    //{
-    //	$.post(VirtoCommerce.url('/settings/hidedemonotice'));
-    //	$('.demo-notice-container').fadeOut(function () { $(this).remove(); });
-    //},
+            $('.main-slider .container').removeAttr('style');
+            $('.main-slider .container').css('display', 'block');
+        }
+    },
+
+    dynamicContent: function (placeName, selector)
+    {
+        if (selector == null || selector == 'undefined')
+            return;
+        
+        $.ajax({
+            type: "GET",
+            dataType: "html",
+            url: VirtoCommerce.url('/banner/showDynamiccontent?placeName='+placeName),
+            success: function (data)
+            {
+                if (typeof selector == 'function')
+                {
+                    selector(data);
+                } else
+                {
+                    $(selector).html(data);
+                }
+            }
+        });
+    },
 
     ///GLOBAL METHODS
 

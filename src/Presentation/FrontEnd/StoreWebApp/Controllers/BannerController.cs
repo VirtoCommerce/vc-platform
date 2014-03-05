@@ -36,7 +36,7 @@ namespace VirtoCommerce.Web.Controllers
             var items = _contentHelper.GetDynamicContent(placeName);
             if (items != null && items.Any())
             {
-                return View("BaseContentPlace", new BannerModel(items));
+                return PartialView("BaseContentPlace", new BannerModel(items));
             }
             return null;
         }

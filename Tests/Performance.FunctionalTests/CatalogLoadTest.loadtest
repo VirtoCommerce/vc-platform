@@ -3,7 +3,7 @@
   <Scenarios>
     <Scenario Name="Catalog Browsing Scenario" DelayBetweenIterations="0" PercentNewUsers="0" IPSwitching="true" TestMixType="PercentageOfTestsStarted" ApplyDistributionToPacingDelay="true" MaxTestIterations="0" DisableDuringWarmup="false" DelayStartTime="0" AllowedAgents="">
       <ThinkProfile Value="0" Pattern="Off" />
-      <LoadProfile Pattern="GoalBased" InitialUsers="2" MachineName="GREENMACHINE" CategoryName="LoadTest:Request" CounterName="Avg. Response Time" InstanceName="_Total" MinUserCount="1" MaxUserCount="1000" MaxUserCountIncrease="5" MaxUserCountDecrease="5" MinTargetValue="9" MaxTargetValue="10" HigherValuesBetter="false" StopAdjustingAtGoal="false" />
+      <LoadProfile Pattern="Constant" InitialUsers="100" />
       <TestMix>
         <TestProfile Name="CatalogBrowseCoded" Path="bin\debug\commercefoundation.performancetests.dll" Id="688b6258-deb1-0995-f3a4-55f26501ca9a" Percentage="100" Type="Microsoft.VisualStudio.TestTools.WebStress.CodedWebTestElement, Microsoft.VisualStudio.QualityTools.LoadTest, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
       </TestMix>

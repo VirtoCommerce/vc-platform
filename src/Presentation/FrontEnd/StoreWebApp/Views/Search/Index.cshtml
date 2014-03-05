@@ -12,6 +12,7 @@
 <script type="text/javascript" src="@Url.Content("~/Scripts/v/virto-reviews.js")"></script>
 <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-tmpl-min.js")"></script>
 
+
 @if (Model.Pager.TotalCount == 0)
 {
     Html.SharedViewBag().Messages = new MessagesModel { new MessageModel("There are no results available.".Localize(), MessageType.Notice) };
@@ -21,6 +22,12 @@ else
     <script type="text/javascript">
         $(function ()
         {
+            //Load promo
+            VirtoCommerce.dynamicContent('CategoryTop', function(data) {
+                $('div.category-image').html(data);
+                VirtoCommerce.initSliders();
+            });
+                
             @if (Model.CatalogItems.Any()){
                 @:Reviews.catalogReviews("@Html.Raw(Model.CatalogItems.Select(i => i.CatalogItem.ItemId).Aggregate((x, y) => (x.Contains("or ItemId eq") ? x : string.Format("ItemId eq '{0}'", x)) + string.Format(" or ItemId eq '{0}'", y)))");
             }
@@ -36,7 +43,7 @@ else
     <div class="content">
         <div class="category-products">
             <div class="category-image">
-                @{ Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "CategoryTop" }, true); }
+@*                @{ Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "CategoryTop" }, true); }*@
             </div>
             <div class="toolbar top">
                 @Html.DisplayFor(model => model.Pager, "SearchPager")

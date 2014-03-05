@@ -27,16 +27,16 @@
                     <div class="grid_6">
                         <div class="head-switch store">
                             @{Html.RenderAction("StorePicker", "Store", true);}
-                        </div>        
+                        </div>
                         <div class="head-switch language">
                             @{Html.RenderPartial("Languages");}
                         </div>
                         <div class="head-switch currency">
                             @{Html.RenderAction("Currencies", "Store", true);}
-                        </div>        
+                        </div>
                     </div>
                     <div class="grid_6">
-                        @{Html.RenderAction("QuickAccess", "Store", true);}        
+                        @{Html.RenderAction("QuickAccess", "Store", true);}
                     </div>
                 </div>
             </div>
@@ -46,8 +46,8 @@
                         <p class="">
                             <a href="@Url.RouteUrl("Store")">Virto Commerce</a>
                         </p>
-                        @RenderSection("Navigation",false)
-                        @RenderSection("MiniActions",false)
+                        @RenderSection("Navigation", false)
+                        @RenderSection("MiniActions", false)
                     </div>
                 </div>
             </header>
@@ -71,21 +71,21 @@
                     @{
                         var messages = Html.SharedViewBag().Messages as MessagesModel;
                     }
-                    <ul id="messages" class="messages" style="@(messages !=null && messages.Any() ? "" : "display:none;")">
+                    <ul id="messages" class="messages" style="@(messages != null && messages.Any() ? "" : "display:none;")">
                         @{
                             if (messages != null && messages.Any())
                             {
 
                                 foreach (var messageGrp in messages.GroupBy(m => m.Type))
                                 {
-                                    <li class="@messageGrp.Key.ToString().ToLower()">
-                                        <ul>
-                                            @foreach (var message in messageGrp)
-                                            {
-                                                <li><span>@message.Text</span></li>
-                                            }
-                                        </ul>
-                                    </li>
+                            <li class="@messageGrp.Key.ToString().ToLower()">
+                                <ul>
+                                    @foreach (var message in messageGrp)
+                                    {
+                                        <li><span>@message.Text</span></li>
+                                    }
+                                </ul>
+                            </li>
                                 }
                             }
                         }
@@ -96,7 +96,7 @@
             </article>
         </div>
         @{
-            Html.RenderAction("Footer","Store", true);
+            Html.RenderAction("Footer", "Store", true);
         }
     </div>
 
@@ -105,7 +105,7 @@
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/jquerymisc")
     @RenderSection("scripts", required: false)
-    
+
 
     <!-- Facebook -->
     <div id="fb-root"></div>
@@ -122,27 +122,12 @@
 
     <!-- Process sliders -->
     <script type="text/javascript">
-        $(function ()
-        {
-            if ($('.main-slider .container').length > 0)
-            {
-                $('.main-slider .container').camera({
-                    loader: 'bar',
-                    playPause: false,
-                    barPosition: 'top',
-                    loaderColor: '#322C29',
-                    loaderBgColor: 'rgba(0, 0, 0, 0)',
-                    height: '25%'
-                });
-
-                $('.main-slider .container').removeAttr('style');
-                $('.main-slider .container').css('display', 'block');
-            }
-            
+        $(function () {
+            VirtoCommerce.initSliders();
             $('.slider-products').virtoSlider();
         });
     </script>
-@* No need to render follow services here, but following template can be used as an example:
+    @* No need to render follow services here, but following template can be used as an example:
     @if (SettingsHelper.GetSettings("FollowServices").Any())
     {
         <!-- AddThis Smart Layers BEGIN -->

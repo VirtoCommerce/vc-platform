@@ -117,12 +117,6 @@ namespace VirtoCommerce.Web.Controllers
 
 
         [ChildActionOnly, DonutOutputCache(CacheProfile = "LayoutStatic")]
-        public ActionResult Info()
-        {
-            return PartialView("_FooterInfo");
-        }
-
-        [ChildActionOnly, DonutOutputCache(CacheProfile = "LayoutStatic")]
         public ActionResult Footer()
         {
             return PartialView("_Footer");

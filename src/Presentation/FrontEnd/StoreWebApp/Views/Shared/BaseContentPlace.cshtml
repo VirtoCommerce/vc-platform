@@ -1,6 +1,5 @@
-﻿@model VirtoCommerce.Web.Models.BannerModel
+﻿@model BannerModel
 @{
-    Layout = null;
 
     var images = Model.Items.Where(i => i.ContentTypeId.Equals(DynamicContentType.ImageClickable.ToString())
                                         || i.ContentTypeId.Equals(DynamicContentType.ImageNonClickable.ToString())).ToArray();
