@@ -20,7 +20,8 @@ namespace VirtoCommerce.Web.Client.Extensions.Filters.Caching
         public CustomDonutOutputCacheAttribute()
             : base(new CacheKeyBuilder())
         {
-
+            //Must go afer canonicalize and localize
+            Order = 3;
         }
 
         public override void OnActionExecuting(ActionExecutingContext filterContext)
