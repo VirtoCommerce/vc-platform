@@ -10,9 +10,9 @@ using VirtoCommerce.Foundation.Catalogs.Search;
 using VirtoCommerce.Foundation.PlatformTools;
 using VirtoCommerce.Foundation.Search;
 using VirtoCommerce.Foundation.Search.Schemas;
+using VirtoCommerce.Web.Client.Caching;
 using VirtoCommerce.Web.Client.Extensions;
 using VirtoCommerce.Client.Globalization;
-using VirtoCommerce.Web.Client.Extensions.Filters.Caching;
 using VirtoCommerce.Web.Client.Helpers;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Virto.Helpers;
@@ -62,7 +62,7 @@ namespace VirtoCommerce.Web.Controllers
         /// </summary>
         /// <param name="parameters">The parameters.</param>
         /// <returns>ActionResult.</returns>
-        [CustomDonutOutputCache(CacheProfile = "SearchCache", VaryByCustom = "storeparam")]
+        [DonutOutputCache(CacheProfile = "SearchCache", VaryByCustom = "storeparam")]
         public ActionResult Index(SearchParameters parameters)
         {
 
@@ -114,7 +114,7 @@ namespace VirtoCommerce.Web.Controllers
 		/// </summary>
 		/// <param name="term">The term.</param>
 		/// <returns>ActionResult.</returns>
-        [CustomDonutOutputCache(CacheProfile = "SearchCache", VaryByCustom = "storeparam")]
+        [DonutOutputCache(CacheProfile = "SearchCache", VaryByCustom = "storeparam")]
         public ActionResult Find(string term)
         {
 			Logger.Info("New search started: "+term);

@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
 using VirtoCommerce.Client;
-using VirtoCommerce.Web.Client.Extensions.Filters.Caching;
+using VirtoCommerce.Web.Client.Caching;
 using VirtoCommerce.Web.Models;
 
 namespace VirtoCommerce.Web.Controllers
@@ -30,7 +30,7 @@ namespace VirtoCommerce.Web.Controllers
 		/// </summary>
 		/// <param name="placeName">Name of dynamic content place.</param>
 		/// <returns>ActionResult.</returns>
-        [CustomDonutOutputCache(CacheProfile = "BannerCache")]
+        [DonutOutputCache(CacheProfile = "BannerCache")]
         public ActionResult ShowDynamicContent(string placeName)
         {
             var items = _contentHelper.GetDynamicContent(placeName);
