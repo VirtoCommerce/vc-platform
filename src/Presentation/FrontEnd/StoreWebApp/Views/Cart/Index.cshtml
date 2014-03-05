@@ -7,16 +7,17 @@
 
 <script type="text/javascript">
 
-    $(document).ready(function ()
+    $(function ()
     {
-        //Hide cart suggested dynamic content when there is nothing there
-        if ($.trim($("#crosssell-products-list li").html()).length == 0)
-        {
-            $("#cartSuggestDynamic").remove();
-        } else
-        {
-            //$(".columns .grid_4").switchClass("grid_4", "grid_3");
-        }
+        VirtoCommerce.dynamicContent('CartSuggest', function(data) {
+            if (data.length == 0)
+            {
+                //Hide cart suggested dynamic content when there is nothing there
+                $("#cartSuggestDynamic").remove();
+            } else {
+                $("#crosssell-products-list").html(data);
+            }
+        });
     });
 </script>
 
@@ -138,7 +139,7 @@
         <div class="cart-block">
             <span class="title">@("You may also be interested in:".Localize())</span>
             <ul id="crosssell-products-list" class="products-list grid" style="padding-bottom: 0;">
-                @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "CartSuggest" });}
+@*                @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "CartSuggest" }, true);}*@
             </ul>
         </div>
     </div>

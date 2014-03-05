@@ -2,13 +2,10 @@
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
-using DevTrends.MvcDonutCaching;
-using DevTrends.MvcDonutCaching.Annotations;
 using VirtoCommerce.Foundation.AppConfig.Model;
+using VirtoCommerce.Web.Client.Caching;
 using VirtoCommerce.Web.Client.Extensions;
 using VirtoCommerce.Web.Client.Extensions.Filters;
-using VirtoCommerce.Web.Client.Extensions.Filters.Caching;
-using VirtoCommerce.Web.Client.Extensions.Routing;
 using VirtoCommerce.Web.Client.Extensions.Routing.Routes;
 using VirtoCommerce.Web.Client.Helpers;
 using VirtoCommerce.Web.Models;
@@ -124,7 +121,7 @@ namespace VirtoCommerce.Web.Controllers
         {
             get {
                 return _cacheManager ??
-                       (_cacheManager = new OutputCacheManager(OutputCache.Instance, new CacheKeyBuilder()));
+                       (_cacheManager = new OutputCacheManager(OutputCache.Instance, new KeyBuilder()));
             }
         }
 

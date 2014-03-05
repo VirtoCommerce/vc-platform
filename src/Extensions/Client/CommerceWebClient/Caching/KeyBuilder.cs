@@ -1,15 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Text;
 using System.Web.Routing;
-using DevTrends.MvcDonutCaching;
-using Microsoft.Practices.ObjectBuilder2;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Web.Client.Extensions.Routing;
 using VirtoCommerce.Web.Client.Helpers;
+using IKeyBuilder = VirtoCommerce.Web.Client.Caching.Interfaces.IKeyBuilder;
 
-namespace VirtoCommerce.Web.Client.Extensions.Filters.Caching
+namespace VirtoCommerce.Web.Client.Caching
 {
-    public class CacheKeyBuilder : IKeyBuilder
+    public class KeyBuilder : IKeyBuilder
     {
         private string _cacheKeyPrefix = "_d0nutc@che.";
 
@@ -82,5 +81,4 @@ namespace VirtoCommerce.Web.Client.Extensions.Filters.Caching
             }
         }
     }
-
 }

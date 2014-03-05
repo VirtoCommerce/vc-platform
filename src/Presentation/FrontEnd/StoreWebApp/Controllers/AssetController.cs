@@ -1,10 +1,7 @@
 ﻿using System.Web.Mvc;
-using DevTrends.MvcDonutCaching;
 using VirtoCommerce.Foundation.Assets;
 using VirtoCommerce.Web.Client.Actions;
-using VirtoCommerce.Web.Client.Extensions.Filters;
 using VirtoCommerce.Web.Client.Extensions.Filters.Caching;
-using VirtoCommerce.Web.Virto.Helpers.MVC;
 
 namespace VirtoCommerce.Web.Controllers
 {
