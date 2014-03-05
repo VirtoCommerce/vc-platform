@@ -19,7 +19,6 @@ namespace VirtoCommerce.Web
         {
             if (AppConfigConfiguration.Instance.Setup.IsCompleted)
             {
-                DynamicModuleUtility.RegisterModule(typeof(UnityPerRequestHttpModule));
                 foreach (var module in AppConfigConfiguration.Instance.AvailableModules.Cast<ModuleConfigurationElement>())
                 {
                     try

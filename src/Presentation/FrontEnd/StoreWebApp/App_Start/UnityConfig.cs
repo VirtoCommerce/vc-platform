@@ -200,7 +200,7 @@ namespace VirtoCommerce.Web
             #region Marketing
 
             container.RegisterType<IMarketingRepository, EFMarketingRepository>(new PerRequestLifetimeManager());
-            container.RegisterType<IMarketingEntityFactory, MarketingEntityFactory>(new ContainerControlledLifetimeManager());
+            container.RegisterType<IMarketingEntityFactory, MarketingEntityFactory>();
             container.RegisterType<IPromotionUsageProvider, PromotionUsageProvider>();
             container.RegisterType<IPromotionEntryPopulate, PromotionEntryPopulate>();
 
@@ -303,12 +303,12 @@ namespace VirtoCommerce.Web
             container.RegisterInstance<IWorkflowService>(workflowService);
             container.RegisterType<IOrderStateController, OrderStateController>();
 
-            container.RegisterType<IOrderRepository, EFOrderRepository>();
-            container.RegisterType<IShippingRepository, EFOrderRepository>();
-            container.RegisterType<IPaymentMethodRepository, EFOrderRepository>();
-            container.RegisterType<ITaxRepository, EFOrderRepository>();
+            container.RegisterType<IOrderRepository, EFOrderRepository>(new PerRequestLifetimeManager());
+            container.RegisterType<IShippingRepository, EFOrderRepository>(new PerRequestLifetimeManager());
+            container.RegisterType<IPaymentMethodRepository, EFOrderRepository>(new PerRequestLifetimeManager());
+            container.RegisterType<ITaxRepository, EFOrderRepository>(new PerRequestLifetimeManager());
 
-            container.RegisterType<ICountryRepository, EFOrderRepository>();
+            container.RegisterType<ICountryRepository, EFOrderRepository>(new PerRequestLifetimeManager());
             container.RegisterType<IOrderService, OrderService>();
 
             #endregion
@@ -364,7 +364,7 @@ namespace VirtoCommerce.Web
             container.RegisterType<DisplayTemplateClient>();
             container.RegisterType<SettingsClient>();
             container.RegisterType<SequencesClient>();
-            container.RegisterType<SeoKeywordClient>();
+            container.RegisterType<SeoKeywordClient>(new PerRequestLifetimeManager());
             container.RegisterType<ReviewClient>();
             container.RegisterType<IPaymentOption, CreditCardOption>("creditcard");
 
