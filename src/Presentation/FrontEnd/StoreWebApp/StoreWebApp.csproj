@@ -799,6 +799,7 @@
     <Content Include="Views\Shared\DisplayTemplates\CanonicalHelperModel.cshtml" />
     <Content Include="Views\Shared\_Footer.cshtml" />
     <Content Include="Views\Shared\_Menu.cshtml" />
+    <Content Include="Views\Banner\MultiBanner.cshtml" />
     <None Include="Web.Azure.config" />
   </ItemGroup>
   <ItemGroup>

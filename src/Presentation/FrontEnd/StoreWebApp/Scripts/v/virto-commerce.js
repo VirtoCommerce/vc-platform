@@ -111,6 +111,42 @@ VirtoCommerce.prototype = {
             }
         });
     },
+    
+    dynamicContents: function (placeNames, selector)
+    {
+        if (selector == null || selector == 'undefined')
+            return;
+
+        var url = VirtoCommerce.url('/banner/showdynamiccontents');
+        
+        if (placeNames != undefined && placeNames.length > 0) {
+            for (var i = 0; i < placeNames.length; i++)
+            {
+                if (i == 0) {
+                    url = url + '?';
+                } else {
+                    url = url + '&';
+                }
+                url = url + 'placeName=' + placeNames[i];
+            }
+        }
+
+        $.ajax({
+            type: "GET",
+            dataType: "html",
+            url: url,
+            success: function (data)
+            {
+                if (typeof selector == 'function')
+                {
+                    selector(data);
+                } else
+                {
+                    $(selector).html(data);
+                }
+            }
+        });
+    },
 
     ///GLOBAL METHODS
 

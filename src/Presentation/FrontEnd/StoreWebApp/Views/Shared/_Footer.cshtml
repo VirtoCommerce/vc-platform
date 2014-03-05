@@ -1,8 +1,13 @@
 ﻿<script>
     $(function ()
     {
-        VirtoCommerce.dynamicContent('BottomLeftPromo', '#BottomLeftPromo ');
-        VirtoCommerce.dynamicContent('FooterPromo', '#FooterPromo ');
+        VirtoCommerce.dynamicContents(["FooterPromo", "BottomLeftPromo"],
+        function (data)
+        {
+            var htmlData = $('<div/>').html(data);
+            $('#FooterPromo').html(htmlData.find('#FooterPromo').html());
+            $('#BottomLeftPromo').html(htmlData.find('#BottomLeftPromo').html());
+        });
     })
 </script>
 
@@ -10,7 +15,7 @@
     <div class="banners">
         <div class="rubber clearfix">
             <div id="BottomLeftPromo"></div>
-@*            @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "BottomLeftPromo" }, true);}*@
+            @*            @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "BottomLeftPromo" }, true);}*@
             <div class="grid_6 banner callback">
                 <a title="Call us! toll free 8-800-123-1234" href="">Call us! toll free <span>8-800-123-1234</span>
                 </a>
@@ -24,17 +29,17 @@
                 <h2>Facebook</h2>
                 <div class="content">
                     <div class="fb-like-box"
-                         data-href="http://facebook.com/virtocommerce"
-                         data-colorscheme="light"
-                         data-show-faces="true"
-                         data-header="false"
-                         data-stream="false"
-                         data-show-border="false">
+                        data-href="http://facebook.com/virtocommerce"
+                        data-colorscheme="light"
+                        data-show-faces="true"
+                        data-header="false"
+                        data-stream="false"
+                        data-show-border="false">
                     </div>
                 </div>
             </div>
             <div id="FooterPromo"></div>
-@*            @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "FooterPromo" }, true);}*@
+            @*            @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "FooterPromo" }, true);}*@
             <div class="grid_3">
                 <a class="control"></a>
                 <h2>@("Information".Localize())</h2>

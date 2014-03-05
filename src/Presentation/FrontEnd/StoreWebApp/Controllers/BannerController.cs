@@ -40,5 +40,11 @@ namespace VirtoCommerce.Web.Controllers
             }
             return null;
         }
+
+        [DonutOutputCache(CacheProfile = "BannerCache")]
+        public ActionResult ShowDynamicContents(string[] placeName)
+        {
+            return PartialView("MultiBanner", placeName);
+        }
     }
 }

@@ -4,23 +4,18 @@
 }
 
 <script>
-    $(function() {
-        VirtoCommerce.dynamicContent('MainSlider', function (data)
+    $(function ()
+    {
+        VirtoCommerce.dynamicContents(["MainSlider", "HomeStaffPick", "HomeFeaturedProducts", "HomeNewProducts"],
+        function (data)
         {
-            $('#MainSlider').html(data);
+            var htmlData = $('<div/>').html(data);
+            $('#MainSlider').html(htmlData.find('#MainSlider').html());
+            $('div.staff-pick ul.products-list').html(htmlData.find('#HomeStaffPick').html());
+            $('div.featured ul.products-list').html(htmlData.find('#HomeFeaturedProducts').html());
+            $('div.new-products ul.products-list').html(htmlData.find('#HomeNewProducts').html());
             VirtoCommerce.initSliders();
-        });
-        VirtoCommerce.dynamicContent('HomeStaffPick', function (data)
-        {
-            $('div.staff-pick ul.products-list').html(data);
             $('div.staff-pick').virtoSlider();
-        });
-        VirtoCommerce.dynamicContent('HomeFeaturedProducts', function (data)
-        {
-            $('div.featured ul.products-list').html(data);
-        });
-        VirtoCommerce.dynamicContent('HomeNewProducts', function (data) {
-            $('div.new-products ul.products-list').html(data);
             $('div.new-products').virtoSlider();
         });
     })
@@ -28,7 +23,7 @@
 
 @section Slider{
     <div id="MainSlider">
-@*        @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "MainSlider" }, true);}*@
+        @*        @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "MainSlider" }, true);}*@
     </div>
 }
 
@@ -40,7 +35,7 @@
         <ul class="products-list slider-list grid">
             @*@{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeStaffPick" }, true);}*@
         </ul>
-    </div>    
+    </div>
     <div class="products featured">
         <header>
             <h2>@("Featured Products".Localize())</h2>
