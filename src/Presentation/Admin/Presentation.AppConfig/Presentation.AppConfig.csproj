@@ -69,10 +69,6 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="WpfLocalization, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\Shared\WpfLocalization.dll</HintPath>
-    </Reference>
     <Reference Include="Xceed.Wpf.DataGrid">
       <HintPath>..\..\..\..\packages\Extended.Wpf.Toolkit.1.9.0\lib\net40\Xceed.Wpf.DataGrid.dll</HintPath>
     </Reference>
@@ -264,6 +260,10 @@
     <ProjectReference Include="..\Presentation.Import\Presentation.Import.csproj">
       <Project>{25f62f0b-3260-4802-b65e-5043585528b6}</Project>
       <Name>Presentation.Import</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Presentation.Localization\Presentation.Localization.csproj">
+      <Project>{10a07a08-2934-4338-b8bd-b89bdc1d014e}</Project>
+      <Name>Presentation.Localization</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

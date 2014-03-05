@@ -201,9 +201,6 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationFramework" />
     <Reference Include="WindowsFormsIntegration" />
-    <Reference Include="WpfLocalization">
-      <HintPath>..\..\..\..\Shared\WpfLocalization.dll</HintPath>
-    </Reference>
     <Reference Include="WpfRichText.Ex">
       <HintPath>..\..\..\..\Shared\WpfRichText.Ex.dll</HintPath>
     </Reference>
@@ -395,6 +392,10 @@
     <ProjectReference Include="..\Presentation.Import\Presentation.Import.csproj">
       <Project>{25f62f0b-3260-4802-b65e-5043585528b6}</Project>
       <Name>Presentation.Import</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Presentation.Localization\Presentation.Localization.csproj">
+      <Project>{10a07a08-2934-4338-b8bd-b89bdc1d014e}</Project>
+      <Name>Presentation.Localization</Name>
     </ProjectReference>
     <ProjectReference Include="..\Presentation.Main\Presentation.Main.csproj">
       <Project>{C63B4116-AA04-451D-ABCD-49F80A0A7DF7}</Project>

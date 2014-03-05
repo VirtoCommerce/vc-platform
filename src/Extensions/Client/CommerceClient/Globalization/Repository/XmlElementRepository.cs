@@ -71,7 +71,6 @@ namespace VirtoCommerce.Client.Globalization.Repository
         public Element Get(string name, string category, string culture)
         {
             return _resx.GetElement(name, category, culture);
-
         }
 
         /// <summary>
@@ -91,7 +90,7 @@ namespace VirtoCommerce.Client.Globalization.Repository
                 _resx.AddResource(element);
                 return true;
             }
-	        return false;
+            return false;
         }
 
         /// <summary>
@@ -101,7 +100,7 @@ namespace VirtoCommerce.Client.Globalization.Repository
         /// <returns><c>true</c> if success, <c>false</c> otherwise.</returns>
         public bool Update(Element element)
         {
-	        return element != null && _resx.UpdateResource(element);
+            return element != null && _resx.UpdateResource(element);
         }
 
         /// <summary>
@@ -110,9 +109,9 @@ namespace VirtoCommerce.Client.Globalization.Repository
         /// <param name="element">The element.</param>
         /// <returns><c>true</c> if success, <c>false</c> otherwise.</returns>
         public bool Remove(Element element)
-	    {
-		    return element != null && _resx.RemoveResource(element);
-	    }
+        {
+            return element != null && _resx.RemoveResource(element);
+        }
 
         /// <summary>
         /// Removes the category.
@@ -140,9 +139,10 @@ namespace VirtoCommerce.Client.Globalization.Repository
         /// </summary>
         public void Clear()
         {
-            if (File.Exists(_path))
+            var dir = new DirectoryInfo(_path);
+            foreach (FileInfo file in dir.GetFiles("*.resx"))
             {
-                File.Delete(_path);
+                file.Delete();
             }
         }
 

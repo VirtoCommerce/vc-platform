@@ -1,8 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
-using VirtoCommerce.Foundation.AppConfig;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
@@ -14,10 +13,8 @@ namespace VirtoCommerce.Client.Globalization.Repository
     /// </summary>
     public class CachedDatabaseElementRepository : IElementRepository
     {
-        /// <summary>
-        /// The _repository
-        /// </summary>
-        private readonly IAppConfigRepository _repository;
+        private readonly IRepositoryFactory<IAppConfigRepository> _repositoryFactory;
+
         /// <summary>
         /// The _cache repository
         /// </summary>
@@ -47,11 +44,11 @@ namespace VirtoCommerce.Client.Globalization.Repository
         /// <summary>
         /// Initializes a new instance of the <see cref="DatabaseElementRepository"/> class.
         /// </summary>
-        /// <param name="repository">The repository.</param>
+        /// <param name="repositoryFactory">The repository factory.</param>
         /// <param name="cacheRepository">The cache repository.</param>
-        public CachedDatabaseElementRepository(IAppConfigRepository repository, IElementRepository cacheRepository)
+        public CachedDatabaseElementRepository(IRepositoryFactory<IAppConfigRepository> repositoryFactory, IElementRepository cacheRepository)
         {
-            _repository = repository;
+            _repositoryFactory = repositoryFactory;
             _cacheRepository = cacheRepository;
         }
 
@@ -68,6 +65,7 @@ namespace VirtoCommerce.Client.Globalization.Repository
                 return _cacheRepository.EnabledLanguages();
             }
 
+            var _repository = _repositoryFactory.GetRepositoryInstance();
             return _repository.Localizations.Where(l => !string.IsNullOrWhiteSpace(l.LanguageCode))
                     .Select(l => new CultureInfo(l.LanguageCode)).AsQueryable();
         }
@@ -80,16 +78,11 @@ namespace VirtoCommerce.Client.Globalization.Repository
         {
             if (!_cacheRepository.Elements().Any())
             {
+                var _repository = _repositoryFactory.GetRepositoryInstance();
                 foreach (var loc in _repository.Localizations)
                 {
                     //Update cache with items
-                    _cacheRepository.Add(new Element
-                    {
-                        Name = loc.Name,
-                        Value = loc.Value,
-                        Category = loc.Category,
-                        Culture = loc.LanguageCode
-                    });
+                    _cacheRepository.Add(GetElement(loc));
                 }
             }
 
@@ -105,27 +98,23 @@ namespace VirtoCommerce.Client.Globalization.Repository
         /// <returns>Element.</returns>
         public Element Get(string name, string category, string culture)
         {
-            name = GetCacheKey(name);
             var result = _cacheRepository.Get(name, category, culture);
             if (result == null)
             {
                 try
                 {
-                    var loc = GetLocalization(name, category, culture);
-                    if (loc != null)
-                        result = new Element
-                        {
-                            Name = loc.Name,
-                            Value = loc.Value,
-                            Category = loc.Category,
-                            Culture = loc.LanguageCode
-                        };
+                    // caching
+                    PreloadLocalizations(category, culture);
+
+                    result = _cacheRepository.Get(name, category, culture);
                 }
-                catch
+                catch (Exception e)
                 {
+                    Debug.WriteLine(e.ToString());
                     //If db is down simply continue as if loc not exists
                 }
             }
+
             return result;
         }
 
@@ -140,6 +129,7 @@ namespace VirtoCommerce.Client.Globalization.Repository
                 return _cacheRepository.Categories();
             }
 
+            var _repository = _repositoryFactory.GetRepositoryInstance();
             return _repository.Localizations.Select(x => new ElementCategory
                     {
                         Category = x.Category,
@@ -159,37 +149,29 @@ namespace VirtoCommerce.Client.Globalization.Repository
                 return false;
             }
 
-            if (Get(element.Name, element.Category, element.Culture) == null)
+            try
             {
-                try
+                using (var _repository = _repositoryFactory.GetRepositoryInstance())
                 {
                     _repository.Add(new Localization
-                        {
-                            Name = element.Name,
-                            Category = element.Category,
-                            LanguageCode = element.Culture,
-                            Value = element.Value
-                        });
+                    {
+                        Name = element.Name,
+                        Category = element.Category,
+                        LanguageCode = element.Culture,
+                        Value = element.Value
+                    });
                     _repository.UnitOfWork.Commit();
-
-                    //Helper.Add(GetCacheKey(LocalizeElementCacheKey, element), element);
-
-                    //Helper.Add(GetCacheKey(LocalizeCategoriesCacheKey), new ElementCategory
-                    //    {
-                    //        Category = element.Category,
-                    //        Culture = element.Culture
-                    //    });
-
-                    //Helper.Add(GetCacheKey(LocalizeCulturesCacheKey), new CultureInfo(element.Culture));
                 }
-                catch
-                {
-                    return false;
-                }
+
+                _cacheRepository.Add(element);
 
                 return true;
             }
-            return false;
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.ToString());
+                return false;
+            }
         }
 
         /// <summary>
@@ -205,24 +187,24 @@ namespace VirtoCommerce.Client.Globalization.Repository
             }
             try
             {
-                var currentItem = GetLocalization(element.Name, element.Category, element.Culture);
-                if (currentItem == null)
+                using (var _repository = _repositoryFactory.GetRepositoryInstance())
                 {
-                    return false;
+                    var currentItem = GetLocalization(element.Name, element.Category, element.Culture, _repository);
+                    if (currentItem == null)
+                    {
+                        return false;
+                    }
+
+                    currentItem.Value = element.Value;
+                    _repository.Update(currentItem);
+                    _repository.UnitOfWork.Commit();
                 }
-
-                currentItem.Value = element.Value;
-                _repository.Update(currentItem);
-                _repository.UnitOfWork.Commit();
-
-                _cacheRepository.Update(element);
+                return _cacheRepository.Update(element);
             }
             catch
             {
                 return false;
             }
-
-            return true;
         }
 
         /// <summary>
@@ -239,23 +221,23 @@ namespace VirtoCommerce.Client.Globalization.Repository
 
             try
             {
-                var currentItem = GetLocalization(element.Name, element.Category, element.Culture);
-                if (currentItem == null)
+                using (var repository = _repositoryFactory.GetRepositoryInstance())
                 {
-                    return false;
+                    var currentItem = GetLocalization(element.Name, element.Category, element.Culture, repository);
+                    if (currentItem == null)
+                    {
+                        return false;
+                    }
+
+                    repository.Remove(currentItem);
+                    repository.UnitOfWork.Commit();
                 }
-
-                _repository.Remove(currentItem);
-                _repository.UnitOfWork.Commit();
-
-                _cacheRepository.Remove(element);
+                return _cacheRepository.Remove(element);
             }
             catch
             {
                 return false;
             }
-
-            return true;
         }
 
         /// <summary>
@@ -263,11 +245,16 @@ namespace VirtoCommerce.Client.Globalization.Repository
         /// </summary>
         public void Clear()
         {
-            foreach (var loc in _repository.Localizations)
-            {
-                _repository.Remove(loc);
-            }
-            _repository.UnitOfWork.Commit();
+            // don't delete anything from real DB.
+            //using (var repository = _repositoryFactory.GetRepositoryInstance())
+            //{
+            //    foreach (var loc in repository.Localizations)
+            //    {
+            //        repository.Remove(loc);
+            //    }
+            //    repository.UnitOfWork.Commit();
+            //}
+
             _cacheRepository.Clear();
         }
 
@@ -278,7 +265,8 @@ namespace VirtoCommerce.Client.Globalization.Repository
         /// <param name="culture">The culture.</param>
         public void AddCategory(string category, string culture)
         {
-            //Do nothing
+            //Do nothing in real DB
+            _cacheRepository.AddCategory(category, culture);
         }
 
         /// <summary>
@@ -302,20 +290,30 @@ namespace VirtoCommerce.Client.Globalization.Repository
         /// <param name="name">The name.</param>
         /// <param name="category">The category.</param>
         /// <param name="culture">The culture.</param>
+        /// <param name="repository"></param>
         /// <returns>Localization.</returns>
-        private Localization GetLocalization(string name, string category, string culture)
+        private Localization GetLocalization(string name, string category, string culture, IAppConfigRepository repository)
         {
-            return _repository.Localizations.Where(it =>
+            // 'it => true && ... ' is a workaround to prevent searching by key (getting exception if Localization not found).
+            return repository.Localizations.Where(it => true &&
                 it.Name.Equals(name, StringComparison.OrdinalIgnoreCase) &&
                 it.Category.Equals(category, StringComparison.OrdinalIgnoreCase) &&
                 it.LanguageCode.Equals(culture, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
         }
 
-        const string EscapeCharacters = "[][: ~`'!@#$%^&*()+=/?{}.,|\\\\\"]";
-        
-        private static string GetCacheKey(string keyName)
+        private void PreloadLocalizations(string category, string culture)
         {
-            return Regex.Replace(keyName, EscapeCharacters, "_");
+            using (var _repository = _repositoryFactory.GetRepositoryInstance())
+            {
+
+
+                var preloadedCategoryLocalizations = _repository.Localizations.Where(it => it.Category.Equals(category, StringComparison.OrdinalIgnoreCase) &&
+                                                               it.LanguageCode.Equals(culture, StringComparison.OrdinalIgnoreCase));
+                foreach (var preloadedCategoryLocalization in preloadedCategoryLocalizations)
+                {
+                    _cacheRepository.Add(GetElement(preloadedCategoryLocalization));
+                }
+            }
         }
 
         /// <summary>
@@ -340,6 +338,16 @@ namespace VirtoCommerce.Client.Globalization.Repository
         //    return GetCacheKey(keyTemplate, element.Name, element.Category, element.LanguageCode);
         //}
 
+        private static Element GetElement(Localization loc)
+        {
+            return new Element
+            {
+                Name = loc.Name,
+                Value = loc.Value,
+                Category = loc.Category,
+                Culture = loc.LanguageCode
+            };
+        }
         #endregion
     }
 }

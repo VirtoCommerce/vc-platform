@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Microsoft.Practices.ServiceLocation;
+using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using Microsoft.Practices.ServiceLocation;
 
 namespace VirtoCommerce.Client.Globalization
 {
@@ -20,7 +20,6 @@ namespace VirtoCommerce.Client.Globalization
         public static string Localize(this string source, CultureInfo culture)
         {
             return source.Localize(null, null, culture);
-
         }
 
         /// <summary>
@@ -28,10 +27,10 @@ namespace VirtoCommerce.Client.Globalization
         /// </summary>
         /// <param name="source">The source.</param>
         /// <returns>localized string</returns>
-		public static string Localize(this string source)
-		{
-			return source.Localize((string)null);
-		}
+        public static string Localize(this string source)
+        {
+            return source.Localize((string)null);
+        }
 
         /// <summary>
         /// Localizes the specified source.
@@ -52,9 +51,9 @@ namespace VirtoCommerce.Client.Globalization
         /// <param name="key">The key.</param>
         /// <param name="category">The category.</param>
         /// <returns>localized string</returns>
-	    public static string Localize(this string source, string key, string category = "")
+        public static string Localize(this string source, string key, string category = "")
         {
-			return source.Localize(key, category, System.Threading.Thread.CurrentThread.CurrentUICulture);
+            return source.Localize(key, category, System.Threading.Thread.CurrentThread.CurrentUICulture);
         }
 
         /// <summary>
@@ -65,16 +64,16 @@ namespace VirtoCommerce.Client.Globalization
         /// <param name="category">The category.</param>
         /// <param name="culture">The culture.</param>
         /// <returns>localized string</returns>
-	    public static string Localize(this string source, string key, string category, CultureInfo culture)
-	    {
-		    if (string.IsNullOrEmpty(source))
-			    return string.Empty;
+        public static string Localize(this string source, string key, string category, CultureInfo culture)
+        {
+            if (string.IsNullOrEmpty(source))
+                return string.Empty;
 
-	        var keySource = string.IsNullOrEmpty(key) ? source : key;
-			key = Regex.Replace(keySource, @"\s+", "");
-			key = key.Substring(0, Math.Min(key.Length, 128));
+            var keySource = string.IsNullOrEmpty(key) ? source : key;
+            key = Regex.Replace(keySource, @"\s+", "");
+            key = key.Substring(0, Math.Min(key.Length, 128));
 
-			return source.Map(key, category, culture ?? System.Threading.Thread.CurrentThread.CurrentUICulture).Value;
+            return source.Map(key, category, culture ?? System.Threading.Thread.CurrentThread.CurrentUICulture).Value;
         }
 
         /// <summary>
@@ -104,11 +103,11 @@ namespace VirtoCommerce.Client.Globalization
                 return Element.Empty;
             }
 
-			var repository = ServiceLocator.Current.GetInstance<IElementRepository>();
+            var repository = ServiceLocator.Current.GetInstance<IElementRepository>();
             var element = repository.Get(key, category, culture.Name);
             if (element == null)
             {
-				element = new Element { Name = key, Category = category, Culture = culture.Name, Value = source };
+                element = new Element { Name = key, Category = category, Culture = culture.Name, Value = source };
                 repository.Add(element);
             }
             return element;

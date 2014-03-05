@@ -64,7 +64,6 @@ namespace VirtoCommerce.Client.Globalization.Repository
             if (element == null)
             {
                 element = _inner.Get(name, category, culture);
-
                 if (element != null)
                 {
                     AddCache(element);
@@ -81,7 +80,6 @@ namespace VirtoCommerce.Client.Globalization.Repository
         {
             var cacheKey = new ElementCacheKey(element);
             _cachedElements[cacheKey] = element;
-
         }
         /// <summary>
         /// Removes the cache.

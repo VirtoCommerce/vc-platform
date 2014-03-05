@@ -4,6 +4,10 @@ using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Client.Globalization.Repository;
+using VirtoCommerce.Foundation.AppConfig.Factories;
+using VirtoCommerce.Foundation.AppConfig.Repositories;
+using VirtoCommerce.Foundation.Data.AppConfig;
+using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.ManagementClient.AppConfig.ViewModel.AppConfig.Implementations;
 using VirtoCommerce.ManagementClient.AppConfig.ViewModel.AppConfig.Interfaces;
@@ -21,9 +25,6 @@ using VirtoCommerce.ManagementClient.Configuration;
 using VirtoCommerce.ManagementClient.Configuration.Model;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
-using VirtoCommerce.Foundation.AppConfig.Factories;
-using VirtoCommerce.Foundation.AppConfig.Repositories;
-using VirtoCommerce.Foundation.Data.AppConfig;
 
 namespace VirtoCommerce.ManagementClient.AppConfig
 {
@@ -59,11 +60,13 @@ namespace VirtoCommerce.ManagementClient.AppConfig
 		protected void RegisterViewsAndServices()
 		{
 			_container.RegisterType<IAppConfigEntityFactory, AppConfigEntityFactory>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IAppConfigRepository, DSAppConfigClient>();
-            var localElements = new XmlElementRepository(@"C:\Users\a\Dropbox\projects\LocalizationPOC\LocalizationClient\resource_temp");
-		    var inst = new CachedDatabaseElementRepository(_container.Resolve<IAppConfigRepository>(), localElements);
-		    _container.RegisterInstance<IElementRepository>(inst);
-            // _container.RegisterType<IElementRepository, >(new ContainerControlledLifetimeManager());
+			_container.RegisterType<IAppConfigRepository, DSAppConfigClient>();
+
+			var repositoryFactory = _container.Resolve<IRepositoryFactory<IAppConfigRepository>>();
+			var a = Environment.ExpandEnvironmentVariables(@"%SystemRoot%\Temp\VirtoCommerceCMLocalization");
+			var localElements = new XmlElementRepository(a);
+			var inst = new CachedDatabaseElementRepository(repositoryFactory, localElements);
+			_container.RegisterInstance<IElementRepository>(inst);
 
 			var resources = new ResourceDictionary
 				{
@@ -89,7 +92,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig
 			_container.RegisterType<IDisplayTemplateOverviewStepViewModel, DisplayTemplateOverviewStepViewModel>();
 			_container.RegisterType<IDisplayTemplateConditionsStepViewModel, DisplayTemplateConditionsStepViewModel>();
 			_container.RegisterType<ILocalizationHomeViewModel, LocalizationHomeViewModel>();
-			
+
 			//EmailTemplates
 			_container.RegisterType<IEmailTemplatesViewModel, EmailTemplatesViewModel>();
 			_container.RegisterType<IEmailTemplateEditViewModel, EmailTemplateEditViewModel>();

@@ -146,7 +146,6 @@ namespace VirtoCommerce.Client.Globalization.Repository
         public void AddCategory(string category, string culture)
         {
             var filePath = Path.Combine(_path, ResXResourceFileHelper.GetFileName(category, culture));
-
             var document = GetResxDocument(filePath) ?? CreateResXDocument();
 
             Locker.EnterWriteLock();
