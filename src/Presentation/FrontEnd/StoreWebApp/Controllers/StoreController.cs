@@ -122,7 +122,7 @@ namespace VirtoCommerce.Web.Controllers
             return PartialView("_Footer");
         }
 
-        [ChildActionOnly, DonutOutputCache(CacheProfile = "LayoutStatic")]
+        [ChildActionOnly, DonutOutputCache(CacheProfile = "LayoutStatic", VaryByCustom = "storeparam")]
         public ActionResult Menu()
         {
             return PartialView("_Menu");

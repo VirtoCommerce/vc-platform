@@ -12,8 +12,7 @@
         itemClass = string.Concat(@itemClass, " ", "sale");
     }
 }
-
-<li class="@itemClass" id="@Model.CatalogItem.ItemId">
+<li class="@itemClass" data-class="@itemClass" id="@Model.CatalogItem.ItemId">
     <div class="inner">
         <a href="@Url.ItemUrl(Model.CatalogItem.Item, Model.CatalogItem.ParentItemId)" title="@Model.DisplayName" class="product-image">
             <figure>
@@ -33,8 +32,8 @@
                 <div class="ratings-links">
                     <ul>
                         <li><a href="@Url.ItemUrl(Model.CatalogItem.Item, Model.CatalogItem.ParentItemId)#product_tabs_reviews">
-                            <span id="totalreviews">0</span>&nbsp;@("Review(s)".Localize())
-                        </a>
+                                <span id="totalreviews">0</span>&nbsp;@("Review(s)".Localize())
+                            </a>
                         </li>
                         <li><a href="@(UserHelper.CustomerSession.IsRegistered ? Url.Action("AddReview", "Catalog", new { id = Model.CatalogItem.ItemId}) : Url.Action("LogOnAsync", "Account"))" rel="popup">@("Add Your Review".Localize())</a></li>
                     </ul>

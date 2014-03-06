@@ -176,7 +176,7 @@ VirtoCommerce.prototype = {
                     var selector = '#' + itemId + " div.price";
                     var priceContent = htmlData.find(selector).html();
                     $(selector).html(priceContent);
-                    var oldPrice = htmlData.find("span.old");
+                    var oldPrice = $('<div/>').html(priceContent).find("span.old");
                     if (oldPrice.length != 0) {
                         $('li#' + itemId).addClass('sale');
                     } else {
