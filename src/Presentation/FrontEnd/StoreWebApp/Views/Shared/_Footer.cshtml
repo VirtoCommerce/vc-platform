@@ -9,8 +9,9 @@
 <div class="footer-wrap">
     <div class="banners">
         <div class="rubber clearfix">
-            <div id="BottomLeftPromo"></div>
-            @*            @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "BottomLeftPromo" }, true);}*@
+            <div id="BottomLeftPromo">
+                 @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "BottomLeftPromo" });}
+            </div>
             <div class="grid_6 banner callback">
                 <a title="Call us! toll free 8-800-123-1234" href="">Call us! toll free <span>8-800-123-1234</span>
                 </a>
@@ -34,7 +35,7 @@
                 </div>
             </div>
             <div id="FooterPromo"></div>
-            @*            @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "FooterPromo" }, true);}*@
+                @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "FooterPromo" });}
             <div class="grid_3">
                 <a class="control"></a>
                 <h2>@("Information".Localize())</h2>

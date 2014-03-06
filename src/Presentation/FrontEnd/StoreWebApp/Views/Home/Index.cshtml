@@ -26,7 +26,7 @@
 
 @section Slider{
     <div id="MainSlider">
-        @*        @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "MainSlider" }, true);}*@
+               @* @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "MainSlider" });}*@
     </div>
 }
 
@@ -36,7 +36,7 @@
             <h2>@("Staff pick".Localize())</h2>
         </header>
         <ul class="products-list slider-list grid">
-            @*@{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeStaffPick" }, true);}*@
+            @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeStaffPick" });}
         </ul>
     </div>
     <div class="products featured">
@@ -44,7 +44,7 @@
             <h2>@("Featured Products".Localize())</h2>
         </header>
         <ul class="products-list grid">
-            @*@{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeFeaturedProducts" }, true);}*@
+            @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeFeaturedProducts" });}
         </ul>
     </div>
     <div class="products slider-products new-products">
@@ -52,7 +52,7 @@
             <h2>@("New Products".Localize())</h2>
         </header>
         <ul class="products-list slider-list grid">
-            @*@{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeNewProducts" }, true);}*@
+            @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeNewProducts" });}
         </ul>
     </div>
 </div>
