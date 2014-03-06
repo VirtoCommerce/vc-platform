@@ -216,7 +216,7 @@ namespace VirtoCommerce.Client
 
             return Helper.Get(
                 string.Format(ItemsCacheKey, CacheHelper.CreateCacheKey("", ids), responseGroup),
-                () => (query).ToArrayAsync().Result,
+                () => (query).ToArray(),
                 CatalogConfiguration.Instance.Cache.ItemTimeout,
                 _isEnabled && useCache);
         }
