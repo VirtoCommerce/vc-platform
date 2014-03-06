@@ -84,7 +84,7 @@ namespace VirtoCommerce.Web.Controllers
         /// Quicks the access.
         /// </summary>
         /// <returns>ActionResult.</returns>
-        [DonutOutputCache(CacheProfile = "StoreCache", Duration = 0)]
+        //[DonutOutputCache(CacheProfile = "StoreCache", Duration = 0)]
         public ActionResult QuickAccess()
         {
             var wishListHelper = new CartHelper(CartHelper.WishListName);
@@ -102,7 +102,7 @@ namespace VirtoCommerce.Web.Controllers
         /// Quicks the access.
         /// </summary>
         /// <returns>ActionResult.</returns>
-        [ChildActionOnly, DonutOutputCache(CacheProfile = "StoreCache", Duration = 0)]
+        //[ChildActionOnly, DonutOutputCache(CacheProfile = "StoreCache", Duration = 0)]
         public ActionResult CartOptions()
         {
             var compareListHelper = new CartHelper(CartHelper.CompareListName);

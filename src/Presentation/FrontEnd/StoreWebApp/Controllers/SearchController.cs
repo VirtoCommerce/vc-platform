@@ -129,6 +129,54 @@ namespace VirtoCommerce.Web.Controllers
             return Json(data.ToArray(), JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult Prices(string[] itemId)
+        {
+            var session = UserHelper.CustomerSession;
+            var itemAndOutine = itemId.ToDictionary(x => x.Split(":".ToCharArray()).First(), y =>
+            {
+                var splited = y.Split(":".ToCharArray());
+                return splited.Length > 1 ? splited[1] : null;
+            });
+            var itemIdArray = itemAndOutine.Keys.ToArray();
+            var prices = _priceListClient.GetLowestPrices(session.Pricelists, itemIdArray, 1);
+
+            var retVal = new List<PriceModel>();
+
+            if (prices != null && prices.Any())
+            {
+                var currentItems = _catalogClient.GetItems(itemIdArray);
+                foreach (var item in currentItems)
+                {
+                    var outline = itemAndOutine[item.ItemId];
+                    if (string.IsNullOrEmpty(outline))
+                    {
+
+                        outline = CatalogHelper.OutlineBuilder.BuildCategoryOutline(session.CatalogId, item.ItemId).ToString();
+                    }
+
+                    var lowestPrice =
+                   (from p in prices
+                    where p.ItemId.Equals(item.ItemId, StringComparison.OrdinalIgnoreCase)
+                    select p).SingleOrDefault();
+                    if (lowestPrice != null)
+                    {
+                        var tags = new Hashtable
+							{
+								{
+									"Outline",
+									outline
+								}
+							};
+                        var priceModel = _marketing.GetItemPriceModel(item, lowestPrice, tags);
+                        retVal.Add(priceModel);
+                    }
+                }
+            }
+
+            //return Json(retVal.ToArray(), JsonRequestBehavior.AllowGet);
+            return PartialView(retVal);
+        }
+
         #region Private Helpers
 
         /// <summary>
@@ -198,7 +246,7 @@ namespace VirtoCommerce.Web.Controllers
         /// Restores the search preferences from cookies.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
-        public static void RestoreSearchPreferences(SearchParameters parameters)
+        private void RestoreSearchPreferences(SearchParameters parameters)
         {
             var pageSize = parameters.PageSize;
             var sort = parameters.Sort;
@@ -375,6 +423,8 @@ namespace VirtoCommerce.Web.Controllers
 
                     //Cache outline
                     HttpContext.Items["browsingoutline_" + item.Code.ToLower()] = searchTags[criteria.BrowsingOutlineField].ToString();
+                    var currentOutline = searchTags[criteria.OutlineField].ToString().Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                        .FirstOrDefault(x => x.StartsWith(catalogIdPath, StringComparison.OrdinalIgnoreCase)) ?? string.Empty;
 
                     if (prices != null && prices.Any())
                     {
@@ -384,7 +434,6 @@ namespace VirtoCommerce.Web.Controllers
                              select p).SingleOrDefault();
                         if (lowestPrice != null)
                         {
-                            var currentOutline = searchTags[criteria.OutlineField].ToString().Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault(x => x.StartsWith(catalogIdPath, StringComparison.OrdinalIgnoreCase)) ?? string.Empty;
                             var tags = new Hashtable
 							{
 								{
@@ -406,7 +455,10 @@ namespace VirtoCommerce.Web.Controllers
                         availabilityModel = new ItemAvailabilityModel(availability);
                     }
 
-                    var itemModel = new CatalogItemWithPriceModel(CatalogHelper.CreateItemModel(item), priceModel, availabilityModel);
+                    var itemModel = new CatalogItemWithPriceModel(CatalogHelper.CreateItemModel(item), priceModel, availabilityModel)
+                    {
+                        SearchOutline = currentOutline
+                    };
                     itemModelList.Add(itemModel);
                 }
             }

@@ -421,6 +421,8 @@ namespace VirtoCommerce.Web.Models
 	        }
 	    }
 
+	    public string SearchOutline { get; set; }
+
 		/// <summary>
 		/// Gets the <see cref="System.String"/> with the specified name.
 		/// </summary>

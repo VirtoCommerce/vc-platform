@@ -342,8 +342,8 @@ Reviews =
             {
                 for (var i = 0; i < data.length; i++)
                 {
-                    $("[id='rateit-" + data[i].ItemId + "']").rateit({ resetable: false, readonly: true, value: data[i].AverageRating.toFixed(1), starwidth: 11, starheight: 11 });
-                    $("[id='totalreviews-" + data[i].ItemId + "']").text(data[i].TotalReviews);
+                    $("li#" + data[i].ItemId + " #rateit").rateit({ resetable: false, readonly: true, value: data[i].AverageRating.toFixed(1), starwidth: 11, starheight: 11 });
+                    $("li#" + data[i].ItemId + " #totalreviews").text(data[i].TotalReviews);
                 }
             }
         });

@@ -41,6 +41,7 @@ namespace VirtoCommerce.Web.Virto.Helpers
             var price = lowestPrice.Sale ?? lowestPrice.List;
             var discount = _client.GetItemDiscountPrice(item, lowestPrice, tags);
             var priceModel = CreatePriceModel(price, price - discount, UserHelper.CustomerSession.Currency);
+	        priceModel.ItemId = item.ItemId;
             //If has any variations
             /* performance too slow with this method, need to store value on indexing instead
 	        if (CatalogHelper.CatalogClient.GetItemRelations(item.ItemId).Any())

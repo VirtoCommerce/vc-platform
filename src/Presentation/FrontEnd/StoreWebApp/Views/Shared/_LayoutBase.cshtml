@@ -36,7 +36,8 @@
                         </div>
                     </div>
                     <div class="grid_6">
-                        @{Html.RenderAction("QuickAccess", "Store", true);}
+                        <ul class="head-links"></ul>
+                        @* @{Html.RenderAction("QuickAccess", "Store", true);}*@
                     </div>
                 </div>
             </div>
@@ -124,6 +125,8 @@
     <script type="text/javascript">
         $(function () {
             VirtoCommerce.renderDynamicContent();
+            VirtoCommerce.updateQuickLinks();
+            VirtoCart.updateCartOptions();
             VirtoCommerce.initSliders();
             $('.slider-products').virtoSlider();
         });
