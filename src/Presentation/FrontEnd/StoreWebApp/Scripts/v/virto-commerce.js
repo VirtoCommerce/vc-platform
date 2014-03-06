@@ -36,6 +36,7 @@
 VirtoCommerce = function ()
 {
     this.Stores = [];
+    this.DynamicContent = {};
 };
 VirtoCommerce.prototype.constructor = VirtoCommerce.prototype;
 
@@ -72,8 +73,9 @@ VirtoCommerce.prototype = {
             }
         });
     },
-    
-    initSliders: function() {
+
+    initSliders: function ()
+    {
         if ($('.main-slider .container').length > 0)
         {
             $('.main-slider .container').camera({
@@ -90,45 +92,31 @@ VirtoCommerce.prototype = {
         }
     },
 
-    dynamicContent: function (placeName, selector)
+    //Register dynamic content
+    //banner: palce name
+    //selector: jquery selector or callback function
+    registerDynamicContent: function (banner, selector)
     {
-        if (selector == null || selector == 'undefined')
-            return;
-        
-        $.ajax({
-            type: "GET",
-            dataType: "html",
-            url: VirtoCommerce.url('/banner/showDynamiccontent?placeName='+placeName),
-            success: function (data)
-            {
-                if (typeof selector == 'function')
-                {
-                    selector(data);
-                } else
-                {
-                    $(selector).html(data);
-                }
-            }
-        });
+        this.DynamicContent[banner] = selector;
     },
-    
-    dynamicContents: function (placeNames, selector)
+
+    //This method must be called after all registration are done. Prefarably at the end of base layout
+    renderDynamicContent: function ()
     {
-        if (selector == null || selector == 'undefined')
-            return;
 
         var url = VirtoCommerce.url('/banner/showdynamiccontents');
-        
-        if (placeNames != undefined && placeNames.length > 0) {
-            for (var i = 0; i < placeNames.length; i++)
+        var i = 0;
+        for (var placeName in this.DynamicContent)
+        {
+            if (i == 0)
             {
-                if (i == 0) {
-                    url = url + '?';
-                } else {
-                    url = url + '&';
-                }
-                url = url + 'placeName=' + placeNames[i];
+                url = url + '?';
+            } else
+            {
+                url = url + '&';
             }
+            url = url + 'placeName=' + placeName;
+            i = i + 1;
         }
 
         $.ajax({
@@ -137,12 +125,20 @@ VirtoCommerce.prototype = {
             url: url,
             success: function (data)
             {
-                if (typeof selector == 'function')
+                var htmlData = $('<div/>').html(data);
+
+                for (var key in VirtoCommerce.DynamicContent)
                 {
-                    selector(data);
-                } else
-                {
-                    $(selector).html(data);
+                    var selector = VirtoCommerce.DynamicContent[key];
+                    var bannerContent = htmlData.find('#' + key).html();
+                    if (typeof selector == 'function')
+                    {
+                        selector(bannerContent);
+                    }
+                    else
+                    {
+                        $(selector).html(bannerContent);
+                    }
                 }
             }
         });
@@ -409,7 +405,8 @@ VirtoCart.prototype = {
         window.location = VirtoCommerce.url('/checkout');
     },
 
-    getVariation: function () {
+    getVariation: function ()
+    {
 
         if ($("#SelectedVariationId").length != 0)
         {
@@ -484,7 +481,8 @@ VirtoCart.prototype = {
 
         form.resetValidation();
         var validator = form.validate();
-        if (form.valid()) {
+        if (form.valid())
+        {
             //data = VirtoCommerce.deserializeForm(form);
             var data = $(form).serializeObject().ShippingEstimateModel;
             $.ajax({

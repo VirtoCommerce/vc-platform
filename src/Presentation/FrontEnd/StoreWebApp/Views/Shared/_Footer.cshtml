@@ -1,13 +1,8 @@
 ﻿<script>
     $(function ()
     {
-        VirtoCommerce.dynamicContents(["FooterPromo", "BottomLeftPromo"],
-        function (data)
-        {
-            var htmlData = $('<div/>').html(data);
-            $('#FooterPromo').html(htmlData.find('#FooterPromo').html());
-            $('#BottomLeftPromo').html(htmlData.find('#BottomLeftPromo').html());
-        });
+        VirtoCommerce.registerDynamicContent("FooterPromo", '#FooterPromo');
+        VirtoCommerce.registerDynamicContent("BottomLeftPromo", '#BottomLeftPromo');
     })
 </script>
 

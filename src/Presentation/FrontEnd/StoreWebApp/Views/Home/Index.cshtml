@@ -4,20 +4,23 @@
 }
 
 <script>
-    $(function ()
-    {
-        VirtoCommerce.dynamicContents(["MainSlider", "HomeStaffPick", "HomeFeaturedProducts", "HomeNewProducts"],
-        function (data)
-        {
-            var htmlData = $('<div/>').html(data);
-            $('#MainSlider').html(htmlData.find('#MainSlider').html());
-            $('div.staff-pick ul.products-list').html(htmlData.find('#HomeStaffPick').html());
-            $('div.featured ul.products-list').html(htmlData.find('#HomeFeaturedProducts').html());
-            $('div.new-products ul.products-list').html(htmlData.find('#HomeNewProducts').html());
+    $(function () {
+        VirtoCommerce.registerDynamicContent("MainSlider", function(data) {
+            $('#MainSlider').html(data);
             VirtoCommerce.initSliders();
-            $('div.staff-pick').virtoSlider();
+        });
+        VirtoCommerce.registerDynamicContent("HomeNewProducts", function (data)
+        {
+            $('div.new-products ul.products-list').html(data);
             $('div.new-products').virtoSlider();
         });
+        VirtoCommerce.registerDynamicContent("HomeStaffPick", function (data)
+        {
+            $('div.staff-pick ul.products-list').html(data);
+            $('div.staff-pick').virtoSlider();
+        });
+        VirtoCommerce.registerDynamicContent("HomeFeaturedProducts", 'div.featured ul.products-list');
+
     })
 </script>
 

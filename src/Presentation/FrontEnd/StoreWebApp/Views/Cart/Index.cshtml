@@ -9,12 +9,14 @@
 
     $(function ()
     {
-        VirtoCommerce.dynamicContent('CartSuggest', function(data) {
+        VirtoCommerce.registerDynamicContent("CartSuggest", function (data)
+        {
             if (data.length == 0)
             {
                 //Hide cart suggested dynamic content when there is nothing there
                 $("#cartSuggestDynamic").remove();
-            } else {
+            } else
+            {
                 $("#crosssell-products-list").html(data);
             }
         });

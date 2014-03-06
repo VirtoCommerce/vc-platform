@@ -149,7 +149,7 @@ namespace VirtoCommerce.Web
                         var qs = Request.QueryString;
                         var pageSize = qs.AllKeys.Contains("pageSize") ? qs["pageSize"] : StoreHelper.GetCookieValue("pagesizecookie");
                         var sort = qs.AllKeys.Contains("sort") ? qs["sort"] : StoreHelper.GetCookieValue("sortcookie");
-                        var sortorder = qs.AllKeys.Contains("sortorder") ? qs["sortorder"] : StoreHelper.GetCookieValue("sortordercookie");
+                        var sortorder = qs.AllKeys.Contains("sortorder") ? qs["sortorder"] : StoreHelper.GetCookieValue("sortordercookie") ?? "asc";
 
                         varyString += string.Format("filters_{0}_{1}_{2}", pageSize, sort, sortorder);
                     }

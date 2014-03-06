@@ -30,7 +30,7 @@ namespace VirtoCommerce.Web.Controllers
 		/// </summary>
 		/// <param name="placeName">Name of dynamic content place.</param>
 		/// <returns>ActionResult.</returns>
-        [DonutOutputCache(CacheProfile = "BannerCache")]
+        //[DonutOutputCache(CacheProfile = "BannerCache")]
         public ActionResult ShowDynamicContent(string placeName)
         {
             var items = _contentHelper.GetDynamicContent(placeName);
@@ -41,7 +41,7 @@ namespace VirtoCommerce.Web.Controllers
             return null;
         }
 
-        [DonutOutputCache(CacheProfile = "BannerCache")]
+        //[DonutOutputCache(CacheProfile = "BannerCache")]
         public ActionResult ShowDynamicContents(string[] placeName)
         {
             return PartialView("MultiBanner", placeName);
