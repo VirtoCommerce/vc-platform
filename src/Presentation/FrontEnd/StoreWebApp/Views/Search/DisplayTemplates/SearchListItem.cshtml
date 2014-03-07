@@ -22,7 +22,12 @@
         <div class="product-info">
             <a class="product-name" href="@Url.ItemUrl(Model.CatalogItem.Item, Model.CatalogItem.ParentItemId)">@Model.DisplayName</a>
             <div class="price-container">
-                @if (Model.Price != null)
+                @if (ViewData.ContainsKey("hidePrices"))
+                {
+                    <div class="price">
+                    </div>
+                }
+                else if (Model.Price != null)
                 {
                     @Html.DisplayFor(model => model.Price)
                 }
@@ -32,10 +37,10 @@
                 <div class="ratings-links">
                     <ul>
                         <li><a href="@Url.ItemUrl(Model.CatalogItem.Item, Model.CatalogItem.ParentItemId)#product_tabs_reviews">
-                                <span id="totalreviews">0</span>&nbsp;@("Review(s)".Localize())
-                            </a>
+                            <span id="totalreviews">0</span>&nbsp;@("Review(s)".Localize())
+                        </a>
                         </li>
-                        <li><a href="@(UserHelper.CustomerSession.IsRegistered ? Url.Action("AddReview", "Catalog", new { id = Model.CatalogItem.ItemId}) : Url.Action("LogOnAsync", "Account"))" rel="popup">@("Add Your Review".Localize())</a></li>
+                        <li><a href="@(UserHelper.CustomerSession.IsRegistered ? Url.Action("AddReview", "Catalog", new { id = Model.CatalogItem.ItemId }) : Url.Action("LogOnAsync", "Account"))" rel="popup">@("Add Your Review".Localize())</a></li>
                     </ul>
                 </div>
             </div>
@@ -46,7 +51,7 @@
                     {
                         if (review.Source == "QuickReview")
                         {
-                            @Html.Raw(review.Content)
+                    @Html.Raw(review.Content)
                         }
                     }
                 }

@@ -129,14 +129,11 @@ namespace VirtoCommerce.Web.Controllers
             return Json(data.ToArray(), JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Prices(string[] itemId)
+        [HttpPost]
+        public ActionResult Prices(Dictionary<string, string> itemAndOutine) 
         {
             var session = UserHelper.CustomerSession;
-            var itemAndOutine = itemId.ToDictionary(x => x.Split(":".ToCharArray()).First(), y =>
-            {
-                var splited = y.Split(":".ToCharArray());
-                return splited.Length > 1 ? splited[1] : null;
-            });
+
             var itemIdArray = itemAndOutine.Keys.ToArray();
             var prices = _priceListClient.GetLowestPrices(session.Pricelists, itemIdArray, 1);
 

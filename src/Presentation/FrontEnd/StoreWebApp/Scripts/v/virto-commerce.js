@@ -148,26 +148,23 @@ VirtoCommerce.prototype = {
         
         if (items == undefined)
             return;
+        
         var url = VirtoCommerce.url('/search/prices');
 
+        var postData = {};
         var i = 0;
         for (var key in items)
         {
-            if (i == 0)
-            {
-                url = url + '?';
-            } else
-            {
-                url = url + '&';
-            }
-            url = url + 'itemId=' + key + ":" + items[key];
+            postData['itemAndOutine[' + i + '].Key'] = key;
+            postData['itemAndOutine[' + i + '].Value'] = items[key];
             i = i + 1;
         }
 
         $.ajax({
-            type: "GET",
+            type: "POST",
             dataType: "html",
             url: url,
+            data: postData,
             success: function (data)
             {
                 var htmlData = $('<div/>').html(data);
@@ -176,7 +173,7 @@ VirtoCommerce.prototype = {
                     var selector = '#' + itemId + " div.price";
                     var priceContent = htmlData.find(selector).html();
                     $(selector).html(priceContent);
-                    var oldPrice = $('<div/>').html(priceContent).find("span.old");
+                    var oldPrice = $(priceContent).find("span.old");
                     if (oldPrice.length != 0) {
                         $('li#' + itemId).addClass('sale');
                     } else {
