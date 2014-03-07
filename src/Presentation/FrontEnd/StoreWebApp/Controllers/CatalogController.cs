@@ -260,6 +260,13 @@ namespace VirtoCommerce.Web.Controllers
                                    });
         }
 
+        [ChildActionOnly, DonutOutputCache(CacheProfile = "CatalogCache", Duration = 0)]
+        public ActionResult ItemDynamic(string item)
+        {
+            var itemModel = CatalogHelper.CreateCatalogModel(item);
+            return ReferenceEquals(itemModel, null) ? null : PartialView(itemModel);
+        }
+
 		/// <summary>
 		/// Method uses displayTemplateClient to resolve which display template should be displayed
 		/// based on current context

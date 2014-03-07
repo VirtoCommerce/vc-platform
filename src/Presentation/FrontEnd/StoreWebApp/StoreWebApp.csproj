@@ -801,6 +801,7 @@
     <Content Include="Views\Shared\_Menu.cshtml" />
     <Content Include="Views\Banner\MultiBanner.cshtml" />
     <Content Include="Views\Search\Prices.cshtml" />
+    <Content Include="Views\Catalog\ItemDynamic.cshtml" />
     <None Include="Web.Azure.config" />
   </ItemGroup>
   <ItemGroup>
