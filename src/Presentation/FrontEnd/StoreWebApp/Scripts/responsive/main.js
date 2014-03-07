@@ -98,7 +98,7 @@
 
 			$('.view-mode a.' + name).addClass('current').siblings().removeClass('current');
 			$('div.' + name).addClass('selected').siblings().removeClass('selected');
-			VirtoCommerce.setCookie("categoryListView",name, 7);
+			VirtoCommerce.setCookie("vcf.categoryListView",name, 7);
 		});
 	};
 
