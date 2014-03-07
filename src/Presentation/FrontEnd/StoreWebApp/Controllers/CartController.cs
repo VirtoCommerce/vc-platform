@@ -331,11 +331,6 @@ namespace VirtoCommerce.Web.Controllers
         [HttpPost]
         public ActionResult ApplyCoupon(string couponCode, bool renderItems = false)
         {
-            if (HttpContext.Session != null)
-            {
-                HttpContext.Session["CurrentCouponCode"] = couponCode;
-            }
-
             _catalogClient.CustomerSession.CouponCode = couponCode;
             var helper = GetCartHelper(CartHelper.CartName);
             var warnings = SaveChanges(helper);

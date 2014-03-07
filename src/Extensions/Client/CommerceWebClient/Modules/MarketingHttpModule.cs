@@ -125,10 +125,6 @@ namespace VirtoCommerce.Web.Client.Modules
             if (!helper.IsEmpty)
             {
                 set.Add(ContextFieldConstants.CartTotal, new Tag(helper.Cart.Total));
-                if (context.Session != null)
-                {
-                    session.CouponCode = (string)context.Session["CurrentCouponCode"];
-                }
             }
         }
 

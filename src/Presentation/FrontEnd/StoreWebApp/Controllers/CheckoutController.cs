@@ -155,7 +155,7 @@ namespace VirtoCommerce.Web.Controllers
 
         /// <summary>
         /// Processes the checkout.
-        /// </summary>
+        /// </summary>CU
         /// <param name="id">The identifier.</param>
         /// <returns>ActionResult.</returns>
         /// <exception cref="System.UnauthorizedAccessException"></exception>
@@ -421,7 +421,7 @@ namespace VirtoCommerce.Web.Controllers
                                 ? configMap["URL"]
                                 : "https://www.sandbox.paypal.com/webscr&amp;cmd={0}",
                             "_express-checkout&token=" + setEcResponse.Token);
-                    Session["checkout_" + setEcResponse.Token] = model;
+                    TempData.Add("checkout_" + setEcResponse.Token,model);
                     return Redirect(redirectUrl);
                 }
             }
@@ -432,7 +432,7 @@ namespace VirtoCommerce.Web.Controllers
         public ActionResult PaypalExpressSuccess(string token, string payerID)
         {
 
-            var model = (CheckoutModel)Session["checkout_" + token] ?? PrepareCheckoutModel(new CheckoutModel());
+            var model = (CheckoutModel)TempData["checkout_" + token] ?? PrepareCheckoutModel(new CheckoutModel());
             model.Payments = model.Payments ?? GetPayments().ToArray();
 
             var payment = _paymentClient.GetPaymentMethod(model.PaymentMethod ?? "Paypal");
@@ -473,9 +473,7 @@ namespace VirtoCommerce.Web.Controllers
 
                     var details = getEcResponse.GetExpressCheckoutDetailsResponseDetails;
                     var paymentDetails = details.PaymentDetails[0];
-                    var orderId = HttpContext.Session != null
-                        ? HttpContext.Session["LatestOrderId"]
-                        : Ch.Cart.OrderGroupId;
+                    var orderId = UserHelper.CustomerSession.LastOrderId;
 
                     if (details.CheckoutStatus.Equals("PaymentActionCompleted", StringComparison.OrdinalIgnoreCase))
                     {
@@ -625,10 +623,8 @@ namespace VirtoCommerce.Web.Controllers
                     Ch.RunWorkflow("ShoppingCartCheckoutWorkflow");
                     // Create order
                     var order = Ch.SaveAsOrder();
-                    if (HttpContext.Session != null)
-                    {
-                        HttpContext.Session["LatestOrderId"] = order.OrderGroupId;
-                    }
+                    UserHelper.CustomerSession.LastOrderId = order.OrderGroupId;
+
                     transaction.Complete();
                     return true;
                 }
