@@ -470,18 +470,18 @@ namespace VirtoCommerce.Web.Controllers
                 }
                 else
                 {
-
                     var details = getEcResponse.GetExpressCheckoutDetailsResponseDetails;
-                    var paymentDetails = details.PaymentDetails[0];
-                    var orderId = UserHelper.CustomerSession.LastOrderId;
 
                     if (details.CheckoutStatus.Equals("PaymentActionCompleted", StringComparison.OrdinalIgnoreCase))
                     {
-                        return RedirectToAction("ProcessCheckout", "Checkout", new {id = orderId});
+                        return RedirectToAction("ProcessCheckout", "Checkout", new { id = UserHelper.CustomerSession.LastOrderId });
                     }
 
                     model.PaymentMethod = payment.Name;
                     model.ShippingMethod = details.UserSelectedOptions.ShippingOptionName;
+
+                    var paymentDetails = details.PaymentDetails[0];
+
                     model.BillingAddress.Address = ConvertToPaypalAddress(paymentDetails.ShipToAddress, "Billing");
                     model.BillingAddress.Address.Email = details.PayerInfo.Payer;
                     model.ShippingAddress.Address = ConvertToPaypalAddress(paymentDetails.ShipToAddress, "Shipping");
@@ -513,8 +513,9 @@ namespace VirtoCommerce.Web.Controllers
                         Ch.SaveChanges();
 
                         if (DoCheckout())
-                        {
-                            return RedirectToAction("ProcessCheckout", "Checkout", new {id = orderId});
+                        { 
+                            //This call was made from paypal API, we need
+                            return null;
                         }
                     }
 
@@ -854,13 +855,13 @@ namespace VirtoCommerce.Web.Controllers
                         BillingAddressId = form.BillingAddressId,
                         PaymentMethodName = model.DisplayName,
                         PaymentMethodId = model.Id,
-                        Amount = form.Total
                     };
             }
             //Common Properties
             payment.Status = PaymentStatus.Pending.ToString();
             payment.OrderForm = form;
             payment.TransactionType = TransactionType.Sale.ToString();
+            payment.Amount = form.OrderGroup.Total;
 
             return payment;
         }

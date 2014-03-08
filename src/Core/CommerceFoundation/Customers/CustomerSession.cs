@@ -153,12 +153,12 @@ namespace VirtoCommerce.Foundation.Customers
         {
             get
             {
-                return _lastOrderId ?? (_lastOrderId = GetCookieValue("vcf.LastOrderId"));
+                return _lastOrderId ?? (_lastOrderId = GetCookieValue("vcf.LastOrderId", true));
             }
             set
             {
                 _lastOrderId = value;
-                SetCookie("vcf.LastOrderId", value);
+                SetCookie("vcf.LastOrderId", value, encrypt:true);
             }
         }
 
