@@ -19,119 +19,121 @@
     <base href="~/" />
 
 </head>
-<body>
-    <div id="layout">
-        <div class="header-wrap">
-            <div class="head-top">
-                <div class="rubber clearfix">
-                    <div class="grid_6">
-                        <div class="head-switch store">
-                            @{Html.RenderAction("StorePicker", "Store", true);}
-                        </div>
-                        <div class="head-switch language">
-                            @{Html.RenderPartial("Languages");}
-                        </div>
-                        <div class="head-switch currency">
-                            @{Html.RenderAction("Currencies", "Store", true);}
-                        </div>
-                    </div>
-                    <div class="grid_6">
-                        <ul class="head-links"></ul>
-                        @* @{Html.RenderAction("QuickAccess", "Store", true);}*@
-                    </div>
-                </div>
-            </div>
-            <header role="banner" class="header">
-                <div class="rubber clearfix">
-                    <div class="grid_12">
-                        <p class="">
-                            <a href="@Url.RouteUrl("Store")">Virto Commerce</a>
-                        </p>
-                        @RenderSection("Navigation", false)
-                        @RenderSection("MiniActions", false)
-                    </div>
-                </div>
-            </header>
-        </div>
-        @RenderSection("Slider", false)
-        <div class="article-wrap">
-            <article role="main" class="article clearfix">
-                <div class="page-nav">
-                    <div class="rubber">
-                        @Html.MvcSiteMap().SiteMapPath()
-                        @if (!string.IsNullOrEmpty(ViewBag.PageTitle as string) || IsSectionDefined("PageTitle"))
-                        {
-                            <div class="title clearfix">
-                                <p>@ViewBag.PageTitle</p>
-                                @RenderSection("PageTitle", false)
+    <body>
+        <!--Disable ajax cache-->
+        <script>$(function (){$.ajaxSetup({ cache: false });});</script>
+        <div id="layout">
+            <div class="header-wrap">
+                <div class="head-top">
+                    <div class="rubber clearfix">
+                        <div class="grid_5">
+                            <div class="head-switch store">
+                                @{Html.RenderAction("StorePicker", "Store", true);}
                             </div>
-                        }
+                            <div class="head-switch language">
+                                @{Html.RenderPartial("Languages");}
+                            </div>
+                            <div class="head-switch currency">
+                                @{Html.RenderAction("Currencies", "Store", true);}
+                            </div>
+                        </div>
+                        <div class="grid_7">
+                            <ul class="head-links"></ul>
+                            @* @{Html.RenderAction("QuickAccess", "Store", true);}*@
+                        </div>
                     </div>
                 </div>
-                <div class="rubber">
-                    @{
-                        var messages = Html.SharedViewBag().Messages as MessagesModel;
-                    }
-                    <ul id="messages" class="messages" style="@(messages != null && messages.Any() ? "" : "display:none;")">
-                        @{
-                            if (messages != null && messages.Any())
+                <header role="banner" class="header">
+                    <div class="rubber clearfix">
+                        <div class="grid_12">
+                            <p class="">
+                                <a href="@Url.RouteUrl("Store")">Virto Commerce</a>
+                            </p>
+                            @RenderSection("Navigation", false)
+                            @RenderSection("MiniActions", false)
+                        </div>
+                    </div>
+                </header>
+            </div>
+            @RenderSection("Slider", false)
+            <div class="article-wrap">
+                <article role="main" class="article clearfix">
+                    <div class="page-nav">
+                        <div class="rubber">
+                            @Html.MvcSiteMap().SiteMapPath()
+                            @if (!string.IsNullOrEmpty(ViewBag.PageTitle as string) || IsSectionDefined("PageTitle"))
                             {
-
-                                foreach (var messageGrp in messages.GroupBy(m => m.Type))
+                                <div class="title clearfix">
+                                    <p>@ViewBag.PageTitle</p>
+                                    @RenderSection("PageTitle", false)
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="rubber">
+                        @{
+                            var messages = Html.SharedViewBag().Messages as MessagesModel;
+                        }
+                        <ul id="messages" class="messages" style="@(messages != null && messages.Any() ? "" : "display:none;")">
+                            @{
+                                if (messages != null && messages.Any())
                                 {
-                            <li class="@messageGrp.Key.ToString().ToLower()">
-                                <ul>
-                                    @foreach (var message in messageGrp)
+
+                                    foreach (var messageGrp in messages.GroupBy(m => m.Type))
                                     {
-                                        <li><span>@message.Text</span></li>
+                                        <li class="@messageGrp.Key.ToString().ToLower()">
+                                            <ul>
+                                                @foreach (var message in messageGrp)
+                                                {
+                                                    <li><span>@message.Text</span></li>
+                                                }
+                                            </ul>
+                                        </li>
                                     }
-                                </ul>
-                            </li>
                                 }
                             }
-                        }
-                    </ul>
-                    @RenderBody()
-                </div>
-                @RenderSection("Bottom", false)
-            </article>
+                        </ul>
+                        @RenderBody()
+                    </div>
+                    @RenderSection("Bottom", false)
+                </article>
+            </div>
+            @{
+                Html.RenderAction("Footer", "Store", true);
+            }
         </div>
-        @{
-            Html.RenderAction("Footer", "Store", true);
-        }
-    </div>
 
 
-    @Scripts.Render("~/bundles/jqueryui")
-    @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/bundles/jquerymisc")
-    @RenderSection("scripts", required: false)
+        @Scripts.Render("~/bundles/jqueryui")
+        @Scripts.Render("~/bundles/jqueryval")
+        @Scripts.Render("~/bundles/jquerymisc")
+        @RenderSection("scripts", required: false)
 
 
-    <!-- Facebook -->
-    <div id="fb-root"></div>
-    <script type="text/javascript">
-        (function (d, s, id)
-        {
-            var js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) return;
-            js = d.createElement(s); js.id = id;
-            js.src = "//connect.facebook.net/en-US/all.js#xfbml=1";
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
-    </script>
+        <!-- Facebook -->
+        <div id="fb-root"></div>
+        <script type="text/javascript">
+            (function (d, s, id)
+            {
+                var js, fjs = d.getElementsByTagName(s)[0];
+                if (d.getElementById(id)) return;
+                js = d.createElement(s); js.id = id;
+                js.src = "//connect.facebook.net/en-US/all.js#xfbml=1";
+                fjs.parentNode.insertBefore(js, fjs);
+            }(document, 'script', 'facebook-jssdk'));
+        </script>
 
-    <!-- Process sliders -->
-    <script type="text/javascript">
-        $(function () {
-            VirtoCommerce.renderDynamicContent();
-            VirtoCommerce.updateQuickLinks();
-            VirtoCart.updateCartOptions();
-            VirtoCommerce.initSliders();
-            $('.slider-products').virtoSlider();
-        });
-    </script>
-    @* No need to render follow services here, but following template can be used as an example:
+        <!-- Process sliders -->
+        <script type="text/javascript">
+            $(function () {
+                VirtoCommerce.renderDynamicContent();
+                VirtoCommerce.updateQuickLinks();
+                VirtoCart.updateCartOptions();
+                VirtoCommerce.initSliders();
+                $('.slider-products').virtoSlider();
+            });
+        </script>
+        @* No need to render follow services here, but following template can be used as an example:
     @if (SettingsHelper.GetSettings("FollowServices").Any())
     {
         <!-- AddThis Smart Layers BEGIN -->
@@ -193,13 +195,13 @@
     }
     *@
 
-    @{
-        var firstOrDefault = StoreHelper.GetSettings("AnalyticsField").FirstOrDefault() ??
-                             (object)SettingsHelper.GetSettings("AnalyticsField").FirstOrDefault();
-        if (firstOrDefault != null)
-        {
-        @Html.Raw(firstOrDefault.ToString())
+        @{
+            var firstOrDefault = StoreHelper.GetSettings("AnalyticsField").FirstOrDefault() ??
+                                 (object)SettingsHelper.GetSettings("AnalyticsField").FirstOrDefault();
+            if (firstOrDefault != null)
+            {
+                @Html.Raw(firstOrDefault.ToString())
+            }
         }
-    }
-</body>
+    </body>
 </html>

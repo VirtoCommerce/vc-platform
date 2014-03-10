@@ -769,7 +769,7 @@ namespace VirtoCommerce.Web.Controllers
                                     let item = _catalogClient.GetItem(li.CatalogItemId)
                                     let parentItem = _catalogClient.GetItem(li.ParentCatalogItemId)
                                     where item != null && rmaLis.All(r => r.LineItemId != li.LineItemId)
-                                    select new OrderReturnItem(new LineItemModel(li, item, parentItem)))
+                                    select new OrderReturnItem(new LineItemModel(li, item, parentItem, order.BillingCurrency)))
                 {
                     model.OrderReturnItems.Add(ori);
                 }
@@ -790,7 +790,7 @@ namespace VirtoCommerce.Web.Controllers
 
                     var item = _catalogClient.GetItem(li.CatalogItemId);
                     var parentItem = _catalogClient.GetItem(li.ParentCatalogItemId);
-                    returnItem.LineItemModel = new LineItemModel(li, item, parentItem);
+                    returnItem.LineItemModel = new LineItemModel(li, item, parentItem, order.BillingCurrency);
                 }
             }
 

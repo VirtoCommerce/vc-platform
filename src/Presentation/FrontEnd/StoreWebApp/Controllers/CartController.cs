@@ -6,7 +6,6 @@ using VirtoCommerce.Client;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Orders.Model;
 using VirtoCommerce.Web.Client.Extensions;
-using VirtoCommerce.Web.Client.Extensions.Filters;
 using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Web.Client.Helpers;
 using VirtoCommerce.Web.Models;
@@ -265,7 +264,7 @@ namespace VirtoCommerce.Web.Controllers
             var addedLineItem = DoAddToCart(name, qty, catalogItem, parentItem);
             if (addedLineItem != null)
             {
-                addedLineItems.Add(new LineItemModel(addedLineItem, catalogItem, parentItem));
+                addedLineItems.Add(new LineItemModel(addedLineItem, catalogItem, parentItem, helper.Cart.BillingCurrency));
             }
 
             if (relatedItemId != null && relatedItemId.Length > 0)
@@ -274,7 +273,7 @@ namespace VirtoCommerce.Web.Controllers
                                         let relItem = _catalogClient.GetItem(relItemId)
                                         let relatedItem = DoAddToCart(name, 1, relItem, null)
                                         where relatedItem != null
-                                        select new LineItemModel(relatedItem, relItem, null));
+                                        select new LineItemModel(relatedItem, relItem, null, helper.Cart.BillingCurrency));
             }
 
             if (Request.UrlReferrer != null)
