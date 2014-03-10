@@ -474,6 +474,7 @@ namespace VirtoCommerce.Web.Controllers
 
                     if (details.CheckoutStatus.Equals("PaymentActionCompleted", StringComparison.OrdinalIgnoreCase))
                     {
+                        UserHelper.CustomerSession.LastOrderId = UserHelper.CustomerSession.LastOrderId ?? TempData["LastOrderId"].ToString();
                         return RedirectToAction("ProcessCheckout", "Checkout", new { id = UserHelper.CustomerSession.LastOrderId });
                     }
 
@@ -514,7 +515,8 @@ namespace VirtoCommerce.Web.Controllers
 
                         if (DoCheckout())
                         { 
-                            //This call was made from paypal API, we need
+                            //This call was made from paypal API, we need so save last order id, as it is not saved in our cookie
+                            TempData["LastOrderId"] = UserHelper.CustomerSession.LastOrderId;
                             return null;
                         }
                     }

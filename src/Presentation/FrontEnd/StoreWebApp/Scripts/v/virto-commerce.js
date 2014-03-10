@@ -388,9 +388,11 @@ VirtoCart.prototype = {
             success: function (context)
             {
                 VirtoCart.updateMiniCart(context.CartName);
+                if (context.CartName == VirtoCart.ShoppingCartName) {
+                    $('#cart-count').html(context.CartCount);
+                }
                 if (context.CartName != VirtoCart.CompareListName)
                 {
-                    $('#cart-count').html(context.CartCount);
                     VirtoCommerce.updateQuickLinks();
                 }
                 //Show success message
