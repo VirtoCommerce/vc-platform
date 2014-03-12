@@ -474,7 +474,7 @@ namespace VirtoCommerce.Web.Controllers
 
                     if (details.CheckoutStatus.Equals("PaymentActionCompleted", StringComparison.OrdinalIgnoreCase))
                     {
-                        UserHelper.CustomerSession.LastOrderId = UserHelper.CustomerSession.LastOrderId ?? TempData["LastOrderId"].ToString();
+                        UserHelper.CustomerSession.LastOrderId = TempData["LastOrderId"].ToString();
                         return RedirectToAction("ProcessCheckout", "Checkout", new { id = UserHelper.CustomerSession.LastOrderId });
                     }
 

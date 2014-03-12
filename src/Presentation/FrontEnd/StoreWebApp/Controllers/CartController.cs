@@ -254,7 +254,7 @@ namespace VirtoCommerce.Web.Controllers
                 name = CartHelper.CartName;
             }
 
-            var helper = new CartHelper(name);
+            var helper = GetCartHelper(name);
 
             var catalogItem = _catalogClient.GetItem(itemId);
             var parentItem = !string.IsNullOrEmpty(parentItemId) ? _catalogClient.GetItem(parentItemId) : null;
@@ -282,7 +282,7 @@ namespace VirtoCommerce.Web.Controllers
             }
 
             helper.ClearCache();
-            helper = new CartHelper(name);
+            helper = GetCartHelper(name);
 
             var results = new CartJsonModel
             {
@@ -464,7 +464,7 @@ namespace VirtoCommerce.Web.Controllers
                     }
                 }
                 // Add item to a cart.
-                addedLineItem = ch.AddItem(catalogItem, parentCatalogItem, qty, false);
+                addedLineItem = ch.AddItem(catalogItem, parentCatalogItem, qty, string.Equals(cartName, CartHelper.CompareListName, StringComparison.OrdinalIgnoreCase));
                 SaveChanges(ch);
             }
 

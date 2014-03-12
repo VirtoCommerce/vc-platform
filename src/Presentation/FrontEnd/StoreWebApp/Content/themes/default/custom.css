@@ -1,7 +1,7 @@
 
 #logoutForm {
     display: inline;
-    white-space: nowrap;
+    /*white-space: nowrap;*/
 }
 
 .field-validation-error {

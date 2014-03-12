@@ -20,7 +20,7 @@ else
                 <col>
                 <col width="1">
                 <col width="1">
-                <col width="1">
+                <col>
             </colgroup>
             <thead>
                 <tr>
@@ -42,7 +42,7 @@ else
             <tbody>
                 @for (var i = 0; i < Model.LineItems.Count(); i++)
                 {
-                    @Html.EditorFor(m => m.LineItems[i], "lineItem")
+                    @Html.EditorFor(m => m.LineItems[i], "lineItem", new { view="WishList"})
                 }
             </tbody>
         </table>

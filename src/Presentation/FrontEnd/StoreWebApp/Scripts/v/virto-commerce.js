@@ -322,9 +322,9 @@ VirtoCart.prototype = {
                 {
                     $(".cart .popup").html(context.LineItemsView);
                 }
-                $('#cart-count').html(context.CartCount);
-                $('#cart-subtotal').html(context.CartSubTotal);
-                $('#cart-total').html(context.CartTotal);
+                $("[id=cart-count]").html(context.CartCount);
+                $("[id=cart-subtotal]").html(context.CartSubTotal);
+                $("[id=cart-total]").html(context.CartTotal);
             }
             else if (context.Source.toLowerCase() == "MiniCompareList".toLowerCase())
             {
@@ -333,8 +333,9 @@ VirtoCart.prototype = {
             else if (context.Source.toLowerCase() == "LineItems".toLowerCase())
             {
                 $('#shopping-cart-table tbody').html(context.LineItemsView);
-                $('#cart-subtotal').html(context.CartSubTotal);
-                $('#cart-total').html(context.CartTotal);
+                $("[id=cart-count]").html(context.CartCount);
+                $("[id=cart-subtotal]").html(context.CartSubTotal);
+                $("[id=cart-total]").html(context.CartTotal);
             }
         } else
         {
@@ -344,9 +345,13 @@ VirtoCart.prototype = {
         VirtoCommerce.processMessages(context);
     },
 
-    add: function (name, title, itemId, parentItemId, quantity, relatedItems)
+    //name, title, itemId, parentItemId, quantity, relatedItems
+    add: function (options)
     {
 
+        if (options.quantity == undefined) {
+            options.quantity = 1;
+        }
 
         //Try to get variation
         try
@@ -354,7 +359,7 @@ VirtoCart.prototype = {
             var variation = this.getVariation();
             if (variation != undefined && variation != "")
             {
-                itemId = variation;
+                options.itemId = variation;
             }
         }
         catch (e)
@@ -363,20 +368,20 @@ VirtoCart.prototype = {
             return false;
         }
 
-        var url = VirtoCommerce.url('/Cart/Add') + '?name=' + name + '&itemId=' + itemId + '&quantity=' + quantity;
+        var url = VirtoCommerce.url('/Cart/Add') + '?name=' + options.name + '&itemId=' + options.itemId + '&quantity=' + options.quantity;
 
-        if (parentItemId != undefined && parentItemId.length > 0)
+        if (options.parentItemId != undefined && options.parentItemId.length > 0)
         {
-            url = url + '&parentItemId=' + parentItemId;
+            url = url + '&parentItemId=' + options.parentItemId;
         }
 
-        if (name == this.ShoppingCartName)
+        if (options.name == this.ShoppingCartName)
         {
-            if (relatedItems != undefined && relatedItems.length > 0)
+            if (options.relatedItems != undefined && options.relatedItems.length > 0)
             {
-                for (var i = 0; i < relatedItems.length; i++)
+                for (var i = 0; i < options.relatedItems.length; i++)
                 {
-                    url = url + '&relatedItemId=' + relatedItems[i];
+                    url = url + '&relatedItemId=' + options.relatedItems[i];
                 }
             }
         }
@@ -387,6 +392,10 @@ VirtoCart.prototype = {
             cache: false,
             success: function (context)
             {
+                if (typeof options.callback == 'function') {
+                    options.callback(context);
+                }
+                
                 VirtoCart.updateMiniCart(context.CartName);
                 if (context.CartName == VirtoCart.ShoppingCartName) {
                     $('#cart-count').html(context.CartCount);
@@ -404,9 +413,9 @@ VirtoCart.prototype = {
         return false;
     },
 
-    addToCart: function (title, itemId, parentItemId, quantity, relatedItems)
-    {
-        return this.add(this.ShoppingCartName, title, itemId, parentItemId, quantity, relatedItems);
+    addToCart: function (options) {
+        options.name = this.ShoppingCartName;
+        return this.add(options);
     },
 
     addToCartOrdersClick: function ()
@@ -415,31 +424,32 @@ VirtoCart.prototype = {
 
         if (relatedItems.length == 0)
             return false;
-        return VirtoCart.addToCart('Item added to cart', null, null, 1, relatedItems);
+        return VirtoCart.addToCart({relatedItems:relatedItems});
     },
 
-    addToCartClick: function (selectedItemId, parentItemId)
+    addToCartClick: function (options)
     {
         if ($('#qty').length != 0 && !$('#qty').valid())
         {
             return false;
         } else
         {
-            var relatedItems = this.collectRelatedItems('related_products[]');
-            var qty = $('#qty').length != 0 ? $('#qty').val() : 1;
+            options.relatedItems = this.collectRelatedItems('related_products[]');
+            options.quantity = $('#qty').length != 0 ? $('#qty').val() : 1;
 
-            return VirtoCart.addToCart('Item added to cart', selectedItemId, parentItemId, qty, relatedItems);
+            return VirtoCart.addToCart(options);
         }
     },
 
-    addToWishList: function (title, itemId, parentId, quantity)
-    {
-        return this.add(this.WishListName, title, itemId, parentId, quantity);
+    addToWishList: function (options) {
+        options.name = this.WishListName;
+        return this.add(options);
     },
 
-    addToCompareList: function (title, itemId, parentId, quantity)
+    addToCompareList: function (options)
     {
-        return this.add(this.CompareListName, title, itemId, parentId, quantity);
+        options.name = this.CompareListName;
+        return this.add(options);
     },
 
     checkout: function ()

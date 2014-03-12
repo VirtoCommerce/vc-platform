@@ -605,6 +605,7 @@ namespace VirtoCommerce.Web.Client.Helpers
 		public virtual void SaveChanges()
 		{
 			//OrderContext.Current.SaveOrderGroups(new OrderGroup[] { this.Cart });
+            SyncCache(); //Update cache with with new cart
 			OrderRepository.UnitOfWork.Commit();
 		}
 
@@ -770,6 +771,31 @@ namespace VirtoCommerce.Web.Client.Helpers
 		}
 
         /// <summary>
+        /// Synchronizes the cache.
+        /// </summary>
+        private void SyncCache()
+        {
+            if (Cart != null)
+            {
+                var cartKey2 = GetCacheKey("__all", Cart.CustomerId);
+
+                CartCount[] allCarts = null;
+
+                if (HttpContext.Current != null)
+                {
+                    allCarts = HttpContext.Current.Items[cartKey2] as CartCount[];
+                }
+
+                if (allCarts != null && allCarts.All(c => c.Name != Cart.Name))
+                {
+                    var newAllCarts = allCarts.ToList();
+                    newAllCarts.Add(new[] { new CartCount { Name = Cart.Name, Count = 1 } });
+                    HttpContext.Current.Items[cartKey2] = newAllCarts.ToArray();
+                }
+            }
+        }
+
+        /// <summary>
         /// Loads the cart. The cart is loaded from current http context if one is present.
         /// </summary>
         /// <param name="storeId">The store id.</param>
@@ -822,24 +848,15 @@ namespace VirtoCommerce.Web.Client.Helpers
 			{
 				cart = new ShoppingCart { StoreId = storeId, CustomerId = userId, Name = name };
 				repo.Add(cart);
-
-				/* Sasha: the code below is incorrect and will cause unnecessary reload of full cart from database when one doesn't exist
-				if (HttpContext.Current != null && allCarts.All(c => c.Name != name))
-				{
-					var newAllCarts = allCarts.ToList();
-					newAllCarts.Add(new[] { new CartCount { Name = name, Count = 1 } });
-					HttpContext.Current.Items[cartKey2] = newAllCarts.ToArray();
-				}
-				 * */
 			}
 
-			if (String.IsNullOrEmpty(cart.CustomerId)
-				/*|| cart.CustomerName.Equals(SecurityContext.Anonymous, StringComparison.OrdinalIgnoreCase)*/)
+			if (String.IsNullOrEmpty(cart.CustomerId))
 			{
 				cart.CustomerId = userId;
 			}
 
 			Cart = cart;
+
 		}
 
 		#endregion

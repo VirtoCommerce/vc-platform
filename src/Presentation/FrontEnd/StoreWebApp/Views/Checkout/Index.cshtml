@@ -20,11 +20,25 @@
 	    {
 	        $(this).bind("change", function ()
 	        {
-	            //Workaround: wait some time for other change events to complete
-	            setTimeout(function ()
+	            var isValid = true;
+	            $("#checkout-address input:not([type='hidden']),#checkout-address select").each(function ()
 	            {
-	                VirtoCheckout.submitChanges();
-	            }, 200);
+	                if ($(this).is(":visible") && !$(this).valid())
+	                {
+	                    isValid = false;
+	                    return false;
+	                }
+	                return true;
+	            });
+
+	            if (isValid)
+	            {
+	                //Workaround: wait some time for other change events to complete
+	                setTimeout(function ()
+	                {
+	                    VirtoCheckout.submitChanges();
+	                }, 200);
+	            }
 
 	        });
 	    });
