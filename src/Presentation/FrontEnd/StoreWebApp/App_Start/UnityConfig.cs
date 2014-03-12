@@ -398,7 +398,7 @@ namespace VirtoCommerce.Web
             container.RegisterType<IEntityEventListener, OrderChangeEventListener>("order");
             container.RegisterType<IEntityEventListener, PublicReplyEventListener>("customer");
             container.RegisterType<IEntityEventListener, CaseChangeEventListener>("customer");
-            container.RegisterType<IEntityEventContext, EntityEventContext>(new ContainerControlledLifetimeManager());
+            container.RegisterType<IEntityEventContext, EntityEventContext>(new PerRequestLifetimeManager());
 
             #endregion
 
