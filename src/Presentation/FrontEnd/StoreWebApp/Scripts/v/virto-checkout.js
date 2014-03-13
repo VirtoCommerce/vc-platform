@@ -68,12 +68,14 @@ VirtoCheckout.prototype = {
                 $('input[name=PaymentMethod]').each(function ()
                 {
 	                if (!this.checked) {
-	                	VirtoCommerce.disableAll($("#container_payment_method_"+this.value));
+	                    VirtoCommerce.disableAll($("#container_payment_method_" + this.value));
+	                } else {
+	                    checkout.paymentChanged(this);
 	                }
 	                $(this).bind("click", function ()
 	                {
 	                	checkout.paymentChanged(this);
-                    });
+	                });        
                 });
 
                 checkout.updateValidation();

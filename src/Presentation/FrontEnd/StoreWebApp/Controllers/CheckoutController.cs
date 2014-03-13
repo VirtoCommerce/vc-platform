@@ -615,9 +615,6 @@ namespace VirtoCommerce.Web.Controllers
             // run workflow
             Ch.RunWorkflow("ShoppingCartPrepareWorkflow");
 
-            //Update payments
-            Ch.OrderForm.Payments.ForEach(p => p.Amount = p.OrderForm.Total);
-
             // save changes
             Ch.SaveChanges();
         }
