@@ -281,8 +281,8 @@ namespace VirtoCommerce.Web.Controllers
                 UserHelper.CustomerSession.LastShoppingPage = Request.UrlReferrer.AbsoluteUri;
             }
 
-            helper.ClearCache();
-            helper = GetCartHelper(name);
+            //helper.ClearCache();
+            //helper = GetCartHelper(name);
 
             var results = new CartJsonModel
             {

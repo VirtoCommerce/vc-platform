@@ -496,6 +496,7 @@
     <Content Include="Content\themes\default\images\icons\insurance.png" />
     <Content Include="Content\themes\default\images\icons\rateit\delete.gif" />
     <Content Include="Content\themes\default\images\icons\rateit\star.gif" />
+    <Content Include="Content\themes\default\images\validation_advice_bg.gif" />
     <Content Include="Content\themes\default\rateit.css" />
     <Content Include="Content\themes\default\images\blank.png" />
     <Content Include="Content\themes\default\images\social\facebook.png" />
