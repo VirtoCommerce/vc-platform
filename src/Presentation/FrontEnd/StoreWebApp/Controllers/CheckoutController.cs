@@ -12,6 +12,7 @@ using PayPal.PayPalAPIInterfaceService;
 using PayPal.PayPalAPIInterfaceService.Model;
 using VirtoCommerce.Client;
 using VirtoCommerce.Foundation.Customers.Model;
+using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using VirtoCommerce.Foundation.Orders.Extensions;
 using VirtoCommerce.Foundation.Orders.Model;
@@ -620,6 +621,7 @@ namespace VirtoCommerce.Web.Controllers
         {
             try
             {
+                using (SqlDbConfiguration.ExecutionStrategySuspension)
                 using (var transaction = new TransactionScope())
                 {
                     // run business rules

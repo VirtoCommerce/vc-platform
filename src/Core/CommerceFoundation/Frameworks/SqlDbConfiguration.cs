@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Activities.Expressions;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.SqlServer;
+using System.Runtime.Remoting.Messaging;
 using VirtoCommerce.Foundation.AppConfig;
 
 namespace VirtoCommerce.Foundation.Frameworks
@@ -10,6 +10,18 @@ namespace VirtoCommerce.Foundation.Frameworks
     public class SqlDbConfiguration : DbConfiguration
     {
         public const string SqlAzureExecutionStrategy = "SqlAzureExecutionStrategy";
+
+        public class SuspensionFlag : IDisposable
+        {
+            public SuspensionFlag(bool suspended = true)
+            {
+                SuspendExecutionStrategy = suspended;
+            }
+            public void Dispose()
+            {
+                SuspendExecutionStrategy = false;
+            }
+        }
 
         public static void Register()
         {
@@ -19,6 +31,29 @@ namespace VirtoCommerce.Foundation.Frameworks
                 SetConfiguration(new SqlDbConfiguration());
             }
         }
+
+        /// <summary>
+        /// Property can be used in 'using' statement. 
+        /// </summary>
+        public static SuspensionFlag ExecutionStrategySuspension
+        {
+            get
+            {
+                return new SuspensionFlag();
+            }
+        }
+
+        public static bool SuspendExecutionStrategy
+        {
+            get
+            {
+                return (bool?)CallContext.LogicalGetData("SuspendExecutionStrategy") ?? false;
+            }
+            set
+            {
+                CallContext.LogicalSetData("SuspendExecutionStrategy", value);
+            }
+        } 
 
         public SqlDbConfiguration()
         {
@@ -34,14 +69,20 @@ namespace VirtoCommerce.Foundation.Frameworks
                 {
                     var maxDelay = strategy.MaxDelay.Value;
                     IDbExecutionStrategy strategyObj = (IDbExecutionStrategy) Activator.CreateInstance(strategyType);
-                    
+
                     if (string.IsNullOrWhiteSpace(strategy.ServerName))
                     {
-                        SetExecutionStrategy(strategy.ProviderName, () => strategyObj);
+                        SetExecutionStrategy(strategy.ProviderName, 
+                            () => SuspendExecutionStrategy
+                                ?(IDbExecutionStrategy)new DefaultExecutionStrategy()
+                                :strategyObj);
                     }
                     else
                     {
-                        SetExecutionStrategy(strategy.ProviderName, () => strategyObj, strategy.ServerName);
+                        SetExecutionStrategy(strategy.ProviderName, 
+                            () => SuspendExecutionStrategy
+                                ?(IDbExecutionStrategy)new DefaultExecutionStrategy()
+                                :strategyObj, strategy.ServerName);
                     }
                 }
             }
@@ -61,7 +102,10 @@ namespace VirtoCommerce.Foundation.Frameworks
                 strategyObj = (IDbExecutionStrategy)Activator.CreateInstance(strategyType);
             }
 
-            SetExecutionStrategy("System.Data.SqlClient", () => strategyObj);
+            SetExecutionStrategy("System.Data.SqlClient", 
+                () => SuspendExecutionStrategy
+                        ? (IDbExecutionStrategy)new DefaultExecutionStrategy()
+                        : strategyObj);
         }
     }
 }

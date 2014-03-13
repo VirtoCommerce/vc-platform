@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Transactions;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
+using VirtoCommerce.Foundation.Frameworks;
 
 namespace VirtoCommerce.Client
 {
@@ -49,6 +50,7 @@ namespace VirtoCommerce.Client
 					var endCounter = SequenceReservationRange;
 
 					//Update Sequences in database
+                    using (SqlDbConfiguration.ExecutionStrategySuspension)
                     using (var transaction = new TransactionScope())
                     {
                         var sequence = _repository.Sequences.SingleOrDefault(

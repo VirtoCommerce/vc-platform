@@ -4,6 +4,7 @@ using System.Linq;
 using System.Transactions;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
+using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 
 namespace VirtoCommerce.Scheduling
@@ -44,6 +45,8 @@ namespace VirtoCommerce.Scheduling
             List<TaskSchedule> tasks;
             var dateTime = DateTime.UtcNow;
             var repository = _repositoryFactory();
+
+            using (SqlDbConfiguration.ExecutionStrategySuspension)
             using (
                     var transaction = new TransactionScope(TransactionScopeOption.Required,
                     new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted }))
@@ -92,6 +95,8 @@ namespace VirtoCommerce.Scheduling
         {
             bool value = false;
             var repository = _repositoryFactory();
+
+            using (SqlDbConfiguration.ExecutionStrategySuspension)
             using (var transaction = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted }))
             {
                 var job = repository.SystemJobs.FirstOrDefault(sj => sj.SystemJobId == systemJobId);
@@ -124,6 +129,7 @@ namespace VirtoCommerce.Scheduling
             string message, string instance, string taskScheduleId, bool multipleInstance)
         {
             var repository = _repositoryFactory();
+            using (SqlDbConfiguration.ExecutionStrategySuspension)
             using (var transaction = new TransactionScope(TransactionScopeOption.Required,
                 new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted }))
             {
@@ -152,6 +158,8 @@ namespace VirtoCommerce.Scheduling
         public void PrepareTaskSchedule(string systemJobId, bool allowMultipleInstances)
         {
             var repository = _repositoryFactory();
+
+            using (SqlDbConfiguration.ExecutionStrategySuspension)
             using (var transaction = new TransactionScope(TransactionScopeOption.Required,
                 new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted }))
             {
@@ -185,6 +193,8 @@ namespace VirtoCommerce.Scheduling
         public void UpdateTaskSchedule(string systemJobId)
         {
             var repository = _repositoryFactory();
+
+            using (SqlDbConfiguration.ExecutionStrategySuspension)
             using (var transaction = new TransactionScope(TransactionScopeOption.Required,
                 new TransactionOptions { IsolationLevel = IsolationLevel.ReadCommitted }))
             {
