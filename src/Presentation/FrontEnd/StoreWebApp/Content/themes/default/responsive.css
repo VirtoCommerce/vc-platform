@@ -2104,7 +2104,8 @@
 
     /* --- Cart --- */
     .article .cart {
-        margin: 30px auto;
+        margin: 0 auto;
+        padding-top: 30px;
         width: 300px;
     }
 
