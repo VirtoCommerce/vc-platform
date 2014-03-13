@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Transactions;
 using System.Web.Mvc;
+using Microsoft.Practices.ObjectBuilder2;
 using Omu.ValueInjecter;
 using PayPal.PayPalAPIInterfaceService;
 using PayPal.PayPalAPIInterfaceService.Model;
@@ -178,7 +177,7 @@ namespace VirtoCommerce.Web.Controllers
         public ActionResult ProcessCheckout(CheckoutModel checkoutModel)
         {
             //Need to submit changes again to make sure cart is still valid
-            SubmitChanges(checkoutModel);
+            RecalculateCart(checkoutModel);
 
             if (!ModelState.IsValid)
             {
@@ -615,6 +614,9 @@ namespace VirtoCommerce.Web.Controllers
 
             // run workflow
             Ch.RunWorkflow("ShoppingCartPrepareWorkflow");
+
+            //Update payments
+            Ch.OrderForm.Payments.ForEach(p => p.Amount = p.OrderForm.Total);
 
             // save changes
             Ch.SaveChanges();
