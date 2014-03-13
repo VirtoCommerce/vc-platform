@@ -21,6 +21,7 @@ using VirtoCommerce.Web.Client.Services.Emails;
 using VirtoCommerce.Web.Client.Services.Security;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Virto.Helpers;
+using WebGrease.Css.Extensions;
 
 
 namespace VirtoCommerce.Web.Controllers
@@ -606,8 +607,16 @@ namespace VirtoCommerce.Web.Controllers
                 throw new UnauthorizedAccessException();
             }
 
+            //Convert order forms to shopping cart
+            order.OrderForms.ForEach(f=>f.Name = CartHelper.CartName);
+
             var ch = new CartHelper(CartHelper.CartName);
             ch.Add(order);
+
+            if (String.IsNullOrEmpty(ch.Cart.BillingCurrency))
+            {
+                ch.Cart.BillingCurrency = UserHelper.CustomerSession.Currency;
+            }
 
             // run workflows
             ch.RunWorkflow("ShoppingCartPrepareWorkflow");

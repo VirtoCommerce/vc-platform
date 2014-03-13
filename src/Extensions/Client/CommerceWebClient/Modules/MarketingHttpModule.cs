@@ -65,7 +65,10 @@ namespace VirtoCommerce.Web.Client.Modules
 
             //Update prices in current currency
             var helper = new CartHelper(CartHelper.CartName);
-            if (!helper.IsEmpty && session.Currency != helper.Cart.BillingCurrency)
+            if (!helper.IsEmpty && 
+                !string.IsNullOrEmpty(session.Currency) && 
+                !string.IsNullOrEmpty(helper.Cart.BillingCurrency) && 
+                session.Currency != helper.Cart.BillingCurrency)
             {
                 helper.RunWorkflow("ShoppingCartValidateWorkflow");
                 helper.SaveChanges();

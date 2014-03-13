@@ -436,6 +436,9 @@ namespace VirtoCommerce.Web.Controllers
             var model = (CheckoutModel)TempData["checkout_" + token] ?? PrepareCheckoutModel(new CheckoutModel());
             model.Payments = model.Payments ?? GetPayments().ToArray();
 
+            //Resave LastOrderId
+            TempData["LastOrderId"] = TempData["LastOrderId"];
+
             var payment = _paymentClient.GetPaymentMethod(model.PaymentMethod ?? "Paypal");
             var configMap = payment.CreateSettings();
 
@@ -475,7 +478,7 @@ namespace VirtoCommerce.Web.Controllers
 
                     if (details.CheckoutStatus.Equals("PaymentActionCompleted", StringComparison.OrdinalIgnoreCase))
                     {
-                        UserHelper.CustomerSession.LastOrderId = TempData["LastOrderId"].ToString();
+                        UserHelper.CustomerSession.LastOrderId = TempData["LastOrderId"] as string;
                         return RedirectToAction("ProcessCheckout", "Checkout", new { id = UserHelper.CustomerSession.LastOrderId });
                     }
 
