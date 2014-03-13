@@ -13,6 +13,7 @@ using VirtoCommerce.Foundation.Catalogs.Services;
 using VirtoCommerce.Foundation.Customers.Services;
 using VirtoCommerce.Foundation.Data.Orders;
 using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Foundation.Frameworks.Currencies;
 using VirtoCommerce.Foundation.Orders;
 using VirtoCommerce.Foundation.Orders.Factories;
 using VirtoCommerce.Foundation.Orders.Repositories;
@@ -104,6 +105,7 @@ namespace VirtoCommerce.ManagementClient.Order
 			_container.RegisterType<IPriceListAssignmentEvaluator, PriceListAssignmentEvaluator>();
 			_container.RegisterType<IPriceListAssignmentEvaluationContext, PriceListAssignmentEvaluationContext>();
 			_container.RegisterType<ICustomerSessionService, CustomerSessionService>();
+            _container.RegisterType<ICurrencyService, CurrencyService>(new ContainerControlledLifetimeManager());
 
 			_container.RegisterType<IOrderRepository, DSOrderClient>();
 			_container.RegisterType<ICountryRepository, DSOrderClient>();
