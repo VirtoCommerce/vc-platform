@@ -17,7 +17,7 @@ namespace VirtoCommerce.Web.Controllers
 	/// Class ControllerBase.
 	/// </summary>
     [Localize(Order = 1)]
-    [Canonicalized(Order = 2)]
+    [Canonicalized(typeof(AccountController), Order = 2)]
 	public abstract class ControllerBase : Controller
 	{
 

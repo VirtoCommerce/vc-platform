@@ -16,15 +16,21 @@ namespace VirtoCommerce.Web.Client.Extensions.Filters
     public class CanonicalizedAttribute : ActionFilterAttribute
     {
         private readonly bool _usePermanentRedirect;
+        private readonly Type[] _skipControllers;
 
-        public CanonicalizedAttribute() : this(true) { }
-        public CanonicalizedAttribute(bool usePermanentRedirect)
+        public CanonicalizedAttribute(params Type[] skipControllers) : this(true, skipControllers) { }
+        public CanonicalizedAttribute(bool usePermanentRedirect, params Type[] skipControllers)
         {
             _usePermanentRedirect = usePermanentRedirect;
+            _skipControllers = skipControllers;
         }
 
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
+            if (_skipControllers.Any(x => filterContext.ActionDescriptor.ControllerDescriptor.ControllerType == x))
+            {
+                return;
+            }
             var context = filterContext.HttpContext;
 
             // don't 'rewrite' POST requests, child action and ajax requests
