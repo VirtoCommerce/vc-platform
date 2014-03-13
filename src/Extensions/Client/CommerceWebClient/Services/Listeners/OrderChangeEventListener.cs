@@ -61,8 +61,9 @@ namespace VirtoCommerce.Web.Client.Services.Listeners
         private void SendNewOrderNotificationsAsync(Order order)
         {
             // the whole function should be async
-            Task.Run(() =>
-                {
+            //TODO: cannot use async here because of PerRequestLifetimeManager for EF repositories
+            //Task.Run(() =>
+            //    {
                     //Create a context object
                     IDictionary<string, object> context = new Dictionary<string, object>();
                     context.Add("order", order);
@@ -91,7 +92,7 @@ namespace VirtoCommerce.Web.Client.Services.Listeners
                             SendEmail(notifyTemplate, store.Email);
                         }
                     }
-                });
+               // });
         }
 
         /// <summary>
