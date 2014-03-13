@@ -42,7 +42,7 @@
 
 				if(typeof callBack === 'function')
 				{
-					callBack();
+					callBack(e);
 				}
 			}
 		});
@@ -179,7 +179,11 @@
 
 		// Search for mobile
 		$('.header .head-top-block .control').click(function (){
-			$(this).parent().toggleClass('opened');
+		    $(this).parent().toggleClass('opened');
+		    window.Other.closestObject('.header .head-top-block', '', function ()
+		    {
+		        $('.header .head-top-block').removeClass('opened');
+		    });
 		});
 
 		// Events for dropdowns
