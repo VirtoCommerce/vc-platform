@@ -2,400 +2,400 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
     <Fragment>
         <DirectoryRef Id="Admin">
-            <Component Id="cmp81FB0DA5EF60334A2D0549AF653BF353" Guid="{F94A6621-F0A5-443D-8A98-CEC6DE20EB4D}">
+            <Component Id="cmp81FB0DA5EF60334A2D0549AF653BF353" Guid="{6D00AF12-3132-4E9F-9DB2-EE937A321959}">
                 <File Id="filE5A77A69DF03A3EC47AAC606F97CBE70" KeyPath="yes" Source="$(var.AdminPath)\setup.exe" />
             </Component>
-            <Component Id="cmp9AB8FBF9EF3E014583A950B6739EF021" Guid="{841732CA-00E2-4151-A3A5-E65F8D944F6A}">
+            <Component Id="cmp9AB8FBF9EF3E014583A950B6739EF021" Guid="{BC84FDE4-8A23-4C1B-A0D7-A2CA888B5FAF}">
                 <File Id="filF4FA50156AFB3C5D6E7269EA6EB6CD75" KeyPath="yes" Source="$(var.AdminPath)\VirtoCommerce.application" />
             </Component>
             <Directory Id="dir2C3B4A64132E8B76E01A63FBDB544EC5" Name="Application Files">
                 <Directory Id="dir12457D3C2F0E37829A3A7CE1A32666FE" Name="VirtoCommerce_$(var.Version)">
-                    <Component Id="cmp29FCC2CF77DE1A1A2E08A50595903987" Guid="{8BA74249-E834-4434-9F6D-996BD08C39FB}">
+                    <Component Id="cmp29FCC2CF77DE1A1A2E08A50595903987" Guid="{81BDC8D8-EF04-43C2-90AF-CD6053766B2C}">
                         <File Id="fil1D59883263A7272209C0A6B76DE21DA6" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\AppConfig.config.deploy" />
                     </Component>
-                    <Component Id="cmp4FE0384366B8A7DC5F7728D439288AD0" Guid="{B43C7A6C-50AB-47F3-9287-F91854525F48}">
+                    <Component Id="cmp4FE0384366B8A7DC5F7728D439288AD0" Guid="{E96D17DE-F888-42A6-A9D2-9A174B0F9711}">
                         <File Id="fil1D1D9CEA08CB282154C522C014F8DA94" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Asset.config.deploy" />
                     </Component>
-                    <Component Id="cmp67DA225F89FCA48A779B962E8A2AF895" Guid="{40B412AF-BCD3-4686-98DA-FD8D5F03E3FD}">
+                    <Component Id="cmp67DA225F89FCA48A779B962E8A2AF895" Guid="{3260F041-1522-404E-AF83-E41B51BBEB7C}">
                         <File Id="fil54AFB61724A3EA04B567AD705E1AD58D" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Catalog.config.deploy" />
                     </Component>
-                    <Component Id="cmp78B89DE6A4E46D4C623FC47749C63C61" Guid="{211B51AE-2103-46F9-BFD7-D4A7BA35211E}">
+                    <Component Id="cmp78B89DE6A4E46D4C623FC47749C63C61" Guid="{287DAF1F-690C-4CF2-B87D-85B1E5998E71}">
                         <File Id="fil9BB1965384B0BAAE6B012B58897B2AB6" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\connectionStrings.local.config.deploy" />
                     </Component>
-                    <Component Id="cmp64583766A80162061186CD5FDDC901EC" Guid="{E4386681-988C-49A0-9D00-E3358A0634AD}">
+                    <Component Id="cmp64583766A80162061186CD5FDDC901EC" Guid="{FE51B80F-EDF0-4A5B-9499-3010D4B629B3}">
                         <File Id="fil479F9BF5F27BAFC5F6C7C21ADEFDC5CB" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Customer.config.deploy" />
                     </Component>
-                    <Component Id="cmp92260D4197EF244BD9D489E35C0A01D7" Guid="{BF8D6892-5687-4344-A2DB-1B33155CC679}">
+                    <Component Id="cmp92260D4197EF244BD9D489E35C0A01D7" Guid="{9D198410-F598-435C-9817-7ED8CBD930AF}">
                         <File Id="fil3354C6A0821C41467353D250510FCDE0" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\DynamicContent.config.deploy" />
                     </Component>
-                    <Component Id="cmp942C2D308119EC2594F02D0A00AF1FC2" Guid="{7A191B44-8F67-498D-B6B6-A46D538CC6DE}">
+                    <Component Id="cmp942C2D308119EC2594F02D0A00AF1FC2" Guid="{63E32F68-EF86-47E8-BB51-8644881AC168}">
                         <File Id="fil38E16C8F028AB08A480D83D84F44DBB7" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\EntityFramework.dll.deploy" />
                     </Component>
-                    <Component Id="cmpC3109B854A537CC7BB5EAA6A0BA6F691" Guid="{139B8C3F-3B43-43EA-B13E-7CC6DA458EC2}">
+                    <Component Id="cmpC3109B854A537CC7BB5EAA6A0BA6F691" Guid="{14EF474F-72AB-4E6D-AA04-A78A4EE40EE8}">
                         <File Id="fil94732A11516BD8907E0875F0DD96AAD6" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\EntityFramework.SqlServer.dll.deploy" />
                     </Component>
-                    <Component Id="cmp7C5120918CFDC9305E7428E883A52024" Guid="{7454E6AB-AEEA-4D1C-BCD6-935781B3D753}">
+                    <Component Id="cmp7C5120918CFDC9305E7428E883A52024" Guid="{D730BA72-17A0-404D-9411-ADE420BBED17}">
                         <File Id="fil5B71A59BDF7F3ECDB7D773236FEBE554" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\EPPlus.dll.deploy" />
                     </Component>
-                    <Component Id="cmp7D05B5AA649D9951F6064898C729D8C4" Guid="{A3FD69DB-4E04-4F72-B862-CCF02281C54B}">
+                    <Component Id="cmp7D05B5AA649D9951F6064898C729D8C4" Guid="{3AB68693-D41B-43BD-8CD9-4B20EB5EF066}">
                         <File Id="fil45094A19388FE77F6F53C021183FA0E5" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\ExpressionSerialization.dll.deploy" />
                     </Component>
-                    <Component Id="cmp447021E7DE9449E11D45CA59FD936DDB" Guid="{E9F02A96-C192-4FC2-B934-825B9BA1AE78}">
+                    <Component Id="cmp447021E7DE9449E11D45CA59FD936DDB" Guid="{1DFA6C24-67DA-45B2-A0F6-E2AE47593064}">
                         <File Id="fil5B933E7C8AE93614104D5E273F6C981A" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Import.config.deploy" />
                     </Component>
-                    <Component Id="cmp5A775C5DE18EC5E8B5C781E87D31317F" Guid="{0DA4E630-BDE7-430C-843B-96EC270896FE}">
+                    <Component Id="cmp5A775C5DE18EC5E8B5C781E87D31317F" Guid="{EDC07C11-CE3F-40EF-8880-84CA2C0AC3D5}">
                         <File Id="fil42E01A7AD487710A3209D0C8841F6CF7" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Inventory.config.deploy" />
                     </Component>
-                    <Component Id="cmpB359AEFF1E314C8BB685F8E60CF42701" Guid="{7C01230D-372B-485D-AC9F-34E72D7F140C}">
+                    <Component Id="cmpB359AEFF1E314C8BB685F8E60CF42701" Guid="{4392A532-C50F-4063-9EAF-A642AA8A0F3A}">
                         <File Id="fil9D59FB45058930AFAD1A63662D534BDC" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\itextsharp.dll.deploy" />
                     </Component>
-                    <Component Id="cmp5EBF5ABD8C04F2A87E20A46D713ADB7C" Guid="{D4EFD68A-93DA-443B-B0D4-C6B0A4AC335C}">
+                    <Component Id="cmp5EBF5ABD8C04F2A87E20A46D713ADB7C" Guid="{0C049245-FAF3-4229-9115-969210271772}">
                         <File Id="fil21FDBE9A671C7E6A91006D280B537C88" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\itextsharp.pdfa.dll.deploy" />
                     </Component>
-                    <Component Id="cmpAD1039D59E6BFF028BC17B9AA54D138D" Guid="{989910C3-6C20-41FD-A33B-1D89D487E31D}">
+                    <Component Id="cmpAD1039D59E6BFF028BC17B9AA54D138D" Guid="{6A8DCF77-A554-4D2A-B64D-0E1042014AD7}">
                         <File Id="fil2077DACBDE0574085DFD28817610FD88" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\KeyboardShortcuts.xml.deploy" />
                     </Component>
-                    <Component Id="cmpCDF5CA17DEF2620C6ED34E7EA120D2B6" Guid="{62146B63-7FEE-4261-8CD4-259ACF4CFBCB}">
+                    <Component Id="cmpCDF5CA17DEF2620C6ED34E7EA120D2B6" Guid="{580AC48C-69D8-4296-8257-B0EC964E9C9F}">
                         <File Id="fil80FDF78771A1E37F977E91074C8DAE6E" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Marketing.config.deploy" />
                     </Component>
-                    <Component Id="cmpC35CF6040C212291909765962B53989C" Guid="{66549A2C-E51E-4E57-B736-C09E70E8DC1A}">
+                    <Component Id="cmpC35CF6040C212291909765962B53989C" Guid="{DCCF13E0-0134-45A2-A9E9-0E5AA6273FD9}">
                         <File Id="fil2E6FECD1A3AAA679D46E511FD4118E32" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Microsoft.Data.Edm.dll.deploy" />
                     </Component>
-                    <Component Id="cmpEDE4C5085FF2E0E34B14C47E21E18204" Guid="{E6E67D64-3B7D-4D55-9C96-5377C35FE6E8}">
+                    <Component Id="cmpEDE4C5085FF2E0E34B14C47E21E18204" Guid="{9C93F085-F270-46B3-93F9-B5C7B307E173}">
                         <File Id="fil28B401B8D74F6C0D66BDF34C1DB07015" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Microsoft.Data.OData.dll.deploy" />
                     </Component>
-                    <Component Id="cmpF3C3F09CAD75EF659D9729FE302D6120" Guid="{B2C2D0C8-2DB7-45FB-81CC-D989E1021E4A}">
+                    <Component Id="cmpF3C3F09CAD75EF659D9729FE302D6120" Guid="{47494657-CB60-466A-B84B-29F5723858A9}">
                         <File Id="fil4E3E223D2AABF041AFB3039AA966707E" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Microsoft.Data.Services.Client.dll.deploy" />
                     </Component>
-                    <Component Id="cmp495CDB086A4F45A093372ED115F91D49" Guid="{0A69662A-F0DF-48CF-AABB-033017A0B131}">
+                    <Component Id="cmp495CDB086A4F45A093372ED115F91D49" Guid="{B67570B6-DBCA-4D73-AB31-F18275863FBF}">
                         <File Id="filF50C1D6CD9C45578341A42E9A9979C94" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Microsoft.Data.Services.dll.deploy" />
                     </Component>
-                    <Component Id="cmpE0CDFD45366F43AF5EA9814D2A0BCB1F" Guid="{64557774-6CEA-4A2B-9BE9-8C3C23A6CCF0}">
+                    <Component Id="cmpE0CDFD45366F43AF5EA9814D2A0BCB1F" Guid="{837A71C9-602A-404E-9822-AF2D6C58C920}">
                         <File Id="fil93D4AFE6526E13F2310598751ECC5CB5" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Microsoft.Expression.Controls.dll.deploy" />
                     </Component>
-                    <Component Id="cmp0C9642885E06EBDDCF786AE9C9C6FC9B" Guid="{0B9DAD79-7841-47D9-BB16-B1BF754A8294}">
+                    <Component Id="cmp0C9642885E06EBDDCF786AE9C9C6FC9B" Guid="{88A0D65C-EFAE-4BFC-B2A4-F9FA7B3A872C}">
                         <File Id="filCD4BAE843B394A3185BDA1B3961BD46D" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Microsoft.Expression.Drawing.dll.deploy" />
                     </Component>
-                    <Component Id="cmpC88C289E68D39015F6DC639F2EB0EC78" Guid="{BD8D1185-763E-4DD3-8CF2-C3B2D2DD47D0}">
+                    <Component Id="cmpC88C289E68D39015F6DC639F2EB0EC78" Guid="{3BFD2930-4AEB-4D39-913B-4048F0815222}">
                         <File Id="filA20F1139220F20AA14F1508C3227E3F5" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Microsoft.Expression.Interactions.dll.deploy" />
                     </Component>
-                    <Component Id="cmpDAAC539A96D4170252EC65D938362363" Guid="{D56BCDC2-5B63-4847-9A51-E994079F6E0F}">
+                    <Component Id="cmpDAAC539A96D4170252EC65D938362363" Guid="{98CA904D-E60F-4705-A275-A1E7EF1C273D}">
                         <File Id="fil5EAEFE2579D89A5EA8DFC9920382B3D1" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Microsoft.OData.EntityFrameworkProvider.dll.deploy" />
                     </Component>
-                    <Component Id="cmp315776486555F755F33E93F65783E56A" Guid="{F8911054-75BE-42BE-9CDC-D2A5953A3D54}">
+                    <Component Id="cmp315776486555F755F33E93F65783E56A" Guid="{808F790F-5CCB-4531-9297-8D32B4B39903}">
                         <File Id="fil6706522A8B5D1A1E9C105EDDFEED49E8" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Microsoft.Practices.Prism.dll.deploy" />
                     </Component>
-                    <Component Id="cmpBAA7896C729488F09D84BFBAE5137CF6" Guid="{88536B36-E295-4A24-976A-F2AE022E95E9}">
+                    <Component Id="cmpBAA7896C729488F09D84BFBAE5137CF6" Guid="{ACEB9030-22A1-4C36-9676-3CE4CF81993E}">
                         <File Id="fil5F443A4ADA4F0DADE60DA622C3D34077" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Microsoft.Practices.Prism.Interactivity.dll.deploy" />
                     </Component>
-                    <Component Id="cmp8E101241CDAA70A9F5AD6172A384D606" Guid="{AB1D66AF-918A-43E0-B8DD-C933010AC9A1}">
+                    <Component Id="cmp8E101241CDAA70A9F5AD6172A384D606" Guid="{8EB30B8B-6BE9-4738-8392-02D2717DA8AE}">
                         <File Id="fil2E58B33E8ECAD3D9180A5A0875976075" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Microsoft.Practices.Prism.UnityExtensions.dll.deploy" />
                     </Component>
-                    <Component Id="cmp6B67AEF1D5672BF86FCE5F534364B7CF" Guid="{A81BAF51-30DC-437A-8041-3DE8DCC948CF}">
+                    <Component Id="cmp6B67AEF1D5672BF86FCE5F534364B7CF" Guid="{D85374BF-AB46-42BE-8AFF-7FD3225F09BE}">
                         <File Id="fil3AFDB6938D4602B2A67CF42385B4D646" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Microsoft.Practices.ServiceLocation.dll.deploy" />
                     </Component>
-                    <Component Id="cmp98A899F6329ADFC0BD89ED179286FCD8" Guid="{75EFE6A3-73BE-430D-8627-243EEF275D90}">
+                    <Component Id="cmp98A899F6329ADFC0BD89ED179286FCD8" Guid="{4C31E157-3AFC-4F1C-BB3C-8785F65B6629}">
                         <File Id="filBBA5036485AF07D0022BABFE063F2C9D" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Microsoft.Practices.Unity.Configuration.dll.deploy" />
                     </Component>
-                    <Component Id="cmpB7B6C57431EB5790F149E6D4176836B8" Guid="{FEAD1F5C-8065-4E0C-BBEB-BBD1AAB28285}">
+                    <Component Id="cmpB7B6C57431EB5790F149E6D4176836B8" Guid="{83C31CBD-0449-43C2-B766-E5995C6D9EAE}">
                         <File Id="fil15794FBD622A647FD49B76F662CA5CEF" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Microsoft.Practices.Unity.dll.deploy" />
                     </Component>
-                    <Component Id="cmp590E0C12DF7989C5A4C5ED520FBE42ED" Guid="{C18BD895-5234-4484-9943-461ECF939E09}">
+                    <Component Id="cmp590E0C12DF7989C5A4C5ED520FBE42ED" Guid="{7FB4A82A-0ED9-4FBA-808D-BFE0ACE29FEF}">
                         <File Id="fil1F39601E24AB7D8EFAE16AB2B355F3BC" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Microsoft.ReportViewer.Common.dll.deploy" />
                     </Component>
-                    <Component Id="cmp730F2C5D50AC904B51F33898019EB4AF" Guid="{6C83A94F-20FB-455D-ADFC-92EE7D87E551}">
+                    <Component Id="cmp730F2C5D50AC904B51F33898019EB4AF" Guid="{BAF0BA58-74AC-4BD3-8B54-437466B51C9A}">
                         <File Id="filA08B9205E65C57B1596002BC50B3BF4C" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Microsoft.ReportViewer.DataVisualization.dll.deploy" />
                     </Component>
-                    <Component Id="cmp5A970D4677DA8D4AC32A087D3A57C005" Guid="{BF9C77A3-A10A-40E4-8331-AD828AE76E33}">
+                    <Component Id="cmp5A970D4677DA8D4AC32A087D3A57C005" Guid="{E152B8D9-B8CB-4274-A601-0B28C29A2E11}">
                         <File Id="fil859ABBF759FC5F838D49A09B95292B72" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Microsoft.ReportViewer.ProcessingObjectModel.dll.deploy" />
                     </Component>
-                    <Component Id="cmp6A93F6347D0EABE439BD3C9162D3B2C4" Guid="{9CD28601-3A14-48A1-94D6-4F987A582D42}">
+                    <Component Id="cmp6A93F6347D0EABE439BD3C9162D3B2C4" Guid="{5890C755-4296-4294-8C87-9B09E2E44A67}">
                         <File Id="fil3B1A4A0565B80E24F2584BCD117E0096" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Microsoft.ReportViewer.WinForms.dll.deploy" />
                     </Component>
-                    <Component Id="cmpF8BF058B89FCDD0C68A2BCF7DD0DD25C" Guid="{04858FBD-A80D-48E3-A93D-CF6DE633C7B7}">
+                    <Component Id="cmpF8BF058B89FCDD0C68A2BCF7DD0DD25C" Guid="{AE0315C0-3B79-4B00-BCE7-4D512E716358}">
                         <File Id="fil92F7EEB09A9A508D13852398776DD920" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Microsoft.SqlServer.Types.dll.deploy" />
                     </Component>
-                    <Component Id="cmp729BDCB9373064DE5EE729E15BB73384" Guid="{11E080A5-40F1-4373-8F71-799F4827F70D}">
+                    <Component Id="cmp729BDCB9373064DE5EE729E15BB73384" Guid="{88703B5D-7FCF-49A3-9162-456C54366FBE}">
                         <File Id="fil3C501022DF4B5AC2DB9FC6E4950E6DDD" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Microsoft.WindowsAzure.Configuration.dll.deploy" />
                     </Component>
-                    <Component Id="cmpE1FC8072425BC51BFFF20CB0DF1EA6D3" Guid="{150E7F50-8C31-478A-B358-5D29EB297596}">
+                    <Component Id="cmpE1FC8072425BC51BFFF20CB0DF1EA6D3" Guid="{74881B62-B2A4-4CEA-90A4-8699566029CC}">
                         <File Id="fil7C1E7CAA65173F0657A6B6D2D0BC8836" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Omu.ValueInjecter.dll.deploy" />
                     </Component>
-                    <Component Id="cmp57500C555D212097D4DE4CE2DD98B3ED" Guid="{54F7F4FC-08A6-4C39-BD1D-6FD3E0E7DAA6}">
+                    <Component Id="cmp57500C555D212097D4DE4CE2DD98B3ED" Guid="{C0FF13E7-E3F6-44DF-B868-DC523BC618B8}">
                         <File Id="fil7D33EDC302046E92951C834D2C7C0F22" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Order.config.deploy" />
                     </Component>
-                    <Component Id="cmp9599F1DB2EEC0A3268E86BA331FBAC33" Guid="{F6015C58-7DCD-41D1-9A9A-111DA163E425}">
+                    <Component Id="cmp9599F1DB2EEC0A3268E86BA331FBAC33" Guid="{E9CFD20D-F891-4C4F-ADAE-DEE6A03DF2BD}">
                         <File Id="fil98A93D26E9028F19AD6F7FD832B6CDDA" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\PdfRpt.dll.deploy" />
                     </Component>
-                    <Component Id="cmpA76E8EDEAE2B1A321956614C5A5D2236" Guid="{E6C32419-B13E-4335-9781-F92FFB83E3D7}">
+                    <Component Id="cmpA76E8EDEAE2B1A321956614C5A5D2236" Guid="{56E8F359-E0D0-46C8-B5F4-42A9B6F36B8E}">
                         <File Id="fil93E2B0F6700E718F66C74F9BAEE7D022" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Reporting.config.deploy" />
                     </Component>
-                    <Component Id="cmpE41DFA055CF6F3429BBA2262CC43F4B0" Guid="{83A8C410-DDF4-46EF-B932-0CEE541BD858}">
+                    <Component Id="cmpE41DFA055CF6F3429BBA2262CC43F4B0" Guid="{2DF2864B-00A2-4FF4-BE7B-A879198CD1F1}">
                         <File Id="filBE3B110A9254D3E5E925F412BBC6C385" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\RequestEngine.dll.deploy" />
                     </Component>
-                    <Component Id="cmp478246A3C4B1653C280F81724BF6C737" Guid="{97E9CAA2-3FA3-4628-9201-B4951763DC9C}">
+                    <Component Id="cmp478246A3C4B1653C280F81724BF6C737" Guid="{0FB4F1C8-31D0-479B-9FD7-2292344566E7}">
                         <File Id="fil372EED8D97E9CD4F93DF01B0DB449DCF" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Review.config.deploy" />
                     </Component>
-                    <Component Id="cmpAC5D3236A62EFC14D4FDF0089C6DFB55" Guid="{0EE8A7E6-A97B-40F9-BEAD-5417FC287C01}">
+                    <Component Id="cmpAC5D3236A62EFC14D4FDF0089C6DFB55" Guid="{C47780ED-84D0-427D-93D5-C077596CA0EE}">
                         <File Id="filB00CB96514E09753B2D754FB0B041807" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Search.config.deploy" />
                     </Component>
-                    <Component Id="cmpF05814656EA682797932D987E7C7BEB1" Guid="{71FDE255-F426-4838-A823-BF3D327393F3}">
+                    <Component Id="cmpF05814656EA682797932D987E7C7BEB1" Guid="{96AF92FB-7189-46E2-AF47-E2F0A7AEDB4A}">
                         <File Id="filCD75E2773517C4578959F1ACB2238218" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Security.config.deploy" />
                     </Component>
-                    <Component Id="cmp091B8C693B1A7277DBA91F36C628C62F" Guid="{F42E9221-74F4-4D6C-9C40-4DAB93D72987}">
+                    <Component Id="cmp091B8C693B1A7277DBA91F36C628C62F" Guid="{A990B90A-B3FD-45D8-A7FC-59816CAA7CA5}">
                         <File Id="filCC81865B506BD122222EA3D109194072" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Stores.config.deploy" />
                     </Component>
-                    <Component Id="cmpF93859EC849725394084BACEAF372B23" Guid="{236B28EF-E598-4804-90DF-011C98AFC64D}">
+                    <Component Id="cmpF93859EC849725394084BACEAF372B23" Guid="{3CE11178-7619-433F-BF61-9B024AE58BED}">
                         <File Id="filDAA654F2893988361B5E6A1E812CC307" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\System.Spatial.dll.deploy" />
                     </Component>
-                    <Component Id="cmpCC7CF117920FF5861385F5F2A2E5D43F" Guid="{49B11D09-5888-4368-B530-F09407A7FE40}">
+                    <Component Id="cmpCC7CF117920FF5861385F5F2A2E5D43F" Guid="{858DC3B6-73A0-462F-AF82-77D269AFFF0E}">
                         <File Id="fil2733928DA60439E87F401024E2035C74" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\System.Windows.Controls.DataVisualization.Toolkit.dll.deploy" />
                     </Component>
-                    <Component Id="cmpF854C42DEBEA8D603BC0C613B30F0EE7" Guid="{8987C033-AE75-4C44-9C72-5754B9C51D7E}">
+                    <Component Id="cmpF854C42DEBEA8D603BC0C613B30F0EE7" Guid="{6FC7B02F-9EF1-40A6-BA9E-A27CDCE2E7D4}">
                         <File Id="fil5276C728AB8755318BAA778B0A2C2348" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\System.Windows.Controls.Input.Toolkit.dll.deploy" />
                     </Component>
-                    <Component Id="cmpE89E7FA127E30A1B8327ADE1D2303857" Guid="{4BBF60C2-E656-486D-9692-1970E834201E}">
+                    <Component Id="cmpE89E7FA127E30A1B8327ADE1D2303857" Guid="{BE2022E0-0820-4031-824D-58478DAA257C}">
                         <File Id="fil7694198F15BA5A60B20B78296A432C9F" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\System.Windows.Controls.Layout.Toolkit.dll.deploy" />
                     </Component>
-                    <Component Id="cmp51E0ED047197724D3A23259062792963" Guid="{2B71A87B-3ED3-4C65-9EE9-8FB3F0440BCC}">
+                    <Component Id="cmp51E0ED047197724D3A23259062792963" Guid="{2237125D-E244-438F-8E3D-F053FE4EBC93}">
                         <File Id="filD5F61F2CC2A64ED492213793AABB92C9" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\System.Windows.Interactivity.dll.deploy" />
                     </Component>
-                    <Component Id="cmp331150E5A95A05D18EDF22CE6434407A" Guid="{1AF4EE6C-0485-4C08-A739-E566ECF42667}">
+                    <Component Id="cmp331150E5A95A05D18EDF22CE6434407A" Guid="{ABA94229-2E96-4775-8EA6-5DC9FE985777}">
                         <File Id="filD8A0DD1DB3E242CFA708C60505F99D82" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\VirtoCommerce.Caching.HttpCache.dll.deploy" />
                     </Component>
-                    <Component Id="cmpC18F91F5DC728F2E1BD55F974FD691CB" Guid="{15A830AF-D6B4-4B24-9FF8-A455F16AB8F0}">
+                    <Component Id="cmpC18F91F5DC728F2E1BD55F974FD691CB" Guid="{73ED26E4-F23D-4ADB-9E71-5B1F50E3A376}">
                         <File Id="filB41051BC25076AFDA9ACCB149C1B5E4B" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\VirtoCommerce.Client.dll.deploy" />
                     </Component>
-                    <Component Id="cmpA3276CC00C193C0C06B39F0BCC60C5FB" Guid="{31014255-434F-4854-87C5-AD2880F38418}">
+                    <Component Id="cmpA3276CC00C193C0C06B39F0BCC60C5FB" Guid="{F632FEE3-1DF4-489C-87F1-6E7D3E900BE2}">
                         <File Id="fil04428413BD0AB36E35FD9CDDD5DA48DC" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\VirtoCommerce.exe.config.deploy" />
                     </Component>
-                    <Component Id="cmpB4251177435AF29E2184670F310B703A" Guid="{43CD4C40-BA9F-454F-AB81-CA5B654FB975}">
+                    <Component Id="cmpB4251177435AF29E2184670F310B703A" Guid="{83D730DE-8E4A-4765-AEDB-5A531151B8EC}">
                         <File Id="filB1F29DD21BD481DAF2655143CF9ADF00" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\VirtoCommerce.exe.deploy" />
                     </Component>
-                    <Component Id="cmpADB6BCE8300C0589060EB60138530A41" Guid="{4FBEF334-BFC8-49E4-96E3-8E0FCEA781DD}">
+                    <Component Id="cmpADB6BCE8300C0589060EB60138530A41" Guid="{0AA68925-9AE4-46BB-B82D-CEC68927A8F5}">
                         <File Id="filD0497426233F0D1DC60D4B976A7462A4" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\VirtoCommerce.exe.manifest" />
                     </Component>
-                    <Component Id="cmpEAF6F89271EB62A831EF3899768803AF" Guid="{36002D14-58D6-4BAD-B22A-CD397D466FBF}">
+                    <Component Id="cmpEAF6F89271EB62A831EF3899768803AF" Guid="{F375A481-F3B7-4A0F-B2CA-41EF44DAA505}">
                         <File Id="fil825A295225B0A556B967DFD74AC07EE1" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\VirtoCommerce.Foundation.Data.dll.deploy" />
                     </Component>
-                    <Component Id="cmpD4FE890D6FA14E9EE757A43F41F923E9" Guid="{6EE3D43E-5D1B-4B66-94E3-EAE42E207BCD}">
+                    <Component Id="cmpD4FE890D6FA14E9EE757A43F41F923E9" Guid="{D30FD8A3-6B77-4C26-8508-5646BF7B27D0}">
                         <File Id="fil219D4C0E105FC5F024ACCB48AE5900B2" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\VirtoCommerce.Foundation.dll.deploy" />
                     </Component>
-                    <Component Id="cmp365229C4E5A1E35B3353C80E51658162" Guid="{C69CEF95-BAC7-4C57-9FD1-583E05EB44BB}">
+                    <Component Id="cmp365229C4E5A1E35B3353C80E51658162" Guid="{9E02FADF-8E49-4D1B-9B89-A944A01060ED}">
                         <File Id="filB88F92DBB44711122934791BD74800A1" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\VirtoCommerce.ManagementClient.AppConfig.dll.deploy" />
                     </Component>
-                    <Component Id="cmp3AABC7CD19A9AF022AFD72E411F79F84" Guid="{22D2A9B4-E264-4672-9639-21FFD5DD4747}">
+                    <Component Id="cmp3AABC7CD19A9AF022AFD72E411F79F84" Guid="{31F4F1BE-B065-4705-ABA9-441619E9F9BC}">
                         <File Id="fil2BCC96C7D02BAD5C6A308DE0D4E0B93B" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\VirtoCommerce.ManagementClient.Asset.dll.deploy" />
                     </Component>
-                    <Component Id="cmp2A3ABD4D285C2617D798E22DC20A1573" Guid="{93FFE1D9-0445-41CE-B2F0-1ECCABA50C85}">
+                    <Component Id="cmp2A3ABD4D285C2617D798E22DC20A1573" Guid="{30FDF5E4-D729-4C09-9433-72FE7ED09965}">
                         <File Id="fil44D6F5AD51EAEDE46D107229DA1598C9" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\VirtoCommerce.ManagementClient.Catalog.dll.deploy" />
                     </Component>
-                    <Component Id="cmp5E07C5F733EE7CCB3232344B6DA45170" Guid="{F8E496D3-7D9C-491C-98C5-D83123F22D39}">
+                    <Component Id="cmp5E07C5F733EE7CCB3232344B6DA45170" Guid="{07CDCBBE-9438-4190-8DE9-D1E498EA98E2}">
                         <File Id="filBCC50F0126C28263680E1BBD470FEE05" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\VirtoCommerce.ManagementClient.Configuration.dll.deploy" />
                     </Component>
-                    <Component Id="cmp375ED550C0044E48C9591FB50D8EB05D" Guid="{5CD4880B-8575-4F8A-8BD8-E2AEF13C2861}">
+                    <Component Id="cmp375ED550C0044E48C9591FB50D8EB05D" Guid="{3554CB06-16CD-46D0-95DA-A4DD46EB82C4}">
                         <File Id="fil303BC03386509A06AB369882C1F93F38" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\VirtoCommerce.ManagementClient.Core.dll.deploy" />
                     </Component>
-                    <Component Id="cmpD2817D42E76D7D23269DFD86EFB2D356" Guid="{9A47350B-C72B-42D3-89AF-5F11E6208724}">
+                    <Component Id="cmpD2817D42E76D7D23269DFD86EFB2D356" Guid="{6FBC8992-D287-4A79-84FB-0890B59C741B}">
                         <File Id="filF46915B26DF6C6C0A495F139D6D77C68" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\VirtoCommerce.ManagementClient.Customers.dll.deploy" />
                     </Component>
-                    <Component Id="cmpF3FBD6181473A4DCB93B3FE4852A7D18" Guid="{7E1E5A9F-1A7C-4C16-96DC-BB9DB60845C2}">
+                    <Component Id="cmpF3FBD6181473A4DCB93B3FE4852A7D18" Guid="{29DFC1D3-60FC-4E66-AC5C-63761922E300}">
                         <File Id="fil997A19B27E71066AD2BC57C10E6298E3" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\VirtoCommerce.ManagementClient.DynamicContent.dll.deploy" />
                     </Component>
-                    <Component Id="cmp428ED04B2ED752F8D9AEDBC7D0B503C9" Guid="{88338CE3-BAB3-4A0B-8BF1-A1896767E05B}">
+                    <Component Id="cmp428ED04B2ED752F8D9AEDBC7D0B503C9" Guid="{01FFBE63-DCE9-4F20-BDA9-E21276649035}">
                         <File Id="filBB84D4BAC8FE75C0F15BDC15B4503A57" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\VirtoCommerce.ManagementClient.Fulfillment.dll.deploy" />
                     </Component>
-                    <Component Id="cmpD1F7D48951CC8ED57ED5928888BF9C4F" Guid="{BCA229A5-67DE-4E17-BD8D-EB84FE06B7AE}">
+                    <Component Id="cmpD1F7D48951CC8ED57ED5928888BF9C4F" Guid="{C6BDDE46-2900-49D2-B853-07EA3AD44277}">
                         <File Id="filC7F6C36EA07136B58C33CDFDA398D71C" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\VirtoCommerce.ManagementClient.Import.dll.deploy" />
                     </Component>
-                    <Component Id="cmp80ECF59669D05F65D0FB7D0FABF60BFD" Guid="{C5E43C59-83DF-47EA-A1CE-A7A3D17E8541}">
+                    <Component Id="cmp80ECF59669D05F65D0FB7D0FABF60BFD" Guid="{D73D551C-67BA-4A9A-8F3B-C3518690292B}">
                         <File Id="fil7EFB229939A9B31B7BC22C02EF8FCE05" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\VirtoCommerce.ManagementClient.Main.dll.deploy" />
                     </Component>
-                    <Component Id="cmp5BDCE81B9E7FF7B6545D9A4210841EB9" Guid="{93126782-8BBF-4F42-9D27-BB2EF45438AD}">
+                    <Component Id="cmp5BDCE81B9E7FF7B6545D9A4210841EB9" Guid="{84BB3BA1-ED3C-4512-A955-3FB2223D3A1F}">
                         <File Id="fil916038E233DFAEB49E10612450BBE664" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\VirtoCommerce.ManagementClient.Marketing.dll.deploy" />
                     </Component>
-                    <Component Id="cmp474A355A9C8C7B78800631CA98D0A070" Guid="{5781F81D-8287-4C37-AF80-AEB3713ECD14}">
+                    <Component Id="cmp474A355A9C8C7B78800631CA98D0A070" Guid="{8B552AEB-2E20-4336-A754-713547658E7E}">
                         <File Id="filCB2D118E4547744BA8F5E54E3C5CCF25" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\VirtoCommerce.ManagementClient.Order.dll.deploy" />
                     </Component>
-                    <Component Id="cmpF09F281F32FB7215AC6FEB260346CE58" Guid="{7A7C667C-0266-4167-A211-7BA941F6A929}">
+                    <Component Id="cmpF09F281F32FB7215AC6FEB260346CE58" Guid="{EF1DF65C-5147-4987-A9C6-454A2E216399}">
                         <File Id="fil6C0C6C3BF37ABC6C229011796A473746" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\VirtoCommerce.ManagementClient.Reporting.dll.deploy" />
                     </Component>
-                    <Component Id="cmp5E806800104D83C88679FCABD236E6B1" Guid="{864D488D-76D4-4D01-8576-69F88B035767}">
+                    <Component Id="cmp5E806800104D83C88679FCABD236E6B1" Guid="{38E47476-169C-4E27-85E6-76115372ECA4}">
                         <File Id="filBF7149870048C54B23F2D929A0B9A24A" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\VirtoCommerce.ManagementClient.Reviews.dll.deploy" />
                     </Component>
-                    <Component Id="cmp29F2024729DCBD7D5B1A312A5F66126D" Guid="{DF93AA1D-E32E-4997-A65A-104D6A46F12F}">
+                    <Component Id="cmp29F2024729DCBD7D5B1A312A5F66126D" Guid="{AF4843E6-2D39-4B18-8385-92F36AF4D2CD}">
                         <File Id="fil00ECFB01B4D904FDDA38EF9CE893C5E7" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\VirtoCommerce.ManagementClient.Security.dll.deploy" />
                     </Component>
-                    <Component Id="cmp768C6732B720815F8DD7D985C80F87C1" Guid="{A9AE943D-E00F-4CD7-A558-4267FE84473A}">
+                    <Component Id="cmp768C6732B720815F8DD7D985C80F87C1" Guid="{30F51146-E55D-4D2E-8B9F-26B1B06D6A46}">
                         <File Id="fil34889ABBDFEF6790796F8BB6F139474F" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Virtoway.WPF.State.dll.deploy" />
                     </Component>
-                    <Component Id="cmp755EFD7A6C7F34E32F0FCF80A72A6BA7" Guid="{FA7B0069-8A00-4BD9-9E04-91CA06866A90}">
+                    <Component Id="cmp755EFD7A6C7F34E32F0FCF80A72A6BA7" Guid="{743D74C5-9BB5-4F88-BFC6-E815C61800EA}">
                         <File Id="fil18AA2B24CBD01BF764496014A863CF04" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\WpfRichText.Ex.dll.deploy" />
                     </Component>
-                    <Component Id="cmp393AB90E546A95612FD409EB9E960DD0" Guid="{46DEA04A-F739-450A-B9CB-1F876C0C82F1}">
+                    <Component Id="cmp393AB90E546A95612FD409EB9E960DD0" Guid="{E60103AA-D75D-46F5-8C77-1CA9A9883F69}">
                         <File Id="fil359F563A0C6804B767D871798EE67B1A" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\WPFToolkit.dll.deploy" />
                     </Component>
-                    <Component Id="cmp52E94137BD24C6A43A7797F49D4F658C" Guid="{9BC4A212-35C4-4E55-876A-556F5DCF3291}">
+                    <Component Id="cmp52E94137BD24C6A43A7797F49D4F658C" Guid="{0898ADA5-A99F-43BF-AD61-BDC809845423}">
                         <File Id="fil3DDDE250646B75DECE88699369E75760" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Xceed.Wpf.DataGrid.dll.deploy" />
                     </Component>
-                    <Component Id="cmpABB049448EF3E3FA2C4BBB6330FE23A4" Guid="{FD23E1ED-78BC-48F2-BD4E-532473952518}">
+                    <Component Id="cmpABB049448EF3E3FA2C4BBB6330FE23A4" Guid="{F166D40C-7055-439C-823C-EC73B027CA66}">
                         <File Id="filC99C8559BFF45279C260DC1567A4DDA2" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Xceed.Wpf.Toolkit.dll.deploy" />
                     </Component>
                     <Directory Id="dirCF53B6B54F9F3E751647F4CCA867BF2B" Name="de">
-                        <Component Id="cmpFA218D1CAA0C0A67F734B66B886E8AFD" Guid="{8C4FC1F4-A589-43AD-9A37-2C13E6AD5631}">
+                        <Component Id="cmpFA218D1CAA0C0A67F734B66B886E8AFD" Guid="{9214A513-E8AC-43FB-8451-592F29A66D13}">
                             <File Id="fil7946B4465F2C12A40596475CF47975E4" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\de\Microsoft.Data.Edm.resources.dll.deploy" />
                         </Component>
-                        <Component Id="cmpBCD10EC9621040B9AB1458D9FB9E7E84" Guid="{5D5CAD01-C555-456C-8324-502872FD470B}">
+                        <Component Id="cmpBCD10EC9621040B9AB1458D9FB9E7E84" Guid="{9AD566BF-6E68-4658-A23C-9200D3F2F283}">
                             <File Id="fil0CB2C0C25B4908B0680FB9C7D46DEA37" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\de\Microsoft.Data.OData.resources.dll.deploy" />
                         </Component>
-                        <Component Id="cmpFE104BD11F1318E41C17E3A126941550" Guid="{983A9BBC-E3C7-4D7E-8FBD-B217DAAA597F}">
+                        <Component Id="cmpFE104BD11F1318E41C17E3A126941550" Guid="{721F528E-A88A-4FFE-965D-70319A760931}">
                             <File Id="filA787D0251C95CFA0F55FF0B46D2C92C0" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\de\Microsoft.Data.Services.Client.resources.dll.deploy" />
                         </Component>
-                        <Component Id="cmp9A965C7D422AF773C09C057EE7D34A0A" Guid="{18FAEA74-0431-4FA2-A8EB-305E8137AA48}">
+                        <Component Id="cmp9A965C7D422AF773C09C057EE7D34A0A" Guid="{607D2372-83A8-4E95-BEF1-6EF215612311}">
                             <File Id="fil1F92AA19C88DD415F72E370A2E860D05" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\de\Microsoft.Data.Services.resources.dll.deploy" />
                         </Component>
-                        <Component Id="cmpF82BD6EE2598808B5A9319959C14CEB2" Guid="{D6004CE5-805F-4517-8AA3-C758EEE5E171}">
+                        <Component Id="cmpF82BD6EE2598808B5A9319959C14CEB2" Guid="{FB19767A-5D5E-4D63-9F1D-856A8EF73CDD}">
                             <File Id="fil8FDEE2AFBE9257E936910940130CC310" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\de\System.Spatial.resources.dll.deploy" />
                         </Component>
                     </Directory>
                     <Directory Id="dirCF18046CC2BE90791740E37329E8A6D4" Name="es">
-                        <Component Id="cmpE31361CE4B83EF4109AA126BD44ACF43" Guid="{8BCA32D1-38DC-4B67-A4D3-E847DD625D87}">
+                        <Component Id="cmpE31361CE4B83EF4109AA126BD44ACF43" Guid="{4846F3BF-C346-4E65-9877-A6946D48DFB3}">
                             <File Id="filADBB4C70EFB4F3005C60395D6A99B53A" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\es\Microsoft.Data.Edm.resources.dll.deploy" />
                         </Component>
-                        <Component Id="cmpFF23C3EBB7B7BCB14979B6A54A2915C9" Guid="{CC9389F4-042C-47C1-AACF-C866F6564971}">
+                        <Component Id="cmpFF23C3EBB7B7BCB14979B6A54A2915C9" Guid="{CF419542-0F22-436F-A01A-7BA6ABC3CA98}">
                             <File Id="filC27FB0498535B8042B66821F23B9F2A5" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\es\Microsoft.Data.OData.resources.dll.deploy" />
                         </Component>
-                        <Component Id="cmp0D9750F0F3942D47B8EDA58BA6BDD7FA" Guid="{DD53A321-95F8-4103-9FFC-1865450C7413}">
+                        <Component Id="cmp0D9750F0F3942D47B8EDA58BA6BDD7FA" Guid="{08F4374A-C84A-473F-B525-FBEAB6714F41}">
                             <File Id="fil2757637CBA7A2A8FC8CBDEADF2171C1F" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\es\Microsoft.Data.Services.Client.resources.dll.deploy" />
                         </Component>
-                        <Component Id="cmpF77BB640D8B62190160EA5ACB5E5086B" Guid="{EE8E7342-80EA-4438-A07B-63061898D2C4}">
+                        <Component Id="cmpF77BB640D8B62190160EA5ACB5E5086B" Guid="{B5329B3E-7DC9-4F30-9D7E-999E069AEECD}">
                             <File Id="fil95C8FBD8F0A78F1B8304F295B3632AE8" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\es\Microsoft.Data.Services.resources.dll.deploy" />
                         </Component>
-                        <Component Id="cmp11F12C863CFEFA96CC7D857CFF0E67B6" Guid="{B94C72D1-A054-42E4-B7FA-42C818C05F37}">
+                        <Component Id="cmp11F12C863CFEFA96CC7D857CFF0E67B6" Guid="{FFACE6AB-9E41-4BEF-AE2B-E6BB2761C3F1}">
                             <File Id="filE1FDF4E266C199B1DE81F97FBF376208" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\es\System.Spatial.resources.dll.deploy" />
                         </Component>
                     </Directory>
                     <Directory Id="dir50219C4C7C44A43909A5BDE2DC5D3871" Name="fr">
-                        <Component Id="cmp7FD9C00779AE0B0F055D7E19C95D002F" Guid="{A605199D-C404-4E98-ADCC-311A44220C68}">
+                        <Component Id="cmp7FD9C00779AE0B0F055D7E19C95D002F" Guid="{E3F85E5D-8313-4ED9-AFD7-0696C021EF72}">
                             <File Id="fil0E0C1E699A9CECFE5C4D0FA0AFFEB948" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\fr\Microsoft.Data.Edm.resources.dll.deploy" />
                         </Component>
-                        <Component Id="cmpE3C6DE9D0B0F4DC95A9277FD586E1E2B" Guid="{0BC69FC4-8BF4-487A-9DD4-1FEE186BA32E}">
+                        <Component Id="cmpE3C6DE9D0B0F4DC95A9277FD586E1E2B" Guid="{57E95231-627A-4D49-A2F7-E1A1BC6668B6}">
                             <File Id="fil5A8C2F7EE960E0E20DB9AF438C28878F" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\fr\Microsoft.Data.OData.resources.dll.deploy" />
                         </Component>
-                        <Component Id="cmpFA0758273AF1DC557E6325EC182D7B52" Guid="{56296DE9-922D-4638-9FB8-CFEBEDF78129}">
+                        <Component Id="cmpFA0758273AF1DC557E6325EC182D7B52" Guid="{6581F09C-B71F-41B8-8D2E-12F9E91BEFD4}">
                             <File Id="fil4C72AA9BF31791EE64704B4CE28AA70A" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\fr\Microsoft.Data.Services.Client.resources.dll.deploy" />
                         </Component>
-                        <Component Id="cmp55F5F31C1FDD8ADC6A7601D7DF448A21" Guid="{FBF7345B-6533-4226-8EEA-7F74F231DE86}">
+                        <Component Id="cmp55F5F31C1FDD8ADC6A7601D7DF448A21" Guid="{A1756E92-B7A0-43AF-B0B9-D737243E4ABC}">
                             <File Id="fil02E02DF3AE99D735BF14794FEF3C4CED" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\fr\Microsoft.Data.Services.resources.dll.deploy" />
                         </Component>
-                        <Component Id="cmpC794F9BCD7B453CB0E11825B972DDAEB" Guid="{0F257677-F059-4CE5-8EFE-26FE29618266}">
+                        <Component Id="cmpC794F9BCD7B453CB0E11825B972DDAEB" Guid="{038518A3-81D5-462F-BB95-B625D7180B6E}">
                             <File Id="filA59C1DAB2891EF9BE1415F4E17932DA6" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\fr\System.Spatial.resources.dll.deploy" />
                         </Component>
                     </Directory>
                     <Directory Id="dir4DAFAB04E7F1A0E02990B4DC0C5FAB5D" Name="it">
-                        <Component Id="cmpE86F9FC3EBC0EF6BF3E4670A48975AC7" Guid="{A39814E0-B3B3-4375-8339-AA6048678D1E}">
+                        <Component Id="cmpE86F9FC3EBC0EF6BF3E4670A48975AC7" Guid="{B31F0A4B-A008-4EE7-92CA-B7B67A7D4C77}">
                             <File Id="fil1C9A7D5D2E59E5BE131A861F1F9D7EB2" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\it\Microsoft.Data.Edm.resources.dll.deploy" />
                         </Component>
-                        <Component Id="cmp4A39C6EA7ED9DF996E06303CA09B8F09" Guid="{3DC42A21-5E29-4300-866E-36659F431125}">
+                        <Component Id="cmp4A39C6EA7ED9DF996E06303CA09B8F09" Guid="{54B3DDF9-F147-4B44-8238-C2E433437280}">
                             <File Id="filB0AD14762699C586F4EBAFBB977B687A" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\it\Microsoft.Data.OData.resources.dll.deploy" />
                         </Component>
-                        <Component Id="cmp580BAD199761AEF1DE954126E73C7DEE" Guid="{87916AF2-8433-42D4-A637-71152F176FAB}">
+                        <Component Id="cmp580BAD199761AEF1DE954126E73C7DEE" Guid="{EEE42281-C4DB-4C87-85B9-A248C11D2141}">
                             <File Id="fil7049A49B8D9A338369E4F6998D074FFB" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\it\Microsoft.Data.Services.Client.resources.dll.deploy" />
                         </Component>
-                        <Component Id="cmp103C6E90034C913113C9B1C6BCD25BF4" Guid="{E95BC2F7-FD81-481C-86F3-CAF1897A3338}">
+                        <Component Id="cmp103C6E90034C913113C9B1C6BCD25BF4" Guid="{0BDE3DD1-95D8-4295-A116-D1816EDEFBF6}">
                             <File Id="fil149D8174C33F707936EAD4F200301748" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\it\Microsoft.Data.Services.resources.dll.deploy" />
                         </Component>
-                        <Component Id="cmp0B253FA8EDC6DCFF47C5047DAEE7A1AE" Guid="{04897296-2F45-4D16-9C89-8A328F3E0906}">
+                        <Component Id="cmp0B253FA8EDC6DCFF47C5047DAEE7A1AE" Guid="{4F265578-BF91-4AF6-A03D-E0AFD1BB3920}">
                             <File Id="fil1A8CB02655902FFC3A06215433C0EAA1" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\it\System.Spatial.resources.dll.deploy" />
                         </Component>
                     </Directory>
                     <Directory Id="dir5FA2F30C37095AFD5A941A7B8C912A10" Name="ja">
-                        <Component Id="cmpE820EA9F09FFE2F817FB533C24F60F1A" Guid="{2D71E913-A1F8-43CB-BAB9-B7138DC8F0F6}">
+                        <Component Id="cmpE820EA9F09FFE2F817FB533C24F60F1A" Guid="{8B0D978F-3051-45CE-8CA0-64454F241C83}">
                             <File Id="fil71D12838CE5375B2DE9D6C0D62AE0D97" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\ja\Microsoft.Data.Edm.resources.dll.deploy" />
                         </Component>
-                        <Component Id="cmp9D4CCF1C309496C19A69820A6E311D14" Guid="{A505F05A-CF6A-460E-ADCC-F81C7D659066}">
+                        <Component Id="cmp9D4CCF1C309496C19A69820A6E311D14" Guid="{EF1ADA39-56FB-48CD-A193-EFF064D69E04}">
                             <File Id="filC6C93455BE4B1E389BC84AC83D252082" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\ja\Microsoft.Data.OData.resources.dll.deploy" />
                         </Component>
-                        <Component Id="cmp07375A73F94DFB4AA26FA049A4FD74CA" Guid="{D2A832FC-D30D-46BE-BD89-7CF438E85697}">
+                        <Component Id="cmp07375A73F94DFB4AA26FA049A4FD74CA" Guid="{88382934-0FC7-484F-A0D3-8DC758612D6B}">
                             <File Id="filF358D8205FD525BBEC11737F805E79A9" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\ja\Microsoft.Data.Services.Client.resources.dll.deploy" />
                         </Component>
-                        <Component Id="cmpE213CD0F48E8E147D2412DC3F34824D9" Guid="{1A7DAE61-C725-46AB-9E92-575FE0CC7BC1}">
+                        <Component Id="cmpE213CD0F48E8E147D2412DC3F34824D9" Guid="{41F824F0-CDF3-4A20-9344-334B00D7A4C7}">
                             <File Id="filD2BA856F26FE2DC6FC2A0E27915CCF07" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\ja\Microsoft.Data.Services.resources.dll.deploy" />
                         </Component>
-                        <Component Id="cmp6704204E89DBFDA7B35C2338584E8069" Guid="{2F29C564-9F25-4518-A7EE-C7726ED2180E}">
+                        <Component Id="cmp6704204E89DBFDA7B35C2338584E8069" Guid="{25A7089F-566C-426A-815D-2CF396B892E9}">
                             <File Id="filFC068B59D85BAF9AD3783AA1497BEA67" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\ja\System.Spatial.resources.dll.deploy" />
                         </Component>
                     </Directory>
                     <Directory Id="dirDE4F49FD088E7F388DEAB8AF19E6D543" Name="ko">
-                        <Component Id="cmp67B8831269FD6F32AD75CA1C5426810C" Guid="{D36396CD-ABC5-4A24-9713-F6C8A16AE6F8}">
+                        <Component Id="cmp67B8831269FD6F32AD75CA1C5426810C" Guid="{BCDC3DE3-0549-4121-A31A-AEB709921F98}">
                             <File Id="filC91AE5C3BC42EE01B8BD1F4F93E605DE" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\ko\Microsoft.Data.Edm.resources.dll.deploy" />
                         </Component>
-                        <Component Id="cmpB401DA0EEA062365E1EE08BF3E719AEF" Guid="{D95ED42F-27D5-4639-B865-BA3B895662D9}">
+                        <Component Id="cmpB401DA0EEA062365E1EE08BF3E719AEF" Guid="{BA34ABF0-A8E8-4EAA-8147-3A425D2301C8}">
                             <File Id="fil40EB7B357893F3AC6BC1D38E44CCA6FD" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\ko\Microsoft.Data.OData.resources.dll.deploy" />
                         </Component>
-                        <Component Id="cmp25D9650955C6520AD579CA20E946CE51" Guid="{674107E9-417B-4C78-865F-6276E46927CE}">
+                        <Component Id="cmp25D9650955C6520AD579CA20E946CE51" Guid="{AC82328F-00E6-48A5-A016-BEDE2C7812AC}">
                             <File Id="fil9A80BCE43A0873CD51D747F8220B2896" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\ko\Microsoft.Data.Services.Client.resources.dll.deploy" />
                         </Component>
-                        <Component Id="cmp1A734A439ED37FA7C17344C9846CF642" Guid="{CD7B72D1-89C0-4D1A-BBFC-E99A3A29689F}">
+                        <Component Id="cmp1A734A439ED37FA7C17344C9846CF642" Guid="{FFF55CCA-410D-4C41-87A5-11B337BEB022}">
                             <File Id="fil74CABCD955B821D34EDDB7E2C338F762" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\ko\Microsoft.Data.Services.resources.dll.deploy" />
                         </Component>
-                        <Component Id="cmpD4C96526B26013935C2D10AAFF06449B" Guid="{B584B408-A031-45C6-AAD8-33DA8B42FCDF}">
+                        <Component Id="cmpD4C96526B26013935C2D10AAFF06449B" Guid="{AC55DA45-422C-4027-9A76-24AC5FD720DB}">
                             <File Id="filB7F84E2E06F1FA1EBECEA7364E3A86E8" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\ko\System.Spatial.resources.dll.deploy" />
                         </Component>
                     </Directory>
                     <Directory Id="dir87363B9B8ECAAD3AB64110CBA087EF69" Name="Resources">
-                        <Component Id="cmp2BADB75C1042074426C16DD9783C15A9" Guid="{4A90AD6F-C720-4BAA-AEE8-B3B6333B4CCE}">
+                        <Component Id="cmp2BADB75C1042074426C16DD9783C15A9" Guid="{898B6535-492E-40E8-BEB8-76D1BA925229}">
                             <File Id="filEB4DAF37D9B4E102732718FE549B09B0" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Resources\VirtoCommerce.ico.deploy" />
                         </Component>
                     </Directory>
                     <Directory Id="dir3F9C2906F1C00386F37F73D9BA66246B" Name="ru">
-                        <Component Id="cmpC7D6CCC43A65ED05E77491109D5C9CDB" Guid="{41E98815-EF6D-478F-9456-00E63354B9AA}">
+                        <Component Id="cmpC7D6CCC43A65ED05E77491109D5C9CDB" Guid="{2DB28A04-82B2-4578-8C1C-F612791C0BA8}">
                             <File Id="fil3F20861F84DA0FDD6FD220ED15F2ACF7" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\ru\Microsoft.Data.Edm.resources.dll.deploy" />
                         </Component>
-                        <Component Id="cmpB9D95D3B8A92E817082CCDDCA91293B3" Guid="{842D0952-9937-47AF-8661-1303FC2F0E45}">
+                        <Component Id="cmpB9D95D3B8A92E817082CCDDCA91293B3" Guid="{BB33545A-5143-447A-B26E-79B2D417CD98}">
                             <File Id="fil36FCFB40E12FF24576AB63B37CD270F7" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\ru\Microsoft.Data.OData.resources.dll.deploy" />
                         </Component>
-                        <Component Id="cmp0E524E2DB15240905E1898E0E15375E9" Guid="{63F7ACFC-8342-4D06-992E-A05C4ECFC8D0}">
+                        <Component Id="cmp0E524E2DB15240905E1898E0E15375E9" Guid="{F321E283-31D8-4061-BF90-96059D50FC78}">
                             <File Id="fil3A7EF6B797D79313F368C96B8027F87F" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\ru\Microsoft.Data.Services.Client.resources.dll.deploy" />
                         </Component>
-                        <Component Id="cmp89D54F50F2913F996ECA3D8AF0B7B42E" Guid="{2B5A2D9F-2213-47DC-B8EF-C8CBCAF65371}">
+                        <Component Id="cmp89D54F50F2913F996ECA3D8AF0B7B42E" Guid="{9C2BA910-6741-44FB-9C89-40005DB67202}">
                             <File Id="filB38FAEB2BFF0AABD70D1EF79E7CD34E4" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\ru\Microsoft.Data.Services.resources.dll.deploy" />
                         </Component>
-                        <Component Id="cmpADE235DAE0D3DFB3830CDE5952FFEAC0" Guid="{89E8532E-FCE4-42E2-AFD4-C3F7670FF774}">
+                        <Component Id="cmpADE235DAE0D3DFB3830CDE5952FFEAC0" Guid="{147D508D-60D0-4720-B8DF-F4AFC6A3FB7B}">
                             <File Id="fil249940F461FB2F7550E4780AF04FD342" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\ru\System.Spatial.resources.dll.deploy" />
                         </Component>
                     </Directory>
                     <Directory Id="dir6212F84D2375390A5D3E1CF67E9D7B10" Name="zh-Hans">
-                        <Component Id="cmp99747520E8F48295437CBB79FED295B8" Guid="{5504EF6D-C974-4497-9845-7E133E8BFB87}">
+                        <Component Id="cmp99747520E8F48295437CBB79FED295B8" Guid="{1194ACF6-DDD1-4435-A949-92B2644BBDCD}">
                             <File Id="fil09E81C31A91ACDC20D59A8C866EDF04F" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\zh-Hans\Microsoft.Data.Edm.resources.dll.deploy" />
                         </Component>
-                        <Component Id="cmp76ED7140CEFFEAD47D9409C7928FF08E" Guid="{BE2EFD05-877B-44EA-B324-69D06EB6F26A}">
+                        <Component Id="cmp76ED7140CEFFEAD47D9409C7928FF08E" Guid="{75FC548A-C371-4595-A327-551AD31E2AC9}">
                             <File Id="fil549C25B20516A40D529B2576F2524B0B" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\zh-Hans\Microsoft.Data.OData.resources.dll.deploy" />
                         </Component>
-                        <Component Id="cmpB4B37F775B26A118E683AF5335EB7995" Guid="{066A35A9-F98F-4FAB-A357-50D63A0FDD6A}">
+                        <Component Id="cmpB4B37F775B26A118E683AF5335EB7995" Guid="{DB5BA0FD-27C5-49B9-A027-8C75C4F07F0E}">
                             <File Id="fil52ABD3AA96D598EACBADB576BF36CC71" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\zh-Hans\Microsoft.Data.Services.Client.resources.dll.deploy" />
                         </Component>
-                        <Component Id="cmp9AEA7501FB75BA650ADD39EC1AAFE648" Guid="{F8140D59-C349-47DC-BD7B-4657A3AFFE6C}">
+                        <Component Id="cmp9AEA7501FB75BA650ADD39EC1AAFE648" Guid="{BFE113BC-656E-4B2C-AA23-A1361293257F}">
                             <File Id="fil6C93DF2616E76CEAFC9C57B383FEEA27" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\zh-Hans\Microsoft.Data.Services.resources.dll.deploy" />
                         </Component>
-                        <Component Id="cmp4D2CFA68E30EB46630D2A990D74A20E4" Guid="{FCC41B38-3713-4405-9176-6A9B00F7EF4A}">
+                        <Component Id="cmp4D2CFA68E30EB46630D2A990D74A20E4" Guid="{4C4AE4B0-31B8-4977-92A0-7E106609201D}">
                             <File Id="filB158687DAFD65FE6E2733B5407B94291" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\zh-Hans\System.Spatial.resources.dll.deploy" />
                         </Component>
                     </Directory>
                     <Directory Id="dir47E73DC144ECCAB2EC187B13DF454ED2" Name="zh-Hant">
-                        <Component Id="cmp0D0AB2488F9329899391409FF0998EDC" Guid="{02E0B2C8-A80A-4A45-906A-E536CA0A420A}">
+                        <Component Id="cmp0D0AB2488F9329899391409FF0998EDC" Guid="{D8D4EE16-905E-48B3-AC92-D9DBA494BF96}">
                             <File Id="fil69F48C612658E15ED8531A868B1CC166" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\zh-Hant\Microsoft.Data.Edm.resources.dll.deploy" />
                         </Component>
-                        <Component Id="cmpEB2E39F1FEA91DEB9E24A0BD579307C0" Guid="{16C031E8-7F22-4191-9F54-CDA1EECDF7D8}">
+                        <Component Id="cmpEB2E39F1FEA91DEB9E24A0BD579307C0" Guid="{425288A5-D300-444D-9204-5C5546B410BD}">
                             <File Id="filC50668F35BB875F94F803B5D9DFFBF81" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\zh-Hant\Microsoft.Data.OData.resources.dll.deploy" />
                         </Component>
-                        <Component Id="cmpD41F148D3C60E416D5615332BBF03B08" Guid="{D7BCDA90-7BF6-4832-94B6-52C176376690}">
+                        <Component Id="cmpD41F148D3C60E416D5615332BBF03B08" Guid="{B4E91E10-827B-4602-8EEA-F85F50AED396}">
                             <File Id="filD920E47D0E6D62201BC730F6E1101A68" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\zh-Hant\Microsoft.Data.Services.Client.resources.dll.deploy" />
                         </Component>
-                        <Component Id="cmp116240254A079CA3493019EE65B9C767" Guid="{35CEF06A-9CFE-41B0-AD2E-50FF20AFC660}">
+                        <Component Id="cmp116240254A079CA3493019EE65B9C767" Guid="{30F50939-DBA8-47A7-A780-4B4F7D15D44E}">
                             <File Id="filF6185154480EA5DE7A16291B1F3DF0B6" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\zh-Hant\Microsoft.Data.Services.resources.dll.deploy" />
                         </Component>
-                        <Component Id="cmp523294F4D26A78F092B8C5AF354EA2D9" Guid="{3E87BA34-3599-4875-B010-7FD1ADBF43B7}">
+                        <Component Id="cmp523294F4D26A78F092B8C5AF354EA2D9" Guid="{7DD89EB9-5355-4DC0-99C5-F47DFC9F45CD}">
                             <File Id="fil5D3280799C60E912ED7268C5C6660A4C" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\zh-Hant\System.Spatial.resources.dll.deploy" />
                         </Component>
                     </Directory>
