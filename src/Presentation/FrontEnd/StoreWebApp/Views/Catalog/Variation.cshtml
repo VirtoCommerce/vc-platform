@@ -16,6 +16,7 @@
         //Handle availability
 	    $("span.in-stock").text("@Model.Availability.AvailabilityString");
 	    $("span.in-stock").show();
+	    $("span.sku").text("@Model.CatalogItem.Code");
 		
 		//Update properties
 		$("#product_tabs_additional_contents_list").html($('#temp_variation_properties').html());
