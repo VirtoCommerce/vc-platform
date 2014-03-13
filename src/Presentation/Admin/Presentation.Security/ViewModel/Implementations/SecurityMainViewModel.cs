@@ -26,7 +26,7 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 			}
 			if (authContext.CheckPermission(PredefinedPermissions.SecurityRoles))
 			{
-				SubItems.Add(new ItemTypeHomeTab { Caption = Resources.Roles, ViewModel = roleVmFactory.GetViewModelInstance(parameters) });
+				SubItems.Add(new ItemTypeHomeTab { Caption = "Roles", ViewModel = roleVmFactory.GetViewModelInstance(parameters) });
 			}
 			CurrentTab = SubItems[0];
 		}

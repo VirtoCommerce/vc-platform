@@ -3,14 +3,9 @@
      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
      xmlns:inf="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
-     xmlns:inf_behavior="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Behaviors;assembly=VirtoCommerce.ManagementClient.Core"
-     xmlns:localInfrastructure="clr-namespace:VirtoCommerce.ManagementClient.Security.Infrastructure"
-     xmlns:model="clr-namespace:VirtoCommerce.Foundation.Security.Model;assembly=VirtoCommerce.Foundation"
-     xmlns:sys="clr-namespace:System;assembly=mscorlib" xmlns:localModel="clr-namespace:VirtoCommerce.ManagementClient.Security.Model"
      xmlns:helpers="clr-namespace:VirtoCommerce.ManagementClient.Security.ViewModel.Helpers"
-     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
-     mc:Ignorable="d" d:DesignHeight="400" Width="600" xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Security.Properties"
-     LocalizationScope.ResourceManager="{ResourceManager res:Resources}">
+     mc:Ignorable="d" d:DesignHeight="400" Width="600" xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Security"
+     LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
 
     <FrameworkElement.Resources>
         <ResourceDictionary>
@@ -190,13 +185,13 @@
             <ColumnDefinition Width="400" />
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <TextBlock Grid.Row="0" Text="{Loc Role_Name}" />
+		<TextBlock Grid.Row="0" Text="* Name:" />
         <controls:WatermarkedTextBox Grid.Row="1" Text="{Binding InnerItem.Name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
 
         <!--AllAvailablePermissionGroups-->
         <controls:MultiSelectControl Grid.Row="2" Grid.ColumnSpan="2" TextSearchTextPath="Name"
-             Template="{StaticResource MultiSelectControlTemplate}" AvailableTitle="{Loc Available_permissions}"
-             AvailableItems="{Binding AllAvailablePermissionGroupViewModels}" CurrentTitle="{Loc Assigned_permissions}"
+             Template="{StaticResource MultiSelectControlTemplate}" AvailableTitle="Available permissions"
+             AvailableItems="{Binding AllAvailablePermissionGroupViewModels}" CurrentTitle="Assigned permissions"
              CurrentItems="{Binding CurrentPermissionGroupViewModels}">
         </controls:MultiSelectControl>
 

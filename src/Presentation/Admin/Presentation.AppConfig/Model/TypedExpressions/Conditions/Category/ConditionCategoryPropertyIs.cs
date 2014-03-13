@@ -1,7 +1,6 @@
 ﻿using System;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.ManagementClient.AppConfig.Properties;
 using VirtoCommerce.ManagementClient.Core.Controls;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using linq = System.Linq.Expressions;
@@ -15,11 +14,11 @@ namespace VirtoCommerce.ManagementClient.AppConfig.Model
 		private UserInputElement _propEl;
 
 		public ConditionCategoryPropertyIs(IExpressionViewModel expressionViewModel)
-			: base(Resources.Category_property_is__, expressionViewModel)
+			: base("Category property is []".Localize(), expressionViewModel)
 		{
-			WithLabel("Category property is ");
+			WithLabel("Category property is ".Localize());
 			_propEl = WithUserInput<string>(string.Empty) as UserInputElement;
-			WithLabel(" and value is ");
+			WithLabel(" and value is ".Localize());
 			_propValueEl = WithUserInput<string>(string.Empty) as UserInputElement;
 		}
 
@@ -58,11 +57,6 @@ namespace VirtoCommerce.ManagementClient.AppConfig.Model
 			var retVal = linq.Expression.Lambda<Func<IEvaluationContext, bool>>(methodCall, paramX);
 
 			return retVal;
-		}
-
-		public override void InitializeAfterDeserialized(IExpressionViewModel expressionViewModel)
-		{
-			base.InitializeAfterDeserialized(expressionViewModel);
 		}
 	}
 }

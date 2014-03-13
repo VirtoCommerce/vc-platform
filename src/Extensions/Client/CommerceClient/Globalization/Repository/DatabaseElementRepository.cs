@@ -128,7 +128,17 @@ namespace VirtoCommerce.Client.Globalization.Repository
 						   };
 		}
 
-        /// <summary>
+	    public DateTime GetStatusDate(string category, string culture)
+	    {
+			// data is always up to date
+		    return DateTime.UtcNow;
+	    }
+
+	    public void SetStatusDate(string category, string culture)
+	    {
+	    }
+
+	    /// <summary>
         /// Get Categories of this instance.
         /// </summary>
         /// <returns>IQueryable{ElementCategory}.</returns>

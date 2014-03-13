@@ -117,43 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AccountState" xml:space="preserve">
-    <value>Account State:</value>
-  </data>
-  <data name="ApproveUser" xml:space="preserve">
-    <value>Approve User</value>
-  </data>
-  <data name="Baseurl" xml:space="preserve">
+	<data name="Baseurl" xml:space="preserve">
     <value>Base url</value>
   </data>
-  <data name="ChangePassword" xml:space="preserve">
-    <value>Change Password</value>
-  </data>
-  <data name="Create_account" xml:space="preserve">
+	<data name="Create_account" xml:space="preserve">
     <value>Create account</value>
   </data>
-  <data name="IsAdministrator" xml:space="preserve">
-    <value>Is Administrator</value>
-  </data>
-  <data name="login" xml:space="preserve">
+	<data name="login" xml:space="preserve">
     <value>Log in</value>
   </data>
   <data name="loginAct" xml:space="preserve">
     <value>Log in</value>
   </data>
-  <data name="RejectUser" xml:space="preserve">
-    <value>Reject User</value>
-  </data>
-  <data name="ResetPassword" xml:space="preserve">
-    <value>Reset Password</value>
-  </data>
-  <data name="Roles" xml:space="preserve">
-    <value>Roles</value>
-  </data>
-  <data name="Username" xml:space="preserve">
-    <value>Username:</value>
-  </data>
-  <data name="Account" xml:space="preserve">
+	<data name="Account" xml:space="preserve">
     <value>Account</value>
   </data>
   <data name="wiz_User_general_information" xml:space="preserve">
@@ -243,62 +219,7 @@
   <data name="error_occurred_when_trying_to_load_Permissions" xml:space="preserve">
     <value>An error occurred when trying to load Permissions for: {0}</value>
   </data>
-  <data name="New_Password_repeat" xml:space="preserve">
-    <value>* New Password repeat:</value>
-  </data>
-  <data name="OldPassword" xml:space="preserve">
-    <value>* Old Password:</value>
-    <comment>TextBlock.Text</comment>
-  </data>
-  <data name="New_Password" xml:space="preserve">
-    <value>* New Password:</value>
-    <comment>TextBlock.Text</comment>
-  </data>
-  <data name="Password" xml:space="preserve">
-    <value>* Password:</value>
-    <comment>TextBlock.Text</comment>
-  </data>
-  <data name="Password_repeat" xml:space="preserve">
-    <value>* Password repeat:</value>
-    <comment>TextBlock.Text</comment>
-  </data>
-  <data name="Username_req" xml:space="preserve">
-    <value>* Username:</value>
-    <comment>TextBlock.Text</comment>
-  </data>
-  <data name="Available_roles" xml:space="preserve">
-    <value>Available roles</value>
-    <comment>controls:MultiSelectControl.AvailableTitle</comment>
-  </data>
-  <data name="Assigned_roles" xml:space="preserve">
-    <value>Assigned roles</value>
-    <comment>controls:MultiSelectControl.CurrentTitle</comment>
-  </data>
-  <data name="Role_Name" xml:space="preserve">
-    <value>* Name:</value>
-    <comment>TextBlock.Text</comment>
-  </data>
-  <data name="Available_permissions" xml:space="preserve">
-    <value>Available permissions</value>
-    <comment>controls:MultiSelectControl.AvailableTitle</comment>
-  </data>
-  <data name="Assigned_permissions" xml:space="preserve">
-    <value>Assigned permissions</value>
-    <comment>controls:MultiSelectControl.CurrentTitle</comment>
-  </data>
-  <data name="Register_Type" xml:space="preserve">
-    <value>Register Type</value>
-    <comment>GridViewColumn.Header</comment>
-  </data>
-  <data name="Account_State" xml:space="preserve">
-    <value>Account State</value>
-    <comment>GridViewColumn.Header</comment>
-  </data>
-  <data name="Username_plain" xml:space="preserve">
-    <value>Username</value>
-    <comment>GridViewColumn.Header</comment>
-  </data>
-  <data name="Role_Name_plain" xml:space="preserve">
+	<data name="Role_Name_plain" xml:space="preserve">
     <value>Name</value>
     <comment>GridViewColumn.Header</comment>
   </data>

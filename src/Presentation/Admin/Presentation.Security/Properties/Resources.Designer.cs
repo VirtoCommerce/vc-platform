@@ -79,29 +79,11 @@ namespace VirtoCommerce.ManagementClient.Security.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Account State.
-        /// </summary>
-        public static string Account_State {
-            get {
-                return ResourceManager.GetString("Account_State", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Accounts.
         /// </summary>
         public static string Accounts {
             get {
                 return ResourceManager.GetString("Accounts", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Account State:.
-        /// </summary>
-        public static string AccountState {
-            get {
-                return ResourceManager.GetString("AccountState", resourceCulture);
             }
         }
         
@@ -124,65 +106,11 @@ namespace VirtoCommerce.ManagementClient.Security.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Approve User.
-        /// </summary>
-        public static string ApproveUser {
-            get {
-                return ResourceManager.GetString("ApproveUser", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Assigned permissions.
-        /// </summary>
-        public static string Assigned_permissions {
-            get {
-                return ResourceManager.GetString("Assigned_permissions", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Assigned roles.
-        /// </summary>
-        public static string Assigned_roles {
-            get {
-                return ResourceManager.GetString("Assigned_roles", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Available permissions.
-        /// </summary>
-        public static string Available_permissions {
-            get {
-                return ResourceManager.GetString("Available_permissions", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Available roles.
-        /// </summary>
-        public static string Available_roles {
-            get {
-                return ResourceManager.GetString("Available_roles", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Base url.
         /// </summary>
         public static string Baseurl {
             get {
                 return ResourceManager.GetString("Baseurl", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Change Password.
-        /// </summary>
-        public static string ChangePassword {
-            get {
-                return ResourceManager.GetString("ChangePassword", resourceCulture);
             }
         }
         
@@ -331,15 +259,6 @@ namespace VirtoCommerce.ManagementClient.Security.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Is Administrator.
-        /// </summary>
-        public static string IsAdministrator {
-            get {
-                return ResourceManager.GetString("IsAdministrator", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Log in.
         /// </summary>
         public static string login {
@@ -354,51 +273,6 @@ namespace VirtoCommerce.ManagementClient.Security.Properties {
         public static string loginAct {
             get {
                 return ResourceManager.GetString("loginAct", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to * New Password:.
-        /// </summary>
-        public static string New_Password {
-            get {
-                return ResourceManager.GetString("New_Password", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to * New Password repeat:.
-        /// </summary>
-        public static string New_Password_repeat {
-            get {
-                return ResourceManager.GetString("New_Password_repeat", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to * Old Password:.
-        /// </summary>
-        public static string OldPassword {
-            get {
-                return ResourceManager.GetString("OldPassword", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to * Password:.
-        /// </summary>
-        public static string Password {
-            get {
-                return ResourceManager.GetString("Password", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to * Password repeat:.
-        /// </summary>
-        public static string Password_repeat {
-            get {
-                return ResourceManager.GetString("Password_repeat", resourceCulture);
             }
         }
         
@@ -421,15 +295,6 @@ namespace VirtoCommerce.ManagementClient.Security.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Register Type.
-        /// </summary>
-        public static string Register_Type {
-            get {
-                return ResourceManager.GetString("Register_Type", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Registered User.
         /// </summary>
         public static string Registered_User {
@@ -448,24 +313,6 @@ namespace VirtoCommerce.ManagementClient.Security.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Reject User.
-        /// </summary>
-        public static string RejectUser {
-            get {
-                return ResourceManager.GetString("RejectUser", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Reset Password.
-        /// </summary>
-        public static string ResetPassword {
-            get {
-                return ResourceManager.GetString("ResetPassword", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Role.
         /// </summary>
         public static string Role {
@@ -475,29 +322,11 @@ namespace VirtoCommerce.ManagementClient.Security.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to * Name:.
-        /// </summary>
-        public static string Role_Name {
-            get {
-                return ResourceManager.GetString("Role_Name", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
         public static string Role_Name_plain {
             get {
                 return ResourceManager.GetString("Role_Name_plain", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Roles.
-        /// </summary>
-        public static string Roles {
-            get {
-                return ResourceManager.GetString("Roles", resourceCulture);
             }
         }
         
@@ -534,33 +363,6 @@ namespace VirtoCommerce.ManagementClient.Security.Properties {
         public static string USER_MANAGEMENT {
             get {
                 return ResourceManager.GetString("USER_MANAGEMENT", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Username:.
-        /// </summary>
-        public static string Username {
-            get {
-                return ResourceManager.GetString("Username", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Username.
-        /// </summary>
-        public static string Username_plain {
-            get {
-                return ResourceManager.GetString("Username_plain", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to * Username:.
-        /// </summary>
-        public static string Username_req {
-            get {
-                return ResourceManager.GetString("Username_req", resourceCulture);
             }
         }
         

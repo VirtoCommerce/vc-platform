@@ -297,12 +297,12 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 
 		private void RaisePasswordChangeRequest()
 		{
-			RaisePasswordChangeRequest(Resources.ChangePassword, true);
+			RaisePasswordChangeRequest("Change Password", true);
 		}
 
 		private void RaisePasswordResetRequest()
 		{
-			RaisePasswordChangeRequest(Resources.ResetPassword, false);
+			RaisePasswordChangeRequest("Reset Password", false);
 		}
 
 		private void RaisePasswordChangeRequest(string title, bool isPasswordChanging)

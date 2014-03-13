@@ -63,10 +63,10 @@ namespace VirtoCommerce.ManagementClient.AppConfig
 			_container.RegisterType<IAppConfigRepository, DSAppConfigClient>();
 
 			var repositoryFactory = _container.Resolve<IRepositoryFactory<IAppConfigRepository>>();
-			var a = Environment.ExpandEnvironmentVariables(@"%SystemRoot%\Temp\VirtoCommerceCMLocalization");
-			var localElements = new XmlElementRepository(a);
-			var inst = new CachedDatabaseElementRepository(repositoryFactory, localElements);
-			_container.RegisterInstance<IElementRepository>(inst);
+			var localElements = new XmlElementRepository(Environment.ExpandEnvironmentVariables(@"%SystemRoot%\Temp\VirtoCommerceCMLocalization"));
+			var cachedElements = new CacheElementRepository(localElements);
+			var instance = new CachedDatabaseElementRepository(repositoryFactory, cachedElements);
+			_container.RegisterInstance<IElementRepository>(instance);
 
 			var resources = new ResourceDictionary
 				{

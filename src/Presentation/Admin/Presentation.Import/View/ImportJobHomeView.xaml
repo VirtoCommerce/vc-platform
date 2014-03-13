@@ -6,10 +6,12 @@
      xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions" xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:inf_behavior="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Behaviors;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:localModule="clr-namespace:VirtoCommerce.ManagementClient.Import" xmlns:securityModule="clr-namespace:VirtoCommerce.Foundation.Security.Model;assembly=VirtoCommerce.Foundation"
+     xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Import.Properties"
      Style="{StaticResource Virto_HomeView_Style}" d:DesignHeight="300" d:DesignWidth="600"
-     LocalizationScope.ResourceManager="{ResourceManager AssemblyName=VirtoCommerce.ManagementClient.Core, BaseName=VirtoCommerce.ManagementClient.Core.Properties.Resources}"
-     xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Import.Properties">
-
+               xmlns:properties2="clr-namespace:VirtoCommerce.ManagementClient.Core.Properties;assembly=VirtoCommerce.ManagementClient.Core"
+               >
+	<!--xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Import.Properties"-->
+	<!--LocalizationScope.ResourceManager="{ResourceManager AssemblyName=VirtoCommerce.ManagementClient.Core, BaseName=VirtoCommerce.ManagementClient.Core.Properties.Resources}"-->
 	<UserControl.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
@@ -73,26 +75,26 @@
 			</Grid.RowDefinitions>
 			<ItemsControl Style="{StaticResource Virto_ToolbarItemsControl_Style}" DockPanel.Dock="Top">
 				<core_controls:MetroButton x:Name="btnRefresh" Command="{Binding SearchItemsCommand}"
-     Header="{Loc REFRESH}" ToolTip="{Loc RefreshTooltip}" Margin="3,0,28,0">
+     Header="{Loc REFRESH}" ToolTip="{x:Static properties2:Resources.RefreshTooltip}" Margin="3,0,28,0">
 					<core_controls:VectorImage ImageResource="{StaticResource Icon_Button_RefreshList}"
      Width="14" Height="14" Margin="1,0,0,0" />
 				</core_controls:MetroButton>
-				<core_controls:MetroButton Command="{Binding ItemAddCommand}" Header="{Loc ADD}"
-     LocalizationScope.ResourceManager="{ResourceManager res:Resources}" ToolTip="{Loc Create_Import_Job}"
+				<core_controls:MetroButton Command="{Binding ItemAddCommand}" Header="{Loc ^ADD}"
+     LocalizationScope.Category="{x:Static localModule:NavigationNames.ModuleName}" ToolTip="{Loc 'Create Import Job'}"
      inf_behavior:PermissionBehavior.PermissionId="{x:Static securityModule:PredefinedPermissions.CatalogCatalog_Import_JobsManage}"
      inf_behavior:PermissionBehavior.DenyVisibility="Collapsed">
 					<Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/add.png"
      Width="14" />
 				</core_controls:MetroButton>
 				<core_controls:MetroButton Command="{Binding ItemDuplicateCommand}" CommandParameter="{Binding SelectedItems, ElementName=ItemList}"
-     Header="{Loc DUPLICATE}" ToolTip="{Loc Duplicate_selected_Items}" inf_behavior:PermissionBehavior.PermissionId="{x:Static securityModule:PredefinedPermissions.CatalogCatalog_Import_JobsManage}"
+     Header="{Loc ^DUPLICATE}" ToolTip="Duplicate selected Items" inf_behavior:PermissionBehavior.PermissionId="{x:Static securityModule:PredefinedPermissions.CatalogCatalog_Import_JobsManage}"
      inf_behavior:PermissionBehavior.DenyVisibility="Collapsed">
 					<core_controls:VectorImage ImageResource="{StaticResource Icon_Button_Copy}"
      Height="13" />
 				</core_controls:MetroButton>
 				<core_controls:MetroButton Command="{Binding ImportJobRunCommand}" CommandParameter="{Binding SelectedItem, ElementName=ItemList}"
-     LocalizationScope.ResourceManager="{ResourceManager res:Resources}" Header="{Loc RUN}"
-     ToolTip="{Loc Run_selected_import_Job}" inf_behavior:PermissionBehavior.PermissionId="{x:Static securityModule:PredefinedPermissions.CatalogCatalog_Import_JobsRun}"
+     LocalizationScope.Category="{x:Static localModule:NavigationNames.ModuleName}" Header="{Loc RUN}"
+     ToolTip="Run selected import Job" inf_behavior:PermissionBehavior.PermissionId="{x:Static securityModule:PredefinedPermissions.CatalogCatalog_Import_JobsRun}"
      inf_behavior:PermissionBehavior.DenyVisibility="Collapsed">
 					<core_controls:VectorImage ImageResource="{StaticResource Icon_ImportJob}" Height="14"
      Width="14" />
@@ -141,10 +143,11 @@
 							<RowDefinition Height="*" />
 							<RowDefinition Height="Auto" />
 						</Grid.RowDefinitions>
-						<StackPanel Grid.Row="0" LocalizationScope.ResourceManager="{ResourceManager res:Resources}">
-							<TextBlock Text="{Loc ImportNameInFilter}" />
+						<StackPanel Grid.Row="0">
+							<!--ImportNameInFilter-->
+							<TextBlock Text="{Loc 'Name', ConverterParameter=1323}" />
 							<core_controls:SearchTextBox SearchEventTimeDelay="0:0:1" Text="{Binding SearchFilterName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-     LabelText="{Loc Enter_name}">
+     LabelText="Enter name...">
 								<i:Interaction.Triggers>
 									<i:EventTrigger EventName="Search">
 										<i:InvokeCommandAction Command="{Binding SearchItemsCommand}" />

@@ -192,6 +192,10 @@
       <Project>{BB168A74-0F1E-43BE-A616-134902238B80}</Project>
       <Name>CommerceFoundation.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\Extensions\Client\CommerceClient\CommerceClient.csproj">
+      <Project>{9179b790-1f77-475f-b6ef-0b567d5ce8e0}</Project>
+      <Name>CommerceClient</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Presentation.Core\Presentation.Core.csproj">
       <Project>{D821E0C3-5D53-429B-AF8F-785E77B82FE0}</Project>
       <Name>Presentation.Core</Name>

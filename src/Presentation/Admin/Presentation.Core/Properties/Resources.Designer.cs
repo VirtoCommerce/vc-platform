@@ -142,11 +142,11 @@ namespace VirtoCommerce.ManagementClient.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Duplicate selected Items.
+        ///   Looks up a localized string similar to EDIT.
         /// </summary>
-        public static string Duplicate_selected_Items {
+        public static string EDIT {
             get {
-                return ResourceManager.GetString("Duplicate_selected_Items", resourceCulture);
+                return ResourceManager.GetString("EDIT", resourceCulture);
             }
         }
         

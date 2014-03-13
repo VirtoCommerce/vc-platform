@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Globalization;
-using System.Windows.Data;
-using System.Resources;
-using System.Windows;
-using System.Windows.Threading;
 using System.ComponentModel;
+using System.Globalization;
+using System.Windows;
+using System.Windows.Data;
+using System.Windows.Threading;
 
 namespace VirtoCommerce.ManagementClient.Localization
 {
@@ -137,39 +136,6 @@ namespace VirtoCommerce.ManagementClient.Localization
 
         #region Attached properties
 
-        /// <summary>
-        /// Gets the <see cref="ResourceManager"/> set for the object.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="ResourceManager"/> or null if no explicit value is set for the object.
-        /// </returns>
-        public ResourceManager GetResourceManager()
-        {
-            var obj = Object;
-
-            if (obj == null)
-            {
-                return null;
-            }
-
-            ResourceManager result;
-
-            if (obj.CheckAccess())
-            {
-                result = LocalizationScope.GetResourceManager(obj);
-            }
-            else
-            {
-                result = (ResourceManager)obj.Dispatcher.Invoke(new DispatcherOperationCallback(x => LocalizationScope.GetResourceManager((DependencyObject)x)), obj);
-            }
-
-            if (result == null)
-            {
-                result = LocalizationManager.DefaultResourceManager;
-            }
-
-            return result;
-        }
 
         /// <summary>
         /// Gets the culture set for the object.

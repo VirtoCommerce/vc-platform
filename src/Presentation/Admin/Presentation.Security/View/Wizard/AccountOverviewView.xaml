@@ -3,10 +3,8 @@
      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
      xmlns:inf="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
-     xmlns:w="clr-namespace:VirtoCommerce.ManagementClient.Security"
      xmlns:common="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Common;assembly=VirtoCommerce.ManagementClient.Core"
-     mc:Ignorable="d" d:DesignHeight="400" LocalizationScope.ResourceManager="{ResourceManager res:Resources}"
-     xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Security.Properties">
+     mc:Ignorable="d" d:DesignHeight="400">
 
     <FrameworkElement.Resources>
         <ResourceDictionary>
@@ -41,11 +39,11 @@
             <RowDefinition Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Text="{Loc Username_req}" />
+		<TextBlock Grid.Row="0" Text="* Username:" />
         <controls:WatermarkedTextBox Grid.Row="1" Text="{Binding InnerItem.UserName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-        <TextBlock Grid.Row="2" Text="{Loc Password}" />
+		<TextBlock Grid.Row="2" Text="* Password:" />
         <PasswordBox Grid.Row="3" common:PasswordHelper.Attach="True" common:PasswordHelper.Password="{Binding Password, Mode=TwoWay}" />
-        <TextBlock Grid.Row="4" Text="{Loc Password_repeat}" />
+		<TextBlock Grid.Row="4" Text="* Password repeat:" />
         <PasswordBox Grid.Row="5" common:PasswordHelper.Attach="True" common:PasswordHelper.Password="{Binding Password1, Mode=TwoWay}" />
     </Grid>
 </inf:ViewBase>

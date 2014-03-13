@@ -76,36 +76,6 @@ namespace VirtoCommerce.ManagementClient.Localization
 
         #endregion
 
-        #region ResourceManager
-
-        /// <summary>
-        /// The resource manager to use to retrieve resources.
-        /// </summary>
-        /// <remarks>
-        /// CAUTION! Setting this property does NOT automatically update localized values.
-        /// Call <see cref="LocalizationScope.UpdateValues"/> for that purpose.
-        /// </remarks>
-        public static readonly DependencyProperty ResourceManagerProperty = DependencyProperty.RegisterAttached(
-            "ResourceManager",
-            typeof(ResourceManager),
-            typeof(LocalizationScope),
-            new FrameworkPropertyMetadata(
-                null,
-                FrameworkPropertyMetadataOptions.Inherits
-                )
-            );
-
-        public static ResourceManager GetResourceManager(DependencyObject obj)
-        {
-            return (ResourceManager)obj.GetValue(ResourceManagerProperty);
-        }
-
-        public static void SetResourceManager(DependencyObject obj, ResourceManager value)
-        {
-            obj.SetValue(ResourceManagerProperty, value);
-        }
-
-        #endregion
 
         #region Category
 

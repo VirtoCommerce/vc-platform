@@ -2,7 +2,6 @@
 using System.Linq;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.ManagementClient.AppConfig.Properties;
 using VirtoCommerce.ManagementClient.Core.Controls;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using linq = System.Linq.Expressions;
@@ -16,11 +15,11 @@ namespace VirtoCommerce.ManagementClient.AppConfig.Model
 		private CategorySelectElement _itemsInCategoryEl;
 
 		public ConditionCategoryIs(IExpressionViewModel expressionViewModel)
-			: base(Resources.Category_is_, expressionViewModel)
+			: base("Category is []".Localize(), expressionViewModel)
 		{
-			WithLabel(Resources.Category_is);
+			WithLabel("Category is ".Localize());
 			_itemsInCategoryEl = WithElement(new CategorySelectElement(expressionViewModel)) as CategorySelectElement;
-			WithAvailableExcluding(() => new CategorySelectElement(Resources.Category, expressionViewModel));
+			WithAvailableExcluding(() => new CategorySelectElement("Category".Localize(), expressionViewModel));
 		}
 
 

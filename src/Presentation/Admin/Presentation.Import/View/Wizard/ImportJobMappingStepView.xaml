@@ -8,7 +8,7 @@
      xmlns:dialogs="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Dialogs;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:core_Converters="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Converters;assembly=VirtoCommerce.ManagementClient.Core"
      mc:Ignorable="d" MinHeight="300" Width="800" VerticalAlignment="Top" HorizontalAlignment="Left"
-     xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Import.Properties" LocalizationScope.ResourceManager="{ResourceManager res:Resources}">
+     xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Import" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
     
     <FrameworkElement.Resources>
         <ResourceDictionary>
@@ -35,14 +35,12 @@
         <ItemsControl Grid.Row="0" Style="{StaticResource Virto_ToolbarItemsControl_Style}"
              Margin="0,10,6,0">
 			<controls:MetroButton Command="{Binding ItemEditCommand}" CommandParameter="{Binding SelectedItem, ElementName=ItemsDataGrid}"
-     ToolTip="{Loc Edit_column_mapping}" LocalizationScope.ResourceManager="{ResourceManager AssemblyName=VirtoCommerce.ManagementClient.Core, BaseName=VirtoCommerce.ManagementClient.Core.Properties.Resources}"
-     Header="{Loc EDIT}">
+     ToolTip="{Loc 'Edit column mapping'}" Header="{Loc EDIT}">
                 <Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/check.png"
                      Width="14" />
             </controls:MetroButton>
 			<controls:MetroButton Command="{Binding ItemClearCommand}" CommandParameter="{Binding SelectedItem, ElementName=ItemsDataGrid}"
-     ToolTip="{Loc Clear_column_mapping}" LocalizationScope.ResourceManager="{ResourceManager AssemblyName=VirtoCommerce.ManagementClient.Core, BaseName=VirtoCommerce.ManagementClient.Core.Properties.Resources}"
-     Header="{Loc Clear}">
+     ToolTip="{Loc 'Clear column mapping'}" Header="{Loc Clear}">
                 <Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/cancel.png"
                      Width="14" />
             </controls:MetroButton>
@@ -52,11 +50,16 @@
         <DataGrid x:Name="ItemsDataGrid" ItemsSource="{Binding InnerItem.PropertiesMap}" Margin="0,0,6,6"
              Grid.Row="1">
             <DataGrid.Columns>
-				<DataGridTextColumn LocalizationScope.ResourceManager="{ResourceManager res:Resources}" Header="{Loc Entity_property}" Binding="{Binding DisplayName}" Width="2*" />
-				<DataGridTextColumn LocalizationScope.ResourceManager="{ResourceManager res:Resources}" Header="{Loc Locale_}" Binding="{Binding Locale, Converter={StaticResource cultureConverter}}" Width="2*" Visibility="{Binding IsPropertySetSelectable, Converter={StaticResource booleanToVisibilityConverter}}" />
-				<DataGridTextColumn LocalizationScope.ResourceManager="{ResourceManager res:Resources}" Header="{Loc CSV_column_}" Binding="{Binding CsvColumnName}" Width="2*" />
-				<DataGridTextColumn LocalizationScope.ResourceManager="{ResourceManager res:Resources}" Header="{Loc Custom_value_}" Binding="{Binding CustomValue}" Width="2*" />
-				<DataGridTextColumn LocalizationScope.ResourceManager="{ResourceManager res:Resources}" Header="{Loc Format_value}" Binding="{Binding StringFormat}" Width="2*" />
+				<DataGridTextColumn Header="{Loc 'Entity property'}" Binding="{Binding DisplayName}" Width="2*" />
+				<DataGridTextColumn LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
+     Header="{Loc 'Locale'}" Binding="{Binding Locale, Converter={StaticResource cultureConverter}}"
+     Width="2*" Visibility="{Binding IsPropertySetSelectable, Converter={StaticResource booleanToVisibilityConverter}}" />
+				<DataGridTextColumn LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
+     Header="{Loc 'CSV column'}" Binding="{Binding CsvColumnName}" Width="2*" />
+				<DataGridTextColumn LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
+     Header="{Loc 'Custom value'}" Binding="{Binding CustomValue}" Width="2*" />
+				<DataGridTextColumn LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
+     Header="{Loc 'Format value'}" Binding="{Binding StringFormat}" Width="2*" />
             </DataGrid.Columns>
             <DataGrid.RowStyle>
                 <Style TargetType="DataGridRow" BasedOn="{StaticResource {x:Type DataGridRow}}">

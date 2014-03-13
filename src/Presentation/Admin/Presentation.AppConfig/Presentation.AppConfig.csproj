@@ -103,11 +103,6 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -223,11 +218,6 @@
     <Compile Include="View\DisplayTemplatesView.xaml.cs">
       <DependentUpon>DisplayTemplatesView.xaml</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -244,6 +234,10 @@
     <ProjectReference Include="..\..\..\Core\CommerceFoundation.Data\CommerceFoundation.Data.csproj">
       <Project>{bb168a74-0f1e-43be-a616-134902238b80}</Project>
       <Name>CommerceFoundation.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Extensions\Client\CommerceClient\CommerceClient.csproj">
+      <Project>{9179B790-1F77-475F-B6EF-0B567D5CE8E0}</Project>
+      <Name>CommerceClient</Name>
     </ProjectReference>
     <ProjectReference Include="..\Presentation.Catalog\Presentation.Catalog.csproj">
       <Project>{4b2cbb79-86c2-4f09-a5db-dbea27330c90}</Project>

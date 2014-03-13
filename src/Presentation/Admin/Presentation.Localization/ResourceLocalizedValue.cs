@@ -44,16 +44,16 @@ namespace VirtoCommerce.ManagementClient.Localization
         /// </returns>
         protected override object GetLocalizedValue()
         {
-            //var resourceManager = Property.GetResourceManager();
-            //if (resourceManager == null)
-            //{
-            //    return GetFallbackValue();
-            //}
+            string value;
+            if (_resourceKey[0] == '^')
+            {
+                value = _resourceKey.Localize(Normalize(_resourceKey.Substring(1)), LocalizationScope.DefaultCategory);
+            }
+            else
+            {
+                value = _resourceKey.Localize(Normalize(_resourceKey), Property.GetCategory());
+            }
 
-            //var uiCulture = Property.GetUICulture();
-            // var value = resourceManager.GetObject(_resourceKey, uiCulture);
-
-            var value = _resourceKey.Localize(Normalize(_resourceKey), Property.GetCategory());
             if (value == null)
             {
                 return GetFallbackValue();

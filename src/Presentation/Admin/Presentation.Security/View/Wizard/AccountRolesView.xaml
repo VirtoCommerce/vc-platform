@@ -6,7 +6,7 @@
      xmlns:localInfrastructure="clr-namespace:VirtoCommerce.ManagementClient.Security.Infrastructure"
      xmlns:model="clr-namespace:VirtoCommerce.Foundation.Security.Model;assembly=VirtoCommerce.Foundation"
      xmlns:sys="clr-namespace:System;assembly=mscorlib" mc:Ignorable="d" d:DesignHeight="400"
-     LocalizationScope.ResourceManager="{ResourceManager res:Resources}" xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Security.Properties">
+     xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Security.Properties">
     
     <FrameworkElement.Resources>
         <ResourceDictionary>
@@ -30,8 +30,8 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <!--<TextBlock Grid.Row="0" Text="Roles:" />-->
-        <controls:MultiSelectControl Grid.Row="1" TextSearchTextPath="Name" AvailableTitle="{Loc Available_roles}"
-             AvailableItems="{Binding AllAvailableRoles}" CurrentTitle="{Loc Assigned_roles}" CurrentItems="{Binding InnerItem.RoleAssignments, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
+		<controls:MultiSelectControl Grid.Row="1" TextSearchTextPath="Name" AvailableTitle="Available roles"
+             AvailableItems="{Binding AllAvailableRoles}" CurrentTitle="Assigned roles" CurrentItems="{Binding InnerItem.RoleAssignments, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
             <controls:MultiSelectControl.ObjectsTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Name}" Style="{StaticResource {x:Type TextBlock}}" Margin="1" />

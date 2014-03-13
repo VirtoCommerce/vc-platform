@@ -4,11 +4,9 @@
      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:core_common="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Common;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:interaction_dialog="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Dialogs;assembly=VirtoCommerce.ManagementClient.Core"
-     xmlns:inf_behavior="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Behaviors;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
      xmlns:prism="http://www.codeplex.com/prism" mc:Ignorable="d" d:DesignHeight="400"
-     Width="400" xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Import.Properties"
-     LocalizationScope.ResourceManager="{ResourceManager res:Resources}">
+     Width="400" xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Import" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
     <i:Interaction.Triggers>
         <prism:InteractionRequestTrigger SourceObject="{Binding CommonConfirmRequest, Mode=OneWay}">
             <interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:DisableableLocalModalInteractionDialog}" />
@@ -37,11 +35,11 @@
 			<RowDefinition Height="*" />
 		</Grid.RowDefinitions>
 
-		<TextBlock Grid.Row="0" Grid.Column="0" Text="{Loc Import_Job_Name}" />
+		<TextBlock Grid.Row="0" Grid.Column="0" Text="{Loc 'Import Job Name:'}" />
 		<TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding InnerItem.ImportJob.Name}"
      FontWeight="Bold" Margin="5,12,0,8" />
 
-		<TextBlock Grid.Row="2" Grid.Column="0" Text="{Loc CSV_file}" />
+		<TextBlock Grid.Row="2" Grid.Column="0" Text="{Loc 'CSV file:'}" />
 
 		<Grid Grid.Row="3" Grid.ColumnSpan="2">
 			<Grid.ColumnDefinitions>
@@ -49,8 +47,8 @@
 				<ColumnDefinition Width="Auto" />
 			</Grid.ColumnDefinitions>
 			<core_controls:WatermarkedTextBox Grid.Column="0" Text="{Binding InnerItem.SourceFile, Mode=OneWay}"
-     WatermarkText="{Loc File_not_selected}" IsReadOnly="True" />
-			<Button Grid.Column="1" Content="{Loc Select_file}" Style="{StaticResource Virto_ToolButton_Style}"
+     WatermarkText="{Loc 'File not selected...'}" IsReadOnly="True" />
+			<Button Grid.Column="1" Content="{Loc 'Select file...'}" Style="{StaticResource Virto_ToolButton_Style}"
      Margin="5,0,0,0" VerticalAlignment="Center" Command="{Binding FilePickCommand}" />
 		</Grid>
     </Grid>

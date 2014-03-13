@@ -7,7 +7,7 @@
               xmlns:controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
               xmlns:dialogs="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Dialogs;assembly=VirtoCommerce.ManagementClient.Core"
      mc:Ignorable="d" Width="600" MinHeight="300" VerticalAlignment="Top" HorizontalAlignment="Left"
-     xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Import.Properties" LocalizationScope.ResourceManager="{ResourceManager res:Resources}">
+     xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Import.Properties">
     
     <FrameworkElement.Resources>
         <ResourceDictionary>
@@ -55,7 +55,7 @@
             </Grid.RowDefinitions>
 
 			<!-- Importing type -->
-			<TextBlock Grid.Row="0" Text="{Loc Importing_item_data_type}" Visibility="{Binding IsTypeSelectable, Converter={StaticResource booleanToVisibilityConverter}}" />
+			<TextBlock Grid.Row="0" Text="* Importing item data type:" Visibility="{Binding IsTypeSelectable, Converter={StaticResource booleanToVisibilityConverter}}" />
 			<ComboBox Grid.Row="1" ItemsSource="{Binding EntityImporters}" IsEnabled="{Binding IsInEditMode}"
                           SelectedValue="{Binding InnerItem.EntityImporter, Mode=TwoWay, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged, 
 							Converter={StaticResource EntityTypeConverter}}" 
@@ -68,7 +68,7 @@
 			</ComboBox>
 
 			<!-- Property set -->
-			<TextBlock Grid.Row="2" Text="{Loc Property_set}" Visibility="{Binding IsPropertySetSelectable, Converter={StaticResource booleanToVisibilityConverter}}" />
+			<TextBlock Grid.Row="2" Text="Property set:" Visibility="{Binding IsPropertySetSelectable, Converter={StaticResource booleanToVisibilityConverter}}" />
 			<ComboBox Grid.Row="3" ItemsSource="{Binding PropertySets}" SelectedValue="{Binding InnerItem.PropertySetId, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" 
      SelectedValuePath="PropertySetId" IsEnabled="{Binding IsInEditMode}" DisplayMemberPath="Name"
 							Visibility="{Binding IsPropertySetSelectable, Converter={StaticResource booleanToVisibilityConverter}}">
@@ -80,11 +80,11 @@
 			</ComboBox>
 			
 			<!-- Name -->
-			<TextBlock Grid.Row="4" Text="{Loc job_Name_req}" />
+			<TextBlock Grid.Row="4" Text="* Name:" />
 			<controls:WatermarkedTextBox Grid.Row="5" Text="{Binding InnerItem.Name, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
 
 			<!-- Errors -->
-			<TextBlock Grid.Row="6" Text="{Loc Errors_allowed_during_import}" />
+			<TextBlock Grid.Row="6" Text="* Errors allowed during import:" />
 			<extToolkit:IntegerUpDown Grid.Row="7" Minimum="0" Value="{Binding InnerItem.MaxErrorsCount, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
 
 			<!-- Import step -->
@@ -111,7 +111,7 @@
             </Grid.RowDefinitions>
 
 			<!-- Catalog -->
-			<TextBlock Grid.Row="0" Text="{Loc Catalog}" Visibility="{Binding IsCatalogSelectable, Converter={StaticResource booleanToVisibilityConverter}}" />
+			<TextBlock Grid.Row="0" Text="* Catalog:" Visibility="{Binding IsCatalogSelectable, Converter={StaticResource booleanToVisibilityConverter}}" />
 			<ComboBox Grid.Row="1" ItemsSource="{Binding Catalogs}" IsEnabled="{Binding IsInEditMode}"
      DisplayMemberPath="Name" SelectedValuePath="CatalogId" SelectedValue="{Binding InnerItem.CatalogId, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
 					  Visibility="{Binding IsCatalogSelectable, Converter={StaticResource booleanToVisibilityConverter}}">
@@ -123,20 +123,20 @@
 			</ComboBox>
 
 			<!-- CSV template -->
-			<TextBlock Grid.Row="2" Text="{Loc CSV_Template_File}" />
+			<TextBlock Grid.Row="2" Text="* CSV Template File:" />
 			<Grid Grid.Row="3">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition />
 					<ColumnDefinition Width="Auto" />
 				</Grid.ColumnDefinitions>
 				<controls:WatermarkedTextBox Text="{Binding InnerItem.TemplatePath, Mode=OneWay}"
-     WatermarkText="{Loc File_not_selected}" IsReadOnly="True" />
-				<Button Content="{Loc Select_file}" Command="{Binding FilePickCommand}" Width="Auto"
+     WatermarkText="{Loc 'File not selected'}" IsReadOnly="True" />
+				<Button Content="{Loc 'Select file'}" Command="{Binding FilePickCommand}" Width="Auto"
      Grid.Column="1" Margin="10,0,0,0" />
 			</Grid>
 
 			<!-- Column delimiter -->
-            <TextBlock Grid.Row="4" Text="{Loc Column_delimiter}" />
+			<TextBlock Grid.Row="4" Text="* Column delimiter:" />
             <Grid Grid.Row="5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="110" />
@@ -150,17 +150,17 @@
 						</i:EventTrigger>
 					</i:Interaction.Triggers>
 				</ComboBox>
-				<controls:WatermarkedTextBox WatermarkText="{Loc Enter_custom_delimiter}" Text="{Binding InnerItem.ColumnDelimiter}"
+				<controls:WatermarkedTextBox WatermarkText="Enter custom delimiter..." Text="{Binding InnerItem.ColumnDelimiter}"
      Grid.Column="1" IsReadOnly="{Binding IsCustomDelimiterSelected}" Margin="10,0,0,0" />
 					
             </Grid>
             
 			<!-- Start index -->
-			<TextBlock Grid.Row="6" Text="{Loc Start_index}" />
+			<TextBlock Grid.Row="6" Text="Start index:" />
 			<extToolkit:IntegerUpDown Grid.Row="7" Minimum="1" Value="{Binding InnerItem.StartIndex, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
 
 			<!-- Import count -->
-			<TextBlock Grid.Row="8" Text="{Loc Import_count_import_all_by_def}" />
+			<TextBlock Grid.Row="8" Text="Import count (import all by default):" />
 			<extToolkit:IntegerUpDown Grid.Row="9" Minimum="0" Value="{Binding InnerItem.ImportCount, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
 		</Grid>
     </Grid>

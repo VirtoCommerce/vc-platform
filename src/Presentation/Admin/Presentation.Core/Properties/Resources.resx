@@ -160,11 +160,7 @@
     <value>DUPLICATE</value>
     <comment>core_controls:MetroButton.Header</comment>
   </data>
-  <data name="Duplicate_selected_Items" xml:space="preserve">
-    <value>Duplicate selected Items</value>
-    <comment>core_controls:MetroButton.ToolTip</comment>
-  </data>
-  <data name="NARROW_YOUR_RESULTS" xml:space="preserve">
+	<data name="NARROW_YOUR_RESULTS" xml:space="preserve">
     <value>NARROW YOUR RESULTS</value>
     <comment>TextBlock.Text</comment>
   </data>

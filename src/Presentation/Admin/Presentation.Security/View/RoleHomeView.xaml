@@ -5,7 +5,7 @@
      xmlns:core_common="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Common;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:prism="clr-namespace:Microsoft.Practices.Prism.Interactivity.InteractionRequest;assembly=Microsoft.Practices.Prism.Interactivity"
      xmlns:interaction_dialog="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Dialogs;assembly=VirtoCommerce.ManagementClient.Core"
-     LocalizationScope.ResourceManager="{ResourceManager AssemblyName=VirtoCommerce.ManagementClient.Core, BaseName=VirtoCommerce.ManagementClient.Core.Properties.Resources}"
+	LocalizationScope.Category="{x:Null}"
      mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <ResourceDictionary>
