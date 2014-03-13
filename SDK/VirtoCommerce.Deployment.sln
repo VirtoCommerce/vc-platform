@@ -39,8 +39,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{C0E722
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
-Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "VirtoCommerce.Manager", "Setup\VirtoCommerce.Manager\VirtoCommerce.Manager.wixproj", "{65707C64-1412-4EC3-9AF2-89B26C098359}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -209,24 +207,6 @@ Global
 		{0EF8FC18-663B-4FBB-AE42-BB08094FF50D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{0EF8FC18-663B-4FBB-AE42-BB08094FF50D}.Release|x64.ActiveCfg = Release|Any CPU
 		{0EF8FC18-663B-4FBB-AE42-BB08094FF50D}.Release|x86.ActiveCfg = Release|Any CPU
-		{65707C64-1412-4EC3-9AF2-89B26C098359}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{65707C64-1412-4EC3-9AF2-89B26C098359}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{65707C64-1412-4EC3-9AF2-89B26C098359}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{65707C64-1412-4EC3-9AF2-89B26C098359}.Debug|x64.ActiveCfg = Debug|x86
-		{65707C64-1412-4EC3-9AF2-89B26C098359}.Debug|x86.ActiveCfg = Debug|x86
-		{65707C64-1412-4EC3-9AF2-89B26C098359}.Debug|x86.Build.0 = Debug|x86
-		{65707C64-1412-4EC3-9AF2-89B26C098359}.LocalDebug|Any CPU.ActiveCfg = Debug|x86
-		{65707C64-1412-4EC3-9AF2-89B26C098359}.LocalDebug|Mixed Platforms.ActiveCfg = Debug|x86
-		{65707C64-1412-4EC3-9AF2-89B26C098359}.LocalDebug|Mixed Platforms.Build.0 = Debug|x86
-		{65707C64-1412-4EC3-9AF2-89B26C098359}.LocalDebug|x64.ActiveCfg = Debug|x86
-		{65707C64-1412-4EC3-9AF2-89B26C098359}.LocalDebug|x86.ActiveCfg = Debug|x86
-		{65707C64-1412-4EC3-9AF2-89B26C098359}.LocalDebug|x86.Build.0 = Debug|x86
-		{65707C64-1412-4EC3-9AF2-89B26C098359}.Release|Any CPU.ActiveCfg = Release|x86
-		{65707C64-1412-4EC3-9AF2-89B26C098359}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{65707C64-1412-4EC3-9AF2-89B26C098359}.Release|Mixed Platforms.Build.0 = Release|x86
-		{65707C64-1412-4EC3-9AF2-89B26C098359}.Release|x64.ActiveCfg = Release|x86
-		{65707C64-1412-4EC3-9AF2-89B26C098359}.Release|x86.ActiveCfg = Release|x86
-		{65707C64-1412-4EC3-9AF2-89B26C098359}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -240,7 +220,6 @@ Global
 		{9D4E5ED4-1E43-4539-B8AC-03A2EFF18DEF} = {1044E8D1-F692-4EBA-A2A9-33606511BE46}
 		{7ACD94BC-CBEF-4A44-BA24-978656A606B7} = {1044E8D1-F692-4EBA-A2A9-33606511BE46}
 		{BCA6F7DF-23AF-48D0-AA28-FCAF33FDCEC8} = {1044E8D1-F692-4EBA-A2A9-33606511BE46}
-		{65707C64-1412-4EC3-9AF2-89B26C098359} = {1044E8D1-F692-4EBA-A2A9-33606511BE46}
 		{16BF4315-95D0-46E9-87D5-B62275298D88} = {2977134E-3152-4496-ACBD-30557F8FC822}
 		{96DEFBC9-13F9-41B4-84EC-D948AAB3D698} = {2977134E-3152-4496-ACBD-30557F8FC822}
 	EndGlobalSection
