@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Web.Client.Caching;
@@ -55,6 +56,30 @@ namespace VirtoCommerce.Web.Controllers
 	        {
 	            this.SharedViewBag().Messages = messages;
 	        }
+	    }
+
+	    protected override void OnResultExecuting(ResultExecutingContext filterContext)
+	    {
+            //This is needed for IE as it agresively caches
+	        DontCacheAjax(filterContext);
+	        base.OnResultExecuting(filterContext);
+	    }
+
+        private void DontCacheAjax(ResultExecutingContext filterContext)
+	    {
+            var context = filterContext.HttpContext;
+
+            //We want to expliclilty not cache ajax get not child requests
+            if (context.Request.RequestType != "GET" || filterContext.IsChildAction || !context.Request.IsAjaxRequest())
+            {
+                return;
+            }
+
+            filterContext.HttpContext.Response.Cache.SetExpires(DateTime.UtcNow.AddDays(-1));
+            filterContext.HttpContext.Response.Cache.SetValidUntilExpires(false);
+            filterContext.HttpContext.Response.Cache.SetRevalidation(HttpCacheRevalidation.AllCaches);
+            filterContext.HttpContext.Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            filterContext.HttpContext.Response.Cache.SetNoStore();
 	    }
 
 	    private bool ProcessMessages(MessageType type, MessagesModel messages)
