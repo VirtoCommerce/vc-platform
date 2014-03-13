@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -178,7 +176,7 @@ namespace VirtoCommerce.Web.Controllers
         public ActionResult ProcessCheckout(CheckoutModel checkoutModel)
         {
             //Need to submit changes again to make sure cart is still valid
-            SubmitChanges(checkoutModel);
+            RecalculateCart(checkoutModel);
 
             if (!ModelState.IsValid)
             {
