@@ -439,8 +439,6 @@ namespace VirtoCommerce.Web.Client.Helpers
         /// <returns>LineItem.</returns>
         public virtual LineItem AddItem(Item item, Item parent, decimal quantity, bool fixedQuantity, params CartHelper[] helpersToRemove)
         {
-            Cart.BillingCurrency = CustomerSession.Currency;
-
             OrderForm orderForm;
             if (Cart.OrderForms.Count == 0) // create a new one
             {
@@ -661,7 +659,7 @@ namespace VirtoCommerce.Web.Client.Helpers
                 // need to set meta data context before cloning
                 foreach (var form in orderGroup.OrderForms)
                 {
-                    var orderForm = FindOrderFormByName(Cart, form.Name);
+                    var orderForm = Cart.OrderForms.FirstOrDefault(f => f.Name.Equals(form.Name, StringComparison.OrdinalIgnoreCase));
                     if (orderForm == null)
                     {
                         orderForm = new OrderForm { Name = form.Name };
@@ -728,16 +726,6 @@ namespace VirtoCommerce.Web.Client.Helpers
             return form.LineItems.IndexOf(value);
         }
 
-        /// <summary>
-        /// Finds the name of the order form by.
-        /// </summary>
-        /// <param name="group">The group.</param>
-        /// <param name="name">The name.</param>
-        /// <returns>OrderForm.</returns>
-        private OrderForm FindOrderFormByName(OrderGroup group, string name)
-        {
-            return @group.OrderForms.FirstOrDefault(form => form.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
-        }
 
         #endregion
 
@@ -847,8 +835,13 @@ namespace VirtoCommerce.Web.Client.Helpers
 
             if (cart == null)
             {
-                cart = new ShoppingCart { StoreId = storeId, CustomerId = userId, Name = name };
-                //repo.Add(cart);
+                cart = new ShoppingCart
+                {
+                    StoreId = storeId,
+                    CustomerId = userId,
+                    Name = name,
+                    BillingCurrency = CustomerSession.Currency
+                };
             }
 
             if (String.IsNullOrEmpty(cart.CustomerId))
