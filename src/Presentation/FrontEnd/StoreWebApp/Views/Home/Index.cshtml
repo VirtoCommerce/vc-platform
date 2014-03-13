@@ -3,19 +3,42 @@
     ViewBag.Title = Html.Title("Home".Localize());
 }
 
+<script>
+    $(function () {
+        VirtoCommerce.registerDynamicContent("MainSlider", function(data) {
+            $('#MainSlider').html(data);
+            VirtoCommerce.initSliders();
+        });
+        VirtoCommerce.registerDynamicContent("HomeNewProducts", function (data)
+        {
+            $('div.new-products ul.products-list').html(data);
+            $('div.new-products').virtoSlider();
+        });
+        VirtoCommerce.registerDynamicContent("HomeStaffPick", function (data)
+        {
+            $('div.staff-pick ul.products-list').html(data);
+            $('div.staff-pick').virtoSlider();
+        });
+        VirtoCommerce.registerDynamicContent("HomeFeaturedProducts", 'div.featured ul.products-list');
+
+    })
+</script>
+
 @section Slider{
-    @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "MainSlider" });}
+    <div id="MainSlider">
+               @* @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "MainSlider" });}*@
+    </div>
 }
 
 <div class="home content">
-    <div class="products slider-products">
+    <div class="products slider-products staff-pick">
         <header>
             <h2>@("Staff pick".Localize())</h2>
         </header>
         <ul class="products-list slider-list grid">
             @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeStaffPick" });}
         </ul>
-    </div>    
+    </div>
     <div class="products featured">
         <header>
             <h2>@("Featured Products".Localize())</h2>
@@ -24,7 +47,7 @@
             @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeFeaturedProducts" });}
         </ul>
     </div>
-    <div class="products slider-products">
+    <div class="products slider-products new-products">
         <header>
             <h2>@("New Products".Localize())</h2>
         </header>

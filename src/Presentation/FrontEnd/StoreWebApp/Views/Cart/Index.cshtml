@@ -7,16 +7,19 @@
 
 <script type="text/javascript">
 
-    $(document).ready(function ()
+    $(function ()
     {
-        //Hide cart suggested dynamic content when there is nothing there
-        if ($.trim($("#crosssell-products-list li").html()).length == 0)
+        VirtoCommerce.registerDynamicContent("CartSuggest", function (data)
         {
-            $("#cartSuggestDynamic").remove();
-        } else
-        {
-            //$(".columns .grid_4").switchClass("grid_4", "grid_3");
-        }
+            if (data.length == 0)
+            {
+                //Hide cart suggested dynamic content when there is nothing there
+                $("#cartSuggestDynamic").remove();
+            } else
+            {
+                $("#crosssell-products-list").html(data);
+            }
+        });
     });
 </script>
 
@@ -35,13 +38,13 @@
         <fieldset>
             <table id="shopping-cart-table" class="data-table">
                 <colgroup>
-                    <col width="1">
                     <col>
-                    <col width="1">
-                    <col width="1">
-                    <col width="1">
-                    <col width="1">
-                    <col width="1">
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
+                    <col>
                 </colgroup>
                 <thead>
                     <tr>
@@ -103,7 +106,7 @@
                 <table>
                     <colgroup>
                         <col>
-                        <col width="1">
+                        <col>
                     </colgroup>
                     <tbody>
                         <tr>
@@ -138,7 +141,7 @@
         <div class="cart-block">
             <span class="title">@("You may also be interested in:".Localize())</span>
             <ul id="crosssell-products-list" class="products-list grid" style="padding-bottom: 0;">
-                @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "CartSuggest" });}
+@*                @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "CartSuggest" }, true);}*@
             </ul>
         </div>
     </div>

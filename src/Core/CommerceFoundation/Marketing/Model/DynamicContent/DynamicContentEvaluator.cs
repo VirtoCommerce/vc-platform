@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
@@ -90,7 +91,7 @@ namespace VirtoCommerce.Foundation.Marketing.Model.DynamicContent
             //var query = _repository.PublishingGroups.Expand("ContentPlaces").Expand("ContentItems").ExpandAll();
 			return Cache.Get(
 				string.Format(DynamicContentCacheKey, "allGroups"),
-				() => (query).ToArray(),
+				() => (query).ToArrayAsync().Result,
 				DynamicContentConfiguration.Instance != null ? DynamicContentConfiguration.Instance.Cache.DynamicContentTimeout : new TimeSpan(),
                 IsEnabled).AsQueryable();
 		}

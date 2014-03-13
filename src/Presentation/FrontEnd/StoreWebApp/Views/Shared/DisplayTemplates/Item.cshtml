@@ -12,7 +12,7 @@
     }
 }
 
-<li class="@itemClass">
+<li class="@itemClass" id="@Model.CatalogItem.ItemId">
     <div class="inner">
         <a href="@Url.ItemUrl(Model.CatalogItem.Item, Model.CatalogItem.ParentItemId)" title="@Model.DisplayName" class="product-image">
             <figure>
@@ -22,11 +22,16 @@
         <div class="product-info">
             <span class="title">@Model.DisplayName</span>
             <div class="ratings">
-                <div id="rateit-@Model.CatalogItem.ItemId"></div>
+                <div id="rateit"></div>
             </div>
-            @if (Model.Price != null && Model.Price.Type != PriceType.None)
+            @if (ViewData.ContainsKey("hidePrices"))
             {
-                @Html.DisplayFor(model => model.Price, new { Association = Model as AssociatedCatalogItemWithPriceModel})
+                <div class="price">
+                </div>
+            }
+            else if (Model.Price != null && Model.Price.Type != PriceType.None)
+            {
+                @Html.DisplayFor(model => model.Price, new { Association = Model as AssociatedCatalogItemWithPriceModel })
             }
             <div class="cart">
                 @{Html.RenderPartial("AddToCart", Model, new ViewDataDictionary { { "View", "List" } });}

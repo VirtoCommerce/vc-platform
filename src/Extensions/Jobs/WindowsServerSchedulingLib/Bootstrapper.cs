@@ -21,6 +21,7 @@ using VirtoCommerce.Foundation.Data.Catalogs;
 using VirtoCommerce.Foundation.Data.Customers;
 using VirtoCommerce.Foundation.Data.Importing;
 using VirtoCommerce.Foundation.Data.Infrastructure;
+using VirtoCommerce.Foundation.Data.Marketing;
 using VirtoCommerce.Foundation.Data.Orders;
 using VirtoCommerce.Foundation.Data.Search;
 using VirtoCommerce.Foundation.Data.Security;
@@ -40,6 +41,9 @@ using VirtoCommerce.Foundation.Frameworks.Workflow.Services;
 using VirtoCommerce.Foundation.Importing.Factories;
 using VirtoCommerce.Foundation.Importing.Repositories;
 using VirtoCommerce.Foundation.Importing.Services;
+using VirtoCommerce.Foundation.Marketing.Factories;
+using VirtoCommerce.Foundation.Marketing.Model;
+using VirtoCommerce.Foundation.Marketing.Repositories;
 using VirtoCommerce.Foundation.Orders.Factories;
 using VirtoCommerce.Foundation.Orders.Repositories;
 using VirtoCommerce.Foundation.Orders.Services;
@@ -94,11 +98,11 @@ namespace VirtoCommerce.Scheduling.Windows
             container.RegisterType<IOperationLogRepository, OperationLogContext>();
 
             #region Marketing
-            //container.RegisterType<IMarketingRepository, EFMarketingRepository>();
-            //container.RegisterType<IMarketingEntityFactory, MarketingEntityFactory>();
-            //container.RegisterType<IPromotionUsageProvider, PromotionUsageProvider>();
-            //container.RegisterType<IPromotionEntryPopulate, PromotionEntryPopulate>();
-            //container.RegisterType<IDynamicContentRepository, EFDynamicContentRepository>();
+            container.RegisterType<IMarketingRepository, EFMarketingRepository>();
+            container.RegisterType<IMarketingEntityFactory, MarketingEntityFactory>();
+            container.RegisterType<IPromotionUsageProvider, PromotionUsageProvider>();
+            container.RegisterType<IPromotionEntryPopulate, PromotionEntryPopulate>();
+            container.RegisterType<IDynamicContentRepository, EFDynamicContentRepository>();
             #endregion
 
             #region Search

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Linq;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
@@ -59,7 +60,7 @@ namespace VirtoCommerce.Client
         {
             return CacheHelper.Get(AllSeoKeywordCacheKey,
                 () => _appConfigRepository.SeoUrlKeywords
-                    .Where(s => s.IsActive).ToArray(), AppConfigConfiguration.Instance.Cache.SeoKeywordsTimeout, _isEnabled);
+                    .Where(s => s.IsActive).ToArrayAsync().Result, AppConfigConfiguration.Instance.Cache.SeoKeywordsTimeout, _isEnabled);
         }
 
         CacheHelper _cacheHelper;

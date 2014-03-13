@@ -155,7 +155,7 @@ namespace VirtoCommerce.Web.Controllers
 
         /// <summary>
         /// Processes the checkout.
-        /// </summary>
+        /// </summary>CU
         /// <param name="id">The identifier.</param>
         /// <returns>ActionResult.</returns>
         /// <exception cref="System.UnauthorizedAccessException"></exception>
@@ -421,7 +421,7 @@ namespace VirtoCommerce.Web.Controllers
                                 ? configMap["URL"]
                                 : "https://www.sandbox.paypal.com/webscr&amp;cmd={0}",
                             "_express-checkout&token=" + setEcResponse.Token);
-                    Session["checkout_" + setEcResponse.Token] = model;
+                    TempData.Add("checkout_" + setEcResponse.Token,model);
                     return Redirect(redirectUrl);
                 }
             }
@@ -432,7 +432,7 @@ namespace VirtoCommerce.Web.Controllers
         public ActionResult PaypalExpressSuccess(string token, string payerID)
         {
 
-            var model = (CheckoutModel)Session["checkout_" + token] ?? PrepareCheckoutModel(new CheckoutModel());
+            var model = (CheckoutModel)TempData["checkout_" + token] ?? PrepareCheckoutModel(new CheckoutModel());
             model.Payments = model.Payments ?? GetPayments().ToArray();
 
             var payment = _paymentClient.GetPaymentMethod(model.PaymentMethod ?? "Paypal");
@@ -470,20 +470,19 @@ namespace VirtoCommerce.Web.Controllers
                 }
                 else
                 {
-
                     var details = getEcResponse.GetExpressCheckoutDetailsResponseDetails;
-                    var paymentDetails = details.PaymentDetails[0];
-                    var orderId = HttpContext.Session != null
-                        ? HttpContext.Session["LatestOrderId"]
-                        : Ch.Cart.OrderGroupId;
 
                     if (details.CheckoutStatus.Equals("PaymentActionCompleted", StringComparison.OrdinalIgnoreCase))
                     {
-                        return RedirectToAction("ProcessCheckout", "Checkout", new {id = orderId});
+                        UserHelper.CustomerSession.LastOrderId = TempData["LastOrderId"].ToString();
+                        return RedirectToAction("ProcessCheckout", "Checkout", new { id = UserHelper.CustomerSession.LastOrderId });
                     }
 
                     model.PaymentMethod = payment.Name;
                     model.ShippingMethod = details.UserSelectedOptions.ShippingOptionName;
+
+                    var paymentDetails = details.PaymentDetails[0];
+
                     model.BillingAddress.Address = ConvertToPaypalAddress(paymentDetails.ShipToAddress, "Billing");
                     model.BillingAddress.Address.Email = details.PayerInfo.Payer;
                     model.ShippingAddress.Address = ConvertToPaypalAddress(paymentDetails.ShipToAddress, "Shipping");
@@ -515,8 +514,10 @@ namespace VirtoCommerce.Web.Controllers
                         Ch.SaveChanges();
 
                         if (DoCheckout())
-                        {
-                            return RedirectToAction("ProcessCheckout", "Checkout", new {id = orderId});
+                        { 
+                            //This call was made from paypal API, we need so save last order id, as it is not saved in our cookie
+                            TempData["LastOrderId"] = UserHelper.CustomerSession.LastOrderId;
+                            return null;
                         }
                     }
 
@@ -530,14 +531,13 @@ namespace VirtoCommerce.Web.Controllers
         private PaymentDetailsType GetPaypalPaymentDetail(CurrencyCodeType currency, PaymentActionCodeType paymentAction)
         {
             var paymentDetails = new PaymentDetailsType { PaymentAction = paymentAction };
-            paymentDetails.PaymentDetailsItem.AddRange(GetPaypalPaymentDetailsItemTypes(currency));
+            decimal itemTotal;
+            paymentDetails.PaymentDetailsItem.AddRange(GetPaypalPaymentDetailsItemTypes(currency, out itemTotal));
+            paymentDetails.ItemTotal = new BasicAmountType(currency, FormatMoney(itemTotal));
             paymentDetails.ShippingTotal = new BasicAmountType(currency, FormatMoney(Ch.Cart.ShippingTotal));
             paymentDetails.HandlingTotal = new BasicAmountType(currency, FormatMoney(Ch.Cart.HandlingTotal));
             paymentDetails.TaxTotal = new BasicAmountType(currency, FormatMoney(Ch.Cart.TaxTotal));
             paymentDetails.OrderTotal = new BasicAmountType(currency, FormatMoney(Ch.Cart.Total));
-            paymentDetails.ItemTotal = new BasicAmountType(currency, FormatMoney(Ch.LineItems.Sum(x=>x.ExtendedPrice)));
-            //paymentDetails.ItemTotal = new BasicAmountType(currency, FormatMoney(paymentDetails.PaymentDetailsItem.Sum(x => x.Quantity.HasValue ?
-            //    decimal.Parse(x.Amount.value) * x.Quantity.Value : decimal.Parse(x.Amount.value))));
 
             var shippingDiscount = Ch.Cart.OrderForms.SelectMany(c => c.Shipments).Sum(c => c.ShippingDiscountAmount);
             if (shippingDiscount > 0)
@@ -552,8 +552,10 @@ namespace VirtoCommerce.Web.Controllers
             return amount.ToString("F2", new CultureInfo("en-US"));
         }
 
-        private IEnumerable<PaymentDetailsItemType> GetPaypalPaymentDetailsItemTypes(CurrencyCodeType currency)
+        private IEnumerable<PaymentDetailsItemType> GetPaypalPaymentDetailsItemTypes(CurrencyCodeType currency, out decimal itemTotal)
         {
+            itemTotal = 0;
+
             var detais = Ch.LineItems.Select(li => new PaymentDetailsItemType
             {
                 Name = li.DisplayName, 
@@ -566,6 +568,10 @@ namespace VirtoCommerce.Web.Controllers
                 ItemURL = Url.ItemUrl(li.CatalogItemId, li.ParentCatalogItemId)
             }).ToList();
 
+            //Item total is sum of line item extended price
+            itemTotal += Ch.LineItems.Sum(li => li.ExtendedPrice);
+
+            //Add order form discounts
             detais.AddRange(Ch.Cart.OrderForms.SelectMany(x => x.Discounts).Select(dicount => new PaymentDetailsItemType
             {
                 Name = dicount.DiscountName, 
@@ -576,6 +582,10 @@ namespace VirtoCommerce.Web.Controllers
                 PromoCode = dicount.DiscountCode
             }));
 
+            //minus cart subtotal discount sum
+            itemTotal -= Ch.Cart.OrderForms.SelectMany(x => x.Discounts).Sum(d => d.DiscountAmount);
+  
+            //Add line item discounts
             detais.AddRange(Ch.Cart.OrderForms.SelectMany(x => x.LineItems).SelectMany(x=>x.Discounts).Select(dicount => new PaymentDetailsItemType
             {
                 Name = dicount.DiscountName,
@@ -616,10 +626,8 @@ namespace VirtoCommerce.Web.Controllers
                     Ch.RunWorkflow("ShoppingCartCheckoutWorkflow");
                     // Create order
                     var order = Ch.SaveAsOrder();
-                    if (HttpContext.Session != null)
-                    {
-                        HttpContext.Session["LatestOrderId"] = order.OrderGroupId;
-                    }
+                    UserHelper.CustomerSession.LastOrderId = order.OrderGroupId;
+
                     transaction.Complete();
                     return true;
                 }
@@ -849,13 +857,13 @@ namespace VirtoCommerce.Web.Controllers
                         BillingAddressId = form.BillingAddressId,
                         PaymentMethodName = model.DisplayName,
                         PaymentMethodId = model.Id,
-                        Amount = form.Total
                     };
             }
             //Common Properties
             payment.Status = PaymentStatus.Pending.ToString();
             payment.OrderForm = form;
             payment.TransactionType = TransactionType.Sale.ToString();
+            payment.Amount = form.OrderGroup.Total;
 
             return payment;
         }

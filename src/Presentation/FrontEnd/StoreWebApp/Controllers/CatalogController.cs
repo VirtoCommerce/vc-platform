@@ -8,7 +8,7 @@ using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Catalogs.Services;
 using VirtoCommerce.Foundation.Frameworks.Tagging;
-using VirtoCommerce.Web.Client.Extensions.Filters;
+using VirtoCommerce.Web.Client.Caching;
 using VirtoCommerce.Web.Client.Extensions.Routing;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Virto.Helpers;
@@ -52,7 +52,7 @@ namespace VirtoCommerce.Web.Controllers
         /// <param name="category">The category code</param>
 	    /// <returns>ActionResult.</returns>
 	    /// <exception cref="System.Web.HttpException">404;Category not found</exception>
-	    [CustomOutputCache(CacheProfile = "CatalogCache", VaryByCustom = "store;currency;cart")]
+        [DonutOutputCache(CacheProfile = "CatalogCache", VaryByCustom = "currency;filters;pricelist")]
         public ActionResult Display(CategoryPathModel category)
         {
             var categoryBase = _catalogClient.GetCategory(category.Category);
@@ -113,7 +113,7 @@ namespace VirtoCommerce.Web.Controllers
         /// <param name="item">Item code</param>
 	    /// <returns>ActionResult.</returns>
 	    /// <exception cref="System.Web.HttpException">404;Item not found</exception>
-	    [CustomOutputCache(CacheProfile = "CatalogCache", VaryByCustom = "store;currency;cart")]
+        [DonutOutputCache(CacheProfile = "CatalogCache", VaryByCustom = "currency;cart")]
         public ActionResult DisplayItem(string item)
         {
             var itemModel = CatalogHelper.CreateCatalogModel(item, byItemCode: true);
@@ -169,7 +169,7 @@ namespace VirtoCommerce.Web.Controllers
 		/// <param name="selections">The selections.</param>
 		/// <param name="variation">The selected variation item code.</param>
 		/// <returns>ActionResult.</returns>
-		[CustomOutputCache(CacheProfile = "CatalogCache")]
+        [DonutOutputCache(CacheProfile = "CatalogCache")]
         public ActionResult ItemVariations(string itemId, string name, string[] selections = null,
                                            string variation = null)
         {
@@ -186,7 +186,7 @@ namespace VirtoCommerce.Web.Controllers
 		/// <param name="templateName">Name of the display template.</param>
 		/// <param name="groupName">Name of the association group.</param>
 		/// <returns>ActionResult.</returns>
-		[CustomOutputCache(CacheProfile = "CatalogCache")]
+        [DonutOutputCache(CacheProfile = "CatalogCache")]
 		public ActionResult Association(ItemModel item, string templateName, string groupName)
         {
             var currentGroup = item.AssociationGroups
@@ -218,7 +218,7 @@ namespace VirtoCommerce.Web.Controllers
 		/// <param name="responseGroups">The response groups.</param>
 		/// <param name="displayOptions">The display options.</param>
 		/// <returns>ActionResult.</returns>
-		[CustomOutputCache(CacheProfile = "CatalogCache")]
+        [DonutOutputCache(CacheProfile = "CatalogCache")]
 		public ActionResult DisplayItemById(string itemId, string parentItemId = null, string name = "MiniItem", string associationType = null, bool forcedActive = false, ItemResponseGroups responseGroups = ItemResponseGroups.ItemSmall, ItemDisplayOptions displayOptions = ItemDisplayOptions.ItemSmall)
 		{
 			return DisplayItemByIdNoCache(itemId, parentItemId, name, associationType, forcedActive, responseGroups,
@@ -248,7 +248,7 @@ namespace VirtoCommerce.Web.Controllers
 		/// </summary>
 		/// <param name="id">The identifier.</param>
 		/// <returns>ActionResult.</returns>
-		[CustomOutputCache(CacheProfile = "CatalogCache")]
+        [DonutOutputCache(CacheProfile = "CatalogCache")]
         public ActionResult AddReview(string id)
         {
             return PartialView("CreateReview",
@@ -258,6 +258,13 @@ namespace VirtoCommerce.Web.Controllers
                                        CreatedDateTime = DateTime.UtcNow,
                                        Reviewer = new MReviewer {NickName = UserHelper.CustomerSession.CustomerName}
                                    });
+        }
+
+        [ChildActionOnly, DonutOutputCache(CacheProfile = "CatalogCache", Duration = 0)]
+        public ActionResult ItemDynamic(string item)
+        {
+            var itemModel = CatalogHelper.CreateCatalogModel(item);
+            return ReferenceEquals(itemModel, null) ? null : PartialView(itemModel);
         }
 
 		/// <summary>

@@ -14,6 +14,8 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 	[DataContract]
 	[EntitySet("CategoryBases")]
 	[DataServiceKey("CategoryId")]
+    [KnownType(typeof(Category))]
+    [KnownType(typeof(LinkedCategory))]
 	public abstract class CategoryBase : StorageEntity
 	{
 		public CategoryBase()

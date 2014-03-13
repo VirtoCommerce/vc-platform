@@ -169,7 +169,7 @@ namespace VirtoCommerce.Web
 
             //container.RegisterType<ICacheProvider, InMemCachingProvider>();
             container.RegisterType<ICacheRepository, HttpCacheRepository>();
-            container.RegisterType<IOperationLogRepository, OperationLogContext>();
+            container.RegisterType<IOperationLogRepository, OperationLogContext>(new PerRequestLifetimeManager());
             container.RegisterType<ILogOperationFactory, LogOperationFactory>();
 
             //Register Sequences
@@ -200,7 +200,7 @@ namespace VirtoCommerce.Web
 
             #region Marketing
 
-            container.RegisterType<IMarketingRepository, EFMarketingRepository>();
+            container.RegisterType<IMarketingRepository, EFMarketingRepository>(new PerRequestLifetimeManager());
             container.RegisterType<IMarketingEntityFactory, MarketingEntityFactory>();
             container.RegisterType<IPromotionUsageProvider, PromotionUsageProvider>();
             container.RegisterType<IPromotionEntryPopulate, PromotionEntryPopulate>();
@@ -222,7 +222,7 @@ namespace VirtoCommerce.Web
             container.RegisterInstance<ISearchConnection>(searchConnection);
             container.RegisterType<ISearchService, SearchService>(new HierarchicalLifetimeManager());
             container.RegisterType<ISearchIndexController, SearchIndexController>();
-            container.RegisterType<IBuildSettingsRepository, EFSearchRepository>();
+            container.RegisterType<IBuildSettingsRepository, EFSearchRepository>(new PerRequestLifetimeManager());
             container.RegisterType<ISearchEntityFactory, SearchEntityFactory>(new ContainerControlledLifetimeManager());
             container.RegisterType<ISearchIndexBuilder, CatalogItemIndexBuilder>("catalogitem");
 
@@ -265,15 +265,15 @@ namespace VirtoCommerce.Web
             #region Catalog
             container.RegisterType<ICatalogEntityFactory, CatalogEntityFactory>(new ContainerControlledLifetimeManager());
 
-            container.RegisterType<ICatalogRepository, EFCatalogRepository>();
-            container.RegisterType<IPricelistRepository, EFCatalogRepository>();
+            container.RegisterType<ICatalogRepository, EFCatalogRepository>(new PerRequestLifetimeManager());
+            container.RegisterType<IPricelistRepository, EFCatalogRepository>(new PerRequestLifetimeManager());
             container.RegisterType<ICatalogService, CatalogService>();
             container.RegisterType<IPriceListAssignmentEvaluator, PriceListAssignmentEvaluator>();
             container.RegisterType<IPriceListAssignmentEvaluationContext, PriceListAssignmentEvaluationContext>();
 
             container.RegisterType<IImportJobEntityFactory, ImportJobEntityFactory>(
                 new ContainerControlledLifetimeManager());
-            container.RegisterType<IImportRepository, EFImportingRepository>();
+            container.RegisterType<IImportRepository, EFImportingRepository>(new PerRequestLifetimeManager());
             container.RegisterType<IImportService, ImportService>();
             #endregion
 
@@ -282,7 +282,7 @@ namespace VirtoCommerce.Web
             container.RegisterType<ICustomerEntityFactory, CustomerEntityFactory>(
                 new ContainerControlledLifetimeManager());
 
-            container.RegisterType<ICustomerRepository, EFCustomerRepository>();
+            container.RegisterType<ICustomerRepository, EFCustomerRepository>(new PerRequestLifetimeManager());
             container.RegisterType<ICustomerSessionService, CustomerSessionService>();
 
             #endregion
@@ -291,7 +291,7 @@ namespace VirtoCommerce.Web
 
             container.RegisterType<IInventoryEntityFactory, InventoryEntityFactory>(
                 new ContainerControlledLifetimeManager());
-            container.RegisterType<IInventoryRepository, EFInventoryRepository>();
+            container.RegisterType<IInventoryRepository, EFInventoryRepository>(new PerRequestLifetimeManager());
 
             #endregion
 
@@ -304,12 +304,12 @@ namespace VirtoCommerce.Web
             container.RegisterInstance<IWorkflowService>(workflowService);
             container.RegisterType<IOrderStateController, OrderStateController>();
 
-            container.RegisterType<IOrderRepository, EFOrderRepository>();
-            container.RegisterType<IShippingRepository, EFOrderRepository>();
-            container.RegisterType<IPaymentMethodRepository, EFOrderRepository>();
-            container.RegisterType<ITaxRepository, EFOrderRepository>();
+            container.RegisterType<IOrderRepository, EFOrderRepository>(new PerRequestLifetimeManager());
+            container.RegisterType<IShippingRepository, EFOrderRepository>(new PerRequestLifetimeManager());
+            container.RegisterType<IPaymentMethodRepository, EFOrderRepository>(new PerRequestLifetimeManager());
+            container.RegisterType<ITaxRepository, EFOrderRepository>(new PerRequestLifetimeManager());
 
-            container.RegisterType<ICountryRepository, EFOrderRepository>();
+            container.RegisterType<ICountryRepository, EFOrderRepository>(new PerRequestLifetimeManager());
             container.RegisterType<IOrderService, OrderService>();
 
             #endregion
@@ -318,7 +318,7 @@ namespace VirtoCommerce.Web
 
             container.RegisterType<IReviewEntityFactory, ReviewEntityFactory>(new ContainerControlledLifetimeManager());
 
-            container.RegisterType<IReviewRepository, EFReviewRepository>();
+            container.RegisterType<IReviewRepository, EFReviewRepository>(new PerRequestLifetimeManager());
 
             #endregion
 
@@ -326,7 +326,7 @@ namespace VirtoCommerce.Web
 
             container.RegisterType<ISecurityEntityFactory, SecurityEntityFactory>(
                 new ContainerControlledLifetimeManager());
-            container.RegisterType<ISecurityRepository, EFSecurityRepository>();
+            container.RegisterType<ISecurityRepository, EFSecurityRepository>(new PerRequestLifetimeManager());
             container.RegisterType<IUserSecurity, WebUserSecurity>();
             container.RegisterType<IAuthenticationService, AuthenticationService>();
             container.RegisterType<ISecurityService, SecurityService>();
@@ -339,7 +339,7 @@ namespace VirtoCommerce.Web
             container.RegisterType<IStoreEntityFactory, StoreEntityFactory>(new ContainerControlledLifetimeManager());
 
             container.RegisterType<IStoreService, StoreService>();
-            container.RegisterType<IStoreRepository, EFStoreRepository>();
+            container.RegisterType<IStoreRepository, EFStoreRepository>(new PerRequestLifetimeManager());
 
             #endregion
 
@@ -365,7 +365,7 @@ namespace VirtoCommerce.Web
             container.RegisterType<DisplayTemplateClient>();
             container.RegisterType<SettingsClient>();
             container.RegisterType<SequencesClient>();
-            container.RegisterType<SeoKeywordClient>();
+            container.RegisterType<SeoKeywordClient>(new PerRequestLifetimeManager());
             container.RegisterType<ReviewClient>();
             container.RegisterType<IPaymentOption, CreditCardOption>("creditcard");
 
@@ -374,15 +374,15 @@ namespace VirtoCommerce.Web
             #region DynamicContent
 
             container.RegisterType<IDynamicContentService, DynamicContentService>();
-            container.RegisterType<IDynamicContentRepository, EFDynamicContentRepository>();
+            container.RegisterType<IDynamicContentRepository, EFDynamicContentRepository>(new PerRequestLifetimeManager());
             container.RegisterType<IDynamicContentEvaluator, DynamicContentEvaluator>();
 
             #endregion
 
             #region AppConfig
 
-            container.RegisterType<IAppConfigRepository, EFAppConfigRepository>();
-            container.RegisterType<IAppConfigEntityFactory, AppConfigEntityFactory>();
+            container.RegisterType<IAppConfigRepository, EFAppConfigRepository>(new PerRequestLifetimeManager());
+            container.RegisterType<IAppConfigEntityFactory, AppConfigEntityFactory>(new ContainerControlledLifetimeManager());
 
             #endregion
 
@@ -399,7 +399,7 @@ namespace VirtoCommerce.Web
             container.RegisterType<IEntityEventListener, OrderChangeEventListener>("order");
             container.RegisterType<IEntityEventListener, PublicReplyEventListener>("customer");
             container.RegisterType<IEntityEventListener, CaseChangeEventListener>("customer");
-            container.RegisterType<IEntityEventContext, EntityEventContext>(new ContainerControlledLifetimeManager());
+            container.RegisterType<IEntityEventContext, EntityEventContext>(new PerRequestLifetimeManager());
 
             #endregion
 
@@ -414,7 +414,7 @@ namespace VirtoCommerce.Web
 			#region Globalization
 
 			//For using database resources
-			container.RegisterType<IElementRepository, DatabaseElementRepository>();
+            container.RegisterType<IElementRepository, DatabaseElementRepository>(new PerRequestLifetimeManager());
 			//For using Local Resources
 	        //container.RegisterInstance<IElementRepository>(new CacheElementRepository(new XmlElementRepository()));
 

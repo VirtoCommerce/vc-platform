@@ -3,9 +3,9 @@ using System.IO;
 using System.Linq;
 using System.Web.Mvc;
 using VirtoCommerce.Foundation.AppConfig.Model;
+using VirtoCommerce.Web.Client.Caching;
 using VirtoCommerce.Web.Client.Extensions;
 using VirtoCommerce.Web.Client.Extensions.Filters;
-using VirtoCommerce.Web.Client.Extensions.Routing;
 using VirtoCommerce.Web.Client.Extensions.Routing.Routes;
 using VirtoCommerce.Web.Client.Helpers;
 using VirtoCommerce.Web.Models;
@@ -19,6 +19,8 @@ namespace VirtoCommerce.Web.Controllers
     [Canonicalized(Order = 2)]
 	public abstract class ControllerBase : Controller
 	{
+
+	    private OutputCacheManager _cacheManager;
 		/// <summary>
 		/// Renders the razor view to string.
 		/// </summary>
@@ -111,7 +113,19 @@ namespace VirtoCommerce.Web.Controllers
 	        }
 
 	        return false;
-	    }
+        }
 
-	}
+        #region Cache
+
+        public OutputCacheManager OutputCacheManager
+        {
+            get {
+                return _cacheManager ??
+                       (_cacheManager = new OutputCacheManager(OutputCache.Instance, new KeyBuilder()));
+            }
+        }
+
+        #endregion
+
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
 using VirtoCommerce.Foundation.AppConfig;
@@ -334,7 +335,7 @@ namespace VirtoCommerce.Client.Globalization.Repository
         /// </returns>
 		private Localization[] GetLocalizations()
 		{
-			return Helper.Get(GetCacheKey(LocalizeElementsCacheKey), () =>  _repository.Localizations.ToArray(),
+			return Helper.Get(GetCacheKey(LocalizeElementsCacheKey), () =>  _repository.Localizations.ToArrayAsync().Result,
 			   AppConfigConfiguration.Instance.Cache.LocalizationTimeout,
 			   AppConfigConfiguration.Instance.Cache.IsEnabled);
 		}

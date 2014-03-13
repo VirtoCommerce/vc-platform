@@ -36,7 +36,7 @@ namespace VirtoCommerce.Web
 
 			if (!AzureCommonHelper.IsAzureEnvironment() && AppConfigConfiguration.Instance.Setup.IsCompleted)
 			{
-				SchedulerHost.CreateScheduler(container);
+				SchedulerHost.CreateScheduler();
 			}
         }
     }

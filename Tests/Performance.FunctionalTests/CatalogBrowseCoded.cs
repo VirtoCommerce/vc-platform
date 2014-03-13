@@ -97,7 +97,7 @@ namespace WebPerfTestProject
             yield return request9;
             request9 = null;
 
-            WebTestRequest request10 = new WebTestRequest(Url + "/videoandvideo/televisions/sony-bravia-klv-32ex400-32''-1080p-full-hd-multi-system-palntscsecam-lcd-tv-dual-110-220-voltage-f-116");
+            WebTestRequest request10 = new WebTestRequest(Url + "/videoandvideo/televisions/sony-bravia-klv-32ex400-32-1080p-full-hd-multi-system-palntscsecam-lcd-tv-dual-110-220-voltage-f-116");
             request10.ParseDependentRequests = false;
             yield return request10;
             request10 = null;

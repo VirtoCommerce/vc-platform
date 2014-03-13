@@ -325,5 +325,10 @@ namespace VirtoCommerce.Foundation.Data
 			get { return ObjectContext.ObjectStateManager; }
 		}
 		#endregion
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+        }
 	}
 }

@@ -1,8 +1,7 @@
 ﻿using System.Web.Mvc;
 using VirtoCommerce.Foundation.Assets;
 using VirtoCommerce.Web.Client.Actions;
-using VirtoCommerce.Web.Client.Extensions.Filters;
-using VirtoCommerce.Web.Virto.Helpers.MVC;
+using VirtoCommerce.Web.Client.Extensions.Filters.Caching;
 
 namespace VirtoCommerce.Web.Controllers
 {
@@ -16,7 +15,7 @@ namespace VirtoCommerce.Web.Controllers
 		/// </summary>
 		/// <param name="path">The asset path.</param>
 		/// <returns>DownloadResult.</returns>
-		[CustomOutputCache(CacheProfile = "AssetCache")]
+        [CustomOutputCache(CacheProfile = "AssetCache")]
         public ActionResult Index(string path)
         {
             var folder = AssetConfiguration.Instance.Connection.StorageFolder;

@@ -62,7 +62,15 @@ namespace VirtoCommerce.Web.Client.Modules
             var priceListHelper = DependencyResolver.Current.GetService<PriceListClient>();
             var priceLists = priceListHelper.GetPriceListStack(session.CatalogId, session.Currency, session.GetCustomerTagSet());
             session.Pricelists = priceLists;
-           
+
+            //Update prices in current currency
+            var helper = new CartHelper(CartHelper.CartName);
+            if (!helper.IsEmpty && session.Currency != helper.Cart.BillingCurrency)
+            {
+                helper.RunWorkflow("ShoppingCartValidateWorkflow");
+                helper.SaveChanges();
+            }
+
 
         }
         #endregion
@@ -108,7 +116,7 @@ namespace VirtoCommerce.Web.Client.Modules
         {
             //TODO: populate geo location information
             var set = session.GetCustomerTagSet();
-            
+
         }
 
         /// <summary>
@@ -125,10 +133,6 @@ namespace VirtoCommerce.Web.Client.Modules
             if (!helper.IsEmpty)
             {
                 set.Add(ContextFieldConstants.CartTotal, new Tag(helper.Cart.Total));
-                if (context.Session != null)
-                {
-                    session.CouponCode = (string)context.Session["CurrentCouponCode"];
-                }
             }
         }
 
@@ -213,7 +217,8 @@ namespace VirtoCommerce.Web.Client.Modules
         {
             var now = DateTime.Today;
             var age = now.Year - birthday.Year;
-            if (now < birthday.AddYears(age)) age--;
+            if (now < birthday.AddYears(age))
+                age--;
             return age;
         }
 
