@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Management.Automation;
-using System.Text;
-using System.Threading.Tasks;
+using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.PowerShell.Reviews;
-using VirtoCommerce.Foundation.Reviews.Factories;
 using VirtoCommerce.Foundation.Data.Reviews;
 using VirtoCommerce.Foundation.Data.Reviews.Migrations;
 
@@ -15,9 +11,9 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
 	[Cmdlet(VerbsData.Publish, "Virto-Review-Database", SupportsShouldProcess = true, DefaultParameterSetName = "DbConnection")]
 	public class PublishReviewDatabase : DatabaseCommand
 	{
-		public override void Publish(string dbconnection, string data, bool sample)
+        public override void Publish(string dbconnection, string data, bool sample, string strategy = SqlDbConfiguration.SqlAzureExecutionStrategy)
 		{
-			base.Publish(dbconnection, data, sample);
+			base.Publish(dbconnection, data, sample, strategy);
 			string connection = dbconnection;
 			SafeWriteDebug("ConnectionString: " + connection);
 

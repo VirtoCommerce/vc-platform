@@ -196,7 +196,7 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 				var connectionString = _confirmationViewModel.DatabaseConnectionString;
 				
 				// Configure database
-				new PublishAppConfigDatabase().Publish(connectionString, null, InstallSamples, _confirmationViewModel.SearchConnection.Scope); // publish AppConfig first as it contains system tables
+				new PublishAppConfigDatabase().PublishWithScope(connectionString, null, InstallSamples, _confirmationViewModel.SearchConnection.Scope); // publish AppConfig first as it contains system tables
 				ct.ThrowIfCancellationRequested();
 				new PublishStoreDatabase().Publish(connectionString, null, InstallSamples);
 				ct.ThrowIfCancellationRequested();

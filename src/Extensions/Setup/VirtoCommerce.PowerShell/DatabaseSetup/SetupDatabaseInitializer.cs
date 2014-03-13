@@ -22,6 +22,7 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup
 
 	    protected SetupDatabaseInitializer()
         {
+            
         }
 
 	    protected SetupDatabaseInitializer(string connectionString)

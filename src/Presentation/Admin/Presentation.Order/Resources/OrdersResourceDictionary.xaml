@@ -7,8 +7,5 @@
 
     <!--shipment tabControl styles-->
 
-    <Presentation_Core_Infrastructure_Converters:CurrencyConverter x:Key="CurrencyConverter"/>
-
-
     <!-- Resource dictionary entries should be defined here. -->
 </ResourceDictionary>

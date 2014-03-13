@@ -9,13 +9,13 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
 	[Cmdlet(VerbsData.Publish, "Virto-AppConfig-Database", SupportsShouldProcess = true, DefaultParameterSetName = "DbConnection")]
 	public class PublishAppConfigDatabase : DatabaseCommand
 	{
-		public override void Publish(string dbconnection, string data, bool sample)
+		public override void Publish(string dbconnection, string data, bool sample, string strategy = "")
 		{
-			base.Publish(dbconnection, data, sample);
-			Publish(dbconnection, data, sample, null);
+			base.Publish(dbconnection, data, sample, strategy);
+			PublishWithScope(dbconnection, data, sample, null);
 		}
 
-		public void Publish(string dbconnection, string data, bool sample, string scope)
+		public void PublishWithScope(string dbconnection, string data, bool sample, string scope)
 		{
 			string connection = dbconnection;
 			SafeWriteDebug("ConnectionString: " + connection);

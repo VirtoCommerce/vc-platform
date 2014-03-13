@@ -10,9 +10,9 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
 	[Cmdlet(VerbsData.Publish, "Virto-Store-Database", SupportsShouldProcess = true, DefaultParameterSetName = "DbConnection")]
 	public class PublishStoreDatabase : DatabaseCommand
 	{
-		public override void Publish(string dbconnection, string data, bool sample)
+		public override void Publish(string dbconnection, string data, bool sample, string strategy = "")
 		{
-			base.Publish(dbconnection, data, sample);
+			base.Publish(dbconnection, data, sample, strategy);
 			string connection = dbconnection;
 			SafeWriteDebug("ConnectionString: " + connection);
 
