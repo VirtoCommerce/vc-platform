@@ -39,7 +39,8 @@ namespace VirtoCommerce.Foundation.Frameworks
         {
             get
             {
-                return new SuspensionFlag();
+                // No need to suspend for nested block
+                return SuspendExecutionStrategy?null:new SuspensionFlag();
             }
         }
 
@@ -72,10 +73,13 @@ namespace VirtoCommerce.Foundation.Frameworks
 
                     if (string.IsNullOrWhiteSpace(strategy.ServerName))
                     {
-                        SetExecutionStrategy(strategy.ProviderName, 
-                            () => SuspendExecutionStrategy
-                                ?(IDbExecutionStrategy)new DefaultExecutionStrategy()
-                                :strategyObj);
+                        SetExecutionStrategy(strategy.ProviderName,
+                            delegate
+                            {
+                                return SuspendExecutionStrategy
+                                    ? (IDbExecutionStrategy) new DefaultExecutionStrategy()
+                                    : strategyObj;
+                            });
                     }
                     else
                     {
