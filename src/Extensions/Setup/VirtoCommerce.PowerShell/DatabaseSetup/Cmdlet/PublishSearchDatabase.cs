@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Management.Automation;
-using System.Text;
-using System.Threading.Tasks;
 using VirtoCommerce.Foundation.Data.Search;
 using VirtoCommerce.Foundation.Data.Search.Migrations;
+using VirtoCommerce.Foundation.Frameworks;
 
 namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
 {
@@ -13,9 +10,9 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
 	[Cmdlet(VerbsData.Publish, "Virto-Search-Database", SupportsShouldProcess = true, DefaultParameterSetName = "DbConnection")]
 	public class PublishSearchDatabase : DatabaseCommand
 	{
-		public override void Publish(string dbconnection, string data, bool sample)
+        public override void Publish(string dbconnection, string data, bool sample, string strategy = SqlDbConfiguration.SqlAzureExecutionStrategy)
 		{
-			base.Publish(dbconnection, data, sample);
+			base.Publish(dbconnection, data, sample, strategy);
 			string connection = dbconnection;
 			SafeWriteDebug("ConnectionString: " + connection);
 

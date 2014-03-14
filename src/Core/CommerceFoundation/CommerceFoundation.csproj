@@ -180,6 +180,7 @@
     <Compile Include="Assets\Services\UploadStreamInfo.cs" />
     <Compile Include="Catalogs\CatalogConfiguration.cs" />
     <Compile Include="Catalogs\Services\ICatalogOutlineBuilder.cs" />
+    <Compile Include="Configuration.cs" />
     <Compile Include="Customers\Model\ContactPropertyValueName.cs" />
     <Compile Include="Customers\CustomerConfiguration.cs" />
     <Compile Include="Customers\CustomerSession.cs" />
@@ -232,6 +233,7 @@
     <Compile Include="DataManagement\Model\Import\Importers\SeoImporter.cs" />
     <Compile Include="DataManagement\Services\IDataManagementService.cs" />
     <Compile Include="DataManagement\Services\DataManagementService.cs" />
+    <Compile Include="Frameworks\SqlDbConfiguration.cs" />
     <Compile Include="Orders\Extensions\PaymentMethodExtensions.cs" />
     <Compile Include="Orders\Model\OrderFormPropertyValue.cs" />
     <Compile Include="Orders\Model\OrderFormValueType.cs" />

@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
+using System.Web.Routing;
 using System.Web.Security;
+using VirtoCommerce.Client;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Foundation.Stores.Model;
-using System.Web.Mvc;
-using System.Configuration;
-using VirtoCommerce.Client;
 using VirtoCommerce.Web.Client.Helpers;
 
 namespace VirtoCommerce.Web.Client.Modules
@@ -147,9 +148,6 @@ namespace VirtoCommerce.Web.Client.Modules
                 session.Language = store.DefaultLanguage;
             }
 
-            // release sitemap
-            MvcSiteMapProvider.SiteMaps.ReleaseSiteMap();
-
             // set customer id to anonymousID if nothing is set, it might be overwritten if authentication is successful
             if (String.IsNullOrEmpty(session.CustomerId))
             {
@@ -242,18 +240,6 @@ namespace VirtoCommerce.Web.Client.Modules
         }
 
         /// <summary>
-        /// Determines whether [is request authenticated] [the specified context].
-        /// </summary>
-        /// <param name="context">The context.</param>
-        /// <returns>
-        ///   <c>true</c> if [is request authenticated] [the specified context]; otherwise, <c>false</c>.
-        /// </returns>
-        protected virtual bool IsRequestAuthenticated(HttpContext context)
-        {
-            return context.Request.IsAuthenticated;
-        }
-
-        /// <summary>
         /// Gets the name of the request user.
         /// </summary>
         /// <param name="context">The context.</param>
@@ -274,9 +260,12 @@ namespace VirtoCommerce.Web.Client.Modules
 		{
 			var loadDefault = true;
 			var storeClient = DependencyResolver.Current.GetService<StoreClient>();
-            //var storeid = context.Request.QueryString["store"];
-            var storeid = GetStoreIdFromUrl(context.Request.Url.Segments);
-			Store store = null;
+            var storeid = GetStoreIdFromRoute(context.Request.RequestContext.RouteData.Values);
+            if (string.IsNullOrEmpty(storeid))
+            {
+                storeid = GetStoreIdFromUrl(context.Request.Url.Segments);
+            }
+            Store store = null;
 
 			if (String.IsNullOrEmpty(storeid))
 			{
@@ -363,6 +352,15 @@ namespace VirtoCommerce.Web.Client.Modules
 			return currency;
 		}
 		#endregion
+
+        private string GetStoreIdFromRoute(RouteValueDictionary values)
+        {
+            if (values != null && values.ContainsKey(Extensions.Routing.Constants.Store))
+            {
+                return values[Extensions.Routing.Constants.Store].ToString();
+            }
+            return null;
+        }
 
         private string GetStoreIdFromUrl(IEnumerable<string> urlSegments)
         {

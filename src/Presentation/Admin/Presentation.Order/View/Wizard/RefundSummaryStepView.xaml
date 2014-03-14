@@ -9,68 +9,75 @@
               mc:Ignorable="d"
               Width="600" d:DesignHeight="400">
 
-	<FrameworkElement.Resources>
-		<ResourceDictionary>
-			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/WizardViewTheme/VirtoCommerceWizardTheme.xaml"/>
-			</ResourceDictionary.MergedDictionaries>
+    <FrameworkElement.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/WizardViewTheme/VirtoCommerceWizardTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
 
-			<core_converter:CurrencyConverter x:Key="CurrencyConverter"/>
-		</ResourceDictionary>
-	</FrameworkElement.Resources>
+            <core_converter:CurrencyConverter x:Key="CurrencyConverter"/>
+        </ResourceDictionary>
+    </FrameworkElement.Resources>
 
-	<Grid d:DataContext="{d:DesignInstance {x:Type implementations:RefundSummaryStepViewModel}}">
-		<HeaderedContentControl Header="Refund confirmation" Style="{DynamicResource Virto_HeaderedContentBlock_Style}" Visibility="{Binding InnerModel.IsPaymentSubmitted, Converter={x:Static core_converter:ToVisibilityConverter.Current}, ConverterParameter=i}">
-			<Grid>
-				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
-				</Grid.RowDefinitions>
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="Auto"/>
-					<ColumnDefinition Width="20"/>
-					<ColumnDefinition />
-				</Grid.ColumnDefinitions>
+    <Grid d:DataContext="{d:DesignInstance {x:Type implementations:RefundSummaryStepViewModel}}">
+        <HeaderedContentControl Header="Refund confirmation" Style="{DynamicResource Virto_HeaderedContentBlock_Style}" Visibility="{Binding InnerModel.IsPaymentSubmitted, Converter={x:Static core_converter:ToVisibilityConverter.Current}, ConverterParameter=i}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
 
-				<TextBlock Grid.ColumnSpan="3" Text="Recheck payment data and press [Submit]." FontStyle="Italic" Margin="0,0,0,8" />
-				<TextBlock Grid.Row="1" Text="Refund amount:"/>
-				<TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding InnerModel.Amount, StringFormat='\{0:0.00\}'}" />
-				<TextBlock Grid.Row="2" Text="Currency:" />
-				<TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding InnerModel.Order.BillingCurrency}" />
-				<TextBlock Grid.Row="3" Text="Refund to:" />
-				<TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding InnerModel.DestinationText}" />
-				<Button Grid.Row="4" Grid.Column="2" HorizontalAlignment="Right" Content="Submit" Command="{Binding SubmitPaymentCommand}" />
-			</Grid>
-		</HeaderedContentControl>
+                <TextBlock Grid.ColumnSpan="3" Text="Recheck payment data and press [Submit]." FontStyle="Italic" Margin="0,0,0,8" />
+                <TextBlock Grid.Row="1" Text="Refund amount:"/>
+                <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding InnerModel.Amount, StringFormat='\{0:0.00\}'}" />
+                <TextBlock Grid.Row="2" Text="Currency:" />
+                <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding InnerModel.Order.BillingCurrency}" />
+                <TextBlock Grid.Row="3" Text="Refund to:" />
+                <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding InnerModel.DestinationText}" />
+                <Button Grid.Row="4" Grid.Column="2" HorizontalAlignment="Right" Content="Submit" Command="{Binding SubmitPaymentCommand}" />
+            </Grid>
+        </HeaderedContentControl>
 
-		<HeaderedContentControl Header="Refund summary" Style="{DynamicResource Virto_HeaderedContentBlock_Style}" Visibility="{Binding InnerModel.IsPaymentSubmitted, Converter={x:Static core_converter:ToVisibilityConverter.Current}}" d:IsHidden="true">
-			<Grid>
-				<Grid.RowDefinitions>
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
-					<RowDefinition Height="Auto" />
-				</Grid.RowDefinitions>
+        <HeaderedContentControl Header="Refund summary" Style="{DynamicResource Virto_HeaderedContentBlock_Style}" Visibility="{Binding InnerModel.IsPaymentSubmitted, Converter={x:Static core_converter:ToVisibilityConverter.Current}}" d:IsHidden="true">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-				<TextBlock Visibility="{Binding IsValid, Converter={x:Static core_converter:ToVisibilityConverter.Current}}">
+                <TextBlock Visibility="{Binding IsValid, Converter={x:Static core_converter:ToVisibilityConverter.Current}}">
 					<Run Text="A refund of the amount of " />
-					<Run Text="{Binding InnerModel.Amount, Converter={StaticResource CurrencyConverter}}" FontWeight="Bold" />
+                    <Run FontWeight="Bold">
+                        <Run.Text>
+                            <MultiBinding Converter="{StaticResource CurrencyConverter}">
+                                <Binding Path="InnerModel.Amount" />
+                                <Binding Path="InnerModel.Order.BillingCurrency"/>
+                        </MultiBinding>
+                        </Run.Text>
+                    </Run>
 					<Run Text="has been processed successfully to Credit card" />
-				</TextBlock>
-				<TextBlock Grid.Row="1" Text="{Binding InnerModel.DestinationText, StringFormat=' {0}.'}" Margin="0,0,0,8" Visibility="{Binding IsValid, Converter={x:Static core_converter:ToVisibilityConverter.Current}}"/>
-				<TextBlock Grid.Row="2" Margin="0,0,0,8">
+                </TextBlock>
+                <TextBlock Grid.Row="1" Text="{Binding InnerModel.DestinationText, StringFormat=' {0}.'}" Margin="0,0,0,8" Visibility="{Binding IsValid, Converter={x:Static core_converter:ToVisibilityConverter.Current}}"/>
+                <TextBlock Grid.Row="2" Margin="0,0,0,8">
 					<Run Text="Transaction confirmation number: " />
 					<Run Text="{Binding TransactionId}" FontWeight="Bold" />
 					<Run Text="." />
-				</TextBlock>
+                </TextBlock>
 
-				<TextBlock Visibility="{Binding IsValid, Converter={x:Static core_converter:ToVisibilityConverter.Current}, ConverterParameter=i}">
+                <TextBlock Visibility="{Binding IsValid, Converter={x:Static core_converter:ToVisibilityConverter.Current}, ConverterParameter=i}">
 					<Run Text="Payment failed with error:" Foreground="Red" />
-				</TextBlock>
-				<TextBlock Grid.Row="1" Text="{Binding SubmitPaymentResultMessage}" Visibility="{Binding IsValid, Converter={x:Static core_converter:ToVisibilityConverter.Current}, ConverterParameter=i}" Margin="0" TextWrapping="Wrap" />
-			</Grid>
-		</HeaderedContentControl>
-	</Grid>
+                </TextBlock>
+                <TextBlock Grid.Row="1" Text="{Binding SubmitPaymentResultMessage}" Visibility="{Binding IsValid, Converter={x:Static core_converter:ToVisibilityConverter.Current}, ConverterParameter=i}" Margin="0" TextWrapping="Wrap" />
+            </Grid>
+        </HeaderedContentControl>
+    </Grid>
 </inf:ViewBase>

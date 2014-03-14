@@ -1,4 +1,6 @@
 ﻿VirtoCheckout = function () {
+    this.SubmitInProgress = false;
+    this.NeedResubmit = false;
 };
 VirtoCheckout.prototype.constructor = VirtoCheckout.prototype;
 
@@ -66,12 +68,14 @@ VirtoCheckout.prototype = {
                 $('input[name=PaymentMethod]').each(function ()
                 {
 	                if (!this.checked) {
-	                	VirtoCommerce.disableAll($("#container_payment_method_"+this.value));
+	                    VirtoCommerce.disableAll($("#container_payment_method_" + this.value));
+	                } else {
+	                    checkout.paymentChanged(this);
 	                }
 	                $(this).bind("click", function ()
 	                {
 	                	checkout.paymentChanged(this);
-                    });
+	                });        
                 });
 
                 checkout.updateValidation();
@@ -178,7 +182,13 @@ VirtoCheckout.prototype = {
             selector.hide();
     },
 
-    submitChanges: function () {
+    submitChanges: function ()
+    {
+        if (this.SubmitInProgress) {
+            this.NeedResubmit = true;
+            return;
+        }
+        this.SubmitInProgress = true;
         var form = $('#onestepcheckout-form');
         var placeholder = $("#checkout-cart");
         this.updateLoading("checkout-cart");
@@ -188,7 +198,16 @@ VirtoCheckout.prototype = {
             url: this.url('/checkout/SubmitChanges'),
             data: form.serialize(),
             dataType: 'html',
-            success: function (data) { placeholder.html(data); }
+            success: function (data)
+            {
+                VirtoCheckout.SubmitInProgress = false;
+                placeholder.html(data);
+                if (VirtoCheckout.NeedResubmit) {
+                    VirtoCheckout.NeedResubmit = false;
+                    VirtoCheckout.submitChanges();
+
+                }
+            }
         });
     },
 

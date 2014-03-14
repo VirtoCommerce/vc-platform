@@ -38,8 +38,9 @@
         -ms-text-overflow: ellipsis;
         -o-text-overflow: ellipsis;
         text-overflow: ellipsis;
+        text-align: right;
         white-space: nowrap;
-        width: 70px;
+        width: 50px;
     }
 
     /* --- Article --- */
@@ -996,7 +997,8 @@
 
         .article .product-view .product-info .product-image {
             float: none;
-            margin: 30px 0 15px;
+            margin: 0 0 15px;
+            padding-top: 30px;
             width: 100%;
         }
 
@@ -1091,7 +1093,8 @@
 
     /* --- Cart --- */
     .article .cart {
-        margin: 30px auto;
+        margin: 0 auto;
+        padding-top: 30px;
         width: 456px;
     }
 
@@ -2010,7 +2013,8 @@
 
         .article .product-view .product-info .product-image {
             float: none;
-            margin: 30px 0 15px;
+            margin: 0 0 15px;
+            padding-top: 30px;
             width: 100%;
         }
 
@@ -2101,7 +2105,8 @@
 
     /* --- Cart --- */
     .article .cart {
-        margin: 30px auto;
+        margin: 0 auto;
+        padding-top: 30px;
         width: 300px;
     }
 

@@ -36,7 +36,14 @@
     </DataTemplate>
 
     <DataTemplate x:Key="ordersColumn3Template">
-        <TextBlock  Text="{Binding Data.InnerItem.Total, Converter={StaticResource CurrencyConverter}}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
+        <TextBlock Style="{StaticResource Virto_TextBlock_VirtualListView_Style}">
+            <TextBlock.Text>
+                <MultiBinding Converter="{StaticResource CurrencyConverter}">
+                    <Binding Path="Data.InnerItem.Total" />
+                    <Binding Path="Data.InnerItem.BillingCurrency"/>
+                </MultiBinding>
+            </TextBlock.Text>
+        </TextBlock>
     </DataTemplate>
 
     <DataTemplate x:Key="ordersColumn4Template">

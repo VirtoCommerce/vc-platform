@@ -58,7 +58,7 @@ namespace VirtoCommerce.Web.Models.Binders
                 PageIndex = qs["p"].TryParse(1),
                 PageSize = qs["pageSize"].TryParse(0),
                 Sort = qs["sort"].EmptyToNull(),
-		            SortOrder = qs["sortorder"].EmptyToNull(),
+		        SortOrder = qs["sortorder"].EmptyToNull(),
                 Facets = qsDict.Where(k => FacetRegex.IsMatch(k.Key))
                     .Select(k => k.WithKey(FacetRegex.Replace(k.Key, "")))
                     .ToDictionary()

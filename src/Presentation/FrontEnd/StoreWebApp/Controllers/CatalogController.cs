@@ -8,7 +8,8 @@ using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Catalogs.Services;
 using VirtoCommerce.Foundation.Frameworks.Tagging;
-using VirtoCommerce.Web.Client.Extensions.Filters;
+using VirtoCommerce.Web.Client.Caching;
+using VirtoCommerce.Web.Client.Extensions.Routing;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Virto.Helpers;
 using AppConfigContext = VirtoCommerce.Foundation.AppConfig.Model.ContextFieldConstants;
@@ -33,11 +34,10 @@ namespace VirtoCommerce.Web.Controllers
 
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CatalogController"/> class.
+        /// Initializes a new instance of the <see cref="CatalogController" /> class.
         /// </summary>
         /// <param name="catalogClient">The catalog client.</param>
         /// <param name="templateClient">The template client.</param>
-        /// <param name="outlineBuilder"></param>
         public CatalogController(CatalogClient catalogClient,
                                  DisplayTemplateClient templateClient)
         {
@@ -52,7 +52,7 @@ namespace VirtoCommerce.Web.Controllers
         /// <param name="category">The category code</param>
 	    /// <returns>ActionResult.</returns>
 	    /// <exception cref="System.Web.HttpException">404;Category not found</exception>
-	    [CustomOutputCache(CacheProfile = "CatalogCache", VaryByCustom = "store;currency;cart")]
+        [DonutOutputCache(CacheProfile = "CatalogCache", VaryByCustom = "currency;filters;pricelist")]
         public ActionResult Display(CategoryPathModel category)
         {
             var categoryBase = _catalogClient.GetCategory(category.Category);
@@ -67,7 +67,7 @@ namespace VirtoCommerce.Web.Controllers
 
                 if (SiteMaps.Current != null)
                 {
-                    var node = SiteMaps.Current.CurrentNode;
+                    var node = GetCurrentSiteMapNode();
 
                     if (Request.UrlReferrer != null &&
                         Request.UrlReferrer.AbsoluteUri.StartsWith(Request.Url.GetLeftPart(UriPartial.Authority)))
@@ -113,7 +113,7 @@ namespace VirtoCommerce.Web.Controllers
         /// <param name="item">Item code</param>
 	    /// <returns>ActionResult.</returns>
 	    /// <exception cref="System.Web.HttpException">404;Item not found</exception>
-	    [CustomOutputCache(CacheProfile = "CatalogCache", VaryByCustom = "store;currency;cart")]
+        [DonutOutputCache(CacheProfile = "CatalogCache", VaryByCustom = "currency;cart")]
         public ActionResult DisplayItem(string item)
         {
             var itemModel = CatalogHelper.CreateCatalogModel(item, byItemCode: true);
@@ -125,7 +125,7 @@ namespace VirtoCommerce.Web.Controllers
 
 	        if (SiteMaps.Current != null)
 	        {
-	            var node = SiteMaps.Current.CurrentNode;
+	            var node = GetCurrentSiteMapNode();
 
 	            if (Request.UrlReferrer != null &&
 	                Request.UrlReferrer.AbsoluteUri.StartsWith(Request.Url.GetLeftPart(UriPartial.Authority)))
@@ -169,7 +169,7 @@ namespace VirtoCommerce.Web.Controllers
 		/// <param name="selections">The selections.</param>
 		/// <param name="variation">The selected variation item code.</param>
 		/// <returns>ActionResult.</returns>
-		[CustomOutputCache(CacheProfile = "CatalogCache")]
+        [DonutOutputCache(CacheProfile = "CatalogCache")]
         public ActionResult ItemVariations(string itemId, string name, string[] selections = null,
                                            string variation = null)
         {
@@ -186,7 +186,7 @@ namespace VirtoCommerce.Web.Controllers
 		/// <param name="templateName">Name of the display template.</param>
 		/// <param name="groupName">Name of the association group.</param>
 		/// <returns>ActionResult.</returns>
-		[CustomOutputCache(CacheProfile = "CatalogCache")]
+        [DonutOutputCache(CacheProfile = "CatalogCache")]
 		public ActionResult Association(ItemModel item, string templateName, string groupName)
         {
             var currentGroup = item.AssociationGroups
@@ -218,7 +218,7 @@ namespace VirtoCommerce.Web.Controllers
 		/// <param name="responseGroups">The response groups.</param>
 		/// <param name="displayOptions">The display options.</param>
 		/// <returns>ActionResult.</returns>
-		[CustomOutputCache(CacheProfile = "CatalogCache")]
+        [DonutOutputCache(CacheProfile = "CatalogCache")]
 		public ActionResult DisplayItemById(string itemId, string parentItemId = null, string name = "MiniItem", string associationType = null, bool forcedActive = false, ItemResponseGroups responseGroups = ItemResponseGroups.ItemSmall, ItemDisplayOptions displayOptions = ItemDisplayOptions.ItemSmall)
 		{
 			return DisplayItemByIdNoCache(itemId, parentItemId, name, associationType, forcedActive, responseGroups,
@@ -248,7 +248,7 @@ namespace VirtoCommerce.Web.Controllers
 		/// </summary>
 		/// <param name="id">The identifier.</param>
 		/// <returns>ActionResult.</returns>
-		[CustomOutputCache(CacheProfile = "CatalogCache")]
+        [DonutOutputCache(CacheProfile = "CatalogCache")]
         public ActionResult AddReview(string id)
         {
             return PartialView("CreateReview",
@@ -258,6 +258,13 @@ namespace VirtoCommerce.Web.Controllers
                                        CreatedDateTime = DateTime.UtcNow,
                                        Reviewer = new MReviewer {NickName = UserHelper.CustomerSession.CustomerName}
                                    });
+        }
+
+        [ChildActionOnly, DonutOutputCache(CacheProfile = "CatalogCache", Duration = 0)]
+        public ActionResult ItemDynamic(string item)
+        {
+            var itemModel = CatalogHelper.CreateCatalogModel(item);
+            return ReferenceEquals(itemModel, null) ? null : PartialView(itemModel);
         }
 
 		/// <summary>
@@ -294,6 +301,22 @@ namespace VirtoCommerce.Web.Controllers
 
             var viewName = _templateClient.GetDisplayTemplate(type, set);
             return string.IsNullOrEmpty(viewName) ? type.ToString() : viewName;
+        }
+
+        private ISiteMapNode GetCurrentSiteMapNode()
+        {
+            // Need to skip decoding values in routes temporary because Sitemap calls GetRouteData and compares the values with the ones stored in siteMapNode
+            // Sitemap node is configured to preserve route values and they are encoded. 
+            // If values in current route does not match node route values sitemap fails to resolve current node
+            try
+            {
+                HttpContext.Items.Add(Constants.SkipSeoDecodeKey, true);
+                return SiteMaps.Current.CurrentNode;
+            }
+            finally
+            {
+                HttpContext.Items.Remove(Constants.SkipSeoDecodeKey);
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
 using VirtoCommerce.Foundation.AppConfig;
@@ -89,7 +90,7 @@ namespace VirtoCommerce.Client.Globalization.Repository
         /// <returns>IQueryable{Element}.</returns>
 		public IQueryable<Element> Elements()
 		{
-			return GetLocalizations().Select(x => new Element
+			return GetLocalizations().AsQueryable().Select(x => new Element
 				{
 					Name = x.Name,
 					Value = x.Value,
@@ -315,35 +316,26 @@ namespace VirtoCommerce.Client.Globalization.Repository
         /// <param name="culture">The culture.</param>
         /// <returns>Localization.</returns>
 		private Localization GetLocalization(string name, string category, string culture)
-		{
-			return Helper.Get(GetCacheKey(LocalizeElementCacheKey, name, category, culture),
-				() => GetLocalizations().FirstOrDefault(it =>
-						it.Name.Equals(name, StringComparison.OrdinalIgnoreCase) &&
-						it.Category.Equals(category, StringComparison.OrdinalIgnoreCase) &&
-						it.LanguageCode.Equals(culture, StringComparison.OrdinalIgnoreCase)),
-				AppConfigConfiguration.Instance.Cache.LocalizationTimeout,
-				AppConfigConfiguration.Instance.Cache.IsEnabled);
+        {
+            var allLocalizations = GetLocalizations();
+
+            return
+                allLocalizations.FirstOrDefault(
+                    it =>
+                    it.Name.Equals(name, StringComparison.OrdinalIgnoreCase)
+                    && it.Category.Equals(category, StringComparison.OrdinalIgnoreCase)
+                    && it.LanguageCode.Equals(culture, StringComparison.OrdinalIgnoreCase));
 		}
 
         /// <summary>
         /// Gets the localizations.
         /// </summary>
-        /// <returns>IQueryable{Localization}.</returns>
-		private IQueryable<Localization> GetLocalizations()
+        /// <returns>
+        /// IQueryable{Localization}.
+        /// </returns>
+		private Localization[] GetLocalizations()
 		{
-			return Helper.Get(GetCacheKey(LocalizeElementsCacheKey), () =>
-			   {
-				   if (AppConfigConfiguration.Instance.Cache.IsEnabled)
-				   {
-					   foreach (var loc in _repository.Localizations)
-					   {
-						   //Update cache with items
-						   Helper.Add(GetCacheKey(LocalizeElementCacheKey, loc), loc,
-									  AppConfigConfiguration.Instance.Cache.LocalizationTimeout);
-					   }
-				   }
-				   return _repository.Localizations;
-			   },
+			return Helper.Get(GetCacheKey(LocalizeElementsCacheKey), () =>  _repository.Localizations.ToArrayAsync().Result,
 			   AppConfigConfiguration.Instance.Cache.LocalizationTimeout,
 			   AppConfigConfiguration.Instance.Cache.IsEnabled);
 		}

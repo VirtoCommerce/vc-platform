@@ -374,6 +374,8 @@ namespace VirtoCommerce.OrderWorkflow
 
 			// Set new price and currency vales on line item.
 			lineItem.ListPrice = newPrice;
+            lineItem.PlacedPrice = newPrice;
+            lineItem.ExtendedPrice = lineItem.PlacedPrice * lineItem.Quantity;
 			CurrentOrderGroup.BillingCurrency = newCurrencyCode;
 		}
 

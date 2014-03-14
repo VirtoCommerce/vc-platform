@@ -8,6 +8,7 @@ using System.Web.Routing;
 using System.Web.WebPages;
 using DotNetOpenAuth.OpenId.Extensions.SimpleRegistration;
 using VirtoCommerce.Foundation.AppConfig.Model;
+using VirtoCommerce.Foundation.Search.Schemas;
 using VirtoCommerce.Web.Client.Helpers;
 
 namespace VirtoCommerce.Web.Client.Extensions.Filters
@@ -15,15 +16,21 @@ namespace VirtoCommerce.Web.Client.Extensions.Filters
     public class CanonicalizedAttribute : ActionFilterAttribute
     {
         private readonly bool _usePermanentRedirect;
+        private readonly Type[] _skipControllers;
 
-        public CanonicalizedAttribute() : this(true) { }
-        public CanonicalizedAttribute(bool usePermanentRedirect)
+        public CanonicalizedAttribute(params Type[] skipControllers) : this(true, skipControllers) { }
+        public CanonicalizedAttribute(bool usePermanentRedirect, params Type[] skipControllers)
         {
             _usePermanentRedirect = usePermanentRedirect;
+            _skipControllers = skipControllers;
         }
 
         public override void OnActionExecuting(ActionExecutingContext filterContext)
         {
+            if (_skipControllers.Any(x => filterContext.ActionDescriptor.ControllerDescriptor.ControllerType == x))
+            {
+                return;
+            }
             var context = filterContext.HttpContext;
 
             // don't 'rewrite' POST requests, child action and ajax requests
@@ -73,7 +80,8 @@ namespace VirtoCommerce.Web.Client.Extensions.Filters
                             var helper = new SearchHelper(StoreHelper.StoreClient.GetCurrentStore());
                             var urlHelper = new UrlHelper(context.Request.RequestContext);
 
-                            var parameters = helper.Filters.Select(filter => queryString.AllKeys
+                            var parameters = helper.Filters.Where(f => !(f is PriceRangeFilter) || ((PriceRangeFilter)f).Currency.Equals(StoreHelper.CustomerSession.Currency, StringComparison.OrdinalIgnoreCase))
+                                .Select(filter => queryString.AllKeys
                                 .FirstOrDefault(k => k.Equals(urlHelper.GetFacetKey(filter.Key), StringComparison.InvariantCultureIgnoreCase)))
                                 .Where(key => !string.IsNullOrEmpty(key))
                                 .ToDictionary<string, string, object>(key => key, key => queryString[key]);

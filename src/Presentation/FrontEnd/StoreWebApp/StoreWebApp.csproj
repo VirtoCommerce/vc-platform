@@ -130,6 +130,7 @@
     <Reference Include="Microsoft.Owin.Security">
       <HintPath>..\..\..\..\packages\Microsoft.Owin.Security.2.0.2\lib\net45\Microsoft.Owin.Security.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Practices.ObjectBuilder2, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\packages\CommonServiceLocator.1.0\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
@@ -161,9 +162,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\packages\WindowsAzure.Storage.3.0.1.0\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
     </Reference>
-    <Reference Include="MvcSiteMapProvider, Version=4.4.6.0, Culture=neutral, PublicKeyToken=1923abe4657913cc, processorArchitecture=MSIL">
+    <Reference Include="MvcSiteMapProvider, Version=4.5.1.0, Culture=neutral, PublicKeyToken=1923abe4657913cc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\packages\MvcSiteMapProvider.MVC4.Core.4.4.6\lib\net45\MvcSiteMapProvider.dll</HintPath>
+      <HintPath>..\..\..\..\packages\MvcSiteMapProvider.MVC4.Core.4.5.1\lib\net45\MvcSiteMapProvider.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -410,6 +411,7 @@
     <Compile Include="Virto\Helpers\CartHelperExtensions.cs" />
     <Compile Include="Virto\Helpers\CatalogHelper.cs" />
     <Compile Include="Virto\Helpers\MarketingHelper.cs" />
+    <Compile Include="Virto\Helpers\MVC\CatalogNodeProvider.cs" />
     <Compile Include="Virto\Helpers\MVC\CssMinifyFix.cs" />
     <Compile Include="Virto\Helpers\MVC\VirtoDataAnnotationsModelValidatorProvider.cs" />
     <Compile Include="Virto\Helpers\Payments\CreditCardOption.cs" />
@@ -494,6 +496,7 @@
     <Content Include="Content\themes\default\images\icons\insurance.png" />
     <Content Include="Content\themes\default\images\icons\rateit\delete.gif" />
     <Content Include="Content\themes\default\images\icons\rateit\star.gif" />
+    <Content Include="Content\themes\default\images\validation_advice_bg.gif" />
     <Content Include="Content\themes\default\rateit.css" />
     <Content Include="Content\themes\default\images\blank.png" />
     <Content Include="Content\themes\default\images\social\facebook.png" />
@@ -606,8 +609,8 @@
     <Content Include="Areas\VirtoAdmin\Views\Web.config" />
     <Content Include="Areas\VirtoAdmin\Views\Install\Index.cshtml" />
     <Content Include="Areas\VirtoAdmin\Views\Install\Success.cshtml" />
-    <Content Include="Mvc.sitemap" />
     <Content Include="App_Data\Virto\Configuration\Reporting.config" />
+    <Content Include="Mvc.sitemap" />
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -690,7 +693,6 @@
     <Content Include="Views\Banner\DisplayTemplates\ImageClick.cshtml" />
     <Content Include="Views\Banner\DisplayTemplates\ImageNoClick.cshtml" />
     <Content Include="Views\Banner\DisplayTemplates\RawHtml.cshtml" />
-    <Content Include="Views\Cart\Add.cshtml" />
     <Content Include="Views\Cart\EditorTemplates\LineItem.cshtml" />
     <Content Include="Views\Cart\EditorTemplates\ShippingEstimate.cshtml" />
     <Content Include="Views\Cart\Empty.cshtml" />
@@ -716,7 +718,6 @@
     <Content Include="Views\Shared\DisplayTemplates\Item.cshtml" />
     <Content Include="Views\Search\DisplayTemplates\SearchPager.cshtml" />
     <Content Include="Views\Search\Index.cshtml" />
-    <Content Include="Views\Search\SearchResultsPartial.cshtml" />
     <Content Include="Views\Store\CartLink.cshtml" />
     <Content Include="Views\Store\Currencies.cshtml" />
     <Content Include="Views\Store\QuickAccess.cshtml" />
@@ -731,15 +732,10 @@
     <Content Include="Views\Shared\AddToLinks.cshtml" />
     <Content Include="Views\Shared\BaseContentPlace.cshtml" />
     <Content Include="Views\Shared\PopupBase.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\MenuHelperModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\PriceModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Search.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\SideMenu.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\SideMenuNode.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\SiteMapNodeModel.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\SiteMapNodeModelList.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\SiteMapPathHelperModel.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\SiteMapTitleHelperModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\TopMenuNodeModel.cshtml" />
     <Content Include="Views\Shared\FailWhale.cshtml" />
     <Content Include="Views\Banner\DisplayTemplates\ProductImageAndPrice.cshtml" />
@@ -764,7 +760,6 @@
     <Content Include="Views\Account\OrderReturn.cshtml" />
     <Content Include="Views\Account\EditorTemplates\OrderReturnItem.cshtml" />
     <Content Include="Views\Account\RmaReturns.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\SiteMapHelperModel.cshtml" />
     <Content Include="Views\Checkout\Payments.cshtml" />
     <Content Include="Views\Account\DisplayTemplates\OrderLine.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\String.cshtml" />
@@ -789,13 +784,25 @@
     <Content Include="Views\Banner\DisplayTemplates\CategoryUrl.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\SearchItems.cshtml" />
     <Content Include="Views\Shared\_LayoutBase.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\MetaRobotsHelperModel.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\CanonicalHelperModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\SiteMapPathNodeModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\ReviewTemplate.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\ReviewCommentTemplate.cshtml" />
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Shared\PaypalExpressButton.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\SiteMapTitleHelperModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\SiteMapPathHelperModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\SiteMapNodeModelList.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\SiteMapNodeModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\SiteMapHelperModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\MetaRobotsHelperModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\MenuHelperModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\CanonicalHelperModel.cshtml" />
+    <Content Include="Views\Shared\_Footer.cshtml" />
+    <Content Include="Views\Shared\_Menu.cshtml" />
+    <Content Include="Views\Banner\MultiBanner.cshtml" />
+    <Content Include="Views\Search\Prices.cshtml" />
+    <Content Include="Views\Catalog\ItemDynamic.cshtml" />
+    <Content Include="Views\Shared\StoreParams.cshtml" />
     <None Include="Web.Azure.config" />
   </ItemGroup>
   <ItemGroup>
@@ -804,7 +811,9 @@
     <Folder Include="Views\Catalog\DisplayTemplates\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="packages.config" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
@@ -904,8 +913,7 @@
           <IISUrl>http://localhost:2359/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
+          <CustomServerUrl>http://localhost/store</CustomServerUrl>
           <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>

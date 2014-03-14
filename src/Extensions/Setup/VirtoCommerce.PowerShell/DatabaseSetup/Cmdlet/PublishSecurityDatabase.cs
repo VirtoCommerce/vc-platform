@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Management.Automation;
-using System.Text;
-using System.Threading.Tasks;
+using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.PowerShell.Security;
 using VirtoCommerce.Foundation.Data.Security;
-using VirtoCommerce.Foundation.Data.Security.Migrations;
 
 namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
 {
@@ -14,9 +10,9 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
 	[Cmdlet(VerbsData.Publish, "Virto-Security-Database", SupportsShouldProcess = true, DefaultParameterSetName = "DbConnection")]
 	public class PublishSecurityDatabase : DatabaseCommand
 	{
-		public override void Publish(string dbconnection, string data, bool sample)
+        public override void Publish(string dbconnection, string data, bool sample, string strategy = SqlDbConfiguration.SqlAzureExecutionStrategy)
 		{
-			base.Publish(dbconnection, data, sample);
+			base.Publish(dbconnection, data, sample, strategy);
 			string connection = dbconnection;
 			SafeWriteDebug("ConnectionString: " + connection);
 

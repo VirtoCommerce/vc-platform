@@ -20,11 +20,25 @@
 	    {
 	        $(this).bind("change", function ()
 	        {
-	            //Workaround: wait some time for other change events to complete
-	            setTimeout(function ()
+	            var isValid = true;
+	            $("#checkout-address input:not([type='hidden']),#checkout-address select").each(function ()
 	            {
-	                VirtoCheckout.submitChanges();
-	            }, 200);
+	                if ($(this).is(":visible") && !$(this).valid())
+	                {
+	                    isValid = false;
+	                    return false;
+	                }
+	                return true;
+	            });
+
+	            if (isValid)
+	            {
+	                //Workaround: wait some time for other change events to complete
+	                setTimeout(function ()
+	                {
+	                    VirtoCheckout.submitChanges();
+	                }, 200);
+	            }
 
 	        });
 	    });
@@ -233,7 +247,7 @@
                 </div>
                 <div class="block">
                     <div class="control-group">
-                        <button onclick="VirtoCheckout.submitCheckout();">
+                        <button type="button" onclick="VirtoCheckout.submitCheckout(); return false;">
                             <span>@("Place order now".Localize())</span>
                         </button>
                     </div>

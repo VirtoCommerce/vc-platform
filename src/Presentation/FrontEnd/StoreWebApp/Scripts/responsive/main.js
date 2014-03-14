@@ -42,7 +42,7 @@
 
 				if(typeof callBack === 'function')
 				{
-					callBack();
+					callBack(e);
 				}
 			}
 		});
@@ -98,7 +98,7 @@
 
 			$('.view-mode a.' + name).addClass('current').siblings().removeClass('current');
 			$('div.' + name).addClass('selected').siblings().removeClass('selected');
-			VirtoCommerce.setCookie("categoryListView",name, 7);
+			VirtoCommerce.setCookie("vcf.categoryListView",name, 7);
 		});
 	};
 
@@ -179,7 +179,11 @@
 
 		// Search for mobile
 		$('.header .head-top-block .control').click(function (){
-			$(this).parent().toggleClass('opened');
+		    $(this).parent().toggleClass('opened');
+		    window.Other.closestObject('.header .head-top-block', '', function ()
+		    {
+		        $('.header .head-top-block').removeClass('opened');
+		    });
 		});
 
 		// Events for dropdowns
@@ -216,13 +220,13 @@
 		$(window).scroll(function (){
 			var scroll = $(this).scrollTop();
 
-			if(scroll >= 35)
+			if (scroll >= 35)
 			{
-				$('.header').addClass('fixed');
+			    $('.header').addClass('fixed');
 			}
 			else
 			{
-				$('header').removeClass('fixed');
+			    $('header').removeClass('fixed');
 			}
 		});
 	};

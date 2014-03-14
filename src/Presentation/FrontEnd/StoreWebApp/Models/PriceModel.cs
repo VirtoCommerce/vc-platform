@@ -36,6 +36,8 @@
 		/// <value>The price title.</value>
         public string PriceTitle { get; set; }
 
+	    public string ItemId { get; set; }
+
 		/// <summary>
 		/// Gets the price type.
 		/// </summary>

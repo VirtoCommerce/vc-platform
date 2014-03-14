@@ -1,11 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using VirtoCommerce.Foundation.AppConfig.Model;
+using VirtoCommerce.Web.Client.Caching;
 using VirtoCommerce.Web.Client.Extensions;
 using VirtoCommerce.Web.Client.Extensions.Filters;
-using VirtoCommerce.Web.Client.Extensions.Routing;
 using VirtoCommerce.Web.Client.Extensions.Routing.Routes;
 using VirtoCommerce.Web.Client.Helpers;
 using VirtoCommerce.Web.Models;
@@ -16,9 +17,11 @@ namespace VirtoCommerce.Web.Controllers
 	/// Class ControllerBase.
 	/// </summary>
     [Localize(Order = 1)]
-    [Canonicalized(Order = 2)]
+    [Canonicalized(typeof(AccountController), Order = 2)]
 	public abstract class ControllerBase : Controller
 	{
+
+	    private OutputCacheManager _cacheManager;
 		/// <summary>
 		/// Renders the razor view to string.
 		/// </summary>
@@ -53,6 +56,30 @@ namespace VirtoCommerce.Web.Controllers
 	        {
 	            this.SharedViewBag().Messages = messages;
 	        }
+	    }
+
+	    protected override void OnResultExecuting(ResultExecutingContext filterContext)
+	    {
+            //This is needed for IE as it agresively caches
+	        DontCacheAjax(filterContext);
+	        base.OnResultExecuting(filterContext);
+	    }
+
+        private void DontCacheAjax(ResultExecutingContext filterContext)
+	    {
+            var context = filterContext.HttpContext;
+
+            //We want to expliclilty not cache ajax get not child requests
+            if (context.Request.RequestType != "GET" || filterContext.IsChildAction || !context.Request.IsAjaxRequest())
+            {
+                return;
+            }
+
+            filterContext.HttpContext.Response.Cache.SetExpires(DateTime.UtcNow.AddDays(-1));
+            filterContext.HttpContext.Response.Cache.SetValidUntilExpires(false);
+            filterContext.HttpContext.Response.Cache.SetRevalidation(HttpCacheRevalidation.AllCaches);
+            filterContext.HttpContext.Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            filterContext.HttpContext.Response.Cache.SetNoStore();
 	    }
 
 	    private bool ProcessMessages(MessageType type, MessagesModel messages)
@@ -111,7 +138,19 @@ namespace VirtoCommerce.Web.Controllers
 	        }
 
 	        return false;
-	    }
+        }
 
-	}
+        #region Cache
+
+        public OutputCacheManager OutputCacheManager
+        {
+            get {
+                return _cacheManager ??
+                       (_cacheManager = new OutputCacheManager(OutputCache.Instance, new KeyBuilder()));
+            }
+        }
+
+        #endregion
+
+    }
 }

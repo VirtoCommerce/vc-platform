@@ -8,27 +8,34 @@
               mc:Ignorable="d"
               Width="600" d:DesignHeight="400">
 
-	<FrameworkElement.Resources>
-		<ResourceDictionary>
-			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/WizardViewTheme/VirtoCommerceWizardTheme.xaml"/>
-			</ResourceDictionary.MergedDictionaries>
+    <FrameworkElement.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/WizardViewTheme/VirtoCommerceWizardTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
 
-			<core_converter:CurrencyConverter x:Key="CurrencyConverter"/>
-		</ResourceDictionary>
-	</FrameworkElement.Resources>
+            <core_converter:CurrencyConverter x:Key="CurrencyConverter"/>
+        </ResourceDictionary>
+    </FrameworkElement.Resources>
 
-	<HeaderedContentControl Header="Refund summary" Style="{DynamicResource Virto_HeaderedContentBlock_Style}">
-		<Grid>
-			<Grid.RowDefinitions>
-				<RowDefinition Height="Auto" />
-				<RowDefinition Height="Auto" />
-			</Grid.RowDefinitions>
-			<StackPanel Orientation="Horizontal" Margin="0">
-				<TextBlock Text="Total refund amount: " Margin="0,0,0,8" />
-				<TextBlock Text="{Binding ReturnBuilder.RmaRequest.ReturnTotal, Converter={StaticResource CurrencyConverter}}" FontWeight="Bold" Margin="0,0,0,8" />
-			</StackPanel>
-			<CheckBox Grid.Row="1" IsChecked="{Binding ReturnBuilder.RmaRequest.IsPhysicalReturnRequired}" Content="Physical return required before refund" />
-		</Grid>
-	</HeaderedContentControl>
+    <HeaderedContentControl Header="Refund summary" Style="{DynamicResource Virto_HeaderedContentBlock_Style}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <StackPanel Orientation="Horizontal" Margin="0">
+                <TextBlock Text="Total refund amount: " Margin="0,0,0,8" />
+                <TextBlock FontWeight="Bold" Margin="0,0,0,8">
+                    <TextBlock.Text>
+                        <MultiBinding Converter="{StaticResource CurrencyConverter}">
+                            <Binding Path="ReturnBuilder.RmaRequest.ReturnTotal" />
+                            <Binding Path="ReturnBuilder.CurrentOrder.InnerItem.BillingCurrency" />
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+            </StackPanel>
+            <CheckBox Grid.Row="1" IsChecked="{Binding ReturnBuilder.RmaRequest.IsPhysicalReturnRequired}" Content="Physical return required before refund" />
+        </Grid>
+    </HeaderedContentControl>
 </inf:ViewBase>

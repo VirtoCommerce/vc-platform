@@ -72,9 +72,9 @@
 			ScrollViewer.IsDeferredScrollingEnabled="True"
 			core_virtualization:VirtualListLoadingIndicator.IsAttached="True"
             >
-        <GridViewColumn Header="Description" core_common:GridViewColumnResize.Width="18*" Width="360" DisplayMemberBinding="{Binding Data.Name}" />
+        <GridViewColumn Header="Item Name" core_common:GridViewColumnResize.Width="18*" Width="360" DisplayMemberBinding="{Binding Data.Name}" />
         <GridViewColumn Header="Start Date" core_common:GridViewColumnResize.Width="4*" Width="80" DisplayMemberBinding="{Binding Data.StartDate, StringFormat=d}" />
-        <GridViewColumn Header="Item Id" core_common:GridViewColumnResize.Width="6*" Width="100" DisplayMemberBinding="{Binding Data.ItemId}" />
+        <GridViewColumn Header="SKU Code" core_common:GridViewColumnResize.Width="6*" Width="100" DisplayMemberBinding="{Binding Data.Code}" />
     </GridView>
 
     <!-- Pricelist list Grid view -->

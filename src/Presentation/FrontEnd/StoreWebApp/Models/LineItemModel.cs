@@ -21,23 +21,28 @@ namespace VirtoCommerce.Web.Models
 		/// The _line item
 		/// </summary>
 		private readonly LineItem _lineItem;
-		/// <summary>
+
+	    private readonly string _currency;
+
+	    /// <summary>
 		/// The _parent item
 		/// </summary>
 		private readonly ItemModel _parentItem;
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="LineItemModel"/> class.
-		/// </summary>
-		/// <param name="lineItem">The line item.</param>
-		/// <param name="catalogItem">The catalog item.</param>
-		/// <param name="parentCatalogItem">The parent catalog item.</param>
-		/// <exception cref="System.ArgumentNullException">catalogItem</exception>
-		public LineItemModel(LineItem lineItem, Item catalogItem, Item parentCatalogItem)
+	    /// <summary>
+	    /// Initializes a new instance of the <see cref="LineItemModel"/> class.
+	    /// </summary>
+	    /// <param name="lineItem">The line item.</param>
+	    /// <param name="catalogItem">The catalog item.</param>
+	    /// <param name="parentCatalogItem">The parent catalog item.</param>
+	    /// <param name="currency"></param>
+	    /// <exception cref="System.ArgumentNullException">catalogItem</exception>
+	    public LineItemModel(LineItem lineItem, Item catalogItem, Item parentCatalogItem, string currency)
 		{
 			_lineItem = lineItem;
+	        _currency = currency;
 
-			if (catalogItem == null)
+	        if (catalogItem == null)
 			{
 				throw new ArgumentNullException("catalogItem");
 			}
@@ -97,7 +102,7 @@ namespace VirtoCommerce.Web.Models
 		/// <value>The formatted placed price.</value>
 		public string FormattedPlacedPrice
 		{
-			get { return StoreHelper.FormatCurrency(LineItem.PlacedPrice, UserHelper.CustomerSession.Currency); }
+			get { return StoreHelper.FormatCurrency(LineItem.PlacedPrice, _currency); }
 		}
 
 		/// <summary>
@@ -106,7 +111,7 @@ namespace VirtoCommerce.Web.Models
 		/// <value>The formatted extended price.</value>
 		public string FormattedExtendedPrice
 		{
-			get { return StoreHelper.FormatCurrency(LineItem.ExtendedPrice, UserHelper.CustomerSession.Currency); }
+            get { return StoreHelper.FormatCurrency(LineItem.ExtendedPrice, _currency); }
 		}
 
 		/// <summary>
@@ -140,9 +145,9 @@ namespace VirtoCommerce.Web.Models
 		/// Gets the quantity.
 		/// </summary>
 		/// <value>The quantity.</value>
-		public decimal Quantity
+		public int Quantity
 		{
-			get { return LineItem.Quantity; }
+			get { return (int)LineItem.Quantity; }
 		}
 
 		/// <summary>

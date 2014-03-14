@@ -16,14 +16,15 @@ using System.Web.Mvc;
 using System.Web.UI;
 using VirtoCommerce.Web.Client.Helpers;
 
-namespace VirtoCommerce.Web.Client.Extensions.Filters
+namespace VirtoCommerce.Web.Client.Extensions.Filters.Caching
 {
 	[SuppressMessage("Microsoft.Performance", "CA1813:AvoidUnsealedAttributes", Justification = "Unsealed so that subclassed types can set properties in the default constructor.")]
 	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
 	public class CustomOutputCacheAttribute : ActionFilterAttribute, IExceptionFilter
 	{
 
-		private readonly OutputCacheParameters _cacheSettings = new OutputCacheParameters { VaryByParam = "*" };
+		private readonly OutputCacheParameters _cacheSettings;
+        private OutputCacheProfile _cacheConfig = null;
 		private const string CacheKeyPrefix = "_MvcChildActionCache_";
 		private static ObjectCache _childActionCache;
 		private readonly Func<ObjectCache> _childActionCacheThunk = () => ChildActionCache;
@@ -33,7 +34,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Filters
 
 		public CustomOutputCacheAttribute()
 		{
-
+            _cacheSettings = new OutputCacheParameters { VaryByParam = "*"};
 		}
 
 		internal CustomOutputCacheAttribute(ObjectCache childActionCache)
@@ -46,6 +47,22 @@ namespace VirtoCommerce.Web.Client.Extensions.Filters
             get
             {
                 return _cacheSettings;
+            }
+        }
+
+        internal OutputCacheProfile CacheConfig
+        {
+            get
+            {
+                if (_cacheConfig == null)
+                {
+                    var section = (OutputCacheSettingsSection)ConfigurationManager.GetSection("system.web/caching/outputCacheSettings");
+                    if ((section != null) && (section.OutputCacheProfiles.Count > 0))
+                    {
+                        _cacheConfig = section.OutputCacheProfiles[CacheProfile];
+                    }
+                }
+                return _cacheConfig;
             }
         }
 
@@ -270,9 +287,9 @@ namespace VirtoCommerce.Web.Client.Extensions.Filters
 			}
 
 			// Complete the request if the child action threw an exception
-			if (filterContext.IsChildAction && filterContext.Exception != null)
+            if (filterContext.IsChildAction && filterContext.Exception != null && SettingsHelper.ChildOutputCacheEnabled)
 			{
-				CompleteChildAction(filterContext, wasException: true);
+				CompleteChildAction(filterContext, true);
 			}
 		}
 
@@ -291,9 +308,8 @@ namespace VirtoCommerce.Web.Client.Extensions.Filters
 			if (configSection.EnableOutputCache)
 			{
 
-				if (filterContext.IsChildAction)
+				if (filterContext.IsChildAction && SettingsHelper.ChildOutputCacheEnabled)
 				{
-
 					ValidateChildActionConfiguration();
 
 					// Already actively being captured? (i.e., cached child action inside of cached child action)
@@ -346,7 +362,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Filters
 
 			if (filterContext.IsChildAction)
 			{
-				CompleteChildAction(filterContext, wasException: true);
+				CompleteChildAction(filterContext, true);
 			}
 		}
 
@@ -416,26 +432,18 @@ namespace VirtoCommerce.Web.Client.Extensions.Filters
 
 			if (!String.IsNullOrWhiteSpace(CacheProfile))
 			{
-				var cacheSettings =
-					(OutputCacheSettingsSection)
-					ConfigurationManager.GetSection("system.web/caching/outputCacheSettings");
-				if ((cacheSettings != null) && (cacheSettings.OutputCacheProfiles.Count > 0))
+                if (CacheConfig != null)
 				{
-					var profile = cacheSettings.OutputCacheProfiles[CacheProfile];
-					if (profile == null)
-					{
-						throw new HttpException("Cache Profile Not found");
-					}
-					if (!string.IsNullOrWhiteSpace(profile.SqlDependency) ||
-						!String.IsNullOrWhiteSpace(profile.VaryByContentEncoding) ||
-						!string.IsNullOrWhiteSpace(profile.VaryByControl) ||
-						!String.IsNullOrWhiteSpace(profile.VaryByCustom) || profile.NoStore)
+                    if (!string.IsNullOrWhiteSpace(CacheConfig.SqlDependency) ||
+                        !string.IsNullOrWhiteSpace(CacheConfig.VaryByContentEncoding) ||
+                        !string.IsNullOrWhiteSpace(CacheConfig.VaryByControl) ||
+                        !string.IsNullOrWhiteSpace(CacheConfig.VaryByCustom) || CacheConfig.NoStore)
 					{
 						throw new InvalidOperationException("OutputCacheAttribute ChildAction UnsupportedSetting");
 					}
 					//overwrite the parameters
-					VaryByParam = profile.VaryByParam;
-					Duration = profile.Duration;
+                    VaryByParam = CacheConfig.VaryByParam;
+                    Duration = CacheConfig.Duration;
 				}
 				else
 				{

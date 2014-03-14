@@ -15,6 +15,7 @@ namespace VirtoCommerce.Foundation.Frameworks.Events
 
             if (EntityBefore != null)
             {
+                //EntityBefore.Invoke(sender, args);
                 EntityBefore(sender, args);
             }
         }
@@ -25,6 +26,7 @@ namespace VirtoCommerce.Foundation.Frameworks.Events
 
             if (EntityAfter != null)
             {
+                //EntityAfter.Invoke(sender, args);
                 EntityAfter(sender, args);
             }
         }

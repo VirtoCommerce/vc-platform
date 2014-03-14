@@ -164,12 +164,14 @@ namespace VirtoCommerce.Web.Client.Helpers
         {
             try
             {
-                return CultureInfo.CreateSpecificCulture(languageCode);
+
+                if(!string.IsNullOrEmpty(languageCode))
+                    return CultureInfo.CreateSpecificCulture(languageCode);
             }
             catch
             {
-                return null;
             }
+            return null;
         }
 
         /// <summary>
@@ -183,6 +185,23 @@ namespace VirtoCommerce.Web.Client.Helpers
                 var retVal = true; // if there is no such setting we assume cache enabled
 
                 var settings = GetSettings("OutputCacheEnabled");
+
+                if (settings != null && settings.Length > 0)
+                {
+                    retVal = settings.First().BooleanValue;
+                }
+
+                return retVal;
+            }
+        }
+
+        public static bool ChildOutputCacheEnabled
+        {
+            get
+            {
+                var retVal = true; // if there is no such setting we assume cache enabled
+
+                var settings = GetSettings("ChildOutputCacheEnabled");
 
                 if (settings != null && settings.Length > 0)
                 {

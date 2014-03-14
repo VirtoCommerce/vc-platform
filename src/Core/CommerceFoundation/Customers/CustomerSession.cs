@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Threading;
+using System.Security.Cryptography;
+using System.Text;
 using System.Web;
 using VirtoCommerce.Foundation.Frameworks.Tagging;
 using System.Collections;
@@ -17,9 +18,34 @@ namespace VirtoCommerce.Foundation.Customers
 		readonly TagSet _set = new TagSet();
         
         /// <summary>
-        /// The _language code
+        /// The language code
         /// </summary>
 		private string _languageCode;
+
+        /// <summary>
+        /// The coupon code
+        /// </summary>
+        private string _couponCode;
+
+        /// <summary>
+        /// The CSR user name
+        /// </summary>
+        private string _csrUserName;
+
+        /// <summary>
+        /// The last shopping page
+        /// </summary>
+        private string _lastShoppingPage;
+
+        /// <summary>
+        /// The category identifier
+        /// </summary>
+        private string _categoryId;
+
+        /// <summary>
+        /// The last order identifier
+        /// </summary>
+        private string _lastOrderId;
 
         /// <summary>
         /// Gets the customer tag set.
@@ -77,22 +103,12 @@ namespace VirtoCommerce.Foundation.Customers
         {
             get
             {
-                if (HttpContext.Current != null && HttpContext.Current.Session != null)
-                {
-                    return HttpContext.Current.Session["CsrUsername"] as string;
-                }
-                return Thread.GetData(Thread.GetNamedDataSlot("CsrUsername")) as string;
+                return _csrUserName ?? (_csrUserName = GetCookieValue("vcf.CsrUsername", true));
             }
             set
             {
-                if (HttpContext.Current != null && HttpContext.Current.Session != null)
-                {
-                    HttpContext.Current.Session["CsrUsername"] = value;
-                }
-                else
-                {
-                    Thread.SetData(Thread.GetNamedDataSlot("CsrUsername"), value);
-                }
+                _csrUserName = value;
+                SetCookie("vcf.CsrUsername", value, encrypt: true);
             }
         }
 
@@ -116,26 +132,35 @@ namespace VirtoCommerce.Foundation.Customers
         /// </value>
 		public string CategoryId
 		{
-			get
-			{
-				if (HttpContext.Current != null && HttpContext.Current.Session != null)
-				{
-					return HttpContext.Current.Session["LastCategoryId"] as string;
-				}
-				return Thread.GetData(Thread.GetNamedDataSlot("LastCategoryId")) as string;
-			}
-			set
-			{
-				if (HttpContext.Current != null && HttpContext.Current.Session != null)
-				{
-					HttpContext.Current.Session["LastCategoryId"] = value;
-				}
-				else
-				{
-					Thread.SetData(Thread.GetNamedDataSlot("LastCategoryId"), value);
-				}
-			}
+            get
+            {
+                return _categoryId ?? (_categoryId = GetCookieValue("vcf.CategoryId"));
+            }
+            set
+            {
+                _categoryId = value;
+                SetCookie("vcf.CategoryId", value);
+            }
 		}
+
+        /// <summary>
+        /// Gets or sets the last order identifier.
+        /// </summary>
+        /// <value>
+        /// The last order identifier.
+        /// </value>
+        public string LastOrderId
+        {
+            get
+            {
+                return _lastOrderId ?? (_lastOrderId = GetCookieValue("vcf.LastOrderId", true));
+            }
+            set
+            {
+                _lastOrderId = value;
+                SetCookie("vcf.LastOrderId", value, encrypt:true);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the currency.
@@ -173,7 +198,18 @@ namespace VirtoCommerce.Foundation.Customers
         /// Gets or sets the coupon code.
         /// </summary>
         /// <value>The coupon code.</value>
-		public string CouponCode { get; set; }
+        public string CouponCode
+        {
+            get
+            {
+                return _couponCode ?? (_couponCode = GetCookieValue("vcf.CouponCode", true));
+            }
+            set
+            {
+                _couponCode = value;
+                SetCookie("vcf.CouponCode", value, encrypt: true);
+            }
+        }
         /// <summary>
         /// Gets or sets the last shopping page.
         /// </summary>
@@ -184,24 +220,20 @@ namespace VirtoCommerce.Foundation.Customers
 		{
 			get
 			{
-				if (HttpContext.Current != null)
-				{
-					var retVal = HttpContext.Current.Session != null ? HttpContext.Current.Session["LastShoppingPage"] as string : null;
-					if (string.IsNullOrEmpty(retVal))
-					{
-						retVal = HttpContext.Current.Request.ApplicationPath;
-					}
-
-					return retVal;
-				}
-				return null;
+			    if (string.IsNullOrEmpty(_lastShoppingPage))
+			    {
+			        _lastShoppingPage = GetCookieValue("vcf.LastShoppingPage");
+			    }
+                if (string.IsNullOrEmpty(_lastShoppingPage))
+                {
+                    _lastShoppingPage = HttpContext.Current.Request.ApplicationPath;
+                }
+                return _lastShoppingPage;
 			}
 			set
 			{
-				if (HttpContext.Current != null && HttpContext.Current.Session != null)
-				{
-					HttpContext.Current.Session["LastShoppingPage"] = value;
-				}
+                _lastShoppingPage = value;
+                SetCookie("vcf.LastShoppingPage", value);
 			}
 		}
 
@@ -271,10 +303,14 @@ namespace VirtoCommerce.Foundation.Customers
         /// <param name="key">The key.</param>
         /// <param name="val">The value.</param>
         /// <param name="expires">The expires.</param>
-		public static void SetCookie(string key, string val, DateTime expires)
+		public static void SetCookie(string key, string val, DateTime? expires = null, bool secure = false, bool encrypt = false)
 		{
 			if (HttpContext.Current != null)
 			{
+			    if (encrypt)
+			    {
+			        val = EncryptCookie(val);
+			    }
 				var responseCookie = HttpContext.Current.Response.Cookies[key];
 
 				if (responseCookie == null)
@@ -285,7 +321,11 @@ namespace VirtoCommerce.Foundation.Customers
 
 				if (val != responseCookie.Value)
 				{
-					responseCookie.Expires = expires;
+                    if (expires.HasValue)
+                    {
+                        responseCookie.Expires = expires.Value;
+                    }
+				    responseCookie.Secure = secure;
 					responseCookie.Value = val;
 				}
 			}
@@ -296,8 +336,11 @@ namespace VirtoCommerce.Foundation.Customers
         /// Gets the cookie value.
         /// </summary>
         /// <param name="key">The key.</param>
-        /// <returns>System.String.</returns>
-		public static string GetCookieValue(string key)
+        /// <param name="decrypt">if set to <c>true</c> [decrypt].</param>
+        /// <returns>
+        /// System.String.
+        /// </returns>
+		public static string GetCookieValue(string key, bool decrypt = false)
 		{
 			string val = null;
 			if (HttpContext.Current != null)
@@ -305,10 +348,35 @@ namespace VirtoCommerce.Foundation.Customers
 				if (HttpContext.Current.Request.Cookies[key] != null)
 				{
 					val = HttpContext.Current.Request.Cookies[key].Value;
+
+                    if (decrypt && !string.IsNullOrEmpty(val))
+                    {
+                        val = DecryptCookie(val);
+                    }
 				}
 			}
-
-			return val;
+            return val;
 		}
+
+        public static string EncryptCookie(string value)
+        {
+            var plainBytes = Encoding.UTF8.GetBytes(value);
+            var encryptedBytes = ProtectedData.Protect(plainBytes, null, DataProtectionScope.CurrentUser);
+            return Convert.ToBase64String(encryptedBytes);
+        }
+
+        public static string DecryptCookie(string value)
+        {
+            try
+            {
+                var encryptedBytes = Convert.FromBase64String(value);
+                var decryptedBytes = ProtectedData.Unprotect(encryptedBytes, null, DataProtectionScope.CurrentUser);
+                return Encoding.UTF8.GetString(decryptedBytes);
+            }
+            catch
+            {
+                return value;
+            }
+        }
     }
 }

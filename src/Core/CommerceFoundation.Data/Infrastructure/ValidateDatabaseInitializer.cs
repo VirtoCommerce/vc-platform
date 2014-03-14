@@ -1,6 +1,7 @@
 ﻿using System.Configuration;
 using System.Data.Entity;
 using System.Transactions;
+using VirtoCommerce.Foundation.Frameworks;
 
 namespace VirtoCommerce.Foundation.Data.Infrastructure
 {
@@ -10,7 +11,7 @@ namespace VirtoCommerce.Foundation.Data.Infrastructure
         public void InitializeDatabase(TContext context)
         {
             bool databaseExists;
-
+            using (SqlDbConfiguration.ExecutionStrategySuspension)
             using (new TransactionScope(TransactionScopeOption.Suppress))
             {
                 databaseExists = context.Database.Exists();

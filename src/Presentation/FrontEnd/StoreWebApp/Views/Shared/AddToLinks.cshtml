@@ -10,7 +10,7 @@
     {
         @:<p>
     }
-            <a href="#" onclick=" return VirtoCart.addToWishList('@("Item added to wish list".Localize())', '@Url.Encode(Model.CatalogItem.ItemId)', '@Url.Encode(Model.CatalogItem.ParentItemId)', 1) ">
+            <a href="#" onclick=" return VirtoCart.addToWishList({itemId:'@Url.Encode(Model.CatalogItem.ItemId)', parentItemId:'@Url.Encode(Model.CatalogItem.ParentItemId)'}) ">
                 @if (!string.Equals(ViewData["View"], "Details"))
                 {
                     <span>+</span>
@@ -28,7 +28,7 @@
     if (!ViewData.Keys.Contains("NoCompare"))
     {
         <li class="compare">
-            <a href="#" onclick="return VirtoCart.addToCompareList('@("Item added to compare list".Localize())', '@Url.Encode(Model.CatalogItem.ItemId)','@Url.Encode(Model.CatalogItem.ParentItemId)', 1)">
+            <a href="#" onclick="return VirtoCart.addToCompareList({itemId:'@Url.Encode(Model.CatalogItem.ItemId)', parentItemId:'@Url.Encode(Model.CatalogItem.ParentItemId)'})">
                 @if (!string.Equals(ViewData["View"], "Details"))
                 {
                     <span>+</span>

@@ -16,8 +16,9 @@ namespace VirtoCommerce.Foundation.Importing.Model
 		{
 			_catalogRepository = catalogRepository;
 			Name = ImportEntityType.Price.ToString();
-			InitializeSystemProperties();
-			_catalogRepository.Catalogs.ToList().ForEach(cat => SystemProperties.First(prop => prop.Name == "CatalogId").EnumValues.Add(cat.Name));
+			InitializeSystemProperties();			
+			var catalogs = _catalogRepository.Catalogs.ToList();
+			catalogs.ForEach(cat => SystemProperties.First(prop => prop.Name == "CatalogId").EnumValues.Add(cat.Name));
 		}
 
 		private void InitializeSystemProperties()

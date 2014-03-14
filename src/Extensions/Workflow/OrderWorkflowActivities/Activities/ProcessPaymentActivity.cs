@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using VirtoCommerce.Client;
+using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Orders.Exceptions;
 using VirtoCommerce.Foundation.Orders.Extensions;
@@ -92,11 +93,12 @@ namespace VirtoCommerce.OrderWorkflow
 			}
 
 			// Start Charging!
-			var methods = PaymentMethodRepository.PaymentMethods
-				.Expand("PaymentGateway")
-				.Expand("PaymentMethodPropertyValues")
-				.ExpandAll().ToArray();
-			foreach (var orderForm in orderGroup.OrderForms)
+		    var methods = PaymentMethodRepository.PaymentMethods
+		            .Expand("PaymentGateway")
+		            .Expand("PaymentMethodPropertyValues")
+		            .ExpandAll().ToArray();
+
+		    foreach (var orderForm in orderGroup.OrderForms)
 			{
 				foreach (var payment in orderForm.Payments)
 				{

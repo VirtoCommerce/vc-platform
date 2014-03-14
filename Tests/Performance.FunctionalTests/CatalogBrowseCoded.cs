@@ -54,60 +54,60 @@ namespace WebPerfTestProject
             yield return request1;
             request1 = null;
 
-            WebTestRequest request2 = new WebTestRequest(Url + "c/tv-video");
+            WebTestRequest request2 = new WebTestRequest(Url + "/videoandvideo");
             request2.ParseDependentRequests = false;
             yield return request2;
             request2 = null;
 
-            WebTestRequest request3 = new WebTestRequest(Url + "c/audio-mp3");
+            WebTestRequest request3 = new WebTestRequest(Url + "/audio");
             request3.ParseDependentRequests = false;
             yield return request3;
             request3 = null;
 
-            WebTestRequest request4 = new WebTestRequest(Url + "c/cameras");
+            WebTestRequest request4 = new WebTestRequest(Url + "/cameras");
             request4.ParseDependentRequests = false;
             yield return request4;
             request4 = null;
 
-            WebTestRequest request5 = new WebTestRequest(Url + "c/computers-tablets");
+            WebTestRequest request5 = new WebTestRequest(Url + "/computers");
             request5.ParseDependentRequests = false;
             yield return request5;
             request5 = null;
 
-            WebTestRequest request6 = new WebTestRequest(Url + "c/accessories");
+            WebTestRequest request6 = new WebTestRequest(Url + "/accessories");
             request6.ParseDependentRequests = false;
             yield return request6;
             request6 = null;
 
-            WebTestRequest request7 = new WebTestRequest(Url + "c/accessories");
+            WebTestRequest request7 = new WebTestRequest(Url + "/accessories");
             request7.ParseDependentRequests = false;
             request7.QueryStringParameters.Add("f_Brand", "sony", false, false);
             request7.QueryStringParameters.Add("p", "1", false, false);
             yield return request7;
             request7 = null;
 
-            WebTestRequest request8 = new WebTestRequest(Url + "c/tv-video");
+            WebTestRequest request8 = new WebTestRequest(Url + "/videoandvideo");
             request8.ParseDependentRequests = false;
             request8.QueryStringParameters.Add("p", "4", false, false);
             yield return request8;
             request8 = null;
 
-            WebTestRequest request9 = new WebTestRequest(Url + "p/v-b0035er1go");
+            WebTestRequest request9 = new WebTestRequest(Url + "/videoandvideo/televisions/sony-bravia-bx-300-series-32-inch-lcd-tv-black");
             request9.ParseDependentRequests = false;
             yield return request9;
             request9 = null;
 
-            WebTestRequest request10 = new WebTestRequest(Url + "p/v-b003rqobj0");
+            WebTestRequest request10 = new WebTestRequest(Url + "/videoandvideo/televisions/sony-bravia-klv-32ex400-32-1080p-full-hd-multi-system-palntscsecam-lcd-tv-dual-110-220-voltage-f-116");
             request10.ParseDependentRequests = false;
             yield return request10;
             request10 = null;
 
-            WebTestRequest request11 = new WebTestRequest(Url + "c/tv-video");
+            WebTestRequest request11 = new WebTestRequest(Url + "/videoandvideo");
             request11.ParseDependentRequests = false;
             yield return request11;
             request11 = null;
 
-            WebTestRequest request12 = new WebTestRequest(Url + "p/v-b004h8fnjy");
+            WebTestRequest request12 = new WebTestRequest(Url + "/cameras/sony-cyber-shot-dsc-wx9-162-mp-exmor-r-cmos-digital-still-camera-with-carl-zeiss-vario-tessar-5x-w-160");
             request12.ParseDependentRequests = false;
             yield return request12;
             request12 = null;

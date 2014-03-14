@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
 using VirtoCommerce.Foundation.Catalogs;
@@ -286,7 +287,7 @@ namespace VirtoCommerce.Client
                 () => (from p in _catalogRepository.PropertySets select p)
                     .Expand("PropertySetProperties/Property/PropertyValues")
                     .Expand("PropertySetProperties/Property/PropertyAttributes")
-                    .ToArray(),
+                    .ToArrayAsync().Result,
                 CatalogConfiguration.Instance.Cache.PropertiesTimeout,
                 _isEnabled && useCache);
         }
@@ -315,7 +316,7 @@ namespace VirtoCommerce.Client
                 if (!properties.Any() && expandProperties)
                 {
                     //This will return expanded category with properties
-                    category = GetCategoryByIdInternal(id) as Category;
+                    category = GetCategoryById(id) as Category;
 
                     if(category !=null)
                     {

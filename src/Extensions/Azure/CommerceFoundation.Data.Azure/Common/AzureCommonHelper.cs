@@ -69,16 +69,25 @@
 		/// </returns>
 		public static bool IsAzureEnvironment()
 		{
-			//if (RoleEnvironment.IsAvailable)
+            /*
+            if (!String.IsNullOrEmpty(Environment.GetEnvironmentVariable("RoleRoot")))
+            {
+                return true;
+            }
+             * */
+			
+            // code causes issues with EF6
 			if (CheckForAzureEnvironment())
 			{
 				return true;
 			}
 
-			if (CloudConfigurationManager.GetSetting("AzureDeployment") != null)
-				return true;
+		    if (CloudConfigurationManager.GetSetting("AzureDeployment") != null)
+		    {
+		        return true;
+		    }
 
-			return false;
+		    return false;
 		}
 
         /// <summary>
