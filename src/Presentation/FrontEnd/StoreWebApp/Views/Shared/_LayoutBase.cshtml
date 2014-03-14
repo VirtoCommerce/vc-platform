@@ -28,8 +28,12 @@
                 <div class="rubber clearfix">
                     <div class="grid_3">
                         <div class="head-switch">
-                            <span>@("Configure".Localize()):
-                                <span class="current">@UserHelper.CustomerSession.StoreName</span>
+                            <span>@("Store".Localize()):
+                                <span class="current">
+                                    @{
+                                        Html.RenderPartial("StoreParams");
+                                    }
+                                </span>
                             </span>
                             <ul>
                                 <li>
