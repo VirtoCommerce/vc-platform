@@ -11,7 +11,7 @@
         <div class="info">
             <p>@Model.CurrentUser.FullName<br />@Model.CurrentUser.Email<br />
             </p>
-            <p><a href="@Url.Action("Edit", "Account")">@("Change Password".Localize())</a></p>
+            <p><a href="@Url.Action("Edit", "Account", new { ChangePassword = true })">@("Change Password".Localize())</a></p>
         </div>
     </div>
     <div class="col">
@@ -36,7 +36,7 @@
             {
                 Html.RenderAction("AddressView", "Account", new { address = Model.BillingAddress });
                 <p>
-                    <a href="@Url.Action("AddressEdit", "Account", new { userId = Model.CurrentUser.MemberId, addressId = Model.BillingAddress.AddressId })">
+                    <a href="@Url.Action("AddressEdit", "Account", new { addressId = Model.BillingAddress.AddressId })">
                         @("Edit Address".Localize())
                     </a>
                 </p>
@@ -54,7 +54,7 @@
             {
                 Html.RenderAction("AddressView", "Account", new { address = Model.ShippingAddress });
                 <p>
-                    <a href="@Url.Action("AddressEdit", "Account", new { userId = Model.CurrentUser.MemberId, addressId = Model.ShippingAddress.AddressId })">
+                    <a href="@Url.Action("AddressEdit", "Account", new { addressId = Model.ShippingAddress.AddressId })">
                         @("Edit Address".Localize())
                     </a>
                 </p>

@@ -161,6 +161,12 @@ namespace VirtoCommerce.Web.Client.Modules
                 set.Add(ContextFieldConstants.StoreId, new Tag(session.StoreId));
             }
 
+            // category id
+            if (!String.IsNullOrEmpty(session.CategoryId))
+            {
+                set.Add(ContextFieldConstants.CategoryId, new Tag(session.CategoryId));
+            }
+
             // current URL
             set.Add(ContextFieldConstants.CurrentUrl, new Tag(context.Request.Url.AbsoluteUri));
 

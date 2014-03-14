@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Dialogs;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 
@@ -12,7 +13,7 @@ namespace VirtoCommerce.ConfigurationUtility.Application
 			Dispatcher.UnhandledException += OnDispatcherUnhandledException;
 			AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 			base.OnStartup(e);
-
+            SqlDbConfiguration.Register();
 			var bootstrapper = new Bootstrapper();
 			bootstrapper.Run();
 		}

@@ -17,7 +17,7 @@
             <div class="info">
                 @{Html.RenderAction("AddressView", "Account", new { address = Model.BillingAddress });}
                 <div class="links">
-                    <a href="@Url.Action("AddressEdit", "Account", new { userId = Model.CurrentUser.MemberId, addressId = Model.BillingAddress.AddressId })">
+                    <a href="@Url.Action("AddressEdit", "Account", new { addressId = Model.BillingAddress.AddressId })">
                         @("Change Billing Address".Localize())
                     </a>
                 </div>
@@ -33,7 +33,7 @@
             <div class="info">
                 @{Html.RenderAction("AddressView", "Account", new { address = Model.ShippingAddress });}
                 <div class="links">
-                    <a href="@Url.Action("AddressEdit", "Account", new { userId = Model.CurrentUser.MemberId, addressId = Model.ShippingAddress.AddressId })">
+                    <a href="@Url.Action("AddressEdit", "Account", new { addressId = Model.ShippingAddress.AddressId })">
                         @("Change Shipping Address".Localize())
                     </a>
                 </div>

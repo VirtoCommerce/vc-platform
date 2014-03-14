@@ -25,15 +25,11 @@ namespace VirtoCommerce.Foundation.Frameworks
 
         public static void Register()
         {
-            if (AppConfigConfiguration.Instance != null &&  
-                AppConfigConfiguration.Instance.SqlExecutionStrategies.Count > 0)
-            {
-                SetConfiguration(new SqlDbConfiguration());
-            }
+            SetConfiguration(new SqlDbConfiguration());
         }
 
         /// <summary>
-        /// Property can be used in 'using' statement. 
+        /// Property can be used with 'using' statement. It is safe to use it multiple time in nested blocks.
         /// </summary>
         public static SuspensionFlag ExecutionStrategySuspension
         {
