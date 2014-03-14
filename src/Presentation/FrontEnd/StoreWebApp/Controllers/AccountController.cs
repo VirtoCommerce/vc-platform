@@ -348,19 +348,7 @@ namespace VirtoCommerce.Web.Controllers
 
                     if (exisintgAddress != null)
                     {
-                        exisintgAddress.City = model.Address.City;
-                        exisintgAddress.CountryCode = model.Address.CountryCode;
-                        exisintgAddress.DaytimePhoneNumber = model.Address.DaytimePhoneNumber;
-                        exisintgAddress.Email = model.Address.Email;
-                        exisintgAddress.FaxNumber = model.Address.FaxNumber;
-                        exisintgAddress.FirstName = model.Address.FirstName;
-                        exisintgAddress.LastName = model.Address.LastName;
-                        exisintgAddress.Line1 = model.Address.Line1;
-                        exisintgAddress.Line2 = model.Address.Line2;
-                        exisintgAddress.RegionName = model.Address.RegionName;
-                        exisintgAddress.Name = model.Address.Name;
-                        exisintgAddress.PostalCode = model.Address.PostalCode;
-                        exisintgAddress.StateProvince = model.Address.StateProvince;
+                        exisintgAddress.InjectFrom(model.Address);
                     }
                     else
                     {
@@ -429,7 +417,7 @@ namespace VirtoCommerce.Web.Controllers
         /// <returns>ActionResult.</returns>
         [HttpGet]
         [Authorize]
-        public ActionResult Edit()
+        public ActionResult Edit(bool changePassword = false)
         {
             var contact = _userClient.GetCurrentCustomer();
             var model = UserHelper.GetCustomerModel(contact);
@@ -437,6 +425,7 @@ namespace VirtoCommerce.Web.Controllers
             chModel.InjectFrom(model);
 
             chModel.FullName = chModel.FullName ?? UserHelper.CustomerSession.CustomerName;
+            chModel.ChangePassword = changePassword;
 
             return View(chModel);
         }

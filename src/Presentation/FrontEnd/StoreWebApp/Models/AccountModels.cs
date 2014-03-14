@@ -77,8 +77,8 @@ namespace VirtoCommerce.Web.Models
         [Display(Name = "Email address")]
         public string Email { get; set; }
 
-        //[Display(Name = "Change Password")]
-        //public bool ChangePassword { get; set; }
+        [Display(Name = "Change Password")]
+        public bool ChangePassword { get; set; }
     }
 
 	/// <summary>

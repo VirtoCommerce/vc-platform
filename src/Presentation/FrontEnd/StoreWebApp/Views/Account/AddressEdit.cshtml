@@ -9,11 +9,11 @@
         var id = '@ViewData.TemplateInfo.GetFullHtmlFieldId(String.Empty)';
         var c = new VirtoAddress(id);
         
-        //$('#Address_StateProvinceId option:selected').each(function(){
-        //    this.selected=false;
-        //});
-        $('#Address_StateProvinceId option[value="@Model.Address.StateProvince"]').attr("selected", "selected");
-        $('#Address_StateProvinceId').trigger('change');
+        var option = $('#Address_StateProvinceId option[value="@Model.Address.StateProvince"]');
+        if (option.length > 0) {
+            option.attr("selected", "selected");
+            $('#Address_StateProvinceId').trigger('change');
+        }
 
     });
     var v_regions = @Html.JsonSerialize(Model.ScriptCountryRegions);
@@ -143,120 +143,3 @@
         <a href="@Url.Action("AddressBook", "Account")" class="back">« @("Back".Localize())</a>
     </div>
 }
-
-@*<form method="post" action="@Url.Action("AddressEdit", "Account")">
-	<h1>@("Edit Address".LocalizeHtml())</h1>
-	@Html.HiddenFor(m => m.Address.AddressId)
-	@Html.HiddenFor(m => m.Address.Name)
-	@Html.HiddenFor(m => m.Address.CountryName)
-	@Html.HiddenFor(m => m.OrganizationId, new { @value = @Request["OrganizationId"] })
-	<div class="fieldset">
-		<h2 class="legend">@("Contact Information".LocalizeHtml())</h2>
-		<ul class="form-list">
-			<li class="fields">
-				<div class="field input-firstname">
-					@Html.LabelForEx(m => m.Address.FirstName)
-					@Html.TextBoxFor(m => m.Address.FirstName, new { @class = "input-text" })<br />
-					@Html.ValidationMessageFor(m => m.Address.FirstName)
-				</div>
-				<div class="field input-lastname">
-					@Html.LabelForEx(m => m.Address.LastName)
-					@Html.TextBoxFor(m => m.Address.LastName, new { @class = "input-text" })<br />
-					@Html.ValidationMessageFor(m => m.Address.LastName)
-				</div>
-			</li>
-			<li class="fields">
-				<div class="field input-email">
-					@Html.LabelForEx(m => m.Address.Email)
-					@Html.TextBoxFor(m => m.Address.Email, new { @class = "validate-email input-text" })<br />
-					@Html.ValidationMessageFor(m => m.Address.Email)
-				</div>
-				<div class="field input-telephone">
-					@Html.LabelForEx(m => m.Address.DaytimePhoneNumber)
-					@Html.TextBoxFor(m => m.Address.DaytimePhoneNumber, new { @class = "input-text" })
-					@Html.ValidationMessageFor(m => m.Address.DaytimePhoneNumber)
-				</div>
-			</li>
-		</ul>
-	</div>
-
-	<div class="fieldset">
-		<h2 class="legend">@("Address Information".LocalizeHtml())</h2>
-		<ul class="form-list">
-			<li class="wide">
-				<div class="field input-address">
-					@Html.LabelForEx(m => m.Address.Line1)
-					@Html.TextBoxFor(m => m.Address.Line1, new { @class = "input-text onestepcheckout-address-line" })
-					@Html.ValidationMessageFor(m => m.Address.Line1)
-				</div>
-			</li>
-			<li class="wide">
-				<div class="field input-address">
-					@Html.TextBoxFor(m => m.Address.Line2, new { @class = "input-text onestepcheckout-address-line" })
-					@Html.ValidationMessageFor(m => m.Address.Line2)
-				</div>
-			</li>
-			<li class="wide">
-				<div class="field input-country">
-					@Html.LabelForEx(m => m.Address.CountryCode)
-					@Html.DropDownListFor(m => m.Address.CountryCode, new SelectList(Model.Countries, "CountryId", "DisplayName"))
-					@Html.ValidationMessageFor(m => m.Address.CountryCode)
-				</div>
-			</li>
-			<li class="fields">
-				<div class="field input-city">
-					@Html.LabelForEx(m => m.Address.City)
-					@Html.TextBoxFor(m => m.Address.City, new { @class = "input-text" })
-					@Html.ValidationMessageFor(m => m.Address.City)
-				</div>
-			</li>
-			<li class="fields" id="">
-				<div class="field input-postcode">
-					@Html.LabelForEx(m => m.Address.PostalCode)
-					@Html.TextBoxFor(m => m.Address.PostalCode, new { @class = "validate-zip-international input-text" })<br />
-					@Html.ValidationMessageFor(m => m.Address.PostalCode)
-				</div>
-				<div class="field input-region">
-					@Html.LabelForEx(m => m.Address.StateProvince)
-					@Html.DropDownList("Address_StateProvinceId", new SelectList(new[] { "select state/province" }))
-					@Html.TextBoxFor(m => m.Address.StateProvince, new { @class = "input-text", style = "display:none" })<br />
-					@Html.ValidationMessageFor(m => m.Address.StateProvince)
-				</div>
-			</li>
-			<li class="clearfix">
-				<div class="field input-company">
-					@Html.LabelForEx(m => m.Address.Organization)
-					@Html.TextBoxFor(m => m.Address.Organization, new { @class = "input-text" })
-					@Html.ValidationMessageFor(m => m.Address.Organization)
-				</div>
-				<div class="field input-fax">
-					@Html.LabelForEx(m => m.Address.FaxNumber)
-					@Html.TextBoxFor(m => m.Address.FaxNumber, new { @class = "input-text" })
-					@Html.ValidationMessageFor(m => m.Address.FaxNumber)
-				</div>
-			</li>
-		</ul>
-		@if (!String.IsNullOrEmpty(Model.Address.AddressId) && Model.Address.Name != null)
-  {
-      if (!Model.Address.Name.Contains(UserHelper.DefaultBilling))
-      {
-				@Html.CheckBoxFor(m => m.IsDefaultBilling, null)
-				@Html.LabelForEx(m => m.IsDefaultBilling)
-      }
-			
-			<br />
-      if (!Model.Address.Name.Contains(UserHelper.DefaultShipping))
-      {
-				@Html.CheckBoxFor(m => m.IsDefaultShipping)
-			    @Html.LabelForEx(m => m.IsDefaultShipping)
-      }
-  }
-	</div>
-	<div class="buttons-set">
-		<p class="required">* @("Required Fields".LocalizeHtml())</p>
-		<p class="back-link">
-			<a href="@backUrl">
-		<small>« </small>@("Back".LocalizeHtml())</a></p>
-		<button class="button" title="@("Save Address".LocalizeHtml())" type="submit"><span><span>@("Save Address".LocalizeHtml())</span></span></button>
-	</div>
-</form>*@
