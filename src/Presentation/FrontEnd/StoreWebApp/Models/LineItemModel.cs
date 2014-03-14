@@ -145,9 +145,9 @@ namespace VirtoCommerce.Web.Models
 		/// Gets the quantity.
 		/// </summary>
 		/// <value>The quantity.</value>
-		public decimal Quantity
+		public int Quantity
 		{
-			get { return LineItem.Quantity; }
+			get { return (int)LineItem.Quantity; }
 		}
 
 		/// <summary>

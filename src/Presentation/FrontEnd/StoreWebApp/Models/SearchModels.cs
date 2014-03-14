@@ -505,18 +505,18 @@ namespace VirtoCommerce.Web.Models
 		/// Gets the minimum quantity.
 		/// </summary>
 		/// <value>The minimum quantity.</value>
-		public decimal MinQuantity
+		public int MinQuantity
 		{
-			get { return _availability.MinQuantity; }
+			get { return (int)_availability.MinQuantity; }
 		}
 
 		/// <summary>
 		/// Gets the maximum quantity.
 		/// </summary>
 		/// <value>The maximum quantity.</value>
-        public decimal MaxQuantity
+        public int MaxQuantity
         {
-            get { return _availability.MaxQuantity; }
+            get { return (int)_availability.MaxQuantity; }
         }
 
 		/// <summary>

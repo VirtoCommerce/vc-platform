@@ -28,7 +28,7 @@
 		}
   else
   {
-		    @:$("#qty").val("@Math.Round(Model.Availability.MinQuantity, 0)");
+		    @:$("#qty").val("@Model.Availability.MinQuantity");
 		}
 
         loadVariations("@Model.CatalogItem.ItemId", "@Request.QueryString["variation"]");
