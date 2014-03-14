@@ -233,11 +233,6 @@ button.proceed:hover span:after
     margin-right: 5px;
 }
 
-    .head-switch.language
-    {
-        margin-left: -10px;
-    }
-
     .head-switch:hover
     {
         -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, .15);
@@ -251,7 +246,7 @@ button.proceed:hover span:after
         display: block;
         padding: 0 10px;
         position: relative;
-        z-index: 2;
+        z-index: 6;
     }
 
     .head-switch:hover > span
@@ -265,6 +260,11 @@ button.proceed:hover span:after
         background: url(images/icons/arrows/arrow_switch.png) no-repeat scroll 100% 50%;
         color: #1d1c1b;
         padding: 0 12px 0 5px;
+    }
+
+    .head-switch ul li .current
+    {
+        background: none;
     }
 
     .head-switch ul
@@ -282,7 +282,17 @@ button.proceed:hover span:after
         box-shadow: 0 0 10px rgba(0, 0, 0, .15);
     }
 
-    .head-switch:hover ul
+        .head-switch ul ul
+        {
+            visibility: hidden;
+            left: 100%;
+            top: 0;
+            margin-left: 13px;
+        }
+
+
+
+    .head-switch:hover > ul
     {
         opacity: 1;
         visibility: visible;
@@ -292,7 +302,22 @@ button.proceed:hover span:after
     .head-switch ul li
     {
         line-height: 28px;
+        position: relative;
+        cursor: pointer;
+        padding: 2px 0;
     }
+
+        .head-switch ul li:hover
+        {
+            background-color: #f5f4f4;
+        }
+
+            .head-switch ul li:hover ul
+            {
+                opacity: 1;
+                visibility: visible;
+                filter: alpha(opacity = 100);
+            }
 
         .head-switch ul li a
         {
@@ -306,22 +331,12 @@ button.proceed:hover span:after
             color: #322c29;
         }
 
-    .head-switch.language ul li a
+    .head-switch .language ul li a
     {
         background-position: 10px 50%;
         background-repeat: no-repeat;
         padding: 0 9px 0 35px;
     }
-
-    /*.head-switch.language ul li.ru a
-					{
-						background-image: url(images/flags/ru.png);
-					}
-
-					.head-switch.language ul li.en a
-					{
-						background-image: url(images/flags/en.png);
-					}*/
 
     .head-switch ul li a:hover
     {
@@ -383,7 +398,7 @@ button.proceed:hover span:after
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.15);
 }
 
-    .header.fixed 
+    .header.fixed
     {
         position: fixed;
     }
