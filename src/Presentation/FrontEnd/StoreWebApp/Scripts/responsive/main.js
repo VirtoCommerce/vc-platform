@@ -220,13 +220,13 @@
 		$(window).scroll(function (){
 			var scroll = $(this).scrollTop();
 
-			if(scroll >= 135)
+			if (scroll >= 35)
 			{
-			    $('.header-wrap').addClass('fixed');
+			    $('.header').addClass('fixed');
 			}
 			else
 			{
-			    $('.header-wrap').removeClass('fixed');
+			    $('header').removeClass('fixed');
 			}
 		});
 	};

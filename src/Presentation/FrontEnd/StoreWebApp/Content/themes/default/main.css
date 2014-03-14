@@ -216,12 +216,6 @@ button.proceed:hover span:after
     z-index: 5000;
 }
 
-    .header-wrap.fixed
-    {
-        position: fixed;
-        width: 100%;
-    }
-
 .head-top
 {
     background: #f9f9f9;
@@ -388,6 +382,11 @@ button.proceed:hover span:after
     -moz-box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.15);
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.15);
 }
+
+    .header.fixed 
+    {
+        position: fixed;
+    }
 
     .header .rubber > div > *:first-child
     {
