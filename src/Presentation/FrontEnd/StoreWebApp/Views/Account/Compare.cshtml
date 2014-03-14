@@ -38,7 +38,9 @@
                 @foreach (var li in Model.LineItems)
                 {
                     <td align="center">
-                        <img src="@Url.Image(li.CatalogItem.Item, "primaryimage")" title="" alt="@li.DisplayName" onerror="this.onerror=null;this.src='@Href("~/Content/themes/default/images/blank.png")';" />
+                        <a href="#" onclick="$.open('@Url.ItemUrl(li.CatalogItem.Item, li.CatalogItem.ParentItemId)'); return false;" title="@li.DisplayName" class="product-image">
+                            <img src="@Url.Image(li.CatalogItem.Item, "primaryimage")" title="" alt="@li.DisplayName" onerror="this.onerror=null;this.src='@Href("~/Content/themes/default/images/blank.png")';" />
+                        </a>
                         <span class="product-name">@li.DisplayName</span>
                         <span class="price">@li.FormattedPlacedPrice</span>
                         @{ var catalogModel = CatalogHelper.CreateCatalogModel(li.CatalogItem.ItemId, li.ParentCatalogItem != null ? li.ParentCatalogItem.ItemId : null, forcedActive: true);}

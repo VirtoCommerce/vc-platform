@@ -693,7 +693,6 @@
     <Content Include="Views\Banner\DisplayTemplates\ImageClick.cshtml" />
     <Content Include="Views\Banner\DisplayTemplates\ImageNoClick.cshtml" />
     <Content Include="Views\Banner\DisplayTemplates\RawHtml.cshtml" />
-    <Content Include="Views\Cart\Add.cshtml" />
     <Content Include="Views\Cart\EditorTemplates\LineItem.cshtml" />
     <Content Include="Views\Cart\EditorTemplates\ShippingEstimate.cshtml" />
     <Content Include="Views\Cart\Empty.cshtml" />
