@@ -89,7 +89,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		}
 #endif
 		#region Constructor
-		
+
 		public CatalogHomeViewModel(CatalogMainViewModel parentViewModel, IAppConfigEntityFactory seoFactory, IRepositoryFactory<IAppConfigRepository> seoRepository, IRepositoryFactory<ICatalogRepository> catalogRepository,
 			IRepositoryFactory<IImportRepository> importRepository, IViewModelsFactory<ICreateCategoryViewModel> wizardCategoryVmFactory,
 			ITitleHomeCaptionViewModel captionVm, IViewModelsFactory<IQueryViewModel> queryVmFactory, IViewModelsFactory<IItemTypeSelectionStepViewModel> selectionVmFactory,
@@ -444,19 +444,17 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 										selectedItems.ToList().ForEach(y =>
 										{
 											var item = y.Data.InnerItem;
-											CategoryItemRelation relation;
+											item = repository.Items.Where(x => x.ItemId == item.ItemId).Expand(x => x.CategoryItemRelations).First();
 
 											// Item can be only in 1 category in a real catalog
-											relation = repository.CategoryItemRelations.Where(x => x.ItemId == item.ItemId && x.CatalogId == item.CatalogId).FirstOrDefault();
+											var relation = item.CategoryItemRelations.FirstOrDefault(x => x.CatalogId == item.CatalogId);
 											if (relation == null)
 											{
 												relation = CreateCatalogEntity<CategoryItemRelation>();
 												relation.ItemId = item.ItemId;
-												repository.Add(relation);
+												item.CategoryItemRelations.Add(relation);
 											}
 
-											repository.Attach(item);
-											//item.Catalog = null;
 											item.CatalogId = itemVM.SelectedItem.CatalogId;
 											relation.CatalogId = item.CatalogId;
 											relation.CategoryId = itemVM.SelectedItem.CategoryId;
@@ -552,7 +550,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		#endregion
 
 		#region ViewModelHomeEditableBase
-		
+
 		protected override bool CanItemAddExecute()
 		{
 			return _authContext.CheckPermission(PredefinedPermissions.CatalogItemsManage) && GetCatalog(SelectedCatalogItem) is catalogModel.Catalog;
@@ -611,13 +609,13 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			if (item is Item)
 			{
 				using (var seoRepository = _seoRepository.GetRepositoryInstance())
-				{					
+				{
 					var i = (Item)item;
 					var itemName = ReplaceRestrictedChars(i.Name);
 					var checkItem = seoRepository.SeoUrlKeywords.Where(s => s.Keyword.Equals(itemName, StringComparison.InvariantCultureIgnoreCase) &&
 						s.Language.Equals(i.Catalog.DefaultLanguage, StringComparison.InvariantCultureIgnoreCase) &&
 						s.KeywordType.Equals((int)SeoUrlKeywordTypes.Item)).FirstOrDefault();
-					
+
 					var seo = _seoFactory.CreateEntity<VirtoCommerce.Foundation.AppConfig.Model.SeoUrlKeyword>();
 					seo.KeywordValue = i.Code;
 					seo.Keyword = checkItem == null ? itemName : "_" + itemName + "_";
