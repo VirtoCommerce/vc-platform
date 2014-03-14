@@ -38,8 +38,9 @@
         -ms-text-overflow: ellipsis;
         -o-text-overflow: ellipsis;
         text-overflow: ellipsis;
+        text-align: right;
         white-space: nowrap;
-        width: 90px;
+        width: 50px;
     }
 
     /* --- Article --- */
