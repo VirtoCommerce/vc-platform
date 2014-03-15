@@ -285,12 +285,11 @@ button.proceed:hover span:after
         .head-switch ul ul
         {
             visibility: hidden;
-            left: 100%;
+            left: 95%;
             top: 0;
             margin-left: 13px;
+            padding: 5px;
         }
-
-
 
     .head-switch:hover > ul
     {
