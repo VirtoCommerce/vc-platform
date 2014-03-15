@@ -1586,9 +1586,6 @@
                         </Directory>
                     </Directory>
                     <Directory Id="dir1FFFABDDC85A0BFC763372AEFE4B921D" Name="Cart">
-                        <Component Id="cmpF6D9E0173F6E8368F71CC1CA8B5D04E7" Guid="{6BA9B11D-499B-4079-BB62-4CBA688F8E5D}">
-                            <File Id="filB076AB122FD0F7F27DE6E44BA1DF9F23" KeyPath="yes" Source="$(var.FrontendSourcePath)\Views\Cart\Add.cshtml" />
-                        </Component>
                         <Component Id="cmp122C1FB48B82D499C10B4A5DE316C81C" Guid="{52FBD3E4-6342-46F6-807E-14C5418CD64D}">
                             <File Id="fil168D36BE1817D9E664F988A09C75FE04" KeyPath="yes" Source="$(var.FrontendSourcePath)\Views\Cart\Empty.cshtml" />
                         </Component>
@@ -2417,7 +2414,6 @@
             <ComponentRef Id="cmpF9D0BB748863B05AEDECFF0E5C0605E5" />
             <ComponentRef Id="cmp06C4785D16E1AFE9782F7443CE713A0E" />
             <ComponentRef Id="cmp49EBE78BE47BBB1031809F51F318A1EC" />
-            <ComponentRef Id="cmpF6D9E0173F6E8368F71CC1CA8B5D04E7" />
             <ComponentRef Id="cmp122C1FB48B82D499C10B4A5DE316C81C" />
             <ComponentRef Id="cmpF6463493384FD093A8E093E18D29566E" />
             <ComponentRef Id="cmp2BDAF4D108A84FF991DD13FDC4A42DC4" />
