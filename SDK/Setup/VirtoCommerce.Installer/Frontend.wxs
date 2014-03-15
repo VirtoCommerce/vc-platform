@@ -1904,9 +1904,6 @@
                             <Component Id="cmp43F72AAE0EC0639E422C23D5C6C7280C" Guid="{3EE825F6-4502-4F2F-8B90-2DC2A04045BC}">
                                 <File Id="fil9D8C02FB6214AEADDB3967C458A1BDEE" KeyPath="yes" Source="$(var.FrontendSourcePath)\Virto\Helpers\MVC\CatalogNodeProvider.cs" />
                             </Component>
-                            <Component Id="cmp3ECCE57722381B3D402E6ECC98D29C27" Guid="{4C47BEA6-8B59-4DF1-9105-02830FCED3A2}">
-                                <File Id="filB1724B3464C5D86FAE22C1DA9F33711E" KeyPath="yes" Source="$(var.FrontendSourcePath)\Virto\Helpers\MVC\CssMinifyFix.cs" />
-                            </Component>
                             <Component Id="cmpD328B79DE01CE7AB23DDB9DCE2578D1A" Guid="{21BD36E0-407C-406B-81BF-33A95C2F08C3}">
                                 <File Id="filAAF127F5EBA22F8FA842CCCDAE7C14C9" KeyPath="yes" Source="$(var.FrontendSourcePath)\Virto\Helpers\MVC\VirtoDataAnnotationsModelValidatorProvider.cs" />
                             </Component>
@@ -2509,7 +2506,6 @@
             <ComponentRef Id="cmp8A1A897A19368A25CB6B34138B99AE25" />
             <ComponentRef Id="cmp355D35F38DDFD4A99915579D5FB56ADB" />
             <ComponentRef Id="cmp43F72AAE0EC0639E422C23D5C6C7280C" />
-            <ComponentRef Id="cmp3ECCE57722381B3D402E6ECC98D29C27" />
             <ComponentRef Id="cmpD328B79DE01CE7AB23DDB9DCE2578D1A" />
             <ComponentRef Id="cmp6B2EF4B3C7EC587F0EDCCE268C2B152E" />
             <ComponentRef Id="cmpDC4C688DAD69DA0670B8173B246B4266" />
