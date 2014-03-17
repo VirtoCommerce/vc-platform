@@ -223,10 +223,12 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 				if (x.Confirmed)
 				{
 					await Task.Run(() =>
-						{							
-							repository.Attach(InnerItem);
-							repository.Remove(InnerItem);
-
+					{
+                            // Removing item by attaching makes DataServiceRequest exception.
+					        var categoryItem = repository.Categories.Where(c => c.CategoryId == InnerItem.CategoryId).FirstOrDefault();
+					        //repository.Attach(InnerItem);
+                            repository.Remove(categoryItem);
+                        
 							// report status
 							var id = Guid.NewGuid().ToString();
 							var item = new StatusMessage { ShortText = string.Format("A {0} '{1}' deletion in progress", typeName, DisplayName), StatusMessageId = id };
