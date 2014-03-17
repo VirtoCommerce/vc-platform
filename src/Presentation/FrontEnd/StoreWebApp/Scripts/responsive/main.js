@@ -95,10 +95,9 @@
 	{
 		$('.view-mode a').click(function (){
 			var name = $(this).attr('class').split(' ')[0];
-
 			$('.view-mode a.' + name).addClass('current').siblings().removeClass('current');
 			$('div.' + name).addClass('selected').siblings().removeClass('selected');
-			VirtoCommerce.setCookie("vcf.categoryListView",name, 7);
+			VirtoCommerce.setCookie("vcf.categoryListView", name, 7);
 		});
 	};
 

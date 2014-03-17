@@ -26,7 +26,7 @@
             foreach (var variation in Model.Variations)
             {
     <div class="variation">
-        <p>@variation.Name</p>
+        <p>@variation.Name.Localize()</p>
 
         <select name="@variation.Name" id="@variation.Name" data-val-required="The field is required." data-val="true">
             @foreach (var item in variation.Items)
