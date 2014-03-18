@@ -224,37 +224,37 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 				{
 					await Task.Run(() =>
 					{
-                            // Removing item by attaching makes DataServiceRequest exception.
-					        var categoryItem = repository.Categories.Where(c => c.CategoryId == InnerItem.CategoryId).FirstOrDefault();
-					        //repository.Attach(InnerItem);
-                            repository.Remove(categoryItem);
-                        
-							// report status
-							var id = Guid.NewGuid().ToString();
-							var item = new StatusMessage { ShortText = string.Format("A {0} '{1}' deletion in progress", typeName, DisplayName), StatusMessageId = id };
-							EventSystem.Publish(item);
+						// Removing item by attaching makes DataServiceRequest exception.
+						var categoryItem = repository.Categories.Where(c => c.CategoryId == InnerItem.CategoryId).FirstOrDefault();
+						//repository.Attach(InnerItem);
+						repository.Remove(categoryItem);
 
-							try
+						// report status
+						var id = Guid.NewGuid().ToString();
+						var item = new StatusMessage { ShortText = string.Format("A {0} '{1}' deletion in progress", typeName, DisplayName), StatusMessageId = id };
+						EventSystem.Publish(item);
+
+						try
+						{
+							if (DeleteSeoKeywords())
 							{
-								if (DeleteSeoKeywords())
-								{
-									repository.UnitOfWork.Commit();
-								}
-								item = new StatusMessage { ShortText = string.Format("A {0} '{1}' deleted successfully", typeName, DisplayName), StatusMessageId = id, State = StatusMessageState.Success };
-								EventSystem.Publish(item);
+								repository.UnitOfWork.Commit();
 							}
-							catch (Exception e)
+							item = new StatusMessage { ShortText = string.Format("A {0} '{1}' deleted successfully", typeName, DisplayName), StatusMessageId = id, State = StatusMessageState.Success };
+							EventSystem.Publish(item);
+						}
+						catch (Exception e)
+						{
+							item = new StatusMessage
 							{
-								item = new StatusMessage
-								{
-									ShortText = string.Format("Failed to delete {0} '{1}'", typeName, DisplayName),
-									Details = e.ToString(),
-									StatusMessageId = id,
-									State = StatusMessageState.Error
-								};
-								EventSystem.Publish(item);
-							}
-						});
+								ShortText = string.Format("Failed to delete {0} '{1}'", typeName, DisplayName),
+								Details = e.ToString(),
+								StatusMessageId = id,
+								State = StatusMessageState.Error
+							};
+							EventSystem.Publish(item);
+						}
+					});
 
 					var parentHierarchyVM = (HierarchyViewModelBase)Parent;
 					parentHierarchyVM.Refresh();
@@ -266,7 +266,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		{
 			var retVal = false;
 
-			using(var seoRepository = _seoRepositoryFactory.GetRepositoryInstance())
+			using (var seoRepository = _seoRepositoryFactory.GetRepositoryInstance())
 			{
 				_repositoryFactory.GetRepositoryInstance().Categories
 					.Where(x => x.ParentCategoryId == InnerItem.CategoryId).ToList().ForEach(y => seoRepository.SeoUrlKeywords.Where(z => z.KeywordValue.Equals(y.Code, StringComparison.InvariantCultureIgnoreCase)).ToList().ForEach(keyword => seoRepository.Remove(keyword)));
@@ -387,7 +387,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		{
 			using (var repository = _repositoryFactory.GetRepositoryInstance())
 			{
-				repository.Attach(InnerItem);
+				_innerItem = repository.Categories.Where(x => x.CategoryId == _innerItem.CategoryId).First();
 
 				if (parent is ITreeCategoryViewModel)
 				{
@@ -409,7 +409,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 					Parent = (IViewModel)parent;
 				}
 
-				repository.UnitOfWork.CommitAndRefreshChanges();
+				repository.UnitOfWork.Commit();
 			}
 		}
 
@@ -461,15 +461,15 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 				using (var repository = _repositoryFactory.GetRepositoryInstance())
 				{
-					repository.Attach(_innerItem);
-					repository.Attach(siblingVM.InnerItem);
+					_innerItem = repository.Categories.Where(x => x.CategoryId == _innerItem.CategoryId).First();
+					var siblingItem = repository.Categories.Where(x => x.CategoryId == siblingVM.InnerItem.CategoryId).First();
 
 					var tmpPriority = _innerItem.Priority;
-					if (_innerItem.Priority == siblingVM.InnerItem.Priority)
-						_innerItem.Priority = siblingVM.InnerItem.Priority + (moveUp ? 1 : -1);
+					if (_innerItem.Priority == siblingItem.Priority)
+						_innerItem.Priority = siblingItem.Priority + (moveUp ? 1 : -1);
 					else
-						_innerItem.Priority = siblingVM.InnerItem.Priority;
-					siblingVM.InnerItem.Priority = tmpPriority;
+						_innerItem.Priority = siblingItem.Priority;
+					siblingItem.Priority = tmpPriority;
 
 					repository.UnitOfWork.Commit();
 				}
