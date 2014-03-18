@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,7 @@ namespace VirtoCommerce.Foundation.Frameworks
         void Unlock(string key, object lockHandle);
         object this[string key] { get; set; }
         bool Remove(string key);
-        void Clear();   
+        void Clear();
+        IDictionaryEnumerator GetEnumerator();
     }
 }

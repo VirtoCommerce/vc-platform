@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VirtoCommerce.Foundation;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Orders;
 using VirtoCommerce.Foundation.Orders.Model.Countries;
@@ -34,7 +35,7 @@ namespace VirtoCommerce.Client
         public Country[] GetAllCountries()
         {
             return Helper.Get(
-                string.Format(CountriesCacheKey, "all"),
+                CacheHelper.CreateCacheKey(Constants.CountriesCachePrefix,  string.Format(CountriesCacheKey, "all")),
                 () => (from c in _countryRepository.Countries 
 					   orderby c.Priority descending, c.DisplayName ascending select c).ExpandAll().ToArray(),
                 OrderConfiguration.Instance.Cache.CountryTimeout,

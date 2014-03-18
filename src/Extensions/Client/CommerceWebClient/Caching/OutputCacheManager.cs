@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Caching;
 using System.Web.Routing;
+using Microsoft.Practices.Unity;
 using VirtoCommerce.Web.Client.Caching.Interfaces;
 using VirtoCommerce.Web.Client.Properties;
 using IKeyBuilder = VirtoCommerce.Web.Client.Caching.Interfaces.IKeyBuilder;
@@ -16,6 +17,12 @@ namespace VirtoCommerce.Web.Client.Caching
 
         public OutputCacheManager()
             : this(OutputCache.Instance, new KeyBuilder())
+        {
+        }
+
+        [InjectionConstructor]
+        public OutputCacheManager(IKeyBuilder keyBuilder)
+            : this(OutputCache.Instance, keyBuilder)
         {
         }
 

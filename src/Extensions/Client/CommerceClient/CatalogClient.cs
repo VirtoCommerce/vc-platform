@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
+using VirtoCommerce.Foundation;
 using VirtoCommerce.Foundation.Catalogs;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Catalogs.Repositories;
@@ -94,7 +95,7 @@ namespace VirtoCommerce.Client
             var query = _catalogRepository.Catalogs.Where(x => x.CatalogId.Equals(catalogId, StringComparison.OrdinalIgnoreCase));
 
             return Helper.Get(
-                string.Format(CatalogCacheKey, catalogId),
+                CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix,string.Format(CatalogCacheKey, catalogId)),
                 () => (query).SingleOrDefault(),
                 CatalogConfiguration.Instance.Cache.CatalogTimeout,
                 _isEnabled && useCache);
@@ -111,7 +112,7 @@ namespace VirtoCommerce.Client
             var query = _catalogRepository.CategoryItemRelations.Where(x => x.ItemId.Equals(itemId, StringComparison.OrdinalIgnoreCase));
 
             return Helper.Get(
-                string.Format(CategoryItemRelationCacheKey, itemId),
+                CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix, string.Format(CategoryItemRelationCacheKey, itemId)),
                 () => (query).ToArray(),
                 CatalogConfiguration.Instance.Cache.CategoryTimeout,
                 _isEnabled && useCache);
@@ -215,7 +216,7 @@ namespace VirtoCommerce.Client
             query = IncludeGroups(query, responseGroup);
 
             return Helper.Get(
-                string.Format(ItemsCacheKey, CacheHelper.CreateCacheKey("", ids), responseGroup),
+                CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix, string.Format(ItemsCacheKey, CacheHelper.CreateCacheKey(ids), responseGroup)),
                 () => (query).ToArray(),
                 CatalogConfiguration.Instance.Cache.ItemTimeout,
                 _isEnabled && useCache);
@@ -235,7 +236,7 @@ namespace VirtoCommerce.Client
             query = IncludeGroups(query, responseGroup);
 
             return Helper.Get(
-                string.Format(ItemsCodeCacheKey, CacheHelper.CreateCacheKey("", codes), responseGroup),
+                CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix,  string.Format(ItemsCodeCacheKey, CacheHelper.CreateCacheKey(codes), responseGroup)),
                 () => (query).ToArray(),
                 CatalogConfiguration.Instance.Cache.ItemTimeout,
                 _isEnabled && useCache);
@@ -283,7 +284,7 @@ namespace VirtoCommerce.Client
         public PropertySet[] GetPropertySets(bool useCache = true)
         {
             return Helper.Get(
-                string.Format(PropertiesCacheKey, "all"),
+                CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix, string.Format(PropertiesCacheKey, "all")),
                 () => (from p in _catalogRepository.PropertySets select p)
                     .Expand("PropertySetProperties/Property/PropertyValues")
                     .Expand("PropertySetProperties/Property/PropertyAttributes")
@@ -337,7 +338,7 @@ namespace VirtoCommerce.Client
             }
 
             return Helper.Get(
-               string.Format(PropertyValueCacheKey, id, name, locale, storageEntity.GetType().Name),
+               CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix, string.Format(PropertyValueCacheKey, id, name, locale, storageEntity.GetType().Name)),
                () =>
                {
 
@@ -454,7 +455,7 @@ namespace VirtoCommerce.Client
         {
 
             return Helper.Get(
-                string.Format(CategoryCacheKey, _customerSession.CustomerSession.CatalogId, code),
+                CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix, string.Format(CategoryCacheKey, _customerSession.CustomerSession.CatalogId, code)),
                 () => GetCategoryInternal(_customerSession.CustomerSession.CatalogId, code),
                 CatalogConfiguration.Instance.Cache.CategoryTimeout,
                 _isEnabled && useCache);
@@ -464,7 +465,7 @@ namespace VirtoCommerce.Client
         {
 
             return Helper.Get(
-                string.Format(CategoryIdCacheKey, _customerSession.CustomerSession.CatalogId, id),
+                CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix,  string.Format(CategoryIdCacheKey, _customerSession.CustomerSession.CatalogId, id)),
                 () => GetCategoryByIdInternal(id),
                 CatalogConfiguration.Instance.Cache.CategoryTimeout,
                 _isEnabled && useCache);
@@ -478,7 +479,7 @@ namespace VirtoCommerce.Client
             var scope = _searchConnection.Scope;
 
             return Helper.Get(
-                string.Format(SearchCacheKey, scope, criteria.CacheKey),
+                CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix, string.Format(SearchCacheKey, scope, criteria.CacheKey)),
                 () => _catalogService.SearchItems(scope, criteria),
                 SearchConfiguration.Instance.Cache.FiltersTimeout,
                 _isEnabled);
@@ -490,7 +491,7 @@ namespace VirtoCommerce.Client
         public ItemRelation[] GetItemRelations(string itemId)
         {
             return Helper.Get(
-                string.Format(ItemVariationsCacheKey, itemId),
+                CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix, string.Format(ItemVariationsCacheKey, itemId)),
                 () => _catalogRepository.ItemRelations.Where(ir => ir.ParentItemId == itemId).Expand(ir => ir.ChildItem).Expand(ir => ir.ChildItem.ItemPropertyValues).ToArray(),
                 CatalogConfiguration.Instance.Cache.ItemTimeout,
                 _isEnabled);
@@ -508,7 +509,8 @@ namespace VirtoCommerce.Client
         /// <returns></returns>
         public Inventory GetItemInventory(string itemId, string fulfillmentCenterId)
         {
-            return Helper.Get(String.Format(ItemInvetoriesCacheKey, itemId, fulfillmentCenterId),
+            return Helper.Get(
+                CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix, string.Format(ItemInvetoriesCacheKey, itemId, fulfillmentCenterId)),
                 () => _inventoryRepository.Inventories.SingleOrDefault(i => i.FulfillmentCenterId.Equals(fulfillmentCenterId, StringComparison.OrdinalIgnoreCase) &&
                                                                          i.Sku.Equals(itemId, StringComparison.OrdinalIgnoreCase)),
                 CatalogConfiguration.Instance.Cache.ItemTimeout,
@@ -523,7 +525,8 @@ namespace VirtoCommerce.Client
         /// <returns></returns>
         public IEnumerable<Inventory> GetItemInventories(string[] itemIds, string fulfillmentCenterId)
         {
-            return Helper.Get(String.Format(ItemInvetoriesCacheKey, CacheHelper.CreateCacheKey("", itemIds), fulfillmentCenterId),
+            return Helper.Get(
+                CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix, string.Format(ItemInvetoriesCacheKey, CacheHelper.CreateCacheKey(itemIds), fulfillmentCenterId)),
                 () => _inventoryRepository.Inventories.Where(i => i.FulfillmentCenterId.Equals(fulfillmentCenterId, StringComparison.OrdinalIgnoreCase) && itemIds.Contains(i.Sku)).ToArray(),
                 CatalogConfiguration.Instance.Cache.ItemCollectionTimeout,
                 _isEnabled);

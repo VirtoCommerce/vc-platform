@@ -25,22 +25,23 @@ namespace VirtoCommerce.Client.Globalization.Repository
 
 		#region Cache Constants
 
+        public const string LocalizationCachePrefix = "_Localization";
         /// <summary>
         /// The localize element cache key
         /// </summary>
-		public const string LocalizeElementCacheKey = "LE:C:{0}";
+        public const string LocalizeElementCacheKey = "LE:C:{0}";
         /// <summary>
         /// The localize elements cache key
         /// </summary>
-		public const string LocalizeElementsCacheKey = "LES:C";
+        public const string LocalizeElementsCacheKey = "LES:C";
         /// <summary>
         /// The localize cultures cache key
         /// </summary>
-		public const string LocalizeCulturesCacheKey = "LEC:C";
+        public const string LocalizeCulturesCacheKey = "LEC:C";
         /// <summary>
         /// The localize categories cache key
         /// </summary>
-		public const string LocalizeCategoriesCacheKey = "LEC:CAT";
+        public const string LocalizeCategoriesCacheKey = "LEC:CAT";
 
 		#endregion
 
@@ -348,7 +349,7 @@ namespace VirtoCommerce.Client.Globalization.Repository
         /// <returns>System.String.</returns>
 		private string GetCacheKey(string keyTemplate, params string[] keys)
 		{
-			return string.Format(keyTemplate, CacheHelper.CreateCacheKey("", keys));
+			return string.Format(keyTemplate, CacheHelper.CreateCacheKey(LocalizationCachePrefix, keys));
 		}
 
         /// <summary>

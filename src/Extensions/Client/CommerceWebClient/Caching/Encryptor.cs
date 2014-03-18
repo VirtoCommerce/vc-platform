@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using System.Web.Security;
-using IEncryptor = VirtoCommerce.Web.Client.Caching.Interfaces.IEncryptor;
+using VirtoCommerce.Web.Client.Caching.Interfaces;
 
 namespace VirtoCommerce.Web.Client.Caching
 {

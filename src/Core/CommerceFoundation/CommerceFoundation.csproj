@@ -181,6 +181,7 @@
     <Compile Include="Catalogs\CatalogConfiguration.cs" />
     <Compile Include="Catalogs\Services\ICatalogOutlineBuilder.cs" />
     <Compile Include="Configuration.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="Customers\Model\ContactPropertyValueName.cs" />
     <Compile Include="Customers\CustomerConfiguration.cs" />
     <Compile Include="Customers\CustomerSession.cs" />

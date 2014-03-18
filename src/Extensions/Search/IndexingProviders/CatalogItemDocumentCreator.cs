@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Data.Entity;
+using VirtoCommerce.Foundation;
 using VirtoCommerce.Foundation.Catalogs;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
@@ -290,7 +291,7 @@ namespace VirtoCommerce.Search.Index
         private Pricelist[] GetPriceLists(string jobId, bool useCache = true)
         {
             return Helper.Get(
-                string.Format(PriceListsCacheKey, jobId),
+                CacheHelper.CreateCacheKey(Constants.PricelistCachePrefix,    string.Format(PriceListsCacheKey, jobId)),
                 () => ((from p in PriceListRepository.Pricelists select p).AsNoTracking().ToArray()),
                 new TimeSpan(0, 5, 0),
                 useCache);
@@ -299,7 +300,7 @@ namespace VirtoCommerce.Search.Index
         private Property[] GetProperties(string jobId, bool useCache = true)
         {
             return Helper.Get(
-                string.Format(PropertiesCacheKey, jobId),
+                CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix, string.Format(PropertiesCacheKey, jobId)),
                 () => ((from p in CatalogRepository.Properties select p).Expand(p => p.PropertyValues).AsNoTracking().ToArray()),
                 new TimeSpan(0, 5, 0),
                 useCache);

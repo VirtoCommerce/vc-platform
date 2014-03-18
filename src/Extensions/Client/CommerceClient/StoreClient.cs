@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using VirtoCommerce.Foundation;
 using VirtoCommerce.Foundation.Customers.Services;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
@@ -126,7 +127,7 @@ namespace VirtoCommerce.Client
         public Store[] GetStores()
         {
             return Helper.Get(
-                string.Format(StoreCacheKey, "all"),
+                CacheHelper.CreateCacheKey(Constants.StoreCachePrefix, string.Format(StoreCacheKey, "all")),
                 () =>
                 {
                     try

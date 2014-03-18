@@ -15,13 +15,13 @@ namespace VirtoCommerce.Foundation.Catalogs.Services
 		#region Private Variables
 		private readonly IPricelistRepository _repository;
 		private IEvaluationPolicy[] _policies;
-
 		private static CacheHelper _cache;
-		public const string PricelistAssignmentCacheKey = "C:PLA:{0}";
 		private static bool _isEnabled;
 		#endregion
 
-		public PriceListAssignmentEvaluator(IPricelistRepository repository, IEvaluationPolicy[] policies, ICacheRepository cache)
+        public const string PricelistAssignmentCacheKey = "C:PLA:{0}";
+
+	    public PriceListAssignmentEvaluator(IPricelistRepository repository, IEvaluationPolicy[] policies, ICacheRepository cache)
 		{
 			_repository = repository;
 			_policies = policies;
@@ -105,7 +105,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Services
 		private IQueryable<PricelistAssignment> GetPricelistAssignments()
 		{
 			return _cache.Get(
-				string.Format(PricelistAssignmentCacheKey, "all"),
+                CacheHelper.CreateCacheKey(Constants.PricelistCachePrefix, string.Format(PricelistAssignmentCacheKey, "all")),
 				() => (_repository.PricelistAssignments.Expand("Pricelist")).ToArray(),
 				CatalogConfiguration.Instance.Cache.PricelistTimeout,
 				_isEnabled).AsQueryable();
