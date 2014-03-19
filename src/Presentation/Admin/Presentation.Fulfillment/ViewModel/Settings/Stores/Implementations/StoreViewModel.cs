@@ -470,7 +470,6 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 
 				if (itemFromDb != null)
 				{
-					repository.Attach(itemFromDb);
 					repository.Remove(itemFromDb);
 					InnerItem.CardTypes.Remove(itemFromDb);
 				}
@@ -506,7 +505,6 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 
 				if (itemFromDb != null)
 				{
-					repository.Attach(itemFromDb);
 					repository.Remove(itemFromDb);
 					InnerItem.PaymentGateways.Remove(itemFromDb);
 				}
@@ -568,7 +566,6 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 
 		private void UpdateTaxCodeList(IStoreRepository repository)
 		{
-
 			var itemsToDelete = TaxesStepViewModel.AvailableTaxCodes.Where(x => x.IsChecked == false).ToList();
 			foreach (var itemToDelete in itemsToDelete)
 			{
