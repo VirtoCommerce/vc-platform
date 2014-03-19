@@ -137,7 +137,7 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure
 									repository.Add(item);
 									repository.UnitOfWork.Commit();
 									success = true;
-								}								
+								}
 							});
 
 						if (success)
@@ -185,7 +185,7 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure
 								});
 							OnUIThread(() =>
 								{
-									var item = CreateItem(itemFromRep);									
+									var item = CreateItem(itemFromRep);
 									AfterItemAddSaved(item);
 								});
 						}
@@ -205,7 +205,7 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure
 		}
 
 		/// <summary>
-		/// Base method to append Item. 
+		/// Base method to delete Item. 
 		/// Rises given confirmation dialog and remove given Item from DB.
 		/// Removes given Item from HomeView list.
 		/// Works with a repository in not UI thread. 
@@ -228,18 +228,23 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure
 			{
 				if (x.Confirmed)
 				{
-					OnUIThread(() => { ShowLoadingAnimation = true; });
-					await Task.Run(() =>
+					ShowLoadingAnimation = true;
+					try
 					{
-						repository.Attach(itemFromRep);
-						repository.Remove(itemFromRep);
-						repository.UnitOfWork.Commit();
-					});
-					OnUIThread(() =>
-					{
+						await Task.Run(() =>
+						{
+							if (!repository.IsAttachedTo(itemFromRep))
+								repository.Attach(itemFromRep);
+							repository.Remove(itemFromRep);
+							repository.UnitOfWork.Commit();
+						});
+
 						Items.Remove(item);
+					}
+					finally
+					{
 						ShowLoadingAnimation = false;
-					});
+					}
 				}
 			});
 		}
@@ -248,9 +253,9 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure
 		{
 			var confirmation = new ConditionalConfirmation
 			{
-				Content = confirmationContent,
-				Title = "Delete confirmation"
+				Content = confirmationContent
 			};
+
 			ItemDelete(item, confirmation, repository, itemFromRep);
 		}
 

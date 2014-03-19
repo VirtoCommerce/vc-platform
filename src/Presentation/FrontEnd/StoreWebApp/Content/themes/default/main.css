@@ -264,7 +264,7 @@ button.proceed:hover span:after
 
     .head-switch ul li .current
     {
-        background: none;
+        background: url(images/icons/arrows/arrow_switch_right.png) no-repeat scroll 100% 50%;
     }
 
     .head-switch ul

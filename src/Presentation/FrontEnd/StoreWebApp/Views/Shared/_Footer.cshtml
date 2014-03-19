@@ -1,7 +1,13 @@
 ﻿<script>
     $(function ()
     {
-        VirtoCommerce.registerDynamicContent("FooterPromo", '#FooterPromo');
+        VirtoCommerce.registerDynamicContent("FooterPromo", function (html) {
+            $('#FooterPromo').html(html);
+            $('#FooterPromo .control').click(function ()
+            {
+                $(this).toggleClass('opened');
+            });
+        });
         VirtoCommerce.registerDynamicContent("BottomLeftPromo", '#BottomLeftPromo');
     })
 </script>

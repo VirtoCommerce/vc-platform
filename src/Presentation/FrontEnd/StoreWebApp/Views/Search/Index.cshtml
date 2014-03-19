@@ -37,7 +37,7 @@ else
             }
 
             var viewClass = VirtoCommerce.getCookie("vcf.categoryListView");
-            viewClass = viewClass == "" ? "list" : viewClass;
+            viewClass = viewClass == "" ? "grid" : viewClass;
             window.setTimeout(function () { $('div.view-mode a.' + viewClass).trigger('click'); }, 100);
 
         });

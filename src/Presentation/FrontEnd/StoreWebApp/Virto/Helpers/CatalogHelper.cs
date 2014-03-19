@@ -12,6 +12,7 @@ using VirtoCommerce.Foundation.Customers;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using VirtoCommerce.Client.Globalization;
+using VirtoCommerce.Web.Client.Helpers;
 using VirtoCommerce.Web.Models;
 
 namespace VirtoCommerce.Web.Virto.Helpers
@@ -80,9 +81,11 @@ namespace VirtoCommerce.Web.Virto.Helpers
             {
                 var values = item.ItemPropertyValues;
                 var properties = propertySet.PropertySetProperties.SelectMany(x => values.Where(v => v.Name == x.Property.Name
-                    && !x.Property.PropertyAttributes.Any(pa => pa.PropertyAttributeName.Equals("Hidden", StringComparison.OrdinalIgnoreCase))
-                    && (!x.Property.IsLocaleDependant
-                    || string.Equals(v.Locale, CultureInfo.CurrentUICulture.Name, StringComparison.InvariantCultureIgnoreCase))),
+                    && !x.Property.PropertyAttributes.Any(pa => pa.PropertyAttributeName.Equals("Hidden", StringComparison.OrdinalIgnoreCase)) //skip hidden
+                    && (!x.Property.IsLocaleDependant // if not localized ok
+                    || string.Equals(v.Locale, CultureInfo.CurrentUICulture.Name, StringComparison.InvariantCultureIgnoreCase) //if current locale match value locale ok
+                    || (string.Equals(v.Locale, StoreHelper.GetDefaultLanguageCode(), StringComparison.InvariantCultureIgnoreCase) //if default locale match value locale and values does not contain locale for current property ok
+                    && !values.Any(val => val.Name == x.Property.Name && string.Equals(val.Locale, CultureInfo.CurrentUICulture.Name, StringComparison.InvariantCultureIgnoreCase))))),
                     (r, v) => CreatePropertyModel(r.Priority, r.Property, v, item)).ToArray();
 
                 model.Properties = new PropertiesModel(properties);

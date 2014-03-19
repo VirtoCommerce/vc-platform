@@ -493,6 +493,7 @@
     <Content Include="Content\themes\default\flags.css" />
     <Content Include="Content\themes\default\images\blank.gif" />
     <Content Include="Content\themes\default\images\flags\flags.png" />
+    <Content Include="Content\themes\default\images\icons\arrows\arrow_switch_right.png" />
     <Content Include="Content\themes\default\images\icons\gift.png" />
     <Content Include="Content\themes\default\images\icons\insurance.png" />
     <Content Include="Content\themes\default\images\icons\rateit\delete.gif" />

@@ -26,9 +26,8 @@
     </td>
     <td align="center" class="add-cart">
         @Html.TextBoxFor(x => x.Quantity, new { @class = "qty", maxlength = "12", size = "4" })
-        <button type="button" title="@("Add to Cart".Localize())" onclick="return VirtoCart.addToCartClick({itemId:'@((Model.CatalogItem != null) ? Model.CatalogItem.ItemId : "")', parentItemId:'@((Model.CatalogItem != null) ? Model.CatalogItem.ParentItemId : "")',callback:function(){ $('#row-@Model.LineItemId').fadeOut('slow');}});">
-            <span>@("Add to Cart".Localize())</span>
-        </button>
+        @{Html.RenderPartial("AddToCart", CatalogHelper.CreateCatalogModel(Model.CatalogItem.ItemId, Model.ParentCatalogItem != null ? Model.ParentCatalogItem.ItemId : null), new ViewDataDictionary { { "CallbackJs", 
+              string.Format("function(){{ $('#row-{0}').fadeOut('slow',function(){{ if($('tr[id^=row-]:visible').length == 0){{ location.reload(true); }} }}); }}", Model.LineItemId) } });}
         <p>@Html.ActionLink("Edit".Localize(), "Configure", "Cart", new { lineItemId = Model.LineItemId }, new { title = "Edit item".Localize() })</p>
     </td>
     <td class="product-actions">

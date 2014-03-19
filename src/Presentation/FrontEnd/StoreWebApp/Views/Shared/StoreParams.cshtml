@@ -6,4 +6,4 @@
     var countryCode = currentCulture.Name.Substring(currentCulture.Name.IndexOf('-') + 1).ToLowerInvariant();
 }
     <img src="~/Content/themes/default/images/blank.gif" class="flag flag-@countryCode" alt="@currentCulture.NativeName" title="@currentCulture.NativeName">
-    <label>@UserHelper.CustomerSession.StoreName, @UserHelper.CustomerSession.Currency</label>
+    @UserHelper.CustomerSession.StoreName, @UserHelper.CustomerSession.Currency
