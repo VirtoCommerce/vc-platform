@@ -267,9 +267,12 @@ button.proceed:hover span:after
         background: url(images/icons/arrows/arrow_switch_right.png) no-repeat scroll 100% 50%;
     }
 
-    .head-switch ul
-    {
+    .head-switch ul {
         background: #fff;
+        -moz-min-width: 140px;
+        -ms-min-width: 140px;
+        -o-min-width: 140px;
+        -webkit-min-width: 140px;
         min-width: 140px;
         opacity: 0;
         padding: 14px;
@@ -282,7 +285,7 @@ button.proceed:hover span:after
         box-shadow: 0 0 10px rgba(0, 0, 0, .15);
     }
 
-        .head-switch ul ul
+.head-switch ul ul
         {
             visibility: hidden;
             left: 95%;
@@ -355,6 +358,11 @@ button.proceed:hover span:after
     font-size: 11px;
     line-height: 30px;
     padding: 0 20px 0 0;
+}
+
+.head-links 
+{
+    white-space: nowrap;
 }
 
 .head-links li
