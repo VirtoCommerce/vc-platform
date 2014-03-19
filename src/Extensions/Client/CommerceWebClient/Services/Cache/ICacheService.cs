@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace VirtoCommerce.Web.Client.Services.Cache
 {
     [ServiceContract(Namespace = "http://schemas.virtocommerce.com/1.0/cache/")]
-    interface ICacheService
+    public interface ICacheService
     {
         /// <summary>
         /// Clears the ouput cache. Optional controller and action. 

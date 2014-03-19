@@ -20,7 +20,8 @@ namespace VirtoCommerce.Web.Client.Services.Cache
         /// </summary>
         /// <param name="cacheRepository">The cache repository.</param>
         /// <param name="outputCacheManager">The output cache manager.</param>
-        public CacheService(ICacheRepository cacheRepository, IOutputCacheManager outputCacheManager)
+        public CacheService(ICacheRepository cacheRepository, IReadWriteOutputCacheManager outputCacheManager)
+            :this()
         {
             _cacheRepository = cacheRepository;
             _outputCacheManager = outputCacheManager;
@@ -38,7 +39,7 @@ namespace VirtoCommerce.Web.Client.Services.Cache
 
         public void ClearDatabaseCache(string cachePrefix)
         {
-            var cacheKeyPrefix = CacheHelper.CreateCacheKey(cachePrefix);
+            var cacheKeyPrefix = CacheHelper.CreateCacheKey(cachePrefix ?? "");
             var enumerableCache = _cacheRepository.GetEnumerator();
 
             while (enumerableCache.MoveNext())

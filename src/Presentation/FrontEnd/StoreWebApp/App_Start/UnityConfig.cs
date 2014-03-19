@@ -91,6 +91,7 @@ using VirtoCommerce.Web.Client.Caching;
 using VirtoCommerce.Web.Client.Caching.Interfaces;
 using VirtoCommerce.Web.Client.Security;
 using VirtoCommerce.Web.Client.Services.Assets;
+using VirtoCommerce.Web.Client.Services.Cache;
 using VirtoCommerce.Web.Client.Services.Emails;
 using VirtoCommerce.Web.Client.Services.Listeners;
 using VirtoCommerce.Web.Client.Services.Security;
@@ -431,6 +432,7 @@ namespace VirtoCommerce.Web
             container.RegisterType<ICacheSettingsManager, CacheSettingsManager>(new PerRequestLifetimeManager());
             container.RegisterType<IReadWriteOutputCacheManager, OutputCacheManager>(new PerRequestLifetimeManager());
             container.RegisterInstance<IActionSettingsSerialiser>(new EncryptingActionSettingsSerialiser(new ActionSettingsSerialiser(), new Encryptor()));
+            container.RegisterType<ICacheService, CacheService>();
    
             #endregion
 

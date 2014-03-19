@@ -20,7 +20,7 @@ namespace CodedUITests
 	{
 		public CatalogTests()
 		{
-			UiMap.OpenHomePageOnIEParams.Url = "http://localhost/store/EN-US";
+            UiMap.OpenHomePageOnIEParams.Url = "http://localhost/store/en-us/electronics";
 		}
 
 
