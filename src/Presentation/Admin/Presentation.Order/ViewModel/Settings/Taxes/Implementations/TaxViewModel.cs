@@ -46,13 +46,13 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Taxes.Implemen
 		#region constructor
 
 		public TaxViewModel(
-			IRepositoryFactory<IOrderRepository> repositoryFactory, 
+			IRepositoryFactory<IOrderRepository> repositoryFactory,
 			IRepositoryFactory<ICatalogRepository> catalogRepositoryFactory,
-			IOrderEntityFactory entityFactory, 
-			IViewModelsFactory<IGeneralLanguagesStepViewModel> langVmFactory, 
+			IOrderEntityFactory entityFactory,
+			IViewModelsFactory<IGeneralLanguagesStepViewModel> langVmFactory,
 			IViewModelsFactory<ITaxValueViewModel> valueVmFactory,
 			IHomeSettingsViewModel parent,
-			INavigationManager navManager, 
+			INavigationManager navManager,
 			Tax item)
 			: base(entityFactory, item, false)
 		{
@@ -71,7 +71,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Taxes.Implemen
 		}
 
 
-		protected TaxViewModel(IRepositoryFactory<IOrderRepository> repositoryFactory, IOrderEntityFactory entityFactory, IViewModelsFactory<IGeneralLanguagesStepViewModel> langVmFactory, 
+		protected TaxViewModel(IRepositoryFactory<IOrderRepository> repositoryFactory, IOrderEntityFactory entityFactory, IViewModelsFactory<IGeneralLanguagesStepViewModel> langVmFactory,
 			IViewModelsFactory<ITaxValueViewModel> valueVmFactory, Tax item)
 			: base(entityFactory, item, true)
 		{
@@ -360,11 +360,11 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Taxes.Implemen
 		private void RaiseValueEditInteractionRequest(TaxValue originalItem)
 		{
 			TaxValue item = new TaxValue();
-			OnUIThread(() => item.InjectFrom<CloneInjection>(originalItem));
+			item.InjectFrom<CloneInjection>(originalItem);
 			if (RaiseValueEditInteractionRequest(item, "Edit Tax Value"))
 			{
 				// copy all values to original:
-				OnUIThread(() => originalItem.InjectFrom<CloneInjection>(item));
+				originalItem.InjectFrom<CloneInjection>(item);
 			}
 		}
 
