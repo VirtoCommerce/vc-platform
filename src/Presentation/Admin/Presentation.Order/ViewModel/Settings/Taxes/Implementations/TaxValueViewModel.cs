@@ -43,9 +43,8 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Taxes.Implemen
         {
             get
             {
-                bool result = false;
-                result = !string.IsNullOrEmpty(InnerItem.TaxCategory);
-                return result;
+                return !string.IsNullOrEmpty(InnerItem.TaxCategory) &&
+	                     !string.IsNullOrEmpty(InnerItem.JurisdictionGroupId);
             }
         }
 

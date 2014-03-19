@@ -20,7 +20,6 @@ using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
 using VirtoCommerce.ManagementClient.Order.Model.Settings;
 using VirtoCommerce.ManagementClient.Order.ViewModel.Implementations;
 using VirtoCommerce.ManagementClient.Order.ViewModel.Settings.ShippingOptions.Interfaces;
-using VirtoCommerce.ManagementClient.Order.ViewModel.Wizard;
 using VirtoCommerce.ManagementClient.Order.ViewModel.Wizard.Interfaces;
 
 namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.ShippingOptions.Implementations
@@ -40,8 +39,8 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.ShippingOption
 
 		public ShippingOptionViewModel(
 			IViewModelsFactory<IShippingOptionAddShippingPackageViewModel> addPackageVmFactory,
-			IRepositoryFactory<IShippingRepository> repositoryFactory, 
-			IOrderEntityFactory entityFactory, 
+			IRepositoryFactory<IShippingRepository> repositoryFactory,
+			IOrderEntityFactory entityFactory,
 			IHomeSettingsViewModel parent,
 			INavigationManager navManager, ShippingOption item, ICatalogRepository catalogRepository)
 			: base(entityFactory, item, false)
@@ -59,8 +58,8 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.ShippingOption
 		}
 
 		protected ShippingOptionViewModel(
-			IViewModelsFactory<IShippingOptionAddShippingPackageViewModel> addPackageVmFactory, 
-			IRepositoryFactory<IShippingRepository> repositoryFactory, 
+			IViewModelsFactory<IShippingOptionAddShippingPackageViewModel> addPackageVmFactory,
+			IRepositoryFactory<IShippingRepository> repositoryFactory,
 			IOrderEntityFactory entityFactory,
 			ICatalogRepository catalogRepository,
 			ShippingOption item)
@@ -187,7 +186,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.ShippingOption
 		{
 			if (_parent != null)
 			{
-				OriginalItem.InjectFrom<CloneInjection>(InnerItem);
+				OriginalItem.InjectFrom(InnerItem);
 				_parent.RefreshItem(OriginalItem);
 			}
 		}
@@ -263,7 +262,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.ShippingOption
 					new KeyValuePair<string, object>("item", new ShippingPackage()),
 					new KeyValuePair<string, object>("selectedPackaging", InnerItem.ShippingPackages.Select(sp => sp.MappedPackagingId).ToList())
 				};
-			
+
 			var itemVm = _addPackageVmFactory.GetViewModelInstance(parameters);
 
 			var confirmation = new ConditionalConfirmation
