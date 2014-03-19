@@ -6,10 +6,6 @@ using System.Web.Mvc;
 using System.Web.UI;
 using Microsoft.Practices.ServiceLocation;
 using VirtoCommerce.Web.Client.Caching.Interfaces;
-using ICacheHeadersHelper = VirtoCommerce.Web.Client.Caching.Interfaces.ICacheHeadersHelper;
-using ICacheSettingsManager = VirtoCommerce.Web.Client.Caching.Interfaces.ICacheSettingsManager;
-using IDonutHoleFiller = VirtoCommerce.Web.Client.Caching.Interfaces.IDonutHoleFiller;
-using IKeyGenerator = VirtoCommerce.Web.Client.Caching.Interfaces.IKeyGenerator;
 
 namespace VirtoCommerce.Web.Client.Caching
 {
@@ -21,6 +17,11 @@ namespace VirtoCommerce.Web.Client.Caching
         // Private
         private bool? _noStore;
         private OutputCacheOptions? _options;
+        private ICacheHeadersHelper _cacheHeadersHelper;
+        private ICacheSettingsManager _cacheSettingsManager;
+        private IDonutHoleFiller _donutHoleFiller;
+        private IKeyGenerator _keyGenerator;
+        private IReadWriteOutputCacheManager _outputCacheManager;
 
         public DonutOutputCacheAttribute()
         {
@@ -28,14 +29,15 @@ namespace VirtoCommerce.Web.Client.Caching
             Duration = -1;
             Location = (OutputCacheLocation)(-1);
             Options = OutputCache.DefaultOptions;
+
         }
 
-        #region Protected Properties
+        #region Injected Properties
         protected ICacheHeadersHelper CacheHeadersHelper
         {
             get
             {
-                return ServiceLocator.Current.GetInstance<ICacheHeadersHelper>();
+                return _cacheHeadersHelper ?? (_cacheHeadersHelper = ServiceLocator.Current.GetInstance<ICacheHeadersHelper>());
             }
         }
 
@@ -43,7 +45,7 @@ namespace VirtoCommerce.Web.Client.Caching
         {
             get
             {
-                return ServiceLocator.Current.GetInstance<ICacheSettingsManager>();
+                return _cacheSettingsManager ?? (_cacheSettingsManager = ServiceLocator.Current.GetInstance<ICacheSettingsManager>());
             }
         }
 
@@ -51,7 +53,7 @@ namespace VirtoCommerce.Web.Client.Caching
         {
             get
             {
-                return ServiceLocator.Current.GetInstance<IDonutHoleFiller>();
+                return _donutHoleFiller ?? (_donutHoleFiller = ServiceLocator.Current.GetInstance<IDonutHoleFiller>());
             }
         }
 
@@ -59,7 +61,7 @@ namespace VirtoCommerce.Web.Client.Caching
         {
             get
             {
-                return ServiceLocator.Current.GetInstance<IKeyGenerator>();
+                return _keyGenerator ?? (_keyGenerator = ServiceLocator.Current.GetInstance<IKeyGenerator>());
             }
         }
 
@@ -67,7 +69,7 @@ namespace VirtoCommerce.Web.Client.Caching
         {
             get
             {
-                return ServiceLocator.Current.GetInstance<IReadWriteOutputCacheManager>();
+                return _outputCacheManager ?? (_outputCacheManager = ServiceLocator.Current.GetInstance<IReadWriteOutputCacheManager>());
             }
         }
 
@@ -126,7 +128,7 @@ namespace VirtoCommerce.Web.Client.Caching
         /// </value>
         public bool AnonymousOnly
         {
-            get; 
+            get;
             set;
         }
 
