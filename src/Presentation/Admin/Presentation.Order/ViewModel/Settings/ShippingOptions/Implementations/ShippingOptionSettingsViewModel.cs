@@ -112,10 +112,14 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.ShippingOption
                 Title = "Delete confirmation"
             };
 
-			ItemDelete(item, confirmation, _repositoryFactory.GetRepositoryInstance());
+			using (var repository = _repositoryFactory.GetRepositoryInstance())
+			{
+				var itemFromRep = repository.ShippingOptions.Where(x => x.ShippingOptionId == item.ShippingOptionId).FirstOrDefault();
+				ItemDelete(item, confirmation, repository, itemFromRep);
+			}
         }
 
-        protected override void ItemDelete(ShippingOption item, ConditionalConfirmation confirmation, IRepository repository)
+		protected override void ItemDelete(ShippingOption item, ConditionalConfirmation confirmation, IRepository repository, object itemFromRep)
         {
             CommonConfirmRequest.Raise(confirmation, async (x) =>
             {
@@ -136,19 +140,22 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.ShippingOption
                         ShippingOptionNotificationRequest.Raise(shipOptionConfirmation);
                         return;
                     }
-                    
-                    OnUIThread(() => { ShowLoadingAnimation = true; });
-                    await Task.Run(() =>
-                    {
-                        repository.Attach(item);
-                        repository.Remove(item);
-                        repository.UnitOfWork.Commit();
-                    });
-                    OnUIThread(() =>
-                    {
-                        Items.Remove(item);
-                        ShowLoadingAnimation = false;
-                    });
+
+					ShowLoadingAnimation = true;
+					try
+					{
+						await Task.Run(() =>
+						{
+							repository.Remove(itemFromRep);
+							repository.UnitOfWork.Commit();
+						});
+
+						Items.Remove(item);
+					}
+					finally
+					{
+						ShowLoadingAnimation = false;
+					}
                 }
             });
         }
