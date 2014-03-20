@@ -121,7 +121,7 @@ namespace VirtoCommerce.Web.Controllers
             ViewBag.Title = String.Format("Searching by '{0}'".Localize(), term);
 
 			var parameters = new SearchParameters { PageSize = 15 };
-			var criteria = new CatalogItemSearchCriteria { SearchPhrase = term, IsFuzzySearch = true };
+			var criteria = new CatalogItemSearchCriteria { SearchPhrase = term.EscapeSearchTerm(), IsFuzzySearch = true };
             var results = SearchResults(criteria, parameters);
 
             var data = from i in results.CatalogItems
