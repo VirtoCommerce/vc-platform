@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading;
 using System.Transactions;
 using System.Web.Mvc;
-using Microsoft.Practices.ObjectBuilder2;
 using Omu.ValueInjecter;
 using PayPal.PayPalAPIInterfaceService;
 using PayPal.PayPalAPIInterfaceService.Model;
@@ -534,19 +533,15 @@ namespace VirtoCommerce.Web.Controllers
         private PaymentDetailsType GetPaypalPaymentDetail(CurrencyCodeType currency, PaymentActionCodeType paymentAction)
         {
             var paymentDetails = new PaymentDetailsType { PaymentAction = paymentAction };
-            decimal itemTotal;
-            paymentDetails.PaymentDetailsItem.AddRange(GetPaypalPaymentDetailsItemTypes(currency, out itemTotal));
+            var itemTotal = Ch.Cart.Subtotal - Ch.Cart.LineItemDiscountTotal - Ch.Cart.FormDiscountTotal;
+            paymentDetails.PaymentDetailsItem.AddRange(GetPaypalPaymentDetailsItemTypes(currency));
             paymentDetails.ItemTotal = new BasicAmountType(currency, FormatMoney(itemTotal));
             paymentDetails.ShippingTotal = new BasicAmountType(currency, FormatMoney(Ch.Cart.ShippingTotal));
             paymentDetails.HandlingTotal = new BasicAmountType(currency, FormatMoney(Ch.Cart.HandlingTotal));
             paymentDetails.TaxTotal = new BasicAmountType(currency, FormatMoney(Ch.Cart.TaxTotal));
             paymentDetails.OrderTotal = new BasicAmountType(currency, FormatMoney(Ch.Cart.Total));
-
-            var shippingDiscount = Ch.Cart.OrderForms.SelectMany(c => c.Shipments).Sum(c => c.ShippingDiscountAmount);
-            if (shippingDiscount > 0)
-            {
-                paymentDetails.ShippingDiscount = new BasicAmountType(currency, FormatMoney(-shippingDiscount));
-            }
+            paymentDetails.ShippingDiscount = new BasicAmountType(currency, FormatMoney(-Ch.Cart.ShipmentDiscountTotal));
+            
             return paymentDetails;
         }
 
@@ -555,10 +550,8 @@ namespace VirtoCommerce.Web.Controllers
             return amount.ToString("F2", new CultureInfo("en-US"));
         }
 
-        private IEnumerable<PaymentDetailsItemType> GetPaypalPaymentDetailsItemTypes(CurrencyCodeType currency, out decimal itemTotal)
+        private IEnumerable<PaymentDetailsItemType> GetPaypalPaymentDetailsItemTypes(CurrencyCodeType currency)
         {
-            itemTotal = 0;
-
             var detais = Ch.LineItems.Select(li => new PaymentDetailsItemType
             {
                 Name = li.DisplayName, 
@@ -571,25 +564,19 @@ namespace VirtoCommerce.Web.Controllers
                 ItemURL = Url.ItemUrl(li.CatalogItemId, li.ParentCatalogItemId)
             }).ToList();
 
-            //Item total is sum of line item extended price
-            itemTotal += Ch.LineItems.Sum(li => li.ExtendedPrice);
-
-            //Add order form discounts
-            detais.AddRange(Ch.Cart.OrderForms.SelectMany(x => x.Discounts).Select(dicount => new PaymentDetailsItemType
+            //Add line item discounts
+            detais.AddRange(Ch.LineItems.SelectMany(x => x.Discounts).Select(dicount => new PaymentDetailsItemType
             {
-                Name = dicount.DiscountName, 
-                Amount = new BasicAmountType(currency, FormatMoney(-dicount.DiscountAmount)), 
-                Quantity = 1, 
-                ItemCategory = ItemCategoryType.PHYSICAL, 
-                Description = dicount.DisplayMessage, 
+                Name = dicount.DiscountName,
+                Amount = new BasicAmountType(currency, FormatMoney(-dicount.DiscountAmount)),
+                Quantity = 1,
+                ItemCategory = ItemCategoryType.PHYSICAL,
+                Description = dicount.DisplayMessage,
                 PromoCode = dicount.DiscountCode
             }));
 
-            //minus cart subtotal discount sum
-            itemTotal -= Ch.Cart.OrderForms.SelectMany(x => x.Discounts).Sum(d => d.DiscountAmount);
-  
-            //Add line item discounts
-            detais.AddRange(Ch.Cart.OrderForms.SelectMany(x => x.LineItems).SelectMany(x=>x.Discounts).Select(dicount => new PaymentDetailsItemType
+            //Add order form discounts
+            detais.AddRange(Ch.Cart.OrderForms.SelectMany(x => x.Discounts).Select(dicount => new PaymentDetailsItemType
             {
                 Name = dicount.DiscountName,
                 Amount = new BasicAmountType(currency, FormatMoney(-dicount.DiscountAmount)),

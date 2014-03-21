@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Activities;
 using System.Linq;
+using System.Security.Cryptography;
 using VirtoCommerce.Foundation.Orders.Model;
 
 namespace VirtoCommerce.OrderWorkflow
@@ -28,6 +29,9 @@ namespace VirtoCommerce.OrderWorkflow
 			decimal handlingTotal = 0;
 			decimal taxTotal = 0;
 			decimal total = 0;
+		    decimal shipmenDiscountTotal = 0;
+		    decimal lineItemDiscountTotal = 0;
+		    decimal formDiscountTotal = 0;
 
 			// Calculate totals for OrderForms
 			foreach (var form in orderGroup.OrderForms)
@@ -40,6 +44,9 @@ namespace VirtoCommerce.OrderWorkflow
 				handlingTotal += form.HandlingTotal;
 				taxTotal += form.TaxTotal;
 				total += form.Total;
+			    shipmenDiscountTotal += form.ShipmentDiscountAmount;
+			    lineItemDiscountTotal += form.LineItemDiscountAmount;
+			    formDiscountTotal += form.DiscountAmount;
 			}
 
 			// calculate OrderGroup totals
@@ -48,6 +55,10 @@ namespace VirtoCommerce.OrderWorkflow
 			orderGroup.TaxTotal = taxTotal;
 			orderGroup.Total = total;
 			orderGroup.HandlingTotal = handlingTotal;
+		    orderGroup.ShipmentDiscountTotal = shipmenDiscountTotal;
+		    orderGroup.LineItemDiscountTotal = lineItemDiscountTotal;
+		    orderGroup.FormDiscountTotal = formDiscountTotal;
+		    orderGroup.DiscountTotal = shipmenDiscountTotal + lineItemDiscountTotal + formDiscountTotal;
 		}
 
 		/// <summary>
@@ -58,37 +69,38 @@ namespace VirtoCommerce.OrderWorkflow
 		{
 			decimal subTotal = 0;
 			decimal shippingCostTotal = 0;
-			decimal discountTotal = 0;
+		    decimal shipmentDiscountAmount = 0;
+		    decimal lineItemDiscountAmount = 0;
 
 			foreach (var item in form.LineItems)
 			{
 				// calculate discounts
 				item.LineItemDiscountAmount = item.Discounts.Sum(discount => discount.DiscountAmount);
+                lineItemDiscountAmount += item.LineItemDiscountAmount;
 				item.ExtendedPrice = item.PlacedPrice * item.Quantity - item.LineItemDiscountAmount;
 				subTotal += item.PlacedPrice * item.Quantity;
-				discountTotal += item.LineItemDiscountAmount;
 			}
 
 			// calculate form discounts
 			form.DiscountAmount = form.Discounts.Sum(discount => discount.DiscountAmount);
-			discountTotal += form.DiscountAmount;
 
 			foreach (var shipment in form.Shipments)
 			{
 				// calculate discounts
 				shipment.ShippingDiscountAmount = shipment.Discounts.Sum(discount => discount.DiscountAmount);
-
+			    shipmentDiscountAmount += shipment.ShippingDiscountAmount;
 				shipment.ItemSubtotal = CalculateShipmentItemSubtotal(form, shipment);
 				shipment.Subtotal = shipment.ItemSubtotal + shipment.ShippingCost + shipment.ItemTaxTotal + shipment.ShippingTaxTotal;
 				shipment.TotalBeforeTax = shipment.ItemSubtotal + shipment.ShippingCost - shipment.ShippingDiscountAmount;
 				shipment.ShipmentTotal = shipment.Subtotal - shipment.ShippingDiscountAmount;
 				shippingCostTotal += shipment.ShippingCost;
-				discountTotal += shipment.ShippingDiscountAmount;
 			}
 
 			form.ShippingTotal = shippingCostTotal;
 			form.Subtotal = subTotal;
-			form.Total = form.Subtotal + shippingCostTotal + form.TaxTotal - discountTotal;
+			form.Total = form.Subtotal + shippingCostTotal + form.TaxTotal - (lineItemDiscountAmount + shipmentDiscountAmount + form.DiscountAmount);
+		    form.ShipmentDiscountAmount = shipmentDiscountAmount;
+		    form.LineItemDiscountAmount = lineItemDiscountAmount;
 		}
 
 		private static decimal CalculateShipmentItemSubtotal(OrderForm form, Shipment shipment)
