@@ -7,6 +7,7 @@ namespace VirtoCommerce.Foundation.Frameworks
     public class CacheHelper
     {
         private readonly ICacheRepository _cacheRepository;
+        public const string GlobalCachePrefix = "_vcc@che";
 
         public CacheHelper(ICacheRepository repository)
         {
@@ -83,7 +84,21 @@ namespace VirtoCommerce.Foundation.Frameworks
         /// <returns></returns>
         public static string CreateCacheKey(string prefix, params string[] keys)
         {
-            var returnKey = new StringBuilder(prefix);
+            var returnKey = new StringBuilder(string.Concat(GlobalCachePrefix, prefix));
+
+            if (keys != null)
+                foreach (var key in keys)
+                {
+                    returnKey.Append("-");
+                    returnKey.Append(key);
+                }
+
+            return returnKey.ToString();
+        }
+
+        public static string CreateCacheKey(params string[] keys)
+        {
+            var returnKey = new StringBuilder();
 
             if (keys != null)
                 foreach (var key in keys)

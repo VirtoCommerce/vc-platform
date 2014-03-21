@@ -209,6 +209,12 @@ namespace VirtoCommerce.Foundation.Orders.Model
 		}
 
 		private decimal _DiscountAmount;
+        /// <summary>
+        /// Gets or sets the cart subtotal discount amount.
+        /// </summary>
+        /// <value>
+        /// The discount amount.
+        /// </value>
 		[DataMember]
 		public decimal DiscountAmount
 		{
@@ -221,6 +227,46 @@ namespace VirtoCommerce.Foundation.Orders.Model
 				SetValue(ref _DiscountAmount, () => this.DiscountAmount, value);
 			}
 		}
+
+        private decimal _LineItemDiscountAmount;
+        /// <summary>
+        /// Gets or sets the line item discount amount.
+        /// </summary>
+        /// <value>
+        /// The line item discount amount.
+        /// </value>
+        [DataMember]
+        public decimal LineItemDiscountAmount
+        {
+            get
+            {
+                return _LineItemDiscountAmount;
+            }
+            set
+            {
+                SetValue(ref _LineItemDiscountAmount, () => this.LineItemDiscountAmount, value);
+            }
+        }
+
+        private decimal _ShipmentDiscountAmount;
+        /// <summary>
+        /// Gets or sets the shipment discount amount.
+        /// </summary>
+        /// <value>
+        /// The shipment discount amount.
+        /// </value>
+        [DataMember]
+        public decimal ShipmentDiscountAmount
+        {
+            get
+            {
+                return _ShipmentDiscountAmount;
+            }
+            set
+            {
+                SetValue(ref _ShipmentDiscountAmount, () => this.ShipmentDiscountAmount, value);
+            }
+        }
 
 		#region Navigation Properties
 

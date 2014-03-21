@@ -20,7 +20,7 @@ namespace CodedUITests
 	{
 		public CatalogTests()
 		{
-			UiMap.OpenHomePageOnIEParams.Url = "http://localhost/store/EN-US";
+            UiMap.OpenHomePageOnIEParams.Url = "http://localhost/store/en-us/electronics";
 		}
 
 
@@ -39,13 +39,13 @@ namespace CodedUITests
 
 		//}
 
-		//[TestMethod]
-		//public void Can_Open_TVVideoCategory()
-		//{
-		//	UiMap.OpenHomePageOnIE();
-		//	UiMap.OpenTVVideoPage();
-		//	UiMap.IsTVVideoInBreadcrumb();
-		//}
+        [TestMethod]
+        public void Can_Open_TVVideoCategory()
+        {
+            UiMap.OpenHomePageOnIE();
+            UiMap.OpenTVVideoPage();
+            UiMap.IsTVVideoInBreadcrumb();
+        }
 
 		[TestMethod]
 		public void Can_Open_AudioMP3Category()
@@ -84,7 +84,7 @@ namespace CodedUITests
 		public void Can_Edit_EditAccountInformation()
 		{
 			UiMap.OpenHomePageOnIE();
-			if (UiMap.UIHomeElectronicsStoreWindow.UIHomeElectronicsStoreDocument1.UILogInHyperlink.Exists)
+			if (UiMap.UIOnlineshoppingfromagWindow1.UIOnlineshoppingfromagDocument.UILayoutPane.UILoginHyperlink.Exists)
 			{
 				UiMap.LoginAdmin();
 			}
@@ -103,8 +103,7 @@ namespace CodedUITests
 		public void Can_Filter_Samsung_From_Menu()
 		{
 			UiMap.OpenHomePageOnIE();
-			//UiMap.OpenTVVideoPage();
-			UiMap.FilterSamsungTVsFromMenu();
+			UiMap.FilterSamsungComputersFromMenu();
 			UiMap.IsFilteredBySamsung();
 		}
 
@@ -121,23 +120,26 @@ namespace CodedUITests
 		public void Can_Add_Samsung_UN19D4003_To_Cart()
 		{
 			UiMap.OpenHomePageOnIE();
-			UiMap.AddToCartSamsungUN19D4003();
-			UiMap.IsSamsungUN19D4003InCart();
+			UiMap.AddToCartSamsungLN26D450();
+			UiMap.IsSamsungLN26D450InCart();
 		}
 
 		[TestMethod]
 		public void Can_Create_New_Order()
 		{
 			UiMap.OpenHomePageOnIE();
-
-			if (UiMap.UIHomeElectronicsStoreWindow.UIHomeElectronicsStoreDocument1.UILogInHyperlink.Exists)
-			{
-				UiMap.LoginAdmin();
-			}
-
-			UiMap.AddToCartSamsungUN19D4003();
+			UiMap.AddToCartSamsungLN26D450();
 			UiMap.OpenCheckoutPage();
 			UiMap.CheckoutUsingPaypal();
+            //if (UiMap.UICheckoutElectronicsSWindow.UIPaywithaPayPalaccounDocument1.UILogInButton.WaitForControlExist(5000) == false)
+            //{
+            // This shoud work but doesnt!
+            //    UiMap.ClickLoginToPaypal();
+            //}
+            UiMap.LoginToPaypal();
+		    UiMap.UICheckoutElectronicsSWindow.UIReviewyourinformatioDocument.UIContinueButton.WaitForControlExist(5000);
+            UiMap.FinishPaypal();
+		    UiMap.UISuccessInternetExploWindow.UISuccessDocument.UIORDER2014032000000Hyperlink.WaitForControlExist(10000);
 			UiMap.IsOrderTrackingNrValidFormat();
 		}
 
@@ -145,19 +147,21 @@ namespace CodedUITests
 		public void Can_Apply_Test_Coupon()
 		{
 			UiMap.OpenHomePageOnIE();
-			UiMap.AddToCartSamsungUN19D4003();
+			UiMap.AddToCartSamsungLN26D450();
+            UiMap.OpenMyCartPage();
 			UiMap.ApplyTestCoupon();
 			UiMap.IsDiscountApplied();
 		}
 
-		//[TestMethod]
-		//public void FullTestOrder()
-		//{
-		//	Can_Admin_Login_As_John_Doe();
-		//	Can_Add_Samsung_UN19D4003_To_Cart();
-		//	Can_Apply_Test_Coupon();
-		//	Can_Create_New_Order();
-		//}
+	    [TestMethod]
+	    public void Can_Add_To_Wishlist()
+	    {
+            UiMap.OpenHomePageOnIE();
+            UiMap.AddToWishListSdCard();
+            UiMap.LoginAdmin();
+            UiMap.OpenWishList();
+            UiMap.IsSDCardInWishlist();
+	    }
 
 		#region Additional test attributes
 

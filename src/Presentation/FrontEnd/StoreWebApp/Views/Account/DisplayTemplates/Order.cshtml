@@ -107,6 +107,10 @@
                 <td>@StoreHelper.FormatCurrency(Model.TaxTotal, Model.BillingCurrency)</td>
             </tr>
             <tr>
+                <td colspan="4" align="right">@("Discount Total".Localize())</td>
+                <td>@StoreHelper.FormatCurrency(Model.DiscountTotal, Model.BillingCurrency)</td>
+            </tr>
+            <tr>
                 <td class="grand" colspan="4" align="right">@("Grand Total".Localize())</td>
                 <td class="grand">@StoreHelper.FormatCurrency(Model.Total, Model.BillingCurrency)</td>
             </tr>

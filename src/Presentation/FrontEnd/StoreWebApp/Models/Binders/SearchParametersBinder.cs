@@ -63,6 +63,10 @@ namespace VirtoCommerce.Web.Models.Binders
                     .Select(k => k.WithKey(FacetRegex.Replace(k.Key, "")))
                     .ToDictionary()
             };
+		        if (!string.IsNullOrEmpty(sp.FreeSearch))
+		        {
+		            sp.FreeSearch = sp.FreeSearch.EscapeSearchTerm();
+		        }
 		    }
             return sp;
         }

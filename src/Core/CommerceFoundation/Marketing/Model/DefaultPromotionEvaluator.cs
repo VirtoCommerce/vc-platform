@@ -16,10 +16,11 @@ namespace VirtoCommerce.Foundation.Marketing.Model
 		private readonly IPromotionUsageProvider _usageProvider;
         
         private static bool _isEnabled;
-        public const string PromotionsCacheKey = "M:P:{0}";
         #endregion
 
-		public DefaultPromotionEvaluator(IMarketingRepository repository, IPromotionUsageProvider usageProvider, IEvaluationPolicy[] policies, ICacheRepository cache)
+        public const string PromotionsCacheKey = "M:P:{0}";
+
+	    public DefaultPromotionEvaluator(IMarketingRepository repository, IPromotionUsageProvider usageProvider, IEvaluationPolicy[] policies, ICacheRepository cache)
 			:base(cache)
 		{
 			_repository = repository;
@@ -122,7 +123,7 @@ namespace VirtoCommerce.Foundation.Marketing.Model
         private IQueryable<Promotion> GetPromotions()
         {
             return Cache.Get(
-                string.Format(PromotionsCacheKey, "all"),
+                CacheHelper.CreateCacheKey(Constants.PromotionsCachePrefix,  string.Format(PromotionsCacheKey, "all")),
                 () => (_repository.Promotions.ExpandAll()
                     .Expand(p=>p.Coupon) //ExpandAll skips non collection props
                     .Expand(p=>p.CouponSet)).ToArray(),

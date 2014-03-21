@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -66,6 +67,11 @@ namespace VirtoCommerce.Caching.AppFabric
             {
                 cache.ClearRegion(region);
             }
+        }
+
+        public IDictionaryEnumerator GetEnumerator()
+        {
+            throw new NotImplementedException();
         }
 
 

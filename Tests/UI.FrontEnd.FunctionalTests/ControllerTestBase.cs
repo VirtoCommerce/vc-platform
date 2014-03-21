@@ -11,6 +11,9 @@ using FunctionalTests.TestHelpers;
 using Microsoft.Practices.ServiceLocation;
 using Microsoft.Practices.Unity;
 using Microsoft.Practices.Unity.Mvc;
+using Moq;
+using MvcSiteMapProvider;
+using MvcSiteMapProvider.Loader;
 using VirtoCommerce.Caching.HttpCache;
 using VirtoCommerce.Client;
 using VirtoCommerce.Client.Orders.StateMachines;
@@ -91,8 +94,11 @@ using VirtoCommerce.Search.Providers.Elastic;
 using VirtoCommerce.Web.Client;
 using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Client.Globalization.Repository;
+using VirtoCommerce.Web.Client.Caching;
+using VirtoCommerce.Web.Client.Caching.Interfaces;
 using VirtoCommerce.Web.Client.Security;
 using VirtoCommerce.Web.Client.Services.Assets;
+using VirtoCommerce.Web.Client.Services.Cache;
 using VirtoCommerce.Web.Client.Services.Emails;
 using VirtoCommerce.Web.Client.Services.Listeners;
 using VirtoCommerce.Web.Client.Services.Security;
@@ -136,6 +142,7 @@ namespace UI.FrontEnd.FunctionalTests
 			//Fake call to init repositories
 			_appConfigRepository = AppConfigRepository;
 			_storeRepository = StoreRepository;
+            SiteMaps.Loader = new Mock<ISiteMapLoader>().Object;
 			base.Init(provider);
 		}
 
@@ -599,6 +606,19 @@ namespace UI.FrontEnd.FunctionalTests
 			//container.RegisterInstance<IElementRepository>(new CacheElementRepository(new XmlElementRepository()));
 
 			#endregion
+
+            #region OutputCache
+
+            container.RegisterType<IKeyBuilder, KeyBuilder>();
+            container.RegisterType<IKeyGenerator, KeyGenerator>();
+            container.RegisterType<IDonutHoleFiller, DonutHoleFiller>();
+            container.RegisterType<ICacheHeadersHelper, CacheHeadersHelper>();
+            container.RegisterType<ICacheSettingsManager, CacheSettingsManager>();
+            container.RegisterType<IReadWriteOutputCacheManager, OutputCacheManager>();
+            container.RegisterInstance<IActionSettingsSerialiser>(new EncryptingActionSettingsSerialiser(new ActionSettingsSerialiser(), new Encryptor()));
+            container.RegisterType<ICacheService, CacheService>();
+
+            #endregion
 
 			container.RegisterInstance<IUnityContainer>(container);
 			return container;

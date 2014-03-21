@@ -87,8 +87,11 @@ using VirtoCommerce.Scheduling.Jobs;
 using VirtoCommerce.Search.Index;
 using VirtoCommerce.Search.Providers.Elastic;
 using VirtoCommerce.Search.Providers.Lucene;
+using VirtoCommerce.Web.Client.Caching;
+using VirtoCommerce.Web.Client.Caching.Interfaces;
 using VirtoCommerce.Web.Client.Security;
 using VirtoCommerce.Web.Client.Services.Assets;
+using VirtoCommerce.Web.Client.Services.Cache;
 using VirtoCommerce.Web.Client.Services.Emails;
 using VirtoCommerce.Web.Client.Services.Listeners;
 using VirtoCommerce.Web.Client.Services.Security;
@@ -419,6 +422,19 @@ namespace VirtoCommerce.Web
 	        //container.RegisterInstance<IElementRepository>(new CacheElementRepository(new XmlElementRepository()));
 
 			#endregion
+
+            #region OutputCache
+
+            container.RegisterType<IKeyBuilder, KeyBuilder>(new PerRequestLifetimeManager());
+            container.RegisterType<IKeyGenerator, KeyGenerator>(new PerRequestLifetimeManager());
+            container.RegisterType<IDonutHoleFiller, DonutHoleFiller>(new PerRequestLifetimeManager());
+            container.RegisterType<ICacheHeadersHelper, CacheHeadersHelper>(new PerRequestLifetimeManager());
+            container.RegisterType<ICacheSettingsManager, CacheSettingsManager>(new PerRequestLifetimeManager());
+            container.RegisterType<IReadWriteOutputCacheManager, OutputCacheManager>(new PerRequestLifetimeManager());
+            container.RegisterInstance<IActionSettingsSerialiser>(new EncryptingActionSettingsSerialiser(new ActionSettingsSerialiser(), new Encryptor()));
+            container.RegisterType<ICacheService, CacheService>();
+   
+            #endregion
 
             container.RegisterInstance(container);
         }

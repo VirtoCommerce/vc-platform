@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using VirtoCommerce.Foundation;
 using VirtoCommerce.Foundation.Orders.Model;
 using VirtoCommerce.Foundation.Orders.Repositories;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
@@ -20,14 +21,14 @@ namespace VirtoCommerce.Client
 
         #region Private Variables
 
-	    readonly IShippingRepository _countryRepository;
+	    readonly IShippingRepository _shippingRepository;
         private readonly ICacheRepository _cacheRepository;
         private readonly bool _isEnabled;
         #endregion
 
         public ShippingClient(IShippingRepository shippingRepository, ICacheRepository cacheRepository)
         {
-            _countryRepository = shippingRepository;
+            _shippingRepository = shippingRepository;
             _cacheRepository = cacheRepository;
             _isEnabled = OrderConfiguration.Instance.Cache.IsEnabled;
         }
@@ -72,8 +73,8 @@ namespace VirtoCommerce.Client
         public ShippingOption[] GetAllShippingOptions(bool useCache = true)
         {
             return Helper.Get(
-                string.Format(ShippingCacheKey, "all"),
-                () => _countryRepository.ShippingOptions.ExpandAll()
+                CacheHelper.CreateCacheKey(Constants.ShippingCachePrefix, string.Format(ShippingCacheKey, "all")),
+                () => _shippingRepository.ShippingOptions.ExpandAll()
 					.Expand("ShippingGateway") //remove this when fixed
 					.ToArray(),
                 OrderConfiguration.Instance.Cache.ShippingTimeout,
@@ -83,8 +84,8 @@ namespace VirtoCommerce.Client
 		public ShippingMethod[] GetAllShippingMethods(bool useCache = true, bool includeInactive = false)
 		{
 			return Helper.Get(
-				string.Format(ShippingMethodCacheKey, "all", includeInactive),
-				() => _countryRepository.ShippingMethods.Where(sm => sm.IsActive || includeInactive).ExpandAll().Expand("PaymentMethodShippingMethods/PaymentMethod").ToArray(),
+				CacheHelper.CreateCacheKey(Constants.ShippingCachePrefix, string.Format(ShippingMethodCacheKey, "all", includeInactive)),
+				() => _shippingRepository.ShippingMethods.Where(sm => sm.IsActive || includeInactive).ExpandAll().Expand("PaymentMethodShippingMethods/PaymentMethod").ToArray(),
 				OrderConfiguration.Instance.Cache.ShippingTimeout,
 				_isEnabled && useCache);
 		}

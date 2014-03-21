@@ -12,6 +12,8 @@ namespace VirtoCommerce.Web.Client.Services.Sequences
         /// The _client
         /// </summary>
         private readonly SequencesClient _client;
+        ///
+        public SequenceService() { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SequenceService"/> class.

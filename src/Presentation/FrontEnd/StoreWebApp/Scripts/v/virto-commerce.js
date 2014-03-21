@@ -93,7 +93,7 @@ VirtoCommerce.prototype = {
     },
 
     //Register dynamic content
-    //banner: palce name
+    //banner: place name
     //selector: jquery selector or callback function
     registerDynamicContent: function (banner, selector)
     {

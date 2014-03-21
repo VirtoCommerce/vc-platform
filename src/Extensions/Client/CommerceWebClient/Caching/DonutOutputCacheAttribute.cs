@@ -4,60 +4,76 @@ using System.IO;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.UI;
+using Microsoft.Practices.ServiceLocation;
 using VirtoCommerce.Web.Client.Caching.Interfaces;
-using ICacheHeadersHelper = VirtoCommerce.Web.Client.Caching.Interfaces.ICacheHeadersHelper;
-using ICacheSettingsManager = VirtoCommerce.Web.Client.Caching.Interfaces.ICacheSettingsManager;
-using IDonutHoleFiller = VirtoCommerce.Web.Client.Caching.Interfaces.IDonutHoleFiller;
-using IKeyBuilder = VirtoCommerce.Web.Client.Caching.Interfaces.IKeyBuilder;
-using IKeyGenerator = VirtoCommerce.Web.Client.Caching.Interfaces.IKeyGenerator;
 
 namespace VirtoCommerce.Web.Client.Caching
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = false)]
     public class DonutOutputCacheAttribute : ActionFilterAttribute, IExceptionFilter
     {
-        // Protected
-        protected readonly ICacheHeadersHelper CacheHeadersHelper;
-        protected readonly ICacheSettingsManager CacheSettingsManager;
-        protected readonly IDonutHoleFiller DonutHoleFiller;
-        protected readonly IKeyGenerator KeyGenerator;
-        protected readonly IReadWriteOutputCacheManager OutputCacheManager;
         protected CacheSettings CacheSettings;
 
         // Private
         private bool? _noStore;
         private OutputCacheOptions? _options;
+        private ICacheHeadersHelper _cacheHeadersHelper;
+        private ICacheSettingsManager _cacheSettingsManager;
+        private IDonutHoleFiller _donutHoleFiller;
+        private IKeyGenerator _keyGenerator;
+        private IReadWriteOutputCacheManager _outputCacheManager;
 
-        public DonutOutputCacheAttribute() : this(new KeyBuilder())
+        public DonutOutputCacheAttribute()
         {
             Order = 3;
-        }
-
-        public DonutOutputCacheAttribute(IKeyBuilder keyBuilder) :
-            this(
-               new KeyGenerator(keyBuilder),
-               new OutputCacheManager(OutputCache.Instance, keyBuilder),
-               new DonutHoleFiller(new EncryptingActionSettingsSerialiser(new ActionSettingsSerialiser(), new Encryptor())),
-               new CacheSettingsManager(),
-               new CacheHeadersHelper()
-        )
-        { }
-
-        protected DonutOutputCacheAttribute(
-            IKeyGenerator keyGenerator, IReadWriteOutputCacheManager outputCacheManager,
-            IDonutHoleFiller donutHoleFiller, ICacheSettingsManager cacheSettingsManager, ICacheHeadersHelper cacheHeadersHelper
-        )
-        {
-            KeyGenerator = keyGenerator;
-            OutputCacheManager = outputCacheManager;
-            DonutHoleFiller = donutHoleFiller;
-            CacheSettingsManager = cacheSettingsManager;
-            CacheHeadersHelper = cacheHeadersHelper;
-
             Duration = -1;
             Location = (OutputCacheLocation)(-1);
             Options = OutputCache.DefaultOptions;
+
         }
+
+        #region Injected Properties
+        protected ICacheHeadersHelper CacheHeadersHelper
+        {
+            get
+            {
+                return _cacheHeadersHelper ?? (_cacheHeadersHelper = ServiceLocator.Current.GetInstance<ICacheHeadersHelper>());
+            }
+        }
+
+        protected ICacheSettingsManager CacheSettingsManager
+        {
+            get
+            {
+                return _cacheSettingsManager ?? (_cacheSettingsManager = ServiceLocator.Current.GetInstance<ICacheSettingsManager>());
+            }
+        }
+
+        protected IDonutHoleFiller DonutHoleFiller
+        {
+            get
+            {
+                return _donutHoleFiller ?? (_donutHoleFiller = ServiceLocator.Current.GetInstance<IDonutHoleFiller>());
+            }
+        }
+
+        protected IKeyGenerator KeyGenerator
+        {
+            get
+            {
+                return _keyGenerator ?? (_keyGenerator = ServiceLocator.Current.GetInstance<IKeyGenerator>());
+            }
+        }
+
+        protected IReadWriteOutputCacheManager OutputCacheManager
+        {
+            get
+            {
+                return _outputCacheManager ?? (_outputCacheManager = ServiceLocator.Current.GetInstance<IReadWriteOutputCacheManager>());
+            }
+        }
+
+        #endregion
 
         /// <summary>
         /// Gets or sets the cache duration, in seconds.
@@ -112,7 +128,7 @@ namespace VirtoCommerce.Web.Client.Caching
         /// </value>
         public bool AnonymousOnly
         {
-            get; 
+            get;
             set;
         }
 

@@ -10,109 +10,108 @@ using VirtoCommerce.Foundation.Marketing.Repositories;
 
 namespace VirtoCommerce.Foundation.Marketing.Model.DynamicContent
 {
-	public class DynamicContentEvaluator : EvaluatorBase, IDynamicContentEvaluator
-	{
-		#region Private Variables
-		private readonly IDynamicContentRepository _repository;
-		private IEvaluationPolicy[] _policies;
+    public class DynamicContentEvaluator : EvaluatorBase, IDynamicContentEvaluator
+    {
+        #region Private Variables
+        private readonly IDynamicContentRepository _repository;
+        private IEvaluationPolicy[] _policies;
 
-		
-		private static bool IsEnabled = false;
-		public const string DynamicContentCacheKey = "M:D:{0}";
-        
-		#endregion
 
-		public DynamicContentEvaluator(IDynamicContentRepository repository, IEvaluationPolicy[] policies, ICacheRepository cache)
-			:base(cache)
-		{
-			_repository = repository;
-			_policies = policies;
+        private static bool IsEnabled = false;
+        public const string DynamicContentCacheKey = "M:D:{0}";
 
-			IsEnabled = DynamicContentConfiguration.Instance != null && DynamicContentConfiguration.Instance.Cache.IsEnabled;
-			
-		}
+        #endregion
 
-		#region IDynamicContentEvaluator Members
+        public DynamicContentEvaluator(IDynamicContentRepository repository, IEvaluationPolicy[] policies, ICacheRepository cache)
+            : base(cache)
+        {
+            _repository = repository;
+            _policies = policies;
 
-		public DynamicContentItem[] Evaluate(IDynamicContentEvaluationContext context)
-		{
-			DynamicContentItem[] retVal = null;
+            IsEnabled = DynamicContentConfiguration.Instance != null && DynamicContentConfiguration.Instance.Cache.IsEnabled;
 
-			if (!(context.ContextObject is Dictionary<string, object>))
-				throw new ArgumentException("context.ContextObject must be a Dictionary");
+        }
+
+        #region IDynamicContentEvaluator Members
+
+        public DynamicContentItem[] Evaluate(IDynamicContentEvaluationContext context)
+        {
+            DynamicContentItem[] retVal = null;
+
+            if (!(context.ContextObject is Dictionary<string, object>))
+                throw new ArgumentException("context.ContextObject must be a Dictionary");
 
             var query = GetPublishingGroups();
-			var places = GetPlaces();
+            var places = GetPlaces();
 
-			var place = places.FirstOrDefault(x => x.Name == context.ContentPlace);
+            var place = places.FirstOrDefault(x => x.Name == context.ContentPlace);
 
-			if (place != null)
-			{	
-				// sort content by type and priority
-				query = query.OrderByDescending(x => x.Priority).ThenByDescending(x => x.Name);
+            if (place != null)
+            {
+                // sort content by type and priority
+                query = query.OrderByDescending(x => x.Priority).ThenByDescending(x => x.Name);
 
-				//filter by date expiration
-				query = query.Where(x => (x.StartDate == null || context.CurrentDate >= x.StartDate) && (x.EndDate == null || x.EndDate >= context.CurrentDate));
+                //filter by date expiration
+                query = query.Where(x => (x.StartDate == null || context.CurrentDate >= x.StartDate) && (x.EndDate == null || x.EndDate >= context.CurrentDate));
 
-				//filter only active
-				query = query.Where(x => x.IsActive);
+                //filter only active
+                query = query.Where(x => x.IsActive);
 
-				//filter by content places
-				query = query.Where(x => x.ContentPlaces.Any(y => y.ContentPlace != null && y.ContentPlace.Name == context.ContentPlace));
+                //filter by content places
+                query = query.Where(x => x.ContentPlaces.Any(y => y.ContentPlace != null && y.ContentPlace.Name == context.ContentPlace));
 
-				//Evaluate query
-				var current = query.ToArray();
+                //Evaluate query
+                var current = query.ToArray();
 
-				//Evaluate condition expression
-				Func<string, bool> conditionPredicate = (x) =>
-				{
-					var condition = DeserializeExpression<Func<IEvaluationContext, bool>>(x);
-					return condition(context);
-				};
+                //Evaluate condition expression
+                Func<string, bool> conditionPredicate = (x) =>
+                {
+                    var condition = DeserializeExpression<Func<IEvaluationContext, bool>>(x);
+                    return condition(context);
+                };
 
                 current = current.Where(x => string.IsNullOrEmpty(x.ConditionExpression) || conditionPredicate(x.ConditionExpression)).ToArray();
 
-				var list = new List<DynamicContentItem>();
+                var list = new List<DynamicContentItem>();
 
                 var items = GetDynamicItems();
-				current.ToList().ForEach(x => x.ContentItems.ToList().ForEach(y => list.Add(items.Where(z => z.DynamicContentItemId == y.DynamicContentItemId))));
-				if (list.Count > 0)
-					retVal = list.ToArray();
-			}
+                current.ToList().ForEach(x => x.ContentItems.ToList().ForEach(y => list.Add(items.Where(z => z.DynamicContentItemId == y.DynamicContentItemId))));
+                if (list.Count > 0)
+                    retVal = list.ToArray();
+            }
 
-			return retVal;
-		}
+            return retVal;
+        }
 
-		#endregion
-		
+        #endregion
+
         private IQueryable<DynamicContentPublishingGroup> GetPublishingGroups()
-		{
-            var query = _repository.PublishingGroups.Expand(g=>g.ContentPlaces.Select(c=>c.ContentPlace)).Expand(g=>g.ContentItems);
-            //var query = _repository.PublishingGroups.Expand("ContentPlaces").Expand("ContentItems").ExpandAll();
-			return Cache.Get(
-				string.Format(DynamicContentCacheKey, "allGroups"),
-				() => (query).ToArrayAsync().Result,
-				DynamicContentConfiguration.Instance != null ? DynamicContentConfiguration.Instance.Cache.DynamicContentTimeout : new TimeSpan(),
+        {
+            var query = _repository.PublishingGroups.Expand(g => g.ContentPlaces.Select(c => c.ContentPlace)).Expand(g => g.ContentItems);
+            return Cache.Get(
+                CacheHelper.CreateCacheKey(Constants.DynamicContentCachePrefix, string.Format(DynamicContentCacheKey, "allGroups")),
+                () => (query).ToArrayAsync().Result,
+                DynamicContentConfiguration.Instance != null ? DynamicContentConfiguration.Instance.Cache.DynamicContentTimeout : new TimeSpan(),
                 IsEnabled).AsQueryable();
-		}
+        }
 
         private IQueryable<DynamicContentPlace> GetPlaces()
         {
             var query = _repository.Places;
             return Cache.Get(
-                string.Format(DynamicContentCacheKey, "allPlaces"),
+                CacheHelper.CreateCacheKey(Constants.DynamicContentCachePrefix, string.Format(DynamicContentCacheKey, "allPlaces")),
                 () => (query).ToArray(),
                 DynamicContentConfiguration.Instance != null ? DynamicContentConfiguration.Instance.Cache.DynamicContentTimeout : new TimeSpan(),
                 IsEnabled).AsQueryable();
         }
 
-		private IQueryable<DynamicContentItem> GetDynamicItems()
-		{
-			return Cache.Get(
-				string.Format(DynamicContentCacheKey, "allItems"),
-				() => (_repository.Items.Expand("PropertyValues")).ToArray(),
-				DynamicContentConfiguration.Instance.Cache.DynamicContentTimeout,
-				IsEnabled).AsQueryable();
-		}
-	} //class
+        private IQueryable<DynamicContentItem> GetDynamicItems()
+        {
+            return Cache.Get(
+                CacheHelper.CreateCacheKey(Constants.DynamicContentCachePrefix, string.Format(DynamicContentCacheKey, "allItems")),
+                () => (_repository.Items.Expand("PropertyValues")).ToArray(),
+                DynamicContentConfiguration.Instance.Cache.DynamicContentTimeout,
+                IsEnabled).AsQueryable();
+        }
+    } //class
 } //namespace

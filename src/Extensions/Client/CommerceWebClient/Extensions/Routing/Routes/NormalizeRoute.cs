@@ -78,10 +78,6 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
             if (vpd != null)
             {
                 var virtualPath = vpd.VirtualPath;
-                if (RequireLowerCase)
-                {
-                    virtualPath = virtualPath.ToLowerInvariant();
-                }
 
                 var queryIndex = virtualPath.IndexOf('?');
                 string queryPart = string.Empty;
@@ -89,6 +85,10 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
                 {
                     queryPart = virtualPath.Substring(queryIndex);
                     virtualPath = virtualPath.Substring(0, queryIndex);
+                }
+                if (RequireLowerCase)
+                {
+                    virtualPath = virtualPath.ToLowerInvariant();
                 }
                 if (AppendTrailingSlash && !virtualPath.EndsWith("/"))
                 {

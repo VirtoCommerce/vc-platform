@@ -1,6 +1,7 @@
 ﻿using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
+using Microsoft.Practices.ServiceLocation;
 using VirtoCommerce.Web.Client.Properties;
 using IActionSettingsSerialiser = VirtoCommerce.Web.Client.Caching.Interfaces.IActionSettingsSerialiser;
 
@@ -14,7 +15,7 @@ namespace VirtoCommerce.Web.Client.Caching
         {
             get
             {
-                return _serialiser ??  (_serialiser = new EncryptingActionSettingsSerialiser(new ActionSettingsSerialiser(), new Encryptor()));
+                return _serialiser ??  (_serialiser = ServiceLocator.Current.GetInstance<IActionSettingsSerialiser>());
             }
             set
             {

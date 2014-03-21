@@ -33,6 +33,10 @@
             <td>@Model.TaxTotalPriceFormatted</td>
         </tr>
         <tr>
+            <td align="right" colspan="2">@("Discount total".Localize())</td>
+            <td>@Model.DiscountTotalPriceFormatted</td>
+        </tr>
+        <tr>
             <td  align="right" colspan="2" class="grand">@("Grand total".Localize())</td>
             <td class="grand">@Model.TotalPriceFormatted</td>
         </tr>

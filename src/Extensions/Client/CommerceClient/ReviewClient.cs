@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using VirtoCommerce.Foundation;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Reviews;
@@ -37,7 +38,8 @@ namespace VirtoCommerce.Client
                 (string.IsNullOrEmpty(itemId) || r.ItemId == itemId)
                 && r.Status == (int)ReviewStatus.Approved).ExpandAll();
 
-            return CacheHelper.Get(string.Format(ReviewsCacheKey, string.IsNullOrEmpty(itemId) ? "all" : itemId),
+            return CacheHelper.Get(
+                CacheHelper.CreateCacheKey(Constants.ReviewsCachePrefix,string.Format(ReviewsCacheKey, string.IsNullOrEmpty(itemId) ? "all" : itemId)),
                 query.ToArray, 
                 ReviewConfiguration.Instance.Cache.ReviewsTimeout, 
                 _isEnabled);
@@ -53,7 +55,8 @@ namespace VirtoCommerce.Client
             var query =
                 _reviewRepository.ReviewComments.Where(
                     r => r.ReviewId == reviewId && r.Status == (int) ReviewStatus.Approved);
-            return CacheHelper.Get(string.Format(ReviewCommentsCacheKey, reviewId),
+            return CacheHelper.Get(
+                CacheHelper.CreateCacheKey(Constants.ReviewsCachePrefix, string.Format(ReviewCommentsCacheKey, reviewId)),
                 query.ToArray,
                 ReviewConfiguration.Instance.Cache.ReviewsTimeout,
                 _isEnabled);

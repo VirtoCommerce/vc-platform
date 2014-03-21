@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Web.Client.Helpers;
@@ -38,6 +39,26 @@ namespace VirtoCommerce.Web.Client.Extensions
         {
             var storeName = StoreHelper.CustomerSession.StoreName;
             return String.IsNullOrEmpty(storeName) ? title : String.Format(formatString, title, storeName);
+        }
+
+        public static string EscapeSearchTerm(this string term)
+        {
+            char[] specialCharcters = { '+', '-', '!', '(', ')', '{', '}', '[', ']', '^', '"', '~', '*', '?', ':', '\\' };
+            var retVal = "";
+            //'&&', '||',
+            foreach (var ch in term)
+            {
+                if (specialCharcters.Any(x => x == ch))
+                {
+                    retVal += "\\";
+                }
+                retVal += ch;
+            }
+            retVal = retVal.Replace("&&", @"\&&");
+            retVal = retVal.Replace("||", @"\||");
+            retVal = retVal.Trim();
+
+            return retVal;
         }
 
     }
