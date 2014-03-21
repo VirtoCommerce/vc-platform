@@ -13,6 +13,11 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
     [DataContract]
     [EntitySet("Items")]
     [DataServiceKey("ItemId")]
+    [KnownType(typeof(Sku))]
+    [KnownType(typeof(Bundle))]
+    [KnownType(typeof(Product))]
+    [KnownType(typeof(Package))]
+    [KnownType(typeof(DynamicKit))]
     public abstract class Item : StorageEntity
     {
         public Item()

@@ -1,0 +1,10 @@
+﻿@model IEnumerable<string>
+
+@foreach (var placeName in Model)
+{
+    <div id="@placeName">
+        @{
+            Html.RenderAction("ShowDynamicContent", new { placeName });
+        }
+    </div>
+}

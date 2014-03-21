@@ -206,7 +206,8 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Wizard.Implementa
 
 		#endregion
 
-		#region UpdateSelectedItemsChangedCommand and realisation
+		#region Commands
+
 		public DelegateCommand<Shipment> UpdateSelectedItemsChangedCommand { get; private set; }
 
 		#endregion

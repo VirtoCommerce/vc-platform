@@ -1,9 +1,10 @@
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Migrations;
+using VirtoCommerce.Foundation.Catalogs.Model;
+
 namespace VirtoCommerce.Foundation.Data.Catalogs.Migrations
 {
-    using VirtoCommerce.Foundation.Catalogs.Model;
-    using VirtoCommerce.Foundation.Data.Infrastructure;
-
-    public sealed class Configuration : DbMigrationsConfigurationBase<EFCatalogRepository>
+    public sealed class Configuration : DbMigrationsConfiguration<VirtoCommerce.Foundation.Data.Catalogs.EFCatalogRepository>
     {
         public Configuration()
         {

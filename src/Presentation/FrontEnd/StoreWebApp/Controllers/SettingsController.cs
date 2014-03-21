@@ -10,16 +10,6 @@ namespace VirtoCommerce.Web.Controllers
 	/// </summary>
 	public class SettingsController : ControllerBase
     {
-		/// <summary>
-		/// Hides the demo notice.
-		/// </summary>
-		/// <returns>ActionResult.</returns>
-		[HttpPost]
-		public ActionResult HideDemoNotice()
-		{
-			Session["HideDemoNotice"] = true;
-			return new EmptyResult();
-		}
 
 		/// <summary>
 		/// Localizes the specified text. Called via ajax to localize

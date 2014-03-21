@@ -72,6 +72,12 @@ namespace VirtoCommerce.Caching.HttpCache
 			return true;
 		}
 
+	    public IDictionaryEnumerator GetEnumerator()
+	    {
+            var cache = GetCache();
+            return cache.GetEnumerator();     
+	    }
+
 		public void Clear()
 		{
 			var cache = GetCache();

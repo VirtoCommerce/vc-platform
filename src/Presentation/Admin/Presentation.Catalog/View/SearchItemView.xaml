@@ -16,108 +16,105 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Catalog;component/View/Views/GridView.xaml"/>
-				<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/DialogViewTheme/VirtoCommerceDialogTheme.xaml"/>
+                <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/DialogViewTheme/VirtoCommerceDialogTheme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
-			<Style TargetType="{x:Type ColumnDefinition}">
-				<Setter Property="ColumnDefinition.Width" Value="200" />
-				<Style.Triggers>
-					<DataTrigger Binding="{Binding ElementName=expandedTab, Path=IsExpanded}" Value="False">
-						<DataTrigger.EnterActions>
-							<BeginStoryboard Name="BeginStoryboard1">
-								<Storyboard>
-									<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Width">
-										<ObjectAnimationUsingKeyFrames.KeyFrames>
-											<DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static GridLength.Auto}" />
-										</ObjectAnimationUsingKeyFrames.KeyFrames>
-									</ObjectAnimationUsingKeyFrames>
-								</Storyboard>
-							</BeginStoryboard>
-						</DataTrigger.EnterActions>
-						<DataTrigger.ExitActions>
-							<RemoveStoryboard BeginStoryboardName="BeginStoryboard1" />
-						</DataTrigger.ExitActions>
-					</DataTrigger>
-				</Style.Triggers>
-			</Style>
+            <Style TargetType="{x:Type ColumnDefinition}">
+                <Setter Property="ColumnDefinition.Width" Value="200" />
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding ElementName=expandedTab, Path=IsExpanded}" Value="False">
+                        <DataTrigger.EnterActions>
+                            <BeginStoryboard Name="BeginStoryboard1">
+                                <Storyboard>
+                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Width">
+                                        <ObjectAnimationUsingKeyFrames.KeyFrames>
+                                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static GridLength.Auto}" />
+                                        </ObjectAnimationUsingKeyFrames.KeyFrames>
+                                    </ObjectAnimationUsingKeyFrames>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </DataTrigger.EnterActions>
+                        <DataTrigger.ExitActions>
+                            <RemoveStoryboard BeginStoryboardName="BeginStoryboard1" />
+                        </DataTrigger.ExitActions>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
 
-            
+
         </ResourceDictionary>
     </UserControl.Resources>
 
     <Grid x:Name="LayoutRoot">
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition Width="*" MinWidth="300"/>
-			<ColumnDefinition Width="auto"/>
-		</Grid.ColumnDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="300"/>
+            <ColumnDefinition Width="auto"/>
+        </Grid.ColumnDefinitions>
 
         <Grid x:Name="content" Grid.Column="0">
-			<Grid.RowDefinitions>
-				<RowDefinition Height="Auto" />
-				<RowDefinition Height="*" />
-				<RowDefinition Height="Auto" />
-			</Grid.RowDefinitions>
-			<core_controls:VirtualFolderItemList Grid.Row="1"  x:Name="ItemList" ItemsSource="{Binding ListItemsSource}"
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <core_controls:VirtualFolderItemList Grid.Row="1"  x:Name="ItemList" ItemsSource="{Binding ListItemsSource}"
 							Style="{StaticResource Virto_VirtualFolderItemList_Style}"
-							SelectedValuePath="Data" SelectionMode="Single" SelectedValue="{Binding SelectedItem,Mode=TwoWay}"
+							SelectedValuePath="Data" SelectionMode="Single" SelectedValue="{Binding SelectedItem}"
 							View="{StaticResource searchItemGridViewView}"
 							ItemContainerStyle="{StaticResource Virto_VirtualListView_WithoutMouseDoubleClick_ItemContainerStyle}" />
         </Grid>
 
-		<DockPanel LastChildFill="False" Grid.Column="1" Margin="10,5" Width="170">
-			<StackPanel DockPanel.Dock="Top">
+        <DockPanel LastChildFill="False" Grid.Column="1" Margin="10,5" Width="170">
+            <StackPanel DockPanel.Dock="Top">
 
-				<TextBlock Text="Item Name"/>
-				<core_controls:WatermarkedTextBox Text="{Binding SearchName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBlock Text="Item Name"/>
+                <core_controls:WatermarkedTextBox Text="{Binding SearchName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-				<TextBlock Text="Code"/>
-				<core_controls:WatermarkedTextBox Text="{Binding SearchCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBlock Text="SKU Code"/>
+                <core_controls:WatermarkedTextBox Text="{Binding SearchCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
-				<TextBlock Text="SKU Code"/>
-				<core_controls:WatermarkedTextBox Text="{Binding SearchSKU, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBlock Text="Item type"/>
+                <core_controls:NullItemSelectorAdapter ItemsSource="{Binding SearchFilterItemTypes}" Width="Auto">
+                    <core_controls:NullItemSelectorAdapter.NullItems>
+                        <collections:ArrayList>
+                            <sys:String>All types</sys:String>
+                        </collections:ArrayList>
+                    </core_controls:NullItemSelectorAdapter.NullItems>
 
-				<TextBlock Text="Item type"/>
-				<core_controls:NullItemSelectorAdapter ItemsSource="{Binding SearchFilterItemTypes}" Width="Auto">
-					<core_controls:NullItemSelectorAdapter.NullItems>
-						<collections:ArrayList>
-							<sys:String>All types</sys:String>
-						</collections:ArrayList>
-					</core_controls:NullItemSelectorAdapter.NullItems>
+                    <ComboBox SelectedValue="{Binding SearchFilterItemType, Mode=TwoWay}" IsEnabled="{Binding CanChangeSearchItemType}" Height="26" Width="Auto">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding SearchCommand}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+                </core_controls:NullItemSelectorAdapter>
 
-					<ComboBox SelectedValue="{Binding SearchFilterItemType, Mode=TwoWay}" IsEnabled="{Binding CanChangeSearchItemType}" Height="26" Width="Auto">
-						<i:Interaction.Triggers>
-							<i:EventTrigger EventName="SelectionChanged">
-								<i:InvokeCommandAction Command="{Binding SearchCommand}" />
-							</i:EventTrigger>
-						</i:Interaction.Triggers>
-					</ComboBox>
-				</core_controls:NullItemSelectorAdapter>
-
-				<TextBlock Text="Catalog"/>
-				<core_controls:NullItemSelectorAdapter ItemsSource="{Binding AvailableCatalogs}" IsAddingNullItemsFirst="True" Width="Auto">
-					<core_controls:NullItemSelectorAdapter.NullItems>
-						<collections:ArrayList>
-							<catalogsModel:Catalog Name="All catalogs" />
-						</collections:ArrayList>
-					</core_controls:NullItemSelectorAdapter.NullItems>
-					<ComboBox SelectedValuePath="CatalogId"
+                <TextBlock Text="Catalog"/>
+                <core_controls:NullItemSelectorAdapter ItemsSource="{Binding AvailableCatalogs}" IsAddingNullItemsFirst="True" Width="Auto">
+                    <core_controls:NullItemSelectorAdapter.NullItems>
+                        <collections:ArrayList>
+                            <catalogsModel:Catalog Name="All catalogs" />
+                        </collections:ArrayList>
+                    </core_controls:NullItemSelectorAdapter.NullItems>
+                    <ComboBox SelectedValuePath="CatalogId"
                               SelectedValue="{Binding SearchCatalogId, Mode=TwoWay}" DisplayMemberPath="Name"
                               IsEnabled="{Binding CanChangeSearchCatalog}"
                               Height="26" Width="Auto">
-						<i:Interaction.Triggers>
-							<i:EventTrigger EventName="SelectionChanged">
-								<i:InvokeCommandAction Command="{Binding SearchCommand}" />
-							</i:EventTrigger>
-						</i:Interaction.Triggers>
-					</ComboBox>
-				</core_controls:NullItemSelectorAdapter>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="SelectionChanged">
+                                <i:InvokeCommandAction Command="{Binding SearchCommand}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ComboBox>
+                </core_controls:NullItemSelectorAdapter>
 
-			</StackPanel>
+            </StackPanel>
 
-			<StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,5">
-				<Button Command="{Binding SearchCommand}" Content="Search"/>
-			</StackPanel>
-		</DockPanel>
+            <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,5">
+                <Button Command="{Binding SearchCommand}" Content="Search"/>
+            </StackPanel>
+        </DockPanel>
 
-	</Grid>
+    </Grid>
 </base:ViewBase>

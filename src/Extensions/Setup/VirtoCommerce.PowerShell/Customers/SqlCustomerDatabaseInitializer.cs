@@ -33,7 +33,7 @@ namespace VirtoCommerce.PowerShell.Customers
             contact.Cases.Add(case1);
             contact.Cases.Add(case2);
 
-            contact.Addresses.Add(new Address { Name = "Primary Address", FirstName = "John", LastName = "Doe", City = "Los Angeles", CountryCode = "USA", CountryName = "United States", Line1 = "8237 Santa Monica Blvd", PostalCode = "90210", DaytimePhoneNumber = "none", Email = "john_doe_work@gmail.com", MemberId = contact.MemberId });
+            contact.Addresses.Add(new Address { Name = "Primary Address", FirstName = "John", LastName = "Doe", City = "Beverly Hills", CountryCode = "USA", StateProvince = "CA", CountryName = "United States", Line1 = "8237 Santa Monica Blvd", PostalCode = "90210", DaytimePhoneNumber = "none", Email = "john_doe_work@gmail.com", MemberId = contact.MemberId });
             contact.Emails.Add(new Email { Address = "john_doe@gmail.com", MemberId = contact.MemberId, Type = EmailType.Primary.ToString()});
             contact.Emails.Add(new Email { Address = "john_doe@outlook.com", MemberId = contact.MemberId, Type = EmailType.Secondary.ToString() });
             contact.Phones.Add(new Phone { Number = "89520050242", MemberId = contact.MemberId });
@@ -62,7 +62,7 @@ namespace VirtoCommerce.PowerShell.Customers
             contact2.Cases.Add(caseForContact2);
 
 
-            contact2.Addresses.Add(new Address { Name = "Primary Address", FirstName = "Bill", LastName = "Ballmer", City = "New York", CountryCode = "USA", CountryName = "United States", Line1 = "1556 Broadway", PostalCode = "10120", DaytimePhoneNumber = "none", Email = "bb_1965@outlook.com", MemberId = contact2.MemberId });
+            contact2.Addresses.Add(new Address { Name = "Primary Address", FirstName = "Bill", LastName = "Ballmer", City = "New York", CountryCode = "USA", StateProvince = "CA", CountryName = "United States", Line1 = "1556 Broadway", PostalCode = "90002", DaytimePhoneNumber = "none", Email = "bb_1965@outlook.com", MemberId = contact2.MemberId });
             contact2.Emails.Add(new Email {Address = "bb_1965@outlook.com",MemberId = contact2.MemberId,Type = EmailType.Primary.ToString()});
             contact2.Phones.Add(new Phone {Number = "8239-1234", MemberId = contact2.MemberId});
 

@@ -23,7 +23,7 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0" Text="Amount"/>
-            <TextBox Grid.Row="1" Text="{Binding Amount, StringFormat=c, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox Grid.Row="1" Text="{Binding Amount, StringFormat={}{0:0.##}, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
     </HeaderedContentControl>
 </inf:ViewBase>

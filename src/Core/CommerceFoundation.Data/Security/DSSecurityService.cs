@@ -11,9 +11,5 @@ namespace VirtoCommerce.Foundation.Data.Security
     [JsonSupportBehavior]
 	public class DSSecurityService : DServiceBase<EFSecurityRepository>
 	{
-		protected override EFSecurityRepository CreateDataSource()
-		{
-			return new EFSecurityRepository(new SecurityEntityFactory());
-		}
 	}
 }

@@ -18,6 +18,9 @@ namespace VirtoCommerce.ManagementClient
 
         protected override void ConfigureContainer()
         {
+            //Enable validation for StorageEntity
+            Foundation.Configuration.EnableEntityValidation = true;
+
             Container.RegisterType<INavigationManager, NavigationManager>(new ContainerControlledLifetimeManager());
             Container.RegisterType<TileManager, TileManager>(new ContainerControlledLifetimeManager());
             

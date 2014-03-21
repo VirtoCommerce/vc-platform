@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:settingsViewModel="clr-namespace:VirtoCommerce.ManagementClient.Order.ViewModel.Settings"
+             xmlns:settingsViewModel="clr-namespace:VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Taxes.Implementations"
              xmlns:extToolkit="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
              xmlns:common="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Common;assembly=VirtoCommerce.ManagementClient.Core"
              mc:Ignorable="d" 
@@ -30,7 +30,7 @@
         </StackPanel>
         <StackPanel Grid.Row="1">
             <TextBlock Text="* Jurisdiction Group:"/>
-            <ComboBox ItemsSource="{Binding AllAvailableJurisdictionGroups, UpdateSourceTrigger=PropertyChanged}"
+            <ComboBox ItemsSource="{Binding AllAvailableJurisdictionGroups, UpdateSourceTrigger=PropertyChanged}" SelectedItem="{Binding InnerItem.JurisdictionGroup}"
                 SelectedValue="{Binding InnerItem.JurisdictionGroupId, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" SelectedValuePath="JurisdictionGroupId" DisplayMemberPath="DisplayName" 
                        common:RequiredFieldHelper.IsRequired="True"/>
         </StackPanel>

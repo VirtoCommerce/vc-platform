@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using VirtoCommerce.Foundation;
 using VirtoCommerce.Foundation.Catalogs;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Catalogs.Repositories;
@@ -136,7 +137,7 @@ namespace VirtoCommerce.Client
                 return null;
 
             return Helper.Get(
-                string.Format(ItemPricesCacheKey, CacheHelper.CreateCacheKey("", priceLists), CacheHelper.CreateCacheKey("", itemIds)),
+                CacheHelper.CreateCacheKey(Constants.PricelistCachePrefix, string.Format(ItemPricesCacheKey, CacheHelper.CreateCacheKey(priceLists), CacheHelper.CreateCacheKey(itemIds))),
                 () => (_priceListRepository.FindLowestPrices(priceLists, itemIds, quantity)),
                 CatalogConfiguration.Instance.Cache.PricesTimeout,
                 _isEnabled && useCache);

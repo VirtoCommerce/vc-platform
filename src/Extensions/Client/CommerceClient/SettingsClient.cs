@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using VirtoCommerce.Foundation;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.AppConfig;
@@ -28,7 +29,8 @@ namespace VirtoCommerce.Client
 
         public SettingValue[] GetSettings(string settingName)
         {
-            return CacheHelper.Get(string.Format(SettingsCacheKey, settingName),
+            return CacheHelper.Get(
+                CacheHelper.CreateCacheKey(Constants.SettingsCachePrefix,string.Format(SettingsCacheKey, settingName)),
                 () => _appConfigRepository.Settings
                     .Where(s => settingName.Equals(s.Name, StringComparison.OrdinalIgnoreCase))
                     .SelectMany(s => s.SettingValues).ToArray(), AppConfigConfiguration.Instance.Cache.SettingsTimeout, _isEnabled);

@@ -38,8 +38,9 @@
         -ms-text-overflow: ellipsis;
         -o-text-overflow: ellipsis;
         text-overflow: ellipsis;
+        text-align: right;
         white-space: nowrap;
-        width: 70px;
+        width: 50px;
     }
 
     /* --- Article --- */
@@ -996,7 +997,8 @@
 
         .article .product-view .product-info .product-image {
             float: none;
-            margin: 30px 0 15px;
+            margin: 0 0 15px;
+            padding-top: 30px;
             width: 100%;
         }
 
@@ -1091,7 +1093,8 @@
 
     /* --- Cart --- */
     .article .cart {
-        margin: 30px auto;
+        margin: 0 auto;
+        padding-top: 30px;
         width: 456px;
     }
 
@@ -1458,6 +1461,18 @@
     .head-top-block .cart-options ul li.count span {
         color: #fff;
     }
+
+    .page-nav {
+        display: none;
+    }
+
+    .article .content {
+        margin-top: 0;
+    }
+
+        .article .content .category-products .toolbar.top {
+            display: none;
+        }
 }
 
 @media only screen and (min-width: 0) and (max-width: 479px) {
@@ -1827,13 +1842,6 @@
             margin: 0;
         }
 
-    .page-nav .title .page-item-nav {
-        display: none;
-    }
-
-    .article .content {
-        margin-top: 30px;
-    }
 
     .article .products-list.grid .item:hover .inner {
         position: static;
@@ -2005,7 +2013,8 @@
 
         .article .product-view .product-info .product-image {
             float: none;
-            margin: 30px 0 15px;
+            margin: 0 0 15px;
+            padding-top: 30px;
             width: 100%;
         }
 
@@ -2096,7 +2105,8 @@
 
     /* --- Cart --- */
     .article .cart {
-        margin: 30px auto;
+        margin: 0 auto;
+        padding-top: 30px;
         width: 300px;
     }
 
@@ -2347,6 +2357,14 @@
             display: none;
         }
 
+    .article .cart .cart-block {
+        padding: 20px;
+    }
+
+        .article .cart .cart-block .products-list .item {
+            width: 200px;
+        }
+
     .article .sidebar .block {
         width: 230px;
     }
@@ -2404,6 +2422,11 @@
             left: 11px;
             margin: -12px 0 0;
         }
+
+        .footer-wrap .banners .banner.insurance a:after {
+            left: 5px;
+        }
+
 
     .footer-wrap .info {
         padding: 30px 0 0;

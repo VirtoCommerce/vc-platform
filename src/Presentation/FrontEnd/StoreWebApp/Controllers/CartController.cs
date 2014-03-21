@@ -6,7 +6,6 @@ using VirtoCommerce.Client;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Orders.Model;
 using VirtoCommerce.Web.Client.Extensions;
-using VirtoCommerce.Web.Client.Extensions.Filters;
 using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Web.Client.Helpers;
 using VirtoCommerce.Web.Models;
@@ -255,7 +254,7 @@ namespace VirtoCommerce.Web.Controllers
                 name = CartHelper.CartName;
             }
 
-            var helper = new CartHelper(name);
+            var helper = GetCartHelper(name);
 
             var catalogItem = _catalogClient.GetItem(itemId);
             var parentItem = !string.IsNullOrEmpty(parentItemId) ? _catalogClient.GetItem(parentItemId) : null;
@@ -265,7 +264,7 @@ namespace VirtoCommerce.Web.Controllers
             var addedLineItem = DoAddToCart(name, qty, catalogItem, parentItem);
             if (addedLineItem != null)
             {
-                addedLineItems.Add(new LineItemModel(addedLineItem, catalogItem, parentItem));
+                addedLineItems.Add(new LineItemModel(addedLineItem, catalogItem, parentItem, helper.Cart.BillingCurrency));
             }
 
             if (relatedItemId != null && relatedItemId.Length > 0)
@@ -274,7 +273,7 @@ namespace VirtoCommerce.Web.Controllers
                                         let relItem = _catalogClient.GetItem(relItemId)
                                         let relatedItem = DoAddToCart(name, 1, relItem, null)
                                         where relatedItem != null
-                                        select new LineItemModel(relatedItem, relItem, null));
+                                        select new LineItemModel(relatedItem, relItem, null, helper.Cart.BillingCurrency));
             }
 
             if (Request.UrlReferrer != null)
@@ -282,8 +281,8 @@ namespace VirtoCommerce.Web.Controllers
                 UserHelper.CustomerSession.LastShoppingPage = Request.UrlReferrer.AbsoluteUri;
             }
 
-            helper.ClearCache();
-            helper = new CartHelper(name);
+            //helper.ClearCache();
+            //helper = GetCartHelper(name);
 
             var results = new CartJsonModel
             {
@@ -331,11 +330,6 @@ namespace VirtoCommerce.Web.Controllers
         [HttpPost]
         public ActionResult ApplyCoupon(string couponCode, bool renderItems = false)
         {
-            if (HttpContext.Session != null)
-            {
-                HttpContext.Session["CurrentCouponCode"] = couponCode;
-            }
-
             _catalogClient.CustomerSession.CouponCode = couponCode;
             var helper = GetCartHelper(CartHelper.CartName);
             var warnings = SaveChanges(helper);
@@ -470,7 +464,7 @@ namespace VirtoCommerce.Web.Controllers
                     }
                 }
                 // Add item to a cart.
-                addedLineItem = ch.AddItem(catalogItem, parentCatalogItem, qty, false);
+                addedLineItem = ch.AddItem(catalogItem, parentCatalogItem, qty, string.Equals(cartName, CartHelper.CompareListName, StringComparison.OrdinalIgnoreCase));
                 SaveChanges(ch);
             }
 

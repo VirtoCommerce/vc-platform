@@ -67,7 +67,7 @@ namespace VirtoCommerce.Foundation.Frameworks
         /// <returns>true if entity is removed</returns>
         public static bool ValidateEntity(DbContext context, DbEntityEntry entity, Type type)
         {
-            if (entity.State == System.Data.EntityState.Modified)
+            if (entity.State == EntityState.Modified)
             {
                 if(IsRemovable(type))
                 {

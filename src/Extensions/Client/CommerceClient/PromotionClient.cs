@@ -5,9 +5,8 @@ using System.Linq;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Marketing.Model;
-using VirtoCommerce.Foundation.Marketing.Model.Policies;
 using VirtoCommerce.Foundation.Marketing.Repositories;
-using cust = VirtoCommerce.Foundation.Customers.Services;
+using VirtoCommerce.Foundation.Customers.Services;
 
 namespace VirtoCommerce.Client
 {
@@ -20,10 +19,9 @@ namespace VirtoCommerce.Client
 		#region Private Variables
 
 		private readonly ICacheRepository _cacheRepository;
-		private readonly cust.ICustomerSessionService _customerSession;
+		private readonly ICustomerSessionService _customerSession;
 	    private readonly IPromotionEvaluator _evaluator;
 	    private readonly IMarketingRepository _marketingRepository;
-		private readonly IPromotionUsageProvider _promotionUsage;
 
 		#endregion
 
@@ -33,14 +31,14 @@ namespace VirtoCommerce.Client
 	    ///     Initializes the <see cref="PromotionClient" /> class.
 	    /// </summary>
 	    /// <param name="marketingRepository">The marketing repository.</param>
-	    /// <param name="promotionUsage">The promotion usage.</param>
 	    /// <param name="customerSession">The customer session.</param>
 	    /// <param name="evaluator"></param>
 	    /// <param name="cacheRepository">The cache repository.</param>
-	    public PromotionClient(IMarketingRepository marketingRepository, IPromotionUsageProvider promotionUsage,
-		                       cust.ICustomerSessionService customerSession, IPromotionEvaluator evaluator, ICacheRepository cacheRepository)
+	    public PromotionClient(IMarketingRepository marketingRepository, 
+            ICustomerSessionService customerSession,
+            IPromotionEvaluator evaluator, 
+            ICacheRepository cacheRepository)
 		{
-			_promotionUsage = promotionUsage;
 			_marketingRepository = marketingRepository;
 			_cacheRepository = cacheRepository;
 			_customerSession = customerSession;
@@ -75,16 +73,23 @@ namespace VirtoCommerce.Client
 					IsRegisteredUser = session.IsRegistered,
 					IsFirstTimeBuyer = session.IsFirstTimeBuyer
 				};
-            //var evaluator = new DefaultPromotionEvaluator(_marketingRepository, _promotionUsage,
-            //                                              new IEvaluationPolicy[]
-            //                                                  {
-            //                                                      new GlobalExclusivityPolicy(), new CartSubtotalRewardCombinePolicy(),
-            //                                                      new ShipmentRewardCombinePolicy()
-            //                                                  }, _cacheRepository);
-			var promotions = _evaluator.EvaluatePromotion(evaluationContext);
-			var rewards = promotions.SelectMany(x => x.Rewards);
 
-			var lineItemRewards = rewards.OfType<CatalogItemReward>().ToArray();
+			var promotions = _evaluator.EvaluatePromotion(evaluationContext);
+            var rewards = promotions.SelectMany(x => x.Rewards).ToArray();
+            var records = new List<PromotionRecord>();
+
+            records.AddRange(rewards.Select(reward => new PromotionRecord
+            {
+                AffectedEntriesSet = set,
+                TargetEntriesSet = set,
+                Reward = reward,
+                PromotionType = PromotionType.CatalogPromotion
+            }));
+
+            //Filter by policies
+		    var allRecords = _evaluator.EvaluatePolicies(records.ToArray());
+
+            var lineItemRewards = allRecords.Select(x=>x.Reward).OfType<CatalogItemReward>().ToArray();
 
 			var discountTotal = 0m;
 			foreach (var reward in lineItemRewards)
@@ -106,11 +111,11 @@ namespace VirtoCommerce.Client
 				const int quantity = 1;
 				if (reward.AmountTypeId == (int)RewardAmountType.Relative)
 				{
-					discountAmount = quantity*price*reward.Amount*0.01m;
+					discountAmount = Math.Round(quantity*price*reward.Amount*0.01m,2);
 				}
 				else if (reward.AmountTypeId == (int)RewardAmountType.Absolute)
 				{
-					discountAmount = quantity*reward.Amount;
+					discountAmount =  Math.Round(quantity*reward.Amount,2);
 				}
 				discountTotal += discountAmount;
 			}

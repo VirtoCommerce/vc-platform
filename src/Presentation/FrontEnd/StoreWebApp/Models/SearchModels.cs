@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using VirtoCommerce.Client;
 using VirtoCommerce.Foundation.Catalogs.Model;
@@ -53,47 +54,62 @@ namespace VirtoCommerce.Web.Models
         public List<SelectedFilterModel> SelectedFilters { get; set; }
     }
 
+    //[KnownType(typeof(FilterModel))]
+    //public class FilterModelList : List<FilterModel>
+    //{
+        
+    //}
+
 	/// <summary>
 	/// Class FilterModel.
 	/// </summary>
+	[DataContract]
+    [KnownType(typeof(FacetModel))]
     public class FilterModel
     {
 		/// <summary>
 		/// Gets or sets the key.
 		/// </summary>
 		/// <value>The key.</value>
+        [DataMember] 
         public string Key { get; set; }
 		/// <summary>
 		/// Gets or sets the name.
 		/// </summary>
 		/// <value>The name.</value>
+        [DataMember] 
         public string Name { get; set; }
 		/// <summary>
 		/// Gets or sets the facets.
 		/// </summary>
 		/// <value>The facets.</value>
+        [DataMember] 
         public FacetModel[] Facets { get; set; }
     }
 
 	/// <summary>
 	/// Class FacetModel.
 	/// </summary>
+    [DataContract]
     public class FacetModel
     {
 		/// <summary>
 		/// Gets or sets the name.
 		/// </summary>
 		/// <value>The name.</value>
+		[DataMember]
         public string Name { get; set; }
 		/// <summary>
 		/// Gets or sets the key.
 		/// </summary>
 		/// <value>The key.</value>
+        [DataMember]
         public string Key { get; set; }
 		/// <summary>
 		/// Gets or sets the count.
 		/// </summary>
 		/// <value>The count.</value>
+        [DataMember] 
         public int Count { get; set; }
     }
 
@@ -405,6 +421,8 @@ namespace VirtoCommerce.Web.Models
 	        }
 	    }
 
+	    public string SearchOutline { get; set; }
+
 		/// <summary>
 		/// Gets the <see cref="System.String"/> with the specified name.
 		/// </summary>
@@ -487,18 +505,18 @@ namespace VirtoCommerce.Web.Models
 		/// Gets the minimum quantity.
 		/// </summary>
 		/// <value>The minimum quantity.</value>
-		public decimal MinQuantity
+		public int MinQuantity
 		{
-			get { return _availability.MinQuantity; }
+			get { return (int)_availability.MinQuantity; }
 		}
 
 		/// <summary>
 		/// Gets the maximum quantity.
 		/// </summary>
 		/// <value>The maximum quantity.</value>
-        public decimal MaxQuantity
+        public int MaxQuantity
         {
-            get { return _availability.MaxQuantity; }
+            get { return (int)_availability.MaxQuantity; }
         }
 
 		/// <summary>

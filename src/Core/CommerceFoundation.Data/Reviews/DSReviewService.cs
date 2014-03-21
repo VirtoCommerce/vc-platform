@@ -26,10 +26,5 @@ namespace VirtoCommerce.Foundation.Data.Reviews
 
             config.DataServiceBehavior.MaxProtocolVersion = DataServiceProtocolVersion.V3;
         }
-
-        protected override EFReviewRepository CreateDataSource()
-        {
-            return new EFReviewRepository(new ReviewEntityFactory());
-        }
 	}
 }

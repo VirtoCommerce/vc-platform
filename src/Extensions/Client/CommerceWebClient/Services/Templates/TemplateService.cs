@@ -9,6 +9,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 using System.Xml.Xsl;
+using DotNetOpenAuth.OpenId.Extensions.SimpleRegistration;
 using VirtoCommerce.Foundation.AppConfig;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
@@ -245,7 +246,7 @@ namespace VirtoCommerce.Web.Client.Services.Templates
 			lock (_lockObject)
 			{
 				return Helper.Get(
-					string.Format(TemplateCacheKey, "all"),
+                    CacheHelper.CreateCacheKey(Foundation.Constants.EmailTemplateCachePrefix, string.Format(TemplateCacheKey, "all")),
 					() => _repository.EmailTemplates.ExpandAll().ToArray(),
 					AppConfigConfiguration.Instance.Cache.DisplayTemplateMappingsTimeout,
 					_isEnabled);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Catalogs.Repositories;
@@ -86,7 +87,7 @@ namespace VirtoCommerce.Foundation.Frameworks.Extensions
 		/// <returns></returns>
 		public static Price[] GetItemPrices(this IPricelistRepository repository, string[] pricelistIds, string itemId, decimal quantity)
 		{
-			var retVal = repository.Prices.Where(x => x.ItemId == itemId && quantity >= x.MinQuantity).ToArray();
+		    var retVal = repository.Prices.Where(x => x.ItemId == itemId && quantity >= x.MinQuantity).ToArray();
 			if (pricelistIds != null)
 			{
 				pricelistIds = pricelistIds.Where(x => !String.IsNullOrEmpty(x)).ToArray();
@@ -108,7 +109,7 @@ namespace VirtoCommerce.Foundation.Frameworks.Extensions
 		/// <returns></returns>
 		public static Price[] GetItemPrices(this IPricelistRepository repository, string[] pricelistIds, string[] itemIds, decimal quantity)
 		{
-			var retVal = repository.Prices.Where(x => itemIds.Contains(x.ItemId) && quantity >= x.MinQuantity).ToArray();
+		    var retVal = repository.Prices.Where(x => itemIds.Contains(x.ItemId) && quantity >= x.MinQuantity).ToArray();
 			if (pricelistIds != null)
 			{
 				pricelistIds = pricelistIds.Where(x => !String.IsNullOrEmpty(x)).ToArray();

@@ -1,17 +1,14 @@
 ﻿using System.ComponentModel;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Orders.Model.Jurisdiction;
 using VirtoCommerce.Foundation.Orders.Model.Taxes;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Taxes.Interfaces;
 
 namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Taxes.Implementations
 {
     public class TaxValueViewModel : ViewModelBase, ITaxValueViewModel
     {
-        #region Fields
-        #endregion
-
         #region Constructor
 
         public TaxValueViewModel(TaxCategory[] allAvailableTaxCategories, JurisdictionGroup[] allAvailableJurisdictionGroups, TaxValue item)
@@ -43,9 +40,8 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Taxes.Implemen
         {
             get
             {
-                bool result = false;
-                result = !string.IsNullOrEmpty(InnerItem.TaxCategory);
-                return result;
+                return !string.IsNullOrEmpty(InnerItem.TaxCategory) &&
+                         !string.IsNullOrEmpty(InnerItem.JurisdictionGroupId);
             }
         }
 

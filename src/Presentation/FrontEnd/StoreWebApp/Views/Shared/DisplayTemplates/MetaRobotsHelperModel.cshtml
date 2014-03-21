@@ -2,6 +2,6 @@
 @using System.Web.Mvc.Html
 @using MvcSiteMapProvider.Web.Html.Models
 
-@if (!String.IsNullOrEmpty(Model.CurrentNode.MetaRobotsContent)) {
+@if (Model.CurrentNode != null && !String.IsNullOrEmpty(Model.CurrentNode.MetaRobotsContent)) {
     <meta name="robots" content="@Model.CurrentNode.MetaRobotsContent" />
 }

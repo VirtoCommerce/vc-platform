@@ -131,6 +131,14 @@ namespace VirtoCommerce.Web.Models
 		/// <value>The total price formatted.</value>
         public string TotalPriceFormatted { get; set; }
 
+        /// <summary>
+        /// Gets or sets the discount total price formatted.
+        /// </summary>
+        /// <value>
+        /// The discount total price formatted.
+        /// </value>
+        public string DiscountTotalPriceFormatted { get; set; }
+
 		/// <summary>
 		/// Gets or sets the shipping price formatted.
 		/// </summary>

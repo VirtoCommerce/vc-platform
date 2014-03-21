@@ -201,6 +201,7 @@
     <Compile Include="Infrastructure\Behaviors\DataGridScrollIntoViewBehavior.cs" />
     <Compile Include="Infrastructure\Behaviors\EnterKeyDownBehavior.cs" />
     <Compile Include="Infrastructure\Behaviors\PermissionBehavior.cs" />
+    <Compile Include="Infrastructure\Behaviors\TabControlKeyNavigationsIgnoreBehavior.cs" />
     <Compile Include="Infrastructure\Behaviors\TreeViewSelectedItemBehavior.cs" />
     <Compile Include="Infrastructure\Common\AttachedInputBindingsHelper.cs" />
     <Compile Include="Infrastructure\Common\BindingFromStringBehavior.cs" />

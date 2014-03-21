@@ -17,18 +17,19 @@ namespace VirtoCommerce.Foundation.AppConfig.Model
 		#endregion
 
 		#region privates
-		private static bool IsEnabled;
-		public const string DisplayTemplateCacheKey = "D:T:{0}";
+		private static bool _isEnabled;
 		#endregion
 
-		#region ctor
+        public const string DisplayTemplateCacheKey = "D:T:{0}";
+
+	    #region ctor
 		public DisplayTemplateEvaluator(IAppConfigRepository repository, IEvaluationPolicy[] policies, ICacheRepository cache)
 			:base(cache)
 		{
 			_repository = repository;
 			_policies = policies;
 
-			IsEnabled = AppConfigConfiguration.Instance != null && AppConfigConfiguration.Instance.Cache.IsEnabled;
+			_isEnabled = AppConfigConfiguration.Instance != null && AppConfigConfiguration.Instance.Cache.IsEnabled;
 			Cache = new CacheHelper(cache);
 		}
 		#endregion
@@ -75,10 +76,10 @@ namespace VirtoCommerce.Foundation.AppConfig.Model
 			var query = _repository.DisplayTemplateMappings;
 
 			return Cache.Get(
-				string.Format(DisplayTemplateCacheKey, "allTemplates"),
+                CacheHelper.CreateCacheKey(Constants.DisplayTemplateCachePrefix, string.Format(DisplayTemplateCacheKey, "allTemplates")),
 				() => (query).ToArray(),
 				AppConfigConfiguration.Instance != null ? AppConfigConfiguration.Instance.Cache.DisplayTemplateMappingsTimeout : new TimeSpan(),
-				IsEnabled).AsQueryable();
+				_isEnabled).AsQueryable();
 		}
 	} //class
 } //namespace

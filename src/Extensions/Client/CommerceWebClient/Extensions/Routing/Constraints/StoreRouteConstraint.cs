@@ -30,8 +30,8 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Constraints
 
         protected override bool IsMatch(HttpContextBase httpContext, Route route, string parameterName, RouteValueDictionary values, RouteDirection routeDirection)
         {
-            //Url generation should allow empty store value
-            if (routeDirection == RouteDirection.UrlGeneration && !values.ContainsKey(parameterName))
+
+            if (routeDirection == RouteDirection.UrlGeneration)
             {
                 return true;
             }

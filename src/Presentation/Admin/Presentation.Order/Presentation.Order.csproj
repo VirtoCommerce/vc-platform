@@ -122,9 +122,9 @@
     </Compile>
     <Compile Include="Infrastructure\Converters\CountryIdToNameConverter.cs" />
     <Compile Include="Infrastructure\Converters\PackagingIdToNameConverter.cs" />
+    <Compile Include="Infrastructure\Converters\TaxValueToJurisdictionGroupNameConverter.cs" />
     <Compile Include="Infrastructure\Converters\TaxCategoryToNameConverter.cs" />
     <Compile Include="Infrastructure\Converters\DateToTextConverter.cs" />
-    <Compile Include="Infrastructure\Converters\TaxTypesConverter.cs" />
     <Compile Include="Infrastructure\Converters\EnumToIntConverters.cs" />
     <Compile Include="Model\Builders\ShipmentBuilder.cs" />
     <Compile Include="Model\CreateRefundModel.cs" />

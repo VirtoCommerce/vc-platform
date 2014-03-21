@@ -26,7 +26,7 @@
             case "List":
                 if (canBeAdded)
                 {
-                    <button type="button" title="@("Add to Cart".Localize())" onclick="VirtoCart.addToCart('Item added to cart', '@Url.Encode(Model.CatalogItem.ItemId)', '@Url.Encode(Model.CatalogItem.ParentItemId)', 1) ">
+                    <button type="button" title="@("Add to Cart".Localize())" onclick="return VirtoCart.addToCart({itemId:'@(Model.CatalogItem != null ? Model.CatalogItem.ItemId : "")', parentItemId:'@Model.CatalogItem.ParentItemId',callback:@(ViewData["CallbackJs"] ?? "null")}); ">
                         @("Add to Cart".Localize())
                     </button>
                 }
@@ -38,7 +38,7 @@
             case "ListLink":
                 if (canBeAdded)
                 {
-                    <a href="" title="@("Add to Cart".Localize())" onclick="return VirtoCart.addToCart('Item added to cart', '@Url.Encode(Model.CatalogItem.ItemId)', '@Url.Encode(Model.CatalogItem.ParentItemId)', 1) ">
+                    <a href="" title="@("Add to Cart".Localize())" onclick="return VirtoCart.addToCart({itemId:'@(Model.CatalogItem != null ? Model.CatalogItem.ItemId : "")', parentItemId:'@Model.CatalogItem.ParentItemId',callback:@(ViewData["CallbackJs"] ?? "null")}); ">
                         @("Add to Cart".Localize())
                     </a>
                 }
@@ -50,7 +50,7 @@
             default:
                 if (canBeAdded)
                 {
-                    <button type="button" title="@("Add to Cart".Localize())" onclick="return VirtoCart.addToCartClick('@((Model.CatalogItem != null) ? Model.CatalogItem.ItemId : "")', '@((Model.CatalogItem != null) ? Model.CatalogItem.ParentItemId : "")');">
+                    <button type="button" title="@("Add to Cart".Localize())" onclick="return VirtoCart.addToCartClick({itemId:'@(Model.CatalogItem != null ? Model.CatalogItem.ItemId : "")', parentItemId:'@(Model.CatalogItem != null ? Model.CatalogItem.ParentItemId : "")',callback:@(ViewData["CallbackJs"] ?? "null")});">
                         <span>@("Add to Cart".Localize())</span>
                     </button>
                 }

@@ -1,15 +1,17 @@
-﻿using System;
+﻿using Microsoft.Practices.ServiceLocation;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Data.Services;
 using System.Data.Services.Common;
+using System.Data.Services.Providers;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace VirtoCommerce.Foundation.Data.Infrastructure
 {
-	public abstract class DServiceBase<T> : DataService<T>
+    public abstract class DServiceBase<T> : EntityFrameworkDataService<T> where T : System.Data.Entity.DbContext, new()
 	{
         /// <summary>
         /// Initializes the service.
@@ -49,5 +51,20 @@ namespace VirtoCommerce.Foundation.Data.Infrastructure
 			
 			args.Exception = new DataServiceException(500, errorMessage);
 		}
+
+        protected override EntityFrameworkDataServiceProvider2<T> CreateDataSource()
+        {
+            return new EntityFrameworkDataServiceProvider2<T>(
+                new DataServiceProviderArgs(
+                    this,
+                    CreateRepository(),
+                    null,
+                    false));
+        }
+
+        protected virtual T CreateRepository()
+        {
+            return ServiceLocator.Current.GetInstance<T>();
+        }
 	}
 }

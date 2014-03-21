@@ -13,7 +13,7 @@
         @Html.Action("SearchResultsWithinCategory", "Search",
         new
         {
-            cat = category,
+            cat = category !=null ? CatalogHelper.CreateCategoryModel(category):null,
             parameters = new SearchParameters { Sort = currentModel.SortField, PageSize = currentModel.ItemCount},
             name = "DisplayTemplates/SearchItems",
             criteria = currentModel.NewItemsOnly ? new CatalogItemSearchCriteria {StartDateFrom = DateTime.UtcNow.AddMonths(-1)} : null,

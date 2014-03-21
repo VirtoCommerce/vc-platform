@@ -61,7 +61,16 @@ namespace VirtoCommerce.Foundation.AppConfig
             }
         }
 
-		/// <summary>
+        [ConfigurationProperty("sqlExecutionStrategies", IsRequired = false)]
+	    public StrategiesCollection SqlExecutionStrategies
+	    {
+            get
+            {
+                return (StrategiesCollection) this["sqlExecutionStrategies"] ?? new StrategiesCollection();
+            }
+	    }
+
+	    /// <summary>
 		/// Config settings which define where caching is enabled and timeouts related to it.
 		/// </summary>
 		/// <value>The cache.</value>
@@ -364,6 +373,23 @@ namespace VirtoCommerce.Foundation.AppConfig
             }
         }
 
+        [ConfigurationProperty("adminUrl", IsRequired = false, DefaultValue = "")]
+        public string AdminUrl
+        {
+            get
+            {
+                return this["adminUrl"].ToString();
+            }
+            set
+            {
+                this["adminUrl"] = value;
+                var configFile = WebConfigurationManager.OpenWebConfiguration("~");
+                var section = (AppConfigConfiguration)configFile.GetSection(AppConfigConfiguration.SectionName);
+                section.Setup["adminUrl"] = value;
+                configFile.Save(ConfigurationSaveMode.Modified);
+            }
+        }
+
         public override bool IsReadOnly()
         {
             return false;
@@ -428,6 +454,59 @@ namespace VirtoCommerce.Foundation.AppConfig
         protected override object GetElementKey(ConfigurationElement element)
         {
             return ((ModuleConfigurationElement)element).Name;
+        }
+    }
+
+    public class StrategyConfigurationElement : ConfigurationElement
+    {
+        [ConfigurationProperty("providerName", IsRequired = false, DefaultValue = "System.Data.SqlClient")]
+        public string ProviderName
+        {
+            get { return (string)base["providerName"]; }
+
+            private set { this["providerName"] = value; }
+        }
+
+        [ConfigurationProperty("serverName", IsRequired = false, DefaultValue = "")]
+        public string ServerName
+        {
+            get { return (string) base["serverName"]; }
+
+            private set { this["serverName"] = value; }
+        }
+
+        [ConfigurationProperty("strategyType", IsRequired = true)]
+        public string StrategyType
+        {
+            get { return (string) base["strategyType"]; }
+            set { base["strategyType"] = value; }
+        }
+
+        [ConfigurationProperty("maxRetryCount", IsRequired = false, DefaultValue = 5)]
+        public int? MaxRetryCount
+        {
+            get { return (int)base["maxRetryCount"]; }
+            set { base["maxRetryCount"] = value; }
+        }
+
+        [ConfigurationProperty("maxDelay", IsRequired = false, DefaultValue = 26)]
+        public int? MaxDelay
+        {
+            get{ return (int)base["maxDelay"]; }
+            set { base["maxDelay"] = value; }
+        }
+    }
+
+    public class StrategiesCollection : ConfigurationElementCollection
+    {
+        protected override ConfigurationElement CreateNewElement()
+        {
+            return new StrategyConfigurationElement();
+        }
+
+        protected override object GetElementKey(ConfigurationElement element)
+        {
+            return ((StrategyConfigurationElement)element).ProviderName + "|" + ((StrategyConfigurationElement)element).ServerName;
         }
     }
 }

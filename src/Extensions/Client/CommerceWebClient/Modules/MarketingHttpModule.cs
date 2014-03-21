@@ -49,7 +49,7 @@ namespace VirtoCommerce.Web.Client.Modules
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         void context_PostAcquireRequestState(object sender, EventArgs e)
         {
-            if (IsResourceFile())
+            if (IsResourceFile() || IsWebApi)
                 return;
 
             var application = (HttpApplication)sender;
@@ -62,7 +62,18 @@ namespace VirtoCommerce.Web.Client.Modules
             var priceListHelper = DependencyResolver.Current.GetService<PriceListClient>();
             var priceLists = priceListHelper.GetPriceListStack(session.CatalogId, session.Currency, session.GetCustomerTagSet());
             session.Pricelists = priceLists;
-           
+
+            //Update prices in current currency
+            var helper = new CartHelper(CartHelper.CartName);
+            if (!helper.IsEmpty && 
+                !string.IsNullOrEmpty(session.Currency) && 
+                !string.IsNullOrEmpty(helper.Cart.BillingCurrency) && 
+                session.Currency != helper.Cart.BillingCurrency)
+            {
+                helper.RunWorkflow("ShoppingCartValidateWorkflow");
+                helper.SaveChanges();
+            }
+
 
         }
         #endregion
@@ -82,15 +93,18 @@ namespace VirtoCommerce.Web.Client.Modules
             set.Add(ContextFieldConstants.CategoryId, new Tag(session.CategoryId));
 
             //Profile
-            var customer = StoreHelper.UserClient.GetCurrentCustomer();
-            if (customer != null)
+            if (IsRequestAuthenticated(context))
             {
-                if (customer.BirthDate.HasValue)
+                var customer = StoreHelper.UserClient.GetCurrentCustomer();
+                if (customer != null)
                 {
-                    set.Add(ContextFieldConstants.UserAge, new Tag(GetAge(customer.BirthDate.Value)));
+                    if (customer.BirthDate.HasValue)
+                    {
+                        set.Add(ContextFieldConstants.UserAge, new Tag(GetAge(customer.BirthDate.Value)));
+                    }
                 }
             }
-    
+
             PopulateBrowserBehavior(context, session);
             PopulateShoppingCart(context, session);
             PopulateGEOLocation(context, session);
@@ -105,7 +119,7 @@ namespace VirtoCommerce.Web.Client.Modules
         {
             //TODO: populate geo location information
             var set = session.GetCustomerTagSet();
-            
+
         }
 
         /// <summary>
@@ -122,10 +136,6 @@ namespace VirtoCommerce.Web.Client.Modules
             if (!helper.IsEmpty)
             {
                 set.Add(ContextFieldConstants.CartTotal, new Tag(helper.Cart.Total));
-                if (context.Session != null)
-                {
-                    session.CouponCode = (string)context.Session["CurrentCouponCode"];
-                }
             }
         }
 
@@ -149,6 +159,12 @@ namespace VirtoCommerce.Web.Client.Modules
             if (!String.IsNullOrEmpty(session.StoreId))
             {
                 set.Add(ContextFieldConstants.StoreId, new Tag(session.StoreId));
+            }
+
+            // category id
+            if (!String.IsNullOrEmpty(session.CategoryId))
+            {
+                set.Add(ContextFieldConstants.CategoryId, new Tag(session.CategoryId));
             }
 
             // current URL
@@ -210,7 +226,8 @@ namespace VirtoCommerce.Web.Client.Modules
         {
             var now = DateTime.Today;
             var age = now.Year - birthday.Year;
-            if (now < birthday.AddYears(age)) age--;
+            if (now < birthday.AddYears(age))
+                age--;
             return age;
         }
 

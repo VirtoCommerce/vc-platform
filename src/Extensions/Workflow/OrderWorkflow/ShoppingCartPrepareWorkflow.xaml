@@ -15,9 +15,9 @@
     <vo:CheckInventoryActivity sap:VirtualizedContainerService.HintSize="200,22.4" OrderGroupArgument="[OrderGroupArgument]" ResultArgument="[ResultArgument]"/>
 	<vo:RemoveDiscountActivity sap:VirtualizedContainerService.HintSize="200,22.4" OrderGroupArgument="[OrderGroupArgument]" ResultArgument="[ResultArgument]"/>
 	<vo:CalculateTotalsActivity sap:VirtualizedContainerService.HintSize="200,22.4" OrderGroupArgument="[OrderGroupArgument]" ResultArgument="[ResultArgument]"/>
-	<vo:CalculateDiscountsActivity sap:VirtualizedContainerService.HintSize="200,22.4" OrderGroupArgument="[OrderGroupArgument]" ResultArgument="[ResultArgument]"/>
     <vo:ShipmentSplitActivity sap:VirtualizedContainerService.HintSize="200,22.4" OrderGroupArgument="[OrderGroupArgument]" ResultArgument="[ResultArgument]"/>
     <vo:ProcessShipmentActivity sap:VirtualizedContainerService.HintSize="200,22.4" OrderGroupArgument="[OrderGroupArgument]" ResultArgument="[ResultArgument]"/>
+    <vo:CalculateDiscountsActivity sap:VirtualizedContainerService.HintSize="200,22.4" OrderGroupArgument="[OrderGroupArgument]" ResultArgument="[ResultArgument]"/>
     <vo:CalculateTaxActivity sap:VirtualizedContainerService.HintSize="200,22.4" OrderGroupArgument="[OrderGroupArgument]" ResultArgument="[ResultArgument]"/>
     <vo:CalculateTotalsActivity sap:VirtualizedContainerService.HintSize="200,22.4" OrderGroupArgument="[OrderGroupArgument]" ResultArgument="[ResultArgument]"/>
   </Sequence>

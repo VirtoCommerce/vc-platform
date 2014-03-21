@@ -48,7 +48,7 @@ namespace VirtoCommerce.Web.Controllers.Api
                 helper.SaveChanges();
 
                 var response = Request.CreateResponse(HttpStatusCode.OK);
-                var bShippingJson = Json.Encode(bestShipping);
+                var bShippingJson = System.Web.Helpers.Json.Encode(bestShipping);
                 response.Content = new StringContent(bShippingJson);
                 return response;
             }

@@ -28,6 +28,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 		public NavigationItem NavigationData { get; protected set; }
 		public DelegateCommand OpenItemCommand { get; protected set; }
+		public DelegateCommand ExportItemCommand { get; protected set; }
 
 		public virtual void Delete(ICatalogRepository repository, InteractionRequest<Confirmation> CommonConfirmRequest, InteractionRequest<Notification> errorNotifyRequest, Action onSuccess)
 		{

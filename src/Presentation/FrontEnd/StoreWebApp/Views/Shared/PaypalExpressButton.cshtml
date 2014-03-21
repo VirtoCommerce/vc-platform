@@ -1,0 +1,37 @@
+﻿
+@functions
+{
+    string GetLocalizedImage()
+    {
+        const string pathFormat = @"https://www.paypal.com/{0}/i/btn/btn_xpressCheckout.gif";
+        var culture = System.Threading.Thread.CurrentThread.CurrentUICulture.Name.Replace("-", "_");
+        try
+        {
+            var imagePath = string.Format(pathFormat, culture);
+            var request = (HttpWebRequest)WebRequest.Create(imagePath);
+            using (var response = (HttpWebResponse)request.GetResponse())
+            {
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    return imagePath;
+                }
+            }
+        }
+        catch
+        {
+        }
+        return string.Format(pathFormat, "en_US");
+    }
+
+    bool IsPaypalAvailable()
+    {
+        return StoreHelper.StoreClient.GetCurrentStore().PaymentGateways.Any(x => x.PaymentGateway.Equals("Paypal", StringComparison.OrdinalIgnoreCase));
+    }
+}    
+
+@if (IsPaypalAvailable())
+{
+    <a href="@Url.Action("PaypalExpress", "Checkout")">
+        <img src="@GetLocalizedImage()" align="left" style="margin-right: 7px;">
+    </a>
+}

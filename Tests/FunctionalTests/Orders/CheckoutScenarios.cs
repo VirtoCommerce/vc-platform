@@ -472,8 +472,8 @@ namespace FunctionalTests.Orders
 			// now check totals            
 
 			// Order totals
-			Assert.Equal(order.TaxTotal, 660.244M);
-			Assert.Equal(order.OrderForms[0].Shipments[0].ItemTaxTotal, 609.844M);
+			Assert.Equal(order.TaxTotal, 660.24M);
+			Assert.Equal(order.OrderForms[0].Shipments[0].ItemTaxTotal, 609.84M);
 			Assert.Equal(order.OrderForms[0].Shipments[0].ShippingTaxTotal, 12.6M);
 		}
 
@@ -573,7 +573,7 @@ namespace FunctionalTests.Orders
                 UsageStatus = testStatus
             };
 
-		    InvokeActivity(activity, orderGroup);
+			InvokeActivity(activity, orderGroup);
 
 		    var addedUsage = repository.Object.PromotionUsages.First(x => x.PromotionId == promotionId);
 

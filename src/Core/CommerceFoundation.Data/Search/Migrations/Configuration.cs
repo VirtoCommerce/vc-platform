@@ -1,17 +1,14 @@
+using System.Data.Entity.Migrations;
+
 namespace VirtoCommerce.Foundation.Data.Search.Migrations
 {
-    using System;
-    using System.Data.Entity;
-    using System.Data.Entity.Migrations;
-    using System.Linq;
-
     public sealed class Configuration : DbMigrationsConfiguration<VirtoCommerce.Foundation.Data.Search.EFSearchRepository>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
             MigrationsDirectory = @"Search\Migrations";
-            //ContextKey = "VCF.Search";
+            ContextKey = "VCF.Search";
         }
 
         protected override void Seed(VirtoCommerce.Foundation.Data.Search.EFSearchRepository context)

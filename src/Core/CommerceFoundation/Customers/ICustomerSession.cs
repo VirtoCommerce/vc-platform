@@ -146,6 +146,14 @@ namespace VirtoCommerce.Foundation.Customers
         /// <value>
         /// <c>true</c> if this instance is first time buyer; otherwise, <c>false</c>.
         /// </value>
-        bool IsFirstTimeBuyer { get; set; }	
+        bool IsFirstTimeBuyer { get; set; }
+
+        /// <summary>
+        /// Gets or sets the last order identifier.
+        /// </summary>
+        /// <value>
+        /// The last order identifier.
+        /// </value>
+        string LastOrderId { get; set; }	
     }
 }

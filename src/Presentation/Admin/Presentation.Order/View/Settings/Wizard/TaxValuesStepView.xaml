@@ -12,72 +12,76 @@
 			 mc:Ignorable="d" VerticalAlignment="Top" HorizontalAlignment="Left"
 			  xmlns:Presentation_Order_Infrastructure_Converters="clr-namespace:VirtoCommerce.ManagementClient.Order.Infrastructure.Converters"
 			 xmlns:implementations="clr-namespace:VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Taxes.Implementations"
-			 Height="400" Width="800">
-	<FrameworkElement.Resources>
-		<ResourceDictionary>
-			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/WizardViewTheme/VirtoCommerceWizardTheme.xaml"/>
-			</ResourceDictionary.MergedDictionaries>
-		</ResourceDictionary>
-	</FrameworkElement.Resources>
+             Height="400" Width="800">
+    <FrameworkElement.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/WizardViewTheme/VirtoCommerceWizardTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </FrameworkElement.Resources>
 
-	<i:Interaction.Triggers>
-		<prism:InteractionRequestTrigger SourceObject="{Binding DisableableConfirmRequest, Mode=OneWay}">
-			<interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:DisableableLocalModalInteractionDialog}"/>
-		</prism:InteractionRequestTrigger>
-		<prism:InteractionRequestTrigger SourceObject="{Binding CommonConfirmRequest, Mode=OneWay}">
-			<interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:ConfirmationLocalModalInteractionDialog}"/>
-		</prism:InteractionRequestTrigger>
-	</i:Interaction.Triggers>
+    <i:Interaction.Triggers>
+        <prism:InteractionRequestTrigger SourceObject="{Binding DisableableConfirmRequest, Mode=OneWay}">
+            <interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:DisableableLocalModalInteractionDialog}"/>
+        </prism:InteractionRequestTrigger>
+        <prism:InteractionRequestTrigger SourceObject="{Binding CommonConfirmRequest, Mode=OneWay}">
+            <interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:ConfirmationLocalModalInteractionDialog}"/>
+        </prism:InteractionRequestTrigger>
+    </i:Interaction.Triggers>
 
-	<Grid Margin="0,0,10,0" d:DataContext="{d:DesignInstance implementations:TaxViewModel}">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto"/>
-			<RowDefinition/>
-		</Grid.RowDefinitions>
-		<Grid.Resources>
-			<Presentation_Order_Infrastructure_Converters:DateToTextConverter x:Key="dateToTextConverter"/>
-			<Presentation_Order_Infrastructure_Converters:TaxCategoryToNameConverter x:Key="taxCategoryNameConverter"/>
-		</Grid.Resources>
-		<ItemsControl Style="{StaticResource Virto_ToolbarItemsControl_Style}">
-			<core_controls:MetroButton Command="{Binding ValueAddCommand}" Header="ADD" ToolTip="Add Tax Value">
-				<Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/add.png" Width="14"/>
-			</core_controls:MetroButton>
-			<core_controls:MetroButton Command="{Binding ValueEditCommand}" CommandParameter="{Binding SelectedItem, ElementName=items}" Header="EDIT" ToolTip="Edit Tax Value">
-				<Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/check.png" Width="14"/>
-			</core_controls:MetroButton>
-			<core_controls:MetroButton Command="{Binding ValueRemoveCommand}" CommandParameter="{Binding SelectedItem, ElementName=items}" Header="REMOVE" ToolTip="Remove Tax Value">
-				<Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/cancel.png" Width="14"/>
-			</core_controls:MetroButton>
-		</ItemsControl>
+    <Grid Margin="0,0,10,0" d:DataContext="{d:DesignInstance implementations:TaxViewModel}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
 
-		<DataGrid Grid.Row="1" ItemsSource="{Binding InnerItem.TaxValues, UpdateSourceTrigger=PropertyChanged}" x:Name="items" Margin="0,4,0,0" >
-			<DataGrid.Columns>
-				<DataGridTextColumn Header="Effective Date" Binding="{Binding AffectiveDate, Converter={StaticResource dateToTextConverter}}" Width="150"/>
-				<DataGridTextColumn Header="Jurisdiction Group" Binding="{Binding JurisdictionGroup.DisplayName}" Width="*"/>
-				<DataGridTextColumn Header="Tax Category">
-					<DataGridTextColumn.Binding>
-						<MultiBinding Converter="{StaticResource taxCategoryNameConverter}">
-							<Binding Path="TaxCategory"/>
-							<Binding Path="DataContext.TaxCategories" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=UserControl}"/>
-						</MultiBinding>
-					</DataGridTextColumn.Binding>
-				</DataGridTextColumn>
-			</DataGrid.Columns>
+        <ItemsControl Style="{StaticResource Virto_ToolbarItemsControl_Style}">
+            <core_controls:MetroButton Command="{Binding ValueAddCommand}" Header="ADD" ToolTip="Add Tax Value">
+                <Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/add.png" Width="14"/>
+            </core_controls:MetroButton>
+            <core_controls:MetroButton Command="{Binding ValueEditCommand}" CommandParameter="{Binding SelectedItem, ElementName=items}" Header="EDIT" ToolTip="Edit Tax Value">
+                <Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/check.png" Width="14"/>
+            </core_controls:MetroButton>
+            <core_controls:MetroButton Command="{Binding ValueRemoveCommand}" CommandParameter="{Binding SelectedItem, ElementName=items}" Header="REMOVE" ToolTip="Remove Tax Value">
+                <Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/cancel.png" Width="14"/>
+            </core_controls:MetroButton>
+        </ItemsControl>
 
-			<DataGrid.RowStyle>
-				<Style TargetType="DataGridRow"  BasedOn="{StaticResource {x:Type DataGridRow}}">
-					<Setter Property="inf_behavior:MouseDoubleClickBehavior.DoubleClickCommand" Value="{Binding DataContext.ValueEditCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}" />
-					<Setter Property="inf_behavior:MouseDoubleClickBehavior.CommandArgument" Value="{Binding }" />
-				</Style>
-			</DataGrid.RowStyle>
+        <DataGrid Grid.Row="1" ItemsSource="{Binding InnerItem.TaxValues, UpdateSourceTrigger=PropertyChanged}" x:Name="items" Margin="0,4,0,0" >
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Effective Date" Binding="{Binding AffectiveDate, Converter={x:Static Presentation_Order_Infrastructure_Converters:DateToTextConverter.Current}}" Width="150"/>
+                <DataGridTextColumn Header="Jurisdiction Group" Width="*">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{x:Static Presentation_Order_Infrastructure_Converters:TaxValueToJurisdictionGroupNameConverter.Current}">
+                            <Binding />
+                            <Binding Path="JurisdictionGroupId" />
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+                <DataGridTextColumn Header="Tax Category">
+                    <DataGridTextColumn.Binding>
+                        <MultiBinding Converter="{x:Static Presentation_Order_Infrastructure_Converters:TaxCategoryToNameConverter.Current}">
+                            <Binding Path="TaxCategory"/>
+                            <Binding Path="DataContext.TaxCategories" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=UserControl}"/>
+                        </MultiBinding>
+                    </DataGridTextColumn.Binding>
+                </DataGridTextColumn>
+            </DataGrid.Columns>
 
-			<i:Interaction.Triggers>
-				<i:EventTrigger EventName="SelectionChanged">
-					<ei:CallMethodAction TargetObject="{Binding ValueEditCommand}" MethodName="RaiseCanExecuteChanged"/>
-					<ei:CallMethodAction TargetObject="{Binding ValueRemoveCommand}" MethodName="RaiseCanExecuteChanged"/>
-				</i:EventTrigger>
-			</i:Interaction.Triggers>
-		</DataGrid>
-	</Grid>
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow"  BasedOn="{StaticResource {x:Type DataGridRow}}">
+                    <Setter Property="inf_behavior:MouseDoubleClickBehavior.DoubleClickCommand" Value="{Binding DataContext.ValueEditCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}" />
+                    <Setter Property="inf_behavior:MouseDoubleClickBehavior.CommandArgument" Value="{Binding }" />
+                </Style>
+            </DataGrid.RowStyle>
+
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <ei:CallMethodAction TargetObject="{Binding ValueEditCommand}" MethodName="RaiseCanExecuteChanged"/>
+                    <ei:CallMethodAction TargetObject="{Binding ValueRemoveCommand}" MethodName="RaiseCanExecuteChanged"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </DataGrid>
+    </Grid>
 </UserControl>

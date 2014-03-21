@@ -27,6 +27,7 @@ namespace VirtoCommerce.Web.Virto.Helpers
 
 			model.SubTotalPriceFormatted = StoreHelper.FormatCurrency(cart.Subtotal, cart.BillingCurrency);
 			model.TotalPriceFormatted = StoreHelper.FormatCurrency(cart.Total, cart.BillingCurrency);
+            model.DiscountTotalPriceFormatted = StoreHelper.FormatCurrency(-cart.DiscountTotal, cart.BillingCurrency);
 			model.ShippingPriceFormatted = StoreHelper.FormatCurrency(cart.ShippingTotal, cart.BillingCurrency);
 			model.TaxTotalPriceFormatted = StoreHelper.FormatCurrency(cart.TaxTotal, cart.BillingCurrency);
 			model.CouponCode = UserHelper.CustomerSession.CouponCode;
@@ -49,7 +50,7 @@ namespace VirtoCommerce.Web.Virto.Helpers
 												   select i).FirstOrDefault()
 									   let parentItem = CartHelper.CatalogClient.GetItem(li.ParentCatalogItemId)
                                        where item != null
-									   select new LineItemModel(li, item, parentItem));
+									   select new LineItemModel(li, item, parentItem, helper.Cart.BillingCurrency));
 				}
 
 				model.LineItems = lineItems.ToArray();
@@ -73,7 +74,7 @@ namespace VirtoCommerce.Web.Virto.Helpers
                 lineItemModels = cartHelper.LineItems.Join(items, li => li.CatalogItemId, i => i.ItemId,
                                                                (li, item) =>
                                                                new LineItemModel(li, item,
-                                                                                 CartHelper.CatalogClient.GetItem(li.ParentCatalogItemId))).ToArray();
+                                                                                 CartHelper.CatalogClient.GetItem(li.ParentCatalogItemId), cartHelper.Cart.BillingCurrency)).ToArray();
             }
 
             return new CompareListModel(lineItemModels);

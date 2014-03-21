@@ -139,6 +139,7 @@ namespace VirtoCommerce.Web.Client.Extensions
             return LabelHelper(html, ModelMetadata.FromLambdaExpression(expression, html.ViewData), ExpressionHelper.GetExpressionText(expression), labelText, new RouteValueDictionary(htmlAttributes));
         }
 
+        private static MvcHtmlString _version;
 		/// <summary>
 		/// Versions the specified HTML.
 		/// </summary>
@@ -146,8 +147,13 @@ namespace VirtoCommerce.Web.Client.Extensions
 		/// <returns>MvcHtmlString.</returns>
 		public static MvcHtmlString Version(this HtmlHelper html)
 		{
-			var assembly = Assembly.GetExecutingAssembly();
-			return new MvcHtmlString(String.Format("{0} (Build {1})", assembly.GetInformationalVersion(), assembly.GetFileVersion()));
+		    if (_version == null)
+		    {
+		        var assembly = Assembly.GetExecutingAssembly();
+		        _version = new MvcHtmlString(String.Format("{0} (Build {1})", assembly.GetInformationalVersion(), assembly.GetFileVersion()));
+		    }
+
+		    return _version;
 		}
 
         #region PageData

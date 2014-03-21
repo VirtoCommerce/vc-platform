@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Web;
 using Microsoft.AspNet.SignalR;
-using Microsoft.AspNet.SignalR.Hubs;
 using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Search;
 using VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet;

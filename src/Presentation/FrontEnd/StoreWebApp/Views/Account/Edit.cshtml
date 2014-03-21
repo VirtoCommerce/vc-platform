@@ -4,9 +4,9 @@
     ViewBag.Title = Html.Title(ViewBag.PageTitle as string);
 }
 <script type="text/javascript">
-    function setPasswordForm(obj, arg)
+    function setPasswordForm(checkbox)
     {
-        if (arg)
+        if ($(checkbox).is(":checked"))
         {
             VirtoCommerce.enableAll($(".change-pass"));
             $('fieldset.change-pass').show();
@@ -23,6 +23,11 @@
             $('#confirmation').removeClass('required-entry');
         }
     }
+
+    $(function () {
+        var checkbox = $('#ChangePassword');
+        setPasswordForm(checkbox);
+    });
 </script>
 
 @using (Html.BeginForm())
@@ -44,7 +49,8 @@
                     <div class="control-group">
                         <div class="control">
                             <label for="ChangePassword">
-                                <input type="checkbox" title="@("Change Password".Localize())" onclick="setPasswordForm(this, this.checked)" value="1" id="ChangePassword" name="ChangePassword" />
+                                @Html.CheckBoxFor(m=>m.ChangePassword, new {title="Change Password".Localize(), onclick="setPasswordForm(this);" })
+@*                                <input type="checkbox" title="@("Change Password".Localize())" onclick="setPasswordForm(this, this.checked)" value="1" id="ChangePassword" name="ChangePassword" />*@
                                 <span>@("Change Password".Localize())</span>
                             </label>
                         </div>

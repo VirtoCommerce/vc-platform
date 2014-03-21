@@ -112,9 +112,14 @@ namespace VirtoCommerce.Web
 			_traceSource.Info("SchedulerHost constructor finished");
         }
 
-		public static void CreateScheduler(IUnityContainer container)
+		public static void CreateScheduler(IUnityContainer container = null)
 		{
-			var schedulerHostStartUpOptionText = ConfigurationManager.AppSettings["SchedulerHost"];
+		    if (container == null)
+		    {
+		        container = Bootstrapper.Initialize();
+		    }
+
+		    var schedulerHostStartUpOptionText = ConfigurationManager.AppSettings["SchedulerHost"];
 			if (string.IsNullOrEmpty(schedulerHostStartUpOptionText))
 			{
 				Trace.TraceError("SchedulerHost parameter not found in Web.Config. Scheduler not started");

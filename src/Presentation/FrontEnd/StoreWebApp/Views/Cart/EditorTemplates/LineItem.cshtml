@@ -51,7 +51,25 @@
         <span class="mobile-view">@("Quantity".Localize())</span>
         @if (!Model.IsPromotion)
         {
-            @Html.TextBoxFor(x => x.Quantity, new { @class = "input-text qty", maxlength = "12", size = "4" })
+            var min = (int)Math.Min(Model.LineItem.MinQuantity, Model.LineItem.MaxQuantity);
+            var max = (int)Math.Max(Model.LineItem.MinQuantity, Model.LineItem.MaxQuantity);
+            min = min > 0 ? min : 1;
+            max = max > 0 ? max : 1;
+            @Html.TextBoxFor(x => x.Quantity, new
+            {
+               @class = "input-text qty",
+               maxlength = "12",
+               size = "4",
+               data_val_required = "The quantity field is required.".Localize(),
+               data_val_range_min = min,
+               data_val_range_max = max,
+               data_val_range = "Select quantity in range".Localize() + string.Format("{0:#} - {1:#}", min, max),
+               data_val_regex_pattern = string.Format(@"^\d{{{0},{1}}}$", Math.Floor(Math.Log10(min) + 1), Math.Floor(Math.Log10(max) + 1)),
+               data_val_regex = "Quantity must be a positive integer".Localize(),
+               data_val = "true"
+            })
+
+            @Html.ValidationMessageFor(x => x.Quantity)
         }
         else
         {

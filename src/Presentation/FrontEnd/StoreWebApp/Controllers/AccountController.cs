@@ -21,6 +21,7 @@ using VirtoCommerce.Web.Client.Services.Emails;
 using VirtoCommerce.Web.Client.Services.Security;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Virto.Helpers;
+using WebGrease.Css.Extensions;
 
 
 namespace VirtoCommerce.Web.Controllers
@@ -347,19 +348,7 @@ namespace VirtoCommerce.Web.Controllers
 
                     if (exisintgAddress != null)
                     {
-                        exisintgAddress.City = model.Address.City;
-                        exisintgAddress.CountryCode = model.Address.CountryCode;
-                        exisintgAddress.DaytimePhoneNumber = model.Address.DaytimePhoneNumber;
-                        exisintgAddress.Email = model.Address.Email;
-                        exisintgAddress.FaxNumber = model.Address.FaxNumber;
-                        exisintgAddress.FirstName = model.Address.FirstName;
-                        exisintgAddress.LastName = model.Address.LastName;
-                        exisintgAddress.Line1 = model.Address.Line1;
-                        exisintgAddress.Line2 = model.Address.Line2;
-                        exisintgAddress.RegionName = model.Address.RegionName;
-                        exisintgAddress.Name = model.Address.Name;
-                        exisintgAddress.PostalCode = model.Address.PostalCode;
-                        exisintgAddress.StateProvince = model.Address.StateProvince;
+                        exisintgAddress.InjectFrom(model.Address);
                     }
                     else
                     {
@@ -376,7 +365,7 @@ namespace VirtoCommerce.Web.Controllers
                         parent.Addresses.Add(newAddress);
                     }
 
-                    _userClient.SaveCustomerChanges();
+                    _userClient.SaveCustomerChanges(u.MemberId);
                 }
 
                 return RedirectToAction(String.IsNullOrEmpty(model.OrganizationId) ? "AddressBook" : "CompanyAddressBook");
@@ -405,7 +394,7 @@ namespace VirtoCommerce.Web.Controllers
                 if (addr != null)
                 {
                     parent.Addresses.Remove(addr);
-                    _userClient.SaveCustomerChanges();
+                    _userClient.SaveCustomerChanges(u.MemberId);
                 }
             }
 
@@ -428,7 +417,7 @@ namespace VirtoCommerce.Web.Controllers
         /// <returns>ActionResult.</returns>
         [HttpGet]
         [Authorize]
-        public ActionResult Edit()
+        public ActionResult Edit(bool changePassword = false)
         {
             var contact = _userClient.GetCurrentCustomer();
             var model = UserHelper.GetCustomerModel(contact);
@@ -436,6 +425,7 @@ namespace VirtoCommerce.Web.Controllers
             chModel.InjectFrom(model);
 
             chModel.FullName = chModel.FullName ?? UserHelper.CustomerSession.CustomerName;
+            chModel.ChangePassword = changePassword;
 
             return View(chModel);
         }
@@ -488,7 +478,7 @@ namespace VirtoCommerce.Web.Controllers
                     u.Emails.Add(newEmail);
                 }
 
-                _userClient.SaveCustomerChanges();
+                _userClient.SaveCustomerChanges(u.MemberId);
 
                 if (needToChangePassword)
                 {
@@ -497,7 +487,7 @@ namespace VirtoCommerce.Web.Controllers
                         TempData[GetMessageTempKey(MessageType.Success)] = new[] { "Password was succesfully changed!".Localize() };
                         return RedirectToAction("Index");
                     }
-                    ModelState.AddModelError("", "The current password is incorrect or the new password is invalid.");
+                    ModelState.AddModelError("", @"The current password is incorrect or the new password is invalid.");
                 }
                 else
                 {
@@ -606,8 +596,16 @@ namespace VirtoCommerce.Web.Controllers
                 throw new UnauthorizedAccessException();
             }
 
+            //Convert order forms to shopping cart
+            order.OrderForms.ForEach(f=>f.Name = CartHelper.CartName);
+
             var ch = new CartHelper(CartHelper.CartName);
             ch.Add(order);
+
+            if (String.IsNullOrEmpty(ch.Cart.BillingCurrency))
+            {
+                ch.Cart.BillingCurrency = UserHelper.CustomerSession.Currency;
+            }
 
             // run workflows
             ch.RunWorkflow("ShoppingCartPrepareWorkflow");
@@ -701,7 +699,7 @@ namespace VirtoCommerce.Web.Controllers
             //No items to return
             if (selectedReturnItems.Count == 0)
             {
-                ModelState.AddModelError("", "Select at least one item to return");
+                ModelState.AddModelError("", @"Select at least one item to return");
             }
 
             //If Validation passed create RmaReturns
@@ -769,7 +767,7 @@ namespace VirtoCommerce.Web.Controllers
                                     let item = _catalogClient.GetItem(li.CatalogItemId)
                                     let parentItem = _catalogClient.GetItem(li.ParentCatalogItemId)
                                     where item != null && rmaLis.All(r => r.LineItemId != li.LineItemId)
-                                    select new OrderReturnItem(new LineItemModel(li, item, parentItem)))
+                                    select new OrderReturnItem(new LineItemModel(li, item, parentItem, order.BillingCurrency)))
                 {
                     model.OrderReturnItems.Add(ori);
                 }
@@ -790,7 +788,7 @@ namespace VirtoCommerce.Web.Controllers
 
                     var item = _catalogClient.GetItem(li.CatalogItemId);
                     var parentItem = _catalogClient.GetItem(li.ParentCatalogItemId);
-                    returnItem.LineItemModel = new LineItemModel(li, item, parentItem);
+                    returnItem.LineItemModel = new LineItemModel(li, item, parentItem, order.BillingCurrency);
                 }
             }
 

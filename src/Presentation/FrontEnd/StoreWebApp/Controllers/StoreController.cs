@@ -1,18 +1,15 @@
-﻿#region
-
-using System;
+﻿using System;
 using System.Linq;
 using System.Web.Mvc;
 using VirtoCommerce.Client;
 using VirtoCommerce.Client.Extensions;
 using VirtoCommerce.Foundation.Stores.Model;
+using VirtoCommerce.Web.Client.Caching;
 using VirtoCommerce.Web.Client.Extensions;
-using VirtoCommerce.Web.Client.Extensions.Filters;
+using VirtoCommerce.Web.Client.Extensions.Routing;
 using VirtoCommerce.Web.Client.Helpers;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Virto.Helpers;
-
-#endregion
 
 namespace VirtoCommerce.Web.Controllers
 {
@@ -39,6 +36,7 @@ namespace VirtoCommerce.Web.Controllers
         /// Show available currencies
         /// </summary>
         /// <returns>ActionResult.</returns>
+        [ChildActionOnly, DonutOutputCache(CacheProfile = "StoreCache", VaryByParam = Constants.Language, VaryByCustom = "currency")]
         public ActionResult Currencies()
         {
             var store = _storeClient.GetCurrentStore();
@@ -54,6 +52,7 @@ namespace VirtoCommerce.Web.Controllers
         /// Shows the available store picker
         /// </summary>
         /// <returns>ActionResult.</returns>
+        [ChildActionOnly, DonutOutputCache(CacheProfile = "StoreCache", VaryByParam = Constants.Language, AnonymousOnly = true)]
         public ActionResult StorePicker()
         {
             var stores = _storeClient.GetStores();
@@ -82,26 +81,10 @@ namespace VirtoCommerce.Web.Controllers
         }
 
         /// <summary>
-        /// Determines whether [is store visible] [the specified store].
-        /// </summary>
-        /// <param name="store">The store.</param>
-        /// <returns><c>true</c> if [is store visible] [the specified store]; otherwise, <c>false</c>.</returns>
-        private bool IsStoreVisible(Store store)
-        {
-            if (UserHelper.CustomerSession.IsRegistered)
-            {
-                string errorMessage;
-                return StoreHelper.IsUserAuthorized(UserHelper.CustomerSession.Username, store.StoreId, out errorMessage);
-            }
-
-            return store.StoreState == StoreState.Open.GetHashCode() ||
-                   store.StoreState == StoreState.RestrictedAccess.GetHashCode();
-        }
-
-        /// <summary>
         /// Quicks the access.
         /// </summary>
         /// <returns>ActionResult.</returns>
+        //[DonutOutputCache(CacheProfile = "StoreCache", Duration = 0)]
         public ActionResult QuickAccess()
         {
             var wishListHelper = new CartHelper(CartHelper.WishListName);
@@ -119,6 +102,7 @@ namespace VirtoCommerce.Web.Controllers
         /// Quicks the access.
         /// </summary>
         /// <returns>ActionResult.</returns>
+        //[ChildActionOnly, DonutOutputCache(CacheProfile = "StoreCache", Duration = 0)]
         public ActionResult CartOptions()
         {
             var compareListHelper = new CartHelper(CartHelper.CompareListName);
@@ -130,5 +114,40 @@ namespace VirtoCommerce.Web.Controllers
                                    CompareList = compareListHelper.CreateCompareModel()
                                }).ToExpando());
         }
+
+
+        [ChildActionOnly, DonutOutputCache(CacheProfile = "LayoutStatic")]
+        public ActionResult Footer()
+        {
+            return PartialView("_Footer");
+        }
+
+        [ChildActionOnly, DonutOutputCache(CacheProfile = "LayoutStatic", VaryByParam = Constants.Store + ";" + Constants.Language)]
+        public ActionResult Menu()
+        {
+            return PartialView("_Menu");
+        }
+
+        #region Private Helpers
+
+        /// <summary>
+        /// Determines whether [is store visible] [the specified store].
+        /// </summary>
+        /// <param name="store">The store.</param>
+        /// <returns><c>true</c> if [is store visible] [the specified store]; otherwise, <c>false</c>.</returns>
+        private bool IsStoreVisible(Store store)
+        {
+            if (UserHelper.CustomerSession.IsRegistered)
+            {
+                string errorMessage;
+                return StoreHelper.IsUserAuthorized(UserHelper.CustomerSession.Username, store.StoreId, out errorMessage);
+            }
+
+            return store.StoreState == StoreState.Open.GetHashCode() ||
+                   store.StoreState == StoreState.RestrictedAccess.GetHashCode();
+        }
+
+        #endregion
+
     }
 }

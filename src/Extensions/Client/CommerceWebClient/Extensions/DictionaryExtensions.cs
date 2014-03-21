@@ -2,10 +2,7 @@
 using System.Collections.Specialized;
 
 namespace VirtoCommerce.Web.Client.Extensions
-{
-    /// <summary>
-    /// Obsolate, move to :Kooboo.Collections.DictionaryExtensions
-    /// </summary>    
+{   
     public static class DictionaryExtensions
     {
         /// <summary>

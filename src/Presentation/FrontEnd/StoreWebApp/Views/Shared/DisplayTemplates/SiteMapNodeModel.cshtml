@@ -1,7 +1,4 @@
-﻿@model MvcSiteMapProvider.Web.Html.Models.SiteMapNodeModel
-@using System.Web.Mvc.Html
-@using MvcSiteMapProvider.Web.Html.Models
-
+﻿@model SiteMapNodeModel
 
 @if (Model.IsCurrentNode && Model.SourceMetadata["HtmlHelper"].ToString() != "MvcSiteMapProvider.Web.Html.MenuHelper")  { 
     <span>@Model.Title.Localize()</span>

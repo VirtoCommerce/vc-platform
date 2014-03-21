@@ -1,6 +1,10 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Migrations;
+using System.Data.SqlClient;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 
 namespace VirtoCommerce.PowerShell.DatabaseSetup
@@ -59,7 +63,6 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup
             }
 
             var seed = !context.Database.Exists();
-
 			var migrator = new DbMigrator(_config);
             if (!seed)
             {
@@ -72,12 +75,11 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup
             }
 
             migrator.Update();
-
             InitializeDbSettings(context);
 
             if (seed)
             {
-                Seed(context);
+                 Seed(context);
             }
         }
 
@@ -85,19 +87,21 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup
         {
             // update general database settings here, for azure we need to connect to master db
             var originalDbName = context.Database.Connection.Database;
-            var originalConnectionString = context.Database.Connection.ConnectionString;
-
-            if (!originalConnectionString.ToLowerInvariant().Contains("(LocalDb)".ToLowerInvariant())) // do not modify connection string for localdb
+            var connectionString = context.Database.Connection.ConnectionString;
+            SqlConnectionStringBuilder sb = new SqlConnectionStringBuilder(connectionString);
+            if (!connectionString.ToLowerInvariant().Contains("(LocalDb)".ToLowerInvariant()))
+                // do not modify connection string for localdb
             {
-                context.Database.Connection.ConnectionString =
-                    context.Database.Connection.ConnectionString.Replace(originalDbName, "master");
+                connectionString = connectionString.Replace(originalDbName, "master");
             }
 
-            context.Database.Connection.Open();
-            context.Database.ExecuteSqlCommand(
-                string.Format(@"ALTER DATABASE [{0}] SET RECURSIVE_TRIGGERS ON;", originalDbName));
-            context.Database.Connection.ConnectionString = originalConnectionString;
-            context.Database.Connection.Close();
+            using (SqlConnection dbConnection = new SqlConnection(connectionString))
+            {
+                dbConnection.Open();
+                var cmd = dbConnection.CreateCommand();
+                cmd.CommandText = string.Format(@"ALTER DATABASE [{0}] SET RECURSIVE_TRIGGERS ON;", originalDbName);
+                cmd.ExecuteNonQuery();
+            }
         }
 
         /// <summary>

@@ -454,7 +454,6 @@
     </Style>
 
     <!-- Windows 8 password box -->
-
     <Style x:Key="RevealButtonStyle" TargetType="{x:Type Button}">
         <Setter Property="Template">
             <Setter.Value>
@@ -570,6 +569,13 @@
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="VerticalAlignment" Value="Center"/>
         <Setter Property="Padding" Value="0"/>
+        <Setter Property="ContextMenu">
+            <Setter.Value>
+                <ContextMenu>
+                    <MenuItem Header="Copy" Command="ApplicationCommands.Copy" FontWeight="DemiBold" />
+                </ContextMenu>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <!--********* ProgressBar-->
@@ -2325,8 +2331,8 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ContextMenu">
-                    <Border Background="{DynamicResource Virto_ContextMenu_Background_Brush}" BorderThickness="1" 
-                            BorderBrush="{DynamicResource Virto_ContextMenu_Border_Background_Brush}" >
+                    <Border Background="{DynamicResource Virto_ContextMenu_Background_Brush}" BorderThickness="1"
+                            BorderBrush="{DynamicResource Virto_ContextMenu_Border_Background_Brush}">
                         <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle"/>
                     </Border>
                 </ControlTemplate>
@@ -2518,7 +2524,7 @@
             <Trigger Property="IsHighlighted" Value="true">
             </Trigger>
             <Trigger Property="IsEnabled" Value="false">
-                <Setter Property="Foreground" Value="{DynamicResource Virto_ContextMenu_Disabled_Foreground_Brush}"/>
+                <Setter Property="Foreground" Value="{StaticResource Virto_ContextMenu_Disabled_Foreground_Brush}"/>
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
@@ -2536,7 +2542,13 @@
                         <ColumnDefinition Width="17"/>
                     </Grid.ColumnDefinitions>
                     <ContentPresenter x:Name="Icon" Margin="1" VerticalAlignment="Center" ContentSource="Icon" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
-                    <ContentPresenter Grid.Column="2" ContentSource="Header" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                    <ContentPresenter Grid.Column="2" ContentSource="Header" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" TextElement.Foreground="{TemplateBinding Foreground}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+                        <ContentPresenter.Resources>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Foreground" Value="{Binding Foreground, RelativeSource={RelativeSource AncestorType=MenuItem}}" />
+                            </Style>
+                        </ContentPresenter.Resources>
+                    </ContentPresenter>
                     <TextBlock Grid.Column="4" Text="{TemplateBinding InputGestureText}" Margin="{TemplateBinding Padding}"/>
                 </Grid>
             </Border>
@@ -2554,7 +2566,7 @@
             <Trigger Property="IsHighlighted" Value="true">
             </Trigger>
             <Trigger Property="IsEnabled" Value="false">
-                <Setter Property="Foreground" Value="{DynamicResource Virto_ContextMenu_Disabled_Foreground_Brush}"/>
+                <Setter Property="Foreground" Value="{StaticResource Virto_ContextMenu_Disabled_Foreground_Brush}"/>
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
@@ -2574,8 +2586,6 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-
-
     <!--ContexMenu -->
 
 

@@ -236,7 +236,7 @@ namespace VirtoCommerce.Search.Providers.Elastic
 					else
 					{
 						var rangeFilter = filter as PriceRangeFilter;
-						if (rangeFilter != null)
+						if (rangeFilter != null && rangeFilter.Currency.Equals(criteria.Currency, StringComparison.OrdinalIgnoreCase))
 						{
 							var myFilter = rangeFilter;
 							var values = myFilter.Values;

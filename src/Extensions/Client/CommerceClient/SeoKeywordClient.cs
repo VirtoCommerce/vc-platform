@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
+using VirtoCommerce.Foundation;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.AppConfig;
@@ -10,6 +13,7 @@ namespace VirtoCommerce.Client
     public class SeoKeywordClient
     {
         #region Cache Constants
+        public const string AllSeoKeywordCacheKey = "SK:S:ALL";
         public const string SeoKeywordCacheKey = "SK:S:{0}:{1}:{2}:{3}";
         #endregion
 
@@ -32,13 +36,25 @@ namespace VirtoCommerce.Client
             {
                 throw new ArgumentNullException("keyword","Keyword or KeywordValue must be provided");
             }
-            return CacheHelper.Get(string.Format(SeoKeywordCacheKey, type, language ?? "", keyword ?? "", keywordvalue ?? ""),
+
+            var allKeywords = GetAllSeoKeywords();
+
+            return
+                allKeywords.Where(
+                        s =>
+                        (language == null || language.Equals(s.Language, StringComparison.OrdinalIgnoreCase))
+                        && (keyword == null || keyword.Equals(s.Keyword, StringComparison.OrdinalIgnoreCase))
+                        && (keywordvalue == null
+                            || keywordvalue.Equals(s.KeywordValue, StringComparison.OrdinalIgnoreCase))
+                        && (int)type == s.KeywordType && s.IsActive).ToArray();
+        }
+
+        private IEnumerable<SeoUrlKeyword> GetAllSeoKeywords()
+        {
+            return CacheHelper.Get(
+                CacheHelper.CreateCacheKey(Constants.SeoCachePrefix,AllSeoKeywordCacheKey),
                 () => _appConfigRepository.SeoUrlKeywords
-                    .Where(s => (language == null || language.Equals(s.Language, StringComparison.OrdinalIgnoreCase)) && 
-                        (keyword == null || keyword.Equals(s.Keyword, StringComparison.OrdinalIgnoreCase)) &&
-                        (keywordvalue == null || keywordvalue.Equals(s.KeywordValue, StringComparison.OrdinalIgnoreCase)) &&
-                        (int)type == s.KeywordType && 
-                        s.IsActive).ToArray(), AppConfigConfiguration.Instance.Cache.SeoKeywordsTimeout, _isEnabled);
+                    .Where(s => s.IsActive).ToArrayAsync().Result, AppConfigConfiguration.Instance.Cache.SeoKeywordsTimeout, _isEnabled);
         }
 
         CacheHelper _cacheHelper;

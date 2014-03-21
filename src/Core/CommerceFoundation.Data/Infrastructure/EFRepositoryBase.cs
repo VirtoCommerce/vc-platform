@@ -7,7 +7,7 @@ using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Migrations;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Data.Entity.Validation;
-using System.Data.Objects;
+using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Reflection;
 using VirtoCommerce.Foundation.Data.Infrastructure;
@@ -43,6 +43,7 @@ namespace VirtoCommerce.Foundation.Data
 		protected EFRepositoryBase(string nameOrConnectionString, IFactory factory = null, IUnitOfWork unitOfWork = null, IInterceptor[] interceptors = null)
             : base(ConnectionHelper.GetConnectionString(nameOrConnectionString))
 		{
+		    //this.Configuration.UseDatabaseNullSemantics = true;
 			_factory = factory;
 			_unitOfWork = unitOfWork;
 			_interceptors = interceptors;
@@ -324,5 +325,10 @@ namespace VirtoCommerce.Foundation.Data
 			get { return ObjectContext.ObjectStateManager; }
 		}
 		#endregion
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+        }
 	}
 }

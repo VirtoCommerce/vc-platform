@@ -12,88 +12,123 @@
             xmlns:prism="http://www.codeplex.com/prism"
             mc:Ignorable="d" 
             d:DesignHeight="800" Width="600">
-	<UserControl.Resources>
-		<ResourceDictionary>
-			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/WizardViewTheme/VirtoCommerceWizardTheme.xaml"/>
-			</ResourceDictionary.MergedDictionaries>
-			<order_converter:ItemConverter x:Key="ItemConverter"/>
-			<core_converter:CurrencyConverter x:Key="CurrencyConverter"/>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/WizardViewTheme/VirtoCommerceWizardTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <order_converter:ItemConverter x:Key="ItemConverter"/>
+            <core_converter:CurrencyConverter x:Key="CurrencyConverter"/>
 
-		</ResourceDictionary>
-	</UserControl.Resources>
-	<Grid>
-		<Grid.RowDefinitions>
-			<RowDefinition />
-			<RowDefinition Height="auto"/>
-		</Grid.RowDefinitions>
-		<i:Interaction.Triggers>
-			<prism:InteractionRequestTrigger SourceObject="{Binding ReturnItemConfirmRequest, Mode=OneWay}">
-				<interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:ConfirmationLocalModalInteractionDialog}" />
-			</prism:InteractionRequestTrigger>
-		</i:Interaction.Triggers>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <i:Interaction.Triggers>
+            <prism:InteractionRequestTrigger SourceObject="{Binding ReturnItemConfirmRequest, Mode=OneWay}">
+                <interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:ConfirmationLocalModalInteractionDialog}" />
+            </prism:InteractionRequestTrigger>
+        </i:Interaction.Triggers>
 
-		<HeaderedContentControl Grid.Row="0" Header="Select items to return" Style="{DynamicResource Virto_HeaderedContentBlock_Style}" Margin="0,5,0,0">
-			<core_controls:MultiSelectControl TextSearchTextPath="Quantity"
+        <HeaderedContentControl Grid.Row="0" Header="Select items to return" Style="{DynamicResource Virto_HeaderedContentBlock_Style}" Margin="0,5,0,0">
+            <core_controls:MultiSelectControl TextSearchTextPath="Quantity"
                             AvailableTitle="Items in the order"
                             AvailableItems="{Binding AvailableItems}"
                             CurrentTitle="Items to return"
                             CurrentItems="{Binding SelectedItems}"
                             >
-				<core_controls:MultiSelectControl.ObjectsTemplate>
-					<DataTemplate>
-						<StackPanel Orientation="Horizontal">
-							<TextBlock Text="{Binding AvailableQuantity}" Margin="1,1,5,1" Style="{StaticResource {x:Type TextBlock}}" />
-							<TextBlock Text="{Binding LineItem, Converter={StaticResource ItemConverter}}" Style="{StaticResource {x:Type TextBlock}}" Margin="1"/>
-						</StackPanel>
-					</DataTemplate>
-				</core_controls:MultiSelectControl.ObjectsTemplate>
-				<core_controls:MultiSelectControl.ObjectsTemplate2>
-					<DataTemplate>
-						<StackPanel Orientation="Horizontal">
-							<TextBlock Text="{Binding RmaLineItems[0].ReturnQuantity}" Style="{StaticResource {x:Type TextBlock}}" Margin="1,1,5,1" />
-							<TextBlock Text="{Binding Converter={StaticResource ItemConverter}}" Style="{StaticResource {x:Type TextBlock}}" Margin="1,1,5,1" />
-							<TextBlock Text="{Binding ReturnReason}" Style="{StaticResource {x:Type TextBlock}}" Margin="1" />
-						</StackPanel>
-					</DataTemplate>
-				</core_controls:MultiSelectControl.ObjectsTemplate2>
-			</core_controls:MultiSelectControl>
-		</HeaderedContentControl>
+                <core_controls:MultiSelectControl.ObjectsTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding AvailableQuantity}" Margin="1,1,5,1" Style="{StaticResource {x:Type TextBlock}}" />
+                            <TextBlock Text="{Binding LineItem, Converter={StaticResource ItemConverter}}" Style="{StaticResource {x:Type TextBlock}}" Margin="1"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </core_controls:MultiSelectControl.ObjectsTemplate>
+                <core_controls:MultiSelectControl.ObjectsTemplate2>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="{Binding RmaLineItems[0].ReturnQuantity}" Style="{StaticResource {x:Type TextBlock}}" Margin="1,1,5,1" />
+                            <TextBlock Text="{Binding Converter={StaticResource ItemConverter}}" Style="{StaticResource {x:Type TextBlock}}" Margin="1,1,5,1" />
+                            <TextBlock Text="{Binding ReturnReason}" Style="{StaticResource {x:Type TextBlock}}" Margin="1" />
+                        </StackPanel>
+                    </DataTemplate>
+                </core_controls:MultiSelectControl.ObjectsTemplate2>
+            </core_controls:MultiSelectControl>
+        </HeaderedContentControl>
 
-		<HeaderedContentControl Grid.Row="1" Header="Return Summary" Style="{DynamicResource Virto_HeaderedContentBlock_Style}">
-			<DockPanel>
-				<Grid>
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="auto"/>
-						<ColumnDefinition Width="10"/>
-						<ColumnDefinition/>
-					</Grid.ColumnDefinitions>
-					<Grid.RowDefinitions>
-						<RowDefinition Height="Auto"/>
-						<RowDefinition Height="Auto"/>
-						<RowDefinition Height="Auto"/>
-						<RowDefinition Height="Auto"/>
-						<RowDefinition Height="Auto"/>
-						<RowDefinition/>
-					</Grid.RowDefinitions>
+        <HeaderedContentControl Grid.Row="1" Header="Return Summary" Style="{DynamicResource Virto_HeaderedContentBlock_Style}">
+            <DockPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
 
-					<TextBlock Grid.Row="0" Grid.Column="0" x:Name="lblItemSubTotal" Text="Item Sub-Total:"/>
-					<TextBlock Grid.Row="1" Grid.Column="0" x:Name="lblTotalBeforeTax"  Text="Total Before Tax:" />
-					<TextBlock Grid.Row="2" Grid.Column="0" x:Name="lblItemTaxes" Text="Item Taxes:"/>
-					<TextBlock Grid.Row="3" Grid.Column="0" x:Name="lbllessReStockingFree" Text="Less Re-Stocking Fee:"/>
-					<TextBlock Grid.Row="4" Grid.Column="0" x:Name="lblTotalReturnAmount" Text="Total Return Amount:"/>
+                    <TextBlock Grid.Row="0" Grid.Column="0" x:Name="lblItemSubTotal" Text="Item Sub-Total:"/>
+                    <TextBlock Grid.Row="1" Grid.Column="0" x:Name="lblTotalBeforeTax"  Text="Total Before Tax:" />
+                    <TextBlock Grid.Row="2" Grid.Column="0" x:Name="lblItemTaxes" Text="Item Taxes:"/>
+                    <TextBlock Grid.Row="3" Grid.Column="0" x:Name="lbllessReStockingFree" Text="Less Re-Stocking Fee:"/>
+                    <TextBlock Grid.Row="4" Grid.Column="0" x:Name="lblTotalReturnAmount" Text="Total Return Amount:"/>
 
-					<TextBlock Grid.Row="0" Grid.Column="2" x:Name="lblItemSubTotalValue" Text="{Binding ReturnBuilder.RmaRequest.ItemSubtotal, Converter={StaticResource CurrencyConverter}}"/>
-					<TextBlock Grid.Row="1" Grid.Column="2" x:Name="lblTotalBeforeTaxValue"   Text="{Binding ReturnBuilder.RmaRequest.TotalBeforeTax, Converter={StaticResource CurrencyConverter}}" />
-					<TextBlock Grid.Row="2" Grid.Column="2" x:Name="lblItemTaxesValue"  Text="{Binding ReturnBuilder.RmaRequest.ItemTax, Converter={StaticResource CurrencyConverter}}"/>
-					<TextBlock Grid.Row="3" Grid.Column="2" x:Name="lbllessReStockingFeeValue"  Text="{Binding ReturnBuilder.RmaRequest.LessReStockingFee, Converter={StaticResource CurrencyConverter}}"/>
-					<TextBlock Grid.Row="4" Grid.Column="2" x:Name="lblTotalReturnAmountValue"  Text="{Binding ReturnBuilder.RmaRequest.ReturnTotal, Converter={StaticResource CurrencyConverter}}"/>
-				</Grid>
-				<StackPanel Margin="20,0,0,0" VerticalAlignment="Top">
-					<TextBlock Text="Customer comment:" />
-					<core_controls:WatermarkedTextBox Text="{Binding ReturnBuilder.RmaRequest.Comment, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource Virto_Multiline_WatermarkedTextBox_Style}" Height="150" WatermarkText="" />
-				</StackPanel>
-			</DockPanel>
-		</HeaderedContentControl>
-	</Grid>
+                    <TextBlock Grid.Row="0" Grid.Column="2" x:Name="lblItemSubTotalValue">
+                        <TextBlock.Text>
+                            <MultiBinding Converter="{StaticResource CurrencyConverter}">
+                                <Binding Path="ReturnBuilder.RmaRequest.ItemSubtotal" />
+                                <Binding Path="ReturnBuilder.CurrentOrder.InnerItem.BillingCurrency" />
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                    <TextBlock Grid.Row="1" Grid.Column="2" x:Name="lblTotalBeforeTaxValue">
+                        <TextBlock.Text>
+                            <MultiBinding Converter="{StaticResource CurrencyConverter}">
+                                <Binding Path="ReturnBuilder.RmaRequest.TotalBeforeTax" />
+                                <Binding Path="ReturnBuilder.CurrentOrder.InnerItem.BillingCurrency" />
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                    <TextBlock Grid.Row="2" Grid.Column="2" x:Name="lblItemTaxesValue">
+                        <TextBlock.Text>
+                            <MultiBinding Converter="{StaticResource CurrencyConverter}">
+                                <Binding Path="ReturnBuilder.RmaRequest.ItemTax" />
+                                <Binding Path="ReturnBuilder.CurrentOrder.InnerItem.BillingCurrency" />
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                    <TextBlock Grid.Row="3" Grid.Column="2" x:Name="lbllessReStockingFeeValue">
+                        <TextBlock.Text>
+                            <MultiBinding Converter="{StaticResource CurrencyConverter}">
+                                <Binding Path="ReturnBuilder.RmaRequest.LessReStockingFee" />
+                                <Binding Path="ReturnBuilder.CurrentOrder.InnerItem.BillingCurrency" />
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                    <TextBlock Grid.Row="4" Grid.Column="2" x:Name="lblTotalReturnAmountValue">
+                        <TextBlock.Text>
+                            <MultiBinding Converter="{StaticResource CurrencyConverter}">
+                                <Binding Path="ReturnBuilder.RmaRequest.ReturnTotal" />
+                                <Binding Path="ReturnBuilder.CurrentOrder.InnerItem.BillingCurrency" />
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </Grid>
+                <StackPanel Margin="20,0,0,0" VerticalAlignment="Top">
+                    <TextBlock Text="Customer comment:" />
+                    <core_controls:WatermarkedTextBox Text="{Binding ReturnBuilder.RmaRequest.Comment, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource Virto_Multiline_WatermarkedTextBox_Style}" Height="150" WatermarkText="" />
+                </StackPanel>
+            </DockPanel>
+        </HeaderedContentControl>
+    </Grid>
 </base:ViewBase>

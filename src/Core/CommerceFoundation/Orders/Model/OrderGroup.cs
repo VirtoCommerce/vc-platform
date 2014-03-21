@@ -241,6 +241,86 @@ namespace VirtoCommerce.Foundation.Orders.Model
 			}
 		}
 
+        private decimal _DiscountTotal;
+        /// <summary>
+        /// Gets or sets the cart subtotal discount Total.
+        /// </summary>
+        /// <value>
+        /// The discount Total.
+        /// </value>
+        [DataMember]
+        public decimal DiscountTotal
+        {
+            get
+            {
+                return _DiscountTotal;
+            }
+            set
+            {
+                SetValue(ref _DiscountTotal, () => this.DiscountTotal, value);
+            }
+        }
+
+        private decimal _FormDiscountTotal;
+        /// <summary>
+        /// Gets or sets the form discount total.
+        /// </summary>
+        /// <value>
+        /// The form discount total.
+        /// </value>
+        [DataMember]
+        public decimal FormDiscountTotal
+        {
+            get
+            {
+                return _FormDiscountTotal;
+            }
+            set
+            {
+                SetValue(ref _FormDiscountTotal, () => this.FormDiscountTotal, value);
+            }
+        }
+
+        private decimal _LineItemDiscountTotal;
+        /// <summary>
+        /// Gets or sets the line item discount Total.
+        /// </summary>
+        /// <value>
+        /// The line item discount Total.
+        /// </value>
+        [DataMember]
+        public decimal LineItemDiscountTotal
+        {
+            get
+            {
+                return _LineItemDiscountTotal;
+            }
+            set
+            {
+                SetValue(ref _LineItemDiscountTotal, () => this.LineItemDiscountTotal, value);
+            }
+        }
+
+        private decimal _ShipmentDiscountTotal;
+        /// <summary>
+        /// Gets or sets the shipment discount Total.
+        /// </summary>
+        /// <value>
+        /// The shipment discount Total.
+        /// </value>
+        [DataMember]
+        public decimal ShipmentDiscountTotal
+        {
+            get
+            {
+                return _ShipmentDiscountTotal;
+            }
+            set
+            {
+                SetValue(ref _ShipmentDiscountTotal, () => this.ShipmentDiscountTotal, value);
+            }
+        }
+
 		private string _BillingCurrency;
 		[DataMember]
 		[StringLength(32)]

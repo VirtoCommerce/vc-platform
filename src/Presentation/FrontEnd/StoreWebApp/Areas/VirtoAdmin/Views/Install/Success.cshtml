@@ -54,7 +54,16 @@
                                     <p>pass: <b>store</b></p>
                                     <p>url: <b>@Model.Website</b></p>
                                     <p></p>
-                                    <a href="http://assets.virtocommerce.com/software/1.8/admin/setup.exe" target="_blank" class="btn">Download Commerce Manager</a>
+ 
+                                    @if (Request.Browser.Type.ToLower().StartsWith("chrome") &&  Request.UserAgent!=null && !Request.UserAgent.Contains("OPR/"))
+                                    {
+                                        <p class="info">Chrome browser requires <a  class="link" href="https://chrome.google.com/webstore/detail/clickonce-for-google-chro/eeifaoomkminpbeebjdmdojbhmagnncl" target="_blank">ClickOnce extension</a> to open Commerce Manager application. Or copy and open <a class="link" target="_blank" href="@Model.AdminUrl">this link</a> in Internet Explorer.</p>
+                                    }
+                                    @if (Request.Browser.Type.ToLower().StartsWith("firefox"))
+                                    {
+                                        <p class="info">Firefox browser requires <a  class="link" href="https://addons.mozilla.org/en-us/firefox/addon/fxclickonce/" target="_blank">ClickOnce add-on</a> to open Commerce Manager application. Or copy and open <a class="link" target="_blank" href="@Model.AdminUrl">this link</a> in Internet Explorer.</p>
+                                    }
+                                    <a href="@Model.AdminUrl" target="_blank" class="btn">Open Commerce Manager</a>
                                 </div>
                             </div>
                         </div>

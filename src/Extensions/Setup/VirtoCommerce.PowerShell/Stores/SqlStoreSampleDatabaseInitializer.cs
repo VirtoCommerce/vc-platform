@@ -54,6 +54,8 @@ namespace VirtoCommerce.PowerShell.Stores
 
 			store.Languages.Add(new StoreLanguage { StoreId = store.StoreId, LanguageCode = "en-US" });
 			store.Languages.Add(new StoreLanguage { StoreId = store.StoreId, LanguageCode = "ru-RU" });
+			store.Languages.Add(new StoreLanguage { StoreId = store.StoreId, LanguageCode = "de-DE" });
+            store.Languages.Add(new StoreLanguage { StoreId = store.StoreId, LanguageCode = "ja-JP" });
 			store.Currencies.Add(new StoreCurrency { StoreId = store.StoreId, CurrencyCode = "USD" });
 			store.Currencies.Add(new StoreCurrency { StoreId = store.StoreId, CurrencyCode = "EUR" });
 			store.DefaultLanguage = "en-US";
@@ -225,6 +227,20 @@ namespace VirtoCommerce.PowerShell.Stores
 
 			filter.Values = vals.ToArray();
 			filters.Add(filter);
+
+            vals = new List<RangeFilterValue>();
+
+            filter = new PriceRangeFilter { Currency = "EUR", IsLocalized = false };
+
+            vals.Add(CreateRange("Under 100€", "under-100", String.Empty, "100", "en"));
+
+            vals.Add(CreateRange("100€ - 200€", "100-200", "100", "200", "en"));
+            vals.Add(CreateRange("200€ - 600€", "200-600", "200", "600", "en"));
+            vals.Add(CreateRange("600€ - 1000€", "600-1000", "600", "1000", "en"));
+            vals.Add(CreateRange("Over 1000€", "over-1000", "1000", String.Empty, "en"));
+
+            filter.Values = vals.ToArray();
+            filters.Add(filter);
 
 			browsing.Prices = filters.ToArray();
 		}

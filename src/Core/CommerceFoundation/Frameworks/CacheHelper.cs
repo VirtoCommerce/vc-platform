@@ -6,28 +6,27 @@ namespace VirtoCommerce.Foundation.Frameworks
 
     public class CacheHelper
     {
-        private readonly ICacheRepository CacheRepository;
-        private string RegionName = "default";
+        private readonly ICacheRepository _cacheRepository;
+        public const string GlobalCachePrefix = "_vcc@che";
 
         public CacheHelper(ICacheRepository repository)
         {
-            CacheRepository = repository;
+            _cacheRepository = repository;
         }
 
         public CacheHelper(ICacheRepository repository, string regionName)
         {
-            CacheRepository = repository;
-            RegionName = regionName;
+            _cacheRepository = repository;
         }
 
         public T Get<T>(string cacheKey, Func<T> fallbackFunction, TimeSpan timeSpan, bool useCache = true) where T : class
         {
-            if (CacheRepository == null || !useCache)
+            if (_cacheRepository == null || !useCache)
             {
                 return fallbackFunction();
             }
 
-            var data = CacheRepository.Get(cacheKey);
+            var data = _cacheRepository.Get(cacheKey);
 
             if (data != null)
             {
@@ -39,7 +38,7 @@ namespace VirtoCommerce.Foundation.Frameworks
             }
 
             var data2 = fallbackFunction();
-            CacheRepository.Add(cacheKey, data2 ?? (object)DBNull.Value, timeSpan);
+            _cacheRepository.Add(cacheKey, data2 ?? (object)DBNull.Value, timeSpan);
 
             return data2;
         }
@@ -47,27 +46,27 @@ namespace VirtoCommerce.Foundation.Frameworks
 
         public void Add(string key, object value)
         {
-            CacheRepository.Add(key, value);
+            _cacheRepository.Add(key, value);
         }
 
         public void Add(string key, object value, TimeSpan timeout)
         {
-            CacheRepository.Add(key, value, timeout);
+            _cacheRepository.Add(key, value, timeout);
         }
 
         public object Get(string key)
         {
-            return CacheRepository[key];
+            return _cacheRepository[key];
         }
 
         public bool Remove(string key)
         {
-            return CacheRepository.Remove(key);
+            return _cacheRepository.Remove(key);
         }
 
         public void Clear()
         {
-            CacheRepository.Clear();
+            _cacheRepository.Clear();
         }
 
         /*
@@ -85,7 +84,21 @@ namespace VirtoCommerce.Foundation.Frameworks
         /// <returns></returns>
         public static string CreateCacheKey(string prefix, params string[] keys)
         {
-            var returnKey = new StringBuilder(prefix);
+            var returnKey = new StringBuilder(string.Concat(GlobalCachePrefix, prefix));
+
+            if (keys != null)
+                foreach (var key in keys)
+                {
+                    returnKey.Append("-");
+                    returnKey.Append(key);
+                }
+
+            return returnKey.ToString();
+        }
+
+        public static string CreateCacheKey(params string[] keys)
+        {
+            var returnKey = new StringBuilder();
 
             if (keys != null)
                 foreach (var key in keys)

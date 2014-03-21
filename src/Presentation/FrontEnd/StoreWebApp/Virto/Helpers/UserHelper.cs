@@ -322,7 +322,7 @@ namespace VirtoCommerce.Web.Virto.Helpers
                     };
                     contact.ContactPropertyValues.Add(lastVisitedByCsr);
                 }
-                UserClient.SaveCustomerChanges();
+                UserClient.SaveCustomerChanges(contact.MemberId);
             }
         }
 

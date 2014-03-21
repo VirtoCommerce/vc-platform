@@ -135,6 +135,11 @@ namespace VirtoCommerce.Foundation.Search
 			get { return "__outline"; }
 		}
 
+        public virtual string BrowsingOutlineField
+        {
+            get { return "__browsingoutline"; }
+        }
+
         [DataMember]
         List<ISearchFilter> _Filters = new List<ISearchFilter>();
 

@@ -8,6 +8,8 @@ using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Catalogs.Repositories;
+using VirtoCommerce.Foundation.DataManagement.Model;
+using VirtoCommerce.Foundation.DataManagement.Services;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Interfaces;
 using VirtoCommerce.ManagementClient.Core.Controls.StatusIndicator.Model;
@@ -24,6 +26,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 		private readonly IViewModelsFactory<ITreeCategoryViewModel> _treeCategoryVmFactory;
 		private readonly IViewModelsFactory<ICatalogDeleteViewModel> _catalogDeleteVmFactory;
+		private readonly IDataManagementService _exportService;
 
 		#endregion
 
@@ -34,7 +37,8 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			IAuthenticationContext authContext,
 			INavigationManager navigationManager,
 			IViewModelsFactory<ICatalogDeleteViewModel> catalogDeleteVmFactory,
-			IViewModelsFactory<ITreeCategoryViewModel> treeCategoryVmFactory)
+			IViewModelsFactory<ITreeCategoryViewModel> treeCategoryVmFactory,
+			IDataManagementService exportService)
 			: base(repositoryFactory, authContext)
 		{
 			InnerItem = item;
@@ -42,6 +46,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 			_catalogDeleteVmFactory = catalogDeleteVmFactory;
 			_treeCategoryVmFactory = treeCategoryVmFactory;
+			_exportService = exportService;
 
 			OpenItemCommand = new DelegateCommand(() =>
 			{
@@ -53,6 +58,8 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 				}
 				navigationManager.Navigate(NavigationData);
 			});
+
+			ExportItemCommand = new DelegateCommand(() => RaiseExportItemCommand());
 		}
 
 		#region ICatalogTreeViewModel Members
@@ -271,6 +278,86 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 				//.Expand(x => x.CatalogLanguages)
 				//.Expand("PropertySets/PropertySetProperties/Property/PropertyValues")
 				.SingleOrDefault();
+		}
+
+		private void RaiseExportItemCommand()
+		{
+			var catalogType = EntityType.Catalog;
+			var assetType = EntityType.ItemAsset;
+			//var testLocalization = EntityType.Localization;
+			var operationId = _exportService.ExportData(new List<EntityType>() { catalogType, assetType }, "tratata", new Dictionary<string, object>() { { "CatalogId", InnerItem.CatalogId }, { "SourceLanguage", "en-US"}, { "TargetLanguage", "ru-RU" } });
+
+			var statusUpdate = new StatusMessage
+			{
+				ShortText = string.Format("Catalog '{0}' export.", InnerItem.CatalogId),
+				StatusMessageId = operationId
+			};
+			EventSystem.Publish(statusUpdate);
+
+			var progress = new Progress<OperationStatus>();
+			progress.ProgressChanged += ExportProgressChanged;
+			PerformExportAsync(operationId, progress);
+		}
+
+		private void ExportProgressChanged(object sender, OperationStatus e)
+		{
+			if (e != null)
+			{
+				if (e.OperationState != OperationState.Finished)
+				{
+					var statusUpdate = new StatusMessage
+					{
+						ShortText =
+							string.Format("Catalog '{0}' export. Processed {1} items.", InnerItem.CatalogId, e.Processed),						
+						StatusMessageId = e.OperationId
+					};
+					EventSystem.Publish(statusUpdate);
+				}
+				else
+				{
+					if (e.Errors != null && e.Errors.Count > 0)
+					{
+						var statusUpdate = new StatusMessage
+						{
+							ShortText = string.Format("Catalog '{0}' exported with errors", InnerItem.CatalogId),
+							StatusMessageId = e.OperationId,
+							Details = e.Errors.Cast<object>()
+									   .Where(val => val != null)
+									   .Aggregate(string.Empty, (current, val) => current + (val.ToString() + Environment.NewLine)),
+							State = StatusMessageState.Error
+						};
+						EventSystem.Publish(statusUpdate);
+					}
+					else
+					{
+						var statusUpdate = new StatusMessage
+						{
+							ShortText = string.Format("Catalog '{0}' exported successfully", InnerItem.CatalogId),
+							StatusMessageId = e.OperationId,
+							State = StatusMessageState.Success
+						};
+						EventSystem.Publish(statusUpdate);
+					}
+				}
+			}
+		}
+
+		private async void PerformExportAsync(string operationId, IProgress<OperationStatus> progress)
+		{
+			if (progress != null)
+			{
+				var finished = false;
+				while (!finished)
+				{
+					await Task.Delay(TimeSpan.FromMilliseconds(100));
+
+					var res = _exportService.GetOperationStatus(operationId);
+					progress.Report(res);
+
+					if (res != null && res.OperationState == OperationState.Finished)
+						finished = true;
+				}
+			}
 		}
 
 		#endregion

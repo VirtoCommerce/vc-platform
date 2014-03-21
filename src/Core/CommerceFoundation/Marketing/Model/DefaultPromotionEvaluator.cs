@@ -12,14 +12,15 @@ namespace VirtoCommerce.Foundation.Marketing.Model
     {
         #region Private Variables
         private readonly IMarketingRepository _repository;
-		private IEvaluationPolicy[] _policies;
+		private readonly IEvaluationPolicy[] _policies;
 		private readonly IPromotionUsageProvider _usageProvider;
         
         private static bool _isEnabled;
-        public const string PromotionsCacheKey = "M:P:{0}";
         #endregion
 
-		public DefaultPromotionEvaluator(IMarketingRepository repository, IPromotionUsageProvider usageProvider, IEvaluationPolicy[] policies, ICacheRepository cache)
+        public const string PromotionsCacheKey = "M:P:{0}";
+
+	    public DefaultPromotionEvaluator(IMarketingRepository repository, IPromotionUsageProvider usageProvider, IEvaluationPolicy[] policies, ICacheRepository cache)
 			:base(cache)
 		{
 			_repository = repository;
@@ -107,30 +108,50 @@ namespace VirtoCommerce.Foundation.Marketing.Model
 				};
 			
 			promotions = promotions.Where(conditionPredicate).ToArray();
-
-            /* we do not evaluate policies here
-			//Apply policies
-			if (_policies != null)
-			{
-				foreach (var policy in _policies)
-				{
-					promotions = policy.FilterPromotions(context, promotions);
-				}
-			}
-             * */
 			return promotions;
 		}
-		#endregion
+
+	    public PromotionRecord[] EvaluatePolicies(PromotionRecord[] records, IEvaluationPolicy[] policies = null)
+	    {
+	        policies = policies ?? _policies;
+			records = SortPromotionRecords(records);
+			return policies.Aggregate(records, (current, policy) => policy.FilterPromotions(null, current));
+	    }
+
+	    #endregion
 		
         private IQueryable<Promotion> GetPromotions()
         {
             return Cache.Get(
-                string.Format(PromotionsCacheKey, "all"),
+                CacheHelper.CreateCacheKey(Constants.PromotionsCachePrefix,  string.Format(PromotionsCacheKey, "all")),
                 () => (_repository.Promotions.ExpandAll()
                     .Expand(p=>p.Coupon) //ExpandAll skips non collection props
                     .Expand(p=>p.CouponSet)).ToArray(),
                 MarketingConfiguration.Instance.Cache.PromotionsTimeout,
                 _isEnabled).AsQueryable();
+        }
+
+
+        // make sure to sort the records correctly
+        // 1st: items with a coupon applied
+        // 2nd: catalog items
+        // 3rd: order
+        // 4th: shipping
+        private PromotionRecord[] SortPromotionRecords(PromotionRecord[] records)
+        {
+            var all = new List<PromotionRecord>();
+            var recordsWithCoupons = from r in records where !String.IsNullOrEmpty(r.Reward.Promotion.CouponId) orderby r.Reward.Promotion.Priority descending select r;
+
+            // all all coupon records first
+            all.Add(recordsWithCoupons);
+
+            var catalogRecords = from r in records where r.PromotionType == PromotionType.CatalogPromotion && !all.Contains(r) orderby r.Reward.Promotion.Priority descending select r;
+            all.Add(catalogRecords);
+
+            var cartRecords = from r in records where r.PromotionType == PromotionType.CartPromotion && !all.Contains(r) orderby r.Reward.Promotion.Priority descending select r;
+            all.Add(cartRecords);
+
+            return all.ToArray();
         }
 	
 	}

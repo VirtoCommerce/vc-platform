@@ -64,9 +64,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\DataAnnotationsExtensions.1.1.0.0\lib\NETFramework40\DataAnnotationsExtensions.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\..\..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\..\..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="ExpressionSerialization">
       <HintPath>..\..\..\Shared\ExpressionSerialization.dll</HintPath>
@@ -111,7 +114,6 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
@@ -178,6 +180,8 @@
     <Compile Include="Assets\Services\UploadStreamInfo.cs" />
     <Compile Include="Catalogs\CatalogConfiguration.cs" />
     <Compile Include="Catalogs\Services\ICatalogOutlineBuilder.cs" />
+    <Compile Include="Configuration.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="Customers\Model\ContactPropertyValueName.cs" />
     <Compile Include="Customers\CustomerConfiguration.cs" />
     <Compile Include="Customers\CustomerSession.cs" />
@@ -224,7 +228,14 @@
     <Compile Include="Catalogs\Model\PropertyTargetType.cs" />
     <Compile Include="Catalogs\Model\PropertyAttribute.cs" />
     <Compile Include="Catalogs\Model\PropertyValueType.cs" />
-    <Compile Include="Importing\Model\Importers\SeoImporter.cs" />
+    <Compile Include="DataManagement\Model\EntityType.cs" />
+    <Compile Include="DataManagement\Model\OperationState.cs" />
+    <Compile Include="DataManagement\Model\OperationStatus.cs" />
+    <Compile Include="DataManagement\Model\Import\Importers\SeoImporter.cs" />
+    <Compile Include="DataManagement\Services\IDataManagementService.cs" />
+    <Compile Include="DataManagement\Services\DataManagementService.cs" />
+    <Compile Include="Frameworks\SqlDbConfiguration.cs" />
+    <Compile Include="Orders\Extensions\PaymentMethodExtensions.cs" />
     <Compile Include="Orders\Model\OrderFormPropertyValue.cs" />
     <Compile Include="Orders\Model\OrderFormValueType.cs" />
     <Compile Include="Catalogs\Model\PropertyValueBase.cs" />
@@ -304,17 +315,17 @@
     <Compile Include="Frameworks\UnityExtensions.cs" />
     <Compile Include="Frameworks\UnityRepositoryFactory.cs" />
     <Compile Include="Frameworks\Workflow\Services\ActivityInvoker.cs" />
-    <Compile Include="Importing\ImportConfiguration.cs" />
-    <Compile Include="Importing\Model\ImportEntityType.cs" />
-    <Compile Include="Importing\Model\Importers\RelationImporter.cs" />
-    <Compile Include="Importing\Model\Importers\LocalizationImporter.cs" />
-    <Compile Include="Importing\Model\Importers\ItemAssetImporter.cs" />
-    <Compile Include="Importing\Model\Importers\JurisdictionGroupImporter.cs" />
-    <Compile Include="Importing\Model\Importers\JurisdictionImporter.cs" />
-    <Compile Include="Importing\Model\Importers\TaxCategoryImporter.cs" />
-    <Compile Include="Importing\Model\Importers\TaxValueImporter.cs" />
-    <Compile Include="Importing\Model\ImportProperty.cs" />
-    <Compile Include="Importing\Services\ImportService.cs" />
+    <Compile Include="DataManagement\ImportConfiguration.cs" />
+    <Compile Include="DataManagement\Model\Import\ImportEntityType.cs" />
+    <Compile Include="DataManagement\Model\Import\Importers\RelationImporter.cs" />
+    <Compile Include="DataManagement\Model\Import\Importers\LocalizationImporter.cs" />
+    <Compile Include="DataManagement\Model\Import\Importers\ItemAssetImporter.cs" />
+    <Compile Include="DataManagement\Model\Import\Importers\JurisdictionGroupImporter.cs" />
+    <Compile Include="DataManagement\Model\Import\Importers\JurisdictionImporter.cs" />
+    <Compile Include="DataManagement\Model\Import\Importers\TaxCategoryImporter.cs" />
+    <Compile Include="DataManagement\Model\Import\Importers\TaxValueImporter.cs" />
+    <Compile Include="DataManagement\Model\Import\ImportProperty.cs" />
+    <Compile Include="DataManagement\Services\ImportService.cs" />
     <Compile Include="Marketing\Model\PromotionUsageStatus.cs" />
     <Compile Include="Marketing\Model\PromotionStatus.cs" />
     <Compile Include="Orders\CreatePaymentResult.cs" />
@@ -484,21 +495,21 @@
     <Compile Include="Frameworks\Csv\CsvReader.cs" />
     <Compile Include="Frameworks\Csv\CsvStream.cs" />
     <Compile Include="Frameworks\Csv\CsvWriter.cs" />
-    <Compile Include="Importing\Factories\ImportJobEntityFactory.cs" />
-    <Compile Include="Importing\Factories\IImportJobEntityFactory.cs" />
-    <Compile Include="Importing\Model\Importers\AssociationImporter.cs" />
-    <Compile Include="Importing\Model\Importers\CategoryImporter.cs" />
-    <Compile Include="Importing\Model\Importers\EntityImporterBase.cs" />
-    <Compile Include="Importing\Model\Importers\IEntityImporter.cs" />
-    <Compile Include="Importing\Model\ImportAction.cs" />
-    <Compile Include="Importing\Model\ImportItem.cs" />
-    <Compile Include="Importing\Model\ImportJob.cs" />
-    <Compile Include="Importing\Model\ImportResult.cs" />
-    <Compile Include="Importing\Model\MappingItem.cs" />
-    <Compile Include="Importing\Model\Importers\PriceImporter.cs" />
-    <Compile Include="Importing\Model\Importers\ItemImporter.cs" />
-    <Compile Include="Importing\Repositories\IImportRepository.cs" />
-    <Compile Include="Importing\Services\IImportService.cs" />
+    <Compile Include="DataManagement\Factories\ImportJobEntityFactory.cs" />
+    <Compile Include="DataManagement\Factories\IImportJobEntityFactory.cs" />
+    <Compile Include="DataManagement\Model\Import\Importers\AssociationImporter.cs" />
+    <Compile Include="DataManagement\Model\Import\Importers\CategoryImporter.cs" />
+    <Compile Include="DataManagement\Model\Import\Importers\EntityImporterBase.cs" />
+    <Compile Include="DataManagement\Model\Import\Importers\IEntityImporter.cs" />
+    <Compile Include="DataManagement\Model\Import\ImportAction.cs" />
+    <Compile Include="DataManagement\Model\Import\ImportItem.cs" />
+    <Compile Include="DataManagement\Model\Import\ImportJob.cs" />
+    <Compile Include="DataManagement\Model\Import\ImportResult.cs" />
+    <Compile Include="DataManagement\Model\Import\MappingItem.cs" />
+    <Compile Include="DataManagement\Model\Import\Importers\PriceImporter.cs" />
+    <Compile Include="DataManagement\Model\Import\Importers\ItemImporter.cs" />
+    <Compile Include="DataManagement\Repositories\IImportRepository.cs" />
+    <Compile Include="DataManagement\Services\IImportService.cs" />
     <Compile Include="Inventories\Factories\IInventoryEntityFactory.cs" />
     <Compile Include="Inventories\Factories\InventoryEntityFactory.cs" />
     <Compile Include="Inventories\Model\Inventory.cs" />
@@ -739,6 +750,7 @@
     <Compile Include="AppConfig\AppConfigConfiguration.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="Assets\Model\AssetsClassDiagram.cd" />
     <None Include="Catalogs\Model\CatalogClassDiagram.cd" />
     <None Include="Catalogs\Model\CatalogBaseClassDiagram.cd" />

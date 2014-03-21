@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Core;
 using System.Data.Entity.Infrastructure;
 using System.Diagnostics;
 using System.Linq;
@@ -9,6 +10,7 @@ using System.Text.RegularExpressions;
 using System.Transactions;
 using VirtoCommerce.Foundation.Data.Common;
 using VirtoCommerce.Foundation.Data.Infrastructure;
+using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Frameworks.Logging;
 
@@ -27,6 +29,7 @@ namespace VirtoCommerce.Foundation.Data
         private static bool Exists(SchemaVersionContext context)
         {
             bool flag;
+            using (SqlDbConfiguration.ExecutionStrategySuspension)
             using (new TransactionScope(TransactionScopeOption.Suppress))
             {
                 flag = context.Database.Exists();
@@ -48,6 +51,8 @@ namespace VirtoCommerce.Foundation.Data
         private static bool Exists(OperationLogContext context)
         {
             bool flag;
+
+            using (SqlDbConfiguration.ExecutionStrategySuspension)
             using (new TransactionScope(TransactionScopeOption.Suppress))
             {
                 flag = context.Database.Exists();

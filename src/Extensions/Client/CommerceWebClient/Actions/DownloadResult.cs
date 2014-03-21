@@ -706,6 +706,14 @@ namespace VirtoCommerce.Web.Client.Actions
 			        context.HttpContext.Response.TransmitFile(filePath);
 		        }
 	        }
+            catch (DirectoryNotFoundException)
+            {
+                if (FallbackPaths.ContainsKey(context.HttpContext.Response.ContentType))
+                {
+                    filePath = context.HttpContext.Request.MapPath(FallbackPaths[context.HttpContext.Response.ContentType]);
+                    context.HttpContext.Response.TransmitFile(filePath);
+                }
+            }
         }
     }
 }

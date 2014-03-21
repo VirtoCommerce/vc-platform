@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.Practices.Unity.Mvc;
 using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 using VirtoCommerce.Foundation.AppConfig;
 using VirtoCommerce.Web.Client.Modules;

@@ -7,7 +7,7 @@
     { 
         <li class="@("level" + (ViewBag.level + 1))">
             @Html.DisplayFor(m => node)
-            @if (node.Children.Any())
+            @if (node.Children != null && node.Children.Any())
             {
                 @Html.DisplayFor(m => node.Children, "SiteMapNodeModelList", new { level = ViewBag.level + 1, last = false })
             }

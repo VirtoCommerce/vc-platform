@@ -1,13 +1,13 @@
-﻿using System.Text;
-using System.Windows.Media;
-using Microsoft.Practices.Prism.Commands;
-using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Media;
+using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using VirtoCommerce.Foundation.Customers.Factories;
 using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Foundation.Customers.Repositories;
@@ -21,10 +21,10 @@ using VirtoCommerce.ManagementClient.Customers.Dialogs.ViewModel.Interfaces;
 using VirtoCommerce.ManagementClient.Customers.Infrastructure.Adaptors;
 using VirtoCommerce.ManagementClient.Customers.Infrastructure.Communications;
 using VirtoCommerce.ManagementClient.Customers.Infrastructure.Controls;
+using VirtoCommerce.ManagementClient.Customers.Infrastructure.Extensions;
 using VirtoCommerce.ManagementClient.Customers.Infrastructure.Generators;
 using VirtoCommerce.ManagementClient.Customers.Model.Enumerations;
 using VirtoCommerce.ManagementClient.Customers.ViewModel.Helpers;
-using VirtoCommerce.ManagementClient.Customers.Infrastructure.Extensions;
 using VirtoCommerce.ManagementClient.Customers.ViewModel.Interfaces;
 
 namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
@@ -33,10 +33,10 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 											IOpenTracking, ISupportAcceptChanges, ISupportDelayInitialization
 	{
 		#region Fields
-		
+
 		private Case _innerItem;
 		private Contact _innerContact;
-		
+
 		private Case _originalItem;
 		private Contact _originalContact;
 
@@ -50,7 +50,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 
 		private bool _isItemsInitialized;
 		private bool _isNewContactInitialized;
-		
+
 		#endregion
 
 		#region Dependencies
@@ -80,7 +80,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 					NavigationManager navManager, IRepositoryFactory<ICustomerRepository> repositoryFactory,
 					IAuthenticationContext authContext, ICustomersCommonViewModel parentViewModel,
 					Case innerCase, Contact innerContact,
-					CaseActionState caseAction, ContactActionState contactAction, 
+					CaseActionState caseAction, ContactActionState contactAction,
 					IViewModelsFactory<CaseDetailViewModel> caseDetailVmFactory, IViewModelsFactory<CustomerDetailViewModel> customerDetailVmFactory,
 					IViewModelsFactory<ICreateCustomerDialogViewModel> wizardCustomerVmFactory,
 					IViewModelsFactory<IKnowledgeBaseDialogViewModel> knowledgeBaseGroupVmFactory)
@@ -329,8 +329,8 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 		private bool Validate()
 		{
 			var result = CaseActionState == CaseActionState.None
-				             ? CustomerDetailViewModel.IsValid
-				             : CaseDetailViewModel.IsValid && CustomerDetailViewModel.IsValid;
+							 ? CustomerDetailViewModel.IsValid
+							 : CaseDetailViewModel.IsValid && CustomerDetailViewModel.IsValid;
 			return result;
 
 		}
@@ -354,7 +354,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 			if (IsModified)
 			{
 
-				var confirmation = new RefusedConfirmation {Title = "Action confirmation"};
+				var confirmation = new RefusedConfirmation { Title = "Action confirmation" };
 				if (CaseActionState == CaseActionState.None)
 				{
 					confirmation.Content = "Save changes to contact '" + CurrentCustomer.FullName + "'?";
@@ -366,47 +366,47 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 
 				CancelConfirmRequest.Raise(confirmation,
 					   async x =>
-					                           {
-						                           if (x.Confirmed)
-						                           {
-							                           if (Validate())
-							                           {
-								                           //Save
-								                           await DoSaveChanges();
-								                           Close();
-							                           }
-							                           else
-							                           {
-								                           if (CommonInfoRequest != null)
-								                           {
-									                           CommonInfoRequest.Raise(new ConditionalConfirmation
-										                           {
-											                           Title = "Action notification",
-											                           Content = "Can't be saved, because not all the fields are filled"
-										                           }, y =>{});
-								                           }
-							                           }
-						                           }
-						                           else if (((RefusedConfirmation) x).Refused)
-						                           {
-							                           //Reloading viewModels
-							                           InnerItem = _originalItem;
-							                           IsModified = false;
-							                           _isItemsInitialized = false;
-							                           CurrentCustomer = _originalContact;
-							                           InitializeViewModels();
-							                           Close();
-						                           }
-						                           else
-						                           {
-							                           var cancelArg = arg as CancelEventArgs;
-							                           if (cancelArg != null)
-							                           {
-								                           cancelArg.Cancel = true;
-								                           OpenItemCommand.Execute();
-							                           }
-						                           }
-					                           });
+					   {
+						   if (x.Confirmed)
+						   {
+							   if (Validate())
+							   {
+								   //Save
+								   await DoSaveChanges();
+								   Close();
+							   }
+							   else
+							   {
+								   if (CommonInfoRequest != null)
+								   {
+									   CommonInfoRequest.Raise(new ConditionalConfirmation
+										   {
+											   Title = "Action notification",
+											   Content = "Can't be saved, because not all the fields are filled"
+										   }, y => { });
+								   }
+							   }
+						   }
+						   else if (((RefusedConfirmation)x).Refused)
+						   {
+							   //Reloading viewModels
+							   InnerItem = _originalItem;
+							   IsModified = false;
+							   _isItemsInitialized = false;
+							   CurrentCustomer = _originalContact;
+							   InitializeViewModels();
+							   Close();
+						   }
+						   else
+						   {
+							   var cancelArg = arg as CancelEventArgs;
+							   if (cancelArg != null)
+							   {
+								   cancelArg.Cancel = true;
+								   OpenItemCommand.Execute();
+							   }
+						   }
+					   });
 			}
 			else
 				Close();
@@ -500,7 +500,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 		{
 			if (CaseActionState == CaseActionState.None)
 			{
-				InnerItem = new Case {Status = CaseStatus.Open.ToString(), Number = UniqueNumberGenerator.GetUniqueNumber()};
+				InnerItem = new Case { Status = CaseStatus.Open.ToString(), Number = UniqueNumberGenerator.GetUniqueNumber() };
 				InitializeCaseViewModel();
 				CaseActionState = CaseActionState.New;
 			}
@@ -787,7 +787,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 									Name = x.Name,
 									Priority = x.Priority,
 									ContactId = CurrentCustomer.MemberId,
-									ValueType = (int) propertyValueType
+									ValueType = (int)propertyValueType
 								};
 
 
@@ -832,7 +832,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 									Name = x.Name,
 									Priority = x.Priority,
 									CaseId = InnerItem.CaseId,
-									ValueType = (int) propertyValueType
+									ValueType = (int)propertyValueType
 								};
 
 							newValueList.Add(new PropertyValueWithFieldNameEditViewModel(item) { FieldName = x.FieldName });
@@ -1028,7 +1028,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 			get
 			{
 				return _navigationData ?? (_navigationData = new NavigationItem(InnerItem.CaseId, NavigationNames.HomeName,
-				                                                                NavigationNames.MenuName, this));
+																				NavigationNames.MenuName, this));
 			}
 		}
 
@@ -1080,8 +1080,8 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 					{
 						DoSaveChangesAsync();
 						Repository.UnitOfWork.Commit();
-					UpdateCaseAndContactCommunicationItems();
-					UpdateCaseAndContactLabels();
+						UpdateCaseAndContactCommunicationItems();
+						UpdateCaseAndContactLabels();
 					});
 
 				_originalContact = CurrentCustomer;
@@ -1239,10 +1239,13 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 											   .Expand(c => c.Labels)
 									/*.Expand(c => c.Notes)*/.Expand(c => c.Phones).SingleOrDefault();
 
-								CurrentCustomer =
-									_originalContact.DeepClone(_entityFactory as IKnownSerializationTypes);
+								var contactNotes = Repository.Notes.Where(n => n.MemberId == CurrentCustomer.MemberId).ToList();
+								OnUIThread(() =>
+								{
+									CurrentCustomer = _originalContact;
+									ContactNotes = contactNotes;
+								});
 
-								ContactNotes = Repository.Notes.Where(n => n.MemberId == CurrentCustomer.MemberId).ToList();
 
 								if (CaseActionState == CaseActionState.None)
 								{
@@ -1340,7 +1343,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 																						new Contact
 																							()));
 
-			var confirmation = new ConditionalConfirmation {Title = "Enter customer details", Content = itemVm};
+			var confirmation = new ConditionalConfirmation { Title = "Enter customer details", Content = itemVm };
 
 			if (CreateCustomerInteractionRequest != null)
 			{
@@ -1843,7 +1846,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 				{
 					labelItem.CaseId = InnerItem.CaseId;
 					repository.Add(labelItem);
-                    InnerItem.Labels.Add(labelItem);
+					InnerItem.Labels.Add(labelItem);
 				}
 			}
 
@@ -1876,7 +1879,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 
 					labelItem.MemberId = CurrentCustomer.MemberId;
 					repository.Add(labelItem);
-				    CurrentCustomer.Labels.Add(labelItem);
+					CurrentCustomer.Labels.Add(labelItem);
 				}
 			}
 
@@ -1957,7 +1960,9 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 
 		private void OnCaseOrContactStateChanged()
 		{
-			Repository = _repositoryFactory.GetRepositoryInstance();
+			if (Repository == null)
+				Repository = _repositoryFactory.GetRepositoryInstance();
+
 			switch (CaseActionState)
 			{
 				case CaseActionState.None:
@@ -1965,7 +1970,8 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 				case CaseActionState.New:
 					break;
 				case CaseActionState.Open:
-					Repository.Attach(InnerItem);
+					if (!Repository.IsAttachedTo(InnerItem))
+						Repository.Attach(InnerItem);
 					break;
 			}
 
@@ -1976,7 +1982,8 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 				case ContactActionState.New:
 					break;
 				case ContactActionState.Open:
-					Repository.Attach(CurrentCustomer);
+					if (!Repository.IsAttachedTo(CurrentCustomer))
+						Repository.Attach(CurrentCustomer);
 					break;
 			}
 		}

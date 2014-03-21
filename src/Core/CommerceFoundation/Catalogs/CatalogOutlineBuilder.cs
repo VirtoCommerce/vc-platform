@@ -100,7 +100,7 @@ namespace VirtoCommerce.Foundation.Catalogs
             var query = _catalogRepository.Catalogs.Where(x => x.CatalogId.Equals(catalogId, StringComparison.OrdinalIgnoreCase));
 
             return Helper.Get(
-                string.Format(CatalogCacheKey, catalogId),
+                CacheHelper.CreateCacheKey(Constants.CatalogOutlineBuilderCachePrefix, string.Format(CatalogCacheKey, catalogId)),
                 () => (query).SingleOrDefault(),
                 _cacheTimeout,
                 useCache);
@@ -109,7 +109,7 @@ namespace VirtoCommerce.Foundation.Catalogs
         private CategoryBase GetCategoryById(string catalogId, string categoryId, bool useCache = true)
         {
             return Helper.Get(
-                string.Format(CategoryIdCacheKey, catalogId, categoryId),
+                CacheHelper.CreateCacheKey(Constants.CatalogOutlineBuilderCachePrefix, string.Format(CategoryIdCacheKey, catalogId, categoryId)),
                 () => GetCategoryByIdInternal(categoryId),
                 _cacheTimeout,
                 useCache);
@@ -121,7 +121,7 @@ namespace VirtoCommerce.Foundation.Catalogs
                    .Where(c => c.ItemId == itemId && c.CatalogId == catalogId);
 
             return Helper.Get(
-               string.Format(CategoryItemRelationsCacheKey, catalogId, itemId),
+               CacheHelper.CreateCacheKey(Constants.CatalogOutlineBuilderCachePrefix, string.Format(CategoryItemRelationsCacheKey, catalogId, itemId)),
                () => (query).ToArray(),
                _cacheTimeout,
                useCache);
@@ -136,24 +136,11 @@ namespace VirtoCommerce.Foundation.Catalogs
                 
 			
             return Helper.Get(
-               string.Format(LinkedCategoriesCacheKey, catalogId, itemId),
+               CacheHelper.CreateCacheKey(Constants.CatalogOutlineBuilderCachePrefix, string.Format(LinkedCategoriesCacheKey, catalogId, itemId)),
                () => (query).ToArray(),
                _cacheTimeout,
                useCache);
         }
-
-		private LinkedCategory[] GetLinkedCategoriesWithDSClient(string itemId, string catalogId, bool useCache = true)
-		{
-			var query = _catalogRepository.CategoryItemRelations
-				.Where(ci => ci.ItemId == itemId).ToList().SelectMany(c => c.Category.LinkedCategories).Where(lc => lc.CatalogId == catalogId);
-
-
-			return Helper.Get(
-			   string.Format(LinkedCategoriesCacheKey, catalogId, itemId),
-			   () => (query).ToArray(),
-			   _cacheTimeout,
-			   useCache);
-		}
 
         private CategoryBase GetCategoryByIdInternal(string id)
 		{

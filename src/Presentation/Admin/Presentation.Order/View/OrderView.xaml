@@ -20,14 +20,13 @@
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Order;component/Resources/OrdersResourceDictionary.xaml"/>
+                <!--<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Order;component/Resources/OrdersResourceDictionary.xaml"/>-->
                 <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Order;component/View/Views/GridView.xaml"/>
                 <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/DetailViewTheme/VirtoCommerceDetailTheme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <converters:OrderAddressConverter x:Key="OrderAddressConverter"/>
-            <!--<converters:AddressConverter x:Key="AddressConverter"/>-->
-            <!--<Presentation_Core_Infrastructure_Converters:CurrencyConverter x:Key="CurrencyConverter"/>-->
+            <Presentation_Core_Infrastructure_Converters:CurrencyConverter x:Key="CurrencyConverter"/>
             <Presentation_Core_Infrastructure_Converters:MathConverter x:Key="MathConverter"/>
 
         </ResourceDictionary>
@@ -133,7 +132,14 @@
                                 <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding StoreId}" />
                                 <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding Created}"/>
                                 <TextBlock Grid.Row="4" Grid.Column="2" Text="{Binding BillingCurrency}"/>
-                                <TextBlock Grid.Row="5" Grid.Column="2" Text="{Binding Total, Converter={StaticResource CurrencyConverter}}" />
+                                <TextBlock Grid.Row="5" Grid.Column="2">
+                                    <TextBlock.Text>
+                                        <MultiBinding Converter="{StaticResource CurrencyConverter}">
+                                            <Binding Path="Total" />
+                                            <Binding Path="BillingCurrency" />
+                                        </MultiBinding>
+                                    </TextBlock.Text>
+                                </TextBlock>
                             </Grid>
 
                         </Grid>
@@ -246,7 +252,8 @@
                         <Setter Property="ContentTemplate">
                             <Setter.Value>
                                 <DataTemplate>
-                                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"
+                                                  d:DataContext="{d:DesignInstance implementations:ShipmentViewModel}">
                                         <Grid Width="800" HorizontalAlignment="Left" VerticalAlignment="Top">
                                             <Grid.RowDefinitions>
                                                 <RowDefinition/>
@@ -293,10 +300,17 @@
                                                                     </DataGridTemplateColumn.CellTemplate>
                                                                 </DataGridTemplateColumn>
                                                                 <DataGridTextColumn Header="Quantity" Binding="{Binding Quantity, StringFormat={}{0:0.##}}" Width="0.2*"/>
-                                                                <DataGridTextColumn Header="Price" Binding="{Binding LineItem.ListPrice, Converter={StaticResource CurrencyConverter}}" Width="0.23*"/>
+                                                                <DataGridTextColumn Header="Price" Width="0.23*">
+                                                                    <DataGridTextColumn.Binding>
+                                                                        <MultiBinding Converter="{StaticResource CurrencyConverter}">
+                                                                            <Binding Path="LineItem.ListPrice" />
+                                                                            <Binding Path="DataContext.ParentViewModel.InnerItem.BillingCurrency" RelativeSource="{RelativeSource AncestorType=DataGrid}" />
+                                                                        </MultiBinding>
+                                                                    </DataGridTextColumn.Binding>
+                                                                </DataGridTextColumn>
                                                                 <DataGridTextColumn Header="Total" FontWeight="Bold" Width="0.27*">
                                                                     <DataGridTextColumn.Binding>
-                                                                        <MultiBinding Converter="{StaticResource MathConverter}" ConverterParameter="*" StringFormat="{}{0:c}">
+                                                                        <MultiBinding Converter="{StaticResource MathConverter}" ConverterParameter="*" StringFormat="{}{0:0.##}">
                                                                             <Binding Path="Quantity" />
                                                                             <Binding Path="LineItem.ListPrice"/>
                                                                         </MultiBinding>
@@ -382,8 +396,8 @@
                                                 </Grid>
 
                                                 <StackPanel x:Name="shippingSummary" Grid.Column="2">
-                                                    <HeaderedContentControl Header="Shipping Summary" Style="{StaticResource Virto_HeaderedContentBlock_Style}" DataContext="{Binding CurrentShipment}">
-                                                        <Grid>
+                                                    <HeaderedContentControl Header="Shipping Summary" Style="{StaticResource Virto_HeaderedContentBlock_Style}">
+                                                        <Grid HorizontalAlignment="Left">
                                                             <Grid.ColumnDefinitions>
                                                                 <ColumnDefinition Width="auto"/>
                                                                 <ColumnDefinition Width="10"/>
@@ -408,14 +422,62 @@
                                                             <TextBlock Grid.Row="5" Grid.Column="0" Text="Shipping Taxes:" />
                                                             <TextBlock Grid.Row="6" Grid.Column="0" Text="Shipment Total:"  FontWeight="DemiBold" />
 
-                                                            <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding Subtotal, Converter={StaticResource CurrencyConverter}}"/>
-                                                            <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding ShippingCost, StringFormat=c}" />
-                                                            <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding ShippingDiscountAmount, Converter={StaticResource CurrencyConverter}}" />
-                                                            <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding TotalBeforeTax, StringFormat=c}"/>
-                                                            <TextBlock Grid.Row="4" Grid.Column="2" Text="{Binding ItemTaxTotal, Converter={StaticResource CurrencyConverter}}"/>
-                                                            <TextBlock Grid.Row="5" Grid.Column="2" Text="{Binding ShippingTaxTotal, Converter={StaticResource CurrencyConverter}}"/>
-                                                            <TextBlock Grid.Row="6" Grid.Column="2" Text="{Binding ShipmentTotal, Converter={StaticResource CurrencyConverter}}"/>
-
+                                                            <TextBlock Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right">
+                                                                <TextBlock.Text>
+                                                                    <MultiBinding Converter="{StaticResource CurrencyConverter}">
+                                                                        <Binding Path="CurrentShipment.Subtotal"/>
+                                                                        <Binding Path="ParentViewModel.InnerItem.BillingCurrency"/>
+                                                                    </MultiBinding>
+                                                                </TextBlock.Text>
+                                                            </TextBlock>
+                                                            <TextBlock Grid.Row="1" Grid.Column="2" HorizontalAlignment="Right">
+                                                                <TextBlock.Text>
+                                                                    <MultiBinding Converter="{StaticResource CurrencyConverter}">
+                                                                        <Binding Path="CurrentShipment.ShippingCost" />
+                                                                        <Binding Path="ParentViewModel.InnerItem.BillingCurrency"/>
+                                                                    </MultiBinding>
+                                                                </TextBlock.Text>
+                                                            </TextBlock>
+                                                            <TextBlock Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right">
+                                                                <TextBlock.Text>
+                                                                    <MultiBinding Converter="{StaticResource CurrencyConverter}">
+                                                                        <Binding Path="CurrentShipment.ShippingDiscountAmount" />
+                                                                        <Binding Path="ParentViewModel.InnerItem.BillingCurrency"/>
+                                                                    </MultiBinding>
+                                                                </TextBlock.Text>
+                                                            </TextBlock>
+                                                            <TextBlock Grid.Row="3" Grid.Column="2" HorizontalAlignment="Right">
+                                                                <TextBlock.Text>
+                                                                    <MultiBinding Converter="{StaticResource CurrencyConverter}">
+                                                                        <Binding Path="CurrentShipment.TotalBeforeTax" />
+                                                                        <Binding Path="ParentViewModel.InnerItem.BillingCurrency"/>
+                                                                    </MultiBinding>
+                                                                </TextBlock.Text>
+                                                            </TextBlock>
+                                                            <TextBlock Grid.Row="4" Grid.Column="2" HorizontalAlignment="Right">
+                                                                <TextBlock.Text>
+                                                                    <MultiBinding Converter="{StaticResource CurrencyConverter}">
+                                                                        <Binding Path="CurrentShipment.ItemTaxTotal" />
+                                                                        <Binding Path="ParentViewModel.InnerItem.BillingCurrency"/>
+                                                                    </MultiBinding>
+                                                                </TextBlock.Text>
+                                                            </TextBlock>
+                                                            <TextBlock Grid.Row="5" Grid.Column="2" HorizontalAlignment="Right">
+                                                                <TextBlock.Text>
+                                                                    <MultiBinding Converter="{StaticResource CurrencyConverter}">
+                                                                        <Binding Path="CurrentShipment.ShippingTaxTotal" />
+                                                                        <Binding Path="ParentViewModel.InnerItem.BillingCurrency"/>
+                                                                    </MultiBinding>
+                                                                </TextBlock.Text>
+                                                            </TextBlock>
+                                                            <TextBlock Grid.Row="6" Grid.Column="2" HorizontalAlignment="Right">
+                                                                <TextBlock.Text>
+                                                                    <MultiBinding Converter="{StaticResource CurrencyConverter}">
+                                                                        <Binding Path="CurrentShipment.ShipmentTotal" />
+                                                                        <Binding Path="ParentViewModel.InnerItem.BillingCurrency"/>
+                                                                    </MultiBinding>
+                                                                </TextBlock.Text>
+                                                            </TextBlock>
                                                         </Grid>
                                                     </HeaderedContentControl>
                                                 </StackPanel>
@@ -432,13 +494,28 @@
                                     <Border x:Name="Bd" BorderThickness="1,1,1,0" BorderBrush="#D4D4D4" Height="35" Padding="10,5">
                                         <StackPanel SnapsToDevicePixels="true" Orientation="Horizontal">
                                             <core_controls:VectorImage ImageSource="{Binding IconSource}" Height="18" Width="18"/>
+                                            <!--
                                             <TextBlock x:Name="Content" FontWeight="Bold" Margin="4,0,0,0">
-                                                <TextBlock.Text>
+                                             <TextBlock.Text>
                                                     <MultiBinding StringFormat="# {0}: {1}">
                                                         <Binding Path="CurrentShipment.ShipmentId" />
                                                         <Binding Path="CurrentShipment.ShipmentTotal" Converter="{StaticResource CurrencyConverter}" />
                                                     </MultiBinding>
                                                 </TextBlock.Text>
+                                            </TextBlock>
+                                            -->
+                                            <TextBlock x:Name="Content" FontWeight="Bold" Margin="4,0,0,0">
+                                                <Run Text="# " />
+                                                <Run Text="{Binding CurrentShipment.ShipmentId}" />
+                                                <Run Text=": " />
+                                                <Run>
+                                                    <Run.Text>
+                                                        <MultiBinding Converter="{StaticResource CurrencyConverter}">
+                                                        <Binding Path="CurrentShipment.ShipmentTotal" />
+                                                        <Binding Path="ParentViewModel.InnerItem.BillingCurrency"/>
+                                                    </MultiBinding>
+                                                    </Run.Text>
+                                                </Run>
                                             </TextBlock>
                                             <TextBlock Text="{Binding CurrentStatusText, StringFormat=' [{0}]'}" FontStyle="Italic" Foreground="#72b143" Style="{DynamicResource {x:Type TextBlock}}" Margin="4,0,0,0"/>
                                             <!--<ContentPresenter x:Name="Content" ContentSource="Header" HorizontalAlignment="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" Margin="4,0,0,0"/>-->
@@ -484,7 +561,14 @@
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Payment method" Binding="{Binding Path=PaymentMethodName, TargetNullValue='N/A'}" Foreground="{StaticResource Virto_HighLightText_Foreground_Brush}" Width="*"/>
                                 <DataGridTextColumn Header="Transaction type" Binding="{Binding Path=TransactionType, TargetNullValue='N/A'}" Width="*"/>
-                                <DataGridTextColumn Header="Amount" Binding="{Binding Path=Amount,Converter={StaticResource CurrencyConverter}, TargetNullValue='N/A'}" Width="*"/>
+                                <DataGridTextColumn Header="Amount" Width="*">
+                                    <DataGridTextColumn.Binding>
+                                        <MultiBinding Converter="{StaticResource CurrencyConverter}" TargetNullValue="N/A">
+                                            <Binding Path="Amount" />
+                                            <Binding Path="DataContext.InnerItem.BillingCurrency" RelativeSource="{RelativeSource AncestorType=DataGrid}" />
+                                        </MultiBinding>
+                                    </DataGridTextColumn.Binding>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn Header="Created" Binding="{Binding Created, StringFormat=\{0:d\}}" Width="*"/>
                                 <DataGridTextColumn Header="Status" Binding="{Binding Path=Status, TargetNullValue='N/A'}" Width="*"/>
                             </DataGrid.Columns>
@@ -510,11 +594,25 @@
                         <TextBlock Grid.Row="1" Grid.Column="0" Text="Paid Total:" FontWeight="DemiBold" />
                         <TextBlock Grid.Row="2" Grid.Column="0" Text="Balance Due:" FontWeight="DemiBold"/>
 
-                        <TextBlock Grid.Row="0" Grid.Column="2" x:Name="lblOrderedValue" Text="{Binding InnerItem.OrderForms[0].Total, StringFormat=c}" HorizontalAlignment="Right" />
-                        <TextBlock Grid.Row="1" Grid.Column="2" x:Name="lblPaidValue" Text="{Binding PaidTotal, StringFormat=c}" HorizontalAlignment="Right"/>
+                        <TextBlock Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right">
+                            <TextBlock.Text>
+                                <MultiBinding Converter="{StaticResource CurrencyConverter}">
+                                    <Binding Path="InnerItem.OrderForms[0].Total" />
+                                    <Binding Path="InnerItem.BillingCurrency"/>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                        <TextBlock Grid.Row="1" Grid.Column="2" HorizontalAlignment="Right">
+                            <TextBlock.Text>
+                                <MultiBinding Converter="{StaticResource CurrencyConverter}">
+                                    <Binding Path="PaidTotal" />
+                                    <Binding Path="InnerItem.BillingCurrency"/>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
                         <TextBlock Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right">
                             <TextBlock.Text>
-                                <MultiBinding Converter="{StaticResource MathConverter}" ConverterParameter="-" StringFormat="{}{0:c}">
+                                <MultiBinding Converter="{StaticResource MathConverter}" ConverterParameter="-" StringFormat="{}{0:0.##}">
                                     <Binding Path="InnerItem.OrderForms[0].Total" />
                                     <Binding Path="PaidTotal" />
                                 </MultiBinding>
@@ -623,7 +721,7 @@
                                                             <DataGridTextColumn Header="Invoice Price" Binding="{Binding RmaLineItems[0].LineItem.PlacedPrice}"/>
                                                             <DataGridTextColumn Header="Total" Width="4*">
                                                                 <DataGridTextColumn.Binding>
-                                                                    <MultiBinding Converter="{StaticResource MathConverter}" ConverterParameter="*" StringFormat="{}{0:c}">
+                                                                    <MultiBinding Converter="{StaticResource MathConverter}" ConverterParameter="*" StringFormat="{}{0:0.##}">
                                                                         <Binding Path="RmaLineItems[0].ReturnQuantity" />
                                                                         <Binding Path="RmaLineItems[0].LineItem.ListPrice"/>
                                                                     </MultiBinding>
@@ -661,11 +759,25 @@
                                                         <TextBlock Grid.Row="1" Grid.Column="0" Text="Refunded:" />
                                                         <TextBlock Grid.Row="2" Grid.Column="0" Text="Balance Owed:" />
 
-                                                        <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding CurrentRmaRequest.ItemSubtotal, Converter={StaticResource CurrencyConverter}}" />
-                                                        <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding CurrentRmaRequest.RefundAmount, Converter={StaticResource CurrencyConverter}}" />
-                                                        <TextBlock Grid.Row="2" Grid.Column="2">
+                                                        <TextBlock Grid.Row="0" Grid.Column="2" HorizontalAlignment="Right">
                                                             <TextBlock.Text>
-                                                                <MultiBinding Converter="{StaticResource MathConverter}" ConverterParameter="-" StringFormat="{}{0:c}">
+                                                                <MultiBinding Converter="{StaticResource CurrencyConverter}">
+                                                                    <Binding Path="CurrentRmaRequest.ItemSubtotal" />
+                                                                    <Binding Path="CurrentRmaRequest.Order.BillingCurrency"/>
+                                                                </MultiBinding>
+                                                            </TextBlock.Text>
+                                                        </TextBlock>
+                                                        <TextBlock Grid.Row="1" Grid.Column="2" HorizontalAlignment="Right">
+                                                            <TextBlock.Text>
+                                                                <MultiBinding Converter="{StaticResource CurrencyConverter}">
+                                                                    <Binding Path="CurrentRmaRequest.RefundAmount" />
+                                                                    <Binding Path="CurrentRmaRequest.Order.BillingCurrency"/>
+                                                                </MultiBinding>
+                                                            </TextBlock.Text>
+                                                        </TextBlock>
+                                                        <TextBlock Grid.Row="2" Grid.Column="2" HorizontalAlignment="Right">
+                                                            <TextBlock.Text>
+                                                                <MultiBinding Converter="{StaticResource MathConverter}" ConverterParameter="-" StringFormat="{}{0:0.##}">
                                                                     <Binding Path="CurrentRmaRequest.ItemSubtotal" />
                                                                     <Binding Path="CurrentRmaRequest.RefundAmount" />
                                                                 </MultiBinding>

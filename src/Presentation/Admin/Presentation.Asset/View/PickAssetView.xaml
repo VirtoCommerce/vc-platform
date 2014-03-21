@@ -25,6 +25,9 @@
         <prism:InteractionRequestTrigger SourceObject="{Binding InputNameDialogRequest, Mode=OneWay}">
             <interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:DisableableLocalModalInteractionDialog}"/>
         </prism:InteractionRequestTrigger>
+        <prism:InteractionRequestTrigger SourceObject="{Binding CommonNotifyRequest, Mode=OneWay}">
+            <interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:NotificationLocalModalInteractionDialog}" />
+        </prism:InteractionRequestTrigger>
     </i:Interaction.Triggers>
 
 	<base:ViewBase.Resources>

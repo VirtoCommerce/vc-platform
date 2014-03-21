@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using VirtoCommerce.Foundation;
 using VirtoCommerce.Foundation.Customers;
 using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Foundation.Customers.Repositories;
@@ -92,8 +93,13 @@ namespace VirtoCommerce.Client
         /// Saves the changes made to customer repository.
         /// </summary>
         /// <returns></returns>
-        public virtual int SaveCustomerChanges()
+        public virtual int SaveCustomerChanges(string memberId = null)
         {
+            //Remove from cache
+            if (!string.IsNullOrEmpty(memberId))
+            {
+                Helper.Remove(string.Format(CustomerCacheKey, memberId));
+            }
             return _customerRepository.UnitOfWork.Commit();
         }
 
@@ -185,7 +191,7 @@ namespace VirtoCommerce.Client
         public Contact GetCustomer(string memberId, bool useCache = true)
         {
             return Helper.Get(
-                string.Format(CustomerCacheKey, memberId),
+                CacheHelper.CreateCacheKey(Constants.UserCachePrefix, string.Format(CustomerCacheKey, memberId)),
                 () => LoadCustomer(memberId),
                 CustomerConfiguration.Instance.Cache.CustomerTimeout,
                 _isEnabled && useCache);

@@ -84,10 +84,9 @@
             if (setting != null)
             {
                 ConnectionStringFormat = setting.ConnectionString;
-                //ConnectionString = setting.ConnectionString;
             }
 
-            ConnectionString = string.Format(ConnectionStringFormat, name);
+            ConnectionString = string.Format(ConnectionStringFormat, name, Guid.NewGuid().ToString("N"));
             ProviderName = "System.Data.SqlClient";
             Info = CreateInfoContext(new SqlConnection(ConnectionString));
         }

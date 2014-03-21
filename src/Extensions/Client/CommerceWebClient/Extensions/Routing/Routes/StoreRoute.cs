@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Routing;
 using VirtoCommerce.Foundation.AppConfig.Model;
+using VirtoCommerce.Foundation.Stores.Model;
 using VirtoCommerce.Web.Client.Extensions.Routing.Constraints;
 using VirtoCommerce.Web.Client.Helpers;
 
@@ -49,44 +51,42 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
                 values.Add(Constants.Store, StoreHelper.CustomerSession.StoreId);
             }
 
-            var storeId = values[Constants.Store].ToString();
+
+            var storeId = SettingsHelper.SeoDecode(values[Constants.Store].ToString(), SeoUrlKeywordTypes.Store, values[Constants.Language] as string);
             var store = StoreHelper.StoreClient.GetStoreById(storeId);
 
             //Reset to default language if validation fails
-            var constraint = new StoreRouteConstraint(); 
-            if (!constraint.Match(requestContext.HttpContext, this, Constants.Store, values,
-                RouteDirection.UrlGeneration))
+            if (!IsValidStoreLanguage(store, values[Constants.Language].ToString()))
             {
                 values[Constants.Language] = store.DefaultLanguage;
             }
 
-            //Need to be in lock to make sure other thread does not change originalUrl in this block
-            lock (thisLock)
+            if (store != null && (!string.IsNullOrEmpty(store.Url) || !string.IsNullOrEmpty(store.SecureUrl)))
             {
-                var originalUrl = Url;
-
-                //If for request store URL is used do not show it in path
-                if (store != null && (!string.IsNullOrEmpty(store.Url) || !string.IsNullOrEmpty(store.SecureUrl)))
+                //Need to be in lock to make sure other thread does not change originalUrl in this block
+                lock (thisLock)
                 {
-                    Url = Url.Replace(string.Format("/{{{0}}}", Constants.Store), "");
+                    var originalUrl = Url;
+
+                    //If for request store URL is used do not show it in path
+                    Url = Url.Replace(string.Format("/{{{0}}}", Constants.Store), string.Empty);
                     values.Remove(Constants.Store);
+                    
+                    var retVal = base.GetVirtualPath(requestContext, values);
+
+                    //Restore original URL
+                    if (!string.IsNullOrEmpty(originalUrl) && !originalUrl.Equals(Url))
+                    {
+                        Url = originalUrl;
+                    }
+
+                    return retVal;
                 }
-                else
-                {
-                    EncodeVirtualPath(requestContext, values, SeoUrlKeywordTypes.Store);
-                }
-
-
-                var retVal = base.GetVirtualPath(requestContext, values);
-
-                //Restore original URL
-                if (!string.IsNullOrEmpty(originalUrl) && !originalUrl.Equals(Url))
-                {
-                    Url = originalUrl;
-                }
-
-                return retVal;
             }
+
+            EncodeVirtualPath(requestContext, values, SeoUrlKeywordTypes.Store);
+            return base.GetVirtualPath(requestContext, values);
+           
         }
 
         public override RouteData GetRouteData(HttpContextBase httpContext)
@@ -238,9 +238,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
             }
 
             //Decode route value
-            var store = routeData.Values[Constants.Store].ToString();
-            routeData.Values[Constants.Store] = SettingsHelper.SeoDecode(store, SeoUrlKeywordTypes.Store, 
-                routeData.Values.ContainsKey(Constants.Language) ? routeData.Values[Constants.Language] as string : null);
+            DecodeRouteData(routeData.Values, SeoUrlKeywordTypes.Store);
 
             return routeData;
         }
@@ -256,6 +254,23 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
             }
         }
 
+        protected virtual void DecodeRouteData(RouteValueDictionary values, SeoUrlKeywordTypes type)
+        {
+            // Need to skip decoding values in routes temporary because Sitemap calls GetRouteData and compares the values with the ones stored in siteMapNode
+            // Sitemap node is configured to preserve route values and they are encoded. 
+            // If values in current route does not match node route values sitemap fails to resolve current node
+            if (HttpContext.Current.Items.Contains(Constants.SkipSeoDecodeKey) && (bool)HttpContext.Current.Items[Constants.SkipSeoDecodeKey])
+                return;
+
+            string routeValueKey = type.ToString().ToLower();
+            var language = values.ContainsKey(Constants.Language) ? values[Constants.Language] as string : null;
+
+            if (values.ContainsKey(routeValueKey) && values[routeValueKey] != null)
+            {
+                values[routeValueKey] = SettingsHelper.SeoDecode(values[routeValueKey].ToString(), type, language);
+            }
+        }
+
         public virtual string GetMainRouteKey()
         {
             return Constants.Store;
@@ -264,6 +279,32 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
         protected bool ProcessConstraints(HttpContextBase httpContext, RouteValueDictionary values, RouteDirection routeDirection)
         {
             return Constraints == null || Constraints.All(constraintsItem => ProcessConstraint(httpContext, constraintsItem.Value, constraintsItem.Key, values, routeDirection));
+        }
+
+        private bool IsValidStoreLanguage(Store dbStore, string lang)
+        {
+            try
+            {
+                if (dbStore == null)
+                {
+                    return false;
+                }
+
+                var culture = CultureInfo.CreateSpecificCulture(lang);
+                    if (!dbStore.Languages.Any(l => l.LanguageCode.Equals(culture.Name, StringComparison.InvariantCultureIgnoreCase)))
+                    {
+                        //Store does not support this language
+                        return false;
+                    }
+
+            }
+            catch
+            {
+                //Language is not valid
+                return false;
+            }
+
+            return true;
         }
     }
 }
