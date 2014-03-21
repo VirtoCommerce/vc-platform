@@ -53,17 +53,17 @@
             </Setter>-->
         </Style>
 
-		<Style x:Key="Expression_ErrorTextBlock_Style" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
-			<Setter Property="FontSize" Value="13" />
-			<Setter Property="Margin" Value="3,3,3,0"/>
-			<Setter Property="Foreground" Value="Red" />
-			<Setter Property="FontStyle" Value="Italic" />
-			<Setter Property="TextWrapping" Value="NoWrap" />
-			<Setter Property="TextTrimming" Value="WordEllipsis" />
-			<Setter Property="MaxWidth" Value="300" />
-		</Style>
+        <Style x:Key="Expression_ErrorTextBlock_Style" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource {x:Type TextBlock}}">
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Margin" Value="3,3,3,0"/>
+            <Setter Property="Foreground" Value="Red" />
+            <Setter Property="FontStyle" Value="Italic" />
+            <Setter Property="TextWrapping" Value="NoWrap" />
+            <Setter Property="TextTrimming" Value="WordEllipsis" />
+            <Setter Property="MaxWidth" Value="300" />
+        </Style>
 
-		<Style x:Key="Expression_SelectionTextBlock_Style" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Expression_AddingTextBlock_Style}">
+        <Style x:Key="Expression_SelectionTextBlock_Style" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource Expression_AddingTextBlock_Style}">
             <Setter Property="FontSize" Value="13" />
             <Setter Property="Margin" Value="3,0"/>
             <Setter Property="Foreground" Value="#006987" />
@@ -228,44 +228,44 @@
                 </Style>
             </Style.BasedOn>
             <Style.Triggers>
-				<Trigger Property="IsMouseOver" Value="false">
+                <Trigger Property="IsMouseOver" Value="false">
                     <Setter Property="ShowButtonSpinner" Value="False" />
                     <Setter Property="BorderThickness" Value="0" />
                 </Trigger>
-				<Trigger Property="IsMouseOver" Value="True">
+                <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Background" Value="#FFF7F7F0"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
 
-		<Style TargetType="{x:Type extToolkit:DoubleUpDown}">
-			<Setter Property="FontSize" Value="13"/>
-			<Setter Property="TextAlignment" Value="Right"/>
-			<Setter Property="WatermarkTemplate">
-				<Setter.Value>
-					<DataTemplate>
-						<ContentControl Content="{Binding}" Foreground="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type extToolkit:DoubleUpDown}}}" 
+        <Style TargetType="{x:Type extToolkit:DoubleUpDown}">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="TextAlignment" Value="Right"/>
+            <Setter Property="WatermarkTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <ContentControl Content="{Binding}" Foreground="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type extToolkit:DoubleUpDown}}}" 
                                         FontSize="13" Margin="0,-2,0,0" Focusable="False"/>
-					</DataTemplate>
-				</Setter.Value>
-			</Setter>
-			<Style.BasedOn>
-				<Style TargetType="{x:Type Control}">
-					<Setter Property="Background" Value="Transparent"/>
-					<Setter Property="BorderThickness" Value="1"/>
-					<Setter Property="BorderBrush" Value="#FF1BA1E2"/>
-					<Setter Property="Focusable" Value="False"/>
-					<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"/>
-					<Setter Property="FontSize" Value="13"/>
-					<Setter Property="HorizontalContentAlignment" Value="Right"/>
-					<Setter Property="Template">
-						<Setter.Value>
-							<ControlTemplate TargetType="{x:Type Control}">
-								<extToolkit:ButtonSpinner x:Name="PART_Spinner" AllowSpin="{Binding AllowSpin, RelativeSource={RelativeSource TemplatedParent}}" 
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.BasedOn>
+                <Style TargetType="{x:Type Control}">
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                    <Setter Property="BorderBrush" Value="#FF1BA1E2"/>
+                    <Setter Property="Focusable" Value="False"/>
+                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"/>
+                    <Setter Property="FontSize" Value="13"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Right"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Control}">
+                                <extToolkit:ButtonSpinner x:Name="PART_Spinner" AllowSpin="{Binding AllowSpin, RelativeSource={RelativeSource TemplatedParent}}" 
 											  BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" 
 											  IsTabStop="False" ShowButtonSpinner="{Binding ShowButtonSpinner, RelativeSource={RelativeSource TemplatedParent}}" 
 											  Template="{StaticResource ButtonSpinner_ControlTemplate}" BorderBrush="{TemplateBinding BorderBrush}" >
-									<extToolkit:WatermarkTextBox x:Name="PART_TextBox" AcceptsReturn="False" BorderThickness="0" Background="{TemplateBinding Background}" 
+                                    <extToolkit:WatermarkTextBox x:Name="PART_TextBox" AcceptsReturn="False" BorderThickness="0" Background="{TemplateBinding Background}" 
                                                                  Foreground="{TemplateBinding Foreground}" FontWeight="{TemplateBinding FontWeight}" 
                                                                  FontStyle="{TemplateBinding FontStyle}" FontStretch="{TemplateBinding FontStretch}" 
                                                                  FontSize="{TemplateBinding FontSize}" FontFamily="{TemplateBinding FontFamily}" 
@@ -274,66 +274,66 @@
                                                                  TextWrapping="NoWrap" Text="{Binding Text, RelativeSource={RelativeSource TemplatedParent}}" 
                                                                  TabIndex="{TemplateBinding TabIndex}" WatermarkTemplate="{Binding WatermarkTemplate, RelativeSource={RelativeSource TemplatedParent}}" 
                                                                  Watermark="{Binding Watermark, RelativeSource={RelativeSource TemplatedParent}}">
-										<extToolkit:WatermarkTextBox.IsReadOnly>
-											<Binding Path="IsReadOnly" RelativeSource="{RelativeSource TemplatedParent}" Converter="{x:Static core_Converters:ToVisibilityConverter.Current}" ConverterParameter='i'>
-											</Binding>
-										</extToolkit:WatermarkTextBox.IsReadOnly>
-									</extToolkit:WatermarkTextBox>
-								</extToolkit:ButtonSpinner>
+                                        <extToolkit:WatermarkTextBox.IsReadOnly>
+                                            <Binding Path="IsReadOnly" RelativeSource="{RelativeSource TemplatedParent}" Converter="{x:Static core_Converters:ToVisibilityConverter.Current}" ConverterParameter='i'>
+                                            </Binding>
+                                        </extToolkit:WatermarkTextBox.IsReadOnly>
+                                    </extToolkit:WatermarkTextBox>
+                                </extToolkit:ButtonSpinner>
 
-								<ControlTemplate.Triggers>
-									<Trigger Property="IsKeyboardFocusWithin" Value="false">
-										<Setter Property="Foreground" Value="#006987" />
-										<Setter Property="FontSize" Value="13" />
-										<!--must adjust Height in order the decorations to be visible-->
-										<Setter TargetName="PART_TextBox" Property="Height" Value="23" />
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsKeyboardFocusWithin" Value="false">
+                                        <Setter Property="Foreground" Value="#006987" />
+                                        <Setter Property="FontSize" Value="13" />
+                                        <!--must adjust Height in order the decorations to be visible-->
+                                        <Setter TargetName="PART_TextBox" Property="Height" Value="23" />
 
-									</Trigger>
-								</ControlTemplate.Triggers>
-							</ControlTemplate>
-						</Setter.Value>
-					</Setter>
-				</Style>
-			</Style.BasedOn>
-			<Style.Triggers>
-				<Trigger Property="IsMouseOver" Value="false">
-					<Setter Property="ShowButtonSpinner" Value="False" />
-					<Setter Property="BorderThickness" Value="0" />
-				</Trigger>
-				<Trigger Property="IsMouseOver" Value="True">
-					<Setter Property="Background" Value="#FFF7F7F0"/>
-				</Trigger>
-			</Style.Triggers>
-		</Style>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Style.BasedOn>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="false">
+                    <Setter Property="ShowButtonSpinner" Value="False" />
+                    <Setter Property="BorderThickness" Value="0" />
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FFF7F7F0"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
 
-		<Style TargetType="{x:Type extToolkit:DecimalUpDown}">
-			<Setter Property="FontSize" Value="13"/>
-			<Setter Property="TextAlignment" Value="Right"/>
-			<Setter Property="WatermarkTemplate">
-				<Setter.Value>
-					<DataTemplate>
-						<ContentControl Content="{Binding}" Foreground="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type extToolkit:DecimalUpDown}}}" 
+        <Style TargetType="{x:Type extToolkit:DecimalUpDown}">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="TextAlignment" Value="Right"/>
+            <Setter Property="WatermarkTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <ContentControl Content="{Binding}" Foreground="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type extToolkit:DecimalUpDown}}}" 
                                         FontSize="13" Margin="0,-2,0,0" Focusable="False"/>
-					</DataTemplate>
-				</Setter.Value>
-			</Setter>
-			<Style.BasedOn>
-				<Style TargetType="{x:Type Control}">
-					<Setter Property="Background" Value="Transparent"/>
-					<Setter Property="BorderThickness" Value="1"/>
-					<Setter Property="BorderBrush" Value="#FF1BA1E2"/>
-					<Setter Property="Focusable" Value="False"/>
-					<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"/>
-					<Setter Property="FontSize" Value="13"/>
-					<Setter Property="HorizontalContentAlignment" Value="Right"/>
-					<Setter Property="Template">
-						<Setter.Value>
-							<ControlTemplate TargetType="{x:Type Control}">
-								<extToolkit:ButtonSpinner x:Name="PART_Spinner" AllowSpin="{Binding AllowSpin, RelativeSource={RelativeSource TemplatedParent}}" 
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.BasedOn>
+                <Style TargetType="{x:Type Control}">
+                    <Setter Property="Background" Value="Transparent"/>
+                    <Setter Property="BorderThickness" Value="1"/>
+                    <Setter Property="BorderBrush" Value="#FF1BA1E2"/>
+                    <Setter Property="Focusable" Value="False"/>
+                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}"/>
+                    <Setter Property="FontSize" Value="13"/>
+                    <Setter Property="HorizontalContentAlignment" Value="Right"/>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type Control}">
+                                <extToolkit:ButtonSpinner x:Name="PART_Spinner" AllowSpin="{Binding AllowSpin, RelativeSource={RelativeSource TemplatedParent}}" 
 											  BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" 
 											  IsTabStop="False" ShowButtonSpinner="{Binding ShowButtonSpinner, RelativeSource={RelativeSource TemplatedParent}}" 
 											  Template="{StaticResource ButtonSpinner_ControlTemplate}" BorderBrush="{TemplateBinding BorderBrush}" >
-									<extToolkit:WatermarkTextBox x:Name="PART_TextBox" AcceptsReturn="False" BorderThickness="0" Background="{TemplateBinding Background}" 
+                                    <extToolkit:WatermarkTextBox x:Name="PART_TextBox" AcceptsReturn="False" BorderThickness="0" Background="{TemplateBinding Background}" 
                                                                  Foreground="{TemplateBinding Foreground}" FontWeight="{TemplateBinding FontWeight}" 
                                                                  FontStyle="{TemplateBinding FontStyle}" FontStretch="{TemplateBinding FontStretch}" 
                                                                  FontSize="{TemplateBinding FontSize}" FontFamily="{TemplateBinding FontFamily}" 
@@ -342,39 +342,39 @@
                                                                  TextWrapping="NoWrap" Text="{Binding Text, RelativeSource={RelativeSource TemplatedParent}}" 
                                                                  TabIndex="{TemplateBinding TabIndex}" WatermarkTemplate="{Binding WatermarkTemplate, RelativeSource={RelativeSource TemplatedParent}}" 
                                                                  Watermark="{Binding Watermark, RelativeSource={RelativeSource TemplatedParent}}">
-										<extToolkit:WatermarkTextBox.IsReadOnly>
-											<Binding Path="IsReadOnly" RelativeSource="{RelativeSource TemplatedParent}" Converter="{x:Static core_Converters:ToVisibilityConverter.Current}" ConverterParameter='i'>
-											</Binding>
-										</extToolkit:WatermarkTextBox.IsReadOnly>
-									</extToolkit:WatermarkTextBox>
-								</extToolkit:ButtonSpinner>
+                                        <extToolkit:WatermarkTextBox.IsReadOnly>
+                                            <Binding Path="IsReadOnly" RelativeSource="{RelativeSource TemplatedParent}" Converter="{x:Static core_Converters:ToVisibilityConverter.Current}" ConverterParameter='i'>
+                                            </Binding>
+                                        </extToolkit:WatermarkTextBox.IsReadOnly>
+                                    </extToolkit:WatermarkTextBox>
+                                </extToolkit:ButtonSpinner>
 
-								<ControlTemplate.Triggers>
-									<Trigger Property="IsKeyboardFocusWithin" Value="false">
-										<Setter Property="Foreground" Value="#006987" />
-										<Setter Property="FontSize" Value="13" />
-										<!--must adjust Height in order the decorations to be visible-->
-										<Setter TargetName="PART_TextBox" Property="Height" Value="23" />
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsKeyboardFocusWithin" Value="false">
+                                        <Setter Property="Foreground" Value="#006987" />
+                                        <Setter Property="FontSize" Value="13" />
+                                        <!--must adjust Height in order the decorations to be visible-->
+                                        <Setter TargetName="PART_TextBox" Property="Height" Value="23" />
 
-									</Trigger>
-								</ControlTemplate.Triggers>
-							</ControlTemplate>
-						</Setter.Value>
-					</Setter>
-				</Style>
-			</Style.BasedOn>
-			<Style.Triggers>
-				<Trigger Property="IsMouseOver" Value="false">
-					<Setter Property="ShowButtonSpinner" Value="False" />
-					<Setter Property="BorderThickness" Value="0" />
-				</Trigger>
-				<Trigger Property="IsMouseOver" Value="True">
-					<Setter Property="Background" Value="#FFF7F7F0"/>
-				</Trigger>
-			</Style.Triggers>
-		</Style>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </Style.BasedOn>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="false">
+                    <Setter Property="ShowButtonSpinner" Value="False" />
+                    <Setter Property="BorderThickness" Value="0" />
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FFF7F7F0"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
 
-		<Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+        <Style TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
             <Style.Triggers>
                 <Trigger Property="IsKeyboardFocusWithin" Value="False">
                     <Setter Property="Template">
@@ -483,7 +483,7 @@
                         <Grid  VerticalAlignment="Center" Height="27">
                             <TextBlock Text="{Binding InputDisplayName}" Style="{StaticResource Expression_SelectionTextBlock_Style}" FontWeight="DemiBold" FontSize="13" Margin="0,-2,0,0" VerticalAlignment="Center" />
                         </Grid>
- 
+
                         <Button.ContextMenu>
                             <ContextMenu ItemsSource="{Binding AvailableValues}">
                                 <ContextMenu.Style>
@@ -555,13 +555,13 @@
                 <DataTemplate DataType="{x:Type core_controls:UserInputElement}">
                     <DataTemplate.Resources>
                         <DataTemplate DataType="{x:Type system:Int32}">
-							<extToolkit:IntegerUpDown Value="{Binding DataContext.InputValue, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentControl}}, Mode=TwoWay}" Minimum="{Binding DataContext.MinValue, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentControl}}}" Maximum="{Binding DataContext.MaxValue, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentControl}}}" Height="27" Width="50" Margin="0,-1,5,0" VerticalAlignment="Top" />
+                            <extToolkit:IntegerUpDown Value="{Binding DataContext.InputValue, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentControl}}, Mode=TwoWay}" Minimum="{Binding DataContext.MinValue, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentControl}}}" Maximum="{Binding DataContext.MaxValue, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentControl}}}" Height="27" Width="50" Margin="0,-1,5,0" VerticalAlignment="Top" />
                         </DataTemplate>
                         <DataTemplate DataType="{x:Type system:Double}">
-							<extToolkit:DoubleUpDown Increment="0.05" Width="Auto" Text="{Binding DataContext.InputValue, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentControl}}, Mode=TwoWay}" Minimum="{Binding DataContext.MinValue, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentControl}}}" Maximum="{Binding DataContext.MaxValue, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentControl}}}" Height="27" Margin="0,0,5,0" VerticalAlignment="Top" />
+                            <extToolkit:DoubleUpDown Increment="0.5" Width="Auto" Value="{Binding DataContext.InputValue, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentControl}}, Mode=TwoWay}" Minimum="{Binding DataContext.MinValue, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentControl}}}" Maximum="{Binding DataContext.MaxValue, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentControl}}}" Height="27" Margin="0,0,5,0" VerticalAlignment="Top" />
                         </DataTemplate>
                         <DataTemplate DataType="{x:Type system:Decimal}">
-							<extToolkit:DecimalUpDown Increment="0.05" Width="Auto" Text="{Binding DataContext.InputValue, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentControl}}, Mode=TwoWay}" Minimum="{Binding DataContext.MinValue, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentControl}}}" Maximum="{Binding DataContext.MaxValue, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentControl}}}" Height="27" Margin="0,0,5,0" VerticalAlignment="Top" />
+                            <extToolkit:DecimalUpDown Increment="0.5" Width="Auto" Value="{Binding DataContext.InputValue, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentControl}}, Mode=TwoWay}" Minimum="{Binding DataContext.MinValue, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentControl}}}" Maximum="{Binding DataContext.MaxValue, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentControl}}}" Height="27" Margin="0,0,5,0" VerticalAlignment="Top" />
                         </DataTemplate>
                         <DataTemplate DataType="{x:Type system:DateTime}">
                             <DatePicker SelectedDate="{Binding DataContext.InputValue, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentControl}}, Mode=TwoWay}" Style="{DynamicResource {x:Type DatePicker}}" Height="27" Margin="0,0,5,0" VerticalAlignment="Top" />
@@ -580,9 +580,9 @@
                             <StackPanel Margin="3,0,0,0">
                                 <ItemsControl ItemsSource="{Binding HeaderElements}" ItemsPanel="{StaticResource LeftOrientedItemsPanelTemplate}" />
 
-								<!--ItemsControl is an extremely special container as it's Datacontext is parent element-->
-                                <ItemsControl ItemsSource="{Binding Children}" Margin="10,0" ItemTemplate="{DynamicResource ChildElements_DataTemplate}" VerticalAlignment="Top" />						
-								
+                                <!--ItemsControl is an extremely special container as it's Datacontext is parent element-->
+                                <ItemsControl ItemsSource="{Binding Children}" Margin="10,0" ItemTemplate="{DynamicResource ChildElements_DataTemplate}" VerticalAlignment="Top" />
+
                                 <!--+ add something-->
                                 <Button>
                                     <TextBlock Text="{Binding NewChildLabel}" Style="{StaticResource Expression_AddingTextBlock_Style}" FontSize="13"/>
@@ -600,7 +600,7 @@
 
                     <ContentControl Content="{Binding }" />
                 </DataTemplate>
-                
+
                 <!-- начало с кнопкой текстом + контайнер конец с кнопкой add something-->
                 <DataTemplate x:Key="ChildElements_DataTemplate" DataType="{x:Type core_controls:CompositeElement}" >
                     <StackPanel>
@@ -616,10 +616,10 @@
                                           ItemTemplate="{StaticResource HeaderElements_DataTemplate}" Margin="0" Padding="0" VerticalAlignment="Top"/>
                         </StackPanel>
 
-						<TextBlock HorizontalAlignment="Left" Margin="30,5,0,2" Text="{Binding ErrorMessage}" Style="{StaticResource Expression_ErrorTextBlock_Style}" 
+                        <TextBlock HorizontalAlignment="Left" Margin="30,5,0,2" Text="{Binding ErrorMessage}" Style="{StaticResource Expression_ErrorTextBlock_Style}" 
 								   Visibility="{Binding IsValid, Converter={StaticResource visibilityConverter}, ConverterParameter='False'}" />
 
-						<!--ItemsControl is an extremely special container as it's Datacontext is parent element-->
+                        <!--ItemsControl is an extremely special container as it's Datacontext is parent element-->
                         <ItemsControl ItemsSource="{Binding Children}" Margin="30,0,0,0" Padding="0" ItemTemplate="{DynamicResource ChildElements_DataTemplate}">
                             <ItemsControl.Resources>
                                 <DataTemplate DataType="{x:Type core_controls:LabelElement}">
@@ -630,9 +630,9 @@
                             </ItemsControl.Resources>
                         </ItemsControl>
 
-						<!--+ add something-->
-						<Button Margin="30,5,0,20" HorizontalAlignment="Left">
-							<TextBlock Text="{Binding NewChildLabel}" Style="{StaticResource Expression_AddingTextBlock_Style}" FontSize="13" />
+                        <!--+ add something-->
+                        <Button Margin="30,5,0,20" HorizontalAlignment="Left">
+                            <TextBlock Text="{Binding NewChildLabel}" Style="{StaticResource Expression_AddingTextBlock_Style}" FontSize="13" />
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="Click">
                                     <ei:ChangePropertyAction TargetObject="{Binding ContextMenu, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}" PropertyName="PlacementTarget" Value="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}, Mode=OneWay}"/>
