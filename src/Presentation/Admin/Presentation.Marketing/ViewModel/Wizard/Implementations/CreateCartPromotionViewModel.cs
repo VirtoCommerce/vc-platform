@@ -152,7 +152,7 @@ namespace VirtoCommerce.ManagementClient.Marketing.ViewModel.Wizard.Implementati
 		{
 			get
 			{
-				return !HasCoupon || (InnerItem.Coupon != null && !string.IsNullOrEmpty(InnerItem.Coupon.Code));
+                return !HasCoupon || !string.IsNullOrEmpty(CouponCodeDisplayed);
 			}
 		}
 

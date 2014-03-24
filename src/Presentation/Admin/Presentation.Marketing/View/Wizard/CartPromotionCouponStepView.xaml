@@ -7,7 +7,8 @@
               xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
               xmlns:inf="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure;assembly=VirtoCommerce.ManagementClient.Core"
               xmlns:controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
-               mc:Ignorable="d" 
+              xmlns:implementations="clr-namespace:VirtoCommerce.ManagementClient.Marketing.ViewModel.Implementations"
+              mc:Ignorable="d" 
              Width="400" MinHeight="400" HorizontalAlignment="Left" VerticalAlignment="Top">
 
     <FrameworkElement.Resources>
@@ -21,28 +22,16 @@
         </ResourceDictionary>
     </FrameworkElement.Resources>
 
-    <Grid>
+    <Grid d:DataContext="{d:DesignInstance implementations:CartPromotionViewModel}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <RadioButton Content="No coupon" IsChecked="True" Grid.Row="0" Margin="0,12,0,8">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="Checked">
-                    <ei:ChangePropertyAction PropertyName="CouponId" TargetObject="{Binding InnerItem}" Value="{x:Null}" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </RadioButton>
-        <RadioButton Content="Has coupon" IsChecked="{Binding HasCoupon}" Grid.Row="1" Margin="0,12,0,8">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="Checked">
-                    <ei:ChangePropertyAction PropertyName="CouponId" TargetObject="{Binding InnerItem}" Value="{Binding InnerItem.Coupon.CouponId}" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </RadioButton>
-        <controls:WatermarkedTextBox Grid.Row="2" Text="{Binding InnerItem.Coupon.Code, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" WatermarkText="Enter coupon code..."
-                                     IsEnabled="{Binding HasCoupon}" Margin="24,0,0,0"/>
+        <RadioButton Content="No coupon" IsChecked="{Binding NoCoupon}" Grid.Row="0" Margin="0,12,0,8" />
+        <RadioButton Name="hasCoupon" Content="Has coupon" IsChecked="{Binding HasCoupon}" Grid.Row="1" Margin="0,12,0,8" />
+        <controls:WatermarkedTextBox Grid.Row="2" Text="{Binding CouponCodeDisplayed, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, Delay=500}" WatermarkText="Enter coupon code..."
+                                     IsEnabled="{Binding IsChecked, ElementName=hasCoupon}" Margin="24,0,0,0"/>
     </Grid>
 </inf:ViewBase>

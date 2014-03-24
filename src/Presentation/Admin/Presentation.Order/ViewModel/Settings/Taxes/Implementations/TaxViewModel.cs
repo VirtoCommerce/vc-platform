@@ -365,6 +365,8 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Taxes.Implemen
 			{
 				// copy all values to original:
 				originalItem.InjectFrom<CloneInjection>(item);
+                // fake assign for UI triggers to display correct values.
+			    originalItem.JurisdictionGroupId = originalItem.JurisdictionGroupId;
 			}
 		}
 
