@@ -163,6 +163,7 @@
     <Compile Include="AppConfig\Model\TargetTypes.cs" />
     <Compile Include="AppConfig\Model\TaskSchedule.cs" />
     <Compile Include="AppConfig\Services\DisplayTemplatesService.cs" />
+    <Compile Include="AppConfig\Services\ICacheService.cs" />
     <Compile Include="AppConfig\Services\IDisplayTemplatesService.cs" />
     <Compile Include="Assets\AssetConfiguration.cs" />
     <Compile Include="Assets\Factories\AssetEntityFactory.cs" />

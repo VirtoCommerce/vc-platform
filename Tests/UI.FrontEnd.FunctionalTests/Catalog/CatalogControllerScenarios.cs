@@ -6,6 +6,7 @@ using FunctionalTests.TestHelpers;
 using UI.FrontEnd.FunctionalTests.Properties;
 using VirtoCommerce.Client;
 using VirtoCommerce.Foundation;
+using VirtoCommerce.Foundation.AppConfig.Services;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Data.Stores;
 using VirtoCommerce.Foundation.Frameworks;

@@ -254,7 +254,6 @@
     <Compile Include="Security\OAuthWebSecurityWrapper.cs" />
     <Compile Include="Services\Assets\FileSystemAssetUrl.cs" />
     <Compile Include="Services\Cache\CacheService.cs" />
-    <Compile Include="Services\Cache\ICacheService.cs" />
     <Compile Include="Services\Emails\AzureEmailService.cs" />
     <Compile Include="Services\Emails\EmailMessage.cs" />
     <Compile Include="Services\Emails\NetEmailService.cs" />
