@@ -288,9 +288,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Migrations\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="Catalogs\Migrations\201402141547367_Initial.resx">
       <DependentUpon>201402141547367_Initial.cs</DependentUpon>
