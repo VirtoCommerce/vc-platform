@@ -198,7 +198,7 @@ namespace VirtoCommerce.Web.Client.Modules
             var session = CustomerSession;
             session.StoreId = store.StoreId;
 
-            var currency = GetStoreCurrency(context, store.DefaultCurrency);
+            var currency = GetStoreCurrency(context, store);
             session.Currency = currency;
             session.StoreName = store.Name;
             session.CatalogId = store.Catalog;
@@ -324,32 +324,37 @@ namespace VirtoCommerce.Web.Client.Modules
         /// Gets the store currency.
         /// </summary>
         /// <param name="context">The context.</param>
-        /// <param name="defaultCurrency">The default currency.</param>
+        /// <param name="store">current store</param>
         /// <returns>
         /// System.String.
         /// </returns>
-		protected virtual string GetStoreCurrency(HttpContext context, string defaultCurrency)
+        protected virtual string GetStoreCurrency(HttpContext context, Store store)
 		{
 			var currency = context.Request.QueryString["currency"];
 
-			if (String.IsNullOrEmpty(currency))
-			{
-				currency = String.Empty;
+            if (String.IsNullOrEmpty(currency))
+            {
+                currency = String.Empty;
 
-				// try getting store from the cookie
-				if (String.IsNullOrEmpty(currency))
-				{
-					currency = StoreHelper.GetCookieValue(CurrencyCookie);
-				}
+                // try getting store from the cookie
+                if (String.IsNullOrEmpty(currency))
+                {
+                    currency = StoreHelper.GetCookieValue(CurrencyCookie);
+                }
 
-				// try getting default store from settings
-				if (String.IsNullOrEmpty(currency))
-				{
-					currency = defaultCurrency;
-				}
-			}
+                // try getting default store from settings
+                if (String.IsNullOrEmpty(currency))
+                {
+                    currency = store.DefaultCurrency;
+                }
+            }
+            //if currency is invalid use dafault
+            else if (!store.Currencies.Any(c => c.CurrencyCode.Equals(currency, StringComparison.OrdinalIgnoreCase)))
+            {
+                currency = store.DefaultCurrency;
+            }
 
-			return currency;
+			return currency.ToUpperInvariant();
 		}
 		#endregion
 
