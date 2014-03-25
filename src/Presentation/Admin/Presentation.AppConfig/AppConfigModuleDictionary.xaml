@@ -62,12 +62,12 @@
     <DataTemplate DataType="{x:Type localWizardViewModel:SystemJobOverviewStepViewModel}">
         <core_controls:CacheContentControl Type="{x:Type localView:SystemJobEditOverviewStepView}"/>
     </DataTemplate>
-    
+
     <DataTemplate DataType="{x:Type localWizardViewModel:SystemJobParametersStepViewModel}">
         <core_controls:CacheContentControl Type="{x:Type localView:SystemJobEditParametersStepView}"/>
     </DataTemplate>
 
-  
+
     <DataTemplate DataType="{x:Type localWizardViewModel:DisplayTemplateOverviewStepViewModel}">
         <core_controls:CacheContentControl Type="{x:Type localView:DisplayTemplateEditOverviewStepView}"/>
     </DataTemplate>
@@ -75,8 +75,8 @@
     <DataTemplate DataType="{x:Type localWizardViewModel:DisplayTemplateConditionsStepViewModel}">
         <core_controls:CacheContentControl Type="{x:Type localView:DisplayTemplateConditionsStepView}"/>
     </DataTemplate>
-    
-    
+
+
     <!--EmailTemplates-->
     <DataTemplate DataType="{x:Type localViewModel1:EmailTemplatesViewModel}">
         <core_controls:CacheContentControl Type="{x:Type localView:EmailTemplatesView}"/>
@@ -92,29 +92,32 @@
     <DataTemplate DataType="{x:Type localViewModel1:EmailTemplateAddLanguageViewModel}">
         <core_controls:CacheContentControl Type="{x:Type localView:EmailTemplateAddLanguageView}"/>
     </DataTemplate>
-    
+
     <DataTemplate DataType="{x:Type localViewModel1:EmailTemplateEditViewModel}">
         <core_controls:CacheContentControl Type="{x:Type localView:EmailTemplateEditView}"/>
     </DataTemplate>
 
-	<!-- Localization -->
-	<DataTemplate DataType="{x:Type implementations2:LocalizationMainViewModel}">
-		<core_controls:CacheContentControl Type="{x:Type core_controls:HorizontalTabDefaultView}"/>
-	</DataTemplate>
-	
-	<DataTemplate DataType="{x:Type implementations2:LocalizationHomeViewModel}">
-		<core_controls:CacheContentControl Type="{x:Type localView:LocalizationHomeView}"/>
-	</DataTemplate>
+    <!-- Localization -->
+    <DataTemplate DataType="{x:Type implementations2:LocalizationMainViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type core_controls:HorizontalTabDefaultView}"/>
+    </DataTemplate>
 
-	<DataTemplate DataType="{x:Type implementations2:LocalizationEditViewModel}">
-		<core_controls:CacheContentControl Type="{x:Type localView:LocalizationEditView}"/>
-	</DataTemplate>
+    <DataTemplate DataType="{x:Type implementations2:LocalizationHomeViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localView:LocalizationHomeView}"/>
+    </DataTemplate>
 
-	<!-- Localization -->
+    <DataTemplate DataType="{x:Type implementations2:LocalizationEditViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localView:LocalizationEditView}"/>
+    </DataTemplate>
 
+    <!-- Localization -->
 
-	<!--Brushes-->
-	<SolidColorBrush x:Key="SettingsDetailItemMenuBrush" Color="#AAAAAA"/>
-	<!--Brushes-->
+    <DataTemplate DataType="{x:Type implementations:CacheViewModel}">
+        <core_controls:CacheContentControl Type="{x:Type localView:CacheView}"/>
+    </DataTemplate>
+
+    <!--Brushes-->
+    <SolidColorBrush x:Key="SettingsDetailItemMenuBrush" Color="#AAAAAA"/>
+    <!--Brushes-->
 
 </ResourceDictionary>

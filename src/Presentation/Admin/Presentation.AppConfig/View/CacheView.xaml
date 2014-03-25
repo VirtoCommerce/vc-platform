@@ -1,0 +1,54 @@
+﻿<base:ViewBase xmlns:base="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure;assembly=VirtoCommerce.ManagementClient.Core"
+            x:Class="VirtoCommerce.ManagementClient.AppConfig.View.CacheView"
+            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+            xmlns:interaction_dialog="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Dialogs;assembly=VirtoCommerce.ManagementClient.Core"
+            xmlns:prism="http://www.codeplex.com/prism"
+            xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:implementations="clr-namespace:VirtoCommerce.ManagementClient.AppConfig.ViewModel.AppConfig.Implementations"
+             xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+             mc:Ignorable="d" >
+    <base:ViewBase.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/WizardViewTheme/VirtoCommerceWizardTheme.xaml"/>
+                <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/SettingsViewTheme/VirtoCommerceSettingsTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </base:ViewBase.Resources>
+
+    <i:Interaction.Triggers>
+        <prism:InteractionRequestTrigger SourceObject="{Binding Path=CommonConfirmRequest}">
+            <interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:DisableableLocalModalInteractionDialog}"/>
+        </prism:InteractionRequestTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid d:DataContext="{d:DesignInstance implementations:CacheViewModel}" VerticalAlignment="Top" HorizontalAlignment="Left">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel>
+            <TextBlock Text="Select Cache type to clear:" />
+            <ListBox ItemsSource="{Binding CacheTypes}" SelectedValue="{Binding SelectedCacheType}" SelectedValuePath="Value"
+				 Style="{StaticResource Virto_ListBox_RadioButtonLike_Style_With_Description}" d:DesignHeight="60" />
+        </StackPanel>
+
+        <StackPanel Grid.Row="1">
+            <TextBlock Text="Specify parameter for selected cache type:" />
+            <ComboBox ItemsSource="{Binding CacheParameters}" SelectedItem="{Binding SelectedCacheParameter, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsCacheTypeSelected}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="SelectionChanged">
+                        <ei:CallMethodAction TargetObject="{Binding ClearCacheCommand}" MethodName="RaiseCanExecuteChanged"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </ComboBox>
+        </StackPanel>
+
+        <Button Grid.Row="2" Content="Clear Cache now" Command="{Binding ClearCacheCommand}" Margin="0,12" />
+    </Grid>
+</base:ViewBase>
