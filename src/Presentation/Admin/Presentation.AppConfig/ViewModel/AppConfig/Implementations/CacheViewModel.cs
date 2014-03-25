@@ -85,7 +85,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.AppConfig.Implement
         {
             if (CacheTypes[0].Value == SelectedCacheType)
             {
-                _service.ClearOuputCache(SelectedCacheType, null);
+                _service.ClearOuputCache(SelectedCacheParameter, null);
             }
             else
             {
