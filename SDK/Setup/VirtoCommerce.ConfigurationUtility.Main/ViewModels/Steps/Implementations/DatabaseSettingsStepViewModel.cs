@@ -231,6 +231,7 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 			{
 				Message = string.Format("{0} {1}: {2}", Resources.DatabaseSettingsAction, Resources.Failed, e.ExpandExceptionMessage());
 				Result = OperationResult.Failed;
+				throw;
 			}
 		}
 
