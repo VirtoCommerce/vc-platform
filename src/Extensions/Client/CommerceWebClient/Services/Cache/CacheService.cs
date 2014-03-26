@@ -1,4 +1,5 @@
 ﻿using System;
+using VirtoCommerce.Foundation.AppConfig.Services;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Web.Client.Caching.Interfaces;
 

@@ -10,10 +10,10 @@ using VirtoCommerce.ManagementClient.Core.Infrastructure.Common.Model;
 
 namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.AppConfig.Implementations
 {
-	public class AppConfigMainSettingsViewModel : SubTabsDefaultViewModel, IAppConfigMainSettingsViewModel
+    public class AppConfigMainSettingsViewModel : SubTabsDefaultViewModel, IAppConfigMainSettingsViewModel
     {
-		public AppConfigMainSettingsViewModel(IAppConfigSettingsViewModel appConfigSetting, ISystemJobsViewModel systemJobSetting, IEmailTemplatesViewModel emailTemplates, IDisplayTemplatesViewModel displayTemplates, ILocalizationMainViewModel localizationHome, IAuthenticationContext authContext)
-		{
+        public AppConfigMainSettingsViewModel(IAppConfigSettingsViewModel appConfigSetting, ISystemJobsViewModel systemJobSetting, IEmailTemplatesViewModel emailTemplates, IDisplayTemplatesViewModel displayTemplates, ILocalizationMainViewModel localizationHome, ICacheViewModel cacheViewModel, IAuthenticationContext authContext)
+        {
             var items = new List<ItemTypeHomeTab>();
 
             if (authContext.CheckPermission(PredefinedPermissions.SettingsAppConfigSettings))
@@ -32,13 +32,18 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.AppConfig.Implement
             {
                 items.Add(new ItemTypeHomeTab { Caption = "Display templates", ViewModel = displayTemplates });
             }
-			items.Add(new ItemTypeHomeTab { Caption = "Localization", ViewModel = localizationHome });
+            items.Add(new ItemTypeHomeTab { Caption = "Localization", ViewModel = localizationHome });
 
-			SubItems = items;
+            if (authContext.CheckPermission(PredefinedPermissions.SettingsAppConfigSettings))
+            {
+                items.Add(new ItemTypeHomeTab { Caption = "Cache", ViewModel = cacheViewModel });
+            }
+
+            SubItems = items;
             if (SubItems.Count > 0)
             {
                 CurrentTab = SubItems[0];
             }
-		}
+        }
     }
 }

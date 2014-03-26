@@ -69,11 +69,25 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="Xceed.Wpf.DataGrid">
-      <HintPath>..\..\..\..\packages\Extended.Wpf.Toolkit.1.9.0\lib\net40\Xceed.Wpf.DataGrid.dll</HintPath>
+    <Reference Include="Xceed.Wpf.AvalonDock">
+      <HintPath>..\..\..\..\packages\Extended.Wpf.Toolkit.2.1.0\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
     </Reference>
-    <Reference Include="Xceed.Wpf.Toolkit">
-      <HintPath>..\..\..\..\packages\Extended.Wpf.Toolkit.1.9.0\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero">
+      <HintPath>..\..\..\..\packages\Extended.Wpf.Toolkit.2.1.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro">
+      <HintPath>..\..\..\..\packages\Extended.Wpf.Toolkit.2.1.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010">
+      <HintPath>..\..\..\..\packages\Extended.Wpf.Toolkit.2.1.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.DataGrid, Version=2.1.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\packages\Extended.Wpf.Toolkit.2.1.0\lib\net40\Xceed.Wpf.DataGrid.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.Toolkit, Version=2.1.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\packages\Extended.Wpf.Toolkit.2.1.0\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -114,7 +128,9 @@
     <Compile Include="ViewModel\AppConfig\Implementations\AppConfigSettingsItemViewModel.cs" />
     <Compile Include="ViewModel\AppConfig\Implementations\AppConfigSettingsViewModel.cs" />
     <Compile Include="ViewModel\AppConfig\Implementations\AddParameterViewModel.cs" />
+    <Compile Include="ViewModel\AppConfig\Implementations\CacheViewModel.cs" />
     <Compile Include="ViewModel\AppConfig\Interfaces\IAppConfigSettingsItemViewModel.cs" />
+    <Compile Include="ViewModel\AppConfig\Interfaces\ICacheViewModel.cs" />
     <Compile Include="ViewModel\EmailTemplates\Implementations\EmailTemplateAddLanguageViewModel.cs" />
     <Compile Include="ViewModel\EmailTemplates\Implementations\EmailTemplateEditViewModel.cs" />
     <Compile Include="ViewModel\EmailTemplates\Implementations\EmailTemplatesViewModel.cs" />
@@ -154,6 +170,9 @@
     <Compile Include="ViewModel\Wizard\Interfaces\ICreateAppConfigSettingViewModel.cs" />
     <Compile Include="View\AddSettingValueView.xaml.cs">
       <DependentUpon>AddSettingValueView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\CacheView.xaml.cs">
+      <DependentUpon>CacheView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\AppConfigSettingEditView.xaml.cs">
       <DependentUpon>AppConfigSettingEditView.xaml</DependentUpon>
@@ -268,6 +287,10 @@
     <Page Include="View\AddSettingValueView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\CacheView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="View\AppConfigSettingEditView.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -1,11 +1,11 @@
-﻿using System;
-using System.Windows;
-using Microsoft.Practices.Prism.Modularity;
+﻿using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Unity;
-using VirtoCommerce.Client.Globalization;
-using VirtoCommerce.Client.Globalization.Repository;
+using System;
+using System.Windows;
+using VirtoCommerce.Foundation.AppConfig;
 using VirtoCommerce.Foundation.AppConfig.Factories;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
+using VirtoCommerce.Foundation.AppConfig.Services;
 using VirtoCommerce.Foundation.Data.AppConfig;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Security.Model;
@@ -61,6 +61,10 @@ namespace VirtoCommerce.ManagementClient.AppConfig
 		{
 			_container.RegisterType<IAppConfigEntityFactory, AppConfigEntityFactory>(new ContainerControlledLifetimeManager());
 			_container.RegisterType<IAppConfigRepository, DSAppConfigClient>();
+            _container.RegisterService<ICacheService>(
+                _container.Resolve<IServiceConnectionFactory>()
+                          .GetConnectionString(AppConfigConfiguration.Instance.CacheServiceConnection.ServiceUri, AppConfigConfiguration.Instance.CacheServiceConnection.ForceHttps),
+                AppConfigConfiguration.Instance.CacheServiceConnection.WSEndPointName);
 
 			var repositoryFactory = _container.Resolve<IRepositoryFactory<IAppConfigRepository>>();
 			var localElements = new XmlElementRepository(Environment.ExpandEnvironmentVariables(@"%SystemRoot%\Temp\VirtoCommerceCMLocalization"));
@@ -92,7 +96,8 @@ namespace VirtoCommerce.ManagementClient.AppConfig
 			_container.RegisterType<IDisplayTemplateOverviewStepViewModel, DisplayTemplateOverviewStepViewModel>();
 			_container.RegisterType<IDisplayTemplateConditionsStepViewModel, DisplayTemplateConditionsStepViewModel>();
 			_container.RegisterType<ILocalizationHomeViewModel, LocalizationHomeViewModel>();
-
+            _container.RegisterType<ICacheViewModel, CacheViewModel>();
+			
 			//EmailTemplates
 			_container.RegisterType<IEmailTemplatesViewModel, EmailTemplatesViewModel>();
 			_container.RegisterType<IEmailTemplateEditViewModel, EmailTemplateEditViewModel>();

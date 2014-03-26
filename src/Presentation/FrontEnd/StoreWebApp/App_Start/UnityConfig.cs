@@ -1,6 +1,5 @@
-using System;
-using System.Data.Entity;
 using Microsoft.Practices.Unity;
+using System;
 using VirtoCommerce.Caching.HttpCache;
 using VirtoCommerce.Client;
 using VirtoCommerce.Client.Globalization;
@@ -26,7 +25,6 @@ using VirtoCommerce.Foundation.Data.Azure.Asset;
 using VirtoCommerce.Foundation.Data.Azure.Common;
 using VirtoCommerce.Foundation.Data.Azure.CQRS;
 using VirtoCommerce.Foundation.Data.Catalogs;
-using VirtoCommerce.Foundation.Data.Common;
 using VirtoCommerce.Foundation.Data.Customers;
 using VirtoCommerce.Foundation.Data.Importing;
 using VirtoCommerce.Foundation.Data.Infrastructure;

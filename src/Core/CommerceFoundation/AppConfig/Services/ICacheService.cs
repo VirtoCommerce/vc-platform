@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
-using System.ServiceModel;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ServiceModel;
 
-namespace VirtoCommerce.Web.Client.Services.Cache
+namespace VirtoCommerce.Foundation.AppConfig.Services
 {
     [ServiceContract(Namespace = "http://schemas.virtocommerce.com/1.0/cache/")]
     public interface ICacheService

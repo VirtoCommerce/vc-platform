@@ -26,7 +26,7 @@
         <div class="header-wrap">
             <div class="head-top">
                 <div class="rubber clearfix">
-                    <div class="grid_4">
+                    <div @*class="grid_4"*@>
                         <div class="head-switch">
                             <span>@("Store".Localize()):
                                 <span class="current">
@@ -37,13 +37,13 @@
                             </span>
                             <ul>
                                 <li>
-                                    <div class="store">
-                                        @{Html.RenderAction("StorePicker", "Store", true);}
+                                    <div class="language">
+                                        @{Html.RenderPartial("Languages");}
                                     </div>
                                 </li>
                                 <li>
-                                    <div class="language">
-                                        @{Html.RenderPartial("Languages");}
+                                    <div class="store">
+                                        @{Html.RenderAction("StorePicker", "Store", true);}
                                     </div>
                                 </li>
                                 <li>
@@ -54,7 +54,7 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="grid_8">
+                    <div @*class="grid_8"*@>
                         <ul class="head-links"></ul>
                         @* @{Html.RenderAction("QuickAccess", "Store", true);}*@
                     </div>
@@ -130,30 +130,30 @@
     <!-- Facebook -->
     <div id="fb-root"></div>
     <script type="text/javascript">
-        (function (d, s, id)
-        {
-            var js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) return;
-            js = d.createElement(s); js.id = id;
-            js.src = "//connect.facebook.net/en-US/all.js#xfbml=1&appId=593495770737439";
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
+    	(function (d, s, id)
+    	{
+    		var js, fjs = d.getElementsByTagName(s)[0];
+    		if (d.getElementById(id)) return;
+    		js = d.createElement(s); js.id = id;
+    		js.src = "//connect.facebook.net/en-US/all.js#xfbml=1&appId=593495770737439";
+    		fjs.parentNode.insertBefore(js, fjs);
+    	}(document, 'script', 'facebook-jssdk'));
     </script>
 
     <!-- Process sliders -->
     <script type="text/javascript">
-        $(function ()
-        {
-            VirtoCommerce.renderDynamicContent();
-            VirtoCommerce.updateQuickLinks();
-            VirtoCart.updateCartOptions();ы
-            VirtoCommerce.initSliders();
-            $('.slider-products').virtoSlider();
-            //$(document).ajaxError(
-            //    function myErrorHandler(event, xhr, ajaxOptions, thrownError) {
-            //    alert("There was an ajax error!");
-            //});
-        });
+    	$(function ()
+    	{
+    		VirtoCommerce.renderDynamicContent();
+    		VirtoCommerce.updateQuickLinks();
+    		VirtoCart.updateCartOptions();
+    		VirtoCommerce.initSliders();
+    		$('.slider-products').virtoSlider();
+    		//$(document).ajaxError(
+    		//    function myErrorHandler(event, xhr, ajaxOptions, thrownError) {
+    		//    alert("There was an ajax error!");
+    		//});
+    	});
     </script>
     @* No need to render follow services here, but following template can be used as an example:
     @if (SettingsHelper.GetSettings("FollowServices").Any())
