@@ -1,5 +1,6 @@
 ﻿using Microsoft.Practices.Prism.Commands;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using VirtoCommerce.Foundation;
 using VirtoCommerce.Foundation.AppConfig.Services;
 using VirtoCommerce.ManagementClient.AppConfig.ViewModel.AppConfig.Interfaces;
@@ -20,11 +21,14 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.AppConfig.Implement
                     new ItemTypeSelectionModel("Database","This is where queried objects are stored.")
                 };
 
+            _allCachesText = "All caches";
+            AnimationText = "Processing...";
             CacheParameters = new ObservableCollection<string>();
-            ClearCacheCommand = new DelegateCommand(DoClearCache, () => !string.IsNullOrEmpty(SelectedCacheType) && !string.IsNullOrEmpty(SelectedCacheParameter));
+            ClearCacheCommand = new DelegateCommand(DoClearCache, () => !string.IsNullOrEmpty(SelectedCacheType) && !string.IsNullOrEmpty(SelectedCacheParameter) && !ShowLoadingAnimation);
         }
 
         private string _selectedCacheType;
+        private readonly string _allCachesText;
         public ItemTypeSelectionModel[] CacheTypes { get; private set; }
 
         public string SelectedCacheType
@@ -43,7 +47,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.AppConfig.Implement
                         CacheParameters.Add(Constants.ControllerNameCatalog);
                         CacheParameters.Add(Constants.ControllerNameSearch);
                         CacheParameters.Add(Constants.ControllerNameStore);
-                        CacheParameters.Add("All caches");
+                        CacheParameters.Add(_allCachesText);
                     }
                     else
                     {
@@ -81,15 +85,26 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.AppConfig.Implement
 
         public DelegateCommand ClearCacheCommand { get; private set; }
 
-        private void DoClearCache()
+        private async void DoClearCache()
         {
-            if (CacheTypes[0].Value == SelectedCacheType)
+            ShowLoadingAnimation = true;
+            ClearCacheCommand.RaiseCanExecuteChanged();
+            try
             {
-                _service.ClearOuputCache(SelectedCacheParameter, null);
+                if (CacheTypes[0].Value == SelectedCacheType)
+                {
+                    var controllerParameter = SelectedCacheParameter == _allCachesText ? null : SelectedCacheParameter;
+                    await Task.Run(() => _service.ClearOuputCache(controllerParameter, null));
+                }
+                else
+                {
+                    await Task.Run(() => _service.ClearDatabaseCache(SelectedCacheParameter));
+                }
             }
-            else
+            finally
             {
-                _service.ClearDatabaseCache(SelectedCacheParameter);
+                ShowLoadingAnimation = false;
+                ClearCacheCommand.RaiseCanExecuteChanged();
             }
         }
     }
