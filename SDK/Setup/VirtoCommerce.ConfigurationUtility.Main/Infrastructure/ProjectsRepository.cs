@@ -95,7 +95,7 @@ namespace VirtoCommerce.ConfigurationUtility.Main.Infrastructure
 
 		public bool IsAttachedTo<T>(T item) where T : class
 		{
-			throw new NotImplementedException();
+			return true;
 		}
 
 		public void Remove<T>(T item) where T : class

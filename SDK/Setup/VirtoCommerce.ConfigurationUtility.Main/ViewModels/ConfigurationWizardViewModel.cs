@@ -116,6 +116,7 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels
 		public bool PrepareAndSave()
 		{
 			var result = false;
+			var allErrors = string.Empty;
 
 			var tokenSource = new CancellationTokenSource();
 			var token = tokenSource.Token;
@@ -134,7 +135,7 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels
 				_databaseSettingsStepViewModel.Configure(token);
 				_searchSettingsStepViewModel.Configure(token);
 			}, token);
-			taskLocation.ContinueWith(x => tokenSource.Cancel(), TaskContinuationOptions.OnlyOnFaulted);
+			taskDbAndSearch.ContinueWith(x => tokenSource.Cancel(), TaskContinuationOptions.OnlyOnFaulted);
 
 			try
 			{
@@ -142,18 +143,10 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels
 			}
 			catch (AggregateException e)
 			{
-				// Display information about each exception.
-#if (DEBUG)
-				foreach (var v in e.InnerExceptions)
-				{
-					if (v is TaskCanceledException)
-						Console.WriteLine("   TaskCanceledException: Task {0}", ((TaskCanceledException)v).Task.Id);
-					else
-						Console.WriteLine("   Exception: {0}", v.GetType().Name);
-				}
-#endif
+				allErrors += GetMessages(e);
 			}
 
+			// cancel all steps
 			if (tokenSource.IsCancellationRequested)
 			{
 				var cancelTasks = new[]
@@ -167,8 +160,9 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels
 				{
 					Task.WaitAll(cancelTasks);
 				}
-				catch (AggregateException)
+				catch (AggregateException e)
 				{
+					allErrors += GetMessages(e);
 				}
 			}
 
@@ -187,9 +181,14 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels
 
 			if (_configurationViewModel.Result == OperationResult.Cancelled || _configurationViewModel.Result == OperationResult.Failed)
 			{
-				_configurationViewModel.Message = _projectLocationStepViewModel.Message + Environment.NewLine +
-											  _databaseSettingsStepViewModel.Message + Environment.NewLine +
-											  _searchSettingsStepViewModel.Message;
+				allErrors += _projectLocationStepViewModel.Message + Environment.NewLine +
+							_databaseSettingsStepViewModel.Message + Environment.NewLine +
+							_searchSettingsStepViewModel.Message;
+			}
+
+			if (!string.IsNullOrEmpty(allErrors))
+			{
+				_configurationViewModel.Message = allErrors;
 			}
 			else
 			{
@@ -206,6 +205,31 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels
 
 				_configurationViewModel.Result = OperationResult.Successful;
 				result = true;
+			}
+
+			return result;
+		}
+
+		private string GetMessages(AggregateException e)
+		{
+			// Display information about each exception.
+#if (DEBUG)
+			foreach (var v in e.InnerExceptions)
+			{
+				if (v is TaskCanceledException)
+					Console.WriteLine("   TaskCanceledException: Task {0}", ((TaskCanceledException)v).Task.Id);
+				else
+					Console.WriteLine("   Exception: {0}", v.GetType().Name);
+			}
+#endif
+
+			var result = string.Empty;
+			foreach (var v in e.InnerExceptions)
+			{
+				if (!(v is TaskCanceledException))
+				{
+					result += v + Environment.NewLine;
+				}
 			}
 
 			return result;

@@ -9,6 +9,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:implementations="clr-namespace:VirtoCommerce.ManagementClient.AppConfig.ViewModel.AppConfig.Implementations"
              xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+             xmlns:core_Converters="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Converters;assembly=VirtoCommerce.ManagementClient.Core"
+             xmlns:dataVirtualization="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.DataVirtualization;assembly=VirtoCommerce.ManagementClient.Core"
              mc:Ignorable="d" >
     <base:ViewBase.Resources>
         <ResourceDictionary>
@@ -49,6 +51,12 @@
             </ComboBox>
         </StackPanel>
 
-        <Button Grid.Row="2" Content="Clear Cache now" Command="{Binding ClearCacheCommand}" Margin="0,12" />
+        <Button Grid.Row="2" Content="Clear Cache now" Command="{Binding ClearCacheCommand}" HorizontalAlignment="Right" />
+
+        <dataVirtualization:LoadingMetroAnimation Grid.Row="2" BackgroundColor="#33111111" AnimationScale="Small" Foreground="Red" ShowText="True"
+							Text="{Binding AnimationText}" Padding="0,14,0,0" Margin="0,-12,0,0"
+                            Visibility="{Binding ShowLoadingAnimation, Converter={x:Static core_Converters:ToVisibilityConverter.Current}, ConverterParameter=h}"
+		                     />
+
     </Grid>
 </base:ViewBase>
