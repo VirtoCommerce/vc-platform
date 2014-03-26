@@ -345,7 +345,7 @@ namespace VirtoCommerce.Foundation.Data.Azure.Asset
             });
         }
 
-        public async void Rename(string id, string name)
+        public void Rename(string id, string name)
         {
             var container = CurrentCloudBlobClient.GetContainerReference(GetContainer(id));
             var prefix = GetPrefix(id);
