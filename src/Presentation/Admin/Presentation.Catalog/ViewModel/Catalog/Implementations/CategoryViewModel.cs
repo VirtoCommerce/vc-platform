@@ -574,7 +574,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
             // for GUI update
             originalItem.Value = originalItem.Value ?? item.Value;
-            OnViewModelCollectionChangedUI(null, null);
+            OnViewModelPropertyChangedUI(null, null);
         }
 
         // function almost duplicated in ItemViewModel
