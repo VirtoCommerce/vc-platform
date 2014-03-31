@@ -2,21 +2,23 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Microsoft.Win32;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.AppConfig.Factories;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Foundation.Frameworks.Csv;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Interfaces;
 using VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Model;
-using VirtoCommerce.Foundation.Frameworks.Csv;
-using System.IO;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Controls.StatusIndicator.Model;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using VirtoCommerce.ManagementClient.Core.Infrastructure.Common;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.EventAggregation;
 
 namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implementations
@@ -27,16 +29,18 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 
 		private readonly IRepositoryFactory<IAppConfigRepository> _repositoryFactory;
 		private readonly IViewModelsFactory<ILocalizationEditViewModel> _editVmFactory;
+		private readonly IElementRepository _elementRepository;
 
 		#endregion
 
 		#region Constructor
-		public LocalizationHomeViewModel(IRepositoryFactory<IAppConfigRepository> repositoryFactory, IAppConfigEntityFactory entityFactory, 
-			IViewModelsFactory<ILocalizationEditViewModel> editVmFactory)
+		public LocalizationHomeViewModel(IRepositoryFactory<IAppConfigRepository> repositoryFactory, IAppConfigEntityFactory entityFactory,
+			IViewModelsFactory<ILocalizationEditViewModel> editVmFactory, IElementRepository elementRepository)
 			: base(entityFactory)
 		{
 			_editVmFactory = editVmFactory;
 			_repositoryFactory = repositoryFactory;
+			_elementRepository = elementRepository;
 			InitCommands();
 		}
 
@@ -50,6 +54,10 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 			ClearFiltersCommand = new DelegateCommand(DoClearFilters);
 			SearchItemsCommand = new DelegateCommand(DoSearchItems);
 			ListExportCommand = new DelegateCommand(RaiseExportCommand, CanExecuteExport);
+			ClearCacheCommand = new DelegateCommand(DoClearCache);
+
+			CommonConfirmRequest = new InteractionRequest<Confirmation>();
+			CommonNotifyRequest = new InteractionRequest<Notification>();
 		}
 
 		#endregion
@@ -57,19 +65,22 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 		#region Filters
 
 		public string SearchFilterName { get; set; }
+		public string FilterModule { get; set; }
 		public DelegateCommand ClearFiltersCommand { get; private set; }
 		public DelegateCommand SearchItemsCommand { get; private set; }
+
+		private int dataLoadingworker;
+		private readonly object _lockObject = new object();
 
 		private void DoClearFilters()
 		{
 			SearchFilterName = null;
+			FilterModule = null;
 			IsUntranslatedOnly = false;
 			OriginalLanguage = null;
 			TranslateLanguage = null;
 			OnPropertyChanged("SearchFilterName");
-			OnPropertyChanged("IsUntranslatedOnly");
-			OnPropertyChanged("OriginalLanguage");
-			OnPropertyChanged("TranslateLanguage");
+			OnPropertyChanged("FilterModule");
 			RaiseCanExecuteChanged();
 		}
 
@@ -77,6 +88,28 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 		{
 			if (RefreshItemListCommand != null)
 				RefreshItemListCommand.Execute();
+		}
+
+		private void DoClearCache()
+		{
+			var confirmation = new ConditionalConfirmation();
+			confirmation.Title = "Refresh locally cached Commerce Manager texts".Localize();
+			confirmation.Content = "Are you sure you want to clear all locally cached Commerce Manager texts?".Localize();
+
+			CommonConfirmRequest.Raise(confirmation,
+				x =>
+				{
+					if (x.Confirmed)
+					{
+						_elementRepository.Clear();
+
+						var notification = new Notification();
+						// notification.Title = "Done";
+						notification.Content = "All locally cached texts were removed. You may need to restart this application for the changes to take effect."
+								.Localize();
+						CommonNotifyRequest.Raise(notification);
+					}
+				});
 		}
 
 		#endregion
@@ -88,69 +121,124 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 		#endregion
 
 		#region HomeSettingsViewModel members
-		
+
 		protected override object LoadData()
 		{
 			var items = new List<LocalizationGroup>();
-			
-			using (var repository = _repositoryFactory.GetRepositoryInstance())
-			{
-				if (repository != null)
-				{
-					if (!string.IsNullOrEmpty(OriginalLanguage) && OriginalLanguage.Length >= 2 &&
-						!string.IsNullOrEmpty(TranslateLanguage) && TranslateLanguage.Length >= 2)
-					{
-						var names = repository.Localizations.ToList().Select(x => x.Name).Distinct();
-						var translateItems =
-							repository.Localizations.Where(x => x.LanguageCode == TranslateLanguage).ToDictionary(x => x.Name);
-						var originalItems =
-							repository.Localizations.Where(x => x.LanguageCode == OriginalLanguage).ToDictionary(x => x.Name);
 
-						foreach (var name in names)
+			if (dataLoadingworker == 0 &&
+				(LanguagesCodes == null ||
+					(LanguagesCodes.Contains(OriginalLanguage) &&
+					 LanguagesCodes.Contains(TranslateLanguage))))
+			{
+				lock (_lockObject)
+				{
+					if (dataLoadingworker == 0)
+					{
+						dataLoadingworker = System.Threading.Thread.CurrentThread.ManagedThreadId;
+					}
+				}
+
+				if (dataLoadingworker == System.Threading.Thread.CurrentThread.ManagedThreadId)
+				{
+					try
+					{
+						using (var repository = _repositoryFactory.GetRepositoryInstance())
 						{
-							var item = name;
-							var isTranslateExists = translateItems.ContainsKey(name);
-							if ((IsUntranslatedOnly && !isTranslateExists) || !IsUntranslatedOnly)
+							if (LanguagesCodes == null)
 							{
-								var original = originalItems.ContainsKey(name)
-										            ? originalItems[name]
-										            : new Foundation.AppConfig.Model.Localization();
-								var translated = isTranslateExists
-										                ? translateItems[name]
-										                : new Foundation.AppConfig.Model.Localization()
-											                {
-												                Name = original.Name,
-												                LanguageCode = TranslateLanguage,
-												                Category = original.Category
-											                };
-								if (string.IsNullOrEmpty(SearchFilterName)
-									|| item.Contains(SearchFilterName)
-									||
-									(!string.IsNullOrEmpty(original.Value) &&
-									    original.Value.IndexOf(SearchFilterName, StringComparison.OrdinalIgnoreCase) >= 0)
-									||
-									(!string.IsNullOrEmpty(translated.Value) &&
-									    translated.Value.IndexOf(SearchFilterName, StringComparison.OrdinalIgnoreCase) >= 0))
+								// load Languages setting
+								var langSetting =
+									repository.Settings.Expand(s => s.SettingValues).Where(s => s.Name.Contains("Lang")).SingleOrDefault();
+
+								OnUIThread(() =>
+									{
+										LanguagesCodes = langSetting == null
+															 ? new List<string>()
+															 : langSetting.SettingValues.Select(sv => sv.ShortTextValue).ToList();
+
+										// list all module names
+										FilterModules = new[]
+											{
+												new KeyValuePair_string_string {Value = "Web pages"},
+												new KeyValuePair_string_string {Key = "AppConfig", Value = "AppConfig"},
+												new KeyValuePair_string_string {Key = "Asset", Value = "Asset"},
+												new KeyValuePair_string_string {Key = "Catalog", Value = "Catalog"},
+												new KeyValuePair_string_string {Key = "Configuration", Value = "Configuration"},
+												new KeyValuePair_string_string {Key = "Customers", Value = "Customers"},
+												new KeyValuePair_string_string {Key = "DynamicContent", Value = "DynamicContent"},
+												new KeyValuePair_string_string {Key = "Fulfillment", Value = "Fulfillment"},
+												new KeyValuePair_string_string {Key = "Import", Value = "Import"},
+												new KeyValuePair_string_string {Key = "Main", Value = "Main"},
+												new KeyValuePair_string_string {Key = "Marketing", Value = "Marketing"},
+												new KeyValuePair_string_string {Key = "Order", Value = "Order"},
+												new KeyValuePair_string_string {Key = "Reporting", Value = "Reporting"},
+												new KeyValuePair_string_string {Key = "Reviews", Value = "Reviews"},
+												new KeyValuePair_string_string {Key = "Security", Value = "Security"}
+											}.ToList();
+									});
+							}
+
+							if (LanguagesCodes.Contains(OriginalLanguage) &&
+								LanguagesCodes.Contains(TranslateLanguage))
+							{
+								var query = repository.Localizations;
+
+								if (string.IsNullOrEmpty(FilterModule))
 								{
-									items.Add(new LocalizationGroup()
+									query = query.Where(x => x.Category == null || x.Category == "");
+								}
+								else
+								{
+									query = query.Where(x => x.Category == FilterModule);
+								}
+
+								var names = query.ToList().Select(x => x.Name).Distinct();
+								var translateItems = query.Where(x => x.LanguageCode == TranslateLanguage).ToDictionary(x => x.Name);
+								var originalItems = query.Where(x => x.LanguageCode == OriginalLanguage).ToDictionary(x => x.Name);
+
+								foreach (var name in names)
+								{
+									var item = name;
+									var isTranslateExists = translateItems.ContainsKey(name);
+									if ((IsUntranslatedOnly && !isTranslateExists) || !IsUntranslatedOnly)
+									{
+										var original = originalItems.ContainsKey(name)
+														   ? originalItems[name]
+														   : new Foundation.AppConfig.Model.Localization();
+										var translated = isTranslateExists
+															 ? translateItems[name]
+															 : new Foundation.AppConfig.Model.Localization()
+																 {
+																	 Name = original.Name,
+																	 LanguageCode = TranslateLanguage,
+																	 Category = original.Category
+																 };
+										if (string.IsNullOrEmpty(SearchFilterName)
+											|| item.Contains(SearchFilterName)
+											||
+											(!string.IsNullOrEmpty(original.Value) &&
+											 original.Value.IndexOf(SearchFilterName, StringComparison.OrdinalIgnoreCase) >= 0)
+											||
+											(!string.IsNullOrEmpty(translated.Value) &&
+											 translated.Value.IndexOf(SearchFilterName, StringComparison.OrdinalIgnoreCase) >= 0))
 										{
-											Name = item,
-											OriginalLocalization = original,
-											TranslateLocalization = translated
-										});
+											items.Add(new LocalizationGroup()
+												{
+													Name = item,
+													OriginalLocalization = original,
+													TranslateLocalization = translated
+												});
+										}
+									}
 								}
 							}
 						}
 					}
-					// load Language
-					var langSetting =
-						repository.Settings.Expand(s => s.SettingValues).Where(s => s.Name.Contains("Lang")).SingleOrDefault();
-
-					OnUIThread(() =>
-						{
-							if ((LanguagesCodes == null || !LanguagesCodes.Any()) && langSetting != null)
-								LanguagesCodes = langSetting.SettingValues.Select(sv => sv.ShortTextValue).ToList();
-						});
+					finally
+					{
+						dataLoadingworker = 0;
+					}
 				}
 			}
 
@@ -174,18 +262,23 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 			//		});
 			//	}
 			//}
-		}		
+		}
 
 		public override void RaiseCanExecuteChanged()
 		{
 			ItemEditCommand.RaiseCanExecuteChanged();
 			ListExportCommand.RaiseCanExecuteChanged();
 		}
-		
+
 		#endregion
 
 		#region Public members
 
+		public List<KeyValuePair_string_string> FilterModules
+		{
+			get { return _filterModules; }
+			set { _filterModules = value; OnPropertyChanged(); }
+		}
 
 		private bool _isUntranslatedOnly;
 		public bool IsUntranslatedOnly
@@ -224,6 +317,8 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 		}
 
 		private List<string> _languagesCodes;
+		private List<KeyValuePair_string_string> _filterModules;
+
 		public List<string> LanguagesCodes
 		{
 			get { return _languagesCodes; }
@@ -268,12 +363,16 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 
 		public DelegateCommand<LocalizationGroup> ItemEditCommand { get; private set; }
 		public DelegateCommand ListExportCommand { get; private set; }
+		public DelegateCommand ClearCacheCommand { get; private set; }
+
+		public InteractionRequest<Confirmation> CommonConfirmRequest { get; private set; }
+		public InteractionRequest<Notification> CommonNotifyRequest { get; private set; }
 
 		private void RaiseItemEditInteractionRequest(LocalizationGroup item)
 		{
 			var itemVM = _editVmFactory.GetViewModelInstance(
-				 new KeyValuePair<string, object>("item", item),
-				 new KeyValuePair<string, object>("parent", this));
+				 new System.Collections.Generic.KeyValuePair<string, object>("item", item),
+				 new System.Collections.Generic.KeyValuePair<string, object>("parent", this));
 
 			var openTracking = (IOpenTracking)itemVM;
 			openTracking.OpenItemCommand.Execute();
@@ -292,7 +391,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 
 
 		#endregion
-		
+
 		#region IEntityExportable Members
 
 		private void RaiseExportCommand()
@@ -317,7 +416,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 					});
 			}
 		}
-		
+
 		#endregion
 
 		#region Auxilliary methods
@@ -330,9 +429,9 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 				{
 					var csvWriter = new CsvWriter(textWriter, ",");
 					csvWriter.WriteRow(new List<string> { "Name", OriginalLangName, string.Format("LanguageCode ({0})", TranslateLanguage), string.Format("Value - {0}", TranslateLangName) },
-					                   false);
+									   false);
 					var itemsCount = Items.Count();
-					foreach (var item in Items.Select((value, index) => new {value, index}))
+					foreach (var item in Items.Select((value, index) => new { value, index }))
 					{
 						csvWriter.WriteRow(item.value.ToExportCollection(), true);
 						var statusUpdate = new StatusMessage
@@ -383,7 +482,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 					retVal = string.Format("{0}.csv", retVal);
 			}
 
-			return  retVal;
+			return retVal;
 		}
 		#endregion
 

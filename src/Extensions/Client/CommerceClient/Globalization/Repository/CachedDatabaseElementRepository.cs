@@ -104,9 +104,10 @@ namespace VirtoCommerce.Client.Globalization.Repository
 				try
 				{
 					// caching
-					PreloadLocalizations(category, culture);
-
-					result = _cacheRepository.Get(name, category, culture);
+					if (PreloadLocalizations(category, culture))
+					{
+						result = _cacheRepository.Get(name, category, culture);
+					}
 				}
 				catch (Exception e)
 				{
@@ -311,10 +312,11 @@ namespace VirtoCommerce.Client.Globalization.Repository
 				it.LanguageCode.Equals(culture, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
 		}
 
-		private void PreloadLocalizations(string category, string culture)
+		private bool PreloadLocalizations(string category, string culture)
 		{
+			var result = false;
 			var dt = _cacheRepository.GetStatusDate(category, culture);
-			if (DateTime.UtcNow - dt > new TimeSpan(1, 0, 30))
+			if (dt == DateTime.MinValue)
 			{
 				using (var _repository = _repositoryFactory.GetRepositoryInstance())
 				{
@@ -326,8 +328,11 @@ namespace VirtoCommerce.Client.Globalization.Repository
 					}
 				}
 
-				_cacheRepository.SetStatusDate(category, culture);
+				SetStatusDate(category, culture);
+				result = true;
 			}
+
+			return result;
 		}
 
 		/// <summary>

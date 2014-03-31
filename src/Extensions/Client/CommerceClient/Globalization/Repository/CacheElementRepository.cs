@@ -18,7 +18,7 @@ namespace VirtoCommerce.Client.Globalization.Repository
 		/// </summary>
 		private readonly IElementRepository _innerRepository;
 		#endregion
-		private const string StatusDateKey = "~intern@|_st@tus_c@che_key!";
+		private const string StatusDateKeyInner = "~1ntern@|_st@tus_c@che_key!";
 
 		#region .ctor
 		/// <summary>
@@ -33,7 +33,7 @@ namespace VirtoCommerce.Client.Globalization.Repository
 
 		#region Methods
 		/// <summary>
-		/// Enableds the languages.
+		/// Enabled the languages.
 		/// </summary>
 		/// <returns>IQueryable{CultureInfo}.</returns>
 		public IQueryable<System.Globalization.CultureInfo> EnabledLanguages()
@@ -73,10 +73,9 @@ namespace VirtoCommerce.Client.Globalization.Repository
 						AddCache(preloadedCategoryLocalization);
 					}
 
-					SetStatusDate(category, culture);
+					// SetStatusDate(category, culture, true);
+					element = _cachedElements[cachedKey] as Element;
 				}
-
-				element = _cachedElements[cachedKey] as Element;
 			}
 			return element;
 		}
@@ -87,9 +86,10 @@ namespace VirtoCommerce.Client.Globalization.Repository
 			var element = GetStatusElement(category, culture);
 			if (element == null)
 			{
-				result = _innerRepository.GetStatusDate(category, culture);
-				element = new Element { Name = StatusDateKey, Category = category, Culture = culture, Value = result.ToString() };
-				AddCache(element);
+				result = DateTime.MinValue;
+				//result = _innerRepository.GetStatusDate(category, culture);
+				//element = new Element { Name = StatusDateKeyInner, Category = category, Culture = culture, Value = result.ToString() };
+				//AddCache(element);
 			}
 			else
 			{
@@ -101,7 +101,9 @@ namespace VirtoCommerce.Client.Globalization.Repository
 
 		public void SetStatusDate(string category, string culture)
 		{
-			var element = new Element { Name = StatusDateKey, Category = category, Culture = culture, Value = DateTime.UtcNow.ToString() };
+			_innerRepository.SetStatusDate(category, culture);
+
+			var element = new Element { Name = StatusDateKeyInner, Category = category, Culture = culture, Value = DateTime.UtcNow.ToString() };
 			AddCache(element);
 		}
 
@@ -228,7 +230,7 @@ namespace VirtoCommerce.Client.Globalization.Repository
 
 		private Element GetStatusElement(string category, string culture)
 		{
-			var cachedKey = new ElementCacheKey(StatusDateKey, category, culture);
+			var cachedKey = new ElementCacheKey(StatusDateKeyInner, category, culture);
 			return _cachedElements[cachedKey] as Element;
 		}
 	}

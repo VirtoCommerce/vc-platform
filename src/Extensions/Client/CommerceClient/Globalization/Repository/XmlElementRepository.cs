@@ -19,6 +19,8 @@ namespace VirtoCommerce.Client.Globalization.Repository
 		/// The ResXResource
 		/// </summary>
 		readonly ResXResource _resx;
+
+		private const string StatusDateKeyInner = "~1ntern@|_st@tus_c@che_key!";
 		#endregion
 
 		#region .ctor
@@ -75,11 +77,23 @@ namespace VirtoCommerce.Client.Globalization.Repository
 
 		public DateTime GetStatusDate(string category, string culture)
 		{
-			return _resx.GetFileDateUtc(category, culture);
+			var element = _resx.GetElement(StatusDateKeyInner, category, culture);
+			return element == null ? DateTime.MinValue : DateTime.Parse(element.Value);
 		}
 
 		public void SetStatusDate(string category, string culture)
 		{
+			var element = _resx.GetElement(StatusDateKeyInner, category, culture);
+			if (element == null)
+			{
+				element = new Element { Name = StatusDateKeyInner, Category = category, Culture = culture, Value = DateTime.UtcNow.ToString() };
+				_resx.AddResource(element);
+			}
+			else
+			{
+				element.Value = DateTime.UtcNow.ToString();
+				_resx.UpdateResource(element);
+			}
 		}
 
 		/// <summary>

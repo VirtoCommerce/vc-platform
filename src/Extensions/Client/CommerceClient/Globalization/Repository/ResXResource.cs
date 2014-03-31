@@ -494,12 +494,6 @@ namespace VirtoCommerce.Client.Globalization.Repository
 			return doc;
 		}
 
-		public DateTime GetFileDateUtc(string category, string culture)
-		{
-			var filePath = Path.Combine(_path, ResXResourceFileHelper.GetFileName(category, culture));
-			return File.GetLastWriteTimeUtc(filePath);
-		}
-
 		#endregion
 	}
 }
