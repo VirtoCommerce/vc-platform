@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using VirtoCommerce.Client.Globalization;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -21,6 +22,7 @@ using VirtoCommerce.ManagementClient.Core.Infrastructure.DataVirtualization;
 using VirtoCommerce.Foundation.Importing.Model;
 using VirtoCommerce.Foundation.Importing.Repositories;
 using System;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 {
@@ -65,7 +67,7 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 			AvailableImporters = (ImportEntityType[]) Enum.GetValues(typeof(ImportEntityType));
 
 			InitCommands();
-			ViewTitle = new ViewTitleBase() { Title = "Catalogs", SubTitle = "MERCHANDISE MANAGEMENT" };
+			ViewTitle = new ViewTitleBase() { Title = "Catalogs".Localize(), SubTitle = "MERCHANDISE MANAGEMENT".Localize() };
 		}
 
 		#region ViewModelHomeEditableBase
@@ -91,7 +93,7 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 				new KeyValuePair<string, object>("entityImporters", AvailableImporters)
 				);
 
-			var confirmation = new Confirmation { Content = itemVM, Title = "Create Import Job definition" };
+			var confirmation = new Confirmation { Content = itemVM, Title = "Create Import Job definition".Localize() };
 			
 			ItemAdd(confirmation);
 		}
@@ -200,7 +202,7 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 			// initial checks
 			if (item == null)
 			{
-				CommonNotifyRequest.Raise(new Notification { Content = "Select import job to run.", Title = "Error" });
+				CommonNotifyRequest.Raise(new Notification { Content = "Select import job to run.".Localize(), Title = "Error".Localize(null, LocalizationScope.DefaultCategory) });
 			}
 			else
 			{
@@ -210,7 +212,7 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 					new KeyValuePair<string, object>("jobEntity", jobEntity)
 					);
 
-				var confirmation = new ConditionalConfirmation(itemVM.Validate) { Content = itemVM, Title = "Run Import Job" };
+				var confirmation = new ConditionalConfirmation(itemVM.Validate) { Content = itemVM, Title = "Run Import Job".Localize() };
 				CommonConfirmRequest.Raise(confirmation, async (x) =>
 				{
 					if (x.Confirmed)
@@ -221,7 +223,7 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 
 								var statusUpdate = new StatusMessage
 									{
-										ShortText = string.Format("File '{0}' import.", Path.GetFileName(jobEntity.SourceFile)),
+										ShortText = string.Format("File '{0}' import.".Localize(), Path.GetFileName(jobEntity.SourceFile)),
 										StatusMessageId = id
 									};
 								EventSystem.Publish(statusUpdate);
@@ -247,7 +249,7 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 					var statusUpdate = new StatusMessage
 						{
 							ShortText =
-								string.Format("File '{0}' import. Processed {1} items.", Path.GetFileName(e.ImportEntity.SourceFile),
+								string.Format("File '{0}' import. Processed {1} items.".Localize(), Path.GetFileName(e.ImportEntity.SourceFile),
 											  e.Processed),
 							//Details = errors != null ?
 							//	errors.Where(val => val != null)
@@ -262,7 +264,7 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 					{
 						var statusUpdate = new StatusMessage
 							{
-								ShortText = string.Format("File '{0}' imported with errors", Path.GetFileName(e.ImportEntity.SourceFile)),
+								ShortText = string.Format("File '{0}' imported with errors".Localize(), Path.GetFileName(e.ImportEntity.SourceFile)),
 								StatusMessageId = e.StatusId,
 								Details = e.ImportResult.Errors.Cast<object>()
 								           .Where(val => val != null)
@@ -275,7 +277,7 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 					{
 						var statusUpdate = new StatusMessage
 							{
-								ShortText = string.Format("File '{0}' imported successfully", Path.GetFileName(e.ImportEntity.SourceFile)),
+								ShortText = string.Format("File '{0}' imported successfully".Localize(), Path.GetFileName(e.ImportEntity.SourceFile)),
 								StatusMessageId = e.StatusId,
 								State = StatusMessageState.Success
 							};
@@ -318,7 +320,7 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 			// initial checks
 			if (selectedItemsList == null)
 			{
-				CommonNotifyRequest.Raise(new Notification {Content = "Select import job to duplicate.", Title = "Error"});
+				CommonNotifyRequest.Raise(new Notification { Content = "Select import job to duplicate.".Localize(), Title = "Error".Localize(null, LocalizationScope.DefaultCategory) });
 			}
 			else
 			{

@@ -4,9 +4,8 @@
      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
      xmlns:core_Converters="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Converters;assembly=VirtoCommerce.ManagementClient.Core"
-               xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Import.Properties"
-
-               mc:Ignorable="d" d:DesignHeight="400" Width="400">
+     mc:Ignorable="d" d:DesignHeight="400" Width="400" xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Import"
+     LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
 
 	<FrameworkElement.Resources>
 		<ResourceDictionary>
@@ -33,15 +32,15 @@
 			<ColumnDefinition Width="7*" />
 		</Grid.ColumnDefinitions>
 
-		<TextBlock Grid.Row="0" Grid.Column="0" Text="Entity column:" />
+		<TextBlock Grid.Row="0" Grid.Column="0" Text="{Loc 'Entity column:'}" />
 		<TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding InnerItem.MappingItem.DisplayName}"
      FontWeight="Bold" />
 
-		<TextBlock Grid.Row="1" Grid.Column="0" Text="Locale:" Visibility="{Binding IsLocaleAvailable, Converter={StaticResource booleanToVisibilityConverter}}" />
+		<TextBlock Grid.Row="1" Grid.Column="0" Text="{Loc 'Locale:'}" Visibility="{Binding IsLocaleAvailable, Converter={StaticResource booleanToVisibilityConverter}}" />
 		<TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding InnerItem.MappingItem.Locale, Converter={StaticResource cultureConverter}}"
      FontWeight="Bold" Visibility="{Binding IsLocaleAvailable, Converter={StaticResource booleanToVisibilityConverter}}" />
 
-		<TextBlock Grid.Row="2" Text="CSV column:" />
+		<TextBlock Grid.Row="2" Text="{Loc 'CSV column:'}" />
 
 		<ComboBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" ItemsSource="{Binding InnerItem.CsvColumnsList}"
      SelectedValue="{Binding InnerItem.MappingItem.CsvColumnName, Mode=TwoWay}">
@@ -69,13 +68,13 @@
 			</i:Interaction.Triggers>
 		</ComboBox>
 
-		<TextBlock Grid.Row="4" Text="Custom value:" />
+		<TextBlock Grid.Row="4" Text="{Loc 'Custom value:'}" />
 		<core_controls:WatermarkedTextBox Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
-			 Text="{Binding InnerItem.MappingItem.CustomValue}" Visibility="{Binding ColumnIsNotEnum, Converter={StaticResource booleanToVisibilityConverter}}"
-			 WatermarkText="Enter custom value..." IsEnabled="{Binding IsColumnSelected}" />
+     Text="{Binding InnerItem.MappingItem.CustomValue}" Visibility="{Binding ColumnIsNotEnum, Converter={StaticResource booleanToVisibilityConverter}}"
+     WatermarkText="{Loc 'Enter custom value...'}" IsEnabled="{Binding IsColumnSelected}" />
 		<ComboBox Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Visibility="{Binding ColumnIsEnum, Converter={StaticResource booleanToVisibilityConverter}}"
-			 IsEnabled="{Binding IsColumnSelected}" ItemsSource="{Binding InnerItem.ImportProperty.EnumValues}"
-			 SelectedValue="{Binding InnerItem.MappingItem.CustomValue, Mode=TwoWay}">
+     IsEnabled="{Binding IsColumnSelected}" ItemsSource="{Binding InnerItem.ImportProperty.EnumValues}"
+     SelectedValue="{Binding InnerItem.MappingItem.CustomValue, Mode=TwoWay}">
 			<ComboBox.ItemTemplate>
 				<DataTemplate>
 					<Grid>
@@ -103,8 +102,9 @@
 			</ComboBox.ItemTemplate>
 		</ComboBox>
 
-		<TextBlock Grid.Row="6" Grid.ColumnSpan="2" Text="Value format ({0} - stands for value):" />
-		<core_controls:WatermarkedTextBox Grid.Row="7" Grid.ColumnSpan="2" Text="{Binding InnerItem.MappingItem.StringFormat}" WatermarkText="Enter value formatting if required..." />
+		<TextBlock Grid.Row="6" Grid.ColumnSpan="2" Text="{Loc 'Value format ({0} - stands for value):'}" />
+		<core_controls:WatermarkedTextBox Grid.Row="7" Grid.ColumnSpan="2" Text="{Binding InnerItem.MappingItem.StringFormat}"
+     WatermarkText="{Loc 'Enter value formatting if required...'}" />
 
 		<StackPanel>
 

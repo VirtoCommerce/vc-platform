@@ -20,7 +20,7 @@
 		</Grid.RowDefinitions>
 
 		<TabControl Grid.Row="0" x:Name="tabControl" Style="{StaticResource Virto_TabControlHorizontal_Style}">
-			<TabItem x:Name="tabItemSummary" LocalizationScope.Category="{x:Null}" Header="{Loc Summary}">
+			<TabItem x:Name="tabItemSummary" Header="{Loc ^Summary}">
             <ScrollViewer VerticalScrollBarVisibility="Auto">
                 <importViewWizard:ImportJobOverviewStepView HorizontalAlignment="Left" />
             </ScrollViewer>

@@ -1,33 +1,33 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
-using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+using Omu.ValueInjecter;
+using PropertyChanged;
+using VirtoCommerce.Client.Globalization;
+using VirtoCommerce.Foundation.Catalogs.Model;
+using VirtoCommerce.Foundation.Catalogs.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
+using VirtoCommerce.Foundation.Importing.Factories;
+using VirtoCommerce.Foundation.Importing.Model;
+using VirtoCommerce.Foundation.Importing.Repositories;
+using VirtoCommerce.Foundation.Importing.Services;
 using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.ManagementClient.Asset.ViewModel.Interfaces;
-using VirtoCommerce.ManagementClient.Import.ViewModel.Interfaces;
-using VirtoCommerce.ManagementClient.Import.ViewModel.Wizard;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Wizard;
-using VirtoCommerce.Foundation.Catalogs.Model;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
-using VirtoCommerce.Foundation.Importing.Model;
-using VirtoCommerce.Foundation.Importing.Repositories;
-using VirtoCommerce.Foundation.Catalogs.Repositories;
-using Omu.ValueInjecter;
-using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using VirtoCommerce.ManagementClient.Import.Model;
-using System.Collections.Generic;
-using VirtoCommerce.Foundation.Importing.Services;
-using VirtoCommerce.Foundation.Importing.Factories;
-using catalogModel = VirtoCommerce.Foundation.Catalogs.Model;
-using System.Threading.Tasks;
-using PropertyChanged;
+using VirtoCommerce.ManagementClient.Import.ViewModel.Interfaces;
+using VirtoCommerce.ManagementClient.Import.ViewModel.Wizard;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 {
@@ -57,11 +57,11 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 		public ImportEntityType[] EntityImporters { get; private set; }
 
 		private static readonly ColumnDelimiter[] _columnDelimiters = new[] { 
-				new ColumnDelimiter{ DisplayName = "Auto", Value="?" },
-				new ColumnDelimiter{ DisplayName = "Comma", Value="," },
-				new ColumnDelimiter{ DisplayName = "Semicolon", Value=";" },
-				new ColumnDelimiter{ DisplayName = "Tab", Value="\t" },
-				new ColumnDelimiter{ DisplayName = "Other", Value=string.Empty }
+				new ColumnDelimiter{ DisplayName = "Auto".Localize(), Value="?" },
+				new ColumnDelimiter{ DisplayName = "Comma".Localize(), Value="," },
+				new ColumnDelimiter{ DisplayName = "Semicolon".Localize(), Value=";" },
+				new ColumnDelimiter{ DisplayName = "Tab".Localize(), Value="\t" },
+				new ColumnDelimiter{ DisplayName = "Other".Localize(), Value=string.Empty }
 			};
 
 		public ColumnDelimiter[] ColumnDelimiters
@@ -71,8 +71,8 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 
 		private static readonly TextQualifier[] _textQualifiers = new[]
 			{
-				new TextQualifier {DisplayName = "Quote", Value = '\''},
-				new TextQualifier {DisplayName = "Other", Value = ' '}
+				new TextQualifier {DisplayName = "Quote".Localize(), Value = '\''},
+				new TextQualifier {DisplayName = "Other".Localize(), Value = ' '}
 			};
 
 		public TextQualifier[] TextQualifiers
@@ -95,7 +95,7 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 		{
 			get { return IsWizardMode; }
 		}
-		
+
 		public bool IsCustomDelimiterSelected
 		{
 			get
@@ -167,7 +167,7 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 
 		#region constructor
 		public ImportJobViewModel(
-			IRepositoryFactory<IImportRepository> repositoryFactory, 
+			IRepositoryFactory<IImportRepository> repositoryFactory,
 			IRepositoryFactory<ICatalogRepository> catalogRepositoryFactory,
 			IViewModelsFactory<IPickAssetViewModel> assetVmFactory,
 			IViewModelsFactory<IColumnMappingViewModel> mappingVmFactory,
@@ -192,7 +192,7 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 
 			ViewTitle = new ViewTitleBase()
 				{
-					Title = "Import job",
+					Title = "Import job".Localize(),
 					SubTitle = (item != null && !string.IsNullOrEmpty(item.Name)) ? item.Name.ToUpper(CultureInfo.InvariantCulture) : ""
 
 				};
@@ -208,7 +208,7 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 		}
 
 		protected ImportJobViewModel(
-			IRepositoryFactory<IImportRepository> repositoryFactory, 
+			IRepositoryFactory<IImportRepository> repositoryFactory,
 			IRepositoryFactory<ICatalogRepository> catalogRepositoryFactory,
 			IImportJobEntityFactory importJobFactory,
 			ImportJob item,
@@ -307,7 +307,7 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 
 		#region ViewModelDetailAndWizardBase Members
 
-		public override string ExceptionContextIdentity { get { return string.Format("Import job ({0})", DisplayName); } }
+		public override string ExceptionContextIdentity { get { return string.Format("Import job ({0})".Localize(), DisplayName); } }
 
 		protected override void GetRepository()
 		{
@@ -353,9 +353,9 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 			get
 			{
 				if (this is IImportJobOverviewStepViewModel)
-					return "Enter Import Job general information.";
+					return "Enter Import Job general information.".Localize();
 				else
-					return "Define properties mappings.";
+					return "Define properties mappings.".Localize();
 			}
 		}
 
@@ -366,8 +366,8 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 		{
 			return new RefusedConfirmation
 			{
-				Content = string.Format("Save changes to import job {0}?'", DisplayName),
-				Title = "Action confirmation"
+				Content = string.Format("Save changes to import job {0}?'".Localize(), DisplayName),
+				Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 		}
 
@@ -501,7 +501,7 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 						if (propertySet != null)
 							propertySetName = propertySet.Name;
 					}
-					InnerItem.Name = string.Format("{0} {1} {2} import", catalogName, propertySetName, InnerItem.EntityImporter);
+					InnerItem.Name = string.Format("{0} {1} {2} import".Localize(), catalogName, propertySetName, InnerItem.EntityImporter);
 				}
 			}
 		}
@@ -525,12 +525,12 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 						if (propertySet != null)
 							propertySetName = propertySet.Name;
 					}
-					InnerItem.Name = string.Format("{0} {1} {2} import", catalogName, propertySetName, InnerItem.EntityImporter);
+					InnerItem.Name = string.Format("{0} {1} {2} import".Localize(), catalogName, propertySetName, InnerItem.EntityImporter);
 				}
 			}
 			else
 			{
-				InnerItem.Name = string.Format("{0} import", InnerItem.EntityImporter);
+				InnerItem.Name = string.Format("{0} import".Localize(), InnerItem.EntityImporter);
 			}
 			OnPropertyChanged("InnerItem");
 		}
@@ -538,12 +538,12 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 		private void RaiseUpdateCatalogRequest(CatalogBase obj)
 		{
 			if (obj != null)
-				InnerItem.Name = string.Format("{0} {1} import", obj.Name, InnerItem.EntityImporter);
+				InnerItem.Name = string.Format("{0} {1} import".Localize(), obj.Name, InnerItem.EntityImporter);
 			UpdatePropertySets(null);
 		}
 
 		private EntityImporterBase[] AvailableImporters;
-		
+
 		private string[] GetCsvColumns()
 		{
 			string[] retVal = null;
@@ -562,7 +562,7 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 			else
 			{
 				IsError = true;
-				ErrorText = string.Format("File '{0}' doesn't exist", InnerItem.TemplatePath);
+				ErrorText = string.Format("File '{0}' doesn't exist".Localize(), InnerItem.TemplatePath);
 			}
 			return retVal;
 		}
@@ -665,11 +665,11 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 		private void RaiseFilePickInteractionRequest()
 		{
 			var itemVM = _assetVmFactory.GetViewModelInstance();
-            itemVM.AssetPickMode = true;
-            itemVM.RootItemId = null;
+			itemVM.AssetPickMode = true;
+			itemVM.RootItemId = null;
 
 			CommonConfirmRequest.Raise(
-				new ConditionalConfirmation(itemVM.Validate) { Content = itemVM, Title = "Select file" },
+				new ConditionalConfirmation(itemVM.Validate) { Content = itemVM, Title = "Select file".Localize(null, LocalizationScope.DefaultCategory) },
 				(x) =>
 				{
 					if (x.Confirmed)
@@ -680,7 +680,7 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 					}
 				});
 		}
-		
+
 		private void RaiseItemEditInteractionRequest(MappingItem originalItem)
 		{
 			var item = originalItem.DeepClone(EntityFactory as ImportJobEntityFactory);
@@ -696,7 +696,7 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 				new KeyValuePair<string, object>("item", param)
 				);
 
-			var confirmation = new ConditionalConfirmation(itemVM.Validate) {Title = "Edit column mapping", Content = itemVM};
+			var confirmation = new ConditionalConfirmation(itemVM.Validate) { Title = "Edit column mapping".Localize(), Content = itemVM };
 
 			CommonConfirmRequest2.Raise(confirmation, (x) =>
 			{
@@ -756,7 +756,7 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 		}
 
 		#endregion
-		
+
 		#region IWizardStep Members
 
 		public override bool IsLast

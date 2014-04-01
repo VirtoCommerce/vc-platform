@@ -1,10 +1,11 @@
-﻿using VirtoCommerce.ManagementClient.Asset.ViewModel.Interfaces;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
-using VirtoCommerce.ManagementClient.Asset.ViewModel;
+﻿using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
-using Microsoft.Practices.Prism.Commands;
+using VirtoCommerce.Client.Globalization;
+using VirtoCommerce.ManagementClient.Asset.ViewModel.Interfaces;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Import.Model;
 using VirtoCommerce.ManagementClient.Import.ViewModel.Interfaces;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 {
@@ -15,7 +16,7 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 		#endregion
 
 		public ImportJobRunViewModel(IViewModelsFactory<IPickAssetViewModel> vmFactory, ImportEntity jobEntity)
-        {
+		{
 			_assetVmFactory = vmFactory;
 
 			InnerItem = jobEntity;
@@ -23,13 +24,13 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 
 			FilePickCommand = new DelegateCommand(RaiseFilePickInteractionRequest);
 			CommonConfirmRequest = new InteractionRequest<Confirmation>();
-        }
+		}
 
 		public ImportEntity InnerItem { get; set; }
-		
+
 		public DelegateCommand FilePickCommand { get; private set; }
 		public InteractionRequest<Confirmation> CommonConfirmRequest { get; private set; }
-		
+
 		public bool Validate()
 		{
 			return !string.IsNullOrEmpty(InnerItem.SourceFile);
@@ -39,11 +40,11 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 		private void RaiseFilePickInteractionRequest()
 		{
 			var itemVM = _assetVmFactory.GetViewModelInstance();
-            itemVM.AssetPickMode = true;
-            itemVM.RootItemId = null;
+			itemVM.AssetPickMode = true;
+			itemVM.RootItemId = null;
 
 			CommonConfirmRequest.Raise(
-				new ConditionalConfirmation(itemVM.Validate) { Content = itemVM, Title = "Select file" },
+				new ConditionalConfirmation(itemVM.Validate) { Content = itemVM, Title = "Select file".Localize(null, LocalizationScope.DefaultCategory) },
 				(x) =>
 				{
 					if (x.Confirmed)

@@ -46,9 +46,8 @@
 				<ColumnDefinition Width="*" />
 				<ColumnDefinition Width="Auto" />
 			</Grid.ColumnDefinitions>
-			<core_controls:WatermarkedTextBox Grid.Column="0" Text="{Binding InnerItem.SourceFile, Mode=OneWay}"
-     WatermarkText="{Loc 'File not selected...'}" IsReadOnly="True" />
-			<Button Grid.Column="1" Content="{Loc 'Select file...'}" Style="{StaticResource Virto_ToolButton_Style}"
+			<core_controls:WatermarkedTextBox Grid.Column="0" Text="{Binding InnerItem.SourceFile, Mode=OneWay}" WatermarkText="{Loc '^File not selected...'}" IsReadOnly="True" />
+			<Button Grid.Column="1" Content="{Loc '^Select file...'}" Style="{StaticResource Virto_ToolButton_Style}"
      Margin="5,0,0,0" VerticalAlignment="Center" Command="{Binding FilePickCommand}" />
 		</Grid>
     </Grid>

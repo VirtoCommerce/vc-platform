@@ -9,7 +9,7 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 	{
 		private const string Default = "Default";
 		private const string Custom = "Custom";
-		private const string SelectValue = "Select value...";
+		private readonly string SelectValue = "Select value...".Localize();
 		public ColumnMappingEntity InnerItem { get; set; }
 
 		public ColumnMappingViewModel(ColumnMappingEntity item)
