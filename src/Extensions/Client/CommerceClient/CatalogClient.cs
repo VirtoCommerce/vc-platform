@@ -92,7 +92,7 @@ namespace VirtoCommerce.Client
 
         public CatalogBase GetCatalog(string catalogId, bool useCache = true)
         {
-            var query = _catalogRepository.Catalogs.Where(x => x.CatalogId.Equals(catalogId, StringComparison.OrdinalIgnoreCase));
+            var query = _catalogRepository.Catalogs.Where(x => x.CatalogId.Equals(catalogId, StringComparison.OrdinalIgnoreCase)).ExpandAll();
 
             return Helper.Get(
                 CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix,string.Format(CatalogCacheKey, catalogId)),

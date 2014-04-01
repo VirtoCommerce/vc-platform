@@ -159,7 +159,9 @@
 			{
 				self.addClass('dropdown');
 
-				$('.level1 > a', self).append('<span>+</span>');
+                if (self.hasClass('level1')) {
+                    $('> a', self).append('<span>+</span>');
+                }
 			}
 
 			$('.arrow').remove();

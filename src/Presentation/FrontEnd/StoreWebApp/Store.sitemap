@@ -2,31 +2,7 @@
 <mvcSiteMap xmlns="http://mvcsitemap.categoryplex.com/schemas/MvcSiteMap-File-4.0">
   <mvcSiteMapNode title="Home" controller="Home" action="Index" changeFrequency="Always" updatePriority="Normal">
     <mvcSiteMapNode key="home" title="Home" controller="Home" action="Index" changeFrequency="Always" updatePriority="Normal" visibility="MainMenu,!*">
-      <mvcSiteMapNode title="TV &amp; Video" action="Display" controller="Catalog" category="tv-video">
-        <mvcSiteMapNode title="Audio &amp; MP3" category="audio-mp3" action="Display" imageUrl="~/Content/themes/default/images/menu/mobiles.png">
-          <mvcSiteMapNode title="Samsung" category="audio-mp3" action="Display" f_Brand="samsung"/>
-          <mvcSiteMapNode title="Sony" category="audio-mp3" action="Display" f_Brand="sony" />
-          <mvcSiteMapNode title="Apple" category="audio-mp3" action="Display" f_Brand="apple" />
-        </mvcSiteMapNode>
-        <mvcSiteMapNode title="Computers" category="computers-tablets" action="Display" imageUrl="~/Content/themes/default/images/menu/computers.png">
-          <mvcSiteMapNode title="Samsung" category="computers-tablets" f_Brand="samsung" action="Display"/>
-          <mvcSiteMapNode title="Sony" category="computers-tablets" f_Brand="sony" action="Display" />
-          <mvcSiteMapNode title="Apple" category="computers-tablets" f_Brand="apple" action="Display"/>
-        </mvcSiteMapNode>
-        <mvcSiteMapNode title="Cameras" category="cameras" action="Display" imageUrl="~/Content/themes/default/images/menu/cameras.png">
-          <mvcSiteMapNode title="Samsung" category="cameras" f_Brand="samsung" action="Display"/>
-          <mvcSiteMapNode title="Sony" category="cameras" f_Brand="sony" action="Display" />
-        </mvcSiteMapNode>
-        <mvcSiteMapNode title="Accessories" category="accessories" action="Display" imageUrl="~/Content/themes/default/images/menu/accessories.png">
-          <mvcSiteMapNode title="Samsung" category="accessories" f_Brand="samsung" action="Display" />
-          <mvcSiteMapNode title="Sony" category="accessories" f_Brand="sony" action="Display" />
-          <mvcSiteMapNode title="Apple" category="accessories" f_Brand="apple" action="Display" />
-        </mvcSiteMapNode>
-      </mvcSiteMapNode>
-      <mvcSiteMapNode title="Audio &amp; MP3" action="Display" controller="Catalog" category="audio-mp3"/>
-      <mvcSiteMapNode title="Cameras" action="Display" controller="Catalog" category="cameras"/>
-      <mvcSiteMapNode title="Computers &amp; Tablets" action="Display" controller="Catalog" category="computers-tablets"/>
-      <mvcSiteMapNode title="Accessories" action="Display" controller="Catalog" category="accessories"/>
+      <mvcSiteMapNode controller="Catalog" title="Categories" dynamicNodeProvider="VirtoCommerce.Web.Virto.Helpers.MVC.CatalogNodeProvider, VirtoCommerce.Web"></mvcSiteMapNode>
     </mvcSiteMapNode>
     
     <mvcSiteMapNode key="account" title="Account Dashboard" controller="Account" action="Index" visibility="account,!*" changeFrequency="Always">
@@ -38,7 +14,7 @@
     </mvcSiteMapNode>
 
     <!-- Special node for building breadcrums-->
-    <mvcSiteMapNode title="Breadcrumb" dynamicNodeProvider="VirtoCommerce.Web.Virto.Helpers.MVC.CatalogNodeProvider, VirtoCommerce.Web" controller="Catalog"></mvcSiteMapNode>
+    <mvcSiteMapNode title="Breadcrumb" dynamicNodeProvider="VirtoCommerce.Web.Virto.Helpers.MVC.BreadcrumbNodeProvider, VirtoCommerce.Web" controller="Catalog"></mvcSiteMapNode>
     
   </mvcSiteMapNode>
   

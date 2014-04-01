@@ -413,6 +413,7 @@
     <Compile Include="Virto\Helpers\CartHelperExtensions.cs" />
     <Compile Include="Virto\Helpers\CatalogHelper.cs" />
     <Compile Include="Virto\Helpers\MarketingHelper.cs" />
+    <Compile Include="Virto\Helpers\MVC\BreadcrumbNodeProvider.cs" />
     <Compile Include="Virto\Helpers\MVC\CatalogNodeProvider.cs" />
     <Compile Include="Virto\Helpers\MVC\VirtoDataAnnotationsModelValidatorProvider.cs" />
     <Compile Include="Virto\Helpers\Payments\CreditCardOption.cs" />
@@ -806,6 +807,7 @@
     <Content Include="Views\Search\Prices.cshtml" />
     <Content Include="Views\Catalog\ItemDynamic.cshtml" />
     <Content Include="Views\Shared\StoreParams.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\MegaMenu.cshtml" />
     <None Include="Web.Azure.config" />
   </ItemGroup>
   <ItemGroup>
