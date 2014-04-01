@@ -42,7 +42,7 @@
 
         <StackPanel Grid.Row="1">
             <TextBlock Text="Specify parameter for selected cache type:" />
-            <ComboBox ItemsSource="{Binding CacheParameters}" SelectedItem="{Binding SelectedCacheParameter, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding IsCacheTypeSelected}">
+            <ComboBox ItemsSource="{Binding CacheParameters}" SelectedValue="{Binding SelectedCacheParameter, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Key" DisplayMemberPath="Value" IsEnabled="{Binding IsCacheTypeSelected}">
                 <i:Interaction.Triggers>
                     <i:EventTrigger EventName="SelectionChanged">
                         <ei:CallMethodAction TargetObject="{Binding ClearCacheCommand}" MethodName="RaiseCanExecuteChanged"/>
@@ -51,7 +51,7 @@
             </ComboBox>
         </StackPanel>
 
-        <Button Grid.Row="2" Content="Clear Cache now" Command="{Binding ClearCacheCommand}" HorizontalAlignment="Right" />
+        <Button Grid.Row="2" Content="Clear Cache" Command="{Binding ClearCacheCommand}" HorizontalAlignment="Right" />
 
         <dataVirtualization:LoadingMetroAnimation Grid.Row="2" BackgroundColor="#33111111" AnimationScale="Small" Foreground="Red" ShowText="True"
 							Text="{Binding AnimationText}" Padding="0,14,0,0" Margin="0,-12,0,0"
