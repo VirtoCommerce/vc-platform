@@ -40,7 +40,7 @@ namespace VirtoCommerce.Foundation.Data.Infrastructure.Interceptors
         /// <param name="context">The context.</param>
         public void After(InterceptionContext context)
         {
-            foreach (var entryWithState in context.EntriesByState)
+            foreach (var entryWithState in context.EntriesByState.Where(x => x.Key != EntityState.Unchanged)) // added unchanged filter, so we don't log events for objects that haven't been changed
             {
                 foreach (var entry in entryWithState)
                 {
