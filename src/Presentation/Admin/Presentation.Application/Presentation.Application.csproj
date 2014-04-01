@@ -243,6 +243,7 @@
     <Compile Include="Modules\AssetModule.cs" />
     <Compile Include="Modules\CatalogModule.cs" />
     <Compile Include="Modules\ConfigurationModule.cs" />
+    <Compile Include="Modules\LocalizationModule.cs" />
     <Compile Include="Modules\CustomersModule.cs" />
     <Compile Include="Modules\DynamicContentModule.cs" />
     <Compile Include="Modules\ImportModule.cs" />

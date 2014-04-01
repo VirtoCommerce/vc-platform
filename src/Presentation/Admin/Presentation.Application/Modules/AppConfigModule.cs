@@ -67,13 +67,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig
 				_container.Resolve<IServiceConnectionFactory>()
 						  .GetConnectionString(AppConfigConfiguration.Instance.CacheServiceConnection.ServiceUri, AppConfigConfiguration.Instance.CacheServiceConnection.ForceHttps),
 				AppConfigConfiguration.Instance.CacheServiceConnection.WSEndPointName);
-
-			var repositoryFactory = _container.Resolve<IRepositoryFactory<IAppConfigRepository>>();
-			var localElements = new XmlElementRepository(Environment.ExpandEnvironmentVariables(@"%SystemRoot%\Temp\VirtoCommerceCMLocalization"));
-			var cachedElements = new CacheElementRepository(localElements);
-			var instance = new CachedDatabaseElementRepository(repositoryFactory, cachedElements);
-			_container.RegisterInstance<IElementRepository>(instance);
-
+			
 			var resources = new ResourceDictionary
 				{
 					Source =

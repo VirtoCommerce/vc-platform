@@ -20,6 +20,7 @@ using VirtoCommerce.ManagementClient.Core.Controls.StatusIndicator.Model;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Common;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.EventAggregation;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implementations
 {
@@ -97,17 +98,31 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 			confirmation.Content = "Are you sure you want to clear all locally cached Commerce Manager texts?".Localize();
 
 			CommonConfirmRequest.Raise(confirmation,
-				x =>
+				async x =>
 				{
 					if (x.Confirmed)
 					{
-						_elementRepository.Clear();
+						ShowLoadingAnimation = true;
+						try
+						{
+							await Task.Run(() =>
+								{
+									_elementRepository.Clear();
 
-						var notification = new Notification();
-						// notification.Title = "Done";
-						notification.Content = "All locally cached texts were removed. You may need to restart this application for the changes to take effect."
+									// force Elements re-caching
+									_elementRepository.Elements();
+								});
+
+							var notification = new Notification();
+							// notification.Title = "Done";
+							notification.Content = "All locally cached texts were removed. You may need to restart this application for the changes to take effect."
 								.Localize();
-						CommonNotifyRequest.Raise(notification);
+							CommonNotifyRequest.Raise(notification);
+						}
+						finally
+						{
+							ShowLoadingAnimation = false;
+						}
 					}
 				});
 		}
@@ -161,6 +176,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 										FilterModules = new[]
 											{
 												new KeyValuePair_string_string {Value = "Web pages"},
+												new KeyValuePair_string_string {Key = LocalizationScope.DefaultCategory, Value = "General"},
 												new KeyValuePair_string_string {Key = "AppConfig", Value = "AppConfig"},
 												new KeyValuePair_string_string {Key = "Asset", Value = "Asset"},
 												new KeyValuePair_string_string {Key = "Catalog", Value = "Catalog"},
@@ -186,7 +202,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 
 								if (string.IsNullOrEmpty(FilterModule))
 								{
-									query = query.Where(x => x.Category == null || x.Category == "");
+									query = query.Where(x => x.Category == "");
 								}
 								else
 								{

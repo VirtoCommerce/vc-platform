@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace VirtoCommerce.Client.Globalization.Repository
 		/// The _cache repository
 		/// </summary>
 		private readonly IElementRepository _cacheRepository;
+		private Func<Localization, bool> _baseFilter;
 
 		#region Cache Constants
 
@@ -46,10 +48,11 @@ namespace VirtoCommerce.Client.Globalization.Repository
 		/// </summary>
 		/// <param name="repositoryFactory">The repository factory.</param>
 		/// <param name="cacheRepository">The cache repository.</param>
-		public CachedDatabaseElementRepository(IRepositoryFactory<IAppConfigRepository> repositoryFactory, IElementRepository cacheRepository)
+		public CachedDatabaseElementRepository(IRepositoryFactory<IAppConfigRepository> repositoryFactory, IElementRepository cacheRepository, Func<Localization, bool> baseFilter)
 		{
 			_repositoryFactory = repositoryFactory;
 			_cacheRepository = cacheRepository;
+			_baseFilter = baseFilter;
 		}
 
 		#region IElementRepository
@@ -66,7 +69,7 @@ namespace VirtoCommerce.Client.Globalization.Repository
 			}
 
 			var _repository = _repositoryFactory.GetRepositoryInstance();
-			return _repository.Localizations.Where(l => !string.IsNullOrWhiteSpace(l.LanguageCode))
+			return GetLocalizationsEnumerable(_repository).Where(l => !string.IsNullOrWhiteSpace(l.LanguageCode))
 					.Select(l => new CultureInfo(l.LanguageCode)).AsQueryable();
 		}
 
@@ -78,11 +81,13 @@ namespace VirtoCommerce.Client.Globalization.Repository
 		{
 			if (!_cacheRepository.Elements().Any())
 			{
-				var _repository = _repositoryFactory.GetRepositoryInstance();
-				foreach (var loc in _repository.Localizations)
+				using (var _repository = _repositoryFactory.GetRepositoryInstance())
 				{
-					//Update cache with items
-					_cacheRepository.Add(GetElement(loc));
+					foreach (var loc in GetLocalizationsEnumerable(_repository))
+					{
+						//Update cache with items
+						_cacheRepository.Add(GetElement(loc));
+					}
 				}
 			}
 
@@ -141,11 +146,11 @@ namespace VirtoCommerce.Client.Globalization.Repository
 			}
 
 			var _repository = _repositoryFactory.GetRepositoryInstance();
-			return _repository.Localizations.Select(x => new ElementCategory
+			return GetLocalizationsEnumerable(_repository).Select(x => new ElementCategory
 					{
 						Category = x.Category,
 						Culture = x.LanguageCode
-					}).Distinct();
+					}).Distinct().AsQueryable();
 		}
 
 		/// <summary>
@@ -259,7 +264,7 @@ namespace VirtoCommerce.Client.Globalization.Repository
 			// don't delete anything from real DB.
 			//using (var repository = _repositoryFactory.GetRepositoryInstance())
 			//{
-			//    foreach (var loc in repository.Localizations)
+			//    foreach (var loc in GetLocalizationsEnumerable(repository))
 			//    {
 			//        repository.Remove(loc);
 			//    }
@@ -306,7 +311,7 @@ namespace VirtoCommerce.Client.Globalization.Repository
 		private Localization GetLocalization(string name, string category, string culture, IAppConfigRepository repository)
 		{
 			// 'it => true && ... ' is a workaround to prevent searching by key (getting exception if Localization not found).
-			return repository.Localizations.Where(it =>
+			return GetLocalizationsEnumerable(repository).Where(it =>
 				it.Name.Equals(name, StringComparison.OrdinalIgnoreCase) &&
 				it.Category.Equals(category, StringComparison.OrdinalIgnoreCase) &&
 				it.LanguageCode.Equals(culture, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
@@ -320,7 +325,7 @@ namespace VirtoCommerce.Client.Globalization.Repository
 			{
 				using (var _repository = _repositoryFactory.GetRepositoryInstance())
 				{
-					var preloadedCategoryLocalizations = _repository.Localizations.Where(it => it.Category.Equals(category, StringComparison.OrdinalIgnoreCase) &&
+					var preloadedCategoryLocalizations = GetLocalizationsEnumerable(_repository).Where(it => it.Category.Equals(category, StringComparison.OrdinalIgnoreCase) &&
 																   it.LanguageCode.Equals(culture, StringComparison.OrdinalIgnoreCase));
 					foreach (var preloadedCategoryLocalization in preloadedCategoryLocalizations)
 					{
@@ -367,6 +372,15 @@ namespace VirtoCommerce.Client.Globalization.Repository
 				Culture = loc.LanguageCode
 			};
 		}
+
+		private IEnumerable<Localization> GetLocalizationsEnumerable(IAppConfigRepository _repository)
+		{
+			IEnumerable<Localization> query = _repository.Localizations;
+			if (_baseFilter != null)
+				query = query.Where(_baseFilter);
+			return query;
+		}
+
 		#endregion
 	}
 }

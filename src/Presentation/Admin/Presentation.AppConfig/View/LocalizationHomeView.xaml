@@ -198,8 +198,7 @@
 						</ComboBox>
 
 						<TextBlock Grid.Row="4" Text="{Loc 'Source Language:'}" />
-						<core_controls:NullItemSelectorAdapter Grid.Row="5" ItemsSource="{Binding LanguagesCodes}"
-     IsAddingNullItemsFirst="True" Width="Auto" HorizontalAlignment="Stretch">
+						<core_controls:NullItemSelectorAdapter Grid.Row="5" ItemsSource="{Binding LanguagesCodes}" IsAddingNullItemsFirst="True" Width="Auto" HorizontalAlignment="Stretch">
 							<core_controls:NullItemSelectorAdapter.NullItems>
 								<collections:ArrayList>
 									<sys:String>Select language...</sys:String>
