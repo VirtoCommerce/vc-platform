@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Routing;
+using VirtoCommerce.Client.Extensions;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.Stores.Model;
 using VirtoCommerce.Web.Client.Extensions.Routing.Constraints;
@@ -71,7 +70,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
                     //If for request store URL is used do not show it in path
                     Url = Url.Replace(string.Format("/{{{0}}}", Constants.Store), string.Empty);
                     values.Remove(Constants.Store);
-                    
+
                     var retVal = base.GetVirtualPath(requestContext, values);
 
                     //Restore original URL
@@ -86,7 +85,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
 
             EncodeVirtualPath(requestContext, values, SeoUrlKeywordTypes.Store);
             return base.GetVirtualPath(requestContext, values);
-           
+
         }
 
         public override RouteData GetRouteData(HttpContextBase httpContext)
@@ -103,7 +102,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
 
                 //Store route can only have up to 2 segments
                 //Other routes have unlimited number of segments due to category path
-                if (GetType() == typeof (StoreRoute) && pathSegments.Length > Url.Split(new[] {'/'}).Length)
+                if (GetType() == typeof(StoreRoute) && pathSegments.Length > Url.Split(new[] { '/' }).Length)
                 {
                     return null;
                 }
@@ -290,12 +289,12 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
                     return false;
                 }
 
-                var culture = CultureInfo.CreateSpecificCulture(lang);
-                    if (!dbStore.Languages.Any(l => l.LanguageCode.Equals(culture.Name, StringComparison.InvariantCultureIgnoreCase)))
-                    {
-                        //Store does not support this language
-                        return false;
-                    }
+                var culture = lang.ToSpecificLangCode();
+                if (!dbStore.Languages.Any(l => l.LanguageCode.ToSpecificLangCode().Equals(culture, StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    //Store does not support this language
+                    return false;
+                }
 
             }
             catch

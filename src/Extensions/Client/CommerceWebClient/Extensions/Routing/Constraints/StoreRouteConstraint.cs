@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using VirtoCommerce.Client;
+using VirtoCommerce.Client.Extensions;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Web.Client.Helpers;
 
@@ -54,8 +51,8 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Constraints
             {
                 try
                 {
-                    var culture = CultureInfo.CreateSpecificCulture(values[Constants.Language].ToString());
-                    if (!dbStore.Languages.Any(l => l.LanguageCode.Equals(culture.Name, StringComparison.InvariantCultureIgnoreCase)))
+                    var culture = values[Constants.Language].ToString().ToSpecificLangCode();
+                    if (!dbStore.Languages.Any(l => l.LanguageCode.ToSpecificLangCode().Equals(culture, StringComparison.InvariantCultureIgnoreCase)))
                     {
                         //Store does not support this language
                         return false;

@@ -42,7 +42,7 @@
             }
             
             var countryCode = culture.Name.Substring(culture.Name.IndexOf('-') + 1).ToLowerInvariant();
-            var liClass = string.Equals(lang.LanguageCode, UICulture, StringComparison.InvariantCultureIgnoreCase) ? " selected" : "";
+            var liClass = string.Equals(culture.Name, UICulture, StringComparison.InvariantCultureIgnoreCase) ? " selected" : "";
 	  
             <li class="@liClass">
                 <img src="~/Content/themes/default/images/blank.gif" class="flag flag-@countryCode" alt="@culture.NativeName">

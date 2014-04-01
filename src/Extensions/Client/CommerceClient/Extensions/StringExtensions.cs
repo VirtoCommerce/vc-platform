@@ -77,5 +77,18 @@ namespace VirtoCommerce.Client.Extensions
                 .Select(ri => ri.CurrencyNativeName)
                 .FirstOrDefault() ?? isoCurrencySymbol;
         }
+
+        public static string ToSpecificLangCode(this string lang)
+        {
+            try
+            {
+                var culture = CultureInfo.CreateSpecificCulture(lang);
+                return culture.Name;
+            }
+            catch
+            {
+                return "";
+            }
+        }
     }
 }

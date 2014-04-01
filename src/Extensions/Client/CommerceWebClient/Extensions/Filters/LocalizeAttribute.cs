@@ -5,6 +5,7 @@ using System.Threading;
 using System.Web.Mvc;
 using Microsoft.Practices.ServiceLocation;
 using VirtoCommerce.Client;
+using VirtoCommerce.Client.Extensions;
 using VirtoCommerce.Foundation.Customers;
 using VirtoCommerce.Foundation.Customers.Services;
 
@@ -53,18 +54,18 @@ namespace VirtoCommerce.Web.Client.Extensions.Filters
 			if (!string.IsNullOrWhiteSpace(lang))
 			{
 				// set the culture from the route data (url)
-				try
-				{
-					var newCulture = CultureInfo.CreateSpecificCulture(lang);
+                try
+                {
+                    var newCulture = lang.ToSpecificLangCode();
 
-					var store = StoreClient.GetCurrentStore();
-					if (store.Languages.Any(
-							s =>
-							string.Equals(s.LanguageCode, newCulture.Name, StringComparison.InvariantCultureIgnoreCase)))
-					{
-						CustomerSession.Language = newCulture.Name;
-					}
-				}
+                    var store = StoreClient.GetCurrentStore();
+                    if (store.Languages.Any(
+                            s =>
+                            string.Equals(s.LanguageCode.ToSpecificLangCode(), newCulture, StringComparison.InvariantCultureIgnoreCase)))
+                    {
+                        CustomerSession.Language = newCulture;
+                    }
+                }
 				catch
 				{
 					//do not change language

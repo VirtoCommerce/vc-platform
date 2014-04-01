@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Security;
 using VirtoCommerce.Client;
+using VirtoCommerce.Client.Extensions;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Foundation.Stores.Model;
@@ -143,7 +144,7 @@ namespace VirtoCommerce.Web.Client.Modules
             var store = GetStore(context);
 
             if (string.IsNullOrEmpty(session.Language)
-                || !store.Languages.Any(s => string.Equals(s.LanguageCode, session.Language, StringComparison.InvariantCultureIgnoreCase)))
+                || !store.Languages.Any(s => string.Equals(s.LanguageCode.ToSpecificLangCode(), session.Language.ToSpecificLangCode(), StringComparison.InvariantCultureIgnoreCase)))
             {
                 session.Language = store.DefaultLanguage;
             }
