@@ -113,7 +113,7 @@ namespace Initial.Web
                     action = "Index",
                     id = UrlParameter.Optional
                 }, // Parameter defaults
-                new[] { "VirtoCommerce.Web.Controllers" });
+                new[] { "Initial.Web.Controllers" });
         }
     }
 }
