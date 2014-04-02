@@ -13,129 +13,129 @@
                xmlns:common="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Common;assembly=VirtoCommerce.ManagementClient.Core"
                mc:Ignorable="d" 
              d:DesignHeight="400" Width="600">
-	<base:ViewBase.Resources>
-		<ResourceDictionary>
-			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/WizardViewTheme/VirtoCommerceWizardTheme.xaml"/>
-			</ResourceDictionary.MergedDictionaries>
-		</ResourceDictionary>
-	</base:ViewBase.Resources>
+    <base:ViewBase.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/WizardViewTheme/VirtoCommerceWizardTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </base:ViewBase.Resources>
 
-   
-	<Grid>
-		<Grid.ColumnDefinitions>
-			<ColumnDefinition/>
-			<ColumnDefinition Width="40"/>
-			<ColumnDefinition/>
-		</Grid.ColumnDefinitions>
-		
-		
-		<Grid Grid.Column="0">
-			<Grid.RowDefinitions>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="*"/>
-			</Grid.RowDefinitions>
-			<TextBlock Grid.Row="0" Text="* Day phone number:" />
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition Width="40"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Text="* Day phone number:" />
             <core_controls:WatermarkedTextBox Grid.Row="1"  common:RequiredFieldHelper.IsRequired="True"
                                               Text="{Binding InnerItem.DaytimePhoneNumber, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
 
-			<TextBlock Grid.Row="2" Text="* Address (line1):" />
+            <TextBlock Grid.Row="2" Text="* Address (line1):" />
             <core_controls:WatermarkedTextBox Grid.Row="3" common:RequiredFieldHelper.IsRequired="True"
                                               Text="{Binding InnerItem.Line1, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
 
-			<TextBlock Grid.Row="4" Text="* Address (line2):" />
-            <core_controls:WatermarkedTextBox Grid.Row="5"  common:RequiredFieldHelper.IsRequired="True"
-                                              Text="{Binding InnerItem.Line2, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-		</Grid>
+            <TextBlock Grid.Row="4" Text="Address (line2):" />
+            <core_controls:WatermarkedTextBox Grid.Row="5"
+                                              Text="{Binding InnerItem.Line2, UpdateSourceTrigger=PropertyChanged}"/>
+        </Grid>
 
-		<Grid Grid.Column="2">
-			<Grid.RowDefinitions>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="Auto"/>
-				<RowDefinition Height="*"/>
-			</Grid.RowDefinitions>
-			
-			<TextBlock Grid.Row="0" Text="* City:" />
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" Text="* City:" />
             <core_controls:WatermarkedTextBox Grid.Row="1"  common:RequiredFieldHelper.IsRequired="True"
                                               WatermarkText="Enter city..." Text="{Binding InnerItem.City, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-			<TextBlock Grid.Row="2" Text="Country:" />
-			<core_controls:NullItemSelectorAdapter Grid.Row="3" ItemsSource="{Binding DataContext.AllCountries, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type base:ViewBase}}}" IsAddingNullItemsFirst="True">
-					<core_controls:NullItemSelectorAdapter.NullItems>
-						<collections:ArrayList>
-							<sys:String>none</sys:String>
-						</collections:ArrayList>
-					</core_controls:NullItemSelectorAdapter.NullItems>
-					<ComboBox SelectedValue="{Binding InnerItem.CountryCode, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
+            <TextBlock Grid.Row="2" Text="Country:" />
+            <core_controls:NullItemSelectorAdapter Grid.Row="3" ItemsSource="{Binding DataContext.AllCountries, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type base:ViewBase}}}" IsAddingNullItemsFirst="True">
+                <core_controls:NullItemSelectorAdapter.NullItems>
+                    <collections:ArrayList>
+                        <sys:String>none</sys:String>
+                    </collections:ArrayList>
+                </core_controls:NullItemSelectorAdapter.NullItems>
+                <ComboBox SelectedValue="{Binding InnerItem.CountryCode, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
                               SelectedValuePath="CountryId" x:Name="cboCountries" common:RequiredFieldHelper.IsRequired="True">
-						<ComboBox.ItemTemplate>
-							<DataTemplate>
-								<Grid>
-									<TextBlock x:Name="textBlock" Text="{Binding DisplayName, FallbackValue='Select country...'}" />
-								</Grid>
-								<DataTemplate.Triggers>
-									<MultiDataTrigger>
-										<MultiDataTrigger.Conditions>
-											<Condition Binding="{Binding Text, ElementName=textBlock}" Value="Select country..." />
-											<Condition Binding="{Binding IsDropDownOpen, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" Value="False" />
-										</MultiDataTrigger.Conditions>
-										<Setter TargetName="textBlock" Property="FontStyle" Value="Italic" />
-									</MultiDataTrigger>
-								</DataTemplate.Triggers>
-							</DataTemplate>
-						</ComboBox.ItemTemplate>
-						<i:Interaction.Triggers>
-							<!--changing property CountryName when selected CountryId changes-->
-							<i:EventTrigger EventName="SelectionChanged">
-								<ei:ChangePropertyAction PropertyName="CountryName" Value="{Binding SelectedItem.DisplayName, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" 
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <TextBlock x:Name="textBlock" Text="{Binding DisplayName, FallbackValue='Select country...'}" />
+                            </Grid>
+                            <DataTemplate.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Text, ElementName=textBlock}" Value="Select country..." />
+                                        <Condition Binding="{Binding IsDropDownOpen, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" Value="False" />
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter TargetName="textBlock" Property="FontStyle" Value="Italic" />
+                                </MultiDataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                    <i:Interaction.Triggers>
+                        <!--changing property CountryName when selected CountryId changes-->
+                        <i:EventTrigger EventName="SelectionChanged">
+                            <ei:ChangePropertyAction PropertyName="CountryName" Value="{Binding SelectedItem.DisplayName, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" 
                                     TargetObject="{Binding InnerItem}" />
-							</i:EventTrigger>
-						</i:Interaction.Triggers>
-					</ComboBox>
-				</core_controls:NullItemSelectorAdapter>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
+                </ComboBox>
+            </core_controls:NullItemSelectorAdapter>
 
-			<TextBlock Grid.Row="4" Text="State, region:" />
-			<core_controls:NullItemSelectorAdapter Grid.Row="5" ItemsSource="{Binding SelectedItem.Regions, ElementName=cboCountries}" IsAddingNullItemsFirst="True" >
-					<core_controls:NullItemSelectorAdapter.NullItems>
-						<collections:ArrayList>
-							<sys:String>none</sys:String>
-						</collections:ArrayList>
-					</core_controls:NullItemSelectorAdapter.NullItems>
-					<ComboBox SelectedValue="{Binding InnerItem.StateProvince}" SelectedValuePath="RegionId" x:Name="cboRegion" >
-						<ComboBox.ItemTemplate>
-							<DataTemplate>
-								<Grid>
-									<TextBlock x:Name="textBlock" Text="{Binding DisplayName, FallbackValue='Select state...'}" />
-								</Grid>
-								<DataTemplate.Triggers>
-									<MultiDataTrigger>
-										<MultiDataTrigger.Conditions>
-											<Condition Binding="{Binding Text, ElementName=textBlock}" Value="Select state..." />
-											<Condition Binding="{Binding IsDropDownOpen, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" Value="False" />
-										</MultiDataTrigger.Conditions>
-										<Setter TargetName="textBlock" Property="FontStyle" Value="Italic" />
-									</MultiDataTrigger>
-								</DataTemplate.Triggers>
-							</DataTemplate>
-						</ComboBox.ItemTemplate>
-					</ComboBox>
-				</core_controls:NullItemSelectorAdapter>
+            <TextBlock Grid.Row="4" Text="State, region:" />
+            <core_controls:NullItemSelectorAdapter Grid.Row="5" ItemsSource="{Binding SelectedItem.Regions, ElementName=cboCountries}" IsAddingNullItemsFirst="True" >
+                <core_controls:NullItemSelectorAdapter.NullItems>
+                    <collections:ArrayList>
+                        <sys:String>none</sys:String>
+                    </collections:ArrayList>
+                </core_controls:NullItemSelectorAdapter.NullItems>
+                <ComboBox SelectedValue="{Binding InnerItem.StateProvince}" SelectedValuePath="RegionId" x:Name="cboRegion" >
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <TextBlock x:Name="textBlock" Text="{Binding DisplayName, FallbackValue='Select state...'}" />
+                            </Grid>
+                            <DataTemplate.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Text, ElementName=textBlock}" Value="Select state..." />
+                                        <Condition Binding="{Binding IsDropDownOpen, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" Value="False" />
+                                    </MultiDataTrigger.Conditions>
+                                    <Setter TargetName="textBlock" Property="FontStyle" Value="Italic" />
+                                </MultiDataTrigger>
+                            </DataTemplate.Triggers>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </core_controls:NullItemSelectorAdapter>
 
-			<TextBlock Grid.Row="6" Text="* Zip code:" />
+            <TextBlock Grid.Row="6" Text="* Zip code:" />
             <core_controls:WatermarkedTextBox Grid.Row="7" WatermarkText="Enter zip code..."  common:RequiredFieldHelper.IsRequired="True"
                                               Text="{Binding InnerItem.PostalCode, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-		</Grid>
-	</Grid>
-	
+        </Grid>
+    </Grid>
+
 
 </base:ViewBase>

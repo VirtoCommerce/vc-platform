@@ -67,9 +67,9 @@
                     <core_controls:WatermarkedTextBox Grid.Row="3" core_common:RequiredFieldHelper.IsRequired="True"
                         Text="{Binding InnerItem.Line1, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
 
-                    <TextBlock Grid.Row="4" Text="* Address (line2):" />
-                    <core_controls:WatermarkedTextBox Grid.Row="5" core_common:RequiredFieldHelper.IsRequired="True"
-                        Text="{Binding InnerItem.Line2, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Grid.Row="4" Text="Address (line2):" />
+                    <core_controls:WatermarkedTextBox Grid.Row="5"
+                        Text="{Binding InnerItem.Line2, UpdateSourceTrigger=PropertyChanged}"/>
                 </Grid>
 
                 <Grid Grid.Column="2">
