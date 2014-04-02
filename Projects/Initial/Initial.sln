@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30110.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{E8015F5A-6A0D-4572-A7F5-7CF954AB0C93}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{9E66CDE9-F510-4431-98C9-6EE65ABF21AB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InitialWebApp", "src\Presentation\InitialWebApp\InitialWebApp.csproj", "{07C352A4-0A88-4050-8CD5-AD447D1A840B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{07C352A4-0A88-4050-8CD5-AD447D1A840B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07C352A4-0A88-4050-8CD5-AD447D1A840B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07C352A4-0A88-4050-8CD5-AD447D1A840B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07C352A4-0A88-4050-8CD5-AD447D1A840B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{07C352A4-0A88-4050-8CD5-AD447D1A840B} = {9E66CDE9-F510-4431-98C9-6EE65ABF21AB}
+	EndGlobalSection
+EndGlobal

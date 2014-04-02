@@ -165,3 +165,5 @@ $RECYCLE.BIN/
 /Tools/ElasticSearch
 /VirtoCommerce.sln.GhostDoc.xml
 /Projects/Initial/src/Presentation/CarombaWebApp/bin
+/Projects/Initial/packages
+/Projects/Initial/src/Presentation/InitialWebApp/bin
