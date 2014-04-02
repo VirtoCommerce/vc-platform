@@ -144,6 +144,10 @@
       <Project>{64fa8a5f-a814-49f3-9661-aa05aad59913}</Project>
       <Name>Presentation.DynamicContent</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Presentation.Localization\Presentation.Localization.csproj">
+      <Project>{10a07a08-2934-4338-b8bd-b89bdc1d014e}</Project>
+      <Name>Presentation.Localization</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Presentation.Marketing\Presentation.Marketing.csproj">
       <Project>{315535f9-143c-41f0-8554-93708dd1091f}</Project>
       <Name>Presentation.Marketing</Name>

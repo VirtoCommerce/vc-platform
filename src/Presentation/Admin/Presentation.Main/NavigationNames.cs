@@ -9,5 +9,6 @@ namespace VirtoCommerce.ManagementClient.Main
 	{
 		public const string MenuName = "MainMenu";
 		public const string HomeName = "MainHome";
+		public const string ModuleName = "Main";
 	}
 }
