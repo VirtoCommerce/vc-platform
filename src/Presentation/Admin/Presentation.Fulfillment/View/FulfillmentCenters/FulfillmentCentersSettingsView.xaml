@@ -27,16 +27,16 @@
         <prism:InteractionRequestTrigger SourceObject="{Binding CommonWizardDialogRequest, Mode=OneWay}">
             <interaction_dialog:InteractionDialogAction x:Name="Create_FulfillmentCenter_Wizard" DialogType="{x:Type interaction_dialog:WizardDialog}" />
         </prism:InteractionRequestTrigger>
-		<prism:InteractionRequestTrigger SourceObject="{Binding CommonConfirmRequest, Mode=OneWay}">
-			<interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:ConfirmationLocalModalInteractionDialog}" />
-		</prism:InteractionRequestTrigger>
+        <prism:InteractionRequestTrigger SourceObject="{Binding CommonConfirmRequest, Mode=OneWay}">
+            <interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:ConfirmationLocalModalInteractionDialog}" />
+        </prism:InteractionRequestTrigger>
         <i:EventTrigger EventName="Loaded">
             <ei:CallMethodAction TargetObject="{Binding }" MethodName="RaiseCanExecuteChanged"/>
         </i:EventTrigger>
     </i:Interaction.Triggers>
-    
+
     <Grid x:Name="LayoutRoot">
-        
+
         <Grid Margin="0,0,10,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
@@ -44,10 +44,10 @@
             </Grid.RowDefinitions>
 
             <ItemsControl Grid.Row="0" Style="{StaticResource Virto_ToolbarItemsControl_Style}">
-				<core_controls:MetroButton Command="{Binding RefreshItemListCommand}" Header="REFRESH" ToolTip="Refresh" Margin="3,0,28,0" >
-					<core_controls:VectorImage ImageResource="{StaticResource Icon_Button_RefreshList}" Width="14" Height="14" />
-				</core_controls:MetroButton>
-				<core_controls:MetroButton Command="{Binding ItemAddCommand}" Header="ADD" ToolTip="Add item">
+                <core_controls:MetroButton Command="{Binding RefreshItemListCommand}" Header="REFRESH" ToolTip="Refresh" Margin="3,0,28,0" >
+                    <core_controls:VectorImage ImageResource="{StaticResource Icon_Button_RefreshList}" Width="14" Height="14" />
+                </core_controls:MetroButton>
+                <core_controls:MetroButton Command="{Binding ItemAddCommand}" Header="ADD" ToolTip="Add item">
                     <Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/add.png" Width="14"/>
                 </core_controls:MetroButton>
                 <core_controls:MetroButton Command="{Binding ItemEditCommand}" CommandParameter="{Binding SelectedItem, ElementName=ItemsDataGrid}" Header="EDIT" ToolTip="Edit Item">
@@ -60,19 +60,19 @@
 
             <DataGrid x:Name="ItemsDataGrid" Grid.Row="1" ItemsSource="{Binding Items, UpdateSourceTrigger=PropertyChanged}" Margin="0,0,0,4">
                 <DataGrid.Columns>
-					<DataGridTextColumn Header="ID" Binding="{Binding FulfillmentCenterId}" />
-					<DataGridTextColumn Header="Name" Binding="{Binding Name}" />
-					<DataGridTextColumn Header="Pick Delay (min)" Binding="{Binding PickDelay}" />
-					<DataGridTextColumn Header="Street">
+                    <DataGridTextColumn Header="ID" Binding="{Binding FulfillmentCenterId}" />
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
+                    <DataGridTextColumn Header="Pick Delay (min)" Binding="{Binding PickDelay}" />
+                    <DataGridTextColumn Header="Street">
                         <DataGridTextColumn.Binding>
-                            <MultiBinding StringFormat="{}{0}, {1}">
+                            <MultiBinding StringFormat="{}{0} {1}">
                                 <Binding Path="Line1" />
                                 <Binding Path="Line2" />
                             </MultiBinding>
                         </DataGridTextColumn.Binding>
                     </DataGridTextColumn>
-					<DataGridTextColumn Header="City" Binding="{Binding City}"/>
-					<DataGridTextColumn Header="Country" Binding="{Binding CountryName}" />
+                    <DataGridTextColumn Header="City" Binding="{Binding City}"/>
+                    <DataGridTextColumn Header="Country" Binding="{Binding CountryName}" />
                 </DataGrid.Columns>
 
                 <DataGrid.RowStyle>
@@ -89,7 +89,7 @@
                 </i:Interaction.Triggers>
             </DataGrid>
 
-		</Grid>
+        </Grid>
         <core_DataVirtualization:LoadingAnimation Grid.RowSpan="3" d:IsHidden="True" Visibility="{Binding ShowLoadingAnimation, Converter={x:Static core_Converters:ToVisibilityConverter.Current}}" />
     </Grid>
 
