@@ -28,20 +28,21 @@ namespace VirtoCommerce.Web.Client.Services.Cache
             _outputCacheManager = outputCacheManager;
         }
 
-        public void ClearOuputCache(string controller, string action)
+        public int ClearOuputCache(string controller, string action)
         {
             if (string.IsNullOrEmpty(controller) && !string.IsNullOrEmpty(action))
             {
                 throw new ArgumentNullException(controller, "Controller must be provided when action not empty");
             }
 
-           _outputCacheManager.RemoveItems(controller, action); 
+           return _outputCacheManager.RemoveItems(controller, action); 
         }
 
-        public void ClearDatabaseCache(string cachePrefix)
+        public int ClearDatabaseCache(string cachePrefix)
         {
             var cacheKeyPrefix = CacheHelper.CreateCacheKey(cachePrefix ?? "");
             var enumerableCache = _cacheRepository.GetEnumerator();
+            var count = 0;
 
             while (enumerableCache.MoveNext())
             {
@@ -50,10 +51,12 @@ namespace VirtoCommerce.Web.Client.Services.Cache
                     var key = enumerableCache.Key.ToString();
                     if (key.StartsWith(cacheKeyPrefix))
                     {
+                        count++;
                         _cacheRepository.Remove(enumerableCache.Key.ToString());
                     }
                 }
             }
+            return count;
         }
     }
 }

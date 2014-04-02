@@ -79,18 +79,19 @@ namespace VirtoCommerce.Web.Client.Caching
         /// <summary>
         /// Removes all output cache entries.
         /// </summary>
-        public void RemoveItems()
+        /// <returns></returns>
+        public int RemoveItems()
         {
-            RemoveItems(null, null, null);
+            return RemoveItems(null, null, null);
         }
 
         /// <summary>
         /// Removes all output cache entries for the specified controller.
         /// </summary>
         /// <param name="controllerName">The name of the controller.</param>
-        public void RemoveItems([AspMvcController] string controllerName)
+        public int RemoveItems([AspMvcController] string controllerName)
         {
-            RemoveItems(controllerName, null, null);
+            return RemoveItems(controllerName, null, null);
         }
 
         /// <summary>
@@ -98,9 +99,9 @@ namespace VirtoCommerce.Web.Client.Caching
         /// </summary>
         /// <param name="controllerName">The name of the controller that contains the action method.</param>
         /// <param name="actionName">The name of the controller action method.</param>
-        public void RemoveItems([AspMvcController] string controllerName, [AspMvcAction] string actionName)
+        public int RemoveItems([AspMvcController] string controllerName, [AspMvcAction] string actionName)
         {
-            RemoveItems(controllerName, actionName, null);
+            return RemoveItems(controllerName, actionName, null);
         }
 
         /// <summary>
@@ -109,7 +110,7 @@ namespace VirtoCommerce.Web.Client.Caching
         /// <param name="controllerName">The name of the controller that contains the action method.</param>
         /// <param name="actionName">The name of the controller action method.</param>
         /// <param name="routeValues">A dictionary that contains the parameters for a route.</param>
-        public void RemoveItems([AspMvcController] string controllerName, [AspMvcAction] string actionName, RouteValueDictionary routeValues)
+        public int RemoveItems([AspMvcController] string controllerName, [AspMvcAction] string actionName, RouteValueDictionary routeValues)
         {
             var enumerableCache = _outputCacheProvider as IEnumerable<KeyValuePair<string, object>>;
 
@@ -119,10 +120,11 @@ namespace VirtoCommerce.Web.Client.Caching
             }
 
             var key = _keyBuilder.BuildKey(controllerName, actionName);
+            var count = 0;
 
             if (string.IsNullOrEmpty(key))
             {
-                return;
+                return count;
             }
 
             var keysToDelete = enumerableCache
@@ -146,8 +148,11 @@ namespace VirtoCommerce.Web.Client.Caching
 
             foreach (var keyToDelete in keysToDelete)
             {
+                count++;
                 _outputCacheProvider.Remove(keyToDelete);
             }
+
+            return count;
         }
     }
 }
