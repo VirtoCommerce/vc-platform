@@ -222,7 +222,7 @@ namespace VirtoCommerce.Web.Client.Modules
         protected virtual void RedirectToLogin(HttpContext context)
         {
             if (!context.Request.Url.AbsolutePath.Equals(FormsAuthentication.LoginUrl, StringComparison.InvariantCultureIgnoreCase) &&
-                !context.Request.Url.AbsolutePath.EndsWith("/Account/Register", StringComparison.InvariantCultureIgnoreCase))
+                !context.Request.Url.AbsolutePath.EndsWith("/Account/Register", StringComparison.InvariantCultureIgnoreCase) && !IsAjax)
             {
                 context.Response.Redirect(FormsAuthentication.LoginUrl + context.Request.Url.Query);
             }
