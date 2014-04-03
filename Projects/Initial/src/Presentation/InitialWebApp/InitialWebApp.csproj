@@ -233,45 +233,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\Unity.WebAPI.5.1\lib\net45\Unity.WebApi.dll</HintPath>
     </Reference>
-    <Reference Include="VirtoCommerce.Caching.HttpCache">
-      <HintPath>..\..\..\..\..\Shared\VirtoCommerce\VirtoCommerce.Caching.HttpCache.dll</HintPath>
-    </Reference>
-    <Reference Include="VirtoCommerce.Client, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\Shared\VirtoCommerce\VirtoCommerce.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="VirtoCommerce.ElasticSearchProvider">
-      <HintPath>..\..\..\..\..\Shared\VirtoCommerce\VirtoCommerce.ElasticSearchProvider.dll</HintPath>
-    </Reference>
-    <Reference Include="VirtoCommerce.Foundation, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\Shared\VirtoCommerce\VirtoCommerce.Foundation.dll</HintPath>
-    </Reference>
-    <Reference Include="VirtoCommerce.Foundation.Data">
-      <HintPath>..\..\..\..\..\Shared\VirtoCommerce\VirtoCommerce.Foundation.Data.dll</HintPath>
-    </Reference>
-    <Reference Include="VirtoCommerce.Foundation.Data.Azure">
-      <HintPath>..\..\..\..\..\Shared\VirtoCommerce\VirtoCommerce.Foundation.Data.Azure.dll</HintPath>
-    </Reference>
-    <Reference Include="VirtoCommerce.LuceneSearchProvider">
-      <HintPath>..\..\..\..\..\Shared\VirtoCommerce\VirtoCommerce.LuceneSearchProvider.dll</HintPath>
-    </Reference>
-    <Reference Include="VirtoCommerce.Scheduling, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\Shared\VirtoCommerce\VirtoCommerce.Scheduling.dll</HintPath>
-    </Reference>
-    <Reference Include="VirtoCommerce.Scheduling.Jobs, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\Shared\VirtoCommerce\VirtoCommerce.Scheduling.Jobs.dll</HintPath>
-    </Reference>
-    <Reference Include="VirtoCommerce.Search.Index, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\Shared\VirtoCommerce\VirtoCommerce.Search.Index.dll</HintPath>
-    </Reference>
-    <Reference Include="VirtoCommerce.WebClient, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\Shared\VirtoCommerce\VirtoCommerce.WebClient.dll</HintPath>
-    </Reference>
     <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\WebActivatorEx.2.0.5\lib\net40\WebActivatorEx.dll</HintPath>
@@ -426,6 +387,56 @@
     <Content Include="packages.config">
       <SubType>Designer</SubType>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\src\Core\CommerceFoundation.Data\CommerceFoundation.Data.csproj">
+      <Project>{bb168a74-0f1e-43be-a616-134902238b80}</Project>
+      <Name>CommerceFoundation.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\src\Core\CommerceFoundation\CommerceFoundation.csproj">
+      <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
+      <Name>CommerceFoundation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\src\Extensions\Azure\CommerceFoundation.Data.Azure\CommerceFoundation.Data.Azure.csproj">
+      <Project>{e3769352-34c8-41a9-a6c8-da95d7dff903}</Project>
+      <Name>CommerceFoundation.Data.Azure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\src\Extensions\Cache\VirtoCommerce.Caching.HttpCache\VirtoCommerce.Caching.HttpCache.csproj">
+      <Project>{3fe4eb14-557a-46bc-94ad-2e9874f85ace}</Project>
+      <Name>VirtoCommerce.Caching.HttpCache</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\src\Extensions\Client\CommerceClient\CommerceClient.csproj">
+      <Project>{9179b790-1f77-475f-b6ef-0b567d5ce8e0}</Project>
+      <Name>CommerceClient</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\src\Extensions\Client\CommerceWebClient\CommerceWebClient.csproj">
+      <Project>{c5a05c8f-6ba8-4ce7-9830-0e4870d1e272}</Project>
+      <Name>CommerceWebClient</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\src\Extensions\Jobs\SchedulingLib\SchedulingLib.csproj">
+      <Project>{7bf794d6-39b2-4a69-9371-f35df8d53e88}</Project>
+      <Name>SchedulingLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\src\Extensions\Jobs\VirtoCommerceJobs\ServerJobs.csproj">
+      <Project>{bfc7b47d-a7ee-4693-9334-5084c09c3d31}</Project>
+      <Name>ServerJobs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\src\Extensions\Jobs\WindowsServerSchedulingLib\WindowsServerSchedulingLib.csproj">
+      <Project>{f4831210-2600-444f-8510-2bd825e3f13b}</Project>
+      <Name>WindowsServerSchedulingLib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\src\Extensions\Search\ElasticSearchProvider\ElasticSearchProvider.csproj">
+      <Project>{039e7914-2925-44c4-acad-6bccfa2a370e}</Project>
+      <Name>ElasticSearchProvider</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\src\Extensions\Search\IndexingProviders\VirtoCommerce.Search.Index.csproj">
+      <Project>{9f5493c4-0080-4bb5-9c12-25d0cdbea2dd}</Project>
+      <Name>VirtoCommerce.Search.Index</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\src\Extensions\Search\LuceneSearchProvider\LuceneSearchProvider.csproj">
+      <Project>{4882f43b-ae8d-489b-911b-7f9a1d526715}</Project>
+      <Name>LuceneSearchProvider</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
