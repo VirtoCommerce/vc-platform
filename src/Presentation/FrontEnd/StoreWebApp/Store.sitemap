@@ -1,22 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <mvcSiteMap xmlns="http://mvcsitemap.categoryplex.com/schemas/MvcSiteMap-File-4.0">
   <mvcSiteMapNode title="Home" controller="Home" action="Index" changeFrequency="Always" updatePriority="Normal">
-    <mvcSiteMapNode key="home" title="Home" controller="Home" action="Index" changeFrequency="Always" updatePriority="Normal" visibility="MainMenu,!*">
+    <mvcSiteMapNode title="Home" key="home"  action="Index" visibility="MainMenu,!*">
        <!-- Categories are created dynamically from database-->
       <mvcSiteMapNode title="Categories" controller="Catalog" dynamicNodeProvider="VirtoCommerce.Web.Virto.Helpers.MVC.CatalogNodeProvider, VirtoCommerce.Web"></mvcSiteMapNode>
-    </mvcSiteMapNode>
-    
+    </mvcSiteMapNode>   
+    <!--Used for account page side menu-->
     <mvcSiteMapNode key="account" title="Account Dashboard" controller="Account" action="Index" changeFrequency="Always" visibility="account,!*">
-      <mvcSiteMapNode title="Account Information" controller="Account" action="Edit"/>
-      <mvcSiteMapNode title="Address Book" controller="Account" action="AddressBook"/>
-      <mvcSiteMapNode title="My Orders" controller="Account" action="Orders"/>
-      <mvcSiteMapNode title="My Wishlist" controller="Account" action="WishList"/>
-      <mvcSiteMapNode title="My Returns" controller="Account" action="RmaReturns"/>
+      <mvcSiteMapNode title="Account Information" action="Edit"/>
+      <mvcSiteMapNode title="Address Book" action="AddressBook"/>
+      <mvcSiteMapNode title="My Orders" action="Orders"/>
+      <mvcSiteMapNode title="My Wishlist" action="WishList"/>
+      <mvcSiteMapNode title="My Returns"  action="RmaReturns"/>
     </mvcSiteMapNode>
-
     <!-- Special node for building breadcrums-->
-    <mvcSiteMapNode title="Breadcrumb" controller="Catalog" dynamicNodeProvider="VirtoCommerce.Web.Virto.Helpers.MVC.BreadcrumbNodeProvider, VirtoCommerce.Web"></mvcSiteMapNode>
-    
+    <mvcSiteMapNode title="Breadcrumb" controller="Catalog" dynamicNodeProvider="VirtoCommerce.Web.Virto.Helpers.MVC.BreadcrumbNodeProvider, VirtoCommerce.Web"></mvcSiteMapNode>   
   </mvcSiteMapNode>
-  
 </mvcSiteMap>
