@@ -63,7 +63,7 @@ namespace VirtoCommerce.Client.Globalization.Repository
 			var element = _cachedElements[cachedKey] as Element;
 			if (element == null)
 			{
-				var statusElement = GetStatusElement(category, culture);
+				var statusElement = GetStatusElement(culture);
 				if (statusElement == null)
 				{
 					var preloadedCategoryLocalizations = _innerRepository.Elements().Where(it => it.Category.Equals(category, StringComparison.OrdinalIgnoreCase) &&
@@ -73,23 +73,20 @@ namespace VirtoCommerce.Client.Globalization.Repository
 						AddCache(preloadedCategoryLocalization);
 					}
 
-					// SetStatusDate(category, culture, true);
+					SetStatusDate(culture);
 					element = _cachedElements[cachedKey] as Element;
 				}
 			}
 			return element;
 		}
 
-		public DateTime GetStatusDate(string category, string culture)
+		public DateTime GetStatusDate(string culture)
 		{
 			DateTime result;
-			var element = GetStatusElement(category, culture);
+			var element = GetStatusElement(culture);
 			if (element == null)
 			{
 				result = DateTime.MinValue;
-				//result = _innerRepository.GetStatusDate(category, culture);
-				//element = new Element { Name = StatusDateKeyInner, Category = category, Culture = culture, Value = result.ToString() };
-				//AddCache(element);
 			}
 			else
 			{
@@ -99,11 +96,11 @@ namespace VirtoCommerce.Client.Globalization.Repository
 			return result;
 		}
 
-		public void SetStatusDate(string category, string culture)
+		public void SetStatusDate(string culture)
 		{
-			_innerRepository.SetStatusDate(category, culture);
+			_innerRepository.SetStatusDate(culture);
 
-			var element = new Element { Name = StatusDateKeyInner, Category = category, Culture = culture, Value = DateTime.UtcNow.ToString() };
+			var element = new Element { Name = StatusDateKeyInner, Culture = culture, Value = DateTime.UtcNow.ToString() };
 			AddCache(element);
 		}
 
@@ -228,9 +225,9 @@ namespace VirtoCommerce.Client.Globalization.Repository
 		}
 		#endregion
 
-		private Element GetStatusElement(string category, string culture)
+		private Element GetStatusElement(string culture)
 		{
-			var cachedKey = new ElementCacheKey(StatusDateKeyInner, category, culture);
+			var cachedKey = new ElementCacheKey(StatusDateKeyInner, null, culture);
 			return _cachedElements[cachedKey] as Element;
 		}
 	}

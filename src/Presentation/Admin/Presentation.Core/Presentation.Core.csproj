@@ -248,6 +248,7 @@
     <Compile Include="Infrastructure\Converters\IsIClosableConverter.cs" />
     <Compile Include="Infrastructure\Converters\IsNecessaryTypeConverter.cs" />
     <Compile Include="Infrastructure\Converters\IsNullConverter.cs" />
+    <Compile Include="Infrastructure\Converters\SingleInstanceBase.cs" />
     <Compile Include="Infrastructure\Converters\StringToVisibilityConverter.cs" />
     <Compile Include="Infrastructure\Converters\TextCaseConverter.cs" />
     <Compile Include="Infrastructure\Converters\ToVisibilityConverter.cs" />
@@ -412,11 +413,6 @@
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -425,10 +421,6 @@
     <Compile Include="Properties\Strings.Designer.cs" />
     <Compile Include="RegionNames.cs" />
     <Compile Include="Infrastructure\BaseClases\ViewModelBase.cs" />
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Strings.resx" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -750,6 +742,10 @@
     <ProjectReference Include="..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
       <Project>{E7FC9A51-1B39-4BDC-983A-8A059C5FC58B}</Project>
       <Name>CommerceFoundation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Presentation.Localization\Presentation.Localization.csproj">
+      <Project>{10A07A08-2934-4338-B8BD-B89BDC1D014E}</Project>
+      <Name>Presentation.Localization</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

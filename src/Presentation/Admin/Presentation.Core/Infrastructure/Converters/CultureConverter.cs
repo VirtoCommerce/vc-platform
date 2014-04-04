@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.Core.Infrastructure.Converters
 {
@@ -14,7 +15,7 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure.Converters
                 result = value;
             else
                 if (valueString.Length > 6 && !valueString.Contains("-"))
-                    result = valueString;
+					result = LocalizingConverter.Current.Convert(valueString, targetType, parameter, culture);
                 else
                 {
                     var valueCulture = CultureInfo.GetCultureInfo(valueString);

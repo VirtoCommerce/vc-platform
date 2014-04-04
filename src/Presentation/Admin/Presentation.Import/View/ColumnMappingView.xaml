@@ -52,9 +52,8 @@
 					<DataTemplate.Triggers>
 						<MultiDataTrigger>
 							<MultiDataTrigger.Conditions>
-								<Condition Binding="{Binding Text, ElementName=textBlock}" Value="Custom" />
-								<Condition Binding="{Binding IsDropDownOpen, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}"
-     Value="False" />
+								<Condition Binding="{Binding SelectedIndex, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" Value="0" />
+								<Condition Binding="{Binding IsDropDownOpen, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" Value="False" />
 							</MultiDataTrigger.Conditions>
 							<Setter TargetName="columnBlock" Property="FontStyle" Value="Italic" />
 						</MultiDataTrigger>
@@ -70,11 +69,11 @@
 
 		<TextBlock Grid.Row="4" Text="{Loc 'Custom value:'}" />
 		<core_controls:WatermarkedTextBox Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2"
-     Text="{Binding InnerItem.MappingItem.CustomValue}" Visibility="{Binding ColumnIsNotEnum, Converter={StaticResource booleanToVisibilityConverter}}"
-     WatermarkText="{Loc 'Enter custom value...'}" IsEnabled="{Binding IsColumnSelected}" />
+			 Text="{Binding InnerItem.MappingItem.CustomValue}" Visibility="{Binding ColumnIsNotEnum, Converter={StaticResource booleanToVisibilityConverter}}"
+			 WatermarkText="{Loc 'Enter custom value...'}" IsEnabled="{Binding IsColumnSelected}" />
 		<ComboBox Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" Visibility="{Binding ColumnIsEnum, Converter={StaticResource booleanToVisibilityConverter}}"
-     IsEnabled="{Binding IsColumnSelected}" ItemsSource="{Binding InnerItem.ImportProperty.EnumValues}"
-     SelectedValue="{Binding InnerItem.MappingItem.CustomValue, Mode=TwoWay}">
+			 IsEnabled="{Binding IsColumnSelected}" ItemsSource="{Binding InnerItem.ImportProperty.EnumValues}"
+			 SelectedValue="{Binding InnerItem.MappingItem.CustomValue, Mode=TwoWay}">
 			<ComboBox.ItemTemplate>
 				<DataTemplate>
 					<Grid>
@@ -84,8 +83,7 @@
 						<MultiDataTrigger>
 							<MultiDataTrigger.Conditions>
 								<Condition Binding="{Binding Text, ElementName=textBlock}" Value="Default" />
-								<Condition Binding="{Binding IsDropDownOpen, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}"
-     Value="False" />
+								<Condition Binding="{Binding IsDropDownOpen, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" Value="False" />
 							</MultiDataTrigger.Conditions>
 							<Setter TargetName="textBlock" Property="FontStyle" Value="Italic" />
 						</MultiDataTrigger>

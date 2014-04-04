@@ -72,19 +72,17 @@ namespace VirtoCommerce.Client.Globalization
 		Element Get(string name, string category, string culture);
 
 		/// <summary>
-		/// Gets the date when localization data was updated 
+		/// Gets the date when localization data was updated for given Culture
 		/// </summary>
-		/// <param name="category">The category.</param>
 		/// <param name="culture">The culture.</param>
 		/// <returns>DateTime</returns>
-		DateTime GetStatusDate(string category, string culture);
+		DateTime GetStatusDate(string culture);
 
 		/// <summary>
-		/// Update Status Date for given Category and Culture
+		/// Update Status Date for given Culture
 		/// </summary>
-		/// <param name="category"></param>
 		/// <param name="culture"></param>
-		void SetStatusDate(string category, string culture);
+		void SetStatusDate(string culture);
 
 		/// <summary>
 		/// Get Categories of this instance.

@@ -109,7 +109,7 @@ namespace VirtoCommerce.Client.Globalization.Repository
 				try
 				{
 					// caching
-					if (PreloadLocalizations(category, culture))
+					if (PreloadLocalizations(culture))
 					{
 						result = _cacheRepository.Get(name, category, culture);
 					}
@@ -124,14 +124,14 @@ namespace VirtoCommerce.Client.Globalization.Repository
 			return result;
 		}
 
-		public DateTime GetStatusDate(string category, string culture)
+		public DateTime GetStatusDate(string culture)
 		{
-			return _cacheRepository.GetStatusDate(category, culture);
+			return _cacheRepository.GetStatusDate(culture);
 		}
 
-		public void SetStatusDate(string category, string culture)
+		public void SetStatusDate(string culture)
 		{
-			_cacheRepository.SetStatusDate(category, culture);
+			_cacheRepository.SetStatusDate(culture);
 		}
 
 		/// <summary>
@@ -317,23 +317,22 @@ namespace VirtoCommerce.Client.Globalization.Repository
 				it.LanguageCode.Equals(culture, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
 		}
 
-		private bool PreloadLocalizations(string category, string culture)
+		private bool PreloadLocalizations(string culture)
 		{
 			var result = false;
-			var dt = _cacheRepository.GetStatusDate(category, culture);
+			var dt = _cacheRepository.GetStatusDate(culture);
 			if (dt == DateTime.MinValue)
 			{
 				using (var _repository = _repositoryFactory.GetRepositoryInstance())
 				{
-					var preloadedCategoryLocalizations = GetLocalizationsEnumerable(_repository).Where(it => it.Category.Equals(category, StringComparison.OrdinalIgnoreCase) &&
-																   it.LanguageCode.Equals(culture, StringComparison.OrdinalIgnoreCase));
+					var preloadedCategoryLocalizations = GetLocalizationsEnumerable(_repository).Where(it => it.LanguageCode.Equals(culture, StringComparison.OrdinalIgnoreCase));
 					foreach (var preloadedCategoryLocalization in preloadedCategoryLocalizations)
 					{
 						_cacheRepository.Add(GetElement(preloadedCategoryLocalization));
 					}
 				}
 
-				SetStatusDate(category, culture);
+				SetStatusDate(culture);
 				result = true;
 			}
 
