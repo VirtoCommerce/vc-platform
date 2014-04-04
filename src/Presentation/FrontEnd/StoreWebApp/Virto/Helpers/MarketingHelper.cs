@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections;
-using System.Linq;
 using VirtoCommerce.Client;
 using VirtoCommerce.Foundation.Catalogs.Model;
-using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Web.Client.Helpers;
 using VirtoCommerce.Web.Models;
 

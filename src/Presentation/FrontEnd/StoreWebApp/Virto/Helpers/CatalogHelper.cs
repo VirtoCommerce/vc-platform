@@ -6,18 +6,16 @@ using System.Linq;
 using System.Web.Mvc;
 using Omu.ValueInjecter;
 using VirtoCommerce.Client;
-using VirtoCommerce.Foundation.Catalogs;
 using VirtoCommerce.Foundation.Catalogs.Model;
-using VirtoCommerce.Foundation.Customers;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Web.Client.Helpers;
 using VirtoCommerce.Web.Models;
+using VirtoCommerce.Foundation.Catalogs.Services;
 
 namespace VirtoCommerce.Web.Virto.Helpers
 {
-    using VirtoCommerce.Foundation.Catalogs.Services;
 
     /// <summary>
     /// Class CatalogHelper.

@@ -244,7 +244,7 @@ namespace VirtoCommerce.Web.Virto.Helpers
                 UserSecurity.CreateUserAndAccount(model.Email, model.Password, new
                 {
                     MemberId = id,
-                    UserHelper.CustomerSession.StoreId,
+                    CustomerSession.StoreId,
                     RegisterType = RegisterType.GuestUser.GetHashCode(),
                     AccountState = AccountState.Approved.GetHashCode(),
                     Discriminator = "Account"
