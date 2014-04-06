@@ -1,17 +1,18 @@
 ﻿using System.Collections.ObjectModel;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
-using VirtoCommerce.ManagementClient.Configuration.ViewModel.Interfaces;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Search.Model;
 using VirtoCommerce.Foundation.Search.Repositories;
-using System.Threading;
-using VirtoCommerce.ManagementClient.Core.Properties;
+using VirtoCommerce.ManagementClient.Configuration.ViewModel.Interfaces;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.Configuration.ViewModel.Implementations
 {
-    public class BuildSettingsViewModel : ViewModelBase, IBuildSettingsViewModel, ISupportDelayInitialization
+	public class BuildSettingsViewModel : ViewModelBase, IBuildSettingsViewModel, ISupportDelayInitialization
 	{
 		#region Dependencies
 		private readonly IBuildSettingsRepository _repository;
@@ -19,25 +20,25 @@ namespace VirtoCommerce.ManagementClient.Configuration.ViewModel.Implementations
 
 		#region Fields
 		public Timer _syncTimer;
-        #endregion
+		#endregion
 
 		#region ctor
 		public BuildSettingsViewModel(IBuildSettingsRepository repository)
-        {
+		{
 			_repository = repository;
 
-            ItemRebuildCommand = new DelegateCommand<BuildSettings>(RaiseItemRebuildInteractionRequest, x => x != null);
-            CommonConfirmRequest = new InteractionRequest<Confirmation>();
-        }
+			ItemRebuildCommand = new DelegateCommand<BuildSettings>(RaiseItemRebuildInteractionRequest, x => x != null);
+			CommonConfirmRequest = new InteractionRequest<Confirmation>();
+		}
 		#endregion
 
 		#region IBuildSettingsViewModel
 
 		public DelegateCommand<BuildSettings> ItemRebuildCommand { get; private set; }
-        public InteractionRequest<Confirmation> CommonConfirmRequest { get; private set; }
+		public InteractionRequest<Confirmation> CommonConfirmRequest { get; private set; }
 
-        private ObservableCollection<BuildSettings> _items;
-        public ObservableCollection<BuildSettings> Items 
+		private ObservableCollection<BuildSettings> _items;
+		public ObservableCollection<BuildSettings> Items
 		{
 			get
 			{
@@ -68,75 +69,75 @@ namespace VirtoCommerce.ManagementClient.Configuration.ViewModel.Implementations
 				}
 			}
 		}
-        #endregion
+		#endregion
 
-        #region Commands implementation
+		#region Commands implementation
 
-        private void RaiseItemRebuildInteractionRequest(BuildSettings item)
-        {
-            var confirmation = new ConditionalConfirmation
-            {
-                Content = string.Format(Properties.Resources.Are_you_sure_you_want_to_rebuild_index, item.DocumentType),
-				Title = Resources.Action_confirmation
-            };
+		private void RaiseItemRebuildInteractionRequest(BuildSettings item)
+		{
+			var confirmation = new ConditionalConfirmation
+			{
+				Content = string.Format(Properties.Resources.Are_you_sure_you_want_to_rebuild_index, item.DocumentType),
+				Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory)
+			};
 
-            if (IsActive)
-                Stop();
-            CommonConfirmRequest.Raise(confirmation, (x) =>
-            {
-                if (x.Confirmed)
-                {
-                    item.Status = System.Convert.ToInt32(BuildStatus.NeverStarted);
-                    _repository.UnitOfWork.Commit();
-                }
-            });
-            if (IsActive)
-                Start(10);
+			if (IsActive)
+				Stop();
+			CommonConfirmRequest.Raise(confirmation, (x) =>
+			{
+				if (x.Confirmed)
+				{
+					item.Status = System.Convert.ToInt32(BuildStatus.NeverStarted);
+					_repository.UnitOfWork.Commit();
+				}
+			});
+			if (IsActive)
+				Start(10);
 
-        }
+		}
 
-        public void RaiseCanExecuteChanged()
-        {
-            ItemRebuildCommand.RaiseCanExecuteChanged();
-        }
+		public void RaiseCanExecuteChanged()
+		{
+			ItemRebuildCommand.RaiseCanExecuteChanged();
+		}
 
-        #endregion
+		#endregion
 
-        #region ISupportDelayInitialization
+		#region ISupportDelayInitialization
 
-        public void InitializeForOpen()
-        {
-            OnUIThread(async () =>
-                {                    
-                    ShowLoadingAnimation = true;
-                    var items = await Task.Run(() => _repository.BuildSettings);
+		public void InitializeForOpen()
+		{
+			OnUIThread(async () =>
+				{
+					ShowLoadingAnimation = true;
+					var items = await Task.Run(() => _repository.BuildSettings);
 
-                    Items = new ObservableCollection<BuildSettings>(items);
-                    ShowLoadingAnimation = false;
-                });
-        }
+					Items = new ObservableCollection<BuildSettings>(items);
+					ShowLoadingAnimation = false;
+				});
+		}
 
-        #endregion
+		#endregion
 
-        #region Private members
-        private void SyncTimerTick(object sender)
+		#region Private members
+		private void SyncTimerTick(object sender)
 		{
 			InitializeForOpen();
 		}
 
-        /// <summary>
-        /// starts new timer
-        /// </summary>
-        /// <param name="PeriodInSeconds">period in seconds to execute handler</param>
-        private void Start(int PeriodInSeconds)
-        {
-            _syncTimer = new Timer(SyncTimerTick, null, 0, PeriodInSeconds * 1000);
-        }
-        private void Stop()
-        {
-            _syncTimer.Dispose();
-        }
+		/// <summary>
+		/// starts new timer
+		/// </summary>
+		/// <param name="PeriodInSeconds">period in seconds to execute handler</param>
+		private void Start(int PeriodInSeconds)
+		{
+			_syncTimer = new Timer(SyncTimerTick, null, 0, PeriodInSeconds * 1000);
+		}
+		private void Stop()
+		{
+			_syncTimer.Dispose();
+		}
 
-        #endregion
+		#endregion
 	}
 }
