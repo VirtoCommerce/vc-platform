@@ -4,8 +4,8 @@
      xmlns:inf="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:helpers="clr-namespace:VirtoCommerce.ManagementClient.Security.ViewModel.Helpers"
-     mc:Ignorable="d" d:DesignHeight="400" Width="600" xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Security"
-     LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
+     mc:Ignorable="d" d:DesignHeight="400" Width="600"
+	 LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}" xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Security">
 
     <FrameworkElement.Resources>
         <ResourceDictionary>
@@ -185,13 +185,13 @@
             <ColumnDefinition Width="400" />
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
-		<TextBlock Grid.Row="0" Text="* Name:" />
+		<TextBlock Grid.Row="0" Text="{Loc '* Name:'}" />
         <controls:WatermarkedTextBox Grid.Row="1" Text="{Binding InnerItem.Name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
 
         <!--AllAvailablePermissionGroups-->
         <controls:MultiSelectControl Grid.Row="2" Grid.ColumnSpan="2" TextSearchTextPath="Name"
-             Template="{StaticResource MultiSelectControlTemplate}" AvailableTitle="Available permissions"
-             AvailableItems="{Binding AllAvailablePermissionGroupViewModels}" CurrentTitle="Assigned permissions"
+             Template="{StaticResource MultiSelectControlTemplate}" AvailableTitle="{Loc 'Available permissions'}"
+             AvailableItems="{Binding AllAvailablePermissionGroupViewModels}" CurrentTitle="{Loc 'Assigned permissions'}"
              CurrentItems="{Binding CurrentPermissionGroupViewModels}">
         </controls:MultiSelectControl>
 

@@ -1,36 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Converters;
-using VirtoCommerce.Foundation.Security.Model;
-using VirtoCommerce.ManagementClient.Security.Properties;
 
 namespace VirtoCommerce.ManagementClient.Security.Infrastructure
 {
-    public class AccountStateConverter : EnumToIntConverter<AccountState>
-    {
-        private IDictionary<AccountState, string> textResources;
-
-        public AccountStateConverter()
-        {
-            // TODO take localized texts from resources
-            textResources = new Dictionary<AccountState, string>
-                {
-                    {AccountState.Approved, Resources.Approved},
-                    {AccountState.Rejected, Resources.Rejected},
-                    {AccountState.PendingApproval, Resources.Pending_Approval}
-                };
-        }
-
-        public override object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            object result;
-            var item = (AccountState)base.Convert(value, targetType, parameter, culture);
-            if (targetType == typeof(string))
-                result = textResources[item];
-            else
-                result = item;
-
-            return result;
-        }
-    }
+	public class AccountStateConverter : EnumToIntConverter<AccountState>
+	{
+	}
 }

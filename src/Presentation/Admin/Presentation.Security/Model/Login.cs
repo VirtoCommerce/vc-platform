@@ -1,6 +1,7 @@
 ﻿using Omu.ValueInjecter;
 using PropertyChanged;
 using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.ManagementClient.Security.Properties;
 using ObjectModel = VirtoCommerce.Foundation.AppConfig.Model;
 
 namespace VirtoCommerce.ManagementClient.Security.Model
@@ -30,7 +31,7 @@ namespace VirtoCommerce.ManagementClient.Security.Model
 				ClearError("Username");
 			}
 			else
-				SetError("Username", "Username is required", true);
+				SetError("Username", Resources.Username_is_required, true);
 
 			var _passwordIsValid = !string.IsNullOrEmpty(Password);
 
@@ -39,7 +40,7 @@ namespace VirtoCommerce.ManagementClient.Security.Model
 				ClearError("Password");
 			}
 			else
-				SetError("Password", "Password is required", true);
+				SetError("Password", Resources.Password_is_required, true);
 
 			var _baseUrlIsValid = !string.IsNullOrEmpty(BaseUrl);
 
@@ -49,10 +50,10 @@ namespace VirtoCommerce.ManagementClient.Security.Model
 				if (_baseUrlIsValid)
 					ClearError("BaseUrl");
 				else
-					SetError("BaseUrl", "Base url should begin with \"http://\" or \"https://\" prefix", true);
+					SetError("BaseUrl", Resources.Base_url_should_begin_with__http_____or__https_____prefix, true);
 			}
 			else
-				SetError("BaseUrl", "Base url is required", true);
+				SetError("BaseUrl", Resources.Base_url_is_required, true);
 
 			return _usernameIsValid && _passwordIsValid && _baseUrlIsValid;
 		}

@@ -8,6 +8,7 @@ using System.Windows.Data;
 using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
 using Omu.ValueInjecter;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
@@ -18,7 +19,7 @@ using VirtoCommerce.Foundation.Security.Services;
 using VirtoCommerce.ManagementClient.Core.Controls;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
-using VirtoCommerce.ManagementClient.Security.Properties;
+using VirtoCommerce.ManagementClient.Localization;
 using VirtoCommerce.ManagementClient.Security.ViewModel.Interfaces;
 
 namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
@@ -57,7 +58,7 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 			_passwordVmFactory = passwordVmFactory;
 			ViewTitle = new ViewTitleBase()
 				{
-					Title = Properties.Resources.Account,
+					Title = "Account".Localize(),
 					SubTitle = (item != null && !string.IsNullOrEmpty(item.UserName)) ? item.UserName.ToUpper(CultureInfo.InvariantCulture) : ""
 				};
 
@@ -145,8 +146,8 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 		{
 			return new RefusedConfirmation
 			{
-				Content = string.Format(Core.Properties.Resources.Save_changes_to, DisplayName),
-				Title = Core.Properties.Resources.Action_confirmation
+				Content = string.Format("Save changes to \'{0}\'?".Localize(null, LocalizationScope.DefaultCategory), DisplayName),
+				Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 		}
 
@@ -227,7 +228,7 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 		{
 			get
 			{
-				return Properties.Resources.wiz_User_general_information;
+				return "Enter User general information.".Localize();
 			}
 		}
 		#endregion
@@ -297,12 +298,12 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 
 		private void RaisePasswordChangeRequest()
 		{
-			RaisePasswordChangeRequest("Change Password", true);
+			RaisePasswordChangeRequest("Change Password".Localize(), true);
 		}
 
 		private void RaisePasswordResetRequest()
 		{
-			RaisePasswordChangeRequest("Reset Password", false);
+			RaisePasswordChangeRequest("Reset Password".Localize(), false);
 		}
 
 		private void RaisePasswordChangeRequest(string title, bool isPasswordChanging)
@@ -327,8 +328,8 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 					catch (Exception ex)
 					{
 						var message = string.Format(isPasswordChanging ?
-							Resources.error_occurred_when_trying_to_change_password :
-							Resources.error_occurred_when_trying_to_reset, ex.InnerException.Message);
+							"An error occurred when trying to change password: {0}".Localize() :
+							"An error occurred when trying to reset password: {0}".Localize(), ex.InnerException.Message);
 
 						ShowErrorDialog(ex, message);
 					}

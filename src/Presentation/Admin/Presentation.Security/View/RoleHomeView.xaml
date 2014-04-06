@@ -5,73 +5,78 @@
      xmlns:core_common="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Common;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:prism="clr-namespace:Microsoft.Practices.Prism.Interactivity.InteractionRequest;assembly=Microsoft.Practices.Prism.Interactivity"
      xmlns:interaction_dialog="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Dialogs;assembly=VirtoCommerce.ManagementClient.Core"
-	LocalizationScope.Category="{x:Null}"
-     mc:Ignorable="d" d:DesignHeight="300" d:DesignWidth="300">
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Security;component/View/Views/GridView.xaml" />
-                <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/HomeViewTheme/VirtoCommerceHomeTheme.xaml" />
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <i:Interaction.Triggers>
-            <prism:InteractionRequestTrigger SourceObject="{Binding CommonConfirmRequest, Mode=OneWay}">
-                <interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:ConfirmationLocalModalInteractionDialog}" />
-            </prism:InteractionRequestTrigger>
-            <!--<prism:InteractionRequestTrigger SourceObject="{Binding CommonNotifyRequest, Mode=OneWay}">
+     LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}" mc:Ignorable="d"
+     d:DesignHeight="300" d:DesignWidth="300" xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Security">
+	<UserControl.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Security;component/View/Views/GridView.xaml" />
+				<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/HomeViewTheme/VirtoCommerceHomeTheme.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</UserControl.Resources>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+		<i:Interaction.Triggers>
+			<prism:InteractionRequestTrigger SourceObject="{Binding CommonConfirmRequest, Mode=OneWay}">
+				<interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:ConfirmationLocalModalInteractionDialog}" />
+			</prism:InteractionRequestTrigger>
+			<!--<prism:InteractionRequestTrigger SourceObject="{Binding CommonNotifyRequest, Mode=OneWay}">
                 <interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:NotificationLocalModalInteractionDialog}" />
             </prism:InteractionRequestTrigger>-->
-            <prism:InteractionRequestTrigger SourceObject="{Binding CommonWizardDialogRequest, Mode=OneWay}">
-                <interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:WizardDialog}" />
-            </prism:InteractionRequestTrigger>
-        </i:Interaction.Triggers>
+			<prism:InteractionRequestTrigger SourceObject="{Binding CommonWizardDialogRequest, Mode=OneWay}">
+				<interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:WizardDialog}" />
+			</prism:InteractionRequestTrigger>
+		</i:Interaction.Triggers>
 
-        <core_controls:SearchTextBox SearchEventTimeDelay="0:0:1" Text="{Binding SearchKeyword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+		<core_controls:SearchTextBox SearchEventTimeDelay="0:0:1" Text="{Binding SearchKeyword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
              HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-70,20,0" Width="250">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="Search">
-                    <i:InvokeCommandAction Command="{Binding SearchItemsCommand}" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </core_controls:SearchTextBox>
+			<i:Interaction.Triggers>
+				<i:EventTrigger EventName="Search">
+					<i:InvokeCommandAction Command="{Binding SearchItemsCommand}" />
+				</i:EventTrigger>
+			</i:Interaction.Triggers>
+		</core_controls:SearchTextBox>
 
-        <ItemsControl Grid.Row="0" Style="{StaticResource Virto_ToolbarItemsControl_Style}">
-            <core_controls:MetroButton x:Name="btnRefresh" Command="{Binding RefreshItemsCommand}"
-                 Header="{Loc REFRESH}" ToolTip="Refresh" Margin="3,0,28,0">
-                <core_controls:VectorImage ImageResource="{StaticResource Icon_Button_RefreshList}"
+		<ItemsControl Grid.Row="0" Style="{StaticResource Virto_ToolbarItemsControl_Style}">
+			<core_controls:MetroButton x:Name="btnRefresh" Command="{Binding RefreshItemsCommand}"
+                 Header="{Loc ^REFRESH}" ToolTip="{Loc '^Refresh items list'}" Margin="3,0,28,0">
+				<core_controls:VectorImage ImageResource="{StaticResource Icon_Button_RefreshList}"
                      Width="14" Height="14" Margin="1,0,0,0" />
-            </core_controls:MetroButton>
-            <core_controls:MetroButton Command="{Binding ItemAddCommand}" Header="{Loc ADD}" ToolTip="{Loc Create_Item}">
-                <Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/add.png"
+			</core_controls:MetroButton>
+			<core_controls:MetroButton Command="{Binding ItemAddCommand}" Header="{Loc ^ADD}"
+                 ToolTip="{Loc 'Create role'}">
+				<Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/add.png"
                      Width="14" />
-            </core_controls:MetroButton>
-            <core_controls:MetroButton Command="{Binding ItemDeleteCommand}" CommandParameter="{Binding SelectedItems, ElementName=ItemList}"
-                 Header="{Loc REMOVE}" ToolTip="{Loc Delete_selected_Items}">
-                <Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/cancel.png"
+			</core_controls:MetroButton>
+			<core_controls:MetroButton Command="{Binding ItemDeleteCommand}" CommandParameter="{Binding SelectedItems, ElementName=ItemList}"
+                 Header="{Loc ^REMOVE}" ToolTip="{Loc '^Delete selected items'}">
+				<Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/cancel.png"
                      Width="14" />
-            </core_controls:MetroButton>
-        </ItemsControl>
+			</core_controls:MetroButton>
+		</ItemsControl>
 
-        <core_controls:VirtualFolderItemList Grid.Row="1" x:Name="ItemList" IsSynchronizedWithCurrentItem="True"
+		<core_controls:VirtualFolderItemList Grid.Row="1" x:Name="ItemList" IsSynchronizedWithCurrentItem="True"
              Style="{StaticResource Virto_VirtualFolderItemList_Style}" ItemContainerStyle="{StaticResource Virto_VirtualListView_Default_ItemContainerStyle}"
              View="{StaticResource gridRoleViewView}" ItemsSource="{Binding ListItemsSource}" core_common:GridViewColumnResize.Enabled="False"
              Margin="0,4,0,0">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="SelectionChanged">
-                    <ei:CallMethodAction TargetObject="{Binding ItemDeleteCommand}" MethodName="RaiseCanExecuteChanged" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </core_controls:VirtualFolderItemList>
+			<i:Interaction.Triggers>
+				<i:EventTrigger EventName="SelectionChanged">
+					<ei:CallMethodAction TargetObject="{Binding ItemDeleteCommand}" MethodName="RaiseCanExecuteChanged" />
+				</i:EventTrigger>
+			</i:Interaction.Triggers>
+		</core_controls:VirtualFolderItemList>
 
-		<TextBlock Text="{Binding ListItemsSource.TotalItemsCount, StringFormat='Items: \{0\}'}"
-     Grid.Row="2" HorizontalAlignment="Right" Margin="0,0,10,0" VerticalAlignment="Bottom"
-     Padding="0,1,0,0" />
-    </Grid>
+		<TextBlock Grid.Row="2" HorizontalAlignment="Right" Margin="0,0,10,0" VerticalAlignment="Bottom" Padding="0,1,0,0">
+			<TextBlock.Text>
+				<LocBinding ResourceKey="^Items: {0}">
+					<Binding Path="ListItemsSource.TotalItemsCount" />
+				</LocBinding>
+			</TextBlock.Text>
+		</TextBlock>
+	</Grid>
 </UserControl>

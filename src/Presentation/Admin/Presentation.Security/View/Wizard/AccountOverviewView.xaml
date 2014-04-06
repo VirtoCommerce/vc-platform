@@ -4,46 +4,32 @@
      xmlns:inf="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:common="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Common;assembly=VirtoCommerce.ManagementClient.Core"
-     mc:Ignorable="d" d:DesignHeight="400">
+     mc:Ignorable="d" d:DesignHeight="400" xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Security"
+     LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
 
-    <FrameworkElement.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/WizardViewTheme/VirtoCommerceWizardTheme.xaml" />
-            </ResourceDictionary.MergedDictionaries>
+	<FrameworkElement.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/WizardViewTheme/VirtoCommerceWizardTheme.xaml" />
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</FrameworkElement.Resources>
 
-            <!--<localInfrastructure:AccountStateConverter x:Key="accountStateConverter" />
-            <ObjectDataProvider x:Key="AvailableAccountState" ObjectType="{x:Type sys:Enum}" MethodName="GetValues">
-                <ObjectDataProvider.MethodParameters>
-                    <x:TypeExtension TypeName="model:AccountState" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-
-            <localInfrastructure:RegisterTypeConverter x:Key="registerTypeConverter" />
-            <ObjectDataProvider x:Key="AvailableRegisterType" ObjectType="{x:Type sys:Enum}" MethodName="GetValues">
-                <ObjectDataProvider.MethodParameters>
-                    <x:TypeExtension TypeName="model:RegisterType" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>-->
-
-        </ResourceDictionary>
-    </FrameworkElement.Resources>
-
-    <Grid Width="300">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition />
-        </Grid.RowDefinitions>
-		<TextBlock Grid.Row="0" Text="* Username:" />
-        <controls:WatermarkedTextBox Grid.Row="1" Text="{Binding InnerItem.UserName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-		<TextBlock Grid.Row="2" Text="* Password:" />
-        <PasswordBox Grid.Row="3" common:PasswordHelper.Attach="True" common:PasswordHelper.Password="{Binding Password, Mode=TwoWay}" />
-		<TextBlock Grid.Row="4" Text="* Password repeat:" />
-        <PasswordBox Grid.Row="5" common:PasswordHelper.Attach="True" common:PasswordHelper.Password="{Binding Password1, Mode=TwoWay}" />
-    </Grid>
+	<Grid Width="300">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition />
+		</Grid.RowDefinitions>
+		<TextBlock Grid.Row="0" Text="{Loc '* Username:'}" />
+		<controls:WatermarkedTextBox Grid.Row="1" Text="{Binding InnerItem.UserName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+		<TextBlock Grid.Row="2" Text="{Loc '* Password:'}" />
+		<PasswordBox Grid.Row="3" common:PasswordHelper.Attach="True" common:PasswordHelper.Password="{Binding Password, Mode=TwoWay}" />
+		<TextBlock Grid.Row="4" Text="{Loc '* Password repeat:'}" />
+		<PasswordBox Grid.Row="5" common:PasswordHelper.Attach="True" common:PasswordHelper.Password="{Binding Password1, Mode=TwoWay}" />
+	</Grid>
 </inf:ViewBase>

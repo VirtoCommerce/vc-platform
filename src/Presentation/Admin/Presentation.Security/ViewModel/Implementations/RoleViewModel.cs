@@ -1,22 +1,24 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
 using Omu.ValueInjecter;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
-using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
-using VirtoCommerce.ManagementClient.Security.Model;
-using VirtoCommerce.ManagementClient.Security.Properties;
-using VirtoCommerce.ManagementClient.Security.ViewModel.Helpers;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Security.Factories;
 using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.Foundation.Security.Repositories;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
+using VirtoCommerce.ManagementClient.Localization;
+using VirtoCommerce.ManagementClient.Security.Model;
+using VirtoCommerce.ManagementClient.Security.Properties;
+using VirtoCommerce.ManagementClient.Security.ViewModel.Helpers;
 using VirtoCommerce.ManagementClient.Security.ViewModel.Interfaces;
 using VirtoCommerce.ManagementClient.Security.ViewModel.Wizard.Interfaces;
 
@@ -41,7 +43,7 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 			_navManager = navManager;
 			ViewTitle = new ViewTitleBase()
 				{
-					Title = Resources.Role,
+					Title = "Role".Localize(),
 					SubTitle =
 						(item != null && !string.IsNullOrEmpty(item.Name)) ? item.Name.ToUpper(CultureInfo.InvariantCulture) : ""
 				};
@@ -103,7 +105,7 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 
 		#region ViewModelDetailAndWizardBase Members
 
-		public override string ExceptionContextIdentity { get { return string.Format("Role ({0})", DisplayName); } }
+		public override string ExceptionContextIdentity { get { return string.Format("Role ({0})".Localize(), DisplayName); } }
 
 		protected override void GetRepository()
 		{
@@ -125,8 +127,8 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 		{
 			return new RefusedConfirmation
 			{
-				Content = string.Format(Core.Properties.Resources.Save_changes, DisplayName),
-				Title = Core.Properties.Resources.Action_confirmation
+				Content = string.Format("Save changes \'{0}\'?".Localize(null, LocalizationScope.DefaultCategory), DisplayName),
+				Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 		}
 
@@ -195,7 +197,7 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 			}
 			catch (Exception ex)
 			{
-				ShowErrorDialog(ex, string.Format(Core.Properties.Resources.error_occurred_when_trying_to_load, ExceptionContextIdentity));
+				ShowErrorDialog(ex, string.Format("An error occurred when trying to load {0}".Localize(null, LocalizationScope.DefaultCategory), ExceptionContextIdentity));
 			}
 		}
 
@@ -280,8 +282,8 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 		{
 			RolePermission perm = new RolePermission
 			{
-			    PermissionId = permToAdd.PermissionId, 
-                RoleId = InnerItem.RoleId
+				PermissionId = permToAdd.PermissionId,
+				RoleId = InnerItem.RoleId
 			};
 
 			InnerItem.RolePermissions.Add(perm);
@@ -421,7 +423,7 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 		{
 			get
 			{
-				return Resources.wiz_Role_information;
+				return "Enter Role information.".Localize();
 			}
 		}
 		#endregion
@@ -447,22 +449,21 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 
 					retVal = new[]
 						{
-							CreatePermissionGroupViewModel(Resources.groupCustomer_Service, allPermissions,
-							                               PredefinedPermissions.ListCustomerServicePermissions()),
-							CreatePermissionGroupViewModel(Resources.groupOrders, allPermissions, PredefinedPermissions.ListOrdersPermissions()),
-							CreatePermissionGroupViewModel(Resources.groupCatalog, allPermissions, PredefinedPermissions.ListCatalogPermissions()),
-							CreatePermissionGroupViewModel(Resources.groupPricing, allPermissions, PredefinedPermissions.ListPricingPermissions()),
-							CreatePermissionGroupViewModel(Resources.groupMarketing, allPermissions, PredefinedPermissions.ListMarketingPermissions()),
-							CreatePermissionGroupViewModel(Resources.groupFulfillment, allPermissions, PredefinedPermissions.ListFulfillmentPermissions()),
-							CreatePermissionGroupViewModel(Resources.groupUsers, allPermissions, PredefinedPermissions.ListUsersPermissions()),
-							CreatePermissionGroupViewModel(Resources.groupShopper, allPermissions, PredefinedPermissions.ListShopperPermissions()),
-							CreatePermissionGroupViewModel(Resources.groupSettings, allPermissions, PredefinedPermissions.ListSettingsPermissions())
+							CreatePermissionGroupViewModel("Customer Service".Localize(), allPermissions, PredefinedPermissions.ListCustomerServicePermissions()),
+							CreatePermissionGroupViewModel("Orders".Localize(), allPermissions, PredefinedPermissions.ListOrdersPermissions()),
+							CreatePermissionGroupViewModel("Catalog".Localize(), allPermissions, PredefinedPermissions.ListCatalogPermissions()),
+							CreatePermissionGroupViewModel("Pricing".Localize(), allPermissions, PredefinedPermissions.ListPricingPermissions()),
+							CreatePermissionGroupViewModel("Marketing".Localize(), allPermissions, PredefinedPermissions.ListMarketingPermissions()),
+							CreatePermissionGroupViewModel("Fulfillment".Localize(), allPermissions, PredefinedPermissions.ListFulfillmentPermissions()),
+							CreatePermissionGroupViewModel("Users".Localize(), allPermissions, PredefinedPermissions.ListUsersPermissions()),
+							CreatePermissionGroupViewModel("Shopper".Localize(), allPermissions, PredefinedPermissions.ListShopperPermissions()),
+							CreatePermissionGroupViewModel("Settings".Localize(), allPermissions, PredefinedPermissions.ListSettingsPermissions())
 						};
 				}
 			}
 			catch (Exception ex)
 			{
-				ShowErrorDialog(ex, string.Format(Resources.error_occurred_when_trying_to_load_Permissions, ExceptionContextIdentity));
+				ShowErrorDialog(ex, string.Format("An error occurred when trying to load Permissions for: {0}".Localize(), ExceptionContextIdentity));
 			}
 			return retVal;
 		}

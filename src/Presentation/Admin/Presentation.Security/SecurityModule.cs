@@ -13,7 +13,6 @@ using VirtoCommerce.Foundation.Security.Repositories;
 using VirtoCommerce.Foundation.Security.Services;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
-using VirtoCommerce.ManagementClient.Security.Properties;
 using VirtoCommerce.ManagementClient.Security.Tokens;
 using VirtoCommerce.ManagementClient.Security.ViewModel.Implementations;
 using VirtoCommerce.ManagementClient.Security.ViewModel.Interfaces;
@@ -52,8 +51,8 @@ namespace VirtoCommerce.ManagementClient.Security
 					{
 						try
 						{
-							InitializeUsersModule();
 							InitializeModules();
+							InitializeUsersModule();
 							InitializeMainModule(); //should be last
 							Application.Current.Dispatcher.Invoke(DispatcherPriority.Send, (Action)delegate
 							{
@@ -95,21 +94,19 @@ namespace VirtoCommerce.ManagementClient.Security
 				var menuNavItem = new NavigationMenuItem(NavigationNames.MenuName);
 				menuNavItem.NavigateCommand =
 					new DelegateCommand<NavigationItem>((x) => { _navigationManager.Navigate(homeNavItem); });
-				menuNavItem.Caption = Resources.Users;
+				menuNavItem.Caption = "Users".Localize();
 				menuNavItem.ImageResourceKey = "Icon_Module_Security";
 				menuNavItem.ItemBackground = Color.FromRgb(64, 159, 216);
 				menuNavItem.Order = 101;
 				_navigationManager.RegisterNavigationItem(menuNavItem);
 			}
-
-
 		}
 
 		private void InitializeModules()
 		{
 			var moduleManager = _container.Resolve<IModuleManager>();
 
-			moduleManager.LoadModule("LocalizationModule");
+			moduleManager.LoadModule("LocalizationModule"); // initialize it first
 			moduleManager.LoadModule("ConfigurationModule");
 			moduleManager.LoadModule("AppConfigModule");
 			moduleManager.LoadModule("AssetModule"); // AssetModule is loaded on demand as a dependency
@@ -121,7 +118,6 @@ namespace VirtoCommerce.ManagementClient.Security
 			moduleManager.LoadModule("CustomersModule");
 
 			moduleManager.LoadModule("ReportingModule");
-
 		}
 
 		private void InitializeMainModule()
@@ -178,7 +174,6 @@ namespace VirtoCommerce.ManagementClient.Security
 			//Create Role Wizard
 			_container.RegisterType<ICreateRoleViewModel, CreateRoleViewModel>();
 			_container.RegisterType<IRoleOverviewStepViewModel, RoleOverviewStepViewModel>();
-
 		}
 	}
 }

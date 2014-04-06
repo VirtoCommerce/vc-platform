@@ -13,6 +13,7 @@ using VirtoCommerce.Foundation.Security.Services;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Dialogs;
 using VirtoCommerce.ManagementClient.Security.Model;
+using VirtoCommerce.ManagementClient.Security.Properties;
 using VirtoCommerce.ManagementClient.Security.ViewModel.Interfaces;
 
 namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
@@ -75,8 +76,8 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 		[AlsoNotifyFor("IsAnimation")]
 		public bool AuthProgress { get; set; }
 
-		public Login CurrentUser{ get; private set; }
-		
+		public Login CurrentUser { get; private set; }
+
 		public bool IsAnimation
 		{
 			get { return _isUserAuthenticated || AuthProgress; }
@@ -87,7 +88,7 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 		#endregion
 
 		#region Private methods
-		
+
 		private void RegisterSecurityServices(string serviceBaseUrl)
 		{
 			var factory = new ServiceConnectionFactory(serviceBaseUrl);
@@ -118,7 +119,6 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 			Error = null;
 			try
 			{
-
 				var serviceBaseUrl = CurrentUser.BaseUrl.ToLower();
 
 				if (!serviceBaseUrl.EndsWith("/"))
@@ -155,7 +155,7 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 			}
 			catch (Exception e)
 			{
-				ErrorDialog.ShowErrorDialog(e.Message, e.StackTrace, e.ToString(), false, "Error at login. ");
+				ErrorDialog.ShowErrorDialog(e.Message, e.StackTrace, e.ToString(), false, Resources.Error_at_login__);
 				AuthProgress = false;
 			}
 		}
@@ -188,7 +188,7 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 			try
 			{
 				string parameterUserName = null;
-				string parameterBaseUrl = null;				
+				string parameterBaseUrl = null;
 
 				if (ApplicationDeployment.IsNetworkDeployed && AppDomain.CurrentDomain.SetupInformation.ActivationArguments.ActivationData != null)
 				{
@@ -241,7 +241,5 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 		}
 
 		#endregion
-
-
 	}
 }

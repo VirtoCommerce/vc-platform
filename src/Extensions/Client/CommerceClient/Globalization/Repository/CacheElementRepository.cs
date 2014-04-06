@@ -66,8 +66,7 @@ namespace VirtoCommerce.Client.Globalization.Repository
 				var statusElement = GetStatusElement(culture);
 				if (statusElement == null)
 				{
-					var preloadedCategoryLocalizations = _innerRepository.Elements().Where(it => it.Category.Equals(category, StringComparison.OrdinalIgnoreCase) &&
-																	   it.Culture.Equals(culture, StringComparison.OrdinalIgnoreCase));
+					var preloadedCategoryLocalizations = _innerRepository.Elements().Where(it => it.Culture.Equals(culture, StringComparison.OrdinalIgnoreCase));
 					foreach (var preloadedCategoryLocalization in preloadedCategoryLocalizations)
 					{
 						AddCache(preloadedCategoryLocalization);

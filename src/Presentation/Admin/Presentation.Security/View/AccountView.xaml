@@ -30,7 +30,7 @@
 	</i:Interaction.Triggers>
 
 	<TabControl x:Name="tabControl" Style="{DynamicResource Virto_TabControlHorizontal_Style}">
-		<TabItem x:Name="tabItemSummary" LocalizationScope.Category="{x:Null}" Header="{Loc ^Summary}">
+		<TabItem x:Name="tabItemSummary" Header="{Loc ^Summary}">
 			<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
 				<Grid HorizontalAlignment="Left" Width="600" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
 					<Grid.ColumnDefinitions>

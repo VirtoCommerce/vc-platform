@@ -109,7 +109,7 @@
                             <ColumnDefinition />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <core_controls:WatermarkedTextBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" WatermarkText="Username:" Margin="0,5,0,5"
+                        <core_controls:WatermarkedTextBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" WatermarkText="{x:Static res:Resources.Login_WatermarkText}" Margin="0,5,0,5"
                                 Text="{Binding CurrentUser.Username, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"/>
                         <PasswordBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" common:PasswordHelper.Attach="True" HorizontalAlignment="Stretch" 
                             common:PasswordHelper.Password="{Binding CurrentUser.Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" Margin="0,5,0,5">

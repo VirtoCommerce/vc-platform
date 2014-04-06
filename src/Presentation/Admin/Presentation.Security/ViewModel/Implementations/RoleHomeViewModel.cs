@@ -1,29 +1,28 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
-using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
-using VirtoCommerce.ManagementClient.Core.Infrastructure.DataVirtualization;
-using VirtoCommerce.ManagementClient.Security.Properties;
-using VirtoCommerce.ManagementClient.Security.ViewModel.Interfaces;
-using VirtoCommerce.Foundation.Security.Model;
-using VirtoCommerce.Foundation.Security.Repositories;
 using System.Threading;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
-using System.ComponentModel;
+using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Foundation.Security.Model;
+using VirtoCommerce.Foundation.Security.Repositories;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using VirtoCommerce.ManagementClient.Core.Infrastructure.DataVirtualization;
+using VirtoCommerce.ManagementClient.Security.ViewModel.Interfaces;
 using VirtoCommerce.ManagementClient.Security.ViewModel.Wizard.Interfaces;
 
 namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 {
-    class RoleHomeViewModel : ViewModelHomeEditableBase<Role>, IRoleHomeViewModel, IVirtualListLoader<IRoleViewModel>, ISupportDelayInitialization
+	class RoleHomeViewModel : ViewModelHomeEditableBase<Role>, IRoleHomeViewModel, IVirtualListLoader<IRoleViewModel>, ISupportDelayInitialization
 	{
 		#region Private Dependencies
 
 		private readonly IViewModelsFactory<IRoleViewModel> _itemVmFactory;
 		private readonly IViewModelsFactory<ICreateRoleViewModel> _wizardVmFactory;
-	    private readonly IRepositoryFactory<ISecurityRepository> _repositoryFactory;
+		private readonly IRepositoryFactory<ISecurityRepository> _repositoryFactory;
 
-        #endregion
+		#endregion
 
 		public RoleHomeViewModel(IRepositoryFactory<ISecurityRepository> repositoryFactory, IViewModelsFactory<IRoleViewModel> itemVmFactory, IViewModelsFactory<ICreateRoleViewModel> wizardVmFactory)
 		{
@@ -46,11 +45,11 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 
 		protected override void RaiseItemAddInteractionRequest()
 		{
-            var item = new Role();
+			var item = new Role();
 
-            var itemVM = _wizardVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", item));
+			var itemVM = _wizardVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", item));
 
-			var confirmation = new Confirmation { Title = Resources.Create_role, Content = itemVM };
+			var confirmation = new Confirmation { Title = "Create role".Localize(), Content = itemVM };
 			ItemAdd(confirmation);
 		}
 
@@ -62,42 +61,42 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 
 		#endregion
 
-		
-        #region IVirtualListLoader<ICustomerServiceDetailViewModel> Members
 
-        public bool CanSort
-        {
-            get { return true; }
-        }
+		#region IVirtualListLoader<ICustomerServiceDetailViewModel> Members
 
-        public IList<IRoleViewModel> LoadRange(int startIndex, int count, System.ComponentModel.SortDescriptionCollection sortDescriptions, out int overallCount)
-        {
+		public bool CanSort
+		{
+			get { return true; }
+		}
 
-            var retVal = new List<IRoleViewModel>();
+		public IList<IRoleViewModel> LoadRange(int startIndex, int count, System.ComponentModel.SortDescriptionCollection sortDescriptions, out int overallCount)
+		{
 
-            using (var repository = _repositoryFactory.GetRepositoryInstance())
-            {
-                var query = repository.Roles;
+			var retVal = new List<IRoleViewModel>();
 
-                if (!string.IsNullOrEmpty(SearchKeyword))
-                {
-                    query = query.Where(c => c.Name.Contains(SearchKeyword));
-                }
+			using (var repository = _repositoryFactory.GetRepositoryInstance())
+			{
+				var query = repository.Roles;
 
-                overallCount = query.Count();
+				if (!string.IsNullOrEmpty(SearchKeyword))
+				{
+					query = query.Where(c => c.Name.Contains(SearchKeyword));
+				}
 
-                var results = query.OrderBy(c => c.RoleId).Skip(startIndex).Take(count).ToList();
+				overallCount = query.Count();
 
-	            retVal.AddRange(results.Select(item => _itemVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", item))));
-            }
+				var results = query.OrderBy(c => c.RoleId).Skip(startIndex).Take(count).ToList();
 
-            return retVal;
-        }
+				retVal.AddRange(results.Select(item => _itemVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", item))));
+			}
 
-        #endregion
+			return retVal;
+		}
+
+		#endregion
 
 
-        #region IRoleHomeViewModel
+		#region IRoleHomeViewModel
 
 		private string _searchKeyword = string.Empty;
 		public string SearchKeyword
@@ -121,20 +120,20 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 			}
 		}
 
-        #endregion
+		#endregion
 
 
-        #region ISupportdelayInitialization
+		#region ISupportdelayInitialization
 
-        public void InitializeForOpen()
-        {
-            if (ListItemsSource == null)
-            {
+		public void InitializeForOpen()
+		{
+			if (ListItemsSource == null)
+			{
 				OnUIThread(() => ListItemsSource = new VirtualList<IRoleViewModel>(this, 20, SynchronizationContext.Current));
-            }
-        }
+			}
+		}
 
-        #endregion
+		#endregion
 
-    }
+	}
 }

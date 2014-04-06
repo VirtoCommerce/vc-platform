@@ -6,7 +6,6 @@ using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.Foundation.Security.Repositories;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Wizard;
-using VirtoCommerce.ManagementClient.Security.Properties;
 using VirtoCommerce.ManagementClient.Security.ViewModel.Implementations;
 using VirtoCommerce.ManagementClient.Security.ViewModel.Wizard.Interfaces;
 
@@ -56,7 +55,7 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Wizard.Implementatio
 
 		public override string Description
 		{
-			get { return Resources.Account_details; }
+			get { return "Enter Account details".Localize(); }
 		}
 
 		public override bool IsValid
@@ -88,7 +87,7 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Wizard.Implementatio
 
 		public override string Description
 		{
-			get { return Resources.Set_Roles; }
+			get { return "Set Roles".Localize(); }
 		}
 
 		public override bool IsValid

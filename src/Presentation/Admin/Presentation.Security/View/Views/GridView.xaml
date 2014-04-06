@@ -35,13 +35,12 @@
          VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling"
          ScrollViewer.IsDeferredScrollingEnabled="True" core_virtualization:VirtualListLoadingIndicator.IsAttached="True">
 		<GridViewColumn Header="{Loc 'Username'}" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
-     core_common:GridViewColumnResize.Width="4*" Width="167.6" core_common:GridViewSort.PropertyName="Username"
-     CellTemplate="{StaticResource userNameColumnTemplate}" />
-		<GridViewColumn Header="{Loc 'Register Type'}" core_common:GridViewColumnResize.Width="4*"
-     Width="167.6" core_common:GridViewSort.PropertyName="RegisterType" CellTemplate="{StaticResource typeColumnTemplate}" />
-		<GridViewColumn LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}" Header="{Loc 'Account State'}" core_common:GridViewColumnResize.Width="4*"
-     Width="167.6" core_common:GridViewSort.PropertyName="AccountState" CellTemplate="{StaticResource statusColumnTemplate}" />
-
+			 core_common:GridViewColumnResize.Width="4*" Width="167.6" core_common:GridViewSort.PropertyName="Username"
+			 CellTemplate="{StaticResource userNameColumnTemplate}" />
+		<GridViewColumn Header="{Loc 'Register Type'}" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}" core_common:GridViewColumnResize.Width="4*"
+			Width="167.6" core_common:GridViewSort.PropertyName="RegisterType" CellTemplate="{StaticResource typeColumnTemplate}" />
+		<GridViewColumn Header="{Loc 'Account State'}" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}" core_common:GridViewColumnResize.Width="4*"
+			Width="167.6" core_common:GridViewSort.PropertyName="AccountState" CellTemplate="{StaticResource statusColumnTemplate}" />
     </GridView>
 
 	<DataTemplate x:Key="roleNameColumnTemplate">
@@ -59,7 +58,7 @@
     <GridView x:Key="gridRoleViewView" ColumnHeaderContainerStyle="{StaticResource Virto_GridView_ColumnHeader_ContainerStyle}"
          VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling"
          ScrollViewer.IsDeferredScrollingEnabled="True" core_virtualization:VirtualListLoadingIndicator.IsAttached="True">
-		<GridViewColumn Header="{Loc 'Name'}" core_common:GridViewColumnResize.Width="13*"
-     Width="544.8" core_common:GridViewSort.PropertyName="Name" CellTemplate="{StaticResource roleNameColumnTemplate}" />
+		<GridViewColumn Header="{Loc 'Role name'}" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}" core_common:GridViewColumnResize.Width="13*"
+			Width="544.8" core_common:GridViewSort.PropertyName="Name" CellTemplate="{StaticResource roleNameColumnTemplate}" />
     </GridView>
 </ResourceDictionary>
