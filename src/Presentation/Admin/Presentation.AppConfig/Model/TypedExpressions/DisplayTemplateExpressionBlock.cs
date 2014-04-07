@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Linq;
-using linq = System.Linq.Expressions;
+using VirtoCommerce.Foundation.AppConfig.Model;
+using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.ManagementClient.Core.Controls;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
-using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.Foundation.AppConfig.Model;
+using linq = System.Linq.Expressions;
 
 namespace VirtoCommerce.ManagementClient.AppConfig.Model
 {
@@ -36,14 +35,14 @@ namespace VirtoCommerce.ManagementClient.AppConfig.Model
 
 		private void InitializeFirstChild()
 		{
-			this.ConditionBlock = new ConditionAndOrBlock("if", this.ExpressionViewModel, "of these conditions are true");
+			this.ConditionBlock = new ConditionAndOrBlock("if".Localize(), ExpressionViewModel, "of these conditions are true".Localize());
 		}
-		
+
 		private void InitializeAvailableExpressions()
 		{
 			var availableElements = new Func<CompositeElement>[] { 
 				()=> { //Items conditions menu items
-					var group = new CompositeElement { DisplayName = "Item conditions" };
+					var group = new CompositeElement { DisplayName = "Item conditions".Localize() };
 					group.AvailableChildrenGetters.AddRange(new Func<ExpressionElement>[] {
 						()=> new ConditionEntryIs(this.ExpressionViewModel),
 						()=> new ConditionItemTypeIs(this.ExpressionViewModel),
@@ -52,7 +51,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.Model
 					return group;
 				},
 				()=> { //Items conditions menu items
-					var group = new CompositeElement { DisplayName = "Category conditions" };
+					var group = new CompositeElement { DisplayName = "Category conditions".Localize() };
 					group.AvailableChildrenGetters.AddRange(new Func<ExpressionElement>[] {
 						()=> new ConditionCategoryIs(this.ExpressionViewModel),
 					});
@@ -60,7 +59,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.Model
 				},
             };
 			ConditionBlock.WithAvailabeChildren(availableElements);
-			ConditionBlock.NewChildLabel = "+ add condition";
+			ConditionBlock.NewChildLabel = "+ add condition".Localize();
 		}
 
 		public void ResetChildren()
@@ -97,8 +96,8 @@ namespace VirtoCommerce.ManagementClient.AppConfig.Model
 					ConditionBlock.WithAvailabeChildren(availableCategoryElements);
 					break;
 			}
-			
-			ConditionBlock.NewChildLabel = "+ add condition";
+
+			ConditionBlock.NewChildLabel = "+ add condition".Localize();
 		}
 
 		public override void InitializeAfterDeserialized(IExpressionViewModel parentViewModel)

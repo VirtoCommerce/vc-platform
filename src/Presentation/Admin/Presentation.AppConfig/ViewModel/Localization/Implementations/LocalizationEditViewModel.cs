@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
 using Omu.ValueInjecter;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.AppConfig.Factories;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
@@ -12,6 +13,7 @@ using VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Interfaces
 using VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Model;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implementations
 {
@@ -44,7 +46,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 			_navManager = navManager;
 			OriginalLocalizationGroup = item;
 
-			ViewTitle = new ViewTitleBase() { SubTitle = "SETTINGS", Title = "Localization" };
+			ViewTitle = new ViewTitleBase() { SubTitle = "SETTINGS".Localize(), Title = "Localization".Localize() };
 
 			OpenItemCommand = new DelegateCommand(() => _navManager.Navigate(NavigationData));
 		}
@@ -148,8 +150,8 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 		{
 			return new RefusedConfirmation
 			{
-				Content = "Save changes to Localization '" + InnerItem.Name + "'?",
-				Title = "Action confirmation"
+				Content = string.Format("Save changes to Localization '{0}'?".Localize(), InnerItem.Name),
+				Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 		}
 

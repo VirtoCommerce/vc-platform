@@ -11,8 +11,8 @@ namespace VirtoCommerce.ManagementClient.AppConfig.Model
 	public class CategorySelectElement : TypedExpressionElementBase
 	{
 		private CustomSelectorElement _valueSelectorEl;
-		private const string ElementLabel = "Items of category";
-		private const string SelectLabel = "select category";
+		private static readonly string ElementLabel = "Items of category".Localize();
+		private static readonly string SelectLabel = "select category".Localize();
 
 		public CategorySelectElement(IExpressionViewModel expressionViewModel)
 			: base(ElementLabel, expressionViewModel)
@@ -48,7 +48,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.Model
 					itemVM.SearchModifier = SearchCategoryModifier.RealCatalogsOnly;
 					itemVM.InitializeForOpen();
 					((IDisplayTemplateViewModel)ExpressionViewModel).CommonConfirmRequest.Raise(
-						new ConditionalConfirmation(() => itemVM.SelectedItem != null) { Content = itemVM, Title = "Select Category" },
+						new ConditionalConfirmation(() => itemVM.SelectedItem != null) { Content = itemVM, Title = "Select Category".Localize() },
 						(x) =>
 						{
 							if (x.Confirmed)

@@ -6,18 +6,20 @@ using System.Windows;
 using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+using Omu.ValueInjecter;
+using VirtoCommerce.Client.Globalization;
+using VirtoCommerce.Foundation.AppConfig.Factories;
+using VirtoCommerce.Foundation.AppConfig.Model;
+using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.ManagementClient.AppConfig.ViewModel.AppConfig.Interfaces;
 using VirtoCommerce.ManagementClient.AppConfig.ViewModel.SystemJobs.Interfaces;
 using VirtoCommerce.ManagementClient.AppConfig.ViewModel.Wizard.Interfaces;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
-using VirtoCommerce.Foundation.AppConfig.Factories;
-using VirtoCommerce.Foundation.AppConfig.Model;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
-using Omu.ValueInjecter;
-using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
-using VirtoCommerce.Foundation.AppConfig.Repositories;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.SystemJobs.Implementations
 {
@@ -41,7 +43,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.SystemJobs.Implemen
 			_navManager = navManager;
 			_parent = parent;
 			_vmFactory = vmFactory;
-			ViewTitle = new ViewTitleBase() { Title = "System job", SubTitle = "SETTINGS" };
+			ViewTitle = new ViewTitleBase() { Title = "System job".Localize(), SubTitle = "SETTINGS".Localize() };
 			OpenItemCommand = new DelegateCommand(() => _navManager.Navigate(NavigationData));
 			CommandInit();
 
@@ -162,8 +164,8 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.SystemJobs.Implemen
 		{
 			return new RefusedConfirmation
 			{
-				Content = "Save changes to System job '" + DisplayName + "'?",
-				Title = "Action confirmation"
+				Content = string.Format("Save changes to System job '{0}'?".Localize(), DisplayName),
+				Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 		}
 
@@ -252,7 +254,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.SystemJobs.Implemen
 		{
 			var item = (JobParameter)EntityFactory.CreateEntityForType("JobParameter");
 
-			if (RaiseItemEditInteractionRequest(item, "Add job parameter"))
+			if (RaiseItemEditInteractionRequest(item, "Add job parameter".Localize()))
 			{
 				item.SystemJobId = InnerItem.SystemJobId;
 				OnUIThread(() => InnerItem.JobParameters.Add(item));
@@ -262,7 +264,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.SystemJobs.Implemen
 		private void RaiseItemEditInteractionRequest(JobParameter originalItem)
 		{
 			var item = originalItem.DeepClone<JobParameter>(EntityFactory as AppConfigEntityFactory);
-			if (RaiseItemEditInteractionRequest(item, "Edit parameter"))
+			if (RaiseItemEditInteractionRequest(item, "Edit parameter".Localize()))
 			{
 				// copy all values to original:
 				OnUIThread(() => originalItem.InjectFrom<CloneInjection>(item));

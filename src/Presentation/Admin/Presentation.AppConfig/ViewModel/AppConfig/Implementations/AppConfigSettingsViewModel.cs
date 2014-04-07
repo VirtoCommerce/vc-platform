@@ -79,7 +79,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.AppConfig.Implement
 		{
 			var itemFromRep = EntityFactory.CreateEntity<Setting>();
 			var vm = WizardVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", itemFromRep));
-			var confirmation = new Confirmation { Title = "Create setting", Content = vm };
+			var confirmation = new Confirmation { Title = "Create setting".Localize(), Content = vm };
 			ItemAdd(confirmation, _repositoryFactory.GetRepositoryInstance(), itemFromRep);
 		}
 
@@ -99,7 +99,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.AppConfig.Implement
 
 		protected override void RaiseItemDeleteInteractionRequest(AppConfigSettingsItemViewModel item)
 		{
-			ItemDelete(item, string.Format("Are you sure you want to delete setting '{0}'?", item.Name),
+			ItemDelete(item, string.Format("Are you sure you want to delete setting '{0}'?".Localize(), item.Name),
 					   _repositoryFactory.GetRepositoryInstance(), GetItemById(item.Id));
 		}
 

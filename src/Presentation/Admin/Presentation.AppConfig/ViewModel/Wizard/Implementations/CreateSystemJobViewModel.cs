@@ -41,7 +41,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Wizard.Implementati
 		{
 			get
 			{
-				return "Enter System job general information.";
+				return "Enter System job general information.".Localize();
 			}
 		}
 	}
@@ -65,7 +65,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Wizard.Implementati
 		{
 			get
 			{
-				return "Enter System job parameters.";
+				return "Enter System job parameters.".Localize();
 			}
 		}
 	}

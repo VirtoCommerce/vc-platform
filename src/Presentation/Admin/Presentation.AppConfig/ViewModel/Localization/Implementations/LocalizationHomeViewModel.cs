@@ -98,9 +98,9 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 			confirmation.Content = "Are you sure you want to clear all locally cached Commerce Manager texts?".Localize();
 
 			CommonConfirmRequest.Raise(confirmation,
-				async x =>
+				async xx =>
 				{
-					if (x.Confirmed)
+					if (xx.Confirmed)
 					{
 						ShowLoadingAnimation = true;
 						try
@@ -110,7 +110,13 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 									_elementRepository.Clear();
 
 									// force Elements re-caching
-									_elementRepository.Elements();
+									var eee = _elementRepository.Elements();
+									var categories = eee.Select(x => x.Culture).Distinct();
+
+									categories.ToList().ForEach(x => _elementRepository.SetStatusDate(x));
+
+									// force values update
+									LocalizationManager.UpdateValues();
 								});
 
 							var notification = new Notification();
@@ -175,22 +181,22 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 										// list all module names
 										FilterModules = new[]
 											{
-												new KeyValuePair_string_string {Value = "Web pages"},
-												new KeyValuePair_string_string {Key = LocalizationScope.DefaultCategory, Value = "General"},
-												new KeyValuePair_string_string {Key = "AppConfig", Value = "AppConfig"},
-												new KeyValuePair_string_string {Key = "Asset", Value = "Asset"},
-												new KeyValuePair_string_string {Key = "Catalog", Value = "Catalog"},
-												new KeyValuePair_string_string {Key = "Configuration", Value = "Configuration"},
-												new KeyValuePair_string_string {Key = "Customers", Value = "Customers"},
-												new KeyValuePair_string_string {Key = "DynamicContent", Value = "DynamicContent"},
-												new KeyValuePair_string_string {Key = "Fulfillment", Value = "Fulfillment"},
-												new KeyValuePair_string_string {Key = "Import", Value = "Import"},
-												new KeyValuePair_string_string {Key = "Main", Value = "Main"},
-												new KeyValuePair_string_string {Key = "Marketing", Value = "Marketing"},
-												new KeyValuePair_string_string {Key = "Order", Value = "Order"},
-												new KeyValuePair_string_string {Key = "Reporting", Value = "Reporting"},
-												new KeyValuePair_string_string {Key = "Reviews", Value = "Reviews"},
-												new KeyValuePair_string_string {Key = "Security", Value = "Security"}
+												new KeyValuePair_string_string {Value = "Web pages".Localize()},
+												new KeyValuePair_string_string {Key = LocalizationScope.DefaultCategory, Value = "General".Localize()},
+												new KeyValuePair_string_string {Key = "AppConfig", Value = "AppConfig".Localize()},
+												new KeyValuePair_string_string {Key = "Asset", Value = "Asset".Localize()},
+												new KeyValuePair_string_string {Key = "Catalog", Value = "Catalog".Localize()},
+												new KeyValuePair_string_string {Key = "Configuration", Value = "Configuration".Localize()},
+												new KeyValuePair_string_string {Key = "Customers", Value = "Customers".Localize()},
+												new KeyValuePair_string_string {Key = "DynamicContent", Value = "DynamicContent".Localize()},
+												new KeyValuePair_string_string {Key = "Fulfillment", Value = "Fulfillment".Localize()},
+												new KeyValuePair_string_string {Key = "Import", Value = "Import".Localize()},
+												new KeyValuePair_string_string {Key = "Main", Value = "Main".Localize()},
+												new KeyValuePair_string_string {Key = "Marketing", Value = "Marketing".Localize()},
+												new KeyValuePair_string_string {Key = "Order", Value = "Order".Localize()},
+												new KeyValuePair_string_string {Key = "Reporting", Value = "Reporting".Localize()},
+												new KeyValuePair_string_string {Key = "Reviews", Value = "Reviews".Localize()},
+												new KeyValuePair_string_string {Key = "Security", Value = "Security".Localize()}
 											}.ToList();
 									});
 							}
@@ -351,7 +357,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 			{
 				if (string.IsNullOrEmpty(OriginalLanguage) || OriginalLanguage.Length > 5)
 				{
-					return OriginalLanguage;
+					return OriginalLanguage.Localize();
 				}
 				return string.Format("{0} ({1})",
 					CultureInfo.GetCultureInfo(OriginalLanguage).DisplayName,
@@ -365,7 +371,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 			{
 				if (string.IsNullOrEmpty(TranslateLanguage) || TranslateLanguage.Length > 5)
 				{
-					return TranslateLanguage;
+					return TranslateLanguage.Localize();
 				}
 				return string.Format("{0} ({1})",
 					CultureInfo.GetCultureInfo(TranslateLanguage).DisplayName,
@@ -422,7 +428,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 
 						var statusUpdate = new StatusMessage
 							{
-								ShortText = string.Format("Localization export to '{0}'.", filePath),
+								ShortText = string.Format("Localization export to '{0}'.".Localize(), filePath),
 								StatusMessageId = id
 							};
 						EventSystem.Publish(statusUpdate);
@@ -452,7 +458,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 						csvWriter.WriteRow(item.value.ToExportCollection(), true);
 						var statusUpdate = new StatusMessage
 							{
-								Details = string.Format("Exported {0} of {1}.", item.index, itemsCount),
+								Details = string.Format("Exported {0} of {1}.".Localize(), item.index, itemsCount),
 								StatusMessageId = id
 							};
 						EventSystem.Publish(statusUpdate);
@@ -462,7 +468,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 
 				var finalStatus = new StatusMessage
 				{
-					ShortText = string.Format("Localization export to '{0}' finished successfully.", filePath),
+					ShortText = string.Format("Localization export to '{0}' finished successfully.".Localize(), filePath),
 					StatusMessageId = id,
 					State = StatusMessageState.Success
 				};
@@ -472,7 +478,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 			{
 				var finalStatus = new StatusMessage
 				{
-					ShortText = string.Format("Error occured during localization export to '{0}'.", filePath),
+					ShortText = string.Format("Error occured during localization export to '{0}'.".Localize(), filePath),
 					StatusMessageId = id,
 					State = StatusMessageState.Error,
 					Details = ex.Message
@@ -485,8 +491,8 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 		{
 			var dialog = new SaveFileDialog()
 			{
-				FileName = string.Format("From {0} to {1}", OriginalLanguage, TranslateLanguage),
-				Filter = "Comma separated Files(*.csv)|*.csv|All(*.*)|*"
+				FileName = string.Format("From {0} to {1}".Localize(), OriginalLanguage, TranslateLanguage),
+				Filter = "Comma separated Files(*.csv)|*.csv|All(*.*)|*".Localize()
 			};
 
 			string retVal = null;

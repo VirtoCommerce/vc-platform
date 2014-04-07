@@ -1,27 +1,23 @@
 ﻿using System;
-using System.Linq;
-using linq = System.Linq.Expressions;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
-using VirtoCommerce.Foundation.Catalogs.Services;
+using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
-using System.Reflection;
-using VirtoCommerce.Foundation.AppConfig.Model;
+using linq = System.Linq.Expressions;
 
 namespace VirtoCommerce.ManagementClient.AppConfig.Model
 {
-    [Serializable]
+	[Serializable]
 	public class ConditionItemTypeIs : TypedExpressionElementBase, IExpressionAdaptor
-    {
+	{
 		public ConditionItemTypeIs(IExpressionViewModel expressionViewModel)
-			: base("Item is of type []", expressionViewModel)
+			: base("Item is of type []".Localize(), expressionViewModel)
 		{
-			WithLabel("Item type is ");
+			WithLabel("Item type is ".Localize());
 			_itemType = WithElement(new ItemTypeElement()) as ItemTypeElement;
 		}
 
 		private ItemTypeElement _itemType;
-		public string ItemType 
+		public string ItemType
 		{
 			get { return _itemType.InputValue.ToString(); }
 			set { _itemType.InputValue = value; }
@@ -45,5 +41,5 @@ namespace VirtoCommerce.ManagementClient.AppConfig.Model
 		{
 			base.InitializeAfterDeserialized(expressionViewModel);
 		}
-    }
+	}
 }

@@ -39,7 +39,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Wizard.Implementati
 		{
 			get
 			{
-				return "Enter Setting details.";
+				return "Enter Setting details.".Localize();
 			}
 		}
 	}

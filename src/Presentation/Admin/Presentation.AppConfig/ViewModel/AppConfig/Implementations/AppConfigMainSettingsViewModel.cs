@@ -18,25 +18,25 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.AppConfig.Implement
 
             if (authContext.CheckPermission(PredefinedPermissions.SettingsAppConfigSettings))
             {
-                items.Add(new ItemTypeHomeTab { Caption = "Settings", ViewModel = appConfigSetting });
+                items.Add(new ItemTypeHomeTab { Caption = "Settings".Localize(), ViewModel = appConfigSetting });
             }
             if (authContext.CheckPermission(PredefinedPermissions.SettingsAppConfigSystemJobs))
             {
-                items.Add(new ItemTypeHomeTab { Caption = "System jobs", ViewModel = systemJobSetting });
+				items.Add(new ItemTypeHomeTab { Caption = "System jobs".Localize(), ViewModel = systemJobSetting });
             }
             if (authContext.CheckPermission(PredefinedPermissions.SettingsAppConfigEmailTemplates))
             {
-                items.Add(new ItemTypeHomeTab { Caption = "Email templates", ViewModel = emailTemplates });
+				items.Add(new ItemTypeHomeTab { Caption = "Email templates".Localize(), ViewModel = emailTemplates });
             }
             if (authContext.CheckPermission(PredefinedPermissions.SettingsAppConfigDisplayTemplates))
             {
-                items.Add(new ItemTypeHomeTab { Caption = "Display templates", ViewModel = displayTemplates });
+				items.Add(new ItemTypeHomeTab { Caption = "Display templates".Localize(), ViewModel = displayTemplates });
             }
-            items.Add(new ItemTypeHomeTab { Caption = "Localization", ViewModel = localizationHome });
+			items.Add(new ItemTypeHomeTab { Caption = "Localization".Localize(), ViewModel = localizationHome });
 
             if (authContext.CheckPermission(PredefinedPermissions.SettingsAppConfigSettings))
             {
-                items.Add(new ItemTypeHomeTab { Caption = "Cache", ViewModel = cacheViewModel });
+				items.Add(new ItemTypeHomeTab { Caption = "Cache".Localize(), ViewModel = cacheViewModel });
             }
 
             SubItems = items;

@@ -1,23 +1,23 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
-using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
-using VirtoCommerce.ManagementClient.AppConfig.Infrastructure.Enumerations;
-using VirtoCommerce.ManagementClient.AppConfig.ViewModel.AppConfig.Interfaces;
-using VirtoCommerce.ManagementClient.AppConfig.ViewModel.Wizard;
-using VirtoCommerce.ManagementClient.AppConfig.ViewModel.Wizard.Interfaces;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
-using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
+using Omu.ValueInjecter;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.AppConfig.Factories;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
-using Omu.ValueInjecter;
+using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
+using VirtoCommerce.ManagementClient.AppConfig.Infrastructure.Enumerations;
+using VirtoCommerce.ManagementClient.AppConfig.ViewModel.AppConfig.Interfaces;
+using VirtoCommerce.ManagementClient.AppConfig.ViewModel.Wizard.Interfaces;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.AppConfig.Implementations
 {
@@ -51,7 +51,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.AppConfig.Implement
 			_repositoryFactory = repositoryFactory;
 			_navManager = navManager;
 			_parent = parent;
-			ViewTitle = new ViewTitleBase() { Title = "Setting", SubTitle = "SETTINGS" };
+			ViewTitle = new ViewTitleBase() { Title = "Setting".Localize(), SubTitle = "SETTINGS".Localize() };
 			OpenItemCommand = new DelegateCommand(() => _navManager.Navigate(NavigationData));
 			CommandInit();
 		}
@@ -138,8 +138,8 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.AppConfig.Implement
 		{
 			return new RefusedConfirmation
 			{
-				Content = "Save changes to Setting '" + DisplayName + "'?",
-				Title = "Action confirmation"
+				Content = string.Format("Save changes to Setting '{0}'?".Localize(), DisplayName),
+				Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 		}
 
@@ -430,11 +430,11 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.AppConfig.Implement
 							itemVM.ShortTextValue = SelectedSettingValue.ShortTextValue;
 							break;
 					}
-					confirmation.Title = "Edit setting value";
+					confirmation.Title = "Edit setting value".Localize();
 				}
 				else
 				{
-					confirmation.Title = "Add setting value";
+					confirmation.Title = "Add setting value".Localize();
 				}
 
 				confirmation.Content = itemVM;
@@ -509,8 +509,8 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.AppConfig.Implement
 			{
 
 				ConditionalConfirmation confirmation = new ConditionalConfirmation();
-				confirmation.Title = "Remove this setting value?";
-				confirmation.Content = "Remove this setting value?";
+				confirmation.Title = "Remove this setting value?".Localize();
+				confirmation.Content = "Remove this setting value?".Localize();
 
 				RemoveConfirmRequest.Raise(confirmation,
 					(x) =>
@@ -529,7 +529,6 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.AppConfig.Implement
 						OnPropertyChanged("IsValid");
 						ItemAddCommand.RaiseCanExecuteChanged();
 					});
-
 			}
 		}
 

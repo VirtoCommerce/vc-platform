@@ -66,22 +66,16 @@
 
 		<StackPanel Grid.Row="5">
 			<ItemsControl Grid.Row="0" Style="{StaticResource Virto_ToolbarItemsControl_Style}">
-				<core_controls:MetroButton Command="{Binding ItemAddCommand}" ToolTip="{Loc 'Create Value'}"
-     LocalizationScope.Category="{x:Null}" Header="{Loc ADD}">
-					<Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/add.png"
-     Width="14" />
+				<core_controls:MetroButton Command="{Binding ItemAddCommand}" ToolTip="{Loc 'Create Value'}" Header="{Loc ^ADD}">
+					<Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/add.png" Width="14" />
 				</core_controls:MetroButton>
 
-				<core_controls:MetroButton Command="{Binding ItemEditCommand}" Header="{Loc EDIT}"
-     ToolTip="{Loc 'Edit selected Value'}" LocalizationScope.Category="{x:Null}">
-					<core_controls:VectorImage ImageResource="{StaticResource Icon_Button_Move}"
-     Width="13" Height="13" Margin="0,0,1,0" />
+				<core_controls:MetroButton Command="{Binding ItemEditCommand}" Header="{Loc ^EDIT}" ToolTip="{Loc 'Edit selected Value'}">
+					<core_controls:VectorImage ImageResource="{StaticResource Icon_Button_Move}" Width="13" Height="13" Margin="0,0,1,0" />
 				</core_controls:MetroButton>
 
-				<core_controls:MetroButton Command="{Binding ItemDeleteCommand}" Header="REMOVE"
-     ToolTip="Delete selected Values">
-					<Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/cancel.png"
-     Width="14" />
+				<core_controls:MetroButton Command="{Binding ItemDeleteCommand}" Header="{Loc ^REMOVE}" ToolTip="{Loc 'Delete selected Values'}">
+					<Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/cancel.png" Width="14" />
 				</core_controls:MetroButton>
 			</ItemsControl>
 			<ListView ItemsSource="{Binding Path=InnerItem.SettingValues, UpdateSourceTrigger=PropertyChanged}"
@@ -112,10 +106,13 @@
      Text="{Binding IntegerValue}" />
 								<TextBlock Grid.Column="1" Visibility="{Binding DataContext.IsBooleanValue,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Converter={StaticResource booleanToVisibilityConverter}}"
      Text="{Binding BooleanValue}" />
-								<TextBlock Grid.Column="1" Visibility="{Binding DataContext.IsDateTimeValue,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Converter={StaticResource booleanToVisibilityConverter}}"
-     Text="{Binding DateTimeValue, StringFormat='{}{0:dd/MM/yyyy}'}" />
-
-
+								<TextBlock Grid.Column="1" Visibility="{Binding DataContext.IsDateTimeValue,RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Converter={StaticResource booleanToVisibilityConverter}}">
+									<TextBlock.Text>
+										<!-- Text={Binding DateTimeValue, StringFormat='{}{0:dd/MM/yyyy}'} -->
+										<LocBinding ResourceKey="{}{0:dd/MM/yyyy}">
+											<Binding Path="DateTimeValue" />
+										</LocBinding>
+									</TextBlock.Text></TextBlock>
 							</Grid>
 						</Border>
 					</DataTemplate>

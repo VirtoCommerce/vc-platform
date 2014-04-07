@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Linq;
-using linq = System.Linq.Expressions;
-using VirtoCommerce.Foundation.Catalogs.Services;
-using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
-using VirtoCommerce.ManagementClient.Core.Controls;
-using System.Reflection;
 using VirtoCommerce.Foundation.AppConfig.Model;
+using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.ManagementClient.Core.Controls;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using linq = System.Linq.Expressions;
 
 namespace VirtoCommerce.ManagementClient.AppConfig.Model
 {
@@ -17,11 +14,11 @@ namespace VirtoCommerce.ManagementClient.AppConfig.Model
 		private UserInputElement _propEl;
 
 		public ConditionItemPropertyIs(IExpressionViewModel expressionViewModel)
-			: base("Item property is [] ", expressionViewModel)
+			: base("Item property is [] ".Localize(), expressionViewModel)
 		{
-			WithLabel("Item property is ");
+			WithLabel("Item property is ".Localize());
 			_propEl = WithUserInput<string>(string.Empty) as UserInputElement;
-			WithLabel(" and value is ");
+			WithLabel(" and value is ".Localize());
 			_propValueEl = WithUserInput<string>(string.Empty) as UserInputElement;
 		}
 
@@ -48,7 +45,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.Model
 				_propEl.InputValue = value;
 			}
 		}
-		
+
 		public linq.Expression<Func<IEvaluationContext, bool>> GetExpression()
 		{
 			linq.ParameterExpression paramX = linq.Expression.Parameter(typeof(IEvaluationContext), "x");

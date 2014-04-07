@@ -3,20 +3,22 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
+using Omu.ValueInjecter;
+using VirtoCommerce.Client.Globalization;
+using VirtoCommerce.Foundation.AppConfig.Factories;
+using VirtoCommerce.Foundation.AppConfig.Model;
+using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using VirtoCommerce.Foundation.Stores.Repositories;
+using VirtoCommerce.ManagementClient.AppConfig.Model;
 using VirtoCommerce.ManagementClient.AppConfig.ViewModel.DisplayTemplates.Interfaces;
 using VirtoCommerce.ManagementClient.AppConfig.ViewModel.Wizard.Interfaces;
 using VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Interfaces;
 using VirtoCommerce.ManagementClient.Core.Controls;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
-using VirtoCommerce.Foundation.AppConfig.Factories;
-using VirtoCommerce.Foundation.AppConfig.Model;
-using Omu.ValueInjecter;
-using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
-using VirtoCommerce.Foundation.AppConfig.Repositories;
-using VirtoCommerce.ManagementClient.AppConfig.Model;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.DisplayTemplates.Implementations
 {
@@ -37,12 +39,12 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.DisplayTemplates.Im
 
 		public DisplayTemplateEditViewModel(
 			IRepositoryFactory<IStoreRepository> storeRepositoryFactory,
-			IRepositoryFactory<IAppConfigRepository> repositoryFactory, 
-			IAppConfigEntityFactory entityFactory, 
-			IViewModelsFactory<ISearchCategoryViewModel> categoryVmFactory, 
-			IViewModelsFactory<ISearchItemViewModel> itemVmFactory, 
-			INavigationManager navManager, 
-			DisplayTemplateMapping item, 
+			IRepositoryFactory<IAppConfigRepository> repositoryFactory,
+			IAppConfigEntityFactory entityFactory,
+			IViewModelsFactory<ISearchCategoryViewModel> categoryVmFactory,
+			IViewModelsFactory<ISearchItemViewModel> itemVmFactory,
+			INavigationManager navManager,
+			DisplayTemplateMapping item,
 			HomeSettingsEditableViewModel<DisplayTemplateMapping> parent)
 			: base(entityFactory, item, false)
 		{
@@ -52,16 +54,16 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.DisplayTemplates.Im
 			_parent = parent;
 			_searchCategoryVmFactory = categoryVmFactory;
 			_searchItemVmFactory = itemVmFactory;
-			ViewTitle = new ViewTitleBase() { Title = "Display template", SubTitle = "SETTINGS" };
+			ViewTitle = new ViewTitleBase() { Title = "Display template".Localize(), SubTitle = "SETTINGS".Localize() };
 			OpenItemCommand = new DelegateCommand(() => _navManager.Navigate(NavigationData));
 		}
 
 		protected DisplayTemplateEditViewModel(
 			IRepositoryFactory<IStoreRepository> storeRepositoryFactory,
-			IRepositoryFactory<IAppConfigRepository> repositoryFactory, 
+			IRepositoryFactory<IAppConfigRepository> repositoryFactory,
 			IAppConfigEntityFactory entityFactory,
-			IViewModelsFactory<ISearchCategoryViewModel> categoryVmFactory, 
-			IViewModelsFactory<ISearchItemViewModel> itemVmFactory, 
+			IViewModelsFactory<ISearchCategoryViewModel> categoryVmFactory,
+			IViewModelsFactory<ISearchItemViewModel> itemVmFactory,
 			DisplayTemplateMapping item)
 			: base(entityFactory, item, true)
 		{
@@ -135,8 +137,8 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.DisplayTemplates.Im
 		{
 			return new RefusedConfirmation
 			{
-				Content = "Save changes to Display template '" + DisplayName + "'?",
-				Title = "Action confirmation"
+				Content = string.Format("Save changes to Display template '{0}'?".Localize(), DisplayName),
+				Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 		}
 

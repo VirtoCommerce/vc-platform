@@ -1,111 +1,113 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Omu.ValueInjecter;
+using VirtoCommerce.Client.Globalization;
+using VirtoCommerce.Foundation.AppConfig.Factories;
+using VirtoCommerce.Foundation.AppConfig.Model;
+using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using VirtoCommerce.ManagementClient.AppConfig.ViewModel.EmailTemplates.Interfaces;
 using VirtoCommerce.ManagementClient.AppConfig.ViewModel.Wizard.Interfaces;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
-using VirtoCommerce.Foundation.AppConfig.Factories;
-using VirtoCommerce.Foundation.AppConfig.Model;
-using VirtoCommerce.Foundation.AppConfig.Repositories;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.EmailTemplates.Implementations
 {
-    public class EmailTemplatesViewModel : HomeSettingsEditableViewModel<EmailTemplate>, IEmailTemplatesViewModel
-    {
+	public class EmailTemplatesViewModel : HomeSettingsEditableViewModel<EmailTemplate>, IEmailTemplatesViewModel
+	{
 
-        #region Dependencies
+		#region Dependencies
 
-        private readonly IRepositoryFactory<IAppConfigRepository> _repositoryFactory;
+		private readonly IRepositoryFactory<IAppConfigRepository> _repositoryFactory;
 
-        #endregion
+		#endregion
 
-        #region Constructor
+		#region Constructor
 
-        public EmailTemplatesViewModel(IRepositoryFactory<IAppConfigRepository> repositoryFactory, IAppConfigEntityFactory entityFactory, IViewModelsFactory<ICreateEmailTemplateViewModel> wizardVmFactory, IViewModelsFactory<IEmailTemplateEditViewModel> editVmFactory)
-            : base(entityFactory, wizardVmFactory, editVmFactory)
-        {
-            _repositoryFactory = repositoryFactory;
-        }
+		public EmailTemplatesViewModel(IRepositoryFactory<IAppConfigRepository> repositoryFactory, IAppConfigEntityFactory entityFactory, IViewModelsFactory<ICreateEmailTemplateViewModel> wizardVmFactory, IViewModelsFactory<IEmailTemplateEditViewModel> editVmFactory)
+			: base(entityFactory, wizardVmFactory, editVmFactory)
+		{
+			_repositoryFactory = repositoryFactory;
+		}
 
-        #endregion
+		#endregion
 
-        #region HomeSettingsViewModel members
+		#region HomeSettingsViewModel members
 
-        protected override object LoadData()
-        {
-	        using (var repository = _repositoryFactory.GetRepositoryInstance())
-	        {
-		        if (repository != null)
-		        {
-			        var items = repository.EmailTemplates.OrderBy(cr => cr.Name).ToList();
-			        return items;
-		        }
-	        }
+		protected override object LoadData()
+		{
+			using (var repository = _repositoryFactory.GetRepositoryInstance())
+			{
+				if (repository != null)
+				{
+					var items = repository.EmailTemplates.OrderBy(cr => cr.Name).ToList();
+					return items;
+				}
+			}
 
-	        return null;
-        }
+			return null;
+		}
 
-        public override void RefreshItem(object item)
-        {
-            var itemToUpdate = item as EmailTemplate;
-            if (itemToUpdate != null)
-            {
-                EmailTemplate itemFromInnerItem =
-                    Items.SingleOrDefault(et => et.EmailTemplateId == itemToUpdate.EmailTemplateId);
+		public override void RefreshItem(object item)
+		{
+			var itemToUpdate = item as EmailTemplate;
+			if (itemToUpdate != null)
+			{
+				EmailTemplate itemFromInnerItem =
+					Items.SingleOrDefault(et => et.EmailTemplateId == itemToUpdate.EmailTemplateId);
 
-                if (itemFromInnerItem != null)
-                {
-                    OnUIThread(() =>
-                    {
-                        itemFromInnerItem.InjectFrom<CloneInjection>(itemToUpdate);
-                        OnPropertyChanged("Items");
-                    });
-                }
-            }
-        }
+				if (itemFromInnerItem != null)
+				{
+					OnUIThread(() =>
+					{
+						itemFromInnerItem.InjectFrom<CloneInjection>(itemToUpdate);
+						OnPropertyChanged("Items");
+					});
+				}
+			}
+		}
 
-        #endregion
+		#endregion
 
-        #region HomeSettingsEditableViewModel members
+		#region HomeSettingsEditableViewModel members
 
-        protected override void RaiseItemAddInteractionRequest()
-        {
-            var item = EntityFactory.CreateEntity<EmailTemplate>();
+		protected override void RaiseItemAddInteractionRequest()
+		{
+			var item = EntityFactory.CreateEntity<EmailTemplate>();
 
-            var vm = WizardVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", item));
+			var vm = WizardVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", item));
 
-            var confirmation = new ConditionalConfirmation()
-            {
-                Title = "Create Email Template",
-                Content = vm
-            };
+			var confirmation = new ConditionalConfirmation()
+			{
+				Title = "Create Email Template".Localize(),
+				Content = vm
+			};
 			ItemAdd(item, confirmation, _repositoryFactory.GetRepositoryInstance());
-        }
+		}
 
-        protected override void RaiseItemEditInteractionRequest(EmailTemplate item)
-        {
-            var itemVM = EditVmFactory.GetViewModelInstance(
-                 new KeyValuePair<string, object>("item", item),
-                 new KeyValuePair<string, object>("parent", this));
+		protected override void RaiseItemEditInteractionRequest(EmailTemplate item)
+		{
+			var itemVM = EditVmFactory.GetViewModelInstance(
+				 new KeyValuePair<string, object>("item", item),
+				 new KeyValuePair<string, object>("parent", this));
 
-            var openTracking = (IOpenTracking)itemVM;
-            openTracking.OpenItemCommand.Execute();
-        }
+			var openTracking = (IOpenTracking)itemVM;
+			openTracking.OpenItemCommand.Execute();
+		}
 
-        protected override void RaiseItemDeleteInteractionRequest(EmailTemplate item)
-        {
-            var confirmation = new ConditionalConfirmation
-            {
-                Content = string.Format("Are you sure you want to delete Email Template '{0}'?", item.Name),
-                Title = "Delete confirmation"
-            };
+		protected override void RaiseItemDeleteInteractionRequest(EmailTemplate item)
+		{
+			var confirmation = new ConditionalConfirmation
+			{
+				Content = string.Format("Are you sure you want to delete Email Template '{0}'?".Localize(), item.Name),
+				Title = "Delete confirmation".Localize(null, LocalizationScope.DefaultCategory)
+			};
 
 			ItemDelete(item, confirmation, _repositoryFactory.GetRepositoryInstance());
-        }
+		}
 
-        #endregion
+		#endregion
 
-    }
+	}
 }

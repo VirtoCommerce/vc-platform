@@ -6,18 +6,19 @@ using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Omu.ValueInjecter;
-using VirtoCommerce.ManagementClient.AppConfig.Infrastructure.Enumerations;
-using VirtoCommerce.ManagementClient.AppConfig.ViewModel.EmailTemplates.Interfaces;
-using VirtoCommerce.ManagementClient.AppConfig.ViewModel.Wizard;
-using VirtoCommerce.ManagementClient.AppConfig.ViewModel.Wizard.Interfaces;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
-using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.AppConfig.Factories;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
+using VirtoCommerce.ManagementClient.AppConfig.Infrastructure.Enumerations;
+using VirtoCommerce.ManagementClient.AppConfig.ViewModel.EmailTemplates.Interfaces;
+using VirtoCommerce.ManagementClient.AppConfig.ViewModel.Wizard.Interfaces;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.EmailTemplates.Implementations
 {
@@ -43,7 +44,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.EmailTemplates.Impl
 			_parent = parent;
 			_navManager = navManager;
 			_vmFactory = vmFactory;
-			ViewTitle = new ViewTitleBase() { SubTitle = "SETTINGS", Title = "Email Template" };
+			ViewTitle = new ViewTitleBase() { SubTitle = "SETTINGS".Localize(), Title = "Email Template".Localize() };
 			OpenItemCommand = new DelegateCommand(() => _navManager.Navigate(NavigationData));
 			CommandInit();
 		}
@@ -135,8 +136,8 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.EmailTemplates.Impl
 		{
 			return new RefusedConfirmation
 			{
-				Content = "Save changes to Email template '" + InnerItem.Subject + "'?",
-				Title = "Action confirmation"
+				Content = string.Format("Save changes to Email template '{0}'?".Localize(), InnerItem.Subject),
+				Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 		}
 
@@ -233,7 +234,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.EmailTemplates.Impl
 
 		public override string Description
 		{
-			get { return "Email Template Details"; }
+			get { return "Email Template Details".Localize(); }
 		}
 
 		#endregion
@@ -328,7 +329,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.EmailTemplates.Impl
 			var itemVm = _vmFactory.GetViewModelInstance(parameters.ToArray());
 
 			var confirmation = new ConditionalConfirmation();
-			confirmation.Title = "Enter language details";
+			confirmation.Title = "Enter language details".Localize();
 			confirmation.Content = itemVm;
 
 
@@ -365,8 +366,8 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.EmailTemplates.Impl
 		private void RemoveEmailTemplateLanguage(EmailTemplateLanguage selectedItem)
 		{
 			ConditionalConfirmation confirmation = new ConditionalConfirmation();
-			confirmation.Title = "Delete confirmation";
-			confirmation.Content = "Are you sure you want to delete language '" + selectedItem.LanguageCode + "'?";
+			confirmation.Title = "Delete confirmation".Localize(null, LocalizationScope.DefaultCategory);
+			confirmation.Content = string.Format("Are you sure you want to delete language '{0}'?".Localize(), selectedItem.LanguageCode);
 
 			if (RemoveEmailTemplateLanguageRequest != null)
 			{

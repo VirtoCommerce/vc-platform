@@ -207,15 +207,12 @@
 							<ComboBox SelectedValue="{Binding OriginalLanguage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 								<ComboBox.ItemTemplate>
 									<DataTemplate>
-										<Grid>
-											<TextBlock x:Name="textBlock" Text="{Binding Path=. , Converter={StaticResource cultureConverter}, Mode=OneWay, TargetNullValue=' ', FallbackValue=' '}" />
-										</Grid>
+										<TextBlock x:Name="textBlock" Text="{Binding Converter={StaticResource cultureConverter}, TargetNullValue=' ', FallbackValue=' '}" />
 										<DataTemplate.Triggers>
 											<MultiDataTrigger>
 												<MultiDataTrigger.Conditions>
-													<Condition Binding="{Binding Text, ElementName=textBlock}" Value="Select language..." />
-													<Condition Binding="{Binding IsDropDownOpen, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}"
-     Value="False" />
+													<Condition Binding="{Binding SelectedIndex, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" Value="0" />
+													<Condition Binding="{Binding IsDropDownOpen, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" Value="False" />
 												</MultiDataTrigger.Conditions>
 												<Setter TargetName="textBlock" Property="FontStyle" Value="Italic" />
 											</MultiDataTrigger>
@@ -240,15 +237,12 @@
 							<ComboBox SelectedValue="{Binding TranslateLanguage, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, ValidatesOnDataErrors=True}">
 								<ComboBox.ItemTemplate>
 									<DataTemplate>
-										<Grid>
-											<TextBlock x:Name="toTextBlock" Text="{Binding Path=. , Converter={StaticResource cultureConverter}, Mode=OneWay, TargetNullValue=' ', FallbackValue=' '}" />
-										</Grid>
+										<TextBlock x:Name="toTextBlock" Text="{Binding Converter={StaticResource cultureConverter}, TargetNullValue=' ', FallbackValue=' '}" />
 										<DataTemplate.Triggers>
 											<MultiDataTrigger>
 												<MultiDataTrigger.Conditions>
-													<Condition Binding="{Binding Text, ElementName=textBlock}" Value="Select language..." />
-													<Condition Binding="{Binding IsDropDownOpen, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}"
-     Value="False" />
+													<Condition Binding="{Binding SelectedIndex, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" Value="0" />
+													<Condition Binding="{Binding IsDropDownOpen, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" Value="False" />
 												</MultiDataTrigger.Conditions>
 												<Setter TargetName="toTextBlock" Property="FontStyle" Value="Italic" />
 											</MultiDataTrigger>
@@ -262,8 +256,7 @@
 								</i:Interaction.Triggers>
 							</ComboBox>
 						</core_controls:NullItemSelectorAdapter>
-						<CheckBox Grid.Row="8" Content="{Loc 'Untranslated'}" IsChecked="{Binding Path=IsUntranslatedOnly}"
-     Margin="0,10,0,0">
+						<CheckBox Grid.Row="8" Content="{Loc 'Untranslated'}" IsChecked="{Binding Path=IsUntranslatedOnly}" Margin="0,10,0,0">
 							<i:Interaction.Triggers>
 								<i:EventTrigger EventName="Checked">
 									<i:InvokeCommandAction Command="{Binding SearchItemsCommand}" />

@@ -48,7 +48,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Wizard.Implementati
 		{
 			get
 			{
-				return "Enter Display template general information.";
+				return "Enter Display template general information.".Localize();
 			}
 		}
 
@@ -83,7 +83,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Wizard.Implementati
 		{
 			get
 			{
-				return "Enter display template pick conditions.";
+				return "Enter display template pick conditions.".Localize();
 			}
 		}
 
