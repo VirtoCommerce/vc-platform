@@ -1,5 +1,6 @@
 ﻿#region
 
+using VirtoCommerce.Foundation.Catalogs.Search;
 using s = VirtoCommerce.Foundation.Search.Schemas;
 
 #endregion
@@ -116,8 +117,7 @@ namespace VirtoCommerce.Search.Providers.Lucene
         /// <param name="filter">The filter.</param>
         /// <param name="currency">The currency.</param>
         /// <returns></returns>
-        private int CalculateResultCount(
-            IndexReader reader, DocIdSet baseDocIdSet, FacetGroup facetGroup, ISearchFilter filter, string currency)
+        private int CalculateResultCount(IndexReader reader, DocIdSet baseDocIdSet, FacetGroup facetGroup, ISearchFilter filter, string currency)
         {
             var count = 0;
 
@@ -255,31 +255,62 @@ namespace VirtoCommerce.Search.Providers.Lucene
         private void CreateFacets(IndexReader reader, Query query)
         {
             var groups = new List<FacetGroup>();
+            var baseQueryFilter = new CachingWrapperFilter(new QueryWrapperFilter(query));
+            var baseDocIdSet = baseQueryFilter.GetDocIdSet(reader);
 
-            if (this.Results.SearchCriteria.Filters != null && this.Results.SearchCriteria.Filters.Length > 0)
+            #region Subcategory filters
+
+            var catalogCriteria = Results.SearchCriteria as CatalogItemSearchCriteria;
+            if (catalogCriteria != null && catalogCriteria.ChildCategoryFilters.Any())
             {
-                var baseQueryFilter = new CachingWrapperFilter(new QueryWrapperFilter(query));
+                var group = new FacetGroup("Subcategory");
+                var groupCount = 0;
 
-                var baseBitArray = baseQueryFilter.GetDocIdSet(reader);
-                foreach (var filter in this.Results.SearchCriteria.Filters)
+                foreach (var value in catalogCriteria.ChildCategoryFilters)
+                {
+                    var q = LuceneQueryHelper.CreateQuery(catalogCriteria.OutlineField, value);
+
+                    if (q == null) continue;
+
+                    var queryFilter = new CachingWrapperFilter(new QueryWrapperFilter(q));
+                    var filterArray = queryFilter.GetDocIdSet(reader);
+                    var newCount = (int)CalculateFacetCount(baseDocIdSet, filterArray);
+                    if (newCount == 0) continue;
+
+                    var newFacet = new Facet(group, value.Code, value.Name, newCount);
+                    group.Facets.Add(newFacet);
+                    groupCount += newCount;
+                }
+
+                // Add only if items exist under
+                if (groupCount > 0)
+                {
+                    groups.Add(group);
+                }
+            }
+
+            #endregion
+
+            if (Results.SearchCriteria.Filters != null && Results.SearchCriteria.Filters.Length > 0)
+            {
+                foreach (var filter in Results.SearchCriteria.Filters)
                 {
                     var group = new FacetGroup(filter.Key);
-
                     var groupCount = 0;
 
-                    if (!String.IsNullOrEmpty(this.Results.SearchCriteria.Currency) && filter is s.PriceRangeFilter)
+                    if (!String.IsNullOrEmpty(Results.SearchCriteria.Currency) && filter is s.PriceRangeFilter)
                     {
-                        var valCurrency = ((s.PriceRangeFilter)filter).Currency;
+                        var valCurrency = ((s.PriceRangeFilter) filter).Currency;
                         if (
                             !valCurrency.Equals(
-                                this.Results.SearchCriteria.Currency, StringComparison.OrdinalIgnoreCase))
+                                Results.SearchCriteria.Currency, StringComparison.OrdinalIgnoreCase))
                         {
                             continue;
                         }
                     }
 
-                    groupCount += this.CalculateResultCount(
-                        reader, baseBitArray, group, filter, this.Results.SearchCriteria.Currency);
+                    groupCount += CalculateResultCount(reader, baseDocIdSet, group, filter,
+                        Results.SearchCriteria.Currency);
 
                     // Add only if items exist under
                     if (groupCount > 0)
@@ -289,7 +320,7 @@ namespace VirtoCommerce.Search.Providers.Lucene
                 }
             }
 
-            this.Results.FacetGroups = groups.ToArray();
+            Results.FacetGroups = groups.ToArray();
         }
 
         /// <summary>
