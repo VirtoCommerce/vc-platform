@@ -95,7 +95,7 @@ namespace VirtoCommerce.Client
             var query = _catalogRepository.Catalogs.Where(x => x.CatalogId.Equals(catalogId, StringComparison.OrdinalIgnoreCase)).ExpandAll();
 
             return Helper.Get(
-                CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix,string.Format(CatalogCacheKey, catalogId)),
+                CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix, string.Format(CatalogCacheKey, catalogId)),
                 () => (query).SingleOrDefault(),
                 CatalogConfiguration.Instance.Cache.CatalogTimeout,
                 _isEnabled && useCache);
@@ -236,7 +236,7 @@ namespace VirtoCommerce.Client
             query = IncludeGroups(query, responseGroup);
 
             return Helper.Get(
-                CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix,  string.Format(ItemsCodeCacheKey, CacheHelper.CreateCacheKey(codes), responseGroup)),
+                CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix, string.Format(ItemsCodeCacheKey, CacheHelper.CreateCacheKey(codes), responseGroup)),
                 () => (query).ToArray(),
                 CatalogConfiguration.Instance.Cache.ItemTimeout,
                 _isEnabled && useCache);
@@ -310,7 +310,7 @@ namespace VirtoCommerce.Client
             }
             else if (category != null)
             {
-               
+
                 id = category.CategoryId;
                 catalogId = category.CatalogId;
                 properties = category.CategoryPropertyValues;
@@ -319,7 +319,7 @@ namespace VirtoCommerce.Client
                     //This will return expanded category with properties
                     category = GetCategoryById(id) as Category;
 
-                    if(category !=null)
+                    if (category != null)
                     {
                         properties = category.CategoryPropertyValues;
                     }
@@ -465,8 +465,18 @@ namespace VirtoCommerce.Client
         {
 
             return Helper.Get(
-                CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix,  string.Format(CategoryIdCacheKey, _customerSession.CustomerSession.CatalogId, id)),
+                CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix, string.Format(CategoryIdCacheKey, _customerSession.CustomerSession.CatalogId, id)),
                 () => GetCategoryByIdInternal(id),
+                CatalogConfiguration.Instance.Cache.CategoryTimeout,
+                _isEnabled && useCache);
+        }
+
+        public CategoryBase[] GetChildCategoriesById(string id, bool useCache = true)
+        {
+
+            return Helper.Get(
+                CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix, string.Format(ChildCategoriesCacheKey, _customerSession.CustomerSession.CatalogId, id)),
+                () => _catalogRepository.Categories.Where(c => c.ParentCategoryId == id).ToArray(),
                 CatalogConfiguration.Instance.Cache.CategoryTimeout,
                 _isEnabled && useCache);
         }

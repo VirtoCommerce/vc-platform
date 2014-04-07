@@ -19,35 +19,35 @@ using VirtoCommerce.Web.Virto.Helpers;
 
 namespace VirtoCommerce.Web.Controllers
 {
-	/// <summary>
-	/// Class SearchController.
-	/// </summary>
-	public class SearchController : ControllerBase
+    /// <summary>
+    /// Class SearchController.
+    /// </summary>
+    public class SearchController : ControllerBase
     {
-		/// <summary>
-		/// The _catalog client
-		/// </summary>
+        /// <summary>
+        /// The _catalog client
+        /// </summary>
         private readonly CatalogClient _catalogClient;
-		/// <summary>
-		/// The _marketing
-		/// </summary>
+        /// <summary>
+        /// The _marketing
+        /// </summary>
         private readonly MarketingHelper _marketing;
-		/// <summary>
-		/// The _price list client
-		/// </summary>
+        /// <summary>
+        /// The _price list client
+        /// </summary>
         private readonly PriceListClient _priceListClient;
-		/// <summary>
-		/// The _store client
-		/// </summary>
+        /// <summary>
+        /// The _store client
+        /// </summary>
         private readonly StoreClient _storeClient;
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="SearchController"/> class.
-		/// </summary>
-		/// <param name="marketing">The marketing.</param>
-		/// <param name="priceListClient">The price list client.</param>
-		/// <param name="storeClient">The store client.</param>
-		/// <param name="catalogClient">The catalog client.</param>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SearchController"/> class.
+        /// </summary>
+        /// <param name="marketing">The marketing.</param>
+        /// <param name="priceListClient">The price list client.</param>
+        /// <param name="storeClient">The store client.</param>
+        /// <param name="catalogClient">The catalog client.</param>
         public SearchController(MarketingHelper marketing, PriceListClient priceListClient, StoreClient storeClient,
                                 CatalogClient catalogClient)
         {
@@ -81,56 +81,70 @@ namespace VirtoCommerce.Web.Controllers
             return View(results);
         }
 
-	    /// <summary>
-	    /// Searches within category.
-	    /// </summary>
-	    /// <param name="cat">The category.</param>
-	    /// <param name="parameters">The parameters.</param>
-	    /// <param name="name">Partial view name</param>
-	    /// <param name="criteria">Search criteria</param>
-	    /// <param name="savePreferences"></param>
-	    /// <returns>ActionResult.</returns>
+        /// <summary>
+        /// Searches within category.
+        /// </summary>
+        /// <param name="cat">The category.</param>
+        /// <param name="parameters">The parameters.</param>
+        /// <param name="name">Partial view name</param>
+        /// <param name="criteria">Search criteria</param>
+        /// <param name="savePreferences"></param>
+        /// <returns>ActionResult.</returns>
         [ChildActionOnly]
         public ActionResult SearchResultsWithinCategory(CategoryModel cat, SearchParameters parameters, string name = "Index", CatalogItemSearchCriteria criteria = null, bool savePreferences = true)
         {
             criteria = criteria ?? new CatalogItemSearchCriteria();
-		    if (cat != null)
-		    {
-		        ViewBag.Title = cat.DisplayName;
+            if (cat != null)
+            {
+                ViewBag.Title = cat.DisplayName;
                 criteria.Outlines.Add(String.Format("{0}*", _catalogClient.BuildCategoryOutline(UserHelper.CustomerSession.CatalogId, cat.Category)));
-		    }
 
-	        if (savePreferences)
-	        {
-	            RestoreSearchPreferences(parameters);
-	        }
+                var children = _catalogClient.GetChildCategoriesById(cat.CategoryId);
+                if (children != null)
+                {
+                    foreach (var child in children.OfType<Category>())
+                    {
+                        criteria.ChildCategoryFilters.Add(new ChildCategoryFilter
+                        {
+                            Code = child.Code,
+                            Name = child.Name,
+                            Outline = String.Format("{0}*", _catalogClient.BuildCategoryOutline(UserHelper.CustomerSession.CatalogId, child)),
+                        });
+                    }
+                }
+            }
 
-	        var results = SearchResults(criteria, parameters);
+            if (savePreferences)
+            {
+                RestoreSearchPreferences(parameters);
+            }
+
+            var results = SearchResults(criteria, parameters);
             return PartialView(name, results);
         }
 
-		/// <summary>
-		/// Finds the specified term.
-		/// </summary>
-		/// <param name="term">The term.</param>
-		/// <returns>ActionResult.</returns>
+        /// <summary>
+        /// Finds the specified term.
+        /// </summary>
+        /// <param name="term">The term.</param>
+        /// <returns>ActionResult.</returns>
         [DonutOutputCache(CacheProfile = "SearchCache", VaryByCustom = "storeparam")]
         public ActionResult Find(string term)
         {
-			Logger.Info("New search started: "+term);
+            Logger.Info("New search started: " + term);
             ViewBag.Title = String.Format("Searching by '{0}'".Localize(), term);
 
-			var parameters = new SearchParameters { PageSize = 15 };
-			var criteria = new CatalogItemSearchCriteria { SearchPhrase = term.EscapeSearchTerm(), IsFuzzySearch = true };
+            var parameters = new SearchParameters { PageSize = 15 };
+            var criteria = new CatalogItemSearchCriteria { SearchPhrase = term.EscapeSearchTerm(), IsFuzzySearch = true };
             var results = SearchResults(criteria, parameters);
 
             var data = from i in results.CatalogItems
-					   select new { url = Url.ItemUrl(i.CatalogItem.Item, i.CatalogItem.ParentItemId), value = i.DisplayName };
+                       select new { url = Url.ItemUrl(i.CatalogItem.Item, i.CatalogItem.ParentItemId), value = i.DisplayName };
             return Json(data.ToArray(), JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
-        public ActionResult Prices(Dictionary<string, string> itemAndOutine) 
+        public ActionResult Prices(Dictionary<string, string> itemAndOutine)
         {
             var session = UserHelper.CustomerSession;
 

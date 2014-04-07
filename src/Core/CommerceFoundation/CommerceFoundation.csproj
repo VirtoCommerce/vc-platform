@@ -180,6 +180,7 @@
     <Compile Include="Assets\Services\IAssetUrl.cs" />
     <Compile Include="Assets\Services\UploadStreamInfo.cs" />
     <Compile Include="Catalogs\CatalogConfiguration.cs" />
+    <Compile Include="Catalogs\Search\ChildCategoryFilter.cs" />
     <Compile Include="Catalogs\Services\ICatalogOutlineBuilder.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="Constants.cs" />

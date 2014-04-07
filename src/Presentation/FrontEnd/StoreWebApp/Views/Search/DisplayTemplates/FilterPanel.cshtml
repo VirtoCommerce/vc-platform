@@ -1,4 +1,14 @@
-﻿@model FilterModel[]
+﻿@using VirtoCommerce.Foundation.AppConfig.Model
+@using VirtoCommerce.Web.Client.Extensions.Routing
+@model FilterModel[]
+    
+@{
+    var tempValues = new RouteValueDictionary();
+    foreach (var key in Request.QueryString.Keys.Cast<string>().Where(key => !tempValues.ContainsKey(key)))
+    {
+        tempValues.Add(key, Request.QueryString[key]);
+    }
+}
 
 <aside class="block">
     <span class="title">@("Shop By".Localize())</span>
@@ -22,6 +32,19 @@
                                 <li class="clearfix" style="background: none;"></li>
                             </ul>
                         </li>
+                    </ol>
+                }
+                else if (group.Name.Equals("Subcategory", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    <ol>
+                        @foreach (var facet in group.Facets)
+                        {
+                            tempValues[Constants.Category] = facet.Key;
+                            <li>
+                                <a href="@Url.RouteUrl("Category", tempValues)">@facet.Name</a>
+                                <span>(@facet.Count)</span>
+                            </li>
+                        }
                     </ol>
                 }
                 else
