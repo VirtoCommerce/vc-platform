@@ -29,7 +29,7 @@
             }
         }
     });
-
+    
 };
 
 if (typeof String.prototype.trim !== 'function') {
@@ -123,30 +123,26 @@ VirtoCommerce.prototype = {
             url = url + 'placeName=' + placeName;
             i = i + 1;
         }
+        if (i > 0) {
+            $.ajax({
+                type: "GET",
+                dataType: "html",
+                url: url,
+                success: function(data) {
+                    var htmlData = $('<div/>').html(data);
 
-        $.ajax({
-            type: "GET",
-            dataType: "html",
-            url: url,
-            success: function (data)
-            {
-                var htmlData = $('<div/>').html(data);
-
-                for (var key in VirtoCommerce.DynamicContent)
-                {
-                    var selector = VirtoCommerce.DynamicContent[key];
-                    var bannerContent = htmlData.find('#' + key).html();
-                    if (typeof selector == 'function')
-                    {
-                        selector(bannerContent);
-                    }
-                    else
-                    {
-                        $(selector).html(bannerContent);
+                    for (var key in VirtoCommerce.DynamicContent) {
+                        var selector = VirtoCommerce.DynamicContent[key];
+                        var bannerContent = htmlData.find('#' + key).html();
+                        if (typeof selector == 'function') {
+                            selector(bannerContent);
+                        } else {
+                            $(selector).html(bannerContent);
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
     },
 
     updatePrices: function (items)

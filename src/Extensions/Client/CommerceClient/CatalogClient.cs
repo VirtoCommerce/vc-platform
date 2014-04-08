@@ -179,7 +179,7 @@ namespace VirtoCommerce.Client
 
                 if (!responseGroup.HasFlag(ItemResponseGroups.ItemCategories))
                 {
-                    relations = GetCategoryItemRelations(id);
+                    relations = GetCategoryItemRelations(item.ItemId);
                 }
 
                 foreach (var rel in relations)
@@ -187,7 +187,7 @@ namespace VirtoCommerce.Client
                     if (rel.CatalogId == catalogId)
                         return item;
 
-                    var category = GetCategoryById(rel.CategoryId);
+                    var category = GetCategoryById(rel.CategoryId, null);
 
                     if (category != null)
                     {
@@ -466,8 +466,8 @@ namespace VirtoCommerce.Client
             CategoryBase category = _catalogRepository.Categories.OfType<Category>()
                 .Expand(c => c.LinkedCategories)
                 .Expand(c => c.CategoryPropertyValues)
-                .FirstOrDefault(x => x.CategoryId.Equals(id, StringComparison.OrdinalIgnoreCase) 
-                    && x.CatalogId.Equals(catalogId, StringComparison.OrdinalIgnoreCase));
+                .FirstOrDefault(x => x.CategoryId.Equals(id, StringComparison.OrdinalIgnoreCase)
+                    && (string.IsNullOrEmpty(catalogId) || x.CatalogId.Equals(catalogId, StringComparison.OrdinalIgnoreCase)));
 
             if (category == null)
             {
@@ -475,7 +475,7 @@ namespace VirtoCommerce.Client
                 category = _catalogRepository.Categories.OfType<LinkedCategory>()
                     .Expand(c => c.LinkedCategories)
                     .FirstOrDefault(x => x.CategoryId.Equals(id, StringComparison.OrdinalIgnoreCase)
-                        && x.CatalogId.Equals(catalogId, StringComparison.OrdinalIgnoreCase));
+                        && (string.IsNullOrEmpty(catalogId) || x.CatalogId.Equals(catalogId, StringComparison.OrdinalIgnoreCase)));
                 if (category != null && category.IsActive)
                 {
                     //Get simple category from linked catalog
@@ -514,7 +514,11 @@ namespace VirtoCommerce.Client
         /// <returns></returns>
         public CategoryBase GetCategoryById(string id, bool useCache = true)
         {
-            var catalogId = _customerSession.CustomerSession.CatalogId;
+            return GetCategoryById(id, _customerSession.CustomerSession.CatalogId, useCache);
+        }
+
+        public CategoryBase GetCategoryById(string id, string catalogId, bool useCache = true)
+        {
             return Helper.Get(
                 CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix, string.Format(CategoryIdCacheKey, catalogId, id)),
                 () => GetCategoryByIdInternal(catalogId, id),
