@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
@@ -13,6 +15,7 @@ using VirtoCommerce.ManagementClient.Core;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.EventAggregation;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
+using VirtoCommerce.Properties;
 
 namespace VirtoCommerce.ManagementClient
 {
@@ -38,8 +41,31 @@ namespace VirtoCommerce.ManagementClient
 				{
 					NumAssignedCases = mess.Message == "0" ? "" : mess.Message;
 				}));
-		}
+			EventSystem.Subscribe<GenericEvent<Tuple<List<CultureInfo>, Action<string>>>>(xx => OnUIThread(() =>
+			{
+				AvailableGuiCultures.Clear();
 
+				xx.Message.Item1.ForEach(x =>
+					{
+						AvailableGuiCultures.Add(x);
+					});
+				if (!AvailableGuiCultures.Any(x => x.Name == "en-US"))
+				{
+					AvailableGuiCultures.Insert(0, CultureInfo.GetCultureInfo("en-US"));
+				}
+
+				if (AvailableGuiCultures.All(x => x.Name != System.Threading.Thread.CurrentThread.CurrentUICulture.Name))
+				{
+					System.Threading.Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en-US");
+				}
+
+				ChangeLanguageAction = xx.Message.Item2;
+
+				GuiCulture = System.Threading.Thread.CurrentThread.CurrentUICulture.ThreeLetterWindowsLanguageName;
+				IsGuiCulturesAvailable = true;
+				OnPropertyChanged("IsGuiCulturesAvailable");
+			}));
+		}
 
 		private void CommandInit()
 		{
@@ -52,8 +78,18 @@ namespace VirtoCommerce.ManagementClient
 			WindowResizeCommand = new DelegateCommand(RiseWindowResizeCommand);
 
 			NavigateToCustomersCommand = new DelegateCommand(NavigateToCustomers);
+
+			AvailableGuiCultures = new ObservableCollection<CultureInfo>();
+			ChangeLanguageCommand = new DelegateCommand<string>(DoChangeLanguage);
 		}
 
+		private void DoChangeLanguage(string cultureName)
+		{
+			if (ChangeLanguageAction != null)
+				ChangeLanguageAction(cultureName);
+
+			GuiCulture = System.Threading.Thread.CurrentThread.CurrentUICulture.ThreeLetterWindowsLanguageName;
+		}
 
 		#region Public Members
 
@@ -62,7 +98,7 @@ namespace VirtoCommerce.ManagementClient
 			get
 			{
 				var assembly = Assembly.GetExecutingAssembly();
-				return String.Format("{0} (Build {1})", assembly.GetInformationalVersion(), assembly.GetFileVersion());
+				return String.Format(Resources._0___Build__1__, assembly.GetInformationalVersion(), assembly.GetFileVersion());
 			}
 		}
 
@@ -175,6 +211,26 @@ namespace VirtoCommerce.ManagementClient
 			}
 		}
 
+		public string GuiCulture
+		{
+			get { return _guiCulture; }
+			set { _guiCulture = value; OnPropertyChanged(); }
+		}
+
+		public ObservableCollection<CultureInfo> AvailableGuiCultures
+		{
+			get { return _availableGuiCultures; }
+			set
+			{
+				_availableGuiCultures = value;
+				OnPropertyChanged();
+			}
+		}
+
+		public bool IsGuiCulturesAvailable { get; private set; }
+		public DelegateCommand<string> ChangeLanguageCommand { get; set; }
+		private Action<string> ChangeLanguageAction;
+
 		private string _baseUrl;
 		public string BaseUrl
 		{
@@ -199,6 +255,9 @@ namespace VirtoCommerce.ManagementClient
 		}
 
 		private int _numHorizontalDocuments;
+		private string _guiCulture;
+		private ObservableCollection<CultureInfo> _availableGuiCultures;
+
 		public int NumHorizontalDocuments
 		{
 			get { return _numHorizontalDocuments; }

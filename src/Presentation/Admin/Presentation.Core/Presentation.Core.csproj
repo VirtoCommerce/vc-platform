@@ -276,6 +276,7 @@
     <Compile Include="Infrastructure\Dialogs\ErrorDialog.xaml.cs">
       <DependentUpon>ErrorDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Infrastructure\EventAggregation\GenericEvent.cs" />
     <Compile Include="Infrastructure\EventAggregation\EventSystem.cs" />
     <Compile Include="Infrastructure\EventAggregation\GoToOrderEvent.cs" />
     <Compile Include="Infrastructure\EventAggregation\ShellMessageEvent.cs" />

@@ -82,6 +82,7 @@
 				<ColumnDefinition Width="Auto"/>
 				<ColumnDefinition Width="Auto"/>
 				<ColumnDefinition Width="Auto"/>
+				<ColumnDefinition Width="Auto"/>
 			</Grid.ColumnDefinitions>
 
 			<!--New Modules Selector Button-->
@@ -160,7 +161,39 @@
 					VerticalAlignment="Center" HorizontalAlignment="Center" Margin="3,3,4,6" FontSize="14" />
 			</Grid>
 			<TextBlock Grid.Column="6" Text="{Binding UserName, TargetNullValue='', UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center"/>
+			<!--languages-->
+			<!--<Menu Grid.Column="7" Style="{StaticResource Virto_Shell_MainMenu_Menu_Style}" Visibility="{Binding IsGuiCulturesAvailable, Converter={x:Static core_Converters:ToVisibilityConverter.Current}}">
+				<MenuItem Style="{x:Null}" ItemsSource="{Binding AvailableGuiCultures}" ItemContainerStyle="{StaticResource Virto_MenuItem_MainMenuDocuments_Vertical_Style}" Cursor="Hand">
+					<MenuItem.Header>
+						<TextBlock Text="{Binding GuiCulture}" Margin="5,0" Padding="5,0" FontSize="24" Background="{StaticResource Virto_MainMenu_Background_Brush}"/>
+					</MenuItem.Header>
+				</MenuItem>
+			</Menu>-->
+			<TextBlock Grid.Column="7" Text="{Binding GuiCulture}"
+					   Visibility="{Binding IsGuiCulturesAvailable, Converter={x:Static core_Converters:ToVisibilityConverter.Current}}"
+					   Margin="5,0" Padding="5,0">
+				<TextBlock.ContextMenu>
+					<ContextMenu ItemsSource="{Binding AvailableGuiCultures}">
+						<ContextMenu.ItemContainerStyle>
+							<Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource {x:Type MenuItem}}">
+								<Setter Property="Header">
+									<Setter.Value>
+										<!--<MultiBinding StringFormat="{}{0} ({1})">
+											<Binding Path="DisplayName" />-->
+											<Binding Path="Name" />
+										<!--</MultiBinding>-->
+									</Setter.Value>
+								</Setter>
+								<Setter Property="Tag" Value="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.DataContext}"/>
+								<Setter Property="Command" Value="{Binding DataContext.ChangeLanguageCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+								<Setter Property="CommandParameter" Value="{Binding Name}"/>
+							</Style>
+						</ContextMenu.ItemContainerStyle>
+					</ContextMenu>
+				</TextBlock.ContextMenu>
+			</TextBlock>
 		</Grid>
+
 		<Grid Grid.Column="0" Grid.ColumnSpan="5" Grid.Row="0" Grid.RowSpan="2" >
 			<Popup  VerticalOffset="160" HorizontalOffset="0" Width="{Binding ElementName=MainShellGrid, Path=ActualWidth}"
 				IsOpen="{Binding IsMainMenuVisible}" StaysOpen="False" AllowsTransparency="True" Placement="Top">

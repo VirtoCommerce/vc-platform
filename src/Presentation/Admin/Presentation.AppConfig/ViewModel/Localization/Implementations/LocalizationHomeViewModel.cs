@@ -43,6 +43,8 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 			_repositoryFactory = repositoryFactory;
 			_elementRepository = elementRepository;
 			InitCommands();
+
+			SendCulturesToShell();
 		}
 
 		#endregion
@@ -59,6 +61,22 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 
 			CommonConfirmRequest = new InteractionRequest<Confirmation>();
 			CommonNotifyRequest = new InteractionRequest<Notification>();
+		}
+
+		private void SendCulturesToShell()
+		{
+			var cultures = _elementRepository.EnabledLanguages().Distinct().ToList();
+
+			var msg = new GenericEvent<Tuple<List<CultureInfo>, Action<string>>> { Message = new Tuple<List<CultureInfo>, Action<string>>(cultures, DoChangeCulture) };
+			EventSystem.Publish(msg);
+		}
+
+		private void DoChangeCulture(string cultureName)
+		{
+			System.Threading.Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo(cultureName);
+
+			// force values update
+			LocalizationManager.UpdateValues();
 		}
 
 		#endregion
