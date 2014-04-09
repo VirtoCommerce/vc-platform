@@ -176,9 +176,15 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 					{
 						if (DeleteSeoKeywords(item))
 						{
-							repository.Attach(item);
-							repository.Remove(item);
-							repository.UnitOfWork.Commit();
+							if (repository is IStoreRepository)
+							{
+								var temp = ((IStoreRepository)repository).Stores.Where(store => store.StoreId == item.StoreId).FirstOrDefault();
+								if (temp != null)
+								{
+									repository.Remove(temp);
+									repository.UnitOfWork.Commit();
+								}
+							}
 						}
 					});
 					OnUIThread(() =>
