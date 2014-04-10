@@ -53,7 +53,7 @@ jQuery.fn.mainSlider = function(options)
                 }
 
                 $('.nav li', self).eq(index).addClass('active').siblings().removeClass('active');
-                $('.slider', self).stop(true, true).animate({ 'margin-left': '-' + parseInt(index * elWidth) + 'px' }, 500);
+                $('.slider', self).stop().animate({ 'margin-left': '-' + parseInt(index * elWidth) + 'px' }, 500);
             }
         });
 
