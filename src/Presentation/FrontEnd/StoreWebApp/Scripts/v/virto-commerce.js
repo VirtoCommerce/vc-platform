@@ -81,36 +81,38 @@ VirtoCommerce.prototype = {
     },
     
 
-    initCameraSliders: function (selector) {
+    initCameraSliders: function (selector, options) {
         
         if (selector == undefined) {
             selector = "";
         } 
         
         selector = (selector + " .camera-slides").trim();
+        
+        options = jQuery.extend({
+            loader: 'bar',
+            playPause: false,
+            barPosition: 'top',
+            loaderColor: '#322C29',
+            loaderBgColor: 'rgba(0, 0, 0, 0)',
+            height: '25%'
+        }, options);
 
         if ($(selector).length > 0) {
-            $(selector).camera({
-                loader: 'bar',
-                playPause: false,
-                barPosition: 'top',
-                loaderColor: '#322C29',
-                loaderBgColor: 'rgba(0, 0, 0, 0)',
-                height: '25%'
-            });
+            $(selector).camera(options);
         }
     },
     
-    initHtmlSliders: function (selector) {
+    initHtmlSliders: function (selector, options) {
 
         if (selector == undefined) {
             selector = "";
         }
-        
+
         selector = (selector + " .html-slides").trim();
 
         if ($(selector).length > 0) {
-            $(selector).mainSlider();
+            $(selector).mainSlider(options);
         }
     },
     
