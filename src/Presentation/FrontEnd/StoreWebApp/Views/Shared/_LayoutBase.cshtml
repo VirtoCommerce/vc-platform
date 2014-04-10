@@ -6,9 +6,9 @@
 <head lang="en">
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <meta name="keywords" content="@ViewBag.MetaKeywords"/>
-    <meta name="description" content="@ViewBag.MetaDescription"/>
-    <meta name="title" content="@ViewBag.Title"/>
+    <meta name="keywords" content="@ViewBag.MetaKeywords" />
+    <meta name="description" content="@ViewBag.MetaDescription" />
+    <meta name="title" content="@ViewBag.Title" />
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/themes/base/css")
     @Styles.Render("~/Content/themes/default/css")
@@ -29,53 +29,60 @@
                 <div class="rubber clearfix">
                     <div @*class="grid_4"*@>
                         <div class="head-switch">
-                            <span>@("Store".Localize()):
-                                <span class="current">
-                                    @{
-                                        Html.RenderPartial("StoreParams");
-                                    }
-                                </span>
+                            <span>
+                                @("Store".Localize()):
+                            <span class="current">
+                                @{
+                                    Html.RenderPartial("StoreParams");
+                                }
                             </span>
-                            <ul>
-                                <li>
-                                    <div class="language">
-                                        @{Html.RenderPartial("Languages");}
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="store">
-                                        @{Html.RenderAction("StorePicker", "Store", true);}
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="currency">
-                                        @{Html.RenderAction("Currencies", "Store", true);}
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
+                        </span>
+                        <ul>
+                            <li>
+                                <div class="language">
+                                    @{Html.RenderPartial("Languages");}
+                                </div>
+                            </li>
+                            <li>
+                                <div class="store">
+                                    @{Html.RenderAction("StorePicker", "Store", true);}
+                                </div>
+                            </li>
+                            <li>
+                                <div class="currency">
+                                    @{Html.RenderAction("Currencies", "Store", true);}
+                                </div>
+                            </li>
+                        </ul>
                     </div>
-                    <div @*class="grid_8"*@>
-                        <ul class="head-links"></ul>
-                        @* @{Html.RenderAction("QuickAccess", "Store", true);}*@
-                    </div>
+                </div>
+                <div @*class="grid_8"*@>
+                    <ul class="head-links"></ul>
+                    @* @{Html.RenderAction("QuickAccess", "Store", true);}*@
                 </div>
             </div>
-            <header role="banner" class="header">
-                <div class="rubber clearfix">
-                    <div class="grid_12">
-                        <p class="">
-                            <a href="@Url.RouteUrl("Store")"></a>
-                        </p>
-                        @RenderSection("Navigation", false)
-                        @RenderSection("MiniActions", false)
-                    </div>
-                </div>
-            </header>
         </div>
-        @RenderSection("Slider", false)
-        <div class="article-wrap">
-            <article role="main" class="article clearfix">
+        <header role="banner" class="header">
+            <div class="rubber clearfix">
+                <div class="grid_12">
+                    <p class="">
+                        <a href="@Url.RouteUrl("Store")"></a>
+                    </p>
+                    @RenderSection("Navigation", false)
+                    @RenderSection("MiniActions", false)
+                </div>
+            </div>
+        </header>
+    </div>
+    @RenderSection("Slider", false)
+    <div class="article-wrap">
+        <article role="main" class="article clearfix">
+            @{
+                var breadcrumb = Html.MvcSiteMap().SiteMapPath();
+                var showPageNav = !string.IsNullOrEmpty(breadcrumb.ToString().Trim()) || !string.IsNullOrEmpty(ViewBag.PageTitle as string) || IsSectionDefined("PageTitle");
+            }
+            @if (showPageNav)
+            {
                 <div class="page-nav">
                     <div class="rubber">
                         @Html.MvcSiteMap().SiteMapPath()
@@ -88,75 +95,74 @@
                         }
                     </div>
                 </div>
-                <div class="rubber">
+            }
+            <div class="rubber">
+                @{
+                    var messages = Html.SharedViewBag().Messages as MessagesModel;
+                }
+                <ul id="messages" class="messages" style="@(messages != null && messages.Any() ? "" : "display:none;")">
                     @{
-                        var messages = Html.SharedViewBag().Messages as MessagesModel;
-                    }
-                    <ul id="messages" class="messages" style="@(messages != null && messages.Any() ? "" : "display:none;")">
-                        @{
-                            if (messages != null && messages.Any())
-                            {
+                        if (messages != null && messages.Any())
+                        {
 
-                                foreach (var messageGrp in messages.GroupBy(m => m.Type))
-                                {
-                            <li class="@messageGrp.Key.ToString().ToLower()">
-                                <ul>
-                                    @foreach (var message in messageGrp)
-                                    {
-                                        <li><span>@message.Text</span></li>
-                                    }
-                                </ul>
-                            </li>
-                                }
+                            foreach (var messageGrp in messages.GroupBy(m => m.Type))
+                            {
+                                <li class="@messageGrp.Key.ToString().ToLower()">
+                                    <ul>
+                                        @foreach (var message in messageGrp)
+                                        {
+                                            <li><span>@message.Text</span></li>
+                                        }
+                                    </ul>
+                                </li>
                             }
                         }
-                    </ul>
-                    @RenderBody()
-                </div>
-                @RenderSection("Bottom", false)
-            </article>
-        </div>
-        @{
-            Html.RenderAction("Footer", "Store", true);
-        }
+                    }
+                </ul>
+                @RenderBody()
+            </div>
+            @RenderSection("Bottom", false)
+        </article>
     </div>
+    @{
+        Html.RenderAction("Footer", "Store", true);
+    }
+</div>
 
 
-    @Scripts.Render("~/bundles/jqueryui")
-    @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/bundles/jquerymisc")
-    @RenderSection("scripts", required: false)
+@Scripts.Render("~/bundles/jqueryui")
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/jquerymisc")
+@RenderSection("scripts", required: false)
 
 
-    <!-- Facebook -->
-    <div id="fb-root"></div>
-    <script type="text/javascript">
-    	(function (d, s, id)
-    	{
-    		var js, fjs = d.getElementsByTagName(s)[0];
-    		if (d.getElementById(id)) return;
-    		js = d.createElement(s); js.id = id;
-    		js.src = "//connect.facebook.net/en-US/all.js#xfbml=1&appId=593495770737439";
-    		fjs.parentNode.insertBefore(js, fjs);
-    	}(document, 'script', 'facebook-jssdk'));
-    </script>
+<!-- Facebook -->
+<div id="fb-root"></div>
+<script type="text/javascript">
+    (function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en-US/all.js#xfbml=1&appId=593495770737439";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+</script>
 
-    <!-- Process sliders -->
-    <script type="text/javascript">
-    	$(function ()
-    	{
-    		VirtoCommerce.renderDynamicContent();
-    		VirtoCommerce.updateQuickLinks();
-    		VirtoCart.updateCartOptions();
-    		VirtoCommerce.initSliders(); 
-    		$('.slider-products').virtoSlider();
-    		//$(document).ajaxError(
-    		//    function myErrorHandler(event, xhr, ajaxOptions, thrownError) {
-    		//    alert("There was an ajax error!");
-    		//});
-    	});
-    </script>
-    @* No need to render follow services here, but following template can be used as an example:
+<!-- Process sliders -->
+<script type="text/javascript">
+    $(function () {
+        VirtoCommerce.renderDynamicContent();
+        VirtoCommerce.updateQuickLinks();
+        VirtoCart.updateCartOptions();
+        VirtoCommerce.initSliders();
+        $('.slider-products').virtoSlider();
+        //$(document).ajaxError(
+        //    function myErrorHandler(event, xhr, ajaxOptions, thrownError) {
+        //    alert("There was an ajax error!");
+        //});
+    });
+</script>
+@* No need to render follow services here, but following template can be used as an example:
     @if (SettingsHelper.GetSettings("FollowServices").Any())
     {
         <!-- AddThis Smart Layers BEGIN -->
@@ -188,20 +194,20 @@
 
                         <text>
                 layers.follow.services.push({
-						@if (followStrSplit.Length > 0)
+                        @if (followStrSplit.Length > 0)
       {
-						    @:'service': '@followStrSplit[0]'
-                                                                                                                                                				    						}
-						@if (followStrSplit.Length > 1)
+                            @:'service': '@followStrSplit[0]'
+                                                                                                                                                                                            }
+                        @if (followStrSplit.Length > 1)
       {
-						    @:, 'id': '@followStrSplit[1]'
-                                                                                                                                                				    						}
-						@if (followStrSplit.Length > 2)
+                            @:, 'id': '@followStrSplit[1]'
+                                                                                                                                                                                            }
+                        @if (followStrSplit.Length > 2)
       {
-						    @:, 'usertype': '@followStrSplit[2]'
-                                                                                                                                                				    						}
+                            @:, 'usertype': '@followStrSplit[2]'
+                                                                                                                                                                                            }
                 });
-				</text>
+                </text>
                     }
 
                 // now render Recommended and What's Next Layers
@@ -216,15 +222,15 @@
         </script>
         <!-- AddThis Smart Layers END -->
     }
-    *@
+*@
 
-    @{
-        var firstOrDefault = StoreHelper.GetSettings("AnalyticsField").FirstOrDefault() ??
-                             (object)SettingsHelper.GetSettings("AnalyticsField").FirstOrDefault();
-        if (firstOrDefault != null)
-        {
+@{
+    var firstOrDefault = StoreHelper.GetSettings("AnalyticsField").FirstOrDefault() ??
+                         (object)SettingsHelper.GetSettings("AnalyticsField").FirstOrDefault();
+    if (firstOrDefault != null)
+    {
         @Html.Raw(firstOrDefault.ToString())
-        }
     }
+}
 </body>
 </html>
