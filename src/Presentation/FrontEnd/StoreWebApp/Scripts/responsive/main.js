@@ -342,7 +342,7 @@
 		$(window).scroll(function (){
 			var scroll = $(this).scrollTop();
 
-			if(scroll > 50)
+			if (scroll >= parseInt($('.head-top').height()) + 5)
 			{
 				$('a.top').stop().animate({bottom: '100px', opacity: 1}, 500);
 			}

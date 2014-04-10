@@ -1087,11 +1087,95 @@ button.proceed:hover span:after
     }
 
 /* --- Slider --- */
-.main-slider .container
+/*.main-slider .container
 {
     background: #f4f4f2;
     padding: 7px 0 20px;
+}*/
+
+.main-slider .container
+{
+    background: #fff;
+    border: 1px solid #ededed;
+    margin: 0 15px;
+    overflow: hidden;
+
+    -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+            box-sizing: border-box;
 }
+
+    .main-slider .container .slider
+    {
+        width: 10000px;
+    }
+
+        .main-slider .container .slider li
+        {
+            float: left;
+            padding: 15px;
+
+            -webkit-box-sizing: border-box;
+               -moz-box-sizing: border-box;
+                    box-sizing: border-box;
+        }
+
+            .main-slider .container .slider li .image
+            {
+                float: left;
+                width: 220px;
+            }
+
+                .main-slider .container .slider li .image img
+                {
+                    display: block;
+                    max-width: 100%;
+                }
+
+            .main-slider .container .slider li .info
+            {
+                display: block;
+                margin: 0 0 0 260px;
+                overflow: hidden;
+            }
+
+                .main-slider .container .slider li .info h2
+                {
+                    letter-spacing: 0;
+                    margin: 0 0 15px;
+                }
+
+    .main-slider .container .nav
+    {
+        background: #f4f4f2;
+        text-align: center;
+    }
+
+        .main-slider .container .nav li
+        {
+            background: none repeat scroll 0 0 #ededed;
+            cursor: pointer;
+            display: inline-block;
+            font-size: 0;
+            height: 10px;
+            margin: 10px 5px;
+            vertical-align: middle;
+            width: 10px;
+
+            -webkit-border-radius: 50%;
+               -moz-border-radius: 50%;
+                    border-radius: 50%;
+
+            -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, .3) inset;
+               -moz-box-shadow: 0 0 3px rgba(0, 0, 0, .3) inset;
+                    box-shadow: 0 0 3px rgba(0, 0, 0, .3) inset;
+        }
+
+        .main-slider .container .nav li:hover,
+        .main-slider .container .nav li.active
+        {
+            background: #2e599e;
+        }
 
 .main-slider .camera_prev,
 .main-slider .camera_next

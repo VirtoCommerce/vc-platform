@@ -648,6 +648,7 @@
     <Content Include="Scripts\responsive\camera.js" />
     <Content Include="Scripts\responsive\jquery.easing.1.3.js" />
     <Content Include="Scripts\responsive\main.js" />
+    <Content Include="Scripts\responsive\main.slider.js" />
     <Content Include="Scripts\responsive\virto.slider.js" />
     <Content Include="Scripts\v\validation.js" />
     <Content Include="Scripts\v\virto-checkout.js" />

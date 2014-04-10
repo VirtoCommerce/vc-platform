@@ -79,12 +79,18 @@ VirtoCommerce.prototype = {
             }
         });
     },
+    
 
-    initSliders: function ()
-    {
-        if ($('.main-slider .container').length > 0)
-        {
-            $('.main-slider .container').camera({
+    initCameraSliders: function (selector) {
+        
+        if (selector == undefined) {
+            selector = "";
+        } 
+        
+        selector = (selector + " .camera-slides").trim();
+
+        if ($(selector).length > 0) {
+            $(selector).camera({
                 loader: 'bar',
                 playPause: false,
                 barPosition: 'top',
@@ -92,10 +98,25 @@ VirtoCommerce.prototype = {
                 loaderBgColor: 'rgba(0, 0, 0, 0)',
                 height: '25%'
             });
-
-            $('.main-slider .container').removeAttr('style');
-            $('.main-slider .container').css('display', 'block');
         }
+    },
+    
+    initHtmlSliders: function (selector) {
+
+        if (selector == undefined) {
+            selector = "";
+        }
+        
+        selector = (selector + " .html-slides").trim();
+
+        if ($(selector).length > 0) {
+            $(selector).mainSlider();
+        }
+    },
+    
+    initSliders: function () {
+        this.initCameraSliders();
+        this.initHtmlSliders();
     },
 
     //Register dynamic content
