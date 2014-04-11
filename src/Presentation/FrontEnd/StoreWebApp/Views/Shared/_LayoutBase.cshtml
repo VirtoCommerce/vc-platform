@@ -78,14 +78,14 @@
     <div class="article-wrap">
         <article role="main" class="article clearfix">
             @{
-                var breadcrumb = Html.MvcSiteMap().SiteMapPath();
+                var breadcrumb = Html.MvcSiteMap().SiteMapPath(null, new { name = "BreadCrumb" });
                 var showPageNav = !string.IsNullOrEmpty(breadcrumb.ToString().Trim()) || !string.IsNullOrEmpty(ViewBag.PageTitle as string) || IsSectionDefined("PageTitle");
             }
             @if (showPageNav)
             {
                 <div class="page-nav">
                     <div class="rubber">
-                        @Html.MvcSiteMap().SiteMapPath()
+                        @breadcrumb
                         @if (!string.IsNullOrEmpty(ViewBag.PageTitle as string) || IsSectionDefined("PageTitle"))
                         {
                             <div class="title clearfix">

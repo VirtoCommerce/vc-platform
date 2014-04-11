@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Data.Entity;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using VirtoCommerce.Foundation.AppConfig;
@@ -334,9 +334,9 @@ namespace VirtoCommerce.Client.Globalization.Repository
         /// <returns>
         /// IQueryable{Localization}.
         /// </returns>
-		private Localization[] GetLocalizations()
+		private IEnumerable<Localization> GetLocalizations()
 		{
-			return Helper.Get(GetCacheKey(LocalizeElementsCacheKey), () =>  _repository.Localizations.ToArrayAsync().Result,
+			return Helper.Get(GetCacheKey(LocalizeElementsCacheKey), () =>  _repository.Localizations.ToArray(),
 			   AppConfigConfiguration.Instance.Cache.LocalizationTimeout,
 			   AppConfigConfiguration.Instance.Cache.IsEnabled);
 		}
@@ -361,17 +361,6 @@ namespace VirtoCommerce.Client.Globalization.Repository
 		private string GetCacheKey(string keyTemplate, Element element)
 		{
 			return GetCacheKey(keyTemplate, element.Name, element.Category, element.Culture);
-		}
-
-        /// <summary>
-        /// Gets the cache key.
-        /// </summary>
-        /// <param name="keyTemplate">The key template.</param>
-        /// <param name="element">The element.</param>
-        /// <returns>System.String.</returns>
-		private string GetCacheKey(string keyTemplate, Localization element)
-		{
-			return GetCacheKey(keyTemplate, element.Name, element.Category, element.LanguageCode);
 		}
 
 		#endregion

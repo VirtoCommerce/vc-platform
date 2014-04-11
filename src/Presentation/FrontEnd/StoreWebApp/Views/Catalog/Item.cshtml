@@ -77,7 +77,7 @@
                             <div class="products-previews">
                                 <div class="scroll">
                                     <ul class="slider-list">
-                                        @foreach (var asset in Model.CatalogItem.ItemAssets.OrderBy(x => x.SortOrder).Where(a => a.GroupName.Equals("primaryimage") || a.GroupName.Equals("images")))
+                                        @foreach (var asset in Model.CatalogItem.ItemAssets.OrderBy(x => x.SortOrder).Where(a => a.GroupName.Equals("primaryimage.thumb") || a.GroupName.Equals("images.thumb")))
                                         {
                                             <li>
                                                 <a href='@Url.Image(asset)'>

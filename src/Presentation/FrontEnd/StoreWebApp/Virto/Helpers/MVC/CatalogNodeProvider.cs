@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using MvcSiteMapProvider;
+using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.Catalogs.Model;
+using VirtoCommerce.Foundation.Catalogs.Services;
+using VirtoCommerce.Web.Client.Extensions.Routing;
 using VirtoCommerce.Web.Client.Helpers;
 
 
@@ -16,13 +19,19 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC
             var nodes = new List<DynamicNode>();
             foreach (var category in catalog.CategoryBases.OfType<Category>().Where(x => x.IsActive).OrderByDescending(x => x.Priority))
             {
+                var outline = new BrowsingOutline(CartHelper.CatalogOutlineBuilder.BuildCategoryOutline(StoreHelper.CustomerSession.CatalogId, CartHelper.CatalogClient.GetCategory(category.Code)));
+
                 var pNode = new DynamicNode
                 {
                     Action = "Display",
                     Title = category.Name,
                     Key = category.CategoryId,
                     ParentKey = category.ParentCategoryId,
-                    RouteValues = new Dictionary<string, object> {{"category", category.Code}},
+                    RouteValues = new Dictionary<string, object>
+                    {
+                        { Constants.Category, SettingsHelper.SeoEncode(outline.ToString(), SeoUrlKeywordTypes.Category) }
+                    },
+                    PreservedRouteParameters = new[] { Constants.Language, Constants.Store },
                 };
 
                 nodes.Add(pNode);
@@ -38,7 +47,7 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC
                         Key = category.CategoryId + "AUDIO",
                         ParentKey = category.CategoryId,
                         ImageUrl = "~/Content/themes/default/images/menu/mobiles.png",
-                        RouteValues = new Dictionary<string, object> { { "category", "audio-mp3" } },
+                        RouteValues = new Dictionary<string, object> { { Constants.Category, "audio-mp3" } },
                     });
 
                     nodes.Add(new DynamicNode
@@ -46,21 +55,21 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC
                         Action = "Display",
                         Title = "Samsung",
                         ParentKey = category.CategoryId + "AUDIO",
-                        RouteValues = new Dictionary<string, object> { { "category", "audio-mp3" }, {"f_Brand", "samsung"} },
+                        RouteValues = new Dictionary<string, object> { { Constants.Category, "audio-mp3" }, {"f_Brand", "samsung"} },
                     });
                     nodes.Add(new DynamicNode
                     {
                         Action = "Display",
                         Title = "sony",
                         ParentKey = category.CategoryId + "AUDIO",
-                        RouteValues = new Dictionary<string, object> { { "category", "audio-mp3" }, { "f_Brand", "sony" } },
+                        RouteValues = new Dictionary<string, object> { { Constants.Category, "audio-mp3" }, { "f_Brand", "sony" } },
                     });
                     nodes.Add(new DynamicNode
                     {
                         Action = "Display",
                         Title = "apple",
                         ParentKey = category.CategoryId + "AUDIO",
-                        RouteValues = new Dictionary<string, object> { { "category", "audio-mp3" }, { "f_Brand", "apple" } },
+                        RouteValues = new Dictionary<string, object> { { Constants.Category, "audio-mp3" }, { "f_Brand", "apple" } },
                     });
 
                     nodes.Add(new DynamicNode
@@ -70,7 +79,7 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC
                         Key = category.CategoryId + "COMPUTERS",
                         ParentKey = category.CategoryId,
                         ImageUrl = "~/Content/themes/default/images/menu/computers.png",
-                        RouteValues = new Dictionary<string, object> { { "category", "computers-tablets" } },
+                        RouteValues = new Dictionary<string, object> { { Constants.Category, "computers-tablets" } },
                     });
 
                     nodes.Add(new DynamicNode
@@ -78,21 +87,21 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC
                         Action = "Display",
                         Title = "Samsung",
                         ParentKey = category.CategoryId + "COMPUTERS",
-                        RouteValues = new Dictionary<string, object> { { "category", "computers-tablets" }, { "f_Brand", "samsung" } },
+                        RouteValues = new Dictionary<string, object> { { Constants.Category, "computers-tablets" }, { "f_Brand", "samsung" } },
                     });
                     nodes.Add(new DynamicNode
                     {
                         Action = "Display",
                         Title = "sony",
                         ParentKey = category.CategoryId + "COMPUTERS",
-                        RouteValues = new Dictionary<string, object> { { "category", "computers-tablets" }, { "f_Brand", "sony" } },
+                        RouteValues = new Dictionary<string, object> { { Constants.Category, "computers-tablets" }, { "f_Brand", "sony" } },
                     });
                     nodes.Add(new DynamicNode
                     {
                         Action = "Display",
                         Title = "apple",
                         ParentKey = category.CategoryId + "COMPUTERS",
-                        RouteValues = new Dictionary<string, object> { { "category", "computers-tablets" }, { "f_Brand", "apple" } },
+                        RouteValues = new Dictionary<string, object> { { Constants.Category, "computers-tablets" }, { "f_Brand", "apple" } },
                     });
 
                     nodes.Add(new DynamicNode
@@ -102,7 +111,7 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC
                         Key = category.CategoryId + "CAMERAS",
                         ParentKey = category.CategoryId,
                         ImageUrl = "~/Content/themes/default/images/menu/Cameras.png",
-                        RouteValues = new Dictionary<string, object> { { "category", "cameras" } },
+                        RouteValues = new Dictionary<string, object> { { Constants.Category, "cameras" } },
                     });
 
                     nodes.Add(new DynamicNode
@@ -110,14 +119,14 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC
                         Action = "Display",
                         Title = "Samsung",
                         ParentKey = category.CategoryId + "CAMERAS",
-                        RouteValues = new Dictionary<string, object> { { "category", "cameras" }, { "f_Brand", "samsung" } },
+                        RouteValues = new Dictionary<string, object> { { Constants.Category, "cameras" }, { "f_Brand", "samsung" } },
                     });
                     nodes.Add(new DynamicNode
                     {
                         Action = "Display",
                         Title = "sony",
                         ParentKey = category.CategoryId + "CAMERAS",
-                        RouteValues = new Dictionary<string, object> { { "category", "cameras" }, { "f_Brand", "sony" } },
+                        RouteValues = new Dictionary<string, object> { { Constants.Category, "cameras" }, { "f_Brand", "sony" } },
                     });
 
                     nodes.Add(new DynamicNode
@@ -127,7 +136,7 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC
                         Key = category.CategoryId + "TVVIDEO",
                         ParentKey = category.CategoryId,
                         ImageUrl = "~/Content/themes/default/images/menu/accessories.png",
-                        RouteValues = new Dictionary<string, object> { { "category", "tv-video" } },
+                        RouteValues = new Dictionary<string, object> { { Constants.Category, "tv-video" } },
                     });
 
                     nodes.Add(new DynamicNode
@@ -135,14 +144,14 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC
                         Action = "Display",
                         Title = "Samsung",
                         ParentKey = category.CategoryId + "TVVIDEO",
-                        RouteValues = new Dictionary<string, object> { { "category", "tv-video" }, { "f_Brand", "samsung" } },
+                        RouteValues = new Dictionary<string, object> { { Constants.Category, "tv-video" }, { "f_Brand", "samsung" } },
                     });
                     nodes.Add(new DynamicNode
                     {
                         Action = "Display",
                         Title = "sony",
                         ParentKey = category.CategoryId + "TVVIDEO",
-                        RouteValues = new Dictionary<string, object> { { "category", "tv-video" }, { "f_Brand", "sony" } },
+                        RouteValues = new Dictionary<string, object> { { Constants.Category, "tv-video" }, { "f_Brand", "sony" } },
                     });
                 }
                 #endregion

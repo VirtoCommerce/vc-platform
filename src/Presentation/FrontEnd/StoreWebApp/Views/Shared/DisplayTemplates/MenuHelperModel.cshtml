@@ -16,7 +16,7 @@
     @foreach (var node in Model.Nodes)
     {
         string template = node.Attributes.ContainsKey("Template") ? node.Attributes["Template"].ToString() : "SiteMapNodeModelList";
-        <li>
+        <li class="@(node.IsCurrentNode?"active":"")">
             @Html.DisplayFor(m => node, "TopMenuNodeModel")
             @if (node.Children.Any())
             {

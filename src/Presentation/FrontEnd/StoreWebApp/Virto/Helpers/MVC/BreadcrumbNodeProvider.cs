@@ -12,11 +12,6 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC
             {
                 new DynamicNode
                 {
-                    Action = "Display",
-                    PreservedRouteParameters = new[] {Constants.Language, Constants.Store, Constants.Category},
-                },
-                new DynamicNode
-                {
                     Action = "DisplayItem",
                     PreservedRouteParameters = new[] {Constants.Language, Constants.Store, Constants.Category, Constants.Item},
                 }

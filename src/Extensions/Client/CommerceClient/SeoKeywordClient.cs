@@ -54,7 +54,7 @@ namespace VirtoCommerce.Client
             return CacheHelper.Get(
                 CacheHelper.CreateCacheKey(Constants.SeoCachePrefix,AllSeoKeywordCacheKey),
                 () => _appConfigRepository.SeoUrlKeywords
-                    .Where(s => s.IsActive).ToArrayAsync().Result, AppConfigConfiguration.Instance.Cache.SeoKeywordsTimeout, _isEnabled);
+                    .Where(s => s.IsActive).ToArray(), AppConfigConfiguration.Instance.Cache.SeoKeywordsTimeout, _isEnabled);
         }
 
         CacheHelper _cacheHelper;

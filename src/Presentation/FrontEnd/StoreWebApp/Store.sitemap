@@ -3,7 +3,10 @@
   <mvcSiteMapNode title="Home" controller="Home" action="Index" changeFrequency="Always" updatePriority="Normal">
     <mvcSiteMapNode title="Home" key="home"  action="Index" visibility="MainMenu,!*">
        <!-- Categories are created dynamically from database-->
-      <mvcSiteMapNode title="Categories" controller="Catalog" dynamicNodeProvider="VirtoCommerce.Web.Virto.Helpers.MVC.CatalogNodeProvider, VirtoCommerce.Web"></mvcSiteMapNode>
+      <mvcSiteMapNode title="Categories" controller="Catalog" dynamicNodeProvider="VirtoCommerce.Web.Virto.Helpers.MVC.CatalogNodeProvider, VirtoCommerce.Web">
+        <mvcSiteMapNode title="Detail" controller="Catalog" dynamicNodeProvider="VirtoCommerce.Web.Virto.Helpers.MVC.BreadcrumbNodeProvider, VirtoCommerce.Web" visibility="BreadCrumb,!*">
+        </mvcSiteMapNode>
+      </mvcSiteMapNode>
     </mvcSiteMapNode>   
     <!--Used for account page side menu-->
     <mvcSiteMapNode key="account" title="Account Dashboard" controller="Account" action="Index" changeFrequency="Always" visibility="account,!*">
@@ -12,8 +15,6 @@
       <mvcSiteMapNode title="My Orders" action="Orders"/>
       <mvcSiteMapNode title="My Wishlist" action="WishList"/>
       <mvcSiteMapNode title="My Returns"  action="RmaReturns"/>
-    </mvcSiteMapNode>
-    <!-- Special node for building breadcrums-->
-    <mvcSiteMapNode title="Breadcrumb" controller="Catalog" dynamicNodeProvider="VirtoCommerce.Web.Virto.Helpers.MVC.BreadcrumbNodeProvider, VirtoCommerce.Web"></mvcSiteMapNode>   
+    </mvcSiteMapNode> 
   </mvcSiteMapNode>
 </mvcSiteMap>
