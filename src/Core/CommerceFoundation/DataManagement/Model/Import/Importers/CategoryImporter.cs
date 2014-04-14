@@ -25,7 +25,7 @@ namespace VirtoCommerce.Foundation.Importing.Model
 			var categoryCode = new ImportProperty { Name = "Code", DisplayName = "Category Code", IsRequiredProperty = true, IsEntityProperty = true, EntityImporterId = Name };
 			var categoryIsActive = new ImportProperty { Name = "IsActive", DisplayName = "Is Active", IsRequiredProperty = false, IsEntityProperty = true, EntityImporterId = Name, DefaultValue = "True", IsEnumValuesProperty = true, EnumValues = { "True", "False" } };
 			var categoryPriority = new ImportProperty { Name = "Priority", DisplayName = "Priority", IsRequiredProperty = false, IsEntityProperty = true, EntityImporterId = Name, DefaultValue = "1" };
-			var categoryParentId = new ImportProperty { Name = "ParentCategoryId", DisplayName = "Parent category code", IsRequiredProperty = true, IsEntityProperty = true, EntityImporterId = Name };
+            var categoryParentId = new ImportProperty { Name = "ParentCategoryId", DisplayName = "Parent category code", IsRequiredProperty = false, IsEntityProperty = true, EntityImporterId = Name };
 			var categoryName = new ImportProperty { Name = "Name", DisplayName = "Category name", IsRequiredProperty = true, IsEntityProperty = true, EntityImporterId = Name };
 			var categoryStartDate = new ImportProperty { Name = "StartDate", DisplayName = "Start date", IsRequiredProperty = true, IsEntityProperty = true, EntityImporterId = Name, DefaultValue = DateTime.Today.ToShortDateString() };
 			var categoryEndDate = new ImportProperty { Name = "EndDate", DisplayName = "End date", IsRequiredProperty = false, IsEntityProperty = true, EntityImporterId = Name };
