@@ -430,7 +430,7 @@ namespace VirtoCommerce.Search.Providers.Elastic
                 if (!Client.IndexExists(new IndexExistsCommand(scope)))
                 {
                     var response = Client.CreateIndex(new IndexCommand(scope));
-                    if (!response.ok)
+                    if (response.error != null)
                         throw new IndexBuildException(response.error);
                 }
 
@@ -438,7 +438,7 @@ namespace VirtoCommerce.Search.Providers.Elastic
                 var mappingNew = mapBuilder.RootObject(documentType, d => d.Properties(p => properties)).Build();
 
                 var result = Client.PutMapping(new PutMappingCommand(scope, documentType), mappingNew);
-                if (!result.ok)
+                if (!result.acknowledged && result.error != null)
                     throw new IndexBuildException(result.error);
             }
 
@@ -455,7 +455,7 @@ namespace VirtoCommerce.Search.Providers.Elastic
         {
             var result = Client.Delete(Commands.Delete(scope, documentType, value));
 
-            if (!result.ok)
+            if (result.error != null && !result.acknowledged)
                 throw new IndexBuildException(result.error);
 
             return 1;
@@ -467,7 +467,7 @@ namespace VirtoCommerce.Search.Providers.Elastic
             {
                 var result = Client.Delete(Commands.Delete(scope, documentType));
 
-                if (!result.ok)
+                if (result.error != null && !result.acknowledged)
                     throw new IndexBuildException(result.error);
             }
             catch (OperationException ex)
@@ -510,7 +510,7 @@ namespace VirtoCommerce.Search.Providers.Elastic
 
                 foreach (var op in result.items)
                 {
-                    if (!op.Result.ok)
+                    if (op.Result.error != null)
                     {
                         throw new IndexBuildException(op.Result.error);
                     }

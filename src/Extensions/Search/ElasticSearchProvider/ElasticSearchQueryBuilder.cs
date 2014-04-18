@@ -50,7 +50,7 @@ namespace VirtoCommerce.Search.Providers.Elastic
                     {
                         if (value.GetType() == typeof(AttributeFilterValue))
                         {
-                            query.Must(q => q.Text(t => t.Field(field).Query(((AttributeFilterValue)value).Value)));
+                            query.Must(q => q.Match(t => t.Field(field).Query(((AttributeFilterValue)value).Value)));
                         }
                         else if (value.GetType() == typeof(RangeFilterValue))
                         {
@@ -150,6 +150,7 @@ namespace VirtoCommerce.Search.Providers.Elastic
 		protected void AddQueryString(string fieldName, BoolQuery<ESDocument> query, CatalogItemSearchCriteria filter)
 		{
 			var searchPhrase = filter.SearchPhrase;
+            /*
 			if (filter.IsFuzzySearch)
 			{
 				var keywords = Regex.Split(searchPhrase, @"\s+");
@@ -157,8 +158,10 @@ namespace VirtoCommerce.Search.Providers.Elastic
 				searchPhrase = keywords.Aggregate(searchPhrase, (current, keyword) => 
 					current + String.Format("{0}~{1}", keyword, filter.FuzzyMinSimilarity));
 			}
+             * */
 
-			query.Must(q => q.QueryString(t => t.DefaultField(fieldName).DefaultOperator(Operator.AND).Query(searchPhrase)));
+			//query.Must(q => q.QueryString(t => t.DefaultField(fieldName).DefaultOperator(Operator.AND).Query(searchPhrase)));
+            query.Must(q => q.Match(x => x.Field(fieldName).Operator(Operator.AND).Fuzziness(filter.FuzzyMinSimilarity).Query(searchPhrase)));
 		}
     }
 }
