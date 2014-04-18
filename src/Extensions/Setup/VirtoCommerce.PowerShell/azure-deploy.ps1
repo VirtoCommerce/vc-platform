@@ -86,7 +86,7 @@ else
     $common_vcfpowershellfile = "$vcfpowershellfile"
 }
 
-$build_path = "$build_solutiondir\VCBuildTemp"
+$build_path = "$common_deploymentdir\VCBuildTemp"
 $build_solutionname = "$build_solutiondir\VirtoCommerce.sln"
 
 # db settings
