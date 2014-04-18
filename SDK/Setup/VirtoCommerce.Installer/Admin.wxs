@@ -230,7 +230,7 @@
                         <File Id="fil34889ABBDFEF6790796F8BB6F139474F" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\Virtoway.WPF.State.dll.deploy" />
                     </Component>
                     <Component Id="cmp755EFD7A6C7F34E32F0FCF80A72A6BA7" Guid="{3228ABB8-59FB-49EA-BFAF-3FAB6FD84117}">
-                        <File Id="fil18AA2B24CBD01BF764496014A863CF04" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\WpfRichText.Ex.dll.deploy" />
+                        <File Id="fil18AA2B24CBD01BF764496014A863CF04" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\WpfRichText.dll.deploy" />
                     </Component>
                     <Component Id="cmp393AB90E546A95612FD409EB9E960DD0" Guid="{D53B3F56-4335-4A7B-BA43-9459296CB8BB}">
                         <File Id="fil359F563A0C6804B767D871798EE67B1A" KeyPath="yes" Source="$(var.AdminPath)\Application Files\VirtoCommerce_$(var.Version)\WPFToolkit.dll.deploy" />
