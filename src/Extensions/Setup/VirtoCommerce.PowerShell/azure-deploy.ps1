@@ -346,6 +346,7 @@ Function build-search
 
     Write-Output "$(Get-Date -f $timeStampFormat) - Search Build: Copy ES Distribution"
     write-progress -id 1 -activity "Search Build" -status "Copy ES Distribution"
+	Write-Host "xcopy ""$search_elasticsearchdistro\*.*"" ""$search_workerrolehome\bin\$build_configuration\es\"" /E /Q"
     echo "N" | xcopy "$search_elasticsearchdistro\*.*" "$search_workerrolehome\bin\$build_configuration\es\" /E /Q
 
     Write-Output "$(Get-Date -f $timeStampFormat) - Search Build: CS Packing"
