@@ -5,17 +5,15 @@
 
 <script>
     $(function () {
-        VirtoCommerce.registerDynamicContent("MainSlider", function(data) {
-            $('#MainSlider').html(data);
+        VirtoCommerce.registerDynamicContent("MainSlider", function (data) {
+            $('.main-slider .container').html(data);
             VirtoCommerce.initSliders();
         });
-        VirtoCommerce.registerDynamicContent("HomeNewProducts", function (data)
-        {
+        VirtoCommerce.registerDynamicContent("HomeNewProducts", function (data) {
             $('div.new-products ul.products-list').html(data);
             $('div.new-products').virtoSlider();
         });
-        VirtoCommerce.registerDynamicContent("HomeStaffPick", function (data)
-        {
+        VirtoCommerce.registerDynamicContent("HomeStaffPick", function (data) {
             $('div.staff-pick ul.products-list').html(data);
             $('div.staff-pick').virtoSlider();
         });
@@ -26,7 +24,11 @@
 
 @section Slider{
     <div id="MainSlider">
-               @* @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "MainSlider" });}*@
+        <div class="main-slider">
+            <div class="container">
+                @* @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "MainSlider" });}*@
+            </div>
+        </div>
     </div>
 }
 

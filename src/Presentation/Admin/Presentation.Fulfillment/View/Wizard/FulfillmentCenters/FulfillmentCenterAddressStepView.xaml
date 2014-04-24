@@ -28,8 +28,8 @@
 			<ColumnDefinition Width="40"/>
 			<ColumnDefinition/>
 		</Grid.ColumnDefinitions>
-
-
+		
+		
 		<Grid>
 			<Grid.RowDefinitions>
 				<RowDefinition Height="Auto"/>
@@ -42,16 +42,16 @@
 			</Grid.RowDefinitions>
 			
 			<TextBlock Grid.Row="0" Text="* Day phone number:" />
-			<core_controls:WatermarkedTextBox Grid.Row="1"  common:RequiredFieldHelper.IsRequired="True"
-                Text="{Binding InnerItem.DaytimePhoneNumber, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+            <core_controls:WatermarkedTextBox Grid.Row="1"  common:RequiredFieldHelper.IsRequired="True"
+                                              Text="{Binding InnerItem.DaytimePhoneNumber, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
 
 			<TextBlock Grid.Row="2" Text="* Address (line1):" />
-			<core_controls:WatermarkedTextBox Grid.Row="3" common:RequiredFieldHelper.IsRequired="True"
-                Text="{Binding InnerItem.Line1, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+            <core_controls:WatermarkedTextBox Grid.Row="3" common:RequiredFieldHelper.IsRequired="True"
+                                              Text="{Binding InnerItem.Line1, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
 
-			<TextBlock Grid.Row="4" Text="* Address (line2):" />
-			<core_controls:WatermarkedTextBox Grid.Row="5"  common:RequiredFieldHelper.IsRequired="True"
-                Text="{Binding InnerItem.Line2, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBlock Grid.Row="4" Text="Address (line2):" />
+            <core_controls:WatermarkedTextBox Grid.Row="5"
+                                              Text="{Binding InnerItem.Line2, UpdateSourceTrigger=PropertyChanged}"/>
 		</Grid>
 
 		<Grid Grid.Column="2">
@@ -66,7 +66,7 @@
 				<RowDefinition Height="Auto"/>
 				<RowDefinition Height="*"/>
 			</Grid.RowDefinitions>
-
+			
 			<TextBlock Grid.Row="0" Text="* City:" />
 			<core_controls:WatermarkedTextBox Grid.Row="1" WatermarkText="Enter city..." common:RequiredFieldHelper.IsRequired="True"
                 Text="{Binding InnerItem.City, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
@@ -76,34 +76,34 @@
 					SelectedValue="{Binding InnerItem.CountryCode, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
                       SelectedValuePath="CountryId" x:Name="cboCountries" common:RequiredFieldHelper.IsRequired="True"
 					  inf_behavior:WatermarkComboBoxBehavior.EnableWatermark ="True" inf_behavior:WatermarkComboBoxBehavior.Label="Select country...">
-				<ComboBox.ItemTemplate>
-					<DataTemplate>
+						<ComboBox.ItemTemplate>
+							<DataTemplate>
 						<TextBlock Text="{Binding DisplayName, Converter={x:Static LocalizingConverter.Current}}" />
-					</DataTemplate>
-				</ComboBox.ItemTemplate>
-				<i:Interaction.Triggers>
-					<!--changing property CountryName when selected CountryId changes-->
-					<i:EventTrigger EventName="SelectionChanged">
-						<ei:ChangePropertyAction PropertyName="CountryName" Value="{Binding SelectedItem.DisplayName, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" 
+							</DataTemplate>
+						</ComboBox.ItemTemplate>
+						<i:Interaction.Triggers>
+							<!--changing property CountryName when selected CountryId changes-->
+							<i:EventTrigger EventName="SelectionChanged">
+								<ei:ChangePropertyAction PropertyName="CountryName" Value="{Binding SelectedItem.DisplayName, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" 
                                     TargetObject="{Binding InnerItem}" />
-					</i:EventTrigger>
-				</i:Interaction.Triggers>
-			</ComboBox>
+							</i:EventTrigger>
+						</i:Interaction.Triggers>
+					</ComboBox>
 
 			<TextBlock Grid.Row="4" Text="State, region:" />
 			<ComboBox Grid.Row="5" ItemsSource="{Binding SelectedItem.Regions, ElementName=cboCountries}" SelectedValue="{Binding InnerItem.StateProvince}" SelectedValuePath="RegionId" x:Name="cboRegion"
 					inf_behavior:WatermarkComboBoxBehavior.EnableWatermark ="True" inf_behavior:WatermarkComboBoxBehavior.Label="Select state...">
-				<ComboBox.ItemTemplate>
-					<DataTemplate>
+						<ComboBox.ItemTemplate>
+							<DataTemplate>
 						<TextBlock Text="{Binding DisplayName, Converter={x:Static LocalizingConverter.Current}}" />
-					</DataTemplate>
-				</ComboBox.ItemTemplate>
-			</ComboBox>
+							</DataTemplate>
+						</ComboBox.ItemTemplate>
+					</ComboBox>
 
 			<TextBlock Grid.Row="6" Text="* Zip code:" />
-			<core_controls:WatermarkedTextBox Grid.Row="7" WatermarkText="Enter zip code..."  common:RequiredFieldHelper.IsRequired="True"
-                Text="{Binding InnerItem.PostalCode, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+            <core_controls:WatermarkedTextBox Grid.Row="7" WatermarkText="Enter zip code..."  common:RequiredFieldHelper.IsRequired="True"
+                                              Text="{Binding InnerItem.PostalCode, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
 		</Grid>
 	</Grid>
-
+	
 </base:ViewBase>

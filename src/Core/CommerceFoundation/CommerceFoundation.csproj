@@ -180,6 +180,7 @@
     <Compile Include="Assets\Services\IAssetUrl.cs" />
     <Compile Include="Assets\Services\UploadStreamInfo.cs" />
     <Compile Include="Catalogs\CatalogConfiguration.cs" />
+    <Compile Include="Catalogs\Search\ChildCategoryFilter.cs" />
     <Compile Include="Catalogs\Services\ICatalogOutlineBuilder.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="Constants.cs" />
@@ -800,6 +801,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta name="keywords" content="@ViewBag.MetaKeywords" />
+    <meta name="description" content="@ViewBag.MetaDescription" />
+    <meta name="title" content="@ViewBag.Title" />
+    <title>@ViewBag.Title</title>
+    @Styles.Render("~/Content/themes/base/css")
+    @*@Styles.Render("~/Content/themes/default/css")*@
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    <base href="~/" />
+</head>
+    <body>
+        <!--Disable ajax cache-->
+        <script>$(function () { $.ajaxSetup({ cache: false }); });</script>
+       
+        @RenderBody()
+
+        @Scripts.Render("~/bundles/jqueryui")
+        @Scripts.Render("~/bundles/jqueryval")
+        @*@Scripts.Render("~/bundles/jquerymisc")*@
+        @RenderSection("scripts", required: false)
+    </body>
+</html>

@@ -42,6 +42,7 @@ namespace VirtoCommerce.Web
 
             bundles.Add(new ScriptBundle("~/bundles/responsive").Include(
                 "~/Scripts/responsive/virto.slider.js",
+                "~/Scripts/responsive/main.slider.js",
                 "~/Scripts/responsive/camera.js",
                 "~/Scripts/responsive/jquery.easing.{version}.js"
                 ));

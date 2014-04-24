@@ -82,6 +82,10 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
                 //TODO: should find closest match to current path
                 outline = item.GetItemCategoryRouteValue();
             }
+            else
+            {
+                outline = outline.Split(';').First();
+            }
 
             return outline;
         }

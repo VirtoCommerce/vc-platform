@@ -92,10 +92,10 @@ namespace VirtoCommerce.Client
 
         public CatalogBase GetCatalog(string catalogId, bool useCache = true)
         {
-            var query = _catalogRepository.Catalogs.Where(x => x.CatalogId.Equals(catalogId, StringComparison.OrdinalIgnoreCase));
+            var query = _catalogRepository.Catalogs.Where(x => x.CatalogId.Equals(catalogId, StringComparison.OrdinalIgnoreCase)).ExpandAll();
 
             return Helper.Get(
-                CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix,string.Format(CatalogCacheKey, catalogId)),
+                CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix, string.Format(CatalogCacheKey, catalogId)),
                 () => (query).SingleOrDefault(),
                 CatalogConfiguration.Instance.Cache.CatalogTimeout,
                 _isEnabled && useCache);
@@ -179,7 +179,7 @@ namespace VirtoCommerce.Client
 
                 if (!responseGroup.HasFlag(ItemResponseGroups.ItemCategories))
                 {
-                    relations = GetCategoryItemRelations(id);
+                    relations = GetCategoryItemRelations(item.ItemId);
                 }
 
                 foreach (var rel in relations)
@@ -187,7 +187,7 @@ namespace VirtoCommerce.Client
                     if (rel.CatalogId == catalogId)
                         return item;
 
-                    var category = GetCategoryById(rel.CategoryId);
+                    var category = GetCategoryById(rel.CategoryId, null);
 
                     if (category != null)
                     {
@@ -236,7 +236,7 @@ namespace VirtoCommerce.Client
             query = IncludeGroups(query, responseGroup);
 
             return Helper.Get(
-                CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix,  string.Format(ItemsCodeCacheKey, CacheHelper.CreateCacheKey(codes), responseGroup)),
+                CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix, string.Format(ItemsCodeCacheKey, CacheHelper.CreateCacheKey(codes), responseGroup)),
                 () => (query).ToArray(),
                 CatalogConfiguration.Instance.Cache.ItemTimeout,
                 _isEnabled && useCache);
@@ -274,6 +274,11 @@ namespace VirtoCommerce.Client
         #endregion
 
         #region Properties Methods
+        /// <summary>
+        /// Gets the property set.
+        /// </summary>
+        /// <param name="propertySetId">The property set identifier.</param>
+        /// <returns></returns>
         public PropertySet GetPropertySet(string propertySetId)
         {
             var sets = GetPropertySets();
@@ -281,6 +286,11 @@ namespace VirtoCommerce.Client
             return set;
         }
 
+        /// <summary>
+        /// Gets the property sets.
+        /// </summary>
+        /// <param name="useCache">if set to <c>true</c> [use cache].</param>
+        /// <returns></returns>
         public PropertySet[] GetPropertySets(bool useCache = true)
         {
             return Helper.Get(
@@ -293,6 +303,15 @@ namespace VirtoCommerce.Client
                 _isEnabled && useCache);
         }
 
+        /// <summary>
+        /// Gets the name of the property value by.
+        /// </summary>
+        /// <param name="storageEntity">The storage entity.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="expandProperties">if set to <c>true</c> [expand properties].</param>
+        /// <param name="locale">The locale.</param>
+        /// <param name="useCache">if set to <c>true</c> [use cache].</param>
+        /// <returns></returns>
         public PropertyValueBase GetPropertyValueByName(StorageEntity storageEntity, string name, bool expandProperties = false, string locale = "", bool useCache = true)
         {
             string id;
@@ -310,7 +329,7 @@ namespace VirtoCommerce.Client
             }
             else if (category != null)
             {
-               
+
                 id = category.CategoryId;
                 catalogId = category.CatalogId;
                 properties = category.CategoryPropertyValues;
@@ -319,7 +338,7 @@ namespace VirtoCommerce.Client
                     //This will return expanded category with properties
                     category = GetCategoryById(id) as Category;
 
-                    if(category !=null)
+                    if (category != null)
                     {
                         properties = category.CategoryPropertyValues;
                     }
@@ -367,6 +386,11 @@ namespace VirtoCommerce.Client
                _isEnabled && useCache);
         }
 
+        /// <summary>
+        /// Gets the properties.
+        /// </summary>
+        /// <param name="useCache">if set to <c>true</c> [use cache].</param>
+        /// <returns></returns>
         public Property[] GetProperties(bool useCache = true)
         {
             var sets = GetPropertySets(useCache);
@@ -377,6 +401,11 @@ namespace VirtoCommerce.Client
             return properties;
         }
 
+        /// <summary>
+        /// Gets the property.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns></returns>
         public Property GetProperty(string key)
         {
             var properties = GetProperties();
@@ -389,6 +418,11 @@ namespace VirtoCommerce.Client
             return null;
         }
 
+        /// <summary>
+        /// Gets the name of the property.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <returns></returns>
         public string GetPropertyName(string key)
         {
             var prop = GetProperty(key);
@@ -403,14 +437,17 @@ namespace VirtoCommerce.Client
             CategoryBase category = _catalogRepository.Categories.OfType<Category>()
                 .Expand(c => c.LinkedCategories)
                 .Expand(c => c.CategoryPropertyValues)
-                .FirstOrDefault(x => (x.CatalogId == catalogId) && (x.Code.Equals(code, StringComparison.OrdinalIgnoreCase)));
+                .FirstOrDefault(x => x.Code.Equals(code, StringComparison.OrdinalIgnoreCase)
+                 && x.CatalogId.Equals(catalogId, StringComparison.OrdinalIgnoreCase));
 
             if (category == null)
             {
                 //Get linked category
                 category = _catalogRepository.Categories.OfType<LinkedCategory>()
                     .Expand(c => c.LinkedCategories)
-                    .FirstOrDefault(x => (x.CatalogId == catalogId) && (x.Code.Equals(code, StringComparison.OrdinalIgnoreCase)));
+                    .FirstOrDefault(x => x.Code.Equals(code, StringComparison.OrdinalIgnoreCase)
+                     && x.CatalogId.Equals(catalogId, StringComparison.OrdinalIgnoreCase));
+
                 if (category != null && category.IsActive)
                 {
                     //Get simple category from linked catalog
@@ -423,20 +460,22 @@ namespace VirtoCommerce.Client
             return category;
         }
 
-        private CategoryBase GetCategoryByIdInternal(string id)
+        private CategoryBase GetCategoryByIdInternal(string catalogId, string id)
         {
             //Get simple category
             CategoryBase category = _catalogRepository.Categories.OfType<Category>()
                 .Expand(c => c.LinkedCategories)
                 .Expand(c => c.CategoryPropertyValues)
-                .FirstOrDefault(x => x.CategoryId.Equals(id, StringComparison.OrdinalIgnoreCase));
+                .FirstOrDefault(x => x.CategoryId.Equals(id, StringComparison.OrdinalIgnoreCase)
+                    && (string.IsNullOrEmpty(catalogId) || x.CatalogId.Equals(catalogId, StringComparison.OrdinalIgnoreCase)));
 
             if (category == null)
             {
                 //Get linked category
                 category = _catalogRepository.Categories.OfType<LinkedCategory>()
                     .Expand(c => c.LinkedCategories)
-                    .FirstOrDefault(x => x.CategoryId.Equals(id, StringComparison.OrdinalIgnoreCase));
+                    .FirstOrDefault(x => x.CategoryId.Equals(id, StringComparison.OrdinalIgnoreCase)
+                        && (string.IsNullOrEmpty(catalogId) || x.CatalogId.Equals(catalogId, StringComparison.OrdinalIgnoreCase)));
                 if (category != null && category.IsActive)
                 {
                     //Get simple category from linked catalog
@@ -451,22 +490,54 @@ namespace VirtoCommerce.Client
 
 
 
+        /// <summary>
+        /// Gets the category.
+        /// </summary>
+        /// <param name="code">The code.</param>
+        /// <param name="useCache">if set to <c>true</c> [use cache].</param>
+        /// <returns></returns>
         public CategoryBase GetCategory(string code, bool useCache = true)
         {
-
+            var catalogId = _customerSession.CustomerSession.CatalogId;
             return Helper.Get(
-                CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix, string.Format(CategoryCacheKey, _customerSession.CustomerSession.CatalogId, code)),
-                () => GetCategoryInternal(_customerSession.CustomerSession.CatalogId, code),
+                CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix, string.Format(CategoryCacheKey, catalogId, code)),
+                () => GetCategoryInternal(catalogId, code),
                 CatalogConfiguration.Instance.Cache.CategoryTimeout,
                 _isEnabled && useCache);
         }
 
+        /// <summary>
+        /// Gets the category by identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="useCache">if set to <c>true</c> [use cache].</param>
+        /// <returns></returns>
         public CategoryBase GetCategoryById(string id, bool useCache = true)
         {
+            return GetCategoryById(id, _customerSession.CustomerSession.CatalogId, useCache);
+        }
 
+        public CategoryBase GetCategoryById(string id, string catalogId, bool useCache = true)
+        {
             return Helper.Get(
-                CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix,  string.Format(CategoryIdCacheKey, _customerSession.CustomerSession.CatalogId, id)),
-                () => GetCategoryByIdInternal(id),
+                CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix, string.Format(CategoryIdCacheKey, catalogId, id)),
+                () => GetCategoryByIdInternal(catalogId, id),
+                CatalogConfiguration.Instance.Cache.CategoryTimeout,
+                _isEnabled && useCache);
+        }
+
+        /// <summary>
+        /// Gets the child categories by parent category identifier.
+        /// </summary>
+        /// <param name="id">The parent category identifier.</param>
+        /// <param name="useCache">if set to <c>true</c> [use cache].</param>
+        /// <returns></returns>
+        public CategoryBase[] GetChildCategoriesById(string id, bool useCache = true)
+        {
+            var catalogId = _customerSession.CustomerSession.CatalogId;
+            return Helper.Get(
+                CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix, string.Format(ChildCategoriesCacheKey, catalogId, id)),
+                () => _catalogRepository.Categories.Where(c => c.CatalogId == catalogId && c.ParentCategoryId == id).ToArray(),
                 CatalogConfiguration.Instance.Cache.CategoryTimeout,
                 _isEnabled && useCache);
         }
@@ -474,6 +545,12 @@ namespace VirtoCommerce.Client
         #endregion
 
         #region Search
+        /// <summary>
+        /// Searches the items.
+        /// </summary>
+        /// <param name="criteria">The criteria.</param>
+        /// <param name="useCache">if set to <c>true</c> [use cache].</param>
+        /// <returns></returns>
         public CatalogItemSearchResults SearchItems(CatalogItemSearchCriteria criteria, bool useCache)
         {
             var scope = _searchConnection.Scope;

@@ -18,11 +18,19 @@ namespace VirtoCommerce.Web.Client.Services.Assets
         {
             if (thumb)
             {
-                var extIdx = assetId.LastIndexOf(".", StringComparison.Ordinal);
-                if (extIdx != -1)
+                if (!assetId.Contains(".thumb"))
                 {
-                    assetId = string.Format("{0}thumb{1}", assetId.Substring(0, extIdx + 1), assetId.Substring(extIdx));
+                    var extIdx = assetId.LastIndexOf(".", StringComparison.Ordinal);
+                    if (extIdx != -1)
+                    {
+                        assetId = string.Format("{0}thumb{1}", assetId.Substring(0, extIdx + 1),
+                            assetId.Substring(extIdx));
+                    }
                 }
+            }
+            else
+            {
+                assetId = assetId.Replace(".thumb", "");
             }
             return String.Format("{0}{1}{2}", "~/asset", "/", assetId);
         }

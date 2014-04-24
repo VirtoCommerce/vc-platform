@@ -30,20 +30,22 @@ namespace VirtoCommerce.Web.Client.Caching.Interfaces
         /// <summary>
         /// Implementations should remove all output cache entries.
         /// </summary>
-        void RemoveItems();
+        int RemoveItems();
 
         /// <summary>
         /// Implementations should remove all output cache entries for the specified controller.
         /// </summary>
         /// <param name="controllerName">The name of the controller.</param>
-        void RemoveItems(string controllerName);
+        /// <returns>Number of items removed</returns>
+        int RemoveItems(string controllerName);
 
         /// <summary>
         /// Implementations should remove all output cache entries for the specified controller and action.
         /// </summary>
         /// <param name="controllerName">The name of the controller that contains the action method.</param>
         /// <param name="actionName">The name of the controller action method.</param>
-        void RemoveItems(string controllerName, string actionName);
+        /// <returns>Number of items removed</returns>
+        int RemoveItems(string controllerName, string actionName);
 
         /// <summary>
         /// Implementations should remove all output cache entries for the specified controller, action and parameters.
@@ -51,6 +53,7 @@ namespace VirtoCommerce.Web.Client.Caching.Interfaces
         /// <param name="controllerName">The name of the controller that contains the action method.</param>
         /// <param name="actionName">The name of the controller action method.</param>
         /// <param name="routeValues">A dictionary that contains the parameters for a route.</param>
-        void RemoveItems(string controllerName, string actionName, RouteValueDictionary routeValues);
+        /// <returns>Number of items removed</returns>
+        int RemoveItems(string controllerName, string actionName, RouteValueDictionary routeValues);
     }
 }

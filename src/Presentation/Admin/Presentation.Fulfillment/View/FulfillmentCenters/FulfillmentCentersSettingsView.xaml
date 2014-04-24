@@ -65,7 +65,7 @@
 					<DataGridTextColumn Header="Pick Delay (min)" Binding="{Binding PickDelay}" />
 					<DataGridTextColumn Header="Street">
                         <DataGridTextColumn.Binding>
-                            <MultiBinding StringFormat="{}{0}, {1}">
+                            <MultiBinding StringFormat="{}{0} {1}">
                                 <Binding Path="Line1" />
                                 <Binding Path="Line2" />
                             </MultiBinding>

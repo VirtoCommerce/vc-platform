@@ -9,7 +9,8 @@
             @Html.DisplayFor(m => node)
             @if (node.Children != null && node.Children.Any())
             {
-                @Html.DisplayFor(m => node.Children, "SiteMapNodeModelList", new { level = ViewBag.level + 1, last = false })
+                string template = node.Attributes.ContainsKey("Template") ? node.Attributes["Template"].ToString() : "SiteMapNodeModelList";
+                @Html.DisplayFor(m => node.Children, template, new { level = ViewBag.level + 1, last = false })
             }
         </li>
     }

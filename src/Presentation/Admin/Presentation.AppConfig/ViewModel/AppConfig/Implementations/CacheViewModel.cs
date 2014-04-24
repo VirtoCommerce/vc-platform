@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Practices.Prism.Commands;
 using VirtoCommerce.Foundation;
@@ -8,14 +10,14 @@ using VirtoCommerce.ManagementClient.Core.Infrastructure;
 
 namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.AppConfig.Implementations
 {
-	public class CacheViewModel : ViewModelBase, ICacheViewModel
-	{
-		private readonly ICacheService _service;
+    public class CacheViewModel : ViewModelBase, ICacheViewModel
+    {
+        private readonly ICacheService _service;
 
-		public CacheViewModel(ICacheService service)
-		{
-			_service = service;
-			CacheTypes = new[]
+        public CacheViewModel(ICacheService service)
+        {
+            _service = service;
+            CacheTypes = new[]
                 {
                     new ItemTypeSelectionModel("Html output".Localize(), "This is where rendered html is stored.".Localize()),
                     new ItemTypeSelectionModel("Database".Localize(),"This is where queried objects are stored.".Localize())
@@ -24,101 +26,150 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.AppConfig.Implement
 			_allCachesText = "All caches".Localize();
 			AnimationText = "Processing...".Localize();
 			CacheParameters = new ObservableCollection<string>();
-			ClearCacheCommand = new DelegateCommand(DoClearCache, () => !string.IsNullOrEmpty(SelectedCacheType) && !string.IsNullOrEmpty(SelectedCacheParameter) && !ShowLoadingAnimation);
-		}
+            ClearCacheCommand = new DelegateCommand(DoClearCache, () => !string.IsNullOrEmpty(SelectedCacheType) && !string.IsNullOrEmpty(SelectedCacheParameter) && !ShowLoadingAnimation);
+        }
 
-		private string _selectedCacheType;
-		private readonly string _allCachesText;
-		public ItemTypeSelectionModel[] CacheTypes { get; private set; }
+        private string _selectedCacheType;
+        private readonly string _allCachesText;
+        public ItemTypeSelectionModel[] CacheTypes { get; private set; }
+        private KeyValuePair<string, string>[] databaseCacheParameters, webOutputCacheParameters;
 
-		public string SelectedCacheType
-		{
-			get { return _selectedCacheType; }
-			set
-			{
-				_selectedCacheType = value;
-				if (_selectedCacheType != null)
-				{
-					CacheParameters.Clear();
-					if (CacheTypes[0].Value == _selectedCacheType)
-					{
-						CacheParameters.Add(Constants.ControllerNameHome);
-						CacheParameters.Add(Constants.ControllerNameAsset);
-						CacheParameters.Add(Constants.ControllerNameCatalog);
-						CacheParameters.Add(Constants.ControllerNameSearch);
-						CacheParameters.Add(Constants.ControllerNameStore);
-						CacheParameters.Add(_allCachesText);
-					}
-					else
-					{
-						CacheParameters.Add(Constants.DisplayTemplateCachePrefix);
-						CacheParameters.Add(Constants.EmailTemplateCachePrefix);
-						CacheParameters.Add(Constants.PricelistCachePrefix);
-						CacheParameters.Add(Constants.CatalogOutlineBuilderCachePrefix);
-						CacheParameters.Add(Constants.PromotionsCachePrefix);
-						CacheParameters.Add(Constants.DynamicContentCachePrefix);
-						CacheParameters.Add(Constants.CatalogCachePrefix);
-						CacheParameters.Add(Constants.CountriesCachePrefix);
-						CacheParameters.Add(Constants.ReviewsCachePrefix);
-						CacheParameters.Add(Constants.SeoCachePrefix);
-						CacheParameters.Add(Constants.SettingsCachePrefix);
-						CacheParameters.Add(Constants.ShippingCachePrefix);
-						CacheParameters.Add(Constants.StoreCachePrefix);
-						CacheParameters.Add(Constants.UserCachePrefix);
-					}
+        public string SelectedCacheType
+        {
+            get { return _selectedCacheType; }
+            set
+            {
+                _selectedCacheType = value;
+                if (_selectedCacheType != null)
+                {
+                    CacheParameters.Clear();
+                    if (CacheTypes[0].Value == _selectedCacheType)
+                    {
+                        EnsureWebOutputCacheParametersInitialized();
+                        CacheParameters.AddRange(webOutputCacheParameters);
+                    }
+                    else
+                    {
+                        EnsureDatabaseCacheParametersInitialized();
+                        CacheParameters.AddRange(databaseCacheParameters);
+                    }
 
-					OnPropertyChanged("IsCacheTypeSelected");
-				}
+                    OnPropertyChanged("IsCacheTypeSelected");
+                }
 
-				OnPropertyChanged();
-			}
-		}
+                OnPropertyChanged();
+            }
+        }
 
-		public ObservableCollection<string> CacheParameters { get; private set; }
+        public ObservableCollection<KeyValuePair<string, string>> CacheParameters { get; private set; }
 
-		public string SelectedCacheParameter { get; set; }
+        public string SelectedCacheParameter { get; set; }
 
-		public bool IsCacheTypeSelected
-		{
-			get { return !string.IsNullOrEmpty(SelectedCacheType); }
-		}
+        public bool IsCacheTypeSelected
+        {
+            get { return !string.IsNullOrEmpty(SelectedCacheType); }
+        }
 
-		public DelegateCommand ClearCacheCommand { get; private set; }
+        public DelegateCommand ClearCacheCommand { get; private set; }
 
-		private async void DoClearCache()
-		{
-			ShowLoadingAnimation = true;
-			ClearCacheCommand.RaiseCanExecuteChanged();
-			try
-			{
-				if (CacheTypes[0].Value == SelectedCacheType)
-				{
-					var controllerParameter = SelectedCacheParameter == _allCachesText ? null : SelectedCacheParameter;
-					await Task.Run(() => _service.ClearOuputCache(controllerParameter, null));
-				}
-				else
-				{
-					await Task.Run(() => _service.ClearDatabaseCache(SelectedCacheParameter));
-				}
-			}
-			finally
-			{
-				ShowLoadingAnimation = false;
-				ClearCacheCommand.RaiseCanExecuteChanged();
-			}
-		}
-	}
+        private void EnsureWebOutputCacheParametersInitialized()
+        {
+            if (webOutputCacheParameters == null)
+            {
+                webOutputCacheParameters = new[] 
+                {
+                    CreateDisplayOption(Constants.ControllerNameHome),
+                    CreateDisplayOption(Constants.ControllerNameAsset),
+                    CreateDisplayOption(Constants.ControllerNameCatalog),
+                    CreateDisplayOption(Constants.ControllerNameSearch),
+                    CreateDisplayOption(Constants.ControllerNameStore),
+                    CreateDisplayOption(_allCachesText)
+                };
+            }
+        }
 
-	public class ItemTypeSelectionModel
-	{
-		public ItemTypeSelectionModel(string value, string description = null)
-		{
-			Value = value;
-			Description = description;
-		}
+        private void EnsureDatabaseCacheParametersInitialized()
+        {
+            if (databaseCacheParameters == null)
+            {
+                databaseCacheParameters = new[]
+                {
+                    CreateDisplayOption(Constants.DisplayTemplateCachePrefix),
+                    CreateDisplayOption(Constants.EmailTemplateCachePrefix),
+                    CreateDisplayOption(Constants.PricelistCachePrefix),
+                    CreateDisplayOption(Constants.CatalogOutlineBuilderCachePrefix),
+                    CreateDisplayOption(Constants.PromotionsCachePrefix),
+                    CreateDisplayOption(Constants.DynamicContentCachePrefix),
+                    CreateDisplayOption(Constants.CatalogCachePrefix),
+                    CreateDisplayOption(Constants.CountriesCachePrefix),
+                    CreateDisplayOption(Constants.ReviewsCachePrefix),
+                    CreateDisplayOption(Constants.SeoCachePrefix),
+                    CreateDisplayOption(Constants.SettingsCachePrefix),
+                    CreateDisplayOption(Constants.ShippingCachePrefix),
+                    CreateDisplayOption(Constants.StoreCachePrefix),
+                    CreateDisplayOption(Constants.UserCachePrefix),
+                    CreateDisplayOption(_allCachesText)
+                };
+            }
+        }
 
-		public string Value { get; set; }
+        private KeyValuePair<string, string> CreateDisplayOption(string parameter)
+        {
+            var result = new KeyValuePair<string, string>(parameter, MakeUserFrendlyText(parameter));
+            //databaseCacheParameters.Add(result);
+            return result;
+        }
 
-		public string Description { get; set; }
-	}
+        private string MakeUserFrendlyText(string parameter)
+        {
+            var sb = new StringBuilder();
+
+            parameter = parameter.Trim().Trim('_');
+            for (int i = 0; i < parameter.Length; i++)
+            {
+                if (char.IsUpper(parameter, i) && i > 0 && char.IsLower(parameter, i - 1))
+                    sb.Append(' ');
+
+                sb.Append(parameter[i]);
+            }
+
+            return sb.ToString();
+        }
+
+        private async void DoClearCache()
+        {
+            ShowLoadingAnimation = true;
+            ClearCacheCommand.RaiseCanExecuteChanged();
+            try
+            {
+                var cacheParameter = SelectedCacheParameter == _allCachesText ? null : SelectedCacheParameter;
+                if (CacheTypes[0].Value == SelectedCacheType)
+                {
+                    await Task.Run(() => _service.ClearOuputCache(cacheParameter, null));
+                }
+                else
+                {
+                    await Task.Run(() => _service.ClearDatabaseCache(cacheParameter));
+                }
+            }
+            finally
+            {
+                ShowLoadingAnimation = false;
+                ClearCacheCommand.RaiseCanExecuteChanged();
+            }
+        }
+    }
+
+    public class ItemTypeSelectionModel
+    {
+        public ItemTypeSelectionModel(string value, string description = null)
+        {
+            Value = value;
+            Description = description;
+        }
+
+        public string Value { get; set; }
+
+        public string Description { get; set; }
+    }
 }

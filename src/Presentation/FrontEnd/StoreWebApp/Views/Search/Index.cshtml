@@ -4,7 +4,7 @@
 {
     foreach (var item in Model.CatalogItems)
     {
-        @Html.DisplayFor(model => item, templateName, new {hidePrices = true})
+        @Html.DisplayFor(model => item, templateName, new { hidePrices = true })
     }
 }
 
@@ -20,21 +20,19 @@
 else
 {
     <script type="text/javascript">
-        $(function ()
-        {
-            
+        $(function () {
+
             VirtoCommerce.updatePrices(@Html.Raw(string.Format("{{{0}}}",Model.CatalogItems.Aggregate("", (current, item) => current + string.Format("'{0}':'{1}',", item.CatalogItem.ItemId, item.SearchOutline)))));
             //Load promo
-            VirtoCommerce.registerDynamicContent("CategoryTop", function (data)
-            {
-                $('div.category-image').html(data);
+            VirtoCommerce.registerDynamicContent("CategoryTop", function (data) {
+                $('.main-slider .container').html(data);
                 VirtoCommerce.initSliders();
-            });    
-                
+            });
+
             @if (Model.CatalogItems.Any())
             {
                 @:Reviews.catalogReviews("@Html.Raw(Model.CatalogItems.Select(i => i.CatalogItem.ItemId).Aggregate((x, y) => (x.Contains("or ItemId eq") ? x : string.Format("ItemId eq '{0}'", x)) + string.Format(" or ItemId eq '{0}'", y)))");
-            }
+                        }
 
             var viewClass = VirtoCommerce.getCookie("vcf.categoryListView");
             viewClass = viewClass == "" ? "grid" : viewClass;
@@ -47,7 +45,11 @@ else
     <div class="content">
         <div class="category-products">
             <div class="category-image">
-@*                @{ Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "CategoryTop" }, true); }*@
+                <div class="main-slider">
+                    <div class="container">
+                        @*                @{ Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "CategoryTop" }, true); }*@
+                    </div>
+                </div>
             </div>
             <div class="toolbar top">
                 @Html.DisplayFor(model => model.Pager, "SearchPager")

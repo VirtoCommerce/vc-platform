@@ -15,12 +15,13 @@
 <ul class="menu" role="navigation">
     @foreach (var node in Model.Nodes)
     {
-        <li>
+        string template = node.Attributes.ContainsKey("Template") ? node.Attributes["Template"].ToString() : "SiteMapNodeModelList";
+        <li class="@(node.IsCurrentNode?"active":"")">
             @Html.DisplayFor(m => node, "TopMenuNodeModel")
             @if (node.Children.Any())
             {
                 <div class="sub-menu">
-                    @Html.DisplayFor(m => node.Children, "SiteMapNodeModelList", new { level = 0, last = false })
+                    @Html.DisplayFor(m => node.Children, template, new { level = 0, last = false })
                 </div>
                 <div class="fade"></div>
             }

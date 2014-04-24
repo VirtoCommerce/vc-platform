@@ -86,7 +86,9 @@ namespace UI.FrontEnd.FunctionalTests.Catalog
 
             //Clear cache
             var cacheService = Locator.GetInstance<ICacheService>();
-            cacheService.ClearDatabaseCache(Constants.CatalogCachePrefix);
+            var removedCount = cacheService.ClearDatabaseCache(Constants.CatalogCachePrefix);
+
+            Assert.True(removedCount > 0, "Nothing was removed from cache");
 
             catalogCachedItems.Clear();
             cachedItems = CacheRepository.GetEnumerator();

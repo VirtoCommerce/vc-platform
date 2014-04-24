@@ -47,7 +47,8 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Constraints
                 encoded = values[Constants.Category].ToString();
                 decoded = SettingsHelper.SeoDecode(encoded, SeoUrlKeywordTypes.Category, values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : null);
 
-                return item.GetItemCategoryBrowsingOutlines().All(outline => ValidateCategoryPath(outline, decoded));
+                //Todo mark valid outline somehow
+                return item.GetItemCategoryBrowsingOutlines().Any(outline => ValidateCategoryPath(outline, decoded));
             }
 
             return true;

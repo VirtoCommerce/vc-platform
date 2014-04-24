@@ -36,6 +36,10 @@ namespace VirtoCommerce.Web.Client.Extensions
                 var outlines = item.GetItemCategoryBrowsingOutlines();
                 outline = outlines.Any() ? outlines.First(): "undefined";
             }
+            else
+            {
+                outline = outline.Split(';').First();
+            }
 
             return outline;
         }

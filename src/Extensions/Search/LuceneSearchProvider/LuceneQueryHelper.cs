@@ -103,6 +103,26 @@ namespace VirtoCommerce.Search.Providers.Lucene
         }
 
         /// <summary>
+        /// Creates the query.
+        /// </summary>
+        /// <param name="field">The field.</param>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
+        public static Query CreateQuery(string field, ChildCategoryFilter value)
+        {
+            var query = new BooleanQuery();
+
+            if (!String.IsNullOrEmpty(value.Outline))
+            {
+                const string fieldName = "__outline";
+                var nodeQuery = new WildcardQuery(new Term(fieldName, value.Outline.ToLower()));
+                query.Add(nodeQuery, Occur.MUST);
+
+            }
+            return query;
+        }
+
+        /// <summary>
         ///     Creates the query.
         /// </summary>
         /// <param name="field">The field.</param>

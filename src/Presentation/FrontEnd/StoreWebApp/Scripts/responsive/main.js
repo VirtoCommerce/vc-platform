@@ -159,7 +159,9 @@
 			{
 				self.addClass('dropdown');
 
-				$('.level1 > a', self).append('<span>+</span>');
+                if (self.hasClass('level1')) {
+                    $('> a', self).append('<span>+</span>');
+                }
 			}
 
 			$('.arrow').remove();
@@ -340,7 +342,7 @@
 		$(window).scroll(function (){
 			var scroll = $(this).scrollTop();
 
-			if(scroll > 50)
+			if (scroll >= parseInt($('.head-top').height()) + 5)
 			{
 				$('a.top').stop().animate({bottom: '100px', opacity: 1}, 500);
 			}

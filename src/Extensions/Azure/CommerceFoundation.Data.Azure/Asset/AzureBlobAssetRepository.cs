@@ -345,7 +345,7 @@ namespace VirtoCommerce.Foundation.Data.Azure.Asset
             });
         }
 
-        public async void Rename(string id, string name)
+        public void Rename(string id, string name)
         {
             var container = CurrentCloudBlobClient.GetContainerReference(GetContainer(id));
             var prefix = GetPrefix(id);
@@ -901,6 +901,22 @@ namespace VirtoCommerce.Foundation.Data.Azure.Asset
         /// <returns>formatted string url including path to a storage server</returns>
         public string ResolveUrl(string assetId, bool thumb)
         {
+            if (thumb)
+            {
+                if (!assetId.Contains(".thumb"))
+                {
+                    var extIdx = assetId.LastIndexOf(".", StringComparison.Ordinal);
+                    if (extIdx != -1)
+                    {
+                        assetId = string.Format("{0}thumb{1}", assetId.Substring(0, extIdx + 1),
+                            assetId.Substring(extIdx));
+                    }
+                }
+            }
+            else
+            {
+                assetId = assetId.Replace(".thumb", "");
+            }
             var root = AzureConfiguration.Instance.AzureStorageAccount.BlobEndpoint.AbsoluteUri;
 
             return String.Format("{0}{1}", root.EndsWith("/") ? root : root + "/", assetId);

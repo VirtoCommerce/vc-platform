@@ -29,8 +29,14 @@
             }
         }
     });
-
+    
 };
+
+if (typeof String.prototype.trim !== 'function') {
+    String.prototype.trim = function() {
+        return this.replace(/^\s+|\s+$/g, '');
+    };
+}
 
 
 VirtoCommerce = function ()
@@ -73,23 +79,46 @@ VirtoCommerce.prototype = {
             }
         });
     },
+    
 
-    initSliders: function ()
-    {
-        if ($('.main-slider .container').length > 0)
-        {
-            $('.main-slider .container').camera({
-                loader: 'bar',
-                playPause: false,
-                barPosition: 'top',
-                loaderColor: '#322C29',
-                loaderBgColor: 'rgba(0, 0, 0, 0)',
-                height: '25%'
-            });
+    initCameraSliders: function (selector, options) {
+        
+        if (selector == undefined) {
+            selector = "";
+        } 
+        
+        selector = (selector + " .camera-slides").trim();
+        
+        options = jQuery.extend({
+            loader: 'bar',
+            playPause: false,
+            barPosition: 'top',
+            loaderColor: '#322C29',
+            loaderBgColor: 'rgba(0, 0, 0, 0)',
+            height: '25%'
+        }, options);
 
-            $('.main-slider .container').removeAttr('style');
-            $('.main-slider .container').css('display', 'block');
+        if ($(selector).length > 0) {
+            $(selector).camera(options);
         }
+    },
+    
+    initHtmlSliders: function (selector, options) {
+
+        if (selector == undefined) {
+            selector = "";
+        }
+
+        selector = (selector + " .html-slides").trim();
+
+        if ($(selector).length > 0) {
+            $(selector).mainSlider(options);
+        }
+    },
+    
+    initSliders: function () {
+        this.initCameraSliders();
+        this.initHtmlSliders();
     },
 
     //Register dynamic content
@@ -117,30 +146,26 @@ VirtoCommerce.prototype = {
             url = url + 'placeName=' + placeName;
             i = i + 1;
         }
+        if (i > 0) {
+            $.ajax({
+                type: "GET",
+                dataType: "html",
+                url: url,
+                success: function(data) {
+                    var htmlData = $('<div/>').html(data);
 
-        $.ajax({
-            type: "GET",
-            dataType: "html",
-            url: url,
-            success: function (data)
-            {
-                var htmlData = $('<div/>').html(data);
-
-                for (var key in VirtoCommerce.DynamicContent)
-                {
-                    var selector = VirtoCommerce.DynamicContent[key];
-                    var bannerContent = htmlData.find('#' + key).html();
-                    if (typeof selector == 'function')
-                    {
-                        selector(bannerContent);
-                    }
-                    else
-                    {
-                        $(selector).html(bannerContent);
+                    for (var key in VirtoCommerce.DynamicContent) {
+                        var selector = VirtoCommerce.DynamicContent[key];
+                        var bannerContent = htmlData.find('#' + key).html();
+                        if (typeof selector == 'function') {
+                            selector(bannerContent);
+                        } else {
+                            $(selector).html(bannerContent);
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
     },
 
     updatePrices: function (items)

@@ -207,6 +207,25 @@ namespace VirtoCommerce.Web.Client.Helpers
 				.Settings.Where(s => s.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase)).ToArray();
 		}
 
+        /// <summary>
+        /// Gets the setting value.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="defaultValue">The default value.</param>
+        /// <returns></returns>
+        public static string GetSettingValue(string name, string defaultValue = "")
+        {
+            var setting = StoreClient.GetCurrentStore()
+                .Settings.FirstOrDefault(s => s.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+
+            if (setting != null)
+            {
+                return setting.ToString();
+            }
+
+            return defaultValue;
+        }
+
 		#region Cookie Management
 
         /// <summary>

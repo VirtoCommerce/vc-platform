@@ -10,12 +10,7 @@
 			xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
 			xmlns:extToolkit="http://schemas.xceed.com/wpf/xaml/toolkit"
 			xmlns:inf_behavior="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Behaviors;assembly=VirtoCommerce.ManagementClient.Core"
-			xmlns:interaction_dialog="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Dialogs;assembly=VirtoCommerce.ManagementClient.Core"
-			xmlns:HtmlEditor="clr-namespace:WpfRichText.Ex.Controls;assembly=WpfRichText.Ex"
-			xmlns:sys="clr-namespace:System;assembly=mscorlib"
-			xmlns:viewWizard="clr-namespace:VirtoCommerce.ManagementClient.Catalog.View.Wizard"
-			xmlns:catalogInfrastructure="clr-namespace:VirtoCommerce.ManagementClient.Catalog.Infrastructure"
-               xmlns:localModule="clr-namespace:VirtoCommerce.ManagementClient.Catalog"
+			xmlns:HtmlEditor="clr-namespace:WpfRichText;assembly=WpfRichText"
                xmlns:securityModule="clr-namespace:VirtoCommerce.Foundation.Security.Model;assembly=VirtoCommerce.Foundation"
                mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400">
 
@@ -146,11 +141,20 @@
 				<RowDefinition Height="*"/>
 			</Grid.RowDefinitions>
 			<TextBlock Grid.Row="0" Text="Content:" DockPanel.Dock="Top" />
-			<HtmlEditor:RichTextEditor Grid.Row="1" Text="{Binding InnerItem.Content, Mode=TwoWay}" BorderThickness="1">
+			<!--<HtmlEditor:RichTextEditor Grid.Row="1" Text="{Binding InnerItem.Content, Mode=TwoWay}" BorderThickness="1">
 				<FrameworkElement.Resources>
-					<!--reset style for "CodeEditor" TextBox-->
+					reset style for "CodeEditor" TextBox
 					<Style TargetType="{x:Type TextBox}" />
+					
 				</FrameworkElement.Resources>
+			</HtmlEditor:RichTextEditor>-->
+			<HtmlEditor:RichTextEditor x:Name="sampleEditor" 
+								Grid.Row="1"
+								Text="{Binding InnerItem.Content, Mode=TwoWay}" 
+								IsContextMenuEnabled="True" 
+								IsToolBarVisible="True" 
+								IsReadOnly="False"
+							    BorderThickness="1">
 			</HtmlEditor:RichTextEditor>
 		</Grid>
 

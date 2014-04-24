@@ -91,5 +91,7 @@ namespace VirtoCommerce.PowerShell.Cmdlet
                 Trace.WriteLine(progress.StatusDescription);
             }
         }
+
+        
     }
 }

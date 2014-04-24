@@ -226,22 +226,23 @@ namespace VirtoCommerce.Web.Controllers
 		}
 
 		//Called from banner/ProductImageAndPrice to avoid nested caching
-		/// <summary>
-		/// Displays the item by identifier no cache.
-		/// </summary>
-		/// <param name="itemId">The item identifier.</param>
-		/// <param name="parentItemId">The parent item identifier.</param>
-		/// <param name="name">The name.</param>
-		/// <param name="associationType">Type of the association.</param>
-		/// <param name="forcedActive">if set to <c>true</c> [forced active].</param>
-		/// <param name="responseGroups">The response groups.</param>
-		/// <param name="displayOptions">The display options.</param>
-		/// <returns>ActionResult.</returns>
-		public ActionResult DisplayItemByIdNoCache(string itemId, string parentItemId = null, string name = "MiniItem", string associationType = null, bool forcedActive = false, ItemResponseGroups responseGroups = ItemResponseGroups.ItemSmall, ItemDisplayOptions displayOptions = ItemDisplayOptions.ItemSmall)
-		{
-			var itemModel = CatalogHelper.CreateCatalogModel(itemId, parentItemId, associationType, forcedActive, responseGroups, displayOptions);
-			return itemModel != null ? PartialView(name, itemModel) : null;
-		}
+        /// <summary>
+        /// Displays the item by identifier no cache.
+        /// </summary>
+        /// <param name="itemId">The item identifier.</param>
+        /// <param name="parentItemId">The parent item identifier.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="associationType">Type of the association.</param>
+        /// <param name="forcedActive">if set to <c>true</c> [forced active].</param>
+        /// <param name="responseGroups">The response groups.</param>
+        /// <param name="displayOptions">The display options.</param>
+        /// <param name="bycode"></param>
+        /// <returns>ActionResult.</returns>
+        public ActionResult DisplayItemByIdNoCache(string itemId, string parentItemId = null, string name = "MiniItem", string associationType = null, bool forcedActive = false, ItemResponseGroups responseGroups = ItemResponseGroups.ItemSmall, ItemDisplayOptions displayOptions = ItemDisplayOptions.ItemSmall, bool bycode = false)
+        {
+            var itemModel = CatalogHelper.CreateCatalogModel(itemId, parentItemId, associationType, forcedActive, responseGroups, displayOptions, bycode);
+            return itemModel != null ? PartialView(name, itemModel) : null;
+        }
 
 		/// <summary>
 		/// Adds the review.

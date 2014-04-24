@@ -10,7 +10,7 @@
     {
         @:<p>
     }
-            <a href="#" onclick=" return VirtoCart.addToWishList({itemId:'@Url.Encode(Model.CatalogItem.ItemId)', parentItemId:'@Url.Encode(Model.CatalogItem.ParentItemId)'}) ">
+            <a href="#" onclick="return VirtoCart.addToWishList({itemId:'@Url.Encode(Model.CatalogItem.ItemId)', parentItemId:'@Url.Encode(Model.CatalogItem.ParentItemId)'}) ">
                 @if (!string.Equals(ViewData["View"], "Details"))
                 {
                     <span>+</span>
