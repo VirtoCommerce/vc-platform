@@ -7,6 +7,7 @@ using VirtoCommerce.Foundation;
 using VirtoCommerce.Foundation.AppConfig.Services;
 using VirtoCommerce.ManagementClient.AppConfig.ViewModel.AppConfig.Interfaces;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using Microsoft.Practices.Prism;
 
 namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.AppConfig.Implementations
 {
@@ -25,7 +26,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.AppConfig.Implement
 
 			_allCachesText = "All caches".Localize();
 			AnimationText = "Processing...".Localize();
-			CacheParameters = new ObservableCollection<string>();
+			CacheParameters = new ObservableCollection<KeyValuePair<string, string>>();
             ClearCacheCommand = new DelegateCommand(DoClearCache, () => !string.IsNullOrEmpty(SelectedCacheType) && !string.IsNullOrEmpty(SelectedCacheParameter) && !ShowLoadingAnimation);
         }
 
@@ -61,7 +62,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.AppConfig.Implement
             }
         }
 
-        public ObservableCollection<KeyValuePair<string, string>> CacheParameters { get; private set; }
+		public ObservableCollection<KeyValuePair<string, string>> CacheParameters { get; private set; }
 
         public string SelectedCacheParameter { get; set; }
 
