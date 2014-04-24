@@ -1,4 +1,6 @@
-﻿namespace VirtoCommerce.ManagementClient.Fulfillment
+﻿using VirtoCommerce.Client.Globalization;
+
+namespace VirtoCommerce.ManagementClient.Fulfillment
 {
 	public static class NavigationNames
 	{
@@ -9,5 +11,12 @@
 			PicklistHomeName="PicklistHome",
 			RmaMenuName = "RmaMenu",
 			RmaHomeName = "RmaHome";
+
+		public const string ModuleName = "Fulfillment";
+
+		public static string Localize(this string source)
+		{
+			return source.Localize(null, ModuleName);
+		}
 	}
 }
