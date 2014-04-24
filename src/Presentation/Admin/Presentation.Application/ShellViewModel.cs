@@ -49,21 +49,17 @@ namespace VirtoCommerce.ManagementClient
 					{
 						AvailableGuiCultures.Add(x);
 					});
-				if (!AvailableGuiCultures.Any(x => x.Name == "en-US"))
+				if (AvailableGuiCultures.All(x => x.Name != "en-US"))
 				{
 					AvailableGuiCultures.Insert(0, CultureInfo.GetCultureInfo("en-US"));
 				}
 
 				if (AvailableGuiCultures.All(x => x.Name != System.Threading.Thread.CurrentThread.CurrentUICulture.Name))
 				{
-					System.Threading.Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en-US");
+					CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo("en-US");
 				}
-
-				ChangeLanguageAction = xx.Message.Item2;
-
 				GuiCulture = System.Threading.Thread.CurrentThread.CurrentUICulture.ThreeLetterWindowsLanguageName;
-				IsGuiCulturesAvailable = true;
-				OnPropertyChanged("IsGuiCulturesAvailable");
+				ChangeLanguageAction = xx.Message.Item2;
 			}));
 		}
 
@@ -227,7 +223,6 @@ namespace VirtoCommerce.ManagementClient
 			}
 		}
 
-		public bool IsGuiCulturesAvailable { get; private set; }
 		public DelegateCommand<string> ChangeLanguageCommand { get; set; }
 		private Action<string> ChangeLanguageAction;
 

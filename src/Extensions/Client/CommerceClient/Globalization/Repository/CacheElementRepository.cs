@@ -18,7 +18,8 @@ namespace VirtoCommerce.Client.Globalization.Repository
 		/// </summary>
 		private readonly IElementRepository _innerRepository;
 		#endregion
-		private const string StatusDateKeyInner = "~1ntern@|_st@tus_c@che_key!";
+		private const string StatusDateKeyInner = "~1ntern@|_st@tus_c@che_key!",
+							StatusDateKey = "~pu8l1c|_st@tus_c@che_key!";
 
 		#region .ctor
 		/// <summary>
@@ -63,7 +64,7 @@ namespace VirtoCommerce.Client.Globalization.Repository
 			var element = _cachedElements[cachedKey] as Element;
 			if (element == null)
 			{
-				var statusElement = GetStatusElement(culture);
+				var statusElement = GetStatusElement(culture, true);
 				if (statusElement == null)
 				{
 					var preloadedCategoryLocalizations = _innerRepository.Elements().Where(it => it.Culture.Equals(culture, StringComparison.OrdinalIgnoreCase));
@@ -72,7 +73,7 @@ namespace VirtoCommerce.Client.Globalization.Repository
 						AddCache(preloadedCategoryLocalization);
 					}
 
-					SetStatusDate(culture);
+					SetStatusElement(culture, true);
 					element = _cachedElements[cachedKey] as Element;
 				}
 			}
@@ -82,7 +83,7 @@ namespace VirtoCommerce.Client.Globalization.Repository
 		public DateTime GetStatusDate(string culture)
 		{
 			DateTime result;
-			var element = GetStatusElement(culture);
+			var element = GetStatusElement(culture, false);
 			if (element == null)
 			{
 				result = DateTime.MinValue;
@@ -99,8 +100,8 @@ namespace VirtoCommerce.Client.Globalization.Repository
 		{
 			_innerRepository.SetStatusDate(culture);
 
-			var element = new Element { Name = StatusDateKeyInner, Culture = culture, Value = DateTime.UtcNow.ToString() };
-			AddCache(element);
+			SetStatusElement(culture, false);
+			SetStatusElement(culture, true);
 		}
 
 		/// <summary>
@@ -224,10 +225,16 @@ namespace VirtoCommerce.Client.Globalization.Repository
 		}
 		#endregion
 
-		private Element GetStatusElement(string culture)
+		private Element GetStatusElement(string culture, bool isForInnerCache)
 		{
-			var cachedKey = new ElementCacheKey(StatusDateKeyInner, null, culture);
+			var cachedKey = new ElementCacheKey(isForInnerCache ? StatusDateKeyInner : StatusDateKey, null, culture);
 			return _cachedElements[cachedKey] as Element;
+		}
+
+		private void SetStatusElement(string culture, bool isForInnerCache)
+		{
+			var element = new Element { Name = isForInnerCache ? StatusDateKeyInner : StatusDateKey, Culture = culture, Value = DateTime.UtcNow.ToString() };
+			AddCache(element);
 		}
 	}
 }

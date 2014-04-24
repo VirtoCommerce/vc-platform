@@ -98,7 +98,7 @@
      Margin="0,0,0,4">
 					<DataGrid.Columns>
 						<DataGridTextColumn Header="{Loc 'Key'}" Binding="{Binding Name}" Width="0.2*"
-     LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"></DataGridTextColumn>
+     LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}" />
 						<DataGridTextColumn Header="{Loc 'Source values'}" Binding="{Binding OriginalValue}"
      Width="0.4*" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
 							<DataGridTextColumn.HeaderTemplate>
@@ -115,6 +115,7 @@
 								</DataTemplate>
 							</DataGridTextColumn.HeaderTemplate>
 						</DataGridTextColumn>
+						<DataGridTextColumn Header="{Loc 'Module'}" Binding="{Binding Category}" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}" />
 					</DataGrid.Columns>
 
 					<DataGrid.RowStyle>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -49,7 +50,7 @@ namespace VirtoCommerce.ManagementClient
 		public Shell()
 		{
 			InitializeComponent();
-			RestoreSizeAndPosition();
+			RestoreSizeAndCulture();
 			Closing += OnClosing;
 		}
 
@@ -57,7 +58,7 @@ namespace VirtoCommerce.ManagementClient
 
 		private void OnClosing(object sender, System.ComponentModel.CancelEventArgs e)
 		{
-			SaveSizeAndPosition();
+			SaveSizeAndCulture();
 			var commandProxy = ServiceLocator.Current.GetInstance<GlobalCommandsProxy>();
 			if (commandProxy != null)
 			{
@@ -89,7 +90,7 @@ namespace VirtoCommerce.ManagementClient
 			}
 		}
 
-		private void RestoreSizeAndPosition()
+		private void RestoreSizeAndCulture()
 		{
 			try
 			{
@@ -101,13 +102,14 @@ namespace VirtoCommerce.ManagementClient
 				{
 					WindowState = WindowState.Maximized;
 				}
+				CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo(Properties.Settings.Default.CurrentUICulture);
 			}
 			catch
 			{
 			}
 		}
 
-		private void SaveSizeAndPosition()
+		private void SaveSizeAndCulture()
 		{
 			try
 			{
@@ -128,6 +130,7 @@ namespace VirtoCommerce.ManagementClient
 					Properties.Settings.Default.Width = Width;
 					Properties.Settings.Default.Maximised = false;
 				}
+				Properties.Settings.Default.CurrentUICulture = System.Threading.Thread.CurrentThread.CurrentUICulture.Name;
 				Properties.Settings.Default.Save();
 			}
 			catch

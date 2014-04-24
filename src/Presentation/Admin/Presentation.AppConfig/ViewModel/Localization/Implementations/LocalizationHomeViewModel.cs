@@ -26,6 +26,14 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 {
 	public class LocalizationHomeViewModel : HomeSettingsViewModel<LocalizationGroup>, ILocalizationHomeViewModel, IEntityExportable
 	{
+		#region const
+
+		const string searchKeyAll = "--all";
+		const string searchLabelWeb = "Web pages";
+		const string searchLabelCM = "General";
+
+		#endregion
+
 		#region Dependencies
 
 		private readonly IRepositoryFactory<IAppConfigRepository> _repositoryFactory;
@@ -65,15 +73,14 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 
 		private void SendCulturesToShell()
 		{
-			var cultures = _elementRepository.EnabledLanguages().Distinct().ToList();
-
+			var cultures = _elementRepository.EnabledLanguages().ToList();
 			var msg = new GenericEvent<Tuple<List<CultureInfo>, Action<string>>> { Message = new Tuple<List<CultureInfo>, Action<string>>(cultures, DoChangeCulture) };
 			EventSystem.Publish(msg);
 		}
 
 		private void DoChangeCulture(string cultureName)
 		{
-			System.Threading.Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo(cultureName);
+			CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo(cultureName);
 
 			// force values update
 			LocalizationManager.UpdateValues();
@@ -129,9 +136,8 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 
 									// force Elements re-caching
 									var eee = _elementRepository.Elements();
-									var categories = eee.Select(x => x.Culture).Distinct();
-
-									categories.ToList().ForEach(x => _elementRepository.SetStatusDate(x));
+									var cultures = eee.Select(x => x.Culture).Distinct().ToList();
+									cultures.ForEach(x => _elementRepository.SetStatusDate(x));
 
 									// force values update
 									LocalizationManager.UpdateValues();
@@ -199,22 +205,23 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 										// list all module names
 										FilterModules = new[]
 											{
-												new KeyValuePair_string_string {Value = "Web pages".Localize()},
-												new KeyValuePair_string_string {Key = LocalizationScope.DefaultCategory, Value = "General".Localize()},
-												new KeyValuePair_string_string {Key = "AppConfig", Value = "AppConfig".Localize()},
-												new KeyValuePair_string_string {Key = "Asset", Value = "Asset".Localize()},
-												new KeyValuePair_string_string {Key = "Catalog", Value = "Catalog".Localize()},
-												new KeyValuePair_string_string {Key = "Configuration", Value = "Configuration".Localize()},
-												new KeyValuePair_string_string {Key = "Customers", Value = "Customers".Localize()},
-												new KeyValuePair_string_string {Key = "DynamicContent", Value = "DynamicContent".Localize()},
-												new KeyValuePair_string_string {Key = "Fulfillment", Value = "Fulfillment".Localize()},
-												new KeyValuePair_string_string {Key = "Import", Value = "Import".Localize()},
-												new KeyValuePair_string_string {Key = "Main", Value = "Main".Localize()},
-												new KeyValuePair_string_string {Key = "Marketing", Value = "Marketing".Localize()},
-												new KeyValuePair_string_string {Key = "Order", Value = "Order".Localize()},
-												new KeyValuePair_string_string {Key = "Reporting", Value = "Reporting".Localize()},
-												new KeyValuePair_string_string {Key = "Reviews", Value = "Reviews".Localize()},
-												new KeyValuePair_string_string {Key = "Security", Value = "Security".Localize()}
+												new KeyValuePair_string_string {Key = searchKeyAll, Value = "All"},
+												new KeyValuePair_string_string {Value = searchLabelWeb},
+												new KeyValuePair_string_string {Key = LocalizationScope.DefaultCategory, Value = searchLabelCM},
+												new KeyValuePair_string_string {Key = "AppConfig", Value = "AppConfig"},
+												new KeyValuePair_string_string {Key = "Asset", Value = "Asset"},
+												new KeyValuePair_string_string {Key = "Catalog", Value = "Catalog"},
+												new KeyValuePair_string_string {Key = "Configuration", Value = "Configuration"},
+												new KeyValuePair_string_string {Key = "Customers", Value = "Customers"},
+												new KeyValuePair_string_string {Key = "DynamicContent", Value = "DynamicContent"},
+												new KeyValuePair_string_string {Key = "Fulfillment", Value = "Fulfillment"},
+												new KeyValuePair_string_string {Key = "Import", Value = "Import"},
+												new KeyValuePair_string_string {Key = "Main", Value = "Main"},
+												new KeyValuePair_string_string {Key = "Marketing", Value = "Marketing"},
+												new KeyValuePair_string_string {Key = "Order", Value = "Order"},
+												new KeyValuePair_string_string {Key = "Reporting", Value = "Reporting"},
+												new KeyValuePair_string_string {Key = "Reviews", Value = "Reviews"},
+												new KeyValuePair_string_string {Key = "Security", Value = "Security"}
 											}.ToList();
 									});
 							}
@@ -223,39 +230,40 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 								LanguagesCodes.Contains(TranslateLanguage))
 							{
 								var query = repository.Localizations;
-
-								if (string.IsNullOrEmpty(FilterModule))
+								if (FilterModule != searchKeyAll)
 								{
-									query = query.Where(x => x.Category == "");
+									if (string.IsNullOrEmpty(FilterModule))
+									{
+										query = query.Where(x => x.Category == "");
+									}
+									else
+									{
+										query = query.Where(x => x.Category == FilterModule);
+									}
 								}
-								else
-								{
-									query = query.Where(x => x.Category == FilterModule);
-								}
+								var localQueryResults = query.ToList();
+								var keys = localQueryResults.Select(x => new { x.Name, x.Category, Key = x.Name + x.Category }).Distinct();
+								var translateItems = localQueryResults.Where(x => x.LanguageCode == TranslateLanguage).ToDictionary(x => x.Name + x.Category);
+								var originalItems = localQueryResults.Where(x => x.LanguageCode == OriginalLanguage).ToDictionary(x => x.Name + x.Category);
 
-								var names = query.ToList().Select(x => x.Name).Distinct();
-								var translateItems = query.Where(x => x.LanguageCode == TranslateLanguage).ToDictionary(x => x.Name);
-								var originalItems = query.Where(x => x.LanguageCode == OriginalLanguage).ToDictionary(x => x.Name);
-
-								foreach (var name in names)
+								foreach (var key in keys)
 								{
-									var item = name;
-									var isTranslateExists = translateItems.ContainsKey(name);
+									var isTranslateExists = translateItems.ContainsKey(key.Key);
 									if ((IsUntranslatedOnly && !isTranslateExists) || !IsUntranslatedOnly)
 									{
-										var original = originalItems.ContainsKey(name)
-														   ? originalItems[name]
+										var original = originalItems.ContainsKey(key.Key)
+														   ? originalItems[key.Key]
 														   : new Foundation.AppConfig.Model.Localization();
 										var translated = isTranslateExists
-															 ? translateItems[name]
-															 : new Foundation.AppConfig.Model.Localization()
+															 ? translateItems[key.Key]
+															 : new Foundation.AppConfig.Model.Localization
 																 {
 																	 Name = original.Name,
 																	 LanguageCode = TranslateLanguage,
-																	 Category = original.Category
+																	 Category = key.Category
 																 };
 										if (string.IsNullOrEmpty(SearchFilterName)
-											|| item.Contains(SearchFilterName)
+											|| key.Name.Contains(SearchFilterName)
 											||
 											(!string.IsNullOrEmpty(original.Value) &&
 											 original.Value.IndexOf(SearchFilterName, StringComparison.OrdinalIgnoreCase) >= 0)
@@ -263,9 +271,10 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 											(!string.IsNullOrEmpty(translated.Value) &&
 											 translated.Value.IndexOf(SearchFilterName, StringComparison.OrdinalIgnoreCase) >= 0))
 										{
-											items.Add(new LocalizationGroup()
+											items.Add(new LocalizationGroup
 												{
-													Name = item,
+													Name = key.Name,
+													Category = string.IsNullOrEmpty(key.Category) ? searchLabelWeb : (key.Category == LocalizationScope.DefaultCategory ? searchLabelCM : key.Category),
 													OriginalLocalization = original,
 													TranslateLocalization = translated
 												});

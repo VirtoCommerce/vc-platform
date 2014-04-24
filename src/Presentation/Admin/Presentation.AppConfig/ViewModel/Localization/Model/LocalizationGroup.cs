@@ -4,7 +4,8 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Model
 {
     public class LocalizationGroup
     {
-        public string Name { get; set; }
+		public string Name { get; set; }
+		public string Category { get; set; }
 
         public Foundation.AppConfig.Model.Localization TranslateLocalization { get; set; }
         

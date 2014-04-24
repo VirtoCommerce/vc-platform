@@ -51,7 +51,7 @@ namespace VirtoCommerce.Client.Globalization.Repository
 		/// <returns>IQueryable{CultureInfo}.</returns>
 		public IQueryable<System.Globalization.CultureInfo> EnabledLanguages()
 		{
-			return _resx.GetCultures().AsQueryable();
+			return _resx.GetCultures().Distinct().AsQueryable();
 		}
 
 		/// <summary>

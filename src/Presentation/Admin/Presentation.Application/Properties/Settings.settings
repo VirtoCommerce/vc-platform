@@ -1,5 +1,5 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Presentation.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="VirtoCommerce.ManagementClient.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
     <Setting Name="Bundle_WeightMeasureField" Type="System.Windows.Visibility" Scope="Application">
@@ -32,19 +32,12 @@
     <Setting Name="Product_AvailabilityField" Type="System.Windows.Visibility" Scope="Application">
       <Value Profile="(Default)">Collapsed</Value>
     </Setting>
-	<!-- rp: product can be purchasable so the next is commented -->
-    <!--<Setting Name="Product_TrackInventoryField" Type="System.Windows.Visibility" Scope="Application">
-      <Value Profile="(Default)">Collapsed</Value>
-    </Setting>-->
     <Setting Name="Product_TaxCategoryField" Type="System.Windows.Visibility" Scope="Application">
       <Value Profile="(Default)">Collapsed</Value>
     </Setting>
     <Setting Name="Product_RelationsTabHeader" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Product Items</Value>
     </Setting>
-    <!--<Setting Name="Product_PricingTab" Type="System.Windows.Visibility" Scope="Application">
-      <Value Profile="(Default)">Collapsed</Value>
-    </Setting>-->
     <Setting Name="Package_RelationsTabHeader" Type="System.String" Scope="Application">
       <Value Profile="(Default)">Package Items</Value>
     </Setting>
@@ -71,6 +64,9 @@
     </Setting>
     <Setting Name="BaseUrl" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="CurrentUICulture" Type="System.String" Scope="User">
+      <Value Profile="(Default)">en-US</Value>
     </Setting>
   </Settings>
 </SettingsFile>
