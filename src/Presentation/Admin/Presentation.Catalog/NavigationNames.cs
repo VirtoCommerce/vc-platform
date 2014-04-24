@@ -1,4 +1,5 @@
-﻿
+﻿using VirtoCommerce.Client.Globalization;
+
 namespace VirtoCommerce.ManagementClient.Catalog
 {
 	public static class NavigationNames
@@ -11,6 +12,12 @@ namespace VirtoCommerce.ManagementClient.Catalog
 							MenuNamePriceListAssignment = "MenuNamePriceListAssignment",
 							HomeNameCatalogImportJob = "CatalogImportJobHome",
 							HomeNamePricelistImportJob = "PricelistImportJobHome",
-							HomeNameReviews = "ReviewsHome";
+							HomeNameReviews = "ReviewsHome",
+							ModuleName = "Catalog";
+
+		public static string Localize(this string source)
+		{
+			return source.Localize(null, ModuleName);
+		}
 	}
 }

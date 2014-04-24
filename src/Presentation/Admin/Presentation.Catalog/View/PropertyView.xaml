@@ -69,36 +69,9 @@
 				<TextBox Grid.Row="3" Text="{Binding InnerItem.Name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
 				<TextBlock Grid.Row="4" Text="* Property Type:" />
 
-				<core_controls:NullItemSelectorAdapter Grid.Row="5" ItemsSource="{Binding PropertyTypes}" IsAddingNullItemsFirst="True">
-					<core_controls:NullItemSelectorAdapter.NullItems>
-						<collections:ArrayList>
-							<sys:String>Select Property Type</sys:String>
-						</collections:ArrayList>
-					</core_controls:NullItemSelectorAdapter.NullItems>
-					<ComboBox SelectedValue="{Binding InnerItem.PropertyValueType, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource propertyValueConverter}, ConverterParameter=Int2PropertyValueType}">
-						<ComboBox.ItemTemplate>
-							<DataTemplate>
-								<Grid>
-									<TextBlock x:Name="textBlock" Text="{Binding }" />
-								</Grid>
-								<DataTemplate.Triggers>
-									<MultiDataTrigger>
-										<MultiDataTrigger.Conditions>
-											<Condition Binding="{Binding Text, ElementName=textBlock}" Value="Select Property Type" />
-											<Condition Binding="{Binding IsDropDownOpen, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" Value="False" />
-										</MultiDataTrigger.Conditions>
-										<Setter TargetName="textBlock" Property="FontStyle" Value="Italic" />
-									</MultiDataTrigger>
-								</DataTemplate.Triggers>
-							</DataTemplate>
-						</ComboBox.ItemTemplate>
-						<!--<i:Interaction.Triggers>
-                    <i:EventTrigger EventName="SelectionChanged">
-                        <ei:ChangePropertyAction PropertyName="PropertyValueType" TargetObject="{Binding}" Value="{Binding SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>-->
-					</ComboBox>
-				</core_controls:NullItemSelectorAdapter>
+				<ComboBox Grid.Row="5" ItemsSource="{Binding PropertyTypes}" SelectedValue="{Binding InnerItem.PropertyValueType, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged, Converter={StaticResource propertyValueConverter}, ConverterParameter=Int2PropertyValueType}" 
+							  ItemTemplate="{StaticResource Virto_Search_ComboBox_DataTemplate}"
+							  inf_behavior:WatermarkComboBoxBehavior.EnableWatermark="True" inf_behavior:WatermarkComboBoxBehavior.Label="Select Property Type" />
 
 				<CheckBox Grid.Row="6" Content="Required" IsChecked="{Binding InnerItem.IsRequired}" />
 				<CheckBox Grid.Row="7" Content="Dictionary" IsChecked="{Binding InnerItem.IsEnum}" />

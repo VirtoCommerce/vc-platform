@@ -18,7 +18,6 @@
 				<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/WizardViewTheme/VirtoCommerceWizardTheme.xaml"/>
 			</ResourceDictionary.MergedDictionaries>
 
-			<fulfillmentInfrastructure:StoreStatesConverter x:Key="storeStatesConverter" />
 			<ObjectDataProvider x:Key="AvailableStoreStates" ObjectType="{x:Type sys:Enum}" MethodName="GetValues">
 				<ObjectDataProvider.MethodParameters>
 					<x:TypeExtension TypeName="commerceFoundationStoresModel:StoreState" />
@@ -67,10 +66,10 @@
 				</StackPanel>
 				<StackPanel Grid.Row="1" Grid.Column="2">
 					<TextBlock Text="State:" />
-					<ComboBox SelectedValue="{Binding InnerItem.StoreState, Converter={StaticResource storeStatesConverter}}" ItemsSource="{Binding Source={StaticResource AvailableStoreStates}}">
+					<ComboBox SelectedValue="{Binding InnerItem.StoreState, Converter={x:Static fulfillmentInfrastructure:StoreStatesConverter.Current}}" ItemsSource="{Binding Source={StaticResource AvailableStoreStates}}">
 						<ComboBox.ItemTemplate>
 							<DataTemplate>
-								<TextBlock Text="{Binding }" />
+								<TextBlock Text="{Binding Converter={x:Static fulfillmentInfrastructure:StoreStatesConverter.Current}}" />
 							</DataTemplate>
 						</ComboBox.ItemTemplate>
 					</ComboBox>

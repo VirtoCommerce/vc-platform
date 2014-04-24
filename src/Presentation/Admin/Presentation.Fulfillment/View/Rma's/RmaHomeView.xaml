@@ -79,7 +79,7 @@
                 </Grid.RowDefinitions>
 
                 <ItemsControl Grid.Row="0" Style="{StaticResource Virto_ToolbarItemsControl_Style}">
-                    <core_controls:MetroButton x:Name="btnRefresh" Command="{Binding SearchItemsCommand}" Header="REFRESH" ToolTip="Refresh" Margin="3,0,28,0" >
+                    <core_controls:MetroButton x:Name="btnRefresh" Command="{Binding SearchItemsCommand}" Header="REFRESH" ToolTip="Refresh list" Margin="3,0,28,0" >
                         <core_controls:VectorImage ImageResource="{StaticResource Icon_Button_RefreshList}" Width="14" Height="14" Margin="1,0,0,0" />
                     </core_controls:MetroButton>
                 </ItemsControl>
@@ -135,23 +135,7 @@
                                     </collections:ArrayList>
                                 </core_controls:NullItemSelectorAdapter.NullItems>
 
-                                <ComboBox SelectedValue="{Binding SearchFilterReason, Mode=TwoWay}">
-                                    <ComboBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <Grid>
-                                                <TextBlock x:Name="textBlock" Text="{Binding }" />
-                                            </Grid>
-                                            <DataTemplate.Triggers>
-                                                <MultiDataTrigger>
-                                                    <MultiDataTrigger.Conditions>
-                                                        <Condition Binding="{Binding Text, ElementName=textBlock}" Value="Select..." />
-                                                        <Condition Binding="{Binding IsDropDownOpen, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" Value="False" />
-                                                    </MultiDataTrigger.Conditions>
-                                                    <Setter TargetName="textBlock" Property="FontStyle" Value="Italic" />
-                                                </MultiDataTrigger>
-                                            </DataTemplate.Triggers>
-                                        </DataTemplate>
-                                    </ComboBox.ItemTemplate>
+								<ComboBox SelectedValue="{Binding SearchFilterReason, Mode=TwoWay}" ItemTemplate="{StaticResource Virto_Search_ComboBox_DataTemplate}">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="SelectionChanged">
                                             <i:InvokeCommandAction Command="{Binding SearchItemsCommand}" />
@@ -167,24 +151,7 @@
                                         <sys:String>Select...</sys:String>
                                     </collections:ArrayList>
                                 </core_controls:NullItemSelectorAdapter.NullItems>
-
-                                <ComboBox SelectedValue="{Binding SearchFilterStatus, Mode=TwoWay}" x:Name="returnStatus">
-                                    <ComboBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <Grid>
-                                                <TextBlock x:Name="textBlock" Text="{Binding }" />
-                                            </Grid>
-                                            <DataTemplate.Triggers>
-                                                <MultiDataTrigger>
-                                                    <MultiDataTrigger.Conditions>
-                                                        <Condition Binding="{Binding Text, ElementName=textBlock}" Value="Select..." />
-                                                        <Condition Binding="{Binding IsDropDownOpen, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" Value="False" />
-                                                    </MultiDataTrigger.Conditions>
-                                                    <Setter TargetName="textBlock" Property="FontStyle" Value="Italic" />
-                                                </MultiDataTrigger>
-                                            </DataTemplate.Triggers>
-                                        </DataTemplate>
-                                    </ComboBox.ItemTemplate>
+								<ComboBox SelectedValue="{Binding SearchFilterStatus, Mode=TwoWay}" x:Name="returnStatus" ItemTemplate="{StaticResource Virto_Search_ComboBox_DataTemplate}">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="SelectionChanged">
                                             <i:InvokeCommandAction Command="{Binding SearchItemsCommand}" />

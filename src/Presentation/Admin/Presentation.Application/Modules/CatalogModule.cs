@@ -67,7 +67,7 @@ namespace VirtoCommerce.ManagementClient.Catalog
 				var menuNavItem = new NavigationMenuItem(NavigationNames.MenuName)
 					{
 						NavigateCommand = new DelegateCommand<NavigationItem>((x) => _navManager.Navigate(homeNavItem)),
-						Caption = "Catalogs",
+						Caption = "Catalogs".Localize(),
 						ImageResourceKey = "Icon_Module_Catalogs",
 						Order = 30,
 						ItemBackground = Color.FromRgb(80, 133, 215)

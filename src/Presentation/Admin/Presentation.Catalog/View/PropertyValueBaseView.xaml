@@ -119,18 +119,7 @@
                 behaviors:WatermarkComboBoxBehavior.EnableWatermark="True" behaviors:WatermarkComboBoxBehavior.Label="Select Value">
 			<ComboBox.ItemTemplate>
 				<DataTemplate>
-					<Grid>
-						<TextBlock x:Name="textBlock" Text="{Binding Converter={StaticResource propertyValueConverter}}" />
-					</Grid>
-					<DataTemplate.Triggers>
-						<MultiDataTrigger>
-							<MultiDataTrigger.Conditions>
-								<Condition Binding="{Binding Text, ElementName=textBlock}" Value="Select Value" />
-								<Condition Binding="{Binding IsDropDownOpen, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" Value="False" />
-							</MultiDataTrigger.Conditions>
-							<Setter TargetName="textBlock" Property="FontStyle" Value="Italic" />
-						</MultiDataTrigger>
-					</DataTemplate.Triggers>
+					<TextBlock Text="{Binding Converter={StaticResource propertyValueConverter}}" />
 				</DataTemplate>
 			</ComboBox.ItemTemplate>
 		</ComboBox>

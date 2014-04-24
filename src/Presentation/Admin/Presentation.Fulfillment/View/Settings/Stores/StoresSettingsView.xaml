@@ -48,7 +48,7 @@
             </Grid.RowDefinitions>
 
             <ItemsControl Grid.Row="0" Style="{StaticResource Virto_ToolbarItemsControl_Style}">
-				<core_controls:MetroButton Command="{Binding RefreshItemListCommand}" Header="REFRESH" ToolTip="Refresh" Margin="3,0,28,0" >
+				<core_controls:MetroButton Command="{Binding RefreshItemListCommand}" Header="REFRESH" ToolTip="Refresh list" Margin="3,0,28,0" >
 					<core_controls:VectorImage ImageResource="{StaticResource Icon_Button_RefreshList}" Width="14" Height="14" />
 				</core_controls:MetroButton>
 				<core_controls:MetroButton Command="{Binding ItemAddCommand}" Header="ADD" ToolTip="Add item">
@@ -66,7 +66,7 @@
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Store Name" Binding="{Binding Name}" Width="*" />
                     <DataGridTextColumn Header="URL" Binding="{Binding Url}" Width="*" />
-                    <DataGridTextColumn Header="State" Binding="{Binding StoreState, Converter={StaticResource storeStatesConverter}}" Width="115" />
+					<DataGridTextColumn Header="State" Binding="{Binding StoreState, Converter={x:Static fulfillmentInfrastructure:StoreStatesConverter.Current}}" Width="115" />
                 </DataGrid.Columns>
 
                 <DataGrid.RowStyle>

@@ -22,96 +22,96 @@
 	Style="{StaticResource Virto_HomeView_Style}"
 	mc:Ignorable="d" d:DesignWidth="900" d:DesignHeight="500">
 
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Reviews;component/View/Views/GridView.xaml"/>
-                <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/HomeViewTheme/VirtoCommerceHomeTheme.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
+	<UserControl.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Reviews;component/View/Views/GridView.xaml"/>
+				<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/HomeViewTheme/VirtoCommerceHomeTheme.xaml"/>
+			</ResourceDictionary.MergedDictionaries>
 
-            <Style x:Key="CollapsableColumn" TargetType="{x:Type ColumnDefinition}">
-                <Setter Property="ColumnDefinition.Width" Value="200" />
-                <Style.Triggers>
-                    <DataTrigger Binding="{Binding ElementName=expandedTab, Path=IsExpanded}" Value="False">
-                        <DataTrigger.EnterActions>
-                            <BeginStoryboard Name="BeginStoryboard1">
-                                <Storyboard>
-                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Width">
-                                        <ObjectAnimationUsingKeyFrames.KeyFrames>
-                                            <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static GridLength.Auto}" />
-                                        </ObjectAnimationUsingKeyFrames.KeyFrames>
-                                    </ObjectAnimationUsingKeyFrames>
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </DataTrigger.EnterActions>
-                        <DataTrigger.ExitActions>
-                            <RemoveStoryboard BeginStoryboardName="BeginStoryboard1" />
-                        </DataTrigger.ExitActions>
-                    </DataTrigger>
-                </Style.Triggers>
-            </Style>
+			<Style x:Key="CollapsableColumn" TargetType="{x:Type ColumnDefinition}">
+				<Setter Property="ColumnDefinition.Width" Value="200" />
+				<Style.Triggers>
+					<DataTrigger Binding="{Binding ElementName=expandedTab, Path=IsExpanded}" Value="False">
+						<DataTrigger.EnterActions>
+							<BeginStoryboard Name="BeginStoryboard1">
+								<Storyboard>
+									<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Width">
+										<ObjectAnimationUsingKeyFrames.KeyFrames>
+											<DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static GridLength.Auto}" />
+										</ObjectAnimationUsingKeyFrames.KeyFrames>
+									</ObjectAnimationUsingKeyFrames>
+								</Storyboard>
+							</BeginStoryboard>
+						</DataTrigger.EnterActions>
+						<DataTrigger.ExitActions>
+							<RemoveStoryboard BeginStoryboardName="BeginStoryboard1" />
+						</DataTrigger.ExitActions>
+					</DataTrigger>
+				</Style.Triggers>
+			</Style>
 
-            <ObjectDataProvider x:Key="ReviewStatus" ObjectType="{x:Type sys:Enum}" MethodName="GetValues">
-                <ObjectDataProvider.MethodParameters>
-                    <x:TypeExtension TypeName="reviewsModel:ReviewStatus" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
+			<ObjectDataProvider x:Key="ReviewStatus" ObjectType="{x:Type sys:Enum}" MethodName="GetValues">
+				<ObjectDataProvider.MethodParameters>
+					<x:TypeExtension TypeName="reviewsModel:ReviewStatus" />
+				</ObjectDataProvider.MethodParameters>
+			</ObjectDataProvider>
 
-            <ObjectDataProvider x:Key="ReviewTypes" ObjectType="{x:Type sys:Enum}" MethodName="GetValues">
-                <ObjectDataProvider.MethodParameters>
-                    <x:TypeExtension TypeName="localModel:ReviewType" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-        </ResourceDictionary>
-    </UserControl.Resources>
+			<ObjectDataProvider x:Key="ReviewTypes" ObjectType="{x:Type sys:Enum}" MethodName="GetValues">
+				<ObjectDataProvider.MethodParameters>
+					<x:TypeExtension TypeName="localModel:ReviewType" />
+				</ObjectDataProvider.MethodParameters>
+			</ObjectDataProvider>
+		</ResourceDictionary>
+	</UserControl.Resources>
 
-    <Grid>
-        <i:Interaction.Triggers>
-            <prism:InteractionRequestTrigger SourceObject="{Binding CommonConfirmRequest, Mode=OneWay}">
-                <interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:ConfirmationLocalModalInteractionDialog}" />
-            </prism:InteractionRequestTrigger>
-            <prism:InteractionRequestTrigger SourceObject="{Binding CommonNotifyRequest, Mode=OneWay}">
-                <interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:NotificationLocalModalInteractionDialog}" />
-            </prism:InteractionRequestTrigger>
-        </i:Interaction.Triggers>
+	<Grid>
+		<i:Interaction.Triggers>
+			<prism:InteractionRequestTrigger SourceObject="{Binding CommonConfirmRequest, Mode=OneWay}">
+				<interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:ConfirmationLocalModalInteractionDialog}" />
+			</prism:InteractionRequestTrigger>
+			<prism:InteractionRequestTrigger SourceObject="{Binding CommonNotifyRequest, Mode=OneWay}">
+				<interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:NotificationLocalModalInteractionDialog}" />
+			</prism:InteractionRequestTrigger>
+		</i:Interaction.Triggers>
 
-        <core_controls:SearchTextBox SearchEventTimeDelay="0:0:1" Text="{Binding SearchFilterKeyword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
+		<core_controls:SearchTextBox SearchEventTimeDelay="0:0:1" Text="{Binding SearchFilterKeyword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"  
                                      HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-70,20,0" Width="250">
-            <i:Interaction.Triggers>
-                <i:EventTrigger EventName="Search">
-                    <i:InvokeCommandAction Command="{Binding SearchItemsCommand}" />
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-        </core_controls:SearchTextBox>
+			<i:Interaction.Triggers>
+				<i:EventTrigger EventName="Search">
+					<i:InvokeCommandAction Command="{Binding SearchItemsCommand}" />
+				</i:EventTrigger>
+			</i:Interaction.Triggers>
+		</core_controls:SearchTextBox>
 
-         <Grid x:Name="LayoutRoot" Margin="0,0,0,6">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="21"/>
-                <ColumnDefinition Style="{DynamicResource CollapsableColumn}" MinWidth="22" Width="250" />
-            </Grid.ColumnDefinitions>
+		<Grid x:Name="LayoutRoot" Margin="0,0,0,6">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*" />
+				<ColumnDefinition Width="21"/>
+				<ColumnDefinition Style="{DynamicResource CollapsableColumn}" MinWidth="22" Width="250" />
+			</Grid.ColumnDefinitions>
 
-            <Grid x:Name="content">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
+			<Grid x:Name="content">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="*" />
+					<RowDefinition Height="Auto" />
+				</Grid.RowDefinitions>
 
-                <!--Toolbar-->
-                <ItemsControl Grid.Row="0" Style="{StaticResource Virto_ToolbarItemsControl_Style}">
-                    <core_controls:MetroButton x:Name="btnApprove" Command="{Binding ApproveSelectedCommand}" Header="APPROVE" ToolTip="Approve checked reviews" Margin="3,0,28,0" >
-                        <core_controls:VectorImage ImageResource="{StaticResource Icon_Button_Submit}" Width="14" Height="14" />
-                    </core_controls:MetroButton>
-                    <core_controls:MetroButton x:Name="btnDecline" Command="{Binding DeclineSelectedCommand}" Header="DECLINE" ToolTip="Decline checked reviews" Margin="3,0,28,0" >
-                        <Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/cancel.png" Width="14"/>
-                    </core_controls:MetroButton>
-                    <core_controls:MetroButton x:Name="btnRefresh" Command="{Binding ItemsListRefreshCommand}" Header="REFRESH" ToolTip="Refresh" Margin="3,0,28,0" >
-                        <core_controls:VectorImage ImageResource="{StaticResource Icon_Button_RefreshList}" Width="14" Height="14" />
-                    </core_controls:MetroButton>
-                </ItemsControl>
+				<!--Toolbar-->
+				<ItemsControl Grid.Row="0" Style="{StaticResource Virto_ToolbarItemsControl_Style}">
+					<core_controls:MetroButton x:Name="btnApprove" Command="{Binding ApproveSelectedCommand}" Header="APPROVE" ToolTip="Approve checked reviews" Margin="3,0,28,0" >
+						<core_controls:VectorImage ImageResource="{StaticResource Icon_Button_Submit}" Width="14" Height="14" />
+					</core_controls:MetroButton>
+					<core_controls:MetroButton x:Name="btnDecline" Command="{Binding DeclineSelectedCommand}" Header="DECLINE" ToolTip="Decline checked reviews" Margin="3,0,28,0" >
+						<Image Source="/VirtoCommerce.ManagementClient.Core;component/Themes/images/cancel.png" Width="14"/>
+					</core_controls:MetroButton>
+					<core_controls:MetroButton x:Name="btnRefresh" Command="{Binding ItemsListRefreshCommand}" Header="REFRESH" ToolTip="Refresh list" Margin="3,0,28,0" >
+						<core_controls:VectorImage ImageResource="{StaticResource Icon_Button_RefreshList}" Width="14" Height="14" />
+					</core_controls:MetroButton>
+				</ItemsControl>
 
-                <core_controls:VirtualFolderItemList Grid.Row="1"  
+				<core_controls:VirtualFolderItemList Grid.Row="1"  
 														IsSynchronizedWithCurrentItem="True"
 														Style="{StaticResource Virto_VirtualFolderItemList_Style}"
 														ItemContainerStyle="{StaticResource Virto_VirtualListView_Default_ItemContainerStyle}"
@@ -120,132 +120,99 @@
 														core_common:GridViewColumnResize.Enabled="False"
                                                         HorizontalAlignment="Stretch"
 														Margin="0,4,0,0">
-                    <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="SelectionChanged">
-                            <ei:CallMethodAction TargetObject="{Binding ApproveSelectedCommand}" MethodName="RaiseCanExecuteChanged"/>
-                            <ei:CallMethodAction TargetObject="{Binding DeclineSelectedCommand}" MethodName="RaiseCanExecuteChanged"/>
-                        </i:EventTrigger>
-                    </i:Interaction.Triggers>
-                </core_controls:VirtualFolderItemList>
+					<i:Interaction.Triggers>
+						<i:EventTrigger EventName="SelectionChanged">
+							<ei:CallMethodAction TargetObject="{Binding ApproveSelectedCommand}" MethodName="RaiseCanExecuteChanged"/>
+							<ei:CallMethodAction TargetObject="{Binding DeclineSelectedCommand}" MethodName="RaiseCanExecuteChanged"/>
+						</i:EventTrigger>
+					</i:Interaction.Triggers>
+				</core_controls:VirtualFolderItemList>
 
-                <TextBlock Text="{Binding ItemsSource.TotalItemsCount, StringFormat='Items: {0}'}" Grid.Row="2" HorizontalAlignment="Right" Margin="0" VerticalAlignment="Bottom" Padding="0,1,0,0" />
-            </Grid>
+				<TextBlock Text="{Binding ItemsSource.TotalItemsCount, StringFormat='Items: {0}'}" Grid.Row="2" HorizontalAlignment="Right" Margin="0" VerticalAlignment="Bottom" Padding="0,1,0,0" />
+			</Grid>
 
-            <core_controls:ExpandedTabControl Grid.Column="2" x:Name="expandedTab" Padding="10" Focusable="False" VerticalAlignment="Stretch">                
-                <TabItem>
-                    <TabItem.Header>
-                        <core_controls:VectorImage ImageResource="{StaticResource Icon_Search}" Height="18" Width="18" Foreground="Black"/>
-                    </TabItem.Header>
-                    <DockPanel LastChildFill="False">
-                        <TextBlock DockPanel.Dock="Top" Text="NARROW YOUR RESULTS" Margin="0,5" Style="{DynamicResource Virto_TextBlock_TabTitle_Style}"/>
-                        <Grid DockPanel.Dock="Top">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto" />
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto" />
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto" />
-                                <RowDefinition Height="auto"/>
-                                <RowDefinition Height="auto" />
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-                            <TextBlock Grid.Row="0" Text="Type" VerticalAlignment="Center"/>
-                            <core_controls:NullItemSelectorAdapter Grid.Row="1" ItemsSource="{Binding Source={StaticResource ReviewTypes}}" IsAddingNullItemsFirst="True" Width="Auto" HorizontalAlignment="Stretch">
-                                <core_controls:NullItemSelectorAdapter.NullItems>
-                                    <collections:ArrayList>
-                                        <sys:String>Select...</sys:String>
-                                    </collections:ArrayList>
-                                </core_controls:NullItemSelectorAdapter.NullItems>
+			<core_controls:ExpandedTabControl Grid.Column="2" x:Name="expandedTab" Padding="10" Focusable="False" VerticalAlignment="Stretch">
+				<TabItem>
+					<TabItem.Header>
+						<core_controls:VectorImage ImageResource="{StaticResource Icon_Search}" Height="18" Width="18" Foreground="Black"/>
+					</TabItem.Header>
+					<DockPanel LastChildFill="False">
+						<TextBlock DockPanel.Dock="Top" Text="NARROW YOUR RESULTS" Margin="0,5" Style="{DynamicResource Virto_TextBlock_TabTitle_Style}"/>
+						<Grid DockPanel.Dock="Top">
+							<Grid.RowDefinitions>
+								<RowDefinition Height="auto"/>
+								<RowDefinition Height="auto" />
+								<RowDefinition Height="auto"/>
+								<RowDefinition Height="auto" />
+								<RowDefinition Height="auto"/>
+								<RowDefinition Height="auto" />
+								<RowDefinition Height="auto"/>
+								<RowDefinition Height="auto" />
+								<RowDefinition/>
+							</Grid.RowDefinitions>
+							<TextBlock Grid.Row="0" Text="Type" VerticalAlignment="Center"/>
+							<core_controls:NullItemSelectorAdapter Grid.Row="1" ItemsSource="{Binding Source={StaticResource ReviewTypes}}" IsAddingNullItemsFirst="True" Width="Auto" HorizontalAlignment="Stretch">
+								<core_controls:NullItemSelectorAdapter.NullItems>
+									<collections:ArrayList>
+										<sys:String>Select...</sys:String>
+									</collections:ArrayList>
+								</core_controls:NullItemSelectorAdapter.NullItems>
 
-                                <ComboBox SelectedValue="{Binding SearchFilterReviewType, Mode=TwoWay}" x:Name="reviewType">
-                                    <ComboBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <Grid>
-                                                <TextBlock x:Name="textBlock" Text="{Binding }" />
-                                            </Grid>
-                                            <DataTemplate.Triggers>
-                                                <MultiDataTrigger>
-                                                    <MultiDataTrigger.Conditions>
-                                                        <Condition Binding="{Binding Text, ElementName=textBlock}" Value="Select..." />
-                                                        <Condition Binding="{Binding IsDropDownOpen, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" Value="False" />
-                                                    </MultiDataTrigger.Conditions>
-                                                    <Setter TargetName="textBlock" Property="FontStyle" Value="Italic" />
-                                                </MultiDataTrigger>
-                                            </DataTemplate.Triggers>
-                                        </DataTemplate>
-                                    </ComboBox.ItemTemplate>
-                                    <i:Interaction.Triggers>
-                                        <i:EventTrigger EventName="SelectionChanged">
-                                            <i:InvokeCommandAction Command="{Binding SearchItemsCommand}" CommandParameter="{Binding ElementName=reviewType, Path=Name}" />
-                                        </i:EventTrigger>
-                                    </i:Interaction.Triggers>
-                                </ComboBox>
-                            </core_controls:NullItemSelectorAdapter>
+								<ComboBox SelectedValue="{Binding SearchFilterReviewType, Mode=TwoWay}" x:Name="reviewType" ItemTemplate="{StaticResource Virto_Search_ComboBox_DataTemplate}">
+									<i:Interaction.Triggers>
+										<i:EventTrigger EventName="SelectionChanged">
+											<i:InvokeCommandAction Command="{Binding SearchItemsCommand}" CommandParameter="{Binding ElementName=reviewType, Path=Name}" />
+										</i:EventTrigger>
+									</i:Interaction.Triggers>
+								</ComboBox>
+							</core_controls:NullItemSelectorAdapter>
 
-                            <TextBlock Grid.Row="2" Text="Status" VerticalAlignment="Center"/>
-                            <core_controls:NullItemSelectorAdapter Grid.Row="3" ItemsSource="{Binding Source={StaticResource ReviewStatus}}" IsAddingNullItemsFirst="True" Width="Auto" HorizontalAlignment="Stretch">
-                                <core_controls:NullItemSelectorAdapter.NullItems>
-                                    <collections:ArrayList>
-                                        <sys:String>Select...</sys:String>
-                                    </collections:ArrayList>
-                                </core_controls:NullItemSelectorAdapter.NullItems>
+							<TextBlock Grid.Row="2" Text="Status" VerticalAlignment="Center"/>
+							<core_controls:NullItemSelectorAdapter Grid.Row="3" ItemsSource="{Binding Source={StaticResource ReviewStatus}}" IsAddingNullItemsFirst="True" Width="Auto" HorizontalAlignment="Stretch">
+								<core_controls:NullItemSelectorAdapter.NullItems>
+									<collections:ArrayList>
+										<sys:String>Select...</sys:String>
+									</collections:ArrayList>
+								</core_controls:NullItemSelectorAdapter.NullItems>
+								<ComboBox SelectedValue="{Binding SearchFilterReviewStatus, Mode=TwoWay}" x:Name="reviewStatus" ItemTemplate ="{StaticResource Virto_Search_ComboBox_DataTemplate}">
+									<i:Interaction.Triggers>
+										<i:EventTrigger EventName="SelectionChanged">
+											<i:InvokeCommandAction Command="{Binding SearchItemsCommand}" CommandParameter="{Binding ElementName=reviewStatus, Path=Name}" />
+										</i:EventTrigger>
+									</i:Interaction.Triggers>
+								</ComboBox>
+							</core_controls:NullItemSelectorAdapter>
 
-                                    <ComboBox SelectedValue="{Binding SearchFilterReviewStatus, Mode=TwoWay}" x:Name="reviewStatus">
-                                    <ComboBox.ItemTemplate>
-                                        <DataTemplate>
-                                            <Grid>
-                                                <TextBlock x:Name="textBlock" Text="{Binding }" />
-                                            </Grid>
-                                            <DataTemplate.Triggers>
-                                                <MultiDataTrigger>
-                                                    <MultiDataTrigger.Conditions>
-                                                        <Condition Binding="{Binding Text, ElementName=textBlock}" Value="Select..." />
-                                                        <Condition Binding="{Binding IsDropDownOpen, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" Value="False" />
-                                                    </MultiDataTrigger.Conditions>
-                                                    <Setter TargetName="textBlock" Property="FontStyle" Value="Italic" />
-                                                </MultiDataTrigger>
-                                            </DataTemplate.Triggers>
-                                        </DataTemplate>
-                                    </ComboBox.ItemTemplate>
-                                    <i:Interaction.Triggers>
-                                        <i:EventTrigger EventName="SelectionChanged">
-                                                <i:InvokeCommandAction Command="{Binding SearchItemsCommand}" CommandParameter="{Binding ElementName=reviewStatus, Path=Name}" />
-                                        </i:EventTrigger>
-                                    </i:Interaction.Triggers>
-                                </ComboBox>
-                            </core_controls:NullItemSelectorAdapter>
+							<TextBlock Grid.Row="4" Text="Item" VerticalAlignment="Center"/>
+							<core_controls:SearchTextBox Grid.Row="5" x:Name="item" SearchEventTimeDelay="0:0:1" Text="{Binding SearchFilterItemName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+								<i:Interaction.Triggers>
+									<i:EventTrigger EventName="Search">
+										<i:InvokeCommandAction Command="{Binding SearchItemsCommand}" CommandParameter="{Binding ElementName=item, Path=Name}" />
+									</i:EventTrigger>
+								</i:Interaction.Triggers>
+							</core_controls:SearchTextBox>
 
-                            <TextBlock Grid.Row="4" Text="Item" VerticalAlignment="Center"/>
-                            <core_controls:SearchTextBox Grid.Row="5" x:Name="item" SearchEventTimeDelay="0:0:1" Text="{Binding SearchFilterItemName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="Search">
-                                        <i:InvokeCommandAction Command="{Binding SearchItemsCommand}" CommandParameter="{Binding ElementName=item, Path=Name}" />
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </core_controls:SearchTextBox>
-
-                            <TextBlock Grid.Row="6" Text="Author name" VerticalAlignment="Center"/>
-                            <core_controls:SearchTextBox Grid.Row="7" x:Name="author" SearchEventTimeDelay="0:0:1" Text="{Binding SearchFilterAuthorName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
-                                <i:Interaction.Triggers>
-                                    <i:EventTrigger EventName="Search">
-                                        <i:InvokeCommandAction Command="{Binding SearchItemsCommand}" CommandParameter="{Binding ElementName=author, Path=Name}" />
-                                    </i:EventTrigger>
-                                </i:Interaction.Triggers>
-                            </core_controls:SearchTextBox>
-                        </Grid>
-                        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,5">
-                            <Button  Content="Clear" Command="{Binding ClearFiltersCommand}" />
-                            <Button  Margin="6,0,0,0" Content="Apply filters" Command="{Binding SearchItemsCommand}" />
-                        </StackPanel>
-                    </DockPanel>
-                </TabItem>
-            </core_controls:ExpandedTabControl>
-            <GridSplitter Grid.Column="1" BorderThickness="1" Width="1" Height="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Center"
+							<TextBlock Grid.Row="6" Text="Author name" VerticalAlignment="Center"/>
+							<core_controls:SearchTextBox Grid.Row="7" x:Name="author" SearchEventTimeDelay="0:0:1" Text="{Binding SearchFilterAuthorName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+								<i:Interaction.Triggers>
+									<i:EventTrigger EventName="Search">
+										<i:InvokeCommandAction Command="{Binding SearchItemsCommand}" CommandParameter="{Binding ElementName=author, Path=Name}" />
+									</i:EventTrigger>
+								</i:Interaction.Triggers>
+							</core_controls:SearchTextBox>
+						</Grid>
+						<StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,5">
+							<Button  Content="Clear" Command="{Binding ClearFiltersCommand}" />
+							<Button  Margin="6,0,0,0" Content="Apply filters" Command="{Binding SearchItemsCommand}" />
+						</StackPanel>
+					</DockPanel>
+				</TabItem>
+			</core_controls:ExpandedTabControl>
+			<GridSplitter Grid.Column="1" BorderThickness="1" Width="1" Height="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Center"
 								  BorderBrush="{StaticResource Virto_Splitter_BorderBrush_Brush}" ResizeDirection="Columns" Background="{x:Null}"
 								  Visibility="{Binding ElementName=expandedTab, Path=IsExpanded, Converter={x:Static Presentation_Infrastructure_Converters:ToVisibilityConverter.Current}}"/>
-        </Grid>
+		</Grid>
 
-    </Grid>
+	</Grid>
 
 </UserControl>

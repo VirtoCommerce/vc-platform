@@ -5,10 +5,8 @@
             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
             xmlns:Presentation_Core_Infrastructure_Converters="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Converters;assembly=VirtoCommerce.ManagementClient.Core"
-            xmlns:catalogsModel="clr-namespace:VirtoCommerce.Foundation.Catalogs.Model;assembly=VirtoCommerce.Foundation"
-            xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
-            xmlns:collections="clr-namespace:System.Collections;assembly=mscorlib"
                xmlns:extToolkit="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
+               xmlns:behaviors="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Behaviors;assembly=VirtoCommerce.ManagementClient.Core"
                mc:Ignorable="d" d:DesignHeight="500" Width="400" VerticalAlignment="Top" HorizontalAlignment="Left">
 	<base:ViewBase.Resources>
 		<ResourceDictionary>
@@ -59,32 +57,14 @@
                 SelectedDate="{Binding InnerItem.DateTimeValue, ValidatesOnDataErrors=True, UpdateSourceTrigger=Default}" />
 			<TextBlock Grid.Row="10" Text="Language:" Visibility="{Binding IsMultiLanguage, Converter={StaticResource booleanToVisibilityConverter}}" />
 
-
-			<core_controls:NullItemSelectorAdapter Grid.Row="11" ItemsSource="{Binding ParentCatalog.CatalogLanguages}" IsAddingNullItemsFirst="True" Visibility="{Binding IsMultiLanguage, Converter={StaticResource booleanToVisibilityConverter}}">
-				<core_controls:NullItemSelectorAdapter.NullItems>
-					<collections:ArrayList>
-						<catalogsModel:CatalogLanguage Language="Select Language" />
-					</collections:ArrayList>
-				</core_controls:NullItemSelectorAdapter.NullItems>
-				<ComboBox SelectedValue="{Binding InnerItem.Locale, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Language">
-					<ComboBox.ItemTemplate>
-						<DataTemplate>
-							<Grid>
-								<TextBlock x:Name="textBlock" Text="{Binding Language, Converter={StaticResource cultureConverter}, Mode=OneWay}" />
-							</Grid>
-							<DataTemplate.Triggers>
-								<MultiDataTrigger>
-									<MultiDataTrigger.Conditions>
-										<Condition Binding="{Binding Text, ElementName=textBlock}" Value="Select Language" />
-										<Condition Binding="{Binding IsDropDownOpen, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" Value="False" />
-									</MultiDataTrigger.Conditions>
-									<Setter TargetName="textBlock" Property="FontStyle" Value="Italic" />
-								</MultiDataTrigger>
-							</DataTemplate.Triggers>
-						</DataTemplate>
-					</ComboBox.ItemTemplate>
-				</ComboBox>
-			</core_controls:NullItemSelectorAdapter>
+			<ComboBox Grid.Row="11" ItemsSource="{Binding ParentCatalog.CatalogLanguages}" Visibility="{Binding IsMultiLanguage, Converter={StaticResource booleanToVisibilityConverter}}" SelectedValue="{Binding InnerItem.Locale, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Language"
+					  behaviors:WatermarkComboBoxBehavior.EnableWatermark="True" behaviors:WatermarkComboBoxBehavior.Label="Select Language">
+				<ComboBox.ItemTemplate>
+					<DataTemplate>
+						<TextBlock Text="{Binding Language, Converter={StaticResource cultureConverter}}" />
+					</DataTemplate>
+				</ComboBox.ItemTemplate>
+			</ComboBox>
 
 		</Grid>
 	</ScrollViewer>

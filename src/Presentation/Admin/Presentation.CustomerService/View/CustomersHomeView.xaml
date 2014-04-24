@@ -82,7 +82,7 @@
                         </i:Interaction.Triggers>
 
 
-                        <core_controls:MetroButton x:Name="btnRefresh" Command="{Binding RefreshCommand}" Header="REFRESH" ToolTip="Refresh" Margin="3,0,28,0">
+                        <core_controls:MetroButton x:Name="btnRefresh" Command="{Binding RefreshCommand}" Header="REFRESH" ToolTip="Refresh list" Margin="3,0,28,0">
                             <core_controls:VectorImage ImageResource="{StaticResource Icon_Button_RefreshList}" Width="14" Height="14" Margin="1,0,0,0" />
                         </core_controls:MetroButton>
 

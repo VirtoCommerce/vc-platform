@@ -20,108 +20,108 @@
                xmlns:countries="clr-namespace:VirtoCommerce.Foundation.Orders.Model.Countries;assembly=VirtoCommerce.Foundation"
                xmlns:fulfillmentCenters="clr-namespace:VirtoCommerce.ManagementClient.Fulfillment.View.Wizard.FulfillmentCenters">
 
-    <UserControl.Resources>
-        <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Fulfillment;component/View/Views/GridView.xaml"/>
-                <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/DetailViewTheme/VirtoCommerceDetailTheme.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
-    </UserControl.Resources>
+	<UserControl.Resources>
+		<ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Fulfillment;component/View/Views/GridView.xaml"/>
+				<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/DetailViewTheme/VirtoCommerceDetailTheme.xaml"/>
+			</ResourceDictionary.MergedDictionaries>
+		</ResourceDictionary>
+	</UserControl.Resources>
 
-    <i:Interaction.Triggers>
-        <prism:InteractionRequestTrigger SourceObject="{Binding CommonConfirmRequest, Mode=OneWay}">
-            <interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:ConfirmationLocalModalInteractionDialog}" />
-        </prism:InteractionRequestTrigger>
-    </i:Interaction.Triggers>
+	<i:Interaction.Triggers>
+		<prism:InteractionRequestTrigger SourceObject="{Binding CommonConfirmRequest, Mode=OneWay}">
+			<interaction_dialog:InteractionDialogAction DialogType="{x:Type interaction_dialog:ConfirmationLocalModalInteractionDialog}" />
+		</prism:InteractionRequestTrigger>
+	</i:Interaction.Triggers>
 
-    <TabControl x:Name="tabControl" Style="{StaticResource Virto_TabControlHorizontal_Style}" Tag="Fulfillment Center">
-        <TabItem x:Name="tabItemSummary" Header="Summary">
-            <fulfillmentCenters:FulfillmentCenterOverviewStepView HorizontalAlignment="Left"/>
-        </TabItem>
+	<TabControl x:Name="tabControl" Style="{StaticResource Virto_TabControlHorizontal_Style}" Tag="Fulfillment Center">
+		<TabItem x:Name="tabItemSummary" Header="Summary">
+			<fulfillmentCenters:FulfillmentCenterOverviewStepView HorizontalAlignment="Left"/>
+		</TabItem>
 
-        <TabItem x:Name="tabItemAddress" Header="Contact information">
-            <Grid Width="600" HorizontalAlignment="Left">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition Width="40"/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
+		<TabItem x:Name="tabItemAddress" Header="Contact information">
+			<Grid Width="600" HorizontalAlignment="Left">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition/>
+					<ColumnDefinition Width="40"/>
+					<ColumnDefinition/>
+				</Grid.ColumnDefinitions>
 
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
+				<Grid>
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="*"/>
+					</Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" Text="* Day phone number:" />
-                    <core_controls:WatermarkedTextBox Grid.Row="1"  core_common:RequiredFieldHelper.IsRequired="True"
+					<TextBlock Grid.Row="0" Text="* Day phone number:" />
+					<core_controls:WatermarkedTextBox Grid.Row="1"  core_common:RequiredFieldHelper.IsRequired="True"
                         Text="{Binding InnerItem.DaytimePhoneNumber, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
 
-                    <TextBlock Grid.Row="2" Text="* Address (line1):" />
-                    <core_controls:WatermarkedTextBox Grid.Row="3" core_common:RequiredFieldHelper.IsRequired="True"
+					<TextBlock Grid.Row="2" Text="* Address (line1):" />
+					<core_controls:WatermarkedTextBox Grid.Row="3" core_common:RequiredFieldHelper.IsRequired="True"
                         Text="{Binding InnerItem.Line1, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
 
-                    <TextBlock Grid.Row="4" Text="* Address (line2):" />
-                    <core_controls:WatermarkedTextBox Grid.Row="5" core_common:RequiredFieldHelper.IsRequired="True"
+					<TextBlock Grid.Row="4" Text="* Address (line2):" />
+					<core_controls:WatermarkedTextBox Grid.Row="5" core_common:RequiredFieldHelper.IsRequired="True"
                         Text="{Binding InnerItem.Line2, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"/>
-                </Grid>
+				</Grid>
 
-                <Grid Grid.Column="2">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
+				<Grid Grid.Column="2">
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="Auto"/>
+						<RowDefinition Height="*"/>
+					</Grid.RowDefinitions>
 
-                    <StackPanel Grid.Row="0">
-                        <TextBlock Text="City:" />
-                        <core_controls:WatermarkedTextBox WatermarkText="Enter city..." core_common:RequiredFieldHelper.IsRequired="True"
+					<StackPanel Grid.Row="0">
+						<TextBlock Text="* City:" />
+						<core_controls:WatermarkedTextBox WatermarkText="Enter city..." core_common:RequiredFieldHelper.IsRequired="True"
                             Text="{Binding InnerItem.City, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-                    </StackPanel>
+					</StackPanel>
 
-                    <StackPanel Grid.Row="1">
-                        <TextBlock Text="Country:" />
-                        <core_controls:NullItemSelectorAdapter ItemsSource="{Binding DataContext.AllCountries, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type base:ViewBase}}}" IsAddingNullItemsFirst="True">
-                            <core_controls:NullItemSelectorAdapter.NullItems>
-                                <collections:ArrayList>
-                                    <countries:Country DisplayName="Select country..."/>
-                                </collections:ArrayList>
-                            </core_controls:NullItemSelectorAdapter.NullItems>
-                            <ComboBox DisplayMemberPath="DisplayName" SelectedItem="{Binding Path=SelectedCountry}"
-                                      x:Name="cboCountries" core_common:RequiredFieldHelper.IsRequired="True"/>
-                        </core_controls:NullItemSelectorAdapter>
-                    </StackPanel>
+					<StackPanel Grid.Row="1">
+						<TextBlock Text="* Country:" />
+						<ComboBox ItemsSource="{Binding DataContext.AllCountries, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type base:ViewBase}}}" 
+								  SelectedItem="{Binding Path=SelectedCountry}"
+                                      x:Name="cboCountries" core_common:RequiredFieldHelper.IsRequired="True"
+									  inf_behavior:WatermarkComboBoxBehavior.EnableWatermark ="True" inf_behavior:WatermarkComboBoxBehavior.Label="Select country...">
+							<ComboBox.ItemTemplate>
+								<DataTemplate>
+									<TextBlock Text="{Binding DisplayName, Converter={x:Static LocalizingConverter.Current}}" />
+								</DataTemplate>
+							</ComboBox.ItemTemplate>
+						</ComboBox>
+					</StackPanel>
 
-                    <StackPanel Grid.Row="2">
-                        <TextBlock Text="State, region:" />
-                        <core_controls:NullItemSelectorAdapter ItemsSource="{Binding SelectedItem.Regions, ElementName=cboCountries}" IsAddingNullItemsFirst="True" >
-                            <core_controls:NullItemSelectorAdapter.NullItems>
-                                <collections:ArrayList>
-                                    <countries:Region DisplayName="Select state..."/>
-                                </collections:ArrayList>
-                            </core_controls:NullItemSelectorAdapter.NullItems>
-                            <ComboBox SelectedItem="{Binding Path=SelectedRegion}" x:Name="cboRegion" DisplayMemberPath="DisplayName"
-                                       core_common:RequiredFieldHelper.IsRequired="True"/>
-                        </core_controls:NullItemSelectorAdapter>
-                    </StackPanel>
+					<StackPanel Grid.Row="2">
+						<TextBlock Text="State, region:" />
+						<ComboBox ItemsSource="{Binding SelectedItem.Regions, ElementName=cboCountries}" SelectedItem="{Binding SelectedRegion}" x:Name="cboRegion"
+								  inf_behavior:WatermarkComboBoxBehavior.EnableWatermark ="True" inf_behavior:WatermarkComboBoxBehavior.Label="Select state...">
+							<ComboBox.ItemTemplate>
+								<DataTemplate>
+									<TextBlock Text="{Binding DisplayName, Converter={x:Static LocalizingConverter.Current}}" />
+								</DataTemplate>
+							</ComboBox.ItemTemplate>
+						</ComboBox>
+					</StackPanel>
 
-                    <StackPanel Grid.Row="3">
-                        <TextBlock Text="Zip code:" />
-                        <core_controls:WatermarkedTextBox WatermarkText="Enter zip code..."  core_common:RequiredFieldHelper.IsRequired="True"
+					<StackPanel Grid.Row="3">
+						<TextBlock Text="* Zip code:" />
+						<core_controls:WatermarkedTextBox WatermarkText="Enter zip code..."  core_common:RequiredFieldHelper.IsRequired="True"
                             Text="{Binding InnerItem.PostalCode, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
-                    </StackPanel>
-                </Grid>
-            </Grid>
+					</StackPanel>
+				</Grid>
+			</Grid>
 
-        </TabItem>
-    </TabControl>
+		</TabItem>
+	</TabControl>
 
 </base:ViewBase>

@@ -9,7 +9,8 @@
               xmlns:controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
               xmlns:commerceFoundationModel="clr-namespace:VirtoCommerce.Foundation.Marketing.Model;assembly=VirtoCommerce.Foundation"
               xmlns:localInfrastructure="clr-namespace:VirtoCommerce.ManagementClient.Marketing.Infrastructure"
-             mc:Ignorable="d" Height="400" VerticalAlignment="Top" HorizontalAlignment="Left">
+              xmlns:vm="clr-namespace:VirtoCommerce.ManagementClient.Marketing.ViewModel.Implementations"
+              mc:Ignorable="d" Height="400" VerticalAlignment="Top" HorizontalAlignment="Left">
 
     <UserControl.Resources>
         <ResourceDictionary>
@@ -26,7 +27,7 @@
         </ResourceDictionary>     
     </UserControl.Resources>
 
-    <Grid>
+	<Grid d:DataContext="{d:DesignInstance vm:CartPromotionViewModel">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -55,11 +56,11 @@
                           SelectedValue="{Binding InnerItem.StoreId, Mode=TwoWay}" IsEnabled="{Binding IsWizard}">
 					<ComboBox.ItemTemplate>
 						<DataTemplate>
-							<TextBlock x:Name="textBlock" Text="{Binding Path=Name}" />
+							<TextBlock x:Name="textBlock" Text="{Binding Name}" />
 							<DataTemplate.Triggers>
 								<MultiDataTrigger>
 									<MultiDataTrigger.Conditions>
-										<Condition Binding="{Binding Text, ElementName=textBlock}" Value="Select store..." />
+										<Condition Binding="{Binding SelectedIndex, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" Value="0" />
 										<Condition Binding="{Binding IsDropDownOpen, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" Value="False" />
 									</MultiDataTrigger.Conditions>
 									<Setter TargetName="textBlock" Property="FontStyle" Value="Italic" />

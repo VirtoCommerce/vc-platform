@@ -44,7 +44,7 @@
 			</Grid.RowDefinitions>
 
 			<ItemsControl Grid.Row="0" Style="{StaticResource Virto_ToolbarItemsControl_Style}">
-				<core_controls:MetroButton Command="{Binding RefreshItemListCommand}" Header="REFRESH" ToolTip="Refresh" Margin="3,0,28,0" >
+				<core_controls:MetroButton Command="{Binding RefreshItemListCommand}" Header="REFRESH" ToolTip="Refresh list" Margin="3,0,28,0" >
 					<core_controls:VectorImage ImageResource="{StaticResource Icon_Button_RefreshList}" Width="14" Height="14" />
 				</core_controls:MetroButton>
 				<core_controls:MetroButton Command="{Binding ItemAddCommand}" Header="ADD" ToolTip="Add item">

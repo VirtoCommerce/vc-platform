@@ -121,7 +121,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig
 				_authContext.CheckPermission(PredefinedPermissions.SettingsAppConfigEmailTemplates) ||
 				_authContext.CheckPermission(PredefinedPermissions.SettingsAppConfigDisplayTemplates))
 			{
-				ConfigurationManager.Settings.Add(new ConfigurationSection { IdTab = NavigationNames.HomeName, Caption = "Application", Order = 1000, ViewModel = _container.Resolve<IAppConfigMainSettingsViewModel>() });
+				ConfigurationManager.Settings.Add(new ConfigurationSection { IdTab = NavigationNames.HomeName, Caption = "Application".Localize(), Order = 1000, ViewModel = _container.Resolve<IAppConfigMainSettingsViewModel>() });
 			}
 		}
 	}

@@ -7,8 +7,9 @@
             xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
             xmlns:collections="clr-namespace:System.Collections;assembly=mscorlib"
             xmlns:sys="clr-namespace:System;assembly=mscorlib"
-			xmlns:viewModel="clr-namespace:VirtoCommerce.ManagementClient.Catalog.ViewModel"
-            mc:Ignorable="d" Width="600" VerticalAlignment="Top" HorizontalAlignment="Left"
+			xmlns:viewModel="clr-namespace:VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementations"
+               xmlns:behaviors="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Behaviors;assembly=VirtoCommerce.ManagementClient.Core"
+               mc:Ignorable="d" Width="600" VerticalAlignment="Top" HorizontalAlignment="Left"
             >
 	<base:ViewBase.Resources>
 		<ResourceDictionary>
@@ -45,45 +46,14 @@
 			<TextBox Grid.Row="4" Text="{Binding InnerItem.Name, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
 
 			<TextBlock Grid.Row="5" Text="Target:"/>
-			<core_controls:NullItemSelectorAdapter Grid.Row="6" ItemsSource="{Binding TargetTypes}" IsAddingNullItemsFirst="True" HorizontalAlignment="Stretch">
-				<core_controls:NullItemSelectorAdapter.NullItems>
-					<collections:ArrayList>
-						<sys:String>Select Target</sys:String>
-					</collections:ArrayList>
-				</core_controls:NullItemSelectorAdapter.NullItems>
-				<ComboBox SelectedItem="{Binding InnerItem.TargetType, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch">
-					<ComboBox.ItemTemplate>
-						<DataTemplate>
-							<Grid>
-								<TextBlock x:Name="textBlock" Text="{Binding }" HorizontalAlignment="Stretch" />
-							</Grid>
+			<ComboBox Grid.Row="6" ItemsSource="{Binding TargetTypes}" SelectedItem="{Binding InnerItem.TargetType, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch"
+						  behaviors:WatermarkComboBoxBehavior.EnableWatermark="True" behaviors:WatermarkComboBoxBehavior.Label="Select Target" />
 
-							<DataTemplate.Triggers>
-								<MultiDataTrigger>
-									<MultiDataTrigger.Conditions>
-										<Condition Binding="{Binding Text, ElementName=textBlock}" Value="Select Target" />
-										<Condition Binding="{Binding IsDropDownOpen, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" Value="False" />
-									</MultiDataTrigger.Conditions>
-									<Setter TargetName="textBlock" Property="FontStyle" Value="Italic" />
-								</MultiDataTrigger>
-							</DataTemplate.Triggers>
-						</DataTemplate>
-					</ComboBox.ItemTemplate>
-					<!--<i:Interaction.Triggers>
-                    <i:EventTrigger EventName="SelectionChanged">
-                        <ei:ChangePropertyAction PropertyName="ItemTargetType" TargetObject="{Binding}" Value="{Binding SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" />
-                    </i:EventTrigger>
-                </i:Interaction.Triggers>-->
-				</ComboBox>
-			</core_controls:NullItemSelectorAdapter>
-
-			<core_controls:MultiSelectControl Grid.Row="7" Grid.ColumnSpan="2" TextSearchTextPath="Name"
-                                
+			<core_controls:MultiSelectControl Grid.Row="7" Grid.ColumnSpan="2" TextSearchTextPath="Name"                                
                     	        AvailableTitle="Available properties"
                     	        AvailableItems="{Binding AllAvailableProperties}"
                     	        CurrentTitle="Selected properties"
-                    	        CurrentItems="{Binding ItemsCollection.InnerItems, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
-        >
+                    	        CurrentItems="{Binding ItemsCollection.InnerItems, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}">
 				<core_controls:MultiSelectControl.ObjectsTemplate>
 					<DataTemplate>
 						<TextBlock Text="{Binding Name}"  Style="{StaticResource {x:Type TextBlock}}" Margin="1"/>

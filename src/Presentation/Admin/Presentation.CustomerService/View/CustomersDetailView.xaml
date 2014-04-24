@@ -386,7 +386,7 @@
 								<RowDefinition Height="Auto" />
 								<RowDefinition />
 							</Grid.RowDefinitions>
-							<core_controls:MetroButton Grid.Row="0" ToolTip="Refresh" Width="22" Height="22" HorizontalAlignment="Right" Margin="0,3,3,0"
+							<core_controls:MetroButton Grid.Row="0" ToolTip="Refresh list" Width="22" Height="22" HorizontalAlignment="Right" Margin="0,3,3,0"
                                     Command="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=UserControl}, Path=DataContext.RefreshContactOrdersPanelCommand}">
 								<core_controls:VectorImage Width="14" Height="14" ImageResource="{StaticResource Icon_Button_RefreshList}" />
 							</core_controls:MetroButton>
