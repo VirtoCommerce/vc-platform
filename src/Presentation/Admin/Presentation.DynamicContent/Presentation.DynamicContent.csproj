@@ -245,6 +245,10 @@
       <Project>{BB168A74-0F1E-43BE-A616-134902238B80}</Project>
       <Name>CommerceFoundation.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\Extensions\Client\CommerceClient\CommerceClient.csproj">
+      <Project>{9179b790-1f77-475f-b6ef-0b567d5ce8e0}</Project>
+      <Name>CommerceClient</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Presentation.Configuration\Presentation.Configuration.csproj">
       <Project>{F0D68841-A0D8-41E1-B116-A35307F6657D}</Project>
       <Name>Presentation.Configuration</Name>
@@ -260,6 +264,10 @@
     <ProjectReference Include="..\Presentation.Catalog\Presentation.Catalog.csproj">
       <Project>{4B2CBB79-86C2-4F09-A5DB-DBEA27330C90}</Project>
       <Name>Presentation.Catalog</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Presentation.Localization\Presentation.Localization.csproj">
+      <Project>{10a07a08-2934-4338-b8bd-b89bdc1d014e}</Project>
+      <Name>Presentation.Localization</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
