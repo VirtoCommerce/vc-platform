@@ -141,6 +141,9 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 
 									// force values update
 									LocalizationManager.UpdateValues();
+
+									// update available languages menu
+									SendCulturesToShell();
 								});
 
 							var notification = new Notification();
