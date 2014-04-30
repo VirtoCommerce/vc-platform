@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Linq;
 using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.ManagementClient.Catalog.Model.TypedExpressions.Conditions;
 using VirtoCommerce.ManagementClient.Catalog.Model.TypedExpressions.Conditions.GeoConditions;
 using VirtoCommerce.ManagementClient.Catalog.ViewModel.Pricelists.Interfaces;
 using VirtoCommerce.ManagementClient.Core.Controls;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using linq = System.Linq.Expressions;
 
 namespace VirtoCommerce.ManagementClient.Catalog.Model.TypedExpressions
 {
@@ -25,11 +28,10 @@ namespace VirtoCommerce.ManagementClient.Catalog.Model.TypedExpressions
 			}
 		}
 
-		public PriceListAssignmentExpressionBlock(IPriceListAssignmentViewModel priceListAssignmentViewModel)
-			: base(null, priceListAssignmentViewModel)
+		public PriceListAssignmentExpressionBlock(IExpressionViewModel priceListAssignmentViewModel, bool isAddBlock)
+			: base("Add conditions block", priceListAssignmentViewModel)
 		{
-			this.ConditionBlock = new ConditionAndOrBlock("if", priceListAssignmentViewModel, "of these conditions are true");
-
+			this.ConditionBlock = new ConditionAndOrBlock("if ", priceListAssignmentViewModel, " of these conditions are true", isAddBlock);
 			InitializeAvailableExpressions();
 		}
 
@@ -77,7 +79,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.Model.TypedExpressions
 			ConditionBlock.WithAvailabeChildren(availableElements);
 			ConditionBlock.NewChildLabel = "+ add condition";
 		}
-
+		
 		public override void InitializeAfterDeserialized(IExpressionViewModel priceListAssignmentViewModel)
 		{
 			base.InitializeAfterDeserialized(priceListAssignmentViewModel);
@@ -87,7 +89,27 @@ namespace VirtoCommerce.ManagementClient.Catalog.Model.TypedExpressions
 
 		public System.Linq.Expressions.Expression<Func<IEvaluationContext, bool>> GetExpression()
 		{
-			var retVal = ConditionBlock.GetExpression();
+
+			linq.Expression<Func<IEvaluationContext, bool>> retVal = PredicateBuilder.True<IEvaluationContext>();
+			foreach (var adaptor in this.Children.OfType<IExpressionAdaptor>())
+			{
+				var expression = adaptor.GetExpression();
+				if (adaptor is PriceListAssignmentExpressionBlock)
+				{
+					expression = ((PriceListAssignmentExpressionBlock)adaptor).ConditionBlock.GetExpression();
+					if (!((PriceListAssignmentExpressionBlock)adaptor).ConditionBlock.AndOr.IsAnd)
+					{
+						retVal = retVal.Or(expression);
+					}
+					else
+					{
+						retVal = retVal.And(expression);
+					}
+				}
+				else
+					retVal = retVal.And(expression);
+			}
+						
 			return retVal;
 		}
 	}
