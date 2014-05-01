@@ -90,7 +90,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.Model.TypedExpressions
 		public System.Linq.Expressions.Expression<Func<IEvaluationContext, bool>> GetExpression()
 		{
 
-			linq.Expression<Func<IEvaluationContext, bool>> retVal = PredicateBuilder.True<IEvaluationContext>();
+			linq.Expression<Func<IEvaluationContext, bool>> retVal = ((IExpressionAdaptor)this.Children[0]).GetExpression();
 			foreach (var adaptor in this.Children.OfType<IExpressionAdaptor>())
 			{
 				var expression = adaptor.GetExpression();
@@ -106,8 +106,8 @@ namespace VirtoCommerce.ManagementClient.Catalog.Model.TypedExpressions
 						retVal = retVal.And(expression);
 					}
 				}
-				else
-					retVal = retVal.And(expression);
+				//else
+				//	retVal = retVal.And(expression);
 			}
 						
 			return retVal;
