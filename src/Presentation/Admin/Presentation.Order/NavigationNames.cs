@@ -1,4 +1,6 @@
-﻿namespace VirtoCommerce.ManagementClient.Order
+﻿using VirtoCommerce.Client.Globalization;
+
+namespace VirtoCommerce.ManagementClient.Order
 {
 	public static class NavigationNames
 	{
@@ -8,5 +10,12 @@
 							PaymentsSettingsHomeName = "PaymentsSettingsHome",
 							ShippingSettingsHomeName = "ShippingSettingsHome",
 							TaxesSettingsHomeName = "TaxesSettingsHome";
+
+		public const string ModuleName = "Order";
+
+		public static string Localize(this string source)
+		{
+			return source.Localize(null, ModuleName);
+		}
 	}
 }
