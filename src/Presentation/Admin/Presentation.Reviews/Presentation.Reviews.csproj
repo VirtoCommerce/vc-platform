@@ -136,6 +136,10 @@
       <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
       <Name>CommerceFoundation</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\Extensions\Client\CommerceClient\CommerceClient.csproj">
+      <Project>{9179b790-1f77-475f-b6ef-0b567d5ce8e0}</Project>
+      <Name>CommerceClient</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Presentation.Core\Presentation.Core.csproj">
       <Project>{d821e0c3-5d53-429b-af8f-785e77b82fe0}</Project>
       <Name>Presentation.Core</Name>
