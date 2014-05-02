@@ -10,7 +10,7 @@
      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
      mc:Ignorable="d" d:DesignHeight="600" Width="400" VerticalAlignment="Top" HorizontalAlignment="Left"
-     xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Order" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
+     LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}" xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Order">
     <base:ViewBase.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
