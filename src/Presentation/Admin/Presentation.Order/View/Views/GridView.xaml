@@ -1,28 +1,27 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:core_common="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Common;assembly=VirtoCommerce.ManagementClient.Core"
-                    xmlns:core_virtualization="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.DataVirtualization;assembly=VirtoCommerce.ManagementClient.Core"
-                    xmlns:Presentation_Core_Infrastructure_Converters="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Converters;assembly=VirtoCommerce.ManagementClient.Core"
-                    xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core">
+     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:core_common="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Common;assembly=VirtoCommerce.ManagementClient.Core"
+     xmlns:core_virtualization="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.DataVirtualization;assembly=VirtoCommerce.ManagementClient.Core"
+     xmlns:Presentation_Core_Infrastructure_Converters="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Converters;assembly=VirtoCommerce.ManagementClient.Core"
+     xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
+     >
     <ResourceDictionary.MergedDictionaries>
-        <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/HomeViewTheme/VirtoCommerceHomeTheme.xaml"/>
+        <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/HomeViewTheme/VirtoCommerceHomeTheme.xaml" />
     </ResourceDictionary.MergedDictionaries>
-
-    <Presentation_Core_Infrastructure_Converters:CurrencyConverter x:Key="CurrencyConverter"/>
-
+    <Presentation_Core_Infrastructure_Converters:CurrencyConverter x:Key="CurrencyConverter" />
     <DataTemplate x:Key="ordersColumn1Template">
         <DockPanel Margin="6,4,0,8" HorizontalAlignment="Stretch">
             <!--<Image Height="36" Stretch="Fill" VerticalAlignment="Center" Source="{Binding Data.InnerItem.CurrentStatus, Converter={x:Static Presentation_Order_Infrastructure_Converters:OrderStatusIconSourceConverter.Current}}" />-->
-            <core_controls:VectorImage Height="18" Width="18" Foreground="{DynamicResource Virto_HighLightText_Foreground_Brush}" 
-                                                   ImageSource="{Binding Data.IconSource}"/>
-            <Border HorizontalAlignment="Stretch" Margin="8,2,0,0" >
+            <core_controls:VectorImage Height="18" Width="18" Foreground="{DynamicResource Virto_HighLightText_Foreground_Brush}"
+                 ImageSource="{Binding Data.IconSource}" />
+            <Border HorizontalAlignment="Stretch" Margin="8,2,0,0">
                 <DockPanel Height="Auto" Width="Auto">
-                    <TextBox DockPanel.Dock="Top" FontWeight="DemiBold" Style="{StaticResource Virto_TextBox_VirtualListView_Style}" Foreground="{DynamicResource Virto_HighLightText_Foreground_Brush}">
+                    <TextBox DockPanel.Dock="Top" FontWeight="DemiBold" Style="{StaticResource Virto_TextBox_VirtualListView_Style}"
+                         Foreground="{DynamicResource Virto_HighLightText_Foreground_Brush}">
                         <TextBox.Text>
-                            <MultiBinding StringFormat="{}{0} by {1}">
+                            <LocBinding ResourceKey="{}{0} by {1}">
                                 <Binding Path="Data.InnerItem.TrackingNumber" />
                                 <Binding Path="Data.InnerItem.CustomerName" />
-                            </MultiBinding>
+                            </LocBinding>
                         </TextBox.Text>
                     </TextBox>
                     <TextBlock DockPanel.Dock="Top" Text="{Binding Data.InnerItem.Status}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
@@ -30,37 +29,39 @@
             </Border>
         </DockPanel>
     </DataTemplate>
-
     <DataTemplate x:Key="ordersColumn2Template">
         <TextBlock Text="{Binding Data.InnerItem.StoreId}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
     </DataTemplate>
-
     <DataTemplate x:Key="ordersColumn3Template">
         <TextBlock Style="{StaticResource Virto_TextBlock_VirtualListView_Style}">
             <TextBlock.Text>
                 <MultiBinding Converter="{StaticResource CurrencyConverter}">
                     <Binding Path="Data.InnerItem.Total" />
-                    <Binding Path="Data.InnerItem.BillingCurrency"/>
+                    <Binding Path="Data.InnerItem.BillingCurrency" />
                 </MultiBinding>
             </TextBlock.Text>
         </TextBlock>
     </DataTemplate>
-
     <DataTemplate x:Key="ordersColumn4Template">
-        <TextBlock Text="{Binding Data.InnerItem.Created, StringFormat=R}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
+        <TextBlock Style="{StaticResource Virto_TextBlock_VirtualListView_Style}">
+            <TextBlock.Text>
+                <!-- Text={Binding Data.InnerItem.Created, StringFormat=R} -->
+                <LocBinding ResourceKey="R">
+                    <Binding Path="Data.InnerItem.Created" />
+                </LocBinding>
+            </TextBlock.Text>
+        </TextBlock>
     </DataTemplate>
-
-    <GridView x:Key="gridViewView"
-                ColumnHeaderContainerStyle="{StaticResource Virto_GridView_ColumnHeader_ContainerStyle}"
-				VirtualizingStackPanel.IsVirtualizing="True"
-				VirtualizingStackPanel.VirtualizationMode="Recycling"
-				ScrollViewer.IsDeferredScrollingEnabled="True"
-				core_virtualization:VirtualListLoadingIndicator.IsAttached="True"
-                >
-        <GridViewColumn Header="Order description" CellTemplate="{StaticResource ordersColumn1Template}" core_common:GridViewColumnResize.Width="5*" Width="521" core_common:GridViewSort.PropertyName="TrackingNumber" />
-        <GridViewColumn Header="Created" CellTemplate="{StaticResource ordersColumn4Template}" Width="198" core_common:GridViewSort.PropertyName="Created" />
-        <GridViewColumn Header="Store" CellTemplate="{StaticResource ordersColumn2Template}" core_common:GridViewColumnResize.Width="1*" Width="104" core_common:GridViewSort.PropertyName="StoreId" />
-        <GridViewColumn Header="Total" CellTemplate="{StaticResource ordersColumn3Template}" Width="72" core_common:GridViewSort.PropertyName="Total" />
+    <GridView x:Key="gridViewView" ColumnHeaderContainerStyle="{StaticResource Virto_GridView_ColumnHeader_ContainerStyle}"
+         VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling"
+         ScrollViewer.IsDeferredScrollingEnabled="True" core_virtualization:VirtualListLoadingIndicator.IsAttached="True">
+        <GridViewColumn Header="{Loc 'Order description'}" CellTemplate="{StaticResource ordersColumn1Template}"
+             core_common:GridViewColumnResize.Width="5*" Width="521" core_common:GridViewSort.PropertyName="TrackingNumber" />
+        <GridViewColumn Header="{Loc 'Created'}" CellTemplate="{StaticResource ordersColumn4Template}"
+             Width="198" core_common:GridViewSort.PropertyName="Created" />
+        <GridViewColumn Header="{Loc 'Store'}" CellTemplate="{StaticResource ordersColumn2Template}"
+             core_common:GridViewColumnResize.Width="1*" Width="104" core_common:GridViewSort.PropertyName="StoreId" />
+        <GridViewColumn Header="{Loc 'Total'}" CellTemplate="{StaticResource ordersColumn3Template}"
+             Width="72" core_common:GridViewSort.PropertyName="Total" />
     </GridView>
-
 </ResourceDictionary>
