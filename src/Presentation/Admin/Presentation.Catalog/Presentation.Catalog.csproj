@@ -627,6 +627,10 @@
       <Project>{25f62f0b-3260-4802-b65e-5043585528b6}</Project>
       <Name>Presentation.Import</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Presentation.Localization\Presentation.Localization.csproj">
+      <Project>{10a07a08-2934-4338-b8bd-b89bdc1d014e}</Project>
+      <Name>Presentation.Localization</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Presentation.Reviews\Presentation.Reviews.csproj">
       <Project>{414e17f3-7333-4c6e-9dc6-09f1614ba047}</Project>
       <Name>Presentation.Reviews</Name>
