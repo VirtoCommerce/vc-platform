@@ -14,14 +14,18 @@ namespace VirtoCommerce.ManagementClient.Catalog.Model.TypedExpressions.Conditio
     [Serializable]
 	public class ConditionAndOrBlock : TypedExpressionElementBase, IExpressionAdaptor
     {
-		public ConditionAndOrBlock(string namePrefix, IExpressionViewModel expressionViewModel, string nameSuffix)
+		public ConditionAndOrBlock(string namePrefix, IExpressionViewModel expressionViewModel, string nameSuffix, bool isAddBlock)
 			: base(namePrefix + " ... " + nameSuffix, expressionViewModel)
         {
+			AndOr = new AndOr();
+			if (isAddBlock)
+				AndOr = WithElement(AndOr) as AndOr;
             if (!string.IsNullOrEmpty(namePrefix)) WithLabel(namePrefix);
             AllAny = WithElement(new AllAny()) as AllAny;
             if (!string.IsNullOrEmpty(nameSuffix)) WithLabel(nameSuffix);
         }
 
+		public AndOr AndOr { get; set; }
         public AllAny AllAny { get; set; }
 
 		public linq.Expression<Func<IEvaluationContext, bool>> GetExpression()

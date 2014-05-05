@@ -171,6 +171,7 @@
     <Compile Include="Controls\ExpressionBuilder\UserInputElements\AgeElement.cs" />
     <Compile Include="Controls\ExpressionBuilder\UserInputElements\AllAny.cs" />
     <Compile Include="Controls\ExpressionBuilder\UserInputElements\CompareConditions.cs" />
+    <Compile Include="Controls\ExpressionBuilder\UserInputElements\AndOr.cs" />
     <Compile Include="Controls\ExpressionBuilder\UserInputElements\MatchContainsCaseStringElement.cs" />
     <Compile Include="Controls\ExpressionBuilder\UserInputElements\MatchContainsStringElement.cs" />
     <Compile Include="Controls\ExpressionBuilder\UserInputElements\MatchStringElement.cs" />

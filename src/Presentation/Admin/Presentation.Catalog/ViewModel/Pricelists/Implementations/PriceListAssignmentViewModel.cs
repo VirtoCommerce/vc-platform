@@ -244,7 +244,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Pricelists.Implementa
 			{
 				if (InnerItem.PredicateVisualTreeSerialized == null)
 				{
-					ExpressionElementBlock = new PriceListAssignmentExpressionBlock(this);
+					ExpressionElementBlock = new PriceListAssignmentExpression(this);
 				}
 				else
 				{
@@ -261,12 +261,12 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Pricelists.Implementa
 		/// </summary>
 		public void UpdateFromExpressionElementBlock()
 		{
-			if (((ConditionAndOrBlock)ExpressionElementBlock.Children[0]).Children.Any())
+			if (((ConditionAndOrBlock)((PriceListAssignmentExpressionBlock)ExpressionElementBlock.Children[0]).Children[0]).Children.Any())
 			{
 				InnerItem.PredicateVisualTreeSerialized = SerializationUtil.Serialize(ExpressionElementBlock);
 				InnerItem.ConditionExpression =
 					SerializationUtil.SerializeExpression(
-						((PriceListAssignmentExpressionBlock)ExpressionElementBlock).GetExpression());
+						((PriceListAssignmentExpression)ExpressionElementBlock).GetExpression());
 			}
 			else
 			{

@@ -1130,6 +1130,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 						OnPropertyChanged("IsCreateLoginPasswordShow");
 						OnPropertyChanged("IsLoginOnBehalfShow");
 						OnPropertyChanged("IsResetPasswordShow");
+						LoginOnBehalfCommand.RaiseCanExecuteChanged();
 					});
 			}
 		}
