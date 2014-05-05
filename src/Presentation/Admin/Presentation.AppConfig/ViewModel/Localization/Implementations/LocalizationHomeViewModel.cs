@@ -487,7 +487,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 				using (var textWriter = File.CreateText(filePath))
 				{
 					var csvWriter = new CsvWriter(textWriter, ",");
-					csvWriter.WriteRow(new List<string> { "Name", "Module", OriginalLangName, string.Format("LanguageCode ({0})", TranslateLanguage), string.Format("Value - {0}", TranslateLangName) },
+					csvWriter.WriteRow(new List<string> { "Name", "Category", OriginalLangName, string.Format("LanguageCode ({0})", TranslateLanguage), string.Format("Value - {0}", TranslateLangName) },
 									   false);
 					var itemsCount = Items.Count();
 					foreach (var item in Items.Select((value, index) => new { value, index }))
