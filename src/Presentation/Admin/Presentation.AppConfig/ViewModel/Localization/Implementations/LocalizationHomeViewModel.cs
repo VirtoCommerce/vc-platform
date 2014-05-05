@@ -29,7 +29,9 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 		#region const
 
 		const string searchKeyAll = "--all";
+		const string searchKeyAllCM = "--allCM";
 		const string searchLabelWeb = "Web pages";
+		const string searchLabelManager = "Commerce manager";
 		const string searchLabelCM = "General";
 
 		#endregion
@@ -210,6 +212,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 											{
 												new KeyValuePair_string_string {Key = searchKeyAll, Value = "All"},
 												new KeyValuePair_string_string {Value = searchLabelWeb},
+												new KeyValuePair_string_string {Key = searchKeyAllCM, Value = searchLabelManager},
 												new KeyValuePair_string_string {Key = LocalizationScope.DefaultCategory, Value = searchLabelCM},
 												new KeyValuePair_string_string {Key = "AppConfig", Value = "AppConfig"},
 												new KeyValuePair_string_string {Key = "Asset", Value = "Asset"},
@@ -235,7 +238,11 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 								var query = repository.Localizations;
 								if (FilterModule != searchKeyAll)
 								{
-									if (string.IsNullOrEmpty(FilterModule))
+									if (FilterModule == searchKeyAllCM)
+									{
+										query = query.Where(x => x.Category != "");
+									}
+									else if (string.IsNullOrEmpty(FilterModule))
 									{
 										query = query.Where(x => x.Category == "");
 									}
@@ -244,7 +251,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 										query = query.Where(x => x.Category == FilterModule);
 									}
 								}
-								var localQueryResults = query.ToList();
+								var localQueryResults = query.ToList().OrderBy(x => x.Category);
 								var keys = localQueryResults.Select(x => new { x.Name, x.Category, Key = x.Name + x.Category }).Distinct();
 								var translateItems = localQueryResults.Where(x => x.LanguageCode == TranslateLanguage).ToDictionary(x => x.Name + x.Category);
 								var originalItems = localQueryResults.Where(x => x.LanguageCode == OriginalLanguage).ToDictionary(x => x.Name + x.Category);
@@ -480,7 +487,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 				using (var textWriter = File.CreateText(filePath))
 				{
 					var csvWriter = new CsvWriter(textWriter, ",");
-					csvWriter.WriteRow(new List<string> { "Name", OriginalLangName, string.Format("LanguageCode ({0})", TranslateLanguage), string.Format("Value - {0}", TranslateLangName) },
+					csvWriter.WriteRow(new List<string> { "Name", "Module", OriginalLangName, string.Format("LanguageCode ({0})", TranslateLanguage), string.Format("Value - {0}", TranslateLangName) },
 									   false);
 					var itemsCount = Items.Count();
 					foreach (var item in Items.Select((value, index) => new { value, index }))
@@ -521,8 +528,8 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 		{
 			var dialog = new SaveFileDialog()
 			{
-				FileName = string.Format("From {0} to {1}".Localize(), OriginalLanguage, TranslateLanguage),
-				Filter = "Comma separated Files(*.csv)|*.csv|All(*.*)|*".Localize()
+				FileName = string.Format("From {0} to {1}_{2}".Localize(), OriginalLanguage, TranslateLanguage, FilterModules.First(x => x.Key == FilterModule).Value),
+				Filter = "Comma separated Files(*.csv)|*.csv|All(*.*)|*"
 			};
 
 			string retVal = null;

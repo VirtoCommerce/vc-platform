@@ -34,6 +34,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Model
 			return new List<string>
 				{
 					string.IsNullOrEmpty(Name) ? string.Empty : Name,
+					string.IsNullOrEmpty(Category) ? string.Empty : Category,
 					string.IsNullOrEmpty(OriginalValue) ? string.Empty : OriginalValue,
 					string.IsNullOrEmpty(TranslateLocalization.LanguageCode) ? string.Empty : TranslateLocalization.LanguageCode,
 					string.IsNullOrEmpty(TranslateValue) ? string.Empty : TranslateValue
