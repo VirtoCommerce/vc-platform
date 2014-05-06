@@ -106,7 +106,7 @@ namespace VirtoCommerce.Web.Client.Modules
                 var contact = StoreHelper.UserClient.GetCurrentCustomer();
                 session.CustomerName = contact != null ? contact.FullName : session.Username;
             }
-            else
+            else if (!context.Request.HttpMethod.Equals("POST", StringComparison.OrdinalIgnoreCase))
             {
                 //Redirect to login page users that are not authenticated but try to navigate to restricted store
                 if (store.StoreState == StoreState.RestrictedAccess.GetHashCode())
