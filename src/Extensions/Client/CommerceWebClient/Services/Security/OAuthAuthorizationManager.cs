@@ -33,7 +33,9 @@ namespace VirtoCommerce.Web.Client.Services.Security
                 // Extract authorization data.
                 var requestMessage = operationContext.RequestContext.RequestMessage;
                 var httpDetails = requestMessage.Properties[HttpRequestMessageProperty.Name] as HttpRequestMessageProperty;
-                var requestUri = requestMessage.Headers.To;
+               
+                // var requestUri = requestMessage.Headers.To; //if IIS has multiple hostnames for this website then a Uri with the first hostname is returned.
+                var requestUri = System.ServiceModel.Web.WebOperationContext.Current.IncomingRequest.UriTemplateMatch.BaseUri; //Here the proper Uri of the requset is returned.
 
                 token = ReadAuthToken(httpDetails);
                 retVal = token != null && IsValidToken(token, requestUri);
