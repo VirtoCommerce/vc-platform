@@ -420,7 +420,7 @@ namespace VirtoCommerce.Web.Controllers
                                 ? configMap["URL"]
                                 : "https://www.sandbox.paypal.com/webscr&amp;cmd={0}",
                             "_express-checkout&token=" + setEcResponse.Token);
-                    TempData.Add("checkout_" + setEcResponse.Token,model);
+                    //TempData.Add("checkout_" + setEcResponse.Token,model);
                     return Redirect(redirectUrl);
                 }
             }
@@ -430,8 +430,8 @@ namespace VirtoCommerce.Web.Controllers
 
         public ActionResult PaypalExpressSuccess(string token, string payerID)
         {
-
-            var model = (CheckoutModel)TempData["checkout_" + token] ?? PrepareCheckoutModel(new CheckoutModel());
+            //var model = (CheckoutModel)TempData["checkout_" + token] ?? PrepareCheckoutModel(new CheckoutModel());
+            var model = PrepareCheckoutModel(new CheckoutModel());
             model.Payments = model.Payments ?? GetPayments().ToArray();
 
             //Resave LastOrderId
