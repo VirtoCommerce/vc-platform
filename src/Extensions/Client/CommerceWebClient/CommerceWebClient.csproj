@@ -251,6 +251,7 @@
     <Compile Include="PageData.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Providers\CookieTempDataProvider.cs" />
     <Compile Include="Security\IOAuthWebSecurity.cs" />
     <Compile Include="Security\OAuthWebSecurityWrapper.cs" />
     <Compile Include="Services\Assets\FileSystemAssetUrl.cs" />

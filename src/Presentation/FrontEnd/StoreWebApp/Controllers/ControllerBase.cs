@@ -13,7 +13,9 @@ using VirtoCommerce.Web.Models;
 
 namespace VirtoCommerce.Web.Controllers
 {
-	/// <summary>
+    using VirtoCommerce.Web.Client.Providers;
+
+    /// <summary>
 	/// Class ControllerBase.
 	/// </summary>
     [Localize(Order = 1)]
@@ -152,5 +154,9 @@ namespace VirtoCommerce.Web.Controllers
 
         #endregion
 
+        protected override ITempDataProvider CreateTempDataProvider()
+        {
+            return new CookieTempDataProvider();
+        }
     }
 }
