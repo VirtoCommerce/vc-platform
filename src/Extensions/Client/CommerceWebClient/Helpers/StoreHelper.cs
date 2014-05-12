@@ -11,9 +11,12 @@ using VirtoCommerce.Foundation.Frameworks.Currencies;
 using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.Foundation.Security.Services;
 using VirtoCommerce.Foundation.Stores.Model;
+using VirtoCommerce.Web.Client.Services.Filters;
 
 namespace VirtoCommerce.Web.Client.Helpers
 {
+    using VirtoCommerce.Foundation.Search;
+
     /// <summary>
     /// Class StoreHelper.
     /// </summary>
@@ -79,6 +82,14 @@ namespace VirtoCommerce.Web.Client.Helpers
 				return ServiceLocator.Current.GetInstance<StoreClient>();
 			}
 		}
+
+        public static ISearchFilterService SearchFilter
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<ISearchFilterService>();
+            }
+        }
 
 		#region Authorization Methods
 

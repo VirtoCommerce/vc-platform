@@ -19,6 +19,8 @@ using VirtoCommerce.Web.Virto.Helpers;
 
 namespace VirtoCommerce.Web.Controllers
 {
+    using VirtoCommerce.Web.Client.Services.Filters;
+
     /// <summary>
     /// Class SearchController.
     /// </summary>
@@ -41,20 +43,24 @@ namespace VirtoCommerce.Web.Controllers
         /// </summary>
         private readonly StoreClient _storeClient;
 
+        private readonly ISearchFilterService _searchFilter;
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="SearchController"/> class.
+        /// Initializes a new instance of the <see cref="SearchController" /> class.
         /// </summary>
         /// <param name="marketing">The marketing.</param>
         /// <param name="priceListClient">The price list client.</param>
         /// <param name="storeClient">The store client.</param>
         /// <param name="catalogClient">The catalog client.</param>
+        /// <param name="searchFilter">The search filter.</param>
         public SearchController(MarketingHelper marketing, PriceListClient priceListClient, StoreClient storeClient,
-                                CatalogClient catalogClient)
+                                CatalogClient catalogClient, ISearchFilterService searchFilter)
         {
             _marketing = marketing;
             _priceListClient = priceListClient;
             _storeClient = storeClient;
             _catalogClient = catalogClient;
+            _searchFilter = searchFilter;
         }
 
         /// <summary>
@@ -99,6 +105,7 @@ namespace VirtoCommerce.Web.Controllers
                 ViewBag.Title = cat.DisplayName;
                 criteria.Outlines.Add(String.Format("{0}*", _catalogClient.BuildCategoryOutline(UserHelper.CustomerSession.CatalogId, cat.Category)));
 
+                /*
                 var children = _catalogClient.GetChildCategoriesById(cat.CategoryId);
                 if (children != null)
                 {
@@ -112,6 +119,7 @@ namespace VirtoCommerce.Web.Controllers
                         });
                     }
                 }
+                 * */
             }
 
             if (savePreferences)
@@ -334,7 +342,7 @@ namespace VirtoCommerce.Web.Controllers
             var dataSource = new CatalogItemSearchModel();
 
             // Now fill in filters
-            var searchHelper = new SearchHelper(_storeClient.GetCurrentStore());
+            var searchHelper = _searchFilter;
 
             var filters = searchHelper.Filters;
 

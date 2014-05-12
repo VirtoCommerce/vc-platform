@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using System.Web.WebPages;
-using DotNetOpenAuth.OpenId.Extensions.SimpleRegistration;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.Search.Schemas;
 using VirtoCommerce.Web.Client.Helpers;
@@ -77,7 +74,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Filters
                             var newQuery = string.Empty;
 
                             //First goes search filter ordered based on document
-                            var helper = new SearchHelper(StoreHelper.StoreClient.GetCurrentStore());
+                            var helper = StoreHelper.SearchFilter;
                             var urlHelper = new UrlHelper(context.Request.RequestContext);
 
                             var parameters = helper.Filters.Where(f => !(f is PriceRangeFilter) || ((PriceRangeFilter)f).Currency.Equals(StoreHelper.CustomerSession.Currency, StringComparison.OrdinalIgnoreCase))

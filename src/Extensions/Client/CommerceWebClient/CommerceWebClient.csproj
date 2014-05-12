@@ -240,7 +240,6 @@
     <Compile Include="Extensions\Validation\RequiredIfAttribute.cs" />
     <Compile Include="Extensions\ViewExtensions.cs" />
     <Compile Include="Helpers\CartHelper.cs" />
-    <Compile Include="Helpers\SearchHelper.cs" />
     <Compile Include="Helpers\SettingsHelper.cs" />
     <Compile Include="Helpers\PromotionHelper.cs" />
     <Compile Include="Helpers\StoreHelper.cs" />
@@ -261,6 +260,7 @@
     <Compile Include="Services\Emails\NetEmailService.cs" />
     <Compile Include="Services\ErrorHandler.cs" />
     <Compile Include="Services\ErrorHandlerElement.cs" />
+    <Compile Include="Services\Filters\StoreSearchFilterService.cs" />
     <Compile Include="Services\Listeners\CaseChangeEventListener.cs" />
     <Compile Include="Services\Listeners\PublicReplyEventListener.cs" />
     <Compile Include="Services\Listeners\OrderChangeEventListener.cs" />

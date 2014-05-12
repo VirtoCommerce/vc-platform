@@ -197,50 +197,15 @@ namespace VirtoCommerce.Search.Providers.Elastic
 
             if (resultDocs.facets != null)
             {
-                #region Subcategories
-
-                var catalogCriteria = criteria as CatalogItemSearchCriteria;
-                if (catalogCriteria != null)
-                {
-                    var group = new FacetGroup("Subcategory");
-                    var groupCount = 0;
-
-                    foreach (var childFilter in catalogCriteria.ChildCategoryFilters)
-                    {
-
-                        var key = childFilter.Name.ToLower();
-                        if (!resultDocs.facets.ContainsKey(key))
-                            continue;
-
-                        var facet = resultDocs.facets[key] as FilterFacetResult;
-                        if (facet != null && facet.count > 0)
-                        {
-                            if (facet.count == 0)
-                                continue;
-
-
-                            var myFacet = new Facet(@group, childFilter.Code, childFilter.Name, facet.count);
-                            @group.Facets.Add(myFacet);
-                            groupCount++;
-                        }
-                    }
-
-                    if (groupCount > 0)
-                    {
-                        groups.Add(group);
-                    }
-                }
-
-                #endregion
-
                 foreach (var filter in criteria.Filters)
                 {
                     var groupCount = 0;
 
                     var group = new FacetGroup(filter.Key);
-                    var attributeFilter = filter as AttributeFilter;
-                    if (attributeFilter != null)
+                    
+                    if (filter is AttributeFilter)
                     {
+                        var attributeFilter = filter as AttributeFilter;
                         var myFilter = attributeFilter;
                         var values = myFilter.Values;
                         if (values != null)
@@ -270,10 +235,11 @@ namespace VirtoCommerce.Search.Providers.Elastic
                             }
                         }
                     }
-                    else
+                    else if (filter is PriceRangeFilter)
                     {
                         var rangeFilter = filter as PriceRangeFilter;
-                        if (rangeFilter != null && rangeFilter.Currency.Equals(criteria.Currency, StringComparison.OrdinalIgnoreCase))
+                        if (rangeFilter != null
+                            && rangeFilter.Currency.Equals(criteria.Currency, StringComparison.OrdinalIgnoreCase))
                         {
                             var myFilter = rangeFilter;
                             var values = myFilter.Values;
@@ -285,17 +251,16 @@ namespace VirtoCommerce.Search.Providers.Elastic
                                 {
                                     var key = String.Format("{0}-{1}", myFilter.Key, value.Id).ToLower();
 
-                                    if (!resultDocs.facets.ContainsKey(key))
-                                        continue;
+                                    if (!resultDocs.facets.ContainsKey(key)) continue;
 
                                     var facet = resultDocs.facets[key] as FilterFacetResult;
 
                                     if (facet != null && facet.count > 0)
                                     {
-                                        if (facet.count == 0)
-                                            continue;
+                                        if (facet.count == 0) continue;
 
-                                        var myFacet = new Facet(@group, value.Id, GetDescription(value, criteria.Locale), facet.count);
+                                        var myFacet = new Facet(
+                                            @group, value.Id, GetDescription(value, criteria.Locale), facet.count);
                                         @group.Facets.Add(myFacet);
 
                                         groupCount++;
@@ -303,28 +268,56 @@ namespace VirtoCommerce.Search.Providers.Elastic
                                 }
                             }
                         }
-                        else
+                    }
+                    else if (filter is RangeFilter)
+                    {
+                        var myFilter = filter as RangeFilter;
+                        if (myFilter != null)
                         {
-                            var myFilter = filter as RangeFilter;
-                            if (myFilter != null)
+                            var values = myFilter.Values;
+                            if (values != null)
                             {
-                                var values = myFilter.Values;
-                                if (values != null)
+                                foreach (var value in values)
                                 {
-                                    foreach (var value in values)
+                                    var facet = resultDocs.facets[filter.Key] as FilterFacetResult;
+
+                                    if (facet == null || facet.count <= 0)
                                     {
-                                        var facet = resultDocs.facets[filter.Key] as FilterFacetResult;
-
-                                        if (facet == null || facet.count <= 0)
-                                        {
-                                            continue;
-                                        }
-
-                                        var myFacet = new Facet(@group, value.Id, GetDescription(value, criteria.Locale), facet.count);
-                                        @group.Facets.Add(myFacet);
-
-                                        groupCount++;
+                                        continue;
                                     }
+
+                                    var myFacet = new Facet(
+                                        @group, value.Id, GetDescription(value, criteria.Locale), facet.count);
+                                    @group.Facets.Add(myFacet);
+
+                                    groupCount++;
+                                }
+                            }
+                        }
+                    }
+                    else if (filter is CategoryFilter)
+                    {
+                        var myFilter = filter as CategoryFilter;
+                        if (myFilter != null)
+                        {
+                            var values = myFilter.Values;
+                            if (values != null)
+                            {
+                                foreach (var value in values)
+                                {
+                                    var key = String.Format("{0}-{1}", myFilter.Key.ToLower(), value.Id.ToLower()).ToLower();
+                                    var facet = resultDocs.facets[key] as FilterFacetResult;
+
+                                    if (facet == null || facet.count <= 0)
+                                    {
+                                        continue;
+                                    }
+
+                                    var myFacet = new Facet(
+                                        @group, value.Id, GetDescription(value, criteria.Locale), facet.count);
+                                    @group.Facets.Add(myFacet);
+
+                                    groupCount++;
                                 }
                             }
                         }
@@ -539,6 +532,11 @@ namespace VirtoCommerce.Search.Providers.Elastic
                 var returnVal = from d in v.Displays where d.Language.Equals(locale, StringComparison.OrdinalIgnoreCase) select d.Value;
                 return returnVal.ToString();
             }
+            if (value is CategoryFilterValue)
+            {
+                var v = value as CategoryFilterValue;
+                return v.Name;
+            }
 
             return String.Empty;
         }
@@ -576,18 +574,25 @@ namespace VirtoCommerce.Search.Providers.Elastic
                         AddFacetQueries(facetParams, filter.Key, ((PriceRangeFilter)filter).Values, criteria);
                     }
                 }
+                else if (filter is CategoryFilter)
+                {
+                    AddFacetQueries(facetParams, filter.Key, ((CategoryFilter)filter).Values);
+                }
             }
 
+            /*
             var catalogCriteria = criteria as CatalogItemSearchCriteria;
 
             if (catalogCriteria != null)
             {
                 AddSubCategoryFacetQueries(facetParams, catalogCriteria);
             }
+             * */
 
             return facetParams;
         }
 
+        /*
         private void AddSubCategoryFacetQueries(Facets<ESDocument> param, CatalogItemSearchCriteria criteria)
         {
             foreach (var child in criteria.ChildCategoryFilters)
@@ -597,6 +602,16 @@ namespace VirtoCommerce.Search.Providers.Elastic
                     bfm.Custom("{{\"wildcard\" : {{ \"{0}\" : \"{1}\" }}}}", criteria.OutlineField, child1.Outline.ToLower()))))));
             }
         }
+         * */
+
+        private void AddFacetQueries(Facets<ESDocument> param, string fieldName, IEnumerable<CategoryFilterValue> values)
+        {
+            foreach (var val in values)
+            {
+                param.FilterFacets(ff => ff.FacetName(String.Format("{0}-{1}", fieldName.ToLower(), val.Id.ToLower())).Filter(f => f.Query(q => q.Bool(bf => bf.Must(bfm =>
+                    bfm.Custom("{{\"wildcard\" : {{ \"{0}\" : \"{1}\" }}}}", fieldName.ToLower(), val.Outline.ToLower()))))));
+            }
+        }
 
         /// <summary>
         /// Adds the facet queries.
@@ -604,12 +619,19 @@ namespace VirtoCommerce.Search.Providers.Elastic
         /// <param name="param">The param.</param>
         /// <param name="fieldName">Name of the field.</param>
         /// <param name="values">The values.</param>
-        private void AddFacetQueries(Facets<ESDocument> param, string fieldName, AttributeFilterValue[] values)
+        private void AddFacetQueries(
+            Facets<ESDocument> param, string fieldName, IEnumerable<AttributeFilterValue> values)
         {
-            if (values == null)
-                return;
+            if (values == null) return;
 
-            param.Terms(t => t.FacetName(fieldName.ToLower()).Field(fieldName.ToLower()));
+            var filter = new FacetFilter<ESDocument>();
+            filter.Terms(x => x.Values(values.Select(y => y.Value).ToArray()));
+            var filterFacet = new FilterFacet<ESDocument>();
+            filterFacet.FacetFilter(f => filter);
+            param.Terms(t => t.FacetName(fieldName.ToLower()).Field(fieldName.ToLower())).FilterFacets(f => filterFacet);
+
+            // old filter, returned all terms
+            //param.Terms(t => t.FacetName(fieldName.ToLower()).Field(fieldName.ToLower()));
         }
 
         /// <summary>

@@ -10,6 +10,11 @@ using VirtoCommerce.Web.Models;
 
 namespace VirtoCommerce.Web.Virto.Helpers
 {
+    using VirtoCommerce.Client;
+    using VirtoCommerce.Client.Extensions;
+    using VirtoCommerce.Foundation.Catalogs.Search;
+    using VirtoCommerce.Web.Client.Services.Filters;
+
     /// <summary>
     /// Class SearchHelperExtensions.
     /// </summary>
@@ -21,7 +26,7 @@ namespace VirtoCommerce.Web.Virto.Helpers
         /// <param name="helper"></param>
         /// <param name="filter">The search filter.</param>
         /// <returns>Filter model</returns>
-        public static FilterModel Convert(this SearchHelper helper, ISearchFilter filter)
+        public static FilterModel Convert(this ISearchFilterService helper, ISearchFilter filter)
         {
             var model = new FilterModel();
 
@@ -29,7 +34,7 @@ namespace VirtoCommerce.Web.Virto.Helpers
             {
                 var prop = filter as AttributeFilter;
                 model.Key = prop.Key;
-                model.Name = helper.CatalogClient.GetPropertyName(prop.Key);
+                model.Name = ClientContext.Clients.CreateCatalogClient().GetPropertyName(prop.Key);
                 model.Name = string.IsNullOrEmpty(model.Name) ? model.Key : model.Name;
                 return model;
             }
@@ -37,7 +42,7 @@ namespace VirtoCommerce.Web.Virto.Helpers
             {
                 var prop = filter as RangeFilter;
                 model.Key = prop.Key;
-                model.Name = helper.CatalogClient.GetPropertyName(prop.Key);
+                model.Name = ClientContext.Clients.CreateCatalogClient().GetPropertyName(prop.Key);
                 model.Name = string.IsNullOrEmpty(model.Name) ? model.Key : model.Name;
                 return model;
             }
@@ -46,6 +51,13 @@ namespace VirtoCommerce.Web.Virto.Helpers
                 var prop = filter as PriceRangeFilter;
                 model.Key = prop.Key;
                 model.Name = "Price";
+                return model;
+            }
+            if (filter is CategoryFilter)
+            {
+                var prop = filter as CategoryFilter;
+                model.Key = prop.Key;
+                model.Name = "Category";
                 return model;
             }
 
@@ -58,7 +70,7 @@ namespace VirtoCommerce.Web.Virto.Helpers
         /// <param name="helper"></param>
         /// <param name="val">The search filter value.</param>
         /// <returns>facet model</returns>
-        public static FacetModel Convert(this SearchHelper helper, ISearchFilterValue val)
+        public static FacetModel Convert(this ISearchFilterService helper, ISearchFilterValue val)
         {
             var model = new FacetModel();
 
@@ -67,6 +79,13 @@ namespace VirtoCommerce.Web.Virto.Helpers
                 var v = val as AttributeFilterValue;
                 model.Key = v.Id;
                 model.Name = v.Value;
+                return model;
+            }
+            if (val is CategoryFilterValue)
+            {
+                var v = val as CategoryFilterValue;
+                model.Key = v.Id;
+                model.Name = v.Name;
                 return model;
             }
             if (val is RangeFilterValue)
@@ -99,7 +118,7 @@ namespace VirtoCommerce.Web.Virto.Helpers
         /// <returns>
         /// FilterModel[][].
         /// </returns>
-        public static FilterModel[] Convert(this SearchHelper helper, FacetGroup[] groups)
+        public static FilterModel[] Convert(this ISearchFilterService helper, FacetGroup[] groups)
         {
             var list = new List<FilterModel>();
             if (groups != null)
@@ -118,7 +137,7 @@ namespace VirtoCommerce.Web.Virto.Helpers
         /// <returns>
         /// facet group
         /// </returns>
-        public static FilterModel Convert(this SearchHelper helper, FacetGroup group)
+        public static FilterModel Convert(this ISearchFilterService helper, FacetGroup group)
         {
             return new FilterModel
             {
@@ -136,7 +155,7 @@ namespace VirtoCommerce.Web.Virto.Helpers
         /// <returns>
         /// facet model
         /// </returns>
-        public static FacetModel Convert(this SearchHelper helper, Facet facet)
+        public static FacetModel Convert(this ISearchFilterService helper, Facet facet)
         {
             return new FacetModel
             {
@@ -146,20 +165,53 @@ namespace VirtoCommerce.Web.Virto.Helpers
             };
         }
 
+        public static IEnumerable<ISearchFilterValue> GetFilterValues(this ISearchFilterService helper, ISearchFilter filter)
+        {
+
+            var attributeFilter = filter as AttributeFilter;
+            if (attributeFilter != null)
+            {
+                return attributeFilter.Values;
+            }
+
+            var rangeFilter = filter as RangeFilter;
+            if (rangeFilter != null)
+            {
+                return rangeFilter.Values;
+            }
+
+            var priceRangeFilter = filter as PriceRangeFilter;
+            if (priceRangeFilter != null)
+            {
+                return priceRangeFilter.Values;
+            }
+
+            var categoryFilter = filter as CategoryFilter;
+            if (categoryFilter != null)
+            {
+                return categoryFilter.Values;
+            }
+
+            return null;
+        }
+
         #region Private Helpers
 
         /// <summary>
         /// Gets the description from filter.
         /// </summary>
         /// <param name="helper">The helper.</param>
-        /// <param name="key">The key.</param>
+        /// <param name="key">The key of the group.</param>
         /// <returns>
         /// System.String.
         /// </returns>
-        private static string GetDescriptionFromFilter(SearchHelper helper, string key)
+        private static string GetDescriptionFromFilter(ISearchFilterService helper, string key)
         {
-            var name = helper.CatalogClient.GetPropertyName(key);
-            return key.Equals("price", StringComparison.OrdinalIgnoreCase) ? "Price".Localize() : !string.IsNullOrEmpty(name) ? name : key;
+            if (key.Equals("__outline")) return "Subcategory";
+
+            var name = ClientContext.Clients.CreateCatalogClient().GetPropertyName(key);
+            //return key.Equals("price", StringComparison.OrdinalIgnoreCase) ? "Price".Localize() : !string.IsNullOrEmpty(name) ? name : key;
+            return !string.IsNullOrEmpty(name) ? name : key;
         }
 
         /// <summary>
@@ -170,17 +222,17 @@ namespace VirtoCommerce.Web.Virto.Helpers
         /// <returns>
         /// System.String.
         /// </returns>
-        private static string GetNameFromFilterValue(SearchHelper helper, Facet facet)
+        private static string GetNameFromFilterValue(ISearchFilterService helper, Facet facet)
         {
-            string key = facet.Group.FieldName;
-            string id = facet.Key;
+            var key = facet.Group.FieldName;
+            var id = facet.Key;
 
             var name = facet.Name;
 
             var d = (from f in helper.Filters
                      where f.Key.Equals(key, StringComparison.OrdinalIgnoreCase) &&
                          (f as PriceRangeFilter == null ||
-                         ((PriceRangeFilter)f).Currency.Equals(helper.CatalogClient.CustomerSession.Currency, StringComparison.OrdinalIgnoreCase))
+                         ((PriceRangeFilter)f).Currency.Equals(ClientContext.Clients.CreateCatalogClient().CustomerSession.Currency, StringComparison.OrdinalIgnoreCase))
                      select f).SingleOrDefault();
 
             if (d != null)
@@ -194,6 +246,7 @@ namespace VirtoCommerce.Web.Virto.Helpers
 
             return name;
         }
+
 
         #endregion
     }
