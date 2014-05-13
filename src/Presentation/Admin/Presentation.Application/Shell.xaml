@@ -13,6 +13,7 @@
                                   xmlns:StatusIndicator="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls.StatusIndicator;assembly=VirtoCommerce.ManagementClient.Core"
                                   xmlns:View="clr-namespace:VirtoCommerce.ManagementClient.Main.View;assembly=VirtoCommerce.ManagementClient.Main"
                                   xmlns:presentationBehaviors="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Behaviors;assembly=VirtoCommerce.ManagementClient.Core"
+                                  xmlns:implementations="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls.StatusIndicator.ViewModel;assembly=VirtoCommerce.ManagementClient.Core"
                                   x:Class="VirtoCommerce.ManagementClient.Shell"
                                   mc:Ignorable="d"
                                   ElementState.Mode="Persist"
@@ -223,8 +224,14 @@
 			<ContentControl  Content="{Binding SelectedContent.ViewTitle, ElementName=MainRegion, Mode=OneWay}"  Height="70" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="50,0,0,0"/>
 		</Grid>
 
-
-		<StatusIndicator:StatusDetails Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Bottom" />
+		<!--StatusIndicator: StatusDetails-->
+		<ContentPresenter Grid.Row="1" Grid.ColumnSpan="2" VerticalAlignment="Bottom" Content="{Binding StatusIndicatorVM}">
+			<ContentPresenter.ContentTemplate>
+				<DataTemplate DataType="{x:Type implementations:StatusIndicatorViewModel}">
+					<presentationControls:CacheContentControl Type="{x:Type StatusIndicator:StatusDetails}"/>
+				</DataTemplate>
+			</ContentPresenter.ContentTemplate>
+		</ContentPresenter>
 
 		<!--bottom status bar-->
 		<DockPanel Grid.Row="2" Grid.ColumnSpan="2">

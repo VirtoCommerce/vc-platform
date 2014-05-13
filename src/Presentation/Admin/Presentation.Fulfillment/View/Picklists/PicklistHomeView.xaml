@@ -108,7 +108,7 @@
                      Padding="0,1,0,0">
                     <TextBlock.Text>
                         <!-- Text={Binding ListItemsSource.TotalItemsCount, StringFormat='Items: {0}'} -->
-                        <LocBinding ResourceKey="Items: {0}">
+                        <LocBinding ResourceKey="^Items: {0}">
                             <Binding Path="ListItemsSource.TotalItemsCount" />
                         </LocBinding>
                     </TextBlock.Text>

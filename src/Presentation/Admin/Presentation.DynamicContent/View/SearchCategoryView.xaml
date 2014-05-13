@@ -87,7 +87,7 @@
             </StackPanel>
             <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" VerticalAlignment="Bottom"
                  HorizontalAlignment="Right" Margin="0,8,0,0">
-                <Button Command="{Binding SearchCommand}" Content="{Loc 'Search'}" />
+                <Button Command="{Binding SearchCommand}" Content="{Loc '^Search'}" />
             </StackPanel>
         </DockPanel>
         <!--filters-->

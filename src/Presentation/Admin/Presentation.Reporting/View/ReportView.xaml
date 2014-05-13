@@ -67,7 +67,7 @@
                         </Grid>
                         <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" VerticalAlignment="Bottom"
                              HorizontalAlignment="Right" Margin="0,8,0,0">
-                            <Button Command="{Binding ClearParametersCommand}" Content="{Loc 'Clear filters'}" />
+                            <Button Command="{Binding ClearParametersCommand}" Content="{Loc '^Clear filters'}" />
                             <Button Margin="6,0,0,0" Command="{Binding GenerateReportCommand}" Content="{Loc 'Generate'}">
                             </Button>
                         </StackPanel>

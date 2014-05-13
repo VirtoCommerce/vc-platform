@@ -4,7 +4,7 @@
      xmlns:Converters="clr-namespace:VirtoCommerce.ManagementClient.Customers.Infrastructure.Converters"
      xmlns:CustomersModels="clr-namespace:VirtoCommerce.Foundation.Customers.Model;assembly=VirtoCommerce.Foundation"
      xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
-     >
+     xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Customers">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/HomeViewTheme/VirtoCommerceHomeTheme.xaml" />
     </ResourceDictionary.MergedDictionaries>
@@ -82,17 +82,17 @@
     <GridView x:Key="gridViewView" ColumnHeaderContainerStyle="{StaticResource Virto_GridView_ColumnHeader_ContainerStyle}"
          VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling"
          ScrollViewer.IsDeferredScrollingEnabled="True" core_virtualization:VirtualListLoadingIndicator.IsAttached="True">
-        <GridViewColumn Header="{Loc 'Channels'}" core_common:GridViewColumnResize.Width="4*"
+        <GridViewColumn Header="{Loc 'Channels'}" core_common:GridViewColumnResize.Width="4*" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
              Width="45" CellTemplate="{StaticResource channelColumnTemplate}" />
-        <GridViewColumn Header="{Loc 'Subject'}" core_common:GridViewColumnResize.Width="25*"
+        <GridViewColumn Header="{Loc 'Subject'}" core_common:GridViewColumnResize.Width="25*" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
              Width="250" CellTemplate="{StaticResource titleColumnTemplate}" />
-        <GridViewColumn Header="{Loc 'Customer'}" core_common:GridViewColumnResize.Width="20*"
+        <GridViewColumn Header="{Loc 'Customer'}" core_common:GridViewColumnResize.Width="20*" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
              Width="200" CellTemplate="{StaticResource fullNameColumnTemplate}" />
-        <GridViewColumn Header="{Loc 'Status'}" core_common:GridViewColumnResize.Width="8*"
+        <GridViewColumn Header="{Loc 'Status'}" core_common:GridViewColumnResize.Width="8*" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
              Width="80" CellTemplate="{StaticResource statusColumnTemplate}" />
-        <GridViewColumn Header="{Loc 'Modified'}" core_common:GridViewColumnResize.Width="10*"
+        <GridViewColumn Header="{Loc 'Modified'}" core_common:GridViewColumnResize.Width="10*" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
              Width="130" CellTemplate="{StaticResource modifiedDateColumnTemplate}" />
-        <GridViewColumn Header="{Loc 'Assigned'}" core_common:GridViewColumnResize.Width="10*"
+        <GridViewColumn Header="{Loc 'Assigned'}" core_common:GridViewColumnResize.Width="10*" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
              Width="100" CellTemplate="{StaticResource agentColumnTemplate}" />
     </GridView>
     <DataTemplate x:Key="typeColumnTemplate">
@@ -109,10 +109,10 @@
     <GridView x:Key="searchGridViewView" ColumnHeaderContainerStyle="{StaticResource Virto_GridView_ColumnHeader_ContainerStyle}"
          VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling"
          ScrollViewer.IsDeferredScrollingEnabled="True" core_virtualization:VirtualListLoadingIndicator.IsAttached="True">
-        <GridViewColumn Header="{Loc 'Name'}" core_common:GridViewColumnResize.Width="5*"
+        <GridViewColumn Header="{Loc 'Name'}" core_common:GridViewColumnResize.Width="5*" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
              Width="200" CellTemplate="{StaticResource nameColumnTemplate}" />
-        <GridViewColumn Header="{Loc 'Type'}" Width="67" CellTemplate="{StaticResource typeColumnTemplate}" />
-        <GridViewColumn Header="{Loc 'Description'}" core_common:GridViewColumnResize.Width="15*"
+        <GridViewColumn Header="{Loc 'Type'}" Width="67" CellTemplate="{StaticResource typeColumnTemplate}" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"/>
+        <GridViewColumn Header="{Loc 'Description'}" core_common:GridViewColumnResize.Width="15*" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
              Width="600" CellTemplate="{StaticResource descriptionColumnTemplate}" />
     </GridView>
 </ResourceDictionary>

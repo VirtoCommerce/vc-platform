@@ -11,6 +11,7 @@
     xmlns:common="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Common"
   
     xmlns:Microsoft_Windows_Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Classic"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
     mc:Ignorable="d">
 
 
@@ -941,11 +942,15 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type ComboBox}">
+					<ControlTemplate.Resources>
+						<DataTemplate DataType="{x:Type sys:String}" >
+							<ContentPresenter ContentTemplate="{DynamicResource Virto_SearchSpecial_ComboBox_DataTemplate}" />
+						</DataTemplate>
+					</ControlTemplate.Resources>
+					
 					<Border x:Name="mainBorder" Height="{TemplateBinding Height}" VerticalAlignment="Center" Padding="0" Margin="0" Width="{TemplateBinding Width}"
-                    BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="true" 
-                            Background="{TemplateBinding Background}"
-                            common:RequiredFieldHelper.IsRequired="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=(common:RequiredFieldHelper.IsRequired)}">
-						<!--common:RequiredFieldHelper.IsRequired="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=(common:RequiredFieldHelper.IsRequired)}"-->
+						BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="true" Background="{TemplateBinding Background}"
+                        common:RequiredFieldHelper.IsRequired="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=(common:RequiredFieldHelper.IsRequired)}">
 						<Grid VerticalAlignment="Center" Height="Auto" Margin="0">
 							<!--main visible content - single item and popup list -->
 							<Border x:Name="Border" Margin="-1,25,0,0" VerticalAlignment="Center" Height="Auto" >
@@ -977,7 +982,6 @@
 												<Setter Property="VerticalAlignment" Value="Center"/>
 												<Setter Property="Margin" Value="4,0"/>
 												<Setter Property="Padding" Value="0"/>
-												<!--<Setter Property="FontSize" Value="14" />-->
 											</Style>
 										</ContentPresenter.Resources>
 									</ContentPresenter>
@@ -1039,8 +1043,21 @@
 		</DataTemplate.Triggers>
 	</DataTemplate>
 
-	<!--*********  Comboboxes-->
+	<!--non-localizable data-->
+	<DataTemplate x:Key="Virto_SearchData_ComboBox_DataTemplate">
+		<TextBlock Text="{Binding }" Margin="4,0" />
+	</DataTemplate>
 
+	<!--localizable texts-->
+	<DataTemplate x:Key="Virto_SearchConstant_ComboBox_DataTemplate">
+		<TextBlock Text="{Binding Converter={x:Static LocalizingConverter.Current}}" Margin="4,0" />
+	</DataTemplate>
+
+	<!-- special localizable texts (e.g. 'Select', 'All items')-->
+	<DataTemplate x:Key="Virto_SearchSpecial_ComboBox_DataTemplate">
+		<TextBlock Text="{Binding Converter={x:Static LocalizingConverter.Current}}" FontStyle="Italic" Margin="4,0"/>
+	</DataTemplate>
+	<!--*********  Comboboxes-->
 
 	<!--********* CheckBoxes-->
 	<Style x:Key="Virto_Base_CheckBox_Style" TargetType="{x:Type CheckBox}" BasedOn="{StaticResource Virto_InputControl_Style}">

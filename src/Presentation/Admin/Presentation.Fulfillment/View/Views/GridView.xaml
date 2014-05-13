@@ -3,7 +3,7 @@
      xmlns:core_virtualization="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.DataVirtualization;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:fulfillmentInfrastructure="clr-namespace:VirtoCommerce.ManagementClient.Fulfillment.Infrastructure"
-     >
+     xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Fulfillment">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/HomeViewTheme/VirtoCommerceHomeTheme.xaml" />
     </ResourceDictionary.MergedDictionaries>
@@ -13,7 +13,7 @@
     <GridView x:Key="gridViewView" ColumnHeaderContainerStyle="{StaticResource Virto_GridView_ColumnHeader_ContainerStyle}"
          VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling"
          ScrollViewer.IsDeferredScrollingEnabled="True" core_virtualization:VirtualListLoadingIndicator.IsAttached="True">
-        <GridViewColumn Header="{Loc 'Sku'}" core_common:GridViewColumnResize.Width="13*"
+        <GridViewColumn Header="{Loc 'Sku'}" core_common:GridViewColumnResize.Width="13*" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
              Width="340">
             <GridViewColumn.CellTemplate>
                 <DataTemplate>
@@ -30,14 +30,14 @@
                 </DataTemplate>
             </GridViewColumn.CellTemplate>
         </GridViewColumn>
-        <!--<GridViewColumn Header="Inventory Id" core_common:GridViewColumnResize.Width="13*" Width="340">
+        <!--<GridViewColumn Header="Inventory Id" core_common:GridViewColumnResize.Width="13*" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}" Width="340">
             <GridViewColumn.CellTemplate>
                 <DataTemplate>
                     <TextBlock  Text="{Binding Data.InnerItem.InventoryId}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}"/>
                 </DataTemplate>
             </GridViewColumn.CellTemplate>
         </GridViewColumn>-->
-        <GridViewColumn Header="{Loc 'In stock quantity'}" core_common:GridViewColumnResize.Width="4*"
+        <GridViewColumn Header="{Loc 'In stock quantity'}" core_common:GridViewColumnResize.Width="4*" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
              Width="115">
             <GridViewColumn.CellTemplate>
                 <DataTemplate>
@@ -60,11 +60,11 @@
     <GridView x:Key="picklistGridViewView" ColumnHeaderContainerStyle="{StaticResource Virto_GridView_ColumnHeader_ContainerStyle}"
          VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling"
          ScrollViewer.IsDeferredScrollingEnabled="True" core_virtualization:VirtualListLoadingIndicator.IsAttached="True">
-        <GridViewColumn Header="{Loc 'Created'}" CellTemplate="{StaticResource createdColumnTemplate}"
+        <GridViewColumn Header="{Loc '^Created'}" CellTemplate="{StaticResource createdColumnTemplate}"
              core_common:GridViewColumnResize.Width="2*" />
-        <GridViewColumn Header="{Loc 'Updated'}" CellTemplate="{StaticResource updatedColumnTemplate}"
+        <GridViewColumn Header="{Loc 'Updated'}" CellTemplate="{StaticResource updatedColumnTemplate}" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
              core_common:GridViewColumnResize.Width="2*" />
-        <GridViewColumn Header="{Loc 'Shipment(s)'}" CellTemplate="{StaticResource shipmentsColumnTemplate}"
+        <GridViewColumn Header="{Loc 'Shipment(s)'}" CellTemplate="{StaticResource shipmentsColumnTemplate}" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
              core_common:GridViewColumnResize.Width="6*" />
     </GridView>
     <DataTemplate x:Key="orderColumnTemplate">
@@ -79,13 +79,13 @@
     <GridView x:Key="rmaGridViewView" ColumnHeaderContainerStyle="{StaticResource Virto_GridView_ColumnHeader_ContainerStyle}"
          VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling"
          ScrollViewer.IsDeferredScrollingEnabled="True" core_virtualization:VirtualListLoadingIndicator.IsAttached="True">
-        <GridViewColumn Header="{Loc 'Created'}" CellTemplate="{StaticResource createdColumnTemplate}"
+        <GridViewColumn Header="{Loc '^Created'}" CellTemplate="{StaticResource createdColumnTemplate}"
              core_common:GridViewColumnResize.Width="1*" />
         <GridViewColumn Header="{Loc 'Order'}" CellTemplate="{StaticResource orderColumnTemplate}"
-             core_common:GridViewColumnResize.Width="1*" />
+             core_common:GridViewColumnResize.Width="1*" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"/>
         <GridViewColumn Header="{Loc 'Status'}" CellTemplate="{StaticResource statusCodeColumnTemplate}"
-             core_common:GridViewColumnResize.Width="1*" />
+             core_common:GridViewColumnResize.Width="1*" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"/>
         <GridViewColumn Header="{Loc 'Authorization code'}" CellTemplate="{StaticResource authorizationCodeColumnTemplate}"
-             core_common:GridViewColumnResize.Width="1*" />
+             core_common:GridViewColumnResize.Width="1*" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"/>
     </GridView>
 </ResourceDictionary>

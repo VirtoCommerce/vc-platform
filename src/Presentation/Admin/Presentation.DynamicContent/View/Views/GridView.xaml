@@ -3,7 +3,7 @@
      xmlns:inf="clr-namespace:VirtoCommerce.ManagementClient.DynamicContent.Infrastructure"
      xmlns:core_virtualization="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.DataVirtualization;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
-     >
+     xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.DynamicContent">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/HomeViewTheme/VirtoCommerceHomeTheme.xaml" />
     </ResourceDictionary.MergedDictionaries>
@@ -15,7 +15,7 @@
     <GridView x:Key="gridViewView" ColumnHeaderContainerStyle="{StaticResource Virto_GridView_ColumnHeader_ContainerStyle}"
          VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling"
          ScrollViewer.IsDeferredScrollingEnabled="True" core_virtualization:VirtualListLoadingIndicator.IsAttached="True">
-        <GridViewColumn Header="{Loc 'Name'}" core_common:GridViewColumnResize.Width="2*"
+        <GridViewColumn Header="{Loc 'Name'}" core_common:GridViewColumnResize.Width="2*" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
              Width="220">
             <GridViewColumn.CellTemplate>
                 <DataTemplate>
@@ -33,7 +33,7 @@
                 </DataTemplate>
             </GridViewColumn.CellTemplate>
         </GridViewColumn>
-        <GridViewColumn Header="{Loc 'Description'}" core_common:GridViewColumnResize.Width="2*"
+        <GridViewColumn Header="{Loc 'Description'}" core_common:GridViewColumnResize.Width="2*" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
              Width="200">
             <GridViewColumn.CellTemplate>
                 <DataTemplate>
@@ -42,7 +42,7 @@
                 </DataTemplate>
             </GridViewColumn.CellTemplate>
         </GridViewColumn>
-        <GridViewColumn Header="{Loc 'Type'}" core_common:GridViewColumnResize.Width="1*"
+        <GridViewColumn Header="{Loc 'Type'}" core_common:GridViewColumnResize.Width="1*" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
              Width="100">
             <GridViewColumn.CellTemplate>
                 <DataTemplate>
@@ -52,18 +52,11 @@
                 </DataTemplate>
             </GridViewColumn.CellTemplate>
         </GridViewColumn>
-        <GridViewColumn Header="{Loc 'Created'}" core_common:GridViewColumnResize.Width="1*"
+        <GridViewColumn Header="{Loc '^Created'}" core_common:GridViewColumnResize.Width="1*"
              Width="100">
             <GridViewColumn.CellTemplate>
                 <DataTemplate>
-                    <TextBlock Style="{StaticResource Virto_TextBlock_VirtualListView_Style}">
-                        <TextBlock.Text>
-                            <!-- Text={Binding Data.InnerItem.Created, StringFormat=R} -->
-                            <LocBinding ResourceKey="R">
-                                <Binding Path="Data.InnerItem.Created" />
-                            </LocBinding>
-                        </TextBlock.Text>
-                    </TextBlock>
+                    <TextBlock Text="{Binding Data.InnerItem.Created, StringFormat=R}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
                 </DataTemplate>
             </GridViewColumn.CellTemplate>
         </GridViewColumn>
@@ -72,7 +65,7 @@
     <GridView x:Key="gridViewViewContent" ColumnHeaderContainerStyle="{StaticResource Virto_GridView_ColumnHeader_ContainerStyle}"
          VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling"
          ScrollViewer.IsDeferredScrollingEnabled="True" core_virtualization:VirtualListLoadingIndicator.IsAttached="True">
-        <GridViewColumn Header="{Loc 'Name'}" core_common:GridViewColumnResize.Width="14*"
+        <GridViewColumn Header="{Loc 'Name'}" core_common:GridViewColumnResize.Width="14*" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
              Width="130">
             <GridViewColumn.CellTemplate>
                 <DataTemplate>
@@ -90,7 +83,7 @@
                 </DataTemplate>
             </GridViewColumn.CellTemplate>
         </GridViewColumn>
-        <GridViewColumn Header="{Loc 'Description'}" core_common:GridViewColumnResize.Width="14*"
+        <GridViewColumn Header="{Loc 'Description'}" core_common:GridViewColumnResize.Width="14*" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
              Width="130">
             <GridViewColumn.CellTemplate>
                 <DataTemplate>
@@ -99,37 +92,23 @@
                 </DataTemplate>
             </GridViewColumn.CellTemplate>
         </GridViewColumn>
-        <GridViewColumn Header="{Loc 'Start date'}" core_common:GridViewColumnResize.Width="8*"
+        <GridViewColumn Header="{Loc 'Start date'}" core_common:GridViewColumnResize.Width="8*" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
              Width="87.3">
             <GridViewColumn.CellTemplate>
                 <DataTemplate>
-                    <TextBlock Style="{StaticResource Virto_TextBlock_VirtualListView_Style}">
-                        <TextBlock.Text>
-                            <!-- Text={Binding Data.InnerItem.StartDate, StringFormat=R, Converter={StaticResource dateVisibilityConverter}} -->
-                            <LocBinding ResourceKey="R">
-                                <Binding Path="Data.InnerItem.StartDate" Converter="{StaticResource dateVisibilityConverter}" />
-                            </LocBinding>
-                        </TextBlock.Text>
-                    </TextBlock>
+                    <TextBlock Text="{Binding Data.InnerItem.StartDate, StringFormat=R, Converter={StaticResource dateVisibilityConverter}}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
                 </DataTemplate>
             </GridViewColumn.CellTemplate>
         </GridViewColumn>
-        <GridViewColumn Header="{Loc 'End date'}" core_common:GridViewColumnResize.Width="8*"
+        <GridViewColumn Header="{Loc 'End date'}" core_common:GridViewColumnResize.Width="8*" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
              Width="87.3">
             <GridViewColumn.CellTemplate>
                 <DataTemplate>
-                    <TextBlock Style="{StaticResource Virto_TextBlock_VirtualListView_Style}">
-                        <TextBlock.Text>
-                            <!-- Text={Binding Data.InnerItem.EndDate, StringFormat=R, Converter={StaticResource dateVisibilityConverter}} -->
-                            <LocBinding ResourceKey="R">
-                                <Binding Path="Data.InnerItem.EndDate" Converter="{StaticResource dateVisibilityConverter}" />
-                            </LocBinding>
-                        </TextBlock.Text>
-                    </TextBlock>
+                    <TextBlock Text="{Binding Data.InnerItem.EndDate, StringFormat=R, Converter={StaticResource dateVisibilityConverter}}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
                 </DataTemplate>
             </GridViewColumn.CellTemplate>
         </GridViewColumn>
-        <GridViewColumn Header="{Loc 'Status'}" core_common:GridViewColumnResize.Width="5*"
+        <GridViewColumn Header="{Loc 'Status'}" core_common:GridViewColumnResize.Width="5*" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
              Width="52.3">
             <GridViewColumn.CellTemplate>
                 <DataTemplate>
@@ -138,7 +117,7 @@
                 </DataTemplate>
             </GridViewColumn.CellTemplate>
         </GridViewColumn>
-        <GridViewColumn Header="{Loc 'Priority'}" core_common:GridViewColumnResize.Width="5*"
+        <GridViewColumn Header="{Loc 'Priority'}" core_common:GridViewColumnResize.Width="5*" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
              Width="52.3">
             <GridViewColumn.CellTemplate>
                 <DataTemplate>
@@ -146,7 +125,7 @@
                 </DataTemplate>
             </GridViewColumn.CellTemplate>
         </GridViewColumn>
-        <GridViewColumn Header="{Loc 'Expression'}" core_common:GridViewColumnResize.Width="5*"
+        <GridViewColumn Header="{Loc 'Expression'}" core_common:GridViewColumnResize.Width="5*" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
              Width="52.3">
             <GridViewColumn.CellTemplate>
                 <DataTemplate>
@@ -158,11 +137,11 @@
     </GridView>
     <!-- categories list Grid view inside category search view-->
     <GridView x:Key="searchCategoryGridViewView" ColumnHeaderContainerStyle="{StaticResource Virto_GridView_ColumnHeader_ContainerStyle}">
-        <GridViewColumn Header="{Loc 'Category Code'}" core_common:GridViewColumnResize.Width="15*"
+        <GridViewColumn Header="{Loc 'Category Code'}" core_common:GridViewColumnResize.Width="15*" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
              Width="280.3" DisplayMemberBinding="{Binding Data.Code}" />
-        <GridViewColumn Header="{Loc 'Name'}" core_common:GridViewColumnResize.Width="15*"
+        <GridViewColumn Header="{Loc 'Name'}" core_common:GridViewColumnResize.Width="15*" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
              Width="280.3" DisplayMemberBinding="{Binding Data.Name}" />
-        <GridViewColumn Header="{Loc 'Enable Date'}" core_common:GridViewColumnResize.Width="15*"
+        <GridViewColumn Header="{Loc 'Enable Date'}" core_common:GridViewColumnResize.Width="15*" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
              Width="280.3" DisplayMemberBinding="{Binding Data.StartDate, StringFormat=R}" />
     </GridView>
 </ResourceDictionary>

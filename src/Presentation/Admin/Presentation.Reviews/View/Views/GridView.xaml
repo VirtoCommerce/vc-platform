@@ -3,7 +3,8 @@
      xmlns:core_virtualization="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.DataVirtualization;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:reviewInfrastructure="clr-namespace:VirtoCommerce.ManagementClient.Reviews.Infrastructure"
      xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-     xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions">
+     xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+     xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Reviews">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/HomeViewTheme/VirtoCommerceHomeTheme.xaml" />
     </ResourceDictionary.MergedDictionaries>
@@ -27,14 +28,7 @@
              Text="{Binding Data.OriginalItem.Title}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
     </DataTemplate>
     <DataTemplate x:Key="createdTemplate">
-        <TextBlock TextTrimming="CharacterEllipsis" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}">
-            <TextBlock.Text>
-                <!-- Text={Binding Data.OriginalItem.Created, StringFormat=R} -->
-                <LocBinding ResourceKey="R">
-                    <Binding Path="Data.OriginalItem.Created" />
-                </LocBinding>
-            </TextBlock.Text>
-        </TextBlock>
+        <TextBlock Text="{Binding Data.OriginalItem.Created, StringFormat=R}" TextTrimming="CharacterEllipsis" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
     </DataTemplate>
     <DataTemplate x:Key="authorTemplate">
         <TextBlock TextTrimming="CharacterEllipsis" ToolTip="{Binding Data.OriginalItem.AuthorName}"
@@ -60,7 +54,7 @@
     <GridView x:Key="gridViewView" ColumnHeaderContainerStyle="{StaticResource Virto_GridView_ColumnHeader_ContainerStyle}"
          VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling"
          ScrollViewer.IsDeferredScrollingEnabled="True" core_virtualization:VirtualListLoadingIndicator.IsAttached="True">
-        <GridViewColumn CellTemplate="{StaticResource setApprovedTemplate}">
+        <GridViewColumn CellTemplate="{StaticResource setApprovedTemplate}" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
             <GridViewColumn.Header>
                 <StackPanel Orientation="Horizontal">
                     <CheckBox IsChecked="{Binding SetAll, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -68,18 +62,18 @@
                 </StackPanel>
             </GridViewColumn.Header>
         </GridViewColumn>
-        <GridViewColumn Header="{Loc 'Status'}" CellTemplate="{StaticResource statusTemplate}"
+        <GridViewColumn Header="{Loc 'Status'}" CellTemplate="{StaticResource statusTemplate}" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
              core_common:GridViewColumnResize.Width="1*" />
-        <GridViewColumn Header="{Loc 'Author'}" CellTemplate="{StaticResource authorTemplate}"
+        <GridViewColumn Header="{Loc 'Author'}" CellTemplate="{StaticResource authorTemplate}" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
              core_common:GridViewColumnResize.Width="1*" />
-        <GridViewColumn Header="{Loc 'Title'}" CellTemplate="{StaticResource titleTemplate}"
+        <GridViewColumn Header="{Loc 'Title'}" CellTemplate="{StaticResource titleTemplate}" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
              core_common:GridViewColumnResize.Width="2*" />
-        <GridViewColumn Header="{Loc 'Created'}" CellTemplate="{StaticResource createdTemplate}"
+        <GridViewColumn Header="{Loc '^Created'}" CellTemplate="{StaticResource createdTemplate}" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
              core_common:GridViewColumnResize.Width="2*" />
-        <GridViewColumn Header="{Loc 'Type'}" CellTemplate="{StaticResource itemTypeTemplate}"
+        <GridViewColumn Header="{Loc 'Type'}" CellTemplate="{StaticResource itemTypeTemplate}" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
              core_common:GridViewColumnResize.Width="1*" />
-        <GridViewColumn Header="{Loc 'Rating'}" CellTemplate="{StaticResource ratingTemplate}" />
-        <GridViewColumn Header="{Loc 'Item'}" CellTemplate="{StaticResource itemTemplate}"
+        <GridViewColumn Header="{Loc 'Rating'}" CellTemplate="{StaticResource ratingTemplate}" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"/>
+        <GridViewColumn Header="{Loc 'Item'}" CellTemplate="{StaticResource itemTemplate}" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
              core_common:GridViewColumnResize.Width="3*" />
     </GridView>
 </ResourceDictionary>

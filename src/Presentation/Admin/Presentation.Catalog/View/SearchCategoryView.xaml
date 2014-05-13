@@ -70,7 +70,7 @@
             </StackPanel>
             <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right"
                  Margin="0,8,0,5">
-                <Button Command="{Binding SearchCommand}" Content="{Loc 'Search'}" />
+                <Button Command="{Binding SearchCommand}" Content="{Loc '^Search'}" />
             </StackPanel>
         </DockPanel>
     </Grid>

@@ -34,14 +34,24 @@ namespace VirtoCommerce.ManagementClient.Marketing.ViewModel.Implementations
         private readonly IViewModelsFactory<ICatalogPromotionViewModel> _itemCatalogVmFactory;
         private readonly NavigationManager _navManager;
         private readonly TileManager _tileManager;
+        private string[] _searchFilterStates;
+        private string[] _searchFilterTypes;
 
         #endregion
 
         public string SearchFilterName { get; set; }
         public string SearchFilterType { get; set; }
-        public string[] SearchFilterTypes { get; private set; }
+        public string[] SearchFilterTypes
+        {
+            get { return _searchFilterTypes ?? (_searchFilterTypes = new[] { "Catalog".Localize(), "Cart".Localize() }); }
+        }
+
         public string SearchFilterState { get; set; }
-        public string[] SearchFilterStates { get; private set; }
+        public string[] SearchFilterStates
+        {
+            get { return _searchFilterStates ?? (_searchFilterStates = new[] { "Active".Localize(), "Inactive".Localize(), "Archived".Localize() }); }
+        }
+
         public string SearchFilterKeyword { get; set; }
 
 
@@ -81,9 +91,6 @@ public MarketingHomeViewModel()
             PromotionCartCreateCommand = new DelegateCommand(RaiseCartPromotionCreateInteractionRequest);
             ItemDuplicateCommand = new DelegateCommand<IList>(RaisePromotionDuplicateInteractionRequest, x => x != null && x.Count > 0);
             ClearFiltersCommand = new DelegateCommand(DoClearFilters);
-            SearchFilterTypes = new[] { "Catalog", "Cart" };
-            SearchFilterStates = new[] { "Active", "Inactive", "Archived" };
-
             CreateItemCommand = new DelegateCommand(CreateItem);
             PopulateTiles();
         }

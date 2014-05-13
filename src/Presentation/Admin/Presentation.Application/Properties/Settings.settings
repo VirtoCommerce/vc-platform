@@ -68,5 +68,8 @@
     <Setting Name="CurrentUICulture" Type="System.String" Scope="User">
       <Value Profile="(Default)">en-US</Value>
     </Setting>
+    <Setting Name="Sku_RelationsTabHeader" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Relations</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -125,10 +125,10 @@
 							<RowDefinition Height="Auto"/>
 						</Grid.RowDefinitions>
 
-						<RadioButton Grid.Row="0" GroupName="radioList" Content="{Binding Path=Value}" 
+						<RadioButton Grid.Row="0" GroupName="radioList" Content="{Binding Value}" 
 									IsChecked="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}"/>
 
-						<TextBlock Grid.Row="1" Text="{Binding Path=Description}">
+						<TextBlock Grid.Row="1" Text="{Binding Description}">
 							<TextBlock.Style>
 								<Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
 									<Setter Property="Visibility" Value="Visible"/>

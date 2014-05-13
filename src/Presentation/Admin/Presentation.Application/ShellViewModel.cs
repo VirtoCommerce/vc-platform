@@ -12,6 +12,7 @@ using Microsoft.Practices.ServiceLocation;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.ManagementClient.Core;
+using VirtoCommerce.ManagementClient.Core.Controls.StatusIndicator.ViewModel;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.EventAggregation;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
@@ -60,6 +61,10 @@ namespace VirtoCommerce.ManagementClient
 				}
 				GuiCulture = System.Threading.Thread.CurrentThread.CurrentUICulture.ThreeLetterWindowsLanguageName;
 				ChangeLanguageAction = xx.Message.Item2;
+
+				// perform other initialization as Localization module has initialized.
+				if (StatusIndicatorVM == null)
+					StatusIndicatorVM = StatusIndicatorViewModel.GetInstance();
 			}));
 		}
 
@@ -213,15 +218,7 @@ namespace VirtoCommerce.ManagementClient
 			set { _guiCulture = value; OnPropertyChanged(); }
 		}
 
-		public ObservableCollection<CultureInfo> AvailableGuiCultures
-		{
-			get { return _availableGuiCultures; }
-			set
-			{
-				_availableGuiCultures = value;
-				OnPropertyChanged();
-			}
-		}
+		public ObservableCollection<CultureInfo> AvailableGuiCultures { get; set; }
 
 		public DelegateCommand<string> ChangeLanguageCommand { get; set; }
 		private Action<string> ChangeLanguageAction;
@@ -251,7 +248,7 @@ namespace VirtoCommerce.ManagementClient
 
 		private int _numHorizontalDocuments;
 		private string _guiCulture;
-		private ObservableCollection<CultureInfo> _availableGuiCultures;
+		private StatusIndicatorViewModel _statusIndicatorViewModel;
 
 		public int NumHorizontalDocuments
 		{
@@ -293,6 +290,12 @@ namespace VirtoCommerce.ManagementClient
 													  .OrderBy(x => x.MenuOrder)
 													  .ToList();
 			}
+		}
+
+		public StatusIndicatorViewModel StatusIndicatorVM
+		{
+			get { return _statusIndicatorViewModel; }
+			set { _statusIndicatorViewModel = value; OnPropertyChanged(); }
 		}
 
 		private void RefreshDocs()

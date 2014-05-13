@@ -244,5 +244,14 @@ namespace VirtoCommerce.ManagementClient.Properties {
                 this["CurrentUICulture"] = value;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Relations")]
+        public string Sku_RelationsTabHeader {
+            get {
+                return ((string)(this["Sku_RelationsTabHeader"]));
+            }
+        }
     }
 }

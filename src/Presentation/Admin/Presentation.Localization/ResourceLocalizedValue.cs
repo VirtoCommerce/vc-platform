@@ -52,7 +52,7 @@ namespace VirtoCommerce.ManagementClient.Localization
 			}
 			else
 			{
-				value = _resourceKey.Localize(Normalize(_resourceKey), Property.GetCategory());
+				value = _resourceKey.Localize(Normalize(_resourceKey), Property.GetCategory() ?? LocalizationScope.DefaultCategory);
 			}
 
 			if (value == null)

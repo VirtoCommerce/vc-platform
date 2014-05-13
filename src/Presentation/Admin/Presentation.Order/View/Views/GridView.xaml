@@ -3,7 +3,7 @@
      xmlns:core_virtualization="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.DataVirtualization;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:Presentation_Core_Infrastructure_Converters="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Converters;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
-     >
+     xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Order">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/HomeViewTheme/VirtoCommerceHomeTheme.xaml" />
     </ResourceDictionary.MergedDictionaries>
@@ -43,25 +43,18 @@
         </TextBlock>
     </DataTemplate>
     <DataTemplate x:Key="ordersColumn4Template">
-        <TextBlock Style="{StaticResource Virto_TextBlock_VirtualListView_Style}">
-            <TextBlock.Text>
-                <!-- Text={Binding Data.InnerItem.Created, StringFormat=R} -->
-                <LocBinding ResourceKey="R">
-                    <Binding Path="Data.InnerItem.Created" />
-                </LocBinding>
-            </TextBlock.Text>
-        </TextBlock>
+        <TextBlock Text="{Binding Data.InnerItem.Created, StringFormat=R}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
     </DataTemplate>
     <GridView x:Key="gridViewView" ColumnHeaderContainerStyle="{StaticResource Virto_GridView_ColumnHeader_ContainerStyle}"
          VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling"
          ScrollViewer.IsDeferredScrollingEnabled="True" core_virtualization:VirtualListLoadingIndicator.IsAttached="True">
-        <GridViewColumn Header="{Loc 'Order description'}" CellTemplate="{StaticResource ordersColumn1Template}"
+        <GridViewColumn Header="{Loc 'Order description'}" CellTemplate="{StaticResource ordersColumn1Template}" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
              core_common:GridViewColumnResize.Width="5*" Width="521" core_common:GridViewSort.PropertyName="TrackingNumber" />
-        <GridViewColumn Header="{Loc 'Created'}" CellTemplate="{StaticResource ordersColumn4Template}"
+        <GridViewColumn Header="{Loc '^Created'}" CellTemplate="{StaticResource ordersColumn4Template}"
              Width="198" core_common:GridViewSort.PropertyName="Created" />
-        <GridViewColumn Header="{Loc 'Store'}" CellTemplate="{StaticResource ordersColumn2Template}"
+        <GridViewColumn Header="{Loc 'Store'}" CellTemplate="{StaticResource ordersColumn2Template}" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
              core_common:GridViewColumnResize.Width="1*" Width="104" core_common:GridViewSort.PropertyName="StoreId" />
-        <GridViewColumn Header="{Loc 'Total'}" CellTemplate="{StaticResource ordersColumn3Template}"
+        <GridViewColumn Header="{Loc 'Total'}" CellTemplate="{StaticResource ordersColumn3Template}" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
              Width="72" core_common:GridViewSort.PropertyName="Total" />
     </GridView>
 </ResourceDictionary>

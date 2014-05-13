@@ -9,7 +9,8 @@
      xmlns:core_common="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Common;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:core_converters="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Converters;assembly=VirtoCommerce.ManagementClient.Core"
      d:DesignHeight="600" d:DesignWidth="1000" xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Marketing"
-     LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
+             xmlns:implementations="clr-namespace:VirtoCommerce.ManagementClient.Marketing.ViewModel.Implementations"
+             LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -39,7 +40,7 @@
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid x:Name="LayoutRoot" Margin="0,0,0,6">
+    <Grid x:Name="LayoutRoot" Margin="0,0,0,6" d:DataContext="{d:DesignInstance implementations:MarketingHomeViewModel }">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" MinWidth="300" />
             <ColumnDefinition Width="21" />
@@ -113,8 +114,7 @@
                 <TextBlock Grid.Row="2" VerticalAlignment="Bottom" Margin="0,1" HorizontalAlignment="Right"
                      Padding="0,1,0,0">
                     <TextBlock.Text>
-                        <!-- Text={Binding ListItemsSource.TotalItemsCount, StringFormat='Items: \{0\}'} -->
-                        <LocBinding ResourceKey="^Items: \{0\}">
+                        <LocBinding ResourceKey="^Items: {0}">
                             <Binding Path="ListItemsSource.TotalItemsCount" />
                         </LocBinding>
                     </TextBlock.Text>
@@ -173,8 +173,7 @@
                              IsAddingNullItemsFirst="True" Width="Auto" HorizontalAlignment="Stretch">
                             <core_controls:NullItemSelectorAdapter.NullItems>
                                 <collections:ArrayList>
-                                    <sys:String>Select.../>
-                                    </sys:String>
+                                    <sys:String>Select...</sys:String>
                                 </collections:ArrayList>
                             </core_controls:NullItemSelectorAdapter.NullItems>
                             <ComboBox SelectedValue="{Binding SearchFilterState, Mode=TwoWay}" ItemTemplate="{StaticResource Virto_Search_ComboBox_DataTemplate}">
@@ -188,8 +187,8 @@
                     </Grid>
                     <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" VerticalAlignment="Bottom"
                          HorizontalAlignment="Right" Margin="0,8,0,0">
-                        <Button Command="{Binding ClearFiltersCommand}" Content="{Loc 'Clear filters'}" />
-                        <Button Margin="6,0,0,0" Command="{Binding SearchItemsCommand}" Content="{Loc 'Search'}">
+                        <Button Command="{Binding ClearFiltersCommand}" Content="{Loc '^Clear filters'}" />
+                        <Button Margin="6,0,0,0" Command="{Binding SearchItemsCommand}" Content="{Loc '^Search'}">
                         </Button>
                     </StackPanel>
                 </DockPanel>

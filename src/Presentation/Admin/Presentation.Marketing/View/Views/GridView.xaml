@@ -2,6 +2,7 @@
      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:core_common="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Common;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:core_virtualization="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.DataVirtualization;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:marketingInfrastructure="clr-namespace:VirtoCommerce.ManagementClient.Marketing.Infrastructure"
+    xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Marketing"
      xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core" >
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/HomeViewTheme/VirtoCommerceHomeTheme.xaml" />
@@ -17,29 +18,15 @@
              Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
     </DataTemplate>
     <DataTemplate x:Key="startDateColumnTemplate">
-        <TextBlock Style="{StaticResource Virto_TextBlock_VirtualListView_Style}">
-            <TextBlock.Text>
-                <!-- Text={Binding Data.OriginalItem.StartDate, StringFormat=R} -->
-                <LocBinding ResourceKey="R">
-                    <Binding Path="Data.OriginalItem.StartDate" />
-                </LocBinding>
-            </TextBlock.Text>
-        </TextBlock>
+        <TextBlock Text="{Binding Data.OriginalItem.StartDate, StringFormat=R}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
     </DataTemplate>
     <DataTemplate x:Key="endDateColumnTemplate">
-        <TextBlock Style="{StaticResource Virto_TextBlock_VirtualListView_Style}">
-            <TextBlock.Text>
-                <!-- Text={Binding Data.OriginalItem.EndDate, StringFormat=R} -->
-                <LocBinding ResourceKey="R">
-                    <Binding Path="Data.OriginalItem.EndDate" />
-                </LocBinding>
-            </TextBlock.Text>
-        </TextBlock>
+        <TextBlock Text="{Binding Data.OriginalItem.EndDate, StringFormat=R}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
     </DataTemplate>
     <GridView x:Key="gridViewView" ColumnHeaderContainerStyle="{StaticResource Virto_GridView_ColumnHeader_ContainerStyle}"
          VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling"
          ScrollViewer.IsDeferredScrollingEnabled="True" core_virtualization:VirtualListLoadingIndicator.IsAttached="True">
-        <GridViewColumn Header="{Loc 'Promotion Name'}" core_common:GridViewColumnResize.Width="3*"
+        <GridViewColumn Header="{Loc 'Promotion Name'}" core_common:GridViewColumnResize.Width="3*" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
              Width="261.4">
             <GridViewColumn.CellTemplate>
                 <DataTemplate>
@@ -58,12 +45,12 @@
             </GridViewColumn.CellTemplate>
         </GridViewColumn>
         <GridViewColumn Header="{Loc 'Type'}" CellTemplate="{StaticResource typeColumnTemplate}"
-             core_common:GridViewColumnResize.Width="*" Width="87.1" />
+             core_common:GridViewColumnResize.Width="*" Width="87.1" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"/>
         <GridViewColumn Header="{Loc 'State'}" CellTemplate="{StaticResource statusColumnTemplate}"
-             core_common:GridViewColumnResize.Width="*" Width="87.1" />
+             core_common:GridViewColumnResize.Width="*" Width="87.1" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"/>
         <GridViewColumn Header="{Loc 'Start Date'}" CellTemplate="{StaticResource startDateColumnTemplate}"
-             core_common:GridViewColumnResize.Width="2*" Width="174.3" />
+             core_common:GridViewColumnResize.Width="2*" Width="174.3" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"/>
         <GridViewColumn Header="{Loc 'Expiration Date'}" CellTemplate="{StaticResource endDateColumnTemplate}"
-             core_common:GridViewColumnResize.Width="2*" Width="174.3" />
+             core_common:GridViewColumnResize.Width="2*" Width="174.3" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"/>
     </GridView>
 </ResourceDictionary>

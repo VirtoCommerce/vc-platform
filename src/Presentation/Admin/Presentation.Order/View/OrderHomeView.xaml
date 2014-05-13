@@ -8,7 +8,9 @@
      mc:Ignorable="d" x:Class="VirtoCommerce.ManagementClient.Order.View.OrderHomeView"
      x:Name="UserControl" d:DesignWidth="640" d:DesignHeight="480" Style="{DynamicResource Virto_Window_Style}"
      d:DataContext="{d:DesignInstance Type=implementations:OrderHomeViewModel, IsDesignTimeCreatable=False}"
-     xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Order" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
+     xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Order"
+             xmlns:model2="clr-namespace:VirtoCommerce.Foundation.Stores.Model;assembly=VirtoCommerce.Foundation"
+             LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -77,8 +79,8 @@
                  IsSynchronizedWithCurrentItem="True" View="{StaticResource gridViewView}" Margin="0,4,0,0" />
             <TextBlock Grid.Row="2" HorizontalAlignment="Right" Margin="0" Padding="0,1,0,0">
                 <TextBlock.Text>
-                    <!-- Text={Binding OrderItemsSource.TotalItemsCount, StringFormat='Orders : \{0\}'} -->
-                    <LocBinding ResourceKey="Orders : \{0\}">
+                    <!-- Text={Binding OrderItemsSource.TotalItemsCount, StringFormat='Orders: \{0\}'} -->
+                    <LocBinding ResourceKey="Orders: {0}">
                         <Binding Path="OrderItemsSource.TotalItemsCount" />
                     </LocBinding>
                 </TextBlock.Text>
@@ -139,11 +141,14 @@
                             <core_controls:NullItemSelectorAdapter.NullItems>
                                 <collections:ArrayList>
                                     <sys:String>Select...</sys:String>
-                                    <!--<sys:String>Select all</sys:String>-->
                                 </collections:ArrayList>
                             </core_controls:NullItemSelectorAdapter.NullItems>
-                            <ComboBox SelectedValue="{Binding SearchFilterOrderStatus, Mode=TwoWay}" x:Name="orderStatus"
-                                 ItemTemplate="{StaticResource Virto_Search_ComboBox_DataTemplate}">
+                            <ComboBox SelectedValue="{Binding SearchFilterOrderStatus, Mode=TwoWay}" x:Name="orderStatus">
+								<FrameworkElement.Resources>
+									<DataTemplate DataType="{x:Type model:OrderStatus}" >
+										<ContentPresenter ContentTemplate="{StaticResource Virto_SearchConstant_ComboBox_DataTemplate}" />
+									</DataTemplate>
+								</FrameworkElement.Resources>
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="SelectionChanged">
                                         <i:InvokeCommandAction Command="{Binding SearchOrdersCommand}" />
@@ -153,35 +158,18 @@
                         </core_controls:NullItemSelectorAdapter>
                         <TextBlock Grid.Row="8" Text="{Loc 'Store'}" />
                         <core_controls:NullItemSelectorAdapter Grid.Row="9" ItemsSource="{Binding AvailableStores}"
-                             IsAddingNullItemsFirst="True" Width="Auto" HorizontalAlignment="Stretch">
+                             Width="Auto" HorizontalAlignment="Stretch">
                             <core_controls:NullItemSelectorAdapter.NullItems>
                                 <collections:ArrayList>
                                     <sys:String>All Stores</sys:String>
                                 </collections:ArrayList>
                             </core_controls:NullItemSelectorAdapter.NullItems>
                             <ComboBox SelectedValue="{Binding SearchFilterStore, Mode=TwoWay}">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock x:Name="textBlock">
-                                            <TextBlock.Text>
-                                                <PriorityBinding>
-                                                    <Binding Path="Name" />
-                                                    <Binding />
-                                                </PriorityBinding>
-                                            </TextBlock.Text>
-                                        </TextBlock>
-                                        <DataTemplate.Triggers>
-                                            <MultiDataTrigger>
-                                                <MultiDataTrigger.Conditions>
-                                                    <Condition Binding="{Binding SelectedIndex, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}"
-                                                         Value="0" />
-                                                    <!--<Condition Binding="{Binding IsDropDownOpen, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ComboBox}}}" Value="False" />-->
-                                                </MultiDataTrigger.Conditions>
-                                                <Setter TargetName="textBlock" Property="FontStyle" Value="Italic" />
-                                            </MultiDataTrigger>
-                                        </DataTemplate.Triggers>
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
+								<FrameworkElement.Resources>
+									<DataTemplate DataType="{x:Type model2:Store}" >
+										<ContentPresenter Content="{Binding Name}" ContentTemplate="{StaticResource Virto_SearchData_ComboBox_DataTemplate}" />
+									</DataTemplate>
+								</FrameworkElement.Resources>
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="SelectionChanged">
                                         <i:InvokeCommandAction Command="{Binding SearchOrdersCommand}" />
@@ -192,8 +180,8 @@
                     </Grid>
                     <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right"
                          Margin="0,8,0,5">
-                        <Button Command="{Binding ClearFiltersCommand}" Content="{Loc 'Clear filters'}" />
-                        <Button Margin="6,0,0,0" Command="{Binding SearchOrdersCommand}" Content="{Loc 'Search'}" />
+                        <Button Command="{Binding ClearFiltersCommand}" Content="{Loc '^Clear filters'}" />
+						<Button Margin="6,0,0,0" Command="{Binding SearchOrdersCommand}" Content="{Loc '^Search'}" />
                     </StackPanel>
                 </DockPanel>
             </TabItem>

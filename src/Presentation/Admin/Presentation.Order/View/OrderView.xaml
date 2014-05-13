@@ -532,7 +532,7 @@
                                         </MultiBinding>
                                     </DataGridTextColumn.Binding>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Header="{Loc 'Created'}" Binding="{Binding Created, StringFormat=\{0:d\}}"
+                                <DataGridTextColumn Header="{Loc '^Created'}" Binding="{Binding Created, StringFormat=\{0:d\}}"
                                      Width="*" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}" />
                                 <DataGridTextColumn Header="{Loc 'Status'}" Binding="{Binding Path=Status, TargetNullValue='N/A'}"
                                      Width="*" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}" />

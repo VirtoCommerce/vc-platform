@@ -49,7 +49,7 @@
 				</i:EventTrigger>
 			</i:Interaction.Triggers>-->
         </core_controls:SearchTextBox>
-        <Button Grid.Row="3" Grid.Column="1" Command="{Binding SearchLineItemCommand}" Content="{Loc 'Search'}" />
+		<Button Grid.Row="3" Grid.Column="1" Command="{Binding SearchLineItemCommand}" Content="{Loc '^Search'}" />
         <!--Available items-->
         <core_controls:MultiSelectControl Grid.Row="4" Grid.ColumnSpan="2" TextSearchTextPath="Name"
              AvailableTitle="{Binding AvailableTitle}" AvailableItems="{Binding AvailableItems}"
