@@ -89,6 +89,11 @@ namespace VirtoCommerce.Search.Providers.Lucene
                     return v.Id;
                 }
             }
+            else if (value is CategoryFilterValue)
+            {
+                var v = value as CategoryFilterValue;
+                return v.Name;
+            }
 
             return String.Empty;
         }
@@ -136,6 +141,10 @@ namespace VirtoCommerce.Search.Providers.Lucene
                 values = ((s.PriceRangeFilter)filter).Values;
                 priceQuery = true;
             }
+            else if (filter is CategoryFilter)
+            {
+                values = ((CategoryFilter)filter).Values;
+            }
 
             if (values == null)
             {
@@ -145,16 +154,20 @@ namespace VirtoCommerce.Search.Providers.Lucene
             foreach (var value in values)
             {
                 Query q = null;
-                if (priceQuery)
+                if (value is s.RangeFilterValue && priceQuery)
                 {
                     q = LuceneQueryHelper.CreateQuery(
-                        this.Results.SearchCriteria, filter.Key, value as s.RangeFilterValue);
+                        this.Results.SearchCriteria, filter.Key, value as s.RangeFilterValue);                   
+                }
+                else if(value is CategoryFilterValue)
+                {
+                    q = LuceneQueryHelper.CreateQuery(filter.Key, value as CategoryFilterValue);
                 }
                 else
                 {
                     q = LuceneQueryHelper.CreateQuery(filter.Key, value);
                 }
-
+                
                 if (q == null) continue;
 
                 var queryFilter = new CachingWrapperFilter(new QueryWrapperFilter(q));
@@ -171,7 +184,7 @@ namespace VirtoCommerce.Search.Providers.Lucene
         }
 
         /// <summary>
-        ///     Gets the similar words.
+        /// Gets the similar words.
         /// </summary>
         /// <param name="reader">The reader.</param>
         /// <param name="fieldName">Name of the field.</param>
@@ -190,8 +203,9 @@ namespace VirtoCommerce.Search.Providers.Lucene
         }
 
         /// <summary>
-        ///     Creates result document collection from Lucene documents.
+        /// Creates result document collection from Lucene documents.
         /// </summary>
+        /// <param name="searcher">The searcher.</param>
         /// <param name="topDocs">The hits.</param>
         private void CreateDocuments(Searcher searcher, TopDocs topDocs)
         {
@@ -261,6 +275,7 @@ namespace VirtoCommerce.Search.Providers.Lucene
             #region Subcategory filters
 
             var catalogCriteria = Results.SearchCriteria as CatalogItemSearchCriteria;
+            /*
             if (catalogCriteria != null && catalogCriteria.ChildCategoryFilters.Any())
             {
                 var group = new FacetGroup("Subcategory");
@@ -288,6 +303,7 @@ namespace VirtoCommerce.Search.Providers.Lucene
                     groups.Add(group);
                 }
             }
+             * */
 
             #endregion
 

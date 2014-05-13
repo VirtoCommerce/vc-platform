@@ -103,6 +103,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Search
             set { ChangeState(); _outlines = value; }
         }
 
+        /*
         private List<ChildCategoryFilter> _childCategoryFilters = new List<ChildCategoryFilter>();
         /// <summary>
         /// Gets or sets the child category filters.
@@ -116,6 +117,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Search
             get { return _childCategoryFilters; }
             set { ChangeState(); _childCategoryFilters = value; }
         }
+         * */
 
         private string[] _pricelists;
         /// <summary>

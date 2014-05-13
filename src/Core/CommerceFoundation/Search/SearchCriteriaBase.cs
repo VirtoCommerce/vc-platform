@@ -7,10 +7,13 @@ using VirtoCommerce.Foundation.Search.Schemas;
 
 namespace VirtoCommerce.Foundation.Search
 {
+    using VirtoCommerce.Foundation.Catalogs.Search;
+
     [DataContract]
     [KnownType(typeof(AttributeFilter))]
     [KnownType(typeof(RangeFilter))]
     [KnownType(typeof(PriceRangeFilter))]
+    [KnownType(typeof(CategoryFilter))]
     public abstract class SearchCriteriaBase : ISearchCriteria
     {
         string _documentType = String.Empty;

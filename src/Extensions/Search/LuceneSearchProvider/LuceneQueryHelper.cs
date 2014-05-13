@@ -108,14 +108,13 @@ namespace VirtoCommerce.Search.Providers.Lucene
         /// <param name="field">The field.</param>
         /// <param name="value">The value.</param>
         /// <returns></returns>
-        public static Query CreateQuery(string field, ChildCategoryFilter value)
+        public static Query CreateQuery(string field, CategoryFilterValue value)
         {
             var query = new BooleanQuery();
 
             if (!String.IsNullOrEmpty(value.Outline))
             {
-                const string fieldName = "__outline";
-                var nodeQuery = new WildcardQuery(new Term(fieldName, value.Outline.ToLower()));
+                var nodeQuery = new WildcardQuery(new Term(field, value.Outline.ToLower()));
                 query.Add(nodeQuery, Occur.MUST);
 
             }

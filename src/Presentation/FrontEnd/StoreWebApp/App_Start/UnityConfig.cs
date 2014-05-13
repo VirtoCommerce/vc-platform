@@ -101,6 +101,8 @@ using IEvaluationPolicy = VirtoCommerce.Foundation.Marketing.Model.IEvaluationPo
 
 namespace VirtoCommerce.Web
 {
+    using VirtoCommerce.Web.Client.Services.Filters;
+
     /// <summary>
     /// Specifies the Unity configuration for the main container.
     /// </summary>
@@ -369,6 +371,7 @@ namespace VirtoCommerce.Web
             container.RegisterType<SeoKeywordClient>(new PerRequestLifetimeManager());
             container.RegisterType<ReviewClient>();
             container.RegisterType<IPaymentOption, CreditCardOption>("creditcard");
+            container.RegisterType<ISearchFilterService, StoreSearchFilterService>(new PerRequestLifetimeManager());
 
             #endregion
 
