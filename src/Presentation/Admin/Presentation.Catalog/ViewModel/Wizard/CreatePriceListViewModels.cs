@@ -45,7 +45,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Wizard
 
 		public override bool IsLast { get { return true; } }
 
-		public override string Description { get { return "Enter price list general information."; } }
+		public override string Description { get { return "Enter price list general information.".Localize(); } }
 
 		#endregion
 

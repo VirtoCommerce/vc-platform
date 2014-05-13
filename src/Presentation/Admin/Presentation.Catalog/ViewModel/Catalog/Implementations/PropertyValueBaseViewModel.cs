@@ -16,7 +16,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 	public class PropertyValueBaseViewModel : ViewModelBase, IPropertyValueBaseViewModel, IMultiSelectControlCommands
 	{
 		#region Dependencies
-		
+
 		private readonly IViewModelsFactory<IPickAssetViewModel> _vmFactory;
 
 		#endregion
@@ -95,7 +95,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 				if (InnerItem.Property != null && InnerItem.Property.IsEnum)
 				{
 					if (InnerItem.Value.KeyValue == null)
-						InnerItem.Value.SetError("KeyValue", "must select", true);
+						InnerItem.Value.SetError("KeyValue", "must select".Localize(), true);
 					else
 						InnerItem.Value.ClearError("KeyValue");
 				}
@@ -106,7 +106,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 					{
 						case PropertyValueType.ShortString:
 							if (string.IsNullOrEmpty(InnerItem.Value.ShortTextValue))
-								InnerItem.Value.SetError("ShortTextValue", "Value is required", true);
+								InnerItem.Value.SetError("ShortTextValue", "Value is required".Localize(), true);
 							// check for duplicates
 							//else if (_parent.InnerItem.Values.Any(x => x.ValueType == InnerItem.ValueType))
 							//    InnerItem.SetError("ShortTextValue", "Value is required", true);
@@ -115,7 +115,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 							break;
 						case PropertyValueType.LongString:
 							if (string.IsNullOrEmpty(InnerItem.Value.LongTextValue))
-								InnerItem.Value.SetError("LongTextValue", "Value is required", true);
+								InnerItem.Value.SetError("LongTextValue", "Value is required".Localize(), true);
 							else
 								InnerItem.Value.ClearError("LongTextValue");
 							break;
@@ -152,12 +152,12 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 		private void RaiseAssetPickInteractionRequest()
 		{
-		    var itemVM = _vmFactory.GetViewModelInstance();
-            itemVM.AssetPickMode = true;
-            itemVM.RootItemId = null;
-			
+			var itemVM = _vmFactory.GetViewModelInstance();
+			itemVM.AssetPickMode = true;
+			itemVM.RootItemId = null;
+
 			CommonConfirmRequest.Raise(
-				new ConditionalConfirmation(itemVM.Validate) { Content = itemVM, Title = "Select property value" },
+				new ConditionalConfirmation(itemVM.Validate) { Content = itemVM, Title = "Select property value".Localize() },
 				(x) =>
 				{
 					if (x.Confirmed)

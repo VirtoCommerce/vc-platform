@@ -15,16 +15,8 @@
     </base:ViewBase.Resources>
     <Grid d:DataContext="{d:DesignInstance implementations:CatalogDeleteViewModel}">
         <StackPanel Margin="0,0,0,48">
-            <TextBlock Text="{Loc 'WARNING: this change is permanent and can\'t be undone afterwards. It can lead to data loss.'}"
-                 Foreground="Red" />
-            <TextBlock>
-                <TextBlock.Text>
-                    <!-- Text={Binding ContentText} -->
-                    <LocBinding ResourceKey="ext">
-                        <Binding Path="ContentText" />
-                    </LocBinding>
-                </TextBlock.Text>
-            </TextBlock>
+            <TextBlock Text="{Loc 'WARNING: this change is permanent and can\'t be undone afterwards. It can lead to data loss.'}" Foreground="Red" />
+			<TextBlock Text="{Binding ContentText}" />
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />

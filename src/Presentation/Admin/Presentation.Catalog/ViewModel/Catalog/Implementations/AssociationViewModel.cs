@@ -4,6 +4,7 @@ using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Interfaces;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using VirtoCommerce.ManagementClient.Core.Infrastructure.Common;
 
 namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementations
 {
@@ -20,13 +21,15 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			InnerItem = item;
 			_searchVmFactory = searchVmFactory;
 
-			AvailableAssociationTypes = new[] { AssociationTypes.optional.ToString(), AssociationTypes.required.ToString() };
+			AvailableAssociationTypes = new[] {
+				new KeyValuePair_string_string { Value = AssociationTypes.optional.ToString() },
+				new KeyValuePair_string_string{ Value = AssociationTypes.required.ToString()}};
 
 			ItemPickCommand = new DelegateCommand(RaiseItemPickInteractionRequest);
 			CommonConfirmRequest = new InteractionRequest<Confirmation>();
 		}
 
-		public IEnumerable<string> AvailableAssociationTypes { get; private set; }
+		public IEnumerable<KeyValuePair_string_string> AvailableAssociationTypes { get; private set; }
 
 		public DelegateCommand ItemPickCommand { get; private set; }
 		public InteractionRequest<Confirmation> CommonConfirmRequest { get; private set; }
@@ -55,11 +58,11 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		private void RaiseItemPickInteractionRequest()
 		{
 			var itemVM = _searchVmFactory.GetViewModelInstance(
-				new KeyValuePair<string, object>("catalogInfo", string.Empty)
-				, new KeyValuePair<string, object>("searchType", string.Empty)
+				new System.Collections.Generic.KeyValuePair<string, object>("catalogInfo", string.Empty)
+				, new System.Collections.Generic.KeyValuePair<string, object>("searchType", string.Empty)
 				);
 			CommonConfirmRequest.Raise(
-				new ConditionalConfirmation(() => itemVM.SelectedItem != null) { Content = itemVM, Title = "Select an item" },
+				new ConditionalConfirmation(() => itemVM.SelectedItem != null) { Content = itemVM, Title = "Select an item".Localize() },
 				(x) =>
 				{
 					if (x.Confirmed)

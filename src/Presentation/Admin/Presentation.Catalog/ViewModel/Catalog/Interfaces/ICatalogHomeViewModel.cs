@@ -40,7 +40,6 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Interfaces
 
         IViewModel SelectedCatalogItem { get; }
 
-        CatalogBase SearchFilterCatalog { get; }
         ObservableCollection<CatalogBase> SearchFilterCatalogs { get; }
         ObservableCollection<ItemFilter> AllQueries { get; }
 
@@ -48,7 +47,6 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Interfaces
 
         string SearchFilterName { get;  }
         string SearchFilterCode { get;  }
-        string SearchFilterItemType { get;  }
-        string[] SearchFilterItemTypes { get;  }
+        object SearchFilterItemType { get;  }
     }
 }

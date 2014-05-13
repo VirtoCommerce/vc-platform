@@ -46,7 +46,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			{
 				case PropertyValueType.ShortString:
 					if (string.IsNullOrEmpty(InnerItem.ShortTextValue))
-						InnerItem.SetError("ShortTextValue", "Value is required", true);
+						InnerItem.SetError("ShortTextValue", "Value is required".Localize(), true);
 					// check for duplicates
 					//else if (_parent.InnerItem.Values.Any(x => x.ValueType == InnerItem.ValueType))
 					//    InnerItem.SetError("ShortTextValue", "Value is required", true);
@@ -55,7 +55,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 					break;
 				case PropertyValueType.LongString:
 					if (string.IsNullOrEmpty(InnerItem.LongTextValue))
-						InnerItem.SetError("LongTextValue", "Value is required", true);
+						InnerItem.SetError("LongTextValue", "Value is required".Localize(), true);
 					else
 						InnerItem.ClearError("LongTextValue");
 					break;

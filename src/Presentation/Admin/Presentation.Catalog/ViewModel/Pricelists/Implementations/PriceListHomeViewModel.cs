@@ -70,7 +70,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Pricelists.Implementa
 			var item = _entityFactory.CreateEntity<Pricelist>();
 			var vm = _wizardVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", item));
 
-			var confirmation = new Confirmation { Content = vm, Title = "Create Price List" };
+			var confirmation = new Confirmation { Content = vm, Title = "Create Price List".Localize() };
 			ItemAdd(confirmation);
 		}
 
@@ -192,7 +192,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Pricelists.Implementa
 					{
 						IdModule = NavigationNames.MenuName,
 						IdTile = "PriceLists",
-						TileTitle = "PRICE LISTS",
+						TileTitle = "PRICE LISTS".Localize(),
 						Order = 3,
 						IdColorSchema = TileColorSchemas.Schema3,
 						NavigateCommand = new DelegateCommand(() => NavigateToTabPage(NavigationNames.HomeNamePriceList)),

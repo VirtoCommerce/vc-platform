@@ -14,9 +14,9 @@ namespace VirtoCommerce.ManagementClient.Catalog.Model.TypedExpressions.Conditio
 		private MatchingContains _matchEl;
 
 		public ConditionGeoContinent(IExpressionViewModel expressionViewModel)
-			: base("Are browsing from continent []", expressionViewModel)
+			: base("Are browsing from continent []".Localize(), expressionViewModel)
 		{
-			WithLabel("Are browsing from continent ");
+			WithLabel("Are browsing from continent ".Localize());
 			_matchEl = WithElement(new MatchingContains(false, false)) as MatchingContains;
 			_valEl = WithDict(new string[] { "Africa", "Antarctica", "Asia", "Australia", "Europe", "North America", "Oceania (Melanesia, Polinesia, Micronesia)", "South America" }, "select continent") as UserInputElement;
 		}

@@ -10,23 +10,23 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 	public class CatalogMainViewModel : SubTabsDefaultViewModel, ICatalogMainViewModel
 	{
 		public CatalogMainViewModel(
-			IViewModelsFactory<ICatalogHomeViewModel> catalogHomeVmFactory, 
-			IViewModelsFactory<ICatalogImportJobHomeViewModel> importVmFactory, 
-			IReviewsHomeViewModel reviewsHomeViewModel, 
+			IViewModelsFactory<ICatalogHomeViewModel> catalogHomeVmFactory,
+			IViewModelsFactory<ICatalogImportJobHomeViewModel> importVmFactory,
+			IReviewsHomeViewModel reviewsHomeViewModel,
 			IAuthenticationContext authContext)
 		{
 			SubItems = new List<ItemTypeHomeTab>();
 			var parameters = new KeyValuePair<string, object>("parentViewModel", this);
 
-			SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.HomeName, Caption = "Catalog", ViewModel = catalogHomeVmFactory.GetViewModelInstance(parameters) });
+			SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.HomeName, Caption = "Catalog".Localize(), ViewModel = catalogHomeVmFactory.GetViewModelInstance(parameters) });
 			if (authContext.CheckPermission(PredefinedPermissions.CatalogCatalog_Import_JobsManage) ||
 				authContext.CheckPermission(PredefinedPermissions.CatalogCatalog_Import_JobsRun))
 			{
-				SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.HomeName, Caption = "Import", ViewModel = importVmFactory.GetViewModelInstance(parameters) });
+				SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.HomeName, Caption = "Import".Localize(), ViewModel = importVmFactory.GetViewModelInstance(parameters) });
 			}
 			if (authContext.CheckPermission(PredefinedPermissions.CatalogCustomerReviewsManage))
 			{
-				SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.HomeNameReviews, Caption = "Reviews", ViewModel = reviewsHomeViewModel });
+				SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.HomeNameReviews, Caption = "Reviews".Localize(), ViewModel = reviewsHomeViewModel });
 			}
 			CurrentTab = SubItems[0];
 		}

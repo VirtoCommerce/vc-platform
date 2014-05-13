@@ -54,7 +54,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Wizard
 		{
 			get
 			{
-				return "Virtual Catalog can contain categories and products from real Catalogs";
+				return "Virtual Catalog can contain categories and products from real Catalogs".Localize();
 			}
 		}
 
@@ -62,7 +62,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Wizard
 		{
 			get
 			{
-				return "Enter Virtual Catalog details";
+				return "Enter Virtual Catalog details".Localize();
 			}
 		}
 

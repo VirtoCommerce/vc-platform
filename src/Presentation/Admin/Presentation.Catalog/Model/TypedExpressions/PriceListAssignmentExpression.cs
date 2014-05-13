@@ -41,7 +41,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.Model.TypedExpressions
 					()=> new PriceListAssignmentExpressionBlock(this.ExpressionViewModel, true)				
 				};
 			ConditionBlock.WithAvailabeChildren(availableElements);
-			ConditionBlock.NewChildLabel = "+ add block";
+			ConditionBlock.NewChildLabel = "+ add block".Localize();
 		}
 
 

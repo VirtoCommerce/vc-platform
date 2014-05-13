@@ -86,7 +86,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.Infrastructure
 				}
 
 				if (retVal == null)
-					retVal = "N/A";
+					retVal = "N/A".Localize();
 			}
 
 			return retVal;

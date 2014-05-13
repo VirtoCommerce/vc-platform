@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
 using Omu.ValueInjecter;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Catalogs.Factories;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Catalogs.Repositories;
@@ -17,6 +18,7 @@ using VirtoCommerce.ManagementClient.Catalog.ViewModel.Pricelists.Interfaces;
 using VirtoCommerce.ManagementClient.Core.Controls;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Pricelists.Implementations
 {
@@ -49,7 +51,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Pricelists.Implementa
 			_authContext = authContext;
 			ViewTitle = new ViewTitleBase()
 				{
-					Title = "Price List Assignment",
+					Title = "Price List Assignment".Localize(),
 					SubTitle = (item != null && !string.IsNullOrEmpty(item.Name)) ? item.Name.ToUpper(CultureInfo.InvariantCulture) : ""
 				};
 			OpenItemCommand = new DelegateCommand(() => _navManager.Navigate(NavigationData));
@@ -137,8 +139,8 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Pricelists.Implementa
 		{
 			return new RefusedConfirmation
 			{
-				Content = "Save changes to price list '" + DisplayName + "'?",
-				Title = "Action confirmation"
+				Content = string.Format("Save changes to price list '{0}'?".Localize(), DisplayName),
+				Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 		}
 

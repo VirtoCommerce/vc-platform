@@ -114,7 +114,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		private void ValidateItemTargetType()
 		{
 			if (!TargetTypes.Contains(InnerItem.TargetType))
-				InnerItem.SetError("TargetType", "TargetType must be selected", true);
+				InnerItem.SetError("TargetType", "TargetType must be selected".Localize(), true);
 			else
 				InnerItem.ClearError("TargetType");
 		}

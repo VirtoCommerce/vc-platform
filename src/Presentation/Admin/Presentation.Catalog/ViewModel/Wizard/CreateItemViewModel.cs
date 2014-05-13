@@ -79,7 +79,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Wizard
 			var item = (EditorialReview)entityFactory.CreateEntityForType(typeof(EditorialReview));
 			item.CatalogItem = parentItem;
 			item.Priority = 1;
-			item.Source = "Product Description";
+			item.Source = "Product Description".Localize();
 
 			var retVal = vmFactory.GetViewModelInstance(
 				new KeyValuePair<string, object>("item", item),
@@ -154,10 +154,10 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Wizard
 		{
 			get
 			{
-				string result = string.Format("Item will be created in catalog '{0}'", InnerItem.Catalog.Name);
+				string result = string.Format("Item will be created in catalog '{0}'".Localize(), InnerItem.Catalog.Name);
 				var parentCategoryVM = stepModel.ParentEntityVM as ITreeCategoryViewModel;
 				if (parentCategoryVM != null)
-					result += string.Format(", category '{0}'", ((Category)parentCategoryVM.InnerItem).Name);
+					result += string.Format(", category '{0}'".Localize(), ((Category)parentCategoryVM.InnerItem).Name);
 
 				return result;
 			}
@@ -165,7 +165,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Wizard
 
 		public override string Description
 		{
-			get { return "Enter Item details."; }
+			get { return "Enter Item details.".Localize(); }
 		}
 
 		public override bool IsValid
@@ -260,7 +260,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Wizard
 		private void ValidatePropertySet(bool doNotifyChanges)
 		{
 			if (InnerItem.PropertySet == null || string.IsNullOrEmpty(InnerItem.PropertySet.PropertySetId))
-				InnerItem.SetError("PropertySet", "PropertySet error", doNotifyChanges);
+				InnerItem.SetError("PropertySet", "PropertySet error".Localize(), doNotifyChanges);
 			else
 				InnerItem.ClearError("PropertySet");
 		}
@@ -288,13 +288,13 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Wizard
 		{
 			get
 			{
-				return "Enter property values. All properties marked required must have values in order for Item to be created.";
+				return "Enter property values. All properties marked required must have values in order for Item to be created.".Localize();
 			}
 		}
 
 		public override string Description
 		{
-			get { return "Fill property values."; }
+			get { return "Fill property values.".Localize(); }
 		}
 
 		public override bool IsValid
@@ -361,7 +361,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Wizard
 
 		public override string Description
 		{
-			get { return "Enter pricing information."; }
+			get { return "Enter pricing information.".Localize(); }
 		}
 
 		public override bool IsValid

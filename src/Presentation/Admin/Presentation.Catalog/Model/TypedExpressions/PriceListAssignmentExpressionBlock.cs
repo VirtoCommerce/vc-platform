@@ -29,9 +29,9 @@ namespace VirtoCommerce.ManagementClient.Catalog.Model.TypedExpressions
 		}
 
 		public PriceListAssignmentExpressionBlock(IExpressionViewModel priceListAssignmentViewModel, bool isAddBlock)
-			: base("Add conditions block", priceListAssignmentViewModel)
+			: base("Add conditions block".Localize(), priceListAssignmentViewModel)
 		{
-			this.ConditionBlock = new ConditionAndOrBlock("if ", priceListAssignmentViewModel, " of these conditions are true", isAddBlock);
+			this.ConditionBlock = new ConditionAndOrBlock("if ".Localize(), priceListAssignmentViewModel, " of these conditions are true".Localize(), isAddBlock);
 			InitializeAvailableExpressions();
 		}
 
@@ -40,7 +40,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.Model.TypedExpressions
 
 			var availableElements = new Func<CompositeElement>[] {
 				()=> { //Browse behavior menu items
-					var group = new CompositeElement { DisplayName = "Browse behavior" };
+					var group = new CompositeElement { DisplayName = "Browse behavior".Localize() };
 					group.AvailableChildrenGetters.AddRange(new Func<ExpressionElement>[] {
 						//()=> new ConditionStoreSearchedPhrase(this.ExpressionViewModel),
 						()=> new ConditionInternetSearchedPhrase(this.ExpressionViewModel),
@@ -51,7 +51,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.Model.TypedExpressions
 					return group;
 				},
 				()=> { //Shoppers profile menu items
-					var group = new CompositeElement { DisplayName = "Shopper profile" };
+					var group = new CompositeElement { DisplayName = "Shopper profile".Localize() };
 					group.AvailableChildrenGetters.AddRange(new Func<ExpressionElement>[] {
 						()=> new ConditionAge(this.ExpressionViewModel),
 						()=> new ConditionGenderIs(this.ExpressionViewModel)
@@ -59,7 +59,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.Model.TypedExpressions
 					return group;
 				},			
 				()=> { //Shoppers geo location menu items
-					var group = new CompositeElement { DisplayName = "Geo location" };
+					var group = new CompositeElement { DisplayName = "Geo location".Localize() };
 					group.AvailableChildrenGetters.AddRange(new Func<ExpressionElement>[] {
 						()=> new ConditionGeoCity(this.ExpressionViewModel),
 						()=> new ConditionGeoState(this.ExpressionViewModel),
@@ -77,7 +77,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.Model.TypedExpressions
 				
             };
 			ConditionBlock.WithAvailabeChildren(availableElements);
-			ConditionBlock.NewChildLabel = "+ add condition";
+			ConditionBlock.NewChildLabel = "+ add condition".Localize();
 		}
 		
 		public override void InitializeAfterDeserialized(IExpressionViewModel priceListAssignmentViewModel)

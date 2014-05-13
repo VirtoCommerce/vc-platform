@@ -13,9 +13,9 @@ namespace VirtoCommerce.ManagementClient.Catalog.Model.TypedExpressions.Conditio
 		private MatchStringElement _valEl;
 
 		public ConditionGeoCity(IExpressionViewModel expressionViewModel)
-			: base("Are browsing from City []", expressionViewModel)
+			: base("Are browsing from City []".Localize(), expressionViewModel)
 		{
-			WithLabel("Browsing from City ");
+			WithLabel("Browsing from City ".Localize());
 			_valEl = WithElement(new MatchStringElement(expressionViewModel)) as MatchStringElement;
 		}
 

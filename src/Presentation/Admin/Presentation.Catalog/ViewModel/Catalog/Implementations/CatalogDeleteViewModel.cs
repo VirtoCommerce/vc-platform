@@ -57,7 +57,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			{
 				if (columnName == "ConfirmationText" && _confirmationTextChanged && !Validate())
 				{
-					return string.Format("Name begins with '{0}'.", confirmationPassword);
+					return string.Format("Name begins with '{0}'.".Localize(), confirmationPassword);
 				}
 				return string.Empty;
 			}

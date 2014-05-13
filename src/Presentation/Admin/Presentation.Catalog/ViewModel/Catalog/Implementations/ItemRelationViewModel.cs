@@ -55,7 +55,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 				);
 			itemVM.ExcludeItemId = Parent.InnerItem.ItemId;
 			CommonConfirmRequest.Raise(
-				new ConditionalConfirmation(() => itemVM.SelectedItem != null) { Content = itemVM, Title = "Select an item" },
+				new ConditionalConfirmation(() => itemVM.SelectedItem != null) { Content = itemVM, Title = "Select an item".Localize() },
 				(x) =>
 				{
 					if (x.Confirmed)

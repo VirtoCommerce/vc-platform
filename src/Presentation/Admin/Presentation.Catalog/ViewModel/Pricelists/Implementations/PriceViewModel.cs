@@ -74,7 +74,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Pricelists.Implementa
 			InnerItem.Validate();
 			if (InnerItem.List <= 0)
 			{
-				InnerItem.SetError("List", "List Price must be greater than 0", true);
+				InnerItem.SetError("List", "List Price must be greater than 0".Localize(), true);
 			}
 			else
 			{
@@ -110,7 +110,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Pricelists.Implementa
 			}
 			else
 			{
-				InnerItem.SetError("MinQuantity", "This pricelist already contains this item with the same quantity", true);
+				InnerItem.SetError("MinQuantity", "This pricelist already contains this item with the same quantity".Localize(), true);
 			}
 
 			result = InnerItem.Errors.Count == 0;
@@ -140,7 +140,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Pricelists.Implementa
 			var itemVM = _searchVmFactory.GetViewModelInstance(parameters.ToArray());
 
 			CommonConfirmRequest.Raise(
-				new ConditionalConfirmation(() => itemVM.SelectedItem != null) { Content = itemVM, Title = "Select an item" },
+				new ConditionalConfirmation(() => itemVM.SelectedItem != null) { Content = itemVM, Title = "Select an item".Localize() },
 				(x) =>
 				{
 					if (x.Confirmed)

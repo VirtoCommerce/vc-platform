@@ -10,6 +10,7 @@ using System.Windows;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using RequestEngine;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.AppConfig.Factories;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
@@ -27,10 +28,12 @@ using VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Interfaces;
 using VirtoCommerce.ManagementClient.Catalog.ViewModel.Titles;
 using VirtoCommerce.ManagementClient.Catalog.ViewModel.Wizard;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using VirtoCommerce.ManagementClient.Core.Infrastructure.Common;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.DataVirtualization;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.DragDrop;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Tiles;
+using VirtoCommerce.ManagementClient.Localization;
 using catalogModel = VirtoCommerce.Foundation.Catalogs.Model;
 
 namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementations
@@ -128,7 +131,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 			if (_viewTitle != null)
 			{
-				_viewTitle.Title = "Catalogs";
+				_viewTitle.Title = "Catalogs".Localize();
 			}
 		}
 
@@ -142,7 +145,6 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			QueryDeleteCommand = new DelegateCommand<ItemFilter>(RaiseItemFilterDeleteInteractionRequest);
 
 			SearchAllItemsCommand = new DelegateCommand(DoSearchAllItems);
-			SearchFilterItemTypes = new string[] { "Product", "Variation", "Bundle", "Package", "Dynamic Kit" };
 			SearchFilterCatalogs = new ObservableCollection<CatalogBase>();
 			ClearFiltersCommand = new DelegateCommand(DoClearFilters);
 			RefreshTreeItemsCommand = new DelegateCommand(DoRefreshTreeItems);
@@ -184,7 +186,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		private void RaiseItemFilterCreateInteractionRequest()
 		{
 			var filter = new ItemFilter();
-			if (RaiseItemFilterEditInteractionRequest(filter, "Create Search Filter"))
+			if (RaiseItemFilterEditInteractionRequest(filter, "Create Search Filter".Localize()))
 			{
 				AllQueries.Add(filter);
 				Virtoway.WPF.State.ElementStateOperations.SetPropertyValue("CustomItemsQuery", filter.Name, filter.StringExpression);
@@ -194,7 +196,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		private void RaiseItemFilterEditInteractionRequest(ItemFilter originalItem)
 		{
 			var item = new ItemFilter { Name = originalItem.Name, StringExpression = originalItem.StringExpression };
-			if (RaiseItemFilterEditInteractionRequest(item, "Edit item filter"))
+			if (RaiseItemFilterEditInteractionRequest(item, "Edit item filter".Localize()))
 			{
 				Virtoway.WPF.State.ElementStateOperations.SetPropertyValue("CustomItemsQuery", originalItem.Name, null);
 				// copy all values to original:
@@ -209,7 +211,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		private bool RaiseItemFilterEditInteractionRequest(ItemFilter item, string title)
 		{
 			var result = false;
-			var itemVM = _queryVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", item));
+			var itemVM = _queryVmFactory.GetViewModelInstance(new System.Collections.Generic.KeyValuePair<string, object>("item", item));
 
 			CommonConfirmRequest.Raise(new ConditionalConfirmation(itemVM.Validate)
 			{
@@ -233,8 +235,8 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			{
 				CommonConfirmRequest.Raise(new ConditionalConfirmation()
 				{
-					Content = string.Format("Are you sure you want to delete filter '{0}'?", selectedItem.Name),
-					Title = "Delete"
+					Content = string.Format("Are you sure you want to delete filter '{0}'?".Localize(), selectedItem.Name),
+					Title = "Delete".Localize(null, LocalizationScope.DefaultCategory)
 				},
 				(x) =>
 				{
@@ -262,9 +264,9 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 				category.CatalogId = GetCatalogId(SelectedCatalogItem);
 				category.Catalog = GetCatalog(SelectedCatalogItem);
 
-				var wizardViewModel = _wizardCategoryVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", category));
+				var wizardViewModel = _wizardCategoryVmFactory.GetViewModelInstance(new System.Collections.Generic.KeyValuePair<string, object>("item", category));
 
-				var confirmation = new Confirmation { Title = "Create Category", Content = wizardViewModel };
+				var confirmation = new Confirmation { Title = "Create Category".Localize(), Content = wizardViewModel };
 				ItemAdd(confirmation, category);
 			}
 		}
@@ -276,14 +278,14 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			{
 				var allAvailableOptions = new ItemTypeSelectionModel[]
 					{
-						new ItemTypeSelectionModel("Catalog","A central location to manage your store merchandise, create catalog for a brand, product line or a particular supplier."),
-						new ItemTypeSelectionModel("Virtual Catalog","A subset of products and categories found in master catalogs.")
+						new ItemTypeSelectionModel("Catalog".Localize(),"A central location to manage your store merchandise, create catalog for a brand, product line or a particular supplier.".Localize()),
+						new ItemTypeSelectionModel("Virtual Catalog".Localize(),"A subset of products and categories found in master catalogs.".Localize())
 					};
 				var itemVM =
-					_selectionVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("allAvailableOptions", allAvailableOptions));
+					_selectionVmFactory.GetViewModelInstance(new System.Collections.Generic.KeyValuePair<string, object>("allAvailableOptions", allAvailableOptions));
 				// show selection step
 				CommonConfirmRequest.Raise(
-					new ConditionalConfirmation(() => !string.IsNullOrEmpty(itemVM.SelectedItemType)) { Content = itemVM, Title = "Select Catalog type" }, (x) =>
+					new ConditionalConfirmation(() => !string.IsNullOrEmpty(itemVM.SelectedItemType)) { Content = itemVM, Title = "Select Catalog type".Localize() }, (x) =>
 							{
 								if (x.Confirmed)
 								{
@@ -312,16 +314,16 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		private void CreateCatalog()
 		{
 			var item = CreateCatalogEntity<catalogModel.Catalog>();
-			var itemVM = _wizardCatalogVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", item));
-			var confirmation = new Confirmation { Content = itemVM, Title = "Create Catalog" };
+			var itemVM = _wizardCatalogVmFactory.GetViewModelInstance(new System.Collections.Generic.KeyValuePair<string, object>("item", item));
+			var confirmation = new Confirmation { Content = itemVM, Title = "Create Catalog".Localize() };
 			ItemAdd(confirmation, item);
 		}
 
 		private void CreateVirtualCatalog()
 		{
 			var item = CreateCatalogEntity<VirtualCatalog>();
-			var itemVM = _wizardVirtualCatalogVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", item));
-			var confirmation = new Confirmation { Content = itemVM, Title = "Create Virtual Catalog" };
+			var itemVM = _wizardVirtualCatalogVmFactory.GetViewModelInstance(new System.Collections.Generic.KeyValuePair<string, object>("item", item));
+			var confirmation = new Confirmation { Content = itemVM, Title = "Create Virtual Catalog".Localize() };
 			ItemAdd(confirmation, item);
 		}
 
@@ -329,12 +331,12 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		{
 			// ParameterOverride ParameterValue cannot be null
 			var itemVM = _searchCategoryVmFactory.GetViewModelInstance(
-				new KeyValuePair<string, object>("catalogInfo", string.Empty)
+				new System.Collections.Generic.KeyValuePair<string, object>("catalogInfo", string.Empty)
 				);
 			itemVM.SearchModifier = SearchCategoryModifier.RealCatalogsOnly;
 			itemVM.InitializeForOpen();
 			CommonConfirmRequest.Raise(
-				new ConditionalConfirmation(() => itemVM.SelectedItem != null) { Content = itemVM, Title = "Select linked Category" },
+				new ConditionalConfirmation(() => itemVM.SelectedItem != null) { Content = itemVM, Title = "Select linked Category".Localize() },
 				(x) =>
 				{
 					if (x.Confirmed)
@@ -388,10 +390,10 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			item.MinQuantity = 1;
 
 			var itemVM = _wizardItemVmFactory.GetViewModelInstance(
-				new KeyValuePair<string, object>("item", item),
-				new KeyValuePair<string, object>("parentEntityVM", SelectedCatalogItem));
+				new System.Collections.Generic.KeyValuePair<string, object>("item", item),
+				new System.Collections.Generic.KeyValuePair<string, object>("parentEntityVM", SelectedCatalogItem));
 
-			var confirmation = new Confirmation { Content = itemVM, Title = "Create " + itemTitle };
+			var confirmation = new Confirmation { Content = itemVM, Title = string.Format("Create {0}".Localize(), itemTitle) };
 			ItemAdd(confirmation, item);
 		}
 
@@ -403,19 +405,23 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 					|| !(SelectedCatalogItem is ITreeCategoryViewModel)
 					|| GetCatalog(SelectedCatalogItem) is VirtualCatalog))
 			{
-				CommonNotifyRequest.Raise(new Notification { Content = "Selection is not valid.", Title = "Error" });
+				CommonNotifyRequest.Raise(new Notification
+				{
+					Content = "Selection is not valid.".Localize(),
+					Title = "Error".Localize(null, LocalizationScope.DefaultCategory)
+				});
 				return;
 			}
 
 			// ParameterOverride ParameterValue cannot be null
 			var catalogId = selectedItemsList.Count > 0 ? string.Empty : GetCatalogId(SelectedCatalogItem);
 			var itemVM = _searchCategoryVmFactory.GetViewModelInstance(
-				new KeyValuePair<string, object>("catalogInfo", catalogId)
+				new System.Collections.Generic.KeyValuePair<string, object>("catalogInfo", catalogId)
 				);
 			itemVM.SearchModifier = SearchCategoryModifier.RealCatalogsOnly | SearchCategoryModifier.UserCanChangeSearchCatalog;
 			itemVM.InitializeForOpen();
 			CommonConfirmRequest.Raise(
-				new ConditionalConfirmation(() => itemVM.SelectedItem != null) { Content = itemVM, Title = "Select item's Category" },
+				new ConditionalConfirmation(() => itemVM.SelectedItem != null) { Content = itemVM, Title = "Select item's Category".Localize() },
 				(xx) =>
 				{
 					if (xx.Confirmed)
@@ -424,15 +430,19 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 						Category oldCategory = null;
 						if (selectedItemsList.Count > 0)
 						{
-							itemsText = string.Format("{0} item(s)", selectedItemsList.Count);
+							itemsText = string.Format("{0} item(s)".Localize(), selectedItemsList.Count);
 						}
 						else
 						{
 							oldCategory = (Category)((ITreeCategoryViewModel)SelectedCatalogItem).InnerItem;
-							itemsText = string.Format("all items from '{0}'", oldCategory.Name);
+							itemsText = string.Format("all items from '{0}'".Localize(), oldCategory.Name);
 						}
-						string confirmationContent = string.Format("Are you sure you want to move {0} to Category '{1}'?", itemsText, itemVM.SelectedItem.Name);
-						CommonConfirmRequest.Raise(new ConditionalConfirmation(() => true) { Title = "Confirmation", Content = confirmationContent }, xxx =>
+						string confirmationContent = string.Format("Are you sure you want to move {0} to Category '{1}'?".Localize(), itemsText, itemVM.SelectedItem.Name);
+						CommonConfirmRequest.Raise(new ConditionalConfirmation(() => true)
+						{
+							Title = "Confirmation".Localize(null, LocalizationScope.DefaultCategory),
+							Content = confirmationContent
+						}, xxx =>
 						{
 							if (xxx.Confirmed)
 							{
@@ -504,7 +514,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		private void DoClearFilters()
 		{
 			// _isInSearchMode = false;
-			SearchFilterName = SearchFilterCode = SearchFilterItemType = null;
+			SearchFilterItemType = SearchFilterName = SearchFilterCode = null;
 			SearchFilterCatalog = null;
 			OnPropertyChanged("SearchFilterName");
 			OnPropertyChanged("SearchFilterCode");
@@ -541,7 +551,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 		protected override void RaiseItemAddInteractionRequest()
 		{
-			var allAvailableOptions = new ItemTypeSelectionModel[]
+			var allAvailableOptions = new[]
 				{
 					new ItemTypeSelectionModel("Variation/SKU","Represents orderable item of merchandise for sale. Contains prices and inventory information."),
 					new ItemTypeSelectionModel("Product","A container for other Variations or SKUs. Contains product details, such as names, description and images. Can be used for targeted promotions."),
@@ -549,12 +559,13 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 					new ItemTypeSelectionModel("Package","A grouping of items sold as a single unit. Package has it's own pricing and inventory."),
 					new ItemTypeSelectionModel("Dynamic Kit","A dynamic kit is a type of catalog item which can be dynamically configured by the customer. This configuration (or grouping) of products is based on the customer's needs and is sold as a single unit.")
 				};
-			var itemVM = _itemTypeVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("allAvailableOptions", allAvailableOptions));
+			allAvailableOptions.ToList().ForEach(x => { x.Value = x.Value.Localize(); x.Description = x.Description.Localize(); });
+			var itemVM = _itemTypeVmFactory.GetViewModelInstance(new System.Collections.Generic.KeyValuePair<string, object>("allAvailableOptions", allAvailableOptions));
 			// show selection step
 			CommonConfirmRequest.Raise(new ConditionalConfirmation(() => !string.IsNullOrEmpty(itemVM.SelectedItemType))
 			{
 				Content = itemVM,
-				Title = "Select Item type"
+				Title = "Select Item type".Localize()
 			},
 			 (x) =>
 			 {
@@ -605,7 +616,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 				}
 
 				// Open the item when wizard is complete
-				var itemViewModel = _itemVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", item));
+				var itemViewModel = _itemVmFactory.GetViewModelInstance(new System.Collections.Generic.KeyValuePair<string, object>("item", item));
 				var openTracking = (IOpenTracking)itemViewModel;
 				openTracking.OpenItemCommand.Execute();
 
@@ -722,7 +733,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			}
 		}
 
-		public CatalogBase SearchFilterCatalog { get; set; }
+		public object SearchFilterCatalog { get; set; }
 		public ObservableCollection<CatalogBase> SearchFilterCatalogs { get; set; }
 
 		private ObservableCollection<ItemFilter> _allQueries;
@@ -736,8 +747,8 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 		public string SearchFilterName { get; set; }
 		public string SearchFilterCode { get; set; }
-		public string SearchFilterItemType { get; set; }
-		public string[] SearchFilterItemTypes { get; set; }
+		public object SearchFilterItemType { get; set; }
+		public KeyValuePair_string_string[] SearchFilterItemTypes { get; set; }
 		#endregion
 
 		#region IVirtualListLoader<IItemViewModel> Members
@@ -786,36 +797,39 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 						query = query.Where(x => x.Code.Contains(SearchFilterCode));
 					}
 
-					// if (!string.IsNullOrEmpty(SearchFilterItemType))
-					if (SearchFilterItemType == SearchFilterItemTypes[0])
+					if (SearchFilterItemType is KeyValuePair_string_string)
 					{
-						canQuery = true;
-						query = query.OfType<Product>();
-					}
-					else if (SearchFilterItemType == SearchFilterItemTypes[1])
-					{
-						canQuery = true;
-						query = query.OfType<Sku>();
-					}
-					else if (SearchFilterItemType == SearchFilterItemTypes[2])
-					{
-						canQuery = true;
-						query = query.OfType<Bundle>();
-					}
-					else if (SearchFilterItemType == SearchFilterItemTypes[3])
-					{
-						canQuery = true;
-						query = query.OfType<Package>();
-					}
-					else if (SearchFilterItemType == SearchFilterItemTypes[4])
-					{
-						canQuery = true;
-						query = query.OfType<DynamicKit>();
+						if (SearchFilterItemType == SearchFilterItemTypes[0])
+						{
+							canQuery = true;
+							query = query.OfType<Sku>();
+						}
+						else if (SearchFilterItemType == SearchFilterItemTypes[1])
+						{
+							canQuery = true;
+							query = query.OfType<Product>();
+						}
+						else if (SearchFilterItemType == SearchFilterItemTypes[2])
+						{
+							canQuery = true;
+							query = query.OfType<Bundle>();
+						}
+						else if (SearchFilterItemType == SearchFilterItemTypes[3])
+						{
+							canQuery = true;
+							query = query.OfType<Package>();
+						}
+						else if (SearchFilterItemType == SearchFilterItemTypes[4])
+						{
+							canQuery = true;
+							query = query.OfType<DynamicKit>();
+						}
 					}
 
-					if (SearchFilterCatalog != null && !String.IsNullOrEmpty(catalogId = SearchFilterCatalog.CatalogId))
+					if (SearchFilterCatalog is CatalogBase)
 					{
 						canQuery = true;
+						catalogId = ((CatalogBase)SearchFilterCatalog).CatalogId;
 						query = query.Where(x => x.CatalogId == catalogId);
 					}
 				}
@@ -860,7 +874,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 					overallCount = query.Count();
 					var orderedItems = sortDescriptions.Count == 0 ? query.OrderBy(x => x.ItemId) : ApplySortDescriptions(query, sortDescriptions);
 					var items = orderedItems.Skip(startIndex).Take(count).ToList();
-					retVal.AddRange(items.Select(item => _itemVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", item))));
+					retVal.AddRange(items.Select(item => _itemVmFactory.GetViewModelInstance(new System.Collections.Generic.KeyValuePair<string, object>("item", item))));
 				}
 				else
 				{
@@ -881,6 +895,13 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			{
 				OnUIThread(async () =>
 					{
+						SearchFilterItemTypes = new[] { new KeyValuePair_string_string{ Value = "Variation"},
+							new KeyValuePair_string_string{ Value = "Product"},
+							new KeyValuePair_string_string{ Value = "Bundle"},
+							new KeyValuePair_string_string{ Value = "Package"},
+							new KeyValuePair_string_string{ Value = "Dynamic Kit"}};
+						OnPropertyChanged("SearchFilterItemTypes");
+
 						if (!RootCatalogs.Any())
 						{
 							//Get all catalogs
@@ -1001,7 +1022,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 		private void AddCatalogToTree(CatalogBase catalog)
 		{
-			var catalogParameter = new KeyValuePair<string, object>("item", catalog);
+			var catalogParameter = new System.Collections.Generic.KeyValuePair<string, object>("item", catalog);
 			var catalogViewModel = catalog is catalogModel.Catalog ? (IViewModel)_treeCatalogVmFactory.GetViewModelInstance(catalogParameter) : _treeVirtualCatalogVmFactory.GetViewModelInstance(catalogParameter);
 
 			RootCatalogs.Add(catalogViewModel);
@@ -1018,7 +1039,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			string subTitle = "";
 			if (_currentFilter != null)
 			{
-				subTitle = "RESULTS FOR SAVED FILTER    \"" + _currentFilter.Name.ToUpper() + "\"";
+				subTitle = string.Format("RESULTS FOR SAVED FILTER    \"{0}\"".Localize(), _currentFilter.Name.ToUpper());
 			}
 			else
 			{
@@ -1031,14 +1052,14 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 				}
 				if (!String.IsNullOrEmpty(path))
 				{
-					subTitle = "BROWSING    \"" + path.ToUpper() + "\"";
+					subTitle = string.Format("BROWSING    \"{0}\"".Localize(), path.ToUpper());
 				}
 			}
 			if (_isInSearchAllMode)
 			{
-				subTitle += (String.IsNullOrEmpty(SearchFilterAll) ? "" : "      ") + "SEARCH RESULTS FOR   \"" + SearchFilterAll.ToUpper() + "\"";
+				subTitle += (String.IsNullOrEmpty(SearchFilterAll) ? "" : "      ") + string.Format("SEARCH RESULTS FOR   \"{0}\"".Localize(), SearchFilterAll.ToUpper());
 			}
-			(_viewTitle as CatalogHomeTitleViewModel).SubTitle = (String.IsNullOrEmpty(subTitle)) ? "MERCHANDISE MANAGEMENT" : subTitle;
+			(_viewTitle as CatalogHomeTitleViewModel).SubTitle = (String.IsNullOrEmpty(subTitle)) ? "MERCHANDISE MANAGEMENT".Localize() : subTitle;
 		}
 
 		#endregion
@@ -1129,7 +1150,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 					{
 						IdModule = NavigationNames.MenuName,
 						IdTile = "Products",
-						TileTitle = "PRODUCTS",
+						TileTitle = "PRODUCTS".Localize(),
 						Order = 0,
 						IdColorSchema = TileColorSchemas.Schema2,
 						NavigateCommand = new DelegateCommand(() => NavigateToTabPage(NavigationNames.HomeName)),
@@ -1164,7 +1185,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 					{
 						IdModule = NavigationNames.MenuName,
 						IdTile = "Catalogs",
-						TileTitle = "CATALOGS",
+						TileTitle = "CATALOGS".Localize(),
 						Order = 1,
 						IdColorSchema = TileColorSchemas.Schema4,
 						NavigateCommand = new DelegateCommand(() => NavigateToTabPage(NavigationNames.HomeName)),
@@ -1195,7 +1216,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 					{
 						IdModule = NavigationNames.MenuName,
 						IdTile = "ImportJob",
-						TileTitle = "IMPORT",
+						TileTitle = "IMPORT".Localize(),
 						Order = 5,
 						IdColorSchema = TileColorSchemas.Schema2,
 						NavigateCommand = new DelegateCommand(() => NavigateToTabPage(NavigationNames.HomeNameCatalogImportJob)),

@@ -62,7 +62,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Wizard
 		{
 			get
 			{
-				return "Catalog can contain Categories and Products and can be assigned to a Store";
+				return "Catalog can contain Categories and Products and can be assigned to a Store".Localize();
 			}
 		}
 
@@ -70,7 +70,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Wizard
 		{
 			get
 			{
-				return "Enter Catalog details";
+				return "Enter Catalog details".Localize();
 			}
 		}
 
@@ -80,7 +80,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Wizard
 		private void ValidateDefaultLanguage(bool doNotifyChanges)
 		{
 			if (string.IsNullOrEmpty(InnerItem.DefaultLanguage) || InnerItem.DefaultLanguage.StartsWith("Select"))
-				InnerItem.SetError("DefaultLanguage", "Field 'Default Language' is required.", doNotifyChanges);
+				InnerItem.SetError("DefaultLanguage", "Field 'Default Language' is required.".Localize(), doNotifyChanges);
 			else
 				InnerItem.ClearError("DefaultLanguage");
 		}
@@ -88,7 +88,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Wizard
 		private void ValidateLanguages(bool doNotifyChanges)
 		{
 			if (InnerItem.CatalogLanguages.Count == 0)
-				InnerItem.SetError("Languages", "external validation error", doNotifyChanges);
+				InnerItem.SetError("Languages", "external validation error".Localize(), doNotifyChanges);
 			else
 				InnerItem.ClearError("Languages");
 		}

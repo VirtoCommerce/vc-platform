@@ -1,12 +1,13 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using Microsoft.Practices.Prism.Commands;
 using Omu.ValueInjecter;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Catalogs.Factories;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Wizard
 {
@@ -36,9 +37,9 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Wizard
 
 			ViewTitle = new ViewTitleBase()
 			{
-				Title = "Editorial Review",
+				Title = "Editorial Review".Localize(),
 				SubTitle = (item != null && item.CatalogItem != null && !string.IsNullOrEmpty(item.CatalogItem.Name))
-							   ? string.Format("ER: {0}", item.CatalogItem.Name).ToUpper(CultureInfo.InvariantCulture)
+							   ? string.Format("ER: {0}".Localize(), item.CatalogItem.Name).ToUpper(CultureInfo.InvariantCulture)
 							   : ""
 			};
 
@@ -68,7 +69,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Wizard
 		{
 			get
 			{
-				return string.Format("ER: {0}", InnerItem.CatalogItem.Name);
+				return string.Format("ER: {0}".Localize(), InnerItem.CatalogItem.Name);
 			}
 		}
 
@@ -114,8 +115,8 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Wizard
 		{
 			return new RefusedConfirmation
 			{
-				Content = "Save changes to Editorial Review '" + DisplayName + "'?",
-				Title = "Action confirmation"
+				Content = string.Format("Save changes to Editorial Review '{0}'?".Localize(), DisplayName),
+				Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 		}
 
@@ -183,7 +184,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Wizard
 		{
 			get
 			{
-				return "Fill Editorial Review information in order to create Review. Or you can leave all fields empty to skip this step.";
+				return "Fill Editorial Review information in order to create Review. Or you can leave all fields empty to skip this step.".Localize();
 			}
 		}
 
@@ -191,7 +192,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Wizard
 		{
 			get
 			{
-				return "Editorial Review";
+				return "Editorial Review".Localize();
 			}
 		}
 

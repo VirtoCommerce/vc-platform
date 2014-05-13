@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Catalogs.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
@@ -13,6 +14,7 @@ using VirtoCommerce.ManagementClient.Core.Controls.StatusIndicator.Model;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.EventAggregation;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementations
 {
@@ -43,7 +45,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			EmbeddedHierarchyEntry = this;
 			ViewTitle = new ViewTitleBase
 				{
-					SubTitle = "VIRTUAL CATALOG",
+					SubTitle = "VIRTUAL CATALOG".Localize(),
 					Title = (item != null && !string.IsNullOrEmpty(item.Name)) ? item.Name : ""
 				};
 
@@ -116,10 +118,10 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 			if (itemCount > 0)
 			{
-				content = string.Format("ATTENTION: This Virtual Catalog contains {0} category(ies).\n\n", itemCount);
+				content = string.Format("ATTENTION: This Virtual Catalog contains {0} category(ies).\n\n".Localize(), itemCount);
 			}
 
-			content += string.Format("Are you sure you want to delete Virtual Catalog '{0}'?", DisplayName);
+			content += string.Format("Are you sure you want to delete Virtual Catalog '{0}'?".Localize(), DisplayName);
 
 			var item = repository.Catalogs.Where(x => x.CatalogId == InnerItem.CatalogId).Single();
 			var itemVM = _catalogDeleteVmFactory.GetViewModelInstance(
@@ -129,7 +131,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			var confirmation = new ConditionalConfirmation(itemVM.Validate)
 			{
 				Content = itemVM,
-				Title = "Delete confirmation"
+				Title = "Delete confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 			commonConfirmRequest.Raise(confirmation, async (x) =>
 			{
@@ -141,20 +143,20 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 							// report status
 							var id = Guid.NewGuid().ToString();
-							var statusUpdate = new StatusMessage { ShortText = string.Format("A Virtual Catalog '{0}' deletion in progress", DisplayName), StatusMessageId = id };
+							var statusUpdate = new StatusMessage { ShortText = string.Format("A Virtual Catalog '{0}' deletion in progress".Localize(), DisplayName), StatusMessageId = id };
 							EventSystem.Publish(statusUpdate);
 
 							try
 							{
 								repository.UnitOfWork.Commit();
-								statusUpdate = new StatusMessage { ShortText = string.Format("A Virtual Catalog '{0}' deleted successfully", DisplayName), StatusMessageId = id, State = StatusMessageState.Success };
+								statusUpdate = new StatusMessage { ShortText = string.Format("A Virtual Catalog '{0}' deleted successfully".Localize(), DisplayName), StatusMessageId = id, State = StatusMessageState.Success };
 								EventSystem.Publish(statusUpdate);
 							}
 							catch (Exception e)
 							{
 								statusUpdate = new StatusMessage
 								{
-									ShortText = string.Format("Failed to delete Virtual Catalog '{0}'", DisplayName),
+									ShortText = string.Format("Failed to delete Virtual Catalog '{0}'".Localize(), DisplayName),
 									Details = e.ToString(),
 									StatusMessageId = id,
 									State = StatusMessageState.Error

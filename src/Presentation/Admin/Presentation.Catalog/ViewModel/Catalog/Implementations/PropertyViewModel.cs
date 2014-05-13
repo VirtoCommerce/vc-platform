@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Omu.ValueInjecter;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Catalogs.Factories;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Frameworks;
@@ -10,6 +11,7 @@ using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Interfaces;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using VirtoCommerce.ManagementClient.Localization;
 using catalogModel = VirtoCommerce.Foundation.Catalogs.Model;
 
 namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementations
@@ -85,7 +87,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			ValidatePropertyValueType();
 
 			if (InnerItem.IsEnum && InnerItem.PropertyValues.Count == 0)
-				InnerItem.SetError("Values", "Dictionary values must be defined", true);
+				InnerItem.SetError("Values", "Dictionary values must be defined".Localize(), true);
 			else
 				InnerItem.ClearError("Values");
 
@@ -98,7 +100,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		private void ValidatePropertyValueType()
 		{
 			if (_propertyValueType != null && !(_propertyValueType is PropertyValueType))
-				InnerItem.SetError("PropertyValueType", "Property Type must be selected", true);
+				InnerItem.SetError("PropertyValueType", "Property Type must be selected".Localize(), true);
 			else
 				InnerItem.ClearError("PropertyValueType");
 		}
@@ -108,7 +110,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			var item = (PropertyValue)_entityFactory.CreateEntityForType("PropertyValue");
 			// ValueType is inherited
 			item.ValueType = InnerItem.PropertyValueType;
-			if (RaisePropertyValueEditInteractionRequest(item, "Create property value"))
+			if (RaisePropertyValueEditInteractionRequest(item, "Create property value".Localize()))
 			{
 				InnerItem.PropertyValues.Add(item);
 			}
@@ -117,7 +119,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		private void RaiseValueEditInteractionRequest(PropertyValueBase originalItem)
 		{
 			var item = originalItem.DeepClone(_entityFactory as CatalogEntityFactory);
-			if (RaisePropertyValueEditInteractionRequest(item, "Edit property value"))
+			if (RaisePropertyValueEditInteractionRequest(item, "Edit property value".Localize()))
 			{
 				// copy all values to original:
 				OnUIThread(() => originalItem.InjectFrom<CloneInjection>(item));
@@ -130,8 +132,8 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		{
 			var confirmation = new ConditionalConfirmation
 			{
-				Content = string.Format("Are you sure you want to delete dictionary Property value '{0}'?", item),
-				Title = "Delete confirmation"
+				Content = string.Format("Are you sure you want to delete dictionary Property value '{0}'?".Localize(), item),
+				Title = "Delete confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 
 			CommonConfirmRequest.Raise(confirmation, (x) =>
@@ -166,7 +168,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		{
 			var item = (PropertyAttribute)_entityFactory.CreateEntityForType("PropertyAttribute");
 			item.PropertyId = InnerItem.PropertyId;
-			if (RaisePropertyAttributeEditInteractionRequest(item, "Create property attribute"))
+			if (RaisePropertyAttributeEditInteractionRequest(item, "Create property attribute".Localize()))
 			{
 				InnerItem.PropertyAttributes.Add(item);
 			}
@@ -175,7 +177,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		private void RaiseAttributeEditInteractionRequest(StorageEntity originalItem)
 		{
 			var item = originalItem.DeepClone(_entityFactory as CatalogEntityFactory);
-			if (RaisePropertyAttributeEditInteractionRequest(item, "Edit property attribute"))
+			if (RaisePropertyAttributeEditInteractionRequest(item, "Edit property attribute".Localize()))
 			{
 				// copy all values to original:
 				OnUIThread(() => originalItem.InjectFrom<CloneInjection>(item));
@@ -200,8 +202,8 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		{
 			var confirmation = new ConditionalConfirmation
 			{
-				Content = string.Format("Are you sure you want to delete Property attribute '{0}({1})'?", item.PropertyAttributeName, item.PropertyAttributeValue),
-				Title = "Delete confirmation"
+				Content = string.Format("Are you sure you want to delete Property attribute '{0}({1})'?".Localize(), item.PropertyAttributeName, item.PropertyAttributeValue),
+				Title = "Delete confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 
 			CommonConfirmRequest.Raise(confirmation, (x) =>

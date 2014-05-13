@@ -59,7 +59,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Pricelists.Implementa
 			var item = _entityFactory.CreateEntity<PricelistAssignment>();
 			var itemVM = _wizardVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", item));
 
-			var confirmation = new Confirmation { Content = itemVM, Title = "Create Price List Assignment" };
+			var confirmation = new Confirmation { Content = itemVM, Title = "Create Price List Assignment".Localize() };
 			ItemAdd(confirmation);
 		}
 

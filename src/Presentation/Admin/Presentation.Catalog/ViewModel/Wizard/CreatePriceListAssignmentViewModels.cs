@@ -55,7 +55,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Wizard
 			}
 		}
 
-		public override string Description { get { return "Enter price list assignment general information"; } }
+		public override string Description { get { return "Enter price list assignment general information".Localize(); } }
 
 		#endregion
 
@@ -87,7 +87,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Wizard
 
 		public override bool IsValid { get { return true; } }
 
-		public override string Description { get { return "Set price list assignment availability conditions"; } }
+		public override string Description { get { return "Set price list assignment availability conditions".Localize(); } }
 
 		#endregion
 
@@ -130,7 +130,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Wizard
 
 		public override bool IsLast { get { return true; } }
 
-		public override string Description { get { return "Set price list assignment availability dates"; } }
+		public override string Description { get { return "Set price list assignment availability dates".Localize(); } }
 
 		#endregion
 

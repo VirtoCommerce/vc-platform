@@ -5,7 +5,8 @@
      xmlns:extToolkit="http://schemas.xceed.com/wpf/xaml/toolkit" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
      mc:Ignorable="d" Width="400" xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Catalog"
-     LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
+               xmlns:core_common="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Common;assembly=VirtoCommerce.ManagementClient.Core"
+               LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
     <FrameworkElement.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -31,9 +32,15 @@
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0" Margin="0,0,0,20" Text="{Loc 'Pick an associated product and the type of the association'}" />
         <TextBlock Grid.Row="1" Text="{Loc '* Association type:'}" />
-        <ComboBox Grid.Row="2" SelectedValue="{Binding InnerItem.AssociationType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
-             ItemsSource="{Binding AvailableAssociationTypes}" />
-        <!-- inf_behavior:WatermarkComboBoxBehavior.EnableWatermark="True" inf_behavior:WatermarkComboBoxBehavior.Label="Pick accociation type"-->
+        <ComboBox Grid.Row="2" SelectedValue="{Binding InnerItem.AssociationType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" SelectedValuePath="Value"
+             ItemsSource="{Binding AvailableAssociationTypes}">
+			<FrameworkElement.Resources>
+				<DataTemplate DataType="{x:Type core_common:KeyValuePair_string_string}" >
+					<ContentPresenter Content="{Binding Value}" ContentTemplate="{StaticResource Virto_SearchConstant_ComboBox_DataTemplate}" />
+				</DataTemplate>
+			</FrameworkElement.Resources>
+		</ComboBox>
+	    <!-- inf_behavior:WatermarkComboBoxBehavior.EnableWatermark="True" inf_behavior:WatermarkComboBoxBehavior.Label="Pick accociation type"-->
         <TextBlock Grid.Row="3" Text="{Loc '* Item:'}" />
         <Grid Grid.Row="4">
             <Grid.ColumnDefinitions>

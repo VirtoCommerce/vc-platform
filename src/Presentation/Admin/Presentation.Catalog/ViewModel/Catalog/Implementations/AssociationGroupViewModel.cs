@@ -76,7 +76,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		{
 			var item = (Association)_entityFactory.CreateEntityForType("Association");
 			item.Priority = 1;
-			if (RaiseItemEditInteractionRequest(item, "Add association"))
+			if (RaiseItemEditInteractionRequest(item, "Add association".Localize()))
 			{
 				item.AssociationGroupId = InnerItem.AssociationGroupId;
 				InnerItem.Associations.Add(item);
@@ -86,7 +86,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		private void RaiseItemEditInteractionRequest(Association originalItem)
 		{
 			var item = originalItem.DeepClone(_entityFactory as CatalogEntityFactory);
-			if (RaiseItemEditInteractionRequest(item, "Edit association"))
+			if (RaiseItemEditInteractionRequest(item, "Edit association".Localize()))
 			{
 				// copy all values to original:
 				OnUIThread(() => originalItem.InjectFrom<CloneInjection>(item));

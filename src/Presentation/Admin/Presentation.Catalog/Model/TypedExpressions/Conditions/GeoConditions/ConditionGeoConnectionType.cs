@@ -14,11 +14,11 @@ namespace VirtoCommerce.ManagementClient.Catalog.Model.TypedExpressions.Conditio
 		private MatchingContains _matchEl;
 
 		public ConditionGeoConnectionType(IExpressionViewModel expressionViewModel)
-			: base("Are browsing from an internet connection type []", expressionViewModel)
+			: base("Are browsing from an internet connection type []".Localize(), expressionViewModel)
 		{
-			WithLabel("Are browsing from an internet connection type ");
+			WithLabel("Are browsing from an internet connection type ".Localize());
 			_matchEl = WithElement(new MatchingContains(false, false)) as MatchingContains;
-			_valEl = WithDict(new string[] { "Ocx", "Tx", "Consumer satellite", "Frame relay", "Dsl" }, "select connection type") as UserInputElement;
+			_valEl = WithDict(new string[] { "Ocx", "Tx", "Consumer satellite", "Frame relay", "Dsl" }, "select connection type".Localize()) as UserInputElement;
 		}
 
 		public MatchingContains MatchCondition

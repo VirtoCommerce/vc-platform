@@ -90,11 +90,11 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Wizard
 		{
 			get
 			{
-				var result = string.Format("Category will be created in catalog '{0}'", InnerItem.Catalog.CatalogId);
+				var result = string.Format("Category will be created in catalog '{0}'".Localize(), InnerItem.Catalog.CatalogId);
 				var parentCategory = InnerItem.ParentCategory as Category;
 				if (parentCategory != null)
 				{
-					result += string.Format(", category '{0}'", parentCategory.Name);
+					result += string.Format(", category '{0}'".Localize(), parentCategory.Name);
 				}
 
 				return result;
@@ -105,7 +105,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Wizard
 		{
 			get
 			{
-				return "Enter main category information.";
+				return "Enter main category information.".Localize();
 			}
 		}
 
@@ -140,7 +140,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Wizard
 		private void ValidatePropertySet(bool doNotifyChanges)
 		{
 			if (InnerItem.PropertySet == null || string.IsNullOrEmpty(InnerItem.PropertySet.PropertySetId))
-				InnerItem.SetError("PropertySet", "PropertySet error", doNotifyChanges);
+				InnerItem.SetError("PropertySet", "PropertySet error".Localize(), doNotifyChanges);
 			else
 				InnerItem.ClearError("PropertySet");
 		}
@@ -207,7 +207,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Wizard
 		{
 			get
 			{
-				return "Enter property values. All properties marked required must have values in order for category to be created.";
+				return "Enter property values. All properties marked required must have values in order for category to be created.".Localize();
 			}
 		}
 
@@ -215,7 +215,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Wizard
 		{
 			get
 			{
-				return "Enter property values.";
+				return "Enter property values.".Localize();
 			}
 		}
 

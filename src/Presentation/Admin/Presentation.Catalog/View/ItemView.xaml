@@ -10,7 +10,8 @@
      xmlns:localVM="clr-namespace:VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementations"
      Style="{DynamicResource Virto_Window_Style}" d:DesignHeight="800" d:DesignWidth="1000"
      d:DataContext="{d:DesignInstance localVM:ItemViewModel}" xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Catalog"
-     LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
+             xmlns:model="clr-namespace:VirtoCommerce.Foundation.Catalogs.Model;assembly=VirtoCommerce.Foundation"
+             LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -297,7 +298,7 @@
                             <TextBlock Grid.Row="0">
                                 <TextBlock.Text>
                                     <!-- Text={Binding InnerItem.Catalog.WeightMeasure, Converter={StaticResource weightMeasureConverter}, StringFormat='Weight (\{0\}):'} -->
-                                    <LocBinding ResourceKey="Weight (\{0\}):">
+                                    <LocBinding ResourceKey="Weight ({0}):">
                                         <Binding Path="InnerItem.Catalog.WeightMeasure" Converter="{StaticResource weightMeasureConverter}" />
                                     </LocBinding>
                                 </TextBlock.Text>
@@ -326,10 +327,10 @@
                                  ItemsSource="{Binding AvailableAvailabilityRules}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding }" />
+										<ContentPresenter Content="{Binding }" ContentTemplate="{StaticResource Virto_SearchConstant_ComboBox_DataTemplate}" />
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
-                            </ComboBox>
+							</ComboBox>
                         </Grid>
                     </Grid>
                 </Grid>
@@ -631,8 +632,19 @@
                      Style="{StaticResource Virto_TabControlHorizontal_Style}">
                     <TabControl.ItemContainerStyle>
                         <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}">
-                            <Setter Property="Header" Value="{Binding CatalogId}" />
-                            <Setter Property="HeaderStringFormat" Value="{}{0} catalog" />
+							<Setter Property="HeaderTemplate">
+								<Setter.Value>
+									<DataTemplate>
+										<TextBlock>
+											<TextBlock.Text>
+												<LocBinding ResourceKey="{}{0} catalog">
+													<Binding Path="DataContext.CatalogId" RelativeSource="{RelativeSource AncestorType=TabItem}" />
+												</LocBinding>
+											</TextBlock.Text>
+										</TextBlock>
+									</DataTemplate>
+								</Setter.Value>
+							</Setter>
                             <Setter Property="ContentTemplate">
                                 <Setter.Value>
                                     <DataTemplate>

@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
 using Omu.ValueInjecter;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Catalogs.Factories;
 using VirtoCommerce.Foundation.Catalogs.Model;
@@ -18,6 +19,7 @@ using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.ManagementClient.Catalog.ViewModel.Pricelists.Interfaces;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Pricelists.Implementations
 {
@@ -53,7 +55,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Pricelists.Implementa
 		{
 			ViewTitle = new ViewTitleBase()
 			{
-				Title = "Price List",
+				Title = "Price List".Localize(),
 				SubTitle = (item != null && !string.IsNullOrEmpty(item.Name)) ? item.Name.ToUpper(CultureInfo.InvariantCulture) : ""
 			};
 			_repositoryFactory = repositoryFactory;
@@ -145,8 +147,8 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Pricelists.Implementa
 		{
 			return new RefusedConfirmation
 			{
-				Content = "Save changes to price list '" + DisplayName + "'?",
-				Title = "Action confirmation"
+				Content = string.Format("Save changes to price list '{0}'?".Localize(), DisplayName),
+				Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 		}
 
@@ -243,7 +245,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Pricelists.Implementa
 			var item = EntityFactory.CreateEntity<Price>();
 			item.MinQuantity = 1;
 			item.PricelistId = InnerItem.PricelistId; // required for validation
-			if (RaisePriceEditInteractionRequest(item, "Add Price"))
+			if (RaisePriceEditInteractionRequest(item, "Add Price".Localize()))
 			{
 				Prices.Add(item);
 			}
@@ -252,7 +254,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Pricelists.Implementa
 		private void RaisePriceEditInteractionRequest(Price originalItem)
 		{
 			var item = originalItem.DeepClone(EntityFactory as IKnownSerializationTypes);
-			if (RaisePriceEditInteractionRequest(item, "Edit Price"))
+			if (RaisePriceEditInteractionRequest(item, "Edit Price".Localize()))
 			{
 				// copy all values to original:
 				OnUIThread(() => originalItem.InjectFrom<CloneInjection>(item));
@@ -284,8 +286,8 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Pricelists.Implementa
 		{
 			var confirmation = new ConditionalConfirmation
 			{
-				Content = string.Format("Are you sure you want to delete price '{0}'?", item.PriceId),
-				Title = "Delete confirmation"
+				Content = string.Format("Are you sure you want to delete price '{0}'?".Localize(), item.PriceId),
+				Title = "Delete confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 
 			CommonConfirmRequest.Raise(confirmation, (x) =>
@@ -363,7 +365,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Pricelists.Implementa
 					tmpPrices.Add(proxyPrice);
 					PricesMap.Add(proxyPrice, price);
 				}
-				
+
 				OnUIThread(() =>
 					{
 						Prices = new ObservableCollection<Price>(tmpPrices);

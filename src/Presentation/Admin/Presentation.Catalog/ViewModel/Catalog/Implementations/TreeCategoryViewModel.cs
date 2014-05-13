@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Catalogs.Repositories;
@@ -17,6 +18,7 @@ using VirtoCommerce.ManagementClient.Core.Controls.StatusIndicator.Model;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.EventAggregation;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
+using VirtoCommerce.ManagementClient.Localization;
 using catalogModel = VirtoCommerce.Foundation.Catalogs.Model;
 
 namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementations
@@ -48,7 +50,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			EmbeddedHierarchyEntry = this;
 			ViewTitle = new ViewTitleBase
 			{
-				Title = "Category",
+				Title = "Category".Localize(),
 				SubTitle = GetDisplayName(item).ToUpper(CultureInfo.InvariantCulture)
 			};
 
@@ -173,7 +175,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 				if (itemCount > 0)
 				{
-					countBuffer.Add(string.Format("has {0} item(s), won't be deleted", itemCount));
+					countBuffer.Add(string.Format("has {0} item(s), won't be deleted".Localize(), itemCount));
 				}
 			}
 
@@ -184,7 +186,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 			if (itemCount > 0)
 			{
-				countBuffer.Add(string.Format("has {0} sub-category(ies), will be deleted", itemCount));
+				countBuffer.Add(string.Format("has {0} sub-category(ies), will be deleted".Localize(), itemCount));
 			}
 
 			if (isThisCategoryInRealCatalog)
@@ -197,25 +199,25 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 				if (itemCount > 0)
 				{
-					countBuffer.Add(string.Format("is coupled with {0} Linked Category(ies), will be deleted", itemCount));
+					countBuffer.Add(string.Format("is coupled with {0} Linked Category(ies), will be deleted".Localize(), itemCount));
 				}
 			}
 
 			// construct nice message
-			var typeName = (InnerItem is Category) ? "category" : "linked category";
+			var typeName = ((InnerItem is Category) ? "category" : "linked category").Localize();
 			var content = string.Empty;
 			var warnings = countBuffer.Select(x => "\n\t- " + x).ToArray();
 			if (warnings.Length > 0)
 			{
-				content = string.Format("ATTENTION: This {0} {1}.\n\n", typeName, string.Join("", warnings));
+				content = string.Format("ATTENTION: This {0} {1}.\n\n".Localize(), typeName, string.Join("", warnings));
 			}
 
-			content += string.Format("Are you sure you want to delete {0} '{1}'?", typeName, DisplayName);
+			content += string.Format("Are you sure you want to delete {0} '{1}'?".Localize(), typeName, DisplayName);
 
 			var confirmation = new ConditionalConfirmation
 			{
 				Content = content,
-				Title = "Delete confirmation"
+				Title = "Delete confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 
 			commonConfirmRequest.Raise(confirmation, async (x) =>
@@ -231,7 +233,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 						// report status
 						var id = Guid.NewGuid().ToString();
-						var item = new StatusMessage { ShortText = string.Format("A {0} '{1}' deletion in progress", typeName, DisplayName), StatusMessageId = id };
+						var item = new StatusMessage { ShortText = string.Format("A {0} '{1}' deletion in progress".Localize(), typeName, DisplayName), StatusMessageId = id };
 						EventSystem.Publish(item);
 
 						try
@@ -240,14 +242,14 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 							{
 								repository.UnitOfWork.Commit();
 							}
-							item = new StatusMessage { ShortText = string.Format("A {0} '{1}' deleted successfully", typeName, DisplayName), StatusMessageId = id, State = StatusMessageState.Success };
+							item = new StatusMessage { ShortText = string.Format("A {0} '{1}' deleted successfully".Localize(), typeName, DisplayName), StatusMessageId = id, State = StatusMessageState.Success };
 							EventSystem.Publish(item);
 						}
 						catch (Exception e)
 						{
 							item = new StatusMessage
 							{
-								ShortText = string.Format("Failed to delete {0} '{1}'", typeName, DisplayName),
+								ShortText = string.Format("Failed to delete {0} '{1}'".Localize(), typeName, DisplayName),
 								Details = e.ToString(),
 								StatusMessageId = id,
 								State = StatusMessageState.Error

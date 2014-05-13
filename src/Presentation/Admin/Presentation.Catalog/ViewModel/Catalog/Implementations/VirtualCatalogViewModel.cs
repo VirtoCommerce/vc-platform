@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.Practices.Prism.Commands;
 using Omu.ValueInjecter;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Catalogs.Factories;
 using VirtoCommerce.Foundation.Catalogs.Model;
@@ -11,6 +12,7 @@ using VirtoCommerce.ManagementClient.Catalog.Model;
 using VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Interfaces;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementations
 {
@@ -34,7 +36,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			_navManager = navManager;
 			ViewTitle = new ViewTitleBase
 				{
-					SubTitle = "VIRTUAL CATALOG",
+					SubTitle = "VIRTUAL CATALOG".Localize(),
 					Title = (item != null && !string.IsNullOrEmpty(item.Name)) ? item.Name : ""
 				};
 
@@ -134,13 +136,12 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		{
 			return new RefusedConfirmation
 			{
-				Content = "Save changes to Virtual Catalog '" + DisplayName + "'?",
-				Title = "Action confirmation"
+				Content = string.Format("Save changes to Virtual Catalog '{0}'?".Localize(), DisplayName),
+				Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 		}
 
 		#endregion
-
 
 	}
 }

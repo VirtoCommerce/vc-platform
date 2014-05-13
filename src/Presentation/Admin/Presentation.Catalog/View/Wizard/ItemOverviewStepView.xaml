@@ -126,7 +126,7 @@
                     <TextBlock>
                         <TextBlock.Text>
                             <!-- Text={Binding InnerItem.Catalog.WeightMeasure, Converter={StaticResource WeightMeasureConverter}, StringFormat='Weight (\{0\}):'} -->
-                            <LocBinding ResourceKey="Weight (\{0\}):">
+                            <LocBinding ResourceKey="Weight ({0}):">
                                 <Binding Path="InnerItem.Catalog.WeightMeasure" Converter="{StaticResource WeightMeasureConverter}" />
                             </LocBinding>
                         </TextBlock.Text>

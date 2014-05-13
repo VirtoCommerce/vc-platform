@@ -82,7 +82,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		{
 			get
 			{
-				return "Enter SEO information.";
+				return "Enter SEO information.".Localize();
 			}
 		}
 
@@ -303,7 +303,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 							if (count > 0)
 							{
-								keyword.SetError("Keyword", string.Format("{0} with the same Keyword and Language already exists", _keywordType.ToString()), false);
+								keyword.SetError("Keyword", string.Format("{0} with the same Keyword and Language already exists".Localize(), _keywordType.ToString()), false);
 								if (keyword.SeoUrlKeywordId.Equals(CurrentSeoKeyword.SeoUrlKeywordId, StringComparison.InvariantCultureIgnoreCase))
 									OnPropertyChanged("CurrentSeoKeyword");
 								retVal = false;

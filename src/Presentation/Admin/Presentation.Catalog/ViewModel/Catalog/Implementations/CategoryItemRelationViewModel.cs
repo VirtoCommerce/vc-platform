@@ -53,7 +53,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			// itemVM.SearchModifier = none;
 			itemVM.InitializeForOpen();
 			CommonConfirmRequest.Raise(
-				new ConditionalConfirmation(() => itemVM.SelectedItem != null) { Content = itemVM, Title = "Select a Category" },
+				new ConditionalConfirmation(() => itemVM.SelectedItem != null) { Content = itemVM, Title = "Select a Category".Localize() },
 				(x) =>
 				{
 					if (x.Confirmed)

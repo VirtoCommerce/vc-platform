@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using PropertyChanged;
 using VirtoCommerce.Foundation.Catalogs.Model;
 
@@ -15,14 +16,14 @@ namespace VirtoCommerce.ManagementClient.Catalog.Model
         public PropertyValueBase Value
         {
             get { return _value; }
-            set { _value = value; OnPropertyChanged("Value"); OnPropertyChanged("IsValid"); }
+            set { _value = value; OnPropertyChanged(); OnPropertyChanged("IsValid"); }
         }
 
         ObservableCollection<PropertyValueBase> _values;
         public ObservableCollection<PropertyValueBase> Values
         {
             get { return _values; }
-            set { _values = value; OnPropertyChanged("Values"); }
+            set { _values = value; OnPropertyChanged(); }
         }
 
         public string Locale { get; set; }
@@ -77,7 +78,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.Model
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual void OnPropertyChanged(string propertyName)
+		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChangedEventHandler handler = this.PropertyChanged;
             if (handler != null)

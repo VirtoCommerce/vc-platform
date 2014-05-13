@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Catalogs.Repositories;
 using VirtoCommerce.Foundation.DataManagement.Model;
@@ -16,6 +17,7 @@ using VirtoCommerce.ManagementClient.Core.Controls.StatusIndicator.Model;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.EventAggregation;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
+using VirtoCommerce.ManagementClient.Localization;
 using catalogModel = VirtoCommerce.Foundation.Catalogs.Model;
 
 namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementations
@@ -127,23 +129,23 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			int itemCount = repository.Categories.Where(x => x.CatalogId == InnerItem.CatalogId).Count();
 			if (itemCount > 0)
 			{
-				countBuffer.Add(string.Format("contains {0} category(ies)", itemCount));
+				countBuffer.Add(string.Format("contains {0} category(ies)".Localize(), itemCount));
 			}
 
 			// count: items in Catalog
 			itemCount = repository.Items.Where(x => x.CatalogId == InnerItem.CatalogId).Count();
 			if (itemCount > 0)
 			{
-				countBuffer.Add(string.Format("has {0} item(s)", itemCount));
+				countBuffer.Add(string.Format("has {0} item(s)".Localize(), itemCount));
 			}
 
 			var content = string.Empty;
 			var warnings = countBuffer.Select(x => "\n\t- " + x).ToArray();
 			if (warnings.Length > 0)
 			{
-				content = string.Format("ATTENTION: This Catalog {0}.\n\n", string.Join("", warnings));
+				content = string.Format("ATTENTION: This Catalog {0}.\n\n".Localize(), string.Join("", warnings));
 			}
-			content += string.Format("Are you sure you want to delete Catalog '{0}'?", DisplayName);
+			content += string.Format("Are you sure you want to delete Catalog '{0}'?".Localize(), DisplayName);
 
 			var item = LoadItem(InnerItem.CatalogId, repository);
 			var itemVM = _catalogDeleteVmFactory.GetViewModelInstance(
@@ -153,7 +155,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			var confirmation = new ConditionalConfirmation(itemVM.Validate)
 			{
 				Content = itemVM,
-				Title = "Delete confirmation"
+				Title = "Delete confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 			commonConfirmRequest.Raise(confirmation, async (x) =>
 			{
@@ -165,21 +167,21 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 						// report status
 						var id = Guid.NewGuid().ToString();
-						var statusUpdate = new StatusMessage { ShortText = string.Format("A Catalog '{0}' deletion in progress", DisplayName), StatusMessageId = id };
+						var statusUpdate = new StatusMessage { ShortText = string.Format("A Catalog '{0}' deletion in progress".Localize(), DisplayName), StatusMessageId = id };
 						EventSystem.Publish(statusUpdate);
 
 						try
 						{
 
 							repository.UnitOfWork.Commit();
-							statusUpdate = new StatusMessage { ShortText = string.Format("A Catalog '{0}' deleted successfully", DisplayName), StatusMessageId = id, State = StatusMessageState.Success };
+							statusUpdate = new StatusMessage { ShortText = string.Format("A Catalog '{0}' deleted successfully".Localize(), DisplayName), StatusMessageId = id, State = StatusMessageState.Success };
 							EventSystem.Publish(statusUpdate);
 						}
 						catch (Exception e)
 						{
 							statusUpdate = new StatusMessage
 							{
-								ShortText = string.Format("Failed to delete Catalog '{0}'", DisplayName),
+								ShortText = string.Format("Failed to delete Catalog '{0}'".Localize(), DisplayName),
 								Details = e.ToString(),
 								StatusMessageId = id,
 								State = StatusMessageState.Error
@@ -285,11 +287,11 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			var catalogType = EntityType.Catalog;
 			var assetType = EntityType.ItemAsset;
 			//var testLocalization = EntityType.Localization;
-			var operationId = _exportService.ExportData(new List<EntityType>() { catalogType, assetType }, "tratata", new Dictionary<string, object>() { { "CatalogId", InnerItem.CatalogId }, { "SourceLanguage", "en-US"}, { "TargetLanguage", "ru-RU" } });
+			var operationId = _exportService.ExportData(new List<EntityType>() { catalogType, assetType }, "tratata", new Dictionary<string, object>() { { "CatalogId", InnerItem.CatalogId }, { "SourceLanguage", "en-US" }, { "TargetLanguage", "ru-RU" } });
 
 			var statusUpdate = new StatusMessage
 			{
-				ShortText = string.Format("Catalog '{0}' export.", InnerItem.CatalogId),
+				ShortText = string.Format("Catalog '{0}' export.".Localize(), InnerItem.CatalogId),
 				StatusMessageId = operationId
 			};
 			EventSystem.Publish(statusUpdate);
@@ -308,7 +310,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 					var statusUpdate = new StatusMessage
 					{
 						ShortText =
-							string.Format("Catalog '{0}' export. Processed {1} items.", InnerItem.CatalogId, e.Processed),						
+							string.Format("Catalog '{0}' export. Processed {1} items.".Localize(), InnerItem.CatalogId, e.Processed),
 						StatusMessageId = e.OperationId
 					};
 					EventSystem.Publish(statusUpdate);
@@ -319,7 +321,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 					{
 						var statusUpdate = new StatusMessage
 						{
-							ShortText = string.Format("Catalog '{0}' exported with errors", InnerItem.CatalogId),
+							ShortText = string.Format("Catalog '{0}' exported with errors".Localize(), InnerItem.CatalogId),
 							StatusMessageId = e.OperationId,
 							Details = e.Errors.Cast<object>()
 									   .Where(val => val != null)
@@ -332,7 +334,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 					{
 						var statusUpdate = new StatusMessage
 						{
-							ShortText = string.Format("Catalog '{0}' exported successfully", InnerItem.CatalogId),
+							ShortText = string.Format("Catalog '{0}' exported successfully".Localize(), InnerItem.CatalogId),
 							StatusMessageId = e.OperationId,
 							State = StatusMessageState.Success
 						};
