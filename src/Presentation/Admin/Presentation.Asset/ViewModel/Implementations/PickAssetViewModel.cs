@@ -1,7 +1,4 @@
-﻿using System.Linq.Expressions;
-using Microsoft.Practices.Prism.Commands;
-using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -11,6 +8,9 @@ using System.Threading.Tasks;
 using System.Waf.Applications.Services;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Assets.Model;
 using VirtoCommerce.Foundation.Assets.Services;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
@@ -20,6 +20,7 @@ using VirtoCommerce.ManagementClient.Asset.ViewModel.Interfaces;
 using VirtoCommerce.ManagementClient.Core.Controls.StatusIndicator.Model;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.EventAggregation;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 {
@@ -29,40 +30,40 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 
 		private readonly IAssetService _assetRepository;
 		private IFileDialogService fileDialogService;
-        private readonly IViewModelsFactory<IInputNameDialogViewModel> _inputNameVmFactory;
-        public InteractionRequest<ConditionalConfirmation> InputNameDialogRequest { get; private set; }
-        public InteractionRequest<Notification> CommonNotifyRequest { get; private set; }
+		private readonly IViewModelsFactory<IInputNameDialogViewModel> _inputNameVmFactory;
+		public InteractionRequest<ConditionalConfirmation> InputNameDialogRequest { get; private set; }
+		public InteractionRequest<Notification> CommonNotifyRequest { get; private set; }
 		#endregion
 
 		#region ctor
 
-        public PickAssetViewModel(IAssetService assetRepository, 
-            IViewModelsFactory<IInputNameDialogViewModel> inputNameVmFactory)
+		public PickAssetViewModel(IAssetService assetRepository,
+			IViewModelsFactory<IInputNameDialogViewModel> inputNameVmFactory)
 		{
 			_assetRepository = assetRepository;
-            _inputNameVmFactory = inputNameVmFactory;
+			_inputNameVmFactory = inputNameVmFactory;
 
 			AddressBarItems = new ObservableCollection<AssetEntitySearchViewModelBase>();
 			SelectedFolderItems = new ObservableCollection<AssetEntitySearchViewModelBase>();
 
-            CommonNotifyRequest = new InteractionRequest<Notification>();
+			CommonNotifyRequest = new InteractionRequest<Notification>();
 
 			OpenItemCommand = new DelegateCommand<object>(RaiseOpenItemRequest);
 			RefreshCommand = new DelegateCommand(LoadItems);
 			UploadCommand = new DelegateCommand(RaiseUploadRequest, () => ParentItem.Type == AssetType.Container || ParentItem.Type == AssetType.Folder);
-            CreateFolderCommand = new DelegateCommand(RaiseCreateFolderRequest);
-            RenameCommand = new DelegateCommand(RaiseRenameRequest);
-		    DeleteCommand = new DelegateCommand(RaiseDeleteRequest);
+			CreateFolderCommand = new DelegateCommand(RaiseCreateFolderRequest);
+			RenameCommand = new DelegateCommand(RaiseRenameRequest);
+			DeleteCommand = new DelegateCommand(RaiseDeleteRequest);
 			ParentItem = new RootSearchViewModel(null);
 			CommonConfirmRequest = new InteractionRequest<Confirmation>();
 
-            InputNameDialogRequest = new InteractionRequest<ConditionalConfirmation>();
+			InputNameDialogRequest = new InteractionRequest<ConditionalConfirmation>();
 
-            AssetPickMode = true;
-            RootItemId = null;
+			AssetPickMode = true;
+			RootItemId = null;
 		}
 
-	    #endregion
+		#endregion
 
 		public InteractionRequest<Confirmation> CommonConfirmRequest { get; private set; }
 
@@ -71,25 +72,25 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 		public DelegateCommand<object> OpenItemCommand { get; private set; }
 		public DelegateCommand RefreshCommand { get; private set; }
 		public DelegateCommand UploadCommand { get; private set; }
-        public DelegateCommand CreateFolderCommand { get; private set; }
-        public DelegateCommand DeleteCommand { get; private set; }
-	    public DelegateCommand RenameCommand { get; private set; }
+		public DelegateCommand CreateFolderCommand { get; private set; }
+		public DelegateCommand DeleteCommand { get; private set; }
+		public DelegateCommand RenameCommand { get; private set; }
 
-	    #endregion
+		#endregion
 
 		#region Properties
 
-	    public string RootItemId
-	    {
-	        get { return _rootItemId; }
-	        set
-	        {
-	            _rootItemId = value;
-                ParentItem = new FolderSearchViewModel(new Folder{FolderId = value, Name = value}, null);
-	        }
-	    }
+		public string RootItemId
+		{
+			get { return _rootItemId; }
+			set
+			{
+				_rootItemId = value;
+				ParentItem = new FolderSearchViewModel(new Folder { FolderId = value, Name = value }, null);
+			}
+		}
 
-	    private AssetEntitySearchViewModelBase _parentItem;
+		private AssetEntitySearchViewModelBase _parentItem;
 		public AssetEntitySearchViewModelBase ParentItem
 		{
 			get
@@ -107,28 +108,28 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 		public ObservableCollection<AssetEntitySearchViewModelBase> SelectedFolderItems { get; private set; }
 		public ObservableCollection<AssetEntitySearchViewModelBase> AddressBarItems { get; private set; }
 
-	    public bool IsItemSelected
-	    {
-	        get { return _selectedItem != null; }
-	    }
-
-	    public bool AssetPickMode
-	    {
-	        get { return _assetPickMode; }
-	        set
-	        {
-	            _assetPickMode = value;
-	            OnPropertyChanged();
-	        }
-	    }
-
-	    private object _selectedItem;
-		public object ItemListSelectedItem
+		public bool IsItemSelected
 		{
-            get { return _selectedItem; }
+			get { return _selectedItem != null; }
+		}
+
+		public bool AssetPickMode
+		{
+			get { return _assetPickMode; }
 			set
 			{
-			    _selectedItem = value;
+				_assetPickMode = value;
+				OnPropertyChanged();
+			}
+		}
+
+		private object _selectedItem;
+		public object ItemListSelectedItem
+		{
+			get { return _selectedItem; }
+			set
+			{
+				_selectedItem = value;
 				if (value is IFileSearchViewModel)
 				{
 					var itemVM = value as IFileSearchViewModel;
@@ -137,7 +138,7 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 				else
 					SelectedAsset = null;
 
-                OnPropertyChanged("IsItemSelected");
+				OnPropertyChanged("IsItemSelected");
 			}
 		}
 
@@ -175,7 +176,7 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 
 		public bool Validate()
 		{
-            return !AssetPickMode || SelectedAsset != null;
+			return !AssetPickMode || SelectedAsset != null;
 		}
 
 		#endregion
@@ -208,13 +209,13 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 		#region private members
 		private void UpdateAddressBar()
 		{
-            AddressBarItems.Clear();
-		    var parent = ParentItem;
-		    while (parent!= null)
-		    {
-                AddressBarItems.Insert(0, parent);
-                parent = parent.Parent;
-		    }
+			AddressBarItems.Clear();
+			var parent = ParentItem;
+			while (parent != null)
+			{
+				AddressBarItems.Insert(0, parent);
+				parent = parent.Parent;
+			}
 		}
 
 		private void LoadItems()
@@ -222,49 +223,49 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 			ShowLoadingAnimation = true;
 			var items = new List<AssetEntitySearchViewModelBase>();
 			var worker = new BackgroundWorker();
-            worker.DoWork += (o, ea) =>
-            {
+			worker.DoWork += (o, ea) =>
+			{
 				if (!string.IsNullOrEmpty(ParentItem.InnerItemID) && ParentItem.InnerItemID != RootItemId)
 				{
 					items.Add(new RootSearchViewModel(ParentItem.Parent));
 				}
 
 
-                switch (ParentItem.Type)
-                {
-                    case AssetType.Folder:
-                    case AssetType.Container:
-                        items.AddRange(
-                            _assetRepository.GetChildrenFolders(ParentItem.InnerItemID)
-                                .Select(x => new FolderSearchViewModel(x, ParentItem)));
-                        if (ParentItem.InnerItemID != null)
-                        {
-                            items.AddRange(
-                                _assetRepository.GetChildrenFolderItems(ParentItem.InnerItemID)
-                                    .Select(x => new FileSearchViewModel(x)));
-                        }
-                        break;
-                    case AssetType.Parent:
-                        items.AddRange(
-                            _assetRepository.GetChildrenFolders(ParentItem.InnerItemID)
-                                .Select(x => new FolderSearchViewModel(x, ParentItem)));
-                        break;
-                }
+				switch (ParentItem.Type)
+				{
+					case AssetType.Folder:
+					case AssetType.Container:
+						items.AddRange(
+							_assetRepository.GetChildrenFolders(ParentItem.InnerItemID)
+								.Select(x => new FolderSearchViewModel(x, ParentItem)));
+						if (ParentItem.InnerItemID != null)
+						{
+							items.AddRange(
+								_assetRepository.GetChildrenFolderItems(ParentItem.InnerItemID)
+									.Select(x => new FileSearchViewModel(x)));
+						}
+						break;
+					case AssetType.Parent:
+						items.AddRange(
+							_assetRepository.GetChildrenFolders(ParentItem.InnerItemID)
+								.Select(x => new FolderSearchViewModel(x, ParentItem)));
+						break;
+				}
 
-                OnUIThread(() =>
+				OnUIThread(() =>
 				{
 					SelectedFolderItems.SetItems(items);
 
 					UpdateAddressBar();
 				});
 			};
-            
+
 			worker.RunWorkerCompleted += (o, ea) =>
 			{
 				ShowLoadingAnimation = false;
 			};
 
-		    worker.RunWorkerAsync();
+			worker.RunWorkerAsync();
 		}
 
 		private async void UpdateImagePreview()
@@ -305,101 +306,105 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 			}
 		}
 
-        private void RaiseCreateFolderRequest()
-        {
-            var inputVm = _inputNameVmFactory.GetViewModelInstance();
-            
-            var confirmation = new ConditionalConfirmation { Title = "Enter new folder name", Content = inputVm };
+		private void RaiseCreateFolderRequest()
+		{
+			var inputVm = _inputNameVmFactory.GetViewModelInstance();
 
-            InputNameDialogRequest.Raise(confirmation, (x) =>
-            {
-                if (x.Confirmed)
-                {
-                    var inputNameDialogViewModel = x.Content as IInputNameDialogViewModel;
-                    if (inputNameDialogViewModel != null)
-                    {
-                        var newFolderName = inputNameDialogViewModel.InputText;
-                        _assetRepository.CreateFolder(newFolderName, ParentItem.InnerItemID);
-                        LoadItems();
-                    }
-                }
-            });
-        }
+			var confirmation = new ConditionalConfirmation { Title = "Enter new folder name".Localize(), Content = inputVm };
 
-        private void RaiseRenameRequest()
-        {
-            if (ItemListSelectedItem is FileSearchViewModel ||
-                ItemListSelectedItem is FolderSearchViewModel)
-            {
-                var item = (AssetEntitySearchViewModelBase)ItemListSelectedItem;
-                var title = ItemListSelectedItem is FileSearchViewModel
-                   ? "Enter new file name"
-                   : "Enter new folder name";
-                var inputVm = _inputNameVmFactory.GetViewModelInstance();
-                inputVm.InputText = item.DisplayName;
-                var confirmation = new ConditionalConfirmation {Title = title, Content = inputVm};
+			InputNameDialogRequest.Raise(confirmation, (x) =>
+			{
+				if (x.Confirmed)
+				{
+					var inputNameDialogViewModel = x.Content as IInputNameDialogViewModel;
+					if (inputNameDialogViewModel != null)
+					{
+						var newFolderName = inputNameDialogViewModel.InputText;
+						_assetRepository.CreateFolder(newFolderName, ParentItem.InnerItemID);
+						LoadItems();
+					}
+				}
+			});
+		}
 
-                InputNameDialogRequest.Raise(confirmation, (x) =>
-                {
-                    if (x.Confirmed)
-                    {
-                        var inputNameDialogViewModel = x.Content as IInputNameDialogViewModel;
-                        if (inputNameDialogViewModel != null)
-                        {
-                            var newFolderName = inputNameDialogViewModel.InputText;
-                            _assetRepository.Rename(item.InnerItemID, newFolderName);
-                            LoadItems();
-                        }
-                    }
-                });
-            }
-        }
+		private void RaiseRenameRequest()
+		{
+			if (ItemListSelectedItem is FileSearchViewModel ||
+				ItemListSelectedItem is FolderSearchViewModel)
+			{
+				var item = (AssetEntitySearchViewModelBase)ItemListSelectedItem;
+				var title = ItemListSelectedItem is FileSearchViewModel
+				   ? "Enter new file name".Localize()
+				   : "Enter new folder name".Localize();
+				var inputVm = _inputNameVmFactory.GetViewModelInstance();
+				inputVm.InputText = item.DisplayName;
+				var confirmation = new ConditionalConfirmation { Title = title, Content = inputVm };
 
-        private void RaiseDeleteRequest()
-        {
-            if (ItemListSelectedItem is FileSearchViewModel ||
-                ItemListSelectedItem is FolderSearchViewModel)
-            {
-                var item = (AssetEntitySearchViewModelBase)ItemListSelectedItem;
-                var message = ItemListSelectedItem is FileSearchViewModel
-                    ? "Are you sure you want to delete file '{0}'?"
-                    : "Are you sure you want to delete folder '{0}' and all its files and subfolders?";
+				InputNameDialogRequest.Raise(confirmation, (x) =>
+				{
+					if (x.Confirmed)
+					{
+						var inputNameDialogViewModel = x.Content as IInputNameDialogViewModel;
+						if (inputNameDialogViewModel != null)
+						{
+							var newFolderName = inputNameDialogViewModel.InputText;
+							_assetRepository.Rename(item.InnerItemID, newFolderName);
+							LoadItems();
+						}
+					}
+				});
+			}
+		}
 
-                var confirmation = new ConditionalConfirmation
-                {
-                    Content = string.Format(message, item.DisplayName),
-                    Title = "Delete confirmation"
-                };
+		private void RaiseDeleteRequest()
+		{
+			if (ItemListSelectedItem is FileSearchViewModel ||
+				ItemListSelectedItem is FolderSearchViewModel)
+			{
+				var item = (AssetEntitySearchViewModelBase)ItemListSelectedItem;
+				var message = ItemListSelectedItem is FileSearchViewModel
+					? "Are you sure you want to delete file '{0}'?".Localize()
+					: "Are you sure you want to delete folder '{0}' and all its files and subfolders?".Localize();
 
-                CommonConfirmRequest.Raise(confirmation, (x) =>
-                {
-                    if (x.Confirmed)
-                    {
-                        _assetRepository.Delete(item.InnerItemID);
-                        LoadItems();
-                    }
-                });
-            }
-        }
+				var confirmation = new ConditionalConfirmation
+				{
+					Content = string.Format(message, item.DisplayName),
+					Title = "Delete confirmation".Localize(null, LocalizationScope.DefaultCategory)
+				};
+
+				CommonConfirmRequest.Raise(confirmation, (x) =>
+				{
+					if (x.Confirmed)
+					{
+						_assetRepository.Delete(item.InnerItemID);
+						LoadItems();
+					}
+				});
+			}
+		}
 
 		private void RaiseUploadRequest()
 		{
-            if (ParentItem.Parent == null)
-            {
-                CommonNotifyRequest.Raise(new Notification { Content = "Can not upload files to the root. Please select a folder first.", Title = "Error" });
-                return;
-            }
+			if (ParentItem.Parent == null)
+			{
+				CommonNotifyRequest.Raise(new Notification
+				{
+					Content = "Can not upload files to the root. Please select a folder first.".Localize(),
+					Title = "Error".Localize(null, LocalizationScope.DefaultCategory)
+				});
+				return;
+			}
 
 			IEnumerable<FileType> fileTypes = new[] {
-                new FileType("all files", ".*"),
-                new FileType("jpg image", ".jpg"),
-                new FileType("bmp image", ".bmp"),
-                new FileType("png image", ".png"),
-                new FileType("Report", ".rld"),
-                new FileType("Report", ".rldc") 
+                new FileType("all files".Localize(), ".*"),
+                new FileType("jpg image".Localize(), ".jpg"),
+                new FileType("bmp image".Localize(), ".bmp"),
+                new FileType("png image".Localize(), ".png"),
+                new FileType("Report".Localize(), ".rld"),
+                new FileType("Report".Localize(), ".rldc") 
             };
 
-		    if (fileDialogService == null)
+			if (fileDialogService == null)
 				fileDialogService = new System.Waf.VirtoCommerce.ManagementClient.Services.FileDialogService();
 
 			var result = fileDialogService.ShowOpenFileDialog(this, fileTypes);
@@ -416,8 +421,8 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 				{
 					CommonConfirmRequest.Raise(new ConditionalConfirmation
 					{
-						Title = "Upload file",
-						Content = string.Format("There is already a file with the same name in this location.\nDo you want to overwrite and replace the existing file '{0}'?", fileInfo.Name)
+						Title = "Upload file".Localize(),
+						Content = string.Format("There is already a file with the same name in this location.\nDo you want to overwrite and replace the existing file '{0}'?".Localize(), fileInfo.Name)
 					}, (x) =>
 					{
 						canUpload = x.Confirmed;
@@ -432,7 +437,7 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 					worker.DoWork += (o, ea) =>
 					{
 						var id = o.GetHashCode().ToString();
-						var item = new StatusMessage { ShortText = "File upload in progress", StatusMessageId = id };
+						var item = new StatusMessage { ShortText = "File upload in progress".Localize(), StatusMessageId = id };
 						EventSystem.Publish(item);
 
 						using (var info = new UploadStreamInfo())
@@ -456,18 +461,18 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 
 						if (ea.Cancelled)
 						{
-							item.ShortText = "File upload was canceled!";
+							item.ShortText = "File upload was canceled!".Localize();
 							item.State = StatusMessageState.Warning;
 						}
 						else if (ea.Error != null)
 						{
-							item.ShortText = "Failed to upload file: " + ea.Error.Message;
+							item.ShortText = string.Format("Failed to upload file: {0}".Localize(), ea.Error.Message);
 							item.Details = ea.Error.ToString();
 							item.State = StatusMessageState.Error;
 						}
 						else
 						{
-							item.ShortText = "File uploaded";
+							item.ShortText = "File uploaded".Localize();
 							item.State = StatusMessageState.Success;
 
 							RefreshCommand.Execute();
@@ -482,10 +487,10 @@ namespace VirtoCommerce.ManagementClient.Asset.ViewModel.Implementations
 		}
 
 		private string _namePathDelimiter;
-	    private string _rootItemId;
-	    private bool _assetPickMode;
+		private string _rootItemId;
+		private bool _assetPickMode;
 
-	    private string NamePathDelimiter
+		private string NamePathDelimiter
 		{
 			get
 			{

@@ -9,7 +9,7 @@ namespace VirtoCommerce.ManagementClient.Asset.Infrastructure
 	public class FileSizeConverter : IValueConverter
 	{
 		const int _Kilo = 1024;
-		readonly string[] _SizeNames = new[] { "Bytes", "KB", "MB", "GB", "TB" };
+		readonly string[] _SizeNames = new[] { "Bytes".Localize(), "KB".Localize(), "MB".Localize(), "GB".Localize(), "TB".Localize() };
 
 		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
