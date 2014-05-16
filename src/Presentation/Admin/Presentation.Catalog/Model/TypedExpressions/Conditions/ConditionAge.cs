@@ -14,9 +14,9 @@ namespace VirtoCommerce.ManagementClient.Catalog.Model.TypedExpressions.Conditio
 		private AgeElement _ageEl;
 
 		public ConditionAge(IExpressionViewModel expressionViewModel)
-			: base("Shopper age []", expressionViewModel)
+			: base("Shopper age []".Localize(), expressionViewModel)
 		{
-			WithLabel("Shopper age is ");
+			WithLabel("Shopper age is ".Localize());
 			_ageEl = WithElement(new AgeElement(expressionViewModel)) as AgeElement;
 		}
 

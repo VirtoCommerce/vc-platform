@@ -7,8 +7,6 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Interfaces
 {
 	public interface ISearchItemViewModel : IViewModel
 	{
-		string SearchFilterItemType { get; set; }
-		string[] SearchFilterItemTypes { get; }
 		List<CatalogBase> AvailableCatalogs { get; }
 
 		string ExcludeItemId { set; }

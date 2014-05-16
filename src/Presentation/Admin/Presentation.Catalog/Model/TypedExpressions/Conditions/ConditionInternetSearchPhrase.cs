@@ -13,9 +13,9 @@ namespace VirtoCommerce.ManagementClient.Catalog.Model.TypedExpressions.Conditio
 		private MatchContainsStringElement _searchPhraseEl;
 
 		public ConditionInternetSearchedPhrase(IExpressionViewModel expressionViewModel)
-			: base("Shopper searched for phrase [] on the Internet", expressionViewModel)
+			: base("Shopper searched for phrase [] on the Internet".Localize(), expressionViewModel)
 		{
-			WithLabel("Shopper searched phrase on the Internet");
+			WithLabel("Shopper searched phrase on the Internet".Localize());
 			_searchPhraseEl = WithElement(new MatchContainsStringElement(expressionViewModel)) as MatchContainsStringElement;
 		}
 

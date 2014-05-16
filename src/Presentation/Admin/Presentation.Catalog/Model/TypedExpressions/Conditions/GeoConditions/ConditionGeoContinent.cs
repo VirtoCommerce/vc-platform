@@ -18,7 +18,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.Model.TypedExpressions.Conditio
 		{
 			WithLabel("Are browsing from continent ".Localize());
 			_matchEl = WithElement(new MatchingContains(false, false)) as MatchingContains;
-			_valEl = WithDict(new string[] { "Africa", "Antarctica", "Asia", "Australia", "Europe", "North America", "Oceania (Melanesia, Polinesia, Micronesia)", "South America" }, "select continent") as UserInputElement;
+			_valEl = WithDict(new string[] { "Africa", "Antarctica", "Asia", "Australia", "Europe", "North America", "Oceania (Melanesia, Polinesia, Micronesia)", "South America" }, "select continent".Localize()) as UserInputElement;
 		}
 
 		public string SelectedValue

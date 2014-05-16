@@ -13,9 +13,9 @@ namespace VirtoCommerce.ManagementClient.Catalog.Model.TypedExpressions.Conditio
 		private MatchContainsStringElement _valEl;
 
 		public ConditionGeoZipCode(IExpressionViewModel expressionViewModel)
-			: base("Are browsing from zip/postal code []", expressionViewModel)
+			: base("Are browsing from zip/postal code []".Localize(), expressionViewModel)
 		{
-			WithLabel("Browsing from zip/postal code ");
+			WithLabel("Browsing from zip/postal code ".Localize());
 			_valEl = WithElement(new MatchContainsStringElement(expressionViewModel)) as MatchContainsStringElement;
 		}
 

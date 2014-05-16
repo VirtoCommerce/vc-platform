@@ -9,9 +9,8 @@
      xmlns:securityModule="clr-namespace:VirtoCommerce.Foundation.Security.Model;assembly=VirtoCommerce.Foundation"
      xmlns:localVM="clr-namespace:VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementations"
      Style="{DynamicResource Virto_Window_Style}" d:DesignHeight="800" d:DesignWidth="1000"
-     d:DataContext="{d:DesignInstance localVM:ItemViewModel}" xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Catalog"
-             xmlns:model="clr-namespace:VirtoCommerce.Foundation.Catalogs.Model;assembly=VirtoCommerce.Foundation"
-             LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
+     d:DataContext="{d:DesignInstance localVM:ItemViewModel}" xmlns:model="clr-namespace:VirtoCommerce.Foundation.Catalogs.Model;assembly=VirtoCommerce.Foundation"
+     LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}" xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Catalog">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -47,11 +46,7 @@
                                     <Button x:Name="CollapsedItem" Command="{Binding DataContext.AssociationGroupAddCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TabPanel}}}"
                                          Foreground="#006987" Style="{StaticResource Virto_Button_Transparent_Style}" FontSize="12"
                                          Visibility="Collapsed" Padding="10,0">
-                                        <TextBlock Margin="0" VerticalAlignment="Center">
-                                            <TextBlock.Inlines>
-                                                <Underline>add new</Underline>
-                                            </TextBlock.Inlines>
-                                        </TextBlock>
+                                        <TextBlock Text="{Loc 'add new'}" Margin="0" VerticalAlignment="Center" TextDecorations="Underline" />
                                     </Button>
                                 </StackPanel>
                             </Border>
@@ -312,7 +307,14 @@
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0" Text="{Loc 'Packaging:'}" />
                             <ComboBox Grid.Row="1" ItemsSource="{Binding AvailablePackageTypes}" SelectedValue="{Binding InnerItem.PackageType}"
-                                 SelectedValuePath="PackageId" DisplayMemberPath="Name" />
+                                 SelectedValuePath="PackageId">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <ContentPresenter Content="{Binding Name, Converter={x:Static LocalizingConverter.Current}, ConverterParameter={x:Static res:NavigationNames.ModuleName}}"
+                                             ContentTemplate="{StaticResource Virto_SearchData_ComboBox_DataTemplate}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
                             <!--inf_behavior:WatermarkComboBoxBehavior.EnableWatermark="True" inf_behavior:WatermarkComboBoxBehavior.Label="Pick packaging" -->
                         </Grid>
                         <CheckBox Grid.Row="4" Grid.Column="0" Content="{Loc 'Track Inventory'}" IsChecked="{Binding InnerItem.TrackInventory, Mode=TwoWay}"
@@ -327,10 +329,10 @@
                                  ItemsSource="{Binding AvailableAvailabilityRules}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
-										<ContentPresenter Content="{Binding }" ContentTemplate="{StaticResource Virto_SearchConstant_ComboBox_DataTemplate}" />
+                                        <ContentPresenter Content="{Binding }" ContentTemplate="{StaticResource Virto_SearchConstant_ComboBox_DataTemplate}" />
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
-							</ComboBox>
+                            </ComboBox>
                         </Grid>
                     </Grid>
                 </Grid>
@@ -632,19 +634,19 @@
                      Style="{StaticResource Virto_TabControlHorizontal_Style}">
                     <TabControl.ItemContainerStyle>
                         <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}">
-							<Setter Property="HeaderTemplate">
-								<Setter.Value>
-									<DataTemplate>
-										<TextBlock>
-											<TextBlock.Text>
-												<LocBinding ResourceKey="{}{0} catalog">
-													<Binding Path="DataContext.CatalogId" RelativeSource="{RelativeSource AncestorType=TabItem}" />
-												</LocBinding>
-											</TextBlock.Text>
-										</TextBlock>
-									</DataTemplate>
-								</Setter.Value>
-							</Setter>
+                            <Setter Property="HeaderTemplate">
+                                <Setter.Value>
+                                    <DataTemplate>
+                                        <TextBlock>
+                                            <TextBlock.Text>
+                                                <LocBinding ResourceKey="{}{0} catalog">
+                                                    <Binding Path="DataContext.CatalogId" RelativeSource="{RelativeSource AncestorType=TabItem}" />
+                                                </LocBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
                             <Setter Property="ContentTemplate">
                                 <Setter.Value>
                                     <DataTemplate>

@@ -17,11 +17,11 @@ namespace VirtoCommerce.ManagementClient.Catalog.Model.TypedExpressions.Conditio
 		private readonly UserInputElement _stateEl;
 		private readonly MatchingContains _matchEl;
 		public ConditionGeoState(IExpressionViewModel expressionViewModel)
-			: base("Are browsing from state/province []", expressionViewModel)
+			: base("Are browsing from state/province []".Localize(), expressionViewModel)
 		{
-			WithLabel("Browsing from state/province ");
+			WithLabel("Browsing from state/province ".Localize());
 			_matchEl = WithElement(new MatchingContains(false, false)) as MatchingContains;
-			_stateEl = WithCustomDict(GetStatesList(expressionViewModel), new[] {"select state"}) as UserInputElement;
+			_stateEl = WithCustomDict(GetStatesList(expressionViewModel), new[] { "select state".Localize() }) as UserInputElement;
 		}
 
 		private string[] GetStatesList(IExpressionViewModel expressionViewModel)

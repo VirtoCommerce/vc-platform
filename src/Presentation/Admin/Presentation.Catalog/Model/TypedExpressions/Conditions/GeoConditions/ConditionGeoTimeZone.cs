@@ -14,11 +14,11 @@ namespace VirtoCommerce.ManagementClient.Catalog.Model.TypedExpressions.Conditio
 		private UserInputElement _valEl;
 
 		public ConditionGeoTimeZone(IExpressionViewModel expressionViewModel)
-			: base("Are browsing from a time zone -/+ offset from UTC []", expressionViewModel)
+			: base("Are browsing from a time zone -/+ offset from UTC []".Localize(), expressionViewModel)
 		{
-			WithLabel("Are browsing from a time zone -/+ offset from UTC ");
+			WithLabel("Are browsing from a time zone -/+ offset from UTC ".Localize());
 			CompareConditions = WithElement(new CompareConditions(true)) as CompareConditions;
-			_valEl = WithCustomDict(GetTimeZonesArray(), new string [] {"select time zone"}) as UserInputElement;
+			_valEl = WithCustomDict(GetTimeZonesArray(), new string[] { "select time zone".Localize() }) as UserInputElement;
 		}
 
 		public string[] GetTimeZonesArray()

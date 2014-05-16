@@ -14,9 +14,9 @@ namespace VirtoCommerce.ManagementClient.Catalog.Model.TypedExpressions.Conditio
 	public class ConditionGenderIs : TypedExpressionElementBase, IExpressionAdaptor
     {
 		public ConditionGenderIs(IExpressionViewModel expressionViewModel)
-			: base("Shopper is of gender []", expressionViewModel)
+			: base("Shopper is of gender []".Localize(), expressionViewModel)
 		{
-			WithLabel("Shopper gender is ");
+			WithLabel("Shopper gender is ".Localize());
 			_gender = WithElement(new GenderElement()) as GenderElement;
 		}
 

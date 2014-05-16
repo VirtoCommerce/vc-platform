@@ -10,6 +10,7 @@ using VirtoCommerce.Foundation.Catalogs.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Interfaces;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using VirtoCommerce.ManagementClient.Core.Infrastructure.Common;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.DataVirtualization;
 
 namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementations
@@ -24,8 +25,8 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
 		public string SearchName { get; set; }
 		public string SearchCode { get; set; }
-		public string SearchFilterItemType { get; set; }
-		public string[] SearchFilterItemTypes { get; set; }
+		public object SearchFilterItemType { get; set; }
+		public KeyValuePair_string_string[] SearchFilterItemTypes { get; set; }
 		public string SearchCatalogId { get; set; }
 
 		public bool CanChangeSearchItemType { get; private set; }
@@ -35,7 +36,12 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		{
 			_catalogRepository = catalogRepository;
 
-			SearchFilterItemTypes = new[] { "Variation".Localize(), "Product".Localize(), "Bundle".Localize(), "Package".Localize(), "Dynamic Kit".Localize() };
+			SearchFilterItemTypes = new[] { new KeyValuePair_string_string{ Value = "Variation"},
+							new KeyValuePair_string_string{ Value = "Product"},
+							new KeyValuePair_string_string{ Value = "Bundle"},
+							new KeyValuePair_string_string{ Value = "Package"},
+							new KeyValuePair_string_string{ Value = "Dynamic Kit"}};
+			// SearchFilterItemTypes = new[] { "Variation".Localize(), "Product".Localize(), "Bundle".Localize(), "Package".Localize(), "Dynamic Kit".Localize() };
 
 			// TODO: move it to parameter constructor and refactor all calls
 			// rp, quick hack, Inventory should contain not only products but variations...
@@ -47,9 +53,9 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			else
 			{
 				SearchFilterItemType = SearchFilterItemTypes.FirstOrDefault(
-					x => x.Equals(searchType, StringComparison.OrdinalIgnoreCase));
+					x => x.Value.Equals(searchType, StringComparison.OrdinalIgnoreCase));
 
-				if (string.IsNullOrEmpty(SearchFilterItemType))
+				if (SearchFilterItemType == null)
 					CanChangeSearchItemType = true;
 			}
 
@@ -128,11 +134,11 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 					query = query.Where(x => x.Code.Contains(SearchCode));
 				}
 
-				if (SearchFilterItemType == SearchFilterItemTypes[0])
+				if (SearchFilterItemType == SearchFilterItemTypes[1])
 				{
 					query = query.OfType<Product>();
 				}
-				else if (SearchFilterItemType == SearchFilterItemTypes[1])
+				else if (SearchFilterItemType == SearchFilterItemTypes[0])
 				{
 					query = query.OfType<Sku>();
 				}

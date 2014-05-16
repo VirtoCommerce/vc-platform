@@ -2,8 +2,10 @@
 using System.Linq;
 using System.Threading;
 using System.Windows.Data;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.ManagementClient.Catalog.Model;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.Catalog.Infrastructure
 {
@@ -86,7 +88,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.Infrastructure
 				}
 
 				if (retVal == null)
-					retVal = "N/A".Localize();
+					retVal = "N/A".Localize(null, LocalizationScope.DefaultCategory);
 			}
 
 			return retVal;

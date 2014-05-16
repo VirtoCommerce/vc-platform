@@ -7,7 +7,9 @@
      xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:catalogsModel="clr-namespace:VirtoCommerce.Foundation.Catalogs.Model;assembly=VirtoCommerce.Foundation"
      Height="450" Width="800" xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Catalog"
-     LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
+               xmlns:implementations="clr-namespace:VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementations"
+               xmlns:core_common="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Common;assembly=VirtoCommerce.ManagementClient.Core"
+               LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -37,7 +39,8 @@
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
-    <Grid x:Name="LayoutRoot">
+	
+    <Grid x:Name="LayoutRoot" d:DataContext="{d:DesignInstance implementations:SearchItemViewModel}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" MinWidth="300" />
             <ColumnDefinition Width="auto" />
@@ -60,8 +63,7 @@
                 <TextBlock Text="{Loc 'SKU Code'}" />
                 <core_controls:WatermarkedTextBox Text="{Binding SearchCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <TextBlock Text="{Loc 'Item type'}" />
-                <core_controls:NullItemSelectorAdapter ItemsSource="{Binding SearchFilterItemTypes}"
-                     Width="Auto">
+                <core_controls:NullItemSelectorAdapter ItemsSource="{Binding SearchFilterItemTypes}" Width="Auto">
                     <core_controls:NullItemSelectorAdapter.NullItems>
                         <collections:ArrayList>
                             <sys:String>All types</sys:String>
@@ -69,7 +71,12 @@
                     </core_controls:NullItemSelectorAdapter.NullItems>
                     <ComboBox SelectedValue="{Binding SearchFilterItemType, Mode=TwoWay}" IsEnabled="{Binding CanChangeSearchItemType}"
                          Height="26" Width="Auto">
-                        <i:Interaction.Triggers>
+						<FrameworkElement.Resources>
+							<DataTemplate DataType="{x:Type core_common:KeyValuePair_string_string}" >
+								<ContentPresenter Content="{Binding Value, Converter={x:Static LocalizingConverter.Current}, ConverterParameter={x:Static res:NavigationNames.ModuleName}}" ContentTemplate="{StaticResource Virto_SearchData_ComboBox_DataTemplate}" />
+							</DataTemplate>
+						</FrameworkElement.Resources>
+						<i:Interaction.Triggers>
                             <i:EventTrigger EventName="SelectionChanged">
                                 <i:InvokeCommandAction Command="{Binding SearchCommand}" />
                             </i:EventTrigger>

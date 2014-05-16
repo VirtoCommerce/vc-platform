@@ -116,8 +116,13 @@
                      Margin="10,0">
                     <TextBlock Text="{Loc 'Packaging:'}" />
                     <ComboBox SelectedValue="{Binding InnerItem.PackageType}" SelectedValuePath="PackageId"
-                         ItemsSource="{Binding AvailablePackageTypes}" DisplayMemberPath="Name" />
-                    <!--behaviors:WatermarkComboBoxBehavior.EnableWatermark="True" behaviors:WatermarkComboBoxBehavior.Label="Pick packaging"  -->
+                         ItemsSource="{Binding AvailablePackageTypes}">
+						<ComboBox.ItemTemplate>
+							<DataTemplate>
+								<ContentPresenter Content="{Binding Name, Converter={x:Static LocalizingConverter.Current}, ConverterParameter={x:Static res:NavigationNames.ModuleName}}" ContentTemplate="{StaticResource Virto_SearchData_ComboBox_DataTemplate}" />
+							</DataTemplate>
+						</ComboBox.ItemTemplate>
+					</ComboBox>
                 </StackPanel>
                 <!-- Weight measure -->
                 <StackPanel Grid.Row="1" Grid.Column="2" IsEnabled="{Binding InnerItem.IsBuyable}"
@@ -142,7 +147,7 @@
                          ItemsSource="{Binding AvailableAvailabilityRules}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
-                                <TextBlock Text="{Binding }" />
+								<ContentPresenter Content="{Binding }" ContentTemplate="{StaticResource Virto_SearchConstant_ComboBox_DataTemplate}" />
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>

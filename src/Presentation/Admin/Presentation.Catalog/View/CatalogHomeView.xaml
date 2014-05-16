@@ -60,7 +60,7 @@
 			</prism:InteractionRequestTrigger>
 		</i:Interaction.Triggers>
 		<core_controls:SearchTextBox SearchEventTimeDelay="0:0:1" Text="{Binding SearchFilterAll, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-             HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-70,20,0" Width="250">
+             HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-70,20,0" Width="250" LabelText="{Loc 'Enter keywords...'}">
 			<i:Interaction.Triggers>
 				<i:EventTrigger EventName="Search">
 					<i:InvokeCommandAction Command="{Binding SearchAllItemsCommand}" />
@@ -324,7 +324,7 @@
 																		<core_controls:VectorImage ImageResource="{StaticResource Icon_Category}" />
 																	</MenuItem.Icon>
 																</MenuItem>
-																<MenuItem Header="{Loc 'Create Linked Category'}" Command="{Binding PlacementTarget.Tag.CreateLinkedCategoryCommand,&#xD;&#xA;																	  RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}"
+																<MenuItem Header="{Loc 'Create Linked Category'}" Command="{Binding PlacementTarget.Tag.CreateLinkedCategoryCommand, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}"
                                                                      inf_behavior:PermissionBehavior.PermissionId="{x:Static securityModule:PredefinedPermissions.CatalogLinked_CategoriesManage}"
                                                                      inf_behavior:PermissionBehavior.DenyVisibility="Collapsed">
 																	<MenuItem.Icon>

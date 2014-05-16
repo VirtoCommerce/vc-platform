@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Linq;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.ManagementClient.Catalog.Model.TypedExpressions.Conditions;
 using VirtoCommerce.ManagementClient.Catalog.Model.TypedExpressions.Conditions.GeoConditions;
-using VirtoCommerce.ManagementClient.Catalog.ViewModel.Pricelists.Interfaces;
 using VirtoCommerce.ManagementClient.Core.Controls;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using VirtoCommerce.ManagementClient.Localization;
 using linq = System.Linq.Expressions;
 
 namespace VirtoCommerce.ManagementClient.Catalog.Model.TypedExpressions
@@ -77,9 +78,9 @@ namespace VirtoCommerce.ManagementClient.Catalog.Model.TypedExpressions
 				
             };
 			ConditionBlock.WithAvailabeChildren(availableElements);
-			ConditionBlock.NewChildLabel = "+ add condition".Localize();
+			ConditionBlock.NewChildLabel = "+ add condition".Localize(null, LocalizationScope.DefaultCategory);
 		}
-		
+
 		public override void InitializeAfterDeserialized(IExpressionViewModel priceListAssignmentViewModel)
 		{
 			base.InitializeAfterDeserialized(priceListAssignmentViewModel);
@@ -109,7 +110,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.Model.TypedExpressions
 				//else
 				//	retVal = retVal.And(expression);
 			}
-						
+
 			return retVal;
 		}
 	}

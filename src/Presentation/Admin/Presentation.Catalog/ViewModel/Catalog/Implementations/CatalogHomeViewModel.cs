@@ -276,7 +276,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			if (_authContext.CheckPermission(PredefinedPermissions.CatalogCatalogsManage) &&
 				_authContext.CheckPermission(PredefinedPermissions.CatalogVirtual_CatalogsManage))
 			{
-				var allAvailableOptions = new ItemTypeSelectionModel[]
+				var allAvailableOptions = new[]
 					{
 						new ItemTypeSelectionModel("Catalog".Localize(),"A central location to manage your store merchandise, create catalog for a brand, product line or a particular supplier.".Localize()),
 						new ItemTypeSelectionModel("Virtual Catalog".Localize(),"A subset of products and categories found in master catalogs.".Localize())
@@ -289,14 +289,13 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 							{
 								if (x.Confirmed)
 								{
-									switch (itemVM.SelectedItemType)
+									if (itemVM.SelectedItemType == allAvailableOptions[0].Value)
 									{
-										case "Catalog":
-											CreateCatalog();
-											break;
-										case "Virtual Catalog":
-											CreateVirtualCatalog();
-											break;
+										CreateCatalog();
+									}
+									else if (itemVM.SelectedItemType == allAvailableOptions[1].Value)
+									{
+										CreateVirtualCatalog();
 									}
 								}
 							});
@@ -571,23 +570,25 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			 {
 				 if (x.Confirmed)
 				 {
-					 switch (itemVM.SelectedItemType)
+					 if (itemVM.SelectedItemType == allAvailableOptions[1].Value)
 					 {
-						 case "Product":
-							 RaiseItemCreateInteractionRequest<Product>(itemVM.SelectedItemType);
-							 break;
-						 case "Variation/SKU":
-							 RaiseItemCreateInteractionRequest<Sku>(itemVM.SelectedItemType);
-							 break;
-						 case "Bundle":
-							 RaiseItemCreateInteractionRequest<Bundle>(itemVM.SelectedItemType);
-							 break;
-						 case "Package":
-							 RaiseItemCreateInteractionRequest<Package>(itemVM.SelectedItemType);
-							 break;
-						 case "Dynamic Kit":
-							 RaiseItemCreateInteractionRequest<DynamicKit>(itemVM.SelectedItemType);
-							 break;
+						 RaiseItemCreateInteractionRequest<Product>(itemVM.SelectedItemType);
+					 }
+					 else if (itemVM.SelectedItemType == allAvailableOptions[0].Value)
+					 {
+						 RaiseItemCreateInteractionRequest<Sku>(itemVM.SelectedItemType);
+					 }
+					 else if (itemVM.SelectedItemType == allAvailableOptions[2].Value)
+					 {
+						 RaiseItemCreateInteractionRequest<Bundle>(itemVM.SelectedItemType);
+					 }
+					 else if (itemVM.SelectedItemType == allAvailableOptions[3].Value)
+					 {
+						 RaiseItemCreateInteractionRequest<Package>(itemVM.SelectedItemType);
+					 }
+					 else if (itemVM.SelectedItemType == allAvailableOptions[4].Value)
+					 {
+						 RaiseItemCreateInteractionRequest<DynamicKit>(itemVM.SelectedItemType);
 					 }
 				 }
 			 });

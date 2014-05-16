@@ -13,9 +13,9 @@ namespace VirtoCommerce.ManagementClient.Catalog.Model.TypedExpressions.Conditio
 		private MatchContainsCaseStringElement _urlEl;
 
 		public ConditionReferedFromUrl(IExpressionViewModel expressionViewModel)
-			: base("Referred from Url []", expressionViewModel)
+			: base("Referred from Url []".Localize(), expressionViewModel)
 		{
-			WithLabel("Referred Url ");
+			WithLabel("Referred Url ".Localize());
 			_urlEl = WithElement(new MatchContainsCaseStringElement(expressionViewModel)) as MatchContainsCaseStringElement;
 		}
 
