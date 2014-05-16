@@ -17,7 +17,7 @@ namespace VirtoCommerce.ManagementClient.Order.Infrastructure.Converters
 
 		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
 		{
-			return value != null ? value.ToString() : "Always effective";
+			return value != null ? value.ToString() : "Always effective".Localize();
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

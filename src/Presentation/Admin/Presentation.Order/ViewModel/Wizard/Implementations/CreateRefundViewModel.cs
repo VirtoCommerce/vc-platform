@@ -18,12 +18,12 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Wizard.Implementations
 	public class CreateRefundViewModel : WizardViewModelBase, ICreateRefundViewModel
 	{
 		public CreateRefundViewModel(
-			IViewModelsFactory<IRefundDetailsStepViewModel> detailsVmFactory, 
-			IViewModelsFactory<IRefundSummaryStepViewModel> summaryVmFactory, 
-			Foundation.Orders.Model.Order item, 
+			IViewModelsFactory<IRefundDetailsStepViewModel> detailsVmFactory,
+			IViewModelsFactory<IRefundSummaryStepViewModel> summaryVmFactory,
+			Foundation.Orders.Model.Order item,
 			decimal defaultAmount)
 		{
-			
+
 			InnerModel = new CreateRefundModel { Order = item, Amount = defaultAmount };
 
 			var itemParameter = new KeyValuePair<string, object>("item", InnerModel);
@@ -64,7 +64,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Wizard.Implementations
 
 		public override string Description
 		{
-			get { return "Enter payment details"; }
+			get { return "Enter payment details".Localize(); }
 		}
 		#endregion
 
@@ -72,7 +72,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Wizard.Implementations
 		{
 			OnIsValidChanged();
 		}
-		
+
 		internal static PaymentModel GetNewPaymentModel(Foundation.Orders.Model.Order order, IPaymentMethodRepository repository, StoreClient client)
 		{
 			var method = repository.PaymentMethods.Where(x => x.Name == "CreditCard").FirstOrDefault();
@@ -96,7 +96,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Wizard.Implementations
                     new ListModelInt("11 - November", 11),
                     new ListModelInt("12 - December", 12)
                 };
-
+			months.ToList().ForEach(x => x.Name = x.Name.Localize(null, ""));
 			var years = new List<ListModelInt>();
 			for (var index = DateTime.Now.Year; index <= DateTime.Now.Year + 10; index++)
 			{

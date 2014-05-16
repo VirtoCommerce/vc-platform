@@ -1,18 +1,18 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
 using Omu.ValueInjecter;
 using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
-using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Orders.Factories;
 using VirtoCommerce.Foundation.Orders.Model.Countries;
 using VirtoCommerce.Foundation.Orders.Model.Jurisdiction;
 using VirtoCommerce.Foundation.Orders.Repositories;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
+using VirtoCommerce.ManagementClient.Localization;
 using VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Jurisdictions.Interfaces;
 
 namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Jurisdictions.Implementations
@@ -42,7 +42,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Jurisdictions.
 			_navManager = navManager;
 			_parent = parent;
 			_jurisdictionType = jurisdictionType;
-			ViewTitle = new ViewTitleBase { SubTitle = "SETTINGS", Title = "Jurisdiction" };
+			ViewTitle = new ViewTitleBase { SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory), Title = "Jurisdiction".Localize() };
 
 			OpenItemCommand = new DelegateCommand(() => _navManager.Navigate(NavigationData));
 
@@ -123,8 +123,8 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Jurisdictions.
 		{
 			return new RefusedConfirmation
 			{
-				Content = "Save changes to Jurisdiction '" + DisplayName + "'?",
-				Title = "Action confirmation"
+				Content = string.Format("Save changes to Jurisdiction '{0}'?".Localize(), DisplayName),
+				Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 		}
 
@@ -185,7 +185,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Jurisdictions.
 
 		public override string Description
 		{
-			get { return "Enter Jurisdiction information."; }
+			get { return "Enter Jurisdiction information.".Localize(); }
 		}
 
 

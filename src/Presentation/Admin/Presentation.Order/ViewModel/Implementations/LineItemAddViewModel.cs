@@ -58,10 +58,10 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 		{
 			get
 			{
-				var result = "Available items";
+				var result = "Available items".Localize();
 				if (_searched)
 				{
-					result += string.Format(" ({0} of {1} total)", AvailableItems.Count, _totalCount);
+					result += string.Format(" ({0} of {1} total)".Localize(), AvailableItems.Count, _totalCount);
 				}
 				return result;
 			}
@@ -76,7 +76,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 			itemVM.ItemToAdd = selectedObj as Item;
 
 			var confirmation = new ConditionalConfirmation();
-			confirmation.Title = "Specify item details";
+			confirmation.Title = "Specify item details".Localize();
 			confirmation.Content = itemVM;
 			ItemDetailsConfirmRequest.Raise(confirmation, x =>
 			{

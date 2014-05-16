@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -7,12 +6,6 @@ using System.Windows.Data;
 using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
 using Omu.ValueInjecter;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
-using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
-using VirtoCommerce.ManagementClient.Order.Model.Settings;
-using VirtoCommerce.ManagementClient.Order.ViewModel.Settings.ShippingMethods.Interfaces;
-using VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Wizard.Interfaces;
-using VirtoCommerce.ManagementClient.Order.ViewModel.Wizard;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
@@ -21,6 +14,12 @@ using VirtoCommerce.Foundation.Orders.Model.Jurisdiction;
 using VirtoCommerce.Foundation.Orders.Model.PaymentMethod;
 using VirtoCommerce.Foundation.Orders.Model.ShippingMethod;
 using VirtoCommerce.Foundation.Orders.Repositories;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
+using VirtoCommerce.ManagementClient.Localization;
+using VirtoCommerce.ManagementClient.Order.Model.Settings;
+using VirtoCommerce.ManagementClient.Order.ViewModel.Settings.ShippingMethods.Interfaces;
+using VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Wizard.Interfaces;
 using VirtoCommerce.ManagementClient.Order.ViewModel.Wizard.Interfaces;
 
 namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.ShippingMethods.Implementations
@@ -59,11 +58,11 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.ShippingMethod
 			IRepositoryFactory<IPaymentMethodRepository> paymentMethdRepositoryFactory,
 			IRepositoryFactory<IOrderRepository> orderRepositoryFactory,
 			IOrderEntityFactory entityFactory, IHomeSettingsViewModel parent,
-			INavigationManager navManager, 
+			INavigationManager navManager,
 			ShippingMethod item)
 			: base(entityFactory, item, false)
 		{
-			ViewTitle = new ViewTitleBase { SubTitle = "SETTINGS", Title = "Shipping Method" };
+			ViewTitle = new ViewTitleBase { SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory), Title = "Shipping Method".Localize() };
 			_repositoryFactory = repositoryFactory;
 			_paymentMethdRepositoryFactory = paymentMethdRepositoryFactory;
 			_orderRepositoryFactory = orderRepositoryFactory;
@@ -82,7 +81,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.ShippingMethod
 			IRepositoryFactory<IShippingRepository> repositoryFactory,
 			IRepositoryFactory<IPaymentMethodRepository> paymentMethdRepositoryFactory,
 			IRepositoryFactory<IOrderRepository> orderRepositoryFactory,
-			IOrderEntityFactory entityFactory, 
+			IOrderEntityFactory entityFactory,
 			ShippingMethod item)
 			: base(entityFactory, item, true)
 		{
@@ -154,8 +153,8 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.ShippingMethod
 		{
 			return new RefusedConfirmation
 			{
-				Content = "Save changes to Shipping method '" + DisplayName + "'?",
-				Title = "Action confirmation"
+				Content = string.Format("Save changes to Shipping method '{0}'?".Localize(), DisplayName),
+				Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 		}
 
@@ -301,7 +300,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.ShippingMethod
 
 		public override string Description
 		{
-			get { return "Enter Shipping method general information."; }
+			get { return "Enter Shipping method general information.".Localize(); }
 		}
 
 		public override bool IsValid

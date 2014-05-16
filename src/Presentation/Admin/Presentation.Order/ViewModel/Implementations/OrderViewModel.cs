@@ -20,6 +20,7 @@ using VirtoCommerce.Foundation.Orders.Repositories;
 using VirtoCommerce.Foundation.Orders.Services;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
+using VirtoCommerce.ManagementClient.Localization;
 using VirtoCommerce.ManagementClient.Order.Model;
 using VirtoCommerce.ManagementClient.Order.ViewModel.Interfaces;
 using VirtoCommerce.ManagementClient.Order.ViewModel.Wizard.Interfaces;
@@ -102,7 +103,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 
 			ViewTitle = new ViewTitleBase()
 			{
-				Title = "Orders",
+				Title = "Orders".Localize(),
 				SubTitle = (item != null && string.IsNullOrEmpty(item.CustomerName)) ? item.CustomerName.ToUpper(CultureInfo.InvariantCulture) : null
 			};
 
@@ -173,8 +174,8 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 		{
 			return new RefusedConfirmation
 			{
-				Content = "Save changes to order '" + DisplayName + "'?",
-				Title = "Action confirmation"
+				Content = string.Format("Save changes to order '{0}'?".Localize(), DisplayName),
+				Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 		}
 
@@ -364,7 +365,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 		private void RaiseCancelOrderInteractionRequest()
 		{
 			CommonOrderCommandConfirmRequest.Raise(
-				new ConditionalConfirmation { Content = "Are you sure you want to cancel order?", Title = "Cancel Order" },
+				new ConditionalConfirmation { Content = "Are you sure you want to cancel order?".Localize(), Title = "Cancel Order".Localize() },
 				(x) =>
 				{
 					if (x.Confirmed)
@@ -378,7 +379,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 		private void RaiseHoldOrderInteractionRequest()
 		{
 			CommonOrderCommandConfirmRequest.Raise(
-				new ConditionalConfirmation { Content = "Are you sure you want to put the order 'On Hold'?", Title = "Order 'On Hold'" },
+				new ConditionalConfirmation { Content = "Are you sure you want to put the order 'On Hold'?".Localize(), Title = "Order 'On Hold'".Localize() },
 				(x) =>
 				{
 					if (x.Confirmed)
@@ -404,7 +405,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 				new KeyValuePair<string, object>("innerOrder", InnerItem),
 				new KeyValuePair<string, object>("rmaRequest", rmaRequest));
 
-			var confirmation = new Confirmation { Title = "Create RMA request", Content = itemVM };
+			var confirmation = new Confirmation { Title = "Create RMA request".Localize(), Content = itemVM };
 			CommonOrderWizardDialogInteractionRequest.Raise(confirmation, (x) =>
 			{
 				if (x.Confirmed)
@@ -473,7 +474,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 				new KeyValuePair<string, object>("innerOrder", InnerItem),
 				new KeyValuePair<string, object>("rmaRequest", rmaRequest));
 
-			var confirmation = new Confirmation { Title = "Create an exchange Order", Content = itemVM };
+			var confirmation = new Confirmation { Title = "Create an exchange Order".Localize(), Content = itemVM };
 			CommonOrderWizardDialogInteractionRequest.Raise(confirmation, (x) =>
 			{
 				if (x.Confirmed)
@@ -543,7 +544,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 				, new KeyValuePair<string, object>("defaultAmount", decimal.Zero)
 				);
 
-			var confirmation = new ConditionalConfirmation { Title = "Create Refund", Content = itemVM };
+			var confirmation = new ConditionalConfirmation { Title = "Create Refund".Localize(), Content = itemVM };
 			CommonOrderWizardDialogInteractionRequest.Raise(confirmation, x =>
 			{
 				if (x.Confirmed)
@@ -557,7 +558,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 		{
 			var itemVM = _wizardPaymentVmFactory.GetViewModelInstance();
 
-			var confirmation = new ConditionalConfirmation { Title = "Create payment", Content = itemVM };
+			var confirmation = new ConditionalConfirmation { Title = "Create payment".Localize(), Content = itemVM };
 			CommonOrderWizardDialogInteractionRequest.Raise(confirmation, (x) =>
 			{
 				if (x.Confirmed)
@@ -601,7 +602,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 				var itemClone = item.DeepClone(EntityFactory as IKnownSerializationTypes);
 				var itemVM = _addressVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("addressItem", itemClone));
 
-				var confirmation = new Confirmation { Title = "Edit order address", Content = itemVM };
+				var confirmation = new Confirmation { Title = "Edit order address".Localize(), Content = itemVM };
 
 				// CommonOrderCommandConfirmRequest.Raise(confirmation, (x) =>
 				DisableableCommandConfirmRequest.Raise(confirmation, (x) =>
@@ -629,7 +630,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 
 				var itemVM = _contactVmFactory.GetViewModelInstance(parameters);
 
-				var confirmation = new ConditionalConfirmation { Title = "Edit customer profile", Content = itemVM };
+				var confirmation = new ConditionalConfirmation { Title = "Edit customer profile".Localize(), Content = itemVM };
 
 				CommonOrderCommandConfirmRequest.Raise(confirmation, (x) =>
 									{

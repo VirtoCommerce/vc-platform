@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
@@ -17,6 +16,7 @@ using VirtoCommerce.Foundation.Orders.Model.Taxes;
 using VirtoCommerce.Foundation.Orders.Repositories;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
+using VirtoCommerce.ManagementClient.Localization;
 using VirtoCommerce.ManagementClient.Order.Model.Settings;
 using VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Taxes.Interfaces;
 using VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Wizard.Interfaces;
@@ -56,7 +56,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Taxes.Implemen
 			Tax item)
 			: base(entityFactory, item, false)
 		{
-			ViewTitle = new ViewTitleBase { SubTitle = "SETTINGS", Title = "Tax" };
+			ViewTitle = new ViewTitleBase { SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory), Title = "Tax".Localize() };
 			_repositoryFactory = repositoryFactory;
 			_catalogRepositoryFactory = catalogRepositoryFactory;
 			_navManager = navManager;
@@ -154,8 +154,8 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Taxes.Implemen
 		{
 			return new RefusedConfirmation
 			{
-				Content = "Save changes to Tax '" + DisplayName + "'?",
-				Title = "Action confirmation"
+				Content = string.Format("Save changes to Tax '{0}'?".Localize(), DisplayName),
+				Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 		}
 
@@ -350,7 +350,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Taxes.Implemen
 		{
 			var item = new TaxValue();
 
-			if (RaiseValueEditInteractionRequest(item, "Create Tax Value"))
+			if (RaiseValueEditInteractionRequest(item, "Create Tax Value".Localize()))
 			{
 				item.TaxId = InnerItem.TaxId;
 				InnerItem.TaxValues.Add(item);
@@ -361,12 +361,12 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Taxes.Implemen
 		{
 			TaxValue item = new TaxValue();
 			item.InjectFrom<CloneInjection>(originalItem);
-			if (RaiseValueEditInteractionRequest(item, "Edit Tax Value"))
+			if (RaiseValueEditInteractionRequest(item, "Edit Tax Value".Localize()))
 			{
 				// copy all values to original:
 				originalItem.InjectFrom<CloneInjection>(item);
-                // fake assign for UI triggers to display correct values.
-			    originalItem.JurisdictionGroupId = originalItem.JurisdictionGroupId;
+				// fake assign for UI triggers to display correct values.
+				originalItem.JurisdictionGroupId = originalItem.JurisdictionGroupId;
 			}
 		}
 
@@ -395,8 +395,8 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Taxes.Implemen
 		{
 			var confirmation = new ConditionalConfirmation
 			{
-				Title = "Remove confirmation",
-				Content = string.Format("Are you sure you want to remove this Tax Value?")
+				Content = string.Format("Are you sure you want to remove this Tax Value?".Localize()),
+				Title = "Remove confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 			CommonConfirmRequest.Raise(confirmation,
 				(x) =>

@@ -137,7 +137,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Wizard.Implementations
 
 		public override string Description
 		{
-			get { return "Enter Order Return details"; }
+			get { return "Enter Order Return details".Localize(); }
 		}
 		#endregion
 
@@ -147,7 +147,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Wizard.Implementations
 			var itemVM = _returnItemVmFactory.GetViewModelInstance();
 			itemVM.ReturnLineItem = selectedObj as ReturnBuilder.ReturnLineItem;
 
-			var confirmation = new ConditionalConfirmation { Title = "Specify return data", Content = itemVM };
+			var confirmation = new ConditionalConfirmation { Title = "Specify return data".Localize(), Content = itemVM };
 			ReturnItemConfirmRequest.Raise(confirmation, (x) =>
 			{
 				if (x.Confirmed)
@@ -166,7 +166,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Wizard.Implementations
 			var itemVM = _returnItemVmFactory.GetViewModelInstance();
 			itemVM.IsBulkReturn = true;
 
-			var confirmation = new ConditionalConfirmation { Title = "Specify return reason", Content = itemVM };
+			var confirmation = new ConditionalConfirmation { Title = "Specify return reason".Localize(), Content = itemVM };
 
 			ReturnItemConfirmRequest.Raise(confirmation, (x) =>
 			{
@@ -235,7 +235,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Wizard.Implementations
 
 		public override string Description
 		{
-			get { return "Adjust Return processing details"; }
+			get { return "Adjust Return processing details".Localize(); }
 		}
 
 		public string[] PaymentMethods { get; private set; }

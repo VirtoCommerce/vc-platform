@@ -138,7 +138,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Wizard.Implementations
 
 		public override string Description
 		{
-			get { return "Enter Payment method details"; }
+			get { return "Enter Payment method details".Localize(); }
 		}
 
 		public override bool IsLast
@@ -186,7 +186,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Wizard.Implementations
 
 		public override string Description
 		{
-			get { return "Enter Payment method property values"; }
+			get { return "Enter Payment method property values".Localize(); }
 		}
 
 		public override bool IsLast

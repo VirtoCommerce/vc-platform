@@ -20,7 +20,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 		private const string tmpShipmentId = "New Shipment";
 
 		#region Dependencies
-		
+
 		private readonly IOrderEntityFactory _entityFactory;
 		private readonly IShippingRepository _shippingRepository;
 		private readonly IViewModelsFactory<IOrderAddressViewModel> _addressVmFactory;
@@ -75,7 +75,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 
 					var confirmation = new ConditionalConfirmation(newOrderAddress.Validate)
 						{
-							Title = "New Order Address",
+							Title = "New Order Address".Localize(),
 							Content = orderAddressViewModel
 						};
 					CreateNewAddressRequest.Raise(confirmation, (x) =>

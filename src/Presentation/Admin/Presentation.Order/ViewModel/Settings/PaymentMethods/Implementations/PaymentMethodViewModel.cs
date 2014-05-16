@@ -18,11 +18,11 @@ using VirtoCommerce.Foundation.Orders.Model.ShippingMethod;
 using VirtoCommerce.Foundation.Orders.Repositories;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
+using VirtoCommerce.ManagementClient.Localization;
 using VirtoCommerce.ManagementClient.Order.Model.Settings;
 using VirtoCommerce.ManagementClient.Order.ViewModel.Implementations;
 using VirtoCommerce.ManagementClient.Order.ViewModel.Settings.PaymentMethods.Interfaces;
 using VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Wizard.Interfaces;
-using VirtoCommerce.ManagementClient.Order.ViewModel.Wizard;
 using VirtoCommerce.ManagementClient.Order.ViewModel.Wizard.Interfaces;
 
 namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.PaymentMethods.Implementations
@@ -48,13 +48,13 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.PaymentMethods
 			IHomeSettingsViewModel parent, PaymentMethod item)
 			: base(entityFactory, item, false)
 		{
-			ViewTitle = new ViewTitleBase { SubTitle = "SETTINGS", Title = "Payment Method" };
+			ViewTitle = new ViewTitleBase { SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory), Title = "Payment Method".Localize() };
 			_navManager = navManager;
 			_parent = parent;
 			_repositoryFactory = repositoryFactory;
 			_shippingRepositoryFactory = shippingRepositoryFactory;
 			_langVmFactory = langVmFactory;
-			
+
 			PropertyValues = new ObservableCollection<GeneralPropertyValueEditViewModel>();
 
 			OpenItemCommand = new DelegateCommand(() => _navManager.Navigate(NavigationData));
@@ -144,8 +144,8 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.PaymentMethods
 		{
 			return new RefusedConfirmation
 			{
-				Content = "Save changes to Payment method '" + DisplayName + "'?",
-				Title = "Action confirmation"
+				Content = string.Format("Save changes to Payment method '{0}'?".Localize(), DisplayName),
+				Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 		}
 
@@ -208,7 +208,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.PaymentMethods
 
 		public override string Description
 		{
-			get { return "Enter Payment method details"; }
+			get { return "Enter Payment method details".Localize(); }
 		}
 
 		public override bool IsLast
@@ -274,8 +274,8 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.PaymentMethods
 		private void RemovePaymentProperty(PaymentMethodPropertyValue selectedItem)
 		{
 			ConditionalConfirmation confirmation = new ConditionalConfirmation();
-			confirmation.Title = "Value clear confirmation";
-			confirmation.Content = string.Format("Clear Property Value '{0}'?", selectedItem.Name);
+			confirmation.Title = "Value clear confirmation".Localize();
+			confirmation.Content = string.Format("Clear Property Value '{0}'?".Localize(), selectedItem.Name);
 
 			// RemovePaymentPropertyRequest//  ??
 			CommonConfirmRequest.Raise(confirmation,

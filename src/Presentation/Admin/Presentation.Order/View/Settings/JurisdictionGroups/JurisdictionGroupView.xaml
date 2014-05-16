@@ -7,7 +7,9 @@
      xmlns:converters="clr-namespace:VirtoCommerce.ManagementClient.Order.Infrastructure.Converters"
      xmlns:common="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Common;assembly=VirtoCommerce.ManagementClient.Core"
      mc:Ignorable="d" d:DesignHeight="600" Style="{DynamicResource Virto_Window_DetailsAndWizard_Style}"
-     xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Order" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
+     xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Order"
+               xmlns:implementations="clr-namespace:VirtoCommerce.ManagementClient.Order.ViewModel.Settings.JurisdictionGroups.Implementations"
+               LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
     <base:ViewBase.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -17,8 +19,7 @@
         </ResourceDictionary>
     </base:ViewBase.Resources>
     <!--<settingsViewWizard:JurisdictionGroupOverviewStepView />-->
-    <Grid d:DataContext="{d:DesignInstance settingsViewModel:JurisdictionGroupViewModel}"
-         xmlns:settingsViewModel="clr-namespace:VirtoCommerce.ManagementClient.Order.ViewModel.Settings">
+    <Grid d:DataContext="{d:DesignInstance implementations:JurisdictionGroupViewModel}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />

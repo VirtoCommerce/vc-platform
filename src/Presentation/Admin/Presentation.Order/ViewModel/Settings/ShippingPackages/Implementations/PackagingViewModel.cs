@@ -1,17 +1,17 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
 using Omu.ValueInjecter;
-using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
-using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
-using VirtoCommerce.ManagementClient.Order.ViewModel.Settings.ShippingPackages.Interfaces;
 using VirtoCommerce.Foundation.Catalogs.Factories;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Catalogs.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
+using VirtoCommerce.ManagementClient.Localization;
+using VirtoCommerce.ManagementClient.Order.ViewModel.Settings.ShippingPackages.Interfaces;
 
 namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.ShippingPackages.Implementations
 {
@@ -31,7 +31,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.ShippingPackag
 			INavigationManager navManager, Packaging item)
 			: base(entityFactory, item, false)
 		{
-			ViewTitle = new ViewTitleBase() { SubTitle = "SETTINGS", Title = "Shipping package" };
+			ViewTitle = new ViewTitleBase() { SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory), Title = "Shipping package".Localize() };
 			_repositoryFactory = repositoryFactory;
 			_navManager = navManager;
 			_parent = parent;
@@ -104,8 +104,8 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.ShippingPackag
 		{
 			return new RefusedConfirmation
 			{
-				Content = "Save changes to Packaging '" + DisplayName + "'?",
-				Title = "Action confirmation"
+				Content = string.Format("Save changes to Packaging '{0}'?".Localize(), DisplayName),
+				Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 		}
 

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using VirtoCommerce.Client.Globalization;
 
 namespace VirtoCommerce.ManagementClient.Main
 {
@@ -10,5 +7,10 @@ namespace VirtoCommerce.ManagementClient.Main
 		public const string MenuName = "MainMenu";
 		public const string HomeName = "MainHome";
 		public const string ModuleName = "Main";
+
+		public static string Localize(this string source)
+		{
+			return source.Localize(null, ModuleName);
+		}
 	}
 }

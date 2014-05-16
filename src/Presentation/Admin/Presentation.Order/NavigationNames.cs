@@ -17,5 +17,9 @@ namespace VirtoCommerce.ManagementClient.Order
 		{
 			return source.Localize(null, ModuleName);
 		}
+		public static string Localize(this string source, string key, string category)
+		{
+			return LocalizeExtension.Localize(source, key, category);
+		}
 	}
 }

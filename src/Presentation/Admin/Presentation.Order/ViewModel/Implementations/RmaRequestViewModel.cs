@@ -14,7 +14,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 	public class RmaRequestViewModel : ViewModelBase, IRmaRequestViewModel
 	{
 		#region Dependencies
-		
+
 		private readonly OrderViewModel _parentViewModel;
 		private readonly IAuthenticationContext _authContext;
 		private readonly IViewModelsFactory<ICreateRefundViewModel> _wizardVmFactory;
@@ -53,8 +53,8 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 		public RmaRequestViewModel(
 			IViewModelsFactory<ICreateRefundViewModel> wizardVmFactory,
 			IViewModelsFactory<IOrderViewModel> orderVmFactory,
-			IAuthenticationContext authContext, 
-			RmaRequest rmaRequestItem, 
+			IAuthenticationContext authContext,
+			RmaRequest rmaRequestItem,
 			OrderViewModel parentViewModel, OrderClient client)
 		{
 			_wizardVmFactory = wizardVmFactory;
@@ -98,7 +98,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 						_parentViewModel.ReQueryPayments();
 					};
 
-				var confirmation = new ConditionalConfirmation {Title = "Create Refund for RMA Request", Content = itemVM};
+				var confirmation = new ConditionalConfirmation { Title = "Create Refund for RMA Request".Localize(), Content = itemVM };
 				_parentViewModel.CommonOrderWizardDialogInteractionRequest.Raise(confirmation, x =>
 					{
 						//if (x.Confirmed)

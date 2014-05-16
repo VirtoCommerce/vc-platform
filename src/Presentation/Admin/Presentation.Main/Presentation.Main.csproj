@@ -120,6 +120,10 @@
       <Project>{bb168a74-0f1e-43be-a616-134902238b80}</Project>
       <Name>CommerceFoundation.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\Extensions\Client\CommerceClient\CommerceClient.csproj">
+      <Project>{9179b790-1f77-475f-b6ef-0b567d5ce8e0}</Project>
+      <Name>CommerceClient</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Presentation.AppConfig\Presentation.AppConfig.csproj">
       <Project>{9e551181-e3bf-450c-b9ab-1097c6caa3a8}</Project>
       <Name>Presentation.AppConfig</Name>

@@ -151,7 +151,7 @@ namespace VirtoCommerce.ManagementClient.Main.ViewModel
 			if (statItem != null && tile != null)
 			{
 				tile.TileNumber = statItem.Value;
-				tile.TileTitle = statItem.Name;
+				tile.TileTitle = statItem.Name.Localize();
 			}
 		}
 
@@ -240,7 +240,7 @@ namespace VirtoCommerce.ManagementClient.Main.ViewModel
 									webRequest.Headers.Add("Is64BitOperatingSystem", Environment.Is64BitOperatingSystem.ToString());
 									webRequest.Headers.Add("OSVersion", Environment.OSVersion.ToString());
 									webRequest.Headers.Add("SiteUrl", _loginViewModel.CurrentUser.BaseUrl);
-									
+
 									using (var reader = new XmlTextReader(webRequest.GetResponse().GetResponseStream()))
 									{
 										var feed = SyndicationFeed.Load(reader);

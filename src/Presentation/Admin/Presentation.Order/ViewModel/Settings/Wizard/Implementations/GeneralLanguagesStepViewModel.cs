@@ -8,6 +8,7 @@ using Omu.ValueInjecter;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Wizard;
+using VirtoCommerce.ManagementClient.Localization;
 using VirtoCommerce.ManagementClient.Order.Model.Settings;
 using VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Wizard.Interfaces;
 
@@ -80,7 +81,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Wizard.Impleme
 
 		public override string Description
 		{
-			get { return "Define Languages."; }
+			get { return "Define Languages.".Localize(); }
 		}
 
 		#endregion
@@ -90,7 +91,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Wizard.Impleme
 		private void RaiseLanguageAddInteractionRequest()
 		{
 			var item = new GeneralLanguage();
-			if (RaiseLanguageEditInteractionRequest(item, "Create Language"))
+			if (RaiseLanguageEditInteractionRequest(item, "Create Language".Localize()))
 			{
 				AddedItems.Add(item);
 				InnerItems.Add(item);
@@ -100,7 +101,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Wizard.Impleme
 		private void RaiseLanguageEditInteractionRequest(GeneralLanguage originalItem)
 		{
 			var item = new GeneralLanguage(originalItem);
-			if (RaiseLanguageEditInteractionRequest(item, "Edit Language"))
+			if (RaiseLanguageEditInteractionRequest(item, "Edit Language".Localize()))
 			{
 				// copy all values to original:
 				OnUIThread(() => originalItem.InjectFrom<CloneInjection>(item));
@@ -133,8 +134,8 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Wizard.Impleme
 		{
 			var confirmation = new ConditionalConfirmation
 			{
-				Title = "Remove confirmation",
-				Content = string.Format("Are you sure you want to remove Language '{0}'?", selectedItem.LanguageCode)
+				Title = "Remove confirmation".Localize(null, LocalizationScope.DefaultCategory),
+				Content = string.Format("Are you sure you want to remove Language '{0}'?".Localize(), selectedItem.LanguageCode)
 			};
 			LanguageCommonConfirmRequest.Raise(confirmation,
 				(x) =>

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
@@ -11,6 +10,7 @@ using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using VirtoCommerce.Foundation.Orders.Factories;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
+using VirtoCommerce.ManagementClient.Localization;
 using VirtoCommerce.ManagementClient.Order.ViewModel.Settings.TaxCategories.Interfaces;
 
 namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.TaxCategories.Implementations
@@ -31,7 +31,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.TaxCategories.
 			INavigationManager navManager, TaxCategory item)
 			: base(entityFactory, item, false)
 		{
-			ViewTitle = new ViewTitleBase { SubTitle = "SETTINGS", Title = "Tax Category" };
+			ViewTitle = new ViewTitleBase { SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory), Title = "Tax Category".Localize() };
 			_repositoryFactory = repositoryFactory;
 			_parent = parent;
 			_navManager = navManager;
@@ -108,11 +108,10 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.TaxCategories.
 		{
 			return new RefusedConfirmation
 			{
-				Content = "Save changes to Tax category '" + DisplayName + "'?",
-				Title = "Action confirmation"
+				Content = string.Format("Save changes to Tax category '{0}'?".Localize(), DisplayName),
+				Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 		}
-
 
 		protected override void LoadInnerItem()
 		{
@@ -155,7 +154,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.TaxCategories.
 
 		public override string Description
 		{
-			get { return "Enter Tax Category information."; }
+			get { return "Enter Tax Category information.".Localize(); }
 		}
 
 		#endregion

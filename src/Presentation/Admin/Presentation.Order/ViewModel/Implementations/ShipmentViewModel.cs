@@ -143,7 +143,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 		private void RaiseReleaseShipmentInteractionRequest()
 		{
 			CommonShipmentConfirmRequest.Raise(
-			  new ConditionalConfirmation { Content = "Are you sure you want to release this shipment?", Title = "Release shipment" },
+			  new ConditionalConfirmation { Content = "Are you sure you want to release this shipment?".Localize(), Title = "Release shipment".Localize() },
 			  (x) =>
 			  {
 				  if (x.Confirmed)
@@ -156,7 +156,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 		private void RaiseCompleteShipmentInteractionRequest()
 		{
 			CommonShipmentConfirmRequest.Raise(
-			  new ConditionalConfirmation { Content = "Are you sure you want to complete this shipment?", Title = "Complete shipment" },
+			  new ConditionalConfirmation { Content = "Are you sure you want to complete this shipment?".Localize(), Title = "Complete shipment".Localize() },
 			  (x) =>
 			  {
 				  if (x.Confirmed)
@@ -169,7 +169,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 		private void RaiseCancelShipmentInteractionRequest()
 		{
 			CommonShipmentConfirmRequest.Raise(
-				new ConditionalConfirmation { Content = "Are you sure you want to cancel this shipment?", Title = "Cancel shipment" },
+				new ConditionalConfirmation { Content = "Are you sure you want to cancel this shipment?".Localize(), Title = "Cancel shipment".Localize() },
 				(x) =>
 				{
 					if (x.Confirmed)
@@ -183,7 +183,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 		{
 			var itemVM = _wizardLineItemVmFactory.GetViewModelInstance();
 
-			var confirmation = new ConditionalConfirmation { Title = "Add new items", Content = itemVM };
+			var confirmation = new ConditionalConfirmation { Title = "Add new items".Localize(), Content = itemVM };
 
 			CommonShipmentConfirmRequest.Raise(confirmation, (x) =>
 			{
@@ -209,7 +209,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 					, new KeyValuePair<string, object>("sourceShipment", CurrentShipment)
 					, new KeyValuePair<string, object>("movingItem", movingItem));
 
-				var confirmation = new ConditionalConfirmation { Title = "Split shipment", Content = itemVM };
+				var confirmation = new ConditionalConfirmation { Title = "Split shipment".Localize(), Content = itemVM };
 
 				CommonShipmentConfirmRequest.Raise(confirmation, (x) =>
 				{
@@ -256,7 +256,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 			itemVM.Initialize(removingItem);
 
 			CommonShipmentConfirmRequest.Raise(
-				new ConditionalConfirmation { Title = "Item removal details", Content = itemVM },
+				new ConditionalConfirmation { Title = "Item removal details".Localize(), Content = itemVM },
 				(x) =>
 				{
 					if (x.Confirmed)
@@ -312,7 +312,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 				ParentViewModel.Recalculate();
 			}
 		}
-		
+
 		public void RaiseCanExecuteChanged()
 		{
 			ReleaseShipmentCommand.RaiseCanExecuteChanged();

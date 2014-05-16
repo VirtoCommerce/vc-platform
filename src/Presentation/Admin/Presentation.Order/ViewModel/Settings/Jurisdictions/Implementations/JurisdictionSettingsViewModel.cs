@@ -10,18 +10,19 @@ using VirtoCommerce.Foundation.Orders.Factories;
 using VirtoCommerce.Foundation.Orders.Model.Jurisdiction;
 using VirtoCommerce.Foundation.Orders.Repositories;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
+using VirtoCommerce.ManagementClient.Localization;
 using VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Jurisdictions.Interfaces;
 using VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Wizard.Interfaces;
 
 namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Jurisdictions.Implementations
 {
-    public class JurisdictionSettingsViewModel : HomeSettingsEditableViewModel<Jurisdiction>, IJurisdictionSettingsViewModel
-    {
-        #region Dependencies
+	public class JurisdictionSettingsViewModel : HomeSettingsEditableViewModel<Jurisdiction>, IJurisdictionSettingsViewModel
+	{
+		#region Dependencies
 
-        private readonly IRepositoryFactory<IOrderRepository> _repositoryFactory;
+		private readonly IRepositoryFactory<IOrderRepository> _repositoryFactory;
 
-        #endregion
+		#endregion
 
 		#region Commands
 		public DelegateCommand<Jurisdiction> ItemDuplicateCommand { get; private set; }
@@ -31,80 +32,80 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Jurisdictions.
 
 		public List<Country> AllCountries { get; private set; }
 
-        public JurisdictionSettingsViewModel(
-			IRepositoryFactory<IOrderRepository> repositoryFactory, 
-			IOrderEntityFactory entityFactory, 
-			IViewModelsFactory<ICreateJurisdictionViewModel> wizardVmFactory, 
-			IViewModelsFactory<IJurisdictionViewModel> editVmFactory, 
+		public JurisdictionSettingsViewModel(
+			IRepositoryFactory<IOrderRepository> repositoryFactory,
+			IOrderEntityFactory entityFactory,
+			IViewModelsFactory<ICreateJurisdictionViewModel> wizardVmFactory,
+			IViewModelsFactory<IJurisdictionViewModel> editVmFactory,
 			JurisdictionTypes jurisdictionType,
 			ICountryRepository countryRepository)
-            : base(entityFactory, wizardVmFactory, editVmFactory)
-        {
-            _jurisdictionType = jurisdictionType;
-            _repositoryFactory = repositoryFactory;
-	        AllCountries = countryRepository.Countries.ToList();
+			: base(entityFactory, wizardVmFactory, editVmFactory)
+		{
+			_jurisdictionType = jurisdictionType;
+			_repositoryFactory = repositoryFactory;
+			AllCountries = countryRepository.Countries.ToList();
 
 			ItemDuplicateCommand = new DelegateCommand<Jurisdiction>(RaiseItemDuplicateInteractionRequest);
-        }
+		}
 
-        #region HomeSettingsViewModel members
+		#region HomeSettingsViewModel members
 
-       protected override object LoadData()
-        {
-	       using (var repository = _repositoryFactory.GetRepositoryInstance())
-	       {
-		       if (repository != null)
-		       {
-			       var items =
-				       repository.Jurisdictions.Where(
-					       x => x.JurisdictionType == (int) JurisdictionTypes.All || x.JurisdictionType == (int) _jurisdictionType)
-				                 .OrderBy(j => j.DisplayName).ToList();
-			       return items;
-		       }
-	       }
-	       return null;
+		protected override object LoadData()
+		{
+			using (var repository = _repositoryFactory.GetRepositoryInstance())
+			{
+				if (repository != null)
+				{
+					var items =
+						repository.Jurisdictions.Where(
+							x => x.JurisdictionType == (int)JurisdictionTypes.All || x.JurisdictionType == (int)_jurisdictionType)
+								  .OrderBy(j => j.DisplayName).ToList();
+					return items;
+				}
+			}
+			return null;
 
-        }
+		}
 
-        public override void RefreshItem(object item)
-        {
-            var itemToUpdate = item as Jurisdiction;
-            if (itemToUpdate != null)
-            {
-                var itemFromInnerItem =
-                    Items.SingleOrDefault(j => j.JurisdictionId == itemToUpdate.JurisdictionId);
+		public override void RefreshItem(object item)
+		{
+			var itemToUpdate = item as Jurisdiction;
+			if (itemToUpdate != null)
+			{
+				var itemFromInnerItem =
+					Items.SingleOrDefault(j => j.JurisdictionId == itemToUpdate.JurisdictionId);
 
-                if (itemFromInnerItem != null)
-                {
-                    OnUIThread(() =>
-                    {
-                        itemFromInnerItem.InjectFrom<CloneInjection>(itemToUpdate);
-                        OnPropertyChanged("Items");
-                    });
-                }
-            }
-        }
+				if (itemFromInnerItem != null)
+				{
+					OnUIThread(() =>
+					{
+						itemFromInnerItem.InjectFrom<CloneInjection>(itemToUpdate);
+						OnPropertyChanged("Items");
+					});
+				}
+			}
+		}
 
-        #endregion
-		
-        #region HomeSettingsEditableViewModel members
+		#endregion
 
-        protected override void RaiseItemAddInteractionRequest()
-        {
-            var item = EntityFactory.CreateEntity<Jurisdiction>();
+		#region HomeSettingsEditableViewModel members
 
-            var vm = WizardVmFactory.GetViewModelInstance(
-                new KeyValuePair<string, object>("item", item),
-                new KeyValuePair<string, object>("jurisdictionType", _jurisdictionType)
-                );
+		protected override void RaiseItemAddInteractionRequest()
+		{
+			var item = EntityFactory.CreateEntity<Jurisdiction>();
 
-            var confirmation = new ConditionalConfirmation()
-            {
-                Title = "Create Jurisdiction",
-                Content = vm
-            };
+			var vm = WizardVmFactory.GetViewModelInstance(
+				new KeyValuePair<string, object>("item", item),
+				new KeyValuePair<string, object>("jurisdictionType", _jurisdictionType)
+				);
+
+			var confirmation = new ConditionalConfirmation()
+			{
+				Title = "Create Jurisdiction".Localize(),
+				Content = vm
+			};
 			ItemAdd(item, confirmation, _repositoryFactory.GetRepositoryInstance());
-        }
+		}
 
 		private void RaiseItemDuplicateInteractionRequest(Jurisdiction item)
 		{
@@ -119,28 +120,28 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Jurisdictions.
 			RefreshItemListCommand.Execute();
 		}
 
-        protected override void RaiseItemEditInteractionRequest(Jurisdiction item)
-        {
-            var itemVM = EditVmFactory.GetViewModelInstance(
-                new KeyValuePair<string, object>("item", item)
-                , new KeyValuePair<string, object>("jurisdictionType", _jurisdictionType),
-                new KeyValuePair<string, object>("parent",this));
+		protected override void RaiseItemEditInteractionRequest(Jurisdiction item)
+		{
+			var itemVM = EditVmFactory.GetViewModelInstance(
+				new KeyValuePair<string, object>("item", item)
+				, new KeyValuePair<string, object>("jurisdictionType", _jurisdictionType),
+				new KeyValuePair<string, object>("parent", this));
 
-            var openTracking = (IOpenTracking)itemVM;
-            openTracking.OpenItemCommand.Execute();
-        }
+			var openTracking = (IOpenTracking)itemVM;
+			openTracking.OpenItemCommand.Execute();
+		}
 
-        protected override void RaiseItemDeleteInteractionRequest(Jurisdiction item)
-        {
-            var confirmation = new ConditionalConfirmation
-            {
-                Content = string.Format("Are you sure you want to delete Jurisdiction '{0}'?", item.DisplayName),
-                Title = "Delete confirmation"
-            };
+		protected override void RaiseItemDeleteInteractionRequest(Jurisdiction item)
+		{
+			var confirmation = new ConditionalConfirmation
+			{
+				Content = string.Format("Are you sure you want to delete Jurisdiction '{0}'?".Localize(), item.DisplayName),
+				Title = "Delete confirmation".Localize(null, LocalizationScope.DefaultCategory)
+			};
 
 			ItemDelete(item, confirmation, _repositoryFactory.GetRepositoryInstance());
-        }
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

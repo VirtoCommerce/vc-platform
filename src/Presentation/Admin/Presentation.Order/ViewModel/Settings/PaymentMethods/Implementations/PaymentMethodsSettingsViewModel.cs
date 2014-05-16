@@ -66,7 +66,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.PaymentMethods
 				{
 					IdModule = VirtoCommerce.ManagementClient.Configuration.NavigationNames.MenuName,
 					IdTile = "PaymentMethodsSettings",
-					TileTitle = "PAYMENT METHODS",
+					TileTitle = "PAYMENT METHODS".Localize(),
 					Order = 2,
 					IdColorSchema = TileColorSchemas.Schema2,
 					NavigateCommand = new DelegateCommand(() => NavigateToTabPage(NavigationNames.PaymentsSettingsHomeName)),
@@ -139,7 +139,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.PaymentMethods
 				new KeyValuePair<string, object>("item", item));
 			var confirmation = new ConditionalConfirmation()
 			{
-				Title = "Create Payment Method",
+				Title = "Create Payment Method".Localize(),
 				Content = vm
 			};
 			ItemAdd(item, confirmation, _repositoryFactory.GetRepositoryInstance());
@@ -159,7 +159,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.PaymentMethods
 		{
 			var confirmation = new ConditionalConfirmation()
 				{
-					Content = string.Format("Are you sure you want to delete Payment method '{0}'?", item.Name)
+					Content = string.Format("Are you sure you want to delete Payment method '{0}'?".Localize(), item.Name)
 				};
 
 			using (var repository = _repositoryFactory.GetRepositoryInstance())
