@@ -43,7 +43,7 @@ namespace VirtoCommerce.ManagementClient.Reporting
                 var menuNavItem = new NavigationMenuItem(NavigationNames.MenuName)
                 {
                     NavigateCommand = new DelegateCommand<NavigationItem>((x) => navigationManager.Navigate(homeNavItem)),
-                    Caption = "Reports",
+					Caption = "Reports".Localize(),
                     ImageResourceKey = "Icon_Module_Reporting",
                     ItemBackground = Colors.LightSlateGray,
                     Order = 51

@@ -50,7 +50,7 @@ namespace VirtoCommerce.ManagementClient.Marketing
 				var menuNavItem = new NavigationMenuItem(NavigationNames.MenuName);
 				menuNavItem.NavigateCommand =
 					new DelegateCommand<NavigationItem>((x) => { navigationManager.Navigate(homeNavItem); });
-				menuNavItem.Caption = "Marketing";
+				menuNavItem.Caption = "Marketing".Localize();
 				menuNavItem.ImageResourceKey = "Icon_Module_Promotions";
 				menuNavItem.ItemBackground = Color.FromRgb(244, 189, 26);
 				menuNavItem.Order = 40;

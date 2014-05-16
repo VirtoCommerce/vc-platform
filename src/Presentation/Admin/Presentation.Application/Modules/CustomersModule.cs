@@ -65,7 +65,7 @@ namespace VirtoCommerce.ManagementClient.Customers
 				var menuNavItem = new NavigationMenuItem(NavigationNames.MenuName);
 				menuNavItem.NavigateCommand =
 					new DelegateCommand<NavigationItem>((x) => navigationManager.Navigate(homeNavItem));
-				menuNavItem.Caption = "Customer Service";
+				menuNavItem.Caption = "Customer Service".Localize();
 				menuNavItem.ImageResourceKey = "Icon_Module_Customers";
 				menuNavItem.ItemBackground = Color.FromRgb(248, 154, 45);
 				menuNavItem.Order = 52;
@@ -136,7 +136,7 @@ namespace VirtoCommerce.ManagementClient.Customers
 				_authContext.CheckPermission(PredefinedPermissions.SettingsCustomerInfo) ||
 				_authContext.CheckPermission(PredefinedPermissions.SettingsCustomerCaseTypes))
 			{
-				ConfigurationManager.Settings.Add(new ConfigurationSection { IdTab = NavigationNames.HomeName, Caption = "Customers", Order = 100, ViewModel = _container.Resolve<ICustomersMainSettingsViewModel>() });
+				ConfigurationManager.Settings.Add(new ConfigurationSection { IdTab = NavigationNames.HomeName, Caption = "Customers".Localize(), Order = 100, ViewModel = _container.Resolve<ICustomersMainSettingsViewModel>() });
 			}
 			var resources = new ResourceDictionary
 				{

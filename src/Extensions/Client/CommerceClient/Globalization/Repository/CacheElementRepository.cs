@@ -64,7 +64,7 @@ namespace VirtoCommerce.Client.Globalization.Repository
 			var element = _cachedElements[cachedKey] as Element;
 			if (element == null)
 			{
-				var statusElement = GetStatusElement(culture, true);
+				var statusElement = GetStatusElement(culture);
 				if (statusElement == null)
 				{
 					var preloadedCategoryLocalizations = _innerRepository.Elements().Where(it => it.Culture.Equals(culture, StringComparison.OrdinalIgnoreCase));
@@ -82,18 +82,7 @@ namespace VirtoCommerce.Client.Globalization.Repository
 
 		public DateTime GetStatusDate(string culture)
 		{
-			DateTime result;
-			var element = GetStatusElement(culture, false);
-			if (element == null)
-			{
-				result = DateTime.MinValue;
-			}
-			else
-			{
-				result = DateTime.Parse(element.Value);
-			}
-
-			return result;
+			return _innerRepository.GetStatusDate(culture);
 		}
 
 		public void SetStatusDate(string culture)
@@ -225,9 +214,9 @@ namespace VirtoCommerce.Client.Globalization.Repository
 		}
 		#endregion
 
-		private Element GetStatusElement(string culture, bool isForInnerCache)
+		private Element GetStatusElement(string culture)
 		{
-			var cachedKey = new ElementCacheKey(isForInnerCache ? StatusDateKeyInner : StatusDateKey, null, culture);
+			var cachedKey = new ElementCacheKey(StatusDateKeyInner, null, culture);
 			return _cachedElements[cachedKey] as Element;
 		}
 

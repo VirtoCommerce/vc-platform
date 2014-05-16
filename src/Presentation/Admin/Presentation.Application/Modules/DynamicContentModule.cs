@@ -91,7 +91,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent
 
             if (_authContext.CheckPermission(PredefinedPermissions.SettingsContent_Places))
             {
-                ConfigurationManager.Settings.Add(new ConfigurationSection { IdTab = NavigationNames.HomeNameDynamicContent, Caption = "Content places", Order = 60, ViewModel = _container.Resolve<IContentPlaceSettingsViewModel>() });
+				ConfigurationManager.Settings.Add(new ConfigurationSection { IdTab = NavigationNames.HomeNameDynamicContent, Caption = "Content places".Localize(), Order = 60, ViewModel = _container.Resolve<IContentPlaceSettingsViewModel>() });
             }
         }
 	}

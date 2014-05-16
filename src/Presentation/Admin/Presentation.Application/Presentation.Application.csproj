@@ -257,6 +257,11 @@
     <Compile Include="Modules\ReportingModule.cs" />
     <Compile Include="Modules\ReviewsModule.cs" />
     <Compile Include="Modules\FulfillmentModule.cs" />
+    <Compile Include="Properties\Resources.ja-JP.Designer.cs">
+      <DependentUpon>Resources.ja-JP.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="Shell.xaml.cs">
       <DependentUpon>Shell.xaml</DependentUpon>
     </Compile>
@@ -290,6 +295,11 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Properties\Resources.ja-JP.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.ja-JP.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>VirtoCommerce.Properties</CustomToolNamespace>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

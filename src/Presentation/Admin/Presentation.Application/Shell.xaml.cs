@@ -49,8 +49,8 @@ namespace VirtoCommerce.ManagementClient
 
 		public Shell()
 		{
-			InitializeComponent();
 			RestoreSizeAndCulture();
+			InitializeComponent();
 			Closing += OnClosing;
 		}
 

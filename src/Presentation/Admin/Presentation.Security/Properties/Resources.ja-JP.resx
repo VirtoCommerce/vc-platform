@@ -117,64 +117,38 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AllCustomersViewModel_DisplayName" xml:space="preserve">
-    <value>All Customers</value>
-    <comment>The display name of an AllCustomersViewModel object</comment>
+  <data name="Baseurl" xml:space="preserve">
+    <value>イ-Base url</value>
   </data>
-  <data name="CustomerViewModel_CustomerTypeOption_Company" xml:space="preserve">
-    <value>Company</value>
-    <comment>The option for when a customer is a company, not a person.</comment>
+  <data name="login" xml:space="preserve">
+    <value>イ-Log in</value>
   </data>
-  <data name="CustomerViewModel_CustomerTypeOption_NotSpecified" xml:space="preserve">
-    <value>(Not Specified)</value>
-    <comment>The "unselected" option for a customer's type.</comment>
+  <data name="loginAct" xml:space="preserve">
+    <value>イ-Log in</value>
   </data>
-  <data name="CustomerViewModel_CustomerTypeOption_Person" xml:space="preserve">
-    <value>Person</value>
-    <comment>The option for when a customer is a person, not a company.</comment>
+  <data name="Welcome" xml:space="preserve">
+    <value>イ- Welcome</value>
+    <comment>TextBlock.Text</comment>
   </data>
-  <data name="CustomerViewModel_DisplayName" xml:space="preserve">
-    <value>New Customer</value>
-    <comment>The display name of a new Customer object.</comment>
+  <data name="Base_url_should_begin_with__http_____or__https_____prefix" xml:space="preserve">
+    <value>イ-Base url should begin with "http://" or "https://" prefix</value>
   </data>
-  <data name="CustomerViewModel_Error_MissingCustomerType" xml:space="preserve">
-    <value>Customer type must be selected</value>
-    <comment>The validation error message returned if the CustomerType property has an invalid value.</comment>
+  <data name="Base_url_is_required" xml:space="preserve">
+    <value>イ-Base url is required</value>
   </data>
-  <data name="CustomerViewModel_Exception_CannotSave" xml:space="preserve">
-    <value>Cannot save an invalid customer.</value>
-    <comment>The exception message shown if you call Save on an invalid CustomerViewModel object.</comment>
+  <data name="Error_at_login__" xml:space="preserve">
+    <value>イ-Error at login. </value>
   </data>
-  <data name="Customer_Error_CompanyHasNoLastName" xml:space="preserve">
-    <value>Companies have no last name</value>
-    <comment>Error message for when a Customer is a company and the user gave it a last name.</comment>
+  <data name="Login_WatermarkText" xml:space="preserve">
+    <value>イ-Username:</value>
   </data>
-  <data name="Customer_Error_InvalidEmail" xml:space="preserve">
-    <value>E-mail address is invalid</value>
-    <comment>Error message for when a Customer has an invalid e-mail address.</comment>
+  <data name="Username_is_required" xml:space="preserve">
+    <value>イ-Username is required</value>
   </data>
-  <data name="Customer_Error_MissingEmail" xml:space="preserve">
-    <value>E-mail address is missing</value>
-    <comment>Error message for when a Customer is missing an e-mail address.</comment>
+  <data name="Password_is_required" xml:space="preserve">
+    <value>イ-Password is required</value>
   </data>
-  <data name="Customer_Error_MissingFirstName" xml:space="preserve">
-    <value>First name is missing</value>
-    <comment>Error message for when a Customer is missing a first name.</comment>
-  </data>
-  <data name="Customer_Error_MissingLastName" xml:space="preserve">
-    <value>Last name is missing</value>
-    <comment>Error message for when a Customer is missing a last name.</comment>
-  </data>
-  <data name="MainWindowViewModel_Command_CreateNewCustomer" xml:space="preserve">
-    <value>Create new customer</value>
-    <comment>Display name for the command that allows the user to create a new customer.</comment>
-  </data>
-  <data name="MainWindowViewModel_Command_ViewAllCustomers" xml:space="preserve">
-    <value>View all customers</value>
-    <comment>Display name for the command that shows all customers.</comment>
-  </data>
-  <data name="MainWindowViewModel_DisplayName" xml:space="preserve">
-    <value>Application Prototype</value>
-    <comment>Title of the main window</comment>
+  <data name="Login_or_password_is_incorrect" xml:space="preserve">
+    <value>イ-Login or password is incorrect</value>
   </data>
 </root>

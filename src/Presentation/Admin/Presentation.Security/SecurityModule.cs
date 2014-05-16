@@ -107,8 +107,8 @@ namespace VirtoCommerce.ManagementClient.Security
 			var moduleManager = _container.Resolve<IModuleManager>();
 
 			moduleManager.LoadModule("LocalizationModule"); // initialize it first
-			moduleManager.LoadModule("ConfigurationModule");
 			moduleManager.LoadModule("AppConfigModule");
+			moduleManager.LoadModule("ConfigurationModule");
 			moduleManager.LoadModule("AssetModule"); // AssetModule is loaded on demand as a dependency
 
 			moduleManager.LoadModule("OrderModule");

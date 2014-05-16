@@ -420,10 +420,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Properties\Strings.Designer.cs" />
     <Compile Include="RegionNames.cs" />
     <Compile Include="Infrastructure\BaseClases\ViewModelBase.cs" />
-    <EmbeddedResource Include="Properties\Strings.resx" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

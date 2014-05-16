@@ -14,6 +14,7 @@
                                   xmlns:View="clr-namespace:VirtoCommerce.ManagementClient.Main.View;assembly=VirtoCommerce.ManagementClient.Main"
                                   xmlns:presentationBehaviors="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Behaviors;assembly=VirtoCommerce.ManagementClient.Core"
                                   xmlns:implementations="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls.StatusIndicator.ViewModel;assembly=VirtoCommerce.ManagementClient.Core"
+                                  xmlns:Properties="clr-namespace:VirtoCommerce.Properties"
                                   x:Class="VirtoCommerce.ManagementClient.Shell"
                                   mc:Ignorable="d"
                                   ElementState.Mode="Persist"
@@ -104,7 +105,7 @@
 				</Grid.ColumnDefinitions>
 
 				<Button Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="auto" Background="Black" 
-					Height="30" Command="{Binding GoToDashboardCommand}" Padding="0" Margin="5,0" Cursor="Hand" ToolTip="Click to go to Dashboard"
+					Height="30" Command="{Binding GoToDashboardCommand}" Padding="0" Margin="5,0" Cursor="Hand" ToolTip="{x:Static Properties:Resources.Click_to_go_to_Dashboard}"
 					Style="{StaticResource Virto_Shell_ToolButton_Style}">
 
 					<DockPanel Width="120">
@@ -116,7 +117,7 @@
 				<Border Grid.Column="1" Height="20" Width="1" Background="White"/>
 
 				<Button Grid.Column="2" Command="{Binding ShowMainMenuCommand}" Style="{StaticResource Virto_Shell_ToolButton_Style}"
-					ToolTip="Show main menu" Cursor="Hand">
+					ToolTip="{x:Static Properties:Resources.Show_main_menu}" Cursor="Hand">
 					<DockPanel>
 						<TextBlock Text="" Margin="2,0"/>
 
@@ -150,7 +151,7 @@
 					<ColumnDefinition/>
 				</Grid.ColumnDefinitions>
 				<Button Style="{x:Null}" Grid.Column="1" Margin="0" VerticalAlignment="Center" Visibility="{Binding IsMessageShow, Converter={x:Static core_Converters:ToVisibilityConverter.Current}}"
-					Command="{Binding NavigateToCustomersCommand}" Cursor="Hand" ToolTip="Click to go to Customer service">
+					Command="{Binding NavigateToCustomersCommand}" Cursor="Hand" ToolTip="{x:Static Properties:Resources.Click_to_go_to_Customer_service}">
 					<Button.Template>
 						<ControlTemplate TargetType="{x:Type Button}">
 							<presentationControls:VectorImage ImageResource="{StaticResource Icon_Message}" Width="22" Height="22" VerticalAlignment="Center"/>
@@ -235,8 +236,8 @@
 
 		<!--bottom status bar-->
 		<DockPanel Grid.Row="2" Grid.ColumnSpan="2">
-			<TextBlock Text="{Binding AssemblyVersion, FallbackValue='', StringFormat=Version: \{0\}, TargetNullValue='', UpdateSourceTrigger=PropertyChanged}" Foreground="Gray"  Margin="10,0,20,3"/>
-			<TextBlock Text="{Binding BaseUrl, FallbackValue='', StringFormat=Connected to: \{0\}, TargetNullValue='', UpdateSourceTrigger=PropertyChanged}" Foreground="Gray" Margin="0,0,20,3"/>
+			<TextBlock Text="{Binding AssemblyVersion, FallbackValue='', TargetNullValue=''}" Foreground="Gray"  Margin="10,0,20,3"/>
+			<TextBlock Text="{Binding BaseUrl, FallbackValue='', TargetNullValue=''}" Foreground="Gray" Margin="0,0,20,3"/>
 			<StatusIndicator:StatusIndicator HorizontalAlignment="Right" Margin="30,0" />
 		</DockPanel>
 

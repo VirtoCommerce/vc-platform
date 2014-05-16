@@ -4,7 +4,9 @@ using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Modularity;
 using Microsoft.Practices.Unity;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
+using VirtoCommerce.ManagementClient.Localization;
 using VirtoCommerce.ManagementClient.Main.ViewModel;
 
 namespace VirtoCommerce.ManagementClient.Main
@@ -35,7 +37,7 @@ namespace VirtoCommerce.ManagementClient.Main
 			var menuNavItem = new NavigationMenuItem(NavigationNames.MenuName);
 			menuNavItem.NavigateCommand = new DelegateCommand<NavigationItem>((x) => { navigationManager.Navigate(homeNavItem); });
 			menuNavItem.Order = 1;
-			menuNavItem.Caption = "Dashboard";
+			menuNavItem.Caption = "Dashboard".Localize(null, LocalizationScope.DefaultCategory);
 			menuNavItem.ItemBackground = Color.FromRgb(141, 187, 29);
 			menuNavItem.ImageResourceKey = "Icon_Module_Home";
 

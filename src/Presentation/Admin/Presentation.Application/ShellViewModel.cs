@@ -99,7 +99,7 @@ namespace VirtoCommerce.ManagementClient
 			get
 			{
 				var assembly = Assembly.GetExecutingAssembly();
-				return String.Format(Resources._0___Build__1__, assembly.GetInformationalVersion(), assembly.GetFileVersion());
+				return String.Format(Resources.Version_0___Build__1__, assembly.GetInformationalVersion(), assembly.GetFileVersion());
 			}
 		}
 
@@ -226,7 +226,10 @@ namespace VirtoCommerce.ManagementClient
 		private string _baseUrl;
 		public string BaseUrl
 		{
-			get { return _baseUrl; }
+			get
+			{
+				return _baseUrl == null ? String.Empty : String.Format(Resources.Connected_to_, _baseUrl);
+			}
 			set
 			{
 				_baseUrl = value;

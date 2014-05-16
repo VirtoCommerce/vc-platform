@@ -117,4 +117,23 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="VirtoCommerce" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\VirtoCommerce.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Version_0___Build__1__" xml:space="preserve">
+    <value>イ-Version: {0} (Build {1})</value>
+  </data>
+  <data name="Connected_to_" xml:space="preserve">
+    <value>イ-Connected to: {0}</value>
+  </data>
+  <data name="Click_to_go_to_Dashboard" xml:space="preserve">
+    <value>イ-Click to go to Dashboard</value>
+  </data>
+  <data name="Click_to_go_to_Customer_service" xml:space="preserve">
+    <value>イ-Click to go to Customer service</value>
+  </data>
+  <data name="Show_main_menu" xml:space="preserve">
+    <value>イ-Show main menu</value>
+  </data>
 </root>
