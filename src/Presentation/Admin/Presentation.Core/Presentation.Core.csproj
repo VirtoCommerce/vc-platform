@@ -254,6 +254,7 @@
     <Compile Include="Infrastructure\Converters\TextCaseConverter.cs" />
     <Compile Include="Infrastructure\Converters\ToVisibilityConverter.cs" />
     <Compile Include="Infrastructure\CollectionChangeGeneral.cs" />
+    <Compile Include="Infrastructure\Converters\UtcToLocalDateTimeConverter.cs" />
     <Compile Include="Infrastructure\CronExpressionDescriptor\CasingTypeEnum.cs" />
     <Compile Include="Infrastructure\CronExpressionDescriptor\DescriptionTypeEnum.cs" />
     <Compile Include="Infrastructure\CronExpressionDescriptor\ExpressionDescriptor.cs" />

@@ -4,6 +4,7 @@
      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
      mc:Ignorable="d" xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.AppConfig"
+	 xmlns:core_Converters="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Converters;assembly=VirtoCommerce.ManagementClient.Core"
      LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
     <base:ViewBase.Resources>
         <ResourceDictionary>
@@ -11,7 +12,9 @@
                 <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/DialogViewTheme/VirtoCommerceDialogTheme.xaml" />
                 <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/HomeViewTheme/VirtoCommerceHomeTheme.xaml" />
             </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
+
+			<core_Converters:UtcToLocalDateTimeConverter x:Key="UtcToLocalDateTimeConverter" />
+		</ResourceDictionary>
     </base:ViewBase.Resources>
     <i:Interaction.Triggers>
         <!--<prism:InteractionRequestTrigger SourceObject="{Binding Path=AddParameterConfirmationRequest}">
@@ -44,8 +47,8 @@
         </Grid>
         <DataGrid Grid.Row="2" x:Name="History" ItemsSource="{Binding History}">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="{Loc 'StartTime'}" Binding="{Binding StartTime}" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}" />
-                <DataGridTextColumn Header="{Loc 'EndTime'}" Binding="{Binding EndTime}" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}" />
+				<DataGridTextColumn Header="{Loc 'StartTime'}" Binding="{Binding StartTime, Converter={StaticResource UtcToLocalDateTimeConverter}}" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}" />
+				<DataGridTextColumn Header="{Loc 'EndTime'}" Binding="{Binding EndTime, Converter={StaticResource UtcToLocalDateTimeConverter}}" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}" />
                 <DataGridTextColumn Header="{Loc 'Instance'}" Binding="{Binding Instance}" Width="*"
                      LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}" />
                 <DataGridTextColumn Header="{Loc 'MultipleInstance'}" Binding="{Binding MultipleInstance}"
