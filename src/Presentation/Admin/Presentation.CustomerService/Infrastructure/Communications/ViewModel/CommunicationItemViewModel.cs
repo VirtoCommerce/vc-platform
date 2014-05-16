@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
-using System.ComponentModel;
-using VirtoCommerce.Foundation.Customers.Model;
-using Microsoft.Practices.Prism.Commands;
 using System.Collections.ObjectModel;
-using System.Waf.Applications.Services;
+using System.ComponentModel;
 using System.IO;
+using System.Linq;
+using System.Waf.Applications.Services;
+using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+using VirtoCommerce.Client.Globalization;
+using VirtoCommerce.Foundation.Customers.Model;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Customers.Infrastructure.Communications.Model;
-using VirtoCommerce.ManagementClient.Customers.ViewModel;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.Customers.Infrastructure.Communications
 {
@@ -43,7 +43,7 @@ namespace VirtoCommerce.ManagementClient.Customers.Infrastructure.Communications
 			if (attachment != null && ConfirmRequest != null)
 			{
 				ConfirmRequest.Raise(
-				new ConditionalConfirmation { Content = "Remove?", Title = "Remove..." },
+				new ConditionalConfirmation { Content = "Remove?".Localize(), Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory) },
 				x =>
 				{
 					if (x.Confirmed)
@@ -130,7 +130,7 @@ namespace VirtoCommerce.ManagementClient.Customers.Infrastructure.Communications
 		public CommunicationItemViewModel()
 		{
 			Created = DateTime.UtcNow;
-            //LastModified = Created;
+			//LastModified = Created;
 			ItemCommands = new List<CommunicationItemComands>();
 			Attachments = new ObservableCollection<CommunicationAttachment>();
 			Attachments.CollectionChanged += (o, e) => ModifiedParentViewModel();
@@ -153,7 +153,7 @@ namespace VirtoCommerce.ManagementClient.Customers.Infrastructure.Communications
 		}
 
 
-        public CommunicationItemType Type { set; get; }
+		public CommunicationItemType Type { set; get; }
 
 		private DateTime _created;
 		public DateTime Created
@@ -338,8 +338,8 @@ namespace VirtoCommerce.ManagementClient.Customers.Infrastructure.Communications
 				{
 					_state = value;
 					OnPropertyChanged();
-                    RaiseCanExecuteChanged();
-                }
+					RaiseCanExecuteChanged();
+				}
 			}
 		}
 
@@ -357,25 +357,25 @@ namespace VirtoCommerce.ManagementClient.Customers.Infrastructure.Communications
 			{
 				_isEditing = value;
 				OnPropertyChanged();
-                RaiseCanExecuteChanged();
+				RaiseCanExecuteChanged();
 			}
 		}
 
-        private bool _isSelected;
-        public bool IsSelected
-        {
-            get
-            {
+		private bool _isSelected;
+		public bool IsSelected
+		{
+			get
+			{
 
-                return _isSelected;
-            }
-            set
-            {
-                _isSelected = value;
-                OnPropertyChanged();
-                RaiseCanExecuteChanged();
-            }
-        }
+				return _isSelected;
+			}
+			set
+			{
+				_isSelected = value;
+				OnPropertyChanged();
+				RaiseCanExecuteChanged();
+			}
+		}
 
 		private ICollectionView _attacmentsCollection;
 		public ICollectionView AttacmentsCollection
@@ -403,22 +403,22 @@ namespace VirtoCommerce.ManagementClient.Customers.Infrastructure.Communications
 
 		#endregion
 
-        public ObservableCollection<CommunicationAttachment> Attachments { set; get; }
+		public ObservableCollection<CommunicationAttachment> Attachments { set; get; }
 
-        public List<CommunicationAttachment> GetAttacmentsByState(CommunicationItemState state)
-        {
-            return Attachments != null ? Attachments.Where(x => x.State == state).ToList() : new List<CommunicationAttachment>();
-        }
+		public List<CommunicationAttachment> GetAttacmentsByState(CommunicationItemState state)
+		{
+			return Attachments != null ? Attachments.Where(x => x.State == state).ToList() : new List<CommunicationAttachment>();
+		}
 
-        // Refresh CanExecute for each  CommunicationItem's command.
-        public void RaiseCanExecuteChanged()
-        {
-            foreach (CommunicationItemComands cmd in ItemCommands)
-            {
-                cmd.Command.RaiseCanExecuteChanged();
-                cmd.IsVisible = cmd.SetVisible != null? cmd.SetVisible(): true;
-            }
-        }
+		// Refresh CanExecute for each  CommunicationItem's command.
+		public void RaiseCanExecuteChanged()
+		{
+			foreach (CommunicationItemComands cmd in ItemCommands)
+			{
+				cmd.Command.RaiseCanExecuteChanged();
+				cmd.IsVisible = cmd.SetVisible != null ? cmd.SetVisible() : true;
+			}
+		}
 
 		public event EventHandler CommunicationItemPropertyChanged;
 

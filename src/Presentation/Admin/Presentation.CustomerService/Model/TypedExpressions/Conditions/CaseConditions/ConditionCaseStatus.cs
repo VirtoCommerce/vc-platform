@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
-using VirtoCommerce.ManagementClient.Core.Controls;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.Foundation.Customers.Services;
 using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.ManagementClient.Core.Controls;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using linq = System.Linq.Expressions;
 
 namespace VirtoCommerce.ManagementClient.Customers.Model
@@ -13,9 +13,9 @@ namespace VirtoCommerce.ManagementClient.Customers.Model
 	{
 		private UserInputElement _caseStatusEl;
 		public ConditionCaseStatus(IExpressionViewModel expressionViewModel)
-            : base("Case status", expressionViewModel)
+			: base("Case status".Localize(), expressionViewModel)
 		{
-            WithLabel("Case status is ");
+			WithLabel("Case status is ".Localize());
 			_caseStatusEl = WithDict(new string[] { "Open", "Pending", "Closed" }, "Open") as UserInputElement;
 		}
 
@@ -27,7 +27,7 @@ namespace VirtoCommerce.ManagementClient.Customers.Model
 			}
 		}
 
-        public linq.Expression<Func<IEvaluationContext, bool>> GetExpression()
+		public linq.Expression<Func<IEvaluationContext, bool>> GetExpression()
 		{
 			linq.ParameterExpression paramX = linq.Expression.Parameter(typeof(IEvaluationContext), "x");
 			var castOp = linq.Expression.MakeUnary(linq.ExpressionType.Convert, paramX, typeof(CaseAlertEvaluationContext));

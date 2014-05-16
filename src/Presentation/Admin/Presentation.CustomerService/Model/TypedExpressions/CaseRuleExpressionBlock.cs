@@ -1,55 +1,57 @@
 ﻿using System;
-using VirtoCommerce.ManagementClient.Core.Controls;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.ManagementClient.Core.Controls;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseRules.Interfaces;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.Customers.Model
 {
-    [Serializable]
-    public class CaseRuleExpressionBlock : TypedExpressionElementBase, IExpressionCaseAlertsAdaptor
-    {
-        private ConditionAndOrBlock _ConditionBlock;
-        public ConditionAndOrBlock ConditionBlock
-        {
-            get
-            {
-                return _ConditionBlock;
-            }
-            private set
-            {
-                _ConditionBlock = value;
-                Children.Add(_ConditionBlock);
-            }
-        }
+	[Serializable]
+	public class CaseRuleExpressionBlock : TypedExpressionElementBase, IExpressionCaseAlertsAdaptor
+	{
+		private ConditionAndOrBlock _ConditionBlock;
+		public ConditionAndOrBlock ConditionBlock
+		{
+			get
+			{
+				return _ConditionBlock;
+			}
+			private set
+			{
+				_ConditionBlock = value;
+				Children.Add(_ConditionBlock);
+			}
+		}
 
-        private ActionBlock _ActionBlock;
-        public ActionBlock ActionBlock
-        {
-            get
-            {
-                return _ActionBlock;
-            }
-            private set
-            {
-                _ActionBlock = value;
-                Children.Add(_ActionBlock);
-            }
-        }
+		private ActionBlock _ActionBlock;
+		public ActionBlock ActionBlock
+		{
+			get
+			{
+				return _ActionBlock;
+			}
+			private set
+			{
+				_ActionBlock = value;
+				Children.Add(_ActionBlock);
+			}
+		}
 
-        public CaseRuleExpressionBlock(ICaseRuleViewModel caseRuleViewModel)
-            : base(null, caseRuleViewModel)
-        {
-            ConditionBlock = new ConditionAndOrBlock("If", caseRuleViewModel, "of these conditions are true");
-            ActionBlock = new ActionBlock("apply these alerts", caseRuleViewModel);
+		public CaseRuleExpressionBlock(ICaseRuleViewModel caseRuleViewModel)
+			: base(null, caseRuleViewModel)
+		{
+			ConditionBlock = new ConditionAndOrBlock("If".Localize(), caseRuleViewModel, "of these conditions are true".Localize());
+			ActionBlock = new ActionBlock("apply these alerts".Localize(), caseRuleViewModel);
 
-            InitializeAvailableExpressions();
-        }
+			InitializeAvailableExpressions();
+		}
 
-        private void InitializeAvailableExpressions()
-        {
-            var availableElements = new Func<CompositeElement>[] {
+		private void InitializeAvailableExpressions()
+		{
+			var availableElements = new Func<CompositeElement>[] {
 				//()=> {
 				//	var group = new CompositeElement { DisplayName = "Customer conditions" };
 				//	group.AvailableChildrenGetters.AddRange(new Func<ExpressionElement>[] {
@@ -59,7 +61,7 @@ namespace VirtoCommerce.ManagementClient.Customers.Model
 				//},
 
 				()=> {
-					var group = new CompositeElement { DisplayName = "Case conditions" };
+					var group = new CompositeElement { DisplayName = "Case conditions".Localize() };
 					group.AvailableChildrenGetters.AddRange(new Func<ExpressionElement>[] {
 						()=> new ConditionCaseStatus(this.ExpressionViewModel)
 					});
@@ -75,35 +77,35 @@ namespace VirtoCommerce.ManagementClient.Customers.Model
 				//}
             };
 
-            ConditionBlock.WithAvailabeChildren(availableElements);
-            ConditionBlock.NewChildLabel = "+ add condition";
+			ConditionBlock.WithAvailabeChildren(availableElements);
+			ConditionBlock.NewChildLabel = "+ add condition".Localize(null, LocalizationScope.DefaultCategory);
 
-            availableElements = new Func<CompositeElement>[] {
+			availableElements = new Func<CompositeElement>[] {
                 ()=> new ActionXslInlineAlert(this.ExpressionViewModel),
 				()=> new ActionHtmlInlineAlert(this.ExpressionViewModel),
                 ()=> new ActionRedirectAlert(this.ExpressionViewModel)	
             };
 
-            ActionBlock.WithAvailabeChildren(availableElements);
-            ActionBlock.NewChildLabel = "+ add effect";
-        }
+			ActionBlock.WithAvailabeChildren(availableElements);
+			ActionBlock.NewChildLabel = "+ add effect".Localize(null, LocalizationScope.DefaultCategory);
+		}
 
-        public override void InitializeAfterDeserialized(IExpressionViewModel CaseRuleViewModel)
-        {
-            base.InitializeAfterDeserialized(CaseRuleViewModel);
-            InitializeAvailableExpressions();
+		public override void InitializeAfterDeserialized(IExpressionViewModel CaseRuleViewModel)
+		{
+			base.InitializeAfterDeserialized(CaseRuleViewModel);
+			InitializeAvailableExpressions();
 
-        }
+		}
 
-        public System.Linq.Expressions.Expression<Func<IEvaluationContext, bool>> GetExpression()
-        {
-            var retVal = ConditionBlock.GetExpression();
-            return retVal;
-        }
+		public System.Linq.Expressions.Expression<Func<IEvaluationContext, bool>> GetExpression()
+		{
+			var retVal = ConditionBlock.GetExpression();
+			return retVal;
+		}
 
 		public virtual CaseAlert[] GetCaseAlerts()
 		{
 			return ActionBlock.GetCaseAlerts();
 		}
-    }
+	}
 }

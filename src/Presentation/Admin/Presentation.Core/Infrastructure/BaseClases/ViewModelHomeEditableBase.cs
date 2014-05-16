@@ -5,9 +5,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Common;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Wizard;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.Core.Infrastructure
 {
@@ -59,7 +61,7 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure
 					}
 					catch (Exception ex)
 					{
-						ShowErrorDialog(ex, string.Format("An error occurred when trying to save"));
+						ShowErrorDialog(ex, string.Format("An error occurred when trying to save".Localize(null, LocalizationScope.DefaultCategory)));
 					}
 					finally
 					{
@@ -92,7 +94,7 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure
 					}
 					catch (Exception ex)
 					{
-						ShowErrorDialog(ex, string.Format("An error occurred when trying to save"));
+						ShowErrorDialog(ex, string.Format("An error occurred when trying to save".Localize(null, LocalizationScope.DefaultCategory)));
 					}
 					finally
 					{

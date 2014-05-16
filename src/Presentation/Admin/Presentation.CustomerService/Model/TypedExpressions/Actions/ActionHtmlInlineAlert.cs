@@ -1,20 +1,19 @@
 ﻿using System;
-using VirtoCommerce.ManagementClient.Core.Controls;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
 
 namespace VirtoCommerce.ManagementClient.Customers.Model
 {
 	[Serializable]
-    public class ActionHtmlInlineAlert : TypedExpressionElementBase, IExpressionCaseAlertsAdaptor
+	public class ActionHtmlInlineAlert : TypedExpressionElementBase, IExpressionCaseAlertsAdaptor
 	{
 		private MultiLineTextBoxInputElement _htmlTemplateEl;
 		public ActionHtmlInlineAlert(IExpressionViewModel expressionViewModel)
-            : base("Raise Html based alert", expressionViewModel)
+			: base("Raise Html based alert".Localize(), expressionViewModel)
 		{
-            WithLabel("Html based alert: ");
-			_htmlTemplateEl = WithElement(new MultiLineTextBoxInputElement(expressionViewModel, "Html", "Enter Html", defaultHtml)) as MultiLineTextBoxInputElement;
+			WithLabel("Html based alert: ".Localize());
+			_htmlTemplateEl = WithElement(new MultiLineTextBoxInputElement(expressionViewModel, "Html".Localize(), "Enter Html".Localize(), defaultHtml)) as MultiLineTextBoxInputElement;
 		}
 
 		public CaseAlert[] GetCaseAlerts()

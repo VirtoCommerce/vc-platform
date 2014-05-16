@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Customers.Factories;
 using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Foundation.Customers.Repositories;
@@ -26,6 +27,7 @@ using VirtoCommerce.ManagementClient.Customers.Infrastructure.Generators;
 using VirtoCommerce.ManagementClient.Customers.Model.Enumerations;
 using VirtoCommerce.ManagementClient.Customers.ViewModel.Helpers;
 using VirtoCommerce.ManagementClient.Customers.ViewModel.Interfaces;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 {
@@ -111,8 +113,8 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 
 			ViewTitle = new ViewTitleBase
 				{
-					Title = string.Format("Case #{0}", InnerItem.Number),
-					SubTitle = "CUSTOMER SERVICE"
+					Title = string.Format("Case #{0}".Localize(), InnerItem.Number),
+					SubTitle = "CUSTOMER SERVICE".Localize()
 				};
 
 
@@ -354,14 +356,14 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 			if (IsModified)
 			{
 
-				var confirmation = new RefusedConfirmation { Title = "Action confirmation" };
+				var confirmation = new RefusedConfirmation { Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory) };
 				if (CaseActionState == CaseActionState.None)
 				{
-					confirmation.Content = "Save changes to contact '" + CurrentCustomer.FullName + "'?";
+					confirmation.Content = string.Format("Save changes to contact '{0}'?".Localize(), CurrentCustomer.FullName);
 				}
 				else
 				{
-					confirmation.Content = "Save changes to case '" + InnerItem.Number + "'?";
+					confirmation.Content = string.Format("Save changes to case '{0}'?".Localize(), InnerItem.Number);
 				}
 
 				CancelConfirmRequest.Raise(confirmation,
@@ -381,8 +383,8 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 								   {
 									   CommonInfoRequest.Raise(new ConditionalConfirmation
 										   {
-											   Title = "Action notification",
-											   Content = "Can't be saved, because not all the fields are filled"
+											   Title = "Warning".Localize(null, LocalizationScope.DefaultCategory),
+											   Content = "Can't be saved, because not all the fields are filled".Localize()
 										   }, y => { });
 								   }
 							   }
@@ -519,8 +521,8 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 			{
 				var confirmation = new ConditionalConfirmation()
 					{
-						Title = "Delete action confirmation",
-						Content = "Are you sure you want to delete contact '" + CurrentCustomer.FullName + "'?"
+						Title = "Delete confirmation".Localize(null, LocalizationScope.DefaultCategory),
+						Content = string.Format("Are you sure you want to delete contact '{0}'?".Localize(), CurrentCustomer.FullName)
 					};
 
 				CommonInfoRequest.Raise(confirmation,
@@ -562,8 +564,8 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 			{
 				var confirmation = new ConditionalConfirmation()
 				{
-					Title = "Delete action confirmation",
-					Content = "Are you sure you want to delete case '" + InnerItem.Number + "'?"
+					Title = "Delete confirmation".Localize(null, LocalizationScope.DefaultCategory),
+					Content = string.Format("Are you sure you want to delete case '{0}'?".Localize(), InnerItem.Number)
 				};
 
 				CommonInfoRequest.Raise(confirmation,
@@ -727,7 +729,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 					SelectedDetailViewOption = DetailViewOptions.CaseOptions;
 					if (ViewTitle != null)
 					{
-						ViewTitle.Title = string.Format("Case #{0}", InnerItem.Number);
+						ViewTitle.Title = string.Format("Case #{0}".Localize(), InnerItem.Number);
 					}
 				}
 			}
@@ -1112,7 +1114,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 			}
 			catch (Exception ex)
 			{
-				ShowErrorDialog(ex, string.Format("An error occurred when trying to save changes: {0}", ex.InnerException.Message));
+				ShowErrorDialog(ex, string.Format("An error occurred when trying to save changes: {0}".Localize(null, LocalizationScope.DefaultCategory), ex.InnerException.Message));
 			}
 			finally
 			{
@@ -1343,7 +1345,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 																						new Contact
 																							()));
 
-			var confirmation = new ConditionalConfirmation { Title = "Enter customer details", Content = itemVm };
+			var confirmation = new ConditionalConfirmation { Title = "Enter customer details".Localize(), Content = itemVm };
 
 			if (CreateCustomerInteractionRequest != null)
 			{
@@ -1466,7 +1468,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 			}
 			catch (Exception ex)
 			{
-				ShowErrorDialog(ex, string.Format("An error occurred when trying to refresh contact notes: {0}", ex.InnerException.Message));
+				ShowErrorDialog(ex, string.Format("An error occurred when trying to refresh contact notes: {0}".Localize(), ex.InnerException.Message));
 			}
 		}
 
@@ -1513,7 +1515,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 			}
 			catch (Exception ex)
 			{
-				ShowErrorDialog(ex, string.Format("An error occurred when trying to refresh case notes: {0}", ex.InnerException.Message));
+				ShowErrorDialog(ex, string.Format("An error occurred when trying to refresh case notes: {0}".Localize(), ex.InnerException.Message));
 			}
 		}
 

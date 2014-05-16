@@ -1,17 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Data;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
-using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using Omu.ValueInjecter;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Foundation.Customers.Repositories;
+using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
-using Omu.ValueInjecter;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseLabels.Interfaces;
+using VirtoCommerce.ManagementClient.Localization;
 
 
 namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseLabels.Implementations
@@ -56,7 +58,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseLabels
 			CommonConfirmRequest.Raise(
 				new ConditionalConfirmation(itemVM.InnerItem.Validate)
 				{
-					Title = "Add Label",
+					Title = "Add Label".Localize(),
 					Content = itemVM
 				},
 				(x) =>
@@ -87,7 +89,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseLabels
 			CommonConfirmRequest.Raise(
 				new ConditionalConfirmation(itemVM.InnerItem.Validate)
 				{
-					Title = "Edit Label",
+					Title = "Edit Label".Localize(),
 					Content = itemVM
 				},
 				(x) =>
@@ -132,8 +134,8 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseLabels
 			CommonConfirmRequest.Raise(
 				new ConditionalConfirmation
 				{
-					Title = "Delete confirmation",
-					Content = string.Format("Are you sure you want to delete Label '{0}'?", selectedLabel.Name)
+					Title = "Delete confirmation".Localize(null, LocalizationScope.DefaultCategory),
+					Content = string.Format("Are you sure you want to delete Label '{0}'?".Localize(), selectedLabel.Name)
 				},
 				(x) =>
 				{
@@ -202,7 +204,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseLabels
 
 		public void InitializeForOpen()
 		{
-			using(var _repository = _repositoryFactory.GetRepositoryInstance())
+			using (var _repository = _repositoryFactory.GetRepositoryInstance())
 			{
 				OnUIThread(async () =>
 					{

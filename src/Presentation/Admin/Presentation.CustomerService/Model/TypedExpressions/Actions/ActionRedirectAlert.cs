@@ -1,8 +1,8 @@
 ﻿using System;
-using VirtoCommerce.ManagementClient.Core.Controls;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.ManagementClient.Core.Controls;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
 
 namespace VirtoCommerce.ManagementClient.Customers.Model
 {
@@ -10,10 +10,10 @@ namespace VirtoCommerce.ManagementClient.Customers.Model
 	public class ActionRedirectAlert : TypedExpressionElementBase, IExpressionCaseAlertsAdaptor
 	{
 		private UserInputElement _redirectEl;
-        public ActionRedirectAlert(IExpressionViewModel expressionViewModel)
-            : base("Raise redirect alert", expressionViewModel)
+		public ActionRedirectAlert(IExpressionViewModel expressionViewModel)
+			: base("Raise redirect alert".Localize(), expressionViewModel)
 		{
-            WithLabel("Raise redirect alert\r\n  (use {CaseId}, {ContactId} as parameters)");
+			WithLabel("Raise redirect alert\r\n  (use {CaseId}, {ContactId} as parameters)".Localize());
 			_redirectEl = WithUserInput<string>(string.Empty) as UserInputElement;
 			_redirectEl.DefaultValue = @"...?customerid={ContactId}&caseid={CaseId}";
 		}

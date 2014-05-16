@@ -13,6 +13,7 @@ using System.Windows.Data;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Omu.ValueInjecter;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Customers.Factories;
 using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Foundation.Customers.Repositories;
@@ -29,6 +30,7 @@ using VirtoCommerce.ManagementClient.Customers.Dialogs.ViewModel.Implementations
 using VirtoCommerce.ManagementClient.Customers.Dialogs.ViewModel.Interfaces;
 using VirtoCommerce.ManagementClient.Customers.Infrastructure.Controls;
 using VirtoCommerce.ManagementClient.Customers.Model.Enumerations;
+using VirtoCommerce.ManagementClient.Localization;
 using VirtoCommerce.ManagementClient.Security.ViewModel.Interfaces;
 
 namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
@@ -429,7 +431,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 
 				var itemVm = _addressVmFactory.GetViewModelInstance(parameters.ToArray());
 
-				var confirmation = new ConditionalConfirmation { Title = "Enter address details", Content = itemVm };
+				var confirmation = new ConditionalConfirmation { Title = "Enter address details".Localize(), Content = itemVm };
 
 				AddAddressPhoneEmailInteractioNRequest.Raise(confirmation,
 					(x) =>
@@ -453,7 +455,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 			{
 				var itemVm = _phoneVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", new Phone()));
 
-				var confirmation = new ConditionalConfirmation { Title = "Enter phone details", Content = itemVm };
+				var confirmation = new ConditionalConfirmation { Title = "Enter phone details".Localize(), Content = itemVm };
 
 				AddAddressPhoneEmailInteractioNRequest.Raise(confirmation,
 					(x) =>
@@ -477,7 +479,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 			{
 				var itemVm = _emailVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", new Email()));
 
-				var confirmation = new ConditionalConfirmation { Title = "Enter email details", Content = itemVm };
+				var confirmation = new ConditionalConfirmation { Title = "Enter email details".Localize(), Content = itemVm };
 
 				AddAddressPhoneEmailInteractioNRequest.Raise(confirmation,
 					(x) =>
@@ -516,7 +518,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 
 				var itemVm = _addressVmFactory.GetViewModelInstance(parameters.ToArray());
 
-				var confirmation = new ConditionalConfirmation { Title = "Enter address details", Content = itemVm };
+				var confirmation = new ConditionalConfirmation { Title = "Enter address details".Localize(), Content = itemVm };
 
 				AddAddressPhoneEmailInteractioNRequest.Raise(confirmation,
 					(x) =>
@@ -549,7 +551,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 
 				var itemVm = _phoneVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", phoneToEdit));
 
-				var confirmation = new ConditionalConfirmation { Title = "Enter phone details", Content = itemVm };
+				var confirmation = new ConditionalConfirmation { Title = "Enter phone details".Localize(), Content = itemVm };
 
 				AddAddressPhoneEmailInteractioNRequest.Raise(confirmation,
 					(x) =>
@@ -585,7 +587,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 
 				var itemVm = _emailVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", emailToEdit));
 
-				var confirmation = new ConditionalConfirmation { Title = "Enter email details", Content = itemVm };
+				var confirmation = new ConditionalConfirmation { Title = "Enter email details".Localize(), Content = itemVm };
 
 				AddAddressPhoneEmailInteractioNRequest.Raise(confirmation,
 					(x) =>
@@ -618,7 +620,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 					_wizardUserVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("operationType",
 						CreateUserDialogOperationType.CreateLogin));
 
-				var confirmation = new ConditionalConfirmation { Title = "Enter login details", Content = itemVm };
+				var confirmation = new ConditionalConfirmation { Title = "Enter login details".Localize(), Content = itemVm };
 
 				SelectStoreRequest.Raise(confirmation,
 					async (x) =>
@@ -655,7 +657,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 						CreateUserDialogOperationType
 							.ResetPassword));
 
-				var confirmation = new ConditionalConfirmation { Title = "Enter new password", Content = itemVm };
+				var confirmation = new ConditionalConfirmation { Title = "Enter new password".Localize(), Content = itemVm };
 
 				SelectStoreRequest.Raise(confirmation,
 					async (x) =>
@@ -693,8 +695,8 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 			{
 				var confirmation = new ConditionalConfirmation()
 					{
-						Title = "Suspend access confirmation",
-						Content = string.Format("Suspend access for user '{0}'?", InnerItem.FullName)
+						Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory),
+						Content = string.Format("Suspend access for user '{0}'?".Localize(), InnerItem.FullName)
 					};
 
 				CommonConfirmRequest.Raise(confirmation,
@@ -723,8 +725,8 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 			{
 				var confirmation = new ConditionalConfirmation()
 				{
-					Title = "Restore access confirmation",
-					Content = string.Format("Restore access for user '{0}'?", InnerItem.FullName)
+					Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory),
+					Content = string.Format("Restore access for user '{0}'?".Localize(), InnerItem.FullName)
 				};
 
 				CommonConfirmRequest.Raise(confirmation,
@@ -739,7 +741,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 							}
 							catch (Exception ex)
 							{
-								ShowErrorDialog(ex, string.Format("An error occurred when trying to restore access: {0}", ex.InnerException.Message));
+								ShowErrorDialog(ex, string.Format("An error occurred when trying to restore access: {0}".Localize(), ex.InnerException.Message));
 							}
 						}
 					});
@@ -808,8 +810,8 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 					{
 						NotificationInteractionRequest.Raise(new ConditionalConfirmation()
 						{
-							Title = "Error file selection",
-							Content = "Image must be less than 20 kilobytes"
+							Title = "Error file selection".Localize(),
+							Content = "Image must be less than 20 kilobytes".Localize()
 						},
 							x =>
 							{

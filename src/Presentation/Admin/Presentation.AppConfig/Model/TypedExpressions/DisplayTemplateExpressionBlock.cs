@@ -1,8 +1,10 @@
 ﻿using System;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.ManagementClient.Core.Controls;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using VirtoCommerce.ManagementClient.Localization;
 using linq = System.Linq.Expressions;
 
 namespace VirtoCommerce.ManagementClient.AppConfig.Model
@@ -59,7 +61,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.Model
 				},
             };
 			ConditionBlock.WithAvailabeChildren(availableElements);
-			ConditionBlock.NewChildLabel = "+ add condition".Localize();
+			ConditionBlock.NewChildLabel = "+ add condition".Localize(null, LocalizationScope.DefaultCategory);
 		}
 
 		public void ResetChildren()
@@ -97,7 +99,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.Model
 					break;
 			}
 
-			ConditionBlock.NewChildLabel = "+ add condition".Localize();
+			ConditionBlock.NewChildLabel = "+ add condition".Localize(null, LocalizationScope.DefaultCategory);
 		}
 
 		public override void InitializeAfterDeserialized(IExpressionViewModel parentViewModel)

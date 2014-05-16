@@ -4,15 +4,17 @@ using System.Windows;
 using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
 using Omu.ValueInjecter;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
-using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Customers.Factories;
 using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Foundation.Customers.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
 using VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseTemplates.Interfaces;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseTemplates.Implementations
 {
@@ -31,8 +33,8 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseTempla
 
 		public CaseTemplateViewModel(
 			IViewModelsFactory<ICaseTemplatePropertyViewModel> templatePropertyVmFactory,
-			IRepositoryFactory<ICustomerRepository> repositoryFactory, 
-			ICustomerEntityFactory entityFactory, 
+			IRepositoryFactory<ICustomerRepository> repositoryFactory,
+			ICustomerEntityFactory entityFactory,
 			IHomeSettingsViewModel parent,
 			INavigationManager navManager, CaseTemplate item)
 			: base(entityFactory, item, false)
@@ -40,7 +42,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseTempla
 			ViewTitle = new ViewTitleBase()
 				{
 					Title = (item != null && !string.IsNullOrEmpty(item.Name)) ? item.Name : "",
-					SubTitle = "CASE TYPES"
+					SubTitle = "CASE TYPES".Localize()
 				};
 			_templatePropertyVmFactory = templatePropertyVmFactory;
 			_repositoryFactory = repositoryFactory;
@@ -55,8 +57,8 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseTempla
 
 		protected CaseTemplateViewModel(
 			IViewModelsFactory<ICaseTemplatePropertyViewModel> templatePropertyVmFactory,
-			IRepositoryFactory<ICustomerRepository> repositoryFactory, 
-			ICustomerEntityFactory entityFactory, 
+			IRepositoryFactory<ICustomerRepository> repositoryFactory,
+			ICustomerEntityFactory entityFactory,
 			CaseTemplate item)
 			: base(entityFactory, item, true)
 		{
@@ -117,8 +119,8 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseTempla
 		{
 			return new RefusedConfirmation
 			{
-				Content = "Save changes to Case channel '" + DisplayName + "'?",
-				Title = "Action confirmation"
+				Content = string.Format("Save changes to Case channel '{0}'?".Localize(), DisplayName),
+				Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 		}
 
@@ -174,7 +176,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseTempla
 
 		public override string Description
 		{
-			get { return "Enter Case channels details"; }
+			get { return "Enter Case channels details".Localize(); }
 		}
 
 
@@ -194,7 +196,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseTempla
 		private void RaiseItemAddInteractionRequest()
 		{
 			var item = new CaseTemplateProperty();
-			if (RaiseItemEditInteractionRequest(item, "Create Case Channels Property"))
+			if (RaiseItemEditInteractionRequest(item, "Create Case Channels Property".Localize()))
 			{
 				item.CaseTemplateId = InnerItem.CaseTemplateId;
 				InnerItem.CaseTemplateProperties.Add(item);
@@ -204,7 +206,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseTempla
 		private void RaiseItemEditInteractionRequest(CaseTemplateProperty originalItem)
 		{
 			var item = originalItem.DeepClone(EntityFactory as IKnownSerializationTypes);
-			if (RaiseItemEditInteractionRequest(item, "Edit Case Channels Property"))
+			if (RaiseItemEditInteractionRequest(item, "Edit Case Channels Property".Localize()))
 			{
 				// copy all values to original:
 				OnUIThread(() => originalItem.InjectFrom<CloneInjection>(item));
@@ -216,7 +218,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseTempla
 			var result = false;
 
 			var itemVM = _templatePropertyVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", item));
-			var confirmation = new ConditionalConfirmation(item.Validate) {Title = title, Content = itemVM};
+			var confirmation = new ConditionalConfirmation(item.Validate) { Title = title, Content = itemVM };
 
 			CommonConfirmRequest.Raise(confirmation, (x) =>
 			{
@@ -230,8 +232,8 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseTempla
 		{
 			var confirmation = new ConditionalConfirmation
 			{
-				Content = string.Format("Are you sure you want to delete Case Channels Property '{0}'?", item.Name),
-				Title = "Delete confirmation"
+				Content = string.Format("Are you sure you want to delete Case Channels Property '{0}'?".Localize(), item.Name),
+				Title = "Delete confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 
 			CommonConfirmRequest.Raise(confirmation, (x) =>

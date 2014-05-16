@@ -5,15 +5,17 @@ using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Omu.ValueInjecter;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
-using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Customers.Factories;
 using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Foundation.Customers.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
 using VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CasePropertySets.Interfaces;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CasePropertySets.Implementations
 {
@@ -36,7 +38,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseProper
 		{
 			ViewTitle = new ViewTitleBase()
 				{
-					SubTitle = "INFO",
+					SubTitle = "INFO".Localize(),
 					Title = (item != null && !string.IsNullOrEmpty(item.Name)) ? item.Name : ""
 				};
 			_casePropertyVmFactory = casePropertyVmFactory;
@@ -103,8 +105,8 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseProper
 		{
 			return new RefusedConfirmation
 			{
-				Content = "Save changes to Case property set '" + DisplayName + "'?",
-				Title = "Action confirmation"
+				Content = string.Format("Save changes to Case property set '{0}'?".Localize(), DisplayName),
+				Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 		}
 
@@ -145,7 +147,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseProper
 		private void RaiseItemAddInteractionRequest()
 		{
 			var item = new CaseProperty();
-			if (RaiseItemEditInteractionRequest(item, "Create Info Value"))
+			if (RaiseItemEditInteractionRequest(item, "Create Info Value".Localize()))
 			{
 				InnerItem.CaseProperties.Add(item);
 				IsModified = true;
@@ -155,7 +157,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseProper
 		private void RaiseItemEditInteractionRequest(CaseProperty originalItem)
 		{
 			var item = originalItem.DeepClone(EntityFactory as IKnownSerializationTypes);
-			if (RaiseItemEditInteractionRequest(item, "Edit Info Value"))
+			if (RaiseItemEditInteractionRequest(item, "Edit Info Value".Localize()))
 			{
 				// copy all values to original:
 				OnUIThread(() => originalItem.InjectFrom<CloneInjection>(item));
@@ -166,9 +168,9 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseProper
 		private bool RaiseItemEditInteractionRequest(CaseProperty item, string title)
 		{
 			var result = false;
-			
+
 			var itemVM = _casePropertyVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", item));
-			var confirmation = new ConditionalConfirmation(item.Validate) {Title = title, Content = itemVM};
+			var confirmation = new ConditionalConfirmation(item.Validate) { Title = title, Content = itemVM };
 
 			CommonConfirmRequest.Raise(confirmation, (x) =>
 			{
@@ -182,8 +184,8 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseProper
 		{
 			var confirmation = new ConditionalConfirmation
 			{
-				Content = string.Format("Are you sure you want to delete Info Value '{0}'?", item.Name),
-				Title = "Delete confirmation"
+				Content = string.Format("Are you sure you want to delete Info Value '{0}'?".Localize(), item.Name),
+				Title = "Delete confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 
 			CommonConfirmRequest.Raise(confirmation, (x) =>
