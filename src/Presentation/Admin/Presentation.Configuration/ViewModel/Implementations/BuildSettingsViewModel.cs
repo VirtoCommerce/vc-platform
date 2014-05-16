@@ -77,7 +77,7 @@ namespace VirtoCommerce.ManagementClient.Configuration.ViewModel.Implementations
 		{
 			var confirmation = new ConditionalConfirmation
 			{
-				Content = string.Format(Properties.Resources.Are_you_sure_you_want_to_rebuild_index, item.DocumentType),
+				Content = string.Format("Are you sure you want to rebuild index \'{0}\'?".Localize(), item.DocumentType),
 				Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 
