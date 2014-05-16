@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
-using VirtoCommerce.Foundation.Stores.Model;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Orders.Repositories;
-using VirtoCommerce.Foundation.Stores.Repositories;
 using VirtoCommerce.Foundation.Stores.Factories;
+using VirtoCommerce.Foundation.Stores.Model;
+using VirtoCommerce.Foundation.Stores.Repositories;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Wizard;
 using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Implementations;
 using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Wizard.Interfaces;
@@ -17,7 +17,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 		#region Dependencies
 
 		private readonly IRepositoryFactory<IPaymentMethodRepository> _paymentRepositoryFactory;
-	    private readonly IRepositoryFactory<IStoreRepository> _repositoryFactory; 
+		private readonly IRepositoryFactory<IStoreRepository> _repositoryFactory;
 
 		#endregion
 
@@ -27,7 +27,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 			: base(repositoryFactory, entityFactory, item)
 		{
 			_paymentRepositoryFactory = paymentRepositoryFactory;
-		    _repositoryFactory = repositoryFactory;
+			_repositoryFactory = repositoryFactory;
 		}
 
 
@@ -62,7 +62,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 		{
 			get
 			{
-				return "Enter payments information.";
+				return "Enter payments information.".Localize();
 			}
 		}
 		#endregion
@@ -77,12 +77,12 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 					var gateway = EntityFactory.CreateEntity<StorePaymentGateway>();
 					gateway.PaymentGateway = x.Name;
 					gateway.StoreId = InnerItem.StoreId;
-					return new StorePaymentGatewayViewModel(gateway, x.Name,_repositoryFactory.GetRepositoryInstance());
+					return new StorePaymentGatewayViewModel(gateway, x.Name, _repositoryFactory.GetRepositoryInstance());
 				}).ToList();
 				OnPropertyChanged("AvailableStorePaymentGateways");
 			}
 
-			AvailableStoreCardTypes = GetAvailableStoreCardTypes(this,_repositoryFactory.GetRepositoryInstance());
+			AvailableStoreCardTypes = GetAvailableStoreCardTypes(this, _repositoryFactory.GetRepositoryInstance());
 			OnPropertyChanged("AvailableStoreCardTypes");
 
 			// setting "CVV Code Validation"
@@ -101,44 +101,44 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 			OnPropertyChanged("SettingEnableCVV");
 		}
 
-	    private static List<StoreCardTypeViewModel> GetAvailableStoreCardTypes(StoreViewModel parentVM,
-	        IStoreRepository repository)
-	    {
-	        var result = new List<StoreCardTypeViewModel>();
-	        result.Add(
-	            new StoreCardTypeViewModel(new StoreCardType() {StoreId = parentVM.InnerItem.StoreId, CardType = "Visa"},
-	                repository));
-	        result.Add(
-	            new StoreCardTypeViewModel(
-	                new StoreCardType() {StoreId = parentVM.InnerItem.StoreId, CardType = "MasterCard"}, repository));
-	        result.Add(
-	            new StoreCardTypeViewModel(new StoreCardType() {StoreId = parentVM.InnerItem.StoreId, CardType = "Amex"},
-	                repository));
-	        return result;
-	    }
+		private static List<StoreCardTypeViewModel> GetAvailableStoreCardTypes(StoreViewModel parentVM,
+			IStoreRepository repository)
+		{
+			var result = new List<StoreCardTypeViewModel>();
+			result.Add(
+				new StoreCardTypeViewModel(new StoreCardType() { StoreId = parentVM.InnerItem.StoreId, CardType = "Visa" },
+					repository));
+			result.Add(
+				new StoreCardTypeViewModel(
+					new StoreCardType() { StoreId = parentVM.InnerItem.StoreId, CardType = "MasterCard" }, repository));
+			result.Add(
+				new StoreCardTypeViewModel(new StoreCardType() { StoreId = parentVM.InnerItem.StoreId, CardType = "Amex" },
+					repository));
+			return result;
+		}
 
-	    #region PAYMENTS tab
+		#region PAYMENTS tab
 		public class StorePaymentGatewayViewModel : ViewModelBase
 		{
-		    public StorePaymentGatewayViewModel(StorePaymentGateway item, string displayName, IStoreRepository repository)
-		    {
-		        InnerItem = item;
-		        _DisplayName = displayName;
+			public StorePaymentGatewayViewModel(StorePaymentGateway item, string displayName, IStoreRepository repository)
+			{
+				InnerItem = item;
+				_DisplayName = displayName;
 
-		        var storeGateways = repository.StorePaymentGateways.Where(
-		            stc => stc.PaymentGateway == InnerItem.PaymentGateway && stc.StoreId == InnerItem.StoreId)
-		            .SingleOrDefault();
-		        if (storeGateways != null)
-		        {
-		            IsChecked = true;
-		        }
-		        else
-		        {
-		            IsChecked = false;
-		        }
-		    }
+				var storeGateways = repository.StorePaymentGateways.Where(
+					stc => stc.PaymentGateway == InnerItem.PaymentGateway && stc.StoreId == InnerItem.StoreId)
+					.SingleOrDefault();
+				if (storeGateways != null)
+				{
+					IsChecked = true;
+				}
+				else
+				{
+					IsChecked = false;
+				}
+			}
 
-		    public StorePaymentGateway InnerItem { get; private set; }
+			public StorePaymentGateway InnerItem { get; private set; }
 
 			private string _DisplayName;
 			public override string DisplayName
@@ -164,23 +164,23 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 		public class StoreCardTypeViewModel : ViewModelBase
 		{
 
-		    public StoreCardTypeViewModel(StoreCardType item, IStoreRepository repository)
-		    {
-		        InnerItem = item;
+			public StoreCardTypeViewModel(StoreCardType item, IStoreRepository repository)
+			{
+				InnerItem = item;
 
-		        var cardTypeFromDb = repository.StoreCardTypes.Where(
-		            stc => stc.CardType == InnerItem.CardType && stc.StoreId == InnerItem.StoreId).SingleOrDefault();
-		        if (cardTypeFromDb != null)
-		        {
-		            IsChecked = true;
-		        }
-		        else
-		        {
-		            IsChecked = false;
-		        }
-		    }
+				var cardTypeFromDb = repository.StoreCardTypes.Where(
+					stc => stc.CardType == InnerItem.CardType && stc.StoreId == InnerItem.StoreId).SingleOrDefault();
+				if (cardTypeFromDb != null)
+				{
+					IsChecked = true;
+				}
+				else
+				{
+					IsChecked = false;
+				}
+			}
 
-		    public StoreCardType InnerItem { get; private set; }
+			public StoreCardType InnerItem { get; private set; }
 
 			private bool _isChecked;
 			public bool IsChecked
@@ -209,8 +209,8 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 
 		private void UpdateCardTypesList()
 		{
-		    if (AvailableStoreCardTypes == null)
-		        return;
+			if (AvailableStoreCardTypes == null)
+				return;
 
 			var itemsToAdd = AvailableStoreCardTypes.Where(x => x.IsChecked == true).ToList();
 			foreach (var itemToAdd in itemsToAdd)
@@ -222,8 +222,8 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 
 		private void UpdateStoreGatewaysList()
 		{
-		    if (AvailableStorePaymentGateways == null)
-		        return;
+			if (AvailableStorePaymentGateways == null)
+				return;
 
 			var itemsToAdd = AvailableStorePaymentGateways.Where(x => x.IsChecked == true).ToList();
 			foreach (var itemToAdd in itemsToAdd)

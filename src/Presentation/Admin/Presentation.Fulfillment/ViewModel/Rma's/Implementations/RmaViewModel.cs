@@ -1,20 +1,21 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
-using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
-using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Rmas.Interfaces;
-using vm = VirtoCommerce.ManagementClient.Fulfillment.Model;
+using VirtoCommerce.Client.Globalization;
+using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
-using VirtoCommerce.Foundation.Orders.Repositories;
 using VirtoCommerce.Foundation.Orders.Model;
-using System.Threading.Tasks;
-using VirtoCommerce.Foundation.AppConfig.Repositories;
+using VirtoCommerce.Foundation.Orders.Repositories;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.EventAggregation;
+using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
+using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Rmas.Interfaces;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Rmas.Implementations
 {
@@ -44,7 +45,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Rmas.Implementati
 
 			ViewTitle = new ViewTitleBase
 			{
-				Title = "Rma request",
+				Title = "Rma request".Localize(),
 				SubTitle = item != null
 				? (string.IsNullOrEmpty(item.AuthorizationCode) ? item.Order.TrackingNumber : item.AuthorizationCode)
 				: ""
@@ -174,8 +175,8 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Rmas.Implementati
 		{
 			return new RefusedConfirmation
 			{
-				Content = "Save changes to rma request '" + DisplayName + "'?",
-				Title = "Action confirmation"
+				Content = string.Format("Save changes to rma request '{0}'?".Localize(), DisplayName),
+				Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 		}
 		#endregion

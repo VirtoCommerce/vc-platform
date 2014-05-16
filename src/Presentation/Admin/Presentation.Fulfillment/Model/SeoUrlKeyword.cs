@@ -62,11 +62,11 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.Model
 				{
 					_isValid = !(Keyword.IndexOfAny(InvalidKeywordCharacters.ToCharArray()) > -1);
 					if (!_isValid)
-						SetError("Keyword", string.Format(@"Keyword can't contain {0} characters", InvalidKeywordCharacters), true);
+						SetError("Keyword", string.Format(@"Keyword can't contain {0} characters".Localize(), InvalidKeywordCharacters), true);
 				}
 			}
 			else
-				SetError("Keyword", @"Keyword is required", true);
+				SetError("Keyword", "Keyword is required".Localize(), true);
 
 			if (_isValid)
 				ClearError("Keyword");

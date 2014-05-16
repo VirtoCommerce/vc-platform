@@ -7,11 +7,11 @@ using System.Linq;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Interfaces;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using VirtoCommerce.Foundation.Inventories.Repositories;
 using VirtoCommerce.Foundation.Stores.Model;
 using VirtoCommerce.Foundation.Stores.Repositories;
-using VirtoCommerce.Foundation.Inventories.Repositories;
+using VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Interfaces;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
 
 
 namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel
@@ -24,8 +24,8 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel
 		public Foundation.Inventories.Model.Inventory CurrentItem { get; set; }
 		public List<FulfillmentCenter> AvailableFulfillments { get; private set; }
 		private FulfillmentCenter _selectedFulfillmentCenter;
-		public FulfillmentCenter SelectedFulfillmentCenter 
-		{ 
+		public FulfillmentCenter SelectedFulfillmentCenter
+		{
 			get { return _selectedFulfillmentCenter; }
 			set
 			{
@@ -39,9 +39,9 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel
 		private readonly IRepositoryFactory<IInventoryRepository> _inventoryRepositoryFactory;
 		private readonly IViewModelsFactory<ISearchItemViewModel> _searchItemVmFactory;
 
-		
+
 		public ReceiveInventoryViewModel(
-			IRepositoryFactory<IFulfillmentCenterRepository> fulfillmentRepositoryFactory, 
+			IRepositoryFactory<IFulfillmentCenterRepository> fulfillmentRepositoryFactory,
 			IRepositoryFactory<IInventoryRepository> inventoryRepositoryFactory,
 			IViewModelsFactory<ISearchItemViewModel> searchItemVmFactory
 		)
@@ -49,7 +49,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel
 			_fulfillmentRepositoryFactory = fulfillmentRepositoryFactory;
 			_inventoryRepositoryFactory = inventoryRepositoryFactory;
 			_searchItemVmFactory = searchItemVmFactory;
-			
+
 			Initialize();
 
 			CommonConfirmRequest = new InteractionRequest<Confirmation>();
@@ -59,19 +59,19 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel
 		private void DoSearchSku(Foundation.Inventories.Model.Inventory sku)
 		{
 			// rp: Inventory should contain not only products but variations...
-            var searchItemVm =
+			var searchItemVm =
 				_searchItemVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("catalogInfo", string.Empty), new KeyValuePair<string, object>("searchType", "Product..."));
-				
+
 			CommonConfirmRequest.Raise(new ConditionalConfirmation
 			{
 				Content = searchItemVm,
-				Title = "Search for item sku"
+				Title = "Search for item sku".Localize()
 			},
 			x =>
 			{
-				if (x.Confirmed && searchItemVm.SelectedItem!=null)
+				if (x.Confirmed && searchItemVm.SelectedItem != null)
 				{
-					CurrentItem.Sku = searchItemVm.SelectedItem.ItemId; 
+					CurrentItem.Sku = searchItemVm.SelectedItem.ItemId;
 					OnSpecifiedPropertyChanged("CurrentItem");
 				}
 			});
@@ -95,7 +95,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel
 			{
 				AvailableFulfillments = fulfillmentRepository.FulfillmentCenters.OrderBy(x => x.Name).ToList();
 			}
-			
+
 
 			foreach (var item in InventoryItems)
 			{
@@ -133,13 +133,13 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel
 					using (var inventoryRepository = _inventoryRepositoryFactory.GetRepositoryInstance())
 					{
 						var sku = inventoryRepository.Inventories.ToList().
-						                                      SingleOrDefault(item => item.Sku == CurrentItem.Sku &&
-						                                                              item.FulfillmentCenterId ==
-						                                                              SelectedFulfillmentCenter.FulfillmentCenterId);
+															  SingleOrDefault(item => item.Sku == CurrentItem.Sku &&
+																					  item.FulfillmentCenterId ==
+																					  SelectedFulfillmentCenter.FulfillmentCenterId);
 						if (sku == null)
 							retVal = true;
 					}
-					
+
 				}
 				return retVal;
 			}

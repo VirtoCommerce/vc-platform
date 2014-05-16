@@ -1,35 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
-using PdfRpt.Core.Contracts;
-using PdfRpt.FluentInterface;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Collections.ObjectModel;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using PdfRpt.Core.Contracts;
 using PdfRpt.Core.Helper;
+using PdfRpt.FluentInterface;
 using VirtoCommerce.Foundation.Orders.Model;
 using vm = VirtoCommerce.ManagementClient.Fulfillment.Model;
 
 
 namespace VirtoCommerce.ManagementClient.Fulfillment.Report
 {
-    public class PicklistPdfReport
-    {
-        public IPdfReportData CreatePdfReport(ObservableCollection<Shipment> source, string Agent)
-        {
+	public class PicklistPdfReport
+	{
+		public IPdfReportData CreatePdfReport(ObservableCollection<Shipment> source, string Agent)
+		{
 			var items = new List<vm.ShipmentItem>();
 			source.SelectMany(x => x.ShipmentItems).ToList().ForEach(item => items.Add(new vm.ShipmentItem(item)));
 
-            var tempPath = Path.GetTempPath();
-            var documentPath = string.Format("{0}{1}{2}.pdf", tempPath, tempPath.EndsWith(Path.DirectorySeparatorChar.ToString()) ? string.Empty : Path.DirectorySeparatorChar.ToString(), Guid.NewGuid().ToString("N"));
+			var tempPath = Path.GetTempPath();
+			var documentPath = string.Format("{0}{1}{2}.pdf", tempPath, tempPath.EndsWith(Path.DirectorySeparatorChar.ToString()) ? string.Empty : Path.DirectorySeparatorChar.ToString(), Guid.NewGuid().ToString("N"));
 
 			return new PdfReport().DocumentPreferences(doc =>
 			{
 				doc.RunDirection(PdfRunDirection.LeftToRight);
 				doc.Orientation(PageOrientation.Portrait);
 				doc.PageSize(PdfPageSize.A4);
-				doc.DocumentMetadata(new DocumentMetadata { Author = Agent, Application = "VirtoCommerce", Keywords = "Picklist", Subject = "Picklist", Title = "Picklist" });
+				doc.DocumentMetadata(new DocumentMetadata { Author = Agent, Application = "VirtoCommerce", Keywords = "Picklist", Subject = "Picklist".Localize(), Title = "Picklist".Localize() });
 				doc.Compression(new CompressionSettings
 				{
 					EnableCompression = true,
@@ -118,12 +118,12 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.Report
 				 });
 
 			 })
-			.MainTableEvents(events => events.DataSourceIsEmpty(message: "There is no data available to display."))
-			 //.Export(export => export.ToExcel())
-            .Generate(data => data.AsPdfFile(documentPath));
-        }
-    }
-	
+			.MainTableEvents(events => events.DataSourceIsEmpty(message: "There is no data available to display.".Localize()))
+				//.Export(export => export.ToExcel())
+			.Generate(data => data.AsPdfFile(documentPath));
+		}
+	}
+
 	public class GroupingHeaders : IPageHeader
 	{
 		public IPdfFont PdfRptFont { set; get; }
@@ -136,7 +136,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.Report
 			table.AddSimpleRow(
 				(cellData, cellProperties) =>
 				{
-					cellData.Value = "Shipment:";
+					cellData.Value = "Shipment:".Localize();
 					cellProperties.PdfFont = PdfRptFont;
 					cellProperties.PdfFontStyle = DocumentFontStyle.Bold;
 					cellProperties.HorizontalAlignment = HorizontalAlignment.Left;
@@ -158,7 +158,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.Report
 			table.AddSimpleRow(
 			   (cellData, cellProperties) =>
 			   {
-				   cellData.Value = "Picklist";
+				   cellData.Value = "Picklist".Localize();
 				   cellProperties.PdfFont = PdfRptFont;
 				   cellProperties.PdfFontStyle = DocumentFontStyle.Bold;
 				   cellProperties.HorizontalAlignment = HorizontalAlignment.Left;

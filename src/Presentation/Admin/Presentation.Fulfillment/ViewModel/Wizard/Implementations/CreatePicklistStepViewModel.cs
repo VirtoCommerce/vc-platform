@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Practices.Prism.Commands;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Orders.Repositories;
@@ -13,6 +14,7 @@ using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
 using VirtoCommerce.ManagementClient.Fulfillment.Model;
 using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Wizard.Interfaces;
+using VirtoCommerce.ManagementClient.Localization;
 using Picklist = VirtoCommerce.Foundation.Orders.Model.Fulfillment.Picklist;
 
 namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Wizard.Implementations
@@ -61,7 +63,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Wizard.Implementa
 
 			using (var repository = _orderRepositoryFactory.GetRepositoryInstance())
 			{
-				Shipments.Where(x => x.IsSelected).ToList().ForEach(s => 
+				Shipments.Where(x => x.IsSelected).ToList().ForEach(s =>
 				{
 					var shipment = repository.Shipments.Where(o => o.ShipmentId == s.ShipmentId).First();
 					shipment.PicklistId = InnerItem.PicklistId;
@@ -152,8 +154,8 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Wizard.Implementa
 		{
 			var value = new RefusedConfirmation
 				{
-					Content = "Create picklist '" + DisplayName + "'?",
-					Title = "Action confirmation"
+					Content = string.Format("Create picklist '{0}'?".Localize(), DisplayName),
+					Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory)
 				};
 			return value;
 		}
@@ -200,7 +202,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Wizard.Implementa
 		{
 			get
 			{
-				return string.Format("Enter picklist details");
+				return string.Format("Enter picklist details.".Localize());
 			}
 		}
 
@@ -211,7 +213,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Wizard.Implementa
 		public DelegateCommand<Shipment> UpdateSelectedItemsChangedCommand { get; private set; }
 
 		#endregion
-		
+
 		#region Fields and Properties : Shipments, AvailableFulfillments, SelectedFulfillmentCenter
 		private ObservableCollection<Shipment> _shipments;
 		public ObservableCollection<Shipment> Shipments

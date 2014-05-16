@@ -110,7 +110,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Inventory.Impleme
 		{
 			_receiveInventoryVm.SelectedFulfillmentCenter = SearchFilterFulfillment;
 
-			var confirmation = new ConditionalConfirmation { Title = "Receive inventory", Content = _receiveInventoryVm };
+			var confirmation = new ConditionalConfirmation { Title = "Receive inventory".Localize(), Content = _receiveInventoryVm };
 
 			CommonConfirmRequest.Raise(confirmation, x =>
 			{
@@ -310,7 +310,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Inventory.Impleme
 					IdModule = Catalog.NavigationNames.MenuName,
 					IdTile = "Fulfillments",
 					TileIconSource = "Icon_Module_Fulfillment",
-					TileTitle = "FULFILLMENT",
+					TileTitle = "FULFILLMENT".Localize(),
 					Order = 6,
 					IdColorSchema = TileColorSchemas.Schema3,
 					NavigateCommand = new DelegateCommand(NavigateHome)

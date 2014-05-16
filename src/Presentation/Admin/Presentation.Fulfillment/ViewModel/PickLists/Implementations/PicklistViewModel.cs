@@ -4,16 +4,18 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
+using VirtoCommerce.Client.Globalization;
+using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
+using VirtoCommerce.Foundation.Orders.Model.Fulfillment;
+using VirtoCommerce.Foundation.Orders.Repositories;
 using VirtoCommerce.Foundation.Stores.Repositories;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
-using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.Foundation.Orders.Model.Fulfillment;
-using VirtoCommerce.Foundation.Orders.Repositories;
-using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.PickLists.Interfaces;
-using vm = VirtoCommerce.ManagementClient.Fulfillment.Model;
 using VirtoCommerce.ManagementClient.Fulfillment.Report;
+using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.PickLists.Interfaces;
+using VirtoCommerce.ManagementClient.Localization;
+using vm = VirtoCommerce.ManagementClient.Fulfillment.Model;
 
 namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.PickLists.Implementations
 {
@@ -46,9 +48,9 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.PickLists.Impleme
 
 			ViewTitle = new ViewTitleBase
 				{
-					Title = "Picklist",
+					Title = "Picklist".Localize(),
 					SubTitle = (item != null && item.Shipments != null)
-							? string.Format("Overall items {0}", item.Shipments.Sum(x => x.ShipmentItems.Sum(y => y.Quantity))).ToUpper()
+							? string.Format("Overall items {0}".Localize(), item.Shipments.Sum(x => x.ShipmentItems.Sum(y => y.Quantity))).ToUpper()
 							: ""
 				};
 
@@ -115,7 +117,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.PickLists.Impleme
 		#region ViewModelDetailBase
 		public override string ExceptionContextIdentity
 		{
-			get { return string.Format("Edit PickList ({0})", DisplayName); }
+			get { return string.Format("Edit PickList ({0})".Localize(), DisplayName); }
 		}
 
 		protected override void GetRepository()
@@ -126,7 +128,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.PickLists.Impleme
 		protected override void LoadInnerItem()
 		{
 			var picklist = ((IFulfillmentRepository)Repository).Picklists.Where(x => x.PicklistId == OriginalItem.PicklistId)
-			                                                        .Expand("Shipments/OrderForm/OrderGroup/OrderAddresses,Shipments/ShipmentItems/LineItem,").SingleOrDefault();
+																	.Expand("Shipments/OrderForm/OrderGroup/OrderAddresses,Shipments/ShipmentItems/LineItem,").SingleOrDefault();
 
 			OnUIThread(() =>
 			{
@@ -155,8 +157,8 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.PickLists.Impleme
 		{
 			return new RefusedConfirmation
 			{
-				Content = "Save changes to PickList '" + DisplayName + "'?",
-				Title = "Action confirmation"
+				Content = string.Format("Save changes to PickList '{0}'?".Localize(), DisplayName),
+				Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 		}
 		#endregion
@@ -237,7 +239,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.PickLists.Impleme
 		}
 
 		private List<vm.Shipment> _shipments;
-		public List<vm.Shipment> Shipments 
+		public List<vm.Shipment> Shipments
 		{
 			get { return _shipments ?? (_shipments = new List<vm.Shipment>()); }
 			set { _shipments = value; OnPropertyChanged(); }

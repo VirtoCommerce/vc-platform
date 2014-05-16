@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Documents;
+﻿using System.Linq;
 using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using VirtoCommerce.Foundation.Stores.Factories;
 using VirtoCommerce.Foundation.Stores.Model;
 using VirtoCommerce.Foundation.Stores.Repositories;
-using VirtoCommerce.Foundation.Stores.Factories;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Wizard;
 using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Implementations;
 using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Wizard.Interfaces;
@@ -13,22 +11,22 @@ using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Wizar
 namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Wizard.Implementations
 {
 	public class StoreTaxesStepViewModel : StoreViewModel, IStoreTaxesStepViewModel, ISupportWizardPrepare
-    {
+	{
 
-        #region Dependencies
+		#region Dependencies
 
-	    private readonly IRepositoryFactory<IStoreRepository> _repositoryFactory; 
+		private readonly IRepositoryFactory<IStoreRepository> _repositoryFactory;
 
-        #endregion
+		#endregion
 
-        #region Constructor
+		#region Constructor
 
-        public StoreTaxesStepViewModel(IStoreEntityFactory entityFactory, Store item,
+		public StoreTaxesStepViewModel(IStoreEntityFactory entityFactory, Store item,
 			 IRepositoryFactory<IStoreRepository> repositoryFactory)
 			: base(repositoryFactory, entityFactory, item)
-        {
-            _repositoryFactory = repositoryFactory;
-        }
+		{
+			_repositoryFactory = repositoryFactory;
+		}
 
 		#endregion
 
@@ -70,15 +68,15 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 		{
 			get
 			{
-				return "Enter taxes information.";
+				return "Enter taxes information.".Localize();
 			}
 		}
 		#endregion
 
-	    private static StoreTaxJurisdictionViewModel[] GetAvailableTaxJurisdictions(StoreViewModel parentVM,
-	        IStoreRepository repository)
-	    {
-	        var result = new StoreTaxJurisdictionViewModel[]
+		private static StoreTaxJurisdictionViewModel[] GetAvailableTaxJurisdictions(StoreViewModel parentVM,
+			IStoreRepository repository)
+		{
+			var result = new StoreTaxJurisdictionViewModel[]
 	        {
 	            new StoreTaxJurisdictionViewModel(
 	                new StoreTaxJurisdiction() {StoreId = parentVM.InnerItem.StoreId, TaxJurisdiction = "China"},
@@ -90,12 +88,12 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 	                new StoreTaxJurisdiction() {StoreId = parentVM.InnerItem.StoreId, TaxJurisdiction = "USA"}, repository)
 	        };
 
-	        return result;
-	    }
+			return result;
+		}
 
-	    private static StoreTaxCodeViewModel[] GetAvailableTaxCodes(StoreViewModel parentVM, IStoreRepository repository)
-	    {
-	        var result = new StoreTaxCodeViewModel[]
+		private static StoreTaxCodeViewModel[] GetAvailableTaxCodes(StoreViewModel parentVM, IStoreRepository repository)
+		{
+			var result = new[]
 	        {
 	            new StoreTaxCodeViewModel(new StoreTaxCode() {StoreId = parentVM.InnerItem.StoreId, TaxCode = "Shipping"},
 	                repository),
@@ -104,30 +102,30 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 	            new StoreTaxCodeViewModel(new StoreTaxCode() {StoreId = parentVM.InnerItem.StoreId, TaxCode = "none"},
 	                repository)
 	        };
-	        return result;
-	    }
+			return result;
+		}
 
-	    public class StoreTaxJurisdictionViewModel : ViewModelBase
+		public class StoreTaxJurisdictionViewModel : ViewModelBase
 		{
 
-	        public StoreTaxJurisdictionViewModel(StoreTaxJurisdiction item, IStoreRepository repository)
-	        {
-	            InnerItem = item;
+			public StoreTaxJurisdictionViewModel(StoreTaxJurisdiction item, IStoreRepository repository)
+			{
+				InnerItem = item;
 
-	            var jurisFromDb = repository.StoreTaxJurisdictions.Where(
-	                stc => stc.TaxJurisdiction == InnerItem.TaxJurisdiction && stc.StoreId == InnerItem.StoreId)
-	                .SingleOrDefault();
-	            if (jurisFromDb != null)
-	            {
-	                IsChecked = true;
-	            }
-	            else
-	            {
-	                IsChecked = false;
-	            }
-	        }
+				var jurisFromDb = repository.StoreTaxJurisdictions.Where(
+					stc => stc.TaxJurisdiction == InnerItem.TaxJurisdiction && stc.StoreId == InnerItem.StoreId)
+					.SingleOrDefault();
+				if (jurisFromDb != null)
+				{
+					IsChecked = true;
+				}
+				else
+				{
+					IsChecked = false;
+				}
+			}
 
-	        public StoreTaxJurisdiction InnerItem { get; private set; }
+			public StoreTaxJurisdiction InnerItem { get; private set; }
 
 
 			private bool _isChecked;
@@ -144,23 +142,23 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 
 		public class StoreTaxCodeViewModel : ViewModelBase
 		{
-		    public StoreTaxCodeViewModel(StoreTaxCode item, IStoreRepository repository)
-		    {
-		        InnerItem = item;
+			public StoreTaxCodeViewModel(StoreTaxCode item, IStoreRepository repository)
+			{
+				InnerItem = item;
 
-		        var codeFromDb = repository.StoreTaxCodes.Where(
-		            stc => stc.TaxCode == InnerItem.TaxCode && stc.StoreId == InnerItem.StoreId).SingleOrDefault();
-		        if (codeFromDb != null)
-		        {
-		            IsChecked = true;
-		        }
-		        else
-		        {
-		            IsChecked = false;
-		        }
-		    }
+				var codeFromDb = repository.StoreTaxCodes.Where(
+					stc => stc.TaxCode == InnerItem.TaxCode && stc.StoreId == InnerItem.StoreId).SingleOrDefault();
+				if (codeFromDb != null)
+				{
+					IsChecked = true;
+				}
+				else
+				{
+					IsChecked = false;
+				}
+			}
 
-		    public StoreTaxCode InnerItem { get; private set; }
+			public StoreTaxCode InnerItem { get; private set; }
 
 			private bool _isChecked;
 			public bool IsChecked
@@ -190,8 +188,8 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 
 		private void UpdateTaxJurisdictionsList()
 		{
-		    if (AvailableTaxJurisdictions == null)
-		        return;
+			if (AvailableTaxJurisdictions == null)
+				return;
 
 			var itemsToAdd = AvailableTaxJurisdictions.Where(x => x.IsChecked == true).ToList();
 			foreach (var itemToAdd in itemsToAdd)
@@ -203,8 +201,8 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 
 		private void UpdateTaxCodeList()
 		{
-		    if (AvailableTaxCodes == null)
-		        return;
+			if (AvailableTaxCodes == null)
+				return;
 
 			var itemsToAdd = AvailableTaxCodes.Where(x => x.IsChecked == true).ToList();
 			foreach (var itemToAdd in itemsToAdd)

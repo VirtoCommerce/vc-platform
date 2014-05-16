@@ -5,16 +5,16 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Data;
-using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.ManagementClient.Core.Controls;
-using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Implementations;
-using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Wizard.Interfaces;
-using VirtoCommerce.ManagementClient.Stores.Model;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
+using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Stores.Factories;
 using VirtoCommerce.Foundation.Stores.Model;
 using VirtoCommerce.Foundation.Stores.Repositories;
+using VirtoCommerce.ManagementClient.Core.Controls;
+using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Implementations;
+using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Wizard.Interfaces;
+using VirtoCommerce.ManagementClient.Stores.Model;
 
 namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Wizard.Implementations
 {
@@ -92,7 +92,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 		{
 			get
 			{
-				return "Enter localization information.";
+				return "Enter localization information.".Localize();
 			}
 		}
 		#endregion
@@ -166,11 +166,11 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 			if (item is StoreLanguageDisplay)
 			{
 				var itemTyped = (StoreLanguageDisplay)item;
-			    var existLang = InnerItem.Languages.SingleOrDefault(l => l.LanguageCode == itemTyped.Language.LanguageCode);
-			    if (existLang != null)
-			    {
-			        result = false;
-			    }
+				var existLang = InnerItem.Languages.SingleOrDefault(l => l.LanguageCode == itemTyped.Language.LanguageCode);
+				if (existLang != null)
+				{
+					result = false;
+				}
 			}
 			return result;
 		}
@@ -181,11 +181,11 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 			if (item is StoreCurrency)
 			{
 				var itemTyped = (StoreCurrency)item;
-			    var existCurrency = InnerItem.Currencies.SingleOrDefault(x => x.CurrencyCode == itemTyped.CurrencyCode);
-			    if (existCurrency != null)
-			    {
-			        result = false;
-			    }
+				var existCurrency = InnerItem.Currencies.SingleOrDefault(x => x.CurrencyCode == itemTyped.CurrencyCode);
+				if (existCurrency != null)
+				{
+					result = false;
+				}
 			}
 			return result;
 		}
@@ -200,12 +200,12 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 				using (var appConfigRepository = _appConfigRepositoryFactory.GetRepositoryInstance())
 				{
 					AllAvailableLanguages = GetAvailableLanguages(InnerItem.StoreId, appConfigRepository);
-				    OnUIThread(() =>
-				    {
-				        var defaultView = CollectionViewSource.GetDefaultView(AllAvailableLanguages);
-				        defaultView.Filter = FilterLanguages;
-				        defaultView.Refresh();
-				    });
+					OnUIThread(() =>
+					{
+						var defaultView = CollectionViewSource.GetDefaultView(AllAvailableLanguages);
+						defaultView.Filter = FilterLanguages;
+						defaultView.Refresh();
+					});
 					OnPropertyChanged("AllAvailableLanguages");
 
 					// currently selected languages
@@ -219,14 +219,14 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 
 					AllAvailableCurrencies = GetAvailableCurrencies(InnerItem.StoreId, appConfigRepository);
 
-				    OnUIThread(() =>
-				    {
-				        var defaultView2 = CollectionViewSource.GetDefaultView(AllAvailableCurrencies);
-				        defaultView2.Filter = FilterCurrencies;
-				        defaultView2.Refresh();
-				    });
-				    OnPropertyChanged("AllAvailableCurrencies");
-                    
+					OnUIThread(() =>
+					{
+						var defaultView2 = CollectionViewSource.GetDefaultView(AllAvailableCurrencies);
+						defaultView2.Filter = FilterCurrencies;
+						defaultView2.Refresh();
+					});
+					OnPropertyChanged("AllAvailableCurrencies");
+
 				}
 			}
 		}
@@ -234,7 +234,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 		private void ValidateLanguages(bool doNotifyChanges)
 		{
 			if (InnerItem.Languages.Count == 0)
-				InnerItem.SetError("Languages", "external validation error", doNotifyChanges);
+				InnerItem.SetError("Languages", "external validation error".Localize(), doNotifyChanges);
 			else
 				InnerItem.ClearError("Languages");
 		}
@@ -242,7 +242,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 		private void ValidateDefaultLanguage(bool doNotifyChanges)
 		{
 			if (string.IsNullOrEmpty(InnerItem.DefaultLanguage))
-				InnerItem.SetError("DefaultLanguage", "Field 'Default Language' is required.", doNotifyChanges);
+				InnerItem.SetError("DefaultLanguage", "Field 'Default Language' is required.".Localize(), doNotifyChanges);
 			else
 				InnerItem.ClearError("DefaultLanguage");
 		}
@@ -250,7 +250,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 		private void ValidateCurrencies(bool doNotifyChanges)
 		{
 			if (InnerItem.Currencies.Count == 0)
-				InnerItem.SetError("Currencies", "external validation error", doNotifyChanges);
+				InnerItem.SetError("Currencies", "external validation error".Localize(), doNotifyChanges);
 			else
 				InnerItem.ClearError("Currencies");
 		}
@@ -258,7 +258,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 		private void ValidateDefaultCurrency(bool doNotifyChanges)
 		{
 			if (string.IsNullOrEmpty(InnerItem.DefaultCurrency))
-				InnerItem.SetError("DefaultCurrency", "Field 'Default Currency' is required.", doNotifyChanges);
+				InnerItem.SetError("DefaultCurrency", "Field 'Default Currency' is required.".Localize(), doNotifyChanges);
 			else
 				InnerItem.ClearError("DefaultCurrency");
 		}

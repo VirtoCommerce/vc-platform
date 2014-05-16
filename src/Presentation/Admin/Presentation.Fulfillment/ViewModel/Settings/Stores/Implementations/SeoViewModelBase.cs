@@ -4,15 +4,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Practices.Prism.Commands;
+using Omu.ValueInjecter;
+using PropertyChanged;
 using VirtoCommerce.Foundation.AppConfig.Factories;
-using VirtoCommerce.ManagementClient.Fulfillment.Model;
-using ObjectModel = VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
-using Omu.ValueInjecter;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using VirtoCommerce.ManagementClient.Fulfillment.Model;
 using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Interfaces;
-using PropertyChanged;
+using ObjectModel = VirtoCommerce.Foundation.AppConfig.Model;
 
 #endregion
 
@@ -29,15 +29,15 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 		private readonly string _keywordValue;
 		private readonly ObjectModel.SeoUrlKeywordTypes _keywordType;
 		private readonly List<string> _availableLanguages;
-		
+
 		#endregion
 
 		#region Constructor
-		
+
 		protected SeoViewModelBase(
-			IRepositoryFactory<IAppConfigRepository> appConfigRepositoryFactory, 
-			IAppConfigEntityFactory appConfigEntityFactory, 
-			string defaultLanguage, 
+			IRepositoryFactory<IAppConfigRepository> appConfigRepositoryFactory,
+			IAppConfigEntityFactory appConfigEntityFactory,
+			string defaultLanguage,
 			IEnumerable<string> languages,
 			string keywordValue,
 			ObjectModel.SeoUrlKeywordTypes keywordType)
@@ -53,7 +53,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 		}
 
 		#endregion
-		
+
 		#region Public properties
 
 		public string NavigateUrl
@@ -61,7 +61,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 			get
 			{
 				return string.IsNullOrEmpty(CurrentSeoKeyword.BaseUrl)
-					                ? string.Empty
+									? string.Empty
 									: string.Format("{0}/{1}", CurrentSeoKeyword.BaseUrl, string.IsNullOrEmpty(CurrentSeoKeyword.Keyword) ? string.IsNullOrEmpty(SeoKeywords.First(x => x.Language.Equals(_defaultLanguage, StringComparison.OrdinalIgnoreCase)).Keyword) ? CurrentSeoKeyword.KeywordValue : SeoKeywords.First(x => x.Language.Equals(_defaultLanguage, StringComparison.OrdinalIgnoreCase)).Keyword : CurrentSeoKeyword.Keyword).ToLower();
 			}
 		}
@@ -82,7 +82,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 		{
 			get
 			{
-				return "Enter SEO information.";
+				return "Enter SEO information.".Localize();
 			}
 		}
 
@@ -118,7 +118,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 								appConfigRepository.SeoUrlKeywords.Where(
 									seoKeyword => true && seoKeyword.SeoUrlKeywordId.Equals(keyword.SeoUrlKeywordId)).FirstOrDefault();
 							if (keywordToRemove != null)
-							{								
+							{
 								appConfigRepository.Remove(keywordToRemove);
 							}
 						}
@@ -303,7 +303,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 
 							if (count > 0)
 							{
-								keyword.SetError("Keyword", string.Format("{0} with the same Keyword and Language already exists", _keywordType.ToString()), false);
+								keyword.SetError("Keyword", string.Format("{0} with the same Keyword and Language already exists".Localize(), _keywordType.ToString()), false);
 								if (keyword.SeoUrlKeywordId.Equals(CurrentSeoKeyword.SeoUrlKeywordId, StringComparison.InvariantCultureIgnoreCase))
 									OnPropertyChanged("CurrentSeoKeyword");
 								retVal = false;

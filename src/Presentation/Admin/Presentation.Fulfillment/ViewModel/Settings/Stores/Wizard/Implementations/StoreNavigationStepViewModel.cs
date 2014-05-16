@@ -1,8 +1,8 @@
 ﻿using System.Linq;
-using VirtoCommerce.Foundation.Stores.Model;
 using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.Foundation.Stores.Repositories;
 using VirtoCommerce.Foundation.Stores.Factories;
+using VirtoCommerce.Foundation.Stores.Model;
+using VirtoCommerce.Foundation.Stores.Repositories;
 using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Implementations;
 using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Wizard.Interfaces;
 
@@ -61,7 +61,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 		{
 			get
 			{
-				return "Enter navigation information.";
+				return "Enter navigation information.".Localize();
 			}
 		}
 		#endregion

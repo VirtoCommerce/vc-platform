@@ -1,27 +1,27 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Omu.ValueInjecter;
+using VirtoCommerce.Client.Globalization;
+using VirtoCommerce.Foundation.AppConfig.Factories;
+using VirtoCommerce.Foundation.AppConfig.Model;
+using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using VirtoCommerce.Foundation.Security.Model;
-using VirtoCommerce.ManagementClient.Configuration.ViewModel;
+using VirtoCommerce.Foundation.Stores.Factories;
+using VirtoCommerce.Foundation.Stores.Model;
+using VirtoCommerce.Foundation.Stores.Repositories;
 using VirtoCommerce.ManagementClient.Configuration.ViewModel.Implementations;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Tiles;
 using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Interfaces;
 using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Wizard.Interfaces;
-using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Wizard;
-using VirtoCommerce.Foundation.Stores.Factories;
-using VirtoCommerce.Foundation.Stores.Model;
-using VirtoCommerce.Foundation.Stores.Repositories;
-using VirtoCommerce.Foundation.AppConfig.Repositories;
-using VirtoCommerce.Foundation.AppConfig.Factories;
-using VirtoCommerce.Foundation.AppConfig.Model;
-using System;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Implementations
 {
@@ -46,11 +46,11 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 			IRepositoryFactory<IAppConfigRepository> seoRepository,
 			IAppConfigEntityFactory seoFactory,
 			IRepositoryFactory<IStoreRepository> repositoryFactory,
-			IStoreEntityFactory entityFactory, 
-			IViewModelsFactory<ICreateStoreViewModel> wizardVmFactory, 
-			IViewModelsFactory<IStoreViewModel> editVmFactory, 
-			IAuthenticationContext authContext, 
-			NavigationManager navManager, 
+			IStoreEntityFactory entityFactory,
+			IViewModelsFactory<ICreateStoreViewModel> wizardVmFactory,
+			IViewModelsFactory<IStoreViewModel> editVmFactory,
+			IAuthenticationContext authContext,
+			NavigationManager navManager,
 			TileManager tileManager)
 			: base(entityFactory, wizardVmFactory, editVmFactory)
 		{
@@ -63,7 +63,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 			_storeVmFactory = storeVmFactory;
 			PopulateTiles();
 
-			LinkedStoreNotifictaionRequest=new InteractionRequest<ConditionalConfirmation>();
+			LinkedStoreNotifictaionRequest = new InteractionRequest<ConditionalConfirmation>();
 		}
 
 		#endregion
@@ -120,10 +120,10 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 				new KeyValuePair<string, object>("item", item));
 			var confirmation = new ConditionalConfirmation()
 				{
-					Title = "Create Store",
+					Title = "Create Store".Localize(),
 					Content = vm
 				};
-			ItemAdd(item, confirmation, _repositoryFactory.GetRepositoryInstance());			
+			ItemAdd(item, confirmation, _repositoryFactory.GetRepositoryInstance());
 		}
 
 		protected override void RaiseItemEditInteractionRequest(Store item)
@@ -140,8 +140,8 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 		{
 			var confirmation = new ConditionalConfirmation()
 				{
-					Content = string.Format("Are you sure you want to delete Store '{0}'?", item.Name),
-					Title = "Delete confirmation"
+					Content = string.Format("Are you sure you want to delete Store '{0}'?".Localize(), item.Name),
+					Title = "Delete confirmation".Localize(null, LocalizationScope.DefaultCategory)
 				};
 			ItemDelete(item, confirmation, _repositoryFactory.GetRepositoryInstance());
 		}
@@ -159,9 +159,9 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 						{
 							Content =
 								string.Format(
-									"Store '{0}' are linked to Store '{1}'. You can't delete it.",
+									"Store '{0}' are linked to Store '{1}'. You can't delete it.".Localize(),
 									item.Name, storeName),
-							Title = "Warning"
+							Title = "Warning".Localize(null, LocalizationScope.DefaultCategory)
 						};
 						LinkedStoreNotifictaionRequest.Raise(
 							linkedConfirmation, (y) =>
@@ -215,14 +215,14 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 		}
 
 		protected override void AfterItemAddSaved(Store item)
-		{			
+		{
 			using (var seoRepository = _seoRepository.GetRepositoryInstance())
 			{
 				var itemName = ReplaceRestrictedChars(item.Name);
 				var checkItem = seoRepository.SeoUrlKeywords.Where(s => s.Keyword.Equals(itemName, StringComparison.InvariantCultureIgnoreCase) &&
 						s.Language.Equals(item.DefaultLanguage, StringComparison.InvariantCultureIgnoreCase) &&
 						s.KeywordType.Equals((int)SeoUrlKeywordTypes.Store)).FirstOrDefault();
-					
+
 				var seo = _seoFactory.CreateEntity<VirtoCommerce.Foundation.AppConfig.Model.SeoUrlKeyword>();
 				seo.KeywordValue = item.StoreId;
 				seo.Keyword = checkItem == null ? itemName : "_" + itemName + "_";
@@ -238,9 +238,9 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 			var openTracking = (IOpenTracking)storeViewModel;
 			openTracking.OpenItemCommand.Execute();
 
-			base.AfterItemAddSaved(item);			
+			base.AfterItemAddSaved(item);
 		}
-		
+
 		#endregion
 
 		#region Private Methods
@@ -301,7 +301,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 				{
 					IdModule = Configuration.NavigationNames.MenuName,
 					IdTile = "StoresSettings",
-					TileTitle = "STORES",
+					TileTitle = "STORES".Localize(),
 					Order = 1,
 					IdColorSchema = TileColorSchemas.Schema2,
 					NavigateCommand = new DelegateCommand(() => NavigateToTabPage(NavigationNames.StoresSettingsHomeName)),

@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using PdfRpt.Core.Contracts;
-using PdfRpt.FluentInterface;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Collections.ObjectModel;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using PdfRpt.Core.Contracts;
 using PdfRpt.Core.Helper;
+using PdfRpt.FluentInterface;
 using VirtoCommerce.Foundation.Orders.Model;
 using vm = VirtoCommerce.ManagementClient.Fulfillment.Model;
 //using System.Globalization;
@@ -15,22 +15,22 @@ using vm = VirtoCommerce.ManagementClient.Fulfillment.Model;
 
 namespace VirtoCommerce.ManagementClient.Fulfillment.Report
 {
-    public class SlipPdfReport
-    {
-        public IPdfReportData CreatePdfReport(ObservableCollection<Shipment> source, string Agent)
-        {
+	public class SlipPdfReport
+	{
+		public IPdfReportData CreatePdfReport(ObservableCollection<Shipment> source, string Agent)
+		{
 			var items = new List<vm.ShipmentItem>();
 			source.SelectMany(x => x.ShipmentItems).ToList().ForEach(item => items.Add(new vm.ShipmentItem(item)));
 
-            var tempPath = Path.GetTempPath();
-            var documentPath = string.Format("{0}{1}{2}.pdf", tempPath, tempPath.EndsWith(Path.DirectorySeparatorChar.ToString()) ? string.Empty : Path.DirectorySeparatorChar.ToString(), Guid.NewGuid().ToString("N"));
+			var tempPath = Path.GetTempPath();
+			var documentPath = string.Format("{0}{1}{2}.pdf", tempPath, tempPath.EndsWith(Path.DirectorySeparatorChar.ToString()) ? string.Empty : Path.DirectorySeparatorChar.ToString(), Guid.NewGuid().ToString("N"));
 
 			return new PdfReport().DocumentPreferences(doc =>
 			{
 				doc.RunDirection(PdfRunDirection.LeftToRight);
 				doc.Orientation(PageOrientation.Portrait);
 				doc.PageSize(PdfPageSize.A4);
-				doc.DocumentMetadata(new DocumentMetadata { Author = Agent, Application = "VirtoCommerce", Keywords = "Slip", Subject = "Slip", Title = "Slip" });
+				doc.DocumentMetadata(new DocumentMetadata { Author = Agent, Application = "VirtoCommerce", Keywords = "Slip", Subject = "Slip".Localize(), Title = "Slip".Localize() });
 				doc.Compression(new CompressionSettings
 				{
 					EnableCompression = true,
@@ -116,7 +116,8 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.Report
 					 column.CalculatedField(
 						 list =>
 						 {
-							 if (list == null) return string.Empty;
+							 if (list == null)
+								 return string.Empty;
 							 var currency = list.GetSafeStringValueOf<vm.ShipmentItem>(x => x.BillingCurrency);
 							 //string curSign;
 							 //if (TryGetCurrencySymbol(currency, out curSign))
@@ -126,54 +127,54 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.Report
 						 });
 				 });
 			 })
-			//.MainTableEvents(events =>
-			//{
-			//	events.DataSourceIsEmpty(message: "There is no data available to display.");
+				//.MainTableEvents(events =>
+				//{
+				//	events.DataSourceIsEmpty(message: "There is no data available to display.");
 
 			//	events.GroupAdded(args =>
-			//	{
-			//		var shippingTaxTotal = args.LastOverallAggregateValueOf<vm.ShipmentItem>(s => s.ShippingTaxTotal);
+				//	{
+				//		var shippingTaxTotal = args.LastOverallAggregateValueOf<vm.ShipmentItem>(s => s.ShippingTaxTotal);
 
 			//		var taxTable = new PdfGrid(args.Table.RelativeWidths)
-			//			{
-			//				WidthPercentage = args.Table.WidthPercentage,
-			//				SpacingBefore = args.Table.SpacingBefore
-			//			}; // Create a clone of the MainTable's structure                   
+				//			{
+				//				WidthPercentage = args.Table.WidthPercentage,
+				//				SpacingBefore = args.Table.SpacingBefore
+				//			}; // Create a clone of the MainTable's structure                   
 
 			//		taxTable.AddSimpleRow(
-			//			null /* null = empty cell */, null,
-			//			(data, cellProperties) =>
-			//			{
-			//				data.Value = "tax";
-			//				cellProperties.PdfFont = args.PdfFont;
-			//				cellProperties.HorizontalAlignment = HorizontalAlignment.Right;
-			//			},
-			//			(data, cellProperties) =>
-			//			{
-			//				data.Value = string.Format("{0:n0}", shippingTaxTotal);
-			//				cellProperties.PdfFont = args.PdfFont;
-			//			});
+				//			null /* null = empty cell */, null,
+				//			(data, cellProperties) =>
+				//			{
+				//				data.Value = "tax";
+				//				cellProperties.PdfFont = args.PdfFont;
+				//				cellProperties.HorizontalAlignment = HorizontalAlignment.Right;
+				//			},
+				//			(data, cellProperties) =>
+				//			{
+				//				data.Value = string.Format("{0:n0}", shippingTaxTotal);
+				//				cellProperties.PdfFont = args.PdfFont;
+				//			});
 
 			//		taxTable.AddSimpleRow(
-			//			null /* null = empty cell */, null,
-			//			(data, cellProperties) =>
-			//			{
-			//				data.Value = "tax";
-			//				cellProperties.PdfFont = args.PdfFont;
-			//				cellProperties.HorizontalAlignment = HorizontalAlignment.Right;
-			//			},
-			//			(data, cellProperties) =>
-			//			{
-			//				data.Value = string.Format("{0:n0}", shippingTaxTotal);
-			//				cellProperties.PdfFont = args.PdfFont;
-			//			});
+				//			null /* null = empty cell */, null,
+				//			(data, cellProperties) =>
+				//			{
+				//				data.Value = "tax";
+				//				cellProperties.PdfFont = args.PdfFont;
+				//				cellProperties.HorizontalAlignment = HorizontalAlignment.Right;
+				//			},
+				//			(data, cellProperties) =>
+				//			{
+				//				data.Value = string.Format("{0:n0}", shippingTaxTotal);
+				//				cellProperties.PdfFont = args.PdfFont;
+				//			});
 
 			//		args.PdfDoc.Add(taxTable);
-			//	});
-			//})
-			 //.Export(export => export.ToExcel())
-            .Generate(data => data.AsPdfFile(documentPath));
-        }
+				//	});
+				//})
+				//.Export(export => export.ToExcel())
+			.Generate(data => data.AsPdfFile(documentPath));
+		}
 
 		//private bool TryGetCurrencySymbol(string ISOCurrencySymbol, out string symbol)
 		//{
@@ -196,7 +197,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.Report
 		//		.FirstOrDefault();
 		//	return symbol != null;
 		//}
-    }
+	}
 
 	public class TotalAggregateFunction : IAggregateFunction
 	{
@@ -232,7 +233,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.Report
 			throw new NotImplementedException();
 		}
 	}
-	
+
 	public class GroupingSlipHeaders : IPageHeader
 	{
 		public IPdfFont PdfRptFont { set; get; }
@@ -249,14 +250,14 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.Report
 			table.AddSimpleRow(
 				(cellData, cellProperties) =>
 				{
-					cellData.Value = "Billing address";
+					cellData.Value = "Billing address".Localize();
 					cellProperties.PdfFont = PdfRptFont;
 					cellProperties.PdfFontStyle = DocumentFontStyle.Bold;
 					cellProperties.HorizontalAlignment = HorizontalAlignment.Left;
 				},
 				(cellData, cellProperties) =>
 				{
-					cellData.Value = "Shipping address";
+					cellData.Value = "Shipping address".Localize();
 					cellProperties.PdfFont = PdfRptFont;
 					cellProperties.PdfFontStyle = DocumentFontStyle.Bold;
 					cellProperties.HorizontalAlignment = HorizontalAlignment.Right;
@@ -293,11 +294,11 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.Report
 					cellProperties.PdfFontStyle = DocumentFontStyle.Normal;
 					cellProperties.HorizontalAlignment = HorizontalAlignment.Right;
 				});
-			
+
 			table.AddSimpleRow(
 				(cellData, cellProperties) =>
 				{
-					cellData.Value = "Invoice and Receipt";
+					cellData.Value = "Invoice and Receipt".Localize();
 					cellProperties.PdfFont = PdfRptFont;
 					cellProperties.PdfFontStyle = DocumentFontStyle.Bold;
 					cellProperties.HorizontalAlignment = HorizontalAlignment.Left;
@@ -307,12 +308,12 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.Report
 					cellData.Value = string.Empty;
 				});
 
-			
+
 
 			table.AddSimpleRow(
 				(cellData, cellProperties) =>
 				{
-					cellData.Value = string.Format("Order date: {0}", ((DateTime?) orderDate).Value.ToShortDateString());
+					cellData.Value = string.Format("Order date: {0}".Localize(), ((DateTime?)orderDate).Value.ToShortDateString());
 					cellProperties.PdfFont = PdfRptFont;
 					cellProperties.PdfFontStyle = DocumentFontStyle.Normal;
 					cellProperties.HorizontalAlignment = HorizontalAlignment.Left;
@@ -325,7 +326,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.Report
 			table.AddSimpleRow(
 				(cellData, cellProperties) =>
 				{
-					cellData.Value = string.Format("Order number: {0}", order);
+					cellData.Value = string.Format("Order number: {0}".Localize(), order);
 					cellProperties.PdfFont = PdfRptFont;
 					cellProperties.PdfFontStyle = DocumentFontStyle.Normal;
 					cellProperties.HorizontalAlignment = HorizontalAlignment.Left;
@@ -342,7 +343,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.Report
 
 		public PdfGrid RenderingReportHeader(Document pdfDoc, PdfWriter pdfWriter, IList<SummaryCellData> summaryData)
 		{
-			
+
 			return null;
 		}
 	}

@@ -77,12 +77,12 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 		{
 			get
 			{
-				return "Enter store general information.";
+				return "Enter store general information.".Localize();
 			}
 		}
 		#endregion
 
-		
+
 
 		protected override void InitializePropertiesForViewing()
 		{

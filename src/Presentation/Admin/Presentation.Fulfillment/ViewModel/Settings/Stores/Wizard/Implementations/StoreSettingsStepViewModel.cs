@@ -1,16 +1,18 @@
-﻿using Omu.ValueInjecter;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
-using System.Collections.Generic;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
-using VirtoCommerce.Foundation.Stores.Model;
+﻿using System.Collections.Generic;
 using Microsoft.Practices.Prism.Commands;
+using Omu.ValueInjecter;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
-using VirtoCommerce.Foundation.Stores.Repositories;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Stores.Factories;
+using VirtoCommerce.Foundation.Stores.Model;
+using VirtoCommerce.Foundation.Stores.Repositories;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Implementations;
 using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Interfaces;
 using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Wizard.Interfaces;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Wizard.Implementations
 {
@@ -36,7 +38,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 
 		#region Commands
 
-//		public InteractionRequest<Confirmation> CommonConfirmRequest { get; private set; }
+		//		public InteractionRequest<Confirmation> CommonConfirmRequest { get; private set; }
 
 		public DelegateCommand StoreSettingAddCommand { get; private set; }
 		public DelegateCommand<StoreSetting> StoreSettingEditCommand { get; private set; }
@@ -95,7 +97,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 		{
 			var item = EntityFactory.CreateEntity<StoreSetting>();
 			item.StoreId = InnerItem.StoreId;
-			if (RaiseStoreSettingEditInteractionRequest(item, "Add Store Setting"))
+			if (RaiseStoreSettingEditInteractionRequest(item, "Add Store Setting".Localize()))
 			{
 				InnerItem.Settings.Add(item);
 			}
@@ -104,7 +106,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 		private void RaiseStoreSettingEditInteractionRequest(StoreSetting originalItem)
 		{
 			var item = originalItem.DeepClone(EntityFactory as IKnownSerializationTypes);
-			if (RaiseStoreSettingEditInteractionRequest(item, "Edit Store Setting"))
+			if (RaiseStoreSettingEditInteractionRequest(item, "Edit Store Setting".Localize()))
 			{
 
 				// copy all values to original:
@@ -137,8 +139,8 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.W
 		{
 			var confirmation = new ConditionalConfirmation
 			{
-				Content = string.Format("Are you sure you want to delete Store Setting '{0}'?", item.Name),
-				Title = "Delete confirmation"
+				Content = string.Format("Are you sure you want to delete Store Setting '{0}'?".Localize(), item.Name),
+				Title = "Delete confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 
 			CommonConfirmRequest.Raise(confirmation, (x) =>

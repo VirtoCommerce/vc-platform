@@ -4,17 +4,19 @@ using System.Windows;
 using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
 using Omu.ValueInjecter;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
-using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
-using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Interfaces;
-using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Wizard.Implementations;
-using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Wizard.Interfaces;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Stores.Factories;
 using VirtoCommerce.Foundation.Stores.Model;
 using VirtoCommerce.Foundation.Stores.Repositories;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
+using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Interfaces;
+using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Wizard.Implementations;
+using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Wizard.Interfaces;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.Implementations
 {
@@ -58,7 +60,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 			INavigationManager navManager, Store item)
 			: base(entityFactory, item, false)
 		{
-			ViewTitle = new ViewTitleBase { SubTitle = "SETTINGS", Title = "Store" };
+			ViewTitle = new ViewTitleBase { SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory), Title = "Store".Localize() };
 			_repositoryFactory = repositoryFactory;
 			_navManager = navManager;
 			_parent = parent;
@@ -162,8 +164,8 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 		{
 			return new RefusedConfirmation
 			{
-				Content = "Save changes to Store '" + DisplayName + "'?",
-				Title = "Action confirmation"
+				Content = string.Format("Save changes to Store '{0}'?".Localize(), DisplayName),
+				Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 		}
 
@@ -265,10 +267,10 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 			if (SeoStepViewModel != null)
 			{
 				if (SeoStepViewModel.SeoKeywords != null)
-					SeoStepViewModel.SeoKeywords.ForEach(keyword => keyword.PropertyChanged += ViewModel_PropertyChanged);				
+					SeoStepViewModel.SeoKeywords.ForEach(keyword => keyword.PropertyChanged += ViewModel_PropertyChanged);
 			}
 		}
-		
+
 		protected override void CloseSubscriptionUI()
 		{
 			if (InnerItem != null)
@@ -327,7 +329,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 				bool result = false;
 
 				result = InnerItem.Validate(false) && !string.IsNullOrEmpty(InnerItem.Name);
-				
+
 				return result;
 			}
 		}

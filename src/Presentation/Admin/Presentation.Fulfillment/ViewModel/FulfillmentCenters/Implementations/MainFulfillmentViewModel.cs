@@ -1,18 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Omu.ValueInjecter;
 using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Orders.Model;
 using VirtoCommerce.Foundation.Orders.Repositories;
+using VirtoCommerce.Foundation.Orders.Services;
 using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Common.Model;
-using System.Linq;
-using System;
-using VirtoCommerce.Foundation.Orders.Services;
-using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.FulfillmentCenters.Interfaces;
 using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Inventory.Interfaces;
 using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.PickLists.Implementations;
@@ -21,7 +21,7 @@ using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Rmas.Interfaces;
 
 namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.FulfillmentCenters.Implementations
 {
-    public class MainFulfillmentViewModel : SubTabsDefaultViewModel, IMainFulfillmentViewModel
+	public class MainFulfillmentViewModel : SubTabsDefaultViewModel, IMainFulfillmentViewModel
 	{
 		#region const
 		private const string RecalculateWorkflowName = "OrderRecalculateWorkflow";
@@ -34,23 +34,23 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.FulfillmentCenter
 		private readonly IViewModelsFactory<ICompleteShipmentViewModel> _completeShipmentVmFactory;
 		private readonly IRepositoryFactory<IOrderRepository> _orderRepositoryFactory;
 		private readonly IAuthenticationContext _authContext;
-	    private readonly IOrderService _orderService;
+		private readonly IOrderService _orderService;
 		#endregion
-		
+
 		#region Constructor
 		public MainFulfillmentViewModel(
-			IInventoryHomeViewModel inventoryVm, 
-			IPicklistHomeViewModel picklistVm, 
-			IRmaHomeViewModel rmaVm, 
+			IInventoryHomeViewModel inventoryVm,
+			IPicklistHomeViewModel picklistVm,
+			IRmaHomeViewModel rmaVm,
 			IViewModelsFactory<ICompleteShipmentViewModel> completeShipmentVmFactory,
 			IRepositoryFactory<IOrderRepository> orderRepositoryFactory,
 			IOrderService orderService,
 			IAuthenticationContext authContext)
-        {
-            ViewTitle = new ViewTitleBase { Title = "Fulfillment", SubTitle = "FULFILLMENT SERVICE" };
+		{
+			ViewTitle = new ViewTitleBase { Title = "Fulfillment".Localize(), SubTitle = "FULFILLMENT SERVICE".Localize() };
 			_inventoryHomeVm = inventoryVm;
 			_inventoryHomeVm.ParentViewModel = this;
-			
+
 			_picklistHomeVm = picklistVm;
 			_picklistHomeVm.ParentViewModel = this;
 
@@ -67,7 +67,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.FulfillmentCenter
 			CompleteShipmentCommand = new DelegateCommand(RaiseCompleteShipment);
 			CommonConfirmRequest = new InteractionRequest<Confirmation>();
 			CommonNotifyRequest = new InteractionRequest<Notification>();
-        }
+		}
 		#endregion
 
 
@@ -80,7 +80,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.FulfillmentCenter
 		public InteractionRequest<Notification> CommonNotifyRequest { get; private set; }
 		#endregion
 
-		
+
 		private void RaiseCompleteShipment()
 		{
 			var shipmentId = "";
@@ -89,12 +89,12 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.FulfillmentCenter
 				var x = (PicklistHomeViewModel)CurrentTab.ViewModel;
 				if (x.SelectedItem != null)
 				{
-					shipmentId=x.SelectedItem.Data.Picklist.Shipments[0].ShipmentId;
+					shipmentId = x.SelectedItem.Data.Picklist.Shipments[0].ShipmentId;
 				}
 			}
 			var vm = _completeShipmentVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("shipmentId", shipmentId));
-			
-			var confirmation = new ConditionalConfirmation {Title = "Complete shipment", Content = vm};
+
+			var confirmation = new ConditionalConfirmation { Title = "Complete shipment".Localize(), Content = vm };
 
 			CommonConfirmRequest.Raise(confirmation, x =>
 			{
@@ -121,7 +121,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.FulfillmentCenter
 								if (originalItem != null)
 								{
 									var result = _orderService.ExecuteWorkflow(RecalculateWorkflowName, originalItem);
-									OnUIThread(()=>originalItem.InjectFrom<CloneInjection>(result.OrderGroup));
+									OnUIThread(() => originalItem.InjectFrom<CloneInjection>(result.OrderGroup));
 								}
 
 								orderRepository.UnitOfWork.Commit();
@@ -135,13 +135,13 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.FulfillmentCenter
 							{
 								var notification = new Notification
 									{
-										Title = "Shipment completed",
-										Content = string.Format("Shipment: {0}{1}{2}{3}Completed successfully",
+										Title = "Shipment completed".Localize(),
+										Content = string.Format("Shipment: {0}{1}{2}{3}Completed successfully".Localize(),
 																vm.ShipmentId,
 																Environment.NewLine,
 																string.IsNullOrEmpty(vm.TrackingNumber)
 																	? string.Empty
-																	: string.Format("TrackingNumber: {0}", vm.TrackingNumber),
+																	: string.Format("TrackingNumber: {0}".Localize(), vm.TrackingNumber),
 																Environment.NewLine)
 									};
 								CommonNotifyRequest.Raise(notification);
@@ -153,8 +153,8 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.FulfillmentCenter
 								orderRepository.UnitOfWork.Commit();
 								var notification = new Notification
 									{
-										Title = "Shipment not completed",
-										Content = string.Format("Shipment: {0}\nNot completed",
+										Title = "Shipment not completed".Localize(),
+										Content = string.Format("Shipment: {0}\nNot completed".Localize(),
 																vm.ShipmentId)
 									};
 								CommonNotifyRequest.Raise(notification);
@@ -163,7 +163,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.FulfillmentCenter
 					}
 				}
 			});
-			
+
 		}
 
 		#region private members
@@ -172,9 +172,9 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.FulfillmentCenter
 
 		//public void Recalculate(Order originalItem)
 		//{
-			
+
 		//}
-		
+
 		//private bool RaiseCanExecuteChanged()
 		//{
 
@@ -186,34 +186,34 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.FulfillmentCenter
 		//						|| ship.Status == Enum.GetName(typeof(ShipmentStatus), ShipmentStatus.Packing)
 		//							 && (ship.OrderForm.OrderGroup.Status != Enum.GetName(typeof(OrderStatus), OrderStatus.OnHold) ||
 		//								ship.OrderForm.OrderGroup.Status != Enum.GetName(typeof(OrderStatus), OrderStatus.Cancelled))));
-					
-			
+
+
 		//	return retVal.Any();
 		//}
 
 		#endregion
 
 		private void PopulateTabItems()
-        {
-            SubItems = new List<ItemTypeHomeTab>();
+		{
+			SubItems = new List<ItemTypeHomeTab>();
 
 			if (_authContext.CheckPermission(PredefinedPermissions.FulfillmentPicklistsManage) ||
 				_authContext.CheckPermission(PredefinedPermissions.FulfillmentInventoryReceive))
 			{
-				SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.HomeName, Caption = "Inventory", Order = 10, ViewModel = _inventoryHomeVm });
+				SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.HomeName, Caption = "Inventory".Localize(), Order = 10, ViewModel = _inventoryHomeVm });
 			}
 			if (_authContext.CheckPermission(PredefinedPermissions.FulfillmentPicklistsManage))
 			{
-				SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.PicklistHomeName, Caption = "Picklists", Order = 20, ViewModel = _picklistHomeVm });
+				SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.PicklistHomeName, Caption = "Picklists".Localize(), Order = 20, ViewModel = _picklistHomeVm });
 			}
 			if (_authContext.CheckPermission(PredefinedPermissions.FulfillmentReturnsManage))
 			{
-				SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.RmaHomeName, Caption = "Returns & Exchanges", Order = 30, ViewModel = _rmaHomeVm });
+				SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.RmaHomeName, Caption = "Returns & Exchanges".Localize(), Order = 30, ViewModel = _rmaHomeVm });
 			}
 			if (SubItems.Any())
 			{
 				CurrentTab = SubItems[0];
 			}
-        }
-    }
+		}
+	}
 }

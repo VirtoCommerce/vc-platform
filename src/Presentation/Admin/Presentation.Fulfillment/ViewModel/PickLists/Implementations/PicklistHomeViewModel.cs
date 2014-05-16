@@ -115,7 +115,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.PickLists.Impleme
 		{
 			var item = _entityFactory.CreateEntity<Picklist>();
 			var itemVm = _wizardVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", item));
-			var confirmation = new Confirmation { Content = itemVm, Title = "Create Pick List" };
+			var confirmation = new Confirmation { Content = itemVm, Title = "Create Pick List".Localize() };
 			ItemAdd(confirmation);
 		}
 

@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
 using Omu.ValueInjecter;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
-using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
-using VirtoCommerce.Foundation.Inventories.Model;
 using VirtoCommerce.Foundation.Inventories.Factories;
+using VirtoCommerce.Foundation.Inventories.Model;
 using VirtoCommerce.Foundation.Inventories.Repositories;
-using System.Linq;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
 using VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Inventory.Interfaces;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Inventory.Implementations
 {
@@ -54,7 +56,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Inventory.Impleme
 			_navManager = navManager;
 			ViewTitle = new ViewTitleBase
 				{
-					Title = "Inventory",
+					Title = "Inventory".Localize(),
 					SubTitle = (item != null && !string.IsNullOrEmpty(item.Sku)) ? item.Sku.ToUpper(CultureInfo.InvariantCulture) : ""
 				};
 
@@ -157,7 +159,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Inventory.Impleme
 
 		private void RaiseEditQuantityInteractionRequest()
 		{
-			var confirmation = new ConditionalConfirmation { Title = "Edit in stock quantity", Content = _editQuantityVm };
+			var confirmation = new ConditionalConfirmation { Title = "Edit in stock quantity".Localize(), Content = _editQuantityVm };
 
 			CommonConfirmRequest.Raise(confirmation, x =>
 			{
@@ -188,8 +190,8 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Inventory.Impleme
 		{
 			return new RefusedConfirmation
 			{
-				Content = string.Format("Save changes to Inventory item '{0}'?", InnerItem.Sku),
-				Title = "Action confirmation"
+				Content = string.Format("Save changes to Inventory item '{0}'?".Localize(), InnerItem.Sku),
+				Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 		}
 

@@ -103,7 +103,7 @@
                                      LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <ComboBox ItemsSource="{Binding DataContext.AvailableConditions, &#xD;&#xA;												RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, &#xD;&#xA;												UpdateSourceTrigger=PropertyChanged}"
+                                            <ComboBox ItemsSource="{Binding DataContext.AvailableConditions, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}, UpdateSourceTrigger=PropertyChanged}"
                                                  SelectedItem="{Binding Path=ReturnCondition, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                  IsReadOnly="{Binding Path=ItemState, Mode=OneWay, Converter={StaticResource SetIsReadOnlyConverter}}"
                                                  IsEnabled="{Binding Path=ItemState, Mode=OneWay, Converter={StaticResource SetIsEnabledConverter}}" />
