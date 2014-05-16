@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Threading;
 using System.Windows.Data;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Marketing.Model.DynamicContent;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.DynamicContent.Infrastructure
 {
@@ -29,7 +31,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.Infrastructure
 					retVal = (DynamicContentType)Enum.Parse(typeof(DynamicContentType), value.ToString());
 					break;
 				default:
-					retVal = value == null || value.ToString() == string.Empty ? "N/A" : value.ToString();
+					retVal = value == null || value.ToString() == string.Empty ? "N/A".Localize(null, LocalizationScope.DefaultCategory) : value.ToString();
 					break;
 			}
 			return retVal;

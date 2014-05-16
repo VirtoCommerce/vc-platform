@@ -1,4 +1,5 @@
-﻿#region Usings
+﻿using VirtoCommerce.Client.Globalization;
+#region Usings
 
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ using VirtoCommerce.Foundation.Marketing.Model;
 using VirtoCommerce.Foundation.Marketing.Factories;
 using VirtoCommerce.Foundation.Marketing.Repositories;
 using VirtoCommerce.ManagementClient.DynamicContent.ViewModel.DynamicContent.Interfaces;
-using localModel = VirtoCommerce.ManagementClient.DynamicContent.Model;
+using VirtoCommerce.ManagementClient.Localization;
 using VirtoCommerce.Foundation.Marketing.Model.DynamicContent;
 
 #endregion
@@ -49,7 +50,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.DynamicContent
 
 			ViewTitle = new ViewTitleBase
 			{
-				Title = "Dynamic Content",
+                Title = "Dynamic Content".Localize(),
 				SubTitle = (item != null && !String.IsNullOrEmpty(item.Name)) ? item.Name.ToUpper(CultureInfo.InvariantCulture) : ""
 			};
 
@@ -156,8 +157,8 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.DynamicContent
 		{
 			return new RefusedConfirmation
 			{
-				Content = string.Format("Save changes to Dynamic Content item '{0}'?", InnerItem.Name),
-				Title = "Action confirmation"
+                Content = string.Format("Save changes to Dynamic Content item '{0}'?".Localize(), InnerItem.Name),
+				Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 		}
 
@@ -178,7 +179,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.DynamicContent
 				}
 				catch (Exception ex)
 				{
-					ShowErrorDialog(ex, string.Format("An error occurred when trying to save Dynamic Content item: "));
+					ShowErrorDialog(ex, string.Format("An error occurred when trying to save {0}".Localize(null, LocalizationScope.DefaultCategory), ExceptionContextIdentity));
 				}
 			}
 		}
@@ -234,7 +235,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.DynamicContent
 				new KeyValuePair<string, object>("item", item)
 				);
 
-			var confirmation = new ConditionalConfirmation {Title = "Enter property value", Content = itemVM};
+            var confirmation = new ConditionalConfirmation { Title = "Enter property value".Localize(), Content = itemVM };
 
 			CommonConfirmRequest.Raise(confirmation, (x) =>
 			{
@@ -251,7 +252,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.DynamicContent
 						case PropertyValueType.ShortString:
 							OnUIThread(() => InnerItem.PropertyValues.First(y => y.Name == item.Name).ShortTextValue = item.ShortTextValue);
 							break;
-						case PropertyValueType.Image:						
+						case PropertyValueType.Image:
 						case PropertyValueType.LongString:
 							OnUIThread(() => InnerItem.PropertyValues.First(y => y.Name == item.Name).LongTextValue = item.LongTextValue);
 							break;

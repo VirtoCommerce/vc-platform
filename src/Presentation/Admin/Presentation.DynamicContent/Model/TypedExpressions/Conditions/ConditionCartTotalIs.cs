@@ -12,9 +12,9 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.Model
 		private readonly CartTotalElement _cartTotalEl;
 
 		public ConditionCartTotalIs(IExpressionViewModel expressionViewModel)
-			: base("Cart total $ []", expressionViewModel)
+            : base("Cart total $ []".Localize(), expressionViewModel)
 		{
-			WithLabel("Cart total is $ ");
+            WithLabel("Cart total is $ ".Localize());
 			_cartTotalEl = WithElement(new CartTotalElement(expressionViewModel)) as CartTotalElement;
 		}
 

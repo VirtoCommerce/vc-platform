@@ -50,7 +50,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.Model
 					itemVM.SearchModifier = SearchCategoryModifier.RealCatalogsOnly;
 					itemVM.InitializeForOpen();
 					((IContentPublishingItemViewModel) ExpressionViewModel).CommonConfirmRequest.Raise(
-						new ConditionalConfirmation(() => itemVM.SelectedItem != null) { Content = itemVM, Title = "Select Category" },
+                        new ConditionalConfirmation(() => itemVM.SelectedItem != null) { Content = itemVM, Title = "Select Category".Localize() },
 						(x) =>
 						{
 							if (x.Confirmed)

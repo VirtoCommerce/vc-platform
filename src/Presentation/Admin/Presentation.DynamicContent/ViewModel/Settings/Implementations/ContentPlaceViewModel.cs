@@ -1,19 +1,19 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Media;
-using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using Microsoft.Practices.Prism.Commands;
-using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
-using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using Omu.ValueInjecter;
-using VirtoCommerce.Foundation.Marketing.Repositories;
-using VirtoCommerce.Foundation.Marketing.Model.DynamicContent;
+using VirtoCommerce.Client.Globalization;
+using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using VirtoCommerce.Foundation.Marketing.Factories;
+using VirtoCommerce.Foundation.Marketing.Model.DynamicContent;
+using VirtoCommerce.Foundation.Marketing.Repositories;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
 using VirtoCommerce.ManagementClient.DynamicContent.ViewModel.Settings.Interfaces;
-using VirtoCommerce.ManagementClient.DynamicContent.ViewModel.Wizard;
 using VirtoCommerce.ManagementClient.DynamicContent.ViewModel.Wizard.Interfaces;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.Settings.Implementations
 {
@@ -35,7 +35,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.Settings.Imple
 			INavigationManager navManager, DynamicContentPlace item)
 			: base(entityFactory, item, false)
 		{
-			ViewTitle = new ViewTitleBase { SubTitle = "SETTINGS", Title = "Content place" };
+            ViewTitle = new ViewTitleBase { SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory), Title = "Content place".Localize() };
 
 			_repositoryFactory = repositoryFactory;
 			_navManager = navManager;
@@ -105,8 +105,8 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.Settings.Imple
 		{
 			return new RefusedConfirmation
 			{
-				Content = "Save changes to Content place '" + DisplayName + "'?",
-				Title = "Action confirmation"
+                Content = string.Format("Save changes to Content place '{0}'?".Localize(), DisplayName),
+				Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 		}
 
@@ -155,7 +155,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.Settings.Imple
 		{
 			get
 			{
-				return string.Format("Enter content place details");
+                return string.Format("Enter content place details".Localize());
 			}
 		}
 

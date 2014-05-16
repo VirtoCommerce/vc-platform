@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
 using Omu.ValueInjecter;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
@@ -12,6 +13,7 @@ using VirtoCommerce.Foundation.Reviews.Factories;
 using VirtoCommerce.Foundation.Reviews.Repositories;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
+using VirtoCommerce.ManagementClient.Localization;
 using VirtoCommerce.ManagementClient.Reviews.Model;
 using VirtoCommerce.ManagementClient.Reviews.ViewModel.Interfaces;
 
@@ -38,7 +40,7 @@ namespace VirtoCommerce.ManagementClient.Reviews.ViewModel.Implementations
 
 			ViewTitle = new ViewTitleBase()
 				{
-					Title = "Reviews",
+                    Title = "Reviews".Localize(),
 					SubTitle = (item != null && !string.IsNullOrEmpty(item.Title)) ? item.Title.ToUpper(CultureInfo.InvariantCulture) : ""
 				};
 		}
@@ -125,8 +127,8 @@ namespace VirtoCommerce.ManagementClient.Reviews.ViewModel.Implementations
 		{
 			return new RefusedConfirmation
 				{
-					Content = "Save changes to Review '" + InnerItem.Title + "'?",
-					Title = "Action confirmation"
+                    Content = string.Format("Save changes to Review '{0}'?".Localize(), InnerItem.Title),
+					Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory)
 				};
 		}
 
@@ -169,11 +171,11 @@ namespace VirtoCommerce.ManagementClient.Reviews.ViewModel.Implementations
 					item.Comment = InnerItem.Body;
 					Repository.UnitOfWork.CommitAndRefreshChanges();
 				}
-				OnUIThread(() => OriginalItem.InjectFrom<CloneInjection>(InnerItem));				
+				OnUIThread(() => OriginalItem.InjectFrom<CloneInjection>(InnerItem));
 			}
 			catch (Exception ex)
 			{
-				ShowErrorDialog(ex, string.Format("An error occurred when trying to save Review: "));
+				ShowErrorDialog(ex, string.Format("An error occurred when trying to save {0}".Localize(null, LocalizationScope.DefaultCategory), ExceptionContextIdentity));
 			}
 		}
 

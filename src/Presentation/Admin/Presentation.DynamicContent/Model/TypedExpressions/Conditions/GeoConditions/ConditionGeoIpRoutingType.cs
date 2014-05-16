@@ -17,11 +17,11 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.Model
 		private MatchingContains _matchEl;
 
 		public ConditionGeoIpRoutingType(IExpressionViewModel expressionViewModel)
-			: base("Are browsing from an internet IP routing of type []", expressionViewModel)
+            : base("Are browsing from an internet IP routing of type []".Localize(), expressionViewModel)
 		{
-			WithLabel("Are browsing from an internet IP routing of type ");
+            WithLabel("Are browsing from an internet IP routing of type ".Localize());
 			_matchEl = WithElement(new MatchingContains(false, false)) as MatchingContains;
-			_valEl = WithDict(new string[] { "Fixed", "Anonymizer", "Aol", "Aolpop", "Aoldialup", "Aolproxy", "Pop", "Superpop", "Stallite", "Cache proxy", "International proxy", "Regional proxy", "Mobile gateway", "None" }, "select routing type") as UserInputElement;
+            _valEl = WithDict(new string[] { "Fixed", "Anonymizer", "Aol", "Aolpop", "Aoldialup", "Aolproxy", "Pop", "Superpop", "Stallite", "Cache proxy", "International proxy", "Regional proxy", "Mobile gateway", "None" }, "select routing type".Localize()) as UserInputElement;
 		}
 
 		public MatchingContains MatchCondition

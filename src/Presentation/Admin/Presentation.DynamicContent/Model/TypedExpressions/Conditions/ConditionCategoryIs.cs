@@ -21,13 +21,13 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.Model
 		/// <param name="expressionViewModel">viewmodel that implements interface IExpressionViewModel</param>
 		/// <param name="useSubcategories">Use true if the condition should use subcategories otherwise - false</param>
 		public ConditionCategoryIs(IExpressionViewModel expressionViewModel, bool useSubcategories)
-			: base(useSubcategories ? "Current category is [] or its subcategory" : "Current category is []", expressionViewModel)
+            : base(useSubcategories ? "Current category is [] or its subcategory".Localize() : "Current category is []".Localize(), expressionViewModel)
 		{
-			WithLabel("Shopper is in category ");
+            WithLabel("Shopper is in category ".Localize());
 			_itemsInCategoryEl = WithElement(new CategoryElement(expressionViewModel)) as CategoryElement;
 			_useSubCategories = useSubcategories;
 			if (useSubcategories)
-				WithLabel(" or subcategories");
+                WithLabel(" or subcategories".Localize());
 		}
 
 		public string SelectedCategoryId

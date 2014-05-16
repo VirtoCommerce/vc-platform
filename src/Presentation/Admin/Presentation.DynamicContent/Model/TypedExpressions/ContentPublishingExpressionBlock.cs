@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Linq;
-using linq = System.Linq.Expressions;
+using VirtoCommerce.Client.Globalization;
+using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.ManagementClient.Core.Controls;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
-using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.Foundation.Marketing.Model.DynamicContent;
+using VirtoCommerce.ManagementClient.Localization;
+using linq = System.Linq.Expressions;
 
 namespace VirtoCommerce.ManagementClient.DynamicContent.Model
 {
@@ -28,7 +28,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.Model
 		public ContentPublishingExpressionBlock(IExpressionViewModel publishingViewModel)
 			: base(null, publishingViewModel)
 		{
-			this.ConditionBlock = new ConditionAndOrBlock("if", publishingViewModel, "of these conditions are true");
+            this.ConditionBlock = new ConditionAndOrBlock("if".Localize(), publishingViewModel, "of these conditions are true".Localize());
 
 			InitializeAvailableExpressions();
 		}
@@ -38,7 +38,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.Model
 
 			var availableElements = new Func<CompositeElement>[] { 
 				()=> { //Browse behavior menu items
-					var group = new CompositeElement { DisplayName = "Browse behavior" };
+                    var group = new CompositeElement { DisplayName = "Browse behavior".Localize() };
 					group.AvailableChildrenGetters.AddRange(new Func<ExpressionElement>[] {
 						()=> new ConditionStoreSearchedPhrase(this.ExpressionViewModel),
 						()=> new ConditionInternetSearchedPhrase(this.ExpressionViewModel),
@@ -50,20 +50,20 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.Model
 					return group;
 				},
 				()=> { //Shopper profile menu items
-					var group = new CompositeElement { DisplayName = "Shopper profile" };
+                    var group = new CompositeElement { DisplayName = "Shopper profile".Localize() };
 					group.AvailableChildrenGetters.AddRange(new Func<ExpressionElement>[] {
 						()=> new ConditionShopperAge(this.ExpressionViewModel),
 						()=> new ConditionGenderIs(this.ExpressionViewModel)});
 					return group;
 				},
 				()=> { //Shopping cart menu items
-					var group = new CompositeElement { DisplayName = "Shopping cart" };
+                    var group = new CompositeElement { DisplayName = "Shopping cart".Localize() };
 					group.AvailableChildrenGetters.AddRange(new Func<ExpressionElement>[] {
 						()=> new ConditionCartTotalIs(this.ExpressionViewModel)});
 					return group;
 				},
 				()=> { //Shoppers geo location menu items
-					var group = new CompositeElement { DisplayName = "Geo location" };
+                    var group = new CompositeElement { DisplayName = "Geo location".Localize() };
 					group.AvailableChildrenGetters.AddRange(new Func<ExpressionElement>[] {
 						()=> new ConditionGeoCity(this.ExpressionViewModel),
 						()=> new ConditionGeoState(this.ExpressionViewModel),
@@ -80,7 +80,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.Model
 				},
             };
 			ConditionBlock.WithAvailabeChildren(availableElements);
-			ConditionBlock.NewChildLabel = "+ add condition";
+			ConditionBlock.NewChildLabel = "+ add condition".Localize(null, LocalizationScope.DefaultCategory);
 		}
 
 		public override void InitializeAfterDeserialized(IExpressionViewModel publishingViewModel)

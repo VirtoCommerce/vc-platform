@@ -75,13 +75,13 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel
 			{
 				case PropertyValueType.ShortString:
 					if (string.IsNullOrEmpty(InnerItem.ShortTextValue))
-						InnerItem.SetError("ShortTextValue", "Value is required", true);
+                        InnerItem.SetError("ShortTextValue", "Value is required".Localize(), true);
 					else
 						InnerItem.ClearError("ShortTextValue");
 					break;
 				case PropertyValueType.LongString:
 					if (string.IsNullOrEmpty(InnerItem.LongTextValue))
-						InnerItem.SetError("LongTextValue", "Value is required", true);
+                        InnerItem.SetError("LongTextValue", "Value is required".Localize(), true);
 					else
 						InnerItem.ClearError("LongTextValue");
 					break;
@@ -124,7 +124,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel
             itemVM.RootItemId = null;
 
 			CommonConfirmRequest.Raise(
-				new ConditionalConfirmation(() => itemVM.SelectedAsset != null) { Content = itemVM, Title = "Select an asset" },
+                new ConditionalConfirmation(() => itemVM.SelectedAsset != null) { Content = itemVM, Title = "Select an asset".Localize() },
 				(x) =>
 				{
 					if (x.Confirmed)
@@ -152,12 +152,12 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel
 			itemVM.SearchModifier = SearchCategoryModifier.UserCanChangeSearchCatalog;
 			itemVM.InitializeForOpen();
 			CommonConfirmRequest.Raise(
-				new ConditionalConfirmation(() => itemVM.SelectedItem != null) { Content = itemVM, Title = "Select Category" },
+                new ConditionalConfirmation(() => itemVM.SelectedItem != null) { Content = itemVM, Title = "Select Category".Localize() },
 				(x) =>
 				{
 					if (x.Confirmed)
 					{
-						var category = (catalogModel.Category)itemVM.SelectedItem;
+						var category = itemVM.SelectedItem;
 						InnerItem.LongTextValue = category.Code;
 						InnerItem.Alias = category.Name;
 						SelectedCategoryName = InnerItem.Alias;

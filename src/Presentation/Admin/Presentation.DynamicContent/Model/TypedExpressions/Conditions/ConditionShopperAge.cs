@@ -13,9 +13,9 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.Model
 		private readonly AgeElement _ageEl;
 
 		public ConditionShopperAge(IExpressionViewModel expressionViewModel)
-			: base("Shopper age []", expressionViewModel)
+            : base("Shopper age []".Localize(), expressionViewModel)
 		{
-			WithLabel("Shopper age is ");
+            WithLabel("Shopper age is ".Localize());
 			_ageEl = WithElement(new AgeElement(expressionViewModel)) as AgeElement;
 		}
 

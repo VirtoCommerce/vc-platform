@@ -54,7 +54,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.Wizard.Impleme
 		{
 			get
 			{
-				return string.Format("Enter content place details");
+                return string.Format("Enter content place details".Localize());
 			}
 		}
 

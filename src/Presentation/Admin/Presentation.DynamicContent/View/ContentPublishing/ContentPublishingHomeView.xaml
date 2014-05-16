@@ -58,7 +58,7 @@
         <core_controls:SearchTextBox Grid.Column="0" Grid.ColumnSpan="3" HorizontalAlignment="Right"
              VerticalAlignment="Top" Width="250" Margin="0,-70,20,0" SearchEventTimeDelay="0:0:1"
              Text="{Binding SearchFilterKeyword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-             x:Name="searchKeyword">
+             x:Name="searchKeyword" LabelText="{Loc 'Enter keywords...'}">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="Search">
                     <i:InvokeCommandAction Command="{Binding SearchItemsCommand}" CommandParameter="{Binding ElementName=searchKeyword, Path=Name}" />

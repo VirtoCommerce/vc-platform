@@ -18,11 +18,11 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.Model
 		private readonly MatchingContains _matchEl;
 
 		public ConditionGeoCountry(IExpressionViewModel expressionViewModel)
-			: base("Are browsing from country []", expressionViewModel)
+            : base("Are browsing from country []".Localize(), expressionViewModel)
 		{
-			WithLabel("Browsing from country ");
+            WithLabel("Browsing from country ".Localize());
 			_matchEl = WithElement(new MatchingContains(false, false)) as MatchingContains;
-			_valEl = WithCustomDict(GetCountryList(expressionViewModel), new[] { "select country" }) as UserInputElement;
+            _valEl = WithCustomDict(GetCountryList(expressionViewModel), new[] { "select country".Localize() }) as UserInputElement;
 		}
 
 		private string[] GetCountryList(IExpressionViewModel expressionViewModel)

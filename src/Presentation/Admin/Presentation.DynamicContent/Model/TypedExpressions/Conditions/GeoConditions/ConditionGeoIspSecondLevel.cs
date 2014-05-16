@@ -15,9 +15,9 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.Model
 		private MatchContainsStringElement _valEl;
 
 		public ConditionGeoIspSecondLevel(IExpressionViewModel expressionViewModel)
-			: base("Are browsing from an ISP with second domain level []", expressionViewModel)
+            : base("Are browsing from an ISP with second domain level []".Localize(), expressionViewModel)
 		{
-			WithLabel("Browsing from an ISP with second domain level ");
+            WithLabel("Browsing from an ISP with second domain level ".Localize());
 			_valEl = WithElement(new MatchContainsStringElement(expressionViewModel)) as MatchContainsStringElement;
 		}
 

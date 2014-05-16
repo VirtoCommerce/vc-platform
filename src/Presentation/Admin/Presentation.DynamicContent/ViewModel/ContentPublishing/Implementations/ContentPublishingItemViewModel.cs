@@ -7,21 +7,23 @@ using System.Windows;
 using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
 using Omu.ValueInjecter;
-using VirtoCommerce.Foundation.Orders.Repositories;
-using VirtoCommerce.Foundation.Stores.Repositories;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
-using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Marketing.Factories;
-using VirtoCommerce.Foundation.Marketing.Repositories;
-using VirtoCommerce.ManagementClient.Core.Controls;
-using VirtoCommerce.ManagementClient.DynamicContent.Model;
 using VirtoCommerce.Foundation.Marketing.Model.DynamicContent;
+using VirtoCommerce.Foundation.Marketing.Repositories;
+using VirtoCommerce.Foundation.Orders.Repositories;
+using VirtoCommerce.Foundation.Stores.Repositories;
+using VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Interfaces;
+using VirtoCommerce.ManagementClient.Core.Controls;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
+using VirtoCommerce.ManagementClient.DynamicContent.Model;
 using VirtoCommerce.ManagementClient.DynamicContent.ViewModel.ContentPublishing.Interfaces;
 using VirtoCommerce.ManagementClient.DynamicContent.ViewModel.Wizard.Interfaces;
-using VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Interfaces;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.ContentPublishing.Implementations
 {
@@ -45,13 +47,13 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.ContentPublish
 			IRepositoryFactory<IDynamicContentRepository> repositoryFactory,
 			IDynamicContentEntityFactory entityFactory,
 			IRepositoryFactory<IStoreRepository> storeRepositoryFactory,
-			INavigationManager navManager, 
+			INavigationManager navManager,
 			DynamicContentPublishingGroup item)
 			: base(entityFactory, item, false)
 		{
 			ViewTitle = new ViewTitleBase
 			{
-				Title = "Content Publishing",
+                Title = "Content Publishing".Localize(),
 				SubTitle = (item != null && !String.IsNullOrEmpty(item.Name)) ? item.Name.ToUpper(CultureInfo.InvariantCulture) : ""
 			};
 
@@ -69,7 +71,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.ContentPublish
 			IViewModelsFactory<ISearchCategoryViewModel> searchCategoryVmFactory,
 			IRepositoryFactory<IDynamicContentRepository> repositoryFactory,
 			IRepositoryFactory<IStoreRepository> storeRepositoryFactory,
-			IDynamicContentEntityFactory entityFactory, 
+			IDynamicContentEntityFactory entityFactory,
 			DynamicContentPublishingGroup item)
 			: base(entityFactory, item, true)
 		{
@@ -149,8 +151,8 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.ContentPublish
 		{
 			return new RefusedConfirmation
 			{
-				Content = "Save changes to content publishing '" + DisplayName + "'?",
-				Title = "Action confirmation"
+                Content = string.Format("Save changes to content publishing '{0}'?".Localize(), DisplayName),
+				Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 		}
 
@@ -283,13 +285,13 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.ContentPublish
 			{
 				var result = string.Empty;
 				if (this is IContentPublishingOverviewStepViewModel)
-					result = string.Format("Enter Content publishing group details");
+                    result = string.Format("Enter Content publishing group details".Localize());
 				else if (this is IContentPublishingContentPlacesStepViewModel)
-					result = "Select content places";
+                    result = "Select content places".Localize();
 				else if (this is IContentPublishingDynamicContentStepViewModel)
-					result = "Select dynamic content";
+                    result = "Select dynamic content".Localize();
 				else if (this is IContentPublishingConditionsStepViewModel)
-					result = "Set availability conditions";
+                    result = "Set availability conditions".Localize();
 
 				return result;
 			}
@@ -314,7 +316,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.ContentPublish
 		public IViewModelsFactory<ISearchCategoryViewModel> SearchCategoryVmFactory { get { return _searchCategoryVmFactory; } }
 
 		public IRepositoryFactory<IStoreRepository> StoreRepositoryFactory { get { return _storeRepositoryFactory; } }
-		
+
 		public TypedExpressionElementBase ExpressionElementBlock { get; set; }
 
 		protected override void DoDuplicate()

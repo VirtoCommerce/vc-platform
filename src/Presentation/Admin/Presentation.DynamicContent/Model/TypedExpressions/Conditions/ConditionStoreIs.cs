@@ -12,9 +12,9 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.Model
         private readonly StoreElement _itemsInStoreEl;
 
         public ConditionStoreIs(IExpressionViewModel expressionViewModel)
-            : base("Current store is []", expressionViewModel)
+            : base("Current store is []".Localize(), expressionViewModel)
         {
-            WithLabel("Current store is ");
+            WithLabel("Current store is ".Localize());
             _itemsInStoreEl = WithElement(new StoreElement(expressionViewModel)) as StoreElement;
         }
 

@@ -15,7 +15,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.Model
 			InitializeAvailableValues(expressionViewModel);
 
             DefaultValue = AvailableValues.FirstOrDefault();
-            InputDisplayName = "select Store";
+            InputDisplayName = "select Store".Localize();
         }
 
 		public override void InitializeAvailableValues(IExpressionViewModel expressionViewModel)

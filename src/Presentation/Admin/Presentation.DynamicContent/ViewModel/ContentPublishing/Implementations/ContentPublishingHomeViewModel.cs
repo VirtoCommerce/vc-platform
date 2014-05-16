@@ -57,8 +57,8 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.ContentPublish
 
 			ViewTitle = new ViewTitleBase
 			{
-				Title = "Marketing",
-				SubTitle = "CONTENT PUBLISHING"
+                Title = "Marketing".Localize(),
+                SubTitle = "CONTENT PUBLISHING".Localize()
 			};
 			PopulateTiles();
 		}
@@ -87,7 +87,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.ContentPublish
 			var confirmation = new Confirmation()
 			{
 				Content = itemVM,
-				Title = "Create content publishing group"
+                Title = "Create content publishing group".Localize()
 			};
 
 			ItemAdd(confirmation);
@@ -232,7 +232,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.ContentPublish
 				IdModule = NavigationNames.MenuName,
 				IdTile = "PublishAd",
 				TileIconSource = "Icon_ContentPublishing",
-				TileTitle = "PUBLISH AD",
+                TileTitle = "PUBLISH AD".Localize(),
 				Order = 6,
 				IdColorSchema = TileColorSchemas.Schema4,
 				NavigateCommand = new DelegateCommand(() => OnUIThread(async () =>

@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using Omu.ValueInjecter;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
@@ -10,6 +11,7 @@ using VirtoCommerce.ManagementClient.DynamicContent.ViewModel.Wizard;
 using VirtoCommerce.Foundation.Marketing.Model.DynamicContent;
 using System.Collections.Generic;
 using VirtoCommerce.ManagementClient.DynamicContent.ViewModel.Wizard.Interfaces;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.Settings.Implementations
 {
@@ -74,7 +76,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.Settings.Imple
 			var vm = WizardVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", item));
 			var confirmation = new ConditionalConfirmation()
 				{
-					Title = "Create content place",
+                    Title = "Create content place".Localize(),
 					Content = vm
 				};
 			ItemAdd(item, confirmation, _repositoryFactory.GetRepositoryInstance());
@@ -95,8 +97,8 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.Settings.Imple
 		{
 			var confirmation = new ConditionalConfirmation
 			{
-				Content = string.Format("Are you sure you want to delete Content place '{0}'?", item.Name),
-				Title = "Delete confirmation"
+                Content = string.Format("Are you sure you want to delete Content place '{0}'?".Localize(), item.Name),
+				Title = "Delete confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 
 			ItemDelete(item, confirmation, _repositoryFactory.GetRepositoryInstance());

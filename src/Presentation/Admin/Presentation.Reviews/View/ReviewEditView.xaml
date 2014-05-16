@@ -47,7 +47,7 @@
             <StackPanel Grid.Row="1" Width="600" HorizontalAlignment="Left">
                 <TextBlock Text="{Loc 'Body:'}" />
                 <core_controls:WatermarkedTextBox Text="{Binding InnerItem.Body, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
-                     Style="{StaticResource Virto_Multiline_WatermarkedTextBox_Style}" Height="300" WatermarkText="{Loc 'Enter job description'}" />
+                     Style="{StaticResource Virto_Multiline_WatermarkedTextBox_Style}" Height="300" />
             </StackPanel>
             <StackPanel Grid.Row="2" Width="400" HorizontalAlignment="Left">
                 <TextBlock Text="{Loc 'Author:'}" />
@@ -56,7 +56,13 @@
             <StackPanel Grid.Row="3" Width="200" HorizontalAlignment="Left">
                 <TextBlock Text="{Loc 'Status:'}" />
                 <ComboBox SelectedValue="{Binding InnerItem.Status, Converter={StaticResource reviewStatusConverter}}"
-                     ItemsSource="{Binding Source={StaticResource ReviewStatus}}" />
+                     ItemsSource="{Binding Source={StaticResource ReviewStatus}}">
+					<ComboBox.ItemTemplate>
+						<DataTemplate>
+							<ContentPresenter Content="{Binding Converter={x:Static LocalizingConverter.Current}, ConverterParameter={x:Static res:NavigationNames.ModuleName}}" ContentTemplate="{StaticResource Virto_SearchData_ComboBox_DataTemplate}" />
+						</DataTemplate>
+					</ComboBox.ItemTemplate>
+				</ComboBox>
             </StackPanel>
             <StackPanel Grid.Row="4" Width="Auto" HorizontalAlignment="Left" Visibility="{Binding IsReview, Converter={StaticResource booleanToVisibilityConverter}}">
                 <TextBlock Text="{Loc 'Rating:'}" />

@@ -1,59 +1,61 @@
-﻿using System;
+﻿using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
+using VirtoCommerce.Foundation.Marketing.Factories;
+using VirtoCommerce.Foundation.Marketing.Model.DynamicContent;
+using VirtoCommerce.Foundation.Marketing.Repositories;
 using VirtoCommerce.Foundation.Security.Model;
-using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
-using VirtoCommerce.ManagementClient.Core.Infrastructure.Tiles;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.DataVirtualization;
-using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
-using Microsoft.Practices.Prism.Commands;
-using System.ComponentModel;
-using VirtoCommerce.Foundation.Marketing.Factories;
-using VirtoCommerce.Foundation.Marketing.Repositories;
-using System.Threading;
+using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
+using VirtoCommerce.ManagementClient.Core.Infrastructure.Tiles;
 using VirtoCommerce.ManagementClient.DynamicContent.ViewModel.DynamicContent.Interfaces;
-using System.Collections;
-using VirtoCommerce.Foundation.Marketing.Model.DynamicContent;
 using VirtoCommerce.ManagementClient.DynamicContent.ViewModel.Wizard.Interfaces;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.DynamicContent.Implementations
 {
     public class DynamicContentHomeViewModel : ViewModelBase, IDynamicContentHomeViewModel, IVirtualListLoader<IDynamicContentItemViewModel>, ISupportDelayInitialization
-	{
-		#region Dependencies
+    {
+        #region Dependencies
 
-		private readonly IDynamicContentEntityFactory _entityFactory;
-		private readonly IAuthenticationContext _authContext;
-		private readonly IRepositoryFactory<IDynamicContentRepository> _dynamicContentRepository;
-	    private readonly IViewModelsFactory<ICreateDynamicContentItemViewModel> _wizardVmFactory;
-	    private readonly IViewModelsFactory<IDynamicContentItemViewModel> _itemVmFactory;
-		private readonly NavigationManager _navManager;
-		private readonly TileManager _tileManager;
-		
-		#endregion
+        private readonly IDynamicContentEntityFactory _entityFactory;
+        private readonly IAuthenticationContext _authContext;
+        private readonly IRepositoryFactory<IDynamicContentRepository> _dynamicContentRepository;
+        private readonly IViewModelsFactory<ICreateDynamicContentItemViewModel> _wizardVmFactory;
+        private readonly IViewModelsFactory<IDynamicContentItemViewModel> _itemVmFactory;
+        private readonly NavigationManager _navManager;
+        private readonly TileManager _tileManager;
+
+        #endregion
 
         #region Constructor
 
         public DynamicContentHomeViewModel(
-			IRepositoryFactory<IDynamicContentRepository> dynamicContentRepository, 
-			IDynamicContentEntityFactory entityFactory,
-			IAuthenticationContext authContext,
-			IViewModelsFactory<ICreateDynamicContentItemViewModel> wizardVmFactory,
-			IViewModelsFactory<IDynamicContentItemViewModel> itemVmFactory,
-			NavigationManager navManager, 
-			TileManager tileManager)
+            IRepositoryFactory<IDynamicContentRepository> dynamicContentRepository,
+            IDynamicContentEntityFactory entityFactory,
+            IAuthenticationContext authContext,
+            IViewModelsFactory<ICreateDynamicContentItemViewModel> wizardVmFactory,
+            IViewModelsFactory<IDynamicContentItemViewModel> itemVmFactory,
+            NavigationManager navManager,
+            TileManager tileManager)
         {
-	        _dynamicContentRepository = dynamicContentRepository;
-			_entityFactory = entityFactory;
-			_authContext = authContext;
-			_navManager = navManager;
-			_tileManager = tileManager;
-	        _wizardVmFactory = wizardVmFactory;
-	        _itemVmFactory = itemVmFactory;
+            _dynamicContentRepository = dynamicContentRepository;
+            _entityFactory = entityFactory;
+            _authContext = authContext;
+            _navManager = navManager;
+            _tileManager = tileManager;
+            _wizardVmFactory = wizardVmFactory;
+            _itemVmFactory = itemVmFactory;
 
             CommonWizardDialogRequest = new InteractionRequest<Confirmation>();
             CommonConfirmRequest = new InteractionRequest<Confirmation>();
@@ -68,8 +70,8 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.DynamicContent
 
             ViewTitle = new ViewTitleBase
             {
-                Title = "Marketing",
-                SubTitle = "DYNAMIC CONTENT"
+                Title = "Marketing".Localize(),
+                SubTitle = "DYNAMIC CONTENT".Localize()
             };
             PopulateTiles();
         }
@@ -118,7 +120,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.DynamicContent
 
             CommonWizardDialogRequest.Raise(new ConditionalConfirmation
             {
-                Title = "Create dynamic content item",
+                Title = "Create dynamic content item".Localize(),
                 Content = itemVM
             }, (x) =>
             {
@@ -141,7 +143,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.DynamicContent
             if (selectionCount > 0)
             {
                 var selectedItems = selectedItemsList.Cast<VirtualListItem<IDynamicContentItemViewModel>>();
-	            var names = selectedItems.
+                var names = selectedItems.
                     Take(4).
                     Select(x => ((ViewModelBase)x.Data).DisplayName);
 
@@ -150,8 +152,8 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.DynamicContent
 
                 CommonConfirmRequest.Raise(new ConditionalConfirmation()
                 {
-                    Content = string.Format("Are you sure you want to duplicate '{0}'?", joinedNames),
-                    Title = "Create duplicate"
+                    Content = string.Format("Are you sure you want to duplicate '{0}'?".Localize(), joinedNames),
+                    Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory)
                 },
                 (x) =>
                 {
@@ -159,9 +161,9 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.DynamicContent
                     {
                         using (var repository = _dynamicContentRepository.GetRepositoryInstance())
                         {
-							selectedItems.
-								ToList().
-								ForEach(y => y.Data.Duplicate(repository));
+                            selectedItems.
+                                ToList().
+                                ForEach(y => y.Data.Duplicate(repository));
 
                             repository.UnitOfWork.Commit();
                         }
@@ -173,72 +175,72 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.DynamicContent
         }
 
         private void RaiseItemDeleteInteractionRequest(IList selectedItemsList)
-		{
-			var selectionCount = selectedItemsList.Count;
+        {
+            var selectionCount = selectedItemsList.Count;
             if (selectionCount > 0)
             {
                 var selectedItems = selectedItemsList.Cast<VirtualListItem<IDynamicContentItemViewModel>>();
-	            var names = selectedItems.
+                var names = selectedItems.
                     Take(4).
                     Select(x => ((ViewModelBase)x.Data).DisplayName);
 
                 var joinedNames = string.Join(", ", names);
                 if (selectionCount > 4) joinedNames += "...";
-				var restrictList = new List<DynamicContentItem>();
-				using (var repository = _dynamicContentRepository.GetRepositoryInstance())
-				{
-					foreach (var item in selectedItems)
+                var restrictList = new List<DynamicContentItem>();
+                using (var repository = _dynamicContentRepository.GetRepositoryInstance())
+                {
+                    foreach (var item in selectedItems)
+                    {
+                        var content = (item.Data as ViewModelDetailBase<DynamicContentItem>).InnerItem;
+                        if (repository.PublishingGroups.Expand(publishing => publishing.ContentItems).Where(x => x.ContentItems.Any(i => i.DynamicContentItemId == content.DynamicContentItemId)).Count() > 0)
+                            restrictList.Add(content);
+                    }
+                    if (restrictList.Any())
+                    {
+                        var dynamicNames = string.Empty;
+                        var prefix = restrictList.Count == 1 ? "Dynamic content".Localize() : "Dynamic contents".Localize();
+                        restrictList.ForEach(x => dynamicNames = string.Join(Environment.NewLine, x.Name, dynamicNames));
+
+                        var suffix = restrictList.Count == 1 ? "it's".Localize() : "they are".Localize();
+                        CommonNotifyRequest.Raise(new Notification()
+                            {
+                                Content = string.Format("{0}{1} {2} can't be deleted as {3} used in Content Publishing".Localize(), prefix, Environment.NewLine, dynamicNames, suffix),
+                                Title = "Error".Localize(null, LocalizationScope.DefaultCategory)
+                            });
+                    }
+                }
+
+                if (!restrictList.Any())
+                {
+                    CommonConfirmRequest.Raise(new ConditionalConfirmation()
                         {
-							var content = (item.Data as ViewModelDetailBase<DynamicContentItem>).InnerItem;
-							if (repository.PublishingGroups.Expand(publishing => publishing.ContentItems).Where(x => x.ContentItems.Any(i => i.DynamicContentItemId == content.DynamicContentItemId)).Count() > 0)
-								restrictList.Add(content);
-                        }
-					if (restrictList.Any())
-					{
-						var dynamicNames = string.Empty;
-						var prefix = restrictList.Count == 1 ? "Dynamic content" : "Dynamic contents";
-						restrictList.ForEach(x => dynamicNames = string.Join(Environment.NewLine, x.Name, dynamicNames));
-						
-						var suffix = restrictList.Count == 1 ? "it's" : "they are";
-						CommonNotifyRequest.Raise(new Notification()
-							{
-								Content = string.Format("{0}{1} {2} can't be deleted as {3} used in Content Publishing", prefix, Environment.NewLine, dynamicNames, suffix),
-								Title = "Error"
-							});
-					}
-				}
+                            Content = string.Format("Are you sure you want to delete '{0}'?".Localize(null, LocalizationScope.DefaultCategory), joinedNames),
+                            Title = "Delete confirmation".Localize(null, LocalizationScope.DefaultCategory)
+                        },
+                                               async (x) =>
+                                               {
+                                                   if (x.Confirmed)
+                                                   {
+                                                       try
+                                                       {
+                                                           OnUIThread(() => { ShowLoadingAnimation = true; });
+                                                           await Task.Run(() =>
+                                                               {
+                                                                   foreach (var item in selectedItems)
+                                                                   {
+                                                                       (item.Data as IViewModelDetailBase).Delete();
+                                                                   }
+                                                               });
+                                                           SelectedDynamicContentItems.Refresh();
+                                                       }
+                                                       finally
+                                                       {
+                                                           OnUIThread(() => { ShowLoadingAnimation = false; });
+                                                       }
+                                                   }
 
-	            if (!restrictList.Any())
-	            {
-		            CommonConfirmRequest.Raise(new ConditionalConfirmation()
-			            {
-				            Content = string.Format("Are you sure you want to delete '{0}'?", joinedNames),
-				            Title = "Delete"
-			            },
-		                                       async (x) =>
-			                                       {
-				                                       if (x.Confirmed)
-				                                       {
-					                                       try
-					                                       {
-						                                       OnUIThread(() => { ShowLoadingAnimation = true; });
-						                                       await Task.Run(() =>
-							                                       {
-								                                       foreach (var item in selectedItems)
-								                                       {
-									                                       (item.Data as IViewModelDetailBase).Delete();
-								                                       }
-							                                       });
-						                                       SelectedDynamicContentItems.Refresh();
-					                                       }
-					                                       finally
-					                                       {
-						                                       OnUIThread(() => { ShowLoadingAnimation = false; });
-					                                       }
-				                                       }
-
-			                                       });
-	            }
+                                               });
+                }
             }
         }
 
@@ -305,7 +307,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.DynamicContent
 
                 overallCount = query.Count();
                 var items = query.OrderBy(x => x.DynamicContentItemId).Skip(startIndex).Take(count).ToList();
-	            retVal.AddRange(items.Select(item => _itemVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", item))));
+                retVal.AddRange(items.Select(item => _itemVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", item))));
             }
 
             return retVal;
@@ -341,8 +343,8 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.DynamicContent
             var navigationData = _navManager.GetNavigationItemByName(NavigationNames.HomeName);
             if (navigationData != null)
             {
-				_navManager.Navigate(navigationData);
-				var mainViewModel = _navManager.GetViewFromRegion(navigationData) as SubTabsDefaultViewModel;
+                _navManager.Navigate(navigationData);
+                var mainViewModel = _navManager.GetViewFromRegion(navigationData) as SubTabsDefaultViewModel;
 
                 return (mainViewModel != null && mainViewModel.SetCurrentTabById(id));
             }
@@ -351,87 +353,87 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.DynamicContent
 
         private void PopulateTiles()
         {
-			if (_authContext.CheckPermission(PredefinedPermissions.MarketingPromotionsManage))
-			{
-				_tileManager.AddTile(new NumberTileItem()
-				{
-					IdModule = NavigationNames.MenuName,
-					IdTile = "ActiveAds",
-					TileTitle = "ACTIVE ADS",
-					Order = 3,
-					IdColorSchema = TileColorSchemas.Schema3,
-					NavigateCommand = new DelegateCommand(() => NavigateToTabPage(NavigationNames.HomeNameDynamicContent)),
-					Refresh = async (tileItem) =>
-					{
-						try
-						{
-							using (var repository = _dynamicContentRepository.GetRepositoryInstance())
-							{
-								if (tileItem is NumberTileItem)
-								{
-									var query = await Task.Factory.StartNew(() => repository.Items.Count());
-									(tileItem as NumberTileItem).TileNumber = query.ToString();
-								}
-							}
-						}
-						catch
-						{
-						}
-					}
-				});
-			}
+            if (_authContext.CheckPermission(PredefinedPermissions.MarketingPromotionsManage))
+            {
+                _tileManager.AddTile(new NumberTileItem()
+                {
+                    IdModule = NavigationNames.MenuName,
+                    IdTile = "ActiveAds",
+                    TileTitle = "ACTIVE ADS".Localize(),
+                    Order = 3,
+                    IdColorSchema = TileColorSchemas.Schema3,
+                    NavigateCommand = new DelegateCommand(() => NavigateToTabPage(NavigationNames.HomeNameDynamicContent)),
+                    Refresh = async (tileItem) =>
+                    {
+                        try
+                        {
+                            using (var repository = _dynamicContentRepository.GetRepositoryInstance())
+                            {
+                                if (tileItem is NumberTileItem)
+                                {
+                                    var query = await Task.Factory.StartNew(() => repository.Items.Count());
+                                    (tileItem as NumberTileItem).TileNumber = query.ToString();
+                                }
+                            }
+                        }
+                        catch
+                        {
+                        }
+                    }
+                });
+            }
 
-	        if (_authContext.CheckPermission(PredefinedPermissions.MarketingDynamic_ContentManage))
-	        {
-		        _tileManager.AddTile(new NumberTileItem()
-			        {
-				        IdModule = NavigationNames.MenuName,
-				        IdTile = "TotalAds",
-				        TileTitle = "TOTAL ADS",
-				        Order = 3,
-				        IdColorSchema = TileColorSchemas.Schema2,
-				        NavigateCommand = new DelegateCommand(() => NavigateToTabPage(NavigationNames.HomeNameDynamicContent)),
-				        Refresh = async (tileItem) =>
-					        {
-						        try
-						        {
-							        using (var repository = _dynamicContentRepository.GetRepositoryInstance())
-							        {
-								        if (tileItem is NumberTileItem)
-								        {
-									        var query = await Task.Factory.StartNew(() => repository.Items.Count());
-									        (tileItem as NumberTileItem).TileNumber = query.ToString();
-								        }
-							        }
-						        }
-						        catch
-						        {
-						        }
-					        }
-			        });
-	        }
+            if (_authContext.CheckPermission(PredefinedPermissions.MarketingDynamic_ContentManage))
+            {
+                _tileManager.AddTile(new NumberTileItem()
+                    {
+                        IdModule = NavigationNames.MenuName,
+                        IdTile = "TotalAds",
+                        TileTitle = "TOTAL ADS".Localize(),
+                        Order = 3,
+                        IdColorSchema = TileColorSchemas.Schema2,
+                        NavigateCommand = new DelegateCommand(() => NavigateToTabPage(NavigationNames.HomeNameDynamicContent)),
+                        Refresh = async (tileItem) =>
+                            {
+                                try
+                                {
+                                    using (var repository = _dynamicContentRepository.GetRepositoryInstance())
+                                    {
+                                        if (tileItem is NumberTileItem)
+                                        {
+                                            var query = await Task.Factory.StartNew(() => repository.Items.Count());
+                                            (tileItem as NumberTileItem).TileNumber = query.ToString();
+                                        }
+                                    }
+                                }
+                                catch
+                                {
+                                }
+                            }
+                    });
+            }
 
-	        if (_authContext.CheckPermission(PredefinedPermissions.MarketingDynamic_ContentManage))
-	        {
-				_tileManager.AddTile(new IconTileItem()
-			        {
-				        IdModule = NavigationNames.MenuName,
-				        IdTile = "NewAd",
-				        TileIconSource = "Icon_Dynamic",
-				        TileTitle = "NEW AD",
-				        Order = 5,
-				        IdColorSchema = TileColorSchemas.Schema1,
-				        NavigateCommand = new DelegateCommand(() => OnUIThread(async () =>
-					        {
-						        if (NavigateToTabPage(NavigationNames.HomeNameDynamicContent))
-						        {
-							        await Task.Run(() => Thread.Sleep(300)); // we need some time to parse xaml  
-							        AddItemCommand.Execute();
+            if (_authContext.CheckPermission(PredefinedPermissions.MarketingDynamic_ContentManage))
+            {
+                _tileManager.AddTile(new IconTileItem()
+                    {
+                        IdModule = NavigationNames.MenuName,
+                        IdTile = "NewAd",
+                        TileIconSource = "Icon_Dynamic",
+                        TileTitle = "NEW AD".Localize(),
+                        Order = 5,
+                        IdColorSchema = TileColorSchemas.Schema1,
+                        NavigateCommand = new DelegateCommand(() => OnUIThread(async () =>
+                            {
+                                if (NavigateToTabPage(NavigationNames.HomeNameDynamicContent))
+                                {
+                                    await Task.Run(() => Thread.Sleep(300)); // we need some time to parse xaml  
+                                    AddItemCommand.Execute();
 
-						        }
-					        }))
-			        });
-	        }
+                                }
+                            }))
+                    });
+            }
         }
 
         #endregion

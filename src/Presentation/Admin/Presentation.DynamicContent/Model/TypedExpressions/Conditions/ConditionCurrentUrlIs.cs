@@ -14,9 +14,9 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.Model
 		private readonly MatchContainsCaseStringElement _urlEl;
 
 		public ConditionCurrentUrlIs(IExpressionViewModel expressionViewModel)
-			: base("Currently viewed Url is []", expressionViewModel)
+            : base("Currently viewed Url is []".Localize(), expressionViewModel)
 		{
-			WithLabel("Current Url is");
+            WithLabel("Current Url is".Localize());
 			_urlEl = WithElement(new MatchContainsCaseStringElement(expressionViewModel)) as MatchContainsCaseStringElement;
 		}
 
