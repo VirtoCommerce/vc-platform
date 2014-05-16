@@ -18,8 +18,7 @@ namespace VirtoCommerce.Client.Globalization.Repository
 		/// </summary>
 		private readonly IElementRepository _innerRepository;
 		#endregion
-		private const string StatusDateKeyInner = "~1ntern@|_st@tus_c@che_key!",
-							StatusDateKey = "~pu8l1c|_st@tus_c@che_key!";
+		private const string StatusDateKeyInner = "~1ntern@|_st@tus_c@che_key!";
 
 		#region .ctor
 		/// <summary>
@@ -73,24 +72,23 @@ namespace VirtoCommerce.Client.Globalization.Repository
 						AddCache(preloadedCategoryLocalization);
 					}
 
-					SetStatusElement(culture, true);
+					SetStatusElement(default(DateTime), culture);
 					element = _cachedElements[cachedKey] as Element;
 				}
 			}
 			return element;
 		}
 
-		public DateTime GetStatusDate(string culture)
+		public DateTime GetStatusDate()
 		{
-			return _innerRepository.GetStatusDate(culture);
+			return _innerRepository.GetStatusDate();
 		}
 
-		public void SetStatusDate(string culture)
+		public void SetStatusDate(DateTime lastModified)
 		{
-			_innerRepository.SetStatusDate(culture);
+			_innerRepository.SetStatusDate(lastModified);
 
-			SetStatusElement(culture, false);
-			SetStatusElement(culture, true);
+			SetStatusElement(lastModified);
 		}
 
 		/// <summary>
@@ -220,9 +218,9 @@ namespace VirtoCommerce.Client.Globalization.Repository
 			return _cachedElements[cachedKey] as Element;
 		}
 
-		private void SetStatusElement(string culture, bool isForInnerCache)
+		private void SetStatusElement(DateTime lastModified, string culture = "")
 		{
-			var element = new Element { Name = isForInnerCache ? StatusDateKeyInner : StatusDateKey, Culture = culture, Value = DateTime.UtcNow.ToString() };
+			var element = new Element { Name = StatusDateKeyInner, Culture = culture, Value = lastModified.ToString() };
 			AddCache(element);
 		}
 	}

@@ -54,7 +54,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.DisplayTemplates.Im
 			_parent = parent;
 			_searchCategoryVmFactory = categoryVmFactory;
 			_searchItemVmFactory = itemVmFactory;
-			ViewTitle = new ViewTitleBase() { Title = "Display template".Localize(), SubTitle = "SETTINGS".Localize() };
+			ViewTitle = new ViewTitleBase() { Title = "Display template".Localize(), SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory) };
 			OpenItemCommand = new DelegateCommand(() => _navManager.Navigate(NavigationData));
 		}
 

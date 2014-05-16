@@ -289,21 +289,21 @@
                     <TextBlock Grid.Row="0" Grid.Column="0" Text="{Loc 'Phone number'}" />
                     <TextBlock Grid.Row="1" Grid.Column="0" Text="{Loc 'E-mail'}" />
                     <TextBlock Grid.Row="2" Grid.Column="0" Text="{Loc 'Case number'}" />
-                    <core_controls:SearchTextBox Grid.Row="0" Grid.Column="2" Text="{Binding Path=Content.SearchPhoneNumberKeyword, UpdateSourceTrigger=PropertyChanged}">
+					<core_controls:SearchTextBox Grid.Row="0" Grid.Column="2" Text="{Binding Path=Content.SearchPhoneNumberKeyword, UpdateSourceTrigger=PropertyChanged}" LabelText="{Loc 'Enter keywords...'}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="Search">
                                 <i:InvokeCommandAction Command="{Binding Path=Content.SearchCustomerCommand}" />
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </core_controls:SearchTextBox>
-                    <core_controls:SearchTextBox Grid.Row="1" Grid.Column="2" Text="{Binding Path=Content.SearchEmailKeyword, UpdateSourceTrigger=PropertyChanged}">
+					<core_controls:SearchTextBox Grid.Row="1" Grid.Column="2" Text="{Binding Path=Content.SearchEmailKeyword, UpdateSourceTrigger=PropertyChanged}" LabelText="{Loc 'Enter keywords...'}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="Search">
                                 <i:InvokeCommandAction Command="{Binding Path=Content.SearchCustomerCommand}" />
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </core_controls:SearchTextBox>
-                    <core_controls:SearchTextBox Grid.Row="2" Grid.Column="2" Text="{Binding Path=Content.SearchCaseNumberKeyword, UpdateSourceTrigger=PropertyChanged}">
+					<core_controls:SearchTextBox Grid.Row="2" Grid.Column="2" Text="{Binding Path=Content.SearchCaseNumberKeyword, UpdateSourceTrigger=PropertyChanged}" LabelText="{Loc 'Enter keywords...'}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="Search">
                                 <i:InvokeCommandAction Command="{Binding Path=Content.SearchCustomerCommand}" />
@@ -325,21 +325,21 @@
                     <TextBlock Grid.Row="0" Grid.Column="0" Text="{Loc 'Customer name'}" />
                     <TextBlock Grid.Row="1" Grid.Column="0" Text="{Loc 'Order number'}" />
                     <TextBlock Grid.Row="2" Grid.Column="0" Text="{Loc 'Customer number'}" />
-                    <core_controls:SearchTextBox Grid.Row="0" Grid.Column="2" Text="{Binding Content.SearchCustomerNameKeyword, UpdateSourceTrigger=PropertyChanged}">
+					<core_controls:SearchTextBox Grid.Row="0" Grid.Column="2" Text="{Binding Content.SearchCustomerNameKeyword, UpdateSourceTrigger=PropertyChanged}" LabelText="{Loc 'Enter keywords...'}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="Search">
                                 <i:InvokeCommandAction Command="{Binding Path=Content.SearchCustomerCommand}" />
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </core_controls:SearchTextBox>
-                    <core_controls:SearchTextBox Grid.Row="1" Grid.Column="2" Text="{Binding Path=Content.SearchOrderNumberKeyword, UpdateSourceTrigger=PropertyChanged}">
+					<core_controls:SearchTextBox Grid.Row="1" Grid.Column="2" Text="{Binding Path=Content.SearchOrderNumberKeyword, UpdateSourceTrigger=PropertyChanged}" LabelText="{Loc 'Enter keywords...'}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="Search">
                                 <i:InvokeCommandAction Command="{Binding Path=Content.SearchCustomerCommand}" />
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
                     </core_controls:SearchTextBox>
-                    <core_controls:SearchTextBox Grid.Row="2" Grid.Column="2" Text="{Binding Path=Content.SearchCustomerKeyword, UpdateSourceTrigger=PropertyChanged}">
+					<core_controls:SearchTextBox Grid.Row="2" Grid.Column="2" Text="{Binding Path=Content.SearchCustomerKeyword, UpdateSourceTrigger=PropertyChanged}" LabelText="{Loc 'Enter keywords...'}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="Search">
                                 <i:InvokeCommandAction Command="{Binding Path=Content.SearchCustomerCommand}" />

@@ -43,7 +43,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.SystemJobs.Implemen
 			_navManager = navManager;
 			_parent = parent;
 			_vmFactory = vmFactory;
-			ViewTitle = new ViewTitleBase() { Title = "System job".Localize(), SubTitle = "SETTINGS".Localize() };
+			ViewTitle = new ViewTitleBase() { Title = "System job".Localize(), SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory) };
 			OpenItemCommand = new DelegateCommand(() => _navManager.Navigate(NavigationData));
 			CommandInit();
 

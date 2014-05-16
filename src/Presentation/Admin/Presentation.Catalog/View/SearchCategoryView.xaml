@@ -34,7 +34,7 @@
         <DockPanel LastChildFill="False" Grid.Column="1" Margin="10,5,10,5" Width="170">
             <StackPanel DockPanel.Dock="Top">
                 <TextBlock Text="{Loc 'Category Name'}" />
-                <core_controls:SearchTextBox SearchEventTimeDelay="0:0:1" Text="{Binding SearchName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+				<core_controls:SearchTextBox SearchEventTimeDelay="0:0:1" Text="{Binding SearchName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" LabelText="{Loc 'Enter keywords...'}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Search">
                             <i:InvokeCommandAction Command="{Binding SearchCommand}" />
@@ -42,7 +42,7 @@
                     </i:Interaction.Triggers>
                 </core_controls:SearchTextBox>
                 <TextBlock Text="{Loc 'Category Code'}" />
-                <core_controls:SearchTextBox SearchEventTimeDelay="0:0:1" Text="{Binding SearchCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+				<core_controls:SearchTextBox SearchEventTimeDelay="0:0:1" Text="{Binding SearchCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" LabelText="{Loc 'Enter keywords...'}">
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Search">
                             <i:InvokeCommandAction Command="{Binding SearchCommand}" />

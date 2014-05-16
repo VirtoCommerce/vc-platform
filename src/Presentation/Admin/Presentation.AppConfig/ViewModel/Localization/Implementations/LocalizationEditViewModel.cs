@@ -46,7 +46,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 			_navManager = navManager;
 			OriginalLocalizationGroup = item;
 
-			ViewTitle = new ViewTitleBase() { SubTitle = "SETTINGS".Localize(), Title = "Localization".Localize() };
+			ViewTitle = new ViewTitleBase() { SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory), Title = "Localization".Localize() };
 
 			OpenItemCommand = new DelegateCommand(() => _navManager.Navigate(NavigationData));
 		}

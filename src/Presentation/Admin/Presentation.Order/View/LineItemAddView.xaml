@@ -42,14 +42,8 @@
 			</i:Interaction.Triggers>-->
         </ComboBox>
         <TextBlock Text="{Loc 'Search SKU'}" Grid.Row="2" />
-        <core_controls:SearchTextBox Grid.Row="3" SearchEventTimeDelay="0:0:1" Text="{Binding SearchSKUText, UpdateSourceTrigger=PropertyChanged}">
-            <!--<i:Interaction.Triggers>
-				<i:EventTrigger EventName="Search">
-					<i:InvokeCommandAction Command="{Binding SearchLineItemCommand}" />
-				</i:EventTrigger>
-			</i:Interaction.Triggers>-->
-        </core_controls:SearchTextBox>
-		<Button Grid.Row="3" Grid.Column="1" Command="{Binding SearchLineItemCommand}" Content="{Loc '^Search'}" />
+        <core_controls:SearchTextBox Grid.Row="3" SearchEventTimeDelay="0:0:1" Text="{Binding SearchSKUText, UpdateSourceTrigger=PropertyChanged}" />
+	    <Button Grid.Row="3" Grid.Column="1" Command="{Binding SearchLineItemCommand}" Content="{Loc '^Search'}" />
         <!--Available items-->
         <core_controls:MultiSelectControl Grid.Row="4" Grid.ColumnSpan="2" TextSearchTextPath="Name"
              AvailableTitle="{Binding AvailableTitle}" AvailableItems="{Binding AvailableItems}"

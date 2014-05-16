@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows;
-using System.Windows.Media;
 
 namespace VirtoCommerce.ManagementClient.Core.Controls
 {
 	public class WatermarkedTextBox : TextBox
 	{
-		private const string _defaultWatermark = "Enter...";
+		private const string _defaultWatermark = "...";
 
-		public static readonly DependencyProperty WatermarkTextProperty = 
-				DependencyProperty.Register("WatermarkText", 
+		public static readonly DependencyProperty WatermarkTextProperty =
+				DependencyProperty.Register("WatermarkText",
 				typeof(string),
-				typeof(WatermarkedTextBox),new PropertyMetadata(_defaultWatermark));
+				typeof(WatermarkedTextBox), new PropertyMetadata(_defaultWatermark));
 
 		private static DependencyPropertyKey HasTextPropertyKey =
 			DependencyProperty.RegisterReadOnly(
@@ -27,22 +22,22 @@ namespace VirtoCommerce.ManagementClient.Core.Controls
 
 		static WatermarkedTextBox()
 		{
-            DefaultStyleKeyProperty.OverrideMetadata(
+			DefaultStyleKeyProperty.OverrideMetadata(
 				typeof(WatermarkedTextBox),
 				new FrameworkPropertyMetadata(typeof(WatermarkedTextBox)));
-        }
+		}
 
 
 		public string WatermarkText
 		{
-	        get { return (string) GetValue(WatermarkTextProperty); }
+			get { return (string)GetValue(WatermarkTextProperty); }
 			set { SetValue(WatermarkTextProperty, value); }
 		}
 
 		public bool HasText
 		{
-			get	{ return (bool)GetValue(HasTextProperty); }
-			private set	{ SetValue(HasTextPropertyKey, value); }
+			get { return (bool)GetValue(HasTextProperty); }
+			private set { SetValue(HasTextPropertyKey, value); }
 		}
 
 		protected override void OnTextChanged(TextChangedEventArgs e)

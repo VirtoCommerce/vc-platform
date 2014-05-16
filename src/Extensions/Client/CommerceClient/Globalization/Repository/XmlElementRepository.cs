@@ -21,7 +21,7 @@ namespace VirtoCommerce.Client.Globalization.Repository
 		readonly ResXResource _resx;
 
 		private const string StatusDateKeyInner = "~1ntern@|_st@tus_c@che_key!";
-		private const string DefaultCategory = "CM";
+		private const string DefaultResource = "CM.en-US";
 		#endregion
 
 		#region .ctor
@@ -75,18 +75,18 @@ namespace VirtoCommerce.Client.Globalization.Repository
 			return _resx.GetElement(name, category, culture);
 		}
 
-		public DateTime GetStatusDate(string culture)
+		public DateTime GetStatusDate()
 		{
-			var element = _resx.GetElement(StatusDateKeyInner, DefaultCategory, culture);
+			var element = _resx.GetElement(StatusDateKeyInner, null, DefaultResource);
 			return element == null ? DateTime.MinValue : DateTime.Parse(element.Value);
 		}
 
-		public void SetStatusDate(string culture)
+		public void SetStatusDate(DateTime lastModified)
 		{
-			var element = _resx.GetElement(StatusDateKeyInner, DefaultCategory, culture);
+			var element = _resx.GetElement(StatusDateKeyInner, null, DefaultResource);
 			if (element == null)
 			{
-				element = new Element { Name = StatusDateKeyInner, Category = DefaultCategory, Culture = culture, Value = DateTime.UtcNow.ToString() };
+				element = new Element { Name = StatusDateKeyInner, Culture = DefaultResource, Value = DateTime.UtcNow.ToString() };
 				_resx.AddResource(element);
 			}
 			else

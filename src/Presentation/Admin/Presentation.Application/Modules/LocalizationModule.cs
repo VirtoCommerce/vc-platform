@@ -47,18 +47,18 @@ namespace VirtoCommerce.ManagementClient.Localization
 
 			// check cache date and update if needed
 			var repository = _container.Resolve<IAppConfigRepository>();
-			var lastItem = repository.Localizations.OrderByDescending(x => x.Created).Take(1).FirstOrDefault();
-			DateTime? dbDate = lastItem == null ? null : lastItem.Created;
+			var lastItem = repository.Localizations.OrderByDescending(x => x.LastModified).Take(1).FirstOrDefault();
+			DateTime? dbDate = lastItem == null ? null : lastItem.LastModified;
 
-			var cacheDate = _elementRepository.GetStatusDate(CultureInfo.DefaultThreadCurrentUICulture.Name);
-			if (!dbDate.HasValue || dbDate > cacheDate)
+			var cacheDate = _elementRepository.GetStatusDate();
+			if (dbDate.HasValue && dbDate > cacheDate)
 			{
 				_elementRepository.Clear();
 
 				// force Elements re-caching
-				var eee = _elementRepository.Elements();
-				var cultures = eee.Select(x => x.Culture).Distinct().ToList();
-				cultures.ForEach(x => _elementRepository.SetStatusDate(x));
+				_elementRepository.Elements();
+
+				_elementRepository.SetStatusDate(dbDate.Value);
 			}
 		}
 	}

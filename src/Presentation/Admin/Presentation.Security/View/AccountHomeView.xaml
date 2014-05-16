@@ -65,7 +65,7 @@
 			</prism:InteractionRequestTrigger>
 		</i:Interaction.Triggers>
 		<core_controls:SearchTextBox SearchEventTimeDelay="0:0:1" Grid.ColumnSpan="3" Text="{Binding SearchKeyword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-             HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-70,20,0" Width="250">
+             HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-70,20,0" Width="250" LabelText="{Loc 'Enter keywords...'}">
 			<i:Interaction.Triggers>
 				<i:EventTrigger EventName="Search">
 					<i:InvokeCommandAction Command="{Binding SearchItemsCommand}" />

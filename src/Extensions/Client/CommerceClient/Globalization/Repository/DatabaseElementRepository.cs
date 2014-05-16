@@ -130,13 +130,13 @@ namespace VirtoCommerce.Client.Globalization.Repository
 						   };
 		}
 
-	    public DateTime GetStatusDate(string culture)
+		public DateTime GetStatusDate()
 	    {
 			// data is always up to date
 		    return DateTime.UtcNow;
 	    }
 
-	    public void SetStatusDate(string culture)
+		public void SetStatusDate(DateTime lastModified)
 	    {
 	    }
 

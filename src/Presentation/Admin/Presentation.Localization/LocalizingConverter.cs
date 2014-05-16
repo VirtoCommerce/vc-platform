@@ -34,10 +34,15 @@ namespace VirtoCommerce.ManagementClient.Localization
 
 			var result = value;
 
-			// this converter can convert to string type only
-			if (value != null && targetType == typeof(string))
+			string category;
+			if (parameter != null)
 			{
-				var category = value.GetType().ToString();
+				category = parameter.ToString();
+				result = AddSpacesToSentence(value.ToString()).Localize(null, category);
+			}
+			else if (value != null && targetType == typeof(string))// this converter can convert to string type only
+			{
+				category = value.GetType().ToString();
 				var idx = category.LastIndexOf(".Model");
 				if (idx > 0)
 				{

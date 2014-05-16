@@ -97,7 +97,7 @@
                                     <RowDefinition Height="auto" />
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
-                                <presentation_core_controls:SearchTextBox Margin="0,0,0,4" SearchMode="Delayed" Text="{Binding Path=Content.SearchKeyword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+								<presentation_core_controls:SearchTextBox Margin="0,0,0,4" SearchMode="Delayed" Text="{Binding Path=Content.SearchKeyword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" LabelText="{Loc 'Enter keywords...'}">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="Search">
                                             <i:InvokeCommandAction Command="{Binding Path=Content.SearchCommand}" />

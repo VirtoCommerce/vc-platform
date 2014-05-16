@@ -44,7 +44,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.EmailTemplates.Impl
 			_parent = parent;
 			_navManager = navManager;
 			_vmFactory = vmFactory;
-			ViewTitle = new ViewTitleBase() { SubTitle = "SETTINGS".Localize(), Title = "Email Template".Localize() };
+			ViewTitle = new ViewTitleBase() { SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory), Title = "Email Template".Localize() };
 			OpenItemCommand = new DelegateCommand(() => _navManager.Navigate(NavigationData));
 			CommandInit();
 		}

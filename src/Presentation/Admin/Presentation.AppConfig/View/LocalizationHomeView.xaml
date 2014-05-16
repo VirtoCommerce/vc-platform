@@ -171,7 +171,7 @@
 						<TextBlock Grid.Row="0" Text="{Loc 'Search keyword:'}" />
 						<!--<core_controls:WatermarkedTextBox Grid.Row="1" Text="{Binding SearchFilterName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" WatermarkText="Enter keyword..."/>-->
 						<core_controls:SearchTextBox Grid.Row="1" SearchEventTimeDelay="0:0:1" Text="{Binding SearchFilterName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-     LabelText="{Loc 'Enter keyword...'}">
+     LabelText="{Loc 'Enter keywords...'}">
 							<i:Interaction.Triggers>
 								<i:EventTrigger EventName="Search">
 									<i:InvokeCommandAction Command="{Binding SearchItemsCommand}" />

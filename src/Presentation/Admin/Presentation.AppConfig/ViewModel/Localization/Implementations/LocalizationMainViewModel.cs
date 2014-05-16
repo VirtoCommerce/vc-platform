@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Interfaces;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Common.Model;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implementations
 {
@@ -11,7 +13,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 	{
 		public LocalizationMainViewModel(ILocalizationHomeViewModel homeViewModel, IViewModelsFactory<ILocalizationImportJobHomeViewModel> importVmFactory, IAuthenticationContext authContext)
 		{
-			ViewTitle = new ViewTitleBase() { Title = "Localization".Localize(), SubTitle = "SETTINGS".Localize() };
+			ViewTitle = new ViewTitleBase() { Title = "Localization".Localize(), SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory) };
 			SubItems = new List<ItemTypeHomeTab>();
 
 			if (authContext.CheckPermission(PredefinedPermissions.Name_SettingsAppConfigSettings))

@@ -103,35 +103,17 @@ namespace VirtoCommerce.Client.Globalization.Repository
 		/// <returns>Element.</returns>
 		public Element Get(string name, string category, string culture)
 		{
-			var result = _cacheRepository.Get(name, category, culture);
-			if (result == null)
-			{
-				try
-				{
-					// caching
-					if (PreloadLocalizations(culture))
-					{
-						result = _cacheRepository.Get(name, category, culture);
-					}
-				}
-				catch (Exception e)
-				{
-					Debug.WriteLine(e.ToString());
-					//If db is down simply continue as if loc not exists
-				}
-			}
-
-			return result;
+			return _cacheRepository.Get(name, category, culture);
 		}
 
-		public DateTime GetStatusDate(string culture)
+		public DateTime GetStatusDate()
 		{
-			return _cacheRepository.GetStatusDate(culture);
+			return _cacheRepository.GetStatusDate();
 		}
 
-		public void SetStatusDate(string culture)
+		public void SetStatusDate(DateTime lastModified)
 		{
-			_cacheRepository.SetStatusDate(culture);
+			_cacheRepository.SetStatusDate(lastModified);
 		}
 
 		/// <summary>
@@ -262,14 +244,6 @@ namespace VirtoCommerce.Client.Globalization.Repository
 		public void Clear()
 		{
 			// don't delete anything from real DB.
-			//using (var repository = _repositoryFactory.GetRepositoryInstance())
-			//{
-			//    foreach (var loc in GetLocalizationsEnumerable(repository))
-			//    {
-			//        repository.Remove(loc);
-			//    }
-			//    repository.UnitOfWork.Commit();
-			//}
 
 			_cacheRepository.Clear();
 		}
@@ -316,50 +290,6 @@ namespace VirtoCommerce.Client.Globalization.Repository
 				it.Category.Equals(category, StringComparison.OrdinalIgnoreCase) &&
 				it.LanguageCode.Equals(culture, StringComparison.OrdinalIgnoreCase)).FirstOrDefault();
 		}
-
-		private bool PreloadLocalizations(string culture)
-		{
-			var result = false;
-			var dt = _cacheRepository.GetStatusDate(culture);
-			if (dt == DateTime.MinValue)
-			{
-				using (var _repository = _repositoryFactory.GetRepositoryInstance())
-				{
-					var preloadedCategoryLocalizations = GetLocalizationsEnumerable(_repository).Where(it => it.LanguageCode.Equals(culture, StringComparison.OrdinalIgnoreCase));
-					foreach (var preloadedCategoryLocalization in preloadedCategoryLocalizations)
-					{
-						_cacheRepository.Add(GetElement(preloadedCategoryLocalization));
-					}
-				}
-
-				SetStatusDate(culture);
-				result = true;
-			}
-
-			return result;
-		}
-
-		/// <summary>
-		/// Gets the cache key.
-		/// </summary>
-		/// <param name="keyTemplate">The key template.</param>
-		/// <param name="element">The element.</param>
-		/// <returns>System.String.</returns>
-		//private string GetCacheKey(string keyTemplate, Element element)
-		//{
-		//    return GetCacheKey(keyTemplate, element.Name, element.Category, element.Culture);
-		//}
-
-		/// <summary>
-		/// Gets the cache key.
-		/// </summary>
-		/// <param name="keyTemplate">The key template.</param>
-		/// <param name="element">The element.</param>
-		/// <returns>System.String.</returns>
-		//private string GetCacheKey(string keyTemplate, Localization element)
-		//{
-		//    return GetCacheKey(keyTemplate, element.Name, element.Category, element.LanguageCode);
-		//}
 
 		private static Element GetElement(Localization loc)
 		{

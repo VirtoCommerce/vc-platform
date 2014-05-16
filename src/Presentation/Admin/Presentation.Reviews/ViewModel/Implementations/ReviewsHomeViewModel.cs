@@ -69,7 +69,7 @@ namespace VirtoCommerce.ManagementClient.Reviews.ViewModel.Implementations
 			SearchItemsCommand = new DelegateCommand<string>(SearchItems);
 			ClearFiltersCommand = new DelegateCommand(DoClearFilters);
 			SearchFilterReviewStatus = ReviewStatus.Pending;
-			ViewTitle = new ViewTitleBase() { Title = "Reviews", SubTitle = "CATALOG" };
+            ViewTitle = new ViewTitleBase() { Title = "Reviews".Localize(), SubTitle = "CATALOG".Localize() };
 
 			PopulateTiles();
 		}
@@ -328,7 +328,7 @@ namespace VirtoCommerce.ManagementClient.Reviews.ViewModel.Implementations
 				{
 					IdModule = NavigationNames.CatalogMenu,
 					IdTile = "Reviews",
-					TileTitle = "REVIEWS",
+                    TileTitle = "REVIEWS".Localize(),
 					Order = 3,
 					IdColorSchema = TileColorSchemas.Schema2,
 					NavigateCommand = new DelegateCommand(() => NavigateToTabPage(NavigationNames.HomeName)),

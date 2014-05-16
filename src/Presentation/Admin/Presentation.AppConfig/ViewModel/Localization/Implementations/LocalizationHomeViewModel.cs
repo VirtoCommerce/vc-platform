@@ -137,9 +137,9 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 									_elementRepository.Clear();
 
 									// force Elements re-caching
-									var eee = _elementRepository.Elements();
-									var cultures = eee.Select(x => x.Culture).Distinct().ToList();
-									cultures.ForEach(x => _elementRepository.SetStatusDate(x));
+									_elementRepository.Elements();
+									
+									_elementRepository.SetStatusDate();
 
 									// force values update
 									LocalizationManager.UpdateValues();
