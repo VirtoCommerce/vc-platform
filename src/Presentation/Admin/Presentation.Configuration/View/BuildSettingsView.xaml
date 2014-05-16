@@ -18,6 +18,7 @@
 				<ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/DetailViewTheme/VirtoCommerceDetailTheme.xaml" />
 			</ResourceDictionary.MergedDictionaries>
 
+			<core_Converters:UtcToLocalDateTimeConverter x:Key="UtcToLocalDateTimeConverter" />
 			<configurationInfrastructure:BuildStatusConverter x:Key="buildStatusConverter" />
 		</ResourceDictionary>
 	</FrameworkElement.Resources>
@@ -45,9 +46,8 @@
 
 			<DataGrid x:Name="ItemsDataGrid" Grid.Row="1" ItemsSource="{Binding Items}">
 				<DataGrid.Columns>
-					<DataGridTextColumn Header="{Loc 'Index Name'}" Binding="{Binding DocumentType}"
-     Width="*" />
-					<DataGridTextColumn Header="{Loc 'Last Updated'}" Binding="{Binding LastBuildDate}" />
+					<DataGridTextColumn Header="{Loc 'Index Name'}" Binding="{Binding DocumentType}" Width="*" />
+					<DataGridTextColumn Header="{Loc 'Last Updated'}" Binding="{Binding LastBuildDate, Converter={StaticResource UtcToLocalDateTimeConverter}}" />
 					<DataGridTextColumn Header="{Loc 'Status'}" Binding="{Binding Status, Converter={StaticResource buildStatusConverter}}" />
 				</DataGrid.Columns>
 
