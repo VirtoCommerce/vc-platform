@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
-using Microsoft.Practices.Prism.Commands;
 using System.ComponentModel;
+using System.IO;
+using System.Linq;
 using System.Windows.Data;
+using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+using VirtoCommerce.Client.Globalization;
+using VirtoCommerce.Foundation.Assets.Services;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using VirtoCommerce.ManagementClient.Customers.Dialogs.ViewModel.Helpers;
 using VirtoCommerce.ManagementClient.Customers.Dialogs.ViewModel.Implementations;
 using VirtoCommerce.ManagementClient.Customers.Dialogs.ViewModel.Interfaces;
-using VirtoCommerce.Foundation.Assets.Services;
-using System.IO;
-using VirtoCommerce.ManagementClient.Customers.Dialogs.ViewModel.Helpers;
 using VirtoCommerce.ManagementClient.Customers.ViewModel.Helpers;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.Customers.Infrastructure.Communications
 {
@@ -76,7 +78,7 @@ namespace VirtoCommerce.ManagementClient.Customers.Infrastructure.Communications
 
 		public bool HasAnyToolBarCommands
 		{
-			get { return ToolBarCommmands.Any();}
+			get { return ToolBarCommmands.Any(); }
 		}
 
 		public bool IsShowEmpty
@@ -109,7 +111,7 @@ namespace VirtoCommerce.ManagementClient.Customers.Infrastructure.Communications
 			}
 		}
 
-		
+
 		public bool OneItemInCommunicationIsInEditState
 		{
 			get
@@ -130,8 +132,8 @@ namespace VirtoCommerce.ManagementClient.Customers.Infrastructure.Communications
 			set
 			{
 				_newBody = value;
-			OnPropertyChanged();
-			    IsModified = true;
+				OnPropertyChanged();
+				IsModified = true;
 			}
 		}
 
@@ -141,7 +143,7 @@ namespace VirtoCommerce.ManagementClient.Customers.Infrastructure.Communications
 			get { return _isReadOnly; }
 			set { _isReadOnly = value; OnPropertyChanged(); }
 		}
-	   
+
 
 		#endregion
 
@@ -150,7 +152,7 @@ namespace VirtoCommerce.ManagementClient.Customers.Infrastructure.Communications
 		public CommunicationControlViewModel(
 			IAssetService assetService,
 			IViewModelsFactory<IKnowledgeBaseDialogViewModel> knowledgeBaseGroupVmFactory,
-			string authorId, 
+			string authorId,
 			string authorName)
 		{
 			_assetService = assetService;
@@ -160,9 +162,9 @@ namespace VirtoCommerce.ManagementClient.Customers.Infrastructure.Communications
 			OpenKnowledgeBaseRequest = new InteractionRequest<Confirmation>();
 			ConfirmRequest = new InteractionRequest<Confirmation>();
 
-			
+
 			CommandInit();
-		  
+
 		}
 
 
@@ -266,7 +268,7 @@ namespace VirtoCommerce.ManagementClient.Customers.Infrastructure.Communications
 			if (item != null && ConfirmRequest != null)
 			{
 				ConfirmRequest.Raise(
-				new ConditionalConfirmation { Content = "Remove?", Title = "Remove..." },
+				new ConditionalConfirmation { Content = "Remove?".Localize(), Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory) },
 				x =>
 				{
 					if (x.Confirmed)
@@ -296,7 +298,7 @@ namespace VirtoCommerce.ManagementClient.Customers.Infrastructure.Communications
 					item.IsEditing = isEditing;
 					item.AuthorId = _authorId;
 					item.AuthorName = _authorName;
-				    item.LastModified = DateTime.Now.ToUniversalTime();
+					item.LastModified = DateTime.Now.ToUniversalTime();
 				}
 
 				DefItemCommands(item);
@@ -331,7 +333,7 @@ namespace VirtoCommerce.ManagementClient.Customers.Infrastructure.Communications
 					if (state == CommunicationItemState.Deleted)
 					{
 						Items.Remove((param as CommunicationItemViewModel));
-					 
+
 					}
 				}
 				else
@@ -341,7 +343,7 @@ namespace VirtoCommerce.ManagementClient.Customers.Infrastructure.Communications
 
 				(param as CommunicationItemViewModel).IsEditing = isEditing;
 				(param as CommunicationItemViewModel).RaiseCanExecuteChanged();
-				
+
 				if (state == CommunicationItemState.Deleted)
 				{
 					RefreshItems();
@@ -373,7 +375,7 @@ namespace VirtoCommerce.ManagementClient.Customers.Infrastructure.Communications
 			item.ItemCommands.Add(new CommunicationItemComands()
 			{
 				Icon = "/VirtoCommerce.ManagementClient.Customers;component/Resources/images/star_none.png",
-				ToolTip = "Select",
+				ToolTip = "Select".Localize(),
 				Command = new DelegateCommand<object>(SelectCommunicationItem),
 				SetVisible = () => true
 			});
@@ -384,7 +386,7 @@ namespace VirtoCommerce.ManagementClient.Customers.Infrastructure.Communications
 			item.ItemCommands.Add(new CommunicationItemComands()
 			{
 				Icon = "/VirtoCommerce.ManagementClient.Customers;component/Resources/images/delete.png",
-				ToolTip = "Delete",
+				ToolTip = "Delete".Localize(),
 				Command = new DelegateCommand<object>(DeleteCommunicationItem),
 				SetVisible = () => true
 			});
@@ -395,7 +397,7 @@ namespace VirtoCommerce.ManagementClient.Customers.Infrastructure.Communications
 			item.ItemCommands.Add(new CommunicationItemComands()
 			{
 				Icon = "/VirtoCommerce.ManagementClient.Customers;component/Resources/images/edit.png",
-				ToolTip = "Edit",
+				ToolTip = "Edit".Localize(),
 				Command = new DelegateCommand<object>(x => ChangeItemState(x, CommunicationItemState.Modified, true)
 					, x => x is CommunicationItemNoteViewModel && (DateTime.UtcNow - ((CommunicationItemViewModel)x).Created).Hours < 1),
 				SetVisible = () => !item.IsEditing
@@ -407,7 +409,7 @@ namespace VirtoCommerce.ManagementClient.Customers.Infrastructure.Communications
 			item.ItemCommands.Add(new CommunicationItemComands()
 			{
 				Icon = "/VirtoCommerce.ManagementClient.Customers;component/Resources/images/save.png",
-				ToolTip = "Post",
+				ToolTip = "Post".Localize(),
 				Command = new DelegateCommand<object>(x => ChangeItemState(x, CommunicationItemState.Modified, false)),
 				SetVisible = () => item.IsEditing
 			});
@@ -418,7 +420,7 @@ namespace VirtoCommerce.ManagementClient.Customers.Infrastructure.Communications
 			item.ItemCommands.Add(new CommunicationItemComands()
 			{
 				Icon = "/VirtoCommerce.ManagementClient.Customers;component/Resources/images/black_book.png",
-				ToolTip = "Knowledge base",
+				ToolTip = "Knowledge base".Localize(),
 				Command = new DelegateCommand<object>(OpenKnowledgeBaseDialog, (x) => item.IsEditing)
 			});
 		}
@@ -456,7 +458,7 @@ namespace VirtoCommerce.ManagementClient.Customers.Infrastructure.Communications
 		{
 			DeleteCommunicationItemWithoutConfirmationCommand =
 				new DelegateCommand<object>(DeleteCommunicationItemWithoutConfirmation
-					,(item) =>
+					, (item) =>
 						{
 							var result = false;
 
@@ -472,9 +474,9 @@ namespace VirtoCommerce.ManagementClient.Customers.Infrastructure.Communications
 							return result;
 						});
 
-			OpenKnowledgeBaseCommand=new DelegateCommand<object>(OpenKnowledgeBaseDialog);
+			OpenKnowledgeBaseCommand = new DelegateCommand<object>(OpenKnowledgeBaseDialog);
 
-			AddItemCommand=new DelegateCommand<object>(AddItem);
+			AddItemCommand = new DelegateCommand<object>(AddItem);
 
 		}
 
@@ -488,7 +490,7 @@ namespace VirtoCommerce.ManagementClient.Customers.Infrastructure.Communications
 				OpenKnowledgeBaseRequest.Raise(
 					new Confirmation
 					{
-						Title = "Knowledge base",
+						Title = "Knowledge base".Localize(),
 						Content = _knowledgeBaseGroupVmFactory.GetViewModelInstance()
 					},
 					(x) =>

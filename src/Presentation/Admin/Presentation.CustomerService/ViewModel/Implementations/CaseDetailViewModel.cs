@@ -7,11 +7,7 @@ using System.Windows.Data;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Omu.ValueInjecter;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
-using VirtoCommerce.ManagementClient.Customers.Dialogs.ViewModel.Implementations;
-using VirtoCommerce.ManagementClient.Customers.Infrastructure.Controls;
-using VirtoCommerce.ManagementClient.Customers.Infrastructure.Generators;
-using VirtoCommerce.ManagementClient.Customers.Model.Enumerations;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Customers.Factories;
 using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Foundation.Customers.Repositories;
@@ -20,7 +16,13 @@ using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.Foundation.Security.Repositories;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using VirtoCommerce.ManagementClient.Customers.Dialogs.ViewModel.Implementations;
+using VirtoCommerce.ManagementClient.Customers.Infrastructure.Controls;
+using VirtoCommerce.ManagementClient.Customers.Infrastructure.Generators;
+using VirtoCommerce.ManagementClient.Customers.Model.Enumerations;
 using VirtoCommerce.ManagementClient.Customers.ViewModel.Interfaces;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 {
@@ -105,31 +107,31 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 											 .OrderBy(x => x.UserName)
 											 .ToList();
 
-				if (!string.IsNullOrEmpty(InnerItem.AgentId) && !string.IsNullOrEmpty(InnerItem.AgentName))
-				{
-					var accID = InnerItem.AgentId;
-					var acc = AssignedUserList.SingleOrDefault(a => a.MemberId == accID);
+			if (!string.IsNullOrEmpty(InnerItem.AgentId) && !string.IsNullOrEmpty(InnerItem.AgentName))
+			{
+				var accID = InnerItem.AgentId;
+				var acc = AssignedUserList.SingleOrDefault(a => a.MemberId == accID);
 
+				if (acc != null)
+				{
+					SelectedAssignedUser = acc;
+				}
+			}
+			else
+			{
+				if (_caseAction == CaseActionState.New)
+				{
+					var authorId = _authContext.CurrentUserId;
+
+					var acc = AssignedUserList.SingleOrDefault(a => a.MemberId == authorId);
 					if (acc != null)
 					{
 						SelectedAssignedUser = acc;
 					}
-				}
-				else
-				{
-					if (_caseAction == CaseActionState.New)
-					{
-						var authorId = _authContext.CurrentUserId;
 
-						var acc = AssignedUserList.SingleOrDefault(a => a.MemberId == authorId);
-						if (acc != null)
-						{
-							SelectedAssignedUser = acc;
-						}
-
-					}
 				}
-			
+			}
+
 
 			if (InnerItem.CaseCc.Count > 0)
 			{
@@ -493,16 +495,16 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 			if (InnerItem.Contact == null)
 			{
 				item = _entityFactory.CreateEntity<Contact>();
-				title = "Create Contact";
+				title = "Create Contact".Localize();
 			}
 			else
 			{
 				item = InnerItem.Contact.DeepClone(_entityFactory as IKnownSerializationTypes);
-				title = "Edit Contact";
+				title = "Edit Contact".Localize();
 			}
 
 			var itemVM = _customerVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", item));
-			var confirmation = new ConditionalConfirmation(item.Validate) {Title = title, Content = itemVM};
+			var confirmation = new ConditionalConfirmation(item.Validate) { Title = title, Content = itemVM };
 
 			CommonConfirmRequest.Raise(confirmation, (x) =>
 			{
@@ -532,8 +534,8 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 		{
 			var confirmation = new ConditionalConfirmation
 			{
-				Content = string.Format("Are you sure you want to detach Customer '{0}' from this Case?", InnerItem.ContactDisplayName),
-				Title = "Detach confirmation"
+				Content = string.Format("Are you sure you want to detach Customer '{0}' from this Case?".Localize(), InnerItem.ContactDisplayName),
+				Title = "Detach confirmation".Localize()
 			};
 
 			CommonConfirmRequest.Raise(confirmation, (x) =>
@@ -563,8 +565,8 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 		{
 			var confirmation = new ConditionalConfirmation
 			{
-				Content = string.Format("Are you sure you want to delete Case '{0}'?", InnerItem.Number),
-				Title = "Delete confirmation"
+				Content = string.Format("Are you sure you want to delete Case '{0}'?".Localize(), InnerItem.Number),
+				Title = "Delete confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 
 			CommonConfirmRequest.Raise(confirmation, (x) =>

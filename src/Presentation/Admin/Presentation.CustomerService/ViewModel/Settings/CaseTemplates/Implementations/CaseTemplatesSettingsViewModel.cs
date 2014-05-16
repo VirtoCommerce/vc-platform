@@ -1,111 +1,113 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Omu.ValueInjecter;
+using VirtoCommerce.Client.Globalization;
+using VirtoCommerce.Foundation.Customers.Factories;
+using VirtoCommerce.Foundation.Customers.Model;
+using VirtoCommerce.Foundation.Customers.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseTemplates.Interfaces;
-using VirtoCommerce.Foundation.Customers.Factories;
-using VirtoCommerce.Foundation.Customers.Model;
-using VirtoCommerce.Foundation.Customers.Repositories;
 using VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.Wizard.Interfaces;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseTemplates.Implementations
 {
-	public class CaseTemplatesSettingsViewModel: HomeSettingsEditableViewModel<CaseTemplate>,ICaseTemplatesSettingsViewModel
+	public class CaseTemplatesSettingsViewModel : HomeSettingsEditableViewModel<CaseTemplate>, ICaseTemplatesSettingsViewModel
 	{
-        #region Dependencies
+		#region Dependencies
 
-        private readonly IRepositoryFactory<ICustomerRepository> _repositoryFactory;
-
-        #endregion
-
-        #region Constructor
-
-        public CaseTemplatesSettingsViewModel(IRepositoryFactory<ICustomerRepository> repositoryFactory, ICustomerEntityFactory entityFactory, 
-			IViewModelsFactory<ICreateCaseTemplateViewModel> wizardVmFactory, IViewModelsFactory<ICaseTemplateViewModel> editVmFactory)
-            : base(entityFactory, wizardVmFactory, editVmFactory)
-		{
-            _repositoryFactory = repositoryFactory;
-        }
+		private readonly IRepositoryFactory<ICustomerRepository> _repositoryFactory;
 
 		#endregion
 
-        #region HomeSettingsViewModel members
+		#region Constructor
 
-        protected override object LoadData()
-        {
-	        using (var repository = _repositoryFactory.GetRepositoryInstance())
-	        {
-		        if (repository != null)
-		        {
-			        var items = repository.CaseTemplates.OrderBy(cr => cr.Name).ToList();
-			        return items;
-		        }
-	        }
-	        return null;
-        }
+		public CaseTemplatesSettingsViewModel(IRepositoryFactory<ICustomerRepository> repositoryFactory, ICustomerEntityFactory entityFactory,
+			IViewModelsFactory<ICreateCaseTemplateViewModel> wizardVmFactory, IViewModelsFactory<ICaseTemplateViewModel> editVmFactory)
+			: base(entityFactory, wizardVmFactory, editVmFactory)
+		{
+			_repositoryFactory = repositoryFactory;
+		}
 
-	    public override void RefreshItem(object item)
-	    {
-            var itemToUpdate = item as CaseTemplate;
-            if (itemToUpdate != null)
-            {
-                CaseTemplate itemFromInnerItem =
-                    Items.SingleOrDefault(ct
-                        => ct.CaseTemplateId == itemToUpdate.CaseTemplateId);
+		#endregion
 
-                if (itemFromInnerItem != null)
-                {
-                    OnUIThread(() =>
-                    {
-                        itemFromInnerItem.InjectFrom<CloneInjection>(itemToUpdate);
-                        OnPropertyChanged("Items");
-                    });
-                }
-            }
-	    }
+		#region HomeSettingsViewModel members
 
-	    #endregion
+		protected override object LoadData()
+		{
+			using (var repository = _repositoryFactory.GetRepositoryInstance())
+			{
+				if (repository != null)
+				{
+					var items = repository.CaseTemplates.OrderBy(cr => cr.Name).ToList();
+					return items;
+				}
+			}
+			return null;
+		}
 
-        #region HomeSettingsEditableViewModel members
+		public override void RefreshItem(object item)
+		{
+			var itemToUpdate = item as CaseTemplate;
+			if (itemToUpdate != null)
+			{
+				CaseTemplate itemFromInnerItem =
+					Items.SingleOrDefault(ct
+						=> ct.CaseTemplateId == itemToUpdate.CaseTemplateId);
 
-	    protected override void RaiseItemAddInteractionRequest()
-	    {
-	        var item = EntityFactory.CreateEntity<CaseTemplate>();
+				if (itemFromInnerItem != null)
+				{
+					OnUIThread(() =>
+					{
+						itemFromInnerItem.InjectFrom<CloneInjection>(itemToUpdate);
+						OnPropertyChanged("Items");
+					});
+				}
+			}
+		}
 
-	        var vm = WizardVmFactory.GetViewModelInstance(
-	            new KeyValuePair<string, object>("item", item));
+		#endregion
 
-            var confirmation = new ConditionalConfirmation()
-            {
-                Title = "Create case template",
-                Content = vm
-            };
+		#region HomeSettingsEditableViewModel members
+
+		protected override void RaiseItemAddInteractionRequest()
+		{
+			var item = EntityFactory.CreateEntity<CaseTemplate>();
+
+			var vm = WizardVmFactory.GetViewModelInstance(
+				new KeyValuePair<string, object>("item", item));
+
+			var confirmation = new ConditionalConfirmation()
+			{
+				Title = "Create case template".Localize(),
+				Content = vm
+			};
 			ItemAdd(item, confirmation, _repositoryFactory.GetRepositoryInstance());
-	    }
+		}
 
-	    protected override void RaiseItemEditInteractionRequest(CaseTemplate item)
-	    {
-            var itemVM = EditVmFactory.GetViewModelInstance(
-                new KeyValuePair<string, object>("item", item),
-                new KeyValuePair<string, object>("parent",this));
+		protected override void RaiseItemEditInteractionRequest(CaseTemplate item)
+		{
+			var itemVM = EditVmFactory.GetViewModelInstance(
+				new KeyValuePair<string, object>("item", item),
+				new KeyValuePair<string, object>("parent", this));
 
-            var openTracking = (IOpenTracking)itemVM;
-            openTracking.OpenItemCommand.Execute();
-	    }
+			var openTracking = (IOpenTracking)itemVM;
+			openTracking.OpenItemCommand.Execute();
+		}
 
-	    protected override void RaiseItemDeleteInteractionRequest(CaseTemplate item)
-	    {
-            var confirmation = new ConditionalConfirmation
-            {
-                Content = string.Format("Are you sure you want to delete Case template '{0}'?", item.Name),
-                Title = "Delete confirmation"
-            };
+		protected override void RaiseItemDeleteInteractionRequest(CaseTemplate item)
+		{
+			var confirmation = new ConditionalConfirmation
+			{
+				Content = string.Format("Are you sure you want to delete Case template '{0}'?".Localize(), item.Name),
+				Title = "Delete confirmation".Localize(null, LocalizationScope.DefaultCategory)
+			};
 
 			ItemDelete(item, confirmation, _repositoryFactory.GetRepositoryInstance());
-	    }
+		}
 
-	    #endregion
+		#endregion
 	}
 }

@@ -2,8 +2,10 @@
 using System.Windows.Data;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Wizard;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.Core.Infrastructure
 {
@@ -222,7 +224,7 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure
 
 			if (string.IsNullOrEmpty(confirmation.Title))
 			{
-				confirmation.Title = "Delete confirmation";
+				confirmation.Title = "Delete confirmation".Localize(null, LocalizationScope.DefaultCategory);
 			}
 			CommonConfirmRequest.Raise(confirmation, async (x) =>
 			{

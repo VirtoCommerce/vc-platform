@@ -1,12 +1,12 @@
-﻿using Microsoft.Practices.Prism.Commands;
-using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Foundation.Customers.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
@@ -19,9 +19,9 @@ using VirtoCommerce.ManagementClient.Core.Infrastructure.Tiles;
 using VirtoCommerce.ManagementClient.Customers.Dialogs.ViewModel.Implementations;
 using VirtoCommerce.ManagementClient.Customers.Dialogs.ViewModel.Interfaces;
 using VirtoCommerce.ManagementClient.Customers.Infrastructure.Converters;
+using VirtoCommerce.ManagementClient.Customers.Infrastructure.Extensions;
 using VirtoCommerce.ManagementClient.Customers.Model.Enumerations;
 using VirtoCommerce.ManagementClient.Customers.ViewModel.Helpers;
-using VirtoCommerce.ManagementClient.Customers.Infrastructure.Extensions;
 using VirtoCommerce.ManagementClient.Customers.ViewModel.Interfaces;
 
 namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
@@ -46,11 +46,12 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 		public CustomersHomeViewModel(
 			TileManager tileManager,
 			INavigationManager navigationManager,
-			IViewModelsFactory<ICustomerChoiceDialogViewModel> customerChoiceVmFactory, 
-			IViewModelsFactory<ICreateCustomerDialogViewModel> wizardVmFactory, 
-			IViewModelsFactory<ICustomersDetailViewModel> customersDetailVmFactory, 
-			IRepositoryFactory<ICustomerRepository> customerRepository, 
-			IAuthenticationContext authContext): base(customerRepository, customersDetailVmFactory)
+			IViewModelsFactory<ICustomerChoiceDialogViewModel> customerChoiceVmFactory,
+			IViewModelsFactory<ICreateCustomerDialogViewModel> wizardVmFactory,
+			IViewModelsFactory<ICustomersDetailViewModel> customersDetailVmFactory,
+			IRepositoryFactory<ICustomerRepository> customerRepository,
+			IAuthenticationContext authContext)
+			: base(customerRepository, customersDetailVmFactory)
 		{
 			_tileManager = tileManager;
 			_navigationManager = navigationManager;
@@ -67,7 +68,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 			CaseFiltersInit();
 			PopulateTiles();
 
-			ViewTitle = new ViewTitleBase() { Title = "Customers", SubTitle = "CUSTOMER SERVICE" };
+			ViewTitle = new ViewTitleBase() { Title = "Customers".Localize(), SubTitle = "CUSTOMER SERVICE".Localize() };
 			SendEventToShell();
 			UpdateActivityTileOnShell();
 		}
@@ -272,7 +273,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 				var itemVm =
 					_wizardVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("item", new Contact()));
 
-				var confirmation = new ConditionalConfirmation {Title = "Enter customer details", Content = itemVm};
+				var confirmation = new ConditionalConfirmation { Title = "Enter customer details".Localize(), Content = itemVm };
 
 				CreateCustomerDialogRequest.Raise(confirmation,
 												  (x) =>
@@ -338,7 +339,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 			ShowCustomerChoiceDialogRequest.Raise(
 				new Confirmation
 					{
-						Title = "Contact Choice",
+						Title = "Contact Choice".Localize(),
 						Content = _customerChoiceVmFactory.GetViewModelInstance()
 					},
 				(x) =>
@@ -704,7 +705,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 						IdModule = NavigationNames.MenuName,
 						IdTile = "NewCustomer",
 						TileIconSource = "Icon_Module_Customers",
-						TileTitle = "NEW CUSTOMER",
+						TileTitle = "NEW CUSTOMER".Localize(),
 						Order = 0,
 						IdColorSchema = TileColorSchemas.Schema1,
 						NavigateCommand = new DelegateCommand(async () =>
@@ -725,7 +726,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 						IdModule = NavigationNames.MenuName,
 						IdTile = "NewEmailCase",
 						TileIconSource = "Icon_New_Case",
-						TileTitle = "NEW CASE",
+						TileTitle = "NEW CASE".Localize(),
 						Order = 1,
 						IdColorSchema = TileColorSchemas.Schema2,
 						NavigateCommand = new DelegateCommand(async () =>
@@ -746,7 +747,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 					{
 						IdModule = NavigationNames.MenuName,
 						IdTile = "Activity",
-						TileTitle = "ACTIVITY",
+						TileTitle = "ACTIVITY".Localize(),
 						Order = 3,
 						IdColorSchema = TileColorSchemas.Schema3,
 						NavigateCommand = new DelegateCommand(() => { }),
@@ -767,7 +768,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 					{
 						IdModule = NavigationNames.MenuName,
 						IdTile = "PendingCases",
-						TileTitle = "PENDING CASES",
+						TileTitle = "PENDING CASES".Localize(),
 						Order = 4,
 						IdColorSchema = TileColorSchemas.Schema2,
 						NavigateCommand = new DelegateCommand(() => NavigateToTabPage(NavigationNames.HomeName)),
@@ -803,7 +804,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 					{
 						IdModule = NavigationNames.MenuName,
 						IdTile = "LastestCases",
-						TileTitle = "LATEST CASES",
+						TileTitle = "LATEST CASES".Localize(),
 						Order = 2,
 						Width = (double)TileSize.Double,
 						IdColorSchema = TileColorSchemas.Schema4,
@@ -873,10 +874,10 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 
 						string[] result =
 							{
-								string.Format("{0}  Assigned to me", assignToMeCount),
-								string.Format("{0}  New", newCasesCount),
-								string.Format("{0}  Due this week", dueThisWeekCount),
-								string.Format("{0}  Past due", pastDueCount)
+								string.Format("{0}  Assigned to me".Localize(), assignToMeCount),
+								string.Format("{0}  New".Localize(), newCasesCount),
+								string.Format("{0}  Due this week".Localize(), dueThisWeekCount),
+								string.Format("{0}  Past due".Localize(), pastDueCount)
 							};
 						return result;
 					}

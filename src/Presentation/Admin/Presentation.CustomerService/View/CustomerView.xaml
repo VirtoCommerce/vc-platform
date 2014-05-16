@@ -25,7 +25,7 @@
             </ObjectDataProvider>
             <ObjectDataProvider x:Key="PhoneNumberValues" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
                 <ObjectDataProvider.MethodParameters>
-                    <x:Type TypeName="commercefoundation_models:PhoneNumberType" />
+                    <x:Type TypeName="commercefoundation_models:PhoneType" />
                 </ObjectDataProvider.MethodParameters>
             </ObjectDataProvider>
             <Style x:Key="ListViewItem_Style" TargetType="ListViewItem">

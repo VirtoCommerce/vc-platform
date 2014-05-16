@@ -1,20 +1,20 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+using Omu.ValueInjecter;
 using VirtoCommerce.Foundation.Customers.Factories;
+using VirtoCommerce.Foundation.Customers.Model;
+using VirtoCommerce.Foundation.Customers.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
-using Microsoft.Practices.Prism.Commands;
-using System.Collections.ObjectModel;
-using System.Threading.Tasks;
+using VirtoCommerce.ManagementClient.Core.Infrastructure.DragDrop;
 using VirtoCommerce.ManagementClient.Customers.Dialogs.ViewModel.Helpers;
 using VirtoCommerce.ManagementClient.Customers.Dialogs.ViewModel.Interfaces;
 using VirtoCommerce.ManagementClient.Customers.Infrastructure.Adaptors;
 using VirtoCommerce.ManagementClient.Customers.Infrastructure.Communications;
-using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
-using VirtoCommerce.ManagementClient.Core.Infrastructure.DragDrop;
-using Omu.ValueInjecter;
-using VirtoCommerce.Foundation.Customers.Repositories;
-using VirtoCommerce.Foundation.Customers.Model;
 
 namespace VirtoCommerce.ManagementClient.Customers.Dialogs.ViewModel.Implementations
 {
@@ -142,10 +142,8 @@ namespace VirtoCommerce.ManagementClient.Customers.Dialogs.ViewModel.Implementat
 				AddKnowledgeBaseGroupDialogRequest.Raise(
 					new Confirmation
 					{
-						Title = "Add group",
-
+						Title = "Add group".Localize(),
 						Content = new KnowledgeGroupViewModel(_repositoryFactory, _groupVmFactory, _repositoryFactory.GetRepositoryInstance(), _entityFactory, new KnowledgeBaseGroup() { ParentId = parentVM != null ? parentVM.OriginalItem.KnowledgeBaseGroupId : null })
-
 					},
 					(x) =>
 					{
@@ -203,7 +201,7 @@ namespace VirtoCommerce.ManagementClient.Customers.Dialogs.ViewModel.Implementat
 				AddKnowledgeBaseGroupDialogRequest.Raise(
 					new Confirmation
 					{
-						Title = "Edit a group",
+						Title = "Edit a group".Localize(),
 						Content = (SelectedKnowledgeGroup as KnowledgeGroupViewModel)
 					},
 					(x) =>
@@ -249,7 +247,7 @@ namespace VirtoCommerce.ManagementClient.Customers.Dialogs.ViewModel.Implementat
 				CommonConfirmRequest.Raise(
 					new Confirmation
 					{
-						Title = "Remove group?",
+						Title = "Remove group?".Localize(),
 						Content = (SelectedKnowledgeGroup as KnowledgeGroupViewModel).InnerItem.Name
 					},
 					(x) =>
@@ -336,10 +334,11 @@ namespace VirtoCommerce.ManagementClient.Customers.Dialogs.ViewModel.Implementat
 		private ICommunicationControlViewModel _knowledgeArticleCommunicationControl;
 		public ICommunicationControlViewModel KnowledgeArticleCommunicationControl
 		{
-			get {
+			get
+			{
 				return _knowledgeArticleCommunicationControl ??
-				       (_knowledgeArticleCommunicationControl =
-				        new KnowledgeArticleCommunicationControlViewModel(null, _knowledgeBaseGroupVmFactory, _authorId, _authorName, this));
+					   (_knowledgeArticleCommunicationControl =
+						new KnowledgeArticleCommunicationControlViewModel(null, _knowledgeBaseGroupVmFactory, _authorId, _authorName, this));
 			}
 		}
 
@@ -435,7 +434,7 @@ namespace VirtoCommerce.ManagementClient.Customers.Dialogs.ViewModel.Implementat
 						var original = repository.KnowledgeBaseArticles.Where(x => x.KnowledgeBaseArticleId == article.KnowledgeBaseArticleId).SingleOrDefault();
 						//SyncAttach(original, article);
 						repository.Attach(original);
-						OnUIThread(()=>original.InjectFrom(article));
+						OnUIThread(() => original.InjectFrom(article));
 					}
 				}
 				int i = repository.UnitOfWork.Commit();

@@ -1,20 +1,19 @@
 ﻿using System;
-using VirtoCommerce.ManagementClient.Core.Controls;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
 
 namespace VirtoCommerce.ManagementClient.Customers.Model
 {
 	[Serializable]
-    public class ActionXslInlineAlert : TypedExpressionElementBase, IExpressionCaseAlertsAdaptor
+	public class ActionXslInlineAlert : TypedExpressionElementBase, IExpressionCaseAlertsAdaptor
 	{
 		private MultiLineTextBoxInputElement _xslTemplateEl;
-        public ActionXslInlineAlert(IExpressionViewModel expressionViewModel)
-            : base("Raise Xsl based alert", expressionViewModel)
+		public ActionXslInlineAlert(IExpressionViewModel expressionViewModel)
+			: base("Raise Xsl based alert".Localize(), expressionViewModel)
 		{
-            WithLabel("Raise alert using Xsl transformation: ");
-			_xslTemplateEl = WithElement(new MultiLineTextBoxInputElement(expressionViewModel, "Xsl stylesheet", "Enter Xsl stylesheet", defaultXsl)) as MultiLineTextBoxInputElement;
+			WithLabel("Raise alert using Xsl transformation: ".Localize());
+			_xslTemplateEl = WithElement(new MultiLineTextBoxInputElement(expressionViewModel, "Xsl stylesheet".Localize(), "Enter Xsl stylesheet".Localize(), defaultXsl)) as MultiLineTextBoxInputElement;
 		}
 
 		public CaseAlert[] GetCaseAlerts()
@@ -64,6 +63,6 @@ namespace VirtoCommerce.ManagementClient.Customers.Model
 			</body>
 		</html>
 	</xsl:template>
-</xsl:stylesheet>";		
+</xsl:stylesheet>";
 	}
 }

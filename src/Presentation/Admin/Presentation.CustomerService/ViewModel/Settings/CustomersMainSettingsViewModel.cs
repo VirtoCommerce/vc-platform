@@ -8,33 +8,33 @@ using VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseTemplates.
 
 namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Settings
 {
-    public class CustomersMainSettingsViewModel : SubTabsDefaultViewModel, ICustomersMainSettingsViewModel
-    {
+	public class CustomersMainSettingsViewModel : SubTabsDefaultViewModel, ICustomersMainSettingsViewModel
+	{
 		#region Constructor
 
 		public CustomersMainSettingsViewModel(
-			ICaseRulesSettingsViewModel caseRulesSettingsViewModel, 
-			ICasePropertySetsSettingsViewModel casePropertySetsSettingsViewModel, 
-			ICaseTemplatesSettingsViewModel caseTemplatesSettingsViewModel, 
+			ICaseRulesSettingsViewModel caseRulesSettingsViewModel,
+			ICasePropertySetsSettingsViewModel casePropertySetsSettingsViewModel,
+			ICaseTemplatesSettingsViewModel caseTemplatesSettingsViewModel,
 			IAuthenticationContext authContext)
 		{
 			SubItems = new List<ItemTypeHomeTab>();
 
 			if (authContext.CheckPermission(PredefinedPermissions.SettingsCustomerRules))
-            {
-				SubItems.Add(new ItemTypeHomeTab { Caption = "Rules", ViewModel = caseRulesSettingsViewModel, Order = 1 });
-            }
+			{
+				SubItems.Add(new ItemTypeHomeTab { Caption = "Rules".Localize(), ViewModel = caseRulesSettingsViewModel, Order = 1 });
+			}
 			if (authContext.CheckPermission(PredefinedPermissions.SettingsCustomerInfo))
-            {
-				SubItems.Add(new ItemTypeHomeTab { Caption = "Info", ViewModel = casePropertySetsSettingsViewModel, Order = 2 });
-            }
+			{
+				SubItems.Add(new ItemTypeHomeTab { Caption = "Info".Localize(), ViewModel = casePropertySetsSettingsViewModel, Order = 2 });
+			}
 			if (authContext.CheckPermission(PredefinedPermissions.SettingsCustomerCaseTypes))
-            {
-				SubItems.Add(new ItemTypeHomeTab { Caption = "Case types", ViewModel = caseTemplatesSettingsViewModel, Order = 3 });
-            }
+			{
+				SubItems.Add(new ItemTypeHomeTab { Caption = "Case types".Localize(), ViewModel = caseTemplatesSettingsViewModel, Order = 3 });
+			}
 			CurrentTab = SubItems[0];
 		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

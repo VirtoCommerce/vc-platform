@@ -6,33 +6,33 @@ using VirtoCommerce.ManagementClient.Customers.ViewModel.Interfaces;
 
 namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 {
-    public class CustomersMainViewModel : SubTabsDefaultViewModel, ICustomersMainViewModel
-    {
-		public CustomersMainViewModel(ICustomersHomeViewModel customersHomeViewModel, ISearchHomeViewModel searchHomeViewModel,  IAuthenticationContext authContext)
-        {
-			ViewTitle = new ViewTitleBase() { Title = "Cases", SubTitle = "CUSTOMER SERVICE" };
-            SubItems = new List<ItemTypeHomeTab>
+	public class CustomersMainViewModel : SubTabsDefaultViewModel, ICustomersMainViewModel
+	{
+		public CustomersMainViewModel(ICustomersHomeViewModel customersHomeViewModel, ISearchHomeViewModel searchHomeViewModel, IAuthenticationContext authContext)
+		{
+			ViewTitle = new ViewTitleBase() { Title = "Cases".Localize(), SubTitle = "CUSTOMER SERVICE".Localize() };
+			SubItems = new List<ItemTypeHomeTab>
 	            {
 		            new ItemTypeHomeTab
 			            {
 				            IdTab = NavigationNames.HomeName,
-				            Caption = "Cases",
+				            Caption = "Cases".Localize(),
 				            ViewModel = customersHomeViewModel
 			            }
 	            };
 
 			if (authContext.CheckPermission(PredefinedPermissions.CustomersSearchCases))
 			{
-				SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.HomeNameSearch, Caption = "Search", ViewModel = searchHomeViewModel });
+				SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.HomeNameSearch, Caption = "Search".Localize(), ViewModel = searchHomeViewModel });
 			}
 			CurrentTab = SubItems[0];
-        }
-		
-        private void Testy()
-        {
-            (this.CurrentTab.ViewModel as CustomersHomeViewModel).ShowCustomerChoiceDialogRequest.Raise(null);
-        }
+		}
+
+		private void Testy()
+		{
+			(this.CurrentTab.ViewModel as CustomersHomeViewModel).ShowCustomerChoiceDialogRequest.Raise(null);
+		}
 
 
-    }
+	}
 }

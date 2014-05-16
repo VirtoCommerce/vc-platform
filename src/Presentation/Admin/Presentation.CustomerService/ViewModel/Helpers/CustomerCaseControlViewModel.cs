@@ -1,11 +1,11 @@
 ﻿using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using VirtoCommerce.Foundation.Assets.Services;
+using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Customers.Dialogs.ViewModel.Interfaces;
 using VirtoCommerce.ManagementClient.Customers.Infrastructure.Communications;
-using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations;
 
 namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Helpers
@@ -14,7 +14,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Helpers
 	{
 		private readonly CustomersDetailViewModel _parentViewModel;
 		private readonly IAuthenticationContext _authContext;
-		public InteractionRequest<ConditionalConfirmation> CommonConfirmRequest { get; private set; } 
+		public InteractionRequest<ConditionalConfirmation> CommonConfirmRequest { get; private set; }
 
 		public CustomerCaseControlViewModel(IAssetService assetService, IViewModelsFactory<IKnowledgeBaseDialogViewModel> knowledgeBaseGroupVmFactory, IAuthenticationContext authContext, string authorId, string authorName, CustomersDetailViewModel parentViewModel)
 			: base(assetService, knowledgeBaseGroupVmFactory, authorId, authorName)
@@ -22,7 +22,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Helpers
 			_parentViewModel = parentViewModel;
 			_authContext = authContext;
 			DefToolBarCommands();
-			CommonConfirmRequest=new InteractionRequest<ConditionalConfirmation>();
+			CommonConfirmRequest = new InteractionRequest<ConditionalConfirmation>();
 			IsReadOnly = !_authContext.CheckPermission(PredefinedPermissions.CustomersCreateCustomer);
 
 		}
@@ -34,9 +34,9 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Helpers
 				ToolBarCommmands.Add(new CommunicationItemComands()
 					{
 						CommandParametr = CommunicationItemType.Note,
-						Header = "Internal note",
-						ToolTip = "Add note",
-						Command = new DelegateCommand<object>(RaiseNoteAddInteractionRequest, (x)=>_authContext.CheckPermission(PredefinedPermissions.CustomersCreateCustomer)),
+						Header = "Internal note".Localize(),
+						ToolTip = "Add note".Localize(),
+						Command = new DelegateCommand<object>(RaiseNoteAddInteractionRequest, (x) => _authContext.CheckPermission(PredefinedPermissions.CustomersCreateCustomer)),
 						IsActive = true,
 						CommandGroupName = "ContactCommandGroup"
 					});
@@ -63,22 +63,22 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Helpers
 		/// <param name="param">CaseChannel создаваемого CommunicationItem</param>
 		private void AppendNewItem(object param)
 		{
-            //if (param != null && param is CaseChannel)
-            //{
-            //    CommunicationItemViewModel item = null;
+			//if (param != null && param is CaseChannel)
+			//{
+			//    CommunicationItemViewModel item = null;
 
-            //    switch ((CaseChannel)param)
-            //    {
-            //        case CaseChannel.Note:
-            //            item = new CommunicationItemNoteViewModel();
-            //            break;
-            //    }
-            //    if (item != null)
-            //    {
-            //        item.State = CommunicationItemState.Appended;
-            //        AppendCommunicationItem(item, true, true);
-            //    }
-            //}
+			//    switch ((CaseChannel)param)
+			//    {
+			//        case CaseChannel.Note:
+			//            item = new CommunicationItemNoteViewModel();
+			//            break;
+			//    }
+			//    if (item != null)
+			//    {
+			//        item.State = CommunicationItemState.Appended;
+			//        AppendCommunicationItem(item, true, true);
+			//    }
+			//}
 		}
 
 		/// <summary>

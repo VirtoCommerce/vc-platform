@@ -24,7 +24,7 @@ namespace VirtoCommerce.ManagementClient.Customers.Infrastructure.Converters
 			{
 				if (contact.MemberId == userId)
 				{
-					return "Me";
+					return "Me".Localize();
 				}
 			}
 
