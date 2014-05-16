@@ -32,13 +32,13 @@ namespace VirtoCommerce.ManagementClient.Marketing.ViewModel.Implementations
 		public CatalogPromotionViewModel(
 			IRepositoryFactory<IAppConfigRepository> appConfigRepositoryFactory,
 			IRepositoryFactory<IMarketingRepository> repositoryFactory,
-			IRepositoryFactory<ICatalogRepository> catalogRepositoryFactory, 
-			IRepositoryFactory<IPricelistRepository> pricelistRepositoryFactory, 
+			IRepositoryFactory<ICatalogRepository> catalogRepositoryFactory,
+			IRepositoryFactory<IPricelistRepository> pricelistRepositoryFactory,
 			IViewModelsFactory<ISearchCategoryViewModel> searchCategoryVmFactory,
 			IViewModelsFactory<ISearchItemViewModel> searchItemVmFactory,
 			IRepositoryFactory<IShippingRepository> shippingRepositoryFactory,
-			IMarketingEntityFactory entityFactory, 
-			INavigationManager navManager, 
+			IMarketingEntityFactory entityFactory,
+			INavigationManager navManager,
 			Promotion item)
 			: base(appConfigRepositoryFactory, repositoryFactory, entityFactory, navManager, item, false, searchCategoryVmFactory, searchItemVmFactory, shippingRepositoryFactory)
 		{
@@ -47,7 +47,7 @@ namespace VirtoCommerce.ManagementClient.Marketing.ViewModel.Implementations
 
 			ViewTitle = new ViewTitleBase
 				{
-					Title = "Promotion",
+					Title = "Promotion".Localize(),
 					SubTitle =
 						(item != null && !string.IsNullOrEmpty(item.Name))
 							? item.Name.ToUpper(CultureInfo.InvariantCulture)
@@ -69,7 +69,7 @@ namespace VirtoCommerce.ManagementClient.Marketing.ViewModel.Implementations
 			IViewModelsFactory<ISearchCategoryViewModel> searchCategoryVmFactory,
 			IViewModelsFactory<ISearchItemViewModel> searchItemVmFactory,
 			IRepositoryFactory<IShippingRepository> shippingRepositoryFactory,
-			IMarketingEntityFactory entityFactory, 
+			IMarketingEntityFactory entityFactory,
 			Promotion item)
 			: base(appConfigRepositoryFactory, repositoryFactory, entityFactory, null, item, true, searchCategoryVmFactory, searchItemVmFactory, shippingRepositoryFactory)
 		{
@@ -89,7 +89,7 @@ namespace VirtoCommerce.ManagementClient.Marketing.ViewModel.Implementations
 		#endregion
 
 		#region Override PromotionViewModelBase Methods
-		
+
 		protected override void InitializePropertiesForViewing()
 		{
 			if (!IsWizardMode)
@@ -98,7 +98,7 @@ namespace VirtoCommerce.ManagementClient.Marketing.ViewModel.Implementations
 				InitializeAvailableCatalogs();
 			}
 		}
-		
+
 		public override string CatalogId
 		{
 			get
@@ -135,7 +135,7 @@ namespace VirtoCommerce.ManagementClient.Marketing.ViewModel.Implementations
 					var catalogs = repository.Catalogs.OrderBy(catalog => catalog.Name).ToList();
 
 					var items = catalogs.Where(cat => pricelistAssignements.Any(assignment => assignment.CatalogId == cat.CatalogId)).ToList();
-					items.Insert(0, new catalogModel.Catalog() {CatalogId = null, Name = "Select catalog..."});
+					items.Insert(0, new catalogModel.Catalog() { CatalogId = null, Name = "Select catalog...".Localize() });
 					OnUIThread(() =>
 					{
 						AvailableCatalogs = items;
@@ -148,7 +148,7 @@ namespace VirtoCommerce.ManagementClient.Marketing.ViewModel.Implementations
 		protected override bool IsValidForSave()
 		{
 			return base.IsValidForSave() && (((!IsWizardMode) && ((ExpressionElementBlock is CatalogPromotionExpressionBlock) &&
-							  (ExpressionElementBlock as CatalogPromotionExpressionBlock).GetPromotionRewards().Any() && 
+							  (ExpressionElementBlock as CatalogPromotionExpressionBlock).GetPromotionRewards().Any() &&
 							  (ExpressionElementBlock as CatalogPromotionExpressionBlock).ConditionBlock.Children.Any())) || IsWizardMode);
 		}
 

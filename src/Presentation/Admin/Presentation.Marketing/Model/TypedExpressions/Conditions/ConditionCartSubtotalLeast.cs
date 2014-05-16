@@ -1,8 +1,8 @@
 ﻿using System;
-using VirtoCommerce.ManagementClient.Core.Controls;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Marketing.Model;
+using VirtoCommerce.ManagementClient.Core.Controls;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using linq = System.Linq.Expressions;
 
 namespace VirtoCommerce.ManagementClient.Marketing.Model
@@ -13,9 +13,9 @@ namespace VirtoCommerce.ManagementClient.Marketing.Model
 		private readonly UserInputElement _subTotalEl;
 
 		public ConditionCartSubtotalLeast(IExpressionViewModel expressionViewModel)
-			: base("Cart subtotal is []", expressionViewModel)
+			: base("Cart subtotal is []".Localize(), expressionViewModel)
 		{
-			WithLabel("Cart subtotal is ");
+			WithLabel("Cart subtotal is ".Localize());
 			ExactlyLeast = WithElement(new ExactlyLeast()) as ExactlyLeast;
 			_subTotalEl = WithUserInput<decimal>(0, 0) as UserInputElement;
 			WithAvailableExcluding(() => new ItemsInCategory(expressionViewModel));

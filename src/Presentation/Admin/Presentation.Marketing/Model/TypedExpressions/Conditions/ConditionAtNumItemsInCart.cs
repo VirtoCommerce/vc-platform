@@ -1,9 +1,9 @@
 ﻿using System;
-using linq = System.Linq.Expressions;
+using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Marketing.Model;
 using VirtoCommerce.ManagementClient.Core.Controls;
-using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using linq = System.Linq.Expressions;
 
 namespace VirtoCommerce.ManagementClient.Marketing.Model
 {
@@ -13,11 +13,11 @@ namespace VirtoCommerce.ManagementClient.Marketing.Model
 		private readonly UserInputElement _numItemEl;
 
 		public ConditionAtNumItemsInCart(IExpressionViewModel expressionViewModel)
-			: base("[] [] items are in shopping cart", expressionViewModel)
+			: base("[] [] items are in shopping cart".Localize(), expressionViewModel)
 		{
 			ExactlyLeast = WithElement(new ExactlyLeast()) as ExactlyLeast;
 			_numItemEl = WithUserInput(1, 0) as UserInputElement;
-			WithLabel("items in shopping cart");
+			WithLabel("items in shopping cart".Localize());
 			WithAvailableExcluding(() => new ItemsInCategory(expressionViewModel));
 			WithAvailableExcluding(() => new ItemsInEntry(expressionViewModel));
 			WithAvailableExcluding(() => new ItemsInSku(expressionViewModel));
@@ -37,7 +37,7 @@ namespace VirtoCommerce.ManagementClient.Marketing.Model
 
 		public ExactlyLeast ExactlyLeast { get; set; }
 
-	
+
 		public override linq.Expression<Func<IEvaluationContext, bool>> GetExpression()
 		{
 			var paramX = linq.Expression.Parameter(typeof(IEvaluationContext), "x");
@@ -59,6 +59,6 @@ namespace VirtoCommerce.ManagementClient.Marketing.Model
 			WithAvailableExcluding(() => new ItemsInEntry(expressionViewModel));
 			WithAvailableExcluding(() => new ItemsInSku(expressionViewModel));
 		}
-	
+
 	}
 }

@@ -3,9 +3,10 @@
      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
      xmlns:localWizardViewModel="clr-namespace:VirtoCommerce.ManagementClient.Marketing.ViewModel.Wizard"
-     mc:Ignorable="d" VerticalAlignment="Top" HorizontalAlignment="Left" d:DataContext="{d:DesignInstance localWizardViewModel:ItemTypeSelectionStepViewModel, IsDesignTimeCreatable=True}"
+     mc:Ignorable="d" VerticalAlignment="Top" HorizontalAlignment="Left" d:DataContext="{d:DesignInstance interfaces:ItemTypeSelectionStepViewModel, IsDesignTimeCreatable=True}"
      MaxWidth="400" xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Marketing"
-     LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
+              xmlns:interfaces="clr-namespace:VirtoCommerce.ManagementClient.Marketing.ViewModel.Wizard.Interfaces"
+              LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
     <FrameworkElement.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

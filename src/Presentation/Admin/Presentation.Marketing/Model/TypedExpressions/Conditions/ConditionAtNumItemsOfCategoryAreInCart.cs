@@ -1,9 +1,9 @@
 ﻿using System;
-using VirtoCommerce.Foundation.Marketing.Model;
-using linq = System.Linq.Expressions;
-using VirtoCommerce.ManagementClient.Core.Controls;
 using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Foundation.Marketing.Model;
+using VirtoCommerce.ManagementClient.Core.Controls;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
+using linq = System.Linq.Expressions;
 
 namespace VirtoCommerce.ManagementClient.Marketing.Model
 {
@@ -14,15 +14,15 @@ namespace VirtoCommerce.ManagementClient.Marketing.Model
 		private readonly ItemsInCategory _itemsInCategoryEl;
 
 		public ConditionAtNumItemsInCategoryAreInCart(IExpressionViewModel expressionViewModel)
-			: base("[] [] items of category are in shopping cart", expressionViewModel)
+			: base("[] [] items of category are in shopping cart".Localize(), expressionViewModel)
 		{
-			 ExactlyLeast = WithElement(new ExactlyLeast()) as ExactlyLeast;
-			 _numItemEl = WithUserInput(1, 0) as UserInputElement;
-			 _itemsInCategoryEl = WithElement(new ItemsInCategory(expressionViewModel)) as ItemsInCategory;
-             WithLabel("are in shopping cart");
-			 WithAvailableExcluding(() => new ItemsInCategory(expressionViewModel));
-			 WithAvailableExcluding(() => new ItemsInEntry(expressionViewModel));
-			 WithAvailableExcluding(() => new ItemsInSku(expressionViewModel));
+			ExactlyLeast = WithElement(new ExactlyLeast()) as ExactlyLeast;
+			_numItemEl = WithUserInput(1, 0) as UserInputElement;
+			_itemsInCategoryEl = WithElement(new ItemsInCategory(expressionViewModel)) as ItemsInCategory;
+			WithLabel("are in shopping cart".Localize());
+			WithAvailableExcluding(() => new ItemsInCategory(expressionViewModel));
+			WithAvailableExcluding(() => new ItemsInEntry(expressionViewModel));
+			WithAvailableExcluding(() => new ItemsInSku(expressionViewModel));
 		}
 
 		public decimal NumItem

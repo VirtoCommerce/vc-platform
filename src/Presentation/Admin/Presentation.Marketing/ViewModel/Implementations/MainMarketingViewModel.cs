@@ -8,31 +8,31 @@ using VirtoCommerce.ManagementClient.Marketing.ViewModel.Interfaces;
 
 namespace VirtoCommerce.ManagementClient.Marketing.ViewModel.Implementations
 {
-    public class MainMarketingViewModel : SubTabsDefaultViewModel, IMainMarketingViewModel
-    {
+	public class MainMarketingViewModel : SubTabsDefaultViewModel, IMainMarketingViewModel
+	{
 		public MainMarketingViewModel(IMarketingHomeViewModel marketingVm, IDynamicContentHomeViewModel contentVm, IContentPublishingHomeViewModel publishingVm, IAuthenticationContext authContext)
 		{
-            ViewTitle = new ViewTitleBase
-            {
-                Title="Marketing",
-                SubTitle="MARKETING SERVICE"
-            };
+			ViewTitle = new ViewTitleBase
+			{
+				Title = "Marketing".Localize(),
+				SubTitle = "MARKETING SERVICE".Localize()
+			};
 
 			SubItems = new List<ItemTypeHomeTab>();
 
 			if (authContext.CheckPermission(PredefinedPermissions.MarketingPromotionsManage))
 			{
-				SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.HomeName, Caption = "Promotions", ViewModel = marketingVm });
+				SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.HomeName, Caption = "Promotions".Localize(), ViewModel = marketingVm });
 			}
 			if (authContext.CheckPermission(PredefinedPermissions.MarketingDynamic_ContentManage))
 			{
-				SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.HomeNameDynamicContent, Caption = "Dynamic content", Order = 10, ViewModel = contentVm });
+				SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.HomeNameDynamicContent, Caption = "Dynamic content".Localize(), Order = 10, ViewModel = contentVm });
 			}
 			if (authContext.CheckPermission(PredefinedPermissions.MarketingContent_PublishingManage))
 			{
-				SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.HomeNameContentPublishing, Caption = "Content publishing", Order = 20, ViewModel = publishingVm });
+				SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.HomeNameContentPublishing, Caption = "Content publishing".Localize(), Order = 20, ViewModel = publishingVm });
 			}
 			CurrentTab = SubItems[0];
 		}
-    }
+	}
 }

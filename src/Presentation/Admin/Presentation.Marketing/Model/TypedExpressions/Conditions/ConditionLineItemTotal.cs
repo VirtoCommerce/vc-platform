@@ -1,8 +1,8 @@
 ﻿using System;
-using VirtoCommerce.ManagementClient.Core.Controls;
-using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Marketing.Model;
+using VirtoCommerce.ManagementClient.Core.Controls;
+using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using linq = System.Linq.Expressions;
 
 namespace VirtoCommerce.ManagementClient.Marketing.Model
@@ -13,9 +13,9 @@ namespace VirtoCommerce.ManagementClient.Marketing.Model
 		private readonly UserInputElement _lineItemTotalEl;
 
 		public ConditionLineItemTotal(IExpressionViewModel expressionViewModel)
-			: base("Line item subtotal is []", expressionViewModel)
+			: base("Line item subtotal is []".Localize(), expressionViewModel)
 		{
-			WithLabel("Line item subtotal is ");
+			WithLabel("Line item subtotal is ".Localize());
 			ExactlyLeast = WithElement(new ExactlyLeast()) as ExactlyLeast;
 			_lineItemTotalEl = WithUserInput<decimal>(0, 0) as UserInputElement;
 			WithAvailableExcluding(() => new ItemsInCategory(expressionViewModel));

@@ -1,21 +1,21 @@
 ﻿using System;
+using VirtoCommerce.Foundation.Marketing.Model;
 using VirtoCommerce.ManagementClient.Core.Controls;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
-using VirtoCommerce.Foundation.Marketing.Model;
 
 namespace VirtoCommerce.ManagementClient.Marketing.Model
 {
-        [Serializable]
+	[Serializable]
 	public class ActionCartGetOfRelSubtotal : PromotionExpressionBlock
 	{
 		private readonly UserInputElement _amountEl;
 
 		public ActionCartGetOfRelSubtotal(IExpressionViewModel expressionViewModel)
-			: base("Get [] % off cart subtotal", expressionViewModel)
+			: base("Get [] % off cart subtotal".Localize(), expressionViewModel)
 		{
-			WithLabel("Get");
+			WithLabel("Get".Localize());
 			_amountEl = WithUserInput(0, 0, 100) as UserInputElement;
-			WithLabel("% off cart subtotal");
+			WithLabel("% off cart subtotal".Localize());
 		}
 
 		public decimal Amount

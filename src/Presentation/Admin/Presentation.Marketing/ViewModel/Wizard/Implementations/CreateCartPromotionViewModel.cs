@@ -4,13 +4,13 @@ using System.Linq;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Marketing.Factories;
+using VirtoCommerce.Foundation.Marketing.Model;
 using VirtoCommerce.Foundation.Marketing.Repositories;
 using VirtoCommerce.Foundation.Orders.Repositories;
+using VirtoCommerce.Foundation.Stores.Repositories;
 using VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Interfaces;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Wizard;
-using VirtoCommerce.Foundation.Marketing.Model;
-using VirtoCommerce.Foundation.Stores.Repositories;
 using VirtoCommerce.ManagementClient.Marketing.Model;
 using VirtoCommerce.ManagementClient.Marketing.ViewModel.Implementations;
 using VirtoCommerce.ManagementClient.Marketing.ViewModel.Wizard.Interfaces;
@@ -18,34 +18,34 @@ using VirtoCommerce.ManagementClient.Marketing.ViewModel.Wizard.Interfaces;
 namespace VirtoCommerce.ManagementClient.Marketing.ViewModel.Wizard.Implementations
 {
 	public class CreateCartPromotionViewModel : WizardContainerStepsViewModel, ICreateCartPromotionViewModel
-    {
+	{
 
 		public CreateCartPromotionViewModel(
-			IViewModelsFactory<ICartPromotionOverviewStepViewModel> overviewVmFactory, 
+			IViewModelsFactory<ICartPromotionOverviewStepViewModel> overviewVmFactory,
 			IViewModelsFactory<ICartPromotionExpressionStepViewModel> expressionVmFactory,
 			IViewModelsFactory<ICartPromotionCouponStepViewModel> couponVmFactory,
 			Promotion item)
-        {
+		{
 			RegisterStep(overviewVmFactory.GetViewModelInstance(
 				new KeyValuePair<string, object>("item", item)));
 			RegisterStep(expressionVmFactory.GetViewModelInstance(
 				new KeyValuePair<string, object>("item", item)));
 			RegisterStep(couponVmFactory.GetViewModelInstance(
 				new KeyValuePair<string, object>("item", item)));
-        }
+		}
 
-    }
+	}
 
 	public class CartPromotionOverviewStepViewModel : CartPromotionViewModel, ICartPromotionOverviewStepViewModel
-    {
+	{
 		public CartPromotionOverviewStepViewModel(
-			IRepositoryFactory<IMarketingRepository> repositoryFactory, 
+			IRepositoryFactory<IMarketingRepository> repositoryFactory,
 			IRepositoryFactory<IStoreRepository> storeRepositoryFactory,
-			IMarketingEntityFactory entityFactory, 
+			IMarketingEntityFactory entityFactory,
 			Promotion item)
 			: base(null, null, null, null, repositoryFactory, storeRepositoryFactory, entityFactory, item)
-        {
-        }
+		{
+		}
 
 		#region IWizardStep Members
 
@@ -68,9 +68,9 @@ namespace VirtoCommerce.ManagementClient.Marketing.ViewModel.Wizard.Implementati
 			}
 		}
 
-		public override string Description { get { return "Enter promotion general information."; } }
+		public override string Description { get { return "Enter promotion general information.".Localize(); } }
 
-		public override string Comment { get { return "Fields marked as required must have values for the promotion to be created."; } }
+		public override string Comment { get { return "Fields marked as required must have values for the promotion to be created.".Localize(); } }
 
 		#endregion
 
@@ -85,35 +85,35 @@ namespace VirtoCommerce.ManagementClient.Marketing.ViewModel.Wizard.Implementati
 	}
 
 	public class CartPromotionExpressionStepViewModel : CartPromotionViewModel, ICartPromotionExpressionStepViewModel, ISupportWizardPrepare
-    {
+	{
 		public CartPromotionExpressionStepViewModel(
 			IRepositoryFactory<IAppConfigRepository> appConfigRepositoryFactory,
 			IRepositoryFactory<IShippingRepository> shippingRepositoryFactory,
 			IViewModelsFactory<ISearchCategoryViewModel> searchCategoryVmFactory,
 			IViewModelsFactory<ISearchItemViewModel> searchItemVmFactory,
-			IRepositoryFactory<IMarketingRepository> repositoryFactory, 
+			IRepositoryFactory<IMarketingRepository> repositoryFactory,
 			IRepositoryFactory<IStoreRepository> storeRepositoryFactory,
 			IMarketingEntityFactory entityFactory, Promotion item)
 			: base(appConfigRepositoryFactory, shippingRepositoryFactory, searchCategoryVmFactory, searchItemVmFactory, repositoryFactory, storeRepositoryFactory, entityFactory, item)
-        {
-        }
-		
+		{
+		}
+
 		#region IWizardStep Members
 
-		public override bool IsValid 
+		public override bool IsValid
 		{
 			get
 			{
 				var retVal = (ExpressionElementBlock is CartPromotionExpressionBlock) &&
-				              (ExpressionElementBlock as CartPromotionExpressionBlock).ConditionCutomerSegmentBlock.Children.Any() &&
-				              (ExpressionElementBlock as CartPromotionExpressionBlock).GetPromotionRewards().Any();
+							  (ExpressionElementBlock as CartPromotionExpressionBlock).ConditionCutomerSegmentBlock.Children.Any() &&
+							  (ExpressionElementBlock as CartPromotionExpressionBlock).GetPromotionRewards().Any();
 				return retVal;
-			} 
+			}
 		}
 
-		public override string Description { get { return "Enter promotion details."; } }
+		public override string Description { get { return "Enter promotion details.".Localize(); } }
 
-		public override string Comment { get { return "Add promotion conditions."; } }
+		public override string Comment { get { return "Add promotion conditions.".Localize(); } }
 
 		#endregion
 
@@ -132,19 +132,19 @@ namespace VirtoCommerce.ManagementClient.Marketing.ViewModel.Wizard.Implementati
 		{
 			UpdateFromExpressionElementBlock();
 		}
-	
+
 		#endregion
-    }
+	}
 
 	public class CartPromotionCouponStepViewModel : CartPromotionViewModel, ICartPromotionCouponStepViewModel, ISupportWizardPrepare
-    {
+	{
 		public CartPromotionCouponStepViewModel(
-			IRepositoryFactory<IMarketingRepository> repositoryFactory, 
-			IMarketingEntityFactory entityFactory, 
+			IRepositoryFactory<IMarketingRepository> repositoryFactory,
+			IMarketingEntityFactory entityFactory,
 			Promotion item)
 			: base(null, null, null, null, repositoryFactory, null, entityFactory, item)
-        {
-        }
+		{
+		}
 
 		#region IWizardStep Members
 
@@ -152,15 +152,15 @@ namespace VirtoCommerce.ManagementClient.Marketing.ViewModel.Wizard.Implementati
 		{
 			get
 			{
-                return !HasCoupon || !string.IsNullOrEmpty(CouponCodeDisplayed);
+				return !HasCoupon || !string.IsNullOrEmpty(CouponCodeDisplayed);
 			}
 		}
 
 		public override bool IsLast { get { return true; } }
 
-		public override string Description { get { return "Enter promotion coupons."; } }
+		public override string Description { get { return "Enter promotion coupons.".Localize(); } }
 
-		public override string Comment { get { return "Select if the promotion available with or without coupon."; } }
+		public override string Comment { get { return "Select if the promotion available with or without coupon.".Localize(); } }
 
 		#endregion
 
