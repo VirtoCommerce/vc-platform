@@ -61,7 +61,7 @@
             </DockPanel>
             <Button.ContextMenu>
                 <ContextMenu>
-                    <MenuItem Command="{Binding PlacementTarget.DataContext.DeleteCaseCommand,&#xD;&#xA;						RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}, Mode=FindAncestor}}"
+                    <MenuItem Command="{Binding PlacementTarget.DataContext.DeleteCaseCommand, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}, Mode=FindAncestor}}"
                          Header="{Loc 'Delete case'}" ToolTip="{Loc 'Delete current case'}" behaviors:PermissionBehavior.PermissionId="{x:Static sequrityModel:PredefinedPermissions.CustomersDeleteExistingCase}"
                          behaviors:PermissionBehavior.DenyVisibility="Collapsed" />
                 </ContextMenu>

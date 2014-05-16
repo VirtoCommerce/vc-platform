@@ -3,18 +3,20 @@ using System.Windows;
 using System.Windows.Media;
 using Microsoft.Practices.Prism.Commands;
 using Omu.ValueInjecter;
+using VirtoCommerce.Client.Globalization;
+using VirtoCommerce.Foundation.Customers.Factories;
+using VirtoCommerce.Foundation.Customers.Model;
+using VirtoCommerce.Foundation.Customers.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.ManagementClient.Core.Controls;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation;
 using VirtoCommerce.ManagementClient.Customers.Model;
 using VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseRules.Interfaces;
-using VirtoCommerce.Foundation.Customers.Factories;
-using VirtoCommerce.Foundation.Customers.Model;
-using VirtoCommerce.Foundation.Customers.Repositories;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.Wizard.Interfaces;
+using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseRules.Implementations
 {
@@ -35,7 +37,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseRules.
 			INavigationManager navManager, CaseRule item)
 			: base(entityFactory, item, false)
 		{
-			ViewTitle = new ViewTitleBase() { Title = "Edit Rule", SubTitle = "SETTINGS" };
+			ViewTitle = new ViewTitleBase() { Title = "Edit Rule".Localize(), SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory) };
 			_repositoryFactory = repositoryFactory;
 			_parent = parent;
 			_navManager = navManager;
@@ -101,8 +103,8 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseRules.
 		{
 			return new RefusedConfirmation
 			{
-				Content = "Save changes to Case rule '" + DisplayName + "'?",
-				Title = "Action confirmation"
+				Content = string.Format("Save changes to Case rule '{0}'?".Localize(), DisplayName),
+				Title = "Action confirmation".Localize(null, LocalizationScope.DefaultCategory)
 			};
 		}
 
@@ -197,9 +199,9 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseRules.
 
 		public TypedExpressionElementBase ExpressionElementBlock { get; set; }
 
-		public IViewModelsFactory<IMultiLineEditViewModel> MultiLineEditVmFactory 
-		{ 
-			get { return _multiLineEditVmFactory; } 
+		public IViewModelsFactory<IMultiLineEditViewModel> MultiLineEditVmFactory
+		{
+			get { return _multiLineEditVmFactory; }
 		}
 
 		public void PrepareOriginalItemForSave()
