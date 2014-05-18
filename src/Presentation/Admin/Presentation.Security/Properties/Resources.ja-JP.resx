@@ -118,37 +118,37 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Baseurl" xml:space="preserve">
-    <value>イ-Base url</value>
+    <value>ベースURL</value>
   </data>
   <data name="login" xml:space="preserve">
-    <value>イ-Log in</value>
+    <value>ログイン</value>
   </data>
   <data name="loginAct" xml:space="preserve">
-    <value>イ-Log in</value>
+    <value>ログイン</value>
   </data>
   <data name="Welcome" xml:space="preserve">
-    <value>イ- Welcome</value>
+    <value>ようこそ</value>
     <comment>TextBlock.Text</comment>
   </data>
   <data name="Base_url_should_begin_with__http_____or__https_____prefix" xml:space="preserve">
-    <value>イ-Base url should begin with "http://" or "https://" prefix</value>
+    <value>ベースURLは、"http://" または "https://" で入力します。</value>
   </data>
   <data name="Base_url_is_required" xml:space="preserve">
-    <value>イ-Base url is required</value>
+    <value>ベースURLは、必須項目です。</value>
   </data>
   <data name="Error_at_login__" xml:space="preserve">
-    <value>イ-Error at login. </value>
+    <value>ログインでエラーが発生しました。</value>
   </data>
   <data name="Login_WatermarkText" xml:space="preserve">
-    <value>イ-Username:</value>
+    <value>ユーザー名:</value>
   </data>
   <data name="Username_is_required" xml:space="preserve">
-    <value>イ-Username is required</value>
+    <value>ユーザー名は、必須項目です。</value>
   </data>
   <data name="Password_is_required" xml:space="preserve">
-    <value>イ-Password is required</value>
+    <value>パスワードは、必須項目です。</value>
   </data>
   <data name="Login_or_password_is_incorrect" xml:space="preserve">
-    <value>イ-Login or password is incorrect</value>
+    <value>ログインID又はパスワードが正しくありません。</value>
   </data>
 </root>
