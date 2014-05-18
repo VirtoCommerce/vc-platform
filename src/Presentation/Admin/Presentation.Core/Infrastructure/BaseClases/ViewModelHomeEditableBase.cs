@@ -169,7 +169,7 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure
 				var confirmation = new ConditionalConfirmation()
 				{
 					Content = joinedNames,
-					Title = "Are you sure you want to delete?"
+                    Title = "Are you sure you want to delete?".Localize()
 				};
 
 				CommonConfirmRequest.Raise(confirmation,
@@ -216,7 +216,7 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure
 				var confirmation = new ConditionalConfirmation()
 				{
 					Content = joinedNames,
-					Title = "Are you sure you want to create duplicate?"
+                    Title = "Are you sure you want to create duplicate?".Localize()
 				};
 
 				CommonConfirmRequest.Raise(confirmation,

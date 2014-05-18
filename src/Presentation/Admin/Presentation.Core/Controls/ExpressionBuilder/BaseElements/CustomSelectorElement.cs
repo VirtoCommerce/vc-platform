@@ -1,16 +1,17 @@
 ﻿using System;
+using VirtoCommerce.Client.Globalization;
 
 namespace VirtoCommerce.ManagementClient.Core.Controls
 {
-	[Serializable]
+    [Serializable]
     public class CustomSelectorElement : UserInputElement
     {
-		[NonSerialized]
+        [NonSerialized]
         public Func<object> ValueSelector;
 
         public CustomSelectorElement()
         {
-            DefaultValue = "select";
+            DefaultValue = "select".Localize();
         }
 
         #region ExpressionElement overrides

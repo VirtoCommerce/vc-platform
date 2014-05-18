@@ -5,8 +5,8 @@ namespace VirtoCommerce.ManagementClient.Core.Controls
 	[Serializable]
 	public class ExactlyLeast : DictionaryElement
 	{
-		public string Exactly = "Exactly";
-		public string Least = "At least";
+        public string Exactly = "Exactly".Localize();
+        public string Least = "At least".Localize();
 
 		public ExactlyLeast()
 		{

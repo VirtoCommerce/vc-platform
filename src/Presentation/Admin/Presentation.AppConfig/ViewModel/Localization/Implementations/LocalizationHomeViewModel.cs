@@ -24,191 +24,193 @@ using VirtoCommerce.ManagementClient.Localization;
 
 namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implementations
 {
-	public class LocalizationHomeViewModel : HomeSettingsViewModel<LocalizationGroup>, ILocalizationHomeViewModel, IEntityExportable
-	{
-		#region const
+    public class LocalizationHomeViewModel : HomeSettingsViewModel<LocalizationGroup>, ILocalizationHomeViewModel, IEntityExportable
+    {
+        #region const
 
-		const string searchKeyAll = "--all";
-		const string searchKeyAllCM = "--allCM";
-		const string searchLabelWeb = "Web pages";
-		const string searchLabelManager = "Commerce manager";
-		const string searchLabelCM = "General";
+        const string searchKeyAll = "--all";
+        const string searchKeyAllCM = "--allCM";
+        const string searchLabelWeb = "Web pages";
+        const string searchLabelManager = "Commerce manager";
+        const string searchLabelCM = "General";
 
-		#endregion
+        #endregion
 
-		#region Dependencies
+        #region Dependencies
 
-		private readonly IRepositoryFactory<IAppConfigRepository> _repositoryFactory;
-		private readonly IViewModelsFactory<ILocalizationEditViewModel> _editVmFactory;
-		private readonly IElementRepository _elementRepository;
+        private readonly IRepositoryFactory<IAppConfigRepository> _repositoryFactory;
+        private readonly IViewModelsFactory<ILocalizationEditViewModel> _editVmFactory;
+        private readonly IElementRepository _elementRepository;
 
-		#endregion
+        #endregion
 
-		#region Constructor
-		public LocalizationHomeViewModel(IRepositoryFactory<IAppConfigRepository> repositoryFactory, IAppConfigEntityFactory entityFactory,
-			IViewModelsFactory<ILocalizationEditViewModel> editVmFactory, IElementRepository elementRepository)
-			: base(entityFactory)
-		{
-			_editVmFactory = editVmFactory;
-			_repositoryFactory = repositoryFactory;
-			_elementRepository = elementRepository;
-			InitCommands();
+        #region Constructor
+        public LocalizationHomeViewModel(IRepositoryFactory<IAppConfigRepository> repositoryFactory, IAppConfigEntityFactory entityFactory,
+            IViewModelsFactory<ILocalizationEditViewModel> editVmFactory, IElementRepository elementRepository)
+            : base(entityFactory)
+        {
+            _editVmFactory = editVmFactory;
+            _repositoryFactory = repositoryFactory;
+            _elementRepository = elementRepository;
+            InitCommands();
 
-			SendCulturesToShell();
-		}
+            SendCulturesToShell();
+        }
 
-		#endregion
+        #endregion
 
-		#region Commands init
+        #region Commands init
 
-		private void InitCommands()
-		{
-			ItemEditCommand = new DelegateCommand<LocalizationGroup>(RaiseItemEditInteractionRequest, CanRaiseItemEditExecute);
-			ClearFiltersCommand = new DelegateCommand(DoClearFilters);
-			SearchItemsCommand = new DelegateCommand(DoSearchItems);
-			ListExportCommand = new DelegateCommand(RaiseExportCommand, CanExecuteExport);
-			ClearCacheCommand = new DelegateCommand(DoClearCache);
+        private void InitCommands()
+        {
+            ItemEditCommand = new DelegateCommand<LocalizationGroup>(RaiseItemEditInteractionRequest, CanRaiseItemEditExecute);
+            ClearFiltersCommand = new DelegateCommand(DoClearFilters);
+            SearchItemsCommand = new DelegateCommand(DoSearchItems);
+            ListExportCommand = new DelegateCommand(RaiseExportCommand, CanExecuteExport);
+            ClearCacheCommand = new DelegateCommand(DoClearCache);
 
-			CommonConfirmRequest = new InteractionRequest<Confirmation>();
-			CommonNotifyRequest = new InteractionRequest<Notification>();
-		}
+            CommonConfirmRequest = new InteractionRequest<Confirmation>();
+            CommonNotifyRequest = new InteractionRequest<Notification>();
+        }
 
-		private void SendCulturesToShell()
-		{
-			var cultures = _elementRepository.EnabledLanguages().ToList();
-			var msg = new GenericEvent<Tuple<List<CultureInfo>, Action<string>>> { Message = new Tuple<List<CultureInfo>, Action<string>>(cultures, DoChangeCulture) };
-			EventSystem.Publish(msg);
-		}
+        private void SendCulturesToShell()
+        {
+            var cultures = _elementRepository.EnabledLanguages().ToList();
+            var msg = new GenericEvent<Tuple<List<CultureInfo>, Action<string>>> { Message = new Tuple<List<CultureInfo>, Action<string>>(cultures, DoChangeCulture) };
+            EventSystem.Publish(msg);
+        }
 
-		private void DoChangeCulture(string cultureName)
-		{
-			CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo(cultureName);
+        private void DoChangeCulture(string cultureName)
+        {
+            CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo(cultureName);
 
-			// force values update
-			LocalizationManager.UpdateValues();
-		}
+            // force values update
+            LocalizationManager.UpdateValues();
+        }
 
-		#endregion
+        #endregion
 
-		#region Filters
+        #region Filters
 
-		public string SearchFilterName { get; set; }
-		public string FilterModule { get; set; }
-		public DelegateCommand ClearFiltersCommand { get; private set; }
-		public DelegateCommand SearchItemsCommand { get; private set; }
+        public string SearchFilterName { get; set; }
+        public string FilterModule { get; set; }
+        public DelegateCommand ClearFiltersCommand { get; private set; }
+        public DelegateCommand SearchItemsCommand { get; private set; }
 
-		private int dataLoadingworker;
-		private readonly object _lockObject = new object();
+        private int dataLoadingworker;
+        private readonly object _lockObject = new object();
 
-		private void DoClearFilters()
-		{
-			SearchFilterName = null;
-			FilterModule = null;
-			IsUntranslatedOnly = false;
-			OriginalLanguage = null;
-			TranslateLanguage = null;
-			OnPropertyChanged("SearchFilterName");
-			OnPropertyChanged("FilterModule");
-			RaiseCanExecuteChanged();
-		}
+        private void DoClearFilters()
+        {
+            SearchFilterName = null;
+            FilterModule = null;
+            IsUntranslatedOnly = false;
+            OriginalLanguage = null;
+            TranslateLanguage = null;
+            OnPropertyChanged("SearchFilterName");
+            OnPropertyChanged("FilterModule");
+            RaiseCanExecuteChanged();
+        }
 
-		private void DoSearchItems()
-		{
-			if (RefreshItemListCommand != null)
-				RefreshItemListCommand.Execute();
-		}
+        private void DoSearchItems()
+        {
+            if (RefreshItemListCommand != null)
+                RefreshItemListCommand.Execute();
+        }
 
-		private void DoClearCache()
-		{
-			var confirmation = new ConditionalConfirmation();
-			confirmation.Title = "Refresh locally cached Commerce Manager texts".Localize();
-			confirmation.Content = "Are you sure you want to clear all locally cached Commerce Manager texts?".Localize();
+        private void DoClearCache()
+        {
+            var confirmation = new ConditionalConfirmation
+            {
+                Title = "Refresh locally cached Commerce Manager texts".Localize(),
+                Content = "Are you sure you want to clear all locally cached Commerce Manager texts?".Localize()
+            };
 
-			CommonConfirmRequest.Raise(confirmation,
-				async xx =>
-				{
-					if (xx.Confirmed)
-					{
-						ShowLoadingAnimation = true;
-						try
-						{
-							await Task.Run(() =>
-								{
-									_elementRepository.Clear();
+            CommonConfirmRequest.Raise(confirmation,
+                async xx =>
+                {
+                    if (xx.Confirmed)
+                    {
+                        ShowLoadingAnimation = true;
+                        try
+                        {
+                            await Task.Run(() =>
+                                {
+                                    _elementRepository.Clear();
 
-									// force Elements re-caching
-									_elementRepository.Elements();
-									
-									_elementRepository.SetStatusDate();
+                                    // force Elements re-caching
+                                    _elementRepository.Elements();
 
-									// force values update
-									LocalizationManager.UpdateValues();
+                                    _elementRepository.SetStatusDate();
 
-									// update available languages menu
-									SendCulturesToShell();
-								});
+                                    // force values update
+                                    LocalizationManager.UpdateValues();
 
-							var notification = new Notification();
-							// notification.Title = "Done";
-							notification.Content = "All locally cached texts were removed. You may need to restart this application for the changes to take effect."
-								.Localize();
-							CommonNotifyRequest.Raise(notification);
-						}
-						finally
-						{
-							ShowLoadingAnimation = false;
-						}
-					}
-				});
-		}
+                                    // update available languages menu
+                                    SendCulturesToShell();
+                                });
 
-		#endregion
+                            var notification = new Notification();
+                            // notification.Title = "Done";
+                            notification.Content = "All locally cached texts were removed. You may need to restart this application for the changes to take effect."
+                                .Localize();
+                            CommonNotifyRequest.Raise(notification);
+                        }
+                        finally
+                        {
+                            ShowLoadingAnimation = false;
+                        }
+                    }
+                });
+        }
 
-		#region ILocalizationHomeViewModel Members
+        #endregion
 
-		public ICollectionView ListItemsSource { get; private set; }
+        #region ILocalizationHomeViewModel Members
 
-		#endregion
+        public ICollectionView ListItemsSource { get; private set; }
 
-		#region HomeSettingsViewModel members
+        #endregion
 
-		protected override object LoadData()
-		{
-			var items = new List<LocalizationGroup>();
+        #region HomeSettingsViewModel members
 
-			if (dataLoadingworker == 0 &&
-				(LanguagesCodes == null ||
-					(LanguagesCodes.Contains(OriginalLanguage) &&
-					 LanguagesCodes.Contains(TranslateLanguage))))
-			{
-				lock (_lockObject)
-				{
-					if (dataLoadingworker == 0)
-					{
-						dataLoadingworker = System.Threading.Thread.CurrentThread.ManagedThreadId;
-					}
-				}
+        protected override object LoadData()
+        {
+            var items = new List<LocalizationGroup>();
 
-				if (dataLoadingworker == System.Threading.Thread.CurrentThread.ManagedThreadId)
-				{
-					try
-					{
-						using (var repository = _repositoryFactory.GetRepositoryInstance())
-						{
-							if (LanguagesCodes == null)
-							{
-								// load Languages setting
-								var langSetting =
-									repository.Settings.Expand(s => s.SettingValues).Where(s => s.Name.Contains("Lang")).SingleOrDefault();
+            if (dataLoadingworker == 0 &&
+                (LanguagesCodes == null ||
+                    (LanguagesCodes.Contains(OriginalLanguage) &&
+                     LanguagesCodes.Contains(TranslateLanguage))))
+            {
+                lock (_lockObject)
+                {
+                    if (dataLoadingworker == 0)
+                    {
+                        dataLoadingworker = System.Threading.Thread.CurrentThread.ManagedThreadId;
+                    }
+                }
 
-								OnUIThread(() =>
-									{
-										LanguagesCodes = langSetting == null
-															 ? new List<string>()
-															 : langSetting.SettingValues.Select(sv => sv.ShortTextValue).ToList();
+                if (dataLoadingworker == System.Threading.Thread.CurrentThread.ManagedThreadId)
+                {
+                    try
+                    {
+                        using (var repository = _repositoryFactory.GetRepositoryInstance())
+                        {
+                            if (LanguagesCodes == null)
+                            {
+                                // load Languages setting
+                                var langSetting =
+                                    repository.Settings.Expand(s => s.SettingValues).Where(s => s.Name.Contains("Lang")).SingleOrDefault();
 
-										// list all module names
-										FilterModules = new[]
+                                OnUIThread(() =>
+                                    {
+                                        LanguagesCodes = langSetting == null
+                                                             ? new List<string>()
+                                                             : langSetting.SettingValues.Select(sv => sv.ShortTextValue).ToList();
+
+                                        // list all module names
+                                        FilterModules = new[]
 											{
 												new KeyValuePair_string_string {Key = searchKeyAll, Value = "All"},
 												new KeyValuePair_string_string {Value = searchLabelWeb},
@@ -229,321 +231,321 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 												new KeyValuePair_string_string {Key = "Reviews", Value = "Reviews"},
 												new KeyValuePair_string_string {Key = "Security", Value = "Security"}
 											}.ToList();
-									});
-							}
+                                    });
+                            }
 
-							if (LanguagesCodes.Contains(OriginalLanguage) &&
-								LanguagesCodes.Contains(TranslateLanguage))
-							{
-								var query = repository.Localizations;
-								if (FilterModule != searchKeyAll)
-								{
-									if (FilterModule == searchKeyAllCM)
-									{
-										query = query.Where(x => x.Category != "");
-									}
-									else if (string.IsNullOrEmpty(FilterModule))
-									{
-										query = query.Where(x => x.Category == "");
-									}
-									else
-									{
-										query = query.Where(x => x.Category == FilterModule);
-									}
-								}
-								var localQueryResults = query.ToList().OrderBy(x => x.Category);
-								var keys = localQueryResults.Select(x => new { x.Name, x.Category, Key = x.Name + x.Category }).Distinct();
-								var translateItems = localQueryResults.Where(x => x.LanguageCode == TranslateLanguage).ToDictionary(x => x.Name + x.Category);
-								var originalItems = localQueryResults.Where(x => x.LanguageCode == OriginalLanguage).ToDictionary(x => x.Name + x.Category);
+                            if (LanguagesCodes.Contains(OriginalLanguage) &&
+                                LanguagesCodes.Contains(TranslateLanguage))
+                            {
+                                var query = repository.Localizations;
+                                if (FilterModule != searchKeyAll)
+                                {
+                                    if (FilterModule == searchKeyAllCM)
+                                    {
+                                        query = query.Where(x => x.Category != "");
+                                    }
+                                    else if (string.IsNullOrEmpty(FilterModule))
+                                    {
+                                        query = query.Where(x => x.Category == "");
+                                    }
+                                    else
+                                    {
+                                        query = query.Where(x => x.Category == FilterModule);
+                                    }
+                                }
+                                var localQueryResults = query.ToList().OrderBy(x => x.Category);
+                                var keys = localQueryResults.Select(x => new { x.Name, x.Category, Key = x.Name + x.Category }).Distinct();
+                                var translateItems = localQueryResults.Where(x => x.LanguageCode == TranslateLanguage).ToDictionary(x => x.Name + x.Category);
+                                var originalItems = localQueryResults.Where(x => x.LanguageCode == OriginalLanguage).ToDictionary(x => x.Name + x.Category);
 
-								foreach (var key in keys)
-								{
-									var isTranslateExists = translateItems.ContainsKey(key.Key);
-									if ((IsUntranslatedOnly && !isTranslateExists) || !IsUntranslatedOnly)
-									{
-										var original = originalItems.ContainsKey(key.Key)
-														   ? originalItems[key.Key]
-														   : new Foundation.AppConfig.Model.Localization();
-										var translated = isTranslateExists
-															 ? translateItems[key.Key]
-															 : new Foundation.AppConfig.Model.Localization
-																 {
-																	 Name = original.Name,
-																	 LanguageCode = TranslateLanguage,
-																	 Category = key.Category
-																 };
-										if (string.IsNullOrEmpty(SearchFilterName)
-											|| key.Name.Contains(SearchFilterName)
-											||
-											(!string.IsNullOrEmpty(original.Value) &&
-											 original.Value.IndexOf(SearchFilterName, StringComparison.OrdinalIgnoreCase) >= 0)
-											||
-											(!string.IsNullOrEmpty(translated.Value) &&
-											 translated.Value.IndexOf(SearchFilterName, StringComparison.OrdinalIgnoreCase) >= 0))
-										{
-											items.Add(new LocalizationGroup
-												{
-													Name = key.Name,
-													Category = string.IsNullOrEmpty(key.Category) ? searchLabelWeb : (key.Category == LocalizationScope.DefaultCategory ? searchLabelCM : key.Category),
-													OriginalLocalization = original,
-													TranslateLocalization = translated
-												});
-										}
-									}
-								}
-							}
-						}
-					}
-					finally
-					{
-						dataLoadingworker = 0;
-					}
-				}
-			}
+                                foreach (var key in keys)
+                                {
+                                    var isTranslateExists = translateItems.ContainsKey(key.Key);
+                                    if ((IsUntranslatedOnly && !isTranslateExists) || !IsUntranslatedOnly)
+                                    {
+                                        var original = originalItems.ContainsKey(key.Key)
+                                                           ? originalItems[key.Key]
+                                                           : new Foundation.AppConfig.Model.Localization();
+                                        var translated = isTranslateExists
+                                                             ? translateItems[key.Key]
+                                                             : new Foundation.AppConfig.Model.Localization
+                                                                 {
+                                                                     Name = original.Name,
+                                                                     LanguageCode = TranslateLanguage,
+                                                                     Category = key.Category
+                                                                 };
+                                        if (string.IsNullOrEmpty(SearchFilterName)
+                                            || key.Name.Contains(SearchFilterName)
+                                            ||
+                                            (!string.IsNullOrEmpty(original.Value) &&
+                                             original.Value.IndexOf(SearchFilterName, StringComparison.OrdinalIgnoreCase) >= 0)
+                                            ||
+                                            (!string.IsNullOrEmpty(translated.Value) &&
+                                             translated.Value.IndexOf(SearchFilterName, StringComparison.OrdinalIgnoreCase) >= 0))
+                                        {
+                                            items.Add(new LocalizationGroup
+                                                {
+                                                    Name = key.Name,
+                                                    Category = string.IsNullOrEmpty(key.Category) ? searchLabelWeb : (key.Category == LocalizationScope.DefaultCategory ? searchLabelCM : key.Category),
+                                                    OriginalLocalization = original,
+                                                    TranslateLocalization = translated
+                                                });
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    finally
+                    {
+                        dataLoadingworker = 0;
+                    }
+                }
+            }
 
-			return items;
-		}
+            return items;
+        }
 
-		public override void RefreshItem(object item)
-		{
-			//var itemToUpdate = item as Foundation.AppConfig.Model.Localization;
-			//if (itemToUpdate != null)
-			//{
-			//	Foundation.AppConfig.Model.Localization itemFromInnerItem =
-			//		Items.SingleOrDefault(et => et.EmailTemplateId == itemToUpdate.EmailTemplateId);
+        public override void RefreshItem(object item)
+        {
+            //var itemToUpdate = item as Foundation.AppConfig.Model.Localization;
+            //if (itemToUpdate != null)
+            //{
+            //	Foundation.AppConfig.Model.Localization itemFromInnerItem =
+            //		Items.SingleOrDefault(et => et.EmailTemplateId == itemToUpdate.EmailTemplateId);
 
-			//	if (itemFromInnerItem != null)
-			//	{
-			//		OnUIThread(() =>
-			//		{
-			//			itemFromInnerItem.InjectFrom<CloneInjection>(itemToUpdate);
-			//			OnPropertyChanged("Items");
-			//		});
-			//	}
-			//}
-		}
+            //	if (itemFromInnerItem != null)
+            //	{
+            //		OnUIThread(() =>
+            //		{
+            //			itemFromInnerItem.InjectFrom<CloneInjection>(itemToUpdate);
+            //			OnPropertyChanged("Items");
+            //		});
+            //	}
+            //}
+        }
 
-		public override void RaiseCanExecuteChanged()
-		{
-			ItemEditCommand.RaiseCanExecuteChanged();
-			ListExportCommand.RaiseCanExecuteChanged();
-		}
+        public override void RaiseCanExecuteChanged()
+        {
+            ItemEditCommand.RaiseCanExecuteChanged();
+            ListExportCommand.RaiseCanExecuteChanged();
+        }
 
-		#endregion
+        #endregion
 
-		#region Public members
+        #region Public members
 
-		public List<KeyValuePair_string_string> FilterModules
-		{
-			get { return _filterModules; }
-			set { _filterModules = value; OnPropertyChanged(); }
-		}
+        public List<KeyValuePair_string_string> FilterModules
+        {
+            get { return _filterModules; }
+            set { _filterModules = value; OnPropertyChanged(); }
+        }
 
-		private bool _isUntranslatedOnly;
-		public bool IsUntranslatedOnly
-		{
-			get { return _isUntranslatedOnly; }
-			set
-			{
-				_isUntranslatedOnly = value;
-				OnPropertyChanged();
-			}
-		}
-
-
-		private string _originalLanguage;
-		public string OriginalLanguage
-		{
-			get { return _originalLanguage; }
-			set
-			{
-				_originalLanguage = value;
-				OnPropertyChanged();
-				OnPropertyChanged("OriginalLangName");
-			}
-		}
-
-		private string _translateLanguage;
-		public string TranslateLanguage
-		{
-			get { return _translateLanguage; }
-			set
-			{
-				_translateLanguage = value;
-				OnPropertyChanged();
-				OnPropertyChanged("TranslateLangName");
-			}
-		}
-
-		private List<string> _languagesCodes;
-		private List<KeyValuePair_string_string> _filterModules;
-
-		public List<string> LanguagesCodes
-		{
-			get { return _languagesCodes; }
-			set
-			{
-				_languagesCodes = value;
-				OnPropertyChanged();
-			}
-		}
-
-		public string OriginalLangName
-		{
-			get
-			{
-				if (string.IsNullOrEmpty(OriginalLanguage) || OriginalLanguage.Length > 5)
-				{
-					return OriginalLanguage.Localize();
-				}
-				return string.Format("{0} ({1})",
-					CultureInfo.GetCultureInfo(OriginalLanguage).DisplayName,
-					OriginalLanguage);
-			}
-		}
-
-		public string TranslateLangName
-		{
-			get
-			{
-				if (string.IsNullOrEmpty(TranslateLanguage) || TranslateLanguage.Length > 5)
-				{
-					return TranslateLanguage.Localize();
-				}
-				return string.Format("{0} ({1})",
-					CultureInfo.GetCultureInfo(TranslateLanguage).DisplayName,
-					TranslateLanguage);
-			}
-		}
-
-		#endregion
-
-		#region Commands
-
-		public DelegateCommand<LocalizationGroup> ItemEditCommand { get; private set; }
-		public DelegateCommand ListExportCommand { get; private set; }
-		public DelegateCommand ClearCacheCommand { get; private set; }
-
-		public InteractionRequest<Confirmation> CommonConfirmRequest { get; private set; }
-		public InteractionRequest<Notification> CommonNotifyRequest { get; private set; }
-
-		private void RaiseItemEditInteractionRequest(LocalizationGroup item)
-		{
-			var itemVM = _editVmFactory.GetViewModelInstance(
-				 new System.Collections.Generic.KeyValuePair<string, object>("item", item),
-				 new System.Collections.Generic.KeyValuePair<string, object>("parent", this));
-
-			var openTracking = (IOpenTracking)itemVM;
-			openTracking.OpenItemCommand.Execute();
-		}
-
-		private static bool CanRaiseItemEditExecute(LocalizationGroup item)
-		{
-			return item != null && item.OriginalLocalization != null && !string.IsNullOrEmpty(item.OriginalLocalization.Value) &&
-				   !string.IsNullOrEmpty(item.TranslateLocalization.LanguageCode);
-		}
-
-		private bool CanExecuteExport()
-		{
-			return Items != null && Items.Any();
-		}
+        private bool _isUntranslatedOnly;
+        public bool IsUntranslatedOnly
+        {
+            get { return _isUntranslatedOnly; }
+            set
+            {
+                _isUntranslatedOnly = value;
+                OnPropertyChanged();
+            }
+        }
 
 
-		#endregion
+        private string _originalLanguage;
+        public string OriginalLanguage
+        {
+            get { return _originalLanguage; }
+            set
+            {
+                _originalLanguage = value;
+                OnPropertyChanged();
+                OnPropertyChanged("OriginalLangName");
+            }
+        }
 
-		#region IEntityExportable Members
+        private string _translateLanguage;
+        public string TranslateLanguage
+        {
+            get { return _translateLanguage; }
+            set
+            {
+                _translateLanguage = value;
+                OnPropertyChanged();
+                OnPropertyChanged("TranslateLangName");
+            }
+        }
 
-		private void RaiseExportCommand()
-		{
-			var filePath = ShowSaveDialog();
+        private List<string> _languagesCodes;
+        private List<KeyValuePair_string_string> _filterModules;
 
-			if (!string.IsNullOrEmpty(filePath))
-			{
-				Task.Run(() =>
-					{
-						var id = Guid.NewGuid().ToString();
+        public List<string> LanguagesCodes
+        {
+            get { return _languagesCodes; }
+            set
+            {
+                _languagesCodes = value;
+                OnPropertyChanged();
+            }
+        }
 
-						var statusUpdate = new StatusMessage
-							{
-								ShortText = string.Format("Localization export to '{0}'.".Localize(), filePath),
-								StatusMessageId = id
-							};
-						EventSystem.Publish(statusUpdate);
+        public string OriginalLangName
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(OriginalLanguage) || OriginalLanguage.Length > 5)
+                {
+                    return OriginalLanguage.Localize();
+                }
+                return string.Format("{0} ({1})",
+                    CultureInfo.GetCultureInfo(OriginalLanguage).DisplayName,
+                    OriginalLanguage);
+            }
+        }
 
-						PerformExportAsync(id, filePath);
+        public string TranslateLangName
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(TranslateLanguage) || TranslateLanguage.Length > 5)
+                {
+                    return TranslateLanguage.Localize();
+                }
+                return string.Format("{0} ({1})",
+                    CultureInfo.GetCultureInfo(TranslateLanguage).DisplayName,
+                    TranslateLanguage);
+            }
+        }
 
-					});
-			}
-		}
+        #endregion
 
-		#endregion
+        #region Commands
 
-		#region Auxilliary methods
+        public DelegateCommand<LocalizationGroup> ItemEditCommand { get; private set; }
+        public DelegateCommand ListExportCommand { get; private set; }
+        public DelegateCommand ClearCacheCommand { get; private set; }
 
-		private void PerformExportAsync(string id, string filePath)
-		{
-			try
-			{
-				using (var textWriter = File.CreateText(filePath))
-				{
-					var csvWriter = new CsvWriter(textWriter, ",");
-					csvWriter.WriteRow(new List<string> { "Name", "Category", OriginalLangName, string.Format("LanguageCode ({0})", TranslateLanguage), string.Format("Value - {0}", TranslateLangName) },
-									   false);
-					var itemsCount = Items.Count();
-					foreach (var item in Items.Select((value, index) => new { value, index }))
-					{
-						csvWriter.WriteRow(item.value.ToExportCollection(), true);
-						var statusUpdate = new StatusMessage
-							{
-								Details = string.Format("Exported {0} of {1}.".Localize(), item.index, itemsCount),
-								StatusMessageId = id
-							};
-						EventSystem.Publish(statusUpdate);
+        public InteractionRequest<Confirmation> CommonConfirmRequest { get; private set; }
+        public InteractionRequest<Notification> CommonNotifyRequest { get; private set; }
 
-					}
-				}
+        private void RaiseItemEditInteractionRequest(LocalizationGroup item)
+        {
+            var itemVM = _editVmFactory.GetViewModelInstance(
+                 new System.Collections.Generic.KeyValuePair<string, object>("item", item),
+                 new System.Collections.Generic.KeyValuePair<string, object>("parent", this));
 
-				var finalStatus = new StatusMessage
-				{
-					ShortText = string.Format("Localization export to '{0}' finished successfully.".Localize(), filePath),
-					StatusMessageId = id,
-					State = StatusMessageState.Success
-				};
-				EventSystem.Publish(finalStatus);
-			}
-			catch (Exception ex)
-			{
-				var finalStatus = new StatusMessage
-				{
-					ShortText = string.Format("Error occured during localization export to '{0}'.".Localize(), filePath),
-					StatusMessageId = id,
-					State = StatusMessageState.Error,
-					Details = ex.Message
-				};
-				EventSystem.Publish(finalStatus);
-			}
-		}
+            var openTracking = (IOpenTracking)itemVM;
+            openTracking.OpenItemCommand.Execute();
+        }
 
-		private string ShowSaveDialog()
-		{
-			var dialog = new SaveFileDialog()
-			{
-				FileName = string.Format("From {0} to {1}_{2}".Localize(), OriginalLanguage, TranslateLanguage, FilterModules.First(x => x.Key == FilterModule).Value),
-				Filter = "Comma separated Files(*.csv)|*.csv|All(*.*)|*"
-			};
+        private static bool CanRaiseItemEditExecute(LocalizationGroup item)
+        {
+            return item != null && item.OriginalLocalization != null && !string.IsNullOrEmpty(item.OriginalLocalization.Value) &&
+                   !string.IsNullOrEmpty(item.TranslateLocalization.LanguageCode);
+        }
 
-			string retVal = null;
+        private bool CanExecuteExport()
+        {
+            return Items != null && Items.Any();
+        }
 
-			if (dialog.ShowDialog() == true && !string.IsNullOrEmpty(dialog.FileName))
-			{
-				retVal = dialog.FileName;
-				if (string.IsNullOrEmpty(Path.GetExtension(retVal)))
-					retVal = string.Format("{0}.csv", retVal);
-			}
 
-			return retVal;
-		}
-		#endregion
+        #endregion
 
-	}
+        #region IEntityExportable Members
+
+        private void RaiseExportCommand()
+        {
+            var filePath = ShowSaveDialog();
+
+            if (!string.IsNullOrEmpty(filePath))
+            {
+                Task.Run(() =>
+                    {
+                        var id = Guid.NewGuid().ToString();
+
+                        var statusUpdate = new StatusMessage
+                            {
+                                ShortText = string.Format("Localization export to '{0}'.".Localize(), filePath),
+                                StatusMessageId = id
+                            };
+                        EventSystem.Publish(statusUpdate);
+
+                        PerformExportAsync(id, filePath);
+
+                    });
+            }
+        }
+
+        #endregion
+
+        #region Auxilliary methods
+
+        private void PerformExportAsync(string id, string filePath)
+        {
+            try
+            {
+                using (var textWriter = File.CreateText(filePath))
+                {
+                    var csvWriter = new CsvWriter(textWriter, ",");
+                    csvWriter.WriteRow(new List<string> { "Name", "Category", OriginalLangName, string.Format("LanguageCode ({0})", TranslateLanguage), string.Format("Value - {0}", TranslateLangName) },
+                                       false);
+                    var itemsCount = Items.Count();
+                    foreach (var item in Items.Select((value, index) => new { value, index }))
+                    {
+                        csvWriter.WriteRow(item.value.ToExportCollection(), true);
+                        var statusUpdate = new StatusMessage
+                            {
+                                Details = string.Format("Exported {0} of {1}.".Localize(), item.index, itemsCount),
+                                StatusMessageId = id
+                            };
+                        EventSystem.Publish(statusUpdate);
+
+                    }
+                }
+
+                var finalStatus = new StatusMessage
+                {
+                    ShortText = string.Format("Localization export to '{0}' finished successfully.".Localize(), filePath),
+                    StatusMessageId = id,
+                    State = StatusMessageState.Success
+                };
+                EventSystem.Publish(finalStatus);
+            }
+            catch (Exception ex)
+            {
+                var finalStatus = new StatusMessage
+                {
+                    ShortText = string.Format("Error occured during localization export to '{0}'.".Localize(), filePath),
+                    StatusMessageId = id,
+                    State = StatusMessageState.Error,
+                    Details = ex.Message
+                };
+                EventSystem.Publish(finalStatus);
+            }
+        }
+
+        private string ShowSaveDialog()
+        {
+            var dialog = new SaveFileDialog()
+            {
+                FileName = string.Format("From {0} to {1}_{2}".Localize(), OriginalLanguage, TranslateLanguage, FilterModules.First(x => x.Key == FilterModule).Value),
+                Filter = "Comma separated Files(*.csv)|*.csv|All(*.*)|*"
+            };
+
+            string retVal = null;
+
+            if (dialog.ShowDialog() == true && !string.IsNullOrEmpty(dialog.FileName))
+            {
+                retVal = dialog.FileName;
+                if (string.IsNullOrEmpty(Path.GetExtension(retVal)))
+                    retVal = string.Format("{0}.csv", retVal);
+            }
+
+            return retVal;
+        }
+        #endregion
+
+    }
 }

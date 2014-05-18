@@ -7,7 +7,7 @@ namespace VirtoCommerce.ManagementClient.Core.Controls
     public class MatchContainsCaseStringElement : TypedExpressionElementBase
     {
 		private readonly UserInputElement _stringItemEl;
-		private static string ElementLabel = "Current value is ";
+        private static string ElementLabel = "Current value is ".Localize();
 
 		public MatchContainsCaseStringElement(IExpressionViewModel expressionViewModel)
 			: base(ElementLabel, expressionViewModel)

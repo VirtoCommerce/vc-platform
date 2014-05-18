@@ -329,7 +329,7 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure
 		private void SetPropertyAtStartProcessUI(string text)
 		{
 			IsInitializing = true;
-			AnimationText = text;
+            AnimationText = text.Localize();
 			ShowLoadingAnimation = true;
 		}
 

@@ -5,13 +5,13 @@ namespace VirtoCommerce.ManagementClient.Core.Controls
 	[Serializable]
 	public class CompareConditions : DictionaryElement
 	{
-		public string GreaterThan = "greater than";
-		public string GreaterOrEqual = "greater than or equals";
-		public string LessThan = "less than";
-		public string LessOrEqual = "less than or equals";
+		public string GreaterThan = "greater than".Localize();
+        public string GreaterOrEqual = "greater than or equals".Localize();
+        public string LessThan = "less than".Localize();
+        public string LessOrEqual = "less than or equals".Localize();
 
-		public string Matching = "matching ";
-		public string NotMatching = "not matching ";
+        public string Matching = "matching ".Localize();
+        public string NotMatching = "not matching ".Localize();
 
 		public CompareConditions(bool useNotMatching)
 		{

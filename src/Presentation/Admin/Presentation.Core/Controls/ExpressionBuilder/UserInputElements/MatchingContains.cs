@@ -6,15 +6,15 @@ namespace VirtoCommerce.ManagementClient.Core.Controls
 	[Serializable]
 	public class MatchingContains : DictionaryElement
 	{
-		public string Matching = "matching";
-		public string Contains = "contains";
-		public string NotMatching = "not matching";
-		public string NotContains = "not contains";
+        public string Matching = "matching".Localize();
+        public string Contains = "contains".Localize();
+        public string NotMatching = "not matching".Localize();
+        public string NotContains = "not contains".Localize();
 
-		public string MatchingCase = "matching (case sensitive)";
-		public string ContainsCase = "contains (case sensitive)";
-		public string NotMatchingCase = "not matching (case sensitive)";
-		public string NotContainsCase = "not contains (case sensitive)";
+        public string MatchingCase = "matching (case sensitive)".Localize();
+        public string ContainsCase = "contains (case sensitive)".Localize();
+        public string NotMatchingCase = "not matching (case sensitive)".Localize();
+        public string NotContainsCase = "not contains (case sensitive)".Localize();
 
 		public MatchingContains(bool useCase, bool useContains)
 		{

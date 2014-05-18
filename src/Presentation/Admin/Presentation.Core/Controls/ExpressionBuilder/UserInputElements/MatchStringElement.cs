@@ -7,7 +7,7 @@ namespace VirtoCommerce.ManagementClient.Core.Controls
     public class MatchStringElement : TypedExpressionElementBase
     {
 		private readonly UserInputElement _stringItemEl;
-		private static string ElementLabel = "Current value";
+        private static string ElementLabel = "Current value".Localize();
 
 		public MatchStringElement(IExpressionViewModel expressionViewModel)
 			: base(ElementLabel, expressionViewModel)

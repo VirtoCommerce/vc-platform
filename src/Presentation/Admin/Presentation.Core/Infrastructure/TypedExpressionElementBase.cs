@@ -15,8 +15,8 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure
             DisplayName = displayName;
 
             _exludingEl = new CompositeElement();
-            _exludingEl.HeaderElements.Add(new LabelElement { Label = "excluding" });
-            _exludingEl.NewChildLabel = "+ excluding";
+            _exludingEl.HeaderElements.Add(new LabelElement { Label = "excluding".Localize() });
+            _exludingEl.NewChildLabel = "+ excluding".Localize();
 			ExpressionViewModel = expressionViewModel;
         }
 
@@ -52,7 +52,7 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure
             {
 				item.InitializeAfterDeserialized(expressionViewModel);
             }
-            _exludingEl.NewChildLabel = "+ excluding";
+            _exludingEl.NewChildLabel = "+ excluding".Localize();
 
             foreach (var item in Children.OfType<TypedExpressionElementBase>())
             {

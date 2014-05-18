@@ -224,7 +224,7 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure
 
 			if (string.IsNullOrEmpty(confirmation.Title))
 			{
-				confirmation.Title = "Delete confirmation".Localize(null, LocalizationScope.DefaultCategory);
+				confirmation.Title = "Delete confirmation".Localize();
 			}
 			CommonConfirmRequest.Raise(confirmation, async (x) =>
 			{

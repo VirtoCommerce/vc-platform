@@ -7,6 +7,7 @@ using System.Reflection;
 using System.Windows;
 using Microsoft.Practices.ObjectBuilder2;
 using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Microsoft.Practices.Prism.Regions;
 using Microsoft.Practices.ServiceLocation;
 using Microsoft.Practices.Unity;
@@ -82,12 +83,21 @@ namespace VirtoCommerce.ManagementClient
 
 			AvailableGuiCultures = new ObservableCollection<CultureInfo>();
 			ChangeLanguageCommand = new DelegateCommand<string>(DoChangeLanguage);
+            CommonNotifyRequest = new InteractionRequest<Notification>();
 		}
 
 		private void DoChangeLanguage(string cultureName)
 		{
-			if (ChangeLanguageAction != null)
+		    if (ChangeLanguageAction != null)
+		    {
 				ChangeLanguageAction(cultureName);
+
+                var notification = new Notification
+                {
+                    Content = "Language changed. You may need to restart this application for some texts to update.".Localize()
+                };
+                CommonNotifyRequest.Raise(notification);
+		    }
 
 			GuiCulture = System.Threading.Thread.CurrentThread.CurrentUICulture.ThreeLetterWindowsLanguageName;
 		}
@@ -222,6 +232,7 @@ namespace VirtoCommerce.ManagementClient
 
 		public DelegateCommand<string> ChangeLanguageCommand { get; set; }
 		private Action<string> ChangeLanguageAction;
+        public InteractionRequest<Notification> CommonNotifyRequest { get; private set; }
 
 		private string _baseUrl;
 		public string BaseUrl
