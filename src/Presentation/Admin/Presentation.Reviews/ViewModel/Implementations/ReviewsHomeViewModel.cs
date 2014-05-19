@@ -328,7 +328,7 @@ namespace VirtoCommerce.ManagementClient.Reviews.ViewModel.Implementations
 				{
 					IdModule = NavigationNames.CatalogMenu,
 					IdTile = "Reviews",
-                    TileTitle = "REVIEWS".Localize(),
+                    TileTitle = "Reviews".Localize(),
 					Order = 3,
 					IdColorSchema = TileColorSchemas.Schema2,
 					NavigateCommand = new DelegateCommand(() => NavigateToTabPage(NavigationNames.HomeName)),

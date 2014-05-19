@@ -10,7 +10,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 	{
 		public CustomersMainViewModel(ICustomersHomeViewModel customersHomeViewModel, ISearchHomeViewModel searchHomeViewModel, IAuthenticationContext authContext)
 		{
-			ViewTitle = new ViewTitleBase() { Title = "Cases".Localize(), SubTitle = "CUSTOMER SERVICE".Localize() };
+			ViewTitle = new ViewTitleBase() { Title = "Cases".Localize(), SubTitle = "Customer Service".Localize() };
 			SubItems = new List<ItemTypeHomeTab>
 	            {
 		            new ItemTypeHomeTab

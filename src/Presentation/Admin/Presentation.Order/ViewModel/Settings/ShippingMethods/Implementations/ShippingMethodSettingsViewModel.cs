@@ -151,7 +151,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.ShippingMethod
 				{
 					IdModule = VirtoCommerce.ManagementClient.Configuration.NavigationNames.MenuName,
 					IdTile = "ShippindMethodsSettings",
-					TileTitle = "SHIPPING METHODS".Localize(),
+					TileTitle = "Shipping methods".Localize(),
 					Order = 3,
 					IdColorSchema = TileColorSchemas.Schema3,
 					NavigateCommand = new DelegateCommand(() => NavigateToTabPage(NavigationNames.ShippingSettingsHomeName)),

@@ -270,7 +270,7 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
                     {
                         IdModule = "ConfigurationMenu",
                         IdTile = "Users",
-                        TileTitle = "USERS".Localize(),
+                        TileTitle = "Users".Localize(),
                         Order = 0,
                         IdColorSchema = TileColorSchemas.Schema1,
                         NavigateCommand = new DelegateCommand(() => NavigateToTabPage(NavigationNames.HomeName)),

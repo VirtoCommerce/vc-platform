@@ -301,7 +301,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Settings.Stores.I
 				{
 					IdModule = Configuration.NavigationNames.MenuName,
 					IdTile = "StoresSettings",
-					TileTitle = "STORES".Localize(),
+					TileTitle = "Stores".Localize(),
 					Order = 1,
 					IdColorSchema = TileColorSchemas.Schema2,
 					NavigateCommand = new DelegateCommand(() => NavigateToTabPage(NavigationNames.StoresSettingsHomeName)),

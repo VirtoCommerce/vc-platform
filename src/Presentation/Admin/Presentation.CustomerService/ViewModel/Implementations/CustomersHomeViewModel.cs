@@ -68,7 +68,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 			CaseFiltersInit();
 			PopulateTiles();
 
-			ViewTitle = new ViewTitleBase() { Title = "Customers".Localize(), SubTitle = "CUSTOMER SERVICE".Localize() };
+			ViewTitle = new ViewTitleBase() { Title = "Customers".Localize(), SubTitle = "Customer Service".Localize() };
 			SendEventToShell();
 			UpdateActivityTileOnShell();
 		}
@@ -705,7 +705,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 						IdModule = NavigationNames.MenuName,
 						IdTile = "NewCustomer",
 						TileIconSource = "Icon_Module_Customers",
-						TileTitle = "NEW CUSTOMER".Localize(),
+						TileTitle = "New customer".Localize(),
 						Order = 0,
 						IdColorSchema = TileColorSchemas.Schema1,
 						NavigateCommand = new DelegateCommand(async () =>
@@ -726,7 +726,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 						IdModule = NavigationNames.MenuName,
 						IdTile = "NewEmailCase",
 						TileIconSource = "Icon_New_Case",
-						TileTitle = "NEW CASE".Localize(),
+						TileTitle = "New case".Localize(),
 						Order = 1,
 						IdColorSchema = TileColorSchemas.Schema2,
 						NavigateCommand = new DelegateCommand(async () =>
@@ -747,7 +747,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 					{
 						IdModule = NavigationNames.MenuName,
 						IdTile = "Activity",
-						TileTitle = "ACTIVITY".Localize(),
+						TileTitle = "Activity".Localize(),
 						Order = 3,
 						IdColorSchema = TileColorSchemas.Schema3,
 						NavigateCommand = new DelegateCommand(() => { }),
@@ -768,7 +768,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 					{
 						IdModule = NavigationNames.MenuName,
 						IdTile = "PendingCases",
-						TileTitle = "PENDING CASES".Localize(),
+						TileTitle = "Pending cases".Localize(),
 						Order = 4,
 						IdColorSchema = TileColorSchemas.Schema2,
 						NavigateCommand = new DelegateCommand(() => NavigateToTabPage(NavigationNames.HomeName)),
@@ -804,7 +804,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 					{
 						IdModule = NavigationNames.MenuName,
 						IdTile = "LastestCases",
-						TileTitle = "LATEST CASES".Localize(),
+						TileTitle = "Latest cases".Localize(),
 						Order = 2,
 						Width = (double)TileSize.Double,
 						IdColorSchema = TileColorSchemas.Schema4,

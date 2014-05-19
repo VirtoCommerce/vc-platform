@@ -114,7 +114,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 			ViewTitle = new ViewTitleBase
 				{
 					Title = string.Format("Case #{0}".Localize(), InnerItem.Number),
-					SubTitle = "CUSTOMER SERVICE".Localize()
+					SubTitle = "Customer Service".Localize()
 				};
 
 
