@@ -67,7 +67,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 			ClearFiltersCommand = new DelegateCommand(DoClearFilters);
 			OnUIThread(PopulateTiles);
 
-			ViewTitle = new ViewTitleBase() { Title = "Orders".Localize(), SubTitle = "CUSTOMER SERVICE".Localize() };
+			ViewTitle = new ViewTitleBase() { Title = "Orders".Localize(), SubTitle = "Customer Service".Localize() };
 
 			EventSystem.Subscribe<GoToOrderEvent>((ordId) => OnUIThread(() => OpenOrderFromCustomerService(ordId.OrderId)));
 		}
@@ -257,7 +257,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 				IdModule = NavigationNames.MenuName,
 				IdTile = "NeedAttention",
 				TileNumber = "1",
-				TileTitle = "NEED ATTENTION".Localize(),
+				TileTitle = "Need attention".Localize(),
 				Order = 0,
 				IdColorSchema = TileColorSchemas.Schema1,
 				NavigateCommand = new DelegateCommand(NavigateToHome)
@@ -268,7 +268,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 				IdModule = NavigationNames.MenuName,
 				IdTile = "ProcessedToday",
 				TileNumber = "10",
-				TileTitle = "PROCESSED TODAY".Localize(),
+				TileTitle = "Processed today".Localize(),
 				Order = 2,
 				IdColorSchema = TileColorSchemas.Schema4,
 				NavigateCommand = new DelegateCommand(NavigateToHome)

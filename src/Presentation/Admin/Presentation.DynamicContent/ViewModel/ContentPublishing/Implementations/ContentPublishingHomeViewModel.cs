@@ -232,7 +232,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.ContentPublish
 				IdModule = NavigationNames.MenuName,
 				IdTile = "PublishAd",
 				TileIconSource = "Icon_ContentPublishing",
-                TileTitle = "PUBLISH AD".Localize(),
+                TileTitle = "Publish ad".Localize(),
 				Order = 6,
 				IdColorSchema = TileColorSchemas.Schema4,
 				NavigateCommand = new DelegateCommand(() => OnUIThread(async () =>

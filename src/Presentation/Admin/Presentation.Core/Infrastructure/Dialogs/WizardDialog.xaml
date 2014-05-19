@@ -126,7 +126,7 @@
         <TextBlock Grid.Column="1" Grid.ColumnSpan="4" Grid.Row="1" FontSize="20" Foreground="Black"
              HorizontalAlignment="Left" VerticalAlignment="Center">
             <TextBlock.Text>
-                <LocBinding ResourceKey="'^Step {0} of {1} - {2}'">
+                <LocBinding ResourceKey="^Step {0} of {1} - {2}">
                     <Binding Path="Content.CurrentStepNumber" />
                     <Binding Path="Content.TotalStepsCount" />
                     <Binding Path="Content.CurrentStep.Description" />

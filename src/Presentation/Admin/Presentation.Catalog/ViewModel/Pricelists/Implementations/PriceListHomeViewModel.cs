@@ -192,7 +192,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Pricelists.Implementa
 					{
 						IdModule = NavigationNames.MenuName,
 						IdTile = "PriceLists",
-						TileTitle = "PRICE LISTS".Localize(),
+						TileTitle = "Price lists".Localize(),
 						Order = 3,
 						IdColorSchema = TileColorSchemas.Schema3,
 						NavigateCommand = new DelegateCommand(() => NavigateToTabPage(NavigationNames.HomeNamePriceList)),
@@ -223,7 +223,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Pricelists.Implementa
 			//			IdModule = NavigationNames.MenuName,
 			//			IdTile = "NewPriceList",
 			//			TileIconSource = "Icon_Module_PriceLists",
-			//			TileTitle = "NEW PRICE LIST",
+			//			TileTitle = "New price list",
 			//			Order = 6,
 			//			IdColorSchema = TileColorSchemas.Schema2,
 			//			NavigateCommand = new DelegateCommand(() => OnUIThread(async () =>

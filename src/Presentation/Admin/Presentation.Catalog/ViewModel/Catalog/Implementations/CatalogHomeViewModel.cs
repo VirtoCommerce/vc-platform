@@ -1186,7 +1186,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 					{
 						IdModule = NavigationNames.MenuName,
 						IdTile = "Catalogs",
-						TileTitle = "CATALOGS".Localize(),
+						TileTitle = "Catalogs".Localize(),
 						Order = 1,
 						IdColorSchema = TileColorSchemas.Schema4,
 						NavigateCommand = new DelegateCommand(() => NavigateToTabPage(NavigationNames.HomeName)),
@@ -1217,7 +1217,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 					{
 						IdModule = NavigationNames.MenuName,
 						IdTile = "ImportJob",
-						TileTitle = "IMPORT".Localize(),
+						TileTitle = "Import".Localize(),
 						Order = 5,
 						IdColorSchema = TileColorSchemas.Schema2,
 						NavigateCommand = new DelegateCommand(() => NavigateToTabPage(NavigationNames.HomeNameCatalogImportJob)),

@@ -310,7 +310,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Inventory.Impleme
 					IdModule = Catalog.NavigationNames.MenuName,
 					IdTile = "Fulfillments",
 					TileIconSource = "Icon_Module_Fulfillment",
-					TileTitle = "FULFILLMENT".Localize(),
+					TileTitle = "Fulfillment".Localize(),
 					Order = 6,
 					IdColorSchema = TileColorSchemas.Schema3,
 					NavigateCommand = new DelegateCommand(NavigateHome)

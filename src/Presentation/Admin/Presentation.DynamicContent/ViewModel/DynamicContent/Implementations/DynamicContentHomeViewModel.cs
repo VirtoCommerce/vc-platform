@@ -359,7 +359,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.DynamicContent
                 {
                     IdModule = NavigationNames.MenuName,
                     IdTile = "ActiveAds",
-                    TileTitle = "ACTIVE ADS".Localize(),
+                    TileTitle = "Active ads".Localize(),
                     Order = 3,
                     IdColorSchema = TileColorSchemas.Schema3,
                     NavigateCommand = new DelegateCommand(() => NavigateToTabPage(NavigationNames.HomeNameDynamicContent)),
@@ -389,7 +389,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.DynamicContent
                     {
                         IdModule = NavigationNames.MenuName,
                         IdTile = "TotalAds",
-                        TileTitle = "TOTAL ADS".Localize(),
+                        TileTitle = "Total ads".Localize(),
                         Order = 3,
                         IdColorSchema = TileColorSchemas.Schema2,
                         NavigateCommand = new DelegateCommand(() => NavigateToTabPage(NavigationNames.HomeNameDynamicContent)),
@@ -420,7 +420,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.DynamicContent
                         IdModule = NavigationNames.MenuName,
                         IdTile = "NewAd",
                         TileIconSource = "Icon_Dynamic",
-                        TileTitle = "NEW AD".Localize(),
+                        TileTitle = "New ad".Localize(),
                         Order = 5,
                         IdColorSchema = TileColorSchemas.Schema1,
                         NavigateCommand = new DelegateCommand(() => OnUIThread(async () =>

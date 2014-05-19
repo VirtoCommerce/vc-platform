@@ -305,7 +305,7 @@ public MarketingHomeViewModel()
 				{
 					IdModule = NavigationNames.MenuName,
 					IdTile = "ActivePromotions",
-					TileTitle = "ACTIVE PROMOTIONS".Localize(),
+					TileTitle = "Active promotions".Localize(),
 					Order = 0,
 					IdColorSchema = TileColorSchemas.Schema3,
 					NavigateCommand = new DelegateCommand(() => OnUIThread(async () =>
@@ -345,7 +345,7 @@ public MarketingHomeViewModel()
 						IdModule = NavigationNames.MenuName,
 						IdTile = "NewPromotion",
 						TileIconSource = "Icon_Module_Promotions",
-						TileTitle = "NEW PROMOTION".Localize(),
+						TileTitle = "New promotion".Localize(),
 						Order = 1,
 						IdColorSchema = TileColorSchemas.Schema1,
 						NavigateCommand = new DelegateCommand(() => OnUIThread(async () =>
