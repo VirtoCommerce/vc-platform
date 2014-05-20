@@ -33,11 +33,11 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
 			{
 				if (sample)
 				{
-					new SqlDynamicContentDatabaseInitializer().InitializeDatabase(db);
+					new SqlDynamicContentSampleDatabaseInitializer().InitializeDatabase(db);
 				}
 				else
 				{
-					new SetupMigrateDatabaseToLatestVersion<EFDynamicContentRepository, m.Content.Configuration>().InitializeDatabase(db);
+                    new SqlDynamicContentDatabaseInitializer().InitializeDatabase(db);
 				}
 			}
 		}
