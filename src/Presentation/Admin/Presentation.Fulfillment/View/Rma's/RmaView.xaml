@@ -54,7 +54,7 @@
                         <TextBlock Grid.Row="0" Text="{Loc 'Created:'}" />
                         <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding InnerItem.Created}" />
                         <TextBlock Grid.Row="1" Text="{Loc 'Status:'}" />
-                        <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding InnerItem.Status}" />
+                        <TextBlock Grid.Row="1" Grid.Column="2" Text="{Binding InnerItem.Status, Converter={x:Static LocalizingConverter.Current}}" />
                         <TextBlock Grid.Row="2" Text="{Loc 'Authorization code:'}" />
                         <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding InnerItem.AuthorizationCode}" />
                         <TextBlock Grid.Row="3" Text="{Loc 'Order:'}" />
