@@ -91,6 +91,7 @@
     <Compile Include="DatabaseSetup\Cmdlet\PublishAppConfigDatabase.cs" />
     <Compile Include="AppConfig\SqlAppConfigSampleDatabaseInitializer.cs" />
     <Compile Include="Import\SqlImportDatabaseInitializer.cs" />
+    <Compile Include="Marketing\SqlDynamicContentSampleDatabaseInitializer.cs" />
     <Compile Include="Marketing\SqlPromotionDatabaseInitializer.cs" />
     <Compile Include="DatabaseSetup\Cmdlet\PublishImportDatabase.cs" />
     <EmbeddedResource Include="Security\Data\SimpleMembership.sql" />
@@ -167,6 +168,7 @@
     <None Include="setup-database.ps1" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Marketing\Data\DynamicContentPublishingGroup_Sample.sql" />
     <EmbeddedResource Include="Security\Data\FillTestAccounts.sql" />
     <EmbeddedResource Include="Security\Data\FillRequiredCaseProperties.sql" />
     <EmbeddedResource Include="Marketing\Data\Coupon.sql" />
