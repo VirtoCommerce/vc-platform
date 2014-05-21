@@ -28,7 +28,7 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC
                     Title = category.Name,
                     Key = category.CategoryId,
                     ParentKey = category.ParentCategoryId,
-                    RouteValues = new Dictionary<string, object> { { Constants.Language, category.Code } },
+                    RouteValues = new Dictionary<string, object> { { Constants.Category, category.Code } },
                     /*
                     RouteValues = new Dictionary<string, object>
                     {
