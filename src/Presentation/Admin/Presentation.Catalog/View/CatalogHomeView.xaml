@@ -199,7 +199,7 @@
                                                          Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=TreeView}}"
                                                          HorizontalAlignment="Stretch">
 														<CheckBox.ContextMenu>
-															<ContextMenu>
+                                                            <ContextMenu LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
 																<MenuItem Header="{Loc 'Open Catalog'}" Command="{Binding OpenItemCommand}" inf_behavior:PermissionBehavior.PermissionId="{x:Static securityModule:PredefinedPermissions.CatalogCatalogsManage}"
                                                                      inf_behavior:PermissionBehavior.DenyVisibility="Collapsed" />
 																<!--<MenuItem Header="Export Catalog" Command="{Binding ExportItemCommand}"  
@@ -221,7 +221,7 @@
 																		<core_controls:VectorImage ImageResource="{StaticResource Icon_Category}" />
 																	</MenuItem.Icon>
 																</MenuItem>
-                                                                <MenuItem Header="{Loc Refresh}" Command="{Binding  PlacementTarget.Tag.RefreshTreeItemsCommand, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}">
+                                                                <MenuItem Header="{Loc Refresh}" Command="{Binding PlacementTarget.Tag.RefreshTreeItemsCommand, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}">
 																	<MenuItem.Icon>
 																		<core_controls:VectorImage ImageResource="{StaticResource Icon_Button_RefreshList}" />
 																	</MenuItem.Icon>
@@ -245,7 +245,7 @@
 													<CheckBox IsChecked="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=TreeViewItem}}"
                                                          HorizontalAlignment="Stretch" Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=TreeView}}">
 														<CheckBox.ContextMenu>
-															<ContextMenu>
+                                                            <ContextMenu LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
 																<MenuItem Header="{Loc 'Open Virtual Catalog'}" Command="{Binding OpenItemCommand}"
                                                                      inf_behavior:PermissionBehavior.PermissionId="{x:Static securityModule:PredefinedPermissions.CatalogVirtual_CatalogsManage}"
                                                                      inf_behavior:PermissionBehavior.DenyVisibility="Collapsed" />
@@ -297,7 +297,7 @@
                                                          Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=TreeView}}"
                                                          HorizontalContentAlignment="Stretch" HorizontalAlignment="Stretch">
 														<CheckBox.ContextMenu>
-															<ContextMenu>
+                                                            <ContextMenu LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
 																<MenuItem Header="{Loc 'Open ...'}" Command="{Binding OpenItemCommand}" inf_behavior:PermissionBehavior.PermissionId="{x:Static securityModule:PredefinedPermissions.CatalogCategoriesManage}"
                                                                      inf_behavior:PermissionBehavior.DenyVisibility="Collapsed" />
 																<MenuItem Header="{Loc 'Delete'}" Command="{Binding PlacementTarget.Tag.TreeItemDeleteCommand, RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}}"
