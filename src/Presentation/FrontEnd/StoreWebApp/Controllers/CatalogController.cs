@@ -67,7 +67,7 @@ namespace VirtoCommerce.Web.Controllers
 
                 if (SiteMaps.Current != null)
                 {
-                    var node = GetCurrentSiteMapNode();
+                    var node = SiteMaps.Current.CurrentNode;
 
                     if (Request.UrlReferrer != null &&
                         Request.UrlReferrer.AbsoluteUri.StartsWith(Request.Url.GetLeftPart(UriPartial.Authority)))
@@ -125,7 +125,7 @@ namespace VirtoCommerce.Web.Controllers
 
 	        if (SiteMaps.Current != null)
 	        {
-	            var node = GetCurrentSiteMapNode();
+	            var node = SiteMaps.Current.CurrentNode;
 
 	            if (Request.UrlReferrer != null &&
 	                Request.UrlReferrer.AbsoluteUri.StartsWith(Request.Url.GetLeftPart(UriPartial.Authority)))
@@ -302,22 +302,6 @@ namespace VirtoCommerce.Web.Controllers
 
             var viewName = _templateClient.GetDisplayTemplate(type, set);
             return string.IsNullOrEmpty(viewName) ? type.ToString() : viewName;
-        }
-
-        private ISiteMapNode GetCurrentSiteMapNode()
-        {
-            // Need to skip decoding values in routes temporary because Sitemap calls GetRouteData and compares the values with the ones stored in siteMapNode
-            // Sitemap node is configured to preserve route values and they are encoded. 
-            // If values in current route does not match node route values sitemap fails to resolve current node
-            try
-            {
-                HttpContext.Items.Add(Constants.SkipSeoDecodeKey, true);
-                return SiteMaps.Current.CurrentNode;
-            }
-            finally
-            {
-                HttpContext.Items.Remove(Constants.SkipSeoDecodeKey);
-            }
         }
     }
 }

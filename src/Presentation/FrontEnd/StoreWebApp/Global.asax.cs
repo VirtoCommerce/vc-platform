@@ -38,6 +38,8 @@ namespace VirtoCommerce.Web
                 WebApiConfig.Register(GlobalConfiguration.Configuration);
                 FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
                 RouteConfig.RegisterRoutes(RouteTable.Routes);
+
+                MvcSiteMapProviderConfig.Register(DependencyResolver.Current);
                
                 AuthConfig.RegisterAuth();
 

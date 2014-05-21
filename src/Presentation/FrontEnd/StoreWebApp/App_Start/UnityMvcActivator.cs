@@ -2,9 +2,11 @@ using System.Linq;
 using System.Web.Http;
 using System.Web.Mvc;
 using Microsoft.Practices.ServiceLocation;
+using Microsoft.Practices.Unity;
 using Microsoft.Practices.Unity.Mvc;
 using VirtoCommerce.Foundation.AppConfig;
 using VirtoCommerce.Web.Client;
+using VirtoCommerce.Web.Virto.Helpers.MVC.SiteMap;
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(VirtoCommerce.Web.UnityWebActivator), "Start")]
 
@@ -23,6 +25,9 @@ namespace VirtoCommerce.Web
         public static void Start() 
         {
             var container = UnityConfig.GetConfiguredContainer();
+            
+            //Add Unity extension for mvc sitemap dependency injection
+            container.AddNewExtension<MvcSiteMapProviderContainerExtension>();
 
             FilterProviders.Providers.Remove(FilterProviders.Providers.OfType<FilterAttributeFilterProvider>().First());
             FilterProviders.Providers.Add(new UnityFilterAttributeFilterProvider(container));
@@ -30,7 +35,7 @@ namespace VirtoCommerce.Web
 			var dependencyResolver = new UnityDependencyResolver(container);
 			var locatorProvider = new UnityDependencyResolverServiceLocatorProvider(dependencyResolver);
 			ServiceLocator.SetLocatorProvider(() => locatorProvider);
-			DependencyResolver.SetResolver(dependencyResolver);
+            DependencyResolver.SetResolver(dependencyResolver);
 
 			GlobalConfiguration.Configuration.DependencyResolver = new Unity.WebApi.UnityDependencyResolver(container);
 
