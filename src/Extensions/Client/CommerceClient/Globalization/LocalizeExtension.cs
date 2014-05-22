@@ -1,4 +1,5 @@
-﻿using Microsoft.Practices.ServiceLocation;
+﻿using System.Threading.Tasks;
+using Microsoft.Practices.ServiceLocation;
 using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
@@ -108,7 +109,8 @@ namespace VirtoCommerce.Client.Globalization
             if (element == null)
             {
                 element = new Element { Name = key, Category = category, Culture = culture.Name, Value = source };
-                repository.Add(element);
+                // repository.Add(element);
+                Task.Run(() => repository.Add(element));
             }
             return element;
         }

@@ -2,7 +2,7 @@
 using MvcSiteMapProvider;
 using VirtoCommerce.Web.Client.Extensions.Routing;
 
-namespace VirtoCommerce.Web.Virto.Helpers.MVC
+namespace VirtoCommerce.Web.Virto.Helpers.MVC.SiteMap
 {
     public class BreadcrumbNodeProvider : DynamicNodeProviderBase
     {

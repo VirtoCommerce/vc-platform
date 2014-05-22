@@ -166,9 +166,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\packages\WindowsAzure.Storage.3.0.1.0\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
     </Reference>
-    <Reference Include="MvcSiteMapProvider, Version=4.5.1.0, Culture=neutral, PublicKeyToken=1923abe4657913cc, processorArchitecture=MSIL">
+    <Reference Include="MvcSiteMapProvider, Version=4.6.3.0, Culture=neutral, PublicKeyToken=1923abe4657913cc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\packages\MvcSiteMapProvider.MVC4.Core.4.5.1\lib\net45\MvcSiteMapProvider.dll</HintPath>
+      <HintPath>..\..\..\..\packages\MvcSiteMapProvider.MVC4.Core.4.6.3\lib\net45\MvcSiteMapProvider.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\..\..\packages\Newtonsoft.Json.6.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -219,6 +219,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\packages\Microsoft.AspNet.WebApi.Client.4.0.20710.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Runtime.Serialization">
       <Private>True</Private>
     </Reference>
@@ -355,6 +356,7 @@
     <Compile Include="App_Start\AuthConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\ModuleConfig.cs" />
+    <Compile Include="App_Start\MvcSiteMapProviderConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\SignalRStartup.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
@@ -385,6 +387,10 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\StoreController.cs" />
+    <Compile Include="Virto\CommonConventions.cs" />
+    <Compile Include="Virto\Helpers\MVC\SiteMap\MvcSiteMapProviderContainerExtension.cs" />
+    <Compile Include="Virto\Helpers\MVC\SiteMap\SeoRouteValueDictionary.cs" />
+    <Compile Include="Virto\Helpers\MVC\SiteMap\SeoRouteValueDictionaryFactory.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -412,8 +418,8 @@
     <Compile Include="Virto\Helpers\CartHelperExtensions.cs" />
     <Compile Include="Virto\Helpers\CatalogHelper.cs" />
     <Compile Include="Virto\Helpers\MarketingHelper.cs" />
-    <Compile Include="Virto\Helpers\MVC\BreadcrumbNodeProvider.cs" />
-    <Compile Include="Virto\Helpers\MVC\CatalogNodeProvider.cs" />
+    <Compile Include="Virto\Helpers\MVC\SiteMap\BreadcrumbNodeProvider.cs" />
+    <Compile Include="Virto\Helpers\MVC\SiteMap\CatalogNodeProvider.cs" />
     <Compile Include="Virto\Helpers\MVC\VirtoDataAnnotationsModelValidatorProvider.cs" />
     <Compile Include="Virto\Helpers\Payments\CreditCardOption.cs" />
     <Compile Include="Virto\Helpers\Payments\IPaymentOption.cs" />
@@ -793,14 +799,10 @@
     <Content Include="Views\Shared\DisplayTemplates\ReviewCommentTemplate.cshtml" />
     <Content Include="Views\Account\ResetPassword.cshtml" />
     <Content Include="Views\Shared\PaypalExpressButton.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\SiteMapTitleHelperModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\SiteMapPathHelperModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\SiteMapNodeModelList.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\SiteMapNodeModel.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\SiteMapHelperModel.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\MetaRobotsHelperModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\MenuHelperModel.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\CanonicalHelperModel.cshtml" />
     <Content Include="Views\Shared\_Footer.cshtml" />
     <Content Include="Views\Shared\_Menu.cshtml" />
     <Content Include="Views\Banner\MultiBanner.cshtml" />
@@ -808,6 +810,10 @@
     <Content Include="Views\Catalog\ItemDynamic.cshtml" />
     <Content Include="Views\Shared\StoreParams.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\MegaMenu.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\SiteMapTitleHelperModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\SiteMapHelperModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\MetaRobotsHelperModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\CanonicalHelperModel.cshtml" />
     <None Include="Web.Azure.config" />
   </ItemGroup>
   <ItemGroup>
