@@ -140,7 +140,7 @@ namespace VirtoCommerce.Search.Providers.Lucene
                 {
                     if (ffilter == null) ffilter = new BooleanFilter();
 
-                    var q = LuceneQueryHelper.CreateQuery(criteria, filter, Occur.SHOULD);
+                    var q = LuceneQueryHelper.CreateQuery(criteria, f, Occur.SHOULD);
                     ffilter.Add(new FilterClause(q, Occur.MUST));
                 }
             }
