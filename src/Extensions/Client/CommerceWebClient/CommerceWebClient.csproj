@@ -207,6 +207,7 @@
     <Compile Include="Extensions\ExpandoExtensions.cs" />
     <Compile Include="Extensions\Filters\CanonicalizedAttribute.cs" />
     <Compile Include="Extensions\Filters\Caching\CustomOutputCacheAttribute.cs" />
+    <Compile Include="Extensions\Filters\ISearchFilterExtension.cs" />
     <Compile Include="Extensions\Filters\LocalizeWebApiAttribute.cs" />
     <Compile Include="Extensions\Filters\LocalizeAttribute.cs" />
     <Compile Include="Extensions\Filters\ModelValidationFilterAttribute.cs" />

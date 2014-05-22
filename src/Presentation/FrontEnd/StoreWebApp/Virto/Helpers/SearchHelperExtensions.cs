@@ -10,9 +10,14 @@ using VirtoCommerce.Web.Models;
 
 namespace VirtoCommerce.Web.Virto.Helpers
 {
+    using Omu.ValueInjecter;
+
     using VirtoCommerce.Client;
     using VirtoCommerce.Client.Extensions;
     using VirtoCommerce.Foundation.Catalogs.Search;
+    using VirtoCommerce.Foundation.Frameworks.Extensions;
+    using VirtoCommerce.Web.Client.Extensions;
+    using VirtoCommerce.Web.Client.Extensions.Filters;
     using VirtoCommerce.Web.Client.Services.Filters;
 
     /// <summary>
@@ -165,35 +170,52 @@ namespace VirtoCommerce.Web.Virto.Helpers
             };
         }
 
-        public static IEnumerable<ISearchFilterValue> GetFilterValues(this ISearchFilterService helper, ISearchFilter filter)
+        public static ISearchFilter Convert(this ISearchFilterService helper, ISearchFilter filter, string[] keys)
         {
+            // get values that we have filters set for
+            var values = from v in filter.GetValues() where keys.Contains(v.Id) select v;
 
             var attributeFilter = filter as AttributeFilter;
             if (attributeFilter != null)
             {
-                return attributeFilter.Values;
+                var newFilter = new AttributeFilter();
+                newFilter.InjectFrom(filter);
+                newFilter.Values = values.OfType<AttributeFilterValue>().ToArray();
+                return newFilter;
             }
 
             var rangeFilter = filter as RangeFilter;
             if (rangeFilter != null)
             {
-                return rangeFilter.Values;
+                var newFilter = new RangeFilter();
+                newFilter.InjectFrom(filter);
+
+                newFilter.Values = values.OfType<RangeFilterValue>().ToArray();
+                return newFilter;
             }
 
             var priceRangeFilter = filter as PriceRangeFilter;
             if (priceRangeFilter != null)
             {
-                return priceRangeFilter.Values;
+                var newFilter = new PriceRangeFilter();
+                newFilter.InjectFrom(filter);
+
+                newFilter.Values = values.OfType<RangeFilterValue>().ToArray();
+                return newFilter;
             }
 
             var categoryFilter = filter as CategoryFilter;
             if (categoryFilter != null)
             {
-                return categoryFilter.Values;
+                var newFilter = new CategoryFilter();
+                newFilter.InjectFrom(filter);
+                newFilter.Values = values.OfType<CategoryFilterValue>().ToArray();
+                return newFilter;
             }
 
             return null;
         }
+
 
         #region Private Helpers
 
@@ -237,7 +259,7 @@ namespace VirtoCommerce.Web.Virto.Helpers
 
             if (d != null)
             {
-                var val = (from v in helper.GetFilterValues(d) where v.Id.Equals(id, StringComparison.OrdinalIgnoreCase) select v).SingleOrDefault();
+                var val = (from v in d.GetValues() where v.Id.Equals(id, StringComparison.OrdinalIgnoreCase) select v).SingleOrDefault();
                 if (val != null)
                 {
                     name = Convert(helper, val).Name;

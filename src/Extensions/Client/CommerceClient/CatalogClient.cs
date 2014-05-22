@@ -298,7 +298,7 @@ namespace VirtoCommerce.Client
                 () => (from p in _catalogRepository.PropertySets select p)
                     .Expand("PropertySetProperties/Property/PropertyValues")
                     .Expand("PropertySetProperties/Property/PropertyAttributes")
-                    .ToArrayAsync().Result,
+                    .ToArray(),
                 CatalogConfiguration.Instance.Cache.PropertiesTimeout,
                 _isEnabled && useCache);
         }

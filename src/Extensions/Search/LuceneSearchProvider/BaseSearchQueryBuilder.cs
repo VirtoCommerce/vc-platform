@@ -27,14 +27,10 @@
         {
             var query = new BooleanQuery();
 
-            if (criteria.CurrentFilterValues != null)
+            if (criteria.CurrentFilters != null)
             {
-                for (var index = 0; index < criteria.CurrentFilterFields.Length; index++)
+                foreach (var filter in criteria.CurrentFilters)
                 {
-                    var filter = criteria.CurrentFilters.ElementAt(index);
-                    var value = criteria.CurrentFilterValues.ElementAt(index);
-                    var field = criteria.CurrentFilterFields.ElementAt(index);
-
                     // Skip currencies that are not part of the filter
                     if (filter.GetType() == typeof(PriceRangeFilter)) // special filtering 
                     {
@@ -45,9 +41,9 @@
                         }
                     }
 
-                    var filterQuery = filter.GetType() == typeof(PriceRangeFilter)
-                                          ? LuceneQueryHelper.CreateQuery(criteria, field, value as RangeFilterValue)
-                                          : LuceneQueryHelper.CreateQuery(field, value);
+                    var filterQuery = LuceneQueryHelper.CreateQuery(criteria, filter, Occur.SHOULD);
+
+                    // now add other values that should also be counted?
 
                     if (filterQuery != null)
                     {

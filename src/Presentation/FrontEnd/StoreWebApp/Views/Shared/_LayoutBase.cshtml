@@ -24,6 +24,9 @@
     <!--Disable ajax cache-->
     <script>$(function () { $.ajaxSetup({ cache: false }); });</script>
     <div id="layout">
+        <div class="demo-notice">
+            <p>This is a demo store. Any orders placed through this store will not be honored or fulfilled.</p>
+        </div>        
         <div class="header-wrap">
             <div class="head-top">
                 <div class="rubber clearfix">
@@ -31,103 +34,103 @@
                         <div class="head-switch">
                             <span>
                                 @("Store".Localize()):
-                            <span class="current">
-                                @{
-                                    Html.RenderPartial("StoreParams");
-                                }
+                                <span class="current">
+                                    @{
+                                        Html.RenderPartial("StoreParams");
+                                    }
+                                </span>
                             </span>
-                        </span>
-                        <ul>
-                            <li>
-                                <div class="language">
-                                    @{Html.RenderPartial("Languages");}
-                                </div>
-                            </li>
-                            <li>
-                                <div class="store">
-                                    @{Html.RenderAction("StorePicker", "Store", true);}
-                                </div>
-                            </li>
-                            <li>
-                                <div class="currency">
-                                    @{Html.RenderAction("Currencies", "Store", true);}
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <div @*class="grid_8"*@>
-                    <ul class="head-links"></ul>
-                    @* @{Html.RenderAction("QuickAccess", "Store", true);}*@
-                </div>
-            </div>
-        </div>
-        <header role="banner" class="header">
-            <div class="rubber clearfix">
-                <div class="grid_12">
-                    <p class="">
-                        <a href="@Url.RouteUrl("Store")"></a>
-                    </p>
-                    @RenderSection("Navigation", false)
-                    @RenderSection("MiniActions", false)
-                </div>
-            </div>
-        </header>
-    </div>
-    @RenderSection("Slider", false)
-    <div class="article-wrap">
-        <article role="main" class="article clearfix">
-            @{
-                var breadcrumb = Html.MvcSiteMap().SiteMapPath(null, new { name = "BreadCrumb" });
-                var showPageNav = !string.IsNullOrEmpty(breadcrumb.ToString().Trim()) || !string.IsNullOrEmpty(ViewBag.PageTitle as string) || IsSectionDefined("PageTitle");
-            }
-            @if (showPageNav)
-            {
-                <div class="page-nav">
-                    <div class="rubber">
-                        @breadcrumb
-                        @if (!string.IsNullOrEmpty(ViewBag.PageTitle as string) || IsSectionDefined("PageTitle"))
-                        {
-                            <div class="title clearfix">
-                                <p>@ViewBag.PageTitle</p>
-                                @RenderSection("PageTitle", false)
-                            </div>
-                        }
-                    </div>
-                </div>
-            }
-            <div class="rubber">
-                @{
-                    var messages = Html.SharedViewBag().Messages as MessagesModel;
-                }
-                <ul id="messages" class="messages" style="@(messages != null && messages.Any() ? "" : "display:none;")">
-                    @{
-                        if (messages != null && messages.Any())
-                        {
-
-                            foreach (var messageGrp in messages.GroupBy(m => m.Type))
-                            {
-                                <li class="@messageGrp.Key.ToString().ToLower()">
-                                    <ul>
-                                        @foreach (var message in messageGrp)
-                                        {
-                                            <li><span>@message.Text</span></li>
-                                        }
-                                    </ul>
+                            <ul>
+                                <li>
+                                    <div class="language">
+                                        @{Html.RenderPartial("Languages");}
+                                    </div>
                                 </li>
+                                <li>
+                                    <div class="store">
+                                        @{Html.RenderAction("StorePicker", "Store", true);}
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="currency">
+                                        @{Html.RenderAction("Currencies", "Store", true);}
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div @*class="grid_8"*@>
+                        <ul class="head-links"></ul>
+                        @* @{Html.RenderAction("QuickAccess", "Store", true);}*@
+                    </div>
+                </div>
+            </div>
+            <header role="banner" class="header">
+                <div class="rubber clearfix">
+                    <div class="grid_12">
+                        <p class="">
+                            <a href="@Url.RouteUrl("Store")"></a>
+                        </p>
+                        @RenderSection("Navigation", false)
+                        @RenderSection("MiniActions", false)
+                    </div>
+                </div>
+            </header>
+        </div>
+        @RenderSection("Slider", false)
+        <div class="article-wrap">
+            <article role="main" class="article clearfix">
+                @{
+                    var breadcrumb = Html.MvcSiteMap().SiteMapPath(null, new { name = "BreadCrumb" });
+                    var showPageNav = !string.IsNullOrEmpty(breadcrumb.ToString().Trim()) || !string.IsNullOrEmpty(ViewBag.PageTitle as string) || IsSectionDefined("PageTitle");
+                }
+                @if (showPageNav)
+                {
+                    <div class="page-nav">
+                        <div class="rubber">
+                            @breadcrumb
+                            @if (!string.IsNullOrEmpty(ViewBag.PageTitle as string) || IsSectionDefined("PageTitle"))
+                            {
+                                <div class="title clearfix">
+                                    <p>@ViewBag.PageTitle</p>
+                                    @RenderSection("PageTitle", false)
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+                <div class="rubber">
+                    @{
+                        var messages = Html.SharedViewBag().Messages as MessagesModel;
+                    }
+                    <ul id="messages" class="messages" style="@(messages != null && messages.Any() ? "" : "display:none;")">
+                        @{
+                            if (messages != null && messages.Any())
+                            {
+
+                                foreach (var messageGrp in messages.GroupBy(m => m.Type))
+                                {
+                                    <li class="@messageGrp.Key.ToString().ToLower()">
+                                        <ul>
+                                            @foreach (var message in messageGrp)
+                                            {
+                                                <li><span>@message.Text</span></li>
+                                            }
+                                        </ul>
+                                    </li>
+                                }
                             }
                         }
-                    }
-                </ul>
-                @RenderBody()
-            </div>
-            @RenderSection("Bottom", false)
-        </article>
+                    </ul>
+                    @RenderBody()
+                </div>
+                @RenderSection("Bottom", false)
+            </article>
+        </div>
+        @{
+            Html.RenderAction("Footer", "Store", true);
+        }
     </div>
-    @{
-        Html.RenderAction("Footer", "Store", true);
-    }
-</div>
 
 
 @Scripts.Render("~/bundles/jqueryui")

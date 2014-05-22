@@ -126,25 +126,7 @@ namespace VirtoCommerce.Search.Providers.Lucene
         {
             var count = 0;
 
-            ISearchFilterValue[] values = null;
-            var priceQuery = false;
-            if (filter is s.AttributeFilter)
-            {
-                values = ((s.AttributeFilter)filter).Values;
-            }
-            else if (filter is s.RangeFilter)
-            {
-                values = ((s.RangeFilter)filter).Values;
-            }
-            else if (filter is s.PriceRangeFilter)
-            {
-                values = ((s.PriceRangeFilter)filter).Values;
-                priceQuery = true;
-            }
-            else if (filter is CategoryFilter)
-            {
-                values = ((CategoryFilter)filter).Values;
-            }
+            var values = LuceneQueryHelper.GetFilterValues(filter);
 
             if (values == null)
             {
@@ -153,21 +135,8 @@ namespace VirtoCommerce.Search.Providers.Lucene
 
             foreach (var value in values)
             {
-                Query q = null;
-                if (value is s.RangeFilterValue && priceQuery)
-                {
-                    q = LuceneQueryHelper.CreateQuery(
-                        this.Results.SearchCriteria, filter.Key, value as s.RangeFilterValue);                   
-                }
-                else if(value is CategoryFilterValue)
-                {
-                    q = LuceneQueryHelper.CreateQuery(filter.Key, value as CategoryFilterValue);
-                }
-                else
-                {
-                    q = LuceneQueryHelper.CreateQuery(filter.Key, value);
-                }
-                
+                var q = LuceneQueryHelper.CreateQueryForValue(this.Results.SearchCriteria, filter, value);
+               
                 if (q == null) continue;
 
                 var queryFilter = new CachingWrapperFilter(new QueryWrapperFilter(q));

@@ -156,6 +156,77 @@ namespace FunctionalTests.Search
             Directory.Delete(_LuceneStorageDir, true);
         }
 
+        [Fact, Trait("type", "lucene")]
+        public void Can_get_item_multiple_filters_lucene()
+        {
+            var scope = "default";
+            var queryBuilder = new LuceneSearchQueryBuilder();
+            var conn = new SearchConnection(_LuceneStorageDir, scope);
+            var provider = new LuceneSearchProvider(queryBuilder, conn);
+            Debug.WriteLine("Lucene connection: {0}", conn.ToString());
+
+            if (Directory.Exists(_LuceneStorageDir))
+            {
+                Directory.Delete(_LuceneStorageDir, true);
+            }
+
+            SearchHelper.CreateSampleIndex(provider, scope);
+
+            var criteria = new CatalogItemSearchCriteria
+            {
+                SearchPhrase = "",
+                IsFuzzySearch = true,
+                Catalog = "goods",
+                RecordsToRetrieve = 10,
+                StartingRecord = 0,
+                Currency = "USD",
+                Pricelists = new[] { "default" }
+            };
+
+            var colorFilter = new AttributeFilter { Key = "Color" };
+            colorFilter.Values = new[]
+                                {
+                                    new AttributeFilterValue { Id = "red", Value = "red" },
+                                    new AttributeFilterValue { Id = "blue", Value = "blue" },
+                                    new AttributeFilterValue { Id = "black", Value = "black" }
+                                };
+
+            var filter = new AttributeFilter { Key = "Color" };
+            filter.Values = new[]
+                                {
+                                    new AttributeFilterValue { Id = "blue", Value = "blue" }//,
+                                    //new AttributeFilterValue { Id = "black", Value = "black" }
+                                };
+
+            var rangefilter = new RangeFilter { Key = "size" };
+            rangefilter.Values = new[]
+                                     {
+                                         new RangeFilterValue { Id = "0_to_5", Lower = "0", Upper = "5" },
+                                         new RangeFilterValue { Id = "5_to_10", Lower = "5", Upper = "11" }
+                                     };
+
+            var priceRangefilter = new PriceRangeFilter { Currency = "usd" };
+            priceRangefilter.Values = new[]
+                                          {
+                                              new RangeFilterValue { Id = "100_to_700", Lower = "100", Upper = "700" }
+                                          };
+
+            criteria.Add(colorFilter);
+
+            // add applied filters
+            criteria.Apply(filter);
+            //criteria.Apply(rangefilter);
+            //criteria.Apply(priceRangefilter);
+
+            var results = provider.Search(scope, criteria);
+
+            var blackCount = GetFacetCount(results, "Color", "black");
+            Assert.True(blackCount == 1, String.Format("Returns {0} facets of black instead of 2", blackCount));
+
+            //Assert.True(results.DocCount == 1, String.Format("Returns {0} instead of 1", results.DocCount));
+
+            Directory.Delete(_LuceneStorageDir, true);
+        }
 
         private int GetFacetCount(ISearchResults results, string fieldName, string facetKey)
         {

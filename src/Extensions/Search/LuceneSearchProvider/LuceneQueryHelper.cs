@@ -64,6 +64,64 @@ namespace VirtoCommerce.Search.Providers.Lucene
             return NumericUtils.DoubleToPrefixCoded((double)value);
         }
 
+        public static Query CreateQuery(ISearchCriteria criteria, ISearchFilter filter, Occur clause)
+        {
+            var values = GetFilterValues(filter);
+            if (values == null) return null;
+
+            var query = new BooleanQuery();
+            foreach (var value in values)
+            {
+                var valueQuery = CreateQueryForValue(criteria, filter, value);
+                query.Add(valueQuery, Occur.SHOULD);
+            }
+
+            return query;
+        }
+
+        public static Query CreateQueryForValue(ISearchCriteria criteria, ISearchFilter filter, ISearchFilterValue value)
+        {
+            Query q = null;
+            var priceQuery = filter is PriceRangeFilter;
+            if (value is RangeFilterValue && priceQuery)
+            {
+                q = LuceneQueryHelper.CreateQuery(
+                    criteria, filter.Key, value as RangeFilterValue);
+            }
+            else if (value is CategoryFilterValue)
+            {
+                q = CreateQuery(filter.Key, value as CategoryFilterValue);
+            }
+            else
+            {
+                q = CreateQuery(filter.Key, value);
+            }
+            return q;
+        }
+
+        public static ISearchFilterValue[] GetFilterValues(ISearchFilter filter)
+        {
+            ISearchFilterValue[] values = null;
+            if (filter is AttributeFilter)
+            {
+                values = ((AttributeFilter)filter).Values;
+            }
+            else if (filter is RangeFilter)
+            {
+                values = ((RangeFilter)filter).Values;
+            }
+            else if (filter is PriceRangeFilter)
+            {
+                values = ((PriceRangeFilter)filter).Values;
+            }
+            else if (filter is CategoryFilter)
+            {
+                values = ((CategoryFilter)filter).Values;
+            }
+
+            return values;
+        }
+
         /// <summary>
         ///     Creates the query.
         /// </summary>

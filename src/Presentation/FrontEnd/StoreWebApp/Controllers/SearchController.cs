@@ -19,6 +19,9 @@ using VirtoCommerce.Web.Virto.Helpers;
 
 namespace VirtoCommerce.Web.Controllers
 {
+    using System.Data.Entity.Core.Metadata.Edm;
+
+    using VirtoCommerce.Web.Client.Extensions.Filters;
     using VirtoCommerce.Web.Client.Services.Filters;
 
     /// <summary>
@@ -349,9 +352,20 @@ namespace VirtoCommerce.Web.Controllers
             // Add all filters
             foreach (var filter in filters)
             {
-                // Check if we already filtering
-                if (parameters.Facets.Keys.Any(k => filter.Key.Equals(k, StringComparison.OrdinalIgnoreCase)))
-                    continue;
+                // Check if we already filtering by the key and value
+                /*
+                var facet = (from f in parameters.Facets
+                    where f.Key.Equals(filter.Key, StringComparison.OrdinalIgnoreCase)
+                    select f).SingleOrDefault();
+
+                if (facet.Value != null) // now check if value already filtered
+                {
+                    if (facet.Value.Intersect(filter.GetValues().Select(x => x.Id)).Any())
+                    {
+                        continue;
+                    }
+                }
+                 * */
 
                 criteria.Add(filter);
             }
@@ -365,14 +379,14 @@ namespace VirtoCommerce.Web.Controllers
                 {
                     var filter = filters.SingleOrDefault(x => x.Key.Equals(key, StringComparison.OrdinalIgnoreCase)
                         && (!(x is PriceRangeFilter) || ((PriceRangeFilter)x).Currency.Equals(StoreHelper.CustomerSession.Currency, StringComparison.OrdinalIgnoreCase)));
-                    var val =
-                        (from v in searchHelper.GetFilterValues(filter) where v.Id == facets[key] select v)
-                            .SingleOrDefault();
-                    if (val != null)
+
+                    var appliedFilter = searchHelper.Convert(filter, facets[key]);
+
+                    foreach (var val in appliedFilter.GetValues())
                     {
-                        criteria.Add(filter, val);
-                        dataSource.SelectedFilters.Add(new SelectedFilterModel(searchHelper.Convert(filter),
-                                                                               searchHelper.Convert(val)));
+                        criteria.Apply(appliedFilter);
+                        dataSource.SelectedFilters.Add(
+                            new SelectedFilterModel(searchHelper.Convert(filter), searchHelper.Convert(val)));
                     }
                 }
             }

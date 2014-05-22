@@ -11,6 +11,76 @@ namespace VirtoCommerce.Search.Providers.Elastic
 {
     public class ElasticQueryHelper
     {
+        public static BoolFilter<ESDocument> CreateQuery(ISearchCriteria criteria, ISearchFilter filter)
+        {
+            var values = GetFilterValues(filter);
+            if (values == null) return null;
+
+            var query = new BoolFilter<ESDocument>();
+            foreach (var value in values)
+            {
+                var valueQuery = CreateQueryForValue(criteria, filter, value);
+                //var boolQuery = new Query<ESDocument>();
+                //boolQuery.Bool(x => valueQuery);
+                query.Should(x=>x.Bool(y=>valueQuery));
+            }
+
+            return query;
+        }
+
+        public static BoolFilter<ESDocument> CreateQueryForValue(ISearchCriteria criteria, ISearchFilter filter, ISearchFilterValue value)
+        {
+            var query = new BoolFilter<ESDocument>();
+            var field = filter.Key.ToLower();
+            if (filter.GetType() == typeof(PriceRangeFilter))
+            {
+                var tempQuery = CreatePriceRangeFilter(criteria, field, value as RangeFilterValue);
+                if (tempQuery != null)
+                {
+                    query.Must(q => q.Bool(b => tempQuery));
+                }
+            }
+            else
+            {
+                if (value.GetType() == typeof(AttributeFilterValue))
+                {
+                    query.Must(q => q.Term(t=>t.Field(field).Value(((AttributeFilterValue)value).Value)));
+                }
+                else if (value.GetType() == typeof(RangeFilterValue))
+                {
+                    var tempValue = value as RangeFilterValue;
+                    var tempFilter = new RangeFilter<ESDocument>();
+                    tempFilter.Field(field).From(tempValue.Lower).To(tempValue.Upper).IncludeLower(true).IncludeUpper(false);
+                    query.Should(q => q.Range(r => tempFilter));
+                }
+            }
+
+            return query;
+        }
+
+        public static ISearchFilterValue[] GetFilterValues(ISearchFilter filter)
+        {
+            ISearchFilterValue[] values = null;
+            if (filter is AttributeFilter)
+            {
+                values = ((AttributeFilter)filter).Values;
+            }
+            else if (filter is RangeFilter)
+            {
+                values = ((RangeFilter)filter).Values;
+            }
+            else if (filter is PriceRangeFilter)
+            {
+                values = ((PriceRangeFilter)filter).Values;
+            }
+            else if (filter is CategoryFilter)
+            {
+                values = ((CategoryFilter)filter).Values;
+            }
+
+            return values;
+        }
+
         /// <summary>
         /// Creates the price range filter.
         /// </summary>

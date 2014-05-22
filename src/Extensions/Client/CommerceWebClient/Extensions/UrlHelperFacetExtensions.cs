@@ -6,6 +6,8 @@ using System.Web.Mvc;
 
 namespace VirtoCommerce.Web.Client.Extensions
 {
+    using Microsoft.Practices.ObjectBuilder2;
+
     public static class UrlHelperFacetExtensions
     {
         public static string FacetPrefix = "f_";
@@ -28,9 +30,9 @@ namespace VirtoCommerce.Web.Client.Extensions
             });
         }
      
-        public static string RemoveFacet(this UrlHelper helper, string field)
+        public static string RemoveFacet(this UrlHelper helper, string field, string value)
         {
-            var noFacet = helper.RemoveParametersUrl(helper.RequestContext.HttpContext.Request.RawUrl, helper.GetFacetKey(field));
+            var noFacet = helper.RemoveParameterUrl(helper.RequestContext.HttpContext.Request.RawUrl, helper.GetFacetKey(field), value);
             return helper.SetParameter(noFacet, "p", "1");
         }
 
@@ -38,11 +40,12 @@ namespace VirtoCommerce.Web.Client.Extensions
         {
             string url = helper.RequestContext.HttpContext.Request.RawUrl;
             var parts = url.Split('?');
-            IDictionary<string, string> qs = new Dictionary<string, string>();
-            if (parts.Length > 1)
-                qs = ParseQueryString(parts[1]);
 
-            List<string> keysToRemove = new List<string>();
+            if (parts.Length == 1) return parts[0];
+
+            var qs = ParseQueryString(parts[1]);
+
+            var keysToRemove = new List<string>();
             foreach (var p in qs)
             {
                 if (p.Key.StartsWith(FacetPrefix))
@@ -83,11 +86,39 @@ namespace VirtoCommerce.Web.Client.Extensions
         public static string SetParameters(this UrlHelper helper, string url, IDictionary<string, object> parameters)
         {
             var parts = url.Split('?');
-            IDictionary<string, string> qs = new Dictionary<string, string>();
+
+            IDictionary<string, string[]> qs = new Dictionary<string, string[]>();
+
             if (parts.Length > 1)
+            {
                 qs = ParseQueryString(parts[1]);
+            }
+
+            // now go through all the parameters and add them into the querystring
             foreach (var p in parameters)
-                qs[p.Key] = p.Value.ToNullOrString();
+            {
+                if (p.Value == null)
+                {
+                    qs[p.Key] = null;
+                }
+                else
+                {
+                    var values = p.Value.ToString().Split(',');
+
+                    if (qs.ContainsKey(p.Key))
+                    {
+                        var list = new List<String>(qs[p.Key]);
+                        list.AddRange(values);
+
+                        qs[p.Key] = list.Distinct().ToArray();
+                    }
+                    else
+                    {
+                        qs[p.Key] = values;
+                    }
+                }
+            }
+
             return parts[0] + "?" + DictToQuerystring(qs);
         }
 
@@ -103,7 +134,14 @@ namespace VirtoCommerce.Web.Client.Extensions
             var qs = ParseQueryString(query);
             foreach (var p in parameters)
             {
-                qs[p.Key] = p.Value.ToNullOrString();
+                if (p.Value == null)
+                {
+                    qs[p.Key] = null;
+                }
+                else
+                {
+                    qs[p.Key] = p.Value.ToString().Split(',');
+                }
             }
             return DictToQuerystring(qs);
         }
@@ -118,24 +156,51 @@ namespace VirtoCommerce.Web.Client.Extensions
         public static string RemoveParametersUrl(this UrlHelper helper, string url, params string[] parameters)
         {
             var parts = url.Split('?');
-            IDictionary<string, string> qs = new Dictionary<string, string>();
-            if (parts.Length > 1)
-                qs = ParseQueryString(parts[1]);
+            if (parts.Length == 1) return parts[0];
+
+            var qs = ParseQueryString(parts[1]);
+
             foreach (var p in parameters)
+            {
                 qs.Remove(p);
+            }
+
             return parts[0] + "?" + DictToQuerystring(qs);
         }
 
-        public static string RemoveParameters(this UrlHelper helper, params string[] parameters)
+        public static string RemoveParameterUrl(this UrlHelper helper, string url, string parameter, string value)
+        {
+            var parts = url.Split('?');
+            if (parts.Length == 1) return parts[0];
+
+            var qs = ParseQueryString(parts[1]);
+
+            if (qs.ContainsKey(parameter))
+            {
+                var values = qs[parameter];
+                if (values == null || values.Length <= 1)
+                {
+                    qs.Remove(parameter);
+                }
+                else
+                {
+                    qs[parameter] = values.Where(x => !x.Equals(value, StringComparison.OrdinalIgnoreCase)).ToArray();
+                }
+            }
+
+            return parts[0] + "?" + DictToQuerystring(qs);
+        }
+
+        private static string RemoveParameters(this UrlHelper helper, params string[] parameters)
         {
             return helper.RemoveParametersUrl(helper.RequestContext.HttpContext.Request.RawUrl, parameters);
         }
 
-        public static string DictToQuerystring(IDictionary<string, string> qs)
+        private static string DictToQuerystring(IDictionary<string, string[]> qs)
         {
             return string.Join("&", qs
                 .Where(k => !string.IsNullOrEmpty(k.Key))
-                .Select(k => string.Format("{0}={1}", HttpUtility.UrlEncode(k.Key), HttpUtility.UrlEncode(k.Value))).ToArray());
+                .Select(k => string.Format("{0}={1}", HttpUtility.UrlEncode(k.Key), String.Join(",", k.Value.Select(x=> HttpUtility.UrlEncode(x)).ToArray()))).ToArray());
         }
 
         /// <summary>
@@ -166,19 +231,30 @@ namespace VirtoCommerce.Web.Client.Extensions
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
-        public static IDictionary<string, string> ParseQueryString(string s)
+        private static IDictionary<string, string[]> ParseQueryString(string s)
         {
-            var d = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+            var d = new Dictionary<string, string[]>(StringComparer.InvariantCultureIgnoreCase);
+
             if (s == null)
+            {
                 return d;
+            }
+
             if (s.StartsWith("?"))
+            {
                 s = s.Substring(1);
+            }
+
             foreach (var kv in s.Split('&'))
             {
                 var v = kv.Split('=');
                 if (string.IsNullOrEmpty(v[0]))
+                {
                     continue;
-                d[HttpUtility.UrlDecode(v[0])] = HttpUtility.UrlDecode(v[1]);
+                }
+
+                var valueArray = v[1].Split(',').Select(x => HttpUtility.UrlDecode(x.ToString())).ToArray();
+                d[HttpUtility.UrlDecode(v[0])] = valueArray;
             }
             return d;
         }

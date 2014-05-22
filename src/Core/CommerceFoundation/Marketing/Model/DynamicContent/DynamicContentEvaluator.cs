@@ -90,7 +90,7 @@ namespace VirtoCommerce.Foundation.Marketing.Model.DynamicContent
             var query = _repository.PublishingGroups.Expand(g => g.ContentPlaces.Select(c => c.ContentPlace)).Expand(g => g.ContentItems);
             return Cache.Get(
                 CacheHelper.CreateCacheKey(Constants.DynamicContentCachePrefix, string.Format(DynamicContentCacheKey, "allGroups")),
-                () => (query).ToArrayAsync().Result,
+                () => (query).ToArray(),
                 DynamicContentConfiguration.Instance != null ? DynamicContentConfiguration.Instance.Cache.DynamicContentTimeout : new TimeSpan(),
                 IsEnabled).AsQueryable();
         }

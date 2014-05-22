@@ -207,6 +207,21 @@ button.proceed:hover span:after
         font-size: 16px;
     }
 
+.demo-notice
+{
+    background: #d75f07;
+    padding: 6px 10px;
+    text-align: center;
+}
+
+    .demo-notice p
+    {
+        color: #fff;
+        font-family: Arial;
+        font-style: 12px;
+        line-height: 1.15;
+    }
+
 /* --- Header --- */
 .header-wrap
 {
@@ -421,6 +436,11 @@ button.proceed:hover span:after
         width: 123px;
     }
 
+    .header .markus
+    {
+        background: url(images/logo-markus.png) no-repeat scroll 0 0;
+    }
+
         .header .rubber > div > *:first-child a
         {
             color: transparent;
@@ -441,12 +461,22 @@ button.proceed:hover span:after
         margin: 0 3px 3px;
     }
 
+    .header .menu li.divider
+    {
+        border-top: 1px solid #4f4f4f;
+        display: none;
+        margin: 10px 0;
+    }
+
         .header .menu li:first-child
         {
             margin: 0 3px 3px 0;
         }
 
-        .header .menu li.more
+        .header .menu li.more,
+        .header .menu li.cart,
+        .header .menu li.login,
+        .header .menu li.wishlist
         {
             display: none;
         }
@@ -1087,95 +1117,11 @@ button.proceed:hover span:after
     }
 
 /* --- Slider --- */
-/*.main-slider .container
+.main-slider .container
 {
     background: #f4f4f2;
     padding: 7px 0 20px;
-}*/
-
-.main-slider .container
-{
-    background: #fff;
-    border: 1px solid #ededed;
-    margin: 0 15px;
-    overflow: hidden;
-
-    -webkit-box-sizing: border-box;
-       -moz-box-sizing: border-box;
-            box-sizing: border-box;
 }
-
-    .main-slider .container .slider
-    {
-        width: 10000px;
-    }
-
-        .main-slider .container .slider li
-        {
-            float: left;
-            padding: 15px;
-
-            -webkit-box-sizing: border-box;
-               -moz-box-sizing: border-box;
-                    box-sizing: border-box;
-        }
-
-            .main-slider .container .slider li .image
-            {
-                float: left;
-                width: 220px;
-            }
-
-                .main-slider .container .slider li .image img
-                {
-                    display: block;
-                    max-width: 100%;
-                }
-
-            .main-slider .container .slider li .info
-            {
-                display: block;
-                margin: 0 0 0 260px;
-                overflow: hidden;
-            }
-
-                .main-slider .container .slider li .info h2
-                {
-                    letter-spacing: 0;
-                    margin: 0 0 15px;
-                }
-
-    .main-slider .container .nav
-    {
-        background: #f4f4f2;
-        text-align: center;
-    }
-
-        .main-slider .container .nav li
-        {
-            background: none repeat scroll 0 0 #ededed;
-            cursor: pointer;
-            display: inline-block;
-            font-size: 0;
-            height: 10px;
-            margin: 10px 5px;
-            vertical-align: middle;
-            width: 10px;
-
-            -webkit-border-radius: 50%;
-               -moz-border-radius: 50%;
-                    border-radius: 50%;
-
-            -webkit-box-shadow: 0 0 3px rgba(0, 0, 0, .3) inset;
-               -moz-box-shadow: 0 0 3px rgba(0, 0, 0, .3) inset;
-                    box-shadow: 0 0 3px rgba(0, 0, 0, .3) inset;
-        }
-
-        .main-slider .container .nav li:hover,
-        .main-slider .container .nav li.active
-        {
-            background: #2e599e;
-        }
 
 .main-slider .camera_prev,
 .main-slider .camera_next
@@ -1541,6 +1487,12 @@ button.proceed:hover span:after
 {
     float: right;
     width: 900px;
+}
+
+.article .content.full
+{
+    float: none;
+    width: 100%;
 }
 
     .article .content header
@@ -2780,16 +2732,112 @@ button.proceed:hover span:after
     background: url(images/icons/bullet.gif) no-repeat scroll 3px 50%;
     line-height: 20px;
     padding: 0 0 0 15px;
+
     -webkit-transition: all .15s linear 0s;
-    -moz-transition: all .15s linear 0s;
-    transition: all .15s linear 0s;
+       -moz-transition: all .15s linear 0s;
+            transition: all .15s linear 0s;
 }
+
+.article .sidebar .block ol li.checkbox
+{
+    background: none;
+    cursor: pointer;
+    position: relative;
+
+    -webkit-transition: none;
+       -moz-transition: none;
+            transition: none;
+}
+
+    .article .sidebar .block ol li.checkbox label
+    {
+        cursor: pointer;
+        display: block;
+    }
+
+        .article .sidebar .block ol li.checkbox label input
+        {
+            display: none;
+        }
+
+        .article .sidebar .block ol li.checkbox label .switch
+        {
+            border: 1px solid #ccc;
+            height: 9px;
+            left: 0;
+            position: absolute;
+            top: 4px;
+            width: 9px;
+
+            -webkit-border-radius: 3px;
+               -moz-border-radius: 3px;
+                    border-radius: 3px;
+        }
+
+        .article .sidebar .block ol li.checkbox label :checked ~ .switch
+        {
+            background: #5bd2ec;
+            border-color: #5bd2ec;
+        }
+
+        .article .sidebar .block ol li.checkbox label .switch:before
+        {
+            color: #FFFFFF;
+            content: "✔";
+            font-size: 8px;
+            left: 1px;
+            position: absolute;
+            right: 0;
+            text-align: center;
+            top: -5px;
+        }
+
+    .article .sidebar .block ol li.color
+    {
+        background: none;
+        display: inline-block;
+        padding: 0;
+        vertical-align: top;
+    }
+
+        .article .sidebar .block ol li.color label
+        {
+            cursor: pointer;
+            display: block;
+        }
+
+        .article .sidebar .block ol li.color label input
+        {
+            display: none;
+        }
+
+        .article .sidebar .block ol li.color label span
+        {
+            display: block;
+            height: 20px;
+            width: 20px;
+        }
+
+        .article .sidebar .block ol li.color label.white span
+        {
+            -webkit-box-shadow: 0 0 0 1px #ccc inset;
+               -moz-box-shadow: 0 0 0 1px #ccc inset;
+                    box-shadow: 0 0 0 1px #ccc inset;
+        }
+
+        .article .sidebar .block ol li.color label:hover span,
+        .article .sidebar .block ol li.color label :checked ~ span
+        {
+            -webkit-box-shadow: 0 0 0 2px #5bd2ec inset;
+               -moz-box-shadow: 0 0 0 2px #5bd2ec inset;
+                    box-shadow: 0 0 0 2px #5bd2ec inset;
+        }
 
     .article .sidebar .block ol li.current
     {
         -webkit-transition: none;
-        -moz-transition: none;
-        transition: none;
+           -moz-transition: none;
+                transition: none;
     }
 
 .article .sidebar .block ol.currently li
@@ -2845,9 +2893,20 @@ button.proceed:hover span:after
         color: #5bd2ec;
     }
 
-.article .sidebar .block ol li span
+.article .sidebar .block ol li span,
+.article .sidebar .block ol li .count
 {
     color: #aaa;
+}
+
+.article .sidebar .block ol li.checkbox .name
+{
+    color: #322c29;
+}
+
+.article .sidebar .block ol li.checkbox:hover .name
+{
+    color: #5bd2ec;
 }
 
 .article .sidebar .block form

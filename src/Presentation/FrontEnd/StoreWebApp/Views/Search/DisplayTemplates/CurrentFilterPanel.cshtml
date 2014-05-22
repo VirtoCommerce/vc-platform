@@ -10,7 +10,7 @@
                 <li>
                     <span class="label">@filter.Filter.Name.Localize():</span>
                     <span class="value">@filter.Facet.Name</span>
-                    <a class="remove" title="@("Remove This Item".Localize())" href="@Url.RemoveFacet(filter.Filter.Key)">@("Remove This Item".Localize())</a>
+                    <a class="remove" title="@("Remove This Item".Localize())" href="@Url.RemoveFacet(filter.Filter.Key, filter.Facet.Key)">@("Remove This Item".Localize())</a>
                 </li>
             }
         </ol>

@@ -371,6 +371,9 @@
     <Compile Include="Search\ISearchConnection.cs" />
     <Compile Include="Search\ISearchFilterService.cs" />
     <Compile Include="Search\KeywordSearchCriteria.cs" />
+    <Compile Include="Search\Schemas\PriceRangeFilter.cs" />
+    <Compile Include="Search\Schemas\RangeFilter.cs" />
+    <Compile Include="Search\Schemas\AttributeFilter.cs" />
     <Compile Include="Search\SearchConnection.cs" />
     <Compile Include="Search\SearchProviders.cs" />
     <Compile Include="Security\Model\AccountState.cs" />
