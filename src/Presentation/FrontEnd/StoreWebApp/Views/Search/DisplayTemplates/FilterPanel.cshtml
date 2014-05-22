@@ -24,7 +24,7 @@
                         {
                             <li class="color">
                                 <label class="@facet.Name" for="@facet.Key">
-                                    <input type="checkbox" @String.Format("{0}", Model.SelectedFilters.Any(x => x.Facet.Key == facet.Key) ? "checked" : "") onchange="this.checked ? $.redirect('@Url.SetFacet(group.Key, facet.Key)') : $.redirect('@Url.RemoveFacet(group.Key, facet.Key)')" name="@facet.Key" id="@facet.Key"><input type="checkbox" @String.Format("{0}", Model.SelectedFilters.Any(x => x.Facet.Key == facet.Key) ? "checked" : "") onchange="this.checked ? $.redirect('@Url.SetFacet(group.Key, facet.Key)') : $.redirect('@Url.RemoveFacet(group.Key, facet.Key)')" name="@facet.Key" id="@facet.Key">
+                                    <input type="checkbox" @String.Format("{0}", Model.SelectedFilters.Any(x => x.Facet.Key == facet.Key) ? "checked" : "") onchange="this.checked ? $.open('@Url.SetFacet(group.Key, facet.Key)') : $.open('@Url.RemoveFacet(group.Key, facet.Key)')" name="@facet.Key" id="@facet.Key"><input type="checkbox" @String.Format("{0}", Model.SelectedFilters.Any(x => x.Facet.Key == facet.Key) ? "checked" : "") onchange="this.checked ? $.open('@Url.SetFacet(group.Key, facet.Key)') : $.open('@Url.RemoveFacet(group.Key, facet.Key)')" name="@facet.Key" id="@facet.Key">
                                     <span style="background: @facet.Name;" title="@facet.Name (@facet.Count)"></span>
                                 </label>                            
                             </li>
@@ -53,7 +53,7 @@
                             <li class="checkbox">
                                 <label for="@facet.Key">
                                     
-                                    <input type="checkbox" @String.Format("{0}", Model.SelectedFilters.Any(x=>x.Facet.Key == facet.Key) ? "checked" : "") onchange="this.checked ? $.redirect('@Url.SetFacet(group.Key, facet.Key)') : $.redirect('@Url.RemoveFacet(group.Key, facet.Key)')" name="@facet.Key" id="@facet.Key">
+                                    <input type="checkbox" @String.Format("{0}", Model.SelectedFilters.Any(x=>x.Facet.Key == facet.Key) ? "checked" : "") onchange="this.checked ? $.open('@Url.SetFacet(group.Key, facet.Key)') : $.open('@Url.RemoveFacet(group.Key, facet.Key)')" name="@facet.Key" id="@facet.Key">
                                     <span class="switch"></span>
                                     <span class="name">@facet.Name</span>
                                     <span class="count">(@facet.Count)</span>

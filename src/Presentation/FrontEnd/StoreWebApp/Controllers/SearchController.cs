@@ -107,22 +107,6 @@ namespace VirtoCommerce.Web.Controllers
             {
                 ViewBag.Title = cat.DisplayName;
                 criteria.Outlines.Add(String.Format("{0}*", _catalogClient.BuildCategoryOutline(UserHelper.CustomerSession.CatalogId, cat.Category)));
-
-                /*
-                var children = _catalogClient.GetChildCategoriesById(cat.CategoryId);
-                if (children != null)
-                {
-                    foreach (var child in children.OfType<Category>())
-                    {
-                        criteria.ChildCategoryFilters.Add(new ChildCategoryFilter
-                        {
-                            Code = child.Code,
-                            Name = child.Name,
-                            Outline = String.Format("{0}*", _catalogClient.BuildCategoryOutline(UserHelper.CustomerSession.CatalogId, child)),
-                        });
-                    }
-                }
-                 * */
             }
 
             if (savePreferences)
@@ -395,7 +379,7 @@ namespace VirtoCommerce.Web.Controllers
             var sort = string.IsNullOrEmpty(parameters.Sort) ? "position" : parameters.Sort;
             var sortOrder = parameters.SortOrder;
 
-            bool isDescending = "desc".Equals(sortOrder, StringComparison.OrdinalIgnoreCase);
+            var isDescending = "desc".Equals(sortOrder, StringComparison.OrdinalIgnoreCase);
 
             SearchSort sortObject = null;
 
