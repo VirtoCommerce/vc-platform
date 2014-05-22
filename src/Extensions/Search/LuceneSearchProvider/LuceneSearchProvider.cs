@@ -255,6 +255,9 @@ namespace VirtoCommerce.Search.Providers.Lucene
 
             var q = (QueryBuilder)this.QueryBuilder.BuildQuery(criteria);
 
+            // filter out empty value
+            var filter = q.Filter.ToString().Equals("BooleanFilter()") ? null : q.Filter;
+
             Debug.WriteLine("Search Lucene Query:{0}", (object)q.ToString());
 
             try
@@ -267,7 +270,7 @@ namespace VirtoCommerce.Search.Providers.Lucene
 
                     docs = searcher.Search(
                         q.Query,
-                        q.Filter,
+                        filter,
                         numDocs,
                         new Sort(
                             fields.Select(field => new SortField(field.FieldName, field.DataType, field.IsDescending))
@@ -275,7 +278,7 @@ namespace VirtoCommerce.Search.Providers.Lucene
                 }
                 else
                 {
-                    docs = searcher.Search(q.Query, q.Filter, numDocs);
+                    docs = searcher.Search(q.Query, filter, numDocs);
                 }
             }
             catch (Exception ex)
