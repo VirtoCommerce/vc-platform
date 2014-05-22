@@ -194,8 +194,7 @@ namespace FunctionalTests.Search
             var filter = new AttributeFilter { Key = "Color" };
             filter.Values = new[]
                                 {
-                                    new AttributeFilterValue { Id = "blue", Value = "blue" }//,
-                                    //new AttributeFilterValue { Id = "black", Value = "black" }
+                                    new AttributeFilterValue { Id = "black", Value = "black" }
                                 };
 
             var rangefilter = new RangeFilter { Key = "size" };
@@ -212,6 +211,7 @@ namespace FunctionalTests.Search
                                           };
 
             criteria.Add(colorFilter);
+            criteria.Add(priceRangefilter);
 
             // add applied filters
             criteria.Apply(filter);

@@ -25,7 +25,11 @@
         /// <returns></returns>
         public virtual object BuildQuery(ISearchCriteria criteria)
         {
+            var queryBuilder = new QueryBuilder();
+            var queryFilter = new BooleanFilter();
             var query = new BooleanQuery();
+            queryBuilder.Query = query;
+            queryBuilder.Filter = queryFilter;
 
             if (criteria.CurrentFilters != null)
             {
@@ -47,12 +51,13 @@
 
                     if (filterQuery != null)
                     {
-                        query.Add(filterQuery, Occur.MUST);
+                        var clause = new FilterClause(filterQuery, Occur.MUST);
+                        queryFilter.Add(clause);
                     }
                 }
             }
 
-            return query;
+            return queryBuilder;
         }
 
         #endregion

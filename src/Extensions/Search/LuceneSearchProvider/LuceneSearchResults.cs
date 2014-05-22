@@ -122,7 +122,7 @@ namespace VirtoCommerce.Search.Providers.Lucene
         /// <param name="filter">The filter.</param>
         /// <param name="currency">The currency.</param>
         /// <returns></returns>
-        private int CalculateResultCount(IndexReader reader, DocIdSet baseDocIdSet, FacetGroup facetGroup, ISearchFilter filter, string currency)
+        private int CalculateResultCount(IndexReader reader, DocIdSet baseDocIdSet, FacetGroup facetGroup, ISearchFilter filter, ISearchCriteria criteria)
         {
             var count = 0;
 
@@ -133,13 +133,30 @@ namespace VirtoCommerce.Search.Providers.Lucene
                 return 0;
             }
 
+            BooleanFilter ffilter = null;
+            foreach (var f in criteria.CurrentFilters)
+            {
+                if (!f.Key.Equals(facetGroup.FieldName))
+                {
+                    if (ffilter == null) ffilter = new BooleanFilter();
+
+                    var q = LuceneQueryHelper.CreateQuery(criteria, filter, Occur.SHOULD);
+                    ffilter.Add(new FilterClause(q, Occur.MUST));
+                }
+            }
+
             foreach (var value in values)
             {
-                var q = LuceneQueryHelper.CreateQueryForValue(this.Results.SearchCriteria, filter, value);
-               
-                if (q == null) continue;
+                var queryFilter = new BooleanFilter();
+                    
+                var valueFilter = LuceneQueryHelper.CreateQueryForValue(this.Results.SearchCriteria, filter, value);
 
-                var queryFilter = new CachingWrapperFilter(new QueryWrapperFilter(q));
+                if (valueFilter == null) continue;
+
+                queryFilter.Add(new FilterClause(valueFilter, Occur.MUST));
+                if(ffilter!=null)
+                    queryFilter.Add(new FilterClause(ffilter, Occur.MUST));
+
                 var filterArray = queryFilter.GetDocIdSet(reader);
                 var newCount = (int)this.CalculateFacetCount(baseDocIdSet, filterArray);
                 if (newCount == 0) continue;
@@ -295,7 +312,7 @@ namespace VirtoCommerce.Search.Providers.Lucene
                     }
 
                     groupCount += CalculateResultCount(reader, baseDocIdSet, group, filter,
-                        Results.SearchCriteria.Currency);
+                        Results.SearchCriteria);
 
                     // Add only if items exist under
                     if (groupCount > 0)
