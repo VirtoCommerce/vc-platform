@@ -59,7 +59,7 @@
                                  SelectedValuePath="Id">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBlock x:Name="availableStatusesTextBlock" Text="{Binding Name, Mode=OneWay}" />
+                                        <TextBlock x:Name="availableStatusesTextBlock" Text="{Binding Name, Converter={x:Static LocalizingConverter.Current}, ConverterParameter={x:Static res:NavigationNames.ModuleName}}" />
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>

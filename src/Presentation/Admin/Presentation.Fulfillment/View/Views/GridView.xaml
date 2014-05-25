@@ -74,7 +74,7 @@
         <TextBlock Text="{Binding Data.InnerItem.AuthorizationCode}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
     </DataTemplate>
     <DataTemplate x:Key="statusCodeColumnTemplate">
-        <TextBlock Text="{Binding Data.InnerItem.Status}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
+        <TextBlock Text="{Binding Data.InnerItem.Status, Converter={x:Static LocalizingConverter.Current}, ConverterParameter={x:Static res:NavigationNames.ModuleName}}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
     </DataTemplate>
     <GridView x:Key="rmaGridViewView" ColumnHeaderContainerStyle="{StaticResource Virto_GridView_ColumnHeader_ContainerStyle}"
          VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling"
