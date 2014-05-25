@@ -92,9 +92,9 @@
     <Reference Include="Microsoft.WindowsAzure.Configuration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\packages\Microsoft.WindowsAzure.ConfigurationManager.2.0.3\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
     </Reference>
-    <Reference Include="MvcSiteMapProvider, Version=4.5.1.0, Culture=neutral, PublicKeyToken=1923abe4657913cc, processorArchitecture=MSIL">
+    <Reference Include="MvcSiteMapProvider, Version=4.6.3.0, Culture=neutral, PublicKeyToken=1923abe4657913cc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\packages\MvcSiteMapProvider.MVC4.Core.4.5.1\lib\net45\MvcSiteMapProvider.dll</HintPath>
+      <HintPath>..\..\..\..\packages\MvcSiteMapProvider.MVC4.Core.4.6.3\lib\net45\MvcSiteMapProvider.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -207,6 +207,7 @@
     <Compile Include="Extensions\ExpandoExtensions.cs" />
     <Compile Include="Extensions\Filters\CanonicalizedAttribute.cs" />
     <Compile Include="Extensions\Filters\Caching\CustomOutputCacheAttribute.cs" />
+    <Compile Include="Extensions\Filters\ISearchFilterExtension.cs" />
     <Compile Include="Extensions\Filters\LocalizeWebApiAttribute.cs" />
     <Compile Include="Extensions\Filters\LocalizeAttribute.cs" />
     <Compile Include="Extensions\Filters\ModelValidationFilterAttribute.cs" />

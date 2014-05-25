@@ -544,7 +544,7 @@ namespace VirtoCommerce.Web.Models
 		/// </summary>
         public SearchParameters()
         {
-            Facets = new Dictionary<string, string>();
+            Facets = new Dictionary<string, string[]>();
             PageSize = 0;
             PageIndex = 1;
         }
@@ -568,7 +568,7 @@ namespace VirtoCommerce.Web.Models
 		/// Gets or sets the facets.
 		/// </summary>
 		/// <value>The facets.</value>
-        public IDictionary<string, string> Facets { get; set; }
+        public IDictionary<string, string[]> Facets { get; set; }
 		/// <summary>
 		/// Gets or sets the sort.
 		/// </summary>

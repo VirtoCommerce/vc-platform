@@ -9,7 +9,9 @@ using VirtoCommerce.Web.Client.Extensions;
 
 namespace VirtoCommerce.Web.Models.Binders
 {
-	/// <summary>
+    using System.Security.Cryptography.X509Certificates;
+
+    /// <summary>
 	/// Class SearchParametersBinder.
 	/// </summary>
     public class SearchParametersBinder : IModelBinder
@@ -52,16 +54,16 @@ namespace VirtoCommerce.Web.Models.Binders
 		    {
             var qs = GetParams(controllerContext);
             var qsDict = NvToDict(qs);
-		        sp = new SearchParameters
+            var facets = qsDict.Where(k => FacetRegex.IsMatch(k.Key)).Select(k => k.WithKey(FacetRegex.Replace(k.Key, ""))).ToDictionary(x=>x.Key, y=>y.Value.Split(','));
+
+		    sp = new SearchParameters
             {
                 FreeSearch = qs["q"].EmptyToNull(),
                 PageIndex = qs["p"].TryParse(1),
                 PageSize = qs["pageSize"].TryParse(0),
                 Sort = qs["sort"].EmptyToNull(),
 		        SortOrder = qs["sortorder"].EmptyToNull(),
-                Facets = qsDict.Where(k => FacetRegex.IsMatch(k.Key))
-                    .Select(k => k.WithKey(FacetRegex.Replace(k.Key, "")))
-                    .ToDictionary()
+                Facets = facets
             };
 		        if (!string.IsNullOrEmpty(sp.FreeSearch))
 		        {

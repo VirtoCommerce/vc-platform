@@ -39,7 +39,9 @@ namespace VirtoCommerce.Search.Providers.Lucene
         /// <returns></returns>
         public override object BuildQuery(ISearchCriteria criteria)
         {
-            var query = base.BuildQuery(criteria) as BooleanQuery;
+
+            var builder = base.BuildQuery(criteria) as QueryBuilder;
+            var query = builder.Query as BooleanQuery;
             var analyzer = new StandardAnalyzer(u.Version.LUCENE_30);
 
             if (criteria is CatalogItemSearchCriteria)
@@ -119,9 +121,15 @@ namespace VirtoCommerce.Search.Providers.Lucene
                 }
             }
 
-            return query;
+            return builder;
         }
 
         #endregion
+    }
+
+    public class QueryBuilder
+    {
+        public Query Query { get; set; }
+        public Filter Filter { get; set; }
     }
 }

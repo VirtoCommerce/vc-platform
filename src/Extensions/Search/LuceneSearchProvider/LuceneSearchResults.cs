@@ -122,55 +122,41 @@ namespace VirtoCommerce.Search.Providers.Lucene
         /// <param name="filter">The filter.</param>
         /// <param name="currency">The currency.</param>
         /// <returns></returns>
-        private int CalculateResultCount(IndexReader reader, DocIdSet baseDocIdSet, FacetGroup facetGroup, ISearchFilter filter, string currency)
+        private int CalculateResultCount(IndexReader reader, DocIdSet baseDocIdSet, FacetGroup facetGroup, ISearchFilter filter, ISearchCriteria criteria)
         {
             var count = 0;
 
-            ISearchFilterValue[] values = null;
-            var priceQuery = false;
-            if (filter is s.AttributeFilter)
-            {
-                values = ((s.AttributeFilter)filter).Values;
-            }
-            else if (filter is s.RangeFilter)
-            {
-                values = ((s.RangeFilter)filter).Values;
-            }
-            else if (filter is s.PriceRangeFilter)
-            {
-                values = ((s.PriceRangeFilter)filter).Values;
-                priceQuery = true;
-            }
-            else if (filter is CategoryFilter)
-            {
-                values = ((CategoryFilter)filter).Values;
-            }
+            var values = LuceneQueryHelper.GetFilterValues(filter);
 
             if (values == null)
             {
                 return 0;
             }
 
+            BooleanFilter ffilter = null;
+            foreach (var f in criteria.CurrentFilters)
+            {
+                if (!f.Key.Equals(facetGroup.FieldName))
+                {
+                    if (ffilter == null) ffilter = new BooleanFilter();
+
+                    var q = LuceneQueryHelper.CreateQuery(criteria, f, Occur.SHOULD);
+                    ffilter.Add(new FilterClause(q, Occur.MUST));
+                }
+            }
+
             foreach (var value in values)
             {
-                Query q = null;
-                if (value is s.RangeFilterValue && priceQuery)
-                {
-                    q = LuceneQueryHelper.CreateQuery(
-                        this.Results.SearchCriteria, filter.Key, value as s.RangeFilterValue);                   
-                }
-                else if(value is CategoryFilterValue)
-                {
-                    q = LuceneQueryHelper.CreateQuery(filter.Key, value as CategoryFilterValue);
-                }
-                else
-                {
-                    q = LuceneQueryHelper.CreateQuery(filter.Key, value);
-                }
-                
-                if (q == null) continue;
+                var queryFilter = new BooleanFilter();
+                    
+                var valueFilter = LuceneQueryHelper.CreateQueryForValue(this.Results.SearchCriteria, filter, value);
 
-                var queryFilter = new CachingWrapperFilter(new QueryWrapperFilter(q));
+                if (valueFilter == null) continue;
+
+                queryFilter.Add(new FilterClause(valueFilter, Occur.MUST));
+                if(ffilter!=null)
+                    queryFilter.Add(new FilterClause(ffilter, Occur.MUST));
+
                 var filterArray = queryFilter.GetDocIdSet(reader);
                 var newCount = (int)this.CalculateFacetCount(baseDocIdSet, filterArray);
                 if (newCount == 0) continue;
@@ -326,7 +312,7 @@ namespace VirtoCommerce.Search.Providers.Lucene
                     }
 
                     groupCount += CalculateResultCount(reader, baseDocIdSet, group, filter,
-                        Results.SearchCriteria.Currency);
+                        Results.SearchCriteria);
 
                     // Add only if items exist under
                     if (groupCount > 0)

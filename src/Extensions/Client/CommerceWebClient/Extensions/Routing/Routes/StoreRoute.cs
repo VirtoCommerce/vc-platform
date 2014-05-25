@@ -255,12 +255,6 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
 
         protected virtual void DecodeRouteData(RouteValueDictionary values, SeoUrlKeywordTypes type)
         {
-            // Need to skip decoding values in routes temporary because Sitemap calls GetRouteData and compares the values with the ones stored in siteMapNode
-            // Sitemap node is configured to preserve route values and they are encoded. 
-            // If values in current route does not match node route values sitemap fails to resolve current node
-            if (HttpContext.Current.Items.Contains(Constants.SkipSeoDecodeKey) && (bool)HttpContext.Current.Items[Constants.SkipSeoDecodeKey])
-                return;
-
             string routeValueKey = type.ToString().ToLower();
             var language = values.ContainsKey(Constants.Language) ? values[Constants.Language] as string : null;
 

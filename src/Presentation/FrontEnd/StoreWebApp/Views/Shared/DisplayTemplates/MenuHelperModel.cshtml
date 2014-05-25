@@ -1,4 +1,5 @@
 ﻿@model MvcSiteMapProvider.Web.Html.Models.MenuHelperModel
+@using VirtoCommerce.Web.Virto.Helpers
 @using System.Web.Mvc.Html
 @using MvcSiteMapProvider.Web.Html.Models
 @{
@@ -37,4 +38,25 @@
             <div class="fade"></div>
         </li>
     }
+    <li class="divider"></li>
+    <li class="cart">
+        <a href="@Url.Action("Index","Cart")" title="@("My Cart".Localize())" class="top-link-cart">@("My Cart".Localize())</a>
+    </li>
+    <li class="login">
+        @if (UserHelper.CustomerSession.IsRegistered)
+        {
+            using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm2" }))
+             {
+                 @Html.AntiForgeryToken()
+                 <a href="javascript:document.getElementById('logoutForm2').submit()">@("Log off".Localize())</a>
+             }
+        }
+        else
+        {
+            @Html.ActionLink("Log In".Localize(), "LogOn", "Account")
+        }
+    </li>
+    <li class="wishlist">
+        <a href="@Url.Action("WishList", "Account")" title="@("My Wishlist".Localize())">@("My Wishlist".Localize())</a>
+    </li>    
 </ul>

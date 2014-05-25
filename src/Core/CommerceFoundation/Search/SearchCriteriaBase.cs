@@ -8,6 +8,7 @@ using VirtoCommerce.Foundation.Search.Schemas;
 namespace VirtoCommerce.Foundation.Search
 {
     using VirtoCommerce.Foundation.Catalogs.Search;
+    using VirtoCommerce.Foundation.Frameworks.Extensions;
 
     [DataContract]
     [KnownType(typeof(AttributeFilter))]
@@ -63,9 +64,9 @@ namespace VirtoCommerce.Foundation.Search
                     key.Append("_st:" + this.Sort.ToString());
 
                 // Add active fields
-                foreach (var field in this._CurrentFilters)
+                foreach (var field in this.Filters)
                 {
-                    key.Append("_cf:" + field.Key.Key + "|" + field.Value.Id);
+                    key.Append("_f:" + field.CacheKey);
                 }
 
                 return key.ToString();
@@ -157,26 +158,28 @@ namespace VirtoCommerce.Foundation.Search
         }
 
         [DataMember]
-        Dictionary<ISearchFilter, ISearchFilterValue> _CurrentFilters = new Dictionary<ISearchFilter, ISearchFilterValue>();
-
+        List<ISearchFilter> _AppliedFilters = new List<ISearchFilter>();
         public virtual ISearchFilterValue[] CurrentFilterValues
         {
-            get { return _CurrentFilters.Values.ToArray(); }
+            get
+            {
+                return null; //_CurrentFilters.Values.ToArray();
+            }
         }
 
         public virtual ISearchFilter[] CurrentFilters
         {
-            get { return _CurrentFilters.Keys.ToArray(); }
+            get { return _AppliedFilters.ToArray(); }
         }
 
         public virtual string[] CurrentFilterFields
         {
-            get { return (from f in _CurrentFilters.Keys.ToArray() select f.Key).ToArray(); }
+            get { return (from f in _AppliedFilters.ToArray() select f.Key).ToArray(); }
         }
 
-        public virtual void Add(ISearchFilter filter, ISearchFilterValue value)
+        public virtual void Apply(ISearchFilter filter)
         {
-            _CurrentFilters.Add(filter, value);
+            _AppliedFilters.Add(filter);
         }
 
         public SearchCriteriaBase(string documentType)

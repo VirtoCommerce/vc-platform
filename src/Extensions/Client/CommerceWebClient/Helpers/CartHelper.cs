@@ -817,7 +817,7 @@ namespace VirtoCommerce.Web.Client.Helpers
                                  .GroupBy(c => c.Name)
                                  .Select(cartGroup => new CartCount { Name = cartGroup.Key, Count = cartGroup.Count() }));
 
-                allCarts = query.ToArrayAsync().Result;
+                allCarts = query.ToArray();
                 if (HttpContext.Current != null)
                 {
                     HttpContext.Current.Items[cartKey2] = allCarts;

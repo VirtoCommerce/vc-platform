@@ -10,22 +10,25 @@ using System.Collections.Specialized;
 
 namespace VirtoCommerce.Search.Providers.Elastic
 {
+    using System.Collections.Generic;
+
     public class ElasticSearchQueryBuilder : ISearchQueryBuilder
     {
         #region ISearchQueryBuilder Members
         public object BuildQuery(ISearchCriteria criteria)
         {
-            var query = new BoolQuery<ESDocument>();
+            var builder = new QueryBuilder<ESDocument>();
+            var mainFilter = new Filter<ESDocument>();
+            var mainQuery = new BoolQuery<ESDocument>();
 
             #region Filters
-            if (criteria.CurrentFilterValues != null)
+            // Perform facet filters
+            if (criteria.CurrentFilters != null)
             {
-                for (var index = 0; index < criteria.CurrentFilterFields.Length; index++)
+                var combinedFilter = new BoolFilter<ESDocument>();
+                // group filters
+                foreach (var filter in criteria.CurrentFilters)
                 {
-                    var filter = criteria.CurrentFilters.ElementAt(index);
-                    var value = criteria.CurrentFilterValues.ElementAt(index);
-                    var field = criteria.CurrentFilterFields.ElementAt(index).ToLower();
-
                     // Skip currencies that are not part of the filter
                     if (filter.GetType() == typeof(PriceRangeFilter)) // special filtering 
                     {
@@ -38,29 +41,15 @@ namespace VirtoCommerce.Search.Providers.Elastic
 	                    }
                     }
 
-	                if (filter.GetType() == typeof(PriceRangeFilter))
+                    var filterQuery = ElasticQueryHelper.CreateQuery(criteria, filter);
+
+                    if (filterQuery != null)
                     {
-                        var tempQuery = ElasticQueryHelper.CreatePriceRangeFilter(criteria, field, value as RangeFilterValue);
-                        if (tempQuery != null)
-                        {
-                            query.Must(q => q.ConstantScore(c => c.Filter(f => f.Bool(b=>tempQuery))));
-                        }
-                    }
-                    else
-                    {
-                        if (value.GetType() == typeof(AttributeFilterValue))
-                        {
-                            query.Must(q => q.Match(t => t.Field(field).Query(((AttributeFilterValue)value).Value)));
-                        }
-                        else if (value.GetType() == typeof(RangeFilterValue))
-                        {
-                            var tempValue = value as RangeFilterValue;
-                            var tempFilter = new RangeFilter<ESDocument>();
-                            tempFilter.Field(field).From(tempValue.Lower).To(tempValue.Upper).IncludeLower(true).IncludeUpper(false);
-                            query.Should(q => q.ConstantScore(c => c.Filter(f => f.Range(r => tempFilter))));
-                        }
+                        combinedFilter.Must(c => c.Bool(q=>filterQuery));
                     }
                 }
+
+                mainFilter.Bool(bl => combinedFilter);
             }
             #endregion
 
@@ -69,38 +58,38 @@ namespace VirtoCommerce.Search.Providers.Elastic
             {
                 var c = criteria as CatalogItemSearchCriteria;
 
-                query.Must(m => m
+                mainQuery.Must(m => m
                     .Range(r => r.Field("startdate").To(c.StartDate.ToString("s")))
 					);
 
 
                 if (c.StartDateFrom.HasValue)
                 {
-                    query.Must(m => m
+                    mainQuery.Must(m => m
                         .Range(r => r.Field("startdate").From(c.StartDateFrom.Value.ToString("s")))
                    );
                 }
 
 				if (c.EndDate.HasValue)
 				{
-					query.Must(m => m
+					mainQuery.Must(m => m
 						.Range(r => r.Field("enddate").From(c.EndDate.Value.ToString("s")))
 				   );
 				}
 
-				query.Must(m => m.Term(t => t.Field("__hidden").Value("false")));
+				mainQuery.Must(m => m.Term(t => t.Field("__hidden").Value("false")));
 
                 if (c.Outlines != null && c.Outlines.Count > 0)
-                    AddQuery("__outline", query, c.Outlines);
+                    AddQuery("__outline", mainQuery, c.Outlines);
 
                 if (!String.IsNullOrEmpty(c.SearchPhrase))
                 {
-					AddQueryString("__content", query, c);
+					AddQueryString("__content", mainQuery, c);
                 }
 
 				if (!String.IsNullOrEmpty(c.Catalog))
 				{
-					AddQuery("catalog", query, c.Catalog);
+					AddQuery("catalog", mainQuery, c.Catalog);
 				}
             }
             #endregion
@@ -108,10 +97,17 @@ namespace VirtoCommerce.Search.Providers.Elastic
             if (criteria is ElasticSearchCriteria)
             {
                 var c = criteria as ElasticSearchCriteria;
-                query.Must(m => m.Custom(c.RawQuery));
+                mainQuery.Must(m => m.Custom(c.RawQuery));
             }
 
-            return query;
+            builder.Query(q => q.Bool(b => mainQuery));
+            builder.Filter(f => mainFilter);
+
+            // Add search facets
+            var facets = GetFacets(criteria);
+            builder.Facets(f => facets);
+
+            return builder;
         }
         #endregion
 
@@ -167,5 +163,159 @@ namespace VirtoCommerce.Search.Providers.Elastic
                         x.Field(fieldName).Operator(Operator.AND).Query(searchPhrase)));		        
 		    }
 		}
+
+        #region Facet Query
+        /// <summary>
+        /// Gets the facet parameters.
+        /// </summary>
+        /// <param name="criteria">The criteria.</param>
+        /// <returns></returns>
+        protected virtual Facets<ESDocument> GetFacets(ISearchCriteria criteria)
+        {
+            // Now add facets
+            var facetParams = new Facets<ESDocument>();
+            foreach (var filter in criteria.Filters)
+            {
+                if (filter is AttributeFilter)
+                {
+                    AddFacetQueries(facetParams, filter.Key, ((AttributeFilter)filter).Values, criteria);
+                }
+                else if (filter is RangeFilter)
+                {
+                    AddFacetQueries(facetParams, filter.Key, ((RangeFilter)filter).Values, criteria);
+                }
+                else if (filter is PriceRangeFilter)
+                {
+                    var currency = ((PriceRangeFilter)filter).Currency;
+                    if (currency.Equals(criteria.Currency, StringComparison.OrdinalIgnoreCase))
+                    {
+                        AddFacetPriceQueries(facetParams, filter.Key, ((PriceRangeFilter)filter).Values, criteria);
+                    }
+                }
+                else if (filter is CategoryFilter)
+                {
+                    AddFacetQueries(facetParams, filter.Key, ((CategoryFilter)filter).Values);
+                }
+            }
+
+            /*
+            var catalogCriteria = criteria as CatalogItemSearchCriteria;
+
+            if (catalogCriteria != null)
+            {
+                AddSubCategoryFacetQueries(facetParams, catalogCriteria);
+            }
+             * */
+
+            return facetParams;
+        }
+
+        private void AddFacetQueries(Facets<ESDocument> param, string fieldName, IEnumerable<CategoryFilterValue> values)
+        {
+            foreach (var val in values)
+            {
+                var facetName = String.Format("{0}-{1}", fieldName.ToLower(), val.Id.ToLower());
+                param.FilterFacets(ff => 
+                    ff.FacetName(facetName).Filter(f => f.Query(q => q.Bool(bf => bf.Must(bfm =>
+                    bfm.Custom("{{\"wildcard\" : {{ \"{0}\" : \"{1}\" }}}}", fieldName.ToLower(), val.Outline.ToLower()))))));
+            }
+        }
+
+        /// <summary>
+        /// Adds the facet queries.
+        /// </summary>
+        /// <param name="param">The param.</param>
+        /// <param name="fieldName">Name of the field.</param>
+        /// <param name="values">The values.</param>
+        private void AddFacetQueries(
+            Facets<ESDocument> param, string fieldName, IEnumerable<AttributeFilterValue> values, ISearchCriteria criteria)
+        {
+            if (values == null) return;
+
+            var ffilter = new BoolFilter<ESDocument>();
+            foreach (var f in criteria.CurrentFilters)
+            {
+                if (!f.Key.Equals(fieldName))
+                {
+                    var q = ElasticQueryHelper.CreateQuery(criteria, f);
+                    ffilter.Must(ff => ff.Bool(bb=>q));
+                }
+            }
+
+            var facetFilter = new FacetFilter<ESDocument>();
+            facetFilter.Bool(f => ffilter);
+            
+            //var filter = new FacetFilter<ESDocument>();
+            //facetFilter.Terms(x => x.Values(values.Select(y => y.Value).ToArray()));
+            //var filterFacet = new FilterFacet<ESDocument>();
+            //filterFacet.FacetName(fieldName.ToLower()).FacetFilter(f => facetFilter);
+
+            param.Terms(t => t.FacetName(fieldName.ToLower()).Field(fieldName.ToLower()).FacetFilter(ff => facetFilter));
+        }
+
+        /// <summary>
+        /// Adds the facet queries.
+        /// </summary>
+        /// <param name="param">The param.</param>
+        /// <param name="fieldName">Name of the field.</param>
+        /// <param name="values">The values.</param>
+        private void AddFacetQueries(Facets<ESDocument> param, string fieldName, IEnumerable<RangeFilterValue> values, ISearchCriteria criteria)
+        {
+            if (values == null)
+                return;
+
+            var ffilter = new Filter<ESDocument>();
+            foreach (var f in criteria.CurrentFilters)
+            {
+                if (!f.Key.Equals(fieldName))
+                {
+                    var q = ElasticQueryHelper.CreateQuery(criteria, f);
+                    ffilter.Bool(ff => q);
+                }
+            }
+
+            foreach (var value in values)
+            {
+                var filter = new FacetFilter<ESDocument>();
+                filter.Range(r => r.IncludeLower(false).IncludeUpper().From(value.Lower).To(value.Upper));
+                filter.And(b => ffilter);
+                param.FilterFacets(ff => ff.FacetName(String.Format("{0}-{1}", fieldName, value.Id)).Filter(f => filter));
+            }
+        }
+
+        /// <summary>
+        /// Adds the facet queries.
+        /// </summary>
+        /// <param name="param">The param.</param>
+        /// <param name="fieldName">Name of the field.</param>
+        /// <param name="values">The values.</param>
+        /// <param name="criteria">The criteria.</param>
+        private void AddFacetPriceQueries(Facets<ESDocument> param, string fieldName, IEnumerable<RangeFilterValue> values, ISearchCriteria criteria)
+        {
+            if (values == null)
+                return;
+
+            var ffilter = new MustFilter<ESDocument>();
+            foreach (var f in criteria.CurrentFilters)
+            {
+                if (!f.Key.Equals(fieldName))
+                {
+                    var q = ElasticQueryHelper.CreateQuery(criteria, f);
+                    ffilter.Bool(ff => q);
+                }
+            }
+
+            foreach (var value in values)
+            {
+                var query = ElasticQueryHelper.CreatePriceRangeFilter(criteria, fieldName, value);
+                query.Must(b =>ffilter);
+                if (query != null)
+                {
+                    param.FilterFacets(
+                        ff => ff.FacetName(String.Format("{0}-{1}", fieldName, value.Id)).Filter(f => f.Bool(b => query)));
+                }
+            }
+        }
+        #endregion
     }
 }

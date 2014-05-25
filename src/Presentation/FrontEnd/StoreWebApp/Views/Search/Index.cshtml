@@ -71,10 +71,5 @@ else
     </div>
 }
 <div class="sidebar">
-    @if (Model.SelectedFilters != null && Model.SelectedFilters.Count > 0)
-    {
-        @Html.DisplayFor(m => m, "CurrentFilterPanel")
-    }
-
-    @Html.DisplayFor(m => m.FilterGroups, "FilterPanel")
+    @Html.DisplayFor(m => m, "FilterPanel")
 </div>

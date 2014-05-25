@@ -201,7 +201,6 @@ namespace VirtoCommerce.Web.Controllers
 
                 var user = _userClient.GetCurrentCustomer(false);
 
-
                 // Save addresses to customer address book
                 if (checkoutModel.AddressBook.SaveBillingAddress)
                 {

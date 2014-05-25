@@ -76,23 +76,12 @@ namespace VirtoCommerce.Foundation.Search
         /// <param name="filter">The filter.</param>
         void Add(ISearchFilter filter);
 
-        ISearchFilterValue[] CurrentFilterValues { get; }
-
         ISearchFilter[] CurrentFilters { get; }
 
         /// <summary>
-        /// Gets the active filter fields.
-        /// </summary>
-        /// <value>The active filter fields.</value>
-        string[] CurrentFilterFields { get; }
-
-        /// <summary>
-        /// Adds the specified filter.
+        /// Applies the specified filter.
         /// </summary>
         /// <param name="field">The field.</param>
-        /// <param name="value">The value.</param>
-        void Add(ISearchFilter filter, ISearchFilterValue value);
-
-
+        void Apply(ISearchFilter filter);
     }
 }

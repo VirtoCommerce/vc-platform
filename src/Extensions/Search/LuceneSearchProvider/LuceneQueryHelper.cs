@@ -64,13 +64,71 @@ namespace VirtoCommerce.Search.Providers.Lucene
             return NumericUtils.DoubleToPrefixCoded((double)value);
         }
 
+        public static Filter CreateQuery(ISearchCriteria criteria, ISearchFilter filter, Occur clause)
+        {
+            var values = GetFilterValues(filter);
+            if (values == null) return null;
+
+            var query = new BooleanFilter();
+            foreach (var value in values)
+            {
+                var valueQuery = CreateQueryForValue(criteria, filter, value);
+                query.Add(new FilterClause(valueQuery, Occur.SHOULD));
+            }
+
+            return query;
+        }
+
+        public static Filter CreateQueryForValue(ISearchCriteria criteria, ISearchFilter filter, ISearchFilterValue value)
+        {
+            Filter q = null;
+            var priceQuery = filter is PriceRangeFilter;
+            if (value is RangeFilterValue && priceQuery)
+            {
+                q = LuceneQueryHelper.CreateQuery(
+                    criteria, filter.Key, value as RangeFilterValue);
+            }
+            else if (value is CategoryFilterValue)
+            {
+                q = CreateQuery(filter.Key, value as CategoryFilterValue);
+            }
+            else
+            {
+                q = CreateQuery(filter.Key, value);
+            }
+            return q;
+        }
+
+        public static ISearchFilterValue[] GetFilterValues(ISearchFilter filter)
+        {
+            ISearchFilterValue[] values = null;
+            if (filter is AttributeFilter)
+            {
+                values = ((AttributeFilter)filter).Values;
+            }
+            else if (filter is RangeFilter)
+            {
+                values = ((RangeFilter)filter).Values;
+            }
+            else if (filter is PriceRangeFilter)
+            {
+                values = ((PriceRangeFilter)filter).Values;
+            }
+            else if (filter is CategoryFilter)
+            {
+                values = ((CategoryFilter)filter).Values;
+            }
+
+            return values;
+        }
+
         /// <summary>
         ///     Creates the query.
         /// </summary>
         /// <param name="field">The field.</param>
         /// <param name="value">The value.</param>
         /// <returns></returns>
-        public static Query CreateQuery(string field, ISearchFilterValue value)
+        public static Filter CreateQuery(string field, ISearchFilterValue value)
         {
             field = field.ToLower();
 
@@ -92,12 +150,12 @@ namespace VirtoCommerce.Search.Providers.Lucene
         /// <param name="field">The field.</param>
         /// <param name="value">The value.</param>
         /// <returns></returns>
-        public static Query CreateQuery(string field, RangeFilterValue value)
+        public static Filter CreateQuery(string field, RangeFilterValue value)
         {
             object lowerbound = value.Lower;
             object upperbound = value.Upper;
 
-            var query = new TermRangeQuery(
+            var query = new TermRangeFilter(
                 field, ConvertToSearchable(lowerbound), ConvertToSearchable(upperbound), true, false);
             return query;
         }
@@ -108,15 +166,15 @@ namespace VirtoCommerce.Search.Providers.Lucene
         /// <param name="field">The field.</param>
         /// <param name="value">The value.</param>
         /// <returns></returns>
-        public static Query CreateQuery(string field, CategoryFilterValue value)
+        public static Filter CreateQuery(string field, CategoryFilterValue value)
         {
-            var query = new BooleanQuery();
-
+            var query = new BooleanFilter();
             if (!String.IsNullOrEmpty(value.Outline))
             {
-                var nodeQuery = new WildcardQuery(new Term(field, value.Outline.ToLower()));
-                query.Add(nodeQuery, Occur.MUST);
-
+                // workaround since there is no wildcard filter in current lucene version
+                var outline = value.Outline.TrimEnd('*');
+                var nodeQuery = new PrefixFilter(new Term(field, outline.ToLower()));
+                query.Add(new FilterClause(nodeQuery, Occur.MUST));
             }
             return query;
         }
@@ -127,9 +185,9 @@ namespace VirtoCommerce.Search.Providers.Lucene
         /// <param name="field">The field.</param>
         /// <param name="value">The value.</param>
         /// <returns></returns>
-        public static Query CreateQuery(ISearchCriteria criteria, string field, RangeFilterValue value)
+        public static Filter CreateQuery(ISearchCriteria criteria, string field, RangeFilterValue value)
         {
-            var query = new BooleanQuery();
+            var query = new BooleanFilter();
 
             object lowerbound = value.Lower;
             object upperbound = value.Upper;
@@ -168,7 +226,7 @@ namespace VirtoCommerce.Search.Providers.Lucene
                 lowerboundincluded,
                 upperboundincluded);
 
-            query.Add(new ConstantScoreQuery(filter), Occur.SHOULD);
+            query.Add(new FilterClause(filter, Occur.SHOULD));
 
             if (pls.Count() > 1)
             {
@@ -181,7 +239,7 @@ namespace VirtoCommerce.Search.Providers.Lucene
                     upper,
                     lowerboundincluded,
                     upperboundincluded);
-                query.Add(q, Occur.SHOULD);
+                query.Add(new FilterClause(q, Occur.SHOULD));
             }
 
             return query;
@@ -193,10 +251,11 @@ namespace VirtoCommerce.Search.Providers.Lucene
         /// <param name="field">The field.</param>
         /// <param name="value">The value.</param>
         /// <returns></returns>
-        public static Query CreateQuery(string field, AttributeFilterValue value)
+        public static Filter CreateQuery(string field, AttributeFilterValue value)
         {
             object val = value.Value;
-            var query = new TermQuery(new Term(field, ConvertToSearchable(val)));
+            var query = new TermsFilter();
+            query.AddTerm(new Term(field, ConvertToSearchable(val)));
             return query;
         }
 
@@ -220,7 +279,7 @@ namespace VirtoCommerce.Search.Providers.Lucene
         ///     if set to <c>true</c> [upperboundincluded].
         /// </param>
         /// <returns></returns>
-        private static BooleanQuery CreatePriceRangeQuery(
+        private static BooleanFilter CreatePriceRangeQuery(
             string[] priceLists,
             int index,
             string field,
@@ -230,7 +289,7 @@ namespace VirtoCommerce.Search.Providers.Lucene
             bool lowerboundincluded,
             bool upperboundincluded)
         {
-            var query = new BooleanQuery();
+            var query = new BooleanFilter();
 
             // create left part
             var filter =
@@ -240,7 +299,7 @@ namespace VirtoCommerce.Search.Providers.Lucene
                     "*",
                     true,
                     false);
-            var leftClause = new BooleanClause(new ConstantScoreQuery(filter), Occur.MUST_NOT);
+            var leftClause = new FilterClause(filter, Occur.MUST_NOT);
             query.Add(leftClause);
 
             // create right part
@@ -254,12 +313,12 @@ namespace VirtoCommerce.Search.Providers.Lucene
                         upperbound,
                         lowerboundincluded,
                         upperboundincluded);
-                var rightClause = new BooleanClause(new ConstantScoreQuery(filter2), Occur.MUST);
+                var rightClause = new FilterClause(filter2, Occur.MUST);
                 query.Add(rightClause);
             }
             else
             {
-                query.Add(
+                query.Add(new FilterClause(
                     CreatePriceRangeQuery(
                         priceLists,
                         index + 1,
@@ -269,7 +328,7 @@ namespace VirtoCommerce.Search.Providers.Lucene
                         upperbound,
                         lowerboundincluded,
                         upperboundincluded),
-                    Occur.SHOULD);
+                    Occur.SHOULD));
             }
 
             return query;

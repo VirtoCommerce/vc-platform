@@ -2,14 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using MvcSiteMapProvider;
-using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.Catalogs.Model;
-using VirtoCommerce.Foundation.Catalogs.Services;
 using VirtoCommerce.Web.Client.Extensions.Routing;
 using VirtoCommerce.Web.Client.Helpers;
 
-
-namespace VirtoCommerce.Web.Virto.Helpers.MVC
+namespace VirtoCommerce.Web.Virto.Helpers.MVC.SiteMap
 {
     public class CatalogNodeProvider : DynamicNodeProviderBase
     {
@@ -19,8 +16,6 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC
             var nodes = new List<DynamicNode>();
             foreach (var category in catalog.CategoryBases.OfType<Category>().Where(x => x.IsActive).OrderByDescending(x => x.Priority))
             {
-                // sasha: using outline here caused incorrect menu links when switching languages
-                // var outline = new BrowsingOutline(CartHelper.CatalogOutlineBuilder.BuildCategoryOutline(StoreHelper.CustomerSession.CatalogId, CartHelper.CatalogClient.GetCategory(category.Code)));
 
                 var pNode = new DynamicNode
                 {
@@ -29,13 +24,8 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC
                     Key = category.CategoryId,
                     ParentKey = category.ParentCategoryId,
                     RouteValues = new Dictionary<string, object> { { Constants.Category, category.Code } },
-                    /*
-                    RouteValues = new Dictionary<string, object>
-                    {
-                        { Constants.Category, SettingsHelper.SeoEncode(outline.ToString(), SeoUrlKeywordTypes.Category) }
-                    },
                     PreservedRouteParameters = new[] { Constants.Language, Constants.Store },
-                     * */
+                     
                 };
 
                 nodes.Add(pNode);

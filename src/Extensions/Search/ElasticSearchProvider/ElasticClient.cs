@@ -38,14 +38,11 @@ namespace VirtoCommerce.Search.Providers.Elastic
             get { return connection; }
         }
 
-
-
         public GetResult<T> Get(GetCommand getCommand)
         {
             var result = connection.Get(getCommand);
             return Serializer.ToGetResult<T>(result);
         }
-
 
         public bool IndexExists(IndexExistsCommand indexExistsCommand)
         {
@@ -133,14 +130,12 @@ namespace VirtoCommerce.Search.Providers.Elastic
             return Serializer.ToDeleteResult(result);
         }
 
-
         public SearchResult<T> Search(SearchCommand searchCommand, QueryBuilder<T> query)
         {
 	        string jsonData = query.Build();
 			var results = connection.Post(searchCommand, jsonData);
             return Serializer.ToSearchResult<T>(results);
         }
-
 
         public string GetMapping(GetMappingCommand getMappingCommand)
         {

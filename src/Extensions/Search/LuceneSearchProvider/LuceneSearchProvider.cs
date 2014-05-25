@@ -253,7 +253,10 @@ namespace VirtoCommerce.Search.Providers.Lucene
             var dir = FSDirectory.Open(new DirectoryInfo(this.GetDirectoryPath(folderName)));
             var searcher = new IndexSearcher(dir);
 
-            var q = (Query)this.QueryBuilder.BuildQuery(criteria);
+            var q = (QueryBuilder)this.QueryBuilder.BuildQuery(criteria);
+
+            // filter out empty value
+            var filter = q.Filter.ToString().Equals("BooleanFilter()") ? null : q.Filter;
 
             Debug.WriteLine("Search Lucene Query:{0}", (object)q.ToString());
 
@@ -266,8 +269,8 @@ namespace VirtoCommerce.Search.Providers.Lucene
                     var fields = criteria.Sort.GetSort();
 
                     docs = searcher.Search(
-                        q,
-                        null,
+                        q.Query,
+                        filter,
                         numDocs,
                         new Sort(
                             fields.Select(field => new SortField(field.FieldName, field.DataType, field.IsDescending))
@@ -275,7 +278,7 @@ namespace VirtoCommerce.Search.Providers.Lucene
                 }
                 else
                 {
-                    docs = searcher.Search(q, numDocs);
+                    docs = searcher.Search(q.Query, filter, numDocs);
                 }
             }
             catch (Exception ex)
@@ -283,7 +286,7 @@ namespace VirtoCommerce.Search.Providers.Lucene
                 throw new LuceneSearchException("Search exception", ex);
             }
 
-            var results = new LuceneSearchResults(searcher, searcher.IndexReader, docs, criteria, q);
+            var results = new LuceneSearchResults(searcher, searcher.IndexReader, docs, criteria, q.Query);
 
             // Cleanup here
             searcher.IndexReader.Dispose();
