@@ -257,7 +257,8 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 				IdModule = NavigationNames.MenuName,
 				IdTile = "NeedAttention",
 				TileNumber = "1",
-				TileTitle = "Need attention".Localize(),
+                TileTitle = "Need attention",
+                TileCategory = NavigationNames.ModuleName,
 				Order = 0,
 				IdColorSchema = TileColorSchemas.Schema1,
 				NavigateCommand = new DelegateCommand(NavigateToHome)
@@ -268,7 +269,8 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 				IdModule = NavigationNames.MenuName,
 				IdTile = "ProcessedToday",
 				TileNumber = "10",
-				TileTitle = "Processed today".Localize(),
+                TileTitle = "Processed today",
+                TileCategory = NavigationNames.ModuleName,
 				Order = 2,
 				IdColorSchema = TileColorSchemas.Schema4,
 				NavigateCommand = new DelegateCommand(NavigateToHome)
@@ -288,7 +290,8 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 			{
 				IdModule = NavigationNames.MenuName,
 				IdTile = "OrderChart",
-				TileTitle = "MONTHLY SALES CHART".Localize(),
+                TileTitle = "MONTHLY SALES CHART",
+                TileCategory = NavigationNames.ModuleName,
 				Order = 6,
 				Width = (double)TileSize.Triple,
 				Height = (double)TileSize.Triple,

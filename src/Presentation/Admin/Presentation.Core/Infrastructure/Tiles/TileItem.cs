@@ -56,6 +56,8 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure.Tiles
             }
         }
 
+        public string TileCategory { get; set; }
+
         private TileColorSchemas _idColorSchema = TileColorSchemas.Schema1;
         public TileColorSchemas IdColorSchema
         {

@@ -47,7 +47,7 @@
 
 				<TextBlock x:Name="tbX" Grid.Row="1" Text="X" Style="{StaticResource Virto_TextBlock_Dashboard_TileBigText_Style}" Visibility="Collapsed"/>
 				<core_controls:VectorImage x:Name="img" Grid.Row="1" Height="70" ImageSource="{Binding TileIconSource}" Foreground="Black"/>
-                <TextBlock x:Name="tbTitle" Grid.Row="2" Text="{Binding TileTitle, Converter={StaticResource textCaseConverter}}" Style="{StaticResource Virto_TextBlock_Dashboard_TileHeaderText_Style}"/>
+                <TextBlock x:Name="tbTitle" Grid.Row="2" Text="{LocBinding CategoryBinding={Binding TileCategory, Converter={StaticResource textCaseConverter}}, StringFormat=TileTitle}" Style="{StaticResource Virto_TextBlock_Dashboard_TileHeaderText_Style}"/>
 			</Grid>
 			<i:Interaction.Triggers>
 				<i:EventTrigger EventName="MouseDown">
@@ -91,7 +91,7 @@
 					<RowDefinition Height="0.75*"/>
 				</Grid.RowDefinitions>
 
-                <TextBlock x:Name="tbTitle" Grid.Row="0" Text="{Binding TileTitle, Converter={StaticResource textCaseConverter}}" FontSize="17" Style="{StaticResource Virto_TextBlock_Dashboard_TileHeaderText_Style}"/>
+                <TextBlock x:Name="tbTitle" Grid.Row="0" Text="{LocBinding CategoryBinding={Binding TileCategory, Converter={StaticResource textCaseConverter}}, StringFormat=TileTitle}" FontSize="17" Style="{StaticResource Virto_TextBlock_Dashboard_TileHeaderText_Style}"/>
 				<ItemsControl x:Name="list" Grid.Row="1" ItemsSource="{Binding InfoList}" Cursor="Hand">
 					<ItemsControl.ItemTemplate>
 						<DataTemplate>
@@ -146,7 +146,7 @@
 				</Grid.RowDefinitions>
 
 				<TextBlock Grid.Row="1" x:Name="tbNum" Text="{Binding TileNumber, Converter={local_converters:NumberRoundingConverter }}" Style="{StaticResource Virto_TextBlock_Dashboard_TileBigText_Style}"/>
-                <TextBlock Grid.Row="2" x:Name="tbTitle" Text="{Binding TileTitle, Converter={StaticResource textCaseConverter}}" Style="{StaticResource Virto_TextBlock_Dashboard_TileHeaderText_Style}"/>
+                <TextBlock Grid.Row="2" x:Name="tbTitle" Text="{LocBinding CategoryBinding={Binding TileCategory, Converter={StaticResource textCaseConverter}}, StringFormat=TileTitle}" Style="{StaticResource Virto_TextBlock_Dashboard_TileHeaderText_Style}"/>
 			</Grid>
 			<i:Interaction.Triggers>
 				<i:EventTrigger EventName="MouseDown">
@@ -179,7 +179,7 @@
 	</DataTemplate>
 
 	<DataTemplate  DataType="{x:Type tiles:LinearChartTileItem}">
-        <charting:Chart x:Name="chart" Title="{Binding TileTitle, Converter={StaticResource textCaseConverter}}" Style="{StaticResource Virto_Chart_Style}" BorderThickness="0" Margin="5" Width="{Binding Width}" Height="{Binding Height}" >
+        <charting:Chart x:Name="chart" Title="{LocBinding CategoryBinding={Binding TileCategory, Converter={StaticResource textCaseConverter}}, StringFormat=TileTitle}" Style="{StaticResource Virto_Chart_Style}" BorderThickness="0" Margin="5" Width="{Binding Width}" Height="{Binding Height}" >
 
 			<charting:ColumnSeries Title="{Binding ColumnSeriesName1, Mode=TwoWay}" IndependentValueBinding="{Binding Key}"   Background="#239FD9"
                                                            DependentValueBinding="{Binding Value}"

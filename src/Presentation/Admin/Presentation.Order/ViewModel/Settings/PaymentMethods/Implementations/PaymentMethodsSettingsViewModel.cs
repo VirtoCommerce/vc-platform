@@ -66,7 +66,8 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.PaymentMethods
 				{
 					IdModule = VirtoCommerce.ManagementClient.Configuration.NavigationNames.MenuName,
 					IdTile = "PaymentMethodsSettings",
-					TileTitle = "Payment methods".Localize(),
+                    TileTitle = "Payment methods",
+                    TileCategory = NavigationNames.ModuleName,
 					Order = 2,
 					IdColorSchema = TileColorSchemas.Schema2,
 					NavigateCommand = new DelegateCommand(() => NavigateToTabPage(NavigationNames.PaymentsSettingsHomeName)),

@@ -52,6 +52,8 @@ namespace VirtoCommerce.ManagementClient.Localization
             }
         }
 
+        public Binding CategoryBinding { get; set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LocBindingExtension"/> class.
         /// </summary>
@@ -91,29 +93,36 @@ namespace VirtoCommerce.ManagementClient.Localization
                         (DependencyProperty)service.TargetProperty
                         );
 
-                    // Check if the property supports binding localization
-                    BindingLocalizedValue.CheckPropertySupported(property);
+                    LocalizedValue localizedValue;
 
-                    if (string.IsNullOrEmpty(ResourceKey) && string.IsNullOrEmpty(StringFormat))
+                    if (CategoryBinding != null)
                     {
-                        // Either a resource key of a format string must be specified
-
-                        return null;
+                        localizedValue = new BindingLocalizedValue(property, CategoryBinding, StringFormat);
                     }
-
-                    if (_bindings == null || _bindings.Count == 0)
+                    else
                     {
-                        // At least one binding must be specified
+                        // Check if the property supports binding localization
+                        MultiBindingLocalizedValue.CheckPropertySupported(property);
 
-                        return null;
+                        if (string.IsNullOrEmpty(ResourceKey) && string.IsNullOrEmpty(StringFormat))
+                        {
+                            // Either a resource key of a format string must be specified
+                            return null;
+                        }
+
+                        if (_bindings == null || _bindings.Count == 0)
+                        {
+                            // At least one binding must be specified
+                            return null;
+                        }
+
+                        localizedValue = new MultiBindingLocalizedValue(
+                            property,
+                            ResourceKey,
+                            StringFormat,
+                            _bindings
+                            );
                     }
-
-                    var localizedValue = new BindingLocalizedValue(
-                        property,
-                        ResourceKey,
-                        StringFormat,
-                        _bindings
-                        );
 
                     LocalizationManager.InternalAddLocalizedValue(localizedValue);
 
