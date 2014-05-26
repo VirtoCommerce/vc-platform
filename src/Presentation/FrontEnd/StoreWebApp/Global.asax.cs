@@ -134,6 +134,10 @@ namespace VirtoCommerce.Web
             {
                 foreach (var key in custom.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries))
                 {
+                    if (string.Equals(key, "registered", StringComparison.OrdinalIgnoreCase))
+                    {
+                        varyString += UserHelper.CustomerSession.IsRegistered ? "registered" : "anonymous";
+                    }
                     if (string.Equals(key, "storeparam", StringComparison.OrdinalIgnoreCase))
                     {
                         varyString += UserHelper.CustomerSession.StoreId;
