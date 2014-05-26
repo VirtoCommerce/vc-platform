@@ -212,6 +212,7 @@ button.proceed:hover span:after
     background: #d75f07;
     padding: 6px 10px;
     text-align: center;
+    display: none;
 }
 
     .demo-notice p
