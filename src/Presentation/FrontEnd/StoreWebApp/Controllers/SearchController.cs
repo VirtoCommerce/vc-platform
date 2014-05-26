@@ -329,9 +329,7 @@ namespace VirtoCommerce.Web.Controllers
             var dataSource = new CatalogItemSearchModel();
 
             // Now fill in filters
-            var searchHelper = _searchFilter;
-
-            var filters = searchHelper.Filters;
+            var filters = _searchFilter.Filters;
 
             // Add all filters
             foreach (var filter in filters)
@@ -364,13 +362,13 @@ namespace VirtoCommerce.Web.Controllers
                     var filter = filters.SingleOrDefault(x => x.Key.Equals(key, StringComparison.OrdinalIgnoreCase)
                         && (!(x is PriceRangeFilter) || ((PriceRangeFilter)x).Currency.Equals(StoreHelper.CustomerSession.Currency, StringComparison.OrdinalIgnoreCase)));
 
-                    var appliedFilter = searchHelper.Convert(filter, facets[key]);
+                    var appliedFilter = _searchFilter.Convert(filter, facets[key]);
 
                     foreach (var val in appliedFilter.GetValues())
                     {
                         criteria.Apply(appliedFilter);
                         dataSource.SelectedFilters.Add(
-                            new SelectedFilterModel(searchHelper.Convert(filter), searchHelper.Convert(val)));
+                            new SelectedFilterModel(_searchFilter.Convert(filter), _searchFilter.Convert(val)));
                     }
                 }
             }
@@ -480,7 +478,7 @@ namespace VirtoCommerce.Web.Controllers
                 }
             }
 
-            dataSource.FilterGroups = searchHelper.Convert(results.FacetGroups);
+            dataSource.FilterGroups = _searchFilter.Convert(results.FacetGroups);
             dataSource.CatalogItems = itemModelList.ToArray();
             dataSource.Criteria = criteria;
 

@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Xml.Serialization;
+using VirtoCommerce.Client;
+using VirtoCommerce.Client.Extensions;
+using VirtoCommerce.Foundation.Catalogs.Model;
+using VirtoCommerce.Foundation.Catalogs.Search;
+using VirtoCommerce.Foundation.Customers.Services;
+using VirtoCommerce.Foundation.Search;
+using VirtoCommerce.Foundation.Search.Schemas;
+using VirtoCommerce.Foundation.Stores.Model;
 
 namespace VirtoCommerce.Web.Client.Services.Filters
 {
-    using System.IO;
-    using System.Xml.Serialization;
-
-    using VirtoCommerce.Client;
-    using VirtoCommerce.Client.Extensions;
-    using VirtoCommerce.Foundation.Catalogs.Model;
-    using VirtoCommerce.Foundation.Catalogs.Search;
-    using VirtoCommerce.Foundation.Customers.Services;
-    using VirtoCommerce.Foundation.Search;
-    using VirtoCommerce.Foundation.Search.Schemas;
-    using VirtoCommerce.Foundation.Stores.Model;
-
     public class StoreSearchFilterService : ISearchFilterService
     {
         private ISearchFilter[] _filters;
@@ -60,7 +58,7 @@ namespace VirtoCommerce.Web.Client.Services.Filters
         {
             get
             {
-                return this._store ?? (this._store = this._storeClient.GetCurrentStore());
+                return _store ?? (_store = _storeClient.GetCurrentStore());
             }
         }
 
@@ -80,13 +78,9 @@ namespace VirtoCommerce.Web.Client.Services.Filters
             if (children != null)
             {
                 var categoryFilter = new CategoryFilter { Key = "__outline" };
-                var listOfValues = new List<CategoryFilterValue>();
-                foreach (var child in children.OfType<Category>())
-                {
-                    var outline = String.Format("{0}*", catalogClient.BuildCategoryOutline(_customerSession.CustomerSession.CatalogId, child));
-                    var val = new CategoryFilterValue() { Id = child.Code, Outline  = outline, Name = child.Name}; // TODO: get localized name
-                    listOfValues.Add(val);
-                }
+                var listOfValues = (from child in children.OfType<Category>() 
+                                    let outline = String.Format("{0}*", catalogClient.BuildCategoryOutline(_customerSession.CustomerSession.CatalogId, child)) 
+                                    select new CategoryFilterValue {Id = child.Code, Outline = outline, Name = child.Name}).ToList();
 
                 // add filters only if found any
                 if (listOfValues.Count > 0)

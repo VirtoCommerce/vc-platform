@@ -424,7 +424,7 @@
     <Compile Include="Virto\Helpers\Payments\CreditCardOption.cs" />
     <Compile Include="Virto\Helpers\Payments\IPaymentOption.cs" />
     <Compile Include="Virto\Helpers\Popup\PopupBase.cs" />
-    <Compile Include="Virto\Helpers\SearchHelperExtensions.cs" />
+    <Compile Include="Virto\Helpers\SearchFilterServiceExtensions.cs" />
     <Compile Include="Virto\Helpers\UserHelper.cs" />
     <Compile Include="WebRole.cs" />
   </ItemGroup>
