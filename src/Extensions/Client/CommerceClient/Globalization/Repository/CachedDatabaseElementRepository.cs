@@ -1,12 +1,13 @@
-﻿using linq = System.Linq.Expressions;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
+using linq = System.Linq.Expressions;
 
 namespace VirtoCommerce.Client.Globalization.Repository
 {
@@ -170,19 +171,23 @@ namespace VirtoCommerce.Client.Globalization.Repository
 
             try
             {
-                using (var _repository = _repositoryFactory.GetRepositoryInstance())
-                {
-                    _repository.Add(new Localization
-                    {
-                        Name = element.Name,
-                        Category = element.Category,
-                        LanguageCode = element.Culture,
-                        Value = element.Value
-                    });
-                    _repository.UnitOfWork.Commit();
-                }
-
                 _cacheRepository.Add(element);
+
+                Task.Run(() =>
+                {
+                    using (var _repository = _repositoryFactory.GetRepositoryInstance())
+                    {
+                        _repository.Add(new Localization
+                        {
+                            Name = element.Name,
+                            Category = element.Category,
+                            LanguageCode = element.Culture,
+                            Value = element.Value
+                        });
+                        _repository.UnitOfWork.Commit();
+                    }
+
+                });
 
                 return true;
             }
