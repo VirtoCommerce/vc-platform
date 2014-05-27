@@ -47,14 +47,16 @@ namespace VirtoCommerce.ManagementClient.Marketing
 				navigationManager.RegisterNavigationItem(homeNavItem);
 
 				//Register menu view
-				var menuNavItem = new NavigationMenuItem(NavigationNames.MenuName);
-				menuNavItem.NavigateCommand =
-					new DelegateCommand<NavigationItem>((x) => { navigationManager.Navigate(homeNavItem); });
-				menuNavItem.Caption = "Marketing".Localize();
-				menuNavItem.ImageResourceKey = "Icon_Module_Promotions";
-				menuNavItem.ItemBackground = Color.FromRgb(244, 189, 26);
-				menuNavItem.Order = 40;
-				navigationManager.RegisterNavigationItem(menuNavItem);
+			    var menuNavItem = new NavigationMenuItem(NavigationNames.MenuName)
+			    {
+			        NavigateCommand = new DelegateCommand<NavigationItem>((x) => { navigationManager.Navigate(homeNavItem); }),
+                    Caption = "Marketing",
+                    Category = NavigationNames.ModuleName,
+			        ImageResourceKey = "Icon_Module_Promotions",
+			        ItemBackground = Color.FromRgb(244, 189, 26),
+			        Order = 40
+			    };
+			    navigationManager.RegisterNavigationItem(menuNavItem);
 			}
 		}
 

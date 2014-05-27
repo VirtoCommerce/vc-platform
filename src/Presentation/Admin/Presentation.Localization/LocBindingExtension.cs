@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Windows.Markup;
 using System.Collections.ObjectModel;
-using System.Windows.Data;
-using System.Windows;
 using System.Reflection;
 using System.Threading;
+using System.Windows;
+using System.Windows.Data;
+using System.Windows.Markup;
 using System.Windows.Threading;
 
 namespace VirtoCommerce.ManagementClient.Localization

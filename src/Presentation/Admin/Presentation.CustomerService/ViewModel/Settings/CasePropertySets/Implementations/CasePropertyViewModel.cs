@@ -12,7 +12,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseProper
 
 		public CasePropertyViewModel(CaseProperty item)
 		{
-			ViewTitle = new ViewTitleBase() { Title = "Edit Info Value".Localize(), SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory) };
+            ViewTitle = new ViewTitleBase() { Title = "Edit Info Value", SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory) };
 			InnerItem = item;
 		}
 

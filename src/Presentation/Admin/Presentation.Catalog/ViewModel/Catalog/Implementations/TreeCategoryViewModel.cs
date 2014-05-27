@@ -50,7 +50,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			EmbeddedHierarchyEntry = this;
 			ViewTitle = new ViewTitleBase
 			{
-				Title = "Category".Localize(),
+                Title = "Category",
 				SubTitle = GetDisplayName(item).ToUpper(CultureInfo.InvariantCulture)
 			};
 

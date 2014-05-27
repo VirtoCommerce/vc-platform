@@ -37,7 +37,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseRules.
 			INavigationManager navManager, CaseRule item)
 			: base(entityFactory, item, false)
 		{
-			ViewTitle = new ViewTitleBase() { Title = "Edit Rule".Localize(), SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory) };
+            ViewTitle = new ViewTitleBase() { Title = "Edit Rule", SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory) };
 			_repositoryFactory = repositoryFactory;
 			_parent = parent;
 			_navManager = navManager;

@@ -34,6 +34,11 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure.Navigation
             set;
         }
 
+        /// <summary>
+        /// Localization category for the Caption
+        /// </summary>
+        public string Category { get; set; }
+
         public string ImageResourceKey
         {
             get;

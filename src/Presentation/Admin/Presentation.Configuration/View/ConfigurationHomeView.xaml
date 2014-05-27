@@ -19,7 +19,7 @@
     <TabControl x:Name="tabControl" ItemsSource="{Binding Settings}" SelectedItem="{Binding CurrentTab}" Style="{StaticResource Virto_TabControlHorizontal_Style}" IsSynchronizedWithCurrentItem="True">
         <TabControl.ItemContainerStyle>
             <Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource {x:Type TabItem}}">
-                <Setter Property="Header" Value="{Binding Caption}" />
+                <Setter Property="Header" Value="{LocBinding CategoryBinding={Binding Category}, StringFormat=Caption}" />
                 <Setter Property="Content" Value="{Binding ViewModel}" />
             </Style>
         </TabControl.ItemContainerStyle>

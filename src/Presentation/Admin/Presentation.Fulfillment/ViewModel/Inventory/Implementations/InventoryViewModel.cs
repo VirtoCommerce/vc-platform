@@ -56,7 +56,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Inventory.Impleme
 			_navManager = navManager;
 			ViewTitle = new ViewTitleBase
 				{
-					Title = "Inventory".Localize(),
+                    Title = "Inventory",
 					SubTitle = (item != null && !string.IsNullOrEmpty(item.Sku)) ? item.Sku.ToUpper(CultureInfo.InvariantCulture) : ""
 				};
 

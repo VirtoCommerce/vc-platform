@@ -36,8 +36,8 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			_navManager = navManager;
 			ViewTitle = new ViewTitleBase
 				{
-					SubTitle = "VIRTUAL CATALOG".Localize(),
-					Title = (item != null && !string.IsNullOrEmpty(item.Name)) ? item.Name : ""
+                    Title = "VIRTUAL CATALOG",
+                    SubTitle = (item != null && !string.IsNullOrEmpty(item.Name)) ? item.Name : ""
 				};
 
 			OpenItemCommand = new DelegateCommand(() => _navManager.Navigate(NavigationData));

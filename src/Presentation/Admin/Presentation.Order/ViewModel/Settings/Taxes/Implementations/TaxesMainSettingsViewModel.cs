@@ -24,23 +24,23 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Taxes.Implemen
 
 			if (authContext.CheckPermission(PredefinedPermissions.SettingsTaxCategories))
 			{
-				SubItems.Add(new ItemTypeHomeTab { Caption = "Tax categories".Localize(), ViewModel = taxCategorySettingsViewModel });
+                SubItems.Add(new ItemTypeHomeTab { Caption = "Tax categories", Category = NavigationNames.ModuleName, ViewModel = taxCategorySettingsViewModel });
 			}
 			if (authContext.CheckPermission(PredefinedPermissions.SettingsJurisdiction))
 			{
-				SubItems.Add(new ItemTypeHomeTab { Caption = "Jurisdictions".Localize(), ViewModel = jSettingsVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("jurisdictionType", JurisdictionTypes.Taxes)) });
+                SubItems.Add(new ItemTypeHomeTab { Caption = "Jurisdictions", Category = NavigationNames.ModuleName, ViewModel = jSettingsVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("jurisdictionType", JurisdictionTypes.Taxes)) });
 			}
 			if (authContext.CheckPermission(PredefinedPermissions.SettingsJurisdictionGroups))
 			{
-				SubItems.Add(new ItemTypeHomeTab { Caption = "Jurisdiction groups".Localize(), ViewModel = jGroupVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("jurisdictionType", JurisdictionTypes.Taxes)) });
+                SubItems.Add(new ItemTypeHomeTab { Caption = "Jurisdiction groups", Category = NavigationNames.ModuleName, ViewModel = jGroupVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("jurisdictionType", JurisdictionTypes.Taxes)) });
 			}
 			if (authContext.CheckPermission(PredefinedPermissions.SettingsTaxes))
 			{
-				SubItems.Add(new ItemTypeHomeTab { Caption = "Taxes".Localize(), ViewModel = taxSettingsViewModel });
+                SubItems.Add(new ItemTypeHomeTab { Caption = "Taxes", Category = NavigationNames.ModuleName, ViewModel = taxSettingsViewModel });
 			}
 			if (authContext.CheckPermission(PredefinedPermissions.SettingsTaxImport))
 			{
-				SubItems.Add(new ItemTypeHomeTab { IdTab = Configuration.NavigationNames.HomeName, Caption = "Import".Localize(), ViewModel = importVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("parentViewModel", this)) });
+                SubItems.Add(new ItemTypeHomeTab { IdTab = Configuration.NavigationNames.HomeName, Caption = "Import", Category = NavigationNames.ModuleName, ViewModel = importVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("parentViewModel", this)) });
 			}
 			CurrentTab = SubItems[0];
 		}

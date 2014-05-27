@@ -26,23 +26,23 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.ShippingMethod
 
 			if (authContext.CheckPermission(PredefinedPermissions.SettingsShippingOptions))
 			{
-				SubItems.Add(new ItemTypeHomeTab { Caption = "Shipping options".Localize(), ViewModel = shippingOptionSettingsViewModel });
+                SubItems.Add(new ItemTypeHomeTab { Caption = "Shipping options", Category = NavigationNames.ModuleName, ViewModel = shippingOptionSettingsViewModel });
 			}
 			if (authContext.CheckPermission(PredefinedPermissions.SettingsShippingMethods))
 			{
-				SubItems.Add(new ItemTypeHomeTab { Caption = "Shipping methods".Localize(), ViewModel = shippingMethodSettingsViewModel });
+                SubItems.Add(new ItemTypeHomeTab { Caption = "Shipping methods", Category = NavigationNames.ModuleName, ViewModel = shippingMethodSettingsViewModel });
 			}
 			if (authContext.CheckPermission(PredefinedPermissions.SettingsShippingPackages))
 			{
-				SubItems.Add(new ItemTypeHomeTab { Caption = "Shipping packages".Localize(), ViewModel = shippingPackageSettingsViewModel });
+                SubItems.Add(new ItemTypeHomeTab { Caption = "Shipping packages", Category = NavigationNames.ModuleName, ViewModel = shippingPackageSettingsViewModel });
 			}
 			if (authContext.CheckPermission(PredefinedPermissions.SettingsJurisdiction))
 			{
-				SubItems.Add(new ItemTypeHomeTab { Caption = "Jurisdictions".Localize(), ViewModel = jurisdictionSettingsVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("jurisdictionType", JurisdictionTypes.Shipping)) });
+                SubItems.Add(new ItemTypeHomeTab { Caption = "Jurisdictions", Category = NavigationNames.ModuleName, ViewModel = jurisdictionSettingsVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("jurisdictionType", JurisdictionTypes.Shipping)) });
 			}
 			if (authContext.CheckPermission(PredefinedPermissions.SettingsJurisdictionGroups))
 			{
-				SubItems.Add(new ItemTypeHomeTab { Caption = "Jurisdiction groups".Localize(), ViewModel = jGroupVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("jurisdictionType", JurisdictionTypes.Shipping)) });
+                SubItems.Add(new ItemTypeHomeTab { Caption = "Jurisdiction groups", Category = NavigationNames.ModuleName, ViewModel = jGroupVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("jurisdictionType", JurisdictionTypes.Shipping)) });
 			}
 			CurrentTab = SubItems[0];
 		}

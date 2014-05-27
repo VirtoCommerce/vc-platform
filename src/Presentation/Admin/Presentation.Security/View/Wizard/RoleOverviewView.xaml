@@ -75,7 +75,7 @@
 
                                 <DataTemplate x:Key="PermissionViewModelDataTemplate" DataType="{x:Type helpers:PermissionViewModel}">
                                     <Border HorizontalAlignment="Stretch" ToolTip="{Binding Path=InnerItem.Name}" Margin="-15,5,0,5">
-                                        <TextBlock Text="{Binding Path=InnerItem.Name}" Style="{StaticResource Virto_TextBlock_TreeNode_Style}"
+                                        <TextBlock Text="{Binding Path=InnerItem.Name, Converter={x:Static LocalizingConverter.Current}, ConverterParameter={x:Static res:NavigationNames.ModuleName}}" Style="{StaticResource Virto_TextBlock_TreeNode_Style}"
                                              Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type TreeViewItem}}}" />
                                     </Border>
                                 </DataTemplate>
@@ -87,7 +87,7 @@
                                         <CheckBox.Template>
                                             <ControlTemplate>
                                                 <DockPanel HorizontalAlignment="Stretch" Margin="-10,5,0,5">
-                                                    <TextBlock Text="{Binding InnerItem.DisplayName, Mode=OneWay}" Style="{StaticResource Virto_TextBlock_RootTreeNode_Style}" />
+                                                    <TextBlock Text="{Binding InnerItem.DisplayName, Converter={x:Static LocalizingConverter.Current}, ConverterParameter={x:Static res:NavigationNames.ModuleName}}" Style="{StaticResource Virto_TextBlock_RootTreeNode_Style}" />
                                                 </DockPanel>
                                             </ControlTemplate>
                                         </CheckBox.Template>
@@ -135,7 +135,7 @@
 
                                 <DataTemplate x:Key="PermissionViewModelDataTemplate" DataType="{x:Type helpers:PermissionViewModel}">
                                     <Border HorizontalAlignment="Stretch" ToolTip="{Binding Path=InnerItem.Name}" Margin="-15,5,0,5">
-                                        <TextBlock Text="{Binding Path=InnerItem.Name}" Style="{StaticResource Virto_TextBlock_TreeNode_Style}"
+                                        <TextBlock Text="{Binding Path=InnerItem.Name, Converter={x:Static LocalizingConverter.Current}, ConverterParameter={x:Static res:NavigationNames.ModuleName}}" Style="{StaticResource Virto_TextBlock_TreeNode_Style}"
                                              Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type TreeViewItem}}}" />
                                     </Border>
                                 </DataTemplate>
@@ -147,7 +147,7 @@
                                         <CheckBox.Template>
                                             <ControlTemplate>
                                                 <DockPanel HorizontalAlignment="Stretch" Margin="-10,5,0,5">
-                                                    <TextBlock Text="{Binding InnerItem.DisplayName, Mode=OneWay}" Style="{StaticResource Virto_TextBlock_RootTreeNode_Style}" />
+                                                    <TextBlock Text="{Binding InnerItem.DisplayName, Converter={x:Static LocalizingConverter.Current}, ConverterParameter={x:Static res:NavigationNames.ModuleName}}" Style="{StaticResource Virto_TextBlock_RootTreeNode_Style}" />
                                                 </DockPanel>
                                             </ControlTemplate>
                                         </CheckBox.Template>

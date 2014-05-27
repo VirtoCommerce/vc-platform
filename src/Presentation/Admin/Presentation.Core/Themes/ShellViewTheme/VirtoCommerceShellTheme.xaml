@@ -349,7 +349,7 @@
 						<ColumnDefinition Width="Auto"/>
 					</Grid.ColumnDefinitions>
 
-					<TextBlock Grid.Column="0" Text="{Binding Caption}" Margin="5,0,0,5" Foreground="{StaticResource Virto_MainMenu_MenuItem_Caption_Foreground}"/>
+                    <TextBlock Grid.Column="0" Text="{LocBinding CategoryBinding={Binding Category}, StringFormat=Caption}" Margin="5,0,0,5" Foreground="{StaticResource Virto_MainMenu_MenuItem_Caption_Foreground}"/>
 				</Grid>
 			</Grid>
 		</Border>

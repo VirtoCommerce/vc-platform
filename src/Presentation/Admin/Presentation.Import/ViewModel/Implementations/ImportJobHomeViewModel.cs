@@ -67,7 +67,7 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 			AvailableImporters = (ImportEntityType[]) Enum.GetValues(typeof(ImportEntityType));
 
 			InitCommands();
-			ViewTitle = new ViewTitleBase() { Title = "Catalogs".Localize(), SubTitle = "MERCHANDISE MANAGEMENT".Localize() };
+            ViewTitle = new ViewTitleBase() { Title = "Catalogs", SubTitle = "MERCHANDISE MANAGEMENT".Localize() };
 		}
 
 		#region ViewModelHomeEditableBase

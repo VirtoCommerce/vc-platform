@@ -55,7 +55,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Pricelists.Implementa
 		{
 			ViewTitle = new ViewTitleBase()
 			{
-				Title = "Price List".Localize(),
+                Title = "Price List",
 				SubTitle = (item != null && !string.IsNullOrEmpty(item.Name)) ? item.Name.ToUpper(CultureInfo.InvariantCulture) : ""
 			};
 			_repositoryFactory = repositoryFactory;

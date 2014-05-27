@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Practices.Prism.Commands;
-using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Foundation.Customers.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
@@ -68,7 +68,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
             CaseFiltersInit();
             PopulateTiles();
 
-            ViewTitle = new ViewTitleBase() { Title = "Customers".Localize(), SubTitle = "Customer Service".Localize() };
+            ViewTitle = new ViewTitleBase() { Title = "Customers", SubTitle = "Customer Service".Localize() };
             SendEventToShell();
             UpdateActivityTileOnShell();
         }
