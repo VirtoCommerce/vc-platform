@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Runtime.Serialization;
+using System.Text;
+using VirtoCommerce.Foundation.Catalogs.Search;
 using VirtoCommerce.Foundation.Search.Schemas;
 
 namespace VirtoCommerce.Foundation.Search
 {
-    using VirtoCommerce.Foundation.Catalogs.Search;
-    using VirtoCommerce.Foundation.Frameworks.Extensions;
 
     [DataContract]
     [KnownType(typeof(AttributeFilter))]
@@ -55,16 +54,16 @@ namespace VirtoCommerce.Foundation.Search
             {
                 var key = new StringBuilder();
 
-                key.Append("_dc:" + this.DocumentType);
-                key.Append("_st:" + this.StartingRecord.ToString());
-                key.Append("_en:" + this.RecordsToRetrieve.ToString());
-                key.Append("_lc:" + this.Locale);
-                key.Append("_cr:" + this.Currency);
+                key.Append("_dc:" + DocumentType);
+                key.Append("_st:" + StartingRecord);
+                key.Append("_en:" + RecordsToRetrieve);
+                key.Append("_lc:" + Locale);
+                key.Append("_cr:" + Currency);
                 if (Sort != null)
-                    key.Append("_st:" + this.Sort.ToString());
+                    key.Append("_st:" + Sort);
 
                 // Add active fields
-                foreach (var field in this.Filters)
+                foreach (var field in Filters)
                 {
                     key.Append("_f:" + field.CacheKey);
                 }
@@ -73,25 +72,14 @@ namespace VirtoCommerce.Foundation.Search
             }
         }
 
-        int _StartingRecord = 0;
         /// <summary>
         /// Gets or sets the starting record.
         /// </summary>
         /// <value>The starting record.</value>
         [DataMember]
-        public virtual int StartingRecord
-        {
-            get
-            {
-                return _StartingRecord;
-            }
-            set
-            {
-                _StartingRecord = value;
-            }
-        }
+        public virtual int StartingRecord { get; set; }
 
-        int _RecordsToRetrieve = 50;
+        int _recordsToRetrieve = 50;
         /// <summary>
         /// Gets or sets the records to retrieve.
         /// </summary>
@@ -101,11 +89,11 @@ namespace VirtoCommerce.Foundation.Search
         {
             get
             {
-                return _RecordsToRetrieve;
+                return _recordsToRetrieve;
             }
             set
             {
-                _RecordsToRetrieve = value;
+                _recordsToRetrieve = value;
             }
         }
 
@@ -145,20 +133,20 @@ namespace VirtoCommerce.Foundation.Search
         }
 
         [DataMember]
-        List<ISearchFilter> _Filters = new List<ISearchFilter>();
+        List<ISearchFilter> _filters = new List<ISearchFilter>();
 
         public virtual ISearchFilter[] Filters
         {
-            get { return _Filters.ToArray(); }
+            get { return _filters.ToArray(); }
         }
 
         public virtual void Add(ISearchFilter filter)
         {
-            _Filters.Add(filter);
+            _filters.Add(filter);
         }
 
         [DataMember]
-        List<ISearchFilter> _AppliedFilters = new List<ISearchFilter>();
+        List<ISearchFilter> _appliedFilters = new List<ISearchFilter>();
         public virtual ISearchFilterValue[] CurrentFilterValues
         {
             get
@@ -169,20 +157,20 @@ namespace VirtoCommerce.Foundation.Search
 
         public virtual ISearchFilter[] CurrentFilters
         {
-            get { return _AppliedFilters.ToArray(); }
+            get { return _appliedFilters.ToArray(); }
         }
 
         public virtual string[] CurrentFilterFields
         {
-            get { return (from f in _AppliedFilters.ToArray() select f.Key).ToArray(); }
+            get { return (from f in _appliedFilters.ToArray() select f.Key).ToArray(); }
         }
 
         public virtual void Apply(ISearchFilter filter)
         {
-            _AppliedFilters.Add(filter);
+            _appliedFilters.Add(filter);
         }
 
-        public SearchCriteriaBase(string documentType)
+        protected SearchCriteriaBase(string documentType)
         {
             _documentType = documentType;
         }

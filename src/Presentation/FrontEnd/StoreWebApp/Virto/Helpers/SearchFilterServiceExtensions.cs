@@ -1,29 +1,23 @@
-﻿using System;
+﻿using Omu.ValueInjecter;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using VirtoCommerce.Client;
+using VirtoCommerce.Client.Extensions;
+using VirtoCommerce.Foundation.Catalogs.Search;
 using VirtoCommerce.Foundation.Search;
 using VirtoCommerce.Foundation.Search.Facets;
 using VirtoCommerce.Foundation.Search.Schemas;
-using VirtoCommerce.Client.Globalization;
-using VirtoCommerce.Web.Client.Helpers;
+using VirtoCommerce.Web.Client.Extensions.Filters;
 using VirtoCommerce.Web.Models;
 
 namespace VirtoCommerce.Web.Virto.Helpers
 {
-    using Omu.ValueInjecter;
-
-    using VirtoCommerce.Client;
-    using VirtoCommerce.Client.Extensions;
-    using VirtoCommerce.Foundation.Catalogs.Search;
-    using VirtoCommerce.Foundation.Frameworks.Extensions;
-    using VirtoCommerce.Web.Client.Extensions;
-    using VirtoCommerce.Web.Client.Extensions.Filters;
-    using VirtoCommerce.Web.Client.Services.Filters;
 
     /// <summary>
     /// Class SearchHelperExtensions.
     /// </summary>
-    public static class SearchHelperExtensions
+    public static class SearchFilterServiceExtensions
     {
         /// <summary>
         /// Converts the specified filter to filter model.
@@ -147,7 +141,7 @@ namespace VirtoCommerce.Web.Virto.Helpers
             return new FilterModel
             {
                 Key = @group.FieldName,
-                Name = GetDescriptionFromFilter(helper, @group.FieldName),
+                Name = GetDescriptionFromFilter(@group.FieldName),
                 Facets = @group.Facets.Select(x => Convert(helper, x)).ToArray()
             };
         }
@@ -222,12 +216,11 @@ namespace VirtoCommerce.Web.Virto.Helpers
         /// <summary>
         /// Gets the description from filter.
         /// </summary>
-        /// <param name="helper">The helper.</param>
         /// <param name="key">The key of the group.</param>
         /// <returns>
         /// System.String.
         /// </returns>
-        private static string GetDescriptionFromFilter(ISearchFilterService helper, string key)
+        private static string GetDescriptionFromFilter(string key)
         {
             if (key.Equals("__outline")) return "Subcategory";
 

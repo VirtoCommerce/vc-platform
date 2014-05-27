@@ -159,6 +159,15 @@
         VirtoCart.updateCartOptions();
         VirtoCommerce.initSliders();
         $('.slider-products').virtoSlider();
+        
+        //Demo notice
+        if (VirtoCommerce.getCookie("vcf.hideDemoNotice") != "true") {
+            $('.demo-notice').show();
+        }
+        $('.demo-notice').on('click', function () {
+            $(this).fadeOut();
+            VirtoCommerce.setCookie("vcf.hideDemoNotice", true, 7);
+        });
         //$(document).ajaxError(
         //    function myErrorHandler(event, xhr, ajaxOptions, thrownError) {
         //    alert("There was an ajax error!");
