@@ -7,6 +7,7 @@ using VirtoCommerce.Foundation.Frameworks;
 using System.Data.Services.Common;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using VirtoCommerce.Foundation.Frameworks.Attributes;
 
 namespace VirtoCommerce.Foundation.Catalogs.Model
 {
@@ -130,6 +131,8 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 		}
 
 		[DataMember]
+		[Parent]
+		[ForeignKey("ItemId")]
 		public Item CatalogItem { get; set; }
 		#endregion
 	}
