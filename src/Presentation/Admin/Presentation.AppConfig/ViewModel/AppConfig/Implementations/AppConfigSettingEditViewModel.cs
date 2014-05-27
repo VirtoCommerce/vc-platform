@@ -51,7 +51,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.AppConfig.Implement
             _repositoryFactory = repositoryFactory;
             _navManager = navManager;
             _parent = parent;
-            ViewTitle = new ViewTitleBase() { Title = "Setting".Localize(), SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory) };
+            ViewTitle = new ViewTitleBase() { Title = "Setting", SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory) };
             OpenItemCommand = new DelegateCommand(() => _navManager.Navigate(NavigationData));
             CommandInit();
         }

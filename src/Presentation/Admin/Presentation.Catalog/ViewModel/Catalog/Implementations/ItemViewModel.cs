@@ -83,7 +83,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			_appConfigRepositoryFactory = appConfigRepositoryFactory;
 
 			_navManager = navManager;
-			ViewTitle = new ViewTitleBase { Title = ItemTypeTitle, SubTitle = item.Name.ToUpper() };
+            ViewTitle = new ViewTitleBase { Title = ItemTypeTitle, SubTitle = item.Name.ToUpper() };
 
 			OpenItemCommand = new DelegateCommand(() =>
 			{

@@ -79,15 +79,17 @@ namespace VirtoCommerce.ManagementClient.Order
 				navigationManager.RegisterNavigationItem(homeNavItem);
 
 				//Register menu view
-				var menuNavItem = new NavigationMenuItem(NavigationNames.MenuName);
-				menuNavItem.NavigateCommand =
-					new DelegateCommand<NavigationItem>((x) => { navigationManager.Navigate(homeNavItem); });
-				menuNavItem.Caption = "Orders".Localize();
-				menuNavItem.ImageResourceKey = "Icon_Module_Orders";
-				menuNavItem.ItemBackground = Colors.OrangeRed;
-				menuNavItem.Order = 51;
+			    var menuNavItem = new NavigationMenuItem(NavigationNames.MenuName)
+			    {
+			        NavigateCommand = new DelegateCommand<NavigationItem>((x) => { navigationManager.Navigate(homeNavItem); }),
+                    Caption = "Orders",
+                    Category = NavigationNames.ModuleName,
+			        ImageResourceKey = "Icon_Module_Orders",
+			        ItemBackground = Colors.OrangeRed,
+			        Order = 51
+			    };
 
-				navigationManager.RegisterNavigationItem(menuNavItem);
+			    navigationManager.RegisterNavigationItem(menuNavItem);
 			}
 		}
 
@@ -226,7 +228,7 @@ namespace VirtoCommerce.ManagementClient.Order
 
 			if (_authContext.CheckPermission(PredefinedPermissions.SettingsPayment_Methods))
 			{
-				ConfigurationManager.Settings.Add(new ConfigurationSection { IdTab = NavigationNames.PaymentsSettingsHomeName, Caption = "Payments".Localize(), Order = 50, ViewModel = _container.Resolve<IPaymentMethodsSettingsViewModel>() });
+                ConfigurationManager.Settings.Add(new ConfigurationSection { IdTab = NavigationNames.PaymentsSettingsHomeName, Caption = "Payments", Category = NavigationNames.ModuleName, Order = 50, ViewModel = _container.Resolve<IPaymentMethodsSettingsViewModel>() });
 			}
 			if (_authContext.CheckPermission(PredefinedPermissions.SettingsShippingOptions) ||
 				_authContext.CheckPermission(PredefinedPermissions.SettingsShippingMethods) ||
@@ -234,7 +236,7 @@ namespace VirtoCommerce.ManagementClient.Order
 				_authContext.CheckPermission(PredefinedPermissions.SettingsJurisdiction) ||
 				_authContext.CheckPermission(PredefinedPermissions.SettingsJurisdictionGroups))
 			{
-				ConfigurationManager.Settings.Add(new ConfigurationSection { IdTab = NavigationNames.ShippingSettingsHomeName, Caption = "Shipping".Localize(), Order = 40, ViewModel = _container.Resolve<IShippingMainSettingsViewModel>() });
+                ConfigurationManager.Settings.Add(new ConfigurationSection { IdTab = NavigationNames.ShippingSettingsHomeName, Caption = "Shipping", Category = NavigationNames.ModuleName, Order = 40, ViewModel = _container.Resolve<IShippingMainSettingsViewModel>() });
 			}
 			if (_authContext.CheckPermission(PredefinedPermissions.SettingsTaxCategories) ||
 				_authContext.CheckPermission(PredefinedPermissions.SettingsTaxImport) ||
@@ -242,7 +244,7 @@ namespace VirtoCommerce.ManagementClient.Order
 				_authContext.CheckPermission(PredefinedPermissions.SettingsJurisdiction) ||
 				_authContext.CheckPermission(PredefinedPermissions.SettingsJurisdictionGroups))
 			{
-				ConfigurationManager.Settings.Add(new ConfigurationSection { IdTab = NavigationNames.TaxesSettingsHomeName, Caption = "Taxes".Localize(), Order = 30, ViewModel = _container.Resolve<ITaxesMainSettingsViewModel>() });
+                ConfigurationManager.Settings.Add(new ConfigurationSection { IdTab = NavigationNames.TaxesSettingsHomeName, Caption = "Taxes", Category = NavigationNames.ModuleName, Order = 30, ViewModel = _container.Resolve<ITaxesMainSettingsViewModel>() });
 			}
 		}
 	}

@@ -42,7 +42,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Jurisdictions.
 			_navManager = navManager;
 			_parent = parent;
 			_jurisdictionType = jurisdictionType;
-			ViewTitle = new ViewTitleBase { SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory), Title = "Jurisdiction".Localize() };
+            ViewTitle = new ViewTitleBase { SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory), Title = "Jurisdiction" };
 
 			OpenItemCommand = new DelegateCommand(() => _navManager.Navigate(NavigationData));
 

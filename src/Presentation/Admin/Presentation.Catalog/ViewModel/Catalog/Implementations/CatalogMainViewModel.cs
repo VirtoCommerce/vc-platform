@@ -18,15 +18,15 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			SubItems = new List<ItemTypeHomeTab>();
 			var parameters = new KeyValuePair<string, object>("parentViewModel", this);
 
-			SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.HomeName, Caption = "Catalog".Localize(), ViewModel = catalogHomeVmFactory.GetViewModelInstance(parameters) });
+            SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.HomeName, Caption = "Catalog", Category = NavigationNames.ModuleName, ViewModel = catalogHomeVmFactory.GetViewModelInstance(parameters) });
 			if (authContext.CheckPermission(PredefinedPermissions.CatalogCatalog_Import_JobsManage) ||
 				authContext.CheckPermission(PredefinedPermissions.CatalogCatalog_Import_JobsRun))
 			{
-				SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.HomeName, Caption = "Import".Localize(), ViewModel = importVmFactory.GetViewModelInstance(parameters) });
+                SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.HomeName, Caption = "Import", Category = NavigationNames.ModuleName, ViewModel = importVmFactory.GetViewModelInstance(parameters) });
 			}
 			if (authContext.CheckPermission(PredefinedPermissions.CatalogCustomerReviewsManage))
 			{
-				SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.HomeNameReviews, Caption = "Reviews".Localize(), ViewModel = reviewsHomeViewModel });
+                SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.HomeNameReviews, Caption = "Reviews", Category = NavigationNames.ModuleName, ViewModel = reviewsHomeViewModel });
 			}
 			CurrentTab = SubItems[0];
 		}

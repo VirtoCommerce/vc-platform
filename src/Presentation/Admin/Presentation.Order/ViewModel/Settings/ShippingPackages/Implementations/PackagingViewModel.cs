@@ -31,7 +31,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.ShippingPackag
 			INavigationManager navManager, Packaging item)
 			: base(entityFactory, item, false)
 		{
-			ViewTitle = new ViewTitleBase() { SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory), Title = "Shipping package".Localize() };
+            ViewTitle = new ViewTitleBase() { SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory), Title = "Shipping package" };
 			_repositoryFactory = repositoryFactory;
 			_navManager = navManager;
 			_parent = parent;

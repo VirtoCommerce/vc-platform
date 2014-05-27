@@ -45,7 +45,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.Rmas.Implementati
 
 			ViewTitle = new ViewTitleBase
 			{
-				Title = "Rma request".Localize(),
+                Title = "Rma request",
 				SubTitle = item != null
 				? (string.IsNullOrEmpty(item.AuthorizationCode) ? item.Order.TrackingNumber : item.AuthorizationCode)
 				: ""

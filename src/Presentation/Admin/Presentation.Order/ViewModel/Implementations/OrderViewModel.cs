@@ -103,7 +103,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 
 			ViewTitle = new ViewTitleBase()
 			{
-				Title = "Orders".Localize(),
+                Title = "Orders",
 				SubTitle = (item != null && string.IsNullOrEmpty(item.CustomerName)) ? item.CustomerName.ToUpper(CultureInfo.InvariantCulture) : null
 			};
 

@@ -46,7 +46,8 @@ namespace VirtoCommerce.ManagementClient.Configuration
 					{
 						NavigateCommand =
 							new DelegateCommand<NavigationItem>((x) => { navigationManager.Navigate(homeNavItem); }),
-						Caption = "Settings".Localize(),
+                        Caption = "Settings",
+                        Category = NavigationNames.ModuleName,
 						ItemBackground = Color.FromRgb(132, 94, 178),
 						ImageResourceKey = "Icon_Module_Settings",
 						Order = 110
@@ -80,7 +81,7 @@ namespace VirtoCommerce.ManagementClient.Configuration
 			//ConfigurationManager.Settings.Add(new ConfigurationSection { Caption = "General", Order = 80 });
 			if (_authContext.CheckPermission(PredefinedPermissions.SettingsSearch))
 			{
-				ConfigurationManager.Settings.Add(new ConfigurationSection { Caption = "Search".Localize(), Order = 20, ViewModel = _container.Resolve<IBuildSettingsViewModel>() });
+                ConfigurationManager.Settings.Add(new ConfigurationSection { Caption = "Search", Category = NavigationNames.ModuleName, Order = 20, ViewModel = _container.Resolve<IBuildSettingsViewModel>() });
 			}
 		}
 

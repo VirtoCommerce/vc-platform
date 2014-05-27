@@ -56,7 +56,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.Taxes.Implemen
 			Tax item)
 			: base(entityFactory, item, false)
 		{
-			ViewTitle = new ViewTitleBase { SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory), Title = "Tax".Localize() };
+            ViewTitle = new ViewTitleBase { SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory), Title = "Tax" };
 			_repositoryFactory = repositoryFactory;
 			_catalogRepositoryFactory = catalogRepositoryFactory;
 			_navManager = navManager;

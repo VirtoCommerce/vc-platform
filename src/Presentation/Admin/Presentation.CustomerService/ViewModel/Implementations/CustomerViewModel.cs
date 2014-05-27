@@ -228,9 +228,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 					IsPhoneInEditMode = false;
 				}
 			}
-
 		}
-
 
 		private void SaveNewPhone()
 		{
@@ -284,7 +282,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 				CommonConfirmRequest.Raise(
 				new ConditionalConfirmation
 				{
-					Title = "Remove phone number?",
+					Title = "Delete confirmation".Localize(null, LocalizationScope.DefaultCategory),
 					Content = "Are you sure you want to delete the phone number?".Localize()
 				},
 				(x) =>

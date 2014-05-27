@@ -44,7 +44,7 @@ namespace VirtoCommerce.ManagementClient.Marketing.ViewModel.Implementations
 
 			ViewTitle = new ViewTitleBase
 			{
-				Title = "Promotion".Localize(),
+                Title = "Promotion",
 				SubTitle = (item != null && !string.IsNullOrEmpty(item.Name)) ? item.Name.ToUpper(CultureInfo.InvariantCulture) : ""
 			};
 		}

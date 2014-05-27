@@ -91,14 +91,16 @@ namespace VirtoCommerce.ManagementClient.Security
 
 				_navigationManager.RegisterNavigationItem(homeNavItem);
 
-				var menuNavItem = new NavigationMenuItem(NavigationNames.MenuName);
-				menuNavItem.NavigateCommand =
-					new DelegateCommand<NavigationItem>((x) => { _navigationManager.Navigate(homeNavItem); });
-				menuNavItem.Caption = "Users".Localize();
-				menuNavItem.ImageResourceKey = "Icon_Module_Security";
-				menuNavItem.ItemBackground = Color.FromRgb(64, 159, 216);
-				menuNavItem.Order = 101;
-				_navigationManager.RegisterNavigationItem(menuNavItem);
+			    var menuNavItem = new NavigationMenuItem(NavigationNames.MenuName)
+			    {
+			        NavigateCommand = new DelegateCommand<NavigationItem>((x) => { _navigationManager.Navigate(homeNavItem); }),
+                    Caption = "Users",
+                    Category = NavigationNames.ModuleName,
+			        ImageResourceKey = "Icon_Module_Security",
+			        ItemBackground = Color.FromRgb(64, 159, 216),
+			        Order = 101
+			    };
+			    _navigationManager.RegisterNavigationItem(menuNavItem);
 			}
 		}
 

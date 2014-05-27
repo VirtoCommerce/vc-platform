@@ -192,7 +192,7 @@ namespace VirtoCommerce.ManagementClient.Import.ViewModel.Implementations
 
 			ViewTitle = new ViewTitleBase()
 				{
-					Title = "Import job".Localize(),
+                    Title = "Import job",
 					SubTitle = (item != null && !string.IsNullOrEmpty(item.Name)) ? item.Name.ToUpper(CultureInfo.InvariantCulture) : ""
 
 				};

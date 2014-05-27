@@ -40,7 +40,7 @@ namespace VirtoCommerce.ManagementClient.Reviews.ViewModel.Implementations
 
 			ViewTitle = new ViewTitleBase()
 				{
-                    Title = "Reviews".Localize(),
+                    Title = "Reviews",
 					SubTitle = (item != null && !string.IsNullOrEmpty(item.Title)) ? item.Title.ToUpper(CultureInfo.InvariantCulture) : ""
 				};
 		}

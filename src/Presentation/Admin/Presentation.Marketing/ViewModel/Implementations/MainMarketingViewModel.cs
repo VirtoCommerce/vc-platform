@@ -14,7 +14,7 @@ namespace VirtoCommerce.ManagementClient.Marketing.ViewModel.Implementations
 		{
 			ViewTitle = new ViewTitleBase
 			{
-				Title = "Marketing".Localize(),
+                Title = "Marketing",
 				SubTitle = "MARKETING SERVICE".Localize()
 			};
 
@@ -22,15 +22,15 @@ namespace VirtoCommerce.ManagementClient.Marketing.ViewModel.Implementations
 
 			if (authContext.CheckPermission(PredefinedPermissions.MarketingPromotionsManage))
 			{
-				SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.HomeName, Caption = "Promotions".Localize(), ViewModel = marketingVm });
+                SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.HomeName, Caption = "Promotions", Category = NavigationNames.ModuleName, ViewModel = marketingVm });
 			}
 			if (authContext.CheckPermission(PredefinedPermissions.MarketingDynamic_ContentManage))
 			{
-				SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.HomeNameDynamicContent, Caption = "Dynamic content".Localize(), Order = 10, ViewModel = contentVm });
+                SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.HomeNameDynamicContent, Caption = "Dynamic content", Category = NavigationNames.ModuleName, Order = 10, ViewModel = contentVm });
 			}
 			if (authContext.CheckPermission(PredefinedPermissions.MarketingContent_PublishingManage))
 			{
-				SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.HomeNameContentPublishing, Caption = "Content publishing".Localize(), Order = 20, ViewModel = publishingVm });
+                SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.HomeNameContentPublishing, Caption = "Content publishing", Category = NavigationNames.ModuleName, Order = 20, ViewModel = publishingVm });
 			}
 			CurrentTab = SubItems[0];
 		}

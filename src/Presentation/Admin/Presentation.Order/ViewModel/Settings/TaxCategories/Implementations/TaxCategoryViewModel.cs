@@ -31,7 +31,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.TaxCategories.
 			INavigationManager navManager, TaxCategory item)
 			: base(entityFactory, item, false)
 		{
-			ViewTitle = new ViewTitleBase { SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory), Title = "Tax Category".Localize() };
+            ViewTitle = new ViewTitleBase { SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory), Title = "Tax Category" };
 			_repositoryFactory = repositoryFactory;
 			_parent = parent;
 			_navManager = navManager;

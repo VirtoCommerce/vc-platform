@@ -41,7 +41,7 @@
             <DataTemplate DataType="{x:Type presentationInfrastructure:ViewTitleBase}">
                 <DockPanel LastChildFill="False">
                     <TextBlock Text="{Binding SubTitle, Converter={StaticResource textCaseConverter}, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource Virto_Shell_TextBlock_SubTitle_Style}" DockPanel.Dock="Top" />
-                    <TextBlock Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource Virto_Shell_TextBlock_Title_Style}" DockPanel.Dock="Top" />
+                    <TextBlock Text="{Binding Title, Converter={x:Static LocalizingConverter.Current}}" Style="{StaticResource Virto_Shell_TextBlock_Title_Style}" DockPanel.Dock="Top" />
                 </DockPanel>
             </DataTemplate>
         </ResourceDictionary>

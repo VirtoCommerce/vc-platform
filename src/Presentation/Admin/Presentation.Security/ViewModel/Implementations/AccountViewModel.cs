@@ -58,7 +58,7 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 			_passwordVmFactory = passwordVmFactory;
 			ViewTitle = new ViewTitleBase()
 				{
-					Title = "Account".Localize(),
+                    Title = "Account",
 					SubTitle = (item != null && !string.IsNullOrEmpty(item.UserName)) ? item.UserName.ToUpper(CultureInfo.InvariantCulture) : ""
 				};
 

@@ -57,7 +57,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.ContentPublish
 
 			ViewTitle = new ViewTitleBase
 			{
-                Title = "Marketing".Localize(),
+                Title = "Marketing",
                 SubTitle = "CONTENT PUBLISHING".Localize()
 			};
 			PopulateTiles();

@@ -50,7 +50,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.DynamicContent
 
 			ViewTitle = new ViewTitleBase
 			{
-                Title = "Dynamic Content".Localize(),
+                Title = "Dynamic Content",
 				SubTitle = (item != null && !String.IsNullOrEmpty(item.Name)) ? item.Name.ToUpper(CultureInfo.InvariantCulture) : ""
 			};
 

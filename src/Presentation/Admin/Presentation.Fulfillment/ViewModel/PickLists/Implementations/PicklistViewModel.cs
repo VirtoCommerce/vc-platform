@@ -48,7 +48,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.PickLists.Impleme
 
 			ViewTitle = new ViewTitleBase
 				{
-					Title = "Picklist".Localize(),
+                    Title = "Picklist",
 					SubTitle = (item != null && item.Shipments != null)
 							? string.Format("Overall items {0}".Localize(), item.Shipments.Sum(x => x.ShipmentItems.Sum(y => y.Quantity))).ToUpper()
 							: ""

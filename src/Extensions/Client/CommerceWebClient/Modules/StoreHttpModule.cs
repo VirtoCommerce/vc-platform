@@ -6,13 +6,11 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Security;
-using Microsoft.Practices.ServiceLocation;
 using VirtoCommerce.Client;
 using VirtoCommerce.Client.Extensions;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Foundation.Stores.Model;
-using VirtoCommerce.Web.Client.Caching.Interfaces;
 using VirtoCommerce.Web.Client.Helpers;
 
 namespace VirtoCommerce.Web.Client.Modules
@@ -211,8 +209,6 @@ namespace VirtoCommerce.Web.Client.Modules
             //release sitemap on store change
             if (!string.Equals(currentCookieStore, session.StoreId))
             {
-                var cacheManager = ServiceLocator.Current.GetInstance<IReadWriteOutputCacheManager>();
-                cacheManager.RemoveItems("Store", "Menu");
                 MvcSiteMapProvider.SiteMaps.ReleaseSiteMap();
             }
 

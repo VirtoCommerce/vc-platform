@@ -16,7 +16,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseTempla
 		{
 			InnerItem = item;
 
-			ViewTitle = new ViewTitleBase() { Title = "Edit Info Value".Localize(), SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory) };
+            ViewTitle = new ViewTitleBase() { Title = "Edit Info Value", SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory) };
 
 			InitializePropertiesForViewing();
 		}
