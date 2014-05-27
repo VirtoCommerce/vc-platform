@@ -117,6 +117,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 		[DataMember]
 		[StringLength(128)]
 		[ForeignKey("CatalogItem")]
+		[Required]
 		public string ItemId
 		{
 			get
