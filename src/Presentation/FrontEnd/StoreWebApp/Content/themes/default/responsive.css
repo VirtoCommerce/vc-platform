@@ -20,8 +20,8 @@
         margin: 15px 0 15px 20px;
     }
 
-    .header .menu > li:nth-last-child(2),
-    .header .menu > li:nth-last-child(3) {
+    .header .menu > li:nth-child(3),
+    .header .menu > li:nth-child(4) {
         display: none;
     }
 
