@@ -68,7 +68,7 @@
              Width="360" DisplayMemberBinding="{Binding Data.Name}" />
         <GridViewColumn Header="{Loc 'Start Date'}" core_common:GridViewColumnResize.Width="4*" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
              Width="80" DisplayMemberBinding="{Binding Data.StartDate, StringFormat=d}" />
-        <GridViewColumn Header="{Loc 'SKU Code'}" core_common:GridViewColumnResize.Width="6*" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
+        <GridViewColumn Header="{Loc 'Item Code'}" core_common:GridViewColumnResize.Width="6*" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
              Width="100" DisplayMemberBinding="{Binding Data.Code}" />
     </GridView>
     <!-- Pricelist list Grid view -->

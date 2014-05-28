@@ -39,7 +39,7 @@
             </Style>
         </ResourceDictionary>
     </UserControl.Resources>
-	
+
     <Grid x:Name="LayoutRoot" d:DataContext="{d:DesignInstance implementations:SearchItemViewModel}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" MinWidth="300" />
@@ -60,23 +60,23 @@
             <StackPanel DockPanel.Dock="Top">
                 <TextBlock Text="{Loc 'Item Name'}" />
                 <core_controls:WatermarkedTextBox Text="{Binding SearchName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <TextBlock Text="{Loc 'SKU Code'}" />
+                <TextBlock Text="{Loc 'Item Code'}" />
                 <core_controls:WatermarkedTextBox Text="{Binding SearchCode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
-                <TextBlock Text="{Loc 'Item type'}" />
+                <TextBlock Text="{Loc 'Item Type'}" />
                 <core_controls:NullItemSelectorAdapter ItemsSource="{Binding SearchFilterItemTypes}" Width="Auto">
                     <core_controls:NullItemSelectorAdapter.NullItems>
                         <collections:ArrayList>
-                            <sys:String>All types</sys:String>
+                            <sys:String>All Types</sys:String>
                         </collections:ArrayList>
                     </core_controls:NullItemSelectorAdapter.NullItems>
                     <ComboBox SelectedValue="{Binding SearchFilterItemType, Mode=TwoWay}" IsEnabled="{Binding CanChangeSearchItemType}"
                          Height="26" Width="Auto">
-						<FrameworkElement.Resources>
-							<DataTemplate DataType="{x:Type core_common:KeyValuePair_string_string}" >
-								<ContentPresenter Content="{Binding Value, Converter={x:Static LocalizingConverter.Current}, ConverterParameter={x:Static res:NavigationNames.ModuleName}}" ContentTemplate="{StaticResource Virto_SearchData_ComboBox_DataTemplate}" />
-							</DataTemplate>
-						</FrameworkElement.Resources>
-						<i:Interaction.Triggers>
+                        <FrameworkElement.Resources>
+                            <DataTemplate DataType="{x:Type core_common:KeyValuePair_string_string}" >
+                                <ContentPresenter Content="{Binding Value, Converter={x:Static LocalizingConverter.Current}, ConverterParameter={x:Static res:NavigationNames.ModuleName}}" ContentTemplate="{StaticResource Virto_SearchData_ComboBox_DataTemplate}" />
+                            </DataTemplate>
+                        </FrameworkElement.Resources>
+                        <i:Interaction.Triggers>
                             <i:EventTrigger EventName="SelectionChanged">
                                 <i:InvokeCommandAction Command="{Binding SearchCommand}" />
                             </i:EventTrigger>
