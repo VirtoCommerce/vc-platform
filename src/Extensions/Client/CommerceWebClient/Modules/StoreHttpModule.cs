@@ -204,14 +204,6 @@ namespace VirtoCommerce.Web.Client.Modules
             session.StoreName = store.Name;
             session.CatalogId = store.Catalog;
 
-            var currentCookieStore = StoreHelper.GetCookieValue(StoreCookie, false);
-
-            //release sitemap on store change
-            if (!string.Equals(currentCookieStore, session.StoreId))
-            {
-                MvcSiteMapProvider.SiteMaps.ReleaseSiteMap();
-            }
-
             // now save store in the cookie
             StoreHelper.SetCookie(StoreCookie, session.StoreId, DateTime.Now.AddMonths(1), false);
             StoreHelper.SetCookie(CurrencyCookie, currency, DateTime.Now.AddMonths(1));

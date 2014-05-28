@@ -420,6 +420,7 @@
     <Compile Include="Virto\Helpers\MarketingHelper.cs" />
     <Compile Include="Virto\Helpers\MVC\SiteMap\BreadcrumbNodeProvider.cs" />
     <Compile Include="Virto\Helpers\MVC\SiteMap\CatalogNodeProvider.cs" />
+    <Compile Include="Virto\Helpers\MVC\SiteMap\SiteMapStoreCacheKeyGenerator.cs" />
     <Compile Include="Virto\Helpers\MVC\VirtoDataAnnotationsModelValidatorProvider.cs" />
     <Compile Include="Virto\Helpers\Payments\CreditCardOption.cs" />
     <Compile Include="Virto\Helpers\Payments\IPaymentOption.cs" />

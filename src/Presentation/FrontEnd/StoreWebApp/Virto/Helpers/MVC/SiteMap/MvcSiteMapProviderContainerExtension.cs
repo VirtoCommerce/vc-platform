@@ -40,7 +40,8 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC.SiteMap
             var clientAssembly = typeof (NamedSiteMapNodeVisibilityProvider).Assembly;
             var allAssemblies = new[] { currentAssembly, siteMapProviderAssembly, clientAssembly };
             var excludeTypes = new[] {
-                typeof(IRouteValueDictionaryFactory)
+                typeof(IRouteValueDictionaryFactory),
+                typeof(ISiteMapCacheKeyGenerator),
             };
             var multipleImplementationTypes = new[] {
                 typeof(ISiteMapNodeUrlResolver),
@@ -74,6 +75,10 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC.SiteMap
                 new ResolvedParameter<IRequestCache>(),
                 new ResolvedParameter<IReservedAttributeNameProvider>(),
                 new ResolvedParameter<IJsonToDictionaryDeserializer>()));
+
+//Register custom sitemap cache key generator
+            Container.RegisterType<ISiteMapCacheKeyGenerator, SiteMapStoreCacheKeyGenerator>(new InjectionConstructor(
+                new ResolvedParameter<IMvcContextFactory>()));
 
 // Url Resolvers
             Container.RegisterType<ISiteMapNodeUrlResolverStrategy, SiteMapNodeUrlResolverStrategy>(new InjectionConstructor(
