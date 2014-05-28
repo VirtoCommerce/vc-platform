@@ -26,7 +26,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Wizard.Implementati
     public class EmailTemplateOverviewStepViewModel : EmailTemplateEditViewModel, IEmailTemplateOverviewStepViewModel
     {
 
-        public EmailTemplateOverviewStepViewModel(IRepositoryFactory<IAppConfigRepository> repositoryFactory, IAppConfigEntityFactory entityFactory, IViewModelsFactory<IEmailTemplateAddLanguagesViewModel> vmFactory, EmailTemplate item)
+        public EmailTemplateOverviewStepViewModel(IRepositoryFactory<IAppConfigRepository> repositoryFactory, IAppConfigEntityFactory entityFactory, IViewModelsFactory<IEmailTemplateAddLanguageViewModel> vmFactory, EmailTemplate item)
             : base(repositoryFactory, entityFactory, vmFactory, item)
         {
 
@@ -36,7 +36,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Wizard.Implementati
     public class EmailTemplateLanguagesStepViewModel:EmailTemplateEditViewModel, IEmailTemplateLanguagesStepViewModel
     {
 
-        public EmailTemplateLanguagesStepViewModel(IRepositoryFactory<IAppConfigRepository> repositoryFactory, IAppConfigEntityFactory entityFactory, IViewModelsFactory<IEmailTemplateAddLanguagesViewModel> vmFactory, EmailTemplate item)
+        public EmailTemplateLanguagesStepViewModel(IRepositoryFactory<IAppConfigRepository> repositoryFactory, IAppConfigEntityFactory entityFactory, IViewModelsFactory<IEmailTemplateAddLanguageViewModel> vmFactory, EmailTemplate item)
             : base(repositoryFactory, entityFactory, vmFactory, item)
         {
 

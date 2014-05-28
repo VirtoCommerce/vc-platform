@@ -98,7 +98,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig
             _container.RegisterType<IEmailTemplateOverviewStepViewModel, EmailTemplateOverviewStepViewModel>();
             _container.RegisterType<IEmailTemplateLanguagesStepViewModel, EmailTemplateLanguagesStepViewModel>();
 
-            _container.RegisterType<IEmailTemplateAddLanguagesViewModel, EmailTemplateAddLanguageViewModel>();
+            _container.RegisterType<IEmailTemplateAddLanguageViewModel, EmailTemplateAddLanguageViewModel>();
 
             //Localization
             _container.RegisterType<ILocalizationMainViewModel, LocalizationMainViewModel>();

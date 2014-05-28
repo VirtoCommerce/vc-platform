@@ -28,7 +28,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.EmailTemplates.Impl
 		#region Dependencies
 
 		private readonly IHomeSettingsViewModel _parent;
-		private readonly IViewModelsFactory<IEmailTemplateAddLanguagesViewModel> _vmFactory;
+		private readonly IViewModelsFactory<IEmailTemplateAddLanguageViewModel> _vmFactory;
 		private readonly INavigationManager _navManager;
 		private readonly IRepositoryFactory<IAppConfigRepository> _repositoryFactory;
 
@@ -37,7 +37,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.EmailTemplates.Impl
 		#region ctor
 
 		public EmailTemplateEditViewModel(IRepositoryFactory<IAppConfigRepository> repositoryFactory, IAppConfigEntityFactory entityFactory,
-			IViewModelsFactory<IEmailTemplateAddLanguagesViewModel> vmFactory, INavigationManager navManager, IHomeSettingsViewModel parent, EmailTemplate item)
+			IViewModelsFactory<IEmailTemplateAddLanguageViewModel> vmFactory, INavigationManager navManager, IHomeSettingsViewModel parent, EmailTemplate item)
 			: base(entityFactory, item, false)
 		{
 			_repositoryFactory = repositoryFactory;
@@ -49,7 +49,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.EmailTemplates.Impl
 			CommandInit();
 		}
 
-		protected EmailTemplateEditViewModel(IRepositoryFactory<IAppConfigRepository> repositoryFactory, IAppConfigEntityFactory entityFactory, IViewModelsFactory<IEmailTemplateAddLanguagesViewModel> vmFactory, EmailTemplate item)
+		protected EmailTemplateEditViewModel(IRepositoryFactory<IAppConfigRepository> repositoryFactory, IAppConfigEntityFactory entityFactory, IViewModelsFactory<IEmailTemplateAddLanguageViewModel> vmFactory, EmailTemplate item)
 			: base(entityFactory, item, true)
 		{
 			_repositoryFactory = repositoryFactory;
@@ -341,13 +341,13 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.EmailTemplates.Impl
 
 						if (operType == OperationType.Add)
 						{
-							var itemToAdd = (x.Content as IEmailTemplateAddLanguagesViewModel).InnerItem;
+							var itemToAdd = (x.Content as IEmailTemplateAddLanguageViewModel).InnerItem;
 
 							InnerItem.EmailTemplateLanguages.Add(itemToAdd);
 						}
 						else
 						{
-							var itemFromDialog = (x.Content as IEmailTemplateAddLanguagesViewModel).InnerItem;
+							var itemFromDialog = (x.Content as IEmailTemplateAddLanguageViewModel).InnerItem;
 
 							var sameItemFromInnerItem =
 								InnerItem.EmailTemplateLanguages.SingleOrDefault(

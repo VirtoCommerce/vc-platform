@@ -7,7 +7,7 @@ using VirtoCommerce.Foundation.AppConfig.Model;
 
 namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.EmailTemplates.Implementations
 {
-    public class EmailTemplateAddLanguageViewModel:ViewModelBase,IEmailTemplateAddLanguagesViewModel
+    public class EmailTemplateAddLanguageViewModel:ViewModelBase,IEmailTemplateAddLanguageViewModel
     {
         #region Fields
 
@@ -77,7 +77,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.EmailTemplates.Impl
 
         #endregion
 
-        #region IEmailTemplateAddLanguagesViewModel members
+        #region IEmailTemplateAddLanguageViewModel members
 
         private EmailTemplateLanguage _innerItem;
         public EmailTemplateLanguage InnerItem
