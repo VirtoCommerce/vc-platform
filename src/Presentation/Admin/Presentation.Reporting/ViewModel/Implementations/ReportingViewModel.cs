@@ -39,8 +39,8 @@ namespace VirtoCommerce.ManagementClient.Reporting.ViewModel.Implementations
             
             ViewTitle = new ViewTitleBase()
             {
-                Title = item.Name,
-                SubTitle = "REPORT"
+                SubTitle = item.Name,
+                Title = "REPORT"
             };
         }
 

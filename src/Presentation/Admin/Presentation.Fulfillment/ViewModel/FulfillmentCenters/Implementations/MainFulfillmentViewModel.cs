@@ -47,7 +47,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.FulfillmentCenter
 			IOrderService orderService,
 			IAuthenticationContext authContext)
 		{
-			ViewTitle = new ViewTitleBase { Title = "Fulfillment".Localize(), SubTitle = "FULFILLMENT SERVICE".Localize() };
+            ViewTitle = new ViewTitleBase { Title = "Fulfillment", SubTitle = "FULFILLMENT SERVICE".Localize() };
 			_inventoryHomeVm = inventoryVm;
 			_inventoryHomeVm.ParentViewModel = this;
 
@@ -200,15 +200,15 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.FulfillmentCenter
 			if (_authContext.CheckPermission(PredefinedPermissions.FulfillmentPicklistsManage) ||
 				_authContext.CheckPermission(PredefinedPermissions.FulfillmentInventoryReceive))
 			{
-				SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.HomeName, Caption = "Inventory".Localize(), Order = 10, ViewModel = _inventoryHomeVm });
+                SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.HomeName, Caption = "Inventory", Category = NavigationNames.ModuleName, Order = 10, ViewModel = _inventoryHomeVm });
 			}
 			if (_authContext.CheckPermission(PredefinedPermissions.FulfillmentPicklistsManage))
 			{
-				SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.PicklistHomeName, Caption = "Picklists".Localize(), Order = 20, ViewModel = _picklistHomeVm });
+                SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.PicklistHomeName, Caption = "Picklists", Category = NavigationNames.ModuleName, Order = 20, ViewModel = _picklistHomeVm });
 			}
 			if (_authContext.CheckPermission(PredefinedPermissions.FulfillmentReturnsManage))
 			{
-				SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.RmaHomeName, Caption = "Returns & Exchanges".Localize(), Order = 30, ViewModel = _rmaHomeVm });
+                SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.RmaHomeName, Caption = "Returns & Exchanges", Category = NavigationNames.ModuleName, Order = 30, ViewModel = _rmaHomeVm });
 			}
 			if (SubItems.Any())
 			{

@@ -41,7 +41,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.FulfillmentCenter
 			INavigationManager navManager, FulfillmentCenter item)
 			: base(entityFactory, item, false)
 		{
-			ViewTitle = new ViewTitleBase { SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory), Title = "Fulfillment center".Localize() };
+            ViewTitle = new ViewTitleBase { SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory), Title = "Fulfillment center" };
 			_repositoryFactory = repositoryFactory;
 			_countryRepositoryFactory = countryRepositoryFactory;
 			_navManager = navManager;

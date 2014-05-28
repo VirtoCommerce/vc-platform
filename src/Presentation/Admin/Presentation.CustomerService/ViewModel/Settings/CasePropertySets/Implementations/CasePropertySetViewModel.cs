@@ -38,8 +38,8 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseProper
 		{
 			ViewTitle = new ViewTitleBase()
 				{
-					SubTitle = "INFO".Localize(),
-					Title = (item != null && !string.IsNullOrEmpty(item.Name)) ? item.Name : ""
+                    Title = "INFO",
+                    SubTitle = (item != null && !string.IsNullOrEmpty(item.Name)) ? item.Name : ""
 				};
 			_casePropertyVmFactory = casePropertyVmFactory;
 			_repositoryFactory = repositoryFactory;

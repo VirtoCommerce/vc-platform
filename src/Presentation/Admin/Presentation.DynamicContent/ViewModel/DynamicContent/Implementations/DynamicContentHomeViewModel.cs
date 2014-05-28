@@ -70,7 +70,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.DynamicContent
 
             ViewTitle = new ViewTitleBase
             {
-                Title = "Marketing".Localize(),
+                Title = "Marketing",
                 SubTitle = "DYNAMIC CONTENT".Localize()
             };
             PopulateTiles();

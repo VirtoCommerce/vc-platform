@@ -37,7 +37,7 @@ namespace VirtoCommerce.ManagementClient.Main
 			var menuNavItem = new NavigationMenuItem(NavigationNames.MenuName);
 			menuNavItem.NavigateCommand = new DelegateCommand<NavigationItem>((x) => { navigationManager.Navigate(homeNavItem); });
 			menuNavItem.Order = 1;
-			menuNavItem.Caption = "Dashboard".Localize(null, LocalizationScope.DefaultCategory);
+			menuNavItem.Caption = "Dashboard";
 			menuNavItem.ItemBackground = Color.FromRgb(141, 187, 29);
 			menuNavItem.ImageResourceKey = "Icon_Module_Home";
 

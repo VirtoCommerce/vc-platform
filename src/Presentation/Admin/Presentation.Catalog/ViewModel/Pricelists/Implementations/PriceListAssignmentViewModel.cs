@@ -51,7 +51,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Pricelists.Implementa
 			_authContext = authContext;
 			ViewTitle = new ViewTitleBase()
 				{
-					Title = "Price List Assignment".Localize(),
+                    Title = "Price List Assignment",
 					SubTitle = (item != null && !string.IsNullOrEmpty(item.Name)) ? item.Name.ToUpper(CultureInfo.InvariantCulture) : ""
 				};
 			OpenItemCommand = new DelegateCommand(() => _navManager.Navigate(NavigationData));

@@ -59,7 +59,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			CurrentCatalogProperties = new ObservableCollection<Property>();
 			ViewTitle = new ViewTitleBase
 			{
-				Title = "CATALOG".Localize(),
+                Title = "CATALOG",
 				SubTitle = (item != null && !string.IsNullOrEmpty(item.Name)) ? item.Name.ToUpper(CultureInfo.InvariantCulture) : ""
 			};
 

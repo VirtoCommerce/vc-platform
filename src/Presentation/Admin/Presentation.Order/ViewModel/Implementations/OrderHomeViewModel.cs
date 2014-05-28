@@ -67,7 +67,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Implementations
 			ClearFiltersCommand = new DelegateCommand(DoClearFilters);
 			OnUIThread(PopulateTiles);
 
-			ViewTitle = new ViewTitleBase() { Title = "Orders".Localize(), SubTitle = "Customer Service".Localize() };
+            ViewTitle = new ViewTitleBase() { Title = "Orders", SubTitle = "Customer Service".Localize() };
 
 			EventSystem.Subscribe<GoToOrderEvent>((ordId) => OnUIThread(() => OpenOrderFromCustomerService(ordId.OrderId)));
 		}

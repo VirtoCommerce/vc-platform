@@ -25,6 +25,5 @@ namespace VirtoCommerce.ManagementClient.Core.Infrastructure
                 OnPropertyChanged();
             }
         }
-
     }
 }

@@ -48,7 +48,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.PaymentMethods
 			IHomeSettingsViewModel parent, PaymentMethod item)
 			: base(entityFactory, item, false)
 		{
-			ViewTitle = new ViewTitleBase { SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory), Title = "Payment Method".Localize() };
+            ViewTitle = new ViewTitleBase { SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory), Title = "Payment Method" };
 			_navManager = navManager;
 			_parent = parent;
 			_repositoryFactory = repositoryFactory;

@@ -18,25 +18,25 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.AppConfig.Implement
 
             if (authContext.CheckPermission(PredefinedPermissions.SettingsAppConfigSettings))
             {
-                items.Add(new ItemTypeHomeTab { Caption = "Settings".Localize(), ViewModel = appConfigSetting });
+                items.Add(new ItemTypeHomeTab { Caption = "Settings", Category = NavigationNames.ModuleName, ViewModel = appConfigSetting });
             }
             if (authContext.CheckPermission(PredefinedPermissions.SettingsAppConfigSystemJobs))
             {
-				items.Add(new ItemTypeHomeTab { Caption = "System jobs".Localize(), ViewModel = systemJobSetting });
+                items.Add(new ItemTypeHomeTab { Caption = "System jobs", Category = NavigationNames.ModuleName, ViewModel = systemJobSetting });
             }
             if (authContext.CheckPermission(PredefinedPermissions.SettingsAppConfigEmailTemplates))
             {
-				items.Add(new ItemTypeHomeTab { Caption = "Email templates".Localize(), ViewModel = emailTemplates });
+                items.Add(new ItemTypeHomeTab { Caption = "Email templates", Category = NavigationNames.ModuleName, ViewModel = emailTemplates });
             }
             if (authContext.CheckPermission(PredefinedPermissions.SettingsAppConfigDisplayTemplates))
             {
-				items.Add(new ItemTypeHomeTab { Caption = "Display templates".Localize(), ViewModel = displayTemplates });
+                items.Add(new ItemTypeHomeTab { Caption = "Display templates", Category = NavigationNames.ModuleName, ViewModel = displayTemplates });
             }
-			items.Add(new ItemTypeHomeTab { Caption = "Localization".Localize(), ViewModel = localizationHome });
+            items.Add(new ItemTypeHomeTab { Caption = "Localization", Category = NavigationNames.ModuleName, ViewModel = localizationHome });
 
             if (authContext.CheckPermission(PredefinedPermissions.SettingsAppConfigSettings))
             {
-				items.Add(new ItemTypeHomeTab { Caption = "Cache".Localize(), ViewModel = cacheViewModel });
+                items.Add(new ItemTypeHomeTab { Caption = "Cache", Category = NavigationNames.ModuleName, ViewModel = cacheViewModel });
             }
 
             SubItems = items;

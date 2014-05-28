@@ -69,7 +69,7 @@ namespace VirtoCommerce.ManagementClient.Reviews.ViewModel.Implementations
 			SearchItemsCommand = new DelegateCommand<string>(SearchItems);
 			ClearFiltersCommand = new DelegateCommand(DoClearFilters);
 			SearchFilterReviewStatus = ReviewStatus.Pending;
-            ViewTitle = new ViewTitleBase() { Title = "Reviews".Localize(), SubTitle = "CATALOG".Localize() };
+            ViewTitle = new ViewTitleBase() { Title = "Reviews", SubTitle = "CATALOG".Localize() };
 
 			PopulateTiles();
 		}

@@ -374,13 +374,7 @@
     </Compile>
     <Compile Include="Infrastructure\Navigation\NavigationItem.cs" />
     <Compile Include="Infrastructure\Navigation\NavigationMenuItem.cs" />
-    <Compile Include="Infrastructure\Navigation\NavigationMenuItemView.xaml.cs">
-      <DependentUpon>NavigationMenuItemView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Infrastructure\Navigation\NavigationManager.cs" />
-    <Compile Include="Infrastructure\Navigation\OpenedItemView.xaml.cs">
-      <DependentUpon>OpenedItemView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Infrastructure\NotificationMessage.cs" />
     <Compile Include="Infrastructure\BaseClases\HomeSettingsEditableViewModel.cs" />
     <Compile Include="Infrastructure\BaseClases\HomeSettingsViewModel.cs" />
@@ -541,14 +535,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Infrastructure\Navigation\HeaderView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Infrastructure\Navigation\NavigationMenuItemView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Infrastructure\Navigation\OpenedItemView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

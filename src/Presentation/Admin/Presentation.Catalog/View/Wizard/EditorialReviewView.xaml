@@ -6,8 +6,9 @@
      xmlns:core_dialogs="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Dialogs;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:extToolkit="http://schemas.xceed.com/wpf/xaml/toolkit" xmlns:inf_behavior="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Behaviors;assembly=VirtoCommerce.ManagementClient.Core"
-     xmlns:HtmlEditor="clr-namespace:WpfRichText;assembly=WpfRichText" xmlns:securityModule="clr-namespace:VirtoCommerce.Foundation.Security.Model;assembly=VirtoCommerce.Foundation"
-     mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
+     xmlns:securityModule="clr-namespace:VirtoCommerce.Foundation.Security.Model;assembly=VirtoCommerce.Foundation"
+     xmlns:ex="clr-namespace:Smith.WPF.HtmlEditor;assembly=Smith.WPF.HtmlEditor"
+			   mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}"
      xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Catalog">
 	<UserControl.Resources>
 		<ResourceDictionary>
@@ -124,16 +125,7 @@
 				<RowDefinition Height="*" />
 			</Grid.RowDefinitions>
 			<TextBlock Grid.Row="0" Text="{Loc 'Content:'}" DockPanel.Dock="Top" />
-			<!--<HtmlEditor:RichTextEditor Grid.Row="1" Text="{Binding InnerItem.Content, Mode=TwoWay}" BorderThickness="1">
-				<FrameworkElement.Resources>
-					reset style for "CodeEditor" TextBox
-					<Style TargetType="{x:Type TextBox}" />
-					
-				</FrameworkElement.Resources>
-			</HtmlEditor:RichTextEditor>-->
-			<HtmlEditor:RichTextEditor x:Name="sampleEditor" Grid.Row="1" Text="{Binding InnerItem.Content, Mode=TwoWay}"
-                 IsContextMenuEnabled="True" IsToolBarVisible="True" IsReadOnly="False" BorderThickness="1">
-			</HtmlEditor:RichTextEditor>
+			<ex:HtmlEditor x:Name="Editor" Grid.Row="1" BindingContent="{Binding InnerItem.Content, Mode=TwoWay}" BorderThickness="1"/>
 		</Grid>
 		<Grid Grid.Row="2" Margin="0,12,0,0" Visibility="{Binding IsSingleDialogEditing, Converter={StaticResource booleanToVisibilityConverter}}">
 			<Grid.RowDefinitions>

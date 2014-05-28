@@ -41,8 +41,8 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Settings.CaseTempla
 		{
 			ViewTitle = new ViewTitleBase()
 				{
-					Title = (item != null && !string.IsNullOrEmpty(item.Name)) ? item.Name : "",
-					SubTitle = "CASE TYPES".Localize()
+					SubTitle = (item != null && !string.IsNullOrEmpty(item.Name)) ? item.Name : "",
+                    Title = "CASE TYPES"
 				};
 			_templatePropertyVmFactory = templatePropertyVmFactory;
 			_repositoryFactory = repositoryFactory;

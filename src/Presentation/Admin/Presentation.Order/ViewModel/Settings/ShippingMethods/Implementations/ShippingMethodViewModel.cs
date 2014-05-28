@@ -62,7 +62,7 @@ namespace VirtoCommerce.ManagementClient.Order.ViewModel.Settings.ShippingMethod
 			ShippingMethod item)
 			: base(entityFactory, item, false)
 		{
-			ViewTitle = new ViewTitleBase { SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory), Title = "Shipping Method".Localize() };
+            ViewTitle = new ViewTitleBase { SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory), Title = "Shipping Method" };
 			_repositoryFactory = repositoryFactory;
 			_paymentMethdRepositoryFactory = paymentMethdRepositoryFactory;
 			_orderRepositoryFactory = orderRepositoryFactory;

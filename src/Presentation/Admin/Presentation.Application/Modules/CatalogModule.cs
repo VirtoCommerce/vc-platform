@@ -64,7 +64,8 @@ namespace VirtoCommerce.ManagementClient.Catalog
 				var menuNavItem = new NavigationMenuItem(NavigationNames.MenuName)
 					{
 						NavigateCommand = new DelegateCommand<NavigationItem>((x) => _navManager.Navigate(homeNavItem)),
-						Caption = "Catalogs".Localize(),
+						Caption = "Catalogs", 
+                        Category = NavigationNames.ModuleName,
 						ImageResourceKey = "Icon_Module_Catalogs",
 						Order = 30,
 						ItemBackground = Color.FromRgb(80, 133, 215)
@@ -83,7 +84,8 @@ namespace VirtoCommerce.ManagementClient.Catalog
 				var menuNavItem = new NavigationMenuItem(NavigationNames.MenuNamePriceList)
 					{
 						NavigateCommand = new DelegateCommand<NavigationItem>((x) => _navManager.Navigate(homeNavItemPriceList)),
-						Caption = "Price Lists".Localize(),
+                        Caption = "Price Lists",
+                        Category = NavigationNames.ModuleName,
 						ImageResourceKey = "Icon_Module_PriceLists",
 						ItemBackground = Color.FromRgb(211, 66, 58),
 						Order = 31

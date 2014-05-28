@@ -37,7 +37,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Wizard
 
 			ViewTitle = new ViewTitleBase()
 			{
-				Title = "Editorial Review".Localize(),
+                Title = "Editorial Review",
 				SubTitle = (item != null && item.CatalogItem != null && !string.IsNullOrEmpty(item.CatalogItem.Name))
 							   ? string.Format("ER: {0}".Localize(), item.CatalogItem.Name).ToUpper(CultureInfo.InvariantCulture)
 							   : ""

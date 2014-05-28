@@ -73,7 +73,8 @@ namespace VirtoCommerce.ManagementClient.Fulfillment
 					var menuNavItem = new NavigationMenuItem(NavigationNames.MenuName)
 					{
 					    NavigateCommand = new DelegateCommand<NavigationItem>((x) => { navigationManager.Navigate(homeNavItem); }),
-						Caption = "Fulfillment".Localize(),
+                        Caption = "Fulfillment",
+                        Category = NavigationNames.ModuleName,
 					    ImageResourceKey = "Icon_Module_Fulfillment",
 					    ItemBackground = Colors.DarkOliveGreen,
 					    Order = 60
@@ -157,11 +158,11 @@ namespace VirtoCommerce.ManagementClient.Fulfillment
 			}
 			if (_authContext.CheckPermission(PredefinedPermissions.SettingsStores))
 			{
-				ConfigurationManager.Settings.Add(new ConfigurationSection { IdTab = NavigationNames.StoresSettingsHomeName, Caption = "Stores".Localize(), Order = 70, ViewModel = _container.Resolve<IStoresSettingsViewModel>() });
+                ConfigurationManager.Settings.Add(new ConfigurationSection { IdTab = NavigationNames.StoresSettingsHomeName, Caption = "Stores", Category = NavigationNames.ModuleName, Order = 70, ViewModel = _container.Resolve<IStoresSettingsViewModel>() });
 			}
 			if (_authContext.CheckPermission(PredefinedPermissions.SettingsFulfillment))
 			{
-				ConfigurationManager.Settings.Add(new ConfigurationSection { IdTab = NavigationNames.HomeName, Caption = "Fulfillment".Localize(), Order = 60, ViewModel = _container.Resolve<IFulfillmentCentersSettingsViewModel>() });
+                ConfigurationManager.Settings.Add(new ConfigurationSection { IdTab = NavigationNames.HomeName, Caption = "Fulfillment", Category = NavigationNames.ModuleName, Order = 60, ViewModel = _container.Resolve<IFulfillmentCentersSettingsViewModel>() });
 			}
 		}
 	}

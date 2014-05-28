@@ -12,7 +12,7 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 		{
 			ViewTitle = new ViewTitleBase
 			{
-				Title = "Users".Localize(),
+                Title = "Users",
 				SubTitle = "USER MANAGEMENT".Localize()
 			};
 
@@ -21,11 +21,11 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 
 			if (authContext.CheckPermission(PredefinedPermissions.SecurityAccounts))
 			{
-				SubItems.Add(new ItemTypeHomeTab { Caption = "Accounts".Localize(), ViewModel = accountVmFactory.GetViewModelInstance(parameters) });
+                SubItems.Add(new ItemTypeHomeTab { Caption = "Accounts", Category = NavigationNames.ModuleName, ViewModel = accountVmFactory.GetViewModelInstance(parameters) });
 			}
 			if (authContext.CheckPermission(PredefinedPermissions.SecurityRoles))
 			{
-				SubItems.Add(new ItemTypeHomeTab { Caption = "Roles".Localize(), ViewModel = roleVmFactory.GetViewModelInstance(parameters) });
+                SubItems.Add(new ItemTypeHomeTab { Caption = "Roles", Category = NavigationNames.ModuleName, ViewModel = roleVmFactory.GetViewModelInstance(parameters) });
 			}
 			CurrentTab = SubItems[0];
 		}

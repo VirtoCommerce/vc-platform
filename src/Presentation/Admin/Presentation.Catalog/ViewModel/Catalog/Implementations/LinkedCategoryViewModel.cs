@@ -32,7 +32,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			_navManager = navManager;
 			ViewTitle = new ViewTitleBase
 				{
-					Title = "Linked Category".Localize(),
+                    Title = "Linked Category",
 					SubTitle = GetDisplayName(item).ToUpper(CultureInfo.InvariantCulture)
 				};
 

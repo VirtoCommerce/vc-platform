@@ -13,17 +13,17 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
 	{
 		public LocalizationMainViewModel(ILocalizationHomeViewModel homeViewModel, IViewModelsFactory<ILocalizationImportJobHomeViewModel> importVmFactory, IAuthenticationContext authContext)
 		{
-			ViewTitle = new ViewTitleBase() { Title = "Localization".Localize(), SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory) };
+            ViewTitle = new ViewTitleBase() { Title = "Localization", SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory) };
 			SubItems = new List<ItemTypeHomeTab>();
 
 			if (authContext.CheckPermission(PredefinedPermissions.Name_SettingsAppConfigSettings))
 			{
-				SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.HomeName, Caption = "Localizations".Localize(), ViewModel = homeViewModel });
+                SubItems.Add(new ItemTypeHomeTab { IdTab = NavigationNames.HomeName, Caption = "Localizations", Category = NavigationNames.ModuleName, ViewModel = homeViewModel });
 			}
 
 			if (authContext.CheckPermission(PredefinedPermissions.Name_SettingsAppConfigSettings))
 			{
-				SubItems.Add(new ItemTypeHomeTab { IdTab = Configuration.NavigationNames.HomeName, Caption = "Import".Localize(), ViewModel = importVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("parentViewModel", this)) });
+                SubItems.Add(new ItemTypeHomeTab { IdTab = Configuration.NavigationNames.HomeName, Caption = "Import", Category = NavigationNames.ModuleName, ViewModel = importVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("parentViewModel", this)) });
 			}
 
 			if (SubItems.Count > 0)

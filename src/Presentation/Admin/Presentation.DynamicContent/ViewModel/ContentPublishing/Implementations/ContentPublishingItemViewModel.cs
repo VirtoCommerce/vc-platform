@@ -53,7 +53,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.ContentPublish
 		{
 			ViewTitle = new ViewTitleBase
 			{
-                Title = "Content Publishing".Localize(),
+                Title = "Content Publishing",
 				SubTitle = (item != null && !String.IsNullOrEmpty(item.Name)) ? item.Name.ToUpper(CultureInfo.InvariantCulture) : ""
 			};
 

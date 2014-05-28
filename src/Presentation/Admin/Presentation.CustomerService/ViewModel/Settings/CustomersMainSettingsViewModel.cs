@@ -22,15 +22,15 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Settings
 
 			if (authContext.CheckPermission(PredefinedPermissions.SettingsCustomerRules))
 			{
-				SubItems.Add(new ItemTypeHomeTab { Caption = "Rules".Localize(), ViewModel = caseRulesSettingsViewModel, Order = 1 });
+                SubItems.Add(new ItemTypeHomeTab { Caption = "Rules", Category = NavigationNames.ModuleName, ViewModel = caseRulesSettingsViewModel, Order = 1 });
 			}
 			if (authContext.CheckPermission(PredefinedPermissions.SettingsCustomerInfo))
 			{
-				SubItems.Add(new ItemTypeHomeTab { Caption = "Info".Localize(), ViewModel = casePropertySetsSettingsViewModel, Order = 2 });
+                SubItems.Add(new ItemTypeHomeTab { Caption = "Info", Category = NavigationNames.ModuleName, ViewModel = casePropertySetsSettingsViewModel, Order = 2 });
 			}
 			if (authContext.CheckPermission(PredefinedPermissions.SettingsCustomerCaseTypes))
 			{
-				SubItems.Add(new ItemTypeHomeTab { Caption = "Case types".Localize(), ViewModel = caseTemplatesSettingsViewModel, Order = 3 });
+                SubItems.Add(new ItemTypeHomeTab { Caption = "Case types", Category = NavigationNames.ModuleName, ViewModel = caseTemplatesSettingsViewModel, Order = 3 });
 			}
 			CurrentTab = SubItems[0];
 		}

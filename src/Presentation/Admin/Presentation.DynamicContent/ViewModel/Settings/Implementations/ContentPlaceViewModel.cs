@@ -35,7 +35,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.Settings.Imple
 			INavigationManager navManager, DynamicContentPlace item)
 			: base(entityFactory, item, false)
 		{
-            ViewTitle = new ViewTitleBase { SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory), Title = "Content place".Localize() };
+            ViewTitle = new ViewTitleBase { SubTitle = "SETTINGS".Localize(null, LocalizationScope.DefaultCategory), Title = "Content place" };
 
 			_repositoryFactory = repositoryFactory;
 			_navManager = navManager;

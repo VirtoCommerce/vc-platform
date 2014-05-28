@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Data;
-using System.Windows.Markup;
 using VirtoCommerce.Client.Globalization;
 
 namespace VirtoCommerce.ManagementClient.Localization
@@ -35,8 +34,11 @@ namespace VirtoCommerce.ManagementClient.Localization
                 throw new ArgumentNullException("binding");
             }
 
-            Property.Converter = binding.Converter;
-            binding.Converter = null;
+            if (binding.Converter != null)
+            {
+                Property.Converter = binding.Converter;
+                binding.Converter = null;
+            }
 
             // resolve resource key
             var b = new Binding(path) { Source = Property.Object.GetValue(FrameworkElement.DataContextProperty) };
