@@ -3,6 +3,7 @@
      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
      xmlns:controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" mc:Ignorable="d" d:DesignHeight="500"
+     xmlns:sys="clr-namespace:System;assembly=mscorlib"
      Width="400" xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.AppConfig" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -25,7 +26,13 @@
         </StackPanel>
         <StackPanel Grid.Row="1">
             <TextBlock Text="{Loc '* Language code'}" />
-            <ComboBox ItemsSource="{Binding Path=LanguageCodeList}" SelectedItem="{Binding Path=InnerItem.LanguageCode, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, ValidatesOnDataErrors=True}" />
+            <ComboBox ItemsSource="{Binding Path=LanguageCodeList}" SelectedItem="{Binding Path=InnerItem.LanguageCode, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, ValidatesOnDataErrors=True}">
+                <FrameworkElement.Resources>
+                    <DataTemplate DataType="{x:Type sys:String}" >
+                        <ContentPresenter ContentTemplate="{StaticResource Virto_SearchConstant_ComboBox_DataTemplate}" />
+                    </DataTemplate>
+                </FrameworkElement.Resources>
+            </ComboBox>
         </StackPanel>
         <StackPanel Grid.Row="2">
             <TextBlock Text="{Loc 'Body'}" />

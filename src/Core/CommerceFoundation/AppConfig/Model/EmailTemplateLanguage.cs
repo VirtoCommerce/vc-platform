@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Services.Common;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Attributes;
 
@@ -15,7 +10,7 @@ namespace VirtoCommerce.Foundation.AppConfig.Model
     [DataContract]
     [EntitySet("EmailTemplateLanguages")]
     [DataServiceKey("EmailTemplateLanguageId")]
-    public class EmailTemplateLanguage:StorageEntity 
+    public class EmailTemplateLanguage : StorageEntity
     {
         public EmailTemplateLanguage()
         {
@@ -32,7 +27,7 @@ namespace VirtoCommerce.Foundation.AppConfig.Model
             get { return _emailTemplateLanguageId; }
             set
             {
-                SetValue(ref _emailTemplateLanguageId,()=>EmailTemplateLanguageId,value);
+                SetValue(ref _emailTemplateLanguageId, () => EmailTemplateLanguageId, value);
             }
         }
 
@@ -46,7 +41,7 @@ namespace VirtoCommerce.Foundation.AppConfig.Model
             get { return _languageCode; }
             set
             {
-                SetValue(ref _languageCode,()=>LanguageCode,value);
+                SetValue(ref _languageCode, () => LanguageCode, value);
             }
         }
 
@@ -60,7 +55,7 @@ namespace VirtoCommerce.Foundation.AppConfig.Model
             get { return _subject; }
             set
             {
-                SetValue(ref _subject,()=>Subject,value);
+                SetValue(ref _subject, () => Subject, value);
             }
         }
 
@@ -88,18 +83,17 @@ namespace VirtoCommerce.Foundation.AppConfig.Model
         private string _emailTemplateId;
         [DataMember]
         [StringLength(128)]
-        [Required]
         public string EmailTemplateId
         {
             get { return _emailTemplateId; }
             set
             {
-                SetValue(ref _emailTemplateId,()=>EmailTemplateId,value);
+                SetValue(ref _emailTemplateId, () => EmailTemplateId, value);
             }
         }
         [DataMember]
-		[ForeignKey("EmailTemplateId")]
-		[Parent]
+        [ForeignKey("EmailTemplateId")]
+        [Parent]
         public virtual EmailTemplate EmailTemplate { get; set; }
 
         #endregion
