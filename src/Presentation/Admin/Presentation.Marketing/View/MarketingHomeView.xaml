@@ -3,8 +3,8 @@
      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
      mc:Ignorable="d" xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
      xmlns:prism="http://www.codeplex.com/prism" xmlns:interaction_dialog="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Dialogs;assembly=VirtoCommerce.ManagementClient.Core"
-     xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions" xmlns:inf_behavior="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Behaviors;assembly=VirtoCommerce.ManagementClient.Core"
-     xmlns:collections="clr-namespace:System.Collections;assembly=mscorlib" xmlns:sys="clr-namespace:System;assembly=mscorlib"
+     xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+     xmlns:collections="clr-namespace:System.Collections;assembly=mscorlib"
      xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:core_common="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Common;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:core_converters="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Converters;assembly=VirtoCommerce.ManagementClient.Core"
@@ -158,10 +158,10 @@
                              IsAddingNullItemsFirst="True" HorizontalAlignment="Stretch">
                             <core_controls:NullItemSelectorAdapter.NullItems>
                                 <collections:ArrayList>
-                                    <sys:String>Select...</sys:String>
+                                    <core_common:Single_String Value="Select..." />
                                 </collections:ArrayList>
                             </core_controls:NullItemSelectorAdapter.NullItems>
-                            <ComboBox SelectedValue="{Binding SearchFilterType, Mode=TwoWay}" ItemTemplate="{StaticResource Virto_Search_ComboBox_DataTemplate}">
+                            <ComboBox SelectedValue="{Binding SearchFilterType, Mode=TwoWay}">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="SelectionChanged">
                                         <i:InvokeCommandAction Command="{Binding SearchItemsCommand}" />
@@ -173,10 +173,10 @@
                              IsAddingNullItemsFirst="True" Width="Auto" HorizontalAlignment="Stretch">
                             <core_controls:NullItemSelectorAdapter.NullItems>
                                 <collections:ArrayList>
-                                    <sys:String>Select...</sys:String>
+                                    <core_common:Single_String Value="Select..." />
                                 </collections:ArrayList>
                             </core_controls:NullItemSelectorAdapter.NullItems>
-                            <ComboBox SelectedValue="{Binding SearchFilterState, Mode=TwoWay}" ItemTemplate="{StaticResource Virto_Search_ComboBox_DataTemplate}">
+                            <ComboBox SelectedValue="{Binding SearchFilterState, Mode=TwoWay}">
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="SelectionChanged">
                                         <i:InvokeCommandAction Command="{Binding SearchItemsCommand}" />

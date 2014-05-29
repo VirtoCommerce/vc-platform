@@ -1,6 +1,6 @@
 ﻿<base:ViewBase x:Class="VirtoCommerce.ManagementClient.Order.View.SplitShipmentView"
      xmlns:base="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure;assembly=VirtoCommerce.ManagementClient.Core"
-     xmlns:collections="clr-namespace:System.Collections;assembly=mscorlib" xmlns:sys="clr-namespace:System;assembly=mscorlib"
+     xmlns:collections="clr-namespace:System.Collections;assembly=mscorlib"
      xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:Presentation_Core_Infrastructure_Converters="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Converters;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:Presentation_Order_Infrastructure_Converters="clr-namespace:VirtoCommerce.ManagementClient.Order.Infrastructure.Converters"
@@ -11,7 +11,8 @@
      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
      mc:Ignorable="d" d:DesignHeight="600" Width="400" VerticalAlignment="Top" HorizontalAlignment="Left"
      LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}" xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Order"
-               xmlns:model2="clr-namespace:VirtoCommerce.Foundation.Orders.Model;assembly=VirtoCommerce.Foundation">
+               xmlns:model2="clr-namespace:VirtoCommerce.Foundation.Orders.Model;assembly=VirtoCommerce.Foundation"
+               xmlns:common="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Common;assembly=VirtoCommerce.ManagementClient.Core">
     <base:ViewBase.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -84,7 +85,7 @@
                      ItemsSource="{Binding CurrentOrder.OrderAddresses}" Visibility="{Binding IsNewShipmentSelected, Converter={StaticResource booleanToVisibilityConverter}}">
                     <core_controls:NullItemSelectorAdapter.NullItems>
                         <collections:ArrayList>
-                            <sys:String>New Address</sys:String>
+                            <common:Single_String Value="New Address" />
                         </collections:ArrayList>
                     </core_controls:NullItemSelectorAdapter.NullItems>
                     <ComboBox SelectedValue="{Binding SelectedOrderAddress, Mode=TwoWay}" x:Name="cboAddress">

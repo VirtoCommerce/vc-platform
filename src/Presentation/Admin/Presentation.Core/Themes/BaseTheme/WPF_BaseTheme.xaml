@@ -943,10 +943,13 @@
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type ComboBox}">
 					<ControlTemplate.Resources>
-						<DataTemplate DataType="{x:Type sys:String}" >
-							<ContentPresenter ContentTemplate="{DynamicResource Virto_SearchSpecial_ComboBox_DataTemplate}" />
-						</DataTemplate>
-					</ControlTemplate.Resources>
+                        <DataTemplate DataType="{x:Type sys:String}" >
+                            <ContentPresenter ContentTemplate="{DynamicResource Virto_SearchConstant_ComboBox_DataTemplate}" />
+                        </DataTemplate>
+                        <DataTemplate DataType="{x:Type common:Single_String}" >
+                            <ContentPresenter Content="{Binding Value}" ContentTemplate="{DynamicResource Virto_SearchSpecial_ComboBox_DataTemplate}" />
+                        </DataTemplate>
+                    </ControlTemplate.Resources>
 					
 					<Border x:Name="mainBorder" Height="{TemplateBinding Height}" VerticalAlignment="Center" Padding="0" Margin="0" Width="{TemplateBinding Width}"
 						BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" SnapsToDevicePixels="true" Background="{TemplateBinding Background}"

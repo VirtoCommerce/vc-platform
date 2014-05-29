@@ -47,6 +47,6 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Interfaces
 
         string SearchFilterName { get;  }
         string SearchFilterCode { get;  }
-        object SearchFilterItemType { get;  }
+        string SearchFilterItemType { get;  }
     }
 }

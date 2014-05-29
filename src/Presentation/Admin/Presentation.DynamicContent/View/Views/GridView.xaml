@@ -47,7 +47,7 @@
             <GridViewColumn.CellTemplate>
                 <DataTemplate>
                     <TextBlock TextTrimming="CharacterEllipsis" ToolTip="{Binding Data.InnerItem.ContentTypeId, Converter={StaticResource contentTypeToDisplayNameConverter}}"
-                         Text="{Binding Data.InnerItem.ContentTypeId, Converter={StaticResource contentTypeToDisplayNameConverter}}"
+                         Text="{Binding Data.InnerItem.ContentTypeId, Converter={x:Static LocalizingConverter.Current}, ConverterParameter={x:Static res:NavigationNames.ModuleName}}"
                          Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
                 </DataTemplate>
             </GridViewColumn.CellTemplate>

@@ -66,14 +66,14 @@
                 <core_controls:NullItemSelectorAdapter ItemsSource="{Binding SearchFilterItemTypes}" Width="Auto">
                     <core_controls:NullItemSelectorAdapter.NullItems>
                         <collections:ArrayList>
-                            <sys:String>All Types</sys:String>
+                            <core_common:Single_String Value="All Types" />
                         </collections:ArrayList>
                     </core_controls:NullItemSelectorAdapter.NullItems>
                     <ComboBox SelectedValue="{Binding SearchFilterItemType, Mode=TwoWay}" IsEnabled="{Binding CanChangeSearchItemType}"
                          Height="26" Width="Auto">
                         <FrameworkElement.Resources>
-                            <DataTemplate DataType="{x:Type core_common:KeyValuePair_string_string}" >
-                                <ContentPresenter Content="{Binding Value, Converter={x:Static LocalizingConverter.Current}, ConverterParameter={x:Static res:NavigationNames.ModuleName}}" ContentTemplate="{StaticResource Virto_SearchData_ComboBox_DataTemplate}" />
+                            <DataTemplate DataType="{x:Type sys:String}" >
+                                <ContentPresenter Content="{Binding Converter={x:Static LocalizingConverter.Current}, ConverterParameter={x:Static res:NavigationNames.ModuleName}}" ContentTemplate="{StaticResource Virto_SearchData_ComboBox_DataTemplate}" />
                             </DataTemplate>
                         </FrameworkElement.Resources>
                         <i:Interaction.Triggers>

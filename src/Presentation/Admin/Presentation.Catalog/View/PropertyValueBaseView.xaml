@@ -4,9 +4,9 @@
      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:behaviors="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Behaviors;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:interaction_dialog="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Dialogs;assembly=VirtoCommerce.ManagementClient.Core"
-     xmlns:prism="http://www.codeplex.com/prism" xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
-     xmlns:inf="clr-namespace:VirtoCommerce.ManagementClient.Catalog.Infrastructure" xmlns:collections="clr-namespace:System.Collections;assembly=mscorlib"
-     xmlns:sys="clr-namespace:System;assembly=mscorlib" xmlns:extToolkit="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
+     xmlns:prism="http://www.codeplex.com/prism"
+     xmlns:inf="clr-namespace:VirtoCommerce.ManagementClient.Catalog.Infrastructure"
+     xmlns:extToolkit="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
      mc:Ignorable="d" xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Catalog"
      LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
     <base:ViewBase.Resources>

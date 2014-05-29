@@ -43,13 +43,13 @@ namespace VirtoCommerce.ManagementClient.Marketing.ViewModel.Implementations
 		public string SearchFilterType { get; set; }
 		public string[] SearchFilterTypes
 		{
-			get { return _searchFilterTypes ?? (_searchFilterTypes = new[] { "Catalog".Localize(), "Cart".Localize() }); }
+			get { return _searchFilterTypes ?? (_searchFilterTypes = new[] { "Catalog", "Cart" }); }
 		}
 
 		public string SearchFilterState { get; set; }
 		public string[] SearchFilterStates
 		{
-			get { return _searchFilterStates ?? (_searchFilterStates = new[] { "Active".Localize(), "Inactive".Localize(), "Archived".Localize() }); }
+			get { return _searchFilterStates ?? (_searchFilterStates = new[] { "Active", "Inactive", "Archived" }); }
 		}
 
 		public string SearchFilterKeyword { get; set; }

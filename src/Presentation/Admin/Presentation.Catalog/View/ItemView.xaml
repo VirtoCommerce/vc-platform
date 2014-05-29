@@ -139,7 +139,7 @@
                                                 </MultiBinding>
                                             </DataGridTextColumn.Binding>
                                         </DataGridTextColumn>
-                                        <DataGridTextColumn Header="{Loc 'Type'}" Width="160" Binding="{Binding AssociationType}"
+                                        <DataGridTextColumn Header="{Loc 'Type'}" Width="160" Binding="{Binding AssociationType, Converter={x:Static LocalizingConverter.Current}}"
                                              LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}" />
                                         <DataGridTextColumn Header="{Loc 'Priority'}" Width="104.6" Binding="{Binding Priority}"
                                              LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}" />
@@ -329,7 +329,7 @@
                                  ItemsSource="{Binding AvailableAvailabilityRules}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
-                                        <ContentPresenter Content="{Binding }" ContentTemplate="{StaticResource Virto_SearchConstant_ComboBox_DataTemplate}" />
+                                        <ContentPresenter ContentTemplate="{StaticResource Virto_SearchConstant_ComboBox_DataTemplate}" />
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>

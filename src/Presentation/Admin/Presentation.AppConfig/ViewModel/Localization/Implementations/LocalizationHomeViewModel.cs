@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Practices.Prism.Commands;
-using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
-using Microsoft.Win32;
 using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.AppConfig.Factories;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
@@ -394,13 +394,7 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
         {
             get
             {
-                if (string.IsNullOrEmpty(OriginalLanguage) || OriginalLanguage.Length > 5)
-                {
-                    return OriginalLanguage.Localize();
-                }
-                return string.Format("{0} ({1})",
-                    CultureInfo.GetCultureInfo(OriginalLanguage).DisplayName,
-                    OriginalLanguage);
+                return GetDisplayLangName(OriginalLanguage);
             }
         }
 
@@ -408,14 +402,20 @@ namespace VirtoCommerce.ManagementClient.AppConfig.ViewModel.Localization.Implem
         {
             get
             {
-                if (string.IsNullOrEmpty(TranslateLanguage) || TranslateLanguage.Length > 5)
-                {
-                    return TranslateLanguage.Localize();
-                }
-                return string.Format("{0} ({1})",
-                    CultureInfo.GetCultureInfo(TranslateLanguage).DisplayName,
-                    TranslateLanguage);
+                return GetDisplayLangName(TranslateLanguage);
             }
+        }
+
+        private string GetDisplayLangName(string lang)
+        {
+            if (LanguagesCodes != null && LanguagesCodes.Contains(lang))
+            {
+                return string.Format("{0} ({1})",
+                 CultureInfo.GetCultureInfo(lang).DisplayName,
+                 lang);
+            }
+
+            return lang.Localize();
         }
 
         #endregion
