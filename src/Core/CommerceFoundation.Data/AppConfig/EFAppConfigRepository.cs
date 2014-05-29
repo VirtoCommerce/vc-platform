@@ -11,121 +11,123 @@ using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
 
 namespace VirtoCommerce.Foundation.Data.AppConfig
 {
-	public class EFAppConfigRepository : EFRepositoryBase, IAppConfigRepository
-	{
-	    public EFAppConfigRepository()
-		{
-		}
+    public class EFAppConfigRepository : EFRepositoryBase, IAppConfigRepository
+    {
+        public EFAppConfigRepository()
+        {
+        }
 
-		public EFAppConfigRepository(string nameOrConnectionString)
-			: base(nameOrConnectionString)
-		{
-			Configuration.AutoDetectChangesEnabled = true;
-			Configuration.ProxyCreationEnabled = false;
-			Database.SetInitializer<EFAppConfigRepository>(null);
-		}
+        public EFAppConfigRepository(string nameOrConnectionString)
+            : base(nameOrConnectionString)
+        {
+            Configuration.AutoDetectChangesEnabled = true;
+            Configuration.ProxyCreationEnabled = false;
+            Database.SetInitializer<EFAppConfigRepository>(null);
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EFAppConfigRepository"/> class.
         /// </summary>
         /// <param name="entityFactory">The entity factory.</param>
         /// <param name="interceptors">The interceptors.</param>
-		[InjectionConstructor]
-		public EFAppConfigRepository(IAppConfigEntityFactory entityFactory, IInterceptor[] interceptors = null)
-			: this(AppConfigConfiguration.Instance.Connection.SqlConnectionStringName, entityFactory, interceptors)
-		{
-		}
+        [InjectionConstructor]
+        public EFAppConfigRepository(IAppConfigEntityFactory entityFactory, IInterceptor[] interceptors = null)
+            : this(AppConfigConfiguration.Instance.Connection.SqlConnectionStringName, entityFactory, interceptors)
+        {
+        }
 
         public EFAppConfigRepository(string connectionStringName, IAppConfigEntityFactory entityFactory, IInterceptor[] interceptors = null)
-			: base(connectionStringName, entityFactory, interceptors: interceptors)
-		{
-		    Database.SetInitializer(new ValidateDatabaseInitializer<EFAppConfigRepository>());
+            : base(connectionStringName, entityFactory, interceptors: interceptors)
+        {
+            Database.SetInitializer(new ValidateDatabaseInitializer<EFAppConfigRepository>());
 
-			Configuration.AutoDetectChangesEnabled = true;
-			Configuration.ProxyCreationEnabled = false;
-		}
+            Configuration.AutoDetectChangesEnabled = true;
+            Configuration.ProxyCreationEnabled = false;
+        }
 
-		protected override void OnModelCreating(DbModelBuilder modelBuilder)
-		{
-			modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
 
-			MapEntity<Setting>(modelBuilder, toTable: "Setting");
+            MapEntity<Setting>(modelBuilder, toTable: "Setting");
             MapEntity<Sequence>(modelBuilder, toTable: "Sequence");
-			MapEntity<SystemJob>(modelBuilder, toTable: "SystemJob");
+            MapEntity<SystemJob>(modelBuilder, toTable: "SystemJob");
             MapEntity<TaskSchedule>(modelBuilder, toTable: "TaskSchedule");
-			MapEntity<Statistic>(modelBuilder, toTable: "Statistic");
-			MapEntity<EmailTemplate>(modelBuilder, toTable: "EmailTemplate");
-			MapEntity<EmailTemplateLanguage>(modelBuilder, toTable: "EmailTemplateLanguage");
-			MapEntity<DisplayTemplateMapping>(modelBuilder, toTable: "DisplayTemplateMapping");
-			MapEntity<ObjectLock>(modelBuilder, toTable: "ObjectLock");
-			MapEntity<Localization>(modelBuilder, toTable: "Localization");
+            MapEntity<Statistic>(modelBuilder, toTable: "Statistic");
+            MapEntity<EmailTemplate>(modelBuilder, toTable: "EmailTemplate");
+            MapEntity<EmailTemplateLanguage>(modelBuilder, toTable: "EmailTemplateLanguage");
+            MapEntity<DisplayTemplateMapping>(modelBuilder, toTable: "DisplayTemplateMapping");
+            MapEntity<ObjectLock>(modelBuilder, toTable: "ObjectLock");
+            MapEntity<Localization>(modelBuilder, toTable: "Localization");
             MapEntity<SeoUrlKeyword>(modelBuilder, toTable: "SeoUrlKeyword");
-			
-			base.OnModelCreating(modelBuilder);
-		}
 
-		#region IAppConfigRepository Members
+            modelBuilder.Entity<EmailTemplate>().HasMany(c => c.EmailTemplateLanguages).WithRequired(p => p.EmailTemplate);
 
-		public IQueryable<Setting> Settings
-		{
-			get { return GetAsQueryable<Setting>(); }
-		}
+            base.OnModelCreating(modelBuilder);
+        }
+
+        #region IAppConfigRepository Members
+
+        public IQueryable<Setting> Settings
+        {
+            get { return GetAsQueryable<Setting>(); }
+        }
 
         public IQueryable<Sequence> Sequences
-	    {
-	        get { return GetAsQueryable<Sequence>(); }
-	    }
+        {
+            get { return GetAsQueryable<Sequence>(); }
+        }
 
-	    public IQueryable<SystemJobLogEntry> SystemJobLogEntries
-	    {
-	        get { return GetAsQueryable<SystemJobLogEntry>(); }
-	    }
+        public IQueryable<SystemJobLogEntry> SystemJobLogEntries
+        {
+            get { return GetAsQueryable<SystemJobLogEntry>(); }
+        }
 
-		public IQueryable<TaskSchedule> TaskSchedules
+        public IQueryable<TaskSchedule> TaskSchedules
         {
             get { return GetAsQueryable<TaskSchedule>(); }
         }
 
-	    public IQueryable<SystemJob> SystemJobs
-		{
-			get { return GetAsQueryable<SystemJob>(); }
-		}
+        public IQueryable<SystemJob> SystemJobs
+        {
+            get { return GetAsQueryable<SystemJob>(); }
+        }
 
-		public IQueryable<Statistic> Statistics
-		{
-			get { return GetAsQueryable<Statistic>(); }
-		}
+        public IQueryable<Statistic> Statistics
+        {
+            get { return GetAsQueryable<Statistic>(); }
+        }
 
-		public IQueryable<EmailTemplate> EmailTemplates
-		{
-			get { return GetAsQueryable<EmailTemplate>(); }
-		}
+        public IQueryable<EmailTemplate> EmailTemplates
+        {
+            get { return GetAsQueryable<EmailTemplate>(); }
+        }
 
-		public IQueryable<EmailTemplateLanguage> EmailTemplateLanguages
-		{
-			get { return GetAsQueryable<EmailTemplateLanguage>(); }
-		}
+        public IQueryable<EmailTemplateLanguage> EmailTemplateLanguages
+        {
+            get { return GetAsQueryable<EmailTemplateLanguage>(); }
+        }
 
-		public IQueryable<DisplayTemplateMapping> DisplayTemplateMappings
-		{
-			get { return GetAsQueryable<DisplayTemplateMapping>(); }
-		}
+        public IQueryable<DisplayTemplateMapping> DisplayTemplateMappings
+        {
+            get { return GetAsQueryable<DisplayTemplateMapping>(); }
+        }
 
-		public IQueryable<ObjectLock> ObjectLocks
-		{
-			get { return GetAsQueryable<ObjectLock>(); }
-		}
+        public IQueryable<ObjectLock> ObjectLocks
+        {
+            get { return GetAsQueryable<ObjectLock>(); }
+        }
 
-		public IQueryable<Localization> Localizations
-		{
-			get { return GetAsQueryable<Localization>(); }
-		}
+        public IQueryable<Localization> Localizations
+        {
+            get { return GetAsQueryable<Localization>(); }
+        }
 
-	    public IQueryable<SeoUrlKeyword> SeoUrlKeywords 
+        public IQueryable<SeoUrlKeyword> SeoUrlKeywords
         {
             get { return GetAsQueryable<SeoUrlKeyword>(); }
-	    }
+        }
 
-	    #endregion		
-	}
+        #endregion
+    }
 }

@@ -66,7 +66,7 @@
     </DataTemplate>
     <DataTemplate x:Key="statusColumnTemplate">
         <TextBlock x:Name="txtStatus" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}"
-             Text="{Binding Path=Data.Status,Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+             Text="{Binding Path=Data.Status, Converter={x:Static LocalizingConverter.Current}, ConverterParameter={x:Static res:NavigationNames.ModuleName}}" />
         <DataTemplate.Triggers>
             <DataTrigger Binding="{Binding Path=Data.Status,Mode=OneWay}" Value="{x:Static CustomersModels:CaseStatus.Pending}">
                 <Setter Property="Foreground" TargetName="txtStatus" Value="Red" />
