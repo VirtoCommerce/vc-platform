@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
+using System.ServiceModel.Web;
 using VirtoCommerce.Foundation.Security;
 using VirtoCommerce.Foundation.Security.Swt;
 
@@ -33,7 +34,7 @@ namespace VirtoCommerce.Web.Client.Services.Security
                 // Extract authorization data.
                 var requestMessage = operationContext.RequestContext.RequestMessage;
                 var httpDetails = requestMessage.Properties[HttpRequestMessageProperty.Name] as HttpRequestMessageProperty;
-                var requestUri = requestMessage.Headers.To;
+                var requestUri = WebOperationContext.Current != null ? WebOperationContext.Current.IncomingRequest.UriTemplateMatch.BaseUri : requestMessage.Headers.To;
 
                 token = ReadAuthToken(httpDetails);
                 retVal = token != null && IsValidToken(token, requestUri);

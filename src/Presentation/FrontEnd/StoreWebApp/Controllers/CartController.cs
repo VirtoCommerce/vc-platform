@@ -389,8 +389,15 @@ namespace VirtoCommerce.Web.Controllers
             var errors = new Dictionary<string, string>();
             if (helper.Cart.Name == CartHelper.CartName)
             {
+                var result = helper.RunWorkflow("ShoppingCartValidateWorkflow");
 
-                helper.RunWorkflow("ShoppingCartValidateWorkflow", errors);
+                if (result.WorkflowResult.Warnings != null)
+                {
+                    foreach (var warning in result.WorkflowResult.Warnings.Distinct())
+                    {
+                        errors.Add(warning.Code, warning.Parameters["Message"]);
+                    }
+                }
             }
 
             helper.SaveChanges();

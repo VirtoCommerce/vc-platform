@@ -1121,7 +1121,7 @@ button.proceed:hover span:after
 .main-slider .container
 {
     background: #f4f4f2;
-    padding: 7px 0 20px;
+    /*padding: 7px 0 20px;*/
 }
 
 .main-slider .camera_prev,

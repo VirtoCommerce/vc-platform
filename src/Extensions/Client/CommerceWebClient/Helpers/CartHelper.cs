@@ -614,20 +614,17 @@ namespace VirtoCommerce.Web.Client.Helpers
         /// Runs the workflow.
         /// </summary>
         /// <param name="name">The name.</param>
-        /// <param name="warnings">The warnings.</param>
+        /// <param name="orderGroup"></param>
         /// <returns>OrderWorkflowResult.</returns>
-        public virtual OrderWorkflowResult RunWorkflow(string name, Dictionary<string, string> warnings = null)
+        public virtual OrderWorkflowResult RunWorkflow(string name, OrderGroup orderGroup = null)
         {
-            var result = new OrderService(OrderRepository, SearchService, WorkflowService, null, null).ExecuteWorkflow(name, Cart);
+            orderGroup = orderGroup ?? Cart;
+            var result = new OrderService(OrderRepository, SearchService, WorkflowService, null, null).ExecuteWorkflow(name, orderGroup);
 
-            if (result.WorkflowResult.Warnings != null && warnings != null)
+            if (result.OrderGroup is ShoppingCart)
             {
-                foreach (var warning in result.WorkflowResult.Warnings.Distinct())
-                {
-                    warnings.Add(warning.Code, warning.Parameters["Message"]);
-                }
+                Cart = result.OrderGroup as ShoppingCart;
             }
-            Cart = result.OrderGroup as ShoppingCart;
             return result;
         }
 

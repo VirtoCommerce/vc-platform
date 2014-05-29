@@ -44,7 +44,11 @@ namespace VirtoCommerce.Scheduling.Jobs
                             && item.Created.Value.AddMinutes(store.FulfillmentCenter.PickDelay) < currentTime)
                         {
                             item.Status = OrderStatus.InProgress.ToString();
-                            item.OrderForms[0].Shipments.ToList().ForEach(x => x.Status = ShipmentStatus.InventoryAssigned.ToString());
+                            if (item.OrderForms.Any())
+                            {
+                                item.OrderForms[0].Shipments.ToList()
+                                    .ForEach(x => x.Status = ShipmentStatus.InventoryAssigned.ToString());
+                            }
                             _orderRepository.UnitOfWork.Commit();
                         }
                     }

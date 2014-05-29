@@ -55,12 +55,13 @@ namespace VirtoCommerce.Foundation.Frameworks.Extensions
 			where TEntity : class
 		{
 			var delimiter = queryable is DataServiceQuery<TEntity> ? "/" : ".";
-			var parts = GetIncludePath(typeof(TEntity), null).Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-			foreach (var part in parts)
-			{
-				queryable = queryable.Expand(part.Replace("/", delimiter));
-			}
-			return queryable;
+		    var includePath = GetIncludePath(typeof (TEntity), null);
+		    if (!string.IsNullOrEmpty(includePath))
+		    {
+                var parts = includePath.Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries);
+		        queryable = parts.Aggregate(queryable, (current, part) => current.Expand(part.Replace("/", delimiter)));
+		    }
+		    return queryable;
 		}
 
 		public static string GetIncludePath(Type type, string prefix)
