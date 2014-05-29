@@ -123,5 +123,13 @@ namespace VirtoCommerce.Client
 			                            .FirstOrDefault(x => x.OrderGroupId == orderId && x.CustomerId == customerId);
 			return order;
 		}
+
+	    public OrderGroup GetOrderByAuthCode(string authCode)
+	    {
+            var payment = _orderRepository.Payments.Where(x => x.AuthorizationCode == authCode)
+                .Expand(p => p.OrderForm.OrderGroup)
+                .Expand(p=>p.OrderForm.LineItems).FirstOrDefault();
+            return payment != null ? payment.OrderForm.OrderGroup : null;
+	    }
 	}
 }

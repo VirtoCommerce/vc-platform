@@ -9,6 +9,7 @@ using Omu.ValueInjecter;
 using PayPal.PayPalAPIInterfaceService;
 using PayPal.PayPalAPIInterfaceService.Model;
 using VirtoCommerce.Client;
+using VirtoCommerce.Foundation.Customers;
 using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
@@ -413,115 +414,156 @@ namespace VirtoCommerce.Web.Controllers
                 }
                 else
                 {
+                    //Save token
+                    var paypalPayment = Ch.OrderForm.Payments.First(x => x.PaymentMethodId == payment.PaymentMethodId);
+                    paypalPayment.AuthorizationCode = setEcResponse.Token;
+                    paypalPayment.Amount = Ch.OrderForm.Total;
+
                     var redirectUrl =
                         string.Format(
                             configMap.ContainsKey("URL")
                                 ? configMap["URL"]
                                 : "https://www.sandbox.paypal.com/webscr&amp;cmd={0}",
                             "_express-checkout&token=" + setEcResponse.Token);
-                    //TempData.Add("checkout_" + setEcResponse.Token,model);
-                    return Redirect(redirectUrl);
+
+                    try
+                    {
+                        using (SqlDbConfiguration.ExecutionStrategySuspension)
+                        using (var transaction = new TransactionScope())
+                        {
+                            // Create order
+                            var order = Ch.SaveAsOrder();
+                            UserHelper.CustomerSession.LastOrderId = order.OrderGroupId;
+
+                            transaction.Complete();
+                        }
+                        return Redirect(redirectUrl);
+                    }
+                    catch (Exception ex)
+                    {
+                        ModelState.AddModelError("", ex.Message);
+                    }
                 }
             }
 
             return View("Index", model);
         }
 
-        public ActionResult PaypalExpressSuccess(string token, string payerID)
+        /// <summary>
+        /// Paypal IPN callback
+        /// </summary>
+        /// <param name="token"></param>
+        /// <param name="payerId"></param>
+        /// <returns></returns>
+        public ActionResult PaypalExpressSuccess(string token, string payerId)
         {
-            //var model = (CheckoutModel)TempData["checkout_" + token] ?? PrepareCheckoutModel(new CheckoutModel());
             var model = PrepareCheckoutModel(new CheckoutModel());
-            model.Payments = model.Payments ?? GetPayments().ToArray();
+            var order = _orderClient.GetOrderByAuthCode(token);
 
-            //Resave LastOrderId
-            TempData["LastOrderId"] = TempData["LastOrderId"];
-
-            var payment = _paymentClient.GetPaymentMethod(model.PaymentMethod ?? "Paypal");
-            var configMap = payment.CreateSettings();
-
-            var service = new PayPalAPIInterfaceServiceService(configMap);
-
-            var getEcWrapper = new GetExpressCheckoutDetailsReq
+            if (order == null)
             {
-                GetExpressCheckoutDetailsRequest = new GetExpressCheckoutDetailsRequestType(token)
-            };
-
-            GetExpressCheckoutDetailsResponseType getEcResponse = null;
-
-            try
-            {
-                getEcResponse = service.GetExpressCheckoutDetails(getEcWrapper);
+                ModelState.AddModelError("", "Order cannot be found for current payment!");
             }
-            catch (Exception ex)
+            else
             {
-                ModelState.AddModelError("", @"Paypal failure".Localize());
-                ModelState.AddModelError("", ex.Message);
-            }
+                var payment = order.OrderForms.SelectMany(f => f.Payments).First(p => p.AuthorizationCode == token);
 
-            if (getEcResponse != null)
-            {
-                if (getEcResponse.Ack.Equals(AckCodeType.FAILURE) ||
-                    (getEcResponse.Errors != null && getEcResponse.Errors.Count > 0))
+                var paymentMethod = _paymentClient.GetPaymentMethod(payment.PaymentMethodName ?? "Paypal");
+                var configMap = paymentMethod.CreateSettings();
+
+                var service = new PayPalAPIInterfaceServiceService(configMap);
+
+                var getEcWrapper = new GetExpressCheckoutDetailsReq
+                {
+                    GetExpressCheckoutDetailsRequest = new GetExpressCheckoutDetailsRequestType(token)
+                };
+
+                GetExpressCheckoutDetailsResponseType getEcResponse = null;
+
+                try
+                {
+                    getEcResponse = service.GetExpressCheckoutDetails(getEcWrapper);
+                }
+                catch (Exception ex)
                 {
                     ModelState.AddModelError("", @"Paypal failure".Localize());
-                    foreach (var error in getEcResponse.Errors)
-                    {
-                        ModelState.AddModelError("", error.LongMessage);
-                    }
+                    ModelState.AddModelError("", ex.Message);
                 }
-                else
+
+                if (getEcResponse != null)
                 {
-                    var details = getEcResponse.GetExpressCheckoutDetailsResponseDetails;
-
-                    if (details.CheckoutStatus.Equals("PaymentActionCompleted", StringComparison.OrdinalIgnoreCase))
+                    if (getEcResponse.Ack.Equals(AckCodeType.FAILURE) ||
+                        (getEcResponse.Errors != null && getEcResponse.Errors.Count > 0))
                     {
-                        UserHelper.CustomerSession.LastOrderId = TempData["LastOrderId"] as string;
-                        return RedirectToAction("ProcessCheckout", "Checkout", new { id = UserHelper.CustomerSession.LastOrderId });
-                    }
-
-                    model.PaymentMethod = payment.Name;
-                    model.ShippingMethod = details.UserSelectedOptions.ShippingOptionName;
-
-                    var paymentDetails = details.PaymentDetails[0];
-
-                    model.BillingAddress.Address = ConvertToPaypalAddress(paymentDetails.ShipToAddress, "Billing");
-                    model.BillingAddress.Address.Email = details.PayerInfo.Payer;
-                    model.ShippingAddress.Address = ConvertToPaypalAddress(paymentDetails.ShipToAddress, "Shipping");
-                    model.ShippingAddress.Address.Email = details.PayerInfo.Payer;
-
-                    Ch.Reset();
-                    UpdateCart(model, true);
-                    Ch.RunWorkflow("ShoppingCartPrepareWorkflow");
-
-                    var cartPayment =
-                        Ch.OrderForm.Payments.FirstOrDefault(
-                            x => x.PaymentMethodName.Equals(payment.Name, StringComparison.OrdinalIgnoreCase));
-
-                    if (cartPayment == null)
-                    {
-                        ModelState.AddModelError("", @"Shopping cart failure!".Localize());
-                    }
-                    else if (ModelState.IsValid)
-                    {
-                        cartPayment.ContractId = payerID;
-                        cartPayment.AuthorizationCode = token;
-                        cartPayment.Amount = Ch.Cart.Total;
-
-                        if (decimal.Parse(paymentDetails.OrderTotal.value) != Ch.Cart.Total)
+                        ModelState.AddModelError("", @"Paypal failure".Localize());
+                        foreach (var error in getEcResponse.Errors)
                         {
-                            ModelState.AddModelError("", @"Paypal payment total does not match cart total!".Localize());
-                        }
-
-                        Ch.SaveChanges();
-
-                        if (DoCheckout())
-                        { 
-                            //This call was made from paypal API, we need so save last order id, as it is not saved in our cookie
-                            TempData["LastOrderId"] = UserHelper.CustomerSession.LastOrderId;
-                            return null;
+                            ModelState.AddModelError("", error.LongMessage);
                         }
                     }
+                    else
+                    {
+                        var details = getEcResponse.GetExpressCheckoutDetailsResponseDetails;
 
+                        if (details.CheckoutStatus.Equals("PaymentActionCompleted", StringComparison.OrdinalIgnoreCase))
+                        {
+                            return RedirectToAction("ProcessCheckout", "Checkout", new { id = order.OrderGroupId });
+                        }
+
+                        model.PaymentMethod = paymentMethod.Name;
+                        model.ShippingMethod = details.UserSelectedOptions.ShippingOptionName;
+
+                        if (!string.IsNullOrEmpty(details.UserSelectedOptions.ShippingOptionName))
+                        {
+                            foreach (var lineItem in order.OrderForms.SelectMany(f => f.LineItems))
+                            {
+                                var shippingMethod = Ch.GetShippingMethods(new List<string> { model.ShippingMethod }).First();
+                                lineItem.ShippingMethodName = shippingMethod.DisplayName;
+                                lineItem.ShippingMethodId = shippingMethod.Id;
+                            }
+                        }
+
+                        var paymentDetails = details.PaymentDetails[0];
+                        //TODO: handle  address
+                        //model.BillingAddress.Address = ConvertToPaypalAddress(paymentDetails.ShipToAddress, "Billing");
+                        //model.BillingAddress.Address.Email = details.PayerInfo.Payer;
+                        //model.ShippingAddress.Address = ConvertToPaypalAddress(paymentDetails.ShipToAddress, "Shipping");
+                        //model.ShippingAddress.Address.Email = details.PayerInfo.Payer;
+
+                        //Ch.Reset();
+                        //UpdateCart(model, true);
+
+                        //Recalcualte totals (User could have changed shipping method in paypal).
+                        Ch.RunWorkflow("ShoppingCartPrepareWorkflow", order);
+                         
+
+                        if (ModelState.IsValid)
+                        {
+                            payment.ContractId = payerId;
+                            payment.AuthorizationCode = token;
+                            payment.Amount = order.Total;
+
+                            if (decimal.Parse(paymentDetails.OrderTotal.value) != order.Total)
+                            {
+                                ModelState.AddModelError("",@"Paypal payment total does not match cart total!".Localize());
+                                return View("Index", model);
+                            }
+
+                            try
+                            {
+                                Ch.RunWorkflow("ShoppingCartCheckoutWorkflow", order);
+                                Ch.OrderRepository.UnitOfWork.Commit();
+                            }
+                            catch (Exception ex)
+                            {
+                                ModelState.AddModelError("", ex.Message);
+                                return View("Index", model);
+                            }
+
+                            return RedirectToAction("ProcessCheckout", "Checkout", new { id = order.OrderGroupId });
+                        }
+
+                    }
                 }
             }
 
