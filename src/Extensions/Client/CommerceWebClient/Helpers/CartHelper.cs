@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.Practices.ObjectBuilder2;
 using Microsoft.Practices.ServiceLocation;
 using Omu.ValueInjecter;
 using VirtoCommerce.Client;
@@ -315,6 +316,28 @@ namespace VirtoCommerce.Web.Client.Helpers
             }
 
             return order;
+        }
+
+        public virtual void ToCart(OrderGroup order)
+        {
+            if (order == null)
+            {
+                throw new ArgumentException("order is required","order");
+            }
+
+            //Convert order forms to shopping cart
+            order.OrderForms.ForEach(f => f.Name = CartName);
+
+            Add(order);
+
+            if (String.IsNullOrEmpty(Cart.BillingCurrency))
+            {
+                Cart.BillingCurrency = CustomerSession.Currency;
+            }
+
+            // run workflows
+            RunWorkflow("ShoppingCartPrepareWorkflow");
+            SaveChanges();
         }
 
         /// <summary>
@@ -661,9 +684,10 @@ namespace VirtoCommerce.Web.Client.Helpers
                     {
                         orderForm = new OrderForm { Name = form.Name };
                         Cart.OrderForms.Add(orderForm);
-                        orderForm.OrderGroupId = Cart.OrderGroupId;
-                        orderForm.OrderGroup = Cart;
                     }
+
+                    orderForm.OrderGroupId = Cart.OrderGroupId;
+                    orderForm.OrderGroup = Cart;
 
                     var count = form.LineItems.Count;
                     for (var i = 0; i < count; i++)

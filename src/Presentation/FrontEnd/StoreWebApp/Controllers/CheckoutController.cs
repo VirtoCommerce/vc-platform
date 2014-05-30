@@ -1,27 +1,27 @@
-﻿using System;
+﻿using Omu.ValueInjecter;
+using PayPal.PayPalAPIInterfaceService;
+using PayPal.PayPalAPIInterfaceService.Model;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Transactions;
 using System.Web.Mvc;
-using Omu.ValueInjecter;
-using PayPal.PayPalAPIInterfaceService;
-using PayPal.PayPalAPIInterfaceService.Model;
 using VirtoCommerce.Client;
-using VirtoCommerce.Foundation.Customers;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
 using VirtoCommerce.Foundation.Orders.Extensions;
 using VirtoCommerce.Foundation.Orders.Model;
-using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Web.Client.Extensions;
 using VirtoCommerce.Web.Client.Helpers;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Virto.Helpers;
 using VirtoCommerce.Web.Virto.Helpers.Payments;
 using VirtoCommerce.Web.Virto.Helpers.Popup;
+using WebGrease.Css.Extensions;
 using AddressType = PayPal.PayPalAPIInterfaceService.Model.AddressType;
 
 namespace VirtoCommerce.Web.Controllers
@@ -458,17 +458,20 @@ namespace VirtoCommerce.Web.Controllers
         public ActionResult PaypalExpressSuccess(string token, string payerId)
         {
             var model = PrepareCheckoutModel(new CheckoutModel());
+            Payment payment = null;
+
             var order = _orderClient.GetOrderByAuthCode(token);
 
             if (order == null)
             {
-                ModelState.AddModelError("", "Order cannot be found for current payment!");
+                ModelState.AddModelError("", "Order cannot be found for current payment!".Localize());
             }
             else
             {
-                var payment = order.OrderForms.SelectMany(f => f.Payments).First(p => p.AuthorizationCode == token);
+                payment = order.OrderForms.SelectMany(f => f.Payments).First(p => p.AuthorizationCode == token);
 
                 var paymentMethod = _paymentClient.GetPaymentMethod(payment.PaymentMethodName ?? "Paypal");
+
                 var configMap = paymentMethod.CreateSettings();
 
                 var service = new PayPalAPIInterfaceServiceService(configMap);
@@ -522,16 +525,56 @@ namespace VirtoCommerce.Web.Controllers
                                 lineItem.ShippingMethodId = shippingMethod.Id;
                             }
                         }
-
+         
                         var paymentDetails = details.PaymentDetails[0];
-                        //TODO: handle  address
-                        //model.BillingAddress.Address = ConvertToPaypalAddress(paymentDetails.ShipToAddress, "Billing");
-                        //model.BillingAddress.Address.Email = details.PayerInfo.Payer;
-                        //model.ShippingAddress.Address = ConvertToPaypalAddress(paymentDetails.ShipToAddress, "Shipping");
-                        //model.ShippingAddress.Address.Email = details.PayerInfo.Payer;
 
-                        //Ch.Reset();
-                        //UpdateCart(model, true);
+                        model.BillingAddress.Address = ConvertFromPaypalAddress(paymentDetails.ShipToAddress, "Billing");
+                        model.BillingAddress.Address.Email = details.PayerInfo.Payer;
+                        model.ShippingAddress.Address = ConvertFromPaypalAddress(paymentDetails.ShipToAddress, "Shipping");
+                        model.ShippingAddress.Address.Email = details.PayerInfo.Payer;
+
+                        #region Process billing address
+
+                        var billingAddress = OrderClient.FindAddressByName(order, "Billing");
+                        if (billingAddress == null)
+                        {
+                            billingAddress = new OrderAddress();
+                            order.OrderAddresses.Add(billingAddress);
+
+                            var orderAddressId = billingAddress.OrderAddressId;
+                            billingAddress.InjectFrom(new IgnorePropertiesInjection("OrderGroupId", "OrderGroup", "OrderAddressId", "Created"), model.BillingAddress.Address);
+                            billingAddress.Name = "Billing";
+                            billingAddress.OrderAddressId = orderAddressId;
+                            order.AddressId = orderAddressId;
+                            order.OrderForms[0].BillingAddressId = orderAddressId;
+                        }
+
+                        #endregion
+
+                        #region Process shipping address
+
+                        var shippingAddress = OrderClient.FindAddressByName(order, "Shipping");
+                        if (shippingAddress == null)
+                        {
+                            shippingAddress = new OrderAddress();
+                            order.OrderAddresses.Add(shippingAddress);
+                        }
+
+                        shippingAddress.InjectFrom(new IgnorePropertiesInjection("OrderGroupId", "OrderGroup", "OrderAddressId", "Created"), model.ShippingAddress.Address);
+                        shippingAddress.Name = "Shipping";
+                        shippingAddress.OrderAddressId = shippingAddress.OrderAddressId;
+
+                        //Update shipping address id
+                        foreach (var shipment in order.OrderForms.SelectMany(f=>f.Shipments))
+                        {
+                            shipment.ShippingAddressId = shippingAddress.OrderAddressId;
+                        }
+                        foreach (var lineItem in order.OrderForms.SelectMany(f => f.LineItems))
+                        {
+                            lineItem.ShippingAddressId = shippingAddress.OrderAddressId;
+                        }
+
+                        #endregion
 
                         //Recalcualte totals (User could have changed shipping method in paypal).
                         Ch.RunWorkflow("ShoppingCartPrepareWorkflow", order);
@@ -543,28 +586,45 @@ namespace VirtoCommerce.Web.Controllers
                             payment.AuthorizationCode = token;
                             payment.Amount = order.Total;
 
+                            //Normally this message should be shown to user when. This happens because address changes and Tax is recalculated
                             if (decimal.Parse(paymentDetails.OrderTotal.value) != order.Total)
                             {
-                                ModelState.AddModelError("",@"Paypal payment total does not match cart total!".Localize());
-                                return View("Index", model);
+                                ModelState.AddModelError("", "Paypal payment total does not match order total! Check the totals and try to pay again.".Localize());
+                            }
+                            else
+                            {
+                                try
+                                {
+                                    Ch.RunWorkflow("ShoppingCartCheckoutWorkflow", order);
+                                    Ch.OrderRepository.UnitOfWork.Commit();
+                                    return RedirectToAction("ProcessCheckout", "Checkout", new { id = order.OrderGroupId });
+                                }
+                                catch (Exception ex)
+                                {
+                                    ModelState.AddModelError("", ex.Message);
+                                }
                             }
 
-                            try
-                            {
-                                Ch.RunWorkflow("ShoppingCartCheckoutWorkflow", order);
-                                Ch.OrderRepository.UnitOfWork.Commit();
-                            }
-                            catch (Exception ex)
-                            {
-                                ModelState.AddModelError("", ex.Message);
-                                return View("Index", model);
-                            }
-
-                            return RedirectToAction("ProcessCheckout", "Checkout", new { id = order.OrderGroupId });
                         }
 
                     }
                 }
+            }
+
+            if (order != null)
+            {
+                //Restore cart if order fails
+                Ch.ToCart(order);
+
+                //Add paypal payment to make it selected in UI
+                var paypalPayment = new OtherPayment
+                {
+                    PaymentMethodId = payment.PaymentMethodId,
+                    PaymentMethodName = payment.PaymentMethodName,
+                    Amount = payment.Amount
+                };
+                Ch.OrderForm.Payments.Add(paypalPayment);
+                Ch.SaveChanges();
             }
 
             return View("Index", model);
@@ -1067,7 +1127,7 @@ namespace VirtoCommerce.Web.Controllers
             return addr;
         }
 
-        private static AddressModel ConvertToPaypalAddress(AddressType address, string name)
+        private static AddressModel ConvertFromPaypalAddress(AddressType address, string name)
         {
             var countryCode = "USA";
             var firstName = address.Name;
