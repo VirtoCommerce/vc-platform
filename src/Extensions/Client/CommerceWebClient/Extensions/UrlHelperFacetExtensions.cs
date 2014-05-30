@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
 namespace VirtoCommerce.Web.Client.Extensions
 {
-    using Microsoft.Practices.ObjectBuilder2;
-
     public static class UrlHelperFacetExtensions
     {
         public static string FacetPrefix = "f_";
@@ -24,10 +23,8 @@ namespace VirtoCommerce.Web.Client.Extensions
 
         public static string SetFacet(this UrlHelper helper, string url, string field, string value)
         {
-            return helper.SetParameters(url, new Dictionary<string, object> {
-                {helper.GetFacetKey(field), value},
-                {"p", 1}
-            });
+            url = helper.SetParameter(url, helper.GetFacetKey(field), value, false);
+            return helper.SetParameter(url, "p", "1");
         }
      
         public static string RemoveFacet(this UrlHelper helper, string field, string value)
@@ -45,12 +42,7 @@ namespace VirtoCommerce.Web.Client.Extensions
 
             var qs = ParseQueryString(parts[1]);
 
-            var keysToRemove = new List<string>();
-            foreach (var p in qs)
-            {
-                if (p.Key.StartsWith(FacetPrefix))
-                    keysToRemove.Add(p.Key);
-            }
+            var keysToRemove = (from p in qs where p.Key.StartsWith(FacetPrefix) select p.Key).ToList();
 
             foreach (var p in keysToRemove)
             {
@@ -64,26 +56,30 @@ namespace VirtoCommerce.Web.Client.Extensions
         /// <summary>
         /// Sets/changes an url's query string parameter.
         /// </summary>
-        /// <param name="helper"></param>
+        /// <param name="helper">The helper.</param>
         /// <param name="url">URL to process</param>
         /// <param name="key">Query string parameter key to set/change</param>
         /// <param name="value">Query string parameter value</param>
-        /// <returns>Resulting URL</returns>
-        public static string SetParameter(this UrlHelper helper, string url, string key, string value)
+        /// <param name="replace">if set to <c>true</c> [replace].</param>
+        /// <returns>
+        /// Resulting URL
+        /// </returns>
+        public static string SetParameter(this UrlHelper helper, string url, string key, string value, bool replace = true)
         {
-            return helper.SetParameters(url, new Dictionary<string, object> {
-                {key, value}
-            });
+            return helper.SetParameters(url, new Dictionary<string, object> { { key, value } }, replace);
         }
 
         /// <summary>
         /// Sets/changes an url's query string parameters.
         /// </summary>
-        /// <param name="helper"></param>
+        /// <param name="helper">The helper.</param>
         /// <param name="url">URL to process</param>
         /// <param name="parameters">Paramteres to set/change</param>
-        /// <returns>Resulting URL</returns>
-        public static string SetParameters(this UrlHelper helper, string url, IDictionary<string, object> parameters)
+        /// <param name="replace">if set to <c>true</c> [replace].</param>
+        /// <returns>
+        /// Resulting URL
+        /// </returns>
+        public static string SetParameters(this UrlHelper helper, string url, IDictionary<string, object> parameters, bool replace = true)
         {
             var parts = url.Split('?');
 
@@ -105,7 +101,7 @@ namespace VirtoCommerce.Web.Client.Extensions
                 {
                     var values = p.Value.ToString().Split(',');
 
-                    if (qs.ContainsKey(p.Key))
+                    if (qs.ContainsKey(p.Key) && !replace)
                     {
                         var list = new List<String>(qs[p.Key]);
                         list.AddRange(values);
@@ -191,16 +187,11 @@ namespace VirtoCommerce.Web.Client.Extensions
             return parts[0] + "?" + DictToQuerystring(qs);
         }
 
-        private static string RemoveParameters(this UrlHelper helper, params string[] parameters)
-        {
-            return helper.RemoveParametersUrl(helper.RequestContext.HttpContext.Request.RawUrl, parameters);
-        }
-
-        private static string DictToQuerystring(IDictionary<string, string[]> qs)
+        private static string DictToQuerystring(IEnumerable<KeyValuePair<string, string[]>> qs)
         {
             return string.Join("&", qs
                 .Where(k => !string.IsNullOrEmpty(k.Key))
-                .Select(k => string.Format("{0}={1}", HttpUtility.UrlEncode(k.Key), String.Join(",", k.Value.Select(x=> HttpUtility.UrlEncode(x)).ToArray()))).ToArray());
+                .Select(k => string.Format("{0}={1}", HttpUtility.UrlEncode(k.Key), String.Join(",", k.Value.Select(HttpUtility.UrlEncode).ToArray()))).ToArray());
         }
 
         /// <summary>
@@ -209,21 +200,25 @@ namespace VirtoCommerce.Web.Client.Extensions
         /// <param name="helper"></param>
         /// <param name="key">Parameter key</param>
         /// <param name="value">Parameter value</param>
+        /// <param name="replace"></param>
         /// <returns>Resulting URL</returns>
-        public static string SetParameter(this UrlHelper helper, string key, object value)
+        public static string SetParameter(this UrlHelper helper, string key, object value, bool replace = true)
         {
-            return helper.SetParameter(helper.RequestContext.HttpContext.Request.RawUrl, key, value.ToNullOrString());
+            return helper.SetParameter(helper.RequestContext.HttpContext.Request.RawUrl, key, value.ToNullOrString(), replace);
         }
 
         /// <summary>
-        /// Sets/changes the current query string's parameters, using <paramref name="parameterDictionary"/> as dictionary
+        /// Sets/changes the current query string's parameters, using <paramref name="parameterDictionary" /> as dictionary
         /// </summary>
-        /// <param name="helper"></param>
+        /// <param name="helper">The helper.</param>
         /// <param name="parameterDictionary">Parameters to set/change</param>
-        /// <returns>Resulting URL</returns>
-        public static string SetParameters(this UrlHelper helper, object parameterDictionary)
+        /// <param name="replace">if set to <c>true</c> [replace].</param>
+        /// <returns>
+        /// Resulting URL
+        /// </returns>
+        public static string SetParameters(this UrlHelper helper, object parameterDictionary, bool replace = true)
         {
-            return helper.SetParameters(helper.RequestContext.HttpContext.Request.RawUrl, parameterDictionary.ToPropertyDictionary());
+            return helper.SetParameters(helper.RequestContext.HttpContext.Request.RawUrl, parameterDictionary.ToPropertyDictionary(), replace);
         }
 
         /// <summary>
@@ -253,7 +248,7 @@ namespace VirtoCommerce.Web.Client.Extensions
                     continue;
                 }
 
-                var valueArray = v[1].Split(',').Select(x => HttpUtility.UrlDecode(x.ToString())).ToArray();
+                var valueArray = v[1].Split(',').Select(x => HttpUtility.UrlDecode(x.ToString(CultureInfo.InvariantCulture))).ToArray();
                 d[HttpUtility.UrlDecode(v[0])] = valueArray;
             }
             return d;
