@@ -169,13 +169,14 @@ namespace VirtoCommerce.Client.Globalization.Repository
                 return false;
             }
 
-            try
-            {
-                _cacheRepository.Add(element);
+            _cacheRepository.Add(element);
 
-                Task.Run(() =>
+
+            Task.Run(() =>
+            {
+                using (var _repository = _repositoryFactory.GetRepositoryInstance())
                 {
-                    using (var _repository = _repositoryFactory.GetRepositoryInstance())
+                    try
                     {
                         _repository.Add(new Localization
                         {
@@ -186,16 +187,14 @@ namespace VirtoCommerce.Client.Globalization.Repository
                         });
                         _repository.UnitOfWork.Commit();
                     }
+                    catch (Exception e)
+                    {
+                        Debug.WriteLine(e.ToString());
+                    }
+                }
+            });
 
-                });
-
-                return true;
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e.ToString());
-                return false;
-            }
+            return true;
         }
 
         /// <summary>

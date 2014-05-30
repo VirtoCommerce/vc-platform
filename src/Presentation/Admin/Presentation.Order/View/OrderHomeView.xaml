@@ -10,6 +10,7 @@
      d:DataContext="{d:DesignInstance Type=implementations:OrderHomeViewModel, IsDesignTimeCreatable=False}"
      xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Order"
              xmlns:model2="clr-namespace:VirtoCommerce.Foundation.Stores.Model;assembly=VirtoCommerce.Foundation"
+             xmlns:common="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Common;assembly=VirtoCommerce.ManagementClient.Core"
              LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
     <UserControl.Resources>
         <ResourceDictionary>
@@ -140,7 +141,7 @@
                              IsAddingNullItemsFirst="True" Width="Auto" HorizontalAlignment="Stretch">
                             <core_controls:NullItemSelectorAdapter.NullItems>
                                 <collections:ArrayList>
-                                    <sys:String>Select...</sys:String>
+                                    <common:Single_String Value="Select..." />
                                 </collections:ArrayList>
                             </core_controls:NullItemSelectorAdapter.NullItems>
                             <ComboBox SelectedValue="{Binding SearchFilterOrderStatus, Mode=TwoWay}" x:Name="orderStatus">
@@ -161,7 +162,7 @@
                              Width="Auto" HorizontalAlignment="Stretch">
                             <core_controls:NullItemSelectorAdapter.NullItems>
                                 <collections:ArrayList>
-                                    <sys:String>All Stores</sys:String>
+                                    <common:Single_String Value="All Stores" />
                                 </collections:ArrayList>
                             </core_controls:NullItemSelectorAdapter.NullItems>
                             <ComboBox SelectedValue="{Binding SearchFilterStore, Mode=TwoWay}">

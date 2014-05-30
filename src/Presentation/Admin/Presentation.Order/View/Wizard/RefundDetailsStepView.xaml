@@ -7,7 +7,8 @@
      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
      xmlns:implementations="clr-namespace:VirtoCommerce.ManagementClient.Order.ViewModel.Wizard.Implementations"
      mc:Ignorable="d" Width="600" d:DesignHeight="400" xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Order"
-     LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
+              xmlns:ordersModel="clr-namespace:VirtoCommerce.ManagementClient.Order.Model"
+              LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
     <FrameworkElement.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -83,8 +84,13 @@
                             <TextBlock Text="{Loc '* Expiration Date'}" />
                             <DockPanel LastChildFill="False">
                                 <ComboBox ItemsSource="{Binding InnerModel.NewPaymentSource.Months}" SelectedValue="{Binding InnerModel.NewPaymentSource.NewPayment.CreditCardExpirationMonth, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
-                                     DisplayMemberPath="Name" SelectedValuePath="Value" MinWidth="140" behaviors:WatermarkComboBoxBehavior.EnableWatermark="True"
-                                     behaviors:WatermarkComboBoxBehavior.Label="month" />
+                                     SelectedValuePath="Value" MinWidth="140" behaviors:WatermarkComboBoxBehavior.EnableWatermark="True" behaviors:WatermarkComboBoxBehavior.Label="month">
+                                    <FrameworkElement.Resources>
+                                        <DataTemplate DataType="{x:Type ordersModel:ListModelInt}" >
+                                            <ContentPresenter Content="{Binding Name}" ContentTemplate="{StaticResource Virto_SearchConstant_ComboBox_DataTemplate}" />
+                                        </DataTemplate>
+                                    </FrameworkElement.Resources>
+                                </ComboBox>
                                 <ComboBox ItemsSource="{Binding InnerModel.NewPaymentSource.Years}" SelectedValue="{Binding InnerModel.NewPaymentSource.NewPayment.CreditCardExpirationYear, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                                      DisplayMemberPath="Name" SelectedValuePath="Value" MinWidth="60" Margin="8,0,0,0"
                                      behaviors:WatermarkComboBoxBehavior.EnableWatermark="True" behaviors:WatermarkComboBoxBehavior.Label="yyyy" />

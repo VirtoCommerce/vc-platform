@@ -16,239 +16,244 @@ using VirtoCommerce.ManagementClient.Order.ViewModel.Wizard.Interfaces;
 
 namespace VirtoCommerce.ManagementClient.Order.ViewModel.Wizard.Implementations
 {
-	public class CreateExchangeViewModel : CreateRmaRequestViewModel, ICreateExchangeViewModel
-	{
-		public ILineItemAddViewModel LineItemAddVM { get; private set; }
+    public class CreateExchangeViewModel : CreateRmaRequestViewModel, ICreateExchangeViewModel
+    {
+        public ILineItemAddViewModel LineItemAddVM { get; private set; }
 
-		private readonly IOrderEntityFactory _entityFactory;
-		private readonly IRepositoryFactory<IShippingRepository> _shippingRepositoryFactory;
-		private readonly IViewModelsFactory<IOrderAddressViewModel> _addressVmFactory;
+        private readonly IOrderEntityFactory _entityFactory;
+        private readonly IRepositoryFactory<IShippingRepository> _shippingRepositoryFactory;
+        private readonly IViewModelsFactory<IOrderAddressViewModel> _addressVmFactory;
 
-		// main public constructor. calls CreateWizardSteps()
-		public CreateExchangeViewModel(Foundation.Orders.Model.Order innerOrder,
-			RmaRequest rmaRequest, IRepositoryFactory<IShippingRepository> shippingRepositoryFactory,
-			IViewModelsFactory<IRmaRequestReturnItemsStepViewModel> returnItemsVmFactory,
-			IViewModelsFactory<IRmaRequestRefundStepViewModel> refundVmFactory,
-			IOrderEntityFactory entityFactory, ReturnBuilder returnBuilder,
-			IViewModelsFactory<ILineItemAddViewModel> lineItemAddVmFactory,
-			IViewModelsFactory<IExchangeOrderStepViewModel> exchangeVmFactory,
-			IViewModelsFactory<IOrderAddressViewModel> addressVmFactory)
-			: base(innerOrder, rmaRequest, entityFactory, returnBuilder, returnItemsVmFactory, refundVmFactory, lineItemAddVmFactory, exchangeVmFactory)
-		{
-			_entityFactory = entityFactory;
-			_addressVmFactory = addressVmFactory;
-			_shippingRepositoryFactory = shippingRepositoryFactory;
-			_exchangeVmFactory = exchangeVmFactory;
-		}
+        // main public constructor. calls CreateWizardSteps()
+        public CreateExchangeViewModel(Foundation.Orders.Model.Order innerOrder,
+            RmaRequest rmaRequest, IRepositoryFactory<IShippingRepository> shippingRepositoryFactory,
+            IViewModelsFactory<IRmaRequestReturnItemsStepViewModel> returnItemsVmFactory,
+            IViewModelsFactory<IRmaRequestRefundStepViewModel> refundVmFactory,
+            IOrderEntityFactory entityFactory, ReturnBuilder returnBuilder,
+            IViewModelsFactory<ILineItemAddViewModel> lineItemAddVmFactory,
+            IViewModelsFactory<IExchangeOrderStepViewModel> exchangeVmFactory,
+            IViewModelsFactory<IOrderAddressViewModel> addressVmFactory)
+            : base(innerOrder, rmaRequest, entityFactory, returnBuilder, returnItemsVmFactory, refundVmFactory, lineItemAddVmFactory, exchangeVmFactory)
+        {
+            _entityFactory = entityFactory;
+            _addressVmFactory = addressVmFactory;
+            _shippingRepositoryFactory = shippingRepositoryFactory;
+            _exchangeVmFactory = exchangeVmFactory;
+        }
 
-		// constructor (for single wizard step)
-		protected CreateExchangeViewModel(
-			ReturnBuilder returnBuilder,
-			IViewModelsFactory<ILineItemAddViewModel> lineItemAddVmFactory,
-			bool isCreatingExchangeOrderOnly,
-			IViewModelsFactory<IReturnItemViewModel> returnItemVmFactory,
-			IRepositoryFactory<IShippingRepository> shippingRepositoryFactory)
-			: base(returnItemVmFactory, returnBuilder, isCreatingExchangeOrderOnly)
-		{
-			_shippingRepositoryFactory = shippingRepositoryFactory;
-			_lineItemAddVmFactory = lineItemAddVmFactory;
-			LineItemAddVM = lineItemAddVmFactory.GetViewModelInstance();
+        // constructor (for single wizard step)
+        protected CreateExchangeViewModel(
+            IOrderEntityFactory entityFactory,
+            IViewModelsFactory<IOrderAddressViewModel> addressVmFactory,
+            ReturnBuilder returnBuilder,
+            IViewModelsFactory<ILineItemAddViewModel> lineItemAddVmFactory,
+            bool isCreatingExchangeOrderOnly,
+            IViewModelsFactory<IReturnItemViewModel> returnItemVmFactory,
+            IRepositoryFactory<IShippingRepository> shippingRepositoryFactory)
+            : base(returnItemVmFactory, returnBuilder, isCreatingExchangeOrderOnly)
+        {
+            _shippingRepositoryFactory = shippingRepositoryFactory;
+            _lineItemAddVmFactory = lineItemAddVmFactory;
+            LineItemAddVM = lineItemAddVmFactory.GetViewModelInstance();
 
-			if (this is IExchangeOrderStepViewModel)
-			{
-				// workaround for null pointer exception
-				returnBuilder.WithExchangeShippingAddress(new OrderAddress() { OrderAddressId = "fake address" });
+            if (this is IExchangeOrderStepViewModel)
+            {
+                _entityFactory = entityFactory;
+                _addressVmFactory = addressVmFactory;
 
-				LineItemAddVM.SelectedItemsToAdd.CollectionChanged += SelectedItemsToAdd_CollectionChanged;
+                // workaround for null pointer exception
+                returnBuilder.WithExchangeShippingAddress(new OrderAddress() { OrderAddressId = "fake address" });
 
-				ShippingAddress = AvailableShippingAddresses.FirstOrDefault();
-				ShippingMethod = AvailableShippingMethods.FirstOrDefault();
-			}
-		}
+                LineItemAddVM.SelectedItemsToAdd.CollectionChanged += SelectedItemsToAdd_CollectionChanged;
 
-		protected OrderModel ExchangeOrder
-		{
-			get
-			{
-				return ReturnBuilder.ExchangeOrder;
-			}
-		}
+                ShippingAddress = AvailableShippingAddresses.FirstOrDefault();
+                ShippingMethod = AvailableShippingMethods.FirstOrDefault();
+            }
+        }
 
-		#region ICreateExchangeViewModel Members
-		public object ShippingAddress
-		{
-			get
-			{
-				// return ExchangeOrder.OrderAddresses.FirstOrDefault(x => x.OrderAddressId == ExchangeOrder.OrderForms[0].Shipments[0].ShippingAddressId);
-				return ExchangeOrder.OrderAddresses.FirstOrDefault(x => x.OrderAddressId == ExchangeOrder.OrderForms[0].Shipments[0].ShippingAddressId);
-			}
-			set
-			{
-				if (value is OrderAddress)
-				{
-					// ExchangeOrder.OrderForms[0].Shipments[0].ShippingAddressId = value;
-					ReturnBuilder.WithExchangeShippingAddress((OrderAddress)value);
-					OnPropertyChanged();
-					OnIsValidChanged();
-				}
-				else
-				{
-					RaiseShippingAddressCreateInteractionRequest();
-				}
-			}
-		}
+        protected OrderModel ExchangeOrder
+        {
+            get
+            {
+                return ReturnBuilder.ExchangeOrder;
+            }
+        }
 
-		public ShippingMethod ShippingMethod
-		{
-			get
-			{
-				return AvailableShippingMethods.FirstOrDefault((x) => x.ShippingMethodId == ExchangeOrder.OrderForms[0].Shipments[0].ShippingMethodId);
-			}
-			set
-			{
-				// ExchangeOrder.OrderForms[0].Shipments[0].ShippingMethodId = value;
-				ReturnBuilder.WithExchangeShippingMethod(value);
-				// OnPropertyChanged("ShippingMethod");
-				OnIsValidChanged();
-			}
-		}
+        #region ICreateExchangeViewModel Members
+        public object ShippingAddress
+        {
+            get
+            {
+                // return ExchangeOrder.OrderAddresses.FirstOrDefault(x => x.OrderAddressId == ExchangeOrder.OrderForms[0].Shipments[0].ShippingAddressId);
+                return ExchangeOrder.OrderAddresses.FirstOrDefault(x => x.OrderAddressId == ExchangeOrder.OrderForms[0].Shipments[0].ShippingAddressId);
+            }
+            set
+            {
+                if (value is OrderAddress)
+                {
+                    // ExchangeOrder.OrderForms[0].Shipments[0].ShippingAddressId = value;
+                    ReturnBuilder.WithExchangeShippingAddress((OrderAddress)value);
+                    OnPropertyChanged();
+                    OnIsValidChanged();
+                }
+                else
+                {
+                    RaiseShippingAddressCreateInteractionRequest();
+                }
+            }
+        }
 
-		#endregion
+        public ShippingMethod ShippingMethod
+        {
+            get
+            {
+                return AvailableShippingMethods.FirstOrDefault((x) => x.ShippingMethodId == ExchangeOrder.OrderForms[0].Shipments[0].ShippingMethodId);
+            }
+            set
+            {
+                // ExchangeOrder.OrderForms[0].Shipments[0].ShippingMethodId = value;
+                ReturnBuilder.WithExchangeShippingMethod(value);
+                // OnPropertyChanged("ShippingMethod");
+                OnIsValidChanged();
+            }
+        }
 
-		public IEnumerable<OrderAddress> AvailableShippingAddresses
-		{
-			get
-			{
-				return ExchangeOrder.OrderAddresses;
-			}
-		}
+        #endregion
 
-		ObservableCollection<ShippingMethod> _availableShippingMethods;
-		public ObservableCollection<ShippingMethod> AvailableShippingMethods
-		{
-			get
-			{
-				if (_availableShippingMethods == null)
-				{
-					var _shippingRepository = _shippingRepositoryFactory.GetRepositoryInstance();
-					var allShippingMethods = _shippingRepository.ShippingOptions.Expand(x => x.ShippingMethods)
-						.ToList()
-						.SelectMany(x => x.ShippingMethods)
-						.Distinct();
+        public IEnumerable<OrderAddress> AvailableShippingAddresses
+        {
+            get
+            {
+                return ExchangeOrder.OrderAddresses;
+            }
+        }
 
-					_availableShippingMethods = new ObservableCollection<ShippingMethod>(allShippingMethods);
-				}
-				return _availableShippingMethods;
-			}
-		}
+        ObservableCollection<ShippingMethod> _availableShippingMethods;
+        public ObservableCollection<ShippingMethod> AvailableShippingMethods
+        {
+            get
+            {
+                if (_availableShippingMethods == null)
+                {
+                    var _shippingRepository = _shippingRepositoryFactory.GetRepositoryInstance();
+                    var allShippingMethods = _shippingRepository.ShippingOptions.Expand(x => x.ShippingMethods)
+                        .ToList()
+                        .SelectMany(x => x.ShippingMethods)
+                        .Distinct();
 
-		#region CreateRmaRequestViewModel Members overrides
+                    _availableShippingMethods = new ObservableCollection<ShippingMethod>(allShippingMethods);
+                }
+                return _availableShippingMethods;
+            }
+        }
 
-		#region IWizardStep Members
-		public override bool IsValid
-		{
-			get
-			{
-				var retval = true;
+        #region CreateRmaRequestViewModel Members overrides
 
-				if (this is IExchangeOrderStepViewModel)
-				{
-					retval = (ReturnBuilder.ExchangeLineItems.Count > 0)
-								&& (ShippingAddress is OrderAddress)
-								&& (ShippingMethod != null);
-				}
+        #region IWizardStep Members
+        public override bool IsValid
+        {
+            get
+            {
+                var retval = true;
 
-				return retval;
-			}
-		}
+                if (this is IExchangeOrderStepViewModel)
+                {
+                    retval = (ReturnBuilder.ExchangeLineItems.Count > 0)
+                                && (ShippingAddress is OrderAddress)
+                                && (ShippingMethod != null);
+                }
 
-		public override string Description
-		{
-			get { return "Select exchange Order Items".Localize(); }
-		}
-		#endregion
+                return retval;
+            }
+        }
 
-		protected override void CreateWizardSteps(IViewModelsFactory<IRmaRequestReturnItemsStepViewModel> returnItemsVmFactory,
-			IViewModelsFactory<IRmaRequestRefundStepViewModel> refundVmFactory)
-		{
-			LineItemAddVM = _lineItemAddVmFactory.GetViewModelInstance();
+        public override string Description
+        {
+            get { return "Select exchange Order Items".Localize(); }
+        }
+        #endregion
 
-			var builderParameter = new KeyValuePair<string, object>("returnBuilder", ReturnBuilder);
+        protected override void CreateWizardSteps(IViewModelsFactory<IRmaRequestReturnItemsStepViewModel> returnItemsVmFactory,
+            IViewModelsFactory<IRmaRequestRefundStepViewModel> refundVmFactory)
+        {
+            LineItemAddVM = _lineItemAddVmFactory.GetViewModelInstance();
 
-			if (!_isCreatingExchangeOrderOnly)
-				RegisterStep(returnItemsVmFactory.GetViewModelInstance(builderParameter));
+            var builderParameter = new KeyValuePair<string, object>("returnBuilder", ReturnBuilder);
 
-			RegisterStep(_exchangeVmFactory.GetViewModelInstance(builderParameter,
-				new KeyValuePair<string, object>("lineItemAddVM", LineItemAddVM),
-				new KeyValuePair<string, object>("isCreatingExchangeOrderOnly", _isCreatingExchangeOrderOnly)));
-			RegisterStep(refundVmFactory.GetViewModelInstance(builderParameter));
-		}
+            if (!_isCreatingExchangeOrderOnly)
+                RegisterStep(returnItemsVmFactory.GetViewModelInstance(builderParameter));
 
-		#endregion
+            RegisterStep(_exchangeVmFactory.GetViewModelInstance(builderParameter,
+                new KeyValuePair<string, object>("lineItemAddVM", LineItemAddVM),
+                new KeyValuePair<string, object>("isCreatingExchangeOrderOnly", _isCreatingExchangeOrderOnly)));
+            RegisterStep(refundVmFactory.GetViewModelInstance(builderParameter));
+        }
 
-		private void SelectedItemsToAdd_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-		{
-			if (e.Action == NotifyCollectionChangedAction.Add)
-			{
-				foreach (ILineItemViewModel item in e.NewItems)
-				{
-					ReturnBuilder.AddExchangeItem(item.ItemToAdd, item.Quantity);
-				}
-			}
-			else if (e.Action == NotifyCollectionChangedAction.Remove)
-			{
-				foreach (ILineItemViewModel item in e.OldItems)
-				{
-					var exchangeLineItem = ReturnBuilder.ExchangeLineItems.Where(x => x.CatalogItemId == item.ItemToAdd.ItemId).FirstOrDefault();
-					ReturnBuilder.RemoveExchangeItem(exchangeLineItem);
-				}
-			}
+        #endregion
 
-			OnIsValidChanged();
-		}
+        private void SelectedItemsToAdd_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            if (e.Action == NotifyCollectionChangedAction.Add)
+            {
+                foreach (ILineItemViewModel item in e.NewItems)
+                {
+                    ReturnBuilder.AddExchangeItem(item.ItemToAdd, item.Quantity);
+                }
+            }
+            else if (e.Action == NotifyCollectionChangedAction.Remove)
+            {
+                foreach (ILineItemViewModel item in e.OldItems)
+                {
+                    var exchangeLineItem = ReturnBuilder.ExchangeLineItems.Where(x => x.CatalogItemId == item.ItemToAdd.ItemId).FirstOrDefault();
+                    ReturnBuilder.RemoveExchangeItem(exchangeLineItem);
+                }
+            }
 
-		private void RaiseShippingAddressCreateInteractionRequest()
-		{
-			var item = CreateEntity<OrderAddress>();
-			var itemVM = _addressVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("addressItem", item));
+            OnIsValidChanged();
+        }
 
-			var confirmation = new ConditionalConfirmation(item.Validate)
-				{
-					Title = "New order address".Localize(),
-					Content = itemVM
-				};
+        private void RaiseShippingAddressCreateInteractionRequest()
+        {
+            var item = CreateEntity<OrderAddress>();
+            var itemVM = _addressVmFactory.GetViewModelInstance(new KeyValuePair<string, object>("addressItem", item));
 
-			ReturnItemConfirmRequest.Raise(confirmation, (x) =>
-			{
-				if (x.Confirmed)
-				{
-					ExchangeOrder.OrderAddresses.Add(item);
-					ShippingAddress = item;
-				}
-			});
-		}
+            var confirmation = new ConditionalConfirmation(item.Validate)
+                {
+                    Title = "New order address".Localize(),
+                    Content = itemVM
+                };
 
-		private T CreateEntity<T>()
-		{
-			var entityName = _entityFactory.GetEntityTypeStringName(typeof(T));
-			return (T)_entityFactory.CreateEntityForType(entityName);
-		}
+            ReturnItemConfirmRequest.Raise(confirmation, (x) =>
+            {
+                if (x.Confirmed)
+                {
+                    ExchangeOrder.OrderAddresses.Add(item);
+                    ShippingAddress = item;
+                }
+            });
+        }
 
-	}
+        private T CreateEntity<T>()
+        {
+            var entityName = _entityFactory.GetEntityTypeStringName(typeof(T));
+            return (T)_entityFactory.CreateEntityForType(entityName);
+        }
 
-	public class ExchangeOrderStepViewModel : CreateExchangeViewModel, IExchangeOrderStepViewModel
-	{
-		public ExchangeOrderStepViewModel(ReturnBuilder returnBuilder, IViewModelsFactory<ILineItemAddViewModel> lineItemAddVmFactory, bool isCreatingExchangeOrderOnly, IRepositoryFactory<IShippingRepository> shippingRepositoryFactory)
-			: base(returnBuilder, lineItemAddVmFactory, isCreatingExchangeOrderOnly, null, shippingRepositoryFactory)
-		{
-		}
+    }
 
-		public Shipment ExchangeShipment
-		{
-			get
-			{
-				return ExchangeOrder.OrderForms[0].Shipments[0];
-			}
-		}
-	}
+    public class ExchangeOrderStepViewModel : CreateExchangeViewModel, IExchangeOrderStepViewModel
+    {
+        public ExchangeOrderStepViewModel(IOrderEntityFactory entityFactory, IViewModelsFactory<IOrderAddressViewModel> addressVmFactory, ReturnBuilder returnBuilder, IViewModelsFactory<ILineItemAddViewModel> lineItemAddVmFactory, bool isCreatingExchangeOrderOnly, IRepositoryFactory<IShippingRepository> shippingRepositoryFactory)
+            : base(entityFactory, addressVmFactory, returnBuilder, lineItemAddVmFactory, isCreatingExchangeOrderOnly, null, shippingRepositoryFactory)
+        {
+        }
+
+        public Shipment ExchangeShipment
+        {
+            get
+            {
+                return ExchangeOrder.OrderForms[0].Shipments[0];
+            }
+        }
+    }
 }

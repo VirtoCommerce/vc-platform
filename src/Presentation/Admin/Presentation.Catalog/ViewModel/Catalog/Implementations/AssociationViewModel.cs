@@ -21,15 +21,13 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			InnerItem = item;
 			_searchVmFactory = searchVmFactory;
 
-			AvailableAssociationTypes = new[] {
-				new KeyValuePair_string_string { Value = AssociationTypes.optional.ToString() },
-				new KeyValuePair_string_string{ Value = AssociationTypes.required.ToString()}};
+			AvailableAssociationTypes = new[] { AssociationTypes.optional.ToString(), AssociationTypes.required.ToString()};
 
 			ItemPickCommand = new DelegateCommand(RaiseItemPickInteractionRequest);
 			CommonConfirmRequest = new InteractionRequest<Confirmation>();
 		}
 
-		public IEnumerable<KeyValuePair_string_string> AvailableAssociationTypes { get; private set; }
+		public string[] AvailableAssociationTypes { get; private set; }
 
 		public DelegateCommand ItemPickCommand { get; private set; }
 		public InteractionRequest<Confirmation> CommonConfirmRequest { get; private set; }

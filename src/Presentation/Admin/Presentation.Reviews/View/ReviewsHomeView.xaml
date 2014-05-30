@@ -4,9 +4,7 @@
      xmlns:collections="clr-namespace:System.Collections;assembly=mscorlib" xmlns:sys="clr-namespace:System;assembly=mscorlib"
      xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
      xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions" xmlns:prism="http://www.codeplex.com/prism"
-     xmlns:localViewModel="clr-namespace:VirtoCommerce.ManagementClient.Reviews.ViewModel"
      xmlns:localModel="clr-namespace:VirtoCommerce.ManagementClient.Reviews.Model" xmlns:reviewsModel="clr-namespace:VirtoCommerce.Foundation.Reviews.Model;assembly=VirtoCommerce.Foundation"
-     xmlns:inf_behavior="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Behaviors;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:core_common="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Common;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:interaction_dialog="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Dialogs;assembly=VirtoCommerce.ManagementClient.Core"
@@ -147,11 +145,15 @@
                                  IsAddingNullItemsFirst="True" Width="Auto" HorizontalAlignment="Stretch">
                                 <core_controls:NullItemSelectorAdapter.NullItems>
                                     <collections:ArrayList>
-                                        <sys:String>Select...</sys:String>
+                                        <core_common:Single_String Value="Select..." />
                                     </collections:ArrayList>
                                 </core_controls:NullItemSelectorAdapter.NullItems>
-                                <ComboBox SelectedValue="{Binding SearchFilterReviewType, Mode=TwoWay}" x:Name="reviewType"
-                                     ItemTemplate="{StaticResource Virto_Search_ComboBox_DataTemplate}">
+                                <ComboBox SelectedValue="{Binding SearchFilterReviewType, Mode=TwoWay}" x:Name="reviewType">
+                                    <FrameworkElement.Resources>
+                                        <DataTemplate DataType="{x:Type localModel:ReviewType}" >
+                                            <ContentPresenter ContentTemplate="{StaticResource Virto_SearchConstant_ComboBox_DataTemplate}" />
+                                        </DataTemplate>
+                                    </FrameworkElement.Resources>
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="SelectionChanged">
                                             <i:InvokeCommandAction Command="{Binding SearchItemsCommand}" CommandParameter="{Binding ElementName=reviewType, Path=Name}" />
@@ -164,11 +166,15 @@
                                  IsAddingNullItemsFirst="True" Width="Auto" HorizontalAlignment="Stretch">
                                 <core_controls:NullItemSelectorAdapter.NullItems>
                                     <collections:ArrayList>
-                                        <sys:String>Select...</sys:String>
+                                        <core_common:Single_String Value="Select..." />
                                     </collections:ArrayList>
                                 </core_controls:NullItemSelectorAdapter.NullItems>
-                                <ComboBox SelectedValue="{Binding SearchFilterReviewStatus, Mode=TwoWay}" x:Name="reviewStatus"
-                                     ItemTemplate="{StaticResource Virto_Search_ComboBox_DataTemplate}">
+                                <ComboBox SelectedValue="{Binding SearchFilterReviewStatus, Mode=TwoWay}" x:Name="reviewStatus">
+                                    <FrameworkElement.Resources>
+                                        <DataTemplate DataType="{x:Type reviewsModel:ReviewStatus}" >
+                                            <ContentPresenter ContentTemplate="{StaticResource Virto_SearchConstant_ComboBox_DataTemplate}" />
+                                        </DataTemplate>
+                                    </FrameworkElement.Resources>
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="SelectionChanged">
                                             <i:InvokeCommandAction Command="{Binding SearchItemsCommand}" CommandParameter="{Binding ElementName=reviewStatus, Path=Name}" />

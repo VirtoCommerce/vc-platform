@@ -2,7 +2,6 @@
      x:Class="VirtoCommerce.ManagementClient.Catalog.View.PropertySetView" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:core_controls="clr-namespace:VirtoCommerce.ManagementClient.Core.Controls;assembly=VirtoCommerce.ManagementClient.Core"
-     xmlns:collections="clr-namespace:System.Collections;assembly=mscorlib" xmlns:sys="clr-namespace:System;assembly=mscorlib"
      xmlns:viewModel="clr-namespace:VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementations"
      xmlns:behaviors="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Behaviors;assembly=VirtoCommerce.ManagementClient.Core"
      mc:Ignorable="d" Width="600" VerticalAlignment="Top" HorizontalAlignment="Left" xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Catalog"

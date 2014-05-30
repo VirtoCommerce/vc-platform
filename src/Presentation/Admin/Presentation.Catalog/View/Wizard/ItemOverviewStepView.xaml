@@ -147,7 +147,7 @@
                          ItemsSource="{Binding AvailableAvailabilityRules}">
                         <ComboBox.ItemTemplate>
                             <DataTemplate>
-								<ContentPresenter Content="{Binding }" ContentTemplate="{StaticResource Virto_SearchConstant_ComboBox_DataTemplate}" />
+								<ContentPresenter ContentTemplate="{StaticResource Virto_SearchConstant_ComboBox_DataTemplate}" />
                             </DataTemplate>
                         </ComboBox.ItemTemplate>
                     </ComboBox>

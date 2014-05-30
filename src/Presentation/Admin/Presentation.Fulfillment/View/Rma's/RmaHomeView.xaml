@@ -125,10 +125,10 @@
                                  IsAddingNullItemsFirst="True" Width="Auto" HorizontalAlignment="Stretch">
                                 <core_controls:NullItemSelectorAdapter.NullItems>
                                     <collections:ArrayList>
-                                        <sys:String>Select...</sys:String>
+                                        <core_common:Single_String Value="Select..." />
                                     </collections:ArrayList>
                                 </core_controls:NullItemSelectorAdapter.NullItems>
-                                <ComboBox SelectedValue="{Binding SearchFilterReason, Mode=TwoWay}" ItemTemplate="{StaticResource Virto_Search_ComboBox_DataTemplate}">
+                                <ComboBox SelectedValue="{Binding SearchFilterReason, Mode=TwoWay}">
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="SelectionChanged">
                                             <i:InvokeCommandAction Command="{Binding SearchItemsCommand}" />
@@ -141,11 +141,15 @@
                                  IsAddingNullItemsFirst="True" Width="Auto" HorizontalAlignment="Stretch">
                                 <core_controls:NullItemSelectorAdapter.NullItems>
                                     <collections:ArrayList>
-                                        <sys:String>Select...</sys:String>
+                                        <core_common:Single_String Value="Select..." />
                                     </collections:ArrayList>
                                 </core_controls:NullItemSelectorAdapter.NullItems>
-                                <ComboBox SelectedValue="{Binding SearchFilterStatus, Mode=TwoWay}" x:Name="returnStatus"
-                                     ItemTemplate="{StaticResource Virto_Search_ComboBox_DataTemplate}">
+                                <ComboBox SelectedValue="{Binding SearchFilterStatus, Mode=TwoWay}" x:Name="returnStatus">
+                                    <FrameworkElement.Resources>
+                                        <DataTemplate DataType="{x:Type ordersModel:RmaRequestStatus}" >
+                                            <ContentPresenter ContentTemplate="{StaticResource Virto_SearchConstant_ComboBox_DataTemplate}" />
+                                        </DataTemplate>
+                                    </FrameworkElement.Resources>
                                     <i:Interaction.Triggers>
                                         <i:EventTrigger EventName="SelectionChanged">
                                             <i:InvokeCommandAction Command="{Binding SearchItemsCommand}" />

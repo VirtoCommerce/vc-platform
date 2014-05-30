@@ -29,7 +29,7 @@
             <ComboBox ItemsSource="{Binding Path=LanguageCodeList}" SelectedItem="{Binding Path=InnerItem.LanguageCode, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, ValidatesOnDataErrors=True}">
                 <FrameworkElement.Resources>
                     <DataTemplate DataType="{x:Type sys:String}" >
-                        <ContentPresenter ContentTemplate="{StaticResource Virto_SearchConstant_ComboBox_DataTemplate}" />
+                        <ContentPresenter ContentTemplate="{StaticResource Virto_SearchData_ComboBox_DataTemplate}" />
                     </DataTemplate>
                 </FrameworkElement.Resources>
             </ComboBox>
