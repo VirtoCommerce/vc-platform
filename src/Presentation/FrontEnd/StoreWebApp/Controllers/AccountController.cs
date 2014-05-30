@@ -596,21 +596,8 @@ namespace VirtoCommerce.Web.Controllers
                 throw new UnauthorizedAccessException();
             }
 
-            //Convert order forms to shopping cart
-            order.OrderForms.ForEach(f=>f.Name = CartHelper.CartName);
-
             var ch = new CartHelper(CartHelper.CartName);
-            ch.Add(order);
-
-            if (String.IsNullOrEmpty(ch.Cart.BillingCurrency))
-            {
-                ch.Cart.BillingCurrency = UserHelper.CustomerSession.Currency;
-            }
-
-            // run workflows
-            ch.RunWorkflow("ShoppingCartPrepareWorkflow");
-
-            ch.SaveChanges();
+            ch.ToCart(order);
 
             return RedirectToAction("Index", "Checkout");
         }
