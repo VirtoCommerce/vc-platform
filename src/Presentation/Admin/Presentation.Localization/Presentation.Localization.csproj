@@ -7,8 +7,8 @@
     <ProjectGuid>{10A07A08-2934-4338-B8BD-B89BDC1D014E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Presentation.Localization</RootNamespace>
-    <AssemblyName>Presentation.Localization</AssemblyName>
+    <RootNamespace>VirtoCommerce.ManagementClient.Localization</RootNamespace>
+    <AssemblyName>VirtoCommerce.ManagementClient.Localization</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
