@@ -33,6 +33,10 @@
       <Payload SourceFile="$(var.AnyCPUOutDir)\System.Windows.Interactivity.dll" Compressed="yes" />
       <Payload SourceFile="$(var.AnyCPUOutDir)\Xceed.Wpf.DataGrid.dll" Compressed="yes" />
       <Payload SourceFile="$(var.AnyCPUOutDir)\Xceed.Wpf.Toolkit.dll" Compressed="yes" />
+      <Payload SourceFile="$(var.AnyCPUOutDir)\VirtoCommerce.ManagementClient.Localization.dll" Compressed="yes" />
+      <?ifdef Debug ?>
+      <Payload SourceFile="$(var.AnyCPUOutDir)\VirtoCommerce.ManagementClient.Localization.pdb" Compressed="yes" />
+      <?endif?>
       <Payload SourceFile="$(var.AnyCPUOutDir)\VirtoCommerce.ManagementClient.Core.dll" Compressed="yes" />
       <?ifdef Debug ?>
         <Payload SourceFile="$(var.AnyCPUOutDir)\VirtoCommerce.ManagementClient.Core.pdb" Compressed="yes" />

@@ -97,6 +97,10 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="VirtoCommerce.Client, Version=1.10.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\src\Presentation\Admin\Presentation.Core\bin\Debug\VirtoCommerce.Client.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -125,6 +129,7 @@
     <Compile Include="..\..\..\src\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Infrastructure\DummyElementRepository.cs" />
     <Compile Include="Modules\MainModule.cs" />
     <Compile Include="ViewModels\IShellViewModel.cs" />
     <Compile Include="ViewModels\ShellViewModel.cs" />
