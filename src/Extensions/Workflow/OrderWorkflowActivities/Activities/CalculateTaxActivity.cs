@@ -77,7 +77,9 @@ namespace VirtoCommerce.OrderWorkflow
 					decimal shippingTax = 0;
 					foreach (var shipItem in shipment.ShipmentItems)
 					{
-						if (shipItem.LineItem == null)
+                        var lineItem = shipItem.LineItem;
+
+                        if (lineItem == null)
 						{
 							continue;
 						}
@@ -89,7 +91,7 @@ namespace VirtoCommerce.OrderWorkflow
 						if (address != null) // no taxes if there is no address
 						{
 							// Try getting an item
-							var item = catalogHelper.GetItem(shipItem.LineItem.CatalogItemId);
+                            var item = catalogHelper.GetItem(lineItem.CatalogItemId);
 							if (item != null) // no entry, no tax category, no tax
 							{
 								var taxCategory = item.TaxCategory;
@@ -102,7 +104,7 @@ namespace VirtoCommerce.OrderWorkflow
 									{
 										if (tax != null)
 										{
-                                            var taxAmount = Math.Round(shipItem.LineItem.ExtendedPrice * (tax.Percentage / 100), 2);
+                                            var taxAmount = Math.Round(lineItem.PlacedPrice * (tax.Percentage / 100), 2) * lineItem.Quantity;
 											if (tax.Tax.TaxType == (int) TaxTypes.SalesTax)
 											{
 												itemTax += taxAmount;
@@ -119,7 +121,7 @@ namespace VirtoCommerce.OrderWorkflow
 								}
 							}
 						}
-						shipItem.LineItem.TaxTotal = lineItemTaxTotal;
+                        lineItem.TaxTotal = lineItemTaxTotal;
 					}
 
 					//TODO Round taxes to money

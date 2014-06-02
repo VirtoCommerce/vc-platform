@@ -335,6 +335,8 @@ namespace VirtoCommerce.Web.Client.Helpers
                 Cart.BillingCurrency = CustomerSession.Currency;
             }
 
+            Reset();
+
             // run workflows
             RunWorkflow("ShoppingCartPrepareWorkflow");
             SaveChanges();

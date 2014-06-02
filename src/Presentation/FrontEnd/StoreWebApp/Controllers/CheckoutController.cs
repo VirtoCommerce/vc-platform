@@ -659,7 +659,7 @@ namespace VirtoCommerce.Web.Controllers
                 Amount = new BasicAmountType(currency, FormatMoney(li.PlacedPrice)), 
                 Quantity = (int) li.Quantity, 
                 ItemCategory = ItemCategoryType.PHYSICAL,
-                Tax = new BasicAmountType(currency, FormatMoney(li.TaxTotal)), 
+                Tax = new BasicAmountType(currency, FormatMoney(li.TaxTotal / li.Quantity)), 
                 Description = li.Description, 
                 Number = li.CatalogItemCode, 
                 ItemURL = Url.ItemUrl(li.CatalogItemId, li.ParentCatalogItemId)

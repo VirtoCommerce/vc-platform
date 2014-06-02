@@ -128,7 +128,8 @@ namespace VirtoCommerce.Client
 	    {
             var payment = _orderRepository.Payments.Where(x => x.AuthorizationCode == authCode)
                 .Expand(p => p.OrderForm.OrderGroup)
-                .Expand(p=>p.OrderForm.LineItems).FirstOrDefault();
+                .Expand(p=>p.OrderForm.LineItems)
+                .Expand(p => p.OrderForm.Shipments).FirstOrDefault();
             return payment != null ? payment.OrderForm.OrderGroup : null;
 	    }
 	}
