@@ -34,7 +34,7 @@ namespace VirtoCommerce.Foundation.AppConfig
             }
         }
 
-        [ConfigurationProperty("CacheServiceConnection", IsRequired = true)]
+        [ConfigurationProperty("CacheServiceConnection", IsRequired = false)]
         public CacheServiceConnection CacheServiceConnection
         {
             get
