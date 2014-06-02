@@ -9,6 +9,7 @@ using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.AspNet.SignalR.Tracing;
 using Microsoft.Owin;
 using Owin;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Web;
 
 [assembly: OwinStartup(typeof(SignalRStartup))]
@@ -155,20 +156,6 @@ namespace VirtoCommerce.Web
 
             // We can still return null if there is no attribute name
             return ReflectionHelper.GetAttributeValue<HubNameAttribute, string>(type, attr => attr.HubName);
-        }
-
-        internal static IEnumerable<Type> GetLoadableTypes(this Assembly assembly)
-        {
-            if (assembly == null)
-                throw new ArgumentNullException("assembly");
-            try
-            {
-                return assembly.GetTypes();
-            }
-            catch (ReflectionTypeLoadException e)
-            {
-                return e.Types.Where(t => t != null);
-            }
         }
     }
 

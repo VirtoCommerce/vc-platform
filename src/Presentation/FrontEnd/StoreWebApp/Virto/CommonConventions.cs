@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
 
 namespace VirtoCommerce.Web.Virto
 {
@@ -197,12 +198,12 @@ namespace VirtoCommerce.Web.Virto
 
         private static IEnumerable<Type> GetInterfaces(Assembly assembly)
         {
-            return assembly.GetTypes().Where(t => t.IsInterface);
+            return assembly.GetTypesSafe().Where(t => t.IsInterface);
         }
 
         private static IEnumerable<Type> GetImplementationsOfInterface(Assembly assembly, Type interfaceType)
         {
-            return assembly.GetTypes().Where(t =>
+            return assembly.GetTypesSafe().Where(t =>
                 !t.IsInterface &&
                 !t.IsAbstract &&
                 interfaceType.IsAssignableFrom(t) &&
