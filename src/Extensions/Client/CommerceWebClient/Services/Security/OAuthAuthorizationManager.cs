@@ -34,7 +34,7 @@ namespace VirtoCommerce.Web.Client.Services.Security
                 // Extract authorization data.
                 var requestMessage = operationContext.RequestContext.RequestMessage;
                 var httpDetails = requestMessage.Properties[HttpRequestMessageProperty.Name] as HttpRequestMessageProperty;
-                var requestUri = WebOperationContext.Current != null ? WebOperationContext.Current.IncomingRequest.UriTemplateMatch.BaseUri : requestMessage.Headers.To;
+                var requestUri = WebOperationContext.Current != null && WebOperationContext.Current.IncomingRequest.UriTemplateMatch != null ? WebOperationContext.Current.IncomingRequest.UriTemplateMatch.BaseUri : requestMessage.Headers.To;
 
                 token = ReadAuthToken(httpDetails);
                 retVal = token != null && IsValidToken(token, requestUri);
@@ -108,7 +108,7 @@ namespace VirtoCommerce.Web.Client.Services.Security
             var isTrustedUssuerUri = webToken.Issuer == tokenValidator.TrustedIssuerUri;
             var isAudience = webToken.Audience.IsBaseOf(requestedUri);
             var isLocal = (IsLocal(webToken.Audience) && IsLocal(requestedUri));
-            
+
             if (!isLocal)
             {
                 isLocal = IsLocalWithFQDNCheck(requestedUri);
@@ -160,6 +160,6 @@ namespace VirtoCommerce.Web.Client.Services.Security
             return isLocalMachine;
 
         }
-        
+
     }
 }
