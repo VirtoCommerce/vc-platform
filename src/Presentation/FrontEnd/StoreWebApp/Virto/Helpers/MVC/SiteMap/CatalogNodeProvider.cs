@@ -14,6 +14,7 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC.SiteMap
         {
             var catalog = CatalogHelper.CatalogClient.GetCatalog(StoreHelper.CustomerSession.CatalogId);
             var nodes = new List<DynamicNode>();
+            int order = 0;
             foreach (var category in catalog.CategoryBases.OfType<Category>().Where(x => x.IsActive).OrderByDescending(x => x.Priority))
             {
 
@@ -22,6 +23,7 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC.SiteMap
                     Action = "Display",
                     Title = category.Name,
                     Key = category.CategoryId,
+                    Order = order++,
                     ParentKey = category.ParentCategoryId,
                     RouteValues = new Dictionary<string, object> { { Constants.Category, category.Code } },
                     PreservedRouteParameters = new[] { Constants.Language, Constants.Store },
