@@ -130,6 +130,10 @@ namespace VirtoCommerce.ManagementClient.Security
 
 		private void RegisterLoginViewsAndServices()
 		{
+            System.Net.ServicePointManager.ServerCertificateValidationCallback
+                = ((sender, cert, chain, errors) => true);
+               // = ((sender, cert, chain, errors) => cert.Subject.Contains("<web server name>"));
+
 			_container.RegisterType<ISecurityEntityFactory, SecurityEntityFactory>(new ContainerControlledLifetimeManager());
 			_container.RegisterType<ISecurityRepository, DSSecurityClient>();
 			_container.RegisterType<ISecurityTokenInjector, SecurityTokenInjector>();
