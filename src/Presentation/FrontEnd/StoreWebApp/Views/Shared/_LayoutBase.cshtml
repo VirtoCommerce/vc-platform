@@ -168,10 +168,10 @@
             $(this).fadeOut();
             VirtoCommerce.setCookie("vcf.hideDemoNotice", true, 7);
         });
-        //$(document).ajaxError(
-        //    function myErrorHandler(event, xhr, ajaxOptions, thrownError) {
-        //    alert("There was an ajax error!");
-        //});
+        $(document).ajaxError(
+            function myErrorHandler(event, xhr, ajaxOptions, thrownError) {
+                $.showPopupMessage("There was an error: <br/><span style='color:red;'>" + xhr.status + " " + xhr.statusText + "!</span>");
+        });
     });
 </script>
 @* No need to render follow services here, but following template can be used as an example:
