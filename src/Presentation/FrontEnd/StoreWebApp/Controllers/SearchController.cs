@@ -381,10 +381,9 @@ namespace VirtoCommerce.Web.Controllers
 
             SearchSort sortObject = null;
 
-            if (!sort.Equals("position", StringComparison.OrdinalIgnoreCase))
+            switch (sort.ToLowerInvariant())
             {
-                if (sort.Equals("price", StringComparison.OrdinalIgnoreCase))
-                {
+                case "price":
                     if (session.Pricelists != null)
                     {
                         sortObject = new SearchSort(session.Pricelists.Select(priceList =>
@@ -399,17 +398,21 @@ namespace VirtoCommerce.Web.Controllers
                             })
                             .ToArray());
                     }
-                }
-                else
-                {
-                    sortObject = new SearchSort(sort.ToLower(), isDescending);
-                }
-            }
+                    break;
+                case "position":
+                    sortObject = new SearchSort(new SearchSortField(string.Format("sort{0}{1}",session.CatalogId,session.CategoryId).ToLower())
+                    {
+                        IgnoredUnmapped = true,
+                        IsDescending = isDescending
+                    });
+                    break;
+                case "name":
+                    sortObject = new SearchSort("name", isDescending);
+                    break;
+                default:
+                    sortObject = CatalogItemSearchCriteria.DefaultSortOrder;
+                    break;
 
-            // Put default sort order if none is set
-            if (sortObject == null)
-            {
-                sortObject = CatalogItemSearchCriteria.DefaultSortOrder;
             }
 
             criteria.Sort = sortObject;
