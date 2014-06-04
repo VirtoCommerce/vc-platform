@@ -472,8 +472,8 @@ namespace FunctionalTests.Orders
 			// now check totals            
 
 			// Order totals
-			Assert.Equal(order.TaxTotal, 660.24M);
-			Assert.Equal(order.OrderForms[0].Shipments[0].ItemTaxTotal, 609.84M);
+			Assert.Equal(order.TaxTotal, 660.28M);
+			Assert.Equal(order.OrderForms[0].Shipments[0].ItemTaxTotal, 609.88M);
 			Assert.Equal(order.OrderForms[0].Shipments[0].ShippingTaxTotal, 12.6M);
 		}
 

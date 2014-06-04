@@ -20,12 +20,14 @@ namespace VirtoCommerce.Web.Client.Services.Filters
         private Store _store;
 
         private readonly ICustomerSessionService _customerSession;
+        private readonly CatalogClient _catalogClient;
         private readonly StoreClient _storeClient;
 
-        public StoreSearchFilterService(StoreClient client, ICustomerSessionService customerSession)
+        public StoreSearchFilterService(StoreClient client, ICustomerSessionService customerSession, CatalogClient catalogClient)
         {
             _storeClient = client;
             _customerSession = customerSession;
+            _catalogClient = catalogClient;
         }
 
         public ISearchFilter[] Filters
@@ -62,6 +64,17 @@ namespace VirtoCommerce.Web.Client.Services.Filters
             }
         }
 
+        private string GetCategoryDisplayName(Category category)
+        {
+                var retValue =  category.Name;
+                var title = _catalogClient.GetPropertyValueByName(category, "Title", true);
+                if (title != null)
+                {
+                    retValue = title.ToString();
+                }
+                return retValue;
+        }
+
         /// <summary>
         /// Gets the store all filters.
         /// </summary>
@@ -80,7 +93,7 @@ namespace VirtoCommerce.Web.Client.Services.Filters
                 var categoryFilter = new CategoryFilter { Key = "__outline" };
                 var listOfValues = (from child in children.OfType<Category>() 
                                     let outline = String.Format("{0}*", catalogClient.BuildCategoryOutline(_customerSession.CustomerSession.CatalogId, child)) 
-                                    select new CategoryFilterValue {Id = child.Code, Outline = outline, Name = child.Name}).ToList();
+                                    select new CategoryFilterValue {Id = child.Code, Outline = outline, Name = GetCategoryDisplayName(child)}).ToList();
 
                 // add filters only if found any
                 if (listOfValues.Count > 0)
