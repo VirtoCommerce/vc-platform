@@ -21,6 +21,20 @@ namespace VirtoCommerce.Search.Providers.Elastic
             var mainFilter = new Filter<ESDocument>();
             var mainQuery = new BoolQuery<ESDocument>();
 
+            #region Sorting
+
+            // Add sort order
+            if (criteria.Sort != null)
+            {
+                var fields = criteria.Sort.GetSort();
+                foreach (var field in fields)
+                {
+                    builder.Sort(d => d.Field(field.FieldName, field.IsDescending ? SortDirection.desc : SortDirection.asc, ignoreUnmapped: field.IgnoredUnmapped));
+                }
+            }
+
+            #endregion
+
             #region Filters
             // Perform facet filters
             if (criteria.CurrentFilters != null)

@@ -10,11 +10,11 @@
     </mvcSiteMapNode>   
     <!--Used for account page side menu-->
     <mvcSiteMapNode key="account" title="Account Dashboard" controller="Account" action="Index" changeFrequency="Always" visibility="account,!*">
-      <mvcSiteMapNode title="Account Information" action="Edit"/>
-      <mvcSiteMapNode title="Address Book" action="AddressBook"/>
-      <mvcSiteMapNode title="My Orders" action="Orders"/>
-      <mvcSiteMapNode title="My Wishlist" action="WishList"/>
-      <mvcSiteMapNode title="My Returns"  action="RmaReturns"/>
+      <mvcSiteMapNode title="Account Information" action="Edit" preservedRouteParameters="lang" />
+      <mvcSiteMapNode title="Address Book" action="AddressBook" preservedRouteParameters="lang"/>
+      <mvcSiteMapNode title="My Orders" action="Orders" preservedRouteParameters="lang"/>
+      <mvcSiteMapNode title="My Wishlist" action="WishList" preservedRouteParameters="lang"/>
+      <mvcSiteMapNode title="My Returns"  action="RmaReturns" preservedRouteParameters="lang"/>
     </mvcSiteMapNode> 
   </mvcSiteMapNode>
 </mvcSiteMap>

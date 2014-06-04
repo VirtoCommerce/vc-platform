@@ -138,16 +138,6 @@ namespace VirtoCommerce.Search.Providers.Elastic
         {
             var command = new SearchCommand(scope, criteria.DocumentType);
 
-            // Add sort order
-            if (criteria.Sort != null)
-            {
-                var fields = criteria.Sort.GetSort();
-                foreach (var field in fields)
-                {
-                    command.Sort(field.FieldName, field.IsDescending ? SortDirection.desc : SortDirection.asc);
-                }
-            }
-
             command.Size(criteria.RecordsToRetrieve);
             command.From(criteria.StartingRecord);
 
