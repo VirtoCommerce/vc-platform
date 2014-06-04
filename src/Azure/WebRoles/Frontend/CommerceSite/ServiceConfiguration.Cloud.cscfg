@@ -8,7 +8,7 @@
       <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
       <Setting name="DataConnectionString" value="" />
       <Setting name="IPAddressRules.Enabled" value="true" />
-      <Setting name="IPAddressRules.Settings" value="ALLOW 80 0.0.0.0;BLOCK 0 2.3.4.5" />
+      <Setting name="IPAddressRules.Settings" value="" />
     </ConfigurationSettings>
   </Role>
 </ServiceConfiguration>
