@@ -18,6 +18,7 @@
     <SccLocalPath>SAK</SccLocalPath>
     <UseIISExpressByDefault>False</UseIISExpressByDefault>
     <PackageEnableRemoteDebugger>False</PackageEnableRemoteDebugger>
+    <UseWebProjectPorts>True</UseWebProjectPorts>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
