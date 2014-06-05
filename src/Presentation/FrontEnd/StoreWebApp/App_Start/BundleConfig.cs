@@ -30,6 +30,7 @@ namespace VirtoCommerce.Web
 			bundles.Add(new ScriptBundle("~/bundles/jquerymisc").Include(
 			"~/Scripts/v/virto-jquery.js",
             "~/Scripts/cloudzoom.js",
+            "~/Scripts/ajaxq.js",
 			"~/Scripts/jquery.rateit.js",
 			"~/Scripts/v/virto-commerce.js",
             "~/Scripts/responsive/main.js",
