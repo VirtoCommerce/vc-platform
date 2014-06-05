@@ -614,6 +614,8 @@ namespace VirtoCommerce.Web.Controllers
 
             if (order != null)
             {
+                //Cancle old order
+                order.Status = OrderStatus.Cancelled.ToString();
                 //Restore cart if order fails
                 Ch.ToCart(order);
 
