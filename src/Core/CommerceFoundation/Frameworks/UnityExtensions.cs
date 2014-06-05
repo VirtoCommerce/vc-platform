@@ -10,21 +10,24 @@ namespace VirtoCommerce.Foundation.Frameworks
     {
         public static void RegisterService<T>(this IUnityContainer container, string serviceUri, string endpointName)
         {
-            var endpoint = GetEndpointByName(endpointName);
+            // changing endpoint name on the fly. Every endpoint should be paired with https version.
+            if (serviceUri.StartsWith("https", StringComparison.OrdinalIgnoreCase))
+            {
+                endpointName = "https" + endpointName;
+            }
 
+            var endpoint = GetEndpointByName(endpointName);
             if (endpoint == null)
             {
                 throw new ApplicationException(String.Format("Endpoint configuration is missing \"{0}\"", endpointName));
             }
 
-            var address = endpoint.Address;
-            if (address == null)
+            if (endpoint.Address == null)
             {
                 throw new ApplicationException(String.Format("Endpoint configuration \"{0}\" is missing address", endpointName));
             }
 
             var factory = new ChannelFactory<T>(endpointName);
-
             if (factory.Endpoint.Address == null && !string.IsNullOrEmpty(serviceUri))
             {
                 factory.Endpoint.Address = new EndpointAddress(serviceUri);
