@@ -626,6 +626,7 @@
     </None>
     <None Include="Properties\PublishProfiles\WebPI.pubxml" />
     <None Include="Scripts\jquery-1.7.1.intellisense.js" />
+    <Content Include="Scripts\ajaxq.js" />
     <Content Include="Scripts\cloudzoom.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />

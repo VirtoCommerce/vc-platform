@@ -13,6 +13,7 @@ using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.ConventionInjections;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Orders.Extensions;
 using VirtoCommerce.Foundation.Orders.Model;
 using VirtoCommerce.Web.Client.Extensions;
@@ -441,7 +442,7 @@ namespace VirtoCommerce.Web.Controllers
                     }
                     catch (Exception ex)
                     {
-                        ModelState.AddModelError("", ex.Message);
+                        ModelState.AddModelError("", ex.ExpandExceptionMessage());
                     }
                 }
             }
@@ -613,6 +614,8 @@ namespace VirtoCommerce.Web.Controllers
 
             if (order != null)
             {
+                //Cancle old order
+                order.Status = OrderStatus.Cancelled.ToString();
                 //Restore cart if order fails
                 Ch.ToCart(order);
 

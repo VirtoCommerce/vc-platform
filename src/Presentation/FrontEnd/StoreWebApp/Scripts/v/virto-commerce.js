@@ -412,7 +412,7 @@ VirtoCart.prototype = {
             }
         }
 
-        $.ajax({
+        $.ajaxq("addtocart",{
             type: 'POST',
             url: url,
             cache: false,

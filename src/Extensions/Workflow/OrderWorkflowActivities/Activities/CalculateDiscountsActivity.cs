@@ -382,6 +382,9 @@ namespace VirtoCommerce.OrderWorkflow
 					discountTotal += discountAmount;
 					AddDiscountToEntity(lineItem, reward, discountAmount);
 					limitQuantity -= quantity;
+
+                    //If we have reached limit there are no discounts left to apply
+				    if (limitQuantity == 0) break;
 				}
 			}
 			//TODO distribute discount amount between lineItems limit number positions of specific product

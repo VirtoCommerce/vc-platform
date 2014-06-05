@@ -1305,7 +1305,7 @@ button.proceed:hover span:after
                 padding: 25px 20px;
             }
 
-                .article .account .add-info-block form a
+                .article .account .add-info-block form a, .article .account .add-info-block a.external
                 {
                     cursor: pointer;
                 }

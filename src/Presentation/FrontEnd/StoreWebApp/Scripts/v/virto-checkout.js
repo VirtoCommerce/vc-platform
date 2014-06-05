@@ -1,6 +1,4 @@
 ﻿VirtoCheckout = function () {
-    this.SubmitInProgress = false;
-    this.NeedResubmit = false;
 };
 VirtoCheckout.prototype.constructor = VirtoCheckout.prototype;
 
@@ -184,29 +182,18 @@ VirtoCheckout.prototype = {
 
     submitChanges: function ()
     {
-        if (this.SubmitInProgress) {
-            this.NeedResubmit = true;
-            return;
-        }
-        this.SubmitInProgress = true;
         var form = $('#onestepcheckout-form');
         var placeholder = $("#checkout-cart");
         this.updateLoading("checkout-cart");
 
-        $.ajax({
+        $.ajaxq("checkoutsubmit",{
             type: "POST",
             url: this.url('/checkout/SubmitChanges'),
             data: form.serialize(),
             dataType: 'html',
             success: function (data)
             {
-                VirtoCheckout.SubmitInProgress = false;
                 placeholder.html(data);
-                if (VirtoCheckout.NeedResubmit) {
-                    VirtoCheckout.NeedResubmit = false;
-                    VirtoCheckout.submitChanges();
-
-                }
             }
         });
     },
