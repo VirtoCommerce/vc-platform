@@ -7,7 +7,7 @@
       <Setting name="SearchConnectionString" value="server=localhost:9200;scope=default" />
       <Setting name="Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" value="UseDevelopmentStorage=true" />
       <Setting name="DataConnectionString" value="" />
-      <Setting name="IPAddressRules.Enabled" value="true" />
+      <Setting name="IPAddressRules.Enabled" value="false" />
       <Setting name="IPAddressRules.Settings" value="" />
     </ConfigurationSettings>
   </Role>
