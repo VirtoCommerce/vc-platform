@@ -219,8 +219,8 @@ button.proceed:hover span:after
     {
         color: #fff;
         font-family: Arial;
-        font-style: 12px;
-        line-height: 1.15;
+        font-size: 12px;
+        line-height: 1.15; 
     }
 
 /* --- Header --- */
@@ -4752,6 +4752,12 @@ ul.list li .remove
         {
             background-color: #Fac200;
             background-position: -108px 0;
+        }
+
+        .footer-wrap .info .social li.in a
+        {
+            background-color: #1D87BD;
+            background-position: -144px 0;
         }
 
         .footer-wrap .info .social li a:hover
