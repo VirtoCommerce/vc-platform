@@ -1,5 +1,4 @@
-﻿INSERT INTO [Tax] ([TaxId],[Name],[TaxType],[SortOrder],[LastModified],[Created],[Discriminator]) VALUES (N'205c0596-866e-492e-b16e-79978a3e7961',N'US Sales tax',0,0,N'20130802 06:14:31.120',N'20130802 06:14:31.120',N'Tax');
-INSERT INTO [Tax] ([TaxId],[Name],[TaxType],[SortOrder],[LastModified],[Created],[Discriminator]) VALUES (N'711e43a2-3fde-47bc-8730-a155e61d95c0',N'PST',0,1,N'20130801 09:57:03.057',N'20130801 09:56:36.087',N'Tax');
+﻿INSERT INTO [Tax] ([TaxId],[Name],[TaxType],[SortOrder],[LastModified],[Created],[Discriminator]) VALUES (N'711e43a2-3fde-47bc-8730-a155e61d95c0',N'PST',0,1,N'20130801 09:57:03.057',N'20130801 09:56:36.087',N'Tax');
 INSERT INTO [Tax] ([TaxId],[Name],[TaxType],[SortOrder],[LastModified],[Created],[Discriminator]) VALUES (N'9afd7da9-47ef-499c-b677-7449c2659c3e',N'Shipping GST',1,1,N'20130801 14:20:02.733',N'20130801 14:20:02.733',N'Tax');
 INSERT INTO [Tax] ([TaxId],[Name],[TaxType],[SortOrder],[LastModified],[Created],[Discriminator]) VALUES (N'df87ec74-850b-4e15-8d9b-37e4b3fc28fc',N'GST',0,0,N'20130801 09:56:58.583',N'20130801 09:56:58.583',N'Tax');
 INSERT INTO [Tax] ([TaxId],[Name],[TaxType],[SortOrder],[LastModified],[Created],[Discriminator]) VALUES (N'dfaa0a12-7bdc-44d0-a088-767ea4f39dee',N'UK VAT',0,1,N'20130801 10:23:44.390',N'20130801 10:23:38.160',N'Tax');
