@@ -588,7 +588,7 @@ namespace VirtoCommerce.Web.Controllers
                             payment.Amount = order.Total;
 
                             //Normally this message should be shown to user when. This happens because address changes and Tax is recalculated
-                            if (decimal.Parse(paymentDetails.OrderTotal.value) != order.Total)
+                            if (decimal.Parse(paymentDetails.OrderTotal.value, CultureInfo.InvariantCulture) != order.Total)
                             {
                                 ModelState.AddModelError("", "Paypal payment total does not match order total! Check the totals and try to pay again.".Localize());
                             }

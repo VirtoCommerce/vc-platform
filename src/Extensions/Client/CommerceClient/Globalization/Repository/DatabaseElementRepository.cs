@@ -27,10 +27,6 @@ namespace VirtoCommerce.Client.Globalization.Repository
 
         public const string LocalizationCachePrefix = "_Localization";
         /// <summary>
-        /// The localize element cache key
-        /// </summary>
-        public const string LocalizeElementCacheKey = "LE:C:{0}";
-        /// <summary>
         /// The localize elements cache key
         /// </summary>
         public const string LocalizeElementsCacheKey = "LES:C";
@@ -172,19 +168,21 @@ namespace VirtoCommerce.Client.Globalization.Repository
 			{
 				try
 				{
-					_repository.Add(new Localization
-						{
-							Name = element.Name,
-							Category = element.Category,
-							LanguageCode = element.Culture,
-							Value = element.Value
-						});
+                    var loc = new Localization
+				    {
+				        Name = element.Name,
+				        Category = element.Category,
+				        LanguageCode = element.Culture,
+				        Value = element.Value
+				    };
+
+
+                    _repository.Add(loc);
 					_repository.UnitOfWork.Commit();
 
 					if (AppConfigConfiguration.Instance.Cache.IsEnabled)
 					{
-						Helper.Add(GetCacheKey(LocalizeElementCacheKey, element), element,
-						           AppConfigConfiguration.Instance.Cache.LocalizationTimeout);
+					    SynchronizeCache(loc);
 
 						Helper.Add(GetCacheKey(LocalizeCategoriesCacheKey), new ElementCategory
 							{
@@ -231,10 +229,7 @@ namespace VirtoCommerce.Client.Globalization.Repository
 				_repository.Update(currentItem);
 				_repository.UnitOfWork.Commit();
 
-				if (AppConfigConfiguration.Instance.Cache.IsEnabled)
-				{
-					Helper.Add(GetCacheKey(LocalizeElementCacheKey, element), element);
-				}
+                SynchronizeCache(currentItem);
 			}
 			catch
 			{
@@ -268,10 +263,7 @@ namespace VirtoCommerce.Client.Globalization.Repository
 				_repository.Remove(currentItem);
 				_repository.UnitOfWork.Commit();
 
-				if (AppConfigConfiguration.Instance.Cache.IsEnabled)
-				{
-					Helper.Remove(GetCacheKey(LocalizeElementCacheKey, element));
-				}
+                SynchronizeCache(currentItem, true);
 			}
 			catch
 			{
@@ -337,6 +329,37 @@ namespace VirtoCommerce.Client.Globalization.Repository
                     && it.Category.Equals(category, StringComparison.OrdinalIgnoreCase)
                     && it.LanguageCode.Equals(culture, StringComparison.OrdinalIgnoreCase));
 		}
+
+        /// <summary>
+        /// Synchronizes the cache.
+        /// </summary>
+        /// <param name="localization">The localization.</param>
+        /// <param name="remove">if set to <c>true</c> [remove].</param>
+        private void SynchronizeCache(Localization localization, bool remove = false)
+        {
+            var allLocalizations = GetLocalizations().ToList();
+
+            var exisiting = allLocalizations.FirstOrDefault(l => l.Name.Equals(localization.Name) && l.Category.Equals(localization.Category) &&
+                                                                 l.LanguageCode.Equals(localization.LanguageCode));
+
+
+            if (exisiting == null)
+            {
+                allLocalizations.Add(localization);
+            }
+            else if (remove)
+            {
+                allLocalizations.Remove(exisiting);
+            }
+            else
+            {
+                exisiting.Value = localization.Value;
+            }
+
+            //Update cache
+            Helper.Remove(GetCacheKey(LocalizeElementsCacheKey));
+            Helper.Add(GetCacheKey(LocalizeElementsCacheKey), allLocalizations.ToArray(), AppConfigConfiguration.Instance.Cache.LocalizationTimeout);
+        }
 
         /// <summary>
         /// Gets the localizations.
