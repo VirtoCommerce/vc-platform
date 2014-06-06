@@ -124,12 +124,17 @@ namespace VirtoCommerce.Client
 			return order;
 		}
 
+        /// <summary>
+        /// Gets the order by authentication code. Used by Paypal.
+        /// </summary>
+        /// <param name="authCode">The authentication code.</param>
+        /// <returns></returns>
 	    public OrderGroup GetOrderByAuthCode(string authCode)
 	    {
             var payment = _orderRepository.Payments.Where(x => x.AuthorizationCode == authCode)
-                .Expand(p => p.OrderForm.OrderGroup)
+                .Expand(p => p.OrderForm.OrderGroup.OrderAddresses)
                 .Expand(p=>p.OrderForm.LineItems)
-                .Expand(p => p.OrderForm.Shipments).FirstOrDefault();
+                .Expand("OrderForm.Shipments.ShipmentItems").FirstOrDefault();
             return payment != null ? payment.OrderForm.OrderGroup : null;
 	    }
 	}
