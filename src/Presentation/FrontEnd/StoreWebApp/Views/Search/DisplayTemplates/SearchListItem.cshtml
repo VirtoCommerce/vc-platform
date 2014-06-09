@@ -40,7 +40,7 @@
                             <span id="totalreviews">0</span>&nbsp;@("Review(s)".Localize())
                         </a>
                         </li>
-                        <li><a href="@(UserHelper.CustomerSession.IsRegistered ? Url.Action("AddReview", "Catalog", new { id = Model.CatalogItem.ItemId }) : Url.Action("LogOnAsync", "Account"))" rel="popup">@("Add Your Review".Localize())</a></li>
+                        <li><a href="@Url.Action("AddReview", "Catalog", new { id = Model.CatalogItem.ItemId })" rel="popup">@("Add Your Review".Localize())</a></li>
                     </ul>
                 </div>
             </div>

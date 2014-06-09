@@ -251,15 +251,19 @@ namespace VirtoCommerce.Web.Controllers
 		/// <returns>ActionResult.</returns>
         [DonutOutputCache(CacheProfile = "CatalogCache")]
         public ActionResult AddReview(string id)
-        {
-            return PartialView("CreateReview",
-                               new MReview
-                                   {
-                                       ItemId = id,
-                                       CreatedDateTime = DateTime.UtcNow,
-                                       Reviewer = new MReviewer {NickName = UserHelper.CustomerSession.CustomerName}
-                                   });
-        }
+		{
+		    if (UserHelper.CustomerSession.IsRegistered)
+		    {
+		        return PartialView("CreateReview",
+		            new MReview
+		            {
+		                ItemId = id,
+		                CreatedDateTime = DateTime.UtcNow,
+		                Reviewer = new MReviewer {NickName = UserHelper.CustomerSession.CustomerName}
+		            });
+		    }
+		    return RedirectToAction("LogOnAsync", "Account");
+		}
 
         [ChildActionOnly, DonutOutputCache(CacheProfile = "CatalogCache", Duration = 0)]
         public ActionResult ItemDynamic(string item)

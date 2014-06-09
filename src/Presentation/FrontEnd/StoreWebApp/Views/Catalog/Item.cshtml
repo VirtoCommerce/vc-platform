@@ -8,7 +8,7 @@
 
 @helper RenderAddReview()
 {
-      <a href="@(UserHelper.CustomerSession.IsRegistered ? Url.Action("AddReview", "Catalog", new { id = Model.CatalogItem.ItemId }) : Url.Action("LogOnAsync", "Account"))" rel="popup">@("Add Your Review".Localize())</a>
+      <a href="@Url.Action("AddReview", "Catalog", new { id = Model.CatalogItem.ItemId })" rel="popup">@("Add Your Review".Localize())</a>
 }
 
 <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-tmpl-min.js")"></script>
