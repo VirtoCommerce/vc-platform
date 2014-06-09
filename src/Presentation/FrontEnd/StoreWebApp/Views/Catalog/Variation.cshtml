@@ -1,4 +1,5 @@
-﻿@model CatalogItemWithPriceModel
+﻿@using VirtoCommerce.Foundation.Frameworks.Extensions
+@model CatalogItemWithPriceModel
 
 <script type="text/javascript">
 	$(document).ready(function ()
@@ -39,7 +40,7 @@
 			$('#qty').attr("data-val-range-min", '@((int)Model.Availability.MinQuantity)');
 			$('#qty').attr("data-val-range-max", '@((int)Model.Availability.MaxQuantity)');
 		    $('#qty').attr("data-val-range", "@("Select quantity in range".Localize())" + " @string.Format("{0:#} - {1:#}", Model.Availability.MinQuantity, @Model.Availability.MaxQuantity)");
-		    $('#qty').attr("data-val-regex-pattern", '@string.Format(@"^\\d{{{0},{1}}}$",Math.Log10((int)Model.Availability.MinQuantity)  + 1,Math.Log10((int)Model.Availability.MaxQuantity)  + 1)');
+		    $('#qty').attr("data-val-regex-pattern", '@string.Format(@"^\\d{{{0},{1}}}$", Model.Availability.MinQuantity.DigitCount(), Model.Availability.MaxQuantity.DigitCount())');
 			var $form = $('#qty').resetValidation();
 			$form.removeData('validator');
 			$form.removeData('unobtrusiveValidation');
