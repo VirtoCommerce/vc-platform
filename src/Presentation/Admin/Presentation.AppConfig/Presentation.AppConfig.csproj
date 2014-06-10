@@ -237,6 +237,7 @@
     <Compile Include="View\DisplayTemplatesView.xaml.cs">
       <DependentUpon>DisplayTemplatesView.xaml</DependentUpon>
     </Compile>
+    <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

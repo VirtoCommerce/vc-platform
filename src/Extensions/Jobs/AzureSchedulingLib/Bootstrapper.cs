@@ -1,8 +1,8 @@
 #region Imports
 
-using System;
 using Microsoft.Practices.ServiceLocation;
 using Microsoft.Practices.Unity;
+using System;
 using VirtoCommerce.Caching.HttpCache;
 using VirtoCommerce.Client.Orders.StateMachines;
 using VirtoCommerce.Foundation.AppConfig.Factories;
@@ -69,43 +69,43 @@ namespace VirtoCommerce.Scheduling.Azure
     using VirtoCommerce.Foundation.Catalogs;
     using VirtoCommerce.Foundation.Data.Azure.Asset;
     using VirtoCommerce.Foundation.Data.Azure.CQRS;
-	using VirtoCommerce.Search.Providers.Lucene;
+    using VirtoCommerce.Search.Providers.Lucene;
 
     public static class Bootstrapper
-	{
+    {
         public static IUnityContainer Initialize()
-		{
-			var container = BuildUnityContainer();
-
-			//set the CSL-compliant service locator - forces the unity initialization 
-			ServiceLocator.SetLocatorProvider(() => new UnityServiceLocator(container));
+        {
+            var container = BuildUnityContainer();
+            var locator = new UnityServiceLocator(container);
+            //set the CSL-compliant service locator - forces the unity initialization 
+            ServiceLocator.SetLocatorProvider(() => locator);
             return container;
-		}
+        }
 
-		private static IUnityContainer BuildUnityContainer()
-		{
-			#region Common Settings for Web and Services
-			// this section is common for both web application and services application and should be kept identical
-			var container = new UnityContainer();
+        private static IUnityContainer BuildUnityContainer()
+        {
+            #region Common Settings for Web and Services
+            // this section is common for both web application and services application and should be kept identical
+            var container = new UnityContainer();
 
-			container.RegisterType<IKnownSerializationTypes, CatalogEntityFactory>("catalog", new ContainerControlledLifetimeManager());
-			//container.RegisterType<IKnowSerializationTypes, OrderEntityFactory>("order", new ContainerControlledLifetimeManager(), null);
-			container.RegisterInstance<IConsumerFactory>(new DomainAssemblyScannerConsumerFactory(container));
-			container.RegisterType<IKnownSerializationTypes, DomainAssemblyScannerConsumerFactory>("scaned", new ContainerControlledLifetimeManager(), new InjectionConstructor(container));
-			container.RegisterType<IConsumerFactory, DomainAssemblyScannerConsumerFactory>();
-			container.RegisterType<ISystemObserver, NullSystemObserver>();
-			container.RegisterType<IEngineProcess, SingleThreadConsumingProcess>();
-			container.RegisterType<IMessageSerializer, DataContractMessageSerializer>();
-			container.RegisterType<IQueueWriter, AzureQueueWriter>();
-			container.RegisterType<IQueueReader, AzureQueueReader>();
-			container.RegisterType<IMessageSender, DefaultMessageSender>(new ContainerControlledLifetimeManager());
-			container.RegisterType<ICurrencyService, CurrencyService>(new ContainerControlledLifetimeManager());
+            container.RegisterType<IKnownSerializationTypes, CatalogEntityFactory>("catalog", new ContainerControlledLifetimeManager());
+            //container.RegisterType<IKnowSerializationTypes, OrderEntityFactory>("order", new ContainerControlledLifetimeManager(), null);
+            container.RegisterInstance<IConsumerFactory>(new DomainAssemblyScannerConsumerFactory(container));
+            container.RegisterType<IKnownSerializationTypes, DomainAssemblyScannerConsumerFactory>("scaned", new ContainerControlledLifetimeManager(), new InjectionConstructor(container));
+            container.RegisterType<IConsumerFactory, DomainAssemblyScannerConsumerFactory>();
+            container.RegisterType<ISystemObserver, NullSystemObserver>();
+            container.RegisterType<IEngineProcess, SingleThreadConsumingProcess>();
+            container.RegisterType<IMessageSerializer, DataContractMessageSerializer>();
+            container.RegisterType<IQueueWriter, AzureQueueWriter>();
+            container.RegisterType<IQueueReader, AzureQueueReader>();
+            container.RegisterType<IMessageSender, DefaultMessageSender>(new ContainerControlledLifetimeManager());
+            container.RegisterType<ICurrencyService, CurrencyService>(new ContainerControlledLifetimeManager());
 
-			//container.RegisterType<ICacheProvider, InMemCachingProvider>();
-			container.RegisterType<ICacheRepository, HttpCacheRepository>();
+            //container.RegisterType<ICacheProvider, InMemCachingProvider>();
+            container.RegisterType<ICacheRepository, HttpCacheRepository>();
 
-			container.RegisterType<ILogOperationFactory, LogOperationFactory>();
-			container.RegisterType<IOperationLogRepository, OperationLogContext>();
+            container.RegisterType<ILogOperationFactory, LogOperationFactory>();
+            container.RegisterType<IOperationLogRepository, OperationLogContext>();
 
             #region Interceptors
 
@@ -116,30 +116,30 @@ namespace VirtoCommerce.Scheduling.Azure
 
             #endregion
 
-			#region Marketing
+            #region Marketing
             //Needed for RemoveExpiredPromotionReservations SystemJob
             container.RegisterType<IMarketingRepository, EFMarketingRepository>();
             container.RegisterType<IMarketingEntityFactory, MarketingEntityFactory>();
             //container.RegisterType<IPromotionUsageProvider, PromotionUsageProvider>();
             //container.RegisterType<IPromotionEntryPopulate, PromotionEntryPopulate>();
             //container.RegisterType<IDynamicContentRepository, EFDynamicContentRepository>();
-			#endregion
+            #endregion
 
-			#region Search
-			var connectionString=ConnectionHelper.GetConnectionString("SearchConnectionString");
-			if (connectionString == null)
-			{
-				Logger.Error("connectionString is null");
-			}
+            #region Search
+            var connectionString = ConnectionHelper.GetConnectionString("SearchConnectionString");
+            if (connectionString == null)
+            {
+                Logger.Error("connectionString is null");
+            }
 
             var searchConnection = new SearchConnection(connectionString);
             container.RegisterInstance<ISearchConnection>(searchConnection);
 
-			container.RegisterType<ISearchService, SearchService>(new HierarchicalLifetimeManager());
-			container.RegisterType<ISearchIndexController, SearchIndexController>();
-			container.RegisterType<IBuildSettingsRepository, EFSearchRepository>();
-			container.RegisterType<ISearchEntityFactory, SearchEntityFactory>(new ContainerControlledLifetimeManager());
-			container.RegisterType<ISearchIndexBuilder, CatalogItemIndexBuilder>("catalogitem");
+            container.RegisterType<ISearchService, SearchService>(new HierarchicalLifetimeManager());
+            container.RegisterType<ISearchIndexController, SearchIndexController>();
+            container.RegisterType<IBuildSettingsRepository, EFSearchRepository>();
+            container.RegisterType<ISearchEntityFactory, SearchEntityFactory>(new ContainerControlledLifetimeManager());
+            container.RegisterType<ISearchIndexBuilder, CatalogItemIndexBuilder>("catalogitem");
 
             // If provider specified as lucene, use lucene libraries, otherwise use default, which is elastic search
             if (string.Equals(searchConnection.Provider, SearchProviders.Lucene.ToString(), StringComparison.OrdinalIgnoreCase))
@@ -154,21 +154,21 @@ namespace VirtoCommerce.Scheduling.Azure
                 container.RegisterType<ISearchQueryBuilder, ElasticSearchQueryBuilder>();
             }
 
-			#endregion
+            #endregion
 
             #region AppConfig
             container.RegisterType<IAppConfigEntityFactory, AppConfigEntityFactory>();
             container.RegisterType<IAppConfigRepository, EFAppConfigRepository>();
             #endregion
 
-			#region Assets
-			container.RegisterType<IAssetEntityFactory, AssetEntityFactory>();
-			container.RegisterType<IAssetRepository, AzureBlobAssetRepository>();
-			container.RegisterType<IBlobStorageProvider, AzureBlobAssetRepository>();
-			container.RegisterType<IAssetService, AssetService>();
-			#endregion
+            #region Assets
+            container.RegisterType<IAssetEntityFactory, AssetEntityFactory>();
+            container.RegisterType<IAssetRepository, AzureBlobAssetRepository>();
+            container.RegisterType<IBlobStorageProvider, AzureBlobAssetRepository>();
+            container.RegisterType<IAssetService, AssetService>();
+            #endregion
 
-			#region Catalog
+            #region Catalog
             container.RegisterType<ICatalogEntityFactory, CatalogEntityFactory>(new ContainerControlledLifetimeManager());
 
             container.RegisterType<ICatalogRepository, EFCatalogRepository>();
@@ -182,7 +182,7 @@ namespace VirtoCommerce.Scheduling.Azure
                 new ContainerControlledLifetimeManager());
             container.RegisterType<IImportRepository, EFImportingRepository>();
             container.RegisterType<IImportService, ImportService>();
-			#endregion
+            #endregion
 
             //#region Customer
             //container.RegisterType<ICustomerEntityFactory, CustomerEntityFactory>(new ContainerControlledLifetimeManager());
@@ -194,7 +194,7 @@ namespace VirtoCommerce.Scheduling.Azure
             //container.RegisterType<IInventoryEntityFactory, InventoryEntityFactory>(new ContainerControlledLifetimeManager());
             //#endregion
 
-			#region Order
+            #region Order
             container.RegisterType<IOrderEntityFactory, OrderEntityFactory>(new ContainerControlledLifetimeManager());
 
             var activityProvider = WorkflowConfiguration.Instance.DefaultActivityProvider;
@@ -209,7 +209,7 @@ namespace VirtoCommerce.Scheduling.Azure
 
             container.RegisterType<ICountryRepository, EFOrderRepository>();
             container.RegisterType<IOrderService, OrderService>();
-			#endregion
+            #endregion
 
             #region Customer
             container.RegisterType<ICustomerEntityFactory, CustomerEntityFactory>(
@@ -225,27 +225,27 @@ namespace VirtoCommerce.Scheduling.Azure
             //container.RegisterType<IReviewRepository, DSReviewClient>();
             //#endregion
 
-			#region Security
-			container.RegisterType<ISecurityEntityFactory, SecurityEntityFactory>(new ContainerControlledLifetimeManager());
+            #region Security
+            container.RegisterType<ISecurityEntityFactory, SecurityEntityFactory>(new ContainerControlledLifetimeManager());
 
-			//container.RegisterType<ISecurityService, SecurityService>();
-			container.RegisterType<ISecurityRepository, EFSecurityRepository>();
-			#endregion
+            //container.RegisterType<ISecurityService, SecurityService>();
+            container.RegisterType<ISecurityRepository, EFSecurityRepository>();
+            #endregion
 
 
-			#region Store
-			container.RegisterType<IStoreEntityFactory, StoreEntityFactory>(new ContainerControlledLifetimeManager());
+            #region Store
+            container.RegisterType<IStoreEntityFactory, StoreEntityFactory>(new ContainerControlledLifetimeManager());
 
-			container.RegisterType<IStoreService, StoreService>();
-			container.RegisterType<IStoreRepository, EFStoreRepository>();
-			#endregion
-			#endregion
+            container.RegisterType<IStoreService, StoreService>();
+            container.RegisterType<IStoreRepository, EFStoreRepository>();
+            #endregion
+            #endregion
 
             container.RegisterType<GenerateSearchIndexWork>();
             container.RegisterType<ProcessOrderStatusWork>();
             container.RegisterType<ProcessSearchIndexWork>();
 
-			return container;
-		}
-	}
+            return container;
+        }
+    }
 }

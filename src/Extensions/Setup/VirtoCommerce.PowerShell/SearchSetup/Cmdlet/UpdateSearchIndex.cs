@@ -1,15 +1,9 @@
-﻿using System;
-using System.Diagnostics;
+﻿using Microsoft.Practices.ServiceLocation;
+using Microsoft.Practices.Unity;
+using System;
 using System.Management.Automation;
 using System.Reflection;
-using System.Threading.Tasks;
-using Microsoft.Practices.ServiceLocation;
-using Microsoft.Practices.Unity;
 using VirtoCommerce.Caching.HttpCache;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
-using VirtoCommerce.PowerShell.Cmdlet;
-using VirtoCommerce.PowerShell.Utilities;
-using VirtoCommerce.Search.Providers.Elastic;
 using VirtoCommerce.Foundation.Catalogs.Factories;
 using VirtoCommerce.Foundation.Catalogs.Repositories;
 using VirtoCommerce.Foundation.Catalogs.Services;
@@ -20,16 +14,18 @@ using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.CQRS;
 using VirtoCommerce.Foundation.Frameworks.CQRS.Engines;
 using VirtoCommerce.Foundation.Frameworks.CQRS.Factories;
-using VirtoCommerce.Foundation.Frameworks.CQRS.Observers;
 using VirtoCommerce.Foundation.Frameworks.CQRS.Senders;
 using VirtoCommerce.Foundation.Frameworks.CQRS.Serialization;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Frameworks.Logging;
 using VirtoCommerce.Foundation.Frameworks.Logging.Factories;
 using VirtoCommerce.Foundation.Search;
 using VirtoCommerce.Foundation.Search.CQRS;
 using VirtoCommerce.Foundation.Search.Factories;
 using VirtoCommerce.Foundation.Search.Repositories;
+using VirtoCommerce.PowerShell.Cmdlet;
 using VirtoCommerce.Search.Index;
+using VirtoCommerce.Search.Providers.Elastic;
 
 namespace VirtoCommerce.PowerShell.SearchSetup.Cmdlet
 {
@@ -60,19 +56,33 @@ namespace VirtoCommerce.PowerShell.SearchSetup.Cmdlet
         public virtual void Index(SearchConnection searchConnection, string dbConnectionString, string documentType, bool rebuild)
         {
             SafeWriteVerbose("Server: " + searchConnection);
-           
-            var controller = GetLocalSearchController(searchConnection, dbConnectionString);
+            IServiceLocator serviceLocatorBackup = null;
+            try
+            {
+                // backup existing LocatorProvider
+                if (ServiceLocator.IsLocationProviderSet)
+                    serviceLocatorBackup = ServiceLocator.Current;
 
-            SafeWriteVerbose("Preparing workload");
-            controller.Prepare(scope: searchConnection.Scope, documentType: documentType, rebuild: rebuild);
+                var controller = GetLocalSearchController(searchConnection, dbConnectionString);
 
-            SafeWriteVerbose("Processing workload");
-            controller.Process(scope: searchConnection.Scope, documentType: documentType);
+                SafeWriteVerbose("Preparing workload");
+                controller.Prepare(scope: searchConnection.Scope, documentType: documentType, rebuild: rebuild);
 
-            // Multi threaded processing
-            //IndexProcess(searchConnection, dbConnectionString, documentType);
+                SafeWriteVerbose("Processing workload");
+                controller.Process(scope: searchConnection.Scope, documentType: documentType);
+
+                // Multi threaded processing
+                //IndexProcess(searchConnection, dbConnectionString, documentType);
+            }
+            finally
+            {
+                // reseting original LocatorProvider
+                if (serviceLocatorBackup != null)
+                    ServiceLocator.SetLocatorProvider(() => serviceLocatorBackup);
+            }
         }
 
+        /*
         private void IndexProcess(SearchConnection searchConnection, string dbConnectionString,
                                         string documentType)
         {
@@ -80,6 +90,7 @@ namespace VirtoCommerce.PowerShell.SearchSetup.Cmdlet
             var controller = GetLocalSearchController(searchConnection, dbConnectionString);
             Parallel.For(0, 5, (i, loopState) => controller.Process(scope: searchConnection.Scope, documentType: documentType));
         }
+         */
 
         /// <summary>
         /// Execute the command.
@@ -144,7 +155,7 @@ namespace VirtoCommerce.PowerShell.SearchSetup.Cmdlet
             container.RegisterInstance<IOperationLogRepository>(new OperationLogContext(connectionString));
             container.RegisterInstance<IBuildSettingsRepository>(new EFSearchRepository(connectionString));
 
-            
+
             var indexingProgress = new ProgressRecord(1, "Indexing Progress", "Progress:");
             var observer = new ProgressObserver(this, indexingProgress);
             container.RegisterInstance<ISystemObserver>(observer);
@@ -155,7 +166,8 @@ namespace VirtoCommerce.PowerShell.SearchSetup.Cmdlet
         protected ISearchIndexController GetLocalSearchController(SearchConnection searchConnection, string connectionString)
         {
             var container = GetLocalContainer(searchConnection, connectionString);
-            ServiceLocator.SetLocatorProvider(() => new UnityServiceLocator(container));
+            var locator = new UnityServiceLocator(container);
+            ServiceLocator.SetLocatorProvider(() => locator);
             var controller = container.Resolve<ISearchIndexController>();
 
             return controller;
