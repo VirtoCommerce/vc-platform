@@ -62,7 +62,7 @@ function loadVariations(parentItemId, variation, dropdown)
             //null means show all
             selectedValue = keyValue[0] + ":null";
         }
-        url = url + '&selections=' + selectedValue;
+        url = url + '&selections=' + encodeURIComponent(selectedValue);
 
     });
 

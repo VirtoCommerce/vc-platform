@@ -96,9 +96,10 @@ namespace VirtoCommerce.Web.Models
                     foreach (var prop in relation.ChildItem.ItemPropertyValues.LocalizedProperties().Where(p => p.Name == @group.Key))
                     {
                         var propValue = prop.ToString();
+                        var name = GetText(propValue);
 
                         //make sure only distinct values are shown 
-                        if (grp.Items.Any(i => i.Value == propValue))
+                        if (grp.Items.Any(i => i.Text == name))
                         {
                             continue;
                         }
@@ -122,7 +123,7 @@ namespace VirtoCommerce.Web.Models
                                 }
                                 var selProp =
                                     relation.ChildItem.ItemPropertyValues.LocalizedProperties().FirstOrDefault(p => string.Equals(p.Name, sel.Key, StringComparison.InvariantCultureIgnoreCase));
-                                if (selProp == null || selProp.ToString().Equals(sel.Value.Value))
+                                if (selProp == null || GetText(selProp.ToString()).Equals(GetText(sel.Value.Value)))
                                 {
                                     continue;
                                 }
@@ -136,7 +137,7 @@ namespace VirtoCommerce.Web.Models
                             continue;
                         }
 
-                        var selectItem = new SelectListItem { Value = propValue, Text = propValue };
+                        var selectItem = new SelectListItem { Value = propValue, Text = name };
 
                         //Selected items
                         if (_selectedVariations != null && _selectedVariations.ContainsKey(relationGroup.Key)
@@ -190,6 +191,17 @@ namespace VirtoCommerce.Web.Models
                     _selectedVariationCandidates.Remove(itemId);
                 }
             }
+        }
+
+        /// <summary>
+        /// Property values can be defined using name|code pair seprated by pipe (|)
+        /// Ex. color can be specified using Green|#00FF00 in english and Grün|#00FF00 in german
+        /// </summary>
+        /// <param name="val">return first part of value before pipe</param>
+        /// <returns></returns>
+        private string GetText(string val)
+        {
+            return val.Split('|')[0];
         }
 
         /// <summary>

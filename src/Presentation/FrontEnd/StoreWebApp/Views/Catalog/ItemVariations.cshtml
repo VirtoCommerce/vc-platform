@@ -44,9 +44,11 @@
             <ul class="color-pallete">
                  @foreach (var item in variation.Items)
                  {
-                     if (!string.IsNullOrEmpty(@item.Value))
+                     if (!string.IsNullOrEmpty(item.Value))
                      {
-                         <li style="background-color: @item.Value;" class="color-box" onclick="$('select#@variation.Name').val('@item.Value').change();"></li>
+                         var namecode = item.Value.Split('|');
+                         
+                         <li style="background-color: @(namecode.Length > 1 ? namecode[1] : item.Value);" class="color-box" onclick="$('select#@variation.Name').val('@item.Value').change();"></li>
                      }
                  }
                 <li class="clearfix"></li>
