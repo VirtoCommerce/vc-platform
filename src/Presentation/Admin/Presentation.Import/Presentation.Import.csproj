@@ -137,6 +137,7 @@
     <Compile Include="View\Wizard\ImportJobOverviewStepView.xaml.cs">
       <DependentUpon>ImportJobOverviewStepView.xaml</DependentUpon>
     </Compile>
+    <None Include="app.config" />
     <None Include="packages.config" />
     <AppDesigner Include="Properties\" />
   </ItemGroup>
