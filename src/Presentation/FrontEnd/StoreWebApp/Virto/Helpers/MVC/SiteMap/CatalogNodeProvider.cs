@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using MvcSiteMapProvider;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Web.Client.Extensions.Routing;
 using VirtoCommerce.Web.Client.Helpers;
@@ -10,6 +13,8 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC.SiteMap
 {
     public class CatalogNodeProvider : DynamicNodeProviderBase
     {
+
+        public const string TitleAttributeFormat = "Title-{0}";  
         public override IEnumerable<DynamicNode> GetDynamicNodeCollection(ISiteMapNode node)
         {
             var catalog = CatalogHelper.CatalogClient.GetCatalog(StoreHelper.CustomerSession.CatalogId);
@@ -21,7 +26,7 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC.SiteMap
                 var pNode = new DynamicNode
                 {
                     Action = "Display",
-                    Title = category.Name,
+                    Title = GetCategoryName(category),
                     Key = category.CategoryId,
                     Order = order++,
                     ParentKey = category.ParentCategoryId,
@@ -29,6 +34,15 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC.SiteMap
                     PreservedRouteParameters = new[] { Constants.Language, Constants.Store },
                      
                 };
+
+                //Add category translations for each language in store
+                var store = StoreHelper.StoreClient.GetCurrentStore();
+                foreach (var lang in store.Languages)
+                {
+                    var culture = CultureInfo.CreateSpecificCulture(lang.LanguageCode);
+                    pNode.Attributes.Add(string.Format(TitleAttributeFormat, culture.Name),
+                        GetCategoryName(category, culture.Name));
+                }
 
                 nodes.Add(pNode);
 
@@ -39,7 +53,7 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC.SiteMap
                     nodes.Add(new DynamicNode
                     {
                         Action = "Display",
-                        Title = "Audio & MP3",
+                        Title = "Audio & MP3".Localize(),
                         Key = category.CategoryId + "AUDIO",
                         ParentKey = category.CategoryId,
                         ImageUrl = "~/Content/themes/default/images/menu/mobiles.png",
@@ -49,21 +63,21 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC.SiteMap
                     nodes.Add(new DynamicNode
                     {
                         Action = "Display",
-                        Title = "Samsung",
+                        Title = "Samsung".Localize(),
                         ParentKey = category.CategoryId + "AUDIO",
                         RouteValues = new Dictionary<string, object> { { Constants.Category, "audio-mp3" }, {"f_Brand", "samsung"} },
                     });
                     nodes.Add(new DynamicNode
                     {
                         Action = "Display",
-                        Title = "sony",
+                        Title = "Sony".Localize(),
                         ParentKey = category.CategoryId + "AUDIO",
                         RouteValues = new Dictionary<string, object> { { Constants.Category, "audio-mp3" }, { "f_Brand", "sony" } },
                     });
                     nodes.Add(new DynamicNode
                     {
                         Action = "Display",
-                        Title = "apple",
+                        Title = "Apple".Localize(),
                         ParentKey = category.CategoryId + "AUDIO",
                         RouteValues = new Dictionary<string, object> { { Constants.Category, "audio-mp3" }, { "f_Brand", "apple" } },
                     });
@@ -71,7 +85,7 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC.SiteMap
                     nodes.Add(new DynamicNode
                     {
                         Action = "Display",
-                        Title = "Computers & Tablets",
+                        Title = "Computers & Tablets".Localize(),
                         Key = category.CategoryId + "COMPUTERS",
                         ParentKey = category.CategoryId,
                         ImageUrl = "~/Content/themes/default/images/menu/computers.png",
@@ -81,21 +95,21 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC.SiteMap
                     nodes.Add(new DynamicNode
                     {
                         Action = "Display",
-                        Title = "Samsung",
+                        Title = "Samsung".Localize(),
                         ParentKey = category.CategoryId + "COMPUTERS",
                         RouteValues = new Dictionary<string, object> { { Constants.Category, "computers-tablets" }, { "f_Brand", "samsung" } },
                     });
                     nodes.Add(new DynamicNode
                     {
                         Action = "Display",
-                        Title = "sony",
+                        Title = "Sony".Localize(),
                         ParentKey = category.CategoryId + "COMPUTERS",
                         RouteValues = new Dictionary<string, object> { { Constants.Category, "computers-tablets" }, { "f_Brand", "sony" } },
                     });
                     nodes.Add(new DynamicNode
                     {
                         Action = "Display",
-                        Title = "apple",
+                        Title = "Apple".Localize(),
                         ParentKey = category.CategoryId + "COMPUTERS",
                         RouteValues = new Dictionary<string, object> { { Constants.Category, "computers-tablets" }, { "f_Brand", "apple" } },
                     });
@@ -103,7 +117,7 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC.SiteMap
                     nodes.Add(new DynamicNode
                     {
                         Action = "Display",
-                        Title = "Cameras",
+                        Title = "Cameras".Localize(),
                         Key = category.CategoryId + "CAMERAS",
                         ParentKey = category.CategoryId,
                         ImageUrl = "~/Content/themes/default/images/menu/Cameras.png",
@@ -113,14 +127,14 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC.SiteMap
                     nodes.Add(new DynamicNode
                     {
                         Action = "Display",
-                        Title = "Samsung",
+                        Title = "Samsung".Localize(),
                         ParentKey = category.CategoryId + "CAMERAS",
                         RouteValues = new Dictionary<string, object> { { Constants.Category, "cameras" }, { "f_Brand", "samsung" } },
                     });
                     nodes.Add(new DynamicNode
                     {
                         Action = "Display",
-                        Title = "sony",
+                        Title = "Sony".Localize(),
                         ParentKey = category.CategoryId + "CAMERAS",
                         RouteValues = new Dictionary<string, object> { { Constants.Category, "cameras" }, { "f_Brand", "sony" } },
                     });
@@ -128,7 +142,7 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC.SiteMap
                     nodes.Add(new DynamicNode
                     {
                         Action = "Display",
-                        Title = "TV & Video",
+                        Title = "TV & Video".Localize(),
                         Key = category.CategoryId + "TVVIDEO",
                         ParentKey = category.CategoryId,
                         ImageUrl = "~/Content/themes/default/images/menu/accessories.png",
@@ -138,14 +152,14 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC.SiteMap
                     nodes.Add(new DynamicNode
                     {
                         Action = "Display",
-                        Title = "Samsung",
+                        Title = "Samsung".Localize(),
                         ParentKey = category.CategoryId + "TVVIDEO",
                         RouteValues = new Dictionary<string, object> { { Constants.Category, "tv-video" }, { "f_Brand", "samsung" } },
                     });
                     nodes.Add(new DynamicNode
                     {
                         Action = "Display",
-                        Title = "sony",
+                        Title = "Sony".Localize(),
                         ParentKey = category.CategoryId + "TVVIDEO",
                         RouteValues = new Dictionary<string, object> { { Constants.Category, "tv-video" }, { "f_Brand", "sony" } },
                     });
@@ -155,6 +169,17 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC.SiteMap
 
             return nodes;
 
+        }
+
+        private string GetCategoryName(Category category, string locale = "")
+        {
+            var retValue = category.Name;
+            var title = CatalogHelper.CatalogClient.GetPropertyValueByName(category, "Title", true, locale);
+            if (title != null)
+            {
+                retValue = title.ToString();
+            }
+            return retValue;
         }
     }
 }

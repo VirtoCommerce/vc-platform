@@ -1,15 +1,25 @@
-﻿@model SiteMapNodeModel
+﻿@using VirtoCommerce.Web.Virto.Helpers.MVC.SiteMap
+@model SiteMapNodeModel
+           
+@functions
+{
+    private string GetTitle(SiteMapNodeModel model)
+    {
+        var titleAttribute = string.Format(CatalogNodeProvider.TitleAttributeFormat, UICulture);
+        return model.Attributes.ContainsKey(titleAttribute) ? model.Attributes[titleAttribute].ToString() : model.Title;
+    }
+}
 
 @if (Model.IsCurrentNode && Model.SourceMetadata["HtmlHelper"].ToString() != "MvcSiteMapProvider.Web.Html.MenuHelper")  { 
-    <b>@Model.Title.Localize()</b>
+    <b>@GetTitle(Model)</b>
 }
 else if (Model.IsClickable)
 {
     <a href="@Model.Url">
-        <span>@Model.Title.Localize()</span>
+        <span>@GetTitle(Model)</span>
     </a>
 }
 else
 {
-    <b>@Model.Title.Localize()</b>
+    <b>@GetTitle(Model)</b>
 }
