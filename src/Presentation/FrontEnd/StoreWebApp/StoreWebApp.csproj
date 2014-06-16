@@ -635,6 +635,9 @@
     <Content Include="Scripts\cloudzoom.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\jquery-1.7.1.min.js" />
+    <Content Include="Scripts\jquery.rateit.js" />
+    <Content Include="Scripts\jquery.rateit.min.js" />
+    <Content Include="Scripts\jquery.rateit.min.js.map" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
     <Content Include="Scripts\jquery-jqzoom.js" />
     <Content Include="Scripts\jquery-jqzoom.min.js" />
@@ -644,8 +647,6 @@
     <Content Include="Scripts\jquery-ui-1.10.1.min.js" />
     <Content Include="Scripts\jquery.gzoom.js" />
     <Content Include="Scripts\jquery.nivo.slider.js" />
-    <Content Include="Scripts\jquery.rateit.js" />
-    <Content Include="Scripts\jquery.rateit.min.js" />
     <Content Include="Scripts\jquery.signalR-2.0.3.js" />
     <Content Include="Scripts\jquery.signalR-2.0.3.min.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
