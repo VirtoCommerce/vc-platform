@@ -154,6 +154,7 @@ Reviews =
         $.ajax({
             type: 'PUT',
             url: VirtoCommerce.url('/api/review/comment'),
+            suppressErrors: true,
             data: data,
             dataType: 'JSON',
             success: function (comment) {
@@ -184,6 +185,7 @@ Reviews =
             type: 'PUT',
             url: VirtoCommerce.url('/api/review/addreview'),
             data: data,
+            suppressErrors: true,
             dataType: 'JSON',
             success: function (newReview) {
                 //close dialog
@@ -267,7 +269,8 @@ Reviews =
 
         $.ajax({
             type: 'PUT',
-            url:  VirtoCommerce.url('/api/review/reportabuse'),
+            url: VirtoCommerce.url('/api/review/reportabuse'),
+            suppressErrors: true,
             data: data,
             dataType: 'JSON',
             success: function () {

@@ -1,5 +1,4 @@
 ﻿using Microsoft.Practices.Prism.Commands;
-using Microsoft.Practices.ServiceLocation;
 using System.Collections.Generic;
 using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
@@ -9,37 +8,37 @@ using VirtoCommerce.ManagementClient.Customers.ViewModel.Interfaces;
 namespace VirtoCommerce.ManagementClient.Customers.Model
 {
     public class SearchModel
-	{
-		#region Dependencies
-		
-		private readonly string _id;
+    {
+        #region Dependencies
+
+        private readonly string _id;
         private readonly SearchResultType _resultType;
-		private readonly ICustomersCommonViewModel _parentViewModel;
-	    private readonly IViewModelsFactory<ICustomersDetailViewModel> _customersDetailVmFactory;
+        private readonly ICustomersCommonViewModel _parentViewModel;
+        private readonly IViewModelsFactory<ICustomersDetailViewModel> _customersDetailVmFactory;
 
-		#endregion
+        #endregion
 
-		public DelegateCommand OpenItemCommand { get; private set; }
+        public DelegateCommand OpenItemCommand { get; private set; }
 
-		public SearchModel(SearchResultType resultType, string id, ICustomersCommonViewModel parentViewModel, IViewModelsFactory<ICustomersDetailViewModel> customersDetailVmFactory)
+        public SearchModel(SearchResultType resultType, string id, ICustomersCommonViewModel parentViewModel, IViewModelsFactory<ICustomersDetailViewModel> customersDetailVmFactory)
         {
             _resultType = resultType;
             _id = id;
             _parentViewModel = parentViewModel;
-			_customersDetailVmFactory = customersDetailVmFactory;
+            _customersDetailVmFactory = customersDetailVmFactory;
 
             OpenItemCommand = new DelegateCommand(RaiseOpenItemInteractionRequest);
         }
 
         public string DisplayName { get; set; }
         public string Description { get; set; }
-        public string CaseContactId { get; set; }        
+        public string CaseContactId { get; set; }
         public string Type { get { return _resultType.ToString(); } }
 
 
         private void RaiseOpenItemInteractionRequest()
         {
-	        var parameters = new List<KeyValuePair<string, object>>();
+            var parameters = new List<KeyValuePair<string, object>>();
 
             var customer = new Contact();
             var caseItem = new Case();
