@@ -214,23 +214,25 @@ Reviews =
         	"You may only submit one vote per review.".Localize("#review_feedback_" + id);
             return;
         }
-        $.post(VirtoCommerce.url("/api/review/vote"), { Id: id, Like: bLike, IsReview: true },
-        function () {
-        	"Thank you for your feedback.".Localize("#review_feedback_" + id);
-            Reviews.ReviewVotes.push(id);
+        $.ajax({
+            type: "POST",
+            url: VirtoCommerce.url("/api/review/vote"),
+            suppressErrors: true,
+            data: { Id: id, Like: bLike, IsReview: true },
+            success: function () {
 
-        })
-        .error(function (data)
-        {
-        	data.responseText.Localize("#review_feedback_" + id);
-        })
-        .success(function () {
+                "Thank you for your feedback.".Localize("#review_feedback_" + id);
+                Reviews.ReviewVotes.push(id);
 
-            $("#total_feedback_review_" + id).text(parseInt($("#total_feedback_review_" + id).text()) + 1);
+                $("#total_feedback_review_" + id).text(parseInt($("#total_feedback_review_" + id).text()) + 1);
 
-            if (bLike)
+                if (bLike) {
+                    $("#positive_review_" + id).text(parseInt($("#positive_review_" + id).text()) + 1);
+                }
+            },
+            error: function (data)
             {
-                $("#positive_review_" + id).text(parseInt($("#positive_review_" + id).text()) + 1);
+                data.responseJSON.Message.Localize("#review_feedback_" + id);
             }
         });
     },
@@ -239,22 +241,28 @@ Reviews =
         	"You may only submit one vote per comment.".Localize("#comment_feedback_" + id);
             return;
         }
-        $.post(VirtoCommerce.url("/api/review/vote"), { Id: id, Like: bLike, IsReview: false },
-        function () {
-        	"Thank you for your feedback.".Localize("#comment_feedback_" + id);
-            Reviews.CommentVotes.push(id);
 
-        })
-        .error(function (data) {
-	        data.responseText.Localize("#comment_feedback_" + id);
-        })
-        .success(function () {
-            $("#total_feedback_comment_" + id).text(parseInt($("#total_feedback_comment_" + id).text()) + 1);
+        $.ajax({
+            type: "POST",
+            url: VirtoCommerce.url("/api/review/vote"),
+            suppressErrors: true,
+            data: { Id: id, Like: bLike, IsReview: false },
+            success: function () {
 
-            if (bLike) {
-                $("#positive_comment_" + id).text(parseInt($("#positive_comment_" + id).text()) + 1);
+                "Thank you for your feedback.".Localize("#comment_feedback_" + id);
+                Reviews.CommentVotes.push(id);
+
+                $("#total_feedback_comment_" + id).text(parseInt($("#total_feedback_comment_" + id).text()) + 1);
+
+                if (bLike) {
+                    $("#positive_comment_" + id).text(parseInt($("#positive_comment_" + id).text()) + 1);
+                }
+            },
+            error: function (data) {
+                data.responseJSON.Message.Localize("#comment_feedback_" + id);
             }
         });
+
     },
     flag: function (id) {
 

@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Script.Serialization;
+using Newtonsoft.Json;
 using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Foundation.Orders.Model;
 using VirtoCommerce.Foundation.Orders.Model.Countries;
@@ -490,7 +491,7 @@ namespace VirtoCommerce.Web.Models
 		/// Gets or sets the method.
 		/// </summary>
 		/// <value>The method.</value>
-        [ScriptIgnore]
+        [JsonIgnore]
         public ShippingMethod Method { get; set; }
 
 		/// <summary>
@@ -587,7 +588,7 @@ namespace VirtoCommerce.Web.Models
 		/// Gets or sets the cart.
 		/// </summary>
 		/// <value>The cart.</value>
-        [ScriptIgnore]
+        [JsonIgnore]
         public ShoppingCart Cart { get; set; }
 
 		/// <summary>
