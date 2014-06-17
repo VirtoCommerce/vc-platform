@@ -97,7 +97,7 @@ namespace CommerceFoundation.UI.FunctionalTests.Catalogs
 		
 		private IPropertyValueBaseViewModel CreatePropertyValueBaseViewModel(KeyValuePair<string, object>[] parameters)
 		{
-			return new PropertyValueBaseViewModel(null, (PropertyAndPropertyValueBase)parameters[0].Value);
+			return new PropertyValueBaseViewModel(null, (PropertyAndPropertyValueBase)parameters[0].Value, "en-US");
 		}
 
 
