@@ -25,7 +25,7 @@
     <script>$(function () { $.ajaxSetup({ cache: false }); });</script>
     <div id="layout">
         <div class="demo-notice">
-            <p>This is a demo store. Any orders placed through this store will not be honored or fulfilled.</p>
+            <p>@("This is a demo store. Any orders placed through this store will not be honored or fulfilled.".Localize())</p>
         </div>        
         <div class="header-wrap">
             <div class="head-top">
@@ -170,6 +170,10 @@
         });
         $(document).ajaxError(
             function myErrorHandler(event, xhr, ajaxOptions, thrownError) {
+
+                if (ajaxOptions.suppressErrors) {
+                    return;
+                }
                 if (xhr.status != 0) {
                     $.showPopupMessage("There was an error: <br/><span style='color:red;'>" + xhr.status + " " + xhr.statusText + "!</span>");
                 }
