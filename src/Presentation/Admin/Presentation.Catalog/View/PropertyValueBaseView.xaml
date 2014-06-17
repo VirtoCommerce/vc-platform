@@ -8,7 +8,8 @@
      xmlns:inf="clr-namespace:VirtoCommerce.ManagementClient.Catalog.Infrastructure"
      xmlns:extToolkit="clr-namespace:Xceed.Wpf.Toolkit;assembly=Xceed.Wpf.Toolkit"
      mc:Ignorable="d" xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.Catalog"
-     LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
+               xmlns:model="clr-namespace:VirtoCommerce.ManagementClient.Catalog.Model"
+               LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
     <base:ViewBase.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -23,7 +24,7 @@
         </prism:InteractionRequestTrigger>
     </i:Interaction.Triggers>
     <!--<ScrollViewer VerticalScrollBarVisibility="Auto">-->
-    <Grid>
+    <Grid d:DataContext="{d:DesignInstance model:PropertyAndPropertyValueBase}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -38,8 +39,6 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.Resources>
-            <inf:BoolToSelectionModeConverter x:Key="boolToMultipleSingleConverter" FalseValue="Single"
-                 TrueValue="Multiple" />
             <inf:PropertyValueConverter x:Key="propertyValueConverter" />
         </Grid.Resources>
         <TextBlock Grid.Row="0" Margin="0,12,0,20" Text="{Loc 'Enter property value'}" Visibility="{Binding InnerPropertyIsNotEnum, Converter={StaticResource booleanToVisibilityConverter}}" />
