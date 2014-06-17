@@ -659,6 +659,45 @@ VirtoAddress.prototype = {
 
             address.updateRegions(countryId);
         }
+
+        if ($('#geocomplete-' + this.Id).length != 0) {
+
+            $('#geocomplete-' + this.Id).geocomplete({
+                details: "#geo-details-" + this.Id,
+                detailsAttribute: "data-geo"
+            }).bind("geocode:result", function(event, result) {
+                var addressArray = result.address_components;
+                var street = "";
+                var countryCode = "";
+                var stateId = "";
+                for (var j = 0; j < addressArray.length; j++) {
+                    var typeName = addressArray[j].types[0];
+                    if (typeName == 'street_number') {
+                        street += addressArray[j].short_name + ' ';
+                    }
+                    if (typeName == 'route') {
+                        street += addressArray[j].short_name;
+                    }
+                    if (typeName == 'country') {
+                        countryCode += addressArray[j].short_name;
+                    }
+                    if (typeName == 'administrative_area_level_1') {
+                        stateId += addressArray[j].short_name;
+                    }   
+                }
+                $('#geo-details-' + address.Id + ' [data-geo="route"]').val(street);
+
+                countryCode = window.v_codes[countryCode];
+                if (countryCode.length > 0) {
+                    $(dropdown).val(countryCode);
+                    address.updateRegions(countryCode);
+                }
+                if (stateId.length > 0) {
+                    $(dropdown2).val(stateId);
+                    $(textbox).val(stateId);
+                }
+            });
+        }
     },
 
     updateRegions: function (countryId)
