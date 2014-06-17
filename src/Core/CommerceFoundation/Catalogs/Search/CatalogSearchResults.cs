@@ -22,9 +22,9 @@ namespace VirtoCommerce.Foundation.Catalogs.Search
         }
 
         [DataMember]
-		Dictionary<string, object> _Items;
+        Dictionary<string, Dictionary<string, object>> _Items;
 
-        public virtual Dictionary<string, object> Items
+        public virtual Dictionary<string, Dictionary<string,object>> Items
         { 
             get
             {
@@ -69,7 +69,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Search
         {
         }
 
-        public CatalogItemSearchResults(ISearchCriteria criteria, Dictionary<string,object> items, SearchResults results)
+        public CatalogItemSearchResults(ISearchCriteria criteria, Dictionary<string, Dictionary<string, object>> items, SearchResults results)
         {
             _Items = items;
             _TotalCount = results.TotalCount;

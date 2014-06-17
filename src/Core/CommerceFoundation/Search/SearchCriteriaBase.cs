@@ -132,6 +132,16 @@ namespace VirtoCommerce.Foundation.Search
             get { return "__browsingoutline"; }
         }
 
+        public virtual string ReviewsTotalField
+        {
+            get { return "__reviewstotal"; }
+        }
+
+        public virtual string ReviewsAverageField
+        {
+            get { return "__reviewsavg"; }
+        }
+
         [DataMember]
         List<ISearchFilter> _filters = new List<ISearchFilter>();
 

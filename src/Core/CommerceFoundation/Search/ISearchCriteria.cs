@@ -65,6 +65,22 @@ namespace VirtoCommerce.Foundation.Search
         string BrowsingOutlineField { get; }
 
         /// <summary>
+        /// Gets the reviews total field.
+        /// </summary>
+        /// <value>
+        /// The reviews total field.
+        /// </value>
+        string ReviewsTotalField { get; }
+
+        /// <summary>
+        /// Gets the reviews average field.
+        /// </summary>
+        /// <value>
+        /// The reviews average field.
+        /// </value>
+        string ReviewsAverageField { get; }
+
+        /// <summary>
         /// Gets the filters.
         /// </summary>
         /// <value>The filters.</value>

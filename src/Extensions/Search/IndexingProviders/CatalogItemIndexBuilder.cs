@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Foundation.Reviews.Repositories;
 using VirtoCommerce.Foundation.Search;
 using VirtoCommerce.Foundation.Frameworks.CQRS;
 using VirtoCommerce.Foundation.Catalogs.Repositories;
@@ -56,6 +57,14 @@ namespace VirtoCommerce.Search.Index
         public ICacheRepository CacheRepository { get; private set; }
 
         /// <summary>
+        /// Gets the review repository.
+        /// </summary>
+        /// <value>
+        /// The review repository.
+        /// </value>
+        public IReviewRepository ReviewRepository { get; private set; }
+
+        /// <summary>
         /// Gets the type of the document.
         /// </summary>
         /// <value>
@@ -77,9 +86,11 @@ namespace VirtoCommerce.Search.Index
         /// <param name="priceListRepository">The price list repository.</param>
         /// <param name="logRepository">The log repository.</param>
         /// <param name="catalogOutlinebuilder">The catalog outlinebuilder.</param>
+        /// <param name="reviewRepository">The review repository.</param>
         /// <param name="cacheRepository">The cache repository.</param>
-        public CatalogItemIndexBuilder(ISearchProvider searchProvider, ICatalogRepository catalogRepository, IPricelistRepository priceListRepository, IOperationLogRepository logRepository, ICatalogOutlineBuilder catalogOutlinebuilder, ICacheRepository cacheRepository)
+        public CatalogItemIndexBuilder(ISearchProvider searchProvider, ICatalogRepository catalogRepository, IPricelistRepository priceListRepository, IOperationLogRepository logRepository, ICatalogOutlineBuilder catalogOutlinebuilder, IReviewRepository reviewRepository, ICacheRepository cacheRepository)
         {
+            ReviewRepository = reviewRepository;
             CatalogRepository = catalogRepository;
             PriceListRepository = priceListRepository;
             SearchProvider = searchProvider;
@@ -88,22 +99,6 @@ namespace VirtoCommerce.Search.Index
             CacheRepository = cacheRepository;
         }
 
-        /*
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CatalogItemIndexBuilder" /> class.
-        /// </summary>
-        /// <param name="catalogRepository">The catalog repository.</param>
-        /// <param name="pricelistRepository">The pricelist repository.</param>
-        /// <param name="logRepository">The log repository.</param>
-        public CatalogItemIndexBuilder(ICatalogRepository catalogRepository, IPricelistRepository pricelistRepository, IOperationLogRepository logRepository, ICacheRepository cacheRepository)
-        {
-            SearchProvider = null;
-            CatalogRepository = catalogRepository;
-            PriceListRepository = pricelistRepository;
-            LogRepository = logRepository;
-            CacheRepository = cacheRepository;
-        }
-         * */
 
         /// <summary>
         /// Initializes the specified Index Builder. Typically creates partitions that will need be indexed.
@@ -128,7 +123,7 @@ namespace VirtoCommerce.Search.Index
         /// <returns></returns>
         public IEnumerable<IDocument> CreateDocuments<T>(T input)
         {
-            var docCreator = new CatalogItemDocumentCreator(CatalogRepository, PriceListRepository, OutlineBuilder, CacheRepository);
+            var docCreator = new CatalogItemDocumentCreator(CatalogRepository, PriceListRepository, OutlineBuilder, ReviewRepository, CacheRepository);
 
             // create index docs
             return docCreator.CreateDocument(input as Partition);
