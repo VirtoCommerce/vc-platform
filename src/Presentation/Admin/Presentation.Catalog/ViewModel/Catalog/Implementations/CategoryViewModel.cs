@@ -99,19 +99,38 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
                 // generate value objects from PropertySet.PropertySetProperties and fill current values
                 PropertySet.PropertySetProperties.Select(x => x.Property).ToList().ForEach(x =>
                     {
-                        T valueItem;
                         if (x.IsLocaleDependant)
                         {
                             locales.ForEach(y =>
                             {
-                                valueItem = PropertyValues.FirstOrDefault(z => z.Name == x.Name && z.Locale == y);
-                                PropertiesAndValues.Add(new PropertyAndPropertyValueBase { Property = x, Value = valueItem, Locale = y });
+                                var item = new PropertyAndPropertyValueBase { Property = x, Locale = y };
+                                if (x.IsMultiValue)
+                                {
+                                    var values = PropertyValues.Where(z => z.Name == x.Name && z.Locale == y);
+                                    item.Values = new ObservableCollection<PropertyValueBase>(values);
+                                }
+                                else
+                                {
+                                    item.Value = PropertyValues.FirstOrDefault(z => z.Name == x.Name && z.Locale == y);
+                                }
+
+                                PropertiesAndValues.Add(item);
                             });
                         }
                         else
                         {
-                            valueItem = PropertyValues.FirstOrDefault(z => z.Name == x.Name);
-                            PropertiesAndValues.Add(new PropertyAndPropertyValueBase { Property = x, Value = valueItem });
+                            var item = new PropertyAndPropertyValueBase { Property = x };
+                            if (x.IsMultiValue)
+                            {
+                                var values = PropertyValues.Where(z => z.Name == x.Name);
+                                item.Values = new ObservableCollection<PropertyValueBase>(values);
+                            }
+                            else
+                            {
+                                item.Value = PropertyValues.FirstOrDefault(z => z.Name == x.Name);
+                            }
+
+                            PropertiesAndValues.Add(item);
                         }
                     });
             }
@@ -297,6 +316,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
             }
         }
 
+        // function almost duplicated in ItemViewModel
         protected override bool IsValidForSave()
         {
             var result = InnerItem.Validate();
@@ -322,6 +342,11 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
             if (!isPropertyValuesValid && isCodeValid)
             {
                 SelectedTabIndex = TabIndexProperties;
+                var val = PropertiesAndValues.First(x => !x.IsValid);
+                if (!string.IsNullOrEmpty(val.Locale) && val.Locale != FilterLanguage)
+                {
+                    RaisePropertiesLocalesFilter(val.Locale);
+                }
             }
 
             var seoIsValid = true;
@@ -534,53 +559,35 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
             else
             {
                 if (originalItem.Values == null)
-                {
                     originalItem.Values = new ObservableCollection<PropertyValueBase>();
-                    item.Values.ToList().ForEach(value =>
+
+                var listToRemove = originalItem.Values.Where(val => item.Values.All(y => y.PropertyValueId != val.PropertyValueId)).ToList();
+                listToRemove.ForEach(x =>
+                {
+                    var itemToRemove = InnerItem.CategoryPropertyValues.First(y => y.KeyValue == x.KeyValue);
+                    InnerItem.CategoryPropertyValues.Remove(itemToRemove);
+                    originalItem.Values.Remove(x);
+                });
+
+                foreach (var value in item.Values)
+                {
+                    if (originalItem.Values.All(y => y.PropertyValueId != value.PropertyValueId))
                     {
                         InnerItem.CategoryPropertyValues.Add(new CategoryPropertyValue
                         {
                             CategoryId = InnerItem.CategoryId,
                             Name = item.PropertyName,
+                            Locale = value.Locale,
                             KeyValue = value.PropertyValueId,
                             ValueType = item.PropertyValueType
                         });
                         originalItem.Values.Add(new PropertyValue
                         {
                             Name = item.PropertyName,
+                            Locale = value.Locale,
                             KeyValue = value.PropertyValueId,
                             ValueType = item.PropertyValueType
                         });
-                    });
-                }
-                else
-                {
-                    var listToRemove = new List<PropertyValue>();
-                    foreach (var val in originalItem.Values)
-                    {
-                        if (item.Values.All(y => y.PropertyValueId != val.PropertyValueId))
-                        {
-                            listToRemove.Add((PropertyValue)val);
-                        }
-                    }
-                    if (listToRemove.Any())
-                    {
-                        listToRemove.ForEach(x =>
-                        {
-                            var itemToRemove = InnerItem.CategoryPropertyValues.First(y => y.KeyValue == x.KeyValue);
-                            InnerItem.CategoryPropertyValues.Remove(itemToRemove);
-                            originalItem.Values.Remove(x);
-                        });
-                    }
-
-                    foreach (var val in item.Values)
-                    {
-                        if (originalItem.Values.All(y => y.PropertyValueId != val.PropertyValueId))
-                        {
-                            originalItem.Values.Add(val);
-                            var newValue = new CategoryPropertyValue { CategoryId = InnerItem.CategoryId, Name = item.PropertyName, KeyValue = val.PropertyValueId, ValueType = item.PropertyValueType };
-                            InnerItem.CategoryPropertyValues.Add(newValue);
-                        }
                     }
                 }
             }
@@ -621,6 +628,17 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
                     originalItem.Value = null;
                 }
 
+                OnViewModelCollectionChangedUI(null, null);
+            }
+            else if (originalItem.IsMultiValue && originalItem.Values != null)
+            {
+                foreach (var value in originalItem.Values)
+                {
+                    var itemToRemove = InnerItem.CategoryPropertyValues.First(y => y.KeyValue == value.KeyValue);
+                    InnerItem.CategoryPropertyValues.Remove(itemToRemove);
+                }
+
+                originalItem.Values = null;
                 OnViewModelCollectionChangedUI(null, null);
             }
         }

@@ -44,6 +44,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
                             value.IntegerValue = propertyValue.IntegerValue;
                             value.LongTextValue = propertyValue.LongTextValue;
                             value.ShortTextValue = propertyValue.ShortTextValue;
+                            value.KeyValue = propertyValue.PropertyValueId;
                         }
                     }
                 }
@@ -197,9 +198,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
         #region IMultiSelectControlCommands
         public void SelectItem(object selectedObj)
         {
-            var selectedItem = (PropertyValue)selectedObj;
-            var item = selectedItem;
-
+            var item = (PropertyValue)selectedObj;
             InnerItem.Values.Add(item);
         }
 
@@ -211,16 +210,14 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
         public void UnSelectItem(object selectedObj)
         {
-
-            var selectedItem = (PropertyValue)selectedObj;
-
+            var selectedItem = (PropertyValueBase)selectedObj;
             var item = InnerItem.Values.First(x => x.PropertyValueId.Equals(selectedItem.PropertyValueId));
             InnerItem.Values.Remove(item);
         }
 
         public void UnSelectAllItems(System.Collections.IList currentListItems)
         {
-            if (currentListItems is IList<PropertyValue>)
+            if (currentListItems is IList<PropertyValueBase>)
                 InnerItem.Values.ToList().ForEach(UnSelectItem);
         }
         #endregion
@@ -232,7 +229,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
             {
                 var itemTyped = (PropertyValue)item;
                 result = (string.IsNullOrEmpty(itemTyped.Locale) || itemTyped.Locale == _locale) &&
-                            InnerItem.Values.All(x => x.PropertyValueId != itemTyped.PropertyValueId);
+                            InnerItem.Values.All(x => x.PropertyValueId != itemTyped.PropertyValueId && x.KeyValue != itemTyped.PropertyValueId);
             }
             return result;
         }
