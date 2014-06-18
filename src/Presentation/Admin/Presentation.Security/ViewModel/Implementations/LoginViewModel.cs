@@ -12,6 +12,7 @@ using VirtoCommerce.Foundation.Security;
 using VirtoCommerce.Foundation.Security.Services;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
 using VirtoCommerce.ManagementClient.Core.Infrastructure.Dialogs;
+using VirtoCommerce.ManagementClient.Core.Infrastructure.EventAggregation;
 using VirtoCommerce.ManagementClient.Security.Model;
 using VirtoCommerce.ManagementClient.Security.Properties;
 using VirtoCommerce.ManagementClient.Security.ViewModel.Interfaces;
@@ -36,6 +37,8 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
             }
         }
 
+        public string ApplicationLoadingStatus { get; private set; }
+
         #region Constructor
 
         public LoginViewModel(IUnityContainer container)
@@ -45,6 +48,13 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
             LoginCommand = new DelegateCommand(ProcessLogin, () => CurrentUser.IsValid);
             _container = container;
             LoadValues();
+
+            // subscribe to application loading status messages
+            EventSystem.Subscribe<GenericEvent<string>>(xx => OnUIThread(() =>
+            {
+                ApplicationLoadingStatus = xx.Message;
+            }));
+
 #if DEBUG
             OnUIThread(() =>
                 {
@@ -116,10 +126,11 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
             }
             AuthProgress = true;
             Error = null;
+            NavigationNames.PublishStatusUpdate("Connecting");
+
             try
             {
                 var serviceBaseUrl = CurrentUser.BaseUrl.ToLower();
-
                 if (!serviceBaseUrl.EndsWith("/"))
                 {
                     serviceBaseUrl += "/";
@@ -130,8 +141,8 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
                     serviceBaseUrl += "Virto/";
                 }
 
-
                 RegisterSecurityServices(serviceBaseUrl);
+
                 var authenticationContext = _container.Resolve<IAuthenticationContext>();
                 _isUserAuthenticated = await Task.Run(() => authenticationContext.Login(CurrentUser.Username, CurrentUser.Password, serviceBaseUrl));
 

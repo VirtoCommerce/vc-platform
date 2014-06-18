@@ -52,6 +52,7 @@ namespace VirtoCommerce.ManagementClient.Security
                         try
                         {
                             InitializeModules();
+                            NavigationNames.PublishStatusUpdate("Updating Dashboard");
                             InitializeUsersModule();
                             InitializeMainModule(); //should be last
                             Application.Current.Dispatcher.Invoke(DispatcherPriority.Send, (Action)delegate
@@ -108,17 +109,24 @@ namespace VirtoCommerce.ManagementClient.Security
         {
             var moduleManager = _container.Resolve<IModuleManager>();
 
+            NavigationNames.PublishStatusUpdate("Loading localization resources");
             moduleManager.LoadModule("LocalizationModule"); // initialize it first
+            NavigationNames.PublishStatusUpdate("Loading settings");
             moduleManager.LoadModule("AppConfigModule");
             moduleManager.LoadModule("ConfigurationModule");
             moduleManager.LoadModule("AssetModule"); // AssetModule is loaded on demand as a dependency
 
+            NavigationNames.PublishStatusUpdate("Loading Orders module");
             moduleManager.LoadModule("OrderModule");
+            NavigationNames.PublishStatusUpdate("Loading Marketing module");
             moduleManager.LoadModule("MarketingModule");
+            NavigationNames.PublishStatusUpdate("Loading Catalog module");
             moduleManager.LoadModule("CatalogModule");
+            NavigationNames.PublishStatusUpdate("Loading Fulfillment module");
             moduleManager.LoadModule("FulfillmentModule");
+            NavigationNames.PublishStatusUpdate("Loading Custommers module");
             moduleManager.LoadModule("CustomersModule");
-
+            NavigationNames.PublishStatusUpdate("Loading Reporting module");
             moduleManager.LoadModule("ReportingModule");
         }
 
