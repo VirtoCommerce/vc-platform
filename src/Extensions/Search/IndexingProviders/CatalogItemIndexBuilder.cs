@@ -108,7 +108,7 @@ namespace VirtoCommerce.Search.Index
         /// <returns></returns>
         public IEnumerable<IMessage> CreatePartitions(string scope, DateTime lastBuild)
         {
-            var creator = new CatalogItemPartitionCreator(CatalogRepository, LogRepository);
+            var creator = new CatalogItemPartitionCreator(CatalogRepository, LogRepository, ReviewRepository);
             var jobId = Guid.NewGuid();
 
             return creator.CreatePartitions(jobId.ToString(), lastBuild)

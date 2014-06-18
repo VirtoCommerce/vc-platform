@@ -14,11 +14,11 @@
     }
 }
 
-<script>
+@*<script>
     $(function() {
         $("li#@Model.CatalogItem.ItemId #rateit").rateit({ resetable: false, readonly: true, value: "@Model.ItemReviewTotals.AverageRating.ToString(CultureInfo.InvariantCulture)", starwidth: 11, starheight: 11 });
     });
-</script>
+</script>*@
 
 <li class="@itemClass" data-class="@itemClass" id="@Model.CatalogItem.ItemId">
     <div class="inner">

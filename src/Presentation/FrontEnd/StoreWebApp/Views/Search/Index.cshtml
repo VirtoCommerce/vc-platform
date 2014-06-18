@@ -29,8 +29,8 @@ else
             VirtoCommerce.initSliders();
         });
 
-        @*Uncomment this if your reviews change very offen and cannot wait for reindex
-            @if (Model.CatalogItems.Any())
+        
+        @if (Model.CatalogItems.Any())
         {
             if (Model.CatalogItems.Length == 1)
             {
@@ -41,7 +41,7 @@ else
             @:var filter = "@Html.Raw(Model.CatalogItems.Select(i => i.CatalogItem.ItemId).Aggregate((x, y) => (x.Contains("or ItemId eq") ? x : string.Format("ItemId eq '{0}'", x)) + string.Format(" or ItemId eq '{0}'", y)))";
             }
             @:Reviews.catalogReviews(filter);
-        }*@
+        }
 
         var viewClass = VirtoCommerce.getCookie("vcf.categoryListView");
         viewClass = viewClass == "" ? "grid" : viewClass;
