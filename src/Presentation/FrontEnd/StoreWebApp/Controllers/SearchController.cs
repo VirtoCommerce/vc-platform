@@ -411,10 +411,10 @@ namespace VirtoCommerce.Web.Controllers
                     sortObject = new SearchSort("name", isDescending);
                     break;
                 case "rating":
-                    sortObject = new SearchSort("__reviewsavg", isDescending);
+                    sortObject = new SearchSort(criteria.ReviewsAverageField, isDescending);
                     break;
                 case "reviews":
-                    sortObject = new SearchSort("__reviewstotal", isDescending);
+                    sortObject = new SearchSort(criteria.ReviewsTotalField, isDescending);
                     break;
                 default:
                     sortObject = CatalogItemSearchCriteria.DefaultSortOrder;
