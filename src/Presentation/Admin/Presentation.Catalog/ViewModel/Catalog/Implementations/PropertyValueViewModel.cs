@@ -72,6 +72,14 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 				//    break;
 			}
 
+		    if (IsMultiLanguage)
+		    {
+                if (string.IsNullOrEmpty(InnerItem.Locale))
+                    InnerItem.SetError("Locale", "Value is required".Localize(), true);
+                else
+                    InnerItem.ClearError("Locale");
+		    }
+
 			//if (string.IsNullOrEmpty(InnerItem.PropertyValueId) || _parent.InnerItem.Values.Any(x => x.PropertyValueId == InnerItem.PropertyValueId))
 			//    InnerItem.SetError("PropertyValueId", "Unique value required", true);
 			//else
