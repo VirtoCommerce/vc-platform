@@ -185,6 +185,27 @@ namespace VirtoCommerce.Foundation.Stores.Model
 			return base.ToString();
 		}
 
+        public object RawValue()
+        {
+            switch (ValueType)
+            {
+                case "Boolean":
+                    return BooleanValue;
+                case "DateTime":
+                    return DateTimeValue;
+                case "Decimal":
+                    return DecimalValue;
+                case "Integer":
+                    return IntegerValue;
+                case "LongText":
+                    return LongTextValue;
+                case "ShortText":
+                    return ShortTextValue;
+            }
+
+            return null;
+        }
+
         #region Navigation Properties
 
         private string _StoreId;

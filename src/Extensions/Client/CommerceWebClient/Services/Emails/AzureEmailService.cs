@@ -18,7 +18,7 @@ namespace VirtoCommerce.Web.Client.Services.Emails
         /// Sends the email.
         /// </summary>
         /// <param name="message">The message.</param>
-        /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
+        /// <returns><c>true</c> if email sent succesfully, <c>false</c> otherwise.</returns>
         public bool SendEmail(IEmailMessage message)
         {
             if (message == null)
@@ -69,7 +69,15 @@ namespace VirtoCommerce.Web.Client.Services.Emails
             var transportSMTP = SMTP.GetInstance(credentials, smtp.Network.Host, smtp.Network.Port);
 
             // Send the email.
-            transportSMTP.Deliver(eMessage);
+            try
+            {
+                transportSMTP.Deliver(eMessage);
+            }
+            catch
+            {
+
+                return false;
+            }
 
             return true;
         }

@@ -1,27 +1,22 @@
-﻿using System;
+﻿using System.Globalization;
+using Omu.ValueInjecter;
+using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Transactions;
 using System.Web.Mvc;
-using System.Web.Security;
-using Omu.ValueInjecter;
 using VirtoCommerce.Client;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Customers.Model;
-using VirtoCommerce.Foundation.Frameworks.Email;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
-using VirtoCommerce.Foundation.Frameworks.Templates;
 using VirtoCommerce.Foundation.Orders.Model;
 using VirtoCommerce.Foundation.Orders.Services;
 using VirtoCommerce.Foundation.Security.Model;
-using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Web.Client.Helpers;
 using VirtoCommerce.Web.Client.Security;
-using VirtoCommerce.Web.Client.Services.Emails;
 using VirtoCommerce.Web.Client.Services.Security;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Virto.Helpers;
-using WebGrease.Css.Extensions;
 
 
 namespace VirtoCommerce.Web.Controllers
@@ -53,9 +48,6 @@ namespace VirtoCommerce.Web.Controllers
         /// </summary>
         private readonly IOrderService _orderService;
 
-        private readonly ITemplateService _templateService;
-        private readonly IEmailService _emailService;
-
         /// <summary>
         /// The _settings client
         /// </summary>
@@ -80,8 +72,6 @@ namespace VirtoCommerce.Web.Controllers
         /// <param name="webSecurity">The web security.</param>
         /// <param name="oAuthSecurity">The o authentication security.</param>
         /// <param name="orderService">The order service.</param>
-        /// <param name="templateService">The template service.</param>
-        /// <param name="emailService">The email service.</param>
         public AccountController(CatalogClient catalogClient,
                                  UserClient userClient,
                                  CountryClient countryClient,
@@ -89,9 +79,7 @@ namespace VirtoCommerce.Web.Controllers
                                  SettingsClient settingsClient,
                                  IUserSecurity webSecurity,
                                  IOAuthWebSecurity oAuthSecurity,
-                                 IOrderService orderService,
-                                 ITemplateService templateService,
-                                 IEmailService emailService)
+                                 IOrderService orderService)
         {
             _catalogClient = catalogClient;
             _userClient = userClient;
@@ -101,8 +89,6 @@ namespace VirtoCommerce.Web.Controllers
             _webSecurity = webSecurity;
             _oAuthSecurity = oAuthSecurity;
             _orderService = orderService;
-            _templateService = templateService;
-            _emailService = emailService;
         }
 
         #region Authentication Methods
@@ -886,11 +872,41 @@ namespace VirtoCommerce.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                string error;
+                string error, token;
 
-                if (!UserHelper.Register(model, out error))
+                var requireConfirmation = StoreHelper.GetSettingValue("RequireAccountConfirmation", false);
+
+                if (!UserHelper.Register(model, requireConfirmation, out error, out token))
                 {
                     ModelState.AddModelError("", error);
+                }
+                else if (requireConfirmation)
+                {
+
+                    var linkUrl = Url.Action("ConfirmAccount", "Account", new { token, username = model.Email }, Request.Url.Scheme);
+
+                    if (UserHelper.SendEmail(linkUrl, string.Format("{0} {1}", model.FirstName, model.LastName),
+                        model.Email, "confirm-account",
+                        emailMessage =>
+                        {
+                            //Use default template
+                            emailMessage.Html =
+                                string.Format(
+                                    "<b>{0}</b> <br/><br/> To confirm your account, click on the following link:<br/> <br/> <a href='{1}'>{1}</a> <br/>",
+                                    string.Format("{0} {1}", model.FirstName, model.LastName),
+                                    linkUrl);
+
+                            emailMessage.Subject = "Account confirmation";
+                        }))
+                    {
+
+                        TempData[GetMessageTempKey(MessageType.Success)] = new[] { "Your account was succesfully created. To confirm your account follow the instruction received in email.".Localize() };
+                    }
+                    else
+                    {
+                        TempData[GetMessageTempKey(MessageType.Error)] = new[] { string.Format("Failed to send confirmation email to {0}.".Localize(), model.Email) };
+                    }
+                    return model.ActionResult ?? RedirectToAction("LogOn");
                 }
                 else
                 {
@@ -1025,7 +1041,7 @@ namespace VirtoCommerce.Web.Controllers
                 var user = _userClient.GetAccountByUserName(model.UserName.ToLower());
 
                 //If user has local account then password must be correct in order to associate it with external account
-                if (user != null && _oAuthSecurity.HasLocalAccount(user.AccountId.ToString()))
+                if (user != null && _oAuthSecurity.HasLocalAccount(user.AccountId.ToString(CultureInfo.InvariantCulture)))
                 {
                     if (user.StoreId != UserHelper.CustomerSession.StoreId)
                     {
@@ -1083,7 +1099,7 @@ namespace VirtoCommerce.Web.Controllers
                         });
                     }
                     //Create internal login
-                    if (model.CreateLocalLogin && !_oAuthSecurity.HasLocalAccount(user.AccountId.ToString()))
+                    if (model.CreateLocalLogin && !_oAuthSecurity.HasLocalAccount(user.AccountId.ToString(CultureInfo.InvariantCulture)))
                     {
                         _webSecurity.CreateAccount(model.UserName, model.NewPassword);
                     }
@@ -1197,21 +1213,8 @@ namespace VirtoCommerce.Web.Controllers
                     //User name can also be an email in most cases
                     var email = UserHelper.GetCustomerModel(contact).Email ?? model.UserName;
 
-                    //Get template
-                    var context = new Dictionary<string, object>() { { "ResetPasswordTemplate", new ResetPasswordTemplate { Url = linkUrl, Username = userName } } };
-                    var template = _templateService.ProcessTemplate("forgot-password", context, CultureInfo.CreateSpecificCulture(UserHelper.CustomerSession.Language));
-
-                    //Create email message
-                    var emailMessage = new EmailMessage();
-                    emailMessage.To.Add(email);
-
-
-                    if (template != null)
-                    {
-                        emailMessage.Html = template.Body;
-                        emailMessage.Subject = template.Subject;
-                    }
-                    else
+                    UserHelper.SendEmail(linkUrl, userName, email, "forgot-password",
+                    emailMessage =>
                     {
                         //Use default template
                         emailMessage.Html =
@@ -1221,10 +1224,7 @@ namespace VirtoCommerce.Web.Controllers
                                 linkUrl);
 
                         emailMessage.Subject = "Reset password";
-                    }
-
-                    //Send email
-                    _emailService.SendEmail(emailMessage);
+                    });
 
                     TempData[GetMessageTempKey(MessageType.Success)] = new[] { "The reset password link was generated. Check you email to reset password.".Localize() };
                 }
@@ -1241,6 +1241,34 @@ namespace VirtoCommerce.Web.Controllers
         public ActionResult ResetPassword(string token)
         {
             return View(new ResetPasswordModel(token));
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult ConfirmAccount(string token, string username)
+        {
+            var account = _userClient.GetAccountByUserName(username, RegisterType.GuestUser);
+
+            if (account != null)
+            {
+                account.AccountState = AccountState.Approved.GetHashCode();
+
+                if (_webSecurity.ConfirmAccount(token, username))
+                {
+                    TempData[GetMessageTempKey(MessageType.Success)] = new[]
+                {
+                    "Your account was succesfully confirmed. Now you can login".Localize()
+                };
+                    _userClient.SaveSecurityChanges();
+                    return RedirectToAction("LogOn");
+                }
+            }
+
+            TempData[GetMessageTempKey(MessageType.Error)] = new[]
+                {
+                    "Failed to confirm account.".Localize()
+                };
+            return RedirectToAction("LogOn");
         }
 
         [HttpPost]
@@ -1390,7 +1418,7 @@ namespace VirtoCommerce.Web.Controllers
             return RedirectToAction("Index", "Home");
         }
 
- 
+
         /// <summary>
         /// Class ExternalLoginResult.
         /// </summary>
@@ -1436,5 +1464,6 @@ namespace VirtoCommerce.Web.Controllers
         }
 
         #endregion
+
     }
 }
