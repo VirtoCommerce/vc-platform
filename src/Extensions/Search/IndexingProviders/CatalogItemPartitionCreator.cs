@@ -108,13 +108,16 @@ namespace VirtoCommerce.Search.Index
             {
                 query =
                     _catalogRepository.Items.Where(i => i.LastModified > lastBuild)
-                                      .OrderBy(i => i.ItemId)
-                                      .Select(i => i.ItemId).AsNoTracking();
+                                            .OrderBy(i => i.ItemId)
+                                            .Select(i => i.ItemId).AsNoTracking();
 
                 //Reindex items where reviews were recently approved
-                query = query.Union(_reviewRepository.Reviews.Where(i => i.LastModified > lastBuild && i.Status == (int)ReviewStatus.Approved)
-                    .OrderBy(i => i.ItemId)
-                    .Select(i => i.ItemId).AsNoTracking()).Distinct();
+                var queryReviews = _reviewRepository.Reviews
+                    .Where(i => i.LastModified > lastBuild && i.Status == (int)ReviewStatus.Approved)                                         
+                    .OrderBy(i => i.ItemId)                                                   
+                    .Select(i => i.ItemId).AsNoTracking();
+
+                query = query.ToArray().Union(queryReviews.ToArray()).Distinct().AsQueryable();
             }
             else
             {
