@@ -16,7 +16,7 @@
 
 @*<script>
     $(function() {
-        $("li#@Model.CatalogItem.ItemId #rateit").rateit({ resetable: false, readonly: true, value: "@Model.ItemReviewTotals.AverageRating.ToString(CultureInfo.InvariantCulture)", starwidth: 11, starheight: 11 });
+        $("li[id='@Model.CatalogItem.ItemId #rateit']").rateit({ resetable: false, readonly: true, value: "@Model.ItemReviewTotals.AverageRating.ToString(CultureInfo.InvariantCulture)", starwidth: 11, starheight: 11 });
     });
 </script>*@
 
