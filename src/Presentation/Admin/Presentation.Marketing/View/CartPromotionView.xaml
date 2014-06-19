@@ -12,7 +12,7 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </FrameworkElement.Resources>
-    <TabControl x:Name="tabControl" Style="{StaticResource Virto_TabControlHorizontal_Style}">
+    <TabControl x:Name="tabControl" SelectedIndex="{Binding SelectedTabIndex}" Style="{StaticResource Virto_TabControlHorizontal_Style}">
         <TabItem x:Name="tabItemSummary" Header="{Loc ^Summary}">
             <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                 <catalogViewWizard:CartPromotionOverviewStepView HorizontalAlignment="Left" Width="Auto" />
