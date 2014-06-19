@@ -7,6 +7,8 @@ using VirtoCommerce.Foundation;
 using VirtoCommerce.Foundation.Catalogs;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
+using VirtoCommerce.Foundation.Reviews.Model;
+using VirtoCommerce.Foundation.Reviews.Repositories;
 using VirtoCommerce.Foundation.Search;
 using VirtoCommerce.Foundation.Catalogs.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
@@ -17,6 +19,7 @@ namespace VirtoCommerce.Search.Index
 
     public class CatalogItemDocumentCreator : ISearchIndexDocumentCreator<Partition>
     {
+
         #region Cache Constants
         public const string PropertiesCacheKey = "C:PR:{0}";
         public const string PriceListsCacheKey = "C:PL:{0}";
@@ -51,6 +54,14 @@ namespace VirtoCommerce.Search.Index
         public ICatalogOutlineBuilder OutlineBuilder { get; private set; }
 
         /// <summary>
+        /// Gets the review repository.
+        /// </summary>
+        /// <value>
+        /// The review repository.
+        /// </value>
+        public IReviewRepository ReviewRepository { get; private set; }
+
+        /// <summary>
         /// Gets the cache repository.
         /// </summary>
         /// <value>
@@ -64,9 +75,11 @@ namespace VirtoCommerce.Search.Index
         /// <param name="catalogRepository">The catalog repository.</param>
         /// <param name="pricelistRepository">The pricelist repository.</param>
         /// <param name="catalogOutlinebuilder">The catalog outline builder.</param>
+        /// <param name="reviewRepository"></param>
         /// <param name="cacheRepository">The cache repository.</param>
-        public CatalogItemDocumentCreator(ICatalogRepository catalogRepository, IPricelistRepository pricelistRepository, ICatalogOutlineBuilder catalogOutlinebuilder,  ICacheRepository cacheRepository)
+        public CatalogItemDocumentCreator(ICatalogRepository catalogRepository, IPricelistRepository pricelistRepository, ICatalogOutlineBuilder catalogOutlinebuilder, IReviewRepository reviewRepository, ICacheRepository cacheRepository)
         {
+            ReviewRepository = reviewRepository;
             CatalogRepository = catalogRepository;
             PriceListRepository = pricelistRepository;
             CacheRepository = cacheRepository;
@@ -103,7 +116,6 @@ namespace VirtoCommerce.Search.Index
             }
         }
 
-        #region private methods
         /// <summary>
         /// Loads the items.
         /// </summary>
@@ -162,6 +174,9 @@ namespace VirtoCommerce.Search.Index
 
             // Index item prices
             IndexItemPrices(ref doc, item);
+
+            //Index item reviews
+            IndexReviews(ref doc, item);
 
             // add to content
 			doc.Add(new DocumentField("__content", item.Name, new[] { IndexStore.YES, IndexType.ANALYZED }));
@@ -285,7 +300,15 @@ namespace VirtoCommerce.Search.Index
             }
         }
         #endregion
-        #endregion
+
+        protected virtual void IndexReviews(ref ResultDocument doc, Item item)
+        {
+            var reviews = ReviewRepository.Reviews.Where(r => r.ItemId == item.ItemId).ToArray();
+            var count = reviews.Count();
+            var avg = count > 0 ? Math.Round(reviews.Average(r => r.OverallRating), 2) : 0;
+            doc.Add(new DocumentField("__reviewsTotal", count, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
+            doc.Add(new DocumentField("__reviewsAvg", avg, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
+        }
 
         #region cache helper methods
 

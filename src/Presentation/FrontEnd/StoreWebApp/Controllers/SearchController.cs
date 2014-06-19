@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Activities.Expressions;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
@@ -409,6 +410,12 @@ namespace VirtoCommerce.Web.Controllers
                 case "name":
                     sortObject = new SearchSort("name", isDescending);
                     break;
+                case "rating":
+                    sortObject = new SearchSort(criteria.ReviewsAverageField, isDescending);
+                    break;
+                case "reviews":
+                    sortObject = new SearchSort(criteria.ReviewsTotalField, isDescending);
+                    break;
                 default:
                     sortObject = CatalogItemSearchCriteria.DefaultSortOrder;
                     break;
@@ -437,7 +444,7 @@ namespace VirtoCommerce.Web.Controllers
                     PriceModel priceModel = null;
                     ItemAvailabilityModel availabilityModel = null;
                     var catalogIdPath = UserHelper.CustomerSession.CatalogId + "/";
-                    var searchTags = results.Items[item.ItemId.ToLower()].ToPropertyDictionary();
+                    var searchTags = results.Items[item.ItemId.ToLower()];
 
                     //Cache outline
                     HttpContext.Items["browsingoutline_" + item.Code.ToLower()] = searchTags[criteria.BrowsingOutlineField].ToString();
@@ -477,6 +484,16 @@ namespace VirtoCommerce.Web.Controllers
                     {
                         SearchOutline = currentOutline
                     };
+
+                    try
+                    {
+                        itemModel.ItemReviewTotals.AverageRating = double.Parse(searchTags[criteria.ReviewsAverageField].ToString());
+                        itemModel.ItemReviewTotals.TotalReviews = int.Parse(searchTags[criteria.ReviewsTotalField].ToString());
+                    }
+                    catch
+                    {
+                        //There are no reviews indexed?
+                    }
                     itemModelList.Add(itemModel);
                 }
             }
@@ -493,7 +510,7 @@ namespace VirtoCommerce.Web.Controllers
                 RecordsPerPage = criteria.RecordsToRetrieve,
                 StartingRecord = criteria.StartingRecord,
                 DisplayStartingRecord = criteria.StartingRecord + 1,
-                SortValues = new[] { "Position", "Name", "Price" },
+                SortValues = new[] { "Position", "Name", "Price", "Rating", "Reviews" },
                 SelectedSort = sort,
                 SortOrder = isDescending ? "desc" : "asc"
             };

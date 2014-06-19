@@ -320,7 +320,6 @@ namespace VirtoCommerce.Web
             #region Review
 
             container.RegisterType<IReviewEntityFactory, ReviewEntityFactory>(new ContainerControlledLifetimeManager());
-
             container.RegisterType<IReviewRepository, EFReviewRepository>(new PerRequestLifetimeManager());
 
             #endregion

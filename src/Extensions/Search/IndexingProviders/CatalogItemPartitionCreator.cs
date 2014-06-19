@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Diagnostics;
 using System.Linq;
+using VirtoCommerce.Foundation.Reviews.Model;
+using VirtoCommerce.Foundation.Reviews.Repositories;
 using VirtoCommerce.Foundation.Search;
 using VirtoCommerce.Foundation.Catalogs.Repositories;
 using VirtoCommerce.Foundation.Frameworks.Logging;
@@ -28,6 +30,7 @@ namespace VirtoCommerce.Search.Index
         }
 
         readonly IOperationLogRepository _logRepository;
+        private readonly IReviewRepository _reviewRepository;
 
         /// <summary>
         /// Gets the log repository.
@@ -42,10 +45,12 @@ namespace VirtoCommerce.Search.Index
         /// </summary>
         /// <param name="repository">The repository.</param>
         /// <param name="logRepository">The log repository.</param>
-        public CatalogItemPartitionCreator(ICatalogRepository repository, IOperationLogRepository logRepository)
+        /// <param name="reviewRepository">The review repository.</param>
+        public CatalogItemPartitionCreator(ICatalogRepository repository, IOperationLogRepository logRepository, IReviewRepository reviewRepository)
         {
             _catalogRepository = repository;
             _logRepository = logRepository;
+            _reviewRepository = reviewRepository;
         }
 
         /// <summary>
@@ -68,7 +73,7 @@ namespace VirtoCommerce.Search.Index
         /// <returns></returns>
         private IEnumerable<Partition> CreatePartitions(string jobId, int partitionSize, DateTime lastBuild)
         {
-            Trace.TraceInformation(String.Format("Creating partitions of size {0} from the time {1}", partitionSize, lastBuild));
+            Trace.TraceInformation("Creating partitions of size {0} from the time {1}", partitionSize, lastBuild);
 
             // If date pass is min date, do the rebuild
             var rebuild = lastBuild == DateTime.MinValue;
@@ -77,15 +82,14 @@ namespace VirtoCommerce.Search.Index
             if (!rebuild)
             {
                 Trace.TraceInformation(String.Format("Doing a incremental rebuild"));
-                IQueryable<string> delete = null;
 
-                delete = from d in LogRepository.OperationLogs
-                         where
-                             d.TableName.Equals("Items", StringComparison.OrdinalIgnoreCase) &&
-                             d.OperationType.Equals("Deleted", StringComparison.OrdinalIgnoreCase) &&
-                             d.LastModified > lastBuild
-                         orderby d.ObjectId, d.ObjectType
-                         select d.ObjectId;
+                IQueryable<string> delete = from d in LogRepository.OperationLogs
+                    where
+                        d.TableName.Equals("Items", StringComparison.OrdinalIgnoreCase) &&
+                        d.OperationType.Equals("Deleted", StringComparison.OrdinalIgnoreCase) &&
+                        d.LastModified > lastBuild
+                    orderby d.ObjectId, d.ObjectType
+                    select d.ObjectId;
 
                 foreach (var result in ProcessQuery(jobId, OperationType.Remove, partitionSize, delete))
                 {
@@ -98,14 +102,22 @@ namespace VirtoCommerce.Search.Index
             }
 
             // do complete rebuild
-            IQueryable<string> query = null;
+            IQueryable<string> query;
 
             if (!rebuild)
             {
                 query =
                     _catalogRepository.Items.Where(i => i.LastModified > lastBuild)
-                                      .OrderBy(i => i.ItemId)
-                                      .Select(i => i.ItemId).AsNoTracking();
+                                            .OrderBy(i => i.ItemId)
+                                            .Select(i => i.ItemId).AsNoTracking();
+
+                //Reindex items where reviews were recently approved
+                var queryReviews = _reviewRepository.Reviews
+                    .Where(i => i.LastModified > lastBuild && i.Status == (int)ReviewStatus.Approved)                                         
+                    .OrderBy(i => i.ItemId)                                                   
+                    .Select(i => i.ItemId).AsNoTracking();
+
+                query = query.ToArray().Union(queryReviews.ToArray()).Distinct().AsQueryable();
             }
             else
             {
@@ -131,7 +143,7 @@ namespace VirtoCommerce.Search.Index
             var skip = 0;
             var total = query.Count(); // only called once, since yield is used
 
-            Trace.TraceInformation(String.Format("Total items {0}", total));
+            Trace.TraceInformation("Total items {0}", total);
             while (true)
             {
                 // no need to process if total is 0 or past the skip amount
@@ -140,7 +152,7 @@ namespace VirtoCommerce.Search.Index
                     break;
                 }
 
-                Trace.TraceInformation(String.Format("Processing items from {0} to {1} of {2}", skip, skip + partitionSize > total ? total : skip + partitionSize, total));
+                Trace.TraceInformation("Processing items from {0} to {1} of {2}", skip, skip + partitionSize > total ? total : skip + partitionSize, total);
                 var items = query.Skip(skip).Take(partitionSize).ToArray();
                 if (!items.Any())
                 {

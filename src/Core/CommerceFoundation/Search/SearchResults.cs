@@ -113,17 +113,17 @@ namespace VirtoCommerce.Foundation.Search
             return entries.ToArray();
         }
 
-		public virtual Dictionary<T, object> GetKeyAndOutlineFieldValueMap<T>()
+        public virtual Dictionary<T, Dictionary<string, object>> GetKeyAndOutlineFieldValueMap<T>()
 		{
 			return Documents == null ? null : GetKeyAndOutlineFieldValueMap<T>(Documents[0].Name);
 		}
 
-	    public virtual Dictionary<T,object> GetKeyAndOutlineFieldValueMap<T>(string documentSetName)
+	    public virtual Dictionary<T,Dictionary<string,object>> GetKeyAndOutlineFieldValueMap<T>(string documentSetName)
 		{
 			if (Documents == null)
 				return null;
 
-			var entries = new Dictionary<T, object>();
+			var entries = new Dictionary<T, Dictionary<string,object>>();
 
 			foreach (var set in Documents)
 			{
@@ -135,12 +135,16 @@ namespace VirtoCommerce.Foundation.Search
 				foreach (var doc in set.Documents)
 				{
                     var id = (T)Convert.ChangeType(doc[SearchCriteria.KeyField].Value.ToString(), typeof(T));
-				    var __outline = GetFieldValue(doc, SearchCriteria.OutlineField);
-                    var __browsingoutline = GetFieldValue(doc, SearchCriteria.BrowsingOutlineField);
+				    var tags = new Dictionary<string, object>
+				    {
+				        {SearchCriteria.OutlineField , GetFieldValue(doc, SearchCriteria.OutlineField)},
+                        {SearchCriteria.BrowsingOutlineField , GetFieldValue(doc, SearchCriteria.BrowsingOutlineField)},
+                        {SearchCriteria.ReviewsAverageField , GetFieldValue(doc, SearchCriteria.ReviewsAverageField)},
+                        {SearchCriteria.ReviewsTotalField , GetFieldValue(doc, SearchCriteria.ReviewsTotalField)},
+				    };
 
-                    // THIS SHOULD NEVER HAPPEN!!!
-                    if (!entries.ContainsKey(id))
-                        entries.Add(id, new { __outline, __browsingoutline });
+                    if (!entries.ContainsKey(id))// THIS SHOULD NEVER HAPPEN!!!
+                        entries.Add(id, tags);
 				}
 			}
 
@@ -160,26 +164,26 @@ namespace VirtoCommerce.Foundation.Search
             var array = doc[fieldName].Values;
             if (array != null)
             {
-                var outlines = new List<string>();
+                var values = new List<string>();
 
                 foreach (var val in array)
                 {
                     var enumerate = val as IEnumerable;
                     if (val is string || enumerate == null)
                     {
-                        outlines.Add(val !=null ? val.ToString() : "");
+                        values.Add(val != null ? val.ToString() : "");
                     }
                     else
                     {
-                        outlines.AddRange(from object val1 in enumerate select val1.ToString());
+                        values.AddRange(from object val1 in enumerate select val1.ToString());
                     }
                 }
 
-                value = String.Join(";", outlines);
+                value = String.Join(";", values);
             }
             else
             {
-                value = doc[SearchCriteria.OutlineField].Value.ToString();
+                value = doc[fieldName].Value.ToString();
             }
 
             return value;
