@@ -49,8 +49,16 @@ namespace VirtoCommerce.Foundation.Frameworks.Currencies
                 // Find currency culture
                 foreach (CultureInfo info in Cultures)
                 {
-                    if (new RegionInfo(info.Name).ISOCurrencySymbol.Equals(currencyCode, StringComparison.OrdinalIgnoreCase))
+                    if (new RegionInfo(info.Name).ISOCurrencySymbol.Equals(currencyCode,
+                        StringComparison.OrdinalIgnoreCase))
+                    {
+                        //There is a bug in .NET for swiss currency it returns Fr
+                        if (info.Name.Equals("de-CH", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            info.NumberFormat.CurrencySymbol = "CHF";
+                        }
                         return info;
+                    }
                 }
                 return Thread.CurrentThread.CurrentCulture;
             }
