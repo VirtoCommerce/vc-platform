@@ -77,8 +77,9 @@ namespace VirtoCommerce.Client.Globalization.Repository
 
         public DateTime GetStatusDate()
         {
+            DateTime result;
             var element = _resx.GetElement(StatusDateKeyInner, null, DefaultResource);
-            return element == null ? DateTime.MinValue : DateTime.Parse(element.Value);
+            return (element == null || !DateTime.TryParse(element.Value, out result)) ? DateTime.MinValue : result;
         }
 
         public void SetStatusDate(DateTime lastModified)

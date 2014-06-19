@@ -7,7 +7,6 @@
      xmlns:behaviors="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Behaviors;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:common="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Common;assembly=VirtoCommerce.ManagementClient.Core"
      xmlns:dialogs="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Dialogs;assembly=VirtoCommerce.ManagementClient.Core"
-     xmlns:local="clr-namespace:VirtoCommerce.ManagementClient.Reporting.ViewModel.Interfaces"
      xmlns:interfaces="clr-namespace:VirtoCommerce.Foundation.Reporting.Model;assembly=VirtoCommerce.Foundation"
      xmlns:interactionRequest="http://www.codeplex.com/prism" xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
      mc:Ignorable="d" d:DesignWidth="640" d:DesignHeight="480" Style="{DynamicResource Virto_Window_Style}"
@@ -18,6 +17,8 @@
                 <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Reporting;component/View/Views/GridView.xaml" />
                 <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/HomeViewTheme/VirtoCommerceHomeTheme.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <Presentation_Infrastructure_Converters:TextCaseConverter x:Key="textCaseConverter" />
+
             <Style x:Key="CollapsableColumn" TargetType="{x:Type ColumnDefinition}">
                 <Setter Property="ColumnDefinition.Width" Value="200" />
                 <Style.Triggers>
@@ -61,20 +62,17 @@
             <!--Toolbar-->
             <ItemsControl Grid.Row="0" Style="{StaticResource Virto_ToolbarItemsControl_Style}">
                 <controls:MetroButton x:Name="btnManage" Command="{Binding UploadReportCommand}" Header="{Loc 'MANAGE'}"
-                     ToolTip="{Loc '^Refresh items list'}" Margin="3,0,28,0">
-                    <controls:VectorImage ImageResource="{StaticResource Icon_Button_Manage}" Width="14"
-                         Height="14" />
+                     ToolTip="{Loc 'Manage report files'}" Margin="3,0,28,0">
+                    <controls:VectorImage ImageResource="{StaticResource Icon_Button_Manage}" Width="14" Height="14" />
                 </controls:MetroButton>
                 <controls:MetroButton x:Name="btnGenerate" Command="{Binding GenerateReportCommand}"
-                     CommandParameter="{Binding SelectedItem, ElementName=ReportItemsList}" Header="{Loc 'GENERATE'}"
-                     ToolTip="{Loc '^Refresh items list'}" Margin="3,0,28,0">
-                    <controls:VectorImage ImageResource="{StaticResource Icon_Button_Generate}" Width="14"
-                         Height="14" />
+                     CommandParameter="{Binding SelectedItem, ElementName=ReportItemsList}" Header="{Loc 'Generate', Converter={StaticResource textCaseConverter}}"
+                     ToolTip="{Loc 'Generate selected report'}" Margin="3,0,28,0">
+                    <controls:VectorImage ImageResource="{StaticResource Icon_Button_Generate}" Width="14" Height="14" />
                 </controls:MetroButton>
                 <controls:MetroButton x:Name="btnRefresh" Command="{Binding RefreshItemsCommand}"
                      Header="{Loc ^REFRESH}" ToolTip="{Loc '^Refresh items list'}" Margin="3,0,28,0">
-                    <controls:VectorImage ImageResource="{StaticResource Icon_Button_RefreshList}" Width="14"
-                         Height="14" />
+                    <controls:VectorImage ImageResource="{StaticResource Icon_Button_RefreshList}" Width="14" Height="14" />
                 </controls:MetroButton>
             </ItemsControl>
             <controls:VirtualFolderItemList Grid.Row="1" x:Name="ReportItemsList" IsSynchronizedWithCurrentItem="True"
@@ -89,7 +87,7 @@
                                 <Setter Property="Template">
                                     <Setter.Value>
                                         <ControlTemplate TargetType="{x:Type controls:VirtualFolderItemList}">
-											<TextBlock LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}" Text="{Loc 'No Items found'}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                            <TextBlock LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}" Text="{Loc 'No Items found'}" HorizontalAlignment="Center" VerticalAlignment="Center" />
                                         </ControlTemplate>
                                     </Setter.Value>
                                 </Setter>
