@@ -271,6 +271,7 @@
     <Compile Include="Services\Listeners\CaseChangeEventListener.cs" />
     <Compile Include="Services\Listeners\PublicReplyEventListener.cs" />
     <Compile Include="Services\Listeners\OrderChangeEventListener.cs" />
+    <Compile Include="Services\Listeners\ReviewApprovedEventListener.cs" />
     <Compile Include="Services\Security\AuthenticationService.cs" />
     <Compile Include="Services\Security\IUserSecurity.cs" />
     <Compile Include="Services\Security\OAuthAuthorizationManager.cs" />
