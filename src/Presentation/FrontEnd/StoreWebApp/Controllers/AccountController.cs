@@ -1401,6 +1401,185 @@ namespace VirtoCommerce.Web.Controllers
 
         #endregion
 
+        #region Company Actions
+
+        public ActionResult CompanyIndex()
+        {
+            return View(_userClient.GetOrganizationsForCurrentUser());
+        }
+
+        public ActionResult CompanyEdit(string companyId)
+        {
+            var userOrg = _userClient.GetOrganizationsForCurrentUser().SingleOrDefault();
+            if (userOrg == null)
+                return RedirectToAction("Index");
+
+            var model = new CompanyEditModel(userOrg.Name, userOrg.Description);
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult CompanyEdit(CompanyEditModel o)
+        {
+            var org = _userClient.GetOrganizationsForCurrentUser().SingleOrDefault();
+            org.Name = o.Name;
+            org.Description = o.Description;
+            _userClient.SaveCustomerChanges(org.MemberId);
+            return View();
+        }
+
+        public ActionResult CompanyUsers()
+        {
+            var model = new CompanyUserListModel();
+            model.CurrentOrganization = _userClient.GetOrganizationsForCurrentUser().SingleOrDefault();
+            var list = new List<Account>();
+            return View(new CompanyUserListModel());
+        }
+
+        public ActionResult CompanyUserNew(string userId)
+        {
+            /*
+            if (!String.IsNullOrEmpty(userId))
+            {
+                var users = UserHelper.GetUserById(userId);
+                if (users != null)
+                {
+                    var model = new CompanyNewUserModel(users);
+
+                    var list = new List<SelectListItem>();
+
+                    var userRoles = _userClient.GetAllMemberRoles(userId);
+                    foreach (var role in userRoles)
+                    {
+                        list.Add(new SelectListItem { Text = role.Name, Value = role.RoleId, Selected = false });
+                    }
+                    model.UserRoles = list.ToArray();
+                    var allRoles = _userClient.GetAllRoles();
+                    var list2 = allRoles.Except(userRoles).Select(x => new SelectListItem { Selected = false, Text = x.Name, Value = x.RoleId });
+                    model.AllRoles = list2;
+
+                    ViewData["List"] = model.AllRoles;
+                    ViewData["UserRoles"] = model.UserRoles;
+                    return View(model);
+                }
+            }
+
+            return View();
+             * */
+
+            throw new NotImplementedException();
+        }
+
+        [HttpPost]
+        public ActionResult CompanyUserNew(CompanyNewUserModel model)
+        {
+            /*
+            if (ModelState.IsValid)
+            {
+                var id = Guid.NewGuid();
+                // Attempt to register the user
+                MembershipCreateStatus createStatus;
+
+                if (!String.IsNullOrEmpty(model.Password))
+                {
+                    var user = Membership.CreateUser(model.EMail, model.Password, model.EMail, null, null, true, id, out createStatus);
+
+                    // now create new user member in commerce
+                    var account = new Account();
+                    account.RegisterType = RegisterType.GuestUser.GetHashCode();
+                    account.MemberId = id.ToString();
+                    account.StoreId = UserHelper.CustomerSession.StoreId;
+                    account.AccountState = AccountState.Approved.GetHashCode();
+
+                    var contact = new Contact();
+                    contact.Email = model.EMail;
+                    contact.FirstName = model.FirstName;
+                    contact.LastName = model.LastName;
+                    contact.FullName = String.Format("{0} {1}", contact.FirstName, contact.LastName);
+
+                    var repo = UserHelper.CustomerRepository;
+                    repo.Add(contact);
+                    repo.UnitOfWork.Commit();
+
+                    var repo2 = UserHelper.SecurityRepository;
+                    repo2.Add(account);
+                    repo2.UnitOfWork.Commit();
+					
+                    return RedirectToAction("CompanyUsers");
+                }
+                else
+                {
+                    var u = UserHelper.GetUserById(model.UserId);
+                    var currentOrg = _userClient.GetOrganizationsForCurrentUser().SingleOrDefault();
+
+                    foreach (var assignment in UserHelper.SecurityRepository.RoleAssignments)
+                    {
+                        UserHelper.SecurityRepository.Remove(assignment);
+                    }
+
+                    foreach (string s in model.GetSelectedUserRoles)
+                    {
+                        var assignment = UserHelper.SecurityRepository.RoleAssignments.Where(x => x.RoleId == s).FirstOrDefault();
+                        if (assignment != null)
+                        {
+                            assignment.OrganizationId = currentOrg.MemberId;
+                            assignment.AccountId = u.Account.MemberId;
+                        }
+                    }
+
+                    u.Contact.Email = model.EMail;
+                    u.Contact.FirstName = model.FirstName;
+                    u.Contact.LastName = model.LastName;
+
+                    UserHelper.CustomerRepository.UnitOfWork.Commit();
+
+                    UserHelper.SecurityRepository.UnitOfWork.Commit();
+
+                    return RedirectToAction("CompanyUsers");
+                    //cm.User = model.CurrentUser;
+                    //todo: Edit
+					
+                }
+            }
+
+            return View(model);
+             * */
+            throw new NotImplementedException();
+        }
+
+        public ActionResult CompanyAddressBook()
+        {
+            var org = _userClient.GetOrganizationsForCurrentUser().SingleOrDefault();
+            if (org != null || org.Addresses.Count == 0)
+                return RedirectToAction("AddressEdit", new { orgId = org.MemberId });
+
+            return View(UserHelper.GetShippingBillingForOrganization(org));
+        }
+
+        public ActionResult CompanyOrders()
+        {
+            /*
+            var criteria = new OrderSearchCriteria();
+            var org = _userClient.GetOrganizationsForCurrentUser().SingleOrDefault();
+            var orders = new Order[] { };
+
+            if (org != null)
+            {
+                criteria.CompanyId = org.MemberId;
+                var groups = OrderHelper.OrderRepository.Orders.Where(x => x.CustomerName == "SampleUnitTest").ToArray();
+
+                if (groups != null && groups.Count() > 0)
+                {
+                    orders = groups.OfType<Order>().ToArray<Order>();
+                }
+            }
+
+            return base.View("CompanyOrders", orders);
+            */
+            throw new NotImplementedException();
+        }
+        #endregion
+
         #region Helpers
 
 
