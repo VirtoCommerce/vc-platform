@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Microsoft.WindowsAzure;
+using Microsoft.WindowsAzure.ServiceRuntime;
+using Microsoft.WindowsAzure.StorageClient;
+using System;
 using System.Diagnostics;
 using System.IO;
-using System.Xml;
-using Microsoft.WindowsAzure.ServiceRuntime;
-using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.StorageClient;
 
 namespace VirtoSoftware.ElasticSearch
 {
@@ -22,7 +18,6 @@ namespace VirtoSoftware.ElasticSearch
         /// <param name="fsPort"></param>
         public Process StartES(string esLocation, string fsPort, string workerIPs)
         {
-            string response;
             // create VHD that will contain the instance
             string cacheLocation = CreateElasticStorageVhd();
 
@@ -30,7 +25,7 @@ namespace VirtoSoftware.ElasticSearch
             CreateElasticStoragerDirs(cacheLocation);
             
             // Call the RunCommand function to change the port in server.xml
-            response = RunCommand(Environment.GetEnvironmentVariable("RoleRoot") + @"\approot\setupElasticSearch.bat", esLocation, fsPort, Environment.GetEnvironmentVariable("RoleRoot") + @"\approot");
+            var response = RunCommand(Environment.GetEnvironmentVariable("RoleRoot") + @"\approot\setupElasticSearch.bat", esLocation, fsPort, Environment.GetEnvironmentVariable("RoleRoot") + @"\approot");
             
             // Call the StartTomcatProcess to start the tomcat process
             return StartESProcess(esLocation, cacheLocation, workerIPs);
@@ -40,21 +35,16 @@ namespace VirtoSoftware.ElasticSearch
         {
             Log("ElasticSearch - creating VHD", "Information");
 
-            CloudStorageAccount storageAccount;
-            LocalResource localCache;
-            CloudBlobClient client;
-            CloudBlobContainer drives;
-
-            localCache = RoleEnvironment.GetLocalResource("ESLocation");
+            var localCache = RoleEnvironment.GetLocalResource("ESLocation");
             Log(String.Format("ESLocation {0} {1} MB", localCache.RootPath, localCache.MaximumSizeInMegabytes - 50), "Information");
             CloudDrive.InitializeCache(localCache.RootPath.TrimEnd('\\'), localCache.MaximumSizeInMegabytes - 50);
 
-            storageAccount = CloudStorageAccount.Parse(RoleEnvironment.GetConfigurationSettingValue("DataConnectionString"));
-            client = storageAccount.CreateCloudBlobClient();
+            var storageAccount = CloudStorageAccount.Parse(RoleEnvironment.GetConfigurationSettingValue("DataConnectionString"));
+            var client = storageAccount.CreateCloudBlobClient();
 
-            string roleId = RoleEnvironment.CurrentRoleInstance.Id;
-            string containerAddress = ContainerNameFromRoleId(roleId);
-            drives = client.GetContainerReference(containerAddress);
+            var roleId = RoleEnvironment.CurrentRoleInstance.Id;
+            var containerAddress = ContainerNameFromRoleId(roleId);
+            var drives = client.GetContainerReference(containerAddress);
 
             try { drives.CreateIfNotExist(); }
             catch { };
@@ -63,11 +53,11 @@ namespace VirtoSoftware.ElasticSearch
             Log(String.Format("ElasticStorage.vhd {0}", vhdUrl), "Information");
             _elasticStorageDrive = storageAccount.CreateCloudDrive(vhdUrl);
 
-            int cloudDriveSizeInMB = int.Parse(RoleEnvironment.GetConfigurationSettingValue("CloudDriveSize"));
-            try { _elasticStorageDrive.Create(cloudDriveSizeInMB); }
+            int cloudDriveSizeInMb = int.Parse(RoleEnvironment.GetConfigurationSettingValue("CloudDriveSize"));
+            try { _elasticStorageDrive.Create(cloudDriveSizeInMb); }
             catch (CloudDriveException) { }
 
-            Log(String.Format("CloudDriveSize {0} MB", cloudDriveSizeInMB), "Information");
+            Log(String.Format("CloudDriveSize {0} MB", cloudDriveSizeInMb), "Information");
 
             //var dataPath = _elasticStorageDrive.Mount(localCache.MaximumSizeInMegabytes - 50, DriveMountOptions.Force);
             var dataPath = _elasticStorageDrive.Mount(localCache.MaximumSizeInMegabytes - 50, DriveMountOptions.Force);
@@ -87,10 +77,9 @@ namespace VirtoSoftware.ElasticSearch
         private void CreateElasticStoragerDirs(String vhdPath)
         {
             Log("ElasticSearch - creating Cache Directories, path="+vhdPath, "Information");
-            String elasticStorageDir, elasticDataDir;
 
-            elasticStorageDir = Path.Combine(vhdPath, "ElasticStorage");
-            elasticDataDir = Path.Combine(elasticStorageDir, "data");
+            var elasticStorageDir = Path.Combine(vhdPath, "ElasticStorage");
+            var elasticDataDir = Path.Combine(elasticStorageDir, "data");
             Log("ElasticSearch - elasticStorageDir=" + elasticStorageDir, "Information");
             Log("ElasticSearch - elasticDataDir=" + elasticDataDir, "Information");
 
@@ -117,10 +106,9 @@ namespace VirtoSoftware.ElasticSearch
             Log("ElasticSearch - starting pricess at esLocation:" + esLocation + ",cacheLocation:" + cacheLocation + ",workerIPs:" + workerIPs, "Information");
 
             // initiating process
-            Process newProc = new Process();
+            var newProc = new Process();
             
             // stream reader to get the output details of the running command
-            string returnDetails;
 
             try
             {
@@ -155,11 +143,11 @@ namespace VirtoSoftware.ElasticSearch
                 newProc.Start();
                 Log("Done - Starting ElasticSearch", "Information");
 
-                newProc.OutputDataReceived += new DataReceivedEventHandler(processToExecuteCommand_OutputDataReceived);
-                newProc.ErrorDataReceived += new DataReceivedEventHandler(processToExecuteCommand_ErrorDataReceived);
+                newProc.OutputDataReceived += processToExecuteCommand_OutputDataReceived;
+                newProc.ErrorDataReceived += processToExecuteCommand_ErrorDataReceived;
                 newProc.BeginOutputReadLine();
                 newProc.BeginErrorReadLine();
-                newProc.Exited += new EventHandler(Process_Exited);
+                newProc.Exited += Process_Exited;
 
                 // getting the process output
                 //sr = newProc.StandardOutput;
@@ -173,7 +161,6 @@ namespace VirtoSoftware.ElasticSearch
             }
             catch (Exception ex)
             {
-                returnDetails = ex.Message;
                 // Logging the exceptiom
                 Trace.TraceError(ex.Message);
                 throw;
@@ -192,11 +179,10 @@ namespace VirtoSoftware.ElasticSearch
         private string RunCommand(string batchFile, string esLocation, string port, string appRoot)
         {
             // initiating process
-            Process newProc = new Process();
+            var newProc = new Process();
             
             // initiating stream reader to get the output details
             // string variable to store the output details
-            string returnDetails;
 
             try
             {
@@ -239,8 +225,8 @@ namespace VirtoSoftware.ElasticSearch
                 // Logging the output details
                 //Log(returnDetails, "Information");
 
-                newProc.OutputDataReceived += new DataReceivedEventHandler(processToExecuteCommand_OutputDataReceived);
-                newProc.ErrorDataReceived += new DataReceivedEventHandler(processToExecuteCommand_ErrorDataReceived);
+                newProc.OutputDataReceived += processToExecuteCommand_OutputDataReceived;
+                newProc.ErrorDataReceived += processToExecuteCommand_ErrorDataReceived;
                 newProc.BeginOutputReadLine();
                 newProc.BeginErrorReadLine();
 
@@ -261,7 +247,6 @@ namespace VirtoSoftware.ElasticSearch
             }
             catch (Exception ex)
             {
-                returnDetails = ex.Message;
                 Trace.TraceError(ex.Message);
                 throw;
             }
@@ -275,9 +260,10 @@ namespace VirtoSoftware.ElasticSearch
             RoleEnvironment.RequestRecycle();
         }
 
+/*
         private Process ExecuteShellCommand(String command, bool waitForExit, String workingDir = null)
         {
-            Process processToExecuteCommand = new Process();
+            var processToExecuteCommand = new Process();
 
             processToExecuteCommand.StartInfo.FileName = "cmd.exe";
             if (workingDir != null)
@@ -309,6 +295,7 @@ namespace VirtoSoftware.ElasticSearch
 
             return processToExecuteCommand;
         }
+*/
 
         private void processToExecuteCommand_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
@@ -351,6 +338,7 @@ namespace VirtoSoftware.ElasticSearch
             Trace.WriteLine(message, category);
         }
 
+/*
         /// <summary>
         /// ConfigTomcatPort method is to configure the port in server.xml
         /// </summary>
@@ -381,6 +369,7 @@ namespace VirtoSoftware.ElasticSearch
                 Trace.TraceError(ex.StackTrace);
             }
         }
+*/
 
     }
 }
