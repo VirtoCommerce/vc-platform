@@ -39,10 +39,12 @@ namespace VirtoCommerce.ManagementClient
 			RiseWindowResizeCommand();
 			var container = ServiceLocator.Current.GetInstance<IUnityContainer>();
 			container.RegisterType<IGlobalConfigService, GlobalConfigService>(new ContainerControlledLifetimeManager());
+            // subscribe to custommers service messages
 			EventSystem.Subscribe<ShellMessageEvent>((mess) => OnUIThread(() =>
 				{
 					NumAssignedCases = mess.Message == "0" ? "" : mess.Message;
 				}));
+            // subscribe to GUI languages messages
 			EventSystem.Subscribe<GenericEvent<Tuple<List<CultureInfo>, Action<string>>>>(xx => OnUIThread(() =>
 			{
 				AvailableGuiCultures.Clear();

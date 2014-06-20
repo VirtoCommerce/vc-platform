@@ -159,31 +159,35 @@ namespace VirtoCommerce.Foundation.Search
 
         private string GetFieldValue(IDocument doc, string fieldName)
         {
-            string value;
+            var value = "";
 
-            var array = doc[fieldName].Values;
-            if (array != null)
+            var field = doc[fieldName];
+            if (field != null)
             {
-                var values = new List<string>();
-
-                foreach (var val in array)
+                var array = doc[fieldName].Values;
+                if (array != null)
                 {
-                    var enumerate = val as IEnumerable;
-                    if (val is string || enumerate == null)
-                    {
-                        values.Add(val != null ? val.ToString() : "");
-                    }
-                    else
-                    {
-                        values.AddRange(from object val1 in enumerate select val1.ToString());
-                    }
-                }
+                    var values = new List<string>();
 
-                value = String.Join(";", values);
-            }
-            else
-            {
-                value = doc[fieldName].Value.ToString();
+                    foreach (var val in array)
+                    {
+                        var enumerate = val as IEnumerable;
+                        if (val is string || enumerate == null)
+                        {
+                            values.Add(val != null ? val.ToString() : "");
+                        }
+                        else
+                        {
+                            values.AddRange(from object val1 in enumerate select val1.ToString());
+                        }
+                    }
+
+                    value = String.Join(";", values);
+                }
+                else
+                {
+                    value = doc[fieldName].Value.ToString();
+                }
             }
 
             return value;

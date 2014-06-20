@@ -1,15 +1,18 @@
-﻿using System;
+﻿using Omu.ValueInjecter;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.Security;
-using Omu.ValueInjecter;
 using VirtoCommerce.Client;
 using VirtoCommerce.Foundation.Customers;
 using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Foundation.Customers.Services;
+using VirtoCommerce.Foundation.Frameworks.Email;
+using VirtoCommerce.Foundation.Frameworks.Templates;
 using VirtoCommerce.Foundation.Security.Model;
+using VirtoCommerce.Web.Client.Services.Emails;
 using VirtoCommerce.Web.Client.Services.Security;
 using VirtoCommerce.Web.Models;
 
@@ -80,14 +83,39 @@ namespace VirtoCommerce.Web.Virto.Helpers
             get { return DependencyResolver.Current.GetService<IUserSecurity>(); }
         }
 
-		/// <summary>
-		/// Gets the store client.
-		/// </summary>
-		/// <value>The store client.</value>
-        public static StoreClient StoreClient
+	    /// <summary>
+	    /// Gets the store client.
+	    /// </summary>
+	    /// <value>The store client.</value>
+	    public static StoreClient StoreClient
+	    {
+	        get { return DependencyResolver.Current.GetService<StoreClient>(); }
+	    }
+
+
+        /// <summary>
+        /// Gets the template service.
+        /// </summary>
+        /// <value>
+        /// The template service.
+        /// </value>
+	    public static ITemplateService TemplateService
         {
-            get { return DependencyResolver.Current.GetService<StoreClient>(); }
+            get { return DependencyResolver.Current.GetService<ITemplateService>(); }
         }
+
+        /// <summary>
+        /// Gets the email service.
+        /// </summary>
+        /// <value>
+        /// The email service.
+        /// </value>
+        public static IEmailService EmailService
+        {
+            get { return DependencyResolver.Current.GetService<IEmailService>(); }
+        }
+        
+        
 
         #endregion
 
@@ -227,35 +255,39 @@ namespace VirtoCommerce.Web.Virto.Helpers
 
         #region Registration
 
-        /// <summary>
-        /// Registers the specified user.
-        /// </summary>
-        /// <param name="model">The registration model.</param>
-        /// <param name="errorMessage">The error message that occured during regustration.</param>
-        /// <returns>true when user is registered and logged in</returns>
-        public static bool Register(RegisterModel model, out string errorMessage)
+	    /// <summary>
+	    /// Registers the specified user.
+	    /// </summary>
+	    /// <param name="model">The registration model.</param>
+	    /// <param name="errorMessage">The error message that occured during regustration.</param>
+	    /// <param name="requireConfirmation">if set to <c>true</c> [require confirmation].</param>
+	    /// <param name="token">Confirmation token</param>
+	    /// <returns>
+	    /// true when user is registered and logged in
+	    /// </returns>
+	    public static bool Register(RegisterModel model, bool requireConfirmation, out string errorMessage, out string token)
         {
             errorMessage = string.Empty;
+            token = string.Empty;
 
             try
             {
                 var id = Guid.NewGuid().ToString();
 
-                UserSecurity.CreateUserAndAccount(model.Email, model.Password, new
+                token = UserSecurity.CreateUserAndAccount(model.Email, model.Password, new
                 {
                     MemberId = id,
                     CustomerSession.StoreId,
                     RegisterType = RegisterType.GuestUser.GetHashCode(),
-                    AccountState = AccountState.Approved.GetHashCode(),
+                    AccountState = requireConfirmation ? AccountState.PendingApproval.GetHashCode() : AccountState.Approved.GetHashCode(),
                     Discriminator = "Account"
-                });
+                }, requireConfirmation);
 
                 var contact = new Contact
                 {
                     MemberId = id,
                     FullName = String.Format("{0} {1}", model.FirstName, model.LastName)
                 };
-
                 contact.Emails.Add(new Email { Address = model.Email, MemberId = id, Type = EmailType.Primary.ToString() });
                 foreach (var addr in model.Addresses)
                 {
@@ -264,7 +296,7 @@ namespace VirtoCommerce.Web.Virto.Helpers
 
                 UserClient.CreateContact(contact);
 
-                return UserSecurity.Login(model.Email, model.Password);
+                return requireConfirmation || UserSecurity.Login(model.Email, model.Password);
             }
             catch (MembershipCreateUserException e)
             {
@@ -277,6 +309,33 @@ namespace VirtoCommerce.Web.Virto.Helpers
 
             return false;
         }
+
+        public static bool SendEmail(string linkUrl, string user, string email, string templateName, Action<EmailMessage> defaultMessage)
+	    {
+
+            //Get template
+            var context = new Dictionary<string, object> { { templateName, new SendEmailTemplate { Url = linkUrl, Username = user } } };
+            var template = TemplateService.ProcessTemplate(templateName, context, CultureInfo.CreateSpecificCulture(UserHelper.CustomerSession.Language));
+
+            //Create email message
+            var emailMessage = new EmailMessage();
+            emailMessage.To.Add(email);
+
+
+            if (template != null)
+            {
+                emailMessage.Html = template.Body;
+                emailMessage.Subject = template.Subject;
+            }
+            else
+            {
+                //Use default template
+                defaultMessage(emailMessage);
+            }
+
+            //Send email
+            return EmailService.SendEmail(emailMessage);
+	    }
 
         /// <summary>
         /// After user has logged in do some actions

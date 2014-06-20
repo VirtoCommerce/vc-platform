@@ -1,4 +1,5 @@
 ﻿using VirtoCommerce.Client.Globalization;
+using VirtoCommerce.ManagementClient.Core.Infrastructure.EventAggregation;
 
 namespace VirtoCommerce.ManagementClient.Security
 {
@@ -13,5 +14,10 @@ namespace VirtoCommerce.ManagementClient.Security
 		{
 			return source.Localize(null, ModuleName);
 		}
+
+        internal static void PublishStatusUpdate(string status)
+        {
+            EventSystem.Publish(new GenericEvent<string> { Message = status });
+        }
     }
 }

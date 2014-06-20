@@ -594,6 +594,7 @@ namespace UI.FrontEnd.FunctionalTests
 			container.RegisterType<IEntityEventListener, OrderChangeEventListener>("order");
 			container.RegisterType<IEntityEventListener, PublicReplyEventListener>("customer");
 			container.RegisterType<IEntityEventListener, CaseChangeEventListener>("customer");
+            container.RegisterType<IEntityEventListener, ReviewApprovedEventListener>("review");
 			container.RegisterType<IEntityEventContext, EntityEventContext>(new ContainerControlledLifetimeManager());
 
 			#endregion

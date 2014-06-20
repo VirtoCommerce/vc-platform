@@ -42,18 +42,22 @@ namespace VirtoCommerce.Foundation.Frameworks.Currencies
         /// <returns>CultureInfo object</returns>
         public CultureInfo EffectiveCulture(string currencyCode)
         {
-            if (CurrentCurrencyCode().Equals(currencyCode, StringComparison.OrdinalIgnoreCase))
-                return CultureInfo.CurrentCulture;
-            else
+            var retVal = CultureInfo.CurrentCulture;
+
+            if (!CurrentCurrencyCode().Equals(currencyCode, StringComparison.OrdinalIgnoreCase))
             {
                 // Find currency culture
-                foreach (CultureInfo info in Cultures)
-                {
-                    if (new RegionInfo(info.Name).ISOCurrencySymbol.Equals(currencyCode, StringComparison.OrdinalIgnoreCase))
-                        return info;
-                }
-                return Thread.CurrentThread.CurrentCulture;
+                var info = Cultures.FirstOrDefault(i => new RegionInfo(i.Name).ISOCurrencySymbol.Equals(currencyCode, StringComparison.OrdinalIgnoreCase));
+                retVal = info ?? retVal;
             }
+
+            //.NET for swiss currency returns Fr where normally it should be CHF
+            if (retVal.Name.Equals("de-CH", StringComparison.InvariantCultureIgnoreCase))
+            {
+                retVal.NumberFormat.CurrencySymbol = "CHF";
+            }
+
+            return retVal;
         }
 
 

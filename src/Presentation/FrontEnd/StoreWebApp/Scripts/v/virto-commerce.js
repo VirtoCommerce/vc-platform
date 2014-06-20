@@ -29,11 +29,13 @@
             }
         }
     });
-    
+
 };
 
-if (typeof String.prototype.trim !== 'function') {
-    String.prototype.trim = function() {
+if (typeof String.prototype.trim !== 'function')
+{
+    String.prototype.trim = function ()
+    {
         return this.replace(/^\s+|\s+$/g, '');
     };
 }
@@ -79,16 +81,18 @@ VirtoCommerce.prototype = {
             }
         });
     },
-    
 
-    initCameraSliders: function (selector, options) {
-        
-        if (selector == undefined) {
+
+    initCameraSliders: function (selector, options)
+    {
+
+        if (selector == undefined)
+        {
             selector = "";
-        } 
-        
+        }
+
         selector = (selector + " .camera-slides").trim();
-        
+
         options = jQuery.extend({
             loader: 'bar',
             playPause: false,
@@ -98,25 +102,30 @@ VirtoCommerce.prototype = {
             height: '25%'
         }, options);
 
-        if ($(selector).length > 0) {
+        if ($(selector).length > 0)
+        {
             $(selector).camera(options);
         }
     },
-    
-    initHtmlSliders: function (selector, options) {
 
-        if (selector == undefined) {
+    initHtmlSliders: function (selector, options)
+    {
+
+        if (selector == undefined)
+        {
             selector = "";
         }
 
         selector = (selector + " .html-slides").trim();
 
-        if ($(selector).length > 0) {
+        if ($(selector).length > 0)
+        {
             $(selector).mainSlider(options);
         }
     },
-    
-    initSliders: function () {
+
+    initSliders: function ()
+    {
         this.initCameraSliders();
         this.initHtmlSliders();
     },
@@ -146,20 +155,25 @@ VirtoCommerce.prototype = {
             url = url + 'placeName=' + placeName;
             i = i + 1;
         }
-        if (i > 0) {
+        if (i > 0)
+        {
             $.ajax({
                 type: "GET",
                 dataType: "html",
                 url: url,
-                success: function(data) {
+                success: function (data)
+                {
                     var htmlData = $('<div/>').html(data);
 
-                    for (var key in VirtoCommerce.DynamicContent) {
+                    for (var key in VirtoCommerce.DynamicContent)
+                    {
                         var selector = VirtoCommerce.DynamicContent[key];
                         var bannerContent = htmlData.find('#' + key).html();
-                        if (typeof selector == 'function') {
+                        if (typeof selector == 'function')
+                        {
                             selector(bannerContent);
-                        } else {
+                        } else
+                        {
                             $(selector).html(bannerContent);
                         }
                     }
@@ -170,10 +184,10 @@ VirtoCommerce.prototype = {
 
     updatePrices: function (items)
     {
-        
+
         if (items == undefined)
             return;
-        
+
         var url = VirtoCommerce.url('/search/prices');
 
         var postData = {};
@@ -194,14 +208,18 @@ VirtoCommerce.prototype = {
             {
                 var htmlData = $('<div/>').html(data);
 
-                for (var itemId in items) {
-                    var selector = '#' + itemId + " div.price";
+                for (var itemId in items)
+                {
+                    var selector = "[id='" + itemId + "'] div.price";
                     var priceContent = htmlData.find(selector).html();
                     $(selector).html(priceContent);
+                    priceContent = $('<div/>').html(priceContent);
                     var oldPrice = $(priceContent).find("span.old");
-                    if (oldPrice.length != 0) {
+                    if (oldPrice.length != 0)
+                    {
                         $('li#' + itemId).addClass('sale');
-                    } else {
+                    } else
+                    {
                         $('li#' + itemId).removeClass('sale');
                     }
                 }
@@ -375,7 +393,8 @@ VirtoCart.prototype = {
     add: function (options)
     {
 
-        if (options.quantity == undefined) {
+        if (options.quantity == undefined)
+        {
             options.quantity = 1;
         }
 
@@ -412,18 +431,20 @@ VirtoCart.prototype = {
             }
         }
 
-        $.ajaxq("addtocart",{
+        $.ajaxq("addtocart", {
             type: 'POST',
             url: url,
             cache: false,
             success: function (context)
             {
-                if (typeof options.callback == 'function') {
+                if (typeof options.callback == 'function')
+                {
                     options.callback(context);
                 }
-                
+
                 VirtoCart.updateMiniCart(context.CartName);
-                if (context.CartName == VirtoCart.ShoppingCartName) {
+                if (context.CartName == VirtoCart.ShoppingCartName)
+                {
                     $('#cart-count').html(context.CartCount);
                 }
                 if (context.CartName != VirtoCart.CompareListName)
@@ -439,7 +460,8 @@ VirtoCart.prototype = {
         return false;
     },
 
-    addToCart: function (options) {
+    addToCart: function (options)
+    {
         options.name = this.ShoppingCartName;
         return this.add(options);
     },
@@ -450,24 +472,31 @@ VirtoCart.prototype = {
 
         if (relatedItems.length == 0)
             return false;
-        return VirtoCart.addToCart({relatedItems:relatedItems});
+        return VirtoCart.addToCart({ relatedItems: relatedItems });
     },
 
-    addToCartClick: function (options)
+    addToCartClick: function (sender, options)
     {
-        if ($('#qty').length != 0 && !$('#qty').valid())
+        if (options.quantitySelector == undefined)
+        {
+            options.quantitySelector = '#qty';
+        }
+        var qty = $(sender).closest("form").find(options.quantitySelector);
+
+        if (qty.length != 0 && !qty.valid())
         {
             return false;
         } else
         {
             options.relatedItems = this.collectRelatedItems('related_products[]');
-            options.quantity = $('#qty').length != 0 ? $('#qty').val() : 1;
+            options.quantity = qty.length != 0 ? qty.val() : 1;
 
             return VirtoCart.addToCart(options);
         }
     },
 
-    addToWishList: function (options) {
+    addToWishList: function (options)
+    {
         options.name = this.WishListName;
         return this.add(options);
     },
@@ -660,39 +689,48 @@ VirtoAddress.prototype = {
             address.updateRegions(countryId);
         }
 
-        if ($('#geocomplete-' + this.Id).length != 0) {
+        if ($('#geocomplete-' + this.Id).length != 0)
+        {
 
             $('#geocomplete-' + this.Id).geocomplete({
                 details: "#geo-details-" + this.Id,
                 detailsAttribute: "data-geo"
-            }).bind("geocode:result", function(event, result) {
+            }).bind("geocode:result", function (event, result)
+            {
                 var addressArray = result.address_components;
                 var street = "";
                 var countryCode = "";
                 var stateId = "";
-                for (var j = 0; j < addressArray.length; j++) {
+                for (var j = 0; j < addressArray.length; j++)
+                {
                     var typeName = addressArray[j].types[0];
-                    if (typeName == 'street_number') {
+                    if (typeName == 'street_number')
+                    {
                         street += addressArray[j].short_name + ' ';
                     }
-                    if (typeName == 'route') {
+                    if (typeName == 'route')
+                    {
                         street += addressArray[j].short_name;
                     }
-                    if (typeName == 'country') {
+                    if (typeName == 'country')
+                    {
                         countryCode += addressArray[j].short_name;
                     }
-                    if (typeName == 'administrative_area_level_1') {
+                    if (typeName == 'administrative_area_level_1')
+                    {
                         stateId += addressArray[j].short_name;
-                    }   
+                    }
                 }
                 $('#geo-details-' + address.Id + ' [data-geo="route"]').val(street);
 
                 countryCode = window.v_codes[countryCode];
-                if (countryCode.length > 0) {
+                if (countryCode.length > 0)
+                {
                     $(dropdown).val(countryCode);
                     address.updateRegions(countryCode);
                 }
-                if (stateId.length > 0) {
+                if (stateId.length > 0)
+                {
                     $(dropdown2).val(stateId);
                     $(textbox).val(stateId);
                 }
