@@ -306,8 +306,8 @@ namespace VirtoCommerce.Search.Index
             var reviews = ReviewRepository.Reviews.Where(r => r.ItemId == item.ItemId).ToArray();
             var count = reviews.Count();
             var avg = count > 0 ? Math.Round(reviews.Average(r => r.OverallRating), 2) : 0;
-            doc.Add(new DocumentField("__reviewsTotal", count, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
-            doc.Add(new DocumentField("__reviewsAvg", avg, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
+            doc.Add(new DocumentField("__reviewstotal", count, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
+            doc.Add(new DocumentField("__reviewsavg", avg, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
         }
 
         #region cache helper methods

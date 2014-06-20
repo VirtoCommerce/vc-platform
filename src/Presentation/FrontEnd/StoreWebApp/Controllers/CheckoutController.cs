@@ -670,6 +670,8 @@ namespace VirtoCommerce.Web.Controllers
             {
                 //Cancel old order
                 order.Status = OrderStatus.Cancelled.ToString();
+                payment.Status = PaymentStatus.Canceled.ToString();
+
                 //Restore cart if order fails
                 Ch.ToCart(order);
 
