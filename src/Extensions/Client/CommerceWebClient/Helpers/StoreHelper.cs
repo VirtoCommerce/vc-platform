@@ -224,14 +224,13 @@ namespace VirtoCommerce.Web.Client.Helpers
         /// <param name="name">The name.</param>
         /// <param name="defaultValue">The default value.</param>
         /// <returns></returns>
-        public static string GetSettingValue(string name, string defaultValue = "")
+        public static T GetSettingValue<T>(string name, T defaultValue = default(T))
         {
-            var setting = StoreClient.GetCurrentStore()
-                .Settings.FirstOrDefault(s => s.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+            var setting = GetSettings(name).FirstOrDefault(s => s.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
 
             if (setting != null)
             {
-                return setting.ToString();
+                return (T)setting.RawValue();
             }
 
             return defaultValue;

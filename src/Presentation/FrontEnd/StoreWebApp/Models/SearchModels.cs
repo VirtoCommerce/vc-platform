@@ -347,6 +347,8 @@ namespace VirtoCommerce.Web.Models
 		/// </summary>
         private readonly PriceModel _price;
 
+	    private readonly ReviewTotals _itemReviews;
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="CatalogItemWithPriceModel"/> class.
 		/// </summary>
@@ -358,6 +360,7 @@ namespace VirtoCommerce.Web.Models
             _item = item;
             _price = price;
             _availability = availability;
+		    _itemReviews = new ReviewTotals {ItemId = item.ItemId};
         }
 
 		/// <summary>
@@ -423,7 +426,12 @@ namespace VirtoCommerce.Web.Models
 
 	    public string SearchOutline { get; set; }
 
-		/// <summary>
+	    public ReviewTotals ItemReviewTotals
+	    {
+	        get { return _itemReviews; }
+	    }
+
+	    /// <summary>
 		/// Gets the <see cref="System.String"/> with the specified name.
 		/// </summary>
 		/// <param name="name">The name.</param>

@@ -101,6 +101,13 @@ namespace VirtoCommerce.PowerShell.Stores
 					ShortTextValue = "You do not have permissions to view this store",
 					Name = "StoreRestrictedMessage"
 				});
+            store.Settings.Add(new StoreSetting
+                {
+                    StoreId = store.StoreId,
+                    ValueType = "Boolean",
+                    BooleanValue = false,
+                    Name = "RequireAccountConfirmation"
+                });
 
 			return store;
 		}

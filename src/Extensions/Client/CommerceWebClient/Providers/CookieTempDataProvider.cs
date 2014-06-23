@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.Script.Serialization;
 
 namespace VirtoCommerce.Web.Client.Providers
 {
-    using System.IO;
-    using System.IO.Compression;
-    using System.Web;
-    using System.Web.Mvc;
-    using System.Web.Script.Serialization;
-    using System.Web.Security;
 
     public class CookieTempDataProvider : ITempDataProvider
     {
@@ -36,16 +35,22 @@ namespace VirtoCommerce.Web.Client.Providers
         {
             // get the cookie
             var value = GetCookieValue(controllerContext);
-            // verify and decrypt the value via the asp.net machine key
-            var bytes = Unprotect(value);
-            // decompress to json
-            value = Decompress(bytes);
-            // convert the json back to a dictionary
-            return Deserialize(value);
+
+            if (value != null)
+            {
+                // verify and decrypt the value via the asp.net machine key
+                var bytes = Unprotect(value);
+                // decompress to json
+                value = Decompress(bytes);
+                // convert the json back to a dictionary
+                return Deserialize(value);
+            }
+
+            return new Dictionary<string, object>();
         }
         string GetCookieValue(ControllerContext controllerContext)
         {
-            HttpCookie c = controllerContext.HttpContext.Request.Cookies[CookieName];
+            var c = controllerContext.HttpContext.Request.Cookies[CookieName];
             if (c != null)
             {
                 return c.Value;
@@ -55,7 +60,7 @@ namespace VirtoCommerce.Web.Client.Providers
 
         void IssueCookie(ControllerContext controllerContext, string value)
         {
-            HttpCookie c = new HttpCookie(CookieName, value)
+            var c = new HttpCookie(CookieName, value)
             {
                 // don't allow javascript access to the cookie
                 HttpOnly = true,
@@ -83,15 +88,16 @@ namespace VirtoCommerce.Web.Client.Providers
         string Protect(byte[] data)
         {
             if (data == null || data.Length == 0) return null;
-
-            return MachineKey.Encode(data, MachineKeyProtection.All);
+            var encryptedBytes = ProtectedData.Protect(data, null, DataProtectionScope.CurrentUser);
+            return Convert.ToBase64String(encryptedBytes);
         }
 
         byte[] Unprotect(string value)
         {
             if (String.IsNullOrWhiteSpace(value)) return null;
 
-            return MachineKey.Decode(value, MachineKeyProtection.All);
+            var encryptedBytes = Convert.FromBase64String(value);
+            return ProtectedData.Unprotect(encryptedBytes, null, DataProtectionScope.CurrentUser);
         }
 
         byte[] Compress(string value)
@@ -136,15 +142,15 @@ namespace VirtoCommerce.Web.Client.Providers
         {
             if (data == null || data.Keys.Count == 0) return null;
 
-            JavaScriptSerializer ser = new JavaScriptSerializer();
+            var ser = new JavaScriptSerializer();
             return ser.Serialize(data);
         }
 
-        IDictionary<string, object> Deserialize(string data)
+        private IDictionary<string, object> Deserialize(string data)
         {
             if (String.IsNullOrWhiteSpace(data)) return null;
 
-            JavaScriptSerializer ser = new JavaScriptSerializer();
+            var ser = new JavaScriptSerializer();
             return ser.Deserialize<IDictionary<string, object>>(data);
         }
     }

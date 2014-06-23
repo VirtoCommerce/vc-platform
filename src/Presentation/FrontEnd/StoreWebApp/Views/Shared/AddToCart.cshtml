@@ -3,30 +3,30 @@
 
 @helper NoSaleResult()
 {
-     <span class="no-sale">@("Not for Sale".Localize())</span>
+    <span class="no-sale">@("Not for Sale".Localize())</span>
 }
 
 
-@if(Model !=null)
+@if (Model != null)
 {
     var hasVariations = Model != null && Model.CatalogItem != null && Model.CatalogItem.Item is Product && CatalogHelper.CatalogClient.GetItemRelations(Model.CatalogItem.ItemId).Any();
     var canBeAdded = (Model.Availability == null || Model.Availability.IsAvailable) && Model.Price != null && Model.Price.Type != PriceType.None;
 
     if (hasVariations)
     {
-        if (Model.Price != null && !string.Equals(ViewData["View"] as string,"Details"))
+        if (Model.Price != null && !string.Equals(ViewData["View"] as string, "Details"))
         {
             //@Html.DisplayFor(m => m.Price)
         }
     }
     else
     {
-        switch ((string) ViewData["View"])
+        switch ((string)ViewData["View"])
         {
             case "List":
                 if (canBeAdded)
                 {
-                    <button type="button" title="@("Add to Cart".Localize())" onclick="return VirtoCart.addToCart({itemId:'@(Model.CatalogItem != null ? Model.CatalogItem.ItemId : "")', parentItemId:'@Model.CatalogItem.ParentItemId',callback:@(ViewData["CallbackJs"] ?? "null")}); ">
+                    <button type="button" title="@("Add to Cart".Localize())" onclick="return VirtoCart.addToCartClick(this, {itemId:'@(Model.CatalogItem != null ? Model.CatalogItem.ItemId : "")', quantitySelector:'@(Model.CatalogItem != null ?"#qty_"+Model.CatalogItem.ItemId :"")', parentItemId:'@Model.CatalogItem.ParentItemId',callback:@(ViewData["CallbackJs"] ?? "null")}); ">
                         @("Add to Cart".Localize())
                     </button>
                 }
@@ -38,7 +38,7 @@
             case "ListLink":
                 if (canBeAdded)
                 {
-                    <a href="" title="@("Add to Cart".Localize())" onclick="return VirtoCart.addToCart({itemId:'@(Model.CatalogItem != null ? Model.CatalogItem.ItemId : "")', parentItemId:'@Model.CatalogItem.ParentItemId',callback:@(ViewData["CallbackJs"] ?? "null")}); ">
+                    <a href="" title="@("Add to Cart".Localize())" onclick="return VirtoCart.addToCartClick(this, {itemId:'@(Model.CatalogItem != null ? Model.CatalogItem.ItemId : "")', quantitySelector:'@(Model.CatalogItem != null ?"#qty_"+Model.CatalogItem.ItemId :"")', parentItemId:'@Model.CatalogItem.ParentItemId',callback:@(ViewData["CallbackJs"] ?? "null")}); ">
                         @("Add to Cart".Localize())
                     </a>
                 }
@@ -50,13 +50,13 @@
             default:
                 if (canBeAdded)
                 {
-                    <button type="button" title="@("Add to Cart".Localize())" onclick="return VirtoCart.addToCartClick({itemId:'@(Model.CatalogItem != null ? Model.CatalogItem.ItemId : "")', parentItemId:'@(Model.CatalogItem != null ? Model.CatalogItem.ParentItemId : "")',callback:@(ViewData["CallbackJs"] ?? "null")});">
+                    <button type="button" title="@("Add to Cart".Localize())" onclick="return VirtoCart.addToCartClick(this, {itemId:'@(Model.CatalogItem != null ? Model.CatalogItem.ItemId : "")', parentItemId:'@(Model.CatalogItem != null ? Model.CatalogItem.ParentItemId : "")',callback:@(ViewData["CallbackJs"] ?? "null")});">
                         <span>@("Add to Cart".Localize())</span>
                     </button>
                 }
                 else
                 {
-                     @NoSaleResult()
+                    @NoSaleResult()
                 }
                 break;
         }

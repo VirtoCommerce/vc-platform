@@ -239,6 +239,20 @@ namespace VirtoCommerce.Web.Client.Services.Security
         }
 
         /// <summary>
+        /// Confirms the account.
+        /// </summary>
+        /// <param name="userName">Name of the user.</param>
+        /// <param name="accountConfirmationToken">The account confirmation token.</param>
+        /// <returns></returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        public bool ConfirmAccount(string accountConfirmationToken, string userName = null)
+        {
+            return string.IsNullOrWhiteSpace(userName)
+                ? WebSecurity.ConfirmAccount(accountConfirmationToken)
+                : WebSecurity.ConfirmAccount(userName, accountConfirmationToken);
+        }
+
+        /// <summary>
         /// Class SimpleMembershipInitializer.
         /// </summary>
         private class SimpleMembershipInitializer
