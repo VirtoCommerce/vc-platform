@@ -53,7 +53,10 @@ namespace VirtoCommerce.Web.Client.Modules
             if (path.StartsWith(appPath + "content") ||
                 path.StartsWith(appPath + "scripts") ||
                 path.StartsWith(appPath + "error") ||
-				path.StartsWith(appPath + "asset") ||
+                path.StartsWith(appPath + "asset") ||
+                path.StartsWith(appPath + "signalr") ||
+                path.StartsWith(appPath + "admin") ||
+                path.StartsWith(appPath + "areas/virtoadmin") ||
                 path.StartsWith(appPath + "virto/dataservices") ||
                 path.StartsWith(appPath + "virto/services"))
             {
