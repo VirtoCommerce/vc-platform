@@ -55,6 +55,7 @@
                         <MultiBinding Converter="{StaticResource propertyValueConverter}">
                             <Binding />
                             <Binding Path="Value" />
+                            <Binding Path="Values" />
                         </MultiBinding>
                     </DataGridTextColumn.Binding>
                 </DataGridTextColumn>

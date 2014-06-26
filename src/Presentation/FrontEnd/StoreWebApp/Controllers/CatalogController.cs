@@ -1,15 +1,15 @@
-﻿using System;
+﻿using MvcSiteMapProvider;
+using System;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using MvcSiteMapProvider;
 using VirtoCommerce.Client;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Catalogs.Services;
 using VirtoCommerce.Foundation.Frameworks.Tagging;
 using VirtoCommerce.Web.Client.Caching;
-using VirtoCommerce.Web.Client.Extensions.Routing;
+using VirtoCommerce.Web.Client.Helpers;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Virto.Helpers;
 using AppConfigContext = VirtoCommerce.Foundation.AppConfig.Model.ContextFieldConstants;
@@ -174,7 +174,7 @@ namespace VirtoCommerce.Web.Controllers
                                            string variation = null)
         {
             var variations = _catalogClient.GetItemRelations(itemId);
-            var selectedVariation = string.IsNullOrEmpty(variation) ? null : _catalogClient.GetItem(variation, bycode: true);
+            var selectedVariation = string.IsNullOrEmpty(variation) ? null : _catalogClient.GetItemByCode(variation, StoreHelper.CustomerSession.CatalogId);
             var model = new VariationsModel(variations, selections, selectedVariation);
             return PartialView(name, model);
         }

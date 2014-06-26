@@ -8,10 +8,11 @@ namespace VirtoCommerce.Web.Client.Services.Emails
 {
     public class NetEmailService : IEmailService
     {
-	    /// <summary>
+        /// <summary>
         /// Sends the email.
         /// </summary>
         /// <param name="message">The message.</param>
+        /// <returns><c>true</c> if email sent succesfully, <c>false</c> otherwise.</returns>
         public bool SendEmail(IEmailMessage message)
         {
             if (message == null)
@@ -64,10 +65,20 @@ namespace VirtoCommerce.Web.Client.Services.Emails
             }
 
             var client = new SmtpClient();
-            client.Send(eMessage);
 
-            //Must close streams here otherwise client.Send will fail with exception
-            openedStream.ForEach(s => s.Dispose());
+	        try
+	        {
+	            client.Send(eMessage);
+	        }
+	        catch
+	        {
+	            return false;
+	        }
+            finally
+            {
+                //Must close streams here otherwise client.Send will fail with exception
+                openedStream.ForEach(s => s.Dispose());
+            }
 
             return true;
         }

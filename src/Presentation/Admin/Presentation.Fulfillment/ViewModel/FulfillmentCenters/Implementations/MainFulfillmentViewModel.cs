@@ -115,6 +115,7 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.ViewModel.FulfillmentCenter
 
 								var q = orderRepository.Orders
 														.Expand("OrderForms/Shipments/ShipmentItems/LineItem")
+                                                        .Expand("OrderForms/LineItems")
 														.Where(order => order.OrderGroupId == current.OrderForm.OrderGroupId);
 								var originalItem = q.SingleOrDefault();
 

@@ -242,9 +242,9 @@ namespace VirtoCommerce.Web.Models
     }
 
     [DataContract]
-    public class ResetPasswordTemplate
+    public class SendEmailTemplate
     {
-        public ResetPasswordTemplate()
+        public SendEmailTemplate()
         {
             AuthorName = "Virto Commerce";
         }

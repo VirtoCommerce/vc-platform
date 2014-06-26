@@ -24,6 +24,7 @@ using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Foundation.Data.Marketing;
 using VirtoCommerce.Foundation.Data.Orders;
+using VirtoCommerce.Foundation.Data.Reviews;
 using VirtoCommerce.Foundation.Data.Search;
 using VirtoCommerce.Foundation.Data.Security;
 using VirtoCommerce.Foundation.Data.Stores;
@@ -49,6 +50,8 @@ using VirtoCommerce.Foundation.Orders.Repositories;
 using VirtoCommerce.Foundation.Orders.Services;
 using VirtoCommerce.Foundation.Orders.StateMachines;
 using VirtoCommerce.Foundation.PlatformTools;
+using VirtoCommerce.Foundation.Reviews.Factories;
+using VirtoCommerce.Foundation.Reviews.Repositories;
 using VirtoCommerce.Foundation.Search;
 using VirtoCommerce.Foundation.Search.Factories;
 using VirtoCommerce.Foundation.Search.Repositories;
@@ -219,11 +222,10 @@ namespace VirtoCommerce.Scheduling.Azure
             container.RegisterType<ICustomerSessionService, CustomerSessionService>();
             #endregion
 
-            //#region Review
-            //container.RegisterType<IFactory, ReviewEntityFactory>(new ContainerControlledLifetimeManager());
-
-            //container.RegisterType<IReviewRepository, DSReviewClient>();
-            //#endregion
+            #region Review
+            container.RegisterType<IReviewEntityFactory, ReviewEntityFactory>(new ContainerControlledLifetimeManager());
+            container.RegisterType<IReviewRepository, EFReviewRepository>();
+            #endregion
 
             #region Security
             container.RegisterType<ISecurityEntityFactory, SecurityEntityFactory>(new ContainerControlledLifetimeManager());

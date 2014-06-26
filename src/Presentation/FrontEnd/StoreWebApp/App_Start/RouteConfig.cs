@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Configuration;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Web.Routing;
-using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Web.Client.Extensions;
 using VirtoCommerce.Web.Client.Extensions.Routing;
 using VirtoCommerce.Web.Client.Extensions.Routing.Constraints;
 using VirtoCommerce.Web.Client.Extensions.Routing.Routes;
+using VirtoCommerce.Web.Client.Helpers;
 using VirtoCommerce.Web.Virto.Helpers;
 
 namespace VirtoCommerce.Web
@@ -98,12 +96,12 @@ namespace VirtoCommerce.Web
                     //Resolve item category dynamically
                     if (x.RouteData.Values.ContainsKey(Constants.Item))
                     {
-                        var item = CatalogHelper.CatalogClient.GetItem(x.RouteData.Values[Constants.Item].ToString(), bycode: true);
+                        var item = CatalogHelper.CatalogClient.GetItemByCode(x.RouteData.Values[Constants.Item].ToString(), StoreHelper.CustomerSession.CatalogId);
                         if (item != null)
                         {
                             return new RouteValueDictionary { { Constants.Category, item.GetItemCategoryRouteValue() } };
                         }
-                    };
+                    }
                     return null;
                 });
 

@@ -1,19 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.WindowsAzure.ServiceRuntime;
+using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading;
-using Microsoft.WindowsAzure.Diagnostics;
-using Microsoft.WindowsAzure.ServiceRuntime;
 
 namespace VirtoSoftware.ElasticSearch
 {
     public class WorkerRole : RoleEntryPoint
     {
-        Process _process = null;
-        RunES _elastic = null;
+        Process _process;
+        RunES _elastic;
         /// <summary>
         /// Run method to start tomcat process in the worker role instances
         /// </summary>
@@ -33,7 +31,7 @@ namespace VirtoSoftware.ElasticSearch
 
                 try
                 {
-                    if ((_process != null) && (_process.HasExited == true))
+                    if ((_process != null) && _process.HasExited)
                     {
                         _elastic.Log("ElasticSearch Process Exited. Hence recycling role.", "Information");
                         RoleEnvironment.RequestRecycle();
@@ -76,19 +74,17 @@ namespace VirtoSoftware.ElasticSearch
             var current = RoleEnvironment.CurrentRoleInstance;
             var endPoints = current.Role.Instances
                             /*.Where(instance => instance != current)*/
-                            .Select(instance => instance.InstanceEndpoints["ElasticCloudServiceEndpoint"]);
+                            .Select(instance => instance.InstanceEndpoints["ElasticCloudServiceEndpoint"]).ToArray();
 
-            if(endPoints == null)
+            if(!endPoints.Any())
             {
                 Trace.WriteLine("no endpoints found");
                 return String.Empty;
             }
 
-            StringBuilder builder = new StringBuilder();
-            foreach (RoleInstanceEndpoint endPoint in endPoints)
-            {                
-                string endPointString = String.Format("{0}:{1}", endPoint.IPEndpoint.Address, endPoint.IPEndpoint.Port);
-             
+            var builder = new StringBuilder();
+            foreach (string endPointString in endPoints.Select(endPoint => String.Format("{0}:{1}", endPoint.IPEndpoint.Address, endPoint.IPEndpoint.Port)))
+            {
                 if (builder.Length > 0)
                     builder.Append(", ");
 
@@ -97,7 +93,7 @@ namespace VirtoSoftware.ElasticSearch
             }
 
 
-            Trace.WriteLine("endpoints:" + builder.ToString());
+            Trace.WriteLine("endpoints:" + builder);
             return builder.ToString();
         }
 

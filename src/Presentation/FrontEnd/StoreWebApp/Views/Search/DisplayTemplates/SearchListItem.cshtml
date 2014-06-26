@@ -1,4 +1,5 @@
-﻿@using VirtoCommerce.Web.Virto.Helpers
+﻿@using System.Globalization
+@using VirtoCommerce.Web.Virto.Helpers
 @model CatalogItemWithPriceModel
 
 @{
@@ -12,6 +13,13 @@
         itemClass = string.Concat(@itemClass, " ", "sale");
     }
 }
+
+@*<script>
+    $(function() {
+        $("li[id='@Model.CatalogItem.ItemId #rateit']").rateit({ resetable: false, readonly: true, value: "@Model.ItemReviewTotals.AverageRating.ToString(CultureInfo.InvariantCulture)", starwidth: 11, starheight: 11 });
+    });
+</script>*@
+
 <li class="@itemClass" data-class="@itemClass" id="@Model.CatalogItem.ItemId">
     <div class="inner">
         <a href="@Url.ItemUrl(Model.CatalogItem.Item, Model.CatalogItem.ParentItemId)" title="@Model.DisplayName" class="product-image">
@@ -37,7 +45,7 @@
                 <div class="ratings-links">
                     <ul>
                         <li><a href="@Url.ItemUrl(Model.CatalogItem.Item, Model.CatalogItem.ParentItemId)#product_tabs_reviews">
-                            <span id="totalreviews">0</span>&nbsp;@("Review(s)".Localize())
+                            <span id="totalreviews">@Model.ItemReviewTotals.TotalReviews</span>&nbsp;@("Review(s)".Localize())
                         </a>
                         </li>
                         <li><a href="@Url.Action("AddReview", "Catalog", new { id = Model.CatalogItem.ItemId })" rel="popup">@("Add Your Review".Localize())</a></li>

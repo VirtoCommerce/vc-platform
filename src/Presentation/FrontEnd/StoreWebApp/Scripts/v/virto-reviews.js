@@ -214,17 +214,18 @@ Reviews =
         	"You may only submit one vote per review.".Localize("#review_feedback_" + id);
             return;
         }
+
         $.ajax({
-            type: "POST",
-            url: VirtoCommerce.url("/api/review/vote"),
-            suppressErrors: true,
+            type: 'POST',
+            url: VirtoCommerce.url('/api/review/vote'),
             data: { Id: id, Like: bLike, IsReview: true },
+            suppressErrors: true,
+            dataType: 'JSON',
             success: function () {
+        	"Thank you for your feedback.".Localize("#review_feedback_" + id);
+            Reviews.ReviewVotes.push(id);
 
-                "Thank you for your feedback.".Localize("#review_feedback_" + id);
-                Reviews.ReviewVotes.push(id);
-
-                $("#total_feedback_review_" + id).text(parseInt($("#total_feedback_review_" + id).text()) + 1);
+            $("#total_feedback_review_" + id).text(parseInt($("#total_feedback_review_" + id).text()) + 1);
 
                 if (bLike) {
                     $("#positive_review_" + id).text(parseInt($("#positive_review_" + id).text()) + 1);
@@ -243,20 +244,20 @@ Reviews =
         }
 
         $.ajax({
-            type: "POST",
-            url: VirtoCommerce.url("/api/review/vote"),
-            suppressErrors: true,
+            type: 'POST',
+            url: VirtoCommerce.url('/api/review/vote'),
             data: { Id: id, Like: bLike, IsReview: false },
+            suppressErrors: true,
+            dataType: 'JSON',
             success: function () {
+        	"Thank you for your feedback.".Localize("#comment_feedback_" + id);
+            Reviews.CommentVotes.push(id);
 
-                "Thank you for your feedback.".Localize("#comment_feedback_" + id);
-                Reviews.CommentVotes.push(id);
+            $("#total_feedback_comment_" + id).text(parseInt($("#total_feedback_comment_" + id).text()) + 1);
 
-                $("#total_feedback_comment_" + id).text(parseInt($("#total_feedback_comment_" + id).text()) + 1);
-
-                if (bLike) {
-                    $("#positive_comment_" + id).text(parseInt($("#positive_comment_" + id).text()) + 1);
-                }
+            if (bLike) {
+                $("#positive_comment_" + id).text(parseInt($("#positive_comment_" + id).text()) + 1);
+            }
             },
             error: function (data) {
                 data.responseJSON.Message.Localize("#comment_feedback_" + id);

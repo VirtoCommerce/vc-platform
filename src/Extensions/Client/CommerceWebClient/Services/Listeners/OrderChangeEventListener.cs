@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Net.Mail;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.Frameworks.Email;
 using VirtoCommerce.Foundation.Frameworks.Events;
@@ -109,7 +109,10 @@ namespace VirtoCommerce.Web.Client.Services.Listeners
             var isHtml = template.Type != EmailTemplateTypes.Text;
             IEmailMessage message = new EmailMessage(recipient, template.Body, isHtml);
             message.Subject = template.Subject;
-            message.From = "orders@virtoway.com";
+            var eMessage = new MailMessage();
+            var smtpDefault = eMessage.From.ToString();
+            message.From = string.IsNullOrWhiteSpace(smtpDefault) ? "orders@virtoway.com" : smtpDefault;
+
             try
             {
                 _emailService.SendEmail(message);

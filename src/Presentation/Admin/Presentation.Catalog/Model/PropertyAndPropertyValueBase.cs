@@ -1,8 +1,9 @@
-﻿using System;
+﻿using PropertyChanged;
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
-using PropertyChanged;
 using VirtoCommerce.Foundation.Catalogs.Model;
 
 namespace VirtoCommerce.ManagementClient.Catalog.Model
@@ -70,7 +71,9 @@ namespace VirtoCommerce.ManagementClient.Catalog.Model
         {
             get
             {
-                return (Value != null && !string.IsNullOrEmpty(Value.ToString())) || !Property.IsRequired;
+                return (Value != null && (!string.IsNullOrEmpty(Value.ToString()) || (IsEnum && !string.IsNullOrEmpty(Value.KeyValue))))
+                                  || (Values != null && Values.Any())
+                                  || !Property.IsRequired;
             }
         }
 
@@ -78,7 +81,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.Model
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChangedEventHandler handler = this.PropertyChanged;
             if (handler != null)

@@ -646,6 +646,8 @@
     <Content Include="Scripts\jquery-jqzoom.min.js" />
     <Content Include="Scripts\jquery-thickbox.js" />
     <Content Include="Scripts\jquery-tmpl-min.js" />
+    <Content Include="Scripts\jquery.geocomplete.js" />
+    <Content Include="Scripts\jquery.geocomplete.min.js" />
     <Content Include="Scripts\jquery.gzoom.js" />
     <Content Include="Scripts\jquery.nivo.slider.js" />
     <Content Include="Scripts\jquery.signalR-2.0.3.js" />

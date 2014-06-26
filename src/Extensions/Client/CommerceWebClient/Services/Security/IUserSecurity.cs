@@ -35,7 +35,7 @@
         /// <param name="password">The password.</param>
         /// <param name="propertyValues">The property values.</param>
         /// <param name="requireConfirmationToken">if set to <c>true</c> [require confirmation token].</param>
-        /// <returns>System.String.</returns>
+        /// <returns>Confirmation token if requeted.</returns>
         string CreateUserAndAccount(string userName, string password, object propertyValues = null, bool requireConfirmationToken = false);
         /// <summary>
         /// Gets the user identifier.
@@ -89,5 +89,13 @@
         /// <param name="userName">Name of the user.</param>
         /// <returns><c>true</c> if success, <c>false</c> otherwise.</returns>
         bool DeleteUser(string userName);
+
+        /// <summary>
+        /// Confirms the account.
+        /// </summary>
+        /// <param name="userName">Name of the user.</param>
+        /// <param name="accountConfirmationToken">The account confirmation token.</param>
+        /// <returns></returns>
+        bool ConfirmAccount(string accountConfirmationToken, string userName = null);
     }
 }
