@@ -1,4 +1,7 @@
 ﻿using System;
+using System.IO;
+using System.Linq;
+using System.Web.Mvc;
 using VirtoCommerce.Foundation.Marketing.Model.DynamicContent;
 
 namespace VirtoCommerce.Web.Models
@@ -34,21 +37,78 @@ namespace VirtoCommerce.Web.Models
 		/// </summary>
 		/// <param name="item">The item.</param>
         public RawHtmlModel(DynamicContentItem item)
-        {
-            foreach (var prop in item.PropertyValues)
-            {
-                if (String.Equals(prop.Name, "RawHtml", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    Html = prop.LongTextValue;
-                }
-            }
-        }
+		{
+		    foreach (var prop in item.PropertyValues.Where(prop => String.Equals(prop.Name, "RawHtml", StringComparison.InvariantCultureIgnoreCase)))
+		    {
+		        Html = prop.LongTextValue;
+		        break;
+		    }
+		}
 
-		/// <summary>
+	    /// <summary>
 		/// Gets or sets the HTML.
 		/// </summary>
 		/// <value>The HTML.</value>
         public string Html { get; set; }
+    }
+
+    public class RazorHtmlModel : RawHtmlModel
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RawHtmlModel"/> class.
+        /// </summary>
+        /// <param name="item">The item.</param>
+        /// <param name="context"></param>
+        public RazorHtmlModel(DynamicContentItem item, ViewContext context) : base(item)
+        {
+            if (string.IsNullOrWhiteSpace(Html))
+            {
+                foreach (
+                    var prop in
+                        item.PropertyValues.Where(
+                            prop => String.Equals(prop.Name, "RazorHtml", StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    Html = prop.LongTextValue;
+                    break;
+                }
+            }
+            Html = Render(Html, context);
+        }
+
+        private string Render(string template, ViewContext context)
+        {
+            var guid = Guid.NewGuid();
+            var path = "~/Views/Shared/" + guid + ".cshtml";
+            var fullPath = context.HttpContext.Server.MapPath(path);
+
+            try
+            {              
+                using (var fs = File.Create(fullPath))
+                {
+                    using (var txtWriter = new StreamWriter(fs))
+                    {
+                        txtWriter.WriteLine(template);
+                    }
+                }
+
+                using (var st = new StringWriter())
+                {
+
+                    var razor = new RazorView(context.Controller.ControllerContext, path, null, false, null);
+                    razor.Render(new ViewContext(context.Controller.ControllerContext, razor, context.ViewData, context.TempData, st), st);
+
+                    return st.ToString();
+                }
+            }
+            catch
+            {
+                return template;
+            }
+            finally
+            {
+                File.Delete(fullPath);
+            }
+        }
     }
 
 	/// <summary>

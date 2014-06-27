@@ -13,6 +13,7 @@ namespace VirtoCommerce.Foundation.Frameworks
         public static readonly string UserAge = "UserAge";
         public static readonly string UserGender = "UserGender";
         public static readonly string CartTotal = "CartTotal";
+        public static readonly string Language = "Language";
 
         public static readonly string GeoCity = "GeoCity";
         public static readonly string GeoState = "GeoState";

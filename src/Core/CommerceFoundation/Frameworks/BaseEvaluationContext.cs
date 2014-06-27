@@ -125,6 +125,14 @@ namespace VirtoCommerce.Foundation.Frameworks
             }
         }
 
+        public virtual string Language
+        {
+            get
+            {
+                return GetStringValue(ContextFieldConstants.Language);
+            }
+        }
+
         #region Navigation
 
         public virtual string ShopperSearchedPhraseInStore
