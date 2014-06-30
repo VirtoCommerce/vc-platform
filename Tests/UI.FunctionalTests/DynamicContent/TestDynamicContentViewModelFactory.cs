@@ -1,7 +1,8 @@
-﻿using System;
+﻿using CommerceFoundation.UI.FunctionalTests.TestHelpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using CommerceFoundation.UI.FunctionalTests.TestHelpers;
+using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Data.Marketing;
 using VirtoCommerce.Foundation.Marketing.Factories;
 using VirtoCommerce.Foundation.Marketing.Model.DynamicContent;
@@ -10,13 +11,12 @@ using VirtoCommerce.Foundation.Orders.Repositories;
 using VirtoCommerce.Foundation.Stores.Repositories;
 using VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Interfaces;
 using VirtoCommerce.ManagementClient.Core.Infrastructure;
-using VirtoCommerce.ManagementClient.DynamicContent.ViewModel;
 using VirtoCommerce.ManagementClient.DynamicContent.ViewModel.Wizard.Implementations;
 using VirtoCommerce.ManagementClient.DynamicContent.ViewModel.Wizard.Interfaces;
 
 namespace CommerceFoundation.UI.FunctionalTests.DynamicContent
 {
-	public class TestDynamicContentViewModelFactory<T> : IViewModelsFactory<T> where T : IViewModel
+    public class TestDynamicContentViewModelFactory<T> : IViewModelsFactory<T> where T : IViewModel
     {
         #region Fields
 
@@ -35,24 +35,24 @@ namespace CommerceFoundation.UI.FunctionalTests.DynamicContent
 
         public T GetViewModelInstance(params KeyValuePair<string, object>[] parameters)
         {
-            if (typeof (T) == typeof (IContentPublishingOverviewStepViewModel))
+            if (typeof(T) == typeof(IContentPublishingOverviewStepViewModel))
             {
-                return (T) CreateContentPublishingOverviewStepViewModel(parameters);
+                return (T)CreateContentPublishingOverviewStepViewModel(parameters);
             }
 
-            if (typeof (T) == typeof (IContentPublishingContentPlacesStepViewModel))
+            if (typeof(T) == typeof(IContentPublishingContentPlacesStepViewModel))
             {
-                return (T) CreateContentPublishingContentPlacesStepViewModel(parameters);
+                return (T)CreateContentPublishingContentPlacesStepViewModel(parameters);
             }
 
-            if (typeof (T) == typeof (IContentPublishingDynamicContentStepViewModel))
+            if (typeof(T) == typeof(IContentPublishingDynamicContentStepViewModel))
             {
-                return (T) CreateContentPublishingDynamicContentStepViewModel(parameters);
+                return (T)CreateContentPublishingDynamicContentStepViewModel(parameters);
             }
 
-            if (typeof (T) == typeof (IContentPublishingConditionsStepViewModel))
+            if (typeof(T) == typeof(IContentPublishingConditionsStepViewModel))
             {
-                return (T) CreateContentPublishingConditionsStepViewModel(parameters);
+                return (T)CreateContentPublishingConditionsStepViewModel(parameters);
             }
 
             return default(T);
@@ -112,22 +112,26 @@ namespace CommerceFoundation.UI.FunctionalTests.DynamicContent
                  new DSRepositoryFactory<IDynamicContentRepository, DSDynamicContentClient, DynamicContentEntityFactory>(
                      _dynamicContentServiceUri);
 
-			var storeRepositoryFactory =
-				 new DSRepositoryFactory<IStoreRepository, DSDynamicContentClient, DynamicContentEntityFactory>(
-					 _dynamicContentServiceUri);
+            var storeRepositoryFactory =
+                 new DSRepositoryFactory<IStoreRepository, DSDynamicContentClient, DynamicContentEntityFactory>(
+                     _dynamicContentServiceUri);
 
-			var countryRepositoryFactory =
-				 new DSRepositoryFactory<ICountryRepository, DSDynamicContentClient, DynamicContentEntityFactory>(
-					 _dynamicContentServiceUri);
+            var countryRepositoryFactory =
+                 new DSRepositoryFactory<ICountryRepository, DSDynamicContentClient, DynamicContentEntityFactory>(
+                     _dynamicContentServiceUri);
 
-			var searchCategoryVmFactory =
-				 new TestDynamicContentViewModelFactory<ISearchCategoryViewModel>(
-					 _dynamicContentServiceUri);
+            var appConfigRepositoryFactory =
+               new DSRepositoryFactory<IAppConfigRepository, DSDynamicContentClient, DynamicContentEntityFactory>(
+                     _dynamicContentServiceUri);
+
+            var searchCategoryVmFactory =
+                 new TestDynamicContentViewModelFactory<ISearchCategoryViewModel>(
+                     _dynamicContentServiceUri);
 
             IDynamicContentEntityFactory entityFactory = new DynamicContentEntityFactory();
             var item = parameters.SingleOrDefault(x => x.Key == "item").Value as DynamicContentPublishingGroup;
 
-			var retval = new ContentPublishingConditionsStepViewModel(countryRepositoryFactory, searchCategoryVmFactory, storeRepositoryFactory, repositoryFactory, entityFactory, item);
+            var retval = new ContentPublishingConditionsStepViewModel(appConfigRepositoryFactory, countryRepositoryFactory, searchCategoryVmFactory, storeRepositoryFactory, repositoryFactory, entityFactory, item);
 
             return retval;
         }
