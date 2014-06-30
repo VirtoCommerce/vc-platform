@@ -144,6 +144,7 @@
     <Compile Include="Model\TypedExpressions\Conditions\ConditionAndOrBlock.cs" />
     <Compile Include="Model\TypedExpressions\Conditions\ConditionCategoryIs.cs" />
     <Compile Include="Model\TypedExpressions\Conditions\ConditionGenderIs.cs" />
+    <Compile Include="Model\TypedExpressions\Conditions\ConditionLanguageIs.cs" />
     <Compile Include="Model\TypedExpressions\Conditions\ConditionStoreSearchPhrase.cs" />
     <Compile Include="Model\TypedExpressions\Conditions\ConditionInternetSearchPhrase.cs" />
     <Compile Include="Model\TypedExpressions\Conditions\ConditionCurrentUrlIs.cs" />
@@ -162,6 +163,7 @@
     <Compile Include="Model\TypedExpressions\Conditions\GeoConditions\ConditionGeoZipCode.cs" />
     <Compile Include="Model\TypedExpressions\ContentPublishingExpressionBlock.cs" />
     <Compile Include="Model\TypedExpressions\UserInputElements\CartTotalElement.cs" />
+    <Compile Include="Model\TypedExpressions\UserInputElements\LanguageElement.cs" />
     <Compile Include="Model\TypedExpressions\UserInputElements\StoreElement.cs" />
     <Compile Include="Model\TypedExpressions\UserInputElements\CategoryElement.cs" />
     <Compile Include="NavigationNames.cs" />

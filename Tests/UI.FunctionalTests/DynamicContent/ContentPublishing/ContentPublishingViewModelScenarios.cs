@@ -1,8 +1,9 @@
-﻿using System.Linq;
-using CommerceFoundation.UI.FunctionalTests.TestHelpers;
+﻿using CommerceFoundation.UI.FunctionalTests.TestHelpers;
 using FunctionalTests.TestHelpers;
+using System.Linq;
 using UI.FunctionalTests.Helpers.Common;
 using UI.FunctionalTests.Helpers.DynaminContent.ContentPublishing;
+using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Data.Marketing;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Marketing.Factories;
@@ -11,7 +12,6 @@ using VirtoCommerce.Foundation.Marketing.Repositories;
 using VirtoCommerce.Foundation.Orders.Repositories;
 using VirtoCommerce.Foundation.Stores.Repositories;
 using VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Interfaces;
-using VirtoCommerce.ManagementClient.DynamicContent.ViewModel;
 using VirtoCommerce.ManagementClient.DynamicContent.ViewModel.ContentPublishing.Implementations;
 using VirtoCommerce.ManagementClient.DynamicContent.ViewModel.Wizard.Implementations;
 using VirtoCommerce.ManagementClient.DynamicContent.ViewModel.Wizard.Interfaces;
@@ -21,30 +21,28 @@ namespace CommerceFoundation.UI.FunctionalTests.DynamicContent.ContentPublishing
 {
 
     [Variant(RepositoryProvider.DataService)]
-	public class ContentPublishingViewModelScenarios : FunctionalUITestBase
+    public class ContentPublishingViewModelScenarios : FunctionalUITestBase
     {
 
         #region Infrastructure/ setup
 
-		public override void DefService()
-		{
-			ServManager.AddService(ServiceNameEnum.DynamicContent);
-		}
+        public override void DefService()
+        {
+            ServManager.AddService(ServiceNameEnum.DynamicContent);
+        }
 
-	    #endregion
+        #endregion
 
-    
+
         [RepositoryTheory]
         public void Can_create_contentpublishingitemviewmodel_in_wizardmode()
         {
-			var overviewVmFactory = new TestDynamicContentViewModelFactory<IContentPublishingOverviewStepViewModel>(ServManager.GetUri(ServiceNameEnum.DynamicContent));
-			var placeVmFactory = new TestDynamicContentViewModelFactory<IContentPublishingContentPlacesStepViewModel>(ServManager.GetUri(ServiceNameEnum.DynamicContent));
-			var contentVmFactory = new TestDynamicContentViewModelFactory<IContentPublishingDynamicContentStepViewModel>(ServManager.GetUri(ServiceNameEnum.DynamicContent));
-			var conditionsVmFactory = new TestDynamicContentViewModelFactory<IContentPublishingConditionsStepViewModel>(ServManager.GetUri(ServiceNameEnum.DynamicContent));
-
+            var overviewVmFactory = new TestDynamicContentViewModelFactory<IContentPublishingOverviewStepViewModel>(ServManager.GetUri(ServiceNameEnum.DynamicContent));
+            var placeVmFactory = new TestDynamicContentViewModelFactory<IContentPublishingContentPlacesStepViewModel>(ServManager.GetUri(ServiceNameEnum.DynamicContent));
+            var contentVmFactory = new TestDynamicContentViewModelFactory<IContentPublishingDynamicContentStepViewModel>(ServManager.GetUri(ServiceNameEnum.DynamicContent));
+            var conditionsVmFactory = new TestDynamicContentViewModelFactory<IContentPublishingConditionsStepViewModel>(ServManager.GetUri(ServiceNameEnum.DynamicContent));
             var repositoryFactory =
-                new DSRepositoryFactory<IDynamicContentRepository, DSDynamicContentClient, DynamicContentEntityFactory>(
-					ServManager.GetUri(ServiceNameEnum.DynamicContent));
+                new DSRepositoryFactory<IDynamicContentRepository, DSDynamicContentClient, DynamicContentEntityFactory>(ServManager.GetUri(ServiceNameEnum.DynamicContent));
 
             //creating additional objects
             DynamicContentPlace[] contentPlaces;
@@ -89,7 +87,7 @@ namespace CommerceFoundation.UI.FunctionalTests.DynamicContent.ContentPublishing
             secondStep.InnerItemContentPlaces.Add(contentPlaces[0]);
 
             Assert.True(secondStep.IsValid);
-            
+
 
             //fill the 3 step
             var thirdStep =
@@ -123,7 +121,7 @@ namespace CommerceFoundation.UI.FunctionalTests.DynamicContent.ContentPublishing
                 var itemFromDb =
                     repository.PublishingGroups.Where(
                         s => s.DynamicContentPublishingGroupId == firstStep.InnerItem.DynamicContentPublishingGroupId)
-                        .Expand(cpg=>cpg.ContentItems).Expand(cpg=>cpg.ContentPlaces)
+                        .Expand(cpg => cpg.ContentItems).Expand(cpg => cpg.ContentPlaces)
                         .SingleOrDefault();
 
                 Assert.True(itemFromDb.Name == "NewTestName");
@@ -138,19 +136,23 @@ namespace CommerceFoundation.UI.FunctionalTests.DynamicContent.ContentPublishing
         {
             var repositoryFactory =
                 new DSRepositoryFactory<IDynamicContentRepository, DSDynamicContentClient, DynamicContentEntityFactory>(
-					ServManager.GetUri(ServiceNameEnum.DynamicContent));
+                    ServManager.GetUri(ServiceNameEnum.DynamicContent));
 
-			var storeRepositoryFactory =
-			   new DSRepositoryFactory<IStoreRepository, DSDynamicContentClient, DynamicContentEntityFactory>(
-				   ServManager.GetUri(ServiceNameEnum.DynamicContent));
+            var storeRepositoryFactory =
+               new DSRepositoryFactory<IStoreRepository, DSDynamicContentClient, DynamicContentEntityFactory>(
+                   ServManager.GetUri(ServiceNameEnum.DynamicContent));
 
-			var countryRepositoryFactory =
-			   new DSRepositoryFactory<ICountryRepository, DSDynamicContentClient, DynamicContentEntityFactory>(
-				   ServManager.GetUri(ServiceNameEnum.DynamicContent));
+            var countryRepositoryFactory =
+               new DSRepositoryFactory<ICountryRepository, DSDynamicContentClient, DynamicContentEntityFactory>(
+                   ServManager.GetUri(ServiceNameEnum.DynamicContent));
 
-			var searchCategoryVmFactory =
-			   new TestDynamicContentViewModelFactory<ISearchCategoryViewModel>(
-				   ServManager.GetUri(ServiceNameEnum.DynamicContent));
+            var appConfigRepositoryFactory =
+               new DSRepositoryFactory<IAppConfigRepository, DSDynamicContentClient, DynamicContentEntityFactory>(
+                   ServManager.GetUri(ServiceNameEnum.DynamicContent));
+
+            var searchCategoryVmFactory =
+               new TestDynamicContentViewModelFactory<ISearchCategoryViewModel>(
+                   ServManager.GetUri(ServiceNameEnum.DynamicContent));
 
             var navigationManager = new TestNavigationManager();
 
@@ -179,7 +181,7 @@ namespace CommerceFoundation.UI.FunctionalTests.DynamicContent.ContentPublishing
                 RepositoryHelper.AddItemToRepository(repository, item);
             }
 
-			var detailViewModel = new ContentPublishingItemViewModel(countryRepositoryFactory, searchCategoryVmFactory, repositoryFactory, entityFactory, storeRepositoryFactory, navigationManager, item);
+            var detailViewModel = new ContentPublishingItemViewModel(appConfigRepositoryFactory, countryRepositoryFactory, searchCategoryVmFactory, repositoryFactory, entityFactory, storeRepositoryFactory, navigationManager, item);
             Assert.NotNull(detailViewModel);
             detailViewModel.InitializeForOpen();
 
@@ -223,19 +225,22 @@ namespace CommerceFoundation.UI.FunctionalTests.DynamicContent.ContentPublishing
         {
             var repositoryFactory =
                 new DSRepositoryFactory<IDynamicContentRepository, DSDynamicContentClient, DynamicContentEntityFactory>(
-					ServManager.GetUri(ServiceNameEnum.DynamicContent));
+                    ServManager.GetUri(ServiceNameEnum.DynamicContent));
 
-			var storeRepositoryFactory =
-				new DSRepositoryFactory<IStoreRepository, DSDynamicContentClient, DynamicContentEntityFactory>(
-					ServManager.GetUri(ServiceNameEnum.DynamicContent));
+            var storeRepositoryFactory =
+                new DSRepositoryFactory<IStoreRepository, DSDynamicContentClient, DynamicContentEntityFactory>(
+                    ServManager.GetUri(ServiceNameEnum.DynamicContent));
 
-			var countryRepositoryFactory =
-				new DSRepositoryFactory<ICountryRepository, DSDynamicContentClient, DynamicContentEntityFactory>(
-					ServManager.GetUri(ServiceNameEnum.DynamicContent));
+            var countryRepositoryFactory =
+                new DSRepositoryFactory<ICountryRepository, DSDynamicContentClient, DynamicContentEntityFactory>(
+                    ServManager.GetUri(ServiceNameEnum.DynamicContent));
+            var appConfigRepositoryFactory =
+               new DSRepositoryFactory<IAppConfigRepository, DSDynamicContentClient, DynamicContentEntityFactory>(
+                   ServManager.GetUri(ServiceNameEnum.DynamicContent));
 
-			var searchCategoryVmFactory =
-			   new TestDynamicContentViewModelFactory<ISearchCategoryViewModel>(
-				   ServManager.GetUri(ServiceNameEnum.DynamicContent));
+            var searchCategoryVmFactory =
+               new TestDynamicContentViewModelFactory<ISearchCategoryViewModel>(
+                   ServManager.GetUri(ServiceNameEnum.DynamicContent));
 
             var navigationManager = new TestNavigationManager();
 
@@ -264,7 +269,7 @@ namespace CommerceFoundation.UI.FunctionalTests.DynamicContent.ContentPublishing
                 RepositoryHelper.AddItemToRepository(repository, item);
             }
 
-			var detailViewModel = new ContentPublishingItemViewModel(countryRepositoryFactory, searchCategoryVmFactory, repositoryFactory, entityFactory, storeRepositoryFactory, navigationManager, item);
+            var detailViewModel = new ContentPublishingItemViewModel(appConfigRepositoryFactory, countryRepositoryFactory, searchCategoryVmFactory, repositoryFactory, entityFactory, storeRepositoryFactory, navigationManager, item);
             Assert.NotNull(detailViewModel);
             detailViewModel.InitializeForOpen();
 
