@@ -26,7 +26,7 @@
             case "List":
                 if (canBeAdded)
                 {
-                    <button type="button" title="@("Add to Cart".Localize())" onclick="return VirtoCart.addToCartClick(this, {itemId:'@(Model.CatalogItem != null ? Model.CatalogItem.ItemId : "")', quantitySelector:'@(Model.CatalogItem != null ?"#qty_"+Model.CatalogItem.ItemId :"")', parentItemId:'@Model.CatalogItem.ParentItemId',callback:@(ViewData["CallbackJs"] ?? "null")}); ">
+                    <button type="button" title="@("Add to Cart".Localize())" onclick="return VirtoCart.addToCartClick(this, {itemId:'@(Model.CatalogItem != null ? Model.CatalogItem.ItemId : "")', quantitySelector:'@(Model.CatalogItem != null ? "#qty_" + Model.CatalogItem.ItemId.EscapeSelector() : "")', parentItemId:'@Model.CatalogItem.ParentItemId',callback:@(ViewData["CallbackJs"] ?? "null")}); ">
                         @("Add to Cart".Localize())
                     </button>
                 }
@@ -38,7 +38,7 @@
             case "ListLink":
                 if (canBeAdded)
                 {
-                    <a href="" title="@("Add to Cart".Localize())" onclick="return VirtoCart.addToCartClick(this, {itemId:'@(Model.CatalogItem != null ? Model.CatalogItem.ItemId : "")', quantitySelector:'@(Model.CatalogItem != null ?"#qty_"+Model.CatalogItem.ItemId :"")', parentItemId:'@Model.CatalogItem.ParentItemId',callback:@(ViewData["CallbackJs"] ?? "null")}); ">
+                    <a href="" title="@("Add to Cart".Localize())" onclick="return VirtoCart.addToCartClick(this, {itemId:'@(Model.CatalogItem != null ? Model.CatalogItem.ItemId : "")', quantitySelector:'@(Model.CatalogItem != null ? "#qty_" + Model.CatalogItem.ItemId.EscapeSelector() : "")', parentItemId:'@Model.CatalogItem.ParentItemId',callback:@(ViewData["CallbackJs"] ?? "null")}); ">
                         @("Add to Cart".Localize())
                     </a>
                 }
