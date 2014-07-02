@@ -68,9 +68,12 @@ namespace VirtoCommerce.Web.Client.Services.Listeners
                     IDictionary<string, object> context = new Dictionary<string, object>();
                     context.Add("order", order);
 
+                    var lang = Helpers.StoreHelper.CustomerSession.Language;
+                    lang = string.IsNullOrWhiteSpace(lang) ? "en-us" : lang;
+
                     //Send order-confirmation email
                     var confirmTempate = _templateService.ProcessTemplate("order-confirmation", context,
-                                                                          new CultureInfo("en-us"));
+                                                                          new CultureInfo(lang));
 
                     var recipientAddress =
                         order.OrderAddresses.FirstOrDefault(oa => oa.OrderAddressId == order.AddressId);
@@ -81,7 +84,7 @@ namespace VirtoCommerce.Web.Client.Services.Listeners
 
                     //Send order-notification email
                     var notifyTemplate = _templateService.ProcessTemplate("order-notify", context,
-                                                                          new CultureInfo("en-us"));
+                                                                          new CultureInfo(lang));
 
                     if (_storeService != null)
                     {

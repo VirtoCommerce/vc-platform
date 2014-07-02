@@ -70,9 +70,12 @@ namespace VirtoCommerce.Web.Client.Services.Listeners
             IDictionary<string, object> context = new Dictionary<string, object>();
             context.Add("case", item);
 
+            var lang = Helpers.StoreHelper.CustomerSession.Language;
+            lang = string.IsNullOrWhiteSpace(lang) ? "en-us" : lang;
+
             //Send case-created-notification email
             var template = _templateService.ProcessTemplate("case-created-notification", context,
-                                                            new CultureInfo("en-us"));
+                                                            new CultureInfo(lang));
 
             if (template != null)
             {
