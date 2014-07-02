@@ -816,6 +816,19 @@ namespace VirtoCommerce.Web.Controllers
 
             var form = Ch.OrderForm;
 
+            #region Comment
+
+            var commentProp = form.OrderFormPropertyValues.FirstOrDefault(x => x.Name == "Comment");
+
+            if (commentProp == null)
+            {
+                commentProp = new OrderFormPropertyValue { Name = "Comment" };
+                form.OrderFormPropertyValues.Add(commentProp);
+            }
+            commentProp.LongTextValue = model.Comments;
+            
+            #endregion
+
             #region Process billing address
 
             var billingAddress = Ch.FindAddressByName("Billing");
