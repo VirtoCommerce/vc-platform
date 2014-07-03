@@ -69,9 +69,9 @@
     <Reference Include="Moq">
       <HintPath>..\..\packages\Moq.4.1.1308.2321\lib\net40\Moq.dll</HintPath>
     </Reference>
-    <Reference Include="MvcSiteMapProvider, Version=4.5.1.0, Culture=neutral, PublicKeyToken=1923abe4657913cc, processorArchitecture=MSIL">
+    <Reference Include="MvcSiteMapProvider, Version=4.6.6.0, Culture=neutral, PublicKeyToken=1923abe4657913cc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\MvcSiteMapProvider.MVC4.Core.4.5.1\lib\net45\MvcSiteMapProvider.dll</HintPath>
+      <HintPath>..\..\packages\MvcSiteMapProvider.MVC4.Core.4.6.6\lib\net45\MvcSiteMapProvider.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -170,7 +170,9 @@
     <None Include="..\FunctionalTests\connectionStrings.config">
       <Link>connectionStrings.config</Link>
     </None>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <Content Include="Configs\AppConfig.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -212,7 +214,9 @@
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
