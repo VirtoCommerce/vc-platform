@@ -166,9 +166,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\packages\WindowsAzure.Storage.3.0.1.0\lib\net40\Microsoft.WindowsAzure.Storage.dll</HintPath>
     </Reference>
-    <Reference Include="MvcSiteMapProvider, Version=4.6.3.0, Culture=neutral, PublicKeyToken=1923abe4657913cc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\packages\MvcSiteMapProvider.MVC4.Core.4.6.3\lib\net45\MvcSiteMapProvider.dll</HintPath>
+    <Reference Include="MvcSiteMapProvider">
+      <HintPath>..\..\..\..\packages\MvcSiteMapProvider.MVC4.Core.4.6.6\lib\net45\MvcSiteMapProvider.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\..\..\packages\Newtonsoft.Json.6.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
