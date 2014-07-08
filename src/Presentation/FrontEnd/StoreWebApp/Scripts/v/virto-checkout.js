@@ -198,12 +198,11 @@ VirtoCheckout.prototype = {
         });
     },
 
-    submitCheckout: function () {
+    submitCheckout: function (button) {
         var form = $("#onestepcheckout-form");
-        //alert(form.valid());
-        //form.validate();
         if (form.valid()) {
             window.history.forward();
+            $(button).attr('disabled', true);
             form.submit();
         }
     },
