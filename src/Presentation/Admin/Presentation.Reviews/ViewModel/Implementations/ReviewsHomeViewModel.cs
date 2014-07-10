@@ -96,7 +96,7 @@ namespace VirtoCommerce.ManagementClient.Reviews.ViewModel.Implementations
 		private void SetItemsStatus()
 		{
 			ItemsSource.SourceCollection.Cast<VirtualListItem<IReviewEditViewModel>>().
-					Where(rev => rev.Data.InnerItem.Status == (int)ReviewStatus.Pending).
+					Where(rev => rev != null && rev.Data != null && rev.Data.InnerItem.Status == (int)ReviewStatus.Pending).
 					ToList().ForEach(item => item.Data.InnerItem.SetStatus = _setAll);
 			RaiseCanExecuteChanged();
 		}
@@ -104,7 +104,7 @@ namespace VirtoCommerce.ManagementClient.Reviews.ViewModel.Implementations
 		private bool IsAnySelected()
 		{
 			return ItemsSource != null && ItemsSource.SourceCollection.Cast<VirtualListItem<IReviewEditViewModel>>().
-					Any(rev => rev.Data.InnerItem.SetStatus);
+					Any(rev => rev != null && rev.Data != null && rev.Data.InnerItem.SetStatus);
 		}
 
 		public DelegateCommand ItemsListRefreshCommand { get; private set; }
