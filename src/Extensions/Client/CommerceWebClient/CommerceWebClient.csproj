@@ -207,6 +207,7 @@
     <Compile Include="Caching\OutputCache.cs" />
     <Compile Include="Caching\OutputCacheManager.cs" />
     <Compile Include="Caching\OutputCacheOptions.cs" />
+    <Compile Include="Extensions\CategoryExtensions.cs" />
     <Compile Include="Extensions\DictionaryExtensions.cs" />
     <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\ExceptionExtensions.cs" />

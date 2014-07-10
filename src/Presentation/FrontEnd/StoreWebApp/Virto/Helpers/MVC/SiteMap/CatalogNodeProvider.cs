@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using MvcSiteMapProvider;
 using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Catalogs.Model;
+using VirtoCommerce.Web.Client.Extensions;
 using VirtoCommerce.Web.Client.Extensions.Routing;
 using VirtoCommerce.Web.Client.Helpers;
 
@@ -26,7 +27,7 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC.SiteMap
                 var pNode = new DynamicNode
                 {
                     Action = "Display",
-                    Title = GetCategoryName(category),
+                    Title = category.DisplayName(),
                     Key = category.CategoryId,
                     Order = order++,
                     ParentKey = category.ParentCategoryId,
@@ -41,7 +42,7 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC.SiteMap
                 {
                     var culture = CultureInfo.CreateSpecificCulture(lang.LanguageCode);
                     pNode.Attributes.Add(string.Format(TitleAttributeFormat, culture.Name),
-                        GetCategoryName(category, culture.Name));
+                        category.DisplayName(culture.Name));
                 }
 
                 nodes.Add(pNode);
@@ -171,15 +172,5 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC.SiteMap
 
         }
 
-        private string GetCategoryName(Category category, string locale = "")
-        {
-            var retValue = category.Name;
-            var title = CatalogHelper.CatalogClient.GetPropertyValueByName(category, "Title", true, locale);
-            if (title != null)
-            {
-                retValue = title.ToString();
-            }
-            return retValue;
-        }
     }
 }
