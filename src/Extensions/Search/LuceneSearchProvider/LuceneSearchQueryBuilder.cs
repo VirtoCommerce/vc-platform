@@ -1,5 +1,6 @@
 ﻿#region
 
+using System.Globalization;
 using u = Lucene.Net.Util;
 
 #endregion
@@ -78,37 +79,29 @@ namespace VirtoCommerce.Search.Providers.Lucene
                 // Add search
                 if (!String.IsNullOrEmpty(c.SearchPhrase))
                 {
+                    var searchPhrase = c.SearchPhrase;
                     if (c.IsFuzzySearch)
                     {
 
                         var keywords = c.SearchPhrase.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
-                        //var keywords = Regex.Split(c.SearchPhrase, @"\s+");
-                        var searchPhrase = string.Empty;
+                        searchPhrase = string.Empty;
                         searchPhrase = keywords.Aggregate(
                             searchPhrase,
-                            (current, keyword) => current + String.Format("{0}~{1}", keyword.Replace("~", ""), c.FuzzyMinSimilarity));
-
-                        var parser = new QueryParser(u.Version.LUCENE_30, "__content", analyzer)
-                                         {
-                                             DefaultOperator =
-                                                 QueryParser
-                                                 .Operator.AND
-                                         };
-
-                        var searchQuery = parser.Parse(searchPhrase);
-                        query.Add(searchQuery, Occur.MUST);
+                            (current, keyword) =>
+                                current + String.Format("{0}~{1}", keyword.Replace("~", ""), c.FuzzyMinSimilarity.ToString(CultureInfo.InvariantCulture)));
                     }
-                    else
-                    {
-                        var parser = new QueryParser(u.Version.LUCENE_30, "__content", analyzer)
-                                         {
-                                             DefaultOperator =
-                                                 QueryParser
-                                                 .Operator.AND
-                                         };
-                        var searchQuery = parser.Parse(c.SearchPhrase);
-                        query.Add(searchQuery, Occur.MUST);
-                    }
+
+                    var contentField = string.Format("__content_{0}", c.Locale.ToLower());
+                    var parser = new MultiFieldQueryParser(u.Version.LUCENE_30, new []{"__content", contentField}, analyzer)
+                                     {
+                                         DefaultOperator =
+                                             QueryParser
+                                             .Operator.OR
+                                     };
+
+                    var searchQuery = parser.Parse(searchPhrase);
+                    query.Add(searchQuery, Occur.MUST);
+
                 }
             }
             else if (criteria is OrderSearchCriteria)
