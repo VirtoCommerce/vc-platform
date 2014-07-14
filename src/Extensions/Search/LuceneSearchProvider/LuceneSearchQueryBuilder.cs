@@ -10,6 +10,7 @@ namespace VirtoCommerce.Search.Providers.Lucene
     #region
 
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Text.RegularExpressions;
 
@@ -91,8 +92,14 @@ namespace VirtoCommerce.Search.Providers.Lucene
                                 current + String.Format("{0}~{1}", keyword.Replace("~", ""), c.FuzzyMinSimilarity.ToString(CultureInfo.InvariantCulture)));
                     }
 
-                    var contentField = string.Format("__content_{0}", c.Locale.ToLower());
-                    var parser = new MultiFieldQueryParser(u.Version.LUCENE_30, new []{"__content", contentField}, analyzer)
+                    var fields = new List<string> { "__content" };
+                    if (c.Locale != null)
+                    {
+                        var contentField = string.Format("__content_{0}", c.Locale.ToLower());    
+                        fields.Add(contentField);
+                    }
+                    
+                    var parser = new MultiFieldQueryParser(u.Version.LUCENE_30, fields.ToArray(), analyzer)
                                      {
                                          DefaultOperator =
                                              QueryParser
