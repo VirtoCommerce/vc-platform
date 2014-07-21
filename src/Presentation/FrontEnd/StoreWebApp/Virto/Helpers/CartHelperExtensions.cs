@@ -102,7 +102,8 @@ namespace VirtoCommerce.Web.Virto.Helpers
 				shippingMethods = options.SelectMany(o => o.ShippingMethods.Where(m => m.IsActive));
 			}
 
-			foreach (var method in shippingMethods.Where(m => m.IsActive))
+			foreach (var method in shippingMethods.Where(m => m.IsActive && 
+                (string.IsNullOrEmpty(m.Currency) || m.Currency.Equals(UserHelper.CustomerSession.Currency, StringComparison.OrdinalIgnoreCase))))
 			{
 				var model = new ShippingMethodModel(method, cart.Cart);
 				methodIds.Add(method.ShippingMethodId);
