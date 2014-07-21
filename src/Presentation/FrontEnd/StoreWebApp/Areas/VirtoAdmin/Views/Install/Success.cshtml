@@ -1,97 +1,160 @@
-﻿@using VirtoCommerce.Web.Areas.VirtoAdmin.Models
+﻿@using VirtoCommerce.Web
+@using VirtoCommerce.Web.Areas.VirtoAdmin.Models
 @using Resource = VirtoCommerce.Web.Areas.VirtoAdmin.Resources.Resource;
 @model SuccessModel
 @{
     Layout = null;
 }
 
-<!DOCTYPE html>
-
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width" />
+    <meta charset="UTF-8" />
     <title>@Resource.InstallPageTitle</title>
-    <link href="~/Areas/VirtoAdmin/Content/site.css" rel="stylesheet" type="text/css" media="all" />
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+
+    @Styles.Render(BundleConfig.VirtoAdminStyles)
     @Scripts.Render("~/bundles/jquery")
+
+    <!-- Чтобы ИЕ ниже 9 версии мог строить HTML 5 блочки и видел media-queries -->
+    <!-- html5.js for IE less than 9 -->
+    <!--[if lt IE 9]>
+        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!-- css3-mediaqueries.js for IE less than 9 -->
+    <!--[if lt IE 9]>
+        <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+    <![endif]-->
+    
+    <!-- Google Analytics -->
+    <script>
+    /**
+     * Creates a temporary global ga object and loads analy  tics.js.
+     * Paramenters o, a, and m are all used internally.  They could have been declared using 'var',
+     * instead they are declared as parameters to save 4 bytes ('var ').
+     *
+     * @@param {Window}      i The global context object.
+     * @@param {Document}    s The DOM document object.
+     * @@param {string}      o Must be 'script'.
+     * @@param {string}      g URL of the analytics.js script. Inherits protocol from page.
+     * @@param {string}      r Global name of analytics object.  Defaults to 'ga'.
+     * @@param {DOMElement?} a Async script tag.
+     * @@param {DOMElement?} m First script tag in document.
+     */
+    (function(i, s, o, g, r, a, m){
+        i['GoogleAnalyticsObject'] = r; // Acts as a pointer to support renaming.
+
+        // Creates an initial ga() function.  The queued commands will be executed once analytics.js loads.
+        i[r] = i[r] || function() {
+            (i[r].q = i[r].q || []).push(arguments)
+        },
+
+        // Sets the time (as an integer) this tag was executed.  Used for timing hits.
+        i[r].l = 1 * new Date();
+
+        // Insert the script tag asynchronously.  Inserts above current tag to prevent blocking in
+        // addition to using the async attribute.
+        a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0];
+        a.async = 1;
+        a.src = g;
+        m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+    ga('create', 'UA-490257-44', { 'cookieDomain': 'none' }); // Creates the tracker with default parameters.
+    ga('send', 'pageview');            // Sends a pageview hit.
+    </script>
+    <!-- End Google Analytics -->
 </head>
 <body>
-    <div id="header">
-        <div id="branding">
-            <h1>Virto Commerce</h1>
-        </div>
-    </div>
-    <div id="success">
-        <div class="zone zone-content">
-            <h1>Installation Successful!</h1>
-            <br/>
-            <p>
-                Your installation has been completed, you can now either browse the frontend or download and login into the management console (Commerce Manager) to customize your store.
-            </p>
-
-            <div class="main rubber" role="main">
-
-                <var start="true" edittype="html" datatype="RichText" positionid="BE94J" positionname="Html:&lt;sectio..." style="display: none;"></var>
-                <section>
-                    <article>
-                        <div class="columns clearfix">
-                            <div class="column">
-                                <div class="inner">
-                                    <figure>
-                                        <img src="@Href("../../content/images/demo-frontend.png")" alt="" /></figure>
-                                    <h4>Frontend</h4>
-                                    <p>Explore front end written using MVC4/Razor. It utilizes jquery for dynamically loading cart elements, updating reviews and many other things. Make sure to check one page checkout, product page with dynamic variations, faceted search and dynamic contents features.</p>
-                                    <a href="@Model.Website" target="_blank" class="btn">Open Frontend</a>
-                                </div>
-                            </div>
-                            <div class="column">
-                                <div class="inner">
-                                    <figure>
-                                        <img src="@Href("../../content/images/demo-console.png")" alt="" /></figure>
-                                    <h4>Administration</h4>
-                                    <p>Virto Commerce uses WPF application for administration. Native application allows for much better user experience compared to more traditional web application. It utilizes Click Once technology, so updates are seamless.</p>
-                                    <p>To connect to the store please use:</p>
-                                    <p>login: <b>admin</b></p>
-                                    <p>pass: <b>store</b></p>
-                                    <p>url: <b>@Model.Website</b></p>
-                                    <p></p>
- 
-                                    @if (Request.Browser.Type.ToLower().StartsWith("chrome") &&  Request.UserAgent!=null && !Request.UserAgent.Contains("OPR/"))
-                                    {
-                                        <p class="info">Chrome browser requires <a  class="link" href="https://chrome.google.com/webstore/detail/clickonce-for-google-chro/eeifaoomkminpbeebjdmdojbhmagnncl" target="_blank">ClickOnce extension</a> to open Commerce Manager application. Or copy and open <a class="link" target="_blank" href="@Model.AdminUrl">this link</a> in Internet Explorer.</p>
-                                    }
-                                    @if (Request.Browser.Type.ToLower().StartsWith("firefox"))
-                                    {
-                                        <p class="info">Firefox browser requires <a  class="link" href="https://addons.mozilla.org/en-us/firefox/addon/fxclickonce/" target="_blank">ClickOnce add-on</a> to open Commerce Manager application. Or copy and open <a class="link" target="_blank" href="@Model.AdminUrl">this link</a> in Internet Explorer.</p>
-                                    }
-                                    <a href="@Model.AdminUrl" target="_blank" class="btn">Open Commerce Manager</a>
-                                </div>
-                            </div>
-                        </div>
-                    </article>
-                </section>
-                <var end="true" style="display: none;"></var>
-
-                <div class="columns form-elements center clearfix">
-                    <div class="column">
-                        <div class="inner">
-                            <br/><br/><br/><br/>
-                        </div>
-                    </div>
-                </div>
+    <div id="layout">
+        <header>
+            <div class="rubber clearfix">
+                <a class="logo" href="http://virtocommerce.com">
+                    <img src="@Href("../../Content/images/logo.png")" alt="">
+                </a>
             </div>
-
-        </div>
-    </div>
-    <div id="throbber">
-        <div class="curtain"></div>
-        <div class="curtain-content">
-            <div>
-                <h1 id="setUpHeader">@Resource.LongProcessMessage</h1>
-                <p>
-                    <img src="@Href("../../content/images/inprogress.gif")" alt="" />
-                </p>
+        </header>
+        <article class="main rubber clearfix" role="main">
+            <div class="welcome">
+                <span class="sub-title">Welcome to the Virto Commerce development community!</span>
+                <span class="title">Keep in touch with our team</span>
+                <ul class="socials">
+                    <li class="plus"><a href="https://plus.google.com/u/0/110275588520785121043/posts"></a></li>
+                    <li class="in"><a href="https://www.linkedin.com/groups/Virtocommerce-Users-Group-8116785"></a></li>
+                    <li class="fb"><a href="https://www.facebook.com/virtocommerce"></a></li>
+                    <li class="tw"><a href="https://twitter.com/VirtoCommerce"></a></li>
+                </ul>
             </div>
-        </div>
+            <div class="ask">
+                <p>Ask your questions on <a href="http://stackoverflow.com/"><img src="@Href("../../Content/images/stackoverflow.png")" alt="stackoverfow"></a> width tag <span class="tag"><a href="http://stackoverflow.com/tags/virtocommerce/info">virtocommerce</a></span></p>
+            </div>
+            <div class="congratulations">
+                <span class="title">Congratulations!</span>
+                <span class="text">Your installation has been completed</span>
+            </div>
+            <div class="main-title">
+                <p>Уou can now either browse the frontend or download <br />and login into the management console (Commerce Manager) to customize your store</p>
+            </div>
+            <div class="demo">
+                <ul>
+                    <li class="clearfix">
+                        <figure>
+                            <img src="@Href("../../Content/images/frontend.jpg")" alt="">
+                            >
+                        </figure>
+                        <div class="info">
+                            <span class="title">Frontend</span>
+                            <p>
+                                Explore front end written using MVC4/Razor. It utilizes jquery <br />
+                                for dynamically loading cart elements, updating reviews <br />
+                                and many other things. Make sure to check one page checkout, <br />
+                                product page with dynamic variations, faceted search <br />
+                                and dynamic contents features.
+                            </p>
+                            <a href="@Model.Website" class="button">Open frontend</a>
+                        </div>
+                    </li>
+                    <li class="clearfix">
+                        <figure>
+                            <img src="@Href("../../Content/images/admin.jpg")" alt="">
+                            >
+                        </figure>
+                        <div class="info">
+                            <span class="title">Administration</span>
+                            <p>
+                                Virto Commerce uses WPF application for administration. Native application allows
+                                for much better user experience compared to more traditional web application.
+                                It utilizes Click Once technology, so updates are seamless.
+                            </p>
+                            <p>To connect to the store please use: <br />URL: <span>@Model.Website</span> | LOGIN: <span>admin</span> | PASSWORD: <span>store</span></p>
+                            @if (Request.Browser.Type.ToLower().StartsWith("chrome") && Request.UserAgent != null && !Request.UserAgent.Contains("OPR/"))
+                            {
+                                <p class="info">Chrome browser requires <a class="link" href="https://chrome.google.com/webstore/detail/clickonce-for-google-chro/eeifaoomkminpbeebjdmdojbhmagnncl" target="_blank">ClickOnce extension</a> to open Commerce Manager application. Or copy and open <a class="link" target="_blank" href="@Model.AdminUrl">this link</a> in Internet Explorer.</p>
+                            }
+                            @if (Request.Browser.Type.ToLower().StartsWith("firefox"))
+                            {
+                                <p class="info">Firefox browser requires <a class="link" href="https://addons.mozilla.org/en-us/firefox/addon/fxclickonce/" target="_blank">ClickOnce add-on</a> to open Commerce Manager application. Or copy and open <a class="link" target="_blank" href="@Model.AdminUrl">this link</a> in Internet Explorer.</p>
+                            }
+                            <a href="@Model.AdminUrl" class="button">Open commerce manager</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </article>
+        <footer role="contentinfo">
+            <div class="rubber clearfix">
+                <p class="copy">Copyright © 2013 VirtoSoftware. All rights reserved</p>
+                <ul class="socials">
+                    <li class="plus"><a href="https://plus.google.com/u/0/110275588520785121043/posts "></a></li>
+                    <li class="in"><a href="https://www.linkedin.com/groups/Virtocommerce-Users-Group-8116785"></a></li>
+                    <li class="fb"><a href="https://www.facebook.com/virtocommerce"></a></li>
+                    <li class="tw"><a href="https://twitter.com/VirtoCommerce"></a></li>
+                </ul>
+            </div>
+        </footer>
     </div>
 </body>
 </html>

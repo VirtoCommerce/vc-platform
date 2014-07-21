@@ -98,7 +98,9 @@ namespace VirtoCommerce.Web
 
             //Admin area
             bundles.Add(new StyleBundle(VirtoAdminStyles).Include(
-            "~/Areas/VirtoAdmin/Content/site.css"
+            "~/Areas/VirtoAdmin/Content/reset.css",
+            "~/Areas/VirtoAdmin/Content/main.css",
+            "~/Areas/VirtoAdmin/Content/responsive.css"
             ));
 		}
 	}

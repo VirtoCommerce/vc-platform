@@ -1,0 +1,305 @@
+/* General
+==========*/
+#layout
+{
+	min-height: 100%;
+	position: relative;
+}
+
+	/* Responsive container
+	======================*/
+	.rubber
+	{
+		margin: 0 auto;
+		padding: 0 10px;
+		position: relative;
+		width: 960px;
+
+		-webkit-box-sizing: border-box;
+		   -moz-box-sizing: border-box;
+				box-sizing: border-box;
+	}
+
+	header
+	{
+		background: url(images/bg-noise.jpg) repeat scroll 0 0;
+		border-bottom: 1px solid #ddd;
+		height: 62px;
+	}
+
+		.logo
+		{
+			display: inline-block;
+		}
+
+			.logo img
+			{
+				display: block;
+				margin: 10px 0 0;
+			}
+
+	.main
+	{
+		margin-top: 55px;
+	}
+
+		.welcome,
+		.ask,
+		.congratulations,
+		.main-title
+		{
+			text-align: center;
+		}
+
+			.welcome span
+			{
+				display: block;
+				font-family: 'Trebuchet MS';
+				text-transform: uppercase;
+			}
+
+			.welcome .sub-title
+			{
+				font-size: 30px;
+			}
+
+			.welcome .title
+			{
+				color: #f9b233;
+				font-size: 60px;
+				margin: 10px 0 0;
+			}
+
+			.welcome .socials
+			{
+				font-size: 0;
+				margin: 25px 40px 55px;
+				position: relative;
+				text-align: justify;
+			}
+
+			.welcome .socials:after
+			{
+				content: '';
+				display: inline-block;
+				width: 100%;
+			}
+
+				.welcome .socials li
+				{
+					display: inline-block;
+					width: 137px;
+				}
+
+					.welcome .socials li a
+					{
+						background: url(images/icons/socials.png) no-repeat scroll 0 0;
+						display: block;
+						height: 137px;
+					}
+
+					.welcome .socials li.in a
+					{
+						background-position: 0 -137px;
+					}
+
+					.welcome .socials li.fb a
+					{
+						background-position: 0 -274px;
+					}
+
+					.welcome .socials li.tw a
+					{
+						background-position: 0 -411px;
+					}
+
+		.ask
+		{
+			margin: 0 0 65px;
+		}
+
+			.ask p
+			{
+				font-size: 30px;
+			}
+
+				.ask p img
+				{
+					display: inline-block;
+					vertical-align: baseline;
+				}
+
+				.ask p .tag {
+				    background: #e0eaf1;
+					color: #406e8d;
+					display: inline-block;
+					font-size: 28px;
+					padding: 0 15px;
+
+					-webkit-box-shadow: -2px -2px 0 #b4cee0 inset;
+				    -ms-box-shadow: -2px -2px 0 #b4cee0 inset;
+				    box-shadow: -2px -2px 0 #b4cee0 inset;
+				}
+
+                .ask p .tag a {
+                    text-decoration: none;
+                    font-weight: normal;
+                }
+
+.congratulations
+		{
+			background: url(images/bg-noise.jpg) repeat scroll 0 0;
+			border: 1px solid #ddd;
+			padding: 30px 0;
+		}
+
+			.congratulations span
+			{
+				display: block;
+				font-family: 'Trebuchet MS';
+				text-transform: uppercase;
+			}
+
+			.congratulations .title
+			{
+				font-size: 48px;
+				line-height: 80%;
+			}
+
+			.congratulations .text
+			{
+				font-size: 24px;
+			}
+
+		.main-title
+		{
+			margin: 40px 0;
+		}
+
+			.main-title p
+			{
+				font-size: 18px;
+			}
+
+			.demo ul li
+			{
+				display: block;
+			}
+
+			.demo ul li + li
+			{
+				margin: 60px 0 0;
+			}
+
+				.demo ul li figure
+				{
+					float: left;
+					width: 310px;
+				}
+
+					.demo ul li figure img
+					{
+						display: inline-block;
+						width: 100%;
+					}
+
+			.demo
+			{
+				margin: 0 0 50px;
+			}
+
+				.demo ul li .info
+				{
+					padding: 0 0 0 345px;
+				}
+
+					.demo ul li .info .title
+					{
+						font-size: 18px;
+						line-height: 18px;
+					}
+
+					.demo ul li .info p
+					{
+						font-size: 14px;
+						line-height: 16px;
+						margin: 15px 0;
+					}
+
+						.demo ul li .info p span
+						{
+							color: #e7302a;
+						}
+
+	/* Footer */
+	footer
+	{
+		
+	}
+
+		footer .rubber
+		{
+			border-top: 2px solid #ddd;
+			padding: 15px 10px 80px;
+		}
+
+		footer .copy
+		{
+			float: left;
+			font-size: 13px;
+			line-height: 36px;
+		}
+
+		footer .socials
+		{
+			float: right;
+		}
+
+			footer .socials li
+			{
+				display: inline-block;
+				margin: 0 0 0 20px;
+				width: 36px;
+			}
+
+				footer .socials li a
+				{
+					background: url(images/icons/socials-mini.png) no-repeat scroll 0 0;
+					display: block;
+					height: 36px;
+				}
+
+				footer .socials li a:hover
+				{
+					background-position: 0 100%;
+				}
+
+				footer .socials li.in a
+				{
+					background-position: -36px 0;
+				}
+
+				footer .socials li.in a:hover
+				{
+					background-position: -36px 100%;
+				}
+
+				footer .socials li.fb a
+				{
+					background-position: -72px 0;
+				}
+
+				footer .socials li.fb a:hover
+				{
+					background-position: -72px 100%;
+				}
+
+				footer .socials li.tw a
+				{
+					background-position: -108px 0;
+				}
+
+				footer .socials li.tw a:hover
+				{
+					background-position: -108px 100%;
+				}
