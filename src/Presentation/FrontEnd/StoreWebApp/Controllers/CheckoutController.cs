@@ -963,9 +963,12 @@ namespace VirtoCommerce.Web.Controllers
             {
                 foreach (var lineItem in form.LineItems)
                 {
-                    var shippingMethod = Ch.GetShippingMethods(new List<string> { model.ShippingMethod }).First();
-                    lineItem.ShippingMethodName = shippingMethod.DisplayName;
-                    lineItem.ShippingMethodId = shippingMethod.Id;
+                    var shippingMethod = Ch.GetShippingMethods(new List<string> { model.ShippingMethod }).FirstOrDefault();
+                    if (shippingMethod != null)
+                    {
+                        lineItem.ShippingMethodName = shippingMethod.DisplayName;
+                        lineItem.ShippingMethodId = shippingMethod.Id;
+                    }
                 }
             }
 
