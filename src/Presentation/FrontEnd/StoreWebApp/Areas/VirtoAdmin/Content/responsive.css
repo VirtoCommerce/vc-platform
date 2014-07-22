@@ -1,0 +1,204 @@
+@media only screen and (min-width: 768px) and (max-width: 959px)
+{
+	.rubber
+	{
+		width: 760px;
+	}
+
+	.welcome .sub-title
+	{
+		font-size: 24px;
+	}
+
+	.welcome .title
+	{
+		font-size: 50px;
+	}
+}
+
+@media only screen and (min-width: 480px) and (max-width: 767px)
+{
+	.rubber
+	{
+		padding: 0;
+		width: 420px;
+	}
+
+	.welcome .sub-title
+	{
+		font-size: 24px;
+	}
+
+	.welcome .title
+	{
+		font-size: 50px;
+		line-height: 110%;
+	}
+
+	.welcome .socials
+	{
+		display: inline-block;
+		text-align: center;
+	}
+
+	.welcome .socials li
+	{
+		display: block;
+	}
+
+	.welcome .socials li + li
+	{
+		margin: 25px 0 0;
+	}
+
+	.ask p,
+	.ask p .tag
+	{
+		font-size: 18px;
+	}
+
+	.ask p img
+	{
+		width: 125px;
+	}
+
+	.congratulations .title
+	{
+		font-size: 28px;
+	}
+
+	.congratulations .text
+	{
+		font-size: 16px;
+	}
+
+	.main-title p
+	{
+		font-size: 16px;
+	}
+
+	.demo ul li figure
+	{
+		float: none;
+		width: 100%;
+	}
+
+	.demo ul li .info
+	{
+		padding: 25px 0 0;
+	}
+
+	footer .rubber
+	{
+		padding: 15px 20px;
+		width: 100%;
+	}
+
+	footer .copy,
+	footer .socials
+	{
+		float: none;
+		width: 100%;
+		text-align: center;
+	}
+
+	footer .socials
+	{
+		display: inline-block;
+		margin: 20px 0 0;
+	}
+}
+
+@media only screen and (min-width: 0) and (max-width: 479px)
+{
+	/* disable webkit text size adjust (for iPhone) */
+	html
+	{
+		-webkit-text-size-adjust: none;
+	}
+
+	.button
+	{
+		font-size: 14px;
+		padding: 0 25px;
+	}
+	
+	.rubber
+	{
+		padding: 0 20px;
+		width: 100%;
+	}
+
+	.welcome
+	{
+		display: none;
+	}
+
+	.ask p,
+	.ask p .tag
+	{
+		font-size: 15px;
+	}
+
+	.ask p img
+	{
+		width: 125px;
+	}
+
+	.congratulations .title
+	{
+		font-size: 28px;
+	}
+
+	.congratulations .text
+	{
+		font-size: 16px;
+	}
+
+	.main-title p
+	{
+		font-size: 16px;
+	}
+
+	.demo ul li figure
+	{
+		float: none;
+		width: 100%;
+	}
+
+	.demo ul li .info
+	{
+		padding: 25px 0 0;
+	}
+
+	footer .rubber
+	{
+		padding: 15px 20px;
+		width: 100%;
+	}
+
+	footer .copy,
+	footer .socials
+	{
+		float: none;
+		width: 100%;
+		text-align: center;
+	}
+
+	footer .socials
+	{
+		display: inline-block;
+		margin: 20px 0 0;
+	}
+}
+
+/* Retina display
+============================================*/
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5),
+    only screen and (-o-min-device-pixel-ratio: 3/2),
+    only screen and (min--moz-device-pixel-ratio: 1.5),
+    only screen and (min-device-pixel-ratio: 1.5)
+    {
+    	
+    }
+}

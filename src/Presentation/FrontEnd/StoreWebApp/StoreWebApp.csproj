@@ -430,11 +430,20 @@
     <Compile Include="WebRole.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Areas\VirtoAdmin\Content\Images\demo-console.png" />
-    <Content Include="Areas\VirtoAdmin\Content\Images\demo-frontend.png" />
+    <Content Include="Areas\VirtoAdmin\Content\Images\admin.jpg" />
+    <Content Include="Areas\VirtoAdmin\Content\Images\bg-noise.jpg" />
+    <Content Include="Areas\VirtoAdmin\Content\Images\frontend.jpg" />
+    <Content Include="Areas\VirtoAdmin\Content\Images\icons\socials-mini.png" />
+    <Content Include="Areas\VirtoAdmin\Content\Images\icons\socials.png" />
     <Content Include="Areas\VirtoAdmin\Content\Images\InProgress.GIF" />
+    <Content Include="Areas\VirtoAdmin\Content\Images\logo.png" />
+    <Content Include="Areas\VirtoAdmin\Content\Images\stackoverflow.png" />
     <Content Include="Areas\VirtoAdmin\Content\Images\VirtoCommerce.png" />
+    <Content Include="Areas\VirtoAdmin\Content\main.css" />
+    <Content Include="Areas\VirtoAdmin\Content\reset.css" />
+    <Content Include="Areas\VirtoAdmin\Content\responsive.css" />
     <Content Include="Areas\VirtoAdmin\Content\site.css" />
+    <Content Include="Areas\VirtoAdmin\Scripts\tracker.js" />
     <Content Include="Content\themes\base\images\animated-overlay.gif" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
