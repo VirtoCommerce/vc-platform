@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using VirtoCommerce.Foundation.Orders.Extensions;
 using VirtoCommerce.Foundation.Orders.Model;
 using VirtoCommerce.Foundation.Orders.Model.ShippingMethod;
 using VirtoCommerce.Web.Client.Helpers;
@@ -106,6 +107,29 @@ namespace VirtoCommerce.Web.Virto.Helpers
                 (string.IsNullOrEmpty(m.Currency) || m.Currency.Equals(UserHelper.CustomerSession.Currency, StringComparison.OrdinalIgnoreCase))))
 			{
 				var model = new ShippingMethodModel(method, cart.Cart);
+
+                //Filter by shipping method jurisdiction
+			    var jurisdictionRelations = method.ShippingMethodJurisdictionGroups.SelectMany(g => g.JurisdictionGroup.JurisdictionRelations).ToArray();
+
+                if (jurisdictionRelations.Any())
+			    {
+                    var address = cart.FindAddressByName("Shipping") ?? cart.FindAddressByName("Billing");
+			        var jurisdictionFound = false;
+
+                    if (address != null)
+			        {
+                        jurisdictionFound = jurisdictionRelations.Any(j => j.Jurisdiction.CheckAllFieldsMatch(
+                                                                            address.CountryCode, 
+                                                                            address.StateProvince,
+                                                                            address.PostalCode, 
+                                                                            address.RegionName, "", "", 
+                                                                            address.City));
+			        }
+
+                    if(!jurisdictionFound)
+			             continue;
+			    }
+
 				methodIds.Add(method.ShippingMethodId);
 				list.Add(model);
 			}

@@ -32,5 +32,5 @@
       m.parentNode.insertBefore(a, m)
   })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-  ga('create', 'UA-490257-44'/*'UA-42754882-1'*/, 'auto'/*{ 'cookieDomain': 'none' }*/); // Creates the tracker with default parameters.
-ga('send', 'pageview');            // Sends a pageview hit.
+    ga('create', 'UA-490257-44'/*'UA-42754882-1'*/, 'auto'/*{ 'cookieDomain': 'none' }*/); // Creates the tracker with default parameters.
+    ga('send', 'pageview');            // Sends a pageview hit.  

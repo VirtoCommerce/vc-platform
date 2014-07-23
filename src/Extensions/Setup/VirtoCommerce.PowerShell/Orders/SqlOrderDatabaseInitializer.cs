@@ -391,7 +391,7 @@ namespace VirtoCommerce.PowerShell.Orders
 				{
 					new ShippingMethod
 						{
-							ShippingMethodId = "FreeShipping",
+							ShippingMethodId = "FreeShippingUsd",
 							Name = "FreeShipping",
 							DisplayName = "Free Shipping",
 							Description = "Free Shipping",
@@ -401,24 +401,49 @@ namespace VirtoCommerce.PowerShell.Orders
 						},
 					new ShippingMethod
 						{
-							ShippingMethodId = "FlatRate",
+							ShippingMethodId = "FlatRateUsd",
 							Name = "FlatRate",
 							DisplayName = "Flat Rate",
 							Description = "Flat Rate",
 							Currency = "USD",
 							BasePrice = 10,
 							IsActive = true
+						},
+                    new ShippingMethod
+						{
+							ShippingMethodId = "FreeShippingEur",
+							Name = "FreeShipping",
+							DisplayName = "Free Shipping",
+							Description = "Free Shipping",
+							Currency = "EUR",
+							BasePrice = 0,
+							IsActive = true
+						},
+					new ShippingMethod
+						{
+							ShippingMethodId = "FlatRateEur",
+							Name = "FlatRate",
+							DisplayName = "Flat Rate",
+							Description = "Flat Rate",
+							Currency = "EUR",
+							BasePrice = 10,
+							IsActive = true
 						}
 				};
 
-            var option = new ShippingOption { Name = "default", Description = "Default", ShippingGateway = gateways[0] };
-            option.ShippingMethods.Add(shippingMethods[0]);
+            var i = 0;
+            foreach (var option in shippingMethods.Select(shippingMethod => new ShippingOption { Name = "default", Description = "Default", ShippingGateway = gateways[0] }))
+            {
+                if (i > 0)
+                {
+                    option.Name = "default" + i;
+                    option.Description = "Default" + i;
+                }
 
-            var option2 = new ShippingOption { Name = "default2", Description = "Default2", ShippingGateway = gateways[0] };
-            option2.ShippingMethods.Add(shippingMethods[1]);
-
-            repository.Add(option);
-            repository.Add(option2);
+                option.ShippingMethods.Add(shippingMethods[i]);
+                repository.Add(option);
+                i++;
+            }
 
             foreach (var sm in shippingMethods)
             {
