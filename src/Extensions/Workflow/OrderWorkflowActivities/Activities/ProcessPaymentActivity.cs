@@ -61,7 +61,11 @@ namespace VirtoCommerce.OrderWorkflow
 		private bool ValidateOrderProperties()
 		{
 			// Cycle through all Order Forms and check total, it should be equal to total of all payments
-			var paymentTotal = CurrentOrderGroup.OrderForms.SelectMany(orderForm => orderForm.Payments).Sum(payment => payment.Amount);
+            var paymentTotal = CurrentOrderGroup.OrderForms.SelectMany(orderForm => orderForm.Payments)
+                .Where(p => !p.Status.Equals(PaymentStatus.Canceled.ToString()) 
+                    && !p.Status.Equals(PaymentStatus.Denied.ToString()) 
+                    && !p.Status.Equals(PaymentStatus.Failed.ToString()))
+                .Sum(payment => payment.Amount);
 
             //Make sure the difference is not because of rounding and more then a cent
 			if (Math.Abs(paymentTotal - CurrentOrderGroup.Total) >= 0.01M)

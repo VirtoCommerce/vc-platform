@@ -5,21 +5,6 @@
 @using VirtoCommerce.Foundation.Catalogs.Services
 @using VirtoCommerce.Web.Virto.Helpers
 
-@functions 
-{
-
-    private string GetCategoryName(Category category)
-    {
-        var retValue = category.Name;
-        var title = CatalogHelper.CatalogClient.GetPropertyValueByName(category, "Title", true);
-        if (title != null)
-        {
-            retValue = title.ToString();
-        }
-        return retValue;
-    }
-
-}
 
 @if (Model.Count() > 1)
 {
@@ -38,7 +23,7 @@
                      {
 
                         <li>
-                            @Html.ActionLink(GetCategoryName(category), "Display", "Catalog", new { category = category.Code }, null)
+                            @Html.ActionLink(category.DisplayName(), "Display", "Catalog", new { category = category.Code }, null)
                         </li>
                      }
                  }

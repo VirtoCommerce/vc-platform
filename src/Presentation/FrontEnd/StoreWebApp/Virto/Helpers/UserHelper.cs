@@ -315,7 +315,7 @@ namespace VirtoCommerce.Web.Virto.Helpers
 
             //Get template
             var context = new Dictionary<string, object> { { templateName, new SendEmailTemplate { Url = linkUrl, Username = user } } };
-            var template = TemplateService.ProcessTemplate(templateName, context, CultureInfo.CreateSpecificCulture(UserHelper.CustomerSession.Language));
+            var template = TemplateService.ProcessTemplate(templateName, context, CultureInfo.CreateSpecificCulture(CustomerSession.Language));
 
             //Create email message
             var emailMessage = new EmailMessage();

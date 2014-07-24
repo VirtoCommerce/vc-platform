@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Migrations.Model;
 using System.Diagnostics;
 using System.Linq;
 using System.Data.Entity;
@@ -27,7 +28,7 @@ namespace VirtoCommerce.Search.Index
 
         private Price[] _prices;
         private Pricelist[] _priceLists;
-		private Property[] _properties;
+        private Property[] _properties;
 
         /// <summary>
         /// Gets the catalog repository.
@@ -108,7 +109,7 @@ namespace VirtoCommerce.Search.Index
             var index = 0;
             Trace.TraceInformation(String.Format("Processing documents starting {0} of {1} - {2}%", source.Start, source.Total, (source.Start * 100 / source.Total)));
             foreach (var item in LoadItems(source.JobId, source.Keys))
-            {               
+            {
                 var doc = new ResultDocument();
                 IndexItem(ref doc, item);
                 yield return doc;
@@ -134,11 +135,11 @@ namespace VirtoCommerce.Search.Index
             // preload properties
             _properties = GetProperties(jobId);
 
-			var query = from i in CatalogRepository.Items where items.Contains(i.ItemId) select i;
-			query = query.Expand("CategoryItemRelations.Category.LinkedCategories");
-			query = query.Expand(p => p.EditorialReviews);
-			query = query.Expand(p => p.ItemPropertyValues);
-			return query.AsNoTracking();
+            var query = from i in CatalogRepository.Items where items.Contains(i.ItemId) select i;
+            query = query.Expand("CategoryItemRelations.Category.LinkedCategories");
+            query = query.Expand(p => p.EditorialReviews);
+            query = query.Expand(p => p.ItemPropertyValues);
+            return query.AsNoTracking();
         }
 
         protected virtual void IndexItem(ref ResultDocument doc, Item item)
@@ -147,7 +148,7 @@ namespace VirtoCommerce.Search.Index
             //doc.Add(new DocumentField("__loc", "en-us", new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
             doc.Add(new DocumentField("__type", item.GetType().Name, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
             doc.Add(new DocumentField("__sort", item.Name, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
-			doc.Add(new DocumentField("__hidden", (!item.IsActive).ToString().ToLower(), new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
+            doc.Add(new DocumentField("__hidden", (!item.IsActive).ToString().ToLower(), new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
             doc.Add(new DocumentField("code", item.Code, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
             doc.Add(new DocumentField("name", item.Name, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
             doc.Add(new DocumentField("startdate", item.StartDate, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
@@ -179,8 +180,8 @@ namespace VirtoCommerce.Search.Index
             IndexReviews(ref doc, item);
 
             // add to content
-			doc.Add(new DocumentField("__content", item.Name, new[] { IndexStore.YES, IndexType.ANALYZED }));
-			doc.Add(new DocumentField("__content", item.Code, new[] { IndexStore.YES, IndexType.ANALYZED }));
+            doc.Add(new DocumentField("__content", item.Name, new[] { IndexStore.YES, IndexType.ANALYZED }));
+            doc.Add(new DocumentField("__content", item.Code, new[] { IndexStore.YES, IndexType.ANALYZED }));
         }
 
         protected virtual void IndexItemCustomProperties(ref ResultDocument doc, Item item)
@@ -188,51 +189,63 @@ namespace VirtoCommerce.Search.Index
             foreach (var val in item.ItemPropertyValues)
             {
                 var key = val.Name;
+
+                PropertyValueBase indexVal = val;
+
+                var prop = _properties.FirstOrDefault(p => p.Name == val.Name && p.CatalogId == item.CatalogId);
+
+                //Handle dictionary value
+                if (prop != null && prop.IsEnum)
+                {
+                    var dictVal = prop.PropertyValues.FirstOrDefault(p => p.PropertyValueId == val.KeyValue);
+                    if (dictVal != null)
+                    {
+                        indexVal = dictVal;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                var contentField = string.Format("__content{0}",
+                    prop != null && (prop.IsLocaleDependant && !string.IsNullOrWhiteSpace(indexVal.Locale)) ? "_" + indexVal.Locale.ToLower() : string.Empty);
+
+                switch ((PropertyValueType)indexVal.ValueType)
+                {
+
+                    case PropertyValueType.LongString:
+                        doc.Add(new DocumentField(contentField, ConvertToLowcase(indexVal.LongTextValue), new[] { IndexStore.YES, IndexType.ANALYZED }));
+                        break;
+                    case PropertyValueType.ShortString:
+                        doc.Add(new DocumentField(contentField, ConvertToLowcase(indexVal.ShortTextValue), new[] { IndexStore.YES, IndexType.ANALYZED }));
+                        break;
+                }
+
+
                 if (doc.ContainsKey(key))
                     continue;
 
-	            PropertyValueBase indexVal = val;
 
-	            var prop = _properties.FirstOrDefault(p => p.Name == val.Name && p.CatalogId == item.CatalogId);
-
-				//Handle dictionary value
-				if(prop !=null)
-				{
-					if (prop.IsEnum)
-					{
-						var dictVal = prop.PropertyValues.FirstOrDefault(p => p.PropertyValueId == val.KeyValue);
-						if (dictVal != null)
-						{
-							indexVal = dictVal;
-						}
-						else
-						{
-							break;
-						}
-					}
-				}
-
-				switch ((PropertyValueType)indexVal.ValueType)
+                switch ((PropertyValueType)indexVal.ValueType)
                 {
                     case PropertyValueType.Boolean:
-						doc.Add(new DocumentField(key, indexVal.BooleanValue, new[] { IndexStore.YES, IndexType.ANALYZED }));
+                        doc.Add(new DocumentField(key, indexVal.BooleanValue, new[] { IndexStore.YES, IndexType.ANALYZED }));
                         break;
                     case PropertyValueType.DateTime:
-						doc.Add(new DocumentField(key, indexVal.DateTimeValue, new[] { IndexStore.YES, IndexType.ANALYZED }));
+                        doc.Add(new DocumentField(key, indexVal.DateTimeValue, new[] { IndexStore.YES, IndexType.ANALYZED }));
                         break;
                     case PropertyValueType.Decimal:
-						doc.Add(new DocumentField(key, indexVal.DecimalValue, new[] { IndexStore.YES, IndexType.ANALYZED }));
+                        doc.Add(new DocumentField(key, indexVal.DecimalValue, new[] { IndexStore.YES, IndexType.ANALYZED }));
                         break;
                     case PropertyValueType.Integer:
-						doc.Add(new DocumentField(key, indexVal.IntegerValue, new[] { IndexStore.YES, IndexType.ANALYZED }));
+                        doc.Add(new DocumentField(key, indexVal.IntegerValue, new[] { IndexStore.YES, IndexType.ANALYZED }));
                         break;
                     case PropertyValueType.LongString:
-						doc.Add(new DocumentField(key, ConvertToLowcase(indexVal.LongTextValue), new[] { IndexStore.YES, IndexType.ANALYZED }));
-						doc.Add(new DocumentField("__content", ConvertToLowcase(indexVal.LongTextValue), new[] { IndexStore.YES, IndexType.ANALYZED }));
+                        doc.Add(new DocumentField(key, ConvertToLowcase(indexVal.LongTextValue), new[] { IndexStore.YES, IndexType.ANALYZED }));
                         break;
                     case PropertyValueType.ShortString:
-						doc.Add(new DocumentField(key, ConvertToLowcase(indexVal.ShortTextValue), new[] { IndexStore.YES, IndexType.ANALYZED }));
-						doc.Add(new DocumentField("__content", ConvertToLowcase(indexVal.ShortTextValue), new[] { IndexStore.YES, IndexType.ANALYZED }));
+                        doc.Add(new DocumentField(key, ConvertToLowcase(indexVal.ShortTextValue), new[] { IndexStore.YES, IndexType.ANALYZED }));
                         break;
                 }
             }
@@ -259,20 +272,20 @@ namespace VirtoCommerce.Search.Index
 
         protected virtual void IndexCategory(ref ResultDocument doc, CategoryItemRelation categoryRelation)
         {
-			//TODO: normally categoryRelation.Category should no be null but somehow it is null sometimes after more than 300 item loads
-			var cat = categoryRelation.Category ?? 
-				CatalogRepository.Categories.Expand(c => c.LinkedCategories)
-				.First(c => c.CategoryId == categoryRelation.CategoryId);
+            //TODO: normally categoryRelation.Category should no be null but somehow it is null sometimes after more than 300 item loads
+            var cat = categoryRelation.Category ??
+                CatalogRepository.Categories.Expand(c => c.LinkedCategories)
+                .First(c => c.CategoryId == categoryRelation.CategoryId);
 
-			IndexCategory(ref doc, categoryRelation.CatalogId, cat);
+            IndexCategory(ref doc, categoryRelation.CatalogId, cat);
         }
 
         protected virtual void IndexCategory(ref ResultDocument doc, string catalogId, CategoryBase category)
         {
-			doc.Add(new DocumentField("catalog", catalogId.ToLower(), new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
+            doc.Add(new DocumentField("catalog", catalogId.ToLower(), new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
 
             // get category path
-			var outline = OutlineBuilder.BuildCategoryOutline(catalogId, category).ToString();
+            var outline = OutlineBuilder.BuildCategoryOutline(catalogId, category).ToString();
             doc.Add(new DocumentField("__outline", outline.ToLower(), new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
 
             // Now index all linked categories
@@ -294,7 +307,7 @@ namespace VirtoCommerce.Search.Index
                 {
                     //var priceList = price.Pricelist;
                     var priceList = (from p in _priceLists where p.PricelistId == price.PricelistId select p).SingleOrDefault();
-					doc.Add(new DocumentField(String.Format("price_{0}_{1}", priceList.Currency, priceList.PricelistId), price.Sale ?? price.List, new[] { IndexStore.NO, IndexType.NOT_ANALYZED }));
+                    doc.Add(new DocumentField(String.Format("price_{0}_{1}", priceList.Currency, priceList.PricelistId), price.Sale ?? price.List, new[] { IndexStore.NO, IndexType.NOT_ANALYZED }));
                     doc.Add(new DocumentField(String.Format("price_{0}_{1}_value", priceList.Currency, priceList.PricelistId), price.Sale == null ? price.List.ToString() : price.Sale.ToString(), new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
                 }
             }
@@ -315,7 +328,7 @@ namespace VirtoCommerce.Search.Index
         private Pricelist[] GetPriceLists(string jobId, bool useCache = true)
         {
             return Helper.Get(
-                CacheHelper.CreateCacheKey(Constants.PricelistCachePrefix,    string.Format(PriceListsCacheKey, jobId)),
+                CacheHelper.CreateCacheKey(Constants.PricelistCachePrefix, string.Format(PriceListsCacheKey, jobId)),
                 () => ((from p in PriceListRepository.Pricelists select p).AsNoTracking().ToArray()),
                 new TimeSpan(0, 5, 0),
                 useCache);

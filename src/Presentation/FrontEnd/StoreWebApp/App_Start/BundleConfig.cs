@@ -92,9 +92,15 @@ namespace VirtoCommerce.Web
                 "~/Content/themes/default/flags.css"
                 ));
 
-            //Admin part
+
+            //Register store specific css.
+            StoreStyle.Register(bundles,@"~/Content/themes/{0}");
+
+            //Admin area
             bundles.Add(new StyleBundle(VirtoAdminStyles).Include(
-            "~/Areas/VirtoAdmin/Content/site.css"
+            "~/Areas/VirtoAdmin/Content/reset.css",
+            "~/Areas/VirtoAdmin/Content/main.css",
+            "~/Areas/VirtoAdmin/Content/responsive.css"
             ));
 		}
 	}

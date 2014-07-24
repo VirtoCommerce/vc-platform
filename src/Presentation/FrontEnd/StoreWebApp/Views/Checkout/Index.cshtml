@@ -57,6 +57,7 @@
 	                setTimeout(function ()
 	                {
 	                    VirtoCheckout.submitChanges();
+	                    VirtoCheckout.updateShipments("checkoutsubmit");
 	                }, 200);
 	            }
 
@@ -268,7 +269,7 @@
                 </div>
                 <div class="block">
                     <div class="control-group">
-                        <button type="button" onclick="VirtoCheckout.submitCheckout(); return false;">
+                        <button type="button" onclick="VirtoCheckout.submitCheckout(this); return false;">
                             <span>@("Place order now".Localize())</span>
                         </button>
                     </div>

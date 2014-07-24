@@ -75,6 +75,7 @@ namespace VirtoCommerce.Client
             return Helper.Get(
                 CacheHelper.CreateCacheKey(Constants.ShippingCachePrefix, string.Format(ShippingCacheKey, "all")),
                 () => _shippingRepository.ShippingOptions.ExpandAll()
+                    .Expand("ShippingMethods.ShippingMethodJurisdictionGroups.JurisdictionGroup.JurisdictionRelations.Jurisdiction")
 					.Expand("ShippingGateway") //remove this when fixed
 					.ToArray(),
                 OrderConfiguration.Instance.Cache.ShippingTimeout,
@@ -85,7 +86,9 @@ namespace VirtoCommerce.Client
 		{
 			return Helper.Get(
 				CacheHelper.CreateCacheKey(Constants.ShippingCachePrefix, string.Format(ShippingMethodCacheKey, "all", includeInactive)),
-				() => _shippingRepository.ShippingMethods.Where(sm => sm.IsActive || includeInactive).ExpandAll().Expand("PaymentMethodShippingMethods/PaymentMethod").ToArray(),
+				() => _shippingRepository.ShippingMethods.Where(sm => sm.IsActive || includeInactive).ExpandAll()
+                    .Expand("ShippingMethodJurisdictionGroups.JurisdictionGroup.JurisdictionRelations.Jurisdiction")
+                    .Expand("PaymentMethodShippingMethods/PaymentMethod").ToArray(),
 				OrderConfiguration.Instance.Cache.ShippingTimeout,
 				_isEnabled && useCache);
 		}

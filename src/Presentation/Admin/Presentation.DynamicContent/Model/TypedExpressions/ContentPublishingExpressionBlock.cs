@@ -8,35 +8,35 @@ using linq = System.Linq.Expressions;
 
 namespace VirtoCommerce.ManagementClient.DynamicContent.Model
 {
-	[Serializable]
-	public class ContentPublishingExpressionBlock : TypedExpressionElementBase, IExpressionAdaptor
-	{
-		private ConditionAndOrBlock _ConditionBlock;
-		public ConditionAndOrBlock ConditionBlock
-		{
-			get
-			{
-				return _ConditionBlock;
-			}
-			private set
-			{
-				_ConditionBlock = value;
-				Children.Add(_ConditionBlock);
-			}
-		}
+    [Serializable]
+    public class ContentPublishingExpressionBlock : TypedExpressionElementBase, IExpressionAdaptor
+    {
+        private ConditionAndOrBlock _ConditionBlock;
+        public ConditionAndOrBlock ConditionBlock
+        {
+            get
+            {
+                return _ConditionBlock;
+            }
+            private set
+            {
+                _ConditionBlock = value;
+                Children.Add(_ConditionBlock);
+            }
+        }
 
-		public ContentPublishingExpressionBlock(IExpressionViewModel publishingViewModel)
-			: base(null, publishingViewModel)
-		{
+        public ContentPublishingExpressionBlock(IExpressionViewModel publishingViewModel)
+            : base(null, publishingViewModel)
+        {
             this.ConditionBlock = new ConditionAndOrBlock("if".Localize(), publishingViewModel, "of these conditions are true".Localize());
 
-			InitializeAvailableExpressions();
-		}
+            InitializeAvailableExpressions();
+        }
 
-		private void InitializeAvailableExpressions()
-		{
+        private void InitializeAvailableExpressions()
+        {
 
-			var availableElements = new Func<CompositeElement>[] { 
+            var availableElements = new Func<CompositeElement>[] { 
 				()=> { //Browse behavior menu items
                     var group = new CompositeElement { DisplayName = "Browse behavior".Localize() };
 					group.AvailableChildrenGetters.AddRange(new Func<ExpressionElement>[] {
@@ -44,6 +44,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.Model
 						()=> new ConditionInternetSearchedPhrase(this.ExpressionViewModel),
 						() => new ConditionCurrentUrlIs(this.ExpressionViewModel),
 						()=> new ConditionStoreIs(this.ExpressionViewModel),
+						()=> new ConditionLanguageIs(this.ExpressionViewModel),
 						()=> new ConditionCategoryIs(this.ExpressionViewModel, false), //without subcategories
 						()=> new ConditionCategoryIs(this.ExpressionViewModel, true) //with subcategories
 					});
@@ -79,22 +80,22 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.Model
 					return group;
 				},
             };
-			ConditionBlock.WithAvailabeChildren(availableElements);
-			ConditionBlock.NewChildLabel = "+ add condition".Localize(null, LocalizationScope.DefaultCategory);
-		}
+            ConditionBlock.WithAvailabeChildren(availableElements);
+            ConditionBlock.NewChildLabel = "+ add condition".Localize(null, LocalizationScope.DefaultCategory);
+        }
 
-		public override void InitializeAfterDeserialized(IExpressionViewModel publishingViewModel)
-		{
-			base.InitializeAfterDeserialized(publishingViewModel);
-			InitializeAvailableExpressions();
+        public override void InitializeAfterDeserialized(IExpressionViewModel publishingViewModel)
+        {
+            base.InitializeAfterDeserialized(publishingViewModel);
+            InitializeAvailableExpressions();
 
-		}
+        }
 
-		public linq.Expression<Func<IEvaluationContext, bool>> GetExpression()
-		{
-			var retVal = ConditionBlock.GetExpression();
-			return retVal;
-		}
+        public linq.Expression<Func<IEvaluationContext, bool>> GetExpression()
+        {
+            var retVal = ConditionBlock.GetExpression();
+            return retVal;
+        }
 
-	}
+    }
 }

@@ -94,7 +94,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="PropertyChanged">
       <HintPath>..\..\..\..\packages\PropertyChanged.Fody.1.48.0.0\Lib\NET35\PropertyChanged.dll</HintPath>
-      <Private>False</Private>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />

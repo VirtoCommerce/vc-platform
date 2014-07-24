@@ -7,6 +7,7 @@
 		CategoryUrl,
 		Flash,
 		Html,
+        Razor,
 		ImageClickable,
 		ImageNonClickable,
 		ProductWithImageAndPrice

@@ -1,0 +1,170 @@
+/* HTML 5 elements 
+====================================*/
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section
+{ 
+	display: block;
+}
+
+*
+{
+	margin: 0;
+	outline: none;
+	padding: 0;
+}
+
+html, body
+{
+	height: 100%;
+	width: 100%;
+}
+
+body
+{
+	background: url(images/bg-noise.jpg) no-repeat scroll 50% 0 #fff;
+	color: #464646;
+	font-family: Arial;
+	font-size: 13px;
+	font-weight: 400;
+	line-height: 1.4;
+	min-width: 300px;
+}
+
+.dn
+{
+	display: none;
+}
+
+.required
+{
+	color: #ff0000;
+}
+
+.center
+{
+	text-align: center;
+}
+
+/* Clearfix 
+====================================*/
+.clearfix:after
+{
+	clear: both;
+	content: '';
+	display: block;
+	font-size: 0;
+}
+
+.clear
+{
+	clear: both;
+	font-size: 0;
+	overflow: hidden;
+}
+
+.button
+{
+	background-image: -webkit-linear-gradient(#fffeff, #e1e1e1);
+	background-image: -o-linear-gradient(#fffeff, #e1e1e1);
+	background-image: linear-gradient(#fffeff, #e1e1e1);
+	border: 1px solid #ddd;
+	display: inline-block;
+	font-family: Arial;
+	font-size: 15px;
+	font-weight: bold;
+	height: 46px;
+	line-height: 46px;
+	padding: 0 45px;
+	text-decoration: none;
+	text-transform: uppercase;
+
+	-webkit-border-radius: 3px;
+			border-radius: 3px;
+
+	-webkit-box-shadow: 0 3px 5px rgba(0, 0, 0, .43);
+			box-shadow: 0 3px 5px rgba(0, 0, 0, .43);
+}
+
+/* Images 
+====================================*/
+img
+{
+	border: none;
+}
+
+/* Headings 
+====================================*/
+h1, h2, h3, h4, h5,
+.title
+{
+	color: #464646;
+	font-weight: normal;
+}
+
+h2
+{
+	font-size: 30px;
+}
+
+/* Paragraphs 
+====================================*/
+p
+{
+	
+}
+
+/* Links 
+====================================*/
+a
+{
+	color: #727272;
+	font-weight: 600;
+	text-decoration: underline;
+}
+
+a:visited
+{
+
+}
+
+a:hover,
+.main .twitter-block .author p a:hover
+{
+	color: #8ac733;
+}
+
+/* Lists 
+====================================*/
+ul
+{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+ul li
+{
+
+}
+
+/* Tables 
+====================================*/
+table
+{
+	border-collapse: collapse;
+	border-spacing: 0;
+	padding: 0;
+}
+
+/* Forms 
+===================================*/
+input
+{
+	color: #404142;
+	font-family: Arial,​Helvetica,​sans-serif;
+}
+
+iframe
+{
+	max-height: 100%;
+	max-width: 100%;
+}

@@ -1,12 +1,11 @@
-﻿using System;
-using System.Linq;
-using System.Text.RegularExpressions;
-using PlainElastic.Net;
-using VirtoCommerce.Foundation.Search;
+﻿using PlainElastic.Net;
 using PlainElastic.Net.Queries;
-using VirtoCommerce.Foundation.Search.Schemas;
-using VirtoCommerce.Foundation.Catalogs.Search;
+using System;
 using System.Collections.Specialized;
+using System.Linq;
+using VirtoCommerce.Foundation.Catalogs.Search;
+using VirtoCommerce.Foundation.Search;
+using VirtoCommerce.Foundation.Search.Schemas;
 
 namespace VirtoCommerce.Search.Providers.Elastic
 {
@@ -46,20 +45,20 @@ namespace VirtoCommerce.Search.Providers.Elastic
                     // Skip currencies that are not part of the filter
                     if (filter.GetType() == typeof(PriceRangeFilter)) // special filtering 
                     {
-	                    var priceRangeFilter = filter as PriceRangeFilter;
-	                    if (priceRangeFilter != null)
-	                    {
-		                    var currency = priceRangeFilter.Currency;
-		                    if (!currency.Equals(criteria.Currency, StringComparison.OrdinalIgnoreCase))
-			                    continue;
-	                    }
+                        var priceRangeFilter = filter as PriceRangeFilter;
+                        if (priceRangeFilter != null)
+                        {
+                            var currency = priceRangeFilter.Currency;
+                            if (!currency.Equals(criteria.Currency, StringComparison.OrdinalIgnoreCase))
+                                continue;
+                        }
                     }
 
                     var filterQuery = ElasticQueryHelper.CreateQuery(criteria, filter);
 
                     if (filterQuery != null)
                     {
-                        combinedFilter.Must(c => c.Bool(q=>filterQuery));
+                        combinedFilter.Must(c => c.Bool(q => filterQuery));
                     }
                 }
 
@@ -74,7 +73,7 @@ namespace VirtoCommerce.Search.Providers.Elastic
 
                 mainQuery.Must(m => m
                     .Range(r => r.Field("startdate").To(c.StartDate.ToString("s")))
-					);
+                    );
 
 
                 if (c.StartDateFrom.HasValue)
@@ -84,27 +83,28 @@ namespace VirtoCommerce.Search.Providers.Elastic
                    );
                 }
 
-				if (c.EndDate.HasValue)
-				{
-					mainQuery.Must(m => m
-						.Range(r => r.Field("enddate").From(c.EndDate.Value.ToString("s")))
-				   );
-				}
+                if (c.EndDate.HasValue)
+                {
+                    mainQuery.Must(m => m
+                        .Range(r => r.Field("enddate").From(c.EndDate.Value.ToString("s")))
+                   );
+                }
 
-				mainQuery.Must(m => m.Term(t => t.Field("__hidden").Value("false")));
+                mainQuery.Must(m => m.Term(t => t.Field("__hidden").Value("false")));
 
                 if (c.Outlines != null && c.Outlines.Count > 0)
                     AddQuery("__outline", mainQuery, c.Outlines);
 
                 if (!String.IsNullOrEmpty(c.SearchPhrase))
                 {
-					AddQueryString("__content", mainQuery, c);
+                    var contentField = string.Format("__content_{0}", c.Locale.ToLower());
+                    AddQueryString(mainQuery, c, "__content", contentField);
                 }
 
-				if (!String.IsNullOrEmpty(c.Catalog))
-				{
-					AddQuery("catalog", mainQuery, c.Catalog);
-				}
+                if (!String.IsNullOrEmpty(c.Catalog))
+                {
+                    AddQuery("catalog", mainQuery, c.Catalog);
+                }
             }
             #endregion
 
@@ -143,8 +143,8 @@ namespace VirtoCommerce.Search.Providers.Elastic
                     var containsFilter = false;
                     foreach (var index in filter.Cast<string>().Where(index => !String.IsNullOrEmpty(index)))
                     {
-	                    booleanQuery.Should(q => q.Custom("{{\"wildcard\" : {{ \"{0}\" : \"{1}\" }}}}", fieldName.ToLower(), index.ToLower()));
-	                    containsFilter = true;
+                        booleanQuery.Should(q => q.Custom("{{\"wildcard\" : {{ \"{0}\" : \"{1}\" }}}}", fieldName.ToLower(), index.ToLower()));
+                        containsFilter = true;
                     }
                     if (containsFilter)
                         query.Must(q => q.Bool(b => booleanQuery));
@@ -157,26 +157,26 @@ namespace VirtoCommerce.Search.Providers.Elastic
             query.Must(q => q.Custom("{{\"wildcard\" : {{ \"{0}\" : \"{1}\" }}}}", fieldName.ToLower(), filter.ToLower()));
         }
 
-		protected void AddQueryString(string fieldName, BoolQuery<ESDocument> query, CatalogItemSearchCriteria filter)
-		{
-			var searchPhrase = filter.SearchPhrase;
-		    if (filter.IsFuzzySearch)
-		    {
-		        query.Must(
-		            q =>
-		            q.Match(
-		                x =>
-		                x.Field(fieldName).Operator(Operator.AND).Fuzziness(filter.FuzzyMinSimilarity).Query(searchPhrase)));
-		    }
-		    else
-		    {
+        protected void AddQueryString(BoolQuery<ESDocument> query, CatalogItemSearchCriteria filter, params string[] fields)
+        {
+            var searchPhrase = filter.SearchPhrase;
+            if (filter.IsFuzzySearch)
+            {
                 query.Must(
                     q =>
-                    q.Match(
+                    q.MultiMatch(
                         x =>
-                        x.Field(fieldName).Operator(Operator.AND).Query(searchPhrase)));		        
-		    }
-		}
+                        x.Fields(fields).Operator(Operator.AND).Fuzziness(filter.FuzzyMinSimilarity).Query(searchPhrase)));
+            }
+            else
+            {
+                query.Must(
+                    q =>
+                    q.MultiMatch(
+                        x =>
+                        x.Fields(fields).Operator(Operator.AND).Query(searchPhrase)));
+            }
+        }
 
         #region Facet Query
         /// <summary>
@@ -229,7 +229,7 @@ namespace VirtoCommerce.Search.Providers.Elastic
             foreach (var val in values)
             {
                 var facetName = String.Format("{0}-{1}", fieldName.ToLower(), val.Id.ToLower());
-                param.FilterFacets(ff => 
+                param.FilterFacets(ff =>
                     ff.FacetName(facetName).Filter(f => f.Query(q => q.Bool(bf => bf.Must(bfm =>
                     bfm.Custom("{{\"wildcard\" : {{ \"{0}\" : \"{1}\" }}}}", fieldName.ToLower(), val.Outline.ToLower()))))));
             }
@@ -252,13 +252,13 @@ namespace VirtoCommerce.Search.Providers.Elastic
                 if (!f.Key.Equals(fieldName))
                 {
                     var q = ElasticQueryHelper.CreateQuery(criteria, f);
-                    ffilter.Must(ff => ff.Bool(bb=>q));
+                    ffilter.Must(ff => ff.Bool(bb => q));
                 }
             }
 
             var facetFilter = new FacetFilter<ESDocument>();
             facetFilter.Bool(f => ffilter);
-            
+
             //var filter = new FacetFilter<ESDocument>();
             //facetFilter.Terms(x => x.Values(values.Select(y => y.Value).ToArray()));
             //var filterFacet = new FilterFacet<ESDocument>();
@@ -322,7 +322,7 @@ namespace VirtoCommerce.Search.Providers.Elastic
             foreach (var value in values)
             {
                 var query = ElasticQueryHelper.CreatePriceRangeFilter(criteria, fieldName, value);
-                query.Must(b =>ffilter);
+                query.Must(b => ffilter);
                 if (query != null)
                 {
                     param.FilterFacets(

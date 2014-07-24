@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Web.Client.Helpers;
@@ -59,6 +60,17 @@ namespace VirtoCommerce.Web.Client.Extensions
             retVal = retVal.Trim();
 
             return retVal;
+        }
+
+        /// <summary>
+        /// Escapes the selector. Query requires special characters to be escaped in query
+        /// http://api.jquery.com/category/selectors/
+        /// </summary>
+        /// <param name="attribute">The attribute.</param>
+        /// <returns></returns>
+        public static string EscapeSelector(this string attribute)
+        {
+            return Regex.Replace(attribute, string.Format("([{0}])", "/[!\"#$%&'()*+,./:;<=>?@^`{|}~\\]"), @"\\$1");
         }
 
     }
