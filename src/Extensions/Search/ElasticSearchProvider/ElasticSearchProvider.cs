@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using PlainElastic.Net.IndexSettings;
 using VirtoCommerce.Foundation.Catalogs.Search;
 using VirtoCommerce.Foundation.Search;
@@ -395,6 +396,9 @@ namespace VirtoCommerce.Search.Providers.Elastic
                         .Store(field.ContainsAttribute(IndexStore.YES))
                         .When(field.ContainsAttribute(IndexType.NOT_ANALYZED), p => p.Index(IndexState.not_analyzed))
                         .When(field.Name.StartsWith("__content", StringComparison.OrdinalIgnoreCase), p => p.Analyzer(SearchAnalyzer))
+                        .When(Regex.Match(field.Name, "__content_en.*").Success, x => x.Analyzer("english"))
+                        .When(Regex.Match(field.Name, "__content_de.*").Success, x => x.Analyzer("german"))
+                        .When(Regex.Match(field.Name, "__content_ru.*").Success, x => x.Analyzer("russian"))
                         .When(field.ContainsAttribute(IndexType.NO), p => p.Index(IndexState.no));
 
                         properties.CustomProperty(field.Name, p => propertyMap);
@@ -415,7 +419,8 @@ namespace VirtoCommerce.Search.Providers.Elastic
                     .Analysis(als => als
                         .Analyzer(a => a.Custom(SearchAnalyzer, custom => custom
                             .Tokenizer(DefaultTokenizers.standard)
-                            .Filter("trigrams_filter")))
+                            .Filter("trigrams_filter")
+                            .Filter(DefaultTokenFilters.lowercase)))
                         .Filter(f => f.NGram("trigrams_filter", ng => ng
                                 .MinGram(3)
                                 .MaxGram(3)))).Build();
