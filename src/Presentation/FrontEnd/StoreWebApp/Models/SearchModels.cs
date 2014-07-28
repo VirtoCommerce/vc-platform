@@ -7,6 +7,7 @@ using VirtoCommerce.Client;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Catalogs.Search;
 using VirtoCommerce.Client.Globalization;
+using VirtoCommerce.Web.Client.Extensions;
 using VirtoCommerce.Web.Client.Helpers;
 using VirtoCommerce.Web.Virto.Helpers;
 
@@ -396,16 +397,7 @@ namespace VirtoCommerce.Web.Models
 		/// <value>The display name.</value>
         public string DisplayName
         {
-            get
-            {
-	            var retValue = CatalogItem.Item.Name;
-	            var title = CatalogHelper.CatalogClient.GetPropertyValueByName(CatalogItem.Item, "Title");
-				if (title != null)
-				{
-					retValue = title.ToString();
-				}
-				return retValue;
-            }
+            get { return CatalogItem.Item.DisplayName(); }
         }
 
 	    public bool IsNew

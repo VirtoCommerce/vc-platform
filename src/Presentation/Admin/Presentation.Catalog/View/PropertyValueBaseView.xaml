@@ -44,10 +44,10 @@
         <TextBlock Grid.Row="0" Margin="0,12,0,20" Text="{Loc 'Enter property value'}" Visibility="{Binding InnerPropertyIsNotEnum, Converter={StaticResource booleanToVisibilityConverter}}" />
         <TextBlock Grid.Row="1" Text="{Loc 'Select property value(s)'}" Visibility="{Binding InnerItem.IsEnum, Converter={StaticResource booleanToVisibilityConverter}}" />
         <TextBox Grid.Row="2" Visibility="{Binding IsShortStringValue, Converter={StaticResource booleanToVisibilityConverter}}"
-             Text="{Binding InnerItem.Value.ShortTextValue, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+             Text="{Binding InnerItem.Value.ShortTextValue, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" Width="350"/>
         <core_controls:WatermarkedTextBox Grid.Row="3" Visibility="{Binding IsLongStringValue, Converter={StaticResource booleanToVisibilityConverter}}"
              Text="{Binding InnerItem.Value.LongTextValue, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
-             WatermarkText="" Height="160" Style="{StaticResource Virto_Multiline_WatermarkedTextBox_Style}"
+             Width="750" Height="140" Style="{StaticResource Virto_Multiline_WatermarkedTextBox_Style}"
              Margin="0,0,0,12" />
         <extToolkit:DecimalUpDown Grid.Row="4" Visibility="{Binding IsDecimalValue, Converter={StaticResource booleanToVisibilityConverter}}"
              Value="{Binding InnerItem.Value.DecimalValue, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}"
@@ -60,7 +60,7 @@
         <DatePicker Grid.Row="7" Visibility="{Binding IsDateTimeValue, Converter={StaticResource booleanToVisibilityConverter}}"
              SelectedDate="{Binding InnerItem.Value.DateTimeValue, ValidatesOnDataErrors=True, UpdateSourceTrigger=Default}" />
         <!-- same image picking xalm is almost duplicated in WizardCreateItemOverviewStepView-->
-        <Grid Grid.Row="8" Visibility="{Binding IsAssetValue, Converter={StaticResource booleanToVisibilityConverter}}">
+        <Grid Grid.Row="8" Visibility="{Binding IsAssetValue, Converter={StaticResource booleanToVisibilityConverter}}" Width="350">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />

@@ -9,6 +9,7 @@ using VirtoCommerce.Foundation.Catalogs.Repositories;
 using VirtoCommerce.Foundation.Catalogs.Services;
 using VirtoCommerce.Foundation.Data.Catalogs;
 using VirtoCommerce.Foundation.Data.Infrastructure;
+using VirtoCommerce.Foundation.Data.Reviews;
 using VirtoCommerce.Foundation.Data.Search;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.CQRS;
@@ -19,6 +20,8 @@ using VirtoCommerce.Foundation.Frameworks.CQRS.Serialization;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Frameworks.Logging;
 using VirtoCommerce.Foundation.Frameworks.Logging.Factories;
+using VirtoCommerce.Foundation.Reviews.Factories;
+using VirtoCommerce.Foundation.Reviews.Repositories;
 using VirtoCommerce.Foundation.Search;
 using VirtoCommerce.Foundation.Search.CQRS;
 using VirtoCommerce.Foundation.Search.Factories;
@@ -124,6 +127,7 @@ namespace VirtoCommerce.PowerShell.SearchSetup.Cmdlet
             container.RegisterType<IQueueReader, InMemoryQueueReader>();
             container.RegisterType<IMessageSender, DefaultMessageSender>(new ContainerControlledLifetimeManager());
             container.RegisterType<ICatalogEntityFactory, CatalogEntityFactory>(new ContainerControlledLifetimeManager());
+            container.RegisterType<IReviewEntityFactory, ReviewEntityFactory>(new ContainerControlledLifetimeManager());
 
             container.RegisterType<ICatalogService, CatalogService>();
             container.RegisterType<ISearchIndexBuilder, CatalogItemIndexBuilder>("catalogitem");
@@ -154,6 +158,9 @@ namespace VirtoCommerce.PowerShell.SearchSetup.Cmdlet
             container.RegisterInstance<IPricelistRepository>(catalogRepository);
             container.RegisterInstance<IOperationLogRepository>(new OperationLogContext(connectionString));
             container.RegisterInstance<IBuildSettingsRepository>(new EFSearchRepository(connectionString));
+
+            var reviewRepository = new EFReviewRepository(connectionString);
+            container.RegisterInstance<IReviewRepository>(reviewRepository);
 
 
             var indexingProgress = new ProgressRecord(1, "Indexing Progress", "Progress:");

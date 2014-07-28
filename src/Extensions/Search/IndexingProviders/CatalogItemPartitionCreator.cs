@@ -112,12 +112,12 @@ namespace VirtoCommerce.Search.Index
                                             .Select(i => i.ItemId).AsNoTracking();
 
                 //Reindex items where reviews were recently approved
-                var queryReviews = _reviewRepository.Reviews
-                    .Where(i => i.LastModified > lastBuild && i.Status == (int)ReviewStatus.Approved)                                         
-                    .OrderBy(i => i.ItemId)                                                   
-                    .Select(i => i.ItemId).AsNoTracking();
+                //var queryReviews = _reviewRepository.Reviews
+                //    .Where(i => i.LastModified > lastBuild && i.Status == (int)ReviewStatus.Approved)                                         
+                //    .OrderBy(i => i.ItemId)                                                   
+                //    .Select(i => i.ItemId).AsNoTracking();
 
-                query = query.ToArray().Union(queryReviews.ToArray()).Distinct().AsQueryable();
+                //query = query.ToArray().Union(queryReviews.ToArray()).Distinct().AsQueryable();
             }
             else
             {

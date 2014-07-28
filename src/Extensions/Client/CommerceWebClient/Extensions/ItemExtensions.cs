@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.Practices.ServiceLocation;
+using VirtoCommerce.Client;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Catalogs.Services;
 using VirtoCommerce.Foundation.Customers;
@@ -26,6 +28,13 @@ namespace VirtoCommerce.Web.Client.Extensions
             }
         }
 
+        public static CatalogClient CatalogClient
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<CatalogClient>();
+            }
+        }
 
         public static string GetItemCategoryRouteValue(this Item item)
         {
@@ -53,6 +62,17 @@ namespace VirtoCommerce.Web.Client.Extensions
                 HttpContext.Current.Items["browsingoutline_" + item.Code.ToLower()] = outline = String.Join(";", outlines.Select(m => new BrowsingOutline(m).ToString()));
             }
             return outline.Split(';');
+        }
+
+        public static string DisplayName(this Item item, string defaultValue = "", string locale="")
+        {
+            var retValue = string.IsNullOrEmpty(defaultValue) ? item.Name : defaultValue;
+            var title = CatalogClient.GetPropertyValueByName(item, "Title", locale:locale);
+            if (title != null)
+            {
+                retValue = title.ToString();
+            }
+            return retValue;
         }
     }
 }

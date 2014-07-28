@@ -11,6 +11,7 @@ using VirtoCommerce.Foundation.Customers.Services;
 using VirtoCommerce.Foundation.Search;
 using VirtoCommerce.Foundation.Search.Schemas;
 using VirtoCommerce.Foundation.Stores.Model;
+using VirtoCommerce.Web.Client.Extensions;
 
 namespace VirtoCommerce.Web.Client.Services.Filters
 {
@@ -64,17 +65,6 @@ namespace VirtoCommerce.Web.Client.Services.Filters
             }
         }
 
-        private string GetCategoryDisplayName(Category category)
-        {
-                var retValue =  category.Name;
-                var title = _catalogClient.GetPropertyValueByName(category, "Title", true);
-                if (title != null)
-                {
-                    retValue = title.ToString();
-                }
-                return retValue;
-        }
-
         /// <summary>
         /// Gets the store all filters.
         /// </summary>
@@ -93,7 +83,7 @@ namespace VirtoCommerce.Web.Client.Services.Filters
                 var categoryFilter = new CategoryFilter { Key = "__outline" };
                 var listOfValues = (from child in children.OfType<Category>() 
                                     let outline = String.Format("{0}*", catalogClient.BuildCategoryOutline(_customerSession.CustomerSession.CatalogId, child)) 
-                                    select new CategoryFilterValue {Id = child.Code, Outline = outline, Name = GetCategoryDisplayName(child)}).ToList();
+                                    select new CategoryFilterValue {Id = child.Code, Outline = outline, Name = child.DisplayName()}).ToList();
 
                 // add filters only if found any
                 if (listOfValues.Count > 0)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -86,14 +87,14 @@ namespace VirtoCommerce.Web.Controllers
 
 	    private bool ProcessMessages(MessageType type, MessagesModel messages)
 	    {
-            var messagesTmp = TempData[GetMessageTempKey(type)] as string[];
+            var messagesTmp = TempData[GetMessageTempKey(type)] as IEnumerable;
 	        var foundAny = false;
 
             if (messagesTmp != null)
             {
                 foreach (var messageTmp in messagesTmp)
                 {
-                    messages.Add(new MessageModel(messageTmp, type));
+                    messages.Add(new MessageModel(messageTmp.ToString(), type));
                     foundAny = true;
                 }
             }

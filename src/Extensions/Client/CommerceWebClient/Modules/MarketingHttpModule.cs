@@ -167,6 +167,12 @@ namespace VirtoCommerce.Web.Client.Modules
                 set.Add(ContextFieldConstants.CategoryId, new Tag(session.CategoryId));
             }
 
+            // language
+            if (!String.IsNullOrEmpty(session.Language))
+            {
+                set.Add(ContextFieldConstants.Language, new Tag(session.Language));
+            }
+
             // current URL
             set.Add(ContextFieldConstants.CurrentUrl, new Tag(context.Request.Url.AbsoluteUri));
 

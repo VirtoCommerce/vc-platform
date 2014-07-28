@@ -1,9 +1,7 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Web;
 using System.Web.Routing;
 using VirtoCommerce.Foundation.AppConfig.Model;
-using VirtoCommerce.Foundation.Catalogs.Services;
 using VirtoCommerce.Web.Client.Helpers;
 
 namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
@@ -72,7 +70,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
 
             if (string.IsNullOrEmpty(outline))
             {
-                var item = CartHelper.CatalogClient.GetItem(itemCode, bycode: true);
+                var item = CartHelper.CatalogClient.GetItemByCode(itemCode, StoreHelper.CustomerSession.CatalogId);
 
                 if (item == null)
                 {

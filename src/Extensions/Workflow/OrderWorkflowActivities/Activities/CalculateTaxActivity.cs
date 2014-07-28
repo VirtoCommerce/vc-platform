@@ -6,6 +6,7 @@ using VirtoCommerce.Client;
 using VirtoCommerce.Foundation.Catalogs.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
+using VirtoCommerce.Foundation.Orders.Extensions;
 using VirtoCommerce.Foundation.Orders.Model;
 using VirtoCommerce.Foundation.Orders.Model.Jurisdiction;
 using VirtoCommerce.Foundation.Orders.Model.Taxes;
@@ -180,7 +181,7 @@ namespace VirtoCommerce.OrderWorkflow
 					//check if can find tax value by geo code
 					if (!string.IsNullOrEmpty(geoCode))
 					{
-						if (taxValue.JurisdictionGroup.JurisdictionRelations.Any(j => string.Equals(j.Jurisdiction.GeoCode, geoCode) && CheckAllFieldsMatch(j.Jurisdiction, countryCode, state, postalCode, regionCode, district, geoCode, city)))
+                        if (taxValue.JurisdictionGroup.JurisdictionRelations.Any(j => string.Equals(j.Jurisdiction.GeoCode, geoCode) && j.Jurisdiction.CheckAllFieldsMatch(countryCode, state, postalCode, regionCode, district, geoCode, city)))
 						{
 							retVal = taxValue;
 							priority = 0;
@@ -193,7 +194,7 @@ namespace VirtoCommerce.OrderWorkflow
 						if (taxValue.JurisdictionGroup.JurisdictionRelations.Any(
 								j => string.Equals(j.Jurisdiction.CountryCode, countryCode) &&
 									(string.Compare(j.Jurisdiction.ZipPostalCodeStart, postalCode) <= 0 &&
-										string.Compare(j.Jurisdiction.ZipPostalCodeEnd, postalCode) >= 0) && CheckAllFieldsMatch(j.Jurisdiction, countryCode, state, postalCode, regionCode, district, geoCode, city)
+                                        string.Compare(j.Jurisdiction.ZipPostalCodeEnd, postalCode) >= 0) && j.Jurisdiction.CheckAllFieldsMatch(countryCode, state, postalCode, regionCode, district, geoCode, city)
 										))
 						{
 								retVal = taxValue;
@@ -207,7 +208,7 @@ namespace VirtoCommerce.OrderWorkflow
 						if (taxValue.JurisdictionGroup.JurisdictionRelations.Any(
 								j => string.Equals(j.Jurisdiction.CountryCode, countryCode) &&
 									//string.Equals(j.Jurisdiction.StateProvinceCode, state) &&
-									string.Equals(j.Jurisdiction.City, city) && CheckAllFieldsMatch(j.Jurisdiction, countryCode, state, postalCode, regionCode, district, geoCode, city)))
+                                    string.Equals(j.Jurisdiction.City, city) && j.Jurisdiction.CheckAllFieldsMatch(countryCode, state, postalCode, regionCode, district, geoCode, city)))
 						{
 								retVal = taxValue;
 								priority = 2;
@@ -219,7 +220,7 @@ namespace VirtoCommerce.OrderWorkflow
 					{
 						if (taxValue.JurisdictionGroup.JurisdictionRelations.Any(
 								j => string.Equals(j.Jurisdiction.CountryCode, countryCode) &&
-									string.Equals(j.Jurisdiction.District, district) && CheckAllFieldsMatch(j.Jurisdiction, countryCode, state, postalCode, regionCode, district, geoCode, city)))
+                                    string.Equals(j.Jurisdiction.District, district) && j.Jurisdiction.CheckAllFieldsMatch(countryCode, state, postalCode, regionCode, district, geoCode, city)))
 						{
 								retVal = taxValue;
 								priority = 3;
@@ -231,7 +232,7 @@ namespace VirtoCommerce.OrderWorkflow
 					{
 						if (taxValue.JurisdictionGroup.JurisdictionRelations.Any(
 								j => string.Equals(j.Jurisdiction.CountryCode, countryCode) &&
-									string.Equals(j.Jurisdiction.StateProvinceCode, state) && CheckAllFieldsMatch(j.Jurisdiction, countryCode, state, postalCode, regionCode, district, geoCode, city)))
+                                    string.Equals(j.Jurisdiction.StateProvinceCode, state) && j.Jurisdiction.CheckAllFieldsMatch(countryCode, state, postalCode, regionCode, district, geoCode, city)))
 						{
 								retVal = taxValue;
 								priority = 4;
@@ -242,7 +243,7 @@ namespace VirtoCommerce.OrderWorkflow
 					if (!string.IsNullOrEmpty(countryCode) && priority > 5)
 					{
 						if (taxValue.JurisdictionGroup.JurisdictionRelations.Any(
-								j => string.Equals(j.Jurisdiction.CountryCode, countryCode) && CheckAllFieldsMatch(j.Jurisdiction, countryCode, state, postalCode, regionCode, district, geoCode, city)))
+                                j => string.Equals(j.Jurisdiction.CountryCode, countryCode) && j.Jurisdiction.CheckAllFieldsMatch(countryCode, state, postalCode, regionCode, district, geoCode, city)))
 						{		
 							retVal = taxValue;
 							priority = 5;
@@ -250,56 +251,6 @@ namespace VirtoCommerce.OrderWorkflow
 					}
 				});
 			return retVal;
-		}
-
-		private bool CheckAllFieldsMatch(Jurisdiction jurisdiction, string countryCode, string state, string postalCode, string regionCode, string district, string geoCode, string city)
-		{
-			var retVal = true;
-
-			if (!string.IsNullOrEmpty(jurisdiction.GeoCode))
-			{
-				retVal = string.Equals(jurisdiction.GeoCode, geoCode);
-				if (!retVal)
-					return false;
-			}
-
-			if (!string.IsNullOrEmpty(jurisdiction.District))
-			{
-				retVal = string.Equals(jurisdiction.District, district);
-				if (!retVal)
-					return false;
-			}
-
-			if (!string.IsNullOrEmpty(jurisdiction.City))
-			{
-				retVal = string.Equals(jurisdiction.City, city);
-				if (!retVal)
-					return false;
-			}
-			
-			if (!string.IsNullOrEmpty(jurisdiction.ZipPostalCodeEnd) && !string.IsNullOrEmpty(jurisdiction.ZipPostalCodeStart))
-			{
-				retVal = (System.String.CompareOrdinal(jurisdiction.ZipPostalCodeStart, postalCode) <= 0 &&
-										System.String.CompareOrdinal(jurisdiction.ZipPostalCodeEnd, postalCode) >= 0);
-				if (!retVal)
-					return false;
-			}
-
-			if (!string.IsNullOrEmpty(jurisdiction.StateProvinceCode))
-			{
-				retVal = string.Equals(jurisdiction.StateProvinceCode, state);
-				if (!retVal)
-					return false;
-			}
-
-			if (!string.IsNullOrEmpty(jurisdiction.CountryCode))
-			{
-				retVal = string.Equals(jurisdiction.CountryCode, countryCode);
-				if (!retVal)
-					return false;
-			}
-
-			return true;
 		}
 	}
 }

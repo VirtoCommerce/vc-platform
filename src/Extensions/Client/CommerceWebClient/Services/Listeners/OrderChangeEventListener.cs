@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Net.Mail;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.Frameworks.Email;
 using VirtoCommerce.Foundation.Frameworks.Events;
@@ -68,9 +68,12 @@ namespace VirtoCommerce.Web.Client.Services.Listeners
                     IDictionary<string, object> context = new Dictionary<string, object>();
                     context.Add("order", order);
 
+                    var lang = Helpers.StoreHelper.CustomerSession.Language;
+                    lang = string.IsNullOrWhiteSpace(lang) ? "en-us" : lang;
+
                     //Send order-confirmation email
                     var confirmTempate = _templateService.ProcessTemplate("order-confirmation", context,
-                                                                          new CultureInfo("en-us"));
+                                                                          new CultureInfo(lang));
 
                     var recipientAddress =
                         order.OrderAddresses.FirstOrDefault(oa => oa.OrderAddressId == order.AddressId);
@@ -81,7 +84,7 @@ namespace VirtoCommerce.Web.Client.Services.Listeners
 
                     //Send order-notification email
                     var notifyTemplate = _templateService.ProcessTemplate("order-notify", context,
-                                                                          new CultureInfo("en-us"));
+                                                                          new CultureInfo(lang));
 
                     if (_storeService != null)
                     {
@@ -109,7 +112,10 @@ namespace VirtoCommerce.Web.Client.Services.Listeners
             var isHtml = template.Type != EmailTemplateTypes.Text;
             IEmailMessage message = new EmailMessage(recipient, template.Body, isHtml);
             message.Subject = template.Subject;
-            message.From = "orders@virtoway.com";
+            var eMessage = new MailMessage();
+            var smtpDefault = eMessage.From.ToString();
+            message.From = string.IsNullOrWhiteSpace(smtpDefault) ? "orders@virtoway.com" : smtpDefault;
+
             try
             {
                 _emailService.SendEmail(message);

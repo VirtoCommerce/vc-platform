@@ -255,15 +255,51 @@ namespace VirtoCommerce.Web.Controllers
                     regModel.Addresses.Add(shipping);
                 }
 
-                string message;
+                string message,token;
 
-                if (!UserHelper.Register(regModel, out message))
+                var requireConfirmation = StoreHelper.GetSettingValue("RequireAccountConfirmation", false);
+
+                if (!UserHelper.Register(regModel, requireConfirmation, out message, out token))
                 {
                     ModelState.AddModelError("", message);
                     return View("Index", checkoutModel);
                 }
 
-                UserHelper.OnPostLogon(regModel.Email);
+                if (requireConfirmation)
+                {
+                    var user = string.Format("{0} {1}", regModel.FirstName, regModel.LastName);
+                    var linkUrl = Url.Action("ConfirmAccount", "Account", new { token, username = regModel.Email }, Request.Url.Scheme);
+
+                    if (
+                        UserHelper.SendEmail(linkUrl, user, regModel.Email, "confirm-account",
+                            emailMessage =>
+                            {
+                                //Use default template
+                                emailMessage.Html =
+                                    string.Format(
+                                        "<b>{0}</b> <br/><br/> To confirm your account, click on the following link:<br/> <br/> <a href='{1}'>{1}</a> <br/>",
+                                        user,
+                                        linkUrl);
+
+                                emailMessage.Subject = "Account confirmation";
+                            }))
+                    {
+                        TempData[GetMessageTempKey(MessageType.Success)] = new[]
+                        {
+                            "Your account was succesfully created. To confirm your account follow the instruction received in email.".Localize()
+                        };
+                    }
+                    else
+                    {
+                        TempData[GetMessageTempKey(MessageType.Error)] = new[] { string.Format("Failed to send confirmation email to {0}.".Localize(), regModel.Email) };
+                    }
+
+                }
+                else
+                {
+                    UserHelper.OnPostLogon(regModel.Email);
+                }
+
             }
 
             if (DoCheckout())
@@ -634,6 +670,8 @@ namespace VirtoCommerce.Web.Controllers
             {
                 //Cancel old order
                 order.Status = OrderStatus.Cancelled.ToString();
+                payment.Status = PaymentStatus.Canceled.ToString();
+
                 //Restore cart if order fails
                 Ch.ToCart(order);
 
@@ -778,6 +816,19 @@ namespace VirtoCommerce.Web.Controllers
 
             var form = Ch.OrderForm;
 
+            #region Comment
+
+            var commentProp = form.OrderFormPropertyValues.FirstOrDefault(x => x.Name == "Comment");
+
+            if (commentProp == null)
+            {
+                commentProp = new OrderFormPropertyValue { Name = "Comment" };
+                form.OrderFormPropertyValues.Add(commentProp);
+            }
+            commentProp.LongTextValue = model.Comments;
+            
+            #endregion
+
             #region Process billing address
 
             var billingAddress = Ch.FindAddressByName("Billing");
@@ -912,9 +963,12 @@ namespace VirtoCommerce.Web.Controllers
             {
                 foreach (var lineItem in form.LineItems)
                 {
-                    var shippingMethod = Ch.GetShippingMethods(new List<string> { model.ShippingMethod }).First();
-                    lineItem.ShippingMethodName = shippingMethod.DisplayName;
-                    lineItem.ShippingMethodId = shippingMethod.Id;
+                    var shippingMethod = Ch.GetShippingMethods(new List<string> { model.ShippingMethod }).FirstOrDefault();
+                    if (shippingMethod != null)
+                    {
+                        lineItem.ShippingMethodName = shippingMethod.DisplayName;
+                        lineItem.ShippingMethodId = shippingMethod.Id;
+                    }
                 }
             }
 

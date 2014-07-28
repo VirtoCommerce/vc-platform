@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Marketing.Factories;
 using VirtoCommerce.Foundation.Marketing.Model.DynamicContent;
@@ -57,7 +58,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.Wizard.Impleme
     {
         public ContentPublishingOverviewStepViewModel(IRepositoryFactory<IDynamicContentRepository> repositoryFactory,
             IDynamicContentEntityFactory entityFactory, DynamicContentPublishingGroup item)
-            : base(null, null, repositoryFactory, null, entityFactory, item)
+            : base(null, null, null, repositoryFactory, null, entityFactory, item)
         {
 
         }
@@ -126,7 +127,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.Wizard.Impleme
         public ContentPublishingContentPlacesStepViewModel(
             IRepositoryFactory<IDynamicContentRepository> repositoryFactory,
             IDynamicContentEntityFactory entityFactory, DynamicContentPublishingGroup item)
-            : base(null, null, repositoryFactory, null, entityFactory, item)
+            : base(null, null, null, repositoryFactory, null, entityFactory, item)
         {
 
         }
@@ -194,7 +195,7 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.Wizard.Impleme
         public ContentPublishingDynamicContentStepViewModel(
             IRepositoryFactory<IDynamicContentRepository> repositoryFactory,
             IDynamicContentEntityFactory entityFactory, DynamicContentPublishingGroup item)
-            : base(null, null, repositoryFactory, null, entityFactory, item)
+            : base(null, null, null, repositoryFactory, null, entityFactory, item)
         {
 
         }
@@ -260,13 +261,14 @@ namespace VirtoCommerce.ManagementClient.DynamicContent.ViewModel.Wizard.Impleme
         IContentPublishingConditionsStepViewModel, ISupportWizardPrepare
     {
         public ContentPublishingConditionsStepViewModel(
+            IRepositoryFactory<IAppConfigRepository> appConfigRepositoryFactory,
             IRepositoryFactory<ICountryRepository> countryRepositoryFactory,
             IViewModelsFactory<ISearchCategoryViewModel> searchCategoryVmFactory,
             IRepositoryFactory<IStoreRepository> storeRepositoryFactory,
             IRepositoryFactory<IDynamicContentRepository> repositoryFactory,
             IDynamicContentEntityFactory entityFactory,
             DynamicContentPublishingGroup item)
-            : base(countryRepositoryFactory, searchCategoryVmFactory, repositoryFactory, storeRepositoryFactory, entityFactory, item)
+            : base(appConfigRepositoryFactory, countryRepositoryFactory, searchCategoryVmFactory, repositoryFactory, storeRepositoryFactory, entityFactory, item)
         {
 
         }

@@ -243,6 +243,7 @@
     <Compile Include="DataManagement\Services\DataManagementService.cs" />
     <Compile Include="Frameworks\Extensions\NumberExtensions.cs" />
     <Compile Include="Frameworks\SqlDbConfiguration.cs" />
+    <Compile Include="Orders\Extensions\JurisdictionExtensions.cs" />
     <Compile Include="Orders\Extensions\PaymentMethodExtensions.cs" />
     <Compile Include="Orders\Model\OrderFormPropertyValue.cs" />
     <Compile Include="Orders\Model\OrderFormValueType.cs" />

@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using System.Web;
-using System.Web.Mvc;
 using System.Web.Routing;
-using VirtoCommerce.Client;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Web.Client.Helpers;
 
@@ -34,7 +28,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Constraints
             var encoded = values[parameterName].ToString();
             var decoded = SettingsHelper.SeoDecode(encoded, SeoUrlKeywordTypes.Item, values.ContainsKey(Constants.Language) ? values[Constants.Language] as string : null);
 
-            var item = CartHelper.CatalogClient.GetItem(decoded, bycode: true);
+            var item = CartHelper.CatalogClient.GetItemByCode(decoded, StoreHelper.CustomerSession.CatalogId);
 
             if (item == null)
             {

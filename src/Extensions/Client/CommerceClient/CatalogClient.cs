@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
 using VirtoCommerce.Foundation;
@@ -130,31 +129,22 @@ namespace VirtoCommerce.Client
         /// </summary>
         /// <param name="id">The identifier.</param>
         /// <param name="useCache">if set to <c>true</c> [use cache].</param>
-        /// <param name="bycode">if set to <c>true</c> [bycode].</param>
         /// <returns></returns>
-        public Item GetItem(string id, bool useCache = true, bool bycode = false)
+        public Item GetItem(string id, bool useCache = true)
         {
-            return GetItem(id, ItemResponseGroups.ItemSmall, useCache, bycode);
+            return GetItem(id, ItemResponseGroups.ItemSmall, null, useCache);
         }
 
         /// <summary>
-        /// Gets the item.
+        /// Gets the item by code.
         /// </summary>
-        /// <param name="id">The identifier.</param>
-        /// <param name="responseGroup">The response group.</param>
+        /// <param name="code">The code.</param>
+        /// <param name="catalogId">The catalog identifier.</param>
         /// <param name="useCache">if set to <c>true</c> [use cache].</param>
-        /// <param name="bycode">if set to <c>true</c> [bycode].</param>
         /// <returns></returns>
-        public Item GetItem(string id, ItemResponseGroups responseGroup, bool useCache = true, bool bycode = false)
+        public Item GetItemByCode(string code, string catalogId, bool useCache = true)
         {
-            if (!string.IsNullOrEmpty(id))
-            {
-                var items = bycode ? GetItemsByCode(new[] { id }, useCache, responseGroup) : GetItems(new[] { id }, useCache, responseGroup);
-                if (items != null && items.Any())
-                    return items[0];
-            }
-
-            return null;
+            return GetItem(code, ItemResponseGroups.ItemSmall, catalogId, useCache, true);
         }
 
         /// <summary>
@@ -168,32 +158,40 @@ namespace VirtoCommerce.Client
         /// <returns></returns>
         public Item GetItem(string id, ItemResponseGroups responseGroup, string catalogId, bool useCache = true, bool bycode = false)
         {
-            var item = GetItem(id, responseGroup, useCache, bycode);
+            var items = bycode ? GetItemsByCode(new[] { id }, useCache, responseGroup) : GetItems(new[] { id }, useCache, responseGroup);
 
-            if (item != null)
+            if (items != null && items.Any())
             {
-                if (item.CatalogId == catalogId)
-                    return item;
-
-                var relations = item.CategoryItemRelations.ToArray();
-
-                if (!responseGroup.HasFlag(ItemResponseGroups.ItemCategories))
+                if (string.IsNullOrWhiteSpace(catalogId))
                 {
-                    relations = GetCategoryItemRelations(item.ItemId);
+                    return items[0];
                 }
 
-                foreach (var rel in relations)
+                foreach (var item in items)
                 {
-                    if (rel.CatalogId == catalogId)
+                    if (item.CatalogId == catalogId)
                         return item;
 
-                    var category = GetCategoryById(rel.CategoryId, null);
+                    var relations = item.CategoryItemRelations.ToArray();
 
-                    if (category != null)
+                    if (!responseGroup.HasFlag(ItemResponseGroups.ItemCategories))
                     {
-                        if (category.LinkedCategories.Any(link => link.CatalogId == catalogId))
-                        {
+                        relations = GetCategoryItemRelations(item.ItemId);
+                    }
+
+                    foreach (var rel in relations)
+                    {
+                        if (rel.CatalogId == catalogId)
                             return item;
+
+                        var category = GetCategoryById(rel.CategoryId, null);
+
+                        if (category != null)
+                        {
+                            if (category.LinkedCategories.Any(link => link.CatalogId == catalogId))
+                            {
+                                return item;
+                            }
                         }
                     }
                 }

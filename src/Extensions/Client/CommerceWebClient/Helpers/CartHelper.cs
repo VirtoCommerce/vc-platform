@@ -308,6 +308,7 @@ namespace VirtoCommerce.Web.Client.Helpers
             foreach (var newOf in order.OrderForms)
             {
                 newOf.Name = "Default";
+                newOf.OrderFormPropertyValues.Add(new OrderFormPropertyValue() { ShortTextValue = CustomerSession.Language, Name = "Language" });
                 if (!string.IsNullOrEmpty(CustomerSession.CsrUsername))
                 {
                     //Add order form property CSR username is saved in the order form property called "Purchased By CSR"
@@ -529,7 +530,7 @@ namespace VirtoCommerce.Web.Client.Helpers
 
             if (parent != null)
             {
-                lineItem.DisplayName = String.Format("{0}: {1}", parent.Name, item.Name);
+                lineItem.DisplayName = item.DisplayName(String.Format("{0}: {1}", parent.Name, item.Name));
                 lineItem.ParentCatalogItemId = parent.ItemId;
 
                 //Build options
@@ -549,7 +550,7 @@ namespace VirtoCommerce.Web.Client.Helpers
             }
             else
             {
-                lineItem.DisplayName = item.Name;
+                lineItem.DisplayName = item.DisplayName();
                 lineItem.ParentCatalogItemId = String.Empty;
             }
 

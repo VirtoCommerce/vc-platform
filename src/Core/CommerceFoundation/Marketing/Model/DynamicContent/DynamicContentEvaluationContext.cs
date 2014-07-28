@@ -39,6 +39,17 @@ namespace VirtoCommerce.Foundation.Marketing.Model.DynamicContent
 			return false;
 		}
 
+        public bool IsShopperInLanguage(string languageId)
+        {
+            var id = GetStringValue(ContextFieldConstants.Language);
+            if (!String.IsNullOrEmpty(id))
+            {
+                return string.Equals(id, languageId, StringComparison.Ordinal);
+            }
+
+            return false;
+        }
+
 		public bool IsShopperInCategoryOrSubcategories(string categoryId)
 		{
             var id = GetStringValue(ContextFieldConstants.CategoryId);
