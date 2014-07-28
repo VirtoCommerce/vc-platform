@@ -18,141 +18,151 @@ using catalogModel = VirtoCommerce.Foundation.Catalogs.Model;
 
 namespace VirtoCommerce.ManagementClient.Marketing.ViewModel.Implementations
 {
-	public class CatalogPromotionViewModel : PromotionViewModelBase, ICatalogPromotionViewModel
-	{
-		#region Dependencies
+    public class CatalogPromotionViewModel : PromotionViewModelBase, ICatalogPromotionViewModel
+    {
+        #region Dependencies
 
-		private readonly IRepositoryFactory<ICatalogRepository> _catalogRepositoryFactory;
-		private readonly IRepositoryFactory<IPricelistRepository> _pricelistRepositoryFactory;
+        private readonly IRepositoryFactory<ICatalogRepository> _catalogRepositoryFactory;
+        private readonly IRepositoryFactory<IPricelistRepository> _pricelistRepositoryFactory;
 
-		#endregion
+        private const int TabIndexOverview = 0;
+        private const int TabIndexConditions = 1;
+        #endregion
 
-		#region Constructor
+        #region Constructor
 
-		public CatalogPromotionViewModel(
-			IRepositoryFactory<IAppConfigRepository> appConfigRepositoryFactory,
-			IRepositoryFactory<IMarketingRepository> repositoryFactory,
-			IRepositoryFactory<ICatalogRepository> catalogRepositoryFactory,
-			IRepositoryFactory<IPricelistRepository> pricelistRepositoryFactory,
-			IViewModelsFactory<ISearchCategoryViewModel> searchCategoryVmFactory,
-			IViewModelsFactory<ISearchItemViewModel> searchItemVmFactory,
-			IRepositoryFactory<IShippingRepository> shippingRepositoryFactory,
-			IMarketingEntityFactory entityFactory,
-			INavigationManager navManager,
-			Promotion item)
-			: base(appConfigRepositoryFactory, repositoryFactory, entityFactory, navManager, item, false, searchCategoryVmFactory, searchItemVmFactory, shippingRepositoryFactory)
-		{
-			_catalogRepositoryFactory = catalogRepositoryFactory;
-			_pricelistRepositoryFactory = pricelistRepositoryFactory;
+        public CatalogPromotionViewModel(
+            IRepositoryFactory<IAppConfigRepository> appConfigRepositoryFactory,
+            IRepositoryFactory<IMarketingRepository> repositoryFactory,
+            IRepositoryFactory<ICatalogRepository> catalogRepositoryFactory,
+            IRepositoryFactory<IPricelistRepository> pricelistRepositoryFactory,
+            IViewModelsFactory<ISearchCategoryViewModel> searchCategoryVmFactory,
+            IViewModelsFactory<ISearchItemViewModel> searchItemVmFactory,
+            IRepositoryFactory<IShippingRepository> shippingRepositoryFactory,
+            IMarketingEntityFactory entityFactory,
+            INavigationManager navManager,
+            Promotion item)
+            : base(appConfigRepositoryFactory, repositoryFactory, entityFactory, navManager, item, false, searchCategoryVmFactory, searchItemVmFactory, shippingRepositoryFactory)
+        {
+            _catalogRepositoryFactory = catalogRepositoryFactory;
+            _pricelistRepositoryFactory = pricelistRepositoryFactory;
 
-			ViewTitle = new ViewTitleBase
-				{
+            ViewTitle = new ViewTitleBase
+                {
                     Title = "Promotion",
-					SubTitle =
-						(item != null && !string.IsNullOrEmpty(item.Name))
-							? item.Name.ToUpper(CultureInfo.InvariantCulture)
-							: string.Empty
-				};
-		}
+                    SubTitle =
+                        (item != null && !string.IsNullOrEmpty(item.Name))
+                            ? item.Name.ToUpper(CultureInfo.InvariantCulture)
+                            : string.Empty
+                };
+        }
 
-		public bool IsWizard
-		{
-			get { return !IsSingleDialogEditing; }
-		}
+        public bool IsWizard
+        {
+            get { return !IsSingleDialogEditing; }
+        }
 
 
-		protected CatalogPromotionViewModel(
-			IRepositoryFactory<IAppConfigRepository> appConfigRepositoryFactory,
-			IRepositoryFactory<IMarketingRepository> repositoryFactory,
-			IRepositoryFactory<ICatalogRepository> catalogRepositoryFactory,
-			IRepositoryFactory<IPricelistRepository> pricelistRepositoryFactory,
-			IViewModelsFactory<ISearchCategoryViewModel> searchCategoryVmFactory,
-			IViewModelsFactory<ISearchItemViewModel> searchItemVmFactory,
-			IRepositoryFactory<IShippingRepository> shippingRepositoryFactory,
-			IMarketingEntityFactory entityFactory,
-			Promotion item)
-			: base(appConfigRepositoryFactory, repositoryFactory, entityFactory, null, item, true, searchCategoryVmFactory, searchItemVmFactory, shippingRepositoryFactory)
-		{
-			_catalogRepositoryFactory = catalogRepositoryFactory;
-			_pricelistRepositoryFactory = pricelistRepositoryFactory;
-			IsWizardMode = true;
-		}
+        protected CatalogPromotionViewModel(
+            IRepositoryFactory<IAppConfigRepository> appConfigRepositoryFactory,
+            IRepositoryFactory<IMarketingRepository> repositoryFactory,
+            IRepositoryFactory<ICatalogRepository> catalogRepositoryFactory,
+            IRepositoryFactory<IPricelistRepository> pricelistRepositoryFactory,
+            IViewModelsFactory<ISearchCategoryViewModel> searchCategoryVmFactory,
+            IViewModelsFactory<ISearchItemViewModel> searchItemVmFactory,
+            IRepositoryFactory<IShippingRepository> shippingRepositoryFactory,
+            IMarketingEntityFactory entityFactory,
+            Promotion item)
+            : base(appConfigRepositoryFactory, repositoryFactory, entityFactory, null, item, true, searchCategoryVmFactory, searchItemVmFactory, shippingRepositoryFactory)
+        {
+            _catalogRepositoryFactory = catalogRepositoryFactory;
+            _pricelistRepositoryFactory = pricelistRepositoryFactory;
+            IsWizardMode = true;
+        }
 
-		#endregion
+        #endregion
 
-		#region ICatalogPromotionViewModel Members
+        #region ICatalogPromotionViewModel Members
 
-		public List<catalogModel.CatalogBase> AvailableCatalogs { get; private set; }
+        public List<catalogModel.CatalogBase> AvailableCatalogs { get; private set; }
 
-		public catalogModel.CatalogBase InnerCatalog { get; set; }
+        public catalogModel.CatalogBase InnerCatalog { get; set; }
 
-		#endregion
+        #endregion
 
-		#region Override PromotionViewModelBase Methods
+        #region Override PromotionViewModelBase Methods
 
-		protected override void InitializePropertiesForViewing()
-		{
-			if (!IsWizardMode)
-			{
-				base.InitializePropertiesForViewing();
-				InitializeAvailableCatalogs();
-			}
-		}
+        protected override void InitializePropertiesForViewing()
+        {
+            if (!IsWizardMode)
+            {
+                base.InitializePropertiesForViewing();
+                InitializeAvailableCatalogs();
+            }
+        }
 
-		public override string CatalogId
-		{
-			get
-			{
-				return (InnerItem as CatalogPromotion).CatalogId;
-			}
-		}
+        public override string CatalogId
+        {
+            get
+            {
+                return (InnerItem as CatalogPromotion).CatalogId;
+            }
+        }
 
-		protected override void InitializeExpressionElementBlock()
-		{
-			if (IsWizardMode)
-			{
-				OnUIThread(() =>
-				{
-					ExpressionElementBlock = new CatalogPromotionExpressionBlock(this);
-					InnerItem.PredicateVisualTreeSerialized = SerializationUtil.Serialize(ExpressionElementBlock);
-				});
-			}
-			base.InitializeExpressionElementBlock();
-		}
+        protected override void InitializeExpressionElementBlock()
+        {
+            if (IsWizardMode)
+            {
+                OnUIThread(() =>
+                {
+                    ExpressionElementBlock = new CatalogPromotionExpressionBlock(this);
+                    InnerItem.PredicateVisualTreeSerialized = SerializationUtil.Serialize(ExpressionElementBlock);
+                });
+            }
+            base.InitializeExpressionElementBlock();
+        }
 
-		#endregion
+        #endregion
 
-		#region  Initialize and Update
+        #region  Initialize and Update
 
-		protected void InitializeAvailableCatalogs()
-		{
-			if (AvailableCatalogs == null)
-			{
-				using (var repository = _catalogRepositoryFactory.GetRepositoryInstance())
-				{
-					var pricelistAssignements = _pricelistRepositoryFactory.GetRepositoryInstance().PricelistAssignments.ToList();
+        protected void InitializeAvailableCatalogs()
+        {
+            if (AvailableCatalogs == null)
+            {
+                using (var repository = _catalogRepositoryFactory.GetRepositoryInstance())
+                {
+                    var pricelistAssignements = _pricelistRepositoryFactory.GetRepositoryInstance().PricelistAssignments.ToList();
 
-					var catalogs = repository.Catalogs.OrderBy(catalog => catalog.Name).ToList();
+                    var catalogs = repository.Catalogs.OrderBy(catalog => catalog.Name).ToList();
 
-					var items = catalogs.Where(cat => pricelistAssignements.Any(assignment => assignment.CatalogId == cat.CatalogId)).ToList();
-					items.Insert(0, new catalogModel.Catalog() { CatalogId = null, Name = "Select catalog...".Localize() });
-					OnUIThread(() =>
-					{
-						AvailableCatalogs = items;
-						OnPropertyChanged("AvailableCatalogs");
-					});
-				}
-			}
-		}
+                    var items = catalogs.Where(cat => pricelistAssignements.Any(assignment => assignment.CatalogId == cat.CatalogId)).ToList();
+                    items.Insert(0, new catalogModel.Catalog() { CatalogId = null, Name = "Select catalog...".Localize() });
+                    OnUIThread(() =>
+                    {
+                        AvailableCatalogs = items;
+                        OnPropertyChanged("AvailableCatalogs");
+                    });
+                }
+            }
+        }
 
-		protected override bool IsValidForSave()
-		{
-			return base.IsValidForSave() && (((!IsWizardMode) && ((ExpressionElementBlock is CatalogPromotionExpressionBlock) &&
-							  (ExpressionElementBlock as CatalogPromotionExpressionBlock).GetPromotionRewards().Any() &&
-							  (ExpressionElementBlock as CatalogPromotionExpressionBlock).ConditionBlock.Children.Any())) || IsWizardMode);
-		}
+        protected override bool IsValidForSave()
+        {
+            var result = base.IsValidForSave();
+            var isExpressionValid = IsWizardMode || (ExpressionElementBlock is CatalogPromotionExpressionBlock &&
+                                                    (ExpressionElementBlock as CatalogPromotionExpressionBlock).GetPromotionRewards().Any() &&
+                                                    (ExpressionElementBlock as CatalogPromotionExpressionBlock).ConditionBlock.Children.Any());
 
-		#endregion
+            if (!result)
+                SelectedTabIndex = TabIndexOverview;
+            else if (!isExpressionValid)
+                SelectedTabIndex = TabIndexConditions;
 
-	}
+            return result && isExpressionValid;
+        }
+
+        #endregion
+
+    }
 }
