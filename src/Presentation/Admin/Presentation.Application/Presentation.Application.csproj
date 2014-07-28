@@ -202,9 +202,6 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationFramework" />
     <Reference Include="WindowsFormsIntegration" />
-    <Reference Include="WpfRichText.Ex">
-      <HintPath>..\..\..\..\Shared\WpfRichText.Ex.dll</HintPath>
-    </Reference>
     <Reference Include="WPFToolkit">
       <HintPath>..\..\..\..\packages\WPFToolkit.3.5.50211.1\lib\WPFToolkit.dll</HintPath>
     </Reference>
