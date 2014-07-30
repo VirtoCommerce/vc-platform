@@ -24,26 +24,24 @@
         </CheckBox>
     </DataTemplate>
     <DataTemplate x:Key="titleTemplate">
-        <TextBlock TextTrimming="CharacterEllipsis" ToolTip="{Binding Data.OriginalItem.Title}"
-             Text="{Binding Data.OriginalItem.Title}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
+        <TextBlock ToolTip="{Binding Data.OriginalItem.Title}" Text="{Binding Data.OriginalItem.Title}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
     </DataTemplate>
     <DataTemplate x:Key="createdTemplate">
-        <TextBlock Text="{Binding Data.OriginalItem.Created, StringFormat=R}" TextTrimming="CharacterEllipsis" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
+        <TextBlock Text="{Binding Data.OriginalItem.Created, Converter={StaticResource UtcToLocalDateTimeConverter}}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
     </DataTemplate>
     <DataTemplate x:Key="authorTemplate">
-        <TextBlock TextTrimming="CharacterEllipsis" ToolTip="{Binding Data.OriginalItem.AuthorName}"
+        <TextBlock ToolTip="{Binding Data.OriginalItem.AuthorName}"
              Text="{Binding Data.OriginalItem.AuthorName}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
     </DataTemplate>
     <DataTemplate x:Key="itemTemplate">
-        <TextBlock TextTrimming="CharacterEllipsis" Text="{Binding Data.OriginalItem.ItemName}"
-             Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
+        <TextBlock Text="{Binding Data.OriginalItem.ItemName}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
     </DataTemplate>
     <DataTemplate x:Key="statusTemplate">
         <TextBlock Text="{Binding Data.OriginalItem.Status, Converter={StaticResource reviewStatusConverter}}"
              Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
     </DataTemplate>
     <DataTemplate x:Key="itemTypeTemplate">
-        <TextBlock TextTrimming="CharacterEllipsis" ToolTip="{Binding Data.OriginalItem.ReviewType, Converter={StaticResource reviewTypeConverter}}"
+        <TextBlock ToolTip="{Binding Data.OriginalItem.ReviewType, Converter={StaticResource reviewTypeConverter}}"
              Text="{Binding Data.OriginalItem.ReviewType, Converter={StaticResource reviewTypeConverter}}"
              Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
     </DataTemplate>

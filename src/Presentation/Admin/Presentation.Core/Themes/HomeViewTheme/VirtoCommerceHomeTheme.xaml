@@ -22,6 +22,7 @@
     </ResourceDictionary.MergedDictionaries>
 
     <BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter" />
+    <core_Converters:UtcToLocalDateTimeConverter x:Key="UtcToLocalDateTimeConverter" />
     <core_Converters:ApplicationResourceConverter x:Key="applicationResourceConverter" />
     <core_Converters:TextCaseConverter x:Key="textCaseConverter" />
 
