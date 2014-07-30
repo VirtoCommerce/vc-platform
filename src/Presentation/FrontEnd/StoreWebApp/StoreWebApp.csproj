@@ -438,6 +438,7 @@
     <Content Include="Areas\VirtoAdmin\Content\Images\bg-noise.jpg" />
     <Content Include="Areas\VirtoAdmin\Content\Images\frontend.jpg" />
     <Content Include="Areas\VirtoAdmin\Content\Images\icons\socials-mini.png" />
+    <Content Include="Areas\VirtoAdmin\Content\Images\icons\socials-mobile.png" />
     <Content Include="Areas\VirtoAdmin\Content\Images\icons\socials.png" />
     <Content Include="Areas\VirtoAdmin\Content\Images\InProgress.GIF" />
     <Content Include="Areas\VirtoAdmin\Content\Images\logo.png" />

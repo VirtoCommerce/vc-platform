@@ -20,23 +20,30 @@
 				box-sizing: border-box;
 	}
 
-	header
+	.congratulations
 	{
 		background: url(images/bg-noise.jpg) repeat scroll 0 0;
-		border-bottom: 1px solid #ddd;
-		height: 62px;
+		border-bottom: 2px solid #ddd;
+		padding: 30px 0;
 	}
 
-		.logo
+		.congratulations span
 		{
-			display: inline-block;
+			display: block;
+			font-family: 'Trebuchet MS';
 		}
 
-			.logo img
-			{
-				display: block;
-				margin: 10px 0 0;
-			}
+		.congratulations .title
+		{
+			font-size: 55px;
+			line-height: 80%;
+			text-transform: uppercase;
+		}
+
+		.congratulations .text
+		{
+			font-size: 30px;
+		}
 
 	.main
 	{
@@ -98,19 +105,39 @@
 						height: 137px;
 					}
 
-					.welcome .socials li.in a
+					.welcome .socials li a:hover
 					{
-						background-position: 0 -137px;
-					}
-
-					.welcome .socials li.fb a
-					{
-						background-position: 0 -274px;
+						background-position: 0 100%;
 					}
 
 					.welcome .socials li.tw a
 					{
-						background-position: 0 -411px;
+						background-position: -137px 0;
+					}
+
+					.welcome .socials li.tw a:hover
+					{
+						background-position: -137px 100%;
+					}
+
+					.welcome .socials li.in a
+					{
+						background-position: -274px 0;
+					}
+
+					.welcome .socials li.in a:hover
+					{
+						background-position: -274px 100%;
+					}
+
+					.welcome .socials li.plus a
+					{
+						background-position: -411px 0;
+					}
+
+					.welcome .socials li.plus a:hover
+					{
+						background-position: -411px 100%;
 					}
 
 		.ask
@@ -141,106 +168,84 @@
 				    box-shadow: -2px -2px 0 #b4cee0 inset;
 				}
 
-                .ask p .tag a {
-                    text-decoration: none;
-                    font-weight: normal;
-                }
-
-.congratulations
+.use-links
 		{
 			background: url(images/bg-noise.jpg) repeat scroll 0 0;
-			border: 1px solid #ddd;
-			padding: 30px 0;
+			border-top: 2px solid #ddd;
+			padding: 0 0 35px;
 		}
 
-			.congratulations span
+			.use-links .title
 			{
 				display: block;
-				font-family: 'Trebuchet MS';
-				text-transform: uppercase;
+				font-size: 30px;
+				padding: 30px 0 35px;
+				text-align: center;
 			}
 
-			.congratulations .title
+			.use-links .column
 			{
-				font-size: 48px;
-				line-height: 80%;
+				float: left;
+				margin: 0 1% 0 0;
+				text-align: center;
+				width: 47%;
 			}
 
-			.congratulations .text
+			.use-links .column + .column
 			{
-				font-size: 24px;
+				float: right;
+				margin: 0 0 0 1%;
 			}
 
-		.main-title
-		{
-			margin: 40px 0;
-		}
-
-			.main-title p
-			{
-				font-size: 18px;
-			}
-
-			.demo ul li
-			{
-				display: block;
-			}
-
-			.demo ul li + li
-			{
-				margin: 60px 0 0;
-			}
-
-				.demo ul li figure
+				.use-links .column figure
 				{
-					float: left;
-					width: 310px;
+					border: 2px solid #f9b233;
+					margin: 0 0 25px;
 				}
 
-					.demo ul li figure img
-					{
-						display: inline-block;
-						width: 100%;
-					}
-
-			.demo
-			{
-				margin: 0 0 50px;
-			}
-
-				.demo ul li .info
+				.use-links .column img
 				{
-					padding: 0 0 0 345px;
+					display: block;
+					max-width: 100%;
 				}
 
-					.demo ul li .info .title
+				.use-links .column p
+				{
+					font-size: 15px;
+					margin: 15px 0;
+				}
+
+					.use-links .column p span
 					{
-						font-size: 18px;
-						line-height: 18px;
+						color: #e7302a;
 					}
 
-					.demo ul li .info p
-					{
-						font-size: 14px;
-						line-height: 16px;
-						margin: 15px 0;
-					}
+				.use-links .column .require-ff
+				{
+					background: #f9b233;
+					color: #fff;
+					display: block;
+					font-size: 10px;
+					padding: 10px 15px;
+					text-align: left;
+				}
 
-						.demo ul li .info p span
-						{
-							color: #e7302a;
-						}
+					.use-links .column .require-ff a
+					{
+						color: #fff;
+						font-weight: bold;
+					}
 
 	/* Footer */
 	footer
 	{
-		
+		background: url(images/bg-noise.jpg) repeat scroll 0 0;
 	}
 
 		footer .rubber
 		{
 			border-top: 2px solid #ddd;
-			padding: 15px 10px 80px;
+			padding: 15px 10px;
 		}
 
 		footer .copy
