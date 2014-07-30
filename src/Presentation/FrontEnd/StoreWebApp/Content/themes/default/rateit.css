@@ -1,4 +1,4 @@
-div.rateit {
+.rateit {
     display: -moz-inline-box;
     display: inline-block;
     position: relative;
@@ -11,7 +11,7 @@ div.rateit {
     -webkit-touch-callout: none;
 }
 
-div.rateit div.rateit-range
+.rateit .rateit-range
 {
     position: relative;
     display: -moz-inline-box;
@@ -20,61 +20,65 @@ div.rateit div.rateit-range
     height: 11px;
 }
 
+.rateit .rateit-range * {
+    display:block;
+}
+
 /* for IE 6 */
-* html div.rateit, * html div.rateit div.rateit-range
+* html .rateit, * html .rateit .rateit-range
 {
     display: inline;
 }
 
 /* for IE 7 */
-* + html div.rateit, * + html div.rateit div.rateit-range
+* + html .rateit, * + html .rateit .rateit-range
 {
     display: inline;
 }
 
-div.rateit div.rateit-hover, div.rateit div.rateit-selected
+.rateit .rateit-hover, .rateit .rateit-selected
 {
     position: absolute;
-    left: 0;
+    left: 0px;
 }
 
-div.rateit div.rateit-hover-rtl, div.rateit div.rateit-selected-rtl
+.rateit .rateit-hover-rtl, .rateit .rateit-selected-rtl
 {
     left: auto;
-    right: 0;
+    right: 0px;
 }
 
-div.rateit div.rateit-hover
+.rateit .rateit-hover
 {
     background: url(images/icons/rateit/star.gif) left -22px;
 }
 
-div.rateit div.rateit-hover-rtl
+.rateit .rateit-hover-rtl
 {
     background-position: right -22px;
 }
 
-div.rateit div.rateit-selected
+.rateit .rateit-selected
 {
     background: url(images/icons/rateit/star.gif) left -11px;
 }
 
-div.rateit div.rateit-selected-rtl
+.rateit .rateit-selected-rtl
 {
     background-position: right -11px;
 }
 
-div.rateit div.rateit-preset
+.rateit .rateit-preset
 {
     background: url(images/icons/rateit/star.gif) left -33px;
 }
 
-div.rateit div.rateit-preset-rtl
+.rateit .rateit-preset-rtl
 {
     background: url(images/icons/rateit/star.gif) left -33px;
 }
 
-div.rateit div.rateit-reset
+.rateit button.rateit-reset
 {
     background: url(images/icons/rateit/delete.gif) 0 0;
     width: 16px;
@@ -82,9 +86,12 @@ div.rateit div.rateit-reset
     display: -moz-inline-box;
     display: inline-block;
     float: left;
+    outline: none;
+    border:none;
+    padding: 0;
 }
 
-div.rateit div.rateit-reset:hover
+.rateit button.rateit-reset:hover, .rateit button.rateit-reset:focus
 {
     background-position: 0 -16px;
 }

@@ -419,7 +419,9 @@
     <Compile Include="RegionNames.cs" />
     <Compile Include="Infrastructure\BaseClases\ViewModelBase.cs" />
     <None Include="app.config" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
