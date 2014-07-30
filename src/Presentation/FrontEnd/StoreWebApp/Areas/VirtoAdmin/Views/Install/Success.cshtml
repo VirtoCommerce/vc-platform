@@ -37,14 +37,14 @@
                 <span class="sub-title">Welcome to the Virto Commerce development community!</span>
                 <span class="title">Keep in touch with our team</span>
                 <ul class="socials">
-                    <li class="fb"><a href="https://www.facebook.com/virtocommerce"></a></li>
-                    <li class="tw"><a href="https://twitter.com/VirtoCommerce"></a></li>
-                    <li class="in"><a href="https://www.linkedin.com/groups/Virtocommerce-Users-Group-8116785"></a></li>
-                    <li class="plus"><a href="https://plus.google.com/u/0/110275588520785121043/posts"></a></li>
+                    <li class="fb"><a href="https://www.facebook.com/virtocommerce" target="_blank"></a></li>
+                    <li class="tw"><a href="https://twitter.com/VirtoCommerce" target="_blank"></a></li>
+                    <li class="in"><a href="https://www.linkedin.com/groups/Virtocommerce-Users-Group-8116785" target="_blank"></a></li>
+                    <li class="plus"><a href="https://plus.google.com/u/0/110275588520785121043/posts" target="_blank"></a></li>
                 </ul>
             </div>
             <div class="ask">
-                <p>Ask your questions on <a href="http://stackoverflow.com/"><img src="@Href("../../Content/images/stackoverflow.png")" alt="stackoverfow"></a> tagging with <span class="tag"><a href="http://stackoverflow.com/tags/virtocommerce/info">virtocommerce</a></span></p>
+                <p>Ask your questions on <a href="http://stackoverflow.com/tags/virtocommerce" target="_blank"><img src="@Href("../../Content/images/stackoverflow.png")" alt="stackoverfow"></a> tagging with <span class="tag"><a href="http://stackoverflow.com/tags/virtocommerce" target="_blank">virtocommerce</a></span></p>
             </div>
             <div class="use-links">
                 <div class="rubber clearfix">
@@ -54,13 +54,13 @@
                             <figure>
                                 <img src="@Href("../../Content/images/frontend.jpg")" alt="">
                             </figure>
-                            <a href="@Model.Website" class=" button">Open frontend</a>
+                            <a href="@Model.Website" class="button" target="_blank">Open frontend</a>
                         </div>
                         <div class="column">
                             <figure>
                                 <img src="@Href("../../Content/images/admin.jpg")" alt="">
                             </figure>
-                            <a href="@Model.AdminUrl" class=" button">Open commerce manager</a>
+                            <a href="@Model.AdminUrl" class="button">Open commerce manager</a>
                             <p>
                                 To connect to the store please use: <br />
                                 URL: <span>@Model.Website</span><br />
@@ -69,14 +69,14 @@
                             @if (Request.Browser.Type.ToLower().StartsWith("firefox"))
                             {
                                 <span class="require-ff">
-                                    Firefox browser requires <a href="https://addons.mozilla.org/en-us/firefox/addon/fxclickonce/">ClickOnce add-on</a> to open Commerce Manager application. <br />
+                                    Firefox browser requires <a href="https://addons.mozilla.org/en-us/firefox/addon/fxclickonce/" target="_blank">ClickOnce add-on</a> to open Commerce Manager application. <br />
                                     Or copy and open <a href="@Model.AdminUrl">this link</a> in Internet Explorer.
                                 </span>
                             }
                             @if (Request.Browser.Type.ToLower().StartsWith("chrome") && Request.UserAgent != null && !Request.UserAgent.Contains("OPR/"))
                             {
                                 <span class="require-ff">
-                                    Chrome browser requires <a href="https://chrome.google.com/webstore/detail/clickonce-for-google-chro/eeifaoomkminpbeebjdmdojbhmagnncl">ClickOnce add-on</a> to open Commerce Manager application. <br />
+                                    Chrome browser requires <a href="https://chrome.google.com/webstore/detail/clickonce-for-google-chro/eeifaoomkminpbeebjdmdojbhmagnncl" target="_blank">ClickOnce add-on</a> to open Commerce Manager application. <br />
                                     Or copy and open <a href="@Model.AdminUrl">this link</a> in Internet Explorer.
                                 </span>
                             }
@@ -87,12 +87,12 @@
         </article>
         <footer role="contentinfo">
             <div class="rubber clearfix">
-                <p class="copy">Copyright © 2013 VirtoSoftware. All rights reserved</p>
+                <p class="copy">Copyright © 2014 Virto Commerce. All rights reserved</p>
                 <ul class="socials">
-                    <li class="plus"><a href="https://plus.google.com/u/0/110275588520785121043/posts "></a></li>
-                    <li class="in"><a href="https://www.linkedin.com/groups/Virtocommerce-Users-Group-8116785"></a></li>
-                    <li class="fb"><a href="https://www.facebook.com/virtocommerce"></a></li>
-                    <li class="tw"><a href="https://twitter.com/VirtoCommerce"></a></li>
+                    <li class="plus"><a href="https://plus.google.com/u/0/110275588520785121043/posts" target="_blank"></a></li>
+                    <li class="in"><a href="https://www.linkedin.com/groups/Virtocommerce-Users-Group-8116785" target="_blank"></a></li>
+                    <li class="fb"><a href="https://www.facebook.com/virtocommerce" target="_blank"></a></li>
+                    <li class="tw"><a href="https://twitter.com/VirtoCommerce" target="_blank"></a></li>
                 </ul>
             </div>
         </footer>
