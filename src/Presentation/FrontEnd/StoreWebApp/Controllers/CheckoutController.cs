@@ -343,14 +343,14 @@ namespace VirtoCommerce.Web.Controllers
                 if (shipping.IsCurrent || noShippingMethod && i == 0)
                 {
                     shippingOptionIsDefault = "1";
-                    currentShippingOption = shipping.Method.Name;
+                    currentShippingOption = shipping.Method.ShippingMethodId;
                 }
 
                 ecDetails.FlatRateShippingOptions.Add(new ShippingOptionType
                 {
                     ShippingOptionAmount = new BasicAmountType(currency, FormatMoney(shipping.Price)),
                     ShippingOptionIsDefault = shippingOptionIsDefault,
-                    ShippingOptionName = shipping.Method.Name,
+                    ShippingOptionName = shipping.Method.ShippingMethodId,
                 });
             }
 

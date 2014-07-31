@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Microsoft.Practices.ServiceLocation;
 using System.Web;
 using VirtoCommerce.Foundation.Customers;
@@ -84,6 +85,7 @@ namespace VirtoCommerce.Web.Client.Modules
             get
             {
                 return
+                    !HttpContext.Current.Request.Headers.AllKeys.Any(k=>k.Equals("forcedwebapi", StringComparison.OrdinalIgnoreCase)) &&
                     HttpContext.Current.Request.RequestContext.RouteData.Route != null &&
                     HttpContext.Current.Request.RequestContext.RouteData.Route.GetType()
                         .Name.Equals("HttpWebRoute", StringComparison.OrdinalIgnoreCase);

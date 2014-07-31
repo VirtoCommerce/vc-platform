@@ -35,7 +35,9 @@ namespace VirtoCommerce.Web
 
             if (AppConfigConfiguration.Instance.Setup.IsCompleted)
             {
-                WebApiConfig.Register(GlobalConfiguration.Configuration);
+                //WebApiConfig.Register(GlobalConfiguration.Configuration);
+                GlobalConfiguration.Configure(WebApiConfig.Register);
+
                 FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
                 RouteConfig.RegisterRoutes(RouteTable.Routes);
 

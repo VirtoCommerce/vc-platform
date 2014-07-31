@@ -610,6 +610,7 @@ VirtoCart.prototype = {
                 url: VirtoCommerce.url('/api/cart/estimatepost'),
                 data: data,
                 dataType: 'JSON',
+                headers: {'forcedwebapi':true},
                 success: function (bestShipment)
                 {
                     $("#shippingRow").fadeIn(1000);

@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
+using System.Web.Http.Results;
 using VirtoCommerce.Client;
+using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Reviews.Model;
 using VirtoCommerce.Foundation.Reviews.Repositories;
 using VirtoCommerce.Web.Client.Extensions.Filters;
-using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Virto.Helpers;
 
@@ -171,11 +170,11 @@ namespace VirtoCommerce.Web.Controllers.Api
         /// <returns>HttpResponseMessage.</returns>
         [ActionName("vote")]
         [HttpPost]
-        public HttpResponseMessage VoteProductReview(VoteParameters voteParams)
+        public IHttpActionResult VoteProductReview(VoteParameters voteParams)
         {
             if (!ModelState.IsValid)
             {
-                return Request.CreateResponse(HttpStatusCode.BadRequest);
+                return new InvalidModelStateResult(ModelState, this);
             }
 
             dynamic entity = voteParams.IsReview
@@ -185,29 +184,21 @@ namespace VirtoCommerce.Web.Controllers.Api
 
             if (entity == null)
             {
-                var response = Request.CreateResponse(HttpStatusCode.NotFound);
-                response.Content = new StringContent("Entity with given id not found".Localize());
-                return response;
+                return NotFound();
             }
 
             if (entity.AuthorId == UserHelper.CustomerSession.CustomerId)
             {
-                var response = Request.CreateResponse(HttpStatusCode.NotFound);
-                response.Content =
-                    new StringContent(string.Format("You cannot vote for your own {0}".Localize(),
+                return BadRequest(string.Format("You cannot vote for your own {0}".Localize(),
                                                     voteParams.IsReview ? "review" : "comment"));
-                return response;
             }
 
             if (_repository.ReportHelpfulElements.Any(rh => rh.AuthorId == UserHelper.CustomerSession.CustomerId &&
                                                             (voteParams.IsReview && rh.ReviewId == voteParams.Id ||
                                                              rh.CommentId == voteParams.Id)))
             {
-                var response = Request.CreateResponse(HttpStatusCode.NotFound);
-                response.Content =
-                    new StringContent(string.Format("You may only submit one vote per {0}".Localize(),
+                return BadRequest(string.Format("You may only submit one vote per {0}".Localize(),
                                                     voteParams.IsReview ? "review." : "comment."));
-                return response;
             }
 
             if (voteParams.Like)
@@ -235,14 +226,12 @@ namespace VirtoCommerce.Web.Controllers.Api
                 _repository.Add(helpful);
                 _repository.UnitOfWork.Commit();
             }
-            catch (Exception)
+            catch
             {
-                var response = Request.CreateResponse(HttpStatusCode.NotFound);
-                response.Content = new StringContent("Error while saving data to database.".Localize());
-                return response;
+                return BadRequest("Error while saving data to database.".Localize());
             }
 
-            return Request.CreateResponse(HttpStatusCode.OK);
+            return Ok("ok");
         }
 
         /// <summary>
@@ -253,7 +242,7 @@ namespace VirtoCommerce.Web.Controllers.Api
         [ActionName("comment")]
         [HttpPut]
         [ModelValidationFilter]
-        public HttpResponseMessage AddReviewComment(AddCommentParameters commentParams)
+        public IHttpActionResult AddReviewComment(AddCommentParameters commentParams)
         {
             if (ModelState.IsValid)
             {
@@ -261,9 +250,7 @@ namespace VirtoCommerce.Web.Controllers.Api
 
                 if (productreview == null)
                 {
-                    var response = Request.CreateResponse(HttpStatusCode.NotFound);
-                    response.Content = new StringContent("Review with given id not found".Localize());
-                    return response;
+                    return NotFound();
                 }
 
                 try
@@ -283,27 +270,26 @@ namespace VirtoCommerce.Web.Controllers.Api
 
                     _repository.Update(productreview);
                     _repository.UnitOfWork.Commit();
-                    return Request.CreateResponse(HttpStatusCode.OK, new MReviewComment
+
+                    return Ok(new MReviewComment
+                    {
+                        Comment = reviewComment.Comment,
+                        CreatedDateTime = reviewComment.Created,
+                        Id = reviewComment.ReviewCommentId,
+                        Reviewer = new MReviewer
                         {
-                            Comment = reviewComment.Comment,
-                            CreatedDateTime = reviewComment.Created,
-                            Id = reviewComment.ReviewCommentId,
-                            Reviewer = new MReviewer
-                                {
-                                    Address = reviewComment.AuthorLocation,
-                                    Id = reviewComment.AuthorId,
-                                    NickName = reviewComment.AuthorName
-                                }
-                        });
+                            Address = reviewComment.AuthorLocation,
+                            Id = reviewComment.AuthorId,
+                            NickName = reviewComment.AuthorName
+                        }
+                    });
                 }
                 catch
                 {
-                    var response = Request.CreateResponse(HttpStatusCode.NotFound);
-                    response.Content = new StringContent("Error while saving data to database.".Localize());
-                    return response;
+                    return BadRequest("Error while saving data to database.".Localize());
                 }
             }
-            return Request.CreateResponse(HttpStatusCode.BadRequest);
+            return BadRequest();
         }
 
         /// <summary>
@@ -315,11 +301,11 @@ namespace VirtoCommerce.Web.Controllers.Api
         [HttpPut]
         [Authorize]
         [ModelValidationFilter]
-        public HttpResponseMessage AddReview(MReview review)
+        public IHttpActionResult AddReview(MReview review)
         {
             if (!ModelState.IsValid)
             {
-                return Request.CreateResponse(HttpStatusCode.BadRequest);
+                return new InvalidModelStateResult(ModelState, this);
             }
             try
             {
@@ -368,13 +354,11 @@ namespace VirtoCommerce.Web.Controllers.Api
 
                 _repository.Add(dbReviewreview);
                 _repository.UnitOfWork.Commit();
-                return Request.CreateResponse(HttpStatusCode.OK);
+                return Ok("ok");
             }
             catch (Exception ex)
             {
-                var response = Request.CreateResponse(HttpStatusCode.NotFound);
-                response.Content = new StringContent("Error while saving data to database.".Localize() + " " + ex.Message);
-                return response;
+                return BadRequest("Error while saving data to database.".Localize() + " " + ex.Message);
             }
         }
 
@@ -387,7 +371,7 @@ namespace VirtoCommerce.Web.Controllers.Api
         [ActionName("reportabuse")]
         [HttpPut]
         [ModelValidationFilter]
-        public HttpResponseMessage ReportAbuse(MReportAbuse abuse)
+        public IHttpActionResult ReportAbuse(MReportAbuse abuse)
         {
             if (ModelState.IsValid)
             {
@@ -405,16 +389,14 @@ namespace VirtoCommerce.Web.Controllers.Api
 
                     _repository.Add(abuseEl);
                     _repository.UnitOfWork.Commit();
-                    return Request.CreateResponse(HttpStatusCode.OK);
+                    return Ok("ok");
                 }
                 catch
                 {
-                    var response = Request.CreateResponse(HttpStatusCode.NotFound);
-                    response.Content = new StringContent("Error while saving data to database.".Localize());
-                    return response;
+                    return BadRequest("Error while saving data to database.".Localize());
                 }
             }
-            return Request.CreateResponse(HttpStatusCode.BadRequest);
+            return BadRequest();
         }
     }
 }
