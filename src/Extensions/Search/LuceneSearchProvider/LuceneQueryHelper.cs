@@ -21,29 +21,34 @@ namespace VirtoCommerce.Search.Providers.Lucene
     public class LuceneQueryHelper
     {
         #region Public Methods and Operators
+
         /// <summary>
-        ///     Converts to searchable.
+        /// Converts to searchable.
         /// </summary>
         /// <param name="value">The value.</param>
+        /// <param name="tryConvertToNumber">if set to <c>true</c> [try convert to number].</param>
         /// <returns></returns>
-        public static string ConvertToSearchable(object value)
+        public static string ConvertToSearchable(object value, bool tryConvertToNumber = true)
         {
             if (value == null || String.IsNullOrEmpty(value.ToString()))
             {
                 return String.Empty;
             }
 
-            decimal decimalVal = 0;
-            var intVal = 0;
+            if (tryConvertToNumber)
+            {
+                decimal decimalVal;
+                int intVal;
 
-            // Try converting to a known type
-            if (Decimal.TryParse(value.ToString(), out decimalVal))
-            {
-                value = decimalVal;
-            }
-            else if (Int32.TryParse(value.ToString(), out intVal))
-            {
-                value = intVal;
+                // Try converting to a known type
+                if (Decimal.TryParse(value.ToString(), out decimalVal))
+                {
+                    value = decimalVal;
+                }
+                else if (Int32.TryParse(value.ToString(), out intVal))
+                {
+                    value = intVal;
+                }
             }
 
             if (value is string)
@@ -255,7 +260,7 @@ namespace VirtoCommerce.Search.Providers.Lucene
         {
             object val = value.Value;
             var query = new TermsFilter();
-            query.AddTerm(new Term(field, ConvertToSearchable(val)));
+            query.AddTerm(new Term(field, ConvertToSearchable(val, false)));
             return query;
         }
 
