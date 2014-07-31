@@ -182,7 +182,6 @@
     <EmbeddedResource Include="AppConfig\Data\Setting.sql" />
     <EmbeddedResource Include="AppConfig\Data\SettingValue.sql" />
     <EmbeddedResource Include="AppConfig\Data\SystemJob.sql" />
-    <EmbeddedResource Include="AppConfig\Data\Statistic.sql" />
     <EmbeddedResource Include="AppConfig\Data\DisplayTemplateMapping.sql" />
     <EmbeddedResource Include="AppConfig\Data\EmailTemplate.sql" />
     <EmbeddedResource Include="AppConfig\Data\EmailTemplateLanguage.sql" />
