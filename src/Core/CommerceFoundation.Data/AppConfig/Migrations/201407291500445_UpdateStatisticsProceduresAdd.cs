@@ -8,7 +8,7 @@ namespace VirtoCommerce.Foundation.Data.AppConfig.Migrations
         {
             // procedure for single Statistic row update
             Sql(@"
-ALTER PROCEDURE [dbo].[UpdateStatistic]
+CREATE PROCEDURE [dbo].[UpdateStatistic]
 	@Key nvarchar(32),
 	@Value nvarchar(64),
 	@Name nvarchar(64) = NULL
@@ -25,7 +25,7 @@ BEGIN
 END");
             // main procedure for all Statistics update
             Sql(@"
-ALTER PROCEDURE [dbo].[UpdateStatistics]
+CREATE PROCEDURE [dbo].[UpdateStatistics]
 AS
 BEGIN
     -- SET NOCOUNT ON added to prevent extra result sets from interfering with SELECT statements.
