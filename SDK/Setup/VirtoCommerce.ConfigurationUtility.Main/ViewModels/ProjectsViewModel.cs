@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Microsoft.Practices.Prism.Commands;
@@ -116,10 +117,21 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels
 		{
 			if (Uri.IsWellFormedUriString(SelectedProject.BrowseUrl, UriKind.Absolute))
 			{
-				var url = string.Format("storeurl={0}", SelectedProject.BrowseUrl);
 				var directory = Path.GetDirectoryName(typeof(ProjectsViewModel).Assembly.Location);
 				var resourcesDir = Path.GetFullPath(Path.Combine(directory, @"..\Resources"));
-				Process.Start(String.Format("{0}\\VirtoCommerceManager.appref-ms", resourcesDir), url);
+
+				// arguments can be passed through shortcut (.appref-ms) files only
+				var shortcutPath = Path.Combine(resourcesDir, "VirtoCommerceManager.appref-ms");
+				if (!File.Exists(shortcutPath))
+				{
+					// Create a shortcut file.
+					var uri = new Uri(resourcesDir + "/Admin/VirtoCommerce.application"); 
+					var createText = uri.AbsoluteUri + "#VirtoCommerce.application, Culture=neutral, PublicKeyToken=daec1fcaccc0d1ab, processorArchitecture=msil";
+					File.WriteAllText(shortcutPath, createText, Encoding.Unicode);
+				}
+
+				var url = string.Format("storeurl={0}", SelectedProject.BrowseUrl);
+				Process.Start(shortcutPath, url);
 			}
 		}
 

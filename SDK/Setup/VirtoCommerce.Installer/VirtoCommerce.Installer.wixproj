@@ -60,7 +60,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Distro\VirtoCommerceManager.appref-ms" />
     <Content Include="local.cmd" />
     <Content Include="Shared.wxi" />
   </ItemGroup>

@@ -68,7 +68,7 @@
             Target="[INSTALLFOLDER_SDK]\Configuration\ConfigurationWizard.exe"
                   WorkingDirectory="INSTALLFOLDER_SDK"/>
         <util:InternetShortcut Id="OnlineDocumentationShortcut" Name="Online Documentation &amp; Support" Target="http://support.virtocommerce.com/"/>        
-        <Shortcut Id="SutupAdminShortcut" 
+        <Shortcut Id="SetupAdminShortcut" 
              Name="Configure Commerce Manager"
            Description="Installs Commerce Manager"
             Target="[INSTALLFOLDER_SDK]\Resources\Admin\setup.exe"
@@ -156,11 +156,11 @@
       <ComponentGroupRef Id="Database"/>
       <ComponentGroupRef Id="Catalog"/>
       <ComponentGroupRef Id="Admin"/>
-      <Component Id="VirtoCommerceManager" Guid="1DF2C2F4-87D0-434E-931C-ACF2B65FDCF7">
+
+		<!--
+	  <Component Id="VirtoCommerceManager" Guid="1DF2C2F4-87D0-434E-931C-ACF2B65FDCF7">
         <File Id="VirtoCommerceManager" Source="$(var.DistroDataFolder)\VirtoCommerceManager.appref-ms" Checksum="yes" KeyPath="yes" Vital="yes" />
       </Component>
-
-      <!--
       <Component Id="ZipTool" Guid="F69FE661-F34F-4EA8-A116-BF789E6C20AE">
         <File Id="SevenZip" Source="C:\Program Files\7-zip\7za.exe" Checksum="yes" KeyPath="yes" Vital="yes" />
       </Component>
