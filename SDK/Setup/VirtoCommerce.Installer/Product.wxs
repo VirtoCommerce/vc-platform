@@ -69,9 +69,9 @@
                   WorkingDirectory="INSTALLFOLDER_SDK"/>
         <util:InternetShortcut Id="OnlineDocumentationShortcut" Name="Online Documentation &amp; Support" Target="http://support.virtocommerce.com/"/>        
         <Shortcut Id="SetupAdminShortcut" 
-             Name="Configure Commerce Manager"
-           Description="Installs Commerce Manager"
-            Target="[INSTALLFOLDER_SDK]\Resources\Admin\setup.exe"
+             Name="Configure and run Commerce Manager"
+           Description="Runs Commerce Manager"
+            Target="[INSTALLFOLDER_SDK]\Resources\Admin\VirtoCommerce.application"
                   WorkingDirectory="INSTALLFOLDER_SDK"/>   
         <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
         <RegistryValue Root="HKCU" Key="Software\Microsoft\VirtoCommerce" Name="installed" Type="integer" Value="1" KeyPath="yes"/>

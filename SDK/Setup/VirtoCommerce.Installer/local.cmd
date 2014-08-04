@@ -18,7 +18,7 @@ cmd.exe /c robocopy "../../Setup\VirtoCommerce.ConfigurationUtility.Application\
 cmd.exe /c robocopy "..\..\..\src\Extensions\Setup\VirtoCommerce.PowerShell" "%TEMP%\Database" *.sql /mir
 
 ECHO create admin temp
-cmd.exe /c robocopy "../../../src/Presentation/Admin/Presentation.Application/bin/Debug/app.publish " "%TEMP%\Admin" /mir
+cmd.exe /c robocopy "../../../src/Presentation/Admin/Presentation.Application/bin/Debug/app.publish " "%TEMP%\Admin" /mir /xf *.exe
 
 if [%1]==[] goto End
 
