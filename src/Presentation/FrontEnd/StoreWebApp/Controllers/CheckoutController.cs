@@ -650,6 +650,15 @@ namespace VirtoCommerce.Web.Controllers
                                     {
                                         Ch.RunWorkflow("ShoppingCartCheckoutWorkflow", order);
                                         Ch.OrderRepository.UnitOfWork.Commit();
+
+                                        //Send email
+                                        var recipientAddress = order.OrderAddresses.FirstOrDefault(oa => oa.OrderAddressId == order.AddressId);
+                                        if (recipientAddress != null)
+                                        {
+                                            IDictionary<string, object> context = new Dictionary<string, object> { { "order", order } };
+                                            UserHelper.SendEmail(context, recipientAddress.Email, "order-confirmation");
+                                        }
+
                                         return RedirectToAction("ProcessCheckout", "Checkout",
                                             new {id = order.OrderGroupId});
                                     }
