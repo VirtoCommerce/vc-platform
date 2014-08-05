@@ -8,7 +8,7 @@ namespace VirtoCommerce.Web
     /// </summary>
 	public class BundleConfig
 	{
-        public const string VirtoAdminStyles = "~/Content/VirtoAdmin/styles";
+        public const string VirtoAdminStyles = "~/Areas/VirtoAdmin/Content/styles";
 
 		// For more information on Bundling, visit http://go.microsoft.com/fwlink/?LinkId=254725
         /// <summary>
