@@ -3,281 +3,281 @@
     <Fragment>
         <DirectoryRef Id="INSTALLFOLDER_SDK">
             <Directory Id="dir4515186F820BC99A806C3FE759091C3A" Name="Configuration">
-                <Component Id="cmp75E6B823DFF8C93BA890D9CB2AB93C55" Guid="{7F07E587-9702-4F57-B180-990A00309436}">
+                <Component Id="cmp75E6B823DFF8C93BA890D9CB2AB93C55" Guid="{94E42EB6-C6ED-4A8F-95D2-0D68CC354797}">
                     <File Id="filF5ED7C33FEF504EC7EDADD7FCBD31E81" KeyPath="yes" Source="$(var.ConfigSourcePath)\ConfigurationWizard.exe" />
                 </Component>
-                <Component Id="cmpC8B7AF0DF6FA3D3F07C297F92DEA9E4A" Guid="{F7AB6158-02F0-4E83-8FAE-B1B4F5668CF8}">
+                <Component Id="cmpC8B7AF0DF6FA3D3F07C297F92DEA9E4A" Guid="{144D2055-F295-4EB4-9C50-BB7D585B8621}">
                     <File Id="filFD972B84BA814838711F531A2E4B752E" KeyPath="yes" Source="$(var.ConfigSourcePath)\ConfigurationWizard.exe.config" />
                 </Component>
-                <Component Id="cmp1A59C99605D8C0BB38444396ABC83E79" Guid="{4DD6EB5C-B2E4-4127-8CF9-192387304CD5}">
+                <Component Id="cmp1A59C99605D8C0BB38444396ABC83E79" Guid="{19A5EB1C-1D82-4A6F-809A-44503224FE63}">
                     <File Id="filE286562F96D74DEFD1CA05170343D449" KeyPath="yes" Source="$(var.ConfigSourcePath)\EntityFramework.dll" />
                 </Component>
-                <Component Id="cmp006D6FBE166B79E3EE3397E371971196" Guid="{7B72744C-2820-44E1-8672-196355492302}">
+                <Component Id="cmp006D6FBE166B79E3EE3397E371971196" Guid="{23B456C7-E300-446C-903C-AF1060552DAB}">
                     <File Id="fil21B326F0D982C0DAFE595278523DD328" KeyPath="yes" Source="$(var.ConfigSourcePath)\EntityFramework.SqlServer.dll" />
                 </Component>
-                <Component Id="cmpD07DF0C489B2CC0636907B525E582FA4" Guid="{28247F6D-1618-4DA1-B568-E5E60D5BC0CC}">
+                <Component Id="cmpD07DF0C489B2CC0636907B525E582FA4" Guid="{DD10AF24-CCAD-4BB0-B981-1FB09D16D41D}">
                     <File Id="fil142A52D03162E5BDD83B8BDF8B403EA8" KeyPath="yes" Source="$(var.ConfigSourcePath)\ExpressionSerialization.dll" />
                 </Component>
-                <Component Id="cmp54DDDCACFC7D71ED7E3942D38631CCE1" Guid="{13695375-1D30-4AE6-BFDE-731818ABAE2D}">
+                <Component Id="cmp54DDDCACFC7D71ED7E3942D38631CCE1" Guid="{0BF9CC37-EB46-4196-B696-DD9C7EE0635E}">
                     <File Id="fil75BC224A6BA5F00C695ED476949934C9" KeyPath="yes" Source="$(var.ConfigSourcePath)\Lucene.Net.Contrib.Queries.dll" />
                 </Component>
-                <Component Id="cmp11E7F7287DF09433F2C8A57AB17014D3" Guid="{1A720EA5-3F7A-4F98-9B81-00B75240D650}">
+                <Component Id="cmp11E7F7287DF09433F2C8A57AB17014D3" Guid="{CADE8AD2-2BD0-4EDB-92F5-173DE3633103}">
                     <File Id="fil509C8AEA6D0A26851BDCCDD36A95BE7D" KeyPath="yes" Source="$(var.ConfigSourcePath)\Lucene.Net.Contrib.SpellChecker.dll" />
                 </Component>
-                <Component Id="cmp297E014D29523C6041295799982D64FF" Guid="{60D6BB4C-1EC9-47E6-ADE7-360A7CE4623B}">
+                <Component Id="cmp297E014D29523C6041295799982D64FF" Guid="{269D8CC4-3E67-49BF-8DD0-F8BC265E51B8}">
                     <File Id="filBFA071C857166D7104E8A83572E45E0B" KeyPath="yes" Source="$(var.ConfigSourcePath)\Lucene.Net.dll" />
                 </Component>
-                <Component Id="cmp27E3BD5C6967000CD158DF5367E8A05B" Guid="{A8B2A5B8-B273-4AC7-86E5-51614AD53515}">
+                <Component Id="cmp27E3BD5C6967000CD158DF5367E8A05B" Guid="{666620B7-C887-4C07-BA99-A46167EAD60F}">
                     <File Id="fil6C47C2A4248DE694E273C7E1944B00B7" KeyPath="yes" Source="$(var.ConfigSourcePath)\Microsoft.Data.Edm.dll" />
                 </Component>
-                <Component Id="cmp37B1ECC3E58C617427442B1236833CAE" Guid="{801488A9-C632-4633-AE19-7B600925A4BF}">
+                <Component Id="cmp37B1ECC3E58C617427442B1236833CAE" Guid="{C806BD33-7255-480B-95B7-FA7E872B8036}">
                     <File Id="fil181128EFCB7566D26CEA0483B9013315" KeyPath="yes" Source="$(var.ConfigSourcePath)\Microsoft.Data.OData.dll" />
                 </Component>
-                <Component Id="cmp5345AF8D090985BD50E13F0C6D6B268A" Guid="{FDAC802E-BFE1-496C-86D7-E5B098295D57}">
+                <Component Id="cmp5345AF8D090985BD50E13F0C6D6B268A" Guid="{66856077-F043-48F2-898D-DC19B10923CB}">
                     <File Id="fil397AF87D95C54FFF528BF15960251661" KeyPath="yes" Source="$(var.ConfigSourcePath)\Microsoft.Data.Services.Client.dll" />
                 </Component>
-                <Component Id="cmpDB68F832EF9BACA3B607B3D939C9C806" Guid="{5BFBBD0F-3CA8-40D0-BF56-53779965CE56}">
+                <Component Id="cmpDB68F832EF9BACA3B607B3D939C9C806" Guid="{F43A24EB-D71E-4650-8994-00E623C10A98}">
                     <File Id="fil3BBDE1F6E3586BF025BEE6E1650598BF" KeyPath="yes" Source="$(var.ConfigSourcePath)\Microsoft.Data.Services.dll" />
                 </Component>
-                <Component Id="cmp4ABD1AE9AE03BD39C4A27447D9196D72" Guid="{CC67C0C4-51FF-48C2-973D-5038264DE4AA}">
+                <Component Id="cmp4ABD1AE9AE03BD39C4A27447D9196D72" Guid="{834DA66D-570D-4A58-8AAD-55CD45986CBC}">
                     <File Id="fil353E53AB8970DE651AB595E732ABD3CC" KeyPath="yes" Source="$(var.ConfigSourcePath)\Microsoft.Expression.Interactions.dll" />
                 </Component>
-                <Component Id="cmp726C2C4F998760FD2CF12372C6F3A37A" Guid="{A4C16426-4052-4553-8468-96458815694C}">
+                <Component Id="cmp726C2C4F998760FD2CF12372C6F3A37A" Guid="{C9C89D73-1E21-4309-AB3A-9A1ED670727A}">
                     <File Id="fil18D7F7EC41DAB13EA2854135C0E6E71A" KeyPath="yes" Source="$(var.ConfigSourcePath)\Microsoft.OData.EntityFrameworkProvider.dll" />
                 </Component>
-                <Component Id="cmp38232351F15ED8194EF75D7C36031DBB" Guid="{76CCE930-6FC1-4026-AE7D-FE86A78AB35E}">
+                <Component Id="cmp38232351F15ED8194EF75D7C36031DBB" Guid="{B0B0F98A-A6D2-4B6F-AF00-C63A98474F86}">
                     <File Id="fil3692FE25331B93A59FD5D0ED14571BAF" KeyPath="yes" Source="$(var.ConfigSourcePath)\Microsoft.Practices.Prism.dll" />
                 </Component>
-                <Component Id="cmp3A1EE513048A650552B19A467871D518" Guid="{10996695-C70F-4599-BFC8-0557B42BE26C}">
+                <Component Id="cmp3A1EE513048A650552B19A467871D518" Guid="{BBD1476D-2C1D-4560-AE82-A47F7DB3DBD8}">
                     <File Id="fil9387D9F510BE9EF324E37BB738446B2F" KeyPath="yes" Source="$(var.ConfigSourcePath)\Microsoft.Practices.Prism.Interactivity.dll" />
                 </Component>
-                <Component Id="cmpFAC84156ED7D8476F722857D4B784C7F" Guid="{F0356B8B-A065-45BA-A4AC-00A357813CAB}">
+                <Component Id="cmpFAC84156ED7D8476F722857D4B784C7F" Guid="{8F80B3F9-2FA6-48CC-B720-28472B0D4FAB}">
                     <File Id="fil04D97EE7A96E665663E08DCEBA2B6DEE" KeyPath="yes" Source="$(var.ConfigSourcePath)\Microsoft.Practices.Prism.UnityExtensions.dll" />
                 </Component>
-                <Component Id="cmp16F56DA74DE6C9A29B38C6AF0765CAC5" Guid="{78EB80EE-C805-4704-B28B-CE17120B6C25}">
+                <Component Id="cmp16F56DA74DE6C9A29B38C6AF0765CAC5" Guid="{41B73161-ED1E-4E50-834D-68180C9B8926}">
                     <File Id="fil7CD265F5CACB64F4CB6FD702D0DFFE12" KeyPath="yes" Source="$(var.ConfigSourcePath)\Microsoft.Practices.ServiceLocation.dll" />
                 </Component>
-                <Component Id="cmpA0D5130C5D82481A7FD236B4F4A9901A" Guid="{106807AA-BED2-46E3-BAAE-5771401A887D}">
+                <Component Id="cmpA0D5130C5D82481A7FD236B4F4A9901A" Guid="{EDF7838A-85CE-44FF-A44A-6E3A209EB0B2}">
                     <File Id="fil905A3FF04DDF7EA0CD6BDB645A5ABBC5" KeyPath="yes" Source="$(var.ConfigSourcePath)\Microsoft.Practices.Unity.Configuration.dll" />
                 </Component>
-                <Component Id="cmp1F67467BC33E77E8C7F4491AF3FE8C22" Guid="{1666DF8D-0B08-45E7-B883-9D685AB2B7E2}">
+                <Component Id="cmp1F67467BC33E77E8C7F4491AF3FE8C22" Guid="{73BE51FE-AC7E-49EE-8349-3EF5C86D70C5}">
                     <File Id="filC6ADF70C166C73FF50B019F77D5E0C8F" KeyPath="yes" Source="$(var.ConfigSourcePath)\Microsoft.Practices.Unity.dll" />
                 </Component>
-                <Component Id="cmpF15F0D9D5E8A964FCBB143DEFF99EAB8" Guid="{E477E8E0-79AF-45DA-9B1E-5954BC986FD3}">
+                <Component Id="cmpF15F0D9D5E8A964FCBB143DEFF99EAB8" Guid="{1B1C57C5-103B-4FE9-AD89-DCE467C09AAB}">
                     <File Id="filC02EEE31995BC4E6A157184E60C61CD2" KeyPath="yes" Source="$(var.ConfigSourcePath)\Microsoft.Practices.Unity.RegistrationByConvention.dll" />
                 </Component>
-                <Component Id="cmp05863A33BA013ECC248380C9E3550E7C" Guid="{2367073B-D183-4423-9439-559CA74E61E2}">
+                <Component Id="cmp05863A33BA013ECC248380C9E3550E7C" Guid="{00B4A670-D5B0-4326-BA83-C36B4BBB76A9}">
                     <File Id="fil0BC4E717A78CBB67AD1D87048ED7C0F8" KeyPath="yes" Source="$(var.ConfigSourcePath)\Microsoft.WindowsAzure.Configuration.dll" />
                 </Component>
-                <Component Id="cmp8E0F2885006C77E0B530CF2F765EE5BD" Guid="{8E87BEC2-BDA8-46BA-9E65-E3C260BA8245}">
+                <Component Id="cmp8E0F2885006C77E0B530CF2F765EE5BD" Guid="{2353EAE9-4B1C-4EAE-A583-51490558E967}">
                     <File Id="filB053571504CCC5027FBB09F691CB1548" KeyPath="yes" Source="$(var.ConfigSourcePath)\Newtonsoft.Json.dll" />
                 </Component>
-                <Component Id="cmp02D30CF07B9E38574073485529F1AD1A" Guid="{AB802F58-9762-4628-953A-7F617834E698}">
+                <Component Id="cmp02D30CF07B9E38574073485529F1AD1A" Guid="{2AC9768D-20D6-4E2F-A5C6-A1227331C914}">
                     <File Id="fil1D1FC3C0E586EBACD499A6C9312B793B" KeyPath="yes" Source="$(var.ConfigSourcePath)\Omu.ValueInjecter.dll" />
                 </Component>
-                <Component Id="cmpB1D07B389FEE0BCDDAE8B76C383C7968" Guid="{E0023A87-E0B7-4D3D-A43B-633DFB525BA8}">
+                <Component Id="cmpB1D07B389FEE0BCDDAE8B76C383C7968" Guid="{177BC3F0-956C-4DF5-8F23-D5E076CFF986}">
                     <File Id="fil7FECE42C62FCDD537F69A952A0B769E7" KeyPath="yes" Source="$(var.ConfigSourcePath)\PlainElastic.Net.dll" />
                 </Component>
-                <Component Id="cmp2991C14DD25F9678C0C08A4A1BDA144A" Guid="{44153C7E-1014-491D-A25E-9122D25622BB}">
+                <Component Id="cmp2991C14DD25F9678C0C08A4A1BDA144A" Guid="{1C92BD40-3320-4C46-833D-89670D2C1430}">
                     <File Id="fil04112ED950E1D67DBCAD7F734DAD1EA7" KeyPath="yes" Source="$(var.ConfigSourcePath)\System.Spatial.dll" />
                 </Component>
-                <Component Id="cmp6F8092FDA861266F76FE0EB615B974EC" Guid="{3D217CBE-4C8C-4659-BB13-E106461D644C}">
+                <Component Id="cmp6F8092FDA861266F76FE0EB615B974EC" Guid="{98832969-B9DB-4A77-A27D-BE2D51629C44}">
                     <File Id="fil179EE0819EC73CE64394606FE71B5607" KeyPath="yes" Source="$(var.ConfigSourcePath)\System.Windows.Interactivity.dll" />
                 </Component>
-                <Component Id="cmpD5B3C273ACEA517A1975FD7CC44DEA75" Guid="{275213F8-E818-4859-B2B8-1904666C4FE7}">
+                <Component Id="cmpD5B3C273ACEA517A1975FD7CC44DEA75" Guid="{8BC55F1E-37E5-4C0A-B567-6645DF5F8B0F}">
                     <File Id="fil5F76E4C8DB5DA018FCD693D368CD07BF" KeyPath="yes" Source="$(var.ConfigSourcePath)\VirtoCommerce.Caching.HttpCache.dll" />
                 </Component>
-                <Component Id="cmp9AE63B6EDC93527F0513F36845D4C893" Guid="{7A805516-24CF-42E4-B21D-E8705C1D4B50}">
+                <Component Id="cmp9AE63B6EDC93527F0513F36845D4C893" Guid="{A9A06053-E354-496D-A752-77165256A4AD}">
                     <File Id="filFCA4577FDDF7204732984F80D78D35C3" KeyPath="yes" Source="$(var.ConfigSourcePath)\VirtoCommerce.Client.dll" />
                 </Component>
-                <Component Id="cmp3EF3F757766F94798643B7A73C4FC4DB" Guid="{B2ED9FB0-04F8-44E5-9444-AB804977993B}">
+                <Component Id="cmp3EF3F757766F94798643B7A73C4FC4DB" Guid="{1D12E465-4D22-4AF4-AB0E-283481A91A5D}">
                     <File Id="fil5765692601E6B6AEFC0270AF2EB74549" KeyPath="yes" Source="$(var.ConfigSourcePath)\VirtoCommerce.ConfigurationUtility.Main.dll" />
                 </Component>
-                <Component Id="cmp1048A3D140D4BC3E4708B0E806EA2007" Guid="{8C71561F-8FC3-4C4A-A233-F415B6B1BC99}">
+                <Component Id="cmp1048A3D140D4BC3E4708B0E806EA2007" Guid="{08EC8178-2A0D-43C3-AEA6-90209EAFA6EB}">
                     <File Id="fil14A7091C80B762CC4F59E7F27BC713B0" KeyPath="yes" Source="$(var.ConfigSourcePath)\VirtoCommerce.ElasticSearchProvider.dll" />
                 </Component>
-                <Component Id="cmp288BEBF6B89EE9DE9A8DC93E994E16BE" Guid="{ADABC825-A466-42A0-A40A-086536C50B06}">
+                <Component Id="cmp288BEBF6B89EE9DE9A8DC93E994E16BE" Guid="{67710144-F885-4B22-A8C9-31ED711BDEAD}">
                     <File Id="fil9484FB017F0C9C40876C37A6C0DE7D0C" KeyPath="yes" Source="$(var.ConfigSourcePath)\VirtoCommerce.Foundation.Data.dll" />
                 </Component>
-                <Component Id="cmpA7041DA0B7F450F763B862C72C6CCCD0" Guid="{1A6B563F-E8D4-4978-BB59-71DEE4D8CC4E}">
+                <Component Id="cmpA7041DA0B7F450F763B862C72C6CCCD0" Guid="{9FBE7DC2-7192-40A7-8CAC-3BBCE0BC65C4}">
                     <File Id="fil2B5C2FF8BCBFB24C5984509B8C81CB74" KeyPath="yes" Source="$(var.ConfigSourcePath)\VirtoCommerce.Foundation.dll" />
                 </Component>
-                <Component Id="cmp0D1F0E3C2C6504224CB37F4713DB2CE4" Guid="{69E7995E-503A-40B3-BA9E-33429A76A1E4}">
+                <Component Id="cmp0D1F0E3C2C6504224CB37F4713DB2CE4" Guid="{05B1474E-4C5C-47BE-AF2A-F3E90679F230}">
                     <File Id="fil5A24FF72A67AD05387D7F0CB251A628C" KeyPath="yes" Source="$(var.ConfigSourcePath)\VirtoCommerce.LuceneSearchProvider.dll" />
                 </Component>
-                <Component Id="cmp3DD082B1C43A957C895026E2BB43749F" Guid="{03FEAA8A-B464-4249-8E7D-C0535F9C956B}">
+                <Component Id="cmp3DD082B1C43A957C895026E2BB43749F" Guid="{D8961481-FBBC-4581-8A78-4391535F0049}">
                     <File Id="filCDDA333F6D7436EFEE57ECEE38E35DD8" KeyPath="yes" Source="$(var.ConfigSourcePath)\VirtoCommerce.ManagementClient.Core.dll" />
                 </Component>
-                <Component Id="cmp91BF387C6ABFE09E3AEA8BE631D9DBE8" Guid="{6D59D628-B34D-43A1-A273-75A69C47D323}">
+                <Component Id="cmp91BF387C6ABFE09E3AEA8BE631D9DBE8" Guid="{293143AD-F27C-406A-AE07-C7B5E912A26C}">
                     <File Id="fil1FD17168321F44F430BCDF7EBE4D40B6" KeyPath="yes" Source="$(var.ConfigSourcePath)\VirtoCommerce.ManagementClient.Localization.dll" />
                 </Component>
-                <Component Id="cmp4F43949E8877BA3B6B5EFD3F17BA9E8B" Guid="{2FBD19CD-A01B-4016-B932-657FA0DA70B6}">
+                <Component Id="cmp4F43949E8877BA3B6B5EFD3F17BA9E8B" Guid="{00FE08EC-D9DD-438C-BC8B-15102E1CDA86}">
                     <File Id="fil67EFA224C8BC15FD14110854BFC4DE4E" KeyPath="yes" Source="$(var.ConfigSourcePath)\VirtoCommerce.PowerShell.dll" />
                 </Component>
-                <Component Id="cmpC37A92DB8DD8BD04ACF3AFFC59A60109" Guid="{8F8CED2C-B097-4447-82CF-6337C0A30E37}">
+                <Component Id="cmpC37A92DB8DD8BD04ACF3AFFC59A60109" Guid="{BC74A136-8E94-4139-A67C-2E80D768403A}">
                     <File Id="filD1E9D1C05A8EF18B9A1C5A005E9B3592" KeyPath="yes" Source="$(var.ConfigSourcePath)\VirtoCommerce.Search.Index.dll" />
                 </Component>
-                <Component Id="cmpF2C2F823108DE854B5C82FB6557EB140" Guid="{6D7AEC76-8BCE-4AF3-A59D-A2BE2DBCB197}">
+                <Component Id="cmpF2C2F823108DE854B5C82FB6557EB140" Guid="{AB218BAB-382F-4B77-BCB5-9F4D2A72BC58}">
                     <File Id="filA00F6A6E0D4FD0C68B4CECADACDDBE84" KeyPath="yes" Source="$(var.ConfigSourcePath)\Xceed.Wpf.DataGrid.dll" />
                 </Component>
-                <Component Id="cmp4BFD0E086A0A8CC567B0BEBFFB4564F0" Guid="{F84EE82F-F595-4166-B563-2845888887FD}">
+                <Component Id="cmp4BFD0E086A0A8CC567B0BEBFFB4564F0" Guid="{E53FFD92-4182-4AC7-BEA0-4A7EAABF8443}">
                     <File Id="fil4EED3A4B7AB3EC738224C9C14425AEAD" KeyPath="yes" Source="$(var.ConfigSourcePath)\Xceed.Wpf.Toolkit.dll" />
                 </Component>
                 <Directory Id="dir195A552B18654C3F30B888DDE7EA62B9" Name="de">
-                    <Component Id="cmpB993B02ADB9F60A0C545E4D37FDEBD5C" Guid="{29024274-0A38-477D-B15F-C66E5C16D339}">
+                    <Component Id="cmpB993B02ADB9F60A0C545E4D37FDEBD5C" Guid="{2D80FAA1-2951-455A-89AB-833811295614}">
                         <File Id="filA6FF74EA5A27091475950E0BBEA86AF3" KeyPath="yes" Source="$(var.ConfigSourcePath)\de\Microsoft.Data.Edm.resources.dll" />
                     </Component>
-                    <Component Id="cmp82996878A3253DEF9647B4229CD899E0" Guid="{B423A7A0-0679-4C35-8C71-505F872C940D}">
+                    <Component Id="cmp82996878A3253DEF9647B4229CD899E0" Guid="{9F872C7A-0F8E-423C-9802-32CA97F984D9}">
                         <File Id="filCE6C4951BEE265FA0AB91596708DE7C1" KeyPath="yes" Source="$(var.ConfigSourcePath)\de\Microsoft.Data.OData.resources.dll" />
                     </Component>
-                    <Component Id="cmpECC0EADEB30B0B0A23F96F9FBF7B239D" Guid="{FA8A7B20-8EF1-4D33-8A98-BB6CD93DE9EF}">
+                    <Component Id="cmpECC0EADEB30B0B0A23F96F9FBF7B239D" Guid="{59B3D9AB-0339-402E-9C28-9B8E86F7D797}">
                         <File Id="fil0D051F26BDD6C2FC78FA8EBD05E4FD68" KeyPath="yes" Source="$(var.ConfigSourcePath)\de\Microsoft.Data.Services.Client.resources.dll" />
                     </Component>
-                    <Component Id="cmpCFE444BD11D36241E8A6809A133E70C2" Guid="{CDB29254-37EE-498F-AECD-8A21413D2CB2}">
+                    <Component Id="cmpCFE444BD11D36241E8A6809A133E70C2" Guid="{7CC738DE-D6EE-45E6-B60D-87AEE0FF9A9F}">
                         <File Id="fil80381F7282536D30B1CDE2C43CA9BD0C" KeyPath="yes" Source="$(var.ConfigSourcePath)\de\Microsoft.Data.Services.resources.dll" />
                     </Component>
-                    <Component Id="cmp21474286D99F1D8CE3C97FE41CFBCF1D" Guid="{23AAD465-592D-4D5B-8815-6A37F0933F56}">
+                    <Component Id="cmp21474286D99F1D8CE3C97FE41CFBCF1D" Guid="{3746192B-0C33-4A38-8BD6-B93FEC4C4265}">
                         <File Id="filC4B91EBAC5761FEE5919CCF52C4EA0DD" KeyPath="yes" Source="$(var.ConfigSourcePath)\de\System.Spatial.resources.dll" />
                     </Component>
                 </Directory>
                 <Directory Id="dir5E3EC87C418F270CF12DC368E0C25EAC" Name="es">
-                    <Component Id="cmp46EB94C44E13584471371522A21498A8" Guid="{61230E36-2D25-4E95-B090-E34377AF2AD9}">
+                    <Component Id="cmp46EB94C44E13584471371522A21498A8" Guid="{775EDFFB-8518-441D-8C94-51FC360ABBFB}">
                         <File Id="fil591CD96757BC5384A7023E364B557D94" KeyPath="yes" Source="$(var.ConfigSourcePath)\es\Microsoft.Data.Edm.resources.dll" />
                     </Component>
-                    <Component Id="cmp12FBD6F2F298D83D2EDBDF5BF04DFB02" Guid="{F5F0227B-30FF-4AB5-87CB-48CBDC66F19E}">
+                    <Component Id="cmp12FBD6F2F298D83D2EDBDF5BF04DFB02" Guid="{7CB318A3-FA07-461F-AF94-13F298583875}">
                         <File Id="fil7B57FC58633B599A44628168DB8A566C" KeyPath="yes" Source="$(var.ConfigSourcePath)\es\Microsoft.Data.OData.resources.dll" />
                     </Component>
-                    <Component Id="cmp97BFEF7716C472D4FB34FF2289E1B098" Guid="{5F6CC419-2A3F-4C67-815D-66C5AFB4A9D1}">
+                    <Component Id="cmp97BFEF7716C472D4FB34FF2289E1B098" Guid="{22A6ED8D-6464-4EBD-B995-C442460FED81}">
                         <File Id="fil6BCFEB1B8BC359A822A1049E6590F7C3" KeyPath="yes" Source="$(var.ConfigSourcePath)\es\Microsoft.Data.Services.Client.resources.dll" />
                     </Component>
-                    <Component Id="cmp59A6007CD640FEE1F4C0A5E7B01DD2EB" Guid="{03120D39-96B4-4890-8C27-3271587A7343}">
+                    <Component Id="cmp59A6007CD640FEE1F4C0A5E7B01DD2EB" Guid="{D27BA456-C553-47B7-81C1-3A7C908271A7}">
                         <File Id="fil21F7BD951B81D0B16A36ED648AF2B497" KeyPath="yes" Source="$(var.ConfigSourcePath)\es\Microsoft.Data.Services.resources.dll" />
                     </Component>
-                    <Component Id="cmpF81ED4EB813F2036354F5678EF4C59A5" Guid="{CFF1EF55-4240-4848-9762-0F0FEEF7B32F}">
+                    <Component Id="cmpF81ED4EB813F2036354F5678EF4C59A5" Guid="{DE455A1F-C065-4F15-8B11-06E9A4C2CF33}">
                         <File Id="fil2AA4A3BCBC14D3858F6B4FC61B44C347" KeyPath="yes" Source="$(var.ConfigSourcePath)\es\System.Spatial.resources.dll" />
                     </Component>
                 </Directory>
                 <Directory Id="dir10DDAC2595A3272B7AA1BC7C83EEFE7B" Name="fr">
-                    <Component Id="cmpD75193852E8FBE6A84D07453399B9CE4" Guid="{8C26309C-5745-4D7B-8AE8-C4E1CB6FDA2D}">
+                    <Component Id="cmpD75193852E8FBE6A84D07453399B9CE4" Guid="{98D66065-1FB1-44C1-9B19-66B5B58D3221}">
                         <File Id="fil42CCDD614EF2F62480DBFD46EDB3B3F6" KeyPath="yes" Source="$(var.ConfigSourcePath)\fr\Microsoft.Data.Edm.resources.dll" />
                     </Component>
-                    <Component Id="cmp94B7C4872032D6053F37ABD8ADD1BBF1" Guid="{414EA227-5665-4DE4-813B-62AA27619D15}">
+                    <Component Id="cmp94B7C4872032D6053F37ABD8ADD1BBF1" Guid="{58EAAFF3-0859-476C-9EDD-2CB716FCF8A0}">
                         <File Id="fil5FAF24B90A4D8A8F19B8D3828B2C2735" KeyPath="yes" Source="$(var.ConfigSourcePath)\fr\Microsoft.Data.OData.resources.dll" />
                     </Component>
-                    <Component Id="cmpCA5B04272E5D7414A6AD390C62E8CD4D" Guid="{2F96FE40-142F-4585-8999-DB4175A27FC6}">
+                    <Component Id="cmpCA5B04272E5D7414A6AD390C62E8CD4D" Guid="{C27602A2-5469-4E0E-9E39-83F95B649AFC}">
                         <File Id="fil8646ED2E4FF0AC13DBBB68D3C8177CE2" KeyPath="yes" Source="$(var.ConfigSourcePath)\fr\Microsoft.Data.Services.Client.resources.dll" />
                     </Component>
-                    <Component Id="cmpB935EE1B239882E402996B8A88753BDF" Guid="{311B87C3-2620-4CCB-9E8C-8ADE75AA31F6}">
+                    <Component Id="cmpB935EE1B239882E402996B8A88753BDF" Guid="{93B2AC5E-3A87-4FF7-ABB6-48337CBE72E3}">
                         <File Id="fil4640A2A648E8463119EE2A35F38D16A2" KeyPath="yes" Source="$(var.ConfigSourcePath)\fr\Microsoft.Data.Services.resources.dll" />
                     </Component>
-                    <Component Id="cmpDC880878EA4658855A174F8750A69A7C" Guid="{368E0002-0EBD-4CB7-9BA6-4372E30B5707}">
+                    <Component Id="cmpDC880878EA4658855A174F8750A69A7C" Guid="{A82EC3AD-D06D-4AF8-806E-9E59CEBFA08C}">
                         <File Id="filB63B37E8B2544B9383077E64DF3B985B" KeyPath="yes" Source="$(var.ConfigSourcePath)\fr\System.Spatial.resources.dll" />
                     </Component>
                 </Directory>
                 <Directory Id="dir8D3F949EC198E938ADC72C6E2249AE7B" Name="it">
-                    <Component Id="cmpCFC3D60847A6FA5F73913304C29F33A0" Guid="{E539253B-F13B-4486-BF25-18B01B167AA9}">
+                    <Component Id="cmpCFC3D60847A6FA5F73913304C29F33A0" Guid="{51B97D74-57F2-409B-A273-2679BF18FE7D}">
                         <File Id="filD5502CED34C950D0A14DD640DD1B3F71" KeyPath="yes" Source="$(var.ConfigSourcePath)\it\Microsoft.Data.Edm.resources.dll" />
                     </Component>
-                    <Component Id="cmp8C6540E6BAFF6276AD1B34D5C2B0D29A" Guid="{811870EA-EF2B-40E7-8174-5D6895666B24}">
+                    <Component Id="cmp8C6540E6BAFF6276AD1B34D5C2B0D29A" Guid="{3216E750-777C-4A9F-A816-C416CB848347}">
                         <File Id="fil8F6B3829729FDE98BF6CB73EF0E6CB21" KeyPath="yes" Source="$(var.ConfigSourcePath)\it\Microsoft.Data.OData.resources.dll" />
                     </Component>
-                    <Component Id="cmpF2112673AB976E29CF431109B6E29320" Guid="{CE378548-CD1B-423F-AA9B-F46BFFBEDA2F}">
+                    <Component Id="cmpF2112673AB976E29CF431109B6E29320" Guid="{776C795F-50A7-4AA7-ADE5-D34EE7D8C352}">
                         <File Id="filB5E8B29A792BECBD3903E7FA4B6B4A00" KeyPath="yes" Source="$(var.ConfigSourcePath)\it\Microsoft.Data.Services.Client.resources.dll" />
                     </Component>
-                    <Component Id="cmpBA35E740BBB01949E6BB66620D02D130" Guid="{7F79C313-1D39-4874-AD1B-085DD1AF8784}">
+                    <Component Id="cmpBA35E740BBB01949E6BB66620D02D130" Guid="{A940CA6F-579C-4640-9D8D-942B7FB19B7F}">
                         <File Id="fil5E83FDA05DC0762365AFA1AF7C0CB3AD" KeyPath="yes" Source="$(var.ConfigSourcePath)\it\Microsoft.Data.Services.resources.dll" />
                     </Component>
-                    <Component Id="cmpF5E1AE593A779E0E65C0A6496E402AE4" Guid="{6B6B3552-421B-4FF9-9031-EF8B618B5BDA}">
+                    <Component Id="cmpF5E1AE593A779E0E65C0A6496E402AE4" Guid="{26F90FA1-509A-4EB9-8D2E-C5AA9321A280}">
                         <File Id="fil323864943665FE910E2F3F9F2A6D5156" KeyPath="yes" Source="$(var.ConfigSourcePath)\it\System.Spatial.resources.dll" />
                     </Component>
                 </Directory>
                 <Directory Id="dir6DF2B422CEE32C2F72463814E3E5661E" Name="ja">
-                    <Component Id="cmpD9209589E485A2BC7E781F75E284D4E3" Guid="{341FEF39-164E-4A2F-9F37-3F292756DDDD}">
+                    <Component Id="cmpD9209589E485A2BC7E781F75E284D4E3" Guid="{C15379DE-DF99-4610-B926-62E56E86FFA4}">
                         <File Id="fil7EA783FDD6BCA64A326C64EAB779B1FC" KeyPath="yes" Source="$(var.ConfigSourcePath)\ja\Microsoft.Data.Edm.resources.dll" />
                     </Component>
-                    <Component Id="cmp9641FDA1BD2ED4C8089D199F2AF170D8" Guid="{B2949496-2103-4227-94DE-0F8103257ED9}">
+                    <Component Id="cmp9641FDA1BD2ED4C8089D199F2AF170D8" Guid="{69736278-40C7-4592-A9BC-C1F2134FF53E}">
                         <File Id="filB37474F4DC884AAC79890CE51DB4FB9C" KeyPath="yes" Source="$(var.ConfigSourcePath)\ja\Microsoft.Data.OData.resources.dll" />
                     </Component>
-                    <Component Id="cmp04980002067CD94EC1F905ADAF82E6C4" Guid="{263F5255-B838-4E03-A11F-A4269537BB50}">
+                    <Component Id="cmp04980002067CD94EC1F905ADAF82E6C4" Guid="{7697A2BF-D159-4FBB-8B5D-36268AFE3B42}">
                         <File Id="fil640F52E9FA6854A387C56B64448056B7" KeyPath="yes" Source="$(var.ConfigSourcePath)\ja\Microsoft.Data.Services.Client.resources.dll" />
                     </Component>
-                    <Component Id="cmpDF1532CF2582D4F89849ED15DB3A2E85" Guid="{5AF1AEB4-4C8C-4735-BB20-6096DC2E7288}">
+                    <Component Id="cmpDF1532CF2582D4F89849ED15DB3A2E85" Guid="{FBA94C58-5579-4CF0-917C-6CB6BFF82A4C}">
                         <File Id="filA2C7BE7E852C2E4B7A3AD6A342689978" KeyPath="yes" Source="$(var.ConfigSourcePath)\ja\Microsoft.Data.Services.resources.dll" />
                     </Component>
-                    <Component Id="cmp8DC768585AE04164261D3F424EDA6034" Guid="{DDF27DD0-8E9F-47A3-89F9-471DD7F1C10C}">
+                    <Component Id="cmp8DC768585AE04164261D3F424EDA6034" Guid="{2E8DD824-344A-4726-9B64-2C6827DF96F0}">
                         <File Id="fil7BEBF1FF17D881CABAEB8E3E88AE4CB4" KeyPath="yes" Source="$(var.ConfigSourcePath)\ja\System.Spatial.resources.dll" />
                     </Component>
                 </Directory>
                 <Directory Id="dir454F66C1311F13065553200F8BBACB0B" Name="ko">
-                    <Component Id="cmp48A6EC0FA652F28804BB3EE8FC882FD8" Guid="{797A4F65-3DE2-44AF-B393-C716CAE43B2A}">
+                    <Component Id="cmp48A6EC0FA652F28804BB3EE8FC882FD8" Guid="{D4685135-7305-4F9B-9022-A9DE752F62E7}">
                         <File Id="filD4941146EF18E433D5E8CE59CC463B5A" KeyPath="yes" Source="$(var.ConfigSourcePath)\ko\Microsoft.Data.Edm.resources.dll" />
                     </Component>
-                    <Component Id="cmp24102329E2A485F062CEAD516B02D1AD" Guid="{F27C88CF-4390-47B3-BE34-7BDDB8EDFAEB}">
+                    <Component Id="cmp24102329E2A485F062CEAD516B02D1AD" Guid="{6D84F3B3-84EF-4E35-BEBF-B56E265B8E96}">
                         <File Id="filEB932C3AE58CA8C631CB63CEDCD9FFB2" KeyPath="yes" Source="$(var.ConfigSourcePath)\ko\Microsoft.Data.OData.resources.dll" />
                     </Component>
-                    <Component Id="cmp87BA58246CDF2BC84F6C2FDEDAEDBA00" Guid="{7AD32430-225E-432F-8007-83514010A7FE}">
+                    <Component Id="cmp87BA58246CDF2BC84F6C2FDEDAEDBA00" Guid="{3CBFFE94-C662-4188-B42D-BECAF4D5D025}">
                         <File Id="fil9B5B02E418E60EDEF14D1D509F2DBAEA" KeyPath="yes" Source="$(var.ConfigSourcePath)\ko\Microsoft.Data.Services.Client.resources.dll" />
                     </Component>
-                    <Component Id="cmp5FD85657C26DE89C637BA21CD7A7CFAF" Guid="{DADA5E08-ADF1-4218-B42D-DEACEA2B03C8}">
+                    <Component Id="cmp5FD85657C26DE89C637BA21CD7A7CFAF" Guid="{25044FDE-4C2D-4CDE-AD41-7306035BE098}">
                         <File Id="fil7157B17E8900545D65E551161981A3AE" KeyPath="yes" Source="$(var.ConfigSourcePath)\ko\Microsoft.Data.Services.resources.dll" />
                     </Component>
-                    <Component Id="cmp46AB76F61A81223F47C365441EF1EAFC" Guid="{5D92848E-25AD-406A-B086-3443876E8065}">
+                    <Component Id="cmp46AB76F61A81223F47C365441EF1EAFC" Guid="{5646746A-1DD5-42AD-84D9-542D2613462B}">
                         <File Id="fil5D06CDB76558A97D420223E9AA69CD94" KeyPath="yes" Source="$(var.ConfigSourcePath)\ko\System.Spatial.resources.dll" />
                     </Component>
                 </Directory>
                 <Directory Id="dir4EB1BD0D85FCACC47377CFA38FB83F9A" Name="ru">
-                    <Component Id="cmpD1BD781FFCE0D951D25BA83213C5D1EB" Guid="{399F6BF0-338E-4A3B-9CB6-037E2C660A76}">
+                    <Component Id="cmpD1BD781FFCE0D951D25BA83213C5D1EB" Guid="{F6CB0858-28EC-43AD-BD6C-7F1C568ED6BA}">
                         <File Id="fil1196F3CF783781648E9152083A312AA5" KeyPath="yes" Source="$(var.ConfigSourcePath)\ru\Microsoft.Data.Edm.resources.dll" />
                     </Component>
-                    <Component Id="cmp788B3A1CB9F5836BDB7E3984A9BA0048" Guid="{69FE7AF3-40F5-451F-B2FE-2B2C1961F474}">
+                    <Component Id="cmp788B3A1CB9F5836BDB7E3984A9BA0048" Guid="{E2FD2F36-D800-40F7-A3A6-35D2E44D2684}">
                         <File Id="filCAD9C6C3933C811F65C36147DCF49A5E" KeyPath="yes" Source="$(var.ConfigSourcePath)\ru\Microsoft.Data.OData.resources.dll" />
                     </Component>
-                    <Component Id="cmp99EBBBA9E06AF716387A68B680E3C112" Guid="{1BB6DC7D-B61D-4460-B150-55AA36A11B2E}">
+                    <Component Id="cmp99EBBBA9E06AF716387A68B680E3C112" Guid="{A258B58B-4697-4B26-80F2-F52FB59A4CB4}">
                         <File Id="fil2A145931F78AB05F4B427150C7B03CE1" KeyPath="yes" Source="$(var.ConfigSourcePath)\ru\Microsoft.Data.Services.Client.resources.dll" />
                     </Component>
-                    <Component Id="cmpE4EA9262750FACF0140C5B90C08468AB" Guid="{AEB5EDFE-1859-4109-9285-CC1E3524B5D1}">
+                    <Component Id="cmpE4EA9262750FACF0140C5B90C08468AB" Guid="{064E1A40-8CAB-42AC-AEC5-E630C6A2E256}">
                         <File Id="filEA26B3EA873A13334E4117870B4F185C" KeyPath="yes" Source="$(var.ConfigSourcePath)\ru\Microsoft.Data.Services.resources.dll" />
                     </Component>
-                    <Component Id="cmpA41C3F04F98D57C5F8C078921F18CFE9" Guid="{278CA7D8-57FA-4F78-B921-FA2B706CFB01}">
+                    <Component Id="cmpA41C3F04F98D57C5F8C078921F18CFE9" Guid="{96FE6CFB-DE58-425F-AC40-176A691CAFAE}">
                         <File Id="filBAB7F47E93E515C50D859FF9E573F297" KeyPath="yes" Source="$(var.ConfigSourcePath)\ru\System.Spatial.resources.dll" />
                     </Component>
                 </Directory>
                 <Directory Id="dir00F84F9E6F5467F1732F59CC2503E09C" Name="ru-RU">
-                    <Component Id="cmp6FC7B8FDBEF5632FF9C70A747EE3FF4B" Guid="{CFEC9E8A-82A8-4D2C-8EE0-C60FF186E3C3}">
+                    <Component Id="cmp6FC7B8FDBEF5632FF9C70A747EE3FF4B" Guid="{7E856442-DA6D-4D28-B5CC-3E722368FF47}">
                         <File Id="fil270DA492EC71A4CAB7681526CBBD6551" KeyPath="yes" Source="$(var.ConfigSourcePath)\ru-RU\VirtoCommerce.ConfigurationUtility.Main.resources.dll" />
                     </Component>
                 </Directory>
                 <Directory Id="dir2906E58E91AB9097952F3D8963D20D49" Name="zh-Hans">
-                    <Component Id="cmp9E09ED703813AD3A42CF5B6027569DFD" Guid="{80FBBBA5-6C84-4D26-8056-448815A566AE}">
+                    <Component Id="cmp9E09ED703813AD3A42CF5B6027569DFD" Guid="{B825DB51-BD90-4988-9623-B2630B42F8C8}">
                         <File Id="fil75A29B8D0CB9031FEB4BE87323421E99" KeyPath="yes" Source="$(var.ConfigSourcePath)\zh-Hans\Microsoft.Data.Edm.resources.dll" />
                     </Component>
-                    <Component Id="cmp14E9B221AE8164FE974966AC479F8285" Guid="{4A7321A0-4CE5-4804-A651-F23E87377C43}">
+                    <Component Id="cmp14E9B221AE8164FE974966AC479F8285" Guid="{8E61F64E-925B-40AA-B11B-CA85AD35591F}">
                         <File Id="fil36B7F32B777713049BEC55F0378A116A" KeyPath="yes" Source="$(var.ConfigSourcePath)\zh-Hans\Microsoft.Data.OData.resources.dll" />
                     </Component>
-                    <Component Id="cmp8F1FA4671EE43BC288FF791101B261AA" Guid="{DDB987EE-DD7B-43B2-AB91-DA2D36AE0297}">
+                    <Component Id="cmp8F1FA4671EE43BC288FF791101B261AA" Guid="{EA988013-B563-44CE-978E-57AD7865EAF1}">
                         <File Id="filA03D5349FE8447688238F6166E25843F" KeyPath="yes" Source="$(var.ConfigSourcePath)\zh-Hans\Microsoft.Data.Services.Client.resources.dll" />
                     </Component>
-                    <Component Id="cmp85223C3147E087DD12D5DCF86AEF4DA5" Guid="{85AD2C51-E1C3-4ABA-B1F9-1CA962622842}">
+                    <Component Id="cmp85223C3147E087DD12D5DCF86AEF4DA5" Guid="{505E579B-1B0E-4C51-A8F6-6B1C1CF54C24}">
                         <File Id="filC204B64681604944966AE3D870224BE6" KeyPath="yes" Source="$(var.ConfigSourcePath)\zh-Hans\Microsoft.Data.Services.resources.dll" />
                     </Component>
-                    <Component Id="cmpBA173BE9D0D48444F7394B0133288D6D" Guid="{2B2B3F56-7321-416A-808E-56F065EA7F47}">
+                    <Component Id="cmpBA173BE9D0D48444F7394B0133288D6D" Guid="{E206C494-56AC-4B59-A245-F492FA26EA4E}">
                         <File Id="filC730251FFE3DAB03291BE13B1054B71A" KeyPath="yes" Source="$(var.ConfigSourcePath)\zh-Hans\System.Spatial.resources.dll" />
                     </Component>
                 </Directory>
                 <Directory Id="dir0A58A2F4101494CA26D42EAD52795EA5" Name="zh-Hant">
-                    <Component Id="cmp1151C82E7C2DE846ED1982412ADF2D04" Guid="{EEAEB44B-286F-4F5E-985A-9574A17C07D6}">
+                    <Component Id="cmp1151C82E7C2DE846ED1982412ADF2D04" Guid="{F505D078-EB80-46D3-B8AA-75141E47D951}">
                         <File Id="filB023C6FE1129613177A91F8C0D267108" KeyPath="yes" Source="$(var.ConfigSourcePath)\zh-Hant\Microsoft.Data.Edm.resources.dll" />
                     </Component>
-                    <Component Id="cmpCC5552466849EE1EBD14B06D9B1B6558" Guid="{482874C9-5B30-407D-B318-5E59F5B3D8FD}">
+                    <Component Id="cmpCC5552466849EE1EBD14B06D9B1B6558" Guid="{013639AD-1298-4DF5-83B9-61B4A9D64CEE}">
                         <File Id="filDC4F9940D569B698A80DC14AEAA97B06" KeyPath="yes" Source="$(var.ConfigSourcePath)\zh-Hant\Microsoft.Data.OData.resources.dll" />
                     </Component>
-                    <Component Id="cmp4E97B70BDBFF1A3BFD3A303BCA85C501" Guid="{1AC8C108-F832-431A-9981-20C9BBDAF410}">
+                    <Component Id="cmp4E97B70BDBFF1A3BFD3A303BCA85C501" Guid="{19899947-C84A-4BAA-81D6-92626C978245}">
                         <File Id="fil62C46BB15FC4EB830B0E9FB6065E2E57" KeyPath="yes" Source="$(var.ConfigSourcePath)\zh-Hant\Microsoft.Data.Services.Client.resources.dll" />
                     </Component>
-                    <Component Id="cmp66200ABA5D0CD1BF91640FF4BF9C39B2" Guid="{F1CFE9AC-631E-4C50-A58A-447F4C69FCF2}">
+                    <Component Id="cmp66200ABA5D0CD1BF91640FF4BF9C39B2" Guid="{DAE30349-EC75-46DC-9D50-16C70F7EA87F}">
                         <File Id="fil5974A62482F5ADB1FED92508870A2DFE" KeyPath="yes" Source="$(var.ConfigSourcePath)\zh-Hant\Microsoft.Data.Services.resources.dll" />
                     </Component>
-                    <Component Id="cmpB6CD329116BAA734F1F4CB72AC956FC1" Guid="{E75D79C4-8920-4CE0-8A28-E7E315CFF002}">
+                    <Component Id="cmpB6CD329116BAA734F1F4CB72AC956FC1" Guid="{B8FA60B9-FA5F-46B7-952E-3DCC601FCA25}">
                         <File Id="filB580E5C87C07D899C9C45544A8968514" KeyPath="yes" Source="$(var.ConfigSourcePath)\zh-Hant\System.Spatial.resources.dll" />
                     </Component>
                 </Directory>
