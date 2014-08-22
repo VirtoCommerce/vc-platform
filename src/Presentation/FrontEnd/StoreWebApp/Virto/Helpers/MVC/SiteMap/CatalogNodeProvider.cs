@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using MvcSiteMapProvider;
 using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Catalogs.Model;
@@ -21,7 +20,8 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC.SiteMap
             var catalog = CatalogHelper.CatalogClient.GetCatalog(StoreHelper.CustomerSession.CatalogId);
             var nodes = new List<DynamicNode>();
             int order = 0;
-            foreach (var category in catalog.CategoryBases.OfType<Category>().Where(x => x.IsActive).OrderByDescending(x => x.Priority))
+            var categories = catalog.CategoryBases.OfType<Category>().Where(x => x.IsActive).ToList();
+            foreach (var category in categories.OrderByDescending(x => x.Priority))
             {
 
                 var pNode = new DynamicNode
@@ -83,87 +83,133 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC.SiteMap
                         RouteValues = new Dictionary<string, object> { { Constants.Category, category.CategoryId }, { "f_Brand", "apple" } },
                     });
 
-                    nodes.Add(new DynamicNode
-                    {
-                        Action = "Display",
-                        Title = "Computers & Tablets".Localize(),
-                        Key = category.CategoryId + "COMPUTERS",
-                        ParentKey = category.CategoryId,
-                        ImageUrl = "~/Content/themes/default/images/menu/computers.png",
-                        RouteValues = new Dictionary<string, object> { { Constants.Category, "computers-tablets" } },
-                    });
+                    var computersCat = categories.FirstOrDefault(
+                        c => c.Code.Equals("computers-tablets", StringComparison.OrdinalIgnoreCase));
 
-                    nodes.Add(new DynamicNode
+                    if (computersCat != null)
                     {
-                        Action = "Display",
-                        Title = "Samsung".Localize(),
-                        ParentKey = category.CategoryId + "COMPUTERS",
-                        RouteValues = new Dictionary<string, object> { { Constants.Category, "computers-tablets" }, { "f_Brand", "samsung" } },
-                    });
-                    nodes.Add(new DynamicNode
-                    {
-                        Action = "Display",
-                        Title = "Sony".Localize(),
-                        ParentKey = category.CategoryId + "COMPUTERS",
-                        RouteValues = new Dictionary<string, object> { { Constants.Category, "computers-tablets" }, { "f_Brand", "sony" } },
-                    });
-                    nodes.Add(new DynamicNode
-                    {
-                        Action = "Display",
-                        Title = "Apple".Localize(),
-                        ParentKey = category.CategoryId + "COMPUTERS",
-                        RouteValues = new Dictionary<string, object> { { Constants.Category, "computers-tablets" }, { "f_Brand", "apple" } },
-                    });
 
-                    nodes.Add(new DynamicNode
-                    {
-                        Action = "Display",
-                        Title = "Cameras".Localize(),
-                        Key = category.CategoryId + "CAMERAS",
-                        ParentKey = category.CategoryId,
-                        ImageUrl = "~/Content/themes/default/images/menu/Cameras.png",
-                        RouteValues = new Dictionary<string, object> { { Constants.Category, "cameras" } },
-                    });
+                        nodes.Add(new DynamicNode
+                        {
+                            Action = "Display",
+                            Title = "Computers & Tablets".Localize(),
+                            Key = category.CategoryId + "COMPUTERS",
+                            ParentKey = category.CategoryId,
+                            ImageUrl = "~/Content/themes/default/images/menu/computers.png",
+                            RouteValues = new Dictionary<string, object> { { Constants.Category, computersCat.CategoryId} },
+                        });
 
-                    nodes.Add(new DynamicNode
-                    {
-                        Action = "Display",
-                        Title = "Samsung".Localize(),
-                        ParentKey = category.CategoryId + "CAMERAS",
-                        RouteValues = new Dictionary<string, object> { { Constants.Category, "cameras" }, { "f_Brand", "samsung" } },
-                    });
-                    nodes.Add(new DynamicNode
-                    {
-                        Action = "Display",
-                        Title = "Sony".Localize(),
-                        ParentKey = category.CategoryId + "CAMERAS",
-                        RouteValues = new Dictionary<string, object> { { Constants.Category, "cameras" }, { "f_Brand", "sony" } },
-                    });
+                        nodes.Add(new DynamicNode
+                        {
+                            Action = "Display",
+                            Title = "Samsung".Localize(),
+                            ParentKey = category.CategoryId + "COMPUTERS",
+                            RouteValues =
+                                new Dictionary<string, object>
+                                {
+                                    {Constants.Category, computersCat.CategoryId},
+                                    {"f_Brand", "samsung"}
+                                },
+                        });
 
-                    nodes.Add(new DynamicNode
-                    {
-                        Action = "Display",
-                        Title = "TV & Video".Localize(),
-                        Key = category.CategoryId + "TVVIDEO",
-                        ParentKey = category.CategoryId,
-                        ImageUrl = "~/Content/themes/default/images/menu/accessories.png",
-                        RouteValues = new Dictionary<string, object> { { Constants.Category, "tv-video" } },
-                    });
+                        nodes.Add(new DynamicNode
+                        {
+                            Action = "Display",
+                            Title = "Sony".Localize(),
+                            ParentKey = category.CategoryId + "COMPUTERS",
+                            RouteValues =
+                                new Dictionary<string, object>
+                                {
+                                    {Constants.Category, computersCat.CategoryId},
+                                    {"f_Brand", "sony"}
+                                },
+                        });
 
-                    nodes.Add(new DynamicNode
+                        nodes.Add(new DynamicNode
+                        {
+                            Action = "Display",
+                            Title = "Apple".Localize(),
+                            ParentKey = category.CategoryId + "COMPUTERS",
+                            RouteValues =
+                                new Dictionary<string, object>
+                                {
+                                    {Constants.Category, computersCat.CategoryId},
+                                    {"f_Brand", "apple"}
+                                },
+                        });
+                    }
+
+                    var camCat = categories.FirstOrDefault(
+                        c => c.Code.Equals("cameras", StringComparison.OrdinalIgnoreCase));
+
+                    if (camCat != null)
                     {
-                        Action = "Display",
-                        Title = "Samsung".Localize(),
-                        ParentKey = category.CategoryId + "TVVIDEO",
-                        RouteValues = new Dictionary<string, object> { { Constants.Category, "tv-video" }, { "f_Brand", "samsung" } },
-                    });
-                    nodes.Add(new DynamicNode
+
+                        nodes.Add(new DynamicNode
+                        {
+                            Action = "Display",
+                            Title = "Cameras".Localize(),
+                            Key = category.CategoryId + "CAMERAS",
+                            ParentKey = category.CategoryId,
+                            ImageUrl = "~/Content/themes/default/images/menu/Cameras.png",
+                            RouteValues = new Dictionary<string, object> { { Constants.Category, camCat.CategoryId} },
+                        });
+
+                        nodes.Add(new DynamicNode
+                        {
+                            Action = "Display",
+                            Title = "Samsung".Localize(),
+                            ParentKey = category.CategoryId + "CAMERAS",
+                            RouteValues =
+                                new Dictionary<string, object> { { Constants.Category, camCat.CategoryId }, { "f_Brand", "samsung" } },
+                        });
+                        nodes.Add(new DynamicNode
+                        {
+                            Action = "Display",
+                            Title = "Sony".Localize(),
+                            ParentKey = category.CategoryId + "CAMERAS",
+                            RouteValues =
+                                new Dictionary<string, object> { { Constants.Category, camCat.CategoryId }, { "f_Brand", "sony" } },
+                        });
+                    }
+
+                     var tvCat = categories.FirstOrDefault(
+                        c => c.Code.Equals("tv-video", StringComparison.OrdinalIgnoreCase));
+
+                    if (tvCat != null)
                     {
-                        Action = "Display",
-                        Title = "Sony".Localize(),
-                        ParentKey = category.CategoryId + "TVVIDEO",
-                        RouteValues = new Dictionary<string, object> { { Constants.Category, "tv-video" }, { "f_Brand", "sony" } },
-                    });
+
+                        nodes.Add(new DynamicNode
+                        {
+                            Action = "Display",
+                            Title = "TV & Video".Localize(),
+                            Key = category.CategoryId + "TVVIDEO",
+                            ParentKey = category.CategoryId,
+                            ImageUrl = "~/Content/themes/default/images/menu/accessories.png",
+                            RouteValues = new Dictionary<string, object> { { Constants.Category, tvCat.CategoryId} },
+                        });
+
+                        nodes.Add(new DynamicNode
+                        {
+                            Action = "Display",
+                            Title = "Samsung".Localize(),
+                            ParentKey = category.CategoryId + "TVVIDEO",
+                            RouteValues =
+                                new Dictionary<string, object>
+                                {
+                                    {Constants.Category, tvCat.CategoryId},
+                                    {"f_Brand", "samsung"}
+                                },
+                        });
+                        nodes.Add(new DynamicNode
+                        {
+                            Action = "Display",
+                            Title = "Sony".Localize(),
+                            ParentKey = category.CategoryId + "TVVIDEO",
+                            RouteValues =
+                                new Dictionary<string, object> { { Constants.Category, tvCat.CategoryId }, { "f_Brand", "sony" } },
+                        });
+                    }
                 }
                 #endregion
             }
