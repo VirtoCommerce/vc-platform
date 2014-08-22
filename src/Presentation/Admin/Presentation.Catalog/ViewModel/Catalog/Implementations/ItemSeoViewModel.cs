@@ -25,7 +25,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		#endregion
 
 		public ItemSeoViewModel(ILoginViewModel loginViewModel, ICatalogOutlineBuilder catalogBuilder, IRepositoryFactory<IStoreRepository> storeRepositoryFactory, IRepositoryFactory<IAppConfigRepository> appConfigRepositoryFactory, IAppConfigEntityFactory appConfigEntityFactory, Item item, IEnumerable<string> languages)
-			: base(appConfigRepositoryFactory, appConfigEntityFactory, item.Catalog.DefaultLanguage, languages, item.Code, SeoUrlKeywordTypes.Item)
+			: base(appConfigRepositoryFactory, appConfigEntityFactory, item.Catalog.DefaultLanguage, languages, item.ItemId, SeoUrlKeywordTypes.Item)
 		{
 			_storeRepositoryFactory = storeRepositoryFactory;
 			_catalogBuilder = catalogBuilder;
@@ -79,12 +79,12 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 						categoryOutlines.First().Categories.ForEach(cat =>
 						{
 							var storeSeo = seoRepo.SeoUrlKeywords.Where(
-								x => x.KeywordValue == cat.Code && x.Language == keyword.Language)
+								x => x.KeywordValue == cat.CategoryId && x.Language == keyword.Language)
 													.FirstOrDefault() ??
 											seoRepo.SeoUrlKeywords.Where(
-												x => x.KeywordValue == cat.Code && x.Language == _item.Catalog.DefaultLanguage)
+												x => x.KeywordValue == cat.CategoryId && x.Language == _item.Catalog.DefaultLanguage)
 													.FirstOrDefault();
-							stringBuilder.AppendFormat("/{0}", storeSeo != null ? storeSeo.Keyword : cat.Code);
+							stringBuilder.AppendFormat("/{0}", storeSeo != null ? storeSeo.Keyword : cat.CategoryId);
 						});
 					}
 				}

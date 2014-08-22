@@ -90,13 +90,13 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
             if (string.IsNullOrEmpty(childCategryEncoded))
                 return null;
 
-            var childCategryCode = SettingsHelper.SeoDecode(childCategryEncoded, SeoUrlKeywordTypes.Category, 
+            var childCategryId = SettingsHelper.SeoDecode(childCategryEncoded, SeoUrlKeywordTypes.Category, 
                 values.ContainsKey(Constants.Language) ? values[Constants.Language] as string : null);
             var outline =
                 new BrowsingOutline(
                     CartHelper.CatalogOutlineBuilder.BuildCategoryOutline(
                         StoreHelper.CustomerSession.CatalogId,
-                        CartHelper.CatalogClient.GetCategory(childCategryCode)));
+                        CartHelper.CatalogClient.GetCategoryById(childCategryId)));
 
             return outline.ToString();
         }

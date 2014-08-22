@@ -96,7 +96,7 @@ namespace VirtoCommerce.Web
                     //Resolve item category dynamically
                     if (x.RouteData.Values.ContainsKey(Constants.Item))
                     {
-                        var item = CatalogHelper.CatalogClient.GetItemByCode(x.RouteData.Values[Constants.Item].ToString(), StoreHelper.CustomerSession.CatalogId);
+                        var item = CatalogHelper.CatalogClient.GetItem(x.RouteData.Values[Constants.Item].ToString(), StoreHelper.CustomerSession.CatalogId);
                         if (item != null)
                         {
                             return new RouteValueDictionary { { Constants.Category, item.GetItemCategoryRouteValue() } };

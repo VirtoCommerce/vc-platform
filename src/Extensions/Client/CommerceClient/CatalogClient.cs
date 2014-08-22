@@ -135,6 +135,11 @@ namespace VirtoCommerce.Client
             return GetItem(id, ItemResponseGroups.ItemSmall, null, useCache);
         }
 
+        public Item GetItem(string id, string catalogId, bool useCache = true)
+        {
+            return GetItem(id, ItemResponseGroups.ItemSmall, catalogId, useCache);
+        }
+
         /// <summary>
         /// Gets the item by code.
         /// </summary>

@@ -172,6 +172,7 @@
     <None Include="setup-database.ps1" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="SQLUpdate\1.11_to_1.12_updates.sql" />
     <EmbeddedResource Include="Marketing\Data\DynamicContentPublishingGroup_Sample.sql" />
     <EmbeddedResource Include="Security\Data\FillTestAccounts.sql" />
     <EmbeddedResource Include="Security\Data\FillRequiredCaseProperties.sql" />

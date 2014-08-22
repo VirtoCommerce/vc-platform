@@ -31,7 +31,7 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC.SiteMap
                     Key = category.CategoryId,
                     Order = order++,
                     ParentKey = category.ParentCategoryId,
-                    RouteValues = new Dictionary<string, object> { { Constants.Category, category.Code } },
+                    RouteValues = new Dictionary<string, object> { { Constants.Category, category.CategoryId } },
                     PreservedRouteParameters = new[] { Constants.Language, Constants.Store },
                      
                 };
@@ -58,7 +58,7 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC.SiteMap
                         Key = category.CategoryId + "AUDIO",
                         ParentKey = category.CategoryId,
                         ImageUrl = "~/Content/themes/default/images/menu/mobiles.png",
-                        RouteValues = new Dictionary<string, object> { { Constants.Category, "audio-mp3" } },
+                        RouteValues = new Dictionary<string, object> { { Constants.Category, category.CategoryId } },
                     });
 
                     nodes.Add(new DynamicNode
@@ -66,21 +66,21 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC.SiteMap
                         Action = "Display",
                         Title = "Samsung".Localize(),
                         ParentKey = category.CategoryId + "AUDIO",
-                        RouteValues = new Dictionary<string, object> { { Constants.Category, "audio-mp3" }, {"f_Brand", "samsung"} },
+                        RouteValues = new Dictionary<string, object> { { Constants.Category, category.CategoryId }, { "f_Brand", "samsung" } },
                     });
                     nodes.Add(new DynamicNode
                     {
                         Action = "Display",
                         Title = "Sony".Localize(),
                         ParentKey = category.CategoryId + "AUDIO",
-                        RouteValues = new Dictionary<string, object> { { Constants.Category, "audio-mp3" }, { "f_Brand", "sony" } },
+                        RouteValues = new Dictionary<string, object> { { Constants.Category, category.CategoryId }, { "f_Brand", "sony" } },
                     });
                     nodes.Add(new DynamicNode
                     {
                         Action = "Display",
                         Title = "Apple".Localize(),
                         ParentKey = category.CategoryId + "AUDIO",
-                        RouteValues = new Dictionary<string, object> { { Constants.Category, "audio-mp3" }, { "f_Brand", "apple" } },
+                        RouteValues = new Dictionary<string, object> { { Constants.Category, category.CategoryId }, { "f_Brand", "apple" } },
                     });
 
                     nodes.Add(new DynamicNode

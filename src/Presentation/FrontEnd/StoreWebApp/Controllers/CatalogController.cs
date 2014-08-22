@@ -55,7 +55,7 @@ namespace VirtoCommerce.Web.Controllers
         [DonutOutputCache(CacheProfile = "CatalogCache", VaryByCustom = "currency;filters;pricelist")]
         public ActionResult Display(CategoryPathModel category)
         {
-            var categoryBase = _catalogClient.GetCategory(category.Category);
+            var categoryBase = _catalogClient.GetCategoryById(category.Category);
             if (categoryBase != null && categoryBase.IsActive)
             {
                 // set the context variable
