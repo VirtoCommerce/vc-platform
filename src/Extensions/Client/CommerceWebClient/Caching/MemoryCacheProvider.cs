@@ -20,7 +20,13 @@ namespace VirtoCommerce.Web.Client.Caching
         public override object Add(string key, object entry, DateTime utcExpiry)
         {
             //return Cache.AddOrGetExisting(key, value, null, utcExpiry);
-            Cache.Add(key, entry, utcExpiry - DateTime.UtcNow);
+            var timespan = new TimeSpan(1, 0, 0, 0);
+            if (utcExpiry < DateTime.MaxValue)
+            {
+                timespan = utcExpiry - DateTime.UtcNow;
+            }
+
+            Cache.Add(key, entry, timespan);
             return entry;
         }
 
