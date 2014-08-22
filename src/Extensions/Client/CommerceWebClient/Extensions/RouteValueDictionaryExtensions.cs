@@ -41,6 +41,11 @@ namespace VirtoCommerce.Web.Client.Extensions
                 return new RouteValueDictionary(targetRouteValues);
             }
 
+            if (targetRouteValues == null)
+            {
+                return new RouteValueDictionary(routeValues);
+            }
+
             var mergedRouteValues = new RouteValueDictionary(routeValues);
             // Target values take precedence.
             foreach (var key in targetRouteValues.Keys)

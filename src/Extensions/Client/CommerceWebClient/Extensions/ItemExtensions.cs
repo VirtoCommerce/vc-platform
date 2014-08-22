@@ -38,7 +38,7 @@ namespace VirtoCommerce.Web.Client.Extensions
 
         public static string GetItemCategoryRouteValue(this Item item)
         {
-            var outline = HttpContext.Current.Items["browsingoutline_" + item.Code.ToLower()] as string;
+            var outline = HttpContext.Current.Items["browsingoutline_" + item.ItemId.ToLower()] as string;
 
             if (string.IsNullOrEmpty(outline))
             {
@@ -55,11 +55,11 @@ namespace VirtoCommerce.Web.Client.Extensions
 
         public static string[] GetItemCategoryBrowsingOutlines(this Item item)
         {
-            var outline = HttpContext.Current.Items["browsingoutline_" + item.Code.ToLower()] as string;
+            var outline = HttpContext.Current.Items["browsingoutline_" + item.ItemId.ToLower()] as string;
             if (string.IsNullOrEmpty(outline))
             {
                 var outlines = OutlineBuilder.BuildCategoryOutline(CustomerSession.CatalogId, item.ItemId);
-                HttpContext.Current.Items["browsingoutline_" + item.Code.ToLower()] = outline = String.Join(";", outlines.Select(m => new BrowsingOutline(m).ToString()));
+                HttpContext.Current.Items["browsingoutline_" + item.ItemId.ToLower()] = outline = String.Join(";", outlines.Select(m => new BrowsingOutline(m).ToString()));
             }
             return outline.Split(';');
         }
