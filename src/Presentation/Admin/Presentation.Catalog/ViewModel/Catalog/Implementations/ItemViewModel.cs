@@ -1301,12 +1301,9 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
         {
             var item = (EditorialReview)EntityFactory.CreateEntityForType("EditorialReview");
             item.CatalogItem = InnerItem;
+            item.Locale = InnerItem.Catalog.DefaultLanguage;
             item.Priority = 1;
             RaiseEditorialReviewEditInteractionRequest(item, "Add Editorial Review".Localize());
-            //if ()
-            //{
-            //    InnerItem.EditorialReviews.Add(item);
-            //}
         }
 
         private void RaiseEditorialReviewEditInteractionRequest(EditorialReview originalItem)
