@@ -21,7 +21,7 @@ namespace VirtoCommerce.Web.Virto.Helpers.MVC.SiteMap
             var nodes = new List<DynamicNode>();
             int order = 0;
             var categories = catalog.CategoryBases.OfType<Category>().Where(x => x.IsActive).ToList();
-            foreach (var category in categories.OrderByDescending(x => x.Priority))
+            foreach (var category in categories.OrderByDescending(x => x.Priority).ThenBy(x => x.Name))
             {
 
                 var pNode = new DynamicNode
