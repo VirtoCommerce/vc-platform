@@ -72,7 +72,12 @@ namespace VirtoCommerce.Web.Virto.Helpers
             model.InjectFrom(item);
 
             model.ItemAssets = new List<ItemAsset>(item.ItemAssets).ToArray();
-            model.EditorialReviews = new List<EditorialReview>(item.EditorialReviews).ToArray();
+            var reviews = item.EditorialReviews;
+            model.EditorialReviews = new List<EditorialReview>(reviews.Where(x => string.IsNullOrEmpty(x.Locale) 
+                ||  string.Equals(x.Locale, CultureInfo.CurrentUICulture.Name, StringComparison.InvariantCultureIgnoreCase)
+                || (string.Equals(x.Locale, StoreHelper.GetDefaultLanguageCode(), StringComparison.InvariantCultureIgnoreCase)
+                    && !reviews.Any(val => val.Source == x.Source && string.Equals(val.Locale, CultureInfo.CurrentUICulture.Name, StringComparison.InvariantCultureIgnoreCase))))).ToArray();
+
             model.AssociationGroups = new List<AssociationGroup>(item.AssociationGroups).ToArray();
 
             if (propertySet != null && item.ItemPropertyValues != null)
