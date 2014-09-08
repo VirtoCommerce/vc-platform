@@ -491,8 +491,6 @@ namespace VirtoCommerce.Client
             return category;
         }
 
-
-
         /// <summary>
         /// Gets the category.
         /// </summary>
@@ -502,6 +500,18 @@ namespace VirtoCommerce.Client
         public CategoryBase GetCategory(string code, bool useCache = true)
         {
             var catalogId = _customerSession.CustomerSession.CatalogId;
+            return GetCategory(code, catalogId, useCache);
+        }
+
+        /// <summary>
+        /// Gets the category.
+        /// </summary>
+        /// <param name="code">The code.</param>
+        /// <param name="catalogId">The catalog identifier.</param>
+        /// <param name="useCache">if set to <c>true</c> [use cache].</param>
+        /// <returns></returns>
+        public CategoryBase GetCategory(string code, string catalogId, bool useCache = true)
+        {
             return Helper.Get(
                 CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix, string.Format(CategoryCacheKey, catalogId, code)),
                 () => GetCategoryInternal(catalogId, code),
@@ -538,6 +548,18 @@ namespace VirtoCommerce.Client
         public CategoryBase[] GetChildCategoriesById(string id, bool useCache = true)
         {
             var catalogId = _customerSession.CustomerSession.CatalogId;
+            return GetChildCategoriesById(id, catalogId, useCache);
+        }
+
+        /// <summary>
+        /// Gets the child categories by identifier.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <param name="catalogId">The catalog identifier.</param>
+        /// <param name="useCache">if set to <c>true</c> [use cache].</param>
+        /// <returns></returns>
+        public CategoryBase[] GetChildCategoriesById(string id, string catalogId, bool useCache = true)
+        {
             return Helper.Get(
                 CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix, string.Format(ChildCategoriesCacheKey, catalogId, id)),
                 () => _catalogRepository.Categories.Where(c => c.CatalogId == catalogId && c.ParentCategoryId == id).ToArray(),
