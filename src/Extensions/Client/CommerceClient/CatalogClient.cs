@@ -562,7 +562,7 @@ namespace VirtoCommerce.Client
         {
             return Helper.Get(
                 CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix, string.Format(ChildCategoriesCacheKey, catalogId, id)),
-                () => _catalogRepository.Categories.Where(c => c.CatalogId == catalogId && c.ParentCategoryId == id).ToArray(),
+                () => _catalogRepository.Categories.Where(c => (string.IsNullOrEmpty(catalogId) || c.CatalogId == catalogId) && c.ParentCategoryId == id).ToArray(),
                 CatalogConfiguration.Instance.Cache.CategoryTimeout,
                 _isEnabled && useCache);
         }
