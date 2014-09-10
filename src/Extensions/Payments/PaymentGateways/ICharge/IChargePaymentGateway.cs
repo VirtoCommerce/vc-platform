@@ -201,7 +201,7 @@ namespace VirtoCommerce.PaymentGateways.ICharge
 						_icharge.Capture(transactionId, _icharge.TransactionAmount);
 						break;
 					case TransactionType.Credit:
-						_icharge.Credit();
+                        _icharge.Refund(transactionId, _icharge.TransactionAmount);
 						break;
 					case TransactionType.Sale:
 						_icharge.Sale();

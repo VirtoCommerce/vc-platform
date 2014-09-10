@@ -90,11 +90,11 @@ namespace VirtoCommerce.Web.Controllers
 
                     if (node != null)
                     {
-                        if (node.ParentNode != null && model.CatalogOutline !=null)
-                        {
+                        //if (node.ParentNode != null && model.CatalogOutline !=null)
+                        //{
 
-                            node.Attributes["Outline"] = new BrowsingOutline(model.CatalogOutline);
-                        }
+                        //    node.Attributes["Outline"] = new BrowsingOutline(model.CatalogOutline);
+                        //}
 
                         node.Title = model.DisplayName;
                     }
