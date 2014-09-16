@@ -482,9 +482,14 @@ namespace VirtoCommerce.Client
                 if (category != null && category.IsActive)
                 {
                     //Get simple category from linked catalog
-                    category = _catalogRepository.Categories.OfType<Category>()
+                    var realCategory = _catalogRepository.Categories.OfType<Category>()
                         .Expand(p => p.CategoryPropertyValues)
                         .FirstOrDefault(x => (x.CatalogId == ((LinkedCategory)category).LinkedCatalogId) && (x.CategoryId.Equals(id, StringComparison.OrdinalIgnoreCase)));
+
+                    if (realCategory != null)
+                    {
+                        return realCategory;
+                    }
                 }
             }
 
