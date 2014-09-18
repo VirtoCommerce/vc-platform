@@ -33,7 +33,10 @@ IF(EXISTS((SELECT CategoryId FROM [deleted])))
 		DELETE FROM [dbo].[CategoryItemRelation] WHERE CategoryId IN (SELECT CategoryId FROM [deleted])
 		DELETE FROM [dbo].[CategoryItemRelation] WHERE CategoryId IN (SELECT CategoryId FROM @TempParentCategoryId)
 		DELETE FROM [dbo].[CategoryBase] WHERE ParentCategoryId IN (SELECT CategoryId FROM [deleted])
-        DELETE FROM [dbo].[SeoUrlKeyword] WHERE KeywordType = 0 AND KeywordValue IN (SELECT CategoryId FROM [deleted])
+        IF (EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND  TABLE_NAME = 'SeoUrlKeyword'))
+	    BEGIN
+		    DELETE FROM [dbo].[SeoUrlKeyword] WHERE KeywordType = 0 AND KeywordValue IN (SELECT CategoryId FROM [deleted])
+	    END
 	END
 END");
 
@@ -41,7 +44,10 @@ END");
 CREATE TRIGGER [dbo].[TR_ItemDeleteTrigger] ON [dbo].[Item] 
 FOR DELETE AS
 BEGIN
-	DELETE FROM [dbo].[SeoUrlKeyword] WHERE KeywordType = 1 AND KeywordValue IN (SELECT ItemId FROM [deleted])
+	IF (EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND  TABLE_NAME = 'SeoUrlKeyword'))
+	BEGIN
+		DELETE FROM [dbo].[SeoUrlKeyword] WHERE KeywordType = 1 AND KeywordValue IN (SELECT ItemId FROM [deleted])
+	END
 END");
         }
         
