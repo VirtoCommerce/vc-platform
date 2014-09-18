@@ -78,6 +78,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Wizard
         {
             var item = (EditorialReview)entityFactory.CreateEntityForType(typeof(EditorialReview));
             item.CatalogItem = parentItem;
+            item.Locale = parentItem.Catalog.DefaultLanguage;
             item.Priority = 1;
             item.Source = "Product Description".Localize();
 

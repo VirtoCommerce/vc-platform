@@ -53,7 +53,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 
 		private string _Source;
 		[DataMember]
-        [StringLength(128)]
+		[StringLength(128)]
 		public string Source
 		{
 			get
@@ -83,7 +83,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 
 		private int _ReviewState;
 		[DataMember]
-        [Required]
+		[Required]
 		public int ReviewState
 		{
 			get
@@ -108,6 +108,21 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 			set
 			{
 				SetValue(ref _Comments, () => this.Comments, value);
+			}
+		}
+
+		private string _Locale;
+		[StringLength(64)]
+		[DataMember]
+		public string Locale
+		{
+			get
+			{
+				return _Locale;
+			}
+			set
+			{
+				SetValue(ref _Locale, () => this.Locale, value);
 			}
 		}
 

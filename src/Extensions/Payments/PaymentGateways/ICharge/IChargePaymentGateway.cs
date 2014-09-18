@@ -64,7 +64,7 @@ namespace VirtoCommerce.PaymentGateways.ICharge
 			_icharge.Card.ExpMonth = info.CreditCardExpirationMonth;
 			_icharge.Card.ExpYear = info.CreditCardExpirationYear;
 			_icharge.Card.Number = info.CreditCardNumber ?? "";
-			_icharge.Card.CVV2Data = info.CreditCardSecurityCode ?? "";
+			_icharge.Card.CVVData = info.CreditCardSecurityCode ?? "";
 
 			// Find the address
 			var address = info.OrderForm.OrderGroup.OrderAddresses
@@ -93,7 +93,7 @@ namespace VirtoCommerce.PaymentGateways.ICharge
 				_icharge.Gateway == IchargeGateways.gwPayFuse ||
 				_icharge.Gateway == IchargeGateways.gwOrbital ||
 				_icharge.Gateway == IchargeGateways.gwOgone ||
-				_icharge.Gateway == IchargeGateways.gwOptimal ||
+				//_icharge.Gateway == IchargeGateways.gwOptimal ||
 				_icharge.Gateway == IchargeGateways.gwWorldPayXML ||
 				_icharge.Gateway == IchargeGateways.gwProPay ||
 				_icharge.Gateway == IchargeGateways.gwLitle ||
@@ -129,9 +129,9 @@ namespace VirtoCommerce.PaymentGateways.ICharge
 						//AddSpecialField(info, " x_tran_key");
 						AddConfigField("AIMHashSecret");
 						break;
-					case IchargeGateways.gwViaKlix:
-						AddSpecialField("ssl_user_id");
-						break;
+                    //case IchargeGateways.gwViaKlix:
+                    //    AddSpecialField("ssl_user_id");
+                    //    break;
 					case IchargeGateways.gwBankOfAmerica:
 						_icharge.AddSpecialField("ecom_payment_card_name", info.CreditCardCustomerName);
 						AddConfigField("referer");
@@ -157,23 +157,23 @@ namespace VirtoCommerce.PaymentGateways.ICharge
 					case IchargeGateways.gwPRIGate:
 						_icharge.MerchantPassword = Settings["MerchantPassword"];
 						break;
-					case IchargeGateways.gwProtx:
-						AddSpecialField("RelatedSecurityKey");
-						AddSpecialField("RelatedVendorTXCode");
-						AddSpecialField("RelatedTXAuthNo");
-						break;
-					case IchargeGateways.gwOptimal:
-						_icharge.MerchantPassword = Settings["MerchantPassword"];
-						AddSpecialField("account");
-						break;
-					case IchargeGateways.gwEFSNet:
-						_icharge.AddSpecialField("OriginalTransactionAmount", _icharge.TransactionAmount);
-						break;
-					case IchargeGateways.gwPayStream:
-						AddSpecialField("CustomerID");
-						AddSpecialField("ZoneID");
-						AddSpecialField("Username");
-						break;
+                    //case IchargeGateways.gwProtx:
+                    //    AddSpecialField("RelatedSecurityKey");
+                    //    AddSpecialField("RelatedVendorTXCode");
+                    //    AddSpecialField("RelatedTXAuthNo");
+                    //    break;
+                    //case IchargeGateways.gwOptimal:
+                    //    _icharge.MerchantPassword = Settings["MerchantPassword"];
+                    //    AddSpecialField("account");
+                    //    break;
+                    //case IchargeGateways.gwEFSNet:
+                    //    _icharge.AddSpecialField("OriginalTransactionAmount", _icharge.TransactionAmount);
+                    //    break;
+                    //case IchargeGateways.gwPayStream:
+                    //    AddSpecialField("CustomerID");
+                    //    AddSpecialField("ZoneID");
+                    //    AddSpecialField("Username");
+                    //    break;
 					case IchargeGateways.gwPayFlowPro:
 						// for testing purpose uncomment line below   
 						//_icharge.GatewayURL = "test-payflow.verisign.com";
@@ -201,7 +201,7 @@ namespace VirtoCommerce.PaymentGateways.ICharge
 						_icharge.Capture(transactionId, _icharge.TransactionAmount);
 						break;
 					case TransactionType.Credit:
-						_icharge.Credit(transactionId, _icharge.TransactionAmount);
+                        _icharge.Refund(transactionId, _icharge.TransactionAmount);
 						break;
 					case TransactionType.Sale:
 						_icharge.Sale();

@@ -608,10 +608,9 @@
                         <DataGridTextColumn Header="{Loc 'State'}" Binding="{Binding ReviewState, Converter={StaticResource reviewStateConverter}}"
                              LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}" />
                         <DataGridTextColumn Header="{Loc 'Priority'}" Binding="{Binding Priority}" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}" />
-                        <DataGridTextColumn Header="{Loc 'Last Modified'}" Binding="{Binding LastModified}"
-                             LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}" />
-                        <DataGridTextColumn Header="{Loc 'Content'}" Binding="{Binding Content}" Width="*"
-                             LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}" />
+                        <DataGridTextColumn Header="{Loc 'Language'}" Binding="{Binding Locale, Converter={StaticResource cultureConverter}}" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}" />
+                        <DataGridTextColumn Header="{Loc 'Last Modified'}" Binding="{Binding LastModified}" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}" />
+                        <DataGridTextColumn Header="{Loc 'Content'}" Binding="{Binding Content}" Width="*" LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}" />
                     </DataGrid.Columns>
                     <DataGrid.RowStyle>
                         <Style TargetType="{x:Type DataGridRow}" BasedOn="{StaticResource {x:Type DataGridRow}}">

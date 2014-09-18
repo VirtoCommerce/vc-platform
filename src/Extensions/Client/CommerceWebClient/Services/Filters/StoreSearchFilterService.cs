@@ -83,7 +83,7 @@ namespace VirtoCommerce.Web.Client.Services.Filters
                 var categoryFilter = new CategoryFilter { Key = "__outline" };
                 var listOfValues = (from child in children.OfType<Category>() 
                                     let outline = String.Format("{0}*", catalogClient.BuildCategoryOutline(_customerSession.CustomerSession.CatalogId, child)) 
-                                    select new CategoryFilterValue {Id = child.Code, Outline = outline, Name = child.DisplayName()}).ToList();
+                                    select new CategoryFilterValue {Id = child.CategoryId, Outline = outline, Name = child.DisplayName()}).ToList();
 
                 // add filters only if found any
                 if (listOfValues.Count > 0)

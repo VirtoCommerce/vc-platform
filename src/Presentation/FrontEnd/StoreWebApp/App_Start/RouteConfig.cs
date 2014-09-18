@@ -89,14 +89,28 @@ namespace VirtoCommerce.Web
             routes.Add("Store", storeRoute);
 
             //Legacy redirects
-            routes.Redirect(r => r.MapRoute("old_Category", string.Format("c/{{{0}}}", Constants.Category))).To(categoryRoute);
+            routes.Redirect(r => r.MapRoute("old_Category", string.Format("c/{{{0}}}", Constants.Category))).To(categoryRoute,
+                x =>
+                {
+                    //Expect to receive category code
+                    if (x.RouteData.Values.ContainsKey(Constants.Category))
+                    {
+                        var category = CatalogHelper.CatalogClient.GetCategory(x.RouteData.Values[Constants.Category].ToString());
+                        if (category != null)
+                        {
+                            return new RouteValueDictionary { { Constants.Category, category.CategoryId } };
+                        }
+                    }
+                    return null;
+                });
             routes.Redirect(r => r.MapRoute("old_Item", string.Format("p/{{{0}}}", Constants.Item))).To(itemRoute,
                 x =>
                 {
                     //Resolve item category dynamically
+                    //Expect to receive item code
                     if (x.RouteData.Values.ContainsKey(Constants.Item))
                     {
-                        var item = CatalogHelper.CatalogClient.GetItem(x.RouteData.Values[Constants.Item].ToString(), StoreHelper.CustomerSession.CatalogId);
+                        var item = CatalogHelper.CatalogClient.GetItemByCode(x.RouteData.Values[Constants.Item].ToString(), StoreHelper.CustomerSession.CatalogId);
                         if (item != null)
                         {
                             return new RouteValueDictionary { { Constants.Category, item.GetItemCategoryRouteValue() } };

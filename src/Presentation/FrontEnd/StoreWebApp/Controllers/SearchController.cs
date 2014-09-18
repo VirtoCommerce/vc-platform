@@ -432,7 +432,7 @@ namespace VirtoCommerce.Web.Controllers
                     var currentOutline = this.GetItemOutlineUsingContext(searchTags[criteria.OutlineField].ToString());
 
                     //Cache outline
-                    HttpContext.Items["browsingoutline_" + item.Code.ToLower()] = StripCatalogFromOutline(currentOutline);
+                    HttpContext.Items["browsingoutline_" + item.ItemId.ToLower()] = StripCatalogFromOutline(currentOutline);
 
                     if (prices != null && prices.Any())
                     {

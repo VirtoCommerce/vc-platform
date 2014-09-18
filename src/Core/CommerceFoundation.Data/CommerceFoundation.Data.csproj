@@ -133,6 +133,10 @@
       <DependentUpon>201407291500445_UpdateStatisticsProceduresAdd.cs</DependentUpon>
     </Compile>
     <Compile Include="Asset\FileSystemBlobAssetRepository.cs" />
+    <Compile Include="Catalogs\Migrations\201409031214424_EditorialReviewLocale_SeoTriggers.cs" />
+    <Compile Include="Catalogs\Migrations\201409031214424_EditorialReviewLocale_SeoTriggers.Designer.cs">
+      <DependentUpon>201409031214424_EditorialReviewLocale_SeoTriggers.cs</DependentUpon>
+    </Compile>
     <Compile Include="Importing\EFImportingRepository.cs" />
     <Compile Include="Importing\DSImportClient.cs" />
     <Compile Include="Importing\DSImportService.cs" />
@@ -308,6 +312,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AppConfig\Migrations\201402141554170_Initial.resx">
       <DependentUpon>201402141554170_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Catalogs\Migrations\201409031214424_EditorialReviewLocale_SeoTriggers.resx">
+      <DependentUpon>201409031214424_EditorialReviewLocale_SeoTriggers.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Customers\Migrations\201402141557167_Initial.resx">
       <DependentUpon>201402141557167_Initial.cs</DependentUpon>

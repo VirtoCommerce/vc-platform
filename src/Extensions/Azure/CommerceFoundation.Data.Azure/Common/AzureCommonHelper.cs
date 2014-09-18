@@ -82,10 +82,19 @@
 				return true;
 			}
 
-		    if (CloudConfigurationManager.GetSetting("AzureDeployment") != null)
-		    {
-		        return true;
-		    }
+
+            try
+            {
+                if (CloudConfigurationManager.GetSetting("AzureDeployment") != null)
+                {
+                    return true;
+                }
+            }
+            catch
+            {
+                
+                return false;
+            }
 
 		    return false;
 		}
