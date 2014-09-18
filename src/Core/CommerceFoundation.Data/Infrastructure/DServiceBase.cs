@@ -52,9 +52,9 @@ namespace VirtoCommerce.Foundation.Data.Infrastructure
 			args.Exception = new DataServiceException(500, errorMessage);
 		}
 
-        protected override EntityFrameworkDataServiceProvider2<T> CreateDataSource()
+        protected override IDataServiceInternalProvider CreateInternalProvider(object dataSourceInstance)
         {
-            return new EntityFrameworkDataServiceProvider2<T>(
+            return new EntityFrameworkDataServiceProvider2(
                 new DataServiceProviderArgs(
                     this,
                     CreateRepository(),
