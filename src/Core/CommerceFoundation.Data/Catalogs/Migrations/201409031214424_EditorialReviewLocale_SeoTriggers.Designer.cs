@@ -7,13 +7,13 @@ namespace VirtoCommerce.Foundation.Data.Catalogs.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.0.2-21211")]
-    public sealed partial class EditorialReviewLocale : IMigrationMetadata
+    public sealed partial class EditorialReviewLocale_SeoTriggers : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(EditorialReviewLocale));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(EditorialReviewLocale_SeoTriggers));
         
         string IMigrationMetadata.Id
         {
-            get { return "201409031214424_EditorialReviewLocale"; }
+            get { return "201409031214424_EditorialReviewLocale_SeoTriggers"; }
         }
         
         string IMigrationMetadata.Source

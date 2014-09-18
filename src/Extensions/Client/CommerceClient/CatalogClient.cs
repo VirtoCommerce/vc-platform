@@ -34,6 +34,7 @@ namespace VirtoCommerce.Client
         public const string ItemsQueryCacheKey = "C:Is:{0}";
         public const string PriceListCacheKey = "C:PL:{0}";
         public const string ItemVariationsCacheKey = "C:V:{0}";
+        public const string ItemVariationParentsCacheKey = "C:VP:{0}";
         public const string ItemInvetoriesCacheKey = "C:INV:{0}:{1}";
 
         public const string PricesCacheKey = "C:P:{0}";
@@ -285,6 +286,7 @@ namespace VirtoCommerce.Client
         public PropertySet GetPropertySet(string propertySetId)
         {
             var sets = GetPropertySets();
+// ReSharper disable once ReplaceWithSingleCallToSingleOrDefault does not work from dataService
             var set = sets.Where(x => x.PropertySetId.Equals(propertySetId, StringComparison.OrdinalIgnoreCase)).SingleOrDefault();
             return set;
         }
@@ -603,6 +605,16 @@ namespace VirtoCommerce.Client
                 CatalogConfiguration.Instance.Cache.ItemTimeout,
                 _isEnabled);
         }
+
+        public ItemRelation[] GetItemParentRelations(string itemId)
+        {
+            return Helper.Get(
+                CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix, string.Format(ItemVariationParentsCacheKey, itemId)),
+                () => _catalogRepository.ItemRelations.Where(ir => ir.ChildItemId == itemId).Expand(ir => ir.ParentItem).Expand(ir => ir.ParentItem.ItemPropertyValues).ToArray(),
+                CatalogConfiguration.Instance.Cache.ItemTimeout,
+                _isEnabled);
+        }
+
 
         #endregion
 
