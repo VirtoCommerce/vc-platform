@@ -271,8 +271,8 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			using (var seoRepository = _seoRepositoryFactory.GetRepositoryInstance())
 			{
 				_repositoryFactory.GetRepositoryInstance().Categories
-					.Where(x => x.ParentCategoryId == InnerItem.CategoryId).ToList().ForEach(y => seoRepository.SeoUrlKeywords.Where(z => z.KeywordValue.Equals(y.Code, StringComparison.InvariantCultureIgnoreCase)).ToList().ForEach(keyword => seoRepository.Remove(keyword)));
-				seoRepository.SeoUrlKeywords.Where(x => x.KeywordValue.Equals(InnerItem.Code, StringComparison.InvariantCultureIgnoreCase)).ToList().ForEach(y => seoRepository.Remove(y));
+					.Where(x => x.ParentCategoryId == InnerItem.CategoryId).ToList().ForEach(y => seoRepository.SeoUrlKeywords.Where(z => z.KeywordValue.Equals(y.CategoryId, StringComparison.InvariantCultureIgnoreCase)).ToList().ForEach(keyword => seoRepository.Remove(keyword)));
+				seoRepository.SeoUrlKeywords.Where(x => x.KeywordValue.Equals(InnerItem.CategoryId, StringComparison.InvariantCultureIgnoreCase)).ToList().ForEach(y => seoRepository.Remove(y));
 				seoRepository.UnitOfWork.Commit();
 				retVal = true;
 			}
