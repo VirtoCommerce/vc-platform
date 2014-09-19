@@ -33,15 +33,15 @@
 			}
 			catch (StorageException e)
 			{
-			    if (e.RequestInformation.ExtendedErrorInformation.ErrorCode == BlobErrorCodeStrings.ContainerNotFound
-			        || e.RequestInformation.ExtendedErrorInformation.ErrorCode == BlobErrorCodeStrings.BlobNotFound)
-			    {
-			        retVal = false;
-			    }
-			    else
-			    {
-			        throw;
-			    }
+				switch (e.RequestInformation.ExtendedErrorInformation.ErrorCode)
+				{
+					case BlobErrorCodeStrings.ContainerNotFound:
+					case BlobErrorCodeStrings.BlobNotFound:
+						retVal = false;
+						break;
+					default:
+						throw;
+				}
 			}
 			return retVal;
 		}
