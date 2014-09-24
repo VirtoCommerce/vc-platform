@@ -237,6 +237,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation.Reporting", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation.Localization", "src\Presentation\Admin\Presentation.Localization\Presentation.Localization.csproj", "{10A07A08-2934-4338-B8BD-B89BDC1D014E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzureSearchProvider", "src\Extensions\Search\AzureSearchProvider\AzureSearchProvider.csproj", "{B7A061D8-6D0A-4996-B222-6611715F516B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -539,6 +541,12 @@ Global
 		{10A07A08-2934-4338-B8BD-B89BDC1D014E}.DebugLocal|Any CPU.Build.0 = Debug|Any CPU
 		{10A07A08-2934-4338-B8BD-B89BDC1D014E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{10A07A08-2934-4338-B8BD-B89BDC1D014E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7A061D8-6D0A-4996-B222-6611715F516B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7A061D8-6D0A-4996-B222-6611715F516B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7A061D8-6D0A-4996-B222-6611715F516B}.DebugLocal|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7A061D8-6D0A-4996-B222-6611715F516B}.DebugLocal|Any CPU.Build.0 = Debug|Any CPU
+		{B7A061D8-6D0A-4996-B222-6611715F516B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7A061D8-6D0A-4996-B222-6611715F516B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -609,6 +617,7 @@ Global
 		{4882F43B-AE8D-489B-911B-7F9A1D526715} = {464DA96A-08A5-4BB1-99DF-0FFA876AB6C4}
 		{2044B7A5-4050-4745-A430-6E29D7AB47C9} = {2C4CBAC6-17BD-4EC5-A378-93BAADF3DDF6}
 		{10A07A08-2934-4338-B8BD-B89BDC1D014E} = {2C4CBAC6-17BD-4EC5-A378-93BAADF3DDF6}
+		{B7A061D8-6D0A-4996-B222-6611715F516B} = {464DA96A-08A5-4BB1-99DF-0FFA876AB6C4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\ y.2.1.505.0\lib\NET35;packages\Unity.2.1.505.2\lib\NET35
