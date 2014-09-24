@@ -2,6 +2,9 @@
 
 namespace FunctionalTests.Search
 {
+    using System.Threading;
+    using System.Threading.Tasks;
+
     using VirtoCommerce.Foundation.Catalogs.Search;
     using VirtoCommerce.Foundation.Search;
     using VirtoCommerce.Search.Providers.Azure;
@@ -29,7 +32,7 @@ namespace FunctionalTests.Search
             var scope = "default";
             var queryBuilder = new AzureSearchQueryBuilder();
             var conn = new SearchConnection(Datasource, Scope, accessKey: AccessKey);
-            var provider = new AzureSearchProvider(queryBuilder, conn);           
+            var provider = new AzureSearchProvider(queryBuilder, conn);
 
             SearchHelper.CreateSampleIndex(provider, scope);
 
@@ -43,6 +46,9 @@ namespace FunctionalTests.Search
                 Pricelists = new string[] { }
             };
 
+
+            // force delay, otherwise records are not available
+            Thread.Sleep(1000); 
 
             var results = provider.Search(scope, criteria);
             
@@ -64,6 +70,29 @@ namespace FunctionalTests.Search
             Assert.True(results.DocCount == 1, String.Format("\"Sample Product\" search returns {0} instead of 1", results.DocCount));
 
             provider.RemoveAll(Scope, String.Empty);
+        }
+
+        [Fact]
+        public void TestAsync()
+        {
+            Console.WriteLine(Task2().Result);
+            Console.WriteLine(Task1().Result);
+            Console.WriteLine(Task2().Result);
+            Console.WriteLine(Task1().Result);
+            Console.WriteLine(Task2().Result);
+            Console.WriteLine(Task2().Result);
+        }
+
+        public async Task<int> Task1()
+        {
+            await Task.Delay(3000);
+            return 1;
+        }
+
+        public async Task<int> Task2()
+        {
+            await Task.Delay(10);
+            return 2;
         }
     }
 }
