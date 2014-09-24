@@ -80,7 +80,7 @@ namespace VirtoCommerce.Search.Providers.Azure
 
                 if (!String.IsNullOrEmpty(c.Catalog))
                 {
-                    filterBuilder.AppendFormat("catalog eq '{0}'", c.Catalog);
+                    //filterBuilder.AppendFormat("catalog eq '{0}'", c.Catalog);
                 }
 
                 builder.Filter = filterBuilder.ToString();
