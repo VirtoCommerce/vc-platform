@@ -85,12 +85,14 @@ namespace FunctionalTests.Search
 
         public async Task<int> Task1()
         {
+            Console.WriteLine("1*");
             await Task.Delay(3000);
             return 1;
         }
 
         public async Task<int> Task2()
         {
+            Console.WriteLine("2*");
             await Task.Delay(10);
             return 2;
         }

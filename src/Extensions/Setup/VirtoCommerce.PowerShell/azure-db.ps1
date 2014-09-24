@@ -17,7 +17,9 @@ Param(
         [parameter(Mandatory=$true)]
 		$publishSettingsFile,
         [parameter(Mandatory=$true)]
-		$setupModulePath
+		$setupModulePath,
+	  	[parameter(Mandatory=$false)]
+		$db_sampledata = $true
      )
 
 function setup-database
@@ -86,7 +88,7 @@ Function run-database-scripts
 {
     $db_connectionstring = "Server=tcp:$db_servername.database.windows.net,1433;Database=$db_databasename;User ID=$db_serverlogin@$db_servername;Password=$db_serverpassword;Trusted_Connection=False;Encrypt=True;Connection Timeout=420;MultipleActiveResultSets=True"
     Write-Output "$(Get-Date –f $timeStampFormat) - SQL Database Deployment: running database scripts"
-    . ".\setup-database.ps1" -dbconnection $db_connectionstring -moduleFile $setupModulePath
+    . ".\setup-database.ps1" -dbconnection $db_connectionstring -moduleFile $setupModulePath -useSample $db_sampledata
 }
 
 #Write-Output "Running Azure Imports"
