@@ -31,7 +31,6 @@ namespace FunctionalTests.Search
             var conn = new SearchConnection(Datasource, Scope, accessKey: AccessKey);
             var provider = new AzureSearchProvider(queryBuilder, conn);           
 
-
             SearchHelper.CreateSampleIndex(provider, scope);
 
             var criteria = new CatalogItemSearchCriteria
@@ -46,7 +45,7 @@ namespace FunctionalTests.Search
 
 
             var results = provider.Search(scope, criteria);
-
+            
             Assert.True(results.DocCount == 1, String.Format("Returns {0} instead of 1", results.DocCount));
 
             criteria = new CatalogItemSearchCriteria
