@@ -58,10 +58,12 @@
     </Compile>
     <Compile Include="AzureDocument.cs" />
     <Compile Include="AzureSearchClient.cs" />
+    <Compile Include="AzureSearchHelper.cs" />
     <Compile Include="AzureSearchQueryBuilder.cs" />
     <Compile Include="AzureSearchProvider.cs" />
     <Compile Include="AzureTypeMapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StringBuilderExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

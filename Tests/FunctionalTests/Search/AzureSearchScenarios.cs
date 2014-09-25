@@ -2,6 +2,7 @@
 
 namespace FunctionalTests.Search
 {
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -81,6 +82,10 @@ namespace FunctionalTests.Search
             Console.WriteLine(Task1().Result);
             Console.WriteLine(Task2().Result);
             Console.WriteLine(Task2().Result);
+
+            var person = new [] { new { UriHostNameType = ""} };
+
+            person.AsQueryable().Where(x => x.UriHostNameType == "as");
         }
 
         public async Task<int> Task1()

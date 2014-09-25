@@ -206,6 +206,11 @@ namespace VirtoCommerce.Search.Providers.Azure
                             indexField.IsFilterable();
                         }
 
+                        if (field.ContainsAttribute(IndexType.NOT_ANALYZED))
+                        {
+                            indexField.IsFilterable();
+                        }
+
                         if (indexField.Type == FieldType.StringCollection || indexField.Type == FieldType.String)
                         {
                             if (!field.ContainsAttribute(IndexType.NO))
@@ -314,14 +319,9 @@ namespace VirtoCommerce.Search.Providers.Azure
         {
             if (value is DateTime)
             {
-                var dateTime = (DateTime)value;
-                if (dateTime == DateTime.MaxValue)
-                {
-                    return DateTimeOffset.MaxValue;
-                }
-
-                return new DateTimeOffset(dateTime);
+                return AzureSearchHelper.ConvertToOffset((DateTime)value);
             }
+
             return value;
         }
     }

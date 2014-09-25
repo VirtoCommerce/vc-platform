@@ -47,6 +47,8 @@ namespace VirtoCommerce.Search.Providers.Azure
                 }
 
 
+                filterBuilder.Filter("startdate", c.StartDate, "lt");
+
                 /*
                 if (c.StartDateFrom.HasValue)
                 {
@@ -56,31 +58,22 @@ namespace VirtoCommerce.Search.Providers.Azure
                 }
                  * */
 
-                /*
                 if (c.EndDate.HasValue)
                 {
-                    mainQuery.Must(m => m
-                        .Range(r => r.Field("enddate").From(c.EndDate.Value.ToString("s")))
-                   );
+                    //filterBuilder.Filter("enddate", c.EndDate.Value, "gt");
                 }
-                 * */
-                /*
-                mainQuery.Must(m => m.Term(t => t.Field("__hidden").Value("false")));
+
+                filterBuilder.Filter("sys__hidden", "false");
 
                 if (c.Outlines != null && c.Outlines.Count > 0)
-                    AddQuery("__outline", mainQuery, c.Outlines);
-
-                if (!String.IsNullOrEmpty(c.SearchPhrase))
                 {
-                    var contentField = string.Format("__content_{0}", c.Locale.ToLower());
-                    AddQueryString(mainQuery, c, "__content", contentField);
+                    filterBuilder.Filter("sys__outline", c.Outlines.OfType<string>().ToArray());
                 }
 
-                 * */
 
                 if (!String.IsNullOrEmpty(c.Catalog))
                 {
-                    //filterBuilder.AppendFormat("catalog eq '{0}'", c.Catalog);
+                    filterBuilder.Filter("catalog", c.Catalog);
                 }
 
                 builder.Filter = filterBuilder.ToString();
@@ -89,14 +82,6 @@ namespace VirtoCommerce.Search.Providers.Azure
             #endregion
 
             return builder;
-        }
-
-        protected void AddQueryString(
-            SearchQuery query,
-            CatalogItemSearchCriteria filter,
-            params string[] fields)
-        {
-            
         }
     }
 }
