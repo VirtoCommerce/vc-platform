@@ -174,7 +174,7 @@ namespace VirtoCommerce.Web.Controllers
                                            string variation = null)
         {
             var variations = _catalogClient.GetItemRelations(itemId);
-            var selectedVariation = string.IsNullOrEmpty(variation) ? null : _catalogClient.GetItemByCode(variation, StoreHelper.CustomerSession.CatalogId);
+            var selectedVariation = string.IsNullOrEmpty(variation) ? null : _catalogClient.GetItem(variation, StoreHelper.CustomerSession.CatalogId);
             var model = new VariationsModel(variations, selections, selectedVariation);
             return PartialView(name, model);
         }
