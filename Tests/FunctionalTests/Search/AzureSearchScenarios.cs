@@ -10,6 +10,7 @@ namespace FunctionalTests.Search
     using VirtoCommerce.Foundation.Search;
     using VirtoCommerce.Search.Providers.Azure;
     using Xunit;
+    using Xunit.Sdk;
 
     public class AzureSearchScenarios
     {
@@ -42,7 +43,7 @@ namespace FunctionalTests.Search
         }
 
 
-        [Fact]
+        //[Fact]
         [Trait("type", "azuresearch")]
         public void Can_find_items_azuresearch()
         {

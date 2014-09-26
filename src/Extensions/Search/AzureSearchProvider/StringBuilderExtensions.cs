@@ -50,5 +50,26 @@ namespace VirtoCommerce.Search.Providers.Azure
             builder.AppendFormat("{0}/any(t: t eq '{1}')", field, value);
         }
 
+        public static void Contains(this StringBuilder builder, string field, string[] values, bool and = true)
+        {
+            if (values.Length == 0) return;
+            
+            if (builder.Length > 0) builder.AppendFormat(" {0} ", and ? "and" : "or");
+
+            var index = 0;
+            builder.AppendFormat("{0}/any(t:", field);
+            foreach (var val in values)
+            {
+                if (index > 0)
+                {
+                    builder.AppendFormat(" {0} ", "or");
+                }
+
+                builder.AppendFormat("t eq '{0}'", val);
+                index++;
+            }
+
+            builder.AppendFormat(")");
+        }
     }
 }

@@ -67,7 +67,7 @@ namespace VirtoCommerce.Search.Providers.Azure
 
                 if (c.Outlines != null && c.Outlines.Count > 0)
                 {
-                    //filterBuilder.Filter("sys__outline", c.Outlines.OfType<string>().ToArray());
+                    filterBuilder.Contains("sys__outline", c.Outlines.OfType<string>().ToArray());
                 }
 
 
