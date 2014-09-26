@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 namespace VirtoCommerce.Search.Providers.Azure
 {
+    using RedDog.Search.Http;
+
     public class AzureSearchHelper
     {
         public static DateTimeOffset ConvertToOffset(DateTime value)
@@ -34,6 +36,15 @@ namespace VirtoCommerce.Search.Providers.Azure
             if (original.Length > 0) original.AppendFormat(" {0} ", and ? "AND" : "OR");
 
             original.Append(target);
+        }
+
+        public static string FormatSearchException(IApiResponse response)
+        {
+            return String.Format(
+                "StatusCode: {0}; Error Code: {1}; Error Message: {2}",
+                response.StatusCode,
+                response.Error.Code,
+                response.Error.Message);
         }
     }
 }

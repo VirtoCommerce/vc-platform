@@ -239,7 +239,7 @@ namespace VirtoCommerce.Web
             }
             else if (string.Equals(searchConnection.Provider, SearchProviders.AzureSearch.ToString(), StringComparison.OrdinalIgnoreCase))
             {
-                // Lucene Search implementation
+                // Azure Search implementation
                 container.RegisterType<ISearchProvider, AzureSearchProvider>();
                 container.RegisterType<ISearchQueryBuilder, AzureSearchQueryBuilder>();
             }

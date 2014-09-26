@@ -27,10 +27,47 @@ namespace FunctionalTests.Search
             provider.RemoveAll(Scope, String.Empty);
         }
 
+        [Fact]
+        public void Can_create_connection_azuresearch()
+        {
+            var connectionString =
+                "server=virtocommerce;scope=default;key=accesskey;provider=azuresearch";
+
+            var connection = new SearchConnection(connectionString);
+
+            Assert.True(connection.DataSource == "virtocommerce");
+            Assert.True(connection.Provider == "azuresearch");
+            Assert.True(connection.Scope == "default");
+            Assert.True(connection.AccessKey == "accesskey");
+        }
+
+
+        [Fact]
+        [Trait("type", "azuresearch")]
+        public void Can_find_items_azuresearch()
+        {
+            var scope = "default";
+            var queryBuilder = new AzureSearchQueryBuilder();
+            var conn = new SearchConnection(Datasource, Scope, accessKey: AccessKey);
+            var provider = new AzureSearchProvider(queryBuilder, conn);
+
+            var criteria = new CatalogItemSearchCriteria
+                           {
+                               SearchPhrase = "sony",
+                               IsFuzzySearch = true,
+                               Catalog = "Sony",
+                               RecordsToRetrieve = 10,
+                               StartingRecord = 0,
+                               Pricelists = new string[] { }
+                           };
+
+            var results = provider.Search(scope, criteria);
+        }
+
         [Fact, Trait("type", "azuresearch")]
         public void Can_find_item_azuresearch()
         {
-            var scope = "default";
+            var scope = "test";
             var queryBuilder = new AzureSearchQueryBuilder();
             var conn = new SearchConnection(Datasource, Scope, accessKey: AccessKey);
             var provider = new AzureSearchProvider(queryBuilder, conn);

@@ -58,6 +58,12 @@ namespace VirtoCommerce.Search.Providers.Azure
             return result;
         }
 
+        public async Task<IApiResponse<Index>> UpdateIndex(Index index)
+        {
+            var result = await IndexClient.UpdateIndexAsync(index);
+            return result;
+        }
+
         public async Task<IApiResponse<IEnumerable<IndexOperationResult>>> IndexBulk(string indexName, IEnumerable<AzureDocument> documents = null)
         {
             var operations = from d in documents

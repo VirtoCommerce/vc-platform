@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace VirtoCommerce.Search.Providers.Azure
 {
+    using System.Net;
+    using System.Threading;
+
     using RedDog.Search;
     using RedDog.Search.Http;
     using RedDog.Search.Model;
@@ -86,7 +89,7 @@ namespace VirtoCommerce.Search.Providers.Azure
                 var searchResponse = Client.Search(scope, builder).Result;
                 if (!searchResponse.IsSuccess)
                 {
-                    throw new ApplicationException(searchResponse.StatusCode.ToString());
+                    throw new AzureSearchException(AzureSearchHelper.FormatSearchException(searchResponse));
                 }
 
                 resultDocs = searchResponse.Body;
@@ -129,17 +132,22 @@ namespace VirtoCommerce.Search.Providers.Azure
             }
 
             Index mapping = null;
+            var indexAlreadyCreated = false;
             if (!_mappings.ContainsKey(core))
             {
+                Thread.Sleep(3000);
+
                 // Get mapping info
                 mapping = Client.GetIndex(scope).Result;
                 if (mapping != null)
                 {
+                    indexAlreadyCreated = true;
                     _mappings.Add(core, mapping);
                 }
             }
             else
             {
+                indexAlreadyCreated = true;
                 mapping = _mappings[core];
             }
 
@@ -169,14 +177,6 @@ namespace VirtoCommerce.Search.Providers.Azure
                     }
 
                     localDocument[key] = objListTemp;
-
-                    // now check if mapping needs to be updated with an array
-                    var fieldToUpdate = mapping.Fields.Where(x => x.Name.Equals(key)).SingleOrDefault();
-                    if (fieldToUpdate.Type != FieldType.StringCollection)
-                    {
-                        fieldToUpdate.Type = FieldType.StringCollection;
-                        submitMapping = true;
-                    }
                 }
                 else
                 {
@@ -186,9 +186,8 @@ namespace VirtoCommerce.Search.Providers.Azure
                         {
                             mapping = new Index(scope);
                         }
-
-                        var type = field.Value != null ? field.Value.GetType() : typeof(String);
-                        var indexField = new IndexField(key, AzureTypeMapper.GetAzureSearchType(type));
+                       
+                        var indexField = new IndexField(key, AzureTypeMapper.GetAzureSearchType(field));
 
                         if (key == ConvertToAzureName("__key"))
                         {
@@ -223,17 +222,29 @@ namespace VirtoCommerce.Search.Providers.Azure
                         submitMapping = true;
                     }
 
-                    localDocument.Add(key, ConvertToOffset(field.Value));
+                    if (field.ContainsAttribute(IndexDataType.StringCollection))
+                        localDocument.Add(key, ConvertToOffset(field.Values));
+                    else
+                        localDocument.Add(key, ConvertToOffset(field.Value));
                 }
             }
 
             // submit mapping
             if (submitMapping)
             {
-                var response = Client.CreateIndex(mapping).Result;
-                if (!response.IsSuccess)
+                IApiResponse<Index> result = null;
+                if (indexAlreadyCreated)
                 {
-                    throw new IndexBuildException(response.ToString());
+                    result = Client.UpdateIndex(mapping).Result;    
+                }
+                else
+                {
+                    result = Client.CreateIndex(mapping).Result;    
+                }
+                
+                if (!result.IsSuccess)
+                {
+                    throw new IndexBuildException(AzureSearchHelper.FormatSearchException(result));
                 }
             }
 
@@ -256,7 +267,15 @@ namespace VirtoCommerce.Search.Providers.Azure
             var result = Client.DeleteIndex(scope).Result;
             if (!result.IsSuccess)
             {
-                throw new IndexBuildException(result.StatusCode.ToString());
+                if (result.StatusCode == HttpStatusCode.NotFound)
+                {
+                    // ignore index not found exception as it might simply not exist and thus no deletion is necessary
+                }
+                else
+                {
+                    throw new IndexBuildException(AzureSearchHelper.FormatSearchException(result));    
+                }
+                
             }
         }
 
@@ -283,7 +302,7 @@ namespace VirtoCommerce.Search.Providers.Azure
 
                 if (!result.IsSuccess)
                 {
-                    throw new IndexBuildException(result.StatusCode.ToString());
+                    throw new IndexBuildException(AzureSearchHelper.FormatSearchException(result));
                 }
 
                 foreach (var op in result.Body)
@@ -307,9 +326,15 @@ namespace VirtoCommerce.Search.Providers.Azure
         private static string _SysFieldPrefix = "sys";
         private static string ConvertToAzureName(string original)
         {
+            // Convert "-" to "_" since azure search doesn't allow those names
+            if (original.Contains("-"))
+            {
+                original = original.Replace("-", "_");
+            }
+
             if (original.StartsWith("__"))
             {
-                return _SysFieldPrefix + original;
+                original = _SysFieldPrefix + original;
             }
 
             return original;

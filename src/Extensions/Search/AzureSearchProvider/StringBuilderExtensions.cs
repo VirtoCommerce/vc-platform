@@ -42,5 +42,13 @@ namespace VirtoCommerce.Search.Providers.Azure
             builder.AppendFormat("{0} {1} {2}", field, op, AzureSearchHelper.ConvertToOffset(value).ToString("u").Replace(" ", "T"));
             builder.AppendFormat(")");
         }
+
+        public static void Contains(this StringBuilder builder, string field, string value, bool and = true)
+        {
+            if (builder.Length > 0) builder.AppendFormat(" {0} ", and ? "and" : "or");
+
+            builder.AppendFormat("{0}/any(t: t eq '{1}')", field, value);
+        }
+
     }
 }

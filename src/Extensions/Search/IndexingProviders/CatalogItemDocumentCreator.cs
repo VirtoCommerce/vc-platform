@@ -155,8 +155,8 @@ namespace VirtoCommerce.Search.Index
             doc.Add(new DocumentField("enddate", item.EndDate.HasValue ? item.EndDate : DateTime.MaxValue, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
             doc.Add(new DocumentField("createddate", item.Created.HasValue ? item.Created : DateTime.MaxValue, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
             doc.Add(new DocumentField("lastmodifieddate", item.LastModified.HasValue ? item.LastModified : DateTime.MaxValue, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
-            doc.Add(new DocumentField("catalog", item.CatalogId.ToLower(), new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
-            doc.Add(new DocumentField("__outline", item.CatalogId.ToLower(), new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
+            doc.Add(new DocumentField("catalog", item.CatalogId.ToLower(), new[] { IndexStore.YES, IndexType.NOT_ANALYZED, IndexDataType.StringCollection }));
+            doc.Add(new DocumentField("__outline", item.CatalogId.ToLower(), new[] { IndexStore.YES, IndexType.NOT_ANALYZED, IndexDataType.StringCollection }));
 
             // Index categories
             IndexItemCategories(ref doc, item);
@@ -171,8 +171,8 @@ namespace VirtoCommerce.Search.Index
             IndexReviews(ref doc, item);
 
             // add to content
-            doc.Add(new DocumentField("__content", item.Name, new[] { IndexStore.YES, IndexType.ANALYZED }));
-            doc.Add(new DocumentField("__content", item.Code, new[] { IndexStore.YES, IndexType.ANALYZED }));
+            doc.Add(new DocumentField("__content", item.Name, new[] { IndexStore.YES, IndexType.ANALYZED, IndexDataType.StringCollection }));
+            doc.Add(new DocumentField("__content", item.Code, new[] { IndexStore.YES, IndexType.ANALYZED, IndexDataType.StringCollection }));
         }
 
         protected virtual void IndexItemCustomProperties(ref ResultDocument doc, Item item)
@@ -206,10 +206,10 @@ namespace VirtoCommerce.Search.Index
                 {
 
                     case PropertyValueType.LongString:
-                        doc.Add(new DocumentField(contentField, ConvertToLowcase(indexVal.LongTextValue), new[] { IndexStore.YES, IndexType.ANALYZED }));
+                        doc.Add(new DocumentField(contentField, ConvertToLowcase(indexVal.LongTextValue), new[] { IndexStore.YES, IndexType.ANALYZED, IndexDataType.StringCollection }));
                         break;
                     case PropertyValueType.ShortString:
-                        doc.Add(new DocumentField(contentField, ConvertToLowcase(indexVal.ShortTextValue), new[] { IndexStore.YES, IndexType.ANALYZED }));
+                        doc.Add(new DocumentField(contentField, ConvertToLowcase(indexVal.ShortTextValue), new[] { IndexStore.YES, IndexType.ANALYZED, IndexDataType.StringCollection }));
                         break;
                 }
 

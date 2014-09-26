@@ -8,9 +8,21 @@ namespace VirtoCommerce.Search.Providers.Azure
 {
     using RedDog.Search.Model;
 
+    using VirtoCommerce.Foundation.Search;
+
     public static class AzureTypeMapper
     {
 
+        public static string GetAzureSearchType(IDocumentField field)
+        {
+            if (field.ContainsAttribute(IndexDataType.StringCollection))
+            {
+                return FieldType.StringCollection;
+            }
+
+            var type = field.Value != null ? field.Value.GetType() : typeof(String);
+            return GetAzureSearchType(type);
+        }
         public static string GetAzureSearchType(Type fieldType)
         {
             if (fieldType == typeof(String))
