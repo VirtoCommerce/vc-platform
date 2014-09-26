@@ -50,7 +50,7 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\packages\Newtonsoft.Json.6.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\..\..\packages\Newtonsoft.Json.6.0.5\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -117,6 +117,10 @@
     <ProjectReference Include="..\..\Jobs\VirtoCommerceJobs\ServerJobs.csproj">
       <Project>{bfc7b47d-a7ee-4693-9334-5084c09c3d31}</Project>
       <Name>ServerJobs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Search\AzureSearchProvider\AzureSearchProvider.csproj">
+      <Project>{b7a061d8-6d0a-4996-b222-6611715f516b}</Project>
+      <Name>AzureSearchProvider</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Search\ElasticSearchProvider\ElasticSearchProvider.csproj">
       <Project>{039e7914-2925-44c4-acad-6bccfa2a370e}</Project>

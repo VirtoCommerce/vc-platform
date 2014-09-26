@@ -3,6 +3,7 @@
     public enum SearchProviders
     {
         Lucene = 0,
-        EleasticSearch
+        EleasticSearch,
+        AzureSearch
     }
 }

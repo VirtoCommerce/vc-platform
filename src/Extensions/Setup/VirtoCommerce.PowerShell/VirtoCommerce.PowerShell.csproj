@@ -60,7 +60,7 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\packages\Newtonsoft.Json.6.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\..\..\packages\Newtonsoft.Json.6.0.5\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PlainElastic.Net, Version=1.0.48.0, Culture=neutral, PublicKeyToken=0930e76dfc03b7ac, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -138,6 +138,10 @@
     <ProjectReference Include="..\..\Cache\VirtoCommerce.Caching.HttpCache\VirtoCommerce.Caching.HttpCache.csproj">
       <Project>{3FE4EB14-557A-46BC-94AD-2E9874F85ACE}</Project>
       <Name>VirtoCommerce.Caching.HttpCache</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Search\AzureSearchProvider\AzureSearchProvider.csproj">
+      <Project>{b7a061d8-6d0a-4996-b222-6611715f516b}</Project>
+      <Name>AzureSearchProvider</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Search\ElasticSearchProvider\ElasticSearchProvider.csproj">
       <Project>{039e7914-2925-44c4-acad-6bccfa2a370e}</Project>

@@ -50,7 +50,9 @@ namespace VirtoCommerce.Search.Providers.Elastic
 
                     var arr = url.Split(':');
                     var host = arr[0];
-                    var port = arr[1];
+                    var port = "8080";
+                    if(arr.Length>1)
+                        port = arr[1];
 
                     _client = new ElasticClient<ESDocument>(host, Int32.Parse(port));
                 }

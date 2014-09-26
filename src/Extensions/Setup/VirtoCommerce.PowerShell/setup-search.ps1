@@ -1,7 +1,7 @@
 # variables
 Param( 
 	$dbconnection = "Server=(local);Database=VirtoCommerce;Integrated Security=True;MultipleActiveResultSets=True",
-	$searchconnection = "server=localhost:9200;scope=default",
+	$searchconnection = "server=virtocommerce;scope=default;key=128EE67AC838DF328B3BEC97ADB1A1B1;provider=azuresearch",
     $moduleFile
 )
 

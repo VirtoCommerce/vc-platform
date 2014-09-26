@@ -87,7 +87,7 @@
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Newtonsoft.Json.6.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\packages\Newtonsoft.Json.6.0.5\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Omu.ValueInjecter, Version=2.3.3.0, Culture=neutral, PublicKeyToken=c7694541b0ac80e4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -102,6 +102,11 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Microsoft.AspNet.WebApi.Client.5.2.2\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Web" />
@@ -156,6 +161,7 @@
     <Compile Include="Reviews\Repository\CatalogQueryScenarios.cs" />
     <Compile Include="Reviews\MigrationScenarios.cs" />
     <Compile Include="Reviews\ReviewScenarios.cs" />
+    <Compile Include="Search\AzureSearchScenarios.cs" />
     <Compile Include="Search\LuceneScenarios.cs" />
     <Compile Include="Search\MigrationScenarios.cs" />
     <Compile Include="Search\SearchHelper.cs" />
@@ -266,6 +272,10 @@
     <ProjectReference Include="..\..\src\Extensions\Payments\PaymentGateways\PaymentGateways.csproj">
       <Project>{8f364fcd-e08e-42c1-ab83-1d9790fb1426}</Project>
       <Name>PaymentGateways</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\Extensions\Search\AzureSearchProvider\AzureSearchProvider.csproj">
+      <Project>{B7A061D8-6D0A-4996-B222-6611715F516B}</Project>
+      <Name>AzureSearchProvider</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\Extensions\Search\ElasticSearchProvider\ElasticSearchProvider.csproj">
       <Project>{039e7914-2925-44c4-acad-6bccfa2a370e}</Project>
