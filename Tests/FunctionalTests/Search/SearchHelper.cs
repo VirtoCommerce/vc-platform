@@ -44,7 +44,7 @@ namespace FunctionalTests.Search
             {
                 foreach (var outline in outlines)
                 {
-                    //doc.Add(new DocumentField("__outline", outline, new[] { IndexStore.YES, IndexType.NOT_ANALYZED, IndexDataType.StringCollection }));
+                    doc.Add(new DocumentField("__outline", outline, new[] { IndexStore.YES, IndexType.NOT_ANALYZED, IndexDataType.StringCollection }));
                 }
             }
 
