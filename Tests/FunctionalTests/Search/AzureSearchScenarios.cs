@@ -14,18 +14,18 @@ namespace FunctionalTests.Search
 
     public class AzureSearchScenarios
     {
-        private const string Scope = "default";
         private const string Datasource = "virtocommerce";
         private const string AccessKey = "128EE67AC838DF328B3BEC97ADB1A1B1";
 
         [Fact, Trait("type", "azuresearch")]
         public void Can_create_azuresearch_index()
         {
+            var scope = "test";
             var queryBuilder = new AzureSearchQueryBuilder();
-            var conn = new SearchConnection(Datasource, Scope, accessKey: AccessKey);
+            var conn = new SearchConnection(Datasource, scope, accessKey: AccessKey);
             var provider = new AzureSearchProvider(queryBuilder, conn);           
-            SearchHelper.CreateSampleIndex(provider, Scope);
-            provider.RemoveAll(Scope, String.Empty);
+            SearchHelper.CreateSampleIndex(provider, scope);
+            provider.RemoveAll(scope, String.Empty);
         }
 
         [Fact]
@@ -49,7 +49,7 @@ namespace FunctionalTests.Search
         {
             var scope = "default";
             var queryBuilder = new AzureSearchQueryBuilder();
-            var conn = new SearchConnection(Datasource, Scope, accessKey: AccessKey);
+            var conn = new SearchConnection(Datasource, scope, accessKey: AccessKey);
             var provider = new AzureSearchProvider(queryBuilder, conn);
 
             var criteria = new CatalogItemSearchCriteria
@@ -70,9 +70,10 @@ namespace FunctionalTests.Search
         {
             var scope = "test";
             var queryBuilder = new AzureSearchQueryBuilder();
-            var conn = new SearchConnection(Datasource, Scope, accessKey: AccessKey);
+            var conn = new SearchConnection(Datasource, scope, accessKey: AccessKey);
             var provider = new AzureSearchProvider(queryBuilder, conn);
 
+            provider.RemoveAll(scope, String.Empty);
             SearchHelper.CreateSampleIndex(provider, scope);
 
             var criteria = new CatalogItemSearchCriteria
@@ -108,7 +109,7 @@ namespace FunctionalTests.Search
 
             Assert.True(results.DocCount == 1, String.Format("\"Sample Product\" search returns {0} instead of 1", results.DocCount));
 
-            provider.RemoveAll(Scope, String.Empty);
+            provider.RemoveAll(scope, String.Empty);
         }
 
         [Fact]
