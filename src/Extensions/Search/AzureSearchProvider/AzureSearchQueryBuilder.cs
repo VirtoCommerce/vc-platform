@@ -17,6 +17,7 @@ namespace VirtoCommerce.Search.Providers.Azure
         {
             var builder = new SearchQuery();
             var filterBuilder = new StringBuilder();
+            var queryBuilder = new StringBuilder();
 
             builder.Skip(criteria.StartingRecord);
             builder.Top(criteria.RecordsToRetrieve);
@@ -43,7 +44,7 @@ namespace VirtoCommerce.Search.Providers.Azure
 
                 if (!String.IsNullOrEmpty(c.SearchPhrase))
                 {
-                    builder.Query = c.SearchPhrase;
+                    queryBuilder.Query(c.SearchPhrase);
                 }
 
 
@@ -67,19 +68,22 @@ namespace VirtoCommerce.Search.Providers.Azure
 
                 if (c.Outlines != null && c.Outlines.Count > 0)
                 {
-                    filterBuilder.Contains("sys__outline", c.Outlines.OfType<string>().ToArray());
+                    queryBuilder.Query("sys__outline", c.Outlines.OfType<string>().ToArray());
                 }
 
 
                 if (!String.IsNullOrEmpty(c.Catalog))
                 {
-                    filterBuilder.Contains("catalog", c.Catalog);
+                    filterBuilder.FilterContains("catalog", c.Catalog);
                 }
 
-                builder.Filter = filterBuilder.ToString();
+                
 
             }
             #endregion
+
+            builder.Filter = filterBuilder.ToString();
+            builder.Query = queryBuilder.ToString();
 
             return builder;
         }

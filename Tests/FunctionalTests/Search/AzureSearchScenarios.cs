@@ -2,6 +2,7 @@
 
 namespace FunctionalTests.Search
 {
+    using System.Collections.Specialized;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
@@ -56,12 +57,17 @@ namespace FunctionalTests.Search
                            {
                                SearchPhrase = "sony",
                                IsFuzzySearch = true,
-                               Catalog = "Sony",
+                               Catalog = "vendorvirtual",
                                RecordsToRetrieve = 10,
                                StartingRecord = 0,
-                               Pricelists = new string[] { }
+                               Pricelists = new string[] { },
+                               StartDate = DateTime.UtcNow,
+                               Sort = new SearchSort("price_usd_saleusd")
                            };
 
+            criteria.Outlines.Add("vendorvirtual*");
+
+            //"(startdate lt 2014-09-26T22:05:11Z) and sys__hidden eq 'false' and sys__outline/any(t:t eq 'VendorVirtual/e1b56012-d877-4bdd-92d8-3fc186899d0f*') and catalog/any(t: t eq 'VendorVirtual')"
             var results = provider.Search(scope, criteria);
         }
 

@@ -48,19 +48,19 @@ namespace VirtoCommerce.Search.Providers.Azure
 
         public async Task<Index> GetIndex(string scope)
         {
-            var index = await IndexClient.GetIndexAsync(scope);
+            var index = await IndexClient.GetIndexAsync(scope).ConfigureAwait(false);
             return index.Body;
         }
 
         public async Task<IApiResponse<Index>> CreateIndex(Index index)
         {
-            var result = await IndexClient.CreateIndexAsync(index);
+            var result = await IndexClient.CreateIndexAsync(index).ConfigureAwait(false);
             return result;
         }
 
         public async Task<IApiResponse<Index>> UpdateIndex(Index index)
         {
-            var result = await IndexClient.UpdateIndexAsync(index);
+            var result = await IndexClient.UpdateIndexAsync(index).ConfigureAwait(false);
             return result;
         }
 
@@ -69,20 +69,20 @@ namespace VirtoCommerce.Search.Providers.Azure
             var operations = from d in documents
                 select new IndexOperation(IndexOperationType.Upload, AzureDocument.KeyFieldName, d.Id.ToString()) { Properties = d };
 
-            var result = await IndexClient.PopulateAsync(indexName, operations.ToArray());
+            var result = await IndexClient.PopulateAsync(indexName, operations.ToArray()).ConfigureAwait(false);
 
             return result;
         }
 
         public async Task<IApiResponse> DeleteIndex(string indexName)
         {
-            var response = await IndexClient.DeleteIndexAsync(indexName);
+            var response = await IndexClient.DeleteIndexAsync(indexName).ConfigureAwait(false);
             return response;
         }
 
         public async Task<IApiResponse<SearchQueryResult>> Search(string indexName, SearchQuery query)
         {
-            var response = await QueryClient.SearchAsync(indexName, query);
+            var response = await QueryClient.SearchAsync(indexName, query).ConfigureAwait(false);
             return response;
         }
     }

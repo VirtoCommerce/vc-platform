@@ -189,6 +189,8 @@ namespace VirtoCommerce.Search.Providers.Azure
                        
                         var indexField = new IndexField(key, AzureTypeMapper.GetAzureSearchType(field));
 
+                        indexField.IsFilterable();
+
                         if (key == ConvertToAzureName("__key"))
                         {
                             indexField.IsKey();
@@ -202,19 +204,20 @@ namespace VirtoCommerce.Search.Providers.Azure
                         if (field.ContainsAttribute(IndexType.ANALYZED))
                         {
                             indexField.IsSearchable();
-                            indexField.IsFilterable();
                         }
 
-                        if (field.ContainsAttribute(IndexType.NOT_ANALYZED))
+
+                        if (indexField.Type != FieldType.StringCollection)
                         {
-                            indexField.IsFilterable();
+                            indexField.IsSortable();
                         }
 
                         if (indexField.Type == FieldType.StringCollection || indexField.Type == FieldType.String)
                         {
-                            if (!field.ContainsAttribute(IndexType.NO))
+
+                            if (field.ContainsAttribute(IndexType.ANALYZED))
                             {
-                                indexField.IsFilterable();
+                                indexField.IsSearchable();
                             }
                         }
 
@@ -223,7 +226,7 @@ namespace VirtoCommerce.Search.Providers.Azure
                     }
 
                     if (field.ContainsAttribute(IndexDataType.StringCollection))
-                        localDocument.Add(key, ConvertToOffset(field.Values));
+                        localDocument.Add(key, ConvertToOffset(field.Values.OfType<string>().ToArray()));
                     else
                         localDocument.Add(key, ConvertToOffset(field.Value));
                 }
