@@ -65,7 +65,13 @@ namespace VirtoCommerce.Foundation.Frameworks.CQRS.Factories
 				throw new InvalidOperationException("There are no assemblies to scan");
 
 			var types = _assemblies
-				.SelectMany(a => a.GetExportedTypes())
+				.SelectMany(a => {
+				    try
+				    {
+				        return a.GetExportedTypes();
+				    } catch{}
+				    return new Type[0];
+				}).Where(x=>x!=null)
 				.ToList();
 
 			var messageTypes = types.Where(x => !x.IsInterface && typeof(IMessage).IsAssignableFrom(x)).ToArray();
