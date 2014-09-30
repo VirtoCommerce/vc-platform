@@ -62,15 +62,15 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
             if (string.IsNullOrEmpty(itemEncoded))
                 return null;
 
-            var itemCode = SettingsHelper.SeoDecode(itemEncoded, SeoUrlKeywordTypes.Item, 
+            var itemId = SettingsHelper.SeoDecode(itemEncoded, SeoUrlKeywordTypes.Item, 
                 values.ContainsKey(Constants.Language) ? values[Constants.Language] as string : null);
 
             // try getting outline from context
-            var outline = HttpContext.Current.Items["browsingoutline_" + itemCode.ToLower()] as string;
+            var outline = HttpContext.Current.Items["browsingoutline_" + itemId.ToLower()] as string;
 
             if (string.IsNullOrEmpty(outline))
             {
-                var item = CartHelper.CatalogClient.GetItemByCode(itemCode, StoreHelper.CustomerSession.CatalogId);
+                var item = CartHelper.CatalogClient.GetItem(itemId, StoreHelper.CustomerSession.CatalogId);
 
                 if (item == null)
                 {

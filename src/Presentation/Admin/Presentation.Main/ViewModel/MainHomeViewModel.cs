@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Practices.Prism.Commands;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -8,7 +9,6 @@ using System.Reflection;
 using System.ServiceModel.Syndication;
 using System.Threading.Tasks;
 using System.Xml;
-using Microsoft.Practices.Prism.Commands;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
@@ -135,8 +135,7 @@ namespace VirtoCommerce.ManagementClient.Main.ViewModel
                     StatisticsList = await Task.Run(() => new ObservableCollection<Statistic>(_repository.Statistics.ToList()));
 
                     GetStatisticForOrders();
-                    GetStatisticForChartLastYear();
-                    GetStatisticForChartThisYear();
+                    GetStatisticForChart();
                 });
         }
 
@@ -146,54 +145,61 @@ namespace VirtoCommerce.ManagementClient.Main.ViewModel
 
         private void GetStatisticForOrders()
         {
-            var statItem = StatisticsList.FirstOrDefault(st => st.Key.Contains("Primary"));
-            var tile = _tileManager.GetTile("OrderTestPrimaryKey") as NumberTileItem;
+            var statItem = StatisticsList.FirstOrDefault(st => st.Key == "OrdersNeedAttention");
+            var tile = _tileManager.GetTile("OrdersNeedAttention") as NumberTileItem;
             if (statItem != null && tile != null)
             {
                 tile.TileNumber = statItem.Value;
-                tile.TileTitle = statItem.Name;
-                tile.TileCategory = NavigationNames.ModuleName;
+            }
+
+            statItem = StatisticsList.FirstOrDefault(st => st.Key == "OrdersProcessedToday");
+            tile = _tileManager.GetTile("OrdersProcessedToday") as NumberTileItem;
+            if (statItem != null && tile != null)
+            {
+                tile.TileNumber = statItem.Value;
+            }
+
+            statItem = StatisticsList.FirstOrDefault(st => st.Key == "OrdersActive");
+            tile = _tileManager.GetTile("OrdersActive") as NumberTileItem;
+            if (statItem != null && tile != null)
+            {
+                tile.TileNumber = statItem.Value;
             }
         }
 
-        private void GetStatisticForChartLastYear()
+        private void GetStatisticForChart()
         {
             var tile = _tileManager.GetTile("OrderChart") as LinearChartTileItem;
-
             if (StatisticsList != null && tile != null)
             {
-                var result = StatisticsList.Where(st => st.Key.Contains("chart") && st.Key.Contains("last"))
-                              .OrderBy(st => st.Key)
-                              .ToList();
                 tile.SeriasArrays1.Clear();
-                foreach (var statistic in result)
-                {
-                    int val;
-                    Int32.TryParse(statistic.Value, out val);
-                    tile.SeriasArrays1.Add(statistic.Name, val);
-                }
-
-            }
-        }
-
-        private void GetStatisticForChartThisYear()
-        {
-            var tile = _tileManager.GetTile("OrderChart") as LinearChartTileItem;
-
-            if (StatisticsList != null && tile != null)
-            {
-                var result = StatisticsList == null
-                                             ? new List<Statistic>()
-                                             : StatisticsList.Where(
-                                                 st => st.Key.Contains("chart") && st.Key.Contains("this"))
-                                                             .OrderBy(st => st.Key)
-                                                             .ToList();
                 tile.SeriasArrays2.Clear();
-                foreach (var statistic in result)
+                foreach (var i in Enumerable.Range(1, 12))
                 {
-                    int val;
-                    Int32.TryParse(statistic.Value, out val);
-                    tile.SeriasArrays2.Add(statistic.Name, val);
+                    int val1 = 0, val2 = 0;
+                    var month = DateTime.Today.AddMonths(i - 12);
+                    var statistic0 = StatisticsList.FirstOrDefault(st => st.Key == "order.sales.chart." + month.AddMonths(-12).ToString("yyyy.MM"));
+                    var statistic1 = StatisticsList.FirstOrDefault(st => st.Key == "order.sales.chart." + month.ToString("yyyy.MM"));
+                    var statisticKey = "";
+                    if (statistic0 != null)
+                    {
+                        statisticKey = statistic0.Name;
+                        Int32.TryParse(statistic0.Value, out val1);
+                    }
+
+                    if (statistic1 != null)
+                    {
+                        statisticKey = statistic1.Name;
+                        Int32.TryParse(statistic1.Value, out val2);
+                    }
+
+                    if (string.IsNullOrEmpty(statisticKey))
+                    {
+                        statisticKey = month.ToString("MMMM");
+                    }
+
+                    tile.SeriasArrays1.Add(statisticKey, val1);
+                    tile.SeriasArrays2.Add(statisticKey, val2);
                 }
             }
         }

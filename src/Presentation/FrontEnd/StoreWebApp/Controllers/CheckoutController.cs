@@ -343,14 +343,14 @@ namespace VirtoCommerce.Web.Controllers
                 if (shipping.IsCurrent || noShippingMethod && i == 0)
                 {
                     shippingOptionIsDefault = "1";
-                    currentShippingOption = shipping.Method.Name;
+                    currentShippingOption = shipping.Method.ShippingMethodId;
                 }
 
                 ecDetails.FlatRateShippingOptions.Add(new ShippingOptionType
                 {
                     ShippingOptionAmount = new BasicAmountType(currency, FormatMoney(shipping.Price)),
                     ShippingOptionIsDefault = shippingOptionIsDefault,
-                    ShippingOptionName = shipping.Method.Name,
+                    ShippingOptionName = shipping.Method.ShippingMethodId,
                 });
             }
 
@@ -650,6 +650,15 @@ namespace VirtoCommerce.Web.Controllers
                                     {
                                         Ch.RunWorkflow("ShoppingCartCheckoutWorkflow", order);
                                         Ch.OrderRepository.UnitOfWork.Commit();
+
+                                        //Send email
+                                        var recipientAddress = order.OrderAddresses.FirstOrDefault(oa => oa.OrderAddressId == order.AddressId);
+                                        if (recipientAddress != null)
+                                        {
+                                            IDictionary<string, object> context = new Dictionary<string, object> { { "order", order } };
+                                            UserHelper.SendEmail(context, recipientAddress.Email, "order-confirmation");
+                                        }
+
                                         return RedirectToAction("ProcessCheckout", "Checkout",
                                             new {id = order.OrderGroupId});
                                     }
@@ -963,9 +972,12 @@ namespace VirtoCommerce.Web.Controllers
             {
                 foreach (var lineItem in form.LineItems)
                 {
-                    var shippingMethod = Ch.GetShippingMethods(new List<string> { model.ShippingMethod }).First();
-                    lineItem.ShippingMethodName = shippingMethod.DisplayName;
-                    lineItem.ShippingMethodId = shippingMethod.Id;
+                    var shippingMethod = Ch.GetShippingMethods(new List<string> { model.ShippingMethod }).FirstOrDefault();
+                    if (shippingMethod != null)
+                    {
+                        lineItem.ShippingMethodName = shippingMethod.DisplayName;
+                        lineItem.ShippingMethodId = shippingMethod.Id;
+                    }
                 }
             }
 

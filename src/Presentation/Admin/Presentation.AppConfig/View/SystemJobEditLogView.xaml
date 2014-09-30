@@ -4,7 +4,6 @@
      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
      mc:Ignorable="d" xmlns:res="clr-namespace:VirtoCommerce.ManagementClient.AppConfig"
-	 xmlns:core_Converters="clr-namespace:VirtoCommerce.ManagementClient.Core.Infrastructure.Converters;assembly=VirtoCommerce.ManagementClient.Core"
      LocalizationScope.Category="{x:Static res:NavigationNames.ModuleName}">
     <base:ViewBase.Resources>
         <ResourceDictionary>
@@ -13,8 +12,7 @@
                 <ResourceDictionary Source="/VirtoCommerce.ManagementClient.Core;component/Themes/HomeViewTheme/VirtoCommerceHomeTheme.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-			<core_Converters:UtcToLocalDateTimeConverter x:Key="UtcToLocalDateTimeConverter" />
-		</ResourceDictionary>
+        </ResourceDictionary>
     </base:ViewBase.Resources>
     <i:Interaction.Triggers>
         <!--<prism:InteractionRequestTrigger SourceObject="{Binding Path=AddParameterConfirmationRequest}">

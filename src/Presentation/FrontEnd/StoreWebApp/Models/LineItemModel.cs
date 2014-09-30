@@ -2,6 +2,7 @@
 using System.Linq;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Orders.Model;
+using VirtoCommerce.Web.Client.Extensions;
 using VirtoCommerce.Web.Client.Helpers;
 using VirtoCommerce.Web.Virto.Helpers;
 
@@ -122,13 +123,7 @@ namespace VirtoCommerce.Web.Models
 		{
 			get
 			{
-				var retValue = LineItem.DisplayName;
-				var title = CatalogHelper.CatalogClient.GetPropertyValueByName(CatalogItem.Item, "Title");
-				if (title != null)
-				{
-					retValue = title.ToString();
-				}
-				return retValue;
+			    return CatalogItem.Item.DisplayName(LineItem.DisplayName);
 			}
 		}
 

@@ -391,7 +391,7 @@ namespace VirtoCommerce.PowerShell.Orders
 				{
 					new ShippingMethod
 						{
-							ShippingMethodId = "FreeShipping",
+							ShippingMethodId = "FreeShippingUsd",
 							Name = "FreeShipping",
 							DisplayName = "Free Shipping",
 							Description = "Free Shipping",
@@ -401,24 +401,49 @@ namespace VirtoCommerce.PowerShell.Orders
 						},
 					new ShippingMethod
 						{
-							ShippingMethodId = "FlatRate",
+							ShippingMethodId = "FlatRateUsd",
 							Name = "FlatRate",
 							DisplayName = "Flat Rate",
 							Description = "Flat Rate",
 							Currency = "USD",
 							BasePrice = 10,
 							IsActive = true
+						},
+                    new ShippingMethod
+						{
+							ShippingMethodId = "FreeShippingEur",
+							Name = "FreeShipping",
+							DisplayName = "Free Shipping",
+							Description = "Free Shipping",
+							Currency = "EUR",
+							BasePrice = 0,
+							IsActive = true
+						},
+					new ShippingMethod
+						{
+							ShippingMethodId = "FlatRateEur",
+							Name = "FlatRate",
+							DisplayName = "Flat Rate",
+							Description = "Flat Rate",
+							Currency = "EUR",
+							BasePrice = 10,
+							IsActive = true
 						}
 				};
 
-            var option = new ShippingOption { Name = "default", Description = "Default", ShippingGateway = gateways[0] };
-            option.ShippingMethods.Add(shippingMethods[0]);
+            var i = 0;
+            foreach (var option in shippingMethods.Select(shippingMethod => new ShippingOption { Name = "default", Description = "Default", ShippingGateway = gateways[0] }))
+            {
+                if (i > 0)
+                {
+                    option.Name = "default" + i;
+                    option.Description = "Default" + i;
+                }
 
-            var option2 = new ShippingOption { Name = "default2", Description = "Default2", ShippingGateway = gateways[0] };
-            option2.ShippingMethods.Add(shippingMethods[1]);
-
-            repository.Add(option);
-            repository.Add(option2);
+                option.ShippingMethods.Add(shippingMethods[i]);
+                repository.Add(option);
+                i++;
+            }
 
             foreach (var sm in shippingMethods)
             {
@@ -795,10 +820,10 @@ namespace VirtoCommerce.PowerShell.Orders
 					new IchargeInfo { Code="gwFastTransact", Name="Fast Transact VeloCT",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit)},
 					new IchargeInfo { Code="gwNetworkMerchants", Name="NetworkMerchants",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
 					new IchargeInfo { Code="gwOgone", Name="Ogone DirectLink",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Credit)},
-					new IchargeInfo { Code="gwEFSNet", Name="Concord EFSNet",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)}, //(Depreciated, use LinkPoint) 
+					//new IchargeInfo { Code="gwEFSNet", Name="Concord EFSNet",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)}, //(Depreciated, use LinkPoint) 
 					new IchargeInfo { Code="gwPRIGate", Name="TransFirst Transaction Central Classic",TransactionTypes = (int)(TransactionType.Sale)},
-					new IchargeInfo { Code="gwProtx", Name="Protx",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)}, //(Depreciated, use SagePay (67) instead)
-					new IchargeInfo { Code="gwOptimal", Name="Optimal Payments / FirePay Direct Payment Protocol",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
+					//new IchargeInfo { Code="gwProtx", Name="Protx",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)}, //(Depreciated, use SagePay (67) instead)
+					//new IchargeInfo { Code="gwOptimal", Name="Optimal Payments / FirePay Direct Payment Protocol",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
 					new IchargeInfo { Code="gwMerchantPartners", Name="Merchant Partners",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
 					new IchargeInfo { Code="gwCyberCash", Name="CyberCash ",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture)},
 					new IchargeInfo { Code="gwFirstData", Name="First Data Global Gateway (Linkpoint)",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
@@ -912,15 +937,15 @@ namespace VirtoCommerce.PowerShell.Orders
                         });
                         icGateway.GatewayProperties.Add(testMode);
                         break;
-                    case "gwViaKlix":
-                        icGateway.GatewayProperties.Add(new GatewayProperty
-                        {
-                            DisplayName = "SSL user id",
-                            Name = "ssl_user_id",
-                            ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                            IsRequired = true
-                        });
-                        break;
+                    //case "gwViaKlix":
+                    //    icGateway.GatewayProperties.Add(new GatewayProperty
+                    //    {
+                    //        DisplayName = "SSL user id",
+                    //        Name = "ssl_user_id",
+                    //        ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+                    //        IsRequired = true
+                    //    });
+                    //    break;
                     case "gwBankOfAmerica":
                         icGateway.GatewayProperties.Add(new GatewayProperty
                         {
@@ -986,61 +1011,61 @@ namespace VirtoCommerce.PowerShell.Orders
                             icGateway.GatewayProperties.Add(testMode);
                         }
                         break;
-                    case "gwProtx":
-                        icGateway.GatewayProperties.Add(new GatewayProperty
-                        {
-                            DisplayName = "RelatedSecurityKey special fields required for Credit",
-                            Name = "RelatedSecurityKey",
-                            ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                            IsRequired = true
-                        });
-                        icGateway.GatewayProperties.Add(new GatewayProperty
-                        {
-                            DisplayName = "RelatedVendorTXCode special fields required for Credit",
-                            Name = "RelatedVendorTXCode",
-                            ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                            IsRequired = true
-                        });
-                        icGateway.GatewayProperties.Add(new GatewayProperty
-                        {
-                            DisplayName = "TXAuthNo special fields required for Captures",
-                            Name = "RelatedTXAuthNo",
-                            ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                            IsRequired = true
-                        });
-                        break;
-                    case "gwOptimal":
-                        icGateway.GatewayProperties.Add(new GatewayProperty
-                        {
-                            DisplayName = "Optimal Gateway also requires an additional account field",
-                            Name = "account",
-                            ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                            IsRequired = true
-                        });
-                        break;
-                    case "gwPayStream":
-                        icGateway.GatewayProperties.Add(new GatewayProperty
-                        {
-                            DisplayName = "CustomerID",
-                            Name = "CustomerID",
-                            ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                            IsRequired = true
-                        });
-                        icGateway.GatewayProperties.Add(new GatewayProperty
-                        {
-                            DisplayName = "ZoneID",
-                            Name = "ZoneID",
-                            ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                            IsRequired = true
-                        });
-                        icGateway.GatewayProperties.Add(new GatewayProperty
-                        {
-                            DisplayName = "Username",
-                            Name = "Username",
-                            ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                            IsRequired = true
-                        });
-                        break;
+                    //case "gwProtx":
+                    //    icGateway.GatewayProperties.Add(new GatewayProperty
+                    //    {
+                    //        DisplayName = "RelatedSecurityKey special fields required for Credit",
+                    //        Name = "RelatedSecurityKey",
+                    //        ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+                    //        IsRequired = true
+                    //    });
+                    //    icGateway.GatewayProperties.Add(new GatewayProperty
+                    //    {
+                    //        DisplayName = "RelatedVendorTXCode special fields required for Credit",
+                    //        Name = "RelatedVendorTXCode",
+                    //        ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+                    //        IsRequired = true
+                    //    });
+                    //    icGateway.GatewayProperties.Add(new GatewayProperty
+                    //    {
+                    //        DisplayName = "TXAuthNo special fields required for Captures",
+                    //        Name = "RelatedTXAuthNo",
+                    //        ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+                    //        IsRequired = true
+                    //    });
+                    //    break;
+                    //case "gwOptimal":
+                    //    icGateway.GatewayProperties.Add(new GatewayProperty
+                    //    {
+                    //        DisplayName = "Optimal Gateway also requires an additional account field",
+                    //        Name = "account",
+                    //        ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+                    //        IsRequired = true
+                    //    });
+                    //    break;
+                    //case "gwPayStream":
+                    //    icGateway.GatewayProperties.Add(new GatewayProperty
+                    //    {
+                    //        DisplayName = "CustomerID",
+                    //        Name = "CustomerID",
+                    //        ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+                    //        IsRequired = true
+                    //    });
+                    //    icGateway.GatewayProperties.Add(new GatewayProperty
+                    //    {
+                    //        DisplayName = "ZoneID",
+                    //        Name = "ZoneID",
+                    //        ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+                    //        IsRequired = true
+                    //    });
+                    //    icGateway.GatewayProperties.Add(new GatewayProperty
+                    //    {
+                    //        DisplayName = "Username",
+                    //        Name = "Username",
+                    //        ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+                    //        IsRequired = true
+                    //    });
+                    //    break;
                     case "gwUSAePay":
                     case "gwECHOnline":
                     case "gwTrustCommerce":

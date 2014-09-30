@@ -102,7 +102,7 @@
             else // try detecting the type
             {
                 // TODO: instead of auto detecting, use meta data information
-                decimal t = 0;
+                decimal t;
                 if (Decimal.TryParse(field.Value.ToString(), out t))
                 {
                     foreach (var val in field.Values)

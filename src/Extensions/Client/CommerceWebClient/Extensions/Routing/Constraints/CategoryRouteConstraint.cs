@@ -37,9 +37,9 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Constraints
             var decoded = SettingsHelper.SeoDecode(encoded, SeoUrlKeywordTypes.Category, 
                 values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : null);
 
-            var childCategryCode = decoded.Split(Separator.ToCharArray()).Last();
+            var childCategryId = decoded.Split(Separator.ToCharArray()).Last();
 
-            var category = CartHelper.CatalogClient.GetCategory(childCategryCode);
+            var category = CartHelper.CatalogClient.GetCategoryById(childCategryId);
 
             if (category == null)
             {

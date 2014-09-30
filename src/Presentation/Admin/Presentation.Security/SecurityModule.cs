@@ -124,7 +124,7 @@ namespace VirtoCommerce.ManagementClient.Security
             moduleManager.LoadModule("CatalogModule");
             NavigationNames.PublishStatusUpdate("Loading Fulfillment module");
             moduleManager.LoadModule("FulfillmentModule");
-            NavigationNames.PublishStatusUpdate("Loading Custommers module");
+            NavigationNames.PublishStatusUpdate("Loading Customers module");
             moduleManager.LoadModule("CustomersModule");
             NavigationNames.PublishStatusUpdate("Loading Reporting module");
             moduleManager.LoadModule("ReportingModule");

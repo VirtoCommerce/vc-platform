@@ -22,6 +22,7 @@ namespace VirtoCommerce.Web.Controllers
 {
     using System.Data.Entity.Core.Metadata.Edm;
 
+    using VirtoCommerce.Foundation.Catalogs.Services;
     using VirtoCommerce.Web.Client.Extensions.Filters;
     using VirtoCommerce.Web.Client.Services.Filters;
 
@@ -335,21 +336,6 @@ namespace VirtoCommerce.Web.Controllers
             // Add all filters
             foreach (var filter in filters)
             {
-                // Check if we already filtering by the key and value
-                /*
-                var facet = (from f in parameters.Facets
-                    where f.Key.Equals(filter.Key, StringComparison.OrdinalIgnoreCase)
-                    select f).SingleOrDefault();
-
-                if (facet.Value != null) // now check if value already filtered
-                {
-                    if (facet.Value.Intersect(filter.GetValues().Select(x => x.Id)).Any())
-                    {
-                        continue;
-                    }
-                }
-                 * */
-
                 criteria.Add(filter);
             }
 
@@ -432,9 +418,7 @@ namespace VirtoCommerce.Web.Controllers
             var itemModelList = new List<CatalogItemWithPriceModel>();
             if (items.Any())
             {
-
                 // Now convert it to the model
-
                 var prices = _priceListClient.GetLowestPrices(session.Pricelists, itemsIdsArray, 1);
                 var availabilities = _catalogClient.GetItemAvailability(itemsIdsArray,
                                                    UserHelper.StoreClient.GetCurrentStore().FulfillmentCenterId);
@@ -443,20 +427,16 @@ namespace VirtoCommerce.Web.Controllers
                 {
                     PriceModel priceModel = null;
                     ItemAvailabilityModel availabilityModel = null;
-                    var catalogIdPath = UserHelper.CustomerSession.CatalogId + "/";
                     var searchTags = results.Items[item.ItemId.ToLower()];
 
+                    var currentOutline = this.GetItemOutlineUsingContext(searchTags[criteria.OutlineField].ToString());
+
                     //Cache outline
-                    HttpContext.Items["browsingoutline_" + item.Code.ToLower()] = searchTags[criteria.BrowsingOutlineField].ToString();
-                    var currentOutline = searchTags[criteria.OutlineField].ToString().Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
-                        .FirstOrDefault(x => x.StartsWith(catalogIdPath, StringComparison.OrdinalIgnoreCase)) ?? string.Empty;
+                    HttpContext.Items["browsingoutline_" + item.ItemId.ToLower()] = StripCatalogFromOutline(currentOutline);
 
                     if (prices != null && prices.Any())
                     {
-                        var lowestPrice =
-                            (from p in prices
-                             where p.ItemId.Equals(item.ItemId, StringComparison.OrdinalIgnoreCase)
-                             select p).SingleOrDefault();
+                        var lowestPrice = (prices.Where(p => p.ItemId.Equals(item.ItemId, StringComparison.OrdinalIgnoreCase))).SingleOrDefault();
                         if (lowestPrice != null)
                         {
                             var tags = new Hashtable
@@ -519,15 +499,43 @@ namespace VirtoCommerce.Web.Controllers
             pager.DisplayEndingRecord = end > results.TotalCount ? results.TotalCount : end;
 
             dataSource.Pager = pager;
-
-            // Query similar words
-            /*
-            if (count == 0)
-                dataSource.Suggestions = GetSuggestions();
-             * */
-            //}
-
             return dataSource;
+        }
+
+        /// <summary>
+        /// Gets the context item outline based on what customer is browsing
+        /// </summary>
+        /// <param name="itemOutline"></param>
+        /// <returns></returns>
+        private string GetItemOutlineUsingContext(string itemOutline)
+        {
+            if (String.IsNullOrEmpty(itemOutline))
+            {
+                return String.Empty;
+            }
+
+            var session = UserHelper.CustomerSession;
+            var prefixOutline = String.Format("{0}/{1}", session.CatalogId, session.CategoryId);
+
+            var outline = itemOutline.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                .FirstOrDefault(x => x.StartsWith(prefixOutline, StringComparison.OrdinalIgnoreCase)) ?? string.Empty;
+
+            return outline;
+        }
+
+        private string StripCatalogFromOutline(string outline)
+        {
+            if (String.IsNullOrEmpty(outline))
+            {
+                return null;
+            }
+
+            var session = UserHelper.CustomerSession;
+
+            if (outline.Length > session.CatalogId.Length + 1)
+                return outline.Substring(session.CatalogId.Length+1);
+
+            return String.Empty;
         }
 
         #endregion

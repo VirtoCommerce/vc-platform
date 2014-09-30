@@ -138,7 +138,6 @@ namespace VirtoCommerce.Foundation.Search
 				    var tags = new Dictionary<string, object>
 				    {
 				        {SearchCriteria.OutlineField , GetFieldValue(doc, SearchCriteria.OutlineField)},
-                        {SearchCriteria.BrowsingOutlineField , GetFieldValue(doc, SearchCriteria.BrowsingOutlineField)},
                         {SearchCriteria.ReviewsAverageField , GetFieldValue(doc, SearchCriteria.ReviewsAverageField)},
                         {SearchCriteria.ReviewsTotalField , GetFieldValue(doc, SearchCriteria.ReviewsTotalField)},
 				    };

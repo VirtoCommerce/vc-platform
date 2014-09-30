@@ -49,7 +49,7 @@ namespace UI.FrontEnd.FunctionalTests.Catalog
 			var category = catalog.CategoryBases.First();
 
 			CustomerSessionService.CustomerSession.CatalogId = catalog.CatalogId;
-			CustomerSessionService.CustomerSession.CategoryId = category.CategoryId;
+			CustomerSessionService.CustomerSession.CategoryId = category.Code;
 
 			var controller = (CatalogController)DependencyResolver.Current.GetService(typeof(CatalogController));
 			var result = controller.Display(new CategoryPathModel {Category = category.Code}) as ViewResult;

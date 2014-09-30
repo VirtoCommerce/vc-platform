@@ -1,4 +1,5 @@
-﻿using Omu.ValueInjecter;
+﻿using System.Web.Http.OData;
+using Omu.ValueInjecter;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -310,11 +311,20 @@ namespace VirtoCommerce.Web.Virto.Helpers
             return false;
         }
 
-        public static bool SendEmail(string linkUrl, string user, string email, string templateName, Action<EmailMessage> defaultMessage)
+        public static bool SendEmail(string linkUrl, string user, string email, string templateName, Action<EmailMessage> defaultMessage = null)
 	    {
 
             //Get template
             var context = new Dictionary<string, object> { { templateName, new SendEmailTemplate { Url = linkUrl, Username = user } } };
+
+            //Send email
+            return SendEmail(context, email, templateName, defaultMessage);
+	    }
+
+        public static bool SendEmail(IDictionary<string,object> context, string email, string templateName, Action<EmailMessage> defaultMessage = null)
+        {
+
+            //Get template
             var template = TemplateService.ProcessTemplate(templateName, context, CultureInfo.CreateSpecificCulture(CustomerSession.Language));
 
             //Create email message
@@ -327,15 +337,15 @@ namespace VirtoCommerce.Web.Virto.Helpers
                 emailMessage.Html = template.Body;
                 emailMessage.Subject = template.Subject;
             }
-            else
+            else if (defaultMessage != null)
             {
                 //Use default template
-                defaultMessage(emailMessage);
+                 defaultMessage(emailMessage);
             }
 
             //Send email
             return EmailService.SendEmail(emailMessage);
-	    }
+        }
 
         /// <summary>
         /// After user has logged in do some actions

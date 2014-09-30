@@ -22,7 +22,7 @@ namespace VirtoCommerce.Web.Controllers.Api
         /// <returns>Json containing ShippingMethodModel with minimum price.</returns>
         [HttpPost]
         [ModelValidationFilter]
-        public HttpResponseMessage EstimatePost(ShippingEstimateModel shippingEstimateModel)
+        public IHttpActionResult EstimatePost(ShippingEstimateModel shippingEstimateModel)
         {
             if (ModelState.IsValid)
             {
@@ -47,13 +47,10 @@ namespace VirtoCommerce.Web.Controllers.Api
                 helper.RunWorkflow("ShoppingCartPrepareWorkflow");
                 helper.SaveChanges();
 
-                var response = Request.CreateResponse(HttpStatusCode.OK);
-                var bShippingJson = System.Web.Helpers.Json.Encode(bestShipping);
-                response.Content = new StringContent(bShippingJson);
-                return response;
+                return Ok(bestShipping);
             }
 
-            return Request.CreateResponse(HttpStatusCode.BadRequest);
+            return BadRequest();
         }
     }
 }

@@ -17,33 +17,37 @@ VirtoCheckout.prototype = {
         $.get(this.url('/checkout/DisplayCart'), {}, function (data) { console.log('updatedcart'); placeholder.html(data); }, "html");
     },
 
-    updateShipments: function ()
+    updateShipments: function (queue)
     {
     	var placeholder = $("#shipping-methods");
 
         var checkout = this;
         this.updateLoading("shipping-methods");
 
-        $.ajax({
+        var options = {
             type: 'GET',
             url: this.url('/checkout/DisplayShipments'),
-            success: function (data) {
+            success: function(data) {
                 placeholder.html(data);
 
-                $('input[name=ShippingMethod]').each(function ()
-                {
-                	if ($(this).is(":checked"))
-                	{
-                		checkout.updatePayments($(this).val());
-                	}
-                    $(this).bind("click", function () {
-                    	checkout.shipmentChanged(this);
+                $('input[name=ShippingMethod]').each(function() {
+                    if ($(this).is(":checked")) {
+                        checkout.updatePayments($(this).val());
+                    }
+                    $(this).bind("click", function() {
+                        checkout.shipmentChanged(this);
                     });
                 });
 
                 checkout.updateValidation();
             }
-        });
+        };
+
+        if (queue !== undefined) {
+            $.ajaxq(queue, options);
+        } else {
+            $.ajax(options);
+        }
     },
 
     updatePayments: function (shippingMethod)
@@ -198,12 +202,11 @@ VirtoCheckout.prototype = {
         });
     },
 
-    submitCheckout: function () {
+    submitCheckout: function (button) {
         var form = $("#onestepcheckout-form");
-        //alert(form.valid());
-        //form.validate();
         if (form.valid()) {
             window.history.forward();
+            $(button).attr('disabled', true);
             form.submit();
         }
     },

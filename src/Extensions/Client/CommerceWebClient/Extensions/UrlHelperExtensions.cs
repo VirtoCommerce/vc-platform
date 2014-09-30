@@ -73,16 +73,16 @@ namespace VirtoCommerce.Web.Client.Extensions
 
             if (parent != null)
             {
-                routeValues.Add("item", parent.Code);
+                routeValues.Add("item", parent.ItemId);
                 if (item != null)
                 {
-                    routeValues.Add("variation", item.Code);
+                    routeValues.Add("variation", item.ItemId);
                 }
                 routeValues.Add("category", item.GetItemCategoryRouteValue());
             }
             else if (item != null)
             {
-                routeValues.Add("item", item.Code);
+                routeValues.Add("item", item.ItemId);
                 routeValues.Add("category", item.GetItemCategoryRouteValue());
             }
             return helper.RouteUrl("Item", routeValues);

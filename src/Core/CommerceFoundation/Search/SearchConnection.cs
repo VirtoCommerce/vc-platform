@@ -36,12 +36,13 @@ namespace VirtoCommerce.Foundation.Search
         /// <param name="dataSource">The data source.</param>
         /// <param name="scope">The scope.</param>
         /// <param name="provider">The provider.</param>
-        public SearchConnection(string dataSource, string scope, string provider = "default")
+        public SearchConnection(string dataSource, string scope, string provider = "default", string accessKey = "")
         {
             _Parameters = new Dictionary<string, string>();
             DataSource = dataSource;
             Scope = scope;
             Provider = provider;
+            AccessKey = accessKey;
         }
 
         private Dictionary<string, string> ParseString(string s)
@@ -80,6 +81,20 @@ namespace VirtoCommerce.Foundation.Search
             private set
             {
                 _Parameters.Add("server", value);
+            }
+        }
+
+        public string AccessKey
+        {
+            get
+            {
+                if (_Parameters != null) return _Parameters["key"];
+
+                throw new ArgumentNullException("Key must be specified using server parameter for the search connection string");
+            }
+            private set
+            {
+                _Parameters.Add("key", value);
             }
         }
 

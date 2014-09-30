@@ -28,7 +28,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Constraints
             var encoded = values[parameterName].ToString();
             var decoded = SettingsHelper.SeoDecode(encoded, SeoUrlKeywordTypes.Item, values.ContainsKey(Constants.Language) ? values[Constants.Language] as string : null);
 
-            var item = CartHelper.CatalogClient.GetItemByCode(decoded, StoreHelper.CustomerSession.CatalogId);
+            var item = CartHelper.CatalogClient.GetItem(decoded, StoreHelper.CustomerSession.CatalogId);
 
             if (item == null)
             {

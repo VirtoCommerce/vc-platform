@@ -728,12 +728,12 @@ if (wrapCounter == undefined) {
                 $(nextNav, wrap).animate({ opacity: 0 }, 0);
                 $(commands, wrap).animate({ opacity: 0 }, 0);
                 if (isMobile()) {
-                    fakeHover.live('vmouseover', function () {
+                    fakeHover.on('vmouseover', function () {
                         $(prevNav, wrap).animate({ opacity: 1 }, 200);
                         $(nextNav, wrap).animate({ opacity: 1 }, 200);
                         $(commands, wrap).animate({ opacity: 1 }, 200);
                     });
-                    fakeHover.live('vmouseout', function () {
+                    fakeHover.on('vmouseout', function () {
                         $(prevNav, wrap).delay(500).animate({ opacity: 0 }, 200);
                         $(nextNav, wrap).delay(500).animate({ opacity: 0 }, 200);
                         $(commands, wrap).delay(500).animate({ opacity: 0 }, 200);
@@ -752,7 +752,7 @@ if (wrapCounter == undefined) {
             }
 
 
-            $('.camera_stop', camera_thumbs_wrap).live('click', function () {
+            $('.camera_stop', camera_thumbs_wrap).on('click', function () {
                 autoAdv = false;
                 elem.addClass('paused');
                 if ($('.camera_stop', camera_thumbs_wrap).length) {
@@ -768,7 +768,7 @@ if (wrapCounter == undefined) {
                 }
             });
 
-            $('.camera_play', camera_thumbs_wrap).live('click', function () {
+            $('.camera_play', camera_thumbs_wrap).on('click', function () {
                 autoAdv = true;
                 elem.removeClass('paused');
                 if ($('.camera_play', camera_thumbs_wrap).length) {

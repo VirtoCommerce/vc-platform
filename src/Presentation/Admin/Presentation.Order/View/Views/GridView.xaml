@@ -43,7 +43,7 @@
         </TextBlock>
     </DataTemplate>
     <DataTemplate x:Key="ordersColumn4Template">
-        <TextBlock Text="{Binding Data.InnerItem.Created, StringFormat=R}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
+        <TextBlock Text="{Binding Data.InnerItem.Created, Converter={StaticResource UtcToLocalDateTimeConverter}}" Style="{StaticResource Virto_TextBlock_VirtualListView_Style}" />
     </DataTemplate>
     <GridView x:Key="gridViewView" ColumnHeaderContainerStyle="{StaticResource Virto_GridView_ColumnHeader_ContainerStyle}"
          VirtualizingStackPanel.IsVirtualizing="True" VirtualizingStackPanel.VirtualizationMode="Recycling"

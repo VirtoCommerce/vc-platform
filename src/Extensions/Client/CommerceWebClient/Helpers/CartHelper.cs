@@ -530,7 +530,7 @@ namespace VirtoCommerce.Web.Client.Helpers
 
             if (parent != null)
             {
-                lineItem.DisplayName = String.Format("{0}: {1}", parent.Name, item.Name);
+                lineItem.DisplayName = item.DisplayName(String.Format("{0}: {1}", parent.Name, item.Name));
                 lineItem.ParentCatalogItemId = parent.ItemId;
 
                 //Build options
@@ -550,7 +550,7 @@ namespace VirtoCommerce.Web.Client.Helpers
             }
             else
             {
-                lineItem.DisplayName = item.Name;
+                lineItem.DisplayName = item.DisplayName();
                 lineItem.ParentCatalogItemId = String.Empty;
             }
 

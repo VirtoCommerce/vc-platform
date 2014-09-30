@@ -18,250 +18,263 @@ using VirtoCommerce.ManagementClient.Marketing.ViewModel.Interfaces;
 
 namespace VirtoCommerce.ManagementClient.Marketing.ViewModel.Implementations
 {
-	public class CartPromotionViewModel : PromotionViewModelBase, ICartPromotionViewModel
-	{
-		#region Dependencies
+    public class CartPromotionViewModel : PromotionViewModelBase, ICartPromotionViewModel
+    {
+        #region Dependencies
 
-		protected readonly IRepositoryFactory<IStoreRepository> _storeRepositoryFactory;
+        protected readonly IRepositoryFactory<IStoreRepository> _storeRepositoryFactory;
 
-		#endregion
+        private const int TabIndexOverview = 0;
+        private const int TabIndexConditions = 1;
+        private const int TabIndexCoupon = 2;
+        #endregion
 
-		#region ctor
+        #region ctor
 
-		public CartPromotionViewModel(
-			IRepositoryFactory<IAppConfigRepository> appConfigRepositoryFactory,
-			IRepositoryFactory<IShippingRepository> shippingRepositoryFactory,
-			IViewModelsFactory<ISearchCategoryViewModel> searchCategoryVmFactory,
-			IViewModelsFactory<ISearchItemViewModel> searchItemVmFactory,
-			IRepositoryFactory<IMarketingRepository> repositoryFactory,
-			IRepositoryFactory<IStoreRepository> storeRepositoryFactory,
-			IMarketingEntityFactory entityFactory,
-			INavigationManager navManager,
-			Promotion item)
-			: base(appConfigRepositoryFactory, repositoryFactory, entityFactory, navManager, item, false, searchCategoryVmFactory, searchItemVmFactory, shippingRepositoryFactory)
-		{
-			_storeRepositoryFactory = storeRepositoryFactory;
+        public CartPromotionViewModel(
+            IRepositoryFactory<IAppConfigRepository> appConfigRepositoryFactory,
+            IRepositoryFactory<IShippingRepository> shippingRepositoryFactory,
+            IViewModelsFactory<ISearchCategoryViewModel> searchCategoryVmFactory,
+            IViewModelsFactory<ISearchItemViewModel> searchItemVmFactory,
+            IRepositoryFactory<IMarketingRepository> repositoryFactory,
+            IRepositoryFactory<IStoreRepository> storeRepositoryFactory,
+            IMarketingEntityFactory entityFactory,
+            INavigationManager navManager,
+            Promotion item)
+            : base(appConfigRepositoryFactory, repositoryFactory, entityFactory, navManager, item, false, searchCategoryVmFactory, searchItemVmFactory, shippingRepositoryFactory)
+        {
+            _storeRepositoryFactory = storeRepositoryFactory;
 
-			ViewTitle = new ViewTitleBase
-			{
+            ViewTitle = new ViewTitleBase
+            {
                 Title = "Promotion",
-				SubTitle = (item != null && !string.IsNullOrEmpty(item.Name)) ? item.Name.ToUpper(CultureInfo.InvariantCulture) : ""
-			};
-		}
+                SubTitle = (item != null && !string.IsNullOrEmpty(item.Name)) ? item.Name.ToUpper(CultureInfo.InvariantCulture) : ""
+            };
+        }
 
-		public bool IsWizard
+        public bool IsWizard
+        {
+            get { return !IsSingleDialogEditing; }
+        }
+
+        protected CartPromotionViewModel(
+            IRepositoryFactory<IAppConfigRepository> appConfigRepositoryFactory,
+            IRepositoryFactory<IShippingRepository> shippingRepositoryFactory,
+            IViewModelsFactory<ISearchCategoryViewModel> searchCategoryVmFactory,
+            IViewModelsFactory<ISearchItemViewModel> searchItemVmFactory,
+            IRepositoryFactory<IMarketingRepository> repositoryFactory,
+            IRepositoryFactory<IStoreRepository> storeRepositoryFactory,
+            IMarketingEntityFactory entityFactory,
+            Promotion item)
+            : base(appConfigRepositoryFactory, repositoryFactory, entityFactory, null, item, true, searchCategoryVmFactory, searchItemVmFactory, shippingRepositoryFactory)
+        {
+            _storeRepositoryFactory = storeRepositoryFactory;
+        }
+
+        #endregion
+
+        #region ICartPromotionViewModel Members
+
+        public bool NoCoupon
+        {
+            get { return !_hasCoupon; }
+            set
+            {
+                _hasCoupon = !value;
+                if (!_hasCoupon)
+                {
+                    CouponCodeDisplayed = null;
+                }
+
+                OnPropertyChanged();
+                if (!IsInitializing)
+                    OnViewModelPropertyChangedUI(null, null);
+            }
+        }
+
+        private bool _hasCoupon;
+        private string _couponCode;
+        private string _couponCodeDisplayed;
+
+        public bool HasCoupon
+        {
+            get { return _hasCoupon; }
+            set
+            {
+                _hasCoupon = value;
+                OnPropertyChanged();
+                if (_hasCoupon)
+                {
+                    CouponCodeDisplayed = _couponCode;
+                }
+            }
+        }
+
+        public string CouponCodeDisplayed
+        {
+            get { return _couponCodeDisplayed; }
+            set
+            {
+                _couponCodeDisplayed = value;
+                OnPropertyChanged();
+                if (HasCoupon)
+                {
+                    _couponCode = _couponCodeDisplayed;
+                    if (!IsInitializing)
+                        OnViewModelPropertyChangedUI(null, null);
+                }
+            }
+        }
+
+        public List<Store> AvailableStores { get; private set; }
+
+        #endregion
+
+        #region override PromotionViewModelBase Methods
+
+        protected override bool IsValidForSave()
 		{
-			get { return !IsSingleDialogEditing; }
+            var result = base.IsValidForSave();
+            var isExpressionValid = IsWizardMode || (ExpressionElementBlock is CartPromotionExpressionBlock &&
+                                                    (ExpressionElementBlock as CartPromotionExpressionBlock).ConditionCutomerSegmentBlock.Children.Any() &&
+                                                    (ExpressionElementBlock as CartPromotionExpressionBlock).GetPromotionRewards().Any());
+            var isCouponValid = !HasCoupon || !string.IsNullOrEmpty(_couponCode);
+
+            if (!result)
+                SelectedTabIndex = TabIndexOverview;
+            else if (!isExpressionValid)
+                SelectedTabIndex = TabIndexConditions;
+            else if (!isCouponValid)
+                SelectedTabIndex = TabIndexCoupon;
+
+            return result && isExpressionValid && isCouponValid;
 		}
 
-		protected CartPromotionViewModel(
-			IRepositoryFactory<IAppConfigRepository> appConfigRepositoryFactory,
-			IRepositoryFactory<IShippingRepository> shippingRepositoryFactory,
-			IViewModelsFactory<ISearchCategoryViewModel> searchCategoryVmFactory,
-			IViewModelsFactory<ISearchItemViewModel> searchItemVmFactory,
-			IRepositoryFactory<IMarketingRepository> repositoryFactory,
-			IRepositoryFactory<IStoreRepository> storeRepositoryFactory,
-			IMarketingEntityFactory entityFactory,
-			Promotion item)
-			: base(appConfigRepositoryFactory, repositoryFactory, entityFactory, null, item, true, searchCategoryVmFactory, searchItemVmFactory, shippingRepositoryFactory)
-		{
-			_storeRepositoryFactory = storeRepositoryFactory;
-		}
+        protected override void InitializePropertiesForViewing()
+        {
+            base.InitializePropertiesForViewing();
+            InitializeAvailableStores();
+        }
 
-		#endregion
+        protected override void LoadInnerItem()
+        {
+            base.LoadInnerItem();
 
-		#region ICartPromotionViewModel Members
+            OnUIThread(() =>
+            {
+                HasCoupon = InnerItem.Coupon != null;
+                if (HasCoupon)
+                {
+                    CouponCodeDisplayed = InnerItem.Coupon.Code;
+                }
+            });
+        }
 
-		public bool NoCoupon
-		{
-			get { return !_hasCoupon; }
-			set
-			{
-				_hasCoupon = !value;
-				if (!_hasCoupon)
-				{
-					CouponCodeDisplayed = null;
-				}
+        public override string CatalogId
+        {
+            get
+            {
+                return _storeRepositoryFactory.GetRepositoryInstance()
+                                               .Stores.Where(store => store.StoreId == (InnerItem as CartPromotion).StoreId).First()
+                                               .Catalog;
+            }
+        }
 
-				OnPropertyChanged();
-				if (!IsInitializing)
-					OnViewModelPropertyChangedUI(null, null);
-			}
-		}
+        protected override bool BeforeDelete()
+        {
+            base.BeforeDelete();
+            if (InnerItem.Coupon != null)
+            {
+                Repository.Remove(InnerItem.Coupon);
+            }
+            return true;
+        }
 
-		private bool _hasCoupon;
-		private string _couponCode;
-		private string _couponCodeDisplayed;
+        /// <summary>
+        /// add, update or delete associated item (coupon)
+        /// </summary>
+        protected override void BeforeSaveChanges()
+        {
+            if (!IsWizardMode)
+            {
+                base.BeforeSaveChanges();
 
-		public bool HasCoupon
-		{
-			get { return _hasCoupon; }
-			set
-			{
-				_hasCoupon = value;
-				OnPropertyChanged();
-				if (_hasCoupon)
-				{
-					CouponCodeDisplayed = _couponCode;
-				}
-			}
-		}
+                if (HasCoupon)
+                {
+                    if (InnerItem.Coupon == null)
+                    {
+                        InnerItem.Coupon = EntityFactory.CreateEntity<Coupon>();
+                        InnerItem.Coupon.Code = _couponCode;
+                        InnerItem.CouponId = InnerItem.Coupon.CouponId;
+                        Repository.Add(InnerItem.Coupon);
+                    }
+                    else
+                    {
+                        InnerItem.Coupon.Code = _couponCode;
+                        Repository.Update(InnerItem.Coupon);
+                    }
+                }
+                else if (InnerItem.Coupon != null)
+                {
+                    Repository.Remove(InnerItem.Coupon);
+                    InnerItem.CouponId = null;
+                    InnerItem.Coupon = null;
+                }
+            }
+            else
+            {
+                if (InnerItem.Coupon != null)
+                {
+                    Repository.Add(InnerItem.Coupon);
+                }
+            }
+        }
 
-		public string CouponCodeDisplayed
-		{
-			get { return _couponCodeDisplayed; }
-			set
-			{
-				_couponCodeDisplayed = value;
-				OnPropertyChanged();
-				if (HasCoupon)
-				{
-					_couponCode = _couponCodeDisplayed;
-					if (!IsInitializing)
-						OnViewModelPropertyChangedUI(null, null);
-				}
-			}
-		}
+        protected override void InitializeExpressionElementBlock()
+        {
+            if (IsWizardMode)
+            {
+                OnUIThread(() =>
+                {
+                    ExpressionElementBlock = new CartPromotionExpressionBlock(this);
+                    InnerItem.PredicateVisualTreeSerialized = SerializationUtil.Serialize(ExpressionElementBlock);
+                });
+            }
+            base.InitializeExpressionElementBlock();
+        }
 
-		public List<Store> AvailableStores { get; private set; }
+        #endregion
 
-		#endregion
+        #region Initialize and Update
 
-		#region override PromotionViewModelBase Methods
+        protected void InitializeAvailableStores()
+        {
+            if (AvailableStores == null)
+            {
+                using (var storeRepositoryFactory = _storeRepositoryFactory.GetRepositoryInstance())
+                {
+                    var items = storeRepositoryFactory.Stores.OrderBy(x => x.Name).ToList();
+                    items.Insert(0, new Store() { StoreId = null, Name = "Select store...".Localize() });
+                    OnUIThread(() =>
+                    {
+                        AvailableStores = items;
+                        OnPropertyChanged("AvailableStores");
+                    });
+                }
+            }
 
-		protected override bool IsValidForSave()
-		{
-			return base.IsValidForSave() && (!HasCoupon
-								|| !string.IsNullOrEmpty(_couponCode)) && (((!IsWizardMode) && ((ExpressionElementBlock is CartPromotionExpressionBlock) &&
-							  (ExpressionElementBlock as CartPromotionExpressionBlock).ConditionCutomerSegmentBlock.Children.Any() &&
-							  (ExpressionElementBlock as CartPromotionExpressionBlock).GetPromotionRewards().Any())) || IsWizardMode);
-		}
+        }
 
-		protected override void InitializePropertiesForViewing()
-		{
-			base.InitializePropertiesForViewing();
-			InitializeAvailableStores();
-		}
+        public void UpdateCoupon()
+        {
+            if (HasCoupon)
+            {
+                InnerItem.Coupon = EntityFactory.CreateEntity<Coupon>();
+                InnerItem.Coupon.Code = _couponCode;
+                InnerItem.CouponId = InnerItem.Coupon.CouponId;
+            }
+        }
 
-		protected override void LoadInnerItem()
-		{
-			base.LoadInnerItem();
-
-			OnUIThread(() =>
-			{
-				HasCoupon = InnerItem.Coupon != null;
-				if (HasCoupon)
-				{
-					CouponCodeDisplayed = InnerItem.Coupon.Code;
-				}
-			});
-		}
-
-		public override string CatalogId
-		{
-			get
-			{
-				return _storeRepositoryFactory.GetRepositoryInstance()
-											   .Stores.Where(store => store.StoreId == (InnerItem as CartPromotion).StoreId).First()
-											   .Catalog;
-			}
-		}
-
-		protected override bool BeforeDelete()
-		{
-			base.BeforeDelete();
-			if (InnerItem.Coupon != null)
-			{
-				Repository.Remove(InnerItem.Coupon);
-			}
-			return true;
-		}
-
-		/// <summary>
-		/// add, update or delete associated item (coupon)
-		/// </summary>
-		protected override void BeforeSaveChanges()
-		{
-			if (!IsWizardMode)
-			{
-				base.BeforeSaveChanges();
-
-				if (HasCoupon)
-				{
-					if (InnerItem.Coupon == null)
-					{
-						InnerItem.Coupon = EntityFactory.CreateEntity<Coupon>();
-						InnerItem.Coupon.Code = _couponCode;
-						InnerItem.CouponId = InnerItem.Coupon.CouponId;
-						Repository.Add(InnerItem.Coupon);
-					}
-					else
-					{
-						InnerItem.Coupon.Code = _couponCode;
-						Repository.Update(InnerItem.Coupon);
-					}
-				}
-				else if (InnerItem.Coupon != null)
-				{
-					Repository.Remove(InnerItem.Coupon);
-					InnerItem.CouponId = null;
-					InnerItem.Coupon = null;
-				}
-			}
-			else
-			{
-				if (InnerItem.Coupon != null)
-				{
-					Repository.Add(InnerItem.Coupon);
-				}
-			}
-		}
-
-		protected override void InitializeExpressionElementBlock()
-		{
-			if (IsWizardMode)
-			{
-				OnUIThread(() =>
-				{
-					ExpressionElementBlock = new CartPromotionExpressionBlock(this);
-					InnerItem.PredicateVisualTreeSerialized = SerializationUtil.Serialize(ExpressionElementBlock);
-				});
-			}
-			base.InitializeExpressionElementBlock();
-		}
-
-		#endregion
-
-		#region Initialize and Update
-
-		protected void InitializeAvailableStores()
-		{
-			if (AvailableStores == null)
-			{
-				using (var storeRepositoryFactory = _storeRepositoryFactory.GetRepositoryInstance())
-				{
-					var items = storeRepositoryFactory.Stores.OrderBy(x => x.Name).ToList();
-					items.Insert(0, new Store() { StoreId = null, Name = "Select store...".Localize() });
-					OnUIThread(() =>
-					{
-						AvailableStores = items;
-						OnPropertyChanged("AvailableStores");
-					});
-				}
-			}
-
-		}
-
-		public void UpdateCoupon()
-		{
-			if (HasCoupon)
-			{
-				InnerItem.Coupon = EntityFactory.CreateEntity<Coupon>();
-				InnerItem.Coupon.Code = _couponCode;
-				InnerItem.CouponId = InnerItem.Coupon.CouponId;
-			}
-		}
-
-		#endregion
-	}
+        #endregion
+    }
 }

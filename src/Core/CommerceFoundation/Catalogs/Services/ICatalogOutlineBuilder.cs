@@ -40,9 +40,15 @@
             return ToString("/");
         }
 
+        /// <summary>
+        /// Only returns paths for actual categories (linked categories shouldn't be included)
+        /// </summary>
+        /// <param name="separator"></param>
+        /// <returns></returns>
         public string ToString(string separator)
         {
-            return Categories.Aggregate(CatalogId, 
+
+            return Categories.OfType<Category>().Aggregate(CatalogId, 
                 (current, category) => current + String.Format("{0}{1}",separator, category.CategoryId));
         }
     }
@@ -68,7 +74,7 @@
             return ToString("/");
         }
 
-        public string ToString(string separator, string field = "Code")
+        public string ToString(string separator, string field = "CategoryId")
         {
             return Categories.Aggregate("",
                 (current, category) => current + String.Format("{0}{1}",

@@ -106,7 +106,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
         {
             var requestRouteValues = requestContext.RouteData.Values;
 
-            var routeValues = AdditionalRouteValuesFunc(requestContext).Merge(requestRouteValues);
+            var routeValues = requestRouteValues.Merge(AdditionalRouteValuesFunc(requestContext));
 
             var vpd = TargetRoute.GetVirtualPath(requestContext, routeValues);
             if (vpd != null)

@@ -606,7 +606,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
             using (var seoRepository = _appConfigRepositoryFactory.GetRepositoryInstance())
             {
-                var deleteList = seoRepository.SeoUrlKeywords.Where(x => x.KeywordValue.Equals(InnerItem.Code, StringComparison.InvariantCultureIgnoreCase));
+                var deleteList = seoRepository.SeoUrlKeywords.Where(x => x.KeywordValue.Equals(InnerItem.ItemId, StringComparison.InvariantCultureIgnoreCase));
                 if (deleteList.Count() > 0)
                     deleteList.ToList().ForEach(seoRepository.Remove);
                 seoRepository.UnitOfWork.Commit();
@@ -1301,12 +1301,9 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
         {
             var item = (EditorialReview)EntityFactory.CreateEntityForType("EditorialReview");
             item.CatalogItem = InnerItem;
+            item.Locale = InnerItem.Catalog.DefaultLanguage;
             item.Priority = 1;
             RaiseEditorialReviewEditInteractionRequest(item, "Add Editorial Review".Localize());
-            //if ()
-            //{
-            //    InnerItem.EditorialReviews.Add(item);
-            //}
         }
 
         private void RaiseEditorialReviewEditInteractionRequest(EditorialReview originalItem)
@@ -1475,7 +1472,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
         protected void InitSeoStep()
         {
             var itemParameter = new KeyValuePair<string, object>("item", InnerItem);
-            var languagesParameter = new KeyValuePair<string, object>("languages", InnerItemCatalogLanguages == null ? new List<string>() : InnerItemCatalogLanguages);
+            var languagesParameter = new KeyValuePair<string, object>("languages", InnerItemCatalogLanguages ?? new List<string>());
             SeoStepViewModel =
                     _seoVmFactory.GetViewModelInstance(itemParameter, languagesParameter);
             OnPropertyChanged("SeoStepViewModel");

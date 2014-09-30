@@ -361,7 +361,7 @@ namespace VirtoCommerce.Foundation.Customers
         public static string EncryptCookie(string value)
         {
             var plainBytes = Encoding.UTF8.GetBytes(value);
-            var encryptedBytes = ProtectedData.Protect(plainBytes, null, DataProtectionScope.CurrentUser);
+            var encryptedBytes = ProtectedData.Protect(plainBytes, null, DataProtectionScope.LocalMachine);
             return Convert.ToBase64String(encryptedBytes);
         }
 
@@ -370,7 +370,7 @@ namespace VirtoCommerce.Foundation.Customers
             try
             {
                 var encryptedBytes = Convert.FromBase64String(value);
-                var decryptedBytes = ProtectedData.Unprotect(encryptedBytes, null, DataProtectionScope.CurrentUser);
+                var decryptedBytes = ProtectedData.Unprotect(encryptedBytes, null, DataProtectionScope.LocalMachine);
                 return Encoding.UTF8.GetString(decryptedBytes);
             }
             catch

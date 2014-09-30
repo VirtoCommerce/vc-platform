@@ -605,8 +605,8 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
                         s.Language.Equals(i.Catalog.DefaultLanguage, StringComparison.InvariantCultureIgnoreCase) &&
                         s.KeywordType.Equals((int)SeoUrlKeywordTypes.Item)).FirstOrDefault();
 
-                    var seo = _seoFactory.CreateEntity<VirtoCommerce.Foundation.AppConfig.Model.SeoUrlKeyword>();
-                    seo.KeywordValue = i.Code;
+                    var seo = _seoFactory.CreateEntity<Foundation.AppConfig.Model.SeoUrlKeyword>();
+                    seo.KeywordValue = i.ItemId;
                     seo.Keyword = checkItem == null ? itemName : "_" + itemName + "_";
                     seo.Language = i.Catalog.DefaultLanguage;
                     seo.IsActive = true;
@@ -635,7 +635,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
                             s.KeywordType.Equals((int)SeoUrlKeywordTypes.Category)).FirstOrDefault();
 
                         var seo = _seoFactory.CreateEntity<VirtoCommerce.Foundation.AppConfig.Model.SeoUrlKeyword>();
-                        seo.KeywordValue = category.Code;
+                        seo.KeywordValue = category.CategoryId;
                         seo.Keyword = checkItem == null ? itemName : "_" + itemName + "_";
                         seo.Language = category.Catalog.DefaultLanguage;
                         seo.IsActive = true;

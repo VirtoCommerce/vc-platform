@@ -27,7 +27,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 		#endregion
 
 		public CategorySeoViewModel(ILoginViewModel loginViewModel, ICatalogOutlineBuilder catalogBuilder, IRepositoryFactory<IStoreRepository> storeRepositoryFactory, IRepositoryFactory<IAppConfigRepository> appConfigRepositoryFactory, IAppConfigEntityFactory appConfigEntityFactory, Category item, IEnumerable<string> languages, CatalogBase parentCatalog)
-			: base(appConfigRepositoryFactory, appConfigEntityFactory, parentCatalog.DefaultLanguage, languages, item.Code, SeoUrlKeywordTypes.Category)
+			: base(appConfigRepositoryFactory, appConfigEntityFactory, parentCatalog.DefaultLanguage, languages, item.CategoryId, SeoUrlKeywordTypes.Category)
 		{
 			_storeRepositoryFactory = storeRepositoryFactory;
 			_catalogBuilder = catalogBuilder;
@@ -74,21 +74,21 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 					}
 				}
 
-				if (!string.IsNullOrEmpty(stringBuilder.ToString()) && categoryOutline.Categories.Any(cat => cat.Code != keyword.KeywordValue))
+				if (!string.IsNullOrEmpty(stringBuilder.ToString()) && categoryOutline.Categories.Any(cat => cat.CategoryId != keyword.KeywordValue))
 				{
 					using (var seoRepo = _appConfigRepositoryFactory.GetRepositoryInstance())
 					{
 						categoryOutline.Categories.ForEach(cat =>
 							{
-								if (cat.Code != keyword.KeywordValue)
+								if (cat.CategoryId != keyword.KeywordValue)
 								{
 									var storeSeo = seoRepo.SeoUrlKeywords.Where(
-										x => x.KeywordValue == cat.Code && x.Language == keyword.Language)
+										x => x.KeywordValue == cat.CategoryId && x.Language == keyword.Language)
 									                      .FirstOrDefault() ??
 									               seoRepo.SeoUrlKeywords.Where(
-										               x => x.KeywordValue.Equals(cat.Code, StringComparison.InvariantCultureIgnoreCase) && x.Language.Equals(_catalog.CatalogId, StringComparison.InvariantCultureIgnoreCase))
+										               x => x.KeywordValue.Equals(cat.CategoryId, StringComparison.InvariantCultureIgnoreCase) && x.Language.Equals(_catalog.CatalogId, StringComparison.InvariantCultureIgnoreCase))
 									                      .FirstOrDefault();
-									stringBuilder.AppendFormat("/{0}", storeSeo != null ? storeSeo.Keyword : cat.Code);
+									stringBuilder.AppendFormat("/{0}", storeSeo != null ? storeSeo.Keyword : cat.CategoryId);
 								}
 
 							});

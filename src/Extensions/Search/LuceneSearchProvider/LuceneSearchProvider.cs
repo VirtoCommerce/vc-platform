@@ -19,7 +19,7 @@ namespace VirtoCommerce.Search.Providers.Lucene
     using global::Lucene.Net.Search;
     using global::Lucene.Net.Store;
 
-    using VirtoCommerce.Foundation.Search;
+    using Foundation.Search;
 
     #endregion
 
@@ -63,9 +63,9 @@ namespace VirtoCommerce.Search.Providers.Lucene
         /// <param name="connection">The connection.</param>
         public LuceneSearchProvider(ISearchQueryBuilder queryBuilder, ISearchConnection connection)
         {
-            this._queryBuilder = queryBuilder;
-            this._connection = connection;
-            this.Init();
+            _queryBuilder = queryBuilder;
+            _connection = connection;
+            Init();
         }
 
         #endregion
@@ -82,11 +82,11 @@ namespace VirtoCommerce.Search.Providers.Lucene
         {
             get
             {
-                return this._autoCommit;
+                return _autoCommit;
             }
             set
             {
-                this._autoCommit = value;
+                _autoCommit = value;
             }
         }
 
@@ -98,11 +98,11 @@ namespace VirtoCommerce.Search.Providers.Lucene
         {
             get
             {
-                return this._autoCommitCount;
+                return _autoCommitCount;
             }
             set
             {
-                this._autoCommitCount = value;
+                _autoCommitCount = value;
             }
         }
 
@@ -116,11 +116,11 @@ namespace VirtoCommerce.Search.Providers.Lucene
         {
             get
             {
-                return this._queryBuilder;
+                return _queryBuilder;
             }
             set
             {
-                this._queryBuilder = value;
+                _queryBuilder = value;
             }
         }
 
@@ -135,7 +135,7 @@ namespace VirtoCommerce.Search.Providers.Lucene
         /// <param name="documentType">The documentType.</param>
         public virtual void Close(string scope, string documentType)
         {
-            this.Close(scope, documentType, true);
+            Close(scope, documentType, true);
         }
 
         /// <summary>
@@ -144,19 +144,19 @@ namespace VirtoCommerce.Search.Providers.Lucene
         /// <param name="scope">Name of the application.</param>
         public virtual void Commit(string scope)
         {
-            var documentTypes = this._pendingDocuments.Keys.ToList();
+            var documentTypes = _pendingDocuments.Keys.ToList();
 
             lock (Providerlock)
             {
                 foreach (var documentType in documentTypes)
                 {
-                    var documents = this._pendingDocuments[documentType];
+                    var documents = _pendingDocuments[documentType];
                     if (documents == null || documents.Count == 0)
                     {
                         continue;
                     }
 
-                    var writer = this.GetIndexWriter(documentType, true, false);
+                    var writer = GetIndexWriter(documentType, true, false);
 
                     foreach (var doc in documents)
                     {
@@ -164,7 +164,7 @@ namespace VirtoCommerce.Search.Providers.Lucene
                     }
 
                     // Remove documents
-                    this._pendingDocuments[documentType].Clear();
+                    _pendingDocuments[documentType].Clear();
                 }
             }
         }
@@ -177,18 +177,18 @@ namespace VirtoCommerce.Search.Providers.Lucene
         /// <param name="document">The document.</param>
         public virtual void Index(string scope, string documentType, IDocument document)
         {
-            var folderName = this.GetFolderName(scope, documentType);
-            if (!this._pendingDocuments.ContainsKey(folderName))
+            var folderName = GetFolderName(scope, documentType);
+            if (!_pendingDocuments.ContainsKey(folderName))
             {
-                this._pendingDocuments.Add(folderName, new List<Document>());
+                _pendingDocuments.Add(folderName, new List<Document>());
             }
 
-            this._pendingDocuments[folderName].Add(LuceneHelper.ConvertDocument(document));
+            _pendingDocuments[folderName].Add(LuceneHelper.ConvertDocument(document));
 
             // Make sure to auto commit changes when limit is reached, still need to call close before changes are written
-            if (this.AutoCommit && this._pendingDocuments.Count > this.AutoCommitCount)
+            if (AutoCommit && _pendingDocuments.Count > AutoCommitCount)
             {
-                this.Commit(scope);
+                Commit(scope);
             }
         }
 
@@ -205,9 +205,9 @@ namespace VirtoCommerce.Search.Providers.Lucene
             var term = new Term(key, value);
 
             // Close writer first
-            this.Close(scope, documentType, false);
+            Close(scope, documentType, false);
 
-            var dir = FSDirectory.Open(new DirectoryInfo(this.GetFolderName(scope, documentType)));
+            var dir = FSDirectory.Open(new DirectoryInfo(GetFolderName(scope, documentType)));
             var indexReader = IndexReader.Open(dir, false);
             var num = indexReader.DeleteDocuments(term);
             indexReader.Dispose();
@@ -222,22 +222,21 @@ namespace VirtoCommerce.Search.Providers.Lucene
         public virtual void RemoveAll(string scope, string documentType)
         {
             // Make sure the existing writer is closed
-            this.Close(scope, documentType, false);
+            Close(scope, documentType, false);
 
             // retrieve foldername
-            var folderName = this.GetFolderName(scope, documentType);
+            var folderName = GetFolderName(scope, documentType);
 
             // re-initialize the write, so all documents are deleted
-            this.GetIndexWriter(folderName, true, true);
+            GetIndexWriter(folderName, true, true);
 
             // now close the write so changes are saved
-            this.Close(scope, documentType, false);
+            Close(scope, documentType, false);
         }
 
         /// <summary>
         ///     Searches the datasource using the specified criteria. Criteria is parsed by the query builder specified by
-        ///     <typeparamref
-        ///         name="QueryBuilderType" />
+        ///     <typeparamref />
         ///     .
         /// </summary>
         /// <param name="scope">Name of the application.</param>
@@ -246,14 +245,14 @@ namespace VirtoCommerce.Search.Providers.Lucene
         /// <exception cref="VirtoCommerce.Search.Providers.Lucene.LuceneSearchException"></exception>
         public virtual ISearchResults Search(string scope, ISearchCriteria criteria)
         {
-            TopDocs docs = null;
+            TopDocs docs;
 
-            var folderName = this.GetFolderName(scope, criteria.DocumentType);
+            var folderName = GetFolderName(scope, criteria.DocumentType);
 
-            var dir = FSDirectory.Open(new DirectoryInfo(this.GetDirectoryPath(folderName)));
+            var dir = FSDirectory.Open(new DirectoryInfo(GetDirectoryPath(folderName)));
             var searcher = new IndexSearcher(dir);
 
-            var q = (QueryBuilder)this.QueryBuilder.BuildQuery(criteria);
+            var q = (QueryBuilder)QueryBuilder.BuildQuery(criteria);
 
             // filter out empty value
             var filter = q.Filter.ToString().Equals("BooleanFilter()") ? null : q.Filter;
@@ -310,7 +309,7 @@ namespace VirtoCommerce.Search.Providers.Lucene
         {
             lock (Providerlock)
             {
-                var folderName = this.GetFolderName(scope, documentType);
+                var folderName = GetFolderName(scope, documentType);
 
                 if (IndexFolders.ContainsKey(folderName) && IndexFolders[folderName] != null)
                 {
@@ -333,7 +332,7 @@ namespace VirtoCommerce.Search.Providers.Lucene
         /// <returns></returns>
         private string GetDirectoryPath(string folderName)
         {
-            return String.Format("{0}/{1}", this._location, folderName);
+            return String.Format("{0}/{1}", _location, folderName);
         }
 
         /// <summary>
@@ -367,7 +366,7 @@ namespace VirtoCommerce.Search.Providers.Lucene
                 {
                     if (!create)
                         return null;
-                    var localDirectory = FSDirectory.Open(this.GetDirectoryPath(folderName));
+                    var localDirectory = FSDirectory.Open(GetDirectoryPath(folderName));
                     if (!localDirectory.Directory.Exists)
                         isNew = true; // create new if directory doesn't exist
                     if (IndexFolders.ContainsKey(folderName))

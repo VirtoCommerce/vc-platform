@@ -55,7 +55,7 @@ namespace VirtoCommerce.Web.Controllers
         [DonutOutputCache(CacheProfile = "CatalogCache", VaryByCustom = "currency;filters;pricelist")]
         public ActionResult Display(CategoryPathModel category)
         {
-            var categoryBase = _catalogClient.GetCategory(category.Category);
+            var categoryBase = _catalogClient.GetCategoryById(category.Category);
             if (categoryBase != null && categoryBase.IsActive)
             {
                 // set the context variable
@@ -90,11 +90,11 @@ namespace VirtoCommerce.Web.Controllers
 
                     if (node != null)
                     {
-                        if (node.ParentNode != null && model.CatalogOutline !=null)
-                        {
+                        //if (node.ParentNode != null && model.CatalogOutline !=null)
+                        //{
 
-                            node.Attributes["Outline"] = new BrowsingOutline(model.CatalogOutline);
-                        }
+                        //    node.Attributes["Outline"] = new BrowsingOutline(model.CatalogOutline);
+                        //}
 
                         node.Title = model.DisplayName;
                     }
@@ -116,7 +116,7 @@ namespace VirtoCommerce.Web.Controllers
         [DonutOutputCache(CacheProfile = "CatalogCache", VaryByCustom = "currency;cart")]
         public ActionResult DisplayItem(string item)
         {
-            var itemModel = CatalogHelper.CreateCatalogModel(item, byItemCode: true);
+            var itemModel = CatalogHelper.CreateCatalogModel(item);
 
             if (ReferenceEquals(itemModel, null))
             {
@@ -174,7 +174,7 @@ namespace VirtoCommerce.Web.Controllers
                                            string variation = null)
         {
             var variations = _catalogClient.GetItemRelations(itemId);
-            var selectedVariation = string.IsNullOrEmpty(variation) ? null : _catalogClient.GetItemByCode(variation, StoreHelper.CustomerSession.CatalogId);
+            var selectedVariation = string.IsNullOrEmpty(variation) ? null : _catalogClient.GetItem(variation, StoreHelper.CustomerSession.CatalogId);
             var model = new VariationsModel(variations, selections, selectedVariation);
             return PartialView(name, model);
         }
@@ -219,9 +219,15 @@ namespace VirtoCommerce.Web.Controllers
 		/// <param name="displayOptions">The display options.</param>
 		/// <returns>ActionResult.</returns>
         [DonutOutputCache(CacheProfile = "CatalogCache")]
-		public ActionResult DisplayItemById(string itemId, string parentItemId = null, string name = "MiniItem", string associationType = null, bool forcedActive = false, ItemResponseGroups responseGroups = ItemResponseGroups.ItemSmall, ItemDisplayOptions displayOptions = ItemDisplayOptions.ItemSmall)
+		public ActionResult DisplayItemById(string itemId, 
+            string parentItemId = null, 
+            string name = "MiniItem", 
+            string associationType = null, 
+            bool forcedActive = false, 
+            ItemResponseGroups responseGroups = ItemResponseGroups.ItemSmall, 
+            ItemDisplayOptions displayOptions = ItemDisplayOptions.ItemSmall)
 		{
-			return DisplayItemByIdNoCache(itemId, parentItemId, name, associationType, forcedActive, responseGroups,
+			return DisplayItemNoCache(itemId, parentItemId, name, associationType, forcedActive, responseGroups,
 			                              displayOptions);
 		}
 
@@ -238,7 +244,14 @@ namespace VirtoCommerce.Web.Controllers
         /// <param name="displayOptions">The display options.</param>
         /// <param name="bycode"></param>
         /// <returns>ActionResult.</returns>
-        public ActionResult DisplayItemByIdNoCache(string itemId, string parentItemId = null, string name = "MiniItem", string associationType = null, bool forcedActive = false, ItemResponseGroups responseGroups = ItemResponseGroups.ItemSmall, ItemDisplayOptions displayOptions = ItemDisplayOptions.ItemSmall, bool bycode = false)
+        public ActionResult DisplayItemNoCache(string itemId, 
+            string parentItemId = null, 
+            string name = "MiniItem", 
+            string associationType = null, 
+            bool forcedActive = false, 
+            ItemResponseGroups responseGroups = ItemResponseGroups.ItemSmall, 
+            ItemDisplayOptions displayOptions = ItemDisplayOptions.ItemSmall, 
+            bool bycode = false)
         {
             var itemModel = CatalogHelper.CreateCatalogModel(itemId, parentItemId, associationType, forcedActive, responseGroups, displayOptions, bycode);
             return itemModel != null ? PartialView(name, itemModel) : null;

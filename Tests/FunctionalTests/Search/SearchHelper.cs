@@ -36,7 +36,7 @@ namespace FunctionalTests.Search
             doc.Add(new DocumentField("price_usd_default", price, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
             doc.Add(new DocumentField("price_usd_default_value", price.ToString(), new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
             doc.Add(new DocumentField("color", color, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
-            doc.Add(new DocumentField("catalog", "goods", new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
+            doc.Add(new DocumentField("catalog", "goods", new[] { IndexStore.YES, IndexType.NOT_ANALYZED, IndexDataType.StringCollection}));
             doc.Add(new DocumentField("size", size, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
             doc.Add(new DocumentField("currency", "USD", new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
 
@@ -44,7 +44,7 @@ namespace FunctionalTests.Search
             {
                 foreach (var outline in outlines)
                 {
-                    doc.Add(new DocumentField("__outline", outline, new[] { IndexStore.YES, IndexType.NOT_ANALYZED }));
+                    doc.Add(new DocumentField("__outline", outline, new[] { IndexStore.YES, IndexType.NOT_ANALYZED, IndexDataType.StringCollection }));
                 }
             }
 

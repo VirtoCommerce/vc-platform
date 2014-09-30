@@ -243,6 +243,7 @@
     <Compile Include="DataManagement\Services\DataManagementService.cs" />
     <Compile Include="Frameworks\Extensions\NumberExtensions.cs" />
     <Compile Include="Frameworks\SqlDbConfiguration.cs" />
+    <Compile Include="Orders\Extensions\JurisdictionExtensions.cs" />
     <Compile Include="Orders\Extensions\PaymentMethodExtensions.cs" />
     <Compile Include="Orders\Model\OrderFormPropertyValue.cs" />
     <Compile Include="Orders\Model\OrderFormValueType.cs" />
@@ -373,6 +374,7 @@
     <Compile Include="Reporting\ReportingConfiguration.cs" />
     <Compile Include="Reporting\Services\IReportingService.cs" />
     <Compile Include="Reporting\Services\ReportingService.cs" />
+    <Compile Include="Search\IndexDataType.cs" />
     <Compile Include="Search\ISearchConnection.cs" />
     <Compile Include="Search\ISearchFilterService.cs" />
     <Compile Include="Search\KeywordSearchCriteria.cs" />

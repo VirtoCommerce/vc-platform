@@ -9,7 +9,7 @@ namespace VirtoCommerce.Foundation.Data.Azure.Common
     {
         private Thread _worker;
 
-        readonly string[] _pages = new[] { "/", "/c/tv-video", "/cart/" };
+        readonly string[] _pages = { "/", "/cart/" };
 
         /// <summary>
         /// Starts this instance.

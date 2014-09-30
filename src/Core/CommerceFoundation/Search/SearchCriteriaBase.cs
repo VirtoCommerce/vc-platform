@@ -127,11 +127,6 @@ namespace VirtoCommerce.Foundation.Search
 			get { return "__outline"; }
 		}
 
-        public virtual string BrowsingOutlineField
-        {
-            get { return "__browsingoutline"; }
-        }
-
         public virtual string ReviewsTotalField
         {
             get { return "__reviewstotal"; }

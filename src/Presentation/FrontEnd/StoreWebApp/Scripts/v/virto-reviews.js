@@ -222,17 +222,18 @@ Reviews =
             suppressErrors: true,
             dataType: 'JSON',
             success: function () {
-                "Thank you for your feedback.".Localize("#review_feedback_" + id);
-                Reviews.ReviewVotes.push(id);
+        	"Thank you for your feedback.".Localize("#review_feedback_" + id);
+            Reviews.ReviewVotes.push(id);
 
-                $("#total_feedback_review_" + id).text(parseInt($("#total_feedback_review_" + id).text()) + 1);
+            $("#total_feedback_review_" + id).text(parseInt($("#total_feedback_review_" + id).text()) + 1);
 
                 if (bLike) {
                     $("#positive_review_" + id).text(parseInt($("#positive_review_" + id).text()) + 1);
                 }
             },
-            error: function (data) {
-                data.responseText.Localize("#review_feedback_" + id);
+            error: function (data)
+            {
+                data.responseJSON.Message.Localize("#review_feedback_" + id);
             }
         });
     },
@@ -249,19 +250,20 @@ Reviews =
             suppressErrors: true,
             dataType: 'JSON',
             success: function () {
-                "Thank you for your feedback.".Localize("#comment_feedback_" + id);
-                Reviews.CommentVotes.push(id);
+        	"Thank you for your feedback.".Localize("#comment_feedback_" + id);
+            Reviews.CommentVotes.push(id);
 
-                $("#total_feedback_comment_" + id).text(parseInt($("#total_feedback_comment_" + id).text()) + 1);
+            $("#total_feedback_comment_" + id).text(parseInt($("#total_feedback_comment_" + id).text()) + 1);
 
-                if (bLike) {
-                    $("#positive_comment_" + id).text(parseInt($("#positive_comment_" + id).text()) + 1);
-                }
+            if (bLike) {
+                $("#positive_comment_" + id).text(parseInt($("#positive_comment_" + id).text()) + 1);
+            }
             },
             error: function (data) {
-                data.responseText.Localize("#comment_feedback_" + id);
+                data.responseJSON.Message.Localize("#comment_feedback_" + id);
             }
         });
+
     },
     flag: function (id) {
 

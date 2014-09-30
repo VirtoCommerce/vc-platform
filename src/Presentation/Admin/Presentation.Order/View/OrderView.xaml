@@ -115,7 +115,7 @@
                                 <TextBlock Grid.Row="0" Grid.Column="2" Text="{Binding Status, Converter={x:Static LocalizingConverter.Current}, ConverterParameter={x:Static res:NavigationNames.ModuleName}}" />
                                 <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding TrackingNumber}" Style="{StaticResource Virto_TextBox_ReadOnly_StyleThemed}" />
                                 <TextBlock Grid.Row="2" Grid.Column="2" Text="{Binding StoreId}" />
-                                <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding Created}" />
+                                <TextBlock Grid.Row="3" Grid.Column="2" Text="{Binding Created, Converter={StaticResource UtcToLocalDateTimeConverter}}" />
                                 <TextBlock Grid.Row="4" Grid.Column="2" Text="{Binding BillingCurrency}" />
                                 <TextBlock Grid.Row="5" Grid.Column="2">
                                     <TextBlock.Text>

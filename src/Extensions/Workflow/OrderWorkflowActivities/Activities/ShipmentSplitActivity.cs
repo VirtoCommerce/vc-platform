@@ -78,6 +78,16 @@ namespace VirtoCommerce.OrderWorkflow
 					};
 				itemShipment.ShipmentItems.Add(link);
 			}
+
+            //Clear unused shipments
+		    foreach (var shipment in form.Shipments.ToArray())
+		    {
+		        if (shipment.ShipmentItems.Count == 0)
+		        {
+		            form.Shipments.Remove(shipment);
+		        }
+		    }
+
 		}
 
 		private void RemoveLineItemFromShipment(Shipment shipment, string lineItemId)

@@ -101,6 +101,7 @@ using IEvaluationPolicy = VirtoCommerce.Foundation.Marketing.Model.IEvaluationPo
 
 namespace VirtoCommerce.Web
 {
+    using VirtoCommerce.Search.Providers.Azure;
     using VirtoCommerce.Web.Client.Services.Filters;
 
     /// <summary>
@@ -235,6 +236,12 @@ namespace VirtoCommerce.Web
                 // Lucene Search implementation
                 container.RegisterType<ISearchProvider, LuceneSearchProvider>();
                 container.RegisterType<ISearchQueryBuilder, LuceneSearchQueryBuilder>();               
+            }
+            else if (string.Equals(searchConnection.Provider, SearchProviders.AzureSearch.ToString(), StringComparison.OrdinalIgnoreCase))
+            {
+                // Azure Search implementation
+                container.RegisterType<ISearchProvider, AzureSearchProvider>();
+                container.RegisterType<ISearchQueryBuilder, AzureSearchQueryBuilder>();
             }
             else
             {

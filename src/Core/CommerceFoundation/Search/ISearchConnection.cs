@@ -25,5 +25,7 @@ namespace VirtoCommerce.Foundation.Search
         /// </value>
         string Provider { get; }
 
+        string AccessKey { get; }
+
     }
 }

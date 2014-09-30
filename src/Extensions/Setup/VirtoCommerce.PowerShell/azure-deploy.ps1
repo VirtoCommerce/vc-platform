@@ -30,6 +30,8 @@ Param(
 		$db_recreate = $true,
 	  	[parameter(Mandatory=$false)]
 		$db_customsqlfolder,
+	  	[parameter(Mandatory=$false)]
+		$db_sampledata = $true,
         [parameter(Mandatory=$true)]
         $db_servername,
         [parameter(Mandatory=$true)] # account that db scripts will be running under
@@ -232,7 +234,7 @@ Function deploy-database
     write-progress -id 1 -activity "SQL Database Deployment" -status "In progress"
     Write-Output "$(Get-Date -f $timeStampFormat) - SQL Database Deployment: In progress"
 
-    . ".\azure-db.ps1" -db_recreate $db_recreate -db_customFolder $common_dbcustomfolder -db_servername $db_servername -db_serverlogin $db_serverlogin -db_serverpassword $db_serverpassword -db_databasename $db_databasename -selectedSubscription $common_subscriptionname -publishSettingsFile $common_publishsettingsfile -setupModulePath $common_vcfpowershellfile
+    . ".\azure-db.ps1" -db_recreate $db_recreate -db_customFolder $common_dbcustomfolder -db_servername $db_servername -db_serverlogin $db_serverlogin -db_serverpassword $db_serverpassword -db_databasename $db_databasename -selectedSubscription $common_subscriptionname -publishSettingsFile $common_publishsettingsfile -setupModulePath $common_vcfpowershellfile -db_sampledata $db_sampledata
 
     write-progress -id 1 -activity "SQL Database Deployment" -status "Finished"
     Write-Output "$(Get-Date -f $timeStampFormat) - SQL Database Deployment: Finished"
@@ -319,9 +321,9 @@ Function build-search
     write-progress -id 1 -activity "Search Build" -status "In progress"
     Write-Output "$(Get-Date -f $timeStampFormat) - Search Build: In progress"
 
-	# set the azure sdk 2.2 home folder
-	$azureSDKPath = (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Microsoft SDKs\ServiceHosting\v2.2" -Name InstallPath).InstallPath
-	Write-Host "Azure SDK 2.2 Path = $azureSDKPath"
+	# set the azure sdk 2.4 home folder
+	$azureSDKPath = (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Microsoft SDKs\ServiceHosting\v2.4" -Name InstallPath).InstallPath
+	Write-Host "Azure SDK 2.4 Path = $azureSDKPath"
 
     & "$global:buildexe_path\MSBuild.exe" $search_workerrolehome\ESWorkerRole.csproj /p:Configuration=$build_configuration
     if ($LASTEXITCODE -ne 0)

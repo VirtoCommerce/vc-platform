@@ -36,7 +36,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			_navManager = navManager;
 			ViewTitle = new ViewTitleBase
 				{
-                    Title = "VIRTUAL CATALOG",
+                    Title = "Virtual Catalog",
                     SubTitle = (item != null && !string.IsNullOrEmpty(item.Name)) ? item.Name : ""
 				};
 

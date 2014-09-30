@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
+using PlainElastic.Net.IndexSettings;
 using VirtoCommerce.Foundation.Catalogs.Search;
 using VirtoCommerce.Foundation.Search;
 using VirtoCommerce.Foundation.Search.Facets;
@@ -17,6 +19,9 @@ namespace VirtoCommerce.Search.Providers.Elastic
         private readonly ISearchConnection _connection;
         private readonly Dictionary<string, List<ESDocument>> _pendingDocuments = new Dictionary<string, List<ESDocument>>();
         private readonly Dictionary<string, string> _mappings = new Dictionary<string, string>();
+
+        private bool _settingsUpdated;
+        private const string SearchAnalyzer = "trigrams";
 
         #region Private Properties
         ElasticClient<ESDocument> _client;
@@ -45,7 +50,9 @@ namespace VirtoCommerce.Search.Providers.Elastic
 
                     var arr = url.Split(':');
                     var host = arr[0];
-                    var port = arr[1];
+                    var port = "8080";
+                    if(arr.Length>1)
+                        port = arr[1];
 
                     _client = new ElasticClient<ESDocument>(host, Int32.Parse(port));
                 }
@@ -390,6 +397,10 @@ namespace VirtoCommerce.Search.Providers.Elastic
                         var propertyMap = new CustomPropertyMap<ESDocument>(field.Name, type)
                         .Store(field.ContainsAttribute(IndexStore.YES))
                         .When(field.ContainsAttribute(IndexType.NOT_ANALYZED), p => p.Index(IndexState.not_analyzed))
+                        .When(field.Name.StartsWith("__content", StringComparison.OrdinalIgnoreCase), p => p.Analyzer(SearchAnalyzer))
+                        .When(Regex.Match(field.Name, "__content_en.*").Success, x => x.Analyzer("english"))
+                        .When(Regex.Match(field.Name, "__content_de.*").Success, x => x.Analyzer("german"))
+                        .When(Regex.Match(field.Name, "__content_ru.*").Success, x => x.Analyzer("russian"))
                         .When(field.ContainsAttribute(IndexType.NO), p => p.Index(IndexState.no));
 
                         properties.CustomProperty(field.Name, p => propertyMap);
@@ -404,11 +415,33 @@ namespace VirtoCommerce.Search.Providers.Elastic
             // submit mapping
             if (submitMapping)
             {
+                //Use ngrams analyzer for search in the middle of word
+                //http://www.elasticsearch.org/guide/en/elasticsearch/guide/current/ngrams-compound-words.html
+                var settings = new IndexSettingsBuilder()
+                    .Analysis(als => als
+                        .Analyzer(a => a.Custom(SearchAnalyzer, custom => custom
+                            .Tokenizer(DefaultTokenizers.standard)
+                            .Filter("trigrams_filter")
+                            .Filter(DefaultTokenFilters.lowercase)))
+                        .Filter(f => f.NGram("trigrams_filter", ng => ng
+                                .MinGram(3)
+                                .MaxGram(3)))).Build();
+
                 if (!Client.IndexExists(new IndexExistsCommand(scope)))
                 {
-                    var response = Client.CreateIndex(new IndexCommand(scope));
+                    var response = Client.CreateIndex(new IndexCommand(scope), settings);
+                    _settingsUpdated = true;
                     if (response.error != null)
                         throw new IndexBuildException(response.error);
+                }
+                else if(!_settingsUpdated)
+                {
+                    // We can't update settings on active index.
+                    // So we need to close it, then update settings and then open index back.
+                    Client.Close(new CloseCommand(scope));
+                    Client.UpdateSettings(new UpdateSettingsCommand(scope), settings);
+                    Client.Open(new OpenCommand(scope));
+                    _settingsUpdated = true;
                 }
 
                 var mapBuilder = new MapBuilder<ESDocument>();

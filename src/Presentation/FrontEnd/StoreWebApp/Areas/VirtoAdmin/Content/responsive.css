@@ -1,0 +1,330 @@
+@media only screen and (min-width: 768px) and (max-width: 959px)
+{
+	.rubber
+	{
+		width: 760px;
+	}
+
+	.welcome .sub-title
+	{
+		font-size: 24px;
+	}
+
+	.welcome .title
+	{
+		font-size: 50px;
+	}
+}
+
+@media only screen and (min-width: 480px) and (max-width: 767px)
+{
+	.rubber
+	{
+		padding: 0;
+		width: 420px;
+	}
+
+	.main
+	{
+		margin-top: 25px;
+	}
+
+	.congratulations .title
+	{
+		font-size: 28px;
+	}
+
+	.congratulations .text
+	{
+		font-size: 16px;
+	}
+
+	.welcome .sub-title
+	{
+		font-size: 20px;
+	}
+
+	.welcome .title
+	{
+		font-size: 28px;
+		line-height: 110%;
+	}
+
+	.welcome .socials
+	{
+		display: inline-block;
+		margin: 15px 0;
+		text-align: center;
+	}
+
+	.welcome .socials li
+	{
+		margin: 0 5px;
+		width: 65px;
+	}
+
+	.welcome .socials li a
+	{
+		background: url(images/icons/socials-mobile.png) no-repeat scroll 0 0;
+		height: 65px;
+	}
+
+	.welcome .socials li a:hover
+	{
+		background-position: 0 100%;
+	}
+
+	.welcome .socials li.tw a
+	{
+		background-position: -65px 0;
+	}
+
+	.welcome .socials li.tw a:hover
+	{
+		background-position: -65px 100%;
+	}
+
+	.welcome .socials li.in a
+	{
+		background-position: -130px 0;
+	}
+
+	.welcome .socials li.in a:hover
+	{
+		background-position: -130px 100%;
+	}
+
+	.welcome .socials li.plus a
+	{
+		background-position: -195px 0;
+	}
+
+	.welcome .socials li.plus a:hover
+	{
+		background-position: -195px 100%;
+	}
+
+	.ask
+	{
+		margin: 0 0 25px;
+	}
+
+	.ask p,
+	.ask p .tag
+	{
+		font-size: 18px;
+	}
+
+	.ask p img
+	{
+		width: 125px;
+	}
+
+	.use-links .title
+	{
+		font-size: 24px;
+	}
+
+	.use-links .column,
+	.use-links .column + .column
+	{
+		float: none;
+		margin: 0;
+		width: 100%;
+	}
+
+	.use-links .column + .column
+	{
+		margin: 25px 0 0;
+	}
+
+	footer .rubber
+	{
+		padding: 15px 20px;
+		width: 100%;
+	}
+
+	footer .copy,
+	footer .socials
+	{
+		float: none;
+		width: 100%;
+		text-align: center;
+	}
+
+	footer .socials
+	{
+		display: inline-block;
+		margin: 20px 0 0;
+	}
+}
+
+@media only screen and (min-width: 0) and (max-width: 479px)
+{
+	/* disable webkit text size adjust (for iPhone) */
+	html
+	{
+		-webkit-text-size-adjust: none;
+	}
+
+	.button
+	{
+		font-size: 14px;
+		padding: 0 25px;
+	}
+	
+	.rubber
+	{
+		padding: 0 20px;
+		width: 100%;
+	}
+
+	.main
+	{
+		margin-top: 25px;
+	}
+
+	.welcome .sub-title
+	{
+		font-size: 16px;
+	}
+
+	.welcome .title
+	{
+		font-size: 18px;
+		line-height: 110%;
+	}
+
+	.welcome .socials
+	{
+		display: inline-block;
+		margin: 15px 0;
+		text-align: center;
+	}
+
+	.welcome .socials li
+	{
+		margin: 0 2px;
+		width: 65px;
+	}
+
+	.welcome .socials li a
+	{
+		background: url(images/icons/socials-mobile.png) no-repeat scroll 0 0;
+		height: 65px;
+	}
+
+	.welcome .socials li a:hover
+	{
+		background-position: 0 100%;
+	}
+
+	.welcome .socials li.tw a
+	{
+		background-position: -65px 0;
+	}
+
+	.welcome .socials li.tw a:hover
+	{
+		background-position: -65px 100%;
+	}
+
+	.welcome .socials li.in a
+	{
+		background-position: -130px 0;
+	}
+
+	.welcome .socials li.in a:hover
+	{
+		background-position: -130px 100%;
+	}
+
+	.welcome .socials li.plus a
+	{
+		background-position: -195px 0;
+	}
+
+	.welcome .socials li.plus a:hover
+	{
+		background-position: -195px 100%;
+	}
+
+	.congratulations .title
+	{
+		font-size: 28px;
+	}
+
+	.congratulations .text
+	{
+		font-size: 16px;
+	}
+
+	.ask
+	{
+		margin: 0 10px 25px;
+	}
+
+	.ask p,
+	.ask p .tag
+	{
+		font-size: 15px;
+	}
+
+	.ask p img
+	{
+		width: 125px;
+	}
+
+	.use-links .title
+	{
+		font-size: 18px;
+	}
+
+	.use-links .column,
+	.use-links .column + .column
+	{
+		float: none;
+		margin: 0;
+		width: 100%;
+	}
+
+	.use-links .column + .column
+	{
+		margin: 25px 0 0;
+	}
+
+	footer .rubber
+	{
+		padding: 15px 20px;
+		width: 100%;
+	}
+
+	footer .copy,
+	footer .socials
+	{
+		float: none;
+		width: 100%;
+		text-align: center;
+	}
+
+	footer .copy
+	{
+		font-size: 11px;
+	}
+
+	footer .socials
+	{
+		display: inline-block;
+		margin: 20px 0 0;
+	}
+}
+
+/* Retina display
+============================================*/
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5),
+    only screen and (-o-min-device-pixel-ratio: 3/2),
+    only screen and (min--moz-device-pixel-ratio: 1.5),
+    only screen and (min-device-pixel-ratio: 1.5)
+    {
+    	
+    }
