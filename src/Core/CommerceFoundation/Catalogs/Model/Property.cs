@@ -53,6 +53,21 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 			}
 		}
 
+        private string _TargetType;
+        [DataMember]
+        [StringLength(128, ErrorMessage = "Only 128 characters allowed.")]
+        public string TargetType
+        {
+            get
+            {
+                return _TargetType;
+            }
+            set
+            {
+                SetValue(ref _TargetType, () => this.TargetType, value);
+            }
+        }
+
 
 		private bool _IsKey;
 		[DataMember]
