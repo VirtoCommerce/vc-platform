@@ -1,10 +1,36 @@
 ﻿using System;
 using System.Linq;
-using WindowsAzure.IPAddressRules;
+
 using Microsoft.WindowsAzure.ServiceRuntime;
 using VirtoCommerce.Foundation.Data.Azure.Common;
 namespace VirtoCommerce.Web
 {
+    public class WebRole : BaseWebRole
+    {
+        public override bool OnStart()
+        {
+            if (RoleEnvironment.IsAvailable && !RoleEnvironment.IsEmulated)
+            {
+                RoleEnvironment.Changing += OnRoleEnvironmentChanging;
+            }
+            return base.OnStart();
+        }
+
+        /// <summary>
+        /// Force restart of the instance.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void OnRoleEnvironmentChanging(object sender, RoleEnvironmentChangingEventArgs e)
+        {
+            if (e.Changes.Any(o => o is RoleEnvironmentChange))
+                e.Cancel = true;
+        }
+    }
+
+    /* The version below allows using IP rules engine, simply include the IPRule package
+     * Install-Package WindowsAzure.IPAddressRules
+    using WindowsAzure.IPAddressRules;
     public class WebRole : BaseWebRole
     {
         private IPAddressRulesManager ruleManager;
@@ -45,4 +71,6 @@ namespace VirtoCommerce.Web
                 e.Cancel = true;
         }
     }
+     */
+
 }
