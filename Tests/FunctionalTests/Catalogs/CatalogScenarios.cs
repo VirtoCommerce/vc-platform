@@ -200,7 +200,7 @@ namespace FunctionalTests.Catalogs
 			items = orderedItems.Skip(0).Take(25).ToList().ToArray();
 
 			var queryTime = DateTime.Now - beginTime;
-			Assert.True(queryTime < new TimeSpan(0, 0, 0, 2));
+			Assert.True(queryTime < new TimeSpan(0, 0, 1, 2));
 		}
 	}
 }

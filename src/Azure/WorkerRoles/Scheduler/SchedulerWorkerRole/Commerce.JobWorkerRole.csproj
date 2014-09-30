@@ -151,7 +151,7 @@
       <Name>AzureSchedulingLib</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\..\Extensions\Jobs\SchedulingLib\SchedulingLib.csproj">
-      <Project>{7BF794D6-39B2-4A69-9371-F35DF8D53E88}</Project>
+      <Project>{7bf794d6-39b2-4a69-9371-f35df8d53e88}</Project>
       <Name>SchedulingLib</Name>
     </ProjectReference>
   </ItemGroup>
