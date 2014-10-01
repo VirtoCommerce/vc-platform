@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using VirtoCommerce.Client;
@@ -89,9 +90,6 @@ namespace VirtoCommerce.Web.Client.Modules
         {
             var set = session.GetCustomerTagSet();
 
-            //Category
-            set.Add(ContextFieldConstants.CategoryId, new Tag(session.CategoryId));
-
             //Profile
             if (IsRequestAuthenticated(context))
             {
@@ -148,6 +146,27 @@ namespace VirtoCommerce.Web.Client.Modules
         {
             var set = session.GetCustomerTagSet();
 
+            var routeValues = context.Request.RequestContext.RouteData.Values;
+
+            if (routeValues != null)
+            {
+                if (routeValues.ContainsKey(Extensions.Routing.Constants.Store))
+                {
+                    session.StoreId = routeValues[Extensions.Routing.Constants.Store].ToString();
+                }
+
+                if (routeValues.ContainsKey(Extensions.Routing.Constants.Language))
+                {
+                    session.Language = routeValues[Extensions.Routing.Constants.Language].ToString();
+                }
+
+                if (routeValues.ContainsKey(Extensions.Routing.Constants.Category))
+                {
+                    session.CategoryOutline = routeValues[Extensions.Routing.Constants.Category].ToString();
+                    session.CategoryId = session.CategoryOutline.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).Last();
+                }
+            }
+
             // search
             var search = context.Request["q"];
             if (!String.IsNullOrEmpty(search))
@@ -165,6 +184,12 @@ namespace VirtoCommerce.Web.Client.Modules
             if (!String.IsNullOrEmpty(session.CategoryId))
             {
                 set.Add(ContextFieldConstants.CategoryId, new Tag(session.CategoryId));
+            }
+
+            //category path
+            if (!String.IsNullOrEmpty(session.CategoryOutline))
+            {
+                set.Add(ContextFieldConstants.CategoryOutline, new Tag(session.CategoryOutline));
             }
 
             // language
@@ -318,6 +343,7 @@ namespace VirtoCommerce.Web.Client.Modules
             }
             return searchQuery;
         }
+
         #endregion
     }
 }

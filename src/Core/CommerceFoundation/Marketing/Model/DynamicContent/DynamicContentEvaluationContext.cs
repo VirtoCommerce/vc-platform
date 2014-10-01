@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
+using VirtoCommerce.Foundation.Catalogs;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Marketing.Services;
 
@@ -52,13 +54,19 @@ namespace VirtoCommerce.Foundation.Marketing.Model.DynamicContent
 
 		public bool IsShopperInCategoryOrSubcategories(string categoryId)
 		{
-            var id = GetStringValue(ContextFieldConstants.CategoryId);
-            if (!String.IsNullOrEmpty(id))
-            {
-                return string.Equals(id, categoryId, StringComparison.Ordinal);
-            }
+		    if (IsShopperInCategory(categoryId))
+		    {
+		        return true;
+		    }
 
-			return false;
+            //Check for sub categories
+            var outline = GetStringValue(ContextFieldConstants.CategoryOutline);
+            if (!String.IsNullOrEmpty(outline))
+		    {
+                return CatalogOutlineBuilder.GetCategoriesHierarchy(outline).Any(x => categoryId.Equals(x, StringComparison.OrdinalIgnoreCase));
+		    }
+
+		    return false;
 		}
 
 		public decimal CartTotal

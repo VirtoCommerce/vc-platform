@@ -43,6 +43,11 @@ namespace VirtoCommerce.Foundation.Customers
         private string _categoryId;
 
         /// <summary>
+        /// The category outline
+        /// </summary>
+        private string _categoryOutline;
+
+        /// <summary>
         /// The last order identifier
         /// </summary>
         private string _lastOrderId;
@@ -142,6 +147,19 @@ namespace VirtoCommerce.Foundation.Customers
                 SetCookie("vcf.CategoryId", value);
             }
 		}
+
+        public string CategoryOutline
+        {
+            get
+            {
+                return _categoryOutline ?? (_categoryOutline = GetCookieValue("vcf.CategoryOutline"));
+            }
+            set
+            {
+                _categoryOutline = value;
+                SetCookie("vcf.CategoryOutline", value);
+            }
+        }
 
         /// <summary>
         /// Gets or sets the last order identifier.

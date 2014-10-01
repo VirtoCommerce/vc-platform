@@ -23,6 +23,15 @@ namespace VirtoCommerce.Foundation.Customers
         /// </value>
 		string CategoryId { get; set; }
 
+
+        /// <summary>
+        /// Gets or sets the category outline.
+        /// </summary>
+        /// <value>
+        /// The category outline.
+        /// </value>
+        string CategoryOutline { get; set; }
+
         /// <summary>
         /// Gets or sets the customer id. Corresponds to MemberId used throughout the application and by various modules.
         /// </summary>

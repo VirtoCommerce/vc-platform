@@ -2,6 +2,7 @@ namespace VirtoCommerce.Foundation.Frameworks
 {
     public struct ContextFieldConstants
     {
+        public static readonly string CategoryOutline = "CategoryOutline";
         public static readonly string CategoryId = "CategoryId";
         public static readonly string StoreId = "StoreId";
 
