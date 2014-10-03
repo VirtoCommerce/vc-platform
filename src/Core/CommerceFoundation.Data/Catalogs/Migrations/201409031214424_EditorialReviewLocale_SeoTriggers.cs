@@ -7,8 +7,14 @@ namespace VirtoCommerce.Foundation.Data.Catalogs.Migrations
     {
         public override void Up()
         {
+            AddColumn("dbo.CategoryPropertyValue", "PropertyId", c => c.String(maxLength: 128));
             AddColumn("dbo.Property", "TargetType", c => c.String(maxLength: 128));
             AddColumn("dbo.EditorialReview", "Locale", c => c.String(maxLength: 64));
+            AddColumn("dbo.ItemPropertyValue", "PropertyId", c => c.String(maxLength: 128));
+            CreateIndex("dbo.CategoryPropertyValue", "PropertyId");
+            CreateIndex("dbo.ItemPropertyValue", "PropertyId");
+            AddForeignKey("dbo.CategoryPropertyValue", "PropertyId", "dbo.Property", "PropertyId");
+            AddForeignKey("dbo.ItemPropertyValue", "PropertyId", "dbo.Property", "PropertyId");
 
             Sql(@"
                 ALTER TRIGGER [TR_CategoryDeleteTrigger] ON [dbo].[Category]
@@ -81,8 +87,14 @@ namespace VirtoCommerce.Foundation.Data.Catalogs.Migrations
 	                END
                 END");
 
+            DropForeignKey("dbo.ItemPropertyValue", "PropertyId", "dbo.Property");
+            DropForeignKey("dbo.CategoryPropertyValue", "PropertyId", "dbo.Property");
+            DropIndex("dbo.ItemPropertyValue", new[] { "PropertyId" });
+            DropIndex("dbo.CategoryPropertyValue", new[] { "PropertyId" });
+            DropColumn("dbo.ItemPropertyValue", "PropertyId");
             DropColumn("dbo.EditorialReview", "Locale");
             DropColumn("dbo.Property", "TargetType");
+            DropColumn("dbo.CategoryPropertyValue", "PropertyId");
         }
     }
 }

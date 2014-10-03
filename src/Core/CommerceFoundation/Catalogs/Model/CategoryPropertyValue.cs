@@ -31,6 +31,26 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 		[Parent]
 		[ForeignKey("CategoryId")]
 		public virtual Category Category { get; set; }
+
+        private string _PropertyId;
+        [DataMember]
+        [StringLength(128)]
+        public string PropertyId
+        {
+            get
+            {
+                return _PropertyId;
+            }
+            set
+            {
+                SetValue(ref _PropertyId, () => this.PropertyId, value);
+            }
+        }
+
+        [DataMember]
+        [Parent]
+        [ForeignKey("PropertyId")]
+        public virtual Property Property { get; set; }
 		#endregion
 	}
 }
