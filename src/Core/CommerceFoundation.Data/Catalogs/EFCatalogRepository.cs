@@ -189,7 +189,15 @@ namespace VirtoCommerce.Foundation.Data.Catalogs
 						.HasMany(x => x.PropertyValues)
 						.WithRequired(x => x.Property);
 
-			#endregion
+            modelBuilder.Entity<Property>()
+                        .HasMany(x => x.ItemPropertyValues)
+                        .WithOptional(x => x.Property);
+
+            modelBuilder.Entity<Property>()
+                        .HasMany(x => x.CategoryPropertyValues)
+                        .WithOptional(x => x.Property);
+
+		    #endregion
 		}
 
 		#region ICatalogRepository Members
