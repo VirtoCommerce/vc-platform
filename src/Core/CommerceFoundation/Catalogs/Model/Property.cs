@@ -254,32 +254,6 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 			}
 		}
 
-        ObservableCollection<ItemPropertyValue> _ItemValues = null;
-        [DataMember]
-        public virtual ObservableCollection<ItemPropertyValue> ItemPropertyValues
-        {
-            get
-            {
-                if (_ItemValues == null)
-                    _ItemValues = new ObservableCollection<ItemPropertyValue>();
-
-                return _ItemValues;
-            }
-        }
-
-        ObservableCollection<CategoryPropertyValue> _CategoryValues = null;
-        [DataMember]
-        public virtual ObservableCollection<CategoryPropertyValue> CategoryPropertyValues
-        {
-            get
-            {
-                if (_CategoryValues == null)
-                    _CategoryValues = new ObservableCollection<CategoryPropertyValue>();
-
-                return _CategoryValues;
-            }
-        }
-
 		ObservableCollection<PropertyAttribute> _PropertyAttributes = null;
 		[DataMember]
 		public virtual ObservableCollection<PropertyAttribute> PropertyAttributes
