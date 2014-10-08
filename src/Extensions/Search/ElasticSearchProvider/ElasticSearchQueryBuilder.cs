@@ -322,9 +322,10 @@ namespace VirtoCommerce.Search.Providers.Elastic
             foreach (var value in values)
             {
                 var query = ElasticQueryHelper.CreatePriceRangeFilter(criteria, fieldName, value);
-                query.Must(b => ffilter);
+                
                 if (query != null)
                 {
+                    query.Must(b => ffilter);
                     param.FilterFacets(
                         ff => ff.FacetName(String.Format("{0}-{1}", fieldName, value.Id)).Filter(f => f.Bool(b => query)));
                 }

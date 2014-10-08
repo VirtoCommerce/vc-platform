@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using VirtoCommerce.Foundation.Search;
 using VirtoCommerce.Foundation.Search.Schemas;
 using PlainElastic.Net.Queries;
@@ -112,7 +110,7 @@ namespace VirtoCommerce.Search.Providers.Elastic
             // Create  filter of type 
             // price_USD_pricelist1:[100 TO 200} (-price_USD_pricelist1:[* TO *} +(price_USD_pricelist2:[100 TO 200} (-price_USD_pricelist2:[* TO *} (+price_USD_pricelist3[100 TO 200}))))
 
-            if (pls == null || pls.Count() == 0)
+            if (pls == null || !pls.Any())
                 return null;
 
             var priceListId = pls[0].ToLower();
