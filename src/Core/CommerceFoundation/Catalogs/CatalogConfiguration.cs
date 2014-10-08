@@ -18,7 +18,14 @@ namespace VirtoCommerce.Foundation.Catalogs
 
 		private static CatalogConfiguration CreateInstance()
 		{
-			return (CatalogConfiguration)ConfigurationManager.GetSection("VirtoCommerce/Catalog");
+			var config = (CatalogConfiguration)ConfigurationManager.GetSection("VirtoCommerce/Catalog");
+
+		    if (config == null)
+		    {
+		        config = new CatalogConfiguration {Connection = new CatalogConnection()};
+		    }
+
+		    return config;
 		}
 
 		[ConfigurationProperty("Connection", IsRequired = true)]
@@ -28,6 +35,7 @@ namespace VirtoCommerce.Foundation.Catalogs
 			{
 				return (CatalogConnection)this["Connection"];
 			}
+		    private set { this["Connection"] = value; }
 		}
 
 		/// <summary>
