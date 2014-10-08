@@ -11,9 +11,9 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
 	[Cmdlet(VerbsData.Publish, "Virto-Store-Database", SupportsShouldProcess = true, DefaultParameterSetName = "DbConnection")]
 	public class PublishStoreDatabase : DatabaseCommand
 	{
-        public override void Publish(string dbconnection, string data, bool sample, string strategy = SqlDbConfiguration.SqlAzureExecutionStrategy)
+        public override void Publish(string dbconnection, string data, bool sample, bool reduced, string strategy = SqlDbConfiguration.SqlAzureExecutionStrategy)
 		{
-			base.Publish(dbconnection, data, sample, strategy);
+			base.Publish(dbconnection, data, sample, reduced, strategy);
 			string connection = dbconnection;
 			SafeWriteDebug("ConnectionString: " + connection);
 
@@ -21,8 +21,8 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
 			{
 				if (sample)
 				{
-					SafeWriteVerbose("Running sample scripts");
-					new SqlStoreSampleDatabaseInitializer().InitializeDatabase(db);
+					SafeWriteVerbose(string.Format("Running {0}sample scripts", reduced? "reduced " : "" ));
+                    new SqlStoreSampleDatabaseInitializer(reduced).InitializeDatabase(db);
 				}
 				else
 				{

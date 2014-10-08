@@ -13,17 +13,24 @@ namespace VirtoCommerce.PowerShell.Stores
 {
 	public class SqlStoreSampleDatabaseInitializer : SetupDatabaseInitializer<EFStoreRepository, Configuration>
 	{
-		protected override void Seed(EFStoreRepository context)
+	    private readonly bool _reduced;
+
+	    public SqlStoreSampleDatabaseInitializer(bool reduced = false)
+	    {
+	        _reduced = reduced;
+	    }
+
+	    protected override void Seed(EFStoreRepository context)
 		{
 			CreateFulfillmentCenter(context);
-			CreateStores(context);
+			CreateStores(context, _reduced);
 
 			base.Seed(context);
 		}
 
-		public static void CreateStores(EFStoreRepository context)
+		public static void CreateStores(EFStoreRepository context, bool reduced = false)
 		{
-			var store = CreateStore("SampleStore");
+			var store = CreateStore("SampleStore", reduced);
 
 			var appleStore = CreateStore("AppleStore");
 			appleStore.Name = "Apple Store";
@@ -39,7 +46,7 @@ namespace VirtoCommerce.PowerShell.Stores
 			context.UnitOfWork.Commit();
 		}
 
-		private static Store CreateStore(string storeId)
+        private static Store CreateStore(string storeId, bool reduced = false)
 		{
 			var store = new Store
 				{
@@ -53,10 +60,13 @@ namespace VirtoCommerce.PowerShell.Stores
 				};
 
 			store.Languages.Add(new StoreLanguage { StoreId = store.StoreId, LanguageCode = "en-US" });
-			store.Languages.Add(new StoreLanguage { StoreId = store.StoreId, LanguageCode = "ru-RU" });
 			store.Languages.Add(new StoreLanguage { StoreId = store.StoreId, LanguageCode = "de-DE" });
-            store.Languages.Add(new StoreLanguage { StoreId = store.StoreId, LanguageCode = "ja-JP" });
-			store.Currencies.Add(new StoreCurrency { StoreId = store.StoreId, CurrencyCode = "USD" });
+		    if (!reduced)
+		    {
+		        store.Languages.Add(new StoreLanguage {StoreId = store.StoreId, LanguageCode = "ru-RU"});
+		        store.Languages.Add(new StoreLanguage {StoreId = store.StoreId, LanguageCode = "ja-JP"});
+		    }
+		    store.Currencies.Add(new StoreCurrency { StoreId = store.StoreId, CurrencyCode = "USD" });
 			store.Currencies.Add(new StoreCurrency { StoreId = store.StoreId, CurrencyCode = "EUR" });
 			store.DefaultLanguage = "en-US";
 			store.DefaultCurrency = "USD";

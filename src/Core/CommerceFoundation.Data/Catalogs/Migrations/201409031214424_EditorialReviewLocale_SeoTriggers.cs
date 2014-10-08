@@ -7,7 +7,7 @@ namespace VirtoCommerce.Foundation.Data.Catalogs.Migrations
     {
         public override void Up()
         {
-            CreateIndex("Property", new[] { "Name", "CatalogId" }, true);
+            CreateIndex("dbo.Property", new[] { "Name", "CatalogId" }, true);
             AddColumn("dbo.Property", "TargetType", c => c.String(maxLength: 128));
             AddColumn("dbo.EditorialReview", "Locale", c => c.String(maxLength: 64));
 
@@ -84,7 +84,7 @@ namespace VirtoCommerce.Foundation.Data.Catalogs.Migrations
 
             DropColumn("dbo.EditorialReview", "Locale");
             DropColumn("dbo.Property", "TargetType");
-            DropIndex("Property", new[] { "Name", "CatalogId" });
+            DropIndex("dbo.Property", new[] { "Name", "CatalogId" });
         }
     }
 }

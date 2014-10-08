@@ -10,13 +10,13 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
 	[Cmdlet(VerbsData.Publish, "Virto-AppConfig-Database", SupportsShouldProcess = true, DefaultParameterSetName = "DbConnection")]
 	public class PublishAppConfigDatabase : DatabaseCommand
 	{
-        public override void Publish(string dbconnection, string data, bool sample, string strategy = SqlDbConfiguration.SqlAzureExecutionStrategy)
+        public override void Publish(string dbconnection, string data, bool sample, bool reduced, string strategy = SqlDbConfiguration.SqlAzureExecutionStrategy)
 		{
-			base.Publish(dbconnection, data, sample, strategy);
-			PublishWithScope(dbconnection, data, sample, null);
+			base.Publish(dbconnection, data, sample, reduced, strategy);
+			PublishWithScope(dbconnection, data, sample, reduced, null);
 		}
 
-		public void PublishWithScope(string dbconnection, string data, bool sample, string scope)
+		public void PublishWithScope(string dbconnection, string data, bool sample, bool reduced, string scope)
 		{
 			string connection = dbconnection;
 			SafeWriteDebug("ConnectionString: " + connection);
@@ -27,8 +27,17 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
 
 				if (sample)
 				{
-					SafeWriteVerbose("Running sample scripts");
-					initializer = new SqlAppConfigSampleDatabaseInitializer();
+				    if (reduced)
+				    {
+                        SafeWriteVerbose("Running reduced sample scripts");
+                        initializer = new SqlAppConfigReducedSampleDatabaseInitializer();
+				    }
+				    else
+				    {
+                        SafeWriteVerbose("Running sample scripts");
+                        initializer = new SqlAppConfigSampleDatabaseInitializer();
+				    }
+
 				}
 				else
 				{

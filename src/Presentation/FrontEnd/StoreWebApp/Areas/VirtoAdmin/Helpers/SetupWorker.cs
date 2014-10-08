@@ -71,33 +71,33 @@ namespace VirtoCommerce.Web.Areas.VirtoAdmin.Helpers
         private void SetupDb(string connectionString, bool installSamples)
         {
             var dataFolder = @"App_Data\Virto\SampleData\Database";
-            dataFolder = Path.Combine(System.Web.HttpContext.Current.Request.PhysicalApplicationPath ?? "/", dataFolder);
+            dataFolder = Path.Combine(HttpContext.Current.Request.PhysicalApplicationPath ?? "/", dataFolder);
             SendFriendlyMessage("Setting sample data path: {0}", dataFolder);
             // Configure database   
             SendFriendlyMessage("Creating database and system tables.");
-            new PublishAppConfigDatabase().Publish(connectionString, null, installSamples); // publish AppConfig first as it contains system tables
+            new PublishAppConfigDatabase().Publish(connectionString, null, installSamples, installSamples); // publish AppConfig first as it contains system tables
             SendFriendlyMessage("Creating 'Store' module tables.");
-            new PublishStoreDatabase().Publish(connectionString, null, installSamples);
+            new PublishStoreDatabase().Publish(connectionString, null, installSamples, installSamples);
             SendFriendlyMessage("Creating 'Catalog' module tables.");
-            new PublishCatalogDatabase().Publish(connectionString, dataFolder, installSamples);
+            new PublishCatalogDatabase().Publish(connectionString, dataFolder, installSamples, installSamples);
             SendFriendlyMessage("Creating 'Import' module tables.");
-            new PublishImportDatabase().Publish(connectionString, dataFolder, installSamples);
+            new PublishImportDatabase().Publish(connectionString, dataFolder, installSamples, installSamples);
             SendFriendlyMessage("Creating 'Customer' module tables.");
-            new PublishCustomerDatabase().Publish(connectionString, null, installSamples);
+            new PublishCustomerDatabase().Publish(connectionString, null, installSamples, installSamples);
             SendFriendlyMessage("Creating 'Inventory' module tables.");
-            new PublishInventoryDatabase().Publish(connectionString, null, installSamples);
+            new PublishInventoryDatabase().Publish(connectionString, null, installSamples, installSamples);
             SendFriendlyMessage("Creating 'Log' module tables.");
-            new PublishLogDatabase().Publish(connectionString, null, installSamples);
+            new PublishLogDatabase().Publish(connectionString, null, installSamples, installSamples);
             SendFriendlyMessage("Creating 'Marketing' module tables.");
-            new PublishMarketingDatabase().Publish(connectionString, null, installSamples);
+            new PublishMarketingDatabase().Publish(connectionString, null, installSamples, installSamples);
             SendFriendlyMessage("Creating 'Order' module tables.");
-            new PublishOrderDatabase().Publish(connectionString, null, installSamples);
+            new PublishOrderDatabase().Publish(connectionString, null, installSamples, installSamples);
             SendFriendlyMessage("Creating 'Review' module tables.");
-            new PublishReviewDatabase().Publish(connectionString, null, installSamples);
+            new PublishReviewDatabase().Publish(connectionString, null, installSamples, installSamples);
             SendFriendlyMessage("Creating 'Search' module tables.");
-            new PublishSearchDatabase().Publish(connectionString, null, installSamples);
+            new PublishSearchDatabase().Publish(connectionString, null, installSamples, installSamples);
             SendFriendlyMessage("Creating 'Security' module tables.");
-            new PublishSecurityDatabase().Publish(connectionString, dataFolder, installSamples);
+            new PublishSecurityDatabase().Publish(connectionString, dataFolder, installSamples, installSamples);
         }
 
         private void UpdateIndex(InstallModel model)
