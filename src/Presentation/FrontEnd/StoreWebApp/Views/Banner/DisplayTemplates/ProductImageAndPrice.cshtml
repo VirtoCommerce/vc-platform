@@ -6,6 +6,6 @@
 
 @if (currentModel != null)
 {
-    @Html.Action("DisplayItemNoCache", "Catalog", new { item = currentModel.ProductCode, bycode = true, displayOptions = ItemDisplayOptions.ItemMedium, name = "DisplayTemplates/Item" })
+    @Html.Action("DisplayItemNoCache", "Catalog", new { itemId = currentModel.ProductCode, bycode = true, displayOptions = ItemDisplayOptions.ItemMedium, name = "DisplayTemplates/Item" })
 }
 
