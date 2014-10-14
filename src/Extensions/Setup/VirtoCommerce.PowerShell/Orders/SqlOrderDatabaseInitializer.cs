@@ -494,6 +494,7 @@ namespace VirtoCommerce.PowerShell.Orders
 						{
 							Description = "Credit Card",
 							Name = "CreditCard",
+                            PaymentGateway = paymentGateways[2],
 							IsActive = true
 						}
 				};
@@ -505,7 +506,6 @@ namespace VirtoCommerce.PowerShell.Orders
                 //Setup test config for Authorize.Net
                 if (pm.Name.Equals("CreditCard", StringComparison.OrdinalIgnoreCase))
                 {
-                    pm.PaymentGateway = paymentGateways.First(pg => pg.GatewayId == "gwAuthorizeNet");
                     pm.PaymentMethodPropertyValues.Add(new PaymentMethodPropertyValue
                     {
                         ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
@@ -524,12 +524,12 @@ namespace VirtoCommerce.PowerShell.Orders
                         Name = "TestMode",
                         BooleanValue = true
                     });
-                    pm.PaymentMethodPropertyValues.Add(new PaymentMethodPropertyValue
-                    {
-                        ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                        Name = "GatewayURL",
-                        ShortTextValue = "https://test.authorize.net/gateway/transact.dll"
-                    });
+                    //pm.PaymentMethodPropertyValues.Add(new PaymentMethodPropertyValue
+                    //{
+                    //    ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+                    //    Name = "GatewayURL",
+                    //    ShortTextValue = "https://test.authorize.net/gateway/transact.dll"
+                    //});
                 }
                 else if (pm.Name.Equals("Paypal", StringComparison.OrdinalIgnoreCase))
                 {
@@ -655,6 +655,7 @@ namespace VirtoCommerce.PowerShell.Orders
             });
 
             SetupPaypalGateway(paymentGateways);
+            SetupAuthorizeNetGateway(paymentGateways);
             SetuptIchargeGateway(paymentGateways);
 
             return paymentGateways;
@@ -665,6 +666,43 @@ namespace VirtoCommerce.PowerShell.Orders
             public int TransactionTypes { get; set; }
             public string Code { get; set; }
             public string Name { get; set; }
+        }
+
+        private void SetupAuthorizeNetGateway(List<PaymentGateway> gateways)
+        {
+            var icGateway = new PaymentGateway
+            {
+                ClassType = "VirtoCommerce.PaymentGateways.AuthorizeNetPaymentGateway, VirtoCommerce.PaymentGateways",
+                Name = "Authorize.NET",
+                SupportedTransactionTypes = 0x1F,
+                SupportsRecurring = true
+            };
+
+            icGateway.GatewayProperties.Add(new GatewayProperty
+            {
+                DisplayName = "Merchant's Gateway login",
+                Name = "MerchantLogin",
+                ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+                IsRequired = true,
+            });
+
+            icGateway.GatewayProperties.Add(new GatewayProperty
+            {
+                DisplayName = "Merchant's Gateway password",
+                Name = "MerchantPassword",
+                ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+                IsRequired = true,
+            });
+
+            icGateway.GatewayProperties.Add(new GatewayProperty
+            {
+                DisplayName = "Identifies if transaction is in test mode",
+                Name = "TestMode",
+                ValueType = GatewayProperty.ValueTypes.Boolean.GetHashCode()
+            });
+
+
+            gateways.Add(icGateway);
         }
 
         private void SetupPaypalGateway(List<PaymentGateway> gateways)
@@ -885,7 +923,7 @@ namespace VirtoCommerce.PowerShell.Orders
                 var icGateway = new PaymentGateway
                 {
                     GatewayId = ichargeInfo.Code,
-                    ClassType = "VirtoCommerce.PaymentGateways.ICharge.IchargePaymentGateway, VirtoCommerce.PaymentGateways",
+                    ClassType = "VirtoCommerce.PaymentGateways.IchargePaymentGateway, VirtoCommerce.PaymentGateways",
                     Name = ichargeInfo.Name,
                     SupportsRecurring = false,
                     SupportedTransactionTypes = ichargeInfo.TransactionTypes

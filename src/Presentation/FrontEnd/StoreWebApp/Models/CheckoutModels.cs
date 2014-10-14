@@ -265,7 +265,7 @@ namespace VirtoCommerce.Web.Models
 		/// </summary>
 		/// <value>The expiration month.</value>
         [Range(1, 12), Required]
-		[Display(Name = "Expiration Year")]
+		[Display(Name = "Expiration Month")]
         public int ExpirationMonth { get; set; }
 
 		/// <summary>
