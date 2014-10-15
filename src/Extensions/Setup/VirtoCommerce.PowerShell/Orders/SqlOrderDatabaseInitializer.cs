@@ -613,7 +613,7 @@ namespace VirtoCommerce.PowerShell.Orders
                     new ShippingGateway
 						{
 							ClassType = "VirtoCommerce.Shipping.WeightedShippingGateway, VirtoCommerce.SimpleShippingGateway",
-							Name = "SimpleShippingGateway"
+							Name = "WeightedShippingGateway"
 						}
 				};
 

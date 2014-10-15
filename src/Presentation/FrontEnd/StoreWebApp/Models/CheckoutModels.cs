@@ -507,15 +507,15 @@ namespace VirtoCommerce.Web.Models
 		/// Gets the display name.
 		/// </summary>
 		/// <value>The display name.</value>
-        public string DisplayName
+       public string DisplayName
         {
             get
             {
                 var shippingMethodLanguage =
                     Method.ShippingMethodLanguages.FirstOrDefault(
-                        sl => sl.LanguageCode == UserHelper.CustomerSession.Language);
+                        sl => sl.LanguageCode.Equals(UserHelper.CustomerSession.Language, StringComparison.OrdinalIgnoreCase));
 
-                return shippingMethodLanguage != null ? shippingMethodLanguage.DisplayName : Method.DisplayName;
+                return shippingMethodLanguage != null ? shippingMethodLanguage.DisplayName : Method.DisplayName ?? Method.Name;
             }
         }
 
