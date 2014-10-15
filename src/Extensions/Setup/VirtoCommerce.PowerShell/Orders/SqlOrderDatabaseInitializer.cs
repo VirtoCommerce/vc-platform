@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using VirtoCommerce.Foundation.Data.Orders;
 using VirtoCommerce.Foundation.Data.Orders.Migrations;
@@ -386,67 +387,78 @@ namespace VirtoCommerce.PowerShell.Orders
         {
             var gateways = CreateShippingGateways();
             gateways.ForEach(repository.Add);
-
-            var shippingMethods = new List<ShippingMethod>
-				{
-					new ShippingMethod
-						{
-							ShippingMethodId = "FreeShippingUsd",
-							Name = "FreeShipping",
-							DisplayName = "Free Shipping",
-							Description = "Free Shipping",
-							Currency = "USD",
-							BasePrice = 0,
-							IsActive = true
-						},
-					new ShippingMethod
-						{
-							ShippingMethodId = "FlatRateUsd",
-							Name = "FlatRate",
-							DisplayName = "Flat Rate",
-							Description = "Flat Rate",
-							Currency = "USD",
-							BasePrice = 10,
-							IsActive = true
-						},
-                    new ShippingMethod
-						{
-							ShippingMethodId = "FreeShippingEur",
-							Name = "FreeShipping",
-							DisplayName = "Free Shipping",
-							Description = "Free Shipping",
-							Currency = "EUR",
-							BasePrice = 0,
-							IsActive = true
-						},
-					new ShippingMethod
-						{
-							ShippingMethodId = "FlatRateEur",
-							Name = "FlatRate",
-							DisplayName = "Flat Rate",
-							Description = "Flat Rate",
-							Currency = "EUR",
-							BasePrice = 10,
-							IsActive = true
-						}
-				};
-
-            var i = 0;
-            foreach (var option in shippingMethods.Select(shippingMethod => new ShippingOption { Name = "default", Description = "Default", ShippingGateway = gateways[0] }))
+            var currency = new[] {"USD", "EUR"};
+            var shippingMethods = new List<ShippingMethod>();
+            foreach (var curr in currency)
             {
-                if (i > 0)
+                shippingMethods.Add(new ShippingMethod
                 {
-                    option.Name = "default" + i;
-                    option.Description = "Default" + i;
-                }
-
-                option.ShippingMethods.Add(shippingMethods[i]);
-                repository.Add(option);
-                i++;
+                    ShippingMethodId = "FreeShipping" + curr,
+                    Name = "FreeShipping",
+                    DisplayName = "Free Shipping",
+                    Description = "Free Shipping",
+                    Currency = curr,
+                    BasePrice = 0,
+                    IsActive = true
+                });
+                shippingMethods.Add(new ShippingMethod
+                {
+                    ShippingMethodId = "FlatRate" + curr,
+                    Name = "FlatRate",
+                    DisplayName = "Flat Rate",
+                    Description = "Flat Rate",
+                    Currency = curr,
+                    BasePrice = 10,
+                    IsActive = true
+                });
+                shippingMethods.Add(new ShippingMethod
+                {
+                    ShippingMethodId = "WeightedRate" + curr,
+                    Name = "WeightedRate",
+                    DisplayName = "Weighted Rate",
+                    Description = "Weighted Rate is based on base price and line items weight",
+                    Currency = curr,
+                    BasePrice = 8,
+                    IsActive = true
+                });
             }
+
+            var simpleOption = new ShippingOption
+            {
+                Name = "simple",
+                Description = "Shipping option for simple shipping gateway",
+                ShippingGateway = gateways[0]
+            };
+
+            repository.Add(simpleOption);
+
+            var weightedOption = new ShippingOption
+            {
+                Name = "weightedOption",
+                Description = "Weighted option for weighted shipping gateway",
+                ShippingGateway = gateways[1]
+            };
+
+            weightedOption.ShippingGatewayPropertyValues.Add(new ShippingGatewayPropertyValue
+            {
+                ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+                Name = "UnitWeightPrice",
+                ShortTextValue = 0.49M.ToString(CultureInfo.InvariantCulture)
+            });
+
+            repository.Add(weightedOption);
 
             foreach (var sm in shippingMethods)
             {
+                if (sm.Name.Equals("FreeShipping") || sm.Name.Equals("FlatRate"))
+                {
+                    simpleOption.ShippingMethods.Add(sm);
+                }
+                if (sm.Name.Equals("WeightedRate"))
+                {
+                    weightedOption.ShippingMethods.Add(sm);
+                }
+
                 var methodLanguage = new ShippingMethodLanguage
                 {
                     DisplayName = sm.Description,
@@ -458,6 +470,11 @@ namespace VirtoCommerce.PowerShell.Orders
 
                 foreach (var pm in repository.PaymentMethods)
                 {
+                    //Add only credit cart payment for weighted shipping
+                    if (sm.Name.Equals("WeightedRate") && !pm.Name.Equals("CreditCard"))
+                    {
+                        continue;
+                    }
                     pm.PaymentMethodShippingMethods.Add(new PaymentMethodShippingMethod
                     {
                         PaymentMethodId = pm.PaymentMethodId,
@@ -592,6 +609,11 @@ namespace VirtoCommerce.PowerShell.Orders
 						{
 							ClassType = "VirtoCommerce.Shipping.SimpleShippingGateway, VirtoCommerce.SimpleShippingGateway",
 							Name = "SimpleShippingGateway"
+						},
+                    new ShippingGateway
+						{
+							ClassType = "VirtoCommerce.Shipping.WeightedShippingGateway, VirtoCommerce.SimpleShippingGateway",
+							Name = "SimpleShippingGateway"
 						}
 				};
 
@@ -601,6 +623,11 @@ namespace VirtoCommerce.PowerShell.Orders
             property.GatewayPropertyDictionaryValues.Add(new GatewayPropertyDictionaryValue { DisplayName = "parameter 1", Value = "p01" });
             property.GatewayPropertyDictionaryValues.Add(new GatewayPropertyDictionaryValue { DisplayName = "parameter 3", Value = "p03" });
             gateways[0].GatewayProperties.Add(property);
+
+            //TODO need to add decimals
+            gateways[1].GatewayProperties.Add(new GatewayProperty { DisplayName = "Unit weight price", Name = "UnitWeightPrice", ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode() });
+
+
             return gateways;
         }
 
