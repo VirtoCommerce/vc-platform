@@ -37,7 +37,7 @@ namespace VirtoCommerce.Shipping
                 return null;
             }
 
-            var retVal =  new ShippingRate(method.ShippingMethodId, method.Name, method.BasePrice, method.Currency);
+            var retVal = new ShippingRate(method.ShippingMethodId, method.Name, method.BasePrice, method.Currency);
 
             var prop = method.ShippingOption.ShippingGatewayPropertyValues.FirstOrDefault(
                 x => x.Name == UnitWeightPricePropertyName);
@@ -50,7 +50,7 @@ namespace VirtoCommerce.Shipping
             //Calculate price for item weight
             foreach (var item in items)
             {
-                retVal.Price += item.Weight*defaultWeghtUnitPriceDecimal;
+                retVal.Price += item.Weight * defaultWeghtUnitPriceDecimal * item.Quantity;
             }
 
             return retVal;
