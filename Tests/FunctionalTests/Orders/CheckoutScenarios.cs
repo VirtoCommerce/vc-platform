@@ -721,7 +721,8 @@ namespace FunctionalTests.Orders
 			Assert.True(form.LineItems[1].ListPrice == 43);
 		}
 
-		[Fact]
+		[Fact(Skip = "Cannot credit payment, because payment is settled in 24h for authorize.net")]
+
 		public void can_create_payment_sale_and_credit()
 		{
 			var order = CreateOrder();
