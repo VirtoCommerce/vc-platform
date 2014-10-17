@@ -592,7 +592,7 @@ namespace VirtoCommerce.Foundation.Orders.Model
             }
             set
             {
-                SetValue(ref _ParentLineItemId, () => this._ParentLineItemId, value);
+                SetValue(ref _ParentLineItemId, () => this.ParentLineItemId, value);
             }
         }
 
