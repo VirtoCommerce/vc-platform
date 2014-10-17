@@ -137,15 +137,11 @@ namespace VirtoCommerce.Web.Virto.Helpers
                     if (address != null)
                     {
                         var ids = method.RestrictJurisdictionGroups.Split(new[] { ';', ',' }, StringSplitOptions.RemoveEmptyEntries);
-                        var relations =
-                            cart.OrderRepository.JurisdictionGroups.Where(x => ids.Contains(x.JurisdictionGroupId))
-                                .SelectMany(x => x.JurisdictionRelations)
-                                .ToArray();
-                        jurisdictionFound = relations.Any(j => j.Jurisdiction.CheckAllFieldsMatch(address.CountryCode,
-                                                                         address.StateProvince,
-                                                                         address.PostalCode,
-                                                                         address.RegionName, "", "",
-                                                                         address.City));
+                        var jurisdictions = cart.OrderRepository.JurisdictionGroups.Where(x => ids.Contains(x.JurisdictionGroupId))
+                            .SelectMany(x => x.JurisdictionRelations).Select(x => x.Jurisdiction).ToArray();
+
+                        jurisdictionFound = jurisdictions.Any(j => j.CheckAllFieldsMatch(address.CountryCode, address.StateProvince, 
+                            address.PostalCode, address.RegionName, "", "", address.City));
                     }
 
                     //If found any match in restrcitions cannot use this shipping method
