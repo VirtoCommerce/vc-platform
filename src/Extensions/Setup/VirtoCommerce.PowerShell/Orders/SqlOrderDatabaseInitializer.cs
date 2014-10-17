@@ -461,7 +461,7 @@ namespace VirtoCommerce.PowerShell.Orders
 
                 var methodLanguage = new ShippingMethodLanguage
                 {
-                    DisplayName = sm.Description,
+                    DisplayName = sm.DisplayName,
                     LanguageCode = "en-US",
                     ShippingMethodId = sm.ShippingMethodId,
                 };
