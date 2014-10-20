@@ -6,6 +6,7 @@ using System.Transactions;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
 
 namespace VirtoCommerce.Client
 {
@@ -16,13 +17,13 @@ namespace VirtoCommerce.Client
 		//********These settings could be saved in database:
 
         //Prefix_Date_Seq
-		public const string IdTemplate = "{0}{1}-{2}";
+		public static string IdTemplate = "{0}{1}-{2}";
         //How many sequence items will be stored in-memory
 		public const int SequenceReservationRange = 100;
         //Constant length of counter. Trailing zeros are added to left.
         public const int CounterLength = 5;
 
-	    public const string DateFormat = "yyyy-MMdd";
+	    public static string DateFormat = "yyyy-MMdd";
 
 		//***********************************************
 
@@ -36,6 +37,17 @@ namespace VirtoCommerce.Client
         public SequencesClient(IAppConfigRepository repository)
         {
             _repository = repository;
+            var template = repository.Settings.Expand(x=>x.SettingValues).FirstOrDefault(x => x.Name == "TrackingNumberFormat");
+            if (template != null && template.SettingValues.Any())
+            {
+                IdTemplate = template.SettingValues[0].ToString();
+            }
+
+            var dateFormat = repository.Settings.Expand(x=>x.SettingValues).FirstOrDefault(x => x.Name == "TrackingNumberFormatDateFormat");
+            if (dateFormat != null && dateFormat.SettingValues.Any())
+            {
+                DateFormat = dateFormat.SettingValues[0].ToString();
+            }
         }
 
 		public string GenerateNext(string objectType)

@@ -24,7 +24,7 @@ namespace FunctionalTests.Orders.Helpers
 					Name = "default",
 					BillingCurrency = "USD",
 					StoreId = "SampleStore",
-					TrackingNumber = "PO32313",
+					TrackingNumber = string.Format("PO{0}-0000{1}", DateTime.UtcNow.ToString("yyyy-MMdd"), new Random().Next(1,9)),
 					Total = 123.43m
 				}; // can't create OrderExt!
 
