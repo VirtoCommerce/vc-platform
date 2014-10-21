@@ -216,10 +216,6 @@
     <Compile Include="Marketing\Migrations\Promotion\201402181150199_Initial.Designer.cs">
       <DependentUpon>201402181150199_Initial.cs</DependentUpon>
     </Compile>
-    <Compile Include="Orders\Migrations\201403210929486_OrderTotals.cs" />
-    <Compile Include="Orders\Migrations\201403210929486_OrderTotals.Designer.cs">
-      <DependentUpon>201403210929486_OrderTotals.cs</DependentUpon>
-    </Compile>
     <Compile Include="Orders\Migrations\201410151102008_LineItemWeightAndParent.cs" />
     <Compile Include="Orders\Migrations\201410151102008_LineItemWeightAndParent.Designer.cs">
       <DependentUpon>201410151102008_LineItemWeightAndParent.cs</DependentUpon>
@@ -336,9 +332,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Marketing\Migrations\Promotion\201402181150199_Initial.resx">
       <DependentUpon>201402181150199_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Orders\Migrations\201403210929486_OrderTotals.resx">
-      <DependentUpon>201403210929486_OrderTotals.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Orders\Migrations\201410151102008_LineItemWeightAndParent.resx">
       <DependentUpon>201410151102008_LineItemWeightAndParent.cs</DependentUpon>
