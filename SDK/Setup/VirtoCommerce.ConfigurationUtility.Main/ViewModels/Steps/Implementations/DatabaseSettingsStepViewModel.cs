@@ -196,29 +196,29 @@ namespace VirtoCommerce.ConfigurationUtility.Main.ViewModels.Steps.Implementatio
 				var connectionString = _confirmationViewModel.DatabaseConnectionString;
 				
 				// Configure database
-				new PublishAppConfigDatabase().PublishWithScope(connectionString, null, InstallSamples, _confirmationViewModel.SearchConnection.Scope); // publish AppConfig first as it contains system tables
+				new PublishAppConfigDatabase().PublishWithScope(connectionString, null, InstallSamples, InstallSamples, _confirmationViewModel.SearchConnection.Scope); // publish AppConfig first as it contains system tables
 				ct.ThrowIfCancellationRequested();
-				new PublishStoreDatabase().Publish(connectionString, null, InstallSamples);
+				new PublishStoreDatabase().Publish(connectionString, null, InstallSamples, InstallSamples);
 				ct.ThrowIfCancellationRequested();
-				new PublishCatalogDatabase().Publish(connectionString, configurationFolder, InstallSamples);
+				new PublishCatalogDatabase().Publish(connectionString, configurationFolder, InstallSamples, InstallSamples);
 				ct.ThrowIfCancellationRequested();
-				new PublishImportDatabase().Publish(connectionString, configurationFolder, InstallSamples);
+				new PublishImportDatabase().Publish(connectionString, configurationFolder, InstallSamples, InstallSamples);
 				ct.ThrowIfCancellationRequested();
-				new PublishCustomerDatabase().Publish(connectionString, null, InstallSamples);
+				new PublishCustomerDatabase().Publish(connectionString, null, InstallSamples, InstallSamples);
 				ct.ThrowIfCancellationRequested();
-				new PublishInventoryDatabase().Publish(connectionString, null, InstallSamples);
+				new PublishInventoryDatabase().Publish(connectionString, null, InstallSamples, InstallSamples);
 				ct.ThrowIfCancellationRequested();
-				new PublishLogDatabase().Publish(connectionString, null, InstallSamples);
+				new PublishLogDatabase().Publish(connectionString, null, InstallSamples, InstallSamples);
 				ct.ThrowIfCancellationRequested();
-				new PublishMarketingDatabase().Publish(connectionString, null, InstallSamples);
+				new PublishMarketingDatabase().Publish(connectionString, null, InstallSamples, InstallSamples);
 				ct.ThrowIfCancellationRequested();
-				new PublishOrderDatabase().Publish(connectionString, null, InstallSamples);
+				new PublishOrderDatabase().Publish(connectionString, null, InstallSamples, InstallSamples);
 				ct.ThrowIfCancellationRequested();
-				new PublishReviewDatabase().Publish(connectionString, null, InstallSamples);
+				new PublishReviewDatabase().Publish(connectionString, null, InstallSamples, InstallSamples);
 				ct.ThrowIfCancellationRequested();
-				new PublishSearchDatabase().Publish(connectionString, null, InstallSamples);
+				new PublishSearchDatabase().Publish(connectionString, null, InstallSamples, InstallSamples);
 				ct.ThrowIfCancellationRequested();
-				new PublishSecurityDatabase().Publish(connectionString, configurationFolder, InstallSamples);
+				new PublishSecurityDatabase().Publish(connectionString, configurationFolder, InstallSamples, InstallSamples);
 				ct.ThrowIfCancellationRequested();
 
 				Result = OperationResult.Successful;

@@ -30,6 +30,16 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup
             set { _setup = value; }
         }
 
+        private bool _reduced;
+
+        [Parameter(HelpMessage = "When set reduced sample scripts will be ran")]
+        [Alias("reduced")]
+        public SwitchParameter ReducedSample
+        {
+            get { return _reduced; }
+            set { _reduced = value; }
+        }
+
         [Parameter(HelpMessage = "When set sample scripts will be ran")]
         [Alias("data")]
         public string DataLocation { get; set; }
@@ -38,7 +48,7 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup
         [Alias("strategy")]
         public string StrategyType { get; set; }
 
-        public virtual void Publish(string dbconnection, string data, bool sample, string strategy = SqlDbConfiguration.SqlAzureExecutionStrategy)
+        public virtual void Publish(string dbconnection, string data, bool sample, bool reduced, string strategy = SqlDbConfiguration.SqlAzureExecutionStrategy)
         {
             SetDbConfiguration(strategy);
             SafeWriteVerbose("Server: " + dbconnection);
@@ -62,7 +72,7 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup
             {
                 SafeWriteVerbose("Version: " + Assembly.GetExecutingAssembly().GetFileVersion());
                 base.ProcessRecord();
-                Publish(DbConnection, DataLocation, SetupSample, StrategyType);
+                Publish(DbConnection, DataLocation, SetupSample, ReducedSample, StrategyType);
                 SafeWriteVerbose("Database Published!");
             }
             catch (Exception ex)

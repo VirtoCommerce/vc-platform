@@ -1,20 +1,17 @@
-﻿using VirtoCommerce.Foundation.Data.AppConfig;
+﻿using System.Linq;
+using VirtoCommerce.Foundation.Data.AppConfig;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
 
 namespace VirtoCommerce.PowerShell.AppConfig
 {
     public class SqlAppConfigSampleDatabaseInitializer : SqlAppConfigDatabaseInitializer
     {
-        protected override void Seed(EFAppConfigRepository context)
+        protected override string[] GetSampleFiles()
         {
-            base.Seed(context);
-            FillAppConfigScripts(context);
-        }
-
-        private void FillAppConfigScripts(EFAppConfigRepository context)
-        {
-            // fill db with sample data
-            RunCommand(context, "DisplayTemplateMapping.sql", "AppConfig");
-            RunCommand(context, "SeoUrlKeyword.sql", "AppConfig");
+            var retVal = base.GetSampleFiles().ToList();
+            retVal.Add("DisplayTemplateMapping.sql");
+            retVal.Add("SeoUrlKeyword.sql");
+            return retVal.ToArray();
         }
     }
 }

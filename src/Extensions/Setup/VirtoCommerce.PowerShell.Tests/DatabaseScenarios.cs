@@ -27,7 +27,7 @@ namespace VirtoCommerce.PowerShell.Tests
         {
             DropDatabase();
             var publisher = new PublishCustomerDatabase();
-            publisher.Publish(TestDatabase.ConnectionString, PowerShellRootFolder, true);
+            publisher.Publish(TestDatabase.ConnectionString, PowerShellRootFolder, true, false);
             Assert.True(TableExists("Contract"));
             DropDatabase();
         }
@@ -37,7 +37,7 @@ namespace VirtoCommerce.PowerShell.Tests
         {
             DropDatabase();
             var publisher = new PublishCatalogDatabase();
-            publisher.Publish(TestDatabase.ConnectionString, PowerShellRootFolder, true);
+            publisher.Publish(TestDatabase.ConnectionString, PowerShellRootFolder, true, false);
             Assert.True(TableExists("Catalog"));
             DropDatabase();
         }
@@ -47,7 +47,7 @@ namespace VirtoCommerce.PowerShell.Tests
         {
             DropDatabase();
             var publisher = new PublishSecurityDatabase();
-            publisher.Publish(TestDatabase.ConnectionString, PowerShellRootFolder, true);
+            publisher.Publish(TestDatabase.ConnectionString, PowerShellRootFolder, true, false);
             Assert.True(TableExists("Account"));
             DropDatabase();
         }
@@ -58,7 +58,7 @@ namespace VirtoCommerce.PowerShell.Tests
             DropDatabase();
 			
             var publisher = new PublishOrderDatabase();
-            publisher.Publish(TestDatabase.ConnectionString, PowerShellRootFolder, true);
+            publisher.Publish(TestDatabase.ConnectionString, PowerShellRootFolder, true, false);
             Assert.True(TableExists("Gateway"));
             DropDatabase();
         }

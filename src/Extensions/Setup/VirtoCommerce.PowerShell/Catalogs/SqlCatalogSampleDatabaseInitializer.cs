@@ -8,30 +8,37 @@ namespace VirtoCommerce.PowerShell.Catalogs
 {
     public class SqlCatalogSampleDatabaseInitializer : SetupDatabaseInitializer<EFCatalogRepository, Configuration>
 	{
-	    readonly string[] _files = new[] { 
-                    "CatalogBase.sql",
-                    "Catalog.sql",
-                    "CatalogLanguage.sql",
-                    "VirtualCatalog.sql",
-                    "Property.sql",
-					"PropertyAttribute.sql",
-                    "PropertySet.sql",
-                    "PropertySetProperty.sql",
-                    "CategoryBase.sql", 
-                    "Category.sql",
-                    "LinkedCategory.sql",
-					"TaxCategory.sql",
-                    "Item.sql",
-                    "ItemPropertyValue.sql",
-                    "CategoryItemRelation.sql",
-                    "EditorialReview.sql",
-                    "ItemAsset.sql",
-                    "PricelistAssignment.sql",
-                    "Price.sql",
-                    "AssociationGroup.sql",
-                    "Association.sql",
-                    "ItemRelation.sql"
-		};
+	    readonly string[] _files =
+	    { 
+	        "CatalogBase.sql",
+	        "Catalog.sql",
+	        "CatalogLanguage.sql",
+	        "VirtualCatalog.sql",
+	        "Property.sql",
+	        "PropertyAttribute.sql",
+	        "PropertySet.sql",
+	        "PropertySetProperty.sql",
+	        "CategoryBase.sql", 
+	        "Category.sql",
+	        "LinkedCategory.sql",
+	        "TaxCategory.sql",
+	        "Item.sql",
+	        "ItemPropertyValue.sql",
+	        "CategoryItemRelation.sql",
+	        "EditorialReview.sql",
+	        "ItemAsset.sql",
+	        "PricelistAssignment.sql",
+	        "Price.sql",
+	        "AssociationGroup.sql",
+	        "Association.sql",
+	        "ItemRelation.sql"
+	    };
+
+
+        protected virtual string[] GetSampleFiles()
+        {
+            return _files;
+        }
 
 	    readonly string _location = String.Empty;
 
@@ -53,7 +60,7 @@ namespace VirtoCommerce.PowerShell.Catalogs
 
 		private void PopulateCatalog(EFCatalogRepository context)
 		{
-			foreach (var file in _files)
+			foreach (var file in GetSampleFiles())
 			{
                 RunCommand(context, file, "Catalogs");
 			}

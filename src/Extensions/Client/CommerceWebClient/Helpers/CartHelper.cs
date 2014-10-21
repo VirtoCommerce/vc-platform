@@ -568,6 +568,7 @@ namespace VirtoCommerce.Web.Client.Helpers
             lineItem.MaxQuantity = item.MaxQuantity;
             lineItem.MinQuantity = item.MinQuantity;
             lineItem.Quantity = quantity;
+            lineItem.Weight = item.Weight;
             lineItem.Catalog = CustomerSession.CatalogId;
             lineItem.FulfillmentCenterId = StoreHelper.StoreClient.GetCurrentStore().FulfillmentCenterId;
             //lineItem.CatalogOutline = CatalogOutlineBuilder.BuildCategoryOutline(CatalogClient.CatalogRepository, CustomerSession.CatalogId, item);

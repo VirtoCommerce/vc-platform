@@ -9,6 +9,22 @@ namespace VirtoCommerce.PowerShell.AppConfig
 	{
 		public string Scope { private get; set; }
 
+        readonly string[] _files =
+	    { 
+	        "Setting.sql",
+			"SettingValue.sql",
+			"SystemJob.sql",
+			"JobParameter.sql",
+			"EmailTemplate.sql",
+			"EmailTemplateLanguage.sql",
+			"Localization.sql"
+	    };
+
+        protected virtual string[] GetSampleFiles()
+        {
+            return _files;
+        }
+
 		protected override void Seed(EFAppConfigRepository context)
 		{
 			base.Seed(context);
@@ -18,14 +34,10 @@ namespace VirtoCommerce.PowerShell.AppConfig
 
 		private void FillAppConfigScripts(EFAppConfigRepository context)
 		{
-			// fill db with data
-			RunCommand(context, "Setting.sql", "AppConfig");
-			RunCommand(context, "SettingValue.sql", "AppConfig");
-			RunCommand(context, "SystemJob.sql", "AppConfig");
-			RunCommand(context, "JobParameter.sql", "AppConfig");
-			RunCommand(context, "EmailTemplate.sql", "AppConfig");
-			RunCommand(context, "EmailTemplateLanguage.sql", "AppConfig");
-			RunCommand(context, "Localization.sql", "AppConfig");
+            foreach (var file in GetSampleFiles())
+            {
+                RunCommand(context, file, "AppConfig");
+            }
 		}
 
 		private void UpdateScopeParameterValue(EFAppConfigRepository context)
