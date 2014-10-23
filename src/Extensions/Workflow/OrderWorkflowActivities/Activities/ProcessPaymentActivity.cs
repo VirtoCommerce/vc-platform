@@ -58,104 +58,114 @@ namespace VirtoCommerce.OrderWorkflow
 		/// <summary>
 		/// Validates the order properties.
 		/// </summary>
-		private bool ValidateOrderProperties()
-		{
-			// Cycle through all Order Forms and check total, it should be equal to total of all payments
-            var paymentTotal = CurrentOrderGroup.OrderForms.SelectMany(orderForm => orderForm.Payments)
-                .Where(p => !p.Status.Equals(PaymentStatus.Canceled.ToString()) 
-                    && !p.Status.Equals(PaymentStatus.Denied.ToString()) 
-                    && !p.Status.Equals(PaymentStatus.Failed.ToString()))
-                .Sum(payment => payment.Amount);
+        private bool ValidateOrderProperties()
+        {
+            // Cycle through all Order Forms and check total, it should be equal to total of all payments
 
-            //Make sure the difference is not because of rounding and more then a cent
-			if (Math.Abs(paymentTotal - CurrentOrderGroup.Total) >= 0.01M)
-			{
-                Trace.TraceError(String.Format("Payment Total Price less that order total price."));
-				RegisterWarning(WorkflowMessageCodes.INVALID_PAYMENT_TOTAL,
-					"The payment and the order total does not not match. Please adjust your payment");
-				return false;
-			}
+            var validPayment = CurrentOrderGroup.OrderForms.SelectMany(orderForm => orderForm.Payments)
+                .Where(p => !p.Status.Equals(PaymentStatus.Canceled.ToString())
+                            && !p.Status.Equals(PaymentStatus.Denied.ToString())
+                            && !p.Status.Equals(PaymentStatus.Failed.ToString())).ToArray();
 
-			return true;
-		}
+            if (validPayment.Any())
+            {
+                var paymentTotal = validPayment.Sum(payment => payment.Amount);
+
+                //Make sure the difference is not because of rounding and more then a cent
+                if (Math.Abs(paymentTotal - CurrentOrderGroup.Total) >= 0.01M)
+                {
+                    Trace.TraceError(String.Format("Payment Total Price less that order total price."));
+                    RegisterWarning(WorkflowMessageCodes.INVALID_PAYMENT_TOTAL,
+                        "The payment and the order total does not not match. Please adjust your payment");
+                    return false;
+                }
+            }
+
+            return true;
+        }
 		
 
 		/// <summary>
 		/// Processes the payment.
 		/// </summary>
-		private void ProcessPayment()
-		{
-			var orderGroup = CurrentOrderGroup;
-			// If total is 0, we do not need to proceed
-			if (orderGroup.Total == 0)
-				return;
+        private void ProcessPayment()
+        {
+            var orderGroup = CurrentOrderGroup;
+            // If total is 0, we do not need to proceed
+            if (orderGroup.Total == 0)
+                return;
 
-			//If validation 
-			if (!ValidateOrderProperties())
-			{
-				throw new PaymentException(PaymentException.ErrorType.PaymentTotalError, "", "Order payment validation failed. See warnings for more information");
-			}
+            var pendingPayments =
+                orderGroup.OrderForms.SelectMany(x => x.Payments)
+                    .Where(x => x.Status.Equals(PaymentStatus.Pending.ToString(), StringComparison.OrdinalIgnoreCase))
+                    .ToArray();
 
-			// Start Charging!
-		    var methods = PaymentMethodRepository.PaymentMethods
-		            .Expand("PaymentGateway")
-		            .Expand("PaymentMethodPropertyValues")
-		            .ExpandAll().ToArray();
+            if (!pendingPayments.Any())
+                return;
 
-		    foreach (var orderForm in orderGroup.OrderForms)
-			{
-				foreach (var payment in orderForm.Payments)
-				{
-					//Do not process payments with status Processing and Fail
-					if (!payment.Status.Equals(PaymentStatus.Pending.ToString(), StringComparison.OrdinalIgnoreCase))
-						continue;
+            //If validation 
+            if (!ValidateOrderProperties())
+            {
+                throw new PaymentException(PaymentException.ErrorType.PaymentTotalError, "", "Order payment validation failed. See warnings for more information");
+            }
 
-					var paymentMethod = (from m in methods where m.PaymentMethodId.Equals(payment.PaymentMethodId) select m).FirstOrDefault();
+            // Start Charging!
+            var methods = PaymentMethodRepository.PaymentMethods
+                    .Expand("PaymentGateway")
+                    .Expand("PaymentMethodPropertyValues")
+                    .ExpandAll().ToArray();
 
-					// If we couldn't find payment method specified, generate an error
-                    if (paymentMethod == null)
-					{
-						throw new MissingMethodException(String.Format("Specified payment method \"{0}\" has not been defined.", payment.PaymentMethodId));
-					}
+            foreach (var payment in pendingPayments)
+            {
+                //Do not process payments with status Processing and Fail
+                if (!payment.Status.Equals(PaymentStatus.Pending.ToString(), StringComparison.OrdinalIgnoreCase))
+                    continue;
 
-                    if (paymentMethod.PaymentGateway == null)
-                    {
-                        throw new MissingMethodException(String.Format("The payment gateway is not configured for payment method {0}.", payment.PaymentMethodId));
-                    }
+                var paymentMethod = (from m in methods where m.PaymentMethodId.Equals(payment.PaymentMethodId) select m).FirstOrDefault();
 
-					Debug.WriteLine(String.Format("Getting the type \"{0}\".", paymentMethod.PaymentGateway.ClassType));
-					var type = Type.GetType(paymentMethod.PaymentGateway.ClassType);
-				    if (type == null)
-				    {
-				        throw new TypeLoadException(
-				            String.Format(
-				                "Specified payment method class \"{0}\" can not be created.", paymentMethod.PaymentGateway.ClassType));
-				    }
+                // If we couldn't find payment method specified, generate an error
+                if (paymentMethod == null)
+                {
+                    throw new MissingMethodException(String.Format("Specified payment method \"{0}\" has not been defined.", payment.PaymentMethodId));
+                }
 
-                    Debug.WriteLine(String.Format("Creating instance of \"{0}\".", type.Name));
-					var provider = (IPaymentGateway)Activator.CreateInstance(type);
+                if (paymentMethod.PaymentGateway == null)
+                {
+                    throw new MissingMethodException(String.Format("The payment gateway is not configured for payment method {0}.", payment.PaymentMethodId));
+                }
 
-                    provider.Settings = paymentMethod.CreateSettings();
+                Debug.WriteLine(String.Format("Getting the type \"{0}\".", paymentMethod.PaymentGateway.ClassType));
+                var type = Type.GetType(paymentMethod.PaymentGateway.ClassType);
+                if (type == null)
+                {
+                    throw new TypeLoadException(
+                        String.Format(
+                            "Specified payment method class \"{0}\" can not be created.", paymentMethod.PaymentGateway.ClassType));
+                }
 
-					var message = "";
-                    Debug.WriteLine(String.Format("Processing the payment."));
-					if (provider.ProcessPayment(payment, ref message))
-					{
-						// should be changed by a payment gateway itself
-						// payment.Status = PaymentStatus.Completed.ToString();
-					}
-					else
-					{
-						payment.Status = PaymentStatus.Failed.ToString();
-						throw new PaymentException(PaymentException.ErrorType.ProviderError, "", message);
-					}
-					Debug.WriteLine(String.Format("Payment processed."));
-					PostProcessPayment(payment);
+                Debug.WriteLine(String.Format("Creating instance of \"{0}\".", type.Name));
+                var provider = (IPaymentGateway)Activator.CreateInstance(type);
 
-					// TODO: add message to transaction log
-				}
-			}
-		}
+                provider.Settings = paymentMethod.CreateSettings();
+
+                var message = "";
+                Debug.WriteLine(String.Format("Processing the payment."));
+                if (provider.ProcessPayment(payment, ref message))
+                {
+                    // should be changed by a payment gateway itself
+                    // payment.Status = PaymentStatus.Completed.ToString();
+                }
+                else
+                {
+                    payment.Status = PaymentStatus.Failed.ToString();
+                    throw new PaymentException(PaymentException.ErrorType.ProviderError, "", message);
+                }
+                Debug.WriteLine(String.Format("Payment processed."));
+                PostProcessPayment(payment);
+
+                // TODO: add message to transaction log
+            }
+        }
 
 		/// <summary>
 		/// Post process the payment. Decrypts the data if needed.
