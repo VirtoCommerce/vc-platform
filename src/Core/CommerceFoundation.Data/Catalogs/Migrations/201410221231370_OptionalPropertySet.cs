@@ -40,7 +40,9 @@ END");
 
             DropForeignKey("dbo.Category", "PropertySetId", "dbo.PropertySet");
             DropForeignKey("dbo.Item", "PropertySetId", "dbo.PropertySet");
+            DropIndex("dbo.Item","IX_PropertySetId");
             AlterColumn("dbo.Item", "PropertySetId", c => c.String(nullable: false, maxLength: 128));
+            CreateIndex("dbo.Item", "PropertySetId");
             AddForeignKey("dbo.Category", "PropertySetId", "dbo.PropertySet", "PropertySetId", cascadeDelete: true);
             AddForeignKey("dbo.Item", "PropertySetId", "dbo.PropertySet", "PropertySetId", cascadeDelete: true);
         }

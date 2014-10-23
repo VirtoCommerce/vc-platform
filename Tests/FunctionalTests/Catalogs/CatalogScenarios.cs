@@ -149,12 +149,7 @@ namespace FunctionalTests.Catalogs
 
 			RefreshRepository(ref repository);
 
-			//var innerItem = repository.Catalogs.Where(x => x.CatalogId == catalogId).Single();
-			var innerItem = repository.Catalogs.OfType<Catalog>()
-				.Where(x => x.CatalogId == catalogId)
-				.Expand(x => x.CatalogLanguages)
-				.Expand("PropertySets/PropertySetProperties/Property/PropertyValues")
-				.SingleOrDefault();
+			var innerItem = repository.Catalogs.Where(x => x.CatalogId == catalogId).Single();
 
 			repository.Remove(innerItem);
 			repository.UnitOfWork.Commit();
