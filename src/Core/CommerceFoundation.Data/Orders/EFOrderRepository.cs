@@ -86,6 +86,7 @@ namespace VirtoCommerce.Foundation.Data.Orders
 			MapEntity<OrderForm>(modelBuilder, toTable: "OrderForm");
 			MapEntity<Shipment>(modelBuilder, toTable: "Shipment");
 			MapEntity<ShipmentItem>(modelBuilder, toTable: "ShipmentItem");
+            MapEntity<ShipmentOption>(modelBuilder, toTable: "ShipmentOption");
 			MapEntity<LineItemOption>(modelBuilder, toTable: "LineItemOption");
 			MapEntity<RmaRequest>(modelBuilder, toTable: "RmaRequest");
 			MapEntity<RmaReturnItem>(modelBuilder, toTable: "RmaReturnItem");
@@ -145,6 +146,7 @@ namespace VirtoCommerce.Foundation.Data.Orders
 			#region Shipment
 			modelBuilder.Entity<ShipmentItem>().HasRequired(o => o.Shipment).WithMany(o => o.ShipmentItems);
 			modelBuilder.Entity<ShipmentDiscount>().HasRequired(o => o.Shipment).WithMany(o => o.Discounts);
+            modelBuilder.Entity<ShipmentOption>().HasRequired(o => o.Shipment).WithMany(o => o.Options);
 			#endregion
 
 			modelBuilder.Entity<RmaLineItem>().HasRequired(o => o.RmaReturnItem).WithMany(o => o.RmaLineItems);

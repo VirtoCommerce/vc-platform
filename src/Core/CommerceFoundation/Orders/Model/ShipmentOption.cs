@@ -8,46 +8,46 @@ using VirtoCommerce.Foundation.Frameworks.Attributes;
 namespace VirtoCommerce.Foundation.Orders.Model
 {
     /// <summary>
-    /// Contains information about line item options that has been selected.
+    /// Contains information about shipment options that has been selected.
     /// </summary>
     [DataContract]
-    [EntitySet("LineItemOptions")]
-    [DataServiceKey("LineItemOptionId")]
-    public class LineItemOption : StorageEntity
+    [EntitySet("ShipmentOptions")]
+    [DataServiceKey("ShipmentOptionId")]
+    public class ShipmentOption : StorageEntity
     {
-        public LineItemOption()
+        public ShipmentOption()
         {
-            LineItemOptionId = GenerateNewKey();
+            ShipmentOptionId = GenerateNewKey();
         }
 
-        private string _LineItemOptionId;
+        private string _ShipmentOptionId;
         [Key]
         [DataMember]
         [StringLength(128, ErrorMessage = "Only 128 characters allowed.")]
-        public string LineItemOptionId
+        public string ShipmentOptionId
         {
             get
             {
-                return _LineItemOptionId;
+                return _ShipmentOptionId;
             }
             set
             {
-                SetValue(ref _LineItemOptionId, () => this.LineItemOptionId, value);
+                SetValue(ref _ShipmentOptionId, () => this.ShipmentOptionId, value);
             }
         }
 
-        private string _LineItemId;
+        private string _ShipmentId;
         [StringLength(128)]
         [DataMember]
-        public string LineItemId
+        public string ShipmentId
         {
             get
             {
-                return _LineItemId;
+                return _ShipmentId;
             }
             set
             {
-                SetValue(ref _LineItemId, () => this.LineItemId, value);
+                SetValue(ref _ShipmentId, () => this.ShipmentId, value);
             }
         }
 
@@ -83,8 +83,8 @@ namespace VirtoCommerce.Foundation.Orders.Model
         }
 
         [DataMember]
-        [ForeignKey("LineItemId")]
+        [ForeignKey("ShipmentId")]
         [Parent]
-        public LineItem LineItem { get; set; }
+        public Shipment Shipment { get; set; }
     }
 }
