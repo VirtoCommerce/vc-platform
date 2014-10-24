@@ -33,6 +33,7 @@ namespace VirtoCommerce.Foundation.Orders.Factories
 			RegisterStorageType(typeof(Shipment), "Shipment");
 			RegisterStorageType(typeof(ShipmentItem), "ShipmentItem");
 			RegisterStorageType(typeof(LineItemOption), "LineItemOption");
+            RegisterStorageType(typeof(ShipmentOption), "ShipmentOption");
 			RegisterStorageType(typeof(RmaRequest), "RmaRequest");
 			RegisterStorageType(typeof(RmaReturnItem), "RmaReturnItem");
 			RegisterStorageType(typeof(RmaLineItem), "RmaLineItem");

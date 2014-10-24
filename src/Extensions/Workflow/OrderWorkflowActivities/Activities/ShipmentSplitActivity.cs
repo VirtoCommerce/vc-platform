@@ -86,6 +86,12 @@ namespace VirtoCommerce.OrderWorkflow
 		        {
 		            form.Shipments.Remove(shipment);
 		        }
+		        else
+		        {
+                    //Calculate shipment weight
+                    shipment.Weight = shipment.ShipmentItems.Where(x => x.LineItem != null)
+                        .Select(x => x.LineItem).Sum(x => x.Weight);
+		        }
 		    }
 
 		}
