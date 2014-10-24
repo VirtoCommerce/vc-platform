@@ -163,13 +163,6 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
                 {
                     await Task.Run(() =>
                     {
-                        //We must also remove all items that have propertySetId = null in this catalog
-                        //This is because items are cascade deleted by deleting property set, except ones that do not have propertySet
-                        foreach (var deleteItem in repository.Items.Where(xx => xx.PropertySet == null && xx.CatalogId == item.CatalogId).ToArray())
-                        {
-                            repository.Remove(deleteItem);
-                        }
-
                         repository.Remove(item);
 
                         // report status
