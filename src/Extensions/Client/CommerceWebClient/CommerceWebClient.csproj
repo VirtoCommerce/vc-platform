@@ -252,6 +252,7 @@
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\Validation\RequiredIfAttribute.cs" />
     <Compile Include="Extensions\ViewExtensions.cs" />
+    <Compile Include="Extensions\ViewRenderer.cs" />
     <Compile Include="Helpers\CartHelper.cs" />
     <Compile Include="Helpers\SettingsHelper.cs" />
     <Compile Include="Helpers\PromotionHelper.cs" />
