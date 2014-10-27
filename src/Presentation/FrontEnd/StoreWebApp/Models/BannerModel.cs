@@ -74,8 +74,8 @@ namespace VirtoCommerce.Web.Models
                     break;
                 }
             }
-            var rendrer = new ViewRenderer<BannerController>(context.Controller.ControllerContext);
-            Html = rendrer.RenderTemplate(Html, this);
+
+            Html = ViewRenderer.RenderTemplate(Html, this, context.Controller.ControllerContext);
         }
     }
 

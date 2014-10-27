@@ -6,8 +6,11 @@ using System.Web.Routing;
 
 namespace VirtoCommerce.Web.Client.Extensions
 {
-    public class ViewRenderer<T> where T : Controller, new()
+    public class ViewRenderer
     {
+        public class RazorTemplateController : Controller
+        {
+        }
 
         public ControllerContext Context;
         public ViewRenderer(ControllerContext controllerContext = null)
@@ -16,7 +19,7 @@ namespace VirtoCommerce.Web.Client.Extensions
             if (controllerContext == null)
             {
                 if (HttpContext.Current != null)
-                    controllerContext = CreateController().ControllerContext;
+                    controllerContext = CreateController<RazorTemplateController>().ControllerContext;
                 else
                     throw new InvalidOperationException(
                         "ViewRenderer must run in the context of an ASP.NET " +
@@ -25,11 +28,150 @@ namespace VirtoCommerce.Web.Client.Extensions
             Context = controllerContext;
         }
 
-        public string RenderTemplate(string template, object model)
+      
+        /// <summary>
+        /// Renders a full MVC view to a string. Will render with the full MVC
+        /// View engine including running _ViewStart and merging into _Layout        
+        /// </summary>
+        /// <param name="viewPath">
+        /// The path to the view to render. Either in same controller, shared by 
+        /// name or as fully qualified ~/ path including extension
+        /// </param>
+        /// <param name="model">The model to render the view with</param>
+        /// <returns>String of the rendered view or null on error</returns>
+        public string RenderView(string viewPath, object model)
         {
+            return RenderViewToStringInternal(viewPath, model, false);
+        }
+
+
+        /// <summary>
+        /// Renders a partial MVC view to string. Use this method to render
+        /// a partial view that doesn't merge with _Layout and doesn't fire
+        /// _ViewStart.
+        /// </summary>
+        /// <param name="viewPath">
+        /// The path to the view to render. Either in same controller, shared by 
+        /// name or as fully qualified ~/ path including extension
+        /// </param>
+        /// <param name="model">The model to pass to the viewRenderer</param>
+        /// <returns>String of the rendered view or null on error</returns>
+        public string RenderPartialView(string viewPath, object model)
+        {
+            return RenderViewToStringInternal(viewPath, model);
+        }
+
+        /// <summary>
+        /// Renders a partial MVC view to string. Use this method to render
+        /// a partial view that doesn't merge with _Layout and doesn't fire
+        /// _ViewStart.
+        /// </summary>
+        /// <param name="viewPath">
+        /// The path to the view to render. Either in same controller, shared by 
+        /// name or as fully qualified ~/ path including extension
+        /// </param>
+        /// <param name="model">The model to pass to the viewRenderer</param>
+        /// <param name="controllerContext">Active Controller context</param>
+        /// <returns>String of the rendered view or null on error</returns>
+        public static string RenderView(string viewPath, object model,
+                                        ControllerContext controllerContext)
+        {
+            var renderer = new ViewRenderer(controllerContext);
+            return renderer.RenderView(viewPath, model);
+        }
+
+        /// <summary>
+        /// Renders a partial MVC view to string. Use this method to render
+        /// a partial view that doesn't merge with _Layout and doesn't fire
+        /// _ViewStart.
+        /// </summary>
+        /// <param name="viewPath">
+        /// The path to the view to render. Either in same controller, shared by 
+        /// name or as fully qualified ~/ path including extension
+        /// </param>
+        /// <param name="model">The model to pass to the viewRenderer</param>
+        /// <param name="controllerContext">Active Controller context</param>
+        /// <param name="errorMessage">optional out parameter that captures an error message instead of throwing</param>
+        /// <returns>String of the rendered view or null on error</returns>
+        public static string RenderView(string viewPath, object model,
+                                        ControllerContext controllerContext,
+                                        out string errorMessage)
+        {
+            errorMessage = null;
+            try
+            {
+                var renderer = new ViewRenderer(controllerContext);
+                return renderer.RenderView(viewPath, model);
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.GetBaseException().Message;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Renders a partial MVC view to string. Use this method to render
+        /// a partial view that doesn't merge with _Layout and doesn't fire
+        /// _ViewStart.
+        /// </summary>
+        /// <param name="viewPath">
+        /// The path to the view to render. Either in same controller, shared by 
+        /// name or as fully qualified ~/ path including extension
+        /// </param>
+        /// <param name="model">The model to pass to the viewRenderer</param>
+        /// <param name="controllerContext">Active controller context</param>
+        /// <returns>String of the rendered view or null on error</returns>
+        public static string RenderPartialView(string viewPath, object model, ControllerContext controllerContext)
+        {
+            var renderer = new ViewRenderer(controllerContext);
+            return renderer.RenderPartialView(viewPath, model);
+        }
+
+        /// <summary>
+        /// Renders a partial MVC view to string. Use this method to render
+        /// a partial view that doesn't merge with _Layout and doesn't fire
+        /// _ViewStart.
+        /// </summary>
+        /// <param name="viewPath">
+        /// The path to the view to render. Either in same controller, shared by 
+        /// name or as fully qualified ~/ path including extension
+        /// </param>
+        /// <param name="model">The model to pass to the viewRenderer</param>
+        /// <param name="controllerContext">Active controller context</param>
+        /// <param name="errorMessage">optional output parameter to receive an error message on failure</param>
+        /// <returns>String of the rendered view or null on error</returns>
+        public static string RenderPartialView(string viewPath, object model,
+                                                ControllerContext controllerContext,
+                                                out string errorMessage)
+        {
+            errorMessage = null;
+            try
+            {
+                var renderer = new ViewRenderer(controllerContext);
+                return renderer.RenderPartialView(viewPath, model);
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.GetBaseException().Message;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Renders the template.
+        /// </summary>
+        /// <param name="template">The template.</param>
+        /// <param name="model">The model.</param>
+        /// <param name="context">The context.</param>
+        /// <param name="partial">if set to <c>true</c> [partial].</param>
+        /// <returns></returns>
+        public static string RenderTemplate(string template, object model, ControllerContext context = null, bool partial = true)
+        {
+            var renderer = new ViewRenderer(context);
             var guid = Guid.NewGuid();
             var path = "~/Views/Shared/" + guid + ".cshtml";
-            var fullPath = Context.HttpContext.Server.MapPath(path);
+            var fullPath = renderer.Context.HttpContext.Server.MapPath(path);
 
             try
             {
@@ -41,7 +183,7 @@ namespace VirtoCommerce.Web.Client.Extensions
                     }
                 }
 
-                return RenderViewToStringInternal(path, model);
+                return renderer.RenderViewToStringInternal(path, model, partial);
             }
             catch
             {
@@ -52,6 +194,8 @@ namespace VirtoCommerce.Web.Client.Extensions
                 File.Delete(fullPath);
             }
         }
+
+
 
         protected string RenderViewToStringInternal(string viewPath, object model, bool partial = true)
         {
@@ -88,7 +232,8 @@ namespace VirtoCommerce.Web.Client.Extensions
         /// <typeparam name="T">Type of the controller to create</typeparam>
         /// <returns>Controller Context for T</returns>
         /// <exception cref="InvalidOperationException">thrown if HttpContext not available</exception>
-        private static T CreateController(RouteData routeData = null)
+        public static T CreateController<T>(RouteData routeData = null)
+               where T : Controller, new()
         {
             // create a disconnected controller instance
             var controller = new T();
@@ -96,14 +241,10 @@ namespace VirtoCommerce.Web.Client.Extensions
             // get context wrapper from HttpContext if available
             HttpContextBase wrapper;
             if (HttpContext.Current != null)
-            {
                 wrapper = new HttpContextWrapper(HttpContext.Current);
-            }
             else
-            {
                 throw new InvalidOperationException(
                     "Can't create Controller Context if no active HttpContext instance is available.");
-            }
 
             if (routeData == null)
                 routeData = new RouteData();

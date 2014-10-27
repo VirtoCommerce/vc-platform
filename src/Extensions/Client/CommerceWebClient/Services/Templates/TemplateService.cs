@@ -154,8 +154,7 @@ namespace VirtoCommerce.Web.Client.Services.Templates
         /// <exception cref="System.NotImplementedException"></exception>
         private string ProcessRazorTemplate(string templateBody, IDictionary<string, object> context)
         {
-            var renderer = new ViewRenderer<RazorTemplateController>();
-            return renderer.RenderTemplate(templateBody, context);
+            return ViewRenderer.RenderTemplate(templateBody, context);
         }
 
         /// <summary>
@@ -319,14 +318,6 @@ namespace VirtoCommerce.Web.Client.Services.Templates
 				base.WriteStartElement(null, localName, "");
 			}
 		}
-
-        public class RazorTemplateController : Controller
-        {
-            public RazorTemplateController()
-            {
-
-            }
-        }
 	}
 
 
