@@ -113,9 +113,9 @@ namespace VirtoCommerce.Foundation.Importing.Model
 						var listId = systemValues.FirstOrDefault(y => y.Name == "PricelistId");
 						if (qty != null && listId != null)
 						{
-							var pricelist = _repository.Pricelists.Where(x => x.Name == listIdR.Value || x.PricelistId == listIdR.Value).FirstOrDefault();
+							var pricelist = _repository.Pricelists.Where(x => x.Name == listId.Value || x.PricelistId == listId.Value).FirstOrDefault();
 							var qtyVal = int.Parse(qty.Value);
-							var origItem = _repository.Prices.ToList().Where(x => x.ItemId == originalItem.ItemId && x.MinQuantity == qtyVal && x.PricelistId == pricelist).SingleOrDefault();
+							var origItem = _repository.Prices.ToList().Where(x => x.ItemId == originalItem.ItemId && x.MinQuantity == qtyVal && x.PricelistId == pricelist.PricelistId).SingleOrDefault();
 							if (origItem != null)
 							{
 								InitializeItem(origItem, systemValues);
