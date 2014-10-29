@@ -81,7 +81,63 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <Content Include="..\..\..\presentation\frontend\storewebapp\app_data\virto\configuration\AppConfig.config">
+      <Link>Configs\AppConfig.config</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\..\presentation\frontend\storewebapp\app_data\virto\configuration\Catalog.config">
+      <Link>Configs\Catalog.config</Link>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\..\presentation\frontend\storewebapp\app_data\virto\configuration\connectionStrings.local.config">
+      <Link>Configs\connectionStrings.local.config</Link>
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\..\presentation\frontend\storewebapp\app_data\virto\configuration\Customer.config">
+      <Link>Configs\Customer.config</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\..\presentation\frontend\storewebapp\app_data\virto\configuration\Inventory.config">
+      <Link>Configs\Inventory.config</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\..\presentation\frontend\storewebapp\app_data\virto\configuration\Marketing.config">
+      <Link>Configs\Marketing.config</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\..\presentation\frontend\storewebapp\app_data\virto\configuration\Order.config">
+      <Link>Configs\Order.config</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\..\presentation\frontend\storewebapp\app_data\virto\configuration\Repository.Azure.config">
+      <Link>Configs\Repository.Azure.config</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\..\presentation\frontend\storewebapp\app_data\virto\configuration\Review.config">
+      <Link>Configs\Review.config</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\..\presentation\frontend\storewebapp\app_data\virto\configuration\Search.config">
+      <Link>Configs\Search.config</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\..\presentation\frontend\storewebapp\app_data\virto\configuration\Security.config">
+      <Link>Configs\Security.config</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\..\presentation\frontend\storewebapp\app_data\virto\configuration\Store.config">
+      <Link>Configs\Store.config</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\..\presentation\frontend\storewebapp\app_data\virto\configuration\Workflow.config">
+      <Link>Configs\Workflow.config</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\webjob-publish-settings.json" />
   </ItemGroup>
