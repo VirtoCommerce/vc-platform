@@ -173,6 +173,7 @@
     <None Include="deploy-tfs.ps1" />
     <None Include="CodeSnippets\LocalizationHtml.snippet" />
     <None Include="deploy.ps1" />
+    <None Include="pubxml.template" />
     <None Include="setup-scheduleservice.ps1" />
     <None Include="setup-frontend.ps1" />
     <None Include="setup-search.ps1" />

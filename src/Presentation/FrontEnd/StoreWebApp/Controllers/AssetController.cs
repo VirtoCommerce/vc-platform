@@ -5,7 +5,9 @@ using VirtoCommerce.Web.Client.Extensions.Filters.Caching;
 
 namespace VirtoCommerce.Web.Controllers
 {
-	/// <summary>
+    using VirtoCommerce.Foundation.Data.Infrastructure;
+
+    /// <summary>
 	/// Class AssetController.
 	/// </summary>
 	public class AssetController : ControllerBase
@@ -18,7 +20,7 @@ namespace VirtoCommerce.Web.Controllers
         [CustomOutputCache(CacheProfile = "AssetCache")]
         public ActionResult Index(string path)
         {
-            var folder = AssetConfiguration.Instance.Connection.StorageFolder;
+            var folder = ConnectionHelper.GetConnectionString(AssetConfiguration.Instance.Connection.StorageConnectionStringName);
             folder = folder.EndsWith("/") ? folder : folder + "/";
             return new DownloadResult {VirtualPath = path, VirtualBasePath = folder};
         }

@@ -53,7 +53,7 @@ namespace VirtoCommerce.Foundation.Assets
 
 
 
-        [Obsolete("Use ResourceConnectionStringName instead")]
+        [Obsolete("Use StorageConnectionStringName instead")]
         [ConfigurationProperty("storageFolder", IsRequired = false)]
         public string StorageFolder
         {

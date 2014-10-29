@@ -82,57 +82,57 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\..\..\presentation\frontend\storewebapp\app_data\virto\configuration\AppConfig.config">
-      <Link>Configs\AppConfig.config</Link>
+      <Link>AppConfig.config</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\..\presentation\frontend\storewebapp\app_data\virto\configuration\Catalog.config">
-      <Link>Configs\Catalog.config</Link>
+      <Link>Catalog.config</Link>
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\..\presentation\frontend\storewebapp\app_data\virto\configuration\connectionStrings.local.config">
-      <Link>Configs\connectionStrings.local.config</Link>
+      <Link>connectionStrings.local.config</Link>
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\..\presentation\frontend\storewebapp\app_data\virto\configuration\Customer.config">
-      <Link>Configs\Customer.config</Link>
+      <Link>Customer.config</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\..\presentation\frontend\storewebapp\app_data\virto\configuration\Inventory.config">
-      <Link>Configs\Inventory.config</Link>
+      <Link>Inventory.config</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\..\presentation\frontend\storewebapp\app_data\virto\configuration\Marketing.config">
-      <Link>Configs\Marketing.config</Link>
+      <Link>Marketing.config</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\..\presentation\frontend\storewebapp\app_data\virto\configuration\Order.config">
-      <Link>Configs\Order.config</Link>
+      <Link>Order.config</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\..\presentation\frontend\storewebapp\app_data\virto\configuration\Repository.Azure.config">
-      <Link>Configs\Repository.Azure.config</Link>
+      <Link>Repository.Azure.config</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\..\presentation\frontend\storewebapp\app_data\virto\configuration\Review.config">
-      <Link>Configs\Review.config</Link>
+      <Link>Review.config</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\..\presentation\frontend\storewebapp\app_data\virto\configuration\Search.config">
-      <Link>Configs\Search.config</Link>
+      <Link>Search.config</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\..\presentation\frontend\storewebapp\app_data\virto\configuration\Security.config">
-      <Link>Configs\Security.config</Link>
+      <Link>Security.config</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\..\presentation\frontend\storewebapp\app_data\virto\configuration\Store.config">
-      <Link>Configs\Store.config</Link>
+      <Link>Store.config</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\..\presentation\frontend\storewebapp\app_data\virto\configuration\Workflow.config">
-      <Link>Configs\Workflow.config</Link>
+      <Link>Workflow.config</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="App.config">
@@ -165,13 +165,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
-  </Target>
-  <Import Project="..\packages\Microsoft.Web.WebJobs.Publish.1.0.0\tools\webjobs.targets" Condition="Exists('..\packages\Microsoft.Web.WebJobs.Publish.1.0.0\tools\webjobs.targets')" />
+  <Import Project="..\..\..\..\packages\Microsoft.Web.WebJobs.Publish.1.0.2\tools\webjobs.targets" Condition="Exists('..\..\..\..\packages\Microsoft.Web.WebJobs.Publish.1.0.2\tools\webjobs.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

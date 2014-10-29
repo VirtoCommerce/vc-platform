@@ -544,7 +544,7 @@ namespace VirtoCommerce.Web.Models
 		/// </summary>
 		/// <value>The confirm password.</value>
         [DataType(DataType.Password)]
-        [System.Web.Mvc.Compare("Password")]
+        [System.ComponentModel.DataAnnotations.Compare("Password")]
         public string ConfirmPassword { get; set; }
 
 		/// <summary>

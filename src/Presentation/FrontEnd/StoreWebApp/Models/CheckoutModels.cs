@@ -132,7 +132,7 @@ namespace VirtoCommerce.Web.Models
 		/// <value>The confirm password.</value>
         [DataType(DataType.Password)]
         [Display(Name = "Confirm new password")]
-        [System.Web.Mvc.Compare("Password", ErrorMessage = "The new password and confirmation password do not match.")]
+        [Compare("Password", ErrorMessage = "The new password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
     }
 
