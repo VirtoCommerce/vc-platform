@@ -15,10 +15,11 @@ namespace FunctionalTests.Search
 
     public class AzureSearchScenarios
     {
-        private const string Datasource = "virtoway";
-        private const string AccessKey = "AFFCA8F65DD3B63415909324752542D6";
+        private const string Datasource = "SOURCE";
+        private const string AccessKey = "KEY";
 
-        [Fact, Trait("type", "azuresearch")]
+  
+        [Fact(Skip = "Needs existing configuration"), Trait("type", "azuresearch")]
         public void Can_create_azuresearch_index()
         {
             var scope = "test";
@@ -71,7 +72,7 @@ namespace FunctionalTests.Search
             var results = provider.Search(scope, criteria);
         }
 
-        [Fact, Trait("type", "azuresearch")]
+        [Fact(Skip = "Needs existing configuration"), Trait("type", "azuresearch")]
         public void Can_find_item_azuresearch()
         {
             var scope = "test";
@@ -116,35 +117,6 @@ namespace FunctionalTests.Search
             Assert.True(results.DocCount == 1, String.Format("\"Sample Product\" search returns {0} instead of 1", results.DocCount));
 
             provider.RemoveAll(scope, String.Empty);
-        }
-
-        [Fact]
-        public void TestAsync()
-        {
-            Console.WriteLine(Task2().Result);
-            Console.WriteLine(Task1().Result);
-            Console.WriteLine(Task2().Result);
-            Console.WriteLine(Task1().Result);
-            Console.WriteLine(Task2().Result);
-            Console.WriteLine(Task2().Result);
-
-            var person = new [] { new { UriHostNameType = ""} };
-
-            person.AsQueryable().Where(x => x.UriHostNameType == "as");
-        }
-
-        public async Task<int> Task1()
-        {
-            Console.WriteLine("1*");
-            await Task.Delay(3000);
-            return 1;
-        }
-
-        public async Task<int> Task2()
-        {
-            Console.WriteLine("2*");
-            await Task.Delay(10);
-            return 2;
         }
     }
 }
