@@ -9,6 +9,8 @@ using VirtoCommerce.Foundation.Frameworks.Email;
 
 namespace VirtoCommerce.Web.Client.Services.Emails
 {
+    using System.Threading.Tasks;
+
     /// <summary>
     /// Class AzureEmailService.
     /// </summary>
@@ -66,12 +68,13 @@ namespace VirtoCommerce.Web.Client.Services.Emails
             var credentials = new NetworkCredential(smtp.Network.UserName, smtp.Network.Password);
 
             // Create an SMTP transport for sending email.
-            var transportSMTP = SMTP.GetInstance(credentials, smtp.Network.Host, smtp.Network.Port);
+            var transportSmtp = SMTP.GetInstance(credentials, smtp.Network.Host, smtp.Network.Port);
 
             // Send the email.
             try
             {
-                transportSMTP.Deliver(eMessage);
+                //Task.Run(() => transportSMTP.Deliver(eMessage));
+                transportSmtp.Deliver(eMessage);
             }
             catch
             {

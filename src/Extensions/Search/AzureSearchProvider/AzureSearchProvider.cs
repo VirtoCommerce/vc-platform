@@ -42,7 +42,9 @@ namespace VirtoCommerce.Search.Providers.Azure
             {
                 if (_Client == null)
                 {
-                    var connection = ApiConnection.Create(_connection.DataSource, _connection.AccessKey);
+                    //var connection = ApiConnection.Create(_connection.DataSource, _connection.AccessKey);
+                    // experimental
+                    var connection = ApiConnection.Create("https://azsrchexp.cloudapp.net/", _connection.AccessKey);
                     _Client = new AzureSearchClient(connection);
                 }
 
