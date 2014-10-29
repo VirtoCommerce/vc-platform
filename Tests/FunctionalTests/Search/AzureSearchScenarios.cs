@@ -15,8 +15,8 @@ namespace FunctionalTests.Search
 
     public class AzureSearchScenarios
     {
-        private const string Datasource = "virtocommerce";
-        private const string AccessKey = "128EE67AC838DF328B3BEC97ADB1A1B1";
+        private const string Datasource = "virtoway";
+        private const string AccessKey = "AFFCA8F65DD3B63415909324752542D6";
 
         [Fact, Trait("type", "azuresearch")]
         public void Can_create_azuresearch_index()

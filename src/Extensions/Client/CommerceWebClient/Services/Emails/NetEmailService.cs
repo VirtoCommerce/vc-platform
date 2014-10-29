@@ -6,6 +6,8 @@ using VirtoCommerce.Foundation.Frameworks.Email;
 
 namespace VirtoCommerce.Web.Client.Services.Emails
 {
+    using System.Threading.Tasks;
+
     public class NetEmailService : IEmailService
     {
         /// <summary>
@@ -68,6 +70,7 @@ namespace VirtoCommerce.Web.Client.Services.Emails
 
 	        try
 	        {
+                //Task.Run(() => client.Send(eMessage));
 	            client.Send(eMessage);
 	        }
 	        catch

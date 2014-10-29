@@ -101,6 +101,11 @@ using IEvaluationPolicy = VirtoCommerce.Foundation.Marketing.Model.IEvaluationPo
 
 namespace VirtoCommerce.Web
 {
+    using System.Configuration;
+    using System.Net.Configuration;
+
+    using VirtoCommerce.Foundation.Assets;
+    using VirtoCommerce.Foundation.Data.Azure;
     using VirtoCommerce.Search.Providers.Azure;
     using VirtoCommerce.Web.Client.Services.Filters;
 
@@ -138,7 +143,7 @@ namespace VirtoCommerce.Web
             #region Common Settings for Web and Services
 
             // this section is common for both web application and services application and should be kept identical
-            var isAzure = AzureCommonHelper.IsAzureEnvironment();
+            // var isAzure = AzureCommonHelper.IsAzureEnvironment();
 
             container.RegisterType<IKnownSerializationTypes, CatalogEntityFactory>("catalog",
                                                                                    new ContainerControlledLifetimeManager
@@ -158,7 +163,11 @@ namespace VirtoCommerce.Web
             container.RegisterType<ISystemObserver, NullSystemObserver>();
             container.RegisterType<IEngineProcess, SingleThreadConsumingProcess>();
             container.RegisterType<IMessageSerializer, DataContractMessageSerializer>();
-            if (isAzure)
+
+            var azureStorageConnectionString = ConnectionHelper.GetConnectionString(AzureConfiguration.Instance.Connection.StorageConnectionStringName);
+
+            // using azure assets
+            if (azureStorageConnectionString.ToLowerInvariant().Contains("DefaultEndpointsProtocol=http".ToLowerInvariant())) // azure
             {
                 container.RegisterType<IQueueWriter, AzureQueueWriter>();
                 container.RegisterType<IQueueReader, AzureQueueReader>();
@@ -182,7 +191,8 @@ namespace VirtoCommerce.Web
             //Register Template and Email service
             container.RegisterType<ITemplateService, TemplateService>();
 
-            if (isAzure)
+            var smtp = (SmtpSection)ConfigurationManager.GetSection("system.net/mailSettings/smtp");
+            if (smtp.Network.Host.Contains("sendgrid"))
             {
                 container.RegisterType<IEmailService, AzureEmailService>();
             }
@@ -254,8 +264,10 @@ namespace VirtoCommerce.Web
 
             container.RegisterType<IAssetEntityFactory, AssetEntityFactory>();
 
+            var storageConnectionString = ConnectionHelper.GetConnectionString(AssetConfiguration.Instance.Connection.StorageConnectionStringName);
+
             // using azure assets
-            if (isAzure)
+            if (storageConnectionString.ToLowerInvariant().Contains("DefaultEndpointsProtocol=http".ToLowerInvariant())) // azure
             {
                 container.RegisterType<IAssetRepository, AzureBlobAssetRepository>();
                 container.RegisterType<IBlobStorageProvider, AzureBlobAssetRepository>();
