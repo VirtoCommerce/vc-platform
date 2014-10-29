@@ -1,15 +1,12 @@
-﻿using System;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Migrations;
 using System.Data.SqlClient;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 
 namespace VirtoCommerce.PowerShell.DatabaseSetup
 {
-    using VirtoCommerce.Foundation.Data.Infrastructure;
+
 
     /// <summary>
     ///     An implementation of <see cref="IDatabaseInitializer{TContext}" /> that will use Code First Migrations
@@ -88,14 +85,15 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup
             // update general database settings here, for azure we need to connect to master db
             var originalDbName = context.Database.Connection.Database;
             var connectionString = context.Database.Connection.ConnectionString;
-            SqlConnectionStringBuilder sb = new SqlConnectionStringBuilder(connectionString);
+
+            // do not modify connection string for localdb
             if (!connectionString.ToLowerInvariant().Contains("(LocalDb)".ToLowerInvariant()))
-                // do not modify connection string for localdb
             {
-                connectionString = connectionString.Replace(originalDbName, "master");
+                //connectionString = connectionString.Replace(originalDbName, "master");
+                connectionString = connectionString.Replace(string.Format("Database={0};",originalDbName), "Database=master;");
             }
 
-            using (SqlConnection dbConnection = new SqlConnection(connectionString))
+            using (var dbConnection = new SqlConnection(connectionString))
             {
                 dbConnection.Open();
                 var cmd = dbConnection.CreateCommand();
