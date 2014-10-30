@@ -39,16 +39,14 @@ namespace VirtoCommerce.Azure.WorkerRoles.ElasticSearch
             var roleId = RoleEnvironment.CurrentRoleInstance.Id;
             var containerName = ContainerNameFromRoleId(roleId);
             var dataBlobName = Constants.ElasticSearchBlobName;
-            var mongodDataDriveLetter = Utilities.GetMountedPathFromBlob(
+            var dataDrivePath = Utilities.GetMountedPathFromBlob(
                 localCache.RootPath,
                 containerName,
                 dataBlobName,
                 localCache.MaximumSizeInMegabytes - 50,
                 out _elasticStorageDrive);
-            DiagnosticsHelper.TraceInformation("Obtained data drive as {0}", mongodDataDriveLetter);
-            var dir = Directory.CreateDirectory(Path.Combine(mongodDataDriveLetter, @"data"));
-            DiagnosticsHelper.TraceInformation("Data directory is {0}", dir.FullName);
-            return dir.FullName;
+            DiagnosticsHelper.TraceInformation("Obtained data drive as {0}", dataDrivePath);
+            return dataDrivePath;
         }
 
         // follow container naming conventions to generate a unique container name
