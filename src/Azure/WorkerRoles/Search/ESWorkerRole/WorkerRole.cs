@@ -66,7 +66,7 @@ namespace VirtoSoftware.ElasticSearch
                 Trace.TraceInformation("FAilED" + ex.Message + " " + ex.StackTrace);
                 Trace.TraceError(ex.Message + " " + ex.StackTrace);
                 //Trace.Flush();
-                //throw;
+                throw;
             }
         }
 

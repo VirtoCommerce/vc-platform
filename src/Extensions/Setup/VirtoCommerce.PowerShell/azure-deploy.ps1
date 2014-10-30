@@ -211,7 +211,7 @@ Function Get-SearchConnectionString
 
 Function Get-StorageConnectionString
 {
-    $temp_connectionstring = "DefaultEndpointsProtocol=https;AccountName=$common_storageaccount;AccountKey=$common_storagekey" 
+    $temp_connectionstring = "DefaultEndpointsProtocol=http;AccountName=$common_storageaccount;AccountKey=$common_storagekey" 
 
     Return $temp_connectionstring
 }
