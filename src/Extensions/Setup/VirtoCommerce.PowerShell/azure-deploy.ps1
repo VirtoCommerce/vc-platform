@@ -102,8 +102,6 @@ else
     $common_dbcustomfolder = "$db_customsqlfolder"
 }
 
-$common_frontendpubxml = "$common_configfolder"
-
 # admin settings
 $admin_blobprefix = "$admin_version/admin"
 $admin_installcontainer = "http://$common_storageaccount.blob.core.windows.net/software"
@@ -120,6 +118,9 @@ $search_packagename = 'ElasticSearch.cspkg'
 # common service deployment parameters
 # this parameters are common for all services we deploying
 $common_configfolder = "$common_deploymentdir\Configs" # folder contains configuration files for the specific azure server, including connection strings
+
+# set pub config folder that will be used to store modified configuration files
+$common_frontendpubxml = $common_configfolder
 
 if($publishsettingsfile -eq $null)
 {
