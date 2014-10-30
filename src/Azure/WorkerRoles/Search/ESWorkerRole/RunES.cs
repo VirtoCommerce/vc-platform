@@ -58,13 +58,19 @@ namespace VirtoSoftware.ElasticSearch
                 Log("Failed to create drive", "Information");
             };
 
-            /*
-            Log("Gettng VHD URL", "Information");
-            var vhdUrl = client.GetContainerReference(containerAddress).GetBlobReference("ElasticStorage.vhd").Uri.ToString();
+            Log("Getting Container Reference", "Information");
+            var containerRef = client.GetContainerReference(containerAddress);
+            Log("Getting Blob Reference", "Information");
+            var blobRef = containerRef.GetBlobReference("ElasticStorage.vhd");
+            Log("Getting Uri", "Information");
+            var blobUri = blobRef.Uri;
+            Log("Getting Uri:"+blobUri, "Information");
+            var vhdUrl = blobUri.ToString();
             Log(String.Format("VHD URL {0}", vhdUrl), "Information");
             Log(String.Format("ElasticStorage.vhd {0}", vhdUrl), "Information");
             _elasticStorageDrive = storageAccount.CreateCloudDrive(vhdUrl);
-            */
+           
+            /*
             try
             {
                 _elasticStorageDrive = storageAccount.CreateCloudDrive(String.Format("{0}/{1}", containerAddress, "ElasticStorage.vhd"));
@@ -74,6 +80,7 @@ namespace VirtoSoftware.ElasticSearch
                 Log(String.Format("{0}:{1}", ex.Message, ex.StackTrace), "Information");
                 //throw;
             }
+             * */
             Log(String.Format("ElasticStorage.vhd {0}", containerAddress), "Information");
 
             int cloudDriveSizeInMb = int.Parse(RoleEnvironment.GetConfigurationSettingValue("CloudDriveSize"));
