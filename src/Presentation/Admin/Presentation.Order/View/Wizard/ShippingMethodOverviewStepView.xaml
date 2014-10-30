@@ -60,12 +60,16 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <StackPanel Grid.Row="0" Margin="0">
+                <TextBlock Text="{Loc 'Display Name:'}" />
+                <core_controls:WatermarkedTextBox Text="{Binding InnerItem.DisplayName, ValidatesOnDataErrors=True, UpdateSourceTrigger=PropertyChanged}" />
+            </StackPanel>
+            <StackPanel Grid.Row="1">
                 <TextBlock Text="{Loc '* Description:'}" />
                 <core_controls:WatermarkedTextBox Text="{Binding InnerItem.Description, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
                      Height="98" WatermarkText="" Style="{StaticResource Virto_Multiline_WatermarkedTextBox_Style}"
                      common:RequiredFieldHelper.IsRequired="True" />
             </StackPanel>
-            <StackPanel Grid.Row="1">
+            <StackPanel Grid.Row="2">
                 <TextBlock Text="{Loc 'Base price:'}" />
                 <extToolkit:DecimalUpDown Value="{Binding InnerItem.BasePrice}" Minimum="0" />
             </StackPanel>
