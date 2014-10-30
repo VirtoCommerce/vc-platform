@@ -36,7 +36,10 @@ namespace VirtoCommerce.Azure.WorkerRoles.ElasticSearch
                 containerName,
                 blobName);
 
-            var storageAccount = CloudStorageAccount.Parse(RoleEnvironment.GetConfigurationSettingValue("DataConnectionString"));
+            var connectionString = RoleEnvironment.GetConfigurationSettingValue("DataConnectionString");
+            connectionString = connectionString.Replace("DefaultEndpointsProtocol=https", "DefaultEndpointsProtocol=http");
+
+            var storageAccount = CloudStorageAccount.Parse(connectionString);
 
             var blobClient = storageAccount.CreateCloudBlobClient();
 
