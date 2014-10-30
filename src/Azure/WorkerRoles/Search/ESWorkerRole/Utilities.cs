@@ -79,17 +79,16 @@ namespace VirtoCommerce.Azure.WorkerRoles.ElasticSearch
             }
 
             DiagnosticsHelper.TraceInformation("Initialize cache");
-            var localStorage = RoleEnvironment.GetLocalResource(localCachePath);
 
-            CloudDrive.InitializeCache(localStorage.RootPath.TrimEnd('\\'),
-                localStorage.MaximumSizeInMegabytes);
+            CloudDrive.InitializeCache(localCachePath.TrimEnd('\\'),
+                driveSize);
 
             // mount the drive and get the root path of the drive it's mounted as
             try
             {
                 DiagnosticsHelper.TraceInformation(
                     "Trying to mount blob as azure drive");
-                var driveLetter = elasticDrive.Mount(localStorage.MaximumSizeInMegabytes,
+                var driveLetter = elasticDrive.Mount(driveSize,
                     DriveMountOptions.None);
                 DiagnosticsHelper.TraceInformation(
                     "Write lock acquired on azure drive, mounted as {0}",
