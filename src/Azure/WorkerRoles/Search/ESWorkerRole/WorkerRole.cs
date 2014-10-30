@@ -55,9 +55,8 @@ namespace VirtoCommerce.Azure.WorkerRoles.ElasticSearch
 
                 var workerIPs = ListWorkerRoles();
                 DiagnosticsHelper.TraceInformation("OnStart workerIPs: " + workerIPs);
-                var path = RoleEnvironment.GetLocalResource("ESLocation").RootPath;
-                DiagnosticsHelper.TraceInformation("OnStart ESLocation: " + path);
-                _process = _elastic.StartES(RoleEnvironment.GetLocalResource("ESLocation").RootPath, "9200", workerIPs);
+                DiagnosticsHelper.TraceInformation("OnStart ESLocation: " + Settings.CacheDir);
+                _process = _elastic.StartES(Settings.CacheDir, Settings.DefaultElasticPort, workerIPs);
             }
             catch (Exception ex)
             {

@@ -19,32 +19,31 @@ namespace VirtoCommerce.Azure.WorkerRoles.ElasticSearch
         public Process StartES(string esLocation, string fsPort, string workerIPs)
         {
             // create VHD that will contain the instance
-            //string cacheLocation = CreateElasticStorageVhd();
-            var cacheLocation = GetElasticDataDirectory();
+            var dataLocation = GetElasticDataDirectory();
 
             // create storage directories if it is a new instance
-            CreateElasticStoragerDirs(cacheLocation);
+            CreateElasticStoragerDirs(dataLocation);
             
             // Call the RunCommand function to change the port in server.xml
-            RunCommand(Environment.GetEnvironmentVariable("RoleRoot") + @"\approot\setupElasticSearch.bat", esLocation, fsPort, Environment.GetEnvironmentVariable("RoleRoot") + @"\approot");
+            RunCommand(Settings.ElasticSetupCommand, esLocation, fsPort, Settings.ElasticAppRootDir);
             
             // Call the StartTomcatProcess to start the tomcat process
-            return StartESProcess(esLocation, cacheLocation, workerIPs);
+            return StartESProcess(esLocation, dataLocation, workerIPs);
         }
 
         private string GetElasticDataDirectory()
         {
-            var localCache = RoleEnvironment.GetLocalResource("ESLocation");
             DiagnosticsHelper.TraceInformation("Getting db path");
             var roleId = RoleEnvironment.CurrentRoleInstance.Id;
             var containerName = ContainerNameFromRoleId(roleId);
-            var dataBlobName = Constants.ElasticSearchBlobName;
+
             var dataDrivePath = Utilities.GetMountedPathFromBlob(
-                localCache.RootPath,
+                Constants.LocalCacheSetting,
                 containerName,
-                dataBlobName,
-                localCache.MaximumSizeInMegabytes - 50,
+                Constants.ElasticSearchBlobName,
+                Settings.DefaultDriveSize,
                 out _elasticStorageDrive);
+
             DiagnosticsHelper.TraceInformation("Obtained data drive as {0}", dataDrivePath);
             return dataDrivePath;
         }
@@ -117,9 +116,9 @@ namespace VirtoCommerce.Azure.WorkerRoles.ElasticSearch
                 newProc.StartInfo.EnvironmentVariables.Add("ES_HOSTS", workerIPs);
                 
                 // setting the file name  bin\startup.bat in tomcatlocation of localresourcepath 
-                newProc.StartInfo.FileName = esLocation + @"bin\elasticsearch.bat";
+                newProc.StartInfo.FileName = esLocation + Settings.ElasticStartApp;
 
-                DiagnosticsHelper.TraceInformation("ElasticSearch start command line: " + esLocation + @"bin\elasticsearch.bat");
+                DiagnosticsHelper.TraceInformation("ElasticSearch start command line: " + esLocation + Settings.ElasticStartApp);
                 // starting process
                 newProc.Start();
                 DiagnosticsHelper.TraceInformation("Done - Starting ElasticSearch");
