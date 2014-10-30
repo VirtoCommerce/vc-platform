@@ -123,7 +123,10 @@
     <Compile Include="..\..\..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Constants.cs" />
+    <Compile Include="DiagnosticsHelper.cs" />
     <Compile Include="RunES.cs" />
+    <Compile Include="Utilities.cs" />
     <Compile Include="WorkerRole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

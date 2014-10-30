@@ -212,7 +212,19 @@ Function Get-SearchConnectionString
 
 Function Get-StorageConnectionString
 {
-    $temp_connectionstring = "DefaultEndpointsProtocol=http;AccountName=$common_storageaccount;AccountKey=$common_storagekey" 
+    Param(
+        [Parameter(Mandatory = $false)]
+        $secure = $true
+    )
+
+	if($secure)
+	{
+		$temp_connectionstring = "DefaultEndpointsProtocol=http;AccountName=$common_storageaccount;AccountKey=$common_storagekey" 
+	}
+	else
+	{
+		$temp_connectionstring = "DefaultEndpointsProtocol=https;AccountName=$common_storageaccount;AccountKey=$common_storagekey" 
+	}
 
     Return $temp_connectionstring
 }
@@ -257,7 +269,11 @@ Function Generate-PublishXml
 
 Function update-config
 {
-    param ($configuration)
+    Param(
+		$configuration,
+        [Parameter(Mandatory = $false)]
+        $secure = $true
+    )
 
 	$dbserverlogin = $db_serverlogin
 	$dbserverpassword = $db_serverpassword
@@ -270,7 +286,7 @@ Function update-config
 	}
 
 	$searchConnectionString = Get-SearchConnectionString
-	$storageConnectionString = Get-StorageConnectionString
+	$storageConnectionString = Get-StorageConnectionString -secure $secure
 
     Write-Output "loading config from $configuration"
     [xml]$temp_serviceConfig = Get-Content $configuration
@@ -323,7 +339,7 @@ Function deploy-frontend
            throw "XCOPY failed"
         }
 
-        update-config $common_configfolder\CommerceSite\$common_serviceconfig
+        update-config -configuration $common_configfolder\CommerceSite\$common_serviceconfig
 
         Write-Host "*** Starting Windows CommerceSite Azure deployment process ***"
         . ".\azure-service-publish.ps1" -serviceName $frontend_servicename -storageAccountName $common_storageaccount -storageAccountKey $common_storagekey -cloudConfigLocation $common_configfolder\CommerceSite\$common_serviceconfig -packageLocation $build_path\$frontend_packagename -selectedSubscription $common_subscriptionname -publishSettingsFile $common_publishsettingsfile -subscriptionId $common_subscriptionid -slot $common_slot -location $common_region
@@ -507,7 +523,7 @@ Function deploy-search
        throw "XCOPY failed"
     }
 
-    update-config $common_configfolder\Search\$common_serviceconfig
+    update-config -configuration $common_configfolder\Search\$common_serviceconfig -secure $false # sicne search relies on cloud drive, it can't support https
 
     . ".\azure-service-publish.ps1" -serviceName $search_servicename -storageAccountName $common_storageaccount -storageAccountKey $common_storagekey -cloudConfigLocation $common_configfolder\Search\$common_serviceconfig -packageLocation $build_path\$search_packagename -selectedSubscription $common_subscriptionname -publishSettingsFile $common_publishsettingsfile -subscriptionId $common_subscriptionid -slot $common_slot -location $common_region
         if ($LASTEXITCODE -ne 0)
@@ -526,7 +542,7 @@ Function deploy-scheduler
     Write-Output "$(Get-Date -f $timeStampFormat) - Scheduler Deployment: In progress"
 
 	& xcopy "$scheduler_workerroleconfig\$common_serviceconfig" "$common_configfolder\Scheduler\" /Y
-    update-config $common_configfolder\Scheduler\$common_serviceconfig
+    update-config -configuration $common_configfolder\Scheduler\$common_serviceconfig
 
     . ".\azure-service-publish.ps1" -serviceName $scheduler_servicename -storageAccountName $common_storageaccount -storageAccountKey $common_storagekey -cloudConfigLocation $common_configfolder\Scheduler\$common_serviceconfig -packageLocation $build_path\$scheduler_packagename -selectedSubscription $common_subscriptionname -publishSettingsFile $common_publishsettingsfile -subscriptionId $common_subscriptionid -slot $common_slot -location $common_region
         if (! $?)
