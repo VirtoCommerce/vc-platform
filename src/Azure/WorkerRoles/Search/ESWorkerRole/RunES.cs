@@ -65,7 +65,15 @@ namespace VirtoSoftware.ElasticSearch
             Log(String.Format("ElasticStorage.vhd {0}", vhdUrl), "Information");
             _elasticStorageDrive = storageAccount.CreateCloudDrive(vhdUrl);
             */
-            _elasticStorageDrive = storageAccount.CreateCloudDrive(String.Format("{0}/{1}", containerAddress, "ElasticStorage.vhd"));
+            try
+            {
+                _elasticStorageDrive = storageAccount.CreateCloudDrive(String.Format("{0}/{1}", containerAddress, "ElasticStorage.vhd"));
+            }
+            catch (Exception ex)
+            {
+                Log(String.Format("{0}:{1}", ex.Message, ex.StackTrace), "ERROR");
+                throw;
+            }
             Log(String.Format("ElasticStorage.vhd {0}", containerAddress), "Information");
 
             int cloudDriveSizeInMb = int.Parse(RoleEnvironment.GetConfigurationSettingValue("CloudDriveSize"));
