@@ -48,7 +48,7 @@ namespace VirtoSoftware.ElasticSearch
             Log(String.Format("Container {0}", containerAddress), "Information");
             var drives = client.GetContainerReference(containerAddress);
 
-            Log("Creating drives", "Information");
+            Log("Creating drives now", "Information");
             try
             {
                 drives.CreateIfNotExist();
@@ -71,8 +71,8 @@ namespace VirtoSoftware.ElasticSearch
             }
             catch (Exception ex)
             {
-                Log(String.Format("{0}:{1}", ex.Message, ex.StackTrace), "ERROR");
-                throw;
+                Log(String.Format("{0}:{1}", ex.Message, ex.StackTrace), "Information");
+                //throw;
             }
             Log(String.Format("ElasticStorage.vhd {0}", containerAddress), "Information");
 

@@ -17,6 +17,44 @@ namespace FunctionalTests.Azure
     public class AzureScenarios : FunctionalTestBase
     {
         [Fact]
+        public void Can_create_local_vhd()
+        {
+            /*
+            CloudDrive.InitializeCache(localCache.RootPath.TrimEnd('\\'), localCache.MaximumSizeInMegabytes - 50);
+
+            var storageAccount = CloudStorageAccount.Parse(RoleEnvironment.GetConfigurationSettingValue("DataConnectionString"));
+            var client = storageAccount.CreateCloudBlobClient();
+
+            var roleId = RoleEnvironment.CurrentRoleInstance.Id;
+            Log(String.Format("Role ID {0}", roleId), "Information");
+            var containerAddress = ContainerNameFromRoleId(roleId);
+            Log(String.Format("Container {0}", containerAddress), "Information");
+            var drives = client.GetContainerReference(containerAddress);
+
+            Log("Creating drives", "Information");
+            try
+            {
+                drives.CreateIfNotExist();
+            }
+            catch
+            {
+                Log("Failed to create drive", "Information");
+            };
+
+            try
+            {
+                _elasticStorageDrive = storageAccount.CreateCloudDrive(String.Format("{0}/{1}", containerAddress, "ElasticStorage.vhd"));
+            }
+            catch (Exception ex)
+            {
+                Log(String.Format("{0}:{1}", ex.Message, ex.StackTrace), "ERROR");
+                throw;
+            }
+            Log(String.Format("ElasticStorage.vhd {0}", containerAddress), "Information");
+            */
+        }
+
+        [Fact]
         public void Can_detect_azure_runtime()
         {
             var isValid = AzureCommonHelper.IsAzureEnvironment();
