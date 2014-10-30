@@ -27,15 +27,20 @@ namespace VirtoCommerce.Foundation.Data.Security
 
 		[InjectionConstructor]
         public EFSecurityRepository(ISecurityEntityFactory entityFactory, IInterceptor[] interceptors = null)
-            : base(SecurityConfiguration.Instance.Connection.SqlConnectionStringName, factory: entityFactory, interceptors: interceptors)
+            : this(SecurityConfiguration.Instance.Connection.SqlConnectionStringName, entityFactory, interceptors)
 		{
-			_entityFactory = entityFactory;
-
-			Database.SetInitializer(new ValidateDatabaseInitializer<EFSecurityRepository>());
-
-			this.Configuration.AutoDetectChangesEnabled = true;
-			this.Configuration.ProxyCreationEnabled = false;
 		}
+
+        public EFSecurityRepository(string nameOrConnectionString, ISecurityEntityFactory entityFactory, IInterceptor[] interceptors = null)
+            : base(nameOrConnectionString, entityFactory, interceptors: interceptors)
+        {
+            _entityFactory = entityFactory;
+
+            Database.SetInitializer(new ValidateDatabaseInitializer<EFSecurityRepository>());
+
+            this.Configuration.AutoDetectChangesEnabled = true;
+            this.Configuration.ProxyCreationEnabled = false;
+        }
 
 		protected override void OnModelCreating(DbModelBuilder modelBuilder)
 		{
