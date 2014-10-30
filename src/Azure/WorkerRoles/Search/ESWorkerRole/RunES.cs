@@ -48,14 +48,22 @@ namespace VirtoSoftware.ElasticSearch
             Log(String.Format("Container {0}", containerAddress), "Information");
             var drives = client.GetContainerReference(containerAddress);
 
-            Log("Creating drives now", "Information");
+            Log("Creating drives", "Information");
             try
             {
+                Log("* Creating drives", "Information");
                 drives.CreateIfNotExist();
             }
-            catch
+            catch (StorageException e)
             {
-                Log("Failed to create drive", "Information");
+                Log(
+                    String.Format("Container creation failed with {0} {1}",
+                    e.Message,
+                    e.StackTrace), "Information");
+            }
+            catch(Exception ex)
+            {
+                Log("Failed to create drive:" + ex.Message, "Information");
             };
 
             Log("Getting Container Reference", "Information");
