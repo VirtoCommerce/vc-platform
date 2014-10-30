@@ -41,6 +41,7 @@ namespace VirtoCommerce.Azure.WorkerRoles.ElasticSearch
                 catch (Exception ex)
                 {
                     DiagnosticsHelper.TraceError(ex.Message + " " + ex.StackTrace);
+                    throw new ApplicationException("Elastic Search Quit: " + ex.Message);
                 }
             }
         }
@@ -60,9 +61,10 @@ namespace VirtoCommerce.Azure.WorkerRoles.ElasticSearch
             }
             catch (Exception ex)
             {
+                DiagnosticsHelper.TraceInformation(ex.Message + " " + ex.StackTrace);
                 DiagnosticsHelper.TraceError(ex.Message + " " + ex.StackTrace);
-                //Trace.Flush();
-                throw;
+                Trace.Flush();
+                throw new ApplicationException("Can't configure Elastic Search: " + ex.Message);
             }
         }
 

@@ -20,7 +20,7 @@ namespace VirtoCommerce.Azure.WorkerRoles.ElasticSearch
         {
             // create VHD that will contain the instance
             //string cacheLocation = CreateElasticStorageVhd();
-            string cacheLocation = GetElasticDataDirectory();
+            var cacheLocation = GetElasticDataDirectory();
 
             // create storage directories if it is a new instance
             CreateElasticStoragerDirs(cacheLocation);
