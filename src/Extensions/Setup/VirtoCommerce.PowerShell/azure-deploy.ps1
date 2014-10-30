@@ -219,11 +219,11 @@ Function Get-StorageConnectionString
 
 	if($secure)
 	{
-		$temp_connectionstring = "DefaultEndpointsProtocol=http;AccountName=$common_storageaccount;AccountKey=$common_storagekey" 
+		$temp_connectionstring = "DefaultEndpointsProtocol=https;AccountName=$common_storageaccount;AccountKey=$common_storagekey" 
 	}
 	else
 	{
-		$temp_connectionstring = "DefaultEndpointsProtocol=https;AccountName=$common_storageaccount;AccountKey=$common_storagekey" 
+		$temp_connectionstring = "DefaultEndpointsProtocol=http;AccountName=$common_storageaccount;AccountKey=$common_storagekey" 
 	}
 
     Return $temp_connectionstring
