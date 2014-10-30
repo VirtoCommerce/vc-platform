@@ -56,7 +56,7 @@ namespace VirtoCommerce.Web.Models
 		/// <value>The confirm password.</value>
         [DataType(DataType.Password)]
         [Display(Name = "Confirm new password")]
-        [System.Web.Mvc.Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match." )]
+        [System.ComponentModel.DataAnnotations.Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match." )]
         [RequiredIf("ChangePassword", true)]
         public string ConfirmPassword { get; set; }
 
@@ -230,7 +230,7 @@ namespace VirtoCommerce.Web.Models
         /// <value>The confirm password.</value>
         [DataType(DataType.Password)]
         [Display(Name = "Confirm new password")]
-        [System.Web.Mvc.Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+        [System.ComponentModel.DataAnnotations.Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
         [RequiredIf("ChangePassword", true)]
         public string ConfirmPassword { get; set; }
 
@@ -286,7 +286,7 @@ namespace VirtoCommerce.Web.Models
 		/// <value>The confirm password.</value>
 		[DataType(DataType.Password)]
 		[Display(Name = "Confirm new password")]
-		[System.Web.Mvc.Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+		[System.ComponentModel.DataAnnotations.Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
 		[RequiredIf("CreateLocalLogin", true)]
 		public string ConfirmPassword { get; set; }
 

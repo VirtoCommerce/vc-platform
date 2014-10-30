@@ -25,11 +25,12 @@ $build = "True"
 $deploydatabase = "True"
 $deploysearch = "True"
 $deployfrontend = "True" 
-$deployscheduler = "True" 
+$deployfrontend_website = $true # deploys frontend as a website instead of cloud service, webjobs are deployed as well so no need to deploy scheduler service
+$deployscheduler = "False"
 $deployadmin = "True"
 $db_recreate = "True" # specify if you want to recreate a database
 
 $db_sampledata = $true # specify if you want sample data to be setup
 $db_customsqldir = ".\CustomSQL" # specify custom sql folder to run sql scripts from
 
-. "$rootfolder\src\Extensions\Setup\VirtoCommerce.PowerShell\deploy-tfs.ps1" -subscriptionname $subscriptionName -storageaccount $storageaccount -region $region -slot $slot -search_servicename $search_servicename -frontend_servicename $frontend_servicename -scheduler_servicename $scheduler_servicename -db_servername $db_servername -db_serverlogin $db_serverlogin -db_serverpassword $db_serverpassword -db_databasename $db_databasename -publishsettingsfile $publishsettingsfile –build $build -deploydatabase $deploydatabase -deploysearch $deploysearch -deployfrontend $deployfrontend -deployscheduler $deployscheduler -deployadmin $deployadmin -deploymentdir "$datafolder\Deployment" -solutiondir $rootfolder -db_sampledata $db_sampledata -db_recreate $db_recreate -db_customsqldir $db_customsqldir
+. "$rootfolder\src\Extensions\Setup\VirtoCommerce.PowerShell\deploy-tfs.ps1" -subscriptionname $subscriptionName -storageaccount $storageaccount -region $region -slot $slot -search_servicename $search_servicename -frontend_servicename $frontend_servicename -scheduler_servicename $scheduler_servicename -db_servername $db_servername -db_serverlogin $db_serverlogin -db_serverpassword $db_serverpassword -db_databasename $db_databasename -publishsettingsfile $publishsettingsfile –build $build -deploydatabase $deploydatabase -deploysearch $deploysearch -deployfrontend $deployfrontend -deployfrontend_website $deployfrontend_website -deployscheduler $deployscheduler -deployadmin $deployadmin -deploymentdir "$datafolder\Deployment" -solutiondir $rootfolder -db_sampledata $db_sampledata -db_recreate $db_recreate -db_customsqldir $db_customsqldir
