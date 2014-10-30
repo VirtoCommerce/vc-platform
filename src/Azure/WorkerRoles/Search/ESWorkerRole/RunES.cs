@@ -43,13 +43,24 @@ namespace VirtoSoftware.ElasticSearch
             var client = storageAccount.CreateCloudBlobClient();
 
             var roleId = RoleEnvironment.CurrentRoleInstance.Id;
+            Log(String.Format("Role ID {0}", roleId), "Information");
             var containerAddress = ContainerNameFromRoleId(roleId);
+            Log(String.Format("Container {0}", containerAddress), "Information");
             var drives = client.GetContainerReference(containerAddress);
 
-            try { drives.CreateIfNotExist(); }
-            catch { };
+            Log("Creating drives", "Information");
+            try
+            {
+                drives.CreateIfNotExist();
+            }
+            catch
+            {
+                Log("Failed to create drive", "Information");
+            };
 
+            Log("Gettng VHD URL", "Information");
             var vhdUrl = client.GetContainerReference(containerAddress).GetBlobReference("ElasticStorage.vhd").Uri.ToString();
+            Log(String.Format("VHD URL {0}", vhdUrl), "Information");
             Log(String.Format("ElasticStorage.vhd {0}", vhdUrl), "Information");
             _elasticStorageDrive = storageAccount.CreateCloudDrive(vhdUrl);
 
