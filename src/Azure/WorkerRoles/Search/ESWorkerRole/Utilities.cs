@@ -81,7 +81,7 @@ namespace VirtoCommerce.Azure.WorkerRoles.ElasticSearch
             DiagnosticsHelper.TraceInformation("Initialize cache");
             var localStorage = RoleEnvironment.GetLocalResource(localCachePath);
 
-            CloudDrive.InitializeCache(localCachePath.TrimEnd('\\'),
+            CloudDrive.InitializeCache(localStorage.RootPath.TrimEnd('\\'),
                 localStorage.MaximumSizeInMegabytes);
 
             // mount the drive and get the root path of the drive it's mounted as
