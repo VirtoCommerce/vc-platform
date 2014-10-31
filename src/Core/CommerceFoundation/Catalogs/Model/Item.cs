@@ -237,68 +237,73 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
         [DataMember]
         public virtual ObservableCollection<CategoryItemRelation> CategoryItemRelations
         {
-            get
+	        get
             {
                 if (_Categories == null)
                     _Categories = new ObservableCollection<CategoryItemRelation>();
 
                 return _Categories;
             }
+			set { _Categories = value; }
         }
 
-        ObservableCollection<ItemAsset> _Assets = null;
+	    ObservableCollection<ItemAsset> _Assets = null;
         [DataMember]
         public virtual ObservableCollection<ItemAsset> ItemAssets
         {
-            get
+	        get
             {
                 if (_Assets == null)
                     _Assets = new ObservableCollection<ItemAsset>();
 
                 return _Assets;
             }
+			set { _Assets = value; }
         }
 
-        ObservableCollection<AssociationGroup> _AssociationGroups = null;
+	    ObservableCollection<AssociationGroup> _AssociationGroups = null;
         [DataMember]
         public virtual ObservableCollection<AssociationGroup> AssociationGroups
         {
-            get
+	        get
             {
                 if (_AssociationGroups == null)
                     _AssociationGroups = new ObservableCollection<AssociationGroup>();
 
                 return _AssociationGroups;
             }
+			set { _AssociationGroups = value; }
         }
 
-        ObservableCollection<EditorialReview> _EditorialReviews = null;
+	    ObservableCollection<EditorialReview> _EditorialReviews = null;
         [DataMember]
         public virtual ObservableCollection<EditorialReview> EditorialReviews
         {
-            get
+	        get
             {
                 if (_EditorialReviews == null)
                     _EditorialReviews = new ObservableCollection<EditorialReview>();
 
                 return _EditorialReviews;
             }
+			set { _EditorialReviews = value; }
         }
 
-        ObservableCollection<ItemPropertyValue> _PropertyValues = null;
+	    ObservableCollection<ItemPropertyValue> _PropertyValues = null;
         [DataMember]
         public virtual ObservableCollection<ItemPropertyValue> ItemPropertyValues
         {
-            get
+	        get
             {
                 if (_PropertyValues == null)
                     _PropertyValues = new ObservableCollection<ItemPropertyValue>();
 
                 return _PropertyValues;
             }
+			set { _PropertyValues = value; }
         }
 
-        private string _PropertySetId;
+	    private string _PropertySetId;
         [DataMember]
 		[StringLength(128)]
         public string PropertySetId

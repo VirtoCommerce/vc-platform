@@ -89,6 +89,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 
 				return _Categories;
 			}
+			set { _Categories = value; }
 		}
 
 		#endregion

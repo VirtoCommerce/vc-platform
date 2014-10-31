@@ -98,6 +98,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 
 				return _Properties;
 			}
+			set { _Properties = value; }
 		}
 
 		#endregion

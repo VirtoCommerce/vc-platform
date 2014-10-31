@@ -252,6 +252,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 
 				return _Values;
 			}
+			set { _Values = value; }
 		}
 
 		ObservableCollection<PropertyAttribute> _PropertyAttributes = null;
@@ -265,7 +266,9 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 
 				return _PropertyAttributes;
 			}
-		} 
+			set { _PropertyAttributes = value; }
+		}
+
 		#endregion
 	}
 }

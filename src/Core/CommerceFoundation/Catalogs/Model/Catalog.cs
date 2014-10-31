@@ -33,28 +33,30 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
         [DataMember]
         public virtual ObservableCollection<CatalogLanguage> CatalogLanguages
         {
-            get
+	        get
             {
                 if (_CatalogLanguages == null)
                     _CatalogLanguages = new ObservableCollection<CatalogLanguage>();
 
                 return _CatalogLanguages;
             }
+	        set { _CatalogLanguages = value; }
         }
 
-        ObservableCollection<PropertySet> _Properties = null;
+	    ObservableCollection<PropertySet> _Properties = null;
         [DataMember]
         public virtual ObservableCollection<PropertySet> PropertySets
         {
-            get
+	        get
             {
                 if (_Properties == null)
                     _Properties = new ObservableCollection<PropertySet>();
 
                 return _Properties;
             }
+			set { _Properties = value; }
         }
 
-        #endregion
+	    #endregion
     }
 }

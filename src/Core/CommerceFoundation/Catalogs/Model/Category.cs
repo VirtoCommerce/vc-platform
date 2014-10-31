@@ -84,15 +84,16 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
         [DataMember]
         public virtual ObservableCollection<CategoryPropertyValue> CategoryPropertyValues
         {
-            get
+	        get
             {
                 if (_PropertyValues == null)
                     _PropertyValues = new ObservableCollection<CategoryPropertyValue>();
 
                 return _PropertyValues;
             }
+			set { _PropertyValues = value; }
         }
 
-        #endregion
+	    #endregion
     }
 }

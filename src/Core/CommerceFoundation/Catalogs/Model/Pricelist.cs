@@ -94,6 +94,7 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 
 				return _Prices;
 			}
+			set { _Prices = value; }
 		}
 
 		#endregion

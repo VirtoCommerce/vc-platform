@@ -111,8 +111,9 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
 
 				return _Associations;
 			}
-
+			set { _Associations = value; }
 		}
+
 		#endregion
 	}
 }

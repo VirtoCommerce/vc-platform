@@ -129,13 +129,14 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
         ObservableCollection<LinkedCategory> _LinkedCategories = null;
         public virtual ObservableCollection<LinkedCategory> LinkedCategories
         {
-            get
+	        get
             {
                 if (_LinkedCategories == null)
                     _LinkedCategories = new ObservableCollection<LinkedCategory>();
 
                 return _LinkedCategories;
             }
+			set { _LinkedCategories = value; }
         }
 
 		#endregion
