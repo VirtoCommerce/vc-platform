@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using Microsoft.Practices.Unity;
 using Microsoft.WindowsAzure;
 using System;
 using System.Linq;
@@ -21,6 +22,9 @@ namespace VirtoCommerce.Web.Client.Services.Security
         /// The _security repository
         /// </summary>
         private readonly ISecurityRepository _securityRepository;
+
+        private readonly string _nameOrConnectionString;
+
         /// <summary>
         /// The _initializer
         /// </summary>
@@ -38,10 +42,23 @@ namespace VirtoCommerce.Web.Client.Services.Security
         /// Initializes a new instance of the <see cref="WebUserSecurity"/> class.
         /// </summary>
         /// <param name="securityRepository">The security repository.</param>
+        [InjectionConstructor]
         public WebUserSecurity(ISecurityRepository securityRepository)
+            : this(securityRepository, SecurityConfiguration.Instance.Connection.SqlConnectionStringName)
+        {
+
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WebUserSecurity"/> class.
+        /// </summary>
+        /// <param name="securityRepository">The security repository.</param>
+        /// <param name="nameOrConnectionString">The name or connection string.</param>
+        public WebUserSecurity(ISecurityRepository securityRepository, string nameOrConnectionString)
         {
             _securityRepository = securityRepository;
-            LazyInitializer.EnsureInitialized(ref _initializer, ref _isInitialized, ref _initializerLock);
+            _nameOrConnectionString = nameOrConnectionString;
+            LazyInitializer.EnsureInitialized(ref _initializer, ref _isInitialized, ref _initializerLock, () => new SimpleMembershipInitializer(_nameOrConnectionString));
         }
 
         /// <summary>
@@ -94,7 +111,7 @@ namespace VirtoCommerce.Web.Client.Services.Security
                 return false;
             }
 
-            if (csrAccount.RegisterType != (int) RegisterType.Administrator)
+            if (csrAccount.RegisterType != (int)RegisterType.Administrator)
             {
                 //Check if CSR has permission to login as
                 var hasPermission = false;
@@ -261,21 +278,20 @@ namespace VirtoCommerce.Web.Client.Services.Security
             /// Initializes a new instance of the <see cref="SimpleMembershipInitializer"/> class.
             /// </summary>
             /// <exception cref="System.InvalidOperationException">The ASP.NET Simple Membership database could not be initialized. For more information, please see http://go.microsoft.com/fwlink/?LinkId=256588</exception>
-            public SimpleMembershipInitializer()
+            public SimpleMembershipInitializer(string nameOrConnectionString)
             {
                 try
                 {
                     if (WebSecurity.Initialized)
                         return;
 
-                    var nameOrConnectionString = SecurityConfiguration.Instance.Connection.SqlConnectionStringName;
                     var settingValue = CloudConfigurationManager.GetSetting(nameOrConnectionString);
 
                     if (String.IsNullOrEmpty(settingValue))
                     {
                         WebSecurity.InitializeDatabaseConnection(
                             nameOrConnectionString,
-                            "Account", "AccountId", "UserName", autoCreateTables: false);
+                            "Account", "AccountId", "UserName", false);
                     }
                     else
                     {
