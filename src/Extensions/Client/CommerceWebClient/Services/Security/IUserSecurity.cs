@@ -73,8 +73,9 @@
         /// </summary>
         /// <param name="resetToken">The reset token.</param>
         /// <param name="newPassword">The new password.</param>
+        /// <param name="userName">Name of the user.</param>
         /// <returns></returns>
-        bool ResetPasswordWithToken(string resetToken, string newPassword);
+        bool ResetPasswordWithToken(string resetToken, string newPassword, string userName = null);
         /// <summary>
         /// Creates the account.
         /// </summary>
@@ -93,9 +94,9 @@
         /// <summary>
         /// Confirms the account.
         /// </summary>
+        /// <param name="emailConfirmationToken">The email confirmation token.</param>
         /// <param name="userName">Name of the user.</param>
-        /// <param name="accountConfirmationToken">The account confirmation token.</param>
         /// <returns></returns>
-        bool ConfirmAccount(string accountConfirmationToken, string userName = null);
+        bool ConfirmAccountEmail(string emailConfirmationToken, string userName);
     }
 }

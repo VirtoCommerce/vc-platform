@@ -89,25 +89,25 @@ namespace VirtoCommerce.Web.Client.Services.Security
         /// <param name="userName">customer user name</param>
         /// <param name="csrUserName">CSR user name</param>
         /// <param name="password">CSR password</param>
-        /// <param name="errrorMessage"></param>
+        /// <param name="errorMessage"></param>
         /// <param name="persistCookie">if set to <c>true</c> [persist cookie].</param>
         /// <returns><c>true</c> if success, <c>false</c> otherwise.</returns>
-        public bool LoginAs(string userName, string csrUserName, string password, out string errrorMessage, bool persistCookie = false)
+        public bool LoginAs(string userName, string csrUserName, string password, out string errorMessage, bool persistCookie = false)
         {
-            errrorMessage = null;
+            errorMessage = null;
             var csrAccount = _securityRepository.Accounts.FirstOrDefault(
                 a => a.UserName.Equals(csrUserName, StringComparison.OrdinalIgnoreCase));
 
             if (!Membership.ValidateUser(csrUserName, password))
             {
-                errrorMessage = "CSR user name or password incorrect.";
+                errorMessage = "CSR user name or password incorrect.";
                 return false;
             }
 
             if (csrAccount == null
             || !csrAccount.AccountState.GetHashCode().Equals(AccountState.Approved.GetHashCode()))
             {
-                errrorMessage = "CSR account is not valid.";
+                errorMessage = "CSR account is not valid.";
                 return false;
             }
 
@@ -132,7 +132,7 @@ namespace VirtoCommerce.Web.Client.Services.Security
 
                 if (!hasPermission)
                 {
-                    errrorMessage = "CSR has no permission to login as other user.";
+                    errorMessage = "CSR has no permission to login as other user.";
                     return false;
                 }
             }
@@ -144,7 +144,7 @@ namespace VirtoCommerce.Web.Client.Services.Security
             if (account == null
                 || !account.AccountState.GetHashCode().Equals(AccountState.Approved.GetHashCode()))
             {
-                errrorMessage = "User account is not valid";
+                errorMessage = "User account is not valid";
                 return false;
             }
 
@@ -227,8 +227,10 @@ namespace VirtoCommerce.Web.Client.Services.Security
         /// </summary>
         /// <param name="resetToken">The reset token.</param>
         /// <param name="newPassword">The new password.</param>
+        /// <param name="?">The ?.</param>
+        /// <param name="userName">Name of the user.</param>
         /// <returns></returns>
-        public bool ResetPasswordWithToken(string resetToken, string newPassword)
+        public bool ResetPasswordWithToken(string resetToken, string newPassword, string userName = null)
         {
             return WebSecurity.ResetPassword(resetToken, newPassword);
         }
@@ -262,11 +264,9 @@ namespace VirtoCommerce.Web.Client.Services.Security
         /// <param name="accountConfirmationToken">The account confirmation token.</param>
         /// <returns></returns>
         /// <exception cref="System.NotImplementedException"></exception>
-        public bool ConfirmAccount(string accountConfirmationToken, string userName = null)
+        public bool ConfirmAccountEmail(string accountConfirmationToken, string userName)
         {
-            return string.IsNullOrWhiteSpace(userName)
-                ? WebSecurity.ConfirmAccount(accountConfirmationToken)
-                : WebSecurity.ConfirmAccount(userName, accountConfirmationToken);
+            return WebSecurity.ConfirmAccount(userName, accountConfirmationToken);
         }
 
         /// <summary>

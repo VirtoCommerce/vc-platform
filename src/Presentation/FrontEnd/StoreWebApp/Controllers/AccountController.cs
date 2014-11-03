@@ -1253,7 +1253,7 @@ namespace VirtoCommerce.Web.Controllers
             {
                 account.AccountState = AccountState.Approved.GetHashCode();
 
-                if (_webSecurity.ConfirmAccount(token, username))
+                if (_webSecurity.ConfirmAccountEmail(token, username))
                 {
                     TempData[GetMessageTempKey(MessageType.Success)] = new[]
                 {
