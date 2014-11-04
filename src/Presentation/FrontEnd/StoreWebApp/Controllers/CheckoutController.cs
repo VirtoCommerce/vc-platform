@@ -782,10 +782,11 @@ namespace VirtoCommerce.Web.Controllers
                 using (SqlDbConfiguration.ExecutionStrategySuspension)
                 using (var transaction = new TransactionScope())
                 {
-                    // run business rules
-                    Ch.RunWorkflow("ShoppingCartCheckoutWorkflow");
                     // Create order
                     var order = Ch.SaveAsOrder();
+                    // run business rules
+                    Ch.RunWorkflow("ShoppingCartCheckoutWorkflow", order);
+
                     UserHelper.CustomerSession.LastOrderId = order.OrderGroupId;
 
                     transaction.Complete();
