@@ -348,10 +348,9 @@ namespace VirtoCommerce.Web
             container.RegisterType<ISecurityEntityFactory, SecurityEntityFactory>(
                 new ContainerControlledLifetimeManager());
             container.RegisterType<ISecurityRepository, EFSecurityRepository>(new PerRequestLifetimeManager());
-            container.RegisterType<IUserSecurity, IdentityUserSecurity>();
+            container.RegisterType<IUserIdentitySecurity, IdentityUserSecurity>();
             container.RegisterType<IAuthenticationService, AuthenticationService>();
             container.RegisterType<ISecurityService, SecurityService>();
-            container.RegisterType<IOAuthWebSecurity, OAuthWebSecurityWrapper>();
 
             #endregion
 

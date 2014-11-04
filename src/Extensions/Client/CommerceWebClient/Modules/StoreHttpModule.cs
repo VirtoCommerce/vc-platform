@@ -6,12 +6,14 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Security;
+using Microsoft.Owin.Security;
 using VirtoCommerce.Client;
 using VirtoCommerce.Client.Extensions;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Foundation.Stores.Model;
 using VirtoCommerce.Web.Client.Helpers;
+using VirtoCommerce.Web.Client.Security.Identity.Configs;
 
 namespace VirtoCommerce.Web.Client.Modules
 {
@@ -28,6 +30,8 @@ namespace VirtoCommerce.Web.Client.Modules
         /// The currency cookie
         /// </summary>
         protected virtual string CurrencyCookie { get { return "vcf.currency"; } }
+
+
 
         /// <summary>
         /// You will need to configure this module in the Web.config file of your
@@ -221,12 +225,11 @@ namespace VirtoCommerce.Web.Client.Modules
         /// <param name="context">The context.</param>
         protected virtual void RedirectToLogin(HttpContext context)
         {
-            var loginUrl = context.Request.ApplicationPath != null ? FormsAuthentication.LoginUrl.Substring(context.Request.ApplicationPath.Length) : FormsAuthentication.LoginUrl;
-
-            if (!context.Request.Url.AbsolutePath.EndsWith(loginUrl, StringComparison.InvariantCultureIgnoreCase) &&
+            //TODO: try to find LoginPath from owin context
+            if (!context.Request.Url.AbsolutePath.EndsWith("/Account/Logon", StringComparison.InvariantCultureIgnoreCase) &&
                 !context.Request.Url.AbsolutePath.EndsWith("/Account/Register", StringComparison.InvariantCultureIgnoreCase) && !IsAjax)
             {
-                context.Response.Redirect(FormsAuthentication.LoginUrl + context.Request.Url.Query);
+                context.Response.Redirect("~/Account/Logon" + context.Request.Url.Query);
             }
         }
 
@@ -237,7 +240,8 @@ namespace VirtoCommerce.Web.Client.Modules
         protected virtual void OnUnauthorized(HttpContext context)
         {
             //WebSecurity.Logout();
-            FormsAuthentication.SignOut(); // it is ok to use this here, since that is what WebSecurity calls anyway
+            //FormsAuthentication.SignOut(); // it is ok to use this here, since that is what WebSecurity calls anyway
+            context.GetOwinContext().Authentication.SignOut();
             // now check if store is accessible
             context.Response.Redirect(context.Request.RawUrl);
         }

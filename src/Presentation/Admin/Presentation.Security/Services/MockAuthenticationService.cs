@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading.Tasks;
 using VirtoCommerce.Foundation.Security.Services;
 using VirtoCommerce.Foundation.Security.Swt;
 
@@ -16,7 +17,7 @@ namespace VirtoCommerce.ManagementClient.Security.Services
 
 		#region IAuthenticationService
 
-        public string AuthenticateUser(string userName, string password, Uri scope)
+        public Task<string> AuthenticateUserAsync(string userName, string password, Uri scope)
 		{
             string token = null;
             string role = userName == "Administrator" ? "adminis" : "everyone";
@@ -27,7 +28,7 @@ namespace VirtoCommerce.ManagementClient.Security.Services
                     new Claim(ClaimTypes.Role, role)
                 );
 
-            return token;
+            return Task.FromResult(token);
             
 		}
 

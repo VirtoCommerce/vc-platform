@@ -29,8 +29,7 @@ namespace VirtoCommerce.Web.Client.Security.Identity.Configs
             InitializeIdentityForEf(context);
             base.Seed(context);
         }
-
-        //Create User=Admin@Admin.com with password=Admin@123456 in the Admin role        
+  
         public static void InitializeIdentityForEf(ApplicationDbContext db)
         {
             var userManager = HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
@@ -56,8 +55,11 @@ namespace VirtoCommerce.Web.Client.Security.Identity.Configs
                 var user = userManager.FindByName(account.UserName);
                 if (user == null)
                 {
-                    userManager.Create(account, "store");
-                    userManager.SetLockoutEnabled(account.Id, false);
+                    var result = userManager.Create(account, "store");
+                    if (result.Succeeded)
+                    {
+                        userManager.SetLockoutEnabled(account.Id, false);
+                    }
                 }
 
                 //sync account

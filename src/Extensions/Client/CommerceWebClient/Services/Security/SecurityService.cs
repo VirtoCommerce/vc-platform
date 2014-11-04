@@ -22,7 +22,7 @@ namespace VirtoCommerce.Web.Client.Services.Security
         /// <summary>
         /// The membership provider
         /// </summary>
-		protected IUserSecurity MembershipProvider;
+		protected IUserIdentitySecurity MembershipProvider;
 		#endregion
 
 		#region ctor
@@ -31,7 +31,7 @@ namespace VirtoCommerce.Web.Client.Services.Security
         /// </summary>
         /// <param name="repository">The repository.</param>
         /// <param name="membershipProvider">The membership provider.</param>
-		public SecurityService(ISecurityRepository repository, IUserSecurity membershipProvider)
+        public SecurityService(ISecurityRepository repository, IdentityUserSecurity membershipProvider)
 		{
 			SecurityRepository = repository;
 			MembershipProvider = membershipProvider;

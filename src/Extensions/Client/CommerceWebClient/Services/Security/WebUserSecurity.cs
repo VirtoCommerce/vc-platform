@@ -16,6 +16,7 @@ namespace VirtoCommerce.Web.Client.Services.Security
     /// <summary>
     /// Class WebUserSecurity.
     /// </summary>
+    [Obsolete("Use ASP.NET Identity", false)]
     public class WebUserSecurity : IUserSecurity
     {
         /// <summary>
@@ -92,23 +93,20 @@ namespace VirtoCommerce.Web.Client.Services.Security
         /// <param name="errorMessage"></param>
         /// <param name="persistCookie">if set to <c>true</c> [persist cookie].</param>
         /// <returns><c>true</c> if success, <c>false</c> otherwise.</returns>
-        public bool LoginAs(string userName, string csrUserName, string password, out string errorMessage, bool persistCookie = false)
+        public string LoginAs(string userName, string csrUserName, string password,  bool persistCookie = false)
         {
-            errorMessage = null;
             var csrAccount = _securityRepository.Accounts.FirstOrDefault(
                 a => a.UserName.Equals(csrUserName, StringComparison.OrdinalIgnoreCase));
 
             if (!Membership.ValidateUser(csrUserName, password))
             {
-                errorMessage = "CSR user name or password incorrect.";
-                return false;
+                return "CSR user name or password incorrect.";
             }
 
             if (csrAccount == null
             || !csrAccount.AccountState.GetHashCode().Equals(AccountState.Approved.GetHashCode()))
             {
-                errorMessage = "CSR account is not valid.";
-                return false;
+                return "CSR account is not valid.";
             }
 
             if (csrAccount.RegisterType != (int)RegisterType.Administrator)
@@ -132,8 +130,7 @@ namespace VirtoCommerce.Web.Client.Services.Security
 
                 if (!hasPermission)
                 {
-                    errorMessage = "CSR has no permission to login as other user.";
-                    return false;
+                    return "CSR has no permission to login as other user.";
                 }
             }
 
@@ -144,14 +141,13 @@ namespace VirtoCommerce.Web.Client.Services.Security
             if (account == null
                 || !account.AccountState.GetHashCode().Equals(AccountState.Approved.GetHashCode()))
             {
-                errorMessage = "User account is not valid";
-                return false;
+                return "User account is not valid";
             }
 
             //Authenticate user
             FormsAuthentication.SetAuthCookie(userName, persistCookie);
 
-            return true;
+            return null;
         }
 
         /// <summary>

@@ -281,6 +281,7 @@
     <Compile Include="Extensions\Validation\RequiredIfAttribute.cs" />
     <Compile Include="Extensions\ViewExtensions.cs" />
     <Compile Include="Extensions\ViewRenderer.cs" />
+    <Compile Include="Helpers\AsyncHelper.cs" />
     <Compile Include="Helpers\CartHelper.cs" />
     <Compile Include="Helpers\SettingsHelper.cs" />
     <Compile Include="Helpers\PromotionHelper.cs" />
@@ -315,6 +316,7 @@
     <Compile Include="Services\Listeners\ReviewApprovedEventListener.cs" />
     <Compile Include="Services\Security\AuthenticationService.cs" />
     <Compile Include="Services\Security\IdentityUserSecurity.cs" />
+    <Compile Include="Services\Security\IUserSecurityAsync.cs" />
     <Compile Include="Services\Security\IUserSecurity.cs" />
     <Compile Include="Services\Security\OAuthAuthorizationManager.cs" />
     <Compile Include="Services\Security\SecurityService.cs" />

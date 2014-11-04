@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ServiceModel;
+using System.Threading.Tasks;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Security.Factories;
 
@@ -9,6 +10,6 @@ namespace VirtoCommerce.Foundation.Security.Services
 	public interface IAuthenticationService
 	{
 		[OperationContract]
-        string AuthenticateUser(string userName, string password, Uri scope);
+        Task<string> AuthenticateUserAsync(string userName, string password, Uri scope);
     }
 }

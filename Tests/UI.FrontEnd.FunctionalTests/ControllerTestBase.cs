@@ -529,10 +529,9 @@ namespace UI.FrontEnd.FunctionalTests
 			container.RegisterType<ISecurityEntityFactory, SecurityEntityFactory>(
 				new ContainerControlledLifetimeManager());
 			container.RegisterType<ISecurityRepository, EFSecurityRepository>();
-			container.RegisterType<IUserSecurity, WebUserSecurity>();
+            container.RegisterType<IUserIdentitySecurity, IdentityUserSecurity>();
 			container.RegisterType<IAuthenticationService, AuthenticationService>();
 			container.RegisterType<ISecurityService, SecurityService>();
-			container.RegisterType<IOAuthWebSecurity, OAuthWebSecurityWrapper>();
 
 			#endregion
 

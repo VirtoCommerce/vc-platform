@@ -6,17 +6,14 @@
 }
 
 <script type="text/javascript">
-    $(function ()
-    {
-        $('.account .add-info-block .slider li a').click(function ()
-        {
+    $(function() {
+        $('.account .add-info-block .slider li a').click(function() {
             var name = $(this).prop('class');
             var margin = name == 'forgot' ? '-300px' : '0';
             $('.article .account .add-info-block .slider ul').animate({ 'margin-left': margin }, 600);
         });
 
-        $('.external').click(function ()
-        {
+        $('.external').click(function() {
             $('.external-login').slideDown();
             $(this).hide();
         });

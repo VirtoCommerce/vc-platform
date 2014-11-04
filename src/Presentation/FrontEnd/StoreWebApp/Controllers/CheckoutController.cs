@@ -1,4 +1,5 @@
-﻿using Omu.ValueInjecter;
+﻿using System.Threading.Tasks;
+using Omu.ValueInjecter;
 using PayPal.PayPalAPIInterfaceService;
 using PayPal.PayPalAPIInterfaceService.Model;
 using System;
@@ -22,7 +23,6 @@ using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Virto.Helpers;
 using VirtoCommerce.Web.Virto.Helpers.Payments;
 using VirtoCommerce.Web.Virto.Helpers.Popup;
-using WebGrease.Css.Extensions;
 using AddressType = PayPal.PayPalAPIInterfaceService.Model.AddressType;
 
 namespace VirtoCommerce.Web.Controllers
@@ -175,7 +175,7 @@ namespace VirtoCommerce.Web.Controllers
         /// <param name="checkoutModel">The checkout model.</param>
         /// <returns>ActionResult.</returns>
         [HttpPost]
-        public ActionResult ProcessCheckout(CheckoutModel checkoutModel)
+        public async Task<ActionResult> ProcessCheckout(CheckoutModel checkoutModel)
         {
             //Need to submit changes again to make sure cart is still valid
             RecalculateCart(checkoutModel);
@@ -255,20 +255,20 @@ namespace VirtoCommerce.Web.Controllers
                     regModel.Addresses.Add(shipping);
                 }
 
-                string message,token;
-
                 var requireConfirmation = StoreHelper.GetSettingValue("RequireAccountConfirmation", false);
 
-                if (!UserHelper.Register(regModel, requireConfirmation, out message, out token))
+                var registrationResult = await UserHelper.RegisterAsync(regModel, requireConfirmation);
+
+                if (!registrationResult.IsSuccess)
                 {
-                    ModelState.AddModelError("", message);
+                    ModelState.AddModelError("", registrationResult.ErrorMessage);
                     return View("Index", checkoutModel);
                 }
 
                 if (requireConfirmation)
                 {
                     var user = string.Format("{0} {1}", regModel.FirstName, regModel.LastName);
-                    var linkUrl = Url.Action("ConfirmAccount", "Account", new { token, username = regModel.Email }, Request.Url.Scheme);
+                    var linkUrl = Url.Action("ConfirmAccount", "Account", new { registrationResult.ConfirmationToken, username = regModel.Email }, Request.Url.Scheme);
 
                     if (
                         UserHelper.SendEmail(linkUrl, user, regModel.Email, "confirm-account",
@@ -297,7 +297,7 @@ namespace VirtoCommerce.Web.Controllers
                 }
                 else
                 {
-                    UserHelper.OnPostLogon(regModel.Email);
+                    await UserHelper.OnPostLogonAsync(regModel.Email);
                 }
 
             }

@@ -44,7 +44,7 @@ namespace VirtoCommerce.Web
             app.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
-                LoginPath = new PathString("/Account/Login"),
+                LoginPath = new PathString("/Account/Logon"),
                 Provider = new CookieAuthenticationProvider
                 {
                     // Enables the application to validate the security stamp when the user logs in.
@@ -73,13 +73,13 @@ namespace VirtoCommerce.Web
             //   consumerKey: "",
             //   consumerSecret: "");
 
-            //app.UseFacebookAuthentication(
-            //   appId: "",
-            //   appSecret: "");
+            app.UseFacebookAuthentication(
+               appId: "593495770737439",
+               appSecret: "9cf0d2f1a1990477d0a81f752a2d808b");
 
-            //app.UseGoogleAuthentication(
-            //    clientId: "",
-            //    clientSecret: "");
+            app.UseGoogleAuthentication(
+                clientId: "855598535060-92701oonpoi22vtipaj2j4fhei03o3ge.apps.googleusercontent.com",
+                clientSecret: "3-rlaLnMVjIwvmXjA8CuRDVC");
         }
     }
 }

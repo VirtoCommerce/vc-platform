@@ -233,7 +233,7 @@ namespace VirtoCommerce.ManagementClient.Security.Model
 							var dataServicesBaseUri = new Uri(BaseUrl);
 
 							// get new token
-							newToken = _authenticationService.AuthenticateUser(UserName, Password, dataServicesBaseUri);
+                            newToken = _authenticationService.AuthenticateUserAsync(UserName, Password, dataServicesBaseUri).Result;
 							Debug.WriteLine("Token updated");
 							if (!String.IsNullOrEmpty(newToken))
 							{

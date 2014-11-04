@@ -9,6 +9,7 @@ namespace VirtoCommerce.Web.Client.Security
     /// <summary>
     /// Class OAuthWebSecurityWrapper.
     /// </summary>
+    [Obsolete("Use asp.net identity OAuth2")]
 	public class OAuthWebSecurityWrapper : IOAuthWebSecurity
 	{
         /// <summary>
