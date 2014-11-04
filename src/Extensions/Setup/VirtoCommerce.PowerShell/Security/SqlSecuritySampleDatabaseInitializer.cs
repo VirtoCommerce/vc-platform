@@ -19,9 +19,9 @@ namespace VirtoCommerce.PowerShell.Security
 		private void FillScripts(EFSecurityRepository context)
         {
 			RunCommand(context, "FillRequiredCaseProperties.sql", "Security");
-			//RunCommand(context, "FillTestAccounts.sql", "Security");
+			RunCommand(context, "FillTestAccounts.sql", "Security");
 
-			//context.Accounts.First(a => a.AccountId == 1).StoreId = "SampleStore";
+			context.Accounts.First(a => a.AccountId == 1).StoreId = "SampleStore";
         }
     }
 }

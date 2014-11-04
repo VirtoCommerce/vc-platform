@@ -15,6 +15,7 @@ namespace VirtoCommerce.PowerShell.Security
         {
             base.Seed(context);
             //CreateSimpleMembership(context);
+            CreateAspNetSecurity(context);
 
             CreatePermissions(context);
             CreateRoles(context);
@@ -24,6 +25,11 @@ namespace VirtoCommerce.PowerShell.Security
         private void CreateSimpleMembership(EFSecurityRepository context)
         {
             RunCommand(context, "SimpleMembership.sql", "Security");
+        }
+
+        private void CreateAspNetSecurity(EFSecurityRepository context)
+        {
+            RunCommand(context, "AspNetIdentity.sql", "Security");
         }
 
         private void CreatePermissions(EFSecurityRepository client)

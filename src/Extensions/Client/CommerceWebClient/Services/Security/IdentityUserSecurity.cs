@@ -48,24 +48,19 @@ namespace VirtoCommerce.Web.Client.Services.Security
         {
             get
             {
-                if (_signInManager == null)
-                {
-                    _signInManager = HttpContext.Current.GetOwinContext().Get<ApplicationSignInManager>();
-                }
-                return _signInManager;
+                return _signInManager ?? (_signInManager = HttpContext.Current.GetOwinContext().Get<ApplicationSignInManager>());
             }
-            private set { _signInManager = value; }
+            private set
+            {
+                _signInManager = value;
+            }
         }
 
         public ApplicationUserManager UserManager
         {
             get
             {
-                if (_userManager == null)
-                {
-                    _userManager = HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
-                }
-                return _userManager;
+                return _userManager ?? (_userManager = HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>());
             }
             private set
             {
@@ -77,13 +72,12 @@ namespace VirtoCommerce.Web.Client.Services.Security
         {
             get
             {
-                if (_authenticationManager == null)
-                {
-                    _authenticationManager = HttpContext.Current.GetOwinContext().Authentication;
-                }
-                return _authenticationManager;
+                return _authenticationManager ?? (_authenticationManager = HttpContext.Current.GetOwinContext().Authentication);
             }
-            private set { _authenticationManager = value; }
+            private set
+            {
+                _authenticationManager = value;
+            }
         }
 
 
@@ -312,11 +306,6 @@ namespace VirtoCommerce.Web.Client.Services.Security
             var user = await UserManager.FindByNameAsync(userName);
             var result = await UserManager.ConfirmEmailAsync(user.Id, emailConfirmationToken);
             return result.Succeeded;
-        }
-
-        public bool ConfirmAccountEmail(string emailConfirmationToken, string userName)
-        {
-            return AsyncHelper.RunSync(() => ConfirmAccountEmailAsync(emailConfirmationToken, userName));
         }
     }
 }
