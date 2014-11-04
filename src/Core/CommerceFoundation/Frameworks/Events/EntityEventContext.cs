@@ -1,4 +1,5 @@
-﻿using Microsoft.Practices.Unity;
+﻿using System.Collections.Generic;
+using Microsoft.Practices.Unity;
 
 namespace VirtoCommerce.Foundation.Frameworks.Events
 {
@@ -61,10 +62,16 @@ namespace VirtoCommerce.Foundation.Frameworks.Events
                     return;
                 }
 
+                IEnumerable<IEntityEventListener> listeners = null;
+                try
+                {
+                    listeners = container.ResolveAll<IEntityEventListener>();
+                }
+                catch
+                {
+                    //asu: This happens if container is prepared using PerRequestLifeTimeManager and HttpContext not availabe
+                }
 
-                // rp: this doesn't work for Scheduler (ServiceLocator depends on Http context)  
-                // var listeners = ServiceLocator.Current.GetAllInstances<IEntityEventListener>();
-                var listeners = container.ResolveAll<IEntityEventListener>();
                 if (listeners != null)
                 {
                     foreach (var listener in listeners)

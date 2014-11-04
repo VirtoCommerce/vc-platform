@@ -104,7 +104,7 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
                 {
                     // always create SiteAdministrator in here. Simple users are created in Customers (Cases) module
                     // create via MemberShip without roles
-                    _securityService.CreateAdminUser(item.MemberId, item.UserName, itemVM.Password);
+                    _securityService.CreateAdminUserAsync(item.MemberId, item.UserName, itemVM.Password);
 
                     //Add roles
                     using (var itemRepository = _securityRepository.GetRepositoryInstance())
@@ -133,7 +133,7 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
             var selectionCount = selectedItemsList.Count;
             if (selectionCount > 0)
             {
-                var selectedItems = selectedItemsList.Cast<VirtualListItem<IAccountViewModel>>();
+                var selectedItems = selectedItemsList.Cast<VirtualListItem<IAccountViewModel>>().ToList();
                 string joinedNames;
                 var names = selectedItems.
                     Take(4).
@@ -152,7 +152,7 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
                 {
                     if (x.Confirmed)
                     {
-                        selectedItems.ToList().ForEach(y => _securityService.DeleteUser(y.Data.InnerItem.UserName));
+                        selectedItems.ForEach(y => _securityService.DeleteUserAsync(y.Data.InnerItem.UserName));
                         Refresh();
                     }
                 });

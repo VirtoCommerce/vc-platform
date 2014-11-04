@@ -25,7 +25,7 @@ namespace VirtoCommerce.Web.Client.Services.Security
         /// <summary>
         /// The membership provider
         /// </summary>
-        protected IdentityUserSecurity MembershipProvider;
+        protected IUserIdentitySecurity MembershipProvider;
         /// <summary>
         /// The security repository
         /// </summary>

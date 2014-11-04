@@ -3,9 +3,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
-using Microsoft.Web.WebPages.OAuth;
 using Owin;
-using VirtoCommerce.Web;
 using VirtoCommerce.Web.Client.Security.Identity.Configs;
 using VirtoCommerce.Web.Client.Security.Identity.Data;
 using VirtoCommerce.Web.Client.Security.Identity.Model;
@@ -18,16 +16,6 @@ namespace VirtoCommerce.Web
 
     public partial class Startup
     {
-
-        /// <summary>
-        /// To let users of this site log in using their accounts from other sites such as Microsoft, Facebook, and Twitter,
-        /// you must update this site. For more information visit http://go.microsoft.com/fwlink/?LinkID=252166
-        /// </summary>
-        //public static void RegisterAuth()
-        //{
-        //    OAuthWebSecurity.RegisterGoogleClient();
-        //    OAuthWebSecurity.RegisterYahooClient();
-        //}
 
         // For more information on configuring authentication, please visit http://go.microsoft.com/fwlink/?LinkId=301864
         public void ConfigureAuth(IAppBuilder app)

@@ -12,7 +12,7 @@ using VirtoCommerce.Web.Client.Security.Identity.Model;
 
 namespace VirtoCommerce.Web.Client.Services.Security
 {
-    public interface IUserIdentitySecurity : IUserSecurity //IUserSecurity Legacy support
+    public interface IUserIdentitySecurity
     {
         /// <summary>
         /// Logins the specified user name asynchronously.

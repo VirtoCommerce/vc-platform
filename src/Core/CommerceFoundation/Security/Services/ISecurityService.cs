@@ -1,4 +1,5 @@
 ﻿using System.ServiceModel;
+using System.Threading.Tasks;
 using VirtoCommerce.Foundation.Security.Model;
 
 namespace VirtoCommerce.Foundation.Security.Services
@@ -12,14 +13,45 @@ namespace VirtoCommerce.Foundation.Security.Services
 		bool CheckMemberInRole(string memberId, Role role);
 
         #region User methods
+        /// <summary>
+        /// Creates the user asynchronous.
+        /// </summary>
+        /// <param name="memberId">The member identifier.</param>
+        /// <param name="userName">Name of the user.</param>
+        /// <param name="password">The password.</param>
+        /// <param name="storeId">The store identifier.</param>
+        /// <param name="requireConfirmationToken">if set to <c>true</c> [require confirmation token].</param>
+        /// <returns></returns>
         [OperationContract]
-        string CreateUser(string memberId, string userName, string password, string storeId, bool requireConfirmationToken = false);
+        Task<string> CreateUserAsync(string memberId, string userName, string password, string storeId, bool requireConfirmationToken = false);
+
+
+        /// <summary>
+        /// Creates the admin user asynchronous.
+        /// </summary>
+        /// <param name="memberId">The member identifier.</param>
+        /// <param name="userName">Name of the user.</param>
+        /// <param name="password">The password.</param>
+        /// <returns></returns>
         [OperationContract]
-        string CreateAdminUser(string memberId, string userName, string password, bool requireConfirmationToken = false);
+        Task<string> CreateAdminUserAsync(string memberId, string userName, string passwor);
+
+        /// <summary>a
+        /// Deletes the user asynchronous.
+        /// </summary>
+        /// <param name="userName">Name of the user.</param>
+        /// <returns></returns>
         [OperationContract]
-        bool DeleteUser(string userName);
+        Task<bool> DeleteUserAsync(string userName);
+        /// <summary>
+        /// Changes the password asynchronous.
+        /// </summary>
+        /// <param name="userName">Name of the user.</param>
+        /// <param name="currentPassword">The current password.</param>
+        /// <param name="newPassword">The new password.</param>
+        /// <returns></returns>
         [OperationContract]
-        bool ChangePassword(string userName, string currentPassword, string newPassword);
+        Task<bool> ChangePasswordAsync(string userName, string currentPassword, string newPassword);
 
         /// <summary>
         /// Resets the password. Should only be used by the super admin user.
@@ -28,7 +60,7 @@ namespace VirtoCommerce.Foundation.Security.Services
         /// <param name="newPassword">The new password.</param>
         /// <returns></returns>
         [OperationContract]
-        bool ResetPassword(string userName, string newPassword);
+        Task<bool> ResetPasswordAsync(string userName, string newPassword);
 
         /// <summary>
         /// Locks the specified member by id.

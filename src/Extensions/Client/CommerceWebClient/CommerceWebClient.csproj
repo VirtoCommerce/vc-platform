@@ -316,7 +316,7 @@
     <Compile Include="Services\Listeners\ReviewApprovedEventListener.cs" />
     <Compile Include="Services\Security\AuthenticationService.cs" />
     <Compile Include="Services\Security\IdentityUserSecurity.cs" />
-    <Compile Include="Services\Security\IUserSecurityAsync.cs" />
+    <Compile Include="Services\Security\IUserIdentitySecurity.cs" />
     <Compile Include="Services\Security\IUserSecurity.cs" />
     <Compile Include="Services\Security\OAuthAuthorizationManager.cs" />
     <Compile Include="Services\Security\SecurityService.cs" />
@@ -344,9 +344,7 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

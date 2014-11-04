@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using System.Net.Mail;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Practices.Unity;
@@ -32,9 +33,9 @@ namespace VirtoCommerce.Web.Client.Services.Security
             _securityRepository = securityRepository;
         }
 
-        public IdentityUserSecurity(ApplicationUserManager userManager, 
-            ApplicationSignInManager signInManager, 
-            IAuthenticationManager authenticationManager, 
+        public IdentityUserSecurity(ApplicationUserManager userManager,
+            ApplicationSignInManager signInManager,
+            IAuthenticationManager authenticationManager,
             ISecurityRepository securityRepository)
             : this(securityRepository)
         {
@@ -43,13 +44,15 @@ namespace VirtoCommerce.Web.Client.Services.Security
             SignInManager = signInManager;
         }
 
-
-
         public ApplicationSignInManager SignInManager
         {
             get
             {
-                return _signInManager ?? HttpContext.Current.GetOwinContext().Get<ApplicationSignInManager>();
+                if (_signInManager == null)
+                {
+                    _signInManager = HttpContext.Current.GetOwinContext().Get<ApplicationSignInManager>();
+                }
+                return _signInManager;
             }
             private set { _signInManager = value; }
         }
@@ -58,7 +61,11 @@ namespace VirtoCommerce.Web.Client.Services.Security
         {
             get
             {
-                return _userManager ?? HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                if (_userManager == null)
+                {
+                    _userManager = HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                }
+                return _userManager;
             }
             private set
             {
@@ -70,7 +77,11 @@ namespace VirtoCommerce.Web.Client.Services.Security
         {
             get
             {
-                return _authenticationManager ?? HttpContext.Current.GetOwinContext().Authentication;
+                if (_authenticationManager == null)
+                {
+                    _authenticationManager = HttpContext.Current.GetOwinContext().Authentication;
+                }
+                return _authenticationManager;
             }
             private set { _authenticationManager = value; }
         }
@@ -79,11 +90,6 @@ namespace VirtoCommerce.Web.Client.Services.Security
         public async Task<SignInStatus> LoginAsync(string userName, string password, bool persistCookie = false)
         {
             return await SignInManager.PasswordSignInAsync(userName, password, persistCookie, true);
-        }
-
-        public bool Login(string userName, string password, bool persistCookie = false)
-        {
-            return LoginAsync(userName, password, persistCookie).Result == SignInStatus.Success;
         }
 
         public async Task<string> LoginAsAsync(string userName, string csrUserName, string password, bool persistCookie = false)
@@ -148,11 +154,6 @@ namespace VirtoCommerce.Web.Client.Services.Security
             return null;
         }
 
-        public string LoginAs(string userName, string csrUserName, string password, bool persistCookie = false)
-        {
-            return AsyncHelper.RunSync(() => LoginAsAsync(userName, csrUserName, password, persistCookie));
-        }
-
         public void Logout()
         {
             AuthenticationManager.SignOut();
@@ -199,8 +200,9 @@ namespace VirtoCommerce.Web.Client.Services.Security
                 UserName = userName,
                 Email = userName,
                 //TODO should change AccountId to string
-                Id = account.AccountId.ToString(CultureInfo.InvariantCulture) 
+                Id = account.AccountId.ToString(CultureInfo.InvariantCulture)
             };
+
 
             var result = await UserManager.CreateAsync(user, password);
             if (result.Succeeded)
@@ -214,21 +216,10 @@ namespace VirtoCommerce.Web.Client.Services.Security
             return null;
         }
 
-        public string CreateUserAndAccount(string userName, string password, object propertyValues = null,
-            bool requireConfirmationToken = false)
-        {
-            return AsyncHelper.RunSync(() => CreateUserAndAccountAsync(userName, password, propertyValues, requireConfirmationToken));
-        }
-
         public async Task<string> GetUserIdAsync(string userName)
         {
             var user = await UserManager.FindByNameAsync(userName);
             return user != null ? user.Id : null;
-        }
-
-        public string GetUserId(string userName)
-        {
-            return AsyncHelper.RunSync(() => GetUserIdAsync(userName));
         }
 
         public async Task<bool> ChangePasswordAsync(string userName, string currentPassword, string newPassword)
@@ -240,11 +231,6 @@ namespace VirtoCommerce.Web.Client.Services.Security
                 return result.Succeeded;
             }
             return false;
-        }
-
-        public bool ChangePassword(string userName, string currentPassword, string newPassword)
-        {
-            return AsyncHelper.RunSync(() => ChangePasswordAsync(userName, currentPassword, newPassword));
         }
 
         public async Task<bool> ResetPasswordAsync(string userName, string newPassword, string token = null)
@@ -259,21 +245,11 @@ namespace VirtoCommerce.Web.Client.Services.Security
             return false;
         }
 
-        public bool ResetPassword(string userName, string newPassword, string token = null)
-        {
-            return AsyncHelper.RunSync(() => ResetPasswordAsync(userName, newPassword, token));
-        }
-
         public async Task<string> GeneratePasswordResetTokenAsync(string userName)
         {
             var user = await UserManager.FindByNameAsync(userName);
             var result = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
             return result;
-        }
-     
-        public string GeneratePasswordResetToken(string userName)
-        {
-            return AsyncHelper.RunSync(() => GeneratePasswordResetTokenAsync(userName));
         }
 
         public async Task<bool> ResetPasswordWithTokenAsync(string resetToken, string newPassword, string userName)
@@ -285,11 +261,6 @@ namespace VirtoCommerce.Web.Client.Services.Security
                 return result.Succeeded;
             }
             return false;
-        }
-
-        public bool ResetPasswordWithToken(string resetToken, string newPassword, string userName = null)
-        {
-            return AsyncHelper.RunSync(() => ResetPasswordWithTokenAsync(resetToken, newPassword, userName));
         }
 
         public async Task<IdentityResult> CreateAccountAsync(string userName, string password = null)
@@ -317,26 +288,23 @@ namespace VirtoCommerce.Web.Client.Services.Security
             {
                 result = await UserManager.CreateAsync(user, password);
             }
-           
-            return result;
-        }
 
-        public string CreateAccount(string userName, string password, bool requireConfirmation = false)
-        {
-           AsyncHelper.RunSync(() => CreateAccountAsync(userName, password));
-           return null;
+            return result;
         }
 
         public async Task<bool> DeleteUserAsync(string userName)
         {
+            var account = _securityRepository.Accounts.FirstOrDefault(x => x.UserName == userName);
+
+            if (account != null)
+            {
+                _securityRepository.Remove(account);
+                _securityRepository.UnitOfWork.Commit();
+            }
+
             var user = await UserManager.FindByNameAsync(userName);
             var result = await UserManager.DeleteAsync(user);
             return result.Succeeded;
-        }
-
-        public bool DeleteUser(string userName)
-        {
-            return AsyncHelper.RunSync(() => DeleteUserAsync(userName));
         }
 
         public async Task<bool> ConfirmAccountEmailAsync(string emailConfirmationToken, string userName)

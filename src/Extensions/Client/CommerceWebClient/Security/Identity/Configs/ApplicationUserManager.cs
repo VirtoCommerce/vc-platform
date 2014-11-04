@@ -34,7 +34,7 @@ namespace VirtoCommerce.Web.Client.Security.Identity.Configs
             manager.UserValidator = new UserValidator<ApplicationUser>(manager)
             {
                 AllowOnlyAlphanumericUserNames = false,
-                RequireUniqueEmail = true
+                //RequireUniqueEmail = true, //Cannot require emails because users can be created from wpf admin and username not enforced to be as email
             };
             // Configure validation logic for passwords
             manager.PasswordValidator = new PasswordValidator
