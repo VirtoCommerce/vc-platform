@@ -787,6 +787,8 @@ namespace VirtoCommerce.Web.Controllers
                     // run business rules
                     Ch.RunWorkflow("ShoppingCartCheckoutWorkflow", order);
 
+                    Ch.OrderRepository.UnitOfWork.Commit();
+
                     UserHelper.CustomerSession.LastOrderId = order.OrderGroupId;
 
                     transaction.Complete();

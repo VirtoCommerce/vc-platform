@@ -182,7 +182,7 @@
     <None Include="setup-database.ps1" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="SQLUpdate\MigrateWebSecurity.sql" />
+    <Content Include="SQLUpdate\MigrateToIndentitySecurity.sql" />
     <EmbeddedResource Include="AppConfig\Data\Localization.reduced.sql" />
     <Content Include="Catalogs\Data\CategoryItemRelation.reduced.sql" />
     <Content Include="Catalogs\Data\EditorialReview.reduced.sql" />
