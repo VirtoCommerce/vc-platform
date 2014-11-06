@@ -6,7 +6,9 @@ using System.Linq;
 
 namespace VirtoCommerce.PowerShell.DatabaseSetup
 {
+    using System;
 
+    using VirtoCommerce.Foundation.Frameworks.Extensions;
 
     /// <summary>
     ///     An implementation of <see cref="IDatabaseInitializer{TContext}" /> that will use Code First Migrations
@@ -71,7 +73,15 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup
                 }
             }
 
-            migrator.Update();
+            try
+            {
+                migrator.Update();
+            }
+            catch (SqlException ex)
+            {               
+                throw new ApplicationException(String.Format("Migrations failed with error \"{0}\"", ex.ExpandExceptionMessage()), ex);
+            }
+            
             InitializeDbSettings(context);
 
             if (seed)
