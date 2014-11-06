@@ -110,7 +110,7 @@ namespace VirtoCommerce.Foundation.Orders.Model
 
 		private decimal _ShippingTotal;
 		/// <summary>
-		/// Gets or sets the shipments total. the sum of all shipment.???.
+		/// Gets or sets the shipments total. the sum of all shipment
 		/// </summary>
 		/// <value>
 		/// The shipping total.

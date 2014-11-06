@@ -105,7 +105,7 @@ namespace VirtoCommerce.OrderWorkflow
 									{
 										if (tax != null)
 										{
-                                            var taxAmount = Math.Round(lineItem.PlacedPrice * (tax.Percentage / 100), 2) * lineItem.Quantity;
+                                            var taxAmount = Math.Round(lineItem.ExtendedPrice * (tax.Percentage / 100), 2);
 											if (tax.Tax.TaxType == (int) TaxTypes.SalesTax)
 											{
 												itemTax += taxAmount;
