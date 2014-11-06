@@ -1,5 +1,4 @@
-﻿using System.Net.Mail;
-using Microsoft.AspNet.Identity;
+﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Practices.Unity;
@@ -14,7 +13,6 @@ using System.Web.Routing;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.Foundation.Security.Repositories;
-using VirtoCommerce.Web.Client.Helpers;
 using VirtoCommerce.Web.Client.Security.Identity.Configs;
 using VirtoCommerce.Web.Client.Security.Identity.Model;
 

@@ -14,17 +14,10 @@ namespace VirtoCommerce.PowerShell.Security
         protected override void Seed(EFSecurityRepository context)
         {
             base.Seed(context);
-            //CreateSimpleMembership(context);
             CreateAspNetSecurity(context);
 
             CreatePermissions(context);
             CreateRoles(context);
-        }
-
-        [Obsolete]
-        private void CreateSimpleMembership(EFSecurityRepository context)
-        {
-            RunCommand(context, "SimpleMembership.sql", "Security");
         }
 
         private void CreateAspNetSecurity(EFSecurityRepository context)

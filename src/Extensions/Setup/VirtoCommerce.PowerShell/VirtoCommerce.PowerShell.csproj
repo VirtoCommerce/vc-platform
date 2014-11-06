@@ -103,7 +103,6 @@
     <Compile Include="Marketing\SqlPromotionDatabaseInitializer.cs" />
     <Compile Include="DatabaseSetup\Cmdlet\PublishImportDatabase.cs" />
     <EmbeddedResource Include="Security\Data\AspNetIdentity.sql" />
-    <EmbeddedResource Include="Security\Data\SimpleMembership.sql" />
     <Compile Include="SearchSetup\ProgressObserver.cs" />
     <Compile Include="Security\SqlSecuritySampleDatabaseInitializer.cs" />
     <Compile Include="Security\SqlSecurityDatabaseInitializer.cs" />
