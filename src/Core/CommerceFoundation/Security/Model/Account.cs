@@ -20,7 +20,6 @@ namespace VirtoCommerce.Foundation.Security.Model
         private string _AccountId;
 		[Key]
 		[DataMember]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string AccountId
 		{
 			get
