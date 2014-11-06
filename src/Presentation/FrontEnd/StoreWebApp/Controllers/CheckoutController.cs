@@ -104,7 +104,12 @@ namespace VirtoCommerce.Web.Controllers
             if (Ch.IsEmpty)
                 return RedirectToAction("Index", "Cart");
 
-            var model = PrepareCheckoutModel(new CheckoutModel());
+            var model = new CheckoutModel();
+
+            //Need to make sure we are displaying correct cart
+            RecalculateCart(model);
+            //Dont show any errors initially
+            ModelState.Clear();
 
             return View(model);
         }

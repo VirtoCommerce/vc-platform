@@ -281,7 +281,14 @@ namespace VirtoCommerce.Web.Client.Services.Security
                     if (WebSecurity.Initialized)
                         return;
 
-                    var settingValue = CloudConfigurationManager.GetSetting(nameOrConnectionString);
+                    string settingValue = null;
+                    try
+                    {
+                        settingValue = CloudConfigurationManager.GetSetting(nameOrConnectionString);
+                    }
+                    catch
+                    {
+                    }
 
                     if (String.IsNullOrEmpty(settingValue))
                     {
@@ -294,7 +301,7 @@ namespace VirtoCommerce.Web.Client.Services.Security
                         WebSecurity.InitializeDatabaseConnection(
                             settingValue,
                             "System.Data.SqlClient",
-                            "Account", "AccountId", "UserName", autoCreateTables: false);
+                            "Account", "AccountId", "UserName", false);
                     }
 
                 }

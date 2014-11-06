@@ -390,8 +390,8 @@ namespace VirtoCommerce.Web.Controllers
             if (helper.Cart.Name == CartHelper.CartName)
             {
                 //Need to prepare cart because shipment rates could chaange after items added/removed
-                var result = helper.RunWorkflow("ShoppingCartPrepareWorkflow");
-                result = helper.RunWorkflow("ShoppingCartValidateWorkflow", result.OrderGroup);
+                //var result = helper.RunWorkflow("ShoppingCartPrepareWorkflow");
+                var result = helper.RunWorkflow("ShoppingCartValidateWorkflow");
 
                 if (result.WorkflowResult.Warnings != null)
                 {

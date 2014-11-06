@@ -32,6 +32,10 @@ namespace VirtoCommerce.Web.Client.Services.Security
         /// <returns>error message</returns>
         Task<string> LoginAsAsync(string userName, string csrUserName, string password, bool persistCookie = false);
         /// <summary>
+        /// Logouts current user.
+        /// </summary>
+        void Logout();
+        /// <summary>
         /// Creates the user and account.
         /// </summary>
         /// <param name="userName">Name of the user.</param>
