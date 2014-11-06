@@ -9,6 +9,9 @@ using Microsoft.Win32;
 
 namespace VirtoCommerce.PowerShell.DatabaseSetup
 {
+    using System.Data.SqlClient;
+    using System.Linq;
+
     public abstract class SetupDatabaseInitializer<TContext, TMigrationsConfiguration> : SetupMigrateDatabaseToLatestVersion<TContext, TMigrationsConfiguration>
         where TContext : DbContext
         where TMigrationsConfiguration : DbMigrationsConfiguration<TContext>, new()
@@ -32,18 +35,32 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup
 
         protected virtual void RunCommand(DbContext context, string fileName, string modelName)
         {
-            string text = ReadSql(fileName, modelName);
+            var text = ReadSql(fileName, modelName);
             if (!String.IsNullOrEmpty(text))
             {
                 // this allows to have GO in the script
-                foreach (string cmd in SplitScriptByGo(text))
+                foreach (string cmd in this.SplitScriptByGo(text).Where(cmd => !String.IsNullOrEmpty(cmd)))
                 {
-                    if (!String.IsNullOrEmpty(cmd))
+                    try
+                    {
                         context.Database.ExecuteSqlCommand(cmd);
+                    }
+                    catch (SqlException ex)
+                    {
+                        throw new ApplicationException(
+                            String.Format(
+                                "Failed to process \"{0}\" in \"{1}\" model. Message: {2}",
+                                fileName,
+                                modelName,
+                                ex.Message),
+                            ex);
+                    }
                 }
             }
             else
-                throw new FileNotFoundException(string.Format("File '{0}' is missing.",fileName));
+            {
+                throw new FileNotFoundException(string.Format("File '{0}' is missing.", fileName));
+            }
         }
 
         protected virtual bool ExecuteCommand(string filename, string arguments)
@@ -61,7 +78,10 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup
             {
                 using (var exeProcess = Process.Start(startInfo))
                 {
-                    exeProcess.WaitForExit();
+                    if (exeProcess != null)
+                    {
+                        exeProcess.WaitForExit();
+                    }
                 }
             }
             catch

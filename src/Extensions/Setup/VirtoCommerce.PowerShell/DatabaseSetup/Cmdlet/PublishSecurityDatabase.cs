@@ -16,19 +16,26 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
 			string connection = dbconnection;
 			SafeWriteDebug("ConnectionString: " + connection);
 
-			using (var db = new EFSecurityRepository(connection))
-			{
-				if (sample)
-				{
-					SafeWriteVerbose("Running sample scripts");
-					new SqlSecuritySampleDatabaseInitializer().InitializeDatabase(db);
-				}
-				else
-				{
-					SafeWriteVerbose("Running minimum scripts");
-					new SqlSecurityDatabaseInitializer().InitializeDatabase(db);
-				}
-			}
+            try
+            {
+                using (var db = new EFSecurityRepository(connection))
+                {
+                    if (sample)
+                    {
+                        SafeWriteVerbose("Running sample scripts");
+                        new SqlSecuritySampleDatabaseInitializer().InitializeDatabase(db);
+                    }
+                    else
+                    {
+                        SafeWriteVerbose("Running minimum scripts");
+                        new SqlSecurityDatabaseInitializer().InitializeDatabase(db);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                SafeThrowError(ex);
+            }
 		}
 	}
 }

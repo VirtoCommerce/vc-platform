@@ -14,22 +14,30 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
         public override void Publish(string dbconnection, string data, bool sample, bool reduced, string strategy = SqlDbConfiguration.SqlAzureExecutionStrategy)
 		{
 			base.Publish(dbconnection, data, sample, reduced, strategy);
-			string connection = dbconnection;
+			var connection = dbconnection;
 			SafeWriteDebug("ConnectionString: " + connection);
 
-			using (var db = new EFStoreRepository(connection))
-			{
-				if (sample)
-				{
-					SafeWriteVerbose(string.Format("Running {0}sample scripts", reduced? "reduced " : "" ));
-                    new SqlStoreSampleDatabaseInitializer(reduced).InitializeDatabase(db);
-				}
-				else
-				{
-					SafeWriteVerbose("Running minimum scripts");
-					new SetupMigrateDatabaseToLatestVersion<EFStoreRepository, Configuration>().InitializeDatabase(db);
-				}
-			}
+            try
+            {                                 
+                using (var db = new EFStoreRepository(connection))
+                {
+                    if (sample)
+                    {
+                        SafeWriteVerbose(string.Format("Running {0}sample scripts", reduced ? "reduced " : ""));
+                        new SqlStoreSampleDatabaseInitializer(reduced).InitializeDatabase(db);
+                    }
+                    else
+                    {
+                        SafeWriteVerbose("Running minimum scripts");
+                        new SetupMigrateDatabaseToLatestVersion<EFStoreRepository, Configuration>().InitializeDatabase(
+                            db);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                SafeThrowError(ex);
+            }
 		}
 	}
 }

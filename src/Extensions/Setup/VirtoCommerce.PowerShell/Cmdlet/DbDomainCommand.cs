@@ -53,6 +53,38 @@ namespace VirtoCommerce.PowerShell.Cmdlet
             SafeWriteError(new ErrorRecord(ex, string.Empty, ErrorCategory.CloseError, null));
         }
 
+        protected void SafeThrowError(ErrorRecord errorRecord)
+        {
+            Debug.Assert(errorRecord != null, "errorRecord cannot be null.");
+
+            // If the exception is an Azure Service Management error, pull the
+            // Azure message out to the front instead of the generic response.
+            // errorRecord = AzureServiceManagementException.WrapExistingError(errorRecord);
+
+            if (CommandRuntime != null)
+            {
+                this.ThrowTerminatingError(errorRecord);
+            }
+            else
+            {
+                Trace.WriteLine(errorRecord);
+            }
+        }
+
+        protected void SafeThrowError(Exception ex)
+        {
+            Debug.Assert(ex != null, "ex cannot be null or empty.");
+
+            if (CommandRuntime != null)
+            {
+                this.ThrowTerminatingError(new ErrorRecord(ex, string.Empty, ErrorCategory.CloseError, null));
+            }
+            else
+            {
+                throw ex;
+            }
+        }
+
         protected void SafeWriteVerbose(string text)
         {
             // If the exception is an Azure Service Management error, pull the
