@@ -161,44 +161,42 @@ namespace VirtoCommerce.Web.Client.Services.Security
                 throw new InvalidOperationException(string.Format("username {0} already taken", userName));
             }
 
-            IDictionary<string, object> values = propertyValues as RouteValueDictionary;
-
-            if (values == null && propertyValues != null)
-            {
-                var propertyValuesAsDictionary = propertyValues as IDictionary<string, object>;
-                values = propertyValuesAsDictionary != null ? new RouteValueDictionary(propertyValuesAsDictionary)
-                                                            : new RouteValueDictionary(propertyValues);
-            }
-
-            account = new Account
-            {
-                UserName = userName
-            };
-
-            if (values != null)
-            {
-                foreach (var prop in account.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                    .Where(prop => values.ContainsKey(prop.Name)))
-                {
-                    prop.SetValue(account, values[prop.Name]);
-                }
-            }
-
-            _securityRepository.Add(account);
-            _securityRepository.UnitOfWork.Commit();
-
             var user = new ApplicationUser
             {
                 UserName = userName,
                 Email = userName,
-                //TODO should change AccountId to string
-                Id = account.AccountId.ToString(CultureInfo.InvariantCulture)
             };
 
 
             var result = await UserManager.CreateAsync(user, password);
             if (result.Succeeded)
             {
+                IDictionary<string, object> values = propertyValues as RouteValueDictionary;
+
+                if (values == null && propertyValues != null)
+                {
+                    var propertyValuesAsDictionary = propertyValues as IDictionary<string, object>;
+                    values = propertyValuesAsDictionary != null ? new RouteValueDictionary(propertyValuesAsDictionary)
+                                                                : new RouteValueDictionary(propertyValues);
+                }
+
+                account = new Account
+                {
+                    UserName = userName,
+                    AccountId = user.Id
+                };
+
+                if (values != null)
+                {
+                    foreach (var prop in account.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(prop => values.ContainsKey(prop.Name)))
+                    {
+                        prop.SetValue(account, values[prop.Name]);
+                    }
+                }
+
+                _securityRepository.Add(account);
+                _securityRepository.UnitOfWork.Commit();
+
                 if (requireConfirmationToken)
                 {
                     return await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
@@ -267,8 +265,7 @@ namespace VirtoCommerce.Web.Client.Services.Security
 
             if (account != null)
             {
-                //Need to connect account with login
-                user.Id = account.AccountId.ToString(CultureInfo.InvariantCulture);
+                user.Id = account.AccountId;
             }
 
             IdentityResult result;

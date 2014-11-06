@@ -51,10 +51,10 @@ namespace VirtoCommerce.Foundation.Security.Model
 		}
 
         #region Navigaton Properties
-        private int _AccountId;
+        private string _AccountId;
 		[Required]
 		[DataMember]
-		public int AccountId
+		public string AccountId
 		{
 			get
 			{

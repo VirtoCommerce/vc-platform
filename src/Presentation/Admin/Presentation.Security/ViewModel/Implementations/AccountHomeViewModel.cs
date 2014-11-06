@@ -114,7 +114,7 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
                         {
 
                             //TODO this property MemberId must be set in service while creating user
-                            originalItem.MemberId = originalItem.AccountId.ToString();
+                            originalItem.MemberId = originalItem.AccountId;
 
                             foreach (var roleAssignments in item.RoleAssignments)
                             {

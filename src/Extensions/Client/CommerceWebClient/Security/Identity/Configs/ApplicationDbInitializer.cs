@@ -42,12 +42,6 @@ namespace VirtoCommerce.Web.Client.Security.Identity.Configs
                     Email = "john_doe@gmail.com",
                     Id = "1"
                 },
-                 new ApplicationUser
-                {
-                    UserName = "test",
-                    Email = "bb_1965@outlook.com",
-                    Id = "2"
-                },
             };
 
             foreach (var account in defaultUsers)
@@ -71,7 +65,7 @@ namespace VirtoCommerce.Web.Client.Security.Identity.Configs
                     {
                         SecurityRepository.Add(new Account
                         {
-                            AccountId = int.Parse(account.Id),
+                            AccountId = account.Id,
                             UserName = account.UserName,
                             AccountState = AccountState.Approved.GetHashCode(),
                             RegisterType = RegisterType.Administrator.GetHashCode(),

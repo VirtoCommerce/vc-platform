@@ -114,7 +114,7 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 			get
 			{
 				return _navigationData ??
-					   (_navigationData = new NavigationItem(GetNavigationKey(OriginalItem.AccountId.ToString()),
+					   (_navigationData = new NavigationItem(GetNavigationKey(OriginalItem.AccountId),
 															NavigationNames.HomeName, NavigationNames.MenuName, this));
 			}
 		}

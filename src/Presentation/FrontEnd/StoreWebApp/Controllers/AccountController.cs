@@ -1108,7 +1108,7 @@ namespace VirtoCommerce.Web.Controllers
 
                 //TODO: there is no guarantee that user is connected by userName
                 if (user != null && appUser == null || user == null && appUser != null ||
-                    user != null && user.AccountId.ToString(CultureInfo.InvariantCulture) != appUser.Id)
+                    user != null && user.AccountId != appUser.Id)
                 {
                     return View("ExternalLoginFailure");
                 }

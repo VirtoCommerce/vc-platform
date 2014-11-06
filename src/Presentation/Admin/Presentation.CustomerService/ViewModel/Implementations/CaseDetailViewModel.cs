@@ -138,8 +138,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 				CollectionFromTagControl.Clear();
 				foreach (var ccc in InnerItem.CaseCc)
 				{
-					int accId = int.Parse(ccc.AccountId);
-					var account = SecurityRepository.Accounts.Where(a => a.AccountId == accId).SingleOrDefault();
+                    var account = SecurityRepository.Accounts.Where(a => a.AccountId == ccc.AccountId).SingleOrDefault();
 					if (account != null)
 					{
 						CollectionFromTagControl.Add(new TagControlItemViewModel(account) { IsEditing = false });
@@ -588,7 +587,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 			InnerItem.AgentName = userName;
 
 
-			var sameUser = AssignedUserList.SingleOrDefault(s => s.AccountId == int.Parse(userId));
+			var sameUser = AssignedUserList.SingleOrDefault(s => s.AccountId == userId);
 			if (sameUser != null)
 			{
 				SelectedAssignedUser = sameUser;
@@ -600,7 +599,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 			var userId = _authContext.CurrentUserId;
 
 			var account =
-				SecurityRepository.Accounts.Where(a => a.AccountId == int.Parse(userId)).SingleOrDefault();
+				SecurityRepository.Accounts.Where(a => a.AccountId == userId).SingleOrDefault();
 			if (account != null)
 			{
 				var accInResultCollection =
@@ -704,7 +703,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 
 			public int GetHashCode(Account obj)
 			{
-				int hashCode = obj.AccountId ^ obj.AccountState ^ obj.UserName.Length;
+				int hashCode = obj.AccountId.GetHashCode() ^ obj.AccountState ^ obj.UserName.Length;
 				return hashCode;
 			}
 		}

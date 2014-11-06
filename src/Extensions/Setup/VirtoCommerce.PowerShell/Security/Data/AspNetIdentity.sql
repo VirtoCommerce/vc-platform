@@ -141,5 +141,5 @@ GO
 
 INSERT INTO [AspNetUsers] ([Id],[Email],[EmailConfirmed],[PasswordHash],[SecurityStamp],[PhoneNumber],[PhoneNumberConfirmed],[TwoFactorEnabled],[LockoutEndDateUtc],[LockoutEnabled],[AccessFailedCount],[UserName]) VALUES (N'1',NULL,1,N'AHQSmKnSLYrzj9vtdDWWnUXojjpmuDW2cHvWloGL9UL3TC9UCfBmbIuR2YCyg4BpNg==',N'',NULL,0,0,NULL,1,0,N'admin');
 GO
-INSERT INTO [Account] ([StoreId],[MemberId],[UserName],[RegisterType],[AccountState],[LastModified],[Created],[Discriminator]) VALUES (NULL,N'1',N'admin',2,1,NULL,NULL,'Account');
+INSERT INTO [Account] ([AccountId],[StoreId],[MemberId],[UserName],[RegisterType],[AccountState],[LastModified],[Created],[Discriminator]) VALUES (N'1',NULL,N'1',N'admin',2,1,NULL,NULL,'Account');
 GO

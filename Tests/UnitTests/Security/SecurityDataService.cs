@@ -49,7 +49,7 @@ namespace CommerceFoundation.UnitTests.SecurityTests
 
             client.Add(item);
             client.UnitOfWork.Commit();
-            int accountId = item.AccountId;
+            string accountId = item.AccountId;
 
             //check
             client = GetClient();
@@ -141,7 +141,7 @@ namespace CommerceFoundation.UnitTests.SecurityTests
 
             client.Add(account);
             client.UnitOfWork.Commit();
-            int accountId = account.AccountId;
+            string accountId = account.AccountId;
             EndActionClearAccount(userName);
 
             client = GetClient();
@@ -180,7 +180,7 @@ namespace CommerceFoundation.UnitTests.SecurityTests
             client.Add(role);
             client.Add(account);
             client.UnitOfWork.Commit();
-            int accountId = account.AccountId;
+            string accountId = account.AccountId;
             string roleId = role.RoleId;
             EndActionClearAccount(userName);
             EndActionClearRole(roleName);
