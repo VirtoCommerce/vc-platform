@@ -1,0 +1,19 @@
+﻿@section scripts
+{
+    <script>
+        $(function () {
+            $('.main-content').on("mousewheel DOMMouseScroll", function (e) {
+                var delta = parseInt(e.originalEvent.wheelDelta || -e.originalEvent.detail);
+                if (Math.abs(delta) >= 120) {
+                    delta = delta / 40;
+                }
+                this.scrollLeft -= (delta * 30);
+                e.preventDefault();
+            });
+        });
+
+    </script>
+}
+
+<ui-view></ui-view>
+

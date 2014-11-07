@@ -1,0 +1,55 @@
+﻿<div style="width:250px">
+    <div class="inner">
+        <div class="block">
+            <div class="row">
+
+                <h3>Select files</h3>
+
+                <div ng-show="uploader.isHTML5">
+                    <!-- 3. ng-file-over | ng-file-over="className" -->
+                    <div class="well my-drop-zone" uploader="uploader" nv-file-drop nv-file-over>
+                        Drag and drop files here
+                    </div>
+                </div>
+
+                <!-- 2. ng-file-select | ng-file-select="options" -->
+                <input type="file" multiple uploader="uploader" nv-file-select>
+
+
+                <div class="col-md-12" style="margin-bottom: 40px">
+                    <div ng-show="uploader.isUploading">
+                        <p>
+                            Progress:
+                            <div class="progress" style="">
+                                <div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
+                            </div>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-12" style="margin-bottom: 40px">
+                    <ul class="image-grid">
+                        <li class="asset" ng-repeat="data in item.assets" ng-include="'assetTemplate.html'"></li>
+                    </ul>
+                </div>
+            </div>
+
+            <script type="text/ng-template" id="assetTemplate.html">
+                <div class="asset-container" ng-class="{selected:data.selected}" ng-click="toggleAssetSelect($event, data)" context-menu="toggleAssetSelect($event, data)" data-target="itemAssetMenu{{$index}}">
+                    <b>{{data.name}}</b>
+                    <p><span>{{data.size}}</span></p>
+                    <a ng-href="{{data.url}}" target="_blank">{{data.url}}</a>
+                </div>
+                <div id="itemAssetMenu{{$index}}" role="menu" class="dropdown-menu context-menu">
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">
+                        <li>
+                            <a style="cursor: pointer;" role="menuitem" tabindex="1" ng-click="removeAction([data])">Remove</a>
+                        </li>
+                        <li>
+                            <a style="cursor: pointer;" role="menuitem" tabindex="1" ng-click="copyUrl(data)">Copy link</a>
+                        </li>
+                    </ul>
+                </div>
+            </script>
+        </div>
+    </div>
+</div>

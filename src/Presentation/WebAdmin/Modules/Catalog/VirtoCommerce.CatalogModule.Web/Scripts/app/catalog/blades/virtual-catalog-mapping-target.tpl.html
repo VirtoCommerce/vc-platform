@@ -1,0 +1,124 @@
+﻿<div class="content">
+    <div class="inner">
+        <table>
+            <colgroup>
+                <col style="width: 49%;">
+                <col style="width: 2%;">
+                <col style="width: 49%;">
+            </colgroup>
+            <tr>
+                <td style="vertical-align: top;">
+                    <div class="input-group">
+                        <input type="text" ng-model="filter.searchKeyword" class="form-control" placeholder="Search keyword..." ui-keyup="{'enter':'doEnterKeyword($event)'}"
+                               typeahead-template-url="customTypeaheadTemplate.html"
+                               typeahead="item.code as item.name for item in getItemsAutocomplete($viewValue)"
+                               typeahead-min-length="3"
+                               typeahead-wait-ms="500">
+                        <span class="glyphicon glyphicon-remove inputClear" ng-click="filter.searchKeyword=''"></span>
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" ng-click="doEnterKeyword($event)">ok</button>
+                        </span>
+                    </div>
+                    <div class="categories-tree">
+                        <ul>
+                            <li ng-repeat="data in tree" ng-include="'tree_catalog_renderer.html'" class="dropdown-switch"></li>
+                        </ul>
+                    </div>
+
+                    <script type="text/ng-template" id="tree_catalog_renderer.html">
+                        <div ng-click='selectNode(data)' class="child" ng-class="{'open': data.checked, 'current': data.id == filter.catalogId && filter.categoryId == undefined}">
+                            <i class="glyphicon" ng-class="{'glyphicon-folder-open': data.checked, 'glyphicon-folder-close' : !data.checked}"></i>
+                            <span class="name" context-menu data-target="mapping_target_catalog_menu_template{{data.id}}">{{data.name}}</span>
+                        </div>
+                        <ul class="dropdown" style="display:block" ng-show="data.checked">
+                            <li ng-repeat="data in data.children" ng-include="'tree_category_renderer.html'" />
+                        </ul>
+                        <div id="mapping_target_catalog_menu_template{{data.id}}" class="context-menu">
+                            <ul role="menu" class="dropdown-menu">
+                                <li ng-click='addCategory(data.id, null)'>
+                                    <a href="">
+                                        <i class="glyphicon glyphicon-plus"></i> New category
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </script>
+
+                    <script type="text/ng-template" id="tree_category_renderer.html">
+                        <div ng-click='selectNode(data)' class="child" ng-class="{'open': data.checked, 'current': data.id == filter.categoryId}">
+                            <i class="glyphicon" ng-class="(data.type=='category') ? (data.checked ? 'glyphicon-folder-open': 'glyphicon-folder-close') : 'glyphicon-link'"></i>
+                            <span class="name" context-menu data-target="mapping_target_cate_menu_template{{data.id}}" ng-hide="edit.editingEntityId === data.id">{{data.name}}</span>
+                            <input type="text" ng-model="edit.model" ng-show="edit.editingEntityId === data.id" focus-on-true="edit.editingEntityId === data.id" ui-keyup="{esc: 'edit.reset()', 'enter':'edit.confirm()'}" style="color:black;width: 80%;" onfocus="this.select();" />
+                        </div>
+                        <ul class="dropdown" style="display:block" ng-show="data.checked">
+                            <li ng-repeat="data in data.children" ng-include="'tree_category_renderer.html'" />
+                        </ul>
+                        <div id="mapping_target_cate_menu_template{{data.id}}" class="context-menu">
+                            <ul role="menu" class="dropdown-menu">
+                                <li ng-click='addCategory(data.catalogId,data.id)' ng-if="data.type==='category'">
+                                    <a href="">
+                                        <i class="glyphicon glyphicon-plus"></i> New subcategory
+                                    </a>
+                                </li>
+                                <li ng-click='renameCategory(data)' ng-if="data.type==='category'">
+                                    <a href="">
+                                        <i class="glyphicon glyphicon-font"></i> Rename
+                                    </a>
+                                </li>
+                                <li ng-click='removeCategory(data)' ng-if="data.type==='category'">
+                                    <a href="">
+                                        <i class="glyphicon glyphicon-remove"></i> Remove
+                                    </a>
+                                </li>
+                                <li ng-click='unmapNode(data)' ng-if="data.type==='linkedCategory'">
+                                    <a href="">
+                                        <i class="glyphicon glyphicon-remove"></i> Unmap
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </script>
+
+                    <script type="text/ng-template" id="customTypeaheadTemplate.html">
+                        <a bind-html-unsafe="match.label | typeaheadHighlight:query" tabindex="-1" class="text-ellipsis" style="max-width:533px"></a>
+                    </script>
+
+                    <div class="underline">Mapped categories</div>
+                    <div ng-if="blade.mappedNodes.length == 0" class="spacer">Nothing mapped</div>
+                    <div class="categories-tree">
+                        <ul>
+                            <li ng-repeat="data in blade.mappedNodes" class="dropdown-switch">
+                                <div ng-click='blade.selectedMapping = data' class="child open" ng-class="{'current': data == blade.selectedMapping}">
+                                    <i class="glyphicon glyphicon-folder-open"></i>
+                                    <b class="name">{{data.name}}</b>
+                                </div>
+                                <ul class="dropdown" style="display:block">
+                                    <li ng-repeat="data in data.children">
+                                        <div ng-click='blade.selectedMapping = data' class="child open" ng-class="{'current': data == blade.selectedMapping}">
+                                            <span class="name">{{data.path}}</span>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+                <td />
+                <td style="vertical-align: top;">
+                    <span ng-include="'pagerTemplate.html'"></span>
+                    <table class="table">
+                        <tbody>
+                            <tr ng-repeat="item in items">
+                                <td><input type="checkbox" ng-model="item.selected" /></td>
+                                <td><img ng-src="{{item.imgSrc}}" height="42" width="42" /></td>
+                                <td ng-repeat="col in [item.id, item.code] track by $index">
+                                    <a class="btn-link" ng-click='selectItem(item)' title="{{col}}">{{col}}</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

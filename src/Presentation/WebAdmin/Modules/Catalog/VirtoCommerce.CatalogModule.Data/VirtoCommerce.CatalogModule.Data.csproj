@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{B8C758D7-822F-40D8-B28C-EF21C873AF49}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>VirtoCommerce.CatalogModule.Data</RootNamespace>
+    <AssemblyName>VirtoCommerce.CatalogModule.Data</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\..\..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="VirtoCommerce.Foundation">
+      <HintPath>..\..\..\Shared\VirtoCommerce\VirtoCommerce.Foundation.dll</HintPath>
+    </Reference>
+    <Reference Include="VirtoCommerce.Foundation.Data">
+      <HintPath>..\..\..\Shared\VirtoCommerce\VirtoCommerce.Foundation.Data.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Converters\AssetConverter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Converters\CatalogConverter.cs" />
+    <Compile Include="Converters\CatalogLanguageConverter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Converters\CategoryConverter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Converters\ItemConverter.cs" />
+    <Compile Include="Converters\PropertyAttributeConverter.cs" />
+    <Compile Include="Converters\PropertyConverter.cs" />
+    <Compile Include="Converters\PropertyDictionaryValueConverter.cs" />
+    <Compile Include="Converters\PropertyValueConverter.cs" />
+    <Compile Include="Converters\PropertyValueTypeConverter.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\FoundationCatalogRepositoryImpl.cs" />
+    <Compile Include="Services\CatalogSearchServiceImpl.cs" />
+    <Compile Include="Services\CategoryServiceImpl.cs" />
+    <Compile Include="Services\ItemServiceImpl.cs" />
+    <Compile Include="Services\CatalogServiceImpl.cs" />
+    <Compile Include="Services\ModuleServiceBase.cs" />
+    <Compile Include="Services\PropertyServiceImpl.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\VirtoCommerce.Framework.Core\VirtoCommerce.Framework.Core.csproj">
+      <Project>{a3b74d5f-2195-48ed-a46b-d026ffc37c4d}</Project>
+      <Name>VirtoCommerce.Framework.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\VirtoCommerce.Framework.Data\VirtoCommerce.Framework.Data.csproj">
+      <Project>{6e789a4b-4be3-4ca4-963a-481a4e06d9c0}</Project>
+      <Name>VirtoCommerce.Framework.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VirtoCommerce.CatalogModule\VirtoCommerce.CatalogModule.csproj">
+      <Project>{f3063592-5fa7-4ce1-a89d-9579aef64db6}</Project>
+      <Name>VirtoCommerce.CatalogModule</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

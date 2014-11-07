@@ -1,0 +1,25 @@
+﻿<div style="width: 300px;" ng-if="currentBlade.manageDefaultLanguage == true">
+    <p class="subheader">Select default language</p>
+    <ul class="list-checkboxes">
+        <li ng-repeat="data in currentBlade.availableLanguages | filter: {catalogId: '!!'}">
+            <label>
+                <input type="checkbox" name="isDefault" ng-checked="data.isDefault" ng-click="setAsDefault(data)">
+                <span class="switch"></span>
+                {{data.displayName}}
+            </label>
+        </li>
+    </ul>
+</div>
+
+<div style="width: 300px;" ng-if="currentBlade.manageDefaultLanguage == false">
+    <p class="subheader">Select languages</p>
+    <ul class="list-checkboxes">
+        <li ng-repeat="data in currentBlade.availableLanguages" ng-class="{disabled:data.isDefault}">
+            <label>
+                <input type="checkbox" name="available" ng-checked="data.catalogId != undefined" ng-click="selectLanguage(data)">
+                <span class="switch"></span>
+                {{data.displayName}}
+            </label>
+        </li>
+    </ul>
+</div>

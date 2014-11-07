@@ -1,0 +1,17 @@
+﻿ <div class="user-id" ng-click="showMenu()" ng-class="{'opened':isMenuVisible}">
+    <div class="user-id-image">
+        <span class="icon-user no-display1"></span>
+        <!--<img class="no-display" src="/Content/themes/metro/images/AvatarMenu_defaultAvatarSmall.png">-->
+    </div>
+    <div class="user-id-name">
+        <span class="first-name">{{fullName}}</span>
+        <span class="last-name">{{userLogin}}</span>
+    </div>
+    <div class="dropdown">
+        <ul>
+            <li class="sign-out">
+                <a ng-click="logout()" href="#">Sign out</a>
+            </li>
+        </ul>
+    </div>
+</div>

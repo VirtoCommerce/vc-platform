@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html lang="en" ng-app="platformWebApp">
+<head>
+    <meta charset="utf-8" />
+    <title>Virto Commerce @ViewBag.Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+
+
+    @Styles.Render("~/Content/css")
+    @Styles.Render("~/Content/themes/base/css")
+    @Styles.Render("~/Content/themes/metro/css")
+    @Styles.Render("~/Content/modules")
+    @*<script src="//cdnjs.cloudflare.com/ajax/libs/es5-shim/3.4.0/es5-shim.min.js"></script>*@
+
+    <meta name="viewport" content="width=device-width" />
+    <base href="~/" />
+</head>
+<body class="metro" ng-controller="appCtrl">
+    @RenderBody()
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/scripts/angular")
+    @Scripts.Render("~/bundles/angularui")
+    @Scripts.Render("~/bundles/underscore")
+    @Scripts.Render("~/bundles/app")
+    @Scripts.Render("~/bundles/angularmisc")
+    @Scripts.Render("~/bundles/modules")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

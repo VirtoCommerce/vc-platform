@@ -1,0 +1,53 @@
+﻿<div style="width: 400px;">
+    <div class="inner">
+        <div class="block">
+            <div class="row">
+
+                <h3>Select files</h3>
+
+                <div ng-show="uploader.isHTML5">
+                    <!-- 3. ng-file-over | ng-file-over="className" -->
+                    <div class="well my-drop-zone" uploader="uploader" nv-file-drop nv-file-over>
+                        Drag and drop images here
+                    </div>
+                </div>
+
+                <!-- 2. ng-file-select | ng-file-select="options" -->
+                <input type="file" multiple uploader="uploader" nv-file-select>
+
+
+                <div class="col-md-12" style="margin-bottom: 40px">
+
+                    <div ng-show="uploader.isUploading">
+                        <p>
+                            Progress:
+                            <div class="progress" style="">
+                                <div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
+                            </div>
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-12" style="margin-bottom: 40px">
+                    <ul class="image-grid">
+                        <li class="image" ng-repeat="image in item.images" ng-include="'imageTemplate.html'">
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <script type="text/ng-template" id="imageTemplate.html">
+                <div class="image-container" ng-class="{selected:image.selected}" ng-click="toggleImageSelect($event, image)" context-menu="toggleImageSelect($event, image)" data-target="itemImageMenu{{$index}}">
+                    <img ng-src="{{image.url ? image.url : ''}}" />
+                </div>
+                <div id="itemImageMenu{{$index}}" role="menu" class="dropdown-menu context-menu">
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">
+                        <li>
+                            <a style="cursor: pointer;" role="menuitem" tabindex="1" ng-click="removeAction([image])">Remove</a>
+                        </li>
+                    </ul>
+                </div>
+            </script>
+        </div>
+    </div>
+</div>

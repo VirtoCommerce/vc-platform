@@ -1,0 +1,27 @@
+﻿<div class="tile-block mini" ng-click="openBlade()">
+    <div class="tile">
+        <p class="title">Assets</p>
+        <p class="text"><span class="count">{{currentBlade.item.assets.length}}</span> count</p>
+    </div>
+</div>
+
+<!--<div class="tile-block">
+    <p class="tile-title">Assets</p>
+    <div class="tile" ng-click="openBlade()">
+        <ul class="list">
+            <li ng-repeat="data in currentBlade.item.assets | limitTo:5">
+                <b>{{data.name}}</b>
+                <span>{{data.size}}</span>
+             
+            </li>
+        </ul>
+
+        <div ng-if="currentBlade.item.assets.length > 5">
+            <span>{{currentBlade.item.assets.length-5}} assets more</span>
+        </div>
+
+        <p ng-if="currentBlade.item.assets.length == 0">
+            No item assets
+        </p>
+    </div>
+</div>-->

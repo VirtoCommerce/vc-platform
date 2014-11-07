@@ -1,0 +1,64 @@
+﻿<div style="width: 350px;">
+    <form name="pdForm">
+        <label for="">Property name</label>
+        <div ng-init="setForm(pdForm);">
+            <input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" />
+        </div>
+        <label for="">Display name</label>
+        
+        <div ng-repeat="data in blade.origEntity.catalog.languages">
+            <div>
+                <input ng-model="nothing.to.bind" class="form-control" />
+            </div>
+            <span class="title">{{data.displayName}}</span>
+        </div>
+    </form>
+
+    <ul class="list-extended">
+        <li ng-class="{'active': currentChild === 'attr'}" ng-click='openChild("attr")'>
+            <span class="title">Attributes</span>
+            <span class="sub-title">Manage property attributes</span>
+        </li>
+        <li ng-class="{'active': currentChild === 'valType'}" ng-click='openChild("valType")'>
+            <span class="title">Value Type</span>
+            <span class="sub-title">{{blade.currentEntity.valueType | propertydatatype}}</span>
+        </li>
+        <li ng-class="{'active': currentChild === 'appliesto'}" ng-click='openChild("appliesto")'>
+            <span class="title">Applies to</span>
+            <span class="sub-title">{{blade.currentEntity.type | propertytype}}</span>
+        </li>
+        <li ng-class="{'active': currentChild === 'dict', 'disabled': !blade.currentEntity.dictionary }" ng-click='openChild("dict")'>
+            <span class="title">Dictionary</span>
+            <span class="sub-title">Manage dictionary</span>
+        </li>
+    </ul>
+
+    <div class="input-control checkbox default-style" data-role="input-control">
+        <label>
+            <input type="checkbox" ng-model="blade.currentEntity.required">
+            <span class="check"></span>
+            Required
+        </label>
+    </div>
+    <div class="input-control checkbox default-style block" data-role="input-control">
+        <label>
+            <input type="checkbox" ng-model="blade.currentEntity.dictionary">
+            <span class="check"></span>
+            Dictionary
+        </label>
+    </div>
+    <div class="input-control checkbox default-style" data-role="input-control">
+        <label>
+            <input type="checkbox" ng-model="blade.currentEntity.multivalue">
+            <span class="check"></span>
+            Multivalue
+        </label>
+    </div>
+    <div class="input-control checkbox default-style block" data-role="input-control">
+        <label>
+            <input type="checkbox" ng-model="blade.currentEntity.multilanguage">
+            <span class="check"></span>
+            Multi language
+        </label>
+    </div>
+</div>

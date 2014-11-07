@@ -1,0 +1,33 @@
+﻿<div class="window-overlay">
+    <form class="login" novalidate ng-submit="ok()">
+        <div class="window flat">
+            <div class="caption">
+                <div class="title">Sign in to Virto Commerce Manager</div>
+            </div>
+            <div class="content">
+                <label for="">Login</label>
+                <div data-role="input-control" class="input-control text">
+                    <input type="text" name="login" ng-model="user.email" required autofocus va-autofill>
+                    <button class="btn-clear" tabindex="-1" type="button"></button>
+                </div>
+                <label for="">Password</label>
+                <div data-role="input-control" class="input-control text">
+                    <input name="password" type="password" ng-model="user.password" required va-autofill>
+                    <button class="btn-reveal" tabindex="-1" type="button"></button>
+                </div>
+                <div class="input-control checkbox block">
+                    <label>
+                        <input type="checkbox" name="c1" checked="" ng-model="user.remember">
+                        <span class="check"></span>Remember me
+                    </label>
+                </div>
+                <label class="fg-red" ng-show="authError">
+                    {{authError}}
+                </label>
+                <div class="form-actions text-right">
+                    <button class="button primary" type="submit" ng-disabled='form.$invalid'>Log in</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

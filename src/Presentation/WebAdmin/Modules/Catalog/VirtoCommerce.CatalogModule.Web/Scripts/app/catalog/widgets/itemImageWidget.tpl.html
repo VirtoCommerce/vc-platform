@@ -1,0 +1,17 @@
+﻿<div class="tile-block">
+    <div class="tile" ng-click="openItemImageBlade()">
+        <p ng-if="currentBlade.item.images.length == 0">
+            No Images
+        </p>
+        <div class="images-list">
+            <div class="image main"
+                 ng-repeat="image in currentBlade.item.images | filter: { group: 'primaryimage' } | limitTo : 1">
+                <img ng-src="{{image.url ? image.url : ''}}" />
+            </div>
+            <div class="image"
+                 ng-repeat="image in currentBlade.item.images | filter: { group: '!primaryimage' } | limitTo : 11">
+                <img ng-src="{{image.url ? image.url : ''}}" />
+            </div>
+        </div>
+    </div>
+</div>

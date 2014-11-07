@@ -1,0 +1,2 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<module moduleName="SecurityModule" assemblyFile="VirtoCommerce.SecurityModule.Web.dll" moduleType="VirtoCommerce.SecurityModule.Web.Module, VirtoCommerce.SecurityModule.Web" />
