@@ -7,6 +7,17 @@ namespace VirtoCommerce.Foundation.Data.Security.Migrations
     {
         public override void Up()
         {
+            //Need to remove webpages_Membership first because AccountId is referenced
+            Sql(@"
+IF OBJECT_ID('dbo.webpages_OAuthMembership', 'U') IS NOT NULL
+    DROP TABLE [dbo].[webpages_OAuthMembership]
+IF OBJECT_ID('dbo.webpages_UsersInRoles', 'U') IS NOT NULL
+    DROP TABLE [dbo].[webpages_UsersInRoles]
+IF OBJECT_ID('dbo.webpages_Roles', 'U') IS NOT NULL
+    DROP TABLE [dbo].[webpages_Roles]
+IF OBJECT_ID('dbo.webpages_Membership', 'U') IS NOT NULL
+    DROP TABLE [dbo].[webpages_Membership]");
+
             CreateTable(
                 "dbo.AccountTemp",
                 c => new
@@ -34,25 +45,6 @@ namespace VirtoCommerce.Foundation.Data.Security.Migrations
 
             CreateIndex("dbo.RoleAssignment", "AccountId");
             AddForeignKey("dbo.RoleAssignment", "AccountId", "dbo.Account", "AccountId", cascadeDelete: true);
-
-            /* OLD
-            DropForeignKey("dbo.RoleAssignment", "AccountId", "dbo.Account");
-            DropIndex("dbo.RoleAssignment", new[] { "AccountId" });
-            DropPrimaryKey("dbo.Account");
-            AlterColumn("dbo.RoleAssignment", "AccountId", c => c.String(nullable: false, maxLength: 128));
-            AddColumn("dbo.Account", "AccountIdTmp", c => c.String(nullable: true, maxLength: 128));
-
-            Sql(@"UPDATE dbo.Account 
-                SET AccountIdTmp = AccountId
-                FROM dbo.Account ");
-
-            DropColumn("dbo.Account", "AccountId");
-            RenameColumn("dbo.Account", "AccountIdTmp", "AccountId");
-            AlterColumn("dbo.Account", "AccountId", c => c.String(nullable: false, maxLength: 128));
-            AddPrimaryKey("dbo.Account", "AccountId");
-            CreateIndex("dbo.RoleAssignment", "AccountId");
-            AddForeignKey("dbo.RoleAssignment", "AccountId", "dbo.Account", "AccountId", cascadeDelete: true);
-             * */
         }
 
         public override void Down()
