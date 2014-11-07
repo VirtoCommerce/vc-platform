@@ -64,8 +64,7 @@ namespace VirtoCommerce.PowerShell.SearchSetup.Cmdlet
             try
             {
                 // backup existing LocatorProvider
-                if (ServiceLocator.IsLocationProviderSet)
-                    serviceLocatorBackup = ServiceLocator.Current;
+                if (ServiceLocator.IsLocationProviderSet) serviceLocatorBackup = ServiceLocator.Current;
 
                 var controller = GetLocalSearchController(searchConnection, dbConnectionString);
 
@@ -77,6 +76,10 @@ namespace VirtoCommerce.PowerShell.SearchSetup.Cmdlet
 
                 // Multi threaded processing
                 //IndexProcess(searchConnection, dbConnectionString, documentType);
+            }
+            catch (Exception ex)
+            {
+                SafeThrowError(ex);
             }
             finally
             {
