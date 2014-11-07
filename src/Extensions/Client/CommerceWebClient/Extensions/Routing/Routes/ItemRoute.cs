@@ -63,7 +63,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
                 return null;
 
             var itemId = SettingsHelper.SeoDecode(itemEncoded, SeoUrlKeywordTypes.Item, 
-                values.ContainsKey(Constants.Language) ? values[Constants.Language] as string : null);
+                values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : null);
 
             // try getting outline from context
             var outline = HttpContext.Current.Items["browsingoutline_" + itemId.ToLower()] as string;

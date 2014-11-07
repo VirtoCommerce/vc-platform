@@ -6,14 +6,12 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Security;
-using Microsoft.Owin.Security;
 using VirtoCommerce.Client;
 using VirtoCommerce.Client.Extensions;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Foundation.Stores.Model;
 using VirtoCommerce.Web.Client.Helpers;
-using VirtoCommerce.Web.Client.Security.Identity.Configs;
 
 namespace VirtoCommerce.Web.Client.Modules
 {
