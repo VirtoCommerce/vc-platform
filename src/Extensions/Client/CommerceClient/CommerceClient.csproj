@@ -101,7 +101,6 @@
     <Compile Include="Orders\StateMachines\ShipmentStateMachineImpl.cs" />
     <Compile Include="Orders\StateMachines\StateMachineBase.cs" />
     <Compile Include="Orders\StateMachines\StateTransitionDef.cs" />
-    <Compile Include="Security\IWebSecurity.cs" />
     <Compile Include="UserClient.cs" />
     <Compile Include="DynamicContentClient.cs" />
     <Compile Include="PromotionClient.cs" />

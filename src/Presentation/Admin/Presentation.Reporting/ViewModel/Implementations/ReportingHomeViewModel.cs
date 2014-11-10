@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Controls;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
+using VirtoCommerce.Foundation;
 using VirtoCommerce.Foundation.Reporting.Services;
 using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.ManagementClient.Asset.ViewModel.Interfaces;
@@ -89,7 +90,7 @@ namespace VirtoCommerce.ManagementClient.Reporting.ViewModel.Implementations
         {
             var assetVM = _assetVmFactory.GetViewModelInstance();
             assetVM.AssetPickMode = false;
-            assetVM.RootItemId = ReportingService.RootFolder;
+            assetVM.RootItemId = Constants.ReportsRootFolder;
 
             CommonConfirmRequest.Raise(
             new ConditionalConfirmation(assetVM.Validate) { Content = assetVM, Title = "Manage reports assets" },

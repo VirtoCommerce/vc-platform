@@ -107,9 +107,6 @@
       <HintPath>..\..\..\packages\Unity.3.5.1404.0\lib\net45\Microsoft.Practices.Unity.RegistrationByConvention.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="Microsoft.WindowsAzure.Configuration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Microsoft.WindowsAzure.ConfigurationManager.2.0.3\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
-    </Reference>
     <Reference Include="Omu.ValueInjecter, Version=2.3.3.0, Culture=neutral, PublicKeyToken=c7694541b0ac80e4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\ValueInjecter.2.3.3\lib\net35\Omu.ValueInjecter.dll</HintPath>
@@ -375,7 +372,6 @@
     <Compile Include="Reporting\Model\ReportInfo.cs" />
     <Compile Include="Reporting\ReportingConfiguration.cs" />
     <Compile Include="Reporting\Services\IReportingService.cs" />
-    <Compile Include="Reporting\Services\ReportingService.cs" />
     <Compile Include="Search\IndexDataType.cs" />
     <Compile Include="Search\ISearchConnection.cs" />
     <Compile Include="Search\ISearchFilterService.cs" />
@@ -781,7 +777,9 @@
     <None Include="Marketing\Model\MarketingClassDiagram2.cd" />
     <None Include="Orders\Model\OrderClassDiagram.cd" />
     <None Include="Orders\OrderClassDiagram.cd" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Search\Schemas\Filters.cd" />
     <None Include="Search\Schemas\Filters.xsd">
       <SubType>Designer</SubType>
