@@ -69,6 +69,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core">
+      <HintPath>..\..\..\packages\Microsoft.AspNet.Identity.Core.2.1.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework">
+      <HintPath>..\..\..\packages\Microsoft.AspNet.Identity.EntityFramework.2.1.0\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Data.Edm, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Microsoft.Data.Edm.5.6.0\lib\net40\Microsoft.Data.Edm.dll</HintPath>
     </Reference>
@@ -228,6 +234,8 @@
     <Compile Include="Orders\Migrations\201410241106023_ShipmentOptions.Designer.cs">
       <DependentUpon>201410241106023_ShipmentOptions.cs</DependentUpon>
     </Compile>
+    <Compile Include="Security\Identity\SecurityDbContext.cs" />
+    <Compile Include="Security\Identity\ApplicationUser.cs" />
     <Compile Include="Security\Migrations\201411061448001_AccountIdToString.cs" />
     <Compile Include="Security\Migrations\201411061448001_AccountIdToString.Designer.cs">
       <DependentUpon>201411061448001_AccountIdToString.cs</DependentUpon>
@@ -288,7 +296,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

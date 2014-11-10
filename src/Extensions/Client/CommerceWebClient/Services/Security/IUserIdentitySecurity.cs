@@ -8,37 +8,11 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using VirtoCommerce.Web.Client.Security.Identity.Configs;
-using VirtoCommerce.Web.Client.Security.Identity.Model;
 
 namespace VirtoCommerce.Web.Client.Services.Security
 {
     public interface IUserIdentitySecurity
     {
-
-        /// <summary>
-        /// Gets the sign in manager.
-        /// </summary>
-        /// <value>
-        /// The sign in manager.
-        /// </value>
-        ApplicationSignInManager SignInManager { get; }
-
-        /// <summary>
-        /// Gets the user manager.
-        /// </summary>
-        /// <value>
-        /// The user manager.
-        /// </value>
-        ApplicationUserManager UserManager { get; }
-
-        /// <summary>
-        /// Gets the authentication manager.
-        /// </summary>
-        /// <value>
-        /// The authentication manager.
-        /// </value>
-        IAuthenticationManager AuthenticationManager { get; }
-
         /// <summary>
         /// Logins the specified user name asynchronously.
         /// </summary>

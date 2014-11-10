@@ -4,17 +4,16 @@ using Microsoft.Owin.Security;
 using Microsoft.Practices.Unity;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Routing;
+using VirtoCommerce.Foundation.Data.Security.Identity;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.Foundation.Security.Repositories;
 using VirtoCommerce.Web.Client.Security.Identity.Configs;
-using VirtoCommerce.Web.Client.Security.Identity.Model;
 
 namespace VirtoCommerce.Web.Client.Services.Security
 {
@@ -31,48 +30,37 @@ namespace VirtoCommerce.Web.Client.Services.Security
             _securityRepository = securityRepository;
         }
 
-        public IdentityUserSecurity(ApplicationUserManager userManager,
-            ApplicationSignInManager signInManager,
-            IAuthenticationManager authenticationManager,
-            ISecurityRepository securityRepository)
-            : this(securityRepository)
-        {
-            AuthenticationManager = authenticationManager;
-            UserManager = userManager;
-            SignInManager = signInManager;
-        }
-
-        public ApplicationSignInManager SignInManager
+        protected ApplicationSignInManager SignInManager
         {
             get
             {
                 return _signInManager ?? (_signInManager = HttpContext.Current.GetOwinContext().Get<ApplicationSignInManager>());
             }
-            private set
+            set
             {
                 _signInManager = value;
             }
         }
 
-        public ApplicationUserManager UserManager
+        protected ApplicationUserManager UserManager
         {
             get
             {
                 return _userManager ?? (_userManager = HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>());
             }
-            private set
+            set
             {
                 _userManager = value;
             }
         }
 
-        public IAuthenticationManager AuthenticationManager
+        protected IAuthenticationManager AuthenticationManager
         {
             get
             {
                 return _authenticationManager ?? (_authenticationManager = HttpContext.Current.GetOwinContext().Authentication);
             }
-            private set
+            set
             {
                 _authenticationManager = value;
             }

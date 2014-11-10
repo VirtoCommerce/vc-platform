@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
@@ -8,7 +7,6 @@ using Omu.ValueInjecter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Transactions;
 using System.Web.Mvc;
 using VirtoCommerce.Client;
 using VirtoCommerce.Client.Globalization;
@@ -18,6 +16,7 @@ using VirtoCommerce.Foundation.Orders.Model;
 using VirtoCommerce.Foundation.Orders.Services;
 using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.Web.Client.Helpers;
+using VirtoCommerce.Web.Client.Security.Identity.Configs;
 using VirtoCommerce.Web.Client.Services.Security;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Virto.Helpers;
@@ -61,6 +60,10 @@ namespace VirtoCommerce.Web.Controllers
         /// </summary>
         private readonly IdentityUserSecurity _identitySecurity;
 
+        private IAuthenticationManager _authenticationManager;
+        private ApplicationSignInManager _signInManager;
+        private ApplicationUserManager _userManager;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AccountController" /> class.
         /// </summary>
@@ -86,6 +89,42 @@ namespace VirtoCommerce.Web.Controllers
             _settingsClient = settingsClient;
             _identitySecurity = identitySecurity;
             _orderService = orderService;
+        }
+
+        public ApplicationSignInManager SignInManager
+        {
+            get
+            {
+                return _signInManager ?? (_signInManager = System.Web.HttpContext.Current.GetOwinContext().Get<ApplicationSignInManager>());
+            }
+            private set
+            {
+                _signInManager = value;
+            }
+        }
+
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? (_userManager = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>());
+            }
+            private set
+            {
+                _userManager = value;
+            }
+        }
+
+        public IAuthenticationManager AuthenticationManager
+        {
+            get
+            {
+                return _authenticationManager ?? (_authenticationManager = System.Web.HttpContext.Current.GetOwinContext().Authentication);
+            }
+            private set
+            {
+                _authenticationManager = value;
+            }
         }
 
         #region Authentication Methods
@@ -930,19 +969,19 @@ namespace VirtoCommerce.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Disassociate(string provider, string providerUserId)
         {
-            var ownerAccount = await _identitySecurity.UserManager.FindByIdAsync(providerUserId);
+            var ownerAccount = await UserManager.FindByIdAsync(providerUserId);
 
             // Only disassociate the account if the currently logged in user is the owner
             if (ownerAccount != null && ownerAccount.UserName == UserHelper.CustomerSession.Username)
             {
-                var hasLocalAccount = await _identitySecurity.UserManager.HasPasswordAsync(ownerAccount.Id);
-                var logins = await _identitySecurity.UserManager.GetLoginsAsync(ownerAccount.Id);
+                var hasLocalAccount = await UserManager.HasPasswordAsync(ownerAccount.Id);
+                var logins = await UserManager.GetLoginsAsync(ownerAccount.Id);
                 if (hasLocalAccount || logins.Count > 1)
                 {
                     var removeLogin = logins.FirstOrDefault(x => x.ProviderKey == provider);
                     if (removeLogin != null)
                     {
-                        await _identitySecurity.UserManager.RemoveLoginAsync(ownerAccount.Id, removeLogin);
+                        await UserManager.RemoveLoginAsync(ownerAccount.Id, removeLogin);
                     }
 
                 }
@@ -954,12 +993,12 @@ namespace VirtoCommerce.Web.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> SendCode(string returnUrl)
         {
-            var userId = await _identitySecurity.SignInManager.GetVerifiedUserIdAsync();
+            var userId = await SignInManager.GetVerifiedUserIdAsync();
             if (userId == null)
             {
                 return View("Error");
             }
-            var userFactors = await _identitySecurity.UserManager.GetValidTwoFactorProvidersAsync(userId);
+            var userFactors = await UserManager.GetValidTwoFactorProvidersAsync(userId);
             var factorOptions = userFactors.Select(purpose => new SelectListItem { Text = purpose, Value = purpose }).ToList();
             return View(new SendCodeViewModel { Providers = factorOptions, ReturnUrl = returnUrl });
         }
@@ -977,7 +1016,7 @@ namespace VirtoCommerce.Web.Controllers
             }
 
             // Generate the token and send it
-            if (!await _identitySecurity.SignInManager.SendTwoFactorCodeAsync(model.SelectedProvider))
+            if (!await SignInManager.SendTwoFactorCodeAsync(model.SelectedProvider))
             {
                 return View("Error");
             }
@@ -989,14 +1028,14 @@ namespace VirtoCommerce.Web.Controllers
         public async Task<ActionResult> VerifyCode(string provider, string returnUrl)
         {
             // Require that the user has already logged in via username/password or external login
-            if (!await _identitySecurity.SignInManager.HasBeenVerifiedAsync())
+            if (!await SignInManager.HasBeenVerifiedAsync())
             {
                 return View("Error");
             }
-            var user = await _identitySecurity.UserManager.FindByIdAsync(await _identitySecurity.SignInManager.GetVerifiedUserIdAsync());
+            var user = await UserManager.FindByIdAsync(await SignInManager.GetVerifiedUserIdAsync());
             if (user != null)
             {
-                ViewBag.Status = "For DEMO purposes the current " + provider + " code is: " + await _identitySecurity.UserManager.GenerateTwoFactorTokenAsync(user.Id, provider);
+                ViewBag.Status = "For DEMO purposes the current " + provider + " code is: " + await UserManager.GenerateTwoFactorTokenAsync(user.Id, provider);
             }
             return View(new VerifyCodeViewModel { Provider = provider, ReturnUrl = returnUrl });
         }
@@ -1013,7 +1052,7 @@ namespace VirtoCommerce.Web.Controllers
                 return View(model);
             }
 
-            var result = await _identitySecurity.SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: false, rememberBrowser: model.RememberBrowser);
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: false, rememberBrowser: model.RememberBrowser);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -1055,14 +1094,14 @@ namespace VirtoCommerce.Web.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
         {
-            var loginInfo = await _identitySecurity.AuthenticationManager.GetExternalLoginInfoAsync();
+            var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
             if (loginInfo == null)
             {
                 return RedirectToAction("ExternalLoginFailure");
             }
 
             // Sign in the user with this external login provider if the user already has a login
-            var result = await _identitySecurity.SignInManager.ExternalSignInAsync(loginInfo, false);
+            var result = await SignInManager.ExternalSignInAsync(loginInfo, false);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -1094,7 +1133,7 @@ namespace VirtoCommerce.Web.Controllers
         public async Task<ActionResult> ExternalLoginConfirmation(RegisterExternalLoginModel model, string returnUrl)
         {
 
-            var info = await _identitySecurity.AuthenticationManager.GetExternalLoginInfoAsync();
+            var info = await AuthenticationManager.GetExternalLoginInfoAsync();
 
             if (UserHelper.CustomerSession.IsRegistered || info == null)
             {
@@ -1104,7 +1143,7 @@ namespace VirtoCommerce.Web.Controllers
             if (ModelState.IsValid)
             {
                 var user = _userClient.GetAccountByUserName(model.Email.ToLower());
-                var appUser = await _identitySecurity.UserManager.FindByNameAsync(model.Email);
+                var appUser = await UserManager.FindByNameAsync(model.Email);
 
                 //TODO: there is no guarantee that user is connected by userName
                 if (user != null && appUser == null || user == null && appUser != null ||
@@ -1114,7 +1153,7 @@ namespace VirtoCommerce.Web.Controllers
                 }
 
                 //If user has local account then password must be correct in order to associate it with external account
-                if (appUser != null && await _identitySecurity.UserManager.HasPasswordAsync(appUser.Id))
+                if (appUser != null && await UserManager.HasPasswordAsync(appUser.Id))
                 {
                     if (user.StoreId != UserHelper.CustomerSession.StoreId)
                     {
@@ -1163,11 +1202,11 @@ namespace VirtoCommerce.Web.Controllers
                         var result = await _identitySecurity.CreateAccountAsync(model.Email, model.CreateLocalLogin ? model.NewPassword : null);
                         if (result.Succeeded)
                         {
-                            appUser = await _identitySecurity.UserManager.FindByNameAsync(model.Email);
-                            result = await _identitySecurity.UserManager.AddLoginAsync(appUser.Id, info.Login);
+                            appUser = await UserManager.FindByNameAsync(model.Email);
+                            result = await UserManager.AddLoginAsync(appUser.Id, info.Login);
                             if (result.Succeeded)
                             {
-                                await _identitySecurity.SignInManager.SignInAsync(appUser, isPersistent: false, rememberBrowser: false);
+                                await SignInManager.SignInAsync(appUser, isPersistent: false, rememberBrowser: false);
                                 await UserHelper.OnPostLogonAsync(model.Email);
                                 return RedirectToLocal(returnUrl);
                             }
@@ -1205,7 +1244,7 @@ namespace VirtoCommerce.Web.Controllers
         public ActionResult ExternalLoginsList(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
-            return PartialView("_ExternalLoginsListPartial", _identitySecurity.AuthenticationManager.GetExternalAuthenticationTypes());
+            return PartialView("_ExternalLoginsListPartial", AuthenticationManager.GetExternalAuthenticationTypes());
         }
 
         /// <summary>
@@ -1217,17 +1256,17 @@ namespace VirtoCommerce.Web.Controllers
         {
 
             var externalLogins = new List<ExternalLogin>();
-            var appUser = _identitySecurity.UserManager.FindByNameAsync(UserHelper.CustomerSession.Username).Result;
+            var appUser = UserManager.FindByNameAsync(UserHelper.CustomerSession.Username).Result;
             if (appUser != null)
             {
-                externalLogins = (_identitySecurity.UserManager.GetLoginsAsync(appUser.Id).Result)
+                externalLogins = (UserManager.GetLoginsAsync(appUser.Id).Result)
                     .Select(x => new ExternalLogin
                     {
                         Provider = x.ProviderKey,
                         ProviderUserId = appUser.Id,
                         ProviderDisplayName = x.LoginProvider
                     }).ToList();
-                ViewBag.ShowRemoveButton = externalLogins.Count > 1 || _identitySecurity.UserManager.HasPasswordAsync(appUser.Id).Result;
+                ViewBag.ShowRemoveButton = externalLogins.Count > 1 || UserManager.HasPasswordAsync(appUser.Id).Result;
 
             }
             return PartialView("_RemoveExternalLoginsPartial", externalLogins);
