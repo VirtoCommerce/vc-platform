@@ -28,5 +28,7 @@ namespace VirtoCommerce.Foundation
             , ControllerNameStore = "Store";
 
         #endregion
+
+        public const string ReportsRootFolder = "reports";
     }
 }

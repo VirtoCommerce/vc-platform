@@ -92,6 +92,7 @@ using VirtoCommerce.Web.Client.Services.Assets;
 using VirtoCommerce.Web.Client.Services.Cache;
 using VirtoCommerce.Web.Client.Services.Emails;
 using VirtoCommerce.Web.Client.Services.Listeners;
+using VirtoCommerce.Web.Client.Services.Reporting;
 using VirtoCommerce.Web.Client.Services.Security;
 using VirtoCommerce.Web.Client.Services.Sequences;
 using VirtoCommerce.Web.Client.Services.Templates;
