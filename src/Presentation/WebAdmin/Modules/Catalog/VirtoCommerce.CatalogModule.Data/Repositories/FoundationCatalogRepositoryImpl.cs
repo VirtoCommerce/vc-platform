@@ -90,13 +90,13 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			if (category.PropertySet != null)
 			{
 				retVal.AddRange(category.PropertySet.PropertySetProperties.Select(x => x.Property));
-				if (category.ParentCategoryId != null)
+			}
+			if (category.ParentCategoryId != null)
+			{
+				var parentCategory = GetCategoryById(category.ParentCategoryId) as foundation.Category;
+				if (parentCategory != null)
 				{
-					var parentCategory = GetCategoryById(category.ParentCategoryId) as foundation.Category;
-					if (parentCategory != null)
-					{
-						retVal.AddRange(GetAllCategoryProperties(parentCategory));
-					}
+					retVal.AddRange(GetAllCategoryProperties(parentCategory));
 				}
 			}
 			return retVal.ToArray();

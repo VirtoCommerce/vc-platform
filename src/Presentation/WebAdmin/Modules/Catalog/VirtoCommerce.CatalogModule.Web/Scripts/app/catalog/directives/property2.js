@@ -30,7 +30,7 @@
 			scope.context.currentPropValues = [];
 			scope.context.allDictionaryValues = [];
 			scope.context.langValuesMap = {};
-
+		
 		
 			scope.$watch('context.langValuesMap', function (newValue, oldValue) {
 				if (newValue != oldValue) {
@@ -48,8 +48,11 @@
 			scope.$watch('context.currentPropValues', function (newValue, oldValue) {
 				//reflect only real changes
 				if (newValue.length != scope.currentEntity.values.length || difference(newValue, scope.currentEntity.values).length > 0) {
-					scope.currentEntity.values = newValue;
-					ngModelController.$setViewValue(scope.currentEntity);
+					//Prevent reflect changing when use null value for empty initial values
+					if (!(scope.currentEntity.values.length == 0 && newValue[0].value == null)) {
+						scope.currentEntity.values = newValue;
+						ngModelController.$setViewValue(scope.currentEntity);
+					}
 				}
 			}, true);
 
@@ -72,19 +75,14 @@
 				chageValueTemplate(scope.currentEntity.valueType);
 			};
 
-			var difference = function (array) {
-				var rest = Array.prototype.concat.apply(Array.prototype, Array.prototype.slice.call(arguments, 1));
-
+			var difference = function (one, two) {
 				var containsEquals = function (obj, target) {
 					if (obj == null) return false;
 					return _.any(obj, function (value) {
 						return value.value == target.value
 					});
 				};
-
-				
-			return _.filter(array, function (value) {return !containsEquals(rest, value);});
-
+				return _.filter(one, function (value) { return !containsEquals(two, value); });
 			};
 
 			function needAddEmptyValue(property, values) {
