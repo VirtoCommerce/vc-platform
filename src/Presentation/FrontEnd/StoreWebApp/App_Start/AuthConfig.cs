@@ -4,9 +4,8 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Owin;
+using VirtoCommerce.Foundation.Data.Security.Identity;
 using VirtoCommerce.Web.Client.Security.Identity.Configs;
-using VirtoCommerce.Web.Client.Security.Identity.Data;
-using VirtoCommerce.Web.Client.Security.Identity.Model;
 
 namespace VirtoCommerce.Web
 {
@@ -21,9 +20,9 @@ namespace VirtoCommerce.Web
         public void ConfigureAuth(IAppBuilder app)
         {
             // Configure the db context, user manager and role manager to use a single instance per request
-            app.CreatePerOwinContext(ApplicationDbContext.Create);
+            app.CreatePerOwinContext(SecurityDbContext.Create);
             app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
-            app.CreatePerOwinContext<ApplicationRoleManager>(ApplicationRoleManager.Create);
+            //app.CreatePerOwinContext<ApplicationRoleManager>(ApplicationRoleManager.Create);
             app.CreatePerOwinContext<ApplicationSignInManager>(ApplicationSignInManager.Create);
 
             // Enable the application to use a cookie to store information for the signed in user

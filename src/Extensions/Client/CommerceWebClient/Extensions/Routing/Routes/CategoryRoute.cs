@@ -91,7 +91,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
                 return null;
 
             var childCategryId = SettingsHelper.SeoDecode(childCategryEncoded, SeoUrlKeywordTypes.Category, 
-                values.ContainsKey(Constants.Language) ? values[Constants.Language] as string : null);
+                values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : null);
             var outline =
                 new BrowsingOutline(
                     CartHelper.CatalogOutlineBuilder.BuildCategoryOutline(

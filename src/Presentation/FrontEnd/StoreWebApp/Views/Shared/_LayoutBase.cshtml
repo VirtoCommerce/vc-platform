@@ -28,7 +28,7 @@
     <div id="layout">
         <div class="demo-notice">
             <p>@("This is a demo store. Any orders placed through this store will not be honored or fulfilled.".Localize())</p>
-        </div>        
+        </div>
         <div class="header-wrap">
             <div class="head-top">
                 <div class="rubber clearfix">
@@ -43,21 +43,9 @@
                                 </span>
                             </span>
                             <ul>
-                                <li>
-                                    <div class="language">
-                                        @{Html.RenderPartial("Languages");}
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="store">
-                                        @{Html.RenderAction("StorePicker", "Store", true);}
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="currency">
-                                        @{Html.RenderAction("Currencies", "Store", true);}
-                                    </div>
-                                </li>
+                                @{Html.RenderPartial("Languages");}
+                                @{Html.RenderAction("StorePicker", "Store", true);}
+                                @{Html.RenderAction("Currencies", "Store", true);}
                             </ul>
                         </div>
                     </div>
@@ -135,122 +123,129 @@
     </div>
 
 
-@Scripts.Render("~/bundles/jqueryui")
-@Scripts.Render("~/bundles/jqueryval")
-@Scripts.Render("~/bundles/jquerymisc")
-@RenderSection("scripts", required: false)
+    @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/jquerymisc")
+    @RenderSection("scripts", required: false)
 
 
-<!-- Facebook -->
-<div id="fb-root"></div>
-<script type="text/javascript">
-    (function (d, s, id) {
-        var js, fjs = d.getElementsByTagName(s)[0];
-        if (d.getElementById(id)) return;
-        js = d.createElement(s); js.id = id;
-        js.src = "//connect.facebook.net/en-US/all.js#xfbml=1&appId=593495770737439";
-        fjs.parentNode.insertBefore(js, fjs);
-    }(document, 'script', 'facebook-jssdk'));
-</script>
+    <!-- Facebook -->
+    <div id="fb-root"></div>
+    <script type="text/javascript">
+        (function (d, s, id)
+        {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/en-US/all.js#xfbml=1&appId=593495770737439";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
 
-<!-- Process sliders -->
-<script type="text/javascript">
-    $(function () {
-        VirtoCommerce.renderDynamicContent();
-        VirtoCommerce.updateQuickLinks();
-        VirtoCart.updateCartOptions();
-        VirtoCommerce.initSliders();
-        $('.slider-products').virtoSlider();
-        
-        //Demo notice
-        if (VirtoCommerce.getCookie("vcf.hideDemoNotice") != "true") {
-            $('.demo-notice').show();
-        }
-        $('.demo-notice').on('click', function () {
-            $(this).fadeOut();
-            VirtoCommerce.setCookie("vcf.hideDemoNotice", true, 7);
-        });
-        $(document).ajaxError(
-            function myErrorHandler(event, xhr, ajaxOptions, thrownError) {
+    <!-- Process sliders -->
+    <script type="text/javascript">
+        $(function ()
+        {
+            VirtoCommerce.renderDynamicContent();
+            VirtoCommerce.updateQuickLinks();
+            VirtoCart.updateCartOptions();
+            VirtoCommerce.initSliders();
+            $('.slider-products').virtoSlider();
 
-                if (ajaxOptions.suppressErrors) {
-                    return;
-                }
-                if (xhr.status != 0) {
-                    $.showPopupMessage("There was an error: <br/><span style='color:red;'>" + xhr.status + " " + xhr.statusText + "!</span>");
-                }
-            });
-    });
-</script>
-@* No need to render follow services here, but following template can be used as an example:
-    @if (SettingsHelper.GetSettings("FollowServices").Any())
-    {
-        <!-- AddThis Smart Layers BEGIN -->
-        <!-- Go to http://www.addthis.com/get/smart-layers to customize -->
-        <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-51ec4b273d0b77ad"></script>
-        <script type="text/javascript">
-
-            // this will be called once all Smart Layers have been rendered
-            var callback = function (smartlayer)
+            //Demo notice
+            if (VirtoCommerce.getCookie("vcf.hideDemoNotice") != "true")
             {
-                // remove all layers currently on the page
-                smartlayer.destroy();
+                $('.demo-notice').show();
+            }
+            $('.demo-notice').on('click', function ()
+            {
+                $(this).fadeOut();
+                VirtoCommerce.setCookie("vcf.hideDemoNotice", true, 7);
+            });
+            $(document).ajaxError(
+                function myErrorHandler(event, xhr, ajaxOptions, thrownError)
+                {
 
-                var layers = {
-                    'theme': 'transparent',
-                    'follow': {
-                        'services': [],
-                        //'title': 'Follow',
-                        'postFollowTitle': '@("Thanks for following!".LocalizeHtml())',
-                        'postFollowRecommendedMsg': '@("Recommended for you".LocalizeHtml())',
-                        'mobile': true,
-                        'theme': 'transparent'
+                    if (ajaxOptions.suppressErrors)
+                    {
+                        return;
                     }
+                    if (xhr.status != 0)
+                    {
+                        $.showPopupMessage("There was an error: <br/><span style='color:red;'>" + xhr.status + " " + xhr.statusText + "!</span>");
+                    }
+                });
+        });
+    </script>
+    @* No need to render follow services here, but following template can be used as an example:
+        @if (SettingsHelper.GetSettings("FollowServices").Any())
+        {
+            <!-- AddThis Smart Layers BEGIN -->
+            <!-- Go to http://www.addthis.com/get/smart-layers to customize -->
+            <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-51ec4b273d0b77ad"></script>
+            <script type="text/javascript">
+
+                // this will be called once all Smart Layers have been rendered
+                var callback = function (smartlayer)
+                {
+                    // remove all layers currently on the page
+                    smartlayer.destroy();
+
+                    var layers = {
+                        'theme': 'transparent',
+                        'follow': {
+                            'services': [],
+                            //'title': 'Follow',
+                            'postFollowTitle': '@("Thanks for following!".LocalizeHtml())',
+                            'postFollowRecommendedMsg': '@("Recommended for you".LocalizeHtml())',
+                            'mobile': true,
+                            'theme': 'transparent'
+                        }
+                    };
+
+                    @foreach (var follow in SettingsHelper.GetSettings("FollowServices"))
+                        {
+                            var followStrSplit = follow.ToString().Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
+
+                            <text>
+                    layers.follow.services.push({
+                            @if (followStrSplit.Length > 0)
+          {
+                                @:'service': '@followStrSplit[0]'
+                                                                                                                                                                                                }
+                            @if (followStrSplit.Length > 1)
+          {
+                                @:, 'id': '@followStrSplit[1]'
+                                                                                                                                                                                                }
+                            @if (followStrSplit.Length > 2)
+          {
+                                @:, 'usertype': '@followStrSplit[2]'
+                                                                                                                                                                                                }
+                    });
+                    </text>
+                        }
+
+                    // now render Recommended and What's Next Layers
+                    window.addthis.layers(layers);
                 };
 
-                @foreach (var follow in SettingsHelper.GetSettings("FollowServices"))
-                    {
-                        var followStrSplit = follow.ToString().Split(new[] { ":" }, StringSplitOptions.RemoveEmptyEntries);
+                addthis.layers({
+                    'theme': 'transparent',
+                    'share': {}
+                }, callback);
 
-                        <text>
-                layers.follow.services.push({
-                        @if (followStrSplit.Length > 0)
-      {
-                            @:'service': '@followStrSplit[0]'
-                                                                                                                                                                                            }
-                        @if (followStrSplit.Length > 1)
-      {
-                            @:, 'id': '@followStrSplit[1]'
-                                                                                                                                                                                            }
-                        @if (followStrSplit.Length > 2)
-      {
-                            @:, 'usertype': '@followStrSplit[2]'
-                                                                                                                                                                                            }
-                });
-                </text>
-                    }
+            </script>
+            <!-- AddThis Smart Layers END -->
+        }
+    *@
 
-                // now render Recommended and What's Next Layers
-                window.addthis.layers(layers);
-            };
-
-            addthis.layers({
-                'theme': 'transparent',
-                'share': {}
-            }, callback);
-
-        </script>
-        <!-- AddThis Smart Layers END -->
+    @{
+        var firstOrDefault = StoreHelper.GetSettings("AnalyticsField").FirstOrDefault() ??
+                             (object)SettingsHelper.GetSettings("AnalyticsField").FirstOrDefault();
+        if (firstOrDefault != null)
+        {
+            @Html.Raw(firstOrDefault.ToString())
+        }
     }
-*@
-
-@{
-    var firstOrDefault = StoreHelper.GetSettings("AnalyticsField").FirstOrDefault() ??
-                         (object)SettingsHelper.GetSettings("AnalyticsField").FirstOrDefault();
-    if (firstOrDefault != null)
-    {
-        @Html.Raw(firstOrDefault.ToString())
-    }
-}
 </body>
 </html>

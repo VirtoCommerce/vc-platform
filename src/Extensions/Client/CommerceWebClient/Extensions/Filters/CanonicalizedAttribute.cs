@@ -176,12 +176,12 @@ namespace VirtoCommerce.Web.Client.Extensions.Filters
             {
                 var value = routeValues[key].ToString();
                 var lang  = routeValues.ContainsKey(Routing.Constants.Language) ? routeValues[Routing.Constants.Language] as string : null;
-                var valueDecoded = SettingsHelper.SeoEncode(value, type, lang).ToLowerInvariant();
+                var valueEncoded = SettingsHelper.SeoEncode(value, type, lang).ToLowerInvariant();
 
                 //If encoded and used value does not match (keyword exist) and requested path contains not encoded value replace with encoded
-                if (!value.Equals(valueDecoded, StringComparison.InvariantCultureIgnoreCase) && path.ToLowerInvariant().Contains(value.ToLowerInvariant()))
+                if (!value.Equals(valueEncoded, StringComparison.InvariantCultureIgnoreCase) && path.ToLowerInvariant().Contains(value.ToLowerInvariant()))
                 {
-                    path = path.Replace(value, valueDecoded);
+                    path = path.Replace(value, valueEncoded);
                 }
             }
 
