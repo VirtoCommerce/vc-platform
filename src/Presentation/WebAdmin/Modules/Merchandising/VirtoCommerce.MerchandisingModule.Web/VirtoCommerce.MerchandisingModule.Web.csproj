@@ -88,13 +88,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="VirtoCommerce.Foundation, Version=1.12.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Shared\VirtoCommerce\VirtoCommerce.Foundation.dll</HintPath>
-    </Reference>
-    <Reference Include="VirtoCommerce.Foundation.Data.Azure">
-      <HintPath>..\..\..\Shared\VirtoCommerce\VirtoCommerce.Foundation.Data.Azure.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Binders\SearchParametersBinder.cs" />
@@ -114,6 +107,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
+      <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
+      <Name>CommerceFoundation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Extensions\Azure\CommerceFoundation.Data.Azure\CommerceFoundation.Data.Azure.csproj">
+      <Project>{e3769352-34c8-41a9-a6c8-da95d7dff903}</Project>
+      <Name>CommerceFoundation.Data.Azure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\VirtoCommerce.Framework.Core\VirtoCommerce.Framework.Core.csproj">
       <Project>{A3B74D5F-2195-48ED-A46B-D026FFC37C4D}</Project>
       <Name>VirtoCommerce.Framework.Core</Name>

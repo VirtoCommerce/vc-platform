@@ -42,12 +42,6 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="VirtoCommerce.Foundation">
-      <HintPath>..\..\..\Shared\VirtoCommerce\VirtoCommerce.Foundation.dll</HintPath>
-    </Reference>
-    <Reference Include="VirtoCommerce.Foundation.Data">
-      <HintPath>..\..\..\Shared\VirtoCommerce\VirtoCommerce.Foundation.Data.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converters\AssetConverter.cs">
@@ -80,6 +74,14 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\Core\CommerceFoundation.Data\CommerceFoundation.Data.csproj">
+      <Project>{bb168a74-0f1e-43be-a616-134902238b80}</Project>
+      <Name>CommerceFoundation.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
+      <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
+      <Name>CommerceFoundation</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\VirtoCommerce.Framework.Core\VirtoCommerce.Framework.Core.csproj">
       <Project>{a3b74d5f-2195-48ed-a46b-d026ffc37c4d}</Project>
       <Name>VirtoCommerce.Framework.Core</Name>

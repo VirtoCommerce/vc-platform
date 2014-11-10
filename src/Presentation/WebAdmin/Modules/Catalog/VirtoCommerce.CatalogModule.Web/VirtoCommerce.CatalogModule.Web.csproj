@@ -144,25 +144,6 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="VirtoCommerce.Caching.HttpCache, Version=1.11.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Shared\VirtoCommerce\VirtoCommerce.Caching.HttpCache.dll</HintPath>
-    </Reference>
-    <Reference Include="VirtoCommerce.ElasticSearchProvider, Version=1.11.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Shared\VirtoCommerce\VirtoCommerce.ElasticSearchProvider.dll</HintPath>
-    </Reference>
-    <Reference Include="VirtoCommerce.Foundation, Version=1.12.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Shared\VirtoCommerce\VirtoCommerce.Foundation.dll</HintPath>
-    </Reference>
-    <Reference Include="VirtoCommerce.Foundation.Data, Version=1.12.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Shared\VirtoCommerce\VirtoCommerce.Foundation.Data.dll</HintPath>
-    </Reference>
-    <Reference Include="VirtoCommerce.Search.Index">
-      <HintPath>..\..\..\Shared\VirtoCommerce\VirtoCommerce.Search.Index.dll</HintPath>
-    </Reference>
     <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\WebActivatorEx.2.0\lib\net40\WebActivatorEx.dll</HintPath>
@@ -294,6 +275,18 @@
     <Content Include="Scripts\app\catalog\widgets\catalogLanguagesWidget.tpl.html" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\Core\CommerceFoundation.Data\CommerceFoundation.Data.csproj">
+      <Project>{bb168a74-0f1e-43be-a616-134902238b80}</Project>
+      <Name>CommerceFoundation.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
+      <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
+      <Name>CommerceFoundation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Extensions\Search\ElasticSearchProvider\ElasticSearchProvider.csproj">
+      <Project>{039e7914-2925-44c4-acad-6bccfa2a370e}</Project>
+      <Name>ElasticSearchProvider</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\VirtoCommerce.Framework.Core\VirtoCommerce.Framework.Core.csproj">
       <Project>{a3b74d5f-2195-48ed-a46b-d026ffc37c4d}</Project>
       <Name>VirtoCommerce.Framework.Core</Name>
