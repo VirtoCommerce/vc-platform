@@ -57,6 +57,10 @@
     <Reference Include="Microsoft.Owin">
       <HintPath>..\..\..\packages\Microsoft.Owin.3.0.0\lib\net45\Microsoft.Owin.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\Microsoft.Owin.Host.SystemWeb.3.0.0\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Owin.Security">
       <HintPath>..\..\..\packages\Microsoft.Owin.Security.2.1.0\lib\net45\Microsoft.Owin.Security.dll</HintPath>
     </Reference>
@@ -106,6 +110,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationOAuthProvider.cs" />
+    <Compile Include="Configs\ApplicationSignInManager.cs" />
+    <Compile Include="Configs\ApplicationUserManager.cs" />
     <Compile Include="Controllers\Api\SecurityController.cs" />
     <Compile Include="Data\FoundationCustomerRepositoryImpl.cs" />
     <Compile Include="Data\FoundationSecurityRepositoryImpl.cs" />
@@ -136,10 +142,6 @@
     <ProjectReference Include="..\..\..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
       <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
       <Name>CommerceFoundation</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\..\..\Extensions\Client\CommerceWebClient\CommerceWebClient.csproj">
-      <Project>{c5a05c8f-6ba8-4ce7-9830-0e4870d1e272}</Project>
-      <Name>CommerceWebClient</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\VirtoCommerce.Framework.Web\VirtoCommerce.Framework.Web.csproj">
       <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>

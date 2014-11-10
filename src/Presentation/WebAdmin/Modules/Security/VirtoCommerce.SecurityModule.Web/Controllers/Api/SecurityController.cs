@@ -2,16 +2,14 @@
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 using Microsoft.AspNet.Identity.Owin;
-using VirtoCommerce.Foundation.Customers.Model;
-using VirtoCommerce.Foundation.Customers.Repositories;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
+using Microsoft.Owin.Security;
 using VirtoCommerce.Foundation.Security.Model;
-using VirtoCommerce.Foundation.Security.Repositories;
+using VirtoCommerce.SecurityModule.Web.Configs;
 using VirtoCommerce.SecurityModule.Web.Data;
 using VirtoCommerce.SecurityModule.Web.Models;
-using VirtoCommerce.Web.Client.Services.Security;
 
 namespace VirtoCommerce.SecurityModule.Web.Controllers
 {
@@ -20,13 +18,38 @@ namespace VirtoCommerce.SecurityModule.Web.Controllers
 	{
         private readonly Func<IFoundationSecurityRepository> _securityRepository;
         private readonly Func<IFoundationCustomerRepository> _customerRepository;
-        private readonly Func<IUserIdentitySecurity> _security;
-        public SecurityController(Func<IFoundationSecurityRepository> securityRepository, Func<IFoundationCustomerRepository> customerRepository, Func<IUserIdentitySecurity> security)
+
+        private IAuthenticationManager _authenticationManager;
+        private ApplicationSignInManager _signInManager;
+        private ApplicationUserManager _userManager;
+        public SecurityController(Func<IFoundationSecurityRepository> securityRepository, Func<IFoundationCustomerRepository> customerRepository)
         {
             _securityRepository = securityRepository;
             _customerRepository = customerRepository;
-            _security = security;
-            //_security = new WebUserSecurity(_securityRepository, "VirtoCommerce");
+        }
+
+        public ApplicationSignInManager SignInManager
+        {
+            get
+            {
+                return _signInManager ?? (_signInManager = HttpContext.Current.GetOwinContext().Get<ApplicationSignInManager>());
+            }
+        }
+
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? (_userManager = HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>());
+            }
+        }
+
+        public IAuthenticationManager AuthenticationManager
+        {
+            get
+            {
+                return _authenticationManager ?? (_authenticationManager = HttpContext.Current.GetOwinContext().Authentication);
+            }
         }
 
         [HttpPost]
@@ -34,7 +57,7 @@ namespace VirtoCommerce.SecurityModule.Web.Controllers
         [Route("login")]
 		public async Task<IHttpActionResult> Login(UserLogin model)
 		{
-            if (await _security().LoginAsync(model.UserName, model.Password, model.RememberMe) == SignInStatus.Success)
+            if (await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, true) == SignInStatus.Success)
             {
                 return Ok(GetUserInfo(model.UserName));
             }
@@ -56,7 +79,7 @@ namespace VirtoCommerce.SecurityModule.Web.Controllers
         [Route("logout")]
 		public IHttpActionResult Logout()
 		{
-            _security().Logout();
+            AuthenticationManager.SignOut();
 			return Ok(new { status = true });
 		}
 

@@ -90,10 +90,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommerceFoundation.Data.Azu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Caching.HttpCache", "..\..\Extensions\Cache\VirtoCommerce.Caching.HttpCache\VirtoCommerce.Caching.HttpCache.csproj", "{3FE4EB14-557A-46BC-94AD-2E9874F85ACE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommerceWebClient", "..\..\Extensions\Client\CommerceWebClient\CommerceWebClient.csproj", "{C5A05C8F-6BA8-4CE7-9830-0E4870D1E272}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommerceClient", "..\..\Extensions\Client\CommerceClient\CommerceClient.csproj", "{9179B790-1F77-475F-B6EF-0B567D5CE8E0}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -176,14 +172,6 @@ Global
 		{3FE4EB14-557A-46BC-94AD-2E9874F85ACE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3FE4EB14-557A-46BC-94AD-2E9874F85ACE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3FE4EB14-557A-46BC-94AD-2E9874F85ACE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C5A05C8F-6BA8-4CE7-9830-0E4870D1E272}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C5A05C8F-6BA8-4CE7-9830-0E4870D1E272}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C5A05C8F-6BA8-4CE7-9830-0E4870D1E272}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C5A05C8F-6BA8-4CE7-9830-0E4870D1E272}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9179B790-1F77-475F-B6EF-0B567D5CE8E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9179B790-1F77-475F-B6EF-0B567D5CE8E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9179B790-1F77-475F-B6EF-0B567D5CE8E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9179B790-1F77-475F-B6EF-0B567D5CE8E0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -214,7 +202,5 @@ Global
 		{039E7914-2925-44C4-ACAD-6BCCFA2A370E} = {EAE05907-1BEE-47FA-890A-40C84B879B1C}
 		{E3769352-34C8-41A9-A6C8-DA95D7DFF903} = {EAE05907-1BEE-47FA-890A-40C84B879B1C}
 		{3FE4EB14-557A-46BC-94AD-2E9874F85ACE} = {EAE05907-1BEE-47FA-890A-40C84B879B1C}
-		{C5A05C8F-6BA8-4CE7-9830-0E4870D1E272} = {EAE05907-1BEE-47FA-890A-40C84B879B1C}
-		{9179B790-1F77-475F-B6EF-0B567D5CE8E0} = {EAE05907-1BEE-47FA-890A-40C84B879B1C}
 	EndGlobalSection
 EndGlobal

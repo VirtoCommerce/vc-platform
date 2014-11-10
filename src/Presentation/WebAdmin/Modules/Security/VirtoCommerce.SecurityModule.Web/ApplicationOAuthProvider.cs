@@ -5,7 +5,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
-using VirtoCommerce.Web.Client.Security.Identity.Configs;
+using VirtoCommerce.SecurityModule.Web.Configs;
 
 namespace VirtoCommerce.SecurityModule.Web
 {

@@ -3,7 +3,6 @@ using Owin;
 using System;
 using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerce.SecurityModule.Web.Data;
-using VirtoCommerce.Web.Client.Services.Security;
 
 namespace VirtoCommerce.SecurityModule.Web
 {
@@ -30,10 +29,6 @@ namespace VirtoCommerce.SecurityModule.Web
             _container.RegisterType<Func<IFoundationSecurityRepository>>(
                 new InjectionFactory(x => new Func<IFoundationSecurityRepository>(() =>
                     new FoundationSecurityRepositoryImpl("VirtoCommerce"))));
-
-            _container.RegisterType<Func<IUserIdentitySecurity>>(
-                new InjectionFactory(x => new Func<IUserIdentitySecurity>(() =>
-                    new IdentityUserSecurity(new FoundationSecurityRepositoryImpl("VirtoCommerce")))));
 
             #endregion
 
