@@ -55,10 +55,17 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				if (!String.IsNullOrEmpty(criteria.CatalogId))
 				{
 					var query = repository.Categories.Where(x => x.CatalogId == criteria.CatalogId);
+
+
 					if (!String.IsNullOrEmpty(criteria.CategoryId))
 					{
 						query = query.Where(x => x.ParentCategoryId == criteria.CategoryId);
 					}
+					else if (!String.IsNullOrEmpty(criteria.CatalogId))
+					{
+						query = query.Where(x => x.CatalogId == criteria.CatalogId && x.ParentCategoryId == null);
+					}
+
 					var categoryIds = query.Select(x => x.CategoryId).ToArray();
 
 					var categories = new ConcurrentBag<module.Category>();
