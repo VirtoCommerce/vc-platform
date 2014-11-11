@@ -15,10 +15,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{A4C0
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Module1", "Module1", "{3874AF7E-4491-48BB-BF11-5F7D7A23EFED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Framework.Core", "src\Presentation\WebAdmin\VirtoCommerce.Framework.Core\VirtoCommerce.Framework.Core.csproj", "{A3B74D5F-2195-48ED-A46B-D026FFC37C4D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Framework.Data", "src\Presentation\WebAdmin\VirtoCommerce.Framework.Data\VirtoCommerce.Framework.Data.csproj", "{6E789A4B-4BE3-4CA4-963A-481A4E06D9C0}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Framework.Web", "src\Presentation\WebAdmin\VirtoCommerce.Framework.Web\VirtoCommerce.Framework.Web.csproj", "{F7C9313B-522E-4619-ABC9-8C7D4600D6B5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Catalog", "Catalog", "{7C7428C3-DDE2-4783-87EB-13E9A7C405C5}"
@@ -95,14 +91,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A3B74D5F-2195-48ED-A46B-D026FFC37C4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A3B74D5F-2195-48ED-A46B-D026FFC37C4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A3B74D5F-2195-48ED-A46B-D026FFC37C4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A3B74D5F-2195-48ED-A46B-D026FFC37C4D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6E789A4B-4BE3-4CA4-963A-481A4E06D9C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6E789A4B-4BE3-4CA4-963A-481A4E06D9C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6E789A4B-4BE3-4CA4-963A-481A4E06D9C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6E789A4B-4BE3-4CA4-963A-481A4E06D9C0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F7C9313B-522E-4619-ABC9-8C7D4600D6B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F7C9313B-522E-4619-ABC9-8C7D4600D6B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7C9313B-522E-4619-ABC9-8C7D4600D6B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
