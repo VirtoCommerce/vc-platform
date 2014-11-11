@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VirtoCommerce.Framework.Core.Extensions;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
 using foundation = VirtoCommerce.Foundation.Catalogs.Model;
 using module = VirtoCommerce.CatalogModule.Model;
 using VirtoCommerce.Framework.Core.Utils;
 using System.Collections.ObjectModel;
+using VirtoCommerce.Foundation.Frameworks;
 
 namespace VirtoCommerce.CatalogModule.Data.Converters
 {

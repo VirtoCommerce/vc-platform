@@ -239,7 +239,16 @@
     <Compile Include="DataManagement\Model\Import\Importers\SeoImporter.cs" />
     <Compile Include="DataManagement\Services\IDataManagementService.cs" />
     <Compile Include="DataManagement\Services\DataManagementService.cs" />
+    <Compile Include="Frameworks\Caching\CacheManager.cs" />
+    <Compile Include="Frameworks\Caching\CacheSettings.cs" />
+    <Compile Include="Frameworks\Common\EnumUtility.cs" />
+    <Compile Include="Frameworks\Extensions\CollectionExtensions.cs" />
+    <Compile Include="Frameworks\Extensions\KeyValuePairExtensions.cs" />
+    <Compile Include="Frameworks\NullCollection.cs" />
     <Compile Include="Frameworks\Extensions\NumberExtensions.cs" />
+    <Compile Include="Frameworks\Extensions\ObjectExtensions.cs" />
+    <Compile Include="Frameworks\Extensions\StringExtensions.cs" />
+    <Compile Include="Frameworks\Extensions\TreeExtension.cs" />
     <Compile Include="Frameworks\SqlDbConfiguration.cs" />
     <Compile Include="Orders\Extensions\JurisdictionExtensions.cs" />
     <Compile Include="Orders\Extensions\PaymentMethodExtensions.cs" />

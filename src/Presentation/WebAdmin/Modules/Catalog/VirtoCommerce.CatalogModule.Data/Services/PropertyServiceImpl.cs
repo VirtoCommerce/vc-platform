@@ -3,7 +3,7 @@ using System.Linq;
 using VirtoCommerce.CatalogModule.Data.Converters;
 using VirtoCommerce.CatalogModule.Repositories;
 using VirtoCommerce.CatalogModule.Services;
-using VirtoCommerce.Framework.Core.Caching;
+using VirtoCommerce.Foundation.Frameworks.Caching;
 using module = VirtoCommerce.CatalogModule.Model;
 
 namespace VirtoCommerce.CatalogModule.Data.Services

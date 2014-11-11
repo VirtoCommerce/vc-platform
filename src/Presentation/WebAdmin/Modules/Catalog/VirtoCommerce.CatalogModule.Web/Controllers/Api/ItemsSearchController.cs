@@ -8,7 +8,7 @@ using VirtoCommerce.CatalogModule.Web.Converters;
 using VirtoCommerce.CatalogModule.Services;
 using moduleModel = VirtoCommerce.CatalogModule.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
-using VirtoCommerce.Framework.Core.Extensions;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
     public class ItemsSearchController : ApiController

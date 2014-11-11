@@ -97,10 +97,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\VirtoCommerce.Framework.Core\VirtoCommerce.Framework.Core.csproj">
-      <Project>{A3B74D5F-2195-48ED-A46B-D026FFC37C4D}</Project>
-      <Name>VirtoCommerce.Framework.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\VirtoCommerce.MerchandisingModule\VirtoCommerce.MerchandisingModule.csproj">
       <Project>{28EBCB4D-45B4-4653-B9C4-0B2F9A4A0371}</Project>
       <Name>VirtoCommerce.MerchandisingModule</Name>

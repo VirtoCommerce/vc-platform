@@ -8,11 +8,10 @@ using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Data.AppConfig;
 using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Search;
-using VirtoCommerce.Framework.Core.Caching;
-using VirtoCommerce.Framework.Data.Caching;
 using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerce.Search.Providers.Elastic;
 using ICatalogService = VirtoCommerce.CatalogModule.Services.ICatalogService;
+using VirtoCommerce.Foundation.Frameworks.Caching;
 
 namespace VirtoCommerce.CatalogModule.Web
 {
@@ -39,7 +38,7 @@ namespace VirtoCommerce.CatalogModule.Web
             #region module services
 
             _container.RegisterType<Func<IFoundationCatalogRepository>>(new InjectionFactory(x => new Func<IFoundationCatalogRepository>(() => new FoundationCatalogRepositoryImpl("VirtoCommerce"))));
-            var cacheManager = new CacheManager(x => new InMemoryCacheProvider(), x => new CacheSettings("", TimeSpan.FromMinutes(1), "", true));
+			var cacheManager = new CacheManager(x => new InMemoryCachingProvider(), x => new CacheSettings("", TimeSpan.FromMinutes(1), "", true));
             _container.RegisterInstance(cacheManager);
             _container.RegisterType<ICatalogService, CatalogServiceImpl>();
             _container.RegisterType<IPropertyService, PropertyServiceImpl>();

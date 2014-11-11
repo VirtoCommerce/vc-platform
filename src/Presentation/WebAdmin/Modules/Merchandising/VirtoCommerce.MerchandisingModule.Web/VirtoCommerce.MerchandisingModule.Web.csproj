@@ -115,10 +115,6 @@
       <Project>{e3769352-34c8-41a9-a6c8-da95d7dff903}</Project>
       <Name>CommerceFoundation.Data.Azure</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\VirtoCommerce.Framework.Core\VirtoCommerce.Framework.Core.csproj">
-      <Project>{A3B74D5F-2195-48ED-A46B-D026FFC37C4D}</Project>
-      <Name>VirtoCommerce.Framework.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\VirtoCommerce.Framework.Web\VirtoCommerce.Framework.Web.csproj">
       <Project>{F7C9313B-522E-4619-ABC9-8C7D4600D6B5}</Project>
       <Name>VirtoCommerce.Framework.Web</Name>

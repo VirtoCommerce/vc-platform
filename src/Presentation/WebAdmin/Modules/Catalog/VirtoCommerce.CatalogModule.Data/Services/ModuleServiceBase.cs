@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.CatalogModule.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.Framework.Data.Extensions;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
 namespace VirtoCommerce.CatalogModule.Data.Services
 {
 	public abstract class ModuleServiceBase

@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http.ModelBinding;
-using VirtoCommerce.Framework.Core.Extensions;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.MerchandisingModule.Web.Binders;
 
 namespace VirtoCommerce.MerchandisingModule.Models
