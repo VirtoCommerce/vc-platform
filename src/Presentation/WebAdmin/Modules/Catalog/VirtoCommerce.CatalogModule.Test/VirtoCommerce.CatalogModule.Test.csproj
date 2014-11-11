@@ -71,10 +71,6 @@
       <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
       <Name>CommerceFoundation</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\VirtoCommerce.Framework.Core\VirtoCommerce.Framework.Core.csproj">
-      <Project>{a3b74d5f-2195-48ed-a46b-d026ffc37c4d}</Project>
-      <Name>VirtoCommerce.Framework.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\VirtoCommerce.CatalogModule.Data\VirtoCommerce.CatalogModule.Data.csproj">
       <Project>{b8c758d7-822f-40d8-b28c-ef21c873af49}</Project>
       <Name>VirtoCommerce.CatalogModule.Data</Name>

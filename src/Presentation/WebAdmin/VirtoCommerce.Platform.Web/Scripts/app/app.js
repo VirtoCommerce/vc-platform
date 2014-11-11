@@ -2,6 +2,7 @@
   'ui.router',
   'ui.bootstrap',
   'ui.utils',
+  'ui.sortable',
   'ngAnimate',
   'ngResource',
   'xeditable',

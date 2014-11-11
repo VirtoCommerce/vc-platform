@@ -249,14 +249,6 @@
       <Project>{039e7914-2925-44c4-acad-6bccfa2a370e}</Project>
       <Name>ElasticSearchProvider</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\VirtoCommerce.Framework.Core\VirtoCommerce.Framework.Core.csproj">
-      <Project>{a3b74d5f-2195-48ed-a46b-d026ffc37c4d}</Project>
-      <Name>VirtoCommerce.Framework.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\VirtoCommerce.Framework.Data\VirtoCommerce.Framework.Data.csproj">
-      <Project>{6e789a4b-4be3-4ca4-963a-481a4e06d9c0}</Project>
-      <Name>VirtoCommerce.Framework.Data</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\VirtoCommerce.Framework.Web\VirtoCommerce.Framework.Web.csproj">
       <Project>{f7c9313b-522e-4619-abc9-8c7d4600d6b5}</Project>
       <Name>VirtoCommerce.Framework.Web</Name>

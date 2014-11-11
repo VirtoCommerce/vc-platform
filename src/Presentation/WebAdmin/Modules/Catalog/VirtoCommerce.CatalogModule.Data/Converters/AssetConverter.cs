@@ -69,7 +69,9 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				target.AssetId = source.AssetId;
 			if (source.AssetType != null)
 				target.AssetType = source.AssetType;
-			
+
+            target.SortOrder = source.SortOrder;
+
 		}
 	}
 

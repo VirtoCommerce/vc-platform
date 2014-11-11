@@ -8,7 +8,7 @@ using VirtoCommerce.Foundation.Catalogs.Repositories;
 using VirtoCommerce.Foundation.Catalogs.Search;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Search;
-using VirtoCommerce.Framework.Core.Extensions;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.MerchandisingModule.Data.Adaptors;
 using VirtoCommerce.MerchandisingModule.Model;
 using VirtoCommerce.MerchandisingModule.Services;

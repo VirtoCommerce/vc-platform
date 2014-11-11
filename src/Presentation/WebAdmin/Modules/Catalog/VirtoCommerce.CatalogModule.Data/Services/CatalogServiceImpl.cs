@@ -7,7 +7,7 @@ using VirtoCommerce.CatalogModule.Data.Converters;
 using VirtoCommerce.CatalogModule.Repositories;
 using VirtoCommerce.CatalogModule.Services;
 using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.Framework.Core.Caching;
+using VirtoCommerce.Foundation.Frameworks.Caching;
 using foundation = VirtoCommerce.Foundation.Catalogs.Model;
 using module = VirtoCommerce.CatalogModule.Model;
 
