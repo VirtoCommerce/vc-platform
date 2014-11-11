@@ -28,24 +28,16 @@
                     </div>
                 </div>
                 <div class="col-md-12" style="margin-bottom: 40px">
-                    <ul class="image-grid">
+                    <ul class="image-grid" ui-sortable="sortableOptions" ng-model="item.images">
                         <li class="image" ng-repeat="image in item.images" ng-include="'imageTemplate.html'">
                         </li>
                     </ul>
                 </div>
-
             </div>
 
             <script type="text/ng-template" id="imageTemplate.html">
-                <div class="image-container" ng-class="{selected:image.selected}" ng-click="toggleImageSelect($event, image)" context-menu="toggleImageSelect($event, image)" data-target="itemImageMenu{{$index}}">
+                <div class="image-container shadow" ng-class="{selected:image.selected}" ng-click="toggleImageSelect($event, image)">
                     <img ng-src="{{image.url ? image.url : ''}}" />
-                </div>
-                <div id="itemImageMenu{{$index}}" role="menu" class="dropdown-menu context-menu">
-                    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu2">
-                        <li>
-                            <a style="cursor: pointer;" role="menuitem" tabindex="1" ng-click="removeAction([image])">Remove</a>
-                        </li>
-                    </ul>
                 </div>
             </script>
         </div>

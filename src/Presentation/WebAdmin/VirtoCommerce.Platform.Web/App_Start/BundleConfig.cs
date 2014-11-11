@@ -41,7 +41,8 @@ namespace VirtoCommerce.Platform.Web
                 "~/Scripts/angular-route.js",
                 "~/Scripts/angular-sanitize.js",
                 "~/Scripts/angular-route.js",
-                "~/Scripts/angular-touch.js"));
+                "~/Scripts/angular-touch.js",
+                "~/Scripts/sortable.js"));
             //Angular ui
             bundles.Add(new ScriptBundle("~/bundles/angularui").Include(
                 "~/Scripts/AngularUI/ui-router.js",

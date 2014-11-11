@@ -694,6 +694,7 @@
     <Content Include="Scripts\ng-focus-on.js" />
     <Content Include="Scripts\ng-google-chart.js" />
     <Content Include="Scripts\ng-tags-input.js" />
+    <Content Include="Scripts\sortable.js" />
     <Content Include="Scripts\underscore.js" />
     <Content Include="Scripts\underscore.min.js" />
     <Content Include="Scripts\xeditable.js" />

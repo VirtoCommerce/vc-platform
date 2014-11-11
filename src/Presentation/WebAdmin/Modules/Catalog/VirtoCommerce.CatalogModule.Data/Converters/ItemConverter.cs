@@ -20,11 +20,8 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 														  foundation.Item[] variations,
 														  string mainProductId)
 		{
-			var retVal = new module.CatalogProduct();
-			retVal.Id = dbItem.ItemId;
-			retVal.Catalog = catalog;
-			retVal.CatalogId = catalog.Id;
-			if (category != null)
+			var retVal = new module.CatalogProduct {Id = dbItem.ItemId, Catalog = catalog, CatalogId = catalog.Id};
+		    if (category != null)
 			{
 				retVal.Category = category;
 				retVal.CategoryId = category.Id;
@@ -50,7 +47,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			#region Assets
 			if (dbItem.ItemAssets != null)
 			{
-				retVal.Assets = dbItem.ItemAssets.Select(x => x.ToModuleModel()).ToList();
+				retVal.Assets = dbItem.ItemAssets.OrderBy(x=>x.SortOrder).Select(x => x.ToModuleModel()).ToList();
 			}
 			#endregion
 
@@ -103,13 +100,17 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				}
 			}
 			retVal.ItemAssets = new NullCollection<foundation.ItemAsset>();
+		    
 			if (product.Assets != null)
 			{
+                var assets = product.Assets.ToArray();
 				retVal.ItemAssets = new ObservableCollection<foundation.ItemAsset>();
-				foreach (var asset in product.Assets)
+				for (int order = 0; order < assets.Length; order++)
 				{
+				    var asset = assets[order];
 					var dbAsset = asset.ToFoundation();
 					dbAsset.ItemId = product.Id;
+				    dbAsset.SortOrder = order;
 					retVal.ItemAssets.Add(dbAsset);
 				}
 			}
