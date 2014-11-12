@@ -9,6 +9,7 @@ using VirtoCommerce.Foundation.Catalogs.Factories;
 using VirtoCommerce.Foundation.Data.Catalogs;
 using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
 using foundation = VirtoCommerce.Foundation.Catalogs.Model;
+using moduleModel = VirtoCommerce.CatalogModule.Model;
 
 namespace VirtoCommerce.CatalogModule.Data.Repositories
 {
@@ -47,14 +48,21 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			return retVal;
 		}
 
-		public foundation.Item[] GetItemByIds(string[] itemIds)
+		public foundation.Item[] GetItemByIds(string[] itemIds, moduleModel.ItemResponseGroup respGroup = moduleModel.ItemResponseGroup.ItemLarge)
 		{
-			var retVal = base.Items.Include(x => x.ItemPropertyValues)
-								   .Include(x => x.Catalog)
-								   .Include(x => x.ItemAssets)
-								   .Include(x => x.CategoryItemRelations)
-								   .Where(x => itemIds.Contains(x.ItemId))
-								   .ToArray();
+			var query = base.Items.Include(x => x.Catalog)
+								  .Include(x => x.CategoryItemRelations)
+								  .Where(x => itemIds.Contains(x.ItemId));
+			if ((respGroup & moduleModel.ItemResponseGroup.ItemProperties) == moduleModel.ItemResponseGroup.ItemProperties)
+			{
+				query = query.Include(x => x.ItemPropertyValues);
+			}
+			if ((respGroup & moduleModel.ItemResponseGroup.ItemAssets) == moduleModel.ItemResponseGroup.ItemAssets)
+			{
+				query = query.Include(x => x.ItemAssets);
+			}
+
+			var retVal = query.ToArray();
 			return retVal;
 		}
 
@@ -159,6 +167,21 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			}
 		}
 
+		public void SwitchProductToMain(foundation.Item item)
+		{
+			var itemRelation = ItemRelations.First(x => x.ChildItemId == item.ItemId);
+			
+			//Update all relations to new parent
+			var allVariationRelations = ItemRelations.Where(x => x.ParentItemId == itemRelation.ParentItemId);
+			foreach(var variationRelation in allVariationRelations)
+			{
+				variationRelation.ParentItemId = item.ItemId;
+			}
+			//Make a old parent relation to new
+			itemRelation.ParentItemId = itemRelation.ChildItemId;
+			itemRelation.ChildItemId = itemRelation.ParentItemId;
+		}
+
 		public void SetItemCategoryRelation(foundation.Item item, foundation.Category category)
 		{
 			item.CategoryItemRelations.Add(new foundation.CategoryItemRelation
@@ -182,6 +205,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 				}
 			}
 		}
+
 		#endregion
 
 

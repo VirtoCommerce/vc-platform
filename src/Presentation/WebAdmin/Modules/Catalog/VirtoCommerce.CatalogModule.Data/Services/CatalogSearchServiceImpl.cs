@@ -134,7 +134,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				var products = new ConcurrentBag<module.CatalogProduct>();
 				Parallel.ForEach(itemIds, parallelOptions, (x) =>
 				{
-					var product = _itemService.GetById(x);
+					var product = _itemService.GetById(x, module.ItemResponseGroup.ItemLarge);
 					products.Add(product);
 				});
 				result.Products = products.OrderByDescending(x => x.Name).ToList();

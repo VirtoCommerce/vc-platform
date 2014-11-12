@@ -41,6 +41,7 @@
     <Compile Include="Model\CategoryLink.cs" />
     <Compile Include="Model\ItemAsset.cs" />
     <Compile Include="Model\ItemAssetType.cs" />
+    <Compile Include="Model\ItemResponseGroup.cs" />
     <Compile Include="Model\SearchCriteria.cs" />
     <Compile Include="Model\Property.cs" />
     <Compile Include="Model\PropertyAttribute.cs" />

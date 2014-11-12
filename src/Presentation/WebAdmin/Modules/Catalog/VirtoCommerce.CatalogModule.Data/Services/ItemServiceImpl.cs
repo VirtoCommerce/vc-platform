@@ -4,6 +4,8 @@ using VirtoCommerce.CatalogModule.Data.Converters;
 using VirtoCommerce.CatalogModule.Repositories;
 using VirtoCommerce.CatalogModule.Services;
 using VirtoCommerce.Foundation.Frameworks.Caching;
+using foundation = VirtoCommerce.Foundation.Catalogs.Model;
+using module = VirtoCommerce.CatalogModule.Model;
 
 namespace VirtoCommerce.CatalogModule.Data.Services
 {
@@ -19,12 +21,12 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
 		#region IItemService Members
 
-		public Model.CatalogProduct GetById(string itemId)
+		public module.CatalogProduct GetById(string itemId, module.ItemResponseGroup respGroup)
 		{
-			Model.CatalogProduct retVal = null;
+			module.CatalogProduct retVal = null;
 			using (var repository = _catalogRepositoryFactory())
 			{
-				var dbItem = repository.GetItemByIds(new string[] { itemId }).FirstOrDefault();
+				var dbItem = repository.GetItemByIds(new string[] { itemId }, respGroup).FirstOrDefault();
 				var dbCatalog = repository.GetCatalogById(dbItem.CatalogId);
 				var dbVariations = repository.GetAllItemVariations(dbItem);
 				var parentItemRelation = repository.ItemRelations.FirstOrDefault(x => x.ChildItemId == itemId);
@@ -48,7 +50,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 			return retVal;
 		}
 
-		public Model.CatalogProduct Create(Model.CatalogProduct item)
+		public module.CatalogProduct Create(module.CatalogProduct item)
 		{
 			var dbItem = item.ToFoundation();
 
@@ -76,7 +78,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				CommitChanges(repository);
 			}
 
-			var retVal = GetById(dbItem.ItemId);
+			var retVal = GetById(dbItem.ItemId, module.ItemResponseGroup.ItemLarge);
 			return retVal;
 		}
 
@@ -84,7 +86,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 		{
 			using (var repository = _catalogRepositoryFactory())
 			{
-				var dbItems = repository.GetItemByIds(items.Select(x => x.Id).ToArray());
+				var dbItems = repository.GetItemByIds(items.Select(x => x.Id).ToArray(), module.ItemResponseGroup.ItemLarge);
 				using (var changeTracker = base.GetChangeTracker(repository))
 				{
 					foreach (var dbItem in dbItems)
@@ -93,7 +95,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 						if (item != null)
 						{
 							changeTracker.Attach(dbItem);
-
+							
 							var dbItemChanged = item.ToFoundation();
 							dbItemChanged.Patch(dbItem);
 
@@ -101,6 +103,11 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 							if (item.MainProductId != null)
 							{
 								repository.SetVariationRelation(dbItem, item.MainProductId);
+							}
+							else
+							{
+								//Switch item like a  main product
+								repository.SwitchProductToMain(dbItem);
 							}
 						}
 					}

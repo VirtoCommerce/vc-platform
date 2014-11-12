@@ -80,7 +80,7 @@ namespace VirtoCommerce.CatalogModule.Test
 		public void GetProduct()
 		{
 			var itemService = GetItemService();
-			var product = itemService.GetById("b7871dc6-9b2c-4a9a-a1aa-2c48fb0a6243");
+			var product = itemService.GetById("b7871dc6-9b2c-4a9a-a1aa-2c48fb0a6243", ItemResponseGroup.ItemLarge);
 		}
 		[TestMethod]
 		public void WorkingWithItemTest()

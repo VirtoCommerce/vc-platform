@@ -27,7 +27,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [HttpGet]
         public IHttpActionResult Get(string id)
         {
-            var item = _itemsService.GetById(id);
+            var item = _itemsService.GetById(id, moduleModel.ItemResponseGroup.ItemLarge);
             if (item == null)
             {
                 return NotFound();
@@ -60,7 +60,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		[ResponseType(typeof(webModel.Product))]
         public IHttpActionResult GetNewVariation(string itemId)
         {
-			var mainProduct = _itemsService.GetById(itemId);
+			var mainProduct = _itemsService.GetById(itemId, moduleModel.ItemResponseGroup.ItemLarge);
 			var newVariation = new webModel.Product
 			{
 				Name = "New variation",
