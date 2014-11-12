@@ -61,22 +61,22 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		[ResponseType(typeof(webModel.Product))]
         public IHttpActionResult GetNewVariation(string itemId)
         {
-			var mainProduct = _itemsService.GetById(itemId, moduleModel.ItemResponseGroup.ItemLarge);
-            if (mainProduct == null)
+			var product = _itemsService.GetById(itemId, moduleModel.ItemResponseGroup.ItemLarge);
+			if (product == null)
             {
                 return NotFound();
             }
 
-			var allCategoryProperties = _propertyService.GetCategoryProperties(mainProduct.CategoryId);
-			var mainWebProduct = mainProduct.ToWebModel(allCategoryProperties);
+			var allCategoryProperties = _propertyService.GetCategoryProperties(product.CategoryId);
+			var mainWebProduct = product.ToWebModel(allCategoryProperties);
 
 			var newVariation = new webModel.Product
 			{
-				Name = mainProduct.Name,
+				Name = product.Name,
 				Code = Guid.NewGuid().ToString().Substring(0, 5),
-				CategoryId = mainProduct.CategoryId,
-				CatalogId = mainProduct.CatalogId,
-				TitularItemId = itemId,
+				CategoryId = product.CategoryId,
+				CatalogId = product.CatalogId,
+				TitularItemId = product.MainProductId ?? itemId,
 			};
 
             newVariation.Properties = mainWebProduct.Properties.Where(x=>x.Type == webModel.PropertyType.Product).ToList();

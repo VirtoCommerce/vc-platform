@@ -32,8 +32,8 @@
 
     function saveChanges() {
         $scope.currentBlade.isLoading = true;
-        var changes = { id: $scope.currentBlade.item.id, name: $scope.currentBlade.item.name, code: $scope.currentBlade.item.code };
-        items.updateitem({}, changes, function (data, headers) {
+        var changes = { id: $scope.currentBlade.item.id, name: $scope.currentBlade.item.name, titularItemId: $scope.currentBlade.item.titularItemId, code: $scope.currentBlade.item.code };
+        items.updateitem({}, $scope.currentBlade.item, function (data, headers) {
             $scope.currentBlade.refresh(true);
         });
     };

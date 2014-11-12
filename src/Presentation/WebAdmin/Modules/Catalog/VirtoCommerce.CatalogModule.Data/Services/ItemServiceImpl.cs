@@ -28,9 +28,24 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 			{
 				var dbItem = repository.GetItemByIds(new string[] { itemId }, respGroup).FirstOrDefault();
 				var dbCatalog = repository.GetCatalogById(dbItem.CatalogId);
-				var dbVariations = repository.GetAllItemVariations(dbItem);
+				
 				var parentItemRelation = repository.ItemRelations.FirstOrDefault(x => x.ChildItemId == itemId);
 				var parentItemId = parentItemRelation == null ? null : parentItemRelation.ParentItemId;
+				foundation.Item[] dbVariations = null;
+				if ((respGroup & module.ItemResponseGroup.Variations) == module.ItemResponseGroup.Variations)
+				{
+					dbVariations = repository.GetAllItemVariations(parentItemId ?? itemId);
+					//When user load not main product need a inclue main product in variation list and exlude current 
+					if (parentItemId != null)
+					{
+						var dbMainItem = repository.GetItemByIds(new string[] { parentItemId }, respGroup).FirstOrDefault();
+						dbVariations = dbVariations.Concat(new foundation.Item[] { dbMainItem }).Where(x => x.ItemId != itemId).ToArray();
+					}
+
+					//Need this for add main product to variations list except current  
+					dbVariations = dbVariations.Concat(new foundation.Item[] { dbItem }).Where(x => x.ItemId != itemId).ToArray();
+				}
+
 				var catalog = dbCatalog.ToModuleModel();
 				if (dbItem.CategoryItemRelations.Any())
 				{

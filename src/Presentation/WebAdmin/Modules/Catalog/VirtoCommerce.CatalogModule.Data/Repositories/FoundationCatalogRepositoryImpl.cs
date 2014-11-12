@@ -103,10 +103,10 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			return retVal.ToArray();
 		}
 
-		public foundation.Item[] GetAllItemVariations(foundation.Item item)
+		public foundation.Item[] GetAllItemVariations(string itemId)
 		{
 			//Load Variations
-			var itemIds =  ItemRelations.Where(x => x.ParentItemId == item.ItemId).Select(x=>x.ChildItemId).ToArray();
+			var itemIds = ItemRelations.Where(x => x.ParentItemId == itemId).Select(x => x.ChildItemId).ToArray();
 			return GetItemByIds(itemIds.ToArray());
 			
 		}
@@ -162,17 +162,20 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 
 		public void SwitchProductToMain(foundation.Item item)
 		{
-			var itemRelation = ItemRelations.First(x => x.ChildItemId == item.ItemId);
-			
-			//Update all relations to new parent
-			var allVariationRelations = ItemRelations.Where(x => x.ParentItemId == itemRelation.ParentItemId);
-			foreach(var variationRelation in allVariationRelations)
+			var itemRelation = ItemRelations.FirstOrDefault(x => x.ChildItemId == item.ItemId);
+			if (itemRelation != null)
 			{
-				variationRelation.ParentItemId = item.ItemId;
+				//Make a old parent relation to new
+				itemRelation.ChildItemId = itemRelation.ParentItemId;
+				itemRelation.ParentItemId = item.ItemId;
+
+				//Update all relations to new parent
+				var allVariationRelations = ItemRelations.Where(x => x.ParentItemId == itemRelation.ParentItemId);
+				foreach (var variationRelation in allVariationRelations)
+				{
+					variationRelation.ParentItemId = item.ItemId;
+				}
 			}
-			//Make a old parent relation to new
-			itemRelation.ParentItemId = itemRelation.ChildItemId;
-			itemRelation.ChildItemId = itemRelation.ParentItemId;
 		}
 
 		public void SetItemCategoryRelation(foundation.Item item, foundation.Category category)
