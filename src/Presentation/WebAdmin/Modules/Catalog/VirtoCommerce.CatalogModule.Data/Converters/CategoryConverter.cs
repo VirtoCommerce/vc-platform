@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using foundation = VirtoCommerce.Foundation.Catalogs.Model;
@@ -12,11 +9,14 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 {
 	public static class CategoryConverter
 	{
-		/// <summary>
-		/// Converting to model type
-		/// </summary>
-		/// <param name="catalogBase"></param>
-		/// <returns></returns>
+        /// <summary>
+        /// Converting to model type
+        /// </summary>
+        /// <param name="dbCategoryBase">The database category base.</param>
+        /// <param name="catalog">The catalog.</param>
+        /// <param name="properties">The properties.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">catalog</exception>
 		public static module.Category ToModuleModel(this foundation.CategoryBase dbCategoryBase, module.Catalog catalog,
 													module.Property[] properties = null)
 		{
@@ -26,23 +26,29 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			var dbCategory = dbCategoryBase as foundation.Category;
 			var retVal = new module.Category
 			{
-				CatalogId = catalog.Id,
-				Catalog = catalog,
-				Id = dbCategory.CategoryId,
-				Name = dbCategory.Name,
-				ParentId = dbCategory.ParentCategoryId,
+			    CatalogId = catalog.Id,
+			    Catalog = catalog,
+                Id = dbCategoryBase.CategoryId,
+                ParentId = dbCategoryBase.ParentCategoryId,
+		
 			};
-			retVal.PropertyValues = dbCategory.CategoryPropertyValues.Select(x => x.ToModuleModel(properties)).ToList();
-			
-			return retVal;
+
+            if (dbCategory != null)
+            {
+                retVal.Name = dbCategory.Name;
+                retVal.PropertyValues =
+                    dbCategory.CategoryPropertyValues.Select(x => x.ToModuleModel(properties)).ToList();
+            }
+
+            return retVal;
 
 		}
 
-		/// <summary>
-		/// Converting to foundation type
-		/// </summary>
-		/// <param name="catalog"></param>
-		/// <returns></returns>
+        /// <summary>
+        /// Converting to foundation type
+        /// </summary>
+        /// <param name="category">The category.</param>
+        /// <returns></returns>
 		public static foundation.CategoryBase ToFoundation(this module.Category category)
 		{
 			var retVal = new foundation.Category
@@ -80,12 +86,15 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			var dbSource = source as foundation.Category;
 			var dbTarget = target as foundation.Category;
 
-			dbTarget.Name = dbSource.Name;
-			if (!dbSource.CategoryPropertyValues.IsNullCollection())
-			{
-				dbSource.CategoryPropertyValues.Patch(dbTarget.CategoryPropertyValues, new PropertyValueComparer(),
-									 (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
-			}
+		    if (dbSource != null && dbTarget != null)
+		    {
+		        dbTarget.Name = dbSource.Name;
+		        if (!dbSource.CategoryPropertyValues.IsNullCollection())
+		        {
+		            dbSource.CategoryPropertyValues.Patch(dbTarget.CategoryPropertyValues, new PropertyValueComparer(),
+		                (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
+		        }
+		    }
 		}
 	}
 }

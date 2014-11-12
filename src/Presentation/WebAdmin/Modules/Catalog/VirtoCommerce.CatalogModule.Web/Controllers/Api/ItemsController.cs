@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
+using Microsoft.Practices.ObjectBuilder2;
 using VirtoCommerce.CatalogModule.Web.Converters;
 using VirtoCommerce.CatalogModule.Services;
 using moduleModel = VirtoCommerce.CatalogModule.Model;
@@ -27,7 +28,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [HttpGet]
         public IHttpActionResult Get(string id)
         {
-            var item = _itemsService.GetById(id);
+            var item = _itemsService.GetById(id, moduleModel.ItemResponseGroup.ItemLarge);
             if (item == null)
             {
                 return NotFound();
@@ -60,15 +61,32 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		[ResponseType(typeof(webModel.Product))]
         public IHttpActionResult GetNewVariation(string itemId)
         {
-			var mainProduct = _itemsService.GetById(itemId);
+			var product = _itemsService.GetById(itemId, moduleModel.ItemResponseGroup.ItemLarge);
+			if (product == null)
+            {
+                return NotFound();
+            }
+
+			var allCategoryProperties = _propertyService.GetCategoryProperties(product.CategoryId);
+			var mainWebProduct = product.ToWebModel(allCategoryProperties);
+
 			var newVariation = new webModel.Product
 			{
-				Name = "New variation",
+				Name = product.Name,
 				Code = Guid.NewGuid().ToString().Substring(0, 5),
-				CategoryId = mainProduct.CategoryId,
-				CatalogId = mainProduct.CatalogId,
-				TitularItemId = itemId
+				CategoryId = product.CategoryId,
+				CatalogId = product.CatalogId,
+				TitularItemId = product.MainProductId ?? itemId,
 			};
+
+            newVariation.Properties = mainWebProduct.Properties.Where(x=>x.Type == webModel.PropertyType.Product).ToList();
+
+            //Need to generated new ids
+            foreach (var val in newVariation.Properties.SelectMany(x=>x.Values).ToArray())
+            {
+                val.Id = Guid.NewGuid().ToString();
+            }
+
 			var retVal = _itemsService.Create(newVariation.ToModuleModel()).ToWebModel();
 			return Ok(retVal);
         }

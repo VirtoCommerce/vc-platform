@@ -8,12 +8,14 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 {
 	public static class PropertyValueConverter
 	{
-		
-		/// <summary>
-		/// Converting to model type
-		/// </summary>
-		/// <param name="catalogBase"></param>
-		/// <returns></returns>
+
+        /// <summary>
+        /// Converting to model type
+        /// </summary>
+        /// <param name="dbPropValue">The database property value.</param>
+        /// <param name="properties">The properties.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">dbPropValue</exception>
 		public static module.PropertyValue ToModuleModel(this foundation.PropertyValueBase dbPropValue,	 module.Property[] properties)
 		{
 			if (dbPropValue == null)
@@ -40,17 +42,19 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			return retVal;
 		}
 
-		/// <summary>
-		/// Converting to foundation type
-		/// </summary>
-		/// <param name="catalog"></param>
-		/// <returns></returns>
-		public static foundation.PropertyValueBase ToFoundation<T>(this module.PropertyValue propValue) where T : new()
-		{
+        /// <summary>
+        /// Converting to foundation type
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="propValue">The property value.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentNullException">propValue</exception>
+		public static foundation.PropertyValueBase ToFoundation<T>(this module.PropertyValue propValue) where T : foundation.PropertyValueBase, new()
+        {
 			if (propValue == null)
 				throw new ArgumentNullException("propValue");
 
-			foundation.PropertyValueBase retVal = new T() as foundation.PropertyValueBase;
+            var retVal = new T();
 			
             if (propValue.Id != null)
 				retVal.PropertyValueId = propValue.Id;
@@ -71,14 +75,18 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// <param name="target"></param>
 		public static void Patch(this foundation.PropertyValueBase source, foundation.PropertyValueBase target)
 		{
-			if (target == null)
-				throw new ArgumentNullException("target");
+		    if (target == null)
+		    {
+		        throw new ArgumentNullException("target");
+		    }
+				
+		    SetPropertyValue(target, (foundation.PropertyValueType)target.ValueType, target.ToString());
 
-			var newValue = target.ToString();
-			if (newValue != null)
-				SetPropertyValue(target, (foundation.PropertyValueType)target.ValueType, target.ToString());
-			if (source.KeyValue != null)
-				target.KeyValue = source.KeyValue;
+		    if (!string.IsNullOrWhiteSpace(source.KeyValue))
+		    {
+		        target.KeyValue = source.KeyValue;
+		    }
+				
 	
 		}
 

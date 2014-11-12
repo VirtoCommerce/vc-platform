@@ -1,10 +1,6 @@
-﻿using System;
+﻿using Omu.ValueInjecter;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Omu.ValueInjecter;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
 using moduleModel = VirtoCommerce.CatalogModule.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 
@@ -24,7 +20,7 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 
 			if (product.Assets != null)
 			{
-				var assetBases = product.Assets.Select(x => x.ToWebModel());
+				var assetBases = product.Assets.Select(x => x.ToWebModel()).ToList();
 				retVal.Images = assetBases.OfType<webModel.ProductImage>().ToList();
 				retVal.Assets = assetBases.OfType<webModel.ProductAsset>().ToList();
 			}
@@ -61,19 +57,18 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 						//Need add dummy property for each value without property
 						property = new webModel.Property
 						{
-							Id = propValue.Id,
-							//Catalog = retVal.Category.Catalog,
-							CatalogId = product.CatalogId,
-							//Category = retVal.Category,
-							//CategoryId = product.Id,
-							IsManageable = false,
-							Name = propValue.PropertyName,
-							Type = webModel.PropertyType.Category,
-							ValueType = (webModel.PropertyValueType)(int)propValue.ValueType,
+						    Id = propValue.Id,
+						    //Catalog = retVal.Category.Catalog,
+						    CatalogId = product.CatalogId,
+						    //Category = retVal.Category,
+						    //CategoryId = product.Id,
+						    IsManageable = false,
+						    Name = propValue.PropertyName,
+						    Type = webModel.PropertyType.Product,
+						    ValueType = (webModel.PropertyValueType) (int) propValue.ValueType,
+						    Values = new List<webModel.PropertyValue> {propValue.ToWebModel()},
 						};
-						property.Values = new List<webModel.PropertyValue>();
-						property.Values.Add(propValue.ToWebModel());
-						retVal.Properties.Add(property);
+					    retVal.Properties.Add(property);
 					}
 					else
 					{

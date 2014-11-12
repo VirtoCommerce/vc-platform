@@ -3,7 +3,7 @@ namespace VirtoCommerce.CatalogModule.Services
 {
     public interface IItemService
     {
-		CatalogProduct GetById(string itemId);
+		CatalogProduct GetById(string itemId, ItemResponseGroup respGroup);
 		CatalogProduct Create(CatalogProduct item);
 		void Update(CatalogProduct[] items);
 		void Delete(string[] itemIds);

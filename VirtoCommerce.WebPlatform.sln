@@ -85,6 +85,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommerceFoundation.Data.Azu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Caching.HttpCache", "src\Extensions\Cache\VirtoCommerce.Caching.HttpCache\VirtoCommerce.Caching.HttpCache.csproj", "{3FE4EB14-557A-46BC-94AD-2E9874F85ACE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.MerchandisingModule.Web2", "src\Presentation\WebAdmin\Modules\Merchandising\VirtoCommerce.MerchandisingModule.Web2\VirtoCommerce.MerchandisingModule.Web2.csproj", "{A8BEEDE8-E33E-4326-A97D-4976549D2EFC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -159,6 +161,10 @@ Global
 		{3FE4EB14-557A-46BC-94AD-2E9874F85ACE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3FE4EB14-557A-46BC-94AD-2E9874F85ACE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3FE4EB14-557A-46BC-94AD-2E9874F85ACE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8BEEDE8-E33E-4326-A97D-4976549D2EFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8BEEDE8-E33E-4326-A97D-4976549D2EFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8BEEDE8-E33E-4326-A97D-4976549D2EFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8BEEDE8-E33E-4326-A97D-4976549D2EFC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -189,5 +195,6 @@ Global
 		{039E7914-2925-44C4-ACAD-6BCCFA2A370E} = {EAE05907-1BEE-47FA-890A-40C84B879B1C}
 		{E3769352-34C8-41A9-A6C8-DA95D7DFF903} = {EAE05907-1BEE-47FA-890A-40C84B879B1C}
 		{3FE4EB14-557A-46BC-94AD-2E9874F85ACE} = {EAE05907-1BEE-47FA-890A-40C84B879B1C}
+		{A8BEEDE8-E33E-4326-A97D-4976549D2EFC} = {AAAC68D3-2CC4-40A6-9E4E-5DDC944817D3}
 	EndGlobalSection
 EndGlobal

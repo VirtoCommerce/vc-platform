@@ -148,24 +148,31 @@
         $scope.selectedItem = listItem;
     };
 
-    $scope.selectItem = function (listItem) {
+    $scope.selectItem = function (e, listItem) {
         $scope.blade.setSelectedItem(listItem);
 
         if (listItem.type === 'category') {
             if (preventCategoryListingOnce) {
                 preventCategoryListingOnce = false;
-            } else {
-                var newBlade = {
-                    id: 'itemsList' + $scope.blade.level,
-                    level: $scope.blade.level + 1,
-                    title: 'Categories & Items',
-                    subtitle: 'Browsing "' + listItem.name + '"',
-                    catalogId: $scope.blade.catalogId,
-                    categoryId: listItem.id,
-                    controller: 'categoriesItemsListController',
-                    template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/categories-items-list.tpl.html',
-                };
-                bladeNavigationService.showBlade(newBlade, $scope.blade);
+            } else
+            {
+                if (e.ctrlKey)
+                {
+                    var newBlade = {
+                        id: 'itemsList' + $scope.blade.level,
+                        level: $scope.blade.level + 1,
+                        title: 'Categories & Items',
+                        subtitle: 'Browsing "' + listItem.name + '"',
+                        catalogId: $scope.blade.catalogId,
+                        categoryId: listItem.id,
+                        controller: 'categoriesItemsListController',
+                        template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/categories-items-list.tpl.html',
+                    };
+                    bladeNavigationService.showBlade(newBlade, $scope.blade);
+                } else {
+                    $scope.blade.categoryId = listItem.id;
+                    $scope.blade.refresh();
+                }
             }
         } else {
             $scope.blade.showItemBlade(listItem.id, listItem.name);
