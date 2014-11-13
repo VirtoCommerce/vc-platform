@@ -6,7 +6,8 @@
     'catalogModule.resources.itemsSearch',
     'platformWebApp.common.confirmDialog'
 ])
-.controller('categoriesItemsListController', ['$rootScope', '$scope', '$filter', 'categories', 'items', 'itemsSearch', 'bladeNavigationService', 'dialogService', function ($rootScope, $scope, $filter, categories, items, itemsSearch, bladeNavigationService, dialogService) {
+.controller('categoriesItemsListController', ['$rootScope', '$scope', '$filter', 'categories', 'items', 'itemsSearch', 'bladeNavigationService', 'dialogService', function ($rootScope, $scope, $filter, categories, items, itemsSearch, bladeNavigationService, dialogService)
+{
     //pagination settigs
     $scope.pageSettings = {};
     $scope.pageSettings.totalItems = 0;
@@ -20,7 +21,8 @@
     $scope.selectedItem = null;
     var preventCategoryListingOnce;
 
-    $scope.blade.refresh = function () {
+    $scope.blade.refresh = function ()
+    {
         $scope.blade.isLoading = true;
         itemsSearch.listitemssearch(
             {
@@ -32,34 +34,40 @@
                 start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
                 count: $scope.pageSettings.itemsPerPageCount
             },
-		function (data, headers) {
+		function (data, headers)
+		{
 		    $scope.blade.isLoading = false;
 		    $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
 		    $scope.items = data.listEntries;
 		    $scope.selectedAll = false;
 
-		    if ($scope.selectedItem != null) {
+		    if ($scope.selectedItem != null)
+		    {
 		        $scope.selectedItem = $scope.findItem($scope.selectedItem.id);
 		    }
 		});
     }
 
-    $scope.$watch('pageSettings.currentPage', function (newPage) {
+    $scope.$watch('pageSettings.currentPage', function (newPage)
+    {
         $scope.blade.refresh();
     });
 
-    $scope.edit = function (listItem) {
+    $scope.edit = function (listItem)
+    {
         closeChildrenBlades();
 
         $scope.selectedItem = listItem;
-        if (listItem.type === 'category') {
+        if (listItem.type === 'category')
+        {
             $scope.blade.showCategoryBlade(listItem.id, null, listItem.name);
             preventCategoryListingOnce = true;
         }
         // else do nothing as item is opened on selecting it.
     };
 
-    $scope.blade.showCategoryBlade = function (id, data, title) {
+    $scope.blade.showCategoryBlade = function (id, data, title)
+    {
         var newBlade = {
             id: "listItemDetail",
             currentEntityId: id,
@@ -72,7 +80,8 @@
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };
 
-    $scope.blade.showItemBlade = function (id, title) {
+    $scope.blade.showItemBlade = function (id, title)
+    {
         var newBlade = {
             id: "listItemDetail",
             itemId: id,
@@ -85,10 +94,13 @@
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };
 
-    $scope.delete = function () {
-        if (isItemsChecked()) {
+    $scope.delete = function ()
+    {
+        if (isItemsChecked())
+        {
             deleteChecked();
-        } else {
+        } else
+        {
             var dialog = {
                 id: "notifyNoTargetCategory",
                 title: "Message",
@@ -100,41 +112,53 @@
         preventCategoryListingOnce = true;
     };
 
-    function isItemsChecked() {
-        if ($scope.items) {
+    function isItemsChecked()
+    {
+        if ($scope.items)
+        {
             return $filter('filter')($scope.items, { selected: true }, true).length > 0;
-        } else {
+        } else
+        {
             return false;
         }
     }
 
-    function deleteChecked() {
+    function deleteChecked()
+    {
         var dialog = {
             id: "confirmDeleteItem",
             title: "Delete confirmation",
             message: "Are you sure you want to delete selected Categories or Items?",
-            callback: function (remove) {
-                if (remove) {
+            callback: function (remove)
+            {
+                if (remove)
+                {
                     closeChildrenBlades();
 
                     var selection = $filter('filter')($scope.items, { selected: true }, true);
                     var categoryIds = [];
                     var itemIds = [];
-                    angular.forEach(selection, function (listItem) {
+                    angular.forEach(selection, function (listItem)
+                    {
                         if (listItem.type === 'category')
                             categoryIds.push(listItem.id);
-                        else {
+                        else
+                        {
                             itemIds.push(listItem.id);
                         }
                     });
 
-                    if (categoryIds.length > 0) {
-                    	categories.remove({}, categoryIds, function (data, headers) {
+                    if (categoryIds.length > 0)
+                    {
+                        categories.remove({}, categoryIds, function (data, headers)
+                        {
                             $scope.blade.refresh();
                         });
                     }
-                    if (itemIds.length > 0) {
-                    	items.remove({ }, itemIds, function (data, headers) {
+                    if (itemIds.length > 0)
+                    {
+                        items.remove({}, itemIds, function (data, headers)
+                        {
                             $scope.blade.refresh();
                         });
                     }
@@ -144,15 +168,19 @@
         dialogService.showConfirmationDialog(dialog);
     }
 
-    $scope.blade.setSelectedItem = function (listItem) {
+    $scope.blade.setSelectedItem = function (listItem)
+    {
         $scope.selectedItem = listItem;
     };
 
-    $scope.selectItem = function (e, listItem) {
+    $scope.selectItem = function (e, listItem)
+    {
         $scope.blade.setSelectedItem(listItem);
 
-        if (listItem.type === 'category') {
-            if (preventCategoryListingOnce) {
+        if (listItem.type === 'category')
+        {
+            if (preventCategoryListingOnce)
+            {
                 preventCategoryListingOnce = false;
             } else
             {
@@ -162,28 +190,78 @@
                         id: 'itemsList' + $scope.blade.level,
                         level: $scope.blade.level + 1,
                         title: 'Categories & Items',
+                        breadcrumbs: angular.copy($scope.blade.breadcrumbs),
                         subtitle: 'Browsing "' + listItem.name + '"',
                         catalogId: $scope.blade.catalogId,
                         categoryId: listItem.id,
                         controller: 'categoriesItemsListController',
                         template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/categories-items-list.tpl.html',
                     };
+                    newBlade.breadcrumbs.push({
+                        params: listItem,
+                        name: listItem.name,
+                        id: listItem.id,
+                        action: function (params)
+                        {
+                            $scope.adjustBreadcrumbs(newBlade.breadcrumbs, listItem.id);
+                            newBlade.categoryId = params.id;
+                            newBlade.refresh();
+                        }
+                    });
                     bladeNavigationService.showBlade(newBlade, $scope.blade);
-                } else {
+                }
+                else
+                {
+
+                    $scope.adjustBreadcrumbs($scope.blade.breadcrumbs, listItem.id);
+
+                    $scope.blade.breadcrumbs.push({
+                        params: listItem,
+                        name: listItem.name,
+                        id: listItem.id,
+                        action: function (params)
+                        {
+                            $scope.adjustBreadcrumbs($scope.blade.breadcrumbs, listItem.id);
+                            $scope.blade.categoryId = params.id;
+                            $scope.blade.refresh();
+                        }
+                    });
+
                     $scope.blade.categoryId = listItem.id;
                     $scope.blade.refresh();
                 }
             }
-        } else {
+        } else
+        {
             $scope.blade.showItemBlade(listItem.id, listItem.name);
         }
 
         $scope.blade.currentItemId = $scope.selectedItem.type === 'product' ? $scope.selectedItem.id : undefined;
     };
 
-    $scope.findItem = function (id) {
+    $scope.adjustBreadcrumbs = function(breadcrumbs, id) {
+        var breadrumbIndex = -1;
+
+        angular.forEach(breadcrumbs, function (bread)
+        {
+            if (bread.id == id)
+            {
+                breadrumbIndex = breadcrumbs.indexOf(bread);
+            }
+        });
+
+        //Reset breadcrumb to found index
+        if (breadrumbIndex >= 0) {
+            var clearStart = breadrumbIndex + 1;
+            breadcrumbs.splice(clearStart, breadcrumbs.length - clearStart);
+        }
+    }
+
+    $scope.findItem = function (id)
+    {
         var retVal;
-        angular.forEach($scope.items, function (item) {
+        angular.forEach($scope.items, function (item)
+        {
             if (item.id == id)
                 retVal = item;
         });
@@ -191,24 +269,32 @@
         return retVal;
     }
 
-    $scope.blade.onClose = function (closeCallback) {
-        if ($scope.blade.childrenBlades.length > 0) {
-            var callback = function () {
-                if ($scope.blade.childrenBlades.length == 0) {
+    $scope.blade.onClose = function (closeCallback)
+    {
+        if ($scope.blade.childrenBlades.length > 0)
+        {
+            var callback = function ()
+            {
+                if ($scope.blade.childrenBlades.length == 0)
+                {
                     closeCallback();
                 };
             };
-            angular.forEach($scope.blade.childrenBlades, function (child) {
+            angular.forEach($scope.blade.childrenBlades, function (child)
+            {
                 bladeNavigationService.closeBlade(child, callback);
             });
         }
-        else {
+        else
+        {
             closeCallback();
         }
     };
 
-    function closeChildrenBlades() {
-        angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
+    function closeChildrenBlades()
+    {
+        angular.forEach($scope.blade.childrenBlades.slice(), function (child)
+        {
             bladeNavigationService.closeBlade(child);
         });
     }
@@ -216,16 +302,19 @@
     $scope.bladeToolbarCommands = [
       {
           name: "Refresh", icon: 'icon-spin',
-          executeMethod: function () {
+          executeMethod: function ()
+          {
               $scope.blade.refresh();
           },
-          canExecuteMethod: function () {
+          canExecuteMethod: function ()
+          {
               return true;
           }
       },
       {
           name: "Add", icon: 'icon-plus',
-          executeMethod: function () {
+          executeMethod: function ()
+          {
               closeChildrenBlades();
 
               var newBlade = {
@@ -237,31 +326,37 @@
               };
               bladeNavigationService.showBlade(newBlade, $scope.blade);
           },
-          canExecuteMethod: function () {
+          canExecuteMethod: function ()
+          {
               return true;
           }
       },
         {
             name: "Manage", icon: 'icon-new-tab-2',
-            executeMethod: function () {
+            executeMethod: function ()
+            {
                 $scope.edit($scope.selectedItem);
             },
-            canExecuteMethod: function () {
+            canExecuteMethod: function ()
+            {
                 return $scope.selectedItem;
             }
         },
       {
           name: "Delete", icon: 'icon-remove',
-          executeMethod: function () {
+          executeMethod: function ()
+          {
               deleteChecked();
           },
-          canExecuteMethod: function () {
+          canExecuteMethod: function ()
+          {
               return isItemsChecked();
           }
       },
       {
           name: "Advanced search", icon: 'icon-search',
-          executeMethod: function () {
+          executeMethod: function ()
+          {
               var newBlade = {
                   id: 'listItemChild',
                   title: 'Advanced search',
@@ -272,14 +367,17 @@
               bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);
               $scope.bladeClose();
           },
-          canExecuteMethod: function () {
+          canExecuteMethod: function ()
+          {
               return true;
           }
       }
     ];
 
-    $scope.checkAll = function (selected) {
-        angular.forEach($scope.items, function (item) {
+    $scope.checkAll = function (selected)
+    {
+        angular.forEach($scope.items, function (item)
+        {
             item.selected = selected;
         });
     };
