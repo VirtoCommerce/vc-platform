@@ -158,8 +158,7 @@
 		           removeProperty(b.origEntity);
 		       },
 		       canExecuteMethod: function () {
-		           // return b.origEntity.isManageable && !isDirty();
-		           return !(b.origEntity.isNew || isDirty());
+		           return b.origEntity.isManageable && !(b.origEntity.isNew || isDirty());
 		       }
 		   }
     ];

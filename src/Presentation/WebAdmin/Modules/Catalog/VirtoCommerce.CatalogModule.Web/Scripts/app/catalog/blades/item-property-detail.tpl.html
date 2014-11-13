@@ -9,7 +9,7 @@
 
             <div ng-repeat="prop in properties = (blade.item.properties | filter: {type:propGroup.type})">
 
-                <div class="control-group" ng-click="blade.selectedProperty = prop" ng-class="{'selected': blade.selectedProperty == prop}">
+                <div class="control-group">
                     <label for="">
                         <a ng-show="prop.isManageable" href="" ng-click="editProperty(prop)">{{prop.name}}</a>
                         <span ng-show="!prop.isManageable">{{prop.name}}</span>
