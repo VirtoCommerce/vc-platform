@@ -6,8 +6,8 @@ using module = VirtoCommerce.CatalogModule.Model;
 
 namespace VirtoCommerce.CatalogModule.Data.Converters
 {
-	public static class PropertyValueConverter
-	{
+    public static class PropertyValueConverter
+    {
 
         /// <summary>
         /// Converting to model type
@@ -16,31 +16,31 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// <param name="properties">The properties.</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">dbPropValue</exception>
-		public static module.PropertyValue ToModuleModel(this foundation.PropertyValueBase dbPropValue,	 module.Property[] properties)
-		{
-			if (dbPropValue == null)
-				throw new ArgumentNullException("dbPropValue");
+        public static module.PropertyValue ToModuleModel(this foundation.PropertyValueBase dbPropValue, module.Property[] properties)
+        {
+            if (dbPropValue == null)
+                throw new ArgumentNullException("dbPropValue");
 
-			var retVal = new module.PropertyValue
-			{
-				Id = dbPropValue.PropertyValueId,
-				LanguageCode = dbPropValue.Locale,
-				PropertyName = dbPropValue.Name,
-				Value = dbPropValue.ToString(),
-				ValueId = dbPropValue.KeyValue,
+            var retVal = new module.PropertyValue
+            {
+                Id = dbPropValue.PropertyValueId,
+                LanguageCode = dbPropValue.Locale,
+                PropertyName = dbPropValue.Name,
+                Value = dbPropValue.ToString(),
+                ValueId = dbPropValue.KeyValue,
                 ValueType = ((foundation.PropertyValueType)dbPropValue.ValueType).ToModuleModel()
-			};
-		
-			if (properties != null)
-			{
-				var property = properties.FirstOrDefault(x => String.Equals(x.Name, dbPropValue.Name, StringComparison.InvariantCultureIgnoreCase));
-				if (property != null)
-				{
-					retVal.PropertyId = property.Id;
-				}
-			}
-			return retVal;
-		}
+            };
+
+            if (properties != null)
+            {
+                var property = properties.FirstOrDefault(x => String.Equals(x.Name, dbPropValue.Name, StringComparison.InvariantCultureIgnoreCase));
+                if (property != null)
+                {
+                    retVal.PropertyId = property.Id;
+                }
+            }
+            return retVal;
+        }
 
         /// <summary>
         /// Converting to foundation type
@@ -49,78 +49,78 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// <param name="propValue">The property value.</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">propValue</exception>
-		public static foundation.PropertyValueBase ToFoundation<T>(this module.PropertyValue propValue) where T : foundation.PropertyValueBase, new()
+        public static foundation.PropertyValueBase ToFoundation<T>(this module.PropertyValue propValue) where T : foundation.PropertyValueBase, new()
         {
-			if (propValue == null)
-				throw new ArgumentNullException("propValue");
+            if (propValue == null)
+                throw new ArgumentNullException("propValue");
 
             var retVal = new T();
-			
-            if (propValue.Id != null)
-				retVal.PropertyValueId = propValue.Id;
 
-			retVal.Name = propValue.PropertyName;
-			retVal.KeyValue = propValue.ValueId;
-			retVal.Locale = propValue.LanguageCode;
-			retVal.ValueType = (int)propValue.ValueType;
+            if (propValue.Id != null)
+                retVal.PropertyValueId = propValue.Id;
+
+            retVal.Name = propValue.PropertyName;
+            retVal.KeyValue = propValue.ValueId;
+            retVal.Locale = propValue.LanguageCode;
+            retVal.ValueType = (int)propValue.ValueType.ToFoundation();
             SetPropertyValue(retVal, propValue.ValueType.ToFoundation(), propValue.Value);
 
-			return retVal;
-		}
+            return retVal;
+        }
 
-		/// <summary>
-		/// Patch changes
-		/// </summary>
-		/// <param name="source"></param>
-		/// <param name="target"></param>
-		public static void Patch(this foundation.PropertyValueBase source, foundation.PropertyValueBase target)
-		{
-		    if (target == null)
-		    {
-		        throw new ArgumentNullException("target");
-		    }
-				
-		    SetPropertyValue(target, (foundation.PropertyValueType)target.ValueType, target.ToString());
+        /// <summary>
+        /// Patch changes
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="target"></param>
+        public static void Patch(this foundation.PropertyValueBase source, foundation.PropertyValueBase target)
+        {
+            if (target == null)
+            {
+                throw new ArgumentNullException("target");
+            }
 
-		    if (!string.IsNullOrWhiteSpace(source.KeyValue))
-		    {
-		        target.KeyValue = source.KeyValue;
-		    }
-				
-	
-		}
+            SetPropertyValue(target, (foundation.PropertyValueType)target.ValueType, target.ToString());
 
-		private static void SetPropertyValue(foundation.PropertyValueBase retVal, foundation.PropertyValueType type, string value)
-		{
-			switch (type)
-			{
-				case foundation.PropertyValueType.LongString:
-					retVal.LongTextValue = value;
-					break;
-				case foundation.PropertyValueType.ShortString:
-					retVal.ShortTextValue = value;
-					break;
-				case foundation.PropertyValueType.Decimal:
-					retVal.DecimalValue = Decimal.Parse(value);
-					break;
-			}
-		}
-	}
+            if (!string.IsNullOrWhiteSpace(source.KeyValue))
+            {
+                target.KeyValue = source.KeyValue;
+            }
 
-	public class PropertyValueComparer : IEqualityComparer<foundation.PropertyValueBase>
-	{
-		#region IEqualityComparer<Item> Members
 
-		public bool Equals(foundation.PropertyValueBase x, foundation.PropertyValueBase y)
-		{
-			return x.PropertyValueId == y.PropertyValueId;
-		}
+        }
 
-		public int GetHashCode(foundation.PropertyValueBase obj)
-		{
-			return obj.GetHashCode();
-		}
+        private static void SetPropertyValue(foundation.PropertyValueBase retVal, foundation.PropertyValueType type, string value)
+        {
+            switch (type)
+            {
+                case foundation.PropertyValueType.LongString:
+                    retVal.LongTextValue = value;
+                    break;
+                case foundation.PropertyValueType.ShortString:
+                    retVal.ShortTextValue = value;
+                    break;
+                case foundation.PropertyValueType.Decimal:
+                    retVal.DecimalValue = Decimal.Parse(value);
+                    break;
+            }
+        }
+    }
 
-		#endregion
-	}
+    public class PropertyValueComparer : IEqualityComparer<foundation.PropertyValueBase>
+    {
+        #region IEqualityComparer<Item> Members
+
+        public bool Equals(foundation.PropertyValueBase x, foundation.PropertyValueBase y)
+        {
+            return x.PropertyValueId == y.PropertyValueId;
+        }
+
+        public int GetHashCode(foundation.PropertyValueBase obj)
+        {
+            return obj.GetHashCode();
+        }
+
+        #endregion
+    }
 }
