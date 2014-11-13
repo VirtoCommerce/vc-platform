@@ -1541,7 +1541,6 @@ a {
   padding: 8px;
   font-size: 14px;
   line-height: 14pt;
-  vertical-align: top;
   border-bottom: 1px #eaeaea solid;
 }
 .metro .table th[class*="span"],

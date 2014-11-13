@@ -74,7 +74,8 @@
                         bladeC = blade.find('.blade-content'),
                         bladeH = bladeC.height(),
                         bladeIh = blade.find('.inner-block').height(),
-                        header = $(this).parents('.blade-head');
+                        header = $(this).parents('.blade-head'),
+                        bladeA = $(this).parents('.blade-actions');
 
                     if(blade.length) {
                         if(bladeH <= bladeIh) {
@@ -87,13 +88,17 @@
                         if(header.length) {
                             horizontalScroll('on');
                         }
+
+                        if(bladeA.length) {
+                            horizontalScroll('off');
+                        }
                     }
                     else {
                         horizontalScroll('on');
                     }
                 });
 
-                $('.blade-head, .blade-actions').on('mouseenter', function (event) {
+                $('.blade-head').on('mouseenter', function (event) {
                     horizontalScroll('on');
                 });
 
@@ -666,7 +671,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="blade">
+                    <div class="blade actions">
                         <header class="blade-head">
                             <div class="title">
                                 <i class="icon-tree-view"></i>
@@ -686,6 +691,11 @@
                         </header>
                         <div class="blade-content">
                             <div class="inner-block">
+                                <ul class="breadcrumbs">
+                                    <li><a href="">Ссылка</a></li>
+                                    <li class="devider">\</li>
+                                    <li class="active">Финал</li>
+                                </ul>
                                 <table class="table hovered">
                                     <thead>
                                         <tr>
@@ -765,6 +775,15 @@
                                     </ul>
                                 </div>
                             </div>
+                        </div>
+                        <div class="blade-actions">
+                            <p>Selected items</p>
+                            <ul>
+                                <li><span>Item 1</span> <a class="cancel" href="">unmap</a></li>
+                                <li><span>Item 2</span> <a class="cancel" href="">unmap</a></li>
+                                <li><span>Item 3</span> <a class="cancel" href="">unmap</a></li>
+                                <li><span>Item 4</span> <a class="cancel" href="">unmap</a></li>
+                            </ul>
                         </div>
                     </div>
                     <div class="blade">
@@ -1398,6 +1417,70 @@
                             <button>
                                 <span>Create</span>
                             </button>
+                        </div>
+                    </div>
+                    <div class="blade">
+                        <header class="blade-head">
+                            <div class="title">
+                                <i class="icon-tree-view"></i>
+                                <p class="blade-title subheader">Select files</p>
+                                <p class="blade-subtitle subheader-secondary">Blade subtitle</p>
+                            </div>
+                            <div class="blade-head-nav">
+                                <button class="btn-min"></button>
+                                <button class="btn-max"></button>
+                                <button class="btn-close"></button>
+                            </div>
+                            <div class="blade-toolbar toolbar transparent">
+                                <button data-hint="Open" data-hint-mode="2" data-hint-position="top"><i class="icon-folder-2 on-left"></i> Open</button>
+                                <button data-hint="Save" data-hint-mode="2" data-hint-position="top" class="disabled"><i class="icon-floppy on-left"></i> Save</button>
+                                <button data-hint="Refresh" data-hint-mode="2" data-hint-position="top"><i class="icon-spin on-left"></i> Refresh</button>
+                            </div>
+                        </header>
+                        <div class="blade-content">
+                            <div class="inner-block">
+                                <div style="width: 300px;">
+                                    <div class="tiles">
+                                        <div class="tile-block">
+                                            <div class="tile">
+                                                <img src="http://fakeimg.pl/175x175/00CED1/FFF/">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <ul class="tiles">
+                                        <li class="tile-block mini">
+                                            <div class="tile">
+                                                <img src="http://fakeimg.pl/85x85/00CED1/FFF/">
+                                            </div>
+                                        </li>
+                                        <li class="tile-block mini">
+                                            <div class="tile">
+                                                <img src="http://fakeimg.pl/85x85/00CED1/FFF/">
+                                            </div>
+                                        </li>
+                                        <li class="tile-block mini">
+                                            <div class="tile">
+                                                <img src="http://fakeimg.pl/85x85/00CED1/FFF/">
+                                            </div>
+                                        </li>
+                                        <li class="tile-block mini">
+                                            <div class="tile">
+                                                <img src="http://fakeimg.pl/85x85/00CED1/FFF/">
+                                            </div>
+                                        </li>
+                                        <li class="tile-block mini">
+                                            <div class="tile">
+                                                <img src="http://fakeimg.pl/85x85/00CED1/FFF/">
+                                            </div>
+                                        </li>
+                                        <li class="tile-block mini">
+                                            <div class="tile">
+                                                <img src="http://fakeimg.pl/85x85/00CED1/FFF/">
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
