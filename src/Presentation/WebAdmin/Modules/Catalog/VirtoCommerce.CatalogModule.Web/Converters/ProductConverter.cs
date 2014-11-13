@@ -30,6 +30,11 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 				retVal.Variations = product.Variations.Select(x => x.ToWebModel()).ToList();
 			}
 
+			if(product.Links != null)
+			{
+				retVal.Links = product.Links.Select(x => x.ToWebModel()).ToList();
+			}
+
 			retVal.TitularItemId = product.MainProductId;
 
 			retVal.Properties = new List<webModel.Property>();
@@ -134,6 +139,11 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 			if (product.Variations != null)
 			{
 				retVal.Variations = product.Variations.Select(x => x.ToModuleModel()).ToList();
+			}
+
+			if(product.Links != null)
+			{
+				retVal.Links = product.Links.Select(x => x.ToModuleModel()).ToList();
 			}
 			
 			retVal.MainProductId = product.TitularItemId;

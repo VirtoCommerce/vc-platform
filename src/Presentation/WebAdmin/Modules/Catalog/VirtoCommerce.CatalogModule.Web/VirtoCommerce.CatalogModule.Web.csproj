@@ -117,6 +117,7 @@
     <Compile Include="Converters\CatalogConverter.cs" />
     <Compile Include="Converters\CatalogLanguageConverter.cs" />
     <Compile Include="Converters\CategoryConverter.cs" />
+    <Compile Include="Converters\LinkConverter.cs" />
     <Compile Include="Converters\ProductConverter.cs" />
     <Compile Include="Converters\PropertyAttributeConverter.cs" />
     <Compile Include="Converters\PropertyConverter.cs" />

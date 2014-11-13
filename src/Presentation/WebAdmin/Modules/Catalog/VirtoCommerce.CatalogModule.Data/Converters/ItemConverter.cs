@@ -30,6 +30,10 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			retVal.Name = dbItem.Name;
 			retVal.MainProductId = mainProductId;
 
+			#region Links
+			retVal.Links = dbItem.CategoryItemRelations.Select(x => x.ToModuleModel()).ToList();
+			#endregion
+
 			#region Variations
 			if (variations != null)
 			{
@@ -99,8 +103,8 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 					retVal.ItemPropertyValues.Add(dbPropValue);
 				}
 			}
+
 			retVal.ItemAssets = new NullCollection<foundation.ItemAsset>();
-		    
 			if (product.Assets != null)
 			{
                 var assets = product.Assets.ToArray();
@@ -114,6 +118,14 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 					retVal.ItemAssets.Add(dbAsset);
 				}
 			}
+
+			retVal.CategoryItemRelations = new NullCollection<foundation.CategoryItemRelation>();
+			if (product.Links != null)
+			{
+				retVal.CategoryItemRelations = new ObservableCollection<foundation.CategoryItemRelation>();
+				retVal.CategoryItemRelations.AddRange(product.Links.Select(x => x.ToFoundation(product)));
+			}
+ 
 			return retVal;
 		}
 

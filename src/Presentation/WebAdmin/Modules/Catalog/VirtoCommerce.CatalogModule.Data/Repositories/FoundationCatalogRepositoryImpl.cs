@@ -37,6 +37,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			var retVal = Categories.OfType<foundation.Category>()
 										.Include(x => x.CategoryPropertyValues)
 										.Include(x=> x.PropertySet.PropertySetProperties.Select(y=>y.Property))
+										.Include(x=>x.LinkedCategories)
 										.FirstOrDefault(x => x.CategoryId == categoryId);
 			return retVal;
 		}

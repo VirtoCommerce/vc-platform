@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
@@ -36,8 +37,8 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
             if (dbCategory != null)
             {
                 retVal.Name = dbCategory.Name;
-                retVal.PropertyValues =
-                    dbCategory.CategoryPropertyValues.Select(x => x.ToModuleModel(properties)).ToList();
+                retVal.PropertyValues = dbCategory.CategoryPropertyValues.Select(x => x.ToModuleModel(properties)).ToList();
+				retVal.Links = dbCategory.LinkedCategories.Select(x => x.ToModuleModel()).ToList();
             }
 
             return retVal;
@@ -66,8 +67,15 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			retVal.CategoryPropertyValues = new NullCollection<foundation.CategoryPropertyValue>();
 			if(category.PropertyValues != null)
 			{
-				retVal.CategoryPropertyValues = new System.Collections.ObjectModel.ObservableCollection<foundation.CategoryPropertyValue>();
+				retVal.CategoryPropertyValues = new ObservableCollection<foundation.CategoryPropertyValue>();
 				retVal.CategoryPropertyValues.AddRange(category.PropertyValues.Select(x => x.ToFoundation<foundation.CategoryPropertyValue>()).OfType<foundation.CategoryPropertyValue>());
+			}
+
+			retVal.LinkedCategories = new NullCollection<foundation.LinkedCategory>();
+			if(category.Links != null)
+			{
+				retVal.LinkedCategories = new ObservableCollection<foundation.LinkedCategory>();
+				retVal.LinkedCategories.AddRange(category.Links.Select(x => x.ToFoundation(category)));
 			}
  
 			return retVal;
