@@ -86,6 +86,25 @@
         });
     };
 
+    function removeProperty(prop) {
+        var dialog = {
+            id: "confirmDelete",
+            title: "Delete confirmation",
+            message: "Are you sure you want to delete Property '" + prop.name + "'?",
+            callback: function (remove) {
+                if (remove) {
+                    $scope.blade.isLoading = true;
+
+                    properties.delete({ id: prop.id }, function () {
+                        $scope.bladeClose();
+                        b.parentBlade.refresh();
+                    });
+                }
+            }
+        }
+        dialogService.showConfirmationDialog(dialog);
+    }
+
     b.onClose = function (closeCallback) {
         angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
             bladeNavigationService.closeBlade(child);
@@ -121,7 +140,7 @@
 		        saveChanges();
 		    },
 		    canExecuteMethod: function () {
-		        return isDirty() && formScope && formScope.$valid;
+		        return (b.origEntity.isNew || isDirty()) && formScope && formScope.$valid;
 		    }
 		},
         {
@@ -132,7 +151,17 @@
             canExecuteMethod: function () {
                 return isDirty();
             }
-        }
+        },
+		   {
+		       name: "Delete", icon: 'icon-remove',
+		       executeMethod: function () {
+		           removeProperty(b.origEntity);
+		       },
+		       canExecuteMethod: function () {
+		           // return b.origEntity.isManageable && !isDirty();
+		           return !(b.origEntity.isNew || isDirty());
+		       }
+		   }
     ];
 
     // actions on load    
