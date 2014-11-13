@@ -198,13 +198,12 @@
                         template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/categories-items-list.tpl.html',
                     };
                     newBlade.breadcrumbs.push({
-                        params: listItem,
                         name: listItem.name,
                         id: listItem.id,
-                        action: function (params)
+                        action: function ()
                         {
                             $scope.adjustBreadcrumbs(newBlade.breadcrumbs, listItem.id);
-                            newBlade.categoryId = params.id;
+                            newBlade.categoryId = listItem.id;
                             newBlade.refresh();
                         }
                     });
@@ -216,13 +215,12 @@
                     $scope.adjustBreadcrumbs($scope.blade.breadcrumbs, listItem.id);
 
                     $scope.blade.breadcrumbs.push({
-                        params: listItem,
                         name: listItem.name,
                         id: listItem.id,
-                        action: function (params)
+                        action: function ()
                         {
                             $scope.adjustBreadcrumbs($scope.blade.breadcrumbs, listItem.id);
-                            $scope.blade.categoryId = params.id;
+                            $scope.blade.categoryId = listItem.id;
                             $scope.blade.refresh();
                         }
                     });
