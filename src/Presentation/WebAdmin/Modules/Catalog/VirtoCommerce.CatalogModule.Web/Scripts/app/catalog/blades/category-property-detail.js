@@ -76,25 +76,6 @@
         });
     }
 
-    function removeProperty(prop) {
-        var dialog = {
-            id: "confirmDelete",
-            title: "Delete confirmation",
-            message: "Are you sure you want to delete Property '" + prop.name + "'?",
-            callback: function (remove) {
-                if (remove) {
-                    $scope.blade.isLoading = true;
-                    closeChildrenBlades();
-
-                    properties.delete({ id: prop.id }, function () {
-                        $scope.blade.refresh();
-                    });
-                }
-            }
-        }
-        dialogService.showConfirmationDialog(dialog);
-    }
-
     $scope.editProperty = function (prop) {
         var newBlade = {
             id: 'editCategoryProperty',
@@ -162,15 +143,6 @@
 		       },
 		       canExecuteMethod: function () {
 		           return angular.isDefined($scope.blade.selectedProperty) && $scope.blade.selectedProperty.isManageable;
-		       }
-		   },
-		   {
-		       name: "Delete", icon: 'icon-remove',
-		       executeMethod: function () {
-		           removeProperty($scope.blade.selectedProperty);
-		       },
-		       canExecuteMethod: function () {
-		           return $scope.blade.selectedProperty && $scope.blade.selectedProperty.isManageable && !isDirty();
 		       }
 		   }
     ];
