@@ -43,6 +43,8 @@ angular.module(catalogsModuleName, [
                           template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/catalogs-list.tpl.html',
                           isClosingDisabled: true
                       };
+                      blade.breadcrumbs = [];
+                      blade.breadcrumbs.push({ name: blade.title, action: function () { blade.refresh(); } });
                       bladeNavigationService.showBlade(blade);
                   }
               ]

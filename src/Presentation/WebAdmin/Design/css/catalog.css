@@ -11,6 +11,14 @@ ul.tiles
 	padding: 0;
 }
 
+ul.tiles .tile-block.first
+{
+	display: block;
+	float: none;
+	margin: 0 auto 5px;
+	overflow: hidden;
+}
+
 ul.tiles img
 {
 	display: block;
