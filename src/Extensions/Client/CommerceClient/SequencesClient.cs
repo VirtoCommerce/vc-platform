@@ -1,12 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
-using System.Collections.Generic;
-using System.Transactions;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
 
 namespace VirtoCommerce.Client
 {
@@ -37,17 +37,24 @@ namespace VirtoCommerce.Client
         public SequencesClient(IAppConfigRepository repository)
         {
             _repository = repository;
-            var template = repository.Settings.Expand(x=>x.SettingValues).FirstOrDefault(x => x.Name == "TrackingNumberFormat");
-            if (template != null && template.SettingValues.Any())
-            {
-                IdTemplate = template.SettingValues[0].ToString();
-            }
+            //TODO: changing format is not safe because it can break unique tracking number
+            /*Uncomment following lines on your own risk. Dont forget these rules
+             * 1. Traking number contains three parts {0}{1}{2}
+             * {0}. Prefix is option
+             * {1}. Date part is required and must contain all three Year/Month/Day
+             * {2}  Counter is required
+             */
+            //var template = repository.Settings.Expand(x=>x.SettingValues).FirstOrDefault(x => x.Name == "TrackingNumberFormat");
+            //if (template != null && template.SettingValues.Any())
+            //{
+            //    IdTemplate = template.SettingValues[0].ToString();
+            //}
 
-            var dateFormat = repository.Settings.Expand(x=>x.SettingValues).FirstOrDefault(x => x.Name == "TrackingNumberFormatDateFormat");
-            if (dateFormat != null && dateFormat.SettingValues.Any())
-            {
-                DateFormat = dateFormat.SettingValues[0].ToString();
-            }
+            //var dateFormat = repository.Settings.Expand(x=>x.SettingValues).FirstOrDefault(x => x.Name == "TrackingNumberFormatDateFormat");
+            //if (dateFormat != null && dateFormat.SettingValues.Any())
+            //{
+            //    DateFormat = dateFormat.SettingValues[0].ToString();
+            //}
         }
 
 		public string GenerateNext(string objectType)
@@ -58,51 +65,59 @@ namespace VirtoCommerce.Client
 
 				if (InMemorySequences[objectType].IsEmpty || InMemorySequences[objectType].HasExpired)
                 {
-					var startCounter = 0;
-					var endCounter = SequenceReservationRange;
+					int startCounter;
+					int endCounter;
 
 					//Update Sequences in database
                     using (SqlDbConfiguration.ExecutionStrategySuspension)
-                    using (var transaction = new TransactionScope())
+                    using (var transaction = ((DbContext)_repository).Database.BeginTransaction(IsolationLevel.Serializable))
                     {
-                        var sequence = _repository.Sequences.SingleOrDefault(
-                            s => s.ObjectType.Equals(objectType, StringComparison.OrdinalIgnoreCase));
+                        var sequence = _repository.Sequences.SingleOrDefault(s => s.ObjectType.Equals(objectType, StringComparison.OrdinalIgnoreCase));
+
+                        var originalModifiedDate = sequence !=null ? sequence.LastModified : null;
 
                         if (sequence != null)
                         {
-	                        startCounter = sequence.Value;
-
-							//Sequence in database has expired?
-	                        if (sequence.LastModified.HasValue && sequence.LastModified.Value.Date < DateTime.UtcNow.Date)
-	                        {
-		                        startCounter = 0;
-	                        }
-
-	                        try
-	                        {
-		                        endCounter = checked(startCounter + SequenceReservationRange);
-	                        }
-	                        catch (OverflowException)
-	                        {
-		                        //need to reset
-		                        startCounter = 0;
-		                        endCounter = SequenceReservationRange;
-	                        }
+                            //Make sequence as volatile data
+                            sequence.LastModified = DateTime.UtcNow;
+                            _repository.UnitOfWork.Commit();
                         }
                         else
                         {
-                            sequence = new Sequence { ObjectType = objectType };
+                            sequence = new Sequence { ObjectType = objectType, Value = 0, LastModified = DateTime.UtcNow};
                             _repository.Add(sequence);
+                            _repository.UnitOfWork.Commit();
+                        }
+
+                        //Refresh data to make sure we have latest value in case another transaction was locked
+                        _repository.Refresh(_repository.Sequences);
+                        sequence = _repository.Sequences.Single(s => s.ObjectType.Equals(objectType, StringComparison.OrdinalIgnoreCase));
+                        startCounter = sequence.Value;
+
+                        //Sequence in database has expired?
+                        if (originalModifiedDate.HasValue && originalModifiedDate.Value.Date < DateTime.UtcNow.Date)
+                        {
+                            startCounter = 0;
+                        }
+
+                        try
+                        {
+                            endCounter = checked(startCounter + SequenceReservationRange);
+                        }
+                        catch (OverflowException)
+                        {
+                            //need to reset
+                            startCounter = 0;
+                            endCounter = SequenceReservationRange;
                         }
 
 						//Commit changes
 						sequence.Value = endCounter;
-                        //To ensure that sequence is changed and will be saved on commit
-                        sequence.LastModified = DateTime.UtcNow;
+                        //sequence.LastModified = DateTime.UtcNow;
                         _repository.UnitOfWork.Commit();
 
 						//Transaction success
-                        transaction.Complete();
+                        transaction.Commit();
                     }
 
 					//Pregenerate

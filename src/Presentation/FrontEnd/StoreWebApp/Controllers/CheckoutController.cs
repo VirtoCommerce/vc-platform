@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Data.Entity;
+using System.Threading.Tasks;
 using Omu.ValueInjecter;
 using PayPal.PayPalAPIInterfaceService;
 using PayPal.PayPalAPIInterfaceService.Model;
@@ -24,6 +25,7 @@ using VirtoCommerce.Web.Virto.Helpers;
 using VirtoCommerce.Web.Virto.Helpers.Payments;
 using VirtoCommerce.Web.Virto.Helpers.Popup;
 using AddressType = PayPal.PayPalAPIInterfaceService.Model.AddressType;
+using IsolationLevel = System.Data.IsolationLevel;
 
 namespace VirtoCommerce.Web.Controllers
 {
@@ -785,7 +787,7 @@ namespace VirtoCommerce.Web.Controllers
             try
             {
                 using (SqlDbConfiguration.ExecutionStrategySuspension)
-                using (var transaction = new TransactionScope())
+                using (var transaction = ((DbContext)Ch.OrderRepository).Database.BeginTransaction(IsolationLevel.Serializable))
                 {
                     // Create order
                     var order = Ch.SaveAsOrder();
@@ -796,7 +798,7 @@ namespace VirtoCommerce.Web.Controllers
 
                     UserHelper.CustomerSession.LastOrderId = order.OrderGroupId;
 
-                    transaction.Complete();
+                    transaction.Commit();
                     return true;
                 }
             }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using VirtoCommerce.ManagementClient.Order.Model;
@@ -505,6 +506,12 @@ namespace VirtoCommerce.ManagementClient.Order.Services
         {
             throw new NotImplementedException();
         }
+
+        public void Refresh(IEnumerable collection)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
         #region ICountryRepository
