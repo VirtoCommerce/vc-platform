@@ -29,11 +29,11 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                 var dbCategory = repository.GetCategoryById(categoryId);
                 var dbCatalog = repository.GetCatalogById(dbCategory.CatalogId);
                 var dbProperties = repository.GetAllCategoryProperties(dbCategory);
-
+			
                 var catalog = dbCatalog.ToModuleModel();
-                var properties = dbProperties.Select(x => x.ToModuleModel(catalog, dbCategory.ToModuleModel(catalog))).ToArray();
+				var properties = dbProperties.Select(x => x.ToModuleModel(catalog, dbCategory.ToModuleModel(catalog))).ToArray();
 
-                retVal = dbCategory.ToModuleModel(catalog, properties);
+				retVal = dbCategory.ToModuleModel(catalog, properties);
             }
             return retVal;
         }
@@ -60,16 +60,27 @@ namespace VirtoCommerce.CatalogModule.Data.Services
             {
                 using (var changeTracker = base.GetChangeTracker(repository))
                 {
+					
                     foreach (var category in categories)
                     {
                         var dbCategory = repository.GetCategoryById(category.Id) as foundation.Category;
+
                         if (dbCategory == null)
                         {
                             throw new NullReferenceException("dbCategory");
                         }
                         var dbCategoryChanged = category.ToFoundation();
 
-                        changeTracker.Attach(dbCategory);
+					    changeTracker.Attach(dbCategory);
+
+						//It need prevent real  adding link to category LinkedCategories because EF changed relations
+						//automaticly to different
+						changeTracker.AddAction = (x) =>
+						{
+							dbCategory.LinkedCategories.Remove((foundation.LinkedCategory)x);
+							repository.Add(x);
+						};
+						
                         dbCategoryChanged.Patch(dbCategory);
 
                     }

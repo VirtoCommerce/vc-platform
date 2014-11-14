@@ -33,16 +33,23 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// </summary>
 		/// <param name="catalog"></param>
 		/// <returns></returns>
-		public static module.CategoryLink ToModuleModel(this foundation.LinkedCategory linkedCategory)
+		public static module.CategoryLink ToModuleModel(this foundation.LinkedCategory linkedCategory, module.Category category)
 		{
 			if (linkedCategory == null)
 				throw new ArgumentNullException("linkedCategory");
 
-			var retVal = new module.CategoryLink
+			var retVal = new module.CategoryLink();
+			//Need to swap link role for both source and target categories
+			if(category.Id == linkedCategory.ParentCategoryId)
 			{
-				CategoryId = linkedCategory.CategoryId,
-				CatalogId = linkedCategory.CatalogId
-			};
+				retVal.CategoryId = linkedCategory.LinkedCategoryId;
+				retVal.CatalogId = linkedCategory.LinkedCatalogId;
+			}
+			else
+			{
+				retVal.CategoryId = linkedCategory.ParentCategoryId;
+				retVal.CatalogId = linkedCategory.CatalogId;
+			}
 			return retVal;
 		}
 
@@ -92,8 +99,8 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				throw new ArgumentNullException("target");
 
 			//Simply propertie spatch
-			target.CatalogId = source.CatalogId;
-			target.CategoryId = source.CategoryId;
+			target.LinkedCatalogId = source.LinkedCatalogId;
+			target.LinkedCategoryId = source.LinkedCategoryId;
 		}
 
 		/// <summary>
@@ -136,7 +143,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 
 		public bool Equals(foundation.LinkedCategory x, foundation.LinkedCategory y)
 		{
-			return x.CategoryId == y.CategoryId;
+			return x.LinkedCategoryId == y.LinkedCategoryId;
 		}
 
 		public int GetHashCode(foundation.LinkedCategory obj)

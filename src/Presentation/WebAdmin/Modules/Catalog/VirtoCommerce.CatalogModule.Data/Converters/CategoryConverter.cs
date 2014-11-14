@@ -18,8 +18,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// <param name="properties">The properties.</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">catalog</exception>
-		public static module.Category ToModuleModel(this foundation.CategoryBase dbCategoryBase, module.Catalog catalog,
-													module.Property[] properties = null)
+		public static module.Category ToModuleModel(this foundation.CategoryBase dbCategoryBase, module.Catalog catalog, module.Property[] properties = null)
 		{
 			if (catalog == null)
 				throw new ArgumentNullException("catalog");
@@ -38,7 +37,8 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
             {
                 retVal.Name = dbCategory.Name;
                 retVal.PropertyValues = dbCategory.CategoryPropertyValues.Select(x => x.ToModuleModel(properties)).ToList();
-				retVal.Links = dbCategory.LinkedCategories.Select(x => x.ToModuleModel()).ToList();
+				retVal.Links = dbCategory.LinkedCategories.Select(x => x.ToModuleModel(retVal)).ToList();
+				retVal.Virtual = catalog.Virtual;
             }
 
             return retVal;
@@ -102,6 +102,13 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		            dbSource.CategoryPropertyValues.Patch(dbTarget.CategoryPropertyValues, new PropertyValueComparer(),
 		                (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
 		        }
+
+				if (!dbSource.LinkedCategories.IsNullCollection())
+				{
+					dbSource.LinkedCategories.Patch(dbTarget.LinkedCategories, new LinkedCategoryComparer(),
+					   (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
+				}
+
 		    }
 		}
 	}

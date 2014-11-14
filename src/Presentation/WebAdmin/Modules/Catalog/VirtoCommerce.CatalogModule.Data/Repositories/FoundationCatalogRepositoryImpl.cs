@@ -4,6 +4,7 @@ using System.Linq;
 using VirtoCommerce.CatalogModule.Repositories;
 using VirtoCommerce.Foundation.Data.Catalogs;
 using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
 using foundation = VirtoCommerce.Foundation.Catalogs.Model;
 using moduleModel = VirtoCommerce.CatalogModule.Model;
 
@@ -37,8 +38,12 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			var retVal = Categories.OfType<foundation.Category>()
 										.Include(x => x.CategoryPropertyValues)
 										.Include(x=> x.PropertySet.PropertySetProperties.Select(y=>y.Property))
-										.Include(x=>x.LinkedCategories)
 										.FirstOrDefault(x => x.CategoryId == categoryId);
+			//Load links for both categories (source and target)
+			var allLinks = Categories.OfType<foundation.LinkedCategory>()
+										.Where(x => x.ParentCategoryId == categoryId || x.LinkedCategoryId == categoryId)
+										.ToArray();
+			retVal.LinkedCategories.AddRange(allLinks);
 			return retVal;
 		}
 

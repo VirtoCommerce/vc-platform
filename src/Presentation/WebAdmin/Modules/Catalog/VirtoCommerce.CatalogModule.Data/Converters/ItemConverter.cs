@@ -159,6 +159,13 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 										 (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
 			}
 
+			//Links
+			if (!source.CategoryItemRelations.IsNullCollection())
+			{
+				source.CategoryItemRelations.Patch(target.CategoryItemRelations, new CategoryItemRelationComparer(),
+										 (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
+			}
+
 		}
 
 	}

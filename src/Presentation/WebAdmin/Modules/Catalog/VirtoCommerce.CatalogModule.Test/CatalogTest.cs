@@ -190,6 +190,70 @@ namespace VirtoCommerce.CatalogModule.Test
 			result = searchService.Search(criteria);
 		}
 
+		[TestMethod]
+		public void VirtualCategories()
+		{
+			var catService = GetCatalogService();
+			var categoryService = GetCategoryService();
+
+			var catalog = new Catalog
+			{
+				Id = "Cat",
+				Name = "Cat",
+			};
+			//catalog = catService.Create(catalog);
+			var category = new Category
+			{
+				Id = "Category",
+				CatalogId = catalog.Id,
+				Name = "Category",
+				Code = "Category"
+			};
+			//category = categoryService.Create(category);
+
+			//Create virtual catalog
+			var vCatalog = new Catalog
+			{
+				Id = "vCat",
+				Name = "vCat",
+				Virtual = true
+			};
+			//vCatalog = catService.Create(vCatalog);
+			var vCategory = new Category
+			{
+				Id = "vCategory",
+				CatalogId = vCatalog.Id,
+				Name = "vCategory",
+				Code = "vCategory",
+				Virtual = true
+			};
+			//vCategory = categoryService.Create(vCategory);
+
+			//vCategory = categoryService.GetById(vCategory.Id);
+			//vCategory.Links.Add(new CategoryLink { CatalogId = catalog.Id, CategoryId = category.Id });
+			//categoryService.Update(new Category[] { vCategory });
+
+			category = categoryService.GetById(category.Id);
+			Assert.IsTrue(category.Links.First().CategoryId == "vCategory");
+			Assert.IsTrue(category.Links.First().CatalogId == "vCat");
+
+			vCategory = categoryService.GetById(vCategory.Id);
+			Assert.IsTrue(vCategory.Links.First().CategoryId == "Category");
+			Assert.IsTrue(vCategory.Links.First().CatalogId == "Cat");
+
+			vCategory.Links.Clear();
+			categoryService.Update(new Category[] { vCategory });
+
+			category = categoryService.GetById(category.Id);
+			Assert.IsFalse(category.Links.Any());
+			Assert.IsFalse(category.Links.Any());
+
+			vCategory = categoryService.GetById(vCategory.Id);
+			Assert.IsFalse(vCategory.Links.Any());
+			Assert.IsFalse(vCategory.Links.Any());
+
+		}
+
 		private ICatalogSearchService GetSearchService()
 		{
 			return new CatalogSearchServiceImpl(GetRepository, GetItemService(), GetCatalogService(), GetCategoryService());
