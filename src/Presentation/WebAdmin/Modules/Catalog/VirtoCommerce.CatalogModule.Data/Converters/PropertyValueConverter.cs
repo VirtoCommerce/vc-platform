@@ -101,7 +101,9 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
                     retVal.ShortTextValue = value;
                     break;
                 case foundation.PropertyValueType.Decimal:
-                    retVal.DecimalValue = Decimal.Parse(value);
+                    decimal parsedDecimal;
+                    Decimal.TryParse(value, out parsedDecimal);
+                    retVal.DecimalValue = parsedDecimal;
                     break;
             }
         }

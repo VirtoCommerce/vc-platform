@@ -7,6 +7,13 @@
             $scope.blade.item = data;
             $scope.blade.isLoading = false;
         });
+
+        if (angular.isUndefined(parentRefresh)) {
+            parentRefresh = true;
+        }
+        if (parentRefresh) {
+            $scope.blade.parentBlade.refresh();
+        }
     }
 
     $scope.selectVariation = function (listItem) {
@@ -34,7 +41,7 @@
         {
             name: "Refresh", icon: 'icon-spin',
             executeMethod: function () {
-                $scope.blade.refresh();
+                $scope.blade.refresh(false);
             },
             canExecuteMethod: function () {
                 return true;
@@ -83,7 +90,7 @@
     };
 
 
-    $scope.blade.refresh();
+    $scope.blade.refresh(false);
 }]);
 
 
