@@ -9,6 +9,7 @@
             $scope.currentBlade.itemId = data.id;
             $scope.currentBlade.title = data.code;
             $scope.isTitular = data.titularItemId == null;
+            $scope.isTitularConfirmed = $scope.isTitular;
 
             $scope.currentBlade.item = angular.copy(data);
             $scope.currentBlade.origItem = data;
@@ -118,7 +119,7 @@
 	             });
 	         },
 	         canExecuteMethod: function () {
-	             return $scope.isTitular;
+	             return $scope.isTitularConfirmed;
 	         }
 	     }
     ];

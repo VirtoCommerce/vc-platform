@@ -131,6 +131,7 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 					{
 						//Need populate required fields
 						propValue.PropertyName = property.Name;
+                        propValue.ValueType = property.ValueType;
 						retVal.PropertyValues.Add(propValue.ToModuleModel());
 					}
 				}
