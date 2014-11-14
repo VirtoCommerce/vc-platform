@@ -6,384 +6,328 @@
     'catalogModule.resources.itemsSearch',
     'platformWebApp.common.confirmDialog'
 ])
-.controller('categoriesItemsListController', ['$rootScope', '$scope', '$filter', 'categories', 'items', 'itemsSearch', 'bladeNavigationService', 'dialogService', function ($rootScope, $scope, $filter, categories, items, itemsSearch, bladeNavigationService, dialogService)
-{
-    //pagination settigs
-    $scope.pageSettings = {};
-    $scope.pageSettings.totalItems = 0;
-    $scope.pageSettings.currentPage = 1;
-    $scope.pageSettings.numPages = 5;
-    $scope.pageSettings.itemsPerPageCount = 20;
+.controller('categoriesItemsListController', ['$rootScope', '$scope', '$filter', 'categories', 'items', 'itemsSearch', 'bladeNavigationService', 'dialogService', function ($rootScope, $scope, $filter, categories, items, itemsSearch, bladeNavigationService, dialogService) {
+	//pagination settigs
+	$scope.pageSettings = {};
+	$scope.pageSettings.totalItems = 0;
+	$scope.pageSettings.currentPage = 1;
+	$scope.pageSettings.numPages = 5;
+	$scope.pageSettings.itemsPerPageCount = 20;
 
-    $scope.filter = { searchKeyword: undefined };
+	$scope.filter = { searchKeyword: undefined };
 
-    $scope.selectedAll = false;
-    $scope.selectedItem = null;
-    var preventCategoryListingOnce;
+	$scope.selectedAll = false;
+	$scope.selectedItem = null;
+	var preventCategoryListingOnce;
 
-    $scope.blade.refresh = function ()
-    {
-        $scope.blade.isLoading = true;
-        itemsSearch.listitemssearch(
+	$scope.blade.refresh = function () {
+		$scope.blade.isLoading = true;
+		itemsSearch.listitemssearch(
             {
-                catalogId: $scope.blade.catalogId,
-                categoryId: $scope.blade.categoryId,
-                keyword: $scope.filter.searchKeyword,
-                // propertyValues: ,
-                responseGroup: 'withCategories, withItems',
-                start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
-                count: $scope.pageSettings.itemsPerPageCount
+            	catalogId: $scope.blade.catalogId,
+            	categoryId: $scope.blade.categoryId,
+            	keyword: $scope.filter.searchKeyword,
+            	// propertyValues: ,
+            	responseGroup: 'withCategories, withItems',
+            	start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
+            	count: $scope.pageSettings.itemsPerPageCount
             },
-		function (data, headers)
-		{
-		    $scope.blade.isLoading = false;
-		    $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
-		    $scope.items = data.listEntries;
-		    $scope.selectedAll = false;
+		function (data, headers) {
+			$scope.blade.isLoading = false;
+			$scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
+			$scope.items = data.listEntries;
+			$scope.selectedAll = false;
 
-		    if ($scope.selectedItem != null)
-		    {
-		        $scope.selectedItem = $scope.findItem($scope.selectedItem.id);
-		    }
+			if ($scope.selectedItem != null) {
+				$scope.selectedItem = $scope.findItem($scope.selectedItem.id);
+			}
+
+			//Set navigation breadcrumbs
+			setBreadcrumps();
 		});
-    }
+	}
 
-    $scope.$watch('pageSettings.currentPage', function (newPage)
-    {
-        $scope.blade.refresh();
-    });
+	//Breadcrumps
+	function setBreadcrumps() {
+		//Clone array (angular.copy leave a same reference)
+		$scope.blade.breadcrumbs = $scope.blade.breadcrumbs.slice(0);
 
-    $scope.edit = function (listItem)
-    {
-        closeChildrenBlades();
+		//catalog breadcrump by default
+		var breadCrumb = {
+			id: $scope.blade.catalogId,
+			name: $scope.blade.catalog.name,
+			blade: $scope.blade
+		};
 
-        $scope.selectedItem = listItem;
-        if (listItem.type === 'category')
-        {
-            $scope.blade.showCategoryBlade(listItem.id, null, listItem.name);
-            preventCategoryListingOnce = true;
-        }
-        // else do nothing as item is opened on selecting it.
-    };
+		//if category need change to category breadcrumb
+		if (angular.isDefined($scope.blade.category)) {
 
-    $scope.blade.showCategoryBlade = function (id, data, title)
-    {
-        var newBlade = {
-            id: "listItemDetail",
-            currentEntityId: id,
-            currentEntity: data,
-            title: title,
-            subtitle: 'category properties',
-            controller: 'categoryPropertyController',
-            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/category-property-detail.tpl.html',
-        };
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
-    };
+			breadCrumb.id = $scope.blade.categoryId;
+			breadCrumb.name = $scope.blade.category.name;
+		}
 
-    $scope.blade.showItemBlade = function (id, title)
-    {
-        var newBlade = {
-            id: "listItemDetail",
-            itemId: id,
-            title: title,
-            style: 'gray',
-            subtitle: 'Item details',
-            controller: 'itemDetailController',
-            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/item-detail.tpl.html'
-        };
-        bladeNavigationService.showBlade(newBlade, $scope.blade);
-    };
+		//prevent dublicate items
+		if (!_.some($scope.blade.breadcrumbs, function (x) { return x.id == breadCrumb.id })) {
+			$scope.blade.breadcrumbs.push(breadCrumb);
+		}
 
-    $scope.delete = function ()
-    {
-        if (isItemsChecked())
-        {
-            deleteChecked();
-        } else
-        {
-            var dialog = {
-                id: "notifyNoTargetCategory",
-                title: "Message",
-                message: "Nothing selected. Check some Categories or Items first."
-            };
-            dialogService.showNotificationDialog(dialog);
-        }
+		breadCrumb.navigate = function (breadcrumb) {
+			bladeNavigationService.closeBlade($scope.blade,
+						function () {
+							bladeNavigationService.showBlade($scope.blade, $scope.blade.parentBlade);
+							$scope.blade.refresh();
+						});
+		};
+	}
 
-        preventCategoryListingOnce = true;
-    };
+	$scope.$watch('pageSettings.currentPage', function (newPage) {
+		$scope.blade.refresh();
+	});
 
-    function isItemsChecked()
-    {
-        if ($scope.items)
-        {
-            return $filter('filter')($scope.items, { selected: true }, true).length > 0;
-        } else
-        {
-            return false;
-        }
-    }
+	$scope.edit = function (listItem) {
+		closeChildrenBlades();
 
-    function deleteChecked()
-    {
-        var dialog = {
-            id: "confirmDeleteItem",
-            title: "Delete confirmation",
-            message: "Are you sure you want to delete selected Categories or Items?",
-            callback: function (remove)
-            {
-                if (remove)
-                {
-                    closeChildrenBlades();
+		$scope.selectedItem = listItem;
+		if (listItem.type === 'category') {
+			$scope.blade.showCategoryBlade(listItem.id, null, listItem.name);
+			preventCategoryListingOnce = true;
+		}
+		// else do nothing as item is opened on selecting it.
+	};
 
-                    var selection = $filter('filter')($scope.items, { selected: true }, true);
-                    var categoryIds = [];
-                    var itemIds = [];
-                    angular.forEach(selection, function (listItem)
-                    {
-                        if (listItem.type === 'category')
-                            categoryIds.push(listItem.id);
-                        else
-                        {
-                            itemIds.push(listItem.id);
-                        }
-                    });
+	$scope.blade.showCategoryBlade = function (id, data, title) {
+		var newBlade = {
+			id: "listItemDetail",
+			currentEntityId: id,
+			currentEntity: data,
+			title: title,
+			subtitle: 'category properties',
+			controller: 'categoryPropertyController',
+			template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/category-property-detail.tpl.html',
+		};
+		bladeNavigationService.showBlade(newBlade, $scope.blade);
+	};
 
-                    if (categoryIds.length > 0)
-                    {
-                        categories.remove({}, categoryIds, function (data, headers)
-                        {
-                            $scope.blade.refresh();
-                        });
-                    }
-                    if (itemIds.length > 0)
-                    {
-                        items.remove({}, itemIds, function (data, headers)
-                        {
-                            $scope.blade.refresh();
-                        });
-                    }
-                }
-            }
-        }
-        dialogService.showConfirmationDialog(dialog);
-    }
+	$scope.blade.showItemBlade = function (id, title) {
+		var newBlade = {
+			id: "listItemDetail",
+			itemId: id,
+			title: title,
+			style: 'gray',
+			subtitle: 'Item details',
+			controller: 'itemDetailController',
+			template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/item-detail.tpl.html'
+		};
+		bladeNavigationService.showBlade(newBlade, $scope.blade);
+	};
 
-    $scope.blade.setSelectedItem = function (listItem)
-    {
-        $scope.selectedItem = listItem;
-    };
+	$scope.delete = function () {
+		if (isItemsChecked()) {
+			deleteChecked();
+		} else {
+			var dialog = {
+				id: "notifyNoTargetCategory",
+				title: "Message",
+				message: "Nothing selected. Check some Categories or Items first."
+			};
+			dialogService.showNotificationDialog(dialog);
+		}
 
-    $scope.selectItem = function (e, listItem)
-    {
-        $scope.blade.setSelectedItem(listItem);
+		preventCategoryListingOnce = true;
+	};
 
-        if (listItem.type === 'category')
-        {
-            if (preventCategoryListingOnce)
-            {
-                preventCategoryListingOnce = false;
-            } else
-            {
-                if (e.ctrlKey)
-                {
-                    var newBlade = {
-                        id: 'itemsList' + $scope.blade.level,
-                        level: $scope.blade.level + 1,
-                        title: 'Categories & Items',
-                        breadcrumbs: angular.copy($scope.blade.breadcrumbs),
-                        subtitle: 'Browsing "' + listItem.name + '"',
-                        catalogId: $scope.blade.catalogId,
-                        categoryId: listItem.id,
-                        controller: 'categoriesItemsListController',
-                        template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/categories-items-list.tpl.html',
-                    };
-                    newBlade.breadcrumbs.push({
-                        params: listItem,
-                        name: listItem.name,
-                        id: listItem.id,
-                        action: function (params)
-                        {
-                            $scope.adjustBreadcrumbs(newBlade.breadcrumbs, listItem.id);
-                            newBlade.categoryId = params.id;
-                            newBlade.refresh();
-                        }
-                    });
-                    bladeNavigationService.showBlade(newBlade, $scope.blade);
-                }
-                else
-                {
+	function isItemsChecked() {
+		if ($scope.items) {
+			return $filter('filter')($scope.items, { selected: true }, true).length > 0;
+		} else {
+			return false;
+		}
+	}
 
-                    $scope.adjustBreadcrumbs($scope.blade.breadcrumbs, listItem.id);
+	function deleteChecked() {
+		var dialog = {
+			id: "confirmDeleteItem",
+			title: "Delete confirmation",
+			message: "Are you sure you want to delete selected Categories or Items?",
+			callback: function (remove) {
+				if (remove) {
+					closeChildrenBlades();
 
-                    $scope.blade.breadcrumbs.push({
-                        params: listItem,
-                        name: listItem.name,
-                        id: listItem.id,
-                        action: function (params)
-                        {
-                            $scope.adjustBreadcrumbs($scope.blade.breadcrumbs, listItem.id);
-                            $scope.blade.categoryId = params.id;
-                            $scope.blade.refresh();
-                        }
-                    });
+					var selection = $filter('filter')($scope.items, { selected: true }, true);
+					var categoryIds = [];
+					var itemIds = [];
+					angular.forEach(selection, function (listItem) {
+						if (listItem.type === 'category')
+							categoryIds.push(listItem.id);
+						else {
+							itemIds.push(listItem.id);
+						}
+					});
 
-                    $scope.blade.categoryId = listItem.id;
-                    $scope.blade.refresh();
-                }
-            }
-        } else
-        {
-            $scope.blade.showItemBlade(listItem.id, listItem.name);
-        }
+					if (categoryIds.length > 0) {
+						categories.remove({}, categoryIds, function (data, headers) {
+							$scope.blade.refresh();
+						});
+					}
+					if (itemIds.length > 0) {
+						items.remove({}, itemIds, function (data, headers) {
+							$scope.blade.refresh();
+						});
+					}
+				}
+			}
+		}
+		dialogService.showConfirmationDialog(dialog);
+	}
 
-        $scope.blade.currentItemId = $scope.selectedItem.type === 'product' ? $scope.selectedItem.id : undefined;
-    };
+	$scope.blade.setSelectedItem = function (listItem) {
+		$scope.selectedItem = listItem;
+	};
 
-    $scope.adjustBreadcrumbs = function(breadcrumbs, id) {
-        var breadrumbIndex = -1;
+	$scope.selectItem = function (e, listItem) {
+		$scope.blade.setSelectedItem(listItem);
 
-        angular.forEach(breadcrumbs, function (bread)
-        {
-            if (bread.id == id)
-            {
-                breadrumbIndex = breadcrumbs.indexOf(bread);
-            }
-        });
+		if (listItem.type === 'category') {
+			if (preventCategoryListingOnce) {
+				preventCategoryListingOnce = false;
+			} else {
+				var newBlade = {
+					id: 'itemsList',
+					breadcrumbs: $scope.blade.breadcrumbs,
+					title: 'Categories & Items',
+					subtitle: 'Browsing "' + listItem.name + '"',
+					catalogId: $scope.blade.catalogId,
+					catalog: $scope.blade.catalog,
+					categoryId: listItem.id,
+					category: listItem,
+					controller: 'categoriesItemsListController',
+					template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/categories-items-list.tpl.html',
+				};
 
-        //Reset breadcrumb to found index
-        if (breadrumbIndex >= 0) {
-            var clearStart = breadrumbIndex + 1;
-            breadcrumbs.splice(clearStart, breadcrumbs.length - clearStart);
-        }
-    }
+				if (e.ctrlKey) {
+					newBlade.id += $scope.blade.level;
+					newBlade.level += 1;
+					bladeNavigationService.showBlade(newBlade, $scope.blade);
+				}
+				else {
+					bladeNavigationService.closeBlade($scope.blade, function () {
+						bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);
+					});
+				}
+			}
+		} else {
+			$scope.blade.showItemBlade(listItem.id, listItem.name);
+		}
 
-    $scope.findItem = function (id)
-    {
-        var retVal;
-        angular.forEach($scope.items, function (item)
-        {
-            if (item.id == id)
-                retVal = item;
-        });
+		$scope.blade.currentItemId = $scope.selectedItem.type === 'product' ? $scope.selectedItem.id : undefined;
+	};
 
-        return retVal;
-    }
 
-    $scope.blade.onClose = function (closeCallback)
-    {
-        if ($scope.blade.childrenBlades.length > 0)
-        {
-            var callback = function ()
-            {
-                if ($scope.blade.childrenBlades.length == 0)
-                {
-                    closeCallback();
-                };
-            };
-            angular.forEach($scope.blade.childrenBlades, function (child)
-            {
-                bladeNavigationService.closeBlade(child, callback);
-            });
-        }
-        else
-        {
-            closeCallback();
-        }
-    };
+	$scope.findItem = function (id) {
+		var retVal;
+		angular.forEach($scope.items, function (item) {
+			if (item.id == id)
+				retVal = item;
+		});
 
-    function closeChildrenBlades()
-    {
-        angular.forEach($scope.blade.childrenBlades.slice(), function (child)
-        {
-            bladeNavigationService.closeBlade(child);
-        });
-    }
+		return retVal;
+	}
 
-    $scope.bladeToolbarCommands = [
+	$scope.blade.onClose = function (closeCallback) {
+		if ($scope.blade.childrenBlades.length > 0) {
+			var callback = function () {
+				if ($scope.blade.childrenBlades.length == 0) {
+					closeCallback();
+				};
+			};
+			angular.forEach($scope.blade.childrenBlades, function (child) {
+				bladeNavigationService.closeBlade(child, callback);
+			});
+		}
+		else {
+			closeCallback();
+		}
+	};
+
+	function closeChildrenBlades() {
+		angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
+			bladeNavigationService.closeBlade(child);
+		});
+	}
+
+	$scope.bladeToolbarCommands = [
       {
-          name: "Refresh", icon: 'icon-spin',
-          executeMethod: function ()
-          {
-              $scope.blade.refresh();
-          },
-          canExecuteMethod: function ()
-          {
-              return true;
-          }
+      	name: "Refresh", icon: 'icon-spin',
+      	executeMethod: function () {
+      		$scope.blade.refresh();
+      	},
+      	canExecuteMethod: function () {
+      		return true;
+      	}
       },
       {
-          name: "Add", icon: 'icon-plus',
-          executeMethod: function ()
-          {
-              closeChildrenBlades();
+      	name: "Add", icon: 'icon-plus',
+      	executeMethod: function () {
+      		closeChildrenBlades();
 
-              var newBlade = {
-                  id: 'listItemChild',
-                  title: 'New category item',
-                  subtitle: 'choose new item type',
-                  controller: 'categoriesItemsAddController',
-                  template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/categories-items-add.tpl.html'
-              };
-              bladeNavigationService.showBlade(newBlade, $scope.blade);
-          },
-          canExecuteMethod: function ()
-          {
-              return true;
-          }
+      		var newBlade = {
+      			id: 'listItemChild',
+      			title: 'New category item',
+      			subtitle: 'choose new item type',
+      			controller: 'categoriesItemsAddController',
+      			template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/categories-items-add.tpl.html'
+      		};
+      		bladeNavigationService.showBlade(newBlade, $scope.blade);
+      	},
+      	canExecuteMethod: function () {
+      		return true;
+      	}
       },
         {
-            name: "Manage", icon: 'icon-new-tab-2',
-            executeMethod: function ()
-            {
-                $scope.edit($scope.selectedItem);
-            },
-            canExecuteMethod: function ()
-            {
-                return $scope.selectedItem;
-            }
+        	name: "Manage", icon: 'icon-new-tab-2',
+        	executeMethod: function () {
+        		$scope.edit($scope.selectedItem);
+        	},
+        	canExecuteMethod: function () {
+        		return $scope.selectedItem;
+        	}
         },
       {
-          name: "Delete", icon: 'icon-remove',
-          executeMethod: function ()
-          {
-              deleteChecked();
-          },
-          canExecuteMethod: function ()
-          {
-              return isItemsChecked();
-          }
+      	name: "Delete", icon: 'icon-remove',
+      	executeMethod: function () {
+      		deleteChecked();
+      	},
+      	canExecuteMethod: function () {
+      		return isItemsChecked();
+      	}
       },
       {
-          name: "Advanced search", icon: 'icon-search',
-          executeMethod: function ()
-          {
-              var newBlade = {
-                  id: 'listItemChild',
-                  title: 'Advanced search',
-                  subtitle: 'Searching within...',
-                  controller: 'advancedSearchController',
-                  template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/advanced-search.tpl.html'
-              };
-              bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);
-              $scope.bladeClose();
-          },
-          canExecuteMethod: function ()
-          {
-              return true;
-          }
+      	name: "Advanced search", icon: 'icon-search',
+      	executeMethod: function () {
+      		var newBlade = {
+      			id: 'listItemChild',
+      			title: 'Advanced search',
+      			subtitle: 'Searching within...',
+      			controller: 'advancedSearchController',
+      			template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/advanced-search.tpl.html'
+      		};
+      		bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);
+      		$scope.bladeClose();
+      	},
+      	canExecuteMethod: function () {
+      		return true;
+      	}
       }
-    ];
+	];
 
-    $scope.checkAll = function (selected)
-    {
-        angular.forEach($scope.items, function (item)
-        {
-            item.selected = selected;
-        });
-    };
+	$scope.checkAll = function (selected) {
+		angular.forEach($scope.items, function (item) {
+			item.selected = selected;
+		});
+	};
 
-    //No need to call this because page 'pageSettings.currentPage' is watched!!! It would trigger subsequent duplicated req...
-    //$scope.blade.refresh();
+	//No need to call this because page 'pageSettings.currentPage' is watched!!! It would trigger subsequent duplicated req...
+	//$scope.blade.refresh();
 }]);
 
 

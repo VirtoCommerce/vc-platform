@@ -28,7 +28,50 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
                     }
                 });
             }
+            setBreadcrumps();
         });
+
+    };
+
+    $scope.blade.onClose = function (closeCallback) {
+    	if ($scope.blade.childrenBlades.length > 0) {
+    		var callback = function () {
+    			if ($scope.blade.childrenBlades.length == 0) {
+    				closeCallback();
+    			};
+    		};
+    		angular.forEach($scope.blade.childrenBlades, function (child) {
+    			bladeNavigationService.closeBlade(child, callback);
+    		});
+    	}
+    	else {
+    		closeCallback();
+    	}
+    };
+
+	//Breadcrumps
+    function setBreadcrumps() {
+    	//Clone array (angular.copy leave a same reference)
+    	$scope.blade.breadcrumbs = $scope.blade.breadcrumbs.slice(0);
+
+    	var breadCrumb = {
+    		id: "Catalogs",
+    		name: "Catalogs",
+    	};
+
+    	//prevent dublicate items
+    	if (!_.some($scope.blade.breadcrumbs, function (x) { return x.id == breadCrumb.id })) {
+    		$scope.blade.breadcrumbs.push(breadCrumb);
+    	}
+
+    	breadCrumb.navigate = function (breadcrumb) {
+    		bladeNavigationService.closeBlade($scope.blade,
+			function () {
+				bladeNavigationService.showBlade($scope.blade);
+				$scope.blade.refresh();
+			});
+    	};
+
     };
 
     $scope.refreshItems = function ()
@@ -41,19 +84,15 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
             var newBlade = {
                 id: 'itemsList',
                 level: 1,
-                breadcrumbs: angular.copy($scope.blade.breadcrumbs),
+                breadcrumbs: $scope.blade.breadcrumbs,
                 title: 'Categories & Items',
                 subtitle: 'Browsing ' + (selectedNode != null ? '"' + selectedNode.name + '"' : ''),
                 catalogId: (selectedNode != null) ? selectedNode.id : null,
+                catalog: selectedNode,
                 controller: 'categoriesItemsListController',
                 template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/categories-items-list.tpl.html',
             };
-            newBlade.breadcrumbs.push({
-                name: (selectedNode != null) ? selectedNode.name : "Catalog",
-                action: function () {
-                    $scope.refreshItems();
-                }
-            });
+       
             bladeNavigationService.showBlade(newBlade, $scope.blade);
         }
     };

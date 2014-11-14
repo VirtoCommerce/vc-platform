@@ -38,13 +38,12 @@ angular.module(catalogsModuleName, [
                       var blade = {
                           id: 'categories',
                           title: 'Catalogs',
+                          breadcrumbs: [],
                           subtitle: 'Manage catalogs',
                           controller: 'catalogsListController',
                           template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/catalogs-list.tpl.html',
                           isClosingDisabled: true
                       };
-                      blade.breadcrumbs = [];
-                      blade.breadcrumbs.push({ name: blade.title, action: function () { blade.refresh(); } });
                       bladeNavigationService.showBlade(blade);
                   }
               ]
