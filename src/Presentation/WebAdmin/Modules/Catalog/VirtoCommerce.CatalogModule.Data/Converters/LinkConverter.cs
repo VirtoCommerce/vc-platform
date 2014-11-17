@@ -39,17 +39,10 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				throw new ArgumentNullException("linkedCategory");
 
 			var retVal = new module.CategoryLink();
-			//Need to swap link role for both source and target categories
-			if(category.Id == linkedCategory.ParentCategoryId)
-			{
-				retVal.CategoryId = linkedCategory.LinkedCategoryId;
-				retVal.CatalogId = linkedCategory.LinkedCatalogId;
-			}
-			else
-			{
-				retVal.CategoryId = linkedCategory.ParentCategoryId;
-				retVal.CatalogId = linkedCategory.CatalogId;
-			}
+		
+			retVal.CategoryId = linkedCategory.LinkedCategoryId;
+			retVal.CatalogId = linkedCategory.LinkedCatalogId;
+		
 			return retVal;
 		}
 
@@ -113,9 +106,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-			//Simply propertie spatch
-			target.CatalogId = source.CatalogId;
-			target.CategoryId = source.CategoryId;
+			//Nothing todo
 		}
 
 	}
@@ -148,7 +139,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 
 		public int GetHashCode(foundation.LinkedCategory obj)
 		{
-			return obj.GetHashCode();
+			return obj.LinkedCategoryId.GetHashCode();
 		}
 
 		#endregion

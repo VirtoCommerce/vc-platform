@@ -229,11 +229,14 @@ namespace VirtoCommerce.CatalogModule.Test
 			};
 			//vCategory = categoryService.Create(vCategory);
 
-			//vCategory = categoryService.GetById(vCategory.Id);
-			//vCategory.Links.Add(new CategoryLink { CatalogId = catalog.Id, CategoryId = category.Id });
-			//categoryService.Update(new Category[] { vCategory });
+			vCategory = categoryService.GetById(vCategory.Id);
+			vCategory.Links.Add(new CategoryLink { CatalogId = catalog.Id, CategoryId = category.Id });
+			categoryService.Update(new Category[] { vCategory });
 
 			category = categoryService.GetById(category.Id);
+			category.Name = "category111";
+			//categoryService.Update(new Category[] { category });
+
 			Assert.IsTrue(category.Links.First().CategoryId == "vCategory");
 			Assert.IsTrue(category.Links.First().CatalogId == "vCat");
 
@@ -253,6 +256,14 @@ namespace VirtoCommerce.CatalogModule.Test
 			Assert.IsFalse(vCategory.Links.Any());
 
 		}
+
+		[TestMethod]
+		public void VirtualCatalogsTest()
+		{
+			var searchService = GetSearchService();
+			var result = searchService.Search(new SearchCriteria { CategoryId = "vCategory", CatalogId="vCat", ResponseGroup = ResponseGroup.WithCategories});
+		}
+
 
 		private ICatalogSearchService GetSearchService()
 		{

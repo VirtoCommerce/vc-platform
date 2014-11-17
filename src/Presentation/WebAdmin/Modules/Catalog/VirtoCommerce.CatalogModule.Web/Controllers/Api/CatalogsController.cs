@@ -36,9 +36,6 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             };
             var serviceResult = _searchService.Search(criteria);
             var retVal = serviceResult.Catalogs.Select(x => x.ToWebModel()).ToArray();
-
-            //TODO: virtual catalogs not supported in this version!!!
-            retVal = retVal.Where(x => !x.Virtual).ToArray();
             return Ok(retVal);
         }
 
@@ -179,14 +176,17 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         {
             var retVal = new List<webModel.CatalogLanguage>();
 
-            var languageSetting = _appConfigRepository.Settings.Expand(x => x.SettingValues).FirstOrDefault(x => x.Name.Equals("Languages"));
-            if (languageSetting != null)
-            {
-                foreach (var languageCode in languageSetting.SettingValues.Select(x => x.ToString()))
-                {
-                    retVal.Add(new webModel.CatalogLanguage(languageCode));
-                }
-            }
+			if (_appConfigRepository != null)
+			{
+				var languageSetting = _appConfigRepository.Settings.Expand(x => x.SettingValues).FirstOrDefault(x => x.Name.Equals("Languages"));
+				if (languageSetting != null)
+				{
+					foreach (var languageCode in languageSetting.SettingValues.Select(x => x.ToString()))
+					{
+						retVal.Add(new webModel.CatalogLanguage(languageCode));
+					}
+				}
+			}
             return retVal;
         }
     }

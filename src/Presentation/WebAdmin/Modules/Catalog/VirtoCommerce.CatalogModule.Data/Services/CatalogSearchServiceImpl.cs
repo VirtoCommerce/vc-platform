@@ -56,17 +56,30 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				{
 					var query = repository.Categories.Where(x => x.CatalogId == criteria.CatalogId);
 
-
 					if (!String.IsNullOrEmpty(criteria.CategoryId))
 					{
-						query = query.Where(x => x.ParentCategoryId == criteria.CategoryId);
+						var dbCategory = repository.GetCategoryById(criteria.CategoryId);
+						var dbCatalog = repository.GetCatalogById(dbCategory.CatalogId);
+
+						//Need return all linked categories also
+						var allLinkIds = dbCategory.LinkedCategories.Select(x => x.LinkedCategoryId).ToArray();
+						if (dbCatalog is foundation.VirtualCatalog)
+						{
+							//Search in all catalogs
+							query = repository.Categories;
+							query = query.Where(x => x.ParentCategoryId == criteria.CategoryId || allLinkIds.Contains(x.CategoryId));
+						}
+						else
+						{
+							query = query.Where(x => x.ParentCategoryId == criteria.CategoryId);
+						}
 					}
 					else if (!String.IsNullOrEmpty(criteria.CatalogId))
 					{
 						query = query.Where(x => x.CatalogId == criteria.CatalogId && x.ParentCategoryId == null);
 					}
 
-					var categoryIds = query.Select(x => x.CategoryId).ToArray();
+					var categoryIds = query.OfType<foundation.Category>().Select(x => x.CategoryId).ToArray();
 
 					var categories = new ConcurrentBag<module.Category>();
 					var parallelOptions = new ParallelOptions
@@ -77,6 +90,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					{
 						var category = _categoryService.GetById(x);
 						categories.Add(category);
+					
 					});
 					result.Categories = categories.OrderByDescending(x => x.Name).ToList();
 				}

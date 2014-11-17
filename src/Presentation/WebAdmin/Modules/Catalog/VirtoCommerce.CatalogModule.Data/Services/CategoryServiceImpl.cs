@@ -69,7 +69,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                         {
                             throw new NullReferenceException("dbCategory");
                         }
-                        var dbCategoryChanged = category.ToFoundation();
+						var dbCategoryChanged = category.ToFoundation();
 
 					    changeTracker.Attach(dbCategory);
 
@@ -80,9 +80,15 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 							dbCategory.LinkedCategories.Remove((foundation.LinkedCategory)x);
 							repository.Add(x);
 						};
+						changeTracker.RemoveAction = (x) =>
+						{
+							repository.Attach(x);
+							repository.Remove(x);
+						};
 						
                         dbCategoryChanged.Patch(dbCategory);
-
+						//Need prevent storing links with category
+						dbCategory.LinkedCategories.Clear();
                     }
                     CommitChanges(repository);
                 }

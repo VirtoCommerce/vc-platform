@@ -15,6 +15,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
 			ImageUrl = "";
 			Code = category.Code;
 			Name = category.Name;
+
 		}
 	}
 }

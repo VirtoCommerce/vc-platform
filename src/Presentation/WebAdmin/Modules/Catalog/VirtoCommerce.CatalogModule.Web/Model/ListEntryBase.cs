@@ -19,6 +19,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
 		public string Code { get; set; }
 
 		public string Name { get; set; }
+		public CategoryLink[] Links { get; set; }
 	
 	}
 }

@@ -41,9 +41,25 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 										.FirstOrDefault(x => x.CategoryId == categoryId);
 			//Load links for both categories (source and target)
 			var allLinks = Categories.OfType<foundation.LinkedCategory>()
+										.AsNoTracking()
 										.Where(x => x.ParentCategoryId == categoryId || x.LinkedCategoryId == categoryId)
 										.ToArray();
-			retVal.LinkedCategories.AddRange(allLinks);
+			foreach (var link in allLinks)
+			{
+				
+				//Need to swap link role for both source and target categories
+				if (categoryId != link.ParentCategoryId)
+				{
+					link.LinkedCategoryId = link.ParentCategoryId;
+					link.LinkedCatalogId = link.CatalogId;
+				}
+
+				//Need add if not loaded automaticly and prevent dublication
+				if (!retVal.LinkedCategories.Any(x => x.CategoryId == link.CategoryId))
+				{	
+					retVal.LinkedCategories.Add(allLinks);
+				}
+			}
 			return retVal;
 		}
 
