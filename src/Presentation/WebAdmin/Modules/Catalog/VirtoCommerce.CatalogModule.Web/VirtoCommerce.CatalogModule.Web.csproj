@@ -107,7 +107,7 @@
     <Compile Include="Controllers\Api\CatalogsController.cs" />
     <Compile Include="Controllers\Api\CategoriesController.cs" />
     <Compile Include="Controllers\Api\ItemsController.cs" />
-    <Compile Include="Controllers\Api\ItemsSearchController.cs" />
+    <Compile Include="Controllers\Api\ListEntryController.cs" />
     <Compile Include="Controllers\Api\PropertiesController.cs" />
     <Compile Include="Converters\AssetConverter.cs" />
     <Compile Include="Converters\CatalogConverter.cs" />
@@ -150,6 +150,8 @@
     <Content Include="Scripts\app\catalog\blades\advanced-search.js" />
     <Content Include="Scripts\app\catalog\blades\advanced-search-results.tpl.html" />
     <Content Include="Scripts\app\catalog\blades\advanced-search.tpl.html" />
+    <Content Include="Scripts\app\catalog\blades\catalogs-select.js" />
+    <Content Include="Scripts\app\catalog\blades\catalogs-select.tpl.html" />
     <Content Include="Scripts\app\catalog\blades\property-attributes.js" />
     <Content Include="Scripts\app\catalog\blades\property-dictionary.js" />
     <Content Include="Scripts\app\catalog\blades\property-attributes.tpl.html" />

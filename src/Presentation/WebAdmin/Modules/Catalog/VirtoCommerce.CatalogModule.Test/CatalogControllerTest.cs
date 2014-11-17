@@ -27,7 +27,7 @@ namespace VirtoCommerce.CatalogModule.Test
 			
 			var catalogController = new CatalogsController(GetCatalogService(), GetSearchService(), null);
 			var categoryController = new CategoriesController(GetCategoryService(), GetPropertyService());
-			var searchController = new ItemsSearchController(GetSearchService());
+            var listEntryController = new ListEntryController(GetSearchService(), GetCategoryService());
 			
 			//Create virtual catalog
 			var catalogResult = catalogController.GetNewVirtualCatalog() as OkNegotiatedContentResult<webModel.Catalog>;
@@ -47,11 +47,11 @@ namespace VirtoCommerce.CatalogModule.Test
 
 			//Link category to virtual category
 			var link = new webModel.CategoryLink { SourceCategoryId = "40773cd0-f2de-462f-9041-da742a274c38", CatalogId = vCatalog.Id, CategoryId = vCategory.Id };
-			categoryController.CreateLinks(new webModel.CategoryLink[] { link });
+            listEntryController.CreateLinks(new webModel.CategoryLink[] { link });
 		
 
 			//Check result
-			var serachResult = searchController.ListItemsSearch(new webModel.SearchCriteria { CatalogId = vCatalog.Id, 
+			var serachResult = listEntryController.ListItemsSearch(new webModel.SearchCriteria { CatalogId = vCatalog.Id, 
 																							 CategoryId = vCategory.Id, 
 																							 ResponseGroup = webModel.ResponseGroup.WithCategories })
 																							 as  OkNegotiatedContentResult<webModel.ListEntrySearchResult>;
@@ -62,7 +62,7 @@ namespace VirtoCommerce.CatalogModule.Test
 			Assert.IsTrue(category.Id == "40773cd0-f2de-462f-9041-da742a274c38");
 
 			//Remove link
-			categoryController.DeleteLinks(new webModel.CategoryLink[] { link });
+            listEntryController.DeleteLinks(new webModel.CategoryLink[] { link });
 
 		}
 

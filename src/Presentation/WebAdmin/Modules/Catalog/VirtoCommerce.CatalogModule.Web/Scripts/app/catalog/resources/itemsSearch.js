@@ -1,9 +1,9 @@
 ﻿angular.module('catalogModule.resources.itemsSearch', [])
 .factory('itemsSearch', ['$resource', function ($resource) {
 
-    return $resource('api/itemssearch/itemssearch/', {},
+    return $resource('api/listentry/', {},
     {
-        listitemssearch: { method: 'POST', isArray: false, url: 'api/itemssearch/listitemssearch' },
+        listitemssearch: { method: 'POST', isArray: false, url: 'api/listentry/listitemssearch' },
         query: { method: 'POST', isArray: false, url: 'api/itemssearch/itemssearch' }
     });
 

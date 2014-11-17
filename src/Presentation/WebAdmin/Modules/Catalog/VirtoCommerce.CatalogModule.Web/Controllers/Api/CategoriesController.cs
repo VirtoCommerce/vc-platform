@@ -74,46 +74,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             _categoryService.Delete(ids);
             return StatusCode(HttpStatusCode.NoContent);
         }
-
-
-		// POST: api/categories/createLinks
-		[HttpPost]
-		[ResponseType(typeof(void))]
-		public IHttpActionResult CreateLinks(webModel.CategoryLink[] links)
-		{
-			var categoryLinks = links.Where(x => x.SourceCategoryId != null);
-			var categories = new List<moduleModel.Category>();
-			foreach (var categoryLink in categoryLinks)
-			{
-				var category = _categoryService.GetById(categoryLink.SourceCategoryId);
-				category.Links.Add(new moduleModel.CategoryLink { CategoryId = categoryLink.CategoryId, CatalogId = categoryLink.CatalogId });
-				categories.Add(category);
-			}
-			_categoryService.Update(categories.ToArray());
-
-			return StatusCode(HttpStatusCode.NoContent);
-		}
-
-		// POST: api/categories/deleteLinks
-		[HttpPost]
-		[ResponseType(typeof(void))]
-		public IHttpActionResult DeleteLinks(webModel.CategoryLink[] links)
-		{
-			var categoryLinks = links.Where(x => x.SourceCategoryId != null);
-			var categories = new List<moduleModel.Category>();
-			foreach (var categoryLink in categoryLinks)
-			{
-				var category = _categoryService.GetById(categoryLink.SourceCategoryId);
-				var linkToRemove = category.Links.First(x => x.CatalogId == categoryLink.CatalogId && x.CategoryId == categoryLink.CategoryId);
-				category.Links.Remove(linkToRemove);
-				categories.Add(category);
-			}
-			_categoryService.Update(categories.ToArray());
-
-			return StatusCode(HttpStatusCode.NoContent);
-		}
-
-
+        
         private void UpdateCategory(webModel.Category category)
         {
             var moduleCategory = category.ToModuleModel();
