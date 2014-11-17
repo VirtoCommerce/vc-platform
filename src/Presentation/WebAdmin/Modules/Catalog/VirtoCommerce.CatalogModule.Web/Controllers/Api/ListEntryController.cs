@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
@@ -14,11 +15,13 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
     {
         private readonly ICatalogSearchService _searchService;
         private readonly ICategoryService _categoryService;
+		private readonly IItemService _itemService;
 
-        public ListEntryController(ICatalogSearchService searchService, ICategoryService categoryService)
+		public ListEntryController(ICatalogSearchService searchService, ICategoryService categoryService, IItemService itemService)
         {
             _searchService = searchService;
             _categoryService = categoryService;
+			_itemService = itemService;
         }
 
         [HttpPost]
@@ -49,38 +52,49 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         // POST: api/listentry/createLinks
         [HttpPost]
         [ResponseType(typeof(void))]
-        public IHttpActionResult CreateLinks(webModel.CategoryLink[] links)
+		public IHttpActionResult CreateLinks(webModel.ListEntryLink[] links)
         {
-            var categoryLinks = links.Where(x => x.SourceCategoryId != null);
-            var categories = new List<moduleModel.Category>();
-            foreach (var categoryLink in categoryLinks)
-            {
-                var category = _categoryService.GetById(categoryLink.SourceCategoryId);
-                category.Links.Add(new moduleModel.CategoryLink { CategoryId = categoryLink.CategoryId, CatalogId = categoryLink.CatalogId });
-                categories.Add(category);
-            }
-            _categoryService.Update(categories.ToArray());
-
+			InnerUpdateLinks(links, (x, y) => x.Links.Add(y));
             return StatusCode(HttpStatusCode.NoContent);
         }
+
 
         // POST: api/listentry/deleteLinks
         [HttpPost]
         [ResponseType(typeof(void))]
-        public IHttpActionResult DeleteLinks(webModel.CategoryLink[] links)
+		public IHttpActionResult DeleteLinks(webModel.ListEntryLink[] links)
         {
-            var categoryLinks = links.Where(x => x.SourceCategoryId != null);
-            var categories = new List<moduleModel.Category>();
-            foreach (var categoryLink in categoryLinks)
-            {
-                var category = _categoryService.GetById(categoryLink.SourceCategoryId);
-                var linkToRemove = category.Links.First(x => x.CatalogId == categoryLink.CatalogId && x.CategoryId == categoryLink.CategoryId);
-                category.Links.Remove(linkToRemove);
-                categories.Add(category);
-            }
-            _categoryService.Update(categories.ToArray());
-
+			InnerUpdateLinks(links, (x,y)=> x.Links.Remove(y) );
             return StatusCode(HttpStatusCode.NoContent);
         }
+
+
+		private void InnerUpdateLinks(webModel.ListEntryLink[] links, Action<moduleModel.ISupportLinks, moduleModel.CategoryLink> action)
+		{
+			var changedObjects = new List<moduleModel.ISupportLinks>();
+			foreach (var link in links)
+			{
+				moduleModel.ISupportLinks changedObject;
+				var newlink = new moduleModel.CategoryLink
+				{
+					CategoryId = link.CategoryId,
+					CatalogId = link.CatalogId
+				};
+
+				if (String.Equals(link.ListEntryType, webModel.ListEntryCategory.TypeName, StringComparison.InvariantCultureIgnoreCase))
+				{
+					changedObject = _categoryService.GetById(link.ListEntryId);
+				}
+				else
+				{
+					changedObject = _itemService.GetById(link.ListEntryId, moduleModel.ItemResponseGroup.ItemLarge);
+				}
+				action(changedObject, newlink);
+				changedObjects.Add(changedObject);
+			}
+
+			_categoryService.Update(changedObjects.OfType<moduleModel.Category>().ToArray());
+			_itemService.Update(changedObjects.OfType<moduleModel.CatalogProduct>().ToArray());
+		}
     }
 }

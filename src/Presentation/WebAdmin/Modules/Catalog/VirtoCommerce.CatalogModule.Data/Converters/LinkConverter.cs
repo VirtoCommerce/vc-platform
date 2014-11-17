@@ -23,7 +23,8 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 
 			var retVal = new module.CategoryLink
 			{
-				 CategoryId = categoryItemRelation.CategoryId
+				 CategoryId = categoryItemRelation.CategoryId,
+				 CatalogId = categoryItemRelation.CatalogId
 			};
 			return retVal;
 		}
@@ -57,7 +58,8 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			{
 				 CategoryId = categoryLink.CategoryId,
 				 ItemId = product.Id,
-				 CatalogId = categoryLink.CatalogId
+				 CatalogId = categoryLink.CatalogId,
+				 Priority = 100
 			};
 			return retVal;
 		}
@@ -88,12 +90,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// <param name="target"></param>
 		public static void Patch(this foundation.LinkedCategory source, foundation.LinkedCategory target)
 		{
-			if (target == null)
-				throw new ArgumentNullException("target");
-
-			//Simply propertie spatch
-			target.LinkedCatalogId = source.LinkedCatalogId;
-			target.LinkedCategoryId = source.LinkedCategoryId;
+			//Nothing todo. Because we not support change  link
 		}
 
 		/// <summary>
@@ -103,10 +100,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// <param name="target"></param>
 		public static void Patch(this foundation.CategoryItemRelation source, foundation.CategoryItemRelation target)
 		{
-			if (target == null)
-				throw new ArgumentNullException("target");
-
-			//Nothing todo
+			//Nothing todo. Because we not support change link
 		}
 
 	}
@@ -122,7 +116,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 
 		public int GetHashCode(foundation.CategoryItemRelation obj)
 		{
-			return obj.GetHashCode();
+			return obj.CategoryId.GetHashCode();
 		}
 
 		#endregion

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace VirtoCommerce.CatalogModule.Model
 {
-	public class CatalogProduct
+	public class CatalogProduct : ISupportLinks
 	{
 		public string Id { get; set; }
 		public string Code { get; set; }

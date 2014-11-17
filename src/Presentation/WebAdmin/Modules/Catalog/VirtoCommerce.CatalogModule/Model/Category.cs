@@ -2,7 +2,7 @@
 
 namespace VirtoCommerce.CatalogModule.Model
 {
-	public class Category
+	public class Category : ISupportLinks
 	{
 		public string CatalogId { get; set; }
 		public Catalog Catalog { get; set; }

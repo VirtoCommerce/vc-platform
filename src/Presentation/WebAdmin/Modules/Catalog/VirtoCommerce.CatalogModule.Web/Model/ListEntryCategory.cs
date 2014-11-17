@@ -8,9 +8,11 @@ namespace VirtoCommerce.CatalogModule.Web.Model
 {
 	public class ListEntryCategory : ListEntryBase
 	{
+		public static string TypeName = "category";
+
 		public ListEntryCategory(Category category)
+			: base(TypeName)
 		{
-			Type = "category";
 			Id = category.Id;
 			ImageUrl = "";
 			Code = category.Code;

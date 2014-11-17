@@ -195,6 +195,8 @@ namespace VirtoCommerce.CatalogModule.Test
 		{
 			var catService = GetCatalogService();
 			var categoryService = GetCategoryService();
+			var itemService = GetItemService();
+			var searchService = GetSearchService();
 
 			var catalog = new Catalog
 			{
@@ -231,7 +233,7 @@ namespace VirtoCommerce.CatalogModule.Test
 
 			vCategory = categoryService.GetById(vCategory.Id);
 			vCategory.Links.Add(new CategoryLink { CatalogId = catalog.Id, CategoryId = category.Id });
-			categoryService.Update(new Category[] { vCategory });
+			//categoryService.Update(new Category[] { vCategory });
 
 			category = categoryService.GetById(category.Id);
 			category.Name = "category111";
@@ -243,6 +245,24 @@ namespace VirtoCommerce.CatalogModule.Test
 			vCategory = categoryService.GetById(vCategory.Id);
 			Assert.IsTrue(vCategory.Links.First().CategoryId == "Category");
 			Assert.IsTrue(vCategory.Links.First().CatalogId == "Cat");
+
+
+			//add link product to virtual category
+			var product = itemService.GetById("v-b002c7481g", ItemResponseGroup.ItemLarge);
+			product.Links.Add(new CategoryLink { CatalogId = vCatalog.Id, CategoryId = vCategory.Id });
+			itemService.Update(new CatalogProduct[] { product });
+			product = itemService.GetById("v-b002c7481g", ItemResponseGroup.ItemLarge);
+			Assert.IsTrue(product.Links.Count() == 2);
+
+			//Check search 
+			var result = searchService.Search(new SearchCriteria { CatalogId = vCatalog.Id, CategoryId = vCategory.Id, ResponseGroup = ResponseGroup.WithItems });
+			Assert.IsTrue(result.Products.Any(x => x.Id == product.Id));
+
+			//Remove link
+			product.Links.Remove(product.Links.First(x => x.CategoryId == vCategory.Id));
+			itemService.Update(new CatalogProduct[] { product });
+			product = itemService.GetById("v-b002c7481g", ItemResponseGroup.ItemLarge);
+			Assert.IsTrue(product.Links.Count() == 1);
 
 			vCategory.Links.Clear();
 			categoryService.Update(new Category[] { vCategory });

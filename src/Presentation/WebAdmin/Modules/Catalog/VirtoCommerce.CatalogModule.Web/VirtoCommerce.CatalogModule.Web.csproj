@@ -121,12 +121,13 @@
     <Compile Include="Converters\PropertyValueConverter.cs" />
     <Compile Include="Converters\SearchConverter.cs" />
     <Compile Include="Model\Catalog.cs" />
+    <Compile Include="Model\CategoryLink.cs" />
+    <Compile Include="Model\ListEntryLink.cs" />
     <Compile Include="Model\PropertyDictionaryValue.cs" />
     <Compile Include="Model\Language.cs" />
     <Compile Include="Model\ListEntryCategory.cs" />
     <Compile Include="Model\ListEntryBase.cs" />
     <Compile Include="Model\Category.cs" />
-    <Compile Include="Model\CategoryLink.cs" />
     <Compile Include="Model\Product.cs" />
     <Compile Include="Model\ItemsSearchResult.cs" />
     <Compile Include="Model\ListEntrySearchResult.cs" />

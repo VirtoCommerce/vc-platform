@@ -49,7 +49,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				var catalog = dbCatalog.ToModuleModel();
 				if (dbItem.CategoryItemRelations.Any())
 				{
-					var dbCategory = repository.GetCategoryById(dbItem.CategoryItemRelations[0].CategoryId);
+					var dbCategory = repository.GetCategoryById(dbItem.CategoryItemRelations.OrderBy(x=>x.Priority).First().CategoryId);
 					var dpProperties = repository.GetAllCategoryProperties(dbCategory);
 					var properties = dpProperties.Select(x => x.ToModuleModel(catalog, dbCategory.ToModuleModel(catalog))).ToArray();
 					var category = dbCategory.ToModuleModel(catalog, properties);

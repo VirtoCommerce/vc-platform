@@ -39,6 +39,7 @@
     <Compile Include="Model\CatalogLanguage.cs" />
     <Compile Include="Model\Category.cs" />
     <Compile Include="Model\CategoryLink.cs" />
+    <Compile Include="Model\ISupportLinks.cs" />
     <Compile Include="Model\ItemAsset.cs" />
     <Compile Include="Model\ItemAssetType.cs" />
     <Compile Include="Model\ItemResponseGroup.cs" />

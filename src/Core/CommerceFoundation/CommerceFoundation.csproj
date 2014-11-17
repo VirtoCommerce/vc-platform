@@ -247,6 +247,7 @@
     <Compile Include="Frameworks\Extensions\StringExtensions.cs" />
     <Compile Include="Frameworks\Extensions\TreeExtension.cs" />
     <Compile Include="Frameworks\SqlDbConfiguration.cs" />
+    <Compile Include="Frameworks\ValueObject.cs" />
     <Compile Include="Orders\Extensions\JurisdictionExtensions.cs" />
     <Compile Include="Orders\Extensions\PaymentMethodExtensions.cs" />
     <Compile Include="Orders\Model\ShipmentOption.cs" />
