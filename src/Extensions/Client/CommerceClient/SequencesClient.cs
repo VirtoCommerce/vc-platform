@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
+using System.Transactions;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
@@ -70,7 +69,7 @@ namespace VirtoCommerce.Client
 
 					//Update Sequences in database
                     using (SqlDbConfiguration.ExecutionStrategySuspension)
-                    using (var transaction = ((DbContext)_repository).Database.BeginTransaction(IsolationLevel.Serializable))
+                    using (var transaction = new TransactionScope())
                     {
                         var sequence = _repository.Sequences.SingleOrDefault(s => s.ObjectType.Equals(objectType, StringComparison.OrdinalIgnoreCase));
 
@@ -117,7 +116,7 @@ namespace VirtoCommerce.Client
                         _repository.UnitOfWork.Commit();
 
 						//Transaction success
-                        transaction.Commit();
+                        transaction.Complete();
                     }
 
 					//Pregenerate
