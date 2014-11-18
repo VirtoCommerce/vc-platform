@@ -60,14 +60,15 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					{
 						var dbCategory = repository.GetCategoryById(criteria.CategoryId);
 						var dbCatalog = repository.GetCatalogById(dbCategory.CatalogId);
-
-						//Need return all linked categories also
-						var allLinkIds = dbCategory.LinkedCategories.Select(x => x.LinkedCategoryId).ToArray();
+						
+						
 						if (dbCatalog is foundation.VirtualCatalog)
 						{
+							//Need return all linked categories also
+							var allLinkedCategoriesIds = repository.GetCategoryLinks(dbCategory.CategoryId).Select(x => x.LinkedCategoryId).ToArray();
 							//Search in all catalogs
 							query = repository.Categories;
-							query = query.Where(x => x.ParentCategoryId == criteria.CategoryId || allLinkIds.Contains(x.CategoryId));
+							query = query.Where(x => x.ParentCategoryId == criteria.CategoryId || allLinkedCategoriesIds.Contains(x.CategoryId));
 						}
 						else
 						{

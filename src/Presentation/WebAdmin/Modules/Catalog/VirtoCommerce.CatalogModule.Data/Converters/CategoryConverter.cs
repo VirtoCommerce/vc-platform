@@ -18,7 +18,8 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// <param name="properties">The properties.</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">catalog</exception>
-		public static module.Category ToModuleModel(this foundation.CategoryBase dbCategoryBase, module.Catalog catalog, module.Property[] properties = null)
+		public static module.Category ToModuleModel(this foundation.CategoryBase dbCategoryBase, module.Catalog catalog, 
+													module.Property[] properties = null, foundation.LinkedCategory[] dbLinks = null)
 		{
 			if (catalog == null)
 				throw new ArgumentNullException("catalog");
@@ -37,10 +38,13 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
             {
                 retVal.Name = dbCategory.Name;
                 retVal.PropertyValues = dbCategory.CategoryPropertyValues.Select(x => x.ToModuleModel(properties)).ToList();
-				retVal.Links = dbCategory.LinkedCategories.Select(x => x.ToModuleModel(retVal)).ToList();
+				
 				retVal.Virtual = catalog.Virtual;
             }
-
+			if (dbLinks != null)
+			{
+				retVal.Links = dbLinks.Select(x => x.ToModuleModel(retVal)).ToList();
+			}
             return retVal;
 
 		}

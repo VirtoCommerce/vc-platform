@@ -33,12 +33,9 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			return retVal;
 		}
 
-		public foundation.Category GetCategoryById(string categoryId)
+		public foundation.LinkedCategory[] GetCategoryLinks(string categoryId)
 		{
-			var retVal = Categories.OfType<foundation.Category>()
-										.Include(x => x.CategoryPropertyValues)
-										.Include(x=> x.PropertySet.PropertySetProperties.Select(y=>y.Property))
-										.FirstOrDefault(x => x.CategoryId == categoryId);
+			var retVal = new List<foundation.LinkedCategory>();
 			//Load links for both categories (source and target)
 			var allLinks = Categories.OfType<foundation.LinkedCategory>()
 										.AsNoTracking()
@@ -46,20 +43,26 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 										.ToArray();
 			foreach (var link in allLinks)
 			{
-				
+
 				//Need to swap link role for both source and target categories
 				if (categoryId != link.ParentCategoryId)
 				{
 					link.LinkedCategoryId = link.ParentCategoryId;
 					link.LinkedCatalogId = link.CatalogId;
 				}
-
-				//Need add if not loaded automaticly and prevent dublication
-				if (!retVal.LinkedCategories.Any(x => x.CategoryId == link.CategoryId))
-				{	
-					retVal.LinkedCategories.Add(allLinks);
-				}
+				retVal.Add(allLinks);
+			
 			}
+			return retVal.ToArray();
+		}
+
+		public foundation.Category GetCategoryById(string categoryId)
+		{
+			var retVal = Categories.OfType<foundation.Category>()
+										.Include(x => x.CategoryPropertyValues)
+										.Include(x=> x.PropertySet.PropertySetProperties.Select(y=>y.Property))
+										.FirstOrDefault(x => x.CategoryId == categoryId);
+					
 			return retVal;
 		}
 

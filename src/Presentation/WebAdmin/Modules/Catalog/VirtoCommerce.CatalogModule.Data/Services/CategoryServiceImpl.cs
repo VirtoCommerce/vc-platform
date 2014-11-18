@@ -4,6 +4,7 @@ using VirtoCommerce.CatalogModule.Data.Converters;
 using VirtoCommerce.CatalogModule.Repositories;
 using VirtoCommerce.CatalogModule.Services;
 using VirtoCommerce.Foundation.Frameworks.Caching;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
 using foundation = VirtoCommerce.Foundation.Catalogs.Model;
 using module = VirtoCommerce.CatalogModule.Model;
 
@@ -29,11 +30,12 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                 var dbCategory = repository.GetCategoryById(categoryId);
                 var dbCatalog = repository.GetCatalogById(dbCategory.CatalogId);
                 var dbProperties = repository.GetAllCategoryProperties(dbCategory);
+				var dbLinks = repository.GetCategoryLinks(categoryId);
 			
                 var catalog = dbCatalog.ToModuleModel();
-				var properties = dbProperties.Select(x => x.ToModuleModel(catalog, dbCategory.ToModuleModel(catalog))).ToArray();
+				var properties = dbProperties.Select(x => x.ToModuleModel(catalog, dbCategory.ToModuleModel(catalog, null,  dbLinks))).ToArray();
 
-				retVal = dbCategory.ToModuleModel(catalog, properties);
+				retVal = dbCategory.ToModuleModel(catalog, properties, dbLinks);
             }
             return retVal;
         }
@@ -64,6 +66,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                     foreach (var category in categories)
                     {
                         var dbCategory = repository.GetCategoryById(category.Id) as foundation.Category;
+						dbCategory.LinkedCategories.AddRange(repository.GetCategoryLinks(category.Id));
 
                         if (dbCategory == null)
                         {
