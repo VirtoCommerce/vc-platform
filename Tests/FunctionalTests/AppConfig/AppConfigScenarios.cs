@@ -93,6 +93,16 @@ namespace FunctionalTests.AppConfig
 
 		}
 
+        [Fact(Skip = "IdentitySequence Table needs to be created manually CREATE TABLE [dbo].[IdentitySequence]([Id] [int] IDENTITY(1,1) NOT NULL) ON [PRIMARY]")]
+        public void Can_generate_sequence()
+        {
+            var client = new EFAppConfigRepository("VirtoCommerce");
+            //var client = GetRepository();
+            var sequence = new DbIdentitySequenceService(client);
+            var result = sequence.GetNext("test");
+            Assert.NotNull(result);
+        }
+
 		#endregion
 
 		#region Helper Methods
