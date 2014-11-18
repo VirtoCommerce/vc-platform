@@ -191,6 +191,27 @@ namespace VirtoCommerce.CatalogModule.Test
 		}
 
 		[TestMethod]
+		public void AddLinkToCatalog()
+		{
+			var catService = GetCatalogService();
+			var categoryService = GetCategoryService();
+			var itemService = GetItemService();
+			var searchService = GetSearchService();
+			//Create virtual catalog
+			var vCatalog = new Catalog
+			{
+				Id = "vCat",
+				Name = "vCat",
+				Virtual = true
+			};
+			//vCatalog = catService.Create(vCatalog);
+
+			var category = categoryService.GetById("03771c0e-51ac-44d0-ac77-2a38b56b11b5");
+			category.Links.Add(new CategoryLink { CatalogId = vCatalog.Id });
+			categoryService.Update(new Category[] { category });
+		}
+
+		[TestMethod]
 		public void VirtualCategories()
 		{
 			var catService = GetCatalogService();
@@ -203,7 +224,7 @@ namespace VirtoCommerce.CatalogModule.Test
 				Id = "Cat",
 				Name = "Cat",
 			};
-			//catalog = catService.Create(catalog);
+			catalog = catService.Create(catalog);
 			var category = new Category
 			{
 				Id = "Category",
@@ -211,7 +232,7 @@ namespace VirtoCommerce.CatalogModule.Test
 				Name = "Category",
 				Code = "Category"
 			};
-			//category = categoryService.Create(category);
+			category = categoryService.Create(category);
 
 			//Create virtual catalog
 			var vCatalog = new Catalog
@@ -220,7 +241,7 @@ namespace VirtoCommerce.CatalogModule.Test
 				Name = "vCat",
 				Virtual = true
 			};
-			//vCatalog = catService.Create(vCatalog);
+			vCatalog = catService.Create(vCatalog);
 			var vCategory = new Category
 			{
 				Id = "vCategory",
@@ -229,15 +250,15 @@ namespace VirtoCommerce.CatalogModule.Test
 				Code = "vCategory",
 				Virtual = true
 			};
-			//vCategory = categoryService.Create(vCategory);
+			vCategory = categoryService.Create(vCategory);
 
 			vCategory = categoryService.GetById(vCategory.Id);
 			vCategory.Links.Add(new CategoryLink { CatalogId = catalog.Id, CategoryId = category.Id });
-			//categoryService.Update(new Category[] { vCategory });
+			categoryService.Update(new Category[] { vCategory });
 
 			category = categoryService.GetById(category.Id);
 			category.Name = "category111";
-			//categoryService.Update(new Category[] { category });
+			categoryService.Update(new Category[] { category });
 
 			Assert.IsTrue(category.Links.First().CategoryId == "vCategory");
 			Assert.IsTrue(category.Links.First().CatalogId == "vCat");

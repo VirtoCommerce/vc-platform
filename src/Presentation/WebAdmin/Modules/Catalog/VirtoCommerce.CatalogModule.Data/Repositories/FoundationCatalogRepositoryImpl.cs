@@ -60,6 +60,17 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			return retVal.ToArray();
 		}
 
+
+		public foundation.LinkedCategory[] GetCatalogLinks(string catalogId)
+		{
+			var retVal = Categories.OfType<foundation.LinkedCategory>()
+										.AsNoTracking()
+										.Where(x => x.LinkedCatalogId == catalogId)
+										.ToArray();
+
+			return retVal;
+		}
+
 		public foundation.Category GetCategoryById(string categoryId)
 		{
 			var retVal = Categories.OfType<foundation.Category>()

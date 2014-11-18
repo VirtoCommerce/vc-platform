@@ -56,13 +56,13 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				{
 					var query = repository.Categories.Where(x => x.CatalogId == criteria.CatalogId);
 
+					var dbCatalog = repository.GetCatalogById(criteria.CatalogId);
+					var isVirtual = dbCatalog is foundation.VirtualCatalog;
 					if (!String.IsNullOrEmpty(criteria.CategoryId))
 					{
 						var dbCategory = repository.GetCategoryById(criteria.CategoryId);
-						var dbCatalog = repository.GetCatalogById(dbCategory.CatalogId);
-						
-						
-						if (dbCatalog is foundation.VirtualCatalog)
+
+						if (isVirtual)
 						{
 							//Need return all linked categories also
 							var allLinkedCategoriesIds = repository.GetCategoryLinks(dbCategory.CategoryId).Select(x => x.LinkedCategoryId).ToArray();
@@ -78,6 +78,14 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					else if (!String.IsNullOrEmpty(criteria.CatalogId))
 					{
 						query = query.Where(x => x.CatalogId == criteria.CatalogId && x.ParentCategoryId == null);
+						if (isVirtual)
+						{
+							//Need return all linked categories 
+							var allLinkedCategoriesIds = repository.GetCatalogLinks(criteria.CatalogId).Select(x => x.ParentCategoryId).ToArray();
+							//Search in all catalogs
+							query = repository.Categories;
+							query = query.Where(x => (x.CatalogId == criteria.CatalogId && x.ParentCategoryId == null )|| allLinkedCategoriesIds.Contains(x.CategoryId));
+						}
 					}
 
 					var categoryIds = query.OfType<foundation.Category>().Select(x => x.CategoryId).ToArray();

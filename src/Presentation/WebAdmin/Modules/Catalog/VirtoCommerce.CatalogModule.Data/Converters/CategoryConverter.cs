@@ -114,13 +114,6 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		            dbSource.CategoryPropertyValues.Patch(dbTarget.CategoryPropertyValues, new PropertyValueComparer(),
 		                (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
 		        }
-
-				if (!dbSource.LinkedCategories.IsNullCollection())
-				{
-					dbSource.LinkedCategories.Patch(dbTarget.LinkedCategories, new LinkedCategoryComparer(),
-					   (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
-				}
-
 		    }
 		}
 	}

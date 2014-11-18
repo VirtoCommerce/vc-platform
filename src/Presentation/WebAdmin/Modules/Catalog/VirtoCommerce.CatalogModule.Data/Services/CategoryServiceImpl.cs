@@ -87,14 +87,13 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				foreach (var category in categories)
 				{
 					var dbCategory = repository.GetCategoryById(category.Id) as foundation.Category;
-					dbCategory.LinkedCategories.AddRange(repository.GetCategoryLinks(category.Id));
-
+					
 					if (dbCategory == null)
 					{
 						throw new NullReferenceException("dbCategory");
 					}
 
-					//Patch seoInfo
+					//Patch SeoInfo  separately
 					if (category.SeoInfos != null)
 					{
 						var dbSeoInfos = new ObservableCollection<foundationConfig.SeoUrlKeyword>(appConfigRepository.GetAllSeoInformation(category.Id));
@@ -104,30 +103,19 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 						changedSeoInfos.Patch(dbSeoInfos, new SeoInfoComparer(), (source, target) => source.Patch(target));
 					}
 
+					//Patch  Links  separately
+					if (category.Links != null)
+					{
+						var dbLinks = new ObservableCollection<foundation.LinkedCategory>(repository.GetCategoryLinks(category.Id));
+						var changedLinks = category.Links.Select(x => x.ToFoundation(category)).ToList();
+						dbLinks.ObserveCollection(x => repository.Add(x), x => repository.Remove(x));
+						changedLinks.Patch(dbLinks, new LinkedCategoryComparer(), (source, target) => source.Patch(target));
+					}
+
 					var dbCategoryChanged = category.ToFoundation();
 					changeTracker.Attach(dbCategory);
-					//It need prevent real  adding link to category LinkedCategories because EF changed relations
-					//automaticly to different
-					changeTracker.AddAction = (x) =>
-					{
-						if (x is foundation.LinkedCategory)
-						{
-							dbCategory.LinkedCategories.Remove((foundation.LinkedCategory)x);
-						}
-						repository.Add(x);
-					};
-					changeTracker.RemoveAction = (x) =>
-					{
-						if (x is foundation.LinkedCategory)
-						{
-							repository.Attach(x);
-						}
-						repository.Remove(x);
-					};
-
+				
 					dbCategoryChanged.Patch(dbCategory);
-					//Need prevent storing links with category
-					dbCategory.LinkedCategories.Clear();
 				}
 				CommitChanges(repository);
 				CommitChanges(appConfigRepository);
