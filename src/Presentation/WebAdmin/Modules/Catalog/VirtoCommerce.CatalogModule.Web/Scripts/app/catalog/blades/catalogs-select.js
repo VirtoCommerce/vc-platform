@@ -19,8 +19,8 @@ function ($scope, catalogs, bladeNavigationService) {
 
         var newBlade = {
             id: 'itemsList' + ($scope.blade.parentBlade.level + 1),
-            mode: 'mappingSource',
             level: $scope.blade.parentBlade.level + 1,
+            mode: 'mappingSource',
             breadcrumbs: [],
             title: 'Source Categories & Items for mapping',
             subtitle: 'Choose items for mapping',
@@ -31,8 +31,6 @@ function ($scope, catalogs, bladeNavigationService) {
         };
 
         bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);
-
-
     };
 
     // actions on load

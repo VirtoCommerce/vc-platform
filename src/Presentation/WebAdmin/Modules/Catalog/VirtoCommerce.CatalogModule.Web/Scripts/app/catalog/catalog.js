@@ -9,6 +9,7 @@ angular.module(catalogsModuleName, [
     'catalogModule.blades.catalogsList',
   'catalogModule.blades.catalogAdd',
   'catalogModule.blades.catalogDetail',
+  'catalogModule.blades.catalogsSelect',
   'catalogModule.blades.virtualCatalogDetail',
   'catalogModule.widget.virtualCatalogMappingWidget',
   'catalogModule.blades.categoryPropertyDetail',

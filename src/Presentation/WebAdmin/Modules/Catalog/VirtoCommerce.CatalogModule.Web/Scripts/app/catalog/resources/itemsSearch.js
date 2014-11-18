@@ -4,6 +4,8 @@
     return $resource('api/listentry/', {},
     {
         listitemssearch: { method: 'POST', isArray: false, url: 'api/listentry/listitemssearch' },
+        createlinks: { method: 'POST', url: 'api/listentry/createlinks' },
+        deletelinks: { method: 'POST', url: 'api/listentry/deletelinks' },
         query: { method: 'POST', isArray: false, url: 'api/itemssearch/itemssearch' }
     });
 
