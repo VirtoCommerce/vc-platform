@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace VirtoCommerce.CatalogModule.Model
 {
-	public class CatalogProduct : ISupportLinks
+	public class CatalogProduct : ILinkSupport, ISeoSupport
 	{
 		public string Id { get; set; }
 		public string Code { get; set; }
@@ -24,5 +24,6 @@ namespace VirtoCommerce.CatalogModule.Model
 		public ICollection<ItemAsset> Assets { get; set; }
 		public ICollection<CategoryLink> Links { get; set; }
 		public ICollection<CatalogProduct> Variations { get; set; }
+		public ICollection<SeoInfo> SeoInfos { get; set; }
 	}
 }

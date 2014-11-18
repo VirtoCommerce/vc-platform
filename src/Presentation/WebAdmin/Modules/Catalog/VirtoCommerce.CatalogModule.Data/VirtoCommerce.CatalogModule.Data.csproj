@@ -65,7 +65,9 @@
     <Compile Include="Converters\PropertyDictionaryValueConverter.cs" />
     <Compile Include="Converters\PropertyValueConverter.cs" />
     <Compile Include="Converters\PropertyValueTypeConverter.cs" />
+    <Compile Include="Converters\SeoInfoConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\FoundationAppConfigRepositoryImpl.cs" />
     <Compile Include="Repositories\FoundationCatalogRepositoryImpl.cs" />
     <Compile Include="Services\CatalogSearchServiceImpl.cs" />
     <Compile Include="Services\CategoryServiceImpl.cs" />

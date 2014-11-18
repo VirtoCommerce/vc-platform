@@ -6,6 +6,7 @@ using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using foundation = VirtoCommerce.Foundation.Catalogs.Model;
 using module = VirtoCommerce.CatalogModule.Model;
+using foundationConfig = VirtoCommerce.Foundation.AppConfig.Model;
 
 namespace VirtoCommerce.CatalogModule.Data.Converters
 {
@@ -18,6 +19,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		public static module.CatalogProduct ToModuleModel(this foundation.Item dbItem, module.Catalog catalog,
 														  module.Category category, module.Property[] properties,
 														  foundation.Item[] variations,
+														  foundationConfig.SeoUrlKeyword[] seoInfos,
 														  string mainProductId)
 		{
 			var retVal = new module.CatalogProduct {Id = dbItem.ItemId, Catalog = catalog, CatalogId = catalog.Id};
@@ -40,7 +42,10 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				retVal.Variations = new List<module.CatalogProduct>();
 				foreach (var variation in variations)
 				{
-					var productVaraition = variation.ToModuleModel(catalog, category, properties, null, retVal.Id);
+					var productVaraition = variation.ToModuleModel(catalog, category, properties, 
+																   variations: null, 
+																   seoInfos: null, 
+																   mainProductId: retVal.Id);
 					productVaraition.MainProduct = retVal;
 					productVaraition.MainProductId = retVal.Id;
 					retVal.Variations.Add(productVaraition);
@@ -62,6 +67,10 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			}
 			#endregion
 
+			if(seoInfos != null)
+			{
+				retVal.SeoInfos = seoInfos.Select(x => x.ToModuleModel()).ToList();
+			}
 
 			return retVal;
 		}

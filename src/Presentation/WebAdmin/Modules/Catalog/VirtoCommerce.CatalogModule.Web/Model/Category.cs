@@ -18,5 +18,6 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         public List<Category> Children { get; set; }
 		public List<Property> Properties { get; set; }
         public List<CategoryLink> Links { get; set; }
+		public List<SeoInfo> SeoInfos { get; set; }
     }
 }

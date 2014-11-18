@@ -52,24 +52,22 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 		public void Update(module.Catalog[] catalogs)
 		{
 			using (var repository = _catalogRepositoryFactory())
+			using (var changeTracker = base.GetChangeTracker(repository))
 			{
-				using (var changeTracker = base.GetChangeTracker(repository))
+				foreach (var catalog in catalogs)
 				{
-					foreach (var catalog in catalogs)
+					var dbCatalog = repository.GetCatalogById(catalog.Id);
+					if (dbCatalog == null)
 					{
-						var dbCatalog = repository.GetCatalogById(catalog.Id);
-						if (dbCatalog == null)
-						{
-							throw new NullReferenceException("dbCatalog");
-						}
-						var dbCatalogChanged = catalog.ToFoundation();
-
-						changeTracker.Attach(dbCatalog);
-						dbCatalogChanged.Patch(dbCatalog);
+						throw new NullReferenceException("dbCatalog");
 					}
+					var dbCatalogChanged = catalog.ToFoundation();
 
-					CommitChanges(repository);
+					changeTracker.Attach(dbCatalog);
+					dbCatalogChanged.Patch(dbCatalog);
 				}
+
+				CommitChanges(repository);
 			}
 		}
 

@@ -5,13 +5,16 @@ using VirtoCommerce.CatalogModule.Repositories;
 using VirtoCommerce.Foundation.Data.Catalogs;
 using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
+using foundationConfig = VirtoCommerce.Foundation.AppConfig.Model;
 using foundation = VirtoCommerce.Foundation.Catalogs.Model;
 using moduleModel = VirtoCommerce.CatalogModule.Model;
+using VirtoCommerce.Foundation.AppConfig.Repositories;
 
 namespace VirtoCommerce.CatalogModule.Data.Repositories
 {
 	public class FoundationCatalogRepositoryImpl : EFCatalogRepository, IFoundationCatalogRepository
 	{
+		private readonly IAppConfigRepository _appConfigRepository;
         public FoundationCatalogRepositoryImpl(string nameOrConnectionString)
             : this(nameOrConnectionString, null)
         {
@@ -19,6 +22,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
         public FoundationCatalogRepositoryImpl(string nameOrConnectionString, IInterceptor[] interceptors)
             : base(nameOrConnectionString, null, interceptors)
 		{
+			
 		}
 
 		#region IModuleCatalogRepository Members
@@ -226,7 +230,6 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 				}
 			}
 		}
-
 		#endregion
 
 

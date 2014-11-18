@@ -35,6 +35,11 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 				retVal.Links = category.Links.Select(x => x.ToWebModel()).ToList();
 			}
 
+			if (category.SeoInfos != null)
+			{
+				retVal.SeoInfos = category.SeoInfos.Select(x => x.ToWebModel()).ToList();
+			}
+
 			//Populate property values
 			if (category.PropertyValues != null)
 			{
@@ -81,6 +86,11 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 			if (category.Links != null)
 			{
 				retVal.Links = category.Links.Select(x => x.ToModuleModel()).ToList();
+			}
+
+			if (category.SeoInfos != null)
+			{
+				retVal.SeoInfos = category.SeoInfos.Select(x => x.ToModuleModel()).ToList();
 			}
 
 			if (category.Properties != null)

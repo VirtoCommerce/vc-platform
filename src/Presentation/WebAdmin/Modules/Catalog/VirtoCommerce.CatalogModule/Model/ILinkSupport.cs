@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VirtoCommerce.CatalogModule.Model
 {
-	public interface ISupportLinks
+	public interface ILinkSupport
 	{
 		ICollection<CategoryLink> Links { get; set; }
 	}

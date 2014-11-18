@@ -11,7 +11,6 @@ namespace VirtoCommerce.CatalogModule.Repositories
 {
 	public interface IFoundationCatalogRepository : ICatalogRepository
 	{
-		
 		foundation.CatalogBase GetCatalogById(string catalogId);
 		foundation.Category GetCategoryById(string categoryId);
 		foundation.Item[] GetItemByIds(string[] itemIds, moduleModel.ItemResponseGroup respGroup);

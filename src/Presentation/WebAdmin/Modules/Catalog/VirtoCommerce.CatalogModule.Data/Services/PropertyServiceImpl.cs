@@ -85,24 +85,21 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 		public void Update(module.Property[] properties)
 		{
 			using (var repository = _catalogRepositoryFactory())
+			using (var changeTracker = base.GetChangeTracker(repository))
 			{
 				var dbProperties = repository.GetPropertiesByIds(properties.Select(x => x.Id).ToArray());
-				using (var changeTracker = base.GetChangeTracker(repository))
+
+				foreach (var dbProperty in dbProperties)
 				{
-					foreach (var dbProperty in dbProperties)
+					var property = properties.FirstOrDefault(x => x.Id == dbProperty.PropertyId);
+					if (property != null)
 					{
-						var property = properties.FirstOrDefault(x => x.Id == dbProperty.PropertyId);
-						if (property != null)
-						{
-							changeTracker.Attach(property);
+						changeTracker.Attach(property);
 
-							var dbPropertyChanged = property.ToFoundation();
-							dbPropertyChanged.Patch(dbProperty);
-
-						}
+						var dbPropertyChanged = property.ToFoundation();
+						dbPropertyChanged.Patch(dbProperty);
 					}
 				}
-
 				CommitChanges(repository);
 			}
 		}

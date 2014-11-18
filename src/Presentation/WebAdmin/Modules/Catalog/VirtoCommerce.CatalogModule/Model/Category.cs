@@ -2,7 +2,7 @@
 
 namespace VirtoCommerce.CatalogModule.Model
 {
-	public class Category : ISupportLinks
+	public class Category : ILinkSupport, ISeoSupport
 	{
 		public string CatalogId { get; set; }
 		public Catalog Catalog { get; set; }
@@ -18,5 +18,6 @@ namespace VirtoCommerce.CatalogModule.Model
         public ICollection<Category> Children { get; set; }
 		public ICollection<PropertyValue> PropertyValues { get; set; }
 		public ICollection<CategoryLink> Links { get; set; }
+		public ICollection<SeoInfo> SeoInfos { get; set; }
 	}
 }

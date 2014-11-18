@@ -42,6 +42,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
 		public List<ProductAsset> Assets { get; set; }
         public List<Product> Variations { get; set; }
         public List<CategoryLink> Links { get; set; }
+		public List<SeoInfo> SeoInfos { get; set; }
 
     }
 }

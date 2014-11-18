@@ -80,7 +80,7 @@ namespace VirtoCommerce.CatalogModule.Test
 
 		private ICategoryService GetCategoryService()
 		{
-			return new CategoryServiceImpl(() => { return GetRepository(); }, null);
+			return new CategoryServiceImpl(() => { return GetRepository(); }, () => { return GetAppConfigRepository(); }, null);
 		}
 
 		private ICatalogService GetCatalogService()
@@ -90,13 +90,19 @@ namespace VirtoCommerce.CatalogModule.Test
 
 		private IItemService GetItemService()
 		{
-			return new ItemServiceImpl(() => { return GetRepository(); }, null);
+			return new ItemServiceImpl(() => { return GetRepository(); }, ()=> { return GetAppConfigRepository(); }, null);
 		}
 
 
 		private IFoundationCatalogRepository GetRepository()
 		{
 			var retVal = new FoundationCatalogRepositoryImpl("VirtoCommerce");
+			return retVal;
+		}
+
+		private IFoundationAppConfigRepository GetAppConfigRepository()
+		{
+			var retVal = new FoundationAppConfigRepositoryImpl("VirtoCommerce");
 			return retVal;
 		}
 	}

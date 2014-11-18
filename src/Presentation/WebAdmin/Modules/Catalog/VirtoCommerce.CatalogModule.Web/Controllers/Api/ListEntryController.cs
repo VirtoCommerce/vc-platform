@@ -69,12 +69,12 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         }
 
 
-		private void InnerUpdateLinks(webModel.ListEntryLink[] links, Action<moduleModel.ISupportLinks, moduleModel.CategoryLink> action)
+		private void InnerUpdateLinks(webModel.ListEntryLink[] links, Action<moduleModel.ILinkSupport, moduleModel.CategoryLink> action)
 		{
-			var changedObjects = new List<moduleModel.ISupportLinks>();
+			var changedObjects = new List<moduleModel.ILinkSupport>();
 			foreach (var link in links)
 			{
-				moduleModel.ISupportLinks changedObject;
+				moduleModel.ILinkSupport changedObject;
 				var newlink = new moduleModel.CategoryLink
 				{
 					CategoryId = link.CategoryId,
