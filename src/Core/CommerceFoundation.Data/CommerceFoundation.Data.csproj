@@ -234,6 +234,10 @@
     <Compile Include="Orders\Migrations\201410241106023_ShipmentOptions.Designer.cs">
       <DependentUpon>201410241106023_ShipmentOptions.cs</DependentUpon>
     </Compile>
+    <Compile Include="Orders\Migrations\201411180915307_Indexes.cs" />
+    <Compile Include="Orders\Migrations\201411180915307_Indexes.Designer.cs">
+      <DependentUpon>201411180915307_Indexes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Security\Identity\SecurityDbContext.cs" />
     <Compile Include="Security\Identity\ApplicationUser.cs" />
     <Compile Include="Security\Migrations\201411061448001_AccountIdToString.cs" />
@@ -363,6 +367,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Orders\Migrations\201410241106023_ShipmentOptions.resx">
       <DependentUpon>201410241106023_ShipmentOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Orders\Migrations\201411180915307_Indexes.resx">
+      <DependentUpon>201411180915307_Indexes.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Security\Migrations\201411061448001_AccountIdToString.resx">
       <DependentUpon>201411061448001_AccountIdToString.cs</DependentUpon>
