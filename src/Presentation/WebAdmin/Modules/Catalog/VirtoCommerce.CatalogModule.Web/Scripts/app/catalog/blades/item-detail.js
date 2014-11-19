@@ -3,6 +3,7 @@
     $scope.currentBlade = $scope.blade;
     $scope.currentBlade.origItem = {};
     $scope.currentBlade.item = {};
+    $scope.blade.currentEntityId = $scope.currentBlade.itemId;
 
     $scope.currentBlade.refresh = function (parentRefresh) {
         return items.get({ id: $scope.currentBlade.itemId }, function (data) {
@@ -17,16 +18,6 @@
             if (parentRefresh) {
                 $scope.currentBlade.parentBlade.refresh();
             }
-
-            // SEO
-            var newBlade = {
-                id: 'seoDetail',
-                seoUrlKeywordType: 1,
-                style: 'gray',
-                controller: 'seoDetailController',
-                template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/seo-detail.tpl.html'
-            };
-            bladeNavigationService.showBlade(newBlade, $scope.blade);
         });
     }
 

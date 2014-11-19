@@ -5,30 +5,28 @@
     $scope.blade.refresh = function (parentRefresh) {
         if (parentRefresh) {
             $scope.blade.isLoading = true;
-            $scope.blade.parentBlade.refresh().$promise.then(function (dataz) {
-                initializeBlade(dataz);
+            $scope.blade.parentBlade.refresh().$promise.then(function (data) {
+                initializeBlade(data.seoInfos);
             });
         } else {
-            var data = $scope.blade.parentBlade.item.seoInfos;
-            initializeBlade(data);
+            initializeBlade($scope.blade.seoInfos);
         }
     }
 
     function initializeBlade(data) {
         $scope.seoInfos = angular.copy(data);
         $scope.blade.origItem = data;
-        $scope.blade.title = $scope.blade.parentBlade.item.code;
         $scope.blade.isLoading = false;
     };
 
     function saveChanges() {
         $scope.blade.isLoading = true;
         if ($scope.blade.seoUrlKeywordType === 0) {
-            categories.update({ id: $scope.blade.parentBlade.item.id, seoInfos: $scope.seoInfos }, function (data, headers) {
+            categories.update({ id: $scope.blade.currentEntityId, seoInfos: $scope.seoInfos }, function () {
                 $scope.blade.refresh(true);
             });
         } else if ($scope.blade.seoUrlKeywordType === 1) {
-            items.updateitem({ id: $scope.blade.parentBlade.item.id, seoInfos: $scope.seoInfos }, function (data, headers) {
+            items.updateitem({ id: $scope.blade.currentEntityId, seoInfos: $scope.seoInfos }, function () {
                 $scope.blade.refresh(true);
             });
         }
@@ -88,7 +86,7 @@
         }
     ];
 
-
+    $scope.blade.style = 'gray';
     $scope.blade.subtitle = 'SEO information';
     $scope.blade.refresh(false);
 }]);
