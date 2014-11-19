@@ -4,7 +4,7 @@
 	'ui.bootstrap.typeahead',
     'ngSanitize'
 ])
-.controller('categoryPropertyController', ['$rootScope', '$scope', 'categories', 'properties', 'bladeNavigationService', 'dialogService', '$injector', function ($rootScope, $scope, categories, properties, bladeNavigationService, dialogService, $injector) {
+.controller('categoryPropertyController', ['$scope', 'categories', 'properties', 'bladeNavigationService', 'dialogService', function ($scope, categories, properties, bladeNavigationService, dialogService) {
     $scope.blade.origEntity = {};
 
     $scope.blade.refresh = function (parentRefresh) {
@@ -90,11 +90,6 @@
         });
     };
 
-    var formScope;
-    $scope.setForm = function (form) {
-        formScope = form;
-    }
-
     $scope.bladeToolbarCommands = [
 		{
 		    name: "Save", icon: 'icon-floppy',
@@ -102,7 +97,7 @@
 		        saveChanges();
 		    },
 		    canExecuteMethod: function () {
-		        return isDirty() && formScope && formScope.$valid;
+		        return isDirty();
 		    }
 		},
         {

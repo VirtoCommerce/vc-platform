@@ -6,14 +6,17 @@ namespace VirtoCommerce.CatalogModule.Web.Model
     {
         public static string TypeName = "category";
 
-        public ListEntryCategory(Category category)
-            : base(TypeName)
-        {
-            Id = category.Id;
-            ImageUrl = "";
-            Code = category.Code;
-            Name = category.Name;
-            Links = category.Links.Select(x => new ListEntryLink { CatalogId = x.CatalogId, CategoryId = x.CategoryId, ListEntryId = x.SourceCategoryId }).ToArray();
-        }
+		public ListEntryCategory(Category category)
+			: base(TypeName)
+		{
+			Id = category.Id;
+			ImageUrl = "";
+			Code = category.Code;
+			Name = category.Name;
+			if (category.Links != null)
+			{
+				Links = category.Links.Select(x => new ListEntryLink(x) ).ToArray();
+			}
+		}
     }
 }

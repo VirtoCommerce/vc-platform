@@ -108,7 +108,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					{
 						var dbLinks = new ObservableCollection<foundation.LinkedCategory>(repository.GetCategoryLinks(category.Id));
 						var changedLinks = category.Links.Select(x => x.ToFoundation(category)).ToList();
-						dbLinks.ObserveCollection(x => repository.Add(x), x => repository.Remove(x));
+						dbLinks.ObserveCollection(x => repository.Add(x), x => { repository.Attach(x); repository.Remove(x); });
 						changedLinks.Patch(dbLinks, new LinkedCategoryComparer(), (source, target) => source.Patch(target));
 					}
 

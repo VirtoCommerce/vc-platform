@@ -1,0 +1,12 @@
+﻿<div style="width:360px">
+    <form name="contextEntityDetailForm">
+        <fieldset ng-init="setForm(contextEntityDetailForm);">
+            <label>Name:</label>
+            <div data-role="input-control" class="input-control text">
+                <input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" placeholder="Enter category name" />
+            </div>
+        </fieldset>
+    </form>
+
+    <va-widget-container group="categoryDetail" blade="blade"></va-widget-container>
+</div>

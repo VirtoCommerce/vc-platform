@@ -65,7 +65,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 		{
 			var retVal = Categories.OfType<foundation.LinkedCategory>()
 										.AsNoTracking()
-										.Where(x => x.LinkedCatalogId == catalogId)
+										.Where(x => x.LinkedCatalogId == catalogId && x.LinkedCategoryId == null)
 										.ToArray();
 
 			return retVal;
