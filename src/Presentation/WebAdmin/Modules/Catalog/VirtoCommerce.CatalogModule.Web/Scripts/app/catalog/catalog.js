@@ -23,6 +23,7 @@ angular.module(catalogsModuleName, [
   'catalogModule.blades.itemVariationList',
   'catalogModule.widget.itemAssetWidget',
   'catalogModule.blades.itemAssetDetail',
+  'catalogModule.blades.seoDetail',
   'catalogModule.blades.propertyDetail',
   'catalogModule.widget.catalogLanguagesWidget',
   'catalogModule.blades.catalogLanguages',

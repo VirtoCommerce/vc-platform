@@ -5,7 +5,7 @@
     $scope.currentBlade.item = {};
 
     $scope.currentBlade.refresh = function (parentRefresh) {
-        items.get({ id: $scope.currentBlade.itemId }, function (data) {
+        return items.get({ id: $scope.currentBlade.itemId }, function (data) {
             $scope.currentBlade.itemId = data.id;
             $scope.currentBlade.title = data.code;
             $scope.isTitular = data.titularItemId == null;
@@ -18,9 +18,17 @@
                 $scope.currentBlade.parentBlade.refresh();
             }
 
+            // SEO
+            var newBlade = {
+                id: 'seoDetail',
+                seoUrlKeywordType: 1,
+                style: 'gray',
+                controller: 'seoDetailController',
+                template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/seo-detail.tpl.html'
+            };
+            bladeNavigationService.showBlade(newBlade, $scope.blade);
         });
     }
-
 
     $scope.setTitular = function () {
         $scope.currentBlade.item.titularItemId = null;
@@ -125,7 +133,6 @@
     ];
 
     $scope.toolbarTemplate = "Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/item-detail-toolbar.tpl.html";
-
 
     $scope.currentBlade.refresh(false);
 }]);

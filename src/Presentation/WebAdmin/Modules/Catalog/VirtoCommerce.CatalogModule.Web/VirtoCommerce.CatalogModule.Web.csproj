@@ -155,6 +155,8 @@
     <Content Include="Scripts\app\catalog\blades\advanced-search.tpl.html" />
     <Content Include="Scripts\app\catalog\blades\catalogs-select.js" />
     <Content Include="Scripts\app\catalog\blades\catalogs-select.tpl.html" />
+    <Content Include="Scripts\app\catalog\blades\seo-detail.js" />
+    <Content Include="Scripts\app\catalog\blades\seo-detail.tpl.html" />
     <Content Include="Scripts\app\catalog\blades\property-attributes.js" />
     <Content Include="Scripts\app\catalog\blades\property-dictionary.js" />
     <Content Include="Scripts\app\catalog\blades\property-attributes.tpl.html" />
