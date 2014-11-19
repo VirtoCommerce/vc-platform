@@ -560,7 +560,6 @@ namespace UI.FrontEnd.FunctionalTests
 			container.RegisterType<OrderClient>();
 			container.RegisterType<DisplayTemplateClient>();
 			container.RegisterType<SettingsClient>();
-			container.RegisterType<SequencesClient>();
 			container.RegisterType<IPaymentOption, CreditCardOption>("creditcard");
 
 			#endregion

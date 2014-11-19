@@ -385,7 +385,6 @@ namespace VirtoCommerce.Web
             container.RegisterType<OrderClient>();
             container.RegisterType<DisplayTemplateClient>();
             container.RegisterType<SettingsClient>();
-            container.RegisterType<SequencesClient>();
             container.RegisterType<SeoKeywordClient>(new PerRequestLifetimeManager());
             container.RegisterType<ReviewClient>();
             container.RegisterType<IPaymentOption, CreditCardOption>("creditcard");
