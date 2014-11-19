@@ -7,6 +7,7 @@ using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Data.AppConfig;
 using VirtoCommerce.Foundation.Data.AppConfig.Migrations;
+using VirtoCommerce.Foundation.Data.AppConfig.Services;
 using VirtoCommerce.PowerShell.DatabaseSetup;
 using Xunit;
 

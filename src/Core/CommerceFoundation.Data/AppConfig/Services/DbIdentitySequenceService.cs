@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Data.Entity;
+using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using VirtoCommerce.Foundation.AppConfig.Repositories;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
+using VirtoCommerce.Foundation.Frameworks.Sequences;
 
-namespace VirtoCommerce.Foundation.Data.AppConfig
+namespace VirtoCommerce.Foundation.Data.AppConfig.Services
 {
-    using System.Data.Entity;
-    using System.Globalization;
-
-    using VirtoCommerce.Foundation.AppConfig.Repositories;
-    using VirtoCommerce.Foundation.Frameworks.Extensions;
-    using VirtoCommerce.Foundation.Frameworks.Sequences;
-
     public class DbIdentitySequenceService : ISequenceService
     {
         private readonly IAppConfigRepository _repository;

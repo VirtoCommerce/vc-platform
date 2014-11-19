@@ -133,11 +133,12 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="AppConfig\DbIdentitySequenceService.cs" />
+    <Compile Include="AppConfig\Services\DbIdentitySequenceService.cs" />
     <Compile Include="AppConfig\Migrations\201407291500445_UpdateStatisticsProceduresAdd.cs" />
     <Compile Include="AppConfig\Migrations\201407291500445_UpdateStatisticsProceduresAdd.Designer.cs">
       <DependentUpon>201407291500445_UpdateStatisticsProceduresAdd.cs</DependentUpon>
     </Compile>
+    <Compile Include="AppConfig\Services\SequenceService.cs" />
     <Compile Include="Asset\FileSystemBlobAssetRepository.cs" />
     <Compile Include="Catalogs\Migrations\201409031214424_EditorialReviewLocale_SeoTriggers.cs" />
     <Compile Include="Catalogs\Migrations\201409031214424_EditorialReviewLocale_SeoTriggers.Designer.cs">

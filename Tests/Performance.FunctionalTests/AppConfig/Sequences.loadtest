@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<LoadTest Name="DynamicContent" Description="" Owner="" storage="f:\virto\git\repos\vc-community\tests\performance.functionaltests\marketing\dynamiccontent.loadtest" Priority="2147483647" Enabled="true" CssProjectStructure="" CssIteration="" DeploymentItemsEditable="" WorkItemIds="" TraceLevel="None" CurrentRunConfig="Run Settings1" Id="73660873-8237-4b1d-8ebf-6ba28621af89" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+<LoadTest Name="Sequences" Description="" Owner="" storage="f:\virto\git\repos\vc-community\tests\performance.functionaltests\appconfig\sequences.loadtest" Priority="2147483647" Enabled="true" CssProjectStructure="" CssIteration="" DeploymentItemsEditable="" WorkItemIds="" TraceLevel="None" CurrentRunConfig="Run Settings1" Id="a62c56a5-aa4f-423c-a5df-f3f663a9e2e3" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
   <Scenarios>
-    <Scenario Name="DynamicContentScenario" DelayBetweenIterations="0" PercentNewUsers="0" IPSwitching="true" TestMixType="PercentageOfTestsStarted" ApplyDistributionToPacingDelay="true" MaxTestIterations="0" DisableDuringWarmup="false" DelayStartTime="0" AllowedAgents="">
-      <ThinkProfile Value="0" Pattern="Off" />
-      <LoadProfile Pattern="Step" InitialUsers="10" MaxUsers="200" StepUsers="10" StepDuration="10" StepRampTime="0" />
+    <Scenario Name="Sequences" DelayBetweenIterations="0" PercentNewUsers="0" IPSwitching="false" TestMixType="PercentageOfTestsStarted" ApplyDistributionToPacingDelay="true" MaxTestIterations="0" DisableDuringWarmup="false" DelayStartTime="0" AllowedAgents="">
+      <ThinkProfile Value="0.2" Pattern="NormalDistribution" />
+      <LoadProfile Pattern="Constant" InitialUsers="100" />
       <TestMix>
-        <TestProfile Name="Run_dynamiccontent_performance" Path="..\bin\debug\commercefoundation.performancetests.dll" Id="a5f0f1dc-64f1-ec38-c317-581c1cad9d59" Percentage="100" Type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+        <TestProfile Name="Run_sequences_performance" Path="..\bin\debug\commercefoundation.performancetests.dll" Id="bccb9c8c-47c9-e901-d692-eef5e395d152" Percentage="100" Type="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestElement, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.ObjectModel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
       </TestMix>
       <NetworkMix>
         <NetworkProfile Percentage="100">
@@ -241,6 +241,7 @@
           </Counters>
           <Instances>
             <Instance Name="QTController" />
+            <Instance Name="QTController64" />
           </Instances>
         </CounterCategory>
       </CounterCategories>
@@ -393,6 +394,10 @@
             <Instance Name="QTAgent32" />
             <Instance Name="QTDCAgent" />
             <Instance Name="QTDCAgent32" />
+            <Instance Name="QTAgent_35" />
+            <Instance Name="QTAgent_40" />
+            <Instance Name="QTAgent32_35" />
+            <Instance Name="QTAgent32_40" />
           </Instances>
         </CounterCategory>
       </CounterCategories>
@@ -404,7 +409,7 @@
     </CounterSet>
   </CounterSets>
   <RunConfigurations>
-    <RunConfiguration Name="Run Settings1" Description="" ResultsStoreType="Database" TimingDetailsStorage="AllIndividualDetails" SaveTestLogsOnError="true" SaveTestLogsFrequency="0" MaxErrorDetails="200" MaxErrorsPerType="1000" MaxThresholdViolations="1000" MaxRequestUrlsReported="1000" UseTestIterations="false" RunDuration="600" WarmupTime="0" CoolDownTime="0" TestIterations="100" WebTestConnectionModel="ConnectionPerUser" WebTestConnectionPoolSize="50" SampleRate="5" ValidationLevel="High" SqlTracingConnectString="" SqlTracingConnectStringDisplayValue="" SqlTracingDirectory="" SqlTracingEnabled="false" SqlTracingFileCount="2" SqlTracingRolloverEnabled="true" SqlTracingMinimumDuration="500" RunUnitTestsInAppDomain="true" CoreCount="0">
+    <RunConfiguration Name="Run Settings1" Description="" ResultsStoreType="Database" TimingDetailsStorage="None" SaveTestLogsOnError="true" SaveTestLogsFrequency="0" MaxErrorDetails="200" MaxErrorsPerType="1000" MaxThresholdViolations="1000" MaxRequestUrlsReported="1000" UseTestIterations="false" RunDuration="300" WarmupTime="0" CoolDownTime="0" TestIterations="100" WebTestConnectionModel="ConnectionPerUser" WebTestConnectionPoolSize="50" SampleRate="15" ValidationLevel="High" SqlTracingConnectString="" SqlTracingConnectStringDisplayValue="" SqlTracingDirectory="" SqlTracingEnabled="false" SqlTracingFileCount="2" SqlTracingRolloverEnabled="true" SqlTracingMinimumDuration="500" RunUnitTestsInAppDomain="true" CoreCount="0">
       <CounterSetMappings>
         <CounterSetMapping ComputerName="[CONTROLLER MACHINE]">
           <CounterSetReferences>

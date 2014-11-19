@@ -282,7 +282,6 @@
     <Compile Include="Services\Security\IUserIdentitySecurity.cs" />
     <Compile Include="Services\Security\OAuthAuthorizationManager.cs" />
     <Compile Include="Services\Security\SecurityService.cs" />
-    <Compile Include="Services\Sequences\SequenceService.cs" />
     <Compile Include="Services\Templates\ProcessedTemplate.cs" />
     <Compile Include="Services\Templates\TemplateService.cs" />
     <Compile Include="UnityDependencyResolverServiceLocatorProvider.cs" />

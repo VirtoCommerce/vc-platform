@@ -8,7 +8,7 @@ using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Sequences;
 
-namespace VirtoCommerce.Web.Client.Services.Sequences
+namespace VirtoCommerce.Foundation.Data.AppConfig.Services
 {
     /// <summary>
     /// Class SequenceService.
@@ -169,16 +169,16 @@ namespace VirtoCommerce.Web.Client.Services.Sequences
 
 			public void Pregenerate(int startCount, int endCount)
 			{
+                _lastGenerationDateTime = DateTime.UtcNow;
 				var generatedItems = new Stack<string>();
 				for (var index = startCount; index < endCount; index++)
 				{
 					var strCount = index.ToString(CultureInfo.InvariantCulture).PadLeft(CounterLength, '0');
-					generatedItems.Push(string.Format(IdTemplate, _prefix, DateTime.UtcNow.ToString(DateFormat), strCount));
+                    generatedItems.Push(string.Format(IdTemplate, _prefix, _lastGenerationDateTime.Value.ToString(DateFormat), strCount));
 				}
 
 				//This revereses the sequence
 				_sequence = new Stack<string>(generatedItems);
-				_lastGenerationDateTime = DateTime.UtcNow;
 			}	
 	    }
 
