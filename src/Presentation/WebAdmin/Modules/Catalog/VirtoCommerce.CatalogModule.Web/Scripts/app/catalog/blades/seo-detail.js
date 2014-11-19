@@ -32,6 +32,12 @@
         }
     };
 
+    $scope.semanticUrlValidator = function (value) {
+        // var pattern = /^\w*$/; // alphanumeric and underscores
+        var pattern = /^([a-zA-Z0-9\(\)_\-]+)*$/;
+        return pattern.test(value);
+    }
+
     function isDirty() {
         return !angular.equals($scope.seoInfos, $scope.blade.origItem);
     };
