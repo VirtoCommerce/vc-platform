@@ -1,11 +1,8 @@
 ﻿using System;
+using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VirtoCommerce.Foundation.Data.AppConfig;
 using VirtoCommerce.Foundation.Data.AppConfig.Services;
 
@@ -15,27 +12,27 @@ namespace PerformanceTests.AppConfig
     public class SequencesScenarios
     {
 
-        public static Dictionary<string,string> generatedNumbers = new Dictionary<string, string>() ;
+        public static Dictionary<string, string> GlobalNumbers = new Dictionary<string, string>();
+        public static int RunCount = 0;
 
         [TestMethod]
         [DeploymentItem("connectionStrings.config")]
         [DeploymentItem("Configs/AppConfig.config", "Configs")]
         public void Run_sequences_performance()
         {
+            var localRunCount = ++RunCount;
+            Debug.WriteLine("Run count: " + localRunCount);
             var repository = new EFAppConfigRepository("VirtoCommerce");
             var sequence = new SequenceService(repository);
 
-            //Get first
-            var result = sequence.GetNext("test");
-            Assert.IsNotNull(result);
 
             for (var i = 1; i < SequenceService.SequenceReservationRange; i++)
             {
-                result = sequence.GetNext("test");
-                Debug.Write(result);
+                var result = sequence.GetNext("test");
+                Debug.WriteLine(result);
                 //This would fail if any duplicate generated
-                Assert.IsFalse(generatedNumbers.ContainsKey(result));
-                generatedNumbers.Add(result, result);
+                Assert.IsFalse(GlobalNumbers.ContainsKey(result));
+                GlobalNumbers.Add(result, result);
             }
 
             //var utcNow = DateTime.UtcNow;
@@ -49,7 +46,6 @@ namespace PerformanceTests.AppConfig
             //}
 
             //var reversedStack = new Stack<string>(generatedItems);
-
 
         }
     }
