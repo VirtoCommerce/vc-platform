@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Diagnostics;
 using VirtoCommerce.Foundation.Data.AppConfig;
@@ -15,13 +13,32 @@ namespace PerformanceTests.AppConfig
         public static Dictionary<string, string> GlobalNumbers = new Dictionary<string, string>();
         public static int RunCount = 0;
 
+        [ClassInitialize]
+        public static void Initialize(TestContext context)
+        {
+            const string sql =
+                @"CREATE TABLE [dbo].[UniqueSequence]([Sequence] [nvarchar](255) NOT NULL,CONSTRAINT [PK_UniqueSequence] PRIMARY KEY CLUSTERED ([Sequence] ASC)
+                WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON))";
+            var repository = new EFAppConfigRepository("VirtoCommerce");
+            repository.Database.ExecuteSqlCommand(sql);
+
+        }
+
+        [ClassCleanup]
+        public static void Cleanup()
+        {
+            const string sql = @"DROP TABLE [dbo].[UniqueSequence]";
+            var repository = new EFAppConfigRepository("VirtoCommerce");
+            repository.Database.ExecuteSqlCommand(sql);
+
+        }
+
+
         [TestMethod]
         [DeploymentItem("connectionStrings.config")]
         [DeploymentItem("Configs/AppConfig.config", "Configs")]
         public void Run_sequences_performance()
         {
-            var localRunCount = ++RunCount;
-            Debug.WriteLine("Run count: " + localRunCount);
             var repository = new EFAppConfigRepository("VirtoCommerce");
             var sequence = new SequenceService(repository);
 
@@ -30,23 +47,16 @@ namespace PerformanceTests.AppConfig
             {
                 var result = sequence.GetNext("test");
                 Debug.WriteLine(result);
+
                 //This would fail if any duplicate generated
                 Assert.IsFalse(GlobalNumbers.ContainsKey(result));
                 GlobalNumbers.Add(result, result);
+
+                const string sql = "INSERT UniqueSequence VALUES(@p0);";
+                //This would fail if any duplicate generated beause we use primary key
+                var sqlResult = repository.Database.ExecuteSqlCommand(sql, result);
+                Assert.AreEqual(1,sqlResult);
             }
-
-            //var utcNow = DateTime.UtcNow;
-            //var startCount = repository.Sequences.Single(x => x.ObjectType.Equals("test")).Value - SequenceService.SequenceReservationRange + 1;
-
-            //var generatedItems = new Stack<string>();
-            //for (var index = startCount; index < SequenceService.SequenceReservationRange + startCount; index++)
-            //{
-            //    var strCount = index.ToString(CultureInfo.InvariantCulture).PadLeft(SequenceService.CounterLength, '0');
-            //    generatedItems.Push(string.Format(SequenceService.IdTemplate, "test".ToUpper(), utcNow.ToString(SequenceService.DateFormat), strCount));
-            //}
-
-            //var reversedStack = new Stack<string>(generatedItems);
-
         }
     }
 }
