@@ -44,6 +44,10 @@ namespace VirtoCommerce.Foundation.Frameworks
 					var right = p.GetValue(other, null);
 
 
+					if(left == null || right == null)
+					{
+						return left == right;
+					}
 					if (typeof(TValueObject).IsAssignableFrom(left.GetType()))
 					{
 						//check not self-references...
