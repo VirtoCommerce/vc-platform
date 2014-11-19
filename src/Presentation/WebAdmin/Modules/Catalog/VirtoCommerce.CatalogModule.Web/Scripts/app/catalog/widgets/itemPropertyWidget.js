@@ -1,9 +1,7 @@
 ﻿angular.module('catalogModule.widget.itemPropertyWidget', [
 ])
-.controller('itemPropertyWidgetController', ['$injector', '$rootScope', '$scope', 'bladeNavigationService', function ($injector, $rootScope, $scope, bladeNavigationService) {
+.controller('itemPropertyWidgetController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
     $scope.currentBlade = $scope.widget.blade;
-
-    $scope.propertyShowLimit = 5;
 
     $scope.openItemPropertyBlade = function () {
 

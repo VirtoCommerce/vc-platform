@@ -97,13 +97,14 @@
 
     $scope.blade.showCategoryBlade = function (id, data, title) {
         var newBlade = {
-            id: "listItemDetail",
+            id: "listCategoryDetail",
             currentEntityId: id,
             currentEntity: data,
             title: title,
-            subtitle: 'category properties',
-            controller: 'categoryPropertyController',
-            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/category-property-detail.tpl.html',
+            style: 'gray',
+            subtitle: 'category details',
+            controller: 'categoryDetailController',
+            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/category-detail.tpl.html',
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };
