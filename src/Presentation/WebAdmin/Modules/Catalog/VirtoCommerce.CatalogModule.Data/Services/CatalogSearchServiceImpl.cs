@@ -84,7 +84,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 							var allLinkedCategoriesIds = repository.GetCatalogLinks(criteria.CatalogId).Select(x => x.ParentCategoryId).ToArray();
 							//Search in all catalogs
 							query = repository.Categories;
-							query = query.Where(x => (x.CatalogId == criteria.CatalogId && x.ParentCategoryId == null )|| allLinkedCategoriesIds.Contains(x.CategoryId));
+							query = query.Where(x => (x.CatalogId == criteria.CatalogId && x.ParentCategoryId == null ) || allLinkedCategoriesIds.Contains(x.CategoryId));
 						}
 					}
 
@@ -129,6 +129,9 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 		{
 			using (var repository = _catalogRepositoryFactory())
 			{
+				var dbCatalog = repository.GetCatalogById(criteria.CatalogId);
+				var isVirtual = dbCatalog is foundation.VirtualCatalog;
+
 				var query = repository.Items;
 
 				if (!String.IsNullOrEmpty(criteria.CategoryId))
@@ -138,6 +141,11 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				else if (!String.IsNullOrEmpty(criteria.CatalogId))
 				{
 					query = query.Where(x => x.CatalogId == criteria.CatalogId && !x.CategoryItemRelations.Any());
+					if(isVirtual)
+					{
+						query = repository.Items;
+						query.Where(x => x.CatalogId == criteria.CatalogId && !x.CategoryItemRelations.Any(y => y.CategoryId == null && x.CatalogId == criteria.CatalogId));
+					}
 				}
 			
 

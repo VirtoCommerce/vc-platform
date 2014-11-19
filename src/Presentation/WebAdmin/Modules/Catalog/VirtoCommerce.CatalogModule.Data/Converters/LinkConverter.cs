@@ -111,12 +111,24 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 
 		public bool Equals(foundation.CategoryItemRelation x, foundation.CategoryItemRelation y)
 		{
-			return x.CategoryId == y.CategoryId;
+			var retVal = x.CatalogId == y.CatalogId;
+			
+			if (retVal && x.CategoryId != null)
+			{
+				retVal = x.CategoryId == y.CategoryId;
+			}
+
+			return retVal;
 		}
 
 		public int GetHashCode(foundation.CategoryItemRelation obj)
 		{
-			return obj.CategoryId.GetHashCode();
+			var retVal = obj.CatalogId.GetHashCode();
+			if (obj.CategoryId != null)
+			{
+				retVal = obj.CategoryId.GetHashCode();
+			}
+			return retVal;
 		}
 
 		#endregion

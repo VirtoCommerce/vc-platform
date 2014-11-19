@@ -208,7 +208,11 @@ namespace VirtoCommerce.CatalogModule.Test
 
 			var category = categoryService.GetById("03771c0e-51ac-44d0-ac77-2a38b56b11b5");
 			category.Links.Add(new CategoryLink { CatalogId = vCatalog.Id });
-			categoryService.Update(new Category[] { category });
+			//categoryService.Update(new Category[] { category });
+
+			var item = itemService.GetById("v-b0007pn5n2", ItemResponseGroup.ItemLarge);
+			item.Links.Add(new CategoryLink { CatalogId = vCatalog.Id });
+			itemService.Update(new CatalogProduct[] { item });
 		}
 
 		[TestMethod]
