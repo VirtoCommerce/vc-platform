@@ -17,8 +17,9 @@ namespace PerformanceTests.AppConfig
         public static void Initialize(TestContext context)
         {
             const string sql =
-                @"CREATE TABLE [dbo].[UniqueSequence]([Sequence] [nvarchar](255) NOT NULL,CONSTRAINT [PK_UniqueSequence] PRIMARY KEY CLUSTERED ([Sequence] ASC)
-                WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON))";
+                @"IF OBJECT_ID('dbo.UniqueSequence', 'U') IS NULL
+                    CREATE TABLE [dbo].[UniqueSequence]([Sequence] [nvarchar](255) NOT NULL,CONSTRAINT [PK_UniqueSequence] PRIMARY KEY CLUSTERED ([Sequence] ASC)
+                    WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON))";
             var repository = new EFAppConfigRepository("VirtoCommerce");
             repository.Database.ExecuteSqlCommand(sql);
 
@@ -27,7 +28,9 @@ namespace PerformanceTests.AppConfig
         [ClassCleanup]
         public static void Cleanup()
         {
-            const string sql = @"DROP TABLE [dbo].[UniqueSequence]";
+            const string sql =
+                @"IF OBJECT_ID('dbo.UniqueSequence', 'U') IS NOT NULL
+                    DROP TABLE [dbo].[UniqueSequence]";
             var repository = new EFAppConfigRepository("VirtoCommerce");
             repository.Database.ExecuteSqlCommand(sql);
 

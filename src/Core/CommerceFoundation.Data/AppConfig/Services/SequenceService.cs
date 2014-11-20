@@ -68,67 +68,98 @@ namespace VirtoCommerce.Foundation.Data.AppConfig.Services
 
 				if (InMemorySequences[objectType].IsEmpty || InMemorySequences[objectType].HasExpired)
                 {
-					int startCounter;
-					int endCounter;
+                    var startCounter = 0;
+                    var endCounter = 0;
 
-					//Update Sequences in database
-                    using (SqlDbConfiguration.ExecutionStrategySuspension)
-                    using (var transaction = new TransactionScope())
+                    var initializedCounters = false;
+                    var retryCount = 0;
+                    const int maxTransactionRetries = 3;
+
+                    while (!initializedCounters && retryCount < maxTransactionRetries)
                     {
-                        var sequence = _repository.Sequences.SingleOrDefault(s => s.ObjectType.Equals(objectType, StringComparison.OrdinalIgnoreCase));
-
-                        var originalModifiedDate = sequence !=null ? sequence.LastModified : null;
-
-                        if (sequence != null)
-                        {
-                            //Make sequence as volatile data
-                            sequence.LastModified = DateTime.UtcNow;
-                            _repository.UnitOfWork.Commit();
-                        }
-                        else
-                        {
-                            sequence = new Sequence { ObjectType = objectType, Value = 0, LastModified = DateTime.UtcNow};
-                            _repository.Add(sequence);
-                            _repository.UnitOfWork.Commit();
-                        }
-
-                        //Refresh data to make sure we have latest value in case another transaction was locked
-                        _repository.Refresh(_repository.Sequences);
-                        sequence = _repository.Sequences.Single(s => s.ObjectType.Equals(objectType, StringComparison.OrdinalIgnoreCase));
-                        startCounter = sequence.Value;
-
-                        //Sequence in database has expired?
-                        if (originalModifiedDate.HasValue && originalModifiedDate.Value.Date < DateTime.UtcNow.Date)
-                        {
-                            startCounter = 0;
-                        }
-
                         try
                         {
-                            endCounter = checked(startCounter + SequenceReservationRange);
+                            InitCounters(objectType, out startCounter, out endCounter);
+                            initializedCounters = true;
                         }
-                        catch (OverflowException)
+                        catch (System.Data.Entity.Infrastructure.DbUpdateException)
                         {
-                            //need to reset
-                            startCounter = 0;
-                            endCounter = SequenceReservationRange;
+                            //This exception can happen due to deadlock so we can retry transaction several times
+                            initializedCounters = false;
+                            if (retryCount >= maxTransactionRetries)
+                            {
+                                throw;
+                            }
                         }
-
-						//Commit changes
-						sequence.Value = endCounter;
-                        //sequence.LastModified = DateTime.UtcNow;
-                        _repository.UnitOfWork.Commit();
-
-						//Transaction success
-                        transaction.Complete();
+                        finally
+                        {
+                            retryCount++;
+                        }
                     }
 
-					//Pregenerate
-					InMemorySequences[objectType].Pregenerate(startCounter, endCounter);
+                    if (initializedCounters)
+                    {
+                        //Pregenerate
+                        InMemorySequences[objectType].Pregenerate(startCounter, endCounter);
+                    }
                 }
 
                 return string.Format(InMemorySequences[objectType].Next());
             }
+        }
+
+        private void InitCounters(string objectType, out int startCounter, out int endCounter)
+        {
+            //Update Sequences in database
+            using (SqlDbConfiguration.ExecutionStrategySuspension)
+            using (var transaction = new TransactionScope())
+            {
+                var sequence = _repository.Sequences.SingleOrDefault(s => s.ObjectType.Equals(objectType, StringComparison.OrdinalIgnoreCase));
+                var originalModifiedDate = sequence != null ? sequence.LastModified : null;
+
+                if (sequence != null)
+                {
+                    sequence.LastModified = DateTime.UtcNow;
+                }
+                else
+                {
+                    sequence = new Sequence { ObjectType = objectType, Value = 0, LastModified = DateTime.UtcNow };
+                    _repository.Add(sequence);
+                }
+
+
+                _repository.UnitOfWork.Commit();
+                //Refresh data to make sure we have latest value in case another transaction was locked
+                _repository.Refresh(_repository.Sequences);
+                sequence = _repository.Sequences.Single(s => s.ObjectType.Equals(objectType, StringComparison.OrdinalIgnoreCase));
+                startCounter = sequence.Value;
+
+                //Sequence in database has expired?
+                if (originalModifiedDate.HasValue && originalModifiedDate.Value.Date < DateTime.UtcNow.Date)
+                {
+                    startCounter = 0;
+                }
+
+                try
+                {
+                    endCounter = checked(startCounter + SequenceReservationRange);
+                }
+                catch (OverflowException)
+                {
+                    //need to reset
+                    startCounter = 0;
+                    endCounter = SequenceReservationRange;
+                }
+
+                //Commit changes
+                sequence.Value = endCounter;
+                //sequence.LastModified = DateTime.UtcNow;
+                _repository.UnitOfWork.Commit();
+
+                //Transaction success
+                transaction.Complete();
+            }
+
         }
 
 	    private class InMemorySequence
