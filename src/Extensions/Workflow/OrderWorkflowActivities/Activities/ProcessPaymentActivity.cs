@@ -98,6 +98,7 @@ namespace VirtoCommerce.OrderWorkflow
             foreach (var zeroPayment in pendingPayments.Where(x => x.Amount == 0))
             {
                 zeroPayment.Status = PaymentStatus.Completed.ToString();
+                PostProcessPayment(zeroPayment);
             }
             // If total is 0, we do not need to proceed
             if (orderGroup.Total == 0)
