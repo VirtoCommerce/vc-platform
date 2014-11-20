@@ -1,0 +1,33 @@
+﻿<div style="width:360px">
+    <form name="newProductForm">
+        <fieldset ng-init="setForm(newProductForm);">
+            <label>SKU:</label>
+            <div data-role="input-control" class="input-control text">
+                <input required class="form-control" ng-model="currentBlade.item.code" placeholder="Enter item sku" />
+            </div>
+            <label>Name:</label>
+            <div data-role="input-control" class="input-control textarea">
+                <textarea required class="form-control" cols="30" rows="3" ng-model="currentBlade.item.name" placeholder="Enter item name"></textarea>
+            </div>
+        </fieldset>
+    </form>
+
+    <ul class="list-extended">
+        <li ng-click="openBlade('properties')">
+            <span class="title">Properties</span>
+            <span class="sub-title">{{currentBlade.item.properties.length}} properties</span>
+        </li>
+        <li ng-click="openBlade('images')">
+            <span class="title">Images</span>
+            <span class="sub-title">{{currentBlade.item.images.length}} images</span>
+        </li>
+        <li ng-click="openBlade('review')">
+            <span class="title">Review</span>
+            <span class="sub-title">Add review</span>
+        </li>
+        <li ng-click="openBlade('seo')">
+            <span class="title">Seo</span>
+            <span class="sub-title">Define seo information</span>
+        </li>
+    </ul>
+</div>

@@ -122,6 +122,20 @@
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };
 
+    $scope.blade.showNewItemWizard = function (inMemoryItem)
+    {
+        var newBlade = {
+            id: "newProductWizard",
+            item: inMemoryItem,
+            title: "New product",
+            style: "actions",
+            subtitle: 'Fill all product information',
+            controller: 'newProductWizardController',
+            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-product-wizard.tpl.html'
+        };
+        bladeNavigationService.showBlade(newBlade, $scope.blade);
+    };
+
     $scope.delete = function () {
         if (isItemsChecked()) {
             deleteChecked();

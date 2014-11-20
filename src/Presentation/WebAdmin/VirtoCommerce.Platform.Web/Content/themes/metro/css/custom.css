@@ -1238,7 +1238,7 @@
 	margin: 0;
 }
 
-.blade.actions .blade-content
+.blade .blade-content.actions
 {
 	height: calc(100% - 270px);
 }

@@ -30,6 +30,7 @@ angular.module(catalogsModuleName, [
   'catalogModule.widget.catalogLanguagesWidget',
   'catalogModule.blades.catalogLanguages',
   'catalogModule.widget.seoWidget',
+  'catalogModule.wizards.newProductWizard',
   'catalogModule.directives'
 ])
 .config(
