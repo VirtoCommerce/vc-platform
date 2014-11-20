@@ -21,7 +21,14 @@ namespace VirtoCommerce.Foundation.Marketing
 
 		private static MarketingConfiguration CreateInstance()
 		{
-			return (MarketingConfiguration)ConfigurationManager.GetSection("VirtoCommerce/Marketing");
+            var config = (MarketingConfiguration)ConfigurationManager.GetSection("VirtoCommerce/Marketing");
+
+            if (config == null)
+            {
+                config = new MarketingConfiguration { Connection = new MarketingConnection() };
+            }
+
+            return config;
 		}
 
 		[ConfigurationProperty("Connection", IsRequired = true)]
@@ -31,6 +38,7 @@ namespace VirtoCommerce.Foundation.Marketing
 			{
 				return (MarketingConnection)this["Connection"];
 			}
+            private set { this["Connection"] = value; }
 		}
 
         /// <summary>
@@ -65,7 +73,7 @@ namespace VirtoCommerce.Foundation.Marketing
 		}
 
 
-		[ConfigurationProperty("sqlConnectionStringName", IsRequired = false)]
+        [ConfigurationProperty("sqlConnectionStringName", IsRequired = false, DefaultValue = "VirtoCommerce")]
 		public string SqlConnectionStringName
 		{
 			get

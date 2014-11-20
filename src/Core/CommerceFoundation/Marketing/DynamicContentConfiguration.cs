@@ -21,7 +21,14 @@ namespace VirtoCommerce.Foundation.Marketing.DynamicContent
 
 		private static DynamicContentConfiguration CreateInstance()
 		{
-			return (DynamicContentConfiguration)ConfigurationManager.GetSection("VirtoCommerce/DynamicContent");
+            var config = (DynamicContentConfiguration)ConfigurationManager.GetSection("VirtoCommerce/DynamicContent");
+
+            if (config == null)
+            {
+                config = new DynamicContentConfiguration { Connection = new DynamicContentConnection() };
+            }
+
+            return config;
 		}
 
 		[ConfigurationProperty("Connection", IsRequired = true)]
@@ -31,6 +38,7 @@ namespace VirtoCommerce.Foundation.Marketing.DynamicContent
 			{
 				return (DynamicContentConnection)this["Connection"];
 			}
+            private set { this["Connection"] = value; }
 		}
 
         /// <summary>
@@ -65,7 +73,7 @@ namespace VirtoCommerce.Foundation.Marketing.DynamicContent
 		}
 
 
-		[ConfigurationProperty("sqlConnectionStringName", IsRequired = false)]
+		[ConfigurationProperty("sqlConnectionStringName", IsRequired = false, DefaultValue = "VirtoCommerce")]
 		public string SqlConnectionStringName
 		{
 			get
