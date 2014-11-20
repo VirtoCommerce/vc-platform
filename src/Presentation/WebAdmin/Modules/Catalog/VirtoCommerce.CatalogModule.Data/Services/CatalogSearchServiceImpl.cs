@@ -101,10 +101,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					Parallel.ForEach(categoryIds, parallelOptions, (x) =>
 					{
 						var category = _categoryService.GetById(x);
-						if(category.Virtual)
-						{
-							category.Links = null;
-						}
+						
 						categories.Add(category);
 					
 					});

@@ -108,7 +108,9 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 
 		    if (dbSource != null && dbTarget != null)
 		    {
-		        dbTarget.Name = dbSource.Name;
+				if(dbSource.Name != null)
+				  dbTarget.Name = dbSource.Name;
+
 		        if (!dbSource.CategoryPropertyValues.IsNullCollection())
 		        {
 		            dbSource.CategoryPropertyValues.Patch(dbTarget.CategoryPropertyValues, new PropertyValueComparer(),

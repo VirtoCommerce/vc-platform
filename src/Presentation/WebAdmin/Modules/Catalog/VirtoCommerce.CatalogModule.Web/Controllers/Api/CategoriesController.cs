@@ -49,7 +49,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 CatalogId = catalogId,
                 Code = Guid.NewGuid().ToString().Substring(0, 5)
             };
+
             retVal = _categoryService.Create(retVal.ToModuleModel()).ToWebModel();
+
             return Ok(retVal);
         }
 
@@ -80,7 +82,5 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             var moduleCategory = category.ToModuleModel();
             _categoryService.Update(new moduleModel.Category[] { moduleCategory });
         }
-
-
     }
 }
