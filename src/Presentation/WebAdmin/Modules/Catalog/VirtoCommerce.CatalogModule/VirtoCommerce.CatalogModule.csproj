@@ -39,6 +39,7 @@
     <Compile Include="Model\CatalogLanguage.cs" />
     <Compile Include="Model\Category.cs" />
     <Compile Include="Model\CategoryLink.cs" />
+    <Compile Include="Model\EditorialReview.cs" />
     <Compile Include="Model\ILanguageSupport.cs" />
     <Compile Include="Model\ILinkSupport.cs" />
     <Compile Include="Model\ISeoSupport.cs" />

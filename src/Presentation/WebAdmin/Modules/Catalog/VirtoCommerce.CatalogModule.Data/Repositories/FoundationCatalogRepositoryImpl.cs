@@ -94,7 +94,11 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			{
 				query = query.Include(x => x.ItemAssets);
 			}
-
+			if ((respGroup & moduleModel.ItemResponseGroup.ItemEditorialReviews) == moduleModel.ItemResponseGroup.ItemEditorialReviews)
+			{
+				query = query.Include(x => x.EditorialReviews);
+			}
+			
 			var retVal = query.ToArray();
 			return retVal;
 		}

@@ -73,7 +73,11 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 return NotFound();
             }
 
-			var allCategoryProperties = _propertyService.GetCategoryProperties(product.CategoryId);
+			moduleModel.Property[] allCategoryProperties = null;
+			if (product.CategoryId != null)
+			{
+				_propertyService.GetCategoryProperties(product.CategoryId);
+			}
 			var mainWebProduct = product.ToWebModel(allCategoryProperties);
 
 			var newVariation = new webModel.Product
