@@ -25,5 +25,6 @@ namespace VirtoCommerce.CatalogModule.Model
 		public ICollection<CategoryLink> Links { get; set; }
 		public ICollection<CatalogProduct> Variations { get; set; }
 		public ICollection<SeoInfo> SeoInfos { get; set; }
+		public ICollection<EditorialReview> Reviews { get; set; }
 	}
 }

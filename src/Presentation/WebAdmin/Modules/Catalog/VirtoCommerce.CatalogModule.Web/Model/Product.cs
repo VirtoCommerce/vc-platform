@@ -43,6 +43,6 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         public List<Product> Variations { get; set; }
         public List<CategoryLink> Links { get; set; }
 		public List<SeoInfo> SeoInfos { get; set; }
-
+		public List<EditorialReview> Reviews { get; set; }
     }
 }

@@ -113,6 +113,7 @@
     <Compile Include="Converters\CatalogConverter.cs" />
     <Compile Include="Converters\CatalogLanguageConverter.cs" />
     <Compile Include="Converters\CategoryConverter.cs" />
+    <Compile Include="Converters\EditorialReviewConverter.cs" />
     <Compile Include="Converters\LinkConverter.cs" />
     <Compile Include="Converters\ProductConverter.cs" />
     <Compile Include="Converters\PropertyAttributeConverter.cs" />
@@ -123,6 +124,7 @@
     <Compile Include="Converters\SeoInfoConverter.cs" />
     <Compile Include="Model\Catalog.cs" />
     <Compile Include="Model\CategoryLink.cs" />
+    <Compile Include="Model\EditorialReview.cs" />
     <Compile Include="Model\ListEntryLink.cs" />
     <Compile Include="Model\PropertyDictionaryValue.cs" />
     <Compile Include="Model\Language.cs" />
