@@ -3349,11 +3349,11 @@ a {
   padding: 0px 6px;
   font-size: 10.5px;
 }
-.metro input[type=number]::-webkit-inner-spin-button,
+/*.metro input[type=number]::-webkit-inner-spin-button,
 .metro input[type=number]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
-}
+}*/
 .metro img {
   max-width: 100%;
 }
