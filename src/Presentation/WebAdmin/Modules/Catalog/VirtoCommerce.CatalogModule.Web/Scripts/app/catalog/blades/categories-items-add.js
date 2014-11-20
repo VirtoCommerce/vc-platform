@@ -28,10 +28,8 @@
 
     $scope.addProduct = function () {
         items.newItem({ catalogId: pb.catalogId, categoryId: pb.categoryId }, function (data) {
-            pb.showItemBlade(data.id, data.name);
+            pb.showNewItemWizard(data);
             $scope.bladeClose();
-            pb.setSelectedItem(data);
-            pb.refresh();
         });
     };
 
