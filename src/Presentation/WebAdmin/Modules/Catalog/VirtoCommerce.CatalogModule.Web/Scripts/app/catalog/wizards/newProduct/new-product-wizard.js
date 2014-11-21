@@ -18,34 +18,46 @@
         });
     }
 
-    $scope.openBlade = function (type)
-    {
-        switch (type)
-        {
-            case 'properties':
-                //TODO
-                break;
-            case 'images':
-                var newBlade = {
-                    id: "newProductImages",
-                    item: $scope.blade.item,
-                    title: $scope.blade.item.name,
-                    style: "actions",
-                    subtitle: 'item images',
-                    controller: 'newProductWizardImagesController',
-                    template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/item-image-detail.tpl.html'
-                };
+    $scope.openBlade = function (type) {
+        $scope.blade.onClose(function() {
+            var newBlade = null;
+            switch (type)
+            {
+                case 'properties':
+                    newBlade = {
+                        id: "newProductProperties",
+                        item: $scope.blade.item,
+                        title: $scope.blade.item.name,
+                        style: "actions",
+                        subtitle: 'item properties',
+                        controller: 'newProductWizardPropertiesController',
+                        template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/item-property-detail.tpl.html'
+                    };
+                    break;
+                case 'images':
+                    newBlade = {
+                        id: "newProductImages",
+                        item: $scope.blade.item,
+                        title: $scope.blade.item.name,
+                        style: "actions",
+                        subtitle: 'item images',
+                        controller: 'newProductWizardImagesController',
+                        template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/item-image-detail.tpl.html'
+                    };
+                    break;
+                case 'seo':
+                    //TODO
+                    break;
+                case 'review':
+                    //TODO
+                    break;
+            }
+
+            if (newBlade != null)
+            {
                 bladeNavigationService.showBlade(newBlade, $scope.blade);
-
-
-                break;
-            case 'seo':
-                //TODO
-                break;
-            case 'review':
-                //TODO
-                break;
-        }
+            }
+        });  
     }
 
     $scope.setForm = function (form)

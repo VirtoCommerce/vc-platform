@@ -32,6 +32,7 @@ angular.module(catalogsModuleName, [
   'catalogModule.widget.seoWidget',
   'catalogModule.wizards.newProductWizard',
   'catalogModule.wizards.newProductWizard.images',
+  'catalogModule.wizards.newProductWizard.properties',
   'catalogModule.directives'
 ])
 .config(
