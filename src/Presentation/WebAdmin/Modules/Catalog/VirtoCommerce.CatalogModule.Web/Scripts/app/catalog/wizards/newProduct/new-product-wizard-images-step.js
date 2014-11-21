@@ -1,58 +1,13 @@
-﻿angular.module('catalogModule.blades.itemImageDetail', [
-   'catalogModule.resources.items',
-   'angularFileUpload',
-])
-.controller('itemImageController', ['$scope', 'items', '$filter', 'FileUploader', 'dialogService', function ($scope, items, $filter, FileUploader, dialogService) {
-    $scope.currentBlade = $scope.blade;
-	$scope.item = {};
-	$scope.origItem = {};
-
-	$scope.currentBlade.refresh = function (parentRefresh) {
-		items.get({ id: $scope.currentBlade.itemId }, function (data) {
-			$scope.origItem = data;
-			$scope.item = angular.copy(data);
-			$scope.currentBlade.isLoading = false;
-			if (parentRefresh) {
-				$scope.currentBlade.parentBlade.refresh();
-			}
-		});
-	}
-
-	$scope.isDirty = function () {
-		return !angular.equals($scope.item, $scope.origItem);
-	};
-
-	$scope.reset = function () {
-		angular.copy($scope.origItem, $scope.item);
-	};
-
-	$scope.currentBlade.onClose = function (closeCallback) {
-		if ($scope.isDirty()) {
-			var dialog = {
-				id: "confirmItemChange",
-				title: "Save changes",
-				message: "The images has been modified. Do you want to save changes?"
-			};
-			dialog.callback = function (needSave) {
-				if (needSave) {
-					$scope.saveChanges();
-				}
-				closeCallback();
-			};
-			dialogService.showConfirmationDialog(dialog);
-		}
-		else {
-			closeCallback();
-		}
-	};
-
+﻿angular.module('catalogModule.wizards.newProductWizard.images', ['angularFileUpload'])
+.controller('newProductWizardImagesController', ['$scope', '$filter', 'FileUploader', function ($scope, $filter, FileUploader)
+{
+    $scope.blade.isLoading = false;
+    $scope.bladeActions = "Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-product-wizard-ok-action.tpl.html";
+    $scope.item = angular.copy($scope.blade.item);
 
 	$scope.saveChanges = function () {
-		$scope.currentBlade.isLoading = true;
-		items.updateitem({}, $scope.item, function (data, headers)
-		{
-			$scope.currentBlade.refresh(true);
-		});
+	    $scope.blade.parentBlade.item.images = $scope.item.images;
+	    $scope.bladeClose();
 	};
 
     function initialize()
@@ -84,7 +39,9 @@
             {
                 angular.forEach(images, function (image)
                 {
-                	image.itemId = $scope.item.id;
+                    if (!angular.isDefined($scope.item.images)) {
+                        $scope.item.images = [];
+                    }
                     //ADD uploaded image to the item
                     $scope.item.images.push(image);
                 });
@@ -125,18 +82,6 @@
     };
 
     $scope.bladeToolbarCommands = [
-
-        {
-            name: "Save", icon: 'icon-floppy',
-        	executeMethod: function ()
-        	{
-        	    $scope.saveChanges();
-        	},
-        	canExecuteMethod: function ()
-        	{
-        	    return $scope.isDirty();
-        	}
-        },
 		{
 		    name: "Remove", icon: 'icon-remove', executeMethod: function () { $scope.removeAction(); },
 			canExecuteMethod: function () {
@@ -171,6 +116,5 @@
     };
 
     initialize();
-    $scope.currentBlade.refresh();
 
 }]);

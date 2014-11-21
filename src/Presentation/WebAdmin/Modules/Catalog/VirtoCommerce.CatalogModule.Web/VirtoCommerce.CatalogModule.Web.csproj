@@ -226,6 +226,8 @@
     <Content Include="Scripts\app\catalog\widgets\itemVariationWidget.tpl.html" />
     <Content Include="Scripts\app\catalog\widgets\virtualCatalogMappingWidget.js" />
     <Content Include="Scripts\app\catalog\widgets\virtualCatalogMappingWidget.tpl.html" />
+    <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-ok-action.tpl.html" />
+    <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-images-step.js" />
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-actions.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard.js" />
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard.tpl.html" />
