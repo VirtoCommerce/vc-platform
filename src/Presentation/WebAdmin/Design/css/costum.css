@@ -1233,25 +1233,25 @@
 	margin: 0;
 }
 
-.blade.actions .blade-content
+.blade .blade-content.actions
 {
 	height: calc(100% - 270px);
 }
 
-.blade.actions .blade-content .breadcrumbs
+.blade .blade-content .breadcrumbs
 {
 	list-style: none;
 	margin: 10px 0;
 	padding: 0;
 }
 
-.blade.actions .blade-content .breadcrumbs li
+.blade .blade-content .breadcrumbs li
 {
 	display: inline-block;
 	font-size: 14px;
 }
 
-.blade.actions .blade-content .breadcrumbs .devider
+.blade .blade-content .breadcrumbs .devider
 {
 	margin: 0 5px;
 }

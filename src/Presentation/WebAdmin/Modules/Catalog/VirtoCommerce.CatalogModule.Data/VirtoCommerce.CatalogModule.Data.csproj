@@ -58,13 +58,17 @@
     <Compile Include="Converters\CategoryConverter.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Converters\EditorialReviewConverter.cs" />
+    <Compile Include="Converters\LinkConverter.cs" />
     <Compile Include="Converters\ItemConverter.cs" />
     <Compile Include="Converters\PropertyAttributeConverter.cs" />
     <Compile Include="Converters\PropertyConverter.cs" />
     <Compile Include="Converters\PropertyDictionaryValueConverter.cs" />
     <Compile Include="Converters\PropertyValueConverter.cs" />
     <Compile Include="Converters\PropertyValueTypeConverter.cs" />
+    <Compile Include="Converters\SeoInfoConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\FoundationAppConfigRepositoryImpl.cs" />
     <Compile Include="Repositories\FoundationCatalogRepositoryImpl.cs" />
     <Compile Include="Services\CatalogSearchServiceImpl.cs" />
     <Compile Include="Services\CategoryServiceImpl.cs" />

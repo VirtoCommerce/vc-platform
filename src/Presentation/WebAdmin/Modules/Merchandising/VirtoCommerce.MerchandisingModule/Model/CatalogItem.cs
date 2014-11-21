@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace VirtoCommerce.MerchandisingModule.Model
 {
@@ -24,13 +23,5 @@ namespace VirtoCommerce.MerchandisingModule.Model
         public ItemImage[] Images { get; set; }
 
         public PropertyDictionary Properties { get; set; }
-    }
-
-    public class PropertyDictionary : Dictionary<string, object>
-    {
-        public void Add(KeyValuePair<string, object> pair)
-        {
-            this.Add(pair.Key, pair.Value);
-        }
     }
 }

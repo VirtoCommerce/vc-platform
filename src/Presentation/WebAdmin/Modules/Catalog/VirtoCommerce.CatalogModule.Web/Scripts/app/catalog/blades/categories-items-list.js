@@ -41,7 +41,43 @@
 		    if ($scope.selectedItem != null) {
 		        $scope.selectedItem = $scope.findItem($scope.selectedItem.id);
 		    }
+
+		    //Set navigation breadcrumbs
+		    setBreadcrumps();
 		});
+    }
+
+    //Breadcrumps
+    function setBreadcrumps() {
+        //Clone array (angular.copy leave a same reference)
+        $scope.blade.breadcrumbs = $scope.blade.breadcrumbs.slice(0);
+
+        //catalog breadcrump by default
+        var breadCrumb = {
+            id: $scope.blade.catalogId,
+            name: $scope.blade.catalog.name,
+            blade: $scope.blade
+        };
+
+        //if category need change to category breadcrumb
+        if (angular.isDefined($scope.blade.category)) {
+
+            breadCrumb.id = $scope.blade.categoryId;
+            breadCrumb.name = $scope.blade.category.name;
+        }
+
+        //prevent dublicate items
+        if (!_.some($scope.blade.breadcrumbs, function (x) { return x.id == breadCrumb.id })) {
+            $scope.blade.breadcrumbs.push(breadCrumb);
+        }
+
+        breadCrumb.navigate = function (breadcrumb) {
+            bladeNavigationService.closeBlade($scope.blade,
+						function () {
+						    bladeNavigationService.showBlade($scope.blade, $scope.blade.parentBlade);
+						    $scope.blade.refresh();
+						});
+        };
     }
 
     $scope.$watch('pageSettings.currentPage', function (newPage) {
@@ -61,13 +97,14 @@
 
     $scope.blade.showCategoryBlade = function (id, data, title) {
         var newBlade = {
-            id: "listItemDetail",
+            id: "listCategoryDetail",
             currentEntityId: id,
             currentEntity: data,
             title: title,
-            subtitle: 'category properties',
-            controller: 'categoryPropertyController',
-            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/category-property-detail.tpl.html',
+            style: 'gray',
+            subtitle: 'category details',
+            controller: 'categoryDetailController',
+            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/category-detail.tpl.html',
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };
@@ -81,6 +118,20 @@
             subtitle: 'Item details',
             controller: 'itemDetailController',
             template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/item-detail.tpl.html'
+        };
+        bladeNavigationService.showBlade(newBlade, $scope.blade);
+    };
+
+    $scope.blade.showNewItemWizard = function (inMemoryItem)
+    {
+        var newBlade = {
+            id: "newProductWizard",
+            item: inMemoryItem,
+            title: "New product",
+            style: "actions",
+            subtitle: 'Fill all product information',
+            controller: 'newProductWizardController',
+            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-product-wizard.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };
@@ -118,23 +169,50 @@
                     closeChildrenBlades();
 
                     var selection = $filter('filter')($scope.items, { selected: true }, true);
+
+                    var listEntryLinks = [];
                     var categoryIds = [];
                     var itemIds = [];
                     angular.forEach(selection, function (listItem) {
-                        if (listItem.type === 'category')
-                            categoryIds.push(listItem.id);
-                        else {
-                            itemIds.push(listItem.id);
+                        var deletingLink = false;
+
+                        if (listItem.type === 'category') {
+                            if ($scope.blade.catalog.virtual && _.some(listItem.links, function (x) { return x.categoryId === $scope.blade.categoryId; })) {
+                                deletingLink = true;
+                            } else {
+                                categoryIds.push(listItem.id);
+                            }
+                        } else {
+                            if ($scope.blade.catalog.virtual) {
+                                deletingLink = true;
+                            } else {
+                                itemIds.push(listItem.id);
+                            }
                         }
+
+                        if (deletingLink)
+                            listEntryLinks.push({
+                                listEntryId: listItem.id,
+                                listEntryType: listItem.type,
+                                catalogId: $scope.blade.catalogId,
+                                categoryId: $scope.blade.categoryId,
+                            });
                     });
 
+                    if (listEntryLinks.length > 0) {
+                        itemsSearch.deletelinks(listEntryLinks, function (data, headers) {
+                            $scope.blade.refresh();
+                            if ($scope.blade.mode === 'mappingSource')
+                                $scope.blade.parentBlade.refresh();
+                        });
+                    }
                     if (categoryIds.length > 0) {
-                    	categories.remove({}, categoryIds, function (data, headers) {
+                        categories.remove({}, categoryIds, function (data, headers) {
                             $scope.blade.refresh();
                         });
                     }
                     if (itemIds.length > 0) {
-                    	items.remove({ }, itemIds, function (data, headers) {
+                        items.remove({}, itemIds, function (data, headers) {
                             $scope.blade.refresh();
                         });
                     }
@@ -142,6 +220,37 @@
             }
         }
         dialogService.showConfirmationDialog(dialog);
+    }
+
+    function mapChecked() {
+        //var dialog = {
+        //    id: "confirmDeleteItem",
+        //    title: "Map confirmation",
+        //    message: "Are you sure you want to map selected Categories or Items?",
+        //    callback: function (confirmed) {
+        //        if (confirmed) {
+        // $scope.blade.parentBlade.catalog.virtual....
+        closeChildrenBlades();
+
+        var selection = $filter('filter')($scope.items, { selected: true }, true);
+        var listEntryLinks = [];
+        angular.forEach(selection, function (listItem) {
+            listEntryLinks.push({
+                listEntryId: listItem.id,
+                listEntryType: listItem.type,
+                catalogId: $scope.blade.parentBlade.catalogId,
+                categoryId: $scope.blade.parentBlade.categoryId,
+            });
+        });
+
+        itemsSearch.createlinks(listEntryLinks, function () {
+            $scope.blade.refresh();
+            $scope.blade.parentBlade.refresh();
+        });
+        //}
+        //    }
+        //}
+        //dialogService.showConfirmationDialog(dialog);
     }
 
     $scope.blade.setSelectedItem = function (listItem) {
@@ -154,24 +263,29 @@
         if (listItem.type === 'category') {
             if (preventCategoryListingOnce) {
                 preventCategoryListingOnce = false;
-            } else
-            {
-                if (e.ctrlKey)
-                {
-                    var newBlade = {
-                        id: 'itemsList' + $scope.blade.level,
-                        level: $scope.blade.level + 1,
-                        title: 'Categories & Items',
-                        subtitle: 'Browsing "' + listItem.name + '"',
-                        catalogId: $scope.blade.catalogId,
-                        categoryId: listItem.id,
-                        controller: 'categoriesItemsListController',
-                        template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/categories-items-list.tpl.html',
-                    };
+            } else {
+                var newBlade = {
+                    id: 'itemsList' + ($scope.blade.level + (e.ctrlKey ? 1 : 0)),
+                    level: $scope.blade.level + (e.ctrlKey ? 1 : 0),
+                    mode: $scope.blade.mode,
+                    breadcrumbs: $scope.blade.breadcrumbs,
+                    title: 'Categories & Items',
+                    subtitle: 'Browsing "' + listItem.name + '"',
+                    catalogId: $scope.blade.catalogId,
+                    catalog: $scope.blade.catalog,
+                    categoryId: listItem.id,
+                    category: listItem,
+                    controller: 'categoriesItemsListController',
+                    template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/categories-items-list.tpl.html'
+                };
+
+                if (e.ctrlKey) {
                     bladeNavigationService.showBlade(newBlade, $scope.blade);
-                } else {
-                    $scope.blade.categoryId = listItem.id;
-                    $scope.blade.refresh();
+                }
+                else {
+                    bladeNavigationService.closeBlade($scope.blade, function () {
+                        bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);
+                    });
                 }
             }
         } else {
@@ -180,6 +294,7 @@
 
         $scope.blade.currentItemId = $scope.selectedItem.type === 'product' ? $scope.selectedItem.id : undefined;
     };
+
 
     $scope.findItem = function (id) {
         var retVal;
@@ -191,20 +306,14 @@
         return retVal;
     }
 
+    $scope.hasLinks = function (listEntry) {
+        return $scope.blade.catalog.virtual && listEntry.links && (listEntry.type === 'category' ? listEntry.links.length > 0 : listEntry.links.length > 1);
+        // return listEntry.links && listEntry.links.length > 0;
+    }
+
     $scope.blade.onClose = function (closeCallback) {
-        if ($scope.blade.childrenBlades.length > 0) {
-            var callback = function () {
-                if ($scope.blade.childrenBlades.length == 0) {
-                    closeCallback();
-                };
-            };
-            angular.forEach($scope.blade.childrenBlades, function (child) {
-                bladeNavigationService.closeBlade(child, callback);
-            });
-        }
-        else {
-            closeCallback();
-        }
+        closeChildrenBlades();
+        closeCallback();
     };
 
     function closeChildrenBlades() {
@@ -214,69 +323,84 @@
     }
 
     $scope.bladeToolbarCommands = [
-      {
-          name: "Refresh", icon: 'icon-spin',
-          executeMethod: function () {
-              $scope.blade.refresh();
-          },
-          canExecuteMethod: function () {
-              return true;
-          }
-      },
-      {
-          name: "Add", icon: 'icon-plus',
-          executeMethod: function () {
-              closeChildrenBlades();
-
-              var newBlade = {
-                  id: 'listItemChild',
-                  title: 'New category item',
-                  subtitle: 'choose new item type',
-                  controller: 'categoriesItemsAddController',
-                  template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/categories-items-add.tpl.html'
-              };
-              bladeNavigationService.showBlade(newBlade, $scope.blade);
-          },
-          canExecuteMethod: function () {
-              return true;
-          }
-      },
         {
-            name: "Manage", icon: 'icon-new-tab-2',
+            name: "Refresh", icon: 'icon-spin',
             executeMethod: function () {
-                $scope.edit($scope.selectedItem);
+                $scope.blade.refresh();
             },
             canExecuteMethod: function () {
-                return $scope.selectedItem;
+                return true;
             }
         },
-      {
-          name: "Delete", icon: 'icon-remove',
-          executeMethod: function () {
-              deleteChecked();
+          {
+              name: "Add", icon: 'icon-plus',
+              executeMethod: function () {
+                  closeChildrenBlades();
+
+                  var newBlade = {
+                      id: 'listItemChild',
+                      title: 'New category item',
+                      subtitle: 'choose new item type',
+                      controller: 'categoriesItemsAddController',
+                      template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/categories-items-add.tpl.html'
+                  };
+                  bladeNavigationService.showBlade(newBlade, $scope.blade);
+              },
+              canExecuteMethod: function () {
+                  return true;
+              }
           },
-          canExecuteMethod: function () {
-              return isItemsChecked();
-          }
-      },
-      {
-          name: "Advanced search", icon: 'icon-search',
-          executeMethod: function () {
-              var newBlade = {
-                  id: 'listItemChild',
-                  title: 'Advanced search',
-                  subtitle: 'Searching within...',
-                  controller: 'advancedSearchController',
-                  template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/advanced-search.tpl.html'
-              };
-              bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);
-              $scope.bladeClose();
-          },
-          canExecuteMethod: function () {
-              return true;
-          }
-      }
+            {
+                name: "Manage", icon: 'icon-new-tab-2',
+                executeMethod: function () {
+                    $scope.edit($scope.selectedItem);
+                },
+                canExecuteMethod: function () {
+                    return $scope.selectedItem;
+                }
+            },
+            {
+                name: "Delete", icon: 'icon-remove',
+                executeMethod: function () {
+                    deleteChecked();
+                },
+                canExecuteMethod: function () {
+                    return isItemsChecked();
+                }
+            },
+            {
+                name: "Advanced search", icon: 'icon-search',
+                executeMethod: function () {
+                    var newBlade = {
+                        id: 'listItemChild',
+                        title: 'Advanced search',
+                        subtitle: 'Searching within...',
+                        controller: 'advancedSearchController',
+                        template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/advanced-search.tpl.html'
+                    };
+                    bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);
+                    $scope.bladeClose();
+                },
+                canExecuteMethod: function () {
+                    return true;
+                }
+            }
     ];
+
+    // mappingSource
+    if (angular.isDefined($scope.blade.mode) && $scope.blade.mode === 'mappingSource') {
+        var mapCommand = {
+            name: "Map", icon: 'icon-link',
+            executeMethod: function () {
+                mapChecked();
+            },
+            canExecuteMethod: function () {
+                return isItemsChecked();
+            }
+        }
+
+        $scope.bladeToolbarCommands.splice(1, 2, mapCommand);
+    }
 
     $scope.checkAll = function (selected) {
         angular.forEach($scope.items, function (item) {
@@ -287,5 +411,3 @@
     //No need to call this because page 'pageSettings.currentPage' is watched!!! It would trigger subsequent duplicated req...
     //$scope.blade.refresh();
 }]);
-
-

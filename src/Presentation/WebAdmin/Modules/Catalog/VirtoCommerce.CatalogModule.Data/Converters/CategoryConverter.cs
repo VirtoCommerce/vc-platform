@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using foundation = VirtoCommerce.Foundation.Catalogs.Model;
 using module = VirtoCommerce.CatalogModule.Model;
+using foundationConfig = VirtoCommerce.Foundation.AppConfig.Model;
 
 namespace VirtoCommerce.CatalogModule.Data.Converters
 {
@@ -17,8 +19,9 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
         /// <param name="properties">The properties.</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentNullException">catalog</exception>
-		public static module.Category ToModuleModel(this foundation.CategoryBase dbCategoryBase, module.Catalog catalog,
-													module.Property[] properties = null)
+		public static module.Category ToModuleModel(this foundation.CategoryBase dbCategoryBase, module.Catalog catalog, 
+													module.Property[] properties = null, foundation.LinkedCategory[] dbLinks = null, 
+													foundationConfig.SeoUrlKeyword[] seoInfos = null)
 		{
 			if (catalog == null)
 				throw new ArgumentNullException("catalog");
@@ -36,9 +39,19 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
             if (dbCategory != null)
             {
                 retVal.Name = dbCategory.Name;
-                retVal.PropertyValues =
-                    dbCategory.CategoryPropertyValues.Select(x => x.ToModuleModel(properties)).ToList();
+                retVal.PropertyValues = dbCategory.CategoryPropertyValues.Select(x => x.ToModuleModel(properties)).ToList();
+				
+				retVal.Virtual = catalog.Virtual;
             }
+			if (dbLinks != null)
+			{
+				retVal.Links = dbLinks.Select(x => x.ToModuleModel(retVal)).ToList();
+			}
+
+			if(seoInfos != null)
+			{
+				retVal.SeoInfos = seoInfos.Select(x => x.ToModuleModel()).ToList();
+			}
 
             return retVal;
 
@@ -66,8 +79,15 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			retVal.CategoryPropertyValues = new NullCollection<foundation.CategoryPropertyValue>();
 			if(category.PropertyValues != null)
 			{
-				retVal.CategoryPropertyValues = new System.Collections.ObjectModel.ObservableCollection<foundation.CategoryPropertyValue>();
+				retVal.CategoryPropertyValues = new ObservableCollection<foundation.CategoryPropertyValue>();
 				retVal.CategoryPropertyValues.AddRange(category.PropertyValues.Select(x => x.ToFoundation<foundation.CategoryPropertyValue>()).OfType<foundation.CategoryPropertyValue>());
+			}
+
+			retVal.LinkedCategories = new NullCollection<foundation.LinkedCategory>();
+			if(category.Links != null)
+			{
+				retVal.LinkedCategories = new ObservableCollection<foundation.LinkedCategory>();
+				retVal.LinkedCategories.AddRange(category.Links.Select(x => x.ToFoundation(category)));
 			}
  
 			return retVal;
@@ -88,7 +108,9 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 
 		    if (dbSource != null && dbTarget != null)
 		    {
-		        dbTarget.Name = dbSource.Name;
+				if(dbSource.Name != null)
+				  dbTarget.Name = dbSource.Name;
+
 		        if (!dbSource.CategoryPropertyValues.IsNullCollection())
 		        {
 		            dbSource.CategoryPropertyValues.Patch(dbTarget.CategoryPropertyValues, new PropertyValueComparer(),

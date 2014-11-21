@@ -32,6 +32,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\VirtoCommerce.Platform.Web\App_Data\Modules\EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Data.Edm, Version=5.6.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\..\..\..\packages\Microsoft.Data.Edm.5.6.0\lib\net40\Microsoft.Data.Edm.dll</HintPath>
     </Reference>
@@ -90,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Binders\SearchParametersBinder.cs" />
+    <Compile Include="Controllers\ContentController.cs" />
     <Compile Include="Controllers\MerchantItemsController.cs" />
     <Compile Include="Controllers\StoresController.cs" />
     <Compile Include="Models\SearchParameters.cs" />
@@ -106,6 +111,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\Core\CommerceFoundation.Data\CommerceFoundation.Data.csproj">
+      <Project>{BB168A74-0F1E-43BE-A616-134902238B80}</Project>
+      <Name>CommerceFoundation.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
       <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
       <Name>CommerceFoundation</Name>
@@ -113,6 +122,10 @@
     <ProjectReference Include="..\..\..\..\..\Extensions\Azure\CommerceFoundation.Data.Azure\CommerceFoundation.Data.Azure.csproj">
       <Project>{e3769352-34c8-41a9-a6c8-da95d7dff903}</Project>
       <Name>CommerceFoundation.Data.Azure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Extensions\Cache\VirtoCommerce.Caching.HttpCache\VirtoCommerce.Caching.HttpCache.csproj">
+      <Project>{3FE4EB14-557A-46BC-94AD-2E9874F85ACE}</Project>
+      <Name>VirtoCommerce.Caching.HttpCache</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\VirtoCommerce.Framework.Web\VirtoCommerce.Framework.Web.csproj">
       <Project>{F7C9313B-522E-4619-ABC9-8C7D4600D6B5}</Project>

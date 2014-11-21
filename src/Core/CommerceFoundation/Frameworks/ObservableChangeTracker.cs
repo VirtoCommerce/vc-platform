@@ -471,11 +471,11 @@ namespace VirtoCommerce.Foundation.Frameworks
                     {
                         foreach (var oldItem in args.OldItems)
                         {
-                            // only remove old item with parent mark
-                            if (ParentValidator.IsRemovable(oldItem.GetType()))
-                            {
-                                Remove(oldItem);
-                            }
+							//// only remove old item with parent mark
+							//if (ParentValidator.IsRemovable(oldItem.GetType()))
+							//{
+                             Remove(oldItem);
+							//}
 
                             //Only remove relation
                             if (RemoveOneToManyRelationAction != null)

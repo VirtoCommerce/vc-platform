@@ -15,7 +15,8 @@
   'platformWebApp.contextMenu',
   'platformWebApp.Filters',
   'platformWebApp.htmlTooltip',
-  'platformWebApp.widget'
+  'platformWebApp.widget',
+  'platformWebApp.breadcrumbs'
 ];
 
 angular.module('platformWebApp', AppDependencies)

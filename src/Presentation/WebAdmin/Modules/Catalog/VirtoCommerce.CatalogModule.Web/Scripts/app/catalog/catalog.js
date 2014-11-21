@@ -6,13 +6,16 @@ if (AppDependencies != undefined) {
 }
 
 angular.module(catalogsModuleName, [
-    'catalogModule.blades.catalogsList',
+   'catalogModule.blades.catalogsList',
   'catalogModule.blades.catalogAdd',
   'catalogModule.blades.catalogDetail',
+  'catalogModule.blades.catalogsSelect',
   'catalogModule.blades.virtualCatalogDetail',
   'catalogModule.widget.virtualCatalogMappingWidget',
   'catalogModule.blades.categoryPropertyDetail',
+  'catalogModule.blades.categoryDetail',
   'catalogModule.blades.categoriesItemsList',
+  'catalogModule.widget.categoryPropertyWidget',
   'catalogModule.blades.itemDetail',
   'catalogModule.widget.itemPropertyWidget',
   'catalogModule.blades.itemPropertyDetail',
@@ -22,9 +25,12 @@ angular.module(catalogsModuleName, [
   'catalogModule.blades.itemVariationList',
   'catalogModule.widget.itemAssetWidget',
   'catalogModule.blades.itemAssetDetail',
+  'catalogModule.blades.seoDetail',
   'catalogModule.blades.propertyDetail',
   'catalogModule.widget.catalogLanguagesWidget',
   'catalogModule.blades.catalogLanguages',
+  'catalogModule.widget.seoWidget',
+  'catalogModule.wizards.newProductWizard',
   'catalogModule.directives'
 ])
 .config(
@@ -38,6 +44,7 @@ angular.module(catalogsModuleName, [
                       var blade = {
                           id: 'categories',
                           title: 'Catalogs',
+                          breadcrumbs: [],
                           subtitle: 'Manage catalogs',
                           controller: 'catalogsListController',
                           template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/catalogs-list.tpl.html',
@@ -86,6 +93,16 @@ angular.module(catalogsModuleName, [
           template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/widgets/itemPropertyWidget.tpl.html',
       };
       widgetService.registerWidget(itemPropertyWidget);
+
+      //Register item seo widget
+      var itemSeoWidget = {
+          group: 'itemDetail',
+          controller: 'seoWidgetController',
+          template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/widgets/seoWidget.tpl.html',
+      };
+
+      widgetService.registerWidget(itemSeoWidget);
+
       //Register variation widget
       var variationWidget = {
           group: 'itemDetail',
@@ -100,6 +117,24 @@ angular.module(catalogsModuleName, [
           template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/widgets/itemAssetWidget.tpl.html',
       };
       widgetService.registerWidget(itemAssetWidget);
+
+      //Register category property widget
+      var categoryPropertyWidget = {
+          group: 'categoryDetail',
+          controller: 'categoryPropertyWidgetController',
+          template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/widgets/categoryPropertyWidget.tpl.html',
+      };
+
+      widgetService.registerWidget(categoryPropertyWidget);
+
+      //Register category seo widget
+      var categorySeoWidget = {
+          group: 'categoryDetail',
+          controller: 'seoWidgetController',
+          template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/widgets/seoWidget.tpl.html',
+      };
+
+      widgetService.registerWidget(categorySeoWidget);
 
       //Register asset widget
       var catalogLanguagesWidget = {

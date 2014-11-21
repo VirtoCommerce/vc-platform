@@ -355,6 +355,8 @@
     <Content Include="Scripts\common\confirmDialog\cofirmDialog.js" />
     <Content Include="Scripts\common\directives\contextMenu.js" />
     <Content Include="Scripts\common\filters.js" />
+    <Content Include="Scripts\common\navigation\breadcrumbs\breadcrumbs.js" />
+    <Content Include="Scripts\common\navigation\breadcrumbs\breadcrumbs.tpl.html" />
     <Content Include="Scripts\common\navigation\menu\mainMenu.js" />
     <Content Include="Scripts\common\navigation\menu\mainMenu.tpl.html" />
     <Content Include="Scripts\common\navigation\widget\widget.js" />

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -100,6 +102,28 @@ namespace VirtoCommerce.Foundation.Frameworks.Extensions
 				target.Remove(removedItem);
 			}
 
+		}
+
+
+		public static void  ObserveCollection<T>(this ObservableCollection<T> collection, Action<T> addAction, Action<T> removeAction)
+		{
+			collection.CollectionChanged += (sender, args) =>
+			{
+				if (args.Action == NotifyCollectionChangedAction.Add)
+				{
+					foreach (var newItem in args.NewItems)
+					{
+						addAction((T)newItem);
+					}
+				}
+				else if (args.Action == NotifyCollectionChangedAction.Remove)
+				{
+					foreach (var removeItem in args.OldItems)
+					{
+						removeAction((T)removeItem);
+					}
+				}
+			};
 		}
     }
 }

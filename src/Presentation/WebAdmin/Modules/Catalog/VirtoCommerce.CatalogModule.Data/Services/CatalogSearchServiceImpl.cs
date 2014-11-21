@@ -56,17 +56,42 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				{
 					var query = repository.Categories.Where(x => x.CatalogId == criteria.CatalogId);
 
-
+					var dbCatalog = repository.GetCatalogById(criteria.CatalogId);
+					var isVirtual = dbCatalog is foundation.VirtualCatalog;
 					if (!String.IsNullOrEmpty(criteria.CategoryId))
 					{
-						query = query.Where(x => x.ParentCategoryId == criteria.CategoryId);
+						var dbCategory = repository.GetCategoryById(criteria.CategoryId);
+
+						if (isVirtual)
+						{
+							//Need return all linked categories also
+							var allLinkedPhysicalCategoriesIds = repository.Categories.OfType<foundation.LinkedCategory>()
+													.Where(x => x.LinkedCategoryId == criteria.CategoryId)
+													.Select(x => x.ParentCategoryId)
+													.ToArray();
+							//Search in all catalogs
+							query = repository.Categories;
+							query = query.Where(x => x.ParentCategoryId == criteria.CategoryId || allLinkedPhysicalCategoriesIds.Contains(x.CategoryId));
+						}
+						else
+						{
+							query = query.Where(x => x.ParentCategoryId == criteria.CategoryId);
+						}
 					}
 					else if (!String.IsNullOrEmpty(criteria.CatalogId))
 					{
 						query = query.Where(x => x.CatalogId == criteria.CatalogId && x.ParentCategoryId == null);
+						if (isVirtual)
+						{
+							//Need return all linked categories 
+							var allLinkedCategoriesIds = repository.GetCatalogLinks(criteria.CatalogId).Select(x => x.ParentCategoryId).ToArray();
+							//Search in all catalogs
+							query = repository.Categories;
+							query = query.Where(x => (x.CatalogId == criteria.CatalogId && x.ParentCategoryId == null ) || allLinkedCategoriesIds.Contains(x.CategoryId));
+						}
 					}
 
-					var categoryIds = query.Select(x => x.CategoryId).ToArray();
+					var categoryIds = query.OfType<foundation.Category>().Select(x => x.CategoryId).ToArray();
 
 					var categories = new ConcurrentBag<module.Category>();
 					var parallelOptions = new ParallelOptions
@@ -76,7 +101,9 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					Parallel.ForEach(categoryIds, parallelOptions, (x) =>
 					{
 						var category = _categoryService.GetById(x);
+						
 						categories.Add(category);
+					
 					});
 					result.Categories = categories.OrderByDescending(x => x.Name).ToList();
 				}
@@ -106,6 +133,8 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 		{
 			using (var repository = _catalogRepositoryFactory())
 			{
+				var dbCatalog = repository.GetCatalogById(criteria.CatalogId);
+				
 				var query = repository.Items;
 
 				if (!String.IsNullOrEmpty(criteria.CategoryId))

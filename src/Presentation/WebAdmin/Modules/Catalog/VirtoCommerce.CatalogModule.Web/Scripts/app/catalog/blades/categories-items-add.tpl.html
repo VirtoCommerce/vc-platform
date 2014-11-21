@@ -5,12 +5,17 @@
             <span class="title">Category</span>
             <span class="sub-title">A container for other Categories and Products or Variations.</span>
         </li>
-        <li ng-mouseup="addProduct()">
+        <li ng-mouseup="addLinkedCategory()" ng-if="blade.parentBlade.catalog.virtual">
+            <i class="ico icon-link"></i>
+            <span class="title">Link</span>
+            <span class="sub-title">A link to real Category or Product.</span>
+        </li>
+        <li ng-mouseup="addProduct()" ng-if="!blade.parentBlade.catalog.virtual">
             <i class="ico icon-basket"></i>
             <span class="title">Product</span>
             <span class="sub-title">The main Variation. Can be used for targeted promotions.</span>
         </li>
-        <li ng-mouseup="addVariation()" ng-class="{'disabled':!blade.parentBlade.currentItemId}">
+        <li ng-mouseup="addVariation()" ng-if="!blade.parentBlade.catalog.virtual" ng-class="{'disabled':!blade.parentBlade.currentItemId}">
             <i class="ico icon-barcode"></i>
             <span class="title">Variation</span>
             <span class="sub-title">Represents orderable item of merchandise for sale. Contains details, such as names, description, images, prices and inventory information.</span>

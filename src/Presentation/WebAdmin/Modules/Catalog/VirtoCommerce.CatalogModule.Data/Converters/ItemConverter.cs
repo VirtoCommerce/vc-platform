@@ -6,6 +6,7 @@ using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using foundation = VirtoCommerce.Foundation.Catalogs.Model;
 using module = VirtoCommerce.CatalogModule.Model;
+using foundationConfig = VirtoCommerce.Foundation.AppConfig.Model;
 
 namespace VirtoCommerce.CatalogModule.Data.Converters
 {
@@ -18,6 +19,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		public static module.CatalogProduct ToModuleModel(this foundation.Item dbItem, module.Catalog catalog,
 														  module.Category category, module.Property[] properties,
 														  foundation.Item[] variations,
+														  foundationConfig.SeoUrlKeyword[] seoInfos,
 														  string mainProductId)
 		{
 			var retVal = new module.CatalogProduct {Id = dbItem.ItemId, Catalog = catalog, CatalogId = catalog.Id};
@@ -30,13 +32,20 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			retVal.Name = dbItem.Name;
 			retVal.MainProductId = mainProductId;
 
+			#region Links
+			retVal.Links = dbItem.CategoryItemRelations.Select(x => x.ToModuleModel()).ToList();
+			#endregion
+
 			#region Variations
 			if (variations != null)
 			{
 				retVal.Variations = new List<module.CatalogProduct>();
 				foreach (var variation in variations)
 				{
-					var productVaraition = variation.ToModuleModel(catalog, category, properties, null, retVal.Id);
+					var productVaraition = variation.ToModuleModel(catalog, category, properties, 
+																   variations: null, 
+																   seoInfos: null, 
+																   mainProductId: retVal.Id);
 					productVaraition.MainProduct = retVal;
 					productVaraition.MainProductId = retVal.Id;
 					retVal.Variations.Add(productVaraition);
@@ -58,7 +67,19 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			}
 			#endregion
 
+			#region SeoInfo
+			if (seoInfos != null)
+			{
+				retVal.SeoInfos = seoInfos.Select(x => x.ToModuleModel()).ToList();
+			}
+			#endregion
 
+			#region EditorialReviews
+			if (dbItem.EditorialReviews != null)
+			{
+				retVal.Reviews = dbItem.EditorialReviews.Select(x => x.ToModuleModel()).ToList();
+			} 
+			#endregion
 			return retVal;
 		}
 
@@ -88,6 +109,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			if (product.Id != null)
 				retVal.ItemId = product.Id;
 
+			#region ItemPropertyValues
 			retVal.ItemPropertyValues = new NullCollection<foundation.ItemPropertyValue>();
 			if (product.PropertyValues != null)
 			{
@@ -98,22 +120,44 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 					dbPropValue.ItemId = retVal.ItemId;
 					retVal.ItemPropertyValues.Add(dbPropValue);
 				}
-			}
+			} 
+			#endregion
+
+			#region ItemAssets
 			retVal.ItemAssets = new NullCollection<foundation.ItemAsset>();
-		    
 			if (product.Assets != null)
 			{
-                var assets = product.Assets.ToArray();
+				var assets = product.Assets.ToArray();
 				retVal.ItemAssets = new ObservableCollection<foundation.ItemAsset>();
 				for (int order = 0; order < assets.Length; order++)
 				{
-				    var asset = assets[order];
+					var asset = assets[order];
 					var dbAsset = asset.ToFoundation();
 					dbAsset.ItemId = product.Id;
-				    dbAsset.SortOrder = order;
+					dbAsset.SortOrder = order;
 					retVal.ItemAssets.Add(dbAsset);
 				}
-			}
+			} 
+			#endregion
+
+			#region CategoryItemRelations
+			retVal.CategoryItemRelations = new NullCollection<foundation.CategoryItemRelation>();
+			if (product.Links != null)
+			{
+				retVal.CategoryItemRelations = new ObservableCollection<foundation.CategoryItemRelation>();
+				retVal.CategoryItemRelations.AddRange(product.Links.Select(x => x.ToFoundation(product)));
+			} 
+			#endregion
+
+			#region EditorialReview
+			retVal.EditorialReviews = new NullCollection<foundation.EditorialReview>();
+			if (product.Reviews != null)
+			{
+				retVal.EditorialReviews = new ObservableCollection<foundation.EditorialReview>();
+				retVal.EditorialReviews.AddRange(product.Reviews.Select(x => x.ToFoundation(product)));
+			} 
+			#endregion
+ 
 			return retVal;
 		}
 
@@ -134,18 +178,40 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			if (source.Code != null)
 				target.Code = source.Code;
 
-			//Asset patch
+		
+			#region ItemAssets
 			if (!source.ItemAssets.IsNullCollection())
 			{
 				source.ItemAssets.Patch(target.ItemAssets, new ItemAssetComparer(),
 										 (sourceAsset, targetAsset) => sourceAsset.Patch(targetAsset));
-			}
-			//Property values
+			} 
+			#endregion
+			
+			#region ItemPropertyValues
 			if (!source.ItemPropertyValues.IsNullCollection())
 			{
 				source.ItemPropertyValues.Patch(target.ItemPropertyValues, new PropertyValueComparer(),
 										 (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
 			}
+			
+			#endregion
+			
+			#region CategoryItemRelations
+			if (!source.CategoryItemRelations.IsNullCollection())
+			{
+				source.CategoryItemRelations.Patch(target.CategoryItemRelations, new CategoryItemRelationComparer(),
+										 (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
+			} 
+			#endregion
+
+			
+			#region EditorialReviews
+			if (!source.EditorialReviews.IsNullCollection())
+			{
+				source.EditorialReviews.Patch(target.EditorialReviews, new EditorialReviewComparer(),
+										 (sourcePropValue, targetPropValue) => sourcePropValue.Patch(targetPropValue));
+			} 
+			#endregion
 
 		}
 

@@ -4,9 +4,8 @@
 	'ui.bootstrap.typeahead',
     'ngSanitize'
 ])
-.controller('categoryPropertyController', ['$rootScope', '$scope', 'categories', 'properties', 'bladeNavigationService', 'dialogService', '$injector', function ($rootScope, $scope, categories, properties, bladeNavigationService, dialogService, $injector) {
+.controller('categoryPropertyController', ['$scope', 'categories', 'properties', 'bladeNavigationService', 'dialogService', function ($scope, categories, properties, bladeNavigationService, dialogService) {
     $scope.blade.origEntity = {};
-    $scope.blade.selectedProperty = undefined;
 
     $scope.blade.refresh = function (parentRefresh) {
         categories.get({ categoryId: $scope.blade.currentEntityId }, function (data) {
@@ -31,10 +30,6 @@
         $scope.blade.origEntity = data;
         $scope.blade.title = data.name;
         $scope.blade.isLoading = false;
-        if (angular.isDefined($scope.blade.currentEntity.properties)) {
-            $scope.blade.selectedProperty = $scope.blade.currentEntity.properties.length > 0 ? $scope.blade.currentEntity.properties[0] : undefined;
-
-        };
     };
 
     function isDirty() {
@@ -95,11 +90,6 @@
         });
     };
 
-    var formScope;
-    $scope.setForm = function (form) {
-        formScope = form;
-    }
-
     $scope.bladeToolbarCommands = [
 		{
 		    name: "Save", icon: 'icon-floppy',
@@ -107,7 +97,7 @@
 		        saveChanges();
 		    },
 		    canExecuteMethod: function () {
-		        return isDirty() && formScope && formScope.$valid;
+		        return isDirty();
 		    }
 		},
         {
@@ -120,7 +110,7 @@
             }
         },
 		  {
-		      name: "Add", icon: 'icon-plus',
+		      name: "Add property", icon: 'icon-plus',
 		      executeMethod: function () {
 		          var newBlade = {
 		              id: 'editCategoryProperty',
@@ -135,16 +125,7 @@
 		      canExecuteMethod: function () {
 		          return true;
 		      }
-		  },
-		   {
-		       name: "Edit", icon: 'icon-new-tab-2',
-		       executeMethod: function () {
-		           $scope.editProperty($scope.blade.selectedProperty);
-		       },
-		       canExecuteMethod: function () {
-		           return angular.isDefined($scope.blade.selectedProperty) && $scope.blade.selectedProperty.isManageable;
-		       }
-		   }
+		  }
     ];
 
     if ($scope.blade.currentEntity) {

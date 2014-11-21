@@ -54,6 +54,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 				return NotFound();
 			}
 			var retVal = property.ToWebModel();
+		    retVal.IsManageable = true;
 			return Ok(retVal);
         }
 

@@ -11,6 +11,10 @@ namespace VirtoCommerce.CatalogModule.Web.Model
 	/// </summary>
 	public abstract class ListEntryBase
 	{
+		public ListEntryBase(string typeName)
+		{
+			Type = typeName;
+		}
 		public string Id { get; set; }
 		public string Type { get; set; }
 
@@ -19,6 +23,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
 		public string Code { get; set; }
 
 		public string Name { get; set; }
+		public ListEntryLink[] Links { get; set; }
 	
 	}
 }

@@ -4,13 +4,17 @@ using System.Linq;
 using VirtoCommerce.CatalogModule.Repositories;
 using VirtoCommerce.Foundation.Data.Catalogs;
 using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
+using foundationConfig = VirtoCommerce.Foundation.AppConfig.Model;
 using foundation = VirtoCommerce.Foundation.Catalogs.Model;
 using moduleModel = VirtoCommerce.CatalogModule.Model;
+using VirtoCommerce.Foundation.AppConfig.Repositories;
 
 namespace VirtoCommerce.CatalogModule.Data.Repositories
 {
 	public class FoundationCatalogRepositoryImpl : EFCatalogRepository, IFoundationCatalogRepository
 	{
+		private readonly IAppConfigRepository _appConfigRepository;
         public FoundationCatalogRepositoryImpl(string nameOrConnectionString)
             : this(nameOrConnectionString, null)
         {
@@ -18,6 +22,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
         public FoundationCatalogRepositoryImpl(string nameOrConnectionString, IInterceptor[] interceptors)
             : base(nameOrConnectionString, null, interceptors)
 		{
+			
 		}
 
 		#region IModuleCatalogRepository Members
@@ -32,12 +37,47 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			return retVal;
 		}
 
+		public foundation.LinkedCategory[] GetCategoryLinks(string categoryId)
+		{
+			var retVal = new List<foundation.LinkedCategory>();
+			//Load links for both categories (source and target)
+			var allLinks = Categories.OfType<foundation.LinkedCategory>()
+										.AsNoTracking()
+										.Where(x => x.ParentCategoryId == categoryId || x.LinkedCategoryId == categoryId)
+										.ToArray();
+			foreach (var link in allLinks)
+			{
+
+				//Need to swap link role for both source and target categories
+				if (categoryId != link.ParentCategoryId)
+				{
+					link.LinkedCategoryId = link.ParentCategoryId;
+					link.LinkedCatalogId = link.CatalogId;
+				}
+				retVal.Add(allLinks);
+			
+			}
+			return retVal.ToArray();
+		}
+
+
+		public foundation.LinkedCategory[] GetCatalogLinks(string catalogId)
+		{
+			var retVal = Categories.OfType<foundation.LinkedCategory>()
+										.AsNoTracking()
+										.Where(x => x.LinkedCatalogId == catalogId && x.LinkedCategoryId == null)
+										.ToArray();
+
+			return retVal;
+		}
+
 		public foundation.Category GetCategoryById(string categoryId)
 		{
 			var retVal = Categories.OfType<foundation.Category>()
 										.Include(x => x.CategoryPropertyValues)
 										.Include(x=> x.PropertySet.PropertySetProperties.Select(y=>y.Property))
 										.FirstOrDefault(x => x.CategoryId == categoryId);
+					
 			return retVal;
 		}
 
@@ -54,7 +94,11 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			{
 				query = query.Include(x => x.ItemAssets);
 			}
-
+			if ((respGroup & moduleModel.ItemResponseGroup.ItemEditorialReviews) == moduleModel.ItemResponseGroup.ItemEditorialReviews)
+			{
+				query = query.Include(x => x.EditorialReviews);
+			}
+			
 			var retVal = query.ToArray();
 			return retVal;
 		}
@@ -201,7 +245,6 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 				}
 			}
 		}
-
 		#endregion
 
 

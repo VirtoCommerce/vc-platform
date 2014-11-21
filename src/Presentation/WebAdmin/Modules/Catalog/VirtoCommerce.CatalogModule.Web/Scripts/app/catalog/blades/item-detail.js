@@ -3,12 +3,14 @@
     $scope.currentBlade = $scope.blade;
     $scope.currentBlade.origItem = {};
     $scope.currentBlade.item = {};
+    $scope.blade.currentEntityId = $scope.currentBlade.itemId;
 
     $scope.currentBlade.refresh = function (parentRefresh) {
-        items.get({ id: $scope.currentBlade.itemId }, function (data) {
+        return items.get({ id: $scope.currentBlade.itemId }, function (data) {
             $scope.currentBlade.itemId = data.id;
             $scope.currentBlade.title = data.code;
             $scope.isTitular = data.titularItemId == null;
+            $scope.isTitularConfirmed = $scope.isTitular;
 
             $scope.currentBlade.item = angular.copy(data);
             $scope.currentBlade.origItem = data;
@@ -16,10 +18,8 @@
             if (parentRefresh) {
                 $scope.currentBlade.parentBlade.refresh();
             }
-
         });
     }
-
 
     $scope.setTitular = function () {
         $scope.currentBlade.item.titularItemId = null;
@@ -118,13 +118,12 @@
 	             });
 	         },
 	         canExecuteMethod: function () {
-	             return $scope.isTitular;
+	             return $scope.isTitularConfirmed;
 	         }
 	     }
     ];
 
     $scope.toolbarTemplate = "Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/item-detail-toolbar.tpl.html";
-
 
     $scope.currentBlade.refresh(false);
 }]);

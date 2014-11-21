@@ -3,46 +3,22 @@
                                                                    {title:'Variation properties', type:1}]">
 
     <form name="contextEntityDetailForm">
-        <div ng-init="setForm(contextEntityDetailForm);">
-            <label for="">Category name</label>
-            <div>
-                <input focus-on=""
-                       required
-                       class="form-control"
-                       ng-model="blade.currentEntity.name" />
-            </div>
-        </div>
-
         <fieldset ng-repeat="propGroup in propGroups">
             <legend>
                 {{propGroup.title}} ({{properties.length}})
             </legend>
-
             <div ng-repeat="prop in properties = (blade.currentEntity.properties | filter: {type:propGroup.type})">
-
-                <div class="control-group" ng-click="blade.selectedProperty = prop" ng-class="{'selected': blade.selectedProperty == prop}">
+                <div class="control-group">
                     <label for="">
                         <a ng-show="prop.isManageable" href="" ng-click="editProperty(prop)">{{prop.name}}</a>
                         <span ng-show="!prop.isManageable">{{prop.name}}</span>
                     </label>
                     <va-property2 ng-model="prop" get-prop-values="getPropValues" />
                 </div>
-
             </div>
             <div ng-if="properties.length == 0">None</div>
         </fieldset>
-
-
     </form>
-
-
-    <div ng-if="!blade.currentEntity.virtual">
-
-        <va-widget-container ng-if="blade.currentEntity.virtual" group="virtualCategoryDetail" blade="blade"></va-widget-container>
-    </div>
-
-
-
 </div>
 
 

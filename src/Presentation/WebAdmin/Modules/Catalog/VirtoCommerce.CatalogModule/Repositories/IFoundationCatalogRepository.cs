@@ -11,13 +11,14 @@ namespace VirtoCommerce.CatalogModule.Repositories
 {
 	public interface IFoundationCatalogRepository : ICatalogRepository
 	{
-		
 		foundation.CatalogBase GetCatalogById(string catalogId);
 		foundation.Category GetCategoryById(string categoryId);
 		foundation.Item[] GetItemByIds(string[] itemIds, moduleModel.ItemResponseGroup respGroup);
 		foundation.Item[] GetAllItemVariations(string itemId);
 		foundation.Property[] GetPropertiesByIds(string[] propIds);
 		foundation.Category GetPropertyCategory(string propId);
+		foundation.LinkedCategory[] GetCategoryLinks(string categoryId);
+		foundation.LinkedCategory[] GetCatalogLinks(string catalogId);
 		foundation.Property[] GetAllCategoryProperties(foundation.Category category);
 		void SetItemCategoryRelation(foundation.Item item, foundation.Category category);
 		void SetVariationRelation(foundation.Item item, string mainProductId);

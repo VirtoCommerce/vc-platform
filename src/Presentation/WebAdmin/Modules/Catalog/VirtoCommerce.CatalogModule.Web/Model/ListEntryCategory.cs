@@ -1,20 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 
 namespace VirtoCommerce.CatalogModule.Web.Model
 {
-	public class ListEntryCategory : ListEntryBase
-	{
+    public class ListEntryCategory : ListEntryBase
+    {
+        public static string TypeName = "category";
+
 		public ListEntryCategory(Category category)
+			: base(TypeName)
 		{
-			Type = "category";
 			Id = category.Id;
 			ImageUrl = "";
 			Code = category.Code;
 			Name = category.Name;
+			if (category.Links != null)
+			{
+				Links = category.Links.Select(x => new ListEntryLink(x) ).ToArray();
+			}
 		}
-	}
+    }
 }

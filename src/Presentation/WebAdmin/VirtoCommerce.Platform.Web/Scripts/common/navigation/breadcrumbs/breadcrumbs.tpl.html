@@ -1,0 +1,6 @@
+﻿<ul class="breadcrumbs">
+    <li ng-repeat-start="breadcrumb in breadcrumbs">
+        <a ng-click='innerNavigate(breadcrumb)' ng-class="{'active': $last}" href="">{{breadcrumb.name}}</a>
+    </li>
+    <li ng-repeat-end class="devider" ng-if="$last == false">\</li>
+</ul>

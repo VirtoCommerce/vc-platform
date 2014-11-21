@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using VirtoCommerce.CatalogModule.Data.Converters;
 using VirtoCommerce.CatalogModule.Repositories;
 using VirtoCommerce.CatalogModule.Services;
 using VirtoCommerce.Foundation.Frameworks.Caching;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
 using foundation = VirtoCommerce.Foundation.Catalogs.Model;
+using foundationConfig = VirtoCommerce.Foundation.AppConfig.Model;
 using module = VirtoCommerce.CatalogModule.Model;
 
 namespace VirtoCommerce.CatalogModule.Data.Services
@@ -12,10 +16,13 @@ namespace VirtoCommerce.CatalogModule.Data.Services
     public class CategoryServiceImpl : ModuleServiceBase, ICategoryService
     {
         private readonly Func<IFoundationCatalogRepository> _catalogRepositoryFactory;
+		private readonly Func<IFoundationAppConfigRepository> _appConfigRepositoryFactory;
         private readonly CacheManager _cacheManager;
-        public CategoryServiceImpl(Func<IFoundationCatalogRepository> catalogRepositoryFactory, CacheManager cacheManager)
+        public CategoryServiceImpl(Func<IFoundationCatalogRepository> catalogRepositoryFactory, Func<IFoundationAppConfigRepository> appConfigRepositoryFactory, 
+								   CacheManager cacheManager)
         {
             _catalogRepositoryFactory = catalogRepositoryFactory;
+			_appConfigRepositoryFactory = appConfigRepositoryFactory;
             _cacheManager = cacheManager;
         }
 
@@ -25,15 +32,19 @@ namespace VirtoCommerce.CatalogModule.Data.Services
         {
             Model.Category retVal;
             using (var repository = _catalogRepositoryFactory())
+			using (var appConfigRepository = _appConfigRepositoryFactory())
             {
                 var dbCategory = repository.GetCategoryById(categoryId);
                 var dbCatalog = repository.GetCatalogById(dbCategory.CatalogId);
                 var dbProperties = repository.GetAllCategoryProperties(dbCategory);
-
+				var dbLinks = repository.GetCategoryLinks(categoryId);
+				var seoInfos = appConfigRepository.GetAllSeoInformation(categoryId);
+			
                 var catalog = dbCatalog.ToModuleModel();
-                var properties = dbProperties.Select(x => x.ToModuleModel(catalog, dbCategory.ToModuleModel(catalog))).ToArray();
+				var properties = dbProperties.Select(x => x.ToModuleModel(catalog, dbCategory.ToModuleModel(catalog, null,  dbLinks)))
+											 .ToArray();
 
-                retVal = dbCategory.ToModuleModel(catalog, properties);
+				retVal = dbCategory.ToModuleModel(catalog, properties, dbLinks, seoInfos);
             }
             return retVal;
         }
@@ -46,9 +57,22 @@ namespace VirtoCommerce.CatalogModule.Data.Services
             var dbCategory = category.ToFoundation();
             module.Category retVal = null;
             using (var repository = _catalogRepositoryFactory())
+			using (var appConfigRepository = _appConfigRepositoryFactory())
             {
+				//Need add seo separately
+				if (category.SeoInfos != null)
+				{
+					foreach(var seoInfo in category.SeoInfos)
+					{
+						var dbSeoInfo = seoInfo.ToFoundation(category);
+						appConfigRepository.Add(dbSeoInfo);
+					}
+				}
+
                 repository.Add(dbCategory);
+
                 CommitChanges(repository);
+				CommitChanges(appConfigRepository);
             }
             retVal = GetById(dbCategory.CategoryId);
             return retVal;
@@ -57,25 +81,46 @@ namespace VirtoCommerce.CatalogModule.Data.Services
         public void Update(module.Category[] categories)
         {
             using (var repository = _catalogRepositoryFactory())
+			using (var appConfigRepository = _appConfigRepositoryFactory())
+			using (var changeTracker = base.GetChangeTracker(repository))
             {
-                using (var changeTracker = base.GetChangeTracker(repository))
-                {
-                    foreach (var category in categories)
-                    {
-                        var dbCategory = repository.GetCategoryById(category.Id) as foundation.Category;
-                        if (dbCategory == null)
-                        {
-                            throw new NullReferenceException("dbCategory");
-                        }
-                        var dbCategoryChanged = category.ToFoundation();
+				foreach (var category in categories)
+				{
+					var dbCategory = repository.GetCategoryById(category.Id) as foundation.Category;
+					
+					if (dbCategory == null)
+					{
+						throw new NullReferenceException("dbCategory");
+					}
 
-                        changeTracker.Attach(dbCategory);
-                        dbCategoryChanged.Patch(dbCategory);
+					//Patch SeoInfo  separately
+					if (category.SeoInfos != null)
+					{
+						var dbSeoInfos = new ObservableCollection<foundationConfig.SeoUrlKeyword>(appConfigRepository.GetAllSeoInformation(category.Id));
+						var changedSeoInfos = category.SeoInfos.Select(x => x.ToFoundation(category)).ToList();
+						dbSeoInfos.ObserveCollection(x => appConfigRepository.Add(x), x => appConfigRepository.Remove(x));
 
-                    }
-                    CommitChanges(repository);
-                }
-            }
+						changedSeoInfos.Patch(dbSeoInfos, new SeoInfoComparer(), (source, target) => source.Patch(target));
+					}
+
+					//Patch  Links  separately
+					if (category.Links != null)
+					{
+						var dbLinks = new ObservableCollection<foundation.LinkedCategory>(repository.GetCategoryLinks(category.Id));
+						var changedLinks = category.Links.Select(x => x.ToFoundation(category)).ToList();
+						dbLinks.ObserveCollection(x => repository.Add(x), x => { repository.Attach(x); repository.Remove(x); });
+						changedLinks.Patch(dbLinks, new LinkedCategoryComparer(), (source, target) => source.Patch(target));
+					}
+
+					var dbCategoryChanged = category.ToFoundation();
+					changeTracker.Attach(dbCategory);
+				
+					dbCategoryChanged.Patch(dbCategory);
+				}
+				CommitChanges(repository);
+				CommitChanges(appConfigRepository);
+
+			}
         }
 
         public void Delete(string[] categoryIds)

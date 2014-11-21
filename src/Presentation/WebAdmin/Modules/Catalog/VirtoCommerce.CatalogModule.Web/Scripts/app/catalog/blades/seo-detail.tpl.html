@@ -1,0 +1,59 @@
+﻿<div style="width:360px">
+    <form name="contextEntityDetailForm">
+        <fieldset ng-init="setForm(contextEntityDetailForm);">
+            <legend>
+                URL keyword
+            </legend>
+            <div ng-repeat="data in seoInfos | orderBy:languageCode">
+                <div>
+                    <div data-role="input-control" class="input-control text">
+                        <input ng-model="data.semanticUrl" name="semanticUrl" ui-validate=" 'semanticUrlValidator($value)' " class="form-control" />
+                    </div>
+                </div>
+                <div ng-if="contextEntityDetailForm.semanticUrl.$dirty">
+                    <label class="fg-red" ng-if="contextEntityDetailForm.semanticUrl.$error.validator">Invalid characters in URL found</label>
+                </div>
+                <span class="title">{{data.languageCode}}</span>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>
+                Page title
+            </legend>
+            <div ng-repeat="data in seoInfos | orderBy:languageCode">
+                <div>
+                    <div data-role="input-control" class="input-control text">
+                        <input ng-model="data.pageTitle" class="form-control" />
+                    </div>
+                </div>
+                <span class="title">{{data.languageCode}}</span>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>
+                Meta description
+            </legend>
+            <div ng-repeat="data in seoInfos | orderBy:languageCode">
+                <div>
+                    <div data-role="input-control" class="input-control textarea">
+                        <textarea ng-model="data.metaDescription" class="form-control" cols="30" rows="3"></textarea>
+                    </div>
+                </div>
+                <span class="title">{{data.languageCode}}</span>
+            </div>
+        </fieldset>
+        <fieldset>
+            <legend>
+                Image alternative text
+            </legend>
+            <div ng-repeat="data in seoInfos | orderBy:languageCode">
+                <div>
+                    <div data-role="input-control" class="input-control text">
+                        <input ng-model="data.imageAltDescription" class="form-control" />
+                    </div>
+                </div>
+                <span class="title">{{data.languageCode}}</span>
+            </div>
+        </fieldset>
+    </form>
+</div>

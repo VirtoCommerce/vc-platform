@@ -35,6 +35,7 @@
                     <img ng-src="{{data.imageUrl}}" height="42" width="42" ng-if="data.type!=='category' && data.imageUrl" /><i class="icon-none" ng-if="data.type!=='category' && !data.imageUrl" style="font-size: 26px" />
                 </td>
                 <td ng-click='selectItem($event, data)' style="max-width: 250px; overflow: hidden; text-overflow: ellipsis;">
+                    <span ng-if="hasLinks(data)"><i class="icon-link" style="font-size: 18px" />&nbsp;</span>
                     <i ng-class="{'icon-folder-2': data.type==='category', 'icon-basket': data.type==='product', 'icon-barcode': data.type==='variation'}" style="font-size: 18px" />&nbsp;
                     <span title="{{data.name}}">{{data.name}}</span>
                     <ul role="menu" class="dropdown-menu context-menu" id="cil_menu_{{data.id+blade.level}}">

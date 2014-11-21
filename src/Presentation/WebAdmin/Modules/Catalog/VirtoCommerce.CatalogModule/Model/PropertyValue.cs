@@ -1,6 +1,6 @@
 ﻿namespace VirtoCommerce.CatalogModule.Model
 {
-	public class PropertyValue
+	public class PropertyValue : ILanguageSupport
 	{
 		public string Id { get; set; }
 		public string PropertyId { get; set; }

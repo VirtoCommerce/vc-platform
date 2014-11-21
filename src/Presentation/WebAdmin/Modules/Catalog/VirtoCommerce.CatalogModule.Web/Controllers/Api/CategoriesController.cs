@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Net;
+using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.CatalogModule.Web.Converters;
 using VirtoCommerce.CatalogModule.Services;
 using moduleModel = VirtoCommerce.CatalogModule.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
+using System.Collections.Generic;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
@@ -47,11 +49,13 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 CatalogId = catalogId,
                 Code = Guid.NewGuid().ToString().Substring(0, 5)
             };
+
             retVal = _categoryService.Create(retVal.ToModuleModel()).ToWebModel();
+
             return Ok(retVal);
         }
 
-
+	
         // POST: api/categories
         [HttpPost]
         [ResponseType(typeof(webModel.Category))]
@@ -72,13 +76,11 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             _categoryService.Delete(ids);
             return StatusCode(HttpStatusCode.NoContent);
         }
-
+        
         private void UpdateCategory(webModel.Category category)
         {
             var moduleCategory = category.ToModuleModel();
             _categoryService.Update(new moduleModel.Category[] { moduleCategory });
         }
-
-
     }
 }

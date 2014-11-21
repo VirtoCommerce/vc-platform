@@ -155,7 +155,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 
         public int GetHashCode(foundation.Property obj)
         {
-            return obj.GetHashCode();
+			return obj.PropertyId.GetHashCode();
         }
 
         #endregion

@@ -30,6 +30,21 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 				retVal.Variations = product.Variations.Select(x => x.ToWebModel()).ToList();
 			}
 
+			if(product.Links != null)
+			{
+				retVal.Links = product.Links.Select(x => x.ToWebModel()).ToList();
+			}
+
+			if(product.SeoInfos != null)
+			{
+				retVal.SeoInfos = product.SeoInfos.Select(x => x.ToWebModel()).ToList();
+			}
+
+			if (product.Reviews != null)
+			{
+				retVal.Reviews = product.Reviews.Select(x => x.ToWebModel()).ToList();
+			}
+
 			retVal.TitularItemId = product.MainProductId;
 
 			retVal.Properties = new List<webModel.Property>();
@@ -126,6 +141,7 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 					{
 						//Need populate required fields
 						propValue.PropertyName = property.Name;
+                        propValue.ValueType = property.ValueType;
 						retVal.PropertyValues.Add(propValue.ToModuleModel());
 					}
 				}
@@ -135,7 +151,22 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 			{
 				retVal.Variations = product.Variations.Select(x => x.ToModuleModel()).ToList();
 			}
-			
+
+			if(product.Links != null)
+			{
+				retVal.Links = product.Links.Select(x => x.ToModuleModel()).ToList();
+			}
+
+			if (product.SeoInfos != null)
+			{
+				retVal.SeoInfos = product.SeoInfos.Select(x => x.ToModuleModel()).ToList();
+			}
+
+			if (product.Reviews != null)
+			{
+				retVal.Reviews = product.Reviews.Select(x => x.ToModuleModel()).ToList();
+			}
+
 			retVal.MainProductId = product.TitularItemId;
 
 			return retVal;

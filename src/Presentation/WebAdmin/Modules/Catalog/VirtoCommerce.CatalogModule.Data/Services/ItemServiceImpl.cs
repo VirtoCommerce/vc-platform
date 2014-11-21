@@ -1,21 +1,27 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using VirtoCommerce.CatalogModule.Data.Converters;
 using VirtoCommerce.CatalogModule.Repositories;
 using VirtoCommerce.CatalogModule.Services;
 using VirtoCommerce.Foundation.Frameworks.Caching;
 using foundation = VirtoCommerce.Foundation.Catalogs.Model;
+using foundationConfig = VirtoCommerce.Foundation.AppConfig.Model;
 using module = VirtoCommerce.CatalogModule.Model;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
 
 namespace VirtoCommerce.CatalogModule.Data.Services
 {
 	public class ItemServiceImpl : ModuleServiceBase, IItemService
 	{
 		private readonly Func<IFoundationCatalogRepository> _catalogRepositoryFactory;
+		private readonly Func<IFoundationAppConfigRepository> _appConfigRepositoryFactory;
 		private readonly CacheManager _cacheManager;
-		public ItemServiceImpl(Func<IFoundationCatalogRepository> catalogRepositoryFactory, CacheManager cacheManager)
+		public ItemServiceImpl(Func<IFoundationCatalogRepository> catalogRepositoryFactory, Func<IFoundationAppConfigRepository> appConfigRepositoryFactory, 
+							  CacheManager cacheManager)
 		{
 			_catalogRepositoryFactory = catalogRepositoryFactory;
+			_appConfigRepositoryFactory = appConfigRepositoryFactory;
 			_cacheManager = cacheManager;
 		}
 
@@ -25,12 +31,15 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 		{
 			module.CatalogProduct retVal = null;
 			using (var repository = _catalogRepositoryFactory())
+			using (var appConfigRepository = _appConfigRepositoryFactory())
 			{
 				var dbItem = repository.GetItemByIds(new string[] { itemId }, respGroup).FirstOrDefault();
 				var dbCatalog = repository.GetCatalogById(dbItem.CatalogId);
 				
 				var parentItemRelation = repository.ItemRelations.FirstOrDefault(x => x.ChildItemId == itemId);
 				var parentItemId = parentItemRelation == null ? null : parentItemRelation.ParentItemId;
+				
+
 				foundation.Item[] dbVariations = null;
 				if ((respGroup & module.ItemResponseGroup.Variations) == module.ItemResponseGroup.Variations)
 				{
@@ -46,19 +55,25 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					dbVariations = dbVariations.Concat(new foundation.Item[] { dbItem }).Where(x => x.ItemId != itemId).ToArray();
 				}
 
+				foundationConfig.SeoUrlKeyword[] seoInfos = null;
+				if ((respGroup & module.ItemResponseGroup.Seo) == module.ItemResponseGroup.Seo)
+				{
+					seoInfos = appConfigRepository.GetAllSeoInformation(itemId);
+				}
+
 				var catalog = dbCatalog.ToModuleModel();
 				if (dbItem.CategoryItemRelations.Any())
 				{
-					var dbCategory = repository.GetCategoryById(dbItem.CategoryItemRelations[0].CategoryId);
+					var dbCategory = repository.GetCategoryById(dbItem.CategoryItemRelations.OrderBy(x=>x.Priority).First().CategoryId);
 					var dpProperties = repository.GetAllCategoryProperties(dbCategory);
 					var properties = dpProperties.Select(x => x.ToModuleModel(catalog, dbCategory.ToModuleModel(catalog))).ToArray();
 					var category = dbCategory.ToModuleModel(catalog, properties);
 
-					retVal = dbItem.ToModuleModel(catalog, category, properties, dbVariations, parentItemId);
+					retVal = dbItem.ToModuleModel(catalog, category, properties, dbVariations, seoInfos, parentItemId);
 				}
 				else
 				{
-					retVal = dbItem.ToModuleModel(catalog, null, null, dbVariations, parentItemId);
+					retVal = dbItem.ToModuleModel(catalog, null, null, dbVariations, seoInfos, parentItemId);
 				}
 			}
 
@@ -70,6 +85,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 			var dbItem = item.ToFoundation();
 
 			using (var repository = _catalogRepositoryFactory())
+			using (var appConfigRepository = _appConfigRepositoryFactory())
 			{
 				if (item.CategoryId != null)
 				{
@@ -88,9 +104,20 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					repository.SetVariationRelation(dbItem, item.MainProductId);
 				}
 
+				//Need add seo separately
+				if (item.SeoInfos != null)
+				{
+					foreach (var seoInfo in item.SeoInfos)
+					{
+						var dbSeoInfo = seoInfo.ToFoundation(item);
+						appConfigRepository.Add(dbSeoInfo);
+					}
+				}
+
 				repository.Add(dbItem);
 
 				CommitChanges(repository);
+				CommitChanges(appConfigRepository);
 			}
 
 			var retVal = GetById(dbItem.ItemId, module.ItemResponseGroup.ItemLarge);
@@ -100,34 +127,44 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 		public void Update(Model.CatalogProduct[] items)
 		{
 			using (var repository = _catalogRepositoryFactory())
+			using (var appConfigRepository = _appConfigRepositoryFactory())
+			using (var changeTracker = base.GetChangeTracker(repository))
 			{
 				var dbItems = repository.GetItemByIds(items.Select(x => x.Id).ToArray(), module.ItemResponseGroup.ItemLarge);
-				using (var changeTracker = base.GetChangeTracker(repository))
+				foreach (var dbItem in dbItems)
 				{
-					foreach (var dbItem in dbItems)
+					var item = items.FirstOrDefault(x => x.Id == dbItem.ItemId);
+					if (item != null)
 					{
-						var item = items.FirstOrDefault(x => x.Id == dbItem.ItemId);
-						if (item != null)
-						{
-							changeTracker.Attach(dbItem);
-							
-							var dbItemChanged = item.ToFoundation();
-							dbItemChanged.Patch(dbItem);
+						changeTracker.Attach(dbItem);
 
-							//Variation relation update
-							if (item.MainProductId != null)
-							{
-								repository.SetVariationRelation(dbItem, item.MainProductId);
-							}
-							else
-							{
-								//Switch item like a  main product
-								repository.SwitchProductToMain(dbItem);
-							}
+						var dbItemChanged = item.ToFoundation();
+						dbItemChanged.Patch(dbItem);
+
+						//Variation relation update
+						if (item.MainProductId != null)
+						{
+							repository.SetVariationRelation(dbItem, item.MainProductId);
 						}
+						else
+						{
+							//Switch item like a  main product
+							repository.SwitchProductToMain(dbItem);
+						}
+					}
+
+					//Patch seoInfo
+					if (item.SeoInfos != null)
+					{
+						var dbSeoInfos = new ObservableCollection<foundationConfig.SeoUrlKeyword>(appConfigRepository.GetAllSeoInformation(item.Id));
+						var changedSeoInfos = item.SeoInfos.Select(x => x.ToFoundation(item)).ToList();
+						dbSeoInfos.ObserveCollection(x => appConfigRepository.Add(x), x => appConfigRepository.Remove(x));
+
+						changedSeoInfos.Patch(dbSeoInfos, new SeoInfoComparer(), (source, target) => source.Patch(target));
 					}
 				}
 				CommitChanges(repository);
+				CommitChanges(appConfigRepository);
 			}
 		}
 

@@ -34,8 +34,12 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 return NotFound();
             }
 
-			var allCategoryProperties = _propertyService.GetCategoryProperties(item.CategoryId);
-			var retVal = item.ToWebModel(allCategoryProperties);
+			moduleModel.Property[] properties = null;
+			if (item.CategoryId != null)
+			{
+				properties = _propertyService.GetCategoryProperties(item.CategoryId);
+			}
+			var retVal = item.ToWebModel(properties);
          
             return Ok(retVal);
         }
@@ -45,14 +49,16 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		[ResponseType(typeof(webModel.Product))]
         public IHttpActionResult GetNewItem(string catalogId = null, string categoryId = null)
         {
-			var newProduct = new webModel.Product
+			var retVal = new webModel.Product
 			{
-				Name = "New product",
-				Code =  Guid.NewGuid().ToString().Substring(0, 5),
 				CategoryId = categoryId,
 				CatalogId = catalogId
 			};
-			var retVal = _itemsService.Create(newProduct.ToModuleModel()).ToWebModel();
+		
+			if (categoryId != null)
+			{
+				retVal.Properties = _propertyService.GetCategoryProperties(categoryId).Select(x=>x.ToWebModel()).ToList();
+			}
 			return Ok(retVal);
         }
 
@@ -67,7 +73,11 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 return NotFound();
             }
 
-			var allCategoryProperties = _propertyService.GetCategoryProperties(product.CategoryId);
+			moduleModel.Property[] allCategoryProperties = null;
+			if (product.CategoryId != null)
+			{
+				_propertyService.GetCategoryProperties(product.CategoryId);
+			}
 			var mainWebProduct = product.ToWebModel(allCategoryProperties);
 
 			var newVariation = new webModel.Product
@@ -110,7 +120,14 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		private void UpdateProduct(webModel.Product product)
 		{
 			var moduleProduct = product.ToModuleModel();
-			_itemsService.Update(new moduleModel.CatalogProduct[] { moduleProduct });
+			if (moduleProduct.Id == null)
+			{
+				_itemsService.Create(moduleProduct);
+			}
+			else
+			{
+				_itemsService.Update(new moduleModel.CatalogProduct[] { moduleProduct });
+			}
 		}
     }
 }
