@@ -17,21 +17,14 @@ angular.module(catalogsModuleName, [
   'catalogModule.blades.categoriesItemsList',
   'catalogModule.widget.categoryPropertyWidget',
   'catalogModule.blades.itemDetail',
-  'catalogModule.widget.itemPropertyWidget',
-  'catalogModule.blades.itemPropertyDetail',
-  'catalogModule.widget.itemImageWidget',
-  'catalogModule.blades.itemImageDetail',
-  'catalogModule.widget.itemVariationWidget',
-  'catalogModule.blades.itemVariationList',
-  'catalogModule.widget.itemAssetWidget',
-  'catalogModule.blades.itemAssetDetail',
   'catalogModule.blades.seoDetail',
   'catalogModule.blades.propertyDetail',
   'catalogModule.widget.catalogLanguagesWidget',
   'catalogModule.blades.catalogLanguages',
   'catalogModule.widget.seoWidget',
   'catalogModule.wizards.newProductWizard',
-  'catalogModule.directives'
+  'catalogModule.directives',
+  'textAngular'
 ])
 .config(
   ['$stateProvider', function ($stateProvider) {
@@ -100,8 +93,15 @@ angular.module(catalogsModuleName, [
           controller: 'seoWidgetController',
           template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/widgets/seoWidget.tpl.html',
       };
-
       widgetService.registerWidget(itemSeoWidget);
+
+      //Register item seo widget
+      var editorialReviewWidget = {
+          group: 'itemDetail',
+          controller: 'editorialReviewWidgetController',
+          template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/widgets/editorialReviewWidget.tpl.html',
+      };
+      widgetService.registerWidget(editorialReviewWidget);
 
       //Register variation widget
       var variationWidget = {

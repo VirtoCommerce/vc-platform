@@ -226,9 +226,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\angular-multi-select.css" />
+    <Content Include="Content\font-awesome.css" />
+    <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\ng-tags-input.css" />
     <Content Include="Content\ng-tags-input.min.css" />
+    <Content Include="Content\textAngular.css" />
     <Content Include="Content\themes\base\images\animated-overlay.gif" />
     <Content Include="Content\themes\base\images\spinner.gif" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
@@ -305,6 +308,7 @@
     <Content Include="Content\themes\metro\fonts\iconFont.dev.svg" />
     <Content Include="Content\themes\metro\fonts\iconFont.svg" />
     <Content Include="Content\themes\metro\fonts\metroSysIcons.svg" />
+    <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\themes\metro\images\AvatarMenu_defaultAvatarSmall.png" />
     <Content Include="Content\themes\metro\images\logo.png" />
@@ -371,13 +375,10 @@
     <Content Include="Scripts\common\icons\icons.tpl.html" />
     <Content Include="Scripts\errors.json" />
     <Content Include="Scripts\angular-touch.min.js.map" />
-    <Content Include="Scripts\angular-sanitize.min.js.map" />
     <Content Include="Scripts\angular-route.min.js.map" />
     <Content Include="Scripts\angular-resource.min.js.map" />
     <Content Include="Scripts\angular-loader.min.js.map" />
     <Content Include="Scripts\angular-cookies.min.js.map" />
-    <Content Include="Scripts\angular-animate.min.js.map" />
-    <Content Include="Scripts\angular.min.js.map" />
     <Content Include="Content\themes\metro\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Content\themes\metro\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\themes\metro\fonts\glyphicons-halflings-regular.eot" />
@@ -394,8 +395,15 @@
     <Content Include="fonts\OpenSans-Light.woff" />
     <Content Include="fonts\OpenSans.woff" />
     <Content Include="fonts\PTSerif-Caption.woff" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.eot" />
+    <Content Include="fonts\FontAwesome.otf" />
     <None Include="Properties\PublishProfiles\Local.pubxml" />
     <None Include="Properties\PublishProfiles\virtoadmin.pubxml" />
+    <Content Include="Scripts\angular-sanitize.min.js.map" />
+    <Content Include="Scripts\angular.min.js.map" />
+    <Content Include="Scripts\angular-animate.min.js.map" />
     <None Include="Scripts\jquery-1.11.1.intellisense.js" />
     <Content Include="Scripts\i18n\angular-locale_af-na.js" />
     <Content Include="Scripts\i18n\angular-locale_af-za.js" />
@@ -699,6 +707,8 @@
     <Content Include="Scripts\ng-google-chart.js" />
     <Content Include="Scripts\ng-tags-input.js" />
     <Content Include="Scripts\sortable.js" />
+    <Content Include="Scripts\textAngular-rangy.min.js" />
+    <Content Include="Scripts\textAngular.min.js" />
     <Content Include="Scripts\underscore.js" />
     <Content Include="Scripts\underscore.min.js" />
     <Content Include="Scripts\xeditable.js" />
