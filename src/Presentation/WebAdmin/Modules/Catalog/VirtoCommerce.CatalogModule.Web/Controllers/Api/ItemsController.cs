@@ -58,6 +58,13 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			if (categoryId != null)
 			{
 				retVal.Properties = _propertyService.GetCategoryProperties(categoryId).Select(x=>x.ToWebModel()).ToList();
+
+                foreach (var property in retVal.Properties)
+                {
+                    property.Values = new List<webModel.PropertyValue>();
+                    property.IsManageable = true;
+                    property.IsReadOnly = property.Type == webModel.PropertyType.Category;
+                }
 			}
 			return Ok(retVal);
         }

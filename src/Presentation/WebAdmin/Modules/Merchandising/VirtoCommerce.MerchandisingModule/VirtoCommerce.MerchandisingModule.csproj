@@ -82,6 +82,8 @@
     <Compile Include="Model\CatalogItem.cs" />
     <Compile Include="Model\CatalogItemResponse.cs" />
     <Compile Include="Model\Category.cs" />
+    <Compile Include="Model\DynamicContentItem.cs" />
+    <Compile Include="Model\DynamicContents.cs" />
     <Compile Include="Model\ItemCategory.cs" />
     <Compile Include="Model\ItemDisplayOptions.cs" />
     <Compile Include="Model\ItemImage.cs" />
@@ -89,6 +91,7 @@
     <Compile Include="Model\Link.cs" />
     <Compile Include="Model\Product.cs" />
     <Compile Include="Model\ProductVariation.cs" />
+    <Compile Include="Model\PropertyDictionary.cs" />
     <Compile Include="Model\Resource.cs" />
     <Compile Include="Model\ResponseCollection.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

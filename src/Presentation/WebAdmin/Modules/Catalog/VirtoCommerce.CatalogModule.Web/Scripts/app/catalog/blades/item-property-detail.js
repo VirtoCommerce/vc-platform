@@ -4,7 +4,7 @@
 	'ui.bootstrap.typeahead',
     'ngSanitize'
 ])
-.controller('itemPropertyController', ['$rootScope', '$scope', 'items', 'properties', 'bladeNavigationService', 'dialogService', '$injector', function ($rootScope, $scope, items, properties, bladeNavigationService, dialogService, $injector) {
+.controller('itemPropertyController', ['$scope', 'items', 'properties', 'bladeNavigationService', 'dialogService', function ($scope, items, properties, bladeNavigationService, dialogService) {
     $scope.blade.origItem = {};
     $scope.blade.item = {};
 

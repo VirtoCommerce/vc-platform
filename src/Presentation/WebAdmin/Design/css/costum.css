@@ -678,7 +678,6 @@
 .metro button:disabled,
 .metro button.disabled
 {
-	background: none !important;
 	color: #999 !important;
 }
 
@@ -942,11 +941,6 @@
 	vertical-align: top;
 	word-spacing: 0;
 	z-index: 500;
-}
-
-.blade.last-child
-{
-	margin-right:85px;
 }
 
 .blade-head
