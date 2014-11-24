@@ -49,7 +49,15 @@
                     //TODO
                     break;
                 case 'review':
-                    //TODO
+                    newBlade = {
+                        id: "editorialReviewsList",
+                        currentEntities: $scope.blade.item.reviews,
+                        title: $scope.blade.item.name,
+                        style: "actions",
+                        subtitle: 'Product Reviews',
+                        controller: 'newProductWizardReviewsController',
+                        template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/editorialReviews-list.tpl.html'
+                    };
                     break;
             }
 

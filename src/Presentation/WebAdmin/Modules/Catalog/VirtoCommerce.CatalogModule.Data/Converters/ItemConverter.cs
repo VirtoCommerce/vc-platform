@@ -106,8 +106,15 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			retVal.Code = product.Code;
 			retVal.CatalogId = product.CatalogId;
 
-			if (product.Id != null)
-				retVal.ItemId = product.Id;
+            if (product.Id != null)
+            {
+                retVal.ItemId = product.Id;
+            }
+            else
+            {
+                //Copy over generated id
+                product.Id = retVal.ItemId;
+            }
 
 			#region ItemPropertyValues
 			retVal.ItemPropertyValues = new NullCollection<foundation.ItemPropertyValue>();

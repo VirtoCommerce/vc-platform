@@ -25,6 +25,8 @@ angular.module(catalogsModuleName, [
   'catalogModule.wizards.newProductWizard',
   'catalogModule.wizards.newProductWizard.images',
   'catalogModule.wizards.newProductWizard.properties',
+  'catalogModule.wizards.newProductWizard.reviews',
+  'catalogModule.wizards.newProductWizard.review.detail',
   'catalogModule.directives',
   'textAngular'
 ])
