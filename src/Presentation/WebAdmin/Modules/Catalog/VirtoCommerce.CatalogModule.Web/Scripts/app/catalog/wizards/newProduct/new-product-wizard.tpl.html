@@ -14,20 +14,20 @@
 
     <ul class="list-extended">
         <li ng-click="openBlade('properties')">
-            <span class="title">Properties</span>
+            <span class="title">Add properties</span>
             <span class="sub-title">{{blade.item.properties.length}} properties</span>
         </li>
         <li ng-click="openBlade('images')">
-            <span class="title">Images</span>
+            <span class="title">Upload images</span>
             <span class="sub-title">{{blade.item.images.length}} images</span>
         </li>
         <li ng-click="openBlade('review')">
-            <span class="title">Review</span>
-            <span class="sub-title">Add review</span>
+            <span class="title">Add review</span>
+            <span class="sub-title">{{blade.item.reviews.length}} reviews</span>
         </li>
         <li ng-click="openBlade('seo')">
-            <span class="title">Seo</span>
-            <span class="sub-title">Define seo information</span>
+            <span class="title">Define seo information</span>
+            <span class="sub-title">{{blade.item.seoInfos.length}} seo information</span>
         </li>
     </ul>
 </div>
