@@ -942,6 +942,10 @@
 	word-spacing: 0;
 	z-index: 500;
 }
+.blade.last-child
+{
+	margin-right:85px;
+}
 
 .blade-head
 {
