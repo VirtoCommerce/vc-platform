@@ -1221,6 +1221,11 @@
 			box-sizing: border-box;
 }
 
+.blade-actions button.disabled
+{
+	background-color: #eee;
+}
+
 .blade-actions button:hover
 {
 	background: #0072c6;
@@ -1233,25 +1238,25 @@
 	margin: 0;
 }
 
-.blade .blade-content.actions
+.blade.actions .blade-content
 {
 	height: calc(100% - 270px);
 }
 
-.blade .blade-content .breadcrumbs
+.blade.actions .blade-content .breadcrumbs
 {
 	list-style: none;
 	margin: 10px 0;
 	padding: 0;
 }
 
-.blade .blade-content .breadcrumbs li
+.blade.actions .blade-content .breadcrumbs li
 {
 	display: inline-block;
 	font-size: 14px;
 }
 
-.blade .blade-content .breadcrumbs .devider
+.blade.actions .blade-content .breadcrumbs .devider
 {
 	margin: 0 5px;
 }
