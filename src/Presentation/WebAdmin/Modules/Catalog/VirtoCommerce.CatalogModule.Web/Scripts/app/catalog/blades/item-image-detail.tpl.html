@@ -4,16 +4,22 @@
             <div class="row">
 
                 <h3>Select files</h3>
-
-                <div ng-show="uploader.isHTML5">
+           
+                <div ng-show="uploader.isHTML5" class="" style="padding: 15px 0;">
                     <!-- 3. ng-file-over | ng-file-over="className" -->
-                    <div class="well my-drop-zone" uploader="uploader" nv-file-drop nv-file-over>
-                        Drag and drop images here
+                    <div over-class="bd-blue" nv-file-over nv-file-drop uploader="uploader" class="panel" style="height: 80px;">
+                        <div class="panel-content">
+                            Drag and drop images here
+                        </div>
                     </div>
                 </div>
 
                 <!-- 2. ng-file-select | ng-file-select="options" -->
-                <input type="file" multiple uploader="uploader" nv-file-select>
+                <div data-role="input-control" class="input-control file">
+                    <input type="file" multiple uploader="uploader" nv-file-select style="z-index: 0;" tabindex="-1">
+                    <input type="text" style="z-index: 1; cursor: default;" readonly="">
+                    <button class="btn-file" type="button" onclick="$('input[type=file]').trigger('click')"></button>
+                </div>
 
 
                 <div class="col-md-12" style="margin-bottom: 40px">
@@ -21,8 +27,8 @@
                     <div ng-show="uploader.isUploading">
                         <p>
                             Progress:
-                            <div class="progress" style="">
-                                <div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
+                            <div class="progress-bar" data-role="progress-bar">
+                                <div class="bar bg-cyan" ng-style="{ 'width': uploader.progress + '%' }"></div>
                             </div>
                         </p>
                     </div>

@@ -52,21 +52,24 @@ namespace VirtoCommerce.Platform.Web
                 "~/Scripts/angular-ui/ui-utils-ieshiv.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/angularmisc").Include(
+                "~/Scripts/angular-multi-select.js",
                 "~/Scripts/ng-context-menu.js",
                 "~/Scripts/xeditable.js",
                 "~/Scripts/ng-focus-on.js",
                 "~/Scripts/ng-google-chart.js",
                 "~/Scripts/ng-tags-input.js",
-                "~/Scripts/angular-multi-select.js"
+                "~/Scripts/textAngular.min.js",
+                "~/Scripts/textAngular-rangy.min.js"
             ));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                 "~/Scripts/bootstrap.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
+                "~/Content/angular-multi-select.css",
+                "~/Content/font-awesome.css",
                 "~/Content/ng-tags-input.css",
-                "~/Content/angular-multi-select.css"
-
+                "~/Content/textAngular.css"
             ));
 
             bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(

@@ -1,4 +1,16 @@
-﻿angular.module('catalogModule.blades.itemDetail', [])
+﻿angular.module('catalogModule.blades.itemDetail', [
+  'catalogModule.widget.editorialReviewWidget',
+  'catalogModule.blades.editorialReviewsList',
+  'catalogModule.blades.editorialReviewDetail',
+  'catalogModule.widget.itemPropertyWidget',
+  'catalogModule.blades.itemPropertyDetail',
+  'catalogModule.widget.itemImageWidget',
+  'catalogModule.blades.itemImageDetail',
+  'catalogModule.widget.itemVariationWidget',
+  'catalogModule.blades.itemVariationList',
+  'catalogModule.widget.itemAssetWidget',
+  'catalogModule.blades.itemAssetDetail'
+])
 .controller('itemDetailController', ['$rootScope', '$scope', 'bladeNavigationService', '$injector', 'items', 'dialogService', function ($rootScope, $scope, bladeNavigationService, $injector, items, dialogService) {
     $scope.currentBlade = $scope.blade;
     $scope.currentBlade.origItem = {};
@@ -6,6 +18,8 @@
     $scope.blade.currentEntityId = $scope.currentBlade.itemId;
 
     $scope.currentBlade.refresh = function (parentRefresh) {
+        $scope.currentBlade.isLoading = true;
+
         return items.get({ id: $scope.currentBlade.itemId }, function (data) {
             $scope.currentBlade.itemId = data.id;
             $scope.currentBlade.title = data.code;
