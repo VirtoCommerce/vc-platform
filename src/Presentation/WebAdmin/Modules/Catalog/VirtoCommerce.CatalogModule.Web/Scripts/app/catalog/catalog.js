@@ -27,6 +27,7 @@ angular.module(catalogsModuleName, [
   'catalogModule.wizards.newProductWizard.properties',
   'catalogModule.wizards.newProductWizard.reviews',
   'catalogModule.wizards.newProductWizard.review.detail',
+  'catalogModule.wizards.newProductWizard.seo',
   'catalogModule.directives',
   'textAngular'
 ])

@@ -2,7 +2,6 @@
 .controller('newProductWizardReviewsController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService)
 {
     $scope.blade.isLoading = false;
-    $scope.bladeActions = "Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-product-wizard-ok-action.tpl.html";
     $scope.wizardBlade = $scope.blade.parentBlade;
 
     $scope.saveChanges = function()

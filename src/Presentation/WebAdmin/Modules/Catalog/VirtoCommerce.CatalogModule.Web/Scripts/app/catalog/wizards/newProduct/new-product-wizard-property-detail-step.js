@@ -5,7 +5,6 @@
 .controller('newProductWizardPropertiesController', ['$scope', 'properties', 'bladeNavigationService', function ($scope, properties, bladeNavigationService)
 {
     $scope.blade.isLoading = false;
-    $scope.bladeActions = "Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-product-wizard-ok-action.tpl.html";
     $scope.blade.item = angular.copy($scope.blade.item);
 
     $scope.saveChanges = function()

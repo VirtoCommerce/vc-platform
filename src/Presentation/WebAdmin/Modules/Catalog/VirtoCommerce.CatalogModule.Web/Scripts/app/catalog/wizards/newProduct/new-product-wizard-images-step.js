@@ -2,7 +2,6 @@
 .controller('newProductWizardImagesController', ['$scope', '$filter', 'FileUploader', function ($scope, $filter, FileUploader)
 {
     $scope.blade.isLoading = false;
-    $scope.bladeActions = "Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-product-wizard-ok-action.tpl.html";
     $scope.item = angular.copy($scope.blade.item);
 
 	$scope.saveChanges = function () {

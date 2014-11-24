@@ -1,7 +1,6 @@
 ﻿angular.module('catalogModule.wizards.newProductWizard.review.detail', [])
 .controller('editorialReviewDetailWizardStepController', ['$scope', function ($scope)
 {
-    $scope.bladeActions = "Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-product-wizard-ok-action.tpl.html";
     function initializeBlade(data)
     {
         $scope.currentEntity = angular.copy(data);
@@ -9,7 +8,6 @@
         $scope.blade.isLoading = false;
     };
 
- 
     $scope.saveChanges = function ()
     {
         if (!angular.isDefined($scope.blade.parentBlade.currentEntities)) {

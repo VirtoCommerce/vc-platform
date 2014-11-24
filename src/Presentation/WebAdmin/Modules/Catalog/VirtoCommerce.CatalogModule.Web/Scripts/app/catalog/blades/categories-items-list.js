@@ -131,6 +131,7 @@
             style: "actions",
             subtitle: 'Fill all product information',
             controller: 'newProductWizardController',
+            bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-product-wizard-actions.tpl.html',
             template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-product-wizard.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);

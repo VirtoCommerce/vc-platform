@@ -1,4 +1,4 @@
-﻿<div class="blade" ng-repeat='blade in blades' ng-class="{'last-child':$last}">
+﻿<div class="blade" ng-repeat='blade in blades' ng-class="{'last-child':$last, 'actions':blade.bladeActions != undefined}">
     <span va-blade='blade'>
         <header class="blade-head">
             <div class="progress" ng-show="blade.isLoading">
@@ -31,7 +31,7 @@
                 <ng-include src='blade.template'> </ng-include>
             </div>
         </div>
-        <div class="blade-actions" ng-include="bladeActions">
+        <div class="blade-actions" ng-include="blade.bladeActions">
         </div>
     </span>
 </div>

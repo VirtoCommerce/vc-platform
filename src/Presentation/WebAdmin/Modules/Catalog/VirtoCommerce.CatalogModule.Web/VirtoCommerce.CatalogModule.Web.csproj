@@ -240,6 +240,7 @@
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-actions.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard.js" />
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard.tpl.html" />
+    <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-seo-detail-step.js" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\priceRuCategoryTest.yml" />

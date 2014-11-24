@@ -3,8 +3,6 @@
 .controller('newProductWizardController', ['$scope', 'bladeNavigationService', 'dialogService', 'items', function ($scope, bladeNavigationService, dialogService, items)
 {
     $scope.blade.isLoading = false;
-    $scope.bladeActions = "Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-product-wizard-actions.tpl.html";
-
 
     $scope.createItem = function ()
     {
@@ -28,7 +26,7 @@
                         id: "newProductProperties",
                         item: $scope.blade.item,
                         title: $scope.blade.item.name,
-                        style: "actions",
+                        bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-product-wizard-ok-action.tpl.html',
                         subtitle: 'item properties',
                         controller: 'newProductWizardPropertiesController',
                         template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/item-property-detail.tpl.html'
@@ -39,21 +37,29 @@
                         id: "newProductImages",
                         item: $scope.blade.item,
                         title: $scope.blade.item.name,
-                        style: "actions",
+                        bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-product-wizard-ok-action.tpl.html',
                         subtitle: 'item images',
                         controller: 'newProductWizardImagesController',
                         template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/item-image-detail.tpl.html'
                     };
                     break;
                 case 'seo':
-                    //TODO
+                    newBlade = {
+                        id: "newProductSeoDetail",
+                        seoInfos: $scope.blade.item.seoInfos,
+                        title: $scope.blade.item.name,
+                        bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-product-wizard-ok-action.tpl.html',
+                        subtitle: 'Seo details',
+                        controller: 'newProductSeoDetailController',
+                        template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/seo-detail.tpl.html'
+                    };
                     break;
                 case 'review':
                     newBlade = {
-                        id: "editorialReviewsList",
+                        id: "newProductEditorialReviewsList",
                         currentEntities: $scope.blade.item.reviews,
                         title: $scope.blade.item.name,
-                        style: "actions",
+                        bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-product-wizard-ok-action.tpl.html',
                         subtitle: 'Product Reviews',
                         controller: 'newProductWizardReviewsController',
                         template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/editorialReviews-list.tpl.html'
