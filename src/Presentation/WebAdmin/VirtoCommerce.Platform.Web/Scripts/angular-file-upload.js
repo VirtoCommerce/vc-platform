@@ -1,5 +1,5 @@
 /*
- angular-file-upload v1.0.2
+ angular-file-upload v1.1.5
  https://github.com/nervgh/angular-file-upload
 */
 (function(angular, factory) {
@@ -78,28 +78,27 @@ module
             FileUploader.prototype.isHTML5 = !!($window.File && $window.FormData);
             /**
              * Adds items to the queue
-             * @param {FileList|File|HTMLInputElement} files
+             * @param {File|HTMLInputElement|Object|FileList|Array<Object>} files
              * @param {Object} [options]
              * @param {Array<Function>|String} filters
              */
             FileUploader.prototype.addToQueue = function(files, options, filters) {
-                var list = angular.isElement(files) ? [files]: files;
+                var list = this.isArrayLikeObject(files) ? files: [files];
                 var arrayOfFilters = this._getFilters(filters);
                 var count = this.queue.length;
                 var addedFileItems = [];
 
-                angular.forEach(list, function(file) {
-                    var item = this._getFileOrFileLikeObject(file);
+                angular.forEach(list, function(some /*{File|HTMLInputElement|Object}*/) {
+                    var temp = new FileUploader.FileLikeObject(some);
 
-                    if (this._isValidFile(item, arrayOfFilters, options)) {
-                        var input = this.isFile(item) ? null : file;
-                        var fileItem = new FileUploader.FileItem(this, item, options, input);
+                    if (this._isValidFile(temp, arrayOfFilters, options)) {
+                        var fileItem = new FileUploader.FileItem(this, some, options);
                         addedFileItems.push(fileItem);
                         this.queue.push(fileItem);
                         this._onAfterAddingFile(fileItem);
                     } else {
                         var filter = this.filters[this._failFilterIndex];
-                        this._onWhenAddingFileFailed(item, filter, options);
+                        this._onWhenAddingFileFailed(temp, filter, options);
                     }
                 }, this);
 
@@ -198,6 +197,14 @@ module
              */
             FileUploader.prototype.isFileLikeObject = function(value) {
                 return value instanceof FileUploader.FileLikeObject;
+            };
+            /**
+             * Returns "true" if value is array like object
+             * @param {*} value
+             * @returns {Boolean}
+             */
+            FileUploader.prototype.isArrayLikeObject = function(value) {
+                return (angular.isObject(value) && 'length' in value);
             };
             /**
              * Returns a index of item from the queue
@@ -337,7 +344,7 @@ module
             FileUploader.prototype._getFilters = function(filters) {
                 if (angular.isUndefined(filters)) return this.filters;
                 if (angular.isArray(filters)) return filters;
-                var names = filters.split(/\s*,/);
+                var names = filters.match(/[^\s,]+/g);
                 return this.filters.filter(function(filter) {
                     return names.indexOf(filter.name) !== -1;
                 }, this);
@@ -382,16 +389,6 @@ module
                 }, this);
             };
             /**
-             * Returns a file or a file-like object
-             * @param {File|HTMLInputElement} some
-             * @returns {File|Object}
-             * @private
-             */
-            FileUploader.prototype._getFileOrFileLikeObject = function(some) {
-                if (this.isFile(some) || this.isFileLikeObject(some)) return some;
-                return new FileUploader.FileLikeObject(some.value);
-            };
-            /**
              * Checks whether upload successful
              * @param {Number} status
              * @returns {Boolean}
@@ -403,12 +400,14 @@ module
             /**
              * Transforms the server response
              * @param {*} response
+             * @param {Object} headers
              * @returns {*}
              * @private
              */
-            FileUploader.prototype._transformResponse = function(response) {
+            FileUploader.prototype._transformResponse = function(response, headers) {
+                var headersGetter = this._headersGetter(headers);
                 angular.forEach($http.defaults.transformResponse, function(transformFn) {
-                    response = transformFn(response);
+                    response = transformFn(response, headersGetter);
                 });
                 return response;
             };
@@ -424,17 +423,10 @@ module
 
                 if (!headers) return parsed;
 
-                function trim(string) {
-                    return string.replace(/^\s+/, '').replace(/\s+$/, '');
-                }
-                function lowercase(string) {
-                    return string.toLowerCase();
-                }
-
                 angular.forEach(headers.split('\n'), function(line) {
                     i = line.indexOf(':');
-                    key = lowercase(trim(line.substr(0, i)));
-                    val = trim(line.substr(i + 1));
+                    key = line.slice(0, i).trim().toLowerCase();
+                    val = line.slice(i + 1).trim();
 
                     if (key) {
                         parsed[key] = parsed[key] ? parsed[key] + ', ' + val : val;
@@ -442,6 +434,20 @@ module
                 });
 
                 return parsed;
+            };
+            /**
+             * Returns function that returns headers
+             * @param {Object} parsedHeaders
+             * @returns {Function}
+             * @private
+             */
+            FileUploader.prototype._headersGetter = function(parsedHeaders) {
+                return function(name) {
+                    if (name) {
+                        return parsedHeaders[name.toLowerCase()] || null;
+                    }
+                    return parsedHeaders;
+                };
             };
             /**
              * The XMLHttpRequest transport
@@ -461,7 +467,7 @@ module
                     });
                 });
 
-                form.append(item.alias, item._file);
+                form.append(item.alias, item._file, item.file.name);
 
                 xhr.upload.onprogress = function(event) {
                     var progress = Math.round(event.lengthComputable ? event.loaded * 100 / event.total : 0);
@@ -470,7 +476,7 @@ module
 
                 xhr.onload = function() {
                     var headers = that._parseHeaders(xhr.getAllResponseHeaders());
-                    var response = that._transformResponse(xhr.response);
+                    var response = that._transformResponse(xhr.response, headers);
                     var gist = that._isSuccessCode(xhr.status) ? 'Success' : 'Error';
                     var method = '_on' + gist + 'Item';
                     that[method](item, response, xhr.status, headers);
@@ -479,14 +485,14 @@ module
 
                 xhr.onerror = function() {
                     var headers = that._parseHeaders(xhr.getAllResponseHeaders());
-                    var response = that._transformResponse(xhr.response);
+                    var response = that._transformResponse(xhr.response, headers);
                     that._onErrorItem(item, response, xhr.status, headers);
                     that._onCompleteItem(item, response, xhr.status, headers);
                 };
 
                 xhr.onabort = function() {
                     var headers = that._parseHeaders(xhr.getAllResponseHeaders());
-                    var response = that._transformResponse(xhr.response);
+                    var response = that._transformResponse(xhr.response, headers);
                     that._onCancelItem(item, response, xhr.status, headers);
                     that._onCompleteItem(item, response, xhr.status, headers);
                 };
@@ -522,7 +528,9 @@ module
 
                 angular.forEach(item.formData, function(obj) {
                     angular.forEach(obj, function(value, key) {
-                        form.append(angular.element('<input type="hidden" name="' + key + '" value="' + value + '" />'));
+                        var element = angular.element('<input type="hidden" name="' + key + '" />');
+                        element.val(value);
+                        form.append(element);
                     });
                 });
 
@@ -552,8 +560,8 @@ module
                     } catch (e) {}
 
                     var xhr = {response: html, status: 200, dummy: true};
-                    var response = that._transformResponse(xhr.response);
                     var headers = {};
+                    var response = that._transformResponse(xhr.response, headers);
 
                     that._onSuccessItem(item, response, xhr.status, headers);
                     that._onCompleteItem(item, response, xhr.status, headers);
@@ -696,6 +704,10 @@ module
              */
             FileUploader.isFileLikeObject = FileUploader.prototype.isFileLikeObject;
             /**
+             * @borrows FileUploader.prototype.isArrayLikeObject
+             */
+            FileUploader.isArrayLikeObject = FileUploader.prototype.isArrayLikeObject;
+            /**
              * @borrows FileUploader.prototype.isHTML5
              */
             FileUploader.isHTML5 = FileUploader.prototype.isHTML5;
@@ -720,29 +732,53 @@ module
 
             /**
              * Creates an instance of FileLikeObject
-             * @param {String} fakePath
+             * @param {File|HTMLInputElement|Object} fileOrInput
              * @constructor
              */
-            function FileLikeObject(fakePath) {
-                var path = fakePath;
+            function FileLikeObject(fileOrInput) {
+                var isInput = angular.isElement(fileOrInput);
+                var fakePathOrObject = isInput ? fileOrInput.value : fileOrInput;
+                var postfix = angular.isString(fakePathOrObject) ? 'FakePath' : 'Object';
+                var method = '_createFrom' + postfix;
+                this[method](fakePathOrObject);
+            }
+
+            /**
+             * Creates file like object from fake path string
+             * @param {String} path
+             * @private
+             */
+            FileLikeObject.prototype._createFromFakePath = function(path) {
                 this.lastModifiedDate = null;
                 this.size = null;
                 this.type = 'like/' + path.slice(path.lastIndexOf('.') + 1).toLowerCase();
                 this.name = path.slice(path.lastIndexOf('/') + path.lastIndexOf('\\') + 2);
-            }
+            };
+            /**
+             * Creates file like object from object
+             * @param {File|FileLikeObject} object
+             * @private
+             */
+            FileLikeObject.prototype._createFromObject = function(object) {
+                this.lastModifiedDate = angular.copy(object.lastModifiedDate);
+                this.size = object.size;
+                this.type = object.type;
+                this.name = object.name;
+            };
 
             // ---------------------------
 
             /**
              * Creates an instance of FileItem
              * @param {FileUploader} uploader
-             * @param {File|FileLikeObject|HTMLInputElement} file
-             * @param {File|Object} options
-             * @param {HTMLInputElement} [input]
+             * @param {File|HTMLInputElement|Object} some
+             * @param {Object} options
              * @constructor
              */
-            function FileItem(uploader, file, options, input) {
-                file = uploader._getFileOrFileLikeObject(file);
+            function FileItem(uploader, some, options) {
+                var isInput = angular.isElement(some);
+                var input = isInput ? angular.element(some) : null;
+                var file = !isInput ? some : null;
 
                 angular.extend(this, {
                     url: uploader.url,
@@ -754,7 +790,7 @@ module
                     method: uploader.method
                 }, options, {
                     uploader: uploader,
-                    file: angular.copy(file),
+                    file: new FileUploader.FileLikeObject(some),
                     isReady: false,
                     isUploading: false,
                     isUploaded: false,
@@ -763,13 +799,11 @@ module
                     isError: false,
                     progress: 0,
                     index: null,
-                    _file: file
+                    _file: file,
+                    _input: input
                 });
 
-                if (input) {
-                    this._input = angular.element(input);
-                    this._replaceNode(this._input);
-                }
+                if (input) this._replaceNode(input);
             }
             /**********************
              * PUBLIC
@@ -1132,7 +1166,7 @@ module
              * Event handler
              */
             FileDrop.prototype.onDragLeave = function(event) {
-                if (event.target !== this.element[0]) return;
+                if (event.currentTarget !== this.element[0]) return;
                 this._preventAndStop(event);
                 angular.forEach(this.uploader._directives.over, this._removeOverClass, this);
             };
@@ -1293,5 +1327,6 @@ module
             }
         };
     }])
+
     return module;
 }));
