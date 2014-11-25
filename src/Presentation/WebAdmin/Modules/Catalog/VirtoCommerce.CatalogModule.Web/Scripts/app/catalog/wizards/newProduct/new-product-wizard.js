@@ -11,8 +11,28 @@
         function (dbItem)
         {
             $scope.bladeClose();
-            $scope.blade.parentBlade.setSelectedItem(dbItem);
-            $scope.blade.parentBlade.refresh();
+
+            //TODO: need better way to find category list blade.
+            var categoryListBlade = $scope.blade.parentBlade;
+
+            if (categoryListBlade.controller != 'categoriesItemsListController')
+            {
+                categoryListBlade = categoryListBlade.parentBlade;
+            }
+
+            categoryListBlade.refresh();
+
+            var newBlade = {
+                id: "listItemDetail",
+                itemId: dbItem.id,
+                title: dbItem.name,
+                style: 'gray',
+                subtitle: 'Item details',
+                controller: 'itemDetailController',
+                template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/item-detail.tpl.html'
+            };
+
+            bladeNavigationService.showBlade(newBlade, categoryListBlade);
         });
     }
 

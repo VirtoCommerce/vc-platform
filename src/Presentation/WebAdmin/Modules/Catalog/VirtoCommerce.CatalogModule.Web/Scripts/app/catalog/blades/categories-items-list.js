@@ -128,11 +128,24 @@
             id: "newProductWizard",
             item: inMemoryItem,
             title: "New product",
-            style: "actions",
             subtitle: 'Fill all product information',
             controller: 'newProductWizardController',
             bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-product-wizard-actions.tpl.html',
             template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-product-wizard.tpl.html'
+        };
+        bladeNavigationService.showBlade(newBlade, $scope.blade);
+    };
+
+    $scope.blade.showNewVariationWizard = function (inMemoryItem)
+    {
+        var newBlade = {
+            id: "newVariationWizard",
+            item: inMemoryItem,
+            title: "New variation",
+            subtitle: 'Fill all variation information',
+            controller: 'newProductWizardController',
+            bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-product-wizard-actions.tpl.html',
+            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-variation-wizard.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };

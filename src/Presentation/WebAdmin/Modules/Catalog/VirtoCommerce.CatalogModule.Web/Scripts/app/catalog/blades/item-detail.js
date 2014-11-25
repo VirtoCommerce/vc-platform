@@ -116,17 +116,17 @@
 	     {
 	         name: "New variation", icon: 'icon-plus',
 	         executeMethod: function () {
-	             items.newVariation({ itemId: $scope.currentBlade.item.id }, function (data, headers) {
-	                 $scope.currentBlade.refresh(true);
 
+	             items.newVariation({ itemId: $scope.currentBlade.item.id }, function (data, headers)
+	             {
 	                 var blade = {
-	                     id: 'variationDetail',
-	                     itemId: data.id,
-	                     title: data.code,
-	                     style: 'gray',
-	                     subtitle: 'Variation details',
-	                     controller: 'itemDetailController',
-	                     template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/item-detail.tpl.html'
+	                     id: "newVariationWizard",
+	                     item: data,
+	                     title: "New variation",
+	                     subtitle: 'Fill all variation information',
+	                     controller: 'newProductWizardController',
+	                     bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-product-wizard-actions.tpl.html',
+	                     template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-variation-wizard.tpl.html'
 	                 };
 	                 bladeNavigationService.showBlade(blade, $scope.currentBlade);
 	             });

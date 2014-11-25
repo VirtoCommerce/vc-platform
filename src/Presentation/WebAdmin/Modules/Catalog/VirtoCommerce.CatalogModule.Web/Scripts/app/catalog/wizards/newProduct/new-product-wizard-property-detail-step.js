@@ -50,4 +50,9 @@
         });
     };
 
+    $scope.setForm = function (form)
+    {
+        $scope.formScope = form;
+    }
+
 }]);
