@@ -12,7 +12,7 @@
                 </div>
                 <label for="">Password</label>
                 <div data-role="input-control" class="input-control text">
-                    <input name="password" type="password" ng-model="user.password" required va-autofill>
+                    <input name="password" type="password" ng-model="user.password" required va-autofill ui-keydown="{'enter':'ok()'}">
                     <button class="btn-reveal" tabindex="-1" type="button"></button>
                 </div>
                 <div class="input-control checkbox block">
