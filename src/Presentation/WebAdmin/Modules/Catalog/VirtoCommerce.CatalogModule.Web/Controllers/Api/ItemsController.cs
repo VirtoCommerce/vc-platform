@@ -40,6 +40,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 				properties = _propertyService.GetCategoryProperties(item.CategoryId);
 			}
 			var retVal = item.ToWebModel(properties);
+
+            //Remove variation properties from Product
+		    retVal.Properties.RemoveAll(x => x.Type == webModel.PropertyType.Variation && string.IsNullOrWhiteSpace(retVal.TitularItemId));
          
             return Ok(retVal);
         }
@@ -94,7 +97,6 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			    CategoryId = product.CategoryId,
 			    CatalogId = product.CatalogId,
 			    TitularItemId = product.MainProductId ?? itemId,
-                IsVariation = true,
 			    Properties = mainWebProduct.Properties.Where(x => x.Type == webModel.PropertyType.Product 
                     || x.Type == webModel.PropertyType.Variation).ToList(),
 			};
