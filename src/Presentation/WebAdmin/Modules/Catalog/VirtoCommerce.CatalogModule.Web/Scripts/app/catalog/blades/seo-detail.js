@@ -6,15 +6,16 @@
         if (parentRefresh) {
             $scope.blade.isLoading = true;
             $scope.blade.parentBlade.refresh().$promise.then(function (data) {
+                $scope.blade.parentEntity = data;
                 initializeBlade(data.seoInfos);
             });
         } else {
-            initializeBlade($scope.blade.seoInfos);
+            initializeBlade($scope.blade.parentEntity.seoInfos);
         }
     }
 
     function initializeBlade(data) {
-        _.each($scope.blade.parentBlade.item.catalog.languages, function (lang) {
+        _.each($scope.blade.parentEntity.catalog.languages, function (lang) {
             if (_.every(data, function (seoInfo) { return seoInfo.languageCode.toLowerCase().indexOf(lang.languageCode.toLowerCase()) < 0; })) {
                 data.push({ isNew: true, languageCode: lang.languageCode });
             }
@@ -31,11 +32,11 @@
         var seoInfos = _.filter($scope.seoInfos, function (data) { return isValid(data); });
 
         if ($scope.blade.seoUrlKeywordType === 0) {
-            categories.update({ id: $scope.blade.currentEntityId, seoInfos: seoInfos }, function () {
+            categories.update({ id: $scope.blade.parentEntity.id, seoInfos: seoInfos }, function () {
                 $scope.blade.refresh(true);
             });
         } else if ($scope.blade.seoUrlKeywordType === 1) {
-            items.updateitem({ id: $scope.blade.currentEntityId, seoInfos: seoInfos }, function () {
+            items.updateitem({ id: $scope.blade.parentEntity.id, seoInfos: seoInfos }, function () {
                 $scope.blade.refresh(true);
             });
         }
