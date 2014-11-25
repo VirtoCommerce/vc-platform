@@ -13,6 +13,21 @@
         $scope.bladeClose();
     };
 
+    //property-details calls refresh with update property
+    $scope.blade.refresh = function (prop)
+    {
+        var foundProp = _.findWhere($scope.blade.item.properties, { id: prop.id });
+        if (foundProp != undefined) {
+            var idx = $scope.blade.item.properties.indexOf(foundProp);
+            //must copy values
+            prop.values = foundProp.values;
+            $scope.blade.item.properties.splice(idx, 1, prop);
+        } else {
+            $scope.blade.item.properties.push(prop);
+        }
+        
+    };
+
     $scope.editProperty = function (prop)
     {
         var newBlade = {

@@ -10,12 +10,18 @@
 
     $scope.saveChanges = function ()
     {
-        if (!angular.isDefined($scope.blade.parentBlade.currentEntities)) {
-            $scope.blade.parentBlade.currentEntities = [];
+        if (angular.isUndefined($scope.blade.parentBlade.currentEntities))
+        {
+            //If there is no list of reviews save directly to item reviews
+            if (angular.isUndefined($scope.blade.parentBlade.item.reviews)) {
+                $scope.blade.parentBlade.item.reviews = [];
+            }
+            $scope.blade.parentBlade.item.reviews.push($scope.currentEntity);
+        } else {
+            var idx = $scope.blade.parentBlade.currentEntities.indexOf($scope.blade.origEntity);
+            $scope.blade.parentBlade.currentEntities.splice(idx, idx < 0 ? 0 : 1, $scope.currentEntity);
         }
-        var idx = $scope.blade.parentBlade.currentEntities.indexOf($scope.blade.origEntity);
-        $scope.blade.parentBlade.currentEntities.splice(idx, idx < 0 ? 0 : 1, $scope.currentEntity);
-        
+
         $scope.bladeClose();
     };
 

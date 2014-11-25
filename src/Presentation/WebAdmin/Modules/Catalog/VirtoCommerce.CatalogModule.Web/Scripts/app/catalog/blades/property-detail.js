@@ -19,7 +19,7 @@
             properties.get({ propertyId: b.currentEntityId }, function (data) {
                 initializeBlade(data);
                 if (parentRefresh) {
-                    b.parentBlade.refresh();
+                    b.parentBlade.refresh(data);
                 }
             });
         } else {
