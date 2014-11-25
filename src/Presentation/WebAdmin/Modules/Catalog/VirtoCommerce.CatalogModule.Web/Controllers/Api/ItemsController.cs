@@ -103,9 +103,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             {
                 val.Id = Guid.NewGuid().ToString();
             }
-
-			var retVal = _itemsService.Create(newVariation.ToModuleModel()).ToWebModel();
-			return Ok(retVal);
+			return Ok(newVariation);
         }
 
 		[HttpPost]
