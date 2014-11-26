@@ -10,13 +10,14 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
     using VirtoCommerce.Foundation.Frameworks.Tagging;
     using VirtoCommerce.Foundation.Marketing.Services;
+    using VirtoCommerce.Framework.Web.Common;
     using VirtoCommerce.MerchandisingModule.Data.Convertors;
     using VirtoCommerce.MerchandisingModule.Model;
 
     [RoutePrefix("api/contents")]
     public class ContentController : ApiController
     {
-        private IDynamicContentService _service = null;
+        private readonly IDynamicContentService _service = null;
         public ContentController(IDynamicContentService service)
         {
             _service = service;
@@ -24,18 +25,18 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
         [HttpGet]
         [Route("{placeholder}")]
-        public DynamicContents GetDynamicContent(string placeHolder)
+        public ResponseCollection<DynamicContentItem> GetDynamicContent(string placeHolder)
         {
             // TODO: add caching
             var items = _service.GetItems(placeHolder, DateTime.Now, new TagSet());
 
-            var retValue = new DynamicContents();
+            var response = new ResponseCollection<DynamicContentItem>();
             if (items != null)
             {
-                retValue.Items = items.Select(x => x.ToModuleModel()).ToArray();
+                response.Items.AddRange(items.Select(x => x.ToModuleModel()).ToArray());
             }
 
-            return retValue;
+            return response;
         }
     }
 }
