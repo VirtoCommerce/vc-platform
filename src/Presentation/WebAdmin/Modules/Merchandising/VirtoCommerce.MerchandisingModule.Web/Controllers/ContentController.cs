@@ -8,6 +8,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
     using System.Web.Http;
 
+    using VirtoCommerce.Foundation.Frameworks.Extensions;
     using VirtoCommerce.Foundation.Frameworks.Tagging;
     using VirtoCommerce.Foundation.Marketing.Services;
     using VirtoCommerce.Framework.Web.Common;
@@ -25,10 +26,21 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
         [HttpGet]
         [Route("{placeholder}")]
-        public ResponseCollection<DynamicContentItem> GetDynamicContent(string placeHolder)
+        public ResponseCollection<DynamicContentItem> GetDynamicContent(string placeHolder, [FromUri] string[] tags)
         {
+            var tagSet = new TagSet();
+
+            if (tags != null)
+            {
+                foreach (var tagArray in tags.Select(tag => tag.Split(new[] { ':' })))
+                {
+                    tagSet.Add(tagArray[0], tagArray[1]);
+                }
+            }
+
+            // TODO: add tags ?tags={users:[id1,id2]}
             // TODO: add caching
-            var items = _service.GetItems(placeHolder, DateTime.Now, new TagSet());
+            var items = _service.GetItems(placeHolder, DateTime.Now, tagSet);
 
             var response = new ResponseCollection<DynamicContentItem>();
             if (items != null)
