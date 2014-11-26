@@ -22,10 +22,10 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             _dataManagementService = dataManagementService;
         }
 
-        // GET: api/import/getnewimportjob
+        // GET: api/import/new
         [HttpGet]
         [ResponseType(typeof(webModel.ImportJob))]
-        public IHttpActionResult GetNewImportJob()
+        public IHttpActionResult New()
         {
             // var category = _importRepository.ImportJobs.fir  etById(categoryId);
             var retVal = new webModel.ImportJob
@@ -54,27 +54,25 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // GET: api/import/getimportjobs
         [ResponseType(typeof(webModel.ImportJob[]))]
-        public IHttpActionResult GetImportJobs()
+        [HttpGet]
+        public IHttpActionResult List()
         {
             var retVal = new webModel.ImportJob[] { };
             return Ok(retVal);
         }
 
-        // DELETE: api/import/id
-        [HttpDelete]
+        [HttpPost]
         [ResponseType(typeof(void))]
-        public IHttpActionResult Delete(string id)
+        public IHttpActionResult Delete(string[] ids)
         {
             //get
             //_importRepository.Remove( id);
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // GET: api/import/GetCsvColumns
         [ResponseType(typeof(string))]
-        [HttpGet]
+        [HttpPost]
         public IHttpActionResult UpdateMappingItems(webModel.ImportJob job)
         {
             // TODO:
@@ -85,13 +83,13 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         }
 
         [HttpPost]
-        public async Task<string> RunImportJob(string id, string sourceAssetId)
+        public async Task<string> Run(string id, string sourceAssetId)
         {
             var retVal = Guid.NewGuid().ToString();
 
             // _importService.RunImportJob(jobEntity.ImportJob.ImportJobId, sourceAssetId));
 
-            return retVal;
+            return await Task.FromResult(retVal);
         }
 
     }
