@@ -6,9 +6,8 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
 using Owin;
 using VirtoCommerce.Foundation.Data.Security.Identity;
-using VirtoCommerce.SecurityModule.Web.Configs;
 
-namespace VirtoCommerce.SecurityModule.Web
+namespace VirtoCommerce.CoreModule.Web.Security
 {
 	public class OwinConfig
 	{

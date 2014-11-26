@@ -9,7 +9,7 @@ using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Foundation.Data.Security;
 using VirtoCommerce.Foundation.Security.Repositories;
 
-namespace VirtoCommerce.SecurityModule.Web.Data
+namespace VirtoCommerce.CoreModule.Web.Security
 {
     public class FoundationCustomerRepositoryImpl : EFCustomerRepository, IFoundationCustomerRepository
     {

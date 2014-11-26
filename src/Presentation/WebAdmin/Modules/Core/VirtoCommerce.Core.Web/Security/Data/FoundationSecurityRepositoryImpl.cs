@@ -10,7 +10,7 @@ using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.Foundation.Security.Repositories;
 
-namespace VirtoCommerce.SecurityModule.Web.Data
+namespace VirtoCommerce.CoreModule.Web.Security
 {
     public class FoundationSecurityRepositoryImpl : EFSecurityRepository, IFoundationSecurityRepository
     {

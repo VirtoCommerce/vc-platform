@@ -1,4 +1,4 @@
-﻿namespace VirtoCommerce.SecurityModule.Web.Models
+﻿namespace VirtoCommerce.CoreModule.Web.Security
 {
 	public class UserLogin
 	{

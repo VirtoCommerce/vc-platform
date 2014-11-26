@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using VirtoCommerce.Foundation.Data.Security.Identity;
 
-namespace VirtoCommerce.SecurityModule.Web.Configs
+namespace VirtoCommerce.CoreModule.Web.Security
 {
     public class ApplicationSignInManager : SignInManager<ApplicationUser, string>
     {

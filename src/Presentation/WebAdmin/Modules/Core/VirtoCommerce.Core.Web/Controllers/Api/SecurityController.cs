@@ -6,10 +6,8 @@ using System.Web;
 using System.Web.Http;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using VirtoCommerce.CoreModule.Web.Security;
 using VirtoCommerce.Foundation.Security.Model;
-using VirtoCommerce.SecurityModule.Web.Configs;
-using VirtoCommerce.SecurityModule.Web.Data;
-using VirtoCommerce.SecurityModule.Web.Models;
 
 namespace VirtoCommerce.SecurityModule.Web.Controllers
 {

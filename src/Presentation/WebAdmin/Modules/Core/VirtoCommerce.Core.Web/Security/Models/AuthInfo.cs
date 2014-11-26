@@ -1,6 +1,6 @@
 ﻿using VirtoCommerce.Foundation.Security.Model;
 
-namespace VirtoCommerce.SecurityModule.Web.Models
+namespace VirtoCommerce.CoreModule.Web.Security
 {
 	public class AuthInfo
 	{

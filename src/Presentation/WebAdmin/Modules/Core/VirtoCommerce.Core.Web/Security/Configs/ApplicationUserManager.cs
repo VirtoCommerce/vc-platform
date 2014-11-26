@@ -6,7 +6,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using VirtoCommerce.Foundation.Data.Security.Identity;
 
-namespace VirtoCommerce.SecurityModule.Web.Configs
+namespace VirtoCommerce.CoreModule.Web.Security
 {
     /// <summary>
     /// Configure the application user manager used in this application. UserManager is defined in ASP.NET Identity and is used by the application.

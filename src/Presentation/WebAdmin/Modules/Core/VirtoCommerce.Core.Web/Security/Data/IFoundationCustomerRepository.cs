@@ -1,7 +1,7 @@
 ﻿using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Foundation.Customers.Repositories;
 
-namespace VirtoCommerce.SecurityModule.Web.Data
+namespace VirtoCommerce.CoreModule.Web.Security
 {
     public interface IFoundationCustomerRepository : ICustomerRepository
     {

@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module moduleName="UnmanagedModule">
 	<dependencies>
-		<dependency moduleName="CatalogsModule" />
+		<dependency moduleName="CoreModule" />
 		<dependency moduleName="Module1" />
 	</dependencies>
 	<styles>
