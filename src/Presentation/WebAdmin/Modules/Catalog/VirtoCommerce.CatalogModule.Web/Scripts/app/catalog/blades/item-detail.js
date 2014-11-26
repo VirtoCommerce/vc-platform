@@ -35,9 +35,13 @@
         });
     }
 
-    $scope.setTitular = function () {
-        $scope.currentBlade.item.titularItemId = null;
-        $scope.isTitular = true;
+    $scope.onTitularChange = function () {
+        $scope.isTitular = !$scope.isTitular;
+        if ($scope.isTitular) {
+            $scope.currentBlade.item.titularItemId = null;
+        } else {
+            $scope.currentBlade.item.titularItemId = $scope.currentBlade.origItem.titularItemId;
+        }
     };
 
     function isDirty() {

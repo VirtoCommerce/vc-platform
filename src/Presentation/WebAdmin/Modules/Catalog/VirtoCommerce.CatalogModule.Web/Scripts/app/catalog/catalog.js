@@ -70,12 +70,12 @@ angular.module(catalogsModuleName, [
 
       //Register module widgets
       // mapping widget in virtual catalog
-      var mappingWidget = {
-          group: 'virtualCatalogDetail',
-          controller: 'virtualCatalogMappingWidgetController',
-          template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/widgets/virtualCatalogMappingWidget.tpl.html'
-      };
-      widgetService.registerWidget(mappingWidget);
+      //var mappingWidget = {
+      //    group: 'virtualCatalogDetail',
+      //    controller: 'virtualCatalogMappingWidgetController',
+      //    template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/widgets/virtualCatalogMappingWidget.tpl.html'
+      //};
+      //widgetService.registerWidget(mappingWidget);
 
       //Register image widget
       var itemImageWidget = {

@@ -3,7 +3,7 @@
                                                                    {title:'Variation properties', type:1}]">
 
     <form name="contextEntityDetailForm">
-        <fieldset ng-repeat="propGroup in propGroups">
+        <fieldset ng-repeat="propGroup in propGroups" ng-init="setForm(contextEntityDetailForm);">
             <legend>
                 {{propGroup.title}} ({{properties.length}})
             </legend>

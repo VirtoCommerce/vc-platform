@@ -1,6 +1,6 @@
 ﻿angular.module('catalogModule.blades.editorialReviewDetail', [])
 .controller('editorialReviewDetailController', ['$scope', '$filter', 'dialogService', 'items', function ($scope, $filter, dialogService, items) {
-    var pb = $scope.blade.parentBlade;
+    $scope.sources = ["QuickReview", "FullReview"];
 
     function initializeBlade(data) {
         $scope.currentEntity = angular.copy(data);
@@ -26,6 +26,26 @@
             angular.copy($scope.currentEntity, $scope.blade.origEntity);
             $scope.blade.parentBlade.refresh(true);
         });
+    };
+
+    $scope.blade.onClose = function (closeCallback) {
+        if (isDirty()) {
+            var dialog = {
+                id: "confirmCurrentBladeClose",
+                title: "Save changes",
+                message: "The Review has been modified. Do you want to save changes?",
+                callback: function (needSave) {
+                    if (needSave) {
+                        saveChanges();
+                    }
+                    closeCallback();
+                }
+            }
+            dialogService.showConfirmationDialog(dialog);
+        }
+        else {
+            closeCallback();
+        }
     };
 
     function deleteEntry() {

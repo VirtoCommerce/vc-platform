@@ -15,6 +15,7 @@
     }
 
     function initializeBlade(data) {
+        data = data.slice();
         _.each($scope.blade.parentEntity.catalog.languages, function (lang) {
             if (_.every(data, function (seoInfo) { return seoInfo.languageCode.toLowerCase().indexOf(lang.languageCode.toLowerCase()) < 0; })) {
                 data.push({ isNew: true, languageCode: lang.languageCode });

@@ -1,7 +1,11 @@
 ﻿<div style="width: 380px;">
+    <label>Source</label>
+    <div data-role="input-control" class="input-control select">
+        <select ng-model="currentEntity.source" ng-options="x for x in sources"></select>
+    </div>
     <label>Language</label>
     <div data-role="input-control" class="input-control select">
-        <select ng-model="currentEntity.languageCode" ng-options="lang.languageCode as lang.displayName for lang in blade.languages"></select>
+        <select ng-model="currentEntity.languageCode" ng-options="lang.languageCode as lang.displayName for lang in blade.languages" required></select>
     </div>
     <label>Editorial Review content</label>
     <div text-angular ng-model="currentEntity.content" text-angular-name="myEditor"></div>
