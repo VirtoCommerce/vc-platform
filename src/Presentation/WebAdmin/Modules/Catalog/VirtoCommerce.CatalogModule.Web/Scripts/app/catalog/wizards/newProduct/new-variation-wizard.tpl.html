@@ -5,10 +5,6 @@
             <div data-role="input-control" class="input-control text">
                 <input required class="form-control" ng-model="blade.item.code" placeholder="Enter item sku" />
             </div>
-            <label>Name:</label>
-            <div data-role="input-control" class="input-control textarea">
-                <textarea required class="form-control" cols="30" rows="3" ng-model="blade.item.name" placeholder="Enter item name"></textarea>
-            </div>
         </fieldset>
     </form>
 
@@ -20,14 +16,6 @@
         <li ng-click="openBlade('images')">
             <span class="title">Upload images</span>
             <span class="sub-title">{{blade.item.images.length >= 0 ? blade.item.images.length : 0}} image(s) uploaded</span>
-        </li>
-        <li ng-click="openBlade('review')">
-            <span class="title">Add review</span>
-            <span class="sub-title">{{blade.item.reviews.length >= 0 ? blade.item.reviews.length : 0}} review(s) added</span>
-        </li>
-        <li ng-click="openBlade('seo')">
-            <span class="title">Define seo information</span>
-            <span class="sub-title">seo information {{blade.item.seoInfos.length > 0 ? "defined" : "undefined"}}</span>
         </li>
     </ul>
 </div> 

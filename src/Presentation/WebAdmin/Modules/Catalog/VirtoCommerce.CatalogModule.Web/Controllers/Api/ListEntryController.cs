@@ -9,7 +9,7 @@ using VirtoCommerce.CatalogModule.Web.Converters;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using moduleModel = VirtoCommerce.CatalogModule.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
+
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
     public class ListEntryController : ApiController
