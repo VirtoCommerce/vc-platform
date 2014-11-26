@@ -25,13 +25,9 @@ namespace VirtoCommerce.Slab.EventSources
 
 		public class EventCodes
 		{
-			public const int TaskFailure = 1;
-			public const int Startup = 2;
-			public const int PaymentTaskFailure = 1000;
-			public const int ApplicationError = 1001;
-			public const int KlarnaPaymentActivationCompleted = 1010;
-			public const int KlarnaPaymentCancellationCompleted = 1020;
-			public const int KlarnaPaymentReservationCompleted = 1030;
+			public const int Startup = 100;
+			public const int ApplicationError = 10000;
+			public const int TaskFailure = 10100;
 		}
 
         private static readonly VirtoCommerceEventSource _log  = new VirtoCommerceEventSource();
@@ -49,34 +45,10 @@ namespace VirtoCommerce.Slab.EventSources
 			this.WriteEvent(EventCodes.Startup);
 		}
 
-        [Event(EventCodes.PaymentTaskFailure, Message = "Payment gateway failure: {3}, task: {0}", Level = EventLevel.Critical, Keywords = Keywords.Diagnostic)]
-        public void PaymentTaskFailure(string task, string orderId, string orderTN, string message, string exception)
-        {
-            this.WriteEvent(EventCodes.PaymentTaskFailure, task, orderId, orderTN, message, exception);
-        }
-
         [Event(EventCodes.ApplicationError, Message = "Application Failure: {0}", Level = EventLevel.Critical, Keywords = Keywords.Diagnostic)]
         public void ApplicationError(string error)
         {
             this.WriteEvent(EventCodes.ApplicationError, error);
-        }
-
-        [Event(EventCodes.KlarnaPaymentActivationCompleted, Message = "Klarna payment for order {1} activated.", Keywords = Keywords.Diagnostic, Level = EventLevel.Informational)]
-		public void KlarnaPaymentActivationCompleted(string orderId, string orderTN, string paymentStatus, string statusDesc, string startTime, string endTime, double duration)
-        {
-			this.WriteEvent(EventCodes.KlarnaPaymentActivationCompleted, orderId, orderTN, paymentStatus, statusDesc, startTime, endTime, duration);
-        }
-
-        [Event(EventCodes.KlarnaPaymentCancellationCompleted, Message = "Klarna payment cancelled for order {1} with result: {3}", Keywords = Keywords.Diagnostic, Level = EventLevel.Informational)]
-        public void KlarnaPaymentCancellationCompleted(string orderId, string orderTN, string reservation, bool result, string startTime, string endTime, double duration)
-        {
-            this.WriteEvent(EventCodes.KlarnaPaymentCancellationCompleted, orderId, orderTN, reservation, result, startTime, endTime, duration);
-        }
-
-        [Event(EventCodes.KlarnaPaymentReservationCompleted, Message = "Klarna payment reserved for order {1} with result: {3}", Keywords = Keywords.Diagnostic, Level = EventLevel.Informational)]
-        public void KlarnaPaymentReservationCompleted(string orderId, string orderTN, string reservation, string status, string billingAddress, string startTime, string endTime, double duration)
-        {
-            this.WriteEvent(EventCodes.KlarnaPaymentReservationCompleted, orderId, orderTN, reservation, status, billingAddress, startTime, endTime, duration);
         }
 	}
 }

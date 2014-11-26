@@ -67,6 +67,7 @@
     </Compile>
     <Compile Include="AuthorizeNet\AuthorizeNetPaymentGateway.cs" />
     <Compile Include="Default\DefaultPaymentGateway.cs" />
+    <Compile Include="PaymentGatewaysEventSource.cs" />
     <Compile Include="PayPal\PaypalPaymentGateway.cs" />
     <Compile Include="ICharge\IChargePaymentGateway.cs" />
     <Compile Include="PaymentGatewayBase.cs" />
@@ -80,6 +81,10 @@
     <ProjectReference Include="..\..\..\Core\CommerceFoundation.Data\CommerceFoundation.Data.csproj">
       <Project>{bb168a74-0f1e-43be-a616-134902238b80}</Project>
       <Name>CommerceFoundation.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Logging\VirtoCommerce.Slab.csproj">
+      <Project>{8dcda1bc-e983-4dbb-98b6-320847accdfe}</Project>
+      <Name>VirtoCommerce.Slab</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

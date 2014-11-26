@@ -116,6 +116,10 @@
       <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
       <Name>CommerceFoundation</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Logging\VirtoCommerce.Slab.csproj">
+      <Project>{8dcda1bc-e983-4dbb-98b6-320847accdfe}</Project>
+      <Name>VirtoCommerce.Slab</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
