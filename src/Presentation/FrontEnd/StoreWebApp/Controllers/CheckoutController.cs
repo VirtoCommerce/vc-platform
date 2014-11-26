@@ -787,7 +787,7 @@ namespace VirtoCommerce.Web.Controllers
             try
             {
                 using (SqlDbConfiguration.ExecutionStrategySuspension)
-                using (var transaction = ((DbContext)Ch.OrderRepository).Database.BeginTransaction(IsolationLevel.Serializable))
+                using (var transaction = new TransactionScope())
                 {
                     // Create order
                     var order = Ch.SaveAsOrder();
@@ -798,7 +798,7 @@ namespace VirtoCommerce.Web.Controllers
 
                     UserHelper.CustomerSession.LastOrderId = order.OrderGroupId;
 
-                    transaction.Commit();
+                    transaction.Complete();
                     return true;
                 }
             }

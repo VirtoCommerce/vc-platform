@@ -1,5 +1,7 @@
 using Microsoft.Practices.Unity;
 using System;
+using System.Configuration;
+using System.Net.Configuration;
 using VirtoCommerce.Caching.HttpCache;
 using VirtoCommerce.Client;
 using VirtoCommerce.Client.Globalization;
@@ -9,6 +11,7 @@ using VirtoCommerce.Foundation.AppConfig.Factories;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.AppConfig.Services;
+using VirtoCommerce.Foundation.Assets;
 using VirtoCommerce.Foundation.Assets.Factories;
 using VirtoCommerce.Foundation.Assets.Repositories;
 using VirtoCommerce.Foundation.Assets.Services;
@@ -20,9 +23,10 @@ using VirtoCommerce.Foundation.Customers.Factories;
 using VirtoCommerce.Foundation.Customers.Repositories;
 using VirtoCommerce.Foundation.Customers.Services;
 using VirtoCommerce.Foundation.Data.AppConfig;
+using VirtoCommerce.Foundation.Data.AppConfig.Services;
 using VirtoCommerce.Foundation.Data.Asset;
+using VirtoCommerce.Foundation.Data.Azure;
 using VirtoCommerce.Foundation.Data.Azure.Asset;
-using VirtoCommerce.Foundation.Data.Azure.Common;
 using VirtoCommerce.Foundation.Data.Azure.CQRS;
 using VirtoCommerce.Foundation.Data.Catalogs;
 using VirtoCommerce.Foundation.Data.Customers;
@@ -83,18 +87,18 @@ using VirtoCommerce.Foundation.Stores.Repositories;
 using VirtoCommerce.Foundation.Stores.Services;
 using VirtoCommerce.Scheduling.Jobs;
 using VirtoCommerce.Search.Index;
+using VirtoCommerce.Search.Providers.Azure;
 using VirtoCommerce.Search.Providers.Elastic;
 using VirtoCommerce.Search.Providers.Lucene;
 using VirtoCommerce.Web.Client.Caching;
 using VirtoCommerce.Web.Client.Caching.Interfaces;
-using VirtoCommerce.Web.Client.Security;
 using VirtoCommerce.Web.Client.Services.Assets;
 using VirtoCommerce.Web.Client.Services.Cache;
 using VirtoCommerce.Web.Client.Services.Emails;
+using VirtoCommerce.Web.Client.Services.Filters;
 using VirtoCommerce.Web.Client.Services.Listeners;
 using VirtoCommerce.Web.Client.Services.Reporting;
 using VirtoCommerce.Web.Client.Services.Security;
-using VirtoCommerce.Web.Client.Services.Sequences;
 using VirtoCommerce.Web.Client.Services.Templates;
 using VirtoCommerce.Web.Virto.Helpers;
 using VirtoCommerce.Web.Virto.Helpers.Payments;
@@ -102,13 +106,6 @@ using IEvaluationPolicy = VirtoCommerce.Foundation.Marketing.Model.IEvaluationPo
 
 namespace VirtoCommerce.Web
 {
-    using System.Configuration;
-    using System.Net.Configuration;
-
-    using VirtoCommerce.Foundation.Assets;
-    using VirtoCommerce.Foundation.Data.Azure;
-    using VirtoCommerce.Search.Providers.Azure;
-    using VirtoCommerce.Web.Client.Services.Filters;
 
     /// <summary>
     /// Specifies the Unity configuration for the main container.
@@ -385,7 +382,6 @@ namespace VirtoCommerce.Web
             container.RegisterType<OrderClient>();
             container.RegisterType<DisplayTemplateClient>();
             container.RegisterType<SettingsClient>();
-            container.RegisterType<SequencesClient>();
             container.RegisterType<SeoKeywordClient>(new PerRequestLifetimeManager());
             container.RegisterType<ReviewClient>();
             container.RegisterType<IPaymentOption, CreditCardOption>("creditcard");

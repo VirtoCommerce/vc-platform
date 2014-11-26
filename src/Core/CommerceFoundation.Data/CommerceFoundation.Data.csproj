@@ -133,10 +133,12 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AppConfig\Services\DbIdentitySequenceService.cs" />
     <Compile Include="AppConfig\Migrations\201407291500445_UpdateStatisticsProceduresAdd.cs" />
     <Compile Include="AppConfig\Migrations\201407291500445_UpdateStatisticsProceduresAdd.Designer.cs">
       <DependentUpon>201407291500445_UpdateStatisticsProceduresAdd.cs</DependentUpon>
     </Compile>
+    <Compile Include="AppConfig\Services\SequenceService.cs" />
     <Compile Include="Asset\FileSystemBlobAssetRepository.cs" />
     <Compile Include="Catalogs\Migrations\201409031214424_EditorialReviewLocale_SeoTriggers.cs" />
     <Compile Include="Catalogs\Migrations\201409031214424_EditorialReviewLocale_SeoTriggers.Designer.cs">
@@ -233,6 +235,10 @@
     <Compile Include="Orders\Migrations\201410241106023_ShipmentOptions.cs" />
     <Compile Include="Orders\Migrations\201410241106023_ShipmentOptions.Designer.cs">
       <DependentUpon>201410241106023_ShipmentOptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Orders\Migrations\201411180915307_Indexes.cs" />
+    <Compile Include="Orders\Migrations\201411180915307_Indexes.Designer.cs">
+      <DependentUpon>201411180915307_Indexes.cs</DependentUpon>
     </Compile>
     <Compile Include="Security\Identity\SecurityDbContext.cs" />
     <Compile Include="Security\Identity\ApplicationUser.cs" />
@@ -363,6 +369,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Orders\Migrations\201410241106023_ShipmentOptions.resx">
       <DependentUpon>201410241106023_ShipmentOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Orders\Migrations\201411180915307_Indexes.resx">
+      <DependentUpon>201411180915307_Indexes.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Security\Migrations\201411061448001_AccountIdToString.resx">
       <DependentUpon>201411061448001_AccountIdToString.cs</DependentUpon>

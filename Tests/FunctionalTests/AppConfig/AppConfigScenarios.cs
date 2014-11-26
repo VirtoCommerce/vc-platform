@@ -7,6 +7,7 @@ using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Data.AppConfig;
 using VirtoCommerce.Foundation.Data.AppConfig.Migrations;
+using VirtoCommerce.Foundation.Data.AppConfig.Services;
 using VirtoCommerce.PowerShell.DatabaseSetup;
 using Xunit;
 
@@ -92,6 +93,16 @@ namespace FunctionalTests.AppConfig
 			Assert.NotNull(localizationItem);
 
 		}
+
+        [Fact(Skip = "IdentitySequence Table needs to be created manually CREATE TABLE [dbo].[IdentitySequence]([Id] [int] IDENTITY(1,1) NOT NULL) ON [PRIMARY]")]
+        public void Can_generate_sequence()
+        {
+            var client = new EFAppConfigRepository("VirtoCommerce");
+            //var client = GetRepository();
+            var sequence = new DbIdentitySequenceService(client);
+            var result = sequence.GetNext("test");
+            Assert.NotNull(result);
+        }
 
 		#endregion
 
