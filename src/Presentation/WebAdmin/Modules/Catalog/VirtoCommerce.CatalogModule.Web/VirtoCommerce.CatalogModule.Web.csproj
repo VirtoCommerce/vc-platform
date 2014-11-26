@@ -163,6 +163,8 @@
     <Content Include="Scripts\app\catalog\blades\category-detail.tpl.html" />
     <Content Include="Scripts\app\catalog\blades\editorialReview-detail.js" />
     <Content Include="Scripts\app\catalog\blades\editorialReview-detail.tpl.html" />
+    <Content Include="Scripts\app\catalog\blades\import\import-job-list.js" />
+    <Content Include="Scripts\app\catalog\blades\import\import-job-list.tpl.html" />
     <Content Include="Scripts\app\catalog\blades\seo-detail.js" />
     <Content Include="Scripts\app\catalog\blades\seo-detail.tpl.html" />
     <Content Include="Scripts\app\catalog\blades\property-attributes.js" />
@@ -212,6 +214,7 @@
     <Content Include="Scripts\app\catalog\home\home.tpl.html" />
     <Content Include="Scripts\app\catalog\resources\catalogs.js" />
     <Content Include="Scripts\app\catalog\resources\categories.js" />
+    <Content Include="Scripts\app\catalog\resources\import.js" />
     <Content Include="Scripts\app\catalog\resources\items.js" />
     <Content Include="Scripts\app\catalog\resources\itemsSearch.js" />
     <Content Include="Scripts\app\catalog\resources\properties.js" />
@@ -239,8 +242,8 @@
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-images-step.js" />
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-actions.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard.js" />
-    <Content Include="Scripts\app\catalog\wizards\newProduct\new-variation-wizard.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard.tpl.html" />
+    <Content Include="Scripts\app\catalog\wizards\newProduct\new-variation-wizard.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-seo-detail-step.js" />
   </ItemGroup>
   <ItemGroup>
@@ -282,7 +285,9 @@
       <Name>VirtoCommerce.CatalogModule</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Scripts\app\catalog\wizards\importWizard\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <PropertyGroup>

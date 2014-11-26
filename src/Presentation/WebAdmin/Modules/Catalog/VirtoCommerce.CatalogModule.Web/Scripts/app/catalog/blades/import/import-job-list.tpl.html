@@ -1,0 +1,37 @@
+﻿<div style="width: 500px">
+    <style>
+        .fixed-td {
+            width: 15px;
+        }
+    </style>
+
+    <table class="table hovered">
+        <thead>
+            <tr>
+                <th class="text-left fixed-td">
+                    <input type="checkbox" ng-model="selectedAll" ng-change="checkAll(selectedAll)" />
+                </th>
+                <th class="text-left">Name</th>
+                <th class="text-left fixed-td">Target</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="data in items" ng-class="{'selected': data.id === selectedItem.id}">
+                <td>
+                    <div data-role="input-control" class="input-control checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="data.selected">
+                            <span class="check"></span>
+                        </label>
+                    </div>
+                </td>
+                <td ng-click='selectedItem = data' style="max-width: 250px; overflow: hidden; text-overflow: ellipsis;">
+                    <span title="{{data.name}}">{{data.name}}</span>
+                </td>
+                <td ng-click='selectedItem = data'>
+                    <span title="{{data.entityImporter}}">{{data.entityImporter}}</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

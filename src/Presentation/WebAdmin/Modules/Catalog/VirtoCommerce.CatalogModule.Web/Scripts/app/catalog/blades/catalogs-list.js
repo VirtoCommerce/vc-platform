@@ -117,6 +117,25 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
         preventCategoryListingOnce = true;
     };
 
+    $scope.import = function(node) {
+        showImportJobsBlade(node.id, node, node.name);
+    }
+
+    function showImportJobsBlade(id, data, title)
+    {
+        var newBlade = {
+            catalogId: id,
+            catalog: data,
+            title: title,
+            id: 'importJobs',
+            subtitle: 'manage import jobs',
+            controller: 'importJobListController',
+            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/import/import-job-list.tpl.html'
+        };
+
+        bladeNavigationService.showBlade(newBlade, $scope.blade);
+    }
+
     function showCatalogBlade(id, data, title) {
         var newBlade = {
             currentEntityId: id,
@@ -152,6 +171,8 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
         $scope.refreshItems();
     };
 
+
+
     $scope.bladeToolbarCommands = [
         {
             name: "Add", icon: 'icon-plus',
@@ -170,15 +191,28 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
                 return true;
             }
         },
-    {
-        name: "Manage", icon: 'icon-new-tab-2',
-        executeMethod: function () {
-            $scope.editCatalog(selectedNode);
+        {
+            name: "Manage", icon: 'icon-new-tab-2',
+            executeMethod: function ()
+            {
+                $scope.editCatalog(selectedNode);
+            },
+            canExecuteMethod: function ()
+            {
+                return selectedNode;
+            }
         },
-        canExecuteMethod: function () {
-            return selectedNode;
-        }
-    },
+        {
+            name: "Import", icon: 'glyphicon-import',
+            executeMethod: function ()
+            {
+                $scope.import(selectedNode);
+            },
+            canExecuteMethod: function ()
+            {
+                return selectedNode;
+            }
+        },
       {
           name: "Delete", icon: 'icon-remove',
           executeMethod: function () {
