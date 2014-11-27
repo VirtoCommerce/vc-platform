@@ -57,7 +57,7 @@
 	};
 
 	function notificationRefresh() {
-		$http.get(serviceBase + 'allnew').
+		$http.get(serviceBase + 'allRecent').
 			success(function (data, status, headers, config) {
 				//Clear all previous notification from menu
 				mainMenuService.clearByPath('notification');
@@ -70,7 +70,7 @@
 					priority: 2,
 					permission: '',
 					template: 'Scripts/common/notification/notifyMenu.tpl.html',
-					newCount: data.totalCount,
+					newCount: data.newCount,
 					progress: _.some(data.notifyEvents, function (x) { return x.status == notifyStatusEnum.running; }),
 					customAction: function() { markAllAsRead(); }
 				};

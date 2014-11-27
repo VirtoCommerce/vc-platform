@@ -22,10 +22,10 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 		[Authorize]
 		[HttpGet]
 		[ResponseType(typeof(NotifySearchResult))]
-		[Route("allnew")]
-		public IHttpActionResult GetAllNew()
+		[Route("allRecent")]
+		public IHttpActionResult GetAllRecent()
 		{
-			var criteria = new NotifySearchCriteria { OnlyNew = true };
+			var criteria = new NotifySearchCriteria { StartDate = DateTime.UtcNow.AddHours(-1), Start = 0, Count = int.MaxValue };
 			var retVal = _notifier.SearchNotifies(User.Identity.Name, criteria);
 			return Ok(retVal);
 		}

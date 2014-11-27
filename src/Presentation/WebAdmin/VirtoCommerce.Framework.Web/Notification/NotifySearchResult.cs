@@ -13,7 +13,7 @@ namespace VirtoCommerce.Framework.Web.Notification
 			NotifyEvents = new List<NotifyEvent>();
         }
         public int TotalCount { get; set; }
-
+		public int NewCount { get; set; }
 		public List<NotifyEvent> NotifyEvents { get; set; }
 	}
 }

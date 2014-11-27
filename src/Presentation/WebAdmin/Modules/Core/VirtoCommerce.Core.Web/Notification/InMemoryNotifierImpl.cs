@@ -58,6 +58,7 @@ namespace VirtoCommerce.CoreModule.Web.Notification
 			var retVal = new NotifySearchResult
 			{
 				TotalCount = query.Count(),
+				NewCount = query.Where(x=>x.New).Count(),
 				NotifyEvents = query.OrderBy(x => x.Created).Skip(criteria.Start).Take(criteria.Count).ToList()
 			};
 			return retVal;
