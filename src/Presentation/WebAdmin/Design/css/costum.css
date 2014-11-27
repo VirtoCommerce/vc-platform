@@ -779,7 +779,6 @@
 .metro button:disabled,
 .metro button.disabled
 {
-	background: none !important;
 	color: #999 !important;
 }
 
@@ -1044,7 +1043,6 @@
 	word-spacing: 0;
 	z-index: 500;
 }
-
 .blade.last-child
 {
 	margin-right:85px;
@@ -1328,6 +1326,11 @@
 			box-sizing: border-box;
 }
 
+.blade-actions button.disabled
+{
+	background-color: #eee;
+}
+
 .blade-actions button:hover
 {
 	background: #0072c6;
@@ -1340,7 +1343,7 @@
 	margin: 0;
 }
 
-.blade .blade-content.actions
+.blade.actions .blade-content
 {
 	height: calc(100% - 270px);
 }

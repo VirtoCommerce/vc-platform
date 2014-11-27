@@ -6,9 +6,8 @@
     $scope.openSeoBlade = function () {
         var blade = {
             id: "seoDetail",
-            currentEntityId: $scope.currentBlade.currentEntityId,
             seoUrlKeywordType: getSeoUrlKeywordType(),
-            seoInfos: getSeoInfos(),
+            parentEntity: getParentEntity(),
             title: $scope.currentBlade.title,
             subtitle: 'Seo details',
             controller: 'seoDetailController',
@@ -26,11 +25,11 @@
         }
     }
 
-    function getSeoInfos() {
+    function getParentEntity() {
         if (angular.isDefined($scope.currentBlade.currentEntity)) {
-            return $scope.currentBlade.currentEntity.seoInfos;
+            return $scope.currentBlade.currentEntity;
         } else {
-            return $scope.currentBlade.item.seoInfos;
+            return $scope.currentBlade.item;
         }
     }
 }]);

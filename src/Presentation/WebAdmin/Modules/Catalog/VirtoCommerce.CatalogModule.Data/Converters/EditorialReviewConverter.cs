@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using foundation = VirtoCommerce.Foundation.Catalogs.Model;
 using module = VirtoCommerce.CatalogModule.Model;
 
@@ -24,7 +21,8 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			{
 				Id = dbReview.EditorialReviewId,
 				Content = dbReview.Content,
-				LanguageCode = dbReview.Locale
+				LanguageCode = dbReview.Locale,
+				ReviewType = dbReview.Source
 			};
 			return retVal;
 
@@ -45,12 +43,12 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			{
 				ItemId = product.Id,
 				Content = review.Content,
-				Source = "FullReview",
+				Source = review.ReviewType,
 				ReviewState = (int)foundation.ReviewState.Active,
 				Locale = review.LanguageCode
 			};
 
-			if(review.Id != null)
+            if (review.Id != null)
 			{
 				retVal.EditorialReviewId = review.Id;
 			}
@@ -72,6 +70,8 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				target.Content = source.Content;
 			if (source.Locale != null)
 				target.Locale = source.Locale;
+			if (source.Source != null)
+				target.Source = source.Source;
 		}
 	}
 

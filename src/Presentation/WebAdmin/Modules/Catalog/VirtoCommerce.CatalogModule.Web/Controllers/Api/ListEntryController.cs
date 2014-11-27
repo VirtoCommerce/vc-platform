@@ -9,6 +9,7 @@ using VirtoCommerce.CatalogModule.Web.Converters;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using moduleModel = VirtoCommerce.CatalogModule.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
+
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
     public class ListEntryController : ApiController
@@ -58,6 +59,18 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             return StatusCode(HttpStatusCode.NoContent);
         }
 
+		// GET: api/GetSlug/sasasa
+		[ResponseType(typeof(string))]
+		[HttpGet]
+		public IHttpActionResult GetSlug(string text)
+		{
+			if(text == null)
+			{
+				return InternalServerError(new NullReferenceException("text"));
+			}
+			return Ok(text.GenerateSlug());
+		}
+
 
         // POST: api/listentry/deleteLinks
         [HttpPost]
@@ -96,5 +109,6 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			_categoryService.Update(changedObjects.OfType<moduleModel.Category>().ToArray());
 			_itemService.Update(changedObjects.OfType<moduleModel.CatalogProduct>().ToArray());
 		}
+
     }
 }

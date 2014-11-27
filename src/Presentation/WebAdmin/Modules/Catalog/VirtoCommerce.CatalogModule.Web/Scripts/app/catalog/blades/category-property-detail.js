@@ -90,6 +90,11 @@
         });
     };
 
+    var formScope;
+    $scope.setForm = function (form) {
+        formScope = form;
+    }
+
     $scope.bladeToolbarCommands = [
 		{
 		    name: "Save", icon: 'icon-floppy',
@@ -97,7 +102,7 @@
 		        saveChanges();
 		    },
 		    canExecuteMethod: function () {
-		        return isDirty();
+		        return isDirty() && formScope && formScope.$valid;
 		    }
 		},
         {
@@ -129,7 +134,7 @@
     ];
 
     if ($scope.blade.currentEntity) {
-        initializeBlade($scope.blade.currentEntity);
+        initializeBlade(angular.copy($scope.blade.currentEntity));
     } else {
         $scope.blade.refresh();
     }

@@ -5,14 +5,12 @@
     <script type="text/ng-template" id="shortText.html">
         <input ng-disabled="currentEntity.isReadOnly"
                ng-required="currentEntity.required && !currentEntity.isReadOnly"
-               focus-on=""
                ng-model="context.currentPropValues[0].value"
                type="text" name="{{currentEntity.valueType}}" />
     </script>
     <script type="text/ng-template" id="longText.html">
         <textarea ng-disabled="currentEntity.isReadOnly"
                   ng-required="currentEntity.required && !currentEntity.isReadOnly"
-                  focus-on=""
                   class="form-control"
                   ng-model="context.currentPropValues[0].value"
                   name="{{currentEntity.valueType}}" />
@@ -21,7 +19,6 @@
         <!--<a href="#" editable-number="val.value">{{val.value || "N/A" }}</a>-->
         <input ng-disabled="currentEntity.isReadOnly"
                ng-required="currentEntity.required && !currentEntity.isReadOnly"
-               focus-on=""
                ng-model="context.currentPropValues[0].value"
                type="number" step="any" name="{{currentEntity.valueType}}" />
     </script>
@@ -30,7 +27,6 @@
         <tags-input ng-model="context.currentPropValues"
                     ng-disabled="currentEntity.isReadOnly"
                     min-tags="{{(currentEntity.required && !currentEntity.isReadOnly) ? 1 : undefined}}"
-                    focus-on=""
                     add-on-blur="false"
                     name="{{currentEntity.valueType}}"
                     display-property="value"
@@ -52,7 +48,6 @@
         <tags-input ng-model="context.currentPropValues"
                     ng-disabled="currentEntity.isReadOnly"
                     min-tags="{{(currentEntity.required && !currentEntity.isReadOnly) ? 1 : undefined}}"
-                    focus-on=""
                     add-on-blur="false"
                     allowed-tags-pattern="^[-]?[0-9]+[\.]?[0-9]*$"
                     min-length="1"
@@ -108,7 +103,6 @@
         <div ng-repeat="(language, langValuesGroup) in context.langValuesMap">
             <input ng-disabled="currentEntity.isReadOnly"
                    ng-required="currentEntity.required && !currentEntity.isReadOnly"
-                   focus-on=""
                    ng-model="langValuesGroup.currentPropValues[0].value"
                    type="text" name="{{currentEntity.valueType}}" />
             <div class="title">{{language}}</div>
@@ -118,7 +112,6 @@
         <div ng-repeat="(language, langValuesGroup) in context.langValuesMap">
             <textarea ng-disabled="currentEntity.isReadOnly"
                       ng-required="currentEntity.required && !currentEntity.isReadOnly"
-                      focus-on=""
                       class="form-control"
                       ng-model="langValuesGroup.currentPropValues[0].value"
                       name="{{currentEntity.valueType}}" />
@@ -129,7 +122,6 @@
         <div ng-repeat="(language, langValuesGroup) in context.langValuesMap">
             <input ng-disabled="currentEntity.isReadOnly"
                    ng-required="currentEntity.required && !currentEntity.isReadOnly"
-                   focus-on=""
                    ng-model="langValuesGroup.currentPropValues[0].value"
                    type="number" step="any" name="{{currentEntity.valueType}}" />
             <div class="title">{{language}}</div>
@@ -142,7 +134,6 @@
             <tags-input ng-model="langValuesGroup.currentPropValues"
                         ng-disabled="currentEntity.isReadOnly"
                         min-tags="{{(currentEntity.required && !currentEntity.isReadOnly) ? 1 : undefined}}"
-                        focus-on=""
                         add-on-blur="false"
                         name="{{currentEntity.valueType}}"
                         display-property="value"
@@ -169,7 +160,6 @@
             <tags-input ng-model="langValuesGroup.currentPropValues"
                         ng-disabled="currentEntity.isReadOnly"
                         min-tags="{{(currentEntity.required && !currentEntity.isReadOnly) ? 1 : undefined}}"
-                        focus-on=""
                         add-on-blur="false"
                         allowed-tags-pattern="^[-]?[0-9]+[\.]?[0-9]*$"
                         min-length="1"

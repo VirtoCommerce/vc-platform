@@ -1743,7 +1743,6 @@ a {
 }
 .metro button:disabled,
 .metro button.disabled {
-  background-color: #eaeaea !important;
   color: #bebebe !important;
   cursor: not-allowed !important;
 }

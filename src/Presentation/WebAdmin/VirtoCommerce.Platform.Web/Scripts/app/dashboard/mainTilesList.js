@@ -2,7 +2,7 @@
     'googlechart',
     'platformWebApp.security.auth'
 ])
-    .directive('vaMainTilesList', ['$document', 'authService', function ($document, authService) {
+    .directive('vaMainTilesList', ['$document', 'authService', 'notificationService', function ($document, authService, notificationService) {
         return {
             templateUrl: 'Scripts/app/dashboard/mainTilesList.tpl.html',
             restrict: 'E',
@@ -10,6 +10,24 @@
             // scope: true,
             link: function ($scope, $element, $attrs, $controller) {
                 $scope.auth = authService;
+                $scope.notification = function (type) {
+                	var title = "Some notification text";
+                	switch(type)
+                	{
+						case 'error':
+							notificationService.error(title);
+							break;
+                		case 'warning':
+                			notificationService.warning(title);
+                			break;
+                		case 'info':
+                			notificationService.info(title);
+                			break;
+                		case 'task':
+                			notificationService.task(title);
+                			break;
+                	}
+                };
 
                 $scope.chartObject = {
                     "type": "ColumnChart",

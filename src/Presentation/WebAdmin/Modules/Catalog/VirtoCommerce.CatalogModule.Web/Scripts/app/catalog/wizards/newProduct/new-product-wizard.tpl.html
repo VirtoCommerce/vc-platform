@@ -3,31 +3,31 @@
         <fieldset ng-init="setForm(newProductForm);">
             <label>SKU:</label>
             <div data-role="input-control" class="input-control text">
-                <input required class="form-control" ng-model="currentBlade.item.code" placeholder="Enter item sku" />
+                <input required class="form-control" ng-model="blade.item.code" placeholder="Enter item sku" />
             </div>
             <label>Name:</label>
             <div data-role="input-control" class="input-control textarea">
-                <textarea required class="form-control" cols="30" rows="3" ng-model="currentBlade.item.name" placeholder="Enter item name"></textarea>
+                <textarea required class="form-control" cols="30" rows="3" ng-model="blade.item.name" placeholder="Enter item name"></textarea>
             </div>
         </fieldset>
     </form>
 
     <ul class="list-extended">
-        <li ng-click="openBlade('properties')">
-            <span class="title">Properties</span>
-            <span class="sub-title">{{currentBlade.item.properties.length}} properties</span>
+        <li ng-click="openBlade('properties')" ng-if="blade.item.properties.length > 0">
+            <span class="title">Add properties</span>
+            <span class="sub-title">{{ getUnfilledProperties().length }} of {{blade.item.properties.length}} properties filled</span>
         </li>
         <li ng-click="openBlade('images')">
-            <span class="title">Images</span>
-            <span class="sub-title">{{currentBlade.item.images.length}} images</span>
+            <span class="title">Upload images</span>
+            <span class="sub-title">{{blade.item.images.length >= 0 ? blade.item.images.length : 0}} image(s) uploaded</span>
         </li>
         <li ng-click="openBlade('review')">
-            <span class="title">Review</span>
-            <span class="sub-title">Add review</span>
+            <span class="title">Add review</span>
+            <span class="sub-title">{{blade.item.reviews.length >= 0 ? blade.item.reviews.length : 0}} review(s) added</span>
         </li>
         <li ng-click="openBlade('seo')">
-            <span class="title">Seo</span>
-            <span class="sub-title">Define seo information</span>
+            <span class="title">Define seo information</span>
+            <span class="sub-title">seo information {{blade.item.seoInfos.length > 0 ? "defined" : "undefined"}}</span>
         </li>
     </ul>
-</div>
+</div> 

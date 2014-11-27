@@ -83,7 +83,6 @@
     <Compile Include="Model\CatalogItemResponse.cs" />
     <Compile Include="Model\Category.cs" />
     <Compile Include="Model\DynamicContentItem.cs" />
-    <Compile Include="Model\DynamicContents.cs" />
     <Compile Include="Model\ItemCategory.cs" />
     <Compile Include="Model\ItemDisplayOptions.cs" />
     <Compile Include="Model\ItemImage.cs" />

@@ -17,21 +17,21 @@ angular.module(catalogsModuleName, [
   'catalogModule.blades.categoriesItemsList',
   'catalogModule.widget.categoryPropertyWidget',
   'catalogModule.blades.itemDetail',
-  'catalogModule.widget.itemPropertyWidget',
-  'catalogModule.blades.itemPropertyDetail',
-  'catalogModule.widget.itemImageWidget',
-  'catalogModule.blades.itemImageDetail',
-  'catalogModule.widget.itemVariationWidget',
-  'catalogModule.blades.itemVariationList',
-  'catalogModule.widget.itemAssetWidget',
-  'catalogModule.blades.itemAssetDetail',
   'catalogModule.blades.seoDetail',
   'catalogModule.blades.propertyDetail',
   'catalogModule.widget.catalogLanguagesWidget',
   'catalogModule.blades.catalogLanguages',
   'catalogModule.widget.seoWidget',
   'catalogModule.wizards.newProductWizard',
-  'catalogModule.directives'
+  'catalogModule.wizards.newProductWizard.images',
+  'catalogModule.wizards.newProductWizard.properties',
+  'catalogModule.wizards.newProductWizard.reviews',
+  'catalogModule.wizards.newProductWizard.review.detail',
+  'catalogModule.wizards.newProductWizard.seo',
+  'catalogModule.directives',
+  'catalogModule.blades.import.importJobList',
+  'catalogModule.wizards.newImportJobWizard',
+  'textAngular'
 ])
 .config(
   ['$stateProvider', function ($stateProvider) {
@@ -61,9 +61,9 @@ angular.module(catalogsModuleName, [
   ['$rootScope', 'mainMenuService', 'widgetService', function ($rootScope, mainMenuService, widgetService) {
       //Register module in main menu
       var menuItem = {
-          group: 'Browse',
+          path: 'browse/catalog',
           icon: 'glyphicon glyphicon-search',
-          title: 'Catalogs',
+          title: 'Catalog',
           priority: 90,
           state: 'workspace.catalog',
           permission: 'catalogMenuPermission'
@@ -72,12 +72,12 @@ angular.module(catalogsModuleName, [
 
       //Register module widgets
       // mapping widget in virtual catalog
-      var mappingWidget = {
-          group: 'virtualCatalogDetail',
-          controller: 'virtualCatalogMappingWidgetController',
-          template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/widgets/virtualCatalogMappingWidget.tpl.html'
-      };
-      widgetService.registerWidget(mappingWidget);
+      //var mappingWidget = {
+      //    group: 'virtualCatalogDetail',
+      //    controller: 'virtualCatalogMappingWidgetController',
+      //    template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/widgets/virtualCatalogMappingWidget.tpl.html'
+      //};
+      //widgetService.registerWidget(mappingWidget);
 
       //Register image widget
       var itemImageWidget = {
@@ -100,8 +100,15 @@ angular.module(catalogsModuleName, [
           controller: 'seoWidgetController',
           template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/widgets/seoWidget.tpl.html',
       };
-
       widgetService.registerWidget(itemSeoWidget);
+
+      //Register item seo widget
+      var editorialReviewWidget = {
+          group: 'itemDetail',
+          controller: 'editorialReviewWidgetController',
+          template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/widgets/editorialReviewWidget.tpl.html',
+      };
+      widgetService.registerWidget(editorialReviewWidget);
 
       //Register variation widget
       var variationWidget = {

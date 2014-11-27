@@ -1,9 +1,8 @@
 ﻿angular.module('catalogModule.blades.itemImageDetail', [
    'catalogModule.resources.items',
    'angularFileUpload',
-   'ng-context-menu'
 ])
-.controller('itemImageController', ['$rootScope', '$scope', 'items', 'bladeNavigationService', '$filter', 'FileUploader', 'dialogService', '$injector', function ($rootScope, $scope, items, bladeNavigationService, $filter, FileUploader, dialogService, $injector) {
+.controller('itemImageController', ['$scope', 'items', '$filter', 'FileUploader', 'dialogService', function ($scope, items, $filter, FileUploader, dialogService) {
     $scope.currentBlade = $scope.blade;
 	$scope.item = {};
 	$scope.origItem = {};
