@@ -69,7 +69,7 @@
 					title: 'Notifications',
 					priority: 2,
 					permission: '',
-					template: 'Scripts/common/notification/mainMenu.tpl.html',
+					template: 'Scripts/common/notification/notifyMenu.tpl.html',
 					newCount: data.totalCount,
 					progress: _.some(data.notifyEvents, function (x) { return x.status == notifyStatusEnum.running; }),
 					customAction: function() { markAllAsRead(); }
@@ -86,7 +86,7 @@
 						state: 'notification',
 						stateParams: x,
 						permission: '',
-						template: 'Scripts/common/notification/templates.tpl.html',
+						template: 'Scripts/common/notification/notify.tpl.html',
 						notify: x,
 					};
 					menuItems.push(menuItem);
