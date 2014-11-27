@@ -1,0 +1,10 @@
+﻿<div>
+   <!--info-->
+    <h3 ng-if="menuItem.notify.notifyType == 0">{{menuItem.title}}</h3>
+    <!--warning-->
+    <h1 ng-if="menuItem.notify.notifyType == 1">{{menuItem.title}}</h1>
+    <!--error-->
+    <h2 ng-if="menuItem.notify.notifyType == 2">{{menuItem.title}}</h2>
+    <!--task-->
+    <h4 ng-if="menuItem.notify.notifyType == 3">{{menuItem.title}}</h4>
+</div>

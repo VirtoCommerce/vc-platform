@@ -21,9 +21,9 @@
 
 angular.module('platformWebApp', AppDependencies)
 .controller('appCtrl', ['$scope', '$state', 'mainMenuService', 'notificationService', function ($scope, $state, mainMenuService, notificationService) {
-    $scope.menuItems = mainMenuService.menuItems;
-    $scope.alerts = notificationService.getAllAlerts();
-    $scope.closeAlert = notificationService.remove;
+	
+	notificationService.run();
+
     $scope.curentStateName = function () {
         return $state.current.name;
     };
@@ -47,26 +47,28 @@ angular.module('platformWebApp', AppDependencies)
         $rootScope.$stateParams = $stateParams;
 
         var homeMenuItem = {
-        	group: 'Home',
-        	state: mainMenuService.menuItems[0].state,
+        	path: 'home',
+        	title: 'Home',
         	icon: 'glyphicon glyphicon-home',
+        	state: 'workspace.catalog',
         	priority: 0
         };
-        var notificationMenuItem = {
-        	group: 'Notification',
-        	state: mainMenuService.menuItems[0].state,
-        	icon: 'glyphicon glyphicon-comment',
-        	priority: 1
+        mainMenuService.addMenuItem(homeMenuItem);
+
+        var menuItem = {
+        	path: 'browse',
+        	icon: 'glyphicon glyphicon-search',
+        	title: 'Browse',
+        	priority: 90,
         };
+        mainMenuService.addMenuItem(menuItem);
+
         var journeyMenuItem = {
-        	group: 'Active',
-        	state: mainMenuService.menuItems[0].state,
+        	path: 'active',
+        	title: 'Journey',
         	icon: 'glyphicon glyphicon-tasks',
         	priority: 999
         };
-       
-        mainMenuService.addMenuItem(homeMenuItem);
-        mainMenuService.addMenuItem(notificationMenuItem);
         mainMenuService.addMenuItem(journeyMenuItem);
 
 

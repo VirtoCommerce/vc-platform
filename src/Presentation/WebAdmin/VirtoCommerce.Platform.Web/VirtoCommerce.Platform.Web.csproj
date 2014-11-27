@@ -369,8 +369,11 @@
     <Content Include="Scripts\common\navigation\menu\mainMenu.tpl.html" />
     <Content Include="Scripts\common\navigation\widget\widget.js" />
     <Content Include="Scripts\common\navigation\widget\widgetContainer.tpl.html" />
-    <Content Include="Scripts\common\notification.js" />
     <Content Include="Scripts\common\directives\overlay.js" />
+    <Content Include="Scripts\common\notification\mainMenu.tpl.html" />
+    <Content Include="Scripts\common\notification\notification.js" />
+    <Content Include="Scripts\common\notification\notification.tpl.html" />
+    <Content Include="Scripts\common\notification\templates.tpl.html" />
     <Content Include="Scripts\common\security\auth\auth.js" />
     <Content Include="Scripts\common\security\login\login.js" />
     <Content Include="Scripts\common\security\login\login.tpl.html" />

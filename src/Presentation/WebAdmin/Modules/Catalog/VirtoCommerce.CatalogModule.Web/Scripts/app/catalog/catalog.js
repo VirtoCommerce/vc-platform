@@ -59,9 +59,9 @@ angular.module(catalogsModuleName, [
   ['$rootScope', 'mainMenuService', 'widgetService', function ($rootScope, mainMenuService, widgetService) {
       //Register module in main menu
       var menuItem = {
-          group: 'Browse',
+          path: 'browse/catalog',
           icon: 'glyphicon glyphicon-search',
-          title: 'Catalogs',
+          title: 'Catalog',
           priority: 90,
           state: 'workspace.catalog',
           permission: 'catalogMenuPermission'

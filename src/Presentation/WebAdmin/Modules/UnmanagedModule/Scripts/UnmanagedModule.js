@@ -35,7 +35,7 @@ angular.module(moduleTemplateName, [
   ['$rootScope', 'mainMenuService', function ($rootScope, mainMenuService) {
       //Register module in main menu
       var menuItem = {
-          group: 'Browse',
+      	  path: 'browse/unmanaged module',
           icon: 'glyphicon glyphicon-search',
           title: 'Unmanaged Module',
           priority: 110,

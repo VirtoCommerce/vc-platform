@@ -4,6 +4,8 @@ using System;
 using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerce.SecurityModule.Web;
 using VirtoCommerce.CoreModule.Web.Security;
+using VirtoCommerce.Framework.Web.Notification;
+using VirtoCommerce.CoreModule.Web.Notification;
 
 namespace VirtoCommerce.CoreModule.Web
 {
@@ -39,6 +41,10 @@ namespace VirtoCommerce.CoreModule.Web
 				new InjectionFactory(x => new Func<IFoundationCustomerRepository>(() =>
 					new FoundationCustomerRepositoryImpl("VirtoCommerce"))));
 
+			#endregion
+
+			#region Notification
+			_container.RegisterInstance<INotifier>(new InMemoryNotifierImpl());
 			#endregion
 		}
 

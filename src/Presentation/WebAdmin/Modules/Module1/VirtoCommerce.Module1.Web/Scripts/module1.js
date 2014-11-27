@@ -34,7 +34,7 @@ angular.module(moduleTemplateName, [
   ['$rootScope', 'mainMenuService', 'widgetService', function ($rootScope, mainMenuService, widgetService) {
   	//Register module in main menu
   	var menuItem = {
-  	    group: 'Browse',
+  	    path: 'browse/module1',
   	    icon: 'icon-rocket',
   	    title: 'Module1',
   	    priority: 100,
