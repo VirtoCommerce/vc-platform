@@ -308,7 +308,7 @@
 							margin-right: 10px;
 						}
 
-						.left-menu .block .dropdown .content header a .ico
+						.left-menu .block .dropdown header a .ico
 						{
 							float: right;
 							height: 25px;
@@ -467,6 +467,85 @@
 										fill: #fff;
 									}
 
+			
+			
+			.left-menu .block .dropdown .list.notif li.item {
+				display: block;
+				line-height: inherit;
+				height: auto;
+			}
+			
+				.left-menu .block .dropdown .list.notif li.item a {
+					padding: 20px;
+				}
+
+					.left-menu .block .dropdown .list.notif .item .head {
+						display: block;
+						height: auto;
+						/*padding: 10px 0;*/
+					}
+
+					.left-menu .block .dropdown .list.notif .item .title {
+						height: auto;
+						font-size: 14px;
+						text-transform: none;
+						line-height: 1.5;
+						display: inline;
+						font-weight: bold;
+						padding: 0;
+						text-align: left;
+					}
+
+					.left-menu .block .dropdown .list.notif .item .date {
+						float: right;
+						font-size: 14px;
+						text-transform: none;
+						line-height: 1.5;
+						display: inline;
+						color: #fff;
+						font-weight: normal;
+					}
+
+					.left-menu .block .dropdown .list.notif .item .pic {
+						display: block;
+						float: left;
+						width: 30px;
+						height: 30px;
+						overflow: hidden;
+						padding: 0;
+						margin-top: 5px;
+					}
+
+						.left-menu .block .dropdown .list.notif .item .pic img {
+							width: 100%;
+							height: auto;
+						}
+
+					.left-menu .block .dropdown .list.notif .item .desc_outer {
+						display: block;
+						overflow: hidden;
+						padding-top: 10px;
+					}
+
+						.left-menu .block .dropdown .list.notif .item .desc {
+							display: block;
+							font-size: 12px;
+							text-transform: none;
+							margin-left: 40px;
+							font-weight: lighter;
+						}
+
+				.left-menu .block .dropdown .list.notif .item .progress-bar {
+					background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+					background-size: 20px 20px;
+					-webkit-animation: 1s linear 0s normal none infinite progress_bar;
+					animation: 1s linear 0s normal none infinite progress_bar;
+					margin-bottom: 0;
+					margin-top: 10px;
+					background-color: #212628;
+				}
+
+
 			.left-menu .block .dropdown .close
 			{
 				color: #fff;
@@ -541,6 +620,7 @@
 						font-size: 10px;
 						height: 100%;
 						padding: 20px 0 0;
+						position: relative;
 						text-align: center;
 						text-decoration: none;
 						text-transform: uppercase;
@@ -560,6 +640,12 @@
 					.left-menu ul.bot li a
 					{
 						background: #2b3137;
+					}
+
+					.left-menu ul li a.attractive {
+						-webkit-animation: attractive  4s ;
+						animation: attractive  4s ;
+						/*background-color: #4390df;*/
 					}
 
 					.left-menu ul li a:hover
@@ -588,6 +674,25 @@
 							width: 21px;
 						}
 
+						.left-menu ul li a.positive .icon {
+							position: relative;
+							left: 10px;
+						}
+
+						.left-menu ul li a .qnt {
+							display: none;
+							text-align: center;
+							font-size: 23px;
+							position: absolute;
+							top: 19px;
+							right: 45px;
+							color: #fff;
+						}
+
+						.left-menu ul li a.positive .qnt {
+							display: block;
+						}
+
 						.left-menu ul li.home a .icon
 						{
 							margin: 0 0 5px;
@@ -597,7 +702,7 @@
 							.left-menu ul li a .icon i
 							{
 								color: #fff;
-								font-size: 16px;
+								font-size: 19px;
 							}
 
 							.msportalfx-svg-c01
@@ -1570,6 +1675,47 @@
 	}
 }
 
+@keyframes attractive
+{
+	0% {
+		background-color: none;
+	}
+
+	10% {
+		background-color: #4390df;
+		color: #fff;
+	}
+	
+	70% {
+		background-color: #4390df;
+		color: #fff;
+	}
+
+	100% {
+		background-color: none;
+	}
+}
+@-webkit-keyframes attractive
+{
+	0% {
+		background-color: none;
+	}
+
+	10% {
+		background-color: #4390df;
+		color: #fff;
+	}
+	
+	70% {
+		background-color: #4390df;
+		color: #fff;
+	}
+
+	100% {
+		background-color: none;
+	}
+}
+
 /* Bootstrap modals */
 .modal-open {
   overflow: hidden;
@@ -1702,3 +1848,5 @@
 .modal-footer:after {
   clear: both;
 }
+
+

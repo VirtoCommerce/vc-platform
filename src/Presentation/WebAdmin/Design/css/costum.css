@@ -642,7 +642,7 @@
 						background: #2b3137;
 					}
 
-					.left-menu ul li.attractive a {
+					.left-menu ul li a.attractive {
 						-webkit-animation: attractive  4s ;
 						animation: attractive  4s ;
 						/*background-color: #4390df;*/
@@ -674,19 +674,23 @@
 							width: 21px;
 						}
 
-						.left-menu ul li.positive a .icon {
+						.left-menu ul li a.positive .icon {
 							position: relative;
 							left: 10px;
 						}
 
 						.left-menu ul li a .qnt {
-							display: block;
+							display: none;
 							text-align: center;
 							font-size: 23px;
 							position: absolute;
 							top: 19px;
 							right: 45px;
 							color: #fff;
+						}
+
+						.left-menu ul li a.positive .qnt {
+							display: block;
 						}
 
 						.left-menu ul li.home a .icon
