@@ -117,15 +117,19 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
         preventCategoryListingOnce = true;
     };
 
-    $scope.import = function(node) {
-        showImportJobsBlade(node.id, node, node.name);
+    $scope.import = function (node)
+    {
+        if (node) {
+            showImportJobsBlade(node.id, node.name);
+        } else {
+            showImportJobsBlade(null, "All import jobs");
+        }
     }
 
-    function showImportJobsBlade(id, data, title)
+    function showImportJobsBlade(id, title)
     {
         var newBlade = {
             catalogId: id,
-            catalog: data,
             title: title,
             id: 'importJobs',
             subtitle: 'manage import jobs',
@@ -210,7 +214,7 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
             },
             canExecuteMethod: function ()
             {
-                return selectedNode;
+                return true;
             }
         },
       {

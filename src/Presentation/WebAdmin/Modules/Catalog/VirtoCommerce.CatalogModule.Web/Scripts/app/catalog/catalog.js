@@ -31,6 +31,7 @@ angular.module(catalogsModuleName, [
   'catalogModule.directives',
   'catalogModule.blades.import.importJobList',
   'catalogModule.wizards.newImportJobWizard',
+  'catalogModule.wizards.newImportJobWizard.catalogs',
   'textAngular'
 ])
 .config(

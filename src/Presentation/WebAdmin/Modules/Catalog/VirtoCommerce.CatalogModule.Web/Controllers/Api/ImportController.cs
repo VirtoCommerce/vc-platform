@@ -27,8 +27,8 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 
         [HttpGet]
         [ResponseType(typeof(webModel.ImportJob))]
-        [Route("new/{catalogId}")]
-        public IHttpActionResult New(string catalogId)
+        [Route("new/{catalogId?}")]
+        public IHttpActionResult New(string catalogId = null)
         {
             var retVal = new webModel.ImportJob
             {
@@ -44,6 +44,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 
         [HttpPut]
         [ResponseType(typeof(void))]
+        [Route("create")]
         public IHttpActionResult Put(webModel.ImportJob entry)
         {
             var coreEntry = entry.ToFoundation();
@@ -55,6 +56,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 
         [HttpPost]
         [ResponseType(typeof(void))]
+        [Route("update")]
         public IHttpActionResult Post(webModel.ImportJob entry)
         {
             var coreEntry = entry.ToFoundation();

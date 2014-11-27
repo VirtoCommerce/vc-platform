@@ -240,8 +240,12 @@
     <Content Include="Scripts\app\catalog\widgets\itemVariationWidget.tpl.html" />
     <Content Include="Scripts\app\catalog\widgets\virtualCatalogMappingWidget.js" />
     <Content Include="Scripts\app\catalog\widgets\virtualCatalogMappingWidget.tpl.html" />
-    <Content Include="Scripts\app\catalog\wizards\importWizard\new-import-job-wizard.js" />
-    <Content Include="Scripts\app\catalog\wizards\importWizard\new-import-job-wizard.tpl.html" />
+    <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-update-action.tpl.html" />
+    <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-catalogs-step.tpl.html" />
+    <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-catalogs-step.js" />
+    <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard.js" />
+    <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard.tpl.html" />
+    <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-create-action.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-editorial-review-detail-step.js" />
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-editorial-reviews.js" />
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-property-detail-step.js" />

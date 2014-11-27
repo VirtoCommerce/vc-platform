@@ -47,7 +47,7 @@
                     var itemIds = [];
                     angular.forEach(selection, function (listItem)
                     {
-                        itemIds.push(listItem.importJobId);
+                        itemIds.push(listItem.id);
                     });
                     if (itemIds.length > 0)
                     {
@@ -78,13 +78,13 @@
                 imports.new({ catalogId: $scope.blade.catalogId }, function (data)
                 {
                     var newBlade = {
-                        id: 'importJobWizard',
+                        id: 'newImportJobWizard',
                         item: data,
                         title: 'New import job',
                         subtitle: 'Create an import job',
-                        controller: 'newImportJobWizardController',
-                        bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-product-wizard-actions.tpl.html',
-                        template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/importWizard/new-import-job-wizard.tpl.html'
+                        controller: 'importJobWizardController',
+                        bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/importWizard/import-job-wizard-create-action.tpl.html',
+                        template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/importWizard/import-job-wizard.tpl.html'
                     };
 
                     bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -99,7 +99,17 @@
             name: "Manage", icon: 'icon-new-tab-2',
             executeMethod: function ()
             {
-                //TODO
+                var newBlade = {
+                    id: 'importJobWizard',
+                    item: $scope.selectedItem,
+                    title: 'Edit import job',
+                    subtitle: 'Manage an import job',
+                    controller: 'importJobWizardController',
+                    bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/importWizard/import-job-wizard-update-action.tpl.html',
+                    template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/importWizard/import-job-wizard.tpl.html'
+                };
+
+                bladeNavigationService.showBlade(newBlade, $scope.blade);
             },
             canExecuteMethod: function ()
             {
