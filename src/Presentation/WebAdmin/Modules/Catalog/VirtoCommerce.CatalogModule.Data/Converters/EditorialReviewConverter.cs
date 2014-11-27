@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using foundation = VirtoCommerce.Foundation.Catalogs.Model;
 using module = VirtoCommerce.CatalogModule.Model;
 
@@ -51,7 +48,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				Locale = review.LanguageCode
 			};
 
-			if(review.Id != null)
+            if (review.Id != null)
 			{
 				retVal.EditorialReviewId = review.Id;
 			}

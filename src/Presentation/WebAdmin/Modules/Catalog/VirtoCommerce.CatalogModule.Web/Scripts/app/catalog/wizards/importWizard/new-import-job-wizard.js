@@ -1,40 +1,52 @@
-﻿angular.module('catalogModule.wizards.newProductWizard', [
+﻿angular.module('catalogModule.wizards.newImportJobWizard', [
+       'angularFileUpload'
 ])
-.controller('newProductWizardController', ['$scope', 'bladeNavigationService', 'dialogService', 'items', function ($scope, bladeNavigationService, dialogService, items)
+.controller('newImportJobWizardController', ['$scope', 'bladeNavigationService', 'dialogService', 'imports', 'FileUploader', function ($scope, bladeNavigationService, dialogService, imports, FileUploader)
 {
     $scope.blade.isLoading = false;
 
     $scope.createItem = function ()
     {
 
-        $scope.blade.item.$updateitem(null,
+        $scope.blade.item.$save(null,
         function (dbItem)
         {
             $scope.bladeClose();
-
-            //TODO: need better way to find category list blade.
-            var categoryListBlade = $scope.blade.parentBlade;
-
-            if (categoryListBlade.controller != 'categoriesItemsListController')
-            {
-                categoryListBlade = categoryListBlade.parentBlade;
-            }
-
-            categoryListBlade.refresh();
-
-            var newBlade = {
-                id: "listItemDetail",
-                itemId: dbItem.id,
-                title: dbItem.name,
-                style: 'gray',
-                subtitle: 'Item details',
-                controller: 'itemDetailController',
-                template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/item-detail.tpl.html'
-            };
-
-            bladeNavigationService.showBlade(newBlade, categoryListBlade);
+            $scope.blade.parentBlade.refresh();
         });
     }
+
+    function initialize()
+    {
+        if (!$scope.uploader)
+        {
+            // Creates a uploader
+            var uploader = $scope.uploader = new FileUploader({
+                scope: $scope,
+                headers: { Accept: 'application/json' },
+                url: 'api/assets/',
+                method: 'PUT',
+                autoUpload: true,
+                removeAfterUpload: true
+            });
+
+            // ADDING FILTERS
+            // Images only
+            uploader.filters.push({
+                name: 'csvFilter',
+                fn: function (i /*{File|FileLikeObject}*/, options)
+                {
+                    var type = '|' + i.type.slice(i.type.lastIndexOf('/') + 1) + '|';
+                    return '|csv|vnd.ms-excel|'.indexOf(type) !== -1;
+                }
+            });
+
+
+            uploader.onSuccessItem = function (fileItem, asset, status, headers) {
+                $scope.blade.item.templatePath = asset[0].url;
+            };
+        }
+    };
 
     $scope.openBlade = function (type) {
         $scope.blade.onClose(function() {
@@ -136,11 +148,7 @@
         }
     };
 
-    $scope.getUnfilledProperties = function() {
-        return _.filter($scope.blade.item.properties, function(p) {
-             return p != undefined && p.values.length > 0 && p.values[0].value.length > 0;
-        });
-    }
+    initialize();
 
 
 }]);

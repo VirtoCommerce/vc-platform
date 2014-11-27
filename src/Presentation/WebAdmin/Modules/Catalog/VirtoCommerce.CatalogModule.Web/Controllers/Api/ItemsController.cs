@@ -40,6 +40,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 				properties = _propertyService.GetCategoryProperties(item.CategoryId);
 			}
 			var retVal = item.ToWebModel(properties);
+
+            //Remove variation properties from Product
+		    retVal.Properties.RemoveAll(x => x.Type == webModel.PropertyType.Variation && string.IsNullOrWhiteSpace(retVal.TitularItemId));
          
             return Ok(retVal);
         }
@@ -83,56 +86,77 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			moduleModel.Property[] allCategoryProperties = null;
 			if (product.CategoryId != null)
 			{
-				_propertyService.GetCategoryProperties(product.CategoryId);
+                allCategoryProperties = _propertyService.GetCategoryProperties(product.CategoryId);
 			}
+
 			var mainWebProduct = product.ToWebModel(allCategoryProperties);
 
 			var newVariation = new webModel.Product
 			{
-				Name = product.Name,
-				Code = Guid.NewGuid().ToString().Substring(0, 5),
-				CategoryId = product.CategoryId,
-				CatalogId = product.CatalogId,
-				TitularItemId = product.MainProductId ?? itemId,
+			    Name = product.Name,
+			    CategoryId = product.CategoryId,
+			    CatalogId = product.CatalogId,
+			    TitularItemId = product.MainProductId ?? itemId,
+			    Properties = mainWebProduct.Properties.Where(x => x.Type == webModel.PropertyType.Product 
+                    || x.Type == webModel.PropertyType.Variation).ToList(),
 			};
 
-            newVariation.Properties = mainWebProduct.Properties.Where(x=>x.Type == webModel.PropertyType.Product).ToList();
-
-            //Need to generated new ids
-            foreach (var val in newVariation.Properties.SelectMany(x=>x.Values).ToArray())
+            foreach (var property in newVariation.Properties)
             {
-                val.Id = Guid.NewGuid().ToString();
+                //Need to generated new ids
+                foreach (var val in property.Values.ToArray())
+                {
+                    val.Id = Guid.NewGuid().ToString();
+                }
+
+                // Mark variation property as required
+                if (property.Type == webModel.PropertyType.Variation)
+                {
+                    property.Required = true;
+                }
+
+                property.IsManageable = true;
+                property.IsReadOnly = property.Type == webModel.PropertyType.Category;
             }
-			return Ok(newVariation);
+
+         
+			//var retVal = _itemsService.Create(newVariation.ToModuleModel()).ToWebModel();
+            return Ok(newVariation);
         }
 
 		[HttpPost]
 		[ResponseType(typeof(void))]
 		public IHttpActionResult Post(webModel.Product product)
 		{
-			UpdateProduct(product);
+			var updatedProduct = UpdateProduct(product);
+		    if (updatedProduct != null)
+		    {
+                return Ok(updatedProduct);
+		    }
 			return StatusCode(HttpStatusCode.NoContent);
 		}
 
-		[HttpPost]
+		[HttpDelete]
 		[ResponseType(typeof(void))]
-		public IHttpActionResult Delete(string[] ids)
+		public IHttpActionResult Delete([FromUri] string[] ids)
 		{
 			_itemsService.Delete(ids);
 			return StatusCode(HttpStatusCode.NoContent);
 		}
 
-		private void UpdateProduct(webModel.Product product)
+		private moduleModel.CatalogProduct UpdateProduct(webModel.Product product)
 		{
 			var moduleProduct = product.ToModuleModel();
 			if (moduleProduct.Id == null)
 			{
-				_itemsService.Create(moduleProduct);
+				return _itemsService.Create(moduleProduct);
 			}
 			else
 			{
-				_itemsService.Update(new moduleModel.CatalogProduct[] { moduleProduct });
+				_itemsService.Update(new[] { moduleProduct });
 			}
+
+		    return null;
 		}
     }
 }

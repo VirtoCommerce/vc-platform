@@ -64,7 +64,8 @@
                                   ids.push(variation.id);
                           });
 
-                          items.remove({}, ids, function () {
+                          items.remove({ ids: ids }, function ()
+                          {
                               $scope.blade.refresh();
                           });
                       }

@@ -35,10 +35,8 @@
 
     $scope.addVariation = function () {
         items.newVariation({ itemId: pb.currentItemId }, function (data) {
-            pb.showItemBlade(data.id, data.name);
+            pb.showNewVariationWizard(data);
             $scope.bladeClose();
-            pb.setSelectedItem(data);
-            pb.refresh();
         });
     };
 

@@ -35,9 +35,13 @@
         });
     }
 
-    $scope.setTitular = function () {
-        $scope.currentBlade.item.titularItemId = null;
-        $scope.isTitular = true;
+    $scope.onTitularChange = function () {
+        $scope.isTitular = !$scope.isTitular;
+        if ($scope.isTitular) {
+            $scope.currentBlade.item.titularItemId = null;
+        } else {
+            $scope.currentBlade.item.titularItemId = $scope.currentBlade.origItem.titularItemId;
+        }
     };
 
     function isDirty() {
@@ -116,17 +120,17 @@
 	     {
 	         name: "New variation", icon: 'icon-plus',
 	         executeMethod: function () {
-	             items.newVariation({ itemId: $scope.currentBlade.item.id }, function (data, headers) {
-	                 $scope.currentBlade.refresh(true);
 
+	             items.newVariation({ itemId: $scope.currentBlade.item.id }, function (data, headers)
+	             {
 	                 var blade = {
-	                     id: 'variationDetail',
-	                     itemId: data.id,
-	                     title: data.code,
-	                     style: 'gray',
-	                     subtitle: 'Variation details',
-	                     controller: 'itemDetailController',
-	                     template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/item-detail.tpl.html'
+	                     id: "newVariationWizard",
+	                     item: data,
+	                     title: "New variation",
+	                     subtitle: 'Fill all variation information',
+	                     controller: 'newProductWizardController',
+	                     bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-product-wizard-actions.tpl.html',
+	                     template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-variation-wizard.tpl.html'
 	                 };
 	                 bladeNavigationService.showBlade(blade, $scope.currentBlade);
 	             });

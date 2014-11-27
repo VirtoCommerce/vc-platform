@@ -44,12 +44,16 @@
         });
     }
 
+    function openAddEntityBlade() {
+        var data = { languageCode: $scope.blade.parentBlade.item.catalog.defaultLanguage.languageCode };
+        $scope.openBlade(data);
+    }
+
     $scope.bladeToolbarCommands = [
         {
             name: "Add", icon: 'icon-plus',
             executeMethod: function () {
-                var data = { languageCode: $scope.blade.parentBlade.item.catalog.defaultLanguage.languageCode };
-                $scope.openBlade(data);
+                openAddEntityBlade();
             },
             canExecuteMethod: function () {
                 return true;
@@ -58,5 +62,10 @@
     ];
 
     $scope.blade.refresh(false);
+
+    // open blade for new review 
+    if (!_.some($scope.blade.currentEntities)) {
+        openAddEntityBlade();
+    }
 
 }]);

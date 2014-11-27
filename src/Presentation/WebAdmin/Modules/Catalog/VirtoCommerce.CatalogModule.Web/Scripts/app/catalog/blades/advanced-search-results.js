@@ -91,7 +91,8 @@
                     });
 
                     if (itemIds.length > 0) {
-                        items.remove({}, itemIds, function (data, headers) {
+                        items.remove({ ids: itemIds }, function (data, headers)
+                        {
                             $scope.blade.refresh();
                         });
                     }

@@ -6,6 +6,7 @@
 {
     $scope.blade.isLoading = false;
     $scope.blade.item = angular.copy($scope.blade.item);
+    $scope.propGroups = [{ title: 'Product properties', type: 0 }, { title: 'Variation properties', type: 1 }];
 
     $scope.saveChanges = function()
     {
@@ -49,5 +50,10 @@
             return result;
         });
     };
+
+    $scope.setForm = function (form)
+    {
+        $scope.formScope = form;
+    }
 
 }]);

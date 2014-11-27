@@ -108,6 +108,7 @@
     <Compile Include="Controllers\Api\CategoriesController.cs" />
     <Compile Include="Controllers\Api\ItemsController.cs" />
     <Compile Include="Controllers\Api\ListEntryController.cs" />
+    <Compile Include="Controllers\Api\ImportController.cs" />
     <Compile Include="Controllers\Api\PropertiesController.cs" />
     <Compile Include="Converters\AssetConverter.cs" />
     <Compile Include="Converters\CatalogConverter.cs" />
@@ -125,7 +126,9 @@
     <Compile Include="Model\Catalog.cs" />
     <Compile Include="Model\CategoryLink.cs" />
     <Compile Include="Model\EditorialReview.cs" />
+    <Compile Include="Model\ImportJob.cs" />
     <Compile Include="Model\ListEntryLink.cs" />
+    <Compile Include="Model\MappingItem.cs" />
     <Compile Include="Model\PropertyDictionaryValue.cs" />
     <Compile Include="Model\Language.cs" />
     <Compile Include="Model\ListEntryCategory.cs" />
@@ -163,6 +166,8 @@
     <Content Include="Scripts\app\catalog\blades\category-detail.tpl.html" />
     <Content Include="Scripts\app\catalog\blades\editorialReview-detail.js" />
     <Content Include="Scripts\app\catalog\blades\editorialReview-detail.tpl.html" />
+    <Content Include="Scripts\app\catalog\blades\import\import-job-list.js" />
+    <Content Include="Scripts\app\catalog\blades\import\import-job-list.tpl.html" />
     <Content Include="Scripts\app\catalog\blades\seo-detail.js" />
     <Content Include="Scripts\app\catalog\blades\seo-detail.tpl.html" />
     <Content Include="Scripts\app\catalog\blades\property-attributes.js" />
@@ -212,6 +217,7 @@
     <Content Include="Scripts\app\catalog\home\home.tpl.html" />
     <Content Include="Scripts\app\catalog\resources\catalogs.js" />
     <Content Include="Scripts\app\catalog\resources\categories.js" />
+    <Content Include="Scripts\app\catalog\resources\import.js" />
     <Content Include="Scripts\app\catalog\resources\items.js" />
     <Content Include="Scripts\app\catalog\resources\itemsSearch.js" />
     <Content Include="Scripts\app\catalog\resources\properties.js" />
@@ -232,6 +238,8 @@
     <Content Include="Scripts\app\catalog\widgets\itemVariationWidget.tpl.html" />
     <Content Include="Scripts\app\catalog\widgets\virtualCatalogMappingWidget.js" />
     <Content Include="Scripts\app\catalog\widgets\virtualCatalogMappingWidget.tpl.html" />
+    <Content Include="Scripts\app\catalog\wizards\importWizard\new-import-job-wizard.js" />
+    <Content Include="Scripts\app\catalog\wizards\importWizard\new-import-job-wizard.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-editorial-review-detail-step.js" />
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-editorial-reviews.js" />
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-property-detail-step.js" />
@@ -240,6 +248,7 @@
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-actions.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard.js" />
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard.tpl.html" />
+    <Content Include="Scripts\app\catalog\wizards\newProduct\new-variation-wizard.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-seo-detail-step.js" />
   </ItemGroup>
   <ItemGroup>
