@@ -2,7 +2,6 @@
 using Owin;
 using System;
 using VirtoCommerce.Framework.Web.Modularity;
-using VirtoCommerce.SecurityModule.Web;
 using VirtoCommerce.CoreModule.Web.Security;
 using VirtoCommerce.Framework.Web.Notification;
 using VirtoCommerce.CoreModule.Web.Notification;
