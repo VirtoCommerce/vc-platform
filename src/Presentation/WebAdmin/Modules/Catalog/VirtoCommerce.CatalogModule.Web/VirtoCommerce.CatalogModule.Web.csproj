@@ -238,6 +238,8 @@
     <Content Include="Scripts\app\catalog\widgets\itemVariationWidget.tpl.html" />
     <Content Include="Scripts\app\catalog\widgets\virtualCatalogMappingWidget.js" />
     <Content Include="Scripts\app\catalog\widgets\virtualCatalogMappingWidget.tpl.html" />
+    <Content Include="Scripts\app\catalog\wizards\importWizard\new-import-job-wizard.js" />
+    <Content Include="Scripts\app\catalog\wizards\importWizard\new-import-job-wizard.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-editorial-review-detail-step.js" />
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-editorial-reviews.js" />
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-property-detail-step.js" />
@@ -288,9 +290,7 @@
       <Name>VirtoCommerce.CatalogModule</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Scripts\app\catalog\wizards\importWizard\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <PropertyGroup>

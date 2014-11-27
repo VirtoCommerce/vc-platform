@@ -16,7 +16,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="data in items" ng-class="{'selected': data.id === selectedItem.id}">
+            <tr ng-repeat="data in items" ng-class="{'selected': data.importJobId === selectedItem.importJobId}">
                 <td>
                     <div data-role="input-control" class="input-control checkbox">
                         <label>
@@ -25,10 +25,11 @@
                         </label>
                     </div>
                 </td>
-                <td ng-click='selectedItem = data' style="max-width: 250px; overflow: hidden; text-overflow: ellipsis;">
+                <td ng-click='setSelectedItem(data)' style="max-width: 250px; overflow: hidden; text-overflow: ellipsis;">
+                    <i style="font-size: 18px" class="icon-enter"></i>
                     <span title="{{data.name}}">{{data.name}}</span>
                 </td>
-                <td ng-click='selectedItem = data'>
+                <td ng-click='setSelectedItem(data)'>
                     <span title="{{data.entityImporter}}">{{data.entityImporter}}</span>
                 </td>
             </tr>

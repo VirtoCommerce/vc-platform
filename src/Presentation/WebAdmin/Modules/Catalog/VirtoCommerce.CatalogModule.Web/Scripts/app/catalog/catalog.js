@@ -30,6 +30,7 @@ angular.module(catalogsModuleName, [
   'catalogModule.wizards.newProductWizard.seo',
   'catalogModule.directives',
   'catalogModule.blades.import.importJobList',
+  'catalogModule.wizards.newImportJobWizard',
   'textAngular'
 ])
 .config(

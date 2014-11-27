@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -9,6 +10,7 @@ using webModel = VirtoCommerce.CatalogModule.Web.Model;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
+    [RoutePrefix("api/import")]
     public class ImportController : ApiController
     {
         private readonly string _relativeDir = "Content/Uploads/ImportData/";
@@ -25,13 +27,17 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         // GET: api/import/new
         [HttpGet]
         [ResponseType(typeof(webModel.ImportJob))]
-        public IHttpActionResult New()
+        [Route("new/{catalogId}")]
+        public IHttpActionResult New(string catalogId)
         {
             // var category = _importRepository.ImportJobs.fir  etById(categoryId);
             var retVal = new webModel.ImportJob
             {
                 Id = Guid.NewGuid().ToString(),
-                Name = "new importJob"
+                Name = "New import job",
+                CatalogId = catalogId,
+                ColumnDelimiter = "?",
+                ImportStep = 1
             };
 
             return Ok(retVal);
@@ -56,15 +62,16 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 
         [ResponseType(typeof(webModel.ImportJob[]))]
         [HttpGet]
-        public IHttpActionResult List()
+        [Route("list/{catalogId?}")]
+        public IHttpActionResult List(string catalogId = null)
         {
-            var retVal = new webModel.ImportJob[] { };
+            var retVal = _importRepository.ImportJobs.Where(x => catalogId == null || x.CatalogId.Equals(catalogId)).ToArray();
             return Ok(retVal);
         }
 
         [HttpDelete]
         [ResponseType(typeof(void))]
-        public IHttpActionResult Delete(string[] ids)
+        public IHttpActionResult Delete([FromUri]string[] ids)
         {
             //get
             //_importRepository.Remove( id);
