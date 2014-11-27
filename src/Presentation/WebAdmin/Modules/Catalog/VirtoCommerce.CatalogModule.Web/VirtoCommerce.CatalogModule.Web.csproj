@@ -115,6 +115,8 @@
     <Compile Include="Converters\CatalogLanguageConverter.cs" />
     <Compile Include="Converters\CategoryConverter.cs" />
     <Compile Include="Converters\EditorialReviewConverter.cs" />
+    <Compile Include="Converters\ImportJobConverter.cs" />
+    <Compile Include="Converters\ImportMappingItemConverter.cs" />
     <Compile Include="Converters\LinkConverter.cs" />
     <Compile Include="Converters\ProductConverter.cs" />
     <Compile Include="Converters\PropertyAttributeConverter.cs" />

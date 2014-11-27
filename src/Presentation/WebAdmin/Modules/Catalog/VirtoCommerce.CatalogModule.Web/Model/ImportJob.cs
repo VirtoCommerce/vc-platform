@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using VirtoCommerce.CatalogModule.Model;
 
 namespace VirtoCommerce.CatalogModule.Web.Model
 {
@@ -8,6 +7,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         public string Id { get; set; }
         public string Name { get; set; }
         public string CatalogId { get; set; }
+        public string CatalogName { get; set; }
         public string TemplatePath { get; set; }
         public int MaxErrorsCount { get; set; }
         public int ImportStep { get; set; }
@@ -17,5 +17,6 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         public string EntityImporter { get; set; } // product, sku, bundle, package, dynamickit, category, association, price, customer, inventory, itemrelation
         public string PropertySetId { get; set; }
         public ICollection<MappingItem> PropertiesMap { get; set; }
+        public string[] AvailableCsvColumns { get; set; }
     }
 }
