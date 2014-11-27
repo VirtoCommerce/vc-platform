@@ -14,12 +14,12 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         private readonly string _relativeDir = "Content/Uploads/ImportData/";
 
         private readonly IImportRepository _importRepository;
-        private readonly IDataManagementService _dataManagementService;
+        //private readonly IDataManagementService _dataManagementService;
 
-        public ImportController(IImportRepository importRepository, IDataManagementService dataManagementService)
+        public ImportController(IImportRepository importRepository/*, IDataManagementService dataManagementService*/)
         {
             _importRepository = importRepository;
-            _dataManagementService = dataManagementService;
+            //_dataManagementService = dataManagementService;
         }
 
         // GET: api/import/new
@@ -62,7 +62,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             return Ok(retVal);
         }
 
-        [HttpPost]
+        [HttpDelete]
         [ResponseType(typeof(void))]
         public IHttpActionResult Delete(string[] ids)
         {

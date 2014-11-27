@@ -136,9 +136,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			return StatusCode(HttpStatusCode.NoContent);
 		}
 
-		[HttpPost]
+		[HttpDelete]
 		[ResponseType(typeof(void))]
-		public IHttpActionResult Delete(string[] ids)
+		public IHttpActionResult Delete([FromUri] string[] ids)
 		{
 			_itemsService.Delete(ids);
 			return StatusCode(HttpStatusCode.NoContent);

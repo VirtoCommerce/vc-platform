@@ -2,7 +2,7 @@
 .factory('imports', ['$resource', function ($resource) {
 
     return $resource('api/import/:id', { id: '@id' }, {
-        remove: { method: 'POST', url: 'api/import/delete' },
+        remove: { method: 'DELETE', url: 'api/import/delete' },
         //copy: { method: 'GET', url: 'api/import/copy/:id' },
         run: { method: 'POST', url: 'api/import/run' },
         list: { method: 'GET', url: 'api/import/list' },

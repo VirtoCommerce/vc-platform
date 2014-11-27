@@ -9,6 +9,7 @@ using VirtoCommerce.Foundation.Assets.Services;
 using VirtoCommerce.Foundation.Data.AppConfig;
 using VirtoCommerce.Foundation.Data.Importing;
 using VirtoCommerce.Foundation.Data.Infrastructure;
+using VirtoCommerce.Foundation.DataManagement.Services;
 using VirtoCommerce.Foundation.Frameworks.Caching;
 using VirtoCommerce.Foundation.Importing.Factories;
 using VirtoCommerce.Foundation.Importing.Repositories;
@@ -31,8 +32,7 @@ namespace VirtoCommerce.CatalogModule.Web
         public void Initialize()
         {
             #region VCF dependencies
-            var appConfigRepository = new EFAppConfigRepository("VirtoCommerce");
-            _container.RegisterInstance<IAppConfigRepository>(appConfigRepository);
+            _container.RegisterType<IAppConfigRepository>(new InjectionFactory(x => new EFAppConfigRepository("VirtoCommerce")));
             _container.RegisterType<ISearchProvider, ElasticSearchProvider>();
             _container.RegisterType<ISearchQueryBuilder, ElasticSearchQueryBuilder>();
             var searchConnection = new SearchConnection(ConnectionHelper.GetConnectionString("SearchConnectionString"));
@@ -40,10 +40,9 @@ namespace VirtoCommerce.CatalogModule.Web
             #endregion
 
             #region Import
-            _container.RegisterType<IImportJobEntityFactory, ImportJobEntityFactory>(new ContainerControlledLifetimeManager());
-            _container.RegisterType<IImportRepository, EFImportingRepository>();
-            // _container.RegisterType<IImportService, ImportService>();
-            _container.RegisterType<IAssetService, AssetService>();
+            _container.RegisterType<IImportRepository>(new InjectionFactory(x => new EFImportingRepository("VirtoCommerce")));
+            //_container.RegisterType<IImportService, ImportService>();
+            //_container.RegisterType<IAssetService, AssetService>();
 
             #endregion
 
