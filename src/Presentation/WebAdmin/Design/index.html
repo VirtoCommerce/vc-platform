@@ -29,18 +29,22 @@
 
                     $('.left-menu .dropdown .title').text(name);
 
-                    if($(this).hasClass('active'))
+                    /* content for submenu */
+                    var submenuCntntId = '#defaultSbmn'
+                    if(typeof $(this).attr('rel') !== typeof undefined && $(this).attr('rel') != '')
                     {
+                        submenuCntntId = '#' + $(this).attr('rel');
+                    }
+
+                    if($(this).hasClass('active')) {
                         $(this).removeClass('active');
                         $('.left-menu .dropdown').removeClass('opened');
                         $('.left-menu .dropdown .content .inner').empty();
-                    }
-                    else
-                    {
+                    } else {
                         $('.bar .top li').removeClass('active');
                         $(this).addClass('active');
                         $('.left-menu .dropdown').addClass('opened');
-                        $('.left-menu .dropdown .content .inner').load('menu.html');
+                        $('.left-menu .dropdown .content .inner').html($(submenuCntntId).html());
                     }
                 });
 
@@ -226,12 +230,13 @@
                                     <span class="name">Home</span>
                                 </a>
                             </li>
-                            <li class="">
+                            <li class="attractive positive" rel="notif">
                                 <a href="">
                                     <span class="icon">
                                         <i class="glyphicon glyphicon-comment"></i>
                                     </span>
                                     <span class="name">Notifications</span>
+                                    <span class="qnt">3</span>
                                 </a>
                             </li>
                             <li class="">
@@ -1484,5 +1489,121 @@
                 </div>
             </div>
         </article>
+        <div id="submenus">
+            <div id="defaultSbmn">
+                <header>
+                    <a href="#"><span>Everything</span><span data-bind="image: MsPortalFx.Base.Images.Go()" class="ico"><svg class="msportalfx-svg-placeholder" viewBox="0 0 50 50" focusable="false"> <path d="M25.004,0C38.809,0,50,11.197,50,25c0,13.808-11.191,25-24.996,25C11.194,50,0,38.808,0,25 C0,11.197,11.194,0,25.004,0 M25.004,3.179C12.974,3.179,3.181,12.967,3.181,25c0,12.033,9.792,21.825,21.823,21.825 c12.026,0,21.817-9.792,21.817-21.825C46.821,12.967,37.03,3.179,25.004,3.179"/> <polygon points="29.576,22.574 21.893,15.329 28.14,15.329 38.415,25.021 28.187,34.677 21.938,34.677 29.576,27.475 12.259,27.475 12.259,22.574 "/> </svg></span></a>
+                </header>
+                <div class="scrollable">
+                    <ul class="list">
+                        <li>
+                            <a href="#">
+                                <i class="icon-rocket"></i> Resourece group
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="icon-camera"></i> Resourece group
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="icon-upload-2"></i> Resourece group
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="icon-thumbs-up"></i> Resourece group
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="icon-chrome"></i> Resourece group
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="icon-IcoMoon"></i> Resourece group
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="icon-chart-alt"></i> Resourece group
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="icon-dollar-2"></i> Resourece group
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="icon-box-remove"></i> Resourece group
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="icon-instagram"></i> Resourece group
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="icon-android"></i> Resourece group
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="icon-database"></i> Resourece group
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!-- // -->
+            <div id="notif">
+                <header>
+                    <a href="#"><span>Everything</span><span data-bind="image: MsPortalFx.Base.Images.Go()" class="ico"><svg class="msportalfx-svg-placeholder" viewBox="0 0 50 50" focusable="false"> <path d="M25.004,0C38.809,0,50,11.197,50,25c0,13.808-11.191,25-24.996,25C11.194,50,0,38.808,0,25 C0,11.197,11.194,0,25.004,0 M25.004,3.179C12.974,3.179,3.181,12.967,3.181,25c0,12.033,9.792,21.825,21.823,21.825 c12.026,0,21.817-9.792,21.817-21.825C46.821,12.967,37.03,3.179,25.004,3.179"/> <polygon points="29.576,22.574 21.893,15.329 28.14,15.329 38.415,25.021 28.187,34.677 21.938,34.677 29.576,27.475 12.259,27.475 12.259,22.574 "/> </svg></span></a>
+                </header>
+                <div class="scrollable">
+                    <ul class="list notif">
+                        <li class="item">
+                            <a href="#">
+                                <span class="head">
+                                    <span class="title">New product was added</span>
+                                    <span class="date">2 m ego</span>
+                                </span>
+                                <span class="desc_outer">
+                                    <span class="pic"><img src="http://i83.beon.ru/1/63/196301/42/6139642/17014652_10650070_toybanner.jpeg" alt=""></span>
+                                    <span class="desc">Username successfully added new product «product name» in category «Category name»</span>
+                                </span>
+                            </a>
+                        </li>
+                        <li class="item">
+                            <a href="#">
+                                <span class="head">
+                                    <span class="title">Catalog import</span>
+                                </span>
+                                <div class="progress-bar small" data-role="progress-bar" data-value="30">
+                                    <div class="bar bg-cyan" style="w30%"></div>
+                                </div>
+                            </a>
+                        </li>
+                        <li class="item">
+                            <a href="#">
+                                <span class="head">
+                                    <span class="title">New product was added</span>
+                                    <span class="date">2 m ego</span>
+                                </span>
+                                <span class="desc_outer">
+                                    <span class="pic"><img src="http://i83.beon.ru/1/63/196301/42/6139642/17014652_10650070_toybanner.jpeg" alt=""></span>
+                                    <span class="desc">Username successfully added new product «product name» in category «Category name»</span>
+                                </span>
+                            </a>
+                        </li>
+                      
+                    </ul>
+                </div>
+            </div>
+        </div>
     </body>
 </html>
