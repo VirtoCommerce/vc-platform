@@ -5,14 +5,16 @@ using VirtoCommerce.CatalogModule.Data.Services;
 using VirtoCommerce.CatalogModule.Repositories;
 using VirtoCommerce.CatalogModule.Services;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
+using VirtoCommerce.Foundation.Assets.Factories;
+using VirtoCommerce.Foundation.Assets.Repositories;
 using VirtoCommerce.Foundation.Assets.Services;
 using VirtoCommerce.Foundation.Data.AppConfig;
+using VirtoCommerce.Foundation.Data.Asset;
 using VirtoCommerce.Foundation.Data.Importing;
 using VirtoCommerce.Foundation.Data.Infrastructure;
-using VirtoCommerce.Foundation.DataManagement.Services;
 using VirtoCommerce.Foundation.Frameworks.Caching;
-using VirtoCommerce.Foundation.Importing.Factories;
 using VirtoCommerce.Foundation.Importing.Repositories;
+using VirtoCommerce.Foundation.Importing.Services;
 using VirtoCommerce.Foundation.Search;
 using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerce.Search.Providers.Elastic;
@@ -40,10 +42,27 @@ namespace VirtoCommerce.CatalogModule.Web
             #endregion
 
             #region Import
-            _container.RegisterType<IImportRepository>(new InjectionFactory(x => new EFImportingRepository("VirtoCommerce")));
-            //_container.RegisterType<IImportService, ImportService>();
-            //_container.RegisterType<IAssetService, AssetService>();
+            var FileSystemBlobAssetRepository = new FileSystemBlobAssetRepository("~/Content/Uploads/", new AssetEntityFactory());
+            _container.RegisterInstance<IAssetRepository>("local", FileSystemBlobAssetRepository);
+            _container.RegisterInstance<IBlobStorageProvider>("local", FileSystemBlobAssetRepository);
+            // _container.RegisterType<IAssetService, AssetService>();
 
+            _container.RegisterType<IImportRepository>(new InjectionFactory(x => new EFImportingRepository("VirtoCommerce")));
+            _container.RegisterType<Func<IImportRepository>>(new InjectionFactory(x => new Func<IImportRepository>(() => new EFImportingRepository("VirtoCommerce"))));
+            _container.RegisterType<Func<IImportService>>(new InjectionFactory(x => new Func<IImportService>(() =>
+                {
+                    var assetRepository = _container.Resolve<IAssetRepository>("local");
+                    var blobStorageProvider = _container.Resolve<IBlobStorageProvider>("local");
+                    return new ImportService(
+                        _container.Resolve<IImportRepository>(),
+                        _container.Resolve<IAssetService>(new ParameterOverrides
+                        {
+                            { "assetRepository", assetRepository },
+                            { "blobStorageProvider", blobStorageProvider }
+                        }),
+                        _container.Resolve<Func<IFoundationCatalogRepository>>()(),
+                        null, null, null);
+                })));
             #endregion
 
             #region module services

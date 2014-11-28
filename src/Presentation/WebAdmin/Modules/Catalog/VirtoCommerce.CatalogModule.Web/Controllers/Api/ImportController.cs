@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.CatalogModule.Web.Converters;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
+using VirtoCommerce.Foundation.Importing.Model;
 using VirtoCommerce.Foundation.Importing.Repositories;
+using VirtoCommerce.Foundation.Importing.Services;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
@@ -14,14 +17,17 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
     [RoutePrefix("api/import")]
     public class ImportController : ApiController
     {
-        private readonly string _relativeDir = "Content/Uploads/ImportData/";
+        // private readonly string _relativeDir = "Content/Uploads/ImportData/";
+        // private readonly string _relativeDir = "Content/Uploads/";
 
-        private readonly IImportRepository _importRepository;
+        private readonly Func<IImportRepository> _importRepositoryFactory;
+        private readonly Func<IImportService> _importServiceFactory;
         //private readonly IDataManagementService _dataManagementService;
 
-        public ImportController(IImportRepository importRepository/*, IDataManagementService dataManagementService*/)
+        public ImportController(Func<IImportRepository> importRepositoryFactory, Func<IImportService> importServiceFactory /*, IDataManagementService dataManagementService*/)
         {
-            _importRepository = importRepository;
+            _importRepositoryFactory = importRepositoryFactory;
+            _importServiceFactory = importServiceFactory;
             //_dataManagementService = dataManagementService;
         }
 
@@ -48,8 +54,11 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         public IHttpActionResult Put(webModel.ImportJob entry)
         {
             var coreEntry = entry.ToFoundation();
-            _importRepository.Add(coreEntry);
-            _importRepository.UnitOfWork.Commit();
+            using (var repository = _importRepositoryFactory())
+            {
+                repository.Add(coreEntry);
+                repository.UnitOfWork.Commit();
+            }
 
             return StatusCode(HttpStatusCode.NoContent);
         }
@@ -60,10 +69,12 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         public IHttpActionResult Post(webModel.ImportJob entry)
         {
             var coreEntry = entry.ToFoundation();
-            var dbEntry = GetInternal(entry.Id);
-            dbEntry.InjectFrom(coreEntry);
-
-            _importRepository.UnitOfWork.Commit();
+            using (var repository = _importRepositoryFactory())
+            {
+                var dbEntry = repository.ImportJobs.ExpandAll().SingleOrDefault(x => x.ImportJobId.Equals(entry.Id));
+                dbEntry.InjectFrom(coreEntry);
+                repository.UnitOfWork.Commit();
+            }
 
             return StatusCode(HttpStatusCode.NoContent);
         }
@@ -73,10 +84,13 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [Route("list/{catalogId?}")]
         public IHttpActionResult List(string catalogId = null)
         {
-            var dbEntries = _importRepository.ImportJobs
-                .Where(x => catalogId == null || x.CatalogId.Equals(catalogId))
-                .OrderBy(x => x.Name).ToArray();
-
+            ImportJob[] dbEntries;
+            using (var repository = _importRepositoryFactory())
+            {
+                dbEntries = repository.ImportJobs
+                    .Where(x => catalogId == null || x.CatalogId.Equals(catalogId))
+                    .OrderBy(x => x.Name).ToArray();
+            }
             var retVal = dbEntries.Select(x => x.ToWebModel());
             return Ok(retVal);
         }
@@ -86,7 +100,11 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [Route("get/{id}")]
         public IHttpActionResult Get(string id)
         {
-            var retVal = GetInternal(id);
+            ImportJob retVal;
+            using (var repository = _importRepositoryFactory())
+            {
+                retVal = repository.ImportJobs.ExpandAll().SingleOrDefault(x => x.ImportJobId.Equals(id));
+            }
 
             return Ok(retVal.ToWebModel());
         }
@@ -95,19 +113,57 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [ResponseType(typeof(void))]
         public IHttpActionResult Delete([FromUri]string[] ids)
         {
-            var entries = _importRepository.ImportJobs.Where(x => ids.Contains(x.ImportJobId)).ToList();
+            using (var repository = _importRepositoryFactory())
+            {
+                var entries = repository.ImportJobs.Where(x => ids.Contains(x.ImportJobId)).ToList();
 
-            entries.ForEach(_importRepository.Remove);
-            _importRepository.UnitOfWork.Commit();
+                entries.ForEach(repository.Remove);
+                repository.UnitOfWork.Commit();
+            }
 
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-        [ResponseType(typeof(string))]
+        [ResponseType(typeof(webModel.ImportJob))]
         [HttpPost]
         public IHttpActionResult UpdateMappingItems(webModel.ImportJob job)
         {
-            // if (string.IsNullOrEmpty(job.EntityImporter))
+            // parameter validation
+            if (string.IsNullOrEmpty(job.EntityImporter))
+            {
+                return BadRequest("EntityImporter is required.");
+            }
+
+            var AvailableImporters = new EntityImporterBase[]
+            {
+                new ItemImporter(ImportEntityType.Product.ToString()),
+                new CategoryImporter()
+            };
+
+            var tmp = AvailableImporters.FirstOrDefault(x => x.Name == job.EntityImporter);
+            if (tmp == null)
+            {
+                return BadRequest("Invalid EntityImporter.");
+            }
+            if (string.IsNullOrEmpty(job.CatalogId))
+            {
+                return BadRequest("CatalogId is required.");
+            }
+            if (string.IsNullOrEmpty(job.TemplatePath))
+            {
+                return BadRequest("TemplatePath is required.");
+            }
+
+            if (string.IsNullOrEmpty(job.ColumnDelimiter))
+            {
+                return BadRequest("Column Delimiter is required.");
+            }
+
+            var importService = _importServiceFactory();
+            var csvColumns = importService.GetCsvColumns(job.TemplatePath, job.ColumnDelimiter);
+            job.AvailableCsvColumns = csvColumns;
+
+
             // TODO:
             // GetCsvColumns from csv file;
             // SetMappingItems for job;
@@ -135,10 +191,8 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         }
 
         #region private
-        private Foundation.Importing.Model.ImportJob GetInternal(string id)
-        {
-            return _importRepository.ImportJobs.SingleOrDefault(x => x.ImportJobId.Equals(id));
-        }
+
+
         #endregion
     }
 }
