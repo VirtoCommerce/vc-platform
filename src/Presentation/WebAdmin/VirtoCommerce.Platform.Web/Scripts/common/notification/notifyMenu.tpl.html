@@ -1,9 +1,8 @@
-﻿<a href="" ng-init="positive = (menuItem.newCount>0)?'positive':''" class="{{positive}}">
+﻿<a href="" class="{{(menuItem.newCount > 0)?'positive':''}}">
     <span class="icon">
         <i ng-class="menuItem.icon"></i>
     </span>
-    <span class="qnt">{{menuItem.newCount}}</span>
-    {{menuItem.progress}}
-    <span class="name">{{menuItem.title}}</span>
-
+    <span ng-bind="menuItem.title" class="name"></span>
+    <span ng-if="menuItem.progress"></span>
+    <span ng-if="menuItem.newCount > 0" ng-bind="menuItem.newCount" class="qnt"></span>
 </a>

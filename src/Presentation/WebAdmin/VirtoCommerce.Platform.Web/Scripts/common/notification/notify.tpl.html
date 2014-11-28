@@ -1,10 +1,27 @@
-﻿<div>
-   <!--info-->
-    <h3 ng-if="menuItem.notify.notifyType == 0">{{menuItem.title}}</h3>
-    <!--warning-->
-    <h1 ng-if="menuItem.notify.notifyType == 1">{{menuItem.title}}</h1>
-    <!--error-->
-    <h2 ng-if="menuItem.notify.notifyType == 2">{{menuItem.title}}</h2>
-    <!--task-->
-    <h4 ng-if="menuItem.notify.notifyType == 3">{{menuItem.title}}</h4>
-</div>
+﻿<a href="" ng-init="
+    notifyStatusArr = [
+        'running',
+        'aborted',
+        'finished',
+        'error'
+    ];
+    notifyTypesArr = [
+        'info',
+        'warning',
+        'error',
+        'task'
+    ];
+    classNames = ['item', 'notif', notifyTypesArr[menuItem.notify.notifyType], notifyStatusArr[menuItem.notify.notifyType]];
+" ng-class="classNames">
+    <span class="head">
+        <span class="title" ng-bind="menuItem.title"></span>
+        <span class="date"></span>
+    </span>
+    <span class="desc_outer">
+        <span class="pic">
+            <i ng-class="(menuItem.notify.notifyType==0)?'icon-comments':'icon-warning'" class="icon"></i>
+        </span>
+        <span class="desc" ng-bind="menuItem.notify.description"></span>
+    </span>
+    <div ng-if="menuItem.notify.status == 0" class="progress-bar small" data-role="progress-bar" data-value="30"></div>
+</a>

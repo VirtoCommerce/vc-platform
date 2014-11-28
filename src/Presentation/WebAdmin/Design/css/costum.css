@@ -334,8 +334,6 @@
 						{
 							border-top: 1px solid #585e60;
 							display: block;
-							height: 71px;
-							line-height: 71px;
 							margin: 0;
 							width: 100%;
 						}
@@ -347,6 +345,8 @@
 								display: block;
 								font-size: 14px;
 								padding: 0 15px;
+								height: 71px;
+								line-height: 71px;
 								text-align: left;
 
 								-webkit-box-shadow: none;
@@ -469,23 +469,20 @@
 
 			
 			
-			.left-menu .block .dropdown .list.notif li.item {
+			.left-menu .block .dropdown .list li a.item.notif {
 				display: block;
-				line-height: inherit;
+				padding: 20px;
 				height: auto;
+				line-height: 1.5;
 			}
-			
-				.left-menu .block .dropdown .list.notif li.item a {
-					padding: 20px;
-				}
 
-					.left-menu .block .dropdown .list.notif .item .head {
+					.left-menu .block .dropdown .list li .item.notif .head {
 						display: block;
 						height: auto;
 						/*padding: 10px 0;*/
 					}
 
-					.left-menu .block .dropdown .list.notif .item .title {
+					.left-menu .block .dropdown .list .item.notif .title {
 						height: auto;
 						font-size: 14px;
 						text-transform: none;
@@ -496,7 +493,7 @@
 						text-align: left;
 					}
 
-					.left-menu .block .dropdown .list.notif .item .date {
+					.left-menu .block .dropdown .list .item.notif .date {
 						float: right;
 						font-size: 14px;
 						text-transform: none;
@@ -506,7 +503,7 @@
 						font-weight: normal;
 					}
 
-					.left-menu .block .dropdown .list.notif .item .pic {
+					.left-menu .block .dropdown .list .item.notif .pic {
 						display: block;
 						float: left;
 						width: 30px;
@@ -516,18 +513,28 @@
 						margin-top: 5px;
 					}
 
-						.left-menu .block .dropdown .list.notif .item .pic img {
-							width: 100%;
-							height: auto;
+						.left-menu .block .dropdown .list .item.notif .pic .icon {
+							line-height: 30px;
+							text-align: center;
+							width: 30px;
+						}
+						.left-menu .block .dropdown .list .item.notif.warning .pic .icon {
+							color: #f0a30a;
+						}
+						.left-menu .block .dropdown .list .item.notif.error .pic .icon {
+							color: #e51400;
+						}
+						.left-menu .block .dropdown .list .item.notif.info .pic .icon {
+							color: #4390df;
 						}
 
-					.left-menu .block .dropdown .list.notif .item .desc_outer {
+					.left-menu .block .dropdown .list .item.notif .desc_outer {
 						display: block;
 						overflow: hidden;
 						padding-top: 10px;
 					}
 
-						.left-menu .block .dropdown .list.notif .item .desc {
+						.left-menu .block .dropdown .list .item.notif .desc {
 							display: block;
 							font-size: 12px;
 							text-transform: none;
@@ -535,7 +542,7 @@
 							font-weight: lighter;
 						}
 
-				.left-menu .block .dropdown .list.notif .item .progress-bar {
+				.left-menu .block .dropdown .list .item.notif .progress-bar {
 					background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
 					background-size: 20px 20px;
 					-webkit-animation: 1s linear 0s normal none infinite progress_bar;
@@ -600,7 +607,6 @@
 
 				.left-menu ul li
 				{
-					height: 85px;
 					margin: 0 0 5px;
 					width: 85px;
 				}
@@ -618,7 +624,7 @@
 						display: block;
 						font-family: wf_segoe-ui_semibold,"Segoe UI Semibold","Segoe WP Semibold","Segoe UI","Segoe WP",Tahoma,Arial,sans-serif;
 						font-size: 10px;
-						height: 100%;
+						height: 85px;
 						padding: 20px 0 0;
 						position: relative;
 						text-align: center;
