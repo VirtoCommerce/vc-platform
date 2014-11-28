@@ -13,6 +13,7 @@
                 </th>
                 <th class="text-left">Name</th>
                 <th class="text-left fixed-td">Target</th>
+                <th class="text-left fixed-td" ng-if="!blade.catalogId">Catalog</th>
             </tr>
         </thead>
         <tbody>
@@ -31,6 +32,9 @@
                 </td>
                 <td ng-click='setSelectedItem(data)'>
                     <span title="{{data.entityImporter}}">{{data.entityImporter}}</span>
+                </td>
+                <td ng-click='setSelectedItem(data)' ng-if="!blade.catalogId">
+                    <span title="{{data.catalogName}}">{{data.catalogId}}</span>
                 </td>
             </tr>
         </tbody>

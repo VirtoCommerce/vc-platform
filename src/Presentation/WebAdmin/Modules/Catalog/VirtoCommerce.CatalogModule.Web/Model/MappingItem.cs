@@ -13,6 +13,5 @@
         public string Locale { get; set; }
 
         public string ImportJobId { get; set; }
-        public ImportJob ImportJob { get; set; }
     }
 }

@@ -47,14 +47,14 @@ namespace VirtoCommerce.CatalogModule.Web
             _container.RegisterInstance<IBlobStorageProvider>("local", FileSystemBlobAssetRepository);
             // _container.RegisterType<IAssetService, AssetService>();
 
-            _container.RegisterType<IImportRepository>(new InjectionFactory(x => new EFImportingRepository("VirtoCommerce")));
+            //_container.RegisterType<IImportRepository>(new InjectionFactory(x => new EFImportingRepository("VirtoCommerce")));
             _container.RegisterType<Func<IImportRepository>>(new InjectionFactory(x => new Func<IImportRepository>(() => new EFImportingRepository("VirtoCommerce"))));
             _container.RegisterType<Func<IImportService>>(new InjectionFactory(x => new Func<IImportService>(() =>
                 {
                     var assetRepository = _container.Resolve<IAssetRepository>("local");
                     var blobStorageProvider = _container.Resolve<IBlobStorageProvider>("local");
                     return new ImportService(
-                        _container.Resolve<IImportRepository>(),
+                        _container.Resolve<Func<IImportRepository>>()(),
                         _container.Resolve<IAssetService>(new ParameterOverrides
                         {
                             { "assetRepository", assetRepository },

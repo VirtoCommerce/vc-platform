@@ -71,6 +71,17 @@
     }
 
     $scope.bladeToolbarCommands = [
+          {
+              name: "Refresh", icon: 'icon-spin',
+              executeMethod: function ()
+              {
+                  $scope.blade.refresh();
+              },
+              canExecuteMethod: function ()
+              {
+                  return true;
+              }
+          },
         {
             name: "Add", icon: 'icon-plus',
             executeMethod: function ()
@@ -86,7 +97,7 @@
                         bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/importWizard/import-job-wizard-create-action.tpl.html',
                         template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/importWizard/import-job-wizard.tpl.html'
                     };
-
+                    closeChildrenBlades();
                     bladeNavigationService.showBlade(newBlade, $scope.blade);
                 });
             },
@@ -108,7 +119,7 @@
                     bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/importWizard/import-job-wizard-update-action.tpl.html',
                     template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/importWizard/import-job-wizard.tpl.html'
                 };
-
+                closeChildrenBlades();
                 bladeNavigationService.showBlade(newBlade, $scope.blade);
             },
             canExecuteMethod: function ()
