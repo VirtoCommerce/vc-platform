@@ -58,6 +58,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             {
                 var dbEntry = repository.ImportJobs.ExpandAll().Single(x => x.ImportJobId.Equals(entry.Id));
 
+                dbEntry.EntityImporter = entry.EntityImporter;
                 dbEntry.CatalogId = entry.CatalogId;
                 dbEntry.ImportStep = entry.ImportStep;
                 dbEntry.MaxErrorsCount = entry.MaxErrorsCount;

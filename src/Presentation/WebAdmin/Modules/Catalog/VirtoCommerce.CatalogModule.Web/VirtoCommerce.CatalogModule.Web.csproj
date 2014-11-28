@@ -240,6 +240,10 @@
     <Content Include="Scripts\app\catalog\widgets\itemVariationWidget.tpl.html" />
     <Content Include="Scripts\app\catalog\widgets\virtualCatalogMappingWidget.js" />
     <Content Include="Scripts\app\catalog\widgets\virtualCatalogMappingWidget.tpl.html" />
+    <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-settings-step.js" />
+    <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-importers-step.js" />
+    <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-settings-step.tpl.html" />
+    <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-importers-step.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-update-action.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-catalogs-step.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-catalogs-step.js" />
@@ -249,7 +253,7 @@
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-editorial-review-detail-step.js" />
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-editorial-reviews.js" />
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-property-detail-step.js" />
-    <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-ok-action.tpl.html" />
+    <Content Include="Scripts\app\catalog\wizards\common\wizard-ok-action.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-images-step.js" />
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-actions.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard.js" />
