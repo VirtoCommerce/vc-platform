@@ -1,0 +1,34 @@
+﻿<div style="width: 500px;">
+    <style>
+        .fixed-td {
+            width: 15px;
+        }
+    </style>
+
+    <table class="table hovered">
+        <thead>
+            <tr>
+                <th class="text-left">Entity property</th>      
+                <th class="text-left fixed-td">Custom value</th>
+                <th class="text-left fixed-td">Format value</th>
+                <th class="text-left fixed-td">CSV column</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="data in item.propertiesMap" ng-class="{'selected': data.id === selectedItem.id}">
+                <td ng-click='setSelectedItem(data)' style="max-width: 250px; overflow: hidden; text-overflow: ellipsis;">
+                    <span title="{{data.entityColumnName}}">{{data.displayName}}</span>
+                </td>   
+                <td ng-click='setSelectedItem(data)'>
+                    <span title="{{data.customValue}}">{{data.customValue}}</span>
+                </td>
+                <td ng-click='setSelectedItem(data)'>
+                    <span title="{{data.stringFormat}}">{{data.stringFormat}}</span>
+                </td>
+                <td ng-click='setSelectedItem(data)'>
+                    <span title="{{data.csvColumnName}}">{{data.csvColumnName}}</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

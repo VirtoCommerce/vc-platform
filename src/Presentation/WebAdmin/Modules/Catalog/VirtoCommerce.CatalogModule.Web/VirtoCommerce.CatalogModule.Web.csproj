@@ -240,8 +240,10 @@
     <Content Include="Scripts\app\catalog\widgets\itemVariationWidget.tpl.html" />
     <Content Include="Scripts\app\catalog\widgets\virtualCatalogMappingWidget.js" />
     <Content Include="Scripts\app\catalog\widgets\virtualCatalogMappingWidget.tpl.html" />
+    <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-mapping-step.js" />
     <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-settings-step.js" />
     <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-importers-step.js" />
+    <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-mapping-step.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-settings-step.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-importers-step.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-update-action.tpl.html" />

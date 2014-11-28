@@ -1,4 +1,4 @@
-﻿angular.module('catalogModule.wizards.newImportJobWizard.importers', [
+﻿angular.module('catalogModule.wizards.importJobWizard.importers', [
 ])
 .controller('importJobImportersController', ['$scope', function ($scope)
 {

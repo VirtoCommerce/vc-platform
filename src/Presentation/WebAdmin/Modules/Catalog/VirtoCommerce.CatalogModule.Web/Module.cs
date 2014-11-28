@@ -42,7 +42,7 @@ namespace VirtoCommerce.CatalogModule.Web
             #endregion
 
             #region Import
-            var FileSystemBlobAssetRepository = new FileSystemBlobAssetRepository("~/Content/Uploads/", new AssetEntityFactory());
+            var FileSystemBlobAssetRepository = new FileSystemBlobAssetRepository("~", new AssetEntityFactory());
             _container.RegisterInstance<IAssetRepository>("local", FileSystemBlobAssetRepository);
             _container.RegisterInstance<IBlobStorageProvider>("local", FileSystemBlobAssetRepository);
             // _container.RegisterType<IAssetService, AssetService>();
