@@ -1,6 +1,6 @@
 ﻿angular.module('catalogModule.blades.editorialReviewDetail', [])
 .controller('editorialReviewDetailController', ['$scope', '$filter', 'dialogService', 'items', function ($scope, $filter, dialogService, items) {
-    $scope.sources = ["QuickReview", "FullReview"];
+    $scope.types = ["QuickReview", "FullReview"];
 
     function initializeBlade(data) {
         $scope.currentEntity = angular.copy(data);

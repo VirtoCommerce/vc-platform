@@ -1,7 +1,7 @@
 ﻿<div style="width: 380px;">
-    <label>Source</label>
+    <label>Type</label>
     <div data-role="input-control" class="input-control select">
-        <select ng-model="currentEntity.source" ng-options="x for x in sources"></select>
+        <select ng-init="currentEntity.reviewType = types[0]" ng-model="currentEntity.reviewType" ng-options="x for x in types"></select>
     </div>
     <label>Language</label>
     <div data-role="input-control" class="input-control select">
