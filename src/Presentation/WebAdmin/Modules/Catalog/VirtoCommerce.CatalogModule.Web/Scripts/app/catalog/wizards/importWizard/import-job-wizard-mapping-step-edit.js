@@ -7,11 +7,6 @@
         $scope.currentEntity = angular.copy(data);
         $scope.blade.origEntity = data;
         $scope.blade.isLoading = false;
-
-        $scope.allColumns = [{ name: "Custom", value: "" }];
-        angular.forEach($scope.blade.csvColumns, function(val) {
-            $scope.allColumns.push({ name: val, value: val });
-        });
     };
 
     $scope.saveChanges = function ()
