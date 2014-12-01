@@ -72,18 +72,8 @@
 		link: function (scope, element, attr) {
 
 			scope.currentMenuItem = undefined;
-			scope.rootMenuItems = [];
-
-
-			function refreshRootMenu () {
-				scope.rootMenuItems = _.where(mainMenuService.menuItems, { parent: null });
-			};
-
-			scope.$watchCollection("mainMenuService.menuItems", function () {
-				refreshRootMenu();
-			});
-
-
+			scope.menuItems = mainMenuService.menuItems;
+		
 			scope.selectMenuItem = function (menuItem) {
 				if (angular.isDefined(menuItem.children) && menuItem.children.length > 0) {
 					scope.currentMenuItem = menuItem;

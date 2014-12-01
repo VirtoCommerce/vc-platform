@@ -85,7 +85,6 @@
 
 				//Add all events
 				angular.forEach(data.notifyEvents, function (x) {
-				    console.info(x);
 				    var menuItem = {
 				    	parent: notifyMenu,
 						path: 'notification/events',
