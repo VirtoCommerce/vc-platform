@@ -77,12 +77,8 @@
 		$http.get(serviceBase + 'allRecent').
 			success(function (data, status, headers, config) {
 				//Clear all previous notification from menu
-
-				
-				console.log(notifyMenu.incremented);
 				if(notifyMenu.newCount < data.newCount) {
 					notifyMenu.incremented = true;
-					console.log(notifyMenu.incremented);
 				}
 				notifyMenu.newCount = data.newCount;
 				notifyMenu.progress = _.some(data.notifyEvents, function (x) { return x.status == notifyStatusEnum.running; });
