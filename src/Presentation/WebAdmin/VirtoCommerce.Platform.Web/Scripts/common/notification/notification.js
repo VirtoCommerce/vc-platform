@@ -58,24 +58,31 @@
 	};
 
 	function notificationRefresh() {
+		var notifyMenu = mainMenuService.findByPath('notification');
+		if (!angular.isDefined(notifyMenu))
+		{
+			notifyMenu = {
+				path: 'notification',
+				icon: 'glyphicon glyphicon-comment',
+				title: 'Notifications',
+				priority: 2,
+				permission: '',
+				template: 'Scripts/common/notification/notifyMenu.tpl.html',
+				customAction: function () { markAllAsRead(); },
+				children: []
+			};
+			mainMenuService.addMenuItem(notifyMenu);
+		}
+		notifyMenu.incremented = false;
 		$http.get(serviceBase + 'allRecent').
 			success(function (data, status, headers, config) {
 				//Clear all previous notification from menu
-				var notifyMenu = mainMenuService.findByPath('notification');
 
-				if (!angular.isDefined(notifyMenu))
-				{
-					notifyMenu = {
-						path: 'notification',
-						icon: 'glyphicon glyphicon-comment',
-						title: 'Notifications',
-						priority: 2,
-						permission: '',
-						template: 'Scripts/common/notification/notifyMenu.tpl.html',
-						customAction: function () { markAllAsRead(); },
-						children: []
-					};
-					mainMenuService.addMenuItem(notifyMenu);
+				
+				console.log(notifyMenu.incremented);
+				if(notifyMenu.newCount < data.newCount) {
+					notifyMenu.incremented = true;
+					console.log(notifyMenu.incremented);
 				}
 				notifyMenu.newCount = data.newCount;
 				notifyMenu.progress = _.some(data.notifyEvents, function (x) { return x.status == notifyStatusEnum.running; });
@@ -85,7 +92,6 @@
 
 				//Add all events
 				angular.forEach(data.notifyEvents, function (x) {
-				    console.info(x);
 				    var menuItem = {
 				    	parent: notifyMenu,
 						path: 'notification/events',
