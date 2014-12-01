@@ -7,7 +7,8 @@
         run: { method: 'POST', url: 'api/import/run' },
         list: { method: 'GET', url: 'api/import/list/:catalogId', isArray: true },
         new: { method: 'GET', url: 'api/import/new/:catalogId' },
-        //update: { method: 'POST', url: 'api/import/post' },
+        create: { method: 'POST', url: 'api/import/create' },
+        update: { method: 'PUT', url: 'api/import/update' },
         updateMappingItems: { method: 'POST', url: 'api/import/updateMappingItems' }
     });
 

@@ -1200,7 +1200,6 @@
     <Content Include="Scripts\version.json" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\Modules\" />
     <Folder Include="App_Data\Search\" />
     <Folder Include="Filters\" />
   </ItemGroup>

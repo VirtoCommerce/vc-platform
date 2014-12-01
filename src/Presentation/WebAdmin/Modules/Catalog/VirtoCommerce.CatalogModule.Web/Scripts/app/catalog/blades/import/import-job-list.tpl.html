@@ -13,10 +13,11 @@
                 </th>
                 <th class="text-left">Name</th>
                 <th class="text-left fixed-td">Target</th>
+                <th class="text-left fixed-td" ng-if="!blade.catalogId">Catalog</th>
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="data in items" ng-class="{'selected': data.importJobId === selectedItem.importJobId}">
+            <tr ng-repeat="data in items" ng-class="{'selected': data.id === selectedItem.id}">
                 <td>
                     <div data-role="input-control" class="input-control checkbox">
                         <label>
@@ -31,6 +32,9 @@
                 </td>
                 <td ng-click='setSelectedItem(data)'>
                     <span title="{{data.entityImporter}}">{{data.entityImporter}}</span>
+                </td>
+                <td ng-click='setSelectedItem(data)' ng-if="!blade.catalogId">
+                    <span title="{{data.catalogName}}">{{data.catalogId}}</span>
                 </td>
             </tr>
         </tbody>

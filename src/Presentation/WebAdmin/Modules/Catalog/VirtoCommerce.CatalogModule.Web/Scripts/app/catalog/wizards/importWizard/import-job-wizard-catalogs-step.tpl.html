@@ -1,0 +1,12 @@
+﻿<div style="width: 300px;">
+    <p class="subheader">Select catalog</p>
+    <ul class="list-checkboxes">
+        <li ng-repeat="data in catalogs">
+            <label>
+                <input type="checkbox" name="isDefault" ng-checked="data.id === selectedCatalogId" ng-click="setCatalog(data)">
+                <span class="switch"></span>
+                {{data.name}}
+            </label>
+        </li>
+    </ul>
+</div>
