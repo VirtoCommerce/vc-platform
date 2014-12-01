@@ -3,47 +3,52 @@
 .factory('mainMenuService', ['$filter', function ($filter) {
 
 	var menuItems = [];
-	var menuTree = [];
 
+	function sortByParentFirst(a, b) {
+		return a.path.split('/').length - b.path.split('/').length; 
+	};
+	function sortByPriority(a, b) {
+			if (angular.isDefined(a.priority) && angular.isDefined(b.priority)) {
+				return a.priority -b.priority;
+			}
+			return -1;
+	};
 	function constructTree() {
 
 		//clear arrays
-		menuTree.splice(0, menuTree.length)
+		//menuTree.splice(0, menuTree.length)
 		//console.log('------------------constructTree---------------------');
-		angular.forEach(menuItems.sort(function (a, b) { return a.path.split('/').length - b.path.split('/').length; }), function (x) {
+		angular.forEach(menuItems.sort(sortByParentFirst), function (x) {
 			//console.log(x.path);
-			var copy = angular.copy(x);
-			copy.parent = null;
-			copy.children = [];
-			menuTree.push(copy);
-
-			var pathParts = x.path.split('/');
-			var path = x.path;
-			var parentPath = null;
-			if (pathParts.length > 1) {
-				pathParts.pop();
-				parentPath = pathParts.join('/');
+			if (!angular.isDefined(x.parent)) {
+				x.parent = null;
 			}
+			if (!angular.isDefined(x.children)) {
+				x.children = [];
+			}
+			if (x.parent == null) {
+				var pathParts = x.path.split('/');
+				var path = x.path;
+				var parentPath = null;
+				if (pathParts.length > 1) {
+					pathParts.pop();
+					parentPath = pathParts.join('/');
+				}
 
-			var parent = _.find(menuTree, function (y) { return y.path == parentPath });
-			if (angular.isDefined(parent)) {
-				copy.parent = parent;
-				parent.children.push(copy);
+				var parent = _.find(menuItems, function (y) { return y.path == parentPath });
+				if (angular.isDefined(parent)) {
+					x.parent = parent;
+					parent.children.push(x);
+				}
 			}
 		});
 		//sort tree items
-		menuTree.sort(function (a, b) {
-			if (angular.isDefined(a.priority) && angular.isDefined(b.priority)) {
-				return a.priority - b.priority;
-			}
-			return -1;
-		});
+		menuItems.sort(sortByPriority);
 	};
 
 
-	function clearByPath(path) {
-		menuItems = _.filter(menuItems, function (x) { return x.path.substring(0, path.length) != path; });
-		constructTree();
+	function findByPath(path) {
+		return _.find(menuItems, function (x) { return x.path == path; });
 	};
 
 	function addMenuItem(menuItem) {
@@ -51,21 +56,11 @@
 		constructTree();
 	}
 
-	function addMenuItems(bulkItems) {
-		angular.forEach(bulkItems, function (x) {
-			menuItems.push(x);
-		});
-		constructTree();
-	}
-
 	var retVal = {
 		menuItems: menuItems,
-		menuTree: menuTree,
 		addMenuItem: addMenuItem,
-		addMenuItems: addMenuItems,
-		clearByPath: clearByPath
+		findByPath: findByPath
 	};
-
 	return retVal;
 }])
 .directive('vaMainMenu', ['$compile', '$filter', '$state', 'mainMenuService', function ($compile, $filter, $state, mainMenuService) {
@@ -77,10 +72,17 @@
 		link: function (scope, element, attr) {
 
 			scope.currentMenuItem = undefined;
+			scope.rootMenuItems = [];
 
-			scope.getRootLevelMenuItems = function () {
-				return _.where(mainMenuService.menuTree, { parent: null });
+
+			function refreshRootMenu () {
+				scope.rootMenuItems = _.where(mainMenuService.menuItems, { parent: null });
 			};
+
+			scope.$watchCollection("mainMenuService.menuItems", function () {
+				refreshRootMenu();
+			});
+
 
 			scope.selectMenuItem = function (menuItem) {
 				if (angular.isDefined(menuItem.children) && menuItem.children.length > 0) {

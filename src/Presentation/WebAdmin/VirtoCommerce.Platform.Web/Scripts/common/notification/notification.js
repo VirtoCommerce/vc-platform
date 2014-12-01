@@ -10,7 +10,7 @@
 			controller: function ($stateParams, notificationService) {
 				//$stateParams.id is id for event
 				//todo: display history here
-				notificationService.markAllAsRead();
+				
 			}
 		});
 }])
@@ -27,13 +27,6 @@
     };
 	if (Object.freeze) Object.freeze(notifyTypeEnum);
 
-	var notifyTypesArr = [
-        'info',
-        'warning',
-        'error',
-        'task'
-	];
-	
 	var notifyStatusEnum =
     {
     	running: 0,
@@ -41,13 +34,6 @@
     	finished: 2,
     	error: 3
     };
-
-	var notifyStatusArr = [
-        'running',
-        'aborted',
-        'finished',
-        'error'
-	];
 
 	if (Object.freeze) Object.freeze(notifyStatusEnum);
 
@@ -75,26 +61,33 @@
 		$http.get(serviceBase + 'allRecent').
 			success(function (data, status, headers, config) {
 				//Clear all previous notification from menu
-				mainMenuService.clearByPath('notification');
-			
-				var menuItems = [];
-				var menuItem = {
-					path: 'notification',
-					icon: 'glyphicon glyphicon-comment',
-					title: 'Notifications',
-					priority: 2,
-					permission: '',
-					template: 'Scripts/common/notification/notifyMenu.tpl.html',
-					newCount: data.newCount,
-					progress: _.some(data.notifyEvents, function (x) { return x.status == notifyStatusEnum.running; }),
-					customAction: function() { markAllAsRead(); }
-				};
-				menuItems.push(menuItem);
+				var notifyMenu = mainMenuService.findByPath('notification');
+
+				if (!angular.isDefined(notifyMenu))
+				{
+					notifyMenu = {
+						path: 'notification',
+						icon: 'glyphicon glyphicon-comment',
+						title: 'Notifications',
+						priority: 2,
+						permission: '',
+						template: 'Scripts/common/notification/notifyMenu.tpl.html',
+						customAction: function () { markAllAsRead(); },
+						children: []
+					};
+					mainMenuService.addMenuItem(notifyMenu);
+				}
+				notifyMenu.newCount = data.newCount;
+				notifyMenu.progress = _.some(data.notifyEvents, function (x) { return x.status == notifyStatusEnum.running; });
+
+				//clear all child
+				notifyMenu.children.splice(0, notifyMenu.children.length)
 
 				//Add all events
 				angular.forEach(data.notifyEvents, function (x) {
 				    console.info(x);
-					var menuItem = {
+				    var menuItem = {
+				    	parent: notifyMenu,
 						path: 'notification/events',
 						icon: 'glyphicon glyphicon-comment',
 						title: x.title,
@@ -102,14 +95,12 @@
 						state: 'notification',
 						stateParams: x,
 						permission: '',
-						stateParams: x,
 						template: 'Scripts/common/notification/notify.tpl.html',
 						notify: x,
 					};
-					menuItems.push(menuItem);
-				
+					notifyMenu.children.push(menuItem);
 				});
-				mainMenuService.addMenuItems(menuItems);
+				
 			}).
 			error(function (data, status, headers, config) {
   				//todo: Need add error notification
@@ -126,13 +117,13 @@
 		},
 		running: false,
 		error: function (data) {
-		    return innerNotification({ notifyType: notifyTypeEnum.error, title: data.title, description: data.description });
+			return innerNotification({ notifyType: notifyTypeEnum.error, title: data.title, description: data.description, status: notifyStatusEnum.finished });
 		},
 		warning: function (data) {
-		    return innerNotification({ notifyType: notifyTypeEnum.warning, title: data.title, description: data.description });
+			return innerNotification({ notifyType: notifyTypeEnum.warning, title: data.title, description: data.description, status: notifyStatusEnum.finished });
 		},
 		info: function (data) {
-		    return innerNotification({ notifyType: notifyTypeEnum.info, title: data.title, description: data.description });
+			return innerNotification({ notifyType: notifyTypeEnum.info, title: data.title, description: data.description, status: notifyStatusEnum.finished });
 		},
 		task: function (data) {
 		    return innerNotification({ notifyType: notifyTypeEnum.task, title: data.title, description: data.description });

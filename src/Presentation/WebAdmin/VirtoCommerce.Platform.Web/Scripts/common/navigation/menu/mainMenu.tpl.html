@@ -9,8 +9,8 @@
                     </header>
                     <div class="scrollable">
                         <ul class="list">
-                            <li ng-repeat="menuItem in currentMenuItem.children">
-                                <a ng-if="!menuItem.template" href="" ng-click="selectMenuItem(menuItem)" va-permission="{{menuItem.permission}}">
+                            <li ng-repeat="menuItem in currentMenuItem.children" ng-click="selectMenuItem(menuItem)">
+                                <a ng-if="!menuItem.template" href="" va-permission="{{menuItem.permission}}">
                                     <i ng-class="menuItem.icon"></i>
                                     {{menuItem.title}}
                                 </a>
@@ -25,7 +25,7 @@
 
         <div class="bar">
             <ul class="top">
-                <li ng-repeat="menuItem in getRootLevelMenuItems()" ng-click="selectMenuItem(menuItem)">
+                <li ng-repeat="menuItem in rootMenuItems" ng-click="selectMenuItem(menuItem)">
                     <a ng-if="!menuItem.template" href="">
                         <span class="icon">
                             <i ng-class="menuItem.icon"></i>
