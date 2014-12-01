@@ -57,6 +57,29 @@
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     }
 
+    $scope.blade.onClose = function (closeCallback)
+    {
+
+        if ($scope.blade.childrenBlades.length > 0)
+        {
+            var callback = function ()
+            {
+                if ($scope.blade.childrenBlades.length == 0)
+                {
+                    closeCallback();
+                };
+            };
+            angular.forEach($scope.blade.childrenBlades, function (child)
+            {
+                bladeNavigationService.closeBlade(child, callback);
+            });
+        }
+        else
+        {
+            closeCallback();
+        }
+    };
+
     $scope.blade.refresh();
 
 }]);

@@ -133,7 +133,17 @@
             name: "Run", icon: 'icon-enter',
             executeMethod: function ()
             {
-                //TODO
+                var newBlade = {
+                    id: 'runImportJob',
+                    item: $scope.selectedItem,
+                    title: 'Run import job',
+                    subtitle: 'Run an import job',
+                    controller: 'importJobRunController',
+                    bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/import/import-job-execute.tpl.html',
+                    template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/import/import-job-run.tpl.html'
+                };
+                closeChildrenBlades();
+                bladeNavigationService.showBlade(newBlade, $scope.blade);
             },
             canExecuteMethod: function ()
             {

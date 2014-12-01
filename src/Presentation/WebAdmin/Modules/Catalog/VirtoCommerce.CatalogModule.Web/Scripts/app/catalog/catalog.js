@@ -30,6 +30,7 @@ angular.module(catalogsModuleName, [
   'catalogModule.wizards.newProductWizard.review.detail',
   'catalogModule.wizards.newProductWizard.seo',
   'catalogModule.blades.import.importJobList',
+  'catalogModule.blades.import.importJobRun',
   'catalogModule.wizards.importJobWizard',
   'catalogModule.wizards.importJobWizard.catalogs',
   'catalogModule.wizards.importJobWizard.importers',

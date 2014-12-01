@@ -20,7 +20,8 @@
             function (dbItem)
             {
                 if (execute) {
-                    imports.run({ id: dbItem.id, sourceAssetId: dbItem.templatePath }, function() {
+                    dbItem.$run(null, function ()
+                    {
                         //TODO show notification
                     });
                 }

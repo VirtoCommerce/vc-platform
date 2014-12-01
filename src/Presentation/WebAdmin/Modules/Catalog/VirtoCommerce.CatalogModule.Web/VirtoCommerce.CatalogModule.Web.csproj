@@ -168,8 +168,11 @@
     <Content Include="Scripts\app\catalog\blades\category-detail.tpl.html" />
     <Content Include="Scripts\app\catalog\blades\editorialReview-detail.js" />
     <Content Include="Scripts\app\catalog\blades\editorialReview-detail.tpl.html" />
+    <Content Include="Scripts\app\catalog\blades\import\import-job-run.js" />
     <Content Include="Scripts\app\catalog\blades\import\import-job-list.js" />
+    <Content Include="Scripts\app\catalog\blades\import\import-job-run.tpl.html" />
     <Content Include="Scripts\app\catalog\blades\import\import-job-list.tpl.html" />
+    <Content Include="Scripts\app\catalog\blades\import\import-job-execute.tpl.html" />
     <Content Include="Scripts\app\catalog\blades\seo-detail.js" />
     <Content Include="Scripts\app\catalog\blades\seo-detail.tpl.html" />
     <Content Include="Scripts\app\catalog\blades\property-attributes.js" />

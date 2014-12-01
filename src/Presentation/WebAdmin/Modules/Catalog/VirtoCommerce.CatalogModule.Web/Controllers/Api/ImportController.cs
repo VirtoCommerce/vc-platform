@@ -308,10 +308,11 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 
         [ResponseType(typeof(NotifyEvent))]
         [HttpPost]
-        public IHttpActionResult Run(string id, string sourceAssetId)
+        [Route("run")]
+        public IHttpActionResult Run(webModel.ImportJob job)
         {
             var importService = _importServiceFactory();
-            Task.Run(() => importService.RunImportJob(id, sourceAssetId));
+            Task.Run(() => importService.RunImportJob(job.Id, job.TemplatePath));
 
             Task.Run(() =>
             {
@@ -320,7 +321,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 var finished = false;
                 while (!finished)
                 {
-                    var res = importService.GetImportResult(id);
+                    var res = importService.GetImportResult(job.Id);
                     //progress.Report(new ImportProgress
                     //{
                     //    ImportEntity = jobEntity,
