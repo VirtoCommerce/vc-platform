@@ -1,0 +1,20 @@
+﻿<div style="width: 300px;">
+    <form name="mappingForm">
+        <fieldset ng-init="setForm(mappingForm)">
+            <label>CSV column:</label>
+            <div data-role="input-control" class="input-control select" style="width: 50%">
+                <select class="form-control" ng-model="currentEntity.csvColumnName" ng-options="obj for obj in blade.csvColumns">
+                    <option value="">Custom</option>
+                </select>
+            </div>
+            <label>Custom value:</label>
+            <div data-role="input-control" class="input-control text">
+                <input class="form-control" ng-model="currentEntity.customValue" type="text" ng-disabled="currentEntity.csvColumnName" />
+            </div>
+            <label>Value format ({0} stands for value):</label>
+            <div data-role="input-control" class="input-control text">
+                <input class="form-control" ng-model="currentEntity.stringFormat" type="text" />
+            </div>
+        </fieldset>
+    </form>
+</div>

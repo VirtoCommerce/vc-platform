@@ -168,8 +168,11 @@
     <Content Include="Scripts\app\catalog\blades\category-detail.tpl.html" />
     <Content Include="Scripts\app\catalog\blades\editorialReview-detail.js" />
     <Content Include="Scripts\app\catalog\blades\editorialReview-detail.tpl.html" />
+    <Content Include="Scripts\app\catalog\blades\import\import-job-run.js" />
     <Content Include="Scripts\app\catalog\blades\import\import-job-list.js" />
+    <Content Include="Scripts\app\catalog\blades\import\import-job-run.tpl.html" />
     <Content Include="Scripts\app\catalog\blades\import\import-job-list.tpl.html" />
+    <Content Include="Scripts\app\catalog\blades\import\import-job-execute.tpl.html" />
     <Content Include="Scripts\app\catalog\blades\seo-detail.js" />
     <Content Include="Scripts\app\catalog\blades\seo-detail.tpl.html" />
     <Content Include="Scripts\app\catalog\blades\property-attributes.js" />
@@ -240,7 +243,9 @@
     <Content Include="Scripts\app\catalog\widgets\itemVariationWidget.tpl.html" />
     <Content Include="Scripts\app\catalog\widgets\virtualCatalogMappingWidget.js" />
     <Content Include="Scripts\app\catalog\widgets\virtualCatalogMappingWidget.tpl.html" />
+    <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-mapping-step-edit.js" />
     <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-mapping-step.js" />
+    <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-mapping-step-edit.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-settings-step.js" />
     <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-importers-step.js" />
     <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-mapping-step.tpl.html" />

@@ -5,13 +5,29 @@
 {
     $scope.blade.isLoading = false;
 
-    $scope.createItem = function ()
+    $scope.blade.refresh = function() {
+        
+        if (!$scope.blade.isNew) {
+            $scope.blade.item.$get({}, function(data) {
+                $scope.blade.item = data;
+            });
+        }
+    }
+
+    $scope.createItem = function (execute)
     {
         $scope.blade.item.$create(null,
             function (dbItem)
             {
-                $scope.bladeClose();
+                if (execute) {
+                    dbItem.$run(null, function ()
+                    {
+                        //TODO show notification
+                    });
+                }
+
                 $scope.blade.parentBlade.refresh();
+                $scope.bladeClose();
             });
 
     }
@@ -28,6 +44,8 @@
 
     function initialize()
     {
+        $scope.blade.refresh();
+
         if (!$scope.uploader)
         {
             // Creates a uploader
@@ -109,6 +127,7 @@
                     newBlade = {
                         id: "importJobMapping",
                         item: $scope.blade.item,
+                        isNew: $scope.blade.isNew,
                         title: $scope.blade.item.name,
                         bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/common/wizard-ok-action.tpl.html',
                         subtitle: 'Column mapping',

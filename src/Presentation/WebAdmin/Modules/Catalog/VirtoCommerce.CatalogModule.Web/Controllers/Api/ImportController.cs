@@ -67,8 +67,10 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 var dbEntry = repository.ImportJobs.ExpandAll().Single(x => x.ImportJobId.Equals(entry.Id));
 
                 dbEntry.EntityImporter = entry.EntityImporter;
+                dbEntry.ColumnDelimiter = entry.ColumnDelimiter;
                 dbEntry.CatalogId = entry.CatalogId;
                 dbEntry.ImportStep = entry.ImportStep;
+                dbEntry.ImportCount = entry.ImportCount;
                 dbEntry.MaxErrorsCount = entry.MaxErrorsCount;
                 dbEntry.Name = entry.Name;
                 dbEntry.PropertySetId = entry.PropertySetId;
@@ -125,28 +127,12 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             foundation.ImportJob[] dbEntries;
             using (var repository = _importRepositoryFactory())
             {
-                dbEntries = repository.ImportJobs.ExpandAll()
+                dbEntries = repository.ImportJobs
                     .Where(x => catalogId == null || x.CatalogId.Equals(catalogId))
                     .OrderBy(x => x.Name).ToArray();
             }
 
             var retVal = dbEntries.Select(x => x.ToWebModel()).ToArray();
-            var importService = _importServiceFactory();
-
-            //Load available columns
-            foreach (var job in retVal)
-            {
-                try
-                {
-                    var csvColumns = importService.GetCsvColumns(job.TemplatePath, job.ColumnDelimiter);
-                    job.AvailableCsvColumns = csvColumns;
-                }
-                catch (Exception)
-                {
-                    //cannot load csv file
-                }
-            }
-
             return Ok(retVal);
         }
 
@@ -155,13 +141,27 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [Route("get/{id}")]
         public IHttpActionResult Get(string id)
         {
-            foundation.ImportJob retVal;
+            foundation.ImportJob job;
             using (var repository = _importRepositoryFactory())
             {
-                retVal = repository.ImportJobs.ExpandAll().SingleOrDefault(x => x.ImportJobId.Equals(id));
+                job = repository.ImportJobs.ExpandAll().SingleOrDefault(x => x.ImportJobId.Equals(id));
             }
 
-            return Ok(retVal.ToWebModel());
+            var importService = _importServiceFactory();
+            var retVal = job.ToWebModel();
+
+            //Load available columns
+            try
+            {
+                var csvColumns = importService.GetCsvColumns(retVal.TemplatePath, retVal.ColumnDelimiter);
+                retVal.AvailableCsvColumns = csvColumns;
+            }
+            catch (Exception)
+            {
+                //cannot load csv file
+            }
+
+            return Ok(retVal);
         }
 
         [HttpDelete]
@@ -310,10 +310,11 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 
         [ResponseType(typeof(NotifyEvent))]
         [HttpPost]
-        public IHttpActionResult Run(string id, string sourceAssetId)
+        [Route("run")]
+        public IHttpActionResult Run(webModel.ImportJob job)
         {
             var importService = _importServiceFactory();
-            Task.Run(() => importService.RunImportJob(id, sourceAssetId));
+            Task.Run(() => importService.RunImportJob(job.Id, job.TemplatePath));
 
             Task.Run(() =>
             {
@@ -322,7 +323,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 var finished = false;
                 while (!finished)
                 {
-                    var res = importService.GetImportResult(id);
+                    var res = importService.GetImportResult(job.Id);
                     //progress.Report(new ImportProgress
                     //{
                     //    ImportEntity = jobEntity,

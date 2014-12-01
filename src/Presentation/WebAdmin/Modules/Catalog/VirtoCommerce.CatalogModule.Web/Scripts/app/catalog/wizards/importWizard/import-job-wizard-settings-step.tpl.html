@@ -19,7 +19,9 @@
             </div>
             <label>Column delimiter:</label>
             <div data-role="input-control" class="input-control select" style="width: 50%">
-                <select required class="form-control" ng-model="item.columnDelimiter" ng-options="obj.value as obj.name for obj in columnDelimiters"></select>
+                <select class="form-control" ng-model="item.columnDelimiter" ng-options="obj.value as obj.name for obj in columnDelimiters">
+                    <option value="">Other</option>
+                </select>
             </div>
             <div data-role="input-control" class="input-control text" style="width: 50%">
                 <input required class="form-control" ng-model="item.columnDelimiter" type="text" />

@@ -1,3 +1,8 @@
-﻿<button ng-click="createItem()" ng-disabled="!canMapColumns()">
-    <span>Create</span>
-</button>
+﻿<div class="button-set">
+    <button ng-click="createItem(false)" ng-disabled="!canMapColumns()">
+        <span>Create</span>
+    </button>
+    <button ng-click="createItem(true)" ng-disabled="!canMapColumns()">
+        <span>Create and execute</span>
+    </button>
+</div>

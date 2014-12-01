@@ -14,11 +14,11 @@
     </form>
 
     <ul class="list-extended">
-        <li ng-click="openBlade('importer')">
+        <li ng-click="openBlade('importer')" ng-class="{'disabled': !blade.isNew}">
             <span class="title">Target type</span>
-            <span class="sub-title">{{blade.item.entityImporter ? blade.item.entityImporter : 'Select entity importer type'}}</span> 
+            <span class="sub-title">{{blade.item.entityImporter ? blade.item.entityImporter : 'Select entity importer type'}}</span>
         </li>
-        <li ng-click="openBlade('catalogs')">
+        <li ng-click="openBlade('catalogs')" ng-class="{'disabled': !blade.isNew}">
             <span class="title">Catalog</span>
             <span class="sub-title">{{blade.item.catalogId ? blade.item.catalogName ? blade.item.catalogName : blade.item.catalogId  : 'Select catalog'}}</span>
         </li>

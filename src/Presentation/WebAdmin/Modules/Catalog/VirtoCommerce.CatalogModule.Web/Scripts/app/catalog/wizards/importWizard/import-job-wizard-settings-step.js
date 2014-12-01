@@ -9,8 +9,7 @@
         { name: "Auto", value: "?" },
         { name: "Comma", value: "," },
         { name: "Semicolon", value: ";" },
-        { name: "Tab", value: "\t" },
-        { name: "Other", value: "" }
+        { name: "Tab", value: "\t" }
     ];
 
     $scope.saveChanges = function ()
