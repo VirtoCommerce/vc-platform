@@ -11,20 +11,21 @@
             link: function ($scope, $element, $attrs, $controller) {
                 $scope.auth = authService;
                 $scope.notification = function (type) {
-                	var title = "Some notification text";
+                    var title = "Some notification text";
+                    var desc = "Some notification description";
                 	switch(type)
                 	{
 						case 'error':
-							notificationService.error(title);
+						    notificationService.error({title:title, description: desc});
 							break;
                 		case 'warning':
-                			notificationService.warning(title);
+                		    notificationService.warning({title:title, description: desc});
                 			break;
                 		case 'info':
-                			notificationService.info(title);
+                		    notificationService.info({title:title, description: desc});
                 			break;
                 		case 'task':
-                			notificationService.task(title);
+                		    notificationService.task({title: title, description: desc });
                 			break;
                 	}
                 };

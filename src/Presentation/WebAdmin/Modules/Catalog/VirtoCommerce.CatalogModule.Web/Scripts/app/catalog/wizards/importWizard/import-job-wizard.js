@@ -1,4 +1,4 @@
-﻿angular.module('catalogModule.wizards.newImportJobWizard', [
+﻿angular.module('catalogModule.wizards.importJobWizard', [
        'angularFileUpload'
 ])
 .controller('importJobWizardController', ['$scope', 'bladeNavigationService', 'dialogService', 'imports', 'FileUploader', function ($scope, bladeNavigationService, dialogService, imports, FileUploader)
@@ -77,13 +77,11 @@
             {
                 case 'importer':
                     newBlade = {
-                        id: "newProductProperties",
-                        item: $scope.blade.item,
+                        id: "importJobImporters",
                         title: $scope.blade.item.name,
-                        bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-product-wizard-ok-action.tpl.html',
-                        subtitle: 'item properties',
-                        controller: 'newProductWizardPropertiesController',
-                        template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/item-property-detail.tpl.html'
+                        subtitle: 'Import types',
+                        controller: 'importJobImportersController',
+                        template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/importWizard/import-job-wizard-importers-step.tpl.html'
                     };
                     break;
                 case 'catalogs':
@@ -96,19 +94,27 @@
                         template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/importWizard/import-job-wizard-catalogs-step.tpl.html'
                     };
                     break;
-                case 'other':
+                case 'settings':
                     newBlade = {
-                        id: "newProductSeoDetail",
-                        seoInfos: $scope.blade.item.seoInfos,
+                        id: "importJobSettings",
+                        item: $scope.blade.item,
                         title: $scope.blade.item.name,
-                        bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-product-wizard-ok-action.tpl.html',
-                        subtitle: 'Seo details',
-                        controller: 'newProductSeoDetailController',
-                        template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/seo-detail.tpl.html'
+                        bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/common/wizard-ok-action.tpl.html',
+                        subtitle: 'Import settings',
+                        controller: 'importJobSettingsController',
+                        template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/importWizard/import-job-wizard-settings-step.tpl.html'
                     };
                     break;
                 case 'mapping':
-
+                    newBlade = {
+                        id: "importJobMapping",
+                        item: $scope.blade.item,
+                        title: $scope.blade.item.name,
+                        bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/common/wizard-ok-action.tpl.html',
+                        subtitle: 'Column mapping',
+                        controller: 'importJobMappingController',
+                        template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/importWizard/import-job-wizard-mapping-step.tpl.html'
+                    };
                     break;
             }
 

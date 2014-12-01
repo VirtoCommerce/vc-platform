@@ -794,7 +794,6 @@
     <Content Include="Views\Catalog\CreateReview.cshtml" />
     <Content Include="Views\Catalog\RelatedProducts.cshtml" />
     <Content Include="Views\Catalog\RelatedItem.cshtml" />
-    <Content Include="Views\Catalog\ItemProperties.cshtml" />
     <Content Include="Views\Catalog\ItemVariations.cshtml" />
     <Content Include="Views\Catalog\Variation.cshtml" />
     <Content Include="Views\Cart\DisplayTemplates\LineItemModel.cshtml" />
@@ -851,12 +850,12 @@
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Account\SendCode.cshtml" />
     <Content Include="Views\Account\VerifyCode.cshtml" />
+    <Content Include="Views\Catalog\DisplayTemplates\PropertiesModel.cshtml" />
     <None Include="Web.Azure.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Virto\Logs\" />
     <Folder Include="Areas\VirtoAdmin\Views\Shared\" />
-    <Folder Include="Views\Catalog\DisplayTemplates\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config">

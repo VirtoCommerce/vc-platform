@@ -26,6 +26,13 @@
     	task: 3
     };
 	if (Object.freeze) Object.freeze(notifyTypeEnum);
+
+	var notifyTypesArr = [
+        'info',
+        'warning',
+        'error',
+        'task'
+	];
 	
 	var notifyStatusEnum =
     {
@@ -34,6 +41,14 @@
     	finished: 2,
     	error: 3
     };
+
+	var notifyStatusArr = [
+        'running',
+        'aborted',
+        'finished',
+        'error'
+	];
+
 	if (Object.freeze) Object.freeze(notifyStatusEnum);
 
 
@@ -78,6 +93,7 @@
 
 				//Add all events
 				angular.forEach(data.notifyEvents, function (x) {
+				    console.info(x);
 					var menuItem = {
 						path: 'notification/events',
 						icon: 'glyphicon glyphicon-comment',
@@ -86,6 +102,7 @@
 						state: 'notification',
 						stateParams: x,
 						permission: '',
+						stateParams: x,
 						template: 'Scripts/common/notification/notify.tpl.html',
 						notify: x,
 					};
@@ -104,21 +121,21 @@
 			if (!this.running) {
 				notificationRefresh();
 				this.running = true;
-				//$interval(notificationRefresh, 10000)
+				//$interval(notificationRefresh, 10000);
 			};
 		},
 		running: false,
-		error: function (message) {
-			return innerNotification({ notifyType: notifyTypeEnum.error, title: message });
+		error: function (data) {
+		    return innerNotification({ notifyType: notifyTypeEnum.error, title: data.title, description: data.description });
 		},
-		warning: function (message) {
-			return innerNotification({ notifyType: notifyTypeEnum.warning, title: message });
+		warning: function (data) {
+		    return innerNotification({ notifyType: notifyTypeEnum.warning, title: data.title, description: data.description });
 		},
-		info: function (message) {
-			return innerNotification({ notifyType: notifyTypeEnum.info, title: message });
+		info: function (data) {
+		    return innerNotification({ notifyType: notifyTypeEnum.info, title: data.title, description: data.description });
 		},
-		task: function (message) {
-			return innerNotification({ notifyType: notifyTypeEnum.task, title: message });
+		task: function (data) {
+		    return innerNotification({ notifyType: notifyTypeEnum.task, title: data.title, description: data.description });
 		}	
 	};
 	return retVal;
