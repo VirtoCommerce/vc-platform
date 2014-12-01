@@ -67,8 +67,10 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 var dbEntry = repository.ImportJobs.ExpandAll().Single(x => x.ImportJobId.Equals(entry.Id));
 
                 dbEntry.EntityImporter = entry.EntityImporter;
+                dbEntry.ColumnDelimiter = entry.ColumnDelimiter;
                 dbEntry.CatalogId = entry.CatalogId;
                 dbEntry.ImportStep = entry.ImportStep;
+                dbEntry.ImportCount = entry.ImportCount;
                 dbEntry.MaxErrorsCount = entry.MaxErrorsCount;
                 dbEntry.Name = entry.Name;
                 dbEntry.PropertySetId = entry.PropertySetId;
