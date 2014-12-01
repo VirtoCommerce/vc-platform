@@ -672,6 +672,15 @@
 						margin: 0 -3px 0 0;
 					}
 
+						.left-menu .top li a .progress-bar {
+							position: absolute;
+							top: 68px;
+							background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+							background-size: 20px 20px;
+							-webkit-animation: 1s linear 0s normal none infinite progress_bar;
+							animation: 1s linear 0s normal none infinite progress_bar;
+						}
+
 						.left-menu ul li a .icon
 						{
 							display: inline-block;
