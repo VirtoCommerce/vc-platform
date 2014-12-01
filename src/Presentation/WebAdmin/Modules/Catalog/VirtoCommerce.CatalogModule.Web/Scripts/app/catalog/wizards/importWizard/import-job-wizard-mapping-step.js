@@ -6,11 +6,16 @@
     {
         $scope.blade.isLoading = true;
 
-        $scope.blade.item.$updateMappingItems(null, function (result)
+        if ($scope.blade.isNew) {
+            $scope.blade.item.$updateMappingItems(null, function(result) {
+                $scope.blade.isLoading = false;
+                $scope.item = result;
+            });
+        } else
         {
             $scope.blade.isLoading = false;
-            $scope.item = result;
-        });
+            $scope.item = $scope.blade.item;
+        }
     };
 
 

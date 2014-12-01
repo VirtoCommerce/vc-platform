@@ -127,6 +127,7 @@
                     newBlade = {
                         id: "importJobMapping",
                         item: $scope.blade.item,
+                        isNew: $scope.blade.isNew,
                         title: $scope.blade.item.name,
                         bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/common/wizard-ok-action.tpl.html',
                         subtitle: 'Column mapping',
