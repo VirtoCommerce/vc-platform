@@ -6,6 +6,7 @@
         //copy: { method: 'GET', url: 'api/import/copy/:id' },
         run: { method: 'POST', url: 'api/import/run' },
         list: { method: 'GET', url: 'api/import/list/:catalogId', isArray: true },
+        get: { method: 'GET', url: 'api/import/get/:id', isArray: false },
         new: { method: 'GET', url: 'api/import/new/:catalogId' },
         create: { method: 'POST', url: 'api/import/create' },
         update: { method: 'PUT', url: 'api/import/update' },

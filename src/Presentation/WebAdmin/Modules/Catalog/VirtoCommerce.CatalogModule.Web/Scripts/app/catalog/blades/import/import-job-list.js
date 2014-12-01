@@ -91,6 +91,7 @@
                     var newBlade = {
                         id: 'newImportJobWizard',
                         item: data,
+                        isNew: true,
                         title: 'New import job',
                         subtitle: 'Create an import job',
                         controller: 'importJobWizardController',
@@ -113,6 +114,7 @@
                 var newBlade = {
                     id: 'importJobWizard',
                     item: $scope.selectedItem,
+                    isNew: false,
                     title: 'Edit import job',
                     subtitle: 'Manage an import job',
                     controller: 'importJobWizardController',

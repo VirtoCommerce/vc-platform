@@ -22,19 +22,20 @@ angular.module(catalogsModuleName, [
   'catalogModule.widget.catalogLanguagesWidget',
   'catalogModule.blades.catalogLanguages',
   'catalogModule.widget.seoWidget',
+  'catalogModule.directives',
   'catalogModule.wizards.newProductWizard',
   'catalogModule.wizards.newProductWizard.images',
   'catalogModule.wizards.newProductWizard.properties',
   'catalogModule.wizards.newProductWizard.reviews',
   'catalogModule.wizards.newProductWizard.review.detail',
   'catalogModule.wizards.newProductWizard.seo',
-  'catalogModule.directives',
   'catalogModule.blades.import.importJobList',
   'catalogModule.wizards.importJobWizard',
   'catalogModule.wizards.importJobWizard.catalogs',
   'catalogModule.wizards.importJobWizard.importers',
   'catalogModule.wizards.importJobWizard.settings',
   'catalogModule.wizards.importJobWizard.mapping',
+  'catalogModule.wizards.importJobWizard.mapping.edit',
   'textAngular'
 ])
 .config(

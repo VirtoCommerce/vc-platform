@@ -35,22 +35,27 @@
             name: "Edit",
             icon: 'icon-new-tab-2',
             executeMethod: function() {
-                var newBlade = {
-                    id: 'importJobWizardMappingEdit',
-                    item: $scope.selectedItem,
-                    title: 'Edit mapping',
-                    subtitle: 'Edit mapping',
-                    controller: 'importJobMappingEditController',
-                    bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/common/wizard-ok-action.tpl.html',
-                    template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/importWizard/import-job-wizard-mapping-step-edit.tpl.html'
-                };
-                bladeNavigationService.showBlade(newBlade, $scope.blade);
+                $scope.editMapping($scope.selectedItem);
             },
             canExecuteMethod: function() {
                 return $scope.selectedItem;
             }
         }
     ];
+
+    $scope.editMapping = function(column) {
+        var newBlade = {
+            id: 'importJobWizardMappingEdit',
+            item: column,
+            csvColumns: $scope.item.availableCsvColumns,
+            title: column.entityColumnName,
+            subtitle: 'Edit column mapping',
+            controller: 'importJobMappingEditController',
+            bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/common/wizard-ok-action.tpl.html',
+            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/importWizard/import-job-wizard-mapping-step-edit.tpl.html'
+        };
+        bladeNavigationService.showBlade(newBlade, $scope.blade);
+    }
 
     $scope.blade.refresh();
 

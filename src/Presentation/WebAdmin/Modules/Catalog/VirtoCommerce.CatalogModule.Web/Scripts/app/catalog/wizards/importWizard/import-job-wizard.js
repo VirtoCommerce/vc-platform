@@ -5,13 +5,28 @@
 {
     $scope.blade.isLoading = false;
 
-    $scope.createItem = function ()
+    $scope.blade.refresh = function() {
+        
+        if (!$scope.blade.isNew) {
+            $scope.blade.item.$get({}, function(data) {
+                $scope.blade.item = data;
+            });
+        }
+    }
+
+    $scope.createItem = function (execute)
     {
         $scope.blade.item.$create(null,
             function (dbItem)
             {
-                $scope.bladeClose();
+                if (execute) {
+                    imports.run({ id: dbItem.id, sourceAssetId: dbItem.templatePath }, function() {
+                        //TODO show notification
+                    });
+                }
+
                 $scope.blade.parentBlade.refresh();
+                $scope.bladeClose();
             });
 
     }
@@ -28,6 +43,8 @@
 
     function initialize()
     {
+        $scope.blade.refresh();
+
         if (!$scope.uploader)
         {
             // Creates a uploader
