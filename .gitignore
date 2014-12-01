@@ -170,3 +170,6 @@ $RECYCLE.BIN/
 /src/Presentation/WebAdmin/VirtoCommerce.Platform.Web/App_Data/Modules
 /src/Presentation/WebAdmin/VirtoCommerce.Platform.Web/bin
 /src/Presentation/WebAdmin/VirtoCommerce.Platform.Web/Content/Uploads
+
+# VirtoCommerce.PaymentGateways.dll
+Shared/VirtoCommerce/VirtoCommerce.PaymentGateways.dll
