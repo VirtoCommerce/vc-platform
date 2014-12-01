@@ -88,7 +88,6 @@
     <Compile Include="Globalization\Repository\XmlElementRepository.cs" />
     <Compile Include="ReviewClient.cs" />
     <Compile Include="SeoKeywordClient.cs" />
-    <Compile Include="SequencesClient.cs" />
     <Compile Include="Settings.cs" />
     <Compile Include="SettingsClient.cs" />
     <Compile Include="DisplayTemplateClient.cs" />

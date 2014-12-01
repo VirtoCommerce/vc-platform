@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections;
+using System.Threading.Tasks;
 using Microsoft.Practices.ObjectBuilder2;
 
 namespace VirtoCommerce.Foundation.Data.Azure.Asset
@@ -399,6 +400,11 @@ namespace VirtoCommerce.Foundation.Data.Azure.Asset
         }
 
         public IQueryable<T> GetAsQueryable<T>() where T : class
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Refresh(IEnumerable collection)
         {
             throw new NotImplementedException();
         }

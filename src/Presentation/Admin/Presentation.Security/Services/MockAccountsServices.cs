@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -84,6 +85,10 @@ namespace VirtoCommerce.ManagementClient.Security.Services
             throw new NotImplementedException();
         }
 
+        public void Refresh(IEnumerable collection)
+        {
+            throw new NotImplementedException();
+        }
 
         #endregion
 

@@ -134,6 +134,7 @@
     <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Web.Extensions">
@@ -281,7 +282,6 @@
     <Compile Include="Services\Security\IUserIdentitySecurity.cs" />
     <Compile Include="Services\Security\OAuthAuthorizationManager.cs" />
     <Compile Include="Services\Security\SecurityService.cs" />
-    <Compile Include="Services\Sequences\SequenceService.cs" />
     <Compile Include="Services\Templates\ProcessedTemplate.cs" />
     <Compile Include="Services\Templates\TemplateService.cs" />
     <Compile Include="UnityDependencyResolverServiceLocatorProvider.cs" />

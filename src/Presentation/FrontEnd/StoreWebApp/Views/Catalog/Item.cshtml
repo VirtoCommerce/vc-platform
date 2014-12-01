@@ -135,7 +135,7 @@
             </div>
             <h2 data-index="1" class="head"><a>@("Additional Information".Localize())</a></h2>
             <div id="product_tabs_additional_contents_list" class="tabs-content" style="display: none;">
-                @{Html.RenderPartial("ItemProperties", Model.CatalogItem);}
+                @Html.DisplayFor(m => m.CatalogItem.Properties)
             </div>
             <h2 data-index="2" class="head"><a>@("Reviews".Localize())</a></h2>
             <div class="tabs-content" style="display: none;">

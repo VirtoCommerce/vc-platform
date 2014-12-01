@@ -1,9 +1,10 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using Microsoft.Practices.Prism.Commands;
+﻿using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Interactivity.InteractionRequest;
 using Omu.ValueInjecter;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using VirtoCommerce.Client.Globalization;
 using VirtoCommerce.Foundation.Catalogs.Factories;
 using VirtoCommerce.Foundation.Catalogs.Model;
@@ -26,19 +27,20 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
         private readonly IViewModelsFactory<IPropertyAttributeViewModel> _attributeVmFactory;
         private readonly IRepositoryFactory<ICatalogRepository> _repositoryFactory;
         private readonly ICatalogEntityFactory _entityFactory;
-
+        private readonly ObservableCollection<Property> _properties;
         #endregion
 
         public catalogModel.Catalog ParentCatalog { get; private set; }
 
-        public PropertyViewModel(IViewModelsFactory<IPropertyValueViewModel> propertyValueVmFactory, IViewModelsFactory<IPropertyAttributeViewModel> attributeVmFactory, ICatalogEntityFactory entityFactory, Property item, catalogModel.Catalog parentCatalog, IRepositoryFactory<ICatalogRepository> repositoryFactory)
+        public PropertyViewModel(IViewModelsFactory<IPropertyValueViewModel> propertyValueVmFactory, IViewModelsFactory<IPropertyAttributeViewModel> attributeVmFactory, ICatalogEntityFactory entityFactory, Property item, catalogModel.Catalog parentCatalog, IRepositoryFactory<ICatalogRepository> repositoryFactory, ObservableCollection<Property> properties)
         {
             InnerItem = item;
             _propertyValueVmFactory = propertyValueVmFactory;
             _attributeVmFactory = attributeVmFactory;
             _entityFactory = entityFactory;
+            _properties = properties;
             ParentCatalog = parentCatalog;
-            _repositoryFactory = repositoryFactory;
+            // _repositoryFactory = repositoryFactory;
 
             ValueAddCommand = new DelegateCommand(RaiseValueAddInteractionRequest);
             ValueEditCommand = new DelegateCommand<PropertyValueBase>(RaiseValueEditInteractionRequest, x => x != null);
@@ -97,12 +99,19 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 
             if (!InnerItem.Errors.Any())
             {
-                var repository = _repositoryFactory.GetRepositoryInstance();
-                var count = repository.Properties.Where(x => x.Name == InnerItem.Name && x.CatalogId == ParentCatalog.CatalogId).Count();
-                if (count > 0)
-                    InnerItem.SetError("Name", "Property with the same name already exists in this catalog.".Localize(), true);
-                else
+                var isUnique = !_properties.Any(x => x.PropertyId != InnerItem.PropertyId && x.Name == InnerItem.Name);
+                // check only on client, not DB
+                //if (isUnique)
+                //{
+                //    var repository = _repositoryFactory.GetRepositoryInstance();
+                //    isUnique = repository.Properties.Where(x => x.PropertyId != InnerItem.PropertyId && x.Name == InnerItem.Name && x.CatalogId == ParentCatalog.CatalogId)
+                //        .Count() == 0;
+                //}
+
+                if (isUnique)
                     InnerItem.ClearError("Name");
+                else
+                    InnerItem.SetError("Name", "Property with the same name already exists in this catalog.".Localize(), true);
             }
 
             return !InnerItem.Errors.Any();

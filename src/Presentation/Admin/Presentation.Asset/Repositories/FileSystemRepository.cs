@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -190,7 +191,12 @@ namespace VirtoCommerce.ManagementClient.Asset.Services
 			throw new NotImplementedException();
 		}
 
-		#endregion
+	    public void Refresh(IEnumerable collection)
+	    {
+	        throw new NotImplementedException();
+	    }
+
+	    #endregion
 
 		#region IUnitOfWork Members
 
