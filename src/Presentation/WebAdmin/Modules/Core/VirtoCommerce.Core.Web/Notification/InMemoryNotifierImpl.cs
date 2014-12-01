@@ -41,7 +41,7 @@ namespace VirtoCommerce.CoreModule.Web.Notification
 
 		public NotifySearchResult SearchNotifies(string userId, NotifySearchCriteria criteria)
 		{
-			var query = _innerList.AsQueryable().Where(x=>x.CreatorId == userId);
+			var query = _innerList.Where(x=>x.CreatorId == userId).OrderByDescending(x=>x.Created).AsQueryable();
 			if(criteria.OnlyNew)
 			{
 				query = query.Where(x => x.New);
@@ -61,6 +61,7 @@ namespace VirtoCommerce.CoreModule.Web.Notification
 				NewCount = query.Where(x=>x.New).Count(),
 				NotifyEvents = query.OrderBy(x => x.Created).Skip(criteria.Start).Take(criteria.Count).ToList()
 			};
+			
 			return retVal;
 		}
 

@@ -53,6 +53,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 		public IHttpActionResult CreateNotify(NotifyEvent notify)
 		{
 			notify.New = true;
+			notify.Created = DateTime.UtcNow;
 			notify.CreatorId = User.Identity.Name;
 			var retVal = _notifier.Create(notify);
 			return Ok(retVal);
