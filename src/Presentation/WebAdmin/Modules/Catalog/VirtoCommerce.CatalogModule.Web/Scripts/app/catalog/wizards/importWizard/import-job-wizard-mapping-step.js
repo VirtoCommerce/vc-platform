@@ -6,11 +6,16 @@
     {
         $scope.blade.isLoading = true;
 
-        $scope.blade.item.$updateMappingItems(null, function (result)
+        if ($scope.blade.isNew) {
+            $scope.blade.item.$updateMappingItems(null, function(result) {
+                $scope.blade.isLoading = false;
+                $scope.item = result;
+            });
+        } else
         {
             $scope.blade.isLoading = false;
-            $scope.item = result;
-        });
+            $scope.item = $scope.blade.item;
+        }
     };
 
 
@@ -35,22 +40,50 @@
             name: "Edit",
             icon: 'icon-new-tab-2',
             executeMethod: function() {
-                var newBlade = {
-                    id: 'importJobWizardMappingEdit',
-                    item: $scope.selectedItem,
-                    title: 'Edit mapping',
-                    subtitle: 'Edit mapping',
-                    controller: 'importJobMappingEditController',
-                    bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/common/wizard-ok-action.tpl.html',
-                    template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/importWizard/import-job-wizard-mapping-step-edit.tpl.html'
-                };
-                bladeNavigationService.showBlade(newBlade, $scope.blade);
+                $scope.editMapping($scope.selectedItem);
             },
             canExecuteMethod: function() {
                 return $scope.selectedItem;
             }
         }
     ];
+
+    $scope.editMapping = function(column) {
+        var newBlade = {
+            id: 'importJobWizardMappingEdit',
+            item: column,
+            csvColumns: $scope.item.availableCsvColumns,
+            title: column.entityColumnName,
+            subtitle: 'Edit column mapping',
+            controller: 'importJobMappingEditController',
+            bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/common/wizard-ok-action.tpl.html',
+            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/importWizard/import-job-wizard-mapping-step-edit.tpl.html'
+        };
+        bladeNavigationService.showBlade(newBlade, $scope.blade);
+    }
+
+    $scope.blade.onClose = function (closeCallback)
+    {
+
+        if ($scope.blade.childrenBlades.length > 0)
+        {
+            var callback = function ()
+            {
+                if ($scope.blade.childrenBlades.length == 0)
+                {
+                    closeCallback();
+                };
+            };
+            angular.forEach($scope.blade.childrenBlades, function (child)
+            {
+                bladeNavigationService.closeBlade(child, callback);
+            });
+        }
+        else
+        {
+            closeCallback();
+        }
+    };
 
     $scope.blade.refresh();
 

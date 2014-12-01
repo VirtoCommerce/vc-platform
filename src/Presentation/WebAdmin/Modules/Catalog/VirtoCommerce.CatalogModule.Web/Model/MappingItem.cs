@@ -1,7 +1,13 @@
-﻿namespace VirtoCommerce.CatalogModule.Web.Model
+﻿using System;
+
+namespace VirtoCommerce.CatalogModule.Web.Model
 {
     public class MappingItem
     {
+        public MappingItem()
+        {
+            Id = Guid.NewGuid().ToString();
+        }
         public string Id { get; set; }
         public string EntityColumnName { get; set; }
         public string CsvColumnName { get; set; }

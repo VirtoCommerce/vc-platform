@@ -91,6 +91,7 @@
                     var newBlade = {
                         id: 'newImportJobWizard',
                         item: data,
+                        isNew: true,
                         title: 'New import job',
                         subtitle: 'Create an import job',
                         controller: 'importJobWizardController',
@@ -113,6 +114,7 @@
                 var newBlade = {
                     id: 'importJobWizard',
                     item: $scope.selectedItem,
+                    isNew: false,
                     title: 'Edit import job',
                     subtitle: 'Manage an import job',
                     controller: 'importJobWizardController',
@@ -131,7 +133,17 @@
             name: "Run", icon: 'icon-enter',
             executeMethod: function ()
             {
-                //TODO
+                var newBlade = {
+                    id: 'runImportJob',
+                    item: $scope.selectedItem,
+                    title: 'Run import job',
+                    subtitle: 'Run an import job',
+                    controller: 'importJobRunController',
+                    bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/import/import-job-execute.tpl.html',
+                    template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/import/import-job-run.tpl.html'
+                };
+                closeChildrenBlades();
+                bladeNavigationService.showBlade(newBlade, $scope.blade);
             },
             canExecuteMethod: function ()
             {
