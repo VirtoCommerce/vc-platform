@@ -25,7 +25,7 @@
 
         <div class="bar">
             <ul class="top">
-                <li ng-repeat="menuItem in rootMenuItems" ng-click="selectMenuItem(menuItem)">
+                <li ng-repeat="menuItem in menuItems | filter: {parent: null}" ng-click="selectMenuItem(menuItem)">
                     <a ng-if="!menuItem.template" href="">
                         <span class="icon">
                             <i ng-class="menuItem.icon"></i>
