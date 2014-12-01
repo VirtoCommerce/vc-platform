@@ -41,8 +41,6 @@ namespace VirtoCommerce.CatalogModule.Web
             #endregion
 
             #region Import
-            // _container.RegisterType<IAssetService, AssetService>();
-
             //_container.RegisterType<IImportRepository>(new InjectionFactory(x => new EFImportingRepository("VirtoCommerce")));
             _container.RegisterType<Func<IImportRepository>>(new InjectionFactory(x => new Func<IImportRepository>(() => new EFImportingRepository("VirtoCommerce"))));
             _container.RegisterType<Func<IImportService>>(new InjectionFactory(x => new Func<IImportService>(() =>
