@@ -1,15 +1,19 @@
-﻿using Omu.ValueInjecter;
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
+using VirtoCommerce.CatalogModule.Repositories;
 using VirtoCommerce.CatalogModule.Web.Converters;
+using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
-using VirtoCommerce.Foundation.Importing.Model;
 using VirtoCommerce.Foundation.Importing.Repositories;
 using VirtoCommerce.Foundation.Importing.Services;
+using VirtoCommerce.Framework.Web.Notification;
+using foundation = VirtoCommerce.Foundation.Importing.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
@@ -22,12 +26,16 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 
         private readonly Func<IImportRepository> _importRepositoryFactory;
         private readonly Func<IImportService> _importServiceFactory;
+        private readonly Func<IFoundationCatalogRepository> _catalogRepositoryFactory;
+        private readonly INotifier _notifier;
         //private readonly IDataManagementService _dataManagementService;
 
-        public ImportController(Func<IImportRepository> importRepositoryFactory, Func<IImportService> importServiceFactory /*, IDataManagementService dataManagementService*/)
+        public ImportController(Func<IImportRepository> importRepositoryFactory, Func<IImportService> importServiceFactory, Func<IFoundationCatalogRepository> catalogRepositoryFactory, INotifier notifier /*, IDataManagementService dataManagementService*/)
         {
             _importRepositoryFactory = importRepositoryFactory;
             _importServiceFactory = importServiceFactory;
+            _catalogRepositoryFactory = catalogRepositoryFactory;
+            _notifier = notifier;
             //_dataManagementService = dataManagementService;
         }
 
@@ -114,7 +122,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [Route("list/{catalogId?}")]
         public IHttpActionResult List(string catalogId = null)
         {
-            ImportJob[] dbEntries;
+            foundation.ImportJob[] dbEntries;
             using (var repository = _importRepositoryFactory())
             {
                 dbEntries = repository.ImportJobs.ExpandAll()
@@ -147,7 +155,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [Route("get/{id}")]
         public IHttpActionResult Get(string id)
         {
-            ImportJob retVal;
+            foundation.ImportJob retVal;
             using (var repository = _importRepositoryFactory())
             {
                 retVal = repository.ImportJobs.ExpandAll().SingleOrDefault(x => x.ImportJobId.Equals(id));
@@ -181,14 +189,14 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 return BadRequest("EntityImporter is required.");
             }
 
-            var availableImporters = new EntityImporterBase[]
+            var availableImporters = new foundation.EntityImporterBase[]
             {
-                new ItemImporter(ImportEntityType.Product.ToString()),
-                new CategoryImporter()
+                new foundation.ItemImporter(foundation.ImportEntityType.Product.ToString()),
+                new foundation.CategoryImporter()
             };
 
-            var tmp = availableImporters.FirstOrDefault(x => x.Name == job.EntityImporter);
-            if (tmp == null)
+            var tmpImporter = availableImporters.FirstOrDefault(x => x.Name == job.EntityImporter);
+            if (tmpImporter == null)
             {
                 return BadRequest("Invalid EntityImporter.");
             }
@@ -207,25 +215,137 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             }
 
             var importService = _importServiceFactory();
+
+            if (job.ColumnDelimiter == "?")
+                job.ColumnDelimiter = importService.GetCsvColumnsAutomatically(job.TemplatePath);
             var csvColumns = importService.GetCsvColumns(job.TemplatePath, job.ColumnDelimiter);
             job.AvailableCsvColumns = csvColumns;
 
+            //add system properties of the selected import type (importer)
+            var newList = new ObservableCollection<webModel.MappingItem>();
+            tmpImporter.SystemProperties.ToList().ForEach(sysProp => newList.Add(new webModel.MappingItem
+            {
+                EntityColumnName = sysProp.Name,
+                IsSystemProperty = true,
+                IsRequired = sysProp.IsRequiredProperty,
+                DisplayName = sysProp.IsRequiredProperty ? string.Format("* {0}", sysProp.DisplayName) : sysProp.DisplayName,
+                ImportJobId = job.Id,
+                CustomValue = !string.IsNullOrEmpty(sysProp.DefaultValue) ? sysProp.DefaultValue : null
+            }));
 
-            // TODO:
-            // GetCsvColumns from csv file;
-            // SetMappingItems for job;
+            job.PropertiesMap = new ObservableCollection<webModel.MappingItem>(newList.OrderBy(item => item.DisplayName));
+            //add custom properties (if any in the selected property set
+            if (job.PropertySetId != null)
+            {
+                //get available locales for the catalog
+                var catalogRepository = _catalogRepositoryFactory();
+                var localesQuery = catalogRepository.Catalogs
+                                    .OfType<Catalog>()
+                                    .Where(x => x.CatalogId == job.CatalogId)
+                                    .Expand(x => x.CatalogLanguages)
+                                    .SingleOrDefault();
+
+                var locales = new List<CatalogLanguage>();
+                if (localesQuery != null)
+                    locales = localesQuery.CatalogLanguages.ToList();
+
+                //get property set properties
+                var ps = catalogRepository.PropertySets
+                                    .Where(x => x.PropertySetId == job.PropertySetId)
+                                    .Expand("PropertySetProperties/Property")
+                                    .FirstOrDefault();
+                if (ps != null && ps.PropertySetProperties != null)
+                {
+                    var props = ps.PropertySetProperties;
+                    newList = new ObservableCollection<webModel.MappingItem>();
+                    props.ToList().ForEach(prop =>
+                    {
+                        if (prop.Property.IsLocaleDependant)
+                        {
+                            locales.ForEach(
+                                locale =>
+                                newList.Add(new webModel.MappingItem
+                                {
+                                    EntityColumnName = prop.Property.Name,
+                                    DisplayName = prop.Property.IsRequired ? string.Format("* {0}", prop.Property.Name) : prop.Property.Name,
+                                    IsRequired = prop.Property.IsRequired,
+                                    Locale = locale.Language,
+                                    IsSystemProperty = false,
+                                    ImportJobId = job.Id
+                                }));
+                        }
+                        else
+                        {
+                            newList.Add(new webModel.MappingItem
+                            {
+                                EntityColumnName = prop.Property.Name,
+                                IsSystemProperty = false,
+                                DisplayName = prop.Property.IsRequired ? string.Format("* {0}", prop.Property.Name) : prop.Property.Name,
+                                IsRequired = prop.Property.IsRequired,
+                                ImportJobId = job.Id
+                            });
+                        }
+                    });
+                    job.PropertiesMap.Add(newList.OrderBy(item => item.DisplayName));
+                }
+            }
+
+            //default columns mapping
+            if (job.AvailableCsvColumns != null && job.AvailableCsvColumns.Any())
+            {
+                job.PropertiesMap.ToList().ForEach(col => job.AvailableCsvColumns.ToList().ForEach(csvcolumn =>
+                {
+                    //if entity column name contains csv column name or visa versa - match entity property name to csv file column name
+                    if (col.EntityColumnName.ToLower().Contains(csvcolumn.ToLower()) ||
+                        csvcolumn.ToLower().Contains(col.EntityColumnName.ToLower()))
+                    {
+                        job.PropertiesMap.First(x => x.EntityColumnName == col.EntityColumnName).CsvColumnName = csvcolumn;
+                        job.PropertiesMap.First(x => x.EntityColumnName == col.EntityColumnName).CustomValue = null;
+                    }
+                }));
+            }
 
             return Ok(job);
         }
 
+        [ResponseType(typeof(NotifyEvent))]
         [HttpPost]
-        public async Task<string> Run(string id, string sourceAssetId)
+        public IHttpActionResult Run(string id, string sourceAssetId)
         {
-            var retVal = Guid.NewGuid().ToString();
+            var importService = _importServiceFactory();
+            Task.Run(() => importService.RunImportJob(id, sourceAssetId));
 
-            // _importService.RunImportJob(jobEntity.ImportJob.ImportJobId, sourceAssetId));
+            Task.Run(() =>
+            {
+                Task.Delay(TimeSpan.FromMilliseconds(300));
 
-            return await Task.FromResult(retVal);
+                var finished = false;
+                while (!finished)
+                {
+                    var res = importService.GetImportResult(id);
+                    //progress.Report(new ImportProgress
+                    //{
+                    //    ImportEntity = jobEntity,
+                    //    ImportResult = res,
+                    //    StatusId = id,
+                    //    Processed = res == null ? 0 : res.ProcessedRecordsCount + res.ErrorsCount
+                    //});
+
+                    // res.
+
+                    if (res != null && res.IsFinished)
+                        finished = true;
+
+                    Task.Delay(TimeSpan.FromMilliseconds(150));
+                }
+            });
+
+            var notify = new NotifyEvent();
+            notify = _notifier.Create(notify);
+
+
+
+            return Ok(notify);
         }
 
         [HttpPost]

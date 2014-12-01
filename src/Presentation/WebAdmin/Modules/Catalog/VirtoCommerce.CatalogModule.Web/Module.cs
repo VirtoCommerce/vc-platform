@@ -6,7 +6,6 @@ using VirtoCommerce.CatalogModule.Repositories;
 using VirtoCommerce.CatalogModule.Services;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Assets.Factories;
-using VirtoCommerce.Foundation.Assets.Repositories;
 using VirtoCommerce.Foundation.Assets.Services;
 using VirtoCommerce.Foundation.Data.AppConfig;
 using VirtoCommerce.Foundation.Data.Asset;
@@ -42,23 +41,19 @@ namespace VirtoCommerce.CatalogModule.Web
             #endregion
 
             #region Import
-            var FileSystemBlobAssetRepository = new FileSystemBlobAssetRepository("~", new AssetEntityFactory());
-            _container.RegisterInstance<IAssetRepository>("local", FileSystemBlobAssetRepository);
-            _container.RegisterInstance<IBlobStorageProvider>("local", FileSystemBlobAssetRepository);
             // _container.RegisterType<IAssetService, AssetService>();
 
             //_container.RegisterType<IImportRepository>(new InjectionFactory(x => new EFImportingRepository("VirtoCommerce")));
             _container.RegisterType<Func<IImportRepository>>(new InjectionFactory(x => new Func<IImportRepository>(() => new EFImportingRepository("VirtoCommerce"))));
             _container.RegisterType<Func<IImportService>>(new InjectionFactory(x => new Func<IImportService>(() =>
                 {
-                    var assetRepository = _container.Resolve<IAssetRepository>("local");
-                    var blobStorageProvider = _container.Resolve<IBlobStorageProvider>("local");
+                    var fileSystemBlobAssetRepository = new FileSystemBlobAssetRepository("~", new AssetEntityFactory());
                     return new ImportService(
                         _container.Resolve<Func<IImportRepository>>()(),
                         _container.Resolve<IAssetService>(new ParameterOverrides
                         {
-                            { "assetRepository", assetRepository },
-                            { "blobStorageProvider", blobStorageProvider }
+                            { "assetRepository", fileSystemBlobAssetRepository },
+                            { "blobStorageProvider", fileSystemBlobAssetRepository }
                         }),
                         _container.Resolve<Func<IFoundationCatalogRepository>>()(),
                         null, null, null);
