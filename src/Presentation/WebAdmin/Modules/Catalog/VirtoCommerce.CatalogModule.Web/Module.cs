@@ -54,7 +54,7 @@ namespace VirtoCommerce.CatalogModule.Web
                             { "blobStorageProvider", fileSystemBlobAssetRepository }
                         }),
                         _container.Resolve<Func<IFoundationCatalogRepository>>()(),
-                        null, null, null);
+                        null, null);
                 })));
             #endregion
 
