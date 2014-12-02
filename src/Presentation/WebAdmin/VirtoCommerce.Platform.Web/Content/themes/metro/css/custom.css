@@ -29,6 +29,7 @@
 {
 	margin: 30px auto !important;
 	width: 500px;
+	position: relative;
 }
 
 .login .window.flat .content
@@ -40,6 +41,14 @@
 .metro .table.hovered tbody tr.selected
 {
 	background: #b3ebfb;
+}
+
+.login .preload {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin-bottom: 0;
 }
 
 .metro button *
@@ -1105,6 +1114,18 @@
 {
 	background: none;
 	height: 24px;
+}
+
+.metro .progress-bar.preload
+{
+	background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+	background-size: 20px 20px;
+	-webkit-animation: 1s linear 0s normal none infinite progress_bar;
+			animation: 1s linear 0s normal none infinite progress_bar;
+}
+
+.metro .progress-bar.preload.gray {
+	background-color: #d9d9d9;
 }
 
 .blade .bar
