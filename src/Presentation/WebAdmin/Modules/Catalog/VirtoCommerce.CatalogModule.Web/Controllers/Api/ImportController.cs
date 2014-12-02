@@ -21,14 +21,14 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
     [RoutePrefix("api/import")]
     public class ImportController : ApiController
     {
-        // private readonly string _relativeDir = "Content/Uploads/Imports/";
-        // private readonly string _relativeDir = "Content/Uploads/";
-
         private readonly Func<IImportRepository> _importRepositoryFactory;
         private readonly Func<IImportService> _importServiceFactory;
         private readonly Func<IFoundationCatalogRepository> _catalogRepositoryFactory;
         private readonly INotifier _notifier;
-        //private readonly IDataManagementService _dataManagementService;
+
+        private readonly Object thisLock = new Object();
+        static readonly Queue<webModel.ImportJobRun> _runningJobs = new Queue<webModel.ImportJobRun>();
+        static webModel.ImportJobRun runningJob;
 
         public ImportController(Func<IImportRepository> importRepositoryFactory, Func<IImportService> importServiceFactory, Func<IFoundationCatalogRepository> catalogRepositoryFactory, INotifier notifier /*, IDataManagementService dataManagementService*/)
         {
@@ -313,40 +313,92 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         [Route("run")]
         public IHttpActionResult Run(webModel.ImportJob job)
         {
-            var importService = _importServiceFactory();
-            Task.Run(() => importService.RunImportJob(job.Id, job.TemplatePath));
+            //var importService = new Services.ImportService(_importServiceFactory());
+            var importService = (_importServiceFactory());
 
-            Task.Run(() =>
+            var jobHandle = new webModel.ImportJobRun
             {
-                Task.Delay(TimeSpan.FromMilliseconds(300));
+                jobId = job.Id,
+                AssetPath = job.TemplatePath
+                // task = new Task(() => importService.RunImportJob(job.Id, job.TemplatePath))
+            };
 
-                var finished = false;
-                while (!finished)
+            lock (thisLock)
+            {
+                _runningJobs.Enqueue(jobHandle);
+            }
+
+            if (runningJob == null)
+            {
+                // import runner task
+                Task.Run(() =>
                 {
-                    var res = importService.GetImportResult(job.Id);
-                    //progress.Report(new ImportProgress
-                    //{
-                    //    ImportEntity = jobEntity,
-                    //    ImportResult = res,
-                    //    StatusId = id,
-                    //    Processed = res == null ? 0 : res.ProcessedRecordsCount + res.ErrorsCount
-                    //});
+                    while (_runningJobs.Any())
+                    {
+                        lock (thisLock)
+                        {
+                            runningJob = _runningJobs.Dequeue();
+                        }
+                        try
+                        {
+                            importService.RunImportJob(runningJob.jobId, runningJob.AssetPath);
+                            //jj.task = new Task(() => importService.RunImportJob(job.Id, job.TemplatePath));
+                            //jj.task.Start();
+                            //jj.task.Wait();
+                            LogProgress(importService);
+                        }
+                        catch (Exception e)
+                        {
+                            // jj.
+                            // return "Error: " + e.Message;
+                        }
+                    }
+                    lock (thisLock)
+                    {
+                        runningJob = null;
+                    }
+                });
 
-                    // res.
+                Task.Run(() =>
+                {
+                    Task.Delay(TimeSpan.FromMilliseconds(300));
 
-                    if (res != null && res.IsFinished)
-                        finished = true;
+                    while (runningJob != null)
+                    {
+                        LogProgress(importService);
 
-                    Task.Delay(TimeSpan.FromMilliseconds(150));
-                }
-            });
+                        //res.
+                        //progress.Report(new ImportProgress
+                        //{
+                        //    ImportEntity = jobEntity,
+                        //    ImportResult = res,
+                        //    StatusId = id,
+                        //    Processed = res == null ? 0 : res.ProcessedRecordsCount + res.ErrorsCount
+                        //});
 
-            var notify = new NotifyEvent();
+                        //if (res != null && res.IsFinished)
+                        //    finished = true;
+
+                        Task.Delay(TimeSpan.FromMilliseconds(150));
+                    }
+                });
+            }
+
+            var notify = new NotifyEvent { Id = jobHandle.id };
             notify = _notifier.Create(notify);
 
-
-
             return Ok(notify);
+        }
+
+        private void LogProgress(IImportService importService)
+        {
+            var res = importService.GetImportResult(runningJob.jobId);
+            var notify = new NotifyEvent
+            {
+                Id = runningJob.id,
+                Status = res.IsRunning ? NotifyStatus.Running : res.IsFinished ? NotifyStatus.Finished : NotifyStatus.Aborted,
+            };
+            _notifier.Update(notify);
         }
 
         [HttpPost]

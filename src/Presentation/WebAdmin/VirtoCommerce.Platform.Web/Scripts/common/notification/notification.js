@@ -74,12 +74,9 @@
 			mainMenuService.addMenuItem(notifyMenu);
 		}
 		notifyMenu.incremented = false;
-		$http.get(serviceBase + 'allRecent').
-			success(function (data, status, headers, config) {
-				//Clear all previous notification from menu
-				if(notifyMenu.newCount < data.newCount) {
-					notifyMenu.incremented = true;
-				}
+		$http.get(serviceBase + 'allRecent').success(function (data, status, headers, config) {
+			
+				notifyMenu.incremented = notifyMenu.newCount < data.newCount;
 				notifyMenu.newCount = data.newCount;
 				notifyMenu.progress = _.some(data.notifyEvents, function (x) { return x.status == notifyStatusEnum.running; });
 
