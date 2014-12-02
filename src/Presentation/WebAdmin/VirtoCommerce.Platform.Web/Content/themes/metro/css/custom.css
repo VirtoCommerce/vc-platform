@@ -1865,3 +1865,13 @@
 }
 
 
+/* textAngular styles */
+
+.btn-toolbar {
+	overflow: hidden;
+}
+
+.btn-toolbar .span5 {
+	float: left;
+	background-color: #d9d9d9;
+}
