@@ -17,7 +17,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="data in items" ng-class="{'selected': data.id === selectedItem.id}">
+            <tr ng-repeat="data in items" ng-class="{'selected': data.id === selectedItem.id}" context-menu data-target="ijl_menu_{{data.id}}">
                 <td>
                     <div data-role="input-control" class="input-control checkbox">
                         <label>
@@ -25,6 +25,17 @@
                             <span class="check"></span>
                         </label>
                     </div>
+                    <ul role="menu" class="dropdown-menu context-menu" id="ijl_menu_{{data.id}}">
+                        <li ng-click='edit(data)'>
+                            <i class="ico icon-new-tab-2"></i>&nbsp;Manage
+                        </li>
+                        <li ng-click='run(data)'>
+                            <i class="ico icon-enter"></i>&nbsp;Run
+                        </li>
+                        <li ng-click='delete()'>
+                            <i class="ico icon-remove"></i>&nbsp;Delete
+                        </li>
+                    </ul>
                 </td>
                 <td ng-click='setSelectedItem(data)' style="max-width: 250px; overflow: hidden; text-overflow: ellipsis;">
                     <i style="font-size: 18px" class="icon-enter"></i>

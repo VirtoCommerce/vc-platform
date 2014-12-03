@@ -1,53 +1,45 @@
 ﻿angular.module('catalogModule.wizards.importJobWizard', [
        'angularFileUpload'
 ])
-.controller('importJobWizardController', ['$scope', 'bladeNavigationService', 'dialogService', 'imports', 'FileUploader', function ($scope, bladeNavigationService, dialogService, imports, FileUploader)
-{
-    $scope.blade.isLoading = false;
+.controller('importJobWizardController', ['$scope', 'bladeNavigationService', 'dialogService', 'imports', 'FileUploader', 'notificationService', function ($scope, bladeNavigationService, dialogService, imports, FileUploader, notificationService) {
 
-    $scope.blade.refresh = function() {
-        
-        if (!$scope.blade.isNew) {
-            $scope.blade.item.$get({}, function(data) {
-                $scope.blade.item = data;
+    $scope.blade.refresh = function () {
+        if ($scope.blade.isNew) {
+            $scope.blade.isLoading = false;
+        } else {
+            $scope.blade.item.$get({}, function (data) {
+                $scope.blade.item = angular.copy(data);
+                $scope.blade.isLoading = false;
             });
         }
     }
 
-    $scope.createItem = function (execute)
-    {
+    $scope.createItem = function (execute) {
         $scope.blade.item.$create(null,
-            function (dbItem)
-            {
+            function (dbItem) {
                 if (execute) {
-                    dbItem.$run(null, function ()
-                    {
-                        //TODO show notification
+                    dbItem.$run(null, function (notify) {
+                        notificationService.task({ title: notify.title, description: notify.description });
                     });
                 }
 
                 $scope.blade.parentBlade.refresh();
                 $scope.bladeClose();
             });
-
     }
 
-    $scope.updateItem = function ()
-    {
+    $scope.updateItem = function () {
         $scope.blade.item.$update(null,
-            function (dbItem)
-            {
+            function (dbItem) {
                 $scope.bladeClose();
                 $scope.blade.parentBlade.refresh();
             });
     }
 
-    function initialize()
-    {
+    function initialize() {
         $scope.blade.refresh();
 
-        if (!$scope.uploader)
-        {
+        if (!$scope.uploader) {
             // Creates a uploader
             var uploader = $scope.uploader = new FileUploader({
                 scope: $scope,
@@ -62,23 +54,20 @@
             // Images only
             uploader.filters.push({
                 name: 'csvFilter',
-                fn: function (i /*{File|FileLikeObject}*/, options)
-                {
+                fn: function (i /*{File|FileLikeObject}*/, options) {
                     var type = '|' + i.type.slice(i.type.lastIndexOf('/') + 1) + '|';
                     return '|csv|vnd.ms-excel|'.indexOf(type) !== -1;
                 }
             });
 
 
-            uploader.onSuccessItem = function (fileItem, asset, status, headers)
-            {
+            uploader.onSuccessItem = function (fileItem, asset, status, headers) {
                 $scope.blade.item.templatePath = asset[0].url;
             };
         }
     };
 
-    $scope.canMapColumns = function ()
-    {
+    $scope.canMapColumns = function () {
         return $scope.blade.item.templatePath &&
             $scope.blade.item.catalogId &&
             $scope.formScope &&
@@ -86,13 +75,10 @@
             $scope.blade.item.entityImporter;
     }
 
-    $scope.openBlade = function (type)
-    {
-        $scope.blade.onClose(function ()
-        {
+    $scope.openBlade = function (type) {
+        $scope.blade.onClose(function () {
             var newBlade = null;
-            switch (type)
-            {
+            switch (type) {
                 case 'importer':
                     newBlade = {
                         id: "importJobImporters",
@@ -137,45 +123,34 @@
                     break;
             }
 
-            if (newBlade != null)
-            {
+            if (newBlade != null) {
                 bladeNavigationService.showBlade(newBlade, $scope.blade);
             }
         });
     }
 
 
-    $scope.setForm = function (form)
-    {
+    $scope.setForm = function (form) {
         $scope.formScope = form;
     }
 
-    $scope.blade.onClose = function (closeCallback)
-    {
+    $scope.blade.onClose = function (closeCallback) {
 
-        if ($scope.blade.childrenBlades.length > 0)
-        {
-            var callback = function ()
-            {
-                if ($scope.blade.childrenBlades.length == 0)
-                {
+        if ($scope.blade.childrenBlades.length > 0) {
+            var callback = function () {
+                if ($scope.blade.childrenBlades.length == 0) {
                     closeCallback();
                 };
             };
-            angular.forEach($scope.blade.childrenBlades, function (child)
-            {
+            angular.forEach($scope.blade.childrenBlades, function (child) {
                 bladeNavigationService.closeBlade(child, callback);
             });
         }
-        else
-        {
+        else {
             closeCallback();
         }
     };
 
+
     initialize();
-
-
 }]);
-
-
