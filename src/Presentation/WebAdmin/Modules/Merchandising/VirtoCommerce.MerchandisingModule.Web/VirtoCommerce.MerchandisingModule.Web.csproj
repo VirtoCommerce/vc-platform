@@ -103,9 +103,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="MerchandisingModule.manifest">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <Content Include="module.manifest" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

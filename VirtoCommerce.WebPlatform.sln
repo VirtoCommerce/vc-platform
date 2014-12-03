@@ -41,7 +41,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Merchandising
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnmanagedModule", "UnmanagedModule", "{CCA3D245-FF8A-4931-9654-731F0F4D618D}"
 	ProjectSection(SolutionItems) = preProject
-		src\Presentation\WebAdmin\Modules\UnmanagedModule\UnmanagedModule.manifest = src\Presentation\WebAdmin\Modules\UnmanagedModule\UnmanagedModule.manifest
+		src\Presentation\WebAdmin\Modules\UnmanagedModule\module.manifest = src\Presentation\WebAdmin\Modules\UnmanagedModule\module.manifest
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Content", "Content", "{5E02FCFA-C9C5-40ED-830E-1BA3EFE28B08}"

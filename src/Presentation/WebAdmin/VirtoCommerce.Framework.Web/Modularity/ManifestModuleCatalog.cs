@@ -12,17 +12,22 @@ namespace VirtoCommerce.Framework.Web.Modularity
 {
 	public class ManifestModuleCatalog : ModuleCatalog
 	{
-		public string ModulesPath { get; set; }
+		public string AssembliesPath { get; set; }
+		public string ContentPath { get; set; }
 
 		protected override void InnerLoad()
 		{
-			if (string.IsNullOrEmpty(ModulesPath))
-				throw new InvalidOperationException(Resources.ModulePathCannotBeNullOrEmpty);
+			if (string.IsNullOrEmpty(AssembliesPath))
+				throw new InvalidOperationException(Resources.AssembliesPathCannotBeNullOrEmpty);
+			if (string.IsNullOrEmpty(ContentPath))
+				throw new InvalidOperationException(Resources.ContentPathCannotBeNullOrEmpty);
 
-			if (!Directory.Exists(ModulesPath))
-				throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.DirectoryNotFound, ModulesPath));
+			if (!Directory.Exists(AssembliesPath))
+				throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.DirectoryNotFound, AssembliesPath));
+			if (!Directory.Exists(ContentPath))
+				throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.DirectoryNotFound, ContentPath));
 
-			foreach (var manifest in Directory.GetFiles(ModulesPath, "*.manifest"))
+			foreach (var manifest in Directory.GetFiles(ContentPath, "module.manifest", SearchOption.AllDirectories))
 			{
 				var doc = XDocument.Load(manifest);
 				var module = doc.XPathSelectElement("/module");
@@ -84,7 +89,7 @@ namespace VirtoCommerce.Framework.Web.Modularity
 			{
 				Host = string.Empty,
 				Scheme = Uri.UriSchemeFile,
-				Path = Path.GetFullPath(Path.Combine(ModulesPath, filePath))
+				Path = Path.GetFullPath(Path.Combine(AssembliesPath, filePath))
 			};
 
 			return builder.Uri.ToString();
