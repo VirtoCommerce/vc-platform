@@ -45,7 +45,10 @@
     }
 
     function openAddEntityBlade() {
-        var data = { languageCode: $scope.blade.parentBlade.item.catalog.defaultLanguage.languageCode };
+        var data = {
+            isNew: true,
+            languageCode: $scope.blade.parentBlade.item.catalog.defaultLanguage.languageCode
+        };
         $scope.openBlade(data);
     }
 
