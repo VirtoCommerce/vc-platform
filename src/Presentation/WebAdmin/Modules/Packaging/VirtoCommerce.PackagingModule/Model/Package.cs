@@ -8,7 +8,7 @@ namespace VirtoCommerce.PackagingModule.Model
 {
 	public class Package
 	{
-		public string PackageId { get; set; }
+		public string Id { get; set; }
 		public string Version { get; set; }
 	}
 }

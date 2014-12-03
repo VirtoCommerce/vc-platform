@@ -22,6 +22,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,6 +32,8 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Web.XmlTransform">
@@ -46,10 +50,24 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\WebsiteLocalPackageRepository.cs" />
+    <Compile Include="Repositories\WebsiteOptimizedZipPackage.cs" />
+    <Compile Include="Repositories\NuGet\CommonResources.cs" />
+    <Compile Include="Repositories\NuGet\CommonResources.designer.cs">
+      <DependentUpon>CommonResources.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Repositories\NuGet\Constants.cs" />
+    <Compile Include="Repositories\NuGet\OptimizedZipPackage.cs" />
+    <Compile Include="Repositories\NuGet\PackageBuilder.cs" />
+    <Compile Include="Repositories\NuGet\UriUtility.cs" />
+    <Compile Include="Repositories\NuGet\ZipPackage.cs" />
     <Compile Include="Services\PackageService.cs" />
+    <Compile Include="Repositories\WebsitePackageRepository.cs" />
+    <Compile Include="Repositories\WebsiteProjectSystem.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\VirtoCommerce.PackagingModule\VirtoCommerce.PackagingModule.csproj">
@@ -59,6 +77,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Repositories\NuGet\CommonResources.resx">
+      <DependentUpon>CommonResources.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
