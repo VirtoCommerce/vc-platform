@@ -67,38 +67,13 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             using (var repository = _importRepositoryFactory())
             {
                 var dbEntry = repository.ImportJobs.ExpandAll().Single(x => x.ImportJobId.Equals(entry.Id));
-
-                dbEntry.EntityImporter = entry.EntityImporter;
-                dbEntry.ColumnDelimiter = entry.ColumnDelimiter;
-                dbEntry.CatalogId = entry.CatalogId;
-                dbEntry.ImportStep = entry.ImportStep;
-                dbEntry.ImportCount = entry.ImportCount;
-                dbEntry.MaxErrorsCount = entry.MaxErrorsCount;
-                dbEntry.Name = entry.Name;
-                dbEntry.PropertySetId = entry.PropertySetId;
-                dbEntry.StartIndex = entry.StartIndex;
-                dbEntry.TemplatePath = entry.TemplatePath;
-
-                foreach (var map in dbEntry.PropertiesMap.ToArray())
+                if (dbEntry == null)
                 {
-                    var entryMap = entry.PropertiesMap.SingleOrDefault(x => x.Id == map.MappingItemId);
-
-                    if (entryMap == null)
-                    {
-                        dbEntry.PropertiesMap.Remove(map);
-                    }
-                    else
-                    {
-                        map.CustomValue = entryMap.CustomValue;
-                        map.CsvColumnName = entryMap.CsvColumnName;
-                        map.DisplayName = entryMap.DisplayName;
-                        map.EntityColumnName = entryMap.EntityColumnName;
-                        map.IsRequired = entryMap.IsRequired;
-                        map.IsSystemProperty = entryMap.IsSystemProperty;
-                        map.Locale = entryMap.Locale;
-                        map.StringFormat = entryMap.StringFormat;
-                    }
+                    throw new NullReferenceException("dbEntry");
                 }
+
+                var dbEntryChanged = entry.ToFoundation();
+                dbEntryChanged.Patch(dbEntry);
 
                 repository.UnitOfWork.Commit();
 
@@ -326,11 +301,12 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 cancellationTokenSource = new CancellationTokenSource()
             };
 
+            var result = LogProgressStart(jobHandle);
+
             lock (thisLock)
             {
                 _runningJobs.Enqueue(jobHandle);
             }
-            var result = LogProgressStart(jobHandle);
 
             if (runningJob == null)
             {
@@ -350,19 +326,17 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                         }
                         try
                         {
-                            importService.ServiceRunnerId = runningJob.id;
-                            importService.CancellationToken = runningJob.cancellationTokenSource.Token;
-                            importService.RunImportJob(runningJob.jobId, runningJob.assetPath);
+                            if (!runningJob.cancellationTokenSource.IsCancellationRequested)
+                            {
+                                importService.ServiceRunnerId = runningJob.id;
+                                importService.CancellationToken = runningJob.cancellationTokenSource.Token;
+                                importService.RunImportJob(runningJob.jobId, runningJob.assetPath);
+                            }
                         }
                         catch (OperationCanceledException)
                         {
-                            // TODO
-                            var progressEntity = new foundation.ImportResult
-                            {
-                                Stopped = DateTime.Now,
-                                IsRunning = false
-                            };
-                            LogProgress(progressEntity, runningJob.id, runningJob.jobName);
+                            var res = importService.GetImportResult(runningJob.jobId);
+                            LogProgressCancel(res, runningJob);
                         }
                         catch (Exception e)
                         {
@@ -393,6 +367,29 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             return Ok(result);
         }
 
+        [HttpPost]
+        [ResponseType(typeof(void))]
+        public IHttpActionResult Cancel(string id)
+        {
+            // TODO
+            var job = _runningJobs.FirstOrDefault(x => x.id == id);
+            if (job != null && !job.cancellationTokenSource.IsCancellationRequested)
+            {
+                job.cancellationTokenSource.Cancel();
+
+                lock (thisLock)
+                {
+                    if (runningJob != job)
+                    {
+                        Task.Run(() => LogProgressCancel(null, job));
+                    }
+                }
+            }
+
+            return StatusCode(HttpStatusCode.NoContent);
+        }
+
+        #region private
         private NotifyEvent LogProgressStart(webModel.ImportJobRun jobRun)
         {
             var notify = new NotifyEvent
@@ -408,13 +405,38 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             notify = _notifier.Create(notify);
             return notify;
         }
+
+        private void LogProgressCancel(foundation.ImportResult result, webModel.ImportJobRun jobRun)
+        {
+            var notify = new NotifyEvent
+            {
+                Id = jobRun.id,
+                Title = string.Format("Import job '{0}' processing was canceled.", jobRun.jobName),
+                Description = string.Format("Import job '{0}' processing was canceled.", jobRun.jobName),
+                Status = NotifyStatus.Aborted,
+                NotifyType = NotifyType.LongRunningTask,
+                FinishDate = DateTime.Now
+            };
+
+            if (result != null && (result.ProcessedRecordsCount + result.ErrorsCount) > 0)
+            {
+                notify.Description += string.Format(" Processed records: {0}", result.ProcessedRecordsCount + result.ErrorsCount);
+                if (result.ErrorsCount > 0)
+                {
+                    notify.Description += Environment.NewLine + "Errors:" + Environment.NewLine + string.Join(Environment.NewLine, result.Errors.Cast<string>());
+                }
+            }
+
+            _notifier.Update(notify);
+        }
+
         private void LogProgress(foundation.ImportResult result, string id, string jobName)
         {
             var notify = new NotifyEvent
             {
                 Id = id,
                 Title = string.Format(result.IsFinished ? "Import job '{0}' complete" : "Import job '{0}' progress", jobName),
-                Description = string.Format("Processed Records: {0}", result.ProcessedRecordsCount + result.ErrorsCount),
+                Description = string.Format("Processed records: {0}", result.ProcessedRecordsCount + result.ErrorsCount),
                 Status = !result.IsStarted ? NotifyStatus.Pending : (result.IsRunning ? NotifyStatus.Running : (result.IsFinished ? NotifyStatus.Finished : NotifyStatus.Aborted)),
                 FinishDate = result.Stopped
             };
@@ -426,24 +448,6 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 
             _notifier.Update(notify);
         }
-
-        [HttpPost]
-        [ResponseType(typeof(void))]
-        public IHttpActionResult Cancel(string id)
-        {
-            // TODO
-            var job = _runningJobs.FirstOrDefault(x => x.id == id);
-            if (job != null && !job.cancellationTokenSource.IsCancellationRequested)
-            {
-                job.cancellationTokenSource.Cancel();
-            }
-
-            return StatusCode(HttpStatusCode.NoContent);
-        }
-
-        #region private
-
-
         #endregion
     }
 }
