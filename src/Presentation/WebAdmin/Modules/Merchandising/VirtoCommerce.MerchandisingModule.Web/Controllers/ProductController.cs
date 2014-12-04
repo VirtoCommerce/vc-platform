@@ -29,21 +29,25 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			_itemService = itemService;
 		}
 
-		/// <summary>
-		/// GET: api/mp/apple/en-us/products?q='some keyword'&outline=apple/catalog
-		/// </summary>
-		/// <param name="catalog"></param>
-		/// <param name="criteria"></param>
-		/// <param name="language"></param>
-		/// <returns></returns>
-		[HttpGet]
-        [Route("products")]
+	    /// <summary>
+	    /// GET: api/mp/apple/en-us/products?q='some keyword'&outline=apple/catalog
+	    /// </summary>
+	    /// <param name="catalog"></param>
+	    /// <param name="criteria"></param>
+	    /// <param name="outline"></param>
+	    /// <param name="language"></param>
+	    /// <returns></returns>
+	    [HttpGet]
+        [Route("products/{outline?}")]
 		[ResponseType(typeof(GenericSearchResult<CatalogItem>))]
-		public IHttpActionResult Search(string catalog, [ModelBinder(typeof(CatalogItemSearchCriteriaBinder))] CatalogItemSearchCriteria criteria,
-										string language = "en-us")
+		public IHttpActionResult Search(string catalog, [ModelBinder(typeof(CatalogItemSearchCriteriaBinder))] CatalogItemSearchCriteria criteria, string outline="", string language = "en-us")
 		{
 			criteria.Locale = language;
 			criteria.Catalog = catalog;
+            if (!string.IsNullOrWhiteSpace(outline))
+            {
+                criteria.Outlines.Add(String.Format("{0}/{1}*", catalog, outline));
+            }
 			var result = _searchService.Search(_searchConnection.Scope, criteria) as SearchResults;
 			var items = result.GetKeyAndOutlineFieldValueMap<string>();
 
