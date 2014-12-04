@@ -1,25 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.CatalogModule.Services;
+using VirtoCommerce.MerchandisingModule.Web.Converters;
 using moduleModel = VirtoCommerce.CatalogModule.Model;
 using webModel = VirtoCommerce.MerchandisingModule.Web.Model;
-using VirtoCommerce.MerchandisingModule.Web.Converters;
-using Microsoft.Practices.Unity;
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
 	[RoutePrefix("api/mp/{catalogId}/{language}")]
-	public class CategorySearchController : ApiController
+	public class CategoryController : ApiController
 	{
 		private readonly ICatalogSearchService _searchService;
 		private readonly ICategoryService _categoryService;
 		private readonly IPropertyService _propertyService;
 
-		public CategorySearchController(ICatalogSearchService searchService, 
+		public CategoryController(ICatalogSearchService searchService, 
 										ICategoryService categoryService,
 										IPropertyService propertyService)
 		{
