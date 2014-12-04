@@ -17,13 +17,13 @@ using Microsoft.Practices.Unity;
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
 	[RoutePrefix("api/mp/{catalog}/{language}/products")]
-	public class ProductSearchController : ApiController
+	public class ProductController : ApiController
 	{
 		private readonly IItemService _itemService;
 		private readonly ISearchProvider _searchService;
 		private readonly ISearchConnection _searchConnection;
 
-		public ProductSearchController(IItemService itemService,
+		public ProductController(IItemService itemService,
 									   ISearchProvider indexedSearchProvider,
 									   ISearchConnection searchConnection)
 		{
@@ -55,7 +55,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			//Load products 
 			foreach (var productId in items.Keys)
 			{
-				var product = _itemService.GetById(productId, moduleModel.ItemResponseGroup.ItemLarge);
+				var product = _itemService.GetById(productId, moduleModel.ItemResponseGroup.ItemAssets | moduleModel.ItemResponseGroup.ItemInfo);
 				if (product != null)
 				{
 					var webModelProduct = product.ToWebModel();
@@ -67,10 +67,17 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 					retVal.Items.Add(webModelProduct);
 				}
 			}
-
-
 			return Ok(retVal);
 		}
 
+		[HttpGet]
+		[ResponseType(typeof(webModel.Product))]
+		[Route("{productId}")]
+		public IHttpActionResult GetProduct(string productId)
+		{
+			var product = _itemService.GetById(productId, moduleModel.ItemResponseGroup.ItemLarge);
+			var retVal = product.ToWebModel();
+			return Ok(retVal);
+		}
 	}
 }

@@ -13,13 +13,13 @@ using Microsoft.Practices.Unity;
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
 	[RoutePrefix("api/mp/{catalogId}/{language}/categories")]
-	public class CategorySearchController : ApiController
+	public class CategoryController : ApiController
 	{
 		private readonly ICatalogSearchService _searchService;
 		private readonly ICategoryService _categoryService;
 		private readonly IPropertyService _propertyService;
 
-		public CategorySearchController(ICatalogSearchService searchService, 
+		public CategoryController(ICatalogSearchService searchService, 
 										ICategoryService categoryService,
 										IPropertyService propertyService)
 		{

@@ -76,9 +76,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Binders\CatalogItemSearchCriteriaBinder.cs" />
-    <Compile Include="Controllers\CategorySearchController.cs" />
+    <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\ContentController.cs" />
-    <Compile Include="Controllers\ProductSearchController.cs" />
+    <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Converters\AssetConverter.cs" />
     <Compile Include="Converters\CategoryConverter.cs" />
     <Compile Include="Converters\DynamicContentItemConverter.cs" />
