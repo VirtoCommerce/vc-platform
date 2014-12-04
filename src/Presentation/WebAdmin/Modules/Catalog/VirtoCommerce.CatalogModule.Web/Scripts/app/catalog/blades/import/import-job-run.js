@@ -1,24 +1,19 @@
 ﻿angular.module('catalogModule.blades.import.importJobRun', [
     'angularFileUpload'
 ])
-.controller('importJobRunController', ['$scope', 'FileUploader', 'notificationService', function ($scope, FileUploader, notificationService)
-{
+.controller('importJobRunController', ['$scope', 'FileUploader', 'notificationService', function ($scope, FileUploader, notificationService) {
     $scope.blade.isLoading = false;
     $scope.job = angular.copy($scope.blade.item);
 
-    $scope.run = function() {
-        $scope.job.$run(null, function (notify)
-        {
-            //TODO show notification
-            //notificationService.notificationRefresh();
+    $scope.run = function () {
+        $scope.job.$run(null, function (notify) {
+            // notificationService.task({ title: notify.title, description: notify.description });
             $scope.bladeClose();
         });
     }
 
-    function initialize()
-    {
-        if (!$scope.uploader)
-        {
+    function initialize() {
+        if (!$scope.uploader) {
             // Creates a uploader
             var uploader = $scope.uploader = new FileUploader({
                 scope: $scope,
@@ -33,16 +28,14 @@
             // Images only
             uploader.filters.push({
                 name: 'csvFilter',
-                fn: function (i /*{File|FileLikeObject}*/, options)
-                {
+                fn: function (i /*{File|FileLikeObject}*/, options) {
                     var type = '|' + i.type.slice(i.type.lastIndexOf('/') + 1) + '|';
                     return '|csv|vnd.ms-excel|'.indexOf(type) !== -1;
                 }
             });
 
 
-            uploader.onSuccessItem = function (fileItem, asset, status, headers)
-            {
+            uploader.onSuccessItem = function (fileItem, asset, status, headers) {
                 $scope.job.templatePath = asset[0].url;
             };
         }

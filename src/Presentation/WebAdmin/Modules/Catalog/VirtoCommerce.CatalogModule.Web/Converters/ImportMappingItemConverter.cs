@@ -1,4 +1,6 @@
 ﻿using Omu.ValueInjecter;
+using System;
+using System.Collections.Generic;
 using VirtoCommerce.CatalogModule.Web.Model;
 using foundation = VirtoCommerce.Foundation.Importing.Model;
 
@@ -21,5 +23,40 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
             retVal.MappingItemId = webEntity.Id;
             return retVal;
         }
+
+        public static void Patch(this foundation.MappingItem source, foundation.MappingItem target)
+        {
+            if (target == null)
+                throw new ArgumentNullException("target");
+
+            //Simple properties patch
+
+            target.CustomValue = source.CustomValue;
+            target.CsvColumnName = source.CsvColumnName;
+            if (source.DisplayName != null)
+                target.DisplayName = source.DisplayName;
+            target.EntityColumnName = source.EntityColumnName;
+            target.IsRequired = source.IsRequired;
+            target.IsSystemProperty = source.IsSystemProperty;
+            target.Locale = source.Locale;
+            target.StringFormat = source.StringFormat;
+        }
+    }
+
+    public class MappingItemComparer : IEqualityComparer<foundation.MappingItem>
+    {
+        #region IEqualityComparer<CatalogLanguage> Members
+
+        public bool Equals(foundation.MappingItem x, foundation.MappingItem y)
+        {
+            return x.MappingItemId == y.MappingItemId;
+        }
+
+        public int GetHashCode(foundation.MappingItem obj)
+        {
+            return obj.MappingItemId.GetHashCode();
+        }
+
+        #endregion
     }
 }

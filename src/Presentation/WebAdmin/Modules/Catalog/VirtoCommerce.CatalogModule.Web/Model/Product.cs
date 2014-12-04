@@ -14,6 +14,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
 
         public string CategoryId { get; set; }
         public Category Category { get; set; }
+		public string Outline { get; set; }
 
         public string TitularItemId { get; set; }
 

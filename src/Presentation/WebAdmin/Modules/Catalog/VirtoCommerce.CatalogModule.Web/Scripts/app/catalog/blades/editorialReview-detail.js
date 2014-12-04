@@ -3,6 +3,10 @@
     $scope.types = ["QuickReview", "FullReview"];
 
     function initializeBlade(data) {
+        if (data.isNew) {
+            data.reviewType = $scope.types[0];
+        }
+
         $scope.currentEntity = angular.copy(data);
         $scope.blade.origEntity = data;
         $scope.blade.isLoading = false;

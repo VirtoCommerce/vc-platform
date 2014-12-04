@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Threading;
 
 namespace VirtoCommerce.CatalogModule.Web.Model
 {
@@ -8,17 +8,17 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         public ImportJobRun()
         {
             id = Guid.NewGuid().ToString();
-            status = "Submitted";
-            errors = new List<string>();
         }
 
         public string id;
         public string jobId;
-        public string AssetPath;
+        public string jobName;
+        public string assetPath;
+        public CancellationTokenSource cancellationTokenSource;
         // public Task task;
 
-        public string status;
-        public bool cancel;
-        public List<string> errors;
+        // public string status;
+        // public bool cancel;
+        // public List<string> errors;
     }
 }

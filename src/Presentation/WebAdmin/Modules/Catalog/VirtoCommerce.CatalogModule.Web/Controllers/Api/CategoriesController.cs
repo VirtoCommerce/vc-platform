@@ -11,19 +11,24 @@ using System.Collections.Generic;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
+	[RoutePrefix("api/catalog/categories")]
     public class CategoriesController : ApiController
     {
+		private readonly ICatalogSearchService _searchService;
         private readonly ICategoryService _categoryService;
         private readonly IPropertyService _propertyService;
 
-        public CategoriesController(ICategoryService categoryService, IPropertyService propertyService)
+        public CategoriesController(ICatalogSearchService searchService, ICategoryService categoryService, IPropertyService propertyService)
         {
+			_searchService = searchService;
             _categoryService = categoryService;
             _propertyService = propertyService;
         }
 
-        // GET: api/Categories/5
+        // GET: api/catalog/categories/5
+		 [HttpGet]
         [ResponseType(typeof(webModel.Category))]
+		[Route("{id}")]
         public IHttpActionResult Get(string id)
         {
             var category = _categoryService.GetById(id);
@@ -37,15 +42,16 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             return Ok(retVal);
         }
 
-        // GET: api/Categories/getnewcategory
+		 // GET: api/catalog/apple/categories/newcategory&parentCategoryId='ddd'"
         [HttpGet]
+		[Route("~/api/catalog/{catalogId}/categories/newcategory")]
         [ResponseType(typeof(webModel.Category))]
-        public IHttpActionResult GetNewCategory(string catalogId, string parentCategoryId = null)
+		 public IHttpActionResult GetNewCategory(string catalogId, [FromUri]string parentCategoryId = null)
         {
             var retVal = new webModel.Category
             {
                 Name = "New category",
-                ParentId = parentCategoryId,
+				ParentId = parentCategoryId,
                 CatalogId = catalogId,
                 Code = Guid.NewGuid().ToString().Substring(0, 5)
             };
@@ -55,22 +61,22 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             return Ok(retVal);
         }
 
-	
-        // POST: api/categories
+
+		// POST:  api/catalog/categories
         [HttpPost]
         [ResponseType(typeof(webModel.Category))]
+		[Route("")]
         public IHttpActionResult Post(webModel.Category category)
         {
-
             UpdateCategory(category);
-
-            return CreatedAtRoute("DefaultApi", new { id = category.Id }, category);
+			var retVal = _categoryService.GetById(category.Id);
+			return Ok(retVal);
         }
 
-
-        // POST: api/categories/5
+		// POST: api/catalog/categories/5
         [HttpPost]
         [ResponseType(typeof(void))]
+		[Route("delete")]
         public IHttpActionResult Delete(string[] ids)
         {
             _categoryService.Delete(ids);

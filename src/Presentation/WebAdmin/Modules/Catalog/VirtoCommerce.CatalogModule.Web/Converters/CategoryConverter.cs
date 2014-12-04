@@ -29,6 +29,11 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 					retVal.Properties.Add(webModelProperty);
 				}
 			}
+
+			if(category.Parents != null)
+			{
+				retVal.Parents = category.Parents.ToDictionary(x => x.Id, x => x.Name);
+			}
 			//For virtual category links not needed
 			if (!category.Virtual && category.Links != null)
 			{

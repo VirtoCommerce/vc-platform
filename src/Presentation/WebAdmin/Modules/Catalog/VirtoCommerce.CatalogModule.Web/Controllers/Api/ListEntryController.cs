@@ -27,7 +27,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 
         [HttpPost]
         [ResponseType(typeof(webModel.ListEntrySearchResult))]
-        public IHttpActionResult ListItemsSearch(webModel.SearchCriteria criteria)
+        public IHttpActionResult ListItemsSearch(webModel.ListEntrySearchCriteria criteria)
         {
             var serviceResult = _searchService.Search(criteria.ToModuleModel());
 

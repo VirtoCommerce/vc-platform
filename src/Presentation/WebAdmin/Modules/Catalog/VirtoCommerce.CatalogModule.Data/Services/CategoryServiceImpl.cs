@@ -43,8 +43,9 @@ namespace VirtoCommerce.CatalogModule.Data.Services
                 var catalog = dbCatalog.ToModuleModel();
 				var properties = dbProperties.Select(x => x.ToModuleModel(catalog, dbCategory.ToModuleModel(catalog, null,  dbLinks)))
 											 .ToArray();
+				var allParents = repository.GetAllCategoryParents(dbCategory);
 
-				retVal = dbCategory.ToModuleModel(catalog, properties, dbLinks, seoInfos);
+				retVal = dbCategory.ToModuleModel(catalog, properties, dbLinks, seoInfos, allParents);
             }
             return retVal;
         }

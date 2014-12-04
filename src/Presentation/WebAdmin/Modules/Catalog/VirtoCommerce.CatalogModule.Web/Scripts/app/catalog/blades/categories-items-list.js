@@ -18,7 +18,7 @@
 
     $scope.selectedAll = false;
     $scope.selectedItem = null;
-    var preventCategoryListingOnce;
+    var preventCategoryListingOnce; // prevent from unwanted additional actions after command was activated from context menu
 
     $scope.blade.refresh = function () {
         $scope.blade.isLoading = true;
@@ -85,12 +85,18 @@
     });
 
     $scope.edit = function (listItem) {
+        if (listItem.type === 'category') {
+            preventCategoryListingOnce = true;
+        }
+        edit(listItem);
+    };
+
+    function edit(listItem) {
         closeChildrenBlades();
 
         $scope.selectedItem = listItem;
         if (listItem.type === 'category') {
             $scope.blade.showCategoryBlade(listItem.id, null, listItem.name);
-            preventCategoryListingOnce = true;
         }
         // else do nothing as item is opened on selecting it.
     };
@@ -122,8 +128,7 @@
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };
 
-    $scope.blade.showNewItemWizard = function (inMemoryItem)
-    {
+    $scope.blade.showNewItemWizard = function (inMemoryItem) {
         var newBlade = {
             id: "newProductWizard",
             item: inMemoryItem,
@@ -136,8 +141,7 @@
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };
 
-    $scope.blade.showNewVariationWizard = function (inMemoryItem)
-    {
+    $scope.blade.showNewVariationWizard = function (inMemoryItem) {
         var newBlade = {
             id: "newVariationWizard",
             item: inMemoryItem,
@@ -367,10 +371,11 @@
             {
                 name: "Manage", icon: 'icon-new-tab-2',
                 executeMethod: function () {
-                    $scope.edit($scope.selectedItem);
+                    // selected OR the first checked listItem
+                    edit($scope.selectedItem || _.find($scope.items, function (x) { return x.selected; }));
                 },
                 canExecuteMethod: function () {
-                    return $scope.selectedItem;
+                    return $scope.selectedItem || isItemsChecked();
                 }
             },
             {

@@ -90,10 +90,9 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="Module1.manifest">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="module.manifest">
       <SubType>Designer</SubType>
-    </None>
+    </Content>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>

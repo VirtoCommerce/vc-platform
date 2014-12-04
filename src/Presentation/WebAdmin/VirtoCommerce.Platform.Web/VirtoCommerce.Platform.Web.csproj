@@ -1261,9 +1261,8 @@
   </ProjectExtensions>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <PropertyGroup>
-    <PostBuildEvent>del "$(ProjectDir)App_Data\Modules\*.manifest"
-for /r "$(ProjectDir)..\Modules" %25%25f in (*.manifest) do xcopy "%25%25f" "$(ProjectDir)App_Data\Modules\" /R /Y
-</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

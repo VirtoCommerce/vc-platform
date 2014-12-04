@@ -14,6 +14,7 @@ namespace VirtoCommerce.CatalogModule.Model
 		public string Name { get; set; }
 		public string Path	{  get;  set; }
 		public bool Virtual { get; set; }
+		public Category[] Parents { get; set; }
 
         public ICollection<Category> Children { get; set; }
 		public ICollection<PropertyValue> PropertyValues { get; set; }

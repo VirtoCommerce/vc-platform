@@ -11,15 +11,15 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 {
 	public static class SearchConverter
 	{
-		public static webModel.SearchCriteria ToWebModel(this moduleModel.SearchCriteria criteria)
+		public static webModel.ListEntrySearchCriteria ToWebModel(this moduleModel.SearchCriteria criteria)
 		{
-			var retVal = new webModel.SearchCriteria();
+			var retVal = new webModel.ListEntrySearchCriteria();
 			retVal.InjectFrom(criteria);
 			retVal.ResponseGroup = (webModel.ResponseGroup)(int)criteria.ResponseGroup;
 			return retVal;
 		}
 
-		public static moduleModel.SearchCriteria ToModuleModel(this webModel.SearchCriteria criteria)
+		public static moduleModel.SearchCriteria ToModuleModel(this webModel.ListEntrySearchCriteria criteria)
 		{
 			var retVal = new moduleModel.SearchCriteria();
 			retVal.InjectFrom(criteria);

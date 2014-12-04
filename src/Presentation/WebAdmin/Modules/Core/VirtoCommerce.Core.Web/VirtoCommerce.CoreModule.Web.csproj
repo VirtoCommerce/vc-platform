@@ -114,9 +114,7 @@
     <Compile Include="Security\OwinConfig.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="CoreModule.manifest">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <Content Include="module.manifest" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
