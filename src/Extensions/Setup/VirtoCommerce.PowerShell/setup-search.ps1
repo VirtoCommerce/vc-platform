@@ -1,6 +1,6 @@
 # variables
 Param( 
-	$dbconnection = "Server=(local);Database=VirtoCommerce;Integrated Security=True;MultipleActiveResultSets=True",
+	$dbconnection = "Server=MC103\SQLEXPRESS;Database=VirtoCommerce;Integrated Security=True;MultipleActiveResultSets=True",
 	$searchconnection = "server=localhost:9200;scope=default;provider=elasticsearch",
     $moduleFile
 )

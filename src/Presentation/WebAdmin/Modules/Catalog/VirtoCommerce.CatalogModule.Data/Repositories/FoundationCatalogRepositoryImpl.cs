@@ -71,12 +71,30 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			return retVal;
 		}
 
+		public foundation.Category[] GetAllCategoryParents(foundation.Category category)
+		{
+			var retVal = new List<foundation.Category>();
+
+			if (category.ParentCategoryId != null)
+			{
+				var parentCategory = Categories.OfType<foundation.Category>()
+									.FirstOrDefault(x => x.CategoryId == category.ParentCategoryId);
+				if (parentCategory != null)
+				{
+					retVal.Add(parentCategory);
+					retVal.AddRange(GetAllCategoryParents(parentCategory));
+				}
+			}
+			return retVal.ToArray();
+		}
+
 		public foundation.Category GetCategoryById(string categoryId)
 		{
 			var retVal = Categories.OfType<foundation.Category>()
 										.Include(x => x.CategoryPropertyValues)
 										.Include(x=> x.PropertySet.PropertySetProperties.Select(y=>y.Property))
 										.FirstOrDefault(x => x.CategoryId == categoryId);
+
 					
 			return retVal;
 		}

@@ -2,5 +2,6 @@
 <module moduleName="MerchandisingModule" assemblyFile="VirtoCommerce.MerchandisingModule.Web.dll" moduleType="VirtoCommerce.MerchandisingModule.Web.MerchModule, VirtoCommerce.MerchandisingModule.Web">
 	<dependencies>
 		<dependency moduleName="CoreModule" />
+		<dependency moduleName="CatalogModule" />
 	</dependencies>
 </module>
