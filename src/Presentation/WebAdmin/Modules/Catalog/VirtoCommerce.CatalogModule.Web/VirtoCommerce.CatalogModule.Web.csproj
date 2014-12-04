@@ -127,7 +127,6 @@
     <Compile Include="Converters\SeoInfoConverter.cs" />
     <Compile Include="Model\Catalog.cs" />
     <Compile Include="Model\CategoryLink.cs" />
-    <Compile Include="Model\CategorySearchResult.cs" />
     <Compile Include="Model\EditorialReview.cs" />
     <Compile Include="Model\ImportJob.cs" />
     <Compile Include="Model\ImportJobRun.cs" />
