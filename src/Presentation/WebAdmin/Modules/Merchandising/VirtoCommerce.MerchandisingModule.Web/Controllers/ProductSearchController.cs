@@ -16,7 +16,7 @@ using Microsoft.Practices.Unity;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
-	[RoutePrefix("api/mp/{catalog}/{language}/products")]
+	[RoutePrefix("api/mp/{catalog}/{language}")]
 	public class ProductSearchController : ApiController
 	{
 		private readonly IItemService _itemService;
@@ -40,7 +40,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		/// <param name="language"></param>
 		/// <returns></returns>
 		[HttpGet]
-		[Route("")]
+        [Route("products")]
 		[ResponseType(typeof(webModel.GenericSearchResult<webModel.CatalogItem>))]
 		public IHttpActionResult Search(string catalog, [ModelBinder(typeof(CatalogItemSearchCriteriaBinder))] CatalogItemSearchCriteria criteria,
 										string language = "en-us")

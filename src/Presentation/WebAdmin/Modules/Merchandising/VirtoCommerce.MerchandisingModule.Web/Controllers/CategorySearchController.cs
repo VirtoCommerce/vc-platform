@@ -12,7 +12,7 @@ using VirtoCommerce.MerchandisingModule.Web.Converters;
 using Microsoft.Practices.Unity;
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
-	[RoutePrefix("api/mp/{catalogId}/{language}/categories")]
+	[RoutePrefix("api/mp/{catalogId}/{language}")]
 	public class CategorySearchController : ApiController
 	{
 		private readonly ICatalogSearchService _searchService;
@@ -37,7 +37,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		/// <returns></returns>
 		[HttpGet]
 		[ResponseType(typeof(webModel.GenericSearchResult<webModel.Category>))]
-		[Route("")]
+        [Route("categories")]
 		public IHttpActionResult Search(string catalogId, string language="en-us", [FromUri]string parentId = null)
 		{
 			var criteria = new moduleModel.SearchCriteria

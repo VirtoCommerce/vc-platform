@@ -34,6 +34,10 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 			using (var appConfigRepository = _appConfigRepositoryFactory())
 			{
 				var dbItem = repository.GetItemByIds(new string[] { itemId }, respGroup).FirstOrDefault();
+			    if (ReferenceEquals(dbItem, null))
+			    {
+			        return null;
+			    }
 				var dbCatalog = repository.GetCatalogById(dbItem.CatalogId);
 				
 				var parentItemRelation = repository.ItemRelations.FirstOrDefault(x => x.ChildItemId == itemId);
