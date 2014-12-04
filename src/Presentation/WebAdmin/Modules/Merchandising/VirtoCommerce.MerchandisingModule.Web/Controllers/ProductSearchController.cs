@@ -4,17 +4,17 @@ using System.Web.Http;
 using System.Web.Http.ModelBinding;
 using VirtoCommerce.CatalogModule.Services;
 using VirtoCommerce.Foundation.Catalogs.Search;
-using VirtoCommerce.MerchandisingModule.Web2.Model;
-using VirtoCommerce.MerchandisingModule.Web2.Converters;
+using VirtoCommerce.MerchandisingModule.Web.Model;
+using VirtoCommerce.MerchandisingModule.Web.Converters;
 using VirtoCommerce.Foundation.Search.Schemas;
 using VirtoCommerce.Foundation.Search;
 using System.Web.Http.Description;
 using moduleModel = VirtoCommerce.CatalogModule.Model;
-using webModel = VirtoCommerce.MerchandisingModule.Web2.Model;
-using VirtoCommerce.MerchandisingModule.Web2.Binders;
+using webModel = VirtoCommerce.MerchandisingModule.Web.Model;
+using VirtoCommerce.MerchandisingModule.Web.Binders;
 using Microsoft.Practices.Unity;
 
-namespace VirtoCommerce.MerchandisingModule.Web2.Controllers
+namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
 	[RoutePrefix("api/mp/{catalog}/{language}/products")]
 	public class ProductSearchController : ApiController

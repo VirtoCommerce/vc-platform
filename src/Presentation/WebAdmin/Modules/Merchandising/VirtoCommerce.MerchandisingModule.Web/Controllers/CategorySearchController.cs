@@ -7,10 +7,10 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.CatalogModule.Services;
 using moduleModel = VirtoCommerce.CatalogModule.Model;
-using webModel = VirtoCommerce.MerchandisingModule.Web2.Model;
-using VirtoCommerce.MerchandisingModule.Web2.Converters;
+using webModel = VirtoCommerce.MerchandisingModule.Web.Model;
+using VirtoCommerce.MerchandisingModule.Web.Converters;
 using Microsoft.Practices.Unity;
-namespace VirtoCommerce.MerchandisingModule.Web2.Controllers
+namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
 	[RoutePrefix("api/mp/{catalogId}/{language}/categories")]
 	public class CategorySearchController : ApiController

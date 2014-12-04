@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace VirtoCommerce.MerchandisingModule.Web2.Model
+namespace VirtoCommerce.MerchandisingModule.Web.Model
 {
     public class GenericSearchResult<T>
     {

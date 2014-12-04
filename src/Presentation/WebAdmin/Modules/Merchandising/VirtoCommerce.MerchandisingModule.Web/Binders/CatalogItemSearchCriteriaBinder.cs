@@ -5,9 +5,9 @@ using System.Web.Http.Controllers;
 using System.Web.Http.ModelBinding;
 using VirtoCommerce.Foundation.Catalogs.Search;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
-using VirtoCommerce.MerchandisingModule.Web2.Model;
+using VirtoCommerce.MerchandisingModule.Web.Model;
 
-namespace VirtoCommerce.MerchandisingModule.Web2.Binders
+namespace VirtoCommerce.MerchandisingModule.Web.Binders
 {
 	/// <summary>
 	/// Class SearchCriteriaBinder.

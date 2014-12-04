@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Omu.ValueInjecter;
 using moduleModel = VirtoCommerce.CatalogModule.Model;
-using webModel = VirtoCommerce.MerchandisingModule.Web2.Model;
+using webModel = VirtoCommerce.MerchandisingModule.Web.Model;
 
-namespace VirtoCommerce.MerchandisingModule.Web2.Converters
+namespace VirtoCommerce.MerchandisingModule.Web.Converters
 {
 	public static class AssetConverter
 	{

@@ -408,4 +408,10 @@
   <data name="UpdatingRegions" xml:space="preserve">
     <value>Updating Regions.</value>
   </data>
+  <data name="AssembliesPathCannotBeNullOrEmpty" xml:space="preserve">
+    <value>The AssembliesPath cannot contain a null value or be empty</value>
+  </data>
+  <data name="ContentPathCannotBeNullOrEmpty" xml:space="preserve">
+    <value>The ContentPath cannot contain a null value or be empty</value>
+  </data>
 </root>

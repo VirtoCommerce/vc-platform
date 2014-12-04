@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A8BEEDE8-E33E-4326-A97D-4976549D2EFC}</ProjectGuid>
+    <ProjectGuid>{EE42FBD1-5DE8-4DA3-868C-92B910170B9F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>VirtoCommerce.MerchandisingModule.Web</RootNamespace>
@@ -77,14 +77,17 @@
   <ItemGroup>
     <Compile Include="Binders\CatalogItemSearchCriteriaBinder.cs" />
     <Compile Include="Controllers\CategorySearchController.cs" />
+    <Compile Include="Controllers\ContentController.cs" />
     <Compile Include="Controllers\ProductSearchController.cs" />
     <Compile Include="Converters\AssetConverter.cs" />
     <Compile Include="Converters\CategoryConverter.cs" />
+    <Compile Include="Converters\DynamicContentItemConverter.cs" />
     <Compile Include="Converters\ProductConverter.cs" />
     <Compile Include="Converters\ResponseGroupConverter.cs" />
-    <Compile Include="MerchantModule.cs" />
+    <Compile Include="Module.cs" />
     <Compile Include="Model\CatalogItem.cs" />
     <Compile Include="Model\Category.cs" />
+    <Compile Include="Model\DynamicContentItem.cs" />
     <Compile Include="Model\ItemCategory.cs" />
     <Compile Include="Model\ItemDisplayOptions.cs" />
     <Compile Include="Model\ItemImage.cs" />
@@ -92,13 +95,12 @@
     <Compile Include="Model\Product.cs" />
     <Compile Include="Model\ProductVariation.cs" />
     <Compile Include="Model\GenericSearchResult.cs" />
+    <Compile Include="Model\PropertyDictionary.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="MerchandisingModule.manifest">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="module.manifest" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -109,6 +111,10 @@
     <ProjectReference Include="..\..\..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
       <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
       <Name>CommerceFoundation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Extensions\Cache\VirtoCommerce.Caching.HttpCache\VirtoCommerce.Caching.HttpCache.csproj">
+      <Project>{3fe4eb14-557a-46bc-94ad-2e9874f85ace}</Project>
+      <Name>VirtoCommerce.Caching.HttpCache</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\..\..\..\Extensions\Search\ElasticSearchProvider\ElasticSearchProvider.csproj">
       <Project>{039e7914-2925-44c4-acad-6bccfa2a370e}</Project>

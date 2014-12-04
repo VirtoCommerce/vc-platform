@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace VirtoCommerce.MerchandisingModule.Web2.Model
+namespace VirtoCommerce.MerchandisingModule.Web.Model
 {
     public class CatalogItem
     {
@@ -27,12 +27,5 @@ namespace VirtoCommerce.MerchandisingModule.Web2.Model
 
         public PropertyDictionary Properties { get; set; }
     }
-
-    public class PropertyDictionary : Dictionary<string, object>
-    {
-        public void Add(KeyValuePair<string, object> pair)
-        {
-            this.Add(pair.Key, pair.Value);
-        }
-    }
+   
 }

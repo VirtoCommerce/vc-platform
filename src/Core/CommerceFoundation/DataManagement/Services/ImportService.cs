@@ -213,6 +213,7 @@ namespace VirtoCommerce.Foundation.Importing.Services
 
                 if (importer != null)
                 {
+                    CancellationToken.ThrowIfCancellationRequested();
                     var processed = 0;
                     while (true)
                     {
@@ -289,6 +290,7 @@ namespace VirtoCommerce.Foundation.Importing.Services
             }
             else
             {
+                result.ErrorsCount++;
                 if (result.Errors == null)
                     result.Errors = new List<string>();
                 result.Errors.Add("File contains no rows");
@@ -303,6 +305,7 @@ namespace VirtoCommerce.Foundation.Importing.Services
                 }
                 catch (Exception e)
                 {
+                    result.ErrorsCount++;
                     if (result.Errors == null)
                         result.Errors = new List<string>();
                     result.Errors.Add(e.Message);
@@ -313,12 +316,12 @@ namespace VirtoCommerce.Foundation.Importing.Services
 
         private void ReportProgressSafe(ImportResult result)
         {
+            CancellationToken.ThrowIfCancellationRequested();
+
             if (ReportProgress != null)
             {
                 ReportProgress(result, ServiceRunnerId, JobName);
             }
-
-            CancellationToken.ThrowIfCancellationRequested();
         }
 
         private static bool IsTaxImport(string entityImporter)

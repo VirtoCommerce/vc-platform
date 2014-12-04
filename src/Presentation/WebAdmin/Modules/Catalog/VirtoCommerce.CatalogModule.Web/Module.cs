@@ -21,7 +21,6 @@ using ICatalogService = VirtoCommerce.CatalogModule.Services.ICatalogService;
 
 namespace VirtoCommerce.CatalogModule.Web
 {
-    [Module(ModuleName = "CatalogsModule", OnDemand = true)]
     public class Module : IModule
     {
         private readonly IUnityContainer _container;

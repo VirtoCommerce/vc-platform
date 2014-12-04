@@ -65,7 +65,7 @@ angular.module('platformWebApp', AppDependencies)
 
         var journeyMenuItem = {
         	path: 'active',
-        	title: 'Journey',
+        	title: 'Active',
         	icon: 'glyphicon glyphicon-tasks',
         	priority: 999
         };

@@ -69,8 +69,8 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         public IHttpActionResult Post(webModel.Category category)
         {
             UpdateCategory(category);
-
-            return CreatedAtRoute("DefaultApi", new { id = category.Id }, category);
+			var retVal = _categoryService.GetById(category.Id);
+			return Ok(retVal);
         }
 
 		// POST: api/catalog/categories/5
