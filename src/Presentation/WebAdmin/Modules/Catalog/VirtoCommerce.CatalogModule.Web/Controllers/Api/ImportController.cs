@@ -124,12 +124,12 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 job = repository.ImportJobs.ExpandAll().SingleOrDefault(x => x.ImportJobId.Equals(id));
             }
 
-            var importService = _importServiceFactory();
             var retVal = job.ToWebModel();
 
             //Load available columns
             try
             {
+                var importService = _importServiceFactory();
                 var csvColumns = importService.GetCsvColumns(retVal.TemplatePath, retVal.ColumnDelimiter);
                 retVal.AvailableCsvColumns = csvColumns;
             }
@@ -285,7 +285,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             return Ok(job);
         }
 
-        [ResponseType(typeof(NotifyEvent))]
+        [ResponseType(typeof(void))]
         [HttpPost]
         [Route("run")]
         public IHttpActionResult Run(webModel.ImportJob job)
@@ -301,7 +301,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 cancellationTokenSource = new CancellationTokenSource()
             };
 
-            var result = LogProgressStart(jobHandle);
+            LogProgressStart(jobHandle);
 
             lock (thisLock)
             {
@@ -364,14 +364,13 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 });
             }
 
-            return Ok(result);
+            return StatusCode(HttpStatusCode.NoContent);
         }
 
         [HttpPost]
         [ResponseType(typeof(void))]
         public IHttpActionResult Cancel(string id)
         {
-            // TODO
             var job = _runningJobs.FirstOrDefault(x => x.id == id);
             if (job != null && !job.cancellationTokenSource.IsCancellationRequested)
             {
@@ -390,7 +389,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         }
 
         #region private
-        private NotifyEvent LogProgressStart(webModel.ImportJobRun jobRun)
+        private void LogProgressStart(webModel.ImportJobRun jobRun)
         {
             var notify = new NotifyEvent
             {
@@ -402,8 +401,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 Created = DateTime.Now
             };
 
-            notify = _notifier.Create(notify);
-            return notify;
+            _notifier.Create(notify);
         }
 
         private void LogProgressCancel(foundation.ImportResult result, webModel.ImportJobRun jobRun)

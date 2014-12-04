@@ -1,6 +1,5 @@
 ﻿using Omu.ValueInjecter;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using VirtoCommerce.CatalogModule.Web.Model;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
@@ -16,16 +15,7 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
             retVal.InjectFrom(core);
             retVal.Id = core.ImportJobId;
 
-            var mappings = new List<MappingItem>();
-            foreach (var map in core.PropertiesMap)
-            {
-                var webMap = new MappingItem();
-                webMap.InjectFrom(map);
-                webMap.Id = map.MappingItemId;
-                webMap.ImportJobId = core.ImportJobId;
-                mappings.Add(webMap);
-            }
-
+            var mappings = core.PropertiesMap.Select(x => x.ToWebModel()).ToList();
             if (mappings.Any())
             {
                 retVal.PropertiesMap = mappings;
@@ -42,15 +32,8 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 
             if (webEntity.PropertiesMap != null)
             {
-                foreach (var map in webEntity.PropertiesMap)
-                {
-                    var coreMap = new foundation.MappingItem();
-                    coreMap.InjectFrom(map);
-                    coreMap.MappingItemId = map.Id;
-                    coreMap.ImportJobId = webEntity.Id;
-                    coreMap.ImportJob = retVal;
-                    retVal.PropertiesMap.Add(coreMap);
-                }
+                var map = webEntity.PropertiesMap.Select(x => x.ToFoundation());
+                retVal.PropertiesMap.Add(map);
             }
             return retVal;
         }
