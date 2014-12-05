@@ -3,6 +3,10 @@
 	font-family: "Segoe UI_","Open Sans",Verdana,Arial,Helvetica,sans-serif;
 }
 
+.button:disabled {
+	opacity: 0.7;
+}
+
 .control-group
 {
 	padding: 10px;
@@ -34,7 +38,8 @@
 
 .login .window.flat .content
 {
-	padding: 40px 20px;
+	padding: 50px 20px 40px 20px;
+	position: relative;
 }
 
 .metro .table tbody tr.selected,
@@ -45,7 +50,7 @@
 
 .login .preload {
 	position: absolute;
-	bottom: 0;
+	top: 32px;
 	left: 0;
 	right: 0;
 	margin-bottom: 0;
