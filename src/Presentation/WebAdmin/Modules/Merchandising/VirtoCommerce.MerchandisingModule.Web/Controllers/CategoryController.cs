@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.CatalogModule.Services;
@@ -53,6 +54,22 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		
 			return Ok(retVal);
 		}
+
+        [HttpGet]
+        [ResponseType(typeof(webModel.GenericSearchResult<webModel.Category>))]
+        [Route("category/{categoryId}")]
+        public IHttpActionResult Get(string categoryId, string catalog, string language = "en-us")
+        {
+            var result = _categoryService.GetById(categoryId);
+
+            if (result != null)
+            {
+                var retVal = result.ToWebModel();
+
+                return Ok(retVal);
+            }
+            return StatusCode(HttpStatusCode.NotFound);
+        }
 
 		
 	}

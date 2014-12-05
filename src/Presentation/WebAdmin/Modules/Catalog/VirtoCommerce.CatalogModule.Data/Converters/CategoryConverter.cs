@@ -30,6 +30,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			var retVal = new module.Category
 			{
 			    CatalogId = catalog.Id,
+                Code = dbCategoryBase.Code,
 			    Catalog = catalog,
                 Id = dbCategoryBase.CategoryId,
                 ParentId = dbCategoryBase.ParentCategoryId,
