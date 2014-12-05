@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.CatalogModule.Services;
+using VirtoCommerce.MerchandisingModule.Web.Converters;
 using moduleModel = VirtoCommerce.CatalogModule.Model;
 using webModel = VirtoCommerce.MerchandisingModule.Web.Model;
-using VirtoCommerce.MerchandisingModule.Web.Converters;
-using Microsoft.Practices.Unity;
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
-	[RoutePrefix("api/mp/{catalogId}/{language}/categories")]
+	[RoutePrefix("api/mp/{catalogId}/{language}")]
 	public class CategoryController : ApiController
 	{
 		private readonly ICatalogSearchService _searchService;
@@ -37,7 +32,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		/// <returns></returns>
 		[HttpGet]
 		[ResponseType(typeof(webModel.GenericSearchResult<webModel.Category>))]
-		[Route("")]
+        [Route("categories")]
 		public IHttpActionResult Search(string catalogId, string language="en-us", [FromUri]string parentId = null)
 		{
 			var criteria = new moduleModel.SearchCriteria

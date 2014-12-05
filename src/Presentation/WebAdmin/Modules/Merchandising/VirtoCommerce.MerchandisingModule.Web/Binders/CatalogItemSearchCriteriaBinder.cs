@@ -49,15 +49,11 @@ namespace VirtoCommerce.MerchandisingModule.Web.Binders
 			//	}
 			//}
 
-			var outline = qs["outline"].EmptyToNull();
-			if (outline != null)
-			{
-				result.Outlines.Add(String.Format("{0}*", outline));
-			}
+			
 			result.SearchPhrase = qs["q"].EmptyToNull();
 			//result.ClassTypes.Add("Product");
 			result.RecordsToRetrieve = qs["take"].TryParse(20);
-			result.StartingRecord = qs["skip"].TryParse(1);
+			result.StartingRecord = qs["skip"].TryParse(0);
 			result.Pricelists = null;
 
 
