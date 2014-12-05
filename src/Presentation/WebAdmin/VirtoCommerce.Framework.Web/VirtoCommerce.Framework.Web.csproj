@@ -79,7 +79,6 @@
     <Compile Include="Modularity\ManifestReader.cs" />
     <Compile Include="Modularity\ModuleAttribute.cs" />
     <Compile Include="Modularity\ModuleCatalog.cs" />
-    <Compile Include="Modularity\ModuleDependency.cs" />
     <Compile Include="Modularity\ModuleDependencyAttribute.cs" />
     <Compile Include="Modularity\ModuleDependencySolver.cs" />
     <Compile Include="Modularity\ModuleDownloadProgressChangedEventArgs.cs" />

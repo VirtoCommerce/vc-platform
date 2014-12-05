@@ -10,7 +10,7 @@ namespace VirtoCommerce.Framework.Web.Modularity
 		public ICollection<ManifestBundleItem> Scripts { get; private set; }
 
 		public ManifestModuleInfo(ModuleManifest manifest)
-			: base(manifest.ModuleName, manifest.ModuleType, manifest.Dependencies)
+			: base(manifest.Id, manifest.ModuleType, manifest.Dependencies)
 		{
 			InitializationMode = InitializationMode.OnDemand;
 

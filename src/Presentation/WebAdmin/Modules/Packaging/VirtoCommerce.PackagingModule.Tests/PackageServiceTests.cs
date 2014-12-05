@@ -16,25 +16,25 @@ namespace VirtoCommerce.PackagingModule.Tests
 			const string package2 = "TestModule2";
 
 			var service = new PackageService("source", "target", "target\\packages", "target\\bin");
-			List(service);
+			ListPackages(service);
 
 			service.Install(package2, "1.0");
-			List(service);
+			ListPackages(service);
 
 			service.Update(package2, "1.1");
-			List(service);
+			ListPackages(service);
 
 			service.Uninstall(package2);
-			List(service);
+			ListPackages(service);
 
 			service.Uninstall(package1);
-			List(service);
+			ListPackages(service);
 		}
 
 
-		static void List(IPackageService service)
+		static void ListPackages(IPackageService service)
 		{
-			var packages = service.List().ToArray();
+			var packages = service.GetPackages();
 			Debug.WriteLine("Packages count: {0}", packages.Length);
 
 			foreach (var package in packages)

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using VirtoCommerce.Framework.Web.Properties;
 
 namespace VirtoCommerce.Framework.Web.Modularity
@@ -9,6 +11,11 @@ namespace VirtoCommerce.Framework.Web.Modularity
 	{
 		public string AssembliesPath { get; set; }
 		public string ContentPath { get; set; }
+
+		public static IEnumerable<ModuleManifest> GetModuleManifests(string rootPath)
+		{
+			return Directory.EnumerateFiles(rootPath, "module.manifest", SearchOption.AllDirectories).Select(ManifestReader.Read);
+		}
 
 		protected override void InnerLoad()
 		{
@@ -22,22 +29,17 @@ namespace VirtoCommerce.Framework.Web.Modularity
 			if (!Directory.Exists(ContentPath))
 				throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.DirectoryNotFound, ContentPath));
 
-			foreach (var manifestPath in Directory.GetFiles(ContentPath, "module.manifest", SearchOption.AllDirectories))
+			foreach (var manifest in GetModuleManifests(ContentPath))
 			{
-				var manifest = ManifestReader.Read(manifestPath);
+				var moduleInfo = new ManifestModuleInfo(manifest);
 
-				if (manifest != null)
-				{
-					var moduleInfo = new ManifestModuleInfo(manifest);
+				// Modules without assembly file don't need initialization
+				if (string.IsNullOrEmpty(manifest.AssemblyFile))
+					moduleInfo.State = ModuleState.Initialized;
+				else
+					moduleInfo.Ref = GetFileAbsoluteUri(manifest.AssemblyFile);
 
-					// Modules without assembly file don't need initialization
-					if (string.IsNullOrEmpty(manifest.AssemblyFile))
-						moduleInfo.State = ModuleState.Initialized;
-					else
-						moduleInfo.Ref = GetFileAbsoluteUri(manifest.AssemblyFile);
-
-					AddModule(moduleInfo);
-				}
+				AddModule(moduleInfo);
 			}
 		}
 
