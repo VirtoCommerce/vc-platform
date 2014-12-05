@@ -19,7 +19,7 @@
             function (dbItem) {
                 if (execute) {
                     dbItem.$run(null, function (notify) {
-                        notificationService.task({ title: notify.title, description: notify.description });
+                        // notificationService.task({ title: notify.title, description: notify.description });
                     });
                 }
 

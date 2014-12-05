@@ -18,10 +18,11 @@ using VirtoCommerce.Foundation.Search;
 using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerce.Search.Providers.Elastic;
 using ICatalogService = VirtoCommerce.CatalogModule.Services.ICatalogService;
+using VirtoCommerce.Framework.Web.Notification;
+using VirtoCommerce.CoreModule.Web.Notification;
 
 namespace VirtoCommerce.CatalogModule.Web
 {
-    [Module(ModuleName = "CatalogsModule", OnDemand = true)]
     public class Module : IModule
     {
         private readonly IUnityContainer _container;
@@ -32,44 +33,45 @@ namespace VirtoCommerce.CatalogModule.Web
 
         public void Initialize()
         {
-            #region VCF dependencies
-            _container.RegisterType<IAppConfigRepository>(new InjectionFactory(x => new EFAppConfigRepository("VirtoCommerce")));
-            _container.RegisterType<ISearchProvider, ElasticSearchProvider>();
-            _container.RegisterType<ISearchQueryBuilder, ElasticSearchQueryBuilder>();
-            var searchConnection = new SearchConnection(ConnectionHelper.GetConnectionString("SearchConnectionString"));
-            _container.RegisterInstance<ISearchConnection>(searchConnection);
+			#region Catalog dependencies
+			var cacheManager = new CacheManager(x => new InMemoryCachingProvider(), x => new CacheSettings("", TimeSpan.FromMinutes(1), "", true));
+			Func<IFoundationCatalogRepository> catalogRepFactory = () => new FoundationCatalogRepositoryImpl("VirtoCommerce");
+			Func<IFoundationAppConfigRepository> appConfigRepFactory = () => new FoundationAppConfigRepositoryImpl("VirtoCommerce");
+
+			var catalogService = new CatalogServiceImpl(catalogRepFactory, cacheManager);
+			var propertyService = new PropertyServiceImpl(catalogRepFactory, cacheManager);
+			var categoryService = new CategoryServiceImpl(catalogRepFactory, appConfigRepFactory, cacheManager);
+			var itemService = new ItemServiceImpl(catalogRepFactory, appConfigRepFactory, cacheManager);
+			var catalogSearchService = new CatalogSearchServiceImpl(catalogRepFactory, itemService, catalogService, categoryService);
+
+			_container.RegisterInstance<ICatalogService>("Catalog", catalogService);
+			_container.RegisterInstance<IPropertyService>("Catalog", propertyService);
+			_container.RegisterInstance<ICategoryService>("Catalog", categoryService);
+			_container.RegisterInstance<IItemService>("Catalog", itemService);
+			_container.RegisterInstance<ICatalogSearchService>("Catalog", catalogSearchService);
+			#endregion
+
+			#region Search dependencies
+			var searchConnection = new SearchConnection(ConnectionHelper.GetConnectionString("SearchConnectionString"));
+			var elasticSearchProvider = new ElasticSearchProvider(new ElasticSearchQueryBuilder(), searchConnection);
+			_container.RegisterInstance<ISearchProvider>("Catalog", elasticSearchProvider);
+			#endregion
+
+
+            #region Import dependencies
+			Func<IImportRepository> importRepFactory = () => new EFImportingRepository("VirtoCommerce");
+			
+			var fileSystemAssetRep = new FileSystemBlobAssetRepository("~", new AssetEntityFactory());
+			var assetService = new AssetService(fileSystemAssetRep, fileSystemAssetRep);
+			Func<IImportService> imporServiceFactory = () => new ImportService(importRepFactory(), assetService, catalogRepFactory(), null, null);
+			
+			_container.RegisterType<Func<IImportRepository>>("Catalog", new InjectionFactory(x => importRepFactory));
+			_container.RegisterType<Func<IImportService>>("Catalog", new InjectionFactory(x => imporServiceFactory));
+			_container.RegisterType<Func<IFoundationCatalogRepository>>("Catalog", new InjectionFactory(x => catalogRepFactory));
+			
             #endregion
 
-            #region Import
-            //_container.RegisterType<IImportRepository>(new InjectionFactory(x => new EFImportingRepository("VirtoCommerce")));
-            _container.RegisterType<Func<IImportRepository>>(new InjectionFactory(x => new Func<IImportRepository>(() => new EFImportingRepository("VirtoCommerce"))));
-            _container.RegisterType<Func<IImportService>>(new InjectionFactory(x => new Func<IImportService>(() =>
-                {
-                    var fileSystemBlobAssetRepository = new FileSystemBlobAssetRepository("~", new AssetEntityFactory());
-                    return new ImportService(
-                        _container.Resolve<Func<IImportRepository>>()(),
-                        _container.Resolve<IAssetService>(new ParameterOverrides
-                        {
-                            { "assetRepository", fileSystemBlobAssetRepository },
-                            { "blobStorageProvider", fileSystemBlobAssetRepository }
-                        }),
-                        _container.Resolve<Func<IFoundationCatalogRepository>>()(),
-                        null, null);
-                })));
-            #endregion
-
-            #region module services
-
-            _container.RegisterType<Func<IFoundationCatalogRepository>>(new InjectionFactory(x => new Func<IFoundationCatalogRepository>(() => new FoundationCatalogRepositoryImpl("VirtoCommerce"))));
-            _container.RegisterType<Func<IFoundationAppConfigRepository>>(new InjectionFactory(x => new Func<IFoundationAppConfigRepository>(() => new FoundationAppConfigRepositoryImpl("VirtoCommerce"))));
-            var cacheManager = new CacheManager(x => new InMemoryCachingProvider(), x => new CacheSettings("", TimeSpan.FromMinutes(1), "", true));
-            _container.RegisterInstance(cacheManager);
-            _container.RegisterType<ICatalogService, CatalogServiceImpl>();
-            _container.RegisterType<IPropertyService, PropertyServiceImpl>();
-            _container.RegisterType<ICategoryService, CategoryServiceImpl>();
-            _container.RegisterType<IItemService, ItemServiceImpl>();
-            _container.RegisterType<ICatalogSearchService, CatalogSearchServiceImpl>();
-
+       
             #region Mock
             //var localPath = Path.Combine(HttpRuntime.AppDomainAppPath, @"App_data\priceRuCategoryTest.yml");
             //var mockCatalogService = new MockCatalogService(localPath);
@@ -82,7 +84,6 @@ namespace VirtoCommerce.CatalogModule.Web
 
             #endregion
 
-            #endregion
         }
     }
 }

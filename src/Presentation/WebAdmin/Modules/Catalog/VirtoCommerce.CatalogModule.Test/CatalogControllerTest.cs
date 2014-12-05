@@ -26,7 +26,7 @@ namespace VirtoCommerce.CatalogModule.Test
 		{
 			
 			var catalogController = new CatalogsController(GetCatalogService(), GetSearchService(), null);
-			var categoryController = new CategoriesController(GetCategoryService(), GetPropertyService());
+			var categoryController = new CategoriesController(GetSearchService(), GetCategoryService(), GetPropertyService());
             var listEntryController = new ListEntryController(GetSearchService(), GetCategoryService(), GetItemService());
 			
 			//Create virtual catalog
@@ -51,7 +51,7 @@ namespace VirtoCommerce.CatalogModule.Test
 		
 
 			//Check result
-			var serachResult = listEntryController.ListItemsSearch(new webModel.SearchCriteria { CatalogId = vCatalog.Id, 
+			var serachResult = listEntryController.ListItemsSearch(new webModel.ListEntrySearchCriteria { CatalogId = vCatalog.Id, 
 																							 CategoryId = vCategory.Id, 
 																							 ResponseGroup = webModel.ResponseGroup.WithCategories })
 																							 as  OkNegotiatedContentResult<webModel.ListEntrySearchResult>;

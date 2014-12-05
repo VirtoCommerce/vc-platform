@@ -19,33 +19,53 @@
   'platformWebApp.breadcrumbs'
 ];
 
-angular.module('platformWebApp', AppDependencies)
-.controller('appCtrl', ['$scope', '$state', 'mainMenuService', 'notificationService', function ($scope, $state, mainMenuService, notificationService) {
+angular.module('platformWebApp', AppDependencies).
+  controller('appCtrl', ['$scope', '$state', '$http', 'mainMenuService', 'notificationService', function ($scope, $state, $http, mainMenuService, notificationService) {
 	
 	notificationService.run();
 
     $scope.curentStateName = function () {
         return $state.current.name;
     };
+   
+  }])
+.factory('httpErrorInterceptor', ['$q', '$rootScope', function ($q, $rootScope) {
+	var httpErrorInterceptor = {};
+
+	httpErrorInterceptor.responseError = function (rejection) {
+		if (rejection.status === 401) {
+			$rootScope.$broadcast('unauthorized', rejection);
+		}
+		else {
+			$rootScope.$broadcast('httpError', rejection);
+		}
+		return $q.reject(rejection);
+	};
+	httpErrorInterceptor.requestError = function (rejection) {
+		$rootScope.$broadcast('httpError', rejection);
+		return $q.reject(rejection);
+	};
+
+	return httpErrorInterceptor;
 }])
 .config(
-  ['$stateProvider', function ($stateProvider) {
-  	$stateProvider
-		.state('workspace', {
-			abstract: true,
-			templateUrl: 'Scripts/app/workspace.tpl.html'
-		});
+  ['$stateProvider', '$httpProvider', function ($stateProvider, $httpProvider) {
+    $stateProvider.state('workspace', {
+						  abstract: true,
+						  templateUrl: 'Scripts/app/workspace.tpl.html'
+    });
+	//Add interseptor
+    $httpProvider.interceptors.push('httpErrorInterceptor');
   }
   ]
 )
 .run(
-  ['$rootScope', '$state', '$stateParams', 'authService', 'mainMenuService', 'editableOptions',
-    function ($rootScope, $state, $stateParams, authService, mainMenuService, editableOptions) {
+  ['$rootScope', '$state', '$stateParams', 'authService', 'mainMenuService', 'editableOptions', 'notificationService',
+    function ($rootScope, $state, $stateParams, authService, mainMenuService, editableOptions, notificationService) {
         editableOptions.theme = 'bs3'; // bootstrap3 theme. Can be also 'bs2', 'default'
 
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
-
         var homeMenuItem = {
         	path: 'home',
         	title: 'Home',
@@ -76,6 +96,12 @@ angular.module('platformWebApp', AppDependencies)
             $state.go('loginDialog');
         });
 
+        $rootScope.$on('httpError', function (event, rejection) {
+        	if (!(rejection.config.url.indexOf('api/notification') + 1)) {
+        		notificationService.error({ title: 'HTTP error', description: rejection.status + ' — ' + rejection.statusText });
+          }
+        });
+
         $rootScope.$on('loginStatusChanged', function (event, authContext) {
             if (authContext.isAuthenticated) {
                 $state.go(homeMenuItem.state);
@@ -89,3 +115,4 @@ angular.module('platformWebApp', AppDependencies)
     }
   ]
 );
+

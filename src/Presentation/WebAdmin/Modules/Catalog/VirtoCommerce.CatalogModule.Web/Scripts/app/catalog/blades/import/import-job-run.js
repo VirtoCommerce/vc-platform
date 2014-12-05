@@ -7,7 +7,7 @@
 
     $scope.run = function () {
         $scope.job.$run(null, function (notify) {
-            notificationService.task({ title: notify.title, description: notify.description });
+            // notificationService.task({ title: notify.title, description: notify.description });
             $scope.bladeClose();
         });
     }

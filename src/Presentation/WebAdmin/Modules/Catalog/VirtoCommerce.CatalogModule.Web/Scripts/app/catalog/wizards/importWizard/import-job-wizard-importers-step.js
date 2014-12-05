@@ -1,9 +1,7 @@
 ﻿angular.module('catalogModule.wizards.importJobWizard.importers', [
 ])
-.controller('importJobImportersController', ['$scope', function ($scope)
-{
-    $scope.blade.refresh = function ()
-    {
+.controller('importJobImportersController', ['$scope', function ($scope) {
+    $scope.blade.refresh = function () {
         $scope.selectedImporter = $scope.blade.parentBlade.item.entityImporter;
         $scope.blade.isLoading = false;
         $scope.importers = [
@@ -12,25 +10,24 @@
             //"Bundle",
             //"Package",
             //"DynamicKit",
-            "Category",
-            "Association",
+            "Category"
+            //"Association",
             //"Price",
-            "ItemRelation",
+            //"ItemRelation",
             //"Inventory",
             //"Customer",
             //"Jurisdiction",
             //"JurisdictionGroup",
             //"TaxCategory",
             //"TaxValue",
-            "ItemAsset",
+            //"ItemAsset",
             //"Localization",
-            "Seo"
+            //"Seo"
         ];
 
     };
 
-    $scope.setImporter = function (importer)
-    {
+    $scope.setImporter = function (importer) {
         $scope.selectedImporter = importer;
         $scope.blade.parentBlade.item.entityImporter = importer;
         $scope.bladeClose();

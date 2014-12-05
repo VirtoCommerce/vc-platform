@@ -28,17 +28,6 @@
         }
     };
 }])
-.factory('authInterceptor', ['$q', '$rootScope', function ($q, $rootScope) {
-	var authInterceptorServiceFactory = {};
-	 
-	authInterceptorServiceFactory.responseError = function (rejection) {
-		if (rejection.status === 401) {
-			$rootScope.$broadcast('unauthorized', rejection);
-		}
-		return $q.reject(rejection);
-	};
- 	return authInterceptorServiceFactory;
-}])
 .factory('authService', ['$http', '$rootScope', '$cookieStore', '$state', function ($http, $rootScope, $cookieStore, $state) {
     var serviceBase = 'api/security/';
     var authContext = {

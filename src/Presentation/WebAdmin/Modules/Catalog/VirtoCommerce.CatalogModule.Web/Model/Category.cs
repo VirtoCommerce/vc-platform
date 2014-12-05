@@ -15,6 +15,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         public string CatalogId { get; set; }
         public string Name { get; set; }
         public string Path { get; set; }
+		public Dictionary<string, string> Parents { get; set; }
         public List<Category> Children { get; set; }
 		public List<Property> Properties { get; set; }
         public List<CategoryLink> Links { get; set; }

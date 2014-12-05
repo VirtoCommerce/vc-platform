@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{0E0CB22C-4501-4E16-B9B7-744B51076524}"
 	ProjectSection(SolutionItems) = preProject
@@ -31,13 +31,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Merchandising", "Merchandis
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.MerchandisingModule.Web", "src\Presentation\WebAdmin\Modules\Merchandising\VirtoCommerce.MerchandisingModule.Web\VirtoCommerce.MerchandisingModule.Web.csproj", "{EE42FBD1-5DE8-4DA3-868C-92B910170B9F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.MerchandisingModule", "src\Presentation\WebAdmin\Modules\Merchandising\VirtoCommerce.MerchandisingModule\VirtoCommerce.MerchandisingModule.csproj", "{28EBCB4D-45B4-4653-B9C4-0B2F9A4A0371}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.MerchandisingModule.Data", "src\Presentation\WebAdmin\Modules\Merchandising\VirtoCommerce.MerchandisingModule.Data\VirtoCommerce.MerchandisingModule.Data.csproj", "{478586E9-2B24-47BC-86D5-96BD26D99FED}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.Web", "src\Presentation\WebAdmin\VirtoCommerce.Platform.Web\VirtoCommerce.Platform.Web.csproj", "{B53BA685-B324-42E6-80AD-7B641DD414E7}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.MerchandisingModule.Web.Tests", "src\Presentation\WebAdmin\Modules\Merchandising\VirtoCommerce.MerchandisingModule.Web.Tests\VirtoCommerce.MerchandisingModule.Web.Tests.csproj", "{41DF5063-F0F7-439D-B478-7CBB47BD0655}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnmanagedModule", "UnmanagedModule", "{CCA3D245-FF8A-4931-9654-731F0F4D618D}"
 	ProjectSection(SolutionItems) = preProject
@@ -123,22 +117,10 @@ Global
 		{EE42FBD1-5DE8-4DA3-868C-92B910170B9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EE42FBD1-5DE8-4DA3-868C-92B910170B9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EE42FBD1-5DE8-4DA3-868C-92B910170B9F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{28EBCB4D-45B4-4653-B9C4-0B2F9A4A0371}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{28EBCB4D-45B4-4653-B9C4-0B2F9A4A0371}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{28EBCB4D-45B4-4653-B9C4-0B2F9A4A0371}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{28EBCB4D-45B4-4653-B9C4-0B2F9A4A0371}.Release|Any CPU.Build.0 = Release|Any CPU
-		{478586E9-2B24-47BC-86D5-96BD26D99FED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{478586E9-2B24-47BC-86D5-96BD26D99FED}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{478586E9-2B24-47BC-86D5-96BD26D99FED}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{478586E9-2B24-47BC-86D5-96BD26D99FED}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B53BA685-B324-42E6-80AD-7B641DD414E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B53BA685-B324-42E6-80AD-7B641DD414E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B53BA685-B324-42E6-80AD-7B641DD414E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B53BA685-B324-42E6-80AD-7B641DD414E7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{41DF5063-F0F7-439D-B478-7CBB47BD0655}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{41DF5063-F0F7-439D-B478-7CBB47BD0655}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{41DF5063-F0F7-439D-B478-7CBB47BD0655}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{41DF5063-F0F7-439D-B478-7CBB47BD0655}.Release|Any CPU.Build.0 = Release|Any CPU
 		{613E443D-8FB2-435A-AA8A-5B141E444824}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{613E443D-8FB2-435A-AA8A-5B141E444824}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{613E443D-8FB2-435A-AA8A-5B141E444824}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -192,9 +174,6 @@ Global
 		{C0E969B6-946A-4E53-BA27-1CFEBCF65CFC} = {3874AF7E-4491-48BB-BF11-5F7D7A23EFED}
 		{AAAC68D3-2CC4-40A6-9E4E-5DDC944817D3} = {A4C0D164-BF77-4B57-8970-B5459B100AC3}
 		{EE42FBD1-5DE8-4DA3-868C-92B910170B9F} = {AAAC68D3-2CC4-40A6-9E4E-5DDC944817D3}
-		{28EBCB4D-45B4-4653-B9C4-0B2F9A4A0371} = {AAAC68D3-2CC4-40A6-9E4E-5DDC944817D3}
-		{478586E9-2B24-47BC-86D5-96BD26D99FED} = {AAAC68D3-2CC4-40A6-9E4E-5DDC944817D3}
-		{41DF5063-F0F7-439D-B478-7CBB47BD0655} = {AAAC68D3-2CC4-40A6-9E4E-5DDC944817D3}
 		{CCA3D245-FF8A-4931-9654-731F0F4D618D} = {A4C0D164-BF77-4B57-8970-B5459B100AC3}
 		{5E02FCFA-C9C5-40ED-830E-1BA3EFE28B08} = {CCA3D245-FF8A-4931-9654-731F0F4D618D}
 		{585A7CD8-E35C-4AAC-A82B-637B1A0C43F8} = {5E02FCFA-C9C5-40ED-830E-1BA3EFE28B08}

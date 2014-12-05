@@ -10,6 +10,7 @@ using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using moduleModel = VirtoCommerce.CatalogModule.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
+using Microsoft.Practices.Unity;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
@@ -17,13 +18,15 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
     {
         private readonly ICatalogService _catalogService;
         private readonly ICatalogSearchService _searchService;
-        private readonly IAppConfigRepository _appConfigRepository;
+		private readonly Func<IAppConfigRepository> _appConfigRepositoryFactory;
 
-        public CatalogsController(ICatalogService catalogService, ICatalogSearchService itemSearchService, IAppConfigRepository appConfigRepository)
+        public CatalogsController([Dependency("Catalog")]ICatalogService catalogService,
+								  [Dependency("Catalog")]ICatalogSearchService itemSearchService,
+								  [Dependency("Catalog")]Func<IAppConfigRepository> appConfigRepositoryFactory)
         {
             _catalogService = catalogService;
             _searchService = itemSearchService;
-            _appConfigRepository = appConfigRepository;
+			_appConfigRepositoryFactory = appConfigRepositoryFactory;
         }
 
         // GET: api/catalogs/itemssearch
@@ -175,15 +178,17 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         private IEnumerable<webModel.CatalogLanguage> GetSystemLanguages()
         {
             var retVal = new List<webModel.CatalogLanguage>();
-
-			if (_appConfigRepository != null)
+			using (var appConfigRep = _appConfigRepositoryFactory())
 			{
-				var languageSetting = _appConfigRepository.Settings.Expand(x => x.SettingValues).FirstOrDefault(x => x.Name.Equals("Languages"));
-				if (languageSetting != null)
+				if (appConfigRep != null)
 				{
-					foreach (var languageCode in languageSetting.SettingValues.Select(x => x.ToString()))
+					var languageSetting = appConfigRep.Settings.Expand(x => x.SettingValues).FirstOrDefault(x => x.Name.Equals("Languages"));
+					if (languageSetting != null)
 					{
-						retVal.Add(new webModel.CatalogLanguage(languageCode));
+						foreach (var languageCode in languageSetting.SettingValues.Select(x => x.ToString()))
+						{
+							retVal.Add(new webModel.CatalogLanguage(languageCode));
+						}
 					}
 				}
 			}
