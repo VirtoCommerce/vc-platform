@@ -1,5 +1,5 @@
 ﻿<div class="window-overlay">
-    <form class="login" novalidate ng-submit="ok()">
+    <form class="login" novalidate ng-submit="ok()" name="loginForm">
         <div class="window flat">
             <div class="caption">
                 <div class="title">Sign in to Virto Commerce Manager</div>
@@ -25,7 +25,7 @@
                     {{authError}}
                 </label>
                 <div class="form-actions text-right">
-                    <button class="button primary" type="submit" ng-disabled='form.$invalid||loginProgress'>Log in</button>
+                    <button class="button primary" type="submit" ng-disabled='loginForm.$invalid||loginProgress'>Log in</button>
                 </div>
                 <div ng-if="loginProgress" class="progress-bar preload gray" data-role="progress-bar"></div>
             </div>
