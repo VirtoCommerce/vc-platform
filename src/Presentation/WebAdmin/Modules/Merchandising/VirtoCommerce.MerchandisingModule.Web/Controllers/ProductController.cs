@@ -15,7 +15,7 @@ using moduleModel = VirtoCommerce.CatalogModule.Model;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
-	[RoutePrefix("api/mp/{catalog}/{language}")]
+	[RoutePrefix("api/mp/{catalog}/{language}/products")]
 	public class ProductController : ApiController
 	{
 		private readonly IItemService _itemService;
@@ -40,9 +40,9 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 	    /// <param name="language"></param>
 	    /// <returns></returns>
 	    [HttpGet]
-        [Route("products/{outline?}")]
+        [Route("")]
 		[ResponseType(typeof(GenericSearchResult<CatalogItem>))]
-		public IHttpActionResult Search(string catalog, [ModelBinder(typeof(CatalogItemSearchCriteriaBinder))] CatalogItemSearchCriteria criteria, string outline="", string language = "en-us")
+		public IHttpActionResult Search(string catalog, [ModelBinder(typeof(CatalogItemSearchCriteriaBinder))] CatalogItemSearchCriteria criteria, [FromUri]string outline="", string language = "en-us")
 		{
 			criteria.Locale = language;
 			criteria.Catalog = catalog;
@@ -74,7 +74,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
 		[HttpGet]
 		[ResponseType(typeof(Product))]
-		[Route("product/{productId}")]
+		[Route("{productId}")]
 		public IHttpActionResult GetProduct(string productId)
 		{
 			var product = _itemService.GetById(productId, moduleModel.ItemResponseGroup.ItemLarge);
