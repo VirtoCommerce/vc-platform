@@ -76,8 +76,10 @@
     <Compile Include="Modularity\ManifestBundleItem.cs" />
     <Compile Include="Modularity\ManifestModuleCatalog.cs" />
     <Compile Include="Modularity\ManifestModuleInfo.cs" />
+    <Compile Include="Modularity\ManifestReader.cs" />
     <Compile Include="Modularity\ModuleAttribute.cs" />
     <Compile Include="Modularity\ModuleCatalog.cs" />
+    <Compile Include="Modularity\ModuleDependency.cs" />
     <Compile Include="Modularity\ModuleDependencyAttribute.cs" />
     <Compile Include="Modularity\ModuleDependencySolver.cs" />
     <Compile Include="Modularity\ModuleDownloadProgressChangedEventArgs.cs" />
@@ -88,6 +90,7 @@
     <Compile Include="Modularity\ModuleInitializer.cs" />
     <Compile Include="Modularity\ModuleManager.cs" />
     <Compile Include="Modularity\Exceptions\ModuleNotFoundException.cs" />
+    <Compile Include="Modularity\ModuleManifest.cs" />
     <Compile Include="Modularity\ModuleState.cs" />
     <Compile Include="Modularity\Exceptions\ModuleTypeLoaderNotFoundException.cs" />
     <Compile Include="Modularity\Exceptions\ModuleTypeLoadingException.cs" />

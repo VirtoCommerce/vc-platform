@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module moduleName="UnmanagedModule">
 	<dependencies>
-		<dependency moduleName="CoreModule" />
-		<dependency moduleName="Module1" />
+		<dependency>CoreModule</dependency>
+		<dependency>Module1</dependency>
 	</dependencies>
 	<styles>
 		<file virtualPath="~/Modules/UnmanagedModule/Content/css/UnmanagedModule.css" />
 	</styles>
 	<scripts>
-    <directory virtualPath="~/Modules/UnmanagedModule/Scripts" searchPattern="*.js" searchSubdirectories="true" />
+		<directory virtualPath="~/Modules/UnmanagedModule/Scripts" searchPattern="*.js" searchSubdirectories="true" />
 	</scripts>
 </module>
