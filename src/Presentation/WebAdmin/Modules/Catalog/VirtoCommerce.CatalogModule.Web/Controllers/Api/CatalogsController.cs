@@ -10,6 +10,7 @@ using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using moduleModel = VirtoCommerce.CatalogModule.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
+using Microsoft.Practices.Unity;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
@@ -19,7 +20,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         private readonly ICatalogSearchService _searchService;
         private readonly IAppConfigRepository _appConfigRepository;
 
-        public CatalogsController(ICatalogService catalogService, ICatalogSearchService itemSearchService, IAppConfigRepository appConfigRepository)
+        public CatalogsController([Dependency("Catalog")]ICatalogService catalogService,
+								  [Dependency("Catalog")]ICatalogSearchService itemSearchService,
+								  [Dependency("Catalog")]IAppConfigRepository appConfigRepository)
         {
             _catalogService = catalogService;
             _searchService = itemSearchService;

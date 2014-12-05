@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
+using Microsoft.Practices.Unity;
 using VirtoCommerce.Foundation.Frameworks.Tagging;
 using VirtoCommerce.Foundation.Marketing.Services;
 using VirtoCommerce.MerchandisingModule.Web.Converters;
@@ -14,7 +15,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
     public class ContentController : ApiController
     {
         private readonly IDynamicContentService _dynamicContentService;
-        public ContentController(IDynamicContentService dynamicContentService)
+		public ContentController([Dependency("MP")] IDynamicContentService dynamicContentService)
         {
             _dynamicContentService = dynamicContentService;
         }

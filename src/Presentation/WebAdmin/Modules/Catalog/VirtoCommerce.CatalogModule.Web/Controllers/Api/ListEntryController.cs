@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
+using Microsoft.Practices.Unity;
 using VirtoCommerce.CatalogModule.Services;
 using VirtoCommerce.CatalogModule.Web.Converters;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
@@ -18,7 +19,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         private readonly ICategoryService _categoryService;
 		private readonly IItemService _itemService;
 
-		public ListEntryController(ICatalogSearchService searchService, ICategoryService categoryService, IItemService itemService)
+		public ListEntryController([Dependency("Catalog")]ICatalogSearchService searchService,
+								   [Dependency("Catalog")]ICategoryService categoryService,
+								   [Dependency("Catalog")]IItemService itemService)
         {
             _searchService = searchService;
             _categoryService = categoryService;

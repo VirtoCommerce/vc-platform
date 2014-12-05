@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
+using Microsoft.Practices.Unity;
 using VirtoCommerce.CatalogModule.Repositories;
 using VirtoCommerce.CatalogModule.Web.Converters;
 using VirtoCommerce.Foundation.Catalogs.Model;
@@ -32,7 +33,10 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         static readonly Queue<webModel.ImportJobRun> _runningJobs = new Queue<webModel.ImportJobRun>();
         static webModel.ImportJobRun runningJob;
 
-        public ImportController(Func<IImportRepository> importRepositoryFactory, Func<IImportService> importServiceFactory, Func<IFoundationCatalogRepository> catalogRepositoryFactory, INotifier notifier /*, IDataManagementService dataManagementService*/)
+		public ImportController([Dependency("Catalog")]Func<IImportRepository> importRepositoryFactory,
+								[Dependency("Catalog")]Func<IImportService> importServiceFactory,
+								[Dependency("Catalog")]Func<IFoundationCatalogRepository> catalogRepositoryFactory,
+								INotifier notifier /*, IDataManagementService dataManagementService*/)
         {
             _importRepositoryFactory = importRepositoryFactory;
             _importServiceFactory = importServiceFactory;

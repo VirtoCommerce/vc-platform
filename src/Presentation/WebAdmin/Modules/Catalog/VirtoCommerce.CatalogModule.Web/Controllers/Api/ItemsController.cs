@@ -9,6 +9,7 @@ using VirtoCommerce.CatalogModule.Web.Converters;
 using VirtoCommerce.CatalogModule.Services;
 using moduleModel = VirtoCommerce.CatalogModule.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
+using Microsoft.Practices.Unity;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
@@ -16,8 +17,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
     {
         private readonly IItemService _itemsService;
 		private readonly IPropertyService _propertyService;
-    
-        public ItemsController(IItemService itemsService, IPropertyService propertyService)
+
+		public ItemsController([Dependency("Catalog")]IItemService itemsService, 
+							   [Dependency("Catalog")]IPropertyService propertyService)
         {
             _itemsService = itemsService;
 			_propertyService = propertyService;

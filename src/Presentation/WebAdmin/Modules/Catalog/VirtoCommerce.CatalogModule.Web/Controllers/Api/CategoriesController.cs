@@ -8,6 +8,7 @@ using VirtoCommerce.CatalogModule.Services;
 using moduleModel = VirtoCommerce.CatalogModule.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 using System.Collections.Generic;
+using Microsoft.Practices.Unity;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
@@ -18,7 +19,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         private readonly ICategoryService _categoryService;
         private readonly IPropertyService _propertyService;
 
-        public CategoriesController(ICatalogSearchService searchService, ICategoryService categoryService, IPropertyService propertyService)
+		public CategoriesController([Dependency("Catalog")]ICatalogSearchService searchService,
+								    [Dependency("Catalog")]ICategoryService categoryService,
+									[Dependency("Catalog")]IPropertyService propertyService)
         {
 			_searchService = searchService;
             _categoryService = categoryService;

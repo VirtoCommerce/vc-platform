@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Description;
+using Microsoft.Practices.Unity;
 using VirtoCommerce.CatalogModule.Services;
 using VirtoCommerce.MerchandisingModule.Web.Converters;
 using moduleModel = VirtoCommerce.CatalogModule.Model;
@@ -14,9 +15,9 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		private readonly ICategoryService _categoryService;
 		private readonly IPropertyService _propertyService;
 
-		public CategoryController(ICatalogSearchService searchService, 
-										ICategoryService categoryService,
-										IPropertyService propertyService)
+		public CategoryController([Dependency("MP")]ICatalogSearchService searchService,
+								  [Dependency("MP")]ICategoryService categoryService,
+								  [Dependency("MP")]IPropertyService propertyService)
 		{
 			_searchService = searchService;
 			_categoryService = categoryService;

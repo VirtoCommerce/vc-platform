@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Description;
 using System.Web.Http.ModelBinding;
+using Microsoft.Practices.Unity;
 using VirtoCommerce.CatalogModule.Services;
 using VirtoCommerce.Foundation.Catalogs.Search;
 using VirtoCommerce.Foundation.Search;
@@ -20,9 +21,9 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		private readonly ISearchProvider _searchService;
 		private readonly ISearchConnection _searchConnection;
 
-		public ProductController(IItemService itemService,
-									   ISearchProvider indexedSearchProvider,
-									   ISearchConnection searchConnection)
+		public ProductController([Dependency("MP")] IItemService itemService,
+								 [Dependency("MP")] ISearchProvider indexedSearchProvider,
+								 [Dependency("MP")] ISearchConnection searchConnection)
 		{
 			_searchService = indexedSearchProvider;
 			_searchConnection = searchConnection;
