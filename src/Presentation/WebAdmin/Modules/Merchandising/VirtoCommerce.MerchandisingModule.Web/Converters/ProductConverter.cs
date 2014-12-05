@@ -30,6 +30,11 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 				((webModel.Product)retVal).Variations = product.Variations.Select(x => x.ToWebModel((webModel.Product)retVal)).OfType<webModel.ProductVariation>().ToArray();
 			}
 
+		    if (product.Reviews != null)
+		    {
+                retVal.EditorialReviews = product.Reviews.Select(x => new webModel.EditorialReview().InjectFrom(x)).Cast<webModel.EditorialReview>().ToArray();
+		    }
+
 			retVal.Properties = new webModel.PropertyDictionary();
 			//Need add property for each meta info
 

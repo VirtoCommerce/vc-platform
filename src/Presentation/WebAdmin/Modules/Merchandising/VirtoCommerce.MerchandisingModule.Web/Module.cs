@@ -23,6 +23,8 @@ namespace VirtoCommerce.MerchandisingModule.Web
 {
     public class Module : IModule
     {
+
+        private const string MarketPlaceConnectionString = "MarketPlace";
         private readonly IUnityContainer _container;
 		public Module(IUnityContainer container)
         {
@@ -32,8 +34,8 @@ namespace VirtoCommerce.MerchandisingModule.Web
         public void Initialize()
         {
 			var cacheManager = new CacheManager(x => new InMemoryCachingProvider(), x => new CacheSettings("", TimeSpan.FromMinutes(1), "", true));
-			Func<IFoundationCatalogRepository> catalogRepFactory = () => new FoundationCatalogRepositoryImpl("VirtoCommerce");
-			Func<IFoundationAppConfigRepository> appConfigRepFactory = () => new FoundationAppConfigRepositoryImpl("VirtoCommerce");
+            Func<IFoundationCatalogRepository> catalogRepFactory = () => new FoundationCatalogRepositoryImpl(MarketPlaceConnectionString);
+            Func<IFoundationAppConfigRepository> appConfigRepFactory = () => new FoundationAppConfigRepositoryImpl(MarketPlaceConnectionString);
 
 			var catalogService = new CatalogServiceImpl(catalogRepFactory, cacheManager);
 			var propertyService = new PropertyServiceImpl(catalogRepFactory, cacheManager);
@@ -57,7 +59,7 @@ namespace VirtoCommerce.MerchandisingModule.Web
 
 			#region Dynamic content
 			var httpCacheRep = new HttpCacheRepository();
-			var dynamicContentRep = new EFDynamicContentRepository("VirtoCommerce");
+            var dynamicContentRep = new EFDynamicContentRepository(MarketPlaceConnectionString);
 			var dynamicContentEval = new DynamicContentEvaluator(dynamicContentRep, null,  httpCacheRep);
 			var dynamicContentService = new DynamicContentService(dynamicContentRep, dynamicContentEval);
 			_container.RegisterInstance<IDynamicContentService>("MP", dynamicContentService);
