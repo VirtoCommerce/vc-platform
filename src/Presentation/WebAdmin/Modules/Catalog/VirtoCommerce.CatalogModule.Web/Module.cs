@@ -42,13 +42,13 @@ namespace VirtoCommerce.CatalogModule.Web
 			var propertyService = new PropertyServiceImpl(catalogRepFactory, cacheManager);
 			var categoryService = new CategoryServiceImpl(catalogRepFactory, appConfigRepFactory, cacheManager);
 			var itemService = new ItemServiceImpl(catalogRepFactory, appConfigRepFactory, cacheManager);
-			var itemSearchService = new CatalogSearchServiceImpl(catalogRepFactory, itemService, catalogService, categoryService);
+			var catalogSearchService = new CatalogSearchServiceImpl(catalogRepFactory, itemService, catalogService, categoryService);
 
 			_container.RegisterInstance<ICatalogService>("Catalog", catalogService);
 			_container.RegisterInstance<IPropertyService>("Catalog", propertyService);
 			_container.RegisterInstance<ICategoryService>("Catalog", categoryService);
 			_container.RegisterInstance<IItemService>("Catalog", itemService);
-			_container.RegisterInstance<ICatalogSearchService>("Catalog", itemSearchService);
+			_container.RegisterInstance<ICatalogSearchService>("Catalog", catalogSearchService);
 			#endregion
 
 			#region Search dependencies

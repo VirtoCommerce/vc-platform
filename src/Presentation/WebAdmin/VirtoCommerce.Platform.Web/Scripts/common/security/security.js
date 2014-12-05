@@ -3,8 +3,6 @@
     'platformWebApp.security.login'
 ]).config(['$stateProvider', '$httpProvider', function ($stateProvider, $httpProvider) {
 
-	$httpProvider.interceptors.push('authInterceptor');
-
 	$stateProvider
 		.state('loginDialog', {
 			url: '/login',

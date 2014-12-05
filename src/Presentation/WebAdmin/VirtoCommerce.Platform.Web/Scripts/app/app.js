@@ -28,24 +28,34 @@ angular.module('platformWebApp', AppDependencies).
         return $state.current.name;
     };
    
+  }])
+.factory('httpErrorInterceptor', ['$q', '$rootScope', function ($q, $rootScope) {
+	var httpErrorInterceptor = {};
+
+	httpErrorInterceptor.responseError = function (rejection) {
+		if (rejection.status === 401) {
+			$rootScope.$broadcast('unauthorized', rejection);
+		}
+		else {
+			$rootScope.$broadcast('httpError', rejection);
+		}
+		return $q.reject(rejection);
+	};
+	httpErrorInterceptor.requestError = function (rejection) {
+		$rootScope.$broadcast('httpError', rejection);
+		return $q.reject(rejection);
+	};
+
+	return httpErrorInterceptor;
 }])
 .config(
   ['$stateProvider', '$httpProvider', function ($stateProvider, $httpProvider) {
-    $stateProvider
-    .state('workspace', {
-      abstract: true,
-      templateUrl: 'Scripts/app/workspace.tpl.html'
+    $stateProvider.state('workspace', {
+						  abstract: true,
+						  templateUrl: 'Scripts/app/workspace.tpl.html'
     });
-    $httpProvider.interceptors.push(function($rootScope) {
-      return {
-        requestError: function(rejection) {
-          $rootScope.$broadcast('httpRequestError', rejection);
-        },
-        responseError: function(response) {
-          $rootScope.$broadcast('httpResponseError', response);
-        }
-      };
-    });
+	//Add interseptor
+    $httpProvider.interceptors.push('httpErrorInterceptor');
   }
   ]
 )
@@ -86,15 +96,9 @@ angular.module('platformWebApp', AppDependencies).
             $state.go('loginDialog');
         });
 
-        $rootScope.$on('httpRequestError', function(event, rejection) {
-          if(!(rejection.config.url.indexOf('api/notification') + 1)) {
-            notificationService.error({title: 'HTTP request error', description: 'Your request was not sended'});
-          }
-        });
-
-        $rootScope.$on('httpResponseError', function(event, response) {
-          if(!(response.config.url.indexOf('api/notification') + 1)) {
-            notificationService.error({title: 'HTTP server error', description: 'Sorry, but server does not answerd. Error data: ' + response.status + ' — ' + response.statusText});
+        $rootScope.$on('httpError', function (event, rejection) {
+        	if (!(rejection.config.url.indexOf('api/notification') + 1)) {
+        		notificationService.error({ title: 'HTTP error', description: rejection.status + ' — ' + rejection.statusText });
           }
         });
 
