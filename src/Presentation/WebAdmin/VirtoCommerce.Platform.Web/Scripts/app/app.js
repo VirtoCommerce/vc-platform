@@ -87,12 +87,15 @@ angular.module('platformWebApp', AppDependencies).
         });
 
         $rootScope.$on('httpRequestError', function(event, rejection) {
-            // notificationService.error({title: 'Some request error', description: 'Your request is not correct'});
+          if(!(rejection.config.url.indexOf('api/notification') + 1)) {
+            notificationService.error({title: 'HTTP request error', description: 'Your request was not sended'});
+          }
         });
 
         $rootScope.$on('httpResponseError', function(event, response) {
-            // notificationService.error({title: 'HTTP server error', description: 'Sorry, but server does not answerd. Error data: ' + response.status + ' — ' + response.statusText});
-            // console.log(response)
+          if(!(response.config.url.indexOf('api/notification') + 1)) {
+            notificationService.error({title: 'HTTP server error', description: 'Sorry, but server does not answerd. Error data: ' + response.status + ' — ' + response.statusText});
+          }
         });
 
         $rootScope.$on('loginStatusChanged', function (event, authContext) {
