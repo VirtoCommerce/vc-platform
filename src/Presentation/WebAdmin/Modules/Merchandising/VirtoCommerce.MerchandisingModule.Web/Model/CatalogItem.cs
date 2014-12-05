@@ -17,13 +17,15 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
         public string Code { get; set; }
 
         [Required]
-        public string Catalog { get; set; }
+        public string CatalogId { get; set; }
 
         public string Name { get; set; }
 
 		public string Outline { get; set; }
 
         public ItemImage[] Images { get; set; }
+
+        public EditorialReview[] EditorialReviews { get; set; }
 
         public PropertyDictionary Properties { get; set; }
     }

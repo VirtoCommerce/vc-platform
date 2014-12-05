@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Model
 {
-	public class PropertyDictionary : Dictionary<string, string>
-	{
-		public void Add(KeyValuePair<string, string> pair)
-		{
-			this.Add(pair.Key, pair.Value);
-		}
-	}
+    public class EditorialReview
+    {
+        public string Id { get; set; }
+
+        public string Content { get; set; }
+
+        public string ReviewType { get; set; }
+
+    }
 }

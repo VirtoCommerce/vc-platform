@@ -84,6 +84,7 @@
     <Compile Include="Converters\DynamicContentItemConverter.cs" />
     <Compile Include="Converters\ProductConverter.cs" />
     <Compile Include="Converters\ResponseGroupConverter.cs" />
+    <Compile Include="Model\EditorialReview.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Model\CatalogItem.cs" />
     <Compile Include="Model\Category.cs" />
