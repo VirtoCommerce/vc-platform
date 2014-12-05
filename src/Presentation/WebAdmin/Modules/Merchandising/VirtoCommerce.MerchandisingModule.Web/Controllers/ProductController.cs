@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
 using System.Web.Http.ModelBinding;
@@ -56,7 +57,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		    //Load products 
 			foreach (var productId in items.Keys)
 			{
-				var product = _itemService.GetById(productId, moduleModel.ItemResponseGroup.ItemAssets | moduleModel.ItemResponseGroup.ItemInfo);
+				var product = _itemService.GetById(productId, moduleModel.ItemResponseGroup.ItemMedium);
 				if (product != null)
 				{
 					var webModelProduct = product.ToWebModel();
@@ -77,8 +78,12 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		public IHttpActionResult GetProduct(string productId)
 		{
 			var product = _itemService.GetById(productId, moduleModel.ItemResponseGroup.ItemLarge);
-			var retVal = product.ToWebModel();
-			return Ok(retVal);
+		    if (product != null)
+		    {
+		        var retVal = product.ToWebModel();
+		        return Ok(retVal);
+		    }
+		    return StatusCode(HttpStatusCode.NotFound);
 		}
 	}
 }

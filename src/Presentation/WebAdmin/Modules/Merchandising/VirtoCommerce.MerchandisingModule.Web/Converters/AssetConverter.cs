@@ -16,7 +16,8 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 			var retVal = new webModel.ItemImage();
 			retVal.InjectFrom(assset);
 			retVal.Src = assset.Url;
-			retVal.ThumbSrc = assset.Url;
+            retVal.ThumbSrc = assset.Url;
+			retVal.Name = assset.Group;
 			return retVal;
 		}
 

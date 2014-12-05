@@ -20,8 +20,6 @@
 ];
 
 angular.module('platformWebApp', AppDependencies).
-  constant('HTTP_DEFAULT_ERROR_MSG', 'An error has occured. Please contact customer support for assistance.').
-  constant('HTTP_NETWORK_ERROR_MSG', 'Unable to communicate with the server. Make sure you are connected to the internet and try again.').
   controller('appCtrl', ['$scope', '$state', '$http', 'mainMenuService', 'notificationService', function ($scope, $state, $http, mainMenuService, notificationService) {
 	
 	notificationService.run();
@@ -89,13 +87,15 @@ angular.module('platformWebApp', AppDependencies).
         });
 
         $rootScope.$on('httpRequestError', function(event, rejection) {
-            notificationService.error({title: 'Some request error', description: 'Your request is not correct'});
-            console.log(rejection)
+          if(!(rejection.config.url.indexOf('api/notification') + 1)) {
+            notificationService.error({title: 'HTTP request error', description: 'Your request was not sended'});
+          }
         });
 
         $rootScope.$on('httpResponseError', function(event, response) {
+          if(!(response.config.url.indexOf('api/notification') + 1)) {
             notificationService.error({title: 'HTTP server error', description: 'Sorry, but server does not answerd. Error data: ' + response.status + ' — ' + response.statusText});
-            console.log(response)
+          }
         });
 
         $rootScope.$on('loginStatusChanged', function (event, authContext) {
