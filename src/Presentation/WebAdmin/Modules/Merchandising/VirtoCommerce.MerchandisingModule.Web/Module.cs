@@ -51,6 +51,7 @@ namespace VirtoCommerce.MerchandisingModule.Web
 			var searchConnection = new SearchConnection(ConnectionHelper.GetConnectionString("SearchConnectionString"));
 			var elasticSearchProvider = new ElasticSearchProvider(new ElasticSearchQueryBuilder(), searchConnection);
 			_container.RegisterInstance<ISearchProvider>("MP",elasticSearchProvider);
+			_container.RegisterInstance<ISearchConnection>("MP", searchConnection);
 			//_container.RegisterType<IAppConfigRepository>("MP", new InjectionFactory(x => new EFAppConfigRepository("VirtoCommerce")));
 			#endregion
 
