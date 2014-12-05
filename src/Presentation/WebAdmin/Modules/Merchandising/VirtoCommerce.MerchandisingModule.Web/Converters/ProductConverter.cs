@@ -22,7 +22,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 			
 			if (product.Assets != null)
 			{
-				retVal.Images = product.Assets.Select(x => x.ToWebModel()).ToArray();
+				retVal.Images = product.Assets.Where(x=>x.Type == moduleModel.ItemAssetType.Image).Select(x => x.ToWebModel()).ToArray();
 			}
 
 			if (product.Variations != null)
