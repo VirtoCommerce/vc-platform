@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using NuGet;
 using VirtoCommerce.PackagingModule.Data.Repositories;
 using VirtoCommerce.PackagingModule.Model;
 using VirtoCommerce.PackagingModule.Services;
+using VirtoCommerce.Framework.Web.Modularity;
 
 namespace VirtoCommerce.PackagingModule.Data.Services
 {
@@ -35,9 +35,14 @@ namespace VirtoCommerce.PackagingModule.Data.Services
 
 		#region IPackageService Members
 
-		public IEnumerable<Package> List()
+		public ModuleDescriptor[] GetModules()
 		{
-			return _projectManager.LocalRepository.GetPackages().Select(ConvertToPackage);
+			return ManifestModuleCatalog.GetModuleManifests(_projectPath).Select(ConvertToModuleDescriptor).ToArray();
+		}
+
+		public PackageDescriptor[] GetPackages()
+		{
+			return _projectManager.LocalRepository.GetPackages().Select(ConvertToPackageDescriptor).ToArray();
 		}
 
 		public void Install(string packageId, string version)
@@ -76,12 +81,33 @@ namespace VirtoCommerce.PackagingModule.Data.Services
 			return projectManager;
 		}
 
-		private static Package ConvertToPackage(IPackage package)
+		private static PackageDescriptor ConvertToPackageDescriptor(IPackage package)
 		{
-			return new Package
+			return new PackageDescriptor
 			{
 				Id = package.Id,
 				Version = package.Version.ToString(),
+			};
+		}
+
+		private static ModuleDescriptor ConvertToModuleDescriptor(ModuleManifest manifest)
+		{
+			return new ModuleDescriptor
+			{
+				Id = manifest.Id,
+				Version = manifest.Version,
+				Title = manifest.Title,
+				Description = manifest.Description,
+				Authors = manifest.Authors,
+				Owners = manifest.Owners,
+				LicenseUrl = manifest.LicenseUrl,
+				ProjectUrl = manifest.ProjectUrl,
+				IconUrl = manifest.IconUrl,
+				RequireLicenseAcceptance = manifest.RequireLicenseAcceptance,
+				ReleaseNotes = manifest.ReleaseNotes,
+				Copyright = manifest.Copyright,
+				Tags = manifest.Tags,
+				Dependencies = manifest.Dependencies,
 			};
 		}
 	}

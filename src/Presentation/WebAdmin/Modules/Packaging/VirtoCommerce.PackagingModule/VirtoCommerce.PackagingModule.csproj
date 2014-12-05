@@ -43,7 +43,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Model\Package.cs" />
+    <Compile Include="Model\ModuleDescriptor.cs" />
+    <Compile Include="Model\PackageDescriptor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IPackageService.cs" />
   </ItemGroup>

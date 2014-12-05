@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Versioning;
+using System.Xml.XPath;
 using NuGet;
 
 namespace VirtoCommerce.PackagingModule.Data.Repositories
@@ -16,7 +17,7 @@ namespace VirtoCommerce.PackagingModule.Data.Repositories
 			Root = rootPath;
 			_binPath = binPath;
 			ProjectName = Path.GetFileName(rootPath);
-			TargetFramework = new FrameworkName(".NETFramework", typeof(string).Assembly.GetName().Version);
+			TargetFramework = new FrameworkName(".NETFramework", GetTargetFrameworkVersion());
 			Logger = NullLogger.Instance;
 			IsBindingRedirectSupported = false;
 		}
@@ -233,6 +234,31 @@ namespace VirtoCommerce.PackagingModule.Data.Repositories
 		private string GetReferencePath(string name)
 		{
 			return Path.Combine(_binPath, name);
+		}
+
+		private Version GetTargetFrameworkVersion()
+		{
+			string result = null;
+
+			const string defaultVersion = "4.5.1";
+			const string webConfigPath = "web.config";
+
+			if (FileExists(webConfigPath))
+			{
+				using (var stream = OpenFile(webConfigPath))
+				{
+					var webConfig = XmlUtility.LoadSafe(stream);
+					var httpRuntime = webConfig.XPathSelectElement("/configuration/system.web/httpRuntime");
+
+					if (httpRuntime != null)
+						result = httpRuntime.GetOptionalAttributeValue("targetFramework");
+				}
+			}
+
+			if (string.IsNullOrEmpty(result))
+				result = defaultVersion;
+
+			return Version.Parse(result);
 		}
 	}
 }
