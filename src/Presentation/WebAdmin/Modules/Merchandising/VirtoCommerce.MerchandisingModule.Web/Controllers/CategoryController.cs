@@ -9,7 +9,7 @@ using moduleModel = VirtoCommerce.CatalogModule.Model;
 using webModel = VirtoCommerce.MerchandisingModule.Web.Model;
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
-	[RoutePrefix("api/mp/{catalog}/{language}")]
+	[RoutePrefix("api/mp/{catalog}/{language}/categories")]
 	public class CategoryController : ApiController
 	{
 		private readonly ICatalogSearchService _searchService;
@@ -35,7 +35,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 	    /// <returns></returns>
 	    [HttpGet]
 		[ResponseType(typeof(webModel.GenericSearchResult<webModel.Category>))]
-        [Route("categories")]
+        [Route("")]
 		public IHttpActionResult Search(string catalog, string language="en-us", [FromUri]string parentId = null)
 		{
 			var criteria = new moduleModel.SearchCriteria
@@ -58,7 +58,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
         [HttpGet]
         [ResponseType(typeof(webModel.GenericSearchResult<webModel.Category>))]
-        [Route("category/{categoryId}")]
+        [Route("{categoryId}")]
         public IHttpActionResult Get(string categoryId, string catalog, string language = "en-us")
         {
             var result = _categoryService.GetById(categoryId);

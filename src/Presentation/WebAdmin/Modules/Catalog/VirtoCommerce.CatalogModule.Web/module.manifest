@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module moduleName="CatalogModule" assemblyFile="VirtoCommerce.CatalogModule.Web.dll" moduleType="VirtoCommerce.CatalogModule.Web.Module, VirtoCommerce.CatalogModule.Web">
 	<dependencies>
-		<dependency moduleName="CoreModule" />
+		<dependency>CoreModule</dependency>
 	</dependencies>
 	<styles>
 		<directory virtualPath="~/Modules/Catalog/VirtoCommerce.CatalogModule.Web/Content/css" searchPattern="*.css" searchSubdirectories="true" />

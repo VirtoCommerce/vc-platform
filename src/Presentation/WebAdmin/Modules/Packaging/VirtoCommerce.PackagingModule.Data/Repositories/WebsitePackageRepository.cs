@@ -47,10 +47,14 @@ namespace VirtoCommerce.PackagingModule.Data.Repositories
 		}
 
 
-		private static IEnumerable<IPackageAssemblyReference> GetCompatibleAssemblyReferences(IPackage package)
+		private IEnumerable<IPackageAssemblyReference> GetCompatibleAssemblyReferences(IPackage package)
 		{
-			//return Enumerable.Empty<IPackageAssemblyReference>();
-			return package.AssemblyReferences;
+			IEnumerable<IPackageAssemblyReference> result;
+
+			if (!VersionUtility.TryGetCompatibleItems(_projectSystem.TargetFramework, package.AssemblyReferences, out result))
+				result = Enumerable.Empty<IPackageAssemblyReference>();
+
+			return result;
 		}
 	}
 }

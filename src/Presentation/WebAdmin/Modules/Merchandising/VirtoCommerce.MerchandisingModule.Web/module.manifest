@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module moduleName="MerchandisingModule" assemblyFile="VirtoCommerce.MerchandisingModule.Web.dll" moduleType="VirtoCommerce.MerchandisingModule.Web.Module, VirtoCommerce.MerchandisingModule.Web">
 	<dependencies>
-		<dependency moduleName="CoreModule" />
-		<dependency moduleName="CatalogModule" />
+		<dependency>CoreModule</dependency>
+		<dependency>CatalogModule</dependency>
 	</dependencies>
 </module>
