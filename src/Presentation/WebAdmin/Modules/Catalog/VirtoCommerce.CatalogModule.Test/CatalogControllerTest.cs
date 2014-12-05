@@ -33,7 +33,7 @@ namespace VirtoCommerce.CatalogModule.Test
 			var catalogResult = catalogController.GetNewVirtualCatalog() as OkNegotiatedContentResult<webModel.Catalog>;
 			var vCatalog = catalogResult.Content;
 			vCatalog.Name = "vCatalog1";
-			catalogController.Post(vCatalog);
+			catalogController.Update(vCatalog);
 
 			Assert.IsTrue(vCatalog.Virtual);
 

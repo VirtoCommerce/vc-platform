@@ -13,21 +13,23 @@ using Microsoft.Practices.Unity;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
-    public class ItemsController : ApiController
+	[RoutePrefix("api/catalog/products")]
+    public class ProductsController : ApiController
     {
         private readonly IItemService _itemsService;
 		private readonly IPropertyService _propertyService;
 
-		public ItemsController([Dependency("Catalog")]IItemService itemsService, 
+		public ProductsController([Dependency("Catalog")]IItemService itemsService, 
 							   [Dependency("Catalog")]IPropertyService propertyService)
         {
             _itemsService = itemsService;
 			_propertyService = propertyService;
         }
 
-        // GET: api/items/5
+		// GET: api/catalog/products/5
+		[HttpGet]
 		[ResponseType(typeof(webModel.Product))]
-        [HttpGet]
+		[Route("{id}")]
         public IHttpActionResult Get(string id)
         {
             var item = _itemsService.GetById(id, moduleModel.ItemResponseGroup.ItemLarge);
@@ -49,10 +51,19 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             return Ok(retVal);
         }
 
-        // GET: api/items/getnewitem
+		[HttpGet]
+		[ResponseType(typeof(webModel.Product))]
+		[Route("~/api/catalog/{catalogId}/products/getnew")]
+		public IHttpActionResult GetNewProduct(string catalogId)
+		{
+			return GetNewProduct(catalogId, null);
+		}
+
+		// GET: /api/catalog/apple/categories/new category/products/getnew
         [HttpGet]
 		[ResponseType(typeof(webModel.Product))]
-        public IHttpActionResult GetNewItem(string catalogId = null, string categoryId = null)
+		[Route("~/api/catalog/{catalogId}/categories/{categoryId}/products/getnew")]
+        public IHttpActionResult GetNewProduct(string catalogId, string categoryId)
         {
 			var retVal = new webModel.Product
 			{
@@ -74,12 +85,13 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			return Ok(retVal);
         }
 
-        // GET: api/items/getnewvariation
+		// GET: /api/catalog/products/121/getnewvariation
         [HttpGet]
 		[ResponseType(typeof(webModel.Product))]
-        public IHttpActionResult GetNewVariation(string itemId)
+		[Route("{productId}/getnewvariation")]
+		public IHttpActionResult GetNewVariation(string productId)
         {
-			var product = _itemsService.GetById(itemId, moduleModel.ItemResponseGroup.ItemLarge);
+			var product = _itemsService.GetById(productId, moduleModel.ItemResponseGroup.ItemLarge);
 			if (product == null)
             {
                 return NotFound();
@@ -98,7 +110,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			    Name = product.Name,
 			    CategoryId = product.CategoryId,
 			    CatalogId = product.CatalogId,
-			    TitularItemId = product.MainProductId ?? itemId,
+				TitularItemId = product.MainProductId ?? productId,
 			    Properties = mainWebProduct.Properties.Where(x => x.Type == webModel.PropertyType.Product 
                     || x.Type == webModel.PropertyType.Variation).ToList(),
 			};
@@ -126,8 +138,10 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             return Ok(newVariation);
         }
 
+		// POST: /api/catalog/products
 		[HttpPost]
 		[ResponseType(typeof(void))]
+		[Route("")]
 		public IHttpActionResult Post(webModel.Product product)
 		{
 			var updatedProduct = UpdateProduct(product);
@@ -138,8 +152,10 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			return StatusCode(HttpStatusCode.NoContent);
 		}
 
+		// DELETE: /api/catalog/products?ids=21
 		[HttpDelete]
 		[ResponseType(typeof(void))]
+		[Route("")]
 		public IHttpActionResult Delete([FromUri] string[] ids)
 		{
 			_itemsService.Delete(ids);

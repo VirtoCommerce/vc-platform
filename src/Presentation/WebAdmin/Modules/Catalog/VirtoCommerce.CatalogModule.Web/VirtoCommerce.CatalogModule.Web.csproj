@@ -106,7 +106,7 @@
     <Compile Include="Controllers\Api\AssetsController.cs" />
     <Compile Include="Controllers\Api\CatalogsController.cs" />
     <Compile Include="Controllers\Api\CategoriesController.cs" />
-    <Compile Include="Controllers\Api\ItemsController.cs" />
+    <Compile Include="Controllers\Api\ProductsController.cs" />
     <Compile Include="Controllers\Api\ListEntryController.cs" />
     <Compile Include="Controllers\Api\ImportController.cs" />
     <Compile Include="Controllers\Api\PropertiesController.cs" />

@@ -49,6 +49,7 @@ namespace VirtoCommerce.CatalogModule.Web
 			_container.RegisterInstance<ICategoryService>("Catalog", categoryService);
 			_container.RegisterInstance<IItemService>("Catalog", itemService);
 			_container.RegisterInstance<ICatalogSearchService>("Catalog", catalogSearchService);
+			_container.RegisterType<Func<IFoundationAppConfigRepository>>("Catalog", new InjectionFactory(x => appConfigRepFactory));
 			#endregion
 
 			#region Search dependencies

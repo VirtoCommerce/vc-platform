@@ -27,10 +27,18 @@
     };
 
     $scope.addProduct = function () {
-        items.newItem({ catalogId: pb.catalogId, categoryId: pb.categoryId }, function (data) {
-            pb.showNewItemWizard(data);
-            $scope.bladeClose();
-        });
+    	if (!angular.isDefined(pb.categoryId)) {
+    		items.newItemInCatalog({ catalogId: pb.catalogId }, function (data) {
+    			pb.showNewItemWizard(data);
+    			$scope.bladeClose();
+    		});
+    	}
+    	else {
+    		items.newItemInCategory({ catalogId: pb.catalogId, categoryId: pb.categoryId }, function (data) {
+    			pb.showNewItemWizard(data);
+    			$scope.bladeClose();
+    		});
+    	}
     };
 
     $scope.addVariation = function () {

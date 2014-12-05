@@ -225,7 +225,7 @@
                         });
                     }
                     if (categoryIds.length > 0) {
-                        categories.remove({}, categoryIds, function (data, headers) {
+                    	categories.remove({ ids: categoryIds }, function (data, headers) {
                             $scope.blade.refresh();
                         });
                     }

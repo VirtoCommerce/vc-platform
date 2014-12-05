@@ -29,7 +29,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         }
 
         // GET: api/catalog/categories/5
-		 [HttpGet]
+		[HttpGet]
         [ResponseType(typeof(webModel.Category))]
 		[Route("{id}")]
         public IHttpActionResult Get(string id)
@@ -77,12 +77,12 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         }
 
 		// POST: api/catalog/categories/5
-        [HttpPost]
+        [HttpDelete]
         [ResponseType(typeof(void))]
-		[Route("delete")]
-        public IHttpActionResult Delete(string[] ids)
+		[Route("")]
+        public IHttpActionResult Delete([FromUri]string[] ids)
         {
-            _categoryService.Delete(ids);
+			_categoryService.Delete(ids);
             return StatusCode(HttpStatusCode.NoContent);
         }
         

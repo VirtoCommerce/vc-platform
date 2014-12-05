@@ -1,13 +1,13 @@
 ﻿angular.module('catalogModule.resources.items', [])
 .factory('items', ['$resource', function ($resource) {
 
-    return $resource('api/items/:id', { id: '@id' }, {
-        get: { method: 'GET', url: 'api/items/get/:id' },
-        remove: { method: 'DELETE', url: 'api/items/delete' },
-        linkitems: { method: 'POST', url: 'api/items/linkitems' },
-        newItem: { method: 'GET', url: 'api/items/getnewitem' },
-        newVariation: { method: 'GET', url: 'api/items/getnewvariation' },
-        updateitem: { method: 'POST', url: 'api/items/post' }
+	return $resource('api/catalog/products/:id', { id: '@id' }, {
+		get: { method: 'GET', url: 'api/catalog/products/:id' },
+		remove: { method: 'DELETE', url: 'api/catalog/products' },
+        newItemInCatalog: { method: 'GET', url: 'api/catalog/:catalogId/products/getnew' },
+        newItemInCategory: { method: 'GET', url: 'api/catalog/:catalogId/categories/:categoryId/products/getnew' },
+        newVariation: { method: 'GET', url: 'api/catalog/products/:itemId/getnewvariation' },
+        updateitem: { method: 'POST', url: 'api/catalog/products' }
     });
 
 }]);

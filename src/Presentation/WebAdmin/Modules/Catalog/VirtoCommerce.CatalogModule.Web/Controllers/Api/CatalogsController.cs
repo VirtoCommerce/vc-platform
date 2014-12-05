@@ -11,9 +11,11 @@ using VirtoCommerce.Foundation.Frameworks.Extensions;
 using moduleModel = VirtoCommerce.CatalogModule.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 using Microsoft.Practices.Unity;
+using VirtoCommerce.CatalogModule.Repositories;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
+	[RoutePrefix("api/catalog/catalogs")]
     public class CatalogsController : ApiController
     {
         private readonly ICatalogService _catalogService;
@@ -22,15 +24,17 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 
         public CatalogsController([Dependency("Catalog")]ICatalogService catalogService,
 								  [Dependency("Catalog")]ICatalogSearchService itemSearchService,
-								  [Dependency("Catalog")]Func<IAppConfigRepository> appConfigRepositoryFactory)
+								  [Dependency("Catalog")]Func<IFoundationAppConfigRepository> appConfigRepositoryFactory)
         {
             _catalogService = catalogService;
             _searchService = itemSearchService;
 			_appConfigRepositoryFactory = appConfigRepositoryFactory;
         }
 
-        // GET: api/catalogs/itemssearch
-        [ResponseType(typeof(webModel.Catalog[]))]
+		// GET: api/catalog/catalogs
+		[HttpGet]
+		[ResponseType(typeof(webModel.Catalog[]))]
+		[Route("")]
         public IHttpActionResult GetCatalogs()
         {
             var criteria = new moduleModel.SearchCriteria
@@ -42,8 +46,10 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             return Ok(retVal);
         }
 
-        // GET: api/catalogs/5
+		// GET:  api/catalog/catalogs/4
+		[HttpGet]
         [ResponseType(typeof(webModel.Catalog))]
+		[Route("{id}")]
         public IHttpActionResult Get(string id)
         {
             var catalog = _catalogService.GetById(id);
@@ -54,7 +60,10 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             return Ok(catalog.ToWebModel());
         }
 
+		// GET:  api/catalog/catalogs/4/languages
         [HttpGet]
+		[ResponseType(typeof(webModel.CatalogLanguage[]))]
+		[Route("{id}/languages")]
         public IHttpActionResult GetCatalogLanguages(string id)
         {
             var catalog = _catalogService.GetById(id);
@@ -75,12 +84,13 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             return Ok(retVal.OrderBy(x => x.DisplayName));
         }
 
-        // POST: api/catalogs/updateCatalogLanguages
+		// POST: api/catalog/catalogs/4/languages
+		[HttpPost]
         [ResponseType(typeof(void))]
-        [HttpPost]
-        public IHttpActionResult UpdateCatalogLanguages(string catalogId, webModel.CatalogLanguage[] languages)
+		[Route("{id}/languages")]
+        public IHttpActionResult UpdateCatalogLanguages(string id, [FromBody]webModel.CatalogLanguage[] languages)
         {
-            var catalog = _catalogService.GetById(catalogId);
+			var catalog = _catalogService.GetById(id);
 
             if (catalog == null)
             {
@@ -96,9 +106,10 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             return Ok();
         }
 
-        // GET: api/catalogs/getnewcatalog
+		// GET: api/catalog/catalogs/getnew
         [HttpGet]
         [ResponseType(typeof(webModel.Catalog))]
+		[Route("getnew")]
         public IHttpActionResult GetNewCatalog()
         {
             var retVal = new webModel.Catalog
@@ -120,6 +131,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         // GET: api/catalogs/getnewvirtualcatalog
         [HttpGet]
         [ResponseType(typeof(webModel.Catalog))]
+		[Route("getnewvirtual")]
         public IHttpActionResult GetNewVirtualCatalog()
         {
             var retVal = new webModel.Catalog
@@ -139,30 +151,21 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             return Ok(retVal);
         }
 
-        // PUT: api/catalogs
+		// POST: api/catalog/catalogs
+		[HttpPost]
         [ResponseType(typeof(void))]
-        public IHttpActionResult Put(webModel.Catalog catalog)
+		[Route("")]
+        public IHttpActionResult Update(webModel.Catalog catalog)
         {
             UpdateCatalog(catalog);
             return StatusCode(HttpStatusCode.NoContent);
         }
-
-
-        // POST: api/Catalogs
-        [ResponseType(typeof(webModel.Catalog))]
-        public IHttpActionResult Post(webModel.Catalog catalog)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            UpdateCatalog(catalog);
-
-            return CreatedAtRoute("DefaultApi", new { id = catalog.Id }, catalog);
-        }
+      
 
         // DELETE: api/catalogs/5
+		[HttpDelete]
         [ResponseType(typeof(void))]
+		[Route("{id}")]
         public IHttpActionResult Delete(string id)
         {
             _catalogService.Delete(new string[] { id });

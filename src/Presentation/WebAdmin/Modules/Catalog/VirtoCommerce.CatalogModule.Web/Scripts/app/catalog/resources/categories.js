@@ -5,7 +5,7 @@
         get: { method: 'GET', url: 'api/catalog/categories/:categoryId' },
         newCategory: { method: 'GET', url: 'api/catalog/:catalogId/categories/newcategory', params: { catalogId: '@catalogId' } },
         update: { method: 'POST', url: 'api/catalog/categories/' },
-        remove: { method: 'POST', url: 'api/catalog/categories/delete' }
+        remove: { method: 'DELETE', url: 'api/catalog/categories'}
     });
 
 }]);
