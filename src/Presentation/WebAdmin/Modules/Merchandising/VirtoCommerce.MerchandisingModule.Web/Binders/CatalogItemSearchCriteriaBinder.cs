@@ -56,6 +56,19 @@ namespace VirtoCommerce.MerchandisingModule.Web.Binders
 			result.ClassTypes.Add("Product");
 			result.RecordsToRetrieve = qs["take"].TryParse(20);
 			result.StartingRecord = qs["skip"].TryParse(0);
+
+		    var startDateFromStr = qs["startdatefrom"].EmptyToNull();
+
+            if (!string.IsNullOrWhiteSpace(startDateFromStr))
+		    {
+                DateTime startDateFrom;
+
+                if (DateTime.TryParse(startDateFromStr, out startDateFrom))
+		        {
+                    result.StartDateFrom = startDateFrom;
+		        }
+		    }
+
 			result.Pricelists = null;
 
 		    var sortQuery = qs["sort"].EmptyToNull();

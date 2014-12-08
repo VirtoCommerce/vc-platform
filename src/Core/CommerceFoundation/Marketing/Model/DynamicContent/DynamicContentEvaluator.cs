@@ -44,7 +44,7 @@ namespace VirtoCommerce.Foundation.Marketing.Model.DynamicContent
             var query = GetPublishingGroups();
             var places = GetPlaces();
 
-            var place = places.FirstOrDefault(x => x.Name == context.ContentPlace);
+            var place = places.FirstOrDefault(x => x.Name.Equals(context.ContentPlace, StringComparison.OrdinalIgnoreCase));
 
             if (place != null)
             {
@@ -58,7 +58,7 @@ namespace VirtoCommerce.Foundation.Marketing.Model.DynamicContent
                 query = query.Where(x => x.IsActive);
 
                 //filter by content places
-                query = query.Where(x => x.ContentPlaces.Any(y => y.ContentPlace != null && y.ContentPlace.Name == context.ContentPlace));
+                query = query.Where(x => x.ContentPlaces.Any(y => y.ContentPlace != null && y.ContentPlace.Name.Equals(context.ContentPlace, StringComparison.OrdinalIgnoreCase)));
 
                 //Evaluate query
                 var current = query.ToArray();
