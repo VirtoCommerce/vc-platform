@@ -78,7 +78,7 @@
     };
 
     $scope.getPropValues = function (propId, keyword) {
-        return properties.query({ propertyId: propId, keyword: keyword }).$promise.then(function (result) {
+        return properties.values({ propertyId: propId, keyword: keyword }).$promise.then(function (result) {
             return result;
         });
     };

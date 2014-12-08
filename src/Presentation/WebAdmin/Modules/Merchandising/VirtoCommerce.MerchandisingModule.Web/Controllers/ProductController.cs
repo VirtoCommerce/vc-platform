@@ -66,6 +66,18 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
 					webModelProduct.Outline = searchTags[criteria.OutlineField].ToString().Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
 															   .FirstOrDefault(x => x.StartsWith(criteria.Catalog, StringComparison.OrdinalIgnoreCase)) ?? string.Empty;
+
+				    int reviewTotal;
+                    if (searchTags.ContainsKey(criteria.ReviewsTotalField) && int.TryParse(searchTags[criteria.ReviewsTotalField].ToString(), out reviewTotal))
+                    {
+                        webModelProduct.ReviewsTotal = reviewTotal;
+				    }
+                    decimal reviewAvg;
+                    if (searchTags.ContainsKey(criteria.ReviewsAverageField) && decimal.TryParse(searchTags[criteria.ReviewsAverageField].ToString(), out reviewAvg))
+                    {
+                        webModelProduct.Rating = reviewAvg;
+                    }
+
 					retVal.Items.Add(webModelProduct);
 				}
 			}
