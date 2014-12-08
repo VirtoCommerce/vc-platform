@@ -33,9 +33,9 @@
                 count: $scope.pageSettings.itemsPerPageCount
             },
 		function (data, headers) {
-		    $scope.blade.isLoading = false;
-		    $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
-		    $scope.items = data.listEntries;
+            $scope.blade.isLoading = false;
+            $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
+            $scope.items = data.listEntries;
 		    $scope.selectedAll = false;
 
 		    if ($scope.selectedItem != null) {
@@ -44,7 +44,10 @@
 
 		    //Set navigation breadcrumbs
 		    setBreadcrumps();
-		});
+		}, function(error) {
+            $scope.blade.isLoading = false;
+            bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+        });
     }
 
     //Breadcrumps

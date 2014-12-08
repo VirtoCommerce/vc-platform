@@ -32,7 +32,10 @@
 		    if ($scope.selectedItem != null) {
 		        $scope.selectedItem = $scope.findItem($scope.selectedItem.id);
 		    }
-		});
+		}, function(error) {
+            $scope.blade.isLoading = false;
+            bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+        });
     }
 
     $scope.$watch('pageSettings.currentPage', function (newPage) {
