@@ -19,7 +19,7 @@
 
             if (angular.isDefined($scope.wizardBlade.item.name)) {
 
-                $http.get('api/listentry/getslug?text=' + $scope.wizardBlade.item.name).
+                $http.get('api/catalog/getslug?text=' + $scope.wizardBlade.item.name).
                     success(function (slug)
                     {
                         _.each($scope.seoInfos, function (seo)

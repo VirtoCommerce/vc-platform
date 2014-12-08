@@ -12,6 +12,7 @@ using Microsoft.Practices.Unity;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
+	[RoutePrefix("api/catalog/properties")]
     public class PropertiesController : ApiController
     {
         private readonly IPropertyService _propertyService;
@@ -25,10 +26,11 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		
         }
 
-        // GET api/properties/propertyvalues
+        // GET api/catalog/properties/11/values
         [HttpGet]
+		[Route("{propertyId}/values")]
 		[ResponseType(typeof(webModel.PropertyValue[]))]
-        public IHttpActionResult GetPropertyValues(string propertyId, string keyword = null)
+        public IHttpActionResult GetPropertyValues(string propertyId, [FromUri]string keyword = null)
         {
 			var retVal = new List<webModel.PropertyValue>();
 			//Need return propValue because it more convenient for ui
@@ -46,7 +48,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			return Ok(retVal.ToArray());
         }
 
-        // GET: api/properties/
+		// GET: api/catalog/properties/11
+		[HttpGet]
+		[Route("{propertyId}")]
 		[ResponseType(typeof(webModel.Property))]
         public IHttpActionResult Get(string propertyId)
         {
@@ -60,8 +64,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			return Ok(retVal);
         }
 
-        // GET: api/properties/getnewproperty
+		// GET: api/catalog/categories/apple/properties/getnew
         [HttpGet]
+		[Route("~/api/catalog/categories/{categoryId}/properties/getnew")]
 		[ResponseType(typeof(webModel.Property))]
         public IHttpActionResult GetNewProperty(string categoryId)
         {
@@ -84,8 +89,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             return Ok(retVal);
         }
 
-        // POST: api/properties/post
+		// POST: api/catalog/properties
         [HttpPost]
+		[Route("")]
         [ResponseType(typeof(void))]
 		public IHttpActionResult Post(webModel.Property property)
         {
@@ -103,8 +109,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		    return StatusCode(HttpStatusCode.NoContent);
         }
 
-        // DELETE: api/properties/id
+        // DELETE: api/catalog/properties?id=222
 		[HttpDelete]
+		[Route("")]
         [ResponseType(typeof(void))]
         public IHttpActionResult Delete(string id)
         {
