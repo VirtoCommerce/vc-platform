@@ -1,12 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<module moduleName="Module1" assemblyFile="VirtoCommerce.Module1.Web.dll" moduleType="VirtoCommerce.Module1.Web.Module, VirtoCommerce.Module1.Web">
+<module>
+	<id>Module1</id>
+	<assemblyFile>VirtoCommerce.Module1.Web.dll</assemblyFile>
+	<moduleType>VirtoCommerce.Module1.Web.Module, VirtoCommerce.Module1.Web</moduleType>
 	<dependencies>
 		<dependency>CoreModule</dependency>
 	</dependencies>
 	<styles>
-		<directory virtualPath="~/Modules/Module1/VirtoCommerce.Module1.Web/Content/css" searchPattern="*.css" searchSubdirectories="true" />
+		<directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
 	</styles>
 	<scripts>
-		<directory virtualPath="~/Modules/Module1/VirtoCommerce.Module1.Web/Scripts" searchPattern="*.js" searchSubdirectories="true" />
+		<directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
 	</scripts>
 </module>

@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Web;
 using System.Web.Hosting;
 using System.Web.Http;
 using System.Web.Http.Dispatcher;
@@ -20,9 +18,10 @@ namespace VirtoCommerce.Platform.Web
 		protected override IModuleCatalog CreateModuleCatalog()
 		{
 			var assembliesPath = HostingEnvironment.MapPath("~/App_data/Modules");
-			var contentPath = HostingEnvironment.MapPath("~/Modules");
+			var contentVirtualPath = "~/Modules";
+			var contentPhysicalPath = HostingEnvironment.MapPath(contentVirtualPath);
 
-			return new ManifestModuleCatalog { AssembliesPath = assembliesPath, ContentPath = contentPath };
+			return new ManifestModuleCatalog { AssembliesPath = assembliesPath, ContentVirtualPath = contentVirtualPath, ContentPhysicalPath = contentPhysicalPath };
 		}
 
 		public override void Run(bool runWithDefaultConfiguration)

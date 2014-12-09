@@ -1,5 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<module moduleName="MerchandisingModule" assemblyFile="VirtoCommerce.MerchandisingModule.Web.dll" moduleType="VirtoCommerce.MerchandisingModule.Web.Module, VirtoCommerce.MerchandisingModule.Web">
+<module>
+	<id>MerchandisingModule</id>
+	<assemblyFile>VirtoCommerce.MerchandisingModule.Web.dll</assemblyFile>
+	<moduleType>VirtoCommerce.MerchandisingModule.Web.Module, VirtoCommerce.MerchandisingModule.Web</moduleType>
 	<dependencies>
 		<dependency>CoreModule</dependency>
 		<dependency>CatalogModule</dependency>

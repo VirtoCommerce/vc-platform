@@ -75,10 +75,10 @@ namespace VirtoCommerce.PackagingModule.Data.Repositories
 				Description = manifest.Description;
 
 			if (manifest.Authors != null)
-				Authors = manifest.Authors.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+				Authors = manifest.Authors;
 
 			if (manifest.Owners != null)
-				Owners = manifest.Owners.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+				Owners = manifest.Owners;
 
 			if (manifest.LicenseUrl != null)
 				LicenseUrl = new Uri(manifest.LicenseUrl);

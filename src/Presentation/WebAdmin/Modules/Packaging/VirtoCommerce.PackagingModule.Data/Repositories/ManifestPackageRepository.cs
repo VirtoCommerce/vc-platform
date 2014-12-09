@@ -23,7 +23,7 @@ namespace VirtoCommerce.PackagingModule.Data.Repositories
 		public override IQueryable<IPackage> GetPackages()
 		{
 			var repositoryPackages = _repository.GetPackages().ToList();
-			var packages = ManifestModuleCatalog.GetModuleManifests(_source).Select(m => ConvertToManifestPackage(m, repositoryPackages)).ToArray();
+			var packages = ManifestModuleCatalog.GetModuleManifests(_source).Values.Select(m => ConvertToManifestPackage(m, repositoryPackages)).ToArray();
 			return packages.AsQueryable();
 		}
 
