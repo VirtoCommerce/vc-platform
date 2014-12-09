@@ -83,7 +83,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			#endregion
 
 			#region Associations
-			if(dbItem.AssociationGroups != null && dbItem.AssociationGroups.Any())
+			if(dbItem.AssociationGroups != null)
 			{
 				retVal.Associations = new List<module.ProductAssociation>();
 				foreach(var association in dbItem.AssociationGroups.SelectMany(x=>x.Associations))
