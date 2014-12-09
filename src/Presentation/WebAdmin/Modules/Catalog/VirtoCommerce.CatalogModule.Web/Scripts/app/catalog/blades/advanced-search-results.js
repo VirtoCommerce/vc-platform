@@ -1,6 +1,6 @@
 ﻿angular.module('catalogModule.blades.advancedSearchResult', []
     )
-.controller('advancedSearchResultsController', ['$rootScope', '$scope', '$filter', 'categories', 'items', 'itemsSearch', 'bladeNavigationService', 'dialogService', function ($rootScope, $scope, $filter, categories, items, itemsSearch, bladeNavigationService, dialogService) {
+.controller('advancedSearchResultsController', ['$rootScope', '$scope', '$filter', 'categories', 'items', 'listEntries', 'bladeNavigationService', 'dialogService', function ($rootScope, $scope, $filter, categories, items, listEntries, bladeNavigationService, dialogService) {
     //pagination settigs
     $scope.pageSettings = {};
     $scope.pageSettings.totalItems = 0;
@@ -14,12 +14,12 @@
     $scope.blade.refresh = function () {
         $scope.blade.isLoading = true;
         var skip = ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount;
-        itemsSearch.listitemssearch(
+        listEntries.listitemssearch(
             {
-                catalogId: $scope.blade.catalogId,
-                categoryId: $scope.blade.categoryId,
+                catalog: $scope.blade.catalogId,
+                category: $scope.blade.categoryId,
                 // propertyValues: .... ,
-                responseGroup: 'withItems',
+                respGroup: 'withItems',
                 start: skip,
                 count: $scope.pageSettings.itemsPerPageCount
             },
@@ -32,7 +32,10 @@
 		    if ($scope.selectedItem != null) {
 		        $scope.selectedItem = $scope.findItem($scope.selectedItem.id);
 		    }
-		});
+		}, function(error) {
+            $scope.blade.isLoading = false;
+            bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+        });
     }
 
     $scope.$watch('pageSettings.currentPage', function (newPage) {

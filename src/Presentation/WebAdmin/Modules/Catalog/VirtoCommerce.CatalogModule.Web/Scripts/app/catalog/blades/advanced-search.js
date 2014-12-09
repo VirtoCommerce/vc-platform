@@ -1,7 +1,7 @@
 ﻿angular.module('catalogModule.blades.advancedSearch', [
     'catalogModule.blades.advancedSearchResult'
 ])
-.controller('advancedSearchController', ['$scope', '$filter', 'itemsSearch', 'bladeNavigationService', function ($scope, $filter, itemsSearch, bladeNavigationService) {
+.controller('advancedSearchController', ['$scope', '$filter', 'listEntries', 'bladeNavigationService', function ($scope, $filter, listEntries, bladeNavigationService) {
     var propertyValues = undefined;
     $scope.filter = { searchKeyword: undefined };
 
@@ -11,7 +11,7 @@
         //Set filters
         prepareFilter();
 
-        var searchResult = itemsSearch.query({ categoryId: $scope.filter.categoryId, catalogId: $scope.filter.catalogId, keyword: $scope.filter.searchKeyword, propertyValues: $scope.filter.propValues, responseGroup: 'withCatalogs, withCategories, withProperties', start: 0, count: 0 }, function () {
+        var searchResult = listEntries.query({ category: $scope.filter.categoryId, catalog: $scope.filter.catalogId, q: $scope.filter.searchKeyword, propertyValues: $scope.filter.propValues, respGroup: 'withCatalogs, withCategories, withProperties', start: 0, count: 0 }, function () {
             $scope.blade.isLoading = false;
 
             // adding root element

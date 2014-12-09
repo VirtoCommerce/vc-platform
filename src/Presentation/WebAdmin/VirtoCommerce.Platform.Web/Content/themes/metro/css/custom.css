@@ -1093,16 +1093,31 @@
 			box-sizing: border-box;
 }
 
-.blade-head:after
+.blade-head .blade-status-bar
 {
 	background: #111;
 	content: '';
+	display: block;
 	height: 24px;
+	line-height: 24px;
 	left: 0;
 	right: 0;
 	position: absolute;
 	top: 0;
 	z-index: 5;
+	color: #fff;
+	font-size: 12px;
+}
+
+.blade-head .blade-status-bar.error {
+	-webkit-animation: bladeError  4s ;
+	animation: bladeError  4s ;
+}
+
+.blade-head .blade-status-bar .icon {
+	margin: 0 10px;
+	color: #e51400;
+	font-size: 15px;
 }
 
 .blade-head .progress
@@ -1754,6 +1769,45 @@
 
 	100% {
 		background-color: none;
+	}
+}
+
+@keyframes bladeError
+{
+	0% {
+		background-color: #111;
+	}
+
+	10% {
+		background-color: #e51400;
+		color: ##e51400;
+	}
+	
+	70% {
+		background-color: #e51400;
+	}
+
+	100% {
+		background-color: #111;
+	}
+}
+@-webkit-keyframes bladeError
+{
+	0% {
+		background-color: #111;
+	}
+
+	10% {
+		background-color: #e51400;
+		color: ##e51400;
+	}
+	
+	70% {
+		background-color: #e51400;
+	}
+
+	100% {
+		background-color: #111;
 	}
 }
 

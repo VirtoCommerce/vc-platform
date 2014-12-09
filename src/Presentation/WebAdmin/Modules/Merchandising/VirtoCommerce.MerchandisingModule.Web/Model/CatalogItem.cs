@@ -28,6 +28,10 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
         public EditorialReview[] EditorialReviews { get; set; }
 
         public PropertyDictionary Properties { get; set; }
+
+        public int ReviewsTotal { get; set; }
+
+        public decimal Rating { get; set; }
     }
    
 }

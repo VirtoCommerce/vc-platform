@@ -4,8 +4,10 @@ using System.Linq;
 using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Web.Http.ModelBinding;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.CatalogModule.Services;
+using VirtoCommerce.CatalogModule.Web.Binders;
 using VirtoCommerce.CatalogModule.Web.Converters;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using moduleModel = VirtoCommerce.CatalogModule.Model;
@@ -13,6 +15,7 @@ using webModel = VirtoCommerce.CatalogModule.Web.Model;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
+	[RoutePrefix("api/catalog/listentries")]
     public class ListEntryController : ApiController
     {
         private readonly ICatalogSearchService _searchService;
@@ -27,10 +30,11 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             _categoryService = categoryService;
 			_itemService = itemService;
         }
-
-        [HttpPost]
+		// GET: api/catalog/listentries&q='some'&catalog=apple&category=cat1&respGroup=8&skip=0&take=20
+        [HttpGet]
+		[Route("")]
         [ResponseType(typeof(webModel.ListEntrySearchResult))]
-        public IHttpActionResult ListItemsSearch(webModel.ListEntrySearchCriteria criteria)
+		public IHttpActionResult ListItemsSearch([ModelBinder(typeof(ListEntrySearchCriteriaBinder))]webModel.ListEntrySearchCriteria criteria)
         {
             var serviceResult = _searchService.Search(criteria.ToModuleModel());
 
@@ -53,8 +57,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             return Ok(retVal);
         }
 
-        // POST: api/listentry/createLinks
+		// POST: api/catalog/listentrylinks
         [HttpPost]
+		[Route("~/api/catalog/listentrylinks")]
         [ResponseType(typeof(void))]
 		public IHttpActionResult CreateLinks(webModel.ListEntryLink[] links)
         {
@@ -62,9 +67,10 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             return StatusCode(HttpStatusCode.NoContent);
         }
 
-		// GET: api/GetSlug/sasasa
-		[ResponseType(typeof(string))]
+		// GET: api/catalog/getslug
 		[HttpGet]
+		[Route("~/api/catalog/getslug")]
+		[ResponseType(typeof(string))]
 		public IHttpActionResult GetSlug(string text)
 		{
 			if(text == null)
@@ -75,12 +81,13 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		}
 
 
-        // POST: api/listentry/deleteLinks
+		// DELETE: api/catalog/listentrylinks
         [HttpPost]
+		[Route("~/api/catalog/listentrylinks/delete")]
         [ResponseType(typeof(void))]
 		public IHttpActionResult DeleteLinks(webModel.ListEntryLink[] links)
         {
-			InnerUpdateLinks(links, (x,y)=> x.Links.Remove(y) );
+			InnerUpdateLinks(links, (x, y) => x.Links.Remove(y));
             return StatusCode(HttpStatusCode.NoContent);
         }
 

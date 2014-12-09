@@ -62,7 +62,7 @@ namespace VirtoCommerce.CatalogModule.Test
 			Assert.IsTrue(category.Id == "40773cd0-f2de-462f-9041-da742a274c38");
 
 			//Remove link
-			listEntryController.DeleteLinks(new webModel.ListEntryLink[] { link });
+			//listEntryController.DeleteLinks(new webModel.ListEntryLink[] { link });
 
 		}
 

@@ -118,10 +118,15 @@
             {
                 if (toolbarCommand.canExecuteMethod())
                     toolbarCommand.executeMethod();
-            }
+            };
+
+            scope.error = {
+                status: false,
+                title: ''
+            };
 
         }
-    }
+    };
 }])
 .factory('bladeNavigationService', ['$rootScope', '$filter', '$state', function ($rootScope, $filter, $state)
 {
@@ -240,6 +245,12 @@
                 showBlade();
             }
 
+        },
+        setError: function(title, blade) {
+            blade.error = {
+                status: true,
+                title: title
+            };
         }
     };
 
