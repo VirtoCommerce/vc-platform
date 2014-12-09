@@ -5,6 +5,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using System.Web.Http.ModelBinding;
 using Microsoft.Practices.Unity;
+using VirtoCommerce.CatalogModule.Repositories;
 using VirtoCommerce.CatalogModule.Services;
 using VirtoCommerce.Foundation.Catalogs.Search;
 using VirtoCommerce.Foundation.Search;
@@ -21,14 +22,17 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		private readonly IItemService _itemService;
 		private readonly ISearchProvider _searchService;
 		private readonly ISearchConnection _searchConnection;
+		private readonly Func<IFoundationCatalogRepository> _foundationCatalogRepositoryFactory;
 
 		public ProductController([Dependency("MP")] IItemService itemService,
 								 [Dependency("MP")] ISearchProvider indexedSearchProvider,
-								 [Dependency("MP")] ISearchConnection searchConnection)
+								 [Dependency("MP")] ISearchConnection searchConnection,
+								 [Dependency("MP")] Func<IFoundationCatalogRepository> foundationCatalogRepositoryFactory)
 		{
 			_searchService = indexedSearchProvider;
 			_searchConnection = searchConnection;
 			_itemService = itemService;
+			_foundationCatalogRepositoryFactory = foundationCatalogRepositoryFactory;
 		}
 
 	    /// <summary>
@@ -83,6 +87,25 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			}
 			return Ok(retVal);
 		}
+
+		/// GET: api/mp/apple/en-us/products?code='22'
+		[HttpGet]
+		[ResponseType(typeof(Product))]
+		[Route("")]
+		public IHttpActionResult GetProductByCode(string catalog, [FromUri]string code, string language = "en-us")
+		{
+			using(var repository = _foundationCatalogRepositoryFactory())
+			{
+				var itemId = repository.Items.Where(x => x.CatalogId == catalog && x.Code == code).Select(x => x.ItemId).FirstOrDefault();
+				if(itemId != null)
+				{
+					return GetProduct(itemId);
+				}
+			}
+			return StatusCode(HttpStatusCode.NotFound);
+		}
+
+
 
 		[HttpGet]
 		[ResponseType(typeof(Product))]

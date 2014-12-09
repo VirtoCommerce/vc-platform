@@ -45,5 +45,6 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         public List<CategoryLink> Links { get; set; }
 		public List<SeoInfo> SeoInfos { get; set; }
 		public List<EditorialReview> Reviews { get; set; }
+		public List<ProductAssociation> Associations { get; set; }
     }
 }

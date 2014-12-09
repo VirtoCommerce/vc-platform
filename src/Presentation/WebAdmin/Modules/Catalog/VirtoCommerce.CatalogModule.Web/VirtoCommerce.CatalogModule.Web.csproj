@@ -112,6 +112,7 @@
     <Compile Include="Controllers\Api\ImportController.cs" />
     <Compile Include="Controllers\Api\PropertiesController.cs" />
     <Compile Include="Converters\AssetConverter.cs" />
+    <Compile Include="Converters\AssociationConverter.cs" />
     <Compile Include="Converters\CatalogConverter.cs" />
     <Compile Include="Converters\CatalogLanguageConverter.cs" />
     <Compile Include="Converters\CategoryConverter.cs" />
@@ -133,6 +134,7 @@
     <Compile Include="Model\ImportJobRun.cs" />
     <Compile Include="Model\ListEntryLink.cs" />
     <Compile Include="Model\MappingItem.cs" />
+    <Compile Include="Model\ProductAssociation.cs" />
     <Compile Include="Model\PropertyDictionaryValue.cs" />
     <Compile Include="Model\Language.cs" />
     <Compile Include="Model\ListEntryCategory.cs" />
@@ -162,7 +164,9 @@
     <Content Include="Scripts\app\catalog\blades\advanced-search.js" />
     <Content Include="Scripts\app\catalog\blades\advanced-search-results.tpl.html" />
     <Content Include="Scripts\app\catalog\blades\advanced-search.tpl.html" />
+    <Content Include="Scripts\app\catalog\blades\item-associations-list.js" />
     <Content Include="Scripts\app\catalog\blades\editorialReviews-list.js" />
+    <Content Include="Scripts\app\catalog\blades\item-associations-list.tpl.html" />
     <Content Include="Scripts\app\catalog\blades\editorialReviews-list.tpl.html" />
     <Content Include="Scripts\app\catalog\blades\catalogs-select.js" />
     <Content Include="Scripts\app\catalog\blades\catalogs-select.tpl.html" />
@@ -227,7 +231,9 @@
     <Content Include="Scripts\app\catalog\widgets\catalogLanguagesWidget.js" />
     <Content Include="Scripts\app\catalog\widgets\editorialReviewWidget.js" />
     <Content Include="Scripts\app\catalog\widgets\editorialReviewWidget.tpl.html" />
+    <Content Include="Scripts\app\catalog\widgets\itemAssociationsWidget.js" />
     <Content Include="Scripts\app\catalog\widgets\seoWidget.js" />
+    <Content Include="Scripts\app\catalog\widgets\itemAssociationsWidget.tpl.html" />
     <Content Include="Scripts\app\catalog\widgets\seoWidget.tpl.html" />
     <Content Include="Scripts\app\catalog\widgets\itemAssetWidget.js" />
     <Content Include="Scripts\app\catalog\widgets\itemImageWidget.js" />
@@ -253,6 +259,11 @@
     <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard.js" />
     <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-create-action.tpl.html" />
+    <Content Include="Scripts\app\catalog\wizards\newAssociation\association-wizard.js" />
+    <Content Include="Scripts\app\catalog\wizards\newAssociation\association-wizard.tpl.html" />
+    <Content Include="Scripts\app\catalog\wizards\newAssociation\association-wizard-group-step.js" />
+    <Content Include="Scripts\app\catalog\wizards\newAssociation\association-wizard-group-step.tpl.html" />
+    <Content Include="Scripts\app\catalog\wizards\newAssociation\association-wizard-actions.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-editorial-review-detail-step.js" />
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-editorial-reviews.js" />
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-property-detail-step.js" />

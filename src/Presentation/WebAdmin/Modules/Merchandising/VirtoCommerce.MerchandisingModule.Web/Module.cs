@@ -50,6 +50,7 @@ namespace VirtoCommerce.MerchandisingModule.Web
 			_container.RegisterInstance<ICategoryService>("MP", categoryService);
 			_container.RegisterInstance<IItemService>("MP", itemService);
 			_container.RegisterInstance<ICatalogSearchService>("MP", itemSearchService);
+			_container.RegisterType<Func<IFoundationCatalogRepository>>("MP", new InjectionFactory(x => catalogRepFactory));
 
 			#region VCF dependencies
 			var searchConnection = new SearchConnection(ConnectionHelper.GetConnectionString("SearchConnectionString"));

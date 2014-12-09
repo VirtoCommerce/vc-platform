@@ -1,0 +1,8 @@
+﻿<div style="width: 250px;">
+    <ul class="list-extended">
+        <li ng-click="openBlade(data)" ng-repeat="data in blade.currentEntities">
+            <span class="title">{{data}}</span>
+        </li>
+    </ul>
+    <div ng-if="blade.currentEntities.length == 0" class="spacer">No Associations yet</div>
+</div>

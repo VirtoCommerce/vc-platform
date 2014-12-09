@@ -119,12 +119,6 @@
                 if (toolbarCommand.canExecuteMethod())
                     toolbarCommand.executeMethod();
             };
-
-            scope.error = {
-                status: false,
-                title: ''
-            };
-
         }
     };
 }])
