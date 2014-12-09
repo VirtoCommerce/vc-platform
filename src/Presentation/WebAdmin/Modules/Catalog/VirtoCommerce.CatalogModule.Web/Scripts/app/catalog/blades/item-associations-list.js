@@ -1,6 +1,5 @@
 ﻿angular.module('catalogModule.blades.itemAssociationsList', [])
 .controller('itemAssociationsListController', ['$rootScope', '$scope', 'bladeNavigationService', 'items', function ($rootScope, $scope, bladeNavigationService, items) {
-    //$scope.blade.currentEntities = {};
 
     $scope.blade.refresh = function (parentRefresh) {
         if (parentRefresh) {
@@ -33,7 +32,6 @@
     function openAddEntityWizard() {
         var newBlade = {
             id: "associationWizard",
-            item: {},
             title: "New Associations",
             //subtitle: '',
             controller: 'associationWizardController',

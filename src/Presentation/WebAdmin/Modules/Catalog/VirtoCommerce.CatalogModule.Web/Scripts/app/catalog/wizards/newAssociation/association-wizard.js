@@ -4,18 +4,22 @@
 .controller('associationWizardController', ['$scope', 'bladeNavigationService', 'dialogService', 'items', function ($scope, bladeNavigationService, dialogService, items) {
 
     $scope.create = function () {
-        $scope.blade.item.$updateitem(null,
-        function (dbItem) {
+        $scope.blade.isLoading = true;
+        var entriesCopy = $scope.blade.parentBlade.currentEntities.slice();
+
+        _.each($scope.selection, function (item) {
+            if (_.every(entriesCopy, function (x) { return x.productId != item.id; })) {
+                var newEntry = {
+                    name: $scope.blade.groupName,
+                    productId: item.id
+                };
+                entriesCopy.push(newEntry);
+            }
+        });
+
+        items.updateitem({ id: $scope.blade.parentBlade.currentEntityId, associations: entriesCopy }, function () {
             $scope.bladeClose();
-
-            //TODO: need better way to find category list blade.
-            //var categoryListBlade = $scope.blade.parentBlade;
-
-            //if (categoryListBlade.controller != 'categoriesItemsListController') {
-            //    categoryListBlade = categoryListBlade.parentBlade;
-            //}
-
-            //categoryListBlade.refresh();
+            $scope.blade.parentBlade.refresh(true);
         });
     }
 
@@ -38,7 +42,7 @@
                         title: 'Select Catalog',
                         subtitle: 'Adding Associations to product',
                         mode: 'newAssociation',
-                        childTitle: 'Choose Categories & Items to associate',
+                        childTitle: 'Choose Items to associate',
                         controller: 'catalogsSelectController',
                         bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/common/wizard-ok-action.tpl.html',
                         template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/catalogs-select.tpl.html'
@@ -73,7 +77,6 @@
     }
 
     $scope.selection = [];
-    $scope.blade.item = {};
     $scope.blade.isLoading = false;
 }]);
 

@@ -177,9 +177,17 @@
             return _.any($scope.items, function (x) { return x.selected; });
         } else {
             return false;
+    }
+        }
+
+    function isProductsChecked() {
+        if ($scope.items) {
+            return _.any($scope.items, function (x) { return x.selected && x.type === 'product'; });
+        } else {
+            return false;
         }
     }
-
+    
     function deleteChecked() {
         var dialog = {
             id: "confirmDeleteItem",
@@ -275,7 +283,7 @@
     }
 
     function associateChecked() {
-        var selection = _.where($scope.items, { selected: true });
+        var selection = _.where($scope.items, { selected: true, type: 'product'});
         $scope.blade.parentBlade.select(selection);
     }
 
@@ -435,7 +443,7 @@
                         associateChecked();
                     },
                     canExecuteMethod: function () {
-                        return isItemsChecked();
+                        return isProductsChecked();
                     }
                 }
                 $scope.bladeToolbarCommands.splice(1, 2, associateCommand);
