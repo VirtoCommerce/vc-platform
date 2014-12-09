@@ -4,7 +4,6 @@ using NuGet;
 using VirtoCommerce.PackagingModule.Data.Repositories;
 using VirtoCommerce.PackagingModule.Model;
 using VirtoCommerce.PackagingModule.Services;
-using VirtoCommerce.Framework.Web.Modularity;
 
 namespace VirtoCommerce.PackagingModule.Data.Services
 {
@@ -37,12 +36,7 @@ namespace VirtoCommerce.PackagingModule.Data.Services
 
 		public ModuleDescriptor[] GetModules()
 		{
-			return ManifestModuleCatalog.GetModuleManifests(_projectPath).Select(ConvertToModuleDescriptor).ToArray();
-		}
-
-		public PackageDescriptor[] GetPackages()
-		{
-			return _projectManager.LocalRepository.GetPackages().Select(ConvertToPackageDescriptor).ToArray();
+			return _projectManager.LocalRepository.GetPackages().OfType<ManifestPackage>().Select(ConvertToModuleDescriptor).ToArray();
 		}
 
 		public void Install(string packageId, string version)
@@ -73,7 +67,7 @@ namespace VirtoCommerce.PackagingModule.Data.Services
 				new WebsiteLocalPackageRepository(_sourcePath),
 				new DefaultPackagePathResolver(_projectPath),
 				projectSystem,
-				new WebsitePackageRepository(_packagesPath, projectSystem)
+				new ManifestPackageRepository(_projectPath, new WebsitePackageRepository(_packagesPath, projectSystem))
 				);
 
 			// TODO: configure logger
@@ -81,33 +75,25 @@ namespace VirtoCommerce.PackagingModule.Data.Services
 			return projectManager;
 		}
 
-		private static PackageDescriptor ConvertToPackageDescriptor(IPackage package)
-		{
-			return new PackageDescriptor
-			{
-				Id = package.Id,
-				Version = package.Version.ToString(),
-			};
-		}
-
-		private static ModuleDescriptor ConvertToModuleDescriptor(ModuleManifest manifest)
+		private static ModuleDescriptor ConvertToModuleDescriptor(ManifestPackage package)
 		{
 			return new ModuleDescriptor
 			{
-				Id = manifest.Id,
-				Version = manifest.Version,
-				Title = manifest.Title,
-				Description = manifest.Description,
-				Authors = manifest.Authors,
-				Owners = manifest.Owners,
-				LicenseUrl = manifest.LicenseUrl,
-				ProjectUrl = manifest.ProjectUrl,
-				IconUrl = manifest.IconUrl,
-				RequireLicenseAcceptance = manifest.RequireLicenseAcceptance,
-				ReleaseNotes = manifest.ReleaseNotes,
-				Copyright = manifest.Copyright,
-				Tags = manifest.Tags,
-				Dependencies = manifest.Dependencies,
+				Id = package.Id,
+				Version = package.Version.ToString(),
+				Title = package.Title,
+				Description = package.Description,
+				Authors = package.Authors,
+				Owners = package.Owners,
+				LicenseUrl = package.LicenseUrl,
+				ProjectUrl = package.ProjectUrl,
+				IconUrl = package.IconUrl,
+				RequireLicenseAcceptance = package.RequireLicenseAcceptance,
+				ReleaseNotes = package.ReleaseNotes,
+				Copyright = package.Copyright,
+				Tags = package.Tags,
+				Dependencies = package.Dependencies,
+				IsRemovable = package.IsRemovable,
 			};
 		}
 	}
