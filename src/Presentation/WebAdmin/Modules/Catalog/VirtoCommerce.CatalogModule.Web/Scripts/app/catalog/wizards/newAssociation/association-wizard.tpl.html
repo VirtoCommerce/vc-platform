@@ -1,0 +1,12 @@
+﻿<div style="width:360px">
+    <ul class="list-extended">
+        <li ng-click="openBlade('group')">
+            <span class="title">Group name</span>
+            <span class="sub-title">{{blade.item.groupId ? blade.item.groupId : 'Not selected'}}</span>
+        </li>
+        <li ng-click="openBlade('products')">
+            <span class="title">Products</span>
+            <span class="sub-title">{{selection.length}} product(s) selected</span>
+        </li>
+    </ul>
+</div> 

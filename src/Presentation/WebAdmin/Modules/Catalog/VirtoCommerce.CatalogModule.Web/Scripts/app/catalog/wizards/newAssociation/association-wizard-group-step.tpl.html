@@ -1,0 +1,12 @@
+﻿<div style="width: 300px;">
+    <p class="subheader">Select Association group</p>
+    <ul class="list-checkboxes">
+        <li ng-repeat="data in items">
+            <label>
+                <input type="checkbox" name="isDefault" ng-checked="data === selectedId" ng-click="setSelected(data)">
+                <span class="switch"></span>
+                {{data}}
+            </label>
+        </li>
+    </ul>
+</div>
