@@ -17,7 +17,10 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 			retVal.InjectFrom(association);
 			if (association.AssociatedProduct != null)
 			{
-				retVal.AssociatedProduct = association.AssociatedProduct.ToWebModel();
+				var associatedProduct = association.AssociatedProduct.ToWebModel();
+				retVal.ProductCode = associatedProduct.Code;
+				retVal.ProductImg = associatedProduct.ImgSrc;
+				retVal.ProductName = associatedProduct.Name;
 			}
 			return retVal;
 		}
@@ -26,10 +29,6 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 		{
 			var retVal = new moduleModel.ProductAssociation();
 			retVal.InjectFrom(association);
-			if (association.AssociatedProduct != null)
-			{
-				retVal.AssociatedProduct = association.AssociatedProduct.ToModuleModel();
-			}
 			return retVal;
 		}
 
