@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Microsoft.Practices.Unity;
+using VirtoCommerce.CatalogModule.Repositories;
 using VirtoCommerce.CatalogModule.Services;
 using VirtoCommerce.MerchandisingModule.Web.Converters;
 using moduleModel = VirtoCommerce.CatalogModule.Model;
@@ -15,28 +17,32 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		private readonly ICatalogSearchService _searchService;
 		private readonly ICategoryService _categoryService;
 		private readonly IPropertyService _propertyService;
+		private readonly Func<IFoundationCatalogRepository> _foundationCatalogRepositoryFactory;
+
 
 		public CategoryController([Dependency("MP")]ICatalogSearchService searchService,
 								  [Dependency("MP")]ICategoryService categoryService,
-								  [Dependency("MP")]IPropertyService propertyService)
+								  [Dependency("MP")]IPropertyService propertyService,
+								  [Dependency("MP")] Func<IFoundationCatalogRepository> foundationCatalogRepositoryFactory)
 		{
 			_searchService = searchService;
 			_categoryService = categoryService;
 			_propertyService = propertyService;
+			_foundationCatalogRepositoryFactory = foundationCatalogRepositoryFactory;
 		}
 
 
-	    /// <summary>
-	    ///  GET: api/mp/apple/en-us/categories?parentId='22'
-	    /// </summary>
-	    /// <param name="catalog"></param>
-	    /// <param name="language"></param>
-	    /// <param name="parentId"></param>
-	    /// <returns></returns>
-	    [HttpGet]
+		/// <summary>
+		///  GET: api/mp/apple/en-us/categories?parentId='22'
+		/// </summary>
+		/// <param name="catalog"></param>
+		/// <param name="language"></param>
+		/// <param name="parentId"></param>
+		/// <returns></returns>
+		[HttpGet]
 		[ResponseType(typeof(webModel.GenericSearchResult<webModel.Category>))]
-        [Route("")]
-		public IHttpActionResult Search(string catalog, string language="en-us", [FromUri]string parentId = null)
+		[Route("")]
+		public IHttpActionResult Search(string catalog, string language = "en-us", [FromUri]string parentId = null)
 		{
 			var criteria = new moduleModel.SearchCriteria
 			{
@@ -52,26 +58,45 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 				TotalCount = result.Categories.Count(),
 				Items = result.Categories.Select(x => x.ToWebModel()).ToList()
 			};
-		
+
 			return Ok(retVal);
 		}
 
-        [HttpGet]
-        [ResponseType(typeof(webModel.GenericSearchResult<webModel.Category>))]
-        [Route("{categoryId}")]
-        public IHttpActionResult Get(string categoryId, string catalog, string language = "en-us")
-        {
-            var result = _categoryService.GetById(categoryId);
 
-            if (result != null)
-            {
-                var retVal = result.ToWebModel();
+		/// GET: api/mp/apple/en-us/categories?code='22'
+		[HttpGet]
+		[ResponseType(typeof(webModel.Category))]
+		[Route("")]
+		public IHttpActionResult GetByCode(string catalog, [FromUri]string code, string language = "en-us")
+		{
+			using (var repository = _foundationCatalogRepositoryFactory())
+			{
+				var categoryId = repository.Categories.Where(x => x.CatalogId == catalog && x.Code == code).Select(x => x.CategoryId).FirstOrDefault();
+				if (categoryId != null)
+				{
+					return Get(categoryId, catalog, language);
+				}
+			}
+			return StatusCode(HttpStatusCode.NotFound);
+		}
+	
+		[HttpGet]
+		[ResponseType(typeof(webModel.Category))]
+		[Route("{categoryId}")]
+		public IHttpActionResult Get(string categoryId, string catalog, string language = "en-us")
+		{
+			if (categoryId != null)
+			{
+				var result = _categoryService.GetById(categoryId);
+				if (result != null)
+				{
+					var retVal = result.ToWebModel();
+					return Ok(retVal);
+				}
+			}
+			return StatusCode(HttpStatusCode.NotFound);
+		}
 
-                return Ok(retVal);
-            }
-            return StatusCode(HttpStatusCode.NotFound);
-        }
 
-		
 	}
 }
