@@ -63,11 +63,11 @@ namespace VirtoCommerce.MerchandisingModule.Web
 			#endregion
 
 			#region Dynamic content
-			var httpCacheRep = new HttpCacheRepository();
-            var dynamicContentRep = new EFDynamicContentRepository(MarketPlaceConnectionString);
-			var dynamicContentEval = new DynamicContentEvaluator(dynamicContentRep, null,  httpCacheRep);
-			var dynamicContentService = new DynamicContentService(dynamicContentRep, dynamicContentEval);
-			_container.RegisterInstance<IDynamicContentService>("MP", dynamicContentService);
+
+            _container.RegisterType<IDynamicContentRepository>("MP", new InjectionFactory(c => new EFDynamicContentRepository(MarketPlaceConnectionString)));
+            _container.RegisterType<IDynamicContentEvaluator>("MP", new InjectionFactory(c => new DynamicContentEvaluator(c.Resolve<IDynamicContentRepository>("MP"), null, new HttpCacheRepository())));
+            _container.RegisterType<IDynamicContentService>("MP", new InjectionFactory(c => new DynamicContentService(c.Resolve<IDynamicContentRepository>("MP"), c.Resolve<IDynamicContentEvaluator>("MP"))));
+
 			#endregion
 		}
     }
