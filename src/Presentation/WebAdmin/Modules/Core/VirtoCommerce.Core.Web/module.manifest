@@ -1,2 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<module moduleName="CoreModule" assemblyFile="VirtoCommerce.CoreModule.Web.dll" moduleType="VirtoCommerce.CoreModule.Web.Module, VirtoCommerce.CoreModule.Web" />
+<module>
+	<id>CoreModule</id>
+	<assemblyFile>VirtoCommerce.CoreModule.Web.dll</assemblyFile>
+	<moduleType>VirtoCommerce.CoreModule.Web.Module, VirtoCommerce.CoreModule.Web</moduleType>
+</module>

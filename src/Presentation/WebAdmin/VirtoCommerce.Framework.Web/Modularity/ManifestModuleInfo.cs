@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Practices.ObjectBuilder2;
 
 namespace VirtoCommerce.Framework.Web.Modularity

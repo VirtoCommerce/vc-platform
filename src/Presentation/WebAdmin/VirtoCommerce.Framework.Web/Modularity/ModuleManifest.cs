@@ -5,7 +5,7 @@ namespace VirtoCommerce.Framework.Web.Modularity
 	[XmlType("module")]
 	public class ModuleManifest
 	{
-		[XmlAttribute("moduleName")]
+		[XmlElement("id")]
 		public string Id { get; set; }
 
 		[XmlElement("version")]
@@ -17,11 +17,13 @@ namespace VirtoCommerce.Framework.Web.Modularity
 		[XmlElement("description")]
 		public string Description { get; set; }
 
-		[XmlElement("authors")]
-		public string Authors { get; set; }
+		[XmlArray("authors")]
+		[XmlArrayItem("author")]
+		public string[] Authors { get; set; }
 
-		[XmlElement("owners")]
-		public string Owners { get; set; }
+		[XmlArray("owners")]
+		[XmlArrayItem("owner")]
+		public string[] Owners { get; set; }
 
 		[XmlElement("licenseUrl")]
 		public string LicenseUrl { get; set; }
@@ -44,10 +46,10 @@ namespace VirtoCommerce.Framework.Web.Modularity
 		[XmlElement("tags")]
 		public string Tags { get; set; }
 
-		[XmlAttribute("assemblyFile")]
+		[XmlElement("assemblyFile")]
 		public string AssemblyFile { get; set; }
 
-		[XmlAttribute("moduleType")]
+		[XmlElement("moduleType")]
 		public string ModuleType { get; set; }
 
 		[XmlArray("dependencies")]
