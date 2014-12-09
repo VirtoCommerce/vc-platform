@@ -23,6 +23,9 @@
                     {{toolbarCommand.name}}
                 </button>
             </div>
+            <span class="blade-status-bar" ng-class="blade.error.status?'error':''">
+                <i ng-if="blade.error.status" class="icon icon-warning"></i> <span class="error-title" ng-bind="blade.error.title"></span>
+            </span>
             <ng-include src="toolbarTemplate" />
         </header>
         <div class="blade-content" ng-class="blade.style">

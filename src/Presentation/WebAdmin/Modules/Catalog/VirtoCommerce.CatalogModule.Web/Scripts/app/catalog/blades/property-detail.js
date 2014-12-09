@@ -95,7 +95,7 @@
                 if (remove) {
                     $scope.blade.isLoading = true;
 
-                    properties.delete({ id: prop.id }, function () {
+                    properties.remove({ id: prop.id }, function () {
                         $scope.bladeClose();
                         b.parentBlade.refresh();
                     });

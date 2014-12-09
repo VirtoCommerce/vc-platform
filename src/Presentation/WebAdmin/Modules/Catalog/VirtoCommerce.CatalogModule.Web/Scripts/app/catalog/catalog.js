@@ -11,7 +11,6 @@ angular.module(catalogsModuleName, [
   'catalogModule.blades.catalogDetail',
   'catalogModule.blades.catalogsSelect',
   'catalogModule.blades.virtualCatalogDetail',
-  'catalogModule.widget.virtualCatalogMappingWidget',
   'catalogModule.blades.categoryPropertyDetail',
   'catalogModule.blades.categoryDetail',
   'catalogModule.blades.categoriesItemsList',

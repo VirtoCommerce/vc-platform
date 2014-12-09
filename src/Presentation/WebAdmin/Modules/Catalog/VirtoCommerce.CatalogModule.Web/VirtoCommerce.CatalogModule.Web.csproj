@@ -103,6 +103,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Binders\ListEntrySearchCriteriaBinder.cs" />
     <Compile Include="Controllers\Api\AssetsController.cs" />
     <Compile Include="Controllers\Api\CatalogsController.cs" />
     <Compile Include="Controllers\Api\CategoriesController.cs" />
@@ -215,10 +216,6 @@
     <Content Include="Scripts\app\catalog\blades\property-detail.tpl.html" />
     <Content Include="Scripts\app\catalog\blades\virtual-catalog-detail.js" />
     <Content Include="Scripts\app\catalog\blades\virtual-catalog-detail.tpl.html" />
-    <Content Include="Scripts\app\catalog\blades\virtual-catalog-mapping-source.js" />
-    <Content Include="Scripts\app\catalog\blades\virtual-catalog-mapping-source.tpl.html" />
-    <Content Include="Scripts\app\catalog\blades\virtual-catalog-mapping-target.js" />
-    <Content Include="Scripts\app\catalog\blades\virtual-catalog-mapping-target.tpl.html" />
     <Content Include="Scripts\app\catalog\catalog.js" />
     <Content Include="Scripts\app\catalog\directives\property2.js" />
     <Content Include="Scripts\app\catalog\directives\property2.tpl.html" />
@@ -227,7 +224,7 @@
     <Content Include="Scripts\app\catalog\resources\categories.js" />
     <Content Include="Scripts\app\catalog\resources\import.js" />
     <Content Include="Scripts\app\catalog\resources\items.js" />
-    <Content Include="Scripts\app\catalog\resources\itemsSearch.js" />
+    <Content Include="Scripts\app\catalog\resources\listEntries.js" />
     <Content Include="Scripts\app\catalog\resources\properties.js" />
     <Content Include="Scripts\app\catalog\widgets\catalogLanguagesWidget.js" />
     <Content Include="Scripts\app\catalog\widgets\editorialReviewWidget.js" />
@@ -246,8 +243,6 @@
     <Content Include="Scripts\app\catalog\widgets\itemPropertyWidget.tpl.html" />
     <Content Include="Scripts\app\catalog\widgets\itemVariationWidget.js" />
     <Content Include="Scripts\app\catalog\widgets\itemVariationWidget.tpl.html" />
-    <Content Include="Scripts\app\catalog\widgets\virtualCatalogMappingWidget.js" />
-    <Content Include="Scripts\app\catalog\widgets\virtualCatalogMappingWidget.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-mapping-step-edit.js" />
     <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-mapping-step.js" />
     <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-mapping-step-edit.tpl.html" />

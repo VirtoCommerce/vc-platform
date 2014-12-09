@@ -14,15 +14,15 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 {
 	public class FoundationCatalogRepositoryImpl : EFCatalogRepository, IFoundationCatalogRepository
 	{
-		private readonly IAppConfigRepository _appConfigRepository;
-        public FoundationCatalogRepositoryImpl(string nameOrConnectionString)
-            : this(nameOrConnectionString, null)
-        {
-        }
-        public FoundationCatalogRepositoryImpl(string nameOrConnectionString, IInterceptor[] interceptors)
-            : base(nameOrConnectionString, null, interceptors)
+		//private readonly IAppConfigRepository _appConfigRepository;
+		public FoundationCatalogRepositoryImpl(string nameOrConnectionString)
+			: this(nameOrConnectionString, null)
 		{
-			
+		}
+		public FoundationCatalogRepositoryImpl(string nameOrConnectionString, IInterceptor[] interceptors)
+			: base(nameOrConnectionString, null, interceptors)
+		{
+
 		}
 
 		#region IModuleCatalogRepository Members
@@ -31,8 +31,8 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 		{
 			foundation.CatalogBase retVal = Catalogs.OfType<foundation.Catalog>()
 														 .Include(x => x.CatalogLanguages)
-                .FirstOrDefault(x => x.CatalogId == catalogId) ??
-                (foundation.CatalogBase) Catalogs.OfType<foundation.VirtualCatalog>()
+				.FirstOrDefault(x => x.CatalogId == catalogId) ??
+				(foundation.CatalogBase)Catalogs.OfType<foundation.VirtualCatalog>()
 									  .FirstOrDefault(x => x.CatalogId == catalogId);
 			return retVal;
 		}
@@ -55,7 +55,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 					link.LinkedCatalogId = link.CatalogId;
 				}
 				retVal.Add(allLinks);
-			
+
 			}
 			return retVal.ToArray();
 		}
@@ -92,10 +92,10 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 		{
 			var retVal = Categories.OfType<foundation.Category>()
 										.Include(x => x.CategoryPropertyValues)
-										.Include(x=> x.PropertySet.PropertySetProperties.Select(y=>y.Property))
+										.Include(x => x.PropertySet.PropertySetProperties.Select(y => y.Property))
 										.FirstOrDefault(x => x.CategoryId == categoryId);
 
-					
+
 			return retVal;
 		}
 
@@ -116,16 +116,16 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			{
 				query = query.Include(x => x.EditorialReviews);
 			}
-			
+
 			var retVal = query.ToArray();
 			return retVal;
 		}
 
 		public foundation.Property[] GetPropertiesByIds(string[] propIds)
 		{
-			var retVal = Properties.Include(x=> x.Catalog)
-										.Include(x=>x.PropertyValues)
-										.Include(x=>x.PropertyAttributes)
+			var retVal = Properties.Include(x => x.Catalog)
+										.Include(x => x.PropertyValues)
+										.Include(x => x.PropertyAttributes)
 										.Where(x => propIds.Contains(x.PropertyId))
 										.ToArray();
 			return retVal;
@@ -138,8 +138,8 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			{
 				var categoryId = Categories.OfType<foundation.Category>()
 								   .Where(x => x.PropertySetId == propSet.PropertySetId)
-								   .Select(x=>x.CategoryId).FirstOrDefault();
-				if(categoryId != null)
+								   .Select(x => x.CategoryId).FirstOrDefault();
+				if (categoryId != null)
 				{
 					retVal = GetCategoryById(categoryId);
 				}
@@ -170,12 +170,12 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			//Load Variations
 			var itemIds = ItemRelations.Where(x => x.ParentItemId == itemId).Select(x => x.ChildItemId).ToArray();
 			return GetItemByIds(itemIds.ToArray());
-			
+
 		}
 
 		public void SetCategoryProperty(foundation.Category category, foundation.Property property)
 		{
-			if(category.PropertySet == null)
+			if (category.PropertySet == null)
 			{
 				var propertySet = new foundation.PropertySet
 				{
@@ -201,12 +201,12 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			var itemRelation = ItemRelations.FirstOrDefault(x => x.ChildItemId == item.ItemId);
 			if (itemRelation == null)
 			{
-				 itemRelation = new foundation.ItemRelation
-				{
-					RelationTypeId = foundation.ItemRelationType.Sku,
-					GroupName = "variation",
-					Quantity = 1
-				};
+				itemRelation = new foundation.ItemRelation
+			   {
+				   RelationTypeId = foundation.ItemRelationType.Sku,
+				   GroupName = "variation",
+				   Quantity = 1
+			   };
 				Add(itemRelation);
 			}
 			if (itemRelation.ChildItemId != item.ItemId)
@@ -216,7 +216,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 
 			//Need update all previous relations if main product changes
 			var allPrevRelations = ItemRelations.Where(x => x.ParentItemId == item.ItemId).ToArray();
-			foreach(var prevRelation in allPrevRelations)
+			foreach (var prevRelation in allPrevRelations)
 			{
 				prevRelation.ParentItemId = mainProductId;
 			}
@@ -250,10 +250,10 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			});
 		}
 
-		public 	void RemoveItems(string[] itemIds)
+		public void RemoveItems(string[] itemIds)
 		{
 			var items = GetItemByIds(itemIds);
-			foreach(var item in items)
+			foreach (var item in items)
 			{
 				base.Remove(item);
 				//delete relations

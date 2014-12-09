@@ -1,12 +1,12 @@
 ﻿angular.module('catalogModule.resources.properties', [])
 .factory('properties', ['$resource', function ($resource) {
 
-	return $resource('api/properties/:id', { id: '@id' }, {
-		newProperty: { method: 'GET', url: 'api/properties/getnewproperty'},
-		get: { method: 'GET', url: 'api/properties/get/:id' },
-        update: { method: 'POST', url: 'api/properties/post/:id' },
-        query: { url: 'api/properties/getpropertyvalues', isArray: true },
-        delete: { method: 'DELETE', url: 'api/properties/delete/:id' }
+	return $resource('api/catalog/properties/:id', { id: '@id' }, {
+		newProperty: { method: 'GET', url: 'api/catalog/categories/:categoryId/properties/getnew'},
+		get: { method: 'GET', url: 'api/catalog/properties/:propertyId' },
+		update: { method: 'POST', url: 'api/catalog/properties' },
+		values: { url: 'api/catalog/properties/:propertyId/values', isArray: true },
+		remove: { method: 'DELETE', url: 'api/catalog/properties' }
     });
 
 }]);

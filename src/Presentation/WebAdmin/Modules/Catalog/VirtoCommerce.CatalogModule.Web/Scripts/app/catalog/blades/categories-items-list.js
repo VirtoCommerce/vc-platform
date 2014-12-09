@@ -3,10 +3,10 @@
     'catalogModule.blades.advancedSearch',
     'catalogModule.resources.categories',
     'catalogModule.resources.items',
-    'catalogModule.resources.itemsSearch',
+    'catalogModule.resources.listEntries',
     'platformWebApp.common.confirmDialog'
 ])
-.controller('categoriesItemsListController', ['$rootScope', '$scope', '$filter', 'categories', 'items', 'itemsSearch', 'bladeNavigationService', 'dialogService', function ($rootScope, $scope, $filter, categories, items, itemsSearch, bladeNavigationService, dialogService) {
+.controller('categoriesItemsListController', ['$rootScope', '$scope', '$filter', 'categories', 'items', 'listEntries', 'bladeNavigationService', 'dialogService', function ($rootScope, $scope, $filter, categories, items, listEntries, bladeNavigationService, dialogService) {
     //pagination settigs
     $scope.pageSettings = {};
     $scope.pageSettings.totalItems = 0;
@@ -22,20 +22,20 @@
 
     $scope.blade.refresh = function () {
         $scope.blade.isLoading = true;
-        itemsSearch.listitemssearch(
+        listEntries.listitemssearch(
             {
-                catalogId: $scope.blade.catalogId,
-                categoryId: $scope.blade.categoryId,
-                keyword: $scope.filter.searchKeyword,
+                catalog: $scope.blade.catalogId,
+                category: $scope.blade.categoryId,
+                q: $scope.filter.searchKeyword,
                 // propertyValues: ,
-                responseGroup: 'withCategories, withItems',
+                respGroup: 'withCategories, withItems',
                 start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
                 count: $scope.pageSettings.itemsPerPageCount
             },
 		function (data, headers) {
-		    $scope.blade.isLoading = false;
-		    $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
-		    $scope.items = data.listEntries;
+            $scope.blade.isLoading = false;
+            $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
+            $scope.items = data.listEntries;
 		    $scope.selectedAll = false;
 
 		    if ($scope.selectedItem != null) {
@@ -44,7 +44,10 @@
 
 		    //Set navigation breadcrumbs
 		    setBreadcrumps();
-		});
+		}, function(error) {
+            $scope.blade.isLoading = false;
+            bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+        });
     }
 
     //Breadcrumps
@@ -218,7 +221,7 @@
                     });
 
                     if (listEntryLinks.length > 0) {
-                        itemsSearch.deletelinks(listEntryLinks, function (data, headers) {
+                    	listEntries.deletelinks(listEntryLinks, function (data, headers) {
                             $scope.blade.refresh();
                             if ($scope.blade.mode === 'mappingSource')
                                 $scope.blade.parentBlade.refresh();
@@ -261,7 +264,7 @@
             });
         });
 
-        itemsSearch.createlinks(listEntryLinks, function () {
+        listEntries.createlinks(listEntryLinks, function () {
             $scope.blade.refresh();
             $scope.blade.parentBlade.refresh();
         });
