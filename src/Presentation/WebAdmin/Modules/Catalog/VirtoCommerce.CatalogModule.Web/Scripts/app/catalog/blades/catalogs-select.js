@@ -20,10 +20,10 @@ function ($scope, catalogs, bladeNavigationService) {
         var newBlade = {
             id: 'itemsList' + ($scope.blade.parentBlade.level + 1),
             level: $scope.blade.parentBlade.level + 1,
-            mode: 'mappingSource',
+            mode: $scope.blade.mode,
             breadcrumbs: [],
-            title: 'Source Categories & Items for mapping',
-            subtitle: 'Choose items for mapping',
+            title: $scope.blade.childTitle,
+            subtitle: $scope.blade.subtitle,
             catalogId: selectedNode.id,
             catalog: selectedNode,
             controller: 'categoriesItemsListController',

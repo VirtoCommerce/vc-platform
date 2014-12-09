@@ -19,26 +19,27 @@
             id: 'selectCatalog',
             title: 'Select Catalog',
             subtitle: 'Creating a Link inside virtual catalog',
+            mode: 'mappingSource',
+            childTitle: 'Choose Categories & Items for mapping',
             controller: 'catalogsSelectController',
-            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/catalogs-select.tpl.html',
-            isClosingDisabled: true
+            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/catalogs-select.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);
     };
 
     $scope.addProduct = function () {
-    	if (!angular.isDefined(pb.categoryId)) {
-    		items.newItemInCatalog({ catalogId: pb.catalogId }, function (data) {
-    			pb.showNewItemWizard(data);
-    			$scope.bladeClose();
-    		});
-    	}
-    	else {
-    		items.newItemInCategory({ catalogId: pb.catalogId, categoryId: pb.categoryId }, function (data) {
-    			pb.showNewItemWizard(data);
-    			$scope.bladeClose();
-    		});
-    	}
+        if (!angular.isDefined(pb.categoryId)) {
+            items.newItemInCatalog({ catalogId: pb.catalogId }, function (data) {
+                pb.showNewItemWizard(data);
+                $scope.bladeClose();
+            });
+        }
+        else {
+            items.newItemInCategory({ catalogId: pb.catalogId, categoryId: pb.categoryId }, function (data) {
+                pb.showNewItemWizard(data);
+                $scope.bladeClose();
+            });
+        }
     };
 
     $scope.addVariation = function () {

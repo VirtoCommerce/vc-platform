@@ -53,6 +53,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Repositories\ManifestPackage.cs" />
+    <Compile Include="Repositories\ManifestPackageRepository.cs" />
     <Compile Include="Repositories\WebsiteLocalPackageRepository.cs" />
     <Compile Include="Repositories\WebsiteOptimizedZipPackage.cs" />
     <Compile Include="Repositories\NuGet\CommonResources.cs" />

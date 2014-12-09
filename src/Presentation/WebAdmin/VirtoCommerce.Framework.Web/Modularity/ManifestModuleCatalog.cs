@@ -14,7 +14,14 @@ namespace VirtoCommerce.Framework.Web.Modularity
 
 		public static IEnumerable<ModuleManifest> GetModuleManifests(string rootPath)
 		{
-			return Directory.EnumerateFiles(rootPath, "module.manifest", SearchOption.AllDirectories).Select(ManifestReader.Read);
+			IEnumerable<ModuleManifest> result;
+
+			if (Directory.Exists(rootPath))
+				result = Directory.EnumerateFiles(rootPath, "module.manifest", SearchOption.AllDirectories).Select(ManifestReader.Read);
+			else
+				result = Enumerable.Empty<ModuleManifest>();
+
+			return result;
 		}
 
 		protected override void InnerLoad()
