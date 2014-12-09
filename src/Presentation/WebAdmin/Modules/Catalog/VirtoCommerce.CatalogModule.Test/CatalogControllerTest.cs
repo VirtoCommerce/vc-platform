@@ -66,7 +66,31 @@ namespace VirtoCommerce.CatalogModule.Test
 
 		}
 
-	
+		[TestMethod]
+		public void AssociationTest()
+		{
+			//Get all product associations
+			var productController = new ProductsController(GetItemService(), GetPropertyService());
+			var productResult = productController.Get("v-b004nzb8tu") as OkNegotiatedContentResult<webModel.Product>;
+			var product = productResult.Content;
+			Assert.IsTrue(product.Associations.Any());
+
+			
+			//Add association
+			var association = new webModel.ProductAssociation
+			{
+				AssociatedProductId = "v-b0007zl6ds",
+				Name = "Related Items"
+			};
+			product.Associations.Add(association);
+			productController.Update(product);
+
+
+			//Remove
+			product.Associations.Remove(product.Associations.Last());
+			productController.Update(product);
+
+		}
 		
 		private ICatalogSearchService GetSearchService()
 		{

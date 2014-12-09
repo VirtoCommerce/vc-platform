@@ -142,7 +142,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		[HttpPost]
 		[ResponseType(typeof(void))]
 		[Route("")]
-		public IHttpActionResult Post(webModel.Product product)
+		public IHttpActionResult Update(webModel.Product product)
 		{
 			var updatedProduct = UpdateProduct(product);
 		    if (updatedProduct != null)

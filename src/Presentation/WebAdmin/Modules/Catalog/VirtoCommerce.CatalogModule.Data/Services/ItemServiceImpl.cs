@@ -9,6 +9,7 @@ using foundation = VirtoCommerce.Foundation.Catalogs.Model;
 using foundationConfig = VirtoCommerce.Foundation.AppConfig.Model;
 using module = VirtoCommerce.CatalogModule.Model;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
+using System.Collections.Generic;
 
 namespace VirtoCommerce.CatalogModule.Data.Services
 {
@@ -64,7 +65,16 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 				{
 					seoInfos = appConfigRepository.GetAllSeoInformation(itemId);
 				}
-
+				List<module.CatalogProduct> associatedProducts  = new List<module.CatalogProduct>();
+				if (dbItem.AssociationGroups.Any())
+				{
+					foreach(var association in dbItem.AssociationGroups.SelectMany(x=>x.Associations))
+					{
+						var associatedProduct = GetById(association.ItemId, module.ItemResponseGroup.ItemAssets);
+						associatedProducts.Add(associatedProduct);
+					}
+				}
+			
 				var catalog = dbCatalog.ToModuleModel();
 				if (dbItem.CategoryItemRelations.Any())
 				{
@@ -73,11 +83,11 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					var properties = dpProperties.Select(x => x.ToModuleModel(catalog, dbCategory.ToModuleModel(catalog))).ToArray();
 					var category = dbCategory.ToModuleModel(catalog, properties);
 
-					retVal = dbItem.ToModuleModel(catalog, category, properties, dbVariations, seoInfos, parentItemId);
+					retVal = dbItem.ToModuleModel(catalog, category, properties, dbVariations, seoInfos, parentItemId, associatedProducts.ToArray());
 				}
 				else
 				{
-					retVal = dbItem.ToModuleModel(catalog, null, null, dbVariations, seoInfos, parentItemId);
+					retVal = dbItem.ToModuleModel(catalog, null, null, dbVariations, seoInfos, parentItemId, associatedProducts.ToArray());
 				}
 			}
 

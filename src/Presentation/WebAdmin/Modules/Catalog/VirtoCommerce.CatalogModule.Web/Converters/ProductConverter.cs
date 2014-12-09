@@ -50,6 +50,10 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
                 retVal.Reviews = product.Reviews.Select(x => x.ToWebModel()).ToList();
             }
 
+			if(product.Associations != null)
+			{
+				retVal.Associations = product.Associations.Select(x => x.ToWebModel()).ToList();
+			}
             retVal.TitularItemId = product.MainProductId;
 
             retVal.Properties = new List<webModel.Property>();
@@ -172,6 +176,10 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
                 retVal.Reviews = product.Reviews.Select(x => x.ToModuleModel()).ToList();
             }
 
+			if (product.Associations != null)
+			{
+				retVal.Associations = product.Associations.Select(x => x.ToModuleModel()).ToList();
+			}
             retVal.MainProductId = product.TitularItemId;
 
             return retVal;

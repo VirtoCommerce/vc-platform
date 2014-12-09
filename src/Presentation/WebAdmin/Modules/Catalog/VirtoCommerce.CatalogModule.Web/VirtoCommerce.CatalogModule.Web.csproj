@@ -112,6 +112,7 @@
     <Compile Include="Controllers\Api\ImportController.cs" />
     <Compile Include="Controllers\Api\PropertiesController.cs" />
     <Compile Include="Converters\AssetConverter.cs" />
+    <Compile Include="Converters\AssociationConverter.cs" />
     <Compile Include="Converters\CatalogConverter.cs" />
     <Compile Include="Converters\CatalogLanguageConverter.cs" />
     <Compile Include="Converters\CategoryConverter.cs" />
@@ -133,6 +134,7 @@
     <Compile Include="Model\ImportJobRun.cs" />
     <Compile Include="Model\ListEntryLink.cs" />
     <Compile Include="Model\MappingItem.cs" />
+    <Compile Include="Model\ProductAssociation.cs" />
     <Compile Include="Model\PropertyDictionaryValue.cs" />
     <Compile Include="Model\Language.cs" />
     <Compile Include="Model\ListEntryCategory.cs" />

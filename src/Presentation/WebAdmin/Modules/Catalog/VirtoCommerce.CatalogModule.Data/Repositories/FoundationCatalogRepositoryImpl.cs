@@ -14,8 +14,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 {
 	public class FoundationCatalogRepositoryImpl : EFCatalogRepository, IFoundationCatalogRepository
 	{
-		private readonly IAppConfigRepository _appConfigRepository;
-        public FoundationCatalogRepositoryImpl(string nameOrConnectionString)
+	    public FoundationCatalogRepositoryImpl(string nameOrConnectionString)
             : this(nameOrConnectionString, null)
         {
         }
@@ -115,6 +114,10 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 			if ((respGroup & moduleModel.ItemResponseGroup.ItemEditorialReviews) == moduleModel.ItemResponseGroup.ItemEditorialReviews)
 			{
 				query = query.Include(x => x.EditorialReviews);
+			}
+			if ((respGroup & moduleModel.ItemResponseGroup.ItemAssociations) == moduleModel.ItemResponseGroup.ItemAssociations)
+			{
+				query = query.Include(x => x.AssociationGroups.Select(y=>y.Associations));
 			}
 			
 			var retVal = query.ToArray();

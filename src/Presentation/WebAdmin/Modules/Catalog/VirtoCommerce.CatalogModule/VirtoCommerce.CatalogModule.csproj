@@ -34,6 +34,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Model\ProductAssociation.cs" />
     <Compile Include="Model\Catalog.cs" />
     <Compile Include="Model\CatalogProduct.cs" />
     <Compile Include="Model\CatalogLanguage.cs" />
