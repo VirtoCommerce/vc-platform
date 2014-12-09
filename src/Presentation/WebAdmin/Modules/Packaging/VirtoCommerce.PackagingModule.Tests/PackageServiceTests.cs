@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VirtoCommerce.PackagingModule.Data.Services;
 using VirtoCommerce.PackagingModule.Services;
@@ -15,31 +14,31 @@ namespace VirtoCommerce.PackagingModule.Tests
 			const string package1 = "TestModule1";
 			const string package2 = "TestModule2";
 
-			var service = new PackageService("source", "target", "target\\packages", "target\\bin");
-			ListPackages(service);
+			var service = new PackageService("source", "target", "target\\packages", "target\\bin") { Logger = new DebugLogger() };
+			ListModules(service);
 
 			service.Install(package2, "1.0");
-			ListPackages(service);
+			ListModules(service);
 
 			service.Update(package2, "1.1");
-			ListPackages(service);
+			ListModules(service);
 
 			service.Uninstall(package2);
-			ListPackages(service);
+			ListModules(service);
 
 			service.Uninstall(package1);
-			ListPackages(service);
+			ListModules(service);
 		}
 
 
-		static void ListPackages(IPackageService service)
+		static void ListModules(IPackageService service)
 		{
-			var packages = service.GetPackages();
-			Debug.WriteLine("Packages count: {0}", packages.Length);
+			var modules = service.GetModules();
+			Debug.WriteLine("Modules count: {0}", modules.Length);
 
-			foreach (var package in packages)
+			foreach (var module in modules)
 			{
-				Debug.WriteLine("{0} {1}", package.Id, package.Version);
+				Debug.WriteLine("{0} {1}", module.Id, module.Version);
 			}
 		}
 	}

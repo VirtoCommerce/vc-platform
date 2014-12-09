@@ -1,4 +1,7 @@
 ﻿angular.module('catalogModule.blades.itemDetail', [
+  'catalogModule.widget.itemAssociationsWidget',
+  'catalogModule.blades.itemAssociationsList',
+  'catalogModule.wizards.associationWizard',
   'catalogModule.widget.editorialReviewWidget',
   'catalogModule.blades.editorialReviewsList',
   'catalogModule.blades.editorialReviewDetail',
@@ -121,8 +124,7 @@
 	         name: "New variation", icon: 'icon-plus',
 	         executeMethod: function () {
 
-	             items.newVariation({ itemId: $scope.currentBlade.item.id }, function (data, headers)
-	             {
+	             items.newVariation({ itemId: $scope.currentBlade.item.id }, function (data, headers) {
 	                 var blade = {
 	                     id: "newVariationWizard",
 	                     item: data,

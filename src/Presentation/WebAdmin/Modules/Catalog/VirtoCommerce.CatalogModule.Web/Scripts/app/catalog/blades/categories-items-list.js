@@ -174,7 +174,7 @@
 
     function isItemsChecked() {
         if ($scope.items) {
-            return $filter('filter')($scope.items, { selected: true }, true).length > 0;
+            return _.any($scope.items, function (x) { return x.selected; });
         } else {
             return false;
         }
@@ -228,7 +228,7 @@
                         });
                     }
                     if (categoryIds.length > 0) {
-                    	categories.remove({ ids: categoryIds }, function (data, headers) {
+                        categories.remove({ ids: categoryIds }, function (data, headers) {
                             $scope.blade.refresh();
                         });
                     }
@@ -253,7 +253,7 @@
         // $scope.blade.parentBlade.catalog.virtual....
         closeChildrenBlades();
 
-        var selection = $filter('filter')($scope.items, { selected: true }, true);
+        var selection = _.where($scope.items, { selected: true });
         var listEntryLinks = [];
         angular.forEach(selection, function (listItem) {
             listEntryLinks.push({
@@ -272,6 +272,11 @@
         //    }
         //}
         //dialogService.showConfirmationDialog(dialog);
+    }
+
+    function associateChecked() {
+        var selection = _.where($scope.items, { selected: true });
+        $scope.blade.parentBlade.select(selection);
     }
 
     $scope.blade.setSelectedItem = function (listItem) {
@@ -409,19 +414,32 @@
             }
     ];
 
-    // mappingSource
-    if (angular.isDefined($scope.blade.mode) && $scope.blade.mode === 'mappingSource') {
-        var mapCommand = {
-            name: "Map", icon: 'icon-link',
-            executeMethod: function () {
-                mapChecked();
-            },
-            canExecuteMethod: function () {
-                return isItemsChecked();
+    if (angular.isDefined($scope.blade.mode)) {
+        // mappingSource
+        if ($scope.blade.mode === 'mappingSource') {
+            var mapCommand = {
+                name: "Map", icon: 'icon-link',
+                executeMethod: function () {
+                    mapChecked();
+                },
+                canExecuteMethod: function () {
+                    return isItemsChecked();
+                }
             }
-        }
-
-        $scope.bladeToolbarCommands.splice(1, 2, mapCommand);
+            $scope.bladeToolbarCommands.splice(1, 2, mapCommand);
+        } else
+            if ($scope.blade.mode === 'newAssociation') {
+                var associateCommand = {
+                    name: "Associate selected", icon: 'icon-link',
+                    executeMethod: function () {
+                        associateChecked();
+                    },
+                    canExecuteMethod: function () {
+                        return isItemsChecked();
+                    }
+                }
+                $scope.bladeToolbarCommands.splice(1, 2, associateCommand);
+            }
     }
 
     $scope.checkAll = function (selected) {

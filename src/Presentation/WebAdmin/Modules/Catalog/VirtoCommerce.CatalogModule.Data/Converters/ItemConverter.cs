@@ -20,7 +20,8 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 														  module.Category category, module.Property[] properties,
 														  foundation.Item[] variations,
 														  foundationConfig.SeoUrlKeyword[] seoInfos,
-														  string mainProductId)
+														  string mainProductId,
+														  module.CatalogProduct[] associatedProducts)
 		{
 			var retVal = new module.CatalogProduct {Id = dbItem.ItemId, Catalog = catalog, CatalogId = catalog.Id};
 		    if (category != null)
@@ -44,8 +45,8 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				{
 					var productVaraition = variation.ToModuleModel(catalog, category, properties, 
 																   variations: null, 
-																   seoInfos: null, 
-																   mainProductId: retVal.Id);
+																   seoInfos: null,
+																   mainProductId: retVal.Id, associatedProducts: null);
 					productVaraition.MainProduct = retVal;
 					productVaraition.MainProductId = retVal.Id;
 					retVal.Variations.Add(productVaraition);
@@ -79,6 +80,22 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			{
 				retVal.Reviews = dbItem.EditorialReviews.Select(x => x.ToModuleModel()).ToList();
 			} 
+			#endregion
+
+			#region Associations
+			if(dbItem.AssociationGroups != null && dbItem.AssociationGroups.Any())
+			{
+				retVal.Associations = new List<module.ProductAssociation>();
+				foreach(var association in dbItem.AssociationGroups.SelectMany(x=>x.Associations))
+				{
+					var associatedProduct = associatedProducts.FirstOrDefault(x => x.Id == association.ItemId);
+					if (associatedProduct != null)
+					{
+						var productAssociation = association.ToModuleModel(associatedProduct);
+						retVal.Associations.Add(productAssociation);
+					}
+				}
+			}
 			#endregion
 			return retVal;
 		}
@@ -164,7 +181,31 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				retVal.EditorialReviews.AddRange(product.Reviews.Select(x => x.ToFoundation(product)));
 			} 
 			#endregion
- 
+
+			#region Associations
+			retVal.AssociationGroups = new NullCollection<foundation.AssociationGroup>();
+			if (product.Associations != null)
+			{
+				retVal.AssociationGroups = new ObservableCollection<foundation.AssociationGroup>();
+				foreach(var association in product.Associations)
+				{
+					var associationGroup = retVal.AssociationGroups.FirstOrDefault(x => x.Name == association.Name);
+					if(associationGroup == null)
+					{
+						associationGroup = new foundation.AssociationGroup
+						{
+							Name = association.Name,
+							Description = association.Description,
+							Priority = 1,
+							ItemId = retVal.ItemId
+						};
+						retVal.AssociationGroups.Add(associationGroup);
+					}
+					associationGroup.Associations.Add(association.ToFoundation());
+				}
+			}
+			#endregion
+
 			return retVal;
 		}
 
@@ -220,6 +261,13 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			} 
 			#endregion
 
+			#region Association
+			if (!source.AssociationGroups.IsNullCollection())
+			{
+				source.AssociationGroups.Patch(target.AssociationGroups, new AssociationGroupComparer(),
+										 (sourceGroup, targetGroup) => sourceGroup.Patch(targetGroup));
+			}
+			#endregion
 		}
 
 	}

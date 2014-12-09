@@ -30,22 +30,25 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
         public module.Category GetById(string categoryId)
         {
-            Model.Category retVal;
+			Model.Category retVal = null;
             using (var repository = _catalogRepositoryFactory())
 			using (var appConfigRepository = _appConfigRepositoryFactory())
             {
                 var dbCategory = repository.GetCategoryById(categoryId);
-                var dbCatalog = repository.GetCatalogById(dbCategory.CatalogId);
-                var dbProperties = repository.GetAllCategoryProperties(dbCategory);
-				var dbLinks = repository.GetCategoryLinks(categoryId);
-				var seoInfos = appConfigRepository.GetAllSeoInformation(categoryId);
-			
-                var catalog = dbCatalog.ToModuleModel();
-				var properties = dbProperties.Select(x => x.ToModuleModel(catalog, dbCategory.ToModuleModel(catalog, null,  dbLinks)))
-											 .ToArray();
-				var allParents = repository.GetAllCategoryParents(dbCategory);
+				if (dbCategory != null)
+				{
+					var dbCatalog = repository.GetCatalogById(dbCategory.CatalogId);
+					var dbProperties = repository.GetAllCategoryProperties(dbCategory);
+					var dbLinks = repository.GetCategoryLinks(categoryId);
+					var seoInfos = appConfigRepository.GetAllSeoInformation(categoryId);
 
-				retVal = dbCategory.ToModuleModel(catalog, properties, dbLinks, seoInfos, allParents);
+					var catalog = dbCatalog.ToModuleModel();
+					var properties = dbProperties.Select(x => x.ToModuleModel(catalog, dbCategory.ToModuleModel(catalog, null, dbLinks)))
+												 .ToArray();
+					var allParents = repository.GetAllCategoryParents(dbCategory);
+
+					retVal = dbCategory.ToModuleModel(catalog, properties, dbLinks, seoInfos, allParents);
+				}
             }
             return retVal;
         }

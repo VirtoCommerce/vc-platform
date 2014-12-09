@@ -44,7 +44,8 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
                 var retVal = new webModel.GenericSearchResult<webModel.DynamicContentItem>
                 {
-                    Items = items.Select(x => x.ToWebModel()).ToList()
+                    Items = items.Select(x => x.ToWebModel()).ToList(),
+                    TotalCount = items.Count()
                 };
 
                 return Ok(retVal);

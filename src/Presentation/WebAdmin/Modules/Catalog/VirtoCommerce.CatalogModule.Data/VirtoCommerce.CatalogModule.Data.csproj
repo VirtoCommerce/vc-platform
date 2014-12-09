@@ -61,6 +61,7 @@
     <Compile Include="Converters\EditorialReviewConverter.cs" />
     <Compile Include="Converters\LinkConverter.cs" />
     <Compile Include="Converters\ItemConverter.cs" />
+    <Compile Include="Converters\ProductAssociationConverter.cs" />
     <Compile Include="Converters\PropertyAttributeConverter.cs" />
     <Compile Include="Converters\PropertyConverter.cs" />
     <Compile Include="Converters\PropertyDictionaryValueConverter.cs" />

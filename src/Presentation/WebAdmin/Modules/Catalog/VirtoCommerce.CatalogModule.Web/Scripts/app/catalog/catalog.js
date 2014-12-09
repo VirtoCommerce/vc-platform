@@ -99,6 +99,14 @@ angular.module(catalogsModuleName, [
       };
       widgetService.registerWidget(itemPropertyWidget);
 
+      //Register item associations widget
+      var itemAssociationsWidget = {
+          group: 'itemDetail',
+          controller: 'itemAssociationsWidgetController',
+          template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/widgets/itemAssociationsWidget.tpl.html',
+      };
+      widgetService.registerWidget(itemAssociationsWidget);
+
       //Register item seo widget
       var itemSeoWidget = {
           group: 'itemDetail',
@@ -107,7 +115,7 @@ angular.module(catalogsModuleName, [
       };
       widgetService.registerWidget(itemSeoWidget);
 
-      //Register item seo widget
+      //Register item editorialReview widget
       var editorialReviewWidget = {
           group: 'itemDetail',
           controller: 'editorialReviewWidgetController',
