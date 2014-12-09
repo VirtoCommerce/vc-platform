@@ -79,7 +79,7 @@ namespace VirtoCommerce.CatalogModule.Test
 			//Add association
 			var association = new webModel.ProductAssociation
 			{
-				AssociatedProductId = "v-b0007zl6ds",
+				ProductId = "v-b0007zl6ds",
 				Name = "Related Items"
 			};
 			product.Associations.Add(association);
