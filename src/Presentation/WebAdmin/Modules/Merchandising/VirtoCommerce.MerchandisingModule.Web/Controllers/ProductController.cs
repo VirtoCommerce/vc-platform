@@ -76,8 +76,8 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
                     {
                         webModelProduct.ReviewsTotal = reviewTotal;
 				    }
-                    decimal reviewAvg;
-                    if (searchTags.ContainsKey(criteria.ReviewsAverageField) && decimal.TryParse(searchTags[criteria.ReviewsAverageField].ToString(), out reviewAvg))
+                    double reviewAvg;
+                    if (searchTags.ContainsKey(criteria.ReviewsAverageField) && double.TryParse(searchTags[criteria.ReviewsAverageField].ToString(), out reviewAvg))
                     {
                         webModelProduct.Rating = reviewAvg;
                     }

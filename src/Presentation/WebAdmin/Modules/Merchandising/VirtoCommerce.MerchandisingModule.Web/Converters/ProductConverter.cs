@@ -38,9 +38,9 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 			retVal.Properties = new webModel.PropertyDictionary();
 			//Need add property for each meta info
 
-			foreach (var propValue in product.PropertyValues)
+			foreach (var propValueGroup in product.PropertyValues.GroupBy(x=>x.PropertyName))
 			{
-				retVal.Properties.Add(propValue.PropertyName, propValue.Value);
+                retVal.Properties.Add(propValueGroup.Key, propValueGroup.Select(g=>g.Value));
 			}
 			return retVal;
 		}

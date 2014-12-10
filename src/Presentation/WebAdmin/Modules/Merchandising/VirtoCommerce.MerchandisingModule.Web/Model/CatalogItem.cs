@@ -31,7 +31,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
 
         public int ReviewsTotal { get; set; }
 
-        public decimal Rating { get; set; }
+        public double Rating { get; set; }
     }
    
 }
