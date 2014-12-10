@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using Microsoft.Practices.ObjectBuilder2;
 using VirtoCommerce.Framework.Web.Properties;
 
 namespace VirtoCommerce.Framework.Web.Modularity
 {
 	public class ManifestModuleCatalog : ModuleCatalog
 	{
+		private static readonly string[] _assemblyFileExtensions = { ".dll", ".pdb", ".exe" };
+
 		public string AssembliesPath { get; set; }
 		public string ContentVirtualPath { get; set; }
 		public string ContentPhysicalPath { get; set; }
@@ -50,7 +51,10 @@ namespace VirtoCommerce.Framework.Web.Modularity
 				var manifest = pair.Value;
 				var manifestPath = pair.Key;
 
-				var moduleVirtualPath = GetModuleVirtualPath(rootUri, manifestPath);
+				var modulePath = Path.GetDirectoryName(manifestPath);
+				CopyAssemblies(Path.Combine(modulePath, "bin\\"), AssembliesPath);
+
+				var moduleVirtualPath = GetModuleVirtualPath(rootUri, modulePath);
 				ConvertVirtualPath(manifest.Scripts, moduleVirtualPath);
 				ConvertVirtualPath(manifest.Styles, moduleVirtualPath);
 
@@ -66,16 +70,58 @@ namespace VirtoCommerce.Framework.Web.Modularity
 			}
 		}
 
-		private string GetModuleVirtualPath(Uri rootUri, string manifestPath)
+
+		private static void CopyAssemblies(string sourceDirectoryPath, string targetDirectoryPath)
 		{
-			var modulePath = Path.GetDirectoryName(manifestPath);
-			var moduleUri = new Uri(modulePath);
-			var moduleRelativePath = rootUri.MakeRelativeUri(moduleUri).ToString();
+			if (Directory.Exists(sourceDirectoryPath))
+			{
+				var sourceDirectoryUri = new Uri(sourceDirectoryPath);
+
+				foreach (var sourceFilePath in Directory.EnumerateFiles(sourceDirectoryPath))
+				{
+					if (IsAssemblyFile(sourceFilePath))
+					{
+						var relativePath = MakeRelativePath(sourceDirectoryUri, sourceFilePath);
+						var targetFilePath = Path.Combine(targetDirectoryPath, relativePath);
+						CopyFile(sourceFilePath, targetFilePath);
+					}
+				}
+			}
+		}
+
+		private static void CopyFile(string sourceFilePath, string targetFilePath)
+		{
+			var sourceFileInfo = new FileInfo(sourceFilePath);
+			var targetFileInfo = new FileInfo(targetFilePath);
+
+			if (!targetFileInfo.Exists || targetFileInfo.LastWriteTimeUtc < sourceFileInfo.LastWriteTimeUtc)
+			{
+				var targetDirectoryPath = Path.GetDirectoryName(targetFilePath);
+				Directory.CreateDirectory(targetDirectoryPath);
+				File.Copy(sourceFilePath, targetFilePath, true);
+			}
+		}
+
+		private static bool IsAssemblyFile(string path)
+		{
+			var fileExtension = Path.GetExtension(path);
+			return fileExtension != null && _assemblyFileExtensions.Contains(fileExtension, StringComparer.OrdinalIgnoreCase);
+		}
+
+		private string GetModuleVirtualPath(Uri rootUri, string modulePath)
+		{
+			var moduleRelativePath = MakeRelativePath(rootUri, modulePath);
 			var moduleVirtualPath = string.Join("/", ContentVirtualPath, moduleRelativePath);
 
 			return moduleVirtualPath;
 		}
 
+		private static string MakeRelativePath(Uri rootUri, string fullPath)
+		{
+			var fullUri = new Uri(fullPath);
+			var relativePath = rootUri.MakeRelativeUri(fullUri).ToString();
+			return relativePath;
+		}
 
 		private void ConvertVirtualPath(IEnumerable<ManifestBundleItem> items, string moduleVirtualPath)
 		{

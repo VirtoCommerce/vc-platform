@@ -10,12 +10,9 @@ namespace VirtoCommerce.PackagingModule.Data.Repositories
 {
 	public class WebsiteProjectSystem : IProjectSystem
 	{
-		private readonly string _binPath;
-
-		public WebsiteProjectSystem(string rootPath, string binPath)
+		public WebsiteProjectSystem(string rootPath)
 		{
 			Root = rootPath;
-			_binPath = binPath;
 			ProjectName = Path.GetFileName(rootPath);
 			TargetFramework = new FrameworkName(".NETFramework", GetTargetFrameworkVersion());
 			Logger = NullLogger.Instance;
@@ -40,9 +37,6 @@ namespace VirtoCommerce.PackagingModule.Data.Repositories
 
 		public void AddReference(string referencePath, Stream stream)
 		{
-			var name = Path.GetFileName(referencePath);
-			var path = GetReferencePath(name);
-			AddFile(path, stream);
 		}
 
 		public bool FileExistsInProject(string path)
@@ -57,8 +51,7 @@ namespace VirtoCommerce.PackagingModule.Data.Repositories
 
 		public bool ReferenceExists(string name)
 		{
-			string path = GetReferencePath(name);
-			return FileExists(path);
+			return false;
 		}
 
 		public void RemoveImport(string targetFullPath)
@@ -154,7 +147,8 @@ namespace VirtoCommerce.PackagingModule.Data.Repositories
 		{
 			if (DirectoryExists(path))
 			{
-				return Directory.EnumerateDirectories(path);//.Select(MakeRelativePath);
+				var fullPath = GetFullPath(path);
+				return Directory.EnumerateDirectories(fullPath);//.Select(MakeRelativePath);
 			}
 
 			return Enumerable.Empty<string>();
@@ -164,7 +158,8 @@ namespace VirtoCommerce.PackagingModule.Data.Repositories
 		{
 			if (DirectoryExists(path))
 			{
-				return Directory.EnumerateFiles(path, filter, recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);//.Select(MakeRelativePath);
+				var fullPath = GetFullPath(path);
+				return Directory.EnumerateFiles(fullPath, filter, recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);//.Select(MakeRelativePath);
 			}
 
 			return Enumerable.Empty<string>();
@@ -229,11 +224,6 @@ namespace VirtoCommerce.PackagingModule.Data.Repositories
 			{
 				writeToStream(stream);
 			}
-		}
-
-		private string GetReferencePath(string name)
-		{
-			return Path.Combine(_binPath, name);
 		}
 
 		private Version GetTargetFrameworkVersion()
