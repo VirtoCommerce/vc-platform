@@ -45,12 +45,14 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			var retVal = new foundation.ItemAsset
 			{
 				AssetId = itemAsset.Url,
-				ItemAssetId = itemAsset.Id,
-                GroupName = itemAsset.Group,
+			    GroupName = itemAsset.Group,
 				AssetType = itemAsset.Type.ToString().ToLower(),
 				ItemId = itemAsset.ItemId,
 			};
-
+			if(itemAsset.Id != null)
+			{
+				retVal.ItemAssetId = itemAsset.Id;
+			}
 			return retVal;
 		}
 

@@ -187,8 +187,10 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			if (product.Associations != null)
 			{
 				retVal.AssociationGroups = new ObservableCollection<foundation.AssociationGroup>();
-				foreach(var association in product.Associations)
+				var associations = product.Associations.ToArray();
+				for (int order = 0; order < associations.Count(); order++)
 				{
+					var association = associations[order];
 					var associationGroup = retVal.AssociationGroups.FirstOrDefault(x => x.Name == association.Name);
 					if(associationGroup == null)
 					{
@@ -201,7 +203,9 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 						};
 						retVal.AssociationGroups.Add(associationGroup);
 					}
-					associationGroup.Associations.Add(association.ToFoundation());
+					var foundationAssociation = association.ToFoundation();
+					foundationAssociation.Priority = order;
+					associationGroup.Associations.Add(foundationAssociation);
 				}
 			}
 			#endregion

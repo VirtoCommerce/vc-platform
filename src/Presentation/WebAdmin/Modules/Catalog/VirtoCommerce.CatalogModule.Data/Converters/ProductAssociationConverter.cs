@@ -80,7 +80,8 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		/// <param name="target"></param>
 		public static void Patch(this foundation.Association source, foundation.Association target)
 		{
-			//Nothing todo
+			if (source.Priority != target.Priority)
+				target.Priority = source.Priority;
 		}
 	}
 
