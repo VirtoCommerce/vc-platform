@@ -28,6 +28,7 @@ namespace VirtoCommerce.Platform.Web
                 "~/Scripts/modernizr-*"));
 
             bundles.Add(new ScriptBundle("~/bundles/underscore").Include("~/Scripts/underscore.js"));
+			bundles.Add(new ScriptBundle("~/bundles/moment").Include("~/Scripts/moment.js"));
 
             //AngularJS 
             //Note: must match the real path (~/Scripts/.) to find source map files references from .min.js (ex. # sourceMappingURL=angular-resource.min.js.map)
@@ -69,8 +70,7 @@ namespace VirtoCommerce.Platform.Web
                 "~/Content/angular-multi-select.css",
                 "~/Content/font-awesome.css",
                 "~/Content/ng-tags-input.css",
-                "~/Content/textAngular.css"
-            ));
+                "~/Content/textAngular.css"));
 
             bundles.Add(new StyleBundle("~/Content/themes/base/css").Include(
                 "~/Content/themes/base/jquery.ui.core.css",
