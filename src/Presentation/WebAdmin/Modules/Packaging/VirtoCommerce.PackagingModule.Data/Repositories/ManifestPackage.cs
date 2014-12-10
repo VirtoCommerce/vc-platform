@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Packaging;
 using System.Linq;
 using System.Runtime.Versioning;
 using NuGet;
@@ -14,6 +15,22 @@ namespace VirtoCommerce.PackagingModule.Data.Repositories
 
 		public bool IsRemovable { get; private set; }
 		public IEnumerable<string> Dependencies { get; private set; }
+
+		public static ManifestPackage OpenPackage(string path)
+		{
+			ManifestPackage result = null;
+
+			var root = Path.GetDirectoryName(path);
+			var fileName = Path.GetFileName(path);
+			var fileSystem = new PhysicalFileSystem(root);
+			var package = new WebsiteOptimizedZipPackage(fileSystem, fileName);
+			var manifest = ReadManifest(package);
+
+			if (manifest != null)
+				result = new ManifestPackage(manifest, package);
+
+			return result;
+		}
 
 		public ManifestPackage(ModuleManifest manifest, IPackage package)
 		{
@@ -167,5 +184,29 @@ namespace VirtoCommerce.PackagingModule.Data.Repositories
 		public Uri ReportAbuseUrl { get; private set; }
 
 		#endregion
+
+
+		private static ModuleManifest ReadManifest(IPackage package)
+		{
+			ModuleManifest result = null;
+
+			using (var stream = package.GetStream())
+			using (var package2 = Package.Open(stream))
+			{
+				var uri = new Uri("/content/module.manifest", UriKind.Relative);
+
+				if (package2.PartExists(uri))
+				{
+					var manifestPart = package2.GetPart(uri);
+
+					using (var manifestStream = manifestPart.GetStream())
+					{
+						result = ManifestReader.Read(manifestStream);
+					}
+				}
+			}
+
+			return result;
+		}
 	}
 }

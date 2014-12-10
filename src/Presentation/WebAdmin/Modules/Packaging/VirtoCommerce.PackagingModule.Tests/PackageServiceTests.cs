@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using VirtoCommerce.PackagingModule.Data.Services;
+using VirtoCommerce.PackagingModule.Model;
 using VirtoCommerce.PackagingModule.Services;
 
 namespace VirtoCommerce.PackagingModule.Tests
@@ -9,12 +11,26 @@ namespace VirtoCommerce.PackagingModule.Tests
 	public class PackageServiceTests
 	{
 		[TestMethod]
-		public void CatalogPatchTest()
+		public void ValidatePackage()
+		{
+			var service = GetPackageService();
+
+			// Load module descriptor from package
+			var module = service.OpenPackage(@"source\TestModule2.1.0.0.0.nupkg");
+			WriteModuleLine(module);
+
+			// Check if all dependencies are installed
+			var modules = service.GetModules();
+			var allDependeciesAreInstalled = module.Dependencies.All(dependency => modules.Any(m => m.Id == dependency));
+		}
+
+		[TestMethod]
+		public void InstallUpdateUninstall()
 		{
 			const string package1 = "TestModule1";
 			const string package2 = "TestModule2";
 
-			var service = new PackageService("source", "target", "target\\packages") { Logger = new DebugLogger() };
+			var service = GetPackageService();
 			ListModules(service);
 
 			service.Install(package2, "1.0");
@@ -31,6 +47,12 @@ namespace VirtoCommerce.PackagingModule.Tests
 		}
 
 
+		private static PackageService GetPackageService()
+		{
+			var service = new PackageService("source", "target", "target\\packages") { Logger = new DebugLogger() };
+			return service;
+		}
+
 		static void ListModules(IPackageService service)
 		{
 			var modules = service.GetModules();
@@ -38,8 +60,13 @@ namespace VirtoCommerce.PackagingModule.Tests
 
 			foreach (var module in modules)
 			{
-				Debug.WriteLine("{0} {1}", module.Id, module.Version);
+				WriteModuleLine(module);
 			}
+		}
+
+		static void WriteModuleLine(ModuleDescriptor module)
+		{
+			Debug.WriteLine("{0} {1}", module.Id, module.Version);
 		}
 	}
 }

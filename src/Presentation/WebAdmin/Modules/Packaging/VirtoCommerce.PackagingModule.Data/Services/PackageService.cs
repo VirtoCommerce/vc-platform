@@ -32,6 +32,19 @@ namespace VirtoCommerce.PackagingModule.Data.Services
 
 		#region IPackageService Members
 
+		public ModuleDescriptor OpenPackage(string path)
+		{
+			ModuleDescriptor result = null;
+
+			var fullPath = Path.GetFullPath(path);
+			var package = ManifestPackage.OpenPackage(fullPath);
+
+			if (package != null)
+				result = ConvertToModuleDescriptor(package);
+
+			return result;
+		}
+
 		public ModuleDescriptor[] GetModules()
 		{
 			return _projectManager.LocalRepository.GetPackages().OfType<ManifestPackage>().Select(ConvertToModuleDescriptor).ToArray();
