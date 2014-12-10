@@ -14,7 +14,7 @@ namespace VirtoCommerce.PackagingModule.Tests
 			const string package1 = "TestModule1";
 			const string package2 = "TestModule2";
 
-			var service = new PackageService("source", "target", "target\\packages", "target\\bin") { Logger = new DebugLogger() };
+			var service = new PackageService("source", "target", "target\\packages") { Logger = new DebugLogger() };
 			ListModules(service);
 
 			service.Install(package2, "1.0");
