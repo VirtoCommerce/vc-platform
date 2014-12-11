@@ -14,14 +14,14 @@ angular.module(moduleTemplateName, [
         $stateProvider
             .state('workspace.unmanagedModuleTemplate', {
                 url: '/unmanagedModule',
-                templateUrl: 'Modules/UnmanagedModule/Scripts/home/home.tpl.html',
+                templateUrl: 'Modules/UnmanagedModule.Web/Scripts/home/home.tpl.html',
                 controller: [
                     '$scope', 'bladeNavigationService', function ($scope, bladeNavigationService) {
                         var blade = {
                             id: 'blade1',
                             // controller name must be unique in Application. Use prefix like 'um-'.
                             controller: 'um-blade1Controller',
-                            template: 'Modules/UnmanagedModule/Scripts/blades/blade1.tpl.html',
+                            template: 'Modules/UnmanagedModule.Web/Scripts/blades/blade1.tpl.html',
                             isClosingDisabled: true
                         };
                         bladeNavigationService.showBlade(blade);

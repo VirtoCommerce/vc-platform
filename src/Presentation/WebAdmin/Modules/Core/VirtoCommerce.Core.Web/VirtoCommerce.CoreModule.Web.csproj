@@ -115,6 +115,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="module.manifest" />
+    <None Include="app.config" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
