@@ -13,6 +13,7 @@
 bin/x64/
 bin/x86/
 build/
+[Bb]in/
 [Bb]in/**/*
 [Oo]bj/
 
