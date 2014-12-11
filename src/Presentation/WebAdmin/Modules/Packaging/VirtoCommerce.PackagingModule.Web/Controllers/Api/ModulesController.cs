@@ -11,6 +11,7 @@ using webModel = VirtoCommerce.PackagingModule.Web.Model;
 using VirtoCommerce.PackagingModule.Web.Converters;
 using VirtoCommerce.Framework.Web.Common;
 using System.Collections.Concurrent;
+using System.IO;
 
 namespace VirtoCommerce.PackagingModule.Web.Controllers.Api
 {
@@ -56,25 +57,22 @@ namespace VirtoCommerce.PackagingModule.Web.Controllers.Api
 
 		// POST: api/modules/upload
 		[HttpPost]
+		[ResponseType(typeof(webModel.ModuleDescriptor))]  
 		[Route("")]
-		public async Task<webModel.ModuleDescriptor[]> Upload()
+		public async Task<IHttpActionResult> Upload()
 		{
 			var streamProvider = await HttpRequestUploader.ReadDataAsync(Request, _packagesPath);
 
-			foreach (var file in streamProvider.FileData)
+			var file = streamProvider.FileData.FirstOrDefault();
+			if(file != null)
 			{
-				
-				//var fInfo = new FileInfo(file.LocalFileName);
-
-				//retVal.Add(new webModel.BlobInfo
-				//{
-				//	Name = fInfo.Name,
-				//	Size = fInfo.Length.ToHumanReadableSize(),
-				//	MimeType = "application/octet-stream",
-				//	Url = string.Concat(_relativeDir, fInfo.Name)
-				//});
+				var retVal = _packageService.OpenPackage(Path.Combine(_packagesPath, file.LocalFileName));
+				if (retVal != null)
+				{
+					return Ok(retVal.ToWebModel());
+				}
 			}
-			return null;
+			return NotFound();
 		}
 
 		// GET: api/modules/121/install
