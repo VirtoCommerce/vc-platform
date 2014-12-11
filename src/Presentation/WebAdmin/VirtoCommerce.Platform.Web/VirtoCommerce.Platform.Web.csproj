@@ -362,6 +362,7 @@
     <Content Include="Scripts\common\confirmDialog\confirmDialog.tpl.html" />
     <Content Include="Scripts\common\confirmDialog\cofirmDialog.js" />
     <Content Include="Scripts\common\directives\contextMenu.js" />
+    <Content Include="Scripts\common\directives\angular-moment.js" />
     <Content Include="Scripts\common\filters.js" />
     <Content Include="Scripts\common\navigation\breadcrumbs\breadcrumbs.js" />
     <Content Include="Scripts\common\navigation\breadcrumbs\breadcrumbs.tpl.html" />
@@ -1241,15 +1242,9 @@
   </PropertyGroup>
   <Target Name="VirtoModulesCollectFiles">
     <ItemGroup>
-      <_CustomFiles Include="..\Modules\**\*" Exclude="..\Modules\**\*.cs;..\Modules\**\*.config;..\Modules\**\*.csproj;..\Modules\**\bin\**;..\Modules\**\obj\**;..\Modules\**\obj\*.manifest" />
+      <_CustomFiles Include="..\Modules\**\*.Web\**\*" Exclude="..\Modules\**\*.cs;..\Modules\**\*.config;..\Modules\**\*.csproj;..\Modules\**\*.user;..\Modules\**\obj\**;..\Modules\**\obj\*.manifest" />
       <FilesForPackagingFromProject Include="%(_CustomFiles.Identity)">
         <DestinationRelativePath>Modules\%(RecursiveDir)%(Filename)%(Extension)</DestinationRelativePath>
-      </FilesForPackagingFromProject>
-    </ItemGroup>
-    <ItemGroup>
-      <_CustomDllFiles Include="App_Data\Modules\**\*.dll;App_Data\Modules\**\*.pdb;App_Data\Modules\**\*.manifest" />
-      <FilesForPackagingFromProject Include="%(_CustomDllFiles.Identity)">
-        <DestinationRelativePath>App_data\Modules\%(RecursiveDir)%(Filename)%(Extension)</DestinationRelativePath>
       </FilesForPackagingFromProject>
     </ItemGroup>
   </Target>

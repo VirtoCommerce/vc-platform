@@ -12,16 +12,14 @@ namespace VirtoCommerce.PackagingModule.Data.Services
 		private readonly string _sourcePath;
 		private readonly string _projectPath;
 		private readonly string _packagesPath;
-		private readonly string _binPath;
 
 		private readonly ProjectManager _projectManager;
 
-		public PackageService(string sourcePath, string projectPath, string packagesPath, string binPath)
+		public PackageService(string sourcePath, string projectPath, string packagesPath)
 		{
 			_sourcePath = Path.GetFullPath(sourcePath ?? "source");
 			_projectPath = Path.GetFullPath(projectPath ?? "website");
 			_packagesPath = Path.GetFullPath(packagesPath ?? Path.Combine(_projectPath, "packages"));
-			_binPath = Path.GetFullPath(binPath ?? Path.Combine(_projectPath, "bin"));
 
 			_projectManager = CreateProjectManager();
 		}
@@ -33,6 +31,19 @@ namespace VirtoCommerce.PackagingModule.Data.Services
 		}
 
 		#region IPackageService Members
+
+		public ModuleDescriptor OpenPackage(string path)
+		{
+			ModuleDescriptor result = null;
+
+			var fullPath = Path.GetFullPath(path);
+			var package = ManifestPackage.OpenPackage(fullPath);
+
+			if (package != null)
+				result = ConvertToModuleDescriptor(package);
+
+			return result;
+		}
 
 		public ModuleDescriptor[] GetModules()
 		{
@@ -61,7 +72,7 @@ namespace VirtoCommerce.PackagingModule.Data.Services
 
 		private ProjectManager CreateProjectManager()
 		{
-			var projectSystem = new WebsiteProjectSystem(_projectPath, _binPath);
+			var projectSystem = new WebsiteProjectSystem(_projectPath);
 
 			var projectManager = new ProjectManager(
 				new WebsiteLocalPackageRepository(_sourcePath),

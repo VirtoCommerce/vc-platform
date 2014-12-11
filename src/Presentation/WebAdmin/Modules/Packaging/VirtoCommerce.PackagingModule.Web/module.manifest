@@ -1,1 +1,6 @@
-﻿
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<module>
+	<id>VirtoCommerce.Packaging</id>
+	<assemblyFile>VirtoCommerce.PackagingModule.Web.dll</assemblyFile>
+	<moduleType>VirtoCommerce.PackagingModule.Web.Module, VirtoCommerce.PackagingModule.Web</moduleType>
+</module>

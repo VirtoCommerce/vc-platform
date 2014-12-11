@@ -1,5 +1,6 @@
 ﻿angular.module('platformWebApp.notification', [
-	'platformWebApp.mainMenu'
+	'platformWebApp.mainMenu',
+	'angularMoment'
 ])
 .config(
   ['$stateProvider', function ($stateProvider) {
@@ -96,38 +97,7 @@
 						stateParams: x,
 						permission: '',
 						template: 'Scripts/common/notification/notify.tpl.html',
-						notify: x,
-						date: function() {
-							var seconds = Math.floor((new Date() - new Date(this.stateParams.created)) / 1000);
-							var date = new Date(this.stateParams.created);
-							var interval = Math.floor(seconds / 31536000);
-							var dateStr = ((date.getDate()<10)?('0'+date.getDate()):date.getDate())
-								+ '.' + ((date.getMonth()<10)?('0'+(date.getMonth()+1)):date.getDate())
-								+ '.' + date.getFullYear();
-							if (interval > 0) {
-								return dateStr;
-							}
-							interval = Math.floor(seconds / 2592000);
-							if (interval > 0) {
-								return dateStr;
-							}
-							interval = Math.floor(seconds / 86400);
-							if (interval > 0) {
-								if(interval == 1) {
-									return "yesterday";
-								}
-								return dateStr;
-							}
-							interval = Math.floor(seconds / 3600);
-							if (interval > 0) {
-								return interval + " h ego";
-							}
-							interval = Math.floor(seconds / 60);
-							if (interval > 0) {
-								return interval + " m ego";
-							}
-							return "few s ego";
-						}
+						notify: x
 					};
 					notifyMenu.children.push(menuItem);
 				});
