@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{0E0CB22C-4501-4E16-B9B7-744B51076524}"
 	ProjectSection(SolutionItems) = preProject
@@ -33,32 +33,32 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Merchandising
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Platform.Web", "src\Presentation\WebAdmin\VirtoCommerce.Platform.Web\VirtoCommerce.Platform.Web.csproj", "{B53BA685-B324-42E6-80AD-7B641DD414E7}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnmanagedModule", "UnmanagedModule", "{CCA3D245-FF8A-4931-9654-731F0F4D618D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnmanagedModule.Web", "UnmanagedModule.Web", "{CCA3D245-FF8A-4931-9654-731F0F4D618D}"
 	ProjectSection(SolutionItems) = preProject
-		src\Presentation\WebAdmin\Modules\UnmanagedModule\module.manifest = src\Presentation\WebAdmin\Modules\UnmanagedModule\module.manifest
+		src\Presentation\WebAdmin\Modules\UnmanagedModule.Web\module.manifest = src\Presentation\WebAdmin\Modules\UnmanagedModule.Web\module.manifest
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Content", "Content", "{5E02FCFA-C9C5-40ED-830E-1BA3EFE28B08}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "css", "css", "{585A7CD8-E35C-4AAC-A82B-637B1A0C43F8}"
 	ProjectSection(SolutionItems) = preProject
-		src\Presentation\WebAdmin\Modules\UnmanagedModule\Content\css\UnmanagedModule.css = src\Presentation\WebAdmin\Modules\UnmanagedModule\Content\css\UnmanagedModule.css
+		src\Presentation\WebAdmin\Modules\UnmanagedModule.Web\Content\css\UnmanagedModule.css = src\Presentation\WebAdmin\Modules\UnmanagedModule.Web\Content\css\UnmanagedModule.css
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{65655FE6-FA29-47C0-AF03-F3F26AAC149B}"
 	ProjectSection(SolutionItems) = preProject
-		src\Presentation\WebAdmin\Modules\UnmanagedModule\Scripts\UnmanagedModule.js = src\Presentation\WebAdmin\Modules\UnmanagedModule\Scripts\UnmanagedModule.js
+		src\Presentation\WebAdmin\Modules\UnmanagedModule.Web\Scripts\UnmanagedModule.js = src\Presentation\WebAdmin\Modules\UnmanagedModule.Web\Scripts\UnmanagedModule.js
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "blades", "blades", "{BC2B5A11-2EB0-40BA-981F-FAE8859F351C}"
 	ProjectSection(SolutionItems) = preProject
-		src\Presentation\WebAdmin\Modules\UnmanagedModule\Scripts\blades\blade1.js = src\Presentation\WebAdmin\Modules\UnmanagedModule\Scripts\blades\blade1.js
-		src\Presentation\WebAdmin\Modules\UnmanagedModule\Scripts\blades\blade1.tpl.html = src\Presentation\WebAdmin\Modules\UnmanagedModule\Scripts\blades\blade1.tpl.html
+		src\Presentation\WebAdmin\Modules\UnmanagedModule.Web\Scripts\blades\blade1.js = src\Presentation\WebAdmin\Modules\UnmanagedModule.Web\Scripts\blades\blade1.js
+		src\Presentation\WebAdmin\Modules\UnmanagedModule.Web\Scripts\blades\blade1.tpl.html = src\Presentation\WebAdmin\Modules\UnmanagedModule.Web\Scripts\blades\blade1.tpl.html
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "home", "home", "{21A52801-B21E-4399-B328-6CD835559229}"
 	ProjectSection(SolutionItems) = preProject
-		src\Presentation\WebAdmin\Modules\UnmanagedModule\Scripts\home\home.tpl.html = src\Presentation\WebAdmin\Modules\UnmanagedModule\Scripts\home\home.tpl.html
+		src\Presentation\WebAdmin\Modules\UnmanagedModule.Web\Scripts\home\home.tpl.html = src\Presentation\WebAdmin\Modules\UnmanagedModule.Web\Scripts\home\home.tpl.html
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.CatalogModule.Test", "src\Presentation\WebAdmin\Modules\Catalog\VirtoCommerce.CatalogModule.Test\VirtoCommerce.CatalogModule.Test.csproj", "{613E443D-8FB2-435A-AA8A-5B141E444824}"
