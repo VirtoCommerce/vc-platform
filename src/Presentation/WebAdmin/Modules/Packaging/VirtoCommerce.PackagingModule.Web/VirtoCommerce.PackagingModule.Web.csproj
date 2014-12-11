@@ -99,9 +99,7 @@
     <None Include="module.manifest" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Scripts\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
@@ -118,6 +116,13 @@
       <Project>{569f3d73-80dd-4e8a-93a4-4cca2751d495}</Project>
       <Name>VirtoCommerce.PackagingModule</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Scripts\blades\modules-list.js" />
+    <Content Include="Scripts\blades\modules-list.tpl.html" />
+    <Content Include="Scripts\packaging.js" />
+    <Content Include="Scripts\home.tpl.html" />
+    <Content Include="Scripts\resources\modules.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
