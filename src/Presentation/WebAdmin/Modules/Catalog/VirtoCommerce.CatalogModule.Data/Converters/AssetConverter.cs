@@ -23,7 +23,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			{
 				Id = dbAsset.ItemAssetId,
 				ItemId = dbAsset.ItemId,
-                Group = dbAsset.GroupName,
+				Group = dbAsset.GroupName,
 				Type = (module.ItemAssetType)Enum.Parse(typeof(module.ItemAssetType), dbAsset.AssetType, true),
 				Url = dbAsset.AssetId
 			};
@@ -31,12 +31,12 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 
 		}
 
-        /// <summary>
-        /// Converting to foundation type
-        /// </summary>
-        /// <param name="itemAsset">The item asset.</param>
-        /// <returns></returns>
-        /// <exception cref="System.ArgumentNullException">itemAsset</exception>
+		/// <summary>
+		/// Converting to foundation type
+		/// </summary>
+		/// <param name="itemAsset">The item asset.</param>
+		/// <returns></returns>
+		/// <exception cref="System.ArgumentNullException">itemAsset</exception>
 		public static foundation.ItemAsset ToFoundation(this module.ItemAsset itemAsset)
 		{
 			if (itemAsset == null)
@@ -45,11 +45,11 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			var retVal = new foundation.ItemAsset
 			{
 				AssetId = itemAsset.Url,
-			    GroupName = itemAsset.Group,
+				GroupName = itemAsset.Group,
 				AssetType = itemAsset.Type.ToString().ToLower(),
 				ItemId = itemAsset.ItemId,
 			};
-			if(itemAsset.Id != null)
+			if (itemAsset.Id != null)
 			{
 				retVal.ItemAssetId = itemAsset.Id;
 			}
@@ -72,7 +72,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			if (source.AssetType != null)
 				target.AssetType = source.AssetType;
 
-            target.SortOrder = source.SortOrder;
+			target.SortOrder = source.SortOrder;
 
 		}
 	}

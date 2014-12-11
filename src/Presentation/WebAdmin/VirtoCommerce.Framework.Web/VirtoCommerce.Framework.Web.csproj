@@ -69,9 +69,9 @@
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Common\FormatingExtensions.cs" />
+    <Compile Include="Common\HttpRequestUploader.cs" />
     <Compile Include="Common\ListDictionary.cs" />
     <Compile Include="Common\CollectionExtensions.cs" />
-    <Compile Include="Common\HttpRequestUploader.cs" />
     <Compile Include="Modularity\AssemblyResolver.cs" />
     <Compile Include="Modularity\Exceptions\CyclicDependencyFoundException.cs" />
     <Compile Include="Modularity\DirectoryModuleCatalog.cs" />
