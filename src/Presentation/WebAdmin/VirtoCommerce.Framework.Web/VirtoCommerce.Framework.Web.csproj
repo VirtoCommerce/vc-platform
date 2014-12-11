@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Common\KeyValuePairExtensions.cs" />
     <Compile Include="Common\ListDictionary.cs" />
     <Compile Include="Common\CollectionExtensions.cs" />
     <Compile Include="Modularity\AssemblyResolver.cs" />
