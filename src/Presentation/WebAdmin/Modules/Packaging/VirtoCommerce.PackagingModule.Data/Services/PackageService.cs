@@ -47,7 +47,11 @@ namespace VirtoCommerce.PackagingModule.Data.Services
 
 		public ModuleDescriptor[] GetModules()
 		{
-			return _projectManager.LocalRepository.GetPackages().OfType<ManifestPackage>().Select(ConvertToModuleDescriptor).ToArray();
+			return _projectManager.LocalRepository.GetPackages()
+				.OfType<ManifestPackage>()
+				.Select(ConvertToModuleDescriptor)
+				.OrderBy(m => m.Title)
+				.ToArray();
 		}
 
 		public void Install(string packageId, string version)

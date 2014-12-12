@@ -1,9 +1,25 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module>
-  <id>VirtoCommerce.Packaging</id>
-  <assemblyFile>VirtoCommerce.PackagingModule.Web.dll</assemblyFile>
-  <moduleType>VirtoCommerce.PackagingModule.Web.Module, VirtoCommerce.PackagingModule.Web</moduleType>
-  <scripts>
-    <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
-  </scripts>
+	<id>VirtoCommerce.Packaging</id>
+	<version>1.0.0.0</version>
+
+	<title>VirtoCommerce Packaging</title>
+	<description>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean vitae sagittis nulla, ac condimentum quam. Maecenas sit amet nibh volutpat, eleifend enim sit amet, cursus erat.</description>
+	<authors>
+		<author>VirtoCommerce</author>
+	</authors>
+	<owners>
+		<owner>VirtoCommerce</owner>
+	</owners>
+	<projectUrl>http://virtocommerce.com/</projectUrl>
+	<iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
+	<releaseNotes>First version.</releaseNotes>
+	<copyright>Copyright © 2014 Virto Commerce. All rights reserved</copyright>
+	<tags>tag1 tag2</tags>
+
+	<assemblyFile>VirtoCommerce.PackagingModule.Web.dll</assemblyFile>
+	<moduleType>VirtoCommerce.PackagingModule.Web.Module, VirtoCommerce.PackagingModule.Web</moduleType>
+	<scripts>
+		<directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
+	</scripts>
 </module>
