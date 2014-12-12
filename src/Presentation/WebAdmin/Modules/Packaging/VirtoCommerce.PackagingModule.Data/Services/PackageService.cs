@@ -10,16 +10,16 @@ namespace VirtoCommerce.PackagingModule.Data.Services
 	public class PackageService : IPackageService
 	{
 		private readonly string _sourcePath;
-		private readonly string _projectPath;
+		private readonly string _modulesPath;
 		private readonly string _packagesPath;
 
 		private readonly ProjectManager _projectManager;
 
-		public PackageService(string sourcePath, string projectPath, string packagesPath)
+		public PackageService(string sourcePath, string modulesPath, string packagesPath)
 		{
 			_sourcePath = Path.GetFullPath(sourcePath ?? "source");
-			_projectPath = Path.GetFullPath(projectPath ?? "website");
-			_packagesPath = Path.GetFullPath(packagesPath ?? Path.Combine(_projectPath, "packages"));
+			_modulesPath = Path.GetFullPath(modulesPath ?? @"target\modules");
+			_packagesPath = Path.GetFullPath(packagesPath ?? @"target\packages");
 
 			_projectManager = CreateProjectManager();
 		}
@@ -72,13 +72,13 @@ namespace VirtoCommerce.PackagingModule.Data.Services
 
 		private ProjectManager CreateProjectManager()
 		{
-			var projectSystem = new WebsiteProjectSystem(_projectPath);
+			var projectSystem = new WebsiteProjectSystem(_modulesPath);
 
 			var projectManager = new ProjectManager(
 				new WebsiteLocalPackageRepository(_sourcePath),
-				new DefaultPackagePathResolver(_projectPath),
+				new DefaultPackagePathResolver(_modulesPath),
 				projectSystem,
-				new ManifestPackageRepository(_projectPath, new WebsitePackageRepository(_packagesPath, projectSystem))
+				new ManifestPackageRepository(_modulesPath, new WebsitePackageRepository(_packagesPath, projectSystem))
 				);
 
 			// TODO: configure logger

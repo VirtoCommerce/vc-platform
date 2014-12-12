@@ -49,7 +49,7 @@ namespace VirtoCommerce.PackagingModule.Tests
 
 		private static PackageService GetPackageService()
 		{
-			var service = new PackageService("source", "target", "target\\packages") { Logger = new DebugLogger() };
+			var service = new PackageService("source", @"target\modules", @"target\packages") { Logger = new DebugLogger() };
 			return service;
 		}
 
