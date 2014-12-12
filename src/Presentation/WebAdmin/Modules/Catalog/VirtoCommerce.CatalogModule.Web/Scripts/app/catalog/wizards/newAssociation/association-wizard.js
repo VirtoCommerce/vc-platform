@@ -57,7 +57,7 @@
 
     $scope.blade.onAfterCatalogSelected = function (selectedNode) {
         var newBlade = {
-            id: 'itemsListAssociation55',
+            id: 'itemsList55',
             level: 55,
             mode: 'newAssociation',
             breadcrumbs: [],
