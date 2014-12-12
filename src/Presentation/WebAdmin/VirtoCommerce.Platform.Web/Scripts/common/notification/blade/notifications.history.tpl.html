@@ -1,0 +1,54 @@
+<div style="width: 500px;">
+    <ul class="list-extended">
+        <table class="list notify table">
+        <thead>
+            <tr>
+                <th class="col">Type</th>
+                <th class="col">Title</th>
+                <th class="col">Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="notify in notifications" ng-init="
+    notifyStatusArr = [
+        'notify_running',
+        'notify_aborted',
+        'notify_finished',
+        'notify_error'
+    ];
+    notifyTypesArr = [
+        'notify_info',
+        'notify_warning',
+        'notify_error',
+        'notify_task'
+    ];
+    classNames = ['item', 'notif', notifyTypesArr[notify.notifyType], notifyStatusArr[notify.notifyType]];
+" ng-class="classNames" class="item notif">
+                <td class="col">
+                    <span class="pic">
+                        <i ng-class="(menuItem.notify.notifyType==0)?'icon-comments':'icon-warning'" class="icon"></i>
+                    </span>
+                </td>
+                <td class="col">
+                    <span class="title" ng-bind="notify.title"></span>
+                    <span class="desc" ng-bind="notify.description"></span>
+                    <div ng-if="notify.status == 0" class="progress-bar small" data-role="progress-bar" data-value="30"></div>
+                </td>
+                <td class="col">
+                    <span class="date" am-time-ago="notify.created"></span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="pagination">
+        <ul>
+            <li class="prev"><a>&laquo;</a></li>
+            <li class="active"><a>1</a></li>
+            <li><a>2</a></li>
+            <li><a>3</a></li>
+            <li><a>4</a></li>
+            <li class="next"><a>&raquo;</a></li>
+        </ul>
+    </div>
+    </ul>
+</div>
