@@ -373,6 +373,7 @@
     <Content Include="Scripts\common\directives\overlay.js" />
     <Content Include="Scripts\common\notification\notifyMenu.tpl.html" />
     <Content Include="Scripts\common\notification\notification.js" />
+    <Content Include="Scripts\common\notification\blade\notifications.history.js" />
     <Content Include="Scripts\common\notification\notification.tpl.html" />
     <Content Include="Scripts\common\notification\notify.tpl.html" />
     <Content Include="Scripts\common\security\auth\auth.js" />
