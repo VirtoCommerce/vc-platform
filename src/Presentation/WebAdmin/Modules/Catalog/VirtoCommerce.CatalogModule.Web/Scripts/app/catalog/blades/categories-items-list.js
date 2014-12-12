@@ -33,9 +33,9 @@
                 count: $scope.pageSettings.itemsPerPageCount
             },
 		function (data, headers) {
-            $scope.blade.isLoading = false;
-            $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
-            $scope.items = data.listEntries;
+		    $scope.blade.isLoading = false;
+		    $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
+		    $scope.items = data.listEntries;
 		    $scope.selectedAll = false;
 
 		    if ($scope.selectedItem != null) {
@@ -44,10 +44,11 @@
 
 		    //Set navigation breadcrumbs
 		    setBreadcrumps();
-		}, function(error) {
-            $scope.blade.isLoading = false;
-            bladeNavigationService.setError('Error ' + error.status, $scope.blade);
-        });
+		    setCheckedEntries();
+		}, function (error) {
+		    $scope.blade.isLoading = false;
+		    bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+		});
     }
 
     //Breadcrumps
@@ -177,17 +178,9 @@
             return _.any($scope.items, function (x) { return x.selected; });
         } else {
             return false;
-    }
         }
+    }
 
-    function isProductsChecked() {
-        if ($scope.items) {
-            return _.any($scope.items, function (x) { return x.selected && x.type === 'product'; });
-        } else {
-            return false;
-        }
-    }
-    
     function deleteChecked() {
         var dialog = {
             id: "confirmDeleteItem",
@@ -229,7 +222,7 @@
                     });
 
                     if (listEntryLinks.length > 0) {
-                    	listEntries.deletelinks(listEntryLinks, function (data, headers) {
+                        listEntries.deletelinks(listEntryLinks, function (data, headers) {
                             $scope.blade.refresh();
                             if ($scope.blade.mode === 'mappingSource')
                                 $scope.blade.parentBlade.refresh();
@@ -280,11 +273,6 @@
         //    }
         //}
         //dialogService.showConfirmationDialog(dialog);
-    }
-
-    function associateChecked() {
-        var selection = _.where($scope.items, { selected: true, type: 'product'});
-        $scope.blade.parentBlade.select(selection);
     }
 
     $scope.blade.setSelectedItem = function (listItem) {
@@ -434,27 +422,60 @@
                     return isItemsChecked();
                 }
             }
-            $scope.bladeToolbarCommands.splice(1, 2, mapCommand);
+            $scope.bladeToolbarCommands.splice(1, 3, mapCommand);
         } else
             if ($scope.blade.mode === 'newAssociation') {
-                var associateCommand = {
-                    name: "Associate selected", icon: 'icon-link',
-                    executeMethod: function () {
-                        associateChecked();
-                    },
-                    canExecuteMethod: function () {
-                        return isProductsChecked();
-                    }
-                }
-                $scope.bladeToolbarCommands.splice(1, 2, associateCommand);
+                $scope.bladeToolbarCommands.splice(1, 3);
             }
     }
+
+    $scope.blade.onAfterCatalogSelected = function (selectedNode) {
+        var newBlade = {
+            id: 'itemsList' + ($scope.blade.level + 1),
+            level: $scope.blade.level + 1,
+            mode: 'mappingSource',
+            breadcrumbs: [],
+            title: 'Choose Categories & Items for mapping',
+            subtitle: 'Creating a Link inside virtual catalog',
+            catalogId: selectedNode.id,
+            catalog: selectedNode,
+            controller: 'categoriesItemsListController',
+            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/categories-items-list.tpl.html'
+        };
+        bladeNavigationService.showBlade(newBlade, $scope.blade);
+    };
 
     $scope.checkAll = function (selected) {
         angular.forEach($scope.items, function (item) {
             item.selected = selected;
+            $scope.checkOne(item);
         });
     };
+
+    $scope.checkOne = function (listItem) {
+        if ($scope.blade.mode === 'newAssociation') {
+            $scope.blade.parentBlade.updateSelection(listItem);
+        }
+    }
+
+    $scope.showCheck = function (listItem) {
+        var retVal = true;
+        if ($scope.blade.mode === 'newAssociation') {
+            retVal = listItem.type !== 'category';
+        }
+        return retVal;
+    }
+
+    function setCheckedEntries() {
+        if ($scope.blade.mode === 'newAssociation') {
+            _.each($scope.blade.parentBlade.selection, function (selectedEntry) {
+                var foundItem = _.findWhere($scope.items, { id: selectedEntry.id });
+                if (foundItem) {
+                    foundItem.selected = true;
+                }
+            });
+        }
+    }
 
     //No need to call this because page 'pageSettings.currentPage' is watched!!! It would trigger subsequent duplicated req...
     //$scope.blade.refresh();

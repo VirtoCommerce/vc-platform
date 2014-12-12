@@ -29,16 +29,17 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
 		[HttpGet]
 		[Route("~/api/mp/{catalog}/{language}/products/{productId}/reviews")]
-		[ResponseType(typeof(Review[]))]
+		[ResponseType(typeof(GenericSearchResult<Review>))]
 		public IHttpActionResult GetAllProductReviews(string catalog, string language, string productId)
 		{
-			Review[] retVal = null;
+            var retVal = new GenericSearchResult<Review>();
 			using (var repository = _reviewRepositoryFactory())
 			{
 				var reviews = repository.Reviews.Where(x => (string.IsNullOrEmpty(productId) || x.ItemId == productId) && x.Status == (int)foundation.ReviewStatus.Approved)
 										        .ExpandAll()
 											    .ToArray();
-				retVal = reviews.Select(x => x.ToWebModel()).ToArray();
+				retVal.Items = reviews.Select(x => x.ToWebModel()).ToArray();
+			    retVal.TotalCount = retVal.Items.Count;
 			}
 			return Ok(retVal);
 

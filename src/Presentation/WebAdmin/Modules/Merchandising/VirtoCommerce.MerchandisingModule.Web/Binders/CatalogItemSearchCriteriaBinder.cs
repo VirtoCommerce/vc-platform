@@ -1,12 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Http.Controllers;
 using System.Web.Http.ModelBinding;
 using VirtoCommerce.Foundation.Catalogs.Search;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Search;
+using VirtoCommerce.Foundation.Search.Schemas;
 using VirtoCommerce.MerchandisingModule.Web.Model;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Binders
@@ -16,6 +20,13 @@ namespace VirtoCommerce.MerchandisingModule.Web.Binders
 	/// </summary>
 	public class CatalogItemSearchCriteriaBinder : IModelBinder
 	{
+
+        /// <summary>
+        /// The facet regex
+        /// </summary>
+        private static readonly Regex TermRegex = new Regex("^t_", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex FacetRegex = new Regex("^f_", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
 		public bool BindModel(HttpActionContext actionContext, ModelBindingContext bindingContext)
 		{
 			if (bindingContext.ModelType != typeof(CatalogItemSearchCriteria))
@@ -25,12 +36,13 @@ namespace VirtoCommerce.MerchandisingModule.Web.Binders
 
 			var key = actionContext.Request.RequestUri.Query;
 			var qs = HttpUtility.ParseQueryString(key);
+            var qsDict = NvToDict(qs);
 
 			// parse facets
-			// var facets = qs.Where(k => FacetRegex.IsMatch(k.Key)).Select(k => k.WithKey(FacetRegex.Replace(k.Key, ""))).ToDictionary(x => x.Key, y => y.Value.Split(','));
+            var facets = qsDict.Where(k => FacetRegex.IsMatch(k.Key)).Select(k => k.WithKey(FacetRegex.Replace(k.Key, ""))).ToDictionary(x => x.Key, y => y.Value.Split(','));
 
 			// parse facets
-			// var terms = qsDict.Where(k => TermRegex.IsMatch(k.Key)).Select(k => k.WithKey(TermRegex.Replace(k.Key, ""))).ToDictionary(x => x.Key, y => y.Value.Split(','));
+			var terms = qsDict.Where(k => TermRegex.IsMatch(k.Key)).Select(k => k.WithKey(TermRegex.Replace(k.Key, ""))).ToDictionary(x => x.Key, y => y.Value.Split(','));
 
 			var result = new CatalogItemSearchCriteria
 			{
@@ -41,19 +53,19 @@ namespace VirtoCommerce.MerchandisingModule.Web.Binders
 
 
 			// apply vendor filter if one specified
-			//if (parameters.Terms != null && parameters.Terms.Count > 0)
-			//{
-			//	foreach (var term in parameters.Terms)
-			//	{
-			//		var termFilter = new AttributeFilter()
-			//		{
-			//			Key = term.Key,
-			//			Values = term.Value.Select(x => new AttributeFilterValue() { Id = x.ToLowerInvariant(), Value = x.ToLowerInvariant() }).ToArray()
-			//		};
+            if (terms.Count > 0)
+			{
+                foreach (var term in terms)
+				{
+					var termFilter = new AttributeFilter
+					{
+						Key = term.Key.ToLowerInvariant(),
+						Values = term.Value.Select(x => new AttributeFilterValue() { Id = x.ToLowerInvariant(), Value = x.ToLowerInvariant() }).ToArray()
+					};
 
-			//		criteria.Apply(termFilter);
-			//	}
-			//}
+                    result.Apply(termFilter);
+				}
+			}
 
 
 		    result.ClassTypes.Add("Product");
@@ -130,5 +142,13 @@ namespace VirtoCommerce.MerchandisingModule.Web.Binders
 			bindingContext.Model = result;
 			return true;
 		}
+
+        public IDictionary<string, string> NvToDict(NameValueCollection nv)
+        {
+            var d = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
+            foreach (var k in nv.AllKeys)
+                d[k] = nv[k];
+            return d;
+        }
 	}
 }

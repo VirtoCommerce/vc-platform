@@ -1,18 +1,15 @@
 ﻿angular.module('catalogModule.blades.itemAssociationsList', [])
-.controller('itemAssociationsListController', ['$rootScope', '$scope', 'bladeNavigationService', 'items', function ($rootScope, $scope, bladeNavigationService, items) {
-
-    $scope.blade.refresh = function (parentRefresh) {
-        if (parentRefresh) {
-            $scope.blade.isLoading = true;
-            $scope.blade.parentBlade.refresh().$promise.then(function (data) {
-                initializeBlade(data.associations);
-            });
-        } else {
-            initializeBlade($scope.blade.currentEntities);
-        }
-    }
+.controller('itemAssociationsListController', ['$rootScope', '$scope', 'bladeNavigationService', 'dialogService', 'items', function ($rootScope, $scope, bladeNavigationService, dialogService, items) {
+    
+    $scope.blade.refresh = function () {
+        $scope.blade.isLoading = true;
+        $scope.blade.parentBlade.refresh().$promise.then(function (data) {
+            initializeBlade(data.associations);
+        });
+    };
 
     function initializeBlade(data) {
+        $scope.selectedAll = false;
         $scope.blade.currentEntities = angular.copy(data);
         $scope.blade.origItem = data;
         $scope.blade.isLoading = false;
@@ -32,6 +29,7 @@
     function openAddEntityWizard() {
         var newBlade = {
             id: "associationWizard",
+            currentEntities: $scope.blade.currentEntities,
             title: "New Associations",
             //subtitle: '',
             controller: 'associationWizardController',
@@ -50,14 +48,58 @@
             canExecuteMethod: function () {
                 return true;
             }
+        },
+        {
+            name: "Delete", icon: 'icon-remove',
+            executeMethod: function () {
+                var dialog = {
+                    id: "confirmDeleteItem",
+                    title: "Delete confirmation",
+                    message: "Are you sure you want to delete selected Associations?",
+                    callback: function (remove) {
+                        if (remove) {
+                            $scope.blade.isLoading = true;
+                            closeChildrenBlades();
+
+                            var undeletedEntries = _.reject($scope.blade.currentEntities, function (x) { return x.selected; });
+                            items.updateitem({ id: $scope.blade.currentEntityId, associations: undeletedEntries }, function () {
+                                $scope.blade.refresh();
+                            });
+                        }
+                    }
+                }
+
+                dialogService.showConfirmationDialog(dialog);
+            },
+            canExecuteMethod: function () {
+                return _.any($scope.blade.currentEntities, function (x) { return x.selected; });;
+            }
         }
     ];
 
-    $scope.blade.refresh(false);
+    $scope.checkAll = function (selected) {
+        angular.forEach($scope.blade.currentEntities, function (item) {
+            item.selected = selected;
+        });
+    };
 
-    // open blade for new item 
-    if (!_.some($scope.blade.currentEntities)) {
-        openAddEntityWizard();
-    }
+    $scope.sortableOptions = {
+        stop: function (e, ui) {
+            for (var i = 0; i < $scope.blade.currentEntities.length; i++) {
+                $scope.blade.currentEntities[i].priority = i + 1;
+            }
 
+            items.updateitem({ id: $scope.blade.currentEntityId, associations: $scope.blade.currentEntities }, function () {
+                $scope.blade.refresh();
+            });
+        },
+        axis: 'y',
+        cursor: "move"
+    };
+
+    $scope.blade.currentEntities.sort(function (a, b) {
+        return a.priority > b.priority;
+    });
+
+    initializeBlade($scope.blade.currentEntities);
 }]);

@@ -19,8 +19,6 @@
             id: 'selectCatalog',
             title: 'Select Catalog',
             subtitle: 'Creating a Link inside virtual catalog',
-            mode: 'mappingSource',
-            childTitle: 'Choose Categories & Items for mapping',
             controller: 'catalogsSelectController',
             template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/catalogs-select.tpl.html'
         };

@@ -1,0 +1,41 @@
+﻿<div style="width: 450px">
+    <style>
+        .fixed-td {
+            width: 15px;
+        }
+    </style>
+    <table class="table hovered" ng-if="blade.currentEntities.length > 0">
+        <thead>
+            <tr>
+                <th class="text-left">Module</th>
+                <th class="text-left fixed-td">Category</th>
+                <th class="text-left fixed-td">Version</th>
+                <th class="text-left fixed-td">Is system</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="data in blade.currentEntities" ng-class="{'selected': data.id === selectedEntityId}">
+                <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis;">
+                    <img ng-src="{{data.iconUrl}}" height="42" width="42" />
+                    <span title="{{data.productName}}">{{data.productName}}</span>
+                    <span title="Code: {{data.productCode}}" class="blade-sw-title">{{data.productCode}}</span>
+                </td>
+                <td>
+                    <span>{{data}}</span>
+                </td>
+                <td>
+                    {{data.version}}
+                </td>
+                <td>
+                    <div data-role="input-control" class="input-control checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="data.selected" disabled="disabled">
+                            <!--<span class="check"></span>-->
+                        </label>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div ng-if="blade.currentEntities.length == 0" class="spacer">No Modules yet</div>
+</div>

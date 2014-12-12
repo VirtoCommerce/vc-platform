@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using NuGet;
 
@@ -21,7 +22,10 @@ namespace VirtoCommerce.PackagingModule.Data.Repositories
 			var references = GetCompatibleAssemblyReferences(package);
 
 			foreach (var reference in references)
-				_projectSystem.AddReference(reference.Name, reference.GetStream());
+			{
+				var path = BuildAssemblyFilePath(package.Id, reference.Name);
+				_projectSystem.AddFile(path, reference.GetStream());
+			}
 		}
 
 		public override void RemovePackage(IPackage package)
@@ -29,7 +33,10 @@ namespace VirtoCommerce.PackagingModule.Data.Repositories
 			base.RemovePackage(package);
 
 			foreach (var reference in GetCompatibleAssemblyReferences(package))
-				_projectSystem.RemoveReference(reference.Name);
+			{
+				var path = BuildAssemblyFilePath(package.Id, reference.Name);
+				_projectSystem.DeleteFileAndParentDirectoriesIfEmpty(path);
+			}
 		}
 
 		public override bool Exists(string packageId, SemanticVersion version)
@@ -55,6 +62,11 @@ namespace VirtoCommerce.PackagingModule.Data.Repositories
 				result = Enumerable.Empty<IPackageAssemblyReference>();
 
 			return result;
+		}
+
+		private static string BuildAssemblyFilePath(string packageId, string fileName)
+		{
+			return Path.Combine(packageId, "bin", fileName);
 		}
 	}
 }

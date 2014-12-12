@@ -24,9 +24,9 @@
         <tbody>
             <tr ng-repeat="data in items" ng-class="{'selected': data.id === selectedItem.id}" context-menu data-target="cil_menu_{{data.id+blade.level}}">
                 <td>
-                    <div data-role="input-control" class="input-control checkbox">
+                    <div data-role="input-control" class="input-control checkbox" ng-if="showCheck(data)">
                         <label>
-                            <input type="checkbox" ng-model="data.selected">
+                            <input type="checkbox" ng-model="data.selected" ng-change="checkOne(data)">
                             <span class="check"></span>
                         </label>
                     </div>

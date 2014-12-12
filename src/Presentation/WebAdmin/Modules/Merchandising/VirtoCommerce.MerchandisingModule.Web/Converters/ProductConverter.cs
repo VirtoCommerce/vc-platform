@@ -35,12 +35,17 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
                 retVal.EditorialReviews = product.Reviews.Select(x => new webModel.EditorialReview().InjectFrom(x)).Cast<webModel.EditorialReview>().ToArray();
 		    }
 
+		    if (product.Links != null)
+		    {
+		        retVal.Categories = product.Links.Select(x => x.CategoryId).ToArray();
+		    }
+
 			retVal.Properties = new webModel.PropertyDictionary();
 			//Need add property for each meta info
 
-			foreach (var propValue in product.PropertyValues)
+			foreach (var propValueGroup in product.PropertyValues.GroupBy(x=>x.PropertyName))
 			{
-				retVal.Properties.Add(propValue.PropertyName, propValue.Value);
+                retVal.Properties.Add(propValueGroup.Key, propValueGroup.Select(g=>g.Value));
 			}
 			return retVal;
 		}

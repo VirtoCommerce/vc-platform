@@ -13,17 +13,17 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 	{
 		public static webModel.DynamicContentItem ToWebModel(this moduleModel.DynamicContentItem contentItem)
 		{
-			var retVal = new webModel.DynamicContentItem()
+			var retVal = new webModel.DynamicContentItem
 			{
-				Id = contentItem.DynamicContentItemId,
-				Name = contentItem.Name,
-				Description = contentItem.Description,
-				ContentType = contentItem.ContentTypeId,
-				IsMultilingual = contentItem.IsMultilingual
+			    Id = contentItem.DynamicContentItemId,
+			    Name = contentItem.Name,
+			    Description = contentItem.Description,
+			    ContentType = contentItem.ContentTypeId,
+			    IsMultilingual = contentItem.IsMultilingual,
+			    Properties = new webModel.PropertyDictionary()
 			};
 
-			retVal.Properties = new webModel.PropertyDictionary();
-			foreach (var value in contentItem.PropertyValues)
+		    foreach (var value in contentItem.PropertyValues)
 			{
 				retVal.Properties.Add(value.Name, value.ToString());
 			}

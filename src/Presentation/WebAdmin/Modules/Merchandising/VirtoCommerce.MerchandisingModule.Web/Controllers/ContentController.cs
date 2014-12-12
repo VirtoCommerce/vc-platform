@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Foundation.Frameworks.Tagging;
+using VirtoCommerce.Foundation.Marketing.Model.DynamicContent;
 using VirtoCommerce.Foundation.Marketing.Services;
 using VirtoCommerce.MerchandisingModule.Web.Converters;
 using webModel = VirtoCommerce.MerchandisingModule.Web.Model;
@@ -21,8 +23,8 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         }
 
         [HttpGet]
-        [ResponseType(typeof(webModel.GenericSearchResult<webModel.DynamicContentItem>))]
-        [Route("{placeholder}")]
+        [ResponseType(typeof(webModel.GenericSearchResult<webModel.DynamicContentItemGroup>))]
+        [Route("{placeHolder}")]
         public IHttpActionResult GetDynamicContent(string placeHolder, [FromUri] string[] tags, string language = "en-us")
         {
             var tagSet = new TagSet();
@@ -37,15 +39,30 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
             // TODO: add tags ?tags={users:[id1,id2]}
             // TODO: add caching
-            var items = _dynamicContentService.GetItems(placeHolder, DateTime.Now, tagSet);
 
-            if (items != null)
+            //Mutiple placeholders can be requested
+            var placeHolders = placeHolder.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries);
+            var groups = new List<webModel.DynamicContentItemGroup>();
+
+            foreach (var holder in placeHolders)
             {
+                var group = new webModel.DynamicContentItemGroup(holder);
 
-                var retVal = new webModel.GenericSearchResult<webModel.DynamicContentItem>
+                var results = _dynamicContentService.GetItems(holder, DateTime.Now, tagSet);
+
+                if (results != null && results.Any())
                 {
-                    Items = items.Select(x => x.ToWebModel()).ToList(),
-                    TotalCount = items.Count()
+                    group.Items.AddRange(results.Select(x => x.ToWebModel()));
+                    groups.Add(group);
+                }
+            }
+
+            if (groups.Any())
+            {
+                var retVal = new webModel.GenericSearchResult<webModel.DynamicContentItemGroup>
+                {
+                    Items = groups,
+                    TotalCount = groups.Count()
                 };
 
                 return Ok(retVal);
