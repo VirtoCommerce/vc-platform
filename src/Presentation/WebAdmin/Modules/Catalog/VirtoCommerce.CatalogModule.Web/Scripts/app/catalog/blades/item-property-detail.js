@@ -7,7 +7,6 @@
 .controller('itemPropertyController', ['$scope', 'items', 'properties', 'bladeNavigationService', 'dialogService', function ($scope, items, properties, bladeNavigationService, dialogService) {
     $scope.blade.origItem = {};
     $scope.blade.item = {};
-    $scope.propGroups = [{ title: 'Product properties', type: 0 }];
 
     $scope.blade.refresh = function (parentRefresh) {
         items.get({ id: $scope.blade.itemId }, function (data) {
@@ -20,7 +19,9 @@
                 });
             }
             if (data.titularItemId != null) {
-                $scope.propGroups.push({ title: 'Variation properties', type: 1 });
+                $scope.propGroups = [{ title: 'Variation properties', type: 1 }];
+            } else {
+                $scope.propGroups = [{ title: 'Product properties', type: 0 }];
             }
 
             $scope.blade.item = angular.copy(data);
