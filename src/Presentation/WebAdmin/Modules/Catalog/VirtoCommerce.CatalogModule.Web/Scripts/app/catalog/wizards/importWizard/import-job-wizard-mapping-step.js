@@ -1,20 +1,20 @@
 ﻿angular.module('catalogModule.wizards.importJobWizard.mapping', [
 ])
-.controller('importJobMappingController', ['$scope', 'bladeNavigationService', function ($scope, bladeNavigationService)
+.controller('importJobMappingController', ['$scope', 'bladeNavigationService', 'imports', function ($scope, bladeNavigationService, imports)
 {
     $scope.blade.refresh = function ()
     {
-        $scope.blade.isLoading = true;
+    	$scope.blade.isLoading = true;
 
+        $scope.item = $scope.blade.item;
         if ($scope.blade.isNew) {
-            $scope.blade.item.$updateMappingItems(null, function(result) {
+        	imports.getAutoMapping({ path: $scope.item.templatePath, entityImporter: $scope.item.entityImporter, delimiter: $scope.item.columnDelimiter }, function (result) {
                 $scope.blade.isLoading = false;
-                $scope.item = result;
+                $scope.item.propertiesMap = result;
             });
         } else
         {
             $scope.blade.isLoading = false;
-            $scope.item = $scope.blade.item;
         }
     };
 

@@ -1,4 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
+using Newtonsoft.Json;
+using VirtoCommerce.CatalogModule.Web.Model.Notifications;
+using VirtoCommerce.Foundation.Importing.Services;
+using VirtoCommerce.Framework.Web.Notification;
 
 namespace VirtoCommerce.CatalogModule.Web.Model
 {
@@ -18,5 +24,27 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         public string PropertySetId { get; set; }
         public ICollection<MappingItem> PropertiesMap { get; set; }
         public string[] AvailableCsvColumns { get; set; }
+
+		[JsonIgnore]
+		public DateTime? Started;
+		[JsonIgnore]
+		public DateTime? Finished;
+		[JsonIgnore]
+		public ImportExportNotifyEvent NotifyEvent { get; set; }
+		[JsonIgnore]
+		public INotifier Notifier { get; set; }
+		[JsonIgnore]
+		public IImportService ImportService { get; set; }
+		[JsonIgnore]
+		public CancellationTokenSource CancellationToken;
+		[JsonIgnore]
+		public bool CanBeCanceled
+		{
+			get
+			{
+				return Started != null && Finished == null && !CancellationToken.IsCancellationRequested;
+			}
+		}
+
     }
 }

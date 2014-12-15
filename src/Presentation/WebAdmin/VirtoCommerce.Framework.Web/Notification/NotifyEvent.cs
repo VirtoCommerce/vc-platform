@@ -8,14 +8,15 @@ namespace VirtoCommerce.Framework.Web.Notification
 {
 	public class NotifyEvent
 	{
-		public NotifyEvent()
+		public NotifyEvent(string creator)
 		{
 			Created = DateTime.UtcNow;
 			New = true;
 			Id = Guid.NewGuid().ToString();
+			Creator = creator;
 		}
 		public string Id { get; set; }
-		public string CreatorId { get; set; }
+		public string Creator { get; set; }
 		public DateTime Created { get; set; }
 		public DateTime? FinishDate { get; set; }
 

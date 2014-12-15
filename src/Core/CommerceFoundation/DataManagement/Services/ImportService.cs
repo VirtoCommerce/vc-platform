@@ -316,7 +316,8 @@ namespace VirtoCommerce.Foundation.Importing.Services
 
         private void ReportProgressSafe(ImportResult result)
         {
-            CancellationToken.ThrowIfCancellationRequested();
+			result.IsCancelled = CancellationToken.IsCancellationRequested;
+			CancellationToken.ThrowIfCancellationRequested();
 
             if (ReportProgress != null)
             {

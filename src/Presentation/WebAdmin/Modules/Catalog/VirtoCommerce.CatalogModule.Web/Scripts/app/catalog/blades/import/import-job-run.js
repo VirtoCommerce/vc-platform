@@ -1,12 +1,12 @@
 ﻿angular.module('catalogModule.blades.import.importJobRun', [
     'angularFileUpload'
 ])
-.controller('importJobRunController', ['$scope', 'FileUploader', 'notificationService', function ($scope, FileUploader, notificationService) {
+.controller('importJobRunController', ['$scope', 'FileUploader', 'notificationService', 'imports', function ($scope, FileUploader, notificationService, imports) {
     $scope.blade.isLoading = false;
     $scope.job = angular.copy($scope.blade.item);
 
     $scope.run = function () {
-        $scope.job.$run(null, function (notify) {
+    	$scope.job.$run({ templatePath: $scope.job.templatePath }, function (notify) {
             // notificationService.task({ title: notify.title, description: notify.description });
             $scope.bladeClose();
         });
@@ -18,8 +18,8 @@
             var uploader = $scope.uploader = new FileUploader({
                 scope: $scope,
                 headers: { Accept: 'application/json' },
-                url: 'api/assets/',
-                method: 'PUT',
+                url: 'api/catalog/assets/',
+                method: 'POST',
                 autoUpload: true,
                 removeAfterUpload: true
             });

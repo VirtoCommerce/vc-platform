@@ -8,8 +8,7 @@ namespace VirtoCommerce.Framework.Web.Notification
 {
 	public interface INotifier
 	{
-		NotifyEvent Create(NotifyEvent notify);
-		void Update(NotifyEvent notify);
+		void Upsert(NotifyEvent notify);
 		NotifySearchResult SearchNotifies(string userId, NotifySearchCriteria criteria);
 
 	}

@@ -41,7 +41,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 			foreach (var notifyEvent in retVal.NotifyEvents)
 			{
 				notifyEvent.New = false;
-				_notifier.Update(notifyEvent);
+				_notifier.Upsert(notifyEvent);
 			}
 
 			return Ok(retVal);
@@ -54,9 +54,9 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 		{
 			notify.New = true;
 			notify.Created = DateTime.UtcNow;
-			notify.CreatorId = User.Identity.Name;
-			var retVal = _notifier.Create(notify);
-			return Ok(retVal);
+			notify.Creator = User.Identity.Name;
+			_notifier.Upsert(notify);
+			return Ok(notify);
 		}
 	}
 }

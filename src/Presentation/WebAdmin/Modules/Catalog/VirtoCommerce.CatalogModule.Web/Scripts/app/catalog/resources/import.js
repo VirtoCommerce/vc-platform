@@ -1,16 +1,16 @@
 ﻿angular.module('catalogModule.resources.import', [])
 .factory('imports', ['$resource', function ($resource) {
 
-    return $resource('api/import/:id', { id: '@id' }, {
+	return $resource('api/catalog/importjobs/:id', { id: '@id' }, {
         //remove: { method: 'DELETE', url: 'api/import/delete' },
         //copy: { method: 'GET', url: 'api/import/copy/:id' },
-        run: { method: 'POST', url: 'api/import/run' },
-        list: { method: 'GET', url: 'api/import/list/:catalogId', isArray: true },
-        get: { method: 'GET', url: 'api/import/get/:id', isArray: false },
-        new: { method: 'GET', url: 'api/import/new/:catalogId' },
-        create: { method: 'POST', url: 'api/import/create' },
-        update: { method: 'PUT', url: 'api/import/update' },
-        updateMappingItems: { method: 'POST', url: 'api/import/updateMappingItems' }
+		run: { method: 'GET', url: 'api/catalog/importjobs/:id/run' },
+		list: { method: 'GET', url: 'api/catalog/importjobs', isArray: true },
+		get: { method: 'GET', url: 'api/catalog/importjobs/:id', isArray: false },
+		new: { method: 'GET', url: 'api/catalog/importjobs/getnew' },
+		create: { method: 'POST', url: 'api/catalog/importjobs' },
+		update: { method: 'POST', url: 'api/catalog/importjobs' },
+        getAutoMapping: { method: 'GET', url: 'api/catalog/importjobs/getautomapping', isArray: true }
     });
 
 }]);

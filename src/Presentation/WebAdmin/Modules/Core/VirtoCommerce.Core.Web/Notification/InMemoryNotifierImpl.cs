@@ -12,17 +12,7 @@ namespace VirtoCommerce.CoreModule.Web.Notification
 		private List<NotifyEvent> _innerList = new List<NotifyEvent>();
 		#region INotifier Members
 
-		public NotifyEvent Create(NotifyEvent notify)
-		{
-			if(notify.Id == null)
-			{
-				notify.Id = Guid.NewGuid().ToString();
-			}
-			_innerList.Add(notify);
-			return notify;
-		}
-
-		public void Update(NotifyEvent notify)
+		public void Upsert(NotifyEvent notify)
 		{
 			var alreadyExistNotify = _innerList.FirstOrDefault(x => x.Id == notify.Id);
 			if(alreadyExistNotify != null)
@@ -37,11 +27,15 @@ namespace VirtoCommerce.CoreModule.Web.Notification
 				if(notify.FinishDate != null)
 					alreadyExistNotify.FinishDate = notify.FinishDate;
 			}
+			else
+			{
+				_innerList.Add(notify);
+			}
 		}
 
 		public NotifySearchResult SearchNotifies(string userId, NotifySearchCriteria criteria)
 		{
-			var query = _innerList.Where(x=>x.CreatorId == userId).AsQueryable();
+			var query = _innerList.Where(x=>x.Creator == userId).AsQueryable();
 			if(criteria.OnlyNew)
 			{
 				query = query.Where(x => x.New);

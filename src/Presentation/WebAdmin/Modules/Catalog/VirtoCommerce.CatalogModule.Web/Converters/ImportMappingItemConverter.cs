@@ -8,6 +8,17 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 {
     public static class MappingItemConverter
     {
+		public static MappingItem ToWebModel(this foundation.ImportProperty importProperty)
+		{
+			var retVal = new MappingItem();
+			retVal.EntityColumnName = importProperty.Name;
+			retVal.IsSystemProperty = true;
+			retVal.IsRequired = importProperty.IsRequiredProperty;
+			retVal.DisplayName = importProperty.IsRequiredProperty ? string.Format("* {0}", importProperty.DisplayName) : importProperty.DisplayName;
+			retVal.CustomValue = !string.IsNullOrEmpty(importProperty.DefaultValue) ? importProperty.DefaultValue : null;
+			return retVal;
+		}
+
         public static MappingItem ToWebModel(this foundation.MappingItem core)
         {
             var retVal = new MappingItem();

@@ -13,6 +13,7 @@ namespace VirtoCommerce.Foundation.Importing.Model
 		public IList Errors { get; set; }
 		public DateTime? Started { get; set; }
 		public DateTime? Stopped { get; set; }
+		public bool IsCancelled { get; set; }
 		public bool IsStarted { get { return Started != null; } }
 		public bool IsFinished { get { return Stopped != null; } }
 	}

@@ -113,7 +113,7 @@
 			if (!this.running) {
 				notificationRefresh();
 				this.running = true;
-				//$interval(notificationRefresh, 10000);
+				$interval(notificationRefresh, 10000);
 			};
 		},
 		running: false,

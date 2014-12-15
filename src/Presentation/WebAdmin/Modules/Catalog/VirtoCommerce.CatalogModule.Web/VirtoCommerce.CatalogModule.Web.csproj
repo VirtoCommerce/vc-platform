@@ -132,9 +132,9 @@
     <Compile Include="Model\CategoryLink.cs" />
     <Compile Include="Model\EditorialReview.cs" />
     <Compile Include="Model\ImportJob.cs" />
-    <Compile Include="Model\ImportJobRun.cs" />
     <Compile Include="Model\ListEntryLink.cs" />
     <Compile Include="Model\MappingItem.cs" />
+    <Compile Include="Model\Notifications\ImportExportNotifyEvent.cs" />
     <Compile Include="Model\ProductAssociation.cs" />
     <Compile Include="Model\PropertyDictionaryValue.cs" />
     <Compile Include="Model\Language.cs" />
