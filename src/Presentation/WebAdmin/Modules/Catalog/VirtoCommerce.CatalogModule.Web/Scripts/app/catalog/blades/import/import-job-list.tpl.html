@@ -5,7 +5,7 @@
         }
     </style>
 
-    <table class="table hovered">
+    <table ng-if="items.length" class="table hovered">
         <thead>
             <tr>
                 <th class="text-left fixed-td">
@@ -50,4 +50,6 @@
             </tr>
         </tbody>
     </table>
+    
+    <label ng-if="items.length == 0" class="spacer">No Import jobs found. Click Add to create one.</label>
 </div>

@@ -66,7 +66,7 @@ namespace VirtoCommerce.PackagingModule.Data.Repositories
 
 		private static string BuildAssemblyFilePath(string packageId, string fileName)
 		{
-			return Path.Combine("Modules", packageId, "bin", fileName);
+			return Path.Combine(packageId, "bin", fileName);
 		}
 	}
 }

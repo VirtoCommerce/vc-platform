@@ -19,7 +19,7 @@ namespace VirtoCommerce.PackagingModule.Data.Repositories
 			const string content = @"content\";
 
 			if (path.StartsWith(content, StringComparison.OrdinalIgnoreCase))
-				result = Path.Combine(content, "Modules", Id, path.Substring(content.Length));
+				result = Path.Combine(content, Id, path.Substring(content.Length));
 
 			return result;
 		}

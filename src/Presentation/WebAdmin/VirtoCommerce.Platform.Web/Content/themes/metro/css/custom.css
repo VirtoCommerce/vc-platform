@@ -1955,3 +1955,98 @@
 	float: left;
 	background-color: #d9d9d9;
 }
+
+
+
+/* notification blade */
+
+.notify.list .item.notif {
+
+}
+	.notify.list .col {
+		text-align: left;
+		white-space: normal;
+	}
+	.notify.list .item.notif .col {
+		/*display: block;*/
+		padding: 20px;
+		height: auto;
+		line-height: 1.5;
+		vertical-align: middle;
+	}
+
+	.notify.list .item.notif .head {
+		display: block;
+		height: auto;
+		/*padding: 10px 0;*/
+	}
+
+	.notify.list .item.notif .title {
+		height: auto;
+		font-size: 14px;
+		text-transform: none;
+		line-height: 1.5;
+		display: inline;
+		font-weight: bold;
+		padding: 0;
+		text-align: left;
+	}
+
+	.notify.list .item.notif .date {
+		float: right;
+		font-size: 14px;
+		text-transform: none;
+		line-height: 1.5;
+		display: inline;
+		font-weight: normal;
+		white-space: nowrap;
+	}
+
+	.notify.list .item.notif .pic {
+		display: block;
+		float: left;
+		width: 30px;
+		height: 30px;
+		overflow: hidden;
+		padding: 0;
+		margin-top: 5px;
+	}
+
+	.notify.list .item.notif .pic .icon {
+		line-height: 30px;
+		text-align: center;
+		width: 30px;
+		font-size: 24px;
+	}
+	.notify.list .item.notif.notify_warning .pic .icon {
+		color: #f0a30a;
+	}
+	.notify.list .item.notif.notify_error .pic .icon {
+		color: #e51400;
+	}
+	.notify.list .item.notif.notify_info .pic .icon {
+		color: #4390df;
+	}
+
+	.notify.list .item.notif .desc_outer {
+		display: block;
+		overflow: hidden;
+		padding-top: 10px;
+	}
+
+	.notify.list .item.notif .desc {
+		display: block;
+		font-size: 12px;
+		text-transform: none;
+		font-weight: lighter;
+	}
+
+	.notify.list .item.notif .progress-bar {
+		background-image: linear-gradient(45deg, rgba(255, 255, 255, 0.15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.15) 75%, transparent 75%, transparent);
+		background-size: 20px 20px;
+		-webkit-animation: 1s linear 0s normal none infinite progress_bar;
+		animation: 1s linear 0s normal none infinite progress_bar;
+		margin-bottom: 0;
+		margin-top: 10px;
+		background-color: #212628;
+	}
