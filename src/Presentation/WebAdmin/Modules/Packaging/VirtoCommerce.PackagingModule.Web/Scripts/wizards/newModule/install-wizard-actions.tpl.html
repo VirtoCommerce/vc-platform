@@ -1,0 +1,18 @@
+﻿<fieldset>
+    <p>
+        <a ng-href="{{currentEntity.licenseUrl}}" ng-if="currentEntity.licenseUrl" target="_blank">License</a>
+    </p>
+    <div class="input-control" data-role="input-control">
+        <div class="input-control checkbox" data-role="input-control">
+            <label>
+                <input type="checkbox" ng-model="licenseAccepted">
+                <span class="check"></span>
+                I accept the license agreement
+            </label>
+        </div>
+    </div>
+    
+    <button ng-click="createItem()" ng-disabled="!licenseAccepted">
+        <span>Install</span>
+    </button>
+</fieldset>

@@ -1,0 +1,29 @@
+﻿<div style="width: 500px;">
+    <style>
+        .sub-title {
+            display: block;
+            white-space: normal;
+        }
+    </style>
+
+    <span class="label">Title</span>
+    <span class="sub-title">{{currentEntity.title}}</span>
+    <span class="label">Author</span>
+    <span class="sub-title" ng-repeat="x in currentEntity.authors">{{x}} </span>
+    <span class="label">ID</span>
+    <span class="sub-title">{{currentEntity.id}}</span>
+    <span class="label">Version</span>
+    <span class="sub-title">{{currentEntity.version}}</span>
+    <p>
+        <a ng-href="{{currentEntity.licenseUrl}}" ng-if="currentEntity.licenseUrl" target="_blank">License</a>
+    </p>
+    <p>
+        <a ng-href="{{currentEntity.projectUrl}}" ng-if="currentEntity.projectUrl" target="_blank">Project Information</a>
+    </p>
+    <span class="label">Description</span>
+    <span class="sub-title">{{currentEntity.description}}</span>
+    <span class="label">Dependencies</span>
+    <span class="sub-title" ng-repeat="x in currentEntity.dependencies">{{x}} </span>
+    <span class="label">Tags</span>
+    <span class="sub-title">{{currentEntity.tags}}</span>
+</div>

@@ -1,0 +1,41 @@
+﻿<div style="width:500px">
+    <fieldset ng-if="!currentEntity">
+        <label>Select module file:</label>
+        <div data-role="input-control" class="input-control file">
+            <input type="file" uploader="uploader" nv-file-select style="z-index: 0;" tabindex="-1">
+            <input type="text" style="z-index: 1; cursor: default;" readonly="">
+            <button class="btn-file" type="button" onclick="$('input[type=file]').trigger('click')"></button>
+        </div>
+    </fieldset>
+
+    <div ng-if="currentEntity">
+        <style>
+            .sub-title {
+                display: block;
+                white-space: normal;
+            }
+        </style>
+
+        <span class="label">Title</span>
+        <span class="sub-title">{{currentEntity.title}}</span>
+        <span class="label">Author</span>
+        <span class="sub-title" ng-repeat="x in currentEntity.authors">{{x}} </span>
+        <span class="label">ID</span>
+        <span class="sub-title">{{currentEntity.id}}</span>
+        <span class="label">Version</span>
+        <span class="sub-title">{{currentEntity.version}}</span>
+        <p>
+            <a ng-href="{{currentEntity.licenseUrl}}" ng-if="currentEntity.licenseUrl" target="_blank">License</a>
+        </p>
+        <p>
+            <a ng-href="{{currentEntity.projectUrl}}" ng-if="currentEntity.projectUrl" target="_blank">Project Information</a>
+        </p>
+        <span class="label">Description</span>
+        <span class="sub-title">{{currentEntity.description}}</span>
+        <span class="label">Dependencies</span>
+        <span class="sub-title" ng-repeat="x in currentEntity.dependencies">{{x}} </span>
+        <span class="label">Tags</span>
+        <span class="sub-title">{{currentEntity.tags}}</span>
+    </div>
+
+</div> 

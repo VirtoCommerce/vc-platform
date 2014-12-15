@@ -1,4 +1,7 @@
 ﻿angular.module('virtoCommerce.packaging.blades.modulesList', [
+    'virtoCommerce.packaging.blades.moduleDetail',
+    'virtoCommerce.packaging.wizards.newModule.installWizard',
+    'angularFileUpload',
     'virtoCommerce.packaging.resources.modules'
 ])
 .controller('modulesListController', ['$rootScope', '$scope', 'bladeNavigationService', 'dialogService', 'modules', function ($rootScope, $scope, bladeNavigationService, dialogService, modules) {
@@ -9,10 +12,21 @@
 
         modules.getModules({}, function (results) {
             $scope.blade.isLoading = false;
-
-            $scope.currentEntities = results;
+            $scope.blade.currentEntities = results;
         });
     };
+
+    $scope.selectItem = function (listItem) {
+        var newBlade = {
+            id: 'moduleDetails',
+            title: 'Module information',
+            currentEntity: listItem,
+            controller: 'moduleDetailController',
+            template: 'Modules/Packaging/VirtoCommerce.PackagingModule.Web/Scripts/blades/module-detail.tpl.html'
+        };
+
+        bladeNavigationService.showBlade(newBlade, $scope.blade);
+    }
 
     $scope.blade.onClose = function (closeCallback) {
         closeChildrenBlades();
@@ -34,50 +48,21 @@
             canExecuteMethod: function () {
                 return true;
             }
-        },
-        {
-            name: "Update", icon: 'icon-arrow-up',
-            executeMethod: function () {
-                openUpdateEntityBlade();
-            },
-            canExecuteMethod: function () {
-                return true;
-            }
-        },
-        {
-            name: "View", icon: 'fa fa-eye',
-            executeMethod: function () {
-                openViewEntityBlade();
-            },
-            canExecuteMethod: function () {
-                return true;
-            }
-        },
-        {
-            name: "Delete", icon: 'icon-remove',
-            executeMethod: function () {
-                openDeleteEntityBlade();
-            },
-            canExecuteMethod: function () {
-                return true;
-            }
         }
     ];
 
     function openAddEntityBlade() {
         closeChildrenBlades();
-    }
 
-    function openUpdateEntityBlade() {
-        closeChildrenBlades();
-    }
-
-    function openViewEntityBlade() {
-        closeChildrenBlades();
-    }
-
-    function openDeleteEntityBlade() {
-        closeChildrenBlades();
+        var newBlade = {
+            id: "moduleInstallWizard",
+            title: "Module install",
+            // subtitle: '',
+            controller: 'installWizardController',
+            bladeActions: 'Modules/Packaging/VirtoCommerce.PackagingModule.Web/Scripts/wizards/newModule/install-wizard-actions.tpl.html',
+            template: 'Modules/Packaging/VirtoCommerce.PackagingModule.Web/Scripts/wizards/newModule/install-wizard.tpl.html'
+        };
+        bladeNavigationService.showBlade(newBlade, $scope.blade);
     }
 
     $scope.blade.refresh();

@@ -101,7 +101,7 @@
                 deleteEntry();
             },
             canExecuteMethod: function () {
-                return $scope.blade.parentBlade.currentEntities.indexOf($scope.blade.origEntity) && !isDirty();
+                return $scope.blade.parentBlade.currentEntities.indexOf($scope.blade.origEntity) >= 0 && !isDirty();
             }
         }
     ];
