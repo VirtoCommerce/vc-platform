@@ -44,6 +44,16 @@
     function openUpdateEntityBlade() {
         closeChildrenBlades();
 
+        var newBlade = {
+            id: "moduleWizard",
+            title: "Module update",
+            // subtitle: '',
+            mode: 'update',
+            controller: 'installWizardController',
+            bladeActions: 'Modules/Packaging/VirtoCommerce.PackagingModule.Web/Scripts/wizards/newModule/install-wizard-actions.tpl.html',
+            template: 'Modules/Packaging/VirtoCommerce.PackagingModule.Web/Scripts/blades/module-detail.tpl.html'
+        };
+        bladeNavigationService.showBlade(newBlade, $scope.blade);
     }
 
     function openDeleteEntityBlade() {
@@ -53,19 +63,20 @@
             message: "Are you sure you want to uninstall this Module?",
             callback: function (remove) {
                 if (remove) {
-                    /*
                     $scope.blade.isLoading = true;
 
-                    var idx = $scope.blade.parentBlade.currentEntities.indexOf($scope.blade.origEntity);
-                    if (idx >= 0) {
-                        var entriesCopy = $scope.blade.parentBlade.currentEntities.slice();
-                        entriesCopy.splice(idx, 1);
-                        items.updateitem({ id: $scope.blade.parentBlade.currentEntityId, reviews: entriesCopy }, function () {
-                            $scope.bladeClose();
-                            $scope.blade.parentBlade.refresh(true);
-                        });
-                    }
-                    */
+                    var newBlade = {
+                        id: 'moduleInstallProgress',
+                        title: 'module uninstall',
+                        subtitle: 'Installation progress',
+                        controller: 'moduleInstallProgressController',
+                        template: 'Modules/Packaging/VirtoCommerce.PackagingModule.Web/Scripts/wizards/newModule/module-wizard-progress-step.tpl.html'
+                    };
+
+                    modules.uninstall({ id: $scope.currentEntity.id }, function (data) {
+                        newBlade.currentEntityId = data;
+                        bladeNavigationService.showBlade(newBlade, $scope.blade);
+                    });
                 }
             }
         }

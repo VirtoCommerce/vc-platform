@@ -1,0 +1,11 @@
+﻿<div style="width: 300px;">
+    <span class="subheader-secondary">Process start</span>
+    <p>{{currentEntity.started}}</p>
+    <span class="subheader-secondary">Process end</span>
+    <p>{{currentEntity.completed}}</p>
+
+    <span class="subheader-secondary">Messages</span>
+    <p ng-repeat="x in currentEntity.logs">{{x}} </p>
+    <span class="subheader-secondary">Errors</span>
+    <p ng-repeat="x in currentEntity.errors">{{x}} </p>
+</div>
