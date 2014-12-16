@@ -1088,6 +1088,7 @@
 	height: 155px;
 	padding: 40px 0 5px;
 	position: relative;
+    min-width: 300px;
 
 	-webkit-box-sizing: border-box;
 			box-sizing: border-box;
@@ -1245,23 +1246,23 @@
 .blade-head-nav .btn-min,
 .blade-head-nav .btn-max
 {
-	width: 24px;
+	width: 35px;
 }
 
 .blade-head-nav .btn-min
 {
-	right: 75px;
+	right: 35px;
 }
 
 .blade-head-nav .btn-max
 {
-	right: 50px;
+	right: 35px;
 }
 
 .blade-head-nav .btn-close
 {
 	right: 0;
-	width: 48px;
+	width: 35px;
 }
 
 .blade-head-nav .btn-min:after,
