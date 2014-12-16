@@ -235,11 +235,15 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 				itemRelation.ParentItemId = item.ItemId;
 
 				//Update all relations to new parent
-				var allVariationRelations = ItemRelations.Where(x => x.ParentItemId == itemRelation.ParentItemId);
+				var allVariationRelations = ItemRelations.Include(x=>x.ChildItem).Where(x => x.ParentItemId == itemRelation.ParentItemId);
 				foreach (var variationRelation in allVariationRelations)
 				{
 					variationRelation.ParentItemId = item.ItemId;
+					//hide all variation in search
+					variationRelation.ChildItem.IsActive = false;
 				}
+				
+
 			}
 		}
 

@@ -25,7 +25,7 @@ namespace VirtoCommerce.PackagingModule.Web
 		public void Initialize()
 		{
 			var packageService = new PackageService(HostingEnvironment.MapPath("~/Content/Packages"), HostingEnvironment.MapPath("~/Modules"), HostingEnvironment.MapPath("~/Packages"));
-			_container.RegisterType<ModulesController>(new InjectionConstructor(packageService, HostingEnvironment.MapPath("~/Content/Packages")));
+			_container.RegisterType<ModulesController>(new InjectionConstructor(packageService, "~/Content/Packages"));
 		}
 
 		#endregion

@@ -7,6 +7,7 @@ using System.Web.Http;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using VirtoCommerce.CoreModule.Web.Security;
+using VirtoCommerce.Foundation.Data.Security.Identity;
 using VirtoCommerce.Foundation.Security.Model;
 
 namespace VirtoCommerce.SecurityModule.Web.Controllers
@@ -51,9 +52,8 @@ namespace VirtoCommerce.SecurityModule.Web.Controllers
         }
 
         [HttpPost]
-		[ActionName("login")]
-        [Route("login")]
-		public async Task<IHttpActionResult> Login(UserLogin model)
+		[Route("login")]
+       	public async Task<IHttpActionResult> Login(UserLogin model)
 		{
             if (await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, true) == SignInStatus.Success)
             {
@@ -65,16 +65,32 @@ namespace VirtoCommerce.SecurityModule.Web.Controllers
 
 		[Authorize]
 		[HttpGet]
-		[ActionName("usersession")]
-        [Route("usersession")]
+	    [Route("usersession")]
 		public  IHttpActionResult GetUserSession()
 		{
             return Ok(GetUserInfo(User.Identity.Name));
 		}
 
+
 		[HttpPost]
-		[ActionName("logout")]
-        [Route("logout")]
+		[Route("register")]
+		public async Task<IHttpActionResult> Register(string userName, string password)
+		{
+			var user = new ApplicationUser() { UserName = userName };
+			var result = await UserManager.CreateAsync(user, password);
+			if (result.Succeeded)
+			{
+				await Login(new UserLogin { UserName = userName, Password = password, RememberMe = false });
+			}
+			else
+			{
+			  return  BadRequest(String.Join(" ", result.Errors));
+			}
+			return Ok();
+		}
+
+		[HttpPost]
+	    [Route("logout")]
 		public IHttpActionResult Logout()
 		{
             AuthenticationManager.SignOut();

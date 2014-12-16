@@ -111,12 +111,14 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			var retVal = new foundation.Product();
 
 			//Constant fields
-			retVal.IsActive = true;
+			//Only for main product
+			retVal.IsActive = product.MainProductId == null;
 			retVal.AvailabilityRule = (int)foundation.AvailabilityRule.Always;
 			retVal.StartDate = DateTime.UtcNow;
 			retVal.IsBuyable = true;
 			retVal.MinQuantity = 1;
 			retVal.MaxQuantity = 0;
+
 
 			//Changed fields
 			retVal.Name = product.Name;
