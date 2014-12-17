@@ -138,7 +138,6 @@
     <Content Include="Scripts\wizards\newModule\module-wizard-progress-step.js" />
     <Content Include="Scripts\wizards\newModule\module-wizard-progress-step.tpl.html" />
     <Content Include="Scripts\wizards\newModule\install-wizard.js" />
-    <Content Include="Scripts\wizards\newModule\install-wizard.tpl.html" />
     <Content Include="Scripts\wizards\newModule\install-wizard-actions.tpl.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

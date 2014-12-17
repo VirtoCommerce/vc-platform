@@ -1,4 +1,4 @@
-﻿<div style="width: 450px;">
+﻿<div style="width: 350px;">
     <style>
         p {
             white-space: normal;
@@ -32,8 +32,14 @@
         <span class="subheader-secondary">Description</span>
         <p>{{currentEntity.description}}</p>
         <span class="subheader-secondary">Dependencies</span>
-        <p ng-repeat="x in currentEntity.dependencies">{{x}} </p>
+        <p>
+            <span ng-repeat="x in currentEntity.dependencies">{{x}}</span>&nbsp;
+        </p>
         <span class="subheader-secondary">Tags</span>
         <p>{{currentEntity.tags}}</p>
+        <span class="subheader-secondary" ng-if="currentEntity.validationErrors.length>0">Errors</span>
+        <p>
+            <span class="fg-red" ng-repeat="x in currentEntity.validationErrors">{{x}}<br></span>
+        </p>
     </div>
 </div>

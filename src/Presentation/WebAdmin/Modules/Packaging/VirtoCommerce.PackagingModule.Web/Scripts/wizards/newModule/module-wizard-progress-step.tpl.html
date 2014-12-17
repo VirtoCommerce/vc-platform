@@ -6,23 +6,24 @@
     </style>
 
     <span class="subheader-secondary">Process start</span>
-    <p>{{currentEntity.started}}&nbsp;</p>
+    <p>{{currentEntity.started | date : 'mediumTime'}}&nbsp;</p>
     <span class="subheader-secondary">Process end</span>
-    <p>{{currentEntity.completed}}&nbsp;</p>
+    <p>{{currentEntity.completed | date : 'mediumTime'}}&nbsp;</p>
 
     <span class="subheader-secondary">Messages</span>
-    <p>
+    <p class="text-info">
         <span ng-repeat="x in currentEntity.logs">{{x}}<br></span>
     </p>
 
-    <span class="subheader-secondary">Errors</span>
+    <span class="subheader-secondary" ng-if="currentEntity.errors.length>0">Errors</span>
     <p>
         <span ng-repeat="x in currentEntity.errors">{{x}}<br></span>
     </p>
 
-    <p ng-if="completed">Module installation process completed. Restart the application now or later.</p>
+    <br/>
+    <p ng-if="completed && currentEntity.errors.length==0">Module installation process completed. Restart the application now or later.</p>
     <div>
-        <button ng-click="submit()" ng-disabled="!completed">
+        <button ng-click="restart()" ng-disabled="!(completed && currentEntity.errors.length==0)">
             <span>Restart</span>
         </button>
     </div>

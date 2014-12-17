@@ -5,7 +5,6 @@
 .controller('installWizardController', ['$scope', 'bladeNavigationService', 'FileUploader', 'modules', function ($scope, bladeNavigationService, FileUploader, modules) {
 
     $scope.submit = function () {
-        $scope.blade.isLoading = true;
         $scope.isInstalling = true;
 
         var newBlade = {
@@ -17,7 +16,7 @@
         };
 
         if ($scope.blade.mode === 'install') {
-        	modules.install({ fileName: $scope.currentEntity.fileName }, function (data) {
+            modules.install({ fileName: $scope.currentEntity.fileName }, function (data) {
                 newBlade.currentEntityId = data.id;
                 bladeNavigationService.showBlade(newBlade, $scope.blade);
             });

@@ -25,18 +25,16 @@
                 openUpdateEntityBlade();
             },
             canExecuteMethod: function () {
-                // return $scope.currentEntity.isRemovable;
-                return true;
+                return $scope.currentEntity && $scope.currentEntity.isRemovable;
             }
         },
         {
-            name: "Delete", icon: 'icon-remove',
+            name: "Uninstall", icon: 'icon-remove',
             executeMethod: function () {
                 openDeleteEntityBlade();
             },
             canExecuteMethod: function () {
-                // return $scope.currentEntity.isRemovable;
-                return true;
+                return $scope.currentEntity && $scope.currentEntity.isRemovable;
             }
         }
     ];
@@ -77,11 +75,11 @@
                         newBlade.currentEntityId = data.id;
                         bladeNavigationService.showBlade(newBlade, $scope.blade);
                     });
+                }
             }
         }
-    }
         dialogService.showConfirmationDialog(dialog);
-}
+    }
 
     // on load
     initializeBlade($scope.blade.currentEntity);
