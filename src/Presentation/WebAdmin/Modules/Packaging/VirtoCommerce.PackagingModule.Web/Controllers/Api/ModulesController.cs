@@ -68,11 +68,16 @@ namespace VirtoCommerce.PackagingModule.Web.Controllers.Api
 				if (descriptor != null)
 				{
 					var retVal = descriptor.ToWebModel();
+					var allInstalledModules = _packageService.GetModules().Select(x => x.Id);
 					//check unresolved dependencies 
 					if (descriptor.Dependencies != null)
 					{
-						var allInstalledModules = _packageService.GetModules().Select(x => x.Id);
-						retVal.UnresolvedDependencies = descriptor.Dependencies.Except(allInstalledModules).ToArray();
+						retVal.ValidationErrors = descriptor.Dependencies.Except(allInstalledModules).Select(x=> "Unresolved dependency: " + x).ToList();
+					}
+					//Check module already installed
+					if (allInstalledModules.Contains(descriptor.Id))
+					{
+						retVal.ValidationErrors.Add("Already installed");
 					}
 					retVal.FileName = file.LocalFileName;
 					return Ok(retVal);
@@ -172,18 +177,19 @@ namespace VirtoCommerce.PackagingModule.Web.Controllers.Api
 					{
 						_jobList.Add(job);
 						job.Started = DateTime.UtcNow;
-						//TODO: log
+						var reportProgress =  new Progress<string>((x) => { job.Logs.Add(x); });
+					
 						if (job.Action == webModel.ModuleAction.Install)
 						{
-							job.PackageService.Install(job.ModuleDescriptor.Id, job.ModuleDescriptor.Version);
+							job.PackageService.Install(job.ModuleDescriptor.Id, job.ModuleDescriptor.Version, reportProgress);
 						}
 						else if (job.Action == webModel.ModuleAction.Update)
 						{
-							job.PackageService.Update(job.ModuleDescriptor.Id, job.ModuleDescriptor.Version);
+							job.PackageService.Update(job.ModuleDescriptor.Id, job.ModuleDescriptor.Version, reportProgress);
 						}
 						else if (job.Action == webModel.ModuleAction.Uninstall)
 						{
-							job.PackageService.Uninstall(job.ModuleDescriptor.Id);
+							job.PackageService.Uninstall(job.ModuleDescriptor.Id, reportProgress);
 						}
 					}
 					catch (Exception ex)

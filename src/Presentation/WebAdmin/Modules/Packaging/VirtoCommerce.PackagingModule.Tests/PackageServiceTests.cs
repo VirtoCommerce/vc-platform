@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NuGet;
+using VirtoCommerce.PackagingModule.Data.Repositories;
 using VirtoCommerce.PackagingModule.Data.Services;
 using VirtoCommerce.PackagingModule.Model;
 using VirtoCommerce.PackagingModule.Services;
@@ -33,23 +35,35 @@ namespace VirtoCommerce.PackagingModule.Tests
 			var service = GetPackageService();
 			ListModules(service);
 
-			service.Install(package2, "1.0");
+			service.Install(package2, "1.0", null);
 			ListModules(service);
 
-			service.Update(package2, "1.1");
+			service.Update(package2, "1.1", null);
 			ListModules(service);
 
-			service.Uninstall(package2);
+			service.Uninstall(package2, null);
 			ListModules(service);
 
-			service.Uninstall(package1);
+			service.Uninstall(package1, null);
 			ListModules(service);
 		}
 
 
 		private static PackageService GetPackageService()
 		{
-			var service = new PackageService("source", @"target\modules", @"target\packages") { Logger = new DebugLogger() };
+			var sourcePath ="source";
+			var modulesPath = @"target\modules";
+			var packagesPath = @"target\packages";
+
+			var projectSystem = new WebsiteProjectSystem(modulesPath);
+
+			var nugetProjectManager = new ProjectManager(new WebsiteLocalPackageRepository(sourcePath),
+													new DefaultPackagePathResolver(modulesPath),
+													projectSystem,
+													new ManifestPackageRepository(modulesPath, new WebsitePackageRepository(packagesPath, projectSystem)));
+
+
+			var service = new PackageService(nugetProjectManager);
 			return service;
 		}
 
