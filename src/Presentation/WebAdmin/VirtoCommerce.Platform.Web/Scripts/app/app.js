@@ -103,9 +103,13 @@ angular.module('platformWebApp', AppDependencies).
         });
 
         $rootScope.$on('loginStatusChanged', function (event, authContext) {
-            if (authContext.isAuthenticated) {
-            	homeMenuItem.action();
-            }
+        	if (authContext.isAuthenticated) {
+        		console.log('State - ' + $state.current.name);
+        		if(!$state.current.name || $state.current.name == 'loginDialog')
+        		{
+        			homeMenuItem.action();
+        		}
+	        }
             else {
                 $state.go('loginDialog');
             }
