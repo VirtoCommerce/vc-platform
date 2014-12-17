@@ -30,7 +30,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
 		[JsonIgnore]
 		public DateTime? Finished;
 		[JsonIgnore]
-		public ImportExportNotifyEvent NotifyEvent { get; set; }
+		public ImportNotifyEvent NotifyEvent { get; set; }
 		[JsonIgnore]
 		public INotifier Notifier { get; set; }
 		[JsonIgnore]

@@ -10,7 +10,7 @@ using VirtoCommerce.Framework.Web.Notification;
 
 namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 {
-	[RoutePrefix("api/notification")]
+	[RoutePrefix("api/notifications")]
 	public class NotificationController : ApiController
 	{
 		private readonly INotifier _notifier;
@@ -19,13 +19,16 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 			_notifier = notifier;
 		}
 
+		/// <summary>
+		/// api/notifications?start=0&count=10&
+		/// </summary>
+		/// <returns></returns>
 		[Authorize]
 		[HttpGet]
 		[ResponseType(typeof(NotifySearchResult))]
-		[Route("allRecent")]
-		public IHttpActionResult GetAllRecent()
+		[Route("")]
+		public IHttpActionResult GetAllRecent([FromUri]NotifySearchCriteria criteria)
 		{
-			var criteria = new NotifySearchCriteria { StartDate = DateTime.UtcNow.AddHours(-1), Start = 0, Count = int.MaxValue };
 			var retVal = _notifier.SearchNotifies(User.Identity.Name, criteria);
 			return Ok(retVal);
 		}

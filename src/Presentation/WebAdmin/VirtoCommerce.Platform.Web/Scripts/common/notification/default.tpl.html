@@ -1,0 +1,21 @@
+﻿<a href="" ng-init="
+    notifyStatusArr = [
+        'running',
+        'aborted',
+        'finished',
+        'error'
+    ];
+    classNames = ['item', 'notif', menuItem.notify.notifyType, notifyStatusArr[menuItem.notify.status]];
+" ng-class="classNames">
+    <span class="head">
+        <span class="title" ng-bind="menuItem.title"></span>
+        <span class="date" am-time-ago="menuItem.notify.created"></span>
+    </span>
+    <span class="desc_outer">
+        <span class="pic">
+            <i ng-class="icon-comments" class="icon"></i>
+        </span>
+        <span class="desc" ng-bind="menuItem.notify.description"></span>
+    </span>
+    <div ng-if="menuItem.notify.status == 0" class="progress-bar small" data-role="progress-bar" data-value="30"></div>
+</a>

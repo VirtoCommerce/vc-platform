@@ -9,7 +9,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="notify in notifications" ng-init="
+            <tr ng-click="selectNotify(notify)" ng-repeat="notify in notifications" ng-init="
     notifyStatusArr = [
         'notify_running',
         'notify_aborted',

@@ -5,6 +5,10 @@ namespace VirtoCommerce.PackagingModule.Web.Model
 {
 	public class ModuleDescriptor
 	{
+		public ModuleDescriptor()
+		{
+			ValidationErrors = new List<string>();
+		}
 		public string Id { get; set; }
 		public string Version { get; set; }
 		public string Title { get; set; }
@@ -18,8 +22,11 @@ namespace VirtoCommerce.PackagingModule.Web.Model
 		public string ReleaseNotes { get; set; }
 		public string Copyright { get; set; }
 		public string Tags { get; set; }
-		public IEnumerable<string> Dependencies { get; set; }
+		public string[] Dependencies { get; set; }
 
+		public ICollection<string> ValidationErrors { get; set; }
 		public bool IsRemovable { get; set; }
+
+		public string FileName { get; set; }
 	}
 }

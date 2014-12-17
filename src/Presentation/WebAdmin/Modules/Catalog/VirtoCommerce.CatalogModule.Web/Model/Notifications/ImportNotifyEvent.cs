@@ -8,16 +8,14 @@ using VirtoCommerce.Framework.Web.Notification;
 
 namespace VirtoCommerce.CatalogModule.Web.Model.Notifications
 {
-	public class ImportExportNotifyEvent : NotifyEvent
+	public class ImportNotifyEvent : NotifyEvent
 	{
-		private readonly ImportJob _job;
-		
-		public ImportExportNotifyEvent(ImportJob job, string creator)
+		public ImportNotifyEvent(ImportJob job, string creator)
 			:base(creator)
 		{
-			_job = job;
+			Job = job;
 			Status = NotifyStatus.Pending;
-			NotifyType = NotifyType.LongRunningTask;
+			NotifyType = this.GetType().Name;
 		}
 
 		public void LogProgress(ImportResult result)
@@ -26,14 +24,16 @@ namespace VirtoCommerce.CatalogModule.Web.Model.Notifications
 			Title = Description = string.Format("Processed records: {0}", result.ProcessedRecordsCount + result.ErrorsCount);
 			if(result.IsCancelled)
 			{
-				Title =  string.Format("Import job '{0}' processing was canceled.", _job.Name);
+				Title = string.Format("Import job '{0}' processing was canceled.", Job.Name);
 			}
 			FinishDate = result.Stopped;
 			if (result.ErrorsCount > 0)
 			{
 				Description += Environment.NewLine + "Errors:" + Environment.NewLine + string.Join(Environment.NewLine, result.Errors.Cast<string>());
 			}
-			_job.Notifier.Upsert(this);
+			Job.Notifier.Upsert(this);
 		}
+
+		public ImportJob Job { get; set; }
 	}
 }

@@ -38,14 +38,41 @@
 
 .login .window.flat .content
 {
-	padding: 50px 20px 40px 20px;
+	padding: 50px 20px 20px;
 	position: relative;
+}
+
+.metro .window.flat .caption
+{
+	height: auto;
+}
+
+.metro .window.flat .caption .logo
+{
+	float: left;
+	margin: 0 0 0 5px;
+	max-width: 25px;
+}
+
+.metro .window.flat .caption .title
+{
+	margin: 5px 0 5px 10px;
 }
 
 .metro .table tbody tr.selected,
 .metro .table.hovered tbody tr.selected
 {
 	background: #b3ebfb;
+}
+
+.metro table
+{
+	clear: both;
+}
+
+.metro .table td
+{
+	cursor: pointer;
 }
 
 .login .preload {
@@ -611,7 +638,7 @@
 
 			.left-menu ul.top
 			{
-				top: 65px;
+				top: 0;
 			}
 
 			.left-menu ul.bot
@@ -684,6 +711,11 @@
 						border-bottom: transparent;
 						border-top: transparent;
 						margin: 0 -3px 0 0;
+					}
+
+					.left-menu ul.top .home img
+					{
+						max-width: 45px;
 					}
 
 						.left-menu .top li a .progress-bar {
@@ -1089,6 +1121,7 @@
 	height: 155px;
 	padding: 40px 0 5px;
 	position: relative;
+    min-width: 300px;
 
 	-webkit-box-sizing: border-box;
 			box-sizing: border-box;
@@ -1246,23 +1279,23 @@
 .blade-head-nav .btn-min,
 .blade-head-nav .btn-max
 {
-	width: 24px;
+	width: 35px;
 }
 
 .blade-head-nav .btn-min
 {
-	right: 75px;
+	right: 35px;
 }
 
 .blade-head-nav .btn-max
 {
-	right: 50px;
+	right: 35px;
 }
 
 .blade-head-nav .btn-close
 {
 	right: 0;
-	width: 48px;
+	width: 35px;
 }
 
 .blade-head-nav .btn-min:after,

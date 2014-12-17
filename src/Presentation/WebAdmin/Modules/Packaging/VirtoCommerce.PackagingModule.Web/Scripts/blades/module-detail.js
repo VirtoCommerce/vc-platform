@@ -63,7 +63,7 @@
             message: "Are you sure you want to uninstall this Module?",
             callback: function (remove) {
                 if (remove) {
-                    $scope.blade.isLoading = true;
+                    // $scope.blade.isLoading = true;
 
                     var newBlade = {
                         id: 'moduleInstallProgress',
@@ -74,14 +74,14 @@
                     };
 
                     modules.uninstall({ id: $scope.currentEntity.id }, function (data) {
-                        newBlade.currentEntityId = data;
+                        newBlade.currentEntityId = data.id;
                         bladeNavigationService.showBlade(newBlade, $scope.blade);
                     });
-                }
             }
         }
-        dialogService.showConfirmationDialog(dialog);
     }
+        dialogService.showConfirmationDialog(dialog);
+}
 
     // on load
     initializeBlade($scope.blade.currentEntity);

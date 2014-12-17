@@ -14,6 +14,7 @@ namespace VirtoCommerce.Framework.Web.Notification
 			New = true;
 			Id = Guid.NewGuid().ToString();
 			Creator = creator;
+			ExtendedProperties = new Dictionary<string, string>();
 		}
 		public string Id { get; set; }
 		public string Creator { get; set; }
@@ -21,10 +22,12 @@ namespace VirtoCommerce.Framework.Web.Notification
 		public DateTime? FinishDate { get; set; }
 
 		public bool New { get; set; }
-		public NotifyType NotifyType { get; set; }
+		public string NotifyType { get; set; }
 		public NotifyStatus Status { get; set; }
 
 		public string Description { get; set; }
 		public string Title { get; set; }
+		public int RepeatCount { get; set; }
+		public IDictionary<string, string> ExtendedProperties { get; set; }
 	}
 }
