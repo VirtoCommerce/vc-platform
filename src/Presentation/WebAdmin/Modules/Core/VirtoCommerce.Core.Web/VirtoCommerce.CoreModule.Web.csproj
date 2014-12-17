@@ -111,6 +111,7 @@
     <Compile Include="Security\Data\IFoundationSecurityRepository.cs" />
     <Compile Include="Security\Models\AuthInfo.cs" />
     <Compile Include="Security\Models\UserLogin.cs" />
+    <Compile Include="Security\Models\ApplicationUserExtended.cs" />
     <Compile Include="Security\OwinConfig.cs" />
   </ItemGroup>
   <ItemGroup>

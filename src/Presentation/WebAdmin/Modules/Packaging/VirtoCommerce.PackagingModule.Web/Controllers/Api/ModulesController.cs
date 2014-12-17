@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.Practices.Unity;
+using System;
+using System.Collections.Concurrent;
+using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
-using Microsoft.Practices.Unity;
-using VirtoCommerce.PackagingModule.Services;
-using webModel = VirtoCommerce.PackagingModule.Web.Model;
-using VirtoCommerce.PackagingModule.Web.Converters;
 using VirtoCommerce.Framework.Web.Common;
-using System.Collections.Concurrent;
-using System.IO;
+using VirtoCommerce.PackagingModule.Services;
+using VirtoCommerce.PackagingModule.Web.Converters;
+using webModel = VirtoCommerce.PackagingModule.Web.Model;
 
 namespace VirtoCommerce.PackagingModule.Web.Controllers.Api
 {
@@ -55,7 +53,7 @@ namespace VirtoCommerce.PackagingModule.Web.Controllers.Api
 			return NotFound();
 		}
 
-		// POST: api/modules/upload
+        // POST: api/modules
 		[HttpPost]
 		[ResponseType(typeof(webModel.ModuleDescriptor))]  
 		[Route("")]
@@ -64,7 +62,7 @@ namespace VirtoCommerce.PackagingModule.Web.Controllers.Api
 			var streamProvider = await HttpRequestUploader.ReadDataAsync(Request, _packagesPath);
 
 			var file = streamProvider.FileData.FirstOrDefault();
-			if(file != null)
+            if (file != null)
 			{
 				var retVal = _packageService.OpenPackage(Path.Combine(_packagesPath, file.LocalFileName));
 				if (retVal != null)
@@ -119,7 +117,7 @@ namespace VirtoCommerce.PackagingModule.Web.Controllers.Api
 
 		// GET: api/modules/jobs/111
 		[HttpGet]
-		[ResponseType(typeof(string))]
+        [ResponseType(typeof(webModel.ModuleWorkerJob))]
 		[Route("jobs/{id}")]
 		public IHttpActionResult GetJob(string id)
 		{
@@ -136,17 +134,17 @@ namespace VirtoCommerce.PackagingModule.Web.Controllers.Api
 			webModel.ModuleWorkerJob retVal = null;
 			var descriptor = _packageService.GetModules().FirstOrDefault(x => x.Id == id);
 			if (descriptor != null)
-			{
+		{
 				retVal = new webModel.ModuleWorkerJob(_packageService, descriptor.ToWebModel(), action);
 
 				_sheduledJobs.Enqueue(retVal);
 
-				if (_runningTask == null || _runningTask.IsCompleted)
+			if (_runningTask == null || _runningTask.IsCompleted)
+			{
+				lock (_lockObject)
 				{
-					lock (_lockObject)
+					if (_runningTask == null || _runningTask.IsCompleted)
 					{
-						if (_runningTask == null || _runningTask.IsCompleted)
-						{
 							_runningTask = Task.Run(() => { DoWork(); }, retVal.CancellationToken);
 						}
 					}

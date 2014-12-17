@@ -1,18 +1,33 @@
 ﻿angular.module('virtoCommerce.packaging.wizards.newModule.installWizard', [
-// 'virtoCommerce.packaging.wizards.newModule...'
+    'virtoCommerce.packaging.wizards.newModule.moduleInstallProgress',
     'angularFileUpload'
 ])
 .controller('installWizardController', ['$scope', 'bladeNavigationService', 'FileUploader', 'modules', function ($scope, bladeNavigationService, FileUploader, modules) {
 
-    $scope.create = function () {
+    $scope.submit = function () {
         $scope.blade.isLoading = true;
+        $scope.isInstalling = true;
 
+        var newBlade = {
+            id: 'moduleInstallProgress',
+            title: $scope.blade.title,
+            subtitle: 'Installation progress',
+            controller: 'moduleInstallProgressController',
+            template: 'Modules/Packaging/VirtoCommerce.PackagingModule.Web/Scripts/wizards/newModule/module-wizard-progress-step.tpl.html'
+        };
 
-        //modules.updateitem({ id: $scope.blade.parentBlade.currentEntityId, associations: entriesCopy }, function () {
-        //    $scope.bladeClose();
-        //    $scope.blade.parentBlade.refresh();
-        //});
-    }
+        if ($scope.blade.mode === 'install') {
+            modules.install({ id: $scope.currentEntity.id }, function (data) {
+                newBlade.currentEntityId = data;
+                bladeNavigationService.showBlade(newBlade, $scope.blade);
+            });
+        } else if ($scope.blade.mode === 'update') {
+            modules.update({ id: $scope.currentEntity.id }, function (data) {
+                newBlade.currentEntityId = data;
+                bladeNavigationService.showBlade(newBlade, $scope.blade);
+            });
+        }
+    };
 
     function endsWith(str, suffix) {
         return str.indexOf(suffix, str.length - suffix.length) !== -1;
@@ -38,35 +53,19 @@
                 }
             });
 
+            uploader.onAfterAddingFile = function (item) {
+                $scope.blade.isLoading = true;
+            };
+
+            uploader.onCompleteAll = function () {
+                $scope.blade.isLoading = false;
+            }
+
             uploader.onSuccessItem = function (fileItem, data, status, headers) {
                 $scope.currentEntity = data;
             };
         }
     };
-
-    /*
-    $scope.openBlade = function (type) {
-        $scope.blade.onClose(function () {
-            var newBlade = null;
-            switch (type) {
-                case 'progress':
-                    newBlade = {
-                        id: 'selectCatalog',
-                        title: 'Select Catalog',
-                        subtitle: 'Adding Associations to product',
-                        controller: 'catalogsSelectController',
-                        bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/common/wizard-ok-action.tpl.html',
-                        template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/catalogs-select.tpl.html'
-                    };
-
-                    break;
-            }
-
-            if (newBlade != null) {
-                bladeNavigationService.showBlade(newBlade, $scope.blade);
-            }
-        });
-    }*/
 
     $scope.blade.onClose = function (closeCallback) {
         closeChildrenBlades();
@@ -80,7 +79,12 @@
     }
 
     initialize();
-    $scope.blade.selection = [];
+    if ($scope.blade.mode === 'install') {
+        $scope.actionButtonTitle = 'Install';
+    } else {
+        $scope.actionButtonTitle = 'Update';
+    }
+
     $scope.blade.isLoading = false;
 }]);
 

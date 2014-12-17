@@ -1,7 +1,6 @@
 ﻿angular.module('virtoCommerce.packaging.blades.modulesList', [
     'virtoCommerce.packaging.blades.moduleDetail',
     'virtoCommerce.packaging.wizards.newModule.installWizard',
-    'angularFileUpload',
     'virtoCommerce.packaging.resources.modules'
 ])
 .controller('modulesListController', ['$rootScope', '$scope', 'bladeNavigationService', 'dialogService', 'modules', function ($rootScope, $scope, bladeNavigationService, dialogService, modules) {
@@ -17,6 +16,8 @@
     };
 
     $scope.selectItem = function (listItem) {
+        $scope.selectedEntityId = listItem.id;
+
         var newBlade = {
             id: 'moduleDetails',
             title: 'Module information',
@@ -41,6 +42,15 @@
 
     $scope.bladeToolbarCommands = [
         {
+            name: "Refresh", icon: 'icon-spin',
+            executeMethod: function () {
+                $scope.blade.refresh();
+            },
+            canExecuteMethod: function () {
+                return true;
+            }
+        },
+        {
             name: "Add", icon: 'icon-plus',
             executeMethod: function () {
                 openAddEntityBlade();
@@ -55,12 +65,13 @@
         closeChildrenBlades();
 
         var newBlade = {
-            id: "moduleInstallWizard",
+            id: "moduleWizard",
             title: "Module install",
             // subtitle: '',
+            mode: 'install',
             controller: 'installWizardController',
             bladeActions: 'Modules/Packaging/VirtoCommerce.PackagingModule.Web/Scripts/wizards/newModule/install-wizard-actions.tpl.html',
-            template: 'Modules/Packaging/VirtoCommerce.PackagingModule.Web/Scripts/wizards/newModule/install-wizard.tpl.html'
+            template: 'Modules/Packaging/VirtoCommerce.PackagingModule.Web/Scripts/blades/module-detail.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     }

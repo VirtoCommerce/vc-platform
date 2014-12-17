@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using VirtoCommerce.CoreModule.Web.Security;
+using VirtoCommerce.CoreModule.Web.Security.Models;
+using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Foundation.Data.Security.Identity;
 using VirtoCommerce.Foundation.Security.Model;
 
@@ -71,23 +75,6 @@ namespace VirtoCommerce.SecurityModule.Web.Controllers
             return Ok(GetUserInfo(User.Identity.Name));
 		}
 
-
-		[HttpPost]
-		[Route("register")]
-		public async Task<IHttpActionResult> Register(string userName, string password)
-		{
-			var user = new ApplicationUser() { UserName = userName };
-			var result = await UserManager.CreateAsync(user, password);
-			if (result.Succeeded)
-			{
-				return await Login(new UserLogin { UserName = userName, Password = password, RememberMe = false });
-			}
-			else
-			{
-			  return  BadRequest(String.Join(" ", result.Errors));
-			}
-		}
-
 		[HttpPost]
 	    [Route("logout")]
 		public IHttpActionResult Logout()
@@ -134,5 +121,87 @@ namespace VirtoCommerce.SecurityModule.Web.Controllers
 
             return null;
         }
-	}
+
+        #region Methods needed to integrate identity security with external user store that will call api methods
+
+        #region IUserStore<ApplicationUser> Members
+
+        [Route("users/id/{userId}")]
+        [HttpGet]
+        public async Task<ApplicationUser> FindByIdAsync(string userId)
+        {
+            return await UserManager.FindByIdAsync(userId);
+        }
+
+        [Route("users/name/{userName}")]
+        [HttpGet]
+        public async Task<ApplicationUser> FindByNameAsync(string userName)
+        {
+            return await UserManager.FindByNameAsync(userName);
+        }
+
+        #endregion
+
+        [HttpPost]
+        [Route("users/create")]
+        public async Task<IHttpActionResult> CreateAsync(ApplicationUserExtended user)
+        {
+            var result = await UserManager.CreateAsync(user);
+
+            if (result.Succeeded)
+            {
+                 var id = Guid.NewGuid().ToString();
+
+                using (var repository = _securityRepository())
+                {
+                    var account = new Account
+                    {
+                        UserName = user.Email,
+                        AccountId = user.Id,
+                        AccountState = AccountState.Approved.GetHashCode(),
+                        MemberId = id,
+                        RegisterType = RegisterType.GuestUser.GetHashCode(),
+                        StoreId = user.StoreId
+                    };
+
+                    repository.Add(account);
+                    repository.UnitOfWork.Commit();
+                }
+
+                using (var repository = _customerRepository())
+                {
+                    var contact = new Contact
+                    {
+                        MemberId = id,
+                        FullName = user.FullName
+                    };
+
+                    contact.Emails.Add(new Email { Address = user.Email, MemberId = id, Type = EmailType.Primary.ToString() });
+
+                    if (string.IsNullOrEmpty(user.Icon))
+                    {
+                        try
+                        {
+                            var iconBytes = Convert.FromBase64String(user.Icon);
+                            contact.Photo = iconBytes;
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                        }
+                    }
+
+                    repository.Add(contact);
+                    repository.UnitOfWork.Commit();
+                }
+                return Ok();
+            }
+            else
+            {
+                return BadRequest(String.Join(" ", result.Errors));
+            }
+        }
+
+        #endregion
+    }
 }
