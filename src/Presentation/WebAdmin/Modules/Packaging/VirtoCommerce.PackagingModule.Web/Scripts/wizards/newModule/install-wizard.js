@@ -18,12 +18,12 @@
 
         if ($scope.blade.mode === 'install') {
         	modules.install({ fileName: $scope.currentEntity.fileName }, function (data) {
-                newBlade.currentEntityId = data;
+                newBlade.currentEntityId = data.id;
                 bladeNavigationService.showBlade(newBlade, $scope.blade);
             });
         } else if ($scope.blade.mode === 'update') {
             modules.update({ id: $scope.currentEntity.id }, function (data) {
-                newBlade.currentEntityId = data;
+                newBlade.currentEntityId = data.id;
                 bladeNavigationService.showBlade(newBlade, $scope.blade);
             });
         }
