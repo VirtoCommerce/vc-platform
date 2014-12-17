@@ -18,8 +18,9 @@ namespace VirtoCommerce.PackagingModule.Web.Model
 		public string ReleaseNotes { get; set; }
 		public string Copyright { get; set; }
 		public string Tags { get; set; }
-		public IEnumerable<string> Dependencies { get; set; }
+		public string[] Dependencies { get; set; }
 
+		public string[] UnresolvedDependencies { get; set; }
 		public bool IsRemovable { get; set; }
 
 		public string FileName { get; set; }

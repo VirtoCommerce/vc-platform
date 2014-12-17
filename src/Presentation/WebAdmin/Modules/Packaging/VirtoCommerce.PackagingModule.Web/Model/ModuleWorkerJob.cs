@@ -24,10 +24,11 @@ namespace VirtoCommerce.PackagingModule.Web.Model
 			CancellationToken = new CancellationToken();
 			PackageService = packageService;
 			ModuleDescriptor = moduleDescriptor;
+			Action = action;
         }
         public string Id;
-		public string Started;
-		public string Completed;
+		public DateTime? Started;
+		public DateTime? Completed;
 		public ModuleDescriptor ModuleDescriptor;
 		public ModuleAction Action;
 		[JsonIgnore]

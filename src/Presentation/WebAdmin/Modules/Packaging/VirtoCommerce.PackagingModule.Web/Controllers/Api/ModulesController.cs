@@ -68,6 +68,12 @@ namespace VirtoCommerce.PackagingModule.Web.Controllers.Api
 				if (descriptor != null)
 				{
 					var retVal = descriptor.ToWebModel();
+					//check unresolved dependencies 
+					if (descriptor.Dependencies != null)
+					{
+						var allInstalledModules = _packageService.GetModules().Select(x => x.Id);
+						retVal.UnresolvedDependencies = descriptor.Dependencies.Except(allInstalledModules).ToArray();
+					}
 					retVal.FileName = file.LocalFileName;
 					return Ok(retVal);
 				}
@@ -165,6 +171,7 @@ namespace VirtoCommerce.PackagingModule.Web.Controllers.Api
 					try
 					{
 						_jobList.Add(job);
+						job.Started = DateTime.UtcNow;
 						//TODO: log
 						if (job.Action == webModel.ModuleAction.Install)
 						{
@@ -183,7 +190,8 @@ namespace VirtoCommerce.PackagingModule.Web.Controllers.Api
 					{
 						job.Errors.Add(ex.ToString());
 					}
-				
+
+					job.Completed = DateTime.UtcNow;
 				}
 			}
 		}
