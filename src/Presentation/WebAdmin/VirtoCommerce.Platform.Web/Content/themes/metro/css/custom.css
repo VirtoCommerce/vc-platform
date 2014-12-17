@@ -838,6 +838,7 @@
 	display: inline-block;
 	height: 100%;
 	word-spacing: -5px;
+	margin-right: 100%;
 }
 
 .dashboard
@@ -1088,7 +1089,6 @@
 	height: 155px;
 	padding: 40px 0 5px;
 	position: relative;
-    min-width: 300px;
 
 	-webkit-box-sizing: border-box;
 			box-sizing: border-box;
@@ -1246,23 +1246,23 @@
 .blade-head-nav .btn-min,
 .blade-head-nav .btn-max
 {
-	width: 35px;
+	width: 24px;
 }
 
 .blade-head-nav .btn-min
 {
-	right: 35px;
+	right: 75px;
 }
 
 .blade-head-nav .btn-max
 {
-	right: 35px;
+	right: 50px;
 }
 
 .blade-head-nav .btn-close
 {
 	right: 0;
-	width: 35px;
+	width: 48px;
 }
 
 .blade-head-nav .btn-min:after,

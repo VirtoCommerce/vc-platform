@@ -3,10 +3,14 @@
     <div id='valuePlaceHolder'></div>
 
     <script type="text/ng-template" id="shortText.html">
-        <input ng-disabled="currentEntity.isReadOnly"
-               ng-required="currentEntity.required && !currentEntity.isReadOnly"
-               ng-model="context.currentPropValues[0].value"
-               type="text" name="{{currentEntity.valueType}}" />
+
+        <div class="input-control text">
+          <input ng-disabled="currentEntity.isReadOnly"
+                 ng-required="currentEntity.required && !currentEntity.isReadOnly"
+                 class="form-control"
+                 ng-model="context.currentPropValues[0].value"
+                 type="text" name="{{currentEntity.valueType}}" />
+        </div>
     </script>
     <script type="text/ng-template" id="longText.html">
         <textarea ng-disabled="currentEntity.isReadOnly"

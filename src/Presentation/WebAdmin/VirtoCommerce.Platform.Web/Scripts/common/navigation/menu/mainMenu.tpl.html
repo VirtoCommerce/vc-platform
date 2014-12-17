@@ -26,12 +26,14 @@
         <div class="bar">
             <ul class="top">
                 <li ng-repeat="menuItem in menuItems | filter: {parent: null}" ng-click="selectMenuItem(menuItem)">
-                    <a ng-if="!menuItem.template" href="">
-                        <span class="icon">
-                            <i ng-class="menuItem.icon"></i>
-                        </span>
-                        <span class="name">{{menuItem.title}}</span>
-                    </a>
+                    <span>
+                        <a ng-if="!menuItem.template" href="">
+                            <span class="icon">
+                                <i ng-class="menuItem.icon"></i>
+                            </span>
+                            <span class="name">{{menuItem.title}}</span>
+                        </a>
+                    </span>
                     <ng-include src='menuItem.template'> </ng-include>
                 </li>
             </ul>

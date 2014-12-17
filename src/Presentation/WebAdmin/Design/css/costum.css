@@ -838,6 +838,7 @@
 	display: inline-block;
 	height: 100%;
 	word-spacing: -5px;
+	margin-right: 100%;
 }
 
 .dashboard
