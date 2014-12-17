@@ -48,6 +48,16 @@
 	background: #b3ebfb;
 }
 
+.metro table
+{
+	clear: both;
+}
+
+.metro .table td
+{
+	cursor: pointer;
+}
+
 .login .preload {
 	position: absolute;
 	top: 32px;

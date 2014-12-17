@@ -20,23 +20,34 @@
             <div class="login">
                 <div class="window flat">
                     <div class="caption">
-                        <span class="icon icon-windows"></span>
-                        <div class="title">Window caption</div>
+                        <img class="logo" src="images/logo.png" alt="">
+                        <div class="title">Sign in to Virto Commerce Manager</div>
                     </div>
                     <div class="content">
                         <label for="">Login</label>
-                        <div data-role="input-control" class="input-control text">
-                            <input type="text" placeholder="type text">
-                            <button tabindex="-1" class="btn-clear" type="button"></button>
+                        <div class="input-control text" data-role="input-control">
+                            <input type="text" va-autofill="" autofocus="" required="" ng-model="user.email" name="login" class="ng-untouched ng-dirty ng-valid-parse ng-valid ng-valid-required">
+                            <button type="button" tabindex="-1" class="btn-clear"></button>
                         </div>
                         <label for="">Password</label>
-                        <div data-role="input-control" class="input-control text">
-                            <input type="text" placeholder="type text">
-                            <button tabindex="-1" class="btn-clear" type="button"></button>
+                        <div class="input-control text" data-role="input-control">
+                            <input type="password" ui-keydown="{'enter':'ok()'}" va-autofill="" required="" ng-model="user.password" name="password" class="ng-untouched ng-dirty ng-valid-parse ng-valid ng-valid-required">
+                            <button type="button" tabindex="-1" class="btn-reveal"></button>
                         </div>
-                        <input type="submit" value="Submit">
+                        <div class="input-control checkbox block">
+                            <label>
+                                <input type="checkbox" ng-model="user.remember" checked="" name="c1" class="ng-pristine ng-untouched ng-valid">
+                                <span class="check"></span>Remember me
+                            </label>
+                        </div>
+                        <label ng-show="authError" class="fg-red ng-binding ng-hide">
+                            
+                        </label>
+                        <div class="form-actions text-right">
+                            <button ng-disabled="loginForm.$invalid||loginProgress" type="submit" class="button primary">Log in</button>
+                        </div>
+                        <!-- ngIf: loginProgress -->
                     </div>
-                    <div class="progress-bar preload gray" data-role="progress-bar"><div class="bar"></div></div>
                 </div>
             </div>
         </div>
