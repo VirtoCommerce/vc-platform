@@ -5,11 +5,11 @@
         }
     </style>
 
-    <div data-role="input-control" class="input-control text" style="width: 70%;">
+    <div data-role="input-control" class="input-control text" style="float: left; width: 70%;">
         <input type="text" placeholder="Search keyword..." ng-model="filter.searchKeyword" ui-keyup="{'enter':'blade.refresh()'}">
         <button tabindex="-1" class="btn-clear" type="button" ng-click="filter.searchKeyword = null;blade.refresh()"></button>
     </div>
-    <span style="position: absolute; right: 30px;">Count: {{pageSettings.totalItems}}</span>
+    <span style="float: right;">Count: {{pageSettings.totalItems}}</span>
 
     <table class="table hovered">
         <thead>

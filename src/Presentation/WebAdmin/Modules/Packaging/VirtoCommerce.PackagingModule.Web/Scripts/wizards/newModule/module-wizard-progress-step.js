@@ -5,7 +5,7 @@
 
         modules.getInstallationStatus({ id: $scope.blade.currentEntityId }, function (results) {
             $scope.currentEntity = results;
-            if (results.completed) {
+            if (results.completed) { //  || true
                 $scope.blade.isLoading = false;
                 stopRefresh();
             }
@@ -17,6 +17,7 @@
         if (angular.isDefined(intervalPromise)) {
             $interval.cancel(intervalPromise);
         }
+        $scope.completed = true;
     };
 
     $scope.$on('$destroy', function () {
