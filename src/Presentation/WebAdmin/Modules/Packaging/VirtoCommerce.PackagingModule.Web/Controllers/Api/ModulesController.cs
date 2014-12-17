@@ -64,55 +64,60 @@ namespace VirtoCommerce.PackagingModule.Web.Controllers.Api
 			var file = streamProvider.FileData.FirstOrDefault();
             if (file != null)
 			{
-				var retVal = _packageService.OpenPackage(Path.Combine(_packagesPath, file.LocalFileName));
-				if (retVal != null)
+				var descriptor = _packageService.OpenPackage(Path.Combine(_packagesPath, file.LocalFileName));
+				if (descriptor != null)
 				{
-					return Ok(retVal.ToWebModel());
+					var retVal = descriptor.ToWebModel();
+					retVal.FileName = file.LocalFileName;
+					return Ok(retVal);
 				}
 			}
 			return NotFound();
 		}
 
-		// GET: api/modules/121/install
+		// GET: api/modules/install?fileName=''
 		[HttpGet]
-		[ResponseType(typeof(string))]
-		[Route("{id}/install")]
-		public IHttpActionResult InstallModule(string id)
+		[ResponseType(typeof(webModel.ModuleWorkerJob))]
+		[Route("install")]
+		public IHttpActionResult InstallModule([FromUri]string fileName)
 		{
-			var retVal = SheduleJob(id, webModel.ModuleAction.Install);
-			if(retVal == null)
+			var descriptor = _packageService.OpenPackage(Path.Combine(_packagesPath, fileName));
+			if (descriptor != null)
 			{
-				return InternalServerError();
+				var retVal = SheduleJob(descriptor.ToWebModel(), webModel.ModuleAction.Install);
+				return Ok(retVal);
 			}
-			return Ok(retVal.Id);
+			return InternalServerError();
 		}
 
 		// GET: api/modules/121/update
 		[HttpGet]
-		[ResponseType(typeof(string))]
+		[ResponseType(typeof(webModel.ModuleWorkerJob))]
 		[Route("{id}/update")]
 		public IHttpActionResult UpdateModule(string id)
 		{
-			var retVal = SheduleJob(id, webModel.ModuleAction.Update);
-			if (retVal == null)
+			var descriptor = _packageService.GetModules().FirstOrDefault(x => x.Id == id);
+			if (descriptor != null)
 			{
-				return InternalServerError();
+				var retVal = SheduleJob(descriptor.ToWebModel(), webModel.ModuleAction.Update);
+				return Ok(retVal);
 			}
-			return Ok(retVal.Id);
+			return InternalServerError();
 		}
 
 		// GET: api/modules/121/uninstall
 		[HttpGet]
-		[ResponseType(typeof(string))]
+		[ResponseType(typeof(webModel.ModuleWorkerJob))]
 		[Route("{id}/uninstall")]
 		public IHttpActionResult UninstallModule(string id)
 		{
-			var retVal = SheduleJob(id, webModel.ModuleAction.Uninstall);
-			if (retVal == null)
+			var descriptor = _packageService.GetModules().FirstOrDefault(x => x.Id == id);
+			if (descriptor != null)
 			{
-				return InternalServerError();
+				var retVal = SheduleJob(descriptor.ToWebModel(), webModel.ModuleAction.Uninstall);
+				return Ok(retVal);
 			}
-			return Ok(retVal.Id);
+			return InternalServerError();
 		}
 
 		// GET: api/modules/jobs/111
@@ -129,15 +134,11 @@ namespace VirtoCommerce.PackagingModule.Web.Controllers.Api
 			return NotFound();
 		}
 
-		private webModel.ModuleWorkerJob SheduleJob(string id, webModel.ModuleAction action)
+		private webModel.ModuleWorkerJob SheduleJob(webModel.ModuleDescriptor descriptor, webModel.ModuleAction action)
 		{
-			webModel.ModuleWorkerJob retVal = null;
-			var descriptor = _packageService.GetModules().FirstOrDefault(x => x.Id == id);
-			if (descriptor != null)
-		{
-				retVal = new webModel.ModuleWorkerJob(_packageService, descriptor.ToWebModel(), action);
+			var retVal = new webModel.ModuleWorkerJob(_packageService, descriptor, action);
 
-				_sheduledJobs.Enqueue(retVal);
+			_sheduledJobs.Enqueue(retVal);
 
 			if (_runningTask == null || _runningTask.IsCompleted)
 			{
@@ -145,11 +146,11 @@ namespace VirtoCommerce.PackagingModule.Web.Controllers.Api
 				{
 					if (_runningTask == null || _runningTask.IsCompleted)
 					{
-							_runningTask = Task.Run(() => { DoWork(); }, retVal.CancellationToken);
-						}
+						_runningTask = Task.Run(() => { DoWork(); }, retVal.CancellationToken);
 					}
 				}
 			}
+
 			return retVal;
 		}
 

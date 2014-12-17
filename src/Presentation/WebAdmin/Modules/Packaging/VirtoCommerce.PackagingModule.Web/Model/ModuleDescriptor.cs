@@ -21,5 +21,7 @@ namespace VirtoCommerce.PackagingModule.Web.Model
 		public IEnumerable<string> Dependencies { get; set; }
 
 		public bool IsRemovable { get; set; }
+
+		public string FileName { get; set; }
 	}
 }

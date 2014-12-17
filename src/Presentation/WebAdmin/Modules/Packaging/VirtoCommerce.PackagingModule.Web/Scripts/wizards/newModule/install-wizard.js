@@ -17,7 +17,7 @@
         };
 
         if ($scope.blade.mode === 'install') {
-            modules.install({ id: $scope.currentEntity.id }, function (data) {
+        	modules.install({ fileName: $scope.currentEntity.fileName }, function (data) {
                 newBlade.currentEntityId = data;
                 bladeNavigationService.showBlade(newBlade, $scope.blade);
             });
