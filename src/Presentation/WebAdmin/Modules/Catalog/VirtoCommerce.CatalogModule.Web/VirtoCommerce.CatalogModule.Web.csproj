@@ -134,7 +134,7 @@
     <Compile Include="Model\ImportJob.cs" />
     <Compile Include="Model\ListEntryLink.cs" />
     <Compile Include="Model\MappingItem.cs" />
-    <Compile Include="Model\Notifications\ImportExportNotifyEvent.cs" />
+    <Compile Include="Model\Notifications\ImportNotifyEvent.cs" />
     <Compile Include="Model\ProductAssociation.cs" />
     <Compile Include="Model\PropertyDictionaryValue.cs" />
     <Compile Include="Model\Language.cs" />
@@ -223,6 +223,8 @@
     <Content Include="Scripts\app\catalog\directives\property2.js" />
     <Content Include="Scripts\app\catalog\directives\property2.tpl.html" />
     <Content Include="Scripts\app\catalog\home\home.tpl.html" />
+    <Content Include="Scripts\app\catalog\notifications\import.tpl.html" />
+    <Content Include="Scripts\app\catalog\notifications\importDetail.tpl.html" />
     <Content Include="Scripts\app\catalog\resources\catalogs.js" />
     <Content Include="Scripts\app\catalog\resources\categories.js" />
     <Content Include="Scripts\app\catalog\resources\import.js" />

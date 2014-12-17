@@ -31,14 +31,14 @@ angular.module(moduleTemplateName, [
   ]
 )
 .run(
-  ['$rootScope', 'mainMenuService', 'widgetService', function ($rootScope, mainMenuService, widgetService) {
+  ['$rootScope', 'mainMenuService', 'widgetService', '$state', function ($rootScope, mainMenuService, widgetService, $state) {
   	//Register module in main menu
   	var menuItem = {
   	    path: 'browse/module1',
   	    icon: 'icon-rocket',
   	    title: 'Module1',
   	    priority: 100,
-  		state: 'workspace.module1template',
+  	    action: function () { $state.go('workspace.module1template') },
   		permission: 'module1Permission'
   	};
   	mainMenuService.addMenuItem(menuItem);

@@ -70,8 +70,8 @@ angular.module('platformWebApp', AppDependencies).
         	path: 'home',
         	title: 'Home',
         	icon: 'glyphicon glyphicon-home',
-        	state: 'workspace.catalog',
-        	priority: 0
+        	action: function () { $state.go('workspace.catalog') },
+           	priority: 0
         };
         mainMenuService.addMenuItem(homeMenuItem);
 
@@ -104,7 +104,7 @@ angular.module('platformWebApp', AppDependencies).
 
         $rootScope.$on('loginStatusChanged', function (event, authContext) {
             if (authContext.isAuthenticated) {
-                $state.go(homeMenuItem.state);
+            	homeMenuItem.action();
             }
             else {
                 $state.go('loginDialog');

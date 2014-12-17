@@ -5,21 +5,15 @@
         'finished',
         'error'
     ];
-    notifyTypesArr = [
-        'info',
-        'warning',
-        'error',
-        'task'
-    ];
-    classNames = ['item', 'notif', notifyTypesArr[menuItem.notify.notifyType], notifyStatusArr[menuItem.notify.notifyType]];
-" ng-class="classNames">
+    classNames = ['item', 'notif', 'task', notifyStatusArr[menuItem.notify.status]];
+" class="classNames">
     <span class="head">
         <span class="title" ng-bind="menuItem.title"></span>
         <span class="date" am-time-ago="menuItem.notify.created"></span>
     </span>
     <span class="desc_outer">
         <span class="pic">
-            <i ng-class="(menuItem.notify.notifyType==0)?'icon-comments':'icon-warning'" class="icon"></i>
+            <i class="icon-download-2"></i>
         </span>
         <span class="desc" ng-bind="menuItem.notify.description"></span>
     </span>

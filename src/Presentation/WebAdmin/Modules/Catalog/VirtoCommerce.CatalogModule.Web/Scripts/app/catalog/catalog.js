@@ -63,26 +63,38 @@ angular.module(catalogsModuleName, [
   ]
 )
 .run(
-  ['$rootScope', 'mainMenuService', 'widgetService', function ($rootScope, mainMenuService, widgetService) {
+  ['$rootScope', 'mainMenuService', 'widgetService', '$state', 'notificationDetailResolver', 'bladeNavigationService', function ($rootScope, mainMenuService, widgetService, $state, notificationDetailResolver, bladeNavigationService) {
       //Register module in main menu
       var menuItem = {
           path: 'browse/catalog',
           icon: 'glyphicon glyphicon-search',
           title: 'Catalog',
           priority: 90,
-          state: 'workspace.catalog',
+          action: function () { $state.go('workspace.catalog') },
           permission: 'catalogMenuPermission'
       };
       mainMenuService.addMenuItem(menuItem);
 
-      //Register module widgets
-      // mapping widget in virtual catalog
-      //var mappingWidget = {
-      //    group: 'virtualCatalogDetail',
-      //    controller: 'virtualCatalogMappingWidgetController',
-      //    template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/widgets/virtualCatalogMappingWidget.tpl.html'
-      //};
-      //widgetService.registerWidget(mappingWidget);
+  	//Register notification detail for import/export task
+      var importNotifyDetail = 
+		{
+			priority : 900,
+			satisfy: function (notify) { return notify.notifyType == 'ImportNotifyEvent'; },
+			template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/notifications/import.tpl.html',
+			menuAction: function (notify) { $state.go('notification', notify) },
+			openDetailAction: function (notify) {
+				var blade = {
+					id: 'CatalogImportDetail',
+					title: 'catalog import detail',
+					subtitle: 'detail',
+					template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/notifications/importDetail.tpl.html',
+					isClosingDisabled: false,
+					notify: notify
+				};
+				bladeNavigationService.showBlade(blade);
+			}
+		};
+      notificationDetailResolver.register(importNotifyDetail);
 
       //Register image widget
       var itemImageWidget = {

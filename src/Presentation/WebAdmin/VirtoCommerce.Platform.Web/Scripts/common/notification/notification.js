@@ -1,6 +1,7 @@
 ﻿angular.module('platformWebApp.notification', [
 	'platformWebApp.mainMenu',
 	'notifications.blades.history',
+	'platformWebApp.notification.resources',
 	'angularMoment'
 ])
 .config(
@@ -16,56 +17,77 @@
 					breadcrumbs: [],
 					subtitle: 'Notifications history',
 					controller: 'notificationsHistoryController',
-					template: 'Scripts/common/notification/blade/notifications.history.tpl.html',
+					template: 'Scripts/common/notification/blade/history.tpl.html',
 					isClosingDisabled: true
 					};
 					bladeNavigationService.showBlade(blade);
 				}
 			]
 		});
-}])
-.factory('notificationService', ['$http', '$interval', '$state', 'mainMenuService', function ($http, $interval, $state, mainMenuService) {
-	var serviceBase = 'api/notification/';
-	
-	//Enums
-	var notifyTypeEnum =
+  }])
+.factory('notificationDetailResolver', [ 'bladeNavigationService', '$state', function (bladeNavigationService, $state) {
+	var notificationDetailActions = [];
+
+	function register(detailAction)
 	{
-		info: 0,
-		warning: 1,
-		error: 2,
-		task: 3
+		notificationDetailActions.push(detailAction);
+		notificationDetailActions.sort(function(a,b) { return a.priority - b.priority; })
 	};
-	if (Object.freeze) Object.freeze(notifyTypeEnum);
+	function resolve(notification)
+	{
+		return _.find(notificationDetailActions, function (x) { return x.satisfy(notification); })
+	};
+	var retVal = {
+		register: register,
+		resolve: resolve,
+	};
+	//Default notification detail
+	var defaultDetail = 
+		{
+			priority : 1000,
+			satisfy: function () { return true; },
+			//template for display that notification in menu and list
+			template: 'Scripts/common/notification/default.tpl.html',
+			//action excecuted in menu selection
+			menuAction: function (notify) { $state.go('notification', notify) },
+			//action excecuted in list event selection
+			openDetailAction: function(notify) {
+				var blade = {
+					id: 'notifyDetail',
+					title: 'Event detail',
+					subtitle: 'Event detail',
+					template: 'Scripts/common/notification/blade/defaultDetail.tpl.html',
+					isClosingDisabled: false,
+					notify: notify
+				};
+				bladeNavigationService.showBlade(blade);
+			}
+		};
+	retVal.register(defaultDetail)
+	return retVal;
+}])
+.factory('notificationService', ['$http', '$interval', '$state', 'mainMenuService', 'notificationDetailResolver', 'notifications', function ($http, $interval, $state, mainMenuService, notificationDetailResolver, notifications) {
 
 	var notifyStatusEnum =
-	{
-		running: 0,
-		aborted: 1,
-		finished: 2,
-		error: 3
-	};
-
-	if (Object.freeze) Object.freeze(notifyStatusEnum);
-
+		{
+			running: 0,
+			aborted: 1,
+			finished: 2,
+			error: 3
+		};
 
 	function innerNotification(notification) {
 		// notification.date = Math.floor(new Date() / 1000);
-		$http.post(serviceBase, notification)
-			.success(function (data, status, headers, config) {
+		notifications.add(notification, function (data, status, headers, config) {
 				notificationRefresh();
-			})
-			.error(function (data, status, headers, config) {
-				//todo: Need a add notification to list anyway
 			});
 	};
 
 	function markAllAsRead() {
-		$http.get(serviceBase + 'markAllAsRead')
-				.success(function (data, status, headers, config) {
-					notificationRefresh();
-				})
-				.error(function (data, status, headers, config) {
-				});
+		notifications.markAllAsRead(null, function (data, status, headers, config) {
+			notificationRefresh();
+		});
+			
 	};
 
 	function notificationRefresh() {
@@ -78,21 +100,16 @@
 				title: 'Notifications',
 				priority: 2,
 				permission: '',
-				state: 'notification',
-				template: 'Scripts/common/notification/notifyMenu.tpl.html',
-				customAction: function () { markAllAsRead(); },
-				children: [],
-				all: {
-					title: 'History',
-					getAll: function(menuItem) {
-						$state.go(menuItem.state, menuItem.stateParams);
-					}
-				}
+				headerTemplate: 'Scripts/common/notification/menuHeader.tpl.html',
+				template: 'Scripts/common/notification/topLevelMenu.tpl.html',
+				action: function () { markAllAsRead(); },
+				showHistory: function() { $state.go('notification') },
+				children: []
 			};
 			mainMenuService.addMenuItem(notifyMenu);
 		}
 		notifyMenu.incremented = false;
-		$http.get(serviceBase + 'allRecent').success(function (data, status, headers, config) {
+		notifications.query({start : 0, count : 15 }, function (data, status, headers, config) {
 			
 				notifyMenu.incremented = notifyMenu.newCount < data.newCount;
 				notifyMenu.newCount = data.newCount;
@@ -103,24 +120,21 @@
 
 				//Add all events
 				angular.forEach(data.notifyEvents, function (x) {
+					notifyDetail = notificationDetailResolver.resolve(x);
 					var menuItem = {
 						parent: notifyMenu,
 						path: 'notification/events',
 						icon: 'glyphicon glyphicon-comment',
 						title: x.title,
 						priority: 2,
-						state: 'notification',
-						stateParams: x,
+						action: notifyDetail.menuAction,
 						permission: '',
-						template: 'Scripts/common/notification/notify.tpl.html',
+						template: notifyDetail.template,
 						notify: x
 					};
 					notifyMenu.children.push(menuItem);
 				});
 				
-			}).
-			error(function (data, status, headers, config) {
-				//todo: Need add error notification
 			});
 	};
 
@@ -134,16 +148,16 @@
 		},
 		running: false,
 		error: function (data) {
-			return innerNotification({ notifyType: notifyTypeEnum.error, title: data.title, description: data.description, status: notifyStatusEnum.finished });
+			return innerNotification({ notifyType: 'error', title: data.title, description: data.description, status: notifyStatusEnum.finished });
 		},
 		warning: function (data) {
-			return innerNotification({ notifyType: notifyTypeEnum.warning, title: data.title, description: data.description, status: notifyStatusEnum.finished });
+			return innerNotification({ notifyType: 'warning', title: data.title, description: data.description, status: notifyStatusEnum.finished });
 		},
 		info: function (data) {
-			return innerNotification({ notifyType: notifyTypeEnum.info, title: data.title, description: data.description, status: notifyStatusEnum.finished });
+			return innerNotification({ notifyType: 'info', title: data.title, description: data.description, status: notifyStatusEnum.finished });
 		},
 		task: function (data) {
-			return innerNotification({ notifyType: notifyTypeEnum.task, title: data.title, description: data.description });
+			return innerNotification({ notifyType: 'task', title: data.title, description: data.description });
 		}	
 	};
 	return retVal;

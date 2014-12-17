@@ -251,7 +251,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 				job.ImportService = _importServiceFactory();
 				job.TemplatePath = templatePath;
 				job.CancellationToken = new CancellationTokenSource();
-				job.NotifyEvent = new ImportExportNotifyEvent(job, User.Identity.Name);
+				job.NotifyEvent = new ImportNotifyEvent(job, User.Identity.Name);
 
 				SheduleJob(job);
 			}
@@ -318,7 +318,13 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 
 						try
 						{
-							job.ImportService.RunImportJob(job.Id, job.TemplatePath);
+							//job.ImportService.RunImportJob(job.Id, job.TemplatePath);
+							for (int i = 0; i < 6; i++)
+							{
+								Thread.Sleep(10000);
+								job.NotifyEvent.LogProgress(new VirtoCommerce.Foundation.Importing.Model.ImportResult { ProcessedRecordsCount = i, ErrorsCount = 0, IsRunning = true });
+							}
+							job.NotifyEvent.LogProgress(new VirtoCommerce.Foundation.Importing.Model.ImportResult { ProcessedRecordsCount = 5, ErrorsCount = 0, IsRunning = false });
 						}
 						catch (Exception e)
 						{

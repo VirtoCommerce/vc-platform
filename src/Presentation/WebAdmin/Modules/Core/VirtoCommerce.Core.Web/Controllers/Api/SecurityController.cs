@@ -80,13 +80,12 @@ namespace VirtoCommerce.SecurityModule.Web.Controllers
 			var result = await UserManager.CreateAsync(user, password);
 			if (result.Succeeded)
 			{
-				await Login(new UserLogin { UserName = userName, Password = password, RememberMe = false });
+				return await Login(new UserLogin { UserName = userName, Password = password, RememberMe = false });
 			}
 			else
 			{
 			  return  BadRequest(String.Join(" ", result.Errors));
 			}
-			return Ok();
 		}
 
 		[HttpPost]

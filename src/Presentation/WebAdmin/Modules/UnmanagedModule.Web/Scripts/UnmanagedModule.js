@@ -32,14 +32,14 @@ angular.module(moduleTemplateName, [
   ]
 )
 .run(
-  ['$rootScope', 'mainMenuService', function ($rootScope, mainMenuService) {
+  ['$rootScope', 'mainMenuService', '$state', function ($rootScope, mainMenuService, $state) {
       //Register module in main menu
       var menuItem = {
       	  path: 'browse/unmanaged module',
           icon: 'glyphicon glyphicon-search',
           title: 'Unmanaged Module',
           priority: 110,
-          state: 'workspace.unmanagedModuleTemplate',
+          action: function () { $state.go('workspace.unmanagedModuleTemplate') },
           permission: 'UnmanagedModulePermission'
       };
       mainMenuService.addMenuItem(menuItem);

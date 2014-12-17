@@ -81,14 +81,40 @@ namespace VirtoCommerce.PackagingModule.Web.Controllers.Api
 		[Route("{id}/install")]
 		public IHttpActionResult InstallModule(string id)
 		{
-			var descriptor = _packageService.GetModules().FirstOrDefault(x => x.Id == id);
-			if (descriptor != null)
+			var retVal = SheduleJob(id, webModel.ModuleAction.Install);
+			if(retVal == null)
 			{
-				var job = new webModel.ModuleWorkerJob(_packageService, descriptor.ToWebModel(), webModel.ModuleAction.Install);
-				SheduleJob(job);
-				return Ok(job.Id);
+				return InternalServerError();
 			}
-			return NotFound();
+			return Ok(retVal.Id);
+		}
+
+		// GET: api/modules/121/update
+		[HttpGet]
+		[ResponseType(typeof(string))]
+		[Route("{id}/update")]
+		public IHttpActionResult UpdateModule(string id)
+		{
+			var retVal = SheduleJob(id, webModel.ModuleAction.Update);
+			if (retVal == null)
+			{
+				return InternalServerError();
+			}
+			return Ok(retVal.Id);
+		}
+
+		// GET: api/modules/121/uninstall
+		[HttpGet]
+		[ResponseType(typeof(string))]
+		[Route("{id}/uninstall")]
+		public IHttpActionResult UninstallModule(string id)
+		{
+			var retVal = SheduleJob(id, webModel.ModuleAction.Uninstall);
+			if (retVal == null)
+			{
+				return InternalServerError();
+			}
+			return Ok(retVal.Id);
 		}
 
 		// GET: api/modules/jobs/111
@@ -105,20 +131,28 @@ namespace VirtoCommerce.PackagingModule.Web.Controllers.Api
 			return NotFound();
 		}
 
-		private static void SheduleJob(webModel.ModuleWorkerJob job)
+		private webModel.ModuleWorkerJob SheduleJob(string id, webModel.ModuleAction action)
 		{
-			_sheduledJobs.Enqueue(job);
-
-			if (_runningTask == null || _runningTask.IsCompleted)
+			webModel.ModuleWorkerJob retVal = null;
+			var descriptor = _packageService.GetModules().FirstOrDefault(x => x.Id == id);
+			if (descriptor != null)
 			{
-				lock (_lockObject)
+				retVal = new webModel.ModuleWorkerJob(_packageService, descriptor.ToWebModel(), action);
+
+				_sheduledJobs.Enqueue(retVal);
+
+				if (_runningTask == null || _runningTask.IsCompleted)
 				{
-					if (_runningTask == null || _runningTask.IsCompleted)
+					lock (_lockObject)
 					{
-						_runningTask = Task.Run(() => { DoWork(); }, job.CancellationToken);
+						if (_runningTask == null || _runningTask.IsCompleted)
+						{
+							_runningTask = Task.Run(() => { DoWork(); }, retVal.CancellationToken);
+						}
 					}
 				}
 			}
+			return retVal;
 		}
 
 		private static void DoWork()

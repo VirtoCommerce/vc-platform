@@ -75,18 +75,12 @@
 			scope.menuItems = mainMenuService.menuItems;
 		
 			scope.selectMenuItem = function (menuItem) {
-				if (angular.isDefined(menuItem.children) && menuItem.children.length > 0) {
-					scope.currentMenuItem = menuItem;
-					scope.showSubMenu = true;
-					//Custom action
-					if (angular.isDefined(menuItem.customAction)) {
-						menuItem.customAction();
-					}
-				}
-				else if (angular.isDefined(menuItem.state)) {
-					scope.showSubMenu = false;
-					//Navigate to state
-					$state.go(menuItem.state, menuItem.stateParams);
+				scope.currentMenuItem = menuItem;
+				scope.showSubMenu = angular.isDefined(menuItem.children) && menuItem.children.length > 0;
+		
+				//run action
+				if (angular.isDefined(menuItem.action)) {
+					menuItem.action();
 				}
 			};
 
