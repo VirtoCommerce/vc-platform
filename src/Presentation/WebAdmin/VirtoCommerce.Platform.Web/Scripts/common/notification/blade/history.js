@@ -2,8 +2,8 @@ angular.module('notifications.blades.history', [
    'catalogModule.resources.catalogs',
    'angularMoment'
 ])
-.controller('notificationsHistoryController', ['$scope', 'bladeNavigationService', 'notificationDetailResolver', 'notifications',
-function ($scope, bladeNavigationService, notificationDetailResolver, notifications) {
+.controller('notificationsHistoryController', ['$scope', 'bladeNavigationService', 'notificationTemplateResolver', 'notifications',
+function ($scope, bladeNavigationService, notificationTemplateResolver, notifications) {
 
     $scope.notifications = [];
     $scope.blade.refresh = function () {
@@ -17,10 +17,10 @@ function ($scope, bladeNavigationService, notificationDetailResolver, notificati
 
 	//Excecute notify detail action
     $scope.selectNotify = function (notify) {
-    	var notifyDetail = notificationDetailResolver.resolve(notify);
-    	if (angular.isDefined(notifyDetail))
+    	var notificationTemplate = notificationTemplateResolver.resolve(notify);
+    	if (angular.isDefined(notificationTemplate))
     	{
-    		notifyDetail.openDetailAction(notify);
+    		notificationTemplate.action(notify);
     	}
     };
 
