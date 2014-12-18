@@ -80,11 +80,11 @@ echo(!PREVIOUS_MANIFEST_PATH!|findstr /r /i /c:"firstDeploymentManifest$" >nul &
 
 	echo Building VirtoCommerce.PowerShell
 	set VCPS=%DEPLOYMENT_SOURCE%\src\Extensions\Setup\VirtoCommerce.PowerShell
-	call "%MSBUILD_PATH%" "%VCPS%\VirtoCommerce.PowerShell.csproj" /nologo /verbosity:m /t:Build /p:Configuration=Release;SolutionDir="%DEPLOYMENT_SOURCE%\.\\" %SCM_BUILD_ARGS%
+	call :ExecuteCmd "%MSBUILD_PATH%" "%VCPS%\VirtoCommerce.PowerShell.csproj" /nologo /verbosity:m /t:Build /p:Configuration=Release;SolutionDir="%DEPLOYMENT_SOURCE%\.\\" %SCM_BUILD_ARGS%
 	IF !ERRORLEVEL! NEQ 0 goto error
 
 	echo Executing setup-database.ps1
-	IF /I "%APPSETTING_insertSampleData%" EQU "True" SET InsertSampleData=$true ELSE InsertSampleData=$false
+	IF /I "%APPSETTING_insertSampleData%" EQU "True" SET InsertSampleData=$true ELSE SET InsertSampleData=$false
 	call :ExecuteCmd PowerShell -ExecutionPolicy Bypass -Command "%VCPS%\setup-database.ps1" -dbconnection "%SQLAZURECONNSTR_DefaultConnection%" -datafolder "%VCPS%" -moduleFile "%VCPS%\bin\Release\VirtoCommerce.PowerShell.dll" -useSample %InsertSampleData% -reducedSample $false
 	IF !ERRORLEVEL! NEQ 0 goto error
 ) || (
