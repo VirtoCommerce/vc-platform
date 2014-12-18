@@ -27,7 +27,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 		[HttpGet]
 		[ResponseType(typeof(NotifySearchResult))]
 		[Route("")]
-		public IHttpActionResult GetAllRecent([FromUri]NotifySearchCriteria criteria)
+		public IHttpActionResult Search([FromUri]NotifySearchCriteria criteria)
 		{
 			var retVal = _notifier.SearchNotifies(User.Identity.Name, criteria);
 			return Ok(retVal);
@@ -53,7 +53,7 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 		[Authorize]
 		[HttpPost]
 		[Route("")]
-		public IHttpActionResult CreateNotify(NotifyEvent notify)
+		public IHttpActionResult Upsert(NotifyEvent notify)
 		{
 			notify.New = true;
 			notify.Created = DateTime.UtcNow;

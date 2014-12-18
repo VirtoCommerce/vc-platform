@@ -100,8 +100,10 @@
   <ItemGroup>
     <Compile Include="Controllers\Api\ModulesController.cs" />
     <Compile Include="Converters\ModuleDescriptorConverter.cs" />
+    <Compile Include="Converters\ProgressMessageConverter.cs" />
     <Compile Include="Model\ModuleDescriptor.cs" />
     <Compile Include="Model\ModuleWorkerJob.cs" />
+    <Compile Include="Model\ProgressMessage.cs" />
     <Compile Include="Module.cs" />
     <None Include="app.config" />
     <None Include="module.manifest">
@@ -138,7 +140,6 @@
     <Content Include="Scripts\wizards\newModule\module-wizard-progress-step.js" />
     <Content Include="Scripts\wizards\newModule\module-wizard-progress-step.tpl.html" />
     <Content Include="Scripts\wizards\newModule\install-wizard.js" />
-    <Content Include="Scripts\wizards\newModule\install-wizard.tpl.html" />
     <Content Include="Scripts\wizards\newModule\install-wizard-actions.tpl.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

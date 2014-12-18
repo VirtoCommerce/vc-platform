@@ -25,6 +25,7 @@ namespace VirtoCommerce.PackagingModule.Web.Model
 			PackageService = packageService;
 			ModuleDescriptor = moduleDescriptor;
 			Action = action;
+			ProgressLog = new List<ProgressMessage>();
         }
         public string Id;
 		public DateTime? Started;
@@ -35,7 +36,6 @@ namespace VirtoCommerce.PackagingModule.Web.Model
 		public IPackageService PackageService;
 		[JsonIgnore]
         public CancellationToken CancellationToken;
-		public List<string> Logs = new List<string>();
-		public List<string> Errors = new List<string>();
+		public ICollection<ProgressMessage> ProgressLog;
 	}
 }

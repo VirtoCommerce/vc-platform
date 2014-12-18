@@ -10,6 +10,7 @@ using VirtoCommerce.Framework.Web.Common;
 using VirtoCommerce.PackagingModule.Services;
 using VirtoCommerce.PackagingModule.Web.Converters;
 using webModel = VirtoCommerce.PackagingModule.Web.Model;
+using moduleModel = VirtoCommerce.PackagingModule.Model;
 
 namespace VirtoCommerce.PackagingModule.Web.Controllers.Api
 {
@@ -177,7 +178,7 @@ namespace VirtoCommerce.PackagingModule.Web.Controllers.Api
 					{
 						_jobList.Add(job);
 						job.Started = DateTime.UtcNow;
-						var reportProgress =  new Progress<string>((x) => { job.Logs.Add(x); });
+						var reportProgress = new Progress<moduleModel.ProgressMessage>((x) => { job.ProgressLog.Add(x.ToWebModel()); });
 					
 						if (job.Action == webModel.ModuleAction.Install)
 						{
@@ -194,7 +195,7 @@ namespace VirtoCommerce.PackagingModule.Web.Controllers.Api
 					}
 					catch (Exception ex)
 					{
-						job.Errors.Add(ex.ToString());
+						job.ProgressLog.Add(new webModel.ProgressMessage { Message = ex.ToString(), Level = moduleModel.ProgressMessageLevel.Error.ToString() });
 					}
 
 					job.Completed = DateTime.UtcNow;

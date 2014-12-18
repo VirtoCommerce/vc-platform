@@ -6,12 +6,12 @@
 ])
 .config(
   ['$stateProvider', function ($stateProvider) {
-	$stateProvider
+  	$stateProvider
 		.state('notification', {
 			url: '/notification/:id',
 			templateUrl: 'Scripts/common/notification/notification.tpl.html',
 			controller: ['$scope', 'bladeNavigationService', 'notificationService', function ($scope, bladeNavigationService, notificationService) {
-					var blade = {
+				var blade = {
 					id: 'notifications',
 					title: 'Notifications',
 					breadcrumbs: [],
@@ -19,39 +19,35 @@
 					controller: 'notificationsHistoryController',
 					template: 'Scripts/common/notification/blade/history.tpl.html',
 					isClosingDisabled: true
-					};
-					bladeNavigationService.showBlade(blade);
-				}
+				};
+				bladeNavigationService.showBlade(blade);
+			}
 			]
 		});
   }])
-.factory('notificationDetailResolver', [ 'bladeNavigationService', '$state', function (bladeNavigationService, $state) {
-	var notificationDetailActions = [];
+.factory('notificationTemplateResolver', ['bladeNavigationService', '$state', function (bladeNavigationService, $state) {
+	var notificationTemplates = [];
 
-	function register(detailAction)
-	{
-		notificationDetailActions.push(detailAction);
-		notificationDetailActions.sort(function(a,b) { return a.priority - b.priority; })
+	function register(template) {
+		notificationTemplates.push(template);
+		notificationTemplates.sort(function (a, b) { return a.priority - b.priority; })
 	};
-	function resolve(notification)
-	{
-		return _.find(notificationDetailActions, function (x) { return x.satisfy(notification); })
+	function resolve(notification) {
+		return _.find(notificationTemplates, function (x) { return x.satisfy(notification); })
 	};
 	var retVal = {
 		register: register,
 		resolve: resolve,
 	};
-	//Default notification detail
-	var defaultDetail = 
+	//Default notification template
+	var defaultTemplate =
 		{
-			priority : 1000,
+			priority: 1000,
 			satisfy: function () { return true; },
 			//template for display that notification in menu and list
 			template: 'Scripts/common/notification/default.tpl.html',
-			//action excecuted in menu selection
-			menuAction: function (notify) { $state.go('notification', notify) },
-			//action excecuted in list event selection
-			openDetailAction: function(notify) {
+			//action excecuted in event detail
+			action: function (notify) {
 				var blade = {
 					id: 'notifyDetail',
 					title: 'Event detail',
@@ -63,11 +59,12 @@
 				bladeNavigationService.showBlade(blade);
 			}
 		};
-	retVal.register(defaultDetail)
+	retVal.register(defaultTemplate)
 	return retVal;
 }])
-.factory('notificationService', ['$http', '$interval', '$state', 'mainMenuService', 'notificationDetailResolver', 'notifications', function ($http, $interval, $state, mainMenuService, notificationDetailResolver, notifications) {
+.factory('notificationService', ['$http', '$interval', '$state', 'mainMenuService', 'notificationTemplateResolver', 'notifications', function ($http, $interval, $state, mainMenuService, notificationTemplateResolver, notifications) {
 
+	//var timer = new Date().getUTCDate();
 	var notifyStatusEnum =
 		{
 			running: 0,
@@ -77,23 +74,24 @@
 		};
 
 	function innerNotification(notification) {
-		// notification.date = Math.floor(new Date() / 1000);
-		notifications.add(notification, function (data, status, headers, config) {
-				notificationRefresh();
-			});
+		
+		//Group notification by text
+		
+		notifications.upsert(notification, function (data, status, headers, config) {
+			notificationRefresh();
+		});
 	};
 
 	function markAllAsRead() {
 		notifications.markAllAsRead(null, function (data, status, headers, config) {
 			notificationRefresh();
 		});
-			
+
 	};
 
 	function notificationRefresh() {
 		var notifyMenu = mainMenuService.findByPath('notification');
-		if (!angular.isDefined(notifyMenu))
-		{
+		if (!angular.isDefined(notifyMenu)) {
 			notifyMenu = {
 				path: 'notification',
 				icon: 'glyphicon glyphicon-comment',
@@ -101,41 +99,45 @@
 				priority: 2,
 				permission: '',
 				headerTemplate: 'Scripts/common/notification/menuHeader.tpl.html',
-				template: 'Scripts/common/notification/topLevelMenu.tpl.html',
+				template: 'Scripts/common/notification/menu.tpl.html',
 				action: function () { markAllAsRead(); },
-				showHistory: function() { $state.go('notification') },
-				children: []
+				showHistory: function () { $state.go('notification') },
+				children: [],
+				newCount : 0
 			};
 			mainMenuService.addMenuItem(notifyMenu);
 		}
 		notifyMenu.incremented = false;
-		notifications.query({start : 0, count : 15 }, function (data, status, headers, config) {
-			
-				notifyMenu.incremented = notifyMenu.newCount < data.newCount;
-				notifyMenu.newCount = data.newCount;
-				notifyMenu.progress = _.some(data.notifyEvents, function (x) { return x.status == notifyStatusEnum.running; });
+		notifications.query({ start: 0, count: 15 }, function (data, status, headers, config) {
 
-				//clear all child
-				notifyMenu.children.splice(0, notifyMenu.children.length);
+			//timer = new Date().getUTCDate();
+			notifyMenu.incremented = notifyMenu.newCount < data.newCount;
+			notifyMenu.newCount = data.newCount;
+			notifyMenu.progress = _.some(data.notifyEvents, function (x) { return x.status == notifyStatusEnum.running; });
 
-				//Add all events
-				angular.forEach(data.notifyEvents, function (x) {
-					notifyDetail = notificationDetailResolver.resolve(x);
-					var menuItem = {
-						parent: notifyMenu,
-						path: 'notification/events',
-						icon: 'glyphicon glyphicon-comment',
-						title: x.title,
-						priority: 2,
-						action: notifyDetail.menuAction,
-						permission: '',
-						template: notifyDetail.template,
-						notify: x
-					};
-					notifyMenu.children.push(menuItem);
-				});
-				
+			//clear all child
+			notifyMenu.children.splice(0, notifyMenu.children.length);
+
+			//Add all events
+			angular.forEach(data.notifyEvents, function (x) {
+
+				notificationTemplate = notificationTemplateResolver.resolve(x);
+
+				var menuItem = {
+					parent: notifyMenu,
+					path: 'notification/events',
+					icon: 'glyphicon glyphicon-comment',
+					title: x.title,
+					priority: 2,
+					action: function (notify) { $state.go('notification', notify) },
+					permission: '',
+					template: notificationTemplate.template,
+					notify: x
+				};
+				notifyMenu.children.push(menuItem);
 			});
+
+		});
 	};
 
 	var retVal = {
@@ -158,7 +160,7 @@
 		},
 		task: function (data) {
 			return innerNotification({ notifyType: 'task', title: data.title, description: data.description });
-		}	
+		}
 	};
 	return retVal;
 

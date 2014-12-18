@@ -65,6 +65,60 @@
 	background: #b3ebfb;
 }
 
+.metro .log
+{
+	background: none;
+	border: 1px solid #ccc;
+	clear: both;
+	color: #999;
+	display: block;
+	font-family: inherit;
+	font-size: 10pt;
+	line-height: 15pt;
+	height: 300px;
+	margin: 5px 0;
+	padding: 15px;
+	overflow: auto;
+}
+
+.metro .log *
+{
+	display: block;
+	margin: 0;
+	white-space: nowrap;
+}
+
+.metro .log .info
+{
+	color: #16499a;
+}
+
+.metro .log .warning
+{
+	color: #c29008;
+}
+
+.metro .log .debug
+{
+	color: #999;
+}
+
+.metro .log .error
+{
+	color: #e51400;
+}
+
+.errors
+{
+	color: red;
+}
+
+.metro p
+{
+	font-size: 10pt;
+	white-space: normal;
+}
+
 .metro table
 {
 	clear: both;
@@ -947,7 +1001,7 @@
 	border-bottom: 1px solid #ccc;
 	cursor: pointer;
 	font-size: 12px;
-	padding: 15px 20px;
+	padding: 15px;
 	position: relative;
 }
 
@@ -1028,6 +1082,7 @@
 .list-checkboxes li
 {
 	border-top: 1px solid #ccc;
+	font-size: 10pt;
 }
 
 .list-checkboxes li:hover

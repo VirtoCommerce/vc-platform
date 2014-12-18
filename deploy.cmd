@@ -61,11 +61,51 @@ IF NOT DEFINED MSBUILD_PATH (
   SET MSBUILD_PATH=%WINDIR%\Microsoft.NET\Framework\v4.0.30319\msbuild.exe
 )
 
+IF NOT DEFINED VCPS (
+	SET VCPS=%DEPLOYMENT_SOURCE%\src\Extensions\Setup\VirtoCommerce.PowerShell
+)
+
+IF NOT DEFINED INSERT_SAMPLE_DATA (
+	IF /I "%APPSETTING_insertSampleData%" EQU "True" (SET INSERT_SAMPLE_DATA=$true) ELSE (SET INSERT_SAMPLE_DATA=$false)
+)
+
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: Deployment
 :: ----------
 
 echo Handling .NET Web Application deployment.
+
+:: If PREVIOUS_MANIFEST_PATH ends with firstDeploymentManifest then initialize database
+
+echo(!PREVIOUS_MANIFEST_PATH!|findstr /r /i /c:"firstDeploymentManifest$" >nul && (
+	echo First deployment. Need to initialize database. InsertSampleData = %APPSETTING_insertSampleData%
+
+	IF EXIST "%DEPLOYMENT_SOURCE%\VirtoCommerce.sln" (
+		echo Restoring NuGet packages for %DEPLOYMENT_SOURCE%\VirtoCommerce.sln
+		call :ExecuteCmd nuget restore "%DEPLOYMENT_SOURCE%\VirtoCommerce.sln"
+		IF !ERRORLEVEL! NEQ 0 goto error
+	) ELSE (
+		echo %DEPLOYMENT_SOURCE%\VirtoCommerce.sln does not exist.
+	)
+
+	IF EXIST "%VCPS%\VirtoCommerce.PowerShell.csproj" (
+		echo Building %VCPS%\VirtoCommerce.PowerShell.csproj
+		call :ExecuteCmd "%MSBUILD_PATH%" "%VCPS%\VirtoCommerce.PowerShell.csproj" /nologo /verbosity:m /t:Build /p:Configuration=Release;SolutionDir="%DEPLOYMENT_SOURCE%\.\\" %SCM_BUILD_ARGS%
+		IF !ERRORLEVEL! NEQ 0 goto error
+	) ELSE (
+		echo %VCPS%\VirtoCommerce.PowerShell.csproj does not exist.
+	)
+
+	IF EXIST "%VCPS%\setup-database.ps1" (
+		echo Executing %VCPS%\setup-database.ps1
+		call :ExecuteCmd PowerShell -ExecutionPolicy Bypass -Command "%VCPS%\setup-database.ps1" -dbconnection '%SQLAZURECONNSTR_DefaultConnection%' -datafolder "%VCPS%" -moduleFile "%VCPS%\bin\Release\VirtoCommerce.PowerShell.dll" -useSample %INSERT_SAMPLE_DATA% -reducedSample $false
+		IF !ERRORLEVEL! NEQ 0 goto error
+	) ELSE (
+		echo %VCPS%\setup-database.ps1 does not exist.
+	)
+) || (
+	echo Not first deployment
+)
 
 :: 1. Restore NuGet packages
 IF /I "VirtoCommerce.WebPlatform.sln" NEQ "" (

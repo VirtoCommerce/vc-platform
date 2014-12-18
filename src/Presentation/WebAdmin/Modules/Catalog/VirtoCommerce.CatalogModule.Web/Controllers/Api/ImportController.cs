@@ -319,12 +319,13 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 						try
 						{
 							//job.ImportService.RunImportJob(job.Id, job.TemplatePath);
+							job.NotifyEvent.LogProgress(new VirtoCommerce.Foundation.Importing.Model.ImportResult { Started = DateTime.UtcNow });
 							for (int i = 0; i < 6; i++)
 							{
-								Thread.Sleep(10000);
 								job.NotifyEvent.LogProgress(new VirtoCommerce.Foundation.Importing.Model.ImportResult { ProcessedRecordsCount = i, ErrorsCount = 0, IsRunning = true });
+								Thread.Sleep(10000);
 							}
-							job.NotifyEvent.LogProgress(new VirtoCommerce.Foundation.Importing.Model.ImportResult { ProcessedRecordsCount = 5, ErrorsCount = 0, IsRunning = false });
+							job.NotifyEvent.LogProgress(new VirtoCommerce.Foundation.Importing.Model.ImportResult { ProcessedRecordsCount = 5, ErrorsCount = 0, IsRunning = false, Stopped = DateTime.UtcNow });
 						}
 						catch (Exception e)
 						{

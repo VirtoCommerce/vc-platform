@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VirtoCommerce.Framework.Web.Notification
 {
-	public class NotifyEvent
+	public class NotifyEvent 
 	{
 		public NotifyEvent(string creator)
 		{
@@ -29,5 +29,11 @@ namespace VirtoCommerce.Framework.Web.Notification
 		public string Title { get; set; }
 		public int RepeatCount { get; set; }
 		public IDictionary<string, string> ExtendedProperties { get; set; }
+
+		public bool ItHasSameContent(NotifyEvent other)
+		{
+			return other.Title == Title && other.NotifyType == NotifyType && other.Description == Description;
+		}
+		
 	}
 }

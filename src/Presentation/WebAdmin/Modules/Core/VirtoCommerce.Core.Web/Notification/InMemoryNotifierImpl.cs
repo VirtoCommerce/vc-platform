@@ -15,6 +15,7 @@ namespace VirtoCommerce.CoreModule.Web.Notification
 		public void Upsert(NotifyEvent notify)
 		{
 			var alreadyExistNotify = _innerList.FirstOrDefault(x => x.Id == notify.Id);
+
 			if(alreadyExistNotify != null)
 			{
 				if(notify.Description != null)
@@ -29,7 +30,17 @@ namespace VirtoCommerce.CoreModule.Web.Notification
 			}
 			else
 			{
-				_innerList.Add(notify);
+				var lastEvent = _innerList.OrderByDescending(x => x.Created).FirstOrDefault();
+				if (lastEvent != null && lastEvent.ItHasSameContent(notify))
+				{
+					lastEvent.New = true;
+					lastEvent.RepeatCount++;
+					lastEvent.Created = DateTime.UtcNow;
+				}
+				else
+				{
+					_innerList.Add(notify);
+				}
 			}
 		}
 

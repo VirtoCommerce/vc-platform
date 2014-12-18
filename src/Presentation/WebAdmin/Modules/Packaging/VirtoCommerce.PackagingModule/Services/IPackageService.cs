@@ -7,8 +7,8 @@ namespace VirtoCommerce.PackagingModule.Services
 	{
 		ModuleDescriptor OpenPackage(string path);
 		ModuleDescriptor[] GetModules();
-		void Install(string packageId, string version, IProgress<string> progress);
-		void Update(string packageId, string version, IProgress<string> progress);
-		void Uninstall(string packageId, IProgress<string> progress);
+		void Install(string packageId, string version, IProgress<ProgressMessage> progress);
+		void Update(string packageId, string version, IProgress<ProgressMessage> progress);
+		void Uninstall(string packageId, IProgress<ProgressMessage> progress);
 	}
 }

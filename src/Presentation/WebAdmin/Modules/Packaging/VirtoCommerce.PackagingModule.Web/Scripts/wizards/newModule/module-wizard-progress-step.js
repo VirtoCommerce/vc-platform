@@ -1,13 +1,15 @@
 ﻿angular.module('virtoCommerce.packaging.wizards.newModule.moduleInstallProgress', [])
-.controller('moduleInstallProgressController', ['$scope', '$interval', 'modules', function ($scope, $interval, modules) {
+.controller('moduleInstallProgressController', ['$scope', '$interval', 'bladeNavigationService', 'modules', function ($scope, $interval, bladeNavigationService, modules) {
     $scope.blade.refresh = function () {
         // $scope.blade.isLoading = true;
 
         modules.getInstallationStatus({ id: $scope.blade.currentEntityId }, function (results) {
             $scope.currentEntity = results;
-            if (results.completed) { //  || true
+            if (results.completed) {
                 $scope.blade.isLoading = false;
+                $scope.completed = true;
                 stopRefresh();
+                $scope.blade.parentBlade.refresh();
             }
         });
 
@@ -17,7 +19,6 @@
         if (angular.isDefined(intervalPromise)) {
             $interval.cancel(intervalPromise);
         }
-        $scope.completed = true;
     };
 
     $scope.$on('$destroy', function () {

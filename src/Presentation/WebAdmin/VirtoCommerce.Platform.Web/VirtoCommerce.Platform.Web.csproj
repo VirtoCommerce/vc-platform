@@ -373,7 +373,7 @@
     <Content Include="Scripts\common\directives\overlay.js" />
     <Content Include="Scripts\common\notification\blade\defaultDetail.tpl.html" />
     <Content Include="Scripts\common\notification\blade\history.tpl.html" />
-    <Content Include="Scripts\common\notification\topLevelMenu.tpl.html" />
+    <Content Include="Scripts\common\notification\menu.tpl.html" />
     <Content Include="Scripts\common\notification\notification.js" />
     <Content Include="Scripts\common\notification\blade\history.js" />
     <Content Include="Scripts\common\notification\notification.tpl.html" />

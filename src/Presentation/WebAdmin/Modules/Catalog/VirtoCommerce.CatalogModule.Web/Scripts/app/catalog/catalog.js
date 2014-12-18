@@ -63,7 +63,7 @@ angular.module(catalogsModuleName, [
   ]
 )
 .run(
-  ['$rootScope', 'mainMenuService', 'widgetService', '$state', 'notificationDetailResolver', 'bladeNavigationService', function ($rootScope, mainMenuService, widgetService, $state, notificationDetailResolver, bladeNavigationService) {
+  ['$rootScope', 'mainMenuService', 'widgetService', '$state', 'notificationTemplateResolver', 'bladeNavigationService', function ($rootScope, mainMenuService, widgetService, $state, notificationTemplateResolver, bladeNavigationService) {
       //Register module in main menu
       var menuItem = {
           path: 'browse/catalog',
@@ -76,13 +76,12 @@ angular.module(catalogsModuleName, [
       mainMenuService.addMenuItem(menuItem);
 
   	//Register notification detail for import/export task
-      var importNotifyDetail = 
+      var importNotificationTemplate = 
 		{
 			priority : 900,
 			satisfy: function (notify) { return notify.notifyType == 'ImportNotifyEvent'; },
 			template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/notifications/import.tpl.html',
-			menuAction: function (notify) { $state.go('notification', notify) },
-			openDetailAction: function (notify) {
+			action: function (notify) {
 				var blade = {
 					id: 'CatalogImportDetail',
 					title: 'catalog import detail',
@@ -94,7 +93,7 @@ angular.module(catalogsModuleName, [
 				bladeNavigationService.showBlade(blade);
 			}
 		};
-      notificationDetailResolver.register(importNotifyDetail);
+      notificationTemplateResolver.register(importNotificationTemplate);
 
       //Register image widget
       var itemImageWidget = {

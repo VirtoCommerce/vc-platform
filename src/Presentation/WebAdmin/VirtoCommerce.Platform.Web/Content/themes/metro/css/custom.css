@@ -38,14 +38,85 @@
 
 .login .window.flat .content
 {
-	padding: 50px 20px 40px 20px;
+	padding: 50px 20px 20px;
 	position: relative;
+}
+
+.metro .window.flat .caption
+{
+	height: auto;
+}
+
+.metro .window.flat .caption .logo
+{
+	float: left;
+	margin: 0 0 0 5px;
+	max-width: 25px;
+}
+
+.metro .window.flat .caption .title
+{
+	margin: 5px 0 5px 10px;
 }
 
 .metro .table tbody tr.selected,
 .metro .table.hovered tbody tr.selected
 {
 	background: #b3ebfb;
+}
+
+.metro .log
+{
+	background: none;
+	border: 1px solid #ccc;
+	clear: both;
+	color: #999;
+	display: block;
+	font-family: inherit;
+	font-size: 10pt;
+	line-height: 15pt;
+	height: 300px;
+	margin: 5px 0;
+	padding: 15px;
+	overflow: auto;
+}
+
+.metro .log *
+{
+	display: block;
+	margin: 0;
+	white-space: nowrap;
+}
+
+.metro .log .info
+{
+	color: #16499a;
+}
+
+.metro .log .warning
+{
+	color: #c29008;
+}
+
+.metro .log .debug
+{
+	color: #999;
+}
+
+.metro .log .error
+{
+	color: #e51400;
+}
+
+.errors
+{
+	color: red;
+}
+
+.metro p
+{
+	font-size: 10pt;
+	white-space: normal;
 }
 
 .metro table
@@ -621,7 +692,7 @@
 
 			.left-menu ul.top
 			{
-				top: 65px;
+				top: 0;
 			}
 
 			.left-menu ul.bot
@@ -694,6 +765,11 @@
 						border-bottom: transparent;
 						border-top: transparent;
 						margin: 0 -3px 0 0;
+					}
+
+					.left-menu ul.top .home img
+					{
+						max-width: 45px;
 					}
 
 						.left-menu .top li a .progress-bar {
@@ -925,7 +1001,7 @@
 	border-bottom: 1px solid #ccc;
 	cursor: pointer;
 	font-size: 12px;
-	padding: 15px 20px;
+	padding: 15px;
 	position: relative;
 }
 
@@ -1006,6 +1082,7 @@
 .list-checkboxes li
 {
 	border-top: 1px solid #ccc;
+	font-size: 10pt;
 }
 
 .list-checkboxes li:hover
@@ -1099,6 +1176,7 @@
 	height: 155px;
 	padding: 40px 0 5px;
 	position: relative;
+    min-width: 300px;
 
 	-webkit-box-sizing: border-box;
 			box-sizing: border-box;
@@ -1256,23 +1334,23 @@
 .blade-head-nav .btn-min,
 .blade-head-nav .btn-max
 {
-	width: 24px;
+	width: 35px;
 }
 
 .blade-head-nav .btn-min
 {
-	right: 75px;
+	right: 35px;
 }
 
 .blade-head-nav .btn-max
 {
-	right: 50px;
+	right: 35px;
 }
 
 .blade-head-nav .btn-close
 {
 	right: 0;
-	width: 48px;
+	width: 35px;
 }
 
 .blade-head-nav .btn-min:after,
