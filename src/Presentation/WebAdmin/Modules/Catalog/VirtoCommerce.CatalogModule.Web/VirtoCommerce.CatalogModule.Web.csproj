@@ -262,6 +262,8 @@
     <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard.js" />
     <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-create-action.tpl.html" />
+    <Content Include="Scripts\app\catalog\wizards\newAssociation\association-wizard-group-new.js" />
+    <Content Include="Scripts\app\catalog\wizards\newAssociation\association-wizard-group-new.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\newAssociation\association-wizard.js" />
     <Content Include="Scripts\app\catalog\wizards\newAssociation\association-wizard.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\newAssociation\association-wizard-group-step.js" />
