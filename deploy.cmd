@@ -94,8 +94,8 @@ echo(!PREVIOUS_MANIFEST_PATH!|findstr /r /i /c:"firstDeploymentManifest$" >nul &
 
 	IF EXIST "%VCPS%\setup-database.ps1" (
 		echo Executing %VCPS%\setup-database.ps1
-		IF /I "%APPSETTING_insertSampleData%" EQU "True" SET InsertSampleData=$true ELSE SET InsertSampleData=$false
-		call :ExecuteCmd PowerShell -ExecutionPolicy Bypass -Command "%VCPS%\setup-database.ps1" -dbconnection "%SQLAZURECONNSTR_DefaultConnection%" -datafolder "%VCPS%" -moduleFile "%VCPS%\bin\Release\VirtoCommerce.PowerShell.dll" -useSample %InsertSampleData% -reducedSample $false
+		IF /I "%APPSETTING_insertSampleData%" EQU "True" (SET InsertSampleData=$true) ELSE (SET InsertSampleData=$false)
+		call :ExecuteCmd PowerShell -ExecutionPolicy Bypass -Command "%VCPS%\setup-database.ps1" -dbconnection '%SQLAZURECONNSTR_DefaultConnection%' -datafolder "%VCPS%" -moduleFile "%VCPS%\bin\Release\VirtoCommerce.PowerShell.dll" -useSample %InsertSampleData% -reducedSample $false
 		IF !ERRORLEVEL! NEQ 0 goto error
 	) ELSE (
 		echo %VCPS%\setup-database.ps1 does not exist.
