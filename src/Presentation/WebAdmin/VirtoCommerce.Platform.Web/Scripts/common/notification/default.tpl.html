@@ -13,7 +13,7 @@
     </span>
     <span class="desc_outer">
         <span class="pic">
-            <i ng-class="icon-comments" class="icon"></i>
+            <i ng-class="(menuItem.notify.notifyType=='info')?'icon-comments':'icon-warning'" class="icon"></i>
         </span>
         <span class="desc" ng-bind="menuItem.notify.description"></span>
     </span>
