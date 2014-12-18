@@ -18,6 +18,7 @@ Contributing
 We welcome & recognize contributors to Virto Commerce. If you feel that you have a desire and knowledge to extend VC, 
 please let us know. There are many benefits available for our contributers, from special licensing to project
 involvement. Contact us at support@virtocommerce.com for more information.
+
 <a href="https://azuredeploy.net/" target="_blank">
 	<img alt="Deploy to Azure" src="http://azuredeploy.net/deploybutton.png"/>
 </a>
