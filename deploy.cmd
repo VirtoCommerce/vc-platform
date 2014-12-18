@@ -65,6 +65,10 @@ IF NOT DEFINED VCPS (
 	SET VCPS=%DEPLOYMENT_SOURCE%\src\Extensions\Setup\VirtoCommerce.PowerShell
 )
 
+IF NOT DEFINED INSERT_SAMPLE_DATA (
+	IF /I "%APPSETTING_insertSampleData%" EQU "True" (SET INSERT_SAMPLE_DATA=$true) ELSE (SET INSERT_SAMPLE_DATA=$false)
+)
+
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: Deployment
 :: ----------
@@ -94,8 +98,7 @@ echo(!PREVIOUS_MANIFEST_PATH!|findstr /r /i /c:"firstDeploymentManifest$" >nul &
 
 	IF EXIST "%VCPS%\setup-database.ps1" (
 		echo Executing %VCPS%\setup-database.ps1
-		IF /I "%APPSETTING_insertSampleData%" EQU "True" (SET InsertSampleData=$true) ELSE (SET InsertSampleData=$false)
-		call :ExecuteCmd PowerShell -ExecutionPolicy Bypass -Command "%VCPS%\setup-database.ps1" -dbconnection '%SQLAZURECONNSTR_DefaultConnection%' -datafolder "%VCPS%" -moduleFile "%VCPS%\bin\Release\VirtoCommerce.PowerShell.dll" -useSample %InsertSampleData% -reducedSample $false
+		call :ExecuteCmd PowerShell -ExecutionPolicy Bypass -Command "%VCPS%\setup-database.ps1" -dbconnection '%SQLAZURECONNSTR_DefaultConnection%' -datafolder "%VCPS%" -moduleFile "%VCPS%\bin\Release\VirtoCommerce.PowerShell.dll" -useSample %INSERT_SAMPLE_DATA% -reducedSample $false
 		IF !ERRORLEVEL! NEQ 0 goto error
 	) ELSE (
 		echo %VCPS%\setup-database.ps1 does not exist.
