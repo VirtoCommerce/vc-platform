@@ -7,26 +7,25 @@
     $scope.submit = function () {
         $scope.isInstalling = true;
 
+        if ($scope.blade.mode === 'install') {
+            modules.install({ fileName: $scope.currentEntity.fileName }, onAfterSubmitted);
+        } else if ($scope.blade.mode === 'update') {
+            modules.update({ id: $scope.currentEntity.id }, onAfterSubmitted);
+        }
+    };
+
+    function onAfterSubmitted(data) {
         var newBlade = {
             id: 'moduleInstallProgress',
+            currentEntityId: data.id,
             title: $scope.blade.title,
             subtitle: 'Installation progress',
             controller: 'moduleInstallProgressController',
             template: 'Modules/Packaging/VirtoCommerce.PackagingModule.Web/Scripts/wizards/newModule/module-wizard-progress-step.tpl.html'
         };
-
-        if ($scope.blade.mode === 'install') {
-            modules.install({ fileName: $scope.currentEntity.fileName }, function (data) {
-                newBlade.currentEntityId = data.id;
-                bladeNavigationService.showBlade(newBlade, $scope.blade);
-            });
-        } else if ($scope.blade.mode === 'update') {
-            modules.update({ id: $scope.currentEntity.id }, function (data) {
-                newBlade.currentEntityId = data.id;
-                bladeNavigationService.showBlade(newBlade, $scope.blade);
-            });
-        }
-    };
+        bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);
+        $scope.bladeClose();
+    }
 
     function endsWith(str, suffix) {
         return str.indexOf(suffix, str.length - suffix.length) !== -1;
@@ -66,17 +65,6 @@
         }
     };
 
-    $scope.blade.onClose = function (closeCallback) {
-        closeChildrenBlades();
-        closeCallback();
-    };
-
-    function closeChildrenBlades() {
-        angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
-            bladeNavigationService.closeBlade(child);
-        });
-    }
-
     initialize();
     if ($scope.blade.mode === 'install') {
         $scope.actionButtonTitle = 'Install';
@@ -86,5 +74,3 @@
 
     $scope.blade.isLoading = false;
 }]);
-
-

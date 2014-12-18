@@ -1,30 +1,16 @@
 ﻿<div style="width: 300px;">
-    <style>
-        p {
-            white-space: normal;
-        }
-    </style>
-
     <span class="subheader-secondary">Process start</span>
     <p>{{currentEntity.started | date : 'mediumTime'}}&nbsp;</p>
     <span class="subheader-secondary">Process end</span>
     <p>{{currentEntity.completed | date : 'mediumTime'}}&nbsp;</p>
 
     <span class="subheader-secondary">Messages</span>
-    <p class="text-info">
-        <span ng-repeat="x in currentEntity.logs">{{x}}<br></span>
-    </p>
-
-    <span class="subheader-secondary" ng-if="currentEntity.errors.length>0">Errors</span>
-    <p>
-        <span ng-repeat="x in currentEntity.errors">{{x}}<br></span>
-    </p>
-
-    <br/>
-    <p ng-if="completed && currentEntity.errors.length==0">Module installation process completed. Restart the application now or later.</p>
-    <div>
-        <button ng-click="restart()" ng-disabled="!(completed && currentEntity.errors.length==0)">
-            <span>Restart</span>
-        </button>
+    <div class="log">
+        <p ng-repeat="x in currentEntity.progressLog" ng-class="{'info' : x.level==='Info', 'warning': x.level==='Warning', 'debug': x.level==='Debug', 'error': x.level==='Error'}">{{x.message}}</p>
     </div>
+
+    <p ng-if="completed">Module installation process completed. Restart the application now or later.</p>
+    <button ng-click="restart()" ng-disabled="!completed">
+        <span>Restart</span>
+    </button>
 </div>

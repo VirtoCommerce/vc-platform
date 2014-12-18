@@ -32,9 +32,15 @@
                         id: "associationGroup",
                         title: 'Association Group',
                         controller: 'associationGroupSelectController',
-                        bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/common/wizard-ok-action.tpl.html',
+                        groupNames: ['Accessories', 'Related Items'],
+                        // bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/common/wizard-ok-action.tpl.html',
                         template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newAssociation/association-wizard-group-step.tpl.html'
                     };
+
+                    if ($scope.blade.groupName && !_.contains(newBlade.groupNames, $scope.blade.groupName)) {
+                        newBlade.groupNames.splice(0, 0, $scope.blade.groupName);
+                    }
+
                     break;
                 case 'products':
                     newBlade = {
@@ -42,7 +48,7 @@
                         title: 'Select Catalog',
                         subtitle: 'Adding Associations to product',
                         controller: 'catalogsSelectController',
-                        bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/common/wizard-ok-action.tpl.html',
+                        // bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/common/wizard-ok-action.tpl.html',
                         template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/catalogs-select.tpl.html'
                     };
 
