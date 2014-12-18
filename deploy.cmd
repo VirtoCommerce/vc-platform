@@ -67,6 +67,30 @@ IF NOT DEFINED MSBUILD_PATH (
 
 echo Handling .NET Web Application deployment.
 
+:: If PREVIOUS_MANIFEST_PATH ends with firstDeploymentManifest then initialize database
+
+echo(!PREVIOUS_MANIFEST_PATH!|findstr /r /i /c:"firstDeploymentManifest$" >nul && (
+	echo First deployment. Need to initialize database. InsertSampleData = %APPSETTING_insertSampleData%
+
+	echo Restoring NuGet packages for VirtoCommerce.sln
+	IF EXIST "%DEPLOYMENT_SOURCE%\VirtoCommerce.sln" (
+		call :ExecuteCmd nuget restore "%DEPLOYMENT_SOURCE%\VirtoCommerce.sln"
+		IF !ERRORLEVEL! NEQ 0 goto error
+	)
+
+	echo Building VirtoCommerce.PowerShell
+	set VCPS=%DEPLOYMENT_SOURCE%\src\Extensions\Setup\VirtoCommerce.PowerShell
+	call "%MSBUILD_PATH%" "%VCPS%\VirtoCommerce.PowerShell.csproj" /nologo /verbosity:m /t:Build /p:Configuration=Release;SolutionDir="%DEPLOYMENT_SOURCE%\.\\" %SCM_BUILD_ARGS%
+	IF !ERRORLEVEL! NEQ 0 goto error
+
+	echo Executing setup-database.ps1
+	IF /I "%APPSETTING_insertSampleData%" EQU "True" SET InsertSampleData=$true ELSE InsertSampleData=$false
+	call :ExecuteCmd PowerShell -ExecutionPolicy Bypass -Command "%VCPS%\setup-database.ps1" -dbconnection "%SQLAZURECONNSTR_DefaultConnection%" -datafolder "%VCPS%" -moduleFile "%VCPS%\bin\Release\VirtoCommerce.PowerShell.dll" -useSample %InsertSampleData% -reducedSample $false
+	IF !ERRORLEVEL! NEQ 0 goto error
+) || (
+	echo Not first deployment
+)
+
 :: 1. Restore NuGet packages
 IF /I "VirtoCommerce.WebPlatform.sln" NEQ "" (
   call :ExecuteCmd nuget restore "%DEPLOYMENT_SOURCE%\VirtoCommerce.WebPlatform.sln"
