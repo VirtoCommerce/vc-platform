@@ -51,7 +51,7 @@
             }
         },
         {
-            name: "Add", icon: 'icon-plus',
+            name: "Install", icon: 'icon-plus',
             executeMethod: function () {
                 openAddEntityBlade();
             },

@@ -61,19 +61,19 @@
             message: "Are you sure you want to uninstall this Module?",
             callback: function (remove) {
                 if (remove) {
-                    // $scope.blade.isLoading = true;
-
-                    var newBlade = {
-                        id: 'moduleInstallProgress',
-                        title: 'module uninstall',
-                        subtitle: 'Installation progress',
-                        controller: 'moduleInstallProgressController',
-                        template: 'Modules/Packaging/VirtoCommerce.PackagingModule.Web/Scripts/wizards/newModule/module-wizard-progress-step.tpl.html'
-                    };
+                    $scope.blade.isLoading = true;
 
                     modules.uninstall({ id: $scope.currentEntity.id }, function (data) {
-                        newBlade.currentEntityId = data.id;
-                        bladeNavigationService.showBlade(newBlade, $scope.blade);
+                        var newBlade = {
+                            id: 'moduleInstallProgress',
+                            currentEntityId: data.id,
+                            title: 'module uninstall',
+                            subtitle: 'Installation progress',
+                            controller: 'moduleInstallProgressController',
+                            template: 'Modules/Packaging/VirtoCommerce.PackagingModule.Web/Scripts/wizards/newModule/module-wizard-progress-step.tpl.html'
+                        };
+                        bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);
+                        $scope.bladeClose();
                     });
                 }
             }

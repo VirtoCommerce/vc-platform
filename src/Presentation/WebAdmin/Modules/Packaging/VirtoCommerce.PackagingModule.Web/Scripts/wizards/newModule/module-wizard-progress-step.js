@@ -9,7 +9,7 @@
                 $scope.blade.isLoading = false;
                 $scope.completed = true;
                 stopRefresh();
-                $scope.blade.parentBlade.parentBlade.refresh();
+                $scope.blade.parentBlade.refresh();
             }
         });
 
@@ -24,8 +24,6 @@
     $scope.$on('$destroy', function () {
         // Make sure that the interval is destroyed too
         stopRefresh();
-
-        bladeNavigationService.closeBlade($scope.blade.parentBlade);
     });
 
     $scope.blade.refresh();
