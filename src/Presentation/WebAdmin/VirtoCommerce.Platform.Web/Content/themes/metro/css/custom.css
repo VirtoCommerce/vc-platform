@@ -1001,7 +1001,7 @@
 	border-bottom: 1px solid #ccc;
 	cursor: pointer;
 	font-size: 12px;
-	padding: 15px 20px;
+	padding: 15px;
 	position: relative;
 }
 
@@ -1082,6 +1082,7 @@
 .list-checkboxes li
 {
 	border-top: 1px solid #ccc;
+	font-size: 10pt;
 }
 
 .list-checkboxes li:hover
