@@ -2139,3 +2139,29 @@
 		margin-top: 10px;
 		background-color: #212628;
 	}
+
+	
+	.table.sortable .sorted {
+		background-color: #f1f1f8;
+	}
+	
+	
+	.table.sortable .th {
+		cursor: pointer;
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-khtml-user-select: none;
+		user-select: none; 
+	}
+
+	.table.sortable .th.sorted {
+		background-color: #4390df;
+		color: #fff;
+	}
+
+	.table.sortable .th.sorted .icon {
+		float: right;
+		position: relative;
+		top: 3px;
+	}
+

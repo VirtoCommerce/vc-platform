@@ -1,14 +1,14 @@
 <div style="width: 500px;">
-        <table class="list notify table">
+        <table class="list notify table sortable">
         <thead>
             <tr>
-                <th class="col" ng-click="setOrder('type')">Type<i ng-class="
+                <th ng-class="(pageSettings.orderBy === 'type')?'sorted':''" class="col th" ng-click="setOrder('type')">Type<i ng-class="
                         (pageSettings.orderBy === 'type')?((pageSettings.order === 'DESC')?'icon-arrow-up-2':'icon-arrow-down-2'):''
                     " class="icon"></i></th>
-                <th class="col" ng-click="setOrder('title')">Title<i ng-class="
+                <th ng-class="(pageSettings.orderBy === 'title')?'sorted':''" class="col th" ng-click="setOrder('title')">Title<i ng-class="
                         (pageSettings.orderBy === 'title')?((pageSettings.order === 'DESC')?'icon-arrow-up-2':'icon-arrow-down-2'):''
                     " class="icon"></i></th>
-                <th class="col" ng-click="setOrder('created')">Date<i ng-class="
+                <th ng-class="(pageSettings.orderBy === 'created')?'sorted':''" class="col th" ng-click="setOrder('created')">Date<i ng-class="
                         (pageSettings.orderBy === 'created')?((pageSettings.order === 'DESC')?'icon-arrow-up-2':'icon-arrow-down-2'):''
                     " class="icon"></i></th>
             </tr>
@@ -28,17 +28,17 @@
     };
     classNames = ['item', 'notif', notifyTypesArr[notify.notifyType], notifyStatusArr[notify.notifyType]];
 " ng-class="classNames" class="item notif">
-                <td class="col">
+                <td ng-class="(pageSettings.orderBy === 'type')?'sorted':''" class="col">
                     <span class="pic">
                         <i ng-class="(notify.notifyType=='info')?'icon-comments':'icon-warning'" class="icon"></i>
                     </span>
                 </td>
-                <td class="col">
+                <td ng-class="(pageSettings.orderBy === 'title')?'sorted':''" class="col">
                     <span class="title" ng-bind="notify.title"></span>
                     <span class="desc" ng-bind="notify.description"></span>
                     <div ng-if="notify.status == 0" class="progress-bar small" data-role="progress-bar" data-value="30"></div>
                 </td>
-                <td class="col">
+                <td ng-class="(pageSettings.orderBy === 'created')?'sorted':''" class="col">
                     <span class="date" am-time-ago="notify.created"></span>
                 </td>
             </tr>

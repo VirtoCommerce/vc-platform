@@ -32,6 +32,7 @@ function ($scope, bladeNavigationService, notificationTemplateResolver, notifica
             $scope.pageSettings.orderBy = field;
             $scope.pageSettings.order = 'DESC';
         }
+        $scope.pageSettings.currentPage = 1;
     }
 
     $scope.$watchGroup(['pageSettings.currentPage',
