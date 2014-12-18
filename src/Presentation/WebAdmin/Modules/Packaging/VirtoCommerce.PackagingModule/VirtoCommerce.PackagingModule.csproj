@@ -44,6 +44,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\ModuleDescriptor.cs" />
+    <Compile Include="Model\ProgressMessage.cs" />
+    <Compile Include="Model\ProgressMessageLevel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\IPackageService.cs" />
   </ItemGroup>

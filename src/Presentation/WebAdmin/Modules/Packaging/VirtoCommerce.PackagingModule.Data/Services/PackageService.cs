@@ -42,21 +42,21 @@ namespace VirtoCommerce.PackagingModule.Data.Services
 				.ToArray();
 		}
 
-		public void Install(string packageId, string version, IProgress<string> progress)
+		public void Install(string packageId, string version, IProgress<ProgressMessage> progress)
 		{
 			var packageVersion = string.IsNullOrEmpty(version) ? null : new SemanticVersion(version);
 			_projectManager.Logger = new LoggerProgressWrapper(progress);
 			_projectManager.AddPackageReference(packageId, packageVersion, false, true);
 		}
 
-		public void Update(string packageId, string version, IProgress<string> progress)
+		public void Update(string packageId, string version, IProgress<ProgressMessage> progress)
 		{
 			var packageVersion = string.IsNullOrEmpty(version) ? null : new SemanticVersion(version);
 			_projectManager.Logger = new LoggerProgressWrapper(progress);
 			_projectManager.UpdatePackageReference(packageId, packageVersion, true, true);
 		}
 
-		public void Uninstall(string packageId, IProgress<string> progress)
+		public void Uninstall(string packageId, IProgress<ProgressMessage> progress)
 		{
 			_projectManager.Logger = new LoggerProgressWrapper(progress);
 			_projectManager.RemovePackageReference(packageId, false, false);
@@ -88,8 +88,8 @@ namespace VirtoCommerce.PackagingModule.Data.Services
 
 		private class LoggerProgressWrapper : ILogger
 		{
-			private readonly IProgress<string> _progress;
-			public LoggerProgressWrapper(IProgress<string> progress)
+			private readonly IProgress<ProgressMessage> _progress;
+			public LoggerProgressWrapper(IProgress<ProgressMessage> progress)
 			{
 				_progress = progress;
 			}
@@ -99,8 +99,8 @@ namespace VirtoCommerce.PackagingModule.Data.Services
 			{
 				if (_progress != null)
 				{
-					var reportMsg = level.ToString() + " - " + string.Format(message, args);
-					_progress.Report(reportMsg);
+					var reportProgress = new ProgressMessage { Level = (ProgressMessageLevel)(int)level, Message = string.Format(message, args) };
+					_progress.Report(reportProgress);
 				}
 			}
 
