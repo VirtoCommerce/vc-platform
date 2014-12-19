@@ -1,16 +1,6 @@
 ﻿<div style="width: 300px;">
-    <span class="subheader-secondary">Process start</span>
-    <p>{{currentEntity.started | date : 'mediumTime'}}&nbsp;</p>
-    <span class="subheader-secondary">Process end</span>
-    <p>{{currentEntity.completed | date : 'mediumTime'}}&nbsp;</p>
-
     <span class="subheader-secondary">Messages</span>
     <div class="log">
         <p ng-repeat="x in currentEntity.progressLog" ng-class="{'info' : x.level==='Info', 'warning': x.level==='Warning', 'debug': x.level==='Debug', 'error': x.level==='Error'}">{{x.message}}</p>
     </div>
-
-    <p ng-if="completed">Module installation process completed. Restart the application now or later.</p>
-    <button ng-click="restart()" ng-disabled="!completed">
-        <span>Restart</span>
-    </button>
 </div>
