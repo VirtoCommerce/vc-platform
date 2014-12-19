@@ -14,7 +14,7 @@ namespace VirtoCommerce.PowerShell.Marketing
 		protected override void Seed(EFDynamicContentRepository context)
 		{
 			base.Seed(context);
-            FillDynamicContentScripts(context);
+            //FillDynamicContentScripts(context);
 		}
 
         private void FillDynamicContentScripts(EFDynamicContentRepository context)
