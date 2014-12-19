@@ -60,7 +60,14 @@ namespace VirtoCommerce.MerchandisingModule.Web
 			Func<IDynamicContentEvaluator> dynamicContentEval = () => { return  new DynamicContentEvaluator(dynamicRepositoryFactory(), null, new HttpCacheRepository()); };
 			Func<IDynamicContentService> dynamicContentServiceFactory = () => { return new DynamicContentService(dynamicRepositoryFactory(), dynamicContentEval()); };
 			#endregion
-			string baseUrl = HttpContext.Current.Request.Url.Scheme + "://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath.TrimEnd('/') + "/";
+
+			var baseUrl = string.Format(
+                "{0}://{1}{2}{3}",
+                (HttpContext.Current.Request.IsSecureConnection) ? "https" : "http",
+                HttpContext.Current.Request.Url.Host,
+                (HttpContext.Current.Request.Url.Port == 80) ? "" : ":" + HttpContext.Current.Request.Url.Port,
+                VirtualPathUtility.ToAbsolute("~/"));
+
 			var assetBaseUri = new Uri(baseUrl);
 
 			_container.RegisterType<ReviewController>(new InjectionConstructor(reviewRepFactory));
