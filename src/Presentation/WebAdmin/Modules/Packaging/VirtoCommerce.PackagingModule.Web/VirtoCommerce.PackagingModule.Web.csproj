@@ -138,6 +138,7 @@
     <Content Include="Scripts\home.tpl.html" />
     <Content Include="Scripts\resources\modules.js" />
     <Content Include="Scripts\wizards\newModule\module-wizard-progress-step.js" />
+    <Content Include="Scripts\wizards\newModule\module-wizard-progress-step.actions.tpl.html" />
     <Content Include="Scripts\wizards\newModule\module-wizard-progress-step.tpl.html" />
     <Content Include="Scripts\wizards\newModule\install-wizard.js" />
     <Content Include="Scripts\wizards\newModule\install-wizard-actions.tpl.html" />
