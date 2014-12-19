@@ -34,10 +34,11 @@ namespace VirtoCommerce.Framework.Web.Modularity
 			if (string.IsNullOrEmpty(ContentPhysicalPath))
 				throw new InvalidOperationException(Resources.ContentPathCannotBeNullOrEmpty);
 
-			if (!Directory.Exists(AssembliesPath))
-				throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.DirectoryNotFound, AssembliesPath));
 			if (!Directory.Exists(ContentPhysicalPath))
 				throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, Resources.DirectoryNotFound, ContentPhysicalPath));
+
+			if (!Directory.Exists(AssembliesPath))
+				Directory.CreateDirectory(AssembliesPath);
 
 			ContentVirtualPath = ContentVirtualPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
 

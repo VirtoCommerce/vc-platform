@@ -159,11 +159,11 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 						{
 							repository.SetVariationRelation(dbItem, item.MainProductId);
 						}
-						else
-						{
-							//Switch item like a  main product
-							repository.SwitchProductToMain(dbItem);
-						}
+						//else
+						//{
+						//	//Switch item like a  main product
+						//	repository.SwitchProductToMain(dbItem);
+						//}
 					}
 
 					//Patch seoInfo

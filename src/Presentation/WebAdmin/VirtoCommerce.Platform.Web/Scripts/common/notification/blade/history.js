@@ -10,14 +10,19 @@ function ($scope, bladeNavigationService, notificationTemplateResolver, notifica
     $scope.pageSettings.currentPage = 1;
     $scope.pageSettings.numPages = 5;
     $scope.pageSettings.itemsPerPageCount = 10;
-    $scope.pageSettings.orderBy = 'created';
-    $scope.pageSettings.order = 'DESC';
     $scope.notifications = [];
 
+    $scope.columns = [
+    	{ title: "Type", orderBy: "NotifyType", checked: true },
+		{ title: "Title", orderBy: "Title" },
+		{ title: "Created", orderBy: "Created" }
+
+    ];
+	
     $scope.blade.refresh = function () {
         $scope.blade.isLoading = true;
         var start = $scope.pageSettings.currentPage * $scope.pageSettings.itemsPerPageCount - $scope.pageSettings.itemsPerPageCount;
-        notifications.query({start:start, count: $scope.pageSettings.itemsPerPageCount }, function (data, status, headers, config) {
+        notifications.query({ start: start, count: $scope.pageSettings.itemsPerPageCount, orderBy: getOrderByExpression() }, function (data, status, headers, config) {
             console.log(data);
             $scope.notifications = data.notifyEvents;
             $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
@@ -25,19 +30,30 @@ function ($scope, bladeNavigationService, notificationTemplateResolver, notifica
         });
     };
 
-    $scope.setOrder = function(field) {
-        if($scope.pageSettings.orderBy === field) {
-            $scope.pageSettings.order = ($scope.pageSettings.order === 'DESC')?'ASC':'DESC';
-        } else {
-            $scope.pageSettings.orderBy = field;
-            $scope.pageSettings.order = 'DESC';
-        }
-        $scope.pageSettings.currentPage = 1;
+    function getOrderByExpression() {
+    	var retVal = '';
+    	var column = _.find($scope.columns, function (x) { return x.checked; });
+    	if(angular.isDefined(column))
+    	{
+    		retVal = column.orderBy;
+    		if (column.inverse) {
+    			retVal += ":desc";
+    		}
+    	}
+    	return retVal;
+    };
+
+    $scope.setOrder = function (column) {
+    	//reset prev selection may be commented if need support multiple order clauses
+    	_.each($scope.columns, function (x) { x.checked = false });
+    	column.checked = true;
+    	column.inverse = !column.inverse;
+    	$scope.pageSettings.currentPage = 1;
+
+    	$scope.blade.refresh();
     }
 
-    $scope.$watchGroup(['pageSettings.currentPage',
-                        'pageSettings.orderBy',
-                        'pageSettings.order'], function () {
+    $scope.$watch(['pageSettings.currentPage'], function () {
         $scope.blade.refresh();
     });
 

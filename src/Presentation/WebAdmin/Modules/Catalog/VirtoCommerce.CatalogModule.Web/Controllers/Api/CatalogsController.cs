@@ -22,9 +22,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         private readonly ICatalogSearchService _searchService;
 		private readonly Func<IAppConfigRepository> _appConfigRepositoryFactory;
 
-        public CatalogsController([Dependency("Catalog")]ICatalogService catalogService,
-								  [Dependency("Catalog")]ICatalogSearchService itemSearchService,
-								  [Dependency("Catalog")]Func<IFoundationAppConfigRepository> appConfigRepositoryFactory)
+        public CatalogsController(ICatalogService catalogService,
+								  ICatalogSearchService itemSearchService,
+								  Func<IFoundationAppConfigRepository> appConfigRepositoryFactory)
         {
             _catalogService = catalogService;
             _searchService = itemSearchService;

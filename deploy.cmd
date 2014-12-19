@@ -11,8 +11,8 @@
 :: Verify node.js installed
 where node 2>nul >nul
 IF %ERRORLEVEL% NEQ 0 (
-  echo Missing node.js executable, please install node.js, if already installed make sure it can be reached from current environment.
-  goto error
+	echo Missing node.js executable, please install node.js, if already installed make sure it can be reached from current environment.
+	goto error
 )
 
 :: Setup
@@ -23,50 +23,52 @@ setlocal enabledelayedexpansion
 SET ARTIFACTS=%~dp0%..\artifacts
 
 IF NOT DEFINED DEPLOYMENT_SOURCE (
-  SET DEPLOYMENT_SOURCE=%~dp0%.
+	SET DEPLOYMENT_SOURCE=%~dp0%.
 )
 
 IF NOT DEFINED DEPLOYMENT_TARGET (
-  SET DEPLOYMENT_TARGET=%ARTIFACTS%\wwwroot
+	SET DEPLOYMENT_TARGET=%ARTIFACTS%\wwwroot
 )
 
 IF NOT DEFINED NEXT_MANIFEST_PATH (
-  SET NEXT_MANIFEST_PATH=%ARTIFACTS%\manifest
+	SET NEXT_MANIFEST_PATH=%ARTIFACTS%\manifest
 
-  IF NOT DEFINED PREVIOUS_MANIFEST_PATH (
-    SET PREVIOUS_MANIFEST_PATH=%ARTIFACTS%\manifest
-  )
+	IF NOT DEFINED PREVIOUS_MANIFEST_PATH (
+		SET PREVIOUS_MANIFEST_PATH=%ARTIFACTS%\manifest
+	)
 )
 
 IF NOT DEFINED KUDU_SYNC_CMD (
-  :: Install kudu sync
-  echo Installing Kudu Sync
-  call npm install kudusync -g --silent
-  IF !ERRORLEVEL! NEQ 0 goto error
+	:: Install kudu sync
+	echo Installing Kudu Sync
+	call npm install kudusync -g --silent
+	IF !ERRORLEVEL! NEQ 0 goto error
 
-  :: Locally just running "kuduSync" would also work
-  SET KUDU_SYNC_CMD=%appdata%\npm\kuduSync.cmd
+	:: Locally just running "kuduSync" would also work
+	SET KUDU_SYNC_CMD=%appdata%\npm\kuduSync.cmd
 )
 IF NOT DEFINED DEPLOYMENT_TEMP (
-  SET DEPLOYMENT_TEMP=%temp%\___deployTemp%random%
-  SET CLEAN_LOCAL_DEPLOYMENT_TEMP=true
+	SET DEPLOYMENT_TEMP=%temp%\___deployTemp%random%
+	SET CLEAN_LOCAL_DEPLOYMENT_TEMP=true
 )
 
 IF DEFINED CLEAN_LOCAL_DEPLOYMENT_TEMP (
-  IF EXIST "%DEPLOYMENT_TEMP%" rd /s /q "%DEPLOYMENT_TEMP%"
-  mkdir "%DEPLOYMENT_TEMP%"
+	IF EXIST "%DEPLOYMENT_TEMP%" rd /s /q "%DEPLOYMENT_TEMP%"
+	mkdir "%DEPLOYMENT_TEMP%"
 )
 
 IF NOT DEFINED MSBUILD_PATH (
-  SET MSBUILD_PATH=%WINDIR%\Microsoft.NET\Framework\v4.0.30319\msbuild.exe
+	SET MSBUILD_PATH=%WINDIR%\Microsoft.NET\Framework\v4.0.30319\msbuild.exe
 )
 
 IF NOT DEFINED VCPS (
 	SET VCPS=%DEPLOYMENT_SOURCE%\src\Extensions\Setup\VirtoCommerce.PowerShell
 )
 
-IF NOT DEFINED INSERT_SAMPLE_DATA (
-	IF /I "%APPSETTING_insertSampleData%" EQU "True" (SET INSERT_SAMPLE_DATA=$true) ELSE (SET INSERT_SAMPLE_DATA=$false)
+IF /I "%APPSETTING_insertSampleData%" EQU "True" (
+	SET INSERT_SAMPLE_DATA=$true
+) ELSE (
+	SET INSERT_SAMPLE_DATA=$false
 )
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -75,18 +77,45 @@ IF NOT DEFINED INSERT_SAMPLE_DATA (
 
 echo Handling .NET Web Application deployment.
 
+:: 1. Restore NuGet packages
+IF /I "VirtoCommerce.WebPlatform.sln" NEQ "" (
+	call :ExecuteCmd nuget restore "%DEPLOYMENT_SOURCE%\VirtoCommerce.WebPlatform.sln"
+	IF !ERRORLEVEL! NEQ 0 goto error
+)
+
+:: 2. Build to the temporary path
+IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
+	echo Building VirtoCommerce.WebPlatform.sln
+	call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\VirtoCommerce.WebPlatform.sln" /nologo /verbosity:m /t:Build /p:Configuration=Release;SolutionDir="%DEPLOYMENT_SOURCE%\.\\" %SCM_BUILD_ARGS%
+	IF !ERRORLEVEL! NEQ 0 goto error
+
+	echo Building VirtoCommerce.Platform.Web.csproj
+	call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\src\Presentation\WebAdmin\VirtoCommerce.Platform.Web\VirtoCommerce.Platform.Web.csproj" /nologo /verbosity:m /t:Build /t:pipelinePreDeployCopyAllFilesToOneFolder /p:_PackageTempDir="%DEPLOYMENT_TEMP%";AutoParameterizationWebConfigConnectionStrings=false;Configuration=Release /p:SolutionDir="%DEPLOYMENT_SOURCE%\.\\" %SCM_BUILD_ARGS%
+	IF !ERRORLEVEL! NEQ 0 goto error
+) ELSE (
+	echo Building VirtoCommerce.WebPlatform.sln
+	call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\VirtoCommerce.WebPlatform.sln" /nologo /verbosity:m /t:Build /p:Configuration=Release;SolutionDir="%DEPLOYMENT_SOURCE%\.\\" %SCM_BUILD_ARGS%
+	IF !ERRORLEVEL! NEQ 0 goto error
+
+	echo Building VirtoCommerce.Platform.Web.csproj
+	call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\src\Presentation\WebAdmin\VirtoCommerce.Platform.Web\VirtoCommerce.Platform.Web.csproj" /nologo /verbosity:m /t:Build /p:AutoParameterizationWebConfigConnectionStrings=false;Configuration=Release /p:SolutionDir="%DEPLOYMENT_SOURCE%\.\\" %SCM_BUILD_ARGS%
+	IF !ERRORLEVEL! NEQ 0 goto error
+)
+
+:: 3. KuduSync
+IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
+	call :ExecuteCmd "%KUDU_SYNC_CMD%" -v 50 -f "%DEPLOYMENT_TEMP%" -t "%DEPLOYMENT_TARGET%" -n "%NEXT_MANIFEST_PATH%" -p "%PREVIOUS_MANIFEST_PATH%" -i ".git;.hg;.deployment;deploy.cmd"
+	IF !ERRORLEVEL! NEQ 0 goto error
+)
+
+:: Clear build output
+call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\VirtoCommerce.WebPlatform.sln" /nologo /verbosity:m /t:Clean /p:Configuration=Release;SolutionDir="%DEPLOYMENT_SOURCE%\.\\" %SCM_BUILD_ARGS%
+
+:: Initialize database for first deployment
 :: If PREVIOUS_MANIFEST_PATH ends with firstDeploymentManifest then initialize database
 
 echo(!PREVIOUS_MANIFEST_PATH!|findstr /r /i /c:"firstDeploymentManifest$" >nul && (
 	echo First deployment. Need to initialize database. InsertSampleData = %APPSETTING_insertSampleData%
-
-	IF EXIST "%DEPLOYMENT_SOURCE%\VirtoCommerce.sln" (
-		echo Restoring NuGet packages for %DEPLOYMENT_SOURCE%\VirtoCommerce.sln
-		call :ExecuteCmd nuget restore "%DEPLOYMENT_SOURCE%\VirtoCommerce.sln"
-		IF !ERRORLEVEL! NEQ 0 goto error
-	) ELSE (
-		echo %DEPLOYMENT_SOURCE%\VirtoCommerce.sln does not exist.
-	)
 
 	IF EXIST "%VCPS%\VirtoCommerce.PowerShell.csproj" (
 		echo Building %VCPS%\VirtoCommerce.PowerShell.csproj
@@ -98,42 +127,16 @@ echo(!PREVIOUS_MANIFEST_PATH!|findstr /r /i /c:"firstDeploymentManifest$" >nul &
 
 	IF EXIST "%VCPS%\setup-database.ps1" (
 		echo Executing %VCPS%\setup-database.ps1
-		call :ExecuteCmd PowerShell -ExecutionPolicy Bypass -Command "%VCPS%\setup-database.ps1" -dbconnection '%SQLAZURECONNSTR_DefaultConnection%' -datafolder "%VCPS%" -moduleFile "%VCPS%\bin\Release\VirtoCommerce.PowerShell.dll" -useSample %INSERT_SAMPLE_DATA% -reducedSample $false
+		call :ExecuteCmd PowerShell -ExecutionPolicy Bypass -File "%VCPS%\setup-database.ps1" -dbconnection '%SQLAZURECONNSTR_DefaultConnection%' -datafolder "%VCPS%" -moduleFile "%VCPS%\bin\Release\VirtoCommerce.PowerShell.dll" -useSample %INSERT_SAMPLE_DATA% -reducedSample $false
 		IF !ERRORLEVEL! NEQ 0 goto error
 	) ELSE (
 		echo %VCPS%\setup-database.ps1 does not exist.
 	)
+
+	:: Clear build output
+	call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\VirtoCommerce.sln" /nologo /verbosity:m /t:Clean /p:Configuration=Release;SolutionDir="%DEPLOYMENT_SOURCE%\.\\" %SCM_BUILD_ARGS%
 ) || (
 	echo Not first deployment
-)
-
-:: 1. Restore NuGet packages
-IF /I "VirtoCommerce.WebPlatform.sln" NEQ "" (
-  call :ExecuteCmd nuget restore "%DEPLOYMENT_SOURCE%\VirtoCommerce.WebPlatform.sln"
-  IF !ERRORLEVEL! NEQ 0 goto error
-)
-
-:: 2. Build to the temporary path
-IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
-  echo Building VirtoCommerce.WebPlatform.sln
-  call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\VirtoCommerce.WebPlatform.sln" /nologo /verbosity:m /t:Build /p:SolutionDir="%DEPLOYMENT_SOURCE%\.\\" %SCM_BUILD_ARGS%
-
-  echo Building VirtoCommerce.Platform.Web.csproj
-  call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\src\Presentation\WebAdmin\VirtoCommerce.Platform.Web\VirtoCommerce.Platform.Web.csproj" /nologo /verbosity:m /t:Build /t:pipelinePreDeployCopyAllFilesToOneFolder /p:_PackageTempDir="%DEPLOYMENT_TEMP%";AutoParameterizationWebConfigConnectionStrings=false;Configuration=Release /p:SolutionDir="%DEPLOYMENT_SOURCE%\.\\" %SCM_BUILD_ARGS%
-) ELSE (
-  echo Building VirtoCommerce.WebPlatform.sln
-  call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\VirtoCommerce.WebPlatform.sln" /nologo /verbosity:m /t:Build /p:SolutionDir="%DEPLOYMENT_SOURCE%\.\\" %SCM_BUILD_ARGS%
-
-  echo Building VirtoCommerce.Platform.Web.csproj
-  call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\src\Presentation\WebAdmin\VirtoCommerce.Platform.Web\VirtoCommerce.Platform.Web.csproj" /nologo /verbosity:m /t:Build /p:AutoParameterizationWebConfigConnectionStrings=false;Configuration=Release /p:SolutionDir="%DEPLOYMENT_SOURCE%\.\\" %SCM_BUILD_ARGS%
-)
-
-IF !ERRORLEVEL! NEQ 0 goto error
-
-:: 3. KuduSync
-IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
-  call :ExecuteCmd "%KUDU_SYNC_CMD%" -v 50 -f "%DEPLOYMENT_TEMP%" -t "%DEPLOYMENT_TARGET%" -n "%NEXT_MANIFEST_PATH%" -p "%PREVIOUS_MANIFEST_PATH%" -i ".git;.hg;.deployment;deploy.cmd"
-  IF !ERRORLEVEL! NEQ 0 goto error
 )
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -148,6 +151,7 @@ goto end
 :ExecuteCmd
 setlocal
 set _CMD_=%*
+echo command=%_CMD_%
 call %_CMD_%
 if "%ERRORLEVEL%" NEQ "0" echo Failed exitCode=%ERRORLEVEL%, command=%_CMD_%
 exit /b %ERRORLEVEL%

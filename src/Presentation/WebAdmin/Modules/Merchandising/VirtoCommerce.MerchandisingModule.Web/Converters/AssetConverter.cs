@@ -11,12 +11,12 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 {
 	public static class AssetConverter
 	{
-		public static webModel.ItemImage ToWebModel(this moduleModel.ItemAsset assset)
+		public static webModel.ItemImage ToWebModel(this moduleModel.ItemAsset assset, Uri baseUri)
 		{
 			var retVal = new webModel.ItemImage();
 			retVal.InjectFrom(assset);
-			retVal.Src = assset.Url;
-            retVal.ThumbSrc = assset.Url;
+			retVal.Src = new Uri(baseUri, assset.Url).ToString();
+			retVal.ThumbSrc = new Uri(baseUri, assset.Url).ToString();
 			retVal.Name = assset.Group;
 			return retVal;
 		}

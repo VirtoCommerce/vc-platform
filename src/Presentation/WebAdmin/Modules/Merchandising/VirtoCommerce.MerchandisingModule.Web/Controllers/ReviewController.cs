@@ -21,7 +21,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 	public class ReviewController : ApiController
 	{
 		private readonly Func<IReviewRepository> _reviewRepositoryFactory;
-		public ReviewController([Dependency("MP")]Func<IReviewRepository> reviewRepositoryFactory)
+		public ReviewController(Func<IReviewRepository> reviewRepositoryFactory)
 		{
 			_reviewRepositoryFactory = reviewRepositoryFactory;
 		}
