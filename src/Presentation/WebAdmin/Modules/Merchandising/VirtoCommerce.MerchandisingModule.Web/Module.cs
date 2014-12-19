@@ -28,7 +28,7 @@ namespace VirtoCommerce.MerchandisingModule.Web
     public class Module : IModule
     {
 
-        private const string MarketPlaceConnectionString = "MarketPlace";
+        private const string MarketPlaceConnectionString = "VirtoCommerce";
         private readonly IUnityContainer _container;
 		public Module(IUnityContainer container)
         {
