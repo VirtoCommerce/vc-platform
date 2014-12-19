@@ -70,7 +70,8 @@
                             title: 'module uninstall',
                             subtitle: 'Installation progress',
                             controller: 'moduleInstallProgressController',
-                            template: 'Modules/Packaging/VirtoCommerce.PackagingModule.Web/Scripts/wizards/newModule/module-wizard-progress-step.tpl.html'
+                            template: 'Modules/Packaging/VirtoCommerce.PackagingModule.Web/Scripts/wizards/newModule/module-wizard-progress-step.tpl.html',
+                            bladeActions: 'Modules/Packaging/VirtoCommerce.PackagingModule.Web/Scripts/wizards/newModule/module-wizard-progress-step.actions.tpl.html'
                         };
                         bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);
                         $scope.bladeClose();

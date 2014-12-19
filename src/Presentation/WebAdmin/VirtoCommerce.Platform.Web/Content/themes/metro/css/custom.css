@@ -1527,6 +1527,11 @@
 	font-weight: bold;
 }
 
+.blade-actions p.normal
+{
+	font-weight: normal;
+}
+
 .blade-actions ul
 {
 	list-style: none;

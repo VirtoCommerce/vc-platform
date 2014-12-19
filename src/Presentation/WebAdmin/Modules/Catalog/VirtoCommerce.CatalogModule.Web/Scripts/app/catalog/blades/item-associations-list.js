@@ -1,6 +1,6 @@
 ﻿angular.module('catalogModule.blades.itemAssociationsList', [])
 .controller('itemAssociationsListController', ['$rootScope', '$scope', 'bladeNavigationService', 'dialogService', 'items', function ($rootScope, $scope, bladeNavigationService, dialogService, items) {
-    
+
     $scope.blade.refresh = function () {
         $scope.blade.isLoading = true;
         $scope.blade.parentBlade.refresh().$promise.then(function (data) {
@@ -13,6 +13,10 @@
         $scope.blade.currentEntities = angular.copy(data);
         $scope.blade.origItem = data;
         $scope.blade.isLoading = false;
+
+        $scope.blade.currentEntities.sort(function (a, b) {
+            return a.priority > b.priority;
+        });
     };
 
     $scope.blade.onClose = function (closeCallback) {
@@ -96,10 +100,6 @@
         axis: 'y',
         cursor: "move"
     };
-
-    $scope.blade.currentEntities.sort(function (a, b) {
-        return a.priority > b.priority;
-    });
 
     initializeBlade($scope.blade.currentEntities);
 }]);
