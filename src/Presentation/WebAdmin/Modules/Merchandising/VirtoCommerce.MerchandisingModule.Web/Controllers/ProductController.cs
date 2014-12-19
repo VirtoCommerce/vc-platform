@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
 using System.Web.Http.ModelBinding;
@@ -28,14 +29,20 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		public ProductController(IItemService itemService,
 								 ISearchProvider indexedSearchProvider,
 								 ISearchConnection searchConnection,
-								 Func<IFoundationCatalogRepository> foundationCatalogRepositoryFactory,
-								 Uri assetBaseUri)
+								 Func<IFoundationCatalogRepository> foundationCatalogRepositoryFactory)
 		{
 			_searchService = indexedSearchProvider;
 			_searchConnection = searchConnection;
 			_itemService = itemService;
 			_foundationCatalogRepositoryFactory = foundationCatalogRepositoryFactory;
-			_assetBaseUri = assetBaseUri;
+
+            var baseUrl = string.Format("{0}://{1}{2}{3}",
+              (HttpContext.Current.Request.IsSecureConnection) ? "https" : "http",
+              HttpContext.Current.Request.Url.Host,
+              (HttpContext.Current.Request.Url.Port == 80) ? "" : ":" + HttpContext.Current.Request.Url.Port,
+              VirtualPathUtility.ToAbsolute("~/"));
+
+            _assetBaseUri = new Uri(baseUrl);
 		}
 
 	    /// <summary>
