@@ -23,8 +23,24 @@ function ($scope, bladeNavigationService, notificationTemplateResolver, notifica
         $scope.blade.isLoading = true;
         var start = $scope.pageSettings.currentPage * $scope.pageSettings.itemsPerPageCount - $scope.pageSettings.itemsPerPageCount;
         notifications.query({ start: start, count: $scope.pageSettings.itemsPerPageCount, orderBy: getOrderByExpression() }, function (data, status, headers, config) {
-            console.log(data);
-            $scope.notifications = data.notifyEvents;
+            angular.forEach(data.notifyEvents, function (x) {
+
+                notificationTemplate = notificationTemplateResolver.resolve(x);
+
+                var menuItem = {
+                    // parent: notifyMenu,
+                    path: 'notification/events',
+                    icon: 'glyphicon glyphicon-comment',
+                    title: x.title,
+                    priority: 2,
+                    // template: 'Scripts/common/notification/blade/notify-item.tpl.html',
+                    action: function (notify) { $state.go('notification', notify) },
+                    permission: '',
+                    template: notificationTemplate.bladeTemplate,
+                    notify: x
+                };
+                $scope.notifications.push(menuItem);
+            });
             $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
             $scope.blade.isLoading = false;
         });
@@ -47,7 +63,7 @@ function ($scope, bladeNavigationService, notificationTemplateResolver, notifica
     	//reset prev selection may be commented if need support multiple order clauses
     	_.each($scope.columns, function (x) { x.checked = false });
     	column.checked = true;
-    	column.inverse = !column.inverse;
+    	column.reverse = !column.reverse;
     	$scope.pageSettings.currentPage = 1;
 
     	$scope.blade.refresh();

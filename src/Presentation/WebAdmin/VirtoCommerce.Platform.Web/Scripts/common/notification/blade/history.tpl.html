@@ -2,26 +2,14 @@
         <table class="list notify table sortable">
         <thead>
             <tr>
-                <th ng-repeat="column in columns" ng-click="setOrder(column)">
+                <th ng-repeat="column in columns" ng-click="setOrder(column)" ng-class="(column.checked)?'sorted':''" class="col th">
                     {{column.title}}
                     <i ng-class="column.checked ? (column.reverse ?'icon-arrow-up-2':'icon-arrow-down-2') : ''" class="icon"></i>
                 </th>
             </tr>
         </thead>
         <tbody>
-            <tr ng-click="selectNotify(notify)" ng-repeat="notify in notifications" class="item notif" ng-class="'notify_' + notify.notifyType">
-                <td class="col">
-                    <span class="pic">
-                        <i ng-class="(notify.notifyType=='info')?'icon-comments':'icon-warning'" class="icon"></i>
-                    </span>
-                </td>
-                <td class="col">
-                    <span class="title" ng-bind="notify.title"></span>
-                    <span class="desc" ng-bind="notify.description"></span>
-                </td>
-                <td class="col">
-                    <span class="date" am-time-ago="notify.created"></span>
-                </td>
+            <tr ng-click="selectNotify(notify)" ng-repeat="menuItem in notifications" class="item notif" ng-class="'notify_' + menuItem.notify.notifyType"  ng-include="menuItem.template">
             </tr>
         </tbody>
     </table>

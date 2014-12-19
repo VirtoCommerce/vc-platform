@@ -46,6 +46,7 @@
 			satisfy: function () { return true; },
 			//template for display that notification in menu and list
 			template: 'Scripts/common/notification/default.tpl.html',
+			bladeTemplate: 'Scripts/common/notification/blade/notify-item.tpl.html',
 			//action excecuted in event detail
 			action: function (notify) {
 				var blade = {
@@ -99,6 +100,7 @@
 				priority: 2,
 				permission: '',
 				headerTemplate: 'Scripts/common/notification/menuHeader.tpl.html',
+				listTemplate: 'Scripts/common/notification/menuList.tpl.html',
 				template: 'Scripts/common/notification/menu.tpl.html',
 				action: function () { markAllAsRead(); },
 				showHistory: function () { $state.go('notification') },
