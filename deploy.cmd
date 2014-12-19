@@ -75,38 +75,6 @@ IF NOT DEFINED INSERT_SAMPLE_DATA (
 
 echo Handling .NET Web Application deployment.
 
-:: If PREVIOUS_MANIFEST_PATH ends with firstDeploymentManifest then initialize database
-
-echo(!PREVIOUS_MANIFEST_PATH!|findstr /r /i /c:"firstDeploymentManifest$" >nul && (
-	echo First deployment. Need to initialize database. InsertSampleData = %APPSETTING_insertSampleData%
-
-	IF EXIST "%DEPLOYMENT_SOURCE%\VirtoCommerce.sln" (
-		echo Restoring NuGet packages for %DEPLOYMENT_SOURCE%\VirtoCommerce.sln
-		call :ExecuteCmd nuget restore "%DEPLOYMENT_SOURCE%\VirtoCommerce.sln"
-		IF !ERRORLEVEL! NEQ 0 goto error
-	) ELSE (
-		echo %DEPLOYMENT_SOURCE%\VirtoCommerce.sln does not exist.
-	)
-
-	IF EXIST "%VCPS%\VirtoCommerce.PowerShell.csproj" (
-		echo Building %VCPS%\VirtoCommerce.PowerShell.csproj
-		call :ExecuteCmd "%MSBUILD_PATH%" "%VCPS%\VirtoCommerce.PowerShell.csproj" /nologo /verbosity:m /t:Build /p:Configuration=Release;SolutionDir="%DEPLOYMENT_SOURCE%\.\\" %SCM_BUILD_ARGS%
-		IF !ERRORLEVEL! NEQ 0 goto error
-	) ELSE (
-		echo %VCPS%\VirtoCommerce.PowerShell.csproj does not exist.
-	)
-
-	IF EXIST "%VCPS%\setup-database.ps1" (
-		echo Executing %VCPS%\setup-database.ps1
-		call :ExecuteCmd PowerShell -ExecutionPolicy Bypass -Command "%VCPS%\setup-database.ps1" -dbconnection '%SQLAZURECONNSTR_DefaultConnection%' -datafolder "%VCPS%" -moduleFile "%VCPS%\bin\Release\VirtoCommerce.PowerShell.dll" -useSample %INSERT_SAMPLE_DATA% -reducedSample $false
-		IF !ERRORLEVEL! NEQ 0 goto error
-	) ELSE (
-		echo %VCPS%\setup-database.ps1 does not exist.
-	)
-) || (
-	echo Not first deployment
-)
-
 :: 1. Restore NuGet packages
 IF /I "VirtoCommerce.WebPlatform.sln" NEQ "" (
   call :ExecuteCmd nuget restore "%DEPLOYMENT_SOURCE%\VirtoCommerce.WebPlatform.sln"
@@ -134,6 +102,38 @@ IF !ERRORLEVEL! NEQ 0 goto error
 IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
   call :ExecuteCmd "%KUDU_SYNC_CMD%" -v 50 -f "%DEPLOYMENT_TEMP%" -t "%DEPLOYMENT_TARGET%" -n "%NEXT_MANIFEST_PATH%" -p "%PREVIOUS_MANIFEST_PATH%" -i ".git;.hg;.deployment;deploy.cmd"
   IF !ERRORLEVEL! NEQ 0 goto error
+)
+
+:: If PREVIOUS_MANIFEST_PATH ends with firstDeploymentManifest then initialize database
+
+echo(!PREVIOUS_MANIFEST_PATH!|findstr /r /i /c:"firstDeploymentManifest$" >nul && (
+	echo First deployment. Need to initialize database. InsertSampleData = %APPSETTING_insertSampleData%
+
+	IF EXIST "%DEPLOYMENT_SOURCE%\VirtoCommerce.sln" (
+		echo Restoring NuGet packages for %DEPLOYMENT_SOURCE%\VirtoCommerce.sln
+		call :ExecuteCmd nuget restore "%DEPLOYMENT_SOURCE%\VirtoCommerce.sln"
+		IF !ERRORLEVEL! NEQ 0 goto error
+	) ELSE (
+		echo %DEPLOYMENT_SOURCE%\VirtoCommerce.sln does not exist.
+	)
+
+	IF EXIST "%VCPS%\VirtoCommerce.PowerShell.csproj" (
+		echo Building %VCPS%\VirtoCommerce.PowerShell.csproj
+		call :ExecuteCmd "%MSBUILD_PATH%" "%VCPS%\VirtoCommerce.PowerShell.csproj" /nologo /verbosity:m /t:Build /p:Configuration=Release;SolutionDir="%DEPLOYMENT_SOURCE%\.\\" %SCM_BUILD_ARGS%
+		IF !ERRORLEVEL! NEQ 0 goto error
+	) ELSE (
+		echo %VCPS%\VirtoCommerce.PowerShell.csproj does not exist.
+	)
+
+	IF EXIST "%VCPS%\setup-database.ps1" (
+		echo Executing %VCPS%\setup-database.ps1
+		call :ExecuteCmd PowerShell -ExecutionPolicy Bypass -File "%VCPS%\setup-database.ps1" -dbconnection '%SQLAZURECONNSTR_DefaultConnection%' -datafolder "%VCPS%" -moduleFile "%VCPS%\bin\Release\VirtoCommerce.PowerShell.dll" -useSample %INSERT_SAMPLE_DATA% -reducedSample $false
+		IF !ERRORLEVEL! NEQ 0 goto error
+	) ELSE (
+		echo %VCPS%\setup-database.ps1 does not exist.
+	)
+) || (
+	echo Not first deployment
 )
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
