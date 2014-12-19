@@ -37,9 +37,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		private static readonly Object _lockObject = new Object();
 
 
-		public ImportController([Dependency("Catalog")]Func<IImportRepository> importRepositoryFactory,
-								[Dependency("Catalog")]Func<IImportService> importServiceFactory,
-								[Dependency("Catalog")]Func<IFoundationCatalogRepository> catalogRepositoryFactory,
+		public ImportController(Func<IImportRepository> importRepositoryFactory,
+								Func<IImportService> importServiceFactory,
+								Func<IFoundationCatalogRepository> catalogRepositoryFactory,
 								INotifier notifier /*, IDataManagementService dataManagementService*/)
 		{
 			_importRepositoryFactory = importRepositoryFactory;

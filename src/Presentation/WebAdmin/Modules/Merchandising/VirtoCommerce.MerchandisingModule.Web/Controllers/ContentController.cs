@@ -17,7 +17,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
     public class ContentController : ApiController
     {
         private readonly IDynamicContentService _dynamicContentService;
-		public ContentController([Dependency("MP")] IDynamicContentService dynamicContentService)
+		public ContentController(IDynamicContentService dynamicContentService)
         {
             _dynamicContentService = dynamicContentService;
         }

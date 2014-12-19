@@ -18,12 +18,13 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
     {
         private readonly IItemService _itemsService;
 		private readonly IPropertyService _propertyService;
+		private readonly Uri _assetBaseUri;
 
-		public ProductsController([Dependency("Catalog")]IItemService itemsService, 
-							   [Dependency("Catalog")]IPropertyService propertyService)
+		public ProductsController(IItemService itemsService, IPropertyService propertyService, Uri assetBaseUri)
         {
             _itemsService = itemsService;
 			_propertyService = propertyService;
+			_assetBaseUri = assetBaseUri;
         }
 
 		// GET: api/catalog/products/5
@@ -43,7 +44,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			{
 				properties = _propertyService.GetCategoryProperties(item.CategoryId);
 			}
-			var retVal = item.ToWebModel(properties);
+			var retVal = item.ToWebModel(_assetBaseUri, properties);
 
             //Remove variation properties from Product
 		    retVal.Properties.RemoveAll(x => x.Type == webModel.PropertyType.Variation && string.IsNullOrWhiteSpace(retVal.TitularItemId));
@@ -103,7 +104,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
                 allCategoryProperties = _propertyService.GetCategoryProperties(product.CategoryId);
 			}
 
-			var mainWebProduct = product.ToWebModel(allCategoryProperties);
+			var mainWebProduct = product.ToWebModel(_assetBaseUri, allCategoryProperties);
 
 			var newVariation = new webModel.Product
 			{

@@ -11,7 +11,7 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 {
 	public static class AssetConverter
 	{
-		public static webModel.ProductAssetBase ToWebModel(this moduleModel.ItemAsset assset)
+		public static webModel.ProductAssetBase ToWebModel(this moduleModel.ItemAsset assset, Uri baseUri)
 		{
 			webModel.ProductAssetBase retVal = new webModel.ProductImage();
 			if(assset.Type == moduleModel.ItemAssetType.File)
@@ -19,6 +19,7 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 				retVal = new webModel.ProductAsset();
 			}
 			retVal.InjectFrom(assset);
+			retVal.Url = new Uri(baseUri, assset.Url).ToString();
 			return retVal;
 		}
 

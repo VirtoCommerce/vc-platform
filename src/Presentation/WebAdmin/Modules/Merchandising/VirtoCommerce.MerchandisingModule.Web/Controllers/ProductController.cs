@@ -23,16 +23,19 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		private readonly ISearchProvider _searchService;
 		private readonly ISearchConnection _searchConnection;
 		private readonly Func<IFoundationCatalogRepository> _foundationCatalogRepositoryFactory;
+		private readonly Uri _assetBaseUri;
 
-		public ProductController([Dependency("MP")] IItemService itemService,
-								 [Dependency("MP")] ISearchProvider indexedSearchProvider,
-								 [Dependency("MP")] ISearchConnection searchConnection,
-								 [Dependency("MP")] Func<IFoundationCatalogRepository> foundationCatalogRepositoryFactory)
+		public ProductController(IItemService itemService,
+								 ISearchProvider indexedSearchProvider,
+								 ISearchConnection searchConnection,
+								 Func<IFoundationCatalogRepository> foundationCatalogRepositoryFactory,
+								 Uri assetBaseUri)
 		{
 			_searchService = indexedSearchProvider;
 			_searchConnection = searchConnection;
 			_itemService = itemService;
 			_foundationCatalogRepositoryFactory = foundationCatalogRepositoryFactory;
+			_assetBaseUri = assetBaseUri;
 		}
 
 	    /// <summary>
@@ -64,7 +67,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 				var product = _itemService.GetById(productId, moduleModel.ItemResponseGroup.ItemMedium);
 				if (product != null)
 				{
-					var webModelProduct = product.ToWebModel();
+					var webModelProduct = product.ToWebModel(_assetBaseUri);
 
 					var searchTags = items[productId];
 
@@ -115,7 +118,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			var product = _itemService.GetById(productId, moduleModel.ItemResponseGroup.ItemLarge);
 		    if (product != null)
 		    {
-		        var retVal = product.ToWebModel();
+				var retVal = product.ToWebModel(_assetBaseUri);
 		        return Ok(retVal);
 		    }
 		    return StatusCode(HttpStatusCode.NotFound);

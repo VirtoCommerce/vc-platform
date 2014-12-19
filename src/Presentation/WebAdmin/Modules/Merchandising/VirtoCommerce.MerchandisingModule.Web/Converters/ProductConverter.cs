@@ -11,7 +11,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 {
 	public static class ProductConverter
 	{
-		public static webModel.CatalogItem ToWebModel(this moduleModel.CatalogProduct product, webModel.Product parentProduct = null)
+		public static webModel.CatalogItem ToWebModel(this moduleModel.CatalogProduct product,  Uri assetBaseUri, webModel.Product parentProduct = null)
 		{
 			webModel.CatalogItem retVal = new webModel.Product();
 			if(parentProduct != null)
@@ -22,12 +22,12 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 			
 			if (product.Assets != null)
 			{
-				retVal.Images = product.Assets.Where(x=>x.Type == moduleModel.ItemAssetType.Image).Select(x => x.ToWebModel()).ToArray();
+				retVal.Images = product.Assets.Where(x => x.Type == moduleModel.ItemAssetType.Image).Select(x => x.ToWebModel(assetBaseUri)).ToArray();
 			}
 
 			if (product.Variations != null)
 			{
-				((webModel.Product)retVal).Variations = product.Variations.Select(x => x.ToWebModel((webModel.Product)retVal)).OfType<webModel.ProductVariation>().ToArray();
+				((webModel.Product)retVal).Variations = product.Variations.Select(x => x.ToWebModel(assetBaseUri, (webModel.Product)retVal)).OfType<webModel.ProductVariation>().ToArray();
 			}
 
 		    if (product.Reviews != null)

@@ -18,8 +18,8 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         private readonly IPropertyService _propertyService;
 		private readonly ICategoryService _categoryService;
 
-		public PropertiesController([Dependency("Catalog")]IPropertyService propertyService,
-									[Dependency("Catalog")]ICategoryService categoryService)
+		public PropertiesController(IPropertyService propertyService,
+									ICategoryService categoryService)
         {
             _propertyService = propertyService;
 			_categoryService = categoryService;

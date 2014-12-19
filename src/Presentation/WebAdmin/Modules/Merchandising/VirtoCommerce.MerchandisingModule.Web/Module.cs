@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Web;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.Caching.HttpCache;
 using VirtoCommerce.CatalogModule.Data.Repositories;
@@ -19,6 +20,7 @@ using VirtoCommerce.Foundation.Marketing.Services;
 using VirtoCommerce.Foundation.Reviews.Repositories;
 using VirtoCommerce.Foundation.Search;
 using VirtoCommerce.Framework.Web.Modularity;
+using VirtoCommerce.MerchandisingModule.Web.Controllers;
 using VirtoCommerce.Search.Providers.Elastic;
 
 namespace VirtoCommerce.MerchandisingModule.Web
@@ -45,31 +47,27 @@ namespace VirtoCommerce.MerchandisingModule.Web
 			var itemService = new ItemServiceImpl(catalogRepFactory, appConfigRepFactory, cacheManager);
 			var itemSearchService = new CatalogSearchServiceImpl(catalogRepFactory, itemService, catalogService, categoryService);
 
-			_container.RegisterInstance<ICatalogService>("MP", catalogService);
-			_container.RegisterInstance<IPropertyService>("MP", propertyService);
-			_container.RegisterInstance<ICategoryService>("MP", categoryService);
-			_container.RegisterInstance<IItemService>("MP", itemService);
-			_container.RegisterInstance<ICatalogSearchService>("MP", itemSearchService);
-			_container.RegisterType<Func<IFoundationCatalogRepository>>("MP", new InjectionFactory(x => catalogRepFactory));
-
 			#region VCF dependencies
 			var searchConnection = new SearchConnection(ConnectionHelper.GetConnectionString("SearchConnectionString"));
 			var elasticSearchProvider = new ElasticSearchProvider(new ElasticSearchQueryBuilder(), searchConnection);
-			_container.RegisterInstance<ISearchProvider>("MP",elasticSearchProvider);
-			_container.RegisterInstance<ISearchConnection>("MP", searchConnection);
-
+	
 			Func<IReviewRepository> reviewRepFactory = () => new EFReviewRepository(MarketPlaceConnectionString);
-			_container.RegisterType<Func<IReviewRepository>>("MP", new InjectionFactory(x => reviewRepFactory));
-			//_container.RegisterType<IAppConfigRepository>("MP", new InjectionFactory(x => new EFAppConfigRepository("VirtoCommerce")));
+		
 			#endregion
 
 			#region Dynamic content
-
-            _container.RegisterType<IDynamicContentRepository>("MP", new InjectionFactory(c => new EFDynamicContentRepository(MarketPlaceConnectionString)));
-            _container.RegisterType<IDynamicContentEvaluator>("MP", new InjectionFactory(c => new DynamicContentEvaluator(c.Resolve<IDynamicContentRepository>("MP"), null, new HttpCacheRepository())));
-            _container.RegisterType<IDynamicContentService>("MP", new InjectionFactory(c => new DynamicContentService(c.Resolve<IDynamicContentRepository>("MP"), c.Resolve<IDynamicContentEvaluator>("MP"))));
-
+			Func<IDynamicContentRepository> dynamicRepositoryFactory = () => { return new EFDynamicContentRepository(MarketPlaceConnectionString); };
+			Func<IDynamicContentEvaluator> dynamicContentEval = () => { return  new DynamicContentEvaluator(dynamicRepositoryFactory(), null, new HttpCacheRepository()); };
+			Func<IDynamicContentService> dynamicContentServiceFactory = () => { return new DynamicContentService(dynamicRepositoryFactory(), dynamicContentEval()); };
 			#endregion
+			string baseUrl = HttpContext.Current.Request.Url.Scheme + "://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath.TrimEnd('/') + "/";
+			var assetBaseUri = new Uri(baseUrl);
+
+			_container.RegisterType<ReviewController>(new InjectionConstructor(reviewRepFactory));
+			_container.RegisterType<ProductController>(new InjectionConstructor(itemService, elasticSearchProvider, searchConnection, catalogRepFactory, assetBaseUri));
+			_container.RegisterType<ContentController>(new InjectionConstructor(dynamicContentServiceFactory()));
+			_container.RegisterType<CategoryController>(new InjectionConstructor(itemSearchService, categoryService, propertyService, catalogRepFactory));
+
 		}
     }
 }

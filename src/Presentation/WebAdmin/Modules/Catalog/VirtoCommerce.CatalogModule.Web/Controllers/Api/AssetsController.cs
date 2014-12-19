@@ -17,7 +17,10 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
     public class AssetsController : ApiController
     {
         private readonly string _relativeDir = "Content/Uploads/";
+		public AssetsController()
+		{
 
+		}
 		[HttpPost]
 		[Route("")]
         public async Task<webModel.BlobInfo[]> UploadAsset()
