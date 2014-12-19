@@ -5,15 +5,15 @@
         'finished',
         'error'
     ];
-    classNames = ['item', 'notif', 'task', notifyStatusArr[menuItem.notify.status]];
-" class="classNames">
+    classNames = ['item', 'notif', menuItem.notify.notifyType, notifyStatusArr[menuItem.notify.status]];
+" ng-class="classNames">
     <span class="head">
         <span class="title" ng-bind="menuItem.title"></span>
         <span class="date" am-time-ago="menuItem.notify.created"></span>
     </span>
     <span class="desc_outer">
         <span class="pic">
-            <i class="icon-download-2"></i>
+            <i ng-class="icon-comments" class="icon"></i>
         </span>
         <span class="desc" ng-bind="menuItem.notify.description"></span>
     </span>
