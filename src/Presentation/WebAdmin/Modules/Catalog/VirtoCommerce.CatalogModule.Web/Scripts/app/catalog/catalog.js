@@ -75,7 +75,7 @@ angular.module(catalogsModuleName, [
       };
       mainMenuService.addMenuItem(menuItem);
 
-  	//Register notification detail for import/export task
+  	//Register notification detail for import task
       var importNotificationTemplate = 
 		{
 			priority : 900,

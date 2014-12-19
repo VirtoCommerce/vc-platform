@@ -2,43 +2,24 @@
         <table class="list notify table sortable">
         <thead>
             <tr>
-                <th ng-class="(pageSettings.orderBy === 'type')?'sorted':''" class="col th" ng-click="setOrder('type')">Type<i ng-class="
-                        (pageSettings.orderBy === 'type')?((pageSettings.order === 'DESC')?'icon-arrow-up-2':'icon-arrow-down-2'):''
-                    " class="icon"></i></th>
-                <th ng-class="(pageSettings.orderBy === 'title')?'sorted':''" class="col th" ng-click="setOrder('title')">Title<i ng-class="
-                        (pageSettings.orderBy === 'title')?((pageSettings.order === 'DESC')?'icon-arrow-up-2':'icon-arrow-down-2'):''
-                    " class="icon"></i></th>
-                <th ng-class="(pageSettings.orderBy === 'created')?'sorted':''" class="col th" ng-click="setOrder('created')">Date<i ng-class="
-                        (pageSettings.orderBy === 'created')?((pageSettings.order === 'DESC')?'icon-arrow-up-2':'icon-arrow-down-2'):''
-                    " class="icon"></i></th>
+                <th ng-repeat="column in columns" ng-click="setOrder(column)">
+                    {{column.title}}
+                    <i ng-class="column.checked ? (column.reverse ?'icon-arrow-up-2':'icon-arrow-down-2') : ''" class="icon"></i>
+                </th>
             </tr>
         </thead>
         <tbody>
-            <tr ng-click="selectNotify(notify)" ng-repeat="notify in notifications" ng-init="
-    notifyStatusArr = [
-        'notify_running',
-        'notify_aborted',
-        'notify_finished',
-        'notify_error'
-    ];
-    notifyTypesArr = {
-        'info':'notify_info',
-        'warning':'notify_warning',
-        'error':'notify_error'
-    };
-    classNames = ['item', 'notif', notifyTypesArr[notify.notifyType], notifyStatusArr[notify.notifyType]];
-" ng-class="classNames" class="item notif">
-                <td ng-class="(pageSettings.orderBy === 'type')?'sorted':''" class="col">
+            <tr ng-click="selectNotify(notify)" ng-repeat="notify in notifications" class="item notif" ng-class="'notify_' + notify.notifyType">
+                <td class="col">
                     <span class="pic">
                         <i ng-class="(notify.notifyType=='info')?'icon-comments':'icon-warning'" class="icon"></i>
                     </span>
                 </td>
-                <td ng-class="(pageSettings.orderBy === 'title')?'sorted':''" class="col">
+                <td class="col">
                     <span class="title" ng-bind="notify.title"></span>
                     <span class="desc" ng-bind="notify.description"></span>
-                    <div ng-if="notify.status == 0" class="progress-bar small" data-role="progress-bar" data-value="30"></div>
                 </td>
-                <td ng-class="(pageSettings.orderBy === 'created')?'sorted':''" class="col">
+                <td class="col">
                     <span class="date" am-time-ago="notify.created"></span>
                 </td>
             </tr>

@@ -47,7 +47,7 @@ namespace VirtoCommerce.CatalogModule.Web
 			var itemService = new ItemServiceImpl(catalogRepFactory, appConfigRepFactory, cacheManager);
 			var catalogSearchService = new CatalogSearchServiceImpl(catalogRepFactory, itemService, catalogService, categoryService);
 
-			string baseUrl = HttpContext.Current.Request.Url.Scheme + "://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath.TrimEnd('/') + "/";
+			string baseUrl = HttpContext.Current.Request.Url.Scheme + "://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.Url.Host + "/";
 			var assetBaseUri = new Uri(baseUrl);
 			_container.RegisterType<ProductsController>(new InjectionConstructor(itemService, propertyService, assetBaseUri));
 			_container.RegisterType<PropertiesController>(new InjectionConstructor(propertyService, categoryService));
