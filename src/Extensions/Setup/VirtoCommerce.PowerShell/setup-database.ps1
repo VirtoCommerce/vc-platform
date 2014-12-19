@@ -19,7 +19,7 @@ if (!$moduleFile) {
 echo $moduleFile
 
 #$datafolder = Split-Path -Parent $MyInvocation.MyCommand.Path
-Import-Module $moduleFile
+Import-Module -DisableNameChecking $moduleFile
 
 ##################################
 
