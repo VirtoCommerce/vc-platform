@@ -20,10 +20,10 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		private readonly Func<IFoundationCatalogRepository> _foundationCatalogRepositoryFactory;
 
 
-		public CategoryController([Dependency("MP")]ICatalogSearchService searchService,
-								  [Dependency("MP")]ICategoryService categoryService,
-								  [Dependency("MP")]IPropertyService propertyService,
-								  [Dependency("MP")] Func<IFoundationCatalogRepository> foundationCatalogRepositoryFactory)
+		public CategoryController(ICatalogSearchService searchService,
+								  ICategoryService categoryService,
+								  IPropertyService propertyService,
+								  Func<IFoundationCatalogRepository> foundationCatalogRepositoryFactory)
 		{
 			_searchService = searchService;
 			_categoryService = categoryService;

@@ -18,5 +18,6 @@ namespace VirtoCommerce.Framework.Web.Notification
 
 		public int Start { get; set; }
 		public int Count { get; set; }
+		
 	}
 }

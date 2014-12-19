@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using moduleModel = VirtoCommerce.CatalogModule.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
+using System;
 
 namespace VirtoCommerce.CatalogModule.Web.Converters
 {
     public static class ProductConverter
     {
-        public static webModel.Product ToWebModel(this moduleModel.CatalogProduct product, moduleModel.Property[] properties = null)
+        public static webModel.Product ToWebModel(this moduleModel.CatalogProduct product, Uri assetBaseUri, moduleModel.Property[] properties = null)
         {
             var retVal = new webModel.Product();
             retVal.InjectFrom(product);
@@ -25,14 +26,14 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 
             if (product.Assets != null)
             {
-                var assetBases = product.Assets.Select(x => x.ToWebModel()).ToList();
+				var assetBases = product.Assets.Select(x => x.ToWebModel(assetBaseUri)).ToList();
                 retVal.Images = assetBases.OfType<webModel.ProductImage>().ToList();
                 retVal.Assets = assetBases.OfType<webModel.ProductAsset>().ToList();
             }
 
             if (product.Variations != null)
             {
-                retVal.Variations = product.Variations.Select(x => x.ToWebModel()).ToList();
+				retVal.Variations = product.Variations.Select(x => x.ToWebModel(assetBaseUri)).ToList();
             }
 
             if (product.Links != null)
@@ -52,7 +53,7 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 
 			if(product.Associations != null)
 			{
-				retVal.Associations = product.Associations.Select(x => x.ToWebModel()).ToList();
+				retVal.Associations = product.Associations.Select(x => x.ToWebModel(assetBaseUri)).ToList();
 			}
             retVal.TitularItemId = product.MainProductId;
 

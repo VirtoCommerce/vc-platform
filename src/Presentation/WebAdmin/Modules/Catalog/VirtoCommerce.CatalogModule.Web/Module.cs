@@ -20,6 +20,9 @@ using VirtoCommerce.Search.Providers.Elastic;
 using ICatalogService = VirtoCommerce.CatalogModule.Services.ICatalogService;
 using VirtoCommerce.Framework.Web.Notification;
 using VirtoCommerce.CoreModule.Web.Notification;
+using VirtoCommerce.CatalogModule.Web.Controllers.Api;
+using System.Web.Hosting;
+using System.Web;
 
 namespace VirtoCommerce.CatalogModule.Web
 {
@@ -44,18 +47,19 @@ namespace VirtoCommerce.CatalogModule.Web
 			var itemService = new ItemServiceImpl(catalogRepFactory, appConfigRepFactory, cacheManager);
 			var catalogSearchService = new CatalogSearchServiceImpl(catalogRepFactory, itemService, catalogService, categoryService);
 
-			_container.RegisterInstance<ICatalogService>("Catalog", catalogService);
-			_container.RegisterInstance<IPropertyService>("Catalog", propertyService);
-			_container.RegisterInstance<ICategoryService>("Catalog", categoryService);
-			_container.RegisterInstance<IItemService>("Catalog", itemService);
-			_container.RegisterInstance<ICatalogSearchService>("Catalog", catalogSearchService);
-			_container.RegisterType<Func<IFoundationAppConfigRepository>>("Catalog", new InjectionFactory(x => appConfigRepFactory));
+			string baseUrl = HttpContext.Current.Request.Url.Scheme + "://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.ApplicationPath.TrimEnd('/') + "/";
+			var assetBaseUri = new Uri(baseUrl);
+			_container.RegisterType<ProductsController>(new InjectionConstructor(itemService, propertyService, assetBaseUri));
+			_container.RegisterType<PropertiesController>(new InjectionConstructor(propertyService, categoryService));
+			_container.RegisterType<ListEntryController>(new InjectionConstructor(catalogSearchService, categoryService, itemService, assetBaseUri));
+			_container.RegisterType<CategoriesController>(new InjectionConstructor(catalogSearchService, categoryService, propertyService));
+			_container.RegisterType<CatalogsController>(new InjectionConstructor(catalogService, catalogSearchService, appConfigRepFactory));
 			#endregion
 
 			#region Search dependencies
-			var searchConnection = new SearchConnection(ConnectionHelper.GetConnectionString("SearchConnectionString"));
-			var elasticSearchProvider = new ElasticSearchProvider(new ElasticSearchQueryBuilder(), searchConnection);
-			_container.RegisterInstance<ISearchProvider>("Catalog", elasticSearchProvider);
+			//var searchConnection = new SearchConnection(ConnectionHelper.GetConnectionString("SearchConnectionString"));
+			//var elasticSearchProvider = new ElasticSearchProvider(new ElasticSearchQueryBuilder(), searchConnection);
+			//_container.RegisterInstance<ISearchProvider>("Catalog", elasticSearchProvider);
 			#endregion
 
 
@@ -66,9 +70,7 @@ namespace VirtoCommerce.CatalogModule.Web
 			var assetService = new AssetService(fileSystemAssetRep, fileSystemAssetRep);
 			Func<IImportService> imporServiceFactory = () => new ImportService(importRepFactory(), assetService, catalogRepFactory(), null, null);
 			
-			_container.RegisterType<Func<IImportRepository>>("Catalog", new InjectionFactory(x => importRepFactory));
-			_container.RegisterType<Func<IImportService>>("Catalog", new InjectionFactory(x => imporServiceFactory));
-			_container.RegisterType<Func<IFoundationCatalogRepository>>("Catalog", new InjectionFactory(x => catalogRepFactory));
+			_container.RegisterType<ImportController>(new InjectionConstructor(importRepFactory, imporServiceFactory, catalogRepFactory, new InMemoryNotifierImpl()));
 			
             #endregion
 

@@ -19,9 +19,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
         private readonly ICategoryService _categoryService;
         private readonly IPropertyService _propertyService;
 
-		public CategoriesController([Dependency("Catalog")]ICatalogSearchService searchService,
-								    [Dependency("Catalog")]ICategoryService categoryService,
-									[Dependency("Catalog")]IPropertyService propertyService)
+		public CategoriesController(ICatalogSearchService searchService,
+								    ICategoryService categoryService,
+									IPropertyService propertyService)
         {
 			_searchService = searchService;
             _categoryService = categoryService;

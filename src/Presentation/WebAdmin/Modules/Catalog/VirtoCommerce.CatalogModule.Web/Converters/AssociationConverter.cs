@@ -11,13 +11,13 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 {
 	public static class AssociationConverter
 	{
-		public static webModel.ProductAssociation ToWebModel(this moduleModel.ProductAssociation association)
+		public static webModel.ProductAssociation ToWebModel(this moduleModel.ProductAssociation association, Uri assetBaseUri)
 		{
 			var retVal = new webModel.ProductAssociation();
 			retVal.InjectFrom(association);
 			if (association.AssociatedProduct != null)
 			{
-				var associatedProduct = association.AssociatedProduct.ToWebModel();
+				var associatedProduct = association.AssociatedProduct.ToWebModel(assetBaseUri);
 				retVal.ProductId = associatedProduct.Id;
 				retVal.ProductCode = associatedProduct.Code;
 				retVal.ProductImg = associatedProduct.ImgSrc;
