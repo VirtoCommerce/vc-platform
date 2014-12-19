@@ -393,6 +393,7 @@
 						height: 26px;
 						line-height: 26px;
 						overflow: hidden;
+						margin-left: 30px;
 					}
 
 						.left-menu .block .dropdown .content header a span
@@ -401,6 +402,12 @@
 							font-size: 16px;
 							line-height: 25px;
 							margin-right: 10px;
+						}
+
+						.left-menu .block .dropdown .content header a .icon {
+							font-size: 22px;
+							position: relative;
+							top: 3px;
 						}
 
 						.left-menu .block .dropdown header a .ico

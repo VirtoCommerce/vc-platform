@@ -8,7 +8,7 @@
     classNames = ['item', 'notif', menuItem.notify.notifyType, notifyStatusArr[menuItem.notify.status]];
 " ng-class="classNames">
     <span class="head">
-        <span class="title" ng-bind="menuItem.title"></span>
+        <span class="title" ng-bind="menuItem.title+((menuItem.notify.repeatCount)?' ('+(menuItem.notify.repeatCount+1) + ')':'')"></span>
         <span class="date" am-time-ago="menuItem.notify.created"></span>
     </span>
     <span class="desc_outer">

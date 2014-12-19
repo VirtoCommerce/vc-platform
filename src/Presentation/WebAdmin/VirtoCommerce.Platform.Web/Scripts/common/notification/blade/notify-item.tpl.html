@@ -1,0 +1,13 @@
+<td ng-class="(pageSettings.orderBy === 'type')?'sorted':''" class="col">
+    <span class="pic">
+        <i ng-class="(notify.notify.notifyType=='info')?'icon-comments':'icon-warning'" class="icon"></i>
+    </span>
+</td>
+<td ng-class="(pageSettings.orderBy === 'title')?'sorted':''" class="col">
+    <span class="title" ng-bind="notify.title+((notify.repeatCount)?' ('+(notify.notify.repeatCount+1) + ')':'')"></span>
+    <span class="desc" ng-bind="notify.notify.description"></span>
+    <div ng-if="notify.notify.status == 0" class="progress-bar small" data-role="progress-bar" data-value="30"></div>
+</td>
+<td ng-class="(pageSettings.orderBy === 'created')?'sorted':''" class="col">
+    <span class="date" am-time-ago="notify.notify.created"></span>
+</td>
