@@ -65,8 +65,10 @@ IF NOT DEFINED VCPS (
 	SET VCPS=%DEPLOYMENT_SOURCE%\src\Extensions\Setup\VirtoCommerce.PowerShell
 )
 
-IF NOT DEFINED INSERT_SAMPLE_DATA (
-	IF /I "%APPSETTING_insertSampleData%" EQU "True" (SET INSERT_SAMPLE_DATA=$true) ELSE (SET INSERT_SAMPLE_DATA=$false)
+IF /I "%APPSETTING_insertSampleData%" EQU "True" (
+	SET INSERT_SAMPLE_DATA=$true
+) ELSE (
+	SET INSERT_SAMPLE_DATA=$false
 )
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -149,6 +151,7 @@ goto end
 :ExecuteCmd
 setlocal
 set _CMD_=%*
+echo command=%_CMD_%
 call %_CMD_%
 if "%ERRORLEVEL%" NEQ "0" echo Failed exitCode=%ERRORLEVEL%, command=%_CMD_%
 exit /b %ERRORLEVEL%
