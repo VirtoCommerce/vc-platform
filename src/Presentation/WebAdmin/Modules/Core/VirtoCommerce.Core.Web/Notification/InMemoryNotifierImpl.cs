@@ -19,15 +19,9 @@ namespace VirtoCommerce.CoreModule.Web.Notification
 
 			if(alreadyExistNotify != null)
 			{
-				if(notify.Description != null)
-					alreadyExistNotify.Description = notify.Description;
-				if (notify.Title != null)
-					alreadyExistNotify.Title = notify.Title;
-
-				alreadyExistNotify.New = notify.New;
-				alreadyExistNotify.Status = notify.Status;
-				if(notify.FinishDate != null)
-					alreadyExistNotify.FinishDate = notify.FinishDate;
+				_innerList.Remove(alreadyExistNotify);
+				_innerList.Add(notify);
+			
 			}
 			else
 			{

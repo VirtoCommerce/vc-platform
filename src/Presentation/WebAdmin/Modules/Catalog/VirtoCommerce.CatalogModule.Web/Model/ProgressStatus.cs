@@ -1,7 +1,7 @@
 ﻿
-namespace VirtoCommerce.Framework.Web.Notification
+namespace VirtoCommerce.CatalogModule.Web.Model
 {
-    public enum NotifyStatus
+    public enum ProgressStatus
     {
         Pending,
         Running,

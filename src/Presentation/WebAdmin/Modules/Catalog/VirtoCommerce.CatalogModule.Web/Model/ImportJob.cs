@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using VirtoCommerce.CatalogModule.Web.Model.Notifications;
 using VirtoCommerce.Foundation.Importing.Services;
 using VirtoCommerce.Framework.Web.Notification;
@@ -10,6 +11,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
 {
     public class ImportJob
     {
+	
         public string Id { get; set; }
         public string Name { get; set; }
         public string CatalogId { get; set; }
@@ -25,10 +27,11 @@ namespace VirtoCommerce.CatalogModule.Web.Model
         public ICollection<MappingItem> PropertiesMap { get; set; }
         public string[] AvailableCsvColumns { get; set; }
 
-		[JsonIgnore]
-		public DateTime? Started;
-		[JsonIgnore]
-		public DateTime? Finished;
+		[JsonConverter(typeof(StringEnumConverter))]
+		public ProgressStatus ProgressStatus { get; set; }
+
+		public JobProgressInfo ProgressInfo { get; set; }
+
 		[JsonIgnore]
 		public ImportNotifyEvent NotifyEvent { get; set; }
 		[JsonIgnore]
@@ -42,9 +45,10 @@ namespace VirtoCommerce.CatalogModule.Web.Model
 		{
 			get
 			{
-				return Started != null && Finished == null && !CancellationToken.IsCancellationRequested;
+				return ProgressStatus == Model.ProgressStatus.Running;
 			}
 		}
+
 
     }
 }

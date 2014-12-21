@@ -69,8 +69,8 @@ namespace VirtoCommerce.CatalogModule.Web
 			var fileSystemAssetRep = new FileSystemBlobAssetRepository("~", new AssetEntityFactory());
 			var assetService = new AssetService(fileSystemAssetRep, fileSystemAssetRep);
 			Func<IImportService> imporServiceFactory = () => new ImportService(importRepFactory(), assetService, catalogRepFactory(), null, null);
-			
-			_container.RegisterType<ImportController>(new InjectionConstructor(importRepFactory, imporServiceFactory, catalogRepFactory, new InMemoryNotifierImpl()));
+
+			_container.RegisterType<ImportController>(new InjectionConstructor(importRepFactory, imporServiceFactory, catalogRepFactory, _container.Resolve<INotifier>()));
 			
             #endregion
 

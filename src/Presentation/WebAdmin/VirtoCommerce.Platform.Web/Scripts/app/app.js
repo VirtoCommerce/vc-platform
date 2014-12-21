@@ -98,7 +98,7 @@ angular.module('platformWebApp', AppDependencies).
 
         $rootScope.$on('httpError', function (event, rejection) {
         	if (!(rejection.config.url.indexOf('api/notification') + 1)) {
-        		notificationService.error({ title: 'HTTP error', description: rejection.status + ' — ' + rejection.statusText });
+        		notificationService.error({ title: 'HTTP error', description: rejection.status + ' — ' + rejection.statusText, extendedData: rejection.data });
           }
         });
 

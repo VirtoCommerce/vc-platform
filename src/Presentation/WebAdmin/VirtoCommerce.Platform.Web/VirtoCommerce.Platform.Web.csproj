@@ -371,13 +371,14 @@
     <Content Include="Scripts\common\navigation\widget\widget.js" />
     <Content Include="Scripts\common\navigation\widget\widgetContainer.tpl.html" />
     <Content Include="Scripts\common\directives\overlay.js" />
-    <Content Include="Scripts\common\notification\blade\defaultDetail.tpl.html" />
+    <Content Include="Scripts\common\notification\blade\historyDetailDefault.tpl.html" />
     <Content Include="Scripts\common\notification\blade\history.tpl.html" />
+    <Content Include="Scripts\common\notification\blade\historyDefault.tpl.html" />
     <Content Include="Scripts\common\notification\menu.tpl.html" />
     <Content Include="Scripts\common\notification\notification.js" />
     <Content Include="Scripts\common\notification\blade\history.js" />
     <Content Include="Scripts\common\notification\notification.tpl.html" />
-    <Content Include="Scripts\common\notification\default.tpl.html" />
+    <Content Include="Scripts\common\notification\menuDefault.tpl.html" />
     <Content Include="Scripts\common\notification\menuHeader.tpl.html" />
     <Content Include="Scripts\common\notification\resources\notifications.js" />
     <Content Include="Scripts\common\security\auth\auth.js" />

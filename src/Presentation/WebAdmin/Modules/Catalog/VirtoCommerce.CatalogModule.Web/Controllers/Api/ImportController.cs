@@ -126,6 +126,10 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			}
 
 			var retVal = dbEntries.Select(x => x.ToWebModel()).ToArray();
+			foreach(var job in retVal)
+			{
+				TryPopulateProgressInfo(job);
+			}
 			return Ok(retVal);
 		}
 
@@ -151,7 +155,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 			var importService = _importServiceFactory();
 			var csvColumns = importService.GetCsvColumns(retVal.TemplatePath, retVal.ColumnDelimiter);
 			retVal.AvailableCsvColumns = csvColumns;
-
+			TryPopulateProgressInfo(retVal);
 			return Ok(retVal);
 		}
 
@@ -252,7 +256,9 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 				job.TemplatePath = templatePath;
 				job.CancellationToken = new CancellationTokenSource();
 				job.NotifyEvent = new ImportNotifyEvent(job, User.Identity.Name);
-
+				job.ProgressInfo = new webModel.JobProgressInfo();
+				job.ProgressStatus = webModel.ProgressStatus.Pending;
+	
 				SheduleJob(job);
 			}
 			return Ok();
@@ -307,39 +313,89 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 				{
 					_jobList.Add(job);
 
-				
-					job.Started = DateTime.UtcNow;
-					job.ImportService.ReportProgress = (result, id, name) => { job.NotifyEvent.LogProgress(result); };
+					job.ProgressStatus = webModel.ProgressStatus.Running;
+					job.NotifyEvent.IsRunning = true;
+					job.ProgressInfo.Started = DateTime.UtcNow;
+
+					job.ImportService.ReportProgress = (result, id, name) => {
+						LogProgress(job, result);
+					};
 
 					if (!job.CancellationToken.IsCancellationRequested)
 					{
 						job.ImportService.ServiceRunnerId = job.Id;
 						job.ImportService.CancellationToken = job.CancellationToken.Token;
 
+						var result = new VirtoCommerce.Foundation.Importing.Model.ImportResult();
+						result.Errors = new List<string>();
+						LogProgress(job, result);
 						try
 						{
 							//job.ImportService.RunImportJob(job.Id, job.TemplatePath);
-							job.NotifyEvent.LogProgress(new VirtoCommerce.Foundation.Importing.Model.ImportResult { Started = DateTime.UtcNow });
-							for (int i = 0; i < 6; i++)
+					
+							result.Length = 6;
+							LogProgress(job, result);
+					
+							for (int i = 0; i < result.Length; i++)
 							{
-								job.NotifyEvent.LogProgress(new VirtoCommerce.Foundation.Importing.Model.ImportResult { ProcessedRecordsCount = i, ErrorsCount = 0, IsRunning = true });
+								if (job.CancellationToken.IsCancellationRequested)
+								{
+									job.ProgressStatus = webModel.ProgressStatus.Aborted;
+									break;
+								}
+								if (i % 2 == 0)
+								{
+									result.ErrorsCount++;
+									result.Errors.Add("Null referncse object item");
+									LogProgress(job, result);
+								}
+								else
+								{
+									result.ProcessedRecordsCount++;
+									LogProgress(job, result);
+								}
 								Thread.Sleep(10000);
 							}
-							job.NotifyEvent.LogProgress(new VirtoCommerce.Foundation.Importing.Model.ImportResult { ProcessedRecordsCount = 5, ErrorsCount = 0, IsRunning = false, Stopped = DateTime.UtcNow });
+						
 						}
 						catch (Exception e)
 						{
-							var result = job.ImportService.GetImportResult(job.Id);
-							result.Errors.Add(e.Message + Environment.NewLine + e);
-							job.NotifyEvent.LogProgress(result);
+							result.Errors.Add(e.ToString());
+							//var result = job.ImportService.GetImportResult(job.Id);
+							//result.Errors.Add(e.Message + Environment.NewLine + e);
+							//job.NotifyEvent.LogProgress(result);
 						}
 						finally
 						{
-							job.Finished = DateTime.UtcNow;
+							job.ProgressStatus = webModel.ProgressStatus.Finished;
+							job.ProgressInfo.Finished = DateTime.UtcNow;
+							job.NotifyEvent.IsRunning = false;
+							LogProgress(job, result);
 						}
 					}
 				}
 			}
+		}
+
+		private static void TryPopulateProgressInfo(webModel.ImportJob job)
+		{
+			var other = _sheduledJobs.Concat(_jobList).FirstOrDefault(x => x.Id == job.Id);
+			if(other != null)
+			{
+				job.ProgressStatus = other.ProgressStatus;
+				job.ProgressInfo = other.ProgressInfo;
+			}
+		}
+		private static void LogProgress(webModel.ImportJob job, VirtoCommerce.Foundation.Importing.Model.ImportResult result)
+		{
+			//Update notification
+			job.NotifyEvent.LogProgress(result);
+			//update job progress
+			
+			job.ProgressInfo.TotalCount = result.Length;
+			job.ProgressInfo.ProcessedCount = result.ProcessedRecordsCount;
+			job.ProgressInfo.ErrorCount = result.ErrorsCount;
+			job.ProgressInfo.Errors = result.Errors;
 		}
 	
 		#endregion

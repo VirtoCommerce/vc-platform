@@ -14,26 +14,22 @@ namespace VirtoCommerce.CatalogModule.Web.Model.Notifications
 			:base(creator)
 		{
 			Job = job;
-			Status = NotifyStatus.Pending;
 			NotifyType = this.GetType().Name;
+			Title = "Import job -" + job.Name;
 		}
 
 		public void LogProgress(ImportResult result)
 		{
-			Status = !result.IsStarted ? NotifyStatus.Pending : (result.IsRunning ? NotifyStatus.Running : (result.IsFinished ? NotifyStatus.Finished : NotifyStatus.Aborted));
-			Title = Description = string.Format("Processed records: {0}", result.ProcessedRecordsCount + result.ErrorsCount);
+			Description = string.Format("Progress: {0}/{1}/{2}", result.Length, result.ProcessedRecordsCount, result.ErrorsCount);
 			if(result.IsCancelled)
 			{
-				Title = string.Format("Import job '{0}' processing was canceled.", Job.Name);
+				Description = string.Format("Import job '{0}' processing was canceled.", Job.Name);
 			}
-			FinishDate = result.Stopped;
-			if (result.ErrorsCount > 0)
-			{
-				Description += Environment.NewLine + "Errors:" + Environment.NewLine + string.Join(Environment.NewLine, result.Errors.Cast<string>());
-			}
+	
 			Job.Notifier.Upsert(this);
 		}
 
+		public bool IsRunning { get; set; }
 		public ImportJob Job { get; set; }
 	}
 }

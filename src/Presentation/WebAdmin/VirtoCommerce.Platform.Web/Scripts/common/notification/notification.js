@@ -7,7 +7,7 @@
 .config(
   ['$stateProvider', function ($stateProvider) {
   	$stateProvider
-		.state('notification', {
+		.state('notificationsHistory', {
 			url: '/notification/:id',
 			templateUrl: 'Scripts/common/notification/notification.tpl.html',
 			controller: ['$scope', 'bladeNavigationService', 'notificationService', function ($scope, bladeNavigationService, notificationService) {
@@ -28,39 +28,54 @@
 .factory('notificationTemplateResolver', ['bladeNavigationService', '$state', function (bladeNavigationService, $state) {
 	var notificationTemplates = [];
 
+	var defaultTypes = ['error', 'info', 'warning'];
 	function register(template) {
 		notificationTemplates.push(template);
 		notificationTemplates.sort(function (a, b) { return a.priority - b.priority; })
 	};
-	function resolve(notification) {
-		return _.find(notificationTemplates, function (x) { return x.satisfy(notification); })
+	function resolve(notification, place) {
+		return _.find(notificationTemplates, function (x) { return x.satisfy(notification, place); })
 	};
 	var retVal = {
 		register: register,
 		resolve: resolve,
 	};
-	//Default notification template
-	var defaultTemplate =
+	
+	//Recent events notification template (error, info, debug) 
+	var menuDefaultTemplate =
 		{
 			priority: 1000,
-			satisfy: function () { return true; },
+			satisfy: function (notification, place) { return place == 'menu'; },
 			//template for display that notification in menu and list
-			template: 'Scripts/common/notification/default.tpl.html',
-			bladeTemplate: 'Scripts/common/notification/blade/notify-item.tpl.html',
+			template: 'Scripts/common/notification/menuDefault.tpl.html',
+			//action execuded when notification selected
+			action: function (notify) { $state.go('notificationsHistory', notify) }
+		};
+
+	//In history list notification template (error, info, debug)
+	var historyDefaultTemplate =
+		{
+			priority: 1000,
+			satisfy: function (notification, place) { return place == 'history'; },
+			//template for display that notification in menu and list
+			template: 'Scripts/common/notification/blade/historyDefault.tpl.html',
 			//action excecuted in event detail
 			action: function (notify) {
 				var blade = {
 					id: 'notifyDetail',
 					title: 'Event detail',
 					subtitle: 'Event detail',
-					template: 'Scripts/common/notification/blade/defaultDetail.tpl.html',
+					template: 'Scripts/common/notification/blade/historyDetailDefault.tpl.html',
 					isClosingDisabled: false,
 					notify: notify
 				};
 				bladeNavigationService.showBlade(blade);
 			}
 		};
-	retVal.register(defaultTemplate)
+
+	retVal.register(menuDefaultTemplate);
+	retVal.register(historyDefaultTemplate);
+
 	return retVal;
 }])
 .factory('notificationService', ['$http', '$interval', '$state', 'mainMenuService', 'notificationTemplateResolver', 'notifications', function ($http, $interval, $state, mainMenuService, notificationTemplateResolver, notifications) {
@@ -115,7 +130,7 @@
 			//timer = new Date().getUTCDate();
 			notifyMenu.incremented = notifyMenu.newCount < data.newCount;
 			notifyMenu.newCount = data.newCount;
-			notifyMenu.progress = _.some(data.notifyEvents, function (x) { return x.status == notifyStatusEnum.running; });
+			notifyMenu.progress = _.some(data.notifyEvents, function (x) { return x.isRunning; });
 
 			//clear all child
 			notifyMenu.children.splice(0, notifyMenu.children.length);
@@ -123,7 +138,7 @@
 			//Add all events
 			angular.forEach(data.notifyEvents, function (x) {
 
-				notificationTemplate = notificationTemplateResolver.resolve(x);
+				notificationTemplate = notificationTemplateResolver.resolve(x, 'menu');
 
 				var menuItem = {
 					parent: notifyMenu,
@@ -131,8 +146,8 @@
 					icon: 'glyphicon glyphicon-comment',
 					title: x.title,
 					priority: 2,
-					action: function (notify) { $state.go('notification', notify) },
 					permission: '',
+					action: notificationTemplate.action,
 					template: notificationTemplate.template,
 					notify: x
 				};
@@ -151,17 +166,17 @@
 			};
 		},
 		running: false,
-		error: function (data) {
-			return innerNotification({ notifyType: 'error', title: data.title, description: data.description, status: notifyStatusEnum.finished });
+		error: function (notification) {
+			notification.notifyType = 'error';
+			return innerNotification(notification);
 		},
-		warning: function (data) {
-			return innerNotification({ notifyType: 'warning', title: data.title, description: data.description, status: notifyStatusEnum.finished });
+		warning: function (notification) {
+			notification.notifyType = 'warning';
+			return innerNotification(notification);
 		},
-		info: function (data) {
-			return innerNotification({ notifyType: 'info', title: data.title, description: data.description, status: notifyStatusEnum.finished });
-		},
-		task: function (data) {
-			return innerNotification({ notifyType: 'task', title: data.title, description: data.description });
+		info: function (notification) {
+			notification.notifyType = 'info';
+			return innerNotification(notification);
 		}
 	};
 	return retVal;

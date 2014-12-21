@@ -24,23 +24,11 @@ function ($scope, bladeNavigationService, notificationTemplateResolver, notifica
         var start = $scope.pageSettings.currentPage * $scope.pageSettings.itemsPerPageCount - $scope.pageSettings.itemsPerPageCount;
         notifications.query({ start: start, count: $scope.pageSettings.itemsPerPageCount, orderBy: getOrderByExpression() }, function (data, status, headers, config) {
             angular.forEach(data.notifyEvents, function (x) {
-
-                notificationTemplate = notificationTemplateResolver.resolve(x);
-
-                var menuItem = {
-                    // parent: notifyMenu,
-                    path: 'notification/events',
-                    icon: 'glyphicon glyphicon-comment',
-                    title: x.title,
-                    priority: 2,
-                    // template: 'Scripts/common/notification/blade/notify-item.tpl.html',
-                    action: function (notify) { $state.go('notification', notify) },
-                    permission: '',
-                    template: notificationTemplate.bladeTemplate,
-                    notify: x
-                };
-                $scope.notifications.push(menuItem);
+                notificationTemplate = notificationTemplateResolver.resolve(x, 'history');
+                x.template = notificationTemplate.template;
+                x.action = notificationTemplate.action;
             });
+            $scope.notifications = data.notifyEvents;
             $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
             $scope.blade.isLoading = false;
         });
@@ -73,15 +61,7 @@ function ($scope, bladeNavigationService, notificationTemplateResolver, notifica
         $scope.blade.refresh();
     });
 
-	//Excecute notify detail action
-    $scope.selectNotify = function (notify) {
-    	var notificationTemplate = notificationTemplateResolver.resolve(notify);
-    	if (angular.isDefined(notificationTemplate))
-    	{
-    		notificationTemplate.action(notify);
-    	}
-    };
-
+	
     // actions on load
     $scope.blade.refresh();
 }]);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace VirtoCommerce.Foundation.Importing.Model
 {
@@ -10,7 +11,7 @@ namespace VirtoCommerce.Foundation.Importing.Model
 		public long Length { get; set; }
 		public long CurrentProgress { get; set; }
 		public int ErrorsCount { get; set; }
-		public IList Errors { get; set; }
+		public ICollection<string> Errors { get; set; }
 		public DateTime? Started { get; set; }
 		public DateTime? Stopped { get; set; }
 		public bool IsCancelled { get; set; }
