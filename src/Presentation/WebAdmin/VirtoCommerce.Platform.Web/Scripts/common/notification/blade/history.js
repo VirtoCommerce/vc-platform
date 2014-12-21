@@ -51,7 +51,7 @@ function ($scope, bladeNavigationService, notificationTemplateResolver, notifica
     	//reset prev selection may be commented if need support multiple order clauses
     	_.each($scope.columns, function (x) { x.checked = false });
     	column.checked = true;
-    	column.reverse = !column.reverse;
+    	column.inverse = !column.inverse;
     	$scope.pageSettings.currentPage = 1;
 
     	$scope.blade.refresh();

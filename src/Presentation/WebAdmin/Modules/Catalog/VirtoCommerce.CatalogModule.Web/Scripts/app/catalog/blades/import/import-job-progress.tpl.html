@@ -12,7 +12,7 @@
     </div>
 
     <p ng-if="job.progressStatus == 'Running'">Interrupt import.</p>
-    <button ng-click="cancel()" ng-disabled="job.progressStatus == 'Running'">
+    <button ng-click="cancel()" ng-disabled="job.progressStatus != 'Running'">
         <span>Cancel</span>
     </button>
 </div>

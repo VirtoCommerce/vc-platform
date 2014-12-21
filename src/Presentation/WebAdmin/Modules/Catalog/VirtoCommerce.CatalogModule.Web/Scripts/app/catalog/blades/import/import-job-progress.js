@@ -3,7 +3,7 @@
 	$scope.blade.refresh = function () {
 
 		imports.get({ id: $scope.blade.job.id }, function (data) {
-			$scope.blade.isLoading = false;
+			$scope.blade.isLoading = data.progressStatus == 'Running';
 			$scope.job = data;
 		});
 

@@ -6,7 +6,6 @@
 <td class="col">
     <span class="title" ng-bind="notification.title+((notification.repeatCount)?' ('+(notification.repeatCount+1) + ')':'')"></span>
     <span class="desc" ng-bind="notification.description"></span>
-    <div ng-if="notification.status == 0" class="progress-bar small" data-role="progress-bar" data-value="30"></div>
 </td>
 <td ng-class="(pageSettings.orderBy === 'created')?'sorted':''" class="col">
     <span class="date" am-time-ago="notification.created"></span>
