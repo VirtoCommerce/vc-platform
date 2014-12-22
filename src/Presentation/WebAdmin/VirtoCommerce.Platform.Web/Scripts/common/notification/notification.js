@@ -118,7 +118,7 @@
 				listTemplate: 'Scripts/common/notification/menuList.tpl.html',
 				template: 'Scripts/common/notification/menu.tpl.html',
 				action: function () { markAllAsRead(); },
-				showHistory: function () { $state.go('notification') },
+				showHistory: function () { $state.go('notificationsHistory') },
 				children: [],
 				newCount : 0
 			};
