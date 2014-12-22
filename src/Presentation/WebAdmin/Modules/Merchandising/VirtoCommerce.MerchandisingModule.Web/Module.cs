@@ -58,7 +58,7 @@ namespace VirtoCommerce.MerchandisingModule.Web
 			var assetBaseUri = new Uri(@"http://virtotest.blob.core.windows.net/");
 			
 			_container.RegisterType<ReviewController>(new InjectionConstructor(reviewRepFactory));
-			_container.RegisterType<ProductController>(new InjectionConstructor(itemService, elasticSearchProvider, searchConnection, catalogRepFactory));
+            _container.RegisterType<ProductController>(new InjectionConstructor(itemService, elasticSearchProvider, searchConnection, catalogRepFactory, assetBaseUri));
 			_container.RegisterType<ContentController>(new InjectionConstructor(dynamicContentServiceFactory));
 			_container.RegisterType<CategoryController>(new InjectionConstructor(itemSearchService, categoryService, propertyService, catalogRepFactory));
 
