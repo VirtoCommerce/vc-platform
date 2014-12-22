@@ -1,18 +1,12 @@
-﻿using System;
-using System.Web;
-using Microsoft.Practices.Unity;
+﻿using Microsoft.Practices.Unity;
+using System;
 using VirtoCommerce.Caching.HttpCache;
 using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.CatalogModule.Data.Services;
 using VirtoCommerce.CatalogModule.Repositories;
-using VirtoCommerce.CatalogModule.Services;
-using VirtoCommerce.Foundation.AppConfig.Repositories;
-using VirtoCommerce.Foundation.Catalogs.Repositories;
-using VirtoCommerce.Foundation.Data.AppConfig;
 using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Data.Marketing;
 using VirtoCommerce.Foundation.Data.Reviews;
-using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Caching;
 using VirtoCommerce.Foundation.Marketing.Model.DynamicContent;
 using VirtoCommerce.Foundation.Marketing.Repositories;
@@ -56,16 +50,16 @@ namespace VirtoCommerce.MerchandisingModule.Web
 			#endregion
 
 			#region Dynamic content
-			Func<IDynamicContentRepository> dynamicRepositoryFactory = () => { return new EFDynamicContentRepository(MarketPlaceConnectionString); };
-			Func<IDynamicContentEvaluator> dynamicContentEval = () => { return  new DynamicContentEvaluator(dynamicRepositoryFactory(), null, new HttpCacheRepository()); };
-			Func<IDynamicContentService> dynamicContentServiceFactory = () => { return new DynamicContentService(dynamicRepositoryFactory(), dynamicContentEval()); };
+			Func<IDynamicContentRepository> dynamicRepositoryFactory = () => new EFDynamicContentRepository(MarketPlaceConnectionString);
+			Func<IDynamicContentEvaluator> dynamicContentEval = () => new DynamicContentEvaluator(dynamicRepositoryFactory(), null, new HttpCacheRepository());
+			Func<IDynamicContentService> dynamicContentServiceFactory = () => new DynamicContentService(dynamicRepositoryFactory(), dynamicContentEval());
 			#endregion
 
 			
 
 			_container.RegisterType<ReviewController>(new InjectionConstructor(reviewRepFactory));
 			_container.RegisterType<ProductController>(new InjectionConstructor(itemService, elasticSearchProvider, searchConnection, catalogRepFactory));
-			_container.RegisterType<ContentController>(new InjectionConstructor(dynamicContentServiceFactory()));
+			_container.RegisterType<ContentController>(new InjectionConstructor(dynamicContentServiceFactory));
 			_container.RegisterType<CategoryController>(new InjectionConstructor(itemSearchService, categoryService, propertyService, catalogRepFactory));
 
 		}

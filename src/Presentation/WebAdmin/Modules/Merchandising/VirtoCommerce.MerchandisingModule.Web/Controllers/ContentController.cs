@@ -16,8 +16,8 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
     [RoutePrefix("api/mp/{language}/contents")]
     public class ContentController : ApiController
     {
-        private readonly IDynamicContentService _dynamicContentService;
-		public ContentController(IDynamicContentService dynamicContentService)
+        private readonly Func<IDynamicContentService> _dynamicContentService;
+        public ContentController(Func<IDynamicContentService> dynamicContentService)
         {
             _dynamicContentService = dynamicContentService;
         }
@@ -48,7 +48,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
             {
                 var group = new webModel.DynamicContentItemGroup(holder);
 
-                var results = _dynamicContentService.GetItems(holder, DateTime.Now, tagSet);
+                var results = _dynamicContentService().GetItems(holder, DateTime.Now, tagSet);
 
                 if (results != null && results.Any())
                 {
