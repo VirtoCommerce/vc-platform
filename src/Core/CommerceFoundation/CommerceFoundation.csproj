@@ -167,6 +167,7 @@
     <Compile Include="Assets\AssetConfiguration.cs" />
     <Compile Include="Assets\Factories\AssetEntityFactory.cs" />
     <Compile Include="Assets\Factories\IAssetEntityFactory.cs" />
+    <Compile Include="Assets\Model\BlobInfo.cs" />
     <Compile Include="Assets\Model\Exceptions\AssetErrorCode.cs" />
     <Compile Include="Assets\Model\Exceptions\AssetStorageException.cs" />
     <Compile Include="Assets\Repositories\IAssetRepository.cs" />

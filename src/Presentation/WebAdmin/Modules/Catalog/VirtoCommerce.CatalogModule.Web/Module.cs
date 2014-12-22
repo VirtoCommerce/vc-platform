@@ -23,6 +23,7 @@ using VirtoCommerce.CoreModule.Web.Notification;
 using VirtoCommerce.CatalogModule.Web.Controllers.Api;
 using System.Web.Hosting;
 using System.Web;
+using VirtoCommerce.Foundation.Data.Azure.Asset;
 
 namespace VirtoCommerce.CatalogModule.Web
 {
@@ -47,8 +48,12 @@ namespace VirtoCommerce.CatalogModule.Web
 			var itemService = new ItemServiceImpl(catalogRepFactory, appConfigRepFactory, cacheManager);
 			var catalogSearchService = new CatalogSearchServiceImpl(catalogRepFactory, itemService, catalogService, categoryService);
 
-			string baseUrl = HttpContext.Current.Request.Url.Scheme + "://" + HttpContext.Current.Request.Url.Authority + HttpContext.Current.Request.Url.Host + "/";
-			var assetBaseUri = new Uri(baseUrl);
+			var azureBlobStorageProvider = new AzureBlobAssetRepository("DefaultEndpointsProtocol=https;AccountName=virtotest;AccountKey=Qvy1huF8b0OE6upFh91/IMZPnETwhxe7BlRNZoZeJL59b921LeBb7zZZt03CiOVf7wVfPseUMKSXD8yz/rXVuQ==", null);
+			var assetBaseUri = new Uri(@"http://virtotest.blob.core.windows.net/");
+
+			_container.RegisterType<AssetsController>(new InjectionConstructor(azureBlobStorageProvider));
+			_container.RegisterType<ProductsController>(new InjectionConstructor(itemService, propertyService, assetBaseUri));
+
 			_container.RegisterType<ProductsController>(new InjectionConstructor(itemService, propertyService, assetBaseUri));
 			_container.RegisterType<PropertiesController>(new InjectionConstructor(propertyService, categoryService));
 			_container.RegisterType<ListEntryController>(new InjectionConstructor(catalogSearchService, categoryService, itemService, assetBaseUri));

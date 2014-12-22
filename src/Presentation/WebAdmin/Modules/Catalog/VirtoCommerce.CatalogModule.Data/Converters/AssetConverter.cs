@@ -67,8 +67,6 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				throw new ArgumentNullException("target");
 
 			//Simply properties patch
-			if (source.AssetId != null)
-				target.AssetId = source.AssetId;
 			if (source.AssetType != null)
 				target.AssetType = source.AssetType;
 
@@ -88,7 +86,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 
 		public int GetHashCode(foundation.ItemAsset obj)
 		{
-			return obj.GetHashCode();
+			return obj.ItemAssetId.GetHashCode();
 		}
 
 		#endregion

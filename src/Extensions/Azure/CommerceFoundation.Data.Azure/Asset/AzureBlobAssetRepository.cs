@@ -48,12 +48,13 @@ namespace VirtoCommerce.Foundation.Data.Azure.Asset
         {
         }
 
+		
         /// <summary>
         /// Prevents a default instance of the <see cref="AzureBlobAssetRepository"/> class from being created.
         /// </summary>
         /// <param name="connectionString">The connection string.</param>
         /// <param name="assetEntityFactory">The asset entity factory.</param>
-        private AzureBlobAssetRepository(string connectionString, IAssetEntityFactory assetEntityFactory)
+        public AzureBlobAssetRepository(string connectionString, IAssetEntityFactory assetEntityFactory)
         {
             this._entityFactory = assetEntityFactory;
             this._connectionString = connectionString;

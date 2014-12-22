@@ -29,20 +29,14 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		public ProductController(IItemService itemService,
 								 ISearchProvider indexedSearchProvider,
 								 ISearchConnection searchConnection,
-								 Func<IFoundationCatalogRepository> foundationCatalogRepositoryFactory)
+								 Func<IFoundationCatalogRepository> foundationCatalogRepositoryFactory,
+								 Uri assetBaseUri)
 		{
 			_searchService = indexedSearchProvider;
 			_searchConnection = searchConnection;
 			_itemService = itemService;
 			_foundationCatalogRepositoryFactory = foundationCatalogRepositoryFactory;
-
-            var baseUrl = string.Format("{0}://{1}{2}{3}",
-              (HttpContext.Current.Request.IsSecureConnection) ? "https" : "http",
-              HttpContext.Current.Request.Url.Host,
-              (HttpContext.Current.Request.Url.Port == 80) ? "" : ":" + HttpContext.Current.Request.Url.Port,
-              VirtualPathUtility.ToAbsolute("~/"));
-
-            _assetBaseUri = new Uri(baseUrl);
+			_assetBaseUri = assetBaseUri;
 		}
 
 	    /// <summary>

@@ -1,16 +1,18 @@
-﻿using Microsoft.Practices.Unity;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
-using VirtoCommerce.Framework.Web.Common;
+using VirtoCommerce.Foundation.Assets.Repositories;
+using VirtoCommerce.Framework.Web.Asset;
 using VirtoCommerce.PackagingModule.Services;
 using VirtoCommerce.PackagingModule.Web.Converters;
-using webModel = VirtoCommerce.PackagingModule.Web.Model;
 using moduleModel = VirtoCommerce.PackagingModule.Model;
+using webModel = VirtoCommerce.PackagingModule.Web.Model;
 
 namespace VirtoCommerce.PackagingModule.Web.Controllers.Api
 {
@@ -23,8 +25,8 @@ namespace VirtoCommerce.PackagingModule.Web.Controllers.Api
 		private static readonly ConcurrentBag<webModel.ModuleWorkerJob> _jobList = new ConcurrentBag<webModel.ModuleWorkerJob>();
 		private static Task _runningTask = null;
 		private static readonly Object _lockObject = new Object();
-
-		public ModulesController([Dependency("Package")]IPackageService packageService, [Dependency("Package")]string packagesPath)
+	
+		public ModulesController(IPackageService packageService, string packagesPath)
 		{
 			_packageService = packageService;
 			_packagesPath = packagesPath;
@@ -60,8 +62,20 @@ namespace VirtoCommerce.PackagingModule.Web.Controllers.Api
 		[Route("")]
 		public async Task<IHttpActionResult> Upload()
 		{
-			var streamProvider = await HttpRequestUploader.ReadDataAsync(Request, _packagesPath);
+			// Check if the request contains multipart/form-data.
+			if (!Request.Content.IsMimeMultipartContent())
+			{
+				throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+			}
+			if (!Directory.Exists(_packagesPath))
+			{
+				Directory.CreateDirectory(_packagesPath);
+			}
 
+			var streamProvider = new CustomMultipartFormDataStreamProvider(_packagesPath);
+			await Request.Content.ReadAsMultipartAsync(streamProvider);
+		
+		
 			var file = streamProvider.FileData.FirstOrDefault();
             if (file != null)
 			{

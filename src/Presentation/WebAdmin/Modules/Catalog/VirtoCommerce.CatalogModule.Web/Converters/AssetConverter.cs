@@ -27,6 +27,7 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 		{
 			var retVal = new moduleModel.ItemAsset();
 			retVal.InjectFrom(assetBase);
+			retVal.Url = new Uri(assetBase.Url).AbsolutePath;
 			if(String.IsNullOrEmpty(retVal.Group))
 			{
 				retVal.Group = "default";

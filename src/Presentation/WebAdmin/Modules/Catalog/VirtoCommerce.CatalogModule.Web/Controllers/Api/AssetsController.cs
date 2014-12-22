@@ -6,7 +6,10 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Http;
+using VirtoCommerce.Foundation.Assets.Repositories;
+using VirtoCommerce.Framework.Web.Asset;
 using VirtoCommerce.Framework.Web.Common;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 
@@ -16,29 +19,36 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 	[RoutePrefix("api/catalog/assets")]
     public class AssetsController : ApiController
     {
-        private readonly string _relativeDir = "Content/Uploads/";
-		public AssetsController()
+ 		private readonly IBlobStorageProvider _blobProvider;
+		private readonly string _tempPath;
+		public AssetsController(IBlobStorageProvider blobProvider)
 		{
-
+			_blobProvider = blobProvider;
+			_tempPath = HostingEnvironment.MapPath("~/Content/Uploads/");
 		}
+
 		[HttpPost]
 		[Route("")]
         public async Task<webModel.BlobInfo[]> UploadAsset()
         {
-			var streamProvider = await HttpRequestUploader.ReadDataAsync(Request, _relativeDir);
+			if (!Request.Content.IsMimeMultipartContent())
+			{
+				throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+			}
 
+			var blobMultipartProvider = new BlobStorageMultipartProvider(_blobProvider, _tempPath, "catalog");
+			await Request.Content.ReadAsMultipartAsync(blobMultipartProvider);
+			
 			var retVal = new List<webModel.BlobInfo>();
 
-            foreach (var file in streamProvider.FileData)
+			foreach (var blobInfo in blobMultipartProvider.BlobInfos)
             {
-                var fInfo = new FileInfo(file.LocalFileName);
-
-				retVal.Add(new webModel.BlobInfo
+ 				retVal.Add(new webModel.BlobInfo
                 {
-                    Name = fInfo.Name,
-                    Size = fInfo.Length.ToHumanReadableSize(),
-                    MimeType = "application/octet-stream",
-                    Url = string.Concat(_relativeDir, fInfo.Name)
+					Name = blobInfo.Name,
+					Size = blobInfo.Size.ToHumanReadableSize(),
+					MimeType = blobInfo.ContentType,
+					Url = blobInfo.Location
                 });
             }
 

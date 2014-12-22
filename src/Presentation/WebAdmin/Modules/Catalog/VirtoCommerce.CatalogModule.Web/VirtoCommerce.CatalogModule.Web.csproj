@@ -304,6 +304,10 @@
       <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
       <Name>CommerceFoundation</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\..\..\Extensions\Azure\CommerceFoundation.Data.Azure\CommerceFoundation.Data.Azure.csproj">
+      <Project>{e3769352-34c8-41a9-a6c8-da95d7dff903}</Project>
+      <Name>CommerceFoundation.Data.Azure</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\..\..\Extensions\Search\ElasticSearchProvider\ElasticSearchProvider.csproj">
       <Project>{039e7914-2925-44c4-acad-6bccfa2a370e}</Project>
       <Name>ElasticSearchProvider</Name>
