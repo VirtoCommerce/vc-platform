@@ -1009,7 +1009,7 @@ p.subheader
 .metro .list-extended
 {
 	list-style: none;
-	margin: 0 -15px 15px;
+	margin: 0 0 15px;
 	padding: 0;
 }
 
@@ -1019,7 +1019,7 @@ p.subheader
 	border-bottom: 1px solid #ccc;
 	cursor: pointer;
 	font-size: 12px;
-	padding: 15px;
+	padding: 15px 20px;
 	position: relative;
 }
 
@@ -1179,16 +1179,12 @@ p.subheader
 	height: 100%;
 	position: relative;
 	vertical-align: top;
+	width: 410px;
 	word-spacing: 0;
 	z-index: 500;
 }
 
-.blade.blade-normal
-{
-	width: 410px;
-}
-
-.blade.blade-normal.blade-stack
+.blade .blade-stack
 {
 	width: 380px;
 }
