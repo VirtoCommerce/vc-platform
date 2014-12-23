@@ -1292,7 +1292,7 @@ p.subheader
 	left: 20px;
 	padding: 0 0 0 50px;
 	position: absolute;
-	right: 0;
+	right: 20px;
 }
 
 .blade-head .title i
@@ -1318,6 +1318,9 @@ p.subheader
 	font-size: 20px;
 	height: 28px;
 	margin: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .blade-subtitle.subheader-secondary
