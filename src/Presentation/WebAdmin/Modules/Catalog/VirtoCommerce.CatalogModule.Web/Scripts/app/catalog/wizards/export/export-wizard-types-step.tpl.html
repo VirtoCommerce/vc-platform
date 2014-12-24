@@ -1,10 +1,10 @@
-﻿<p class="subheader">Select import target</p>
+﻿<p class="subheader">Select entity types to export</p>
 <ul class="list-checkboxes">
-    <li ng-repeat="data in importers">
+    <li ng-repeat="data in list">
         <label>
-            <input type="checkbox" name="isDefault" ng-checked="data === selectedImporter" ng-click="setImporter(data)">
+            <input type="checkbox" ng-checked="data.selected" ng-click="data.selected=!data.selected">
             <span class="switch"></span>
-            {{data}}
+            {{data.name}}
         </label>
     </li>
 </ul>

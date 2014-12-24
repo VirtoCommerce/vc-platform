@@ -253,13 +253,14 @@
     <Content Include="Scripts\app\catalog\widgets\itemPropertyWidget.tpl.html" />
     <Content Include="Scripts\app\catalog\widgets\itemVariationWidget.js" />
     <Content Include="Scripts\app\catalog\widgets\itemVariationWidget.tpl.html" />
+    <Content Include="Scripts\app\catalog\wizards\common\wizard-ok-action2.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\export\export-wizard-action.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\export\export-wizard-format-step.js" />
     <Content Include="Scripts\app\catalog\wizards\export\export-wizard-format-step.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\export\export-wizard-types-step.js" />
     <Content Include="Scripts\app\catalog\wizards\export\export-wizard-types-step.tpl.html" />
-    <Content Include="Scripts\app\catalog\wizards\export\_export-wizard.js" />
-    <Content Include="Scripts\app\catalog\wizards\export\_export-wizard.tpl.html" />
+    <Content Include="Scripts\app\catalog\wizards\export\%24export-wizard.js" />
+    <Content Include="Scripts\app\catalog\wizards\export\%24export-wizard.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-mapping-step-edit.js" />
     <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-mapping-step.js" />
     <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-mapping-step-edit.tpl.html" />

@@ -1,10 +1,10 @@
-﻿    <p class="subheader">Select data format</p>
-    <ul class="list-checkboxes">
-        <li ng-repeat="data in importers">
-            <label>
-                <input type="checkbox" name="isDefault" ng-checked="data === selectedImporter" ng-click="setImporter(data)">
-                <span class="switch"></span>
-                {{data}}
-            </label>
-        </li>
-    </ul>
+﻿<p class="subheader">Select data format</p>
+<ul class="list-checkboxes">
+    <li ng-repeat="data in list">
+        <label>
+            <input type="checkbox" ng-checked="data.selected" ng-click="select(data);">
+            <span class="switch"></span>
+            {{data.name}}
+        </label>
+    </li>
+</ul>

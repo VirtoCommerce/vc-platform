@@ -1,20 +1,21 @@
 ﻿angular.module('catalogModule.wizards.exportWizard')
 .controller('exportFormatController', ['$scope', function ($scope) {
     $scope.blade.refresh = function () {
-        $scope.selectedImporter = $scope.blade.parentBlade.item.entityImporter;
-        $scope.blade.isLoading = false;
-        $scope.importers = [
-            "Csv"
+        $scope.list = [
+            { name: "Csv" }
         ];
 
+        var found = _.find($scope.list, function (xx) { return xx.name === $scope.blade.parentBlade.currentEntity.format; });
+        if (found) {
+            found.selected = true;
+        }
     };
 
-    $scope.setImporter = function (importer) {
-        $scope.selectedImporter = importer;
-        $scope.blade.parentBlade.item.entityImporter = importer;
+    $scope.select = function (data) {
+        $scope.blade.parentBlade.currentEntity.format = data.name;
         $scope.bladeClose();
     }
 
     $scope.blade.refresh();
-
+    $scope.blade.isLoading = false;
 }]);

@@ -20,6 +20,7 @@
                     newBlade = {
                         subtitle: 'Select what to export',
                         controller: 'exportTypesController',
+                        bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/common/wizard-ok-action2.tpl.html',
                         template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/export/export-wizard-types-step.tpl.html'
                     };
                     break;
@@ -46,7 +47,7 @@
     };
 
     $scope.isValid = function () {
-        return $scope.blade.currentEntity.catalog;
+        return $scope.blade.currentEntity.catalog && _.any($scope.blade.currentEntity.types) && $scope.blade.currentEntity.format;
     }
 
     $scope.blade.onClose = function (closeCallback) {

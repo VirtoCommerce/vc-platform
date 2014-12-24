@@ -1,39 +1,26 @@
 ﻿angular.module('catalogModule.wizards.exportWizard')
 .controller('exportTypesController', ['$scope', function ($scope) {
     $scope.blade.refresh = function () {
-        $scope.selectedImporter = $scope.blade.parentBlade.item.entityImporter;
-        $scope.blade.isLoading = false;
-        $scope.importers = [
-            "Product",
-            //"Sku",
-            //"Bundle",
-            //"Package",
-            //"DynamicKit",
-            "Category"
-            //"Association",
-            //"Price",
-            //"ItemRelation",
-            //"Inventory",
-            //"Customer",
-            //"Jurisdiction",
-            //"JurisdictionGroup",
-            //"TaxCategory",
-            //"TaxValue",
-            //"ItemAsset",
-            //"Localization",
-            //"Seo"
+        $scope.list = [
+            { name: "Product" },
+            { name: "Category" }
         ];
 
+        _.each($scope.blade.parentBlade.currentEntity.types, function (x) {
+            var found = _.find($scope.list, function (xx) { return xx.name === x; });
+            found.selected = true;
+        });
     };
 
-    $scope.setImporter = function (importer) {
-        $scope.selectedImporter = importer;
-        $scope.blade.parentBlade.item.entityImporter = importer;
+    $scope.isValid = function () {
+        return _.any($scope.list, function (x) { return x.selected; });
+    }
+
+    $scope.saveChanges = function () {
+        $scope.blade.parentBlade.currentEntity.types = _.pluck(_.where($scope.list, { selected: true }), 'name');
         $scope.bladeClose();
     }
 
     $scope.blade.refresh();
-
+    $scope.blade.isLoading = false;
 }]);
-
-
