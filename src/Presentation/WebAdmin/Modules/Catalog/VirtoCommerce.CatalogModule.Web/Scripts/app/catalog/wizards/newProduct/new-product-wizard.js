@@ -1,22 +1,14 @@
-﻿angular.module('catalogModule.wizards.newProductWizard', [
-])
-.controller('newProductWizardController', ['$scope', 'bladeNavigationService', 'dialogService', 'items', function ($scope, bladeNavigationService, dialogService, items)
-{
-    $scope.blade.isLoading = false;
-
-    $scope.createItem = function ()
-    {
-
+﻿angular.module('catalogModule.wizards.newProductWizard', [])
+.controller('newProductWizardController', ['$scope', 'bladeNavigationService', 'dialogService', 'items', function ($scope, bladeNavigationService, dialogService, items) {
+    $scope.createItem = function () {
         $scope.blade.item.$updateitem(null,
-        function (dbItem)
-        {
+        function (dbItem) {
             $scope.bladeClose();
 
             //TODO: need better way to find category list blade.
             var categoryListBlade = $scope.blade.parentBlade;
 
-            if (categoryListBlade.controller != 'categoriesItemsListController')
-            {
+            if (categoryListBlade.controller != 'categoriesItemsListController') {
                 categoryListBlade = categoryListBlade.parentBlade;
             }
 
@@ -37,10 +29,9 @@
     }
 
     $scope.openBlade = function (type) {
-        $scope.blade.onClose(function() {
+        $scope.blade.onClose(function () {
             var newBlade = null;
-            switch (type)
-            {
+            switch (type) {
                 case 'properties':
                     newBlade = {
                         id: "newProductProperties",
@@ -100,49 +91,42 @@
                     break;
             }
 
-            if (newBlade != null)
-            {
+            if (newBlade != null) {
                 bladeNavigationService.showBlade(newBlade, $scope.blade);
             }
-        });  
+        });
     }
 
-    $scope.setForm = function (form)
-    {
+    $scope.setForm = function (form) {
         $scope.formScope = form;
     }
 
 
-    $scope.blade.onClose = function (closeCallback)
-    {
+    $scope.blade.onClose = function (closeCallback) {
 
-        if ($scope.blade.childrenBlades.length > 0)
-        {
-            var callback = function ()
-            {
-                if ($scope.blade.childrenBlades.length == 0)
-                {
+        if ($scope.blade.childrenBlades.length > 0) {
+            var callback = function () {
+                if ($scope.blade.childrenBlades.length == 0) {
                     closeCallback();
                 };
             };
-            angular.forEach($scope.blade.childrenBlades, function (child)
-            {
+            angular.forEach($scope.blade.childrenBlades, function (child) {
                 bladeNavigationService.closeBlade(child, callback);
             });
         }
-        else
-        {
+        else {
             closeCallback();
         }
     };
 
-    $scope.getUnfilledProperties = function() {
-        return _.filter($scope.blade.item.properties, function(p) {
-             return p != undefined && p.values.length > 0 && p.values[0].value.length > 0;
+    $scope.getUnfilledProperties = function () {
+        return _.filter($scope.blade.item.properties, function (p) {
+            return p != undefined && p.values.length > 0 && p.values[0].value.length > 0;
         });
     }
 
-
+    $scope.blade.isLoading = false;
+    $scope.blade.isList = true;
 }]);
 
 

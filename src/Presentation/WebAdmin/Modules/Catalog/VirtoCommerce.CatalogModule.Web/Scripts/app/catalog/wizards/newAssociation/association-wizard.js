@@ -104,6 +104,7 @@
 
     $scope.blade.selection = [];
     $scope.blade.isLoading = false;
+    $scope.blade.isList = true;
 }]);
 
 

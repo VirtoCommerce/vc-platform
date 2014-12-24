@@ -148,7 +148,7 @@
         {
             name: "Run", icon: 'icon-enter',
             executeMethod: function () {
-            	$scope.run($scope.selectedItem);
+                $scope.run($scope.selectedItem);
             },
             canExecuteMethod: function () {
                 return $scope.selectedItem;
@@ -167,4 +167,6 @@
 
 
     $scope.blade.refresh();
+    $scope.blade.isList = true;
+    $scope.blade.widthClass = 'medium';
 }]);

@@ -4,14 +4,16 @@
 
         <div class="input-control checkbox" data-role="input-control">
             <label>
-                <input type="checkbox" ng-model="currentEntity.licenseAccepted" ng-disabled="!currentEntity || currentEntity.validationErrors.length>0 || isInstalling">
+                <!--currentEntity.validationErrors.length>0 ||--> 
+                <input type="checkbox" ng-model="currentEntity.licenseAccepted" ng-disabled="!currentEntity || isInstalling">
                 <span class="check"></span>
                 I accept the license agreement
             </label>
         </div>
     </div>
-
-    <button ng-click="submit()" ng-disabled="!currentEntity || currentEntity.validationErrors.length>0 || isInstalling || (currentEntity.requireLicenseAcceptance && !currentEntity.licenseAccepted)">
+    
+    <!--currentEntity.validationErrors.length>0 ||--> 
+    <button ng-click="submit()" ng-disabled="!currentEntity || isInstalling || (currentEntity.requireLicenseAcceptance && !currentEntity.licenseAccepted)">
         <span>{{actionButtonTitle}}</span>
     </button>
 </fieldset>

@@ -107,6 +107,7 @@
     ];
 
     // on load
+    $scope.blade.widthClass = 'medium';
     initializeBlade($scope.blade.currentEntity);
     $scope.$watch('blade.parentBlade.currentEntities', function (newEntities, oldEntities) {
         if (!angular.equals(newEntities, oldEntities)) {

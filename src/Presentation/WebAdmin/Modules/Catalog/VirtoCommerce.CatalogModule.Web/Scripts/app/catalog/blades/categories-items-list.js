@@ -479,4 +479,6 @@
 
     //No need to call this because page 'pageSettings.currentPage' is watched!!! It would trigger subsequent duplicated req...
     //$scope.blade.refresh();
+    $scope.blade.isList = true;
+    $scope.blade.widthClass = 'medium';
 }]);
