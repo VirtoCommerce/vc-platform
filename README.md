@@ -9,9 +9,9 @@ Website: http://virtocommerce.com
 
 Documentation: http://docs.virtocommerce.com
 
-Online Demo: http://virtocommerce.com/sandbox
+Online Demo: http://virtocommerce.com/try-now
 
-CMS Demo: http://virtocommerce-cms.azurewebsites.net (for admin goto: http://virtocommerce-cms.azurewebsites.net/admin)
+Web Admin Demo: http://virtoadmin.azurewebsites.net (login: admin, password: store)
 
 
 Contributing
