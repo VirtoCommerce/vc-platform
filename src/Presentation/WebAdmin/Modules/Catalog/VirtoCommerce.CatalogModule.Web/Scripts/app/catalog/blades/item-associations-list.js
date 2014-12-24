@@ -101,5 +101,8 @@
         cursor: "move"
     };
 
+
     initializeBlade($scope.blade.currentEntities);
+    $scope.blade.isList = true;
+    $scope.blade.widthClass = 'medium';
 }]);

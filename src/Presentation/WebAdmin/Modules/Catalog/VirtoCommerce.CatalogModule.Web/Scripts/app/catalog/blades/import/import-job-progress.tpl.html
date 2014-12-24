@@ -1,5 +1,4 @@
-﻿<div style="width: 300px;">
-    <span class="subheader-secondary">Start</span>
+﻿    <span class="subheader-secondary">Start</span>
     <p>{{job.progressInfo.started | date : 'mediumTime'}}&nbsp;</p>
     <span class="subheader-secondary">End</span>
     <p>{{job.progressInfo.finished | date : 'mediumTime'}}&nbsp;</p>
@@ -15,4 +14,3 @@
     <button ng-click="cancel()" ng-disabled="job.progressStatus != 'Running'">
         <span>Cancel</span>
     </button>
-</div>

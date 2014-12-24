@@ -64,8 +64,7 @@
                                   ids.push(variation.id);
                           });
 
-                          items.remove({ ids: ids }, function ()
-                          {
+                          items.remove({ ids: ids }, function () {
                               $scope.blade.refresh();
                           });
                       }
@@ -92,6 +91,6 @@
 
 
     $scope.blade.refresh(false);
+    $scope.blade.isList = true;
+    $scope.blade.widthClass = 'medium';
 }]);
-
-

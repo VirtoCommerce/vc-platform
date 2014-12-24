@@ -37,6 +37,7 @@ angular.module(catalogsModuleName, [
   'catalogModule.wizards.importJobWizard.mapping',
   'catalogModule.wizards.importJobWizard.mapping.edit',
   'catalogModule.blades.import',
+  'catalogModule.wizards.exportWizard',
   'textAngular'
 ])
 .config(
@@ -76,32 +77,32 @@ angular.module(catalogsModuleName, [
       };
       mainMenuService.addMenuItem(menuItem);
 
-  	//NOTIFICATIONS
+      //NOTIFICATIONS
       var menuImportTemplate =
 		 {
-		 	priority: 900,
-		 	satisfy: function (notify, place) { return place == 'menu' && notify.notifyType == 'ImportNotifyEvent'; },
-		 	template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/notifications/menuImport.tpl.html',
-		 	action: function (notify) { $state.go('notificationsHistory', notify) }
+		     priority: 900,
+		     satisfy: function (notify, place) { return place == 'menu' && notify.notifyType == 'ImportNotifyEvent'; },
+		     template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/notifications/menuImport.tpl.html',
+		     action: function (notify) { $state.go('notificationsHistory', notify) }
 		 };
       notificationTemplateResolver.register(menuImportTemplate);
 
-      var historyImportTemplate = 
+      var historyImportTemplate =
 		{
-			priority : 900,
-			satisfy: function (notify, place) { return place == 'history' && notify.notifyType == 'ImportNotifyEvent'; },
-			template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/notifications/historyImport.tpl.html',
-			action: function (notify) {
-				var blade = {
-					id: 'CatalogImportDetail',
-					title: 'catalog import detail',
-					subtitle: 'detail',
-					template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/import/import-job-progress.tpl.html',
-					controller: 'importJobProgressController',
-					job: notify.job
-				};
-				bladeNavigationService.showBlade(blade);
-			}
+		    priority: 900,
+		    satisfy: function (notify, place) { return place == 'history' && notify.notifyType == 'ImportNotifyEvent'; },
+		    template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/notifications/historyImport.tpl.html',
+		    action: function (notify) {
+		        var blade = {
+		            id: 'CatalogImportDetail',
+		            title: 'catalog import detail',
+		            subtitle: 'detail',
+		            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/import/import-job-progress.tpl.html',
+		            controller: 'importJobProgressController',
+		            job: notify.job
+		        };
+		        bladeNavigationService.showBlade(blade);
+		    }
 		};
       notificationTemplateResolver.register(historyImportTemplate);
 

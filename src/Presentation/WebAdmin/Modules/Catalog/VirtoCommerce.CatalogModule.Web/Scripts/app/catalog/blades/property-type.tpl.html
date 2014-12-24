@@ -1,25 +1,23 @@
-﻿<div style="width: 340px;">
-    <ul class="list-checkboxes">
-        <li ng-mouseup="selectOption(0)">
-            <label>
-                <input type="checkbox" ng-checked="0 === blade.parentBlade.currentEntity.type">
-                <span class="switch"></span>
-                {{0 | propertytype}}
-            </label>
-        </li>
-        <li ng-mouseup="selectOption(1)">
-            <label>
-                <input type="checkbox" ng-checked="1 === blade.parentBlade.currentEntity.type">
-                <span class="switch"></span>
-                {{1 | propertytype}}
-            </label>
-        </li>
-        <li ng-mouseup="selectOption(2)">
-            <label>
-                <input type="checkbox" ng-checked="2 === blade.parentBlade.currentEntity.type">
-                <span class="switch"></span>
-                {{2 | propertytype}}
-            </label>
-        </li>
-    </ul>
-</div>
+﻿<ul class="list-checkboxes">
+    <li ng-mouseup="selectOption(0)">
+        <label>
+            <input type="checkbox" ng-checked="0 === blade.parentBlade.currentEntity.type">
+            <span class="switch"></span>
+            {{0 | propertytype}}
+        </label>
+    </li>
+    <li ng-mouseup="selectOption(1)">
+        <label>
+            <input type="checkbox" ng-checked="1 === blade.parentBlade.currentEntity.type">
+            <span class="switch"></span>
+            {{1 | propertytype}}
+        </label>
+    </li>
+    <li ng-mouseup="selectOption(2)">
+        <label>
+            <input type="checkbox" ng-checked="2 === blade.parentBlade.currentEntity.type">
+            <span class="switch"></span>
+            {{2 | propertytype}}
+        </label>
+    </li>
+</ul>

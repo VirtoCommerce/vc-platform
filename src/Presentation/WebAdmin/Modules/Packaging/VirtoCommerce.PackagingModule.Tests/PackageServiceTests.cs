@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NuGet;
@@ -51,9 +52,9 @@ namespace VirtoCommerce.PackagingModule.Tests
 
 		private static PackageService GetPackageService()
 		{
-			var sourcePath ="source";
-			var modulesPath = @"target\modules";
-			var packagesPath = @"target\packages";
+			var sourcePath = Path.GetFullPath("source");
+			var modulesPath = Path.GetFullPath(@"target\modules");
+			var packagesPath = Path.GetFullPath(@"target\packages");
 
 			var projectSystem = new WebsiteProjectSystem(modulesPath);
 

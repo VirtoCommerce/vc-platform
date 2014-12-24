@@ -1009,7 +1009,7 @@ p.subheader
 .metro .list-extended
 {
 	list-style: none;
-	margin: 0 -15px 15px;
+	margin: 0 0 15px;
 	padding: 0;
 }
 
@@ -1019,7 +1019,7 @@ p.subheader
 	border-bottom: 1px solid #ccc;
 	cursor: pointer;
 	font-size: 12px;
-	padding: 15px;
+	padding: 15px 20px;
 	position: relative;
 }
 
@@ -1179,16 +1179,12 @@ p.subheader
 	height: 100%;
 	position: relative;
 	vertical-align: top;
+	width: 410px;
 	word-spacing: 0;
 	z-index: 500;
 }
 
-.blade.blade-normal
-{
-	width: 410px;
-}
-
-.blade.blade-normal.blade-stack
+.blade .blade-stack
 {
 	width: 380px;
 }
@@ -1296,7 +1292,7 @@ p.subheader
 	left: 20px;
 	padding: 0 0 0 50px;
 	position: absolute;
-	right: 0;
+	right: 20px;
 }
 
 .blade-head .title i
@@ -1322,6 +1318,9 @@ p.subheader
 	font-size: 20px;
 	height: 28px;
 	margin: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .blade-subtitle.subheader-secondary
@@ -2212,6 +2211,29 @@ p.subheader
 	.table.sortable .th.sorted .icon {
 		float: right;
 		position: relative;
-		top: 3px;
+		right: 10px;
+		top: 2px;
 	}
 
+	.table.sortable .th.sorted .icon.sort-down
+	{
+		top: 7px;
+	}
+
+	.table.sortable .th.sorted .icon:after
+	{
+		border-style: solid;
+		border-width: 5px;
+		content: '';
+		position: absolute;
+	}
+
+	.table.sortable .th.sorted .icon.sort-up:after
+	{
+		border-color: transparent transparent #fff;
+	}
+
+	.table.sortable .th.sorted .icon.sort-down:after
+	{
+		border-color: #fff transparent transparent;
+	}

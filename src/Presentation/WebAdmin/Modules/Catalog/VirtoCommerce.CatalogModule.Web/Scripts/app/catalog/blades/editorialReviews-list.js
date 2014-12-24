@@ -71,4 +71,6 @@
         openAddEntityBlade();
     }
 
+    $scope.blade.isList = true;
+    $scope.blade.widthClass = 'medium';
 }]);
