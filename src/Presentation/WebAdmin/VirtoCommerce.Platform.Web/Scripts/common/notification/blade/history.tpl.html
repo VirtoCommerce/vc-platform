@@ -4,7 +4,7 @@
             <tr>
                 <th ng-repeat="column in columns" ng-click="setOrder(column)" ng-class="(column.checked)?'sorted':''" class="col th">
                     {{column.title}}
-                    <i ng-class="column.checked ? (column.reverse ?'icon-arrow-up-2':'icon-arrow-down-2') : ''" class="icon"></i>
+                    <i ng-class="column.checked ? (column.reverse ?'sort-up':'sort-down') : ''" class="icon"></i>
                 </th>
             </tr>
         </thead>

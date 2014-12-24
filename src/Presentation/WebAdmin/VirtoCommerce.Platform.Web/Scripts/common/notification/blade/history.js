@@ -40,7 +40,7 @@ function ($scope, bladeNavigationService, notificationTemplateResolver, notifica
     	if(angular.isDefined(column))
     	{
     		retVal = column.orderBy;
-    		if (column.inverse) {
+    		if (column.reverse) {
     			retVal += ":desc";
     		}
     	}
@@ -51,7 +51,7 @@ function ($scope, bladeNavigationService, notificationTemplateResolver, notifica
     	//reset prev selection may be commented if need support multiple order clauses
     	_.each($scope.columns, function (x) { x.checked = false });
     	column.checked = true;
-    	column.inverse = !column.inverse;
+    	column.reverse = !column.reverse;
     	$scope.pageSettings.currentPage = 1;
 
     	$scope.blade.refresh();
