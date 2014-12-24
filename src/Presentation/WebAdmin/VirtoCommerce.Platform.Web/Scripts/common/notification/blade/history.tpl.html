@@ -9,12 +9,15 @@
             </tr>
         </thead>
         <tbody>
-            <tr ng-click="selectNotify(notify)" ng-repeat="menuItem in notifications" class="item notif" ng-class="'notify_' + menuItem.notify.notifyType"  ng-include="menuItem.template">
-            </tr>
+            <tr ng-click="notification.action(notification)" ng-repeat="notification in notifications" class="item notif" ng-class="'notify_' + notification.notifyType" ng-include="notification.template"></tr>
         </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="{{columns.length}}">
+                        <pagination boundary-links="true" max-size="pageSettings.numPages" items-per-page="pageSettings.itemsPerPageCount" total-items="pageSettings.totalItems" ng-model="pageSettings.currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+                    </td>
+                </tr>
+            </tfoot>
     </table>
-    <div ng-include="'pagerTemplate.html'"></div>
-    <script type="text/ng-template" id="pagerTemplate.html">
-        <pagination ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" boundary-links="true" max-size="pageSettings.numPages" items-per-page="pageSettings.itemsPerPageCount" total-items="pageSettings.totalItems" ng-model="pageSettings.currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
-    </script>
+     
 </div>
