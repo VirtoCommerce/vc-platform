@@ -1,0 +1,10 @@
+﻿<p class="subheader">Select import target</p>
+<ul class="list-checkboxes">
+    <li ng-repeat="data in importers">
+        <label>
+            <input type="checkbox" name="isDefault" ng-checked="data === selectedImporter" ng-click="setImporter(data)">
+            <span class="switch"></span>
+            {{data}}
+        </label>
+    </li>
+</ul>
