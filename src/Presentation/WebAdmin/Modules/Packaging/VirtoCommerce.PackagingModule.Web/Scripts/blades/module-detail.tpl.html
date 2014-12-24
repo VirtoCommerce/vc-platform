@@ -1,45 +1,43 @@
-﻿<div style="width: 350px;">
-    <style>
-        p {
-            white-space: normal;
-        }
-    </style>
+﻿<style>
+    p {
+        white-space: normal;
+    }
+</style>
 
-    <fieldset ng-if="!currentEntity">
-        <label>Select module file:</label>
-        <div data-role="input-control" class="input-control file">
-            <input type="file" uploader="uploader" nv-file-select style="z-index: 0;" tabindex="-1">
-            <input type="text" style="z-index: 1; cursor: default;" readonly="">
-            <button class="btn-file" type="button" onclick="$('input[type=file]').trigger('click')"></button>
-        </div>
-    </fieldset>
-
-    <div ng-if="currentEntity">
-        <span class="subheader-secondary">Title</span>
-        <p>{{currentEntity.title}}</p>
-        <span class="subheader-secondary">Author</span>
-        <div ng-repeat="x in currentEntity.authors">{{x}} </div>
-        <span class="subheader-secondary">ID</span>
-        <p>{{currentEntity.id}}</p>
-        <span class="subheader-secondary">Version</span>
-        <p>{{currentEntity.version}}</p>
-        <p>
-            <a ng-href="{{currentEntity.licenseUrl}}" ng-if="currentEntity.licenseUrl" target="_blank">License</a>
-        </p>
-        <p>
-            <a ng-href="{{currentEntity.projectUrl}}" ng-if="currentEntity.projectUrl" target="_blank">Project Information</a>
-        </p>
-        <span class="subheader-secondary">Description</span>
-        <p>{{currentEntity.description}}</p>
-        <span class="subheader-secondary">Dependencies</span>
-        <p>
-            <span ng-repeat="x in currentEntity.dependencies">{{x}}</span>&nbsp;
-        </p>
-        <span class="subheader-secondary">Tags</span>
-        <p>{{currentEntity.tags}}</p>
-        <span class="subheader-secondary" ng-if="currentEntity.validationErrors.length>0">Errors</span>
-        <p>
-            <span class="fg-red" ng-repeat="x in currentEntity.validationErrors">{{x}}<br></span>
-        </p>
+<fieldset ng-if="!currentEntity">
+    <label>Select module file:</label>
+    <div data-role="input-control" class="input-control file">
+        <input type="file" uploader="uploader" nv-file-select style="z-index: 0;" tabindex="-1">
+        <input type="text" style="z-index: 1; cursor: default;" readonly="">
+        <button class="btn-file" type="button" onclick="$('input[type=file]').trigger('click')"></button>
     </div>
+</fieldset>
+
+<div ng-if="currentEntity">
+    <span class="subheader-secondary">Title</span>
+    <p>{{currentEntity.title}}</p>
+    <span class="subheader-secondary">Author</span>
+    <div ng-repeat="x in currentEntity.authors">{{x}} </div>
+    <span class="subheader-secondary">ID</span>
+    <p>{{currentEntity.id}}</p>
+    <span class="subheader-secondary">Version</span>
+    <p>{{currentEntity.version}}</p>
+    <p>
+        <a ng-href="{{currentEntity.licenseUrl}}" ng-if="currentEntity.licenseUrl" target="_blank">License</a>
+    </p>
+    <p>
+        <a ng-href="{{currentEntity.projectUrl}}" ng-if="currentEntity.projectUrl" target="_blank">Project Information</a>
+    </p>
+    <span class="subheader-secondary">Description</span>
+    <p>{{currentEntity.description}}</p>
+    <span class="subheader-secondary">Dependencies</span>
+    <p>
+        <span ng-repeat="x in currentEntity.dependencies">{{x}}</span>&nbsp;
+    </p>
+    <span class="subheader-secondary">Tags</span>
+    <p>{{currentEntity.tags}}</p>
+    <span class="subheader-secondary" ng-if="currentEntity.validationErrors.length>0">Errors</span>
+    <p>
+        <span class="fg-red" ng-repeat="x in currentEntity.validationErrors">{{x}}<br></span>
+    </p>
 </div>

@@ -1,4 +1,4 @@
-﻿<div class="blade" ng-repeat='blade in blades' ng-class="{'last-child':$last, 'actions':blade.bladeActions != undefined}">
+﻿<div class="blade" ng-repeat='blade in blades' ng-class="{'last-child':$last, 'actions':blade.bladeActions != undefined, 'blade-stack':blade.isList, 'blade-medium':blade.widthClass=='medium'}">
     <span va-blade='blade'>
         <header class="blade-head">
             <div class="progress" ng-show="blade.isLoading">
@@ -29,7 +29,7 @@
             <ng-include src="toolbarTemplate" />
         </header>
         <div class="blade-content" ng-class="blade.style">
-            <div class="inner-block clearfix">
+            <div class="inner-block">
                 <va-breadcrumb ng-model="blade.breadcrumbs"></va-breadcrumb>
                 <ng-include src='blade.template'> </ng-include>
             </div>

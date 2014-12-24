@@ -1,4 +1,4 @@
-﻿<div style="width: 300px;" ng-if="currentBlade.manageDefaultLanguage == true">
+﻿<span ng-if="currentBlade.manageDefaultLanguage == true">
     <p class="subheader">Select default language</p>
     <ul class="list-checkboxes">
         <li ng-repeat="data in currentBlade.availableLanguages | filter: {catalogId: '!!'}">
@@ -9,9 +9,9 @@
             </label>
         </li>
     </ul>
-</div>
+</span>
 
-<div style="width: 300px;" ng-if="currentBlade.manageDefaultLanguage == false">
+<span ng-if="currentBlade.manageDefaultLanguage == false">
     <p class="subheader">Select languages</p>
     <ul class="list-checkboxes">
         <li ng-repeat="data in currentBlade.availableLanguages" ng-class="{disabled:data.isDefault}">
@@ -22,4 +22,4 @@
             </label>
         </li>
     </ul>
-</div>
+</span>

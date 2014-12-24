@@ -1,28 +1,26 @@
-﻿<div style="width: 340px;">
-    <ul class="list-checkboxes">
-        <li ng-mouseup="selectOption(0)">
-            <label>
-                <input type="checkbox" ng-checked="0 === blade.parentBlade.currentEntity.valueType">
-                <span class="switch"></span>
-                <span class="title block">{{0 | propertydatatype}}</span>
-                <span class="sub-title">Text values less than 1024 chars.</span>
-            </label>
-        </li>
-        <li ng-mouseup="selectOption(1)">
-            <label>
-                <input type="checkbox" ng-checked="1 === blade.parentBlade.currentEntity.valueType">
-                <span class="switch"></span>
-                <span class="title block">{{1 | propertydatatype}}</span>
-                <span class="sub-title">Huge amount text without size limit.</span>
-            </label>
-        </li>
-        <li ng-mouseup="selectOption(2)">
-            <label>
-                <input type="checkbox" ng-checked="2 === blade.parentBlade.currentEntity.valueType">
-                <span class="switch"></span>
-                <span class="title block">{{2 | propertydatatype}}</span>
-                <span class="sub-title">Digital input with float point.</span>
-            </label>
-        </li>
-    </ul>
-</div>
+﻿<ul class="list-checkboxes">
+    <li ng-mouseup="selectOption(0)">
+        <label>
+            <input type="checkbox" ng-checked="0 === blade.parentBlade.currentEntity.valueType">
+            <span class="switch"></span>
+            <span class="title block">{{0 | propertydatatype}}</span>
+            <span class="sub-title">Text values less than 1024 chars.</span>
+        </label>
+    </li>
+    <li ng-mouseup="selectOption(1)">
+        <label>
+            <input type="checkbox" ng-checked="1 === blade.parentBlade.currentEntity.valueType">
+            <span class="switch"></span>
+            <span class="title block">{{1 | propertydatatype}}</span>
+            <span class="sub-title">Huge amount text without size limit.</span>
+        </label>
+    </li>
+    <li ng-mouseup="selectOption(2)">
+        <label>
+            <input type="checkbox" ng-checked="2 === blade.parentBlade.currentEntity.valueType">
+            <span class="switch"></span>
+            <span class="title block">{{2 | propertydatatype}}</span>
+            <span class="sub-title">Digital input with float point.</span>
+        </label>
+    </li>
+</ul>

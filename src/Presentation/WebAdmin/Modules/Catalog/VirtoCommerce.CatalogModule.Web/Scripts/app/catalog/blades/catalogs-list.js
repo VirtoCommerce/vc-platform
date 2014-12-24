@@ -117,8 +117,7 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
         preventCategoryListingOnce = true;
     };
 
-    $scope.import = function (node)
-    {
+    $scope.import = function (node) {
         if (node) {
             showImportJobsBlade(node.id, node.name);
         } else {
@@ -126,8 +125,20 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
         }
     }
 
-    function showImportJobsBlade(id, title)
-    {
+    $scope.export = function (node) {
+        var newBlade = {
+            id: 'importJobs',
+            catalog: node,
+            title: 'Data export',
+            subtitle: 'Configure & start data export',
+            controller: 'exportWizardController',
+            bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/export/export-wizard-action.tpl.html',
+            template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/export/_export-wizard.tpl.html'
+        };
+        bladeNavigationService.showBlade(newBlade, $scope.blade);
+    }
+
+    function showImportJobsBlade(id, title) {
         var newBlade = {
             catalogId: id,
             title: title,
@@ -197,23 +208,28 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
         },
         {
             name: "Manage", icon: 'icon-new-tab-2',
-            executeMethod: function ()
-            {
+            executeMethod: function () {
                 $scope.editCatalog(selectedNode);
             },
-            canExecuteMethod: function ()
-            {
+            canExecuteMethod: function () {
                 return selectedNode;
             }
         },
         {
-            name: "Import", icon: 'glyphicon-import',
-            executeMethod: function ()
-            {
+            name: "Import", icon: 'icon-download-2',
+            executeMethod: function () {
                 $scope.import(selectedNode);
             },
-            canExecuteMethod: function ()
-            {
+            canExecuteMethod: function () {
+                return true;
+            }
+        },
+        {
+            name: "Export", icon: 'icon-upload-3',
+            executeMethod: function () {
+                $scope.export(selectedNode);
+            },
+            canExecuteMethod: function () {
                 return true;
             }
         },
@@ -230,4 +246,5 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
 
     // actions on load
     $scope.blade.refresh();
+    $scope.blade.isList = true;
 }]);

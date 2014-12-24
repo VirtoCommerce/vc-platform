@@ -7,7 +7,11 @@
         $scope.blade.isLoading = true;
 
         catalogs.getCatalogs({}, function (results) {
-            $scope.objects = _.where(results, { virtual: false });
+            if ($scope.blade.doShowAllCatalogs) {
+                $scope.objects = results;
+            } else {
+                $scope.objects = _.where(results, { virtual: false });
+            }
 
             $scope.blade.isLoading = false;
         });
