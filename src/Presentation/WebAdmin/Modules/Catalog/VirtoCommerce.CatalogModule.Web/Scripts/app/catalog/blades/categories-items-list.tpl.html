@@ -4,17 +4,23 @@
         }
     </style>
 
-    <div data-role="input-control" class="input-control text" style="float: left; width: 70%;">
+    <div data-role="input-control" class="input-control text input-search">
         <input type="text" placeholder="Search keyword..." ng-model="filter.searchKeyword" ui-keyup="{'enter':'blade.refresh()'}">
         <button tabindex="-1" class="btn-clear" type="button" ng-click="filter.searchKeyword = null;blade.refresh()"></button>
     </div>
-    <span style="float: right;">Count: {{pageSettings.totalItems}}</span>
+    <span class="search-count">Count: {{pageSettings.totalItems}}</span>
 
     <table class="table hovered">
         <thead>
             <tr>
                 <th class="text-left fixed-td">
-                    <input type="checkbox" ng-model="selectedAll" ng-change="checkAll(selectedAll)" /></th>
+                    <div data-role="input-control" class="input-control checkbox">
+                        <label>
+                            <input type="checkbox" ng-model="selectedAll" ng-change="checkAll(selectedAll)" />
+                            <span class="check"></span>
+                        </label>
+                    </div>
+                </th>
                 <th class="text-left fixed-td">Img</th>
                 <th class="text-left">Name</th>
                 <th class="text-left fixed-td">Code</th>
@@ -33,7 +39,7 @@
                 <td ng-click='selectItem($event, data)'>
                     <img ng-src="{{data.imageUrl}}" height="42" width="42" ng-if="data.type!=='category' && data.imageUrl" /><i class="icon-none" ng-if="data.type!=='category' && !data.imageUrl" style="font-size: 26px" />
                 </td>
-                <td ng-click='selectItem($event, data)' style="max-width: 250px; overflow: hidden; text-overflow: ellipsis;">
+                <td ng-click='selectItem($event, data)' class="product-name">
                     <span ng-if="hasLinks(data)"><i class="icon-link" style="font-size: 18px" />&nbsp;</span>
                     <i ng-class="{'icon-folder-2': data.type==='category', 'icon-basket': data.type==='product', 'icon-barcode': data.type==='variation'}" style="font-size: 18px" />&nbsp;
                     <span title="{{data.name}}">{{data.name}}</span>
@@ -51,7 +57,7 @@
                 </td>
             </tr>
         </tbody>
-        <tfoot>
+        <tfoot ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems">
             <tr>
                 <td colspan="4" ng-include="'pagerTemplate.html'"></td>
             </tr>
