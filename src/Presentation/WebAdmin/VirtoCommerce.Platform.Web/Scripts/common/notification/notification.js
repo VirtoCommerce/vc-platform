@@ -110,7 +110,7 @@
 		if (!angular.isDefined(notifyMenu)) {
 			notifyMenu = {
 				path: 'notification',
-				icon: 'glyphicon glyphicon-comment',
+				icon: 'fa fa-comment',
 				title: 'Notifications',
 				priority: 2,
 				permission: '',
@@ -143,7 +143,7 @@
 				var menuItem = {
 					parent: notifyMenu,
 					path: 'notification/events',
-					icon: 'glyphicon glyphicon-comment',
+					icon: 'fa fa-comment',
 					title: x.title,
 					priority: 2,
 					permission: '',

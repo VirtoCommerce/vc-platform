@@ -1,15 +1,15 @@
-﻿<div class="blade" ng-repeat='blade in blades' ng-class="{'last-child':$last, 'actions':blade.bladeActions != undefined, 'blade-stack':blade.isList, 'blade-medium':blade.widthClass=='medium'}">
-    <span va-blade='blade'>
+﻿<div class="blade" ng-repeat='blade in blades' ng-class="{'gray': blade.style, 'last-child':$last, 'actions':blade.bladeActions != undefined, 'blade-stack':blade.isList, 'blade-medium':blade.widthClass=='medium'}">
+    <div va-blade='blade'>
         <header class="blade-head">
             <div class="progress" ng-show="blade.isLoading">
                 <div data-color="bg-dark" data-role="progress-bar" class="progress-bar">
                     <div class="bar bg-dark" style="width: 100%;"></div>
                 </div>
             </div>
-            <div class="title">
+            <div class="title" ng-class="{'secondary': blade.subtitle}">
                 <i class="icon-grid-view"></i>
                 <p class="blade-title subheader" ng-bind="blade.title"></p>
-                <p class="blade-subtitle subheader-secondary" ng-bind="blade.subtitle"></p>
+                <p class="blade-subtitle subheader-secondary" ng-if="blade.subtitle" ng-bind="blade.subtitle"></p>
             </div>
             <div class="blade-head-nav">
                 <button class="btn-min" ng-show="maximized" ng-click="bladeRestore()"></button>
@@ -28,7 +28,7 @@
             </span>
             <ng-include src="toolbarTemplate" />
         </header>
-        <div class="blade-content" ng-class="blade.style">
+        <div class="blade-content">
             <div class="inner-block">
                 <va-breadcrumb ng-model="blade.breadcrumbs"></va-breadcrumb>
                 <ng-include src='blade.template'> </ng-include>
@@ -36,7 +36,7 @@
         </div>
         <div class="blade-actions" ng-include="blade.bladeActions">
         </div>
-    </span>
+    </div>
 </div>
 
 

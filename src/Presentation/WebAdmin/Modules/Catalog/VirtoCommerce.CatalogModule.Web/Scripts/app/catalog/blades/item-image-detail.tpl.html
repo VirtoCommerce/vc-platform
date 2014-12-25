@@ -34,8 +34,7 @@
                 </div>
                 <div>
                     <ul class="tiles" ui-sortable="sortableOptions" ng-model="item.images">
-                        <li class="tile-block shadow" ng-class="{'first':$first, 'mini': $first == false}" ng-repeat="image in item.images" ng-include="'imageTemplate.html'">
-                        </li>
+                        <li class="tile-block nobg" ng-class="{'first':$first, 'mini': $first == false}" ng-repeat="image in item.images" ng-include="'imageTemplate.html'"></li>
                     </ul>
                 </div>
             </div>

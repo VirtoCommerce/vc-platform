@@ -24,9 +24,9 @@
                     </div>
                 </td>
                 <td ng-click='selectVariation(data)'>
-                    <img ng-src="{{data.imgSrc}}" height="42" width="42" ng-if="data.imgSrc" /><i class="icon-none" ng-if="!data.imgSrc" style="font-size:26px" />
+                    <img ng-src="{{data.imgSrc}}" height="42" width="42" ng-if="data.imgSrc" /><i class="icon-none" ng-if="!data.imgSrc" style="font-size: 26px" />
                 </td>
-                <td ng-repeat="col in [data.id, data.code, data.name] track by $index" ng-click='selectVariation(data)' style="max-width: 250px; overflow: hidden; text-overflow: ellipsis;">
+                <td ng-class="{'product-id': $index === 0, 'product-name': $index === 2}" ng-repeat="col in [data.id, data.code, data.name] track by $index" ng-click='selectVariation(data)'>
                     <span title="{{col}}">{{col}}</span>
                 </td>
             </tr>
