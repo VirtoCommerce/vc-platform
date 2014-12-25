@@ -3,8 +3,8 @@
 	<id>VirtoCommerce.Packaging</id>
 	<version>1.0.0.0</version>
 
-	<title>Virto Commerce Packaging Module</title>
-	<description>Provides UI and API to manage modules.</description>
+	<title>Virto Commerce Packaging</title>
+	<description>UI and API to manage modules.</description>
 	<authors>
 		<author>Virto Commerce</author>
 	</authors>
