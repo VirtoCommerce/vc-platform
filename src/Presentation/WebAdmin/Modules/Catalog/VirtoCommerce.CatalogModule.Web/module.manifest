@@ -6,8 +6,8 @@
 		<dependency>VirtoCommerce.Core</dependency>
 	</dependencies>
 
-	<title>Virto Commerce Catalog Module</title>
-	<description>Provides APIs and UI for managing Master &amp; Virtual Catalogs, Products and SKUs.</description>
+	<title>Virto Commerce Catalog</title>
+	<description>APIs and UI for managing Master &amp; Virtual Catalogs, Products and SKUs.</description>
 	<authors>
 		<author>Virto Commerce</author>
 	</authors>
