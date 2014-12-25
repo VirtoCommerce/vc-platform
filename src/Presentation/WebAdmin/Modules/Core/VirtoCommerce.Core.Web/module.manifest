@@ -3,8 +3,8 @@
 	<id>VirtoCommerce.Core</id>
 	<version>1.0.0.0</version>
 
-	<title>Virto Commerce Core Module</title>
-	<description>Provides Core functionality.</description>
+	<title>Virto Commerce Core</title>
+	<description>Core functionality.</description>
 	<authors>
 		<author>Virto Commerce</author>
 	</authors>
