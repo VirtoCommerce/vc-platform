@@ -7,7 +7,7 @@
 	</dependencies>
 
 	<title>Virto Commerce Catalog Module</title>
-	<description>Provides APIs and UI for managing Master & Virtual Catalogs, Products and SKUs.</description>
+	<description>Provides APIs and UI for managing Master &amp; Virtual Catalogs, Products and SKUs.</description>
 	<authors>
 		<author>Virto Commerce</author>
 	</authors>
