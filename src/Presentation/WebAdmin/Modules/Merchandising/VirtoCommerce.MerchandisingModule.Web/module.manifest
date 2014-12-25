@@ -7,8 +7,8 @@
 		<dependency>VirtoCommerce.Catalog</dependency>
 	</dependencies>
 
-	<title>Virto Commerce Merchandising Module</title>
-	<description>Provides Web API for various frontends.</description>
+	<title>Virto Commerce Merchandising</title>
+	<description>Web API for various frontends to access various modules functionality.</description>
 	<authors>
 		<author>Virto Commerce</author>
 	</authors>
