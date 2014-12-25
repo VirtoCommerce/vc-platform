@@ -57,13 +57,15 @@ ul.tiles img
 
 .tiles .tile .title
 {
-	margin: 10px 15px;
+	margin: 10px 0 5px 10px;
+	text-align: left;
 }
 
 .tiles .tile .text
 {
 	font-size: 11px;
-	margin: 0 15px;
+	margin: 0 10px;
+	text-align: left;
 }
 
 .tiles .tile .text .count

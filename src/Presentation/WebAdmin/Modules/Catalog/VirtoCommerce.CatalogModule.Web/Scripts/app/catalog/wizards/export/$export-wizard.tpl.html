@@ -1,0 +1,14 @@
+﻿<ul class="list-extended">
+    <li ng-click="openBlade('catalog')">
+        <span class="title">{{blade.currentEntity.catalog ? 'Selected catalog' : 'Select a catalog'}}</span>
+        <span class="sub-title">{{blade.currentEntity.catalog.name}}</span>
+    </li>
+    <li ng-click="openBlade('types')">
+        <span class="title">{{blade.currentEntity.types.length>0 ? 'Selected types' : 'Select types to export'}}</span>
+        <span class="sub-title"><span ng-repeat="x in blade.currentEntity.types">{{x}}, </span></span>
+    </li>
+    <li ng-click="openBlade('format')">
+        <span class="title">{{blade.currentEntity.format ? 'Selected format' : 'Select a format'}}</span>
+        <span class="sub-title">{{blade.currentEntity.format}}</span>
+    </li>
+</ul>

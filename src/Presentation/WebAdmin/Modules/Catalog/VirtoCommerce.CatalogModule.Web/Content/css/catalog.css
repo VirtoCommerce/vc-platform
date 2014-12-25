@@ -1,4 +1,4 @@
-﻿.tiles
+.tiles
 {
 	list-style: none;
 	margin: 0 -5px 15px 0;
@@ -7,8 +7,16 @@
 
 ul.tiles
 {
-	margin: -15px -5px 15px 0;
+	margin: 0 -5px 0 0;
 	padding: 0;
+}
+
+ul.tiles .tile-block.first
+{
+	display: block;
+	float: none;
+	margin: 0 auto 5px;
+	overflow: hidden;
 }
 
 ul.tiles img
@@ -49,13 +57,15 @@ ul.tiles img
 
 .tiles .tile .title
 {
-	margin: 10px 15px;
+	margin: 10px 0 5px 10px;
+	text-align: left;
 }
 
 .tiles .tile .text
 {
 	font-size: 11px;
-	margin: 0 15px;
+	margin: 0 10px;
+	text-align: left;
 }
 
 .tiles .tile .text .count

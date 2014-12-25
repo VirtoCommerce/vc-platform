@@ -107,6 +107,7 @@
     <Compile Include="Controllers\Api\AssetsController.cs" />
     <Compile Include="Controllers\Api\CatalogsController.cs" />
     <Compile Include="Controllers\Api\CategoriesController.cs" />
+    <Compile Include="Controllers\Api\ExportController.cs" />
     <Compile Include="Controllers\Api\ProductsController.cs" />
     <Compile Include="Controllers\Api\ListEntryController.cs" />
     <Compile Include="Controllers\Api\ImportController.cs" />
@@ -252,6 +253,14 @@
     <Content Include="Scripts\app\catalog\widgets\itemPropertyWidget.tpl.html" />
     <Content Include="Scripts\app\catalog\widgets\itemVariationWidget.js" />
     <Content Include="Scripts\app\catalog\widgets\itemVariationWidget.tpl.html" />
+    <Content Include="Scripts\app\catalog\wizards\common\wizard-ok-action2.tpl.html" />
+    <Content Include="Scripts\app\catalog\wizards\export\export-wizard-action.tpl.html" />
+    <Content Include="Scripts\app\catalog\wizards\export\export-wizard-format-step.js" />
+    <Content Include="Scripts\app\catalog\wizards\export\export-wizard-format-step.tpl.html" />
+    <Content Include="Scripts\app\catalog\wizards\export\export-wizard-types-step.js" />
+    <Content Include="Scripts\app\catalog\wizards\export\export-wizard-types-step.tpl.html" />
+    <Content Include="Scripts\app\catalog\wizards\export\%24export-wizard.js" />
+    <Content Include="Scripts\app\catalog\wizards\export\%24export-wizard.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-mapping-step-edit.js" />
     <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-mapping-step.js" />
     <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-mapping-step-edit.tpl.html" />

@@ -18,6 +18,36 @@
 	padding: 10px;
 }
 
+.metro .input-control.text input
+{
+	font-family: inherit;
+	font-size: 14px;
+	padding: 5px 10px;
+}
+
+.metro .input-control.text.input-search
+{
+	float: left;
+	margin: 0 0 10px 20px;
+	width: 70%;
+}
+
+.metro .input-control.select select,
+.metro .input-control.textarea select,
+.metro .input-control.select textarea,
+.metro .input-control.textarea textarea
+{
+	font-size: 14px;
+	font-family: inherit;
+	padding: 10px;
+}
+
+.search-count
+{
+	float: right;
+	margin: 0 20px 0 0;
+}
+
 .control-group.selected
 {
 	background: #b3ebfb;
@@ -138,6 +168,54 @@ p.subheader
 .metro .table td
 {
 	cursor: pointer;
+}
+
+.metro .table th,
+.metro .table td
+{
+	padding: 5px 10px;
+}
+
+.metro .table th:first-child,
+.metro .table td:first-child
+{
+	padding-left: 20px;
+}
+
+.metro .table th:last-child,
+.metro .table td:last-child
+{
+	padding-right: 20px;
+	text-align: right;
+}
+
+.metro .table td.product-name
+{
+	max-width: 250px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.metro .table thead th
+{
+	vertical-align: middle;
+}
+
+.metro .table tbody tr:last-child td
+{
+	border-bottom: 1px solid #eaeaea;
+}
+
+.metro .table thead th
+{
+	border-bottom: 1px solid #eaeaea;
+}
+
+.metro .input-control.checkbox .check,
+.metro .input-control.radio .check
+{
+	margin: 2px 5px 0 0;
+	vertical-align: top;
 }
 
 .login .preload {
@@ -1016,9 +1094,9 @@ p.subheader
 .grid-list li,
 .list-extended li
 {
-	border-bottom: 1px solid #ccc;
+	border-bottom: 1px solid #ddd;
 	cursor: pointer;
-	font-size: 12px;
+	font-size: 14px;
 	padding: 15px 20px;
 	position: relative;
 }
@@ -1071,9 +1149,18 @@ p.subheader
 
 .list-extended > li .ico
 {
-	float: left;
+	display: inline-block;
 	font-size: 30px;
-	margin: 0 10px 0 0;
+	height: 32px;
+	margin: 0 15px 0 0;
+	vertical-align: middle;
+}
+
+.list-extended > li .name
+{
+	display: inline-block;
+	line-height: 1.2;
+	vertical-align: middle;
 }
 
 .list-extended li .title,
@@ -1544,7 +1631,7 @@ p.subheader
 .blade .blade-content .breadcrumbs
 {
 	list-style: none;
-	margin: 10px;
+	margin: 10px 20px;
 	padding: 0;
 }
 
@@ -1556,7 +1643,8 @@ p.subheader
 
 .blade .blade-content .breadcrumbs .devider
 {
-	margin: 0 5px;
+	color: #ccc;
+	margin: 0 5px 0 0;
 }
 
 .blade-actions p

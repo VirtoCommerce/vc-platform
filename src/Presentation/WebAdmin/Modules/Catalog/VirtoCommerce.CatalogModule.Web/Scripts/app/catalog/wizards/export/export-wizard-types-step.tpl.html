@@ -1,0 +1,10 @@
+﻿<p class="subheader">Select entity types to export</p>
+<ul class="list-checkboxes">
+    <li ng-repeat="data in list">
+        <label>
+            <input type="checkbox" ng-checked="data.selected" ng-click="data.selected=!data.selected">
+            <span class="switch"></span>
+            {{data.name}}
+        </label>
+    </li>
+</ul>
