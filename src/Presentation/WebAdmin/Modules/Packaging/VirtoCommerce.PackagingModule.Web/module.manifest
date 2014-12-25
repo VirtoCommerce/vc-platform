@@ -4,7 +4,7 @@
 	<version>1.0.0.0</version>
 
 	<title>Virto Commerce Packaging</title>
-	<description>UI and API to manage modules.</description>
+	<description>UI and API to manage modules</description>
 	<authors>
 		<author>Virto Commerce</author>
 	</authors>
