@@ -6,19 +6,19 @@
 		<dependency>VirtoCommerce.Core</dependency>
 	</dependencies>
 
-	<title>VirtoCommerce Catalog</title>
-	<description>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean vitae sagittis nulla, ac condimentum quam. Maecenas sit amet nibh volutpat, eleifend enim sit amet, cursus erat.</description>
+	<title>Virto Commerce Catalog Module</title>
+	<description>Provides APIs and UI for managing Master & Virtual Catalogs, Products and SKUs.</description>
 	<authors>
-		<author>VirtoCommerce</author>
+		<author>Virto Commerce</author>
 	</authors>
 	<owners>
-		<owner>VirtoCommerce</owner>
+		<owner>Virto Commerce</owner>
 	</owners>
 	<projectUrl>http://virtocommerce.com/</projectUrl>
 	<iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
 	<releaseNotes>First version.</releaseNotes>
-	<copyright>Copyright © 2014 Virto Commerce. All rights reserved</copyright>
-	<tags>tag1 tag2</tags>
+	<copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
+	<tags>catalog</tags>
 
 	<assemblyFile>VirtoCommerce.CatalogModule.Web.dll</assemblyFile>
 	<moduleType>VirtoCommerce.CatalogModule.Web.Module, VirtoCommerce.CatalogModule.Web</moduleType>
