@@ -834,6 +834,27 @@ p.subheader
 				bottom: 0;
 			}
 
+				.left-menu ul li.logo span
+				{
+					display: block;
+					padding: 20px 0;
+					text-align: center;
+				}
+
+				.left-menu ul li.logo .version
+				{
+					color: #fff;
+					font-size: 14px;
+					padding: 0;
+				}
+
+				.left-menu ul li.logo img
+				{
+					display: inline-block;
+					margin: 0 0 10px;
+					max-width: 35px;
+				}
+
 					.left-menu ul li a
 					{
 						color: #8d9aa6;
