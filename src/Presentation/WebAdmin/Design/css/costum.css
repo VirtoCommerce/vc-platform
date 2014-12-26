@@ -413,14 +413,38 @@ p.subheader
 
 .metro .context-menu
 {
+	background: #333;
+	border: none;
 	min-width: inherit;
+	padding: 10px 5px;
 	position: fixed;
 }
 
-.metro .context-menu li a
+.metro .context-menu li
 {
-	font-size: 13px !important;
-	padding: 5px 15px !important;
+	border: none;
+	color: #fff;
+	height: auto;
+	min-height: inherit;
+	font-size: 12px;
+	margin: 0 !important;
+	padding: 5px 10px;
+}
+
+.metro .context-menu li:hover
+{
+	background: none;
+	color: #2daded;
+}
+
+.metro .context-menu li .ico
+{
+	display: inline-block;
+	font-size: 20px;
+	float: none;
+	margin: 0;
+	vertical-align: middle;
+	width: 25px;
 }
 
 .left-menu
@@ -957,6 +981,13 @@ p.subheader
 								font-size: 21px;
 							}
 
+							.left-menu ul li a,
+							.left-menu ul li a .icon i
+							{
+								-webkit-transition: all .4s ease 0s;
+										transition: all .4s ease 0s;
+							}
+
 							.left-menu ul li a:hover,
 							.left-menu ul li a:hover .icon i,
 							.left-menu ul li.active a,
@@ -1001,6 +1032,15 @@ p.subheader
 .metro .toolbar .transparent .button
 {
 	border: none;
+}
+
+.metro .toolbar.transparent button,
+.metro .toolbar .transparent button,
+.metro .toolbar.transparent button .on-left,
+.metro .toolbar .transparent button .on-left
+{
+	-webkit-transition: all .4s ease 0s;
+			transition: all .4s ease 0s;
 }
 
 .metro .toolbar.transparent button:hover,
@@ -1226,14 +1266,14 @@ p.subheader
 .list-extended > li .ico
 {
 	float: left;
-	font-size: 32px;
+	font-size: 28px;
 	margin: 0 15px 0 0;
 	vertical-align: middle;
+	width: 35px;
 }
 
 .list-extended > li .name
 {
-	display: inline-block;
 	line-height: 1.2;
 	margin: 5px 0 0;
 	vertical-align: middle;
@@ -1351,6 +1391,9 @@ p.subheader
 	width: 406px;
 	word-spacing: 0;
 	z-index: 500;
+
+	-webkit-transition: none;
+			transition: none;
 }
 
 .blade.gray
@@ -1632,8 +1675,16 @@ p.subheader
 
 .metro .blade-head button .on-left
 {
-	font-size: 16px;
-	margin: 0 0 5px;
+	font-size: 20px;
+	margin: 0 0 3px;
+}
+
+.metro .blade-head button .on-left.fa-upload,
+.metro .blade-head button .on-left.fa-trash,
+.metro .blade-head button .on-left.fa-trash-o
+{
+	position: relative;
+	top: -2px;
 }
 
 .blade-switch
@@ -1843,6 +1894,7 @@ p.subheader
 .dashboard .tile
 {
 	background: #fff;
+	border: 2px solid transparent;
 	padding: 16px;
 }
 
@@ -1889,6 +1941,31 @@ p.subheader
 .dashboard .tile p.text
 {
 	font-size: 12px;
+}
+
+.dashboard .tile ul,
+.dashboard .tile ol
+{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.dashboard .notice-list li
+{
+	font-size: 12px;
+	margin: 1px 0;
+	padding: 0 5px;
+
+	-webkit-border-radius: 3px;
+			border-radius: 3px;
+}
+
+.dashboard .notice-list li:hover
+{
+	opacity: .9;
+
+	filter: alpha(opacity=90);
 }
 
 .tiles .tile p
@@ -2414,3 +2491,10 @@ p.subheader
 	{
 		border-color: #fff transparent transparent;
 	}
+
+/* Transitions */
+*
+{
+	-webkit-transition: all .4s ease 0s;
+			transition: all .4s ease 0s;
+}

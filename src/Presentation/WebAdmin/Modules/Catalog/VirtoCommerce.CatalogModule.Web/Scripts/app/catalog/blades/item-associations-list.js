@@ -45,7 +45,7 @@
 
     $scope.bladeToolbarCommands = [
         {
-            name: "Add", icon: 'icon-plus',
+            name: "Add", icon: 'fa fa-plus',
             executeMethod: function () {
                 openAddEntityWizard();
             },
@@ -54,7 +54,7 @@
             }
         },
         {
-            name: "Delete", icon: 'icon-remove',
+            name: "Delete", icon: 'fa fa-trash-o',
             executeMethod: function () {
                 var dialog = {
                     id: "confirmDeleteItem",

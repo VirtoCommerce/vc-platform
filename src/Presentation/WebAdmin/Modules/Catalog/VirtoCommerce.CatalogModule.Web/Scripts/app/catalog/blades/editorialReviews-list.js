@@ -54,7 +54,7 @@
 
     $scope.bladeToolbarCommands = [
         {
-            name: "Add", icon: 'icon-plus',
+            name: "Add", icon: 'fa fa-plus',
             executeMethod: function () {
                 openAddEntityBlade();
             },

@@ -26,18 +26,18 @@
                     </div>
                     <ul role="menu" class="dropdown-menu context-menu" id="ijl_menu_{{data.id}}">
                         <li ng-click='edit(data)'>
-                            <i class="ico icon-new-tab-2"></i>&nbsp;Manage
+                            <i class="ico fa fa-edit"></i> Manage
                         </li>
                         <li ng-click='run(data)'>
-                            <i class="ico icon-enter"></i>&nbsp;Run
+                            <i class="ico fa fa-sign-in"></i> Run
                         </li>
                         <li ng-click='delete()'>
-                            <i class="ico icon-remove"></i>&nbsp;Delete
+                            <i class="ico fa fa-trash-o"></i> Delete
                         </li>
                     </ul>
                 </td>
                 <td ng-click='setSelectedItem(data)' style="max-width: 250px; overflow: hidden; text-overflow: ellipsis;">
-                    <i style="font-size: 18px" class="icon-enter"></i>
+                    <i style="font-size: 18px" class="fa fa-sign-in"></i>
                     <span title="{{data.name}}">{{data.name}}</span>
                 </td>
                 <td ng-click='setSelectedItem(data)'>

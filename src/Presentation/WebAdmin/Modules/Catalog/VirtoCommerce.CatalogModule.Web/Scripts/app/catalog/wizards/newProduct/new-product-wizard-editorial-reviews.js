@@ -51,7 +51,7 @@
 
     $scope.bladeToolbarCommands = [
         {
-            name: "Add", icon: 'icon-plus',
+            name: "Add", icon: 'fa fa-plus',
             executeMethod: function ()
             {
                 var data = { languageCode: $scope.wizardBlade.parentBlade.catalog.defaultLanguage.languageCode };

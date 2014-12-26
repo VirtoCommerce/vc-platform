@@ -38,7 +38,7 @@
     $scope.bladeToolbarCommands = [
         {
             name: "Edit",
-            icon: 'icon-new-tab-2',
+            icon: 'fa fa-edit',
             executeMethod: function() {
                 $scope.editMapping($scope.selectedItem);
             },

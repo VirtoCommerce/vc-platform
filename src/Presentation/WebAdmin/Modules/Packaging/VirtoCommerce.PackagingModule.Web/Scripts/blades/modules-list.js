@@ -42,7 +42,7 @@
 
     $scope.bladeToolbarCommands = [
         {
-            name: "Refresh", icon: 'icon-spin',
+            name: "Refresh", icon: 'fa fa-refresh',
             executeMethod: function () {
                 $scope.blade.refresh();
             },
@@ -51,7 +51,7 @@
             }
         },
         {
-            name: "Install", icon: 'icon-plus',
+            name: "Install", icon: 'fa fa-plus',
             executeMethod: function () {
                 openAddEntityBlade();
             },

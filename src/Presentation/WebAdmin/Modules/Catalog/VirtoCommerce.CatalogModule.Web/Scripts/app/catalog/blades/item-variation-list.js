@@ -39,7 +39,7 @@
 
     $scope.bladeToolbarCommands = [
         {
-            name: "Refresh", icon: 'icon-spin',
+            name: "Refresh", icon: 'fa fa-refresh',
             executeMethod: function () {
                 $scope.blade.refresh(false);
             },
@@ -48,7 +48,7 @@
             }
         },
       {
-          name: "Delete", icon: 'icon-remove',
+          name: "Delete", icon: 'fa fa-trash-o',
           executeMethod: function () {
               var dialog = {
                   id: "confirmDeleteItem",
