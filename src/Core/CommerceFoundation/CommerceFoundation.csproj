@@ -240,8 +240,16 @@
     <Compile Include="Frameworks\Caching\CacheManager.cs" />
     <Compile Include="Frameworks\Caching\CacheSettings.cs" />
     <Compile Include="Frameworks\Common\EnumUtility.cs" />
+    <Compile Include="Frameworks\EntityBase.cs" />
     <Compile Include="Frameworks\Extensions\CollectionExtensions.cs" />
     <Compile Include="Frameworks\Extensions\KeyValuePairExtensions.cs" />
+    <Compile Include="Frameworks\IAuditable.cs" />
+    <Compile Include="Frameworks\IGenericEntityCrudService.cs" />
+    <Compile Include="Frameworks\Money\CurrencyCode.cs" />
+    <Compile Include="Frameworks\Money\ICurrencyConverter.cs" />
+    <Compile Include="Frameworks\Money\Money.cs" />
+    <Compile Include="Frameworks\Money\SampleConverter.cs" />
+    <Compile Include="Frameworks\Money\SimpleMoney.cs" />
     <Compile Include="Frameworks\NullCollection.cs" />
     <Compile Include="Frameworks\Extensions\NumberExtensions.cs" />
     <Compile Include="Frameworks\Extensions\ObjectExtensions.cs" />

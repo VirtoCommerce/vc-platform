@@ -1,6 +1,6 @@
-angular.module('notifications.blades.history', [
-   'catalogModule.resources.catalogs',
-   'angularMoment'
+angular.module('platformWebApp.notifications.blades.history', [
+    'angularMoment',
+	'platformWebApp.notification.resources'
 ])
 .controller('notificationsHistoryController', ['$scope', 'bladeNavigationService', 'notificationTemplateResolver', 'notifications',
 function ($scope, bladeNavigationService, notificationTemplateResolver, notifications) {

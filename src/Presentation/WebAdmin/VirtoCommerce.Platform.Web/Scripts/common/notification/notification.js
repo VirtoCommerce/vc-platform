@@ -1,6 +1,6 @@
 ﻿angular.module('platformWebApp.notification', [
 	'platformWebApp.mainMenu',
-	'notifications.blades.history',
+	'platformWebApp.notifications.blades.history',
 	'platformWebApp.notification.resources',
 	'angularMoment'
 ])
