@@ -106,7 +106,7 @@
 
     $scope.bladeToolbarCommands = [
           {
-              name: "Refresh", icon: 'icon-spin',
+              name: "Refresh", icon: 'fa fa-refresh',
               executeMethod: function () {
                   $scope.blade.refresh();
               },
@@ -115,7 +115,7 @@
               }
           },
         {
-            name: "Add", icon: 'icon-plus',
+            name: "Add", icon: 'fa fa-plus',
             executeMethod: function () {
                 imports.new({ catalogId: $scope.blade.catalogId }, function (data) {
                     var newBlade = {
@@ -137,7 +137,7 @@
             }
         },
         {
-            name: "Manage", icon: 'icon-new-tab-2',
+            name: "Manage", icon: 'fa fa-edit',
             executeMethod: function () {
                 $scope.edit($scope.selectedItem);
             },
@@ -146,7 +146,7 @@
             }
         },
         {
-            name: "Run", icon: 'icon-enter',
+            name: "Run", icon: 'fa fa-sign-in',
             executeMethod: function () {
                 $scope.run($scope.selectedItem);
             },
@@ -155,7 +155,7 @@
             }
         },
         {
-            name: "Delete", icon: 'icon-remove',
+            name: "Delete", icon: 'fa fa-trash-o',
             executeMethod: function () {
                 deleteChecked();
             },

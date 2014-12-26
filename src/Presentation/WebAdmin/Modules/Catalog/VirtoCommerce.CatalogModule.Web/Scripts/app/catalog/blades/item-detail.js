@@ -102,7 +102,7 @@
 
     $scope.bladeToolbarCommands = [
 	 {
-	     name: "Save", icon: 'icon-floppy',
+	     name: "Save", icon: 'fa fa-save',
 	     executeMethod: function () {
 	         saveChanges();
 	     },
@@ -111,7 +111,7 @@
 	     }
 	 },
         {
-            name: "Reset", icon: 'icon-undo',
+            name: "Reset", icon: 'fa fa-undo',
             executeMethod: function () {
                 angular.copy($scope.currentBlade.origItem, $scope.currentBlade.item);
                 $scope.isTitular = $scope.currentBlade.item.titularItemId == null;
@@ -121,7 +121,7 @@
             }
         },
 	     {
-	         name: "New variation", icon: 'icon-plus',
+	         name: "New variation", icon: 'fa fa-plus',
 	         executeMethod: function () {
 
 	             items.newVariation({ itemId: $scope.currentBlade.item.id }, function (data, headers) {

@@ -190,7 +190,7 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
 
     $scope.bladeToolbarCommands = [
         {
-            name: "Add", icon: 'icon-plus',
+            name: "Add", icon: 'fa fa-plus',
             executeMethod: function () {
                 var newBlade = {
                     id: 'listItemChild',
@@ -207,7 +207,7 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
             }
         },
         {
-            name: "Manage", icon: 'icon-new-tab-2',
+            name: "Manage", icon: 'fa fa-edit',
             executeMethod: function () {
                 $scope.editCatalog(selectedNode);
             },
@@ -216,7 +216,7 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
             }
         },
         {
-            name: "Import", icon: 'icon-download-2',
+            name: "Import", icon: 'fa fa-download',
             executeMethod: function () {
                 $scope.import(selectedNode);
             },
@@ -225,7 +225,7 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
             }
         },
         {
-            name: "Export", icon: 'icon-upload-3',
+            name: "Export", icon: 'fa fa-upload',
             executeMethod: function () {
                 $scope.export(selectedNode);
             },
@@ -234,7 +234,7 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
             }
         },
       {
-          name: "Delete", icon: 'icon-remove',
+          name: "Delete", icon: 'fa fa-trash-o',
           executeMethod: function () {
               $scope.deleteCatalog(selectedNode);
           },

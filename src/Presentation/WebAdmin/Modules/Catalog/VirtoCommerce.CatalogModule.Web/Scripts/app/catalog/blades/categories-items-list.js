@@ -346,7 +346,7 @@
 
     $scope.bladeToolbarCommands = [
         {
-            name: "Refresh", icon: 'icon-spin',
+            name: "Refresh", icon: 'fa fa-refresh',
             executeMethod: function () {
                 $scope.blade.refresh();
             },
@@ -355,7 +355,7 @@
             }
         },
           {
-              name: "Add", icon: 'icon-plus',
+              name: "Add", icon: 'fa fa-plus',
               executeMethod: function () {
                   closeChildrenBlades();
 
@@ -374,7 +374,7 @@
               }
           },
             {
-                name: "Manage", icon: 'icon-new-tab-2',
+                name: "Manage", icon: 'fa fa-edit',
                 executeMethod: function () {
                     // selected OR the first checked listItem
                     edit($scope.selectedItem || _.find($scope.items, function (x) { return x.selected; }));
@@ -384,7 +384,7 @@
                 }
             },
             {
-                name: "Delete", icon: 'icon-remove',
+                name: "Delete", icon: 'fa fa-trash-o',
                 executeMethod: function () {
                     deleteChecked();
                 },
@@ -393,7 +393,7 @@
                 }
             },
             {
-                name: "Advanced search", icon: 'icon-search',
+                name: "Advanced search", icon: 'fa fa-search',
                 executeMethod: function () {
                     var newBlade = {
                         id: 'listItemChild',
@@ -415,7 +415,7 @@
         // mappingSource
         if ($scope.blade.mode === 'mappingSource') {
             var mapCommand = {
-                name: "Map", icon: 'icon-link',
+                name: "Map", icon: 'fa fa-link',
                 executeMethod: function () {
                     mapChecked();
                 },

@@ -2,10 +2,10 @@
         <li ng-repeat="data in objects" ng-class="{'active': data.id === selectedNodeId}" ng-click='selectNode(data)' context-menu data-target="cl_menu{{$index}}">
             <ul role="menu" class="dropdown-menu context-menu" id="cl_menu{{$index}}">
                 <li ng-click='editCatalog(data)'>
-                    <i class="ico icon-new-tab-2"></i> Manage
+                    <i class="ico fa fa-edit"></i> Manage
                 </li>
                 <li ng-click='deleteCatalog(data)'>
-                    <i class="ico icon-remove"></i> Delete
+                    <i class="ico fa fa-trash-o"></i> Delete
                 </li>
             </ul>
             <i class="ico" ng-class="data.virtual ? 'icon-layers' : 'icon-grid-view'"></i>
