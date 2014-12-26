@@ -1,6 +1,6 @@
 ﻿    <ul class="list-extended">
         <li ng-mouseup="addCategory()">
-            <i class="ico icon-folder-2"></i>
+            <i class="ico fa fa-folder-open-o"></i>
             <span class="title">Category</span>
             <span class="sub-title">A container for other Categories and Products or Variations.</span>
         </li>
@@ -10,12 +10,12 @@
             <span class="sub-title">A link to real Category or Product.</span>
         </li>
         <li ng-mouseup="addProduct()" ng-if="!blade.parentBlade.catalog.virtual">
-            <i class="ico icon-basket"></i>
+            <i class="ico fa fa-shopping-cart"></i>
             <span class="title">Product</span>
             <span class="sub-title">The main Variation. Can be used for targeted promotions.</span>
         </li>
         <li ng-mouseup="addVariation()" ng-if="!blade.parentBlade.catalog.virtual" ng-class="{'disabled':!blade.parentBlade.currentItemId}">
-            <i class="ico icon-barcode"></i>
+            <i class="ico fa fa-barcode"></i>
             <span class="title">Variation</span>
             <span class="sub-title">Represents orderable item of merchandise for sale. Contains details, such as names, description, images, prices and inventory information.</span>
         </li>

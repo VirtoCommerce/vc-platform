@@ -69,7 +69,7 @@ angular.module('platformWebApp', AppDependencies).
         var homeMenuItem = {
         	path: 'home',
         	title: 'Home',
-        	icon: 'glyphicon glyphicon-home',
+        	icon: 'fa fa-home',
         	action: function () { $state.go('workspace.catalog') },
            	priority: 0
         };
@@ -77,7 +77,7 @@ angular.module('platformWebApp', AppDependencies).
 
         var menuItem = {
         	path: 'browse',
-        	icon: 'glyphicon glyphicon-search',
+        	icon: 'fa fa-search',
         	title: 'Browse',
         	priority: 90,
         };
@@ -86,7 +86,7 @@ angular.module('platformWebApp', AppDependencies).
         var journeyMenuItem = {
         	path: 'active',
         	title: 'Active',
-        	icon: 'glyphicon glyphicon-tasks',
+        	icon: 'fa fa-tasks',
         	priority: 999
         };
         mainMenuService.addMenuItem(journeyMenuItem);

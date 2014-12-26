@@ -364,7 +364,8 @@
                       title: 'New category item',
                       subtitle: 'choose new item type',
                       controller: 'categoriesItemsAddController',
-                      template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/categories-items-add.tpl.html'
+                      template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/categories-items-add.tpl.html',
+					  isList: true
                   };
                   bladeNavigationService.showBlade(newBlade, $scope.blade);
               },

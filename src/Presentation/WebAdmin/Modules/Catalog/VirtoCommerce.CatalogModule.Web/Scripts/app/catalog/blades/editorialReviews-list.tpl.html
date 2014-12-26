@@ -1,8 +1,11 @@
-﻿<ul class="list-extended">
+﻿<ul class="list-extended" ng-if="blade.currentEntities.length">
     <li ng-click="openBlade(data)" ng-repeat="data in blade.currentEntities | orderBy:languageCode">
         <!--<p ng-bind-html="data.content"></p>-->
+        <i class="ico fa fa-comment-o"></i>
         <span class="title">{{data.content | limitTo:150}}</span>
         <span class="sub-title">{{data.languageCode}}</span>
     </li>
 </ul>
-<div ng-if="blade.currentEntities.length == 0" class="spacer">No Editorial Reviews yet</div>
+<div class="notice marker-on-left fg-white" ng-if="!blade.currentEntities.length">
+    <p>No Editorial Reviews yet</p>
+</div>

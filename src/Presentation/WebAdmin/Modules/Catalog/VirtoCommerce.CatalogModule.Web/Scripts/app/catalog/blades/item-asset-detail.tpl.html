@@ -4,15 +4,21 @@
 
                 <h3>Select files</h3>
 
-                <div ng-show="uploader.isHTML5">
+                <div ng-show="uploader.isHTML5" style="padding: 15px 0;">
                     <!-- 3. ng-file-over | ng-file-over="className" -->
-                    <div class="well my-drop-zone" uploader="uploader" nv-file-drop nv-file-over>
-                        Drag and drop files here
+                    <div class="well my-drop-zone panel" uploader="uploader" style="height: 80px;" nv-file-drop nv-file-over>
+                        <div class="panel-content">
+                            Drag and drop files here
+                        </div>
                     </div>
                 </div>
 
                 <!-- 2. ng-file-select | ng-file-select="options" -->
-                <input type="file" multiple uploader="uploader" nv-file-select>
+                <div data-role="input-control" class="input-control file">
+                    <input type="file" multiple uploader="uploader" nv-file-select style="z-index: 0;" tabindex="-1">
+                    <input type="text" style="z-index: 1; cursor: default;" readonly="">
+                    <button class="btn-file" type="button" onclick="$('input[type=file]').trigger('click')"></button>
+                </div>
 
 
                 <div class="col-md-12" style="margin-bottom: 40px">

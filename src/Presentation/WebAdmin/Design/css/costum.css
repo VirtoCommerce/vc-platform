@@ -18,6 +18,16 @@
 	padding: 10px;
 }
 
+.metro .notice
+{
+	margin: 0 20px;
+}
+
+.metro .notice *
+{
+	font-size: 14px;
+}
+
 .metro .input-control.text input
 {
 	font-family: inherit;
@@ -40,6 +50,26 @@
 	font-size: 14px;
 	font-family: inherit;
 	padding: 10px;
+}
+
+.metro form
+{
+	margin: 0 0 10px;
+}
+
+.metro .form
+{
+	margin: 0 20px 10px;
+}
+
+.blade form
+{
+	width: 355px;
+}
+
+.blade.blade-medium form
+{
+	width: 535px;
 }
 
 .search-count
@@ -186,14 +216,19 @@ p.subheader
 .metro .table td:last-child
 {
 	padding-right: 20px;
-	text-align: right;
 }
 
-.metro .table td.product-name
+.metro .table td.product-name,
+.metro .table td.product-id
 {
 	max-width: 250px;
 	overflow: hidden;
 	text-overflow: ellipsis;
+}
+
+.metro .table td.product-id
+{
+	max-width: 150px;
 }
 
 .metro .table thead th
@@ -394,7 +429,7 @@ p.subheader
 	left: 0;
 	position: fixed;
 	top: 0;
-	width: 85px;
+	width: 90px;
 	z-index: 800;
 
 	-webkit-box-shadow: 5px 0 0 rgba(31, 35, 39, .2);
@@ -410,6 +445,7 @@ p.subheader
 
 		.left-menu .block ul
 		{
+			list-style: none;
 			margin: 0;
 			padding: 0;
 		}
@@ -783,7 +819,9 @@ p.subheader
 
 			.left-menu ul
 			{
+				left: 0;
 				position: absolute;
+				right: 0;
 			}
 
 			.left-menu ul.top
@@ -796,27 +834,13 @@ p.subheader
 				bottom: 0;
 			}
 
-				.left-menu ul li
-				{
-					margin: 0 0 5px;
-					width: 85px;
-				}
-
-				.left-menu ul.bot li
-				{
-					margin: 0;
-				}
-
 					.left-menu ul li a
 					{
-						border-bottom: 1px solid #131617;
-						border-top: 1px solid #131617;
 						color: #8d9aa6;
 						display: block;
-						font-family: wf_segoe-ui_semibold,"Segoe UI Semibold","Segoe WP Semibold","Segoe UI","Segoe WP",Tahoma,Arial,sans-serif;
+						font-family: "Segoe UI";
 						font-size: 10px;
-						height: 85px;
-						padding: 20px 0 0;
+						padding: 20px 0;
 						position: relative;
 						text-align: center;
 						text-decoration: none;
@@ -829,9 +853,6 @@ p.subheader
 						-webkit-transition: all .09s ease-in 0s;
 						   -moz-transition: all .09s ease-in 0s;
 								transition: all .09s ease-in 0s;
-
-						-webkit-box-shadow: 0 1px #2e3639 inset;
-								box-shadow: 0 1px #2e3639 inset;
 					}
 
 					.left-menu ul.bot li a
@@ -882,7 +903,6 @@ p.subheader
 							display: inline-block;
 							height: 21px;
 							margin: 0 0 10px;
-							width: 21px;
 						}
 
 						.left-menu ul li a.positive .icon {
@@ -913,7 +933,15 @@ p.subheader
 							.left-menu ul li a .icon i
 							{
 								color: #fff;
-								font-size: 19px;
+								font-size: 21px;
+							}
+
+							.left-menu ul li a:hover,
+							.left-menu ul li a:hover .icon i,
+							.left-menu ul li.active a,
+							.left-menu ul li.active a .icon i
+							{
+								color: #2daded;
 							}
 
 							.msportalfx-svg-c01
@@ -956,19 +984,30 @@ p.subheader
 
 .metro .toolbar.transparent button:hover,
 .metro .toolbar .transparent button:hover,
-.metro .toolbar.transparent .button:hover,
-.metro .toolbar .transparent .button:hover
+.metro .toolbar.transparent button:hover .on-left,
+.metro .toolbar .transparent button:hover .on-left
 {
-	background: #fff;
+	background: none;
 	border: none;
+	color: #2daded;
 }
 
-.metro .blade-head .toolbar.transparent button:hover,
-.metro .blade-head .toolbar .transparent button:hover,
-.metro .blade-head .toolbar.transparent .button:hover,
-.metro .blade-head .toolbar .transparent .button:hover
+.metro .toolbar.transparent button.disabled:hover .on-left,
+.metro .toolbar .transparent button.disabled:hover .on-left
 {
-	background: #333;
+	color: #bebebe;
+}
+
+.metro .blade-head button:active
+{
+	background-color: transparent !important;
+	color: #2daded !important;
+}
+
+.metro .blade-head button:disabled:active,
+.metro .blade-head button.disabled:active
+{
+	color: #bebebe !important;
 }
 
 .clear
@@ -986,15 +1025,25 @@ p.subheader
 	color: #fff;
 }
 
+.metro .blade-head button:disabled,
+.metro .blade-head button:disabled:hover
+{
+	background: none;
+	opacity: .5;
+
+	filter: alpha(opacity=50);
+}
+
 .metro .blade-head button i
 {
 	display: block;
 }
 
 .metro button:disabled,
-.metro button.disabled
+.metro button.disabled,
+.metro button:disabled:hover
 {
-	color: #999 !important;
+	background: #eee;
 }
 
 .metro .input-control.switch .check:after
@@ -1006,7 +1055,7 @@ p.subheader
 
 .main-content
 {
-	left: 85px;
+	left: 90px;
 	overflow-x: auto;
 	overflow-y: hidden;
 	position: fixed;
@@ -1109,15 +1158,21 @@ p.subheader
 .grid-list > li:after,
 .list-extended > li:after
 {
-	content: '';
-	font-family: 'Iconfont';
-	font-size: 24px;
+	content: '';
+	font-family: 'FontAwesome';
+	font-size: 16px;
 	position: absolute;
 	right: 14px;
 	top: 50%;
 
 	-webkit-transform: translateY(-50%);
 			transform: translateY(-50%);
+}
+
+.grid-list > li.null:after,
+.list-extended > li.null:after
+{
+	content: '';
 }
 
 .grid-list li:hover,
@@ -1149,9 +1204,8 @@ p.subheader
 
 .list-extended > li .ico
 {
-	display: inline-block;
-	font-size: 30px;
-	height: 32px;
+	float: left;
+	font-size: 32px;
 	margin: 0 15px 0 0;
 	vertical-align: middle;
 }
@@ -1160,6 +1214,7 @@ p.subheader
 {
 	display: inline-block;
 	line-height: 1.2;
+	margin: 5px 0 0;
 	vertical-align: middle;
 }
 
@@ -1168,13 +1223,19 @@ p.subheader
 {
 	display: block;
 	line-height: 1.3;
-	margin: 0 20px 0 0;
+	margin: 0 30px 0 50px;
     white-space: normal;
 }
 
 .list-extended li .title
 {
 	color: #999;
+	font-size: 15px;
+}
+
+.list-extended li .sub-title
+{
+	font-size: 13px;
 }
 
 .metro .list-checkboxes
@@ -1266,14 +1327,14 @@ p.subheader
 	height: 100%;
 	position: relative;
 	vertical-align: top;
-	width: 410px;
+	width: 406px;
 	word-spacing: 0;
 	z-index: 500;
 }
 
-.blade .blade-stack
+.blade.gray
 {
-	width: 380px;
+	background: #eee;
 }
 
 .blade-stack .blade-content
@@ -1283,17 +1344,17 @@ p.subheader
 
 .blade.blade-medium
 {
-	width: 560px;
-}
-
-.blade.blade-medium.blade-stack
-{
-	width: 530px;
+	width: 586px;
 }
 
 .blade.last-child
 {
-	margin-right:85px;
+	margin-right: 85px;
+}
+
+.blade > div
+{
+	height: inherit;
 }
 
 .blade-head
@@ -1301,7 +1362,7 @@ p.subheader
 	background: #222;
 	border-bottom: 1px solid #eee;
 	height: 155px;
-	padding: 40px 0 5px;
+	padding: 35px 0 5px;
 	position: relative;
     min-width: 300px;
 
@@ -1377,7 +1438,7 @@ p.subheader
 {
 	height: 42px;
 	left: 20px;
-	padding: 0 0 0 50px;
+	padding: 0 0 0 60px;
 	position: absolute;
 	right: 20px;
 }
@@ -1385,49 +1446,42 @@ p.subheader
 .blade-head .title i
 {
 	color: #fff;
-    font-size: 24px;
+    font-size: 32px;
     left: 10px;
     position: absolute;
-    top: 50%;
-
-    -webkit-transform: translateY(-50%);
-    		transform: translateY(-50%);
-}
-
-.blade-title,
-.blade-subtitle
-{
-	color: #fff !important;
+    top: 8px;
 }
 
 .blade-title.subheader
 {
-	font-size: 20px;
-	height: 28px;
-	margin: 0;
+	color: #fff;
+	font-size: 16px;
+	line-height: 1.4;
+	margin: 14px 0 2px;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
 
+.blade-head .title.secondary .subheader
+{
+	margin: 4px 0 2px;
+}
+
 .blade-subtitle.subheader-secondary
 {
-	font-size: 14px;
-	height: 14px;
+	color: #bbb;
+	font-size: 12px;
 	line-height: 1;
 	margin: 0;
 	top: 70px;
 }
 
-/*.blade-title.subheader,
+.blade-title.subheader,
 .blade-subtitle.subheader-secondary
 {
-	margin: 0 120px 10px 0;
-	max-width: 226px;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-}*/
+	font-family: 'Segoe UI';
+}
 
 .blade-head-nav
 {
@@ -1441,6 +1495,9 @@ p.subheader
 .blade-head .progress ~ .blade-head-nav .btn-max:after
 {
 	border-color: #fff;
+
+	-webkit-box-sizing: content-box;
+			box-sizing: content-box;
 }
 
 .blade-head-nav .btn-min,
@@ -1536,12 +1593,26 @@ p.subheader
 	bottom: 0;
 	height: 48px;
 	left: 0;
-	padding: 5px 100px 0 15px;
+	padding: 1px 100px 0 20px;
 	position: absolute;
 	right: 0;
 
 	-webkit-box-shadow: 0 1px #111 inset;
 			box-shadow: 0 1px #111 inset;
+}
+
+.metro .toolbar button,
+.metro .toolbar .button
+{
+	font-family: 'Segoe UI';
+	font-size: 12px;
+	padding: 9px 10px;
+}
+
+.metro .blade-head button .on-left
+{
+	font-size: 16px;
+	margin: 0 0 5px;
 }
 
 .blade-switch
@@ -1572,11 +1643,6 @@ p.subheader
 
 	-webkit-box-sizing: border-box;
 			box-sizing: border-box;
-}
-
-.blade-content.gray
-{
-	background: #eee;
 }
 
 .blade-actions
@@ -1813,7 +1879,7 @@ p.subheader
 .tiles .tile a
 {
 	font-size: 14px;
-	line-height: inherit;
+	line-height: 1;
 }
 
 .tiles .tile .list
@@ -1842,8 +1908,10 @@ p.subheader
 
 .tiles .tile img
 {
-	display: block;
+	display: inline-block;
+	margin: -2px 0 0;
 	max-width: 100%;
+	vertical-align: middle;
 }
 
 .tiles .tile .big

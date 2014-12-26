@@ -47,12 +47,22 @@ ul.tiles img
 
 .tiles .tile
 {
+	border: 2px solid #eee;
 	height: 175px;
+	line-height: 175px;
 	margin: 0;
 	width: 175px;
 
 	-webkit-box-sizing: border-box;
 			box-sizing: border-box;
+}
+
+.tile-block.nobg .tile
+{
+	background: none;
+
+	-webkit-box-shadow: none;
+			box-shadow: none;
 }
 
 .tiles .tile .title
@@ -128,6 +138,7 @@ ul.tiles img
 .tiles .tile-block.mini .tile
 {
 	height: 85px;
+	line-height: 85px;
 	text-align: center;
 	width: 85px;
 }
@@ -213,10 +224,8 @@ ul.tiles img
 
 .metro .tile:hover
 {
+	border-color: #ccc;
 	outline: none;
-
-	-webkit-box-shadow: 0 0 0 2px #ccc inset;
-			box-shadow: 0 0 0 2px #ccc inset;
 }
 
 .images-list
@@ -236,9 +245,9 @@ ul.tiles img
 
 .images-list .image img
 {
-	display: block;
-	max-height: 100%;
+	display: inline-block;
 	max-width: 100%;
+	vertical-align: middle;
 }
 
 .images-list .image .ico

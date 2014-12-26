@@ -41,7 +41,7 @@
                 </td>
                 <td ng-click='selectItem($event, data)' class="product-name">
                     <span ng-if="hasLinks(data)"><i class="icon-link" style="font-size: 18px" />&nbsp;</span>
-                    <i ng-class="{'icon-folder-2': data.type==='category', 'icon-basket': data.type==='product', 'icon-barcode': data.type==='variation'}" style="font-size: 18px" />&nbsp;
+                    <i ng-class="{'fa fa-folder-open-o': data.type==='category', 'fa fa-shopping-cart': data.type==='product', 'fa fa-barcode': data.type==='variation'}" />&nbsp;
                     <span title="{{data.name}}">{{data.name}}</span>
                     <ul role="menu" class="dropdown-menu context-menu" id="cil_menu_{{data.id+blade.level}}">
                         <li ng-click='edit(data)'>
