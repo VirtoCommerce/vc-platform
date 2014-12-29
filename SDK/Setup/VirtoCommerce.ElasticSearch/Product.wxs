@@ -104,11 +104,11 @@
 				<File Id="plugin.bat" Source="$(var.SearchDataFolder)\bin\plugin.bat" Checksum="yes" KeyPath="yes" Vital="yes" />
 			</Component>
 			<Component Id="elasticsearchw.exe" Guid="17E3AD52-5382-40C9-8323-9CC5AC3AF3FC">
-				<?if $(var.Platform) = x64 ?>
+				<!--<?if $(var.Platform) = x64 ?>
 				<File Id="elasticsearchw.exe" Name="elasticsearchw.exe" Source="$(var.SearchDataFolder)\bin\x64\elasticsearchw.exe" Checksum="yes" KeyPath="yes" Vital="yes" />
-				<?else ?>
+				<?else ?>-->
 				<File Id="elasticsearchw.exe" Name="elasticsearchw.exe" Source="$(var.SearchDataFolder)\bin\x86\elasticsearchw.exe" Checksum="yes" KeyPath="yes" Vital="yes" />
-				<?endif?>
+				<!--<?endif?>-->
 				<!--
         <util:User Id="UserToCheckOrCreate" Name="elasticsearch" LogonAsService="yes" Password="Pa55w0rd" CreateUser="yes" UpdateIfExists="yes" PasswordNeverExpires="yes" PasswordExpired="no" RemoveOnUninstall="yes" />
         -->
@@ -153,8 +153,8 @@
 		</ComponentGroup>
 
 		<!--$(var.SearchDataFolder)\lib is the directory to regenerate -->
-		<!--<ComponentGroup Id="lib" Directory="lib">
-			<Component Id="elasticsearch.jar" Guid="71110682-2768-49E6-997E-724C6F94C773">
+		<ComponentGroup Id="lib" Directory="lib">
+			<!--<Component Id="elasticsearch.jar" Guid="71110682-2768-49E6-997E-724C6F94C773">
 				<File Id="elasticsearch.jar" Source="$(var.SearchDataFolder)\lib\elasticsearch-0.20.5.jar" Checksum="yes" KeyPath="yes" Vital="yes" />
 			</Component>
 			<Component Id="lucenehighlighter.jar" Guid="499AABC0-AAA1-4C32-ABC6-E6EF0A970BF2">
@@ -189,11 +189,11 @@
 			</Component>
 			<Component Id="elasticsearchwuninstall.cmd" Guid="A268F3CC-FA5F-4808-B0F6-6A2B57BA722F">
 				<File Id="elasticsearchwuninstall.cmd" Source="$(var.SearchDataFolder)\lib\elasticsearchw-uninstall.cmd" Checksum="yes" KeyPath="yes" Vital="yes" />
-			</Component>
+			</Component>-->
 		</ComponentGroup>
 
 		<ComponentGroup Id="sigar" Directory="sigar">
-			<Component Id="sigar.jar" Guid="5958BD8F-009C-4D57-A699-94C289C7D74E">
+			<!--<Component Id="sigar.jar" Guid="5958BD8F-009C-4D57-A699-94C289C7D74E">
 				<File Id="sigar.jar" Source="$(var.SearchDataFolder)\lib\sigar\sigar-1.6.4.jar" Checksum="yes" KeyPath="yes" Vital="yes" />
 			</Component>
 			<Component Id="sigaramd64winnt.dll" Guid="EB2DCD10-241B-4540-AAA4-AD75A266F52B">
@@ -201,8 +201,8 @@
 			</Component>
 			<Component Id="sigarx86winnt.dll" Guid="1656D797-54D8-4964-AC3D-EFE7AA5926FB">
 				<File Id="sigarx86winnt.dll" Source="$(var.SearchDataFolder)\lib\sigar\sigar-x86-winnt.dll" Checksum="yes" KeyPath="yes" Vital="yes" />
-			</Component>
-		</ComponentGroup>-->
+			</Component>-->
+		</ComponentGroup>
 
 		<!--
     <Component Id="service" Guid="B30BC1EA-300B-4A52-BFF4-E5D1C35519CC">
