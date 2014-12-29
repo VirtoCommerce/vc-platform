@@ -7,23 +7,23 @@
 		<Package InstallerVersion="200" Platform="$(sys.BUILDARCH)" InstallPrivileges="elevated" Compressed="yes" InstallScope="perMachine" />
 
 		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." AllowSameVersionUpgrades="yes"/>
-   
-    <Property Id="ARPSYSTEMCOMPONENT" Value="1" />
-    
+
+		<Property Id="ARPSYSTEMCOMPONENT" Value="1" />
+
 		<Feature Id="ProductFeature" Title="Virto Commerce Search $(var.DisplayVersion)" Level="1">
 			<ComponentGroupRef Id="bin" />
-      <ComponentGroupRef Id="lib" />
-      <ComponentGroupRef Id="config" />
-      <ComponentGroupRef Id="sigar" />
-      <!--
+			<ComponentGroupRef Id="lib" />
+			<ComponentGroupRef Id="config" />
+			<ComponentGroupRef Id="sigar" />
+			<!--
       <ComponentRef Id="service"/>
       -->
-    </Feature>
+		</Feature>
 
-    <Media Id="1" Cabinet="search.cab" EmbedCab="yes" CompressionLevel="high" />
-    
-    <!-- now configure the service -->   
-    <!--
+		<Media Id="1" Cabinet="search.cab" EmbedCab="yes" CompressionLevel="high" />
+
+		<!-- now configure the service -->
+		<!--
     <CustomAction Id="ConfigureService_Helper" Property="ConfigureService" Value="&quot;[WindowsFolder]system32\cmd.exe&quot; &quot;[lib]elasticsearchw-update.cmd&quot;" Execute="immediate"/>
     <?if $(var.Platform) = x64 ?>
       <CustomAction Id="ConfigureService" BinaryKey="WixCA" DllEntry="CAQuietExec64" Execute="deferred" Return="ignore"/>
@@ -38,13 +38,13 @@
       <CustomAction Id="UninstallService" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore"/>
     <?endif ?>
     -->
-    <!-- working but showing -->
-    <CustomAction Id="ConfigureService" Directory="lib" Execute="deferred" ExeCommand="[lib]elasticsearchw-update.cmd" Return="ignore"/>
-    <CustomAction Id="UninstallService" Directory="lib" Execute="immediate" ExeCommand="[lib]elasticsearchw-uninstall.cmd" Return="ignore"/>
+		<!-- working but showing -->
+		<CustomAction Id="ConfigureService" Directory="lib" Execute="deferred" ExeCommand="[lib]elasticsearchw-update.cmd" Return="ignore"/>
+		<CustomAction Id="UninstallService" Directory="lib" Execute="immediate" ExeCommand="[lib]elasticsearchw-uninstall.cmd" Return="ignore"/>
 
-    <InstallExecuteSequence>
-      <!-- Services -->
-      <!--
+		<InstallExecuteSequence>
+			<!-- Services -->
+			<!--
       <Custom Action="ConfigureService_Helper" After="CostFinalize">
         <![CDATA[NOT Installed]]>
       </Custom>
@@ -58,155 +58,156 @@
         <![CDATA[(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")]]>
       </Custom>
       -->
-      <!-- working but showing -->
-      <Custom Action="UninstallService" After="StartServices">
-        (NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")
-      </Custom>        
-      <Custom Action="ConfigureService" After="InstallFiles">
-        NOT Installed
-      </Custom>
-    </InstallExecuteSequence>
-  </Product>
+			<!-- working but showing -->
+			<Custom Action="UninstallService" After="StartServices">
+				(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")
+			</Custom>
+			<Custom Action="ConfigureService" After="InstallFiles">
+				NOT Installed
+			</Custom>
+		</InstallExecuteSequence>
+	</Product>
 
 	<Fragment>
-    <?if $(var.Platform) = x64 ?>
-      <?define PlatformProgramFilesFolder = "ProgramFiles64Folder" ?>
-    <?else ?>
-      <?define PlatformProgramFilesFolder = "ProgramFilesFolder" ?>
-    <?endif?>
+		<?if $(var.Platform) = x64 ?>
+		<?define PlatformProgramFilesFolder = "ProgramFiles64Folder" ?>
+		<?else ?>
+		<?define PlatformProgramFilesFolder = "ProgramFilesFolder" ?>
+		<?endif?>
 
-    <?define SearchDataFolder = "$(var.ProjectDir)Distro" ?>
+		<?define SearchDataFolder = "$(var.ProjectDir)Distro" ?>
 
-    <Directory Id="TARGETDIR" Name="SourceDir">
-      <Directory Id="$(var.PlatformProgramFilesFolder)">
-        <Directory Id="INSTALLFOLDER" Name="VirtoCommerce 1.0">
-          <Directory Id="INSTALLFOLDER_SEARCH" Name="ElasticSearch">
-            <Directory Id="bin" Name="bin"/>
-            <Directory Id="config" Name="config"/>
-            <Directory Id="lib" Name="lib">
-              <Directory Id="sigar" Name="sigar"></Directory>
-            </Directory>
-            <Directory Id="data" Name="data"/>
-            <Directory Id="logs" Name="logs"/>
-          </Directory>
-        </Directory>
-      </Directory>
-    </Directory>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="$(var.PlatformProgramFilesFolder)">
+				<Directory Id="INSTALLFOLDER" Name="VirtoCommerce 1.0">
+					<Directory Id="INSTALLFOLDER_SEARCH" Name="ElasticSearch">
+						<Directory Id="bin" Name="bin"/>
+						<Directory Id="config" Name="config"/>
+						<Directory Id="lib" Name="lib">
+							<Directory Id="sigar" Name="sigar"></Directory>
+						</Directory>
+						<Directory Id="data" Name="data"/>
+						<Directory Id="logs" Name="logs"/>
+					</Directory>
+				</Directory>
+			</Directory>
+		</Directory>
 
-  </Fragment>
+	</Fragment>
 
 	<Fragment>
 		<ComponentGroup Id="bin" Directory="bin">
 			<Component Id="elasticsearch.bat" Guid="E1D18CB5-7033-43C1-9A2C-86A77C9940DD">
-        <File Id="elasticsearch.bat" Source="$(var.SearchDataFolder)\bin\elasticsearch.bat" Checksum="yes" KeyPath="yes" Vital="yes" />
+				<File Id="elasticsearch.bat" Source="$(var.SearchDataFolder)\bin\elasticsearch.bat" Checksum="yes" KeyPath="yes" Vital="yes" />
 			</Component>
-      <Component Id="plugin.bat" Guid="3439347A-10E1-49D9-8872-C2EF34E150AE">
-        <File Id="plugin.bat" Source="$(var.SearchDataFolder)\bin\plugin.bat" Checksum="yes" KeyPath="yes" Vital="yes" />
-      </Component>
-      <Component Id="elasticsearchw.exe" Guid="17E3AD52-5382-40C9-8323-9CC5AC3AF3FC">
-        <?if $(var.Platform) = x64 ?>
-          <File Id="elasticsearchw.exe" Name="elasticsearchw.exe" Source="$(var.SearchDataFolder)\bin\x64\elasticsearchw.exe" Checksum="yes" KeyPath="yes" Vital="yes" />
-        <?else ?>
-          <File Id="elasticsearchw.exe" Name="elasticsearchw.exe" Source="$(var.SearchDataFolder)\bin\x86\elasticsearchw.exe" Checksum="yes" KeyPath="yes" Vital="yes" />
-        <?endif?>        
-        <!--
+			<Component Id="plugin.bat" Guid="3439347A-10E1-49D9-8872-C2EF34E150AE">
+				<File Id="plugin.bat" Source="$(var.SearchDataFolder)\bin\plugin.bat" Checksum="yes" KeyPath="yes" Vital="yes" />
+			</Component>
+			<Component Id="elasticsearchw.exe" Guid="17E3AD52-5382-40C9-8323-9CC5AC3AF3FC">
+				<?if $(var.Platform) = x64 ?>
+				<File Id="elasticsearchw.exe" Name="elasticsearchw.exe" Source="$(var.SearchDataFolder)\bin\x64\elasticsearchw.exe" Checksum="yes" KeyPath="yes" Vital="yes" />
+				<?else ?>
+				<File Id="elasticsearchw.exe" Name="elasticsearchw.exe" Source="$(var.SearchDataFolder)\bin\x86\elasticsearchw.exe" Checksum="yes" KeyPath="yes" Vital="yes" />
+				<?endif?>
+				<!--
         <util:User Id="UserToCheckOrCreate" Name="elasticsearch" LogonAsService="yes" Password="Pa55w0rd" CreateUser="yes" UpdateIfExists="yes" PasswordNeverExpires="yes" PasswordExpired="no" RemoveOnUninstall="yes" />
         -->
 
-        <!-- now install the service -->
-        <ServiceInstall
-                      Id="virtocommerce.elasticsearch"
-                      Type="ownProcess"
-                      Vital="yes"
-                      Name="VirtoCommerce.ElasticSearch"
-                      DisplayName="Virto Commerce $(var.DisplayVersion) Search"
-                      Description="Virto Commerce Elastic Search Engine"
-                      Start="auto"
-                      Arguments="//RS//Virtocommerce.Elasticsearch"
-                      Account="LocalSystem"
-                      ErrorControl="ignore"
-                      Interactive="no">
-            <util:PermissionEx User="Everyone" ServiceStart="yes"
-                ServiceStop="yes"
-                ServicePauseContinue="yes"
-                ServiceInterrogate="yes"
-                ServiceChangeConfig="yes"
-                ServiceEnumerateDependents="yes"
-                ServiceQueryConfig="yes"
-                ServiceQueryStatus="yes"
-                ServiceUserDefinedControl="yes">
-            </util:PermissionEx>
-        </ServiceInstall>
+				<!-- now install the service -->
+				<ServiceInstall
+							  Id="virtocommerce.elasticsearch"
+							  Type="ownProcess"
+							  Vital="yes"
+							  Name="VirtoCommerce.ElasticSearch"
+							  DisplayName="Virto Commerce $(var.DisplayVersion) Search"
+							  Description="Virto Commerce Elastic Search Engine"
+							  Start="auto"
+							  Arguments="//RS//Virtocommerce.Elasticsearch"
+							  Account="LocalSystem"
+							  ErrorControl="ignore"
+							  Interactive="no">
+					<util:PermissionEx User="Everyone" ServiceStart="yes"
+						ServiceStop="yes"
+						ServicePauseContinue="yes"
+						ServiceInterrogate="yes"
+						ServiceChangeConfig="yes"
+						ServiceEnumerateDependents="yes"
+						ServiceQueryConfig="yes"
+						ServiceQueryStatus="yes"
+						ServiceUserDefinedControl="yes">
+					</util:PermissionEx>
+				</ServiceInstall>
 
-        <!-- now start the service -->
-        <ServiceControl Id="virtocommerce.elasticsearch.start" Start="install" Stop="both" Remove="uninstall" Name="VirtoCommerce.ElasticSearch" Wait="yes" />
-      </Component>
-    </ComponentGroup>
+				<!-- now start the service -->
+				<ServiceControl Id="virtocommerce.elasticsearch.start" Start="install" Stop="both" Remove="uninstall" Name="VirtoCommerce.ElasticSearch" Wait="yes" />
+			</Component>
+		</ComponentGroup>
 
-    <ComponentGroup Id="config" Directory="config">
-      <Component Id="elasticsearch.yml" Guid="E65CFBA7-1732-4DB7-B3F7-CBF99A432063">
-        <File Id="elasticsearch.yml" Source="$(var.SearchDataFolder)\config\elasticsearch.yml" Checksum="yes" KeyPath="yes" Vital="yes" />
-      </Component>
-      <Component Id="logging.yml" Guid="F0E375C0-457B-4329-B532-B5EAC5CE3148">
-        <File Id="logging.yml" Source="$(var.SearchDataFolder)\config\logging.yml" Checksum="yes" KeyPath="yes" Vital="yes" />
-      </Component>
-    </ComponentGroup>
+		<ComponentGroup Id="config" Directory="config">
+			<Component Id="elasticsearch.yml" Guid="E65CFBA7-1732-4DB7-B3F7-CBF99A432063">
+				<File Id="elasticsearch.yml" Source="$(var.SearchDataFolder)\config\elasticsearch.yml" Checksum="yes" KeyPath="yes" Vital="yes" />
+			</Component>
+			<Component Id="logging.yml" Guid="F0E375C0-457B-4329-B532-B5EAC5CE3148">
+				<File Id="logging.yml" Source="$(var.SearchDataFolder)\config\logging.yml" Checksum="yes" KeyPath="yes" Vital="yes" />
+			</Component>
+		</ComponentGroup>
 
-    <ComponentGroup Id="lib" Directory="lib">
-      <Component Id="elasticsearch.jar" Guid="71110682-2768-49E6-997E-724C6F94C773">
-        <File Id="elasticsearch.jar" Source="$(var.SearchDataFolder)\lib\elasticsearch-0.20.5.jar" Checksum="yes" KeyPath="yes" Vital="yes" />
-      </Component>
-      <Component Id="lucenehighlighter.jar" Guid="499AABC0-AAA1-4C32-ABC6-E6EF0A970BF2">
-        <File Id="lucenehighlighter.jar" Source="$(var.SearchDataFolder)\lib\lucene-highlighter-3.6.2.jar" Checksum="yes" KeyPath="yes" Vital="yes" />
-      </Component>
-      <Component Id="lucenememory.jar" Guid="A43B68AB-04CC-4C4D-8DEE-6F5F07D1F5F2">
-        <File Id="lucenememory.jar" Source="$(var.SearchDataFolder)\lib\lucene-memory-3.6.2.jar" Checksum="yes" KeyPath="yes" Vital="yes" />
-      </Component>
-      <Component Id="lucenequeries.jar" Guid="1F83A062-CFC0-4FA0-888A-16A14936D329">
-        <File Id="lucenequeries.jar" Source="$(var.SearchDataFolder)\lib\lucene-queries-3.6.2.jar" Checksum="yes" KeyPath="yes" Vital="yes" />
-      </Component>
-      <Component Id="luceneanalyzers.jar" Guid="717C2F6D-EA19-4D45-AD4A-7469691DE756">
-        <File Id="luceneanalyzers.jar" Source="$(var.SearchDataFolder)\lib\lucene-analyzers-3.6.2.jar" Checksum="yes" KeyPath="yes" Vital="yes" />
-      </Component>
-      <Component Id="lucenecore.jar" Guid="90276C9D-6254-4297-915B-3118BFF48B74">
-        <File Id="lucenecore.jar" Source="$(var.SearchDataFolder)\lib\lucene-core-3.6.2.jar" Checksum="yes" KeyPath="yes" Vital="yes" />
-      </Component>
-      <Component Id="elasticsearchw.jar" Guid="A7DE7803-E54C-437D-821D-614C0DE7A654">
-        <File Id="elasticsearchw.jar" Source="$(var.SearchDataFolder)\lib\elasticsearchw.jar" Checksum="yes" KeyPath="yes" Vital="yes" />
-      </Component>
-      <Component Id="jna.jar" Guid="CCE8A6FF-E232-4372-BABE-A99B84B237E4">
-        <File Id="jna.jar" Source="$(var.SearchDataFolder)\lib\jna-3.3.0.jar" Checksum="yes" KeyPath="yes" Vital="yes" />
-      </Component>
-      <Component Id="log4j.jar" Guid="2C59B4AB-7FB8-4333-8C4E-5DF808CF3FD1">
-        <File Id="log4j.jar" Source="$(var.SearchDataFolder)\lib\log4j-1.2.17.jar" Checksum="yes" KeyPath="yes" Vital="yes" />
-      </Component>
-      <Component Id="snappyjava.jar" Guid="3CE0475C-35D9-49B8-8945-65A72A6AB5C7">
-        <File Id="snappyjava.jar" Source="$(var.SearchDataFolder)\lib\snappy-java-1.0.4.1.jar" Checksum="yes" KeyPath="yes" Vital="yes" />
-      </Component>
-      <Component Id="elasticsearchwupdate.cmd" Guid="6676C4EA-C03E-4114-AFC5-23E8BF10AC15">
-        <File Id="elasticsearchwupdate.cmd" Source="$(var.SearchDataFolder)\lib\elasticsearchw-update.cmd" Checksum="yes" KeyPath="yes" Vital="yes" />
-      </Component>
-      <Component Id="elasticsearchwuninstall.cmd" Guid="A268F3CC-FA5F-4808-B0F6-6A2B57BA722F">
-        <File Id="elasticsearchwuninstall.cmd" Source="$(var.SearchDataFolder)\lib\elasticsearchw-uninstall.cmd" Checksum="yes" KeyPath="yes" Vital="yes" />
-      </Component>
-    </ComponentGroup>
+		<!--$(var.SearchDataFolder)\lib is the directory to regenerate -->
+		<!--<ComponentGroup Id="lib" Directory="lib">
+			<Component Id="elasticsearch.jar" Guid="71110682-2768-49E6-997E-724C6F94C773">
+				<File Id="elasticsearch.jar" Source="$(var.SearchDataFolder)\lib\elasticsearch-0.20.5.jar" Checksum="yes" KeyPath="yes" Vital="yes" />
+			</Component>
+			<Component Id="lucenehighlighter.jar" Guid="499AABC0-AAA1-4C32-ABC6-E6EF0A970BF2">
+				<File Id="lucenehighlighter.jar" Source="$(var.SearchDataFolder)\lib\lucene-highlighter-3.6.2.jar" Checksum="yes" KeyPath="yes" Vital="yes" />
+			</Component>
+			<Component Id="lucenememory.jar" Guid="A43B68AB-04CC-4C4D-8DEE-6F5F07D1F5F2">
+				<File Id="lucenememory.jar" Source="$(var.SearchDataFolder)\lib\lucene-memory-3.6.2.jar" Checksum="yes" KeyPath="yes" Vital="yes" />
+			</Component>
+			<Component Id="lucenequeries.jar" Guid="1F83A062-CFC0-4FA0-888A-16A14936D329">
+				<File Id="lucenequeries.jar" Source="$(var.SearchDataFolder)\lib\lucene-queries-3.6.2.jar" Checksum="yes" KeyPath="yes" Vital="yes" />
+			</Component>
+			<Component Id="luceneanalyzers.jar" Guid="717C2F6D-EA19-4D45-AD4A-7469691DE756">
+				<File Id="luceneanalyzers.jar" Source="$(var.SearchDataFolder)\lib\lucene-analyzers-3.6.2.jar" Checksum="yes" KeyPath="yes" Vital="yes" />
+			</Component>
+			<Component Id="lucenecore.jar" Guid="90276C9D-6254-4297-915B-3118BFF48B74">
+				<File Id="lucenecore.jar" Source="$(var.SearchDataFolder)\lib\lucene-core-3.6.2.jar" Checksum="yes" KeyPath="yes" Vital="yes" />
+			</Component>
+			<Component Id="elasticsearchw.jar" Guid="A7DE7803-E54C-437D-821D-614C0DE7A654">
+				<File Id="elasticsearchw.jar" Source="$(var.SearchDataFolder)\lib\elasticsearchw.jar" Checksum="yes" KeyPath="yes" Vital="yes" />
+			</Component>
+			<Component Id="jna.jar" Guid="CCE8A6FF-E232-4372-BABE-A99B84B237E4">
+				<File Id="jna.jar" Source="$(var.SearchDataFolder)\lib\jna-3.3.0.jar" Checksum="yes" KeyPath="yes" Vital="yes" />
+			</Component>
+			<Component Id="log4j.jar" Guid="2C59B4AB-7FB8-4333-8C4E-5DF808CF3FD1">
+				<File Id="log4j.jar" Source="$(var.SearchDataFolder)\lib\log4j-1.2.17.jar" Checksum="yes" KeyPath="yes" Vital="yes" />
+			</Component>
+			<Component Id="snappyjava.jar" Guid="3CE0475C-35D9-49B8-8945-65A72A6AB5C7">
+				<File Id="snappyjava.jar" Source="$(var.SearchDataFolder)\lib\snappy-java-1.0.4.1.jar" Checksum="yes" KeyPath="yes" Vital="yes" />
+			</Component>
+			<Component Id="elasticsearchwupdate.cmd" Guid="6676C4EA-C03E-4114-AFC5-23E8BF10AC15">
+				<File Id="elasticsearchwupdate.cmd" Source="$(var.SearchDataFolder)\lib\elasticsearchw-update.cmd" Checksum="yes" KeyPath="yes" Vital="yes" />
+			</Component>
+			<Component Id="elasticsearchwuninstall.cmd" Guid="A268F3CC-FA5F-4808-B0F6-6A2B57BA722F">
+				<File Id="elasticsearchwuninstall.cmd" Source="$(var.SearchDataFolder)\lib\elasticsearchw-uninstall.cmd" Checksum="yes" KeyPath="yes" Vital="yes" />
+			</Component>
+		</ComponentGroup>
 
-    <ComponentGroup Id="sigar" Directory="sigar">
-      <Component Id="sigar.jar" Guid="5958BD8F-009C-4D57-A699-94C289C7D74E">
-        <File Id="sigar.jar" Source="$(var.SearchDataFolder)\lib\sigar\sigar-1.6.4.jar" Checksum="yes" KeyPath="yes" Vital="yes" />
-      </Component>
-      <Component Id="sigaramd64winnt.dll" Guid="EB2DCD10-241B-4540-AAA4-AD75A266F52B">
-        <File Id="sigaramd64winnt.dll" Source="$(var.SearchDataFolder)\lib\sigar\sigar-amd64-winnt.dll" Checksum="yes" KeyPath="yes" Vital="yes" />
-      </Component>
-      <Component Id="sigarx86winnt.dll" Guid="1656D797-54D8-4964-AC3D-EFE7AA5926FB">
-        <File Id="sigarx86winnt.dll" Source="$(var.SearchDataFolder)\lib\sigar\sigar-x86-winnt.dll" Checksum="yes" KeyPath="yes" Vital="yes" />
-      </Component>
-    </ComponentGroup>
+		<ComponentGroup Id="sigar" Directory="sigar">
+			<Component Id="sigar.jar" Guid="5958BD8F-009C-4D57-A699-94C289C7D74E">
+				<File Id="sigar.jar" Source="$(var.SearchDataFolder)\lib\sigar\sigar-1.6.4.jar" Checksum="yes" KeyPath="yes" Vital="yes" />
+			</Component>
+			<Component Id="sigaramd64winnt.dll" Guid="EB2DCD10-241B-4540-AAA4-AD75A266F52B">
+				<File Id="sigaramd64winnt.dll" Source="$(var.SearchDataFolder)\lib\sigar\sigar-amd64-winnt.dll" Checksum="yes" KeyPath="yes" Vital="yes" />
+			</Component>
+			<Component Id="sigarx86winnt.dll" Guid="1656D797-54D8-4964-AC3D-EFE7AA5926FB">
+				<File Id="sigarx86winnt.dll" Source="$(var.SearchDataFolder)\lib\sigar\sigar-x86-winnt.dll" Checksum="yes" KeyPath="yes" Vital="yes" />
+			</Component>
+		</ComponentGroup>-->
 
-    <!--
+		<!--
     <Component Id="service" Guid="B30BC1EA-300B-4A52-BFF4-E5D1C35519CC">
 
     </Component>
     -->
-  </Fragment>
+	</Fragment>
 </Wix>
