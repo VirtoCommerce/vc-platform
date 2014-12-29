@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Text;
 
@@ -62,5 +64,11 @@ namespace VirtoCommerce.Foundation.Frameworks
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
 		IQueryable<T> GetAsQueryable<T>() where T : class;
+
+        /// <summary>
+        /// Refreshes the specified collection.
+        /// </summary>
+        /// <param name="collection">The collection.</param>
+        void Refresh(IEnumerable collection);
 	}
 }

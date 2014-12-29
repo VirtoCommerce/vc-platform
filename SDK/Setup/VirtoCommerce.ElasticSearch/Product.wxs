@@ -4,14 +4,14 @@
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util='http://schemas.microsoft.com/wix/UtilExtension'>
   <Product Id="C153F4D9-D606-49B0-80AE-799FDC059ACF" Name="Virto Commerce Search $(var.DisplayVersion)" Language="1033" Version="$(var.ProductVersion)" UpgradeCode="$(var.UpgradeCode)" Manufacturer="VirtoCommerce">
-    <Package InstallerVersion="200" Platform="$(sys.BUILDARCH)" InstallPrivileges="elevated" Compressed="yes" InstallScope="perMachine" />
+		<Package InstallerVersion="200" Platform="$(sys.BUILDARCH)" InstallPrivileges="elevated" Compressed="yes" InstallScope="perMachine" />
 
-    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." AllowSameVersionUpgrades="yes"/>
-
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." AllowSameVersionUpgrades="yes"/>
+   
     <Property Id="ARPSYSTEMCOMPONENT" Value="1" />
-
-    <Feature Id="ProductFeature" Title="Virto Commerce Search $(var.DisplayVersion)" Level="1">
-      <ComponentGroupRef Id="bin" />
+    
+		<Feature Id="ProductFeature" Title="Virto Commerce Search $(var.DisplayVersion)" Level="1">
+			<ComponentGroupRef Id="bin" />
       <ComponentGroupRef Id="lib" />
       <ComponentGroupRef Id="config" />
       <ComponentGroupRef Id="sigar" />
@@ -21,8 +21,8 @@
     </Feature>
 
     <Media Id="1" Cabinet="search.cab" EmbedCab="yes" CompressionLevel="high" />
-
-    <!-- now configure the service -->
+    
+    <!-- now configure the service -->   
     <!--
     <CustomAction Id="ConfigureService_Helper" Property="ConfigureService" Value="&quot;[WindowsFolder]system32\cmd.exe&quot; &quot;[lib]elasticsearchw-update.cmd&quot;" Execute="immediate"/>
     <?if $(var.Platform) = x64 ?>
@@ -61,18 +61,18 @@
       <!-- working but showing -->
       <Custom Action="UninstallService" After="StartServices">
         (NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")
-      </Custom>
+      </Custom>        
       <Custom Action="ConfigureService" After="InstallFiles">
         NOT Installed
       </Custom>
     </InstallExecuteSequence>
   </Product>
 
-  <Fragment>
+	<Fragment>
     <?if $(var.Platform) = x64 ?>
-    <?define PlatformProgramFilesFolder = "ProgramFiles64Folder" ?>
+      <?define PlatformProgramFilesFolder = "ProgramFiles64Folder" ?>
     <?else ?>
-    <?define PlatformProgramFilesFolder = "ProgramFilesFolder" ?>
+      <?define PlatformProgramFilesFolder = "ProgramFilesFolder" ?>
     <?endif?>
 
     <?define SearchDataFolder = "$(var.ProjectDir)Distro" ?>
@@ -95,20 +95,20 @@
 
   </Fragment>
 
-  <Fragment>
-    <ComponentGroup Id="bin" Directory="bin">
-      <Component Id="elasticsearch.bat" Guid="E1D18CB5-7033-43C1-9A2C-86A77C9940DD">
+	<Fragment>
+		<ComponentGroup Id="bin" Directory="bin">
+			<Component Id="elasticsearch.bat" Guid="E1D18CB5-7033-43C1-9A2C-86A77C9940DD">
         <File Id="elasticsearch.bat" Source="$(var.SearchDataFolder)\bin\elasticsearch.bat" Checksum="yes" KeyPath="yes" Vital="yes" />
-      </Component>
+			</Component>
       <Component Id="plugin.bat" Guid="3439347A-10E1-49D9-8872-C2EF34E150AE">
         <File Id="plugin.bat" Source="$(var.SearchDataFolder)\bin\plugin.bat" Checksum="yes" KeyPath="yes" Vital="yes" />
       </Component>
       <Component Id="elasticsearchw.exe" Guid="17E3AD52-5382-40C9-8323-9CC5AC3AF3FC">
-        <!--<?if $(var.Platform) = x64 ?>
+				<!--<?if $(var.Platform) = x64 ?>
           <File Id="elasticsearchw.exe" Name="elasticsearchw.exe" Source="$(var.SearchDataFolder)\bin\x64\elasticsearchw.exe" Checksum="yes" KeyPath="yes" Vital="yes" />
-        <?else ?>-->
-        <File Id="elasticsearchw.exe" Name="elasticsearchw.exe" Source="$(var.SearchDataFolder)\bin\x86\elasticsearchw.exe" Checksum="yes" KeyPath="yes" Vital="yes" />
-        <!--<?endif?>-->
+				<?else ?>-->
+          <File Id="elasticsearchw.exe" Name="elasticsearchw.exe" Source="$(var.SearchDataFolder)\bin\x86\elasticsearchw.exe" Checksum="yes" KeyPath="yes" Vital="yes" />
+				<!--<?endif?>-->
         <!--
         <util:User Id="UserToCheckOrCreate" Name="elasticsearch" LogonAsService="yes" Password="Pa55w0rd" CreateUser="yes" UpdateIfExists="yes" PasswordNeverExpires="yes" PasswordExpired="no" RemoveOnUninstall="yes" />
         -->
@@ -126,16 +126,16 @@
                       Account="LocalSystem"
                       ErrorControl="ignore"
                       Interactive="no">
-          <util:PermissionEx User="Everyone" ServiceStart="yes"
-              ServiceStop="yes"
-              ServicePauseContinue="yes"
-              ServiceInterrogate="yes"
-              ServiceChangeConfig="yes"
-              ServiceEnumerateDependents="yes"
-              ServiceQueryConfig="yes"
-              ServiceQueryStatus="yes"
-              ServiceUserDefinedControl="yes">
-          </util:PermissionEx>
+            <util:PermissionEx User="Everyone" ServiceStart="yes"
+                ServiceStop="yes"
+                ServicePauseContinue="yes"
+                ServiceInterrogate="yes"
+                ServiceChangeConfig="yes"
+                ServiceEnumerateDependents="yes"
+                ServiceQueryConfig="yes"
+                ServiceQueryStatus="yes"
+                ServiceUserDefinedControl="yes">
+            </util:PermissionEx>
         </ServiceInstall>
 
         <!-- now start the service -->

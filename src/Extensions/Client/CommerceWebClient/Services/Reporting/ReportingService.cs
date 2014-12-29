@@ -1,23 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
-using Microsoft.WindowsAzure;
+using VirtoCommerce.Foundation;
 using VirtoCommerce.Foundation.Assets.Model;
 using VirtoCommerce.Foundation.Assets.Repositories;
+using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Reporting.Helpers;
 using VirtoCommerce.Foundation.Reporting.Model;
+using VirtoCommerce.Foundation.Reporting.Services;
 
-namespace VirtoCommerce.Foundation.Reporting.Services
+namespace VirtoCommerce.Web.Client.Services.Reporting
 {
-    [UnityInstanceProviderServiceBehaviorAttribute]
+    [UnityInstanceProviderServiceBehavior]
     public class ReportingService : IReportingService
     {
-        public const string RootFolder = "reports";
 
         private readonly IBlobStorageProvider _blobStorageProvider;
         private readonly IAssetRepository _assetRepository;
@@ -26,17 +25,17 @@ namespace VirtoCommerce.Foundation.Reporting.Services
         {
             _blobStorageProvider = blobStorageProvider;
             _assetRepository = assetRepository;
-            _assetRepository.CreateFolder(RootFolder);
+            _assetRepository.CreateFolder(Constants.ReportsRootFolder);
         }
 
-        public IEnumerable<ReportInfo> GetReportsList(string folderId = RootFolder)
+        public IEnumerable<ReportInfo> GetReportsList(string folderId = Constants.ReportsRootFolder)
         {
             if (string.IsNullOrWhiteSpace(folderId))
             {
-                folderId = RootFolder;
+                folderId = Constants.ReportsRootFolder;
             }
 
-            List<ReportInfo> list = new List<ReportInfo>();
+            var list = new List<ReportInfo>();
             GetReportItems(list, folderId);
 
             return list;
@@ -44,8 +43,8 @@ namespace VirtoCommerce.Foundation.Reporting.Services
 
         public IEnumerable<ReportFolder> GetReportsFolders()
         {
-            List<ReportFolder> foldersList = new List<ReportFolder>();
-            var folder = _assetRepository.GetFolderById(RootFolder);
+            var foldersList = new List<ReportFolder>();
+            var folder = _assetRepository.GetFolderById(Constants.ReportsRootFolder);
             var root = new ReportFolder
             {
                 FolderName = folder.Name.ToUpper(),
@@ -100,14 +99,14 @@ namespace VirtoCommerce.Foundation.Reporting.Services
 
         public DataSet GetReportData(string reportFileName, IDictionary<string, object> parameters = null)
         {
-            DataSet data = new DataSet();
+            var data = new DataSet();
             var report = RdlType.Load(GetReportFile(reportFileName));
 
             report.UpdateReportParameters(parameters);
 
             foreach(var dataSet in report.DataSets)
             {
-                var connectionString = GetConnectionString(dataSet.Query.DataSourceName);
+                var connectionString = ConnectionHelper.GetConnectionString(dataSet.Query.DataSourceName);
                 if (string.IsNullOrWhiteSpace(connectionString))
                 {
                     var firstOrDefault = report.DataSources.FirstOrDefault(d=>d.Name == dataSet.Query.DataSourceName);
@@ -130,7 +129,7 @@ namespace VirtoCommerce.Foundation.Reporting.Services
             return data;
         }
 
-        private DataTable ExecuteSQL(SqlConnection dbConn, string sqlCommand, IDictionary<string, object> parameters = null)
+        private DataTable ExecuteSQL(SqlConnection dbConn, string sqlCommand, IEnumerable<KeyValuePair<string, object>> parameters = null)
         {
             using (var cmd = dbConn.CreateCommand())
             {
@@ -145,26 +144,11 @@ namespace VirtoCommerce.Foundation.Reporting.Services
                 }
 
                 var adapter = new SqlDataAdapter(cmd);
-                DataTable table = new DataTable();
+                var table = new DataTable();
                 adapter.Fill(table);
                
                 return table;
             }
-        }
-
-        public string GetConnectionString(string nameOrConnectionString)
-        {
-            // try getting a settings first
-            var settingValue = CloudConfigurationManager.GetSetting(nameOrConnectionString);
-
-            if (String.IsNullOrEmpty(settingValue))
-            {
-                var connectionStringVal = ConfigurationManager.ConnectionStrings[nameOrConnectionString];
-
-                settingValue = connectionStringVal == null ? string.Empty : connectionStringVal.ConnectionString;
-            }
-
-            return settingValue;
         }
     }
 }

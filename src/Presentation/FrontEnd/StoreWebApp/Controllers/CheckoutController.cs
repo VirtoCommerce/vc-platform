@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Data.Entity;
+using System.Threading.Tasks;
 using Omu.ValueInjecter;
 using PayPal.PayPalAPIInterfaceService;
 using PayPal.PayPalAPIInterfaceService.Model;
@@ -24,6 +25,7 @@ using VirtoCommerce.Web.Virto.Helpers;
 using VirtoCommerce.Web.Virto.Helpers.Payments;
 using VirtoCommerce.Web.Virto.Helpers.Popup;
 using AddressType = PayPal.PayPalAPIInterfaceService.Model.AddressType;
+using IsolationLevel = System.Data.IsolationLevel;
 
 namespace VirtoCommerce.Web.Controllers
 {

@@ -356,6 +356,7 @@ namespace VirtoCommerce.ManagementClient.Catalog.ViewModel.Catalog.Implementatio
 			var result = false;
 			var itemVM = _propertyVmFactory.GetViewModelInstance(
 				new KeyValuePair<string, object>("item", item),
+                new KeyValuePair<string, object>("properties", CurrentCatalogProperties),
 				new KeyValuePair<string, object>("parentCatalog", InnerItem)
 				);
 			var confirmation = new ConditionalConfirmation(itemVM.Validate) { Title = title, Content = itemVM };

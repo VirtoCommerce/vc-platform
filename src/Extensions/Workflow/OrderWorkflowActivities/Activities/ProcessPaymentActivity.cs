@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using VirtoCommerce.Client;
-using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Orders.Exceptions;
 using VirtoCommerce.Foundation.Orders.Extensions;
 using VirtoCommerce.Foundation.Orders.Model;
-using VirtoCommerce.Foundation.Orders.Model.PaymentMethod;
 using VirtoCommerce.Foundation.Orders.Repositories;
 using VirtoCommerce.Foundation.Orders.Services;
 using VirtoCommerce.Foundation.Stores.Model;
@@ -91,14 +88,23 @@ namespace VirtoCommerce.OrderWorkflow
         private void ProcessPayment()
         {
             var orderGroup = CurrentOrderGroup;
+
+            var pendingPayments =
+               orderGroup.OrderForms.SelectMany(x => x.Payments)
+                   .Where(x => x.Status.Equals(PaymentStatus.Pending.ToString(), StringComparison.OrdinalIgnoreCase))
+                   .ToArray();
+
+            //Complete 0 payments immediatlety
+            foreach (var zeroPayment in pendingPayments.Where(x => x.Amount == 0))
+            {
+                zeroPayment.Status = PaymentStatus.Completed.ToString();
+                PostProcessPayment(zeroPayment);
+            }
             // If total is 0, we do not need to proceed
             if (orderGroup.Total == 0)
                 return;
 
-            var pendingPayments =
-                orderGroup.OrderForms.SelectMany(x => x.Payments)
-                    .Where(x => x.Status.Equals(PaymentStatus.Pending.ToString(), StringComparison.OrdinalIgnoreCase))
-                    .ToArray();
+            pendingPayments = pendingPayments.Where(x => x.Status.Equals(PaymentStatus.Pending.ToString(), StringComparison.OrdinalIgnoreCase)).ToArray();
 
             if (!pendingPayments.Any())
                 return;

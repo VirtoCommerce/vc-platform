@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -363,7 +364,12 @@ namespace VirtoCommerce.Foundation.Data.Asset
 			throw new NotImplementedException();
 		}
 
-		#endregion
+        public void Refresh(IEnumerable collection)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
 
 		#region IUnitOfWork Members
 

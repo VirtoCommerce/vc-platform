@@ -3,7 +3,7 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using VirtoCommerce.Web.Client.Security.Identity.Model;
+using VirtoCommerce.Foundation.Data.Security.Identity;
 
 namespace VirtoCommerce.Web.Client.Security.Identity.Configs
 {
