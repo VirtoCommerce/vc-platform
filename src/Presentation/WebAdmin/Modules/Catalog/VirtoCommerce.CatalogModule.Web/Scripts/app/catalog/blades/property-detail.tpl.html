@@ -2,17 +2,22 @@
     <div class="blade-inner">
         <div class="inner-block">
             <form name="pdForm">
-                <label for="">Property name</label>
-                <div ng-init="setForm(pdForm);">
-                    <input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" />
-                </div>
-                <label for="">Display name</label>
-
-                <div ng-repeat="data in blade.origEntity.catalog.languages">
-                    <div>
-                        <input ng-model="nothing.to.bind" class="form-control" />
+               <div class="block">
+                    <label for="">Property name</label>
+                    <div ng-init="setForm(pdForm);">
+                        <div class="input-control text">
+                            <input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" />
+                        </div>
                     </div>
-                    <span class="title">{{data.displayName}}</span>
+               </div>
+                <div class="block">
+                    <label for="">Display name</label>
+                    <div ng-repeat="data in blade.origEntity.catalog.languages">
+                        <div class="input-control text">
+                            <input ng-model="nothing.to.bind" class="form-control" />
+                        </div>
+                        <span>{{data.displayName}}</span>
+                    </div>
                 </div>
             </form>
 
