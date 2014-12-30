@@ -17,7 +17,6 @@
             currentEntity: data,
             languages: $scope.wizardBlade.parentBlade.catalog.languages,
             title: 'Review',
-            bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/common/wizard-ok-action.tpl.html',
             subtitle: 'Product Review',
             controller: 'editorialReviewDetailWizardStepController',
             template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/editorialReview-detail.tpl.html'

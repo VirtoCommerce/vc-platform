@@ -132,7 +132,6 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
             title: 'Data export',
             subtitle: 'Configure & start data export',
             controller: 'exportWizardController',
-            bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/export/export-wizard-action.tpl.html',
             template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/export/$export-wizard.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);

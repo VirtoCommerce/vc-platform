@@ -70,7 +70,6 @@
             // subtitle: '',
             mode: 'install',
             controller: 'installWizardController',
-            bladeActions: 'Modules/Packaging/VirtoCommerce.PackagingModule.Web/Scripts/wizards/newModule/install-wizard-actions.tpl.html',
             template: 'Modules/Packaging/VirtoCommerce.PackagingModule.Web/Scripts/blades/module-detail.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);

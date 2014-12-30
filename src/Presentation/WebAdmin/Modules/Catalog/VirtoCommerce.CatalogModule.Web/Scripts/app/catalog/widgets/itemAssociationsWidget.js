@@ -22,7 +22,6 @@
                     title: "New Associations",
                     //subtitle: '',
                     controller: 'associationWizardController',
-                    bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newAssociation/association-wizard-actions.tpl.html',
                     template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newAssociation/association-wizard.tpl.html'
                 };
             }

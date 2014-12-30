@@ -37,8 +37,8 @@
                         id: "newProductProperties",
                         item: $scope.blade.item,
                         title: $scope.blade.item.name,
-                        bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/common/wizard-ok-action.tpl.html',
                         subtitle: 'item properties',
+                        isNew: true,
                         controller: 'newProductWizardPropertiesController',
                         template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/item-property-detail.tpl.html'
                     };
@@ -48,7 +48,6 @@
                         id: "newProductImages",
                         item: $scope.blade.item,
                         title: $scope.blade.item.name,
-                        bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/common/wizard-ok-action.tpl.html',
                         subtitle: 'item images',
                         controller: 'newProductWizardImagesController',
                         template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/item-image-detail.tpl.html'
@@ -59,7 +58,6 @@
                         id: "newProductSeoDetail",
                         seoInfos: $scope.blade.item.seoInfos,
                         title: $scope.blade.item.name,
-                        bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/common/wizard-ok-action.tpl.html',
                         subtitle: 'Seo details',
                         controller: 'newProductSeoDetailController',
                         template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/seo-detail.tpl.html'
@@ -71,7 +69,6 @@
                             id: "newProductEditorialReviewsList",
                             currentEntities: $scope.blade.item.reviews,
                             title: $scope.blade.item.name,
-                            bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/common/wizard-ok-action.tpl.html',
                             subtitle: 'Product Reviews',
                             controller: 'newProductWizardReviewsController',
                             template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/editorialReviews-list.tpl.html'
@@ -82,7 +79,6 @@
                             currentEntity: { languageCode: $scope.blade.parentBlade.catalog.defaultLanguage.languageCode },
                             languages: $scope.blade.parentBlade.catalog.languages,
                             title: 'Review',
-                            bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/common/wizard-ok-action.tpl.html',
                             subtitle: 'Product Review',
                             controller: 'editorialReviewDetailWizardStepController',
                             template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/editorialReview-detail.tpl.html'

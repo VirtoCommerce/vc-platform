@@ -139,7 +139,6 @@
             title: "New product",
             subtitle: 'Fill all product information',
             controller: 'newProductWizardController',
-            bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-product-wizard-actions.tpl.html',
             template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-product-wizard.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -152,7 +151,6 @@
             title: "New variation",
             subtitle: 'Fill all variation information',
             controller: 'newProductWizardController',
-            bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-product-wizard-actions.tpl.html',
             template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-variation-wizard.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -365,7 +363,7 @@
                       subtitle: 'choose new item type',
                       controller: 'categoriesItemsAddController',
                       template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/categories-items-add.tpl.html',
-					  isList: true
+                      isList: true
                   };
                   bladeNavigationService.showBlade(newBlade, $scope.blade);
               },

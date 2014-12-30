@@ -131,7 +131,6 @@
 	                     title: "New variation",
 	                     subtitle: 'Fill all variation information',
 	                     controller: 'newProductWizardController',
-	                     bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-product-wizard-actions.tpl.html',
 	                     template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-variation-wizard.tpl.html'
 	                 };
 	                 bladeNavigationService.showBlade(blade, $scope.currentBlade);

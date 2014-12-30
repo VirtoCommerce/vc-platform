@@ -26,7 +26,7 @@
                     </div>
                     <div class="block">
                         <p class="title">Version</p>
-                     <p>{{currentEntity.version}}</p>
+                        <p>{{currentEntity.version}}</p>
                     </div>
                     <div class="block">
                         <p ng-if="currentEntity.licenseUrl"><a ng-href="{{currentEntity.licenseUrl}}" target="_blank">License</a></p>
@@ -52,4 +52,25 @@
             </div>
         </div>
     </div>
+</div>
+<div class="static bottom" ng-if="blade.mode">
+    <fieldset>
+        <div class="input-control" data-role="input-control" ng-if="currentEntity.requireLicenseAcceptance">
+            <a ng-href="{{currentEntity.licenseUrl}}" ng-if="currentEntity.licenseUrl" target="_blank">License</a>
+
+            <div class="input-control checkbox" data-role="input-control">
+                <label>
+                    <!--currentEntity.validationErrors.length>0 ||-->
+                    <input type="checkbox" ng-model="currentEntity.licenseAccepted" ng-disabled="!currentEntity || isInstalling">
+                    <span class="check"></span>
+                    I accept the license agreement
+                </label>
+            </div>
+        </div>
+
+        <!--currentEntity.validationErrors.length>0 ||-->
+        <button ng-click="submit()" ng-disabled="!currentEntity || isInstalling || (currentEntity.requireLicenseAcceptance && !currentEntity.licenseAccepted)">
+            <span>{{actionButtonTitle}}</span>
+        </button>
+    </fieldset>
 </div>
