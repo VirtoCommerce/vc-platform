@@ -94,8 +94,8 @@ angular.module('platformWebApp.bladeNavigation', [
                 blade.attr('data-width', blade.width());
                 var leftMenu = $('.left-menu');
                 var offset = parseInt(blade.offset().left + $('.main-content').scrollLeft() - leftMenu.width());
-                var contentblock = blade.find(".blade-content ng-include").children()[0];
-                $(contentblock).animate({ width: (parseInt(window.innerWidth - 134) + 'px') }, 100);
+                var contentblock = blade.find(".blade-content");
+                $(contentblock).animate({ width: (parseInt(window.innerWidth - leftMenu.width()) + 'px') }, 100);
                 $('.main-content').animate({ scrollLeft: offset + 'px' }, 250);
             };
 
@@ -109,7 +109,7 @@ angular.module('platformWebApp.bladeNavigation', [
                 blade.removeAttr('data-width');
 
                 var offset = parseInt(blade.offset().left + $('.main-content').scrollLeft() - leftMenu.width());
-                var contentblock = blade.find(".blade-content ng-include").children()[0];
+                var contentblock = blade.find(".blade-content");
                 $(contentblock).animate({ width: blockWidth }, 100);
                 $('.main-content').animate({ scrollLeft: offset + 'px' }, 250);
             };
