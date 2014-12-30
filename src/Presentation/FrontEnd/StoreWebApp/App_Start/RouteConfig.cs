@@ -26,6 +26,10 @@ namespace VirtoCommerce.Web
             routes.IgnoreRoute(".html");
 
             routes.MapRoute(
+                "Home",
+                "realhome", new { controller = "Home", action = "Index" });
+
+            routes.MapRoute(
                 "FailWhale",
                 "FailWhale/{action}/{id}", new { controller = "Error", action = "FailWhale", id = UrlParameter.Optional });
 
@@ -134,7 +138,7 @@ namespace VirtoCommerce.Web
                 "{controller}/{action}/{id}", // URL with parameters
                 new
                 {
-                    action = "Index", 
+                    action = "Index",
                     id = UrlParameter.Optional
                 }, // Parameter defaults
                 new[] { "VirtoCommerce.Web.Controllers" });

@@ -652,6 +652,17 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Properties\PublishProfiles\WebPI.pubxml" />
+    <Content Include="responsive\css\main.css" />
+    <Content Include="responsive\css\reset.css" />
+    <Content Include="responsive\images\imagedoc-darknoise.png" />
+    <Content Include="responsive\images\pad-land.png" />
+    <Content Include="responsive\images\pad-port.png" />
+    <Content Include="responsive\images\phone-land.png" />
+    <Content Include="responsive\images\phone-port.png" />
+    <Content Include="responsive\images\preloader.GIF" />
+    <Content Include="responsive\images\sprite-device.png" />
+    <Content Include="index.html" />
+    <Content Include="responsive\js\main.js" />
     <Content Include="Scripts\ajaxq.js" />
     <Content Include="Scripts\cloudzoom.js" />
     <Content Include="Properties\webjobs-list.json" />
