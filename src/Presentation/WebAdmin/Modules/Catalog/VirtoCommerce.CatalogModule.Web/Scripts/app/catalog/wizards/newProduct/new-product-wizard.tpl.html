@@ -1,31 +1,40 @@
-﻿<form class="form" name="newProductForm">
-    <fieldset ng-init="setForm(newProductForm);">
-        <label>SKU:</label>
-        <div data-role="input-control" class="input-control text">
-            <input required class="form-control" ng-model="blade.item.code" placeholder="Enter item sku" />
-        </div>
-        <label>Name:</label>
-        <div data-role="input-control" class="input-control textarea">
-            <textarea required class="form-control" cols="30" rows="3" ng-model="blade.item.name" placeholder="Enter item name"></textarea>
-        </div>
-    </fieldset>
-</form>
+﻿<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form class="form" name="newProductForm">
+                <fieldset ng-init="setForm(newProductForm);">
+                    <label>SKU:</label>
+                    <div data-role="input-control" class="input-control text">
+                        <input required class="form-control" ng-model="blade.item.code" placeholder="Enter item sku" />
+                    </div>
+                    <label>Name:</label>
+                    <div data-role="input-control" class="input-control textarea">
+                        <textarea required class="form-control" cols="30" rows="3" ng-model="blade.item.name" placeholder="Enter item name"></textarea>
+                    </div>
+                </fieldset>
+            </form>
 
-<ul class="list-extended">
-    <li ng-click="openBlade('properties')" ng-if="blade.item.properties.length > 0">
-        <span class="title">Add properties</span>
-        <span class="sub-title">{{ getUnfilledProperties().length }} of {{blade.item.properties.length}} properties filled</span>
-    </li>
-    <li ng-click="openBlade('images')">
-        <span class="title">Upload images</span>
-        <span class="sub-title">{{blade.item.images.length >= 0 ? blade.item.images.length : 0}} image(s) uploaded</span>
-    </li>
-    <li ng-click="openBlade('review')">
-        <span class="title">Add review</span>
-        <span class="sub-title">{{blade.item.reviews.length >= 0 ? blade.item.reviews.length : 0}} review(s) added</span>
-    </li>
-    <li ng-click="openBlade('seo')">
-        <span class="title">Define seo information</span>
-        <span class="sub-title">seo information {{blade.item.seoInfos.length > 0 ? "defined" : "undefined"}}</span>
-    </li>
-</ul>
+            <ul class="list-extended">
+                <li ng-click="openBlade('properties')" ng-if="blade.item.properties.length > 0">
+                    <span class="title">Add properties</span>
+                    <span class="sub-title">{{ getUnfilledProperties().length }} of {{blade.item.properties.length}} properties filled</span>
+                </li>
+                <li ng-click="openBlade('images')">
+                    <i class="ico fa fa-image"></i>
+                    <span class="title">Upload images</span>
+                    <span class="sub-title">{{blade.item.images.length >= 0 ? blade.item.images.length : 0}} image(s) uploaded</span>
+                </li>
+                <li ng-click="openBlade('review')">
+                    <i class="ico fa fa-file-text"></i>
+                    <span class="title">Add review</span>
+                    <span class="sub-title">{{blade.item.reviews.length >= 0 ? blade.item.reviews.length : 0}} review(s) added</span>
+                </li>
+                <li ng-click="openBlade('seo')">
+                    <i class="ico fa fa-bar-chart-o"></i>
+                    <span class="title">Define seo information</span>
+                    <span class="sub-title">seo information {{blade.item.seoInfos.length > 0 ? "defined" : "undefined"}}</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

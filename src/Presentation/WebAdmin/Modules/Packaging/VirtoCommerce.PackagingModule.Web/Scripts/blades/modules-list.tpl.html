@@ -1,33 +1,36 @@
-﻿<style>
-    .fixed-td {
-        width: 15px;
-    }
-</style>
-<table class="table hovered" ng-if="blade.currentEntities.length > 0">
-    <thead>
-        <tr>
-            <th class="text-left fixed-td">Icon</th>
-            <th class="text-left">Module</th>
-            <th class="text-left fixed-td">Version</th>
-            <th class="text-left fixed-td">Author</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr ng-repeat="data in blade.currentEntities" ng-class="{'selected': data.id === selectedEntityId}" ng-click='selectItem(data)'>
-            <td>
-                <img ng-src="{{data.iconUrl}}" height="42" width="42" />
-            </td>
-            <td style="max-width: 230px;">
-                <span title="{{data.title}}">{{data.title}}</span>
-                <span title="{{data.description}}" class="blade-sw-title" style="overflow: hidden; text-overflow: ellipsis;">{{data.description}}</span>
-            </td>
-            <td>
-                <span>{{data.version}}</span>
-            </td>
-            <td>
-                <span ng-repeat="x in data.authors">{{x}} </span>
-            </td>
-        </tr>
-    </tbody>
-</table>
-<div ng-if="blade.currentEntities.length == 0" class="spacer">No Modules yet</div>
+﻿<div class="blade-content blade-medium">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="table-wrapper">
+                <table class="table hovered" ng-if="blade.currentEntities.length > 0">
+                    <thead>
+                        <tr>
+                            <th class="text-left fixed-td">Icon</th>
+                            <th class="text-left">Module</th>
+                            <th class="text-left fixed-td">Version</th>
+                            <th class="text-left fixed-td">Author</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="data in blade.currentEntities" ng-class="{'selected': data.id === selectedEntityId}" ng-click='selectItem(data)'>
+                            <td>
+                                <img ng-src="{{data.iconUrl}}" height="42" width="42" />
+                            </td>
+                            <td style="max-width: 230px;">
+                                <span title="{{data.title}}">{{data.title}}</span>
+                                <span title="{{data.description}}" class="blade-sw-title" style="overflow: hidden; text-overflow: ellipsis;">{{data.description}}</span>
+                            </td>
+                            <td>
+                                <span>{{data.version}}</span>
+                            </td>
+                            <td>
+                                <span ng-repeat="x in data.authors">{{x}} </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div ng-if="blade.currentEntities.length == 0" class="spacer">No Modules yet</div>  
+        </div>
+    </div>
+</div>

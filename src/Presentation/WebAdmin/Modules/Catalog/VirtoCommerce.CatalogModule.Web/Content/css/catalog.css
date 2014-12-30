@@ -47,7 +47,6 @@ ul.tiles img
 
 .tiles .tile
 {
-	border: 2px solid #eee;
 	height: 175px;
 	line-height: 175px;
 	margin: 0;
@@ -143,6 +142,12 @@ ul.tiles img
 	width: 85px;
 }
 
+.tiles .tile.normal,
+.tiles .tile-block.mini .tile.normal
+{
+	line-height: inherit;
+}
+
 .tiles .tile-block.mini .tile i
 {
 	display: block;
@@ -224,8 +229,10 @@ ul.tiles img
 
 .metro .tile:hover
 {
-	border-color: #ccc;
 	outline: none;
+
+	-webkit-box-shadow: 0 0 0 2px #ccc inset;
+			box-shadow: 0 0 0 2px #ccc inset;
 }
 
 .images-list

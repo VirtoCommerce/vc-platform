@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp.bladeNavigation', [
+angular.module('platformWebApp.bladeNavigation', [
 ])
 .directive('vaBladeContainer', ['$compile', 'bladeNavigationService', function ($compile, bladeNavigationService)
 {
@@ -48,7 +48,7 @@
             $(element).off('mouseenter').on('mouseenter', function (e)
             {
                 var blade = $(element),
-			        bladeC = blade.find('.blade-content'),
+			        bladeC = blade.find('.blade-inner'),
 			        bladeH = bladeC.height(),
 			        bladeIh = blade.find('.inner-block').height();
 
@@ -63,6 +63,11 @@
 
                 horizontalScroll('on');
 
+            });
+
+            $('.blade-head, .blade-head *, .static, .static *').on('mouseenter', function (event) {
+                horizontalScroll('on');
+                event.stopPropagation();
             });
 
             function horizontalScroll(flag)

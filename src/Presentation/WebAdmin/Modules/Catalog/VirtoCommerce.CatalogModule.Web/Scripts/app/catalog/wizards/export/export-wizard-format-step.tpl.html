@@ -1,10 +1,18 @@
-﻿<p class="subheader">Select data format</p>
-<ul class="list-checkboxes">
-    <li ng-repeat="data in list">
-        <label>
-            <input type="checkbox" ng-checked="data.selected" ng-click="select(data);">
-            <span class="switch"></span>
-            {{data.name}}
-        </label>
-    </li>
-</ul>
+﻿<div class="blade-content">
+	<div class="blade-inner">
+		<div class="inner-block">
+			<div class="block">
+				<p class="subheader-secondary">Select data format</p>
+				<ul class="list-checkboxes">
+				    <li ng-repeat="data in list">
+				        <label>
+				            <input type="checkbox" ng-checked="data.selected" ng-click="select(data);">
+				            <span class="switch"></span>
+				            {{data.name}}
+				        </label>
+				    </li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,14 +1,20 @@
-﻿    <ul class="list-extended">
-        <li ng-repeat="data in objects" ng-class="{'active': data.id === selectedNodeId}" ng-click='selectNode(data)' context-menu data-target="cl_menu{{$index}}">
-            <ul role="menu" class="dropdown-menu context-menu" id="cl_menu{{$index}}">
-                <li ng-click='editCatalog(data)'>
-                    <i class="ico fa fa-edit"></i> Manage
-                </li>
-                <li ng-click='deleteCatalog(data)'>
-                    <i class="ico fa fa-trash-o"></i> Delete
+﻿<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block clearfix">
+            <ul class="list-extended">
+                <li ng-repeat="data in objects" ng-class="{'active': data.id === selectedNodeId}" ng-click='selectNode(data)' context-menu data-target="cl_menu{{$index}}">
+                    <ul role="menu" class="dropdown-menu context-menu" id="cl_menu{{$index}}">
+                        <li ng-click='editCatalog(data)'>
+                            <i class="ico fa fa-edit"></i> Manage
+                        </li>
+                        <li ng-click='deleteCatalog(data)'>
+                            <i class="ico fa fa-trash-o"></i> Delete
+                        </li>
+                    </ul>
+                    <i class="ico" ng-class="data.virtual ? 'fa fa-cloud' : 'fa fa-folder'"></i>
+                    <span class="name">{{data.name + (data.virtual ? ' (virtual)' : '')}}</span>
                 </li>
             </ul>
-            <i class="ico" ng-class="data.virtual ? 'icon-layers' : 'icon-grid-view'"></i>
-            <span class="name">{{data.name + (data.virtual ? ' (virtual)' : '')}}</span>
-        </li>
-    </ul>
+        </div>
+    </div>
+</div>
