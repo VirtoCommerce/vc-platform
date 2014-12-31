@@ -33,9 +33,9 @@ namespace VirtoCommerce.CoreModule.Web.Settings
 			return moduleDescriptors;
 		}
 
-		public SettingsGroup[] GetSettings(string moduleId)
+		public SettingDescriptor[] GetSettings(string moduleId)
 		{
-			SettingsGroup[] result = null;
+			var result = new List<SettingDescriptor>();
 
 			var manifest = GetModuleManifestsWithSettings().FirstOrDefault(m => m.Id == moduleId);
 
@@ -49,13 +49,19 @@ namespace VirtoCommerce.CoreModule.Web.Settings
 
 				if (settingNames.Any())
 				{
-					var storedSettings = LoadSettings(settingNames);
+					var existingSettings = LoadSettings(settingNames);
 
-					result = manifest.Settings.Select(g => ConvertToSettingsGroup(g, storedSettings)).ToArray();
+					foreach (var group in manifest.Settings)
+					{
+						if (group.Settings != null)
+						{
+							result.AddRange(group.Settings.Select(s => ConvertToSettingsDescriptor(group.Name, s, existingSettings)));
+						}
+					}
 				}
 			}
 
-			return result;
+			return result.ToArray();
 		}
 
 		public void SaveSettings(SettingDescriptor[] settings)
@@ -247,19 +253,11 @@ namespace VirtoCommerce.CoreModule.Web.Settings
 			}
 		}
 
-		private static SettingsGroup ConvertToSettingsGroup(ModuleSettingsGroup group, IEnumerable<Setting> storedSettings)
-		{
-			return new SettingsGroup
-			{
-				Name = group.Name,
-				Settings = group.Settings.Select(s => ConvertToSettingsDescriptor(s, storedSettings)).ToArray(),
-			};
-		}
-
-		private static SettingDescriptor ConvertToSettingsDescriptor(ModuleSetting setting, IEnumerable<Setting> storedSettings)
+		private static SettingDescriptor ConvertToSettingsDescriptor(string groupName, ModuleSetting setting, IEnumerable<Setting> existingSettings)
 		{
 			var result = new SettingDescriptor
 			{
+				GroupName = groupName,
 				Name = setting.Name,
 				Value = setting.DefaultValue,
 				ValueType = setting.ValueType,
@@ -269,14 +267,14 @@ namespace VirtoCommerce.CoreModule.Web.Settings
 				Description = setting.Description,
 			};
 
-			var storedValue = storedSettings
+			var existingValue = existingSettings
 				.Where(s => s.Name == setting.Name)
 				.SelectMany(s => s.SettingValues)
 				.FirstOrDefault();
 
-			if (storedValue != null)
+			if (existingValue != null)
 			{
-				result.Value = storedValue.ToString(CultureInfo.InvariantCulture);
+				result.Value = existingValue.ToString(CultureInfo.InvariantCulture);
 			}
 
 			return result;

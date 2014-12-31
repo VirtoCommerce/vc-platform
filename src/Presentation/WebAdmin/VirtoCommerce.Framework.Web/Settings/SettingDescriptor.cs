@@ -4,6 +4,7 @@ namespace VirtoCommerce.Framework.Web.Settings
 {
 	public class SettingDescriptor
 	{
+		public string GroupName { get; set; }
 		public string Name { get; set; }
 		public string Value { get; set; }
 		public string ValueType { get; set; }

@@ -3,7 +3,7 @@
 	public interface ISettingsManager
 	{
 		ModuleDescriptor[] GetModules();
-		SettingsGroup[] GetSettings(string moduleId);
+		SettingDescriptor[] GetSettings(string moduleId);
 		void SaveSettings(SettingDescriptor[] settings);
 
 		T GetValue<T>(string name, T defaultValue);

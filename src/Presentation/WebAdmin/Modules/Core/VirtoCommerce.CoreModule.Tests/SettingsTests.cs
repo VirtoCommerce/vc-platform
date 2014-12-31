@@ -26,10 +26,9 @@ namespace VirtoCommerce.CoreModule.Tests
 			var module = modules.FirstOrDefault(m => m.Id == moduleId);
 			Assert.IsNotNull(module);
 
-			var groups = manager.GetSettings(module.Id);
-			Assert.IsNotNull(groups);
+			var settings = manager.GetSettings(module.Id);
+			Assert.IsNotNull(settings);
 
-			var settings = groups.SelectMany(g => g.Settings).ToArray();
 			var setting = settings.FirstOrDefault(s => s.Name == settingName);
 			Assert.IsNotNull(setting);
 
