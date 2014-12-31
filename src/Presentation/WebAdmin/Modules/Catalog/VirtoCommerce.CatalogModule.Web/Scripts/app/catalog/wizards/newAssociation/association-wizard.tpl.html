@@ -1,10 +1,23 @@
-﻿<ul class="list-extended">
-    <li ng-click="openBlade('group')">
-        <span class="title">Group name</span>
-        <span class="sub-title">{{blade.groupName ? blade.groupName : 'Not selected'}}</span>
-    </li>
-    <li ng-click="openBlade('products')">
-        <span class="title">Products</span>
-        <span class="sub-title">{{blade.selection.length}} product(s) selected</span>
-    </li>
-</ul>
+﻿<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <ul class="list-extended">
+                <li ng-click="openBlade('group')">
+                    <i class="ico fa fa-cubes"></i>
+                    <span class="title">Group name</span>
+                    <span class="sub-title">{{blade.groupName ? blade.groupName : 'Not selected'}}</span>
+                </li>
+                <li ng-click="openBlade('products')">
+                    <i class="ico fa fa-cubes"></i>
+                    <span class="title">Products</span>
+                    <span class="sub-title">{{blade.selection.length}} product(s) selected</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="static bottom">
+    <button ng-click="create()" ng-disabled="!blade.groupName || blade.selection.length==0">
+        <span>Create</span>
+    </button>
+</div>

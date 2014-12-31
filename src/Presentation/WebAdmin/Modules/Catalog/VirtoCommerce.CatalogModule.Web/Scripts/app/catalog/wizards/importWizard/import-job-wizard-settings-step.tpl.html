@@ -1,29 +1,37 @@
-﻿<form name="settingsForm">
-    <fieldset ng-init="setForm(settingsForm)">
-        <label>Errors allowed during import:</label>
-        <div data-role="input-control" class="input-control number">
-            <input required class="form-control" ng-model="item.maxErrorsCount" type="number" min="0" />
+﻿<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form name="settingsForm">
+                <fieldset ng-init="setForm(settingsForm)">
+                    <label>Errors allowed during import:</label>
+                    <div data-role="input-control" class="input-control number">
+                        <input required class="form-control" ng-model="item.maxErrorsCount" type="number" min="0" />
+                    </div>
+                    <label>Import step (import every {{item.importStep}} entry):</label>
+                    <div data-role="input-control" class="input-control number">
+                        <input required class="form-control" ng-model="item.importStep" type="number" min="1" />
+                    </div>
+                    <label>Start index:</label>
+                    <div data-role="input-control" class="input-control number">
+                        <input required class="form-control" ng-model="item.startIndex" type="number" min="0" />
+                    </div>
+                    <label>Import count (import all by default):</label>
+                    <div data-role="input-control" class="input-control number">
+                        <input required class="form-control" ng-model="item.importCount" type="number" min="0" />
+                    </div>
+                    <label>Column delimiter:</label>
+                    <div data-role="input-control" class="input-control select" style="width: 50%">
+                        <select class="form-control" ng-model="item.columnDelimiter" ng-options="obj.value as obj.name for obj in columnDelimiters">
+                            <option value="">Other</option>
+                        </select>
+                    </div>
+                    <div data-role="input-control" class="input-control text" style="width: 50%">
+                        <input required class="form-control" ng-model="item.columnDelimiter" type="text" />
+                    </div>
+                </fieldset>
+            </form>
         </div>
-        <label>Import step (import every {{item.importStep}} entry):</label>
-        <div data-role="input-control" class="input-control number">
-            <input required class="form-control" ng-model="item.importStep" type="number" min="1" />
-        </div>
-        <label>Start index:</label>
-        <div data-role="input-control" class="input-control number">
-            <input required class="form-control" ng-model="item.startIndex" type="number" min="0" />
-        </div>
-        <label>Import count (import all by default):</label>
-        <div data-role="input-control" class="input-control number">
-            <input required class="form-control" ng-model="item.importCount" type="number" min="0" />
-        </div>
-        <label>Column delimiter:</label>
-        <div data-role="input-control" class="input-control select" style="width: 50%">
-            <select class="form-control" ng-model="item.columnDelimiter" ng-options="obj.value as obj.name for obj in columnDelimiters">
-                <option value="">Other</option>
-            </select>
-        </div>
-        <div data-role="input-control" class="input-control text" style="width: 50%">
-            <input required class="form-control" ng-model="item.columnDelimiter" type="text" />
-        </div>
-    </fieldset>
-</form>
+    </div>
+</div>
+<div class="static bottom" ng-include="'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/common/wizard-ok-action.tpl.html'">
+</div>

@@ -139,7 +139,6 @@
             title: "New product",
             subtitle: 'Fill all product information',
             controller: 'newProductWizardController',
-            bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-product-wizard-actions.tpl.html',
             template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-product-wizard.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -152,7 +151,6 @@
             title: "New variation",
             subtitle: 'Fill all variation information',
             controller: 'newProductWizardController',
-            bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-product-wizard-actions.tpl.html',
             template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-variation-wizard.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -346,7 +344,7 @@
 
     $scope.bladeToolbarCommands = [
         {
-            name: "Refresh", icon: 'icon-spin',
+            name: "Refresh", icon: 'fa fa-refresh',
             executeMethod: function () {
                 $scope.blade.refresh();
             },
@@ -355,7 +353,7 @@
             }
         },
           {
-              name: "Add", icon: 'icon-plus',
+              name: "Add", icon: 'fa fa-plus',
               executeMethod: function () {
                   closeChildrenBlades();
 
@@ -365,7 +363,7 @@
                       subtitle: 'choose new item type',
                       controller: 'categoriesItemsAddController',
                       template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/categories-items-add.tpl.html',
-					  isList: true
+                      isList: true
                   };
                   bladeNavigationService.showBlade(newBlade, $scope.blade);
               },
@@ -374,7 +372,7 @@
               }
           },
             {
-                name: "Manage", icon: 'icon-new-tab-2',
+                name: "Manage", icon: 'fa fa-edit',
                 executeMethod: function () {
                     // selected OR the first checked listItem
                     edit($scope.selectedItem || _.find($scope.items, function (x) { return x.selected; }));
@@ -384,7 +382,7 @@
                 }
             },
             {
-                name: "Delete", icon: 'icon-remove',
+                name: "Delete", icon: 'fa fa-trash-o',
                 executeMethod: function () {
                     deleteChecked();
                 },
@@ -393,7 +391,7 @@
                 }
             },
             {
-                name: "Advanced search", icon: 'icon-search',
+                name: "Advanced search", icon: 'fa fa-search',
                 executeMethod: function () {
                     var newBlade = {
                         id: 'listItemChild',
@@ -415,7 +413,7 @@
         // mappingSource
         if ($scope.blade.mode === 'mappingSource') {
             var mapCommand = {
-                name: "Map", icon: 'icon-link',
+                name: "Map", icon: 'fa fa-link',
                 executeMethod: function () {
                     mapChecked();
                 },

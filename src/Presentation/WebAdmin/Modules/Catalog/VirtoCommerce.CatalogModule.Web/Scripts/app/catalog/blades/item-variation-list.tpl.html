@@ -1,34 +1,37 @@
-﻿    <style>
-        .fixed-td {
-            width: 15px;
-        }
-    </style>
-    <table class="table hovered">
-        <thead>
-            <tr>
-                <th class="text-left fixed-td"><input type="checkbox" ng-model="selectedAll" ng-change="checkAll(selectedAll)" /></th>
-                <th class="text-left fixed-td">Img</th>
-                <th class="text-left">Id</th>
-                <th class="text-left fixed-td">Code</th>
-                <th class="text-left">Name</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr ng-repeat="data in blade.item.variations" ng-class="{'selected': data === selectedItem}">
-                <td>
-                    <div data-role="input-control" class="input-control checkbox">
-                        <label>
-                            <input type="checkbox" ng-model="data.selected">
-                            <span class="check"></span>
-                        </label>
-                    </div>
-                </td>
-                <td ng-click='selectVariation(data)'>
-                    <img ng-src="{{data.imgSrc}}" height="42" width="42" ng-if="data.imgSrc" /><i class="icon-none" ng-if="!data.imgSrc" style="font-size: 26px" />
-                </td>
-                <td ng-class="{'product-id': $index === 0, 'product-name': $index === 2}" ng-repeat="col in [data.id, data.code, data.name] track by $index" ng-click='selectVariation(data)'>
-                    <span title="{{col}}">{{col}}</span>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+﻿<div class="blade-content blade-medium">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="table-wrapper">
+                <table class="table hovered">
+                    <thead>
+                        <tr>
+                            <th class="text-left fixed-td"><input type="checkbox" ng-model="selectedAll" ng-change="checkAll(selectedAll)" /></th>
+                            <th class="text-left fixed-td">Img</th>
+                            <th class="text-left">Id</th>
+                            <th class="text-left fixed-td">Code</th>
+                            <th class="text-left">Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="data in blade.item.variations" ng-class="{'selected': data === selectedItem}">
+                            <td>
+                                <div data-role="input-control" class="input-control checkbox">
+                                    <label>
+                                        <input type="checkbox" ng-model="data.selected">
+                                        <span class="check"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td ng-click='selectVariation(data)'>
+                                <img ng-src="{{data.imgSrc}}" height="42" width="42" ng-if="data.imgSrc" /><i class="icon-none" ng-if="!data.imgSrc" style="font-size: 26px" />
+                            </td>
+                            <td ng-class="{'product-id': $index === 0, 'product-name': $index === 2}" ng-repeat="col in [data.id, data.code, data.name] track by $index" ng-click='selectVariation(data)'>
+                                <span title="{{col}}">{{col}}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,10 +1,18 @@
-﻿    <p class="subheader">Select catalog</p>
-    <ul class="list-checkboxes">
-        <li ng-repeat="data in catalogs">
-            <label>
-                <input type="checkbox" name="isDefault" ng-checked="data.id === selectedCatalogId" ng-click="setCatalog(data)">
-                <span class="switch"></span>
-                {{data.name}}
-            </label>
-        </li>
-    </ul>
+﻿<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="block">
+                <p class="subheader">Select catalog</p>
+                <ul class="list-checkboxes">
+                    <li ng-repeat="data in catalogs">
+                        <label>
+                            <input type="checkbox" name="isDefault" ng-checked="data.id === selectedCatalogId" ng-click="setCatalog(data)">
+                            <span class="switch"></span>
+                            {{data.name}}
+                        </label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,10 +1,18 @@
-﻿    <form name="contextEntityDetailForm">
-        <fieldset ng-init="setForm(contextEntityDetailForm);">
-            <label>Name:</label>
-            <div data-role="input-control" class="input-control text">
-                <input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" placeholder="Enter category name" />
-            </div>
-        </fieldset>
-    </form>
+﻿<div class="blade-content">
+	<div class="blade-inner">
+		<div class="inner-block">
+			<form name="contextEntityDetailForm">
+		        <fieldset ng-init="setForm(contextEntityDetailForm);">
+		            <label>Name:</label>
+		            <div data-role="input-control" class="input-control text">
+		                <input focus-on="" required class="form-control" ng-model="blade.currentEntity.name" placeholder="Enter category name" />
+		            </div>
+		        </fieldset>
+		    </form>
 
-    <va-widget-container group="categoryDetail" blade="blade"></va-widget-container>
+		    <div class="tiles clearfix">
+		    	<va-widget-container group="categoryDetail" blade="blade"></va-widget-container>
+		    </div>
+		</div>
+	</div>
+</div>

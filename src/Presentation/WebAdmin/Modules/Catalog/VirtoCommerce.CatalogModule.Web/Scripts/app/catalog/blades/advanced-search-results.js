@@ -137,7 +137,7 @@
 
     $scope.bladeToolbarCommands = [
       {
-          name: "Refresh", icon: 'icon-spin',
+          name: "Refresh", icon: 'fa fa-refresh',
           executeMethod: function () {
               $scope.blade.refresh();
           },
@@ -146,7 +146,7 @@
           }
       },
         {
-            name: "Manage", icon: 'icon-new-tab-2',
+            name: "Manage", icon: 'fa fa-edit',
             executeMethod: function () {
                 $scope.edit($scope.selectedItem);
             },
@@ -155,7 +155,7 @@
             }
         },
       {
-          name: "Delete", icon: 'icon-remove',
+          name: "Delete", icon: 'fa fa-trash-o',
           executeMethod: function () {
               deleteChecked();
           },

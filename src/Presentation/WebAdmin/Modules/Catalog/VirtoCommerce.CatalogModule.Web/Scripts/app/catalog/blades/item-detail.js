@@ -102,7 +102,7 @@
 
     $scope.bladeToolbarCommands = [
 	 {
-	     name: "Save", icon: 'icon-floppy',
+	     name: "Save", icon: 'fa fa-save',
 	     executeMethod: function () {
 	         saveChanges();
 	     },
@@ -111,7 +111,7 @@
 	     }
 	 },
         {
-            name: "Reset", icon: 'icon-undo',
+            name: "Reset", icon: 'fa fa-undo',
             executeMethod: function () {
                 angular.copy($scope.currentBlade.origItem, $scope.currentBlade.item);
                 $scope.isTitular = $scope.currentBlade.item.titularItemId == null;
@@ -121,7 +121,7 @@
             }
         },
 	     {
-	         name: "New variation", icon: 'icon-plus',
+	         name: "New variation", icon: 'fa fa-plus',
 	         executeMethod: function () {
 
 	             items.newVariation({ itemId: $scope.currentBlade.item.id }, function (data, headers) {
@@ -131,7 +131,6 @@
 	                     title: "New variation",
 	                     subtitle: 'Fill all variation information',
 	                     controller: 'newProductWizardController',
-	                     bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-product-wizard-actions.tpl.html',
 	                     template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newProduct/new-variation-wizard.tpl.html'
 	                 };
 	                 bladeNavigationService.showBlade(blade, $scope.currentBlade);

@@ -1,54 +1,48 @@
 ﻿angular.module('catalogModule.wizards.importJobWizard.mapping', [
 ])
-.controller('importJobMappingController', ['$scope', 'bladeNavigationService', 'imports', function ($scope, bladeNavigationService, imports)
-{
-    $scope.blade.refresh = function ()
-    {
-    	$scope.blade.isLoading = true;
+.controller('importJobMappingController', ['$scope', 'bladeNavigationService', 'imports', function ($scope, bladeNavigationService, imports) {
+    $scope.blade.refresh = function () {
+        $scope.blade.isLoading = true;
 
         $scope.item = $scope.blade.item;
         if ($scope.blade.isNew) {
-        	imports.getAutoMapping({ path: $scope.item.templatePath, entityImporter: $scope.item.entityImporter, delimiter: $scope.item.columnDelimiter }, function (result) {
+            imports.getAutoMapping({ path: $scope.item.templatePath, entityImporter: $scope.item.entityImporter, delimiter: $scope.item.columnDelimiter }, function (result) {
                 $scope.blade.isLoading = false;
                 $scope.item.propertiesMap = result;
             });
-        } else
-        {
+        } else {
             $scope.blade.isLoading = false;
         }
     };
 
 
-    $scope.saveChanges = function ()
-    {
+    $scope.saveChanges = function () {
         $scope.blade.parentBlade.item.propertiesMap = $scope.item.propertiesMap;
         $scope.bladeClose();
     };
 
-    $scope.setForm = function (form)
-    {
+    $scope.setForm = function (form) {
         $scope.formScope = form;
     }
 
-    $scope.setSelectedItem = function (data)
-    {
+    $scope.setSelectedItem = function (data) {
         $scope.selectedItem = data;
     }
 
     $scope.bladeToolbarCommands = [
         {
             name: "Edit",
-            icon: 'icon-new-tab-2',
-            executeMethod: function() {
+            icon: 'fa fa-edit',
+            executeMethod: function () {
                 $scope.editMapping($scope.selectedItem);
             },
-            canExecuteMethod: function() {
+            canExecuteMethod: function () {
                 return $scope.selectedItem;
             }
         }
     ];
 
-    $scope.editMapping = function(column) {
+    $scope.editMapping = function (column) {
         var newBlade = {
             id: 'importJobWizardMappingEdit',
             item: column,
@@ -56,31 +50,24 @@
             title: column.entityColumnName,
             subtitle: 'Edit column mapping',
             controller: 'importJobMappingEditController',
-            bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/common/wizard-ok-action.tpl.html',
             template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/importWizard/import-job-wizard-mapping-step-edit.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     }
 
-    $scope.blade.onClose = function (closeCallback)
-    {
+    $scope.blade.onClose = function (closeCallback) {
 
-        if ($scope.blade.childrenBlades.length > 0)
-        {
-            var callback = function ()
-            {
-                if ($scope.blade.childrenBlades.length == 0)
-                {
+        if ($scope.blade.childrenBlades.length > 0) {
+            var callback = function () {
+                if ($scope.blade.childrenBlades.length == 0) {
                     closeCallback();
                 };
             };
-            angular.forEach($scope.blade.childrenBlades, function (child)
-            {
+            angular.forEach($scope.blade.childrenBlades, function (child) {
                 bladeNavigationService.closeBlade(child, callback);
             });
         }
-        else
-        {
+        else {
             closeCallback();
         }
     };

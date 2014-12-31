@@ -33,7 +33,6 @@
             title: 'Edit import job',
             subtitle: 'Manage import job',
             controller: 'importJobWizardController',
-            bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/importWizard/import-job-wizard-update-action.tpl.html',
             template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/importWizard/import-job-wizard.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -49,7 +48,6 @@
             title: 'Run import job',
             subtitle: 'Run import job',
             controller: 'importJobRunController',
-            bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/import/import-job-execute.tpl.html',
             template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/import/import-job-run.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -106,7 +104,7 @@
 
     $scope.bladeToolbarCommands = [
           {
-              name: "Refresh", icon: 'icon-spin',
+              name: "Refresh", icon: 'fa fa-refresh',
               executeMethod: function () {
                   $scope.blade.refresh();
               },
@@ -115,7 +113,7 @@
               }
           },
         {
-            name: "Add", icon: 'icon-plus',
+            name: "Add", icon: 'fa fa-plus',
             executeMethod: function () {
                 imports.new({ catalogId: $scope.blade.catalogId }, function (data) {
                     var newBlade = {
@@ -125,7 +123,6 @@
                         title: 'New import job',
                         subtitle: 'Create an import job',
                         controller: 'importJobWizardController',
-                        bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/importWizard/import-job-wizard-create-action.tpl.html',
                         template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/importWizard/import-job-wizard.tpl.html'
                     };
                     closeChildrenBlades();
@@ -137,7 +134,7 @@
             }
         },
         {
-            name: "Manage", icon: 'icon-new-tab-2',
+            name: "Manage", icon: 'fa fa-edit',
             executeMethod: function () {
                 $scope.edit($scope.selectedItem);
             },
@@ -146,7 +143,7 @@
             }
         },
         {
-            name: "Run", icon: 'icon-enter',
+            name: "Run", icon: 'fa fa-sign-in',
             executeMethod: function () {
                 $scope.run($scope.selectedItem);
             },
@@ -155,7 +152,7 @@
             }
         },
         {
-            name: "Delete", icon: 'icon-remove',
+            name: "Delete", icon: 'fa fa-trash-o',
             executeMethod: function () {
                 deleteChecked();
             },

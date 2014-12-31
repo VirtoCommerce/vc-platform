@@ -1,24 +1,23 @@
-﻿<div class="inner-block" ng-init="propGroups = [{title:'Category properties', type:2},
-                                                                   {title:'Product properties', type:0},
-                                                                   {title:'Variation properties', type:1}]">
-
-    <form name="contextEntityDetailForm">
-        <fieldset ng-repeat="propGroup in propGroups" ng-init="setForm(contextEntityDetailForm);">
-            <legend>
-                {{propGroup.title}} ({{properties.length}})
-            </legend>
-            <div ng-repeat="prop in properties = (blade.currentEntity.properties | filter: {type:propGroup.type})">
-                <div class="control-group">
-                    <label for="">
-                        <a ng-show="prop.isManageable" href="" ng-click="editProperty(prop)">{{prop.name}}</a>
-                        <span ng-show="!prop.isManageable">{{prop.name}}</span>
-                    </label>
-                    <va-property2 ng-model="prop" get-prop-values="getPropValues" />
-                </div>
-            </div>
-            <div ng-if="properties.length == 0">None</div>
-        </fieldset>
-    </form>
+﻿<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block" ng-init="propGroups = [{title:'Category properties', type:2}, {title:'Product properties', type:0}, {title:'Variation properties', type:1}]">
+            <form name="contextEntityDetailForm">
+                <fieldset ng-repeat="propGroup in propGroups" ng-init="setForm(contextEntityDetailForm);">
+                    <legend>
+                        {{propGroup.title}} ({{properties.length}})
+                    </legend>
+                    <div ng-repeat="prop in properties = (blade.currentEntity.properties | filter: {type:propGroup.type})">
+                        <div class="control-group">
+                            <label for="">
+                                <a ng-show="prop.isManageable" href="" ng-click="editProperty(prop)">{{prop.name}}</a>
+                                <span ng-show="!prop.isManageable">{{prop.name}}</span>
+                            </label>
+                            <va-property2 ng-model="prop" get-prop-values="getPropValues" />
+                        </div>
+                    </div>
+                    <div ng-if="properties.length == 0">None</div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
 </div>
-
-

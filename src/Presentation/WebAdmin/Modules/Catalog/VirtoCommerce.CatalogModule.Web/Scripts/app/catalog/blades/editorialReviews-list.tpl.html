@@ -1,11 +1,17 @@
-﻿<ul class="list-extended" ng-if="blade.currentEntities.length">
-    <li ng-click="openBlade(data)" ng-repeat="data in blade.currentEntities | orderBy:languageCode">
-        <!--<p ng-bind-html="data.content"></p>-->
-        <i class="ico fa fa-comment-o"></i>
-        <span class="title">{{data.content | limitTo:150}}</span>
-        <span class="sub-title">{{data.languageCode}}</span>
-    </li>
-</ul>
-<div class="notice marker-on-left fg-white" ng-if="!blade.currentEntities.length">
-    <p>No Editorial Reviews yet</p>
+﻿<div class="blade-content">
+	<div class="blade-inner">
+		<div class="inner-block">
+			<ul class="list-extended" ng-if="blade.currentEntities.length">
+			    <li ng-click="openBlade(data)" ng-repeat="data in blade.currentEntities | orderBy:languageCode">
+			        <!--<p ng-bind-html="data.content"></p>-->
+			        <i class="ico fa fa-comment-o"></i>
+			        <span class="title">{{data.content | limitTo:150}}</span>
+			        <span class="sub-title">{{data.languageCode}}</span>
+			    </li>
+			</ul>
+			<div class="notice marker-on-left fg-white" ng-if="!blade.currentEntities.length">
+			    <p>No Editorial Reviews yet</p>
+			</div>
+		</div>
+	</div>
 </div>

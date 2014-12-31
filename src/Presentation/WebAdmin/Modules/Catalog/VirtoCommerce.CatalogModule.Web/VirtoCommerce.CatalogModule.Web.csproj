@@ -182,7 +182,6 @@
     <Content Include="Scripts\app\catalog\blades\import\import-job-list.js" />
     <Content Include="Scripts\app\catalog\blades\import\import-job-run.tpl.html" />
     <Content Include="Scripts\app\catalog\blades\import\import-job-list.tpl.html" />
-    <Content Include="Scripts\app\catalog\blades\import\import-job-execute.tpl.html" />
     <Content Include="Scripts\app\catalog\blades\seo-detail.js" />
     <Content Include="Scripts\app\catalog\blades\seo-detail.tpl.html" />
     <Content Include="Scripts\app\catalog\blades\property-attributes.js" />
@@ -254,7 +253,6 @@
     <Content Include="Scripts\app\catalog\widgets\itemVariationWidget.js" />
     <Content Include="Scripts\app\catalog\widgets\itemVariationWidget.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\common\wizard-ok-action2.tpl.html" />
-    <Content Include="Scripts\app\catalog\wizards\export\export-wizard-action.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\export\export-wizard-format-step.js" />
     <Content Include="Scripts\app\catalog\wizards\export\export-wizard-format-step.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\export\export-wizard-types-step.js" />
@@ -269,19 +267,16 @@
     <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-mapping-step.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-settings-step.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-importers-step.tpl.html" />
-    <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-update-action.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-catalogs-step.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-catalogs-step.js" />
     <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard.js" />
     <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard.tpl.html" />
-    <Content Include="Scripts\app\catalog\wizards\importWizard\import-job-wizard-create-action.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\newAssociation\association-wizard-group-new.js" />
     <Content Include="Scripts\app\catalog\wizards\newAssociation\association-wizard-group-new.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\newAssociation\association-wizard.js" />
     <Content Include="Scripts\app\catalog\wizards\newAssociation\association-wizard.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\newAssociation\association-wizard-group-step.js" />
     <Content Include="Scripts\app\catalog\wizards\newAssociation\association-wizard-group-step.tpl.html" />
-    <Content Include="Scripts\app\catalog\wizards\newAssociation\association-wizard-actions.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-editorial-review-detail-step.js" />
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-editorial-reviews.js" />
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-property-detail-step.js" />

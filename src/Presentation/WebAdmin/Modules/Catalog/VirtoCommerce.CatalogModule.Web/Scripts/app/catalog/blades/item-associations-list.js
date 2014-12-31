@@ -37,7 +37,6 @@
             title: "New Associations",
             //subtitle: '',
             controller: 'associationWizardController',
-            bladeActions: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newAssociation/association-wizard-actions.tpl.html',
             template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newAssociation/association-wizard.tpl.html'
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -45,7 +44,7 @@
 
     $scope.bladeToolbarCommands = [
         {
-            name: "Add", icon: 'icon-plus',
+            name: "Add", icon: 'fa fa-plus',
             executeMethod: function () {
                 openAddEntityWizard();
             },
@@ -54,7 +53,7 @@
             }
         },
         {
-            name: "Delete", icon: 'icon-remove',
+            name: "Delete", icon: 'fa fa-trash-o',
             executeMethod: function () {
                 var dialog = {
                     id: "confirmDeleteItem",

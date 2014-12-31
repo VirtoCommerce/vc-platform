@@ -1,4 +1,4 @@
-﻿angular.module('platformWebApp.bladeNavigation', [
+angular.module('platformWebApp.bladeNavigation', [
 ])
 .directive('vaBladeContainer', ['$compile', 'bladeNavigationService', function ($compile, bladeNavigationService)
 {
@@ -48,7 +48,7 @@
             $(element).off('mouseenter').on('mouseenter', function (e)
             {
                 var blade = $(element),
-			        bladeC = blade.find('.blade-content'),
+			        bladeC = blade.find('.blade-inner'),
 			        bladeH = bladeC.height(),
 			        bladeIh = blade.find('.inner-block').height();
 
@@ -63,6 +63,11 @@
 
                 horizontalScroll('on');
 
+            });
+
+            $('.blade-head, .blade-head *, .static, .static *').on('mouseenter', function (event) {
+                horizontalScroll('on');
+                event.stopPropagation();
             });
 
             function horizontalScroll(flag)
@@ -89,8 +94,8 @@
                 blade.attr('data-width', blade.width());
                 var leftMenu = $('.left-menu');
                 var offset = parseInt(blade.offset().left + $('.main-content').scrollLeft() - leftMenu.width());
-                var contentblock = blade.find(".blade-content ng-include").children()[0];
-                $(contentblock).animate({ width: (parseInt(window.innerWidth - 134) + 'px') }, 100);
+                var contentblock = blade.find(".blade-content");
+                $(contentblock).animate({ width: (parseInt(window.innerWidth - leftMenu.width()) + 'px') }, 100);
                 $('.main-content').animate({ scrollLeft: offset + 'px' }, 250);
             };
 
@@ -104,7 +109,7 @@
                 blade.removeAttr('data-width');
 
                 var offset = parseInt(blade.offset().left + $('.main-content').scrollLeft() - leftMenu.width());
-                var contentblock = blade.find(".blade-content ng-include").children()[0];
+                var contentblock = blade.find(".blade-content");
                 $(contentblock).animate({ width: blockWidth }, 100);
                 $('.main-content').animate({ scrollLeft: offset + 'px' }, 250);
             };

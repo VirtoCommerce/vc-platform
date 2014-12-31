@@ -1,10 +1,20 @@
-﻿<p class="subheader">Select entity types to export</p>
-<ul class="list-checkboxes">
-    <li ng-repeat="data in list">
-        <label>
-            <input type="checkbox" ng-checked="data.selected" ng-click="data.selected=!data.selected">
-            <span class="switch"></span>
-            {{data.name}}
-        </label>
-    </li>
-</ul>
+﻿<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="block">
+                <p class="subheader-secondary">Select entity types to export</p>
+                <ul class="list-checkboxes">
+                    <li ng-repeat="data in list">
+                        <label>
+                            <input type="checkbox" ng-checked="data.selected" ng-click="data.selected=!data.selected">
+                            <span class="switch"></span>
+                            {{data.name}}
+                        </label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="static bottom" ng-include="'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/common/wizard-ok-action2.tpl.html'">
+</div>

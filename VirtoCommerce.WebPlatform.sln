@@ -91,6 +91,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.PackagingModu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.CoreModule.Tests", "src\Presentation\WebAdmin\Modules\Core\VirtoCommerce.CoreModule.Tests\VirtoCommerce.CoreModule.Tests.csproj", "{521E57F8-E304-44A6-8EC3-CA41663AE65E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Cart", "Cart", "{8B27E533-BA11-47BD-8392-05CEB5DB0ED5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Order", "Order", "{0A7E7D8E-9573-4C10-9C37-A3E80798A6B0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.OrderModule", "src\Presentation\WebAdmin\Modules\Order\VirtoCommerce.OrderModule\VirtoCommerce.OrderModule.csproj", "{5F310990-CF4B-4FFE-9700-4206A011888E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.OrderModule.Test", "src\Presentation\WebAdmin\Modules\Order\VirtoCommerce.OrderModule.Test\VirtoCommerce.OrderModule.Test.csproj", "{1D6D1378-2CBE-4DA8-80EF-2B6106F614A7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -173,6 +181,14 @@ Global
 		{521E57F8-E304-44A6-8EC3-CA41663AE65E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{521E57F8-E304-44A6-8EC3-CA41663AE65E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{521E57F8-E304-44A6-8EC3-CA41663AE65E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F310990-CF4B-4FFE-9700-4206A011888E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F310990-CF4B-4FFE-9700-4206A011888E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F310990-CF4B-4FFE-9700-4206A011888E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F310990-CF4B-4FFE-9700-4206A011888E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D6D1378-2CBE-4DA8-80EF-2B6106F614A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D6D1378-2CBE-4DA8-80EF-2B6106F614A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D6D1378-2CBE-4DA8-80EF-2B6106F614A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D6D1378-2CBE-4DA8-80EF-2B6106F614A7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -206,5 +222,9 @@ Global
 		{A3B5EC9F-A1C9-43FE-8FC9-E11BBACF31BD} = {36033FE9-89FC-47CA-8F3C-6133BA23F53F}
 		{52F0A23D-D8A5-42AE-9C1B-6F1114CF2C77} = {36033FE9-89FC-47CA-8F3C-6133BA23F53F}
 		{521E57F8-E304-44A6-8EC3-CA41663AE65E} = {0310F318-D932-4ADA-9D9F-2D62927B2328}
+		{8B27E533-BA11-47BD-8392-05CEB5DB0ED5} = {A4C0D164-BF77-4B57-8970-B5459B100AC3}
+		{0A7E7D8E-9573-4C10-9C37-A3E80798A6B0} = {A4C0D164-BF77-4B57-8970-B5459B100AC3}
+		{5F310990-CF4B-4FFE-9700-4206A011888E} = {0A7E7D8E-9573-4C10-9C37-A3E80798A6B0}
+		{1D6D1378-2CBE-4DA8-80EF-2B6106F614A7} = {0A7E7D8E-9573-4C10-9C37-A3E80798A6B0}
 	EndGlobalSection
 EndGlobal

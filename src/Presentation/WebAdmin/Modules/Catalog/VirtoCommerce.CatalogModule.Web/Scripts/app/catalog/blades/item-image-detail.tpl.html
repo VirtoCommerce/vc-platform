@@ -1,48 +1,56 @@
-﻿    <div class="inner">
-        <div class="block">
-            <div class="row">
+﻿<div class="blade-content">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="inner">
+                <div class="block">
+                    <div class="row">
 
-                <h3>Select files</h3>
-           
-                <div ng-show="uploader.isHTML5" class="" style="padding: 15px 0;">
-                    <!-- 3. ng-file-over | ng-file-over="className" -->
-                    <div over-class="bd-blue" nv-file-over nv-file-drop uploader="uploader" class="panel" style="height: 80px;">
-                        <div class="panel-content">
-                            Drag and drop images here
+                        <h3>Select files</h3>
+                   
+                        <div ng-show="uploader.isHTML5" class="" style="padding: 15px 0;">
+                            <!-- 3. ng-file-over | ng-file-over="className" -->
+                            <div over-class="bd-blue" nv-file-over nv-file-drop uploader="uploader" class="panel" style="height: 80px;">
+                                <div class="panel-content">
+                                    Drag and drop images here
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2. ng-file-select | ng-file-select="options" -->
+                        <div data-role="input-control" class="input-control file">
+                            <input type="file" multiple uploader="uploader" nv-file-select style="z-index: 0;" tabindex="-1">
+                            <input type="text" style="z-index: 1; cursor: default;" readonly="">
+                            <button class="btn-file" type="button" onclick="$('input[type=file]').trigger('click')"></button>
+                        </div>
+
+
+                        <div class="col-md-12" style="margin-bottom: 40px">
+
+                            <div ng-show="uploader.isUploading">
+                                <p>
+                                    Progress:
+                                    <div class="progress-bar" data-role="progress-bar">
+                                        <div class="bar bg-cyan" ng-style="{ 'width': uploader.progress + '%' }"></div>
+                                    </div>
+                                </p>
+                            </div>
+                        </div>
+                        <div>
+                            <ul class="tiles" ui-sortable="sortableOptions" ng-model="item.images">
+                                <li class="tile-block nobg" ng-class="{'first':$first, 'mini': $first == false}" ng-repeat="image in item.images" ng-include="'imageTemplate.html'"></li>
+                            </ul>
                         </div>
                     </div>
-                </div>
 
-                <!-- 2. ng-file-select | ng-file-select="options" -->
-                <div data-role="input-control" class="input-control file">
-                    <input type="file" multiple uploader="uploader" nv-file-select style="z-index: 0;" tabindex="-1">
-                    <input type="text" style="z-index: 1; cursor: default;" readonly="">
-                    <button class="btn-file" type="button" onclick="$('input[type=file]').trigger('click')"></button>
-                </div>
-
-
-                <div class="col-md-12" style="margin-bottom: 40px">
-
-                    <div ng-show="uploader.isUploading">
-                        <p>
-                            Progress:
-                            <div class="progress-bar" data-role="progress-bar">
-                                <div class="bar bg-cyan" ng-style="{ 'width': uploader.progress + '%' }"></div>
-                            </div>
-                        </p>
-                    </div>
-                </div>
-                <div>
-                    <ul class="tiles" ui-sortable="sortableOptions" ng-model="item.images">
-                        <li class="tile-block nobg" ng-class="{'first':$first, 'mini': $first == false}" ng-repeat="image in item.images" ng-include="'imageTemplate.html'"></li>
-                    </ul>
+                    <script type="text/ng-template" id="imageTemplate.html">
+                        <div class="tile" ng-class="{selected:image.selected}" ng-click="toggleImageSelect($event, image)">
+                            <img ng-src="{{image.url ? image.url : ''}}">
+                        </div>
+                    </script>
                 </div>
             </div>
-
-            <script type="text/ng-template" id="imageTemplate.html">
-                <div class="tile" ng-class="{selected:image.selected}" ng-click="toggleImageSelect($event, image)">
-                    <img ng-src="{{image.url ? image.url : ''}}">
-                </div>
-            </script>
         </div>
     </div>
+</div>
+<div class="static bottom" ng-include="'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/common/wizard-ok-action.tpl.html'">
+</div>
