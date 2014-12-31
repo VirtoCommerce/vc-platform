@@ -13,8 +13,8 @@ namespace VirtoCommerce.CoreModule.Tests
 		[TestMethod]
 		public void TestSettings()
 		{
-			const string moduleId = "Sample.Managed";
-			const string settingName = "Sample.Managed.General.String";
+			const string moduleId = "VirtoCommerce.Core.Test";
+			const string settingName = "VirtoCommerce.Core.Test.General.String";
 			const string settingValue1 = "123";
 			const string settingValue2 = "456";
 
