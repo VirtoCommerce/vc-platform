@@ -50,7 +50,7 @@ namespace VirtoCommerce.CoreModule.Tests
 
 		private static ISettingsManager GetSettingsManager()
 		{
-			var modulesPath = Path.GetFullPath("modules");
+			var modulesPath = Path.GetFullPath(@"..\..\modules");
 			return new SettingsManager(modulesPath, () => new EFAppConfigRepository("VirtoCommerce"));
 		}
 	}

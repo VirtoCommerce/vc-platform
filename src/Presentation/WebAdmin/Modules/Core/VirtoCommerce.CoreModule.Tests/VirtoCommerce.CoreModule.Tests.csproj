@@ -85,7 +85,6 @@
   <ItemGroup>
     <Content Include="Modules\module.manifest">
       <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>

@@ -1,33 +1,33 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module>
-	<id>Sample.Managed</id>
+	<id>VirtoCommerce.Core.Test</id>
 	<title>Sample Managed Module</title>
 
 	<settings>
 		<group>
 			<setting>
-				<name>Sample.Managed.General.String</name>
+				<name>VirtoCommerce.Core.Test.General.String</name>
 				<valueType>string</valueType>
 				<defaultValue>qwerty</defaultValue>
 				<title>String</title>
 				<description>A text setting</description>
 			</setting>
 			<setting>
-				<name>Sample.Managed.General.Password</name>
+				<name>VirtoCommerce.Core.Test.General.Password</name>
 				<valueType>secureString</valueType>
 				<defaultValue>qwerty</defaultValue>
 				<title>Password</title>
 				<description>A secure text setting</description>
 			</setting>
 			<setting>
-				<name>Sample.Managed.General.Integer</name>
+				<name>VirtoCommerce.Core.Test.General.Integer</name>
 				<valueType>integer</valueType>
 				<defaultValue>123</defaultValue>
 				<title>Integer</title>
 				<description>An integer setting</description>
 			</setting>
 			<setting>
-				<name>Sample.Managed.General.Decimal</name>
+				<name>VirtoCommerce.Core.Test.General.Decimal</name>
 				<valueType>decimal</valueType>
 				<defaultValue>123.45</defaultValue>
 				<title>Decimal</title>
@@ -36,21 +36,21 @@
 		</group>
 		<group name="Advanced">
 			<setting>
-				<name>Sample.Managed.Advanced.Boolean1</name>
+				<name>VirtoCommerce.Core.Test.Advanced.Boolean1</name>
 				<valueType>boolean</valueType>
 				<defaultValue>true</defaultValue>
 				<title>Boolean1</title>
 				<description>A boolean setting</description>
 			</setting>
 			<setting>
-				<name>Sample.Managed.Advanced.Boolean2</name>
+				<name>VirtoCommerce.Core.Test.Advanced.Boolean2</name>
 				<valueType>boolean</valueType>
 				<defaultValue>false</defaultValue>
 				<title>Boolean2</title>
 				<description>A boolean setting</description>
 			</setting>
 			<setting>
-				<name>Sample.Managed.Advanced.Select</name>
+				<name>VirtoCommerce.Core.Test.Advanced.Select</name>
 				<valueType>string</valueType>
 				<allowedValues>
 					<value>qwerty</value>
