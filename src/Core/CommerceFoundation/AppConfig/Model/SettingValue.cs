@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Services.Common;
+using System.Globalization;
 using System.Runtime.Serialization;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Attributes;
@@ -12,8 +12,15 @@ namespace VirtoCommerce.Foundation.AppConfig.Model
 	[DataContract]
 	[EntitySet("SettingValues")]
 	[DataServiceKey("SettingValueId")]
-	public class SettingValue: StorageEntity
+	public class SettingValue : StorageEntity
 	{
+		public const string TypeShortText = "ShortText";
+		public const string TypeLongText = "LongText";
+		public const string TypeInteger = "Integer";
+		public const string TypeDecimal = "Decimal";
+		public const string TypeBoolean = "Boolean";
+		public const string TypeDateTime = "DateTime";
+
 		public SettingValue()
 		{
 			_settingValueId = GenerateNewKey();
@@ -30,7 +37,7 @@ namespace VirtoCommerce.Foundation.AppConfig.Model
 			set { SetValue(ref _settingValueId, () => SettingValueId, value); }
 		}
 
-		private string _ValueType;
+		private string _valueType;
 		[Required]
 		[DataMember]
 		[StringLength(64)]
@@ -38,144 +45,164 @@ namespace VirtoCommerce.Foundation.AppConfig.Model
 		{
 			get
 			{
-				return _ValueType;
+				return _valueType;
 			}
 			set
 			{
-				SetValue(ref _ValueType, () => this.ValueType, value);
+				SetValue(ref _valueType, () => ValueType, value);
 			}
 		}
 
-		private string _ShortTextValue;
+		private string _shortTextValue;
 		[StringLength(512)]
 		[DataMember]
 		public string ShortTextValue
 		{
 			get
 			{
-				return _ShortTextValue;
+				return _shortTextValue;
 			}
 			set
 			{
-				SetValue(ref _ShortTextValue, () => this.ShortTextValue, value);
+				SetValue(ref _shortTextValue, () => ShortTextValue, value);
 			}
 		}
 
-		private string _LongTextValue;
+		private string _longTextValue;
 		[DataMember]
 		public string LongTextValue
 		{
 			get
 			{
-				return _LongTextValue;
+				return _longTextValue;
 			}
 			set
 			{
-				SetValue(ref _LongTextValue, () => this.LongTextValue, value);
+				SetValue(ref _longTextValue, () => LongTextValue, value);
 			}
 		}
 
-		private decimal _DecimalValue;
+		private decimal _decimalValue;
 		[DataMember]
 		public decimal DecimalValue
 		{
 			get
 			{
-				return _DecimalValue;
+				return _decimalValue;
 			}
 			set
 			{
-				SetValue(ref _DecimalValue, () => this.DecimalValue, value);
+				SetValue(ref _decimalValue, () => DecimalValue, value);
 			}
 		}
 
-		private int _IntegerValue;
+		private int _integerValue;
 		[DataMember]
 		public int IntegerValue
 		{
 			get
 			{
-				return _IntegerValue;
+				return _integerValue;
 			}
 			set
 			{
-				SetValue(ref _IntegerValue, () => this.IntegerValue, value);
+				SetValue(ref _integerValue, () => IntegerValue, value);
 			}
 		}
 
-		private bool _BooleanValue;
+		private bool _booleanValue;
 		[DataMember]
 		public bool BooleanValue
 		{
 			get
 			{
-				return _BooleanValue;
+				return _booleanValue;
 			}
 			set
 			{
-				SetValue(ref _BooleanValue, () => this.BooleanValue, value);
+				SetValue(ref _booleanValue, () => BooleanValue, value);
 			}
 		}
 
-		private DateTime? _DateTimeValue;
+		private DateTime? _dateTimeValue;
 		[DataMember]
 		public DateTime? DateTimeValue
 		{
 			get
 			{
-				return _DateTimeValue;
+				return _dateTimeValue;
 			}
 			set
 			{
-				SetValue(ref _DateTimeValue, () => this.DateTimeValue, value);
+				SetValue(ref _dateTimeValue, () => DateTimeValue, value);
 			}
 		}
 
-		private string _Locale;
+		private string _locale;
 		[StringLength(64)]
 		[DataMember]
 		public string Locale
 		{
 			get
 			{
-				return _Locale;
+				return _locale;
 			}
 			set
 			{
-				SetValue(ref _Locale, () => this.Locale, value);
+				SetValue(ref _locale, () => Locale, value);
 			}
 		}
 
 		public override string ToString()
 		{
-			switch (this.ValueType)
-			{
-				case textBoolean:
-					return this.BooleanValue.ToString();
-				case textDateTime:
-					return this.DateTimeValue.ToString();
-				case textDecimal:
-					return this.DecimalValue.ToString();
-				case textInteger:
-					return this.IntegerValue.ToString();
-				case textLongText:
-					return this.LongTextValue;
-				case textShortText:
-					return this.ShortTextValue;
-			}
-			return base.ToString();
+			return ToString(CultureInfo.CurrentCulture);
 		}
 
-		private const string textShortText = "ShortText",
-			textLongText = "LongText",
-			textInteger = "Integer",
-			textDecimal = "Decimal",
-			textBoolean = "Boolean",
-			textDateTime = "DateTime";
+		public string ToString(IFormatProvider formatProvider)
+		{
+			switch (ValueType)
+			{
+				case TypeBoolean:
+					return BooleanValue.ToString();
+				case TypeDateTime:
+					return DateTimeValue == null ? null : DateTimeValue.Value.ToString(formatProvider);
+				case TypeDecimal:
+					return DecimalValue.ToString(formatProvider);
+				case TypeInteger:
+					return IntegerValue.ToString(formatProvider);
+				case TypeLongText:
+					return LongTextValue;
+				case TypeShortText:
+					return ShortTextValue;
+				default:
+					return base.ToString();
+			}
+		}
+
+		public object RawValue()
+		{
+			switch (ValueType)
+			{
+				case TypeBoolean:
+					return BooleanValue;
+				case TypeDateTime:
+					return DateTimeValue;
+				case TypeDecimal:
+					return DecimalValue;
+				case TypeInteger:
+					return IntegerValue;
+				case TypeLongText:
+					return LongTextValue;
+				case TypeShortText:
+					return ShortTextValue;
+				default:
+					return null;
+			}
+		}
 
 		#region Navigation properties
 
-		private string _SettingId;
+		private string _settingId;
 
 		[StringLength(128)]
 		[Required]
@@ -184,11 +211,11 @@ namespace VirtoCommerce.Foundation.AppConfig.Model
 		{
 			get
 			{
-				return _SettingId;
+				return _settingId;
 			}
 			set
 			{
-				SetValue(ref _SettingId, () => SettingId, value);
+				SetValue(ref _settingId, () => SettingId, value);
 			}
 		}
 

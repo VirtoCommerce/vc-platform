@@ -108,6 +108,8 @@
     <Compile Include="Modularity\ModuleManager.cs" />
     <Compile Include="Modularity\Exceptions\ModuleNotFoundException.cs" />
     <Compile Include="Modularity\ModuleManifest.cs" />
+    <Compile Include="Modularity\ModuleSetting.cs" />
+    <Compile Include="Modularity\ModuleSettingsGroup.cs" />
     <Compile Include="Modularity\ModuleState.cs" />
     <Compile Include="Modularity\Exceptions\ModuleTypeLoaderNotFoundException.cs" />
     <Compile Include="Modularity\Exceptions\ModuleTypeLoadingException.cs" />
@@ -121,6 +123,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Settings\ISettingsManager.cs" />
+    <Compile Include="Settings\ModuleDescriptor.cs" />
+    <Compile Include="Settings\SettingDescriptor.cs" />
+    <Compile Include="Settings\SettingsGroup.cs" />
     <Compile Include="UnityBootstrapper.cs" />
     <Compile Include="UnityBootstrapperExtension.cs" />
     <Compile Include="UnityContainerHelper.cs" />

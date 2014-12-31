@@ -113,6 +113,7 @@
     <Compile Include="Security\Models\UserLogin.cs" />
     <Compile Include="Security\Models\ApplicationUserExtended.cs" />
     <Compile Include="Security\OwinConfig.cs" />
+    <Compile Include="Settings\SettingsManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="module.manifest" />
