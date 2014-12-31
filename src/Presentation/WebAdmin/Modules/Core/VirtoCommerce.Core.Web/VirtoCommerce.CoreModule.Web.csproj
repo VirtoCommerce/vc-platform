@@ -117,6 +117,13 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="module.manifest" />
+    <Content Include="Scripts\Settings\blades\settings-detail.js" />
+    <Content Include="Scripts\Settings\blades\settings-detail.tpl.html" />
+    <Content Include="Scripts\Settings\blades\%24settings-list.js" />
+    <Content Include="Scripts\Settings\blades\%24settings-list.tpl.html" />
+    <Content Include="Scripts\home.tpl.html" />
+    <Content Include="Scripts\Settings\resources\setting.js" />
+    <Content Include="Scripts\Settings\settings.js" />
     <None Include="app.config" />
     <None Include="packages.config">
       <SubType>Designer</SubType>

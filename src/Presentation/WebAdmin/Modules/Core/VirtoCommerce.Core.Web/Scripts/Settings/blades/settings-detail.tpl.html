@@ -1,0 +1,30 @@
+﻿<div class="blade-content blade-medium">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <form name="objectsForm">
+                <fieldset ng-repeat="settingGroup in settingGroups" ng-init="setForm(objectsForm)">
+                    <legend>{{settingGroup.name==='-'?'General':settingGroup.name}}</legend>
+                    <div ng-repeat="data in blade.objects | filter: {groupName:settingGroup.name}">
+                        <div class="control-group" title="{{data.description}}">
+                            <label>{{data.title}}</label>
+                            <!--<va-property2 ng-model="prop" get-prop-values="getPropValues" />-->
+                            <div data-role="input-control" class="input-control text">
+                                <input required class="form-control" ng-model="data.value" />
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+
+
+            <!--<div class="block">
+                <div>
+                    <div class="block">
+                        <p class="title">Title</p>
+                        <p>{{currentEntity.title}}</p>
+                    </div>
+                </div>
+            </div>-->
+        </div>
+    </div>
+</div>
