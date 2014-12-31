@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <module>
 	<id>VirtoCommerce.Core.Test</id>
-	<title>Sample Managed Module</title>
+	<title>Virto Commerce Core Tests</title>
 
 	<settings>
 		<group>
