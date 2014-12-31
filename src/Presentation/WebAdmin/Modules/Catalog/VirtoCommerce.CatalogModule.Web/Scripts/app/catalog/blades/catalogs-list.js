@@ -245,5 +245,4 @@ function ($injector, $rootScope, $scope, catalogs, bladeNavigationService, dialo
 
     // actions on load
     $scope.blade.refresh();
-    $scope.blade.isList = true;
 }]);

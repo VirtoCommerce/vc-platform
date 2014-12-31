@@ -70,7 +70,4 @@
     if (!_.some($scope.blade.currentEntities)) {
         openAddEntityBlade();
     }
-
-    $scope.blade.isList = true;
-    $scope.blade.widthClass = 'medium';
 }]);

@@ -7,5 +7,4 @@
     };
 
     $scope.blade.isLoading = false;
-    $scope.blade.isList = true;
 }]);

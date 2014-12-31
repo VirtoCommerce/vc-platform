@@ -164,6 +164,4 @@
 
 
     $scope.blade.refresh();
-    $scope.blade.isList = true;
-    $scope.blade.widthClass = 'medium';
 }]);

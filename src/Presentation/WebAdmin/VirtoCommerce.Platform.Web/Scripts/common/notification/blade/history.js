@@ -64,6 +64,4 @@ function ($scope, bladeNavigationService, notificationTemplateResolver, notifica
 	
     // actions on load
     $scope.blade.refresh();
-    $scope.blade.isList = true;
-    $scope.blade.widthClass = 'medium';
 }]);

@@ -36,5 +36,4 @@
     }
 
     $scope.blade.refresh();
-    $scope.blade.isList = true;
 }]);
