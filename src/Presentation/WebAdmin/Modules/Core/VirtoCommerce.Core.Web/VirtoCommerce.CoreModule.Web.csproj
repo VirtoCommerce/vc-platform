@@ -99,6 +99,7 @@
   <ItemGroup>
     <Compile Include="Controllers\Api\NotificationController.cs" />
     <Compile Include="Controllers\Api\SecurityController.cs" />
+    <Compile Include="Controllers\Api\SettingController.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Notification\InMemoryNotifierImpl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

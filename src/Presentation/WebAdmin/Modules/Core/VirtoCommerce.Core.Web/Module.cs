@@ -5,6 +5,11 @@ using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerce.CoreModule.Web.Security;
 using VirtoCommerce.Framework.Web.Notification;
 using VirtoCommerce.CoreModule.Web.Notification;
+using VirtoCommerce.Foundation.Data.AppConfig;
+using VirtoCommerce.Foundation.AppConfig.Repositories;
+using System.Web.Hosting;
+using VirtoCommerce.CoreModule.Web.Controllers.Api;
+using VirtoCommerce.CoreModule.Web.Settings;
 
 namespace VirtoCommerce.CoreModule.Web
 {
@@ -44,6 +49,13 @@ namespace VirtoCommerce.CoreModule.Web
 
 			#region Notification
 			_container.RegisterInstance<INotifier>(new InMemoryNotifierImpl());
+			#endregion
+
+			#region Settings
+			var modulesPath = HostingEnvironment.MapPath("~/Modules");
+			Func<IAppConfigRepository> appConfigRepFactory = () => new EFAppConfigRepository("VirtoCommerce");
+			
+			_container.RegisterType<SettingController>(new InjectionConstructor ( new SettingsManager(modulesPath, appConfigRepFactory)));
 			#endregion
 		}
 
