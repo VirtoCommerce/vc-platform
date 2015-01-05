@@ -8,7 +8,7 @@ function ($injector, $scope, settings, bladeNavigationService) {
     $scope.blade.refresh = function () {
         $scope.blade.isLoading = true;
 
-        settings.getSettingsSections({}, function (results) {
+        settings.getModules({}, function (results) {
             $scope.blade.isLoading = false;
 
             $scope.objects = results;

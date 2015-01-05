@@ -2,8 +2,8 @@
     <div class="blade-inner">
         <div class="inner-block">
             <form name="objectsForm">
-                <fieldset ng-repeat="(groupName, groupSettings) in objectsGrouped" ng-init="setForm(objectsForm)">
-                    <legend>{{groupName==='-'?'General':groupName}}</legend>
+                <fieldset ng-repeat="(groupName, groupSettings) in blade.objects" ng-init="setForm(objectsForm)">
+                    <legend>{{groupName==='undefined'?'General':groupName}}</legend>
                     <div ng-repeat="data in groupSettings">
                         <div class="control-group" title="{{data.description}}">
                             <label>{{data.title}}</label>
