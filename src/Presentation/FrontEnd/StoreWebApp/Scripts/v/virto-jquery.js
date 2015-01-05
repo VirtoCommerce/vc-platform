@@ -106,13 +106,17 @@
 	    wnd.isPopup = true;
 	    wnd.focus();
     };
-    $.open = function (url)
+    $.open = function (url, target)
     {
     	if (window.isPopup) {
     		$.openParent(url, true);
 
-    	} else {
-		    window.location.href = url;
+    	} else
+    	{
+            if (!target) {
+                target = "_self";
+            }
+            window.open(url, target);
 	    }
     };
     $.openParent = function (url, setFocus)
