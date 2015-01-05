@@ -65,5 +65,9 @@ namespace VirtoCommerce.Framework.Web.Modularity
 		[XmlArrayItem(typeof(ManifestBundleFile))]
 		[XmlArrayItem(typeof(ManifestBundleDirectory))]
 		public ManifestBundleItem[] Scripts { get; set; }
+
+		[XmlArray("settings")]
+		[XmlArrayItem("group")]
+		public ModuleSettingsGroup[] Settings { get; set; }
 	}
 }

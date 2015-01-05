@@ -362,8 +362,7 @@
                       title: 'New category item',
                       subtitle: 'choose new item type',
                       controller: 'categoriesItemsAddController',
-                      template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/categories-items-add.tpl.html',
-                      isList: true
+                      template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/categories-items-add.tpl.html'
                   };
                   bladeNavigationService.showBlade(newBlade, $scope.blade);
               },
@@ -478,6 +477,4 @@
 
     //No need to call this because page 'pageSettings.currentPage' is watched!!! It would trigger subsequent duplicated req...
     //$scope.blade.refresh();
-    $scope.blade.isList = true;
-    $scope.blade.widthClass = 'medium';
 }]);
