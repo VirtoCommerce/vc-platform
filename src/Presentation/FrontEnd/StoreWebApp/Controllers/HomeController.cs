@@ -15,14 +15,7 @@ namespace VirtoCommerce.Web.Controllers
         [DonutOutputCache(CacheProfile = "HomeCache")]
         public ActionResult Index()
         {
-            if (Request.Path.EndsWith("realhome"))
-            {
-                return View();
-            }
-            else
-            {
-                return new RedirectResult("../index.html", true);
-            }
+            return View();
         }
     }
 }
