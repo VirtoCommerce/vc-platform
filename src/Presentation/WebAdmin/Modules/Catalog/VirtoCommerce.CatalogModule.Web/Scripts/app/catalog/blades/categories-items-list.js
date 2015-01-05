@@ -172,11 +172,7 @@
     };
 
     function isItemsChecked() {
-        if ($scope.items) {
-            return _.any($scope.items, function (x) { return x.selected; });
-        } else {
-            return false;
-        }
+        return $scope.items && _.any($scope.items, function (x) { return x.selected; });
     }
 
     function deleteChecked() {

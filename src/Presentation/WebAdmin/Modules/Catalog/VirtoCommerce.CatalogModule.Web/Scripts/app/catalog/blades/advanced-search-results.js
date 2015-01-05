@@ -32,10 +32,10 @@
 		    if ($scope.selectedItem != null) {
 		        $scope.selectedItem = $scope.findItem($scope.selectedItem.id);
 		    }
-		}, function(error) {
-            $scope.blade.isLoading = false;
-            bladeNavigationService.setError('Error ' + error.status, $scope.blade);
-        });
+		}, function (error) {
+		    $scope.blade.isLoading = false;
+		    bladeNavigationService.setError('Error ' + error.status, $scope.blade);
+		});
     }
 
     $scope.$watch('pageSettings.currentPage', function (newPage) {
@@ -73,11 +73,7 @@
     };
 
     function isItemsChecked() {
-        if ($scope.items) {
-            return $filter('filter')($scope.items, { selected: true }, true).length > 0;
-        } else {
-            return false;
-        }
+        return $scope.items && _.any($scope.items, function (x) { return x.selected; });
     }
 
     function deleteChecked() {
@@ -94,8 +90,7 @@
                     });
 
                     if (itemIds.length > 0) {
-                        items.remove({ ids: itemIds }, function (data, headers)
-                        {
+                        items.remove({ ids: itemIds }, function (data, headers) {
                             $scope.blade.refresh();
                         });
                     }
