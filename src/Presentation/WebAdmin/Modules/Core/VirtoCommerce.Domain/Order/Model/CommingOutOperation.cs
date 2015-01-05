@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VirtoCommerce.OrderModule.Model
+namespace VirtoCommerce.Domain.Order.Model
 {
-	[Flags]
-	public enum OrderResponseGroup
+	public abstract class CommingOutOperation : StockOperation
 	{
 	}
 }

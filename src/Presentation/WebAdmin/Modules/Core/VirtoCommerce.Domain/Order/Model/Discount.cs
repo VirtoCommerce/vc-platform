@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Money;
 
-namespace VirtoCommerce.OrderModule.Model
+namespace VirtoCommerce.Domain.Order.Model
 {
 	public class Discount : ValueObject<Discount>
 	{

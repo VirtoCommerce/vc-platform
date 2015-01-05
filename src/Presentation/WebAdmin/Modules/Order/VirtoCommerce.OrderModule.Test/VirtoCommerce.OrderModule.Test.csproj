@@ -58,9 +58,13 @@
       <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
       <Name>CommerceFoundation</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VirtoCommerce.OrderModule\VirtoCommerce.OrderModule.csproj">
-      <Project>{5f310990-cf4b-4ffe-9700-4206a011888e}</Project>
-      <Name>VirtoCommerce.OrderModule</Name>
+    <ProjectReference Include="..\..\Core\VirtoCommerce.Domain\VirtoCommerce.Domain.csproj">
+      <Project>{67c58a78-ddea-4fa3-a969-1cab582918e4}</Project>
+      <Name>VirtoCommerce.Domain</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VirtoCommerce.OrderModule.Data\VirtoCommerce.OrderModule.Data.csproj">
+      <Project>{061c4a3e-4d94-4807-9209-07d9f6392830}</Project>
+      <Name>VirtoCommerce.OrderModule.Data</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

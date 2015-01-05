@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VirtoCommerce.OrderModule.Model
+namespace VirtoCommerce.Domain.Order.Model
 {
-	public class Package : AuditableEntityBase<Package>
+	public class PaymentOut : FinanceOutOperation
 	{
 	}
 }

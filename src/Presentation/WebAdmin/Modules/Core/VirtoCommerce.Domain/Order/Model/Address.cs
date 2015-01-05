@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.OrderModule.Model;
 
-namespace VirtoCommerce.OrderModule.Services
+namespace VirtoCommerce.Domain.Order.Model
 {
-	public interface IPackageService : IGenericCrudService<Package>
+	public class Address : ValueObject<Address>
 	{
 	}
 }

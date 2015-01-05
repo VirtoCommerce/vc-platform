@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.OrderModule.Model;
 
-namespace VirtoCommerce.OrderModule.Services
+namespace VirtoCommerce.Domain.Order.Model
 {
-	public interface IShipmentService : IGenericCrudService<Shipment>
+	public class PaymentMethod : ValueObject<PaymentMethod>
 	{
 	}
 }

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Foundation.Frameworks;
 
-namespace VirtoCommerce.OrderModule.Model
+namespace VirtoCommerce.Domain.Order.Model
 {
 	public class Coupon : ValueObject<Coupon>
 	{

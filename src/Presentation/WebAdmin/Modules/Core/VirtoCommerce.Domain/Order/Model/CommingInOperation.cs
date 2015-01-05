@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace VirtoCommerce.OrderModule.Model
+namespace VirtoCommerce.Domain.Order.Model
 {
-	public interface IRecalculationRule
+	public abstract class CommingInOperation : StockOperation
 	{
-		void Recalculate(Order order);
 	}
 }
