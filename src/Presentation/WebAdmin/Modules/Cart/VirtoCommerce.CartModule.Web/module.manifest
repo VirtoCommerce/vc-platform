@@ -20,12 +20,12 @@
   <copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
   <tags>shopping cart</tags>
 
-  <!--<assemblyFile>VirtoCommerce.CartModule.Web.dll</assemblyFile>
+  <assemblyFile>VirtoCommerce.CartModule.Web.dll</assemblyFile>
   <moduleType>VirtoCommerce.CartModule.Web.Module, VirtoCommerce.CartModule.Web</moduleType>
-  <styles>
+  <!--<styles>
     <directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
-  </styles>-->
+  </styles>
   <scripts>
     <directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
-  </scripts>
+  </scripts>-->
 </module>

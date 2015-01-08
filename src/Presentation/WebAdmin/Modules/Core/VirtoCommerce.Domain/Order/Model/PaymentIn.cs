@@ -9,7 +9,8 @@ namespace VirtoCommerce.Domain.Order.Model
 {
 	public class PaymentIn : FinanceInOperation
 	{
+	
 		public DateTime? IncomingDate { get; set; }
-		public string IncomingNumber { get; set; }
+		public string OuterId { get; set; }
 	}
 }
