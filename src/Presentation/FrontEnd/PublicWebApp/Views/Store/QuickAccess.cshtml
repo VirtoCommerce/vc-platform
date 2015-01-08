@@ -1,0 +1,18 @@
+﻿@using VirtoCommerce.Web.Virto.Helpers
+@model dynamic
+
+<ul class="head-links">
+    <li class="first"><a href="@Url.Action("Index", "Account")" title="@("My Account".Localize())">
+                          @("My Account".Localize())</a>
+
+    </li>
+    <li>@{Html.RenderPartial("WishListLink", Model.WishList as CartModel);}</li>
+    <li>@{Html.RenderPartial("CartLink", Model.Cart as CartModel);}</li>
+    <li><a href="@Url.Action("Index", "Checkout")" title="@("Checkout".Localize())" class="top-link-checkout">@("Checkout".Localize())</a></li>
+    @{Html.RenderPartial("_LogOnPartial");}
+</ul>
+
+@if (UserHelper.CustomerSession.IsRegistered)
+{
+    <p class="welcome">@UserHelper.CustomerSession.CustomerName</p>
+}

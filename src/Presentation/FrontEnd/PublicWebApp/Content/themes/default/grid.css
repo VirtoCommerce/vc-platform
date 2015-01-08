@@ -1,0 +1,123 @@
+/**
+ * w - widthDisplay,
+ * h - heightDisplay
+ *
+ * Landscape — w > h
+ * Portrait — h > w
+ *
+ * Grid columns
+ * Use for desktop
+ *
+ * 12 Columns - 1200px
+ */
+.grid_1, .grid_2, .grid_3, .grid_4, .grid_5, .grid_6, .grid_7, .grid_8, .grid_9, .grid_10, .grid_11, .grid_12 {	display:inline;	float: left; position: relative; margin:0 15px; min-height:1px;}
+.grid_1 { width:70px;}
+.grid_2 { width:170px;}
+.grid_3 { width:270px;}
+.grid_4 { width:370px;}
+.grid_5 { width:470px;}
+.grid_6 { width:570px;}
+.grid_7 { width:670px;}
+.grid_8 { width:770px;}
+.grid_9 { width:870px;}
+.grid_10 { width:970px;}
+.grid_11 { width:1070px;}
+.grid_12 { width:1170px;}
+.space_1 { margin-left:100px; }
+.space_2 { margin-left:200px; }
+.space_3 { margin-left:300px; }
+.space_4 { margin-left:400px; }
+.space_5 { margin-left:500px; }
+.space_6 { margin-left:600px; }
+.space_7 { margin-left:700px; }
+.space_8 { margin-left:800px; }
+.space_9 { margin-left:900px; }
+.space_10 { margin-left:1000px; }
+.space_11 { margin-left:1100px; }
+
+/**
+ * Grid columns
+ * Use for tablets | Landscape
+ *
+ * 12 Columns - 960px
+ */
+@media only screen and (min-width: 960px) and (max-width: 1220px) {
+	.grid_1, .grid_2, .grid_3, .grid_4, .grid_5, .grid_6, .grid_7, .grid_8, .grid_9, .grid_10, .grid_11, .grid_12 { margin:0 16px; }
+	.grid_1 { width:48px; }
+	.grid_2 { width:128px; }
+	.grid_3 { width:208px; }
+	.grid_4 { width:288px; }
+	.grid_5 { width:368px; }
+	.grid_6 { width:448px; }
+	.grid_7 { width:528px; }
+	.grid_8 { width:608px; }
+	.grid_9 { width:688px; }
+	.grid_10 { width:768px; }
+	.grid_11 { width:848px; }
+	.grid_12 { width:928px; }
+	.space_1 { margin-left:96px; }
+	.space_2 { margin-left:176px; }
+	.space_3 { margin-left:256px; }
+	.space_4 { margin-left:336px; }
+	.space_5 { margin-left:416px; }
+	.space_6 { margin-left:496px; }
+	.space_7 { margin-left:576px; }
+	.space_8 { margin-left:656px; }
+	.space_9 { margin-left:736px; }
+	.space_10 { margin-left:816px; }
+	.space_11 { margin-left:896px; }
+}
+
+/**
+ * Grid columns
+ * Use for tablets | Portrait
+ *
+ * 12 Columns - 768px
+ */
+@media only screen and (min-width: 768px) and (max-width: 959px) {
+	.grid_1, .grid_2, .grid_3, .grid_4, .grid_5, .grid_6, .grid_7, .grid_8, .grid_9, .grid_10, .grid_11, .grid_12 { margin:0 14px; }
+    .grid_1 { width:36px; }
+    .grid_2 { width:100px; }
+    .grid_3 { width:164px; }
+    .grid_4 { width:228px; }
+    .grid_5 { width:292px; }
+    .grid_6 { width:342px; }
+    .grid_7 { width:420px; }
+    .grid_8 { width:484px; }
+    .grid_9 { width:548px; }
+    .grid_10 { width:612px; }
+    .grid_11 { width:676px; }
+    .grid_12 { width:740px; }
+    .space_1 { margin-left:78px; }
+    .space_2 { margin-left:142px; }
+    .space_3 { margin-left:206px; }
+    .space_4 { margin-left:270px; }
+    .space_5 { margin-left:334px; }
+    .space_6 { margin-left:398px; }
+    .space_7 { margin-left:462px; }
+    .space_8 { margin-left:526px; }
+    .space_9 { margin-left:590px; }
+    .space_10 { margin-left:654px; }
+    .space_11 { margin-left:718px; }
+}
+
+/**
+ * Grid columns
+ * Use for iPhone | Landscape
+ *
+ * 12 Columns - 480px
+ */
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+	.grid_1, .grid_2, .grid_3, .grid_4, .grid_5, .grid_6, .grid_7, .grid_8, .grid_9, .grid_10, .grid_11, .grid_12 { margin:0 15px 25px; width: 426px; }
+}
+
+/**
+ * Grid columns
+ * Use for iPhone | Portrait
+ *
+ * 12 Columns - 300px
+ */
+@media only screen and (min-width: 0) and (max-width: 479px) {
+	.grid_1, .grid_2, .grid_3, .grid_4, .grid_5, .grid_6, .grid_7, .grid_8, .grid_9, .grid_10, .grid_11, .grid_12 { margin:0 15px 10px; width: 270px; }
+    .space_1, .space_2, .space_3, .space_4, .space_5, .space_6, .space_7, .space_8, .space_9, .space_10, .space_11 { margin-left:0; }
+}

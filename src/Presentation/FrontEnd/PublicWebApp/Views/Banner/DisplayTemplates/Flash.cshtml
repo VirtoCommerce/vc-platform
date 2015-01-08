@@ -1,0 +1,10 @@
+﻿@{
+    Layout = null;
+	var currentModel = ViewData["Model"] as FlashModel;
+}
+@if (currentModel != null)
+{
+    <object height="@currentModel.Height" width="@currentModel.Width" classid="@currentModel.ClassId">
+        <object height="@currentModel.Height" width="@currentModel.Width" data="@currentModel.Src" type="application/x-shockwave-flash"></object>
+    </object>
+}

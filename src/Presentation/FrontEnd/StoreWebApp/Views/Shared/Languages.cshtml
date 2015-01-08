@@ -1,6 +1,7 @@
 ﻿@using System.Globalization
-@using RouteConstatnts = VirtoCommerce.Web.Client.Extensions.Routing
 @using VirtoCommerce.Foundation.AppConfig.Model
+@using RouteConstants = VirtoCommerce.Web.Client.Extensions.Routing
+
 @{
     var tempValues = new RouteValueDictionary(ViewContext.RouteData.Values);
     foreach (var key in Request.QueryString.Keys.Cast<string>())
@@ -26,20 +27,20 @@
                     @foreach (var lang in store.Languages)
                     {
                         var culture = CultureInfo.CreateSpecificCulture(lang.LanguageCode);
-                        tempValues[RouteConstatnts.Constants.Language] = culture.Name;
-                        tempValues[RouteConstatnts.Constants.Store] = SettingsHelper.SeoEncode(StoreHelper.CustomerSession.StoreId, SeoUrlKeywordTypes.Store, culture.Name);
+                        tempValues[RouteConstants.Constants.Language] = culture.Name;
+                        tempValues[RouteConstants.Constants.Store] = SettingsHelper.SeoEncode(StoreHelper.CustomerSession.StoreId, SeoUrlKeywordTypes.Store, culture.Name);
 
-                        if (tempValues.ContainsKey(RouteConstatnts.Constants.Category) && tempValues[RouteConstatnts.Constants.Category] as string != null)
+                        if (tempValues.ContainsKey(RouteConstants.Constants.Category) && tempValues[RouteConstants.Constants.Category] as string != null)
                         {
-                            tempValues[RouteConstatnts.Constants.Category] = SettingsHelper.SeoEncode(
-                                SettingsHelper.SeoDecode(ViewContext.RouteData.Values[RouteConstatnts.Constants.Category].ToString()
+                            tempValues[RouteConstants.Constants.Category] = SettingsHelper.SeoEncode(
+                                SettingsHelper.SeoDecode(ViewContext.RouteData.Values[RouteConstants.Constants.Category].ToString()
                                     , SeoUrlKeywordTypes.Category), SeoUrlKeywordTypes.Category, culture.Name);
                         }
 
-                        if (tempValues.ContainsKey(RouteConstatnts.Constants.Item) && tempValues[RouteConstatnts.Constants.Item] as string != null)
+                        if (tempValues.ContainsKey(RouteConstants.Constants.Item) && tempValues[RouteConstants.Constants.Item] as string != null)
                         {
-                            tempValues[RouteConstatnts.Constants.Item] = SettingsHelper.SeoEncode(
-                                SettingsHelper.SeoDecode(ViewContext.RouteData.Values[RouteConstatnts.Constants.Item].ToString()
+                            tempValues[RouteConstants.Constants.Item] = SettingsHelper.SeoEncode(
+                                SettingsHelper.SeoDecode(ViewContext.RouteData.Values[RouteConstants.Constants.Item].ToString()
                                     , SeoUrlKeywordTypes.Item), SeoUrlKeywordTypes.Item, culture.Name);
                         }
 

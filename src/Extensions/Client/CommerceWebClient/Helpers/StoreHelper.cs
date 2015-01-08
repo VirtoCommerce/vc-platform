@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.Eventing.Reader;
-using Microsoft.Practices.ServiceLocation;
+﻿using Microsoft.Practices.ServiceLocation;
 using System;
 using System.Collections.Specialized;
 using System.Linq;
@@ -8,14 +7,13 @@ using VirtoCommerce.Client;
 using VirtoCommerce.Foundation.Customers;
 using VirtoCommerce.Foundation.Customers.Services;
 using VirtoCommerce.Foundation.Frameworks.Currencies;
+using VirtoCommerce.Foundation.Search;
 using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.Foundation.Security.Services;
 using VirtoCommerce.Foundation.Stores.Model;
-using VirtoCommerce.Web.Client.Services.Filters;
 
 namespace VirtoCommerce.Web.Client.Helpers
 {
-    using VirtoCommerce.Foundation.Search;
 
     /// <summary>
     /// Class StoreHelper.

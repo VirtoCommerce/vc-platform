@@ -1,0 +1,16 @@
+﻿@model CartModel
+@{
+    Layout = null;
+}
+
+@if (Model.LineItems.Any())
+{
+	<a href="@Url.Action("WishList", "Account")" title="@("My Wishlist".Localize())">
+		@String.Format("My Wishlist ({0} {1})".Localize(), @Model.LineItems.Count(), Model.LineItems.Count() > 1 ? "items".Localize() : "item".Localize())
+	</a>
+}
+else
+{
+    <a href="@Url.Action("WishList", "Account")" title="@("My Wishlist".Localize())">@("My Wishlist".Localize())</a>
+}
+

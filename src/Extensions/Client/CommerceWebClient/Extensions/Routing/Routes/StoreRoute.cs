@@ -150,8 +150,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
                     //Check if some values match constraint for language or store. The expected route is {lang}/{store}/...
                     //But Language and/or store can be skipped then defaults or current values are used
                     var languageConstraint = new LanguageRouteConstraint();
-                    var storeConstraint = new StoreRouteConstraint();
-
+                   
                     var languageFound = false;
                     if (languageConstraint.Match(httpContext, this, Constants.Language,
                         new RouteValueDictionary { { Constants.Language, pathSegments[0] } }.Merge(values), RouteDirection.IncomingRequest))
@@ -170,6 +169,7 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
                     var storeCandidate = !languageFound
                         ? pathSegments[0]
                         : pathSegments.Length > 1 ? pathSegments[1] : null;
+                    var storeConstraint = new StoreRouteConstraint();
 
                     if (!string.IsNullOrEmpty(storeCandidate) && storeConstraint.Match(httpContext, this, Constants.Store,
                        new RouteValueDictionary { { Constants.Store, storeCandidate } }.Merge(values), RouteDirection.IncomingRequest))

@@ -1,0 +1,18 @@
+﻿@model CurrenciesModel
+
+@if (Model.Currencies.Count() > 1)
+{
+    <li>
+        <div class="currency">
+            <span>@("Currency".Localize()): <span class="current">@Model.SelectedCurrency</span></span>
+            <ul>
+                @foreach (var curr in Model.Currencies)
+                {
+                    <li class="@(curr.CurrencyCode == Model.SelectedCurrency ? "selected" : "")">
+                        <a href="" onclick="VirtoCommerce.changeCurrency('@curr.CurrencyCode'); return false;">@string.Format("{0} - {1}", curr.CurrencyName, curr.CurrencyCode)</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </li>
+}

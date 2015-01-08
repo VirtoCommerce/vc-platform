@@ -178,6 +178,7 @@ namespace VirtoCommerce.Foundation.Stores.Model
 				case "Integer":
 					return IntegerValue.ToString();
 				case "LongText":
+                case "xml":
 					return LongTextValue;
 				case "ShortText":
 					return ShortTextValue;

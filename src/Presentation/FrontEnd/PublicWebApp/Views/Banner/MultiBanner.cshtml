@@ -1,0 +1,17 @@
+﻿@model IEnumerable<VirtoCommerce.ApiClient.DataContracts.Contents.DynamicContentItemGroup>
+
+@foreach (var group in Model)
+{
+    <div id="@group.GroupName">
+        @{
+            try
+            {
+                Html.RenderPartial("BaseContentPlace", new BannerModel(group.Items));
+            }
+            catch (Exception ex)
+            {
+                <p style="font-style: italic; text-align: center;">Failed to load dynamic content item</p>
+            }
+        }
+    </div>
+}

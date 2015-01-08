@@ -1,0 +1,103 @@
+﻿@using System.Reflection
+<script>
+    $(function ()
+    {
+        VirtoCommerce.registerDynamicContent("FooterPromo", function (html) {
+            $('#FooterPromo').html(html);
+            $('#FooterPromo .control').click(function ()
+            {
+                $(this).toggleClass('opened');
+            });
+        });
+        VirtoCommerce.registerDynamicContent("BottomLeftPromo", '#BottomLeftPromo');
+    })
+</script>
+
+<div class="footer-wrap">
+    <div class="banners">
+        <div class="rubber clearfix">
+            <div id="BottomLeftPromo">
+                 @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "BottomLeftPromo" });}
+            </div>
+            <div class="grid_6 banner callback">
+                <a title="Call us! toll free 8-800-123-1234" href="">Call us! toll free <span>8-800-123-1234</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="info">
+        <div class="rubber clearfix">
+            <div class="grid_3">
+                <a class="control"></a>
+                <h2>Facebook</h2>
+                <div class="content">
+                    <div class="fb-like-box"
+                        data-href="http://facebook.com/virtocommerce"
+                        data-colorscheme="light"
+                        data-show-faces="true"
+                        data-header="false"
+                        data-stream="false"
+                        data-show-border="false">
+                    </div>
+                </div>
+            </div>
+            <div id="FooterPromo">
+@*                @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "FooterPromo" });}*@
+            </div>
+            <div class="grid_3">
+                <a class="control"></a>
+                <h2>@("Information".Localize())</h2>
+                <div class="content">
+                    <ul>
+                        <li>Build your business the way you want with our flexible, customizable platform</li>
+                        <li>Expand globally with new online stores that launch in a matter of days, not months</li>
+                        <li>Market products in endless ways with different catalogue and product types</li>
+                        <li>Target customers with unique promotions, pricing, and dynamic content</li>
+                        <li>Manage stores with the clean, intuitive back-end system</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="grid_3">
+                <a class="control"></a>
+                <h2>@("Contacts".Localize())</h2>
+                <div class="content">
+                    <address>
+                        <p>Los Angeles, USA</p>
+                        <p>Vilnius, Lithuania</p>
+                        <p>Kaliningrad, Russia</p>
+                        <p>Beijing, China</p>
+                    </address>
+                    <hr>
+                    <p>+1 (323) 570.5588</p>
+                    <hr>
+                    <p><a href="mailto:sales@virtocommerce.com">sales@virtocommerce.com</a></p>
+                    <ul class="social clearfix">
+                        <li class="tw"><a target="blank" href="http://twitter.com/VirtoCommerce"><span>Twitter</span></a></li>
+                        <li class="fb"><a target="blank" href="http://facebook.com/virtocommerce"><span>Facebook</span></a></li>
+                        <li class="mail"><a href="mailto:support@virtocommerce.com"><span>Email</span></a></li>
+                        <li class="plus"><a target="blank" href="http://plus.google.com/u/0/110275588520785121043"><span>Google</span></a></li>
+                        <li class="in"><a target="blank" href="https://www.linkedin.com/groups/Virtocommerce-Users-Group-8116785"><span>LinkedIn</span></a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <footer role="contentinfo" class="footer rubber clearfix">
+        <div class="grid_6">
+            <address>
+                @("Version:".Localize()) @Html.Version() - <a href="http://support.virtocommerce.com"
+                    onclick="this.target='_blank'"><strong>@("Report Issues".Localize())</strong></a>
+                &copy; 2014 @("Powered by".Localize()) <a href="http://virtocommerce.com">Virto Commerce</a>&nbsp;-
+                <a href="http://virtocommerce.com/requestcommunitylicense" target="_blank">Get License</a>
+            </address>
+        </div>
+        <div class="grid_6">
+            <ul class="links">
+                <li><a href="http://virtocommerce.com/about" title="About Us">@("About Us".Localize())</a></li>
+                <li><a href="#" title="Delivery &amp; Returns">@("Delivery & Returns".Localize())</a></li>
+                <li><a href="http://virtocommerce.com/enterprise-edition" title="Terms &amp; Conditions">@("Terms & Conditions".Localize())</a></li>
+                <li><a href="http://virtocommerce.com/contact-us" title="Contact Us">@("Contact Us".Localize())</a></li>
+            </ul>
+        </div>
+    </footer>
+</div>

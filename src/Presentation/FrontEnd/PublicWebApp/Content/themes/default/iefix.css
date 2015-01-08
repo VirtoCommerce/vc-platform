@@ -1,0 +1,45 @@
+﻿.head-switch ul {
+    display: none;
+    visibility: visible;
+}
+
+    .head-switch ul ul {
+        display: none;
+        visibility: visible;
+    }
+
+.head-switch:hover > ul {
+    display: block;
+}
+
+.head-switch ul li:hover ul {
+    display: block;
+}
+
+.header .menu li .sub-menu {
+    display: none;
+    visibility: visible;
+}
+
+.header .menu li:hover .sub-menu,
+.header .menu li.hovered .sub-menu {
+    display: block;
+}
+
+.head-top-block .cart-options ul li .popup {
+    display: none;
+    visibility: visible;
+}
+
+.head-top-block .cart-options ul li:hover .popup {
+    display: block;
+}
+
+.article .content .category-products .toolbar .sorter .switch .dropdown {
+    display: none;
+    visibility: visible;
+}
+
+.article .content .category-products .toolbar .sorter .switch:hover .dropdown {
+    display: block;
+}

@@ -49,25 +49,6 @@ namespace VirtoCommerce.Client
 
             //return allStores.Where(x => x.StoreId == storeId || storeId == "").FirstOrDefault();
             return allStores.Where(x => x.StoreId.Equals(storeId, StringComparison.OrdinalIgnoreCase) || storeId == "").FirstOrDefault();
-
-            /*
-            return Helper.Get(
-                string.Format(StoreCacheKey, storeId),
-                () => _storeRepository.Stores
-                                      .Expand(s => s.Settings)
-                                      .Expand(s => s.Currencies)
-                                      .Expand(s => s.FulfillmentCenter)
-                                      .Expand(s => s.Languages)
-                                      .Expand(s => s.LinkedStores)
-                                      .Expand(s => s.PaymentGateways)
-                                      .Expand(s => s.CardTypes)
-                                      .Expand(s => s.ReturnsFulfillmentCenter)
-                                      .Expand(s => s.TaxCodes)
-                                      .Expand(s => s.TaxJurisdictions)
-                                      .Where(x => x.StoreId == storeId || storeId == "").FirstOrDefault(),
-                StoreConfiguration.Instance.Cache.StoreTimeout,
-                _isEnabled);
-             * */
         }
 
         /// <summary>

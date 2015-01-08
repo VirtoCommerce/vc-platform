@@ -1,0 +1,9 @@
+﻿@{
+    Layout = null;
+	var currentModel = ViewData["Model"] as ImageClickableModel;
+}
+
+@if (currentModel !=null && currentModel.TargetUrl != null) 
+{
+    <div data-src="@Url.Content(currentModel.ImageUrl)" data-link="@Url.Content(currentModel.TargetUrl)"></div>
+}

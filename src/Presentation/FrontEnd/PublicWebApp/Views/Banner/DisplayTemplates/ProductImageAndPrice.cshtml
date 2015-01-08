@@ -1,0 +1,10 @@
+﻿@{
+    Layout = null;
+	var currentModel = ViewData["Model"] as ProductWithImageAndPriceModel;
+}
+
+@if (currentModel != null)
+{
+    @*@Html.Action("DisplayDynamic", "Extension", new { itemCode = currentModel.ProductCode })*@
+}
+

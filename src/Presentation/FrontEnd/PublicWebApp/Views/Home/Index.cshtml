@@ -1,0 +1,72 @@
+﻿@{
+    Layout = "../Shared/_Layout.cshtml";
+    ViewBag.Title = Html.Title("Home".Localize());
+}
+
+<script>
+    $(function () {
+        VirtoCommerce.registerDynamicContent("MainSlider", function (data) {
+            $('.main-slider .container').html(data);
+            VirtoCommerce.initSliders();
+        });
+        VirtoCommerce.registerDynamicContent("HomeNewProducts", function (data) {
+            $('div.new-products ul.products-list').html(data);
+            $('div.new-products').virtoSlider();
+        });
+        VirtoCommerce.registerDynamicContent("HomeStaffPick", function (data) {
+            $('div.staff-pick ul.products-list').html(data);
+            $('div.staff-pick').virtoSlider();
+        });
+        VirtoCommerce.registerDynamicContent("HomeFeaturedProducts", 'div.featured ul.products-list');
+
+    })
+</script>
+
+@section Slider{
+    <div id="MainSlider">
+        <div class="main-slider">
+            <div class="container">
+                @* @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "MainSlider" });}*@
+            </div>
+        </div>
+    </div>
+}
+
+<div class="home content">
+    <div class="products slider-products staff-pick">
+        <header>
+            <h2>@("Staff pick".Localize())</h2>
+        </header>
+        <ul class="products-list slider-list grid">
+            @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeStaffPick" });}
+        </ul>
+    </div>
+    <div class="products featured">
+        <header>
+            <h2>@("Featured Products".Localize())</h2>
+        </header>
+        <ul class="products-list grid">
+            @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeFeaturedProducts" });}
+        </ul>
+    </div>
+    <div class="products slider-products new-products">
+        <header>
+            <h2>@("New Products".Localize())</h2>
+        </header>
+        <ul class="products-list slider-list grid">
+            @{Html.RenderAction("ShowDynamicContent", "Banner", new { placeName = "HomeNewProducts" });}
+        </ul>
+    </div>
+</div>
+<div class="home sidebar">
+    <aside class="block">
+        <span class="title">@("Newsletter Sign-up".Localize())</span>
+        <p>@("Sign up for our newsletter".Localize())</p>
+        <form action="#" method="post" id="newsletter-validate-detail">
+            <input type="text" name="email" id="newsletter" title="@("Sign up for our newsletter".Localize())" class="required-entry validate-email" />
+            <button type="submit">
+                <span>@("subscribe".Localize())</span>
+            </button>
+        </form>
+    </aside>
+</div>

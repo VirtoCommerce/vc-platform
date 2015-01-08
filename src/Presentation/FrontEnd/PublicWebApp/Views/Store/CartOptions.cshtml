@@ -1,0 +1,22 @@
+﻿@model dynamic
+@{
+    var cart = Model.Cart as CartModel;
+}
+
+<ul>
+    <li class="compare">
+        <a href="javascript:void(0)" onclick="$.popup('@Url.Action("Compare", "Account")')">@("Compare".Localize())</a>
+        <div class="popup">
+            @{ Html.RenderPartial("MiniCompareList", Model.CompareList as CompareListModel); }
+        </div>
+    </li>
+    <li class="cart">
+        <a href="@Url.Action("Index", "Cart")">@("Bag".Localize())</a>
+        <div class="popup">
+            @{ Html.RenderPartial("MiniCart", cart); }
+        </div>
+    </li>
+    <li class="count">
+        <span>@("Bag".Localize()) (<span id="cart-count">@(cart !=null ? cart.LineItems.Length : 0)</span>)</span>
+    </li>
+</ul>

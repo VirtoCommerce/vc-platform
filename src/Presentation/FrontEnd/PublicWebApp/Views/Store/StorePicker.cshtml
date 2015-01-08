@@ -1,0 +1,23 @@
+﻿@using Newtonsoft.Json
+@model StoresModel
+<script>
+    $(function() {
+        VirtoCommerce.Stores = @Html.Raw(JsonConvert.SerializeObject(Model.Stores));
+    });
+</script>
+@if (Model.Stores.Count() > 1)
+{
+    <li>
+        <div class="store">
+            <span>@("Store".Localize()): <span class="current">@Model.SelectedStoreName</span></span>
+            <ul>
+                @foreach (var curr in Model.Stores)
+                {
+                    <li class="@(curr.Id.Equals(Model.SelectedStore, StringComparison.InvariantCultureIgnoreCase) ? "selected" : "")">
+                        <a href="@curr.Url">@curr.Name</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </li>
+}
