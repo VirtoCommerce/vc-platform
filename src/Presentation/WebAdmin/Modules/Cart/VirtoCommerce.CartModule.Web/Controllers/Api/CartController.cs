@@ -28,7 +28,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		// GET: api/cart/store1/carts/current
 		[HttpGet]
 		[ResponseType(typeof(webModel.ShoppingCart))]
-		[Route("/{siteId}/carts/current")]
+		[Route("{siteId}/carts/current")]
 		public IHttpActionResult GetCurrentCart(string siteId)
 		{
 			var customerId = User.Identity.Name;
@@ -59,10 +59,14 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		// GET: api/cart/carts/{id}
 		[HttpGet]
 		[ResponseType(typeof(webModel.ShoppingCart))]
-		[Route("carts")]
+		[Route("carts/{id}")]
 		public IHttpActionResult GetCartById(string id)
 		{
 			var retVal = _shoppingCartService.GetById(id);
+			if(retVal == null)
+			{
+				return NotFound();
+			}
 			return Ok(retVal.ToWebModel());
 		}
 

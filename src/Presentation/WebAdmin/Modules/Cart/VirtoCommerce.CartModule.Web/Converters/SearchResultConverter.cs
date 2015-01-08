@@ -14,18 +14,12 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 		public static webModel.SearchResult ToWebModel(this coreModel.SearchResult result)
 		{
 			var retVal = new webModel.SearchResult();
+
 			retVal.InjectFrom(result);
+			retVal.ShopingCarts = result.ShopingCarts.Select(x => x.ToWebModel()).ToList();
 
 			return retVal;
 		}
-
-		public static coreModel.SearchResult ToCoreModel(this webModel.SearchResult result)
-		{
-			var retVal = new coreModel.SearchResult();
-			retVal.InjectFrom(result);
-			return retVal;
-		}
-
 
 	}
 }
