@@ -1,0 +1,77 @@
+﻿<div class="static top">
+    <div data-role="input-control" class="input-control text input-search">
+        <input type="text" placeholder="Search keyword..." ng-model="filter.searchKeyword" ui-keyup="{'enter':'blade.refresh()'}">
+        <button tabindex="-1" class="btn-clear" type="button" ng-click="filter.searchKeyword = null;blade.refresh()"></button>
+    </div>
+    <span class="search-count">Count: {{pageSettings.totalItems}}</span>
+</div>
+<div class="blade-content blade-medium">
+    <div class="blade-inner">
+        <div class="inner-block">
+            <div class="table-wrapper">
+                <table class="table hovered">
+                    <thead>
+                        <tr>
+                            <th class="text-left fixed-td">
+                                <div data-role="input-control" class="input-control checkbox">
+                                    <label>
+                                        <input type="checkbox" ng-model="selectedAll" ng-change="checkAll(selectedAll)" />
+                                        <span class="check"></span>
+                                    </label>
+                                </div>
+                            </th>
+                            <th class="text-left">Customer</th>
+                            <th class="text-left fixed-td">Items count</th>
+                            <th class="text-left fixed-td">Total</th>
+                            <th class="text-left fixed-td">Created</th>
+                            <th class="text-left fixed-td">Modified</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="data in objects" ng-class="{'selected': data.id === selectedNodeId}" context-menu data-target="cl_menu_{{data.id}}" ng-click='selectNode(data)'>
+                            <td>
+                                <div data-role="input-control" class="input-control checkbox">
+                                    <label>
+                                        <input type="checkbox" ng-model="data.selected">
+                                        <span class="check"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <span title="{{data.customer.name}}">{{data.customer.name}}</span>
+                            </td>
+                            <td>
+                                <span>{{data.items.length}}</span>
+                                <ul role="menu" class="dropdown-menu context-menu" id="cl_menu_{{data.id}}">
+                                    <li ng-click='edit(data)'>
+                                        <i class="ico fa fa-edit"></i>&nbsp;Manage
+                                    </li>
+                                    <li ng-click='delete()'>
+                                        <i class="ico fa fa-trash-o"></i>&nbsp;Delete
+                                    </li>
+                                </ul>
+                            </td>
+                            <td>
+                                <span title="{{data.totals}}">{{data.totals}}</span>
+                            </td>
+                            <td>
+                                <span title="{{data.created}}">{{data.created | date }}</span>
+                            </td>
+                            <td>
+                                <span title="{{data.modified}}">{{data.modified | date}}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems">
+                        <tr>
+                            <td colspan="6" ng-include="'pagerTemplate.html'"></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <script type="text/ng-template" id="pagerTemplate.html">
+                <pagination ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" boundary-links="true" max-size="pageSettings.numPages" items-per-page="pageSettings.itemsPerPageCount" total-items="pageSettings.totalItems" ng-model="pageSettings.currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+            </script>
+        </div>
+    </div>
+</div>

@@ -5,7 +5,7 @@
         $scope.blade.isLoading = true;
 
         // parse values as they all are strings
-        settings.getSettings({ moduleId: $scope.blade.moduleId }, function (results) {
+        settings.getSettings({ id: $scope.blade.moduleId }, function (results) {
             var selectedSettings = _.where(results, { valueType: 'integer' });
             _.forEach(selectedSettings, function (setting) {
                 setting.value = parseInt(setting.value, 10);
@@ -24,13 +24,13 @@
 
             selectedSettings = _.where(results, { valueType: 'boolean' });
             _.forEach(selectedSettings, function (setting) {
-                setting.value = setting.value === 'true';
+                setting.value = setting.value === 'True';
                 if (setting.allowedValues) {
-                    setting.allowedValues = _.map(setting.allowedValues, function (value) { return value === 'true'; });
+                    setting.allowedValues = _.map(setting.allowedValues, function (value) { return value === 'True'; });
                 }
             });
 
-            $scope.objectsGrouped = _.groupBy(results, 'groupName');
+            results = _.groupBy(results, 'groupName');
             $scope.blade.objects = angular.copy(results);
             $scope.blade.origEntity = results;
             $scope.blade.isLoading = false;
@@ -47,7 +47,9 @@
 
     function saveChanges() {
         $scope.blade.isLoading = true;
-        settings.update({}, $scope.blade.objects, function (data, headers) {
+        var objects = _.flatten(_.map($scope.blade.objects, _.values));
+        //console.log('saveChanges3: ' + angular.toJson(objects, true));
+        settings.update({}, objects, function (data, headers) {
             $scope.blade.refresh();
         });
     };
@@ -66,7 +68,6 @@
             name: "Reset", icon: 'icon-undo',
             executeMethod: function () {
                 angular.copy($scope.blade.origEntity, $scope.blade.objects);
-                $scope.objectsGrouped = _.groupBy($scope.blade.objects, 'groupName');
             },
             canExecuteMethod: function () {
                 return isDirty();
