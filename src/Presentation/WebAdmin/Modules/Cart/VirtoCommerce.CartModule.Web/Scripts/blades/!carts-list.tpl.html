@@ -38,10 +38,10 @@
                                 </div>
                             </td>
                             <td>
-                                <span title="{{data.customer.name}}">{{data.customer.name}}</span>
+                                <span title="{{data.customerName}}">{{data.customerName}}</span>
                             </td>
                             <td>
-                                <span>{{data.items.length}}</span>
+                                <span>{{data.items?data.items.length:0}}</span>
                                 <ul role="menu" class="dropdown-menu context-menu" id="cl_menu_{{data.id}}">
                                     <li ng-click='edit(data)'>
                                         <i class="ico fa fa-edit"></i>&nbsp;Manage
@@ -52,13 +52,13 @@
                                 </ul>
                             </td>
                             <td>
-                                <span title="{{data.totals}}">{{data.totals}}</span>
+                                <span title="{{data.total}}">{{data.total}}</span>
                             </td>
                             <td>
-                                <span title="{{data.created}}">{{data.created | date }}</span>
+                                <span title="{{data.createdDate}}">{{data.createdDate | date }}</span>
                             </td>
                             <td>
-                                <span title="{{data.modified}}">{{data.modified | date}}</span>
+                                <span title="{{data.modifiedDate}}">{{data.modifiedDate | date}}</span>
                             </td>
                         </tr>
                     </tbody>
