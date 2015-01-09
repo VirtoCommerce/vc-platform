@@ -1,43 +1,44 @@
 ﻿angular.module('virtoCommerce.cartModule.resources.carts', [])
 .factory('carts', ['$resource', function ($resource) {
-    //return $resource('api/carts/:id', { id: '@Id' }, {
-    //    getCarts: { url: 'api/carts/modules/:id', isArray: true },
-    //    update: { method: 'POST', url: 'api/carts' }
-    //});
+    return $resource('api/cart/:id', { id: '@Id' }, {
+        cartsSearch: { url: 'api/cart/carts' },
+        getCart: { url: 'api/cart/carts/:id' },
+        update: { method: 'POST', url: 'api/cart' }
+    });
 
-    return {
-        getCarts: getCartsMock,
-        // update: updateMock
-    };
+    //return {
+    //    cartsSearch: getCartsMock,
+    //    // update: updateMock
+    //};
 
-    function getCartsMock(param1, param2) {
-        var entries = [
-            {
-                id: 'id1',
-                name: 'id1 name',
-                customer: { name: 'customer name' },
-                items: [{ id: 'i01' }, { id: 'i88' }, { id: 'i05' }],
-                totals: '123.45 USD',
-                created: '1278903921551',
-                modified: '2015-01-05T16:16:08.726Z'
-            },
-            {
-                id: 'id2',
-                name: 'id2 name',
-                customer: { name: 'john doe name' },
-                items: [{ id: 'i01' }],
-                totals: '7123.45 USD',
-                created: '1228903921551',
-                modified: '2015-01-08T16:16:08.726Z'
-            }
+    //function getCartsMock(param1, param2) {
+    //    var entries = [
+    //        {
+    //            id: 'id1',
+    //            name: 'id1 name',
+    //            customerName: 'customer name',
+    //            items: [{ id: 'i01' }, { id: 'i88' }, { id: 'i05' }],
+    //            total: '123.45 USD',
+    //            createdDate: '1278903921551',
+    //            modifiedDate: '2015-01-05T16:16:08.726Z'
+    //        },
+    //        {
+    //            id: 'id2',
+    //            name: 'id2 name',
+    //            customerName: 'john doe name',
+    //            items: [{ id: 'i01' }],
+    //            total: '7123.45 USD',
+    //            createdDate: '1228903921551',
+    //            modifiedDate: '2015-01-08T16:16:08.726Z'
+    //        }
 
-        ];
+    //    ];
 
-        var retVal = {
-            totalCount: entries.length,
-            listEntries: entries
-        }
-        param2(retVal);
-    }
+    //    var retVal = {
+    //        totalCount: entries.length,
+    //        shopingCarts: entries
+    //    }
+    //    param2(retVal);
+    //}
 
 }]);

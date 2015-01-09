@@ -18,16 +18,20 @@ function ($scope, carts, bladeNavigationService, dialogService) {
     $scope.blade.refresh = function () {
         $scope.blade.isLoading = true;
 
-        carts.getCarts({}, function (data) {
+        carts.cartsSearch({
+            keyword: $scope.filter.searchKeyword,
+            start: ($scope.pageSettings.currentPage - 1) * $scope.pageSettings.itemsPerPageCount,
+            count: $scope.pageSettings.itemsPerPageCount
+        }, function (data) {
             $scope.blade.isLoading = false;
             $scope.selectedAll = false;
 
             $scope.pageSettings.totalItems = angular.isDefined(data.totalCount) ? data.totalCount : 0;
-            $scope.objects = data.listEntries;
+            $scope.objects = data.shopingCarts;
 
             if (selectedNode != null) {
                 //select the node in the new list
-                angular.forEach(results, function (node) {
+                angular.forEach(data.shopingCarts, function (node) {
                     if (selectedNode.id === node.id) {
                         selectedNode = node;
                     }
@@ -36,13 +40,17 @@ function ($scope, carts, bladeNavigationService, dialogService) {
         });
     };
 
+    $scope.$watch('pageSettings.currentPage', function (newPage) {
+        $scope.blade.refresh();
+    });
+
     $scope.selectNode = function (node) {
         selectedNode = node;
         $scope.selectedNodeId = selectedNode.id;
 
         var newBlade = {
             id: 'cartDetail',
-            title: selectedNode.customer.name + '\'s Shopping cart',
+            title: selectedNode.customerName + '\'s Shopping cart',
             currentEntityId: selectedNode.id,
             controller: 'cartDetailController',
             template: 'Modules/Cart/VirtoCommerce.CartModule.Web/Scripts/blades/cart-detail.tpl.html'
@@ -126,5 +134,6 @@ function ($scope, carts, bladeNavigationService, dialogService) {
 
 
     // actions on load
-    $scope.blade.refresh();
+    //No need to call this because page 'pageSettings.currentPage' is watched!!! It would trigger subsequent duplicated req...
+    //$scope.blade.refresh();
 }]);
