@@ -61,10 +61,14 @@
     <Compile Include="ClientContext.cs" />
     <Compile Include="CommerceClients.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="DataContracts\SeoKeyword.cs" />
+    <Compile Include="DataContracts\SeoUrlKeywordTypes.cs" />
     <Compile Include="DataContracts\Store\Store.cs" />
     <Compile Include="DataContracts\Store\StoreSetting.cs" />
     <Compile Include="DataContracts\Store\StoreState.cs" />
+    <Compile Include="Extensions\SeoClientExtensions.cs" />
     <Compile Include="Extensions\StoreClientExtensions.cs" />
+    <Compile Include="SeoClient.cs" />
     <Compile Include="StoreClient.cs" />
     <Compile Include="ContentClient.cs" />
     <Compile Include="DataContracts\BrowseQuery.cs" />

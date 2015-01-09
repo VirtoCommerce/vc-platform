@@ -49,6 +49,8 @@ namespace PublicWebApp.App_Start
             #region MVC Helpers
 
             container.RegisterType<StoreClient>();
+            container.RegisterType<SeoKeywordClient>();
+            container.RegisterType<CatalogClient>();
 
             #endregion
 

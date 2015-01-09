@@ -57,7 +57,7 @@ namespace VirtoCommerce.ApiClient.Utilities
 
         public static string ApiConnectionString(string nameOrConnectionString)
         {
-            return ApiConnectionString(nameOrConnectionString, ConfigurationManager.AppSettings["DefaultCatalog"]).ToLower();
+            return ApiConnectionString(nameOrConnectionString, ConfigurationManager.AppSettings["DefaultStore"]).ToLower();
         }
 
         public static string ApiConnectionString(string nameOrConnectionString, string catalog, string language = null)

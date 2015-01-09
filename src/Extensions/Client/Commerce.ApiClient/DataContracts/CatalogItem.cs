@@ -23,6 +23,8 @@ namespace VirtoCommerce.ApiClient.DataContracts
 
         public string[] Categories { get; set; }
 
+        public string Outline { get; set; }
+
         #region Properties
 
         private IDictionary<string, string[]> _properties = new Dictionary<string, string[]>();

@@ -4,16 +4,20 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using PublicWebApp.Models;
+using VirtoCommerce.ApiClient.DataContracts;
 using VirtoCommerce.ApiWebClient.Caching;
 using VirtoCommerce.ApiWebClient.Extensions;
+using VirtoCommerce.ApiWebClient.Extensions.Filters;
+using VirtoCommerce.ApiWebClient.Extensions.Routing.Routes;
+using VirtoCommerce.ApiWebClient.Helpers;
 
 namespace PublicWebApp.Controllers
 {
     /// <summary>
 	/// Class ControllerBase.
 	/// </summary>
-    //[Localize(Order = 1)]
-    //[Canonicalized(typeof(AccountController), typeof(CheckoutController), Order = 2)]
+    [Localize(Order = 1)]
+    [Canonicalized(typeof(AccountController)/*, typeof(CheckoutController)*/, Order = 2)]
 	public abstract class ControllerBase : Controller
 	{
 
@@ -33,7 +37,7 @@ namespace PublicWebApp.Controllers
 	    {
 	        if (!filterContext.Canceled && filterContext.Result != null && !ControllerContext.IsChildAction)
 	        {
-	            //FillViewBagWithMetadata(filterContext);
+	            FillViewBagWithMetadata(filterContext);
 	        }
 
             //Process messages
@@ -92,41 +96,41 @@ namespace PublicWebApp.Controllers
 	        return string.Format("{0}_messages", type);
 	    }
 
-        //protected virtual bool FillViewBagWithMetadata(ActionExecutedContext filterContext)
-        //{
-        //    var storeRoute = filterContext.RouteData.Route as StoreRoute;
+        protected virtual bool FillViewBagWithMetadata(ActionExecutedContext filterContext)
+        {
+            var storeRoute = filterContext.RouteData.Route as StoreRoute;
 
-        //    if (storeRoute != null)
-        //    {
-        //        string routeKey = storeRoute.GetMainRouteKey();
+            if (storeRoute != null)
+            {
+                string routeKey = storeRoute.GetMainRouteKey();
 
-        //        if (filterContext.RouteData.Values.ContainsKey(routeKey))
-        //        {
-        //            var routeValue = filterContext.RouteData.Values[routeKey] as string;
-        //            if (!String.IsNullOrEmpty(routeValue))
-        //            {
-        //                SeoUrlKeywordTypes type;
-        //                if (Enum.TryParse(routeKey, true, out type))
-        //                {
-        //                    var lastIsVal = routeValue.Split(new[] {'/'}, StringSplitOptions.RemoveEmptyEntries).Last();
-        //                    var keyword = SettingsHelper.SeoKeyword(lastIsVal, type, byValue: false);
+                if (filterContext.RouteData.Values.ContainsKey(routeKey))
+                {
+                    var routeValue = filterContext.RouteData.Values[routeKey] as string;
+                    if (!String.IsNullOrEmpty(routeValue))
+                    {
+                        SeoUrlKeywordTypes type;
+                        if (Enum.TryParse(routeKey, true, out type))
+                        {
+                            var lastIsVal = routeValue.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).Last();
+                            var keyword = SettingsHelper.SeoKeyword(lastIsVal, type, byValue: false);
 
-        //                    if (keyword != null)
-        //                    {
-        //                        ViewBag.MetaDescription = keyword.MetaDescription;
-        //                        ViewBag.Title = keyword.Title;
-        //                        ViewBag.MetaKeywords = keyword.MetaKeywords;
-        //                        ViewBag.ImageAltDescription = keyword.ImageAltDescription;
+                            if (keyword != null)
+                            {
+                                ViewBag.MetaDescription = keyword.MetaDescription;
+                                ViewBag.Title = keyword.Title;
+                                ViewBag.MetaKeywords = keyword.MetaKeywords;
+                                ViewBag.ImageAltDescription = keyword.ImageAltDescription;
 
-        //                        return true;
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    }
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
 
-        //    return false;
-        //}
+            return false;
+        }
 
         #region Cache
 

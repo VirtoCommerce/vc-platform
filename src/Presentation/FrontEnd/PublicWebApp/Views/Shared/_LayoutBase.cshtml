@@ -41,8 +41,8 @@
                             </span>
                             <ul>
                                 @{Html.RenderPartial("Languages");}
-                                @*@{Html.RenderAction("StorePicker", "Store", true);}
-                                @{Html.RenderAction("Currencies", "Store", true);}*@
+                                @{Html.RenderAction("StorePicker", "Store", true);}
+                                @{Html.RenderAction("Currencies", "Store", true);}
                             </ul>
                         </div>
                     </div>
@@ -56,7 +56,7 @@
                 <div class="rubber clearfix">
                     <div class="grid_12">
                         <p class="">
-                            @*<a href="@Url.RouteUrl("Store")"></a>*@
+                            <a href="@Url.RouteUrl("Store")"></a>
                         </p>
                         @RenderSection("Navigation", false)
                         @RenderSection("MiniActions", false)

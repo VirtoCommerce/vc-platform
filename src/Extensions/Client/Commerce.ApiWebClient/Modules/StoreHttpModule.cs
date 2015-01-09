@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Security;
+using VirtoCommerce.ApiClient.DataContracts;
 using VirtoCommerce.ApiClient.DataContracts.Store;
 using VirtoCommerce.ApiWebClient.Clients;
 using VirtoCommerce.ApiWebClient.Extensions;
@@ -381,7 +382,7 @@ namespace VirtoCommerce.ApiWebClient.Modules
                     continue;
                 }
 
-                //storeCandidate = SettingsHelper.SeoDecode(storeCandidate, SeoUrlKeywordTypes.Store);
+                storeCandidate = SettingsHelper.SeoDecode(storeCandidate, SeoUrlKeywordTypes.Store);
 
                 if (string.IsNullOrEmpty(storeCandidate))
                 {

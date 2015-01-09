@@ -34,24 +34,6 @@ namespace VirtoCommerce.ApiWebClient.Configuration.Application
             }
         }
 
-        [ConfigurationProperty("CacheServiceConnection", IsRequired = false)]
-        public CacheServiceConnection CacheServiceConnection
-        {
-            get
-            {
-                return (CacheServiceConnection)this["CacheServiceConnection"];
-            }
-        }
-
-        [ConfigurationProperty("Scheduler", IsRequired = false)]
-        public SchedulerConnection Scheduler
-        {
-            get
-            {
-                return (SchedulerConnection)this["Scheduler"];
-            }
-        }
-
         [ConfigurationProperty("Setup", IsRequired = true)]
         public SetupConfiguration Setup
         {
@@ -87,31 +69,7 @@ namespace VirtoCommerce.ApiWebClient.Configuration.Application
 
     public class AppConfigConnection : ConfigurationElement
     {
-        [ConfigurationProperty("wsEndPointName", IsRequired = false)]
-        public string WSEndPointName
-        {
-            get
-            {
-                return (string)this["wsEndPointName"];
-            }
-            set
-            {
-                this["wsEndPointName"] = value;
-            }
-        }
-
-        [ConfigurationProperty("sqlConnectionStringName", IsRequired = false)]
-        public string SqlConnectionStringName
-        {
-            get
-            {
-                return (string)this["sqlConnectionStringName"];
-            }
-            set
-            {
-                this["sqlConnectionStringName"] = value;
-            }
-        }
+      
 
         [ConfigurationProperty("dataServiceUri", IsRequired = false)]
         public string DataServiceUri
@@ -123,19 +81,6 @@ namespace VirtoCommerce.ApiWebClient.Configuration.Application
             set
             {
                 this["dataServiceUri"] = value;
-            }
-        }
-
-        [ConfigurationProperty("dataServiceBaseUriName", IsRequired = false)]
-        public string DataServiceBaseUriName
-        {
-            get
-            {
-                return (string)this["dataServiceBaseUriName"];
-            }
-            set
-            {
-                this["dataServiceBaseUriName"] = value;
             }
         }
 
@@ -151,128 +96,6 @@ namespace VirtoCommerce.ApiWebClient.Configuration.Application
         }
     }
 
-    public class CacheServiceConnection : ConfigurationElement
-    {
-        [ConfigurationProperty("wsEndPointName", IsRequired = false)]
-        public string WSEndPointName
-        {
-            get
-            {
-                return (string)this["wsEndPointName"];
-            }
-            set
-            {
-                this["wsEndPointName"] = value;
-            }
-        }
-
-        [ConfigurationProperty("serviceBaseUriName", IsRequired = false)]
-        public string ServiceBaseUriName
-        {
-            get
-            {
-                return (string)this["serviceBaseUriName"];
-            }
-            set
-            {
-                this["serviceBaseUriName"] = value;
-            }
-        }
-
-        [ConfigurationProperty("serviceUri", IsRequired = false)]
-        public string ServiceUri
-        {
-            get
-            {
-                return (string)this["serviceUri"];
-            }
-            set
-            {
-                this["serviceUri"] = value;
-            }
-        }
-
-        [ConfigurationProperty("forceHttps", IsRequired = false)]
-        public bool ForceHttps
-        {
-            get
-            {
-                return (bool)this["forceHttps"];
-            }
-            set
-            {
-                this["forceHttps"] = value;
-            }
-        }
-    }
-
-    public class SchedulerConnection : ConfigurationElement
-    {
-        public SchedulerConnection() { }
-
-        [ConfigurationProperty("wsEndPointName", IsRequired = false)]
-        public string WSEndPointName
-        {
-            get
-            {
-                return (string)this["wsEndPointName"];
-            }
-            set
-            {
-                this["wsEndPointName"] = value;
-            }
-        }
-
-        [ConfigurationProperty("sqlConnectionStringName", IsRequired = false)]
-        public string SqlConnectionStringName
-        {
-            get
-            {
-                return (string)this["sqlConnectionStringName"];
-            }
-            set
-            {
-                this["sqlConnectionStringName"] = value;
-            }
-        }
-
-        [ConfigurationProperty("dataServiceUri", IsRequired = false)]
-        public string DataServiceUri
-        {
-            get
-            {
-                return (string)this["dataServiceUri"];
-            }
-            set
-            {
-                this["dataServiceUri"] = value;
-            }
-        }
-
-        [ConfigurationProperty("dataServiceBaseUriName", IsRequired = false)]
-        public string DataServiceBaseUriName
-        {
-            get
-            {
-                return (string)this["dataServiceBaseUriName"];
-            }
-            set
-            {
-                this["dataServiceBaseUriName"] = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the <see cref="T:System.Configuration.ConfigurationElement"/> object is read-only.
-        /// </summary>
-        /// <returns>
-        /// true if the <see cref="T:System.Configuration.ConfigurationElement"/> object is read-only; otherwise, false.
-        /// </returns>
-        public override bool IsReadOnly()
-        {
-            return false;
-        }
-    }
 
     /// <summary>
     /// Config settings which define where caching is enabled and timeouts related to it.
@@ -343,25 +166,6 @@ namespace VirtoCommerce.ApiWebClient.Configuration.Application
             }
         }
 
-        /// <summary>
-        /// Configuration attribute which determines when the Scheduled jobs are
-        /// automatically refreshed in memory (in seconds).
-        /// </summary>
-        /// <value>
-        /// The scheduled jobs collection timeout.
-        /// </value>
-        [ConfigurationProperty("schedulerTimeout", IsRequired = false, DefaultValue = "0:1:0")]
-        public TimeSpan SchedulerTimeout
-        {
-            get
-            {
-                return (TimeSpan)this["schedulerTimeout"];
-            }
-            set
-            {
-                this["schedulerTimeout"] = value.ToString();
-            }
-        }
 
         /// <summary>
         /// Configuration attribute which determines when the seo keywords values are

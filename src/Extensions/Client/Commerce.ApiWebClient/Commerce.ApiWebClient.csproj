@@ -60,18 +60,31 @@
       <Private>True</Private>
       <HintPath>..\..\..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Owin">
       <HintPath>..\..\..\..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\packages\Microsoft.AspNet.WebApi.Client.5.2.2\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\packages\Microsoft.AspNet.WebPages.3.2.2\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\packages\Microsoft.AspNet.WebApi.Core.5.2.2\lib\net45\System.Web.Http.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Mvc, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -120,15 +133,39 @@
     <Compile Include="Caching\HttpCacheRepository.cs" />
     <Compile Include="Caching\Interfaces\ICacheRepository.cs" />
     <Compile Include="Clients\DynamicContentClient.cs" />
+    <Compile Include="Clients\SeoKeywordClient.cs" />
+    <Compile Include="Clients\CatalogClient.cs" />
     <Compile Include="Configuration\Application\AppConfigConfiguration.cs" />
+    <Compile Include="Configuration\Catalog\CatalogConfiguration.cs" />
     <Compile Include="Configuration\DynamicContent\DynamicContentConfiguration.cs" />
     <Compile Include="Configuration\Store\StoreConfiguration.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Currencies\CurrencyService.cs" />
     <Compile Include="Currencies\ICurrencyService.cs" />
+    <Compile Include="Extensions\Filters\CanonicalizedAttribute.cs" />
+    <Compile Include="Extensions\Filters\LocalizeAttribute.cs" />
+    <Compile Include="Extensions\Filters\LocalizeWebApiAttribute.cs" />
+    <Compile Include="Extensions\Filters\ModelValidationFilterAttribute.cs" />
+    <Compile Include="Extensions\Filters\ValidateAjaxAttribute.cs" />
+    <Compile Include="Extensions\RedirectRouteExtensions.cs" />
+    <Compile Include="Extensions\RouteValueDictionaryExtensions.cs" />
     <Compile Include="Extensions\Routing\Constants.cs" />
+    <Compile Include="Extensions\Routing\Constraints\BaseRouteConstraint.cs" />
+    <Compile Include="Extensions\Routing\Constraints\CategoryRouteConstraint.cs" />
+    <Compile Include="Extensions\Routing\Constraints\ItemRouteConstraint.cs" />
+    <Compile Include="Extensions\Routing\Constraints\LanguageRouteConstraint.cs" />
+    <Compile Include="Extensions\Routing\Constraints\StoreRouteConstraint.cs" />
+    <Compile Include="Extensions\Routing\HttpHandlers\DelegateHttpHandler.cs" />
+    <Compile Include="Extensions\Routing\HttpHandlers\RedirectHttpHandler.cs" />
+    <Compile Include="Extensions\Routing\Routes\CategoryRoute.cs" />
+    <Compile Include="Extensions\Routing\Routes\ItemRoute.cs" />
+    <Compile Include="Extensions\Routing\Routes\NormalizeRoute.cs" />
+    <Compile Include="Extensions\Routing\Routes\RedirectRoute.cs" />
+    <Compile Include="Extensions\Routing\Routes\StoreRoute.cs" />
     <Compile Include="Extensions\SectionExtensions.cs" />
     <Compile Include="Extensions\ViewRenderer.cs" />
+    <Compile Include="Helpers\SettingsHelper.cs" />
+    <Compile Include="Helpers\CatalogHelper.cs" />
     <Compile Include="Modules\BaseHttpModule.cs" />
     <Compile Include="Modules\StoreHttpModule.cs" />
     <Compile Include="Properties\Annotations.cs" />

@@ -65,6 +65,9 @@
     <Reference Include="MvcSiteMapProvider.WebActivator">
       <HintPath>..\..\..\..\packages\MvcSiteMapProvider.MVC5.4.6.17\lib\net45\MvcSiteMapProvider.WebActivator.dll</HintPath>
     </Reference>
+    <Reference Include="RouteDebugger">
+      <HintPath>..\..\..\..\packages\routedebugger.2.1.4.0\lib\net40\RouteDebugger.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -199,6 +202,7 @@
     <Compile Include="Controllers\ControllerBase.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\CatalogController.cs" />
     <Compile Include="Controllers\StoreController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -404,6 +408,7 @@
     <Content Include="App_Data\Virto\Configuration\DynamicContent.config">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="App_Data\Virto\Configuration\Catalog.config" />
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>

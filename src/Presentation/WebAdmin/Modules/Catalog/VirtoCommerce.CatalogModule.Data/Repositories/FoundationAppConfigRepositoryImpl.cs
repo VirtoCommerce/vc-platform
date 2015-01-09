@@ -27,7 +27,7 @@ namespace VirtoCommerce.CatalogModule.Data.Repositories
 
 		public foundation.SeoUrlKeyword[] GetAllSeoInformation(string id)
 		{
-			return SeoUrlKeywords.Where(x => x.KeywordValue == id).ToArray();
+			return SeoUrlKeywords.Where(x => x.IsActive && (string.IsNullOrEmpty(id) || x.KeywordValue == id) ).ToArray();
 		}
 
 		#endregion

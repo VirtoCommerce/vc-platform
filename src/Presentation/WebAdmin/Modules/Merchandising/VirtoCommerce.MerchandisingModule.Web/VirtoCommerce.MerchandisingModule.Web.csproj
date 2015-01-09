@@ -80,6 +80,7 @@
     <Compile Include="Controllers\ContentController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\ReviewController.cs" />
+    <Compile Include="Controllers\KeywordController.cs" />
     <Compile Include="Controllers\StoreController.cs" />
     <Compile Include="Converters\AssetConverter.cs" />
     <Compile Include="Converters\CategoryConverter.cs" />
@@ -88,11 +89,13 @@
     <Compile Include="Converters\ResponseGroupConverter.cs" />
     <Compile Include="Converters\ReviewCommentConverter.cs" />
     <Compile Include="Converters\ReviewConverter.cs" />
+    <Compile Include="Converters\KeywordConverter.cs" />
     <Compile Include="Converters\StoreConverter.cs" />
     <Compile Include="Model\IFeedbackCounterSupport.cs" />
     <Compile Include="Model\EditorialReview.cs" />
     <Compile Include="Model\Review.cs" />
     <Compile Include="Model\ReviewComment.cs" />
+    <Compile Include="Model\SeoKeyword.cs" />
     <Compile Include="Model\Store\Store.cs" />
     <Compile Include="Model\Store\StoreSetting.cs" />
     <Compile Include="Module.cs" />

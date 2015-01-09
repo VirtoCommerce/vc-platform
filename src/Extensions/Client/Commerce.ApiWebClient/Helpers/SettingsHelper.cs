@@ -1,14 +1,13 @@
 ﻿using System;
-using System.CodeDom.Compiler;
 using System.Globalization;
 using System.Linq;
 using Microsoft.Practices.ServiceLocation;
-using VirtoCommerce.Client;
-using VirtoCommerce.Foundation.AppConfig.Model;
-using VirtoCommerce.Foundation.Customers;
-using VirtoCommerce.Foundation.Customers.Services;
+using VirtoCommerce.ApiClient.DataContracts;
+using VirtoCommerce.ApiWebClient.Clients;
+using VirtoCommerce.ApiWebClient.Customer;
+using VirtoCommerce.ApiWebClient.Customer.Services;
 
-namespace VirtoCommerce.Web.Client.Helpers
+namespace VirtoCommerce.ApiWebClient.Helpers
 {
     /// <summary>
     /// Class SettingsHelper.
@@ -19,13 +18,13 @@ namespace VirtoCommerce.Web.Client.Helpers
         /// Gets the settings client.
         /// </summary>
         /// <value>The settings client.</value>
-		public static SettingsClient SettingsClient
-		{
-			get
-			{
-				return ServiceLocator.Current.GetInstance<SettingsClient>();
-			}
-		}
+        //public static SettingsClient SettingsClient
+        //{
+        //    get
+        //    {
+        //        return ServiceLocator.Current.GetInstance<SettingsClient>();
+        //    }
+        //}
 
         /// <summary>
         /// Gets the seo keyword client.
@@ -53,10 +52,10 @@ namespace VirtoCommerce.Web.Client.Helpers
         /// </summary>
         /// <param name="name">The name.</param>
         /// <returns>SettingValue[][].</returns>
-		public static SettingValue[] GetSettings(string name)
-		{
-			return SettingsClient.GetSettings(name);
-		}
+        //public static SettingValue[] GetSettings(string name)
+        //{
+        //    return SettingsClient.GetSettings(name);
+        //}
 
         /// <summary>
         /// Encodes the given value to SEO keyword.
@@ -98,7 +97,7 @@ namespace VirtoCommerce.Web.Client.Helpers
         }
 
 
-        public static SeoUrlKeyword SeoKeyword(string val, SeoUrlKeywordTypes type, string language = null, bool byValue = true)
+        public static SeoKeyword SeoKeyword(string val, SeoUrlKeywordTypes type, string language = null, bool byValue = true)
         {
             language = language ?? CustomerSession.Language;
             var langInfo = TryGetCultureInfo(language);
@@ -179,38 +178,38 @@ namespace VirtoCommerce.Web.Client.Helpers
         /// Gets a value indicating whether [output cache enabled].
         /// </summary>
         /// <value><c>true</c> if [output cache enabled]; otherwise, <c>false</c>.</value>
-        public static bool OutputCacheEnabled
-        {
-            get
-            {
-                var retVal = true; // if there is no such setting we assume cache enabled
+        //public static bool OutputCacheEnabled
+        //{
+        //    get
+        //    {
+        //        var retVal = true; // if there is no such setting we assume cache enabled
 
-                var settings = GetSettings("OutputCacheEnabled");
+        //        var settings = GetSettings("OutputCacheEnabled");
 
-                if (settings != null && settings.Length > 0)
-                {
-                    retVal = settings.First().BooleanValue;
-                }
+        //        if (settings != null && settings.Length > 0)
+        //        {
+        //            retVal = settings.First().BooleanValue;
+        //        }
 
-                return retVal;
-            }
-        }
+        //        return retVal;
+        //    }
+        //}
 
-        public static bool ChildOutputCacheEnabled
-        {
-            get
-            {
-                var retVal = true; // if there is no such setting we assume cache enabled
+        //public static bool ChildOutputCacheEnabled
+        //{
+        //    get
+        //    {
+        //        var retVal = true; // if there is no such setting we assume cache enabled
 
-                var settings = GetSettings("ChildOutputCacheEnabled");
+        //        var settings = GetSettings("ChildOutputCacheEnabled");
 
-                if (settings != null && settings.Length > 0)
-                {
-                    retVal = settings.First().BooleanValue;
-                }
+        //        if (settings != null && settings.Length > 0)
+        //        {
+        //            retVal = settings.First().BooleanValue;
+        //        }
 
-                return retVal;
-            }
-        }
+        //        return retVal;
+        //    }
+        //}
 	}
 }

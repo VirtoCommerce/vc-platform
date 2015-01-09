@@ -64,6 +64,7 @@ namespace VirtoCommerce.MerchandisingModule.Web
 			_container.RegisterType<ContentController>(new InjectionConstructor(dynamicContentServiceFactory));
 			_container.RegisterType<CategoryController>(new InjectionConstructor(itemSearchService, categoryService, propertyService, catalogRepFactory));
             _container.RegisterType<StoreController>(new InjectionConstructor(storeRepFactory));
+            _container.RegisterType<KeywordController>(new InjectionConstructor(appConfigRepFactory));
 
 
 		}
