@@ -21,8 +21,8 @@ namespace VirtoCommerce.CartModule.Data.Converters
 				throw new ArgumentNullException("target");
 
 			//Simply properties patch
-			if (source.Amount != null)
-				target.Amount = source.Amount;
+			target.Amount = source.Amount;
+
 			if (source.PaymentGatewayCode != null)
 				target.PaymentGatewayCode = source.PaymentGatewayCode;
 

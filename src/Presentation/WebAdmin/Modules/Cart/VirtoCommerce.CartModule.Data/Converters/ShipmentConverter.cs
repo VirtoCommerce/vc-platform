@@ -20,17 +20,14 @@ namespace VirtoCommerce.CartModule.Data.Converters
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-
 			//Simply properties patch
-			if (source.ShippingPrice != null)
-				target.ShippingPrice = source.ShippingPrice;
+			target.ShippingPrice = source.ShippingPrice;
+			target.TaxTotal = source.TaxTotal;
 
 			if (source.Weight != null)
 				target.Weight = source.Weight;
 			if (source.Dimension != null && !source.Dimension.Equals(target.Dimension))
 				target.Dimension = source.Dimension;
-			if (source.TaxTotal != null)
-				target.TaxTotal = source.TaxTotal;
 			if (source.RecipientAddress != null)
 				target.RecipientAddress = source.RecipientAddress;
 
