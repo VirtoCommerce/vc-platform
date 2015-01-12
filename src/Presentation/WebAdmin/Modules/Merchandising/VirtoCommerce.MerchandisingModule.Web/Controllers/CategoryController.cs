@@ -3,9 +3,9 @@ using System.Linq;
 using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
-using Microsoft.Practices.Unity;
 using VirtoCommerce.CatalogModule.Repositories;
 using VirtoCommerce.CatalogModule.Services;
+using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.MerchandisingModule.Web.Converters;
 using moduleModel = VirtoCommerce.CatalogModule.Model;
 using webModel = VirtoCommerce.MerchandisingModule.Web.Model;
@@ -18,17 +18,18 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		private readonly ICategoryService _categoryService;
 		private readonly IPropertyService _propertyService;
 		private readonly Func<IFoundationCatalogRepository> _foundationCatalogRepositoryFactory;
+	    private readonly Func<IFoundationAppConfigRepository> _foundationAppConfigRepFactory;
 
-
-		public CategoryController(ICatalogSearchService searchService,
+	    public CategoryController(ICatalogSearchService searchService,
 								  ICategoryService categoryService,
 								  IPropertyService propertyService,
-								  Func<IFoundationCatalogRepository> foundationCatalogRepositoryFactory)
+                                  Func<IFoundationCatalogRepository> foundationCatalogRepositoryFactory, Func<IFoundationAppConfigRepository> foundationAppConfigRepFactory)
 		{
 			_searchService = searchService;
 			_categoryService = categoryService;
 			_propertyService = propertyService;
 			_foundationCatalogRepositoryFactory = foundationCatalogRepositoryFactory;
+	        _foundationAppConfigRepFactory = foundationAppConfigRepFactory;
 		}
 
 
@@ -82,17 +83,35 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 	
 		[HttpGet]
 		[ResponseType(typeof(webModel.Category))]
-		[Route("{categoryId}")]
-		public IHttpActionResult Get(string categoryId, string catalog, string language = "en-us")
+		[Route("{category}")]
+		public IHttpActionResult Get(string category, string catalog, string language = "en-us")
 		{
-			if (categoryId != null)
+			if (category != null)
 			{
-				var result = _categoryService.GetById(categoryId);
-				if (result != null)
-				{
-					var retVal = result.ToWebModel();
-					return Ok(retVal);
-				}
+              
+				var result = _categoryService.GetById(category);
+			    if (result == null)
+			    {
+			       //Lets treat categoryId as slug
+			        using (var appConfigRepo = _foundationAppConfigRepFactory())
+			        {
+			            var keyword = appConfigRepo.SeoUrlKeywords.FirstOrDefault(x => x.KeywordType == (int)SeoUrlKeywordTypes.Category
+                            && x.Keyword.Equals(category, StringComparison.InvariantCultureIgnoreCase) 
+                            && x.Language.Equals(language, StringComparison.InvariantCultureIgnoreCase));
+
+			            if (keyword != null)
+			            {
+                            result = _categoryService.GetById(keyword.KeywordValue);
+			            }
+			        }
+
+			    }
+
+
+                if (result != null)
+                {        
+                    return Ok(result.ToWebModel());
+                }
 			}
 			return StatusCode(HttpStatusCode.NotFound);
 		}

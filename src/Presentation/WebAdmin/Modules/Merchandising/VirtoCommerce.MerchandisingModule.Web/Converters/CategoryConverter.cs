@@ -21,6 +21,11 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 				retVal.Parents = category.Parents.ToDictionary(x => x.Id, x => x.Name);
 			}
 
+		    if (category.SeoInfos != null)
+		    {
+		        retVal.SeoKeywords = category.SeoInfos.Select(x => x.ToWebModel()).ToArray();
+		    }
+
 			return retVal;
 		}
 

@@ -17,7 +17,7 @@ namespace VirtoCommerce.CatalogModule.Model
 		Variations = 1 << 5,
 		Seo = 1 << 6,
 		ItemSmall = ItemInfo | ItemAssets | ItemProperties,
-		ItemMedium = ItemInfo | ItemAssets | ItemProperties | ItemAssociations | ItemEditorialReviews,
-		ItemLarge = ItemInfo | ItemAssets | ItemProperties | ItemAssociations | ItemEditorialReviews | Variations | Seo
+        ItemMedium = ItemSmall | ItemAssociations | ItemEditorialReviews,
+        ItemLarge = ItemMedium | Variations | Seo
 	}
 }

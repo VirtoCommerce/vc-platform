@@ -1,10 +1,10 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using PublicWebApp.Models;
+using VirtoCommerce.Web.Models;
 using VirtoCommerce.ApiWebClient.Clients;
 
-namespace PublicWebApp.Controllers
+namespace VirtoCommerce.Web.Controllers
 {
 	/// <summary>
 	/// Class BannerController.

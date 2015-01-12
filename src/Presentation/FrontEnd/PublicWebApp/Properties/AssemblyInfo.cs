@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("PublicWebApp")]
+[assembly: AssemblyTitle("VirtoCommerce.Web")]
 [assembly: AssemblyDescription("")]
 [assembly: ComVisible(false)]
 

@@ -19,5 +19,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
 		public Dictionary<string, string> Parents { get; set; }
         
         public bool Virtual { get; set; }
+
+        public SeoKeyword[] SeoKeywords { get; set; }
     }
 }

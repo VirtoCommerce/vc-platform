@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using VirtoCommerce.ApiClient;
 using VirtoCommerce.ApiClient.DataContracts;
@@ -6,7 +7,6 @@ using VirtoCommerce.ApiClient.Extensions;
 using VirtoCommerce.ApiWebClient.Caching;
 using VirtoCommerce.ApiWebClient.Caching.Interfaces;
 using VirtoCommerce.ApiWebClient.Configuration.Catalog;
-using VirtoCommerce.ApiWebClient.Customer.Services;
 
 namespace VirtoCommerce.ApiWebClient.Clients
 {
@@ -15,7 +15,7 @@ namespace VirtoCommerce.ApiWebClient.Clients
         #region Cache Constants
         public const string ItemCacheKey = "C:I:{0}:g:{1}";
         public const string ItemCodeCacheKey = "C:Ic:{0}:g:{1}";
-        public const string CategoryCacheKey = "C:CT:{0}:{1}";
+        public const string CategoriesCacheKey = "C:CT:{0}:{1}";
         public const string CategoryIdCacheKey = "C:CTID:{0}:{1}";
         #endregion
 
@@ -38,7 +38,7 @@ namespace VirtoCommerce.ApiWebClient.Clients
         public BrowseClient GetClient(string lang, string catalog)
         {
             return ClientContext.Clients.CreateBrowseClient(
-                string.Format(CatalogConfiguration.Instance.Connection.DataServiceUri, lang, catalog));
+                string.Format(CatalogConfiguration.Instance.Connection.DataServiceUri, catalog, lang));
 
         }
         #region Item Methods
@@ -46,13 +46,13 @@ namespace VirtoCommerce.ApiWebClient.Clients
         /// <summary>
         /// Gets the item.
         /// </summary>
-        /// <param name="id">The identifier.</param>
+        /// <param name="slug">The slug. Can be id or seo keyword</param>
         /// <param name="catalogId">The catalog identifier.</param>
         /// <param name="language">The language.</param>
         /// <param name="responseGroup">The response group.</param>
         /// <param name="useCache">if set to <c>true</c> [use cache].</param>
         /// <returns></returns>
-        public async Task<CatalogItem> GetItemAsync(string id, string catalogId, string language, ItemResponseGroups responseGroup = ItemResponseGroups.ItemSmall, bool useCache = true)
+        public async Task<CatalogItem> GetItemAsync(string slug, string catalogId, string language, ItemResponseGroups responseGroup = ItemResponseGroups.ItemMedium, bool useCache = true)
         {
             var client = GetClient(language, catalogId);
 
@@ -60,8 +60,8 @@ namespace VirtoCommerce.ApiWebClient.Clients
             {
                 return await Helper.GetAsync(
                     CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix,
-                        string.Format(ItemCacheKey, CacheHelper.CreateCacheKey(id), responseGroup)),
-                    () => client.GetProductAsync(id),
+                        string.Format(ItemCacheKey, CacheHelper.CreateCacheKey(slug), responseGroup)),
+                    () => client.GetProductAsync(slug, responseGroup),
                     CatalogConfiguration.Instance.Cache.ItemTimeout,
                     _isEnabled && useCache);
             }
@@ -81,10 +81,12 @@ namespace VirtoCommerce.ApiWebClient.Clients
         /// Gets the item by code.
         /// </summary>
         /// <param name="code">The code.</param>
+        /// <param name="catalogId">The catalog identifier.</param>
+        /// <param name="language">The language.</param>
         /// <param name="useCache">if set to <c>true</c> [use cache].</param>
         /// <param name="responseGroup">The response group.</param>
         /// <returns></returns>
-        public async Task<CatalogItem> GetItemByCodeAsync(string code, string catalogId, string language, bool useCache = true, ItemResponseGroups responseGroup = ItemResponseGroups.ItemSmall)
+        public async Task<CatalogItem> GetItemByCodeAsync(string code, string catalogId, string language, bool useCache = true, ItemResponseGroups responseGroup = ItemResponseGroups.ItemMedium)
         {
             var client = GetClient(language, catalogId);
             return await Helper.GetAsync(
@@ -93,7 +95,7 @@ namespace VirtoCommerce.ApiWebClient.Clients
                 {
                     try
                     {
-                        return client.GetProductByCodeAsync(code);
+                        return client.GetProductByCodeAsync(code,responseGroup);
                     }
                     catch (ManagementClientException ex)
                     {
@@ -112,7 +114,15 @@ namespace VirtoCommerce.ApiWebClient.Clients
         #endregion
 
         #region Catalog methods
-        public async Task<Category> GetCategoryAsync(string id, string catalogId, string language, bool useCache = true)
+        /// <summary>
+        /// Gets the category asynchronous.
+        /// </summary>
+        /// <param name="slug">The slug. Can by id or seo keyword</param>
+        /// <param name="catalogId">The catalog identifier.</param>
+        /// <param name="language">The language.</param>
+        /// <param name="useCache">if set to <c>true</c> [use cache].</param>
+        /// <returns></returns>
+        public async Task<Category> GetCategoryAsync(string slug, string catalogId, string language, bool useCache = true)
         {
             var client = GetClient(language, catalogId);
 
@@ -120,8 +130,8 @@ namespace VirtoCommerce.ApiWebClient.Clients
             {
                 return await Helper.GetAsync(
                     CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix,
-                         string.Format(CategoryIdCacheKey, catalogId, id)),
-                    () => client.GetCategoryAsync(id),
+                         string.Format(CategoryIdCacheKey, catalogId, slug)),
+                    () => client.GetCategoryAsync(slug),
                     CatalogConfiguration.Instance.Cache.CategoryTimeout,
                     _isEnabled && useCache);
             }
@@ -133,6 +143,36 @@ namespace VirtoCommerce.ApiWebClient.Clients
                 }
                 throw;
             }
+        }
+
+        public async Task<Category[]> GetCategoriesAsync(string catalogId, string language, bool useCache = true)
+        {
+            var client = GetClient(language, catalogId);
+
+            try
+            {
+                var result = await Helper.GetAsync(
+                    CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix,
+                         string.Format(CategoriesCacheKey, catalogId, language)),
+                    () =>client.GetCategoriesAsync(),
+                    CatalogConfiguration.Instance.Cache.CategoryTimeout,
+                    _isEnabled && useCache);
+
+                if (result.TotalCount > 0)
+                {
+                    return result.Items.ToArray();
+                }
+            }
+            catch (ManagementClientException ex)
+            {
+                if (ex.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return null;
+                }
+                throw;
+            }
+
+            return new Category[0];
         }
         #endregion
 

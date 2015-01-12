@@ -3,7 +3,7 @@ using System.Collections;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using PublicWebApp.Models;
+using VirtoCommerce.Web.Models;
 using VirtoCommerce.ApiClient.DataContracts;
 using VirtoCommerce.ApiWebClient.Caching;
 using VirtoCommerce.ApiWebClient.Extensions;
@@ -11,54 +11,54 @@ using VirtoCommerce.ApiWebClient.Extensions.Filters;
 using VirtoCommerce.ApiWebClient.Extensions.Routing.Routes;
 using VirtoCommerce.ApiWebClient.Helpers;
 
-namespace PublicWebApp.Controllers
+namespace VirtoCommerce.Web.Controllers
 {
     /// <summary>
-	/// Class ControllerBase.
-	/// </summary>
+    /// Class ControllerBase.
+    /// </summary>
     [Localize(Order = 1)]
     [Canonicalized(typeof(AccountController)/*, typeof(CheckoutController)*/, Order = 2)]
-	public abstract class ControllerBase : Controller
-	{
+    public abstract class ControllerBase : Controller
+    {
 
-	    private OutputCacheManager _cacheManager;
-		/// <summary>
-		/// Renders the razor view to string.
-		/// </summary>
-		/// <param name="viewName">Name of the view.</param>
-		/// <param name="model">The model.</param>
-		/// <returns>System.String.</returns>
-		protected string RenderRazorViewToString(string viewName, object model)
-		{
-		    return ViewRenderer.RenderPartialView(viewName, model, ControllerContext);
-		}
+        private OutputCacheManager _cacheManager;
+        /// <summary>
+        /// Renders the razor view to string.
+        /// </summary>
+        /// <param name="viewName">Name of the view.</param>
+        /// <param name="model">The model.</param>
+        /// <returns>System.String.</returns>
+        protected string RenderRazorViewToString(string viewName, object model)
+        {
+            return ViewRenderer.RenderPartialView(viewName, model, ControllerContext);
+        }
 
-	    protected override void OnActionExecuted(ActionExecutedContext filterContext)
-	    {
-	        if (!filterContext.Canceled && filterContext.Result != null && !ControllerContext.IsChildAction)
-	        {
-	            FillViewBagWithMetadata(filterContext);
-	        }
+        protected override void OnActionExecuted(ActionExecutedContext filterContext)
+        {
+            if (!filterContext.Canceled && filterContext.Result != null && !ControllerContext.IsChildAction)
+            {
+                FillViewBagWithMetadata(filterContext);
+            }
 
             //Process messages
             var messages = new MessagesModel();
-	        var hasMessages = Enum.GetNames(typeof (MessageType)).Aggregate(false, (current, typeName) =>
+            var hasMessages = Enum.GetNames(typeof(MessageType)).Aggregate(false, (current, typeName) =>
                 current | ProcessMessages((MessageType)Enum.Parse(typeof(MessageType), typeName), messages));
-	        if (hasMessages)
-	        {
-	            this.SharedViewBag().Messages = messages;
-	        }
-	    }
+            if (hasMessages)
+            {
+                this.SharedViewBag().Messages = messages;
+            }
+        }
 
-	    protected override void OnResultExecuting(ResultExecutingContext filterContext)
-	    {
+        protected override void OnResultExecuting(ResultExecutingContext filterContext)
+        {
             //This is needed for IE as it agresively caches
-	        DontCacheAjax(filterContext);
-	        base.OnResultExecuting(filterContext);
-	    }
+            DontCacheAjax(filterContext);
+            base.OnResultExecuting(filterContext);
+        }
 
         private void DontCacheAjax(ResultExecutingContext filterContext)
-	    {
+        {
             var context = filterContext.HttpContext;
 
             //We want to expliclilty not cache ajax get not child requests
@@ -72,12 +72,12 @@ namespace PublicWebApp.Controllers
             filterContext.HttpContext.Response.Cache.SetRevalidation(HttpCacheRevalidation.AllCaches);
             filterContext.HttpContext.Response.Cache.SetCacheability(HttpCacheability.NoCache);
             filterContext.HttpContext.Response.Cache.SetNoStore();
-	    }
+        }
 
-	    private bool ProcessMessages(MessageType type, MessagesModel messages)
-	    {
+        private bool ProcessMessages(MessageType type, MessagesModel messages)
+        {
             var messagesTmp = TempData[GetMessageTempKey(type)] as IEnumerable;
-	        var foundAny = false;
+            var foundAny = false;
 
             if (messagesTmp != null)
             {
@@ -88,13 +88,13 @@ namespace PublicWebApp.Controllers
                 }
             }
 
-	        return foundAny;
-	    }
+            return foundAny;
+        }
 
-	    public string GetMessageTempKey(MessageType type)
-	    {
-	        return string.Format("{0}_messages", type);
-	    }
+        public string GetMessageTempKey(MessageType type)
+        {
+            return string.Format("{0}_messages", type);
+        }
 
         protected virtual bool FillViewBagWithMetadata(ActionExecutedContext filterContext)
         {
@@ -113,7 +113,23 @@ namespace PublicWebApp.Controllers
                         if (Enum.TryParse(routeKey, true, out type))
                         {
                             var lastIsVal = routeValue.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).Last();
-                            var keyword = SettingsHelper.SeoKeyword(lastIsVal, type, byValue: false);
+                            SeoKeyword keyword = null;
+
+                            switch (type)
+                            {
+                                case SeoUrlKeywordTypes.Store:
+                                    var store = StoreHelper.StoreClient.GetCurrentStore();
+                                    if (store != null && store.SeoKeywords != null)
+                                    {
+                                        keyword = store.SeoKeywords.SeoKeyword();
+
+                                    }
+                                    break;
+                                default:
+                                    //TODO get rid of SeoKeyword
+                                    keyword = SettingsHelper.SeoKeyword(lastIsVal, type, byValue: false);                                
+                                    break;
+                            }
 
                             if (keyword != null)
                             {
@@ -124,6 +140,7 @@ namespace PublicWebApp.Controllers
 
                                 return true;
                             }
+
                         }
                     }
                 }
@@ -136,7 +153,8 @@ namespace PublicWebApp.Controllers
 
         public OutputCacheManager OutputCacheManager
         {
-            get {
+            get
+            {
                 return _cacheManager ??
                        (_cacheManager = new OutputCacheManager(OutputCache.Instance, new KeyBuilder()));
             }

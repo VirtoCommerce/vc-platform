@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
 using System.Web.Http.ModelBinding;
-using Microsoft.Practices.Unity;
 using VirtoCommerce.CatalogModule.Repositories;
 using VirtoCommerce.CatalogModule.Services;
+using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.Catalogs.Search;
 using VirtoCommerce.Foundation.Search;
 using VirtoCommerce.MerchandisingModule.Web.Binders;
@@ -24,33 +23,37 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		private readonly ISearchProvider _searchService;
 		private readonly ISearchConnection _searchConnection;
 		private readonly Func<IFoundationCatalogRepository> _foundationCatalogRepositoryFactory;
-		private readonly Uri _assetBaseUri;
+	    private readonly Func<IFoundationAppConfigRepository> _foundationAppConfigRepFactory;
+	    private readonly Uri _assetBaseUri;
 
 		public ProductController(IItemService itemService,
 								 ISearchProvider indexedSearchProvider,
 								 ISearchConnection searchConnection,
 								 Func<IFoundationCatalogRepository> foundationCatalogRepositoryFactory,
+                                 Func<IFoundationAppConfigRepository> foundationAppConfigRepFactory,
 								 Uri assetBaseUri)
 		{
 			_searchService = indexedSearchProvider;
 			_searchConnection = searchConnection;
 			_itemService = itemService;
 			_foundationCatalogRepositoryFactory = foundationCatalogRepositoryFactory;
-			_assetBaseUri = assetBaseUri;
+		    _foundationAppConfigRepFactory = foundationAppConfigRepFactory;
+		    _assetBaseUri = assetBaseUri;
 		}
 
-	    /// <summary>
-	    /// GET: api/mp/apple/en-us/products?q='some keyword'&outline=apple/catalog
-	    /// </summary>
-	    /// <param name="catalog"></param>
-	    /// <param name="criteria"></param>
-	    /// <param name="outline"></param>
-	    /// <param name="language"></param>
-	    /// <returns></returns>
+        /// <summary>
+        /// Searches the specified catalog.
+        /// </summary>
+        /// <param name="catalog">The catalog.</param>
+        /// <param name="criteria">The criteria.</param>
+        /// <param name="responseGroup">The response group.</param>
+        /// <param name="outline">The outline.</param>
+        /// <param name="language">The language.</param>
+        /// <returns></returns>
 	    [HttpGet]
         [Route("")]
 		[ResponseType(typeof(GenericSearchResult<CatalogItem>))]
-		public IHttpActionResult Search(string catalog, [ModelBinder(typeof(CatalogItemSearchCriteriaBinder))] CatalogItemSearchCriteria criteria, [FromUri]string outline="", string language = "en-us")
+		public IHttpActionResult Search(string catalog, [ModelBinder(typeof(CatalogItemSearchCriteriaBinder))] CatalogItemSearchCriteria criteria,[FromUri]moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemMedium, [FromUri]string outline="", string language = "en-us")
 		{
 			criteria.Locale = language;
 			criteria.Catalog = catalog;
@@ -65,7 +68,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		    //Load products 
 			foreach (var productId in items.Keys)
 			{
-				var product = _itemService.GetById(productId, moduleModel.ItemResponseGroup.ItemMedium);
+                var product = _itemService.GetById(productId, responseGroup);
 				if (product != null)
 				{
 					var webModelProduct = product.ToWebModel(_assetBaseUri);
@@ -98,14 +101,14 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		[HttpGet]
 		[ResponseType(typeof(Product))]
 		[Route("")]
-		public IHttpActionResult GetProductByCode(string catalog, [FromUri]string code, string language = "en-us")
+        public IHttpActionResult GetProductByCode(string catalog, [FromUri]string code, [FromUri]moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemLarge, string language = "en-us")
 		{
 			using(var repository = _foundationCatalogRepositoryFactory())
 			{
 				var itemId = repository.Items.Where(x => x.CatalogId == catalog && x.Code == code).Select(x => x.ItemId).FirstOrDefault();
 				if(itemId != null)
 				{
-					return GetProduct(itemId);
+					return GetProduct(itemId,responseGroup);
 				}
 			}
 			return StatusCode(HttpStatusCode.NotFound);
@@ -115,13 +118,30 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
 		[HttpGet]
 		[ResponseType(typeof(Product))]
-		[Route("{productId}")]
-		public IHttpActionResult GetProduct(string productId)
+		[Route("{product}")]
+        public IHttpActionResult GetProduct(string product, [FromUri]moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemLarge, string language = "en-us")
 		{
-			var product = _itemService.GetById(productId, moduleModel.ItemResponseGroup.ItemLarge);
-		    if (product != null)
+            var result = _itemService.GetById(product, responseGroup);
+
+            if (result == null)
+            {
+                //Lets treat product as slug
+                using (var appConfigRepo = _foundationAppConfigRepFactory())
+                {
+                    var keyword = appConfigRepo.SeoUrlKeywords.FirstOrDefault(x => x.KeywordType == (int)SeoUrlKeywordTypes.Item
+                        && x.Keyword.Equals(product, StringComparison.InvariantCultureIgnoreCase)
+                        && x.Language.Equals(language, StringComparison.InvariantCultureIgnoreCase));
+
+                    if (keyword != null)
+                    {
+                        result = _itemService.GetById(keyword.KeywordValue, responseGroup);
+                    }
+                }
+            }
+
+            if (result != null)
 		    {
-				var retVal = product.ToWebModel(_assetBaseUri);
+				var retVal = result.ToWebModel(_assetBaseUri);
 		        return Ok(retVal);
 		    }
 		    return StatusCode(HttpStatusCode.NotFound);

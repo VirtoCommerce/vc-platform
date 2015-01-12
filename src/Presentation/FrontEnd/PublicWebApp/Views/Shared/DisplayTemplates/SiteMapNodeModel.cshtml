@@ -1,18 +1,17 @@
-﻿@model MvcSiteMapProvider.Web.Html.Models.SiteMapNodeModel
-@using System.Web.Mvc.Html
-@using MvcSiteMapProvider.Web.Html.Models
+﻿@model SiteMapNodeModel
 
 @if (Model.IsCurrentNode && Model.SourceMetadata["HtmlHelper"].ToString() != "MvcSiteMapProvider.Web.Html.MenuHelper")  { 
-    <text>@Model.Title</text>
-} else if (Model.IsClickable) { 
-    if (string.IsNullOrEmpty(Model.Description))
+    <span>@Model.Title.Localize()</span>
+}
+else if (Model.IsClickable)
+{
+    if (!string.IsNullOrEmpty(Model.ImageUrl))
     {
-        <a href="@Model.Url">@Model.Title</a>
+        <img src="@Url.Content(Model.ImageUrl)" alt="">
     }
-    else
-    {
-        <a href="@Model.Url" title="@Model.Description">@Model.Title</a>
-    }
-} else { 
-    <text>@Model.Title</text>
+    <a href="@Model.Url">@Model.Title.Localize()</a>
+}
+else
+{
+    <b>@Model.Title.Localize()</b>
 }

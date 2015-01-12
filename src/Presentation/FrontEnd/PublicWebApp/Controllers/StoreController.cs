@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
-using PublicWebApp.Models;
+using VirtoCommerce.Web.Models;
 using VirtoCommerce.ApiClient.DataContracts.Store;
 using VirtoCommerce.ApiWebClient.Clients;
 using VirtoCommerce.ApiWebClient.Extensions;
 using VirtoCommerce.ApiWebClient.Helpers;
 
-namespace PublicWebApp.Controllers
+namespace VirtoCommerce.Web.Controllers
 {
     /// <summary>
     /// Class StoreController.

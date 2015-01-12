@@ -1,4 +1,4 @@
-﻿namespace PublicWebApp.Models
+﻿namespace VirtoCommerce.Web.Models
 {
 	/// <summary>
 	/// Class CurrencyModel.

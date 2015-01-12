@@ -5,9 +5,9 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
 using Owin;
-using PublicWebApp.Models;
+using VirtoCommerce.Web.Models;
 
-namespace PublicWebApp
+namespace VirtoCommerce.Web
 {
     public partial class Startup
     {

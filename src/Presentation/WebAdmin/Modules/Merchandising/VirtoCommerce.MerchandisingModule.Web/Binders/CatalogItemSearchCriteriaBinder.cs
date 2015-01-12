@@ -68,7 +68,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Binders
 			}
 
 
-		    result.ClassTypes.Add("Product");
+		    //result.ClassTypes.Add("Product");
 
 		    var startDateFromStr = qs["startdatefrom"].EmptyToNull();
 

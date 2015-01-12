@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 using System.Web.Routing;
-using VirtoCommerce.ApiWebClient.Extensions;
 using VirtoCommerce.ApiWebClient.Extensions.Routing;
 using VirtoCommerce.ApiWebClient.Extensions.Routing.Constraints;
 using VirtoCommerce.ApiWebClient.Extensions.Routing.Routes;
-using VirtoCommerce.ApiWebClient.Helpers;
 
-namespace PublicWebApp
+namespace VirtoCommerce.Web
 {
     public class RouteConfig
     {
@@ -45,7 +39,7 @@ namespace PublicWebApp
                         {Constants.Category, new CategoryRouteConstraint()},
                         {Constants.Item, new ItemRouteConstraint()}
                     },
-                    new RouteValueDictionary { { "namespaces", new[] { "PublicWebApp.Controllers" } } },
+                    new RouteValueDictionary { { "namespaces", new[] { "VirtoCommerce.Web.Controllers" } } },
                 new MvcRouteHandler()));
 
             var categoryRoute = new NormalizeRoute(
@@ -62,7 +56,7 @@ namespace PublicWebApp
                         {Constants.Store, new StoreRouteConstraint()},
                         {Constants.Category, new CategoryRouteConstraint()}
                     },
-                new RouteValueDictionary { { "namespaces", new[] { "PublicWebApp.Controllers" } } },
+                new RouteValueDictionary { { "namespaces", new[] { "VirtoCommerce.Web.Controllers" } } },
                 new MvcRouteHandler()));
 
             var storeRoute = new NormalizeRoute(
@@ -77,7 +71,7 @@ namespace PublicWebApp
                         {Constants.Language, new LanguageRouteConstraint()},
                         {Constants.Store, new StoreRouteConstraint()}
                     },
-                new RouteValueDictionary { { "namespaces", new[] { "PublicWebApp.Controllers" } } },
+                new RouteValueDictionary { { "namespaces", new[] { "VirtoCommerce.Web.Controllers" } } },
                 new MvcRouteHandler()));
 
             routes.Add("Item", itemRoute);
@@ -118,7 +112,7 @@ namespace PublicWebApp
             var defaultRoute = new NormalizeRoute(new Route(string.Format("{{{0}}}/{{controller}}/{{action}}/{{id}}", Constants.Language),
                 new RouteValueDictionary { { "id", UrlParameter.Optional }, { "action", "Index" } },
                 new RouteValueDictionary { { Constants.Language, new LanguageRouteConstraint() } },
-                new RouteValueDictionary { { "namespaces", new[] { "PublicWebApp.Controllers" } } },
+                new RouteValueDictionary { { "namespaces", new[] { "VirtoCommerce.Web.Controllers" } } },
                 new MvcRouteHandler()));
 
             //Other actions
@@ -133,7 +127,7 @@ namespace PublicWebApp
                     action = "Index",
                     id = UrlParameter.Optional
                 }, // Parameter defaults
-                new[] { "PublicWebApp.Controllers" });
+                new[] { "VirtoCommerce.Web.Controllers" });
         }
     }
 }

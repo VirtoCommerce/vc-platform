@@ -11,8 +11,8 @@
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PublicWebApp</RootNamespace>
-    <AssemblyName>PublicWebApp</AssemblyName>
+    <RootNamespace>VirtoCommerce.Web</RootNamespace>
+    <AssemblyName>VirtoCommerce.Web</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
@@ -71,6 +71,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -193,6 +194,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\ModuleConfig.cs" />
+    <Compile Include="App_Start\MvcSiteMapProviderConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\UnityConfig.cs" />
@@ -207,6 +209,13 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\CommonConventions.cs" />
+    <Compile Include="Helpers\MVC\SiteMap\BreadcrumbNodeProvider.cs" />
+    <Compile Include="Helpers\MVC\SiteMap\CatalogNodeProvider.cs" />
+    <Compile Include="Helpers\MVC\SiteMap\MvcSiteMapProviderContainerExtension.cs" />
+    <Compile Include="Helpers\MVC\SiteMap\SeoRouteValueDictionary.cs" />
+    <Compile Include="Helpers\MVC\SiteMap\SeoRouteValueDictionaryFactory.cs" />
+    <Compile Include="Helpers\MVC\SiteMap\SiteMapStoreCacheKeyGenerator.cs" />
     <Compile Include="Helpers\MVC\StoreStyle.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\BannerModel.cs" />
@@ -489,7 +498,10 @@
     <Content Include="Views\Shared\DisplayTemplates\SiteMapPathHelperModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\SiteMapNodeModelList.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\SiteMapNodeModel.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\SiteMapHelperModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\SiteMapHelperModel.cshtml">
+      <SubType>
+      </SubType>
+    </Content>
     <Content Include="Views\Shared\DisplayTemplates\MetaRobotsHelperModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\MenuHelperModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\CanonicalHelperModel.cshtml" />
@@ -511,6 +523,13 @@
     <Content Include="Views\Store\WishListLink.cshtml" />
     <Content Include="Views\Shared\_Menu.cshtml" />
     <Content Include="Views\Shared\_Footer.cshtml" />
+    <Content Include="Store.sitemap">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Views\Shared\DisplayTemplates\TopMenuNodeModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\SideMenu.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\SideMenuNode.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\SiteMapPathNodeModel.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

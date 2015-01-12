@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace PublicWebApp.Models
+namespace VirtoCommerce.Web.Models
 {
     public class ExternalLoginConfirmationViewModel
     {

@@ -20,6 +20,8 @@ namespace VirtoCommerce.ApiClient.DataContracts
 
         public bool Virtual { get; set; }
 
+        public SeoKeyword[] SeoKeywords { get; set; }
+
         public string Outline
         {
             get

@@ -27,9 +27,9 @@ namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Constraints
                 return false;
             }
 
-            var encoded = values[parameterName].ToString();
-            var decoded = SettingsHelper.SeoDecode(encoded, SeoUrlKeywordTypes.Store, values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : null);
-            var dbStore = StoreHelper.StoreClient.GetStoreById(decoded);
+            var slug = values[parameterName].ToString();
+            //var decoded = SettingsHelper.SeoDecode(encoded, SeoUrlKeywordTypes.Store, values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : null);
+            var dbStore = StoreHelper.StoreClient.GetStore(slug);
 
             if (dbStore == null)
             {

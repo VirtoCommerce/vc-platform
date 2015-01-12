@@ -6,7 +6,7 @@ using System.Web.Mvc;
 using VirtoCommerce.ApiClient.DataContracts.Contents;
 using VirtoCommerce.ApiWebClient.Extensions;
 
-namespace PublicWebApp.Models
+namespace VirtoCommerce.Web.Models
 {
     public enum DynamicContentType
     {

@@ -6,9 +6,9 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
-using PublicWebApp.Models;
+using VirtoCommerce.Web.Models;
 
-namespace PublicWebApp.Controllers
+namespace VirtoCommerce.Web.Controllers
 {
     [Authorize]
     public class ManageController : Controller

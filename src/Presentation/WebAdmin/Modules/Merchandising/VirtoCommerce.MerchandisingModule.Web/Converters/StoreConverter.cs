@@ -11,7 +11,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 {
     public static class StoreConverter
     {
-        public static webModel.Store ToWebModel(this foundation.Store store)
+        public static webModel.Store ToWebModel(this foundation.Store store, Foundation.AppConfig.Model.SeoUrlKeyword[] keywords)
         {
             var retVal = new webModel.Store
             {
@@ -38,6 +38,11 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
             if (store.Settings != null)
             {
                 retVal.Settings = store.Settings.Select(x => x.ToWebModel()).ToArray();
+            }
+
+            if (keywords != null)
+            {
+                retVal.SeoKeywords = keywords.Select(x => x.ToWebModel()).ToArray();
             }
 
             return retVal;

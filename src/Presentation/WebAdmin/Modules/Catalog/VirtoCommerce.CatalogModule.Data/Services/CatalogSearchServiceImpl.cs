@@ -60,7 +60,7 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 					var isVirtual = dbCatalog is foundation.VirtualCatalog;
 					if (!String.IsNullOrEmpty(criteria.CategoryId))
 					{
-						var dbCategory = repository.GetCategoryById(criteria.CategoryId);
+						//var dbCategory = repository.GetCategoryById(criteria.CategoryId);
 
 						if (isVirtual)
 						{

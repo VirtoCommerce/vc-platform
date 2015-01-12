@@ -1,8 +1,8 @@
 ﻿using Microsoft.Owin;
 using Owin;
 
-[assembly: OwinStartupAttribute(typeof(PublicWebApp.Startup))]
-namespace PublicWebApp
+[assembly: OwinStartupAttribute(typeof(VirtoCommerce.Web.Startup))]
+namespace VirtoCommerce.Web
 {
     public partial class Startup
     {

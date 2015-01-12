@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using VirtoCommerce.ApiClient.DataContracts;
@@ -41,19 +42,30 @@ namespace VirtoCommerce.ApiClient
         /// <summary>
         /// List items matching the given query
         /// </summary>
-        public Task<ResponseCollection<Product>> GetProductsAsync(BrowseQuery query)
+        public Task<ResponseCollection<Product>> GetProductsAsync(BrowseQuery query, ItemResponseGroups? responseGroup = null)
         {
-            return GetAsync<ResponseCollection<Product>>(CreateRequestUri(RelativePaths.Products, query.GetQueryString()));
+            return GetAsync<ResponseCollection<Product>>(CreateRequestUri(RelativePaths.Products, query.GetQueryString(responseGroup)));
         }
 
-        public Task<Product> GetProductAsync(string productId)
+        public Task<Product> GetProductAsync(string productId, ItemResponseGroups responseGroup)
         {
-            return GetAsync<Product>(CreateRequestUri(String.Format(RelativePaths.Product, productId)));
+            var query = new List<KeyValuePair<string, string>>
+            {
+                 new KeyValuePair<string, string>("responseGroup", responseGroup.GetHashCode().ToString()),
+            };
+            
+            return GetAsync<Product>(CreateRequestUri(String.Format(RelativePaths.Product, productId), query.ToArray()));
         }
 
-        public Task<Product> GetProductByCodeAsync(string code)
+        public Task<Product> GetProductByCodeAsync(string code, ItemResponseGroups responseGroup)
         {
-            return GetAsync<Product>((CreateRequestUri(RelativePaths.Products, string.Format("code={0}", code))));
+            var query = new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("code", code),
+                 new KeyValuePair<string, string>("responseGroup", responseGroup.GetHashCode().ToString()),
+            };
+
+            return GetAsync<Product>((CreateRequestUri(RelativePaths.Products, query.ToArray())));
         }
 
         public Task<ResponseCollection<Category>> GetCategoriesAsync(string parentId = null)

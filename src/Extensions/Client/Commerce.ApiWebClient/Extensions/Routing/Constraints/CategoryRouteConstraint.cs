@@ -28,18 +28,19 @@ namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Constraints
             }
 
             var encoded = values[parameterName].ToString();
-            var decoded = SettingsHelper.SeoDecode(encoded, SeoUrlKeywordTypes.Category, 
-                values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : null);
+           
 
-            var childCategoryId = decoded.Split(Separator.ToCharArray()).Last();
+            var childCategorySlug = encoded.Split(Separator.ToCharArray()).Last();
             var session = StoreHelper.CustomerSession;
-            var category = Task.Run(() => CatalogHelper.CatalogClient.GetCategoryAsync(childCategoryId, session.CatalogId, session.Language)).Result;
+            var category = Task.Run(() => CatalogHelper.CatalogClient.GetCategoryAsync(childCategorySlug, session.CatalogId, session.Language)).Result;
 
             if (category == null)
             {
                 return false;
             }
 
+            //TODO return encoded outline
+            var decoded = SettingsHelper.SeoDecode(encoded, SeoUrlKeywordTypes.Category, values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : null);
             return ValidateCategoryPath(category.Outline, decoded);
         }
 

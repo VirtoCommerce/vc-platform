@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using VirtoCommerce.ApiClient;
@@ -52,7 +53,31 @@ namespace VirtoCommerce.ApiWebClient.Clients
         {
             var allStores = GetStores();
 
-            return allStores.FirstOrDefault(x => x.Id.Equals(storeId, StringComparison.OrdinalIgnoreCase) || storeId == "");
+            return allStores.FirstOrDefault(x => x.Id.Equals(storeId, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public Store GetStore(string slug, string language = null)
+        {
+            var allStores = GetStores();
+
+            var store = allStores.FirstOrDefault(x => x.Id.Equals(slug, StringComparison.OrdinalIgnoreCase));
+
+            if (store == null)
+            {
+
+                language = language ?? _customerSession.CustomerSession.Language;
+                var langInfo = TryGetCultureInfo(language);
+                language = langInfo != null ? langInfo.Name : language;
+
+                store = allStores.FirstOrDefault(x => x.SeoKeywords != null &&
+                                                      x.SeoKeywords.Any(
+                                                          k =>
+                                                              k.Language.Equals(language,
+                                                                  StringComparison.InvariantCultureIgnoreCase) &&
+                                                              k.Keyword.Equals(slug,
+                                                                  StringComparison.InvariantCultureIgnoreCase)));
+            }
+            return store;
         }
 
         /// <summary>
@@ -139,9 +164,10 @@ namespace VirtoCommerce.ApiWebClient.Clients
             var allStores = GetStores();
             url = url.ToLower();
             var stores = (from s in allStores
-                          where 
-							  (!string.IsNullOrEmpty(s.Url) && url.Contains(s.Url)) || 
-							  (!string.IsNullOrEmpty(s.SecureUrl) && url.Contains(s.SecureUrl)) select s).ToArray();
+                          where
+                              (!string.IsNullOrEmpty(s.Url) && url.Contains(s.Url)) ||
+                              (!string.IsNullOrEmpty(s.SecureUrl) && url.Contains(s.SecureUrl))
+                          select s).ToArray();
 
             return stores.Length > 0 ? stores[0].Id : String.Empty;
         }
@@ -169,6 +195,20 @@ namespace VirtoCommerce.ApiWebClient.Clients
         public CacheHelper Helper
         {
             get { return _cacheHelper ?? (_cacheHelper = new CacheHelper(_cacheRepository)); }
+        }
+
+        private static CultureInfo TryGetCultureInfo(string languageCode)
+        {
+            try
+            {
+
+                if (!string.IsNullOrEmpty(languageCode))
+                    return CultureInfo.CreateSpecificCulture(languageCode);
+            }
+            catch
+            {
+            }
+            return null;
         }
     }
 

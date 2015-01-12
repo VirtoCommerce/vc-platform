@@ -1,9 +1,7 @@
-﻿using System;
+﻿using Omu.ValueInjecter;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Omu.ValueInjecter;
 using moduleModel = VirtoCommerce.CatalogModule.Model;
 using webModel = VirtoCommerce.MerchandisingModule.Web.Model;
 
@@ -38,6 +36,11 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 		    if (product.Links != null)
 		    {
 		        retVal.Categories = product.Links.Select(x => x.CategoryId).ToArray();
+		    }
+
+		    if (product.SeoInfos != null)
+		    {
+                retVal.SeoKeywords = product.SeoInfos.Select(x => x.ToWebModel()).ToArray();
 		    }
 
 			retVal.Properties = new webModel.PropertyDictionary();

@@ -1,13 +1,12 @@
 using System;
 using Microsoft.Practices.Unity;
-using Microsoft.Practices.Unity.Configuration;
 using VirtoCommerce.ApiWebClient.Caching;
 using VirtoCommerce.ApiWebClient.Caching.Interfaces;
 using VirtoCommerce.ApiWebClient.Clients;
 using VirtoCommerce.ApiWebClient.Currencies;
 using VirtoCommerce.ApiWebClient.Customer.Services;
 
-namespace PublicWebApp.App_Start
+namespace VirtoCommerce.Web
 {
     /// <summary>
     /// Specifies the Unity configuration for the main container.

@@ -96,7 +96,6 @@ namespace VirtoCommerce.ApiWebClient.Helpers
             return seoKeyword != null ? seoKeyword.KeywordValue : keyword;
         }
 
-
         public static SeoKeyword SeoKeyword(string val, SeoUrlKeywordTypes type, string language = null, bool byValue = true)
         {
             language = language ?? CustomerSession.Language;

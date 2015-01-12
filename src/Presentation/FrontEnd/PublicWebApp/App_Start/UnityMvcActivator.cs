@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using Microsoft.Practices.ServiceLocation;
+using Microsoft.Practices.Unity;
 using Microsoft.Practices.Unity.Mvc;
+using VirtoCommerce.Web;
+using VirtoCommerce.Web.Helpers.MVC.SiteMap;
 
-[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(PublicWebApp.App_Start.UnityWebActivator), "Start")]
-[assembly: WebActivatorEx.ApplicationShutdownMethod(typeof(PublicWebApp.App_Start.UnityWebActivator), "Shutdown")]
+[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(UnityWebActivator), "Start")]
+[assembly: WebActivatorEx.ApplicationShutdownMethod(typeof(UnityWebActivator), "Shutdown")]
 
-namespace PublicWebApp.App_Start
+namespace VirtoCommerce.Web
 {
     /// <summary>Provides the bootstrapping for integrating Unity with ASP.NET MVC.</summary>
     public static class UnityWebActivator
@@ -17,6 +20,9 @@ namespace PublicWebApp.App_Start
         public static void Start() 
         {
             var container = UnityConfig.GetConfiguredContainer();
+
+            //Add Unity extension for mvc sitemap dependency injection
+            container.AddNewExtension<MvcSiteMapProviderContainerExtension>();
 
             FilterProviders.Providers.Remove(FilterProviders.Providers.OfType<FilterAttributeFilterProvider>().First());
             FilterProviders.Providers.Add(new UnityFilterAttributeFilterProvider(container));

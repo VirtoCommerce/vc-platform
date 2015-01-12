@@ -1,22 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
-using foundation = VirtoCommerce.Foundation.Catalogs.Model;
-using module = VirtoCommerce.CatalogModule.Model;
 using foundationConfig = VirtoCommerce.Foundation.AppConfig.Model;
+using module = VirtoCommerce.CatalogModule.Model;
 
 namespace VirtoCommerce.CatalogModule.Data.Converters
 {
 	public static class SeoInfoConverter
 	{
-		/// <summary>
-		/// Converting to model type
-		/// </summary>
-		/// <param name="catalogBase"></param>
-		/// <returns></returns>
+        /// <summary>
+        /// Converting to model type
+        /// </summary>
+        /// <param name="dbSeoInfo">The database seo information.</param>
+        /// <returns></returns>
 		public static module.SeoInfo ToModuleModel(this foundationConfig.SeoUrlKeyword dbSeoInfo)
 		{
 			var retVal = new module.SeoInfo
@@ -26,16 +21,18 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				ImageAltDescription = dbSeoInfo.ImageAltDescription,
 				LanguageCode = dbSeoInfo.Language,
 				MetaDescription = dbSeoInfo.MetaDescription,
+                MetaKeywords = dbSeoInfo.MetaKeywords,
 				PageTitle = dbSeoInfo.Title
 			};
 			return retVal;
 		}
 
-		/// <summary>
-		/// Converting to foundation type
-		/// </summary>
-		/// <param name="catalog"></param>
-		/// <returns></returns>
+        /// <summary>
+        /// Converting to foundation type
+        /// </summary>
+        /// <param name="seoInfo">The seo information.</param>
+        /// <param name="product">The product.</param>
+        /// <returns></returns>
 		public static foundationConfig.SeoUrlKeyword ToFoundation(this module.SeoInfo seoInfo, module.CatalogProduct product)
 		{
 			var retVal = seoInfo.ToFoundation();
@@ -44,11 +41,12 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			return retVal;
 		}
 
-		/// <summary>
-		/// Converting to foundation type
-		/// </summary>
-		/// <param name="catalog"></param>
-		/// <returns></returns>
+        /// <summary>
+        /// Converting to foundation type
+        /// </summary>
+        /// <param name="seoInfo">The seo information.</param>
+        /// <param name="category">The category.</param>
+        /// <returns></returns>
 		public static foundationConfig.SeoUrlKeyword ToFoundation(this module.SeoInfo seoInfo, module.Category category)
 		{
 			var retVal = seoInfo.ToFoundation();

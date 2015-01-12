@@ -1,12 +1,11 @@
-﻿using System;
+﻿using Microsoft.Web.Infrastructure.DynamicModuleHelper;
+using System;
 using System.Linq;
-using Microsoft.Practices.Unity.Mvc;
-using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 using VirtoCommerce.ApiWebClient.Configuration.Application;
 
-[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(PublicWebApp.ModuleConfig), "Start")]
+[assembly: WebActivatorEx.PreApplicationStartMethod(typeof(VirtoCommerce.Web.ModuleConfig), "Start")]
 
-namespace PublicWebApp
+namespace VirtoCommerce.Web
 {
     
     public static class ModuleConfig

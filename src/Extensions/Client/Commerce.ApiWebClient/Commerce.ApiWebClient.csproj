@@ -60,6 +60,9 @@
       <Private>True</Private>
       <HintPath>..\..\..\..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
+    <Reference Include="MvcSiteMapProvider">
+      <HintPath>..\..\..\..\packages\MvcSiteMapProvider.MVC5.Core.4.6.17\lib\net45\MvcSiteMapProvider.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -140,6 +143,7 @@
     <Compile Include="Configuration\DynamicContent\DynamicContentConfiguration.cs" />
     <Compile Include="Configuration\Store\StoreConfiguration.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="ContextFieldConstants.cs" />
     <Compile Include="Currencies\CurrencyService.cs" />
     <Compile Include="Currencies\ICurrencyService.cs" />
     <Compile Include="Extensions\Filters\CanonicalizedAttribute.cs" />
@@ -163,10 +167,12 @@
     <Compile Include="Extensions\Routing\Routes\RedirectRoute.cs" />
     <Compile Include="Extensions\Routing\Routes\StoreRoute.cs" />
     <Compile Include="Extensions\SectionExtensions.cs" />
+    <Compile Include="Extensions\SeoKeywordExtensions.cs" />
     <Compile Include="Extensions\ViewRenderer.cs" />
     <Compile Include="Helpers\SettingsHelper.cs" />
     <Compile Include="Helpers\CatalogHelper.cs" />
     <Compile Include="Modules\BaseHttpModule.cs" />
+    <Compile Include="Modules\MarketingHttpModule.cs" />
     <Compile Include="Modules\StoreHttpModule.cs" />
     <Compile Include="Properties\Annotations.cs" />
     <Compile Include="Caching\Interfaces\IActionSettingsSerialiser.cs" />
@@ -197,6 +203,7 @@
     <Compile Include="PageData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Clients\StoreClient.cs" />
+    <Compile Include="Providers\NamedSiteMapNodeVisibilityProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Commerce.ApiClient\Commerce.ApiClient.csproj">

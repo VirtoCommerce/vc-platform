@@ -25,6 +25,8 @@ namespace VirtoCommerce.ApiClient.DataContracts
 
         public string Outline { get; set; }
 
+        public SeoKeyword[] SeoKeywords { get; set; }
+
         #region Properties
 
         private IDictionary<string, string[]> _properties = new Dictionary<string, string[]>();

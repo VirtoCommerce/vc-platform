@@ -4,7 +4,7 @@ using System.Web;
 using System.Web.Optimization;
 using VirtoCommerce.ApiWebClient.Helpers;
 
-namespace PublicWebApp.Helpers.MVC
+namespace VirtoCommerce.Web.Helpers.MVC
 {
     public static class StoreStyle
     {

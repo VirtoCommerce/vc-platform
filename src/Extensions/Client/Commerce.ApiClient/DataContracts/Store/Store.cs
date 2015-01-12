@@ -35,5 +35,7 @@ namespace VirtoCommerce.ApiClient.DataContracts.Store
 
         public string[] LinkedStores { get; set; }
 
+        public SeoKeyword[] SeoKeywords { get; set; }
+
     }
 }

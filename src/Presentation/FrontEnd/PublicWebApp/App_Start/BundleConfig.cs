@@ -1,8 +1,8 @@
 ﻿using System.Web;
 using System.Web.Optimization;
-using PublicWebApp.Helpers.MVC;
+using VirtoCommerce.Web.Helpers.MVC;
 
-namespace PublicWebApp
+namespace VirtoCommerce.Web
 {
     public class BundleConfig
     {

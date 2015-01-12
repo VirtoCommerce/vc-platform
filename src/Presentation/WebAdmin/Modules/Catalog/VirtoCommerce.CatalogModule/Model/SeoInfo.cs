@@ -14,6 +14,7 @@ namespace VirtoCommerce.CatalogModule.Model
 		public string PageTitle { get; set; }
 		public string MetaDescription { get; set; }
 		public string ImageAltDescription { get; set; }
+        public string MetaKeywords { get; set; }
 
 		#region ISupportLanguage Members
 
