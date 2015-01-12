@@ -20,13 +20,9 @@ namespace VirtoCommerce.CartModule.Data.Converters
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-
 			//Simply properties patch
-			if (source.Quantity != null)
-				target.Quantity = source.Quantity;
-
+			target.Quantity = source.Quantity;
 		}
-
 	}
 
 	public class ShipmentItemComparer : IEqualityComparer<ShipmentItem>

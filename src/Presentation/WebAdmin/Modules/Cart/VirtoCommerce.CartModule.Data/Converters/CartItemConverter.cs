@@ -20,17 +20,11 @@ namespace VirtoCommerce.CartModule.Data.Converters
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-
 			//Simply properties patch
-			if (source.Quantity != null)
-				target.Quantity = source.Quantity;
-
-			if (source.SalePrice != null)
-				target.SalePrice = source.SalePrice;
-			if (source.PlacedPrice != null)
-				target.PlacedPrice = source.PlacedPrice;
-			if (source.ListPrice != null)
-				target.ListPrice = source.ListPrice;
+			target.Quantity = source.Quantity;
+			target.SalePrice = source.SalePrice;
+			target.PlacedPrice = source.PlacedPrice;
+			target.ListPrice = source.ListPrice;
 
 			if (source.Discounts != null)
 			{
@@ -38,7 +32,7 @@ namespace VirtoCommerce.CartModule.Data.Converters
 					target.Discounts = new List<Discount>();
 
 				source.Discounts.Patch(target.Discounts, new DiscountComparer(),
-													 (sourceDiscount, targetDiscount) => sourceDiscount.Patch(targetDiscount));
+					(sourceDiscount, targetDiscount) => sourceDiscount.Patch(targetDiscount));
 			}
 		}
 

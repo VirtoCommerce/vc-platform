@@ -20,10 +20,8 @@ namespace VirtoCommerce.CartModule.Data.Converters
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-
 			//Simply properties patch
-			if (source.DiscountAmount != null)
-				target.DiscountAmount = source.DiscountAmount;
+			target.DiscountAmount = source.DiscountAmount;
 
 			if (source.Coupon != null)
 				target.Coupon = source.Coupon;
