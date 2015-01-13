@@ -1,11 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Routing;
-using VirtoCommerce.ApiClient;
-using VirtoCommerce.ApiClient.Extensions;
-using VirtoCommerce.ApiClient.Utilities;
-using VirtoCommerce.ApiWebClient.Helpers;
 
 namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Constraints
 {
@@ -37,23 +34,28 @@ namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Constraints
         /// Should allow categories to match in same order. 
         /// Can only allow some missings segments
         /// </summary>
-        /// <param name="outline">The outline.</param>
+        /// <param name="outline">The outline containing ids and semantic url mappings.</param>
         /// <param name="requestedPath">The requested path. Containing category codes code1/code2/.../codeN</param>
         /// <returns></returns>
-        protected virtual bool ValidateCategoryPath(string outline, string requestedPath)
+        protected virtual bool ValidateCategoryPath(Dictionary<string, string> outline, string requestedPath)
         {
             var prevCatIndex = -1;
+            var outlineIds = outline.Keys.ToList();
             foreach (var segment in requestedPath.Split(Separator.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
             {
-                var categories = outline.Split(Separator.ToCharArray()).ToList();
-                var category = categories.FirstOrDefault(c => c.Equals(segment, StringComparison.InvariantCultureIgnoreCase));
+                var category =
+                    outline.FirstOrDefault(
+                        x =>
+                            x.Key.Equals(segment, StringComparison.InvariantCultureIgnoreCase) ||
+                            x.Value.Equals(segment, StringComparison.InvariantCultureIgnoreCase));
 
                 //Category must exist
-                if (category == null)
+                if (category.Equals(default(KeyValuePair<string, string>)))
                 {
                     return false;
                 }
-                var currentCatIndex = categories.IndexOf(category);
+
+                var currentCatIndex = outlineIds.IndexOf(category.Key);
 
                 //Segments order must match outline order
                 if (prevCatIndex > 0 && prevCatIndex > currentCatIndex)

@@ -125,7 +125,7 @@ namespace VirtoCommerce.ApiWebClient.Helpers
                 //Current store can be null when called from StoreHttpModule and store is not yet initialzed
                 if (store == null && type == SeoUrlKeywordTypes.Store)
                 {
-                    store = StoreHelper.StoreClient.GetStoreById(seoKeywords[0].KeywordValue);
+                    store = StoreHelper.StoreClient.GetStore(seoKeywords[0].KeywordValue);
                 }
 
                 if (store != null && !store.DefaultLanguage.Equals(language, StringComparison.OrdinalIgnoreCase))

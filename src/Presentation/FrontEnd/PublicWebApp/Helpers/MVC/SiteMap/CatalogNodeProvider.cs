@@ -20,9 +20,9 @@ namespace VirtoCommerce.Web.Helpers.MVC.SiteMap
 
             var nodes = new List<DynamicNode>();
             int order = 0;
-            var categories =  Task.Run(()=>CatalogHelper.CatalogClient.GetCategoriesAsync(session.CatalogId,session.Language)).Result;
+            var categories =  Task.Run(()=>CatalogHelper.CatalogClient.GetCategoriesAsync(session.CatalogId, session.Language)).Result;
 
-            foreach (var category in categories.OrderByDescending(x => x.Name))
+            foreach (var category in categories)
             {
 
                 var pNode = new DynamicNode

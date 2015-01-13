@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Web;
-using System.Web.Mvc;
 using System.Web.Routing;
-using VirtoCommerce.ApiClient.DataContracts;
 using VirtoCommerce.ApiWebClient.Helpers;
 
 namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Constraints
@@ -28,8 +26,8 @@ namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Constraints
             }
 
             var slug = values[parameterName].ToString();
-            //var decoded = SettingsHelper.SeoDecode(encoded, SeoUrlKeywordTypes.Store, values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : null);
-            var dbStore = StoreHelper.StoreClient.GetStore(slug);
+            var language = values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : null;
+            var dbStore = StoreHelper.StoreClient.GetStore(slug, language);
 
             if (dbStore == null)
             {

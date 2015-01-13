@@ -8,6 +8,7 @@ using Microsoft.Practices.ServiceLocation;
 using VirtoCommerce.ApiClient.DataContracts;
 using VirtoCommerce.ApiWebClient.Customer;
 using VirtoCommerce.ApiWebClient.Customer.Services;
+using VirtoCommerce.ApiWebClient.Helpers;
 
 namespace VirtoCommerce.ApiWebClient.Extensions
 {
@@ -45,6 +46,14 @@ namespace VirtoCommerce.ApiWebClient.Extensions
                 if (seoKeyword != null)
                 {
                     return seoKeyword;
+                }
+
+                 //Default language failover scenario
+                var store = StoreHelper.StoreClient.GetCurrentStore();
+
+                if (store != null && !store.DefaultLanguage.Equals(language, StringComparison.OrdinalIgnoreCase))
+                {
+                    return keywords.FirstOrDefault(x => x.Language.Equals(store.DefaultLanguage, StringComparison.InvariantCultureIgnoreCase));
                 }
             }
 

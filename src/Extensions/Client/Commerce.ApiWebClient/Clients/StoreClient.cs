@@ -45,17 +45,11 @@ namespace VirtoCommerce.ApiWebClient.Clients
         }
 
         /// <summary>
-        /// Gets the store by id.
-        /// </summary>
-        /// <param name="storeId">The store id.</param>
+        /// Gets the store. First treats slug as storeId then as keyword
+        /// </summary>t
+        /// <param name="slug">The slug.</param>
+        /// <param name="language">The language.</param>
         /// <returns></returns>
-        public Store GetStoreById(string storeId)
-        {
-            var allStores = GetStores();
-
-            return allStores.FirstOrDefault(x => x.Id.Equals(storeId, StringComparison.OrdinalIgnoreCase));
-        }
-
         public Store GetStore(string slug, string language = null)
         {
             var allStores = GetStores();
@@ -184,7 +178,7 @@ namespace VirtoCommerce.ApiWebClient.Clients
             if (storeObject != null)
                 return storeObject as Store;
 
-            var store = GetStoreById(session.StoreId);
+            var store = GetStore(session.StoreId);
 
             session["store"] = store;
 

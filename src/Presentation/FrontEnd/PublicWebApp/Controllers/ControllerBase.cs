@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using VirtoCommerce.ApiWebClient.Extensions.Routing;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.ApiClient.DataContracts;
 using VirtoCommerce.ApiWebClient.Caching;
@@ -112,8 +114,9 @@ namespace VirtoCommerce.Web.Controllers
                         SeoUrlKeywordTypes type;
                         if (Enum.TryParse(routeKey, true, out type))
                         {
-                            var lastIsVal = routeValue.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).Last();
+                            var slug = routeValue.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).Last();
                             SeoKeyword keyword = null;
+                            var session = StoreHelper.CustomerSession;
 
                             switch (type)
                             {
@@ -125,9 +128,19 @@ namespace VirtoCommerce.Web.Controllers
 
                                     }
                                     break;
-                                default:
-                                    //TODO get rid of SeoKeyword
-                                    keyword = SettingsHelper.SeoKeyword(lastIsVal, type, byValue: false);                                
+                                case SeoUrlKeywordTypes.Category:
+                                    var category = Task.Run(() => CatalogHelper.CatalogClient.GetCategoryAsync(slug, session.CatalogId, session.Language)).Result;
+                                    if (category != null)
+                                    {
+                                        keyword = category.SeoKeywords.SeoKeyword(session.Language);
+                                    }
+                                    break;
+                                case SeoUrlKeywordTypes.Item:
+                                    var item = Task.Run(() => CatalogHelper.CatalogClient.GetItemAsync(slug, session.CatalogId, session.Language)).Result;
+                                    if (item != null)
+                                    {
+                                        keyword = item.SeoKeywords.SeoKeyword(session.Language);
+                                    }
                                     break;
                             }
 

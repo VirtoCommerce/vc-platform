@@ -1,8 +1,6 @@
-﻿using System.Linq;
-using System.Web;
+﻿using System.Web;
 using System.Web.Routing;
 using VirtoCommerce.ApiClient.DataContracts;
-using VirtoCommerce.ApiWebClient.Helpers;
 
 namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Routes
 {
@@ -39,11 +37,6 @@ namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Routes
                 {
                     routeData = null;
                 }
-                else
-                {
-                    //Decode the value
-                    DecodeRouteData(routeData.Values, SeoUrlKeywordTypes.Item);
-                }
             }
             return routeData;
         }
@@ -51,7 +44,7 @@ namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Routes
 
         public override VirtualPathData GetVirtualPath(RequestContext requestContext, RouteValueDictionary values)
         {
-            EncodeVirtualPath(requestContext, values, SeoUrlKeywordTypes.Item);
+            EncodeVirtualPath(values, SeoUrlKeywordTypes.Item);
             return base.GetVirtualPath(requestContext, values);
         }
 

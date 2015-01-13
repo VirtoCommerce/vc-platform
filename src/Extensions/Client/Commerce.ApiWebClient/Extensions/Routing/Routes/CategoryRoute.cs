@@ -1,9 +1,6 @@
-﻿using System;
-using System.Linq;
-using System.Web;
+﻿using System.Web;
 using System.Web.Routing;
 using VirtoCommerce.ApiClient.DataContracts;
-using VirtoCommerce.ApiWebClient.Helpers;
 
 namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Routes
 {
@@ -39,10 +36,6 @@ namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Routes
                 {
                     routeData = null;
                 }
-                else
-                {
-                    DecodeRouteData(routeData.Values, SeoUrlKeywordTypes.Category);
-                }
             }
 
             return routeData;
@@ -50,53 +43,9 @@ namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Routes
 
         public override VirtualPathData GetVirtualPath(RequestContext requestContext, RouteValueDictionary values)
         {
-
-            if (values.ContainsKey(Constants.Category) && values[Constants.Category] != null)
-            {
-                var oldOutline = values[Constants.Category].ToString();
-
-                var newOutline = ModifyCategoryPath(values);
-
-                if (!string.IsNullOrEmpty(newOutline) &&
-                    !newOutline.Equals(oldOutline, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    values[Constants.Category] = newOutline;
-                }
-            }
-
-            EncodeVirtualPath(requestContext, values, SeoUrlKeywordTypes.Category);
+            EncodeVirtualPath(values, SeoUrlKeywordTypes.Category);
             return base.GetVirtualPath(requestContext, values);
         }
-
-        /// <summary>
-        /// Convert path to full category path
-        /// </summary>
-        /// <param name="values">The route values.</param>
-        /// <returns></returns>
-        protected virtual string ModifyCategoryPath(RouteValueDictionary values)
-        {
-            var currentPath = values[Constants.Category].ToString();
-            return currentPath;
-
-            //if (string.IsNullOrEmpty(currentPath))
-            //    return null;
-
-            //var childCategryEncoded = currentPath.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).Last();
-
-            //if (string.IsNullOrEmpty(childCategryEncoded))
-            //    return null;
-
-            //var childCategryId = SettingsHelper.SeoDecode(childCategryEncoded, SeoUrlKeywordTypes.Category, 
-            //    values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : null);
-            //var outline =
-            //    new BrowsingOutline(
-            //        CartHelper.CatalogOutlineBuilder.BuildCategoryOutline(
-            //            StoreHelper.CustomerSession.CatalogId,
-            //            CartHelper.CatalogClient.GetCategoryById(childCategryId)));
-
-            //return outline.ToString();
-        }
-
 
         public override string GetMainRouteKey()
         {

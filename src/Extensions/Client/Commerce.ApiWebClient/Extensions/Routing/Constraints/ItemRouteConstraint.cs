@@ -26,10 +26,11 @@ namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Constraints
             }
 
             var encoded = values[parameterName].ToString();
-           // var decoded = SettingsHelper.SeoDecode(encoded, SeoUrlKeywordTypes.Item, values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : null);
-            var productSlug = encoded;
             var session = StoreHelper.CustomerSession;
-            var item = Task.Run(() => CatalogHelper.CatalogClient.GetItemAsync(productSlug, session.CatalogId, session.Language)).Result;
+            var language = values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : session.Language;
+            var productSlug = encoded;
+           
+            var item = Task.Run(() => CatalogHelper.CatalogClient.GetItemAsync(productSlug, session.CatalogId, language)).Result;
 
             if (item == null)
             {
@@ -37,14 +38,14 @@ namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Constraints
             }
 
             //Check if category is correct
-            if (values.ContainsKey(Constants.Category) && !string.IsNullOrEmpty(item.Outline))
-            {
-                encoded = values[Constants.Category].ToString();
-                var decoded = SettingsHelper.SeoDecode(encoded, SeoUrlKeywordTypes.Category, values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : null);
+            //if (values.ContainsKey(Constants.Category))
+            //{
+            //    encoded = values[Constants.Category].ToString();
+            //    //var decoded = SettingsHelper.SeoDecode(encoded, SeoUrlKeywordTypes.Category, values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : null);
 
-                //Todo mark valid outline somehow
-                return ValidateCategoryPath(item.Outline, decoded);
-            }
+            //    //Todo mark valid outline somehow
+            //    return ValidateCategoryPath(item.Outline, decoded);
+            //}
 
             return true;
         }

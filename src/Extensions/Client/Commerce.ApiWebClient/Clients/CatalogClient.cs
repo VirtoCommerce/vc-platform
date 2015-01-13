@@ -15,7 +15,7 @@ namespace VirtoCommerce.ApiWebClient.Clients
         #region Cache Constants
         public const string ItemCacheKey = "C:I:{0}:g:{1}";
         public const string ItemCodeCacheKey = "C:Ic:{0}:g:{1}";
-        public const string CategoriesCacheKey = "C:CT:{0}:{1}";
+        public const string CategoriesCacheKey = "C:CT:{0}:{1}:{2}";
         public const string CategoryIdCacheKey = "C:CTID:{0}:{1}";
         #endregion
 
@@ -117,7 +117,7 @@ namespace VirtoCommerce.ApiWebClient.Clients
         /// <summary>
         /// Gets the category asynchronous.
         /// </summary>
-        /// <param name="slug">The slug. Can by id or seo keyword</param>
+        /// <param name="slug">The slug. Can be id or seo keyword</param>
         /// <param name="catalogId">The catalog identifier.</param>
         /// <param name="language">The language.</param>
         /// <param name="useCache">if set to <c>true</c> [use cache].</param>
@@ -145,7 +145,7 @@ namespace VirtoCommerce.ApiWebClient.Clients
             }
         }
 
-        public async Task<Category[]> GetCategoriesAsync(string catalogId, string language, bool useCache = true)
+        public async Task<Category[]> GetCategoriesAsync(string catalogId, string language, string parentId = null, bool useCache = true)
         {
             var client = GetClient(language, catalogId);
 
@@ -153,8 +153,8 @@ namespace VirtoCommerce.ApiWebClient.Clients
             {
                 var result = await Helper.GetAsync(
                     CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix,
-                         string.Format(CategoriesCacheKey, catalogId, language)),
-                    () =>client.GetCategoriesAsync(),
+                         string.Format(CategoriesCacheKey, catalogId, parentId, language)),
+                    () =>client.GetCategoriesAsync(parentId),
                     CatalogConfiguration.Instance.Cache.CategoryTimeout,
                     _isEnabled && useCache);
 

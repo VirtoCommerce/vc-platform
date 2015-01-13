@@ -44,7 +44,7 @@ namespace VirtoCommerce.ApiWebClient.Extensions
             {
                 return a.GetLoadableTypes();
             }
-            catch (Exception ex)
+            catch
             {
                 return Enumerable.Empty<Type>();
             }

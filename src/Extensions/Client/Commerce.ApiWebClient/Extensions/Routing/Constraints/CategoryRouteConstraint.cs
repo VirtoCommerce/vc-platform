@@ -27,21 +27,23 @@ namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Constraints
                 return true;
             }
 
-            var encoded = values[parameterName].ToString();
-           
+            var categoryPath = values[parameterName].ToString();
 
-            var childCategorySlug = encoded.Split(Separator.ToCharArray()).Last();
+
+            var childCategorySlug = categoryPath.Split(Separator.ToCharArray()).Last();
             var session = StoreHelper.CustomerSession;
-            var category = Task.Run(() => CatalogHelper.CatalogClient.GetCategoryAsync(childCategorySlug, session.CatalogId, session.Language)).Result;
+            var language = values.ContainsKey(Constants.Language)
+                ? values[Constants.Language].ToString()
+                : session.Language;
+
+            var category = Task.Run(() => CatalogHelper.CatalogClient.GetCategoryAsync(childCategorySlug, session.CatalogId, language)).Result;
 
             if (category == null)
             {
                 return false;
             }
 
-            //TODO return encoded outline
-            var decoded = SettingsHelper.SeoDecode(encoded, SeoUrlKeywordTypes.Category, values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : null);
-            return ValidateCategoryPath(category.Outline, decoded);
+            return ValidateCategoryPath(category.BuildOutline(language), categoryPath);
         }
 
     }

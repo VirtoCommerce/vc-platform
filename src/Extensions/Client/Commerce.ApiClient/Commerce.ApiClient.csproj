@@ -61,6 +61,7 @@
     <Compile Include="ClientContext.cs" />
     <Compile Include="CommerceClients.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="DataContracts\CategoryInfo.cs" />
     <Compile Include="DataContracts\SeoKeyword.cs" />
     <Compile Include="DataContracts\SeoUrlKeywordTypes.cs" />
     <Compile Include="DataContracts\Store\Store.cs" />

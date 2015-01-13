@@ -3,9 +3,6 @@ using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Routing;
-using VirtoCommerce.ApiClient.DataContracts;
-using VirtoCommerce.ApiWebClient.Helpers;
 
 namespace VirtoCommerce.ApiWebClient.Extensions.Filters
 {
@@ -51,6 +48,31 @@ namespace VirtoCommerce.ApiWebClient.Extensions.Filters
                     var queryString = context.Request.QueryString;
                     var needRedirect = false;
 
+
+                    //make language code allways be five symbols
+                    if (filterContext.RouteData.Values.ContainsKey(Routing.Constants.Language) &&
+                        filterContext.RouteData.Values[Routing.Constants.Language] as string != null)
+                    {
+                        var lang = filterContext.RouteData.Values[Routing.Constants.Language].ToString();
+                        if (lang.Length < 5)
+                        {
+                            try
+                            {
+                                var cult = CultureInfo.CreateSpecificCulture(lang);
+                                if (!lang.Equals(cult.Name, StringComparison.InvariantCultureIgnoreCase))
+                                {
+                                    filterContext.RouteData.Values[Routing.Constants.Language] =
+                                        cult.Name.ToLowerInvariant();
+                                    needRedirect = true;
+                                }
+                            }
+                            catch
+                            {
+                                //Something wrong with language??
+                            }
+                        }
+                    }
+
                     //Make sure we allways use same virtual path as Route provides
                     var routePath = filterContext.RouteData.Route.GetVirtualPath(filterContext.RequestContext,
                         filterContext.RouteData.Values);
@@ -72,24 +94,25 @@ namespace VirtoCommerce.ApiWebClient.Extensions.Filters
                         //Rebuild querystring from scratch
                         var newQuery = string.Empty;
 
-                        /*
+                        
                         //First goes search filter ordered based on document
-                        var helper = StoreHelper.SearchFilter;
+                        //var helper = StoreHelper.SearchFilter;
                         var urlHelper = new UrlHelper(context.Request.RequestContext);
 
-                        var parameters = helper.Filters.Where(f => !(f is PriceRangeFilter) || ((PriceRangeFilter)f).Currency.Equals(StoreHelper.CustomerSession.Currency, StringComparison.OrdinalIgnoreCase))
-                            .Select(filter => queryString.AllKeys
-                            .FirstOrDefault(k => k.Equals(urlHelper.GetFacetKey(filter.Key), StringComparison.InvariantCultureIgnoreCase)))
-                            .Where(key => !string.IsNullOrEmpty(key))
-                            .ToDictionary<string, string, object>(key => key, key => queryString[key]);
+                        //TODO handle filters parameters
+                        //var parameters = helper.Filters.Where(f => !(f is PriceRangeFilter) || ((PriceRangeFilter)f).Currency.Equals(StoreHelper.CustomerSession.Currency, StringComparison.OrdinalIgnoreCase))
+                        //    .Select(filter => queryString.AllKeys
+                        //    .FirstOrDefault(k => k.Equals(urlHelper.GetFacetKey(filter.Key), StringComparison.InvariantCultureIgnoreCase)))
+                        //    .Where(key => !string.IsNullOrEmpty(key))
+                        //    .ToDictionary<string, string, object>(key => key, key => queryString[key]);
 
-                        if (parameters.Any())
-                        {
-                            newQuery = urlHelper.SetQueryParameters(newQuery, parameters);
-                        }
+                        //if (parameters.Any())
+                        //{
+                        //    newQuery = urlHelper.SetQueryParameters(newQuery, parameters);
+                        //}
 
                         //Order remaining parameters
-                        var otherParams = queryString.AllKeys.Where(key => !parameters.ContainsKey(key)).OrderBy(k => k)
+                        var otherParams = queryString.AllKeys/*.Where(key => !parameters.ContainsKey(key))*/.OrderBy(k => k)
                             .ToDictionary<string, string, object>(key => key, key => queryString[key]);
 
                         if (otherParams.Any())
@@ -109,43 +132,13 @@ namespace VirtoCommerce.ApiWebClient.Extensions.Filters
                             query = newQuery;
                             needRedirect = true;
                         }
-                         * */
+                        
                     }
-
-
-                    //make language code allways be five symbols
-                    if (filterContext.RouteData.Values.ContainsKey(Routing.Constants.Language) &&
-                        filterContext.RouteData.Values[Routing.Constants.Language] as string != null)
-                    {
-                        var lang = filterContext.RouteData.Values[Routing.Constants.Language].ToString();
-                        if (lang.Length < 5)
-                        {
-                            try
-                            {
-                                var cult = CultureInfo.CreateSpecificCulture(lang);
-                                if (!path.ToLowerInvariant().Contains(cult.Name.ToLowerInvariant()))
-                                {
-                                    path = path.Replace(lang, cult.Name);
-                                    needRedirect = true;
-                                }
-                            }
-                            catch
-                            {
-                                //Something wrong with language??
-                            }
-                        }
-                    }
-
-                    //make path segments allways encoded
-                    var encodedPath = path;
-                    encodedPath = ProcessSegment(filterContext.RouteData.Values, encodedPath, Routing.Constants.Store);
-                    encodedPath = ProcessSegment(filterContext.RouteData.Values, encodedPath, Routing.Constants.Category);
-                    encodedPath = ProcessSegment(filterContext.RouteData.Values, encodedPath, Routing.Constants.Item);
 
                     // check for any upper-case letters:
-                    if (path != encodedPath.ToLowerInvariant())
+                    if (path != path.ToLowerInvariant())
                     {
-                        path = encodedPath.ToLowerInvariant();
+                        path = path.ToLowerInvariant();
                         needRedirect = true;
                     }
 
@@ -171,28 +164,6 @@ namespace VirtoCommerce.ApiWebClient.Extensions.Filters
             base.OnActionExecuting(filterContext);
 
         }
-
-        private string ProcessSegment(RouteValueDictionary routeValues, string path, string key)
-        {
-            SeoUrlKeywordTypes type;
-
-            if (routeValues.ContainsKey(key) &&
-                          routeValues[key] as string != null && Enum.TryParse(key, true, out type))
-            {
-                var value = routeValues[key].ToString();
-                var lang = routeValues.ContainsKey(Routing.Constants.Language) ? routeValues[Routing.Constants.Language] as string : null;
-                var valueEncoded = SettingsHelper.SeoEncode(value, type, lang).ToLowerInvariant();
-
-                //If encoded and used value does not match (keyword exist) and requested path contains not encoded value replace with encoded
-                if (!value.Equals(valueEncoded, StringComparison.InvariantCultureIgnoreCase) && path.ToLowerInvariant().Contains(value.ToLowerInvariant()))
-                {
-                    path = path.Replace(value, valueEncoded);
-                }
-            }
-
-            return path;
-        }
-
 
 
         // correct as many 'rules' as possible per redirect to avoid

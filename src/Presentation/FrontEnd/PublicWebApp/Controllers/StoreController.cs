@@ -67,7 +67,7 @@ namespace VirtoCommerce.Web.Controllers
                                       ? Url.RouteUrl("Store", new { store = store.Id })
                                       : store.Url
                               }).ToArray(),
-                    SelectedStore = StoreHelper.CustomerSession.StoreId,
+                    SelectedStore = StoreHelper.StoreClient.GetCurrentStore().Id,
                     SelectedStoreName = StoreHelper.CustomerSession.StoreName
                 };
 

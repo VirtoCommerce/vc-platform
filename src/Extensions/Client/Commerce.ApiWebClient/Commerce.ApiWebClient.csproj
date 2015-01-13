@@ -146,11 +146,14 @@
     <Compile Include="ContextFieldConstants.cs" />
     <Compile Include="Currencies\CurrencyService.cs" />
     <Compile Include="Currencies\ICurrencyService.cs" />
+    <Compile Include="Extensions\CategoryExtensions.cs" />
+    <Compile Include="Extensions\EnumerableExtensions.cs" />
     <Compile Include="Extensions\Filters\CanonicalizedAttribute.cs" />
     <Compile Include="Extensions\Filters\LocalizeAttribute.cs" />
     <Compile Include="Extensions\Filters\LocalizeWebApiAttribute.cs" />
     <Compile Include="Extensions\Filters\ModelValidationFilterAttribute.cs" />
     <Compile Include="Extensions\Filters\ValidateAjaxAttribute.cs" />
+    <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\RedirectRouteExtensions.cs" />
     <Compile Include="Extensions\RouteValueDictionaryExtensions.cs" />
     <Compile Include="Extensions\Routing\Constants.cs" />
@@ -168,6 +171,7 @@
     <Compile Include="Extensions\Routing\Routes\StoreRoute.cs" />
     <Compile Include="Extensions\SectionExtensions.cs" />
     <Compile Include="Extensions\SeoKeywordExtensions.cs" />
+    <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Extensions\ViewRenderer.cs" />
     <Compile Include="Helpers\SettingsHelper.cs" />
     <Compile Include="Helpers\CatalogHelper.cs" />

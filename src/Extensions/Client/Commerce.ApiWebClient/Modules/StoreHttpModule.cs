@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -17,8 +18,8 @@ namespace VirtoCommerce.ApiWebClient.Modules
     /// <summary>
     /// Class StoreHttpModule.
     /// </summary>
-	public class StoreHttpModule : BaseHttpModule
-	{
+    public class StoreHttpModule : BaseHttpModule
+    {
         /// <summary>
         /// The store cookie
         /// </summary>
@@ -35,10 +36,10 @@ namespace VirtoCommerce.ApiWebClient.Modules
         /// web and register it with IIS before being able to use it. For more information
         /// see the following link: http://go.microsoft.com/?linkid=8101007
         /// </summary>
-		public override void Dispose()
-		{
-			//clean-up code here.
-		}
+        public override void Dispose()
+        {
+            //clean-up code here.
+        }
 
         /// <summary>
         /// Initializes a module and prepares it to handle requests.
@@ -76,6 +77,7 @@ namespace VirtoCommerce.ApiWebClient.Modules
         protected virtual void OnAuthenticateRequest(HttpContext context)
         {
             var session = CustomerSession;
+            session.Language = GetLanguage(context);
             var store = GetStore(context);
 
             if (IsRequestAuthenticated(context))
@@ -142,6 +144,7 @@ namespace VirtoCommerce.ApiWebClient.Modules
         protected virtual void OnPostAcquireRequestState(HttpContext context)
         {
             var session = CustomerSession;
+            session.Language = GetLanguage(context);
             var store = GetStore(context);
 
             if (string.IsNullOrEmpty(session.Language)
@@ -190,6 +193,9 @@ namespace VirtoCommerce.ApiWebClient.Modules
         /// <exception cref="System.Web.HttpException">404;Store Not Found</exception>
         protected virtual void OnBeginRequest(HttpContext context)
         {
+            var session = CustomerSession;
+            session.Language = GetLanguage(context);
+
             var store = GetStore(context);
 
             if (store == null)
@@ -197,7 +203,6 @@ namespace VirtoCommerce.ApiWebClient.Modules
                 throw new HttpException(404, "Store Not Found");
             }
 
-            var session = CustomerSession;
             session.StoreId = store.Id;
 
             var currency = GetStoreCurrency(context, store);
@@ -215,7 +220,7 @@ namespace VirtoCommerce.ApiWebClient.Modules
             }
         }
 
-		#region Helper Methods
+        #region Helper Methods
         /// <summary>
         /// Redirects to login.
         /// </summary>
@@ -251,6 +256,23 @@ namespace VirtoCommerce.ApiWebClient.Modules
             return context.User.Identity.Name;
         }
 
+        protected virtual string GetLanguage(HttpContext context)
+        {
+            var language = GetLanguageFromRoute(context.Request.RequestContext.RouteData.Values);
+
+            if (string.IsNullOrEmpty(language))
+            {
+                language = GetLanguageFromUrl(context.Request.Url.Segments);
+            }
+
+            if (string.IsNullOrEmpty(language))
+            {
+                language = CustomerSession.Language;
+            }
+
+            return language;
+        }
+
         /// <summary>
         /// Gets the store.
         /// </summary>
@@ -259,9 +281,9 @@ namespace VirtoCommerce.ApiWebClient.Modules
         /// Store.
         /// </returns>
         protected virtual Store GetStore(HttpContext context)
-		{
-			var loadDefault = true;
-			var storeClient = DependencyResolver.Current.GetService<StoreClient>();
+        {
+            var loadDefault = true;
+            var storeClient = DependencyResolver.Current.GetService<StoreClient>();
             var storeid = GetStoreIdFromRoute(context.Request.RequestContext.RouteData.Values);
             if (string.IsNullOrEmpty(storeid))
             {
@@ -269,58 +291,58 @@ namespace VirtoCommerce.ApiWebClient.Modules
             }
             Store store = null;
 
-			if (String.IsNullOrEmpty(storeid))
-			{
-				// try getting store from URL
-				storeid = storeClient.GetStoreIdByUrl(context.Request.Url.AbsoluteUri);
-				if (String.IsNullOrEmpty(storeid))
-				{
-					// try getting store from the cookie
-					storeid = StoreHelper.GetCookieValue(StoreCookie, false);
+            if (String.IsNullOrEmpty(storeid))
+            {
+                // try getting store from URL
+                storeid = storeClient.GetStoreIdByUrl(context.Request.Url.AbsoluteUri);
+                if (String.IsNullOrEmpty(storeid))
+                {
+                    // try getting store from the cookie
+                    storeid = StoreHelper.GetCookieValue(StoreCookie, false);
 
-					// try getting default store from settings
-					if (String.IsNullOrEmpty(storeid))
-					{
-						storeid = ConfigurationManager.AppSettings["DefaultStore"];
-					}
-				}
+                    // try getting default store from settings
+                    if (String.IsNullOrEmpty(storeid))
+                    {
+                        storeid = ConfigurationManager.AppSettings["DefaultStore"];
+                    }
+                }
 
-			}
+            }
 
-			if (!String.IsNullOrEmpty(storeid))
-			{
-				store = storeClient.GetStoreById(storeid);
+            if (!String.IsNullOrEmpty(storeid))
+            {
+                store = storeClient.GetStore(storeid);
 
-				if (store != null)
-				{
-					if (store.StoreState != StoreState.Closed)
-					{
-						loadDefault = false;
-					}
-					else
-					{
-						store = null;
-					}
-				}
-			}
+                if (store != null)
+                {
+                    if (store.StoreState != StoreState.Closed)
+                    {
+                        loadDefault = false;
+                    }
+                    else
+                    {
+                        store = null;
+                    }
+                }
+            }
 
 
-			if (store == null)
-			{
-				if (loadDefault)
-				{
-					StoreHelper.ClearCookie(StoreCookie, String.Empty, false);
-					storeid = ConfigurationManager.AppSettings["DefaultStore"];
-					store = storeClient.GetStoreById(storeid);
-				}
-				else
-				{
-					store = storeClient.GetStores().FirstOrDefault();
-				}
-			}
+            if (store == null)
+            {
+                if (loadDefault)
+                {
+                    StoreHelper.ClearCookie(StoreCookie, String.Empty, false);
+                    storeid = ConfigurationManager.AppSettings["DefaultStore"];
+                    store = storeClient.GetStore(storeid);
+                }
+                else
+                {
+                    store = storeClient.GetStores().FirstOrDefault();
+                }
+            }
 
-			return store;
-		}
+            return store;
+        }
 
         /// <summary>
         /// Gets the store currency.
@@ -331,8 +353,8 @@ namespace VirtoCommerce.ApiWebClient.Modules
         /// System.String.
         /// </returns>
         protected virtual string GetStoreCurrency(HttpContext context, Store store)
-		{
-			var currency = context.Request.QueryString["currency"];
+        {
+            var currency = context.Request.QueryString["currency"];
 
             if (String.IsNullOrEmpty(currency))
             {
@@ -356,9 +378,9 @@ namespace VirtoCommerce.ApiWebClient.Modules
                 currency = store.DefaultCurrency;
             }
 
-			return currency.ToUpperInvariant();
-		}
-		#endregion
+            return currency.ToUpperInvariant();
+        }
+        #endregion
 
         private string GetStoreIdFromRoute(RouteValueDictionary values)
         {
@@ -369,28 +391,30 @@ namespace VirtoCommerce.ApiWebClient.Modules
             return null;
         }
 
+        private string GetLanguageFromRoute(RouteValueDictionary values)
+        {
+            if (values != null && values.ContainsKey(Extensions.Routing.Constants.Language))
+            {
+                return values[Extensions.Routing.Constants.Language].ToString();
+            }
+            return null;
+        }
+
         private string GetStoreIdFromUrl(IEnumerable<string> urlSegments)
         {
             var storeClient = DependencyResolver.Current.GetService<StoreClient>();
-            var allStores = storeClient.GetStores();
 
             foreach (var urlSegment in urlSegments)
             {
                 var storeCandidate = HttpUtility.UrlDecode(urlSegment.Replace("/", ""));
-                if (string.IsNullOrEmpty(storeCandidate))
-                {
-                    continue;
-                }
-
-                storeCandidate = SettingsHelper.SeoDecode(storeCandidate, SeoUrlKeywordTypes.Store);
 
                 if (string.IsNullOrEmpty(storeCandidate))
                 {
                     continue;
                 }
 
-                var foundStore = allStores.FirstOrDefault(
-                    s => s.Id.Equals(storeCandidate, StringComparison.InvariantCultureIgnoreCase));
+
+                var foundStore = storeClient.GetStore(storeCandidate);
 
                 if (foundStore != null)
                 {
@@ -401,5 +425,28 @@ namespace VirtoCommerce.ApiWebClient.Modules
 
             return null;
         }
-	}
+
+        private string GetLanguageFromUrl(IEnumerable<string> urlSegments)
+        {
+
+            foreach (var urlSegment in urlSegments)
+            {
+                var languageCandidate = HttpUtility.UrlDecode(urlSegment.Replace("/", ""));
+                if (string.IsNullOrEmpty(languageCandidate))
+                {
+                    continue;
+                }
+
+                var constraintsRegEx = string.Format("^({0})$", Extensions.Routing.Constants.LanguageRegex);
+
+                if (Regex.IsMatch(languageCandidate, constraintsRegEx, RegexOptions.CultureInvariant | RegexOptions.IgnoreCase | RegexOptions.Compiled))
+                {
+                    return languageCandidate.ToLowerInvariant();
+                }
+
+            }
+
+            return null;
+        }
+    }
 }

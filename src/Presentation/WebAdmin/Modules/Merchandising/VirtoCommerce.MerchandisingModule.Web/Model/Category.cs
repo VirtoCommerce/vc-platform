@@ -16,7 +16,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
 
         public string Name { get; set; }
 
-		public Dictionary<string, string> Parents { get; set; }
+        public CategoryInfo[] Parents { get; set; }
         
         public bool Virtual { get; set; }
 

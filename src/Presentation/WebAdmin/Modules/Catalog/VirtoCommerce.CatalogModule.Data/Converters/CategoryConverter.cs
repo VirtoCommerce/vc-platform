@@ -34,6 +34,8 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			    Catalog = catalog,
                 Id = dbCategoryBase.CategoryId,
                 ParentId = dbCategoryBase.ParentCategoryId,
+                Priority = dbCategoryBase.Priority,
+                IsActive = dbCategoryBase.IsActive
 		
 			};
 

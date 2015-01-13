@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Routing;
 using VirtoCommerce.ApiClient.DataContracts;
@@ -42,8 +43,9 @@ namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Routes
                 values.Add(Constants.Store, StoreHelper.CustomerSession.StoreId);
             }
 
-            var storeId = SettingsHelper.SeoDecode(values[Constants.Store].ToString(), SeoUrlKeywordTypes.Store, values[Constants.Language] as string);
-            var store = StoreHelper.StoreClient.GetStoreById(storeId);
+            //var storeId = SettingsHelper.SeoDecode(values[Constants.Store].ToString(), SeoUrlKeywordTypes.Store, values[Constants.Language] as string);
+            var storeSlug = values[Constants.Store].ToString();
+            var store = StoreHelper.StoreClient.GetStore(storeSlug, values[Constants.Language] as string);
 
             if (!values.ContainsKey(Constants.Language))
             {
@@ -77,7 +79,7 @@ namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Routes
                     }
                     else
                     {
-                        EncodeVirtualPath(requestContext, values, SeoUrlKeywordTypes.Store);
+                        EncodeVirtualPath(values, SeoUrlKeywordTypes.Store);
                     }
 
                     if (!isLanguageNeeded)
@@ -108,7 +110,7 @@ namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Routes
                 }
             }
 
-            EncodeVirtualPath(requestContext, values, SeoUrlKeywordTypes.Store);
+            EncodeVirtualPath(values, SeoUrlKeywordTypes.Store);
             return base.GetVirtualPath(requestContext, values);
 
         }
@@ -149,7 +151,7 @@ namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Routes
                     //Check if some values match constraint for language or store. The expected route is {lang}/{store}/...
                     //But Language and/or store can be skipped then defaults or current values are used
                     var languageConstraint = new LanguageRouteConstraint();
-                   
+
                     var languageFound = false;
                     if (languageConstraint.Match(httpContext, this, Constants.Language,
                         new RouteValueDictionary { { Constants.Language, pathSegments[0] } }.Merge(values), RouteDirection.IncomingRequest))
@@ -262,32 +264,59 @@ namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Routes
             }
 
             //Decode route value
-            DecodeRouteData(routeData.Values, SeoUrlKeywordTypes.Store);
+            //DecodeRouteData(routeData.Values, SeoUrlKeywordTypes.Store);
 
             return routeData;
         }
 
-        protected virtual void EncodeVirtualPath(RequestContext requestContext, RouteValueDictionary values, SeoUrlKeywordTypes type)
+        protected virtual void EncodeVirtualPath(RouteValueDictionary values, SeoUrlKeywordTypes type)
         {
-            string routeValueKey = type.ToString().ToLower();
-            var language = values.ContainsKey(Constants.Language) ? values[Constants.Language] as string : null;
+            var routeValueKey = type.ToString().ToLower();
+            var session = StoreHelper.CustomerSession;
+            var language = values.ContainsKey(Routing.Constants.Language) ? values[Routing.Constants.Language] as string : session.Language;
 
             if (values.ContainsKey(routeValueKey) && values[routeValueKey] != null)
             {
-                values[routeValueKey] = SettingsHelper.SeoEncode(values[routeValueKey].ToString(), type, language);
+                var slug = values[routeValueKey].ToString().Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).Last();
+
+                switch (type)
+                {
+                    case SeoUrlKeywordTypes.Store:
+                        var store = StoreHelper.StoreClient.GetStore(slug);
+                        if (store != null)
+                        {
+                            var keyword = store.SeoKeywords.SeoKeyword(language);
+                            if (keyword != null)
+                            {
+                                values[routeValueKey] = keyword.Keyword;
+                            }
+                        }
+
+                        break;
+                    case SeoUrlKeywordTypes.Category:
+                        var category = Task.Run(() => CatalogHelper.CatalogClient.GetCategoryAsync(slug, session.CatalogId, language)).Result;
+                        if (category != null)
+                        {
+                            values[routeValueKey] = string.Join("/", category.BuildOutline(language).Select(x => x.Value));
+                        }
+                        break;
+                    case SeoUrlKeywordTypes.Item:
+                        var item = Task.Run(() => CatalogHelper.CatalogClient.GetItemAsync(slug, session.CatalogId, language)).Result;
+                        if (item != null)
+                        {
+                            var keyword = item.SeoKeywords.SeoKeyword(language);
+                            if (keyword != null)
+                            {
+                                values[routeValueKey] = keyword.Keyword;
+                            }
+                        }
+                        break;
+                }
+
+
             }
         }
 
-        protected virtual void DecodeRouteData(RouteValueDictionary values, SeoUrlKeywordTypes type)
-        {
-            string routeValueKey = type.ToString().ToLower();
-            var language = values.ContainsKey(Constants.Language) ? values[Constants.Language] as string : null;
-
-            if (values.ContainsKey(routeValueKey) && values[routeValueKey] != null)
-            {
-                values[routeValueKey] = SettingsHelper.SeoDecode(values[routeValueKey].ToString(), type, language);
-            }
-        }
 
         public virtual string GetMainRouteKey()
         {
@@ -299,7 +328,7 @@ namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Routes
             return Constraints == null || Constraints.All(constraintsItem => ProcessConstraint(httpContext, constraintsItem.Value, constraintsItem.Key, values, routeDirection));
         }
 
-        protected  virtual bool IsLanguageNeeded(Store dbStore)
+        protected virtual bool IsLanguageNeeded(Store dbStore)
         {
             if (dbStore != null)
             {
