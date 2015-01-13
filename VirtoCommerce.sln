@@ -245,12 +245,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Logging", "Logging", "{7F49
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Slab", "src\Extensions\Logging\VirtoCommerce.Slab.csproj", "{8DCDA1BC-E983-4DBB-98B6-320847ACCDFE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PublicWebApp", "src\Presentation\FrontEnd\PublicWebApp\PublicWebApp.csproj", "{736303CF-F1F3-4BB4-9647-992E8AF3606A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Commerce.ApiClient", "src\Extensions\Client\Commerce.ApiClient\Commerce.ApiClient.csproj", "{84B945B7-85E4-4057-B0DF-1F8A03B8D53C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Commerce.ApiWebClient", "src\Extensions\Client\Commerce.ApiWebClient\Commerce.ApiWebClient.csproj", "{A67C7412-708C-4978-A666-6B9414BBF696}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -571,24 +565,6 @@ Global
 		{8DCDA1BC-E983-4DBB-98B6-320847ACCDFE}.DebugLocal|Any CPU.Build.0 = Debug|Any CPU
 		{8DCDA1BC-E983-4DBB-98B6-320847ACCDFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8DCDA1BC-E983-4DBB-98B6-320847ACCDFE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{736303CF-F1F3-4BB4-9647-992E8AF3606A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{736303CF-F1F3-4BB4-9647-992E8AF3606A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{736303CF-F1F3-4BB4-9647-992E8AF3606A}.DebugLocal|Any CPU.ActiveCfg = Debug|Any CPU
-		{736303CF-F1F3-4BB4-9647-992E8AF3606A}.DebugLocal|Any CPU.Build.0 = Debug|Any CPU
-		{736303CF-F1F3-4BB4-9647-992E8AF3606A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{736303CF-F1F3-4BB4-9647-992E8AF3606A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{84B945B7-85E4-4057-B0DF-1F8A03B8D53C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{84B945B7-85E4-4057-B0DF-1F8A03B8D53C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{84B945B7-85E4-4057-B0DF-1F8A03B8D53C}.DebugLocal|Any CPU.ActiveCfg = Debug|Any CPU
-		{84B945B7-85E4-4057-B0DF-1F8A03B8D53C}.DebugLocal|Any CPU.Build.0 = Debug|Any CPU
-		{84B945B7-85E4-4057-B0DF-1F8A03B8D53C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{84B945B7-85E4-4057-B0DF-1F8A03B8D53C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A67C7412-708C-4978-A666-6B9414BBF696}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A67C7412-708C-4978-A666-6B9414BBF696}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A67C7412-708C-4978-A666-6B9414BBF696}.DebugLocal|Any CPU.ActiveCfg = Debug|Any CPU
-		{A67C7412-708C-4978-A666-6B9414BBF696}.DebugLocal|Any CPU.Build.0 = Debug|Any CPU
-		{A67C7412-708C-4978-A666-6B9414BBF696}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A67C7412-708C-4978-A666-6B9414BBF696}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -663,9 +639,6 @@ Global
 		{7AB6B367-1BC3-474B-982D-B50B32B1574A} = {CECDE122-6128-402F-B3B4-4D8C388308D3}
 		{7F4999F5-7952-4F64-9285-61A77E1F0890} = {5E7C52DA-805F-4F37-878B-8DE95F1B92EF}
 		{8DCDA1BC-E983-4DBB-98B6-320847ACCDFE} = {7F4999F5-7952-4F64-9285-61A77E1F0890}
-		{736303CF-F1F3-4BB4-9647-992E8AF3606A} = {B5987D54-8BC5-4588-A2E2-72DD0EEC338E}
-		{84B945B7-85E4-4057-B0DF-1F8A03B8D53C} = {B23D71DE-DC4A-4783-AEE4-6C6CDF0EE4EB}
-		{A67C7412-708C-4978-A666-6B9414BBF696} = {B23D71DE-DC4A-4783-AEE4-6C6CDF0EE4EB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		EnterpriseLibraryConfigurationToolBinariesPath = packages\ y.2.1.505.0\lib\NET35;packages\Unity.2.1.505.2\lib\NET35
