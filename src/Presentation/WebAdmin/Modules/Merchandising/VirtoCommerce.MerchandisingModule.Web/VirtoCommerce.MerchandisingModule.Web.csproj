@@ -91,6 +91,7 @@
     <Compile Include="Converters\ReviewConverter.cs" />
     <Compile Include="Converters\KeywordConverter.cs" />
     <Compile Include="Converters\StoreConverter.cs" />
+    <Compile Include="Model\CategoryInfo.cs" />
     <Compile Include="Model\IFeedbackCounterSupport.cs" />
     <Compile Include="Model\EditorialReview.cs" />
     <Compile Include="Model\Review.cs" />
