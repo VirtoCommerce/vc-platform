@@ -35,13 +35,6 @@
 	padding: 5px 10px;
 }
 
-.metro .input-control.text.input-search
-{
-	float: left;
-	margin: 0 0 10px 20px;
-	width: 70%;
-}
-
 .metro .input-control.select select,
 .metro .input-control.textarea select,
 .metro .input-control.select textarea,
@@ -1153,6 +1146,19 @@ p.subheader
 	outline: 2px solid #fff;
 }
 
+.metro .input-control.switch .check:after
+{
+	bottom: 1px;
+	height: auto;
+	left: 1px;
+	top: 1px;
+}
+
+.metro .input-control.switch input[type="checkbox"]:checked ~ .check:after
+{
+	right: 1px;
+}
+
 .main-content
 {
 	left: 90px;
@@ -1786,6 +1792,12 @@ p.subheader
 .blade-container .static.bottom ~ .blade-content,
 .blade-container .static.top ~ .blade-content
 {
+	height: calc(100% - 70px);
+}
+
+.blade-container .static.bottom ~ .blade-content,
+.blade-container .static.top.expanded ~ .blade-content
+{
 	height: calc(100% - 100px);
 }
 
@@ -1845,7 +1857,7 @@ p.subheader
 .metro .breadcrumbs
 {
 	list-style: none;
-	margin: 10px 20px;
+	margin: 0 20px 10px;
 	padding: 0;
 }
 
@@ -1921,8 +1933,13 @@ p.subheader
 {
 	background: #fff;
 	border-bottom: 2px solid #dcdfe2;
+	height: 70px;
+	padding: 15px 0 0;
+}
+
+.blade-container .static.expanded
+{
 	height: 100px;
-	padding: 5px 0 0;
 }
 
 .blade-container .static.bottom
@@ -1930,11 +1947,19 @@ p.subheader
 	border-bottom: none;
 	border-top: 2px solid #dcdfe2;
 	bottom: 0;
+	height: 100px;
 	left: 0;
 	padding: 10px 20px 0;
 	position: absolute;
 	right: 0;
 	z-index: 800;
+}
+
+.blade-container .static .input-search
+{
+	float: left;
+	margin: 0 0 10px 20px;
+	width: 70%;
 }
 
 .list-selected

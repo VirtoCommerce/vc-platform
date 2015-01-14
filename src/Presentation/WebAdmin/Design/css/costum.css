@@ -35,13 +35,6 @@
 	padding: 5px 10px;
 }
 
-.metro .input-control.text.input-search
-{
-	float: left;
-	margin: 0 0 10px 20px;
-	width: 70%;
-}
-
 .metro .input-control.select select,
 .metro .input-control.textarea select,
 .metro .input-control.select textarea,
@@ -75,7 +68,7 @@
 
 .block
 {
-	margin: 0 0 20px;
+	margin: 20px 0;
 }
 
 .blade form
@@ -220,7 +213,7 @@ p.subheader
 
 .table-wrapper
 {
-	margin: 0 -20px;
+	margin: 10px -20px 20px;
 }
 
 .metro table
@@ -1153,6 +1146,19 @@ p.subheader
 	outline: 2px solid #fff;
 }
 
+.metro .input-control.switch .check:after
+{
+	bottom: 1px;
+	height: auto;
+	left: 1px;
+	top: 1px;
+}
+
+.metro .input-control.switch input[type="checkbox"]:checked ~ .check:after
+{
+	right: 1px;
+}
+
 .main-content
 {
 	left: 90px;
@@ -1246,6 +1252,7 @@ p.subheader
 	border-bottom: 1px solid #ddd;
 	cursor: pointer;
 	font-size: 14px;
+	overflow: hidden;
 	padding: 15px 20px;
 	position: relative;
 }
@@ -1314,6 +1321,7 @@ p.subheader
 	font-size: 32px;
 	margin: 0 15px 0 0;
 	vertical-align: middle;
+	width: 35px;
 }
 
 .list-extended > li .name
@@ -1739,7 +1747,8 @@ p.subheader
 {
 	color: #999;
 	display: block;
-	font-size: 10px;
+	font-size: 11px;
+	line-height: 1.4;
 }
 
 .blade-sw-title.uppercase
@@ -1749,6 +1758,7 @@ p.subheader
 
 .blade-content
 {
+	white-space: normal;
 	width: 412px;
 }
 
@@ -1766,7 +1776,7 @@ p.subheader
 .blade-content .blade-inner
 {
 	height: 100%;
-	padding: 20px;
+	padding: 0 20px;
 	overflow-x: hidden;
 	overflow-y: auto;
 
@@ -1781,6 +1791,12 @@ p.subheader
 
 .blade-container .static.bottom ~ .blade-content,
 .blade-container .static.top ~ .blade-content
+{
+	height: calc(100% - 70px);
+}
+
+.blade-container .static.bottom ~ .blade-content,
+.blade-container .static.top.expanded ~ .blade-content
 {
 	height: calc(100% - 100px);
 }
@@ -1841,7 +1857,7 @@ p.subheader
 .metro .breadcrumbs
 {
 	list-style: none;
-	margin: 10px 20px;
+	margin: 0 20px 10px;
 	padding: 0;
 }
 
@@ -1917,8 +1933,13 @@ p.subheader
 {
 	background: #fff;
 	border-bottom: 2px solid #dcdfe2;
+	height: 70px;
+	padding: 15px 0 0;
+}
+
+.blade-container .static.expanded
+{
 	height: 100px;
-	padding: 5px 0 0;
 }
 
 .blade-container .static.bottom
@@ -1926,11 +1947,19 @@ p.subheader
 	border-bottom: none;
 	border-top: 2px solid #dcdfe2;
 	bottom: 0;
+	height: 100px;
 	left: 0;
 	padding: 10px 20px 0;
 	position: absolute;
 	right: 0;
 	z-index: 800;
+}
+
+.blade-container .static .input-search
+{
+	float: left;
+	margin: 0 0 10px 20px;
+	width: 70%;
 }
 
 .list-selected
@@ -1993,7 +2022,6 @@ p.subheader
 .dashboard .tile
 {
 	background: #fff;
-	border: 2px solid transparent;
 	padding: 16px;
 }
 
