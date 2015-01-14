@@ -14,11 +14,6 @@ namespace VirtoCommerce.Web.Controllers
     /// </summary>
     public class CatalogController : ControllerBase
     {
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StoreController"/> class.
-        /// </summary>
-        /// <param name="storeClient">The store client.</param>
         public CatalogController()
         {
         }
@@ -29,6 +24,11 @@ namespace VirtoCommerce.Web.Controllers
         /// <returns>ActionResult.</returns>
         //[ChildActionOnly, DonutOutputCache(CacheProfile = "StoreCache", VaryByParam = Constants.Language, VaryByCustom = "currency")]
         public ActionResult Display(string category)
+        {
+            return null;
+        }
+
+        public ActionResult DisplayItem(string item)
         {
             return null;
         }
