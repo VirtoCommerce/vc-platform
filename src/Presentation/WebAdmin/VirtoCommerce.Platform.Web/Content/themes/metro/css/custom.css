@@ -1113,6 +1113,11 @@ p.subheader
 	font-size: 8pt;
 }
 
+.metro legend
+{
+	margin: 0;
+}
+
 .metro .blade-head button
 {
 	color: #fff;
@@ -1137,6 +1142,11 @@ p.subheader
 .metro button:disabled:hover
 {
 	background: #eee;
+}
+
+.metro .input-control.switch
+{
+	margin: 0;
 }
 
 .metro .input-control.switch .check
