@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Web.Mvc;
 using VirtoCommerce.Web.Models;
-using VirtoCommerce.ApiClient.DataContracts.Store;
 using VirtoCommerce.ApiWebClient.Clients;
 using VirtoCommerce.ApiWebClient.Extensions;
 using VirtoCommerce.ApiWebClient.Helpers;

@@ -1,12 +1,14 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using VirtoCommerce.ApiClient;
-using VirtoCommerce.ApiClient.DataContracts;
-using VirtoCommerce.ApiClient.DataContracts.Contents;
 using VirtoCommerce.ApiClient.Extensions;
 using VirtoCommerce.ApiWebClient.Caching;
 using VirtoCommerce.ApiWebClient.Caching.Interfaces;
-using VirtoCommerce.ApiWebClient.Configuration.DynamicContent;
+using VirtoCommerce.ApiWebClient.Customer;
 using VirtoCommerce.ApiWebClient.Customer.Services;
+using VirtoCommerce.Web.Core.Configuration.DynamicContent;
+using VirtoCommerce.Web.Core.DataContracts;
+using VirtoCommerce.Web.Core.DataContracts.Contents;
 
 namespace VirtoCommerce.ApiWebClient.Clients
 {
@@ -35,28 +37,27 @@ namespace VirtoCommerce.ApiWebClient.Clients
             _isEnabled = DynamicContentConfiguration.Instance.Cache.IsEnabled;
         }
 
-        public ContentClient ContentClient
+        public ContentClient GetClient(string lang)
         {
-            get
-            {
-                //TODO: get correct language
-                return ClientContext.Clients.CreateContentClient(string.Format(DynamicContentConfiguration.Instance.Connection.DataServiceUri, "en-us"));
-            }
+            return ClientContext.Clients.CreateDefaultContentClient(lang);
+
         }
 
         /// <summary>
         /// Gets the content of the dynamic.
         /// </summary>
+        /// <param name="tags">The tags.</param>
+        /// <param name="language">The language.</param>
+        /// <param name="timestamp">The timestamp.</param>
         /// <param name="placeName">Name of the place.</param>
         /// <returns></returns>
-        public async Task<ResponseCollection<DynamicContentItemGroup>> GetDynamicContentAsync(params string[] placeName)
+        public async Task<ResponseCollection<DynamicContentItemGroup>> GetDynamicContentAsync(TagQuery tags, string language, DateTime timestamp, params string[] placeName)
         {
-            var session = _customerSession.CustomerSession;
-            var tags = session.GetCustomerTagSet();
+            var client = GetClient(language);
 
             return await Helper.GetAsync(
-                CacheHelper.CreateCacheKey(Constants.DynamicContentCachePrefix, string.Format(DynamicContentCacheKey, placeName, session.CurrentDateTime, tags.GetCacheKey())),
-                () => ContentClient.GetDynamicContentAsync(placeName, tags),
+                CacheHelper.CreateCacheKey(Constants.DynamicContentCachePrefix, string.Format(DynamicContentCacheKey, placeName, timestamp, tags.GetCacheKey())),
+                () => client.GetDynamicContentAsync(placeName, tags),
                 DynamicContentConfiguration.Instance.Cache.DynamicContentTimeout, _isEnabled);
         }
 

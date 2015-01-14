@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using VirtoCommerce.ApiWebClient.Caching;
+using VirtoCommerce.ApiWebClient.Extensions.Routing;
+using VirtoCommerce.Web.Core.DataContracts.Store;
 using VirtoCommerce.Web.Models;
-using VirtoCommerce.ApiClient.DataContracts.Store;
 using VirtoCommerce.ApiWebClient.Clients;
 using VirtoCommerce.ApiWebClient.Extensions;
 using VirtoCommerce.ApiWebClient.Helpers;
@@ -12,6 +14,7 @@ namespace VirtoCommerce.Web.Controllers
     /// <summary>
     /// Class StoreController.
     /// </summary>
+    [RoutePrefix("stores")]
     public class StoreController : ControllerBase
     {
         /// <summary>
@@ -32,7 +35,8 @@ namespace VirtoCommerce.Web.Controllers
         /// Show available currencies
         /// </summary>
         /// <returns>ActionResult.</returns>
-        //[ChildActionOnly, DonutOutputCache(CacheProfile = "StoreCache", VaryByParam = Constants.Language, VaryByCustom = "currency")]
+        [ChildActionOnly, DonutOutputCache(CacheProfile = "StoreCache", VaryByParam = Constants.Language, VaryByCustom = "currency")]
+        [Route("currencies")]
         public ActionResult Currencies()
         {
             var store = _storeClient.GetCurrentStore();
@@ -48,7 +52,8 @@ namespace VirtoCommerce.Web.Controllers
         /// Shows the available store picker
         /// </summary>
         /// <returns>ActionResult.</returns>
-        //[ChildActionOnly, DonutOutputCache(CacheProfile = "StoreCache", VaryByParam = Constants.Language, AnonymousOnly = true)]
+        [ChildActionOnly, DonutOutputCache(CacheProfile = "StoreCache", VaryByParam = Constants.Language, AnonymousOnly = true)]
+        [Route("")]
         public ActionResult StorePicker()
         {
             var stores = _storeClient.GetStores();
@@ -80,18 +85,19 @@ namespace VirtoCommerce.Web.Controllers
         /// Quicks the access.
         /// </summary>
         /// <returns>ActionResult.</returns>
-        //[DonutOutputCache(CacheProfile = "StoreCache", Duration = 0)]
+        [DonutOutputCache(CacheProfile = "StoreCache", Duration = 0)]
+        [Route("quickaccess")]
         public ActionResult QuickAccess()
         {
             //var wishListHelper = new CartHelper(CartHelper.WishListName);
             //var cartHelper = new CartHelper(CartHelper.CartName);
-            //return PartialView("QuickAccess",
-            //                   (new
-            //                       {
-            //                           Cart = cartHelper.CreateCartModel(true),
-            //                           WishList = wishListHelper.CreateCartModel(true),
-            //                           UserHelper.CustomerSession.CustomerName
-            //                       }).ToExpando());
+            return PartialView("QuickAccess",
+                               (new
+                                   {
+                                       //Cart = cartHelper.CreateCartModel(true),
+                                       //WishList = wishListHelper.CreateCartModel(true),
+                                       StoreHelper.CustomerSession.CustomerName
+                                   }).ToExpando());
 
             return null;
         }
@@ -101,6 +107,7 @@ namespace VirtoCommerce.Web.Controllers
         /// </summary>
         /// <returns>ActionResult.</returns>
         //[ChildActionOnly, DonutOutputCache(CacheProfile = "StoreCache", Duration = 0)]
+        [Route("quickcart")]
         public ActionResult CartOptions()
         {
             //var compareListHelper = new CartHelper(CartHelper.CompareListName);
@@ -116,13 +123,15 @@ namespace VirtoCommerce.Web.Controllers
         }
 
 
-        //[ChildActionOnly, DonutOutputCache(CacheProfile = "LayoutStatic")]
+        [ChildActionOnly, DonutOutputCache(CacheProfile = "LayoutStatic")]
+        [Route("footer")]
         public ActionResult Footer()
         {
             return PartialView("_Footer");
         }
 
-        //[ChildActionOnly, DonutOutputCache(CacheProfile = "LayoutStatic", VaryByParam = Constants.Store + ";" + Constants.Language, VaryByCustom = "registered")]
+        [ChildActionOnly, DonutOutputCache(CacheProfile = "LayoutStatic", VaryByParam = Constants.Store + ";" + Constants.Language, VaryByCustom = "registered")]
+        [Route("menu")]
         public ActionResult Menu()
         {
             return PartialView("_Menu");
@@ -143,9 +152,8 @@ namespace VirtoCommerce.Web.Controllers
             //    return StoreHelper.IsUserAuthorized(StoreHelper.CustomerSession.Username, store.Id, out errorMessage);
             //}
 
-            //return store.StoreState == StoreState.Open.GetHashCode() ||
-            //       store.StoreState == StoreState.RestrictedAccess.GetHashCode();
-            return true;
+            return store.StoreState == StoreState.Open ||
+                   store.StoreState == StoreState.RestrictedAccess;
         }
 
         #endregion

@@ -1,4 +1,4 @@
-﻿@using VirtoCommerce.Web.Virto.Helpers
+﻿@using VirtoCommerce.ApiWebClient.Helpers
 @model dynamic
 
 <ul class="head-links">
@@ -6,13 +6,13 @@
                           @("My Account".Localize())</a>
 
     </li>
-    <li>@{Html.RenderPartial("WishListLink", Model.WishList as CartModel);}</li>
-    <li>@{Html.RenderPartial("CartLink", Model.Cart as CartModel);}</li>
+    @*<li>@{Html.RenderPartial("WishListLink", Model.WishList as CartModel);}</li>
+    <li>@{Html.RenderPartial("CartLink", Model.Cart as CartModel);}</li>*@
     <li><a href="@Url.Action("Index", "Checkout")" title="@("Checkout".Localize())" class="top-link-checkout">@("Checkout".Localize())</a></li>
-    @{Html.RenderPartial("_LogOnPartial");}
+    @{Html.RenderPartial("_LogInPartial");}
 </ul>
 
-@if (UserHelper.CustomerSession.IsRegistered)
+@if (StoreHelper.CustomerSession.IsRegistered)
 {
-    <p class="welcome">@UserHelper.CustomerSession.CustomerName</p>
+    <p class="welcome">@StoreHelper.CustomerSession.CustomerName</p>
 }

@@ -74,7 +74,7 @@ VirtoCommerce.prototype = {
         $.ajax({
             type: "GET",
             dataType: "html",
-            url: VirtoCommerce.url('/store/quickaccess', true),
+            url: VirtoCommerce.url('/stores/quickaccess', true),
             success: function (data)
             {
                 $("ul.head-links").parent().html(data);
@@ -141,7 +141,7 @@ VirtoCommerce.prototype = {
     //This method must be called after all registrations are done. Preferably at the end of base layout
     renderDynamicContent: function ()
     {
-        var url = VirtoCommerce.url('/banner/showdynamiccontents');
+        var url = VirtoCommerce.url('/dynamic/contents');
         var i = 0;
         for (var placeName in this.DynamicContent)
         {
@@ -569,7 +569,7 @@ VirtoCart.prototype = {
         $.ajax({
             type: "GET",
             dataType: "html",
-            url: VirtoCommerce.url('/store/cartoptions', true),
+            url: VirtoCommerce.url('/stores/quickcart', true),
             success: function (data)
             {
                 $("div.cart-options").html(data);

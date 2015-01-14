@@ -7,11 +7,10 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.Security;
-using VirtoCommerce.ApiClient.DataContracts;
-using VirtoCommerce.ApiClient.DataContracts.Store;
 using VirtoCommerce.ApiWebClient.Clients;
 using VirtoCommerce.ApiWebClient.Extensions;
 using VirtoCommerce.ApiWebClient.Helpers;
+using VirtoCommerce.Web.Core.DataContracts.Store;
 
 namespace VirtoCommerce.ApiWebClient.Modules
 {
@@ -194,6 +193,8 @@ namespace VirtoCommerce.ApiWebClient.Modules
         protected virtual void OnBeginRequest(HttpContext context)
         {
             var session = CustomerSession;
+            session.CategoryId = "";
+            session.CategoryOutline = "";
             session.Language = GetLanguage(context);
 
             var store = GetStore(context);

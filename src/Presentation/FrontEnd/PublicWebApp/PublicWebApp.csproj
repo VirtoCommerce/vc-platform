@@ -65,6 +65,9 @@
     <Reference Include="MvcSiteMapProvider.WebActivator">
       <HintPath>..\..\..\..\packages\MvcSiteMapProvider.MVC5.4.6.17\lib\net45\MvcSiteMapProvider.WebActivator.dll</HintPath>
     </Reference>
+    <Reference Include="Omu.ValueInjecter">
+      <HintPath>..\..\..\..\packages\valueinjecter.2.3.3\lib\net35\Omu.ValueInjecter.dll</HintPath>
+    </Reference>
     <Reference Include="RouteDebugger">
       <HintPath>..\..\..\..\packages\routedebugger.2.1.4.0\lib\net40\RouteDebugger.dll</HintPath>
     </Reference>
@@ -201,11 +204,13 @@
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BannerController.cs" />
+    <Compile Include="Controllers\CheckoutController.cs" />
     <Compile Include="Controllers\ControllerBase.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\CatalogController.cs" />
     <Compile Include="Controllers\StoreController.cs" />
+    <Compile Include="Converters\UserConverters.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -418,6 +423,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="App_Data\Virto\Configuration\Catalog.config" />
+    <Content Include="App_Data\Virto\Configuration\Security.config" />
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -546,6 +552,10 @@
     <ProjectReference Include="..\..\..\Extensions\Client\Commerce.ApiWebClient\Commerce.ApiWebClient.csproj">
       <Project>{a67c7412-708c-4978-a666-6b9414bbf696}</Project>
       <Name>Commerce.ApiWebClient</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\VirtoCommerce.Web.Core\VirtoCommerce.Web.Core.csproj">
+      <Project>{a00173b5-ea0a-438a-840b-821f0c6b726c}</Project>
+      <Name>VirtoCommerce.Web.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

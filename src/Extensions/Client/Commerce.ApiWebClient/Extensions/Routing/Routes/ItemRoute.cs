@@ -1,6 +1,6 @@
 ﻿using System.Web;
 using System.Web.Routing;
-using VirtoCommerce.ApiClient.DataContracts;
+using VirtoCommerce.Web.Core.DataContracts;
 
 namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Routes
 {

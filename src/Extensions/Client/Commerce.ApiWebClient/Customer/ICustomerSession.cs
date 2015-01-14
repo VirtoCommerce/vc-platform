@@ -1,5 +1,5 @@
 ﻿using System;
-using VirtoCommerce.ApiClient.DataContracts;
+using VirtoCommerce.Web.Core.DataContracts;
 
 namespace VirtoCommerce.ApiWebClient.Customer
 {

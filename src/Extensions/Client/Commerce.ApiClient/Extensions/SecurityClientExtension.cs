@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.ApiClient.Utilities;
+using VirtoCommerce.Web.Core.Configuration.Security;
 
 namespace VirtoCommerce.ApiClient.Extensions
 {
@@ -11,9 +12,9 @@ namespace VirtoCommerce.ApiClient.Extensions
 
     public static class SecurityClientExtension
     {
-        public static SecurityClient CreateSecurityClient(this CommerceClients source)
+        public static SecurityClient CreateDefaultSecurityClient(this CommerceClients source, params object[] options)
         {
-            var connectionString = ConnectionHelper.GetConnectionString("vc-commerce-api-security");
+            var connectionString = string.Format(SecurityConfiguration.Instance.Connection.DataServiceUri, options);
             return CreateSecurityClient(source, connectionString);
         }
 

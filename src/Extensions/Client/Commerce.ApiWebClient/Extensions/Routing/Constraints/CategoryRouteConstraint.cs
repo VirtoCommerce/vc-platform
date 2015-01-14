@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Routing;
-using VirtoCommerce.ApiClient.DataContracts;
 using VirtoCommerce.ApiWebClient.Helpers;
 
 namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Constraints
@@ -32,9 +31,7 @@ namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Constraints
 
             var childCategorySlug = categoryPath.Split(Separator.ToCharArray()).Last();
             var session = StoreHelper.CustomerSession;
-            var language = values.ContainsKey(Constants.Language)
-                ? values[Constants.Language].ToString()
-                : session.Language;
+            var language = values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : session.Language;
 
             var category = Task.Run(() => CatalogHelper.CatalogClient.GetCategoryAsync(childCategorySlug, session.CatalogId, language)).Result;
 

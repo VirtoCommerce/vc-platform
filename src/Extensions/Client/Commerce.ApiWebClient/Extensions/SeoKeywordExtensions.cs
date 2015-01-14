@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.Practices.ServiceLocation;
+using System;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.Practices.ServiceLocation;
-using VirtoCommerce.ApiClient.DataContracts;
 using VirtoCommerce.ApiWebClient.Customer;
 using VirtoCommerce.ApiWebClient.Customer.Services;
 using VirtoCommerce.ApiWebClient.Helpers;
+using VirtoCommerce.Web.Core.DataContracts;
 
 namespace VirtoCommerce.ApiWebClient.Extensions
 {
@@ -24,6 +21,12 @@ namespace VirtoCommerce.ApiWebClient.Extensions
             get { return ServiceLocator.Current.GetInstance<ICustomerSessionService>().CustomerSession; }
         }
 
+        /// <summary>
+        /// Get correct seo keyword by language from list of given keywords
+        /// </summary>
+        /// <param name="keywords">The keywords.</param>
+        /// <param name="language">The language.</param>
+        /// <returns></returns>
         public static SeoKeyword SeoKeyword(this SeoKeyword[] keywords, string language = null)
         {
             if (keywords == null || !keywords.Any())
@@ -51,6 +54,12 @@ namespace VirtoCommerce.ApiWebClient.Extensions
                  //Default language failover scenario
                 var store = StoreHelper.StoreClient.GetCurrentStore();
 
+                //Current store can be null when called from StoreHttpModule and store is not yet initialzed
+                if (store == null && keywords[0].KeywordType == SeoUrlKeywordTypes.Store)
+                {
+                    store = StoreHelper.StoreClient.GetStore(keywords[0].KeywordValue);
+                }
+
                 if (store != null && !store.DefaultLanguage.Equals(language, StringComparison.OrdinalIgnoreCase))
                 {
                     return keywords.FirstOrDefault(x => x.Language.Equals(store.DefaultLanguage, StringComparison.InvariantCultureIgnoreCase));
@@ -65,13 +74,13 @@ namespace VirtoCommerce.ApiWebClient.Extensions
             try
             {
 
-                if (!string.IsNullOrEmpty(languageCode))
-                    return CultureInfo.CreateSpecificCulture(languageCode);
+                return !string.IsNullOrEmpty(languageCode) ? CultureInfo.CreateSpecificCulture(languageCode) : null;
             }
             catch
             {
+                return null;
             }
-            return null;
+
         }
     }
 }

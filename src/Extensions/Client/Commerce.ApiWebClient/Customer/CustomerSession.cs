@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
+using System.IO;
+using System.IO.Compression;
 using System.Text;
 using System.Web;
 using System.Web.Security;
-using VirtoCommerce.ApiClient.DataContracts;
+using VirtoCommerce.Web.Core.DataContracts;
 
 namespace VirtoCommerce.ApiWebClient.Customer
 {
@@ -321,6 +323,8 @@ namespace VirtoCommerce.ApiWebClient.Customer
         /// <param name="key">The key.</param>
         /// <param name="val">The value.</param>
         /// <param name="expires">The expires.</param>
+        /// <param name="secure">if set to <c>true</c> [secure].</param>
+        /// <param name="encrypt">if set to <c>true</c> [encrypt].</param>
 		public static void SetCookie(string key, string val, DateTime? expires = null, bool secure = false, bool encrypt = false)
 		{
 			if (HttpContext.Current != null)
@@ -378,22 +382,69 @@ namespace VirtoCommerce.ApiWebClient.Customer
 
         public static string EncryptCookie(string value)
         {
-            var plainBytes = Encoding.UTF8.GetBytes(value);
+            if (string.IsNullOrEmpty(value))
+            {
+                return null;
+            }
+            var plainBytes = Compress(value);
             var encryptedBytes = MachineKey.Protect(plainBytes, "Cookie protection");
             return Convert.ToBase64String(encryptedBytes);
         }
 
         public static string DecryptCookie(string value)
         {
+            if (string.IsNullOrEmpty(value))
+            {
+                return null;
+            }
+
             try
             {
                 var encryptedBytes = Convert.FromBase64String(value);
                 var decryptedBytes = MachineKey.Unprotect(encryptedBytes, "Cookie protection");
-                return decryptedBytes != null ? Encoding.UTF8.GetString(decryptedBytes) : value;
+                return decryptedBytes != null ? Decompress(decryptedBytes): value;
             }
             catch
             {
                 return value;
+            }
+        }
+
+        public static byte[] Compress(string value)
+        {
+            if (value == null) return null;
+
+            var data = Encoding.UTF8.GetBytes(value);
+            using (var input = new MemoryStream(data))
+            {
+                using (var output = new MemoryStream())
+                {
+                    using (Stream cs = new DeflateStream(output, CompressionMode.Compress))
+                    {
+                        input.CopyTo(cs);
+                    }
+
+                    return output.ToArray();
+                }
+            }
+        }
+
+        public static string Decompress(byte[] data)
+        {
+            if (data == null || data.Length == 0) return null;
+
+            using (var input = new MemoryStream(data))
+            {
+                using (var output = new MemoryStream())
+                {
+                    using (Stream cs = new DeflateStream(input, CompressionMode.Decompress))
+                    {
+                        cs.CopyTo(output);
+                    }
+
+                    var result = output.ToArray();
+                    return Encoding.UTF8.GetString(result);
+                }
             }
         }
     }

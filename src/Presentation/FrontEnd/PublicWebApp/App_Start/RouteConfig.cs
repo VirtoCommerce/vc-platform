@@ -15,6 +15,8 @@ namespace VirtoCommerce.Web
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
             routes.IgnoreRoute(".html");
 
+            routes.MapMvcAttributeRoutes();
+
             routes.MapRoute(
                 "FailWhale",
                 "FailWhale/{action}/{id}", new { controller = "Error", action = "FailWhale", id = UrlParameter.Optional });

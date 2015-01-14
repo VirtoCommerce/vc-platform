@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using VirtoCommerce.ApiClient.DataContracts;
+using VirtoCommerce.Web.Core.DataContracts;
 
 namespace VirtoCommerce.ApiWebClient.Extensions
 {

@@ -98,8 +98,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
                     using (var appConfigRepo = _foundationAppConfigRepFactory())
                     {
                         var keyword = appConfigRepo.SeoUrlKeywords.FirstOrDefault(x => x.KeywordType == (int)SeoUrlKeywordTypes.Category
-                            && x.Keyword.Equals(category, StringComparison.InvariantCultureIgnoreCase)
-                            && x.Language.Equals(language, StringComparison.InvariantCultureIgnoreCase));
+                            && x.Keyword.Equals(category, StringComparison.InvariantCultureIgnoreCase));
 
                         if (keyword != null)
                         {

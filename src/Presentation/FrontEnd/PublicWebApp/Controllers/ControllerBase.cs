@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using VirtoCommerce.ApiWebClient.Extensions.Routing;
-using VirtoCommerce.Web.Models;
-using VirtoCommerce.ApiClient.DataContracts;
 using VirtoCommerce.ApiWebClient.Caching;
 using VirtoCommerce.ApiWebClient.Extensions;
 using VirtoCommerce.ApiWebClient.Extensions.Filters;
 using VirtoCommerce.ApiWebClient.Extensions.Routing.Routes;
 using VirtoCommerce.ApiWebClient.Helpers;
+using VirtoCommerce.ApiWebClient.Providers;
+using VirtoCommerce.Web.Core.DataContracts;
+using VirtoCommerce.Web.Models;
 
 namespace VirtoCommerce.Web.Controllers
 {
@@ -114,35 +113,7 @@ namespace VirtoCommerce.Web.Controllers
                         SeoUrlKeywordTypes type;
                         if (Enum.TryParse(routeKey, true, out type))
                         {
-                            var slug = routeValue.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).Last();
-                            SeoKeyword keyword = null;
-                            var session = StoreHelper.CustomerSession;
-
-                            switch (type)
-                            {
-                                case SeoUrlKeywordTypes.Store:
-                                    var store = StoreHelper.StoreClient.GetCurrentStore();
-                                    if (store != null && store.SeoKeywords != null)
-                                    {
-                                        keyword = store.SeoKeywords.SeoKeyword();
-
-                                    }
-                                    break;
-                                case SeoUrlKeywordTypes.Category:
-                                    var category = Task.Run(() => CatalogHelper.CatalogClient.GetCategoryAsync(slug, session.CatalogId, session.Language)).Result;
-                                    if (category != null)
-                                    {
-                                        keyword = category.SeoKeywords.SeoKeyword(session.Language);
-                                    }
-                                    break;
-                                case SeoUrlKeywordTypes.Item:
-                                    var item = Task.Run(() => CatalogHelper.CatalogClient.GetItemAsync(slug, session.CatalogId, session.Language)).Result;
-                                    if (item != null)
-                                    {
-                                        keyword = item.SeoKeywords.SeoKeyword(session.Language);
-                                    }
-                                    break;
-                            }
+                            var keyword = SettingsHelper.GetKeyword(routeValue, type);
 
                             if (keyword != null)
                             {
@@ -175,9 +146,9 @@ namespace VirtoCommerce.Web.Controllers
 
         #endregion
 
-        //protected override ITempDataProvider CreateTempDataProvider()
-        //{
-        //    return new CookieTempDataProvider();
-        //}
+        protected override ITempDataProvider CreateTempDataProvider()
+        {
+            return new CookieTempDataProvider();
+        }
     }
 }

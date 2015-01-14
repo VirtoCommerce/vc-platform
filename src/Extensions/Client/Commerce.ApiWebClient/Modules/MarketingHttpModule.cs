@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using VirtoCommerce.ApiWebClient.Customer;
+using VirtoCommerce.ApiWebClient.Extensions;
 using VirtoCommerce.ApiWebClient.Helpers;
 
 namespace VirtoCommerce.ApiWebClient.Modules
@@ -160,8 +162,19 @@ namespace VirtoCommerce.ApiWebClient.Modules
 
                 if (routeValues.ContainsKey(Extensions.Routing.Constants.Category))
                 {
-                    session.CategoryOutline = routeValues[Extensions.Routing.Constants.Category].ToString();
-                    session.CategoryId = session.CategoryOutline.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).Last();
+                    var categoryPath = routeValues[Extensions.Routing.Constants.Category].ToString();
+
+                    if (!string.IsNullOrEmpty(categoryPath)) 
+                    {
+                        var categorySlug = categoryPath.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).Last();
+                        var category = Task.Run(()=>CatalogHelper.CatalogClient.GetCategoryAsync(categorySlug,session.CatalogId, session.Language)).Result;
+
+                        if (category != null)
+                        {
+                            session.CategoryOutline = string.Join("/", category.BuildOutline().Select(x => x.Key));
+                            session.CategoryId = category.Id;
+                        }
+                    }
                 }
             }
 

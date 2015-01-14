@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using VirtoCommerce.ApiClient.DataContracts;
-using VirtoCommerce.ApiClient.DataContracts.Store;
 using VirtoCommerce.ApiClient.Extensions;
 using VirtoCommerce.ApiClient.Utilities;
+using VirtoCommerce.Web.Core.DataContracts.Store;
 
 namespace VirtoCommerce.ApiClient
 {
-    using DataContracts.Contents;
-
     public class StoreClient : BaseClient
     {
         protected class RelativePaths

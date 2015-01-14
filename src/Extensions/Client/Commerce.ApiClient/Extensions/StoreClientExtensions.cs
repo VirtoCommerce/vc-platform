@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.ApiClient.Utilities;
+using VirtoCommerce.Web.Core.Configuration.Store;
 
 namespace VirtoCommerce.ApiClient.Extensions
 {
@@ -11,9 +12,9 @@ namespace VirtoCommerce.ApiClient.Extensions
 
     public static class StoreClientExtensions
     {
-        public static StoreClient CreateStoreClient(this CommerceClients source)
+        public static StoreClient CreateDefaultStoreClient(this CommerceClients source, params object[] options)
         {
-            var connectionString = ConnectionHelper.GetConnectionString("vc-commerce-api");
+            var connectionString = string.Format(StoreConfiguration.Instance.Connection.DataServiceUri, options);
             return CreateStoreClient(source, connectionString);
         }
 

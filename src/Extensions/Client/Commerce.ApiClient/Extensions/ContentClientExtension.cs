@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.ApiClient.Utilities;
+using VirtoCommerce.Web.Core.Configuration.DynamicContent;
 
 namespace VirtoCommerce.ApiClient.Extensions
 {
@@ -11,9 +12,9 @@ namespace VirtoCommerce.ApiClient.Extensions
 
     public static class ContentClientExtension
     {
-        public static ContentClient CreateContentClient(this CommerceClients source)
+        public static ContentClient CreateDefaultContentClient(this CommerceClients source, params object[] options)
         {
-            var connectionString = ConnectionHelper.GetConnectionString("vc-commerce-api");
+            var connectionString = string.Format(DynamicContentConfiguration.Instance.Connection.DataServiceUri, options);
             return CreateContentClient(source, connectionString);
         }
 

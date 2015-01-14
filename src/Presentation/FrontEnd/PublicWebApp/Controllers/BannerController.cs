@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using VirtoCommerce.ApiWebClient.Helpers;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.ApiWebClient.Clients;
 
@@ -9,6 +10,7 @@ namespace VirtoCommerce.Web.Controllers
 	/// <summary>
 	/// Class BannerController.
 	/// </summary>
+	[RoutePrefix("dynamic")]
     public class BannerController : ControllerBase
     {
 		/// <summary>
@@ -36,9 +38,11 @@ namespace VirtoCommerce.Web.Controllers
 		/// <param name="placeName">Name of dynamic content place.</param>
 		/// <returns>ActionResult.</returns>
         //[DonutOutputCache(CacheProfile = "BannerCache")]
+        [Route("content")]
         public ActionResult ShowDynamicContent(string placeName)
-        {
-            var result = Task.Run(() => _contentHelper.GetDynamicContentAsync(placeName)).Result;
+		{
+		    var session = StoreHelper.CustomerSession;
+            var result = Task.Run(() => _contentHelper.GetDynamicContentAsync(session.GetCustomerTagSet(), session.Language, session.CurrentDateTime, placeName)).Result;
             if (result != null && result.TotalCount > 0)
             {
                 return PartialView("BaseContentPlace", new BannerModel(result.Items.First().Items.ToArray()));
@@ -47,9 +51,11 @@ namespace VirtoCommerce.Web.Controllers
         }
 
         //[DonutOutputCache(CacheProfile = "BannerCache")]
+         [Route("contents")]
         public async Task<ActionResult> ShowDynamicContents(string[] placeName)
         {
-            var result = await _contentHelper.GetDynamicContentAsync(placeName);
+            var session = StoreHelper.CustomerSession;
+            var result = await _contentHelper.GetDynamicContentAsync(session.GetCustomerTagSet(), session.Language, session.CurrentDateTime, placeName);
             if (result != null && result.TotalCount > 0)
             {
                 return PartialView("MultiBanner", result.Items);

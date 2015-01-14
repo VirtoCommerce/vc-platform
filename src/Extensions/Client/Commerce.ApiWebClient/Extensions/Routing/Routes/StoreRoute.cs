@@ -3,10 +3,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Routing;
-using VirtoCommerce.ApiClient.DataContracts;
-using VirtoCommerce.ApiClient.DataContracts.Store;
 using VirtoCommerce.ApiWebClient.Extensions.Routing.Constraints;
 using VirtoCommerce.ApiWebClient.Helpers;
+using VirtoCommerce.Web.Core.DataContracts;
+using VirtoCommerce.Web.Core.DataContracts.Store;
 
 namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Routes
 {
@@ -263,9 +263,6 @@ namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Routes
                 }
             }
 
-            //Decode route value
-            //DecodeRouteData(routeData.Values, SeoUrlKeywordTypes.Store);
-
             return routeData;
         }
 
@@ -273,47 +270,11 @@ namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Routes
         {
             var routeValueKey = type.ToString().ToLower();
             var session = StoreHelper.CustomerSession;
-            var language = values.ContainsKey(Routing.Constants.Language) ? values[Routing.Constants.Language] as string : session.Language;
+            var language = values.ContainsKey(Constants.Language) ? values[Routing.Constants.Language] as string : session.Language;
 
             if (values.ContainsKey(routeValueKey) && values[routeValueKey] != null)
             {
-                var slug = values[routeValueKey].ToString().Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).Last();
-
-                switch (type)
-                {
-                    case SeoUrlKeywordTypes.Store:
-                        var store = StoreHelper.StoreClient.GetStore(slug);
-                        if (store != null)
-                        {
-                            var keyword = store.SeoKeywords.SeoKeyword(language);
-                            if (keyword != null)
-                            {
-                                values[routeValueKey] = keyword.Keyword;
-                            }
-                        }
-
-                        break;
-                    case SeoUrlKeywordTypes.Category:
-                        var category = Task.Run(() => CatalogHelper.CatalogClient.GetCategoryAsync(slug, session.CatalogId, language)).Result;
-                        if (category != null)
-                        {
-                            values[routeValueKey] = string.Join("/", category.BuildOutline(language).Select(x => x.Value));
-                        }
-                        break;
-                    case SeoUrlKeywordTypes.Item:
-                        var item = Task.Run(() => CatalogHelper.CatalogClient.GetItemAsync(slug, session.CatalogId, language)).Result;
-                        if (item != null)
-                        {
-                            var keyword = item.SeoKeywords.SeoKeyword(language);
-                            if (keyword != null)
-                            {
-                                values[routeValueKey] = keyword.Keyword;
-                            }
-                        }
-                        break;
-                }
-
-
+                values[routeValueKey] = SettingsHelper.EncodeRouteValue(values[routeValueKey].ToString(), type, language);           
             }
         }
 

@@ -3,11 +3,11 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Web;
 using Microsoft.Practices.ServiceLocation;
-using VirtoCommerce.ApiClient.DataContracts.Store;
 using VirtoCommerce.ApiWebClient.Clients;
 using VirtoCommerce.ApiWebClient.Currencies;
 using VirtoCommerce.ApiWebClient.Customer;
 using VirtoCommerce.ApiWebClient.Customer.Services;
+using VirtoCommerce.Web.Core.DataContracts.Store;
 
 namespace VirtoCommerce.ApiWebClient.Helpers
 {

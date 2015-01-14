@@ -1,7 +1,7 @@
 ﻿using Microsoft.Web.Infrastructure.DynamicModuleHelper;
 using System;
 using System.Linq;
-using VirtoCommerce.ApiWebClient.Configuration.Application;
+using VirtoCommerce.Web.Core.Configuration.Application;
 
 [assembly: WebActivatorEx.PreApplicationStartMethod(typeof(VirtoCommerce.Web.ModuleConfig), "Start")]
 

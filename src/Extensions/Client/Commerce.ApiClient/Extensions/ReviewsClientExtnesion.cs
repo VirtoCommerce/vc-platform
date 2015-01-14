@@ -11,7 +11,7 @@ namespace VirtoCommerce.ApiClient.Extensions
 
     public static class ReviewsClientExtnesion
     {
-        public static ReviewsClient CreateReviewsClient(this CommerceClients source)
+        public static ReviewsClient CreateReviewsClient(this CommerceClients source, params object[] options)
         {
             var connectionString = ConnectionHelper.GetConnectionString("vc-commerce-api");
             return CreateReviewsClient(source, connectionString);

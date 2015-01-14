@@ -1,14 +1,15 @@
 ﻿using System;
 using VirtoCommerce.ApiClient.Utilities;
 using System.Configuration;
+using VirtoCommerce.Web.Core.Configuration.Application;
 
 namespace VirtoCommerce.ApiClient.Extensions
 {
     public static class SeoClientExtensions
     {
-        public static SeoClient CreateSeoClient(this CommerceClients source)
+        public static SeoClient CreateDefaultSeoClient(this CommerceClients source, params object[] options)
         {
-            var connectionString = ConnectionHelper.GetConnectionString("vc-commerce-api");
+            var connectionString = string.Format(AppConfigConfiguration.Instance.Connection.DataServiceUri, options);
             return CreateSeoClient(source, connectionString);
         }
 

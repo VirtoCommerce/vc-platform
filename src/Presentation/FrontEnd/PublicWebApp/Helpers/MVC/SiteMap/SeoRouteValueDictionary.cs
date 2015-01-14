@@ -5,7 +5,6 @@ using MvcSiteMapProvider.Builder;
 using MvcSiteMapProvider.Caching;
 using MvcSiteMapProvider.Collections.Specialized;
 using MvcSiteMapProvider.Web.Script.Serialization;
-using VirtoCommerce.ApiClient.DataContracts;
 using VirtoCommerce.ApiWebClient.Extensions.Routing;
 using VirtoCommerce.ApiWebClient.Helpers;
 

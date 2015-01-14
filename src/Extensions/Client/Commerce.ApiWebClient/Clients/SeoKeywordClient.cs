@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using VirtoCommerce.ApiClient;
-using VirtoCommerce.ApiClient.DataContracts;
 using VirtoCommerce.ApiClient.Extensions;
 using VirtoCommerce.ApiWebClient.Caching;
 using VirtoCommerce.ApiWebClient.Caching.Interfaces;
-using VirtoCommerce.ApiWebClient.Configuration.Application;
+using VirtoCommerce.Web.Core.Configuration.Application;
+using VirtoCommerce.Web.Core.DataContracts;
 
 namespace VirtoCommerce.ApiWebClient.Clients
 {
@@ -32,7 +32,7 @@ namespace VirtoCommerce.ApiWebClient.Clients
         {
             get
             {
-                return ClientContext.Clients.CreateSeoClient(string.Format(AppConfigConfiguration.Instance.Connection.DataServiceUri, "en-us"));
+                return ClientContext.Clients.CreateDefaultSeoClient("en-us");
             }
         }
 

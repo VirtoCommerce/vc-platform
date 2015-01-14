@@ -13,7 +13,8 @@ using VirtoCommerce.Web.Models;
 namespace VirtoCommerce.Web.Controllers
 {
     [Authorize]
-    public class AccountController : Controller
+    [RoutePrefix("account")]
+    public class AccountController : ControllerBase
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
@@ -22,11 +23,11 @@ namespace VirtoCommerce.Web.Controllers
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
-        {
-            UserManager = userManager;
-            SignInManager = signInManager;
-        }
+        //public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
+        //{
+        //    UserManager = userManager;
+        //    SignInManager = signInManager;
+        //}
 
         public ApplicationSignInManager SignInManager
         {
@@ -52,9 +53,19 @@ namespace VirtoCommerce.Web.Controllers
             }
         }
 
+        [Route("")]
+        public ActionResult Index()
+        {
+            //var contact = _userClient.GetCurrentCustomer();
+            //var model = UserHelper.GetCustomerModel(contact);
+            //return View();
+            return null;
+        }
+
         //
         // GET: /Account/Login
         [AllowAnonymous]
+        [Route("login")]
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;

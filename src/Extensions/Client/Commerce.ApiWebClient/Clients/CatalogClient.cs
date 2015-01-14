@@ -2,11 +2,11 @@
 using System.Net;
 using System.Threading.Tasks;
 using VirtoCommerce.ApiClient;
-using VirtoCommerce.ApiClient.DataContracts;
 using VirtoCommerce.ApiClient.Extensions;
 using VirtoCommerce.ApiWebClient.Caching;
 using VirtoCommerce.ApiWebClient.Caching.Interfaces;
-using VirtoCommerce.ApiWebClient.Configuration.Catalog;
+using VirtoCommerce.Web.Core.Configuration.Catalog;
+using VirtoCommerce.Web.Core.DataContracts;
 
 namespace VirtoCommerce.ApiWebClient.Clients
 {

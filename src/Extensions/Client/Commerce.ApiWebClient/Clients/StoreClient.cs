@@ -3,12 +3,13 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using VirtoCommerce.ApiClient;
-using VirtoCommerce.ApiClient.DataContracts.Store;
 using VirtoCommerce.ApiClient.Extensions;
 using VirtoCommerce.ApiWebClient.Caching;
 using VirtoCommerce.ApiWebClient.Caching.Interfaces;
-using VirtoCommerce.ApiWebClient.Configuration.Store;
 using VirtoCommerce.ApiWebClient.Customer.Services;
+using VirtoCommerce.ApiWebClient.Extensions;
+using VirtoCommerce.Web.Core.Configuration.Store;
+using VirtoCommerce.Web.Core.DataContracts.Store;
 
 namespace VirtoCommerce.ApiWebClient.Clients
 {
@@ -35,14 +36,12 @@ namespace VirtoCommerce.ApiWebClient.Clients
             _isEnabled = StoreConfiguration.Instance.Cache.IsEnabled;
         }
 
-        public ApiClient.StoreClient StoreApiClient
+        public ApiClient.StoreClient GetClient(string lang)
         {
-            get
-            {
-                //TODO: get correct language
-                return ClientContext.Clients.CreateStoreClient(string.Format(StoreConfiguration.Instance.Connection.DataServiceUri, "en-us"));
-            }
+            return  ClientContext.Clients.CreateDefaultStoreClient(lang);
+
         }
+
 
         /// <summary>
         /// Gets the store. First treats slug as storeId then as keyword
@@ -59,17 +58,12 @@ namespace VirtoCommerce.ApiWebClient.Clients
             if (store == null)
             {
 
-                language = language ?? _customerSession.CustomerSession.Language;
-                var langInfo = TryGetCultureInfo(language);
-                language = langInfo != null ? langInfo.Name : language;
+                var keyword =  allStores.SelectMany(x => x.SeoKeywords).Where(x=>x.Keyword.Equals(slug, StringComparison.InvariantCultureIgnoreCase)).ToArray().SeoKeyword(language);
 
-                store = allStores.FirstOrDefault(x => x.SeoKeywords != null &&
-                                                      x.SeoKeywords.Any(
-                                                          k =>
-                                                              k.Language.Equals(language,
-                                                                  StringComparison.InvariantCultureIgnoreCase) &&
-                                                              k.Keyword.Equals(slug,
-                                                                  StringComparison.InvariantCultureIgnoreCase)));
+                if (keyword != null)
+                {
+                    store = allStores.FirstOrDefault(x => x.Id.Equals(keyword.KeywordValue, StringComparison.InvariantCultureIgnoreCase));
+                }
             }
             return store;
         }
@@ -136,7 +130,8 @@ namespace VirtoCommerce.ApiWebClient.Clients
                 {
                     try
                     {
-                        return Task.Run(() => StoreApiClient.GetStoresAsync()).Result;
+                        var client = GetClient(_customerSession.CustomerSession.Language);
+                        return Task.Run(() => client.GetStoresAsync()).Result;
                     }
                     catch
                     {
@@ -178,6 +173,9 @@ namespace VirtoCommerce.ApiWebClient.Clients
             if (storeObject != null)
                 return storeObject as Store;
 
+            if (string.IsNullOrEmpty(session.StoreId))
+                return null;
+
             var store = GetStore(session.StoreId);
 
             session["store"] = store;
@@ -195,14 +193,12 @@ namespace VirtoCommerce.ApiWebClient.Clients
         {
             try
             {
-
-                if (!string.IsNullOrEmpty(languageCode))
-                    return CultureInfo.CreateSpecificCulture(languageCode);
+                return !string.IsNullOrEmpty(languageCode) ? CultureInfo.CreateSpecificCulture(languageCode) : null;
             }
             catch
             {
+                return null;
             }
-            return null;
         }
     }
 

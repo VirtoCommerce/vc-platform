@@ -136,12 +136,9 @@
     <Compile Include="Caching\HttpCacheRepository.cs" />
     <Compile Include="Caching\Interfaces\ICacheRepository.cs" />
     <Compile Include="Clients\DynamicContentClient.cs" />
+    <Compile Include="Clients\SecurityClient.cs" />
     <Compile Include="Clients\SeoKeywordClient.cs" />
     <Compile Include="Clients\CatalogClient.cs" />
-    <Compile Include="Configuration\Application\AppConfigConfiguration.cs" />
-    <Compile Include="Configuration\Catalog\CatalogConfiguration.cs" />
-    <Compile Include="Configuration\DynamicContent\DynamicContentConfiguration.cs" />
-    <Compile Include="Configuration\Store\StoreConfiguration.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="ContextFieldConstants.cs" />
     <Compile Include="Currencies\CurrencyService.cs" />
@@ -207,9 +204,14 @@
     <Compile Include="PageData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Clients\StoreClient.cs" />
+    <Compile Include="Providers\CookieTempDataProvider.cs" />
     <Compile Include="Providers\NamedSiteMapNodeVisibilityProvider.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Presentation\FrontEnd\VirtoCommerce.Web.Core\VirtoCommerce.Web.Core.csproj">
+      <Project>{a00173b5-ea0a-438a-840b-821f0c6b726c}</Project>
+      <Name>VirtoCommerce.Web.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Commerce.ApiClient\Commerce.ApiClient.csproj">
       <Project>{84b945b7-85e4-4057-b0df-1f8a03b8d53c}</Project>
       <Name>Commerce.ApiClient</Name>

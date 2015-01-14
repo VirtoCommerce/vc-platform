@@ -61,39 +61,11 @@
     <Compile Include="ClientContext.cs" />
     <Compile Include="CommerceClients.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="DataContracts\CategoryInfo.cs" />
-    <Compile Include="DataContracts\SeoKeyword.cs" />
-    <Compile Include="DataContracts\SeoUrlKeywordTypes.cs" />
-    <Compile Include="DataContracts\Store\Store.cs" />
-    <Compile Include="DataContracts\Store\StoreSetting.cs" />
-    <Compile Include="DataContracts\Store\StoreState.cs" />
     <Compile Include="Extensions\SeoClientExtensions.cs" />
     <Compile Include="Extensions\StoreClientExtensions.cs" />
     <Compile Include="SeoClient.cs" />
     <Compile Include="StoreClient.cs" />
     <Compile Include="ContentClient.cs" />
-    <Compile Include="DataContracts\BrowseQuery.cs" />
-    <Compile Include="DataContracts\CatalogItem.cs" />
-    <Compile Include="DataContracts\CatalogItemResponse.cs" />
-    <Compile Include="DataContracts\Category.cs" />
-    <Compile Include="DataContracts\Contents\DynamicContentItem.cs" />
-    <Compile Include="DataContracts\Contents\DynamicContentItemGroup.cs" />
-    <Compile Include="DataContracts\EditorialReview.cs" />
-    <Compile Include="DataContracts\ErrorDetail.cs" />
-    <Compile Include="DataContracts\ItemCategory.cs" />
-    <Compile Include="DataContracts\ItemDisplayOptions.cs" />
-    <Compile Include="DataContracts\ItemImage.cs" />
-    <Compile Include="DataContracts\ItemResponseGroups.cs" />
-    <Compile Include="DataContracts\Link.cs" />
-    <Compile Include="DataContracts\ManagementServiceError.cs" />
-    <Compile Include="DataContracts\Product.cs" />
-    <Compile Include="DataContracts\ProductVariation.cs" />
-    <Compile Include="DataContracts\Resource.cs" />
-    <Compile Include="DataContracts\ResponseCollection.cs" />
-    <Compile Include="DataContracts\Review.cs" />
-    <Compile Include="DataContracts\ReviewComment.cs" />
-    <Compile Include="DataContracts\Security\ApplicationUser.cs" />
-    <Compile Include="DataContracts\TagQuery.cs" />
     <Compile Include="Extensions\BrowseClientExtension.cs" />
     <Compile Include="Extensions\ContentClientExtension.cs" />
     <Compile Include="Extensions\ItemsClientExtension.cs" />
@@ -111,6 +83,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Presentation\FrontEnd\VirtoCommerce.Web.Core\VirtoCommerce.Web.Core.csproj">
+      <Project>{a00173b5-ea0a-438a-840b-821f0c6b726c}</Project>
+      <Name>VirtoCommerce.Web.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
