@@ -35,7 +35,7 @@ angular.module(moduleName, [
       //Register module in main menu
       var menuItem = {
           path: 'browse/catalog',
-          icon: 'glyphicon glyphicon-cog',
+          icon: 'fa fa-cubes',
           title: 'Modules',
           priority: 200,
           action: function () { $state.go('workspace.packaging') },

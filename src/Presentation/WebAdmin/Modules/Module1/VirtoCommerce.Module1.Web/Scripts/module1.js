@@ -35,7 +35,7 @@ angular.module(moduleTemplateName, [
   	//Register module in main menu
   	var menuItem = {
   	    path: 'browse/module1',
-  	    icon: 'icon-rocket',
+  	    icon: 'fa fa-cube',
   	    title: 'Module1',
   	    priority: 100,
   	    action: function () { $state.go('workspace.module1template') },
