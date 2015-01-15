@@ -69,7 +69,7 @@ angular.module(catalogsModuleName, [
       //Register module in main menu
       var menuItem = {
           path: 'browse/catalog',
-          icon: 'glyphicon glyphicon-search',
+          icon: 'fa fa-tag',
           title: 'Catalog',
           priority: 90,
           action: function () { $state.go('workspace.catalog') },

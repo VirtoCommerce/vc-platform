@@ -35,7 +35,7 @@ angular.module(moduleName, [
       //Register module in main menu
       var menuItem = {
           path: 'browse/carts',
-          icon: 'glyphicon glyphicon-cog',
+          icon: 'fa fa-shopping-cart',
           title: 'Shopping carts',
           priority: 99,
           action: function () { $state.go('workspace.cartModule'); },
