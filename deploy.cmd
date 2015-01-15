@@ -102,14 +102,14 @@ IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
 	IF !ERRORLEVEL! NEQ 0 goto error
 )
 
+:: Clear build output
+call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\VirtoCommerce.WebPlatform.sln" /nologo /verbosity:m /t:Clean /p:Configuration=Release;SolutionDir="%DEPLOYMENT_SOURCE%\.\\" %SCM_BUILD_ARGS%
+
 :: 3. KuduSync
 IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
 	call :ExecuteCmd "%KUDU_SYNC_CMD%" -v 50 -f "%DEPLOYMENT_TEMP%" -t "%DEPLOYMENT_TARGET%" -n "%NEXT_MANIFEST_PATH%" -p "%PREVIOUS_MANIFEST_PATH%" -i ".git;.hg;.deployment;deploy.cmd"
 	IF !ERRORLEVEL! NEQ 0 goto error
 )
-
-:: Clear build output
-call :ExecuteCmd "%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\VirtoCommerce.WebPlatform.sln" /nologo /verbosity:m /t:Clean /p:Configuration=Release;SolutionDir="%DEPLOYMENT_SOURCE%\.\\" %SCM_BUILD_ARGS%
 
 :: Initialize database for first deployment
 :: If PREVIOUS_MANIFEST_PATH ends with firstDeploymentManifest then initialize database
