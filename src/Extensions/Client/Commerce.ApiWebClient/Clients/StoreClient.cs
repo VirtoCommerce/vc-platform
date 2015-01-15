@@ -123,24 +123,26 @@ namespace VirtoCommerce.ApiWebClient.Clients
         /// </summary>
         /// <returns></returns>
         public Store[] GetStores()
-        {
-            return Helper.Get(
+        {     
+            var stores =  Helper.Get(
                 CacheHelper.CreateCacheKey(Constants.StoreCachePrefix, string.Format(StoreCacheKey, "all")),
                 () =>
                 {
                     try
                     {
-                        var client = GetClient(_customerSession.CustomerSession.Language);
+                        var client = GetClient("en-us");
                         return Task.Run(() => client.GetStoresAsync()).Result;
                     }
                     catch
                     {
 
-                        return new Store[0];
+                        return null;
                     }
                 },
                 StoreConfiguration.Instance.Cache.StoreTimeout,
                 _isEnabled);
+
+            return stores ?? new Store[0];
         }
 
         /// <summary>

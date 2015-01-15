@@ -17,6 +17,7 @@ namespace VirtoCommerce.ApiWebClient.Clients
         public const string ItemCodeCacheKey = "C:Ic:{0}:g:{1}";
         public const string CategoriesCacheKey = "C:CT:{0}:{1}:{2}";
         public const string CategoryIdCacheKey = "C:CTID:{0}:{1}";
+        public const string CategoryCodeCacheKey = "C:CTCODE:{0}:{1}";
         #endregion
 
         #region Private Variables
@@ -145,6 +146,29 @@ namespace VirtoCommerce.ApiWebClient.Clients
             }
         }
 
+        public async Task<Category> GetCategoryByCodeAsync(string code, string catalogId, string language, bool useCache = true)
+        {
+            var client = GetClient(language, catalogId);
+
+            try
+            {
+                return await Helper.GetAsync(
+                    CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix,
+                         string.Format(CategoryCodeCacheKey, catalogId, code)),
+                    () => client.GetCategoryByCodeAsync(code),
+                    CatalogConfiguration.Instance.Cache.CategoryTimeout,
+                    _isEnabled && useCache);
+            }
+            catch (ManagementClientException ex)
+            {
+                if (ex.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return null;
+                }
+                throw;
+            }
+        }
+
         public async Task<Category[]> GetCategoriesAsync(string catalogId, string language, string parentId = null, bool useCache = true)
         {
             var client = GetClient(language, catalogId);
@@ -174,6 +198,14 @@ namespace VirtoCommerce.ApiWebClient.Clients
 
             return new Category[0];
         }
+
+        public async Task<ResponseCollection<Product>> GetProductsAsync(string catalogId, string language, BrowseQuery query)
+        {
+            var client = GetClient(language, catalogId);
+
+            return await client.GetProductsAsync(query);
+        }
+
         #endregion
 
 

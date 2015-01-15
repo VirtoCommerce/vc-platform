@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace VirtoCommerce.Web.Core.DataContracts
@@ -26,6 +27,8 @@ namespace VirtoCommerce.Web.Core.DataContracts
         public string Outline { get; set; }
 
         public SeoKeyword[] SeoKeywords { get; set; }
+
+        public DateTime StartDate { get; set; }
 
         #region Properties
 

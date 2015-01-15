@@ -36,6 +36,8 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
         public double Rating { get; set; }
 
         public SeoKeyword[] SeoKeywords { get; set; }
+
+        public DateTime StartDate { get; set; }
     }
    
 }

@@ -23,7 +23,11 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 														  string mainProductId,
 														  module.CatalogProduct[] associatedProducts)
 		{
-			var retVal = new module.CatalogProduct { Id = dbItem.ItemId, Catalog = catalog, CatalogId = catalog.Id };
+			var retVal = new module.CatalogProduct {
+                Id = dbItem.ItemId, 
+                Catalog = catalog, CatalogId = catalog.Id,
+                StartDate = dbItem.StartDate
+            };
 			if (category != null)
 			{
 				retVal.Category = category;
@@ -114,7 +118,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			//Only for main product
 			retVal.IsActive = product.MainProductId == null;
 			retVal.AvailabilityRule = (int)foundation.AvailabilityRule.Always;
-			retVal.StartDate = DateTime.UtcNow;
+			retVal.StartDate = product.StartDate;
 			retVal.IsBuyable = true;
 			retVal.MinQuantity = 1;
 			retVal.MaxQuantity = 0;

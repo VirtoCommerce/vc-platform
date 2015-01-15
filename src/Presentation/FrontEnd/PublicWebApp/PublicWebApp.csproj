@@ -209,7 +209,9 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\CatalogController.cs" />
+    <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\StoreController.cs" />
+    <Compile Include="Converters\ItemConverters.cs" />
     <Compile Include="Converters\UserConverters.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -224,10 +226,13 @@
     <Compile Include="Helpers\MVC\StoreStyle.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\BannerModel.cs" />
+    <Compile Include="Models\CatalogModels.cs" />
     <Compile Include="Models\CurrencyModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MessageModel.cs" />
+    <Compile Include="Models\PriceModel.cs" />
+    <Compile Include="Models\SearchModels.cs" />
     <Compile Include="Models\StoreModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -536,6 +541,9 @@
     <Content Include="Views\Shared\DisplayTemplates\SideMenu.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\SideMenuNode.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\SiteMapPathNodeModel.cshtml" />
+    <Content Include="Views\Search\SearchItems.cshtml" />
+    <Content Include="Views\Search\DisplayTemplates\Item.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\PriceModel.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

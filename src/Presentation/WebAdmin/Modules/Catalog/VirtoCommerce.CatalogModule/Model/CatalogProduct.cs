@@ -27,5 +27,6 @@ namespace VirtoCommerce.CatalogModule.Model
 		public ICollection<SeoInfo> SeoInfos { get; set; }
 		public ICollection<EditorialReview> Reviews { get; set; }
 		public ICollection<ProductAssociation> Associations { get; set; }
+	    public DateTime StartDate { get; set; }
 	}
 }

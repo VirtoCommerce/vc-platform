@@ -4,9 +4,34 @@ using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using VirtoCommerce.Web.Core.DataContracts;
 
 namespace VirtoCommerce.ApiWebClient.Extensions
 {
+    public static class UrlHelperExtensions
+    {
+        public static string Image(this UrlHelper helper, CatalogItem item, string name)
+        {
+
+            if (item == null)
+                return null;
+
+            var image = FindItemImage(item.Images, name);
+
+            return Image(helper, image);
+        }
+
+        public static string Image(this UrlHelper helper, ItemImage image)
+        {
+            const string defaultImage = "blank.png";
+            return helper.Content(image == null ? String.Format("~/Content/themes/default/images/{0}", defaultImage) : image.Src);
+        }
+
+        private static ItemImage FindItemImage(IEnumerable<ItemImage> images, string name)
+        {
+            return images == null ? null : images.FirstOrDefault(i => i.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+        }
+    }
     public static class UrlHelperFacetExtensions
     {
         public static string FacetPrefix = "f_";
