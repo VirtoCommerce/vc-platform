@@ -1,8 +1,11 @@
-﻿using System.Web.Mvc;
+﻿using System.Threading.Tasks;
+using System.Web.Mvc;
 using System.Web.Routing;
+using VirtoCommerce.ApiWebClient.Extensions;
 using VirtoCommerce.ApiWebClient.Extensions.Routing;
 using VirtoCommerce.ApiWebClient.Extensions.Routing.Constraints;
 using VirtoCommerce.ApiWebClient.Extensions.Routing.Routes;
+using VirtoCommerce.ApiWebClient.Helpers;
 
 namespace VirtoCommerce.Web
 {
@@ -81,35 +84,38 @@ namespace VirtoCommerce.Web
             routes.Add("Store", storeRoute);
 
             //Legacy redirects
-            //routes.Redirect(r => r.MapRoute("old_Category", string.Format("c/{{{0}}}", Constants.Category))).To(categoryRoute,
-            //    x =>
-            //    {
-            //        //Expect to receive category code
-            //        if (x.RouteData.Values.ContainsKey(Constants.Category))
-            //        {
-            //            var category = CatalogHelper.CatalogClient.GetCategory(x.RouteData.Values[Constants.Category].ToString());
-            //            if (category != null)
-            //            {
-            //                return new RouteValueDictionary { { Constants.Category, category.CategoryId } };
-            //            }
-            //        }
-            //        return null;
-            //    });
-            //routes.Redirect(r => r.MapRoute("old_Item", string.Format("p/{{{0}}}", Constants.Item))).To(itemRoute,
-            //    x =>
-            //    {
-            //        //Resolve item category dynamically
-            //        //Expect to receive item code
-            //        if (x.RouteData.Values.ContainsKey(Constants.Item))
-            //        {
-            //            var item = CatalogHelper.CatalogClient.GetItemByCode(x.RouteData.Values[Constants.Item].ToString(), StoreHelper.CustomerSession.CatalogId);
-            //            if (item != null)
-            //            {
-            //                return new RouteValueDictionary { { Constants.Category, item.GetItemCategoryRouteValue() } };
-            //            }
-            //        }
-            //        return null;
-            //    });
+            routes.Redirect(r => r.MapRoute("old_Category", string.Format("c/{{{0}}}", Constants.Category))).To(categoryRoute,
+                x =>
+                {
+                    //Expect to receive category code
+                    if (x.RouteData.Values.ContainsKey(Constants.Category))
+                    {
+                        var session = StoreHelper.CustomerSession;
+                        var category = Task.Run(()=>CatalogHelper.CatalogClient.GetCategoryByCodeAsync(x.RouteData.Values[Constants.Category].ToString(), session.CatalogId, session.Language)).Result;
+                        if (category != null)
+                        {
+                            return new RouteValueDictionary { { Constants.Category, category.Id } };
+                        }
+                    }
+                    return null;
+                });
+            routes.Redirect(r => r.MapRoute("old_Item", string.Format("p/{{{0}}}", Constants.Item))).To(itemRoute,
+                x =>
+                {
+                    //Resolve item category dynamically
+                    //Expect to receive item code
+                    if (x.RouteData.Values.ContainsKey(Constants.Item))
+                    {
+                        var session = StoreHelper.CustomerSession;
+                        var item = Task.Run(()=>CatalogHelper.CatalogClient.GetItemByCodeAsync(x.RouteData.Values[Constants.Item].ToString(), session.CatalogId, session.Language)).Result;
+                        if (item != null)
+                        {
+                            //TODO return category for item
+                            return new RouteValueDictionary { { Constants.Category, item.Outline } };
+                        }
+                    }
+                    return null;
+                });
 
             var defaultRoute = new NormalizeRoute(new Route(string.Format("{{{0}}}/{{controller}}/{{action}}/{{id}}", Constants.Language),
                 new RouteValueDictionary { { "id", UrlParameter.Optional }, { "action", "Index" } },

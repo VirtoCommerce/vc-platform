@@ -105,7 +105,8 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		{
 			using(var repository = _foundationCatalogRepositoryFactory())
 			{
-				var itemId = repository.Items.Where(x => x.CatalogId == catalog && x.Code == code).Select(x => x.ItemId).FirstOrDefault();
+                //Cannot filter by catalogId here because it fails when catalog is virtual
+				var itemId = repository.Items.Where(x => x.Code == code).Select(x => x.ItemId).FirstOrDefault();
 				if(itemId != null)
 				{
 					return GetProduct(itemId,responseGroup);

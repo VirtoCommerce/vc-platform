@@ -82,7 +82,9 @@ namespace VirtoCommerce.MerchandisingModule.Web.Binders
 		        }
 		    }
 
+            //TODO load pricelists
 			result.Pricelists = null;
+            result.Currency = qs["curreny"].EmptyToNull();
 
 		    var sortQuery = qs["sort"].EmptyToNull();
             var sort = string.IsNullOrEmpty(sortQuery) ? "name" : sortQuery;
@@ -104,12 +106,25 @@ namespace VirtoCommerce.MerchandisingModule.Web.Binders
                 categoryId = outline.Split(new[] { '/' }).Last();
 		    }
 
-            SearchSort sortObject;
+            SearchSort sortObject = null;
 
             switch (sort.ToLowerInvariant())
             {
                 case "price":
-                    sortObject = new SearchSort("price", isDescending);
+                     if (result.Pricelists != null)
+                    {
+                        sortObject = new SearchSort(result.Pricelists.Select(priceList =>
+                            new SearchSortField(
+                                String.Format("price_{0}_{1}",
+                                    result.Currency.ToLower(),
+                                    priceList.ToLower()))
+                            {
+                                IgnoredUnmapped = true,
+                                IsDescending = isDescending,
+                                DataType = SearchSortField.DOUBLE
+                            })
+                            .ToArray());
+                    }
                     break;
                 case "position":
                     sortObject = new SearchSort(new SearchSortField(string.Format("sort{0}{1}", catalogId, categoryId).ToLower())

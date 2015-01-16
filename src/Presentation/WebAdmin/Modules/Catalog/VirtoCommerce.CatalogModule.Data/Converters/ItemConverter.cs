@@ -25,7 +25,8 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 		{
 			var retVal = new module.CatalogProduct {
                 Id = dbItem.ItemId, 
-                Catalog = catalog, CatalogId = catalog.Id,
+                Catalog = catalog, 
+                CatalogId = catalog.Id,
                 StartDate = dbItem.StartDate
             };
 			if (category != null)

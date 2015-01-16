@@ -542,10 +542,12 @@
     <Content Include="Views\Shared\DisplayTemplates\SideMenuNode.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\SiteMapPathNodeModel.cshtml" />
     <Content Include="Views\Search\SearchItems.cshtml" />
-    <Content Include="Views\Search\DisplayTemplates\Item.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Item.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\PriceModel.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Views\Search\DisplayTemplates\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />

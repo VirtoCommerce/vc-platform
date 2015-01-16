@@ -5,6 +5,6 @@
 
 @if (currentModel != null)
 {
-    @*@Html.Action("DisplayDynamic", "Extension", new { itemCode = currentModel.ProductCode })*@
+    @Html.Action("DisplayDynamic", "Catalog", new { itemCode = currentModel.ProductCode })
 }
 

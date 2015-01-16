@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Mvc;
+using VirtoCommerce.ApiClient;
+using VirtoCommerce.Web.Converters;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.ApiWebClient.Clients;
 using VirtoCommerce.ApiWebClient.Extensions;
@@ -30,6 +33,24 @@ namespace VirtoCommerce.Web.Controllers
         public ActionResult DisplayItem(string item)
         {
             return null;
+        }
+
+        [ChildActionOnly]
+        public ActionResult DisplayDynamic(string itemCode)
+        {
+            try
+            {
+                var session = StoreHelper.CustomerSession;
+                var product = Task.Run(() => CatalogHelper.CatalogClient.GetItemByCodeAsync(itemCode, session.CatalogId, session.Language)).Result;
+                //var reviews = Task.Run(() => ReviewsClient.GetReviewsAsync(product.Id)).Result;
+                var model = product.ToWebModel();
+                //model.Rating = reviews.TotalCount > 0 ? reviews.Items.Average(x => x.Rating) : 0;
+                return PartialView("DisplayTemplates/Item", model);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
     }
