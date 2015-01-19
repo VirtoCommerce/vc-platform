@@ -583,7 +583,7 @@ namespace VirtoCommerce.Client
         /// <param name="criteria">The criteria.</param>
         /// <param name="useCache">if set to <c>true</c> [use cache].</param>
         /// <returns></returns>
-        public CatalogItemSearchResults SearchItems(CatalogItemSearchCriteria criteria, bool useCache)
+        public CatalogItemSearchResults SearchItems(CatalogItemSearchCriteria criteria, bool useCache = true)
         {
             var scope = _searchConnection.Scope;
 
@@ -591,7 +591,7 @@ namespace VirtoCommerce.Client
                 CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix, string.Format(SearchCacheKey, scope, criteria.CacheKey)),
                 () => _catalogService.SearchItems(scope, criteria),
                 SearchConfiguration.Instance.Cache.FiltersTimeout,
-                _isEnabled);
+                _isEnabled && useCache);
         }
         #endregion
 
@@ -625,15 +625,16 @@ namespace VirtoCommerce.Client
         /// </summary>
         /// <param name="itemId">The item id.</param>
         /// <param name="fulfillmentCenterId">The fulfillment center id.</param>
+        /// <param name="useCache">if set to <c>true</c> [use cache].</param>
         /// <returns></returns>
-        public Inventory GetItemInventory(string itemId, string fulfillmentCenterId)
+        public Inventory GetItemInventory(string itemId, string fulfillmentCenterId, bool useCache = true)
         {
             return Helper.Get(
                 CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix, string.Format(ItemInvetoriesCacheKey, itemId, fulfillmentCenterId)),
                 () => _inventoryRepository.Inventories.SingleOrDefault(i => i.FulfillmentCenterId.Equals(fulfillmentCenterId, StringComparison.OrdinalIgnoreCase) &&
                                                                          i.Sku.Equals(itemId, StringComparison.OrdinalIgnoreCase)),
                 CatalogConfiguration.Instance.Cache.ItemTimeout,
-                _isEnabled);
+                _isEnabled && useCache);
         }
 
         /// <summary>
@@ -642,13 +643,13 @@ namespace VirtoCommerce.Client
         /// <param name="itemIds">The item ids.</param>
         /// <param name="fulfillmentCenterId">The fulfillment center id.</param>
         /// <returns></returns>
-        public IEnumerable<Inventory> GetItemInventories(string[] itemIds, string fulfillmentCenterId)
+        public IEnumerable<Inventory> GetItemInventories(string[] itemIds, string fulfillmentCenterId, bool useCache = true)
         {
             return Helper.Get(
                 CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix, string.Format(ItemInvetoriesCacheKey, CacheHelper.CreateCacheKey(itemIds), fulfillmentCenterId)),
                 () => _inventoryRepository.Inventories.Where(i => i.FulfillmentCenterId.Equals(fulfillmentCenterId, StringComparison.OrdinalIgnoreCase) && itemIds.Contains(i.Sku)).ToArray(),
                 CatalogConfiguration.Instance.Cache.ItemCollectionTimeout,
-                _isEnabled);
+                _isEnabled && useCache);
         }
 
         /// <summary>
