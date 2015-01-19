@@ -7,7 +7,9 @@ using System.Web.Http.ModelBinding;
 using VirtoCommerce.CatalogModule.Repositories;
 using VirtoCommerce.CatalogModule.Services;
 using VirtoCommerce.Foundation.AppConfig.Model;
+using VirtoCommerce.Foundation.Catalogs;
 using VirtoCommerce.Foundation.Catalogs.Search;
+using VirtoCommerce.Foundation.Catalogs.Services;
 using VirtoCommerce.Foundation.Search;
 using VirtoCommerce.MerchandisingModule.Web.Binders;
 using VirtoCommerce.MerchandisingModule.Web.Converters;
@@ -24,6 +26,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		private readonly ISearchConnection _searchConnection;
 		private readonly Func<IFoundationCatalogRepository> _foundationCatalogRepositoryFactory;
 	    private readonly Func<IFoundationAppConfigRepository> _foundationAppConfigRepFactory;
+	    private readonly Func<ICatalogOutlineBuilder> _catalogOutlineBuilderFactory;
 	    private readonly Uri _assetBaseUri;
 
 		public ProductController(IItemService itemService,
@@ -31,6 +34,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 								 ISearchConnection searchConnection,
 								 Func<IFoundationCatalogRepository> foundationCatalogRepositoryFactory,
                                  Func<IFoundationAppConfigRepository> foundationAppConfigRepFactory,
+                                 Func<ICatalogOutlineBuilder> catalogOutlineBuilderFactory,
 								 Uri assetBaseUri)
 		{
 			_searchService = indexedSearchProvider;
@@ -38,6 +42,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			_itemService = itemService;
 			_foundationCatalogRepositoryFactory = foundationCatalogRepositoryFactory;
 		    _foundationAppConfigRepFactory = foundationAppConfigRepFactory;
+		    _catalogOutlineBuilderFactory = catalogOutlineBuilderFactory;
 		    _assetBaseUri = assetBaseUri;
 		}
 
@@ -56,7 +61,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		public IHttpActionResult Search(string catalog, [ModelBinder(typeof(CatalogItemSearchCriteriaBinder))] CatalogItemSearchCriteria criteria,[FromUri]moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemMedium, [FromUri]string outline="", string language = "en-us")
 		{
 			criteria.Locale = language;
-			criteria.Catalog = catalog;
+			criteria.Catalog = catalog.ToLowerInvariant();
             if (!string.IsNullOrWhiteSpace(outline))
             {
                 criteria.Outlines.Add(String.Format("{0}/{1}*", catalog, outline));
@@ -109,7 +114,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 				var itemId = repository.Items.Where(x => x.Code == code).Select(x => x.ItemId).FirstOrDefault();
 				if(itemId != null)
 				{
-					return GetProduct(itemId,responseGroup);
+					return GetProduct(catalog, itemId,responseGroup);
 				}
 			}
 			return StatusCode(HttpStatusCode.NotFound);
@@ -120,7 +125,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		[HttpGet]
 		[ResponseType(typeof(Product))]
 		[Route("{product}")]
-        public IHttpActionResult GetProduct(string product, [FromUri]moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemLarge, string language = "en-us")
+        public IHttpActionResult GetProduct(string catalog, string product, [FromUri]moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemLarge, string language = "en-us")
 		{
             var result = _itemService.GetById(product, responseGroup);
 
@@ -141,8 +146,11 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
             if (result != null)
 		    {
-				var retVal = result.ToWebModel(_assetBaseUri);
-		        return Ok(retVal);
+                var webModelProduct = result.ToWebModel(_assetBaseUri);
+                //Build category path outline for requested catalog, can be virtual catalog as well
+                webModelProduct.Outline = _catalogOutlineBuilderFactory().BuildCategoryOutline(catalog, result.Id).ToString("/").ToLowerInvariant();
+                webModelProduct.Outline = webModelProduct.Outline.Replace(catalog + "/", "");
+                return Ok(webModelProduct);
 		    }
 		    return StatusCode(HttpStatusCode.NotFound);
 		}

@@ -30,6 +30,8 @@ namespace VirtoCommerce.Web.Core.DataContracts
 
         public DateTime StartDate { get; set; }
 
+        public string MainProductId { get; set; }
+
         #region Properties
 
         private IDictionary<string, string[]> _properties = new Dictionary<string, string[]>();

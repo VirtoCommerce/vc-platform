@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using VirtoCommerce.ApiWebClient.Clients;
 using VirtoCommerce.ApiWebClient.Customer;
 using VirtoCommerce.ApiWebClient.Extensions;
 using VirtoCommerce.ApiWebClient.Helpers;
@@ -12,8 +13,45 @@ using VirtoCommerce.Web.Models;
 
 namespace VirtoCommerce.Web.Controllers
 {
+    [RoutePrefix("search")]
     public class SearchController : ControllerBase
     {
+
+        [Route("")]
+        public async Task<ActionResult> Index(BrowseQuery query)
+        {
+
+            if (!string.IsNullOrWhiteSpace(query.Search))
+            {
+                ViewBag.Title = String.Format("Searching by '{0}'", query.Search);
+            }
+
+            var retVal = await SearchAsync(query);
+
+            return View(retVal);
+        }
+
+        [Route("find")]
+        public async Task<ActionResult> Find(string term)
+        {
+            ViewBag.Title = String.Format("Searching by '{0}'", term);
+
+            var query = new BrowseQuery
+            {
+                Take = 15, //autocomplete returns first 15
+                Search = term.EscapeSearchTerm()
+            };
+            var results = await SearchAsync(query, responseGroup: ItemResponseGroups.ItemInfo);
+
+            var data = from i in results.Results
+                       select new
+                       {
+                           url = Url.ItemUrl(i.CatalogItem.Id, i.CatalogItem.Outline, i.CatalogItem.MainProductId),
+                           value = i.DisplayName
+                       };
+            return Json(data.ToArray(), JsonRequestBehavior.AllowGet);
+        }
+
         [ChildActionOnly]
         public ActionResult SearchItems(CategoryUrlModel categoryUrl)
         {
@@ -71,9 +109,10 @@ namespace VirtoCommerce.Web.Controllers
             return retVal;
         }
 
-        private async Task<SearchResult> SearchAsync(BrowseQuery query, ICustomerSession session)
+        private async Task<SearchResult> SearchAsync(BrowseQuery query, ICustomerSession session = null, ItemResponseGroups responseGroup = ItemResponseGroups.ItemMedium)
         {
-            var results = await CatalogHelper.CatalogClient.GetProductsAsync(session.CatalogId, session.Language, query);
+            session = session ?? StoreHelper.CustomerSession;
+            var results = await CatalogHelper.CatalogClient.GetProductsAsync(session.CatalogId, session.Language, query, responseGroup);
             var retVal = CreateSearchResult(results, query);
 
             return retVal;
@@ -134,5 +173,7 @@ namespace VirtoCommerce.Web.Controllers
         }
 
         #endregion
+
+      
     }
 }

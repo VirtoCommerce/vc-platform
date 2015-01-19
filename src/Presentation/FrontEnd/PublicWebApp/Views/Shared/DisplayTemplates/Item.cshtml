@@ -14,7 +14,7 @@
 
 <li class="@itemClass" id="@Model.CatalogItem.Id">
     <div class="inner">
-        <a href="" title="@Model.DisplayName" class="product-image">
+        <a href="@Url.ItemUrl(Model.CatalogItem.Id, Model.CatalogItem.Outline, Model.CatalogItem.MainProductId)" title="@Model.DisplayName" class="product-image">
             <figure>
                 <img src="@Url.Image(Model.CatalogItem, "primaryimage")" alt="@Model.DisplayName" onerror="this.onerror=null;this.src='@Href("~/Content/themes/default/images/blank.png")';" />
             </figure>

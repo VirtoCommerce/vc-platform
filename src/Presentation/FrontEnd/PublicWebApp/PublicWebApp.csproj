@@ -544,6 +544,7 @@
     <Content Include="Views\Search\SearchItems.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Item.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\PriceModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\Search.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Search\DisplayTemplates\" />

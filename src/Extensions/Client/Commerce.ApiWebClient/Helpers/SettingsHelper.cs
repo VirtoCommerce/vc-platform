@@ -95,18 +95,25 @@ namespace VirtoCommerce.ApiWebClient.Helpers
             var session = CustomerSession;
             var keyword = GetKeyword(routeValue, type, language);
 
-            switch (type)
+            if (keyword != null)
             {
-                case SeoUrlKeywordTypes.Store:
-                case SeoUrlKeywordTypes.Item:
-                    return keyword.Keyword;
-                case SeoUrlKeywordTypes.Category:
-                    var category = Task.Run(() => CatalogHelper.CatalogClient.GetCategoryAsync(routeValue, session.CatalogId, language)).Result;
-                    if (category != null)
-                    {
-                        return string.Join("/", category.BuildOutline(language).Select(x => x.Value));
-                    }
-                    break;
+                switch (type)
+                {
+                    case SeoUrlKeywordTypes.Store:
+                    case SeoUrlKeywordTypes.Item:
+                        return keyword.Keyword;
+                    case SeoUrlKeywordTypes.Category:
+                        var category =
+                            Task.Run(
+                                () =>
+                                    CatalogHelper.CatalogClient.GetCategoryAsync(routeValue, session.CatalogId, language))
+                                .Result;
+                        if (category != null)
+                        {
+                            return string.Join("/", category.BuildOutline(language).Select(x => x.Value));
+                        }
+                        break;
+                }
             }
 
             return routeValue;

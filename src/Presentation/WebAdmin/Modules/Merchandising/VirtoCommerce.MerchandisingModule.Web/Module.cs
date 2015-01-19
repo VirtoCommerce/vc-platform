@@ -4,6 +4,8 @@ using VirtoCommerce.Caching.HttpCache;
 using VirtoCommerce.CatalogModule.Data.Repositories;
 using VirtoCommerce.CatalogModule.Data.Services;
 using VirtoCommerce.CatalogModule.Repositories;
+using VirtoCommerce.Foundation.Catalogs;
+using VirtoCommerce.Foundation.Catalogs.Services;
 using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Data.Marketing;
 using VirtoCommerce.Foundation.Data.Reviews;
@@ -57,10 +59,12 @@ namespace VirtoCommerce.MerchandisingModule.Web
             Func<IDynamicContentService> dynamicContentServiceFactory = () => new DynamicContentService(dynamicRepositoryFactory(), dynamicContentEval());
             #endregion
 
+            Func<ICatalogOutlineBuilder> catalogOutlineBuilderFactory = () => new CatalogOutlineBuilder(catalogRepFactory(), new HttpCacheRepository());
+
             var assetBaseUri = new Uri(@"http://virtotest.blob.core.windows.net/");
 
             _container.RegisterType<ReviewController>(new InjectionConstructor(reviewRepFactory));
-            _container.RegisterType<ProductController>(new InjectionConstructor(itemService, elasticSearchProvider, searchConnection, catalogRepFactory, appConfigRepFactory, assetBaseUri));
+            _container.RegisterType<ProductController>(new InjectionConstructor(itemService, elasticSearchProvider, searchConnection, catalogRepFactory, appConfigRepFactory, catalogOutlineBuilderFactory, assetBaseUri));
             _container.RegisterType<ContentController>(new InjectionConstructor(dynamicContentServiceFactory));
             _container.RegisterType<CategoryController>(new InjectionConstructor(itemSearchService, categoryService, propertyService, catalogRepFactory, appConfigRepFactory));
             _container.RegisterType<StoreController>(new InjectionConstructor(storeRepFactory, appConfigRepFactory));

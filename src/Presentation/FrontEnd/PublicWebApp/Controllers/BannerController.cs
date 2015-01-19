@@ -39,10 +39,11 @@ namespace VirtoCommerce.Web.Controllers
 		/// <returns>ActionResult.</returns>
         //[DonutOutputCache(CacheProfile = "BannerCache")]
         [Route("content")]
+        [ChildActionOnly]
         public ActionResult ShowDynamicContent(string placeName)
 		{
 		    var session = StoreHelper.CustomerSession;
-            var result = Task.Run(() => _contentHelper.GetDynamicContentAsync(session.GetCustomerTagSet(), session.Language, session.CurrentDateTime, placeName)).Result;
+            var result = Task.Run(() => _contentHelper.GetDynamicContentAsync(session.GetCustomerTagSet(), session.Language, session.CurrentDateTime, placeName)).GetAwaiter().GetResult();
             if (result != null && result.TotalCount > 0)
             {
                 return PartialView("BaseContentPlace", new BannerModel(result.Items.First().Items.ToArray()));

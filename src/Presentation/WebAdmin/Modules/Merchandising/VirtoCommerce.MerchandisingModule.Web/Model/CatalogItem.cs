@@ -38,6 +38,8 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
         public SeoKeyword[] SeoKeywords { get; set; }
 
         public DateTime StartDate { get; set; }
+
+        public string MainProductId { get; set; }
     }
    
 }

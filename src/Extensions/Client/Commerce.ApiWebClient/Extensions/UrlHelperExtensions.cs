@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Routing;
 using VirtoCommerce.Web.Core.DataContracts;
 
 namespace VirtoCommerce.ApiWebClient.Extensions
@@ -30,6 +31,25 @@ namespace VirtoCommerce.ApiWebClient.Extensions
         private static ItemImage FindItemImage(IEnumerable<ItemImage> images, string name)
         {
             return images == null ? null : images.FirstOrDefault(i => i.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public static string ItemUrl(this UrlHelper helper, string itemId, string categoryOutline, string parentId = null)
+        {
+            var routeValues = new RouteValueDictionary();
+
+
+            if (!string.IsNullOrEmpty(parentId))
+            {
+                routeValues.Add("item", parentId);
+                routeValues.Add("variation", itemId);
+                routeValues.Add("category", categoryOutline);
+            }
+            else
+            {
+                routeValues.Add("item", itemId);
+                routeValues.Add("category", categoryOutline);
+            }
+            return helper.RouteUrl("Item", routeValues);
         }
     }
     public static class UrlHelperFacetExtensions

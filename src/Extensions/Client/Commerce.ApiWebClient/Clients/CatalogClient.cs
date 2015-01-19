@@ -53,7 +53,7 @@ namespace VirtoCommerce.ApiWebClient.Clients
         /// <param name="responseGroup">The response group.</param>
         /// <param name="useCache">if set to <c>true</c> [use cache].</param>
         /// <returns></returns>
-        public async Task<CatalogItem> GetItemAsync(string slug, string catalogId, string language, ItemResponseGroups responseGroup = ItemResponseGroups.ItemMedium, bool useCache = true)
+        public async Task<Product> GetItemAsync(string slug, string catalogId, string language, ItemResponseGroups responseGroup = ItemResponseGroups.ItemMedium, bool useCache = true)
         {
             var client = GetClient(language, catalogId);
 
@@ -87,7 +87,7 @@ namespace VirtoCommerce.ApiWebClient.Clients
         /// <param name="useCache">if set to <c>true</c> [use cache].</param>
         /// <param name="responseGroup">The response group.</param>
         /// <returns></returns>
-        public async Task<CatalogItem> GetItemByCodeAsync(string code, string catalogId, string language, bool useCache = true, ItemResponseGroups responseGroup = ItemResponseGroups.ItemMedium)
+        public async Task<Product> GetItemByCodeAsync(string code, string catalogId, string language, bool useCache = true, ItemResponseGroups responseGroup = ItemResponseGroups.ItemMedium)
         {
             var client = GetClient(language, catalogId);
             return await Helper.GetAsync(
@@ -199,7 +199,7 @@ namespace VirtoCommerce.ApiWebClient.Clients
             return new Category[0];
         }
 
-        public async Task<ResponseCollection<Product>> GetProductsAsync(string catalogId, string language, BrowseQuery query)
+        public async Task<ResponseCollection<Product>> GetProductsAsync(string catalogId, string language, BrowseQuery query, ItemResponseGroups responseGroup = ItemResponseGroups.ItemMedium)
         {
             var client = GetClient(language, catalogId);
 
