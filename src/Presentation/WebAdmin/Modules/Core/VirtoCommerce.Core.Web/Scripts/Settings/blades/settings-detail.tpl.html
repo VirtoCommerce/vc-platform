@@ -19,7 +19,7 @@
                                 </label>
                             </div>
                             <div data-role="input-control" class="input-control select" ng-if="data.allowedValues.length>0">
-                                <select ng-model="data.value" ng-options="x for x in data.allowedValues"></select>
+                                <select class="chosen-select" ng-model="data.value" ng-options="x for x in data.allowedValues"></select>
                             </div>
                         </div>
                     </div>
@@ -28,3 +28,17 @@
         </div>
     </div>
 </div>
+<script>
+    $(function () {
+        var timer = setInterval(countDown, 1000);
+
+        function countDown() {
+            if($('.chosen-select').is(':visible')) {
+                $('.chosen-select').chosen();
+            }
+            else {
+                clearInterval(timer);
+            }
+        }
+    });
+</script>
