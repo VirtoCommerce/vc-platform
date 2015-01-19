@@ -96,6 +96,15 @@ namespace VirtoCommerce.Platform.Web
                 "~/Content/themes/metro/css/custom.css"
             ));
 
+            //Chosen
+            bundles.Add(new StyleBundle("~/Content/chosen").Include(
+                "~/Scripts/chosen/chosen.css"
+            ));
+
+            bundles.Add(new ScriptBundle("~/Scripts/chosen").Include(
+                "~/Scripts/chosen/chosen.jquery.js"
+            ));
+
 
             //Angular App
             bundles.Add(new ScriptBundle("~/bundles/app")
