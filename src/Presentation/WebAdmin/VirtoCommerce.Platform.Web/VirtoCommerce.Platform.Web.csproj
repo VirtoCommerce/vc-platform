@@ -356,6 +356,14 @@
     <Content Include="Scripts\app\workspace.tpl.html" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\chosen\chosen-sprite%402x.png" />
+    <Content Include="Scripts\chosen\chosen-sprite.png" />
+    <Content Include="Scripts\chosen\chosen.css" />
+    <Content Include="Scripts\chosen\chosen.jquery.js" />
+    <Content Include="Scripts\chosen\chosen.jquery.min.js" />
+    <Content Include="Scripts\chosen\chosen.min.css" />
+    <Content Include="Scripts\chosen\chosen.proto.js" />
+    <Content Include="Scripts\chosen\chosen.proto.min.js" />
     <Content Include="Scripts\common\confirmDialog\notifyDialog.tpl.html" />
     <Content Include="Scripts\common\directives\autofill.js" />
     <Content Include="Scripts\common\directives\htmlTooltip.js" />
