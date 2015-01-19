@@ -1,0 +1,25 @@
+﻿<script type="text/javascript">
+    $(document).ready(function ()
+    {
+        if ($("input#search"))
+        {
+            $("input#search").autocomplete({
+                minLength: 3,
+                source: '@Url.Action("Find", "Search")',
+                appendTo: "#search_autocomplete",
+                select: function (event, ui)
+                {
+                    document.location.href = ui.item.url;
+                }
+            });
+        }
+    });
+</script>
+
+@using (Html.BeginForm("Index", "Search", FormMethod.Get))
+{
+    <input id="search" type="text" name="q" value="@Request.QueryString["q"]" placeholder="@("Type and hit enter".Localize())" class="field" />
+    <button type="submit" title="@("Search".Localize())" class="submit"></button>
+    <div id="search_autocomplete" class="search-autocomplete">
+    </div>
+}
