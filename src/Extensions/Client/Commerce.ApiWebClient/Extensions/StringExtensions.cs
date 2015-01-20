@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web.Mvc;
 using VirtoCommerce.ApiWebClient.Globalization;
+using VirtoCommerce.ApiWebClient.Helpers;
 
 namespace VirtoCommerce.ApiWebClient.Extensions
 {
@@ -38,7 +39,7 @@ namespace VirtoCommerce.ApiWebClient.Extensions
         /// <returns></returns>
         public static string Title(this string title, string formatString)
         {
-            var storeName = "SomeStore";//StoreHelper.CustomerSession.StoreName;
+            var storeName = StoreHelper.CustomerSession.StoreName;
             return String.IsNullOrEmpty(storeName) ? title : String.Format(formatString, title, storeName);
         }
 
@@ -84,6 +85,16 @@ namespace VirtoCommerce.ApiWebClient.Extensions
 
             return retVal;
 
+        }
+
+        public static int? TryParse(this string u, int? defaultValue)
+        {
+            var result = TryParse(u, defaultValue.HasValue ? defaultValue.Value : int.MinValue);
+
+            if (result == int.MinValue)
+                return null;
+
+            return result;
         }
 
         public static int TryParse(this string u)

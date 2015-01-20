@@ -20,16 +20,6 @@ namespace VirtoCommerce.Web.Controllers
         {
         }
 
-        /// <summary>
-        /// Show available currencies
-        /// </summary>
-        /// <returns>ActionResult.</returns>
-        //[ChildActionOnly, DonutOutputCache(CacheProfile = "StoreCache", VaryByParam = Constants.Language, VaryByCustom = "currency")]
-        public ActionResult Display(string category)
-        {
-            return null;
-        }
-
         public ActionResult DisplayItem(string item)
         {
             return null;

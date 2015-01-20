@@ -51,8 +51,8 @@ namespace VirtoCommerce.Web
                 new CategoryRoute(Constants.CategoryRoute,
                     new RouteValueDictionary
                     {
-                        {"controller", "Catalog"},
-                        {"action", "Display"},
+                        {"controller", "Search"},
+                        {"action", "Category"},
                         {Constants.Language, UrlParameter.Optional}
                     },
                  new RouteValueDictionary

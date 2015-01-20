@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using VirtoCommerce.Web.Core.DataContracts;
 
 namespace VirtoCommerce.Web.Models
@@ -87,5 +88,22 @@ namespace VirtoCommerce.Web.Models
 
         public string ReviewType { get; set; }
 
+    }
+
+    public class CategoryPathModel
+    {
+        private string _url;
+
+        public string Url
+        {
+            get { return _url; }
+            set
+            {
+                Category = value.Split(new[] { '/' }).Last();
+                _url = value;
+            }
+        }
+
+        public string Category { get; set; }
     }
 }

@@ -24,11 +24,13 @@ namespace VirtoCommerce.ApiWebClient.Extensions
             {
                 foreach (var parent in category.Parents)
                 {
+                    SeoKeyword keyword = null;
                     if (parent.SeoKeywords != null)
                     {
-                        var keyword = parent.SeoKeywords.SeoKeyword(language);
-                        segments.Add(parent.Id,keyword != null ? keyword.Keyword : parent.Id);
+                        keyword = parent.SeoKeywords.SeoKeyword(language);         
                     }
+
+                    segments.Add(parent.Id, keyword != null ? keyword.Keyword : parent.Id);
                 }
             }
 

@@ -33,6 +33,11 @@ namespace VirtoCommerce.ApiWebClient.Extensions
             return images == null ? null : images.FirstOrDefault(i => i.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
         }
 
+        public static string ItemUrl(this UrlHelper helper, CatalogItem item)
+        {
+            return ItemUrl(helper, item.Id, item.Outline, item.MainProductId);
+        }
+
         public static string ItemUrl(this UrlHelper helper, string itemId, string categoryOutline, string parentId = null)
         {
             var routeValues = new RouteValueDictionary();

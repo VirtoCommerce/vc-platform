@@ -27,7 +27,7 @@ namespace VirtoCommerce.Web.Helpers.MVC.SiteMap
 
                 var pNode = new DynamicNode
                 {
-                    Action = "Display",
+                    Action = "Category",
                     Title = category.Name,
                     Key = category.Id,
                     Order = order++,
@@ -53,7 +53,7 @@ namespace VirtoCommerce.Web.Helpers.MVC.SiteMap
                     pNode.Attributes.Add("Template", "MegaMenu");
                     nodes.Add(new DynamicNode
                     {
-                        Action = "Display",
+                        Action = "Category",
                         Title = "Audio & MP3".Localize(),
                         Key = category.Id + "AUDIO",
                         ParentKey = category.Id,
@@ -63,21 +63,21 @@ namespace VirtoCommerce.Web.Helpers.MVC.SiteMap
 
                     nodes.Add(new DynamicNode
                     {
-                        Action = "Display",
+                        Action = "Category",
                         Title = "Samsung".Localize(),
                         ParentKey = category.Id + "AUDIO",
                         RouteValues = new Dictionary<string, object> { { Constants.Category, category.Id }, { "f_Brand", "samsung" } },
                     });
                     nodes.Add(new DynamicNode
                     {
-                        Action = "Display",
+                        Action = "Category",
                         Title = "Sony".Localize(),
                         ParentKey = category.Id + "AUDIO",
                         RouteValues = new Dictionary<string, object> { { Constants.Category, category.Id }, { "f_Brand", "sony" } },
                     });
                     nodes.Add(new DynamicNode
                     {
-                        Action = "Display",
+                        Action = "Category",
                         Title = "Apple".Localize(),
                         ParentKey = category.Id + "AUDIO",
                         RouteValues = new Dictionary<string, object> { { Constants.Category, category.Id }, { "f_Brand", "apple" } },
@@ -91,7 +91,7 @@ namespace VirtoCommerce.Web.Helpers.MVC.SiteMap
 
                         nodes.Add(new DynamicNode
                         {
-                            Action = "Display",
+                            Action = "Category",
                             Title = "Computers & Tablets".Localize(),
                             Key = category.Id + "COMPUTERS",
                             ParentKey = category.Id,
@@ -101,7 +101,7 @@ namespace VirtoCommerce.Web.Helpers.MVC.SiteMap
 
                         nodes.Add(new DynamicNode
                         {
-                            Action = "Display",
+                            Action = "Category",
                             Title = "Samsung".Localize(),
                             ParentKey = category.Id + "COMPUTERS",
                             RouteValues =
@@ -114,7 +114,7 @@ namespace VirtoCommerce.Web.Helpers.MVC.SiteMap
 
                         nodes.Add(new DynamicNode
                         {
-                            Action = "Display",
+                            Action = "Category",
                             Title = "Sony".Localize(),
                             ParentKey = category.Id + "COMPUTERS",
                             RouteValues =
@@ -127,7 +127,7 @@ namespace VirtoCommerce.Web.Helpers.MVC.SiteMap
 
                         nodes.Add(new DynamicNode
                         {
-                            Action = "Display",
+                            Action = "Category",
                             Title = "Apple".Localize(),
                             ParentKey = category.Id + "COMPUTERS",
                             RouteValues =
@@ -147,7 +147,7 @@ namespace VirtoCommerce.Web.Helpers.MVC.SiteMap
 
                         nodes.Add(new DynamicNode
                         {
-                            Action = "Display",
+                            Action = "Category",
                             Title = "Cameras".Localize(),
                             Key = category.Id + "CAMERAS",
                             ParentKey = category.Id,
@@ -157,7 +157,7 @@ namespace VirtoCommerce.Web.Helpers.MVC.SiteMap
 
                         nodes.Add(new DynamicNode
                         {
-                            Action = "Display",
+                            Action = "Category",
                             Title = "Samsung".Localize(),
                             ParentKey = category.Id + "CAMERAS",
                             RouteValues =
@@ -165,7 +165,7 @@ namespace VirtoCommerce.Web.Helpers.MVC.SiteMap
                         });
                         nodes.Add(new DynamicNode
                         {
-                            Action = "Display",
+                            Action = "Category",
                             Title = "Sony".Localize(),
                             ParentKey = category.Id + "CAMERAS",
                             RouteValues =
@@ -181,7 +181,7 @@ namespace VirtoCommerce.Web.Helpers.MVC.SiteMap
 
                         nodes.Add(new DynamicNode
                         {
-                            Action = "Display",
+                            Action = "Category",
                             Title = "TV & Video".Localize(),
                             Key = category.Id + "TVVIDEO",
                             ParentKey = category.Id,
@@ -191,7 +191,7 @@ namespace VirtoCommerce.Web.Helpers.MVC.SiteMap
 
                         nodes.Add(new DynamicNode
                         {
-                            Action = "Display",
+                            Action = "Category",
                             Title = "Samsung".Localize(),
                             ParentKey = category.Id + "TVVIDEO",
                             RouteValues =
@@ -203,7 +203,7 @@ namespace VirtoCommerce.Web.Helpers.MVC.SiteMap
                         });
                         nodes.Add(new DynamicNode
                         {
-                            Action = "Display",
+                            Action = "Category",
                             Title = "Sony".Localize(),
                             ParentKey = category.Id + "TVVIDEO",
                             RouteValues =

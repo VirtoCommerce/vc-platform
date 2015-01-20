@@ -3,7 +3,7 @@
   <mvcSiteMapNode title="Home" controller="Home" action="Index" changeFrequency="Always" updatePriority="Normal">
     <mvcSiteMapNode title="Home" key="home"  action="Index" visibility="MainMenu,!*">
        <!-- Categories are created dynamically from database-->
-      <mvcSiteMapNode title="Categories" controller="Catalog" dynamicNodeProvider="VirtoCommerce.Web.Helpers.MVC.SiteMap.CatalogNodeProvider, VirtoCommerce.Web">
+      <mvcSiteMapNode title="Categories" controller="Search" dynamicNodeProvider="VirtoCommerce.Web.Helpers.MVC.SiteMap.CatalogNodeProvider, VirtoCommerce.Web">
         <mvcSiteMapNode title="Detail" controller="Catalog" dynamicNodeProvider="VirtoCommerce.Web.Helpers.MVC.SiteMap.BreadcrumbNodeProvider, VirtoCommerce.Web" visibility="BreadCrumb,!*">
         </mvcSiteMapNode>
       </mvcSiteMapNode>

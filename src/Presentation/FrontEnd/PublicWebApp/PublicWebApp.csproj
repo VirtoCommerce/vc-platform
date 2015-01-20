@@ -226,6 +226,8 @@
     <Compile Include="Helpers\MVC\StoreStyle.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\BannerModel.cs" />
+    <Compile Include="Models\Binders\BrowseQueryBinder.cs" />
+    <Compile Include="Models\Binders\CategoryPathModelBinder.cs" />
     <Compile Include="Models\CatalogModels.cs" />
     <Compile Include="Models\CurrencyModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
@@ -545,10 +547,13 @@
     <Content Include="Views\Shared\DisplayTemplates\Item.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\PriceModel.cshtml" />
     <Content Include="Views\Shared\DisplayTemplates\Search.cshtml" />
+    <Content Include="Views\Search\Index.cshtml" />
+    <Content Include="Views\Search\DisplayTemplates\CurrentFilterPanel.cshtml" />
+    <Content Include="Views\Search\DisplayTemplates\FilterPanel.cshtml" />
+    <Content Include="Views\Search\DisplayTemplates\SearchPager.cshtml" />
+    <Content Include="Views\Search\DisplayTemplates\SearchListItem.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\Search\DisplayTemplates\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />

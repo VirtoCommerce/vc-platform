@@ -7,6 +7,9 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using VirtoCommerce.ApiWebClient.Caching;
 using VirtoCommerce.ApiWebClient.Helpers;
+using VirtoCommerce.Web.Core.DataContracts;
+using VirtoCommerce.Web.Models;
+using VirtoCommerce.Web.Models.Binders;
 
 namespace VirtoCommerce.Web
 {
@@ -19,6 +22,9 @@ namespace VirtoCommerce.Web
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
             MvcSiteMapProviderConfig.Register(DependencyResolver.Current);
+
+            ModelBinders.Binders[typeof(BrowseQuery)] = new BrowseQueryBinder();
+            ModelBinders.Binders[typeof(CategoryPathModel)] = new CategoryPathModelBinder();
         }
 
         /// <summary>

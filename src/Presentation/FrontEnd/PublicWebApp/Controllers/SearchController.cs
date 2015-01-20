@@ -2,7 +2,9 @@
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Mvc;
+using VirtoCommerce.ApiWebClient.Caching;
 using VirtoCommerce.ApiWebClient.Clients;
 using VirtoCommerce.ApiWebClient.Customer;
 using VirtoCommerce.ApiWebClient.Extensions;
@@ -20,13 +22,14 @@ namespace VirtoCommerce.Web.Controllers
         [Route("")]
         public async Task<ActionResult> Index(BrowseQuery query)
         {
+            RestoreSearchPreferences(query);
+
+            var retVal = await SearchAsync(query);
 
             if (!string.IsNullOrWhiteSpace(query.Search))
             {
-                ViewBag.Title = String.Format("Searching by '{0}'", query.Search);
+                retVal.Title = String.Format("Searching by '{0}'", query.Search);
             }
-
-            var retVal = await SearchAsync(query);
 
             return View(retVal);
         }
@@ -50,6 +53,36 @@ namespace VirtoCommerce.Web.Controllers
                            value = i.DisplayName
                        };
             return Json(data.ToArray(), JsonRequestBehavior.AllowGet);
+        }
+
+
+        // GET: /Catalog/
+        /// <summary>
+        /// Displays the catalog by specified URL.
+        /// </summary>
+        /// <param name="category">The category code</param>
+        /// <param name="query">The query.</param>
+        /// <returns>
+        /// ActionResult.
+        /// </returns>
+        /// <exception cref="System.Web.HttpException">404;Category not found</exception>
+        [DonutOutputCache(CacheProfile = "CatalogCache", VaryByCustom = "currency;filters;pricelist")]
+        public async Task<ActionResult> Category(CategoryPathModel category, BrowseQuery query)
+        {
+            var session = StoreHelper.CustomerSession;
+            var cat = await CatalogHelper.CatalogClient.GetCategoryAsync(category.Category, session.CatalogId, session.Language);
+
+            if (cat != null)
+            {
+                RestoreSearchPreferences(query);
+                query.Outline = string.Join("/", cat.BuildOutline().Select(x => x.Key));
+                var retVal = await SearchAsync(query);
+                retVal.Title = cat.Name;
+
+                return View("Index", retVal);
+            }
+
+            throw new HttpException(404, "Category not found");
         }
 
         [ChildActionOnly]
@@ -94,23 +127,30 @@ namespace VirtoCommerce.Web.Controllers
                 {
                     TotalCount = results.TotalCount,
                     RecordsPerPage = query.Take ?? BrowseQuery.DefaultPageSize,
-                    StartingRecord = query.Skip ??  0,
-                    DisplayStartingRecord = query.Skip ?? 1,
                     SortValues = new[] { "Position", "Name", "Price", "Rating", "Reviews" },
                     SelectedSort = query.SortProperty,
                     SortOrder = query.SortDirection
                 }
             };
 
-            var end = query.Skip + query.Take ?? 0;
-            retVal.Pager.CurrentPage = retVal.Pager.StartingRecord/retVal.Pager.RecordsPerPage + 1;
+        
+            retVal.Pager.StartingRecord = query.Skip ?? 0;
+            retVal.Pager.DisplayStartingRecord = retVal.Pager.StartingRecord + 1;
+            retVal.Pager.CurrentPage = retVal.Pager.StartingRecord / retVal.Pager.RecordsPerPage + 1;
+
+            var end = retVal.Pager.StartingRecord + retVal.Pager.RecordsPerPage;    
             retVal.Pager.DisplayEndingRecord = end > results.TotalCount ? results.TotalCount : end;
 
+         
             return retVal;
         }
 
         private async Task<SearchResult> SearchAsync(BrowseQuery query, ICustomerSession session = null, ItemResponseGroups responseGroup = ItemResponseGroups.ItemMedium)
         {
+
+            query.SortProperty = string.IsNullOrEmpty(query.SortProperty) ? "position" : query.SortProperty;
+            query.SortDirection = "desc".Equals(query.SortDirection, StringComparison.OrdinalIgnoreCase) ? "desc" : "asc";
+
             session = session ?? StoreHelper.CustomerSession;
             var results = await CatalogHelper.CatalogClient.GetProductsAsync(session.CatalogId, session.Language, query, responseGroup);
             var retVal = CreateSearchResult(results, query);

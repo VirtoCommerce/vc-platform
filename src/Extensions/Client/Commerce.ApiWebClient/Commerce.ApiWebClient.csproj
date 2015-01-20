@@ -150,6 +150,7 @@
     <Compile Include="Extensions\Filters\LocalizeWebApiAttribute.cs" />
     <Compile Include="Extensions\Filters\ModelValidationFilterAttribute.cs" />
     <Compile Include="Extensions\Filters\ValidateAjaxAttribute.cs" />
+    <Compile Include="Extensions\KeyValuePairExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\RedirectRouteExtensions.cs" />
     <Compile Include="Extensions\RouteValueDictionaryExtensions.cs" />
