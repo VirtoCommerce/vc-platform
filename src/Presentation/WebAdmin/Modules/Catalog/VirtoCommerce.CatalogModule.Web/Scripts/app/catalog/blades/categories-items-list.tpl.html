@@ -37,7 +37,11 @@
                                 </div>
                             </td>
                             <td ng-click='selectItem($event, data)'>
-                                <img ng-src="{{data.imageUrl}}" height="42" width="42" ng-if="data.type!=='category' && data.imageUrl" /><i class="icon-none" ng-if="data.type!=='category' && !data.imageUrl" style="font-size: 26px" />
+                                <div class="product-img">
+                                    <div class="image" style="background-image: url({{data.imageUrl}})" ng-if="data.type!=='category' && data.imageUrl"></div>
+                                    <i class="fa fa-ban" ng-if="data.type!=='category' && !data.imageUrl" />
+                                </div>
+                                <!-- <img ng-src="{{data.imageUrl}}" height="42" width="42" ng-if="data.type!=='category' && data.imageUrl" /> -->
                             </td>
                             <td ng-click='selectItem($event, data)' class="product-name">
                                 <span ng-if="hasLinks(data)"><i class="icon-link" style="font-size: 18px" />&nbsp;</span>

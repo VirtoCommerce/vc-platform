@@ -257,6 +257,42 @@ p.subheader
 	max-width: 150px;
 }
 
+.metro .table td .product-img
+{
+	height: 40px;
+	line-height: 40px;
+	margin: 0 auto;
+	text-align: center;
+	width: 40px;
+}
+
+.metro .table td .product-img .fa
+{
+	margin: -4px 0 0;
+	vertical-align: middle;
+}
+
+.metro .table td .product-img .image
+{
+	background-blend-mode: darken;
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	background-size: cover;
+	height: 100%;
+	position: relative;
+	width: 100%;
+}
+
+.metro .table tr:hover td .product-img .image
+{
+	background-color: rgba(28, 183, 236, 0.1);
+}
+
+.metro .table tr.selected td .product-img .image
+{
+	background-color: #b3ebfb;
+}
+
 .metro .table thead th
 {
 	vertical-align: middle;
