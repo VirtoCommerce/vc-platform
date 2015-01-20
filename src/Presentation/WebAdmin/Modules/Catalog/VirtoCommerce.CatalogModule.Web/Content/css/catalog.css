@@ -235,6 +235,12 @@ ul.tiles img
 			box-shadow: 0 0 0 2px #ccc inset;
 }
 
+.metro .tile-img:hover
+{
+	-webkit-box-shadow: none;
+			box-shadow: none;
+}
+
 .images-list
 {
 	height: 100%;
@@ -243,11 +249,15 @@ ul.tiles img
 
 .images-list .image
 {
+	border: 1px solid #ddd;
 	height: 40px;
 	line-height: 40px;
 	position: absolute;
 	text-align: center;
 	width: 40px;
+
+	-webkit-box-sizing: border-box;
+			box-sizing: border-box;
 }
 
 .images-list .image img
