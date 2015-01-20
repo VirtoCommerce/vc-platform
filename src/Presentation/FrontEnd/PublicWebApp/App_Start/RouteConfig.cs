@@ -9,6 +9,11 @@ using VirtoCommerce.ApiWebClient.Helpers;
 
 namespace VirtoCommerce.Web
 {
+    using VirtoCommerce.ApiClient;
+    using VirtoCommerce.ApiWebClient.Clients;
+    using VirtoCommerce.ApiWebClient.Clients.Extensions;
+    using VirtoCommerce.Web.Core.DataContracts;
+
     public class RouteConfig
     {
         public static void RegisterRoutes(RouteCollection routes)
@@ -83,6 +88,7 @@ namespace VirtoCommerce.Web
             routes.Add("Category", categoryRoute);
             routes.Add("Store", storeRoute);
 
+            
             //Legacy redirects
             routes.Redirect(r => r.MapRoute("old_Category", string.Format("c/{{{0}}}", Constants.Category))).To(categoryRoute,
                 x =>
@@ -90,8 +96,8 @@ namespace VirtoCommerce.Web
                     //Expect to receive category code
                     if (x.RouteData.Values.ContainsKey(Constants.Category))
                     {
-                        var session = StoreHelper.CustomerSession;
-                        var category = Task.Run(()=>CatalogHelper.CatalogClient.GetCategoryByCodeAsync(x.RouteData.Values[Constants.Category].ToString(), session.CatalogId, session.Language)).Result;
+                        var client = ClientContext.Clients.CreateBrowseCachedClient();
+                        var category = Task.Run(() => client.GetCategoryByCodeAsync(x.RouteData.Values[Constants.Category].ToString())).Result;
                         if (category != null)
                         {
                             return new RouteValueDictionary { { Constants.Category, category.Id } };
@@ -106,8 +112,8 @@ namespace VirtoCommerce.Web
                     //Expect to receive item code
                     if (x.RouteData.Values.ContainsKey(Constants.Item))
                     {
-                        var session = StoreHelper.CustomerSession;
-                        var item = Task.Run(()=>CatalogHelper.CatalogClient.GetItemByCodeAsync(x.RouteData.Values[Constants.Item].ToString(), session.CatalogId, session.Language)).Result;
+                        var client = ClientContext.Clients.CreateBrowseCachedClient();
+                        var item = Task.Run(()=>client.GetProductByCodeAsync(x.RouteData.Values[Constants.Item].ToString(), ItemResponseGroups.ItemMedium)).Result;
                         if (item != null)
                         {
                             //TODO return category for item

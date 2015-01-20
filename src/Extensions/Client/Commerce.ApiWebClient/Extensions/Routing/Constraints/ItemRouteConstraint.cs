@@ -5,6 +5,10 @@ using VirtoCommerce.ApiWebClient.Helpers;
 
 namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Constraints
 {
+    using VirtoCommerce.ApiClient;
+    using VirtoCommerce.ApiWebClient.Clients;
+    using VirtoCommerce.ApiWebClient.Clients.Extensions;
+    using VirtoCommerce.Web.Core.DataContracts;
 
     /// <summary>
     /// Route constraint checks if item exists in database
@@ -28,8 +32,9 @@ namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Constraints
             var session = StoreHelper.CustomerSession;
             var language = values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : session.Language;
             var productSlug = encoded;
-           
-            var item = Task.Run(() => CatalogHelper.CatalogClient.GetItemAsync(productSlug, session.CatalogId, language)).Result;
+
+            var client = ClientContext.Clients.CreateBrowseCachedClient();
+            var item = Task.Run(() => client.GetProductAsync(productSlug, ItemResponseGroups.ItemMedium)).Result;
 
             if (item == null)
             {

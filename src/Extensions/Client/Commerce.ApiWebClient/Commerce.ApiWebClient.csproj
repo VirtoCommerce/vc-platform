@@ -135,10 +135,11 @@
     <Compile Include="Caching\HtmlHelperExtensions.cs" />
     <Compile Include="Caching\HttpCacheRepository.cs" />
     <Compile Include="Caching\Interfaces\ICacheRepository.cs" />
+    <Compile Include="Clients\BrowseCachedClient.cs" />
     <Compile Include="Clients\DynamicContentClient.cs" />
+    <Compile Include="Clients\Extensions\CachedClientExtensions.cs" />
     <Compile Include="Clients\SecurityClient.cs" />
     <Compile Include="Clients\SeoKeywordClient.cs" />
-    <Compile Include="Clients\CatalogClient.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="ContextFieldConstants.cs" />
     <Compile Include="Currencies\CurrencyService.cs" />

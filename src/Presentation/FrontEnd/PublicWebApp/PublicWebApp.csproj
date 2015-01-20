@@ -431,6 +431,7 @@
     </Content>
     <Content Include="App_Data\Virto\Configuration\Catalog.config" />
     <Content Include="App_Data\Virto\Configuration\Security.config" />
+    <Content Include="App_Data\Virto\Configuration\connectionStrings.config" />
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>

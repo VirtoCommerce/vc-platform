@@ -42,12 +42,12 @@ namespace VirtoCommerce.ApiClient
         /// <summary>
         /// List items matching the given query
         /// </summary>
-        public Task<ResponseCollection<Product>> GetProductsAsync(BrowseQuery query, ItemResponseGroups? responseGroup = null)
+        public virtual Task<ResponseCollection<Product>> GetProductsAsync(BrowseQuery query, ItemResponseGroups? responseGroup = null)
         {
             return GetAsync<ResponseCollection<Product>>(CreateRequestUri(RelativePaths.Products, query.GetQueryString(responseGroup)));
         }
 
-        public Task<Product> GetProductAsync(string productId, ItemResponseGroups responseGroup)
+        public virtual Task<Product> GetProductAsync(string productId, ItemResponseGroups responseGroup)
         {
             var query = new List<KeyValuePair<string, string>>
             {
@@ -57,7 +57,7 @@ namespace VirtoCommerce.ApiClient
             return GetAsync<Product>(CreateRequestUri(String.Format(RelativePaths.Product, productId), query.ToArray()));
         }
 
-        public Task<Product> GetProductByCodeAsync(string code, ItemResponseGroups responseGroup)
+        public virtual Task<Product> GetProductByCodeAsync(string code, ItemResponseGroups responseGroup)
         {
             var query = new List<KeyValuePair<string, string>>
             {
@@ -68,17 +68,17 @@ namespace VirtoCommerce.ApiClient
             return GetAsync<Product>((CreateRequestUri(RelativePaths.Products, query.ToArray())));
         }
 
-        public Task<ResponseCollection<Category>> GetCategoriesAsync(string parentId = null)
+        public virtual Task<ResponseCollection<Category>> GetCategoriesAsync(string parentId = null)
         {
             return GetAsync<ResponseCollection<Category>>(CreateRequestUri(RelativePaths.Categories, string.Format("parentId={0}", parentId)));
         }
 
-        public Task<Category> GetCategoryByCodeAsync(string code)
+        public virtual Task<Category> GetCategoryByCodeAsync(string code)
         {
             return GetAsync<Category>(CreateRequestUri(RelativePaths.Categories, "code=" + code));
         }
 
-        public Task<Category> GetCategoryAsync(string categoryId)
+        public virtual Task<Category> GetCategoryAsync(string categoryId)
         {
             return GetAsync<Category>(CreateRequestUri(String.Format(RelativePaths.Category, categoryId)));
         }

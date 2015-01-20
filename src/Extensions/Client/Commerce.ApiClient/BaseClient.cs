@@ -82,7 +82,7 @@ namespace VirtoCommerce.ApiClient
         /// <param name="requestUri">The request URI.</param>
         /// <param name="userId">The user id. Only required by the tenant API.</param>
         /// <returns>Response object.</returns>
-        protected async Task<T> GetAsync<T>(Uri requestUri, string userId = null)
+        protected virtual async Task<T> GetAsync<T>(Uri requestUri, string userId = null) where T : class 
         {
             var message = new HttpRequestMessage(HttpMethod.Get, requestUri);
 

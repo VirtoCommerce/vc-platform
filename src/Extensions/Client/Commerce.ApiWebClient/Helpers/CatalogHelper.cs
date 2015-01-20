@@ -3,6 +3,7 @@ using VirtoCommerce.ApiWebClient.Clients;
 
 namespace VirtoCommerce.ApiWebClient.Helpers
 {
+    /*
     public class CatalogHelper
     {
         public static CatalogClient CatalogClient
@@ -13,4 +14,5 @@ namespace VirtoCommerce.ApiWebClient.Helpers
             }
         }
     }
+     * */
 }

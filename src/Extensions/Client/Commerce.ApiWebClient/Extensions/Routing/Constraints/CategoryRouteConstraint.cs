@@ -6,6 +6,9 @@ using VirtoCommerce.ApiWebClient.Helpers;
 
 namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Constraints
 {
+    using VirtoCommerce.ApiClient;
+    using VirtoCommerce.ApiWebClient.Clients;
+    using VirtoCommerce.ApiWebClient.Clients.Extensions;
 
     /// <summary>
     /// Route constraint checks if category exists in database
@@ -33,7 +36,8 @@ namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Constraints
             var session = StoreHelper.CustomerSession;
             var language = values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : session.Language;
 
-            var category = Task.Run(() => CatalogHelper.CatalogClient.GetCategoryAsync(childCategorySlug, session.CatalogId, language)).Result;
+            var client = ClientContext.Clients.CreateBrowseCachedClient();
+            var category = Task.Run(() => client.GetCategoryAsync(childCategorySlug)).Result;
 
             if (category == null)
             {

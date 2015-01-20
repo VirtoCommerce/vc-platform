@@ -3,6 +3,9 @@ using Newtonsoft.Json;
 
 namespace VirtoCommerce.Web.Core.DataContracts
 {
+    using System.Collections;
+    using System.Collections.Generic;
+
     public class ResponseCollection<T>
     {
         [JsonProperty("total")]

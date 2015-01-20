@@ -11,6 +11,9 @@ using VirtoCommerce.ApiWebClient.Helpers;
 
 namespace VirtoCommerce.Web.Controllers
 {
+    using VirtoCommerce.ApiWebClient.Clients.Extensions;
+    using VirtoCommerce.Web.Core.DataContracts;
+
     /// <summary>
     /// Class StoreController.
     /// </summary>
@@ -30,18 +33,15 @@ namespace VirtoCommerce.Web.Controllers
         {
             try
             {
-                var session = StoreHelper.CustomerSession;
-                var product = Task.Run(() => CatalogHelper.CatalogClient.GetItemByCodeAsync(itemCode, session.CatalogId, session.Language)).Result;
-                //var reviews = Task.Run(() => ReviewsClient.GetReviewsAsync(product.Id)).Result;
+                var client = ClientContext.Clients.CreateBrowseCachedClient();
+                var product = Task.Run(() => client.GetProductByCodeAsync(itemCode, ItemResponseGroups.ItemMedium)).Result;
                 var model = product.ToWebModel();
-                //model.Rating = reviews.TotalCount > 0 ? reviews.Items.Average(x => x.Rating) : 0;
                 return PartialView("DisplayTemplates/Item", model);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return null;
             }
         }
-
     }
 }

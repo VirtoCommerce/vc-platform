@@ -11,6 +11,9 @@ using VirtoCommerce.Web.Core.DataContracts;
 
 namespace VirtoCommerce.ApiWebClient.Helpers
 {
+    using VirtoCommerce.ApiClient;
+    using VirtoCommerce.ApiWebClient.Clients.Extensions;
+
     /// <summary>
     /// Class SettingsHelper.
     /// </summary>
@@ -59,7 +62,7 @@ namespace VirtoCommerce.ApiWebClient.Helpers
             var langInfo = TryGetCultureInfo(language);
             language = langInfo != null ? langInfo.Name : language;
             var keyword = new SeoKeyword { KeywordType = type, Keyword = routeValue, KeywordValue = routeValue, Language = language };
-
+            var client = ClientContext.Clients.CreateBrowseCachedClient(language);
             switch (type)
             {
                 case SeoUrlKeywordTypes.Store:
@@ -71,14 +74,14 @@ namespace VirtoCommerce.ApiWebClient.Helpers
                     }
                     break;
                 case SeoUrlKeywordTypes.Category:
-                    var category = Task.Run(() => CatalogHelper.CatalogClient.GetCategoryAsync(routeValue, session.CatalogId, language)).Result;
+                    var category = Task.Run(() => client.GetCategoryAsync(routeValue)).Result;
                     if (category != null)
                     {
                         keyword = category.SeoKeywords.SeoKeyword(language);
                     }
                     break;
                 case SeoUrlKeywordTypes.Item:
-                    var item = Task.Run(() => CatalogHelper.CatalogClient.GetItemAsync(routeValue, session.CatalogId, language)).Result;
+                    var item = Task.Run(() => client.GetProductAsync(routeValue, ItemResponseGroups.ItemMedium)).Result;
                     if (item != null)
                     {
                         keyword = item.SeoKeywords.SeoKeyword(language);
@@ -95,6 +98,8 @@ namespace VirtoCommerce.ApiWebClient.Helpers
             var session = CustomerSession;
             var keyword = GetKeyword(routeValue, type, language);
 
+            var client = ClientContext.Clients.CreateBrowseCachedClient(language);
+
             if (keyword != null)
             {
                 switch (type)
@@ -106,7 +111,7 @@ namespace VirtoCommerce.ApiWebClient.Helpers
                         var category =
                             Task.Run(
                                 () =>
-                                    CatalogHelper.CatalogClient.GetCategoryAsync(routeValue, session.CatalogId, language))
+                                    client.GetCategoryAsync(routeValue))
                                 .Result;
                         if (category != null)
                         {

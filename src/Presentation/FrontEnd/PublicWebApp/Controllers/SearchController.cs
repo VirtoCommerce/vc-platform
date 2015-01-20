@@ -15,6 +15,9 @@ using VirtoCommerce.Web.Models;
 
 namespace VirtoCommerce.Web.Controllers
 {
+    using VirtoCommerce.ApiClient;
+    using VirtoCommerce.ApiWebClient.Clients.Extensions;
+
     [RoutePrefix("search")]
     public class SearchController : ControllerBase
     {
@@ -69,8 +72,8 @@ namespace VirtoCommerce.Web.Controllers
         [DonutOutputCache(CacheProfile = "CatalogCache", VaryByCustom = "currency;filters;pricelist")]
         public async Task<ActionResult> Category(CategoryPathModel category, BrowseQuery query)
         {
-            var session = StoreHelper.CustomerSession;
-            var cat = await CatalogHelper.CatalogClient.GetCategoryAsync(category.Category, session.CatalogId, session.Language);
+            var client = ClientContext.Clients.CreateBrowseCachedClient();
+            var cat = await client.GetCategoryAsync(category.Category);
 
             if (cat != null)
             {
@@ -102,7 +105,8 @@ namespace VirtoCommerce.Web.Controllers
 
             if (!string.IsNullOrWhiteSpace(categoryUrl.CategoryCode))
             {
-                var category = Task.Run(() => CatalogHelper.CatalogClient.GetCategoryByCodeAsync(categoryUrl.CategoryCode, session.CatalogId, session.Language)).Result;
+                var client = ClientContext.Clients.CreateBrowseCachedClient();
+                var category = Task.Run(() => client.GetCategoryByCodeAsync(categoryUrl.CategoryCode)).Result;
 
                 if (category != null)
                 {
@@ -147,12 +151,12 @@ namespace VirtoCommerce.Web.Controllers
 
         private async Task<SearchResult> SearchAsync(BrowseQuery query, ICustomerSession session = null, ItemResponseGroups responseGroup = ItemResponseGroups.ItemMedium)
         {
-
             query.SortProperty = string.IsNullOrEmpty(query.SortProperty) ? "position" : query.SortProperty;
             query.SortDirection = "desc".Equals(query.SortDirection, StringComparison.OrdinalIgnoreCase) ? "desc" : "asc";
 
             session = session ?? StoreHelper.CustomerSession;
-            var results = await CatalogHelper.CatalogClient.GetProductsAsync(session.CatalogId, session.Language, query, responseGroup);
+            var client = ClientContext.Clients.CreateBrowseCachedClient();
+            var results = await client.GetProductsAsync(query, responseGroup);
             var retVal = CreateSearchResult(results, query);
 
             return retVal;

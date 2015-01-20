@@ -10,6 +10,10 @@ using VirtoCommerce.ApiWebClient.Helpers;
 
 namespace VirtoCommerce.Web.Helpers.MVC.SiteMap
 {
+    using VirtoCommerce.ApiClient;
+    using VirtoCommerce.ApiWebClient.Clients;
+    using VirtoCommerce.ApiWebClient.Clients.Extensions;
+
     public class CatalogNodeProvider : DynamicNodeProviderBase
     {
 
@@ -19,10 +23,11 @@ namespace VirtoCommerce.Web.Helpers.MVC.SiteMap
             var session = StoreHelper.CustomerSession;
 
             var nodes = new List<DynamicNode>();
-            int order = 0;
-            var categories =  Task.Run(()=>CatalogHelper.CatalogClient.GetCategoriesAsync(session.CatalogId, session.Language)).Result;
+            var order = 0;
+            var client = ClientContext.Clients.CreateBrowseCachedClient();
+            var categories = Task.Run(() => client.GetCategoriesAsync()).Result;
 
-            foreach (var category in categories)
+            foreach (var category in categories.Items)
             {
 
                 var pNode = new DynamicNode
@@ -83,7 +88,7 @@ namespace VirtoCommerce.Web.Helpers.MVC.SiteMap
                         RouteValues = new Dictionary<string, object> { { Constants.Category, category.Id }, { "f_Brand", "apple" } },
                     });
 
-                    var computersCat = categories.FirstOrDefault(
+                    var computersCat = categories.Items.FirstOrDefault(
                         c => c.Code.Equals("computers-tablets", StringComparison.OrdinalIgnoreCase));
 
                     if (computersCat != null)
@@ -139,7 +144,7 @@ namespace VirtoCommerce.Web.Helpers.MVC.SiteMap
                         });
                     }
 
-                    var camCat = categories.FirstOrDefault(
+                    var camCat = categories.Items.FirstOrDefault(
                         c => c.Code.Equals("cameras", StringComparison.OrdinalIgnoreCase));
 
                     if (camCat != null)
@@ -173,7 +178,7 @@ namespace VirtoCommerce.Web.Helpers.MVC.SiteMap
                         });
                     }
 
-                     var tvCat = categories.FirstOrDefault(
+                     var tvCat = categories.Items.FirstOrDefault(
                         c => c.Code.Equals("tv-video", StringComparison.OrdinalIgnoreCase));
 
                     if (tvCat != null)
