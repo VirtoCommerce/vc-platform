@@ -105,7 +105,8 @@ namespace VirtoCommerce.ApiClient
         {
             return await Helper.GetAsync(requestUri.ToString(),
                 () => GetAsyncInternal<T>(requestUri, userId),
-                this.GetCacheTimeOut(requestUri.ToString()));
+                this.GetCacheTimeOut(requestUri.ToString()),
+                ClientContext.Configuration.IsCacheEnabled);
         }
 
         /// <summary>

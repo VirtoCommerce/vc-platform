@@ -85,35 +85,15 @@ namespace VirtoCommerce.ApiClient
         {
             return GetAsync<Category>(CreateRequestUri(String.Format(RelativePaths.Category, categoryId)));
         }
+
+        protected override TimeSpan GetCacheTimeOut(string requestUrl)
+        {
+            if (requestUrl.Contains(RelativePaths.Categories))
+            {
+                return CatalogConfiguration.Instance.Cache.CategoryCollectionTimeout;
+            }
+
+            return base.GetCacheTimeOut(requestUrl);
+        }
     }
-
-    /*
-    public class BrowseCachedClient : BrowseClient
-    {
-        #region Private Variables
-        private readonly bool _isEnabled;
-        private readonly ICacheRepository _cacheRepository = new HttpCacheRepository();
-        #endregion
-
-        public BrowseCachedClient(Uri adminBaseEndpoint, string token)
-            : base(adminBaseEndpoint, token)
-        {
-        }
-
-        public BrowseCachedClient(Uri adminBaseEndpoint, MessageProcessingHandler handler)
-            : base(adminBaseEndpoint, handler)
-        {
-        }
-
-        protected override Task<T> GetAsync<T>(Uri requestUri, string userId = null)
-        {
-            // TODO: vary cache timeout based on url requested, since we know the exact URI for each resource
-            return Helper.GetAsync(requestUri.ToString(),
-                () => base.GetAsync<T>(requestUri, userId),
-                CatalogConfiguration.Instance.Cache.ItemTimeout,
-                true);
-        }
-
-    }
-     * */
 }
