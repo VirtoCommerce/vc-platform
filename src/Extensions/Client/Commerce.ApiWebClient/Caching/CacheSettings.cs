@@ -3,6 +3,8 @@ using VirtoCommerce.ApiWebClient.Helpers;
 
 namespace VirtoCommerce.ApiWebClient.Caching
 {
+    using VirtoCommerce.ApiClient;
+
     public class CacheSettings
     {
         /// <summary>
@@ -86,7 +88,7 @@ namespace VirtoCommerce.ApiWebClient.Caching
                 return IsCachingEnabled && Duration > 0 && (Location == OutputCacheLocation.Any ||
                                                             Location == OutputCacheLocation.Server ||
                                                             Location == OutputCacheLocation.ServerAndClient)
-                                                            && (!AnonymousOnly || AnonymousOnly && !StoreHelper.CustomerSession.IsRegistered);
+                                                            && (!AnonymousOnly || AnonymousOnly && !ClientContext.Session.IsRegistered);
             }
         }
 

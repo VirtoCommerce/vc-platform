@@ -2,11 +2,12 @@
 using System.Linq;
 using System.Web;
 using Microsoft.Practices.ServiceLocation;
-using VirtoCommerce.ApiWebClient.Customer;
-using VirtoCommerce.ApiWebClient.Customer.Services;
 
 namespace VirtoCommerce.ApiWebClient.Modules
 {
+    using VirtoCommerce.ApiClient;
+    using VirtoCommerce.ApiClient.Session;
+
     /// <summary>
     /// Class BaseHttpModule.
     /// </summary>
@@ -20,8 +21,7 @@ namespace VirtoCommerce.ApiWebClient.Modules
         {
             get
             {
-                var session = ServiceLocator.Current.GetInstance<ICustomerSessionService>();
-                return session.CustomerSession;
+                return ClientContext.Session;
             }
         }
 

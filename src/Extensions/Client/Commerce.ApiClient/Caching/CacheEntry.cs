@@ -1,4 +1,4 @@
-﻿namespace VirtoCommerce.ApiWebClient.Caching
+﻿namespace VirtoCommerce.ApiClient.Caching
 {
     internal class CacheEntry
     {

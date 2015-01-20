@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 
-namespace VirtoCommerce.ApiWebClient.Caching
+namespace VirtoCommerce.ApiClient.Caching
 {
     /// <summary>
     /// Thread safe class to manipulate cache locks.

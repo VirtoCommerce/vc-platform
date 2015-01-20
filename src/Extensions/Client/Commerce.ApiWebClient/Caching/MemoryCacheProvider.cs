@@ -7,6 +7,8 @@ using VirtoCommerce.ApiWebClient.Caching.Interfaces;
 
 namespace VirtoCommerce.ApiWebClient.Caching
 {
+    using VirtoCommerce.ApiClient.Caching;
+
     public class MemoryCacheProvider : OutputCacheProvider, IEnumerable<KeyValuePair<string, object>>
     {
         private ICacheRepository _repository;

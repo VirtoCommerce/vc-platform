@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Web;
 
-namespace VirtoCommerce.ApiWebClient.Customer.Services
+namespace VirtoCommerce.ApiClient.Session
 { 
     /// <summary>
     /// Provide access to current customer session info.

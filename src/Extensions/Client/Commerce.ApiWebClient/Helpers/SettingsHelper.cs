@@ -4,14 +4,13 @@ using Microsoft.Practices.ServiceLocation;
 using System.Globalization;
 using System.Threading.Tasks;
 using VirtoCommerce.ApiWebClient.Clients;
-using VirtoCommerce.ApiWebClient.Customer;
-using VirtoCommerce.ApiWebClient.Customer.Services;
 using VirtoCommerce.ApiWebClient.Extensions;
 using VirtoCommerce.Web.Core.DataContracts;
 
 namespace VirtoCommerce.ApiWebClient.Helpers
 {
     using VirtoCommerce.ApiClient;
+    using VirtoCommerce.ApiClient.Session;
     using VirtoCommerce.ApiWebClient.Clients.Extensions;
 
     /// <summary>
@@ -49,7 +48,10 @@ namespace VirtoCommerce.ApiWebClient.Helpers
         /// <value>The customer session service.</value>
         public static ICustomerSession CustomerSession
         {
-            get { return ServiceLocator.Current.GetInstance<ICustomerSessionService>().CustomerSession; }
+            get
+            {
+                return ClientContext.Session;
+            }
         }
 
         public static SeoKeyword GetKeyword(string routeValue, SeoUrlKeywordTypes type, string language = null)
@@ -95,7 +97,6 @@ namespace VirtoCommerce.ApiWebClient.Helpers
         public static string EncodeRouteValue(string routeValue, SeoUrlKeywordTypes type, string language = null)
         {
             routeValue = routeValue.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).Last();
-            var session = CustomerSession;
             var keyword = GetKeyword(routeValue, type, language);
 
             var client = ClientContext.Clients.CreateBrowseCachedClient(language);

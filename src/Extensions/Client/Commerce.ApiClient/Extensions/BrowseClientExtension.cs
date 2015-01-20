@@ -25,5 +25,16 @@ namespace VirtoCommerce.ApiClient.Extensions
             var client = new BrowseClient(new Uri(connectionString), new AzureSubscriptionMessageProcessingHandler(subscriptionKey, "secret"));
             return client;
         }
+
+        public static BrowseCachedClient CreateBrowseCachedClient(this CommerceClients source, string language = "")
+        {
+            var session = ClientContext.Session;
+            language = String.IsNullOrEmpty(language) ? session.Language : language;
+            // http://localhost/admin/api/mp/{0}/{1}/
+            var connectionString = ConnectionHelper.GetConnectionString("VirtoCommerce") + String.Format("{0}/{1}/", session.CatalogId, language);
+            var subscriptionKey = ConfigurationManager.AppSettings["vc-public-apikey"];
+            var client = new BrowseCachedClient(new Uri(connectionString), new AzureSubscriptionMessageProcessingHandler(subscriptionKey, "secret"));
+            return client;
+        }    
     }
 }

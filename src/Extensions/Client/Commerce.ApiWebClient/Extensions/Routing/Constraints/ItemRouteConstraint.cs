@@ -29,7 +29,7 @@ namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Constraints
             }
 
             var encoded = values[parameterName].ToString();
-            var session = StoreHelper.CustomerSession;
+            var session = ClientContext.Session;
             var language = values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : session.Language;
             var productSlug = encoded;
 

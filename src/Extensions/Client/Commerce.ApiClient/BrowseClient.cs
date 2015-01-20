@@ -8,6 +8,9 @@ using VirtoCommerce.Web.Core.DataContracts;
 
 namespace VirtoCommerce.ApiClient
 {
+    using VirtoCommerce.ApiClient.Caching;
+    using VirtoCommerce.Web.Core.Configuration.Catalog;
+
     public class BrowseClient : BaseClient
     {
         protected class RelativePaths
@@ -81,6 +84,40 @@ namespace VirtoCommerce.ApiClient
         public virtual Task<Category> GetCategoryAsync(string categoryId)
         {
             return GetAsync<Category>(CreateRequestUri(String.Format(RelativePaths.Category, categoryId)));
+        }
+    }
+
+
+    public class BrowseCachedClient : BrowseClient
+    {
+        #region Private Variables
+        private readonly bool _isEnabled;
+        private readonly ICacheRepository _cacheRepository = new HttpCacheRepository();
+        #endregion
+
+        public BrowseCachedClient(Uri adminBaseEndpoint, string token)
+            : base(adminBaseEndpoint, token)
+        {
+        }
+
+        public BrowseCachedClient(Uri adminBaseEndpoint, MessageProcessingHandler handler)
+            : base(adminBaseEndpoint, handler)
+        {
+        }
+
+        protected override Task<T> GetAsync<T>(Uri requestUri, string userId = null)
+        {
+            // TODO: vary cache timeout based on url requested, since we know the exact URI for each resource
+            return Helper.GetAsync(requestUri.ToString(),
+                () => base.GetAsync<T>(requestUri, userId),
+                CatalogConfiguration.Instance.Cache.ItemTimeout,
+                true);
+        }
+
+        CacheHelper _cacheHelper;
+        public CacheHelper Helper
+        {
+            get { return _cacheHelper ?? (_cacheHelper = new CacheHelper(_cacheRepository)); }
         }
     }
 }

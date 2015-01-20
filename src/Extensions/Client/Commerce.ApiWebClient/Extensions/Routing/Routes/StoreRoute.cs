@@ -10,6 +10,8 @@ using VirtoCommerce.Web.Core.DataContracts.Store;
 
 namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Routes
 {
+    using VirtoCommerce.ApiClient;
+
     public class StoreRoute : Route
     {
 
@@ -40,7 +42,7 @@ namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Routes
         {
             if (!values.ContainsKey(Constants.Store))
             {
-                values.Add(Constants.Store, StoreHelper.CustomerSession.StoreId);
+                values.Add(Constants.Store, ClientContext.Session.StoreId);
             }
 
             //var storeId = SettingsHelper.SeoDecode(values[Constants.Store].ToString(), SeoUrlKeywordTypes.Store, values[Constants.Language] as string);
@@ -50,7 +52,7 @@ namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Routes
             if (!values.ContainsKey(Constants.Language))
             {
                 values.Add(Constants.Language,
-                    StoreHelper.CustomerSession.Language ??
+                    ClientContext.Session.Language ??
                     StoreHelper.StoreClient.GetCurrentStore().DefaultLanguage);
             }
 
@@ -142,9 +144,9 @@ namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Routes
                 if (pathSegments.Length == 0)
                 {
                     values.Add(Constants.Language,
-                        StoreHelper.CustomerSession.Language ??
+                        ClientContext.Session.Language ??
                         StoreHelper.StoreClient.GetCurrentStore().DefaultLanguage);
-                    values.Add(Constants.Store, StoreHelper.CustomerSession.StoreId);
+                    values.Add(Constants.Store, ClientContext.Session.StoreId);
                 }
                 else
                 {
@@ -162,7 +164,7 @@ namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Routes
                     else
                     {
                         values.Add(Constants.Language,
-                        StoreHelper.CustomerSession.Language ??
+                        ClientContext.Session.Language ??
                         StoreHelper.StoreClient.GetCurrentStore().DefaultLanguage);
                     }
 
@@ -180,7 +182,7 @@ namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Routes
                     }
                     else
                     {
-                        values.Add(Constants.Store, StoreHelper.CustomerSession.StoreId);
+                        values.Add(Constants.Store, ClientContext.Session.StoreId);
                     }
 
                     int startIndex;

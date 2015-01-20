@@ -8,6 +8,8 @@ using VirtoCommerce.ApiWebClient.Helpers;
 
 namespace VirtoCommerce.ApiWebClient.Extensions
 {
+    using VirtoCommerce.ApiClient;
+
     public static class StringExtensions
     {
         /// <summary>
@@ -39,7 +41,7 @@ namespace VirtoCommerce.ApiWebClient.Extensions
         /// <returns></returns>
         public static string Title(this string title, string formatString)
         {
-            var storeName = StoreHelper.CustomerSession.StoreName;
+            var storeName = ClientContext.Session.StoreName;
             return String.IsNullOrEmpty(storeName) ? title : String.Format(formatString, title, storeName);
         }
 

@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using VirtoCommerce.ApiWebClient.Caching;
-using VirtoCommerce.ApiWebClient.Clients;
-using VirtoCommerce.ApiWebClient.Customer;
 using VirtoCommerce.ApiWebClient.Extensions;
 using VirtoCommerce.ApiWebClient.Helpers;
 using VirtoCommerce.Web.Converters;
@@ -16,6 +14,7 @@ using VirtoCommerce.Web.Models;
 namespace VirtoCommerce.Web.Controllers
 {
     using VirtoCommerce.ApiClient;
+    using VirtoCommerce.ApiClient.Session;
     using VirtoCommerce.ApiWebClient.Clients.Extensions;
 
     [RoutePrefix("search")]

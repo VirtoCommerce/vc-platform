@@ -1,5 +1,5 @@
 ﻿
-namespace VirtoCommerce.ApiWebClient.Customer.Services
+namespace VirtoCommerce.ApiClient.Session
 {
     public interface ICustomerSessionService
     {

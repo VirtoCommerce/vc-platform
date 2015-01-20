@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Practices.ServiceLocation;
 using MvcSiteMapProvider;
-using VirtoCommerce.ApiWebClient.Customer;
-using VirtoCommerce.ApiWebClient.Customer.Services;
 
 namespace VirtoCommerce.ApiWebClient.Providers
 {
+    using VirtoCommerce.ApiClient;
+    using VirtoCommerce.ApiClient.Session;
+
     /// <summary>
     /// Filtered SiteMapNode Visibility Provider.
     /// 
@@ -25,8 +26,7 @@ namespace VirtoCommerce.ApiWebClient.Providers
 		{
 			get
 			{
-				var session = ServiceLocator.Current.GetInstance<ICustomerSessionService>();
-				return session.CustomerSession;
+                return ClientContext.Session;
 			}
 		}
 

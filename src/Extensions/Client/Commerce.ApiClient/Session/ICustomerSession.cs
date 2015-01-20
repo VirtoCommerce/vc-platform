@@ -1,7 +1,7 @@
 ﻿using System;
 using VirtoCommerce.Web.Core.DataContracts;
 
-namespace VirtoCommerce.ApiWebClient.Customer
+namespace VirtoCommerce.ApiClient.Session
 {
     /// <summary>
     /// Holds current state of customer session

@@ -58,12 +58,21 @@
   <ItemGroup>
     <Compile Include="BaseClient.cs" />
     <Compile Include="BrowseClient.cs" />
+    <Compile Include="Caching\CacheEntries.cs" />
+    <Compile Include="Caching\CacheEntry.cs" />
+    <Compile Include="Caching\CacheHelper.cs" />
+    <Compile Include="Caching\HttpCacheRepository.cs" />
+    <Compile Include="Caching\ICacheRepository.cs" />
     <Compile Include="ClientContext.cs" />
     <Compile Include="CommerceClients.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Extensions\SeoClientExtensions.cs" />
     <Compile Include="Extensions\StoreClientExtensions.cs" />
     <Compile Include="SeoClient.cs" />
+    <Compile Include="Session\CustomerSession.cs" />
+    <Compile Include="Session\CustomerSessionService.cs" />
+    <Compile Include="Session\ICustomerSession.cs" />
+    <Compile Include="Session\ICustomerSessionService.cs" />
     <Compile Include="StoreClient.cs" />
     <Compile Include="ContentClient.cs" />
     <Compile Include="Extensions\BrowseClientExtension.cs" />

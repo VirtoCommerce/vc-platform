@@ -2,12 +2,13 @@
 using System.Globalization;
 using System.Web.Http.Filters;
 using Microsoft.Practices.ServiceLocation;
-using VirtoCommerce.ApiWebClient.Customer;
-using VirtoCommerce.ApiWebClient.Customer.Services;
 
 namespace VirtoCommerce.ApiWebClient.Extensions.Filters
 {
-	/// <summary>
+    using VirtoCommerce.ApiClient;
+    using VirtoCommerce.ApiClient.Session;
+
+    /// <summary>
 	/// Class LocalizeWebApiAttribute.
 	/// </summary>
 	public class LocalizeWebApiAttribute : ActionFilterAttribute
@@ -18,11 +19,7 @@ namespace VirtoCommerce.ApiWebClient.Extensions.Filters
 		/// <value>The customer session.</value>
 		private static ICustomerSession CustomerSession
 		{
-			get
-			{
-				var session = ServiceLocator.Current.GetInstance<ICustomerSessionService>();
-				return session.CustomerSession;
-			}
+            get { return ClientContext.Session; }
 		}
 		/// <summary>
 		/// Occurs before the action method is invoked.

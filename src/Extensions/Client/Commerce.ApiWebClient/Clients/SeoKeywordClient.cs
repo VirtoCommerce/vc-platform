@@ -4,13 +4,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using VirtoCommerce.ApiClient;
 using VirtoCommerce.ApiClient.Extensions;
-using VirtoCommerce.ApiWebClient.Caching;
 using VirtoCommerce.ApiWebClient.Caching.Interfaces;
 using VirtoCommerce.Web.Core.Configuration.Application;
 using VirtoCommerce.Web.Core.DataContracts;
 
 namespace VirtoCommerce.ApiWebClient.Clients
 {
+    using VirtoCommerce.ApiClient.Caching;
+
+    using CacheHelper = VirtoCommerce.ApiWebClient.Caching.CacheHelper;
+
     public class SeoKeywordClient
     {
         #region Cache Constants

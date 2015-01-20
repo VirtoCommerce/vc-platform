@@ -9,9 +9,11 @@ namespace VirtoCommerce.ApiWebClient.Clients
     using System.Net.Http;
 
     using VirtoCommerce.ApiClient;
-    using VirtoCommerce.ApiWebClient.Caching;
+    using VirtoCommerce.ApiClient.Caching;
     using VirtoCommerce.ApiWebClient.Caching.Interfaces;
     using VirtoCommerce.Web.Core.Configuration.Catalog;
+
+    using CacheHelper = VirtoCommerce.ApiWebClient.Caching.CacheHelper;
 
     public class BrowseCachedClient : BrowseClient
     {

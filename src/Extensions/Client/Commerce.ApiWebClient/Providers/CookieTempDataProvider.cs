@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
-using VirtoCommerce.ApiWebClient.Customer;
 
 namespace VirtoCommerce.ApiWebClient.Providers
 {
+    using VirtoCommerce.ApiClient;
+    using VirtoCommerce.ApiClient.Session;
 
     public class CookieTempDataProvider : ITempDataProvider
     {
+
         const string CookieName = "TempData";
 
         public void SaveTempData(

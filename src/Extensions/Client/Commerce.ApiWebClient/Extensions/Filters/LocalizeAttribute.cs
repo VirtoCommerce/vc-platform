@@ -4,14 +4,15 @@ using System.Linq;
 using System.Threading;
 using System.Web.Mvc;
 using Microsoft.Practices.ServiceLocation;
-using VirtoCommerce.ApiWebClient.Clients;
-using VirtoCommerce.ApiWebClient.Customer;
-using VirtoCommerce.ApiWebClient.Customer.Services;
 
 namespace VirtoCommerce.ApiWebClient.Extensions.Filters
 {
+    using VirtoCommerce.ApiClient;
+    using VirtoCommerce.ApiClient.Session;
 
-	/// <summary>
+    using StoreClient = VirtoCommerce.ApiWebClient.Clients.StoreClient;
+
+    /// <summary>
 	/// Class LocalizeAttribute.
 	/// </summary>
 	public class LocalizeAttribute : ActionFilterAttribute
@@ -20,14 +21,13 @@ namespace VirtoCommerce.ApiWebClient.Extensions.Filters
 		/// Gets the customer session.
 		/// </summary>
 		/// <value>The customer session.</value>
-		private static ICustomerSession CustomerSession
-		{
-			get
-			{
-				var session = ServiceLocator.Current.GetInstance<ICustomerSessionService>();
-				return session.CustomerSession;
-			}
-		}
+        public ICustomerSession CustomerSession
+        {
+            get
+            {
+                return ClientContext.Session;
+            }
+        }
 
 		/// <summary>
 		/// Gets the store client.

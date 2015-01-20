@@ -121,8 +121,6 @@
   <ItemGroup>
     <Compile Include="Caching\ActionSettings.cs" />
     <Compile Include="Caching\ActionSettingsSerialiser.cs" />
-    <Compile Include="Caching\CacheEntries.cs" />
-    <Compile Include="Caching\CacheEntry.cs" />
     <Compile Include="Caching\CacheHeadersHelper.cs" />
     <Compile Include="Caching\CacheHelper.cs" />
     <Compile Include="Caching\CacheItem.cs" />
@@ -133,8 +131,6 @@
     <Compile Include="Caching\EncryptingActionSettingsSerialiser.cs" />
     <Compile Include="Caching\Encryptor.cs" />
     <Compile Include="Caching\HtmlHelperExtensions.cs" />
-    <Compile Include="Caching\HttpCacheRepository.cs" />
-    <Compile Include="Caching\Interfaces\ICacheRepository.cs" />
     <Compile Include="Clients\BrowseCachedClient.cs" />
     <Compile Include="Clients\DynamicContentClient.cs" />
     <Compile Include="Clients\Extensions\CachedClientExtensions.cs" />
@@ -194,10 +190,6 @@
     <Compile Include="Caching\OutputCache.cs" />
     <Compile Include="Caching\OutputCacheManager.cs" />
     <Compile Include="Caching\OutputCacheOptions.cs" />
-    <Compile Include="Customer\CustomerSession.cs" />
-    <Compile Include="Customer\ICustomerSession.cs" />
-    <Compile Include="Customer\Services\CustomerSessionService.cs" />
-    <Compile Include="Customer\Services\ICustomerSessionService.cs" />
     <Compile Include="Extensions\AssemblyExtensions.cs" />
     <Compile Include="Extensions\HtmlHelperExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />

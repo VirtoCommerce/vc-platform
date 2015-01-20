@@ -2,13 +2,14 @@
 using System;
 using System.Globalization;
 using System.Linq;
-using VirtoCommerce.ApiWebClient.Customer;
-using VirtoCommerce.ApiWebClient.Customer.Services;
 using VirtoCommerce.ApiWebClient.Helpers;
 using VirtoCommerce.Web.Core.DataContracts;
 
 namespace VirtoCommerce.ApiWebClient.Extensions
 {
+    using VirtoCommerce.ApiClient;
+    using VirtoCommerce.ApiClient.Session;
+
     public static class SeoKeywordExtensions
     {
 
@@ -18,7 +19,7 @@ namespace VirtoCommerce.ApiWebClient.Extensions
         /// <value>The customer session service.</value>
         public static ICustomerSession CustomerSession
         {
-            get { return ServiceLocator.Current.GetInstance<ICustomerSessionService>().CustomerSession; }
+            get { return ClientContext.Session; }
         }
 
         /// <summary>

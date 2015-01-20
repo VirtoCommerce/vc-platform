@@ -7,7 +7,7 @@ using System.Web;
 using System.Web.Security;
 using VirtoCommerce.Web.Core.DataContracts;
 
-namespace VirtoCommerce.ApiWebClient.Customer
+namespace VirtoCommerce.ApiClient.Session
 {
     /// <summary>
     /// Class CustomerSession.

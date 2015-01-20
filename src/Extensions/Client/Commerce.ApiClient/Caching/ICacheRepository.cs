@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
 
-namespace VirtoCommerce.ApiWebClient.Caching.Interfaces
+namespace VirtoCommerce.ApiClient.Caching
 {
     public interface ICacheRepository
     {

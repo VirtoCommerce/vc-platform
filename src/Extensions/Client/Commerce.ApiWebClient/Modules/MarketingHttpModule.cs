@@ -2,13 +2,13 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
-using VirtoCommerce.ApiWebClient.Customer;
 using VirtoCommerce.ApiWebClient.Extensions;
 using VirtoCommerce.ApiWebClient.Helpers;
 
 namespace VirtoCommerce.ApiWebClient.Modules
 {
     using VirtoCommerce.ApiClient;
+    using VirtoCommerce.ApiClient.Session;
     using VirtoCommerce.ApiWebClient.Clients;
     using VirtoCommerce.ApiWebClient.Clients.Extensions;
 

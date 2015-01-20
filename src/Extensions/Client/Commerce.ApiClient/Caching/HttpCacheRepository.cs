@@ -2,9 +2,8 @@
 using System.Collections;
 using System.Web;
 using System.Web.Caching;
-using VirtoCommerce.ApiWebClient.Caching.Interfaces;
 
-namespace VirtoCommerce.ApiWebClient.Caching
+namespace VirtoCommerce.ApiClient.Caching
 {
 	public class HttpCacheRepository : ICacheRepository
 	{

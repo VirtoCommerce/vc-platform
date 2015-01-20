@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
-using VirtoCommerce.ApiWebClient.Caching.Interfaces;
 
-namespace VirtoCommerce.ApiWebClient.Caching
+namespace VirtoCommerce.ApiClient.Caching
 {
-    using VirtoCommerce.ApiClient.Caching;
-
     public class CacheHelper
     {
         private readonly ICacheRepository _cacheRepository;

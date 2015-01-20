@@ -16,7 +16,7 @@ namespace VirtoCommerce.ApiWebClient.Clients.Extensions
     {
         public static BrowseCachedClient CreateBrowseCachedClient(this CommerceClients source, string language = "")
         {
-            var session = StoreHelper.CustomerSession;
+            var session = ClientContext.Session;
             language = String.IsNullOrEmpty(language) ? session.Language : language;
             // http://localhost/admin/api/mp/{0}/{1}/
             var connectionString = ConnectionHelper.GetConnectionString("VirtoCommerce") + String.Format("{0}/{1}/", session.CatalogId, language);

@@ -2,18 +2,15 @@
 using System.Threading.Tasks;
 using VirtoCommerce.ApiClient;
 using VirtoCommerce.ApiClient.Extensions;
-using VirtoCommerce.ApiWebClient.Customer.Services;
 using VirtoCommerce.Web.Core.DataContracts.Security;
 
 namespace VirtoCommerce.ApiWebClient.Clients
 {
     public class SecurityClient
     {
-        private ICustomerSessionService _customerSession;
 
-        public SecurityClient(ICustomerSessionService customerSession)
+        public SecurityClient()
         {
-            _customerSession = customerSession;
         }
 
         public ApiClient.SecurityClient SecurityApiClient

@@ -4,15 +4,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using VirtoCommerce.ApiClient;
 using VirtoCommerce.ApiClient.Extensions;
-using VirtoCommerce.ApiWebClient.Caching;
-using VirtoCommerce.ApiWebClient.Caching.Interfaces;
-using VirtoCommerce.ApiWebClient.Customer.Services;
 using VirtoCommerce.ApiWebClient.Extensions;
 using VirtoCommerce.Web.Core.Configuration.Store;
 using VirtoCommerce.Web.Core.DataContracts.Store;
 
 namespace VirtoCommerce.ApiWebClient.Clients
 {
+    using VirtoCommerce.ApiClient.Caching;
+    using VirtoCommerce.ApiClient.Session;
+
+    using CacheHelper = VirtoCommerce.ApiWebClient.Caching.CacheHelper;
+
     public class StoreClient
     {
         #region Cache Constants
