@@ -60,7 +60,7 @@
 					<Setter Property="Margin" Value="4,10,22,0" />
 					<Setter Property="LineStackingStrategy" Value="BlockLineHeight" />
 					<Setter Property="HorizontalAlignment" Value="Left"/>
-					<Setter Property="Foreground" Value="Black" />
+					<Setter Property="Foreground" Value="Red" />
 					<Setter Property="TextTrimming" Value="CharacterEllipsis"/>
 					<Setter Property="TextWrapping" Value="NoWrap"/>
 					<Setter Property="Visibility" Value="Visible"/>

@@ -25,6 +25,9 @@ namespace VirtoCommerce.Web
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
             routes.IgnoreRoute(".html");
 
+            //This makes sure index.html (or any other deafult document is opened for empty url
+            routes.IgnoreRoute("");
+
             routes.MapRoute(
                 "FailWhale",
                 "FailWhale/{action}/{id}", new { controller = "Error", action = "FailWhale", id = UrlParameter.Optional });
@@ -134,7 +137,7 @@ namespace VirtoCommerce.Web
                 "{controller}/{action}/{id}", // URL with parameters
                 new
                 {
-                    action = "Index", 
+                    action = "Index",
                     id = UrlParameter.Optional
                 }, // Parameter defaults
                 new[] { "VirtoCommerce.Web.Controllers" });

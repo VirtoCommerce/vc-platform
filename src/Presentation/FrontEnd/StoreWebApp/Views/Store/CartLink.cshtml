@@ -5,12 +5,12 @@
 }
 @if (Model.LineItems.Any())
 	{
-		<a href="@Url.Action("Index","Cart")" title="@("My Cart".Localize())" class="top-link-cart">
+		<a href="@Url.Action("Index","Cart")" title="@("My Cart".Localize())" class="top-link-cart" target="_blank">
 			@String.Format("My Cart ({0} {1})".Localize(), @Model.LineItems.Count(), Model.LineItems.Count() > 1 ? "items".Localize() : "item".Localize())
 		</a>
-}
-	else
-	{
-		<a href="@Url.Action("Index","Cart")" title="@("My Cart".Localize())" class="top-link-cart">@("My Cart".Localize())</a>
+    }
+else
+{
+    <a href="@Url.Action("Index","Cart")" title="@("My Cart".Localize())" class="top-link-cart" target="_blank">@("My Cart".Localize())</a>
 }
 	
