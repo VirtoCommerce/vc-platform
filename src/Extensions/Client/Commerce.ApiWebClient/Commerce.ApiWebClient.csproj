@@ -131,9 +131,7 @@
     <Compile Include="Caching\EncryptingActionSettingsSerialiser.cs" />
     <Compile Include="Caching\Encryptor.cs" />
     <Compile Include="Caching\HtmlHelperExtensions.cs" />
-    <Compile Include="Clients\BrowseCachedClient.cs" />
     <Compile Include="Clients\DynamicContentClient.cs" />
-    <Compile Include="Clients\Extensions\CachedClientExtensions.cs" />
     <Compile Include="Clients\SecurityClient.cs" />
     <Compile Include="Clients\SeoKeywordClient.cs" />
     <Compile Include="Constants.cs" />

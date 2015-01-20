@@ -87,7 +87,7 @@ namespace VirtoCommerce.ApiClient
         }
     }
 
-
+    /*
     public class BrowseCachedClient : BrowseClient
     {
         #region Private Variables
@@ -114,10 +114,6 @@ namespace VirtoCommerce.ApiClient
                 true);
         }
 
-        CacheHelper _cacheHelper;
-        public CacheHelper Helper
-        {
-            get { return _cacheHelper ?? (_cacheHelper = new CacheHelper(_cacheRepository)); }
-        }
     }
+     * */
 }

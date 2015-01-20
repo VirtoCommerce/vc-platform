@@ -11,6 +11,8 @@ using VirtoCommerce.Web.Core.DataContracts;
 
 namespace VirtoCommerce.ApiClient
 {
+    using VirtoCommerce.ApiClient.Caching;
+
     public class BaseClient
     {
         private const string UnknownErrorCode = "UnknownError";
@@ -82,7 +84,7 @@ namespace VirtoCommerce.ApiClient
         /// <param name="requestUri">The request URI.</param>
         /// <param name="userId">The user id. Only required by the tenant API.</param>
         /// <returns>Response object.</returns>
-        protected virtual async Task<T> GetAsync<T>(Uri requestUri, string userId = null) where T : class 
+        protected virtual async Task<T> GetAsyncInternal<T>(Uri requestUri, string userId = null) where T : class 
         {
             var message = new HttpRequestMessage(HttpMethod.Get, requestUri);
 
@@ -97,6 +99,13 @@ namespace VirtoCommerce.ApiClient
 
                 return await response.Content.ReadAsAsync<T>();
             }
+        }
+
+        protected virtual async Task<T> GetAsync<T>(Uri requestUri, string userId = null) where T:class
+        {
+            return await Helper.GetAsync(requestUri.ToString(),
+                () => GetAsyncInternal<T>(requestUri, userId),
+                this.GetCacheTimeOut(requestUri.ToString()));
         }
 
         /// <summary>
@@ -249,5 +258,32 @@ namespace VirtoCommerce.ApiClient
 
             disposed = true;
         }
+
+        #region Cache Implementation
+        CacheHelper _cacheHelper;
+        private CacheHelper Helper
+        {
+            get { return _cacheHelper ?? (_cacheHelper = new CacheHelper(_cacheRepository)); }
+        }
+
+        private ICacheRepository _cacheRepository = new HttpCacheRepository();
+        protected virtual ICacheRepository CacheRepository
+        {
+            get
+            {
+                if (_cacheRepository == null)
+                {
+                    _cacheRepository = new HttpCacheRepository();
+                }
+
+                return _cacheRepository;
+            }
+        }
+
+        protected virtual TimeSpan GetCacheTimeOut(string requestUrl)
+        {
+            return new TimeSpan(0,0,0,30);
+        }
+        #endregion
     }
 }

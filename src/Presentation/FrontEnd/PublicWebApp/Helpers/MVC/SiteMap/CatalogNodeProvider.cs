@@ -11,8 +11,7 @@ using VirtoCommerce.ApiWebClient.Helpers;
 namespace VirtoCommerce.Web.Helpers.MVC.SiteMap
 {
     using VirtoCommerce.ApiClient;
-    using VirtoCommerce.ApiWebClient.Clients;
-    using VirtoCommerce.ApiWebClient.Clients.Extensions;
+    using VirtoCommerce.ApiClient.Extensions;
 
     public class CatalogNodeProvider : DynamicNodeProviderBase
     {
@@ -24,7 +23,7 @@ namespace VirtoCommerce.Web.Helpers.MVC.SiteMap
 
             var nodes = new List<DynamicNode>();
             var order = 0;
-            var client = ClientContext.Clients.CreateBrowseCachedClient();
+            var client = ClientContext.Clients.CreateBrowseClient(session.CatalogId, session.Language);
             var categories = Task.Run(() => client.GetCategoriesAsync()).Result;
 
             foreach (var category in categories.Items)

@@ -8,7 +8,7 @@
         {
             Clients = new CommerceClients();
             SessionService = new CustomerSessionService();
-            //Configuration = new CommerceConfiguration();
+            Configuration = new CommerceConfiguration();
         }
 
         /// <summary>
@@ -25,7 +25,7 @@
         /// Gets utilities for easily retrieving configuration settings across
         /// a variety of platform appropriate sources.
         /// </summary>
-        //public static CommerceConfiguration Configuration { get; private set; }
+        public static CommerceConfiguration Configuration { get; private set; }
 
         public static ICustomerSession Session
         {

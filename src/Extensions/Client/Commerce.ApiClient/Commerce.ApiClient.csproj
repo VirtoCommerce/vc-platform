@@ -65,6 +65,7 @@
     <Compile Include="Caching\ICacheRepository.cs" />
     <Compile Include="ClientContext.cs" />
     <Compile Include="CommerceClients.cs" />
+    <Compile Include="CommerceConfiguration.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Extensions\SeoClientExtensions.cs" />
     <Compile Include="Extensions\StoreClientExtensions.cs" />

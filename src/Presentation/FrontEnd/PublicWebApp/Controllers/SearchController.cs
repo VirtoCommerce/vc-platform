@@ -14,8 +14,8 @@ using VirtoCommerce.Web.Models;
 namespace VirtoCommerce.Web.Controllers
 {
     using VirtoCommerce.ApiClient;
+    using VirtoCommerce.ApiClient.Extensions;
     using VirtoCommerce.ApiClient.Session;
-    using VirtoCommerce.ApiWebClient.Clients.Extensions;
 
     [RoutePrefix("search")]
     public class SearchController : ControllerBase
@@ -71,7 +71,7 @@ namespace VirtoCommerce.Web.Controllers
         [DonutOutputCache(CacheProfile = "CatalogCache", VaryByCustom = "currency;filters;pricelist")]
         public async Task<ActionResult> Category(CategoryPathModel category, BrowseQuery query)
         {
-            var client = ClientContext.Clients.CreateBrowseCachedClient();
+            var client = ClientContext.Clients.CreateBrowseClient();
             var cat = await client.GetCategoryAsync(category.Category);
 
             if (cat != null)
@@ -104,7 +104,7 @@ namespace VirtoCommerce.Web.Controllers
 
             if (!string.IsNullOrWhiteSpace(categoryUrl.CategoryCode))
             {
-                var client = ClientContext.Clients.CreateBrowseCachedClient();
+                var client = ClientContext.Clients.CreateBrowseClient();
                 var category = Task.Run(() => client.GetCategoryByCodeAsync(categoryUrl.CategoryCode)).Result;
 
                 if (category != null)
@@ -154,7 +154,7 @@ namespace VirtoCommerce.Web.Controllers
             query.SortDirection = "desc".Equals(query.SortDirection, StringComparison.OrdinalIgnoreCase) ? "desc" : "asc";
 
             session = session ?? StoreHelper.CustomerSession;
-            var client = ClientContext.Clients.CreateBrowseCachedClient();
+            var client = ClientContext.Clients.CreateBrowseClient(session.CatalogId, session.Language);
             var results = await client.GetProductsAsync(query, responseGroup);
             var retVal = CreateSearchResult(results, query);
 

@@ -12,9 +12,12 @@ namespace VirtoCommerce.ApiClient.Extensions
 
     public static class ContentClientExtension
     {
-        public static ContentClient CreateDefaultContentClient(this CommerceClients source, params object[] options)
+        public static ContentClient CreateDefaultContentClient(this CommerceClients source, string language = "")
         {
-            var connectionString = string.Format(DynamicContentConfiguration.Instance.Connection.DataServiceUri, options);
+            var session = ClientContext.Session;
+            language = String.IsNullOrEmpty(language) ? session.Language : language;
+
+            var connectionString = ClientContext.Configuration.ConnectionString + String.Format("{0}/", language);
             return CreateContentClient(source, connectionString);
         }
 

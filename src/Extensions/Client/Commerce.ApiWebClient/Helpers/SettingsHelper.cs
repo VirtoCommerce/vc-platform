@@ -10,8 +10,8 @@ using VirtoCommerce.Web.Core.DataContracts;
 namespace VirtoCommerce.ApiWebClient.Helpers
 {
     using VirtoCommerce.ApiClient;
+    using VirtoCommerce.ApiClient.Extensions;
     using VirtoCommerce.ApiClient.Session;
-    using VirtoCommerce.ApiWebClient.Clients.Extensions;
 
     /// <summary>
     /// Class SettingsHelper.
@@ -64,7 +64,7 @@ namespace VirtoCommerce.ApiWebClient.Helpers
             var langInfo = TryGetCultureInfo(language);
             language = langInfo != null ? langInfo.Name : language;
             var keyword = new SeoKeyword { KeywordType = type, Keyword = routeValue, KeywordValue = routeValue, Language = language };
-            var client = ClientContext.Clients.CreateBrowseCachedClient(language);
+            var client = ClientContext.Clients.CreateBrowseClient(session.CatalogId, language);
             switch (type)
             {
                 case SeoUrlKeywordTypes.Store:
@@ -99,7 +99,7 @@ namespace VirtoCommerce.ApiWebClient.Helpers
             routeValue = routeValue.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).Last();
             var keyword = GetKeyword(routeValue, type, language);
 
-            var client = ClientContext.Clients.CreateBrowseCachedClient(language);
+            var client = ClientContext.Clients.CreateBrowseClient(ClientContext.Session.CatalogId, language);
 
             if (keyword != null)
             {

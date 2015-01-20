@@ -11,7 +11,7 @@ using VirtoCommerce.ApiWebClient.Helpers;
 
 namespace VirtoCommerce.Web.Controllers
 {
-    using VirtoCommerce.ApiWebClient.Clients.Extensions;
+    using VirtoCommerce.ApiClient.Extensions;
     using VirtoCommerce.Web.Core.DataContracts;
 
     /// <summary>
@@ -33,7 +33,7 @@ namespace VirtoCommerce.Web.Controllers
         {
             try
             {
-                var client = ClientContext.Clients.CreateBrowseCachedClient();
+                var client = ClientContext.Clients.CreateBrowseClient(ClientContext.Session.CatalogId, ClientContext.Session.Language);
                 var product = Task.Run(() => client.GetProductByCodeAsync(itemCode, ItemResponseGroups.ItemMedium)).Result;
                 var model = product.ToWebModel();
                 return PartialView("DisplayTemplates/Item", model);

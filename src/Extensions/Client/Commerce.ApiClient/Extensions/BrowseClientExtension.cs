@@ -12,29 +12,25 @@ namespace VirtoCommerce.ApiClient.Extensions
 
     public static class BrowseClientExtension
     {
-        public static BrowseClient CreateBrowseClient(this CommerceClients source, params object[] options)
+        public static BrowseClient CreateBrowseClient(this CommerceClients source)
         {
-            var connectionString = string.Format(CatalogConfiguration.Instance.Connection.DataServiceUri, options);
-            return CreateBrowseClient(source, connectionString);
+            return source.CreateBrowseClient(ClientContext.Session.CatalogId, ClientContext.Session.Language);
         }
 
-        public static BrowseClient CreateBrowseClient(this CommerceClients source, string serviceUrl)
+        public static BrowseClient CreateBrowseClient(this CommerceClients source, string catalogId, string language)
+        {
+            // http://localhost/admin/api/mp/{0}/{1}/
+            var connectionString = ClientContext.Configuration.ConnectionString + String.Format("{0}/{1}/", catalogId, language);
+            return CreateBrowseClientWithUri(source, connectionString);
+        }
+
+        public static BrowseClient CreateBrowseClientWithUri(this CommerceClients source, string serviceUrl)
         {
             var connectionString = serviceUrl;
             var subscriptionKey = ConfigurationManager.AppSettings["vc-public-apikey"];
             var client = new BrowseClient(new Uri(connectionString), new AzureSubscriptionMessageProcessingHandler(subscriptionKey, "secret"));
             return client;
         }
-
-        public static BrowseCachedClient CreateBrowseCachedClient(this CommerceClients source, string language = "")
-        {
-            var session = ClientContext.Session;
-            language = String.IsNullOrEmpty(language) ? session.Language : language;
-            // http://localhost/admin/api/mp/{0}/{1}/
-            var connectionString = ConnectionHelper.GetConnectionString("VirtoCommerce") + String.Format("{0}/{1}/", session.CatalogId, language);
-            var subscriptionKey = ConfigurationManager.AppSettings["vc-public-apikey"];
-            var client = new BrowseCachedClient(new Uri(connectionString), new AzureSubscriptionMessageProcessingHandler(subscriptionKey, "secret"));
-            return client;
-        }    
+ 
     }
 }

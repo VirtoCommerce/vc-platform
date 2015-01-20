@@ -8,9 +8,8 @@ using VirtoCommerce.ApiWebClient.Helpers;
 namespace VirtoCommerce.ApiWebClient.Modules
 {
     using VirtoCommerce.ApiClient;
+    using VirtoCommerce.ApiClient.Extensions;
     using VirtoCommerce.ApiClient.Session;
-    using VirtoCommerce.ApiWebClient.Clients;
-    using VirtoCommerce.ApiWebClient.Clients.Extensions;
 
     /// <summary>
     /// Class MarketingHttpModule.
@@ -170,7 +169,7 @@ namespace VirtoCommerce.ApiWebClient.Modules
 
                     if (!string.IsNullOrEmpty(categoryPath)) 
                     {
-                        var client = ClientContext.Clients.CreateBrowseCachedClient();
+                        var client = ClientContext.Clients.CreateBrowseClient(session.CatalogId, session.Language);
                         var categorySlug = categoryPath.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).Last();
                         var category = Task.Run(()=>client.GetCategoryAsync(categorySlug)).Result;
 
