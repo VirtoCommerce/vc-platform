@@ -50,8 +50,6 @@ namespace VirtoCommerce.Web
             #region MVC Helpers
 
             container.RegisterType<StoreClient>();
-            container.RegisterType<SeoKeywordClient>();
-            //container.RegisterType<CatalogClient>();
             container.RegisterType<SecurityClient>();
 
             #endregion

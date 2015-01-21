@@ -18,29 +18,6 @@ namespace VirtoCommerce.ApiWebClient.Helpers
     /// </summary>
 	public class SettingsHelper
 	{
-        /// <summary>
-        /// Gets the settings client.
-        /// </summary>
-        /// <value>The settings client.</value>
-        //public static SettingsClient SettingsClient
-        //{
-        //    get
-        //    {
-        //        return ServiceLocator.Current.GetInstance<SettingsClient>();
-        //    }
-        //}
-
-        /// <summary>
-        /// Gets the seo keyword client.
-        /// </summary>
-        /// <value>The seo keyword client.</value>
-        public static SeoKeywordClient SeoKeywordClient
-        {
-            get
-            {
-                return ServiceLocator.Current.GetInstance<SeoKeywordClient>();
-            }
-        }
 
         /// <summary>
         /// Gets the customer session service.
@@ -96,29 +73,32 @@ namespace VirtoCommerce.ApiWebClient.Helpers
 
         public static string EncodeRouteValue(string routeValue, SeoUrlKeywordTypes type, string language = null)
         {
-            routeValue = routeValue.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).Last();
-            var keyword = GetKeyword(routeValue, type, language);
-
-            var client = ClientContext.Clients.CreateBrowseClient(ClientContext.Session.CatalogId, language);
-
-            if (keyword != null)
+            if (!string.IsNullOrEmpty(routeValue))
             {
-                switch (type)
+                routeValue = routeValue.Split(new[] {'/'}, StringSplitOptions.RemoveEmptyEntries).Last();
+                var keyword = GetKeyword(routeValue, type, language);
+
+                var client = ClientContext.Clients.CreateBrowseClient(ClientContext.Session.CatalogId, language);
+
+                if (keyword != null)
                 {
-                    case SeoUrlKeywordTypes.Store:
-                    case SeoUrlKeywordTypes.Item:
-                        return keyword.Keyword;
-                    case SeoUrlKeywordTypes.Category:
-                        var category =
-                            Task.Run(
-                                () =>
-                                    client.GetCategoryAsync(routeValue))
-                                .Result;
-                        if (category != null)
-                        {
-                            return string.Join("/", category.BuildOutline(language).Select(x => x.Value));
-                        }
-                        break;
+                    switch (type)
+                    {
+                        case SeoUrlKeywordTypes.Store:
+                        case SeoUrlKeywordTypes.Item:
+                            return keyword.Keyword;
+                        case SeoUrlKeywordTypes.Category:
+                            var category =
+                                Task.Run(
+                                    () =>
+                                        client.GetCategoryAsync(routeValue))
+                                    .Result;
+                            if (category != null)
+                            {
+                                return string.Join("/", category.BuildOutline(language).Select(x => x.Value));
+                            }
+                            break;
+                    }
                 }
             }
 

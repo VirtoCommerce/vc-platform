@@ -189,10 +189,17 @@ namespace VirtoCommerce.ApiClient
         {
             if (!response.IsSuccessStatusCode)
             {
+                //Do not treat not found as error
+                if (response.StatusCode == HttpStatusCode.NotFound)
+                {
+                    return;
+                }
+
                 if (response.StatusCode == HttpStatusCode.Unauthorized)
                 {
                     throw new UnauthorizedAccessException();
                 }
+
 
                 ManagementServiceError managementServiceError = null;
 
@@ -228,9 +235,14 @@ namespace VirtoCommerce.ApiClient
         private MediaTypeFormatter CreateMediaTypeFormatter()
         {
             //MediaTypeFormatter formatter;
-            var formatter = new JsonMediaTypeFormatter();
-            formatter.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Ignore;
-            formatter.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+            var formatter = new JsonMediaTypeFormatter
+            {
+                SerializerSettings =
+                {
+                    DefaultValueHandling = DefaultValueHandling.Ignore,
+                    NullValueHandling = NullValueHandling.Ignore
+                }
+            };
 
             return formatter;
         }
@@ -270,15 +282,7 @@ namespace VirtoCommerce.ApiClient
         private ICacheRepository _cacheRepository = new HttpCacheRepository();
         protected virtual ICacheRepository CacheRepository
         {
-            get
-            {
-                if (_cacheRepository == null)
-                {
-                    _cacheRepository = new HttpCacheRepository();
-                }
-
-                return _cacheRepository;
-            }
+            get { return _cacheRepository ?? (_cacheRepository = new HttpCacheRepository()); }
         }
 
         protected virtual TimeSpan GetCacheTimeOut(string requestUrl)

@@ -80,10 +80,12 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
 					var searchTags = items[productId];
 
-					webModelProduct.Outline = searchTags[criteria.OutlineField].ToString().Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
-															   .FirstOrDefault(x => x.StartsWith(criteria.Catalog, StringComparison.OrdinalIgnoreCase)) ?? string.Empty;
+				    var catalogPath = criteria.Catalog + "/";
 
-				    webModelProduct.Outline = webModelProduct.Outline.Replace(criteria.Catalog + "/", "");
+					webModelProduct.Outline = searchTags[criteria.OutlineField].ToString().Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                                                               .FirstOrDefault(x => x.StartsWith(catalogPath, StringComparison.OrdinalIgnoreCase)) ?? string.Empty;
+
+                    webModelProduct.Outline = webModelProduct.Outline.Replace(catalogPath, "");
 
 				    int reviewTotal;
                     if (searchTags.ContainsKey(criteria.ReviewsTotalField) && int.TryParse(searchTags[criteria.ReviewsTotalField].ToString(), out reviewTotal))

@@ -1,4 +1,12 @@
-﻿@model ItemModel
+﻿@using System.Globalization
+@model ItemModel
+           
+<script>
+    $(function ()
+    {
+        $("li#" + "@Model.CatalogItem.Id" + " #rateit").rateit({ resetable: false, readonly: true, value: @Model.CatalogItem.Rating.ToString(CultureInfo.InvariantCulture), starwidth: 11, starheight: 11 });
+    })
+</script>
 
 @{
     var itemClass = "item";
@@ -33,12 +41,12 @@
             {
                 @Html.DisplayFor(model => model.Price)
             }
-            @*<div class="cart">
+            <div class="cart">
                 @{Html.RenderPartial("AddToCart", Model, new ViewDataDictionary { { "View", "List" } });}
             </div>
             <ul class="add-to-links">
                 @{Html.RenderPartial("AddToLinks", Model);}
-            </ul>*@
+            </ul>
         </div>
     </div>
 </li>

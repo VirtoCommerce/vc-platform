@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using VirtoCommerce.ApiWebClient.Globalization;
 using VirtoCommerce.Web.Core.DataContracts;
 
 namespace VirtoCommerce.Web.Models
@@ -44,6 +45,8 @@ namespace VirtoCommerce.Web.Models
                 return Price != null && Price.Type == PriceType.Sale;
             }
         }
+
+        public ItemAvailabilityModel Availability { get; set; }
 
         #region Properties
 
@@ -105,5 +108,87 @@ namespace VirtoCommerce.Web.Models
         }
 
         public string Category { get; set; }
+    }
+
+    public enum ItemStoreAvailabity
+    {
+        OutOfStore = 0,
+        InStore,
+        AvailableForBackOrder,
+        AvailableForPreOrder
+    }
+
+    public class ItemAvailabilityModel
+    {
+
+        public DateTime? Date { get; set; }
+        public ItemStoreAvailabity Availability { get; set; }
+        public decimal MaxQuantity { get; set; }
+        public decimal MinQuantity { get; set; }
+        public string ItemId { get; set; }
+
+        public bool IsAvailable
+        {
+            get
+            {
+                switch (Availability)
+                {
+                    case ItemStoreAvailabity.OutOfStore:
+                        return false;
+                    case ItemStoreAvailabity.AvailableForBackOrder:
+                    case ItemStoreAvailabity.AvailableForPreOrder:
+                        if (!Date.HasValue || Date.Value > DateTime.Now)
+                        {
+                            return false;
+                        }
+                        break;
+                }
+                return true;
+            }
+        }
+
+
+        /// <summary>
+        /// Gets the availability string.
+        /// </summary>
+        /// <value>The availability string.</value>
+        public string AvailabilityString
+        {
+            get
+            {
+                var availabilityString = "";
+                switch (Availability)
+                {
+                    case ItemStoreAvailabity.InStore:
+                        availabilityString = MaxQuantity > 5 ? "In Stock".Localize() : string.Format("Only {0} left in stock".Localize(), ((int)MaxQuantity));
+                        break;
+                    case ItemStoreAvailabity.OutOfStore:
+                        availabilityString = "Out Of Stock".Localize();
+                        break;
+                    case ItemStoreAvailabity.AvailableForBackOrder:
+                        if (Date != null && Date.Value > DateTime.Now)
+                        {
+                            availabilityString = string.Format("Available on {0} for Back order".Localize(), Date.Value.ToLongDateString());
+                        }
+                        else
+                        {
+                            availabilityString = "Back Ordered".Localize();
+                        }
+                        break;
+                    case ItemStoreAvailabity.AvailableForPreOrder:
+                        if (Date != null && Date.Value > DateTime.Now)
+                        {
+                            availabilityString = string.Format("Available on {0} for Pre order".Localize(), Date.Value.ToLongDateString());
+                        }
+                        else
+                        {
+                            availabilityString = "Available for Preorder".Localize();
+                        }
+                        break;
+                }
+
+                return availabilityString;
+            }
+        }
     }
 }

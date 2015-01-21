@@ -1,0 +1,69 @@
+﻿
+@using VirtoCommerce.Web.Core.DataContracts
+@model ItemModel
+           
+@{
+    var product = Model.CatalogItem as Product;
+}
+
+@helper NoSaleResult()
+{
+    <span class="no-sale">@("Not for Sale".Localize())</span>
+}
+
+
+@if (Model != null)
+{
+    var hasVariations = Model != null && Model.CatalogItem != null && product != null && product.Variations != null && product.Variations.Any();
+    var canBeAdded = (Model.Availability == null || Model.Availability.IsAvailable) && Model.Price != null && Model.Price.Type != PriceType.None;
+
+    if (hasVariations)
+    {
+        if (Model.Price != null && !string.Equals(ViewData["View"] as string, "Details"))
+        {
+            //@Html.DisplayFor(m => m.Price)
+        }
+    }
+    else
+    {
+        switch ((string)ViewData["View"])
+        {
+            case "List":
+                if (canBeAdded)
+                {
+                    <button type="button" title="@("Add to Cart".Localize())" onclick="return VirtoCart.addToCartClick(this, {itemId:'@(Model.CatalogItem != null ? Model.CatalogItem.Id : "")', quantitySelector:'@(Model.CatalogItem != null ? "#qty_" + Model.CatalogItem.Id.EscapeSelector() : "")', parentItemId:'@Model.CatalogItem.MainProductId',callback:@(ViewData["CallbackJs"] ?? "null")}); ">
+                        @("Add to Cart".Localize())
+                    </button>
+                }
+                else
+                {
+                    @NoSaleResult()
+                }
+                break;
+            case "ListLink":
+                if (canBeAdded)
+                {
+                    <a href="" title="@("Add to Cart".Localize())" onclick="return VirtoCart.addToCartClick(this, {itemId:'@(Model.CatalogItem != null ? Model.CatalogItem.Id : "")', quantitySelector:'@(Model.CatalogItem != null ? "#qty_" + Model.CatalogItem.Id.EscapeSelector() : "")', parentItemId:'@Model.CatalogItem.MainProductId',callback:@(ViewData["CallbackJs"] ?? "null")}); ">
+                        @("Add to Cart".Localize())
+                    </a>
+                }
+                else
+                {
+                    @NoSaleResult()
+                }
+                break;
+            default:
+                if (canBeAdded)
+                {
+                    <button type="button" title="@("Add to Cart".Localize())" onclick="return VirtoCart.addToCartClick(this, {itemId:'@(Model.CatalogItem != null ? Model.CatalogItem.Id : "")', parentItemId:'@(Model.CatalogItem != null ? Model.CatalogItem.MainProductId : "")',callback:@(ViewData["CallbackJs"] ?? "null")});">
+                        <span>@("Add to Cart".Localize())</span>
+                    </button>
+                }
+                else
+                {
+                    @NoSaleResult()
+                }
+                break;
+        }
+    }
+}

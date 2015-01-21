@@ -132,7 +132,6 @@
     <Compile Include="Caching\Encryptor.cs" />
     <Compile Include="Caching\HtmlHelperExtensions.cs" />
     <Compile Include="Clients\SecurityClient.cs" />
-    <Compile Include="Clients\SeoKeywordClient.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="ContextFieldConstants.cs" />
     <Compile Include="Currencies\CurrencyService.cs" />
@@ -166,7 +165,6 @@
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
     <Compile Include="Extensions\ViewRenderer.cs" />
     <Compile Include="Helpers\SettingsHelper.cs" />
-    <Compile Include="Helpers\CatalogHelper.cs" />
     <Compile Include="Modules\BaseHttpModule.cs" />
     <Compile Include="Modules\MarketingHttpModule.cs" />
     <Compile Include="Modules\StoreHttpModule.cs" />

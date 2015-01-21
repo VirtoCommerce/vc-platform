@@ -11,13 +11,19 @@ namespace VirtoCommerce.ApiClient.Extensions
 
     public static class ReviewsClientExtnesion
     {
-        public static ReviewsClient CreateReviewsClient(this CommerceClients source, params object[] options)
+        public static ReviewsClient CreateReviewsClient(this CommerceClients source)
         {
-            var connectionString = ConnectionHelper.GetConnectionString("vc-commerce-api");
-            return CreateReviewsClient(source, connectionString);
+            return source.CreateReviewsClient(ClientContext.Session.CatalogId, ClientContext.Session.Language);
         }
 
-        public static ReviewsClient CreateReviewsClient(this CommerceClients source, string serviceUrl)
+        public static ReviewsClient CreateReviewsClient(this CommerceClients source, string catalogId, string language)
+        {
+            // http://localhost/admin/api/mp/{0}/{1}/
+            var connectionString = ClientContext.Configuration.ConnectionString + String.Format("{0}/{1}/", catalogId, language);
+            return CreateReviewClientWithUri(source, connectionString);
+        }
+
+        public static ReviewsClient CreateReviewClientWithUri(this CommerceClients source, string serviceUrl)
         {
             var connectionString = serviceUrl;
             var subscriptionKey = ConfigurationManager.AppSettings["vc-public-apikey"];

@@ -553,6 +553,8 @@
     <Content Include="Views\Search\DisplayTemplates\FilterPanel.cshtml" />
     <Content Include="Views\Search\DisplayTemplates\SearchPager.cshtml" />
     <Content Include="Views\Search\DisplayTemplates\SearchListItem.cshtml" />
+    <Content Include="Views\Shared\AddToCart.cshtml" />
+    <Content Include="Views\Shared\AddToLinks.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
