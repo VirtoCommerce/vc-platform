@@ -7,7 +7,6 @@ using System.Web.Http.ModelBinding;
 using VirtoCommerce.CatalogModule.Repositories;
 using VirtoCommerce.CatalogModule.Services;
 using VirtoCommerce.Foundation.AppConfig.Model;
-using VirtoCommerce.Foundation.Catalogs;
 using VirtoCommerce.Foundation.Catalogs.Search;
 using VirtoCommerce.Foundation.Catalogs.Services;
 using VirtoCommerce.Foundation.Search;
@@ -70,38 +69,42 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			var items = result.GetKeyAndOutlineFieldValueMap<string>();
 
 			var retVal = new GenericSearchResult<CatalogItem> {TotalCount = result.TotalCount};
-		    //Load products 
-			foreach (var productId in items.Keys)
-			{
-                var product = _itemService.GetById(productId, responseGroup);
-				if (product != null)
-				{
-					var webModelProduct = product.ToWebModel(_assetBaseUri);
+		    //Load ALL products 
+            var products = _itemService.GetByIds(items.Keys.ToArray(), responseGroup);
 
-					var searchTags = items[productId];
+            foreach (var product in products)
+            {
+                var webModelProduct = product.ToWebModel(_assetBaseUri);
 
-				    var catalogPath = criteria.Catalog + "/";
+                var searchTags = items[product.Id];
 
-					webModelProduct.Outline = searchTags[criteria.OutlineField].ToString().Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
-                                                               .FirstOrDefault(x => x.StartsWith(catalogPath, StringComparison.OrdinalIgnoreCase)) ?? string.Empty;
+                var catalogPath = criteria.Catalog + "/";
 
-                    webModelProduct.Outline = webModelProduct.Outline.Replace(catalogPath, "");
+                webModelProduct.Outline =
+                    searchTags[criteria.OutlineField].ToString()
+                        .Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                        .FirstOrDefault(x => x.StartsWith(catalogPath, StringComparison.OrdinalIgnoreCase))
+                    ?? string.Empty;
 
-				    int reviewTotal;
-                    if (searchTags.ContainsKey(criteria.ReviewsTotalField) && int.TryParse(searchTags[criteria.ReviewsTotalField].ToString(), out reviewTotal))
-                    {
-                        webModelProduct.ReviewsTotal = reviewTotal;
-				    }
-                    double reviewAvg;
-                    if (searchTags.ContainsKey(criteria.ReviewsAverageField) && double.TryParse(searchTags[criteria.ReviewsAverageField].ToString(), out reviewAvg))
-                    {
-                        webModelProduct.Rating = reviewAvg;
-                    }
+                webModelProduct.Outline = webModelProduct.Outline.Replace(catalogPath, "");
 
-					retVal.Items.Add(webModelProduct);
-				}
-			}
-			return Ok(retVal);
+                int reviewTotal;
+                if (searchTags.ContainsKey(criteria.ReviewsTotalField)
+                    && int.TryParse(searchTags[criteria.ReviewsTotalField].ToString(), out reviewTotal))
+                {
+                    webModelProduct.ReviewsTotal = reviewTotal;
+                }
+                double reviewAvg;
+                if (searchTags.ContainsKey(criteria.ReviewsAverageField)
+                    && double.TryParse(searchTags[criteria.ReviewsAverageField].ToString(), out reviewAvg))
+                {
+                    webModelProduct.Rating = reviewAvg;
+                }
+
+                retVal.Items.Add(webModelProduct);
+            }
+
+            return Ok(retVal);
 		}
 
 		/// GET: api/mp/apple/en-us/products?code='22'

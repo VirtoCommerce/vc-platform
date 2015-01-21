@@ -1,21 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.CatalogModule.Repositories;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Stores.Repositories;
 using VirtoCommerce.MerchandisingModule.Web.Converters;
-using VirtoCommerce.MerchandisingModule.Web.Model;
 using VirtoCommerce.MerchandisingModule.Web.Model.Store;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
-    [RoutePrefix("api/mp/{language}/stores")]
+    [RoutePrefix("api/mp/stores")]
     public class StoreController : ApiController
     {
         private readonly Func<IStoreRepository> _storeRepository;
@@ -30,7 +26,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         [HttpGet]
         [ResponseType(typeof (Store[]))]
         [Route("")]
-        public IHttpActionResult GetStores(string language = "en-us")
+        public IHttpActionResult GetStores()
         {
             var retVal = new List<Store>();
             using (var repository = _storeRepository())

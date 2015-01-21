@@ -40,7 +40,7 @@ namespace VirtoCommerce.ApiWebClient.Clients
 
         public ApiClient.StoreClient GetClient(string lang)
         {
-            return  ClientContext.Clients.CreateDefaultStoreClient(lang);
+            return  ClientContext.Clients.CreateStoreClient();
 
         }
 

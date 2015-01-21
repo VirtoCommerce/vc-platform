@@ -12,9 +12,9 @@ namespace VirtoCommerce.ApiClient.Extensions
 
     public static class StoreClientExtensions
     {
-        public static StoreClient CreateDefaultStoreClient(this CommerceClients source, params object[] options)
+        public static StoreClient CreateStoreClient(this CommerceClients source)
         {
-            var connectionString = string.Format(StoreConfiguration.Instance.Connection.DataServiceUri, options);
+            var connectionString = ClientContext.Configuration.ConnectionString;
             return CreateStoreClient(source, connectionString);
         }
 
