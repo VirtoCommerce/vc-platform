@@ -570,10 +570,6 @@
       <Project>{a67c7412-708c-4978-a666-6b9414bbf696}</Project>
       <Name>Commerce.ApiWebClient</Name>
     </ProjectReference>
-    <ProjectReference Include="..\VirtoCommerce.Web.Core\VirtoCommerce.Web.Core.csproj">
-      <Project>{a00173b5-ea0a-438a-840b-821f0c6b726c}</Project>
-      <Name>VirtoCommerce.Web.Core</Name>
-    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -199,10 +199,6 @@
     <Compile Include="Providers\NamedSiteMapNodeVisibilityProvider.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Presentation\FrontEnd\VirtoCommerce.Web.Core\VirtoCommerce.Web.Core.csproj">
-      <Project>{a00173b5-ea0a-438a-840b-821f0c6b726c}</Project>
-      <Name>VirtoCommerce.Web.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Commerce.ApiClient\Commerce.ApiClient.csproj">
       <Project>{84b945b7-85e4-4057-b0df-1f8a03b8d53c}</Project>
       <Name>Commerce.ApiClient</Name>

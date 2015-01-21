@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Clients", "Clients", "{41558F49-4FEE-4456-8D28-CC79DC43D940}"
 EndProject
@@ -10,10 +10,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Commerce.ApiWebClient", "src\Extensions\Client\Commerce.ApiWebClient\Commerce.ApiWebClient.csproj", "{A67C7412-708C-4978-A666-6B9414BBF696}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PublicWebApp", "src\Presentation\FrontEnd\PublicWebApp\PublicWebApp.csproj", "{736303CF-F1F3-4BB4-9647-992E8AF3606A}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{5E0AFDBF-501F-4312-B3B8-6BF08260393F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.Web.Core", "src\Presentation\FrontEnd\VirtoCommerce.Web.Core\VirtoCommerce.Web.Core.csproj", "{A00173B5-EA0A-438A-840B-821F0C6B726C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,10 +29,6 @@ Global
 		{736303CF-F1F3-4BB4-9647-992E8AF3606A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{736303CF-F1F3-4BB4-9647-992E8AF3606A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{736303CF-F1F3-4BB4-9647-992E8AF3606A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A00173B5-EA0A-438A-840B-821F0C6B726C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A00173B5-EA0A-438A-840B-821F0C6B726C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A00173B5-EA0A-438A-840B-821F0C6B726C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A00173B5-EA0A-438A-840B-821F0C6B726C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -44,6 +36,5 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{84B945B7-85E4-4057-B0DF-1F8A03B8D53C} = {41558F49-4FEE-4456-8D28-CC79DC43D940}
 		{A67C7412-708C-4978-A666-6B9414BBF696} = {41558F49-4FEE-4456-8D28-CC79DC43D940}
-		{A00173B5-EA0A-438A-840B-821F0C6B726C} = {5E0AFDBF-501F-4312-B3B8-6BF08260393F}
 	EndGlobalSection
 EndGlobal
