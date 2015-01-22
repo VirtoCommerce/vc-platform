@@ -11,8 +11,22 @@ namespace VirtoCommerce.Web.Models
         public ItemModel(CatalogItem catalogItem)
         {
             CatalogItem = catalogItem;
+            Availability = new ItemAvailabilityModel();
+            DisplayTemplate = "Item";
         }
         public CatalogItem CatalogItem { get; set; }
+
+        public Category Category { get; set; }
+
+        public string CategoryId
+        {
+            get
+            {
+                return !string.IsNullOrEmpty(CatalogItem.Outline)
+                    ? CatalogItem.Outline.Split("/".ToCharArray()).Last()
+                    : null;
+            }
+        }
 
         public PriceModel Price { get; set; }
 
@@ -29,6 +43,8 @@ namespace VirtoCommerce.Web.Models
                 return retVal;
             }
         }
+
+        public string DisplayTemplate { get; set; }
 
         public bool IsNew
         {
@@ -123,8 +139,8 @@ namespace VirtoCommerce.Web.Models
 
         public DateTime? Date { get; set; }
         public ItemStoreAvailabity Availability { get; set; }
-        public decimal MaxQuantity { get; set; }
-        public decimal MinQuantity { get; set; }
+        public int MaxQuantity { get; set; }
+        public int MinQuantity { get; set; }
         public string ItemId { get; set; }
 
         public bool IsAvailable

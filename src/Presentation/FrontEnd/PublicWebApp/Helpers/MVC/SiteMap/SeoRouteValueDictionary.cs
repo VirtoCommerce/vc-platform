@@ -7,6 +7,7 @@ using MvcSiteMapProvider.Collections.Specialized;
 using MvcSiteMapProvider.Web.Script.Serialization;
 using VirtoCommerce.ApiWebClient.Extensions.Routing;
 using VirtoCommerce.ApiWebClient.Helpers;
+using VirtoCommerce.Web.Core.DataContracts;
 
 namespace VirtoCommerce.Web.Helpers.MVC.SiteMap
 {
@@ -30,27 +31,29 @@ namespace VirtoCommerce.Web.Helpers.MVC.SiteMap
 
             var currentValue = this[key].ToString();
 
-            //switch (key)
-            //{
-            //    case Constants.Store:
-            //        currentValue = SettingsHelper.SeoDecode(currentValue, SeoUrlKeywordTypes.Store);
-            //        value = SettingsHelper.SeoDecode(value.ToString(), SeoUrlKeywordTypes.Store);   
-            //        break;
-            //    case Constants.Category:
-            //        currentValue = SettingsHelper.SeoDecode(currentValue, SeoUrlKeywordTypes.Category);
-            //        value = SettingsHelper.SeoDecode(value.ToString(), SeoUrlKeywordTypes.Category);
-            //        if (currentValue.Equals(value.ToString(), StringComparison.InvariantCultureIgnoreCase))
-            //        {
-            //            return true;
-            //        }
-            //        //Check only category code which is last segment in path
-            //        value = value.ToString().Split(new[] {"/"}, StringSplitOptions.RemoveEmptyEntries).Last();
-            //        break;
-            //    case Constants.Item:
-            //        currentValue = SettingsHelper.SeoDecode(currentValue, SeoUrlKeywordTypes.Item);
-            //        value = SettingsHelper.SeoDecode(value.ToString(), SeoUrlKeywordTypes.Item);   
-            //        break;
-            //}
+            var language = ContainsKey(Constants.Language) ? this[Constants.Language] as string : null;
+
+            switch (key)
+            {
+                case Constants.Store:
+                    currentValue = SettingsHelper.EncodeRouteValue(currentValue, SeoUrlKeywordTypes.Store, language);
+                    value = SettingsHelper.EncodeRouteValue(value.ToString(), SeoUrlKeywordTypes.Store, language);
+                    break;
+                case Constants.Category:
+                    currentValue = SettingsHelper.EncodeRouteValue(currentValue, SeoUrlKeywordTypes.Category, language);
+                    value = SettingsHelper.EncodeRouteValue(value.ToString(), SeoUrlKeywordTypes.Category, language);
+                    if (currentValue.Equals(value.ToString(), StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        return true;
+                    }
+                    //Check only category code which is last segment in path
+                    value = value.ToString().Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries).Last();
+                    break;
+                case Constants.Item:
+                    currentValue = SettingsHelper.EncodeRouteValue(currentValue, SeoUrlKeywordTypes.Item, language);
+                    value = SettingsHelper.EncodeRouteValue(value.ToString(), SeoUrlKeywordTypes.Item, language);
+                    break;
+            }
 
             return currentValue.Equals(value.ToString(), StringComparison.InvariantCultureIgnoreCase);
         }

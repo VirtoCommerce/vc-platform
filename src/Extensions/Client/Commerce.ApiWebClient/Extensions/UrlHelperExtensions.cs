@@ -28,6 +28,13 @@ namespace VirtoCommerce.ApiWebClient.Extensions
             return helper.Content(image == null ? String.Format("~/Content/themes/default/images/{0}", defaultImage) : image.Src);
         }
 
+          public static string ImageThumbnail(this UrlHelper helper, ItemImage image)
+        {
+            const string defaultImage = "blank.png";
+
+            return helper.Content(image == null ? String.Format("~/Content/themes/default/images/{0}", defaultImage) : image.ThumbSrc);
+        }
+
         private static ItemImage FindItemImage(IEnumerable<ItemImage> images, string name)
         {
             return images == null ? null : images.FirstOrDefault(i => i.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
@@ -38,6 +45,7 @@ namespace VirtoCommerce.ApiWebClient.Extensions
             return ItemUrl(helper, item.Id, item.Outline, item.MainProductId);
         }
 
+       
         public static string ItemUrl(this UrlHelper helper, string itemId, string categoryOutline, string parentId = null)
         {
             var routeValues = new RouteValueDictionary();

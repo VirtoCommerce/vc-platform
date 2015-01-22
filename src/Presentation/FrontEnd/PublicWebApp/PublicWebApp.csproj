@@ -555,6 +555,10 @@
     <Content Include="Views\Search\DisplayTemplates\SearchListItem.cshtml" />
     <Content Include="Views\Shared\AddToCart.cshtml" />
     <Content Include="Views\Shared\AddToLinks.cshtml" />
+    <Content Include="Views\Catalog\Item.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\ReviewCommentTemplate.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\ReviewTemplate.cshtml" />
+    <Content Include="Views\Catalog\ItemDynamic.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

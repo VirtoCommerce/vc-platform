@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using MvcSiteMapProvider;
 using VirtoCommerce.ApiWebClient.Caching;
 using VirtoCommerce.ApiWebClient.Extensions;
 using VirtoCommerce.ApiWebClient.Helpers;
@@ -80,6 +81,35 @@ namespace VirtoCommerce.Web.Controllers
                 query.Outline = string.Join("/", cat.BuildOutline().Select(x => x.Key));
                 var retVal = await SearchAsync(query);
                 retVal.Title = cat.Name;
+
+                if (SiteMaps.Current != null)
+                {
+                    var node = SiteMaps.Current.CurrentNode;
+
+                    if (Request.UrlReferrer != null &&
+                        Request.UrlReferrer.AbsoluteUri.StartsWith(Request.Url.GetLeftPart(UriPartial.Authority)))
+                    {
+                        if (node != null)
+                        {
+                            node.RootNode.Attributes["ShowBack"] = true;
+                        }
+
+                        if (Request.UrlReferrer.AbsoluteUri.Equals(Request.Url.AbsoluteUri))
+                        {
+                            StoreHelper.CustomerSession.LastShoppingPage = Url.Content("~/");
+                        }
+                        else
+                        {
+                            StoreHelper.CustomerSession.LastShoppingPage = Request.UrlReferrer.AbsoluteUri;
+                        }
+
+                    }
+
+                    if (node != null)
+                    {
+                        node.Title = retVal.Title;
+                    }
+                }
 
                 return View("Index", retVal);
             }

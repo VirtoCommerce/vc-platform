@@ -11,20 +11,26 @@
         }
 
     }*@
-    @if (Model.Type == PriceType.Sale)
+    @if (Model != null)
     {
+         if (Model.Type == PriceType.Sale)
+         {
 
-        <p>
-            <span class="original">@Model.SalePriceFormatted</span>
-            <span class="old">@Model.ListPriceFormatted</span>
+             <p>
+                 <span class="original">@Model.SalePriceFormatted</span>
+                 <span class="old">@Model.ListPriceFormatted</span>
 
-        </p>
-    }
-    else if (Model.Type == PriceType.Regular)
-    {
+             </p>
+         }
+         else if (Model.Type == PriceType.Regular)
+         {
 
-        <p>
-            <span class="original">@if(!string.IsNullOrEmpty(Model.PriceTitle)){<span class="price-label">@Model.PriceTitle&nbsp;</span>}@Model.ListPriceFormatted</span>
-        </p>
+             <p>
+                 <span class="original">@if (!string.IsNullOrEmpty(Model.PriceTitle))
+                                        {
+                                            <span class="price-label">@Model.PriceTitle&nbsp;</span>
+                                        }@Model.ListPriceFormatted</span>
+             </p>
+         }
     }
 </div>
