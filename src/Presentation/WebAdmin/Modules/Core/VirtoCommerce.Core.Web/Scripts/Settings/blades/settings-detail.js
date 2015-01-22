@@ -31,6 +31,7 @@
             });
 
             results = _.groupBy(results, 'groupName');
+            $scope.blade.groupNames = _.keys(results);
             $scope.blade.objects = angular.copy(results);
             $scope.blade.origEntity = results;
             $scope.blade.isLoading = false;
