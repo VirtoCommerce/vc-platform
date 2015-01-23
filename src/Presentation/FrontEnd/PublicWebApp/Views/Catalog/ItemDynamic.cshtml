@@ -1,4 +1,12 @@
-﻿@model ItemModel
+﻿@using System.Globalization
+@model ItemModel
+           
+@*<script>
+    $(function ()
+    {
+        $(".rating").rateit({ resetable: false, readonly: true, value: @Model.CatalogItem.Rating.ToString(CultureInfo.InvariantCulture), starwidth: 11, starheight: 11 });
+    })
+</script>*@
 
 @helper RenderAddReview()
 {

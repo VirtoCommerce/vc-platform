@@ -1,0 +1,58 @@
+﻿@model ItemModel
+
+<script type="text/javascript">
+	$(document).ready(function ()
+	{
+	    //Update main image
+	    var cloudZoom = $("#imageContainer img.cloudzoom").data("CloudZoom");
+	    cloudZoom.loadImage('@Url.Image(Model.CatalogItem, "primaryimage")', '@Url.Image(Model.CatalogItem, "primaryimage")');
+
+		//Update main price
+@*		@{Model.Price.PriceTitle = "Price:".Localize();}*@
+	    $("#mainPrice").html($('#temp_price').html());
+	    $('#temp_price').remove();
+	    $("header.product-name h1").html('@Model.DisplayName');
+	    
+        //Handle availability
+	    $("span.in-stock").text("@Model.Availability.AvailabilityString");
+	    $("span.in-stock").show();
+	    $("span.sku").text("@Model.CatalogItem.Code");
+		
+		//Update properties
+		$("#product_tabs_additional_contents_list").html($('#temp_variation_properties').html());
+		$('#temp_variation_properties').remove();
+		@*$(".add-to-cart").load('@Html.Raw(Url.Action("AddToCart", "Cart", new {itemId = Model.CatalogItem.Id, parentItemId = Model.CatalogItem.MainProductId}))');*@
+	
+		if ($('#qty').length != 0)
+		{
+			initQtySpinner("#qty", "@((int)(Model.Availability.MinQuantity))", "@((int)(Model.Availability.MaxQuantity))");
+     		
+			@if (!Model.Availability.IsAvailable)
+			{
+				@:$("#qty").spinner("disable");
+			}
+			else
+			{
+				@:$("#qty").spinner("enable");
+			}
+
+			$('#qty').attr("data-val-range-min", '@((int)Model.Availability.MinQuantity)');
+			$('#qty').attr("data-val-range-max", '@((int)Model.Availability.MaxQuantity)');
+		    $('#qty').attr("data-val-range", "@("Select quantity in range".Localize())" + " @string.Format("{0:#} - {1:#}", Model.Availability.MinQuantity, @Model.Availability.MaxQuantity)");
+		    $('#qty').attr("data-val-regex-pattern", '@string.Format(@"^\\d{{{0},{1}}}$", Model.Availability.MinQuantity.DigitCount(), Model.Availability.MaxQuantity.DigitCount())');
+			var $form = $('#qty').resetValidation();
+			$form.removeData('validator');
+			$form.removeData('unobtrusiveValidation');
+			$.validator.unobtrusive.parse("#" + $form.attr("id"));
+		}
+	});
+</script>
+
+<div id="temp_variation_properties"style="display: none;">
+   @Html.DisplayFor(x => x.CatalogItem.Properties, "Properties")
+</div>
+
+<div id="temp_price"style="display: none;">
+    @{ Html.RenderPartial("DisplayTemplates/PriceModel", Model.Price); }
+</div>
+
