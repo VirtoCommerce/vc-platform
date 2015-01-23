@@ -12,6 +12,7 @@ namespace VirtoCommerce.Web.Models
         {
             CatalogItem = catalogItem;
             Availability = new ItemAvailabilityModel();
+            Price = new PriceModel();
             DisplayTemplate = "Item";
         }
         public CatalogItem CatalogItem { get; set; }

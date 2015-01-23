@@ -1,0 +1,20 @@
+﻿@model IDictionary<string,string[]>
+
+<table class="data-table" id="product-attribute-specs-table">
+    <col width="25%" />
+    <col />
+    <tbody>
+        @foreach (var prop in Model)
+        {
+            <tr>
+                <th class="label">
+                    @prop.Key.Localize()
+                </th>
+                <td class="data">
+                    @string.Join(", ", prop.Value)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
