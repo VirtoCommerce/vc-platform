@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data.Entity;
-using System.IO;
 using System.Linq;
 using FunctionalTests.TestHelpers;
 using VirtoCommerce.Foundation.AppConfig.Model;
@@ -8,7 +7,7 @@ using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Data.AppConfig;
 using VirtoCommerce.Foundation.Data.AppConfig.Migrations;
 using VirtoCommerce.Foundation.Data.AppConfig.Services;
-using VirtoCommerce.PowerShell.DatabaseSetup;
+using VirtoCommerce.Foundation.Data.Infrastructure;
 using Xunit;
 
 namespace FunctionalTests.AppConfig
@@ -25,7 +24,7 @@ namespace FunctionalTests.AppConfig
 		public SecurityScenarios()
 		{
 			_previousDataDirectory = AppDomain.CurrentDomain.GetData("DataDirectory");
-            AppDomain.CurrentDomain.SetData("DataDirectory", TempPath);
+			AppDomain.CurrentDomain.SetData("DataDirectory", TempPath);
 			_databaseName = "AppConfigTest";
 		}
 
@@ -64,7 +63,7 @@ namespace FunctionalTests.AppConfig
 		public void Can_add_appsettings()
 		{
 
-			var setting = new Setting {Name = "Currencies", SettingValueType = "ShortText", IsMultiValue = true, IsSystem = true};
+			var setting = new Setting { Name = "Currencies", SettingValueType = "ShortText", IsMultiValue = true, IsSystem = true };
 			var id = setting.SettingId;
 			setting.SettingValues.Add(new SettingValue() { ValueType = "ShortText", ShortTextValue = "USD", SettingId = id });
 			setting.SettingValues.Add(new SettingValue() { ValueType = "ShortText", ShortTextValue = "EUR", SettingId = id });
@@ -82,7 +81,7 @@ namespace FunctionalTests.AppConfig
 		public void Can_Add_Localization()
 		{
 			var client = GetRepository();
-			var localizationItem = new Localization {LanguageCode = "EN", Name = "1", Value = "Test", Category = "1", };
+			var localizationItem = new Localization { LanguageCode = "EN", Name = "1", Value = "Test", Category = "1", };
 			var items = client.Localizations.ToList();
 			items.Add(localizationItem);
 			client.Add(localizationItem);
@@ -94,15 +93,15 @@ namespace FunctionalTests.AppConfig
 
 		}
 
-        [Fact(Skip = "IdentitySequence Table needs to be created manually CREATE TABLE [dbo].[IdentitySequence]([Id] [int] IDENTITY(1,1) NOT NULL) ON [PRIMARY]")]
-        public void Can_generate_sequence()
-        {
-            var client = new EFAppConfigRepository("VirtoCommerce");
-            //var client = GetRepository();
-            var sequence = new DbIdentitySequenceService(client);
-            var result = sequence.GetNext("test");
-            Assert.NotNull(result);
-        }
+		[Fact(Skip = "IdentitySequence Table needs to be created manually CREATE TABLE [dbo].[IdentitySequence]([Id] [int] IDENTITY(1,1) NOT NULL) ON [PRIMARY]")]
+		public void Can_generate_sequence()
+		{
+			var client = new EFAppConfigRepository("VirtoCommerce");
+			//var client = GetRepository();
+			var sequence = new DbIdentitySequenceService(client);
+			var result = sequence.GetNext("test");
+			Assert.NotNull(result);
+		}
 
 		#endregion
 
@@ -116,6 +115,6 @@ namespace FunctionalTests.AppConfig
 		}
 
 		#endregion
-	
+
 	}
 }

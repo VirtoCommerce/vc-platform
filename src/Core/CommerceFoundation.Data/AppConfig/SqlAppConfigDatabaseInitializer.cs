@@ -1,15 +1,13 @@
 ﻿using System.Linq;
-using VirtoCommerce.Foundation.Data.AppConfig;
-using VirtoCommerce.Foundation.Data.AppConfig.Migrations;
-using VirtoCommerce.PowerShell.DatabaseSetup;
+using VirtoCommerce.Foundation.Data.Infrastructure;
 
-namespace VirtoCommerce.PowerShell.AppConfig
+namespace VirtoCommerce.Foundation.Data.AppConfig
 {
-	public class SqlAppConfigDatabaseInitializer : SetupDatabaseInitializer<EFAppConfigRepository, Configuration>
+	public class SqlAppConfigDatabaseInitializer : SetupDatabaseInitializer<EFAppConfigRepository, Migrations.Configuration>
 	{
 		public string Scope { private get; set; }
 
-        readonly string[] _files =
+		readonly string[] _files =
 	    { 
 	        "Setting.sql",
 			"SettingValue.sql",
@@ -20,10 +18,10 @@ namespace VirtoCommerce.PowerShell.AppConfig
 			"Localization.sql"
 	    };
 
-        protected virtual string[] GetSampleFiles()
-        {
-            return _files;
-        }
+		protected virtual string[] GetSampleFiles()
+		{
+			return _files;
+		}
 
 		protected override void Seed(EFAppConfigRepository context)
 		{
@@ -34,10 +32,10 @@ namespace VirtoCommerce.PowerShell.AppConfig
 
 		private void FillAppConfigScripts(EFAppConfigRepository context)
 		{
-            foreach (var file in GetSampleFiles())
-            {
-                RunCommand(context, file, "AppConfig");
-            }
+			foreach (var file in GetSampleFiles())
+			{
+				RunCommand(context, file, "AppConfig");
+			}
 		}
 
 		private void UpdateScopeParameterValue(EFAppConfigRepository context)

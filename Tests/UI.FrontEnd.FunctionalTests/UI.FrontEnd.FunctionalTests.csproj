@@ -165,10 +165,6 @@
       <Project>{9f5493c4-0080-4bb5-9c12-25d0cdbea2dd}</Project>
       <Name>VirtoCommerce.Search.Index</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Extensions\Setup\VirtoCommerce.PowerShell\VirtoCommerce.PowerShell.csproj">
-      <Project>{98748b0a-4c04-4e70-a4ef-7cbae5959d18}</Project>
-      <Name>VirtoCommerce.PowerShell</Name>
-    </ProjectReference>
     <ProjectReference Include="..\FunctionalTests\FunctionalTests.csproj">
       <Project>{3e38a90d-0cac-40f5-a62a-28ff92b410d2}</Project>
       <Name>FunctionalTests</Name>

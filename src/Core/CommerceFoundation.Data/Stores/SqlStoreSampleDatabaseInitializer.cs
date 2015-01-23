@@ -3,24 +3,22 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
-using VirtoCommerce.Foundation.Data.Stores;
-using VirtoCommerce.Foundation.Data.Stores.Migrations;
+using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Search.Schemas;
 using VirtoCommerce.Foundation.Stores.Model;
-using VirtoCommerce.PowerShell.DatabaseSetup;
 
-namespace VirtoCommerce.PowerShell.Stores
+namespace VirtoCommerce.Foundation.Data.Stores
 {
-	public class SqlStoreSampleDatabaseInitializer : SetupDatabaseInitializer<EFStoreRepository, Configuration>
+	public class SqlStoreSampleDatabaseInitializer : SetupDatabaseInitializer<EFStoreRepository, Migrations.Configuration>
 	{
-	    private readonly bool _reduced;
+		private readonly bool _reduced;
 
-	    public SqlStoreSampleDatabaseInitializer(bool reduced = false)
-	    {
-	        _reduced = reduced;
-	    }
+		public SqlStoreSampleDatabaseInitializer(bool reduced = false)
+		{
+			_reduced = reduced;
+		}
 
-	    protected override void Seed(EFStoreRepository context)
+		protected override void Seed(EFStoreRepository context)
 		{
 			CreateFulfillmentCenter(context);
 			CreateStores(context, _reduced);
@@ -46,7 +44,7 @@ namespace VirtoCommerce.PowerShell.Stores
 			context.UnitOfWork.Commit();
 		}
 
-        private static Store CreateStore(string storeId, bool reduced = false)
+		private static Store CreateStore(string storeId, bool reduced = false)
 		{
 			var store = new Store
 				{
@@ -61,12 +59,12 @@ namespace VirtoCommerce.PowerShell.Stores
 
 			store.Languages.Add(new StoreLanguage { StoreId = store.StoreId, LanguageCode = "en-US" });
 			store.Languages.Add(new StoreLanguage { StoreId = store.StoreId, LanguageCode = "de-DE" });
-		    if (!reduced)
-		    {
-		        store.Languages.Add(new StoreLanguage {StoreId = store.StoreId, LanguageCode = "ru-RU"});
-		        store.Languages.Add(new StoreLanguage {StoreId = store.StoreId, LanguageCode = "ja-JP"});
-		    }
-		    store.Currencies.Add(new StoreCurrency { StoreId = store.StoreId, CurrencyCode = "USD" });
+			if (!reduced)
+			{
+				store.Languages.Add(new StoreLanguage { StoreId = store.StoreId, LanguageCode = "ru-RU" });
+				store.Languages.Add(new StoreLanguage { StoreId = store.StoreId, LanguageCode = "ja-JP" });
+			}
+			store.Currencies.Add(new StoreCurrency { StoreId = store.StoreId, CurrencyCode = "USD" });
 			store.Currencies.Add(new StoreCurrency { StoreId = store.StoreId, CurrencyCode = "EUR" });
 			store.DefaultLanguage = "en-US";
 			store.DefaultCurrency = "USD";
@@ -111,13 +109,13 @@ namespace VirtoCommerce.PowerShell.Stores
 					ShortTextValue = "You do not have permissions to view this store",
 					Name = "StoreRestrictedMessage"
 				});
-            store.Settings.Add(new StoreSetting
-                {
-                    StoreId = store.StoreId,
-                    ValueType = "Boolean",
-                    BooleanValue = false,
-                    Name = "RequireAccountConfirmation"
-                });
+			store.Settings.Add(new StoreSetting
+				{
+					StoreId = store.StoreId,
+					ValueType = "Boolean",
+					BooleanValue = false,
+					Name = "RequireAccountConfirmation"
+				});
 
 			return store;
 		}
@@ -245,19 +243,19 @@ namespace VirtoCommerce.PowerShell.Stores
 			filter.Values = vals.ToArray();
 			filters.Add(filter);
 
-            vals = new List<RangeFilterValue>();
+			vals = new List<RangeFilterValue>();
 
-            filter = new PriceRangeFilter { Currency = "EUR", IsLocalized = false };
+			filter = new PriceRangeFilter { Currency = "EUR", IsLocalized = false };
 
-            vals.Add(CreateRange("Under 100€", "under-100", String.Empty, "100", "en"));
+			vals.Add(CreateRange("Under 100€", "under-100", String.Empty, "100", "en"));
 
-            vals.Add(CreateRange("100€ - 200€", "100-200", "100", "200", "en"));
-            vals.Add(CreateRange("200€ - 600€", "200-600", "200", "600", "en"));
-            vals.Add(CreateRange("600€ - 1000€", "600-1000", "600", "1000", "en"));
-            vals.Add(CreateRange("Over 1000€", "over-1000", "1000", String.Empty, "en"));
+			vals.Add(CreateRange("100€ - 200€", "100-200", "100", "200", "en"));
+			vals.Add(CreateRange("200€ - 600€", "200-600", "200", "600", "en"));
+			vals.Add(CreateRange("600€ - 1000€", "600-1000", "600", "1000", "en"));
+			vals.Add(CreateRange("Over 1000€", "over-1000", "1000", String.Empty, "en"));
 
-            filter.Values = vals.ToArray();
-            filters.Add(filter);
+			filter.Values = vals.ToArray();
+			filters.Add(filter);
 
 			browsing.Prices = filters.ToArray();
 		}

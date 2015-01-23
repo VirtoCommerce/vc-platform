@@ -1,33 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using VirtoCommerce.Foundation.Data.Orders;
-using VirtoCommerce.Foundation.Data.Orders.Migrations;
+using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Orders.Model;
 using VirtoCommerce.Foundation.Orders.Model.Countries;
 using VirtoCommerce.Foundation.Orders.Model.Gateways;
 using VirtoCommerce.Foundation.Orders.Model.PaymentMethod;
 using VirtoCommerce.Foundation.Orders.Model.ShippingMethod;
-using VirtoCommerce.PowerShell.DatabaseSetup;
 
-
-namespace VirtoCommerce.PowerShell.Orders
+namespace VirtoCommerce.Foundation.Data.Orders
 {
-    public class SqlOrderDatabaseInitializer : SetupDatabaseInitializer<EFOrderRepository, Configuration>
-    {
-        protected override void Seed(EFOrderRepository context)
-        {
-            CreateCountries(context);
-            CreatePaymentMethods(context);
-            CreateShippingMethods(context);
-            base.Seed(context);
-        }
+	public class SqlOrderDatabaseInitializer : SetupDatabaseInitializer<EFOrderRepository, Migrations.Configuration>
+	{
+		protected override void Seed(EFOrderRepository context)
+		{
+			CreateCountries(context);
+			CreatePaymentMethods(context);
+			CreateShippingMethods(context);
+			base.Seed(context);
+		}
 
-        #region Country/Regions
-        private void CreateCountries(EFOrderRepository repository)
-        {
-            var countries = new List<Country>
+		#region Country/Regions
+		private void CreateCountries(EFOrderRepository repository)
+		{
+			var countries = new List<Country>
 				{
 					CreateCountry("Aruba", "ABW", 0),
 					CreateCountry("Afghanistan", "AFG", 0),
@@ -269,31 +265,31 @@ namespace VirtoCommerce.PowerShell.Orders
 					CreateCountry("Zambia", "ZMB", 0),
 					CreateCountry("Zimbabwe", "ZWE", 0)
 				};
-            foreach (var country in countries)
-            {
-                repository.Add(country);
-            }
-            repository.UnitOfWork.Commit();
-        }
+			foreach (var country in countries)
+			{
+				repository.Add(country);
+			}
+			repository.UnitOfWork.Commit();
+		}
 
-        private Region CreateRegion(string name, string id, int priority, string countryId)
-        {
-            var region = new Region
-            {
-                RegionId = id,
-                CountryId = countryId,
-                DisplayName = name,
-                Name = name,
-                Priority = priority,
-                IsVisible = true
-            };
+		private Region CreateRegion(string name, string id, int priority, string countryId)
+		{
+			var region = new Region
+			{
+				RegionId = id,
+				CountryId = countryId,
+				DisplayName = name,
+				Name = name,
+				Priority = priority,
+				IsVisible = true
+			};
 
-            return region;
-        }
+			return region;
+		}
 
-        private IEnumerable<Region> CreateRegions()
-        {
-            var list = new List<Region>
+		private IEnumerable<Region> CreateRegions()
+		{
+			var list = new List<Region>
 				{
 					CreateRegion("ALABAMA", "AL", 0, "USA"),
 					CreateRegion("ALASKA", "AK", 0, "USA"),
@@ -361,137 +357,137 @@ namespace VirtoCommerce.PowerShell.Orders
 					CreateRegion("Armed Forces Middle East", "AM", 0, "USA"),
 					CreateRegion("Armed Forces Pacific", "AP", 0, "USA")
 				};
-            return list.ToArray();
-        }
+			return list.ToArray();
+		}
 
-        private Country CreateCountry(string name, string id, int priority)
-        {
-            var country = new Country { CountryId = id, DisplayName = name, Name = name, Priority = priority, IsVisible = true };
+		private Country CreateCountry(string name, string id, int priority)
+		{
+			var country = new Country { CountryId = id, DisplayName = name, Name = name, Priority = priority, IsVisible = true };
 
-            if (id == "USA")
-            {
-                var regions = CreateRegions();
-                foreach (var region in regions)
-                {
-                    country.Regions.Add(region);
-                }
-            }
+			if (id == "USA")
+			{
+				var regions = CreateRegions();
+				foreach (var region in regions)
+				{
+					country.Regions.Add(region);
+				}
+			}
 
-            return country;
-        }
+			return country;
+		}
 
-        #endregion
+		#endregion
 
-        #region Payments & Shippings
-        private void CreateShippingMethods(EFOrderRepository repository)
-        {
-            var gateways = CreateShippingGateways();
-            gateways.ForEach(repository.Add);
-            var currency = new[] {"USD", "EUR"};
-            var shippingMethods = new List<ShippingMethod>();
-            foreach (var curr in currency)
-            {
-                shippingMethods.Add(new ShippingMethod
-                {
-                    ShippingMethodId = "FreeShipping" + curr,
-                    Name = "FreeShipping",
-                    DisplayName = "Free Shipping",
-                    Description = "Free Shipping",
-                    Currency = curr,
-                    BasePrice = 0,
-                    IsActive = true
-                });
-                shippingMethods.Add(new ShippingMethod
-                {
-                    ShippingMethodId = "FlatRate" + curr,
-                    Name = "FlatRate",
-                    DisplayName = "Flat Rate",
-                    Description = "Flat Rate",
-                    Currency = curr,
-                    BasePrice = 10,
-                    IsActive = true
-                });
-                shippingMethods.Add(new ShippingMethod
-                {
-                    ShippingMethodId = "WeightedRate" + curr,
-                    Name = "WeightedRate",
-                    DisplayName = "Weighted Rate",
-                    Description = "Weighted Rate is based on base price and line items weight",
-                    Currency = curr,
-                    BasePrice = 8,
-                    IsActive = true
-                });
-            }
+		#region Payments & Shippings
+		private void CreateShippingMethods(EFOrderRepository repository)
+		{
+			var gateways = CreateShippingGateways();
+			gateways.ForEach(repository.Add);
+			var currency = new[] { "USD", "EUR" };
+			var shippingMethods = new List<ShippingMethod>();
+			foreach (var curr in currency)
+			{
+				shippingMethods.Add(new ShippingMethod
+				{
+					ShippingMethodId = "FreeShipping" + curr,
+					Name = "FreeShipping",
+					DisplayName = "Free Shipping",
+					Description = "Free Shipping",
+					Currency = curr,
+					BasePrice = 0,
+					IsActive = true
+				});
+				shippingMethods.Add(new ShippingMethod
+				{
+					ShippingMethodId = "FlatRate" + curr,
+					Name = "FlatRate",
+					DisplayName = "Flat Rate",
+					Description = "Flat Rate",
+					Currency = curr,
+					BasePrice = 10,
+					IsActive = true
+				});
+				shippingMethods.Add(new ShippingMethod
+				{
+					ShippingMethodId = "WeightedRate" + curr,
+					Name = "WeightedRate",
+					DisplayName = "Weighted Rate",
+					Description = "Weighted Rate is based on base price and line items weight",
+					Currency = curr,
+					BasePrice = 8,
+					IsActive = true
+				});
+			}
 
-            var simpleOption = new ShippingOption
-            {
-                Name = "simple",
-                Description = "Shipping option for simple shipping gateway",
-                ShippingGateway = gateways[0]
-            };
+			var simpleOption = new ShippingOption
+			{
+				Name = "simple",
+				Description = "Shipping option for simple shipping gateway",
+				ShippingGateway = gateways[0]
+			};
 
-            repository.Add(simpleOption);
+			repository.Add(simpleOption);
 
-            var weightedOption = new ShippingOption
-            {
-                Name = "weightedOption",
-                Description = "Weighted option for weighted shipping gateway",
-                ShippingGateway = gateways[1]
-            };
+			var weightedOption = new ShippingOption
+			{
+				Name = "weightedOption",
+				Description = "Weighted option for weighted shipping gateway",
+				ShippingGateway = gateways[1]
+			};
 
-            weightedOption.ShippingGatewayPropertyValues.Add(new ShippingGatewayPropertyValue
-            {
-                ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                Name = "UnitWeightPrice",
-                ShortTextValue = 0.49M.ToString(CultureInfo.InvariantCulture)
-            });
+			weightedOption.ShippingGatewayPropertyValues.Add(new ShippingGatewayPropertyValue
+			{
+				ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+				Name = "UnitWeightPrice",
+				ShortTextValue = 0.49M.ToString(CultureInfo.InvariantCulture)
+			});
 
-            repository.Add(weightedOption);
+			repository.Add(weightedOption);
 
-            foreach (var sm in shippingMethods)
-            {
-                if (sm.Name.Equals("FreeShipping") || sm.Name.Equals("FlatRate"))
-                {
-                    simpleOption.ShippingMethods.Add(sm);
-                }
-                if (sm.Name.Equals("WeightedRate"))
-                {
-                    weightedOption.ShippingMethods.Add(sm);
-                }
+			foreach (var sm in shippingMethods)
+			{
+				if (sm.Name.Equals("FreeShipping") || sm.Name.Equals("FlatRate"))
+				{
+					simpleOption.ShippingMethods.Add(sm);
+				}
+				if (sm.Name.Equals("WeightedRate"))
+				{
+					weightedOption.ShippingMethods.Add(sm);
+				}
 
-                var methodLanguage = new ShippingMethodLanguage
-                {
-                    DisplayName = sm.DisplayName,
-                    LanguageCode = "en-US",
-                    ShippingMethodId = sm.ShippingMethodId,
-                };
+				var methodLanguage = new ShippingMethodLanguage
+				{
+					DisplayName = sm.DisplayName,
+					LanguageCode = "en-US",
+					ShippingMethodId = sm.ShippingMethodId,
+				};
 
-                sm.ShippingMethodLanguages.Add(methodLanguage);
+				sm.ShippingMethodLanguages.Add(methodLanguage);
 
-                foreach (var pm in repository.PaymentMethods)
-                {
-                    //Add only credit cart payment for weighted shipping
-                    if (sm.Name.Equals("WeightedRate") && !pm.Name.Equals("CreditCard"))
-                    {
-                        continue;
-                    }
-                    pm.PaymentMethodShippingMethods.Add(new PaymentMethodShippingMethod
-                    {
-                        PaymentMethodId = pm.PaymentMethodId,
-                        ShippingMethodId = sm.ShippingMethodId
-                    });
-                }
-            }
+				foreach (var pm in repository.PaymentMethods)
+				{
+					//Add only credit cart payment for weighted shipping
+					if (sm.Name.Equals("WeightedRate") && !pm.Name.Equals("CreditCard"))
+					{
+						continue;
+					}
+					pm.PaymentMethodShippingMethods.Add(new PaymentMethodShippingMethod
+					{
+						PaymentMethodId = pm.PaymentMethodId,
+						ShippingMethodId = sm.ShippingMethodId
+					});
+				}
+			}
 
-            repository.UnitOfWork.Commit();
-        }
+			repository.UnitOfWork.Commit();
+		}
 
-        private void CreatePaymentMethods(EFOrderRepository repository)
-        {
-            var paymentGateways = CreatePaymentGateways();
-            paymentGateways.ForEach(repository.Add);
+		private void CreatePaymentMethods(EFOrderRepository repository)
+		{
+			var paymentGateways = CreatePaymentGateways();
+			paymentGateways.ForEach(repository.Add);
 
-            var paymentMethods = new List<PaymentMethod>
+			var paymentMethods = new List<PaymentMethod>
 				{
 					new PaymentMethod
 						{
@@ -516,94 +512,94 @@ namespace VirtoCommerce.PowerShell.Orders
 						}
 				};
 
-            foreach (var pm in paymentMethods)
-            {
-                repository.Add(pm);
+			foreach (var pm in paymentMethods)
+			{
+				repository.Add(pm);
 
-                //Setup test config for Authorize.Net
-                if (pm.Name.Equals("CreditCard", StringComparison.OrdinalIgnoreCase))
-                {
-                    pm.PaymentMethodPropertyValues.Add(new PaymentMethodPropertyValue
-                    {
-                        ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                        Name = "MerchantLogin",
-                        ShortTextValue = "87WmkB7W"
-                    });
-                    pm.PaymentMethodPropertyValues.Add(new PaymentMethodPropertyValue
-                    {
-                        ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                        Name = "MerchantPassword",
-                        ShortTextValue = "8hAuD275892cBFcb"
-                    });
-                    pm.PaymentMethodPropertyValues.Add(new PaymentMethodPropertyValue
-                    {
-                        ValueType = GatewayProperty.ValueTypes.Boolean.GetHashCode(),
-                        Name = "TestMode",
-                        BooleanValue = true
-                    });
-                    //pm.PaymentMethodPropertyValues.Add(new PaymentMethodPropertyValue
-                    //{
-                    //    ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                    //    Name = "GatewayURL",
-                    //    ShortTextValue = "https://test.authorize.net/gateway/transact.dll"
-                    //});
-                }
-                else if (pm.Name.Equals("Paypal", StringComparison.OrdinalIgnoreCase))
-                {
-                    pm.PaymentMethodPropertyValues.Add(new PaymentMethodPropertyValue
-                    {
-                        ValueType = GatewayProperty.ValueTypes.DictionaryKey.GetHashCode(),
-                        Name = "mode",
-                        ShortTextValue = "sandbox"
-                    });
-                    pm.PaymentMethodPropertyValues.Add(new PaymentMethodPropertyValue
-                    {
-                        ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                        Name = "account1.apiUsername",
-                        ShortTextValue = "jb-us-seller_api1.paypal.com"
-                    });
-                    pm.PaymentMethodPropertyValues.Add(new PaymentMethodPropertyValue
-                    {
-                        ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                        Name = "account1.apiPassword",
-                        ShortTextValue = "WX4WTU3S8MY44S7F"
-                    });
-                    pm.PaymentMethodPropertyValues.Add(new PaymentMethodPropertyValue
-                    {
-                        ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                        Name = "account1.apiSignature",
-                        ShortTextValue = "AFcWxV21C7fd0v3bYYYRCpSSRl31A7yDhhsPUU2XhtMoZXsWHFxu-RWy"
-                    });
-                    pm.PaymentMethodPropertyValues.Add(new PaymentMethodPropertyValue
-                    {
-                        ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                        Name = "account1.applicationId",
-                        ShortTextValue = "APP-80W284485P519543T"
-                    });
-                    pm.PaymentMethodPropertyValues.Add(new PaymentMethodPropertyValue
-                    {
-                        ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                        Name = "URL",
-                        ShortTextValue = "https://www.sandbox.paypal.com/webscr&cmd={0}"
-                    });
-                }
+				//Setup test config for Authorize.Net
+				if (pm.Name.Equals("CreditCard", StringComparison.OrdinalIgnoreCase))
+				{
+					pm.PaymentMethodPropertyValues.Add(new PaymentMethodPropertyValue
+					{
+						ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+						Name = "MerchantLogin",
+						ShortTextValue = "87WmkB7W"
+					});
+					pm.PaymentMethodPropertyValues.Add(new PaymentMethodPropertyValue
+					{
+						ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+						Name = "MerchantPassword",
+						ShortTextValue = "8hAuD275892cBFcb"
+					});
+					pm.PaymentMethodPropertyValues.Add(new PaymentMethodPropertyValue
+					{
+						ValueType = GatewayProperty.ValueTypes.Boolean.GetHashCode(),
+						Name = "TestMode",
+						BooleanValue = true
+					});
+					//pm.PaymentMethodPropertyValues.Add(new PaymentMethodPropertyValue
+					//{
+					//    ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+					//    Name = "GatewayURL",
+					//    ShortTextValue = "https://test.authorize.net/gateway/transact.dll"
+					//});
+				}
+				else if (pm.Name.Equals("Paypal", StringComparison.OrdinalIgnoreCase))
+				{
+					pm.PaymentMethodPropertyValues.Add(new PaymentMethodPropertyValue
+					{
+						ValueType = GatewayProperty.ValueTypes.DictionaryKey.GetHashCode(),
+						Name = "mode",
+						ShortTextValue = "sandbox"
+					});
+					pm.PaymentMethodPropertyValues.Add(new PaymentMethodPropertyValue
+					{
+						ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+						Name = "account1.apiUsername",
+						ShortTextValue = "jb-us-seller_api1.paypal.com"
+					});
+					pm.PaymentMethodPropertyValues.Add(new PaymentMethodPropertyValue
+					{
+						ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+						Name = "account1.apiPassword",
+						ShortTextValue = "WX4WTU3S8MY44S7F"
+					});
+					pm.PaymentMethodPropertyValues.Add(new PaymentMethodPropertyValue
+					{
+						ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+						Name = "account1.apiSignature",
+						ShortTextValue = "AFcWxV21C7fd0v3bYYYRCpSSRl31A7yDhhsPUU2XhtMoZXsWHFxu-RWy"
+					});
+					pm.PaymentMethodPropertyValues.Add(new PaymentMethodPropertyValue
+					{
+						ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+						Name = "account1.applicationId",
+						ShortTextValue = "APP-80W284485P519543T"
+					});
+					pm.PaymentMethodPropertyValues.Add(new PaymentMethodPropertyValue
+					{
+						ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+						Name = "URL",
+						ShortTextValue = "https://www.sandbox.paypal.com/webscr&cmd={0}"
+					});
+				}
 
-                var methodLanguage = new PaymentMethodLanguage
-                {
-                    DisplayName = pm.Description,
-                    LanguageCode = "en-US",
-                    PaymentMethodId = pm.PaymentMethodId,
-                };
+				var methodLanguage = new PaymentMethodLanguage
+				{
+					DisplayName = pm.Description,
+					LanguageCode = "en-US",
+					PaymentMethodId = pm.PaymentMethodId,
+				};
 
-                pm.PaymentMethodLanguages.Add(methodLanguage);
-            }
+				pm.PaymentMethodLanguages.Add(methodLanguage);
+			}
 
-            repository.UnitOfWork.Commit();
-        }
+			repository.UnitOfWork.Commit();
+		}
 
-        private List<ShippingGateway> CreateShippingGateways()
-        {
-            var gateways = new List<ShippingGateway>
+		private List<ShippingGateway> CreateShippingGateways()
+		{
+			var gateways = new List<ShippingGateway>
 				{
 					new ShippingGateway
 						{
@@ -617,237 +613,237 @@ namespace VirtoCommerce.PowerShell.Orders
 						}
 				};
 
-            gateways[0].GatewayProperties.Add(new GatewayProperty { DisplayName = "Currency", Name = "Currency", ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode() });
-            gateways[0].GatewayProperties.Add(new GatewayProperty { DisplayName = "Include VAT", Name = "IncludeVAT", ValueType = GatewayProperty.ValueTypes.Boolean.GetHashCode() });
-            var property = new GatewayProperty { DisplayName = "Dictionary Values", Name = "DictionaryParam", ValueType = GatewayProperty.ValueTypes.DictionaryKey.GetHashCode() };
-            property.GatewayPropertyDictionaryValues.Add(new GatewayPropertyDictionaryValue { DisplayName = "parameter 1", Value = "p01" });
-            property.GatewayPropertyDictionaryValues.Add(new GatewayPropertyDictionaryValue { DisplayName = "parameter 3", Value = "p03" });
-            gateways[0].GatewayProperties.Add(property);
+			gateways[0].GatewayProperties.Add(new GatewayProperty { DisplayName = "Currency", Name = "Currency", ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode() });
+			gateways[0].GatewayProperties.Add(new GatewayProperty { DisplayName = "Include VAT", Name = "IncludeVAT", ValueType = GatewayProperty.ValueTypes.Boolean.GetHashCode() });
+			var property = new GatewayProperty { DisplayName = "Dictionary Values", Name = "DictionaryParam", ValueType = GatewayProperty.ValueTypes.DictionaryKey.GetHashCode() };
+			property.GatewayPropertyDictionaryValues.Add(new GatewayPropertyDictionaryValue { DisplayName = "parameter 1", Value = "p01" });
+			property.GatewayPropertyDictionaryValues.Add(new GatewayPropertyDictionaryValue { DisplayName = "parameter 3", Value = "p03" });
+			gateways[0].GatewayProperties.Add(property);
 
-            //TODO need to add decimals
-            gateways[1].GatewayProperties.Add(new GatewayProperty { DisplayName = "Unit weight price", Name = "UnitWeightPrice", ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode() });
-
-
-            return gateways;
-        }
-
-        private List<PaymentGateway> CreatePaymentGateways()
-        {
-            var defaultGateway = new PaymentGateway
-            {
-                ClassType = "VirtoCommerce.PaymentGateways.DefaultPaymentGateway, VirtoCommerce.PaymentGateways",
-                Name = "DefaultPaymentGateway",
-                SupportsRecurring = false
-            };
-
-            var paymentGateways = new List<PaymentGateway>{defaultGateway};
-
-            var property0 = new GatewayProperty
-            {
-                DisplayName = "Status",
-                Name = "Status",
-                ValueType = GatewayProperty.ValueTypes.DictionaryKey.GetHashCode(),
-                IsRequired = true,
-            };
-
-            property0.GatewayPropertyDictionaryValues.Add(new GatewayPropertyDictionaryValue
-            {
-                DisplayName = "Idle",
-                Value = "Idle"
-            });
-            property0.GatewayPropertyDictionaryValues.Add(new GatewayPropertyDictionaryValue
-            {
-                DisplayName = "Processing in progress",
-                Value = "InProgress"
-            });
-            property0.GatewayPropertyDictionaryValues.Add(new GatewayPropertyDictionaryValue
-            {
-                DisplayName = "Paused",
-                Value = "Paused"
-            });
-
-            defaultGateway.GatewayProperties.Add(property0);
-            defaultGateway.GatewayProperties.Add(new GatewayProperty
-            {
-                DisplayName = "Allow unencrypted data",
-                Name = "IsAllowUnencrypted",
-                ValueType = GatewayProperty.ValueTypes.Boolean.GetHashCode()
-            });
-
-            defaultGateway.GatewayProperties.Add(new GatewayProperty
-            {
-                DisplayName = "Secure URL",
-                Name = "URL",
-                ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode()
-            });
-
-            SetupPaypalGateway(paymentGateways);
-            SetupAuthorizeNetGateway(paymentGateways);
-            SetuptIchargeGateway(paymentGateways);
-
-            return paymentGateways;
-        }
-
-        private class IchargeInfo
-        {
-            public int TransactionTypes { get; set; }
-            public string Code { get; set; }
-            public string Name { get; set; }
-        }
-
-        private void SetupAuthorizeNetGateway(List<PaymentGateway> gateways)
-        {
-            var icGateway = new PaymentGateway
-            {
-                ClassType = "VirtoCommerce.PaymentGateways.AuthorizeNetPaymentGateway, VirtoCommerce.PaymentGateways",
-                Name = "Authorize.NET",
-                SupportedTransactionTypes = 0x1F,
-                SupportsRecurring = true
-            };
-
-            icGateway.GatewayProperties.Add(new GatewayProperty
-            {
-                DisplayName = "Merchant's Gateway login",
-                Name = "MerchantLogin",
-                ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                IsRequired = true,
-            });
-
-            icGateway.GatewayProperties.Add(new GatewayProperty
-            {
-                DisplayName = "Merchant's Gateway password",
-                Name = "MerchantPassword",
-                ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                IsRequired = true,
-            });
-
-            icGateway.GatewayProperties.Add(new GatewayProperty
-            {
-                DisplayName = "Identifies if transaction is in test mode",
-                Name = "TestMode",
-                ValueType = GatewayProperty.ValueTypes.Boolean.GetHashCode()
-            });
+			//TODO need to add decimals
+			gateways[1].GatewayProperties.Add(new GatewayProperty { DisplayName = "Unit weight price", Name = "UnitWeightPrice", ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode() });
 
 
-            gateways.Add(icGateway);
-        }
+			return gateways;
+		}
 
-        private void SetupPaypalGateway(List<PaymentGateway> gateways)
-        {
-            var payPalGateway = new PaymentGateway
-            {
-                ClassType = "VirtoCommerce.PaymentGateways.PaypalPaymentGateway, VirtoCommerce.PaymentGateways",
-                Name = "PayPal",
-                SupportedTransactionTypes = (int) (TransactionType.Sale),
-                SupportsRecurring = true
-            };
+		private List<PaymentGateway> CreatePaymentGateways()
+		{
+			var defaultGateway = new PaymentGateway
+			{
+				ClassType = "VirtoCommerce.PaymentGateways.DefaultPaymentGateway, VirtoCommerce.PaymentGateways",
+				Name = "DefaultPaymentGateway",
+				SupportsRecurring = false
+			};
 
-            payPalGateway.GatewayProperties.Add(new GatewayProperty
-            {
-                DisplayName = "Secure URL",
-                Name = "URL",
-                ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode()
-            });
+			var paymentGateways = new List<PaymentGateway> { defaultGateway };
 
-            var propertyMode = new GatewayProperty
-            {
-                DisplayName = "PayPal environment",
-                Name = "mode",
-                ValueType = GatewayProperty.ValueTypes.DictionaryKey.GetHashCode(),
-                IsRequired = true,
-            };
+			var property0 = new GatewayProperty
+			{
+				DisplayName = "Status",
+				Name = "Status",
+				ValueType = GatewayProperty.ValueTypes.DictionaryKey.GetHashCode(),
+				IsRequired = true,
+			};
 
-            propertyMode.GatewayPropertyDictionaryValues.Add(new GatewayPropertyDictionaryValue
-            {
-                DisplayName = "Live mode",
-                Value = "live"
-            });
-            propertyMode.GatewayPropertyDictionaryValues.Add(new GatewayPropertyDictionaryValue
-            {
-                DisplayName = "Sandbox mode",
-                Value = "sandbox"
-            });
+			property0.GatewayPropertyDictionaryValues.Add(new GatewayPropertyDictionaryValue
+			{
+				DisplayName = "Idle",
+				Value = "Idle"
+			});
+			property0.GatewayPropertyDictionaryValues.Add(new GatewayPropertyDictionaryValue
+			{
+				DisplayName = "Processing in progress",
+				Value = "InProgress"
+			});
+			property0.GatewayPropertyDictionaryValues.Add(new GatewayPropertyDictionaryValue
+			{
+				DisplayName = "Paused",
+				Value = "Paused"
+			});
 
-            payPalGateway.GatewayProperties.Add(propertyMode);
+			defaultGateway.GatewayProperties.Add(property0);
+			defaultGateway.GatewayProperties.Add(new GatewayProperty
+			{
+				DisplayName = "Allow unencrypted data",
+				Name = "IsAllowUnencrypted",
+				ValueType = GatewayProperty.ValueTypes.Boolean.GetHashCode()
+			});
 
-            #region Uncomment this if want to override default settings
-            //paymentGateways[1].GatewayProperties.Add(new GatewayProperty
-            //{
-            //    DisplayName = "Connection timeout",
-            //    Name = "connectionTimeout",
-            //    ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode()
-            //});
-            //paymentGateways[1].GatewayProperties.Add(new GatewayProperty
-            //{
-            //    DisplayName = "Request retries",
-            //    Name = "requestRetries",
-            //    ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode()
-            //});
-            #endregion
-            payPalGateway.GatewayProperties.Add(new GatewayProperty
-            {
-                DisplayName = "username",
-                Name = "account1.apiUsername",
-                ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode()
-            });
-            payPalGateway.GatewayProperties.Add(new GatewayProperty
-            {
-                DisplayName = "password",
-                Name = "account1.apiPassword",
-                ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode()
-            });
-            payPalGateway.GatewayProperties.Add(new GatewayProperty
-            {
-                DisplayName = "signature",
-                Name = "account1.apiSignature",
-                ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode()
-            });
-            payPalGateway.GatewayProperties.Add(new GatewayProperty
-            {
-                DisplayName = "application id",
-                Name = "account1.applicationId",
-                ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode()
-            });
-            #region Uncomment this if need to setup paypal with certificate
-            //paymentGateways[1].GatewayProperties.Add(new GatewayProperty
-            //{
-            //    DisplayName = "username",
-            //    Name = "account2.apiUsername",
-            //    ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode()
-            //});
-            //paymentGateways[1].GatewayProperties.Add(new GatewayProperty
-            //{
-            //    DisplayName = "password",
-            //    Name = "account2.apiPassword",
-            //    ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode()
-            //});
-            //paymentGateways[1].GatewayProperties.Add(new GatewayProperty
-            //{
-            //    DisplayName = "certificate",
-            //    Name = "account2.apiCertificate",
-            //    ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode()
-            //});
-            //paymentGateways[1].GatewayProperties.Add(new GatewayProperty
-            //{
-            //    DisplayName = "private key password",
-            //    Name = "account2.privateKeyPassword",
-            //    ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode()
-            //});
-            //paymentGateways[1].GatewayProperties.Add(new GatewayProperty
-            //{
-            //    DisplayName = "application id",
-            //    Name = "account2.applicationId",
-            //    ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode()
-            //});
-            #endregion
+			defaultGateway.GatewayProperties.Add(new GatewayProperty
+			{
+				DisplayName = "Secure URL",
+				Name = "URL",
+				ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode()
+			});
 
-            gateways.Add(payPalGateway);
-        }
+			SetupPaypalGateway(paymentGateways);
+			SetupAuthorizeNetGateway(paymentGateways);
+			SetuptIchargeGateway(paymentGateways);
 
-        private void SetuptIchargeGateway(List<PaymentGateway> gateways)
-        {
-            //Commented gateways are no longer in service.
-            var ichargeGateways = new List<IchargeInfo>
+			return paymentGateways;
+		}
+
+		private class IchargeInfo
+		{
+			public int TransactionTypes { get; set; }
+			public string Code { get; set; }
+			public string Name { get; set; }
+		}
+
+		private void SetupAuthorizeNetGateway(List<PaymentGateway> gateways)
+		{
+			var icGateway = new PaymentGateway
+			{
+				ClassType = "VirtoCommerce.PaymentGateways.AuthorizeNetPaymentGateway, VirtoCommerce.PaymentGateways",
+				Name = "Authorize.NET",
+				SupportedTransactionTypes = 0x1F,
+				SupportsRecurring = true
+			};
+
+			icGateway.GatewayProperties.Add(new GatewayProperty
+			{
+				DisplayName = "Merchant's Gateway login",
+				Name = "MerchantLogin",
+				ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+				IsRequired = true,
+			});
+
+			icGateway.GatewayProperties.Add(new GatewayProperty
+			{
+				DisplayName = "Merchant's Gateway password",
+				Name = "MerchantPassword",
+				ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+				IsRequired = true,
+			});
+
+			icGateway.GatewayProperties.Add(new GatewayProperty
+			{
+				DisplayName = "Identifies if transaction is in test mode",
+				Name = "TestMode",
+				ValueType = GatewayProperty.ValueTypes.Boolean.GetHashCode()
+			});
+
+
+			gateways.Add(icGateway);
+		}
+
+		private void SetupPaypalGateway(List<PaymentGateway> gateways)
+		{
+			var payPalGateway = new PaymentGateway
+			{
+				ClassType = "VirtoCommerce.PaymentGateways.PaypalPaymentGateway, VirtoCommerce.PaymentGateways",
+				Name = "PayPal",
+				SupportedTransactionTypes = (int)(TransactionType.Sale),
+				SupportsRecurring = true
+			};
+
+			payPalGateway.GatewayProperties.Add(new GatewayProperty
+			{
+				DisplayName = "Secure URL",
+				Name = "URL",
+				ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode()
+			});
+
+			var propertyMode = new GatewayProperty
+			{
+				DisplayName = "PayPal environment",
+				Name = "mode",
+				ValueType = GatewayProperty.ValueTypes.DictionaryKey.GetHashCode(),
+				IsRequired = true,
+			};
+
+			propertyMode.GatewayPropertyDictionaryValues.Add(new GatewayPropertyDictionaryValue
+			{
+				DisplayName = "Live mode",
+				Value = "live"
+			});
+			propertyMode.GatewayPropertyDictionaryValues.Add(new GatewayPropertyDictionaryValue
+			{
+				DisplayName = "Sandbox mode",
+				Value = "sandbox"
+			});
+
+			payPalGateway.GatewayProperties.Add(propertyMode);
+
+			#region Uncomment this if want to override default settings
+			//paymentGateways[1].GatewayProperties.Add(new GatewayProperty
+			//{
+			//    DisplayName = "Connection timeout",
+			//    Name = "connectionTimeout",
+			//    ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode()
+			//});
+			//paymentGateways[1].GatewayProperties.Add(new GatewayProperty
+			//{
+			//    DisplayName = "Request retries",
+			//    Name = "requestRetries",
+			//    ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode()
+			//});
+			#endregion
+			payPalGateway.GatewayProperties.Add(new GatewayProperty
+			{
+				DisplayName = "username",
+				Name = "account1.apiUsername",
+				ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode()
+			});
+			payPalGateway.GatewayProperties.Add(new GatewayProperty
+			{
+				DisplayName = "password",
+				Name = "account1.apiPassword",
+				ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode()
+			});
+			payPalGateway.GatewayProperties.Add(new GatewayProperty
+			{
+				DisplayName = "signature",
+				Name = "account1.apiSignature",
+				ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode()
+			});
+			payPalGateway.GatewayProperties.Add(new GatewayProperty
+			{
+				DisplayName = "application id",
+				Name = "account1.applicationId",
+				ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode()
+			});
+			#region Uncomment this if need to setup paypal with certificate
+			//paymentGateways[1].GatewayProperties.Add(new GatewayProperty
+			//{
+			//    DisplayName = "username",
+			//    Name = "account2.apiUsername",
+			//    ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode()
+			//});
+			//paymentGateways[1].GatewayProperties.Add(new GatewayProperty
+			//{
+			//    DisplayName = "password",
+			//    Name = "account2.apiPassword",
+			//    ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode()
+			//});
+			//paymentGateways[1].GatewayProperties.Add(new GatewayProperty
+			//{
+			//    DisplayName = "certificate",
+			//    Name = "account2.apiCertificate",
+			//    ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode()
+			//});
+			//paymentGateways[1].GatewayProperties.Add(new GatewayProperty
+			//{
+			//    DisplayName = "private key password",
+			//    Name = "account2.privateKeyPassword",
+			//    ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode()
+			//});
+			//paymentGateways[1].GatewayProperties.Add(new GatewayProperty
+			//{
+			//    DisplayName = "application id",
+			//    Name = "account2.applicationId",
+			//    ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode()
+			//});
+			#endregion
+
+			gateways.Add(payPalGateway);
+		}
+
+		private void SetuptIchargeGateway(List<PaymentGateway> gateways)
+		{
+			//Commented gateways are no longer in service.
+			var ichargeGateways = new List<IchargeInfo>
 				{
 					//new IchargeInfo { Code="gwNoGateway", Name = "No Gateway"},
 					new IchargeInfo { Code="gwAuthorizeNet", Name="Authorize.Net", TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
@@ -945,215 +941,215 @@ namespace VirtoCommerce.PowerShell.Orders
 					new IchargeInfo { Code="gwGlobalIris", Name="Global Iris (HSBC)",TransactionTypes = (int)(TransactionType.Sale | TransactionType.Authorization | TransactionType.Capture | TransactionType.Credit | TransactionType.Void)},
 				};
 
-            foreach (var ichargeInfo in ichargeGateways)
-            {
-                var icGateway = new PaymentGateway
-                {
-                    GatewayId = ichargeInfo.Code,
-                    ClassType = "VirtoCommerce.PaymentGateways.IchargePaymentGateway, VirtoCommerce.PaymentGateways",
-                    Name = ichargeInfo.Name,
-                    SupportsRecurring = false,
-                    SupportedTransactionTypes = ichargeInfo.TransactionTypes
-                };
+			foreach (var ichargeInfo in ichargeGateways)
+			{
+				var icGateway = new PaymentGateway
+				{
+					GatewayId = ichargeInfo.Code,
+					ClassType = "VirtoCommerce.PaymentGateways.IchargePaymentGateway, VirtoCommerce.PaymentGateways",
+					Name = ichargeInfo.Name,
+					SupportsRecurring = false,
+					SupportedTransactionTypes = ichargeInfo.TransactionTypes
+				};
 
-                icGateway.GatewayProperties.Add(new GatewayProperty
-                {
-                    DisplayName = "Merchant's Gateway login",
-                    Name = "MerchantLogin",
-                    ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                    IsRequired = true,
-                });
+				icGateway.GatewayProperties.Add(new GatewayProperty
+				{
+					DisplayName = "Merchant's Gateway login",
+					Name = "MerchantLogin",
+					ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+					IsRequired = true,
+				});
 
-                icGateway.GatewayProperties.Add(new GatewayProperty
-                {
-                    DisplayName = "Merchant's Gateway password",
-                    Name = "MerchantPassword",
-                    ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                    IsRequired = true,
-                });
+				icGateway.GatewayProperties.Add(new GatewayProperty
+				{
+					DisplayName = "Merchant's Gateway password",
+					Name = "MerchantPassword",
+					ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+					IsRequired = true,
+				});
 
-                icGateway.GatewayProperties.Add(new GatewayProperty
-                {
-                    DisplayName = "Default URL for a specific Gateway.",
-                    Name = "GatewayURL",
-                    ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                    IsRequired = false
-                });
-                var testMode = new GatewayProperty
-                {
-                    DisplayName = "Identifies if transaction is in test mode",
-                    Name = "TestMode",
-                    ValueType = GatewayProperty.ValueTypes.Boolean.GetHashCode()
-                };
+				icGateway.GatewayProperties.Add(new GatewayProperty
+				{
+					DisplayName = "Default URL for a specific Gateway.",
+					Name = "GatewayURL",
+					ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+					IsRequired = false
+				});
+				var testMode = new GatewayProperty
+				{
+					DisplayName = "Identifies if transaction is in test mode",
+					Name = "TestMode",
+					ValueType = GatewayProperty.ValueTypes.Boolean.GetHashCode()
+				};
 
-                switch (ichargeInfo.Code)
-                {
-                    case "gwAuthorizeNet":
-                    case "gwPlanetPayment":
-                    case "gwMPCS":
-                    case "gwRTWare":
-                    case "gwECX":
-                        icGateway.GatewayProperties.Add(new GatewayProperty
-                        {
-                            DisplayName = "Extra security key for Authorize.Net's AIM (3.1) protocol.",
-                            Name = "AIMHashSecret",
-                            ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                            IsRequired = true
-                        });
-                        icGateway.GatewayProperties.Add(testMode);
-                        break;
-                    //case "gwViaKlix":
-                    //    icGateway.GatewayProperties.Add(new GatewayProperty
-                    //    {
-                    //        DisplayName = "SSL user id",
-                    //        Name = "ssl_user_id",
-                    //        ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                    //        IsRequired = true
-                    //    });
-                    //    break;
-                    case "gwBankOfAmerica":
-                        icGateway.GatewayProperties.Add(new GatewayProperty
-                        {
-                            DisplayName = "HTTP Referer header allowed in your Bank of America store security settings",
-                            Name = "referer",
-                            ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                            IsRequired = true
-                        });
-                        break;
-                    case "gwInnovative":
-                        icGateway.GatewayProperties.Add(new GatewayProperty
-                        {
-                            DisplayName = "Test override errors",
-                            Name = "test_override_errors",
-                            ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                            IsRequired = false
-                        });
-                        icGateway.GatewayProperties.Add(testMode);
-                        break;
-                    case "gwPayFuse":
-                        icGateway.GatewayProperties.Add(new GatewayProperty
-                        {
-                            DisplayName = "PayFuse requires this additional merchant property.",
-                            Name = "MerchantAlias",
-                            ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                            IsRequired = false
-                        });
-                        icGateway.GatewayProperties.Add(testMode);
-                        break;
-                    case "gwYourPay":
-                    case "gwFirstData":
-                    case "gwLinkPoint":
-                        icGateway.GatewayProperties.Add(new GatewayProperty
-                        {
-                            DisplayName = "SSL Certificate store",
-                            Name = "SSLCertStore",
-                            ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                            IsRequired = true
-                        });
-                        icGateway.GatewayProperties.Add(new GatewayProperty
-                        {
-                            DisplayName = "SSL Certificate store",
-                            Name = "SSLCertStore",
-                            ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                            IsRequired = true
-                        });
-                        icGateway.GatewayProperties.Add(new GatewayProperty
-                        {
-                            DisplayName = "SSL Certificate subject",
-                            Name = "SSLCertSubject",
-                            ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                            IsRequired = true
-                        });
-                        icGateway.GatewayProperties.Add(new GatewayProperty
-                        {
-                            DisplayName = "SSL Certificate encoded",
-                            Name = "SSLCertEncoded",
-                            ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                            IsRequired = true
-                        });
-                        if (ichargeInfo.Code.Equals("gwLinkPoint"))
-                        {
-                            icGateway.GatewayProperties.Add(testMode);
-                        }
-                        break;
-                    //case "gwProtx":
-                    //    icGateway.GatewayProperties.Add(new GatewayProperty
-                    //    {
-                    //        DisplayName = "RelatedSecurityKey special fields required for Credit",
-                    //        Name = "RelatedSecurityKey",
-                    //        ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                    //        IsRequired = true
-                    //    });
-                    //    icGateway.GatewayProperties.Add(new GatewayProperty
-                    //    {
-                    //        DisplayName = "RelatedVendorTXCode special fields required for Credit",
-                    //        Name = "RelatedVendorTXCode",
-                    //        ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                    //        IsRequired = true
-                    //    });
-                    //    icGateway.GatewayProperties.Add(new GatewayProperty
-                    //    {
-                    //        DisplayName = "TXAuthNo special fields required for Captures",
-                    //        Name = "RelatedTXAuthNo",
-                    //        ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                    //        IsRequired = true
-                    //    });
-                    //    break;
-                    //case "gwOptimal":
-                    //    icGateway.GatewayProperties.Add(new GatewayProperty
-                    //    {
-                    //        DisplayName = "Optimal Gateway also requires an additional account field",
-                    //        Name = "account",
-                    //        ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                    //        IsRequired = true
-                    //    });
-                    //    break;
-                    //case "gwPayStream":
-                    //    icGateway.GatewayProperties.Add(new GatewayProperty
-                    //    {
-                    //        DisplayName = "CustomerID",
-                    //        Name = "CustomerID",
-                    //        ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                    //        IsRequired = true
-                    //    });
-                    //    icGateway.GatewayProperties.Add(new GatewayProperty
-                    //    {
-                    //        DisplayName = "ZoneID",
-                    //        Name = "ZoneID",
-                    //        ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                    //        IsRequired = true
-                    //    });
-                    //    icGateway.GatewayProperties.Add(new GatewayProperty
-                    //    {
-                    //        DisplayName = "Username",
-                    //        Name = "Username",
-                    //        ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-                    //        IsRequired = true
-                    //    });
-                    //    break;
-                    case "gwUSAePay":
-                    case "gwECHOnline":
-                    case "gwTrustCommerce":
-                    case "gwPSIGate":
-                    case "gwEway":
-                    case "gwTransFirst":
-                    case "gwPSIGateXML":
-                    case "gwWorldPay":
-                    case "gwPaymentExpress":
-                    case "gwPayLeap":
-                    case "gwSterlingXML":
-                    case "gwHSBC":
-                    case "gwBluePay":
-                    case "gwBarclay":
-                    case "gwPayTrace":
-                    case "gwGoToBilling":
-                        icGateway.GatewayProperties.Add(testMode);
-                        break;
-                }
+				switch (ichargeInfo.Code)
+				{
+					case "gwAuthorizeNet":
+					case "gwPlanetPayment":
+					case "gwMPCS":
+					case "gwRTWare":
+					case "gwECX":
+						icGateway.GatewayProperties.Add(new GatewayProperty
+						{
+							DisplayName = "Extra security key for Authorize.Net's AIM (3.1) protocol.",
+							Name = "AIMHashSecret",
+							ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+							IsRequired = true
+						});
+						icGateway.GatewayProperties.Add(testMode);
+						break;
+					//case "gwViaKlix":
+					//    icGateway.GatewayProperties.Add(new GatewayProperty
+					//    {
+					//        DisplayName = "SSL user id",
+					//        Name = "ssl_user_id",
+					//        ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+					//        IsRequired = true
+					//    });
+					//    break;
+					case "gwBankOfAmerica":
+						icGateway.GatewayProperties.Add(new GatewayProperty
+						{
+							DisplayName = "HTTP Referer header allowed in your Bank of America store security settings",
+							Name = "referer",
+							ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+							IsRequired = true
+						});
+						break;
+					case "gwInnovative":
+						icGateway.GatewayProperties.Add(new GatewayProperty
+						{
+							DisplayName = "Test override errors",
+							Name = "test_override_errors",
+							ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+							IsRequired = false
+						});
+						icGateway.GatewayProperties.Add(testMode);
+						break;
+					case "gwPayFuse":
+						icGateway.GatewayProperties.Add(new GatewayProperty
+						{
+							DisplayName = "PayFuse requires this additional merchant property.",
+							Name = "MerchantAlias",
+							ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+							IsRequired = false
+						});
+						icGateway.GatewayProperties.Add(testMode);
+						break;
+					case "gwYourPay":
+					case "gwFirstData":
+					case "gwLinkPoint":
+						icGateway.GatewayProperties.Add(new GatewayProperty
+						{
+							DisplayName = "SSL Certificate store",
+							Name = "SSLCertStore",
+							ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+							IsRequired = true
+						});
+						icGateway.GatewayProperties.Add(new GatewayProperty
+						{
+							DisplayName = "SSL Certificate store",
+							Name = "SSLCertStore",
+							ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+							IsRequired = true
+						});
+						icGateway.GatewayProperties.Add(new GatewayProperty
+						{
+							DisplayName = "SSL Certificate subject",
+							Name = "SSLCertSubject",
+							ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+							IsRequired = true
+						});
+						icGateway.GatewayProperties.Add(new GatewayProperty
+						{
+							DisplayName = "SSL Certificate encoded",
+							Name = "SSLCertEncoded",
+							ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+							IsRequired = true
+						});
+						if (ichargeInfo.Code.Equals("gwLinkPoint"))
+						{
+							icGateway.GatewayProperties.Add(testMode);
+						}
+						break;
+					//case "gwProtx":
+					//    icGateway.GatewayProperties.Add(new GatewayProperty
+					//    {
+					//        DisplayName = "RelatedSecurityKey special fields required for Credit",
+					//        Name = "RelatedSecurityKey",
+					//        ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+					//        IsRequired = true
+					//    });
+					//    icGateway.GatewayProperties.Add(new GatewayProperty
+					//    {
+					//        DisplayName = "RelatedVendorTXCode special fields required for Credit",
+					//        Name = "RelatedVendorTXCode",
+					//        ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+					//        IsRequired = true
+					//    });
+					//    icGateway.GatewayProperties.Add(new GatewayProperty
+					//    {
+					//        DisplayName = "TXAuthNo special fields required for Captures",
+					//        Name = "RelatedTXAuthNo",
+					//        ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+					//        IsRequired = true
+					//    });
+					//    break;
+					//case "gwOptimal":
+					//    icGateway.GatewayProperties.Add(new GatewayProperty
+					//    {
+					//        DisplayName = "Optimal Gateway also requires an additional account field",
+					//        Name = "account",
+					//        ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+					//        IsRequired = true
+					//    });
+					//    break;
+					//case "gwPayStream":
+					//    icGateway.GatewayProperties.Add(new GatewayProperty
+					//    {
+					//        DisplayName = "CustomerID",
+					//        Name = "CustomerID",
+					//        ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+					//        IsRequired = true
+					//    });
+					//    icGateway.GatewayProperties.Add(new GatewayProperty
+					//    {
+					//        DisplayName = "ZoneID",
+					//        Name = "ZoneID",
+					//        ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+					//        IsRequired = true
+					//    });
+					//    icGateway.GatewayProperties.Add(new GatewayProperty
+					//    {
+					//        DisplayName = "Username",
+					//        Name = "Username",
+					//        ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+					//        IsRequired = true
+					//    });
+					//    break;
+					case "gwUSAePay":
+					case "gwECHOnline":
+					case "gwTrustCommerce":
+					case "gwPSIGate":
+					case "gwEway":
+					case "gwTransFirst":
+					case "gwPSIGateXML":
+					case "gwWorldPay":
+					case "gwPaymentExpress":
+					case "gwPayLeap":
+					case "gwSterlingXML":
+					case "gwHSBC":
+					case "gwBluePay":
+					case "gwBarclay":
+					case "gwPayTrace":
+					case "gwGoToBilling":
+						icGateway.GatewayProperties.Add(testMode);
+						break;
+				}
 
-                gateways.Add(icGateway);
-            }
-        }
-        #endregion
-    }
+				gateways.Add(icGateway);
+			}
+		}
+		#endregion
+	}
 }

@@ -1,18 +1,16 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Migrations;
 using System.Data.SqlClient;
 using System.Linq;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
 
-namespace VirtoCommerce.PowerShell.DatabaseSetup
+namespace VirtoCommerce.Foundation.Data.Infrastructure
 {
-	using System;
-
-	using VirtoCommerce.Foundation.Frameworks.Extensions;
-
 	/// <summary>
-	///     An implementation of <see cref="IDatabaseInitializer{TContext}" /> that will use Code First Migrations
-	///     to update the database to the latest version.
+	/// An implementation of <see cref="IDatabaseInitializer{TContext}" /> that will use Code First Migrations
+	/// to update the database to the latest version.
 	/// </summary>
 	public class SetupMigrateDatabaseToLatestVersion<TContext, TMigrationsConfiguration> : IDatabaseInitializer<TContext>
 		where TContext : DbContext
@@ -21,14 +19,7 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup
 		private DbMigrationsConfiguration _config;
 
 		/// <summary>
-		/// Initializes the <see cref="SetupMigrateDatabaseToLatestVersion{TContext, TMigrationsConfiguration}"/> class.
-		/// </summary>
-		static SetupMigrateDatabaseToLatestVersion()
-		{
-		}
-
-		/// <summary>
-		///     Initializes a new instance of the MigrateDatabaseToLatestVersion class.
+		/// Initializes a new instance of the MigrateDatabaseToLatestVersion class.
 		/// </summary>
 		public SetupMigrateDatabaseToLatestVersion()
 		{
@@ -62,7 +53,7 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup
 			}
 
 			var seed = !context.Database.Exists();
-			var migrator = new DbMigrator(_config);
+			var migrator = new System.Data.Entity.Migrations.DbMigrator(_config);
 			if (!seed)
 			{
 				var local = migrator.GetLocalMigrations();
