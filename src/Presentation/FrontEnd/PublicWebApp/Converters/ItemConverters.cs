@@ -11,9 +11,9 @@ namespace VirtoCommerce.Web.Converters
     public static class ItemConverters
     {
 
-        public static ItemModel ToWebModel(this CatalogItem item)
+        public static ItemModel ToWebModel(this CatalogItem item, string associationType = null)
         {
-            var retVal = new ItemModel(item);
+            var retVal = string.IsNullOrEmpty(associationType) ?  new ItemModel(item) : new AssociatedItemModel(item, associationType);
             return retVal;
         }
     }

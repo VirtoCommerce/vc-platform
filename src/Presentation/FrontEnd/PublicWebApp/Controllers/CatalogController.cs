@@ -120,7 +120,17 @@ namespace VirtoCommerce.Web.Controllers
             return PartialView(name, model);
         }
 
-        private async Task<ItemModel> GetItem(string item, ItemResponseGroups responseGroup = ItemResponseGroups.ItemMedium, ICustomerSession session = null, bool byCode = false)
+        [ChildActionOnly]
+        public ActionResult AssociatedItem(string itemid, string name, string associationtype)
+        {
+            var session = ClientContext.Session;
+            var item = Task.Run(() => GetItem(itemid, session: session, associationType: associationtype)).Result;
+            return item != null ? PartialView(name, item) : null;
+        }
+
+        #region Private helpers
+
+        private async Task<ItemModel> GetItem(string item, ItemResponseGroups responseGroup = ItemResponseGroups.ItemMedium, ICustomerSession session = null, bool byCode = false, string associationType = null)
         {
             session = session ?? ClientContext.Session;
 
@@ -135,7 +145,7 @@ namespace VirtoCommerce.Web.Controllers
             //Get reviews
             var reviewClient = ClientContext.Clients.CreateReviewsClient(session.CatalogId, session.Language);
             var productReviews = Task.Run(() => reviewClient.GetReviewsAsync(product.Id)).Result;
-            var model = product.ToWebModel();
+            var model = product.ToWebModel(associationType);
             if (productReviews.TotalCount > 0)
             {
                 model.CatalogItem.ReviewsTotal = productReviews.TotalCount;
@@ -154,5 +164,7 @@ namespace VirtoCommerce.Web.Controllers
           
             return model;
         }
+
+        #endregion
     }
 }

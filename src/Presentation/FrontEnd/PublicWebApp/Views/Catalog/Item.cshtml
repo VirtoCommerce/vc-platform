@@ -98,17 +98,19 @@
                 </form>
             </div>
 
-            @*@{ var associationGroup = CatalogHelper.Association(Model.CatalogItem, "Related Items"); }
-            @if (associationGroup != null)
+            @{var relatedItems = Model.CatalogItem.Associations != null ? Model.CatalogItem.Associations.Where(x => x.Name.Equals("Related Items", StringComparison.OrdinalIgnoreCase)) : null; }
+            @if (relatedItems != null && relatedItems.Any())
             {
                 <div class="product-other">
                     <div class="product-additional">
-                        @{ Html.RenderPartial("RelatedProducts", associationGroup); }
-                  ,  </div>
+                        @{ Html.RenderPartial("RelatedProducts", relatedItems); }
+                     </div>
                 </div>
             }
-            else*@
-            <script>$(function () { $(".article .product-view").addClass('no-recommend'); })</script>
+            else
+            {
+                <script> $(function() { $(".article .product-view").addClass('no-recommend'); }) </script>
+            }
             
         </div>
         <div class="product-tabs tabs">
@@ -170,17 +172,22 @@
                 </div>
             </div>
         </div>
-        @*@if (associationGroup != null)
+        @if (relatedItems != null && relatedItems.Any())
         {
             <div class="product-recommend products-no-effects slider-products">
 
-                @{ Html.RenderPartial("RelatedProducts2", associationGroup); }
+                @{ Html.RenderPartial("RelatedProducts2", relatedItems); }
             </div>
-        }*@
+        }
     </div>
 </div>
-@*@section Bottom{
-
-    @{Html.RenderAction("Association", new { item = Model.CatalogItem, templateName = "RecommendedProducts", groupName = "Accessories" });}
-
-}*@
+@section Bottom
+{
+    @{
+        var recomendedItems = Model.CatalogItem.Associations != null ? Model.CatalogItem.Associations.Where(x => x.Name.Equals("Related Items", StringComparison.OrdinalIgnoreCase)) : null;
+        if (recomendedItems != null && recomendedItems.Any())
+        {
+            Html.RenderPartial("RecommendedProducts", recomendedItems);
+        }
+    }
+}

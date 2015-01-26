@@ -43,6 +43,11 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
                 retVal.SeoKeywords = product.SeoInfos.Select(x => x.ToWebModel()).ToArray();
 		    }
 
+		    if (product.Associations != null)
+		    {
+		        retVal.Associations = product.Associations.Select(x => x.ToWebModel()).ToArray();
+		    }
+
 			retVal.Properties = new webModel.PropertyDictionary();
 			//Need add property for each meta info
 

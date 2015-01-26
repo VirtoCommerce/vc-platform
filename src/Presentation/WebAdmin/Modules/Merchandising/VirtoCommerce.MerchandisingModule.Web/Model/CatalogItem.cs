@@ -27,6 +27,8 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
 
         public EditorialReview[] EditorialReviews { get; set; }
 
+        public Association[] Associations { get; set; }
+
         public string[] Categories { get; set; }
 
         public PropertyDictionary Properties { get; set; }

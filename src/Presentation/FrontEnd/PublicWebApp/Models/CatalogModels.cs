@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using VirtoCommerce.ApiClient.DataContracts;
 using VirtoCommerce.ApiWebClient.Globalization;
 using VirtoCommerce.Web.Core.DataContracts;
 
@@ -98,6 +99,35 @@ namespace VirtoCommerce.Web.Models
         }
 
         #endregion
+    }
+
+    public class AssociatedItemModel : ItemModel
+    {
+        private readonly string _associationType;
+
+
+        public AssociatedItemModel(CatalogItem catalogItem, string associationType) : base(catalogItem)
+        {
+            _associationType = associationType;
+        }
+
+        /// <summary>
+        /// Gets the type of the association.
+        /// </summary>
+        /// <value>The type of the association.</value>
+        public string AssociationType
+        {
+            get { return _associationType; }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this instance is required.
+        /// </summary>
+        /// <value><c>true</c> if this instance is required; otherwise, <c>false</c>.</value>
+        public bool IsRequired
+        {
+            get { return string.Equals(_associationType, AssociationTypes.required.ToString(), StringComparison.OrdinalIgnoreCase); }
+        }
     }
 
     public class EditorialReviewModel
