@@ -72,6 +72,7 @@
     <Compile Include="Configuration\Security\SecurityConfiguration.cs" />
     <Compile Include="Configuration\Store\StoreConfiguration.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="DataContracts\Association.cs" />
     <Compile Include="DataContracts\BrowseQuery.cs" />
     <Compile Include="DataContracts\CatalogItem.cs" />
     <Compile Include="DataContracts\CatalogItemResponse.cs" />

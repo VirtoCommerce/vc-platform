@@ -74,19 +74,24 @@
     <Compile Include="Order\Model\FinanceOperation.cs" />
     <Compile Include="Order\Model\FinanceOutOperation.cs" />
     <Compile Include="Order\Model\Operation.cs" />
-    <Compile Include="Order\Model\OrderOperation.cs" />
     <Compile Include="Order\Model\PaymentIn.cs" />
     <Compile Include="Order\Model\PaymentMethod.cs" />
     <Compile Include="Order\Model\PaymentOut.cs" />
     <Compile Include="Order\Model\Position.cs" />
+    <Compile Include="Order\Model\SearchCriteria.cs" />
+    <Compile Include="Order\Model\SearchResult.cs" />
     <Compile Include="Order\Model\Shipment.cs" />
     <Compile Include="Order\Model\StockOperation.cs" />
-    <Compile Include="Order\Services\IOperationService.cs" />
+    <Compile Include="Order\Repositories\IOrderRepository.cs" />
+    <Compile Include="Order\Services\ICustomerOrderService.cs" />
+    <Compile Include="Order\Services\IOrderSearchService.cs" />
+    <Compile Include="Payment\Model\PaymentInfo.cs" />
+    <Compile Include="Payment\Services\IPaymentGateway.cs" />
+    <Compile Include="Payment\Services\IPaymentGatewayManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Catalog\" />
-    <Folder Include="Order\Repositories\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">

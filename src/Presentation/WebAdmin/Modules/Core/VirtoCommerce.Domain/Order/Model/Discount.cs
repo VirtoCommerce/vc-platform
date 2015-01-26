@@ -11,7 +11,7 @@ namespace VirtoCommerce.Domain.Order.Model
 	public class Discount : ValueObject<Discount>
 	{
 		public string PromotionId { get; set; }
-		public Money DiscountAmount { get; set; }
+		public decimal DiscountAmount { get; set; }
 		public Coupon Coupon { get; set; }
 		public string Description { get; set; }
 	}

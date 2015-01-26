@@ -5,30 +5,34 @@ using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Domain.Inventory.Services;
 using VirtoCommerce.Domain.Order.Model;
+using VirtoCommerce.Domain.Order.Repositories;
 using VirtoCommerce.Domain.Order.Services;
 
 namespace VirtoCommerce.OrderModule.Data.Services
 {
-	public class OperationServiceImpl : IOperationService
+	public class CustomerOrderServiceImpl : ICustomerOrderService
 	{
 		private IInventoryService _inventoryService;
-		public OperationServiceImpl(IInventoryService inventoryService)
+		private IOrderRepository _orderRepository;
+		public CustomerOrderServiceImpl(IOrderRepository orderRepository, IInventoryService inventoryService)
 		{
 			_inventoryService = inventoryService;
+			_orderRepository = orderRepository;
 		}
-		#region IOperationService Members
 
-		public Operation GetById(string id)
+		#region ICustomerOrderService Members
+
+		public CustomerOrder GetById(string id)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Operation Create(Operation operation)
+		public CustomerOrder Create(CustomerOrder order)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void Update(Operation[] operations)
+		public void Update(CustomerOrder[] orders)
 		{
 			throw new NotImplementedException();
 		}

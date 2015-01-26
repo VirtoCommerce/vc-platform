@@ -1654,6 +1654,9 @@ p.subheader
 .blade-subtitle.subheader-secondary
 {
 	font-family: 'Segoe UI';
+
+	-webkit-transition: none;
+			transition: none;
 }
 
 .blade-head-nav
@@ -1798,7 +1801,7 @@ p.subheader
 
 .blade-switch
 {
-	bottom: 0;
+	bottom: 5px;
 	position: absolute;
 	right: 15px;
 }
@@ -1830,7 +1833,17 @@ p.subheader
 
 .blade-content.blade-medium
 {
-	width: 586px;
+	width: 595px;
+}
+
+.blade-content.blade-large
+{
+	width: 775px;
+}
+
+.blade-content.blade-xlarge
+{
+	width: 955px;
 }
 
 .blade-content .blade-inner
@@ -2196,7 +2209,11 @@ p.subheader
 	display: inline-block;
 	margin: -8px 0 0;
 	max-width: 100%;
+	padding: 4px;
 	vertical-align: middle;
+
+	-webkit-box-sizing: border-box;
+			box-sizing: border-box;
 }
 
 .tiles .tile .big
@@ -2677,6 +2694,237 @@ p.subheader
 	.table.sortable .th.sorted .icon.sort-down:after
 	{
 		border-color: #fff transparent transparent;
+	}
+
+/* Tree */
+.metro .tree-view
+{
+	overflow-x: auto;
+}
+
+.metro .tree-scroll
+{
+	padding: 20px 0;
+	text-align: center;
+	width: 900px;
+}
+
+.metro .tree,
+.metro .tree-item
+{
+	display: inline-block;
+	position: relative;
+	vertical-align: top;
+	text-align: center;
+}
+
+.metro .tree-view ul
+{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.metro .tree
+{
+	
+}
+
+.metro .tree-item:first-child:before
+{
+	background: #fff;
+	content: '';
+	height: 2px;
+	left: -1px;
+	position: absolute;
+	top: 0;
+	width: 50%;
+	z-index: 5;
+}
+
+.metro .tree-item:last-child:before
+{
+	background: #fff;
+	content: '';
+	height: 2px;
+	right: -1px;
+	position: absolute;
+	top: 0;
+	width: 50%;
+	z-index: 5;
+}
+
+.metro .tree-block
+{
+	border: 2px solid #ccc;
+	display: inline-block;
+	margin: 10px 0;
+	padding: 5px 0;
+	position: relative;
+	text-align: center;
+	vertical-align: top;
+	width: 140px;
+
+	-webkit-box-sizing: border-box;
+			box-sizing: border-box;
+}
+
+.metro .tree-block.selected
+{
+	background: #d9f5fd;
+	border-color: #b3ebfb;
+}
+
+.metro .tree-block .inner
+{
+	height: 100%;
+	width: 100%;
+}
+
+.metro .tree-item.last .tree-block .inner:after
+{
+	background: #fff;
+	content: '';
+	height: 2px;
+	left: -1px;
+	position: absolute;
+	top: -12px;
+	width: 50%;
+	z-index: 5;
+}
+
+.metro .tree-item.last .tree-block .inner:before
+{
+	background: #fff;
+	content: '';
+	height: 2px;
+	position: absolute;
+	right: -1px;
+	top: -12px;
+	width: 50%;
+	z-index: 10;
+}
+
+.metro .first > :first-child:before
+{
+	display: none;
+}
+
+.metro .first > :first-child,
+.metro .first > :first-child.selected
+{
+	background: #eee;
+	border-color: #ccc;
+}
+
+.metro .tree-block:before
+{
+	background: #ccc;
+	content: '';
+	height: 10px;
+	left: 50%;
+	position: absolute;
+	top: -10px;
+	width: 2px;
+
+	-webkit-transform: translateX(-50%);
+			transform: translateX(-50%);
+}
+
+.metro .tree-node
+{
+	position: relative;
+}
+
+.metro .tree-node:after
+{
+	background: #ccc;
+	content: '';
+	height: 2px;
+	left: 0;
+	position: absolute;
+	right: 1px;
+	top: 0;
+}
+
+.metro .tree-node:before
+{
+	background: #ccc;
+	content: '';
+	height: 10px;
+	left: 50%;
+	position: absolute;
+	top: -10px;
+	width: 2px;
+
+	-webkit-transform: translateX(-50%);
+			transform: translateX(-50%);
+}
+
+.metro .tree-el
+{
+	color: #666;
+	display: block;
+	font-size: 12px;
+	line-height: 1;
+	margin: 0;
+	padding: 3px 0;
+}
+
+
+.metro .tree-el.title
+{
+	color: #16499a;
+}
+
+/* Order info */
+.metro .order-info
+{
+	border-top: 1px solid #ccc;
+	margin: 0 -20px;
+	overflow: hidden;
+	padding: 20px;
+}
+
+.metro .order-info .table-wrapper
+{
+	margin: 0 0 20px 20px;
+}
+
+.metro .order-info .order-currency
+{
+	margin: 0 0 0 20px;
+	padding: 0 0 0 20px;
+}
+
+.column
+{
+	float: left;
+}
+
+.col-60
+{
+	width: 60%;
+}
+
+.col-50
+{
+	width: 50%;
+}
+
+.col-40
+{
+	width: 40%;
+}
+
+	.column .block
+	{
+		margin: 0 20px 20px 0;
+	}
+
+	.column:nth-child(2) .block
+	{
+		margin: 0 0 20px 20px;
 	}
 
 /* Transitions */

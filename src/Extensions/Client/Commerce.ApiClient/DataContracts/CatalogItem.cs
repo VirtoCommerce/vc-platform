@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
+using VirtoCommerce.ApiClient.DataContracts;
 
 namespace VirtoCommerce.Web.Core.DataContracts
 {
@@ -17,6 +18,8 @@ namespace VirtoCommerce.Web.Core.DataContracts
         public ItemImage[] Images { get; set; }
 
         public EditorialReview[] EditorialReviews { get; set; }
+
+        public Association[] Associations { get; set; }
 
         public int ReviewsTotal { get; set; }
 

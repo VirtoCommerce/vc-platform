@@ -19,7 +19,6 @@ namespace VirtoCommerce.Domain.Order.Model
 
 		#endregion
 
-		public string ParentOperationId { get; set; }
 		public string Number { get; set; }
 		public bool IsApproved { get; set; }
 		public string StatusId { get; set; }
@@ -39,8 +38,13 @@ namespace VirtoCommerce.Domain.Order.Model
 		/// Target organization or agent
 		/// </summary>
 		public string TargetAgentId	{ get; set;	}
+		/// <summary>
+		/// Currecy code
+		/// </summary>
+		public string Comment { get; set; }
+		public CurrencyCodes Currency { get; set; }
 		public bool TaxIncluded	{ get; set;	}
-		public Money Sum { get; set; }
-		public Money Tax { get; set; }
+		public decimal Sum { get; set; }
+		public decimal Tax { get; set; }
 	}
 }

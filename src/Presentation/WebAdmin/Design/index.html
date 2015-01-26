@@ -134,6 +134,39 @@
                         $(this).find('.blade-content').height(h + 'px');
                     }); 
                 }
+
+                /* Tree view */
+                function getTreeItems(el) {
+                    el == el || '';
+
+                    $('.tree-node').each(function () {
+                        var node = $(this);
+
+                        if($('.tree-item', node).length <= 1) {
+                            $(this).find('.tree-item').addClass('last');
+                        }
+
+                        console.log($('.tree-node').text().length)
+                    });
+
+                    var inW = $('.blade-inner .inner-block').width(),
+                        trW = $('.tree').width();
+
+                    if(inW < trW) {
+                        $('.tree-scroll').width(trW + 40);
+                    }
+                    else {
+                        $('.tree-scroll').width('auto');
+                    }
+                }
+
+                getTreeItems();
+
+                $('.tree-block').on('click', function () {
+                    $('.tree-block').removeClass('selected');
+                    $(this).addClass('selected');
+                });
+
             });
         </script>
     </head>
@@ -351,7 +384,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="blade blade-medium blade-stack">
+                    <div class="blade blade-medium">
                         <header class="blade-head">
                             <div class="title">
                                 <i class="icon icon-comments"></i>
@@ -368,74 +401,82 @@
                             </div>
                             <span class="blade-status-bar"></span>
                         </header>
-                        <div class="blade-content ">
-                            <table class="list notify table sortable">
-                                <thead>
-                                    <tr>
-                                        <th class="col th">Type</th>
-                                        <th class="col th">Title</th>
-                                        <th class="col th sorted">Date<i class="icon sort-down"></i></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="item notif notify_error">
-                                        <td class="col">
-                                            <span class="pic">
-                                                <i ng-class="menuItem.type" class="icon icon-warning"></i>
-                                            </span>
-                                        </td>
-                                        <td class="col">
-                                            <span class="title">New product was added</span>
-                                            <span class="desc">Username successfully added new product «product name» in category «Category name»</span>
-                                        </td>
-                                        <td class="col sorted">
-                                            <span class="date">2 m ego</span>
-                                        </td>
-                                    </tr>
-                                    <!-- // -->
-                                    <tr class="item notif notify_warning">
-                                        <td class="col">
-                                            <span class="pic">
-                                                <i ng-class="menuItem.type" class="icon icon-warning"></i>
-                                            </span>
-                                        </td>
-                                        <td class="col">
-                                            <span class="title">New product was added</span>
-                                            <span class="desc">Username successfully added new product «product name» in category «Category name»</span>
-                                            <div class="progress-bar small" data-role="progress-bar" data-value="30">
-                                                <div class="bar bg-cyan" style="w30%"></div>
-                                            </div>
-                                        </td>
-                                        <td class="col sorted">
-                                            <span class="date">2 m ego</span>
-                                        </td>
-                                    </tr>
-                                    <!-- // -->
-                                    <tr class="item notif notify_info">
-                                        <td class="col">
-                                            <span class="pic">
-                                                <i ng-class="menuItem.type" class="icon icon-comments"></i>
-                                            </span>
-                                        </td>
-                                        <td class="col">
-                                            <span class="title">New product was added</span>
-                                            <span class="desc">Username successfully added new product «product name» in category «Category name»</span>
-                                        </td>
-                                        <td class="col sorted">
-                                            <span class="date">2 m ego</span>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div class="pagination">
-                                <ul>
-                                    <li class="prev"><a>&laquo;</a></li>
-                                    <li class="active"><a>1</a></li>
-                                    <li><a>2</a></li>
-                                    <li><a>3</a></li>
-                                    <li><a>4</a></li>
-                                    <li class="next"><a>&raquo;</a></li>
-                                </ul>
+                        <div class="blade-container">
+                            <div class="blade-content blade-medium">
+                                <div class="blade-inner">
+                                    <div class="inner-block">
+                                        <div class="table-wrapper">
+                                            <table class="list notify table sortable">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="col th">Type</th>
+                                                        <th class="col th">Title</th>
+                                                        <th class="col th sorted">Date<i class="icon sort-down"></i></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="item notif notify_error">
+                                                        <td class="col">
+                                                            <span class="pic">
+                                                                <i ng-class="menuItem.type" class="icon icon-warning"></i>
+                                                            </span>
+                                                        </td>
+                                                        <td class="col">
+                                                            <span class="title">New product was added</span>
+                                                            <span class="desc">Username successfully added new product «product name» in category «Category name»</span>
+                                                        </td>
+                                                        <td class="col sorted">
+                                                            <span class="date">2 m ego</span>
+                                                        </td>
+                                                    </tr>
+                                                    <!-- // -->
+                                                    <tr class="item notif notify_warning">
+                                                        <td class="col">
+                                                            <span class="pic">
+                                                                <i ng-class="menuItem.type" class="icon icon-warning"></i>
+                                                            </span>
+                                                        </td>
+                                                        <td class="col">
+                                                            <span class="title">New product was added</span>
+                                                            <span class="desc">Username successfully added new product «product name» in category «Category name»</span>
+                                                            <div class="progress-bar small" data-role="progress-bar" data-value="30">
+                                                                <div class="bar bg-cyan" style="w30%"></div>
+                                                            </div>
+                                                        </td>
+                                                        <td class="col sorted">
+                                                            <span class="date">2 m ego</span>
+                                                        </td>
+                                                    </tr>
+                                                    <!-- // -->
+                                                    <tr class="item notif notify_info">
+                                                        <td class="col">
+                                                            <span class="pic">
+                                                                <i ng-class="menuItem.type" class="icon icon-comments"></i>
+                                                            </span>
+                                                        </td>
+                                                        <td class="col">
+                                                            <span class="title">New product was added</span>
+                                                            <span class="desc">Username successfully added new product «product name» in category «Category name»</span>
+                                                        </td>
+                                                        <td class="col sorted">
+                                                            <span class="date">2 m ego</span>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="pagination">
+                                            <ul>
+                                                <li class="prev"><a>&laquo;</a></li>
+                                                <li class="active"><a>1</a></li>
+                                                <li><a>2</a></li>
+                                                <li><a>3</a></li>
+                                                <li><a>4</a></li>
+                                                <li class="next"><a>&raquo;</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -466,111 +507,115 @@
                                 </div>
                             </div>
                         </header>
-                        <div class="blade-content gray">
-                            <div class="inner-block clearfix">
-                                <form>
-                                    <fieldset>
-                                        <label>Code:</label>
-                                        <div data-role="input-control" class="input-control text">
-                                            <input type="text" placeholder="input text" value="">
-                                            <button class="btn-clear" tabindex="-1" type="button"></button>
+                        <div class="blade-container">
+                            <div class="blade-content">
+                                <div class="blade-inner">
+                                    <div class="inner-block clearfix">
+                                        <form>
+                                            <fieldset>
+                                                <label>Code:</label>
+                                                <div data-role="input-control" class="input-control text">
+                                                    <input type="text" placeholder="input text" value="">
+                                                    <button class="btn-clear" tabindex="-1" type="button"></button>
+                                                </div>
+                                                <label>Name:</label>
+                                                <div data-role="input-control" class="input-control textarea">
+                                                    <textarea></textarea>
+                                                </div>
+                                            </fieldset>
+                                        </form>
+                                        <div class="tiles clearfix">
+                                            <p class="tile-title">Lense 1</p>
+                                            <div class="tile-block">
+                                                <div class="tile">
+                                                    <p class="title">Roles</p>
+                                                    <ul class="list">
+                                                        <li class="list-item">
+                                                            <span class="role">Owner</span>
+                                                            <span class="access"><i class="icon-user-2"></i> 0</span>
+                                                            <span class="access"><i class="icon-user-3"></i> 1</span>
+                                                        </li>
+                                                        <li class="list-item selected">
+                                                            <span class="role">Contributer</span>
+                                                            <span class="access"><i class="icon-user-2"></i> 0</span>
+                                                            <span class="access"><i class="icon-user-3"></i> 0</span>
+                                                        </li>
+                                                        <li class="list-item">
+                                                            <span class="role">Reader</span>
+                                                            <span class="access"><i class="icon-user-2"></i> 0</span>
+                                                            <span class="access"><i class="icon-user-3"></i> 0</span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="tile-block wide">
+                                                <div class="tile">
+                                                    <p class="title">Extensions</p>
+                                                    <p class="text"><span class="count">0</span> Installed Extensions</p>
+                                                </div>
+                                            </div>
+                                            <div class="tile-block mini">
+                                                <div class="tile">
+                                                    <i class="icon-cloud"></i>
+                                                    <span class="name">Мое облако</span>
+                                                </div>
+                                            </div>
+                                            <div class="tile-block mini">
+                                                <div class="tile">
+                                                    <i class="icon-apple"></i>
+                                                    <span class="name">Apple</span>
+                                                </div>
+                                            </div>
                                         </div>
-                                        <label>Name:</label>
-                                        <div data-role="input-control" class="input-control textarea">
-                                            <textarea></textarea>
-                                        </div>
-                                    </fieldset>
-                                </form>
-                                <div class="tiles clearfix" style="width: 360px;">
-                                    <p class="tile-title">Lense 1</p>
-                                    <div class="tile-block">
-                                        <div class="tile">
-                                            <p class="title">Roles</p>
-                                            <ul class="list">
-                                                <li class="list-item">
-                                                    <span class="role">Owner</span>
-                                                    <span class="access"><i class="icon-user-2"></i> 0</span>
-                                                    <span class="access"><i class="icon-user-3"></i> 1</span>
-                                                </li>
-                                                <li class="list-item selected">
-                                                    <span class="role">Contributer</span>
-                                                    <span class="access"><i class="icon-user-2"></i> 0</span>
-                                                    <span class="access"><i class="icon-user-3"></i> 0</span>
-                                                </li>
-                                                <li class="list-item">
-                                                    <span class="role">Reader</span>
-                                                    <span class="access"><i class="icon-user-2"></i> 0</span>
-                                                    <span class="access"><i class="icon-user-3"></i> 0</span>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="tile-block wide">
-                                        <div class="tile">
-                                            <p class="title">Extensions</p>
-                                            <p class="text"><span class="count">0</span> Installed Extensions</p>
-                                        </div>
-                                    </div>
-                                    <div class="tile-block mini">
-                                        <div class="tile">
-                                            <i class="icon-cloud"></i>
-                                            <span class="name">Мое облако</span>
-                                        </div>
-                                    </div>
-                                    <div class="tile-block mini">
-                                        <div class="tile">
-                                            <i class="icon-apple"></i>
-                                            <span class="name">Apple</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="tiles clearfix" style="width: 360px;">
-                                    <p class="tile-title">Lense 2</p>
-                                    <div class="tile-block">
-                                        <div class="tile">
-                                            <div class="images-list">
-                                                <div class="image main">
-                                                    <div class="ico">
-                                                        <i class="icon-pictures"></i>
+                                        <div class="tiles clearfix">
+                                            <p class="tile-title">Lense 2</p>
+                                            <div class="tile-block">
+                                                <div class="tile">
+                                                    <div class="images-list">
+                                                        <div class="image main">
+                                                            <div class="ico">
+                                                                <i class="icon-pictures"></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="image">
+                                                            <img src="http://fakeimg.pl/85x85/f30/FFF/?text">
+                                                        </div>
+                                                        <div class="image">
+                                                            <div class="ico">
+                                                                <i class="icon-pictures"></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="image">
+                                                            <img src="http://fakeimg.pl/85x85/f30/FFF/?text">
+                                                        </div>
+                                                        <div class="image">
+                                                            <img src="http://fakeimg.pl/85x85/f60/FFF/?text">
+                                                        </div>
+                                                        <div class="image">
+                                                            <img src="http://fakeimg.pl/85x85/f60/FFF/?text">
+                                                        </div>
+                                                        <div class="image">
+                                                            <img src="http://fakeimg.pl/85x85/f30/FFF/?text">
+                                                        </div>
+                                                        <div class="image">
+                                                            <img src="http://fakeimg.pl/85x85/f30/FFF/?text">
+                                                        </div>
+                                                        <div class="image">
+                                                            <img src="http://fakeimg.pl/85x85/f60/FFF/?text">
+                                                        </div>
+                                                        <div class="image">
+                                                            <img src="http://fakeimg.pl/85x85/f60/FFF/?text">
+                                                        </div>
+                                                        <div class="image">
+                                                            <img src="http://fakeimg.pl/85x85/f30/FFF/?text">
+                                                        </div>
+                                                        <div class="image">
+                                                            <img src="http://fakeimg.pl/85x85/f30/FFF/?text">
+                                                        </div>
+                                                        <div class="image">
+                                                            <img src="http://fakeimg.pl/85x85/f60/FFF/?text">
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="image">
-                                                    <img src="http://fakeimg.pl/85x85/f30/FFF/?text">
-                                                </div>
-                                                <div class="image">
-                                                    <div class="ico">
-                                                        <i class="icon-pictures"></i>
-                                                    </div>
-                                                </div>
-                                                <div class="image">
-                                                    <img src="http://fakeimg.pl/85x85/f30/FFF/?text">
-                                                </div>
-                                                <div class="image">
-                                                    <img src="http://fakeimg.pl/85x85/f60/FFF/?text">
-                                                </div>
-                                                <div class="image">
-                                                    <img src="http://fakeimg.pl/85x85/f60/FFF/?text">
-                                                </div>
-                                                <div class="image">
-                                                    <img src="http://fakeimg.pl/85x85/f30/FFF/?text">
-                                                </div>
-                                                <div class="image">
-                                                    <img src="http://fakeimg.pl/85x85/f30/FFF/?text">
-                                                </div>
-                                                <div class="image">
-                                                    <img src="http://fakeimg.pl/85x85/f60/FFF/?text">
-                                                </div>
-                                                <div class="image">
-                                                    <img src="http://fakeimg.pl/85x85/f60/FFF/?text">
-                                                </div>
-                                                <div class="image">
-                                                    <img src="http://fakeimg.pl/85x85/f30/FFF/?text">
-                                                </div>
-                                                <div class="image">
-                                                    <img src="http://fakeimg.pl/85x85/f30/FFF/?text">
-                                                </div>
-                                                <div class="image">
-                                                    <img src="http://fakeimg.pl/85x85/f60/FFF/?text">
                                                 </div>
                                             </div>
                                         </div>
@@ -579,7 +624,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="blade blade-stack actions">
+                    <div class="blade">
                         <header class="blade-head">
                             <div class="title">
                                 <i class="icon-tree-view"></i>
@@ -597,104 +642,139 @@
                                 <button data-hint="Refresh" data-hint-mode="2" data-hint-position="top"><i class="icon-spin on-left"></i> Refresh</button>
                             </div>
                         </header>
-                        <div class="blade-content">
-                            <div class="inner-block">
+                        <div class="blade-container">
+                            <div class="static top">
                                 <ul class="breadcrumbs">
                                     <li><a href="">Ссылка</a></li>
                                     <li class="devider">\</li>
                                     <li class="active">Финал</li>
                                 </ul>
-                                <table class="table hovered">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-left">
-                                                <div data-role="input-control" class="input-control checkbox">
-                                                    <label>
-                                                        <input type="checkbox">
-                                                        <span class="check"></span>
-                                                    </label>
+                            </div>
+                            <div class="blade-content blade-medium">
+                                <div class="blade-inner">
+                                    <div class="inner-block">
+                                        <div class="table-wrapper">
+                                            <table class="table hovered">
+                                                <thead>
+                                                    <tr>
+                                                        <th class="text-left">
+                                                            <div data-role="input-control" class="input-control checkbox">
+                                                                <label>
+                                                                    <input type="checkbox">
+                                                                    <span class="check"></span>
+                                                                </label>
+                                                            </div>
+                                                        </th>
+                                                        <th class="text-left">Image</th>
+                                                        <th class="text-left">Id</th>
+                                                        <th class="text-left">Code</th>
+                                                        <th class="text-left">Name</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td>
+                                                            <div data-role="input-control" class="input-control checkbox">
+                                                                <label>
+                                                                    <input type="checkbox">
+                                                                    <span class="check"></span>
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <img src="http://i83.beon.ru/1/63/196301/42/6139642/17014652_10650070_toybanner.jpeg" alt="">
+                                                        </td>
+                                                        <td>1</td>
+                                                        <td>ceb30938-c</td>
+                                                        <td>Item</td>
+                                                    </tr>
+                                                    <tr class="selected">
+                                                        <td>
+                                                            <div data-role="input-control" class="input-control checkbox">
+                                                                <label>
+                                                                    <input type="checkbox">
+                                                                    <span class="check"></span>
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <img src="http://i83.beon.ru/1/63/196301/42/6139642/17014652_10650070_toybanner.jpeg" alt="">
+                                                        </td>
+                                                        <td>1</td>
+                                                        <td>ceb30938-c</td>
+                                                        <td>Item</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <div data-role="input-control" class="input-control checkbox">
+                                                                <label>
+                                                                    <input type="checkbox">
+                                                                    <span class="check"></span>
+                                                                </label>
+                                                            </div>
+                                                        </td>
+                                                        <td>
+                                                            <img src="http://i83.beon.ru/1/63/196301/42/6139642/17014652_10650070_toybanner.jpeg" alt="">
+                                                        </td>
+                                                        <td>1</td>
+                                                        <td>ceb30938-c</td>
+                                                        <td>Item</td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="pagination">
+                                            <ul>
+                                                <li class="prev"><a>&laquo;</a></li>
+                                                <li class="active"><a>1</a></li>
+                                                <li><a>2</a></li>
+                                                <li><a>3</a></li>
+                                                <li><a>4</a></li>
+                                                <li class="next"><a>&raquo;</a></li>
+                                            </ul>
+                                        </div>
+                                        <div class="order-info">
+                                            <div class="column col-50">
+                                                <label>Comment</label>
+                                                <div class="input-control textarea">
+                                                    <textarea></textarea>
                                                 </div>
-                                            </th>
-                                            <th class="text-left">Image</th>
-                                            <th class="text-left">Id</th>
-                                            <th class="text-left">Code</th>
-                                            <th class="text-left">Name</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                <div data-role="input-control" class="input-control checkbox">
-                                                    <label>
-                                                        <input type="checkbox">
-                                                        <span class="check"></span>
-                                                    </label>
+                                            </div>
+                                            <div class="column col-50">
+                                                <div class="table-wrapper">
+                                                    <table class="table">
+                                                        <tr>
+                                                            <td>Total:</td>
+                                                            <td>678.23</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Sub Total</td>
+                                                            <td>678.23</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Discount Total</td>
+                                                            <td>36.00</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Tax Total</td>
+                                                            <td>12.00</td>
+                                                        </tr>
+                                                    </table>
                                                 </div>
-                                            </td>
-                                            <td>
-                                                <img src="http://i83.beon.ru/1/63/196301/42/6139642/17014652_10650070_toybanner.jpeg" alt="">
-                                            </td>
-                                            <td>1</td>
-                                            <td>ceb30938-c</td>
-                                            <td>Item</td>
-                                        </tr>
-                                        <tr class="selected">
-                                            <td>
-                                                <div data-role="input-control" class="input-control checkbox">
-                                                    <label>
-                                                        <input type="checkbox">
-                                                        <span class="check"></span>
-                                                    </label>
+                                                <div class="order-currency">
+                                                    <label>Currency:</label>
+                                                    <select class="chosen-select" name="" id="">
+                                                        <option value="USD">USD</option>
+                                                    </select>
                                                 </div>
-                                            </td>
-                                            <td>
-                                                <img src="http://i83.beon.ru/1/63/196301/42/6139642/17014652_10650070_toybanner.jpeg" alt="">
-                                            </td>
-                                            <td>1</td>
-                                            <td>ceb30938-c</td>
-                                            <td>Item</td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div data-role="input-control" class="input-control checkbox">
-                                                    <label>
-                                                        <input type="checkbox">
-                                                        <span class="check"></span>
-                                                    </label>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <img src="http://i83.beon.ru/1/63/196301/42/6139642/17014652_10650070_toybanner.jpeg" alt="">
-                                            </td>
-                                            <td>1</td>
-                                            <td>ceb30938-c</td>
-                                            <td>Item</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                                <div class="pagination">
-                                    <ul>
-                                        <li class="prev"><a>&laquo;</a></li>
-                                        <li class="active"><a>1</a></li>
-                                        <li><a>2</a></li>
-                                        <li><a>3</a></li>
-                                        <li><a>4</a></li>
-                                        <li class="next"><a>&raquo;</a></li>
-                                    </ul>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="blade-actions">
-                            <p>Selected items</p>
-                            <ul>
-                                <li><span>Item 1</span> <a class="cancel" href="">unmap</a></li>
-                                <li><span>Item 2</span> <a class="cancel" href="">unmap</a></li>
-                                <li><span>Item 3</span> <a class="cancel" href="">unmap</a></li>
-                                <li><span>Item 4</span> <a class="cancel" href="">unmap</a></li>
-                            </ul>
-                        </div>
                     </div>
-                    <div class="blade blade-stack">
+                    <div class="blade">
                         <header class="blade-head">
                             <div class="title">
                                 <i class="icon-tree-view"></i>
@@ -712,39 +792,45 @@
                                 <button data-hint="Refresh" data-hint-mode="2" data-hint-position="top"><i class="icon-spin on-left"></i> Refresh</button>
                             </div>
                         </header>
-                        <div class="blade-content">
-                            <div class="inner-block">
-                                <p class="subheader">List</p>
-                                <ul class="grid-list">
-                                    <li>Home</li>
-                                    <li>Virtual machines</li>
-                                    <li>Web</li>
-                                    <li class="active">Mobile</li>
-                                    <li>Developers</li>
-                                    <li>Media</li>
-                                </ul>
-                                <p class="subheader">List extended</p>
-                                <ul class="list-extended">
-                                    <li>
-                                        <i class="ico icon-user-3"></i>
-                                        <span class="title">Owner</span>
-                                        <span class="sub-title">0 users, 1 group</span>
-                                    </li>
-                                    <li class="active">
-                                        <span class="title">Owner</span>
-                                        <span class="sub-title">0 users, 1 group</span>
-                                    </li>
-                                    <li class="disabled">
-                                        <i class="ico icon-user-2"></i>
-                                        <span class="title">Owner</span>
-                                        <span class="sub-title">0 users, 1 group</span>
-                                    </li>
-                                    <li>
-                                        <i class="ico icon-user-2"></i>
-                                        <span class="title">Owner</span>
-                                        <span class="sub-title">0 users, 1 group</span>
-                                    </li>
-                                </ul>
+                        <div class="blade-container">
+                            <div class="blade-content">
+                                <div class="blade-inner">
+                                    <div class="inner-block">
+                                        <div class="block">
+                                            <p class="subheader">List</p>
+                                        </div>
+                                        <ul class="grid-list">
+                                            <li>Home</li>
+                                            <li>Virtual machines</li>
+                                            <li>Web</li>
+                                            <li class="active">Mobile</li>
+                                            <li>Developers</li>
+                                            <li>Media</li>
+                                        </ul>
+                                        <p class="subheader">List extended</p>
+                                        <ul class="list-extended">
+                                            <li>
+                                                <i class="ico icon-user-3"></i>
+                                                <span class="title">Owner</span>
+                                                <span class="sub-title">0 users, 1 group</span>
+                                            </li>
+                                            <li class="active">
+                                                <span class="title">Owner</span>
+                                                <span class="sub-title">0 users, 1 group</span>
+                                            </li>
+                                            <li class="disabled">
+                                                <i class="ico icon-user-2"></i>
+                                                <span class="title">Owner</span>
+                                                <span class="sub-title">0 users, 1 group</span>
+                                            </li>
+                                            <li>
+                                                <i class="ico icon-user-2"></i>
+                                                <span class="title">Owner</span>
+                                                <span class="sub-title">0 users, 1 group</span>
+                                            </li>
+                                        </ul>
+                                    </div>  
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -765,142 +851,146 @@
                                 <button data-hint="Reset" data-hint-mode="2" data-hint-position="top" class="disabled">Reset</button>
                             </div>
                         </header>
-                        <div class="blade-content">
-                            <div class="inner-block">
-                                <form>
-                                    <fieldset>
-                                        <label>Category name</label>
-                                        <div class="input-control text" data-role="input-control">
-                                            <input type="text" value="" placeholder="input text">
-                                            <button type="button" tabindex="-1" class="btn-clear"></button>
-                                        </div>
-                                        <div class="input-control text block" data-role="input-control">
-                                            <button class="button">
-                                                <i class="icon-plus-2 on-left"></i>
-                                                Property
-                                            </button>
-                                        </div>
-                                        <label>Type</label>
-                                        <div data-role="input-control" class="input-control radio default-style">
-                                            <label>
-                                                <input type="radio" name="r1">
-                                                <span class="check"></span>
-                                                Product
-                                            </label>
-                                        </div>
-                                        <div data-role="input-control" class="input-control radio default-style">
-                                            <label>
-                                                <input type="radio" name="r1">
-                                                <span class="check"></span>
-                                                Variation
-                                            </label>
-                                        </div>
-                                        <div data-role="input-control" class="input-control radio default-style">
-                                            <label>
-                                                <input type="radio" name="r1">
-                                                <span class="check"></span>
-                                                Category
-                                            </label>
-                                        </div>
-                                        <label>Property name</label>
-                                        <div class="input-control text" data-role="input-control">
-                                            <input type="text" value="" placeholder="input text">
-                                            <button type="button" tabindex="-1" class="btn-clear"></button>
-                                        </div>
-                                        <div class="control-group selected">
-                                            <label>Value type</label>
-                                            <div data-role="input-control" class="input-control select">
-                                                <select name="s1">
-                                                    <option value="short text">Short text</option>
-                                                    <option value="long text">Long text</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <label>Value</label>
-                                        <div class="input-control text" data-role="input-control">
-                                            <input type="text" value="" disabled="">
-                                            <button type="button" tabindex="-1" class="btn-clear"></button>
-                                        </div>
-                                        <div data-role="input-control" class="input-control checkbox default-style block">
-                                            <label>
-                                                <input type="checkbox" name="r1">
-                                                <span class="check"></span>
-                                                Multivalue
-                                            </label>
-                                        </div>
-                                        <div data-role="input-control" class="input-control checkbox default-style block">
-                                            <label>
-                                                <input type="checkbox" name="r1">
-                                                <span class="check"></span>
-                                                Required
-                                            </label>
-                                        </div>
-                                        <div data-role="input-control" class="input-control checkbox default-style block">
-                                            <label>
-                                                <input type="checkbox" name="r1">
-                                                <span class="check"></span>
-                                                Dictionary
-                                            </label>
-                                        </div>
-                                        <input type="submit" value="Ok">
-                                    </fieldset>
-                                    <fieldset>
-                                        <legend>Category properties</legend>
-                                        <a href="">N/A</a>
-                                    </fieldset>
-                                    <fieldset>
-                                        <legend>Product properties</legend>
-                                        <div class="property-title">
-                                            <label>dsds</label>
-                                            <ul class="attrs">
-                                                <li>Short text</li>
-                                            </ul>
-                                        </div>
-                                        <div class="input-control text" data-role="input-control">
-                                            <input type="text" placeholder="Add attribute" value="">
-                                            <button type="button" tabindex="-1" class="btn-clear"></button>
-                                        </div>
-                                        <div class="property-title">
-                                            <label>property name</label>
-                                            <ul class="attrs">
-                                                <li>Short text</li>
-                                                <li>required</li>
-                                                <li>multivalue</li>
-                                            </ul>
-                                        </div>
-                                        <div class="input-control text" data-role="input-control">
-                                            <input type="text" placeholder="Add attribute" value="">
-                                            <button type="button" tabindex="-1" class="btn-clear"></button>
-                                        </div>
-                                        <div class="property-title">
-                                            <label>test1</label>
-                                            <ul class="attrs">
-                                                <li>Long text</li>
-                                            </ul>
-                                        </div>
-                                        <div class="input-control text" data-role="input-control">
-                                            <input type="text" placeholder="Add attribute" value="">
-                                            <button type="button" tabindex="-1" class="btn-clear"></button>
-                                        </div>
-                                    </fieldset>
-                                    <fieldset>
-                                        <legend>Variation properties</legend>
-                                        <div class="property-title">
-                                            <label>variation name</label>
-                                            <ul class="attrs">
-                                                <li>Short text</li>
-                                            </ul>
-                                        </div>
-                                        <div class="input-control text" data-role="input-control">
-                                            <input type="text" placeholder="Add attribute" value="">
-                                            <button type="button" tabindex="-1" class="btn-clear"></button>
-                                        </div>
-                                    </fieldset>
-                                </form>
+                        <div class="blade-container">
+                            <div class="blade-content">
+                                <div class="blade-inner">
+                                    <div class="inner-block">
+                                        <form>
+                                            <fieldset>
+                                                <label>Category name</label>
+                                                <div class="input-control text" data-role="input-control">
+                                                    <input type="text" value="" placeholder="input text">
+                                                    <button type="button" tabindex="-1" class="btn-clear"></button>
+                                                </div>
+                                                <div class="input-control text block" data-role="input-control">
+                                                    <button class="button">
+                                                        <i class="icon-plus-2 on-left"></i>
+                                                        Property
+                                                    </button>
+                                                </div>
+                                                <label>Type</label>
+                                                <div data-role="input-control" class="input-control radio default-style">
+                                                    <label>
+                                                        <input type="radio" name="r1">
+                                                        <span class="check"></span>
+                                                        Product
+                                                    </label>
+                                                </div>
+                                                <div data-role="input-control" class="input-control radio default-style">
+                                                    <label>
+                                                        <input type="radio" name="r1">
+                                                        <span class="check"></span>
+                                                        Variation
+                                                    </label>
+                                                </div>
+                                                <div data-role="input-control" class="input-control radio default-style">
+                                                    <label>
+                                                        <input type="radio" name="r1">
+                                                        <span class="check"></span>
+                                                        Category
+                                                    </label>
+                                                </div>
+                                                <label>Property name</label>
+                                                <div class="input-control text" data-role="input-control">
+                                                    <input type="text" value="" placeholder="input text">
+                                                    <button type="button" tabindex="-1" class="btn-clear"></button>
+                                                </div>
+                                                <div class="control-group selected">
+                                                    <label>Value type</label>
+                                                    <div data-role="input-control" class="input-control select">
+                                                        <select name="s1">
+                                                            <option value="short text">Short text</option>
+                                                            <option value="long text">Long text</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <label>Value</label>
+                                                <div class="input-control text" data-role="input-control">
+                                                    <input type="text" value="" disabled="">
+                                                    <button type="button" tabindex="-1" class="btn-clear"></button>
+                                                </div>
+                                                <div data-role="input-control" class="input-control checkbox default-style block">
+                                                    <label>
+                                                        <input type="checkbox" name="r1">
+                                                        <span class="check"></span>
+                                                        Multivalue
+                                                    </label>
+                                                </div>
+                                                <div data-role="input-control" class="input-control checkbox default-style block">
+                                                    <label>
+                                                        <input type="checkbox" name="r1">
+                                                        <span class="check"></span>
+                                                        Required
+                                                    </label>
+                                                </div>
+                                                <div data-role="input-control" class="input-control checkbox default-style block">
+                                                    <label>
+                                                        <input type="checkbox" name="r1">
+                                                        <span class="check"></span>
+                                                        Dictionary
+                                                    </label>
+                                                </div>
+                                                <input type="submit" value="Ok">
+                                            </fieldset>
+                                            <fieldset>
+                                                <legend>Category properties</legend>
+                                                <a href="">N/A</a>
+                                            </fieldset>
+                                            <fieldset>
+                                                <legend>Product properties</legend>
+                                                <div class="property-title">
+                                                    <label>dsds</label>
+                                                    <ul class="attrs">
+                                                        <li>Short text</li>
+                                                    </ul>
+                                                </div>
+                                                <div class="input-control text" data-role="input-control">
+                                                    <input type="text" placeholder="Add attribute" value="">
+                                                    <button type="button" tabindex="-1" class="btn-clear"></button>
+                                                </div>
+                                                <div class="property-title">
+                                                    <label>property name</label>
+                                                    <ul class="attrs">
+                                                        <li>Short text</li>
+                                                        <li>required</li>
+                                                        <li>multivalue</li>
+                                                    </ul>
+                                                </div>
+                                                <div class="input-control text" data-role="input-control">
+                                                    <input type="text" placeholder="Add attribute" value="">
+                                                    <button type="button" tabindex="-1" class="btn-clear"></button>
+                                                </div>
+                                                <div class="property-title">
+                                                    <label>test1</label>
+                                                    <ul class="attrs">
+                                                        <li>Long text</li>
+                                                    </ul>
+                                                </div>
+                                                <div class="input-control text" data-role="input-control">
+                                                    <input type="text" placeholder="Add attribute" value="">
+                                                    <button type="button" tabindex="-1" class="btn-clear"></button>
+                                                </div>
+                                            </fieldset>
+                                            <fieldset>
+                                                <legend>Variation properties</legend>
+                                                <div class="property-title">
+                                                    <label>variation name</label>
+                                                    <ul class="attrs">
+                                                        <li>Short text</li>
+                                                    </ul>
+                                                </div>
+                                                <div class="input-control text" data-role="input-control">
+                                                    <input type="text" placeholder="Add attribute" value="">
+                                                    <button type="button" tabindex="-1" class="btn-clear"></button>
+                                                </div>
+                                            </fieldset>
+                                        </form>
+                                    </div>  
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="blade blade-stack actions">
+                    <div class="blade">
                         <header class="blade-head">
                             <div class="title">
                                 <i class="icon-tree-view"></i>
@@ -918,187 +1008,356 @@
                                 <button data-hint="Refresh" data-hint-mode="2" data-hint-position="top"><i class="icon-spin on-left"></i> Refresh</button>
                             </div>
                         </header>
-                        <div class="blade-content">
-                            <div class="inner-block">
-                                <p class="subheader">Location</p>
-                                <ul class="list-checkboxes">
-                                    <li>
-                                        <label for="s1">
-                                            <input type="checkbox" name="list" id="s1">
-                                            <span class="switch"></span>
-                                            East US
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label for="s2">
-                                            <input type="checkbox" name="list" id="s2">
-                                            <span class="switch"></span>
-                                            East US
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label for="s3">
-                                            <input type="checkbox" name="list" id="s3">
-                                            <span class="switch"></span>
-                                            East US
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label for="s4">
-                                            <input type="checkbox" name="list" id="s4">
-                                            <span class="switch"></span>
-                                            East US
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label for="s5">
-                                            <input type="checkbox" name="list" id="s5">
-                                            <span class="switch"></span>
-                                            East US
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label for="s6">
-                                            <input type="checkbox" name="list" id="s6">
-                                            <span class="switch"></span>
-                                            East US
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label for="s7">
-                                            <input type="checkbox" name="list" id="s7">
-                                            <span class="switch"></span>
-                                            East US
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label for="s8">
-                                            <input type="checkbox" name="list" id="s8">
-                                            <span class="switch"></span>
-                                            East US
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label for="s9">
-                                            <input type="checkbox" name="list" id="s9">
-                                            <span class="switch"></span>
-                                            East US
-                                        </label>
-                                    </li>
-                                    <li>
-                                        <label for="s10">
-                                            <input type="checkbox" name="list" id="s10">
-                                            <span class="switch"></span>
-                                            East US
-                                        </label>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="blade-actions">
-                            <div class="input-control checkbox" data-role="input-control">
-                                <label>
-                                    <input type="checkbox">
-                                    <span class="check"></span>
-                                    Add to Startboard
-                                </label>
-                            </div>
-                            <button>
-                                <span>Create</span>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="blade">
-                        <header class="blade-head">
-                            <div class="title">
-                                <i class="icon-tree-view"></i>
-                                <p class="blade-title subheader">Select files</p>
-                                <p class="blade-subtitle subheader-secondary">Blade subtitle</p>
-                            </div>
-                            <div class="blade-head-nav">
-                                <button class="btn-min"></button>
-                                <button class="btn-max"></button>
-                                <button class="btn-close"></button>
-                            </div>
-                            <div class="blade-toolbar toolbar transparent">
-                                <button data-hint="Open" data-hint-mode="2" data-hint-position="top"><i class="icon-folder-2 on-left"></i> Open</button>
-                                <button data-hint="Save" data-hint-mode="2" data-hint-position="top" class="disabled"><i class="icon-floppy on-left"></i> Save</button>
-                                <button data-hint="Refresh" data-hint-mode="2" data-hint-position="top"><i class="icon-spin on-left"></i> Refresh</button>
-                            </div>
-                        </header>
-                        <div class="blade-content">
-                            <div class="inner-block">
-                                <ul class="tiles">
-                                    <li class="tile-block first">
-                                        <div class="tile">
-                                            <img src="http://fakeimg.pl/175x175/00CED1/FFF/">
+                        <div class="blade-container">
+                            <div class="blade-content">
+                                <div class="blade-inner">
+                                    <div class="inner-block">
+                                        <div class="block">
+                                            <p class="subheader">Location</p>
                                         </div>
-                                    </li>
-                                    <li class="tile-block mini">
-                                        <div class="tile">
-                                            <img src="http://fakeimg.pl/85x85/00CED1/FFF/">
-                                        </div>
-                                    </li>
-                                    <li class="tile-block mini">
-                                        <div class="tile">
-                                            <img src="http://fakeimg.pl/85x85/00CED1/FFF/">
-                                        </div>
-                                    </li>
-                                    <li class="tile-block mini">
-                                        <div class="tile">
-                                            <img src="http://fakeimg.pl/85x85/00CED1/FFF/">
-                                        </div>
-                                    </li>
-                                    <li class="tile-block mini">
-                                        <div class="tile">
-                                            <img src="http://fakeimg.pl/85x85/00CED1/FFF/">
-                                        </div>
-                                    </li>
-                                    <li class="tile-block mini">
-                                        <div class="tile">
-                                            <img src="http://fakeimg.pl/85x85/00CED1/FFF/">
-                                        </div>
-                                    </li>
-                                    <li class="tile-block mini">
-                                        <div class="tile">
-                                            <img src="http://fakeimg.pl/85x85/00CED1/FFF/">
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="blade">
-                        <header class="blade-head">
-                            <div class="title">
-                                <i class="icon-tree-view"></i>
-                                <p class="blade-title subheader">Select files</p>
-                                <p class="blade-subtitle subheader-secondary">Blade subtitle</p>
-                            </div>
-                            <div class="blade-head-nav">
-                                <button class="btn-min"></button>
-                                <button class="btn-max"></button>
-                                <button class="btn-close"></button>
-                            </div>
-                            <div class="blade-toolbar toolbar transparent">
-                                <button data-hint="Open" data-hint-mode="2" data-hint-position="top"><i class="icon-folder-2 on-left"></i> Open</button>
-                                <button data-hint="Save" data-hint-mode="2" data-hint-position="top" class="disabled"><i class="icon-floppy on-left"></i> Save</button>
-                                <button data-hint="Refresh" data-hint-mode="2" data-hint-position="top"><i class="icon-spin on-left"></i> Refresh</button>
-                            </div>
-                        </header>
-                        <div class="blade-content">
-                            <div class="inner-block">
-                                <span class="subheader-secondary">Messages</span>
-                                <div class="log">
-                                    <p class="info">Info - Adding 'Sample.TestModule1 1.0.0.0' to Modules.</p>
-                                    <p class="warning">Warning - Adding 'Sample.TestModule1 1.0.0.0' to Modules.</p>
-                                    <p class="debug">Debug - Adding 'Sample.TestModule1 1.0.0.0' to Modules.</p>
-                                    <p class="error">Error - Adding 'Sample.TestModule1 1.0.0.0' to Modules.</p>
+                                        <ul class="list-checkboxes">
+                                            <li>
+                                                <label for="s1">
+                                                    <input type="checkbox" name="list" id="s1">
+                                                    <span class="switch"></span>
+                                                    East US
+                                                </label>
+                                            </li>
+                                            <li>
+                                                <label for="s2">
+                                                    <input type="checkbox" name="list" id="s2">
+                                                    <span class="switch"></span>
+                                                    East US
+                                                </label>
+                                            </li>
+                                            <li>
+                                                <label for="s3">
+                                                    <input type="checkbox" name="list" id="s3">
+                                                    <span class="switch"></span>
+                                                    East US
+                                                </label>
+                                            </li>
+                                            <li>
+                                                <label for="s4">
+                                                    <input type="checkbox" name="list" id="s4">
+                                                    <span class="switch"></span>
+                                                    East US
+                                                </label>
+                                            </li>
+                                            <li>
+                                                <label for="s5">
+                                                    <input type="checkbox" name="list" id="s5">
+                                                    <span class="switch"></span>
+                                                    East US
+                                                </label>
+                                            </li>
+                                            <li>
+                                                <label for="s6">
+                                                    <input type="checkbox" name="list" id="s6">
+                                                    <span class="switch"></span>
+                                                    East US
+                                                </label>
+                                            </li>
+                                            <li>
+                                                <label for="s7">
+                                                    <input type="checkbox" name="list" id="s7">
+                                                    <span class="switch"></span>
+                                                    East US
+                                                </label>
+                                            </li>
+                                            <li>
+                                                <label for="s8">
+                                                    <input type="checkbox" name="list" id="s8">
+                                                    <span class="switch"></span>
+                                                    East US
+                                                </label>
+                                            </li>
+                                            <li>
+                                                <label for="s9">
+                                                    <input type="checkbox" name="list" id="s9">
+                                                    <span class="switch"></span>
+                                                    East US
+                                                </label>
+                                            </li>
+                                            <li>
+                                                <label for="s10">
+                                                    <input type="checkbox" name="list" id="s10">
+                                                    <span class="switch"></span>
+                                                    East US
+                                                </label>
+                                            </li>
+                                        </ul>
+                                    </div>  
                                 </div>
-                                <p>Module installation process completed. Restart the application now or later.</p>
-                                <button>
-                                    <span>Restart</span>
-                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="blade">
+                        <header class="blade-head">
+                            <div class="title">
+                                <i class="icon-tree-view"></i>
+                                <p class="blade-title subheader">Select files</p>
+                                <p class="blade-subtitle subheader-secondary">Blade subtitle</p>
+                            </div>
+                            <div class="blade-head-nav">
+                                <button class="btn-min"></button>
+                                <button class="btn-max"></button>
+                                <button class="btn-close"></button>
+                            </div>
+                            <div class="blade-toolbar toolbar transparent">
+                                <button data-hint="Open" data-hint-mode="2" data-hint-position="top"><i class="icon-folder-2 on-left"></i> Open</button>
+                                <button data-hint="Save" data-hint-mode="2" data-hint-position="top" class="disabled"><i class="icon-floppy on-left"></i> Save</button>
+                                <button data-hint="Refresh" data-hint-mode="2" data-hint-position="top"><i class="icon-spin on-left"></i> Refresh</button>
+                            </div>
+                        </header>
+                        <div class="blade-container">
+                            <div class="blade-content">
+                                <div class="blade-inner">
+                                    <div class="inner-block">
+                                        <div class="block">
+                                            <ul class="tiles">
+                                                <li class="tile-block first">
+                                                    <div class="tile">
+                                                        <img src="http://fakeimg.pl/175x175/00CED1/FFF/">
+                                                    </div>
+                                                </li>
+                                                <li class="tile-block mini">
+                                                    <div class="tile">
+                                                        <img src="http://fakeimg.pl/85x85/00CED1/FFF/">
+                                                    </div>
+                                                </li>
+                                                <li class="tile-block mini">
+                                                    <div class="tile">
+                                                        <img src="http://fakeimg.pl/85x85/00CED1/FFF/">
+                                                    </div>
+                                                </li>
+                                                <li class="tile-block mini">
+                                                    <div class="tile">
+                                                        <img src="http://fakeimg.pl/85x85/00CED1/FFF/">
+                                                    </div>
+                                                </li>
+                                                <li class="tile-block mini">
+                                                    <div class="tile">
+                                                        <img src="http://fakeimg.pl/85x85/00CED1/FFF/">
+                                                    </div>
+                                                </li>
+                                                <li class="tile-block mini">
+                                                    <div class="tile">
+                                                        <img src="http://fakeimg.pl/85x85/00CED1/FFF/">
+                                                    </div>
+                                                </li>
+                                                <li class="tile-block mini">
+                                                    <div class="tile">
+                                                        <img src="http://fakeimg.pl/85x85/00CED1/FFF/">
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="blade">
+                        <header class="blade-head">
+                            <div class="title">
+                                <i class="icon-tree-view"></i>
+                                <p class="blade-title subheader">Select files</p>
+                                <p class="blade-subtitle subheader-secondary">Blade subtitle</p>
+                            </div>
+                            <div class="blade-head-nav">
+                                <button class="btn-min"></button>
+                                <button class="btn-max"></button>
+                                <button class="btn-close"></button>
+                            </div>
+                            <div class="blade-toolbar toolbar transparent">
+                                <button data-hint="Open" data-hint-mode="2" data-hint-position="top"><i class="icon-folder-2 on-left"></i> Open</button>
+                                <button data-hint="Save" data-hint-mode="2" data-hint-position="top" class="disabled"><i class="icon-floppy on-left"></i> Save</button>
+                                <button data-hint="Refresh" data-hint-mode="2" data-hint-position="top"><i class="icon-spin on-left"></i> Refresh</button>
+                            </div>
+                        </header>
+                        <div class="blade-container">
+                            <div class="blade-content">
+                                <div class="blade-inner">
+                                    <div class="inner-block">
+                                        <div class="block">
+                                            <span class="subheader-secondary">Messages</span>
+                                        </div>
+                                        <div class="log">
+                                            <p class="info">Info - Adding 'Sample.TestModule1 1.0.0.0' to Modules.</p>
+                                            <p class="warning">Warning - Adding 'Sample.TestModule1 1.0.0.0' to Modules.</p>
+                                            <p class="debug">Debug - Adding 'Sample.TestModule1 1.0.0.0' to Modules.</p>
+                                            <p class="error">Error - Adding 'Sample.TestModule1 1.0.0.0' to Modules.</p>
+                                        </div>
+                                        <p>Module installation process completed. Restart the application now or later.</p>
+                                        <button>
+                                            <span>Restart</span>
+                                        </button>
+                                    </div>  
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="blade">
+                        <header class="blade-head">
+                            <div class="title">
+                                <i class="icon-tree-view"></i>
+                                <p class="blade-title subheader">Tree</p>
+                                <p class="blade-subtitle subheader-secondary">Blade subtitle</p>
+                            </div>
+                            <div class="blade-head-nav">
+                                <button class="btn-min"></button>
+                                <button class="btn-max"></button>
+                                <button class="btn-close"></button>
+                            </div>
+                            <div class="blade-toolbar toolbar transparent">
+                                <button data-hint="Open" data-hint-mode="2" data-hint-position="top"><i class="icon-folder-2 on-left"></i> Open</button>
+                                <button data-hint="Save" data-hint-mode="2" data-hint-position="top" class="disabled"><i class="icon-floppy on-left"></i> Save</button>
+                                <button data-hint="Refresh" data-hint-mode="2" data-hint-position="top"><i class="icon-spin on-left"></i> Refresh</button>
+                            </div>
+                        </header>
+                        <div class="blade-container">
+                            <div class="blade-content blade-medium">
+                                <div class="blade-inner">
+                                    <div class="inner-block">
+                                        <div class="block">
+                                            <div class="column col-50">
+                                                <div class="block">
+                                                    <label>Customer order number</label>
+                                                    <div class="input-control text">
+                                                        <input type="text">
+                                                    </div>
+                                                </div>
+                                                <div class="block">
+                                                    <label>Status</label>
+                                                    <div class="input-control select">
+                                                        <select name="" id="" class="chosen-select">
+                                                            <option value="new">New</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="block">
+                                                    <label>Fulfilment centre</label>
+                                                    <div class="input-control select">
+                                                        <select name="" id="" class="chosen-select">
+                                                            <option value="bejieng">Bejieng</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="column col-50">
+                                                <div class="block">
+                                                    <label>from</label>
+                                                    <div class="input-control text">
+                                                        2014-02-23 22:21
+                                                    </div>
+                                                </div>
+                                                <div class="block">
+                                                    <label>Site</label>
+                                                    <div class="input-control select">
+                                                        <select name="" id="" class="chosen-select">
+                                                            <option value="test">Test site</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="block">
+                                                    <label>Customer</label>
+                                                    <div class="input-control select">
+                                                        <select name="" id="" class="chosen-select">
+                                                            <option value="Evant">Evant Moriss</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="block">
+                                            <p class="title">Custom attributes</p>
+                                        </div>
+                                        <div class="block">
+                                            <div class="column col-50">
+                                                <div class="block">
+                                                    <label>Custom string field</label>
+                                                    <div class="input-control text">
+                                                        <input type="text">
+                                                    </div>
+                                                    <div class="input-control checkbox default-style block" data-role="input-control">
+                                                        <label>
+                                                            <input type="checkbox" name="r1">
+                                                            <span class="check"></span>
+                                                            Custom flag field
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="column col-50">
+                                                <div class="block">
+                                                    <label>Custom text field</label>
+                                                    <div class="input-control textarea">
+                                                        <textarea></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="block">
+                                            <p class="title">Documents</p>
+                                        </div>
+                                        <div class="tree-view">
+                                            <div class="tree-scroll">
+                                                <ul class="tree">
+                                                    <li class="tree-item first">
+                                                        <div class="tree-block">
+                                                            <div class="inner">
+                                                                <span class="tree-el title">Заказ № 0969G40</span>
+                                                                <span class="tree-el date">20.12.14 14:10:16</span>
+                                                                <span class="tree-el price">46,50 рублей</span>
+                                                            </div>
+                                                        </div>
+                                                        <ul class="tree-node">
+                                                            <li class="tree-item">
+                                                                <div class="tree-block">
+                                                                    <div class="inner">
+                                                                        <span class="tree-el title">Отгрузка № 0969G40</span>
+                                                                        <span class="tree-el date">20.12.14 14:10:16</span>
+                                                                        <span class="tree-el price">46,50 рублей</span>
+                                                                    </div>
+                                                                </div>
+                                                                <ul class="tree-node">
+                                                                    <li class="tree-item">
+                                                                        <div class="tree-block">
+                                                                            <div class="inner">
+                                                                                <span class="tree-el title">Отгрузка № 0969G40</span>
+                                                                                <span class="tree-el date">20.12.14 14:10:16</span>
+                                                                                <span class="tree-el price">46,50 рублей</span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </li>
+                                                                </ul>
+                                                            </li>
+                                                            <li class="tree-item">
+                                                                <div class="tree-block">
+                                                                    <div class="inner">
+                                                                        <span class="tree-el title">Отгрузка № 0969G40</span>
+                                                                        <span class="tree-el date">20.12.14 14:10:16</span>
+                                                                        <span class="tree-el price">46,50 рублей</span>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                            <li class="tree-item">
+                                                                <div class="tree-block">
+                                                                    <div class="inner">
+                                                                        <span class="tree-el title">Отгрузка № 0969G40</span>
+                                                                        <span class="tree-el date">20.12.14 14:10:16</span>
+                                                                        <span class="tree-el price">46,50 рублей</span>
+                                                                    </div>
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>  
+                                </div>
                             </div>
                         </div>
                     </div>
