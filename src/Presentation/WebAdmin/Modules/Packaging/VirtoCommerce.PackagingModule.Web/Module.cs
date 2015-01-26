@@ -18,6 +18,10 @@ namespace VirtoCommerce.PackagingModule.Web
 
 		#region IModule Members
 
+		public void SetupDatabase(bool insertSampleData, bool reducedSampleData)
+		{
+		}
+
 		public void Initialize()
 		{
 			var sourcePath = HostingEnvironment.MapPath("~/App_Data/SourcePackages");

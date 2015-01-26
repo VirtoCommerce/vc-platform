@@ -151,11 +151,13 @@
     <Compile Include="Catalogs\Migrations\201410221231370_OptionalPropertySet.Designer.cs">
       <DependentUpon>201410221231370_OptionalPropertySet.cs</DependentUpon>
     </Compile>
+    <Compile Include="Catalogs\SqlCatalogDatabaseInitializer.cs" />
     <Compile Include="Catalogs\SqlCatalogReducedSampleDatabaseInitializer.cs" />
     <Compile Include="Catalogs\SqlCatalogSampleDatabaseInitializer.cs" />
+    <Compile Include="Customers\SqlCustomerDatabaseInitializer.cs" />
     <Compile Include="Infrastructure\SetupDatabaseInitializer.cs" />
     <Compile Include="Infrastructure\SetupMigrateDatabaseToLatestVersion.cs" />
-    <Compile Include="Customers\SqlCustomerDatabaseInitializer.cs" />
+    <Compile Include="Customers\SqlCustomerSampleDatabaseInitializer.cs" />
     <Compile Include="Importing\EFImportingRepository.cs" />
     <Compile Include="Importing\DSImportClient.cs" />
     <Compile Include="Importing\DSImportService.cs" />
@@ -240,6 +242,7 @@
     <Compile Include="Marketing\SqlDynamicContentDatabaseInitializer.cs" />
     <Compile Include="Marketing\SqlDynamicContentSampleDatabaseInitializer.cs" />
     <Compile Include="Marketing\SqlPromotionDatabaseInitializer.cs" />
+    <Compile Include="Marketing\SqlPromotionSampleDatabaseInitializer.cs" />
     <Compile Include="Orders\Migrations\201410151102008_LineItemWeightAndParent.cs" />
     <Compile Include="Orders\Migrations\201410151102008_LineItemWeightAndParent.Designer.cs">
       <DependentUpon>201410151102008_LineItemWeightAndParent.cs</DependentUpon>
@@ -254,6 +257,7 @@
     </Compile>
     <Compile Include="Orders\SqlOrderDatabaseInitializer.cs" />
     <Compile Include="Orders\SqlOrderSampleDatabaseInitializer.cs" />
+    <Compile Include="Reviews\SqlReviewDatabaseInitializer.cs" />
     <Compile Include="Reviews\SqlReviewSampleDatabaseInitializer.cs" />
     <Compile Include="Security\Identity\SecurityDbContext.cs" />
     <Compile Include="Security\Identity\ApplicationUser.cs" />
@@ -311,6 +315,7 @@
     <Compile Include="AppConfig\DSAppConfigClient.cs" />
     <Compile Include="AppConfig\DSAppConfigService.cs" />
     <Compile Include="AppConfig\EFAppConfigRepository.cs" />
+    <Compile Include="Stores\SqlStoreDatabaseInitializer.cs" />
     <Compile Include="Stores\SqlStoreSampleDatabaseInitializer.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -472,7 +477,6 @@
     <EmbeddedResource Include="Catalogs\Data\TaxCategory.sql" />
     <EmbeddedResource Include="Catalogs\Data\VirtualCatalog.sql" />
     <EmbeddedResource Include="Security\Data\FillTestAccounts.sql" />
-    <EmbeddedResource Include="Security\Data\FillRequiredCaseProperties.sql" />
     <EmbeddedResource Include="Security\Data\AspNetIdentity.sql" />
     <EmbeddedResource Include="Reviews\Data\ReviewFieldValue.sql" />
     <EmbeddedResource Include="Reviews\Data\ReviewComment.sql" />

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Management.Automation;
 using VirtoCommerce.Foundation.Data.Customers;
-using VirtoCommerce.Foundation.Data.Customers.Migrations;
-using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Frameworks;
 
 namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
@@ -19,16 +17,20 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
 
 			using (var db = new EFCustomerRepository(connection))
 			{
+				SqlCustomerDatabaseInitializer initializer;
+
 				if (sample)
 				{
 					SafeWriteVerbose("Running sample scripts");
-					new SqlCustomerDatabaseInitializer().InitializeDatabase(db);
+					initializer = new SqlCustomerSampleDatabaseInitializer();
 				}
 				else
 				{
 					SafeWriteVerbose("Running minimum scripts");
-					new SetupMigrateDatabaseToLatestVersion<EFCustomerRepository, Configuration>().InitializeDatabase(db);
+					initializer = new SqlCustomerDatabaseInitializer();
 				}
+
+				initializer.InitializeDatabase(db);
 			}
 		}
 	}
