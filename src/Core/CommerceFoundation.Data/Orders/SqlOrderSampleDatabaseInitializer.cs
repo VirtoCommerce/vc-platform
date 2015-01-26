@@ -2,47 +2,47 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using VirtoCommerce.Foundation.Data.Orders;
 using VirtoCommerce.Foundation.Orders.Factories;
 using VirtoCommerce.Foundation.Orders.Model;
 using VirtoCommerce.Foundation.Orders.Model.PaymentMethod;
 
-namespace VirtoCommerce.PowerShell.Orders
+namespace VirtoCommerce.Foundation.Data.Orders
 {
 	public class SqlOrderSampleDatabaseInitializer : SqlOrderDatabaseInitializer
 	{
-		private readonly string[] _files = new string[] { 
-					"Jurisdiction.sql",
-					"JurisdictionGroup.sql",
-					"JurisdictionRelation.sql",
-					"Tax.sql",
-					"TaxValue.sql"
+		private readonly string[] _files =
+		{ 
+			"Jurisdiction.sql",
+			"JurisdictionGroup.sql",
+			"JurisdictionRelation.sql",
+			"Tax.sql",
+			"TaxValue.sql"
 		};
 
-		private readonly string[] _customers = new[] 
-        {
-            "Bauermeister, Denise",
-            "Blackwell, Cynthia",
-            "Bressler, Linda",
-            "Caroompas, John",
-            "Clark, Patti",
-            "Dangl, Sherrilynne",
-            "Desguin, Joel",
-            "Dickinson, Kate",
-            "Dugan, Kathy",
-            "Galloway, Linda",
-            "Granger, Deborah",
-            "Heeschen, Kristin",
-            "Hiber, Miss",
-            "Hickson, Dorothy",
-            "Hoevatanakul, Narisa",
-            "Kwan, Shirley",
-            "Lamb, Tricia",
-            "LeCours, Kathie",
-            "Molstad, Amy",
-            "Murdock, Monica",
-            "Ntzouras, Andrew"           
-        };
+		private readonly string[] _customers =
+		{
+			"Bauermeister, Denise",
+			"Blackwell, Cynthia",
+			"Bressler, Linda",
+			"Caroompas, John",
+			"Clark, Patti",
+			"Dangl, Sherrilynne",
+			"Desguin, Joel",
+			"Dickinson, Kate",
+			"Dugan, Kathy",
+			"Galloway, Linda",
+			"Granger, Deborah",
+			"Heeschen, Kristin",
+			"Hiber, Miss",
+			"Hickson, Dorothy",
+			"Hoevatanakul, Narisa",
+			"Kwan, Shirley",
+			"Lamb, Tricia",
+			"LeCours, Kathie",
+			"Molstad, Amy",
+			"Murdock, Monica",
+			"Ntzouras, Andrew"           
+		};
 
 		protected override void Seed(EFOrderRepository context)
 		{

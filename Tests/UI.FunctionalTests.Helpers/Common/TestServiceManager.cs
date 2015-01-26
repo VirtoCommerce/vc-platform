@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.IO;
+using FunctionalTests.TestHelpers;
 using VirtoCommerce.Foundation.AppConfig.Factories;
 using VirtoCommerce.Foundation.Catalogs.Factories;
 using VirtoCommerce.Foundation.Data.AppConfig;
 using VirtoCommerce.Foundation.Data.Catalogs;
-using FunctionalTests.TestHelpers;
+using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Data.Marketing;
 using VirtoCommerce.Foundation.Data.Orders;
 using VirtoCommerce.Foundation.Data.Stores;
 using VirtoCommerce.Foundation.Marketing.Factories;
 using VirtoCommerce.Foundation.Orders.Factories;
 using VirtoCommerce.Foundation.Stores.Factories;
-using VirtoCommerce.PowerShell.DatabaseSetup;
 
 
 // Using TestServiceManager in UI tests
@@ -120,24 +120,24 @@ namespace UI.FunctionalTests.Helpers.Common
 							<EFCatalogRepository, VirtoCommerce.Foundation.Data.Catalogs.Migrations.Configuration>());
 					break;
 				case ServiceNameEnum.DynamicContent:
-										Database.SetInitializer(
-						new SetupMigrateDatabaseToLatestVersion
-							<EFDynamicContentRepository, VirtoCommerce.Foundation.Data.Marketing.Migrations.Content.Configuration>());
+					Database.SetInitializer(
+	new SetupMigrateDatabaseToLatestVersion
+		<EFDynamicContentRepository, VirtoCommerce.Foundation.Data.Marketing.Migrations.Content.Configuration>());
 					break;
 				case ServiceNameEnum.Store:
-										Database.SetInitializer(
-						new SetupMigrateDatabaseToLatestVersion
-							<EFStoreRepository, VirtoCommerce.Foundation.Data.Stores.Migrations.Configuration>());
+					Database.SetInitializer(
+	new SetupMigrateDatabaseToLatestVersion
+		<EFStoreRepository, VirtoCommerce.Foundation.Data.Stores.Migrations.Configuration>());
 					break;
 				case ServiceNameEnum.Order:
-										Database.SetInitializer(
-						new SetupMigrateDatabaseToLatestVersion
-							<EFOrderRepository, VirtoCommerce.Foundation.Data.Orders.Migrations.Configuration>());
+					Database.SetInitializer(
+	new SetupMigrateDatabaseToLatestVersion
+		<EFOrderRepository, VirtoCommerce.Foundation.Data.Orders.Migrations.Configuration>());
 					break;
 				case ServiceNameEnum.Marketing:
-										Database.SetInitializer(
-						new SetupMigrateDatabaseToLatestVersion
-							<EFMarketingRepository, VirtoCommerce.Foundation.Data.Marketing.Migrations.Promotion.Configuration>());
+					Database.SetInitializer(
+	new SetupMigrateDatabaseToLatestVersion
+		<EFMarketingRepository, VirtoCommerce.Foundation.Data.Marketing.Migrations.Promotion.Configuration>());
 					break;
 			}
 		}
@@ -161,7 +161,7 @@ namespace UI.FunctionalTests.Helpers.Common
 			}
 			return null;
 		}
-		
+
 		#endregion
 
 		private object _previousDataDirectory;
@@ -169,7 +169,7 @@ namespace UI.FunctionalTests.Helpers.Common
 		private readonly Dictionary<ServiceNameEnum, TestDataService> _testDataServices = new Dictionary<ServiceNameEnum, TestDataService>();
 
 
-        public delegate void EnsureDatabaseInitializedDelegate(Func<DbContext> createContext, Action intializer = null, Action<DbContext> postInitDb = null);
+		public delegate void EnsureDatabaseInitializedDelegate(Func<DbContext> createContext, Action intializer = null, Action<DbContext> postInitDb = null);
 
 
 
@@ -210,33 +210,33 @@ namespace UI.FunctionalTests.Helpers.Common
 
 		public void Clean()
 		{
-            try
-            {
-                foreach (var serviceAviable in _serviceAvailable)
-                {
-                    var dbContext = GetDbContext(serviceAviable);
-                    if (dbContext != null)
-                    {
-                        dbContext.Database.Delete();
-                    }
-                }
+			try
+			{
+				foreach (var serviceAviable in _serviceAvailable)
+				{
+					var dbContext = GetDbContext(serviceAviable);
+					if (dbContext != null)
+					{
+						dbContext.Database.Delete();
+					}
+				}
 
-                foreach (var serviceName in _serviceAvailable)
-                {
-                    var service = GetService(serviceName);
-                    if (service != null)
-                    {
-                        service.Dispose();
-                    }
-                }
-                _serviceAvailable.Clear();
-                _testDataServices.Clear();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(@"Exception while disposing test: " + ex);
-            }
-			finally 
+				foreach (var serviceName in _serviceAvailable)
+				{
+					var service = GetService(serviceName);
+					if (service != null)
+					{
+						service.Dispose();
+					}
+				}
+				_serviceAvailable.Clear();
+				_testDataServices.Clear();
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine(@"Exception while disposing test: " + ex);
+			}
+			finally
 			{
 				AppDomain.CurrentDomain.SetData("DataDirectory", _previousDataDirectory);
 			}

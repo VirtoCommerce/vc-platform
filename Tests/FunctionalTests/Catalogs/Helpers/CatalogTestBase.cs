@@ -1,24 +1,23 @@
 ﻿using System;
 using System.Data.Entity;
-using System.IO;
 using FunctionalTests.TestHelpers;
 using VirtoCommerce.Foundation.Catalogs.Factories;
 using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Catalogs.Repositories;
 using VirtoCommerce.Foundation.Data;
 using VirtoCommerce.Foundation.Data.Catalogs;
+using VirtoCommerce.Foundation.Data.Catalogs.Migrations;
+using VirtoCommerce.Foundation.Data.Infrastructure;
 
 namespace FunctionalTests.Catalogs.Helpers
 {
-    using VirtoCommerce.Foundation.Data.Catalogs.Migrations;
-    using VirtoCommerce.PowerShell.DatabaseSetup;
 
-    [JsonSupportBehavior]
+	[JsonSupportBehavior]
 	public class TestDSCatalogService : DSCatalogService
 	{
 		public const string DatabaseName = "CatalogTest";
 
-        protected override EFCatalogRepository CreateRepository()
+		protected override EFCatalogRepository CreateRepository()
 		{
 			return new EFCatalogRepository(DatabaseName, new CatalogEntityFactory());
 		}

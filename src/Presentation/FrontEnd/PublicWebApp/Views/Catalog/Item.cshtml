@@ -29,9 +29,9 @@
 		    @:$("#qty").val("@Model.Availability.MinQuantity");
 		}
 
-        @*loadVariations("@Model.CatalogItem.Id", "@Request.QueryString["variation"]");
+        loadVariations("@Model.CatalogItem.Id", "@Request.QueryString["variation"]");
 
-        Reviews.init({ container: "#reviewsTemplateContainer", currentId: "@Model.CatalogItem.Id" });*@
+        Reviews.init({ container: "#reviewsTemplateContainer", currentItemId: "@Model.CatalogItem.Id" });
 
         // Slider
         $('.products-previews').virtoSlider({ speed: 300 });
@@ -132,23 +132,7 @@
             </div>
             <h2 data-index="1" class="head"><a>@("Additional Information".Localize())</a></h2>
             <div id="product_tabs_additional_contents_list" class="tabs-content" style="display: none;">
-                <table class="data-table" id="product-attribute-specs-table">
-                    <col width="25%" />
-                    <col />
-                    <tbody>
-                        @foreach (var prop in Model.CatalogItem.Properties)
-                        {
-                            <tr>
-                                <th class="label">
-                                    @prop.Key.Localize()
-                                </th>
-                                <td class="data">
-                                    @string.Join(", ",prop.Value)
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+               @Html.DisplayFor(x=>x.CatalogItem.Properties, "Properties")
             </div>
             <h2 data-index="2" class="head"><a>@("Reviews".Localize())</a></h2>
             <div class="tabs-content" style="display: none;">

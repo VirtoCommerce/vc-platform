@@ -1,12 +1,4 @@
-﻿using FunctionalTests.Catalogs;
-using FunctionalTests.TestHelpers;
-using Microsoft.Practices.ServiceLocation;
-using Microsoft.Practices.Unity;
-using Microsoft.Practices.Unity.Mvc;
-using Moq;
-using MvcSiteMapProvider;
-using MvcSiteMapProvider.Loader;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.IO;
@@ -14,6 +6,14 @@ using System.Linq;
 using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
+using FunctionalTests.Catalogs;
+using FunctionalTests.TestHelpers;
+using Microsoft.Practices.ServiceLocation;
+using Microsoft.Practices.Unity;
+using Microsoft.Practices.Unity.Mvc;
+using Moq;
+using MvcSiteMapProvider;
+using MvcSiteMapProvider.Loader;
 using VirtoCommerce.Caching.HttpCache;
 using VirtoCommerce.Client;
 using VirtoCommerce.Client.Globalization;
@@ -91,7 +91,6 @@ using VirtoCommerce.Foundation.Security.Services;
 using VirtoCommerce.Foundation.Stores.Factories;
 using VirtoCommerce.Foundation.Stores.Repositories;
 using VirtoCommerce.Foundation.Stores.Services;
-using VirtoCommerce.PowerShell.DatabaseSetup;
 using VirtoCommerce.Search.Index;
 using VirtoCommerce.Search.Providers.Elastic;
 using VirtoCommerce.Web.Client;
@@ -108,9 +107,9 @@ using VirtoCommerce.Web.Virto.Helpers.Payments;
 
 namespace UI.FrontEnd.FunctionalTests
 {
-    using VirtoCommerce.Foundation.Catalogs;
+	using VirtoCommerce.Foundation.Catalogs;
 
-    public abstract class ControllerTestBase : FunctionalTestBase, IDisposable
+	public abstract class ControllerTestBase : FunctionalTestBase, IDisposable
 	{
 		public const string CatalogDatabaseName = "CatalogTest";
 		public const string AppConfigDatabaseName = "AppConfigTest";
@@ -141,7 +140,7 @@ namespace UI.FrontEnd.FunctionalTests
 			//Fake call to init repositories
 			_appConfigRepository = AppConfigRepository;
 			_storeRepository = StoreRepository;
-            SiteMaps.Loader = new Mock<ISiteMapLoader>().Object;
+			SiteMaps.Loader = new Mock<ISiteMapLoader>().Object;
 			base.Init(provider);
 		}
 
@@ -176,7 +175,7 @@ namespace UI.FrontEnd.FunctionalTests
 					var repository = (DbContext)Activator.CreateInstance(createdDb, _createdDbs[createdDb]);
 					repository.Database.Delete();
 				}
-				
+
 			}
 			finally
 			{
@@ -192,7 +191,7 @@ namespace UI.FrontEnd.FunctionalTests
 				{
 
 					var repository = new EFAppConfigRepository(AppConfigDatabaseName);
-					EnsureDatabaseInitialized(() => repository, 
+					EnsureDatabaseInitialized(() => repository,
 						() => Database.SetInitializer(new SetupMigrateDatabaseToLatestVersion<EFAppConfigRepository, VirtoCommerce.Foundation.Data.AppConfig.Migrations.Configuration>()));
 					_createdDbs.Add(typeof(EFAppConfigRepository), AppConfigDatabaseName);
 				}
@@ -344,7 +343,7 @@ namespace UI.FrontEnd.FunctionalTests
 				documents.Documents = docList.ToArray();
 
 				// Create search results object
-                return new SearchResults(criteria, new [] { documents });
+				return new SearchResults(criteria, new[] { documents });
 			}
 
 			public void Index(string scope, string documentType, IDocument document)
@@ -466,7 +465,7 @@ namespace UI.FrontEnd.FunctionalTests
 			container.RegisterType<ICatalogEntityFactory, CatalogEntityFactory>(new ContainerControlledLifetimeManager());
 
 			container.RegisterType<ICatalogRepository, EFCatalogRepository>(new InjectionConstructor(CatalogDatabaseName));
-            container.RegisterType<ICatalogOutlineBuilder, CatalogOutlineBuilder>();
+			container.RegisterType<ICatalogOutlineBuilder, CatalogOutlineBuilder>();
 			container.RegisterType<IPricelistRepository, EFCatalogRepository>(new InjectionConstructor(CatalogDatabaseName));
 			container.RegisterType<ICatalogService, CatalogService>();
 			container.RegisterType<IPriceListAssignmentEvaluator, PriceListAssignmentEvaluator>();
@@ -528,7 +527,7 @@ namespace UI.FrontEnd.FunctionalTests
 			container.RegisterType<ISecurityEntityFactory, SecurityEntityFactory>(
 				new ContainerControlledLifetimeManager());
 			container.RegisterType<ISecurityRepository, EFSecurityRepository>();
-            container.RegisterType<IUserIdentitySecurity, IdentityUserSecurity>();
+			container.RegisterType<IUserIdentitySecurity, IdentityUserSecurity>();
 			container.RegisterType<IAuthenticationService, AuthenticationService>();
 			container.RegisterType<ISecurityService, SecurityService>();
 
@@ -591,7 +590,7 @@ namespace UI.FrontEnd.FunctionalTests
 			container.RegisterType<IEntityEventListener, OrderChangeEventListener>("order");
 			container.RegisterType<IEntityEventListener, PublicReplyEventListener>("customer");
 			container.RegisterType<IEntityEventListener, CaseChangeEventListener>("customer");
-            container.RegisterType<IEntityEventListener, ReviewApprovedEventListener>("review");
+			container.RegisterType<IEntityEventListener, ReviewApprovedEventListener>("review");
 			container.RegisterType<IEntityEventContext, EntityEventContext>(new ContainerControlledLifetimeManager());
 
 			#endregion
@@ -605,18 +604,18 @@ namespace UI.FrontEnd.FunctionalTests
 
 			#endregion
 
-            #region OutputCache
+			#region OutputCache
 
-            container.RegisterType<IKeyBuilder, KeyBuilder>();
-            container.RegisterType<IKeyGenerator, KeyGenerator>();
-            container.RegisterType<IDonutHoleFiller, DonutHoleFiller>();
-            container.RegisterType<ICacheHeadersHelper, CacheHeadersHelper>();
-            container.RegisterType<ICacheSettingsManager, CacheSettingsManager>();
-            container.RegisterType<IReadWriteOutputCacheManager, OutputCacheManager>();
-            container.RegisterInstance<IActionSettingsSerialiser>(new EncryptingActionSettingsSerialiser(new ActionSettingsSerialiser(), new Encryptor()));
-            container.RegisterType<ICacheService, CacheService>();
+			container.RegisterType<IKeyBuilder, KeyBuilder>();
+			container.RegisterType<IKeyGenerator, KeyGenerator>();
+			container.RegisterType<IDonutHoleFiller, DonutHoleFiller>();
+			container.RegisterType<ICacheHeadersHelper, CacheHeadersHelper>();
+			container.RegisterType<ICacheSettingsManager, CacheSettingsManager>();
+			container.RegisterType<IReadWriteOutputCacheManager, OutputCacheManager>();
+			container.RegisterInstance<IActionSettingsSerialiser>(new EncryptingActionSettingsSerialiser(new ActionSettingsSerialiser(), new Encryptor()));
+			container.RegisterType<ICacheService, CacheService>();
 
-            #endregion
+			#endregion
 
 			container.RegisterInstance<IUnityContainer>(container);
 			return container;

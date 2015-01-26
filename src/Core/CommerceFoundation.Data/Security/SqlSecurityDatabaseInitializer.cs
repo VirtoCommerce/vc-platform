@@ -1,42 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using VirtoCommerce.PowerShell.DatabaseSetup;
-using VirtoCommerce.Foundation.Data.Security;
-using VirtoCommerce.Foundation.Data.Security.Migrations;
+using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.Foundation.Security.Repositories;
 
-namespace VirtoCommerce.PowerShell.Security
+namespace VirtoCommerce.Foundation.Data.Security
 {
-    public class SqlSecurityDatabaseInitializer : SetupDatabaseInitializer<EFSecurityRepository, Configuration>
-    {
-        protected override void Seed(EFSecurityRepository context)
-        {
-            base.Seed(context);
-            CreateAspNetSecurity(context);
+	public class SqlSecurityDatabaseInitializer : SetupDatabaseInitializer<EFSecurityRepository, Migrations.Configuration>
+	{
+		protected override void Seed(EFSecurityRepository context)
+		{
+			base.Seed(context);
+			CreateAspNetSecurity(context);
 
-            CreatePermissions(context);
-            CreateRoles(context);
-        }
+			CreatePermissions(context);
+			CreateRoles(context);
+		}
 
-        private void CreateAspNetSecurity(EFSecurityRepository context)
-        {
-            RunCommand(context, "AspNetIdentity.sql", "Security");
-        }
+		private void CreateAspNetSecurity(EFSecurityRepository context)
+		{
+			RunCommand(context, "AspNetIdentity.sql", "Security");
+		}
 
-        private void CreatePermissions(EFSecurityRepository client)
-        {
-            PredefinedPermissions.GetAllPermissions().ForEach(client.Add);
-            client.UnitOfWork.Commit();
-        }
+		private void CreatePermissions(EFSecurityRepository client)
+		{
+			PredefinedPermissions.GetAllPermissions().ForEach(client.Add);
+			client.UnitOfWork.Commit();
+		}
 
-        private void CreateRoles(EFSecurityRepository client)
-        {
-            var allPermissions = client.Permissions.ToArray();
+		private void CreateRoles(EFSecurityRepository client)
+		{
+			var allPermissions = client.Permissions.ToArray();
 
-            CreateRole(PredefinedPermissions.Role_SuperAdmin, allPermissions, new List<string>(allPermissions.Select(x => x.PermissionId)), client);
-            CreateRole(PredefinedPermissions.Role_CustomerService, allPermissions, new List<string> { 
+			CreateRole(PredefinedPermissions.Role_SuperAdmin, allPermissions, new List<string>(allPermissions.Select(x => x.PermissionId)), client);
+			CreateRole(PredefinedPermissions.Role_CustomerService, allPermissions, new List<string> { 
 	                PredefinedPermissions.CustomersViewAssignedCases,
 	                PredefinedPermissions.CustomersSearchCases,
 	                PredefinedPermissions.CustomersCreateNewCase,
@@ -56,7 +53,7 @@ namespace VirtoCommerce.PowerShell.Security
 					PredefinedPermissions.OrdersIssueOrderReturns,
 					PredefinedPermissions.OrdersCreateOrderExchange
 			}, client);
-            CreateRole(PredefinedPermissions.Role_CatalogManagement, allPermissions, new List<string> {		
+			CreateRole(PredefinedPermissions.Role_CatalogManagement, allPermissions, new List<string> {		
                     PredefinedPermissions.CatalogItemsManage,
                     PredefinedPermissions.CatalogCatalogsManage,
                     PredefinedPermissions.CatalogCategoriesManage,
@@ -74,20 +71,20 @@ namespace VirtoCommerce.PowerShell.Security
 					PredefinedPermissions.PricingPrice_ListsImport_JobsRun,
 					PredefinedPermissions.PricingPrice_ListsManage
 			}, client);
-            CreateRole(PredefinedPermissions.Role_Marketing, allPermissions, new List<string> {		
+			CreateRole(PredefinedPermissions.Role_Marketing, allPermissions, new List<string> {		
                     PredefinedPermissions.MarketingPromotionsManage,
                     PredefinedPermissions.MarketingDynamic_ContentManage,
                     PredefinedPermissions.MarketingContent_PublishingManage,
 					PredefinedPermissions.PricingPrice_List_AssignmentsManage,
 					PredefinedPermissions.SettingsStores,
 			}, client);
-            CreateRole(PredefinedPermissions.Role_Fulfillment, allPermissions, new List<string> {
+			CreateRole(PredefinedPermissions.Role_Fulfillment, allPermissions, new List<string> {
                     PredefinedPermissions.FulfillmentInventoryManage,
                     PredefinedPermissions.FulfillmentInventoryReceive,
                     PredefinedPermissions.FulfillmentPicklistsManage,
                     PredefinedPermissions.FulfillmentCompleteShipment,
                     PredefinedPermissions.FulfillmentReturnsManage}, client);
-            CreateRole(PredefinedPermissions.Role_ConfigurationManagement, allPermissions, new List<string> { 		
+			CreateRole(PredefinedPermissions.Role_ConfigurationManagement, allPermissions, new List<string> { 		
                     PredefinedPermissions.SettingsCustomerRules,
                     PredefinedPermissions.SettingsContent_Places,
                     PredefinedPermissions.SettingsFulfillment,
@@ -108,19 +105,19 @@ namespace VirtoCommerce.PowerShell.Security
                     PredefinedPermissions.SettingsJurisdictionGroups,
                     PredefinedPermissions.SettingsTaxCategories,
                     PredefinedPermissions.SettingsTaxImport}, client);
-            CreateRole(PredefinedPermissions.Role_PrivateShopper, allPermissions, new List<string> { 
+			CreateRole(PredefinedPermissions.Role_PrivateShopper, allPermissions, new List<string> { 
                     PredefinedPermissions.ShopperRestrictedAccess,}, client);
 
-            client.UnitOfWork.Commit();
-        }
+			client.UnitOfWork.Commit();
+		}
 
-        private void CreateRole(string name, IEnumerable<Permission> allPermissions, ICollection<string> permissionList, ISecurityRepository client)
-        {
-            var item = new Role { Name = name };
+		private void CreateRole(string name, IEnumerable<Permission> allPermissions, ICollection<string> permissionList, ISecurityRepository client)
+		{
+			var item = new Role { Name = name };
 
-            var rolePermissions = allPermissions.Where(x => permissionList.Contains(x.PermissionId)).ToList();
-            rolePermissions.ForEach(x => item.RolePermissions.Add(new RolePermission { PermissionId = x.PermissionId, RoleId = item.RoleId }));
-            client.Add(item);
-        }
-    }
+			var rolePermissions = allPermissions.Where(x => permissionList.Contains(x.PermissionId)).ToList();
+			rolePermissions.ForEach(x => item.RolePermissions.Add(new RolePermission { PermissionId = x.PermissionId, RoleId = item.RoleId }));
+			client.Add(item);
+		}
+	}
 }

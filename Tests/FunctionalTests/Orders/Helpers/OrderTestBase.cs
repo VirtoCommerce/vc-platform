@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Activities;
 using System.Collections.Generic;
-using System.IO;
 using FunctionalTests.TestHelpers;
 using Microsoft.Practices.ServiceLocation;
 using Microsoft.Practices.Unity;
@@ -14,6 +13,7 @@ using VirtoCommerce.Foundation.Customers.Repositories;
 using VirtoCommerce.Foundation.Customers.Services;
 using VirtoCommerce.Foundation.Data;
 using VirtoCommerce.Foundation.Data.Catalogs;
+using VirtoCommerce.Foundation.Data.Common;
 using VirtoCommerce.Foundation.Data.Customers;
 using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Data.Inventories;
@@ -55,16 +55,14 @@ using VirtoCommerce.Search.Providers.Elastic;
 
 namespace FunctionalTests.Orders.Helpers
 {
-    using System.Data.Entity;
+	using System.Data.Entity;
 
-    using VirtoCommerce.PowerShell.DatabaseSetup;
-
-    [JsonSupportBehavior]
+	[JsonSupportBehavior]
 	public class TestDSOrderService : DSOrderService
 	{
 		public const string DatabaseName = "OrdersTest";
 
-        protected override EFOrderRepository CreateRepository()
+		protected override EFOrderRepository CreateRepository()
 		{
 			return new EFOrderRepository(DatabaseName, new OrderEntityFactory());
 		}
@@ -195,7 +193,7 @@ namespace FunctionalTests.Orders.Helpers
 
 		protected IOrderRepository GetRepository()
 		{
-            EnsureDatabaseInitialized(() => new EFOrderRepository(TestDSOrderService.DatabaseName), 
+			EnsureDatabaseInitialized(() => new EFOrderRepository(TestDSOrderService.DatabaseName),
 				() => Database.SetInitializer(new SetupMigrateDatabaseToLatestVersion<EFOrderRepository, VirtoCommerce.Foundation.Data.Orders.Migrations.Configuration>()));
 
 			if (RepositoryProvider == RepositoryProvider.DataService)

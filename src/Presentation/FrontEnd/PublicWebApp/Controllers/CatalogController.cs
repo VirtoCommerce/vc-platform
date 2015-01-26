@@ -9,6 +9,7 @@ using VirtoCommerce.ApiClient.Extensions;
 using VirtoCommerce.ApiClient.Session;
 using VirtoCommerce.ApiWebClient.Caching;
 using VirtoCommerce.ApiWebClient.Extensions;
+using VirtoCommerce.ApiWebClient.Helpers;
 using VirtoCommerce.Web.Converters;
 using VirtoCommerce.Web.Core.DataContracts;
 using VirtoCommerce.Web.Models;
@@ -93,6 +94,30 @@ namespace VirtoCommerce.Web.Controllers
             {
                 return null;
             }
+        }
+
+        /// <summary>
+        /// Displays item variations.
+        /// </summary>
+        /// <param name="itemId">The item identifier.</param>
+        /// <param name="name">The name.</param>
+        /// <param name="selections">The selections.</param>
+        /// <param name="variation">The selected variation item code.</param>
+        /// <returns>ActionResult.</returns>
+        [DonutOutputCache(CacheProfile = "CatalogCache")]
+        public async Task<ActionResult> ItemVariations(string itemId, string name, string[] selections = null,
+                                           string variation = null)
+        {
+            var item = await GetItem(itemId, ItemResponseGroups.ItemLarge);
+            var product = item.CatalogItem as Product;
+
+            if (product == null || product.Variations == null || !product.Variations.Any())
+                return null;
+
+            var variations = product.Variations;
+            var selectedVariation = string.IsNullOrEmpty(variation) ? null : variations.FirstOrDefault(x=>x.Id == variation);
+            var model = new VariationsModel(variations, selections, selectedVariation);
+            return PartialView(name, model);
         }
 
         private async Task<ItemModel> GetItem(string item, ItemResponseGroups responseGroup = ItemResponseGroups.ItemMedium, ICustomerSession session = null, bool byCode = false)
