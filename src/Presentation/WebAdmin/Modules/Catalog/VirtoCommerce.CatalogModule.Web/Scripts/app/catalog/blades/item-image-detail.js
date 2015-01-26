@@ -172,5 +172,6 @@
 
     initialize();
     $scope.currentBlade.refresh();
+    $scope.blade.style = 'gray';
 
 }]);

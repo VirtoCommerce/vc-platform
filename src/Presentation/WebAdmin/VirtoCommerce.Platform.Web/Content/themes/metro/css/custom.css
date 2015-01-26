@@ -1798,7 +1798,7 @@ p.subheader
 
 .blade-switch
 {
-	bottom: 0;
+	bottom: 5px;
 	position: absolute;
 	right: 15px;
 }
@@ -2206,7 +2206,11 @@ p.subheader
 	display: inline-block;
 	margin: -8px 0 0;
 	max-width: 100%;
+	padding: 4px;
 	vertical-align: middle;
+
+	-webkit-box-sizing: border-box;
+			box-sizing: border-box;
 }
 
 .tiles .tile .big

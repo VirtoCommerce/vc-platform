@@ -12,6 +12,7 @@
 
             <ul class="list-extended">
                 <li ng-click="openBlade('properties')" ng-if="blade.item.properties.length > 0">
+                    <i class="ico fa fa-plus"></i>
                     <span class="title">Add properties</span>
                     <span class="sub-title">{{ getUnfilledProperties().length }} of {{blade.item.properties.length}} properties filled</span>
                 </li>
