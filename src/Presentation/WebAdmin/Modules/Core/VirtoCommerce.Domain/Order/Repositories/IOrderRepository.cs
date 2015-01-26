@@ -9,5 +9,6 @@ namespace VirtoCommerce.Domain.Order.Repositories
 {
 	public interface IOrderRepository : IRepository
 	{
+	
 	}
 }

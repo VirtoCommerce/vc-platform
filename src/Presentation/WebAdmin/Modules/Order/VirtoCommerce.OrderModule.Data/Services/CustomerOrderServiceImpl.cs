@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Domain.Inventory.Services;
 using VirtoCommerce.Domain.Order.Model;
+using VirtoCommerce.Domain.Order.Repositories;
 using VirtoCommerce.Domain.Order.Services;
 
 namespace VirtoCommerce.OrderModule.Data.Services
@@ -12,9 +13,11 @@ namespace VirtoCommerce.OrderModule.Data.Services
 	public class CustomerOrderServiceImpl : ICustomerOrderService
 	{
 		private IInventoryService _inventoryService;
-		public CustomerOrderServiceImpl(IInventoryService inventoryService)
+		private IOrderRepository _orderRepository;
+		public CustomerOrderServiceImpl(IOrderRepository orderRepository, IInventoryService inventoryService)
 		{
 			_inventoryService = inventoryService;
+			_orderRepository = orderRepository;
 		}
 
 		#region ICustomerOrderService Members
