@@ -128,6 +128,27 @@ namespace VirtoCommerce.Web.Controllers
             return item != null ? PartialView(name, item) : null;
         }
 
+        /// <summary>
+        /// Adds the review.
+        /// </summary>
+        /// <param name="id">The identifier.</param>
+        /// <returns>ActionResult.</returns>
+        [DonutOutputCache(CacheProfile = "CatalogCache")]
+        public ActionResult AddReview(string id)
+        {
+            if (StoreHelper.CustomerSession.IsRegistered)
+            {
+                return PartialView("CreateReview",
+                    new MReview
+                    {
+                        ItemId = id,
+                        CreatedDateTime = DateTime.UtcNow,
+                        Reviewer = new MReviewer { NickName = StoreHelper.CustomerSession.CustomerName }
+                    });
+            }
+            return RedirectToAction("LogOnAsync", "Account");
+        }
+
         #region Private helpers
 
         private async Task<ItemModel> GetItem(string item, ItemResponseGroups responseGroup = ItemResponseGroups.ItemMedium, ICustomerSession session = null, bool byCode = false, string associationType = null)

@@ -62,6 +62,17 @@ namespace VirtoCommerce.Web.Controllers
             return null;
         }
 
+
+        /// <summary>
+        /// Logs on asynchronous.
+        /// </summary>
+        /// <returns>ActionResult.</returns>
+        [AllowAnonymous]
+        public ActionResult LogOnAsync()
+        {
+            return PartialView("LogOnAsync");
+        }
+
         //
         // GET: /Account/Login
         [AllowAnonymous]
