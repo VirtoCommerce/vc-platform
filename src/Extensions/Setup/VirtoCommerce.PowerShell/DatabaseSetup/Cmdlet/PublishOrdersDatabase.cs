@@ -2,7 +2,6 @@
 using System.Management.Automation;
 using VirtoCommerce.Foundation.Data.Orders;
 using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.PowerShell.Orders;
 
 namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
 {
@@ -10,7 +9,7 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
 	[Cmdlet(VerbsData.Publish, "Virto-Order-Database", SupportsShouldProcess = true, DefaultParameterSetName = "DbConnection")]
 	public class PublishOrderDatabase : DatabaseCommand
 	{
-        public override void Publish(string dbconnection, string data, bool sample, bool reduced, string strategy = SqlDbConfiguration.SqlAzureExecutionStrategy)
+		public override void Publish(string dbconnection, string data, bool sample, bool reduced, string strategy = SqlDbConfiguration.SqlAzureExecutionStrategy)
 		{
 			base.Publish(dbconnection, data, sample, reduced, strategy);
 			var connection = dbconnection;

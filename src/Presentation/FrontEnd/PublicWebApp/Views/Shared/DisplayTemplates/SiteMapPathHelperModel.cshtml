@@ -3,6 +3,7 @@
 @using System.Linq
 @using MvcSiteMapProvider.Web.Html.Models
 @using VirtoCommerce.ApiWebClient.Helpers
+@using VirtoCommerce.Web.Core.DataContracts
 @using VirtoCommerce.Web.Helpers
 
 
@@ -17,16 +18,16 @@
                 {
                     @:<a href="@StoreHelper.CustomerSession.LastShoppingPage">< Back to results</a> &nbsp; | &nbsp;        
                 }
-                 @*if (node.Attributes.ContainsKey("Outline"))
+                 if (node.Attributes.ContainsKey("Outline"))
                  {
-                     foreach (var category in ((BrowsingOutline)node.Attributes["Outline"]).Categories)
+                     foreach (var category in (Dictionary<string,string>)node.Attributes["Outline"])
                      {
 
                         <li>
-                            @Html.ActionLink(category.DisplayName(), "Display", "Catalog", new { category = category.CategoryId }, null)
+                            @Html.ActionLink(category.Value, "Category", "Search", new { category = category.Key }, null)
                         </li>
                      }
-                 }*@
+                 }
                 <li>
                     @Html.DisplayFor(m => node, "SiteMapPathNodeModel")
                 </li>

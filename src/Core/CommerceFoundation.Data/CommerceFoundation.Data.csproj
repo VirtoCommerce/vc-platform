@@ -139,6 +139,9 @@
       <DependentUpon>201407291500445_UpdateStatisticsProceduresAdd.cs</DependentUpon>
     </Compile>
     <Compile Include="AppConfig\Services\SequenceService.cs" />
+    <Compile Include="AppConfig\SqlAppConfigDatabaseInitializer.cs" />
+    <Compile Include="AppConfig\SqlAppConfigReducedSampleDatabaseInitializer.cs" />
+    <Compile Include="AppConfig\SqlAppConfigSampleDatabaseInitializer.cs" />
     <Compile Include="Asset\FileSystemBlobAssetRepository.cs" />
     <Compile Include="Catalogs\Migrations\201409031214424_EditorialReviewLocale_SeoTriggers.cs" />
     <Compile Include="Catalogs\Migrations\201409031214424_EditorialReviewLocale_SeoTriggers.Designer.cs">
@@ -148,9 +151,15 @@
     <Compile Include="Catalogs\Migrations\201410221231370_OptionalPropertySet.Designer.cs">
       <DependentUpon>201410221231370_OptionalPropertySet.cs</DependentUpon>
     </Compile>
+    <Compile Include="Catalogs\SqlCatalogReducedSampleDatabaseInitializer.cs" />
+    <Compile Include="Catalogs\SqlCatalogSampleDatabaseInitializer.cs" />
+    <Compile Include="Infrastructure\SetupDatabaseInitializer.cs" />
+    <Compile Include="Infrastructure\SetupMigrateDatabaseToLatestVersion.cs" />
+    <Compile Include="Customers\SqlCustomerDatabaseInitializer.cs" />
     <Compile Include="Importing\EFImportingRepository.cs" />
     <Compile Include="Importing\DSImportClient.cs" />
     <Compile Include="Importing\DSImportService.cs" />
+    <Compile Include="Importing\SqlImportDatabaseInitializer.cs" />
     <Compile Include="Infrastructure\ConnectionHelper.cs" />
     <Compile Include="Infrastructure\DbMigrationContext.cs" />
     <Compile Include="Infrastructure\DbMigrationsConfigurationBase.cs" />
@@ -228,6 +237,9 @@
     <Compile Include="Marketing\Migrations\Promotion\201402181150199_Initial.Designer.cs">
       <DependentUpon>201402181150199_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Marketing\SqlDynamicContentDatabaseInitializer.cs" />
+    <Compile Include="Marketing\SqlDynamicContentSampleDatabaseInitializer.cs" />
+    <Compile Include="Marketing\SqlPromotionDatabaseInitializer.cs" />
     <Compile Include="Orders\Migrations\201410151102008_LineItemWeightAndParent.cs" />
     <Compile Include="Orders\Migrations\201410151102008_LineItemWeightAndParent.Designer.cs">
       <DependentUpon>201410151102008_LineItemWeightAndParent.cs</DependentUpon>
@@ -240,12 +252,17 @@
     <Compile Include="Orders\Migrations\201411180915307_Indexes.Designer.cs">
       <DependentUpon>201411180915307_Indexes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Orders\SqlOrderDatabaseInitializer.cs" />
+    <Compile Include="Orders\SqlOrderSampleDatabaseInitializer.cs" />
+    <Compile Include="Reviews\SqlReviewSampleDatabaseInitializer.cs" />
     <Compile Include="Security\Identity\SecurityDbContext.cs" />
     <Compile Include="Security\Identity\ApplicationUser.cs" />
     <Compile Include="Security\Migrations\201411061448001_AccountIdToString.cs" />
     <Compile Include="Security\Migrations\201411061448001_AccountIdToString.Designer.cs">
       <DependentUpon>201411061448001_AccountIdToString.cs</DependentUpon>
     </Compile>
+    <Compile Include="Security\SqlSecurityDatabaseInitializer.cs" />
+    <Compile Include="Security\SqlSecuritySampleDatabaseInitializer.cs" />
     <Compile Include="Stores\Migrations\201402141710203_Initial.cs" />
     <Compile Include="Stores\Migrations\201402141710203_Initial.Designer.cs">
       <DependentUpon>201402141710203_Initial.cs</DependentUpon>
@@ -294,6 +311,7 @@
     <Compile Include="AppConfig\DSAppConfigClient.cs" />
     <Compile Include="AppConfig\DSAppConfigService.cs" />
     <Compile Include="AppConfig\EFAppConfigRepository.cs" />
+    <Compile Include="Stores\SqlStoreSampleDatabaseInitializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CommerceFoundation\CommerceFoundation.csproj">
@@ -329,7 +347,9 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="AppConfig\Data\DisplayTemplateMapping.sql" />
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="AppConfig\Migrations\201407291500445_UpdateStatisticsProceduresAdd.resx">
       <DependentUpon>201407291500445_UpdateStatisticsProceduresAdd.cs</DependentUpon>
@@ -391,6 +411,88 @@
     <EmbeddedResource Include="Orders\Migrations\201402141614217_Initial.resx">
       <DependentUpon>201402141614217_Initial.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AppConfig\Data\EmailTemplate.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AppConfig\Data\EmailTemplateLanguage.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AppConfig\Data\JobParameter.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AppConfig\Data\Localization.reduced.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AppConfig\Data\Localization.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AppConfig\Data\SeoUrlKeyword.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AppConfig\Data\Setting.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AppConfig\Data\SettingValue.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AppConfig\Data\SystemJob.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Catalogs\Data\Association.sql" />
+    <EmbeddedResource Include="Catalogs\Data\AssociationGroup.sql" />
+    <EmbeddedResource Include="Catalogs\Data\Catalog.sql" />
+    <EmbeddedResource Include="Catalogs\Data\CatalogBase.sql" />
+    <EmbeddedResource Include="Catalogs\Data\CatalogLanguage.sql" />
+    <EmbeddedResource Include="Catalogs\Data\Category.sql" />
+    <EmbeddedResource Include="Catalogs\Data\CategoryBase.sql" />
+    <EmbeddedResource Include="Catalogs\Data\CategoryItemRelation.reduced.sql" />
+    <EmbeddedResource Include="Catalogs\Data\CategoryItemRelation.sql" />
+    <EmbeddedResource Include="Catalogs\Data\EditorialReview.reduced.sql" />
+    <EmbeddedResource Include="Catalogs\Data\EditorialReview.sql" />
+    <EmbeddedResource Include="Catalogs\Data\Item.reduced.sql" />
+    <EmbeddedResource Include="Catalogs\Data\Item.sql" />
+    <EmbeddedResource Include="Catalogs\Data\ItemAsset.reduced.sql" />
+    <EmbeddedResource Include="Catalogs\Data\ItemAsset.sql" />
+    <EmbeddedResource Include="Catalogs\Data\ItemPropertyValue.reduced.sql" />
+    <EmbeddedResource Include="Catalogs\Data\ItemPropertyValue.sql" />
+    <EmbeddedResource Include="Catalogs\Data\ItemRelation.sql" />
+    <EmbeddedResource Include="Catalogs\Data\LinkedCategory.sql" />
+    <EmbeddedResource Include="Catalogs\Data\Price.reduced.sql" />
+    <EmbeddedResource Include="Catalogs\Data\Price.sql" />
+    <EmbeddedResource Include="Catalogs\Data\Pricelist.sql" />
+    <EmbeddedResource Include="Catalogs\Data\PricelistAssignment.sql" />
+    <EmbeddedResource Include="Catalogs\Data\Property.reduced.sql" />
+    <EmbeddedResource Include="Catalogs\Data\Property.sql" />
+    <EmbeddedResource Include="Catalogs\Data\PropertyAttribute.sql" />
+    <EmbeddedResource Include="Catalogs\Data\PropertySet.sql" />
+    <EmbeddedResource Include="Catalogs\Data\PropertySetProperty.reduced.sql" />
+    <EmbeddedResource Include="Catalogs\Data\PropertySetProperty.sql" />
+    <EmbeddedResource Include="Catalogs\Data\TaxCategory.sql" />
+    <EmbeddedResource Include="Catalogs\Data\VirtualCatalog.sql" />
+    <EmbeddedResource Include="Security\Data\FillTestAccounts.sql" />
+    <EmbeddedResource Include="Security\Data\FillRequiredCaseProperties.sql" />
+    <EmbeddedResource Include="Security\Data\AspNetIdentity.sql" />
+    <EmbeddedResource Include="Reviews\Data\ReviewFieldValue.sql" />
+    <EmbeddedResource Include="Reviews\Data\ReviewComment.sql" />
+    <EmbeddedResource Include="Reviews\Data\Review.sql" />
+    <EmbeddedResource Include="Orders\Data\TaxValue.sql" />
+    <EmbeddedResource Include="Orders\Data\Tax.sql" />
+    <EmbeddedResource Include="Orders\Data\JurisdictionRelation.sql" />
+    <EmbeddedResource Include="Orders\Data\JurisdictionGroup.sql" />
+    <EmbeddedResource Include="Orders\Data\Jurisdiction.sql" />
+    <EmbeddedResource Include="Marketing\Data\PublishingGroupContentPlace.sql" />
+    <EmbeddedResource Include="Marketing\Data\PublishingGroupContentItem.sql" />
+    <EmbeddedResource Include="Marketing\Data\PromotionReward.sql" />
+    <EmbeddedResource Include="Marketing\Data\Promotion.sql" />
+    <EmbeddedResource Include="Marketing\Data\DynamicContentPublishingGroup_Sample.sql" />
+    <EmbeddedResource Include="Marketing\Data\DynamicContentPublishingGroup.sql" />
+    <EmbeddedResource Include="Marketing\Data\DynamicContentPlace.sql" />
+    <EmbeddedResource Include="Marketing\Data\DynamicContentItemProperty.sql" />
+    <EmbeddedResource Include="Marketing\Data\DynamicContentItem.sql" />
+    <EmbeddedResource Include="Marketing\Data\Coupon.sql" />
+    <EmbeddedResource Include="Customers\Data\FillRequiredCaseProperty.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

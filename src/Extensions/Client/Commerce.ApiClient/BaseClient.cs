@@ -189,7 +189,7 @@ namespace VirtoCommerce.ApiClient
         {
             if (!response.IsSuccessStatusCode)
             {
-                //Do not treat not found as error
+                //Do not treat not found as exception, but rather as null result
                 if (response.StatusCode == HttpStatusCode.NotFound)
                 {
                     return;

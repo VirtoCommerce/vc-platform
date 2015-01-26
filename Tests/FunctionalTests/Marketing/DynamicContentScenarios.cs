@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Data.Entity;
-using System.IO;
 using System.Linq;
 using FunctionalTests.TestHelpers;
 using VirtoCommerce.Foundation.Data;
+using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Data.Marketing;
 using VirtoCommerce.Foundation.Data.Marketing.Migrations.Content;
 using VirtoCommerce.Foundation.Marketing.Factories;
 using VirtoCommerce.Foundation.Marketing.Model.DynamicContent;
 using VirtoCommerce.Foundation.Marketing.Repositories;
-using VirtoCommerce.PowerShell.DatabaseSetup;
 using Xunit;
 
 namespace FunctionalTests.Marketing
@@ -24,33 +23,33 @@ namespace FunctionalTests.Marketing
 	}
 
 	[Variant(RepositoryProvider.EntityFramework)]
-    [Variant(RepositoryProvider.DataService)]
+	[Variant(RepositoryProvider.DataService)]
 	public class DynamicContentScenarios : FunctionalTestBase, IDisposable
-    {
+	{
 		private TestDataService _service;
 
-        #region Infrastructure/setup
+		#region Infrastructure/setup
 
-        private readonly string _databaseName;
-        private readonly object _previousDataDirectory;
+		private readonly string _databaseName;
+		private readonly object _previousDataDirectory;
 
 		public DynamicContentScenarios()
-        {
-            _previousDataDirectory = AppDomain.CurrentDomain.GetData("DataDirectory");
-            AppDomain.CurrentDomain.SetData("DataDirectory", TempPath);
-            _databaseName = "DynamicContentTest";
-			
-        }
+		{
+			_previousDataDirectory = AppDomain.CurrentDomain.GetData("DataDirectory");
+			AppDomain.CurrentDomain.SetData("DataDirectory", TempPath);
+			_databaseName = "DynamicContentTest";
 
-        public override void Init(RepositoryProvider provider)
-        {
-            if (provider == RepositoryProvider.DataService)
-            {
-                _service = new TestDataService(typeof(TestDSDynamicContentService));
-            }
+		}
 
-            base.Init(provider);
-        }
+		public override void Init(RepositoryProvider provider)
+		{
+			if (provider == RepositoryProvider.DataService)
+			{
+				_service = new TestDataService(typeof(TestDSDynamicContentService));
+			}
+
+			base.Init(provider);
+		}
 
 		public void Dispose()
 		{
@@ -63,10 +62,10 @@ namespace FunctionalTests.Marketing
 					context.Database.Delete();
 				}
 
-                if (_service != null)
-                {
-                    _service.Dispose();
-                }
+				if (_service != null)
+				{
+					_service.Dispose();
+				}
 
 			}
 			finally
@@ -84,12 +83,12 @@ namespace FunctionalTests.Marketing
 			var groupId = Guid.NewGuid().ToString();
 			var dbReviewreview = new DynamicContentPublishingGroup
 				{
-				DynamicContentPublishingGroupId = groupId,
-				Name = "Test content publishing", 
-				Description = "Test content publishing description", 
-				IsActive = true, 
-				Priority = 1,
-			};
+					DynamicContentPublishingGroupId = groupId,
+					Name = "Test content publishing",
+					Description = "Test content publishing description",
+					IsActive = true,
+					Priority = 1,
+				};
 
 			client.Add(dbReviewreview);
 			client.UnitOfWork.Commit();
@@ -103,7 +102,7 @@ namespace FunctionalTests.Marketing
 			//aa: add conditions expression and predicate tree serialized of 5 conditions.
 			loadedContentPublishing.ConditionExpression = ConditionExpression;
 			loadedContentPublishing.PredicateVisualTreeSerialized = PredicateSerialized;
-			
+
 			client.UnitOfWork.Commit();
 
 			//RefreshClient
@@ -150,5 +149,5 @@ namespace FunctionalTests.Marketing
 		//	Assert.True(items != null);
 		//	Assert.True(items.Count() == 1);
 		//}
-    }
+	}
 }

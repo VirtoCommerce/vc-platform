@@ -207,7 +207,7 @@ namespace VirtoCommerce.Web.Client.Modules
             session.CatalogId = store.Catalog;
 
             // now save store in the cookie
-            StoreHelper.SetCookie(StoreCookie, session.StoreId, DateTime.Now.AddMonths(1), false);
+            StoreHelper.SetCookie(StoreCookie, session.StoreId, null, false);
             StoreHelper.SetCookie(CurrencyCookie, currency, DateTime.Now.AddMonths(1));
 
             if (context.Request.QueryString.AllKeys.Any(x => string.Equals(x, "loginas", StringComparison.OrdinalIgnoreCase)))

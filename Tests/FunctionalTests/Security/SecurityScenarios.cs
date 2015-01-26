@@ -2,19 +2,18 @@
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.IO;
 using FunctionalTests.TestHelpers;
+using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Data.Security;
 using VirtoCommerce.Foundation.Data.Security.Migrations;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.Foundation.Security.Repositories;
-using VirtoCommerce.PowerShell.DatabaseSetup;
 using Xunit;
 
 namespace FunctionalTests.Security
 {
-    [Variant(RepositoryProvider.EntityFramework)]
+	[Variant(RepositoryProvider.EntityFramework)]
 	[Variant(RepositoryProvider.DataService)]
 	public class SecurityScenarios : FunctionalTestBase, IDisposable
 	{
@@ -49,24 +48,24 @@ namespace FunctionalTests.Security
 
 		#endregion
 
-        #region Tests
+		#region Tests
 
-        [Fact]
-        public void Can_create_security_graph()
-        {
-	        var accountName = "Account create_role_graph";
-	        var roleName = "Role create_role_graph";
-	        var permissionName = "Permission create_role_graph";
+		[Fact]
+		public void Can_create_security_graph()
+		{
+			var accountName = "Account create_role_graph";
+			var roleName = "Role create_role_graph";
+			var permissionName = "Permission create_role_graph";
 			AddAccount(accountName);
 			AddRole(roleName);
 			AddPermission(permissionName);
 
 			var client = GetRepository();
-			
+
 			var account = client.Accounts.Where(x => x.UserName == accountName).SingleOrDefault();
 			Assert.NotNull(account);
 
-	        var permission = client.Permissions.Where(x => x.Name == permissionName).SingleOrDefault();
+			var permission = client.Permissions.Where(x => x.Name == permissionName).SingleOrDefault();
 			Assert.NotNull(permission);
 
 			var role = client.Roles.Where(x => x.Name == roleName).SingleOrDefault();
@@ -76,19 +75,19 @@ namespace FunctionalTests.Security
 			AddRolePermission(role.RoleId, permission.PermissionId);
 
 			role = client.Roles.Expand("RolePermissions/Permission").Where(x => x.Name == roleName).SingleOrDefault();
-	        Assert.NotNull(role.RolePermissions.Where(x => x.Permission.Name == permissionName).SingleOrDefault());
+			Assert.NotNull(role.RolePermissions.Where(x => x.Permission.Name == permissionName).SingleOrDefault());
 
 			account = client.Accounts.Expand("RoleAssignments/Role").Where(x => x.UserName == accountName).SingleOrDefault();
 			Assert.NotNull(account.RoleAssignments.Where(x => x.Role.Name == roleName).SingleOrDefault());
-			
-        }
 
-        #endregion
+		}
 
-        #region Real Scenarios Tests
+		#endregion
+
+		#region Real Scenarios Tests
 
 		[Fact]
-        public void Can_permission_unassign()
+		public void Can_permission_unassign()
 		{
 			var roleName = "Role permission_unassign";
 			var permissionName = "Permission permission_unassign";
@@ -96,15 +95,15 @@ namespace FunctionalTests.Security
 			var roleId = AddRole(roleName);
 			var permissionId = AddPermission(permissionName);
 			AddRolePermission(roleId, permissionId);
-			
+
 			var client = GetRepository();
 
-            // load to detail view
-            var innerItem = client.Roles.Expand("RolePermissions/Permission").Where(x => x.Name == roleName).SingleOrDefault();
-            Assert.NotNull(innerItem);
+			// load to detail view
+			var innerItem = client.Roles.Expand("RolePermissions/Permission").Where(x => x.Name == roleName).SingleOrDefault();
+			Assert.NotNull(innerItem);
 
-            // check RolePermission to delete
-            var rolePermission = innerItem.RolePermissions.Where(x => x.Permission.Name == permissionName).SingleOrDefault();
+			// check RolePermission to delete
+			var rolePermission = innerItem.RolePermissions.Where(x => x.Permission.Name == permissionName).SingleOrDefault();
 			Assert.NotNull(rolePermission);
 
 			innerItem.RolePermissions.Remove(rolePermission);
@@ -116,138 +115,138 @@ namespace FunctionalTests.Security
 			client = GetRepository();
 
 			var checklItem = client.Roles.Expand("RolePermissions/Permission").Where(x => x.Name == roleName).SingleOrDefault();
-            Assert.NotNull(checklItem);
+			Assert.NotNull(checklItem);
 
-            rolePermission = checklItem.RolePermissions.Where(x => x.Permission.Name == permissionName).SingleOrDefault();
+			rolePermission = checklItem.RolePermissions.Where(x => x.Permission.Name == permissionName).SingleOrDefault();
 			Assert.Null(rolePermission);
 		}
 
-        [Fact]
-        public void Can_role_unassign()
-        {
+		[Fact]
+		public void Can_role_unassign()
+		{
 			var accountName = "Account role_unassign";
 			var roleName = "Role role_unassign";
 			var accountId = AddAccount(accountName);
 			var roleId = AddRole(roleName);
 			AddRoleAssignment(roleId, accountId);
-			
-            var client = GetRepository();
 
-            // load to detail view
-            var innerItem = client.Accounts.Expand("RoleAssignments/Role").Where(x => x.UserName == accountName).SingleOrDefault();
-            Assert.NotNull(innerItem);
+			var client = GetRepository();
 
-            // get Role Assignment to delete
-            var roleAssignment = innerItem.RoleAssignments.Where(x => x.Role.Name == roleName).SingleOrDefault();
-            Assert.NotNull(roleAssignment);
+			// load to detail view
+			var innerItem = client.Accounts.Expand("RoleAssignments/Role").Where(x => x.UserName == accountName).SingleOrDefault();
+			Assert.NotNull(innerItem);
 
-            // repository has to track it
-            innerItem.RoleAssignments.Remove(roleAssignment);
+			// get Role Assignment to delete
+			var roleAssignment = innerItem.RoleAssignments.Where(x => x.Role.Name == roleName).SingleOrDefault();
+			Assert.NotNull(roleAssignment);
 
-            // save changes to DB
-            client.UnitOfWork.Commit();
+			// repository has to track it
+			innerItem.RoleAssignments.Remove(roleAssignment);
 
-            // check changes
-            client = GetRepository();
+			// save changes to DB
+			client.UnitOfWork.Commit();
+
+			// check changes
+			client = GetRepository();
 
 			var checklItem = client.Accounts.Expand("RoleAssignments/Role").Where(x => x.UserName == accountName).SingleOrDefault();
-            Assert.NotNull(checklItem);
+			Assert.NotNull(checklItem);
 
-            roleAssignment = checklItem.RoleAssignments.Where(x => x.Role.Name == roleName).SingleOrDefault();
-            Assert.Null(roleAssignment);
-        }
+			roleAssignment = checklItem.RoleAssignments.Where(x => x.Role.Name == roleName).SingleOrDefault();
+			Assert.Null(roleAssignment);
+		}
 
-        [Fact]
-        public void Can_double_remove_competition_Throws_DbUpdateConcurrencyException()
-        {
-            var accountName = "Account competition";
-            var roleName = "Role competition";
-            var accountId = AddAccount(accountName);
-            var roleId = AddRole(roleName);
-            AddRoleAssignment(roleId, accountId);
+		[Fact]
+		public void Can_double_remove_competition_Throws_DbUpdateConcurrencyException()
+		{
+			var accountName = "Account competition";
+			var roleName = "Role competition";
+			var accountId = AddAccount(accountName);
+			var roleId = AddRole(roleName);
+			AddRoleAssignment(roleId, accountId);
 
-            var client1 = GetRepository();
-            var client2 = GetRepository();
+			var client1 = GetRepository();
+			var client2 = GetRepository();
 
-            // load to detail first view
-            var innerItem1 = client1.Accounts.Expand("RoleAssignments/Role").Where(x => x.UserName == accountName).SingleOrDefault();
-            Assert.NotNull(innerItem1);
-            
-            // load to detail second view
-            var innerItem2 = client2.Accounts.Expand("RoleAssignments/Role").Where(x => x.UserName == accountName).SingleOrDefault();
-            Assert.NotNull(innerItem2);
+			// load to detail first view
+			var innerItem1 = client1.Accounts.Expand("RoleAssignments/Role").Where(x => x.UserName == accountName).SingleOrDefault();
+			Assert.NotNull(innerItem1);
 
-            // get Role Assignment to delete
-            var roleAssignment = innerItem1.RoleAssignments.Where(x => x.Role.Name == roleName).SingleOrDefault();
-            Assert.NotNull(roleAssignment);
+			// load to detail second view
+			var innerItem2 = client2.Accounts.Expand("RoleAssignments/Role").Where(x => x.UserName == accountName).SingleOrDefault();
+			Assert.NotNull(innerItem2);
 
-            // repository has to track it
-            innerItem1.RoleAssignments.Remove(roleAssignment);
+			// get Role Assignment to delete
+			var roleAssignment = innerItem1.RoleAssignments.Where(x => x.Role.Name == roleName).SingleOrDefault();
+			Assert.NotNull(roleAssignment);
 
-            // save changes to DB
-            client1.UnitOfWork.Commit();
+			// repository has to track it
+			innerItem1.RoleAssignments.Remove(roleAssignment);
 
-            // get Role Assignment to delete
-            roleAssignment = innerItem2.RoleAssignments.Where(x => x.Role.Name == roleName).SingleOrDefault();
-            Assert.NotNull(roleAssignment);
+			// save changes to DB
+			client1.UnitOfWork.Commit();
 
-            // repository has to track it
-            innerItem2.RoleAssignments.Remove(roleAssignment);
+			// get Role Assignment to delete
+			roleAssignment = innerItem2.RoleAssignments.Where(x => x.Role.Name == roleName).SingleOrDefault();
+			Assert.NotNull(roleAssignment);
 
-            // save changes to DB
-            var ex = Assert.Throws<DbUpdateConcurrencyException>(() => client2.UnitOfWork.Commit());
+			// repository has to track it
+			innerItem2.RoleAssignments.Remove(roleAssignment);
 
-            // check changes
-            var client = GetRepository();
+			// save changes to DB
+			var ex = Assert.Throws<DbUpdateConcurrencyException>(() => client2.UnitOfWork.Commit());
 
-            var checklItem = client.Accounts.Expand("RoleAssignments/Role").Where(x => x.UserName == accountName).SingleOrDefault();
-            Assert.NotNull(checklItem);
+			// check changes
+			var client = GetRepository();
 
-            roleAssignment = checklItem.RoleAssignments.Where(x => x.Role.Name == roleName).SingleOrDefault();
-            Assert.Null(roleAssignment);
+			var checklItem = client.Accounts.Expand("RoleAssignments/Role").Where(x => x.UserName == accountName).SingleOrDefault();
+			Assert.NotNull(checklItem);
 
-        }
+			roleAssignment = checklItem.RoleAssignments.Where(x => x.Role.Name == roleName).SingleOrDefault();
+			Assert.Null(roleAssignment);
 
-
-        [Fact]
-        public void Can_add_remove_add()
-        {
-            var accountName = "Account add_remove_add";
-            var roleName = "Role create_role_graph";
-            var accountId = AddAccount(accountName);
-            var roleId = AddRole(roleName);
+		}
 
 
-            var client = GetRepository();
-            var role = client.Roles.Where(x => x.Name == roleName).SingleOrDefault();
-            Assert.NotNull(role);
+		[Fact]
+		public void Can_add_remove_add()
+		{
+			var accountName = "Account add_remove_add";
+			var roleName = "Role create_role_graph";
+			var accountId = AddAccount(accountName);
+			var roleId = AddRole(roleName);
 
-            var account = client.Accounts.Expand("RoleAssignments/Role").Where(x => x.AccountId == accountId).SingleOrDefault();
-            Assert.NotNull(account);
 
-            //var newRole = client.Roles.Where(x => x.Name == roleName).SingleOrDefault(); // need to reload role in new repository
+			var client = GetRepository();
+			var role = client.Roles.Where(x => x.Name == roleName).SingleOrDefault();
+			Assert.NotNull(role);
 
-            //var roleAssignment = new RoleAssignment { RoleId = roleId, AccountId = accountId};// worked
-            var roleAssignment = new RoleAssignment { RoleId = role.RoleId, AccountId = accountId, Role = role };
+			var account = client.Accounts.Expand("RoleAssignments/Role").Where(x => x.AccountId == accountId).SingleOrDefault();
+			Assert.NotNull(account);
 
-            account.RoleAssignments.Add(roleAssignment);
-            account.RoleAssignments.Remove(roleAssignment);
-            //Deattach here
-            account.RoleAssignments.Add(roleAssignment);
-            
-            client.UnitOfWork.Commit();
+			//var newRole = client.Roles.Where(x => x.Name == roleName).SingleOrDefault(); // need to reload role in new repository
 
-            client = GetRepository();
-            account = client.Accounts.Expand("RoleAssignments/Role").Where(x => x.UserName == accountName).SingleOrDefault();
-            Assert.NotNull(account.RoleAssignments.Where(x => x.Role.Name == roleName).SingleOrDefault());
-        }
+			//var roleAssignment = new RoleAssignment { RoleId = roleId, AccountId = accountId};// worked
+			var roleAssignment = new RoleAssignment { RoleId = role.RoleId, AccountId = accountId, Role = role };
+
+			account.RoleAssignments.Add(roleAssignment);
+			account.RoleAssignments.Remove(roleAssignment);
+			//Deattach here
+			account.RoleAssignments.Add(roleAssignment);
+
+			client.UnitOfWork.Commit();
+
+			client = GetRepository();
+			account = client.Accounts.Expand("RoleAssignments/Role").Where(x => x.UserName == accountName).SingleOrDefault();
+			Assert.NotNull(account.RoleAssignments.Where(x => x.Role.Name == roleName).SingleOrDefault());
+		}
 
 		[Fact]
 		public void Can_remove_add_the_same_role()
 		{
 			var accountName = "Account remove_add_the_same_role";
 			var roleName = "Role remove_add_the_same_role";
-			
+
 			// create one account with one role
 			var accountId = AddAccount(accountName);
 			var roleId = AddRole(roleName);
@@ -255,7 +254,7 @@ namespace FunctionalTests.Security
 
 
 			var client = GetRepository();
-			
+
 			var aviableRole = client.Roles.Where(x => x.Name == roleName).SingleOrDefault();
 			Assert.NotNull(aviableRole);
 
@@ -266,11 +265,11 @@ namespace FunctionalTests.Security
 			Assert.NotNull(checkRole);
 
 			// remove existing role from account
-            var item = account.RoleAssignments.First(x => x.RoleId == roleId);
-            account.RoleAssignments.Remove(item);
+			var item = account.RoleAssignments.First(x => x.RoleId == roleId);
+			account.RoleAssignments.Remove(item);
 
 			// add the same role again
-			item = new RoleAssignment {AccountId = accountId, Role = aviableRole, RoleId = aviableRole.RoleId};
+			item = new RoleAssignment { AccountId = accountId, Role = aviableRole, RoleId = aviableRole.RoleId };
 			account.RoleAssignments.Add(item);
 
 
@@ -283,23 +282,23 @@ namespace FunctionalTests.Security
 
 		#endregion
 
-        #region Helper Methods
+		#region Helper Methods
 
-        private ISecurityRepository GetRepository()
+		private ISecurityRepository GetRepository()
 		{
 			EnsureDatabaseInitialized(() => new EFSecurityRepository(_databaseName), () => Database.SetInitializer(new SetupMigrateDatabaseToLatestVersion<EFSecurityRepository, Configuration>()));
 			var retVal = new EFSecurityRepository(_databaseName);
 			return retVal;
 		}
 
-	    private string AddAccount(string name)
-	    {
-			var  client = GetRepository();
+		private string AddAccount(string name)
+		{
+			var client = GetRepository();
 			var account = new Account { UserName = name };
 			client.Add(account);
 			client.UnitOfWork.Commit();
 			return account.AccountId;
-	    }
+		}
 
 		private string AddRole(string name)
 		{

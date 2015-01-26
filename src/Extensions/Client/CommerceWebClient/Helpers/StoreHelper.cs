@@ -243,19 +243,22 @@ namespace VirtoCommerce.Web.Client.Helpers
         /// <param name="val">The val.</param>
         /// <param name="expires">The expires.</param>
         /// <param name="prefix">if set to <c>true</c> [prefix].</param>
-		public static void SetCookie(string key, string val, DateTime expires, bool prefix = true)
+		public static void SetCookie(string key, string val, DateTime? expires = null, bool prefix = true)
 		{
 			var cookieName = prefix ? MakeStoreCookieName(key) : key;
-			var httpCookie = HttpContext.Current.Request.Cookies.Get(cookieName) ?? new HttpCookie(cookieName);
+            Foundation.Customers.CustomerSession.SetCookie(cookieName, val, expires);
+		}
 
-			if (httpCookie.Value != val)
+        /// <summary>
+        /// Gets the cookie.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="prefix">if set to <c>true</c> [prefix].</param>
+        /// <returns>System.String.</returns>
+		public static string GetCookieValue(string key, bool prefix = true)
 			{
-				// Set cookie value
-				httpCookie.Value = val;
-				httpCookie.Expires = expires;
-
-                HttpContext.Current.Response.Cookies.Set(httpCookie);
-			}
+			var cookieName = prefix ? MakeStoreCookieName(key) : key;
+            return Foundation.Customers.CustomerSession.GetCookieValue(cookieName);
 		}
 
         /// <summary>
@@ -288,6 +291,7 @@ namespace VirtoCommerce.Web.Client.Helpers
 		public static NameValueCollection GetCookie(string key, bool prefix = true)
 		{
 			var cookieName = prefix ? MakeStoreCookieName(key) : key;
+
 			HttpCookie cookie = null;
 
 			foreach (string cookieKey in HttpContext.Current.Response.Cookies.Keys)
@@ -301,23 +305,6 @@ namespace VirtoCommerce.Web.Client.Helpers
 
 			cookie = HttpContext.Current.Request.Cookies.Get(cookieName);
 			return cookie != null ? cookie.Values : null;
-		}
-
-        /// <summary>
-        /// Gets the cookie.
-        /// </summary>
-        /// <param name="key">The key.</param>
-        /// <param name="prefix">if set to <c>true</c> [prefix].</param>
-        /// <returns>System.String.</returns>
-		public static string GetCookieValue(string key, bool prefix = true)
-		{
-			var cookieName = prefix ? MakeStoreCookieName(key) : key;
-			string val = null;
-
-			if (HttpContext.Current.Request.Cookies[cookieName] != null)
-				val = HttpContext.Current.Request.Cookies[cookieName].Value;
-
-			return val;
 		}
 
         /// <summary>

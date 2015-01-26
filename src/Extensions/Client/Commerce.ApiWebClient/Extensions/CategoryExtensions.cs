@@ -43,5 +43,27 @@ namespace VirtoCommerce.ApiWebClient.Extensions
             
             return segments;
         }
+
+        public static Dictionary<string, string> BuildTitleOutline(this Category category)
+        {
+            var segments = new Dictionary<string, string>();
+
+            //first add parents
+            if (category.Parents != null)
+            {
+                foreach (var parent in category.Parents)
+                {
+                    segments.Add(parent.Id, parent.Name);
+                }
+            }
+
+            //Finally add category itself
+            {
+                segments.Add(category.Id, category.Name);
+            }
+
+
+            return segments;
+        }
     }
 }

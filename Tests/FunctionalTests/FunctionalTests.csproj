@@ -304,10 +304,6 @@
       <Project>{196ff814-152f-416d-82ab-9b1df3323839}</Project>
       <Name>OrderWorkflow</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\src\Extensions\Setup\VirtoCommerce.PowerShell\VirtoCommerce.PowerShell.csproj">
-      <Project>{98748b0a-4c04-4e70-a4ef-7cbae5959d18}</Project>
-      <Name>VirtoCommerce.PowerShell</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

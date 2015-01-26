@@ -272,7 +272,7 @@ namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Routes
         {
             var routeValueKey = type.ToString().ToLower();
             var session = StoreHelper.CustomerSession;
-            var language = values.ContainsKey(Constants.Language) ? values[Routing.Constants.Language] as string : session.Language;
+            var language = values.ContainsKey(Constants.Language) ? values[Constants.Language] as string : session.Language;
 
             if (values.ContainsKey(routeValueKey) && values[routeValueKey] != null)
             {

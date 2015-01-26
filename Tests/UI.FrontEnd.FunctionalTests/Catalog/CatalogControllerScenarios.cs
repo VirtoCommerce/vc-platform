@@ -11,8 +11,6 @@ using VirtoCommerce.Foundation.Catalogs.Model;
 using VirtoCommerce.Foundation.Data.Stores;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Marketing.Model;
-using VirtoCommerce.PowerShell.Stores;
-using VirtoCommerce.Web.Client.Services.Cache;
 using VirtoCommerce.Web.Controllers;
 using VirtoCommerce.Web.Models;
 using Xunit;
@@ -52,56 +50,56 @@ namespace UI.FrontEnd.FunctionalTests.Catalog
 			CustomerSessionService.CustomerSession.CategoryId = category.Code;
 
 			var controller = (CatalogController)DependencyResolver.Current.GetService(typeof(CatalogController));
-			var result = controller.Display(new CategoryPathModel {Category = category.Code}) as ViewResult;
+			var result = controller.Display(new CategoryPathModel { Category = category.Code }) as ViewResult;
 			var model = result.Model as CategoryModel;
 
 			Assert.Equal(result.ViewName, "Category");
 			Assert.NotNull(model);
 			Assert.Equal(model.CategoryId, category.CategoryId);
-         
+
 		}
 
-        [RepositoryTheory]
-	    public void can_clear_databaseCache()
-	    {
-            Item[] items = null;
-            CreateFullGraphCatalog("testcatlog", ref items);
+		[RepositoryTheory]
+		public void can_clear_databaseCache()
+		{
+			Item[] items = null;
+			CreateFullGraphCatalog("testcatlog", ref items);
 
-            var client = Locator.GetInstance<CatalogClient>();
-            var catalog =client.GetCatalog("testcatlog");
+			var client = Locator.GetInstance<CatalogClient>();
+			var catalog = client.GetCatalog("testcatlog");
 
-            Assert.NotNull(catalog);
+			Assert.NotNull(catalog);
 
-            //Check that there are items in cache
-            var cachedItems = CacheRepository.GetEnumerator();
-            var catalogCachedItems = new List<object>();
-            while (cachedItems.MoveNext())
-            {
-                if (cachedItems.Key.ToString().StartsWith(CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix)))
-                {
-                    catalogCachedItems.Add(cachedItems.Entry);
-                }
-            }
-            Assert.NotEmpty(catalogCachedItems);
+			//Check that there are items in cache
+			var cachedItems = CacheRepository.GetEnumerator();
+			var catalogCachedItems = new List<object>();
+			while (cachedItems.MoveNext())
+			{
+				if (cachedItems.Key.ToString().StartsWith(CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix)))
+				{
+					catalogCachedItems.Add(cachedItems.Entry);
+				}
+			}
+			Assert.NotEmpty(catalogCachedItems);
 
-            //Clear cache
-            var cacheService = Locator.GetInstance<ICacheService>();
-            var removedCount = cacheService.ClearDatabaseCache(Constants.CatalogCachePrefix);
+			//Clear cache
+			var cacheService = Locator.GetInstance<ICacheService>();
+			var removedCount = cacheService.ClearDatabaseCache(Constants.CatalogCachePrefix);
 
-            Assert.True(removedCount > 0, "Nothing was removed from cache");
+			Assert.True(removedCount > 0, "Nothing was removed from cache");
 
-            catalogCachedItems.Clear();
-            cachedItems = CacheRepository.GetEnumerator();
-            while (cachedItems.MoveNext())
-            {
-                if (cachedItems.Key.ToString().StartsWith(CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix)))
-                {
-                    catalogCachedItems.Add(cachedItems.Entry);
-                }
-            }
+			catalogCachedItems.Clear();
+			cachedItems = CacheRepository.GetEnumerator();
+			while (cachedItems.MoveNext())
+			{
+				if (cachedItems.Key.ToString().StartsWith(CacheHelper.CreateCacheKey(Constants.CatalogCachePrefix)))
+				{
+					catalogCachedItems.Add(cachedItems.Entry);
+				}
+			}
 
-            Assert.Empty(catalogCachedItems);
-	    }
+			Assert.Empty(catalogCachedItems);
+		}
 
 		[RepositoryTheory]
 		public void can_display_item()
@@ -166,7 +164,7 @@ namespace UI.FrontEnd.FunctionalTests.Catalog
 					PredicateSerialized = expression,
 					Status = "Active",
 					StartDate = DateTime.UtcNow,
-					
+
 				};
 
 			MarketingRepository.Add(promotion);

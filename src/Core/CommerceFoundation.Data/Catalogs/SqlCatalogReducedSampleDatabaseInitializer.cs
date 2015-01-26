@@ -1,18 +1,18 @@
-﻿namespace VirtoCommerce.PowerShell.Catalogs
+﻿namespace VirtoCommerce.Foundation.Data.Catalogs
 {
-    public class SqlCatalogReducedSampleDatabaseInitializer : SqlCatalogSampleDatabaseInitializer
-    {
-        public SqlCatalogReducedSampleDatabaseInitializer(string location)
-            : base(location)
-        {
-        }
+	public class SqlCatalogReducedSampleDatabaseInitializer : SqlCatalogSampleDatabaseInitializer
+	{
+		public SqlCatalogReducedSampleDatabaseInitializer(string location)
+			: base(location)
+		{
+		}
 
-        public SqlCatalogReducedSampleDatabaseInitializer(string location, string connectionString)
-            : base(location, connectionString)
-        {
-        }
+		public SqlCatalogReducedSampleDatabaseInitializer(string location, string connectionString)
+			: base(location, connectionString)
+		{
+		}
 
-        readonly string[] _files =
+		readonly string[] _files =
         { 
             "CatalogBase.sql",
             "Catalog.sql",
@@ -38,9 +38,9 @@
             "ItemRelation.sql"
         };
 
-        protected override string[] GetSampleFiles()
-        {
-            return _files;
-        }
-    }
+		protected override string[] GetSampleFiles()
+		{
+			return _files;
+		}
+	}
 }

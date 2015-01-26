@@ -10,6 +10,7 @@ using VirtoCommerce.Foundation.AppConfig.Repositories;
 using System.Web.Hosting;
 using VirtoCommerce.CoreModule.Web.Controllers.Api;
 using VirtoCommerce.CoreModule.Web.Settings;
+using VirtoCommerce.Framework.Web.Settings;
 
 namespace VirtoCommerce.CoreModule.Web
 {
@@ -54,8 +55,11 @@ namespace VirtoCommerce.CoreModule.Web
 			#region Settings
 			var modulesPath = HostingEnvironment.MapPath("~/Modules");
 			Func<IAppConfigRepository> appConfigRepFactory = () => new EFAppConfigRepository("VirtoCommerce");
-			
-			_container.RegisterType<SettingController>(new InjectionConstructor ( new SettingsManager(modulesPath, appConfigRepFactory)));
+
+			var settingsManager = new SettingsManager(modulesPath, appConfigRepFactory);
+			_container.RegisterInstance<ISettingsManager>(settingsManager);
+
+			_container.RegisterType<SettingController>(new InjectionConstructor(settingsManager));
 			#endregion
 		}
 
