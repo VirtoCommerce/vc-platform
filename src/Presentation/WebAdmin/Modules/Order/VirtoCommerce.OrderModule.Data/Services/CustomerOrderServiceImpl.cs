@@ -9,26 +9,27 @@ using VirtoCommerce.Domain.Order.Services;
 
 namespace VirtoCommerce.OrderModule.Data.Services
 {
-	public class OperationServiceImpl : IOperationService
+	public class CustomerOrderServiceImpl : ICustomerOrderService
 	{
 		private IInventoryService _inventoryService;
-		public OperationServiceImpl(IInventoryService inventoryService)
+		public CustomerOrderServiceImpl(IInventoryService inventoryService)
 		{
 			_inventoryService = inventoryService;
 		}
-		#region IOperationService Members
 
-		public Operation GetById(string id)
+		#region ICustomerOrderService Members
+
+		public CustomerOrder GetById(string id)
 		{
 			throw new NotImplementedException();
 		}
 
-		public Operation Create(Operation operation)
+		public CustomerOrder Create(CustomerOrder order)
 		{
 			throw new NotImplementedException();
 		}
 
-		public void Update(Operation[] operations)
+		public void Update(CustomerOrder[] orders)
 		{
 			throw new NotImplementedException();
 		}

@@ -10,7 +10,9 @@ namespace VirtoCommerce.Domain.Order.Model
 	{
 		public string CustomerOrderId { get; set; }
 		public CustomerOrder CustomerOrder { get; set; }
+
 		public ICollection<Position> Items { get; set; }
 		public Address DeliveryAddress { get; set; }
+		public Discount Discount { get; set; }
 	}
 }

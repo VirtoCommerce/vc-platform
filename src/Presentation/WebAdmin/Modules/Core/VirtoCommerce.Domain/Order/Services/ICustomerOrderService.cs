@@ -8,11 +8,11 @@ using VirtoCommerce.Domain.Order.Model;
 
 namespace VirtoCommerce.Domain.Order.Services
 {
-	public interface IOperationService 
+	public interface ICustomerOrderService 
 	{
-		Operation GetById(string id);
-		Operation Create(Operation operation);
-		void Update(Operation[] operations);
+		CustomerOrder GetById(string id);
+		CustomerOrder Create(CustomerOrder order);
+		void Update(CustomerOrder[] orders);
 		void Delete(string[] ids);
 	}
 }

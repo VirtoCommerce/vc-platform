@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
 using VirtoCommerce.Domain.Order.Services;
 using VirtoCommerce.Domain.Order.Model;
-
+using VirtoCommerce.Foundation.Frameworks.Extensions;
 namespace VirtoCommerce.OrderModule.Tests
 {
 	[TestClass]
@@ -14,8 +14,8 @@ namespace VirtoCommerce.OrderModule.Tests
 		[TestMethod]
 		public void ProcessPaymentForOrder()
 		{
-			IOperationService operationService = null;
-			var order = operationService.GetById("") as CustomerOrder;
+			ICustomerOrderService customerOrderService = null;
+			var order = customerOrderService.GetById("");
 			var notApprovedPayments = order.InPayments.Where(x => !x.IsApproved);
 			foreach (var inPayment in notApprovedPayments)
 			{
@@ -24,14 +24,14 @@ namespace VirtoCommerce.OrderModule.Tests
 				inPayment.IsApproved = true;
 			}
 
-			operationService.Update(new CustomerOrder[] { order });
+			customerOrderService.Update(new CustomerOrder[] { order });
 		}
 
 		//
 		[TestMethod]
 		public void CancelWholeOrderItem()
 		{
-			IOperationService operationService = null;
+			ICustomerOrderService operationService = null;
 
 			var order = operationService.GetById("") as CustomerOrder;
 		
@@ -59,7 +59,7 @@ namespace VirtoCommerce.OrderModule.Tests
 		[TestMethod]
 		public void DescreaseOrderItem()
 		{
-			IOperationService operationService = null;
+			ICustomerOrderService operationService = null;
 			var order = operationService.GetById("") as CustomerOrder;
 			var orderItem = order.Items.Where(x => x.Quantity > 1).First();
 			orderItem.Quantity = 1;
@@ -80,7 +80,17 @@ namespace VirtoCommerce.OrderModule.Tests
 		[TestMethod]
 		public void FulfilOrderWithSingleShipment()
 		{
+			ICustomerOrderService customerOrderService = null;
+			var order = customerOrderService.GetById("");
 			//Check that inventory changed
+			var shipment = new Shipment
+			{
+				IsApproved = true
+			};
+			shipment.Items.AddRange(order.Items);
+			order.Shipments.Add(shipment);
+
+			customerOrderService.Update(new CustomerOrder[] { order });
 		}
 
 		[TestMethod]
@@ -92,5 +102,6 @@ namespace VirtoCommerce.OrderModule.Tests
 		public void FulfilOrderPartialy()
 		{
 		}
+
 	}
 }

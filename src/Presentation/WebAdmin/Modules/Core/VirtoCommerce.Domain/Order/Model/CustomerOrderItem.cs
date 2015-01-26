@@ -16,7 +16,7 @@ namespace VirtoCommerce.Domain.Order.Model
 		public string ShippingMethodCode { get; set; }
 		public string FulfilmentLocationCode { get; set; }
 
-		public ICollection<Discount> Discounts { get; set; }
+		public Discount Discount { get; set; }
 
 	}
 }

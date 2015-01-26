@@ -3,28 +3,40 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Money;
 
 namespace VirtoCommerce.Domain.Order.Model
 {
-	public abstract class Position 
+	public abstract class Position : Entity, IAuditable
 	{
+		#region IAuditable Members
+
+		public DateTime CreatedDate { get; set; }
+		public string CreatedBy { get; set; }
+		public DateTime ModifiedDate { get; set; }
+		public string ModifiedBy { get; set; }
+
+		#endregion
+
+		public string OperationId { get; set; }
+		
 		/// <summary>
 		/// Price with tax and without dicount
 		/// </summary>
-		Money BasePrice { get; set; }
+		public decimal BasePrice { get; set; }
 		/// <summary>
 		/// Price with tax and discount
 		/// </summary>
-		Money Price { get; set; }
+		public decimal Price { get; set; }
 		/// <summary>
 		/// Discount amount
 		/// </summary>
-		Money Discount { get; set; }
+		public decimal Discount { get; set; }
 		/// <summary>
 		/// Tax sum
 		/// </summary>
-		Money Tax { get; set; }
+		public decimal Tax { get; set; }
 
 		/// <summary>
 		/// Reserve quantity

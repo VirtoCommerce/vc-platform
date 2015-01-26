@@ -14,7 +14,6 @@ namespace VirtoCommerce.Domain.Order.Model
 
 		public ICollection<Position> Items { get; set; }
 		public ICollection<Shipment> Shipments { get; set; }
-		public ICollection<Coupon> Coupons { get; set; }
-		public ICollection<Discount> Discounts { get; set; }
+		public Discount Discount { get; set; }
 	}
 }
