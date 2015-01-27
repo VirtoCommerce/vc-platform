@@ -99,7 +99,8 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup
             // do not modify connection string for localdb
             if (!connectionString.ToLowerInvariant().Contains("(LocalDb)".ToLowerInvariant()))
             {
-                connectionString = connectionString.Replace(string.Format("Initial Catalog={0};", originalDbName), "Initial Catalog=master;");
+                var csBuilder = new SqlConnectionStringBuilder(connectionString) { InitialCatalog = "master" };
+                connectionString = csBuilder.ToString();
             }
 
             using (var dbConnection = new SqlConnection(connectionString))
