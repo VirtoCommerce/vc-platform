@@ -133,6 +133,10 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AppConfig\Migrations\201501271324562_BlankFix.cs" />
+    <Compile Include="AppConfig\Migrations\201501271324562_BlankFix.Designer.cs">
+      <DependentUpon>201501271324562_BlankFix.cs</DependentUpon>
+    </Compile>
     <Compile Include="AppConfig\Services\DbIdentitySequenceService.cs" />
     <Compile Include="AppConfig\Migrations\201407291500445_UpdateStatisticsProceduresAdd.cs" />
     <Compile Include="AppConfig\Migrations\201407291500445_UpdateStatisticsProceduresAdd.Designer.cs">
@@ -154,7 +158,15 @@
     <Compile Include="Catalogs\SqlCatalogDatabaseInitializer.cs" />
     <Compile Include="Catalogs\SqlCatalogReducedSampleDatabaseInitializer.cs" />
     <Compile Include="Catalogs\SqlCatalogSampleDatabaseInitializer.cs" />
+    <Compile Include="Customers\Migrations\201501271317313_BlankFix.cs" />
+    <Compile Include="Customers\Migrations\201501271317313_BlankFix.Designer.cs">
+      <DependentUpon>201501271317313_BlankFix.cs</DependentUpon>
+    </Compile>
     <Compile Include="Customers\SqlCustomerDatabaseInitializer.cs" />
+    <Compile Include="Importing\Migrations\201501271331013_BlankFix.cs" />
+    <Compile Include="Importing\Migrations\201501271331013_BlankFix.Designer.cs">
+      <DependentUpon>201501271331013_BlankFix.cs</DependentUpon>
+    </Compile>
     <Compile Include="Infrastructure\SetupDatabaseInitializer.cs" />
     <Compile Include="Infrastructure\SetupMigrateDatabaseToLatestVersion.cs" />
     <Compile Include="Customers\SqlCustomerSampleDatabaseInitializer.cs" />
@@ -359,6 +371,9 @@
     <EmbeddedResource Include="AppConfig\Migrations\201407291500445_UpdateStatisticsProceduresAdd.resx">
       <DependentUpon>201407291500445_UpdateStatisticsProceduresAdd.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="AppConfig\Migrations\201501271324562_BlankFix.resx">
+      <DependentUpon>201501271324562_BlankFix.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Catalogs\Migrations\201402141547367_Initial.resx">
       <DependentUpon>201402141547367_Initial.cs</DependentUpon>
     </EmbeddedResource>
@@ -374,8 +389,14 @@
     <EmbeddedResource Include="Customers\Migrations\201402141557167_Initial.resx">
       <DependentUpon>201402141557167_Initial.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Customers\Migrations\201501271317313_BlankFix.resx">
+      <DependentUpon>201501271317313_BlankFix.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Importing\Migrations\201402141559293_Initial.resx">
       <DependentUpon>201402141559293_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Importing\Migrations\201501271331013_BlankFix.resx">
+      <DependentUpon>201501271331013_BlankFix.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Infrastructure\LogMigrations\201402141605558_Initial.resx">
       <DependentUpon>201402141605558_Initial.cs</DependentUpon>
