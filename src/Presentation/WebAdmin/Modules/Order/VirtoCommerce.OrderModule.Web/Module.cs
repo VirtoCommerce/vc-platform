@@ -16,10 +16,6 @@ namespace VirtoCommerce.OrderModule.Web
 
 		#region IModule Members
 
-		public void SetupDatabase(bool insertSampleData, bool reducedSampleData)
-		{
-		}
-
 		public void Initialize()
 		{
 		}

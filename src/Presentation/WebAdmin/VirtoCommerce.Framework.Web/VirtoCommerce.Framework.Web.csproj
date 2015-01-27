@@ -80,6 +80,7 @@
     <Compile Include="Modularity\Exceptions\DuplicateModuleException.cs" />
     <Compile Include="Modularity\FileModuleTypeLoader.cs" />
     <Compile Include="Modularity\IAssemblyResolver.cs" />
+    <Compile Include="Modularity\IDatabaseModule.cs" />
     <Compile Include="Modularity\IModule.cs" />
     <Compile Include="Modularity\IModuleCatalog.cs" />
     <Compile Include="Modularity\IModuleCatalogItem.cs" />

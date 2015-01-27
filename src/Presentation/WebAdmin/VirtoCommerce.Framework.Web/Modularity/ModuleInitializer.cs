@@ -49,7 +49,11 @@ namespace VirtoCommerce.Framework.Web.Modularity
 			try
 			{
 				moduleInstance = CreateModule(moduleInfo);
-				//moduleInstance.SetupDatabase(insertSampleData: true, reducedSampleData: false);
+
+				var databaseModule = moduleInstance as IDatabaseModule;
+				if (databaseModule != null)
+					databaseModule.SetupDatabase(insertSampleData: true, reducedSampleData: false);
+
 				moduleInstance.Initialize();
 			}
 			catch (Exception ex)

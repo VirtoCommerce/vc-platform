@@ -17,7 +17,7 @@ using VirtoCommerce.Framework.Web.Settings;
 namespace VirtoCommerce.CoreModule.Web
 {
 	[Module(ModuleName = "CoreModule", OnDemand = true)]
-	public class Module : IModule
+	public class Module : IModule, IDatabaseModule
 	{
 		private const string _connectionStringName = "VirtoCommerce";
 		private readonly IUnityContainer _container;
@@ -29,7 +29,7 @@ namespace VirtoCommerce.CoreModule.Web
 			_appBuilder = appBuilder;
 		}
 
-		#region IModule Members
+		#region IDatabaseModule Members
 
 		public void SetupDatabase(bool insertSampleData, bool reducedSampleData)
 		{
@@ -88,6 +88,10 @@ namespace VirtoCommerce.CoreModule.Web
 				initializer.InitializeDatabase(db);
 			}
 		}
+
+		#endregion
+
+		#region IModule Members
 
 		public void Initialize()
 		{
