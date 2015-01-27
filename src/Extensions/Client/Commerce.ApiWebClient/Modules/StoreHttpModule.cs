@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -94,19 +95,16 @@ namespace VirtoCommerce.ApiWebClient.Modules
 
                     OnUnauthorized(context);
                 }
-                //var account = StoreHelper.UserClient.GetAccountByUserName(session.Username);
-                //if (account != null)
-                //{
-                //    session.CustomerId = account.MemberId;
-                //    var customer = StoreHelper.UserClient.GetCustomer(account.MemberId);
-                //    if (customer != null)
-                //    {
-                //        session.IsFirstTimeBuyer =
-                //            !customer.ContactPropertyValues.Any(x => x.Name == ContactPropertyValueName.LastOrder && x.DateTimeValue.HasValue);
-                //    }
-                //}
-                //var contact = StoreHelper.UserClient.GetCurrentCustomer();
-                //session.CustomerName = contact != null ? contact.FullName : session.Username;
+
+                var userInfo = Task.Run(() => SecurityClient.GetUserInfo(session.Username)).Result;
+                if (userInfo != null)
+                {
+                    session.CustomerId = userInfo.Id;
+                    session.IsFirstTimeBuyer = userInfo.Properties != null &&
+                                               userInfo.Properties.Any(x => x.Key == ContactPropertyValueName.LastOrder);
+                    session.CustomerName = userInfo.FullName;
+
+                }
             }
             else if (!context.Request.HttpMethod.Equals("POST", StringComparison.OrdinalIgnoreCase))
             {

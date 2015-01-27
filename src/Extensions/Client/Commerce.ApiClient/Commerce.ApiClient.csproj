@@ -95,6 +95,7 @@
     <Compile Include="DataContracts\Review.cs" />
     <Compile Include="DataContracts\ReviewComment.cs" />
     <Compile Include="DataContracts\Security\ApplicationUser.cs" />
+    <Compile Include="DataContracts\Security\AuthInfo.cs" />
     <Compile Include="DataContracts\SeoKeyword.cs" />
     <Compile Include="DataContracts\SeoUrlKeywordTypes.cs" />
     <Compile Include="DataContracts\Store\Store.cs" />

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
+using System.Web.Http.Description;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
@@ -55,6 +56,8 @@ namespace VirtoCommerce.SecurityModule.Web.Controllers
             }
         }
 
+        #region Internal Web admin actions
+
         [HttpPost]
 		[Route("login")]
        	public async Task<IHttpActionResult> Login(UserLogin model)
@@ -70,7 +73,8 @@ namespace VirtoCommerce.SecurityModule.Web.Controllers
 		[Authorize]
 		[HttpGet]
 	    [Route("usersession")]
-		public  IHttpActionResult GetUserSession()
+        [ResponseType(typeof(AuthInfo))]
+		public IHttpActionResult GetUserSession()
 		{
             return Ok(GetUserInfo(User.Identity.Name));
 		}
@@ -83,43 +87,16 @@ namespace VirtoCommerce.SecurityModule.Web.Controllers
 			return Ok(new { status = true });
 		}
 
+        #endregion
 
-        private AuthInfo GetUserInfo(string userName)
+        #region Public methods
+
+        [HttpGet]
+        [Route("usersession/{userName}")]
+        [ResponseType(typeof(AuthInfoExtended))]
+        public IHttpActionResult GetUserSession(string userName)
         {
-            using (var repository = _securityRepository())
-            {
-                var user = repository.GetAccount(userName);
-
-                if (user != null)
-                {
-                    var permissions =
-                        user.RoleAssignments.Select(x => x.Role)
-                            .SelectMany(x => x.RolePermissions)
-                            .Select(x => x.Permission);
-
-                    string fullname = user.UserName;
-
-                    using (var customerRep = _customerRepository())
-                    {
-                        var contact = customerRep.GetContact(user.MemberId);
-                        //Account should allways have associated contact info
-                        if (contact != null)
-                        {
-                            fullname = contact.FullName;
-                        }
-                    }
-
-                    return new AuthInfo
-                    {
-                        Login = user.UserName,
-                        FullName = fullname,
-                        UserType = (RegisterType) user.RegisterType,
-                        Permissions = permissions.Select(x => x.PermissionId).Distinct().ToArray()
-                    };
-                }
-            }
-
-            return null;
+            return Ok(GetUserInfo(userName));
         }
 
         #region Methods needed to integrate identity security with external user store that will call api methods
@@ -200,6 +177,55 @@ namespace VirtoCommerce.SecurityModule.Web.Controllers
             {
                 return BadRequest(String.Join(" ", result.Errors));
             }
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Helpers
+
+        private AuthInfo GetUserInfo(string userName)
+        {
+            AuthInfoExtended retVal = null;
+            using (var repository = _securityRepository())
+            {
+                var user = repository.GetAccount(userName);
+
+                if (user != null)
+                {
+                    var permissions =
+                        user.RoleAssignments.Select(x => x.Role)
+                            .SelectMany(x => x.RolePermissions)
+                            .Select(x => x.Permission);
+
+
+                    retVal = new AuthInfoExtended
+                    {
+                        Id = user.MemberId,
+                        Login = user.UserName,
+                        FullName = user.UserName,
+                        AccountState = user.AccountState,
+                        UserType = (RegisterType)user.RegisterType,
+                        Permissions = permissions.Select(x => x.PermissionId).Distinct().ToArray()
+                    };
+
+
+                    using (var customerRep = _customerRepository())
+                    {
+                        var contact = customerRep.GetContact(user.MemberId);
+                        //Account should allways have associated contact info
+                        if (contact != null)
+                        {
+                            retVal.FullName = contact.FullName;
+                            retVal.Properties = contact.ContactPropertyValues.ToDictionary(x => x.Name, x => x.ToString());
+                        }
+                    }
+
+                }
+            }
+
+            return retVal;
         }
 
         #endregion

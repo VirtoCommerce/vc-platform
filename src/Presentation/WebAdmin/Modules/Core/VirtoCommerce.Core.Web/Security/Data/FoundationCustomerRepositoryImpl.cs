@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,7 +28,7 @@ namespace VirtoCommerce.CoreModule.Web.Security
         }
         public Contact GetContact(string id)
         {
-            return Members.OfType<Contact>().FirstOrDefault(x => x.MemberId == id);
+            return Members.OfType<Contact>().Include(x => x.ContactPropertyValues).FirstOrDefault(x => x.MemberId == id);
         }
     }
 }

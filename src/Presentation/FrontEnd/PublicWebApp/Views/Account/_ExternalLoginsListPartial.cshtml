@@ -1,28 +1,24 @@
-﻿@model VirtoCommerce.Web.Models.ExternalLoginListViewModel
-@using Microsoft.Owin.Security
+﻿@model IEnumerable<Microsoft.Owin.Security.AuthenticationDescription>
+@if (!Model.Any())
+{
+    <div class="message-info">
+        <p>@(@"There are no external authentication services configured. See <a href='http://go.microsoft.com/fwlink/?LinkId=313242'>this article</a> for details on setting up this ASP.NET application to support logging in via external services.".LocalizeHtml())</p>
+    </div>
+}
+else
+{
+    using (Html.BeginForm("ExternalLogin", "Account", new { ViewBag.ReturnUrl }))
+    {
+        @Html.AntiForgeryToken()
 
-<h4>Use another service to log in.</h4>
-<hr />
-@{
-    var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes();
-    if (loginProviders.Count() == 0) {
-        <div>
-            <p>
-                There are no external authentication services configured. See <a href="http://go.microsoft.com/fwlink/?LinkId=403804">this article</a>
-                for details on setting up this ASP.NET application to support logging in via external services.
-            </p>
-        </div>
-    }
-    else {
-        using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = Model.ReturnUrl })) {
-            @Html.AntiForgeryToken()
-            <div id="socialLoginList">
-                <p>
-                    @foreach (AuthenticationDescription p in loginProviders) {
-                        <button type="submit" class="btn btn-default" id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType" title="Log in using your @p.Caption account">@p.AuthenticationType</button>
-                    }
-                </p>
-            </div>
-        }
+        <span class="title">@("Log in using another service".Localize())</span>
+        <p>
+            @foreach (var p in Model)
+            {
+                <button type="submit" name="provider" value="@p.AuthenticationType" title="@("Log in using your {0} account".Localize((object)p.Caption))">
+                    <img alt="@p.Caption" src="@Href(String.Format("~/content/themes/default/images/social/{0}.png", p.AuthenticationType))" />
+                </button>
+            }
+        </p>
     }
 }

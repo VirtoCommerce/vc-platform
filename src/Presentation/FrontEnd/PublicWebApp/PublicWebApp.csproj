@@ -602,10 +602,9 @@
     <Content Include="Views\Catalog\RelatedProducts2.cshtml" />
     <Content Include="Views\Catalog\CreateReview.cshtml" />
     <Content Include="Views\Account\LogOnAsync.cshtml" />
+    <Content Include="Views\Account\DisplayTemplates\ForgotPassword.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\Account\DisplayTemplates\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
