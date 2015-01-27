@@ -23,7 +23,7 @@ using VirtoCommerce.Search.Providers.Elastic;
 
 namespace VirtoCommerce.MerchandisingModule.Web
 {
-	public class Module : IModule
+	public class Module : IModule, IDatabaseModule
 	{
 		private const string _connectionStringName = "VirtoCommerce";
 		private readonly IUnityContainer _container;
@@ -33,7 +33,7 @@ namespace VirtoCommerce.MerchandisingModule.Web
 			_container = container;
 		}
 
-		#region IModule Members
+		#region IDatabaseModule Members
 
 		public void SetupDatabase(bool insertSampleData, bool reducedSampleData)
 		{
@@ -97,6 +97,10 @@ namespace VirtoCommerce.MerchandisingModule.Web
 				initializer.InitializeDatabase(db);
 			}
 		}
+
+		#endregion
+
+		#region IModule Members
 
 		public void Initialize()
 		{
