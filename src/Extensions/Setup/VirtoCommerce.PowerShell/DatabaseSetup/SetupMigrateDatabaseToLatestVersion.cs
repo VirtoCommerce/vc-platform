@@ -62,7 +62,7 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup
             }
 
             var seed = !context.Database.Exists();
-			var migrator = new DbMigrator(_config);
+            var migrator = new DbMigrator(_config);
             if (!seed)
             {
                 var local = migrator.GetLocalMigrations();
@@ -78,15 +78,15 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup
                 migrator.Update();
             }
             catch (SqlException ex)
-            {               
+            {
                 throw new ApplicationException(String.Format("Migrations failed with error \"{0}\"", ex.ExpandExceptionMessage()), ex);
             }
-            
+
             InitializeDbSettings(context);
 
             if (seed)
             {
-                 Seed(context);
+                Seed(context);
             }
         }
 
@@ -99,8 +99,7 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup
             // do not modify connection string for localdb
             if (!connectionString.ToLowerInvariant().Contains("(LocalDb)".ToLowerInvariant()))
             {
-                //connectionString = connectionString.Replace(originalDbName, "master");
-                connectionString = connectionString.Replace(string.Format("Database={0};",originalDbName), "Database=master;");
+                connectionString = connectionString.Replace(string.Format("Initial Catalog={0};", originalDbName), "Initial Catalog=master;");
             }
 
             using (var dbConnection = new SqlConnection(connectionString))
