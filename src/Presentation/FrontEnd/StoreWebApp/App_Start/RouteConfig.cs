@@ -25,6 +25,11 @@ namespace VirtoCommerce.Web
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
             routes.IgnoreRoute(".html");
 
+            //Ignore all calls to bundles
+            routes.IgnoreRoute("bundles/{*pathInfo}");
+            //Ignore all calls to areas (Areas supposed to serve own routes)
+            routes.IgnoreRoute("areas/{*pathInfo}");
+
             //This makes sure index.html (or any other deafult document is opened for empty url
             routes.IgnoreRoute("");
 
