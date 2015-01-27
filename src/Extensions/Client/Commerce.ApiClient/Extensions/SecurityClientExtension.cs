@@ -12,9 +12,9 @@ namespace VirtoCommerce.ApiClient.Extensions
 
     public static class SecurityClientExtension
     {
-        public static SecurityClient CreateDefaultSecurityClient(this CommerceClients source, params object[] options)
+        public static SecurityClient CreateSecurityClient(this CommerceClients source)
         {
-            var connectionString = string.Format(SecurityConfiguration.Instance.Connection.DataServiceUri, options);
+            var connectionString = ClientContext.Configuration.ConnectionString;
             return CreateSecurityClient(source, connectionString);
         }
 

@@ -15,7 +15,7 @@ namespace VirtoCommerce.ApiWebClient.Clients
 
         public ApiClient.SecurityClient SecurityApiClient
         {
-            get { return ClientContext.Clients.CreateDefaultSecurityClient(); }
+            get { return ClientContext.Clients.CreateSecurityClient(); }
         }
 
         #region IUserStore<ApplicationUser> Members wrapper
