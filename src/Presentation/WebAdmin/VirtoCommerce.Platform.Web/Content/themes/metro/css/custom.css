@@ -1377,6 +1377,7 @@ p.subheader
 
 .list-extended > li .ico
 {
+	color: #444;
 	float: left;
 	font-size: 32px;
 	margin: 0 15px 0 0;

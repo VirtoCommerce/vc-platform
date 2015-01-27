@@ -31,7 +31,7 @@ angular.module('platformWebApp.bladeNavigation', [
             {
                 var mainContent = $('.main-content');
                 var blade = $(element).parent('.blade');
-                var offset = parseInt(blade.offset().left + mainContent.scrollLeft() + blade.width() + 85 - mainContent[0].clientWidth);
+                var offset = parseInt(blade.offset().left + mainContent.scrollLeft() + blade.width() - 85 - mainContent[0].clientWidth);
                 if (offset > mainContent.scrollLeft()) {
                     mainContent.animate({ scrollLeft: offset + 'px' }, 500);
                 }
@@ -39,35 +39,29 @@ angular.module('platformWebApp.bladeNavigation', [
 
 
             //Somehow vertical scrollbar does not work initially so need to turn it on
-            $(element).find('.blade-content').off('mousewheel').on('mousewheel', function (event, delta)
-            {
-                this.scrollTop -= (delta * speed);
-                event.preventDefault();
-            });
+            horizontalScroll('on');
 
-            $(element).off('mouseenter').on('mouseenter', function (e)
-            {
-                var blade = $(element),
-			        bladeC = blade.find('.blade-inner'),
-			        bladeH = bladeC.height(),
-			        bladeIh = blade.find('.inner-block').height();
+            $('*').on('mouseenter', function (e) {
+                var blade = $(this).parents('.blade'),
+                    bladeI = blade.find('.blade-inner'),
+                    bladeH = bladeI.height(),
+                    bladeIh = blade.find('.inner-block').height();
 
-                if (blade.length)
-                {
-                    if (bladeH <= bladeIh)
-                    {
+                if(blade.length) {
+                    if(bladeH <= bladeIh) {
                         horizontalScroll('off');
-                        return;
+                    }
+                    else {
+                        horizontalScroll('on');
                     }
                 }
-
-                horizontalScroll('on');
-
+                else {
+                    horizontalScroll('on');
+                }
             });
 
             $('.blade-head, .blade-head *, .static, .static *').on('mouseenter', function (event) {
                 horizontalScroll('on');
-                event.stopPropagation();
             });
 
             function horizontalScroll(flag)
