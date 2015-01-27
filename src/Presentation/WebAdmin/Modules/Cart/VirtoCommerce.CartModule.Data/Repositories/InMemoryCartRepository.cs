@@ -15,12 +15,12 @@ namespace VirtoCommerce.CartModule.Data.Repositories
 
 		#region IShoppingCartRepository Members
 
-		public IQueryable<Domain.Cart.Model.ShoppingCart> ShoppingCarts
+		public IQueryable<ShoppingCart> ShoppingCarts
 		{
 			get { return _carts.AsQueryable(); }
 		}
 
-		public Domain.Cart.Model.ShoppingCart GetById(string id)
+		public ShoppingCart GetById(string id)
 		{
 			return _carts.FirstOrDefault(x=>x.Id == id);
 		}

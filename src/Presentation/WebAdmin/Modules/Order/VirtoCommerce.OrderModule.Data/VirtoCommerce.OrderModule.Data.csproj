@@ -39,8 +39,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Converters\CustomerOrderConverter.cs" />
+    <Compile Include="Converters\PositionConverter.cs" />
+    <Compile Include="Converters\OperationConverter.cs" />
+    <Compile Include="Converters\PaymentInConverter.cs" />
+    <Compile Include="Converters\ShipmentConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Repositories\InMemoryOrderRepository.cs" />
     <Compile Include="Services\CustomerOrderServiceImpl.cs" />
+    <Compile Include="Services\TimeBasedNumberGeneratorImpl.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

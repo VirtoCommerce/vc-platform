@@ -12,6 +12,9 @@ namespace VirtoCommerce.Domain.Order.Model
 		public string CustomerOrderId { get; set; }
 		public CustomerOrder CustomerOrder { get; set; }
 
+		public string ShipmentId { get; set; }
+		public Shipment Shipment { get; set; }
+
 		public DateTime? IncomingDate { get; set; }
 		public string OuterId { get; set; }
 	}

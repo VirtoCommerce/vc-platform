@@ -9,7 +9,7 @@ namespace VirtoCommerce.Domain.Payment.Services
 {
 	public interface IPaymentGateway
 	{
-		string Code { get;  }
+		string GatewayCode { get;  }
 		string Description { get; }
 		string LogoUrl { get; }
 

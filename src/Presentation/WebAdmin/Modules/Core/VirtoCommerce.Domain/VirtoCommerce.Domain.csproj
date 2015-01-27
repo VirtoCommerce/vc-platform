@@ -69,6 +69,8 @@
     <Compile Include="Order\Model\Coupon.cs" />
     <Compile Include="Order\Model\CustomerOrder.cs" />
     <Compile Include="Order\Model\CustomerOrderItem.cs" />
+    <Compile Include="Order\Services\IOperationNumberGenerator.cs" />
+    <Compile Include="Order\Model\ResponseGroup.cs" />
     <Compile Include="Order\Model\Discount.cs" />
     <Compile Include="Order\Model\FinanceInOperation.cs" />
     <Compile Include="Order\Model\FinanceOperation.cs" />
@@ -85,6 +87,8 @@
     <Compile Include="Order\Repositories\IOrderRepository.cs" />
     <Compile Include="Order\Services\ICustomerOrderService.cs" />
     <Compile Include="Order\Services\IOrderSearchService.cs" />
+    <Compile Include="Order\Services\IPaymentService.cs" />
+    <Compile Include="Order\Services\IShipmentService.cs" />
     <Compile Include="Payment\Model\PaymentInfo.cs" />
     <Compile Include="Payment\Services\IPaymentGateway.cs" />
     <Compile Include="Payment\Services\IPaymentGatewayManager.cs" />
