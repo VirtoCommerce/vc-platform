@@ -1,4 +1,4 @@
-﻿@model IDictionary<string,string[]>
+﻿@model IDictionary<string,object>
 
 <table class="data-table" id="product-attribute-specs-table">
     <col width="25%" />
@@ -11,7 +11,7 @@
                     @prop.Key.Localize()
                 </th>
                 <td class="data">
-                    @string.Join(", ", prop.Value)
+                    @prop.Value.ToString()
                 </td>
             </tr>
         }

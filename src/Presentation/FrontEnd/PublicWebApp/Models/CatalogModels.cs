@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using VirtoCommerce.ApiClient.DataContracts;
 using VirtoCommerce.ApiWebClient.Globalization;
@@ -37,9 +36,9 @@ namespace VirtoCommerce.Web.Models
             get
             {
                 var retVal = CatalogItem.Name;
-                if (Properties.ContainsKey("Title"))
+                if (CatalogItem.Properties.ContainsKey("Title"))
                 {
-                    retVal = this["Title"][0];
+                    retVal = CatalogItem["Title"].ToString();
                 }
 
                 return retVal;
@@ -66,39 +65,7 @@ namespace VirtoCommerce.Web.Models
 
         public ItemAvailabilityModel Availability { get; set; }
 
-        #region Properties
-
-        private IDictionary<string, string[]> _properties = new Dictionary<string, string[]>();
-
-        public string[] this[string name]
-        {
-            get
-            {
-                return _properties[name];
-            }
-            set
-            {
-                if (_properties.ContainsKey(name))
-                {
-                    _properties[name] = value;
-                }
-                else
-                {
-                    _properties.Add(name, value);
-                }
-            }
-        }
-
-        public IDictionary<string, string[]> Properties
-        {
-            get
-            {
-                return _properties;
-            }
-            set { _properties = value; }
-        }
-
-        #endregion
+     
     }
 
     public class AssociatedItemModel : ItemModel

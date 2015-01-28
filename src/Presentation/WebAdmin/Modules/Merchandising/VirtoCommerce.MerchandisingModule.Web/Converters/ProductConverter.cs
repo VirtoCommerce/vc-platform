@@ -60,6 +60,9 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 
 		    foreach (var propValue in product.PropertyValues)
 		    {
+                //TODO create property collection not Dictionary to support multivalues
+                if (retVal.Properties.ContainsKey(propValue.PropertyName))continue;
+		        
                 retVal.Properties.Add(propValue.PropertyName, propValue.Value);
 		    }
 
