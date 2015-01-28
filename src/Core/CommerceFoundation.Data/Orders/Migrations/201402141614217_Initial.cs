@@ -1,70 +1,38 @@
+using System.Data.Entity.Migrations;
+
 namespace VirtoCommerce.Foundation.Data.Orders.Migrations
 {
-    using System;
-    using System.Data.Entity.Migrations;
-    
     public partial class Initial : DbMigration
     {
         public override void Up()
         {
             CreateTable(
-                "dbo.OrderGroup",
-                c => new
-                    {
-                        OrderGroupId = c.String(nullable: false, maxLength: 128),
-                        Name = c.String(nullable: false, maxLength: 128),
-                        OrganizationId = c.String(maxLength: 128),
-                        CustomerId = c.String(maxLength: 128),
-                        CustomerName = c.String(maxLength: 128),
-                        StoreId = c.String(maxLength: 128),
-                        AddressId = c.String(maxLength: 128),
-                        ShippingTotal = c.Decimal(nullable: false, precision: 18, scale: 2),
-                        HandlingTotal = c.Decimal(nullable: false, precision: 18, scale: 2),
-                        TaxTotal = c.Decimal(nullable: false, precision: 18, scale: 2),
-                        Subtotal = c.Decimal(nullable: false, precision: 18, scale: 2),
-                        Total = c.Decimal(nullable: false, precision: 18, scale: 2),
-                        DiscountTotal = c.Decimal(nullable: false, precision: 18, scale: 2),
-                        FormDiscountTotal = c.Decimal(nullable: false, precision: 18, scale: 2),
-                        LineItemDiscountTotal = c.Decimal(nullable: false, precision: 18, scale: 2),
-                        ShipmentDiscountTotal = c.Decimal(nullable: false, precision: 18, scale: 2),
-                        BillingCurrency = c.String(maxLength: 32),
-                        Status = c.String(maxLength: 32),
-                        LastModified = c.DateTime(),
-                        Created = c.DateTime(),
-                        TrackingNumber = c.String(maxLength: 128),
-                        ParentOrderId = c.String(),
-                        ExpirationDate = c.DateTime(),
-                        Discriminator = c.String(maxLength: 128),
-                    })
-                .PrimaryKey(t => t.OrderGroupId);
-            
-            CreateTable(
                 "dbo.OrderAddress",
                 c => new
-                    {
-                        OrderAddressId = c.String(nullable: false, maxLength: 128),
-                        OrderGroupId = c.String(nullable: false, maxLength: 128),
-                        Name = c.String(nullable: false, maxLength: 512),
-                        FirstName = c.String(nullable: false, maxLength: 128),
-                        LastName = c.String(nullable: false, maxLength: 128),
-                        Organization = c.String(maxLength: 128),
-                        Line1 = c.String(nullable: false, maxLength: 128),
-                        Line2 = c.String(maxLength: 128),
-                        City = c.String(nullable: false, maxLength: 128),
-                        StateProvince = c.String(maxLength: 128),
-                        CountryCode = c.String(nullable: false, maxLength: 128),
-                        CountryName = c.String(maxLength: 64),
-                        PostalCode = c.String(nullable: false, maxLength: 32),
-                        RegionId = c.String(maxLength: 32),
-                        RegionName = c.String(maxLength: 64),
-                        DaytimePhoneNumber = c.String(nullable: false, maxLength: 32),
-                        EveningPhoneNumber = c.String(maxLength: 32),
-                        FaxNumber = c.String(maxLength: 32),
-                        Email = c.String(nullable: false, maxLength: 256),
-                        LastModified = c.DateTime(),
-                        Created = c.DateTime(),
-                        Discriminator = c.String(maxLength: 128),
-                    })
+                {
+                    OrderAddressId = c.String(nullable: false, maxLength: 128),
+                    OrderGroupId = c.String(nullable: false, maxLength: 128),
+                    Name = c.String(nullable: false, maxLength: 512),
+                    FirstName = c.String(nullable: false, maxLength: 128),
+                    LastName = c.String(nullable: false, maxLength: 128),
+                    Organization = c.String(maxLength: 128),
+                    Line1 = c.String(nullable: false, maxLength: 128),
+                    Line2 = c.String(maxLength: 128),
+                    City = c.String(nullable: false, maxLength: 128),
+                    StateProvince = c.String(maxLength: 128),
+                    CountryCode = c.String(nullable: false, maxLength: 128),
+                    CountryName = c.String(maxLength: 64),
+                    PostalCode = c.String(nullable: false, maxLength: 32),
+                    RegionId = c.String(maxLength: 32),
+                    RegionName = c.String(maxLength: 64),
+                    DaytimePhoneNumber = c.String(nullable: false, maxLength: 32),
+                    EveningPhoneNumber = c.String(maxLength: 32),
+                    FaxNumber = c.String(maxLength: 32),
+                    Email = c.String(nullable: false, maxLength: 256),
+                    LastModified = c.DateTime(),
+                    Created = c.DateTime(),
+                    Discriminator = c.String(maxLength: 128),
+                })
                 .PrimaryKey(t => t.OrderAddressId)
                 .ForeignKey("dbo.OrderGroup", t => t.OrderGroupId, cascadeDelete: true)
                 .Index(t => t.OrderGroupId);
@@ -84,8 +52,6 @@ namespace VirtoCommerce.Foundation.Data.Orders.Migrations
                         Subtotal = c.Decimal(nullable: false, precision: 18, scale: 2),
                         Total = c.Decimal(nullable: false, precision: 18, scale: 2),
                         DiscountAmount = c.Decimal(nullable: false, precision: 18, scale: 2),
-                        LineItemDiscountAmount = c.Decimal(nullable: false, precision: 18, scale: 2),
-                        ShipmentDiscountAmount = c.Decimal(nullable: false, precision: 18, scale: 2),
                         LastModified = c.DateTime(),
                         Created = c.DateTime(),
                         Discriminator = c.String(maxLength: 128),
@@ -336,6 +302,36 @@ namespace VirtoCommerce.Foundation.Data.Orders.Migrations
                 .Index(t => t.ShipmentId);
             
             CreateTable(
+                "dbo.OrderGroup",
+                c => new
+                    {
+                        OrderGroupId = c.String(nullable: false, maxLength: 128),
+                        Name = c.String(nullable: false, maxLength: 128),
+                        OrganizationId = c.String(maxLength: 128),
+                        CustomerId = c.String(maxLength: 128),
+                        CustomerName = c.String(maxLength: 128),
+                        StoreId = c.String(maxLength: 128),
+                        AddressId = c.String(maxLength: 128),
+                        ShippingTotal = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        HandlingTotal = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        TaxTotal = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        Subtotal = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        Total = c.Decimal(nullable: false, precision: 18, scale: 2),
+                        BillingCurrency = c.String(maxLength: 32),
+                        Status = c.String(maxLength: 32),
+                        LastModified = c.DateTime(),
+                        Created = c.DateTime(),
+                        TrackingNumber = c.String(maxLength: 128),
+                        ParentOrderId = c.String(),
+                        ExpirationDate = c.DateTime(),
+                        Discriminator = c.String(maxLength: 128),
+                    })
+                .PrimaryKey(t => t.OrderGroupId)
+                .Index(t => t.Discriminator)
+                .Index(t => t.Created)
+                .Index(t => t.StoreId);
+            
+            CreateTable(
                 "dbo.RmaRequest",
                 c => new
                     {
@@ -363,8 +359,8 @@ namespace VirtoCommerce.Foundation.Data.Orders.Migrations
                 .PrimaryKey(t => t.RmaRequestId)
                 .ForeignKey("dbo.OrderGroup", t => t.ExchangeOrderId)
                 .ForeignKey("dbo.OrderGroup", t => t.OrderId, cascadeDelete: true)
-                .Index(t => t.OrderId)
-                .Index(t => t.ExchangeOrderId);
+                .Index(t => t.ExchangeOrderId)
+                .Index(t => t.OrderId);
             
             CreateTable(
                 "dbo.RmaReturnItem",
@@ -404,21 +400,6 @@ namespace VirtoCommerce.Foundation.Data.Orders.Migrations
                 .Index(t => t.RmaReturnItemId);
             
             CreateTable(
-                "dbo.Gateway",
-                c => new
-                    {
-                        GatewayId = c.String(nullable: false, maxLength: 128),
-                        Name = c.String(nullable: false, maxLength: 64),
-                        ClassType = c.String(maxLength: 128),
-                        LastModified = c.DateTime(),
-                        Created = c.DateTime(),
-                        SupportsRecurring = c.Boolean(),
-                        SupportedTransactionTypes = c.Int(),
-                        Discriminator = c.String(maxLength: 128),
-                    })
-                .PrimaryKey(t => t.GatewayId);
-            
-            CreateTable(
                 "dbo.GatewayProperty",
                 c => new
                     {
@@ -451,6 +432,21 @@ namespace VirtoCommerce.Foundation.Data.Orders.Migrations
                 .PrimaryKey(t => t.GatewayPropertyDictionaryValueId)
                 .ForeignKey("dbo.GatewayProperty", t => t.GatewayPropertyId, cascadeDelete: true)
                 .Index(t => t.GatewayPropertyId);
+            
+            CreateTable(
+                "dbo.Gateway",
+                c => new
+                    {
+                        GatewayId = c.String(nullable: false, maxLength: 128),
+                        Name = c.String(nullable: false, maxLength: 64),
+                        ClassType = c.String(maxLength: 128),
+                        LastModified = c.DateTime(),
+                        Created = c.DateTime(),
+                        SupportsRecurring = c.Boolean(),
+                        SupportedTransactionTypes = c.Int(),
+                        Discriminator = c.String(maxLength: 128),
+                    })
+                .PrimaryKey(t => t.GatewayId);
             
             CreateTable(
                 "dbo.ShippingOption",
@@ -609,8 +605,8 @@ namespace VirtoCommerce.Foundation.Data.Orders.Migrations
                 .PrimaryKey(t => t.ShippingMethodJurisdictionGroupId)
                 .ForeignKey("dbo.JurisdictionGroup", t => t.JurisdictionGroupId, cascadeDelete: true)
                 .ForeignKey("dbo.ShippingMethod", t => t.ShippingMethodId, cascadeDelete: true)
-                .Index(t => t.ShippingMethodId)
-                .Index(t => t.JurisdictionGroupId);
+                .Index(t => t.JurisdictionGroupId)
+                .Index(t => t.ShippingMethodId);
             
             CreateTable(
                 "dbo.JurisdictionGroup",
@@ -744,8 +740,8 @@ namespace VirtoCommerce.Foundation.Data.Orders.Migrations
                 .PrimaryKey(t => t.TaxValueId)
                 .ForeignKey("dbo.JurisdictionGroup", t => t.JurisdictionGroupId, cascadeDelete: true)
                 .ForeignKey("dbo.Tax", t => t.TaxId, cascadeDelete: true)
-                .Index(t => t.TaxId)
-                .Index(t => t.JurisdictionGroupId);
+                .Index(t => t.JurisdictionGroupId)
+                .Index(t => t.TaxId);
             
             CreateTable(
                 "dbo.Country",
@@ -779,7 +775,6 @@ namespace VirtoCommerce.Foundation.Data.Orders.Migrations
                 .PrimaryKey(t => t.RegionId)
                 .ForeignKey("dbo.Country", t => t.CountryId, cascadeDelete: true)
                 .Index(t => t.CountryId);
-            
         }
         
         public override void Down()
@@ -824,44 +819,47 @@ namespace VirtoCommerce.Foundation.Data.Orders.Migrations
             DropForeignKey("dbo.OrderFormDiscount", "OrderFormId", "dbo.OrderForm");
             DropForeignKey("dbo.OrderAddress", "OrderGroupId", "dbo.OrderGroup");
             DropIndex("dbo.Region", new[] { "CountryId" });
-            DropIndex("dbo.TaxValue", new[] { "JurisdictionGroupId" });
             DropIndex("dbo.TaxValue", new[] { "TaxId" });
+            DropIndex("dbo.TaxValue", new[] { "JurisdictionGroupId" });
             DropIndex("dbo.TaxLanguage", new[] { "TaxId" });
             DropIndex("dbo.ShippingPackage", new[] { "ShippingOptionId" });
+            DropIndex("dbo.ShippingMethod", new[] { "ShippingOptionId" });
             DropIndex("dbo.ShippingMethodLanguage", new[] { "ShippingMethodId" });
+            DropIndex("dbo.ShippingMethodJurisdictionGroup", new[] { "ShippingMethodId" });
+            DropIndex("dbo.ShippingMethodJurisdictionGroup", new[] { "JurisdictionGroupId" });
             DropIndex("dbo.JurisdictionRelation", new[] { "JurisdictionGroupId" });
             DropIndex("dbo.JurisdictionRelation", new[] { "JurisdictionId" });
-            DropIndex("dbo.ShippingMethodJurisdictionGroup", new[] { "JurisdictionGroupId" });
-            DropIndex("dbo.ShippingMethodJurisdictionGroup", new[] { "ShippingMethodId" });
             DropIndex("dbo.ShippingMethodCase", new[] { "ShippingMethodId" });
+            DropIndex("dbo.PaymentMethodShippingMethod", new[] { "ShippingMethodId" });
+            DropIndex("dbo.PaymentMethodShippingMethod", new[] { "PaymentMethodId" });
             DropIndex("dbo.PaymentMethodPropertyValue", new[] { "PaymentMethodId" });
             DropIndex("dbo.PaymentMethodLanguage", new[] { "PaymentMethodId" });
             DropIndex("dbo.PaymentMethod", new[] { "PaymentGatewayId" });
-            DropIndex("dbo.PaymentMethodShippingMethod", new[] { "ShippingMethodId" });
-            DropIndex("dbo.PaymentMethodShippingMethod", new[] { "PaymentMethodId" });
-            DropIndex("dbo.ShippingMethod", new[] { "ShippingOptionId" });
             DropIndex("dbo.ShippingGatewayPropertyValue", new[] { "ShippingOptionId" });
             DropIndex("dbo.ShippingOption", new[] { "ShippingGatewayId" });
             DropIndex("dbo.GatewayPropertyDictionaryValue", new[] { "GatewayPropertyId" });
             DropIndex("dbo.GatewayProperty", new[] { "GatewayId" });
+            DropIndex("dbo.RmaReturnItem", new[] { "RmaRequestId" });
             DropIndex("dbo.RmaLineItem", new[] { "RmaReturnItemId" });
             DropIndex("dbo.RmaLineItem", new[] { "LineItemId" });
-            DropIndex("dbo.RmaReturnItem", new[] { "RmaRequestId" });
-            DropIndex("dbo.RmaRequest", new[] { "ExchangeOrderId" });
             DropIndex("dbo.RmaRequest", new[] { "OrderId" });
+            DropIndex("dbo.RmaRequest", new[] { "ExchangeOrderId" });
             DropIndex("dbo.ShipmentItem", new[] { "ShipmentId" });
             DropIndex("dbo.ShipmentItem", new[] { "LineItemId" });
-            DropIndex("dbo.ShipmentDiscount", new[] { "ShipmentId" });
             DropIndex("dbo.Shipment", new[] { "PicklistId" });
             DropIndex("dbo.Shipment", new[] { "OrderFormId" });
+            DropIndex("dbo.ShipmentDiscount", new[] { "ShipmentId" });
             DropIndex("dbo.Payment", new[] { "OrderFormId" });
+            DropIndex("dbo.OrderForm", new[] { "OrderGroupId" });
             DropIndex("dbo.OrderFormPropertyValue", new[] { "OrderFormId" });
+            DropIndex("dbo.LineItem", new[] { "OrderFormId" });
             DropIndex("dbo.LineItemOption", new[] { "LineItemId" });
             DropIndex("dbo.LineItemDiscount", new[] { "LineItemId" });
-            DropIndex("dbo.LineItem", new[] { "OrderFormId" });
             DropIndex("dbo.OrderFormDiscount", new[] { "OrderFormId" });
-            DropIndex("dbo.OrderForm", new[] { "OrderGroupId" });
             DropIndex("dbo.OrderAddress", new[] { "OrderGroupId" });
+            DropIndex("dbo.OrderGroup", new[] { "Discriminator" });
+            DropIndex("dbo.OrderGroup", new[] { "Created" });
+            DropIndex("dbo.OrderGroup", new[] { "StoreId" });
             DropTable("dbo.Region");
             DropTable("dbo.Country");
             DropTable("dbo.TaxValue");
@@ -881,12 +879,13 @@ namespace VirtoCommerce.Foundation.Data.Orders.Migrations
             DropTable("dbo.ShippingMethod");
             DropTable("dbo.ShippingGatewayPropertyValue");
             DropTable("dbo.ShippingOption");
+            DropTable("dbo.Gateway");
             DropTable("dbo.GatewayPropertyDictionaryValue");
             DropTable("dbo.GatewayProperty");
-            DropTable("dbo.Gateway");
             DropTable("dbo.RmaLineItem");
             DropTable("dbo.RmaReturnItem");
             DropTable("dbo.RmaRequest");
+            DropTable("dbo.OrderGroup");
             DropTable("dbo.ShipmentItem");
             DropTable("dbo.Picklist");
             DropTable("dbo.ShipmentDiscount");
@@ -899,7 +898,6 @@ namespace VirtoCommerce.Foundation.Data.Orders.Migrations
             DropTable("dbo.OrderFormDiscount");
             DropTable("dbo.OrderForm");
             DropTable("dbo.OrderAddress");
-            DropTable("dbo.OrderGroup");
         }
     }
 }

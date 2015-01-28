@@ -121,8 +121,8 @@ namespace VirtoCommerce.Foundation.Data.Stores.Migrations
                 .PrimaryKey(t => t.StoreLinkedStoreId)
                 .ForeignKey("dbo.Store", t => t.LinkedStoreId)
                 .ForeignKey("dbo.Store", t => t.StoreId, cascadeDelete: true)
-                .Index(t => t.StoreId)
-                .Index(t => t.LinkedStoreId);
+                .Index(t => t.LinkedStoreId)
+                .Index(t => t.StoreId);
             
             CreateTable(
                 "dbo.StorePaymentGateway",
@@ -210,14 +210,14 @@ namespace VirtoCommerce.Foundation.Data.Stores.Migrations
             DropIndex("dbo.StoreTaxJurisdiction", new[] { "StoreId" });
             DropIndex("dbo.StoreTaxCode", new[] { "StoreId" });
             DropIndex("dbo.StoreSetting", new[] { "StoreId" });
+            DropIndex("dbo.Store", new[] { "ReturnsFulfillmentCenterId" });
             DropIndex("dbo.StorePaymentGateway", new[] { "StoreId" });
-            DropIndex("dbo.StoreLinkedStore", new[] { "LinkedStoreId" });
             DropIndex("dbo.StoreLinkedStore", new[] { "StoreId" });
+            DropIndex("dbo.StoreLinkedStore", new[] { "LinkedStoreId" });
             DropIndex("dbo.StoreLanguage", new[] { "StoreId" });
+            DropIndex("dbo.Store", new[] { "FulfillmentCenterId" });
             DropIndex("dbo.StoreCurrency", new[] { "StoreId" });
             DropIndex("dbo.StoreCardType", new[] { "StoreId" });
-            DropIndex("dbo.Store", new[] { "ReturnsFulfillmentCenterId" });
-            DropIndex("dbo.Store", new[] { "FulfillmentCenterId" });
             DropTable("dbo.StoreTaxJurisdiction");
             DropTable("dbo.StoreTaxCode");
             DropTable("dbo.StoreSetting");

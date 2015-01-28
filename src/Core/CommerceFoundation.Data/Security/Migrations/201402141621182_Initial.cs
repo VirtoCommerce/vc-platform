@@ -1,8 +1,7 @@
+using System.Data.Entity.Migrations;
+
 namespace VirtoCommerce.Foundation.Data.Security.Migrations
 {
-    using System;
-    using System.Data.Entity.Migrations;
-    
     public partial class Initial : DbMigration
     {
         public override void Up()
@@ -33,8 +32,8 @@ namespace VirtoCommerce.Foundation.Data.Security.Migrations
                 .PrimaryKey(t => t.RolePermissionId)
                 .ForeignKey("dbo.Permission", t => t.PermissionId, cascadeDelete: true)
                 .ForeignKey("dbo.Role", t => t.RoleId, cascadeDelete: true)
-                .Index(t => t.RoleId)
-                .Index(t => t.PermissionId);
+                .Index(t => t.PermissionId)
+                .Index(t => t.RoleId);
             
             CreateTable(
                 "dbo.Role",
@@ -90,10 +89,10 @@ namespace VirtoCommerce.Foundation.Data.Security.Migrations
             DropForeignKey("dbo.RoleAssignment", "RoleId", "dbo.Role");
             DropForeignKey("dbo.RoleAssignment", "AccountId", "dbo.Account");
             DropForeignKey("dbo.RolePermission", "PermissionId", "dbo.Permission");
+            DropIndex("dbo.RolePermission", new[] { "RoleId" });
             DropIndex("dbo.RoleAssignment", new[] { "RoleId" });
             DropIndex("dbo.RoleAssignment", new[] { "AccountId" });
             DropIndex("dbo.RolePermission", new[] { "PermissionId" });
-            DropIndex("dbo.RolePermission", new[] { "RoleId" });
             DropTable("dbo.Account");
             DropTable("dbo.RoleAssignment");
             DropTable("dbo.Role");

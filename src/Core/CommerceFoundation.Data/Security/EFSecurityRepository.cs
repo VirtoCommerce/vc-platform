@@ -23,6 +23,7 @@ namespace VirtoCommerce.Foundation.Data.Security
 		{
 			this.Configuration.AutoDetectChangesEnabled = true;
 			this.Configuration.ProxyCreationEnabled = false;
+            Database.SetInitializer<EFSecurityRepository>(null);
 		}
 
 		[InjectionConstructor]

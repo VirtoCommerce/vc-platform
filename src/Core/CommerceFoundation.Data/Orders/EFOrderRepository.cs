@@ -41,6 +41,7 @@ namespace VirtoCommerce.Foundation.Data.Orders
         {
             this.Configuration.AutoDetectChangesEnabled = true;
             this.Configuration.ProxyCreationEnabled = false;
+            Database.SetInitializer<EFOrderRepository>(null);
         }
 
         /// <summary>

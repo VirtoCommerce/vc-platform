@@ -22,6 +22,7 @@ namespace VirtoCommerce.Foundation.Data.Marketing
         {
             this.Configuration.AutoDetectChangesEnabled = true;
             this.Configuration.ProxyCreationEnabled = false;
+            Database.SetInitializer<EFMarketingRepository>(null);
         }
 
         [InjectionConstructor]

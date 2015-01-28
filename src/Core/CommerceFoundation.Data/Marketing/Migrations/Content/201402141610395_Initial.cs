@@ -1,8 +1,7 @@
+using System.Data.Entity.Migrations;
+
 namespace VirtoCommerce.Foundation.Data.Marketing.Migrations.Content
 {
-    using System;
-    using System.Data.Entity.Migrations;
-    
     public partial class Initial : DbMigration
     {
         public override void Up()
@@ -92,8 +91,8 @@ namespace VirtoCommerce.Foundation.Data.Marketing.Migrations.Content
                 .PrimaryKey(t => t.PublishingGroupContentItemId)
                 .ForeignKey("dbo.DynamicContentItem", t => t.DynamicContentItemId)
                 .ForeignKey("dbo.DynamicContentPublishingGroup", t => t.DynamicContentPublishingGroupId, cascadeDelete: true)
-                .Index(t => t.DynamicContentPublishingGroupId)
-                .Index(t => t.DynamicContentItemId);
+                .Index(t => t.DynamicContentItemId)
+                .Index(t => t.DynamicContentPublishingGroupId);
             
             CreateTable(
                 "dbo.PublishingGroupContentPlace",
@@ -109,8 +108,8 @@ namespace VirtoCommerce.Foundation.Data.Marketing.Migrations.Content
                 .PrimaryKey(t => t.PublishingGroupContentPlaceId)
                 .ForeignKey("dbo.DynamicContentPlace", t => t.DynamicContentPlaceId)
                 .ForeignKey("dbo.DynamicContentPublishingGroup", t => t.DynamicContentPublishingGroupId, cascadeDelete: true)
-                .Index(t => t.DynamicContentPublishingGroupId)
-                .Index(t => t.DynamicContentPlaceId);
+                .Index(t => t.DynamicContentPlaceId)
+                .Index(t => t.DynamicContentPublishingGroupId);
             
         }
         
@@ -121,10 +120,10 @@ namespace VirtoCommerce.Foundation.Data.Marketing.Migrations.Content
             DropForeignKey("dbo.PublishingGroupContentItem", "DynamicContentPublishingGroupId", "dbo.DynamicContentPublishingGroup");
             DropForeignKey("dbo.PublishingGroupContentItem", "DynamicContentItemId", "dbo.DynamicContentItem");
             DropForeignKey("dbo.DynamicContentItemProperty", "DynamicContentItemId", "dbo.DynamicContentItem");
-            DropIndex("dbo.PublishingGroupContentPlace", new[] { "DynamicContentPlaceId" });
             DropIndex("dbo.PublishingGroupContentPlace", new[] { "DynamicContentPublishingGroupId" });
-            DropIndex("dbo.PublishingGroupContentItem", new[] { "DynamicContentItemId" });
+            DropIndex("dbo.PublishingGroupContentPlace", new[] { "DynamicContentPlaceId" });
             DropIndex("dbo.PublishingGroupContentItem", new[] { "DynamicContentPublishingGroupId" });
+            DropIndex("dbo.PublishingGroupContentItem", new[] { "DynamicContentItemId" });
             DropIndex("dbo.DynamicContentItemProperty", new[] { "DynamicContentItemId" });
             DropTable("dbo.PublishingGroupContentPlace");
             DropTable("dbo.PublishingGroupContentItem");
