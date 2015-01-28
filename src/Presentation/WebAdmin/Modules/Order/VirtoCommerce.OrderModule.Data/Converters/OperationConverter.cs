@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Domain.Order.Model;
+using VirtoCommerce.OrderModule.Data.Model;
 
 namespace VirtoCommerce.OrderModule.Data.Converters
 {
@@ -14,7 +15,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 		/// </summary>
 		/// <param name="source"></param>
 		/// <param name="target"></param>
-		public static void Patch(this Operation source, Operation target)
+		public static void Patch(this OperationEntity source, OperationEntity target)
 		{
 			if (target == null)
 				throw new ArgumentNullException("target");
@@ -24,36 +25,35 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 				target.Comment = source.Comment;
 			if (source.Currency != null)
 				target.Currency = source.Currency;
-			if (source.IsApproved != null)
-				target.IsApproved = source.IsApproved;
 			if (source.Number != null)
 				target.Number = source.Number;
 			if (source.SourceAgentId != null)
 				target.SourceAgentId = source.SourceAgentId;
 			if (source.SourceStoreId != null)
 				target.SourceStoreId = source.SourceStoreId;
-			if(source.StatusId != null)
-				target.StatusId = source.StatusId;
+			if (source.Status != null)
+				target.Status = source.Status;
 			if (source.TargetAgentId != null)
 				target.TargetAgentId = source.TargetAgentId;
 			if (source.TargetStoreId != null)
 				target.TargetStoreId = source.TargetStoreId;
+
 			target.Tax = source.Tax;
-			if (source.TaxIncluded != null)
-				target.TaxIncluded = source.TaxIncluded;
+			target.TaxIncluded = source.TaxIncluded;
+			target.IsApproved = source.IsApproved;
 		}
 	}
 
-	public class OperationComparer : IEqualityComparer<Operation>
+	public class OperationComparer : IEqualityComparer<OperationEntity>
 	{
 		#region IEqualityComparer<Discount> Members
 
-		public bool Equals(Operation x, Operation y)
+		public bool Equals(OperationEntity x, OperationEntity y)
 		{
 			return x.Id == y.Id;
 		}
 
-		public int GetHashCode(Operation obj)
+		public int GetHashCode(OperationEntity obj)
 		{
 			return obj.Id.GetHashCode();
 		}

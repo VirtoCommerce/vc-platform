@@ -15,10 +15,9 @@ namespace VirtoCommerce.OrderModule.Web.Model
 		{
 			OperationType = "CustomerOrder";
 		}
-		public ICollection<Address> BillingAddresses { get; set; }
-		public ICollection<Address> ShippingAddresses { get; set; }
+		public ICollection<Address> Addresses { get; set; }
 		public ICollection<PaymentIn> InPayments { get; set; }
-		public ICollection<CustomerOrderItem> Items { get; set; }
+		public ICollection<LineItem> Items { get; set; }
 		public ICollection<Shipment> Shipments { get; set; }
 		public Discount Discount { get; set; }
 	}

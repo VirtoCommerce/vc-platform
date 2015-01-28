@@ -4,44 +4,34 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Domain.Order.Model;
-using VirtoCommerce.Domain.Order.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.OrderModule.Data.Model;
 
 namespace VirtoCommerce.OrderModule.Data.Repositories
 {
 	public class InMemoryOrderRepository : IOrderRepository, IUnitOfWork
 	{
-		private List<CustomerOrder> _customerOrders = new List<CustomerOrder>();
+		private List<CustomerOrderEntity> _customerOrders = new List<CustomerOrderEntity>();
 		#region IOrderRepository Members
 
-		public IQueryable<CustomerOrder> CustomerOrders
+		public IQueryable<CustomerOrderEntity> CustomerOrders
 		{
 			get { return _customerOrders.AsQueryable(); }
 		}
 
-		public IQueryable<Shipment> Shipments
+		public IQueryable<ShipmentEntity> Shipments
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public IQueryable<PaymentIn> InPayments
+		public IQueryable<PaymentInEntity> InPayments
 		{
 			get { throw new NotImplementedException(); }
 		}
 
-		public CustomerOrder GetCustomerOrderById(string id, ResponseGroup responseGroup)
+		public CustomerOrderEntity GetCustomerOrderById(string id, ResponseGroup responseGroup)
 		{
 			return _customerOrders.FirstOrDefault(x => x.Id == id);
-		}
-
-		public CustomerOrder GetShipmentById(string id, ResponseGroup responseGroup)
-		{
-			throw new NotImplementedException();
-		}
-
-		public CustomerOrder GetInPaymentById(string id, ResponseGroup responseGroup)
-		{
-			throw new NotImplementedException();
 		}
 
 		#endregion
@@ -65,7 +55,7 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 
 		public void Add<T>(T item) where T : class
 		{
-			_customerOrders.Add(item as CustomerOrder);
+			_customerOrders.Add(item as CustomerOrderEntity);
 		}
 
 		public void Update<T>(T item) where T : class

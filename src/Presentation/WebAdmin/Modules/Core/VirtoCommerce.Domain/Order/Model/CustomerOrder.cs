@@ -9,15 +9,35 @@ namespace VirtoCommerce.Domain.Order.Model
 {
 	public class CustomerOrder : Operation
 	{
-		public ICollection<Address> BillingAddresses { get; set; }
-		public ICollection<Address> ShippingAddresses { get; set; }
-
+		public ICollection<Address> Addresses { get; set; }
 		public ICollection<PaymentIn> InPayments { get; set; }
-		public ICollection<PaymentOut> OutPayments { get; set; }
-
-		public ICollection<CustomerOrderItem> Items { get; set; }
+	
+		public ICollection<LineItem> Items { get; set; }
 		public ICollection<Shipment> Shipments { get; set; }
+		
 		public Discount Discount { get; set; }
+
+		public override IEnumerable<Operation> GetAllRelatedOperations()
+		{
+			var retVal = base.GetAllRelatedOperations().ToList();
+
+			if(InPayments != null)
+			{
+				foreach(var inPayment in InPayments)
+				{
+					retVal.AddRange(inPayment.GetAllRelatedOperations());
+				}
+			}
+
+			if(Shipments != null)
+			{
+				foreach (var shipment in Shipments)
+				{
+					retVal.AddRange(shipment.GetAllRelatedOperations());
+				}
+			}
+			return retVal;
+		}
 
 		public virtual void CalculateTotals()
 		{

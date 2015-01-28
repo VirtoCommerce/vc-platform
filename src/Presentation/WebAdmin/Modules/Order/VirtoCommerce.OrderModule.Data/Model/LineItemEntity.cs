@@ -4,50 +4,36 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.Foundation.Money;
 
-namespace VirtoCommerce.Domain.Order.Model
+namespace VirtoCommerce.OrderModule.Data.Model
 {
-	public abstract class Position : Entity, IAuditable
+	public class LineItemEntity : Entity
 	{
-		#region IAuditable Members
-
 		public DateTime CreatedDate { get; set; }
 		public string CreatedBy { get; set; }
 		public DateTime? ModifiedDate { get; set; }
 		public string ModifiedBy { get; set; }
-
-		#endregion
-
-		/// <summary>
-		/// Price with tax and without dicount
-		/// </summary>
-		public decimal? BasePrice { get; set; }
-		/// <summary>
-		/// Price with tax and discount
-		/// </summary>
+		public decimal BasePrice { get; set; }
 		public decimal Price { get; set; }
-		/// <summary>
-		/// Static discount amount
-		/// </summary>
-		public decimal StaticDiscount { get; set; }
-		/// <summary>
-		/// Tax sum
-		/// </summary>
+		public decimal DiscountAmount { get; set; }
 		public decimal Tax { get; set; }
-
-		/// <summary>
-		/// Reserve quantity
-		/// </summary>
-		public long ReserveQuantity { get; set; }
 		public long Quantity { get; set; }
-
 		public string ProductId { get; set; }
 		public string CatalogId { get; set; }
 		public string CategoryId { get; set; }
-
 		public string Name { get; set; }
-		
 		public string ImageUrl { get; set; }
+		public bool IsGift { get; set; }
+		public string ShippingMethodCode { get; set; }
+		public string FulfilmentLocationCode { get; set; }
+
+		public virtual DiscountEntity Discount { get; set; }
+
+		public virtual CustomerOrderEntity CustomerOrder { get; set; }
+		public string CustomerOrderId { get; set; }
+
+		public virtual ShipmentEntity Shipment { get; set; }
+		public string ShipmentId { get; set; }
+
 	}
 }

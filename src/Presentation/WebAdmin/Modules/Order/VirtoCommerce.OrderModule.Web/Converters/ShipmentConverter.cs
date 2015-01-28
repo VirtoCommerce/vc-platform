@@ -15,7 +15,6 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 		{
 			var retVal = new webModel.Shipment();
 			retVal.Childrens = new List<webModel.OperationTreeNode>();
-			retVal.ParentId = shipment.CustomerOrderId;
 			retVal.InjectFrom(shipment);
 		
 			if (shipment.DeliveryAddress != null)
@@ -43,10 +42,7 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 		{
 			var retVal = new coreModel.Shipment();
 			retVal.InjectFrom(shipment);
-			if (retVal.IsTransient())
-			{
-				retVal.Id = Guid.NewGuid().ToString();
-			}
+
 			if (shipment.DeliveryAddress != null)
 				retVal.DeliveryAddress = shipment.DeliveryAddress.ToCoreModel();
 			if (shipment.InPayments != null)

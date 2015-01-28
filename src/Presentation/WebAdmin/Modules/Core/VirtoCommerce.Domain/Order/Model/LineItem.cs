@@ -7,15 +7,12 @@ using VirtoCommerce.Foundation.Money;
 
 namespace VirtoCommerce.Domain.Order.Model
 {
-	public class CustomerOrderItem : Position
+	public class LineItem : Position
 	{
-		public string DisplayName { get; set; }
-	
 		public bool? IsGift { get; set; }
 		public string ShippingMethodCode { get; set; }
 		public string FulfilmentLocationCode { get; set; }
 
 		public Discount Discount { get; set; }
-
 	}
 }

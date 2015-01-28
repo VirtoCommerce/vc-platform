@@ -9,7 +9,6 @@ using VirtoCommerce.CartModule.Data.Services;
 using VirtoCommerce.Domain.Cart.Repositories;
 using VirtoCommerce.Domain.Cart.Services;
 using VirtoCommerce.Domain.Inventory.Services;
-using VirtoCommerce.Domain.Order.Repositories;
 using VirtoCommerce.Domain.Order.Services;
 using VirtoCommerce.OrderModule.Data.Repositories;
 using VirtoCommerce.OrderModule.Data.Services;
@@ -27,9 +26,9 @@ namespace VirtoCommerce.OrderModule.Test
 		[TestInitialize]
 		public void Initialize()
 		{
-			_controller  = GetCustomerOrderController();
-			var testOrder = GetTestOrder("order1");
-			_controller.CreateOrder(testOrder);
+			_controller = GetCustomerOrderController();
+			//var testOrder = GetTestOrder("order1");
+			//_controller.CreateOrder(testOrder);
 		}
 
 		[TestMethod]
@@ -42,7 +41,7 @@ namespace VirtoCommerce.OrderModule.Test
 		[TestMethod]
 		public void CreateNewManualOrder()
 		{
-			var testOrder = GetTestOrder("order2");
+			var testOrder = GetTestOrder("order1");
 			var result = _controller.CreateOrder(testOrder) as OkNegotiatedContentResult<webModel.CustomerOrder>;
 			Assert.IsNotNull(result.Content);
 		}
@@ -118,12 +117,12 @@ namespace VirtoCommerce.OrderModule.Test
 			var result = _controller.GetById("order1") as OkNegotiatedContentResult<webModel.CustomerOrder>;
 			var testOrder = result.Content;
 
-			var item1 = new webModel.CustomerOrderItem
+			var item1 = new webModel.LineItem
 			{
 				BasePrice = 77,
 				Price = 77,
 				DisplayName = "boots",
-				ItemId = "boots",
+				ProductId = "boots",
 				Name = "boots",
 				Quantity = 2,
 				FulfilmentLocationCode = "warehouse1",
@@ -151,7 +150,7 @@ namespace VirtoCommerce.OrderModule.Test
 			var newShipment = new webModel.Shipment
 			{
 				 Currency = testOrder.Currency,
-				 DeliveryAddress = testOrder.ShippingAddresses.First(),
+				 DeliveryAddress = testOrder.Addresses.First(),
 				 IsApproved = true
 			};
 			testOrder.IsApproved = true;
@@ -178,49 +177,103 @@ namespace VirtoCommerce.OrderModule.Test
 			var order = new webModel.CustomerOrder
 			{
 				Id = id,
+				CreatedBy = "et",
+				CreatedDate = DateTime.UtcNow,
 				Currency = Foundation.Money.CurrencyCodes.USD,
 				TargetAgentId = "vasja customer",
 				SourceAgentId = "employe",
 				SourceStoreId = "test store",
+				Discount = new webModel.Discount
+				{
+					PromotionId = "testPromotion",
+					Currency = Foundation.Money.CurrencyCodes.USD,
+					DiscountAmount = 12,
+					Coupon = new webModel.Coupon
+					{
+						Code = "ssss"
+					}
+				}
 			};
-			var item1 = new webModel.CustomerOrderItem
+			var item1 = new webModel.LineItem
 			{
+				CreatedBy = "et",
+				CreatedDate = DateTime.UtcNow,
 				BasePrice = 10,
 				Price = 9,
 				DisplayName = "shoes",
-				ItemId = "shoes",
+				ProductId = "shoes",
+				CatalogId = "catalog",
+				CategoryId = "category",
 				Name = "shoes",
 				Quantity = 2,
 				FulfilmentLocationCode = "warehouse1",
-				ShippingMethodCode = "EMS"
+				ShippingMethodCode = "EMS",
+				Discount = new webModel.Discount
+				{
+					PromotionId = "itemPromotion",
+					Currency = Foundation.Money.CurrencyCodes.USD,
+					DiscountAmount = 12,
+					Coupon = new webModel.Coupon
+					{
+						 Code = "ssss"
+					}
+				}
 			};
-			var item2 = new webModel.CustomerOrderItem
+			var item2 = new webModel.LineItem
 			{
+				CreatedBy = "et",
+				CreatedDate = DateTime.UtcNow,
 				BasePrice = 100,
 				Price = 100,
 				DisplayName = "t-shirt",
-				ItemId = "t-shirt",
+				ProductId = "t-shirt",
+				CatalogId = "catalog",
+				CategoryId = "category",
 				Name = "t-shirt",
 				Quantity = 2,
 				FulfilmentLocationCode = "warehouse1",
-				ShippingMethodCode = "EMS"
+				ShippingMethodCode = "EMS",
+				Discount = new webModel.Discount
+				{
+					PromotionId = "testPromotion",
+					Currency = Foundation.Money.CurrencyCodes.USD,
+					DiscountAmount = 12,
+					Coupon = new webModel.Coupon
+					{
+						Code = "ssss"
+					}
+				}
 			};
-			order.Items = new List<webModel.CustomerOrderItem>();
+			order.Items = new List<webModel.LineItem>();
 			order.Items.Add(item1);
 			order.Items.Add(item2);
 
 			var shipment = new webModel.Shipment
 			{
+				CreatedBy = "et",
+				CreatedDate = DateTime.UtcNow,
 				Currency = Foundation.Money.CurrencyCodes.USD,
 				DeliveryAddress = new webModel.Address
 				{
 					City = "london",
+					Phone = "+68787687",
+					PostalCode = "2222",
 					CountryCode = "ENG",
 					Email = "user@mail.com",
 					FirstName = "first name",
 					LastName = "last name",
 					Line1 = "line 1",
 					Organization = "org1"
+				},
+				Discount = new webModel.Discount
+				{
+					PromotionId = "testPromotion",
+					Currency = Foundation.Money.CurrencyCodes.USD,
+					DiscountAmount = 12,
+					Coupon = new webModel.Coupon
+					{
+						Code = "ssss"
+					}
 				}
 			};
 			order.Shipments = new List<webModel.Shipment>();
@@ -231,11 +284,11 @@ namespace VirtoCommerce.OrderModule.Test
 		private static CustomerOrderController GetCustomerOrderController()
 		{
 			var cartRepository = new InMemoryCartRepository();
-			var orderRepository = new InMemoryOrderRepository();
+			Func<IOrderRepository> orderRepositoryFactory = () => { return new OrderRepositoryImpl("VirtoCommerce"); };
 			var cartService = new ShoppingCartServiceImpl(cartRepository);
 			var mockInventory = new Mock<IInventoryService>();
 
-			var orderService = new CustomerOrderServiceImpl(orderRepository, mockInventory.Object, cartService, new TimeBasedNumberGeneratorImpl());
+			var orderService = new CustomerOrderServiceImpl(orderRepositoryFactory, mockInventory.Object, cartService, new TimeBasedNumberGeneratorImpl());
 
 			var controller = new CustomerOrderController(orderService);
 			return controller;

@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace VirtoCommerce.Domain.Order.Model
 {
-	public class PaymentOut : FinanceOutOperation
+	public enum AddressType
 	{
+		Billing,
+		Shipping
 	}
 }

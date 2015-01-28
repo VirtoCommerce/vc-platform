@@ -32,14 +32,11 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			{
 				retVal.Items = customerOrder.Items.Select(x => x.ToWebModel()).ToList();
 			}
-			if (customerOrder.BillingAddresses != null)
+			if (customerOrder.Addresses != null)
 			{
-				retVal.BillingAddresses = customerOrder.BillingAddresses.Select(x => x.ToWebModel()).ToList();
+				retVal.Addresses = customerOrder.Addresses.Select(x => x.ToWebModel()).ToList();
 			}
-			if (customerOrder.ShippingAddresses != null)
-			{
-				retVal.ShippingAddresses = customerOrder.ShippingAddresses.Select(x => x.ToWebModel()).ToList();
-			}
+		
 		
 			return retVal;
 		}
@@ -48,19 +45,12 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 		{
 			var retVal = new coreModel.CustomerOrder();
 			retVal.InjectFrom(customerOrder);
-			if (retVal.IsTransient())
-			{
-				retVal.Id = Guid.NewGuid().ToString();
-			}
-
 			retVal.Currency = customerOrder.Currency;
 
 			if (customerOrder.Items != null)
 				retVal.Items = customerOrder.Items.Select(x => x.ToCoreModel()).ToList();
-			if (customerOrder.BillingAddresses != null)
-				retVal.BillingAddresses = customerOrder.BillingAddresses.Select(x => x.ToCoreModel()).ToList();
-			if (customerOrder.ShippingAddresses != null)
-				retVal.ShippingAddresses = customerOrder.ShippingAddresses.Select(x => x.ToCoreModel()).ToList();
+			if (customerOrder.Addresses != null)
+				retVal.Addresses = customerOrder.Addresses.Select(x => x.ToCoreModel()).ToList();
 			if (customerOrder.Shipments != null)
 				retVal.Shipments = customerOrder.Shipments.Select(x => x.ToCoreModel()).ToList();
 			if (customerOrder.InPayments != null)

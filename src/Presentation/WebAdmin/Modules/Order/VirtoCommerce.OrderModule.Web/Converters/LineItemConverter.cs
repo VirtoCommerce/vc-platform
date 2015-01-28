@@ -12,24 +12,18 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 {
 	public static class CusgtomerOrderItemConverter
 	{
-		public static webModel.CustomerOrderItem ToWebModel(this coreModel.CustomerOrderItem orderItem)
+		public static webModel.LineItem ToWebModel(this coreModel.LineItem orderItem)
 		{
-			var retVal = new webModel.CustomerOrderItem();
+			var retVal = new webModel.LineItem();
 			retVal.InjectFrom(orderItem);
 		
 			return retVal;
 		}
 
-		public static coreModel.CustomerOrderItem ToCoreModel(this webModel.CustomerOrderItem orderItem)
+		public static coreModel.LineItem ToCoreModel(this webModel.LineItem orderItem)
 		{
-			var retVal = new coreModel.CustomerOrderItem();
+			var retVal = new coreModel.LineItem();
 			retVal.InjectFrom(orderItem);
-		
-			if (retVal.IsTransient())
-			{
-				retVal.Id = Guid.NewGuid().ToString();
-			}
-
 			if(orderItem.Discount != null)
 			{
 				retVal.Discount = orderItem.Discount.ToCoreModel();

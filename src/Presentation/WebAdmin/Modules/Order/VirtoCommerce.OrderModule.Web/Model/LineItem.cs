@@ -5,7 +5,7 @@ using System.Web;
 
 namespace VirtoCommerce.OrderModule.Web.Model
 {
-	public class CustomerOrderItem
+	public class LineItem
 	{
 		public string Id { get; set; }
 
@@ -37,7 +37,7 @@ namespace VirtoCommerce.OrderModule.Web.Model
 		public long ReserveQuantity { get; set; }
 		public long Quantity { get; set; }
 
-		public string ItemId { get; set; }
+		public string ProductId { get; set; }
 		public string CatalogId { get; set; }
 		public string CategoryId { get; set; }
 

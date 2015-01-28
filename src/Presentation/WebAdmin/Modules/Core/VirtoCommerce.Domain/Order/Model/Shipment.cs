@@ -11,10 +11,24 @@ namespace VirtoCommerce.Domain.Order.Model
 		public string CustomerOrderId { get; set; }
 		public CustomerOrder CustomerOrder { get; set; }
 
-		public ICollection<CustomerOrderItem> Items { get; set; }
+		public ICollection<LineItem> Items { get; set; }
 		public ICollection<PaymentIn> InPayments { get; set; }
 		public Address DeliveryAddress { get; set; }
 		public Discount Discount { get; set; }
+
+		public override IEnumerable<Operation> GetAllRelatedOperations()
+		{
+			var retVal = base.GetAllRelatedOperations().ToList();
+			
+			if (InPayments != null)
+			{
+				foreach (var inPayment in InPayments)
+				{
+					retVal.AddRange(inPayment.GetAllRelatedOperations());
+				}
+			}
+			return retVal;
+		}
 
 		public virtual void CalculateTotals()
 		{

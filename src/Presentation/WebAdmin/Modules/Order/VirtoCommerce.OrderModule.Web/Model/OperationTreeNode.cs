@@ -15,7 +15,7 @@ namespace VirtoCommerce.OrderModule.Web.Model
 
 		public DateTime CreatedDate { get; set; }
 		public string CreatedBy { get; set; }
-		public DateTime ModifiedDate { get; set; }
+		public DateTime? ModifiedDate { get; set; }
 		public string ModifiedBy { get; set; }
 
 		public string Number { get; set; }
@@ -48,7 +48,7 @@ namespace VirtoCommerce.OrderModule.Web.Model
 		public decimal Sum { get; set; }
 		public decimal Tax { get; set; }
 
-		public string ParentId { get; set; }
+		public string ParentOperationId { get; set; }
 		public ICollection<OperationTreeNode> Childrens { get; set; }
 		
 	}

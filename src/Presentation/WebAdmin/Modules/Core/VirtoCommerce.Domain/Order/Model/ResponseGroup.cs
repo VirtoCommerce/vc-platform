@@ -12,5 +12,6 @@ namespace VirtoCommerce.Domain.Order.Model
 		WithItems = 1,
 		WithShipments = 2,
 		WithInPayments = 4,
+		Full = WithItems | WithShipments | WithInPayments
 	}
 }

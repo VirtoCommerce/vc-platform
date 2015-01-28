@@ -17,11 +17,7 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			var retVal = new webModel.PaymentIn();
 			retVal.InjectFrom(payment);
 			retVal.Currency = payment.Currency;
-			retVal.ParentId = payment.CustomerOrderId;
-			if(payment.ShipmentId != null)
-			{
-				retVal.ParentId = payment.ShipmentId;
-			}
+			
 			return retVal;
 		}
 
@@ -30,10 +26,6 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			var retVal = new coreModel.PaymentIn();
 			retVal.InjectFrom(payment);
 		
-			if (retVal.IsTransient())
-			{
-				retVal.Id = Guid.NewGuid().ToString();
-			}
 			retVal.Currency = payment.Currency;
 			return retVal;
 		}

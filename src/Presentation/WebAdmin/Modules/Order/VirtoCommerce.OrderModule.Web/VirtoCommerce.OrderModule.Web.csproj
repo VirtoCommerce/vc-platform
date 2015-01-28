@@ -89,7 +89,7 @@
     <Compile Include="Controllers\Api\CustomerOrderController.cs" />
     <Compile Include="Converters\AddressConverter.cs" />
     <Compile Include="Converters\CustomerOrderConverter.cs" />
-    <Compile Include="Converters\CustomerOrderItemConverter.cs" />
+    <Compile Include="Converters\LineItemConverter.cs" />
     <Compile Include="Converters\DiscountConverter.cs" />
     <Compile Include="Converters\InPaymentConverter.cs" />
     <Compile Include="Converters\ShipmentConverter.cs" />
@@ -98,7 +98,7 @@
     <Compile Include="Model\CustomerOrder.cs" />
     <Compile Include="Model\Discount.cs" />
     <Compile Include="Model\PaymentIn.cs" />
-    <Compile Include="Model\CustomerOrderItem.cs" />
+    <Compile Include="Model\LineItem.cs" />
     <Compile Include="Model\ResponseGroup.cs" />
     <Compile Include="Model\Shipment.cs" />
     <Compile Include="Model\OperationTreeNode.cs" />
