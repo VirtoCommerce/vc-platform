@@ -84,12 +84,13 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 
 			source.Patch((OperationEntity)target);
 		
-			if (source.InPayments != null)
+			if (!source.InPayments.IsNullCollection())
 			{
-				if (target.InPayments == null)
-					target.InPayments = new ObservableCollection<PaymentInEntity>();
-
 				source.InPayments.Patch(target.InPayments, new OperationComparer(), (sourcePayment, targetPayment) => sourcePayment.Patch(targetPayment));
+			}
+			if(!source.Items.IsNullCollection())
+			{
+				source.Items.Patch(target.Items, new LineItemComparer(), (sourceItem, targetItem) => sourceItem.Patch(targetItem));
 			}
 		}
 	}

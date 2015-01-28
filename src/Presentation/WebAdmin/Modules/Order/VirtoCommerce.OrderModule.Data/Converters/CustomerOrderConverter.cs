@@ -100,27 +100,19 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 
 			source.Patch((OperationEntity)target);
 
-			if (source.Shipments != null)
+			if (!source.Shipments.IsNullCollection())
 			{
-				if (target.Shipments == null)
-					target.Shipments = new ObservableCollection<ShipmentEntity>();
-
 				source.Shipments.Patch(target.Shipments, new OperationComparer(),
 													 (sourceShipment, targetShipment) => sourceShipment.Patch(targetShipment));
 			}
 
-			if (source.Items != null)
+			if (!source.Items.IsNullCollection())
 			{
-				if (target.Items == null)
-					target.Items = new ObservableCollection<LineItemEntity>();
 				source.Items.Patch(target.Items, new LineItemComparer(), (sourceItem, targetItem) => sourceItem.Patch(targetItem));
 			}
 
-			if (source.InPayments != null)
+			if (!source.InPayments.IsNullCollection())
 			{
-				if (target.InPayments == null)
-					target.InPayments = new ObservableCollection<PaymentInEntity>();
-
 				source.InPayments.Patch(target.InPayments, new OperationComparer(), (sourcePayment, targetPayment) => sourcePayment.Patch(targetPayment));
 			}
 		}

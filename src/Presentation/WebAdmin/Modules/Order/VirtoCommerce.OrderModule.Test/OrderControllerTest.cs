@@ -71,6 +71,7 @@ namespace VirtoCommerce.OrderModule.Test
 			var testOrder = result.Content;
 
 			var shipment = testOrder.Shipments.FirstOrDefault();
+			shipment.Items = new List<webModel.LineItem>();
 			foreach(var item in testOrder.Items)
 			{
 				shipment.Items.Add(item);

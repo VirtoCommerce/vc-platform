@@ -11,6 +11,14 @@ namespace VirtoCommerce.OrderModule.Data.Model
 {
 	public class CustomerOrderEntity : OperationEntity
 	{
+		public CustomerOrderEntity()
+		{
+			Addresses = new NullCollection<AddressEntity>();
+			InPayments = new NullCollection<PaymentInEntity>();
+			Items = new NullCollection<LineItemEntity>();
+			Shipments = new NullCollection<ShipmentEntity>();
+		}
+
 		public virtual ObservableCollection<AddressEntity> Addresses { get; set; }
 		public virtual ObservableCollection<PaymentInEntity> InPayments { get; set; }
 

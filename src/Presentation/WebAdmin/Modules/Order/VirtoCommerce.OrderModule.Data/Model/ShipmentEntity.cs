@@ -4,12 +4,18 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Money;
 
 namespace VirtoCommerce.OrderModule.Data.Model
 {
 	public class ShipmentEntity : OperationEntity
 	{
+		public ShipmentEntity()
+		{
+			Items = new NullCollection<LineItemEntity>();
+			InPayments = new NullCollection<PaymentInEntity>();
+		}
 		public string CustomerOrderId { get; set; }
 		public virtual CustomerOrderEntity CustomerOrder { get; set; }
 
