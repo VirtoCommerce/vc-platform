@@ -5,7 +5,7 @@ using System.Net;
 using System.Web.Http;
 using System.Web.Http.Description;
 using VirtoCommerce.Domain.Cart.Services;
-using VirtoCommerce.CatalogModule.Web.Converters;
+using VirtoCommerce.CartModule.Web.Converters;
 using coreModel = VirtoCommerce.Domain.Cart.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 using System.Web.Http.ModelBinding;
@@ -92,7 +92,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		}
 
 		// PUT: api/cart/carts
-		[HttpPost]
+		[HttpPut]
 		[ResponseType(typeof(void))]
 		[Route("carts")]
 		public IHttpActionResult Update(webModel.ShoppingCart cart)

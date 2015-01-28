@@ -1,0 +1,147 @@
+﻿
+
+
+
+
+
+
+
+
+
+
+
+
+.metro .treeview
+{
+	background: none;
+	margin: 0 0 15px;
+}
+
+.metro .treeview .node a
+{
+	padding: 0;
+}
+
+.metro .treeview a.active
+{
+	background: #e1e1e1;
+	color: #1d1d1d;
+	font-weight: bold;
+}
+
+.metro .treeview .node ul li a
+{
+	padding: 0 0 0 15px;
+}
+
+.metro .treeview .node .node li a
+{
+	padding: 0 0 0 30px;
+}
+
+.metro .treeview .node .node .node li a
+{
+	padding: 0 0 0 40px;
+}
+
+.metro .treeview .node .node .node .node li a
+{
+	padding: 0 0 0 50px;
+}
+
+.metro .treeview .node .node .node .node .node li a
+{
+	padding: 0 0 0 60px;
+}
+
+.metro .treeview .collapsed > ul
+{
+	display: none;
+}
+
+
+
+
+
+.blade-actions p
+{
+	font-weight: bold;
+}
+
+.blade-actions p.normal
+{
+	font-weight: normal;
+}
+
+.blade-actions ul
+{
+	list-style: none;
+	margin: 0 0 15px;
+	padding: 0;
+}
+
+.blade-actions ul li
+{
+	font-size: 14px;
+	margin: 2px 0;
+}
+
+.blade-actions ul li span
+{
+	display: inline-block;
+	padding: 2px 5px;
+}
+
+.blade-actions ul li .cancel
+{
+	display: inline-block;
+	font-size: 12px;
+	height: 20px;
+	padding: 2px;
+	visibility: hidden;
+}
+
+.blade-actions ul li:hover span
+{
+	background: rgba(28, 183, 236, .1);
+}
+
+.blade-actions ul li:hover .cancel
+{
+	vertical-align: text-top;
+	visibility: visible;
+}
+
+
+
+.property-title
+{
+	position: relative;
+}
+
+.property-title .attrs
+{
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	position: absolute;
+	right: 0;
+	top: 0;
+}
+
+.property-title .attrs li
+{
+	color: #2e92cf;
+	display: inline-block;
+	font-size: 10px;
+	margin: 0 0 0 10px;
+}
+
+
+
+
+
+
+
+
+

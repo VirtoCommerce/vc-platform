@@ -11,5 +11,6 @@ namespace VirtoCommerce.Domain.Order.Model
 	{
 		public DateTime? IncomingDate { get; set; }
 		public string OuterId { get; set; }
+		public Address BillingAddress { get; set; }
 	}
 }

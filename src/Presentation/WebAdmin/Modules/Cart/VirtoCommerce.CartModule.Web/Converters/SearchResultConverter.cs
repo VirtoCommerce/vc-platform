@@ -7,7 +7,7 @@ using Omu.ValueInjecter;
 using coreModel = VirtoCommerce.Domain.Cart.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
 
-namespace VirtoCommerce.CatalogModule.Web.Converters
+namespace VirtoCommerce.CartModule.Web.Converters
 {
 	public static class SearchResultConverter
 	{

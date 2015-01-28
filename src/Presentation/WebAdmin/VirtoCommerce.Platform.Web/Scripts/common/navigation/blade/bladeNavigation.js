@@ -39,9 +39,13 @@ angular.module('platformWebApp.bladeNavigation', [
 
 
             //Somehow vertical scrollbar does not work initially so need to turn it on
-            horizontalScroll('on');
+            $(element).find('.blade-content').off('mousewheel').on('mousewheel', function (event, delta)
+            {
+                this.scrollTop -= (delta * speed);
+                event.preventDefault();
+            });
 
-            $('*').on('mouseenter', function (e) {
+            $(element).off('mouseenter').on('mouseenter', function (e) {
                 var blade = $(this).parents('.blade'),
                     bladeI = blade.find('.blade-inner'),
                     bladeH = bladeI.height(),

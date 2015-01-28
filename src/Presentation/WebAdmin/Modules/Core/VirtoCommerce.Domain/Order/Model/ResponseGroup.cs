@@ -6,7 +6,12 @@ using System.Threading.Tasks;
 
 namespace VirtoCommerce.Domain.Order.Model
 {
-	public class PaymentOut : FinanceOutOperation
+	[Flags]
+	public enum ResponseGroup
 	{
+		WithItems = 1,
+		WithShipments = 2,
+		WithInPayments = 4,
+		Full = WithItems | WithShipments | WithInPayments
 	}
 }

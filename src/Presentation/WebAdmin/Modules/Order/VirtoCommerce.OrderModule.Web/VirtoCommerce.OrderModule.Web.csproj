@@ -55,6 +55,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\packages\Newtonsoft.Json.6.0.5\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Omu.ValueInjecter, Version=2.3.3.0, Culture=neutral, PublicKeyToken=c7694541b0ac80e4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\packages\valueinjecter.2.3.3\lib\net35\Omu.ValueInjecter.dll</HintPath>
+    </Reference>
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -82,14 +86,27 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\Api\CustomerOrderController.cs" />
+    <Compile Include="Converters\AddressConverter.cs" />
+    <Compile Include="Converters\CustomerOrderConverter.cs" />
+    <Compile Include="Converters\LineItemConverter.cs" />
+    <Compile Include="Converters\DiscountConverter.cs" />
+    <Compile Include="Converters\InPaymentConverter.cs" />
+    <Compile Include="Converters\ShipmentConverter.cs" />
+    <Compile Include="Model\Address.cs" />
+    <Compile Include="Model\Coupon.cs" />
+    <Compile Include="Model\CustomerOrder.cs" />
+    <Compile Include="Model\Discount.cs" />
+    <Compile Include="Model\PaymentIn.cs" />
+    <Compile Include="Model\LineItem.cs" />
+    <Compile Include="Model\ResponseGroup.cs" />
+    <Compile Include="Model\Shipment.cs" />
+    <Compile Include="Model\OperationTreeNode.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Binders\" />
-    <Folder Include="Controllers\" />
-    <Folder Include="Converters\" />
-    <Folder Include="Model\" />
     <Folder Include="Scripts\blades\" />
   </ItemGroup>
   <ItemGroup>

@@ -18,13 +18,13 @@ namespace VirtoCommerce.Domain.Cart.Model
 		public string Name { get; set; }
 		public int Quantity { get; set; }
 
-		public string WarehouseLocation { get; set; }
+		public string FulfilmentLocationCode { get; set; }
 		public string ShipmentMethodCode { get; set; }
 		public bool? RequiredShipping { get; set; }
 		public string ThumbnailImageUrl { get; set; }
 		public string ImageUrl { get; set; }
 
-		public bool? Gift { get; set; }
+		public bool? IsGift { get; set; }
 		public CurrencyCodes? Currency { get; set; }
 
 		public ICollection<Discount> Discounts { get; set; }

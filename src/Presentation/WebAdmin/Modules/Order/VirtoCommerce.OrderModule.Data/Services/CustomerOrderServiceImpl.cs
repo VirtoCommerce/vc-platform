@@ -3,45 +3,168 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VirtoCommerce.Domain.Cart.Services;
 using VirtoCommerce.Domain.Inventory.Services;
 using VirtoCommerce.Domain.Order.Model;
-using VirtoCommerce.Domain.Order.Repositories;
 using VirtoCommerce.Domain.Order.Services;
+using VirtoCommerce.OrderModule.Data.Converters;
+using VirtoCommerce.OrderModule.Data.Repositories;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
+using VirtoCommerce.Foundation.Frameworks;
 
 namespace VirtoCommerce.OrderModule.Data.Services
 {
-	public class CustomerOrderServiceImpl : ICustomerOrderService
+	public class CustomerOrderServiceImpl : ModuleServiceBase, ICustomerOrderService
 	{
-		private IInventoryService _inventoryService;
-		private IOrderRepository _orderRepository;
-		public CustomerOrderServiceImpl(IOrderRepository orderRepository, IInventoryService inventoryService)
+		private readonly IInventoryService _inventoryService;
+		private readonly Func<IOrderRepository> _repositoryFactory;
+		private readonly IOperationNumberGenerator _operationNumberGenerator;
+		private readonly IShoppingCartService _shoppingCartService;
+		public CustomerOrderServiceImpl(Func<IOrderRepository> orderRepositoryFactory, IInventoryService inventoryService, 
+									    IShoppingCartService shoppingCartService, IOperationNumberGenerator operationNumberGenerator)
 		{
 			_inventoryService = inventoryService;
-			_orderRepository = orderRepository;
+			_repositoryFactory = orderRepositoryFactory;
+			_shoppingCartService = shoppingCartService;
+			_operationNumberGenerator = operationNumberGenerator;
 		}
 
 		#region ICustomerOrderService Members
 
-		public CustomerOrder GetById(string id)
+		public virtual CustomerOrder GetById(string orderId, ResponseGroup respGroup = ResponseGroup.WithItems)
 		{
-			throw new NotImplementedException();
+			CustomerOrder retVal = null;
+			using (var repository = _repositoryFactory())
+			{
+				var orderEntity = repository.GetCustomerOrderById(orderId, respGroup);
+				if(orderEntity != null)
+				{
+					retVal = orderEntity.ToCoreModel();
+				}
+			}
+			return retVal;
 		}
 
-		public CustomerOrder Create(CustomerOrder order)
+		public virtual CustomerOrder Create(CustomerOrder order)
 		{
-			throw new NotImplementedException();
+			order.CalculateTotals();
+			EnsureThatAllOperationsHasNumber(order);
+
+			//TODO: for approved sipments need decrease inventory
+
+			var orderEntity = order.ToEntity();
+			CustomerOrder retVal = null;
+			using (var repository = _repositoryFactory())
+			{
+				repository.Add(orderEntity);
+				CommitChanges(repository);
+			}
+			retVal = GetById(orderEntity.Id);
+			return retVal;
+
+		}
+
+		public virtual CustomerOrder CreateByShoppingCart(string cartId)
+		{
+			var shoppingCart = _shoppingCartService.GetById(cartId);
+			var customerOrder = new CustomerOrder
+			{
+				Currency = shoppingCart.Currency,
+				TargetAgentId = shoppingCart.CustomerId,
+				SourceStoreId = shoppingCart.SiteId,
+			};
+
+			foreach (var cartItem in shoppingCart.Items)
+			{
+				var orderItem = new LineItem
+				{
+					Name = cartItem.Name,
+					BasePrice = cartItem.ListPrice,
+					CatalogId = cartItem.CatalogId,
+					CategoryId = cartItem.CategoryId,
+					ProductId = cartItem.ProductId,
+					Price = cartItem.PlacedPrice,
+					ShippingMethodCode = cartItem.ShipmentMethodCode,
+					Tax = cartItem.TaxTotal,
+					IsGift = cartItem.IsGift,
+					Quantity = cartItem.Quantity,
+					FulfilmentLocationCode = cartItem.FulfilmentLocationCode
+				};
+				customerOrder.Items.Add(orderItem);
+			}
+			//TODO: split shipment
+			
+			//Clear shopping cart
+			_shoppingCartService.Delete(new string[] { cartId });
+
+			customerOrder = Create(customerOrder);
+			return customerOrder;
 		}
 
 		public void Update(CustomerOrder[] orders)
 		{
-			throw new NotImplementedException();
+			var changedOrders = new List<CustomerOrder>();
+			// incoming order may contains only changed fields and we need load whole order and apply changes to it
+
+			foreach (var order in orders)
+			{
+				//Apply changes to temporary order object
+				var targetOrder = GetById(order.Id, ResponseGroup.Full);
+				if (targetOrder == null)
+				{
+					throw new NullReferenceException("targetOrder");
+				}
+				var sourceOrderEntity = order.ToEntity();
+				var targetOrderEntity = targetOrder.ToEntity();
+				sourceOrderEntity.Patch(targetOrderEntity);
+				var changedOrder = targetOrderEntity.ToCoreModel();
+				changedOrders.Add(changedOrder);
+			}
+			
+
+			//Need a call business logic for changes and persist changes
+			using (var repository = _repositoryFactory())
+			using (var changeTracker = base.GetChangeTracker(repository))
+			{
+				foreach (var changedOrder in changedOrders)
+				{
+					//Do business logic on temporary  order object
+					changedOrder.CalculateTotals();
+
+					EnsureThatAllOperationsHasNumber(changedOrder);
+
+					var sourceOrderEntity = changedOrder.ToEntity();
+					var targetOrderEntity = repository.GetCustomerOrderById(changedOrder.Id, ResponseGroup.Full);
+					if (targetOrderEntity == null)
+					{
+						throw new NullReferenceException("targetOrderEntity");
+					}
+				
+					changeTracker.Attach(targetOrderEntity);
+					sourceOrderEntity.Patch(targetOrderEntity);
+				}
+				CommitChanges(repository);
+			}
+	
 		}
 
-		public void Delete(string[] ids)
+		public void Delete(string[] cartIds)
 		{
 			throw new NotImplementedException();
 		}
-
 		#endregion
+
+	
+		private void EnsureThatAllOperationsHasNumber(CustomerOrder order)
+		{
+			 foreach(var operation in order.GetAllRelatedOperations())
+			 {
+				 if (operation.Number == null)
+				 {
+					 operation.Number = _operationNumberGenerator.GenerateNumber(operation);
+				 }
+			 }
+			
+		}
 	}
 }
