@@ -112,6 +112,8 @@ namespace VirtoCommerce.CatalogModule.Web.Converters
 				}
 				
 			}
+
+		    retVal.IsActive = true;
 			return retVal;
 		}
 
