@@ -6,7 +6,8 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Practices.ServiceLocation;
-using VirtoCommerce.ApiWebClient.Clients;
+using VirtoCommerce.ApiClient;
+using VirtoCommerce.ApiClient.Extensions;
 using VirtoCommerce.Web.Converters;
 using VirtoCommerce.Web.Models;
 
@@ -17,10 +18,7 @@ namespace VirtoCommerce.Web
     {
         public SecurityClient SecurityClient
         {
-            get
-            {
-                return ServiceLocator.Current.GetInstance<SecurityClient>();
-            }
+            get { return ClientContext.Clients.CreateSecurityClient(); }     
         }
 
         public static ApplicationUserStore Create()
@@ -37,7 +35,7 @@ namespace VirtoCommerce.Web
 
         public async Task DeleteAsync(ApplicationUser user)
         {
-            await SecurityClient.DeleteAsync(user.ToServiceModel());
+            throw new NotImplementedException();
         }
 
         public async Task<ApplicationUser> FindByIdAsync(string userId)
@@ -54,7 +52,7 @@ namespace VirtoCommerce.Web
 
         public async Task UpdateAsync(ApplicationUser user)
         {
-            await SecurityClient.UpdateAsync(user.ToServiceModel());
+            throw new NotImplementedException();
         }
 
         public void Dispose()

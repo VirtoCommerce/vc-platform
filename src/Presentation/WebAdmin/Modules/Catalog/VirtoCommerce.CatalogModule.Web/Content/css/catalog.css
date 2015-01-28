@@ -50,6 +50,7 @@ ul.tiles img
 	height: 175px;
 	line-height: 175px;
 	margin: 0;
+	text-align: center;
 	width: 175px;
 
 	-webkit-box-sizing: border-box;
@@ -252,6 +253,7 @@ ul.tiles img
 	border: 1px solid #ddd;
 	height: 40px;
 	line-height: 40px;
+	overflow: hidden;
 	position: absolute;
 	text-align: center;
 	width: 40px;

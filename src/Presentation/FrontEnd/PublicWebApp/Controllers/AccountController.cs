@@ -8,6 +8,8 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using VirtoCommerce.ApiWebClient.Globalization;
+using VirtoCommerce.ApiWebClient.Helpers;
 using VirtoCommerce.Web.Models;
 
 namespace VirtoCommerce.Web.Controllers
@@ -62,44 +64,117 @@ namespace VirtoCommerce.Web.Controllers
             return null;
         }
 
+
+        /// <summary>
+        /// Logs on asynchronous.
+        /// </summary>
+        /// <returns>ActionResult.</returns>
+        [AllowAnonymous]
+        public ActionResult LogOnAsync()
+        {
+            return PartialView("LogOnAsync");
+        }
+
+        /// <summary>
+        /// Logs on asynchronous.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="returnUrl">The return URL.</param>
+        /// <returns>ActionResult.</returns>
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<ActionResult> LogOnAsync(LogOnModel model, string returnUrl)
+        {
+            string errorMessage = null;
+            if (ModelState.IsValid && await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, false) == SignInStatus.Success)
+            {
+                if (StoreHelper.IsUserAuthorized(model.UserName, out errorMessage))
+                {
+                    if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
+                        && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
+                    {
+                        //await UserHelper.OnPostLogonAsync(model.UserName);
+                        return Redirect(returnUrl);
+                    }
+                    var res = new JavaScriptResult { Script = "location.reload();" };
+                    return res;
+                }
+            }
+
+            // If we got this far, something failed, redisplay form
+            ModelState.AddModelError("", string.IsNullOrEmpty(errorMessage) ? "The user name or password provided is incorrect." : errorMessage);
+            return PartialView(model);
+        }
+
         //
         // GET: /Account/Login
-        [AllowAnonymous]
         [Route("login")]
-        public ActionResult Login(string returnUrl)
+        [AllowAnonymous]
+        public ActionResult Login(string returnUrl, string loginAs)
         {
+            var model = new LogOnModel();
+            if (!string.IsNullOrEmpty(loginAs))
+            {
+                model.ImpersonatedUserName = loginAs;
+            }
             ViewBag.ReturnUrl = returnUrl;
-            return View();
+            return View(model);
         }
 
         //
         // POST: /Account/Login
+        [Route("login")]
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
+        public async Task<ActionResult> Login(LogOnModel model, string returnUrl)
         {
-            if (!ModelState.IsValid)
+
+            string errorMessage = null;
+            if (ModelState.IsValid)
             {
-                return View(model);
+                if (string.IsNullOrEmpty(model.ImpersonatedUserName))
+                {
+                    // This doesn't count login failures towards account lockout
+                    // To enable password failures to trigger account lockout, change to shouldLockout: true
+                    var result = await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, false);
+
+                    switch (result)
+                    {
+                        case SignInStatus.Success:
+                            if (StoreHelper.IsUserAuthorized(model.UserName, out errorMessage))
+                            {
+                                //await UserHelper.OnPostLogonAsync(model.ImpersonatedUserName, model.UserName);
+                                return RedirectToLocal(returnUrl);
+                            }
+                            break;                 
+                        case SignInStatus.LockedOut:
+                            return View("Lockout");
+                        case SignInStatus.RequiresVerification:
+                            return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+                    }
+                }
+                else
+                {
+                    //errorMessage = await _identitySecurity.LoginAsAsync(model.ImpersonatedUserName, model.UserName, model.Password, model.RememberMe);
+                    //if (string.IsNullOrEmpty(errorMessage)
+                    //    && StoreHelper.IsUserAuthorized(model.UserName, out errorMessage)
+                    //    && StoreHelper.IsUserAuthorized(model.ImpersonatedUserName, out errorMessage))
+                    //{
+                    //    await UserHelper.OnPostLogonAsync(model.ImpersonatedUserName, model.UserName);
+                    //    return RedirectToLocal(returnUrl);
+                    //}
+                }
             }
 
-            // This doesn't count login failures towards account lockout
-            // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
-            switch (result)
-            {
-                case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
-                case SignInStatus.LockedOut:
-                    return View("Lockout");
-                case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
-                case SignInStatus.Failure:
-                default:
-                    ModelState.AddModelError("", "Invalid login attempt.");
-                    return View(model);
-            }
+
+            errorMessage = string.IsNullOrEmpty(errorMessage)
+                ? "The user name or password provided is incorrect.".Localize()
+                : errorMessage.Localize();
+            // If we got this far, something failed, redisplay form
+            ModelState.AddModelError("", errorMessage);
+            return View(model);
+
         }
 
         //
@@ -209,11 +284,11 @@ namespace VirtoCommerce.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        public async Task<ActionResult> ForgotPassword(ForgotPasswordModel model)
         {
             if (ModelState.IsValid)
             {
-                var user = await UserManager.FindByNameAsync(model.Email);
+                var user = await UserManager.FindByNameAsync(model.UserName);
                 if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
                 {
                     // Don't reveal that the user does not exist or is not confirmed
@@ -412,6 +487,19 @@ namespace VirtoCommerce.Web.Controllers
         public ActionResult ExternalLoginFailure()
         {
             return View();
+        }
+
+        /// <summary>
+        /// Gets external logins list.
+        /// </summary>
+        /// <param name="returnUrl">The return URL.</param>
+        /// <returns>ActionResult.</returns>
+        [AllowAnonymous]
+        [ChildActionOnly]
+        public ActionResult ExternalLoginsList(string returnUrl)
+        {
+            ViewBag.ReturnUrl = returnUrl;
+            return PartialView("_ExternalLoginsListPartial", AuthenticationManager.GetExternalAuthenticationTypes());
         }
 
         protected override void Dispose(bool disposing)

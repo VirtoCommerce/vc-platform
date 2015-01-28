@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Web;
-using Microsoft.Practices.ServiceLocation;
+using VirtoCommerce.ApiClient;
+using VirtoCommerce.ApiClient.Extensions;
 
 namespace VirtoCommerce.ApiWebClient.Modules
 {
-    using VirtoCommerce.ApiClient;
     using VirtoCommerce.ApiClient.Session;
 
     /// <summary>
@@ -25,6 +25,11 @@ namespace VirtoCommerce.ApiWebClient.Modules
             }
         }
 
+
+        public virtual SecurityClient SecurityClient
+        {
+            get { return ClientContext.Clients.CreateSecurityClient(); }
+        }
 
         /// <summary>
         /// Determines whether [is request authenticated] [the specified context].

@@ -1,8 +1,6 @@
-﻿using VirtoCommerce.Foundation.Data.Infrastructure;
-
-namespace VirtoCommerce.Foundation.Data.Marketing
+﻿namespace VirtoCommerce.Foundation.Data.Marketing
 {
-	public class SqlDynamicContentSampleDatabaseInitializer : SetupDatabaseInitializer<EFDynamicContentRepository, Migrations.Content.Configuration>
+	public class SqlDynamicContentSampleDatabaseInitializer : SqlDynamicContentDatabaseInitializer
 	{
 		protected override void Seed(EFDynamicContentRepository context)
 		{

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using VirtoCommerce.ApiClient.DataContracts.Security;
 using VirtoCommerce.ApiClient.Utilities;
 using VirtoCommerce.Web.Core.DataContracts.Security;
 
@@ -13,6 +14,7 @@ namespace VirtoCommerce.ApiClient
             public const string FindById = "users/id/{0}";
             public const string FindByName = "users/name/{0}";
             public const string Create = "users/create";
+            public const string UserInfo = "usersession/{0}";
         }
 
         /// <summary>
@@ -36,6 +38,8 @@ namespace VirtoCommerce.ApiClient
 
         }
 
+        #region Owin Security Integration
+
         public Task<ApplicationUser> FindByIdAsync(string userId)
         {
             var requestUri = CreateRequestUri(string.Format(RelativePaths.FindById,userId));
@@ -52,6 +56,14 @@ namespace VirtoCommerce.ApiClient
         {
             var requestUri = CreateRequestUri(RelativePaths.Create);
             return SendAsync(requestUri, HttpMethod.Post, user);
+        }
+
+        #endregion
+
+        public Task<AuthInfo> GetUserInfo(string userName)
+        {
+            var requestUri = CreateRequestUri(string.Format(RelativePaths.UserInfo, userName));
+            return GetAsync<AuthInfo>(requestUri);
         }
     }
 }

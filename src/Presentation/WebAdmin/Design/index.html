@@ -71,11 +71,9 @@
 
                 $('*').on('mouseenter', function (e) {
                     var blade = $(this).parents('.blade'),
-                        bladeC = blade.find('.blade-content'),
-                        bladeH = bladeC.height(),
-                        bladeIh = blade.find('.inner-block').height(),
-                        header = $(this).parents('.blade-head'),
-                        bladeA = $(this).parents('.blade-actions');
+                        bladeI = blade.find('.blade-inner'),
+                        bladeH = bladeI.height(),
+                        bladeIh = blade.find('.inner-block').height();
 
                     if(blade.length) {
                         if(bladeH <= bladeIh) {
@@ -84,21 +82,13 @@
                         else {
                             horizontalScroll('on');
                         }
-
-                        if(header.length) {
-                            horizontalScroll('on');
-                        }
-
-                        if(bladeA.length) {
-                            horizontalScroll('off');
-                        }
                     }
                     else {
                         horizontalScroll('on');
                     }
                 });
 
-                $('.blade-head').on('mouseenter', function (event) {
+                $('.blade-head, .blade-head *, .static, .static *').on('mouseenter', function (event) {
                     horizontalScroll('on');
                 });
 

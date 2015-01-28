@@ -4,11 +4,11 @@ using VirtoCommerce.ApiWebClient.Caching;
 using VirtoCommerce.ApiWebClient.Caching.Interfaces;
 using VirtoCommerce.ApiWebClient.Clients;
 using VirtoCommerce.ApiWebClient.Currencies;
+using VirtoCommerce.ApiClient.Caching;
+using VirtoCommerce.ApiClient.Session;
 
 namespace VirtoCommerce.Web
 {
-    using VirtoCommerce.ApiClient.Caching;
-    using VirtoCommerce.ApiClient.Session;
 
     /// <summary>
     /// Specifies the Unity configuration for the main container.
@@ -50,7 +50,6 @@ namespace VirtoCommerce.Web
             #region MVC Helpers
 
             container.RegisterType<StoreClient>();
-            container.RegisterType<SecurityClient>();
 
             #endregion
 

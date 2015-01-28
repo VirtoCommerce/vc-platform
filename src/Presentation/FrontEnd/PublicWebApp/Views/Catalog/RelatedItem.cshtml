@@ -1,0 +1,14 @@
+﻿@model AssociatedItemModel
+
+<a class="pic" href="@Url.ItemUrl(Model.CatalogItem)" title="@Model.DisplayName">
+    <img src="@Url.Image(Model.CatalogItem, "primaryimage")" alt="@Model.CatalogItem.Code" onerror="this.onerror=null;this.src='@Href("~/Content/themes/default/images/blank.png")';" />
+</a>
+<a href="@Url.ItemUrl(Model.CatalogItem)">
+    @Model.DisplayName
+</a>
+<label>
+    @if (Model.Price != null)
+    {
+        @Html.DisplayFor(m => m.Price, new { Association = Model})
+    }
+</label>

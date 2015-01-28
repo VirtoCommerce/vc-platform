@@ -7,6 +7,6 @@
 		public string LanguageCode { get; set; }
 		public PropertyValueType ValueType { get; set; }
 		public string ValueId { get; set; }
-        public string Value { get; set; }
+        public object Value { get; set; }
     }
 }

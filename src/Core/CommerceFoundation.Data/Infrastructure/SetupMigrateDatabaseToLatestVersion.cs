@@ -90,9 +90,8 @@ namespace VirtoCommerce.Foundation.Data.Infrastructure
 			// do not modify connection string for localdb
 			if (!connectionString.ToLowerInvariant().Contains("(LocalDb)".ToLowerInvariant()))
 			{
-				//connectionString = connectionString.Replace(originalDbName, "master");
-				connectionString = connectionString.Replace(string.Format("Database={0};", originalDbName), "Database=master;");
-				connectionString = connectionString.Replace(string.Format("Initial Catalog={0};", originalDbName), "Initial Catalog=master;");
+                var csBuilder = new SqlConnectionStringBuilder(connectionString) { InitialCatalog = "master" };
+                connectionString = csBuilder.ToString();
 			}
 
 			using (var dbConnection = new SqlConnection(connectionString))

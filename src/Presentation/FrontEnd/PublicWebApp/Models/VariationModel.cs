@@ -59,7 +59,7 @@ namespace VirtoCommerce.Web.Models
                 _selectedVariations = new Dictionary<string, SelectionValue>();
                 foreach (var prop in selectedVariation.Properties.Where(p => relationGroups.Contains(p.Key)))
                 {
-                    _selectedVariations.Add(prop.Key, new SelectionValue { Value = prop.Value.FirstOrDefault() });
+                    _selectedVariations.Add(prop.Key, new SelectionValue { Value = prop.Value.ToString() });
                 }
             }
             else if (selections != null)
@@ -98,7 +98,7 @@ namespace VirtoCommerce.Web.Models
                     //Iterate through each property in ItemRelation ChildItem
                     foreach (var prop in variation.Properties.Where(p => p.Key == relationGroup))
                     {
-                        var propValue = prop.Value[0];
+                        var propValue = prop.Value.ToString();
                         var name = GetText(propValue);
 
                         //make sure only distinct values are shown 
@@ -126,7 +126,7 @@ namespace VirtoCommerce.Web.Models
                                 }
                                 var selProp =
                                     variation.Properties.FirstOrDefault(p => string.Equals(p.Key, sel.Key, StringComparison.InvariantCultureIgnoreCase));
-                                if (selProp.Equals(default(KeyValuePair<string,string[]>)) || GetText(selProp.Value[0]).Equals(GetText(sel.Value.Value)))
+                                if (selProp.Equals(default(KeyValuePair<string,string[]>)) || GetText(selProp.Value.ToString()).Equals(GetText(sel.Value.Value)))
                                 {
                                     continue;
                                 }
@@ -187,7 +187,7 @@ namespace VirtoCommerce.Web.Models
                 //Extra filter by all properties
                 foreach (var itemId in from itemId in _selectedVariationCandidates.ToArray()
                                        let item = availableVariations.First(i => i.Id == itemId)
-                                       where item.Properties.Any(p => this[p.Key] != null && !string.Equals(this[p.Key].Value, p.Value[0]))
+                                       where item.Properties.Any(p => this[p.Key] != null && !string.Equals(this[p.Key].Value, p.Value.ToString()))
                                        select itemId)
                 {
                     _selectedVariationCandidates.Remove(itemId);

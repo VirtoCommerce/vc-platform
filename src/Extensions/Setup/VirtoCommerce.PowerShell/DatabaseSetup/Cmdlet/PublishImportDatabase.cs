@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Management.Automation;
 using VirtoCommerce.Foundation.Data.Importing;
-using VirtoCommerce.Foundation.Data.Importing.Migrations;
-using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Frameworks;
 
 namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
@@ -19,16 +17,20 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
 
 			using (var db = new EFImportingRepository(connection))
 			{
+				SqlImportDatabaseInitializer initializer;
+
 				if (sample)
 				{
 					SafeWriteVerbose("Running sample scripts");
-					new SqlImportDatabaseInitializer().InitializeDatabase(db);
+					initializer = new SqlImportDatabaseInitializer();
 				}
 				else
 				{
 					SafeWriteVerbose("Running minimum scripts");
-					new SetupMigrateDatabaseToLatestVersion<EFImportingRepository, Configuration>().InitializeDatabase(db);
+					initializer = new SqlImportDatabaseInitializer();
 				}
+
+				initializer.InitializeDatabase(db);
 			}
 		}
 	}

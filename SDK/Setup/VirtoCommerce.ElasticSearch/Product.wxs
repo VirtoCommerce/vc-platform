@@ -4,11 +4,36 @@
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util='http://schemas.microsoft.com/wix/UtilExtension'>
   <Product Id="C153F4D9-D606-49B0-80AE-799FDC059ACF" Name="Virto Commerce Search $(var.DisplayVersion)" Language="1033" Version="$(var.ProductVersion)" UpgradeCode="$(var.UpgradeCode)" Manufacturer="VirtoCommerce">
-		<Package InstallerVersion="200" Platform="$(sys.BUILDARCH)" InstallPrivileges="elevated" Compressed="yes" InstallScope="perMachine" />
+		<Package InstallerVersion="400" Platform="$(sys.BUILDARCH)" Compressed="yes" InstallScope="perMachine" />
 
-		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." AllowSameVersionUpgrades="yes"/>
-   
+		<MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." Schedule="afterInstallInitialize"/>
+
+    <!-- 
+      http://msdn.microsoft.com/en-us/library/aa372380%28v=vs.85%29.aspx
+      http://code.dblock.org/msi-property-patterns-upgrading-firstinstall-and-maintenance
+      http://www.mail-archive.com/wix-users@lists.sourceforge.net/msg42579.html
+    -->
+    <SetProperty After="FindRelatedProducts" Id="FirstInstall" Value="true">
+      NOT Installed AND NOT WIX_UPGRADE_DETECTED AND NOT WIX_DOWNGRADE_DETECTED
+    </SetProperty>
+    <SetProperty After="SetFirstInstall" Id="Upgrading" Value="true">
+      WIX_UPGRADE_DETECTED AND NOT (REMOVE="ALL")
+    </SetProperty>
+    <SetProperty After ="RemoveExistingProducts" Id="RemovingForUpgrade" Sequence="execute" Value="true">
+      (REMOVE="ALL") AND UPGRADINGPRODUCTCODE
+    </SetProperty>
+    <SetProperty After="SetUpgrading" Id="Uninstalling" Value="true">
+      Installed AND (REMOVE="ALL") AND NOT (WIX_UPGRADE_DETECTED OR UPGRADINGPRODUCTCODE)
+    </SetProperty>
+    <SetProperty After="SetUninstalling" Id="Maintenance" Value="true">
+      Installed AND NOT Upgrading AND NOT Uninstalling AND NOT UPGRADINGPRODUCTCODE
+    </SetProperty>
+    
+    <!--
     <Property Id="ARPSYSTEMCOMPONENT" Value="1" />
+    -->
+
+    <Media Id="1" Cabinet="search.cab" EmbedCab="yes" CompressionLevel="high" />
     
 		<Feature Id="ProductFeature" Title="Virto Commerce Search $(var.DisplayVersion)" Level="1">
 			<ComponentGroupRef Id="bin" />
@@ -20,51 +45,12 @@
       -->
     </Feature>
 
-    <Media Id="1" Cabinet="search.cab" EmbedCab="yes" CompressionLevel="high" />
-    
-    <!-- now configure the service -->   
-    <!--
-    <CustomAction Id="ConfigureService_Helper" Property="ConfigureService" Value="&quot;[WindowsFolder]system32\cmd.exe&quot; &quot;[lib]elasticsearchw-update.cmd&quot;" Execute="immediate"/>
-    <?if $(var.Platform) = x64 ?>
-      <CustomAction Id="ConfigureService" BinaryKey="WixCA" DllEntry="CAQuietExec64" Execute="deferred" Return="ignore"/>
-    <?else ?>
-      <CustomAction Id="ConfigureService" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore"/>
-    <?endif ?>
-
-    <CustomAction Id="UninstallService_Helper" Property="UninstallService" Value="&quot;[WindowsFolder]system32\cmd.exe&quot; &quot;[lib]elasticsearchw-uninstall.cmd&quot;" Execute="immediate"/>
-    <?if $(var.Platform) = x64 ?>
-      <CustomAction Id="UninstallService" BinaryKey="WixCA" DllEntry="CAQuietExec64" Execute="deferred" Return="ignore"/>
-    <?else ?>
-      <CustomAction Id="UninstallService" BinaryKey="WixCA" DllEntry="CAQuietExec" Execute="deferred" Return="ignore"/>
-    <?endif ?>
-    -->
-    <!-- working but showing -->
-    <CustomAction Id="ConfigureService" Directory="lib" Execute="deferred" ExeCommand="[lib]elasticsearchw-update.cmd" Return="ignore"/>
-    <CustomAction Id="UninstallService" Directory="lib" Execute="immediate" ExeCommand="[lib]elasticsearchw-uninstall.cmd" Return="ignore"/>
+    <CustomAction Id="BatchCmd" ExeCommand="[bin]esi_service.bat" Directory="lib" Execute="deferred" Return="check" Impersonate="no"/>
+    <CustomAction Id="BatchCmdU" ExeCommand="[bin]esi_service_uninstall.bat" Directory="lib" Execute="deferred" Return="ignore" Impersonate="no"/>
 
     <InstallExecuteSequence>
-      <!-- Services -->
-      <!--
-      <Custom Action="ConfigureService_Helper" After="CostFinalize">
-        <![CDATA[NOT Installed]]>
-      </Custom>
-      <Custom Action="ConfigureService" Before="InstallFiles">
-        <![CDATA[NOT Installed]]>
-      </Custom>
-      <Custom Action="UninstallService_Helper" After="CostFinalize">
-        <![CDATA[(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")]]>
-      </Custom>
-      <Custom Action="UninstallService" After="StartServices">
-        <![CDATA[(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")]]>
-      </Custom>
-      -->
-      <!-- working but showing -->
-      <Custom Action="UninstallService" After="StartServices">
-        (NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")
-      </Custom>        
-      <Custom Action="ConfigureService" After="InstallFiles">
-        NOT Installed
-      </Custom>
+      <Custom Action="BatchCmd" After="InstallFiles">FirstInstall</Custom>
+      <Custom Action="BatchCmdU" Before="RemoveFiles">Uninstalling</Custom>
     </InstallExecuteSequence>
   </Product>
 
@@ -103,43 +89,32 @@
       <Component Id="plugin.bat" Guid="3439347A-10E1-49D9-8872-C2EF34E150AE">
         <File Id="plugin.bat" Source="$(var.SearchDataFolder)\bin\plugin.bat" Checksum="yes" KeyPath="yes" Vital="yes" />
       </Component>
-      <Component Id="elasticsearchw.exe" Guid="17E3AD52-5382-40C9-8323-9CC5AC3AF3FC">
-				<!--<?if $(var.Platform) = x64 ?>
-          <File Id="elasticsearchw.exe" Name="elasticsearchw.exe" Source="$(var.SearchDataFolder)\bin\x64\elasticsearchw.exe" Checksum="yes" KeyPath="yes" Vital="yes" />
-				<?else ?>-->
-          <File Id="elasticsearchw.exe" Name="elasticsearchw.exe" Source="$(var.SearchDataFolder)\bin\x86\elasticsearchw.exe" Checksum="yes" KeyPath="yes" Vital="yes" />
-				<!--<?endif?>-->
-        <!--
-        <util:User Id="UserToCheckOrCreate" Name="elasticsearch" LogonAsService="yes" Password="Pa55w0rd" CreateUser="yes" UpdateIfExists="yes" PasswordNeverExpires="yes" PasswordExpired="no" RemoveOnUninstall="yes" />
-        -->
-
-        <!-- now install the service -->
-        <ServiceInstall
-                      Id="virtocommerce.elasticsearch"
-                      Type="ownProcess"
-                      Vital="yes"
-                      Name="VirtoCommerce.ElasticSearch"
-                      DisplayName="Virto Commerce $(var.DisplayVersion) Search"
-                      Description="Virto Commerce Elastic Search Engine"
-                      Start="auto"
-                      Arguments="//RS//Virtocommerce.Elasticsearch"
-                      Account="LocalSystem"
-                      ErrorControl="ignore"
-                      Interactive="no">
-            <util:PermissionEx User="Everyone" ServiceStart="yes"
-                ServiceStop="yes"
-                ServicePauseContinue="yes"
-                ServiceInterrogate="yes"
-                ServiceChangeConfig="yes"
-                ServiceEnumerateDependents="yes"
-                ServiceQueryConfig="yes"
-                ServiceQueryStatus="yes"
-                ServiceUserDefinedControl="yes">
-            </util:PermissionEx>
-        </ServiceInstall>
-
-        <!-- now start the service -->
-        <ServiceControl Id="virtocommerce.elasticsearch.start" Start="install" Stop="both" Remove="uninstall" Name="VirtoCommerce.ElasticSearch" Wait="yes" />
+      <Component Id="esi_config.bat" Guid="E1D28CB5-7033-43C1-9A2C-86A77C9940DD">
+        <File Id="esi_config.bat" Source="$(var.SearchDataFolder)\bin\esi_config.bat" Checksum="yes" KeyPath="yes" Vital="yes" />
+      </Component>
+      <Component Id="esi_elasticsearch.bat" Guid="E2D18CB5-7033-43C1-9A2C-86A77C9940DD">
+        <File Id="esi_elasticsearch.bat" Source="$(var.SearchDataFolder)\bin\esi_elasticsearch.bat" Checksum="yes" KeyPath="yes" Vital="yes" />
+      </Component>
+      <Component Id="esi_plugin.bat" Guid="E3D18CB5-7033-43C1-9A2C-86A77C9940DD">
+        <File Id="esi_plugin.bat" Source="$(var.SearchDataFolder)\bin\esi_plugin.bat" Checksum="yes" KeyPath="yes" Vital="yes" />
+      </Component>
+      <Component Id="esi_service.bat" Guid="E4D18CB5-7033-43C1-9A2C-86A77C9940DD">
+        <File Id="esi_service.bat" Source="$(var.SearchDataFolder)\bin\esi_service.bat" Checksum="yes" KeyPath="yes" Vital="yes" />
+      </Component>
+      <Component Id="esi_service_uninstall.bat" Guid="E5D18CB5-7033-43C1-9A2C-86A77C9940DD">
+        <File Id="esi_service_uninstall.bat" Source="$(var.SearchDataFolder)\bin\esi_service_uninstall.bat" Checksum="yes" KeyPath="yes" Vital="yes" />
+      </Component>
+      <Component Id="service.bat" Guid="E6D18CB5-7033-43C1-9A2C-86A77C9940DD">
+        <File Id="service.bat" Source="$(var.SearchDataFolder)\bin\service.bat" Checksum="yes" KeyPath="yes" Vital="yes" />
+      </Component>
+      <Component Id="elasticsearchservicemgr.exe" Guid="E7D18CB5-7033-43C1-9A2C-86A77C9940DD">
+        <File Id="elasticsearchservicemgr.exe" Source="$(var.SearchDataFolder)\bin\elasticsearch-service-mgr.exe" Checksum="yes" KeyPath="yes" Vital="yes" />
+      </Component>
+      <Component Id="elasticsearchservicex64.exe" Guid="E8D18CB5-7033-43C1-9A2C-86A77C9940DD">
+        <File Id="elasticsearchservicex64.exe" Source="$(var.SearchDataFolder)\bin\elasticsearch-service-x64.exe" Checksum="yes" KeyPath="yes" Vital="yes" />
+      </Component>
+      <Component Id="elasticsearchservicex86.exe" Guid="E9D18CB5-7033-43C1-9A2C-86A77C9940DD">
+        <File Id="elasticsearchservicex86.exe" Source="$(var.SearchDataFolder)\bin\elasticsearch-service-x86.exe" Checksum="yes" KeyPath="yes" Vital="yes" />
       </Component>
     </ComponentGroup>
 
@@ -233,11 +208,5 @@
       </Component>
 
     </ComponentGroup>
-
-    <!--
-    <Component Id="service" Guid="B30BC1EA-300B-4A52-BFF4-E5D1C35519CC">
-
-    </Component>
-    -->
   </Fragment>
 </Wix>

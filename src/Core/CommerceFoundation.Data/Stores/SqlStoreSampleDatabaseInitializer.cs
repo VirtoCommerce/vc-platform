@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml.Serialization;
-using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Search.Schemas;
 using VirtoCommerce.Foundation.Stores.Model;
 
 namespace VirtoCommerce.Foundation.Data.Stores
 {
-	public class SqlStoreSampleDatabaseInitializer : SetupDatabaseInitializer<EFStoreRepository, Migrations.Configuration>
+	public class SqlStoreSampleDatabaseInitializer : SqlStoreDatabaseInitializer
 	{
 		private readonly bool _reduced;
 

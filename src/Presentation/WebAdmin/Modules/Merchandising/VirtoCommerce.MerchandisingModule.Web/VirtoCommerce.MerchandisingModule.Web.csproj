@@ -83,6 +83,7 @@
     <Compile Include="Controllers\KeywordController.cs" />
     <Compile Include="Controllers\StoreController.cs" />
     <Compile Include="Converters\AssetConverter.cs" />
+    <Compile Include="Converters\AssociationConverter.cs" />
     <Compile Include="Converters\CategoryConverter.cs" />
     <Compile Include="Converters\DynamicContentItemConverter.cs" />
     <Compile Include="Converters\ProductConverter.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="Converters\ReviewConverter.cs" />
     <Compile Include="Converters\KeywordConverter.cs" />
     <Compile Include="Converters\StoreConverter.cs" />
+    <Compile Include="Model\Association.cs" />
     <Compile Include="Model\CategoryInfo.cs" />
     <Compile Include="Model\IFeedbackCounterSupport.cs" />
     <Compile Include="Model\EditorialReview.cs" />
