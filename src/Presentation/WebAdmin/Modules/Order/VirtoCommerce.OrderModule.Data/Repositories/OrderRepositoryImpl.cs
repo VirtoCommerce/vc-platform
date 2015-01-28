@@ -10,12 +10,17 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 {
 	public class OrderRepositoryImpl : EFRepositoryBase, IOrderRepository
 	{
+		public OrderRepositoryImpl()
+		{
+			Database.SetInitializer<OrderRepositoryImpl>(null);
+			Configuration.LazyLoadingEnabled = false;
+		}
+
 		public OrderRepositoryImpl(string nameOrConnectionString)
 			: base(nameOrConnectionString)
 		{
 			Database.SetInitializer<OrderRepositoryImpl>(null);
 			Configuration.LazyLoadingEnabled = false;
-
 		}
 
 		protected override void OnModelCreating(DbModelBuilder modelBuilder)
