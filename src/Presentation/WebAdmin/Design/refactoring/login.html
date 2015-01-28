@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Metro Theme</title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <link rel="stylesheet" href="css/metro-bootstrap.css">
+        <link rel="stylesheet" href="css/metro-bootstrap-responsive.css">
+        <link rel="stylesheet" href="css/iconFont.css">
+        <link rel="stylesheet" href="css/custom.css">
+        <script src="js/jquery/jquery.min.js"></script>
+        <script src="js/jquery/jquery.widget.min.js"></script>
+        <script src="js/jquery/jquery.mousewheel.js"></script>
+        <script src="js/metro/metro.min.js"></script>
+    </head>
+    <body class="metro">
+        <div class="window-overlay">
+            <div class="login">
+                <div class="window flat">
+                    <div class="caption">
+                        <img class="logo" src="images/logo.png" alt="">
+                        <div class="title">Sign in to Virto Commerce Manager</div>
+                    </div>
+                    <div class="content">
+                        <label for="">Login</label>
+                        <div class="input-control text" data-role="input-control">
+                            <input type="text" va-autofill="" autofocus="" required="" ng-model="user.email" name="login" class="ng-untouched ng-dirty ng-valid-parse ng-valid ng-valid-required">
+                            <button type="button" tabindex="-1" class="btn-clear"></button>
+                        </div>
+                        <label for="">Password</label>
+                        <div class="input-control text" data-role="input-control">
+                            <input type="password" ui-keydown="{'enter':'ok()'}" va-autofill="" required="" ng-model="user.password" name="password" class="ng-untouched ng-dirty ng-valid-parse ng-valid ng-valid-required">
+                            <button type="button" tabindex="-1" class="btn-reveal"></button>
+                        </div>
+                        <div class="input-control checkbox block">
+                            <label>
+                                <input type="checkbox" ng-model="user.remember" checked="" name="c1" class="ng-pristine ng-untouched ng-valid">
+                                <span class="check"></span>Remember me
+                            </label>
+                        </div>
+                        <label ng-show="authError" class="fg-red ng-binding ng-hide">
+                            
+                        </label>
+                        <div class="form-actions text-right">
+                            <button ng-disabled="loginForm.$invalid||loginProgress" type="submit" class="button primary">Log in</button>
+                        </div>
+                        <!-- ngIf: loginProgress -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
