@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace VirtoCommerce.Domain.Order.Model
 {
@@ -19,7 +16,7 @@ namespace VirtoCommerce.Domain.Order.Model
 		public override IEnumerable<Operation> GetAllRelatedOperations()
 		{
 			var retVal = base.GetAllRelatedOperations().ToList();
-			
+
 			if (InPayments != null)
 			{
 				foreach (var inPayment in InPayments)
@@ -36,26 +33,26 @@ namespace VirtoCommerce.Domain.Order.Model
 			{
 				foreach (var item in Items)
 				{
-					this.Sum += item.Price * item.Quantity;
+					Sum += item.Price * item.Quantity;
 					if (item.Discount != null)
 					{
-						this.Sum -= item.Discount.DiscountAmount;
+						Sum -= item.Discount.DiscountAmount;
 					}
 					else
 					{
-						this.Sum -= item.StaticDiscount;
+						Sum -= item.StaticDiscount;
 					}
 				}
 			}
 
-			if (Discount != null && Discount.DiscountAmount != null)
+			if (Discount != null)
 			{
-				this.Sum -= Discount.DiscountAmount;
+				Sum -= Discount.DiscountAmount;
 			}
 
-			if (this.TaxIncluded ?? false)
+			if (TaxIncluded ?? false)
 			{
-				this.Sum += this.Tax;
+				Sum += Tax;
 			}
 		}
 	}

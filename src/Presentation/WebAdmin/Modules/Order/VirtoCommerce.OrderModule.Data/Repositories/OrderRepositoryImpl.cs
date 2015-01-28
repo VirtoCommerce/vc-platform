@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VirtoCommerce.Foundation.Data;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
-using VirtoCommerce.OrderModule.Data.Model;
+using System.Linq;
 using VirtoCommerce.Domain.Order.Model;
-using System.Data.Entity;
+using VirtoCommerce.Foundation.Data;
+using VirtoCommerce.OrderModule.Data.Model;
 
 namespace VirtoCommerce.OrderModule.Data.Repositories
 {
@@ -31,7 +27,7 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 					.Property(x => x.Id);
 
 			modelBuilder.Entity<CustomerOrderEntity>().HasOptional(x => x.Discount)
-													  .WithRequired(x=>x.CustomerOrder);
+													  .WithRequired(x => x.CustomerOrder);
 
 			modelBuilder.Entity<CustomerOrderEntity>().ToTable("order_CustomerOrder");
 			#endregion
@@ -46,7 +42,7 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 			modelBuilder.Entity<LineItemEntity>().HasOptional(x => x.Discount)
 												.WithRequired(x => x.LineItem);
 
-			modelBuilder.Entity<LineItemEntity>().HasOptional(x=>x.CustomerOrder)
+			modelBuilder.Entity<LineItemEntity>().HasOptional(x => x.CustomerOrder)
 									   .WithMany(x => x.Items)
 									   .HasForeignKey(x => x.CustomerOrderId);
 
@@ -88,7 +84,7 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 									   .HasForeignKey(x => x.CustomerOrderId);
 
 			modelBuilder.Entity<AddressEntity>()
-				  .HasOptional(x=> x.Shipment) // Mark  is optional 
+				  .HasOptional(x => x.Shipment) // Mark  is optional 
 				  .WithRequired(x => x.DeliveryAddress); // Create inverse relationship
 
 			modelBuilder.Entity<AddressEntity>()
@@ -118,7 +114,7 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 
 			#region Discount
 			modelBuilder.Entity<DiscountEntity>().HasKey(x => x.Id);
-		
+
 			modelBuilder.Entity<DiscountEntity>().ToTable("order_Discount");
 			#endregion
 		}
@@ -146,7 +142,7 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 								 .Include(x => x.InPayments)
 								 .Include(x => x.Items)
 								 .FirstOrDefault(x => x.Id == id);
-			
+
 		}
 
 		public ShipmentEntity GetShipmentById(string id, ResponseGroup responseGroup)
