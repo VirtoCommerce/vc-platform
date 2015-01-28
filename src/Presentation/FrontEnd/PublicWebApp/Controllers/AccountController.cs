@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using VirtoCommerce.ApiClient;
 using VirtoCommerce.ApiWebClient.Globalization;
 using VirtoCommerce.ApiWebClient.Helpers;
 using VirtoCommerce.Web.Models;
@@ -15,7 +16,6 @@ using VirtoCommerce.Web.Models;
 namespace VirtoCommerce.Web.Controllers
 {
     [Authorize]
-    [RoutePrefix("account")]
     public class AccountController : ControllerBase
     {
         private ApplicationSignInManager _signInManager;
@@ -37,9 +37,9 @@ namespace VirtoCommerce.Web.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -55,12 +55,12 @@ namespace VirtoCommerce.Web.Controllers
             }
         }
 
-        [Route("")]
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             //var contact = _userClient.GetCurrentCustomer();
             //var model = UserHelper.GetCustomerModel(contact);
             //return View();
+
             return null;
         }
 
@@ -108,7 +108,6 @@ namespace VirtoCommerce.Web.Controllers
 
         //
         // GET: /Account/Login
-        [Route("login")]
         [AllowAnonymous]
         public ActionResult Login(string returnUrl, string loginAs)
         {
@@ -123,7 +122,6 @@ namespace VirtoCommerce.Web.Controllers
 
         //
         // POST: /Account/Login
-        [Route("login")]
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -147,7 +145,7 @@ namespace VirtoCommerce.Web.Controllers
                                 //await UserHelper.OnPostLogonAsync(model.ImpersonatedUserName, model.UserName);
                                 return RedirectToLocal(returnUrl);
                             }
-                            break;                 
+                            break;
                         case SignInStatus.LockedOut:
                             return View("Lockout");
                         case SignInStatus.RequiresVerification:
@@ -156,6 +154,7 @@ namespace VirtoCommerce.Web.Controllers
                 }
                 else
                 {
+                    //TODO login as
                     //errorMessage = await _identitySecurity.LoginAsAsync(model.ImpersonatedUserName, model.UserName, model.Password, model.RememberMe);
                     //if (string.IsNullOrEmpty(errorMessage)
                     //    && StoreHelper.IsUserAuthorized(model.UserName, out errorMessage)
@@ -206,7 +205,7 @@ namespace VirtoCommerce.Web.Controllers
             // If a user enters incorrect codes for a specified amount of time then the user account 
             // will be locked out for a specified amount of time. 
             // You can configure the account lockout settings in IdentityConfig
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:  model.RememberMe, rememberBrowser: model.RememberBrowser);
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -228,30 +227,63 @@ namespace VirtoCommerce.Web.Controllers
             return View();
         }
 
-        //
+
         // POST: /Account/Register
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        public async Task<ActionResult> Register(RegisterModel model)
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
-                {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
-                    // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
-                    // Send an email with this link
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                var requireEmailConfirmation = true; //TODO get from settings
 
-                    return RedirectToAction("Index", "Home");
+                var user = new ApplicationUser
+                {
+                    UserName = model.Email,
+                    Email = model.Email,
+                    FullName = string.Format("{0} {1}", model.FirstName, model.LastName),
+                    StoreId = StoreHelper.CustomerSession.StoreId,
+                };
+
+                try
+                {
+                    var result = await UserManager.CreateAsync(user, model.Password);
+                    if (result.Succeeded)
+                    {
+                        //Need to get user id
+                        user = await UserManager.FindByNameAsync(model.Email);
+
+                        if (requireEmailConfirmation)
+                        {
+                            // Send an email with this link
+                            var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                            var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = HttpUtility.UrlEncode(code) }, Request.Url.Scheme);
+                            try
+                            {
+                                await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                                TempData[GetMessageTempKey(MessageType.Success)] = new[] { "Your account was succesfully created. To confirm your account follow the instruction received in email.".Localize() };
+                            }
+                            catch (Exception ex)
+                            {
+
+                                TempData[GetMessageTempKey(MessageType.Error)] = new[] { string.Format("Failed to send confirmation email to {0}.".Localize(), model.Email) };
+                            }
+                            return model.ActionResult ?? RedirectToAction("Login");
+                        }
+                        else
+                        {
+                            await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                            return model.ActionResult ?? RedirectToAction("Index", "Home");
+                        }
+
+                    }
+                    AddErrors(result);
                 }
-                AddErrors(result);
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", ex);
+                }
             }
 
             // If we got this far, something failed, redisplay form
@@ -267,8 +299,27 @@ namespace VirtoCommerce.Web.Controllers
             {
                 return View("Error");
             }
+
             var result = await UserManager.ConfirmEmailAsync(userId, code);
-            return View(result.Succeeded ? "ConfirmEmail" : "Error");
+
+            if (result.Succeeded)
+            {
+                TempData[GetMessageTempKey(MessageType.Success)] = new[]
+                {
+                    "Your account was succesfully confirmed. Now you can login".Localize()
+                };
+
+            }
+            else
+            {
+
+                TempData[GetMessageTempKey(MessageType.Error)] = new[]
+                {
+                    "Failed to confirm account.".Localize()
+                };
+            }
+
+            return RedirectToAction("Login");
         }
 
         //

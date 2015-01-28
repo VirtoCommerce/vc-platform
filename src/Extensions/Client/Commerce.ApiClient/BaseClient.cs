@@ -101,12 +101,12 @@ namespace VirtoCommerce.ApiClient
             }
         }
 
-        protected virtual async Task<T> GetAsync<T>(Uri requestUri, string userId = null) where T:class
+        protected virtual async Task<T> GetAsync<T>(Uri requestUri, string userId = null, bool useCache = true) where T:class
         {
             return await Helper.GetAsync(requestUri.ToString(),
                 () => GetAsyncInternal<T>(requestUri, userId),
                 this.GetCacheTimeOut(requestUri.ToString()),
-                ClientContext.Configuration.IsCacheEnabled);
+                ClientContext.Configuration.IsCacheEnabled && useCache);
         }
 
         /// <summary>
