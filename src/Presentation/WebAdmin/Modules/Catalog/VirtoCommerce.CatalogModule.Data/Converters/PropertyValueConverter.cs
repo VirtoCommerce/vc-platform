@@ -26,7 +26,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
                 Id = dbPropValue.PropertyValueId,
                 LanguageCode = dbPropValue.Locale,
                 PropertyName = dbPropValue.Name,
-                Value = dbPropValue.ObjectValue, // retain the correct object type value
+                Value = dbPropValue.ToObjectValue(), // retain the correct object type value
                 ValueId = dbPropValue.KeyValue,
                 ValueType = ((foundation.PropertyValueType)dbPropValue.ValueType).ToModuleModel()
             };
