@@ -49,12 +49,20 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 		    }
 
 			retVal.Properties = new webModel.PropertyDictionary();
-			//Need add property for each meta info
-
+            
+            //Need add property for each meta info
+            /* SASHA: no need to group elements here, simply return one key per value
 			foreach (var propValueGroup in product.PropertyValues.GroupBy(x=>x.PropertyName))
 			{
                 retVal.Properties.Add(propValueGroup.Key, propValueGroup.Select(g=>g.Value));
 			}
+             * */
+
+		    foreach (var propValue in product.PropertyValues)
+		    {
+                retVal.Properties.Add(propValue.PropertyName, propValue.Value);
+		    }
+
 			return retVal;
 		}
 

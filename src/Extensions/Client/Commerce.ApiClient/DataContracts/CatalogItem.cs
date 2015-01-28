@@ -37,10 +37,10 @@ namespace VirtoCommerce.Web.Core.DataContracts
 
         #region Properties
 
-        private IDictionary<string, string[]> _properties = new Dictionary<string, string[]>();
+        private IDictionary<string, object> _properties = new Dictionary<string, object>();
         
         [JsonIgnore]
-        public string[] this[string name]
+        public object this[string name]
         {
             get
             {
@@ -59,7 +59,7 @@ namespace VirtoCommerce.Web.Core.DataContracts
             }
         }
 
-        public IDictionary<string, string[]> Properties
+        public IDictionary<string, object> Properties
         {
             get
             {

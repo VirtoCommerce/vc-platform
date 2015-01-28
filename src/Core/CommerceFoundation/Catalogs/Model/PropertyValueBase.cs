@@ -211,5 +211,30 @@ namespace VirtoCommerce.Foundation.Catalogs.Model
             }
             return base.ToString();
         }
+
+        public object ObjectValue
+        {
+            get
+            {
+                switch (ValueType)
+                {
+                    case (int)PropertyValueType.Boolean:
+                        return BooleanValue;
+                    case (int)PropertyValueType.DateTime:
+                        return DateTimeValue;
+                    case (int)PropertyValueType.Decimal:
+                        return DecimalValue;
+                    case (int)PropertyValueType.Integer:
+                        return IntegerValue;
+                    case (int)PropertyValueType.LongString:
+                        return LongTextValue;
+                    case (int)PropertyValueType.ShortString:
+                    case (int)PropertyValueType.Image:
+                        return ShortTextValue;
+                }
+
+                return base.ToString();
+            }
+        }
     }
 }
