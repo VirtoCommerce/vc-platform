@@ -1,11 +1,11 @@
-﻿using System;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Identity;
+﻿using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
-using Microsoft.Practices.ServiceLocation;
+using System;
+using System.Net.Mail;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using VirtoCommerce.ApiClient;
 using VirtoCommerce.ApiClient.Extensions;
 using VirtoCommerce.Web.Converters;
@@ -14,7 +14,7 @@ using VirtoCommerce.Web.Models;
 namespace VirtoCommerce.Web
 {
     // Configure the application user manager used in this application. UserManager is defined in ASP.NET Identity and is used by the application.
-    public class ApplicationUserStore : IUserStore<ApplicationUser>, IUserLockoutStore<ApplicationUser, string>, IUserPasswordStore<ApplicationUser>, IUserTwoFactorStore<ApplicationUser, string>
+    public class ApplicationUserStore : IUserStore<ApplicationUser>, IUserLockoutStore<ApplicationUser, string>, IUserPasswordStore<ApplicationUser>, IUserTwoFactorStore<ApplicationUser, string>, IUserEmailStore<ApplicationUser>
     {
         public SecurityClient SecurityClient
         {
@@ -30,12 +30,29 @@ namespace VirtoCommerce.Web
 
         public async Task CreateAsync(ApplicationUser user)
         {
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
             await SecurityClient.CreateAsync(user.ToServiceModel());
         }
 
         public async Task DeleteAsync(ApplicationUser user)
         {
-            throw new NotImplementedException();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+            await SecurityClient.DeleteAsync(user.Id);
+        }
+
+        public async Task UpdateAsync(ApplicationUser user)
+        {
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+            await SecurityClient.UpdateAsync(user.ToServiceModel());
         }
 
         public async Task<ApplicationUser> FindByIdAsync(string userId)
@@ -50,10 +67,7 @@ namespace VirtoCommerce.Web
             return user.ToWebModel();
         }
 
-        public async Task UpdateAsync(ApplicationUser user)
-        {
-            throw new NotImplementedException();
-        }
+       
 
         public void Dispose()
         {
@@ -66,37 +80,72 @@ namespace VirtoCommerce.Web
 
         public Task<bool> GetLockoutEnabledAsync(ApplicationUser user)
         {
-            return Task.FromResult(false);
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+            return Task.FromResult(user.LockoutEnabled);
         }
 
         public Task<int> GetAccessFailedCountAsync(ApplicationUser user)
         {
-            throw new NotImplementedException();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+            return Task.FromResult(user.AccessFailedCount);
         }
 
         public Task<DateTimeOffset> GetLockoutEndDateAsync(ApplicationUser user)
         {
-            throw new NotImplementedException();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+            return
+                Task.FromResult(user.LockoutEndDateUtc.HasValue
+                    ? new DateTimeOffset(DateTime.SpecifyKind(user.LockoutEndDateUtc.Value, DateTimeKind.Utc))
+                    : new DateTimeOffset());
         }
 
         public Task<int> IncrementAccessFailedCountAsync(ApplicationUser user)
         {
-            throw new NotImplementedException();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+            user.AccessFailedCount++;
+            return Task.FromResult(user.AccessFailedCount);
         }
 
         public Task ResetAccessFailedCountAsync(ApplicationUser user)
         {
-            throw new NotImplementedException();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+            user.AccessFailedCount = 0;
+            return Task.FromResult(0);
         }
 
         public Task SetLockoutEnabledAsync(ApplicationUser user, bool enabled)
         {
-            throw new NotImplementedException();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+            user.LockoutEnabled = enabled;
+            return Task.FromResult(0);
         }
 
         public Task SetLockoutEndDateAsync(ApplicationUser user, DateTimeOffset lockoutEnd)
         {
-            throw new NotImplementedException();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+            user.LockoutEndDateUtc = lockoutEnd == DateTimeOffset.MinValue ? (DateTime?)null : lockoutEnd.UtcDateTime;
+            return Task.FromResult(0);
         }
 
         #endregion
@@ -105,16 +154,24 @@ namespace VirtoCommerce.Web
 
         public Task<string> GetPasswordHashAsync(ApplicationUser user)
         {
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
             return Task.FromResult(user.PasswordHash);
         }
 
         public Task<bool> HasPasswordAsync(ApplicationUser user)
         {
-            return Task.FromResult(!string.IsNullOrWhiteSpace(user.PasswordHash));
+            return Task.FromResult(user.PasswordHash != null);
         }
 
         public Task SetPasswordHashAsync(ApplicationUser user, string passwordHash)
         {
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
             user.PasswordHash = passwordHash;
             return Task.FromResult(0);
         }
@@ -125,15 +182,67 @@ namespace VirtoCommerce.Web
 
         public Task<bool> GetTwoFactorEnabledAsync(ApplicationUser user)
         {
-            return Task.FromResult(false);
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+            return Task.FromResult(user.TwoFactorEnabled);
         }
 
         public Task SetTwoFactorEnabledAsync(ApplicationUser user, bool enabled)
         {
-            throw new NotImplementedException();
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+            user.TwoFactorEnabled = enabled;
+            return Task.FromResult(0);
         }
 
         #endregion
+
+        public Task SetEmailAsync(ApplicationUser user, string email)
+        {
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+            user.Email = email;
+            return Task.FromResult(0);
+        }
+
+        public Task<string> GetEmailAsync(ApplicationUser user)
+        {
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+            return Task.FromResult(user.Email);
+        }
+
+        public Task<bool> GetEmailConfirmedAsync(ApplicationUser user)
+        {
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+            return Task.FromResult(user.EmailConfirmed);
+        }
+
+        public Task SetEmailConfirmedAsync(ApplicationUser user, bool confirmed)
+        {
+            if (user == null)
+            {
+                throw new ArgumentNullException("user");
+            }
+            user.EmailConfirmed = confirmed;
+            return Task.FromResult(0);
+        }
+
+        public Task<ApplicationUser> FindByEmailAsync(string email)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public class ApplicationUserManager : UserManager<ApplicationUser>
@@ -193,7 +302,15 @@ namespace VirtoCommerce.Web
     {
         public Task SendAsync(IdentityMessage message)
         {
-            return Task.FromResult(0);
+            var client = new SmtpClient();
+            var eMessage = new MailMessage
+            {
+                Body = message.Body,
+                Subject = message.Subject,
+                IsBodyHtml = true
+            };
+            eMessage.To.Add(message.Destination);
+            return client.SendMailAsync(eMessage);
         }
     }
 
