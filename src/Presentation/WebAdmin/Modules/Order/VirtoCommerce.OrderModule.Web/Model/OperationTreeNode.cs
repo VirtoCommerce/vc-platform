@@ -21,22 +21,7 @@ namespace VirtoCommerce.OrderModule.Web.Model
 		public string Number { get; set; }
 		public bool IsApproved { get; set; }
 		public string StatusId { get; set; }
-		/// <summary>
-		/// source warehouse or store
-		/// </summary>
-		public string SourceStoreId { get; set; }
-		/// <summary>
-		/// Target warehouse or store
-		/// </summary>
-		public string TargetStoreId { get; set; }
-		/// <summary>
-		/// Source organization or agent
-		/// </summary>
-		public string SourceAgentId { get; set; }
-		/// <summary>
-		/// Target organization or agent
-		/// </summary>
-		public string TargetAgentId { get; set; }
+	
 
 		public string Comment { get; set; }
 		/// <summary>

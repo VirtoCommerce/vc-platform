@@ -17,6 +17,16 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			retVal.Childrens = new List<webModel.OperationTreeNode>();
 			retVal.InjectFrom(customerOrder);
 
+			retVal.CustomerId =  customerOrder.TargetAgentId;
+			retVal.SiteId = customerOrder.SourceStoreId;
+			retVal.OrganizationId = customerOrder.TargetStoreId;
+			retVal.EmployeeId = customerOrder.SourceAgentId;
+
+			//TODO: resolve id to names
+			retVal.Customer = retVal.CustomerId;
+			retVal.Site = retVal.SiteId;
+			retVal.OrganizationId = retVal.OrganizationId;
+			retVal.EmployeeId = retVal.EmployeeId;
 
 			if (customerOrder.Shipments != null)
 			{
@@ -46,6 +56,12 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			var retVal = new coreModel.CustomerOrder();
 			retVal.InjectFrom(customerOrder);
 			retVal.Currency = customerOrder.Currency;
+
+			
+			retVal.TargetAgentId = customerOrder.CustomerId;
+			retVal.SourceStoreId = customerOrder.SiteId;
+			retVal.TargetStoreId = customerOrder.OrganizationId;
+			retVal.SourceAgentId = customerOrder.EmployeeId;
 
 			if (customerOrder.Items != null)
 				retVal.Items = customerOrder.Items.Select(x => x.ToCoreModel()).ToList();

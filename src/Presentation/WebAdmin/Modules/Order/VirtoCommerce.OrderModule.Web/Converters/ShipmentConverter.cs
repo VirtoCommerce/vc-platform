@@ -16,7 +16,15 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			var retVal = new webModel.Shipment();
 			retVal.Childrens = new List<webModel.OperationTreeNode>();
 			retVal.InjectFrom(shipment);
-		
+
+			retVal.OrganizationId = shipment.SourceAgentId;
+			retVal.FulfilmentCenterId = shipment.SourceStoreId;
+			retVal.EmployeeId = shipment.TargetAgentId;
+
+			retVal.Organization = retVal.OrganizationId;
+			retVal.FulfilmentCenter = retVal.FulfilmentCenterId;
+			retVal.Employee = retVal.EmployeeId;
+
 			if (shipment.DeliveryAddress != null)
 				retVal.DeliveryAddress = shipment.DeliveryAddress.ToWebModel();
 
@@ -42,6 +50,10 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 		{
 			var retVal = new coreModel.Shipment();
 			retVal.InjectFrom(shipment);
+
+			retVal.SourceAgentId = shipment.OrganizationId;
+			retVal.SourceStoreId = shipment.FulfilmentCenterId;
+			retVal.TargetAgentId = shipment.EmployeeId;
 
 			if (shipment.DeliveryAddress != null)
 				retVal.DeliveryAddress = shipment.DeliveryAddress.ToCoreModel();

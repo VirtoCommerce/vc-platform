@@ -25,6 +25,7 @@ namespace VirtoCommerce.OrderModule.Data.Model
 		public virtual ObservableCollection<LineItemEntity> Items { get; set; }
 		public virtual ObservableCollection<ShipmentEntity> Shipments { get; set; }
 
+		public string DiscountId { get; set; }
 		public virtual DiscountEntity Discount { get; set; }
 	}
 }

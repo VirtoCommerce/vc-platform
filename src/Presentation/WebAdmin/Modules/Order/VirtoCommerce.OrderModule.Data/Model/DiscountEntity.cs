@@ -19,9 +19,9 @@ namespace VirtoCommerce.OrderModule.Data.Model
 		public string CouponCode { get; set; }
 		public string CouponInvalidDescription { get; set; }
 
-		public virtual CustomerOrderEntity CustomerOrder { get; set; }
-		public virtual LineItemEntity LineItem { get; set; }
-		public virtual ShipmentEntity Shipment { get; set; }
+		public virtual ICollection<CustomerOrderEntity> CustomerOrders { get; set; }
+		public virtual ICollection<LineItemEntity> LineItems { get; set; }
+		public virtual ICollection<ShipmentEntity> Shipments { get; set; }
 		
 
 	}

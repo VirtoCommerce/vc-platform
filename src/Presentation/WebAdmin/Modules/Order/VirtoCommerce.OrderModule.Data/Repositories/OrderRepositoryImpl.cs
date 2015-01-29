@@ -31,8 +31,11 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 			modelBuilder.Entity<CustomerOrderEntity>().HasKey(x => x.Id)
 					.Property(x => x.Id);
 
+			modelBuilder.Entity<CustomerOrderEntity>().Property(x => x.DiscountId).HasColumnName("Discount_Id");
+
 			modelBuilder.Entity<CustomerOrderEntity>().HasOptional(x => x.Discount)
-													  .WithRequired(x => x.CustomerOrder);
+												.WithMany(x => x.CustomerOrders)
+												.HasForeignKey(x => x.DiscountId);
 
 			modelBuilder.Entity<CustomerOrderEntity>().ToTable("order_CustomerOrder");
 			#endregion
@@ -43,9 +46,11 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 
 			modelBuilder.Entity<LineItemEntity>().Property(x => x.CustomerOrderId).HasColumnName("CustomerOrder_Id");
 			modelBuilder.Entity<LineItemEntity>().Property(x => x.ShipmentId).HasColumnName("Shipment_Id");
+			modelBuilder.Entity<LineItemEntity>().Property(x => x.DiscountId).HasColumnName("Discount_Id");
 
 			modelBuilder.Entity<LineItemEntity>().HasOptional(x => x.Discount)
-												.WithRequired(x => x.LineItem);
+												.WithMany(x => x.LineItems)
+												.HasForeignKey(x => x.DiscountId);
 
 			modelBuilder.Entity<LineItemEntity>().HasOptional(x => x.CustomerOrder)
 									   .WithMany(x => x.Items)
@@ -63,14 +68,15 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 				.Property(x => x.Id);
 
 			modelBuilder.Entity<ShipmentEntity>().Property(x => x.CustomerOrderId).HasColumnName("CustomerOrder_Id");
+			modelBuilder.Entity<ShipmentEntity>().Property(x => x.DiscountId).HasColumnName("Discount_Id");
 
+			modelBuilder.Entity<ShipmentEntity>().HasOptional(x => x.Discount)
+												.WithMany(x => x.Shipments)
+												.HasForeignKey(x => x.DiscountId);
 
 			modelBuilder.Entity<ShipmentEntity>().HasRequired(x => x.CustomerOrder)
 										   .WithMany(x => x.Shipments)
 										   .HasForeignKey(x => x.CustomerOrderId);
-
-			modelBuilder.Entity<ShipmentEntity>().HasOptional(x => x.Discount)
-												.WithRequired(x => x.Shipment);
 
 
 			modelBuilder.Entity<ShipmentEntity>().ToTable("order_Shipment");
@@ -118,7 +124,8 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 			#endregion
 
 			#region Discount
-			modelBuilder.Entity<DiscountEntity>().HasKey(x => x.Id);
+			modelBuilder.Entity<DiscountEntity>().HasKey(x => x.Id)
+						.Property(x => x.Id);;
 
 			modelBuilder.Entity<DiscountEntity>().ToTable("order_Discount");
 			#endregion

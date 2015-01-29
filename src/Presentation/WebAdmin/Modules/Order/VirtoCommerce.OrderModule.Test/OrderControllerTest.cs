@@ -181,9 +181,9 @@ namespace VirtoCommerce.OrderModule.Test
 				CreatedBy = "et",
 				CreatedDate = DateTime.UtcNow,
 				Currency = Foundation.Money.CurrencyCodes.USD,
-				TargetAgentId = "vasja customer",
-				SourceAgentId = "employe",
-				SourceStoreId = "test store",
+				CustomerId = "vasja customer",
+				EmployeeId = "employe",
+				 SiteId = "test store",
 				Discount = new webModel.Discount
 				{
 					PromotionId = "testPromotion",
@@ -209,16 +209,16 @@ namespace VirtoCommerce.OrderModule.Test
 				Quantity = 2,
 				FulfilmentLocationCode = "warehouse1",
 				ShippingMethodCode = "EMS",
-				Discount = new webModel.Discount
-				{
-					PromotionId = "itemPromotion",
-					Currency = Foundation.Money.CurrencyCodes.USD,
-					DiscountAmount = 12,
-					Coupon = new webModel.Coupon
-					{
-						 Code = "ssss"
-					}
-				}
+				//Discount = new webModel.Discount
+				//{
+				//	PromotionId = "itemPromotion",
+				//	Currency = Foundation.Money.CurrencyCodes.USD,
+				//	DiscountAmount = 12,
+				//	Coupon = new webModel.Coupon
+				//	{
+				//		 Code = "ssss"
+				//	}
+				//}
 			};
 			var item2 = new webModel.LineItem
 			{
@@ -234,16 +234,16 @@ namespace VirtoCommerce.OrderModule.Test
 				Quantity = 2,
 				FulfilmentLocationCode = "warehouse1",
 				ShippingMethodCode = "EMS",
-				Discount = new webModel.Discount
-				{
-					PromotionId = "testPromotion",
-					Currency = Foundation.Money.CurrencyCodes.USD,
-					DiscountAmount = 12,
-					Coupon = new webModel.Coupon
-					{
-						Code = "ssss"
-					}
-				}
+				//Discount = new webModel.Discount
+				//{
+				//	PromotionId = "testPromotion",
+				//	Currency = Foundation.Money.CurrencyCodes.USD,
+				//	DiscountAmount = 12,
+				//	Coupon = new webModel.Coupon
+				//	{
+				//		Code = "ssss"
+				//	}
+				//}
 			};
 			order.Items = new List<webModel.LineItem>();
 			order.Items.Add(item1);
@@ -291,7 +291,7 @@ namespace VirtoCommerce.OrderModule.Test
 
 			var orderService = new CustomerOrderServiceImpl(orderRepositoryFactory, mockInventory.Object, cartService, new TimeBasedNumberGeneratorImpl());
 
-			var controller = new CustomerOrderController(orderService);
+			var controller = new CustomerOrderController(orderService, null);
 			return controller;
 		}
 

@@ -10,6 +10,8 @@ using coreModel = VirtoCommerce.Domain.Order.Model;
 using webModel = VirtoCommerce.OrderModule.Web.Model;
 using VirtoCommerce.OrderModule.Web.Converters;
 using VirtoCommerce.Domain.Cart.Services;
+using System.Web.Http.ModelBinding;
+using VirtoCommerce.OrderModule.Web.Binders;
 
 namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 {
@@ -17,10 +19,22 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
     public class CustomerOrderController : ApiController
     {
 		private readonly ICustomerOrderService _customerOrderService;
+		private readonly ICustomerOrderSearchService _searchService;
 	
-		public CustomerOrderController(ICustomerOrderService customerOrderService)
+		public CustomerOrderController(ICustomerOrderService customerOrderService, ICustomerOrderSearchService searchService)
 		{
 			_customerOrderService = customerOrderService;
+			_searchService = searchService;
+		}
+
+		// GET: api/order/customerOrders?q=ddd&site=site1&customer=user1&start=0&count=20
+		[HttpGet]
+		[ResponseType(typeof(webModel.SearchResult))]
+		[Route("")]
+		public IHttpActionResult Search([ModelBinder(typeof(SearchCriteriaBinder))] webModel.SearchCriteria criteria)
+		{
+			var retVal = _searchService.Search(criteria.ToCoreModel());
+			return Ok(retVal.ToWebModel());
 		}
 
 		// GET: api/order/customerOrders/{id}

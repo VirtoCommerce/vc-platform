@@ -4,6 +4,7 @@ using VirtoCommerce.CartModule.Data.Repositories;
 using VirtoCommerce.CartModule.Data.Services;
 using VirtoCommerce.CatalogModule.Web.Controllers.Api;
 using VirtoCommerce.Domain.Cart.Model;
+using VirtoCommerce.Domain.Cart.Services;
 using VirtoCommerce.Foundation.Money;
 using VirtoCommerce.Framework.Web.Modularity;
 
@@ -49,6 +50,8 @@ namespace VirtoCommerce.CartModule.Web
 			repository.Add(cart2);
 			var cartService = new ShoppingCartServiceImpl(repository);
 			var searchService = new ShoppingCartSearchServiceImpl(repository);
+
+			_container.RegisterInstance<IShoppingCartService>(cartService);
 
 			_container.RegisterType<CartController>(new InjectionConstructor(cartService, searchService));
 		}
