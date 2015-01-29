@@ -17,7 +17,14 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			var retVal = new webModel.PaymentIn();
 			retVal.InjectFrom(payment);
 			retVal.Currency = payment.Currency;
-			
+
+			retVal.OrganizationId = payment.TargetAgentId;
+			retVal.CustomerId = payment.SourceAgentId;
+		
+
+			retVal.Organization = retVal.OrganizationId;
+			retVal.Customer = retVal.CustomerId;
+
 			return retVal;
 		}
 

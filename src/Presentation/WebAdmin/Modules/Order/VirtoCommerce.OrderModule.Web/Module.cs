@@ -5,6 +5,13 @@ using VirtoCommerce.Foundation.Money;
 using VirtoCommerce.Framework.Web.Modularity;
 using VirtoCommerce.OrderModule.Data;
 using VirtoCommerce.OrderModule.Data.Repositories;
+using System;
+using VirtoCommerce.OrderModule.Data.Services;
+using VirtoCommerce.Domain.Inventory.Services;
+using Moq;
+using VirtoCommerce.Domain.Cart.Services;
+using VirtoCommerce.OrderModule.Web.Controllers.Api;
+using VirtoCommerce.Domain.Order.Services;
 
 namespace VirtoCommerce.OrderModule.Web
 {
@@ -20,6 +27,17 @@ namespace VirtoCommerce.OrderModule.Web
 
 		public void Initialize()
 		{
+			Func<IOrderRepository> orderRepositoryFactory = () => { return new OrderRepositoryImpl("VirtoCommerce"); };
+		
+			var mockInventory = new Mock<IInventoryService>();
+
+			_container.RegisterType<Func<IOrderRepository>>(new InjectionFactory(x => orderRepositoryFactory));
+			_container.RegisterInstance<IInventoryService>(mockInventory.Object);
+			_container.RegisterType<IOperationNumberGenerator, TimeBasedNumberGeneratorImpl>();
+
+			_container.RegisterType<ICustomerOrderService, CustomerOrderServiceImpl>();
+			_container.RegisterType<ICustomerOrderSearchService, CustomerOrderSearchServiceImpl>();
+			
 		}
 
 		#endregion

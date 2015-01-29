@@ -65,6 +65,10 @@
     <Compile Include="Migrations\201501281601226_Initial.Designer.cs">
       <DependentUpon>201501281601226_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201501291202428_DiscountReference.cs" />
+    <Compile Include="Migrations\201501291202428_DiscountReference.Designer.cs">
+      <DependentUpon>201501291202428_DiscountReference.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
     <Compile Include="Model\CustomerOrderEntity.cs" />
@@ -78,6 +82,7 @@
     <Compile Include="Repositories\InMemoryOrderRepository.cs" />
     <Compile Include="Repositories\IOrderRepository.cs" />
     <Compile Include="Repositories\OrderRepositoryImpl.cs" />
+    <Compile Include="Services\CustomerOrderSearchServiceImpl.cs" />
     <Compile Include="Services\ModuleSeviceBase.cs" />
     <Compile Include="Services\CustomerOrderServiceImpl.cs" />
     <Compile Include="Services\TimeBasedNumberGeneratorImpl.cs" />
@@ -103,6 +108,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201501281601226_Initial.resx">
       <DependentUpon>201501281601226_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501291202428_DiscountReference.resx">
+      <DependentUpon>201501291202428_DiscountReference.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

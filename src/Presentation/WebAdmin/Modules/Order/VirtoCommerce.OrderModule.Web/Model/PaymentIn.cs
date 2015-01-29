@@ -15,6 +15,11 @@ namespace VirtoCommerce.OrderModule.Web.Model
 			OperationType = "PaymentIn";
 		}
 
+		public string Organization { get; set; }
+		public string OrganizationId { get; set; }
+		public string Customer { get; set; }
+		public string CustomerId { get; set; }
+
 		public string PaymentPurpose { get; set; }
 
 		public string PaymentGatewayCode { get; set; }

@@ -59,6 +59,9 @@
     <Reference Include="Microsoft.Practices.Unity.RegistrationByConvention">
       <HintPath>..\..\..\..\..\..\packages\Unity.3.5.1404.0\lib\net45\Microsoft.Practices.Unity.RegistrationByConvention.dll</HintPath>
     </Reference>
+    <Reference Include="Moq">
+      <HintPath>..\..\..\..\..\..\packages\Moq.4.2.1409.1722\lib\net40\Moq.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\packages\Newtonsoft.Json.6.0.5\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -94,12 +97,15 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Binders\SearchCriteriaBinder.cs" />
     <Compile Include="Controllers\Api\CustomerOrderController.cs" />
     <Compile Include="Converters\AddressConverter.cs" />
     <Compile Include="Converters\CustomerOrderConverter.cs" />
     <Compile Include="Converters\LineItemConverter.cs" />
     <Compile Include="Converters\DiscountConverter.cs" />
     <Compile Include="Converters\InPaymentConverter.cs" />
+    <Compile Include="Converters\SearchCriteriaConverter.cs" />
+    <Compile Include="Converters\SearchResultConverter.cs" />
     <Compile Include="Converters\ShipmentConverter.cs" />
     <Compile Include="Model\Address.cs" />
     <Compile Include="Model\Coupon.cs" />
@@ -107,18 +113,19 @@
     <Compile Include="Model\Discount.cs" />
     <Compile Include="Model\PaymentIn.cs" />
     <Compile Include="Model\LineItem.cs" />
-    <Compile Include="Model\ResponseGroup.cs" />
+    <Compile Include="Model\SearchCriteria.cs" />
+    <Compile Include="Model\SearchResult.cs" />
     <Compile Include="Model\Shipment.cs" />
     <Compile Include="Model\OperationTreeNode.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Binders\" />
-    <Folder Include="Scripts\blades\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="module.manifest" />
+    <Content Include="Scripts\blades\!customerOrder-list.js" />
+    <Content Include="Scripts\blades\!customerOrder-list.tpl.html" />
+    <Content Include="Scripts\home.tpl.html" />
     <Content Include="Scripts\order.js" />
   </ItemGroup>
   <ItemGroup>
@@ -149,6 +156,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Scripts\resources\customerOrders.js" />
     <Content Include="web.config">
       <SubType>Designer</SubType>
     </Content>

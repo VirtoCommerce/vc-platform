@@ -85,7 +85,7 @@
     <Compile Include="Order\Model\Shipment.cs" />
     <Compile Include="Order\Model\StockOperation.cs" />
     <Compile Include="Order\Services\ICustomerOrderService.cs" />
-    <Compile Include="Order\Services\IOrderSearchService.cs" />
+    <Compile Include="Order\Services\ICustomerOrderSearchService.cs" />
     <Compile Include="Order\Services\IPaymentService.cs" />
     <Compile Include="Order\Services\IShipmentService.cs" />
     <Compile Include="Payment\Model\PaymentInfo.cs" />

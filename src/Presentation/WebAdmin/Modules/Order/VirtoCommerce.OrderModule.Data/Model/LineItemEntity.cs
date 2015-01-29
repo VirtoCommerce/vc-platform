@@ -27,6 +27,7 @@ namespace VirtoCommerce.OrderModule.Data.Model
 		public string ShippingMethodCode { get; set; }
 		public string FulfilmentLocationCode { get; set; }
 
+		public string DiscountId { get; set; }
 		public virtual DiscountEntity Discount { get; set; }
 
 		public virtual CustomerOrderEntity CustomerOrder { get; set; }
