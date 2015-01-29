@@ -41,7 +41,7 @@ namespace VirtoCommerce.ApiWebClient.Helpers
             var langInfo = TryGetCultureInfo(language);
             language = langInfo != null ? langInfo.Name : language;
             var keyword = new SeoKeyword { KeywordType = type, Keyword = routeValue, KeywordValue = routeValue, Language = language };
-            var client = ClientContext.Clients.CreateBrowseClient(session.CatalogId, language);
+            var client = ClientContext.Clients.CreateBrowseClient(session.StoreId, language);
             switch (type)
             {
                 case SeoUrlKeywordTypes.Store:
@@ -78,7 +78,7 @@ namespace VirtoCommerce.ApiWebClient.Helpers
                 routeValue = routeValue.Split(new[] {'/'}, StringSplitOptions.RemoveEmptyEntries).Last();
                 var keyword = GetKeyword(routeValue, type, language);
 
-                var client = ClientContext.Clients.CreateBrowseClient(ClientContext.Session.CatalogId, language);
+                var client = ClientContext.Clients.CreateBrowseClient(ClientContext.Session.StoreId, language);
 
                 if (keyword != null)
                 {

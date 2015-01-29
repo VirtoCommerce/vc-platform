@@ -19,7 +19,7 @@ namespace VirtoCommerce.Domain.Cart.Model
 
 		public DateTime CreatedDate { get; set; }
 		public string CreatedBy { get; set; }
-		public DateTime ModifiedDate { get; set; }
+		public DateTime? ModifiedDate { get; set; }
 		public string ModifiedBy { get; set; }
 
 		#endregion
@@ -53,7 +53,7 @@ namespace VirtoCommerce.Domain.Cart.Model
 		public decimal DiscountTotal { get; private set; }
 		public decimal TaxTotal { get; set; }
 
-		public void CalculateTotals()
+		public virtual void CalculateTotals()
 		{
 			if (Items != null)
 			{

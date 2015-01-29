@@ -49,6 +49,9 @@ namespace VirtoCommerce.CatalogModule.Data.Services
 
         private void SearchCategories(module.SearchCriteria criteria, module.SearchResult result)
         {
+            // TODO: optimize for performance, need to eliminate number of database queries
+            // 1. Catalog should either be passed or loaded using caching
+            // 2. Categories should be loaded by passing array of ids instead of parallel locading one by one
             using (var repository = _catalogRepositoryFactory())
             {
                 if (!String.IsNullOrEmpty(criteria.CatalogId))

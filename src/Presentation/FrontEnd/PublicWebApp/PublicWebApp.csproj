@@ -596,6 +596,13 @@
     <Content Include="Views\Catalog\ItemVariations.cshtml" />
     <Content Include="Views\Catalog\Variation.cshtml" />
     <Content Include="Views\Catalog\DisplayTemplates\Properties.cshtml" />
+    <Content Include="Views\Catalog\RecommendedProducts.cshtml" />
+    <Content Include="Views\Catalog\RelatedItem.cshtml" />
+    <Content Include="Views\Catalog\RelatedProducts.cshtml" />
+    <Content Include="Views\Catalog\RelatedProducts2.cshtml" />
+    <Content Include="Views\Catalog\CreateReview.cshtml" />
+    <Content Include="Views\Account\LogOnAsync.cshtml" />
+    <Content Include="Views\Account\DisplayTemplates\ForgotPassword.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -1,62 +1,87 @@
-﻿@model LoginViewModel
+﻿@using VirtoCommerce.ApiWebClient.Helpers
+@using VirtoCommerce.Web.Core.DataContracts.Store
+@model LogOnModel
 @{
-    ViewBag.Title = "Log in";
+    ViewBag.Title = Html.Title("Log On".Localize());
+    Layout = "~/Views/Shared/_LayoutBase.cshtml";
 }
 
-<h2>@ViewBag.Title.</h2>
-<div class="row">
-    <div class="col-md-8">
-        <section id="loginForm">
-            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-            {
-                @Html.AntiForgeryToken()
-                <h4>Use a local account to log in.</h4>
-                <hr />
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                <div class="form-group">
-                    @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
-                    <div class="col-md-10">
-                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
-                    <div class="col-md-10">
-                        @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <div class="checkbox">
-                            @Html.CheckBoxFor(m => m.RememberMe)
-                            @Html.LabelFor(m => m.RememberMe)
+<script type="text/javascript">
+    $(function() {
+        $('.account .add-info-block .slider li a').click(function() {
+            var name = $(this).prop('class');
+            var margin = name == 'forgot' ? '-300px' : '0';
+            $('.article .account .add-info-block .slider ul').animate({ 'margin-left': margin }, 600);
+        });
+
+        $('.external').click(function() {
+            $('.external-login').slideDown();
+            $(this).hide();
+        });
+    });
+</script>
+
+<div class="account">
+    <div class="add-info-block">
+        <div class="slider">
+            <ul class="clearfix">
+                <li>
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true, "Login was unsuccessful. Please correct the errors and try again.".Localize())
+                        <span class="title">@("Sign In".Localize())</span>
+                        if (!string.IsNullOrEmpty(Model.ImpersonatedUserName))
+                        {
+                            <div class="control-group">
+                                @Html.LabelForEx(m => m.ImpersonatedUserName, "Login on behalf of user")
+                                @Html.TextBoxFor(m => m.ImpersonatedUserName)
+                            </div>
+                        }
+                        <div class="control-group">
+                            @Html.LabelForEx(m => m.UserName, "Email Address")
+                            @Html.TextBoxFor(m => m.UserName)
+                            @Html.ValidationMessageFor(m => m.UserName)
                         </div>
-                    </div>
+                        <div class="control-group">
+                            @Html.LabelForEx(m => m.Password)
+                            @Html.PasswordFor(m => m.Password)
+                            @Html.ValidationMessageFor(m => m.Password)
+                        </div>
+                        <div class="control-group">
+                            <div class="control">
+                                <label>
+                                    @Html.CheckBoxFor(m => m.RememberMe)
+                                    <span>@("Remember Me".Localize())</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="button-group">
+                            <button type="submit">
+                                <span>@("Login".Localize())</span>
+                            </button>
+                        </div>
+                        <a class="forgot">@("Forgot Your Password?".Localize())</a>
+                    }
+                </li>
+                <li>
+                    @{ Html.RenderPartial("DisplayTemplates/ForgotPassword", new ForgotPasswordModel()); }
+                </li>
+            </ul>
+        </div>
+        <div class="new-users">
+            <div class="button-group">
+                <button onclick="$.redirect('@Url.Action("Register")');" title="@("Create an Account".Localize())">
+                    <span>@("Register".Localize())</span>
+                </button>
+            </div>
+            <a class="external">@("External login?".Localize())</a>
+            @if (StoreHelper.StoreClient.GetCurrentStore().StoreState == StoreState.Open)
+            {
+                <div class="external-login">
+                    @Html.Action("ExternalLoginsList", new { ViewBag.ReturnUrl })
                 </div>
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <input type="submit" value="Log in" class="btn btn-default" />
-                    </div>
-                </div>
-                <p>
-                    @Html.ActionLink("Register as a new user", "Register")
-                </p>
-                @* Enable this once you have account confirmation enabled for password reset functionality
-                    <p>
-                        @Html.ActionLink("Forgot your password?", "ForgotPassword")
-                    </p>*@
             }
-        </section>
-    </div>
-    <div class="col-md-4">
-        <section id="socialLoginForm">
-            @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
-        </section>
+        </div>
     </div>
 </div>
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-}

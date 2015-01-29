@@ -14,25 +14,23 @@ namespace VirtoCommerce.Domain.Order.Model
 
 		public DateTime CreatedDate { get; set; }
 		public string CreatedBy { get; set; }
-		public DateTime ModifiedDate { get; set; }
+		public DateTime? ModifiedDate { get; set; }
 		public string ModifiedBy { get; set; }
 
 		#endregion
 
-		public string OperationId { get; set; }
-		
 		/// <summary>
 		/// Price with tax and without dicount
 		/// </summary>
-		public decimal BasePrice { get; set; }
+		public decimal? BasePrice { get; set; }
 		/// <summary>
 		/// Price with tax and discount
 		/// </summary>
 		public decimal Price { get; set; }
 		/// <summary>
-		/// Discount amount
+		/// Static discount amount
 		/// </summary>
-		public decimal Discount { get; set; }
+		public decimal StaticDiscount { get; set; }
 		/// <summary>
 		/// Tax sum
 		/// </summary>
@@ -44,7 +42,7 @@ namespace VirtoCommerce.Domain.Order.Model
 		public long ReserveQuantity { get; set; }
 		public long Quantity { get; set; }
 
-		public string ItemId { get; set; }
+		public string ProductId { get; set; }
 		public string CatalogId { get; set; }
 		public string CategoryId { get; set; }
 

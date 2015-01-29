@@ -1,0 +1,30 @@
+﻿@model IEnumerable<VirtoCommerce.ApiClient.DataContracts.Association>
+
+@{
+    var associations = Model.OrderBy(a => a.Priority).ToList();
+}
+
+<header>
+    <h2>@("Related Products".Localize())</h2>
+</header>
+
+<div class="scroll">
+    <ul class="slider-list">
+        @foreach (var association in associations)
+        {
+            var idx = associations.IndexOf(association);
+            if (idx % 6 == 0)
+            {
+                @:<li><ul>
+            }
+            <li>
+                 @Html.Action("AssociatedItem", new { itemId = association.ItemId, name = "relateditem",associationType = association.Type })
+            </li>
+            
+            if ((idx + 1) % 6 == 0 || idx + 1 == associations.Count)
+            {
+                @:</ul></li>
+            }
+        }
+    </ul>
+</div>

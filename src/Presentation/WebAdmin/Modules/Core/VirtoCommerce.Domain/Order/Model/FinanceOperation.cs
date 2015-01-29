@@ -8,8 +8,8 @@ namespace VirtoCommerce.Domain.Order.Model
 {
 	public abstract class FinanceOperation : Operation
 	{
-		public string PaymentPurpose { get; set; }
+		public string Purpose { get; set; }
 
-		public string PaymentGatewayCode { get; set; }
+		public string GatewayCode { get; set; }
 	}
 }

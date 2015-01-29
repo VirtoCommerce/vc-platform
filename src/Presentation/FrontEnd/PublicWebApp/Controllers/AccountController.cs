@@ -8,12 +8,14 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using VirtoCommerce.ApiClient;
+using VirtoCommerce.ApiWebClient.Globalization;
+using VirtoCommerce.ApiWebClient.Helpers;
 using VirtoCommerce.Web.Models;
 
 namespace VirtoCommerce.Web.Controllers
 {
     [Authorize]
-    [RoutePrefix("account")]
     public class AccountController : ControllerBase
     {
         private ApplicationSignInManager _signInManager;
@@ -35,9 +37,9 @@ namespace VirtoCommerce.Web.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -53,23 +55,69 @@ namespace VirtoCommerce.Web.Controllers
             }
         }
 
-        [Route("")]
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
             //var contact = _userClient.GetCurrentCustomer();
             //var model = UserHelper.GetCustomerModel(contact);
             //return View();
+
             return null;
+        }
+
+
+        /// <summary>
+        /// Logs on asynchronous.
+        /// </summary>
+        /// <returns>ActionResult.</returns>
+        [AllowAnonymous]
+        public ActionResult LogOnAsync()
+        {
+            return PartialView("LogOnAsync");
+        }
+
+        /// <summary>
+        /// Logs on asynchronous.
+        /// </summary>
+        /// <param name="model">The model.</param>
+        /// <param name="returnUrl">The return URL.</param>
+        /// <returns>ActionResult.</returns>
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<ActionResult> LogOnAsync(LogOnModel model, string returnUrl)
+        {
+            string errorMessage = null;
+            if (ModelState.IsValid && await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, false) == SignInStatus.Success)
+            {
+                if (StoreHelper.IsUserAuthorized(model.UserName, out errorMessage))
+                {
+                    if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
+                        && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
+                    {
+                        //await UserHelper.OnPostLogonAsync(model.UserName);
+                        return Redirect(returnUrl);
+                    }
+                    var res = new JavaScriptResult { Script = "location.reload();" };
+                    return res;
+                }
+            }
+
+            // If we got this far, something failed, redisplay form
+            ModelState.AddModelError("", string.IsNullOrEmpty(errorMessage) ? "The user name or password provided is incorrect." : errorMessage);
+            return PartialView(model);
         }
 
         //
         // GET: /Account/Login
         [AllowAnonymous]
-        [Route("login")]
-        public ActionResult Login(string returnUrl)
+        public ActionResult Login(string returnUrl, string loginAs)
         {
+            var model = new LogOnModel();
+            if (!string.IsNullOrEmpty(loginAs))
+            {
+                model.ImpersonatedUserName = loginAs;
+            }
             ViewBag.ReturnUrl = returnUrl;
-            return View();
+            return View(model);
         }
 
         //
@@ -77,29 +125,55 @@ namespace VirtoCommerce.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
+        public async Task<ActionResult> Login(LogOnModel model, string returnUrl)
         {
-            if (!ModelState.IsValid)
+
+            string errorMessage = null;
+            if (ModelState.IsValid)
             {
-                return View(model);
+                if (string.IsNullOrEmpty(model.ImpersonatedUserName))
+                {
+                    // This doesn't count login failures towards account lockout
+                    // To enable password failures to trigger account lockout, change to shouldLockout: true
+                    var result = await SignInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, false);
+
+                    switch (result)
+                    {
+                        case SignInStatus.Success:
+                            if (StoreHelper.IsUserAuthorized(model.UserName, out errorMessage))
+                            {
+                                //await UserHelper.OnPostLogonAsync(model.ImpersonatedUserName, model.UserName);
+                                return RedirectToLocal(returnUrl);
+                            }
+                            break;
+                        case SignInStatus.LockedOut:
+                            return View("Lockout");
+                        case SignInStatus.RequiresVerification:
+                            return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+                    }
+                }
+                else
+                {
+                    //TODO login as
+                    //errorMessage = await _identitySecurity.LoginAsAsync(model.ImpersonatedUserName, model.UserName, model.Password, model.RememberMe);
+                    //if (string.IsNullOrEmpty(errorMessage)
+                    //    && StoreHelper.IsUserAuthorized(model.UserName, out errorMessage)
+                    //    && StoreHelper.IsUserAuthorized(model.ImpersonatedUserName, out errorMessage))
+                    //{
+                    //    await UserHelper.OnPostLogonAsync(model.ImpersonatedUserName, model.UserName);
+                    //    return RedirectToLocal(returnUrl);
+                    //}
+                }
             }
 
-            // This doesn't count login failures towards account lockout
-            // To enable password failures to trigger account lockout, change to shouldLockout: true
-            var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
-            switch (result)
-            {
-                case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
-                case SignInStatus.LockedOut:
-                    return View("Lockout");
-                case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
-                case SignInStatus.Failure:
-                default:
-                    ModelState.AddModelError("", "Invalid login attempt.");
-                    return View(model);
-            }
+
+            errorMessage = string.IsNullOrEmpty(errorMessage)
+                ? "The user name or password provided is incorrect.".Localize()
+                : errorMessage.Localize();
+            // If we got this far, something failed, redisplay form
+            ModelState.AddModelError("", errorMessage);
+            return View(model);
+
         }
 
         //
@@ -131,7 +205,7 @@ namespace VirtoCommerce.Web.Controllers
             // If a user enters incorrect codes for a specified amount of time then the user account 
             // will be locked out for a specified amount of time. 
             // You can configure the account lockout settings in IdentityConfig
-            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent:  model.RememberMe, rememberBrowser: model.RememberBrowser);
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: model.RememberMe, rememberBrowser: model.RememberBrowser);
             switch (result)
             {
                 case SignInStatus.Success:
@@ -153,30 +227,63 @@ namespace VirtoCommerce.Web.Controllers
             return View();
         }
 
-        //
+
         // POST: /Account/Register
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        public async Task<ActionResult> Register(RegisterModel model)
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
-                {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
-                    // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
-                    // Send an email with this link
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                var requireEmailConfirmation = true; //TODO get from settings
 
-                    return RedirectToAction("Index", "Home");
+                var user = new ApplicationUser
+                {
+                    UserName = model.Email,
+                    Email = model.Email,
+                    FullName = string.Format("{0} {1}", model.FirstName, model.LastName),
+                    StoreId = StoreHelper.CustomerSession.StoreId,
+                };
+
+                try
+                {
+                    var result = await UserManager.CreateAsync(user, model.Password);
+                    if (result.Succeeded)
+                    {
+                        //Need to get user id
+                        user = await UserManager.FindByNameAsync(model.Email);
+
+                        if (requireEmailConfirmation)
+                        {
+                            // Send an email with this link
+                            var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                            var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = HttpUtility.UrlEncode(code) }, Request.Url.Scheme);
+                            try
+                            {
+                                await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                                TempData[GetMessageTempKey(MessageType.Success)] = new[] { "Your account was succesfully created. To confirm your account follow the instruction received in email.".Localize() };
+                            }
+                            catch (Exception ex)
+                            {
+
+                                TempData[GetMessageTempKey(MessageType.Error)] = new[] { string.Format("Failed to send confirmation email to {0}.".Localize(), model.Email) };
+                            }
+                            return model.ActionResult ?? RedirectToAction("Login");
+                        }
+                        else
+                        {
+                            await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                            return model.ActionResult ?? RedirectToAction("Index", "Home");
+                        }
+
+                    }
+                    AddErrors(result);
                 }
-                AddErrors(result);
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", ex);
+                }
             }
 
             // If we got this far, something failed, redisplay form
@@ -192,8 +299,27 @@ namespace VirtoCommerce.Web.Controllers
             {
                 return View("Error");
             }
+
             var result = await UserManager.ConfirmEmailAsync(userId, code);
-            return View(result.Succeeded ? "ConfirmEmail" : "Error");
+
+            if (result.Succeeded)
+            {
+                TempData[GetMessageTempKey(MessageType.Success)] = new[]
+                {
+                    "Your account was succesfully confirmed. Now you can login".Localize()
+                };
+
+            }
+            else
+            {
+
+                TempData[GetMessageTempKey(MessageType.Error)] = new[]
+                {
+                    "Failed to confirm account.".Localize()
+                };
+            }
+
+            return RedirectToAction("Login");
         }
 
         //
@@ -209,11 +335,11 @@ namespace VirtoCommerce.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        public async Task<ActionResult> ForgotPassword(ForgotPasswordModel model)
         {
             if (ModelState.IsValid)
             {
-                var user = await UserManager.FindByNameAsync(model.Email);
+                var user = await UserManager.FindByNameAsync(model.UserName);
                 if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
                 {
                     // Don't reveal that the user does not exist or is not confirmed
@@ -412,6 +538,19 @@ namespace VirtoCommerce.Web.Controllers
         public ActionResult ExternalLoginFailure()
         {
             return View();
+        }
+
+        /// <summary>
+        /// Gets external logins list.
+        /// </summary>
+        /// <param name="returnUrl">The return URL.</param>
+        /// <returns>ActionResult.</returns>
+        [AllowAnonymous]
+        [ChildActionOnly]
+        public ActionResult ExternalLoginsList(string returnUrl)
+        {
+            ViewBag.ReturnUrl = returnUrl;
+            return PartialView("_ExternalLoginsListPartial", AuthenticationManager.GetExternalAuthenticationTypes());
         }
 
         protected override void Dispose(bool disposing)

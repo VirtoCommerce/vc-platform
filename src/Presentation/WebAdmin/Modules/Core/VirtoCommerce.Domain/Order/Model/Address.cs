@@ -9,6 +9,7 @@ namespace VirtoCommerce.Domain.Order.Model
 {
 	public class Address : ValueObject<Address>
 	{
+		public AddressType AddressType { get; set; }
 		public string Organization { get; set; }
 		public string CountryCode { get; set; }
 		public string CountryName { get; set; }

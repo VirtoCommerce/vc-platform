@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using VirtoCommerce.ApiClient.DataContracts;
 using VirtoCommerce.ApiWebClient.Globalization;
 using VirtoCommerce.Web.Core.DataContracts;
 
@@ -36,9 +36,9 @@ namespace VirtoCommerce.Web.Models
             get
             {
                 var retVal = CatalogItem.Name;
-                if (Properties.ContainsKey("Title"))
+                if (CatalogItem.Properties.ContainsKey("Title"))
                 {
-                    retVal = this["Title"][0];
+                    retVal = CatalogItem["Title"].ToString();
                 }
 
                 return retVal;
@@ -65,39 +65,36 @@ namespace VirtoCommerce.Web.Models
 
         public ItemAvailabilityModel Availability { get; set; }
 
-        #region Properties
+     
+    }
 
-        private IDictionary<string, string[]> _properties = new Dictionary<string, string[]>();
+    public class AssociatedItemModel : ItemModel
+    {
+        private readonly string _associationType;
 
-        public string[] this[string name]
+
+        public AssociatedItemModel(CatalogItem catalogItem, string associationType) : base(catalogItem)
         {
-            get
-            {
-                return _properties[name];
-            }
-            set
-            {
-                if (_properties.ContainsKey(name))
-                {
-                    _properties[name] = value;
-                }
-                else
-                {
-                    _properties.Add(name, value);
-                }
-            }
+            _associationType = associationType;
         }
 
-        public IDictionary<string, string[]> Properties
+        /// <summary>
+        /// Gets the type of the association.
+        /// </summary>
+        /// <value>The type of the association.</value>
+        public string AssociationType
         {
-            get
-            {
-                return _properties;
-            }
-            set { _properties = value; }
+            get { return _associationType; }
         }
 
-        #endregion
+        /// <summary>
+        /// Gets a value indicating whether this instance is required.
+        /// </summary>
+        /// <value><c>true</c> if this instance is required; otherwise, <c>false</c>.</value>
+        public bool IsRequired
+        {
+            get { return string.Equals(_associationType, AssociationTypes.required.ToString(), StringComparison.OrdinalIgnoreCase); }
+        }
     }
 
     public class EditorialReviewModel

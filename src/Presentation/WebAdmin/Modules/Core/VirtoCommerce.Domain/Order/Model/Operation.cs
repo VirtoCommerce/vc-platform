@@ -12,16 +12,16 @@ namespace VirtoCommerce.Domain.Order.Model
 	{
 		#region IAuditable Members
 
-		public DateTime CreatedDate	{ get; set;	}
+		public DateTime CreatedDate { get; set;	}
 		public string CreatedBy	{ get; set;	}
-		public DateTime ModifiedDate { get; set; }
+		public DateTime? ModifiedDate { get; set; }
 		public string ModifiedBy { get; set; }
 
 		#endregion
-
+		public string ParentOperationId { get; set; }
 		public string Number { get; set; }
-		public bool IsApproved { get; set; }
-		public string StatusId { get; set; }
+		public bool? IsApproved { get; set; }
+		public string Status { get; set; }
 		/// <summary>
 		/// source warehouse or store
 		/// </summary>
@@ -42,9 +42,14 @@ namespace VirtoCommerce.Domain.Order.Model
 		/// Currecy code
 		/// </summary>
 		public string Comment { get; set; }
-		public CurrencyCodes Currency { get; set; }
-		public bool TaxIncluded	{ get; set;	}
+		public CurrencyCodes? Currency { get; set; }
+		public bool? TaxIncluded { get; set;	}
 		public decimal Sum { get; set; }
 		public decimal Tax { get; set; }
+
+		public virtual IEnumerable<Operation> GetAllRelatedOperations()
+		{
+			return new Operation[] { this };
+		}
 	}
 }

@@ -1,0 +1,15 @@
+body
+{
+	font-family: "Segoe UI_","Open Sans",Verdana,Arial,Helvetica,sans-serif;
+}
+
+/* Clearfix */
+.clear
+{
+	margin: 0 0 5px;
+}
+
+.clear a
+{
+	font-size: 8pt;
+}

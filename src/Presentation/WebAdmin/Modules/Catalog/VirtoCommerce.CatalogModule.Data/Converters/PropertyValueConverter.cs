@@ -26,7 +26,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
                 Id = dbPropValue.PropertyValueId,
                 LanguageCode = dbPropValue.Locale,
                 PropertyName = dbPropValue.Name,
-                Value = dbPropValue.ToString(),
+                Value = dbPropValue.ToObjectValue(), // retain the correct object type value
                 ValueId = dbPropValue.KeyValue,
                 ValueType = ((foundation.PropertyValueType)dbPropValue.ValueType).ToModuleModel()
             };
@@ -63,7 +63,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
             retVal.KeyValue = propValue.ValueId;
             retVal.Locale = propValue.LanguageCode;
             retVal.ValueType = (int)propValue.ValueType.ToFoundation();
-            SetPropertyValue(retVal, propValue.ValueType.ToFoundation(), propValue.Value);
+            SetPropertyValue(retVal, propValue.ValueType.ToFoundation(), propValue.Value.ToString());
 
             return retVal;
         }

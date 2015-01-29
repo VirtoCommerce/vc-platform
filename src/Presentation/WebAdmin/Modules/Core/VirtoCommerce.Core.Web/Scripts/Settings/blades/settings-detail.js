@@ -42,6 +42,11 @@
         });
     }
 
+    var formScope;
+    $scope.setForm = function (form) {
+        formScope = form;
+    }
+
     function isDirty() {
         return !angular.equals($scope.blade.objects, $scope.blade.origEntity);
     };
@@ -62,7 +67,7 @@
                 saveChanges();
             },
             canExecuteMethod: function () {
-                return isDirty();
+                return isDirty() && formScope && formScope.$valid;
             }
         },
         {

@@ -421,8 +421,7 @@ namespace VirtoCommerce.Search.Providers.Elastic
                     .Analysis(als => als
                         .Analyzer(a => a.Custom(SearchAnalyzer, custom => custom
                             .Tokenizer(DefaultTokenizers.standard)
-                            .Filter("trigrams_filter")
-                            .Filter(DefaultTokenFilters.lowercase)))
+                            .Filter("trigrams_filter", DefaultTokenFilters.lowercase.ToString())))
                         .Filter(f => f.NGram("trigrams_filter", ng => ng
                                 .MinGram(3)
                                 .MaxGram(3)))).Build();

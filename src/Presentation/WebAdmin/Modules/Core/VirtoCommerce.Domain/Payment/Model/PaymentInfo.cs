@@ -13,7 +13,7 @@ namespace VirtoCommerce.Domain.Payment.Model
 		public string GatewayCode { get; set; }
 		public DateTime? CreatedDate { get; set; }
 		public string Status { get; set; }
-		public bool Approved { get; set; }
+		public bool IsApproved { get; set; }
 		public CurrencyCodes Currency { get; set; }
 		public decimal Amount { get; set; }
 		public string Error { get; set; }

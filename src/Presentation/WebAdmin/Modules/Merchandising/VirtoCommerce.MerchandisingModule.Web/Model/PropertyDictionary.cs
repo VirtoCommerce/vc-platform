@@ -8,7 +8,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
 {
 	public class PropertyDictionary : Dictionary<string, object>
 	{
-		public void Add(KeyValuePair<string, string[]> pair)
+		public void Add(KeyValuePair<string, object> pair)
 		{
 			this.Add(pair.Key, pair.Value);
 		}

@@ -80,6 +80,7 @@
     <Compile Include="Modularity\Exceptions\DuplicateModuleException.cs" />
     <Compile Include="Modularity\FileModuleTypeLoader.cs" />
     <Compile Include="Modularity\IAssemblyResolver.cs" />
+    <Compile Include="Modularity\IDatabaseModule.cs" />
     <Compile Include="Modularity\IModule.cs" />
     <Compile Include="Modularity\IModuleCatalog.cs" />
     <Compile Include="Modularity\IModuleCatalogItem.cs" />
@@ -113,6 +114,7 @@
     <Compile Include="Modularity\ModuleState.cs" />
     <Compile Include="Modularity\Exceptions\ModuleTypeLoaderNotFoundException.cs" />
     <Compile Include="Modularity\Exceptions\ModuleTypeLoadingException.cs" />
+    <Compile Include="Modularity\SampleDataLevel.cs" />
     <Compile Include="Notification\INotifier.cs" />
     <Compile Include="Notification\NotifyEvent.cs" />
     <Compile Include="Notification\NotifySearchCriteria.cs" />

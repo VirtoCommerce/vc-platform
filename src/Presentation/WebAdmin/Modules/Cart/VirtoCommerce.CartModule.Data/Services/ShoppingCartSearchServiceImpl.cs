@@ -23,11 +23,11 @@ namespace VirtoCommerce.CartModule.Data.Services
 			var query = _repository.ShoppingCarts;
 			if(criteria.CustomerId != null)
 			{
-				query = _repository.ShoppingCarts.Where(x => x.CustomerId == criteria.CustomerId);
+				query = query.Where(x => x.CustomerId == criteria.CustomerId);
 			}
 			if(criteria.SiteId != null)
 			{
-				query = _repository.ShoppingCarts.Where(x => x.SiteId == criteria.SiteId);
+				query = query.Where(x => x.SiteId == criteria.SiteId);
 			}
 
 			var retVal = new SearchResult

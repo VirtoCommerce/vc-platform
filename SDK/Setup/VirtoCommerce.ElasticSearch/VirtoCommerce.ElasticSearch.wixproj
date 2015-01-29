@@ -52,7 +52,6 @@
   <ItemGroup>
     <Folder Include="Distro" />
     <Folder Include="Distro\bin\" />
-    <Folder Include="Distro\bin\x86\" />
     <Folder Include="Distro\config\" />
     <Folder Include="Distro\lib\" />
     <Folder Include="Distro\lib\sigar\" />
@@ -61,9 +60,17 @@
     <Content Include="..\VirtoCommerce.Installer\Shared.wxi">
       <Link>Shared.wxi</Link>
     </Content>
+    <Content Include="Distro\bin\elasticsearch-service-mgr.exe" />
+    <Content Include="Distro\bin\elasticsearch-service-x64.exe" />
+    <Content Include="Distro\bin\elasticsearch-service-x86.exe" />
     <Content Include="Distro\bin\elasticsearch.bat" />
+    <Content Include="Distro\bin\esi_config.bat" />
+    <Content Include="Distro\bin\esi_elasticsearch.bat" />
+    <Content Include="Distro\bin\esi_plugin.bat" />
+    <Content Include="Distro\bin\esi_service.bat" />
+    <Content Include="Distro\bin\esi_service_uninstall.bat" />
     <Content Include="Distro\bin\plugin.bat" />
-    <Content Include="Distro\bin\x86\elasticsearchw.exe" />
+    <Content Include="Distro\bin\service.bat" />
     <Content Include="Distro\config\elasticsearch.yml" />
     <Content Include="Distro\config\logging.yml" />
     <Content Include="Distro\lib\elasticsearch-1.1.1.jar" />

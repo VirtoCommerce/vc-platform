@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Management.Automation;
-using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Data.Marketing;
 using VirtoCommerce.Foundation.Frameworks;
-using m = VirtoCommerce.Foundation.Data.Marketing.Migrations;
 
 namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
 {
@@ -19,26 +17,34 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
 
 			using (var db = new EFMarketingRepository(connection))
 			{
+				SqlPromotionDatabaseInitializer initializer;
+
 				if (sample)
 				{
-					new SqlPromotionDatabaseInitializer().InitializeDatabase(db);
+					initializer = new SqlPromotionSampleDatabaseInitializer();
 				}
 				else
 				{
-					new SetupMigrateDatabaseToLatestVersion<EFMarketingRepository, m.Promotion.Configuration>().InitializeDatabase(db);
+					initializer = new SqlPromotionDatabaseInitializer();
 				}
+
+				initializer.InitializeDatabase(db);
 			}
 
 			using (var db = new EFDynamicContentRepository(connection))
 			{
+				SqlDynamicContentDatabaseInitializer initializer;
+
 				if (sample)
 				{
-					new SqlDynamicContentSampleDatabaseInitializer().InitializeDatabase(db);
+					initializer = new SqlDynamicContentSampleDatabaseInitializer();
 				}
 				else
 				{
-					new SqlDynamicContentDatabaseInitializer().InitializeDatabase(db);
+					initializer = new SqlDynamicContentDatabaseInitializer();
 				}
+
+				initializer.InitializeDatabase(db);
 			}
 		}
 	}

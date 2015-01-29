@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Management.Automation;
-using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Data.Stores;
-using VirtoCommerce.Foundation.Data.Stores.Migrations;
 using VirtoCommerce.Foundation.Frameworks;
 
 namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
@@ -21,17 +19,20 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
 			{
 				using (var db = new EFStoreRepository(connection))
 				{
+					SqlStoreDatabaseInitializer initializer;
+
 					if (sample)
 					{
 						SafeWriteVerbose(string.Format("Running {0}sample scripts", reduced ? "reduced " : ""));
-						new SqlStoreSampleDatabaseInitializer(reduced).InitializeDatabase(db);
+						initializer = new SqlStoreSampleDatabaseInitializer(reduced);
 					}
 					else
 					{
 						SafeWriteVerbose("Running minimum scripts");
-						new SetupMigrateDatabaseToLatestVersion<EFStoreRepository, Configuration>().InitializeDatabase(
-							db);
+						initializer = new SqlStoreDatabaseInitializer();
 					}
+
+					initializer.InitializeDatabase(db);
 				}
 			}
 			catch (Exception ex)

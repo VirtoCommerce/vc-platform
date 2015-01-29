@@ -32,7 +32,7 @@ namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Constraints
             var language = values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : session.Language;
             var productSlug = encoded;
 
-            var client = ClientContext.Clients.CreateBrowseClient(session.CatalogId, language);
+            var client = ClientContext.Clients.CreateBrowseClient(session.StoreId, language);
             var item = Task.Run(() => client.GetProductAsync(productSlug, ItemResponseGroups.ItemMedium)).Result;
 
             if (item == null)

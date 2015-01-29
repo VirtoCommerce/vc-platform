@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using VirtoCommerce.ApiClient.DataContracts.Search;
 using VirtoCommerce.ApiClient.Extensions;
 using VirtoCommerce.ApiClient.Utilities;
 using VirtoCommerce.Web.Core.DataContracts;
@@ -45,9 +46,9 @@ namespace VirtoCommerce.ApiClient
         /// <summary>
         /// List items matching the given query
         /// </summary>
-        public virtual Task<ResponseCollection<Product>> GetProductsAsync(BrowseQuery query, ItemResponseGroups? responseGroup = null)
+        public virtual Task<ProductSearchResult> GetProductsAsync(BrowseQuery query, ItemResponseGroups? responseGroup = null)
         {
-            return GetAsync<ResponseCollection<Product>>(CreateRequestUri(RelativePaths.Products, query.GetQueryString(responseGroup)));
+            return GetAsync<ProductSearchResult>(CreateRequestUri(RelativePaths.Products, query.GetQueryString(responseGroup)));
         }
 
         public virtual Task<Product> GetProductAsync(string productId, ItemResponseGroups responseGroup)

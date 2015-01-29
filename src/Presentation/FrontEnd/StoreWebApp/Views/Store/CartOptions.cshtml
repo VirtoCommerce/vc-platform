@@ -11,7 +11,7 @@
         </div>
     </li>
     <li class="cart">
-        <a href="@Url.Action("Index", "Cart")">@("Bag".Localize())</a>
+        <a href="@Url.Action("Index", "Cart")" target="_blank">@("Bag".Localize())</a>
         <div class="popup">
             @{ Html.RenderPartial("MiniCart", cart); }
         </div>

@@ -95,7 +95,7 @@ namespace VirtoCommerce.Web
                     //Expect to receive category code
                     if (x.RouteData.Values.ContainsKey(Constants.Category))
                     {
-                        var client = ClientContext.Clients.CreateBrowseClient(ClientContext.Session.CatalogId, ClientContext.Session.Language);
+                        var client = ClientContext.Clients.CreateBrowseClient(ClientContext.Session.StoreId, ClientContext.Session.Language);
                         var category = Task.Run(() => client.GetCategoryByCodeAsync(x.RouteData.Values[Constants.Category].ToString())).Result;
                         if (category != null)
                         {
@@ -111,7 +111,7 @@ namespace VirtoCommerce.Web
                     //Expect to receive item code
                     if (x.RouteData.Values.ContainsKey(Constants.Item))
                     {
-                        var client = ClientContext.Clients.CreateBrowseClient(ClientContext.Session.CatalogId, ClientContext.Session.Language);
+                        var client = ClientContext.Clients.CreateBrowseClient(ClientContext.Session.StoreId, ClientContext.Session.Language);
                         var item = Task.Run(()=>client.GetProductByCodeAsync(x.RouteData.Values[Constants.Item].ToString(), ItemResponseGroups.ItemMedium)).Result;
                         if (item != null)
                         {

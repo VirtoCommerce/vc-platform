@@ -27,6 +27,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 				Description = dbAssociation.AssociationGroup.Description,
 				Priority = dbAssociation.Priority,
 				AssociatedProductId = associatedProduct.Id,
+                Type = dbAssociation.AssociationType,
 				AssociatedProduct = associatedProduct
 			};
 			return retVal;
@@ -48,7 +49,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
 			{
 				ItemId = association.AssociatedProductId,
 				Priority = association.Priority,
-				AssociationType = "optional"
+				AssociationType = association.Type ?? "optional"
 			};
 			return retVal;
 		}

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Management.Automation;
 using VirtoCommerce.Foundation.Data.Catalogs;
-using VirtoCommerce.Foundation.Data.Catalogs.Migrations;
-using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Frameworks;
 
 namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
@@ -19,25 +17,29 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
 
 			using (var db = new EFCatalogRepository(connection))
 			{
+				SqlCatalogDatabaseInitializer initializer;
+
 				if (!string.IsNullOrEmpty(data) && sample)
 				{
 					if (reduced)
 					{
 						SafeWriteVerbose("Running reduced sample scripts");
-						new SqlCatalogReducedSampleDatabaseInitializer(data).InitializeDatabase(db);
+						initializer = new SqlCatalogReducedSampleDatabaseInitializer(data);
 					}
 					else
 					{
 						SafeWriteVerbose("Running sample scripts");
-						new SqlCatalogSampleDatabaseInitializer(data).InitializeDatabase(db);
+						initializer = new SqlCatalogSampleDatabaseInitializer(data);
 					}
 
 				}
 				else
 				{
 					SafeWriteVerbose("Running minimum scripts");
-					new SetupMigrateDatabaseToLatestVersion<EFCatalogRepository, Configuration>().InitializeDatabase(db);
+					initializer = new SqlCatalogDatabaseInitializer();
 				}
+
+				initializer.InitializeDatabase(db);
 			}
 		}
 	}

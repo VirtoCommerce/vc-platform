@@ -72,6 +72,7 @@
     <Compile Include="Configuration\Security\SecurityConfiguration.cs" />
     <Compile Include="Configuration\Store\StoreConfiguration.cs" />
     <Compile Include="Constants.cs" />
+    <Compile Include="DataContracts\Association.cs" />
     <Compile Include="DataContracts\BrowseQuery.cs" />
     <Compile Include="DataContracts\CatalogItem.cs" />
     <Compile Include="DataContracts\CatalogItemResponse.cs" />
@@ -93,7 +94,11 @@
     <Compile Include="DataContracts\ResponseCollection.cs" />
     <Compile Include="DataContracts\Review.cs" />
     <Compile Include="DataContracts\ReviewComment.cs" />
+    <Compile Include="DataContracts\Search\Facet.cs" />
+    <Compile Include="DataContracts\Search\FacetValue.cs" />
+    <Compile Include="DataContracts\Search\ProductSearchResult.cs" />
     <Compile Include="DataContracts\Security\ApplicationUser.cs" />
+    <Compile Include="DataContracts\Security\AuthInfo.cs" />
     <Compile Include="DataContracts\SeoKeyword.cs" />
     <Compile Include="DataContracts\SeoUrlKeywordTypes.cs" />
     <Compile Include="DataContracts\Store\Store.cs" />

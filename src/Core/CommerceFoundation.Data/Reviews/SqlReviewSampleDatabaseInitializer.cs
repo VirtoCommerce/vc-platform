@@ -1,8 +1,6 @@
-﻿using VirtoCommerce.Foundation.Data.Infrastructure;
-
-namespace VirtoCommerce.Foundation.Data.Reviews
+﻿namespace VirtoCommerce.Foundation.Data.Reviews
 {
-	public class SqlReviewSampleDatabaseInitializer : SetupDatabaseInitializer<EFReviewRepository, Migrations.Configuration>
+	public class SqlReviewSampleDatabaseInitializer : SqlReviewDatabaseInitializer
 	{
 		protected override void Seed(EFReviewRepository context)
 		{

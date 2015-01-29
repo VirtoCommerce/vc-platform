@@ -43,13 +43,42 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
                 retVal.SeoKeywords = product.SeoInfos.Select(x => x.ToWebModel()).ToArray();
 		    }
 
-			retVal.Properties = new webModel.PropertyDictionary();
-			//Need add property for each meta info
+		    if (product.Associations != null)
+		    {
+		        retVal.Associations = product.Associations.Select(x => x.ToWebModel()).ToArray();
+		    }
 
+			retVal.Properties = new webModel.PropertyDictionary();
+            
+            //Need add property for each meta info
+            /* SASHA: no need to group elements here, simply return one key per value
 			foreach (var propValueGroup in product.PropertyValues.GroupBy(x=>x.PropertyName))
 			{
                 retVal.Properties.Add(propValueGroup.Key, propValueGroup.Select(g=>g.Value));
 			}
+             * */
+
+
+            // dictionary properties are returned as object[], all other properties are returned as primitives
+            foreach (var propValueGroup in product.PropertyValues.GroupBy(x => x.PropertyName))
+            {
+                var val = propValueGroup.Select(g => g.Value);
+                if (val.Any())
+                {
+                    retVal.Properties.Add(propValueGroup.Key, val.Count() > 1 ? val : val.First());
+                }
+            }
+
+            /*
+		    foreach (var propValue in product.PropertyValues)
+		    {
+                //TODO create property collection not Dictionary to support multivalues
+                if (retVal.Properties.ContainsKey(propValue.PropertyName))continue;
+		        
+                retVal.Properties.Add(propValue.PropertyName, propValue.Value);
+		    }
+             * */
+
 			return retVal;
 		}
 
