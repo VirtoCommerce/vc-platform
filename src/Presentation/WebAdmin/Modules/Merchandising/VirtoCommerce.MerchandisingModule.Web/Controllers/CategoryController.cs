@@ -7,13 +7,14 @@ using System.Web.Http.Description;
 using VirtoCommerce.CatalogModule.Repositories;
 using VirtoCommerce.CatalogModule.Services;
 using VirtoCommerce.Foundation.AppConfig.Model;
+using VirtoCommerce.Foundation.Stores.Repositories;
 using VirtoCommerce.MerchandisingModule.Web.Converters;
 using moduleModel = VirtoCommerce.CatalogModule.Model;
 using webModel = VirtoCommerce.MerchandisingModule.Web.Model;
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
-    [RoutePrefix("api/mp/{catalog}/{language}/categories")]
-    public class CategoryController : ApiController
+    [RoutePrefix("api/mp/{store}/{language}/categories")]
+    public class CategoryController : BaseController
     {
         private readonly ICatalogSearchService _searchService;
         private readonly ICategoryService _categoryService;
@@ -24,7 +25,10 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         public CategoryController(ICatalogSearchService searchService,
                                   ICategoryService categoryService,
                                   IPropertyService propertyService,
-                                  Func<IFoundationCatalogRepository> foundationCatalogRepositoryFactory, Func<IFoundationAppConfigRepository> foundationAppConfigRepFactory)
+                                  Func<IFoundationCatalogRepository> foundationCatalogRepositoryFactory,
+                                  Func<IFoundationAppConfigRepository> foundationAppConfigRepFactory,
+                                  Func<IStoreRepository> storeRepository)
+            : base(storeRepository)
         {
             _searchService = searchService;
             _categoryService = categoryService;
@@ -35,17 +39,18 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
 
         /// <summary>
-        ///  GET: api/mp/apple/en-us/categories?parentId='22'
+        /// GET: api/mp/apple/en-us/categories?parentId='22'
         /// </summary>
-        /// <param name="catalog"></param>
-        /// <param name="language"></param>
-        /// <param name="parentId"></param>
+        /// <param name="store">The store.</param>
+        /// <param name="language">The language.</param>
+        /// <param name="parentId">The parent identifier.</param>
         /// <returns></returns>
         [HttpGet]
         [ResponseType(typeof(webModel.GenericSearchResult<webModel.Category>))]
         [Route("")]
-        public IHttpActionResult Search(string catalog, string language = "en-us", [FromUri]string parentId = null)
+        public IHttpActionResult Search(string store, string language = "en-us", [FromUri]string parentId = null)
         {
+            var catalog = GetCatalogId(store);
             var criteria = new moduleModel.SearchCriteria
             {
                 CatalogId = catalog,
@@ -70,8 +75,9 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         [HttpGet]
         [ResponseType(typeof(webModel.Category))]
         [Route("")]
-        public IHttpActionResult GetByCode(string catalog, [FromUri]string code, string language = "en-us")
+        public IHttpActionResult GetByCode(string store, [FromUri]string code, string language = "en-us")
         {
+            var catalog = GetCatalogId(store);
             using (var repository = _foundationCatalogRepositoryFactory())
             {
                 var categoryId = repository.Categories.Where(x => x.CatalogId == catalog && x.Code == code).Select(x => x.CategoryId).FirstOrDefault();
@@ -86,8 +92,9 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         [HttpGet]
         [ResponseType(typeof(webModel.Category))]
         [Route("{category}")]
-        public IHttpActionResult Get(string category, string catalog, string language = "en-us")
+        public IHttpActionResult Get(string category, string store, string language = "en-us")
         {
+            //var catalog = GetCatalogId(store);
             if (category != null)
             {
 

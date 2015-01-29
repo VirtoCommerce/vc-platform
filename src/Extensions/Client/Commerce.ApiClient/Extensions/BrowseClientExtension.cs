@@ -14,13 +14,13 @@ namespace VirtoCommerce.ApiClient.Extensions
     {
         public static BrowseClient CreateBrowseClient(this CommerceClients source)
         {
-            return source.CreateBrowseClient(ClientContext.Session.CatalogId, ClientContext.Session.Language);
+            return source.CreateBrowseClient(ClientContext.Session.StoreId, ClientContext.Session.Language);
         }
 
-        public static BrowseClient CreateBrowseClient(this CommerceClients source, string catalogId, string language)
+        public static BrowseClient CreateBrowseClient(this CommerceClients source, string storeId, string language)
         {
             // http://localhost/admin/api/mp/{0}/{1}/
-            var connectionString = ClientContext.Configuration.ConnectionString + String.Format("{0}/{1}/", catalogId, language);
+            var connectionString = ClientContext.Configuration.ConnectionString + String.Format("{0}/{1}/", storeId, language);
             return CreateBrowseClientWithUri(source, connectionString);
         }
 

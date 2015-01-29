@@ -23,7 +23,7 @@ namespace VirtoCommerce.Web.Helpers.MVC.SiteMap
 
             var nodes = new List<DynamicNode>();
             var order = 0;
-            var client = ClientContext.Clients.CreateBrowseClient(session.CatalogId, session.Language);
+            var client = ClientContext.Clients.CreateBrowseClient(session.StoreId, session.Language);
             var categories = Task.Run(() => client.GetCategoriesAsync()).Result;
 
             foreach (var category in categories.Items)

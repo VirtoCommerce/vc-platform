@@ -35,7 +35,7 @@ namespace VirtoCommerce.ApiWebClient.Extensions.Routing.Constraints
             var session = ClientContext.Session;
             var language = values.ContainsKey(Constants.Language) ? values[Constants.Language].ToString() : session.Language;
 
-            var client = ClientContext.Clients.CreateBrowseClient(session.CatalogId, language);
+            var client = ClientContext.Clients.CreateBrowseClient(session.StoreId, language);
             var category = Task.Run(() => client.GetCategoryAsync(childCategorySlug)).Result;
 
             if (category == null)

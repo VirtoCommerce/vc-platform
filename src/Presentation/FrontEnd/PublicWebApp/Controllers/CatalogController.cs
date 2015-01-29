@@ -156,7 +156,7 @@ namespace VirtoCommerce.Web.Controllers
             session = session ?? ClientContext.Session;
 
             //Create client
-            var client = ClientContext.Clients.CreateBrowseClient(session.CatalogId, session.Language);
+            var client = ClientContext.Clients.CreateBrowseClient(session.StoreId, session.Language);
 
             //Get product
             var product = byCode ?
@@ -164,7 +164,7 @@ namespace VirtoCommerce.Web.Controllers
                 await client.GetProductAsync(item, responseGroup);
 
             //Get reviews
-            var reviewClient = ClientContext.Clients.CreateReviewsClient(session.CatalogId, session.Language);
+            var reviewClient = ClientContext.Clients.CreateReviewsClient(session.Language);
             var productReviews = Task.Run(() => reviewClient.GetReviewsAsync(product.Id)).Result;
             var model = product.ToWebModel(associationType);
             if (productReviews.TotalCount > 0)

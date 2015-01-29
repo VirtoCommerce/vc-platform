@@ -94,6 +94,9 @@
     <Compile Include="DataContracts\ResponseCollection.cs" />
     <Compile Include="DataContracts\Review.cs" />
     <Compile Include="DataContracts\ReviewComment.cs" />
+    <Compile Include="DataContracts\Search\Facet.cs" />
+    <Compile Include="DataContracts\Search\FacetValue.cs" />
+    <Compile Include="DataContracts\Search\ProductSearchResult.cs" />
     <Compile Include="DataContracts\Security\ApplicationUser.cs" />
     <Compile Include="DataContracts\Security\AuthInfo.cs" />
     <Compile Include="DataContracts\SeoKeyword.cs" />

@@ -13,13 +13,13 @@ namespace VirtoCommerce.ApiClient.Extensions
     {
         public static ReviewsClient CreateReviewsClient(this CommerceClients source)
         {
-            return source.CreateReviewsClient(ClientContext.Session.CatalogId, ClientContext.Session.Language);
+            return source.CreateReviewsClient(ClientContext.Session.Language);
         }
 
-        public static ReviewsClient CreateReviewsClient(this CommerceClients source, string catalogId, string language)
+        public static ReviewsClient CreateReviewsClient(this CommerceClients source, string language)
         {
             // http://localhost/admin/api/mp/{0}/{1}/
-            var connectionString = ClientContext.Configuration.ConnectionString + String.Format("{0}/{1}/", catalogId, language);
+            var connectionString = ClientContext.Configuration.ConnectionString + String.Format("{0}/", language);
             return CreateReviewClientWithUri(source, connectionString);
         }
 
