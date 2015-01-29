@@ -52,32 +52,29 @@ namespace VirtoCommerce.Foundation.Data.Infrastructure
 				};
 			}
 
-			var seed = !context.Database.Exists();
 			var migrator = new System.Data.Entity.Migrations.DbMigrator(_config);
-			if (!seed)
+			var pending = migrator.GetPendingMigrations().Count();
+			var local = migrator.GetLocalMigrations().Count();
+			var exists = context.Database.Exists();
+			var update = !exists || pending > 0;
+
+			if (update)
 			{
-				var local = migrator.GetLocalMigrations();
-				var pending = migrator.GetPendingMigrations();
-				if (local.Count() == pending.Count())
+				try
 				{
-					seed = true;
+					migrator.Update();
 				}
-			}
+				catch (SqlException ex)
+				{
+					throw new ApplicationException(String.Format("Migrations failed with error \"{0}\"", ex.ExpandExceptionMessage()), ex);
+				}
 
-			try
-			{
-				migrator.Update();
-			}
-			catch (SqlException ex)
-			{
-				throw new ApplicationException(String.Format("Migrations failed with error \"{0}\"", ex.ExpandExceptionMessage()), ex);
-			}
+				InitializeDbSettings(context);
 
-			InitializeDbSettings(context);
-
-			if (seed)
-			{
-				Seed(context);
+				if (pending == local)
+				{
+					Seed(context);
+				}
 			}
 		}
 
@@ -90,8 +87,8 @@ namespace VirtoCommerce.Foundation.Data.Infrastructure
 			// do not modify connection string for localdb
 			if (!connectionString.ToLowerInvariant().Contains("(LocalDb)".ToLowerInvariant()))
 			{
-                var csBuilder = new SqlConnectionStringBuilder(connectionString) { InitialCatalog = "master" };
-                connectionString = csBuilder.ToString();
+				var csBuilder = new SqlConnectionStringBuilder(connectionString) { InitialCatalog = "master" };
+				connectionString = csBuilder.ToString();
 			}
 
 			using (var dbConnection = new SqlConnection(connectionString))
