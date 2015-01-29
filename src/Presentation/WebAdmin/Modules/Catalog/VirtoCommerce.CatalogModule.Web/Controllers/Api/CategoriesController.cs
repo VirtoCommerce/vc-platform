@@ -1,37 +1,36 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
-using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Description;
-using VirtoCommerce.CatalogModule.Web.Converters;
 using VirtoCommerce.CatalogModule.Services;
-using moduleModel = VirtoCommerce.CatalogModule.Model;
+using VirtoCommerce.CatalogModule.Web.Converters;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
-using System.Collections.Generic;
-using Microsoft.Practices.Unity;
 
 namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 {
-	[RoutePrefix("api/catalog/categories")]
+    [RoutePrefix("api/catalog/categories")]
     public class CategoriesController : ApiController
     {
-		private readonly ICatalogSearchService _searchService;
+        private readonly ICatalogSearchService _searchService;
         private readonly ICategoryService _categoryService;
         private readonly IPropertyService _propertyService;
+        private readonly ICatalogService _catalogService;
 
-		public CategoriesController(ICatalogSearchService searchService,
-								    ICategoryService categoryService,
-									IPropertyService propertyService)
+        public CategoriesController(ICatalogSearchService searchService,
+                                    ICategoryService categoryService,
+                                    IPropertyService propertyService, ICatalogService catalogService)
         {
-			_searchService = searchService;
+            _searchService = searchService;
             _categoryService = categoryService;
             _propertyService = propertyService;
+            _catalogService = catalogService;
         }
 
         // GET: api/catalog/categories/5
-		[HttpGet]
+        [HttpGet]
         [ResponseType(typeof(webModel.Category))]
-		[Route("{id}")]
+        [Route("{id}")]
         public IHttpActionResult Get(string id)
         {
             var category = _categoryService.GetById(id);
@@ -45,51 +44,53 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
             return Ok(retVal);
         }
 
-		 // GET: api/catalog/apple/categories/newcategory&parentCategoryId='ddd'"
+        // GET: api/catalog/apple/categories/newcategory&parentCategoryId='ddd'"
         [HttpGet]
-		[Route("~/api/catalog/{catalogId}/categories/newcategory")]
+        [Route("~/api/catalog/{catalogId}/categories/newcategory")]
         [ResponseType(typeof(webModel.Category))]
-		 public IHttpActionResult GetNewCategory(string catalogId, [FromUri]string parentCategoryId = null)
+        public IHttpActionResult GetNewCategory(string catalogId, [FromUri]string parentCategoryId = null)
         {
             var retVal = new webModel.Category
             {
-                Name = "New category",
-				ParentId = parentCategoryId,
+                ParentId = parentCategoryId,
                 CatalogId = catalogId,
-                Code = Guid.NewGuid().ToString().Substring(0, 5)
+                Catalog = _catalogService.GetById(catalogId).ToWebModel(),
+                Code = Guid.NewGuid().ToString().Substring(0, 5),
+                SeoInfos = new List<webModel.SeoInfo>()
             };
-
-            retVal = _categoryService.Create(retVal.ToModuleModel()).ToWebModel();
 
             return Ok(retVal);
         }
 
 
-		// POST:  api/catalog/categories
+        // POST:  api/catalog/categories
         [HttpPost]
-        [ResponseType(typeof(webModel.Category))]
-		[Route("")]
+        [ResponseType(typeof(void))]
+        [Route("")]
         public IHttpActionResult Post(webModel.Category category)
         {
-            UpdateCategory(category);
-			var retVal = _categoryService.GetById(category.Id);
-			return Ok(retVal);
+            var moduleObj = category.ToModuleModel();
+            if (moduleObj.Id == null)
+            {
+                var retVal = _categoryService.Create(moduleObj).ToWebModel();
+                retVal.Catalog = null;
+                return Ok(retVal);
+            }
+            else
+            {
+                _categoryService.Update(new[] { moduleObj });
+                return StatusCode(HttpStatusCode.NoContent);
+            }
         }
 
-		// POST: api/catalog/categories/5
+        // POST: api/catalog/categories/5
         [HttpDelete]
         [ResponseType(typeof(void))]
-		[Route("")]
+        [Route("")]
         public IHttpActionResult Delete([FromUri]string[] ids)
         {
-			_categoryService.Delete(ids);
+            _categoryService.Delete(ids);
             return StatusCode(HttpStatusCode.NoContent);
-        }
-        
-        private void UpdateCategory(webModel.Category category)
-        {
-            var moduleCategory = category.ToModuleModel();
-            _categoryService.Update(new moduleModel.Category[] { moduleCategory });
         }
     }
 }
