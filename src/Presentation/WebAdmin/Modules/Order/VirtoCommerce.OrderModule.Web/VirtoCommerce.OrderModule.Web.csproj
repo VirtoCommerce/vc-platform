@@ -125,6 +125,11 @@
     <Content Include="module.manifest" />
     <Content Include="Scripts\blades\!customerOrder-list.js" />
     <Content Include="Scripts\blades\!customerOrder-list.tpl.html" />
+    <Content Include="Scripts\blades\customerOrder-detail.js" />
+    <Content Include="Scripts\blades\customerOrder-detail.tpl.html" />
+    <Content Include="Scripts\blades\customerOrder-items.js" />
+    <Content Include="Scripts\blades\customerOrder-items.tpl.html" />
+    <Content Include="Scripts\blades\customerOrder-detail-toolbar.tpl.html" />
     <Content Include="Scripts\home.tpl.html" />
     <Content Include="Scripts\order.js" />
   </ItemGroup>
