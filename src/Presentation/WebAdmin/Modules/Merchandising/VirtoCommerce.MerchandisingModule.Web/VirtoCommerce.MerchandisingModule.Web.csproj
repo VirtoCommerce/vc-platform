@@ -86,6 +86,7 @@
     <Compile Include="Converters\AssociationConverter.cs" />
     <Compile Include="Converters\CategoryConverter.cs" />
     <Compile Include="Converters\DynamicContentItemConverter.cs" />
+    <Compile Include="Converters\FacetConverters.cs" />
     <Compile Include="Converters\ProductConverter.cs" />
     <Compile Include="Converters\ResponseGroupConverter.cs" />
     <Compile Include="Converters\ReviewCommentConverter.cs" />
@@ -94,8 +95,11 @@
     <Compile Include="Converters\StoreConverter.cs" />
     <Compile Include="Model\Association.cs" />
     <Compile Include="Model\CategoryInfo.cs" />
+    <Compile Include="Model\Facet.cs" />
+    <Compile Include="Model\FacetValue.cs" />
     <Compile Include="Model\IFeedbackCounterSupport.cs" />
     <Compile Include="Model\EditorialReview.cs" />
+    <Compile Include="Model\ProductSearchResult.cs" />
     <Compile Include="Model\Review.cs" />
     <Compile Include="Model\ReviewComment.cs" />
     <Compile Include="Model\SeoKeyword.cs" />

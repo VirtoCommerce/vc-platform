@@ -48,7 +48,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Binders
 			{
 			    SearchPhrase = qs["q"].EmptyToNull(),
 			    RecordsToRetrieve = qs["take"].TryParse(20),
-			    StartingRecord = qs["skip"].TryParse(0)
+			    StartingRecord = qs["skip"].TryParse(0),
 			};
 
 

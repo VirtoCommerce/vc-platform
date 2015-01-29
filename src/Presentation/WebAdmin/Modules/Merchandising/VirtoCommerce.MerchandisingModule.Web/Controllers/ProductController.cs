@@ -56,7 +56,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         /// <returns></returns>
 	    [HttpGet]
         [Route("")]
-		[ResponseType(typeof(GenericSearchResult<CatalogItem>))]
+		[ResponseType(typeof(ProductSearchResult))]
 		public IHttpActionResult Search(string catalog, [ModelBinder(typeof(CatalogItemSearchCriteriaBinder))] CatalogItemSearchCriteria criteria,[FromUri]moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemMedium, [FromUri]string outline="", string language = "en-us")
 		{
 			criteria.Locale = language;
@@ -68,13 +68,16 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			var result = _searchService.Search(_searchConnection.Scope, criteria) as SearchResults;
 			var items = result.GetKeyAndOutlineFieldValueMap<string>();
 
-			var retVal = new GenericSearchResult<CatalogItem> {TotalCount = result.TotalCount};
+			var retVal = new ProductSearchResult {TotalCount = result.TotalCount};
+
+            retVal.Facets = result.FacetGroups.Select(g=>g.ToWebModel()).ToArray();
+
 		    //Load ALL products 
             var products = _itemService.GetByIds(items.Keys.ToArray(), responseGroup);
 
             foreach (var product in products)
             {
-                var webModelProduct = product.ToWebModel(_assetBaseUri);
+                var webModelProduct = product.ToWebModel(_assetBaseUri) as Product;
 
                 var searchTags = items[product.Id];
 
