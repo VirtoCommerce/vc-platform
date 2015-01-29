@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
+using VirtoCommerce.ApiWebClient.Extensions.Validation;
 
 namespace VirtoCommerce.Web.Models
 {
@@ -126,6 +127,50 @@ namespace VirtoCommerce.Web.Models
         [Display(Name = "User name")]
         [Required]
         public string UserName { get; set; }
+    }
+
+    public class ResetPasswordModel
+    {
+        public ResetPasswordModel() { }
+
+        public ResetPasswordModel(string token)
+        {
+            Token = token;
+        }
+        /// <summary>
+        /// Gets or sets the new password.
+        /// </summary>
+        /// <value>The new password.</value>
+        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [DataType(DataType.Password)]
+        [Display(Name = "New password")]
+        [RequiredIf("ChangePassword", true)]
+        public string NewPassword { get; set; }
+
+        /// <summary>
+        /// Gets or sets the confirm password.
+        /// </summary>
+        /// <value>The confirm password.</value>
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirm new password")]
+        [System.ComponentModel.DataAnnotations.Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+        [RequiredIf("ChangePassword", true)]
+        public string ConfirmPassword { get; set; }
+
+        /// <summary>
+        /// Gets or sets the email.
+        /// </summary>
+        /// <value>The email.</value>
+        [Required, EmailAddress]
+        [DataType(DataType.EmailAddress)]
+        [Display(Name = "Email address")]
+        public string Email { get; set; }
+
+
+        [Required]
+        [Display(Name = "Password reset token")]
+        public string Token { get; set; }
+
     }
 
     /// <summary>

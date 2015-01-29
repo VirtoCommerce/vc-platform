@@ -3,7 +3,6 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using VirtoCommerce.ApiClient.DataContracts.Security;
 using VirtoCommerce.ApiClient.Utilities;
-using VirtoCommerce.Web.Core.DataContracts.Security;
 
 namespace VirtoCommerce.ApiClient
 {
