@@ -9,6 +9,7 @@ using VirtoCommerce.CatalogModule.Services;
 using VirtoCommerce.Foundation.Catalogs.Search;
 using VirtoCommerce.Foundation.Reviews.Repositories;
 using VirtoCommerce.Foundation.Search;
+using VirtoCommerce.Foundation.Stores.Repositories;
 using VirtoCommerce.MerchandisingModule.Web.Binders;
 using VirtoCommerce.MerchandisingModule.Web.Converters;
 using VirtoCommerce.MerchandisingModule.Web.Model;
@@ -17,7 +18,6 @@ using VirtoCommerce.Foundation.Frameworks.Extensions;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
-	[RoutePrefix("api/mp/{catalog}/{language}/reviews")]
 	public class ReviewController : ApiController
 	{
 		private readonly Func<IReviewRepository> _reviewRepositoryFactory;
@@ -28,9 +28,9 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
 
 		[HttpGet]
-		[Route("~/api/mp/{catalog}/{language}/products/{productId}/reviews")]
+		[Route("~/api/mp/{language}/products/{productId}/reviews")]
 		[ResponseType(typeof(GenericSearchResult<Review>))]
-		public IHttpActionResult GetAllProductReviews(string catalog, string language, string productId)
+		public IHttpActionResult GetAllProductReviews(string language, string productId)
 		{
             var retVal = new GenericSearchResult<Review>();
 			using (var repository = _reviewRepositoryFactory())

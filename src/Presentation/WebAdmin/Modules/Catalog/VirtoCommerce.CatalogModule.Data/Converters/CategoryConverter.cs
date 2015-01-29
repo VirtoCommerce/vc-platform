@@ -81,6 +81,7 @@ namespace VirtoCommerce.CatalogModule.Data.Converters
                 ParentCategoryId = category.ParentId,
                 EndDate = DateTime.UtcNow.AddYears(100),
                 StartDate = DateTime.UtcNow,
+                IsActive = category.IsActive
             };
             if (category.Id != null)
                 retVal.CategoryId = category.Id;

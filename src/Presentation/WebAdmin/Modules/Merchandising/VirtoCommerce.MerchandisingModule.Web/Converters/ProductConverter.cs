@@ -58,6 +58,18 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 			}
              * */
 
+
+            // dictionary properties are returned as object[], all other properties are returned as primitives
+            foreach (var propValueGroup in product.PropertyValues.GroupBy(x => x.PropertyName))
+            {
+                var val = propValueGroup.Select(g => g.Value);
+                if (val.Any())
+                {
+                    retVal.Properties.Add(propValueGroup.Key, val.Count() > 1 ? val : val.First());
+                }
+            }
+
+            /*
 		    foreach (var propValue in product.PropertyValues)
 		    {
                 //TODO create property collection not Dictionary to support multivalues
@@ -65,6 +77,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
 		        
                 retVal.Properties.Add(propValue.PropertyName, propValue.Value);
 		    }
+             * */
 
 			return retVal;
 		}

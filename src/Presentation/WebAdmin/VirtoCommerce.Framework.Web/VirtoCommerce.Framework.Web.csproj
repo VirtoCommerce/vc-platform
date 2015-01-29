@@ -114,6 +114,7 @@
     <Compile Include="Modularity\ModuleState.cs" />
     <Compile Include="Modularity\Exceptions\ModuleTypeLoaderNotFoundException.cs" />
     <Compile Include="Modularity\Exceptions\ModuleTypeLoadingException.cs" />
+    <Compile Include="Modularity\SampleDataLevel.cs" />
     <Compile Include="Notification\INotifier.cs" />
     <Compile Include="Notification\NotifyEvent.cs" />
     <Compile Include="Notification\NotifySearchCriteria.cs" />

@@ -52,7 +52,7 @@ namespace VirtoCommerce.Framework.Web.Modularity
 
 				var databaseModule = moduleInstance as IDatabaseModule;
 				if (databaseModule != null)
-					databaseModule.SetupDatabase(insertSampleData: true, reducedSampleData: false);
+					databaseModule.SetupDatabase(SampleDataLevel.Full);
 
 				moduleInstance.Initialize();
 			}

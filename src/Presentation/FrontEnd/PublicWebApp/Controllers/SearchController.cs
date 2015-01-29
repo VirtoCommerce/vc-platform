@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using MvcSiteMapProvider;
+using VirtoCommerce.ApiClient.DataContracts.Search;
 using VirtoCommerce.ApiWebClient.Caching;
 using VirtoCommerce.ApiWebClient.Extensions;
 using VirtoCommerce.ApiWebClient.Helpers;
@@ -151,7 +152,7 @@ namespace VirtoCommerce.Web.Controllers
 
         #region Private Helpers
 
-        private static SearchResult CreateSearchResult(ResponseCollection<Product> results, BrowseQuery query)
+        private static SearchResult CreateSearchResult(ProductSearchResult results, BrowseQuery query)
         {
             var retVal = new SearchResult
             {
@@ -184,7 +185,7 @@ namespace VirtoCommerce.Web.Controllers
             query.SortDirection = "desc".Equals(query.SortDirection, StringComparison.OrdinalIgnoreCase) ? "desc" : "asc";
 
             session = session ?? StoreHelper.CustomerSession;
-            var client = ClientContext.Clients.CreateBrowseClient(session.CatalogId, session.Language);
+            var client = ClientContext.Clients.CreateBrowseClient(session.StoreId, session.Language);
             var results = await client.GetProductsAsync(query, responseGroup);
             var retVal = CreateSearchResult(results, query);
 

@@ -12,32 +12,31 @@ using VirtoCommerce.MerchandisingModule.Web.Model.Store;
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
     [RoutePrefix("api/mp/stores")]
-    public class StoreController : ApiController
+    public class StoreController : BaseController
     {
         private readonly Func<IStoreRepository> _storeRepository;
         private readonly Func<IFoundationAppConfigRepository> _appConfigRepFactory;
 
         public StoreController(Func<IStoreRepository> storeRepository, Func<IFoundationAppConfigRepository> appConfigRepFactory)
+            : base(storeRepository)
         {
             _storeRepository = storeRepository;
             _appConfigRepFactory = appConfigRepFactory;
         }
 
         [HttpGet]
-        [ResponseType(typeof (Store[]))]
+        [ResponseType(typeof(Store[]))]
         [Route("")]
         public IHttpActionResult GetStores()
         {
             var retVal = new List<Store>();
-            using (var repository = _storeRepository())
+
+            var stores = GetAllStores();
+            if (stores.Any())
             {
-                var stores = repository.Stores.ExpandAll().ToArray();
-                if (stores.Any())
+                using (var appConfig = _appConfigRepFactory())
                 {
-                    using (var appConfig = _appConfigRepFactory())
-                    {
-                        retVal.AddRange(stores.Select(store => store.ToWebModel(appConfig.GetAllSeoInformation(store.StoreId))));
-                    }
+                    retVal.AddRange(stores.Select(store => store.ToWebModel(appConfig.GetAllSeoInformation(store.StoreId))));
                 }
             }
 

@@ -155,7 +155,8 @@ namespace VirtoCommerce.ApiWebClient.Modules
             {
                 if (routeValues.ContainsKey(Extensions.Routing.Constants.Store))
                 {
-                    session.StoreId = routeValues[Extensions.Routing.Constants.Store].ToString();
+                    //Store id must be decoded
+                    //session.StoreId = routeValues[Extensions.Routing.Constants.Store].ToString();
                 }
 
                 if (routeValues.ContainsKey(Extensions.Routing.Constants.Language))
@@ -169,7 +170,7 @@ namespace VirtoCommerce.ApiWebClient.Modules
 
                     if (!string.IsNullOrEmpty(categoryPath)) 
                     {
-                        var client = ClientContext.Clients.CreateBrowseClient(session.CatalogId, session.Language);
+                        var client = ClientContext.Clients.CreateBrowseClient(session.StoreId, session.Language);
                         var categorySlug = categoryPath.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).Last();
                         var category = Task.Run(()=>client.GetCategoryAsync(categorySlug)).Result;
 

@@ -48,11 +48,11 @@ namespace VirtoCommerce.MerchandisingModule.Web.Binders
 			{
 			    SearchPhrase = qs["q"].EmptyToNull(),
 			    RecordsToRetrieve = qs["take"].TryParse(20),
-			    StartingRecord = qs["skip"].TryParse(0)
+			    StartingRecord = qs["skip"].TryParse(0),
 			};
 
 
-			// apply vendor filter if one specified
+			// apply filters if one specified
             if (terms.Count > 0)
 			{
                 foreach (var term in terms)

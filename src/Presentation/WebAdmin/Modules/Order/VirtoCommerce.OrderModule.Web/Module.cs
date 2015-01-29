@@ -44,7 +44,7 @@ namespace VirtoCommerce.OrderModule.Web
 
 		#region IDatabaseModule Members
 
-		public void SetupDatabase(bool insertSampleData, bool reducedSampleData)
+		public void SetupDatabase(SampleDataLevel sampleDataLevel)
 		{
 			using (var context = new OrderRepositoryImpl())
 			{

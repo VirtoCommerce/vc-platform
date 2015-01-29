@@ -112,13 +112,13 @@
             currentEntity: data,
             title: title,
             style: 'gray',
-            subtitle: 'category details',
+            subtitle: 'Category details',
             controller: 'categoryDetailController',
             template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/blades/category-detail.tpl.html',
         };
         bladeNavigationService.showBlade(newBlade, $scope.blade);
     };
-
+    
     $scope.blade.showItemBlade = function (id, title) {
         var newBlade = {
             id: "listItemDetail",

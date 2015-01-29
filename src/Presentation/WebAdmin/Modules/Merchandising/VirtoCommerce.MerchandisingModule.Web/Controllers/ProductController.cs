@@ -10,6 +10,7 @@ using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.Catalogs.Search;
 using VirtoCommerce.Foundation.Catalogs.Services;
 using VirtoCommerce.Foundation.Search;
+using VirtoCommerce.Foundation.Stores.Repositories;
 using VirtoCommerce.MerchandisingModule.Web.Binders;
 using VirtoCommerce.MerchandisingModule.Web.Converters;
 using VirtoCommerce.MerchandisingModule.Web.Model;
@@ -17,8 +18,8 @@ using moduleModel = VirtoCommerce.CatalogModule.Model;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
-	[RoutePrefix("api/mp/{catalog}/{language}/products")]
-	public class ProductController : ApiController
+	[RoutePrefix("api/mp/{store}/{language}/products")]
+	public class ProductController : BaseController
 	{
 		private readonly IItemService _itemService;
 		private readonly ISearchProvider _searchService;
@@ -34,7 +35,9 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 								 Func<IFoundationCatalogRepository> foundationCatalogRepositoryFactory,
                                  Func<IFoundationAppConfigRepository> foundationAppConfigRepFactory,
                                  Func<ICatalogOutlineBuilder> catalogOutlineBuilderFactory,
-								 Uri assetBaseUri)
+                                 Func<IStoreRepository> storeRepository,
+								 Uri assetBaseUri) 
+            : base(storeRepository)
 		{
 			_searchService = indexedSearchProvider;
 			_searchConnection = searchConnection;
@@ -48,7 +51,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         /// <summary>
         /// Searches the specified catalog.
         /// </summary>
-        /// <param name="catalog">The catalog.</param>
+        /// <param name="store">The store.</param>
         /// <param name="criteria">The criteria.</param>
         /// <param name="responseGroup">The response group.</param>
         /// <param name="outline">The outline.</param>
@@ -56,9 +59,11 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         /// <returns></returns>
 	    [HttpGet]
         [Route("")]
-		[ResponseType(typeof(GenericSearchResult<CatalogItem>))]
-		public IHttpActionResult Search(string catalog, [ModelBinder(typeof(CatalogItemSearchCriteriaBinder))] CatalogItemSearchCriteria criteria,[FromUri]moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemMedium, [FromUri]string outline="", string language = "en-us")
-		{
+		[ResponseType(typeof(ProductSearchResult))]
+		public IHttpActionResult Search(string store, [ModelBinder(typeof(CatalogItemSearchCriteriaBinder))] CatalogItemSearchCriteria criteria,[FromUri]moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemMedium, [FromUri]string outline="", string language = "en-us")
+        {
+            var catalog = GetCatalogId(store);
+
 			criteria.Locale = language;
 			criteria.Catalog = catalog.ToLowerInvariant();
             if (!string.IsNullOrWhiteSpace(outline))
@@ -68,13 +73,18 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 			var result = _searchService.Search(_searchConnection.Scope, criteria) as SearchResults;
 			var items = result.GetKeyAndOutlineFieldValueMap<string>();
 
-			var retVal = new GenericSearchResult<CatalogItem> {TotalCount = result.TotalCount};
-		    //Load ALL products 
+			var retVal = new ProductSearchResult
+			{
+			    TotalCount = result.TotalCount,
+			    Facets = result.FacetGroups.Select(g => g.ToWebModel()).ToArray()
+			};
+
+            //Load ALL products 
             var products = _itemService.GetByIds(items.Keys.ToArray(), responseGroup);
 
             foreach (var product in products)
             {
-                var webModelProduct = product.ToWebModel(_assetBaseUri);
+                var webModelProduct = product.ToWebModel(_assetBaseUri) as Product;
 
                 var searchTags = items[product.Id];
 
@@ -111,8 +121,10 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		[HttpGet]
 		[ResponseType(typeof(Product))]
 		[Route("")]
-        public IHttpActionResult GetProductByCode(string catalog, [FromUri]string code, [FromUri]moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemLarge, string language = "en-us")
+        public IHttpActionResult GetProductByCode(string store, [FromUri]string code, [FromUri]moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemLarge, string language = "en-us")
 		{
+            var catalog = GetCatalogId(store);
+
 			using(var repository = _foundationCatalogRepositoryFactory())
 			{
                 //Cannot filter by catalogId here because it fails when catalog is virtual
@@ -130,8 +142,9 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		[HttpGet]
 		[ResponseType(typeof(Product))]
 		[Route("{product}")]
-        public IHttpActionResult GetProduct(string catalog, string product, [FromUri]moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemLarge, string language = "en-us")
+        public IHttpActionResult GetProduct(string store, string product, [FromUri]moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemLarge, string language = "en-us")
 		{
+            var catalog = GetCatalogId(store);
             var result = _itemService.GetById(product, responseGroup);
 
             if (result == null)
