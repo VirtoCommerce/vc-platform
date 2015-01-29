@@ -1,14 +1,21 @@
-﻿angular.module('catalogModule.blades.categoriesItemsAdd', [])
+﻿angular.module('catalogModule.blades.categoriesItemsAdd', ['catalogModule.wizards.categoryWizard'])
 .controller('categoriesItemsAddController', ['$scope', 'bladeNavigationService', 'categories', 'items', function ($scope, bladeNavigationService, categories, items) {
     var pb = $scope.blade.parentBlade;
 
     $scope.addCategory = function () {
         categories.newCategory({ catalogId: pb.catalogId, parentCategoryId: pb.categoryId },
             function (data) {
-                pb.showCategoryBlade(data.id, data);
+                var newBlade = {
+                    id: "newCategoryWizard",
+                    currentEntity: data,
+                    title: "New category",
+                    subtitle: 'Fill category information',
+                    controller: 'newCategoryWizardController',
+                    template: 'Modules/Catalog/VirtoCommerce.CatalogModule.Web/Scripts/app/catalog/wizards/newCategory/category-wizard.tpl.html'
+                };
+                bladeNavigationService.showBlade(newBlade, pb);
+
                 $scope.bladeClose();
-                pb.setSelectedItem(data);
-                pb.refresh();
             });
     };
 

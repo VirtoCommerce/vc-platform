@@ -277,6 +277,9 @@
     <Content Include="Scripts\app\catalog\wizards\newAssociation\association-wizard.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\newAssociation\association-wizard-group-step.js" />
     <Content Include="Scripts\app\catalog\wizards\newAssociation\association-wizard-group-step.tpl.html" />
+    <Content Include="Scripts\app\catalog\wizards\newCategory\category-wizard-actions.tpl.html" />
+    <Content Include="Scripts\app\catalog\wizards\newCategory\category-wizard.js" />
+    <Content Include="Scripts\app\catalog\wizards\newCategory\category-wizard.tpl.html" />
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-editorial-review-detail-step.js" />
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-editorial-reviews.js" />
     <Content Include="Scripts\app\catalog\wizards\newProduct\new-product-wizard-property-detail-step.js" />

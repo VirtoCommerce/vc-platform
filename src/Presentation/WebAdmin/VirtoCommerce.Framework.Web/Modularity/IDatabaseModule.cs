@@ -14,8 +14,7 @@ namespace VirtoCommerce.Framework.Web.Modularity
 		/// <summary>
 		/// Allows module to configure database.
 		/// </summary>
-		/// <param name="insertSampleData">If true, insert sample data.</param>
-		/// <param name="reducedSampleData">If true, insert reduced sample data.</param>
-		void SetupDatabase(bool insertSampleData, bool reducedSampleData);
+		/// <param name="sampleDataLevel">Defines the amount of sample data that should be inserted, if any.</param>
+		void SetupDatabase(SampleDataLevel sampleDataLevel);
 	}
 }

@@ -18,7 +18,7 @@ namespace VirtoCommerce.CatalogModule.Test
         {
 
             var catalogController = new CatalogsController(GetCatalogService(), GetSearchService(), null);
-            var categoryController = new CategoriesController(GetSearchService(), GetCategoryService(), GetPropertyService());
+            var categoryController = new CategoriesController(GetSearchService(), GetCategoryService(), GetPropertyService(), GetCatalogService());
             var listEntryController = new ListEntryController(GetSearchService(), GetCategoryService(), GetItemService(), null);
 
             //Create virtual catalog
