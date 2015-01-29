@@ -29,27 +29,23 @@ namespace VirtoCommerce.CatalogModule.Web
 
 		#region IDatabaseModule Members
 
-		public void SetupDatabase(bool insertSampleData, bool reducedSampleData)
+		public void SetupDatabase(SampleDataLevel sampleDataLevel)
 		{
 			using (var db = new EFCatalogRepository(_connectionStringName))
 			{
 				SqlCatalogDatabaseInitializer initializer;
 
-				if (insertSampleData)
+				switch (sampleDataLevel)
 				{
-					if (reducedSampleData)
-					{
-						initializer = new SqlCatalogReducedSampleDatabaseInitializer();
-					}
-					else
-					{
+					case SampleDataLevel.Full:
 						initializer = new SqlCatalogSampleDatabaseInitializer();
-					}
-
-				}
-				else
-				{
-					initializer = new SqlCatalogDatabaseInitializer();
+						break;
+					case SampleDataLevel.Reduced:
+						initializer = new SqlCatalogReducedSampleDatabaseInitializer();
+						break;
+					default:
+						initializer = new SqlCatalogDatabaseInitializer();
+						break;
 				}
 
 				initializer.InitializeDatabase(db);
@@ -57,17 +53,7 @@ namespace VirtoCommerce.CatalogModule.Web
 
 			using (var db = new EFImportingRepository(_connectionStringName))
 			{
-				SqlImportDatabaseInitializer initializer;
-
-				if (insertSampleData)
-				{
-					initializer = new SqlImportDatabaseInitializer();
-				}
-				else
-				{
-					initializer = new SqlImportDatabaseInitializer();
-				}
-
+				var initializer = new SqlImportDatabaseInitializer();
 				initializer.InitializeDatabase(db);
 			}
 		}

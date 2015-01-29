@@ -31,19 +31,21 @@ namespace VirtoCommerce.CoreModule.Web
 
 		#region IDatabaseModule Members
 
-		public void SetupDatabase(bool insertSampleData, bool reducedSampleData)
+		public void SetupDatabase(SampleDataLevel sampleDataLevel)
 		{
 			using (var db = new EFSecurityRepository(_connectionStringName))
 			{
 				SqlSecurityDatabaseInitializer initializer;
 
-				if (insertSampleData)
+				switch (sampleDataLevel)
 				{
-					initializer = new SqlSecuritySampleDatabaseInitializer();
-				}
-				else
-				{
-					initializer = new SqlSecurityDatabaseInitializer();
+					case SampleDataLevel.Full:
+					case SampleDataLevel.Reduced:
+						initializer = new SqlSecuritySampleDatabaseInitializer();
+						break;
+					default:
+						initializer = new SqlSecurityDatabaseInitializer();
+						break;
 				}
 
 				initializer.InitializeDatabase(db);
@@ -53,13 +55,15 @@ namespace VirtoCommerce.CoreModule.Web
 			{
 				SqlCustomerDatabaseInitializer initializer;
 
-				if (insertSampleData)
+				switch (sampleDataLevel)
 				{
-					initializer = new SqlCustomerSampleDatabaseInitializer();
-				}
-				else
-				{
-					initializer = new SqlCustomerDatabaseInitializer();
+					case SampleDataLevel.Full:
+					case SampleDataLevel.Reduced:
+						initializer = new SqlCustomerSampleDatabaseInitializer();
+						break;
+					default:
+						initializer = new SqlCustomerDatabaseInitializer();
+						break;
 				}
 
 				initializer.InitializeDatabase(db);
@@ -69,20 +73,17 @@ namespace VirtoCommerce.CoreModule.Web
 			{
 				SqlAppConfigDatabaseInitializer initializer;
 
-				if (insertSampleData)
+				switch (sampleDataLevel)
 				{
-					if (reducedSampleData)
-					{
-						initializer = new SqlAppConfigReducedSampleDatabaseInitializer();
-					}
-					else
-					{
+					case SampleDataLevel.Full:
 						initializer = new SqlAppConfigSampleDatabaseInitializer();
-					}
-				}
-				else
-				{
-					initializer = new SqlAppConfigDatabaseInitializer();
+						break;
+					case SampleDataLevel.Reduced:
+						initializer = new SqlAppConfigReducedSampleDatabaseInitializer();
+						break;
+					default:
+						initializer = new SqlAppConfigDatabaseInitializer();
+						break;
 				}
 
 				initializer.InitializeDatabase(db);

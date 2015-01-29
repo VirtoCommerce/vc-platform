@@ -35,19 +35,21 @@ namespace VirtoCommerce.MerchandisingModule.Web
 
 		#region IDatabaseModule Members
 
-		public void SetupDatabase(bool insertSampleData, bool reducedSampleData)
+		public void SetupDatabase(SampleDataLevel sampleDataLevel)
 		{
 			using (var db = new EFReviewRepository(_connectionStringName))
 			{
 				SqlReviewDatabaseInitializer initializer;
 
-				if (insertSampleData)
+				switch (sampleDataLevel)
 				{
-					initializer = new SqlReviewSampleDatabaseInitializer();
-				}
-				else
-				{
-					initializer = new SqlReviewDatabaseInitializer();
+					case SampleDataLevel.Full:
+					case SampleDataLevel.Reduced:
+						initializer = new SqlReviewSampleDatabaseInitializer();
+						break;
+					default:
+						initializer = new SqlReviewDatabaseInitializer();
+						break;
 				}
 
 				initializer.InitializeDatabase(db);
@@ -57,13 +59,15 @@ namespace VirtoCommerce.MerchandisingModule.Web
 			{
 				SqlStoreDatabaseInitializer initializer;
 
-				if (insertSampleData)
+				switch (sampleDataLevel)
 				{
-					initializer = new SqlStoreSampleDatabaseInitializer();
-				}
-				else
-				{
-					initializer = new SqlStoreDatabaseInitializer();
+					case SampleDataLevel.Full:
+					case SampleDataLevel.Reduced:
+						initializer = new SqlStoreSampleDatabaseInitializer();
+						break;
+					default:
+						initializer = new SqlStoreDatabaseInitializer();
+						break;
 				}
 
 				initializer.InitializeDatabase(db);
@@ -71,27 +75,35 @@ namespace VirtoCommerce.MerchandisingModule.Web
 
 			using (var db = new EFMarketingRepository(_connectionStringName))
 			{
-				if (insertSampleData)
+				SqlPromotionDatabaseInitializer initializer;
+
+				switch (sampleDataLevel)
 				{
-					new SqlPromotionSampleDatabaseInitializer().InitializeDatabase(db);
+					case SampleDataLevel.Full:
+					case SampleDataLevel.Reduced:
+						initializer = new SqlPromotionSampleDatabaseInitializer();
+						break;
+					default:
+						initializer = new SqlPromotionDatabaseInitializer();
+						break;
 				}
-				else
-				{
-					new SqlPromotionDatabaseInitializer().InitializeDatabase(db);
-				}
+
+				initializer.InitializeDatabase(db);
 			}
 
 			using (var db = new EFDynamicContentRepository(_connectionStringName))
 			{
 				SqlDynamicContentDatabaseInitializer initializer;
 
-				if (insertSampleData)
+				switch (sampleDataLevel)
 				{
-					initializer = new SqlDynamicContentSampleDatabaseInitializer();
-				}
-				else
-				{
-					initializer = new SqlDynamicContentDatabaseInitializer();
+					case SampleDataLevel.Full:
+					case SampleDataLevel.Reduced:
+						initializer = new SqlDynamicContentSampleDatabaseInitializer();
+						break;
+					default:
+						initializer = new SqlDynamicContentDatabaseInitializer();
+						break;
 				}
 
 				initializer.InitializeDatabase(db);
