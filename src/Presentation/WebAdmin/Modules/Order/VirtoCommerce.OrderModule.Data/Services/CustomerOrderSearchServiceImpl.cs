@@ -28,11 +28,11 @@ namespace VirtoCommerce.OrderModule.Data.Services
 				var query = repository.CustomerOrders;
 				if (criteria.CustomerId != null)
 				{
-					query = query.Where(x => x.TargetAgentId == criteria.CustomerId);
+					query = query.Where(x => x.CustomerId == criteria.CustomerId);
 				}
 				if (criteria.SiteId != null)
 				{
-					query = query.Where(x => x.SourceStoreId == criteria.SiteId);
+					query = query.Where(x => x.SiteId == criteria.SiteId);
 				}
 			
 				retVal = new SearchResult

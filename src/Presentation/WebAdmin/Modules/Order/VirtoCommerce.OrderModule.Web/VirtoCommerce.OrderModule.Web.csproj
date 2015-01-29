@@ -104,6 +104,7 @@
     <Compile Include="Converters\LineItemConverter.cs" />
     <Compile Include="Converters\DiscountConverter.cs" />
     <Compile Include="Converters\InPaymentConverter.cs" />
+    <Compile Include="Converters\OperationConverter.cs" />
     <Compile Include="Converters\SearchCriteriaConverter.cs" />
     <Compile Include="Converters\SearchResultConverter.cs" />
     <Compile Include="Converters\ShipmentConverter.cs" />

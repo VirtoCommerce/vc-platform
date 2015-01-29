@@ -14,13 +14,8 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 		public static webModel.CustomerOrder ToWebModel(this coreModel.CustomerOrder customerOrder)
 		{
 			var retVal = new webModel.CustomerOrder();
-			retVal.Childrens = new List<webModel.OperationTreeNode>();
+		
 			retVal.InjectFrom(customerOrder);
-
-			retVal.CustomerId =  customerOrder.TargetAgentId;
-			retVal.SiteId = customerOrder.SourceStoreId;
-			retVal.OrganizationId = customerOrder.TargetStoreId;
-			retVal.EmployeeId = customerOrder.SourceAgentId;
 
 			//TODO: resolve id to names
 			retVal.Customer = retVal.CustomerId;
@@ -28,25 +23,22 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			retVal.OrganizationId = retVal.OrganizationId;
 			retVal.EmployeeId = retVal.EmployeeId;
 
-			if (customerOrder.Shipments != null)
-			{
-				retVal.Shipments = customerOrder.Shipments.Select(x => x.ToWebModel()).ToList();
-				retVal.Childrens.AddRange(retVal.Shipments);
-			}
-			if (customerOrder.InPayments != null)
-			{
-				retVal.InPayments = customerOrder.InPayments.Select(x => x.ToWebModel()).ToList();
-				retVal.Childrens.AddRange(retVal.InPayments);
-			}
-			if (customerOrder.Items != null)
-			{
-				retVal.Items = customerOrder.Items.Select(x => x.ToWebModel()).ToList();
-			}
-			if (customerOrder.Addresses != null)
-			{
-				retVal.Addresses = customerOrder.Addresses.Select(x => x.ToWebModel()).ToList();
-			}
+			if(customerOrder.Discount != null)
+				retVal.Discount = customerOrder.Discount.ToWebModel();
 		
+			if (customerOrder.Shipments != null)
+				retVal.Shipments = customerOrder.Shipments.Select(x => x.ToWebModel()).ToList();
+
+			if (customerOrder.InPayments != null)
+				retVal.InPayments = customerOrder.InPayments.Select(x => x.ToWebModel()).ToList();
+	
+			if (customerOrder.Items != null)
+				retVal.Items = customerOrder.Items.Select(x => x.ToWebModel()).ToList();
+
+			if (customerOrder.Addresses != null)
+				retVal.Addresses = customerOrder.Addresses.Select(x => x.ToWebModel()).ToList();
+
+			retVal.AllRelatedOperations = customerOrder.GetAllRelatedOperations().Select(x => x.ToWebModel()).ToList();
 		
 			return retVal;
 		}
@@ -56,12 +48,6 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			var retVal = new coreModel.CustomerOrder();
 			retVal.InjectFrom(customerOrder);
 			retVal.Currency = customerOrder.Currency;
-
-			
-			retVal.TargetAgentId = customerOrder.CustomerId;
-			retVal.SourceStoreId = customerOrder.SiteId;
-			retVal.TargetStoreId = customerOrder.OrganizationId;
-			retVal.SourceAgentId = customerOrder.EmployeeId;
 
 			if (customerOrder.Items != null)
 				retVal.Items = customerOrder.Items.Select(x => x.ToCoreModel()).ToList();

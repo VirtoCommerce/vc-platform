@@ -18,26 +18,19 @@ namespace VirtoCommerce.Domain.Order.Model
 		public string ModifiedBy { get; set; }
 
 		#endregion
+
+		public string OperationType { 
+			get
+			{
+				return this.GetType().Name;
+			}
+		}
+
 		public string ParentOperationId { get; set; }
 		public string Number { get; set; }
 		public bool? IsApproved { get; set; }
 		public string Status { get; set; }
-		/// <summary>
-		/// source warehouse or store
-		/// </summary>
-		public string SourceStoreId { get; set; }
-		/// <summary>
-		/// Target warehouse or store
-		/// </summary>
-		public string TargetStoreId { get; set;	}
-		/// <summary>
-		/// Source organization or agent
-		/// </summary>
-		public string SourceAgentId { get; set; }
-		/// <summary>
-		/// Target organization or agent
-		/// </summary>
-		public string TargetAgentId	{ get; set;	}
+		
 		/// <summary>
 		/// Currecy code
 		/// </summary>

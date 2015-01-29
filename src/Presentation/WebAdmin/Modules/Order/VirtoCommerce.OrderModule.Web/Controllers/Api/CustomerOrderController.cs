@@ -43,7 +43,7 @@ namespace VirtoCommerce.OrderModule.Web.Controllers.Api
 		[Route("{id}")]
 		public IHttpActionResult GetById(string id)
 		{
-			var retVal = _customerOrderService.GetById(id);
+			var retVal = _customerOrderService.GetById(id, coreModel.CustomerOrderResponseGroup.Full);
 			if (retVal == null)
 			{
 				return NotFound();

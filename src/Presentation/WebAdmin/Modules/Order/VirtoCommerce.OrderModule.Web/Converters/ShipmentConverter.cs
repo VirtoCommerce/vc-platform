@@ -14,12 +14,7 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 		public static webModel.Shipment ToWebModel(this coreModel.Shipment shipment)
 		{
 			var retVal = new webModel.Shipment();
-			retVal.Childrens = new List<webModel.OperationTreeNode>();
 			retVal.InjectFrom(shipment);
-
-			retVal.OrganizationId = shipment.SourceAgentId;
-			retVal.FulfilmentCenterId = shipment.SourceStoreId;
-			retVal.EmployeeId = shipment.TargetAgentId;
 
 			retVal.Organization = retVal.OrganizationId;
 			retVal.FulfilmentCenter = retVal.FulfilmentCenterId;
@@ -29,20 +24,14 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 				retVal.DeliveryAddress = shipment.DeliveryAddress.ToWebModel();
 
 			if (shipment.InPayments != null)
-			{
 				retVal.InPayments = shipment.InPayments.Select(x => x.ToWebModel()).ToList();
-				retVal.Childrens.AddRange(retVal.InPayments);
-			}
 
 			if(shipment.Items != null)
-			{
 				retVal.Items = shipment.Items.Select(x => x.ToWebModel()).ToList();
-			}
 		
 			if(shipment.Discount != null)
-			{
 				retVal.Discount = shipment.Discount.ToWebModel();
-			}
+
 			return retVal;
 		}
 
@@ -50,10 +39,6 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 		{
 			var retVal = new coreModel.Shipment();
 			retVal.InjectFrom(shipment);
-
-			retVal.SourceAgentId = shipment.OrganizationId;
-			retVal.SourceStoreId = shipment.FulfilmentCenterId;
-			retVal.TargetAgentId = shipment.EmployeeId;
 
 			if (shipment.DeliveryAddress != null)
 				retVal.DeliveryAddress = shipment.DeliveryAddress.ToCoreModel();

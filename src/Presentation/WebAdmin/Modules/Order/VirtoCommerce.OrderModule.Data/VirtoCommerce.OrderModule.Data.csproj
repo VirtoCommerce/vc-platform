@@ -69,6 +69,10 @@
     <Compile Include="Migrations\201501291202428_DiscountReference.Designer.cs">
       <DependentUpon>201501291202428_DiscountReference.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201501291406043_PropertiesChange.cs" />
+    <Compile Include="Migrations\201501291406043_PropertiesChange.Designer.cs">
+      <DependentUpon>201501291406043_PropertiesChange.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
     <Compile Include="Model\CustomerOrderEntity.cs" />
@@ -111,6 +115,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201501291202428_DiscountReference.resx">
       <DependentUpon>201501291202428_DiscountReference.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501291406043_PropertiesChange.resx">
+      <DependentUpon>201501291406043_PropertiesChange.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

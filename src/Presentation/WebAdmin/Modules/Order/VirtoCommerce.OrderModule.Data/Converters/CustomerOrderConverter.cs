@@ -27,6 +27,10 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 				retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), entity.Currency);
 			}
 
+			if(entity.Discount != null)
+			{
+				retVal.Discount = entity.Discount.ToCoreModel();
+			}
 			if (entity.Items != null)
 			{
 				retVal.Items = entity.Items.Select(x => x.ToCoreModel()).ToList();
@@ -99,6 +103,15 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 				throw new ArgumentNullException("target");
 
 			source.Patch((OperationEntity)target);
+
+			if (source.CustomerId != null)
+				target.CustomerId = source.CustomerId;
+			if (source.SiteId != null)
+				target.SiteId = source.SiteId;
+			if (source.OrganizationId != null)
+				target.OrganizationId = source.OrganizationId;
+			if (source.EmployeeId != null)
+				target.EmployeeId = source.EmployeeId;
 
 			if (!source.Shipments.IsNullCollection())
 			{

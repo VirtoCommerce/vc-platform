@@ -9,7 +9,7 @@ using VirtoCommerce.Foundation.Money;
 
 namespace VirtoCommerce.OrderModule.Web.Model
 {
-	public class CustomerOrder : OperationTreeNode
+	public class CustomerOrder : Operation
 	{
 		public CustomerOrder()
 		{
@@ -30,5 +30,7 @@ namespace VirtoCommerce.OrderModule.Web.Model
 		public ICollection<LineItem> Items { get; set; }
 		public ICollection<Shipment> Shipments { get; set; }
 		public Discount Discount { get; set; }
+
+		public ICollection<Operation> AllRelatedOperations { get; set; }
 	}
 }

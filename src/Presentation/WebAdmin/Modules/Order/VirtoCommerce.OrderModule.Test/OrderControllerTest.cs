@@ -51,7 +51,7 @@ namespace VirtoCommerce.OrderModule.Test
 		{
 			var result = _controller.GetById("order1") as OkNegotiatedContentResult<webModel.CustomerOrder>;
 			var testOrder = result.Content;
-			
+
 			var payment = testOrder.InPayments.FirstOrDefault();
 
 			var mockPaymentManager = new Mock<IPaymentGatewayManager>();
@@ -65,21 +65,27 @@ namespace VirtoCommerce.OrderModule.Test
 
 
 		[TestMethod]
-		public void FulfilOrderWithSingleShipment()
+		public void FulfilOrderWithSingleShipmentAndPartialUpdate()
 		{
 			var result = _controller.GetById("order1") as OkNegotiatedContentResult<webModel.CustomerOrder>;
 			var testOrder = result.Content;
 
-			var shipment = testOrder.Shipments.FirstOrDefault();
-			shipment.Items = new List<webModel.LineItem>();
-			foreach(var item in testOrder.Items)
+			var partialChangeOrder = new webModel.CustomerOrder
 			{
+				Id = testOrder.Id,
+				Shipments = testOrder.Shipments
+			};
+
+			var shipment = partialChangeOrder.Shipments.FirstOrDefault();
+			shipment.Items = new List<webModel.LineItem>();
+			foreach (var item in testOrder.Items)
+			{
+				item.Id = null;
 				shipment.Items.Add(item);
 			}
 			shipment.IsApproved = true;
-			testOrder.IsApproved = true;
 
-			_controller.Update(testOrder);
+			_controller.Update(partialChangeOrder);
 		}
 
 		//
@@ -150,15 +156,15 @@ namespace VirtoCommerce.OrderModule.Test
 
 			var newShipment = new webModel.Shipment
 			{
-				 Currency = testOrder.Currency,
-				 DeliveryAddress = testOrder.Addresses.First(),
-				 IsApproved = true
+				Currency = testOrder.Currency,
+				DeliveryAddress = testOrder.Addresses.First(),
+				IsApproved = true
 			};
 			testOrder.IsApproved = true;
 
 			testOrder.Shipments.Add(newShipment);
 			//Aprove shipment
-			foreach(var shipment in testOrder.Shipments)
+			foreach (var shipment in testOrder.Shipments)
 			{
 				shipment.IsApproved = true;
 			}
@@ -183,7 +189,21 @@ namespace VirtoCommerce.OrderModule.Test
 				Currency = Foundation.Money.CurrencyCodes.USD,
 				CustomerId = "vasja customer",
 				EmployeeId = "employe",
-				 SiteId = "test store",
+				SiteId = "test store",
+				Addresses = new webModel.Address[]
+				{
+					new webModel.Address {							 
+					City = "london",
+					Phone = "+68787687",
+					PostalCode = "2222",
+					CountryCode = "ENG",
+					Email = "user@mail.com",
+					FirstName = "first name",
+					LastName = "last name",
+					Line1 = "line 1",
+					Organization = "org1"
+					}
+				}.ToList(),
 				Discount = new webModel.Discount
 				{
 					PromotionId = "testPromotion",
@@ -209,16 +229,16 @@ namespace VirtoCommerce.OrderModule.Test
 				Quantity = 2,
 				FulfilmentLocationCode = "warehouse1",
 				ShippingMethodCode = "EMS",
-				//Discount = new webModel.Discount
-				//{
-				//	PromotionId = "itemPromotion",
-				//	Currency = Foundation.Money.CurrencyCodes.USD,
-				//	DiscountAmount = 12,
-				//	Coupon = new webModel.Coupon
-				//	{
-				//		 Code = "ssss"
-				//	}
-				//}
+				Discount = new webModel.Discount
+				{
+					PromotionId = "itemPromotion",
+					Currency = Foundation.Money.CurrencyCodes.USD,
+					DiscountAmount = 12,
+					Coupon = new webModel.Coupon
+					{
+						Code = "ssss"
+					}
+				}
 			};
 			var item2 = new webModel.LineItem
 			{
@@ -234,16 +254,16 @@ namespace VirtoCommerce.OrderModule.Test
 				Quantity = 2,
 				FulfilmentLocationCode = "warehouse1",
 				ShippingMethodCode = "EMS",
-				//Discount = new webModel.Discount
-				//{
-				//	PromotionId = "testPromotion",
-				//	Currency = Foundation.Money.CurrencyCodes.USD,
-				//	DiscountAmount = 12,
-				//	Coupon = new webModel.Coupon
-				//	{
-				//		Code = "ssss"
-				//	}
-				//}
+				Discount = new webModel.Discount
+				{
+					PromotionId = "testPromotion",
+					Currency = Foundation.Money.CurrencyCodes.USD,
+					DiscountAmount = 12,
+					Coupon = new webModel.Coupon
+					{
+						Code = "ssss"
+					}
+				}
 			};
 			order.Items = new List<webModel.LineItem>();
 			order.Items.Add(item1);

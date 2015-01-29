@@ -16,6 +16,11 @@ namespace VirtoCommerce.OrderModule.Data.Model
 			Items = new NullCollection<LineItemEntity>();
 			InPayments = new NullCollection<PaymentInEntity>();
 		}
+
+		public string OrganizationId { get; set; }
+		public string FulfilmentCenterId { get; set; }
+		public string EmployeeId { get; set; }
+
 		public string CustomerOrderId { get; set; }
 		public virtual CustomerOrderEntity CustomerOrder { get; set; }
 

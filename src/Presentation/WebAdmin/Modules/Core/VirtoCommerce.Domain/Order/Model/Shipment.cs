@@ -5,6 +5,10 @@ namespace VirtoCommerce.Domain.Order.Model
 {
 	public class Shipment : CommingOutOperation
 	{
+		public string OrganizationId { get; set; }
+		public string FulfilmentCenterId { get; set; }
+		public string EmployeeId { get; set; }
+
 		public string CustomerOrderId { get; set; }
 		public CustomerOrder CustomerOrder { get; set; }
 
@@ -21,6 +25,7 @@ namespace VirtoCommerce.Domain.Order.Model
 			{
 				foreach (var inPayment in InPayments)
 				{
+					inPayment.ParentOperationId = this.Id;
 					retVal.AddRange(inPayment.GetAllRelatedOperations());
 				}
 			}
@@ -29,30 +34,31 @@ namespace VirtoCommerce.Domain.Order.Model
 
 		public virtual void CalculateTotals()
 		{
+			this.Sum = 0;
 			if (Items != null)
 			{
 				foreach (var item in Items)
 				{
-					Sum += item.Price * item.Quantity;
+					this.Sum += item.Price * item.Quantity;
 					if (item.Discount != null)
 					{
-						Sum -= item.Discount.DiscountAmount;
+						this.Sum -= item.Discount.DiscountAmount;
 					}
 					else
 					{
-						Sum -= item.StaticDiscount;
+						this.Sum -= item.StaticDiscount;
 					}
 				}
 			}
 
 			if (Discount != null)
 			{
-				Sum -= Discount.DiscountAmount;
+				this.Sum -= Discount.DiscountAmount;
 			}
 
 			if (TaxIncluded ?? false)
 			{
-				Sum += Tax;
+				this.Sum += this.Tax;
 			}
 		}
 	}

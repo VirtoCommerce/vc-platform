@@ -18,10 +18,7 @@ namespace VirtoCommerce.OrderModule.Data.Model
 		public string Number { get; set; }
 		public bool IsApproved { get; set; }
 		public string Status { get; set; }
-		public string SourceStoreId { get; set; }
-		public string TargetStoreId { get; set; }
-		public string SourceAgentId { get; set; }
-		public string TargetAgentId { get; set; }
+	
 		public string Comment { get; set; }
 		public string Currency { get; set; }
 		public bool TaxIncluded { get; set; }

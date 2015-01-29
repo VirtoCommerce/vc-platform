@@ -31,7 +31,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 
 		#region ICustomerOrderService Members
 
-		public virtual CustomerOrder GetById(string orderId, ResponseGroup respGroup = ResponseGroup.WithItems)
+		public virtual CustomerOrder GetById(string orderId, CustomerOrderResponseGroup respGroup = CustomerOrderResponseGroup.Full)
 		{
 			CustomerOrder retVal = null;
 			using (var repository = _repositoryFactory())
@@ -67,11 +67,12 @@ namespace VirtoCommerce.OrderModule.Data.Services
 		public virtual CustomerOrder CreateByShoppingCart(string cartId)
 		{
 			var shoppingCart = _shoppingCartService.GetById(cartId);
-			var customerOrder = new CustomerOrder
+			var retVal = new CustomerOrder
 			{
 				Currency = shoppingCart.Currency,
-				TargetAgentId = shoppingCart.CustomerId,
-				SourceStoreId = shoppingCart.SiteId,
+				CustomerId = shoppingCart.CustomerId,
+				SiteId = shoppingCart.SiteId,
+				OrganizationId = shoppingCart.OrganizationId
 			};
 
 			foreach (var cartItem in shoppingCart.Items)
@@ -90,15 +91,17 @@ namespace VirtoCommerce.OrderModule.Data.Services
 					Quantity = cartItem.Quantity,
 					FulfilmentLocationCode = cartItem.FulfilmentLocationCode
 				};
-				customerOrder.Items.Add(orderItem);
+				retVal.Items.Add(orderItem);
 			}
 			//TODO: split shipment
-			
+
+			retVal = Create(retVal);
+
 			//Clear shopping cart
 			_shoppingCartService.Delete(new string[] { cartId });
 
-			customerOrder = Create(customerOrder);
-			return customerOrder;
+
+			return retVal;
 		}
 
 		public void Update(CustomerOrder[] orders)
@@ -109,7 +112,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 			foreach (var order in orders)
 			{
 				//Apply changes to temporary order object
-				var targetOrder = GetById(order.Id, ResponseGroup.Full);
+				var targetOrder = GetById(order.Id, CustomerOrderResponseGroup.Full);
 				if (targetOrder == null)
 				{
 					throw new NullReferenceException("targetOrder");
@@ -132,9 +135,12 @@ namespace VirtoCommerce.OrderModule.Data.Services
 					changedOrder.CalculateTotals();
 
 					EnsureThatAllOperationsHasNumber(changedOrder);
+					
+					//reflect stock operation to inventory service
+					var changedStockOperations = changedOrder.GetAllRelatedOperations().OfType<StockOperation>().Where(x=>x.IsApproved ?? false);
 
 					var sourceOrderEntity = changedOrder.ToEntity();
-					var targetOrderEntity = repository.GetCustomerOrderById(changedOrder.Id, ResponseGroup.Full);
+					var targetOrderEntity = repository.GetCustomerOrderById(changedOrder.Id, CustomerOrderResponseGroup.Full);
 					if (targetOrderEntity == null)
 					{
 						throw new NullReferenceException("targetOrderEntity");
