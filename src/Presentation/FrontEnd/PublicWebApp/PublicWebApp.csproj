@@ -256,11 +256,13 @@
     <Compile Include="Helpers\MVC\SiteMap\SeoRouteValueDictionaryFactory.cs" />
     <Compile Include="Helpers\MVC\SiteMap\SiteMapStoreCacheKeyGenerator.cs" />
     <Compile Include="Helpers\MVC\StoreStyle.cs" />
+    <Compile Include="Helpers\UserHelper.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\BannerModel.cs" />
     <Compile Include="Models\Binders\BrowseQueryBinder.cs" />
     <Compile Include="Models\Binders\CategoryPathModelBinder.cs" />
     <Compile Include="Models\CatalogModels.cs" />
+    <Compile Include="Models\CustomerModels.cs" />
     <Compile Include="Models\CurrencyModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -603,6 +605,9 @@
     <Content Include="Views\Catalog\CreateReview.cshtml" />
     <Content Include="Views\Account\LogOnAsync.cshtml" />
     <Content Include="Views\Account\DisplayTemplates\ForgotPassword.cshtml" />
+    <Content Include="Views\Account\_Layout.cshtml" />
+    <Content Include="Views\Account\Index.cshtml" />
+    <Content Include="Views\Account\AccountInfo.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

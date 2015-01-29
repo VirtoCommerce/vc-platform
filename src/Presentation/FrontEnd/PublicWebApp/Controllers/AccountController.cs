@@ -9,9 +9,14 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using VirtoCommerce.ApiClient;
+using VirtoCommerce.ApiClient.DataContracts.Security;
+using VirtoCommerce.ApiClient.Extensions;
 using VirtoCommerce.ApiWebClient.Globalization;
 using VirtoCommerce.ApiWebClient.Helpers;
+using VirtoCommerce.Web.Converters;
+using VirtoCommerce.Web.Helpers;
 using VirtoCommerce.Web.Models;
+using ApplicationUser = VirtoCommerce.Web.Models.ApplicationUser;
 
 namespace VirtoCommerce.Web.Controllers
 {
@@ -57,11 +62,9 @@ namespace VirtoCommerce.Web.Controllers
 
         public async Task<ActionResult> Index()
         {
-            //var contact = _userClient.GetCurrentCustomer();
-            //var model = UserHelper.GetCustomerModel(contact);
-            //return View();
-
-            return null;
+            var client = ClientContext.Clients.CreateSecurityClient();
+            var user = await client.GetUserInfo(ClientContext.Session.Username);
+            return View(user.ToWebModel());
         }
 
 
@@ -174,6 +177,15 @@ namespace VirtoCommerce.Web.Controllers
             ModelState.AddModelError("", errorMessage);
             return View(model);
 
+        }
+
+        public ActionResult AccountInfo()
+        {
+            var session = ClientContext.Session;
+            var client = ClientContext.Clients.CreateSecurityClient();
+            var user = Task.Run(() => client.GetUserInfo(session.Username)).Result;
+            var model = UserHelper.GetShippingBillingForCustomer(user);
+            return PartialView("AccountInfo", model);
         }
 
         //
@@ -337,25 +349,44 @@ namespace VirtoCommerce.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ForgotPassword(ForgotPasswordModel model)
         {
+
             if (ModelState.IsValid)
             {
-                var user = await UserManager.FindByNameAsync(model.UserName);
-                if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
+                try
                 {
-                    // Don't reveal that the user does not exist or is not confirmed
-                    return View("ForgotPasswordConfirmation");
+                    var client = ClientContext.Clients.CreateSecurityClient();
+                    var user = await client.GetUserInfo(model.UserName);
+
+                    if (user == null)
+                    {
+                        TempData[GetMessageTempKey(MessageType.Error)] = new[] { "Such account does not exist in our database".Localize() };
+                        return RedirectToAction("Login");
+                    }
+
+                    if (user.UserType == RegisterType.Administrator || user.UserType == RegisterType.SiteAdministrator)
+                    {
+                        //The message is tricky in purpose so that no one could guess admins username!!!
+                        TempData[GetMessageTempKey(MessageType.Error)] = new[] { "Such account does not exist in our database".Localize() };
+                        return RedirectToAction("Login");
+                    }
+
+                    var code = await UserManager.GeneratePasswordResetTokenAsync(user.AccountId);
+
+                    var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.AccountId, code = HttpUtility.UrlEncode(code) }, Request.Url.Scheme);
+
+                    await UserManager.SendEmailAsync(user.AccountId, "Reset Password", string.Format(
+                                "<b>{0}</b> <br/><br/> To change your password, click on the following link:<br/> <br/> <a href='{1}'>{1}</a> <br/>",
+                                user.FullName,
+                                callbackUrl));
+
+                    TempData[GetMessageTempKey(MessageType.Success)] = new[] { "The reset password link was generated. Check you email to reset password.".Localize() };
                 }
-
-                // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
-                // Send an email with this link
-                // string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
-                // await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
-                // return RedirectToAction("ForgotPasswordConfirmation", "Account");
+                catch (Exception ex)
+                {
+                    TempData[GetMessageTempKey(MessageType.Error)] = new[] { ex.Message };
+                }
             }
-
-            // If we got this far, something failed, redisplay form
-            return View(model);
+            return RedirectToAction("Login");
         }
 
         //
@@ -371,7 +402,7 @@ namespace VirtoCommerce.Web.Controllers
         [AllowAnonymous]
         public ActionResult ResetPassword(string code)
         {
-            return code == null ? View("Error") : View();
+            return View(new ResetPasswordModel(code));
         }
 
         //
@@ -379,25 +410,28 @@ namespace VirtoCommerce.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
+        public async Task<ActionResult> ResetPassword(ResetPasswordModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
+
             var user = await UserManager.FindByNameAsync(model.Email);
             if (user == null)
             {
                 // Don't reveal that the user does not exist
-                return RedirectToAction("ResetPasswordConfirmation", "Account");
+                return RedirectToAction("Login");
             }
-            var result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
+            var result = await UserManager.ResetPasswordAsync(user.Id, model.Token, model.NewPassword);
             if (result.Succeeded)
             {
-                return RedirectToAction("ResetPasswordConfirmation", "Account");
+                TempData[GetMessageTempKey(MessageType.Success)] = new[] { "Your password has been succesfully changed. You can now login using new password".Localize() };
+                return RedirectToAction("Login");
             }
             AddErrors(result);
-            return View();
+            return View(model);
+
         }
 
         //
@@ -631,5 +665,7 @@ namespace VirtoCommerce.Web.Controllers
             }
         }
         #endregion
+
+
     }
 }

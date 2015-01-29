@@ -28,7 +28,11 @@ namespace VirtoCommerce.CoreModule.Web.Security
         }
         public Contact GetContact(string id)
         {
-            return Members.OfType<Contact>().Include(x => x.ContactPropertyValues).FirstOrDefault(x => x.MemberId == id);
+            return Members.OfType<Contact>()
+                .Include(x => x.Addresses)
+                .Include(x => x.Emails)
+                .Include(x => x.ContactPropertyValues)
+                .FirstOrDefault(x => x.MemberId == id);
         }
     }
 }
