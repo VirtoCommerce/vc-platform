@@ -148,21 +148,37 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 			get { return GetAsQueryable<PaymentInEntity>(); }
 		}
 
-		public CustomerOrderEntity GetCustomerOrderById(string id, ResponseGroup responseGroup)
+		public CustomerOrderEntity GetCustomerOrderById(string id, CustomerOrderResponseGroup responseGroup)
 		{
-			return CustomerOrders.Include(x => x.Shipments)
-								 .Include(x => x.InPayments)
-								 .Include(x => x.Items)
-								 .FirstOrDefault(x => x.Id == id);
+			var query = CustomerOrders.Where(x=>x.Id == id)
+									  .Include(x => x.Discount);
 
+			if ((responseGroup & CustomerOrderResponseGroup.WithAddresses) == CustomerOrderResponseGroup.WithAddresses)
+			{
+				query = query.Include(x => x.Addresses);
+			}
+			if ((responseGroup & CustomerOrderResponseGroup.WithInPayments) == CustomerOrderResponseGroup.WithInPayments)
+			{
+				query = query.Include(x => x.InPayments.Select(y => y.BillingAddress));
+			}
+			if ((responseGroup & CustomerOrderResponseGroup.WithItems) == CustomerOrderResponseGroup.WithItems)
+			{
+				query = query.Include(x => x.Items.Select(y => y.Discount));
+			}
+			if ((responseGroup & CustomerOrderResponseGroup.WithShipments) == CustomerOrderResponseGroup.WithShipments)
+			{
+				query = query.Include(x => x.Shipments.Select(y => y.Discount))
+						     .Include(x => x.Shipments.Select(y => y.DeliveryAddress));
+			}
+			return query.FirstOrDefault();
 		}
 
-		public ShipmentEntity GetShipmentById(string id, ResponseGroup responseGroup)
+		public ShipmentEntity GetShipmentById(string id, CustomerOrderResponseGroup responseGroup)
 		{
 			throw new NotImplementedException();
 		}
 
-		public PaymentInEntity GetInPaymentById(string id, ResponseGroup responseGroup)
+		public PaymentInEntity GetInPaymentById(string id, CustomerOrderResponseGroup responseGroup)
 		{
 			throw new NotImplementedException();
 		}

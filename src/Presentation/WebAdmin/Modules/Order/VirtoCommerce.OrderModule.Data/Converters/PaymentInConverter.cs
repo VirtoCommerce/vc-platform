@@ -65,6 +65,11 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 				throw new ArgumentNullException("target");
 
 			source.Patch((OperationEntity)target);
+
+			if (source.CustomerId != null)
+				target.CustomerId = source.CustomerId;
+			if (source.OrganizationId != null)
+				target.OrganizationId = source.OrganizationId;
 		}
 	}
 

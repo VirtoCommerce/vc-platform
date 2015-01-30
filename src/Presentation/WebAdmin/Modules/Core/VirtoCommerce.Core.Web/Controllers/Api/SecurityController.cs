@@ -7,11 +7,13 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Description;
+using Omu.ValueInjecter;
 using VirtoCommerce.CoreModule.Web.Security;
 using VirtoCommerce.CoreModule.Web.Security.Models;
 using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Foundation.Data.Security.Identity;
 using VirtoCommerce.Foundation.Security.Model;
+using Address = VirtoCommerce.CoreModule.Web.Security.Models.Address;
 
 namespace VirtoCommerce.SecurityModule.Web.Controllers
 {
@@ -179,6 +181,7 @@ namespace VirtoCommerce.SecurityModule.Web.Controllers
         {
             var dbUser = new ApplicationUser
             {
+                Id = user.Id,
                 Email = user.Email,
                 PasswordHash = user.PasswordHash,
                 UserName = user.UserName,
@@ -267,6 +270,7 @@ namespace VirtoCommerce.SecurityModule.Web.Controllers
                     retVal = new AuthInfoExtended
                     {
                         Id = user.MemberId,
+                        AccountId = user.AccountId,
                         Login = user.UserName,
                         FullName = user.UserName,
                         AccountState = user.AccountState,
@@ -283,6 +287,20 @@ namespace VirtoCommerce.SecurityModule.Web.Controllers
                         {
                             retVal.FullName = contact.FullName;
                             retVal.Properties = contact.ContactPropertyValues.ToDictionary(x => x.Name, x => x.ToString());
+                            if (contact.Addresses != null)
+                            {
+                                retVal.Addresses = contact.Addresses.Select(x => new Address().InjectFrom(x)).Cast<Address>().ToArray();
+                            }
+
+                            if (contact.Emails != null)
+                            {
+                                var email = contact.Emails.FirstOrDefault(x => x.Type == EmailType.Primary.ToString());
+
+                                if (email != null)
+                                {
+                                    retVal.Email = email.Address;
+                                }
+                            }
                         }
                     }
 

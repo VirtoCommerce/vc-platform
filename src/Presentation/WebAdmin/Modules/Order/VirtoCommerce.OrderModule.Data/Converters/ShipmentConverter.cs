@@ -83,7 +83,14 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 				throw new ArgumentNullException("target");
 
 			source.Patch((OperationEntity)target);
-		
+
+			if (source.OrganizationId != null)
+				target.OrganizationId = source.OrganizationId;
+			if (source.FulfilmentCenterId != null)
+				target.FulfilmentCenterId = source.FulfilmentCenterId;
+			if (source.EmployeeId != null)
+				target.EmployeeId = source.EmployeeId;
+
 			if (!source.InPayments.IsNullCollection())
 			{
 				source.InPayments.Patch(target.InPayments, new OperationComparer(), (sourcePayment, targetPayment) => sourcePayment.Patch(targetPayment));

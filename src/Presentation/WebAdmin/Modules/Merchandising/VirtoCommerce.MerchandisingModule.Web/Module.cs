@@ -23,7 +23,12 @@ using VirtoCommerce.Search.Providers.Elastic;
 
 namespace VirtoCommerce.MerchandisingModule.Web
 {
-	public class Module : IModule, IDatabaseModule
+    using VirtoCommerce.Foundation.Assets.Factories;
+    using VirtoCommerce.Foundation.Assets.Services;
+    using VirtoCommerce.Foundation.Data.Azure.Asset;
+    using VirtoCommerce.MerchandisingModule.Web.Services;
+
+    public class Module : IModule, IDatabaseModule
 	{
 		private const string _connectionStringName = "VirtoCommerce";
 		private readonly IUnityContainer _container;
@@ -144,18 +149,23 @@ namespace VirtoCommerce.MerchandisingModule.Web
 
 			#endregion
 
+            var azureBlobStorageProvider = new AzureBlobAssetRepository("DefaultEndpointsProtocol=https;AccountName=virtotest;AccountKey=Qvy1huF8b0OE6upFh91/IMZPnETwhxe7BlRNZoZeJL59b921LeBb7zZZt03CiOVf7wVfPseUMKSXD8yz/rXVuQ==", null);
+            var itemBrowseService = new ItemBrowsingService(itemService, catalogRepFactory, elasticSearchProvider, new HttpCacheRepository(), azureBlobStorageProvider, searchConnection);
+
 			Func<ICatalogOutlineBuilder> catalogOutlineBuilderFactory = () => new CatalogOutlineBuilder(catalogRepFactory(), new HttpCacheRepository());
 
 			var assetBaseUri = new Uri(@"http://virtotest.blob.core.windows.net/");
 
 			_container.RegisterType<ReviewController>(new InjectionConstructor(reviewRepFactory));
-            _container.RegisterType<ProductController>(new InjectionConstructor(itemService, elasticSearchProvider, searchConnection, catalogRepFactory, appConfigRepFactory, catalogOutlineBuilderFactory, storeRepFactory, assetBaseUri));
+            _container.RegisterType<ProductController>(new InjectionConstructor(itemService, elasticSearchProvider, searchConnection, itemBrowseService, catalogRepFactory, appConfigRepFactory, catalogOutlineBuilderFactory, storeRepFactory, azureBlobStorageProvider));
 			_container.RegisterType<ContentController>(new InjectionConstructor(dynamicContentServiceFactory));
 			_container.RegisterType<CategoryController>(new InjectionConstructor(itemSearchService, categoryService, propertyService, catalogRepFactory, appConfigRepFactory, storeRepFactory));
 			_container.RegisterType<StoreController>(new InjectionConstructor(storeRepFactory, appConfigRepFactory));
 			_container.RegisterType<KeywordController>(new InjectionConstructor(appConfigRepFactory));
-
-
+            _container.RegisterType<IAssetUrl, AzureBlobAssetRepository>();
+            _container.RegisterType<IAssetEntityFactory, AssetEntityFactory>();
+            _container.RegisterType<IAssetService, AssetService>();
+            _container.RegisterType<IItemBrowsingService, ItemBrowsingService>();
 		}
 
 		#endregion

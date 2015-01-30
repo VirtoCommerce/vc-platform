@@ -9,6 +9,9 @@ namespace VirtoCommerce.OrderModule.Data.Model
 {
 	public class PaymentInEntity : OperationEntity
 	{
+		public string OrganizationId { get; set; }
+		public string CustomerId { get; set; }
+
 		public DateTime? IncomingDate { get; set; }
 		public string OuterId { get; set; }
 		public string Purpose { get; set; }

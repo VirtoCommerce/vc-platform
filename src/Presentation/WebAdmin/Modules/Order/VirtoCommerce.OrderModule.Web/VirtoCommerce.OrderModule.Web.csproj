@@ -104,6 +104,7 @@
     <Compile Include="Converters\LineItemConverter.cs" />
     <Compile Include="Converters\DiscountConverter.cs" />
     <Compile Include="Converters\InPaymentConverter.cs" />
+    <Compile Include="Converters\OperationConverter.cs" />
     <Compile Include="Converters\SearchCriteriaConverter.cs" />
     <Compile Include="Converters\SearchResultConverter.cs" />
     <Compile Include="Converters\ShipmentConverter.cs" />
@@ -125,6 +126,11 @@
     <Content Include="module.manifest" />
     <Content Include="Scripts\blades\!customerOrder-list.js" />
     <Content Include="Scripts\blades\!customerOrder-list.tpl.html" />
+    <Content Include="Scripts\blades\customerOrder-detail.js" />
+    <Content Include="Scripts\blades\customerOrder-detail.tpl.html" />
+    <Content Include="Scripts\blades\customerOrder-items.js" />
+    <Content Include="Scripts\blades\customerOrder-items.tpl.html" />
+    <Content Include="Scripts\blades\customerOrder-detail-toolbar.tpl.html" />
     <Content Include="Scripts\home.tpl.html" />
     <Content Include="Scripts\order.js" />
   </ItemGroup>

@@ -5,6 +5,11 @@ namespace VirtoCommerce.Domain.Order.Model
 {
 	public class CustomerOrder : Operation
 	{
+		public string CustomerId { get; set; }
+		public string SiteId { get; set; }
+		public string OrganizationId { get; set; }
+		public string EmployeeId { get; set; }
+
 		public ICollection<Address> Addresses { get; set; }
 		public ICollection<PaymentIn> InPayments { get; set; }
 
@@ -21,6 +26,7 @@ namespace VirtoCommerce.Domain.Order.Model
 			{
 				foreach (var inPayment in InPayments)
 				{
+					inPayment.ParentOperationId = this.Id;
 					retVal.AddRange(inPayment.GetAllRelatedOperations());
 				}
 			}
@@ -29,6 +35,7 @@ namespace VirtoCommerce.Domain.Order.Model
 			{
 				foreach (var shipment in Shipments)
 				{
+					shipment.ParentOperationId = this.Id;
 					retVal.AddRange(shipment.GetAllRelatedOperations());
 				}
 			}

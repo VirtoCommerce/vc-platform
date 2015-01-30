@@ -31,7 +31,7 @@ function ($scope, customerOrders, bladeNavigationService, dialogService) {
 
             if (selectedNode != null) {
                 //select the node in the new list
-            	angular.forEach(data.customerOrders, function (node) {
+                angular.forEach(data.customerOrders, function (node) {
                     if (selectedNode.id === node.id) {
                         selectedNode = node;
                     }
@@ -50,10 +50,11 @@ function ($scope, customerOrders, bladeNavigationService, dialogService) {
 
         var newBlade = {
             id: 'customerOrderDetail',
-            title: selectedNode.customerName + '\'s Customer Order',
+            title: selectedNode.customer + '\'s Customer Order',
+            subtitle: 'Edit order details and related documents',
             currentEntityId: selectedNode.id,
             controller: 'customerOrderDetailController',
-            template: 'Modules/Orders/VirtoCommerce.OrderModule.Web/Scripts/blades/customerOrder-detail.tpl.html'
+            template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/blades/customerOrder-detail.tpl.html'
         };
 
         bladeNavigationService.showBlade(newBlade, $scope.blade);
@@ -105,7 +106,7 @@ function ($scope, customerOrders, bladeNavigationService, dialogService) {
                   return true;
               }
           },
-         
+
           {
               name: "Delete", icon: 'fa fa-trash-o',
               executeMethod: function () {

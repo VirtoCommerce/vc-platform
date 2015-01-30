@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 namespace VirtoCommerce.Domain.Order.Model
 {
 	[Flags]
-	public enum ResponseGroup
+	public enum CustomerOrderResponseGroup
 	{
 		WithItems = 1,
 		WithShipments = 2,
 		WithInPayments = 4,
-		Full = WithItems | WithShipments | WithInPayments
+		WithAddresses = 8,
+		Full = WithItems | WithShipments | WithInPayments | WithAddresses 
 	}
 }

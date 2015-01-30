@@ -8,9 +8,9 @@ using Newtonsoft.Json;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Model
 {
-    public class GenericSearchResult<T>
+    public class ResponseCollection<T>
     {
-		public GenericSearchResult()
+		public ResponseCollection()
 		{
 			Items = new Collection<T>();
 		}

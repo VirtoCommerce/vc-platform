@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VirtoCommerce.Web.Core.DataContracts.Security
+namespace VirtoCommerce.ApiClient.DataContracts.Security
 {
     public class ApplicationUser
     {

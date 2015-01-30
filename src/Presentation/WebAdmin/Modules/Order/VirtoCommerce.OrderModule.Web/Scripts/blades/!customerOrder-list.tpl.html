@@ -20,15 +20,15 @@
                                     </label>
                                 </div>
                             </th>
-                            <th class="text-left">Customer</th>
-                            <th class="text-left fixed-td">Items count</th>
+                            <th class="text-left">Description</th>
+                            <th class="text-left fixed-td">Confirmed</th>
                             <th class="text-left fixed-td">Total</th>
                             <th class="text-left fixed-td">Created</th>
-                            <th class="text-left fixed-td">Modified</th>
+                            <th class="text-left fixed-td">Store</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="data in objects" ng-class="{'selected': data.id === selectedNodeId}" context-menu data-target="cl_menu_{{data.id}}" ng-click='selectNode(data)'>
+                        <tr ng-repeat="data in objects" ng-class="{'selected': data.id === selectedNodeId}" context-menu data-target="col_menu_{{data.id}}" ng-click='selectNode(data)'>
                             <td>
                                 <div data-role="input-control" class="input-control checkbox">
                                     <label>
@@ -38,11 +38,12 @@
                                 </div>
                             </td>
                             <td>
-                                <span title="{{data.customerName}}">{{data.customer}}</span>
+                                <span>{{data.number + ' by ' + data.customer}}</span>
+                                <span class="sub-title">{{data.statusId}}</span>
                             </td>
                             <td>
-                                <span>{{data.items?data.items.length:0}}</span>
-                                <ul role="menu" class="dropdown-menu context-menu" id="cl_menu_{{data.id}}">
+                                <span>{{data.isApproved}}</span>
+                                <ul role="menu" class="dropdown-menu context-menu" id="col_menu_{{data.id}}">
                                     <li ng-click='edit(data)'>
                                         <i class="ico fa fa-edit"></i>&nbsp;Manage
                                     </li>
@@ -52,13 +53,13 @@
                                 </ul>
                             </td>
                             <td>
-                                <span title="{{data.total}}">{{data.sum}}</span>
+                                <span>{{data.sum + data.currency}}</span>
                             </td>
                             <td>
                                 <span title="{{data.createdDate}}">{{data.createdDate | date }}</span>
                             </td>
                             <td>
-                                <span title="{{data.modifiedDate}}">{{data.modifiedDate | date}}</span>
+                                <span title="{{data.site}}">{{data.site}}</span>
                             </td>
                         </tr>
                     </tbody>

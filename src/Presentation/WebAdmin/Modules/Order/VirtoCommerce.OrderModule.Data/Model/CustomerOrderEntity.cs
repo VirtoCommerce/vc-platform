@@ -19,6 +19,11 @@ namespace VirtoCommerce.OrderModule.Data.Model
 			Shipments = new NullCollection<ShipmentEntity>();
 		}
 
+		public string CustomerId { get; set; }
+		public string SiteId { get; set; }
+		public string OrganizationId { get; set; }
+		public string EmployeeId { get; set; }
+
 		public virtual ObservableCollection<AddressEntity> Addresses { get; set; }
 		public virtual ObservableCollection<PaymentInEntity> InPayments { get; set; }
 

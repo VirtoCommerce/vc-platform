@@ -27,16 +27,8 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 				target.Currency = source.Currency;
 			if (source.Number != null)
 				target.Number = source.Number;
-			if (source.SourceAgentId != null)
-				target.SourceAgentId = source.SourceAgentId;
-			if (source.SourceStoreId != null)
-				target.SourceStoreId = source.SourceStoreId;
 			if (source.Status != null)
 				target.Status = source.Status;
-			if (source.TargetAgentId != null)
-				target.TargetAgentId = source.TargetAgentId;
-			if (source.TargetStoreId != null)
-				target.TargetStoreId = source.TargetStoreId;
 
 			target.Tax = source.Tax;
 			target.TaxIncluded = source.TaxIncluded;

@@ -23,7 +23,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         }
 
         [HttpGet]
-        [ResponseType(typeof(webModel.GenericSearchResult<webModel.DynamicContentItemGroup>))]
+        [ResponseType(typeof(webModel.ResponseCollection<webModel.DynamicContentItemGroup>))]
         [Route("{placeHolder}")]
         public IHttpActionResult GetDynamicContent(string placeHolder, [FromUri] string[] tags, string language = "en-us")
         {
@@ -59,7 +59,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
             if (groups.Any())
             {
-                var retVal = new webModel.GenericSearchResult<webModel.DynamicContentItemGroup>
+                var retVal = new webModel.ResponseCollection<webModel.DynamicContentItemGroup>
                 {
                     Items = groups,
                     TotalCount = groups.Count()

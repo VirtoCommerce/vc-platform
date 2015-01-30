@@ -18,103 +18,95 @@ using moduleModel = VirtoCommerce.CatalogModule.Model;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
-	[RoutePrefix("api/mp/{store}/{language}/products")]
+    using VirtoCommerce.Foundation.Assets.Services;
+    using VirtoCommerce.Foundation.Search.Schemas;
+    using VirtoCommerce.MerchandisingModule.Web.Services;
+
+    [RoutePrefix("api/mp/{store}/{language}/products")]
 	public class ProductController : BaseController
 	{
 		private readonly IItemService _itemService;
 		private readonly ISearchProvider _searchService;
 		private readonly ISearchConnection _searchConnection;
-		private readonly Func<IFoundationCatalogRepository> _foundationCatalogRepositoryFactory;
+
+        private readonly IItemBrowsingService _browseService;
+
+        private readonly Func<IFoundationCatalogRepository> _foundationCatalogRepositoryFactory;
 	    private readonly Func<IFoundationAppConfigRepository> _foundationAppConfigRepFactory;
 	    private readonly Func<ICatalogOutlineBuilder> _catalogOutlineBuilderFactory;
-	    private readonly Uri _assetBaseUri;
+
+        private readonly IAssetUrl _assetUri;
 
 		public ProductController(IItemService itemService,
 								 ISearchProvider indexedSearchProvider,
 								 ISearchConnection searchConnection,
+                                    IItemBrowsingService browseService,
 								 Func<IFoundationCatalogRepository> foundationCatalogRepositoryFactory,
                                  Func<IFoundationAppConfigRepository> foundationAppConfigRepFactory,
                                  Func<ICatalogOutlineBuilder> catalogOutlineBuilderFactory,
                                  Func<IStoreRepository> storeRepository,
-								 Uri assetBaseUri) 
+								 IAssetUrl assetUri) 
             : base(storeRepository)
 		{
 			_searchService = indexedSearchProvider;
 			_searchConnection = searchConnection;
-			_itemService = itemService;
+		    _itemService = itemService;
 			_foundationCatalogRepositoryFactory = foundationCatalogRepositoryFactory;
 		    _foundationAppConfigRepFactory = foundationAppConfigRepFactory;
 		    _catalogOutlineBuilderFactory = catalogOutlineBuilderFactory;
-		    _assetBaseUri = assetBaseUri;
+            _assetUri = assetUri;
+		    this._browseService = browseService;
 		}
 
         /// <summary>
         /// Searches the specified catalog.
         /// </summary>
         /// <param name="store">The store.</param>
-        /// <param name="criteria">The criteria.</param>
+        /// <param name="parameters"></param>
         /// <param name="responseGroup">The response group.</param>
         /// <param name="outline">The outline.</param>
         /// <param name="language">The language.</param>
+        /// <param name="currency"></param>
         /// <returns></returns>
-	    [HttpGet]
+        [HttpGet]
         [Route("")]
 		[ResponseType(typeof(ProductSearchResult))]
-		public IHttpActionResult Search(string store, [ModelBinder(typeof(CatalogItemSearchCriteriaBinder))] CatalogItemSearchCriteria criteria,[FromUri]moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemMedium, [FromUri]string outline="", string language = "en-us")
+		public IHttpActionResult Search(string store, [ModelBinder(typeof(SearchParametersBinder))] SearchParameters parameters, [FromUri]moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemMedium, [FromUri]string outline="", string language = "en-us", string currency = "USD")
         {
             var catalog = GetCatalogId(store);
 
-			criteria.Locale = language;
-			criteria.Catalog = catalog.ToLowerInvariant();
+            var criteria = new CatalogItemSearchCriteria { Locale = language, Catalog = catalog.ToLowerInvariant() };
+
             if (!string.IsNullOrWhiteSpace(outline))
             {
                 criteria.Outlines.Add(String.Format("{0}/{1}*", catalog, outline));
             }
-			var result = _searchService.Search(_searchConnection.Scope, criteria) as SearchResults;
-			var items = result.GetKeyAndOutlineFieldValueMap<string>();
 
-			var retVal = new ProductSearchResult
-			{
-			    TotalCount = result.TotalCount,
-			    Facets = result.FacetGroups.Select(g => g.ToWebModel()).ToArray()
-			};
-
-            //Load ALL products 
-            var products = _itemService.GetByIds(items.Keys.ToArray(), responseGroup);
-
-            foreach (var product in products)
+            // apply vendor filter if one specified
+            if (parameters.Terms != null && parameters.Terms.Count > 0)
             {
-                var webModelProduct = product.ToWebModel(_assetBaseUri) as Product;
-
-                var searchTags = items[product.Id];
-
-                var catalogPath = criteria.Catalog + "/";
-
-                webModelProduct.Outline =
-                    searchTags[criteria.OutlineField].ToString()
-                        .Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
-                        .FirstOrDefault(x => x.StartsWith(catalogPath, StringComparison.OrdinalIgnoreCase))
-                    ?? string.Empty;
-
-                webModelProduct.Outline = webModelProduct.Outline.Replace(catalogPath, "");
-
-                int reviewTotal;
-                if (searchTags.ContainsKey(criteria.ReviewsTotalField)
-                    && int.TryParse(searchTags[criteria.ReviewsTotalField].ToString(), out reviewTotal))
+                foreach (var term in parameters.Terms)
                 {
-                    webModelProduct.ReviewsTotal = reviewTotal;
-                }
-                double reviewAvg;
-                if (searchTags.ContainsKey(criteria.ReviewsAverageField)
-                    && double.TryParse(searchTags[criteria.ReviewsAverageField].ToString(), out reviewAvg))
-                {
-                    webModelProduct.Rating = reviewAvg;
-                }
+                    var termFilter = new AttributeFilter()
+                    {
+                        Key = term.Key,
+                        Values = term.Value.Select(x => new AttributeFilterValue() { Id = x.ToLowerInvariant(), Value = x.ToLowerInvariant() }).ToArray()
+                    };
 
-                retVal.Items.Add(webModelProduct);
+                    criteria.Apply(termFilter);
+                }
             }
 
-            return Ok(retVal);
+            //criteria.ClassTypes.Add("Product");
+            criteria.RecordsToRetrieve = parameters.PageSize == 0 ? 10 : parameters.PageSize;
+            criteria.StartingRecord = (parameters.PageIndex - 1) * criteria.RecordsToRetrieve;
+            criteria.Pricelists = null;//UserHelper.CustomerSession.Pricelists;
+            criteria.Currency = currency;
+
+            //Load ALL products 
+            var searchResults = _browseService.SearchItems(criteria, responseGroup);
+
+            return Ok(searchResults);
 		}
 
 		/// GET: api/mp/apple/en-us/products?code='22'
@@ -164,7 +156,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
             if (result != null)
 		    {
-                var webModelProduct = result.ToWebModel(_assetBaseUri);
+                var webModelProduct = result.ToWebModel(_assetUri);
                 //Build category path outline for requested catalog, can be virtual catalog as well
                 webModelProduct.Outline = _catalogOutlineBuilderFactory().BuildCategoryOutline(catalog, result.Id).ToString("/").ToLowerInvariant();
                 webModelProduct.Outline = webModelProduct.Outline.Replace(catalog + "/", "");

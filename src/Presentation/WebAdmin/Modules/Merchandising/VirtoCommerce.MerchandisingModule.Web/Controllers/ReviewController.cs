@@ -29,10 +29,10 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
 		[HttpGet]
 		[Route("~/api/mp/{language}/products/{productId}/reviews")]
-		[ResponseType(typeof(GenericSearchResult<Review>))]
+		[ResponseType(typeof(ResponseCollection<Review>))]
 		public IHttpActionResult GetAllProductReviews(string language, string productId)
 		{
-            var retVal = new GenericSearchResult<Review>();
+            var retVal = new ResponseCollection<Review>();
 			using (var repository = _reviewRepositoryFactory())
 			{
 				var reviews = repository.Reviews.Where(x => (string.IsNullOrEmpty(productId) || x.ItemId == productId) && x.Status == (int)foundation.ReviewStatus.Approved)

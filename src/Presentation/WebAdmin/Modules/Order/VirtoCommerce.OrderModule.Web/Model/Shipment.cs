@@ -8,7 +8,7 @@ using VirtoCommerce.Foundation.Money;
 
 namespace VirtoCommerce.OrderModule.Web.Model
 {
-	public class Shipment : OperationTreeNode
+	public class Shipment : Operation
 	{
 		public Shipment()
 		{

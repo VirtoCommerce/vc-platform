@@ -29,7 +29,7 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 			get { throw new NotImplementedException(); }
 		}
 
-		public CustomerOrderEntity GetCustomerOrderById(string id, ResponseGroup responseGroup)
+		public CustomerOrderEntity GetCustomerOrderById(string id, CustomerOrderResponseGroup responseGroup)
 		{
 			return _customerOrders.FirstOrDefault(x => x.Id == id);
 		}

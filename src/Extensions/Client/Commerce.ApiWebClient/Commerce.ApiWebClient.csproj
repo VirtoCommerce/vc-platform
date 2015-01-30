@@ -71,6 +71,7 @@
       <HintPath>..\..\..\..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http" />
@@ -163,6 +164,9 @@
     <Compile Include="Extensions\SectionExtensions.cs" />
     <Compile Include="Extensions\SeoKeywordExtensions.cs" />
     <Compile Include="Extensions\UrlHelperExtensions.cs" />
+    <Compile Include="Extensions\Validation\BooleanRequiredAttribute.cs" />
+    <Compile Include="Extensions\Validation\DynamicRangeValidatorAttribute.cs" />
+    <Compile Include="Extensions\Validation\RequiredIfAttribute.cs" />
     <Compile Include="Extensions\ViewRenderer.cs" />
     <Compile Include="Helpers\SettingsHelper.cs" />
     <Compile Include="Modules\BaseHttpModule.cs" />

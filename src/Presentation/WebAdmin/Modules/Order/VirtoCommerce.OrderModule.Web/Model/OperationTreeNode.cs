@@ -8,7 +8,7 @@ using VirtoCommerce.Foundation.Money;
 
 namespace VirtoCommerce.OrderModule.Web.Model
 {
-	public abstract class OperationTreeNode
+	public class Operation
 	{
 		public string Id { get; set; }
 		public string OperationType { get; set; }
@@ -34,7 +34,7 @@ namespace VirtoCommerce.OrderModule.Web.Model
 		public decimal Tax { get; set; }
 
 		public string ParentOperationId { get; set; }
-		public ICollection<OperationTreeNode> Childrens { get; set; }
+	
 		
 	}
 }
