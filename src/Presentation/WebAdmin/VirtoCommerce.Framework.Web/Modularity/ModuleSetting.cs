@@ -33,7 +33,7 @@ namespace VirtoCommerce.Framework.Web.Modularity
 
 		public object RawDefaultValue()
 		{
-			return RawValue(DefaultValue, DefaultValue);
+			return RawValue(ValueType, DefaultValue);
 		}
 
 		public static object RawValue(string valueType, string value)

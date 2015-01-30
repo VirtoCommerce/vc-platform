@@ -24,9 +24,9 @@
 
             selectedSettings = _.where(results, { valueType: 'boolean' });
             _.forEach(selectedSettings, function (setting) {
-                setting.value = setting.value === 'True';
+                setting.value = setting.value.toLowerCase() === 'true';
                 if (setting.allowedValues) {
-                    setting.allowedValues = _.map(setting.allowedValues, function (value) { return value === 'True'; });
+                    setting.allowedValues = _.map(setting.allowedValues, function (value) { return value.toLowerCase() === 'true'; });
                 }
             });
 
