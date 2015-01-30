@@ -1,20 +1,18 @@
-﻿using VirtoCommerce.Foundation.Frameworks.Extensions;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Xml.Serialization;
+using VirtoCommerce.Foundation.Catalogs.Repositories;
+using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
+using VirtoCommerce.Foundation.Search;
+using VirtoCommerce.Foundation.Search.Schemas;
+using VirtoCommerce.Foundation.Stores.Model;
+using VirtoCommerce.Foundation.Stores.Repositories;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Services
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Xml.Serialization;
-
-    using Foundation.Catalogs.Repositories;
-    using Foundation.Catalogs.Search;
-    using Foundation.Frameworks;
-    using Foundation.Search;
-    using Foundation.Search.Schemas;
-    using Foundation.Stores.Model;
-    using Foundation.Stores.Repositories;
 
     public class FilterService : IBrowseFilterService
     {
@@ -23,7 +21,6 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
 
         private readonly Func<ICatalogRepository> _catalogRepository;
         private ISearchFilter[] _filters;
-        private Store _store;
 
         public FilterService(Func<IStoreRepository> storeRepository, Func<ICatalogRepository> catalogRepository, ICacheRepository cacheRepository)
         {
