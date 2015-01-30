@@ -26,7 +26,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
         {
             Facets = new Dictionary<string, string[]>();
             PageSize = 0;
-            PageIndex = 1;
+            StartingRecord = 0;
         }
 
         /// <summary>
@@ -38,12 +38,14 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
         /// Gets or sets the index of the page.
         /// </summary>
         /// <value>The index of the page.</value>
-        public int PageIndex { get; set; }
+        public int StartingRecord { get; set; }
         /// <summary>
         /// Gets or sets the size of the page.
         /// </summary>
         /// <value>The size of the page.</value>
         public int PageSize { get; set; }
+
+        public DateTime? StartDateFrom { get; set; }
         /// <summary>
         /// Gets or sets the facets.
         /// </summary>
@@ -71,7 +73,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
         {
             var builder = new StringBuilder();
             builder.Append(FreeSearch);
-            builder.Append(PageIndex);
+            builder.Append(StartingRecord);
             builder.Append(PageSize);
             builder.Append(Sort);
 
@@ -120,7 +122,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
             var sp = new SearchParameters
             {
                 FreeSearch = qs["q"].EmptyToNull(),
-                PageIndex = qs["skip"].TryParse(1),
+                StartingRecord = qs["skip"].TryParse(0),
                 PageSize = qs["take"].TryParse(10),
                 Sort = qs["sort"].EmptyToNull(),
                 SortOrder = qs["sortorder"].EmptyToNull(),
@@ -130,6 +132,12 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
             if (!string.IsNullOrEmpty(sp.FreeSearch))
             {
                 sp.FreeSearch = sp.FreeSearch.EscapeSearchTerm();
+            }
+
+            DateTime startDate;
+            if (!string.IsNullOrEmpty(qs["startdatefrom"]) && DateTime.TryParse(qs["startdatefrom"], out startDate))
+            {
+                sp.StartDateFrom = startDate;
             }
 
             result = sp;

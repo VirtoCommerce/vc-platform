@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using VirtoCommerce.Foundation.Search.Schemas;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Services
 {
@@ -111,7 +112,10 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
 
             response.Items.AddRange(catalogItems);
             response.TotalCount = results.TotalCount;
-            response.Facets = results.FacetGroups.Select(g => g.ToWebModel()).ToArray();
+
+            //TODO need better way to find applied filter values
+            var appliedFilters = criteria.CurrentFilters.OfType<AttributeFilter>().SelectMany(x => x.Values).Select(x=>x.Value).ToArray();
+            response.Facets = results.FacetGroups.Select(g => g.ToWebModel(appliedFilters)).ToArray();
             return response;
         }
 

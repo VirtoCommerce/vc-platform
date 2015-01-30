@@ -1,5 +1,5 @@
-﻿@using VirtoCommerce.Foundation.AppConfig.Model
-@using VirtoCommerce.Web.Client.Extensions.Routing
+﻿
+@using VirtoCommerce.ApiWebClient.Extensions.Routing
 @model SearchResult
     
 @{
@@ -13,33 +13,33 @@
 <aside class="block">
     <span class="title">@("Shop By".Localize())</span>
     <dl>
-        @foreach (var group in Model.FilterGroups)
+        @foreach (var group in Model.Facets)
         {
-            <dt>@group.Name.Localize()</dt>
+            <dt>@(group.Label ?? group.Field.Localize())</dt>
             <dd>
-                @if (group.Name.Equals("Color", StringComparison.InvariantCultureIgnoreCase))
+                @if (group.FacetType.Equals("Color", StringComparison.InvariantCultureIgnoreCase))
                 {
                     <ol>
-                        @foreach (var facet in group.Facets)
+                        @foreach (var facet in group.Values)
                         {
                             <li class="color">
-                                <label class="@facet.Name" for="@facet.Key">
-                                    <input type="checkbox" @String.Format("{0}", Model.SelectedFilters.Any(x => x.Facet.Key == facet.Key) ? "checked" : "") onchange="this.checked ? $.open('@Url.SetFacet(group.Key, facet.Key)') : $.open('@Url.RemoveFacet(group.Key, facet.Key)')" name="@facet.Key" id="@facet.Key"><input type="checkbox" @String.Format("{0}", Model.SelectedFilters.Any(x => x.Facet.Key == facet.Key) ? "checked" : "") onchange="this.checked ? $.open('@Url.SetFacet(group.Key, facet.Key)') : $.open('@Url.RemoveFacet(group.Key, facet.Key)')" name="@facet.Key" id="@facet.Key">
-                                    <span style="background: @facet.Name;" title="@facet.Name (@facet.Count)"></span>
-                                </label>                            
+                                <label class="@facet.Label" for="@facet.Value">
+                                    <input type="checkbox" @String.Format("{0}", facet.IsApplied ? "checked" : "") onchange="this.checked ? $.open('@Url.SetFacet(group.Field, facet.Value)') : $.open('@Url.RemoveFacet(group.Field, facet.Value.ToString())')" name="@facet.Value" id="@facet.Value">
+                                    <span style="background: @facet.Label;" title="@facet.Label (@facet.Count)"></span>
+                                </label>
                             </li>
                         }
-        
+
                     </ol>
                 }
-                else if (group.Name.Equals("Subcategory", StringComparison.InvariantCultureIgnoreCase))
+                else if (group.FacetType.Equals("Subcategory", StringComparison.InvariantCultureIgnoreCase))
                 {
                     <ol>
-                        @foreach (var facet in group.Facets)
+                        @foreach (var facet in group.Values)
                         {
-                            tempValues[Constants.Category] = facet.Key;
+                            tempValues[Constants.Category] = facet.Value;
                             <li>
-                                <a href="@Url.RouteUrl("Category", tempValues)">@facet.Name</a>
+                                <a href="@Url.RouteUrl("Category", tempValues)">@facet.Label</a>
                                 <span>(@facet.Count)</span>
                             </li>
                         }
@@ -48,14 +48,14 @@
                 else
                 {
                     <ol>
-                        @foreach (var facet in group.Facets)
+                        @foreach (var facet in group.Values)
                         {
                             <li class="checkbox">
-                                <label for="@facet.Key">
+                                <label for="@facet.Value">
                                     
-                                    <input type="checkbox" @String.Format("{0}", Model.SelectedFilters.Any(x=>x.Facet.Key == facet.Key) ? "checked" : "") onchange="this.checked ? $.open('@Url.SetFacet(group.Key, facet.Key)') : $.open('@Url.RemoveFacet(group.Key, facet.Key)')" name="@facet.Key" id="@facet.Key">
+                                    <input type="checkbox" @String.Format("{0}", facet.IsApplied ? "checked" : "") onchange="this.checked ? $.open('@Url.SetFacet(group.Field, facet.Value)') : $.open('@Url.RemoveFacet(group.Field, facet.Value)')" name="@facet.Label" id="@facet.Value">
                                     <span class="switch"></span>
-                                    <span class="name">@facet.Name</span>
+                                    <span class="name">@facet.Label</span>
                                     <span class="count">(@facet.Count)</span>
                                 </label>
                             </li>

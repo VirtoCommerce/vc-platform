@@ -1,18 +1,18 @@
-﻿namespace VirtoCommerce.MerchandisingModule.Web.Services
-{
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Xml.Serialization;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Xml.Serialization;
+using VirtoCommerce.Foundation.Catalogs.Repositories;
+using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
+using VirtoCommerce.Foundation.Search;
+using VirtoCommerce.Foundation.Search.Schemas;
+using VirtoCommerce.Foundation.Stores.Model;
+using VirtoCommerce.Foundation.Stores.Repositories;
 
-    using VirtoCommerce.Foundation.Catalogs.Repositories;
-    using VirtoCommerce.Foundation.Catalogs.Search;
-    using VirtoCommerce.Foundation.Frameworks;
-    using VirtoCommerce.Foundation.Search;
-    using VirtoCommerce.Foundation.Search.Schemas;
-    using VirtoCommerce.Foundation.Stores.Model;
-    using VirtoCommerce.Foundation.Stores.Repositories;
+namespace VirtoCommerce.MerchandisingModule.Web.Services
+{
 
     public class FilterService : IBrowseFilterService
     {
@@ -21,13 +21,12 @@
 
         private readonly Func<ICatalogRepository> _catalogRepository;
         private ISearchFilter[] _filters;
-        private Store _store;
 
         public FilterService(Func<IStoreRepository> storeRepository, Func<ICatalogRepository> catalogRepository, ICacheRepository cacheRepository)
         {
-            this._storeRepository = storeRepository;
-            this._cacheRepository = cacheRepository;
-            this._catalogRepository = catalogRepository;
+            _storeRepository = storeRepository;
+            _cacheRepository = cacheRepository;
+            _catalogRepository = catalogRepository;
         }
 
         #region Private Helpers
@@ -98,9 +97,10 @@
             {
                 using (var repository = _storeRepository())
                 {
-                    var store = repository.Stores.SingleOrDefault(s => s.StoreId == context["StoreId"]);
+                    var storeId = context["StoreId"].ToString();
+                    var store = repository.Stores.ExpandAll().SingleOrDefault(s => s.StoreId == storeId);
 
-                    var browsing = this.GetStoreBrowseFilters(store);
+                    var browsing = GetStoreBrowseFilters(store);
                     if (browsing != null)
                     {
                         if (browsing.Attributes != null)

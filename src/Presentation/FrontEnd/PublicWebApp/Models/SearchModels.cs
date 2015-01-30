@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using VirtoCommerce.ApiClient.DataContracts.Search;
 
 namespace VirtoCommerce.Web.Models
 {
@@ -65,6 +66,8 @@ namespace VirtoCommerce.Web.Models
         public PagerModel Pager { get; set; }
 
         public List<ItemModel> Results { get; set; }
+
+        public Facet[] Facets { get; set; }
 
         public string Title { get; set; }
     }
