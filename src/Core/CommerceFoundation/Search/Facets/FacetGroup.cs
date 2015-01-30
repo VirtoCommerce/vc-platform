@@ -9,7 +9,15 @@ using System.Collections.Specialized;
 
 namespace VirtoCommerce.Foundation.Search.Facets
 {
-	[DataContract/*Serializable*/]
+    public struct FacetTypes
+    {
+        public const string Attribute = "attr";
+        public const string Range = "range";
+        public const string PriceRange = "pricerange";
+        public const string Category = "category";
+    }
+
+	[DataContract]
 	public class FacetGroup : INotifyPropertyChanged
 	{
 		/// <summary>
@@ -23,18 +31,16 @@ namespace VirtoCommerce.Foundation.Search.Facets
 			private set;
 		}
 
-		/*
 		/// <summary>
-		/// Gets the name.
+		/// Specifies facet type.
 		/// </summary>
 		/// <value>The name.</value>
 		[DataMember]
-		public string Name
+		public string FacetType
 		{
 			get;
-			private set;
+			set;
 		}
-		 * */
 
 		FacetCollection<Facet> _Facets = null;
 		/// <summary>
@@ -96,9 +102,9 @@ namespace VirtoCommerce.Foundation.Search.Facets
 		public FacetCollection(FacetGroup parent)
 		{
 			Parent = parent;
-			if (parent is INotifyPropertyChanged)
+			if (parent != null)
 			{
-				((INotifyPropertyChanged)parent).PropertyChanged += new PropertyChangedEventHandler(StorageEntityCollection_PropertyChanged);
+				((INotifyPropertyChanged)parent).PropertyChanged += this.StorageEntityCollection_PropertyChanged;
 			}
 		}
 
@@ -108,7 +114,7 @@ namespace VirtoCommerce.Foundation.Search.Facets
 			if (e.Action == NotifyCollectionChangedAction.Add)
 			{
 				var newItems = e.NewItems.Cast<T>();
-				foreach (T item in newItems)
+				foreach (var item in newItems)
 				{
 					item.Group = Parent;
 				}

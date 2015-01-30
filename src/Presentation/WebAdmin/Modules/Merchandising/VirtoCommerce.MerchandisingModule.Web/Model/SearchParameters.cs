@@ -101,8 +101,8 @@ namespace VirtoCommerce.MerchandisingModule.Web.Model
         /// <summary>
         /// The facet regex
         /// </summary>
-        private static readonly Regex FacetRegex = new Regex("^f_", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        private static readonly Regex TermRegex = new Regex("^t_", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex FacetRegex = new Regex("^f_", RegexOptions.Compiled | RegexOptions.IgnoreCase); // used to apply facet filtering
+        private static readonly Regex TermRegex = new Regex("^t_", RegexOptions.Compiled | RegexOptions.IgnoreCase); // used to filter by any property
 
 
         public static bool TryParse(string s, out SearchParameters result)

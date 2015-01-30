@@ -14,7 +14,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Converters
         {
             var retVal = new webModel.Facet
             {
-                FacetType = facetGroup.FieldName,
+                FacetType = facetGroup.FacetType,
                 Field = facetGroup.FieldName,
                 Values = facetGroup.Facets.Select(f => f.ToWebModel(appliedFilters)).ToArray()
             };

@@ -196,6 +196,7 @@ namespace VirtoCommerce.Search.Providers.Elastic
                     
                     if (filter is AttributeFilter)
                     {
+                        group.FacetType = FacetTypes.Attribute;
                         var attributeFilter = filter as AttributeFilter;
                         var myFilter = attributeFilter;
                         var values = myFilter.Values;
@@ -228,6 +229,7 @@ namespace VirtoCommerce.Search.Providers.Elastic
                     }
                     else if (filter is PriceRangeFilter)
                     {
+                        group.FacetType = FacetTypes.PriceRange;
                         var rangeFilter = filter as PriceRangeFilter;
                         if (rangeFilter != null
                             && rangeFilter.Currency.Equals(criteria.Currency, StringComparison.OrdinalIgnoreCase))
@@ -262,6 +264,7 @@ namespace VirtoCommerce.Search.Providers.Elastic
                     }
                     else if (filter is RangeFilter)
                     {
+                        group.FacetType = FacetTypes.Range;
                         var myFilter = filter as RangeFilter;
                         if (myFilter != null)
                         {
@@ -288,6 +291,7 @@ namespace VirtoCommerce.Search.Providers.Elastic
                     }
                     else if (filter is CategoryFilter)
                     {
+                        group.FacetType = FacetTypes.Category;
                         var myFilter = filter as CategoryFilter;
                         if (myFilter != null)
                         {

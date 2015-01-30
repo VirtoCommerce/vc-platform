@@ -114,6 +114,19 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
                 }
             }
 
+            // apply filters
+            var facets = parameters.Facets;
+            if (facets.Count != 0)
+            {
+                foreach (var key in facets.Keys)
+                {
+                    var filter = filters.SingleOrDefault(x => x.Key.Equals(key, StringComparison.OrdinalIgnoreCase)
+                        && (!(x is PriceRangeFilter) || ((PriceRangeFilter)x).Currency.Equals(currency, StringComparison.OrdinalIgnoreCase)));
+
+                    var appliedFilter = _browseFilterService.Convert(filter, facets[key]);
+                    criteria.Apply(appliedFilter);
+                }
+            }
 
             //criteria.ClassTypes.Add("Product");
             criteria.RecordsToRetrieve = parameters.PageSize == 0 ? 10 : parameters.PageSize;
