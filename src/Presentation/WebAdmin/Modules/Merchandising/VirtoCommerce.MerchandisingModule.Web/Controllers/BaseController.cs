@@ -41,7 +41,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
                 }
             }
 
-            return null;
+            throw new InvalidOperationException(string.Format("No store exits with id {0}", storeId));
         }
     }
 }

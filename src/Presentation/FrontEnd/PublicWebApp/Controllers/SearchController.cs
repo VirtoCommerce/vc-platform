@@ -164,7 +164,8 @@ namespace VirtoCommerce.Web.Controllers
                     SortValues = new[] { "Position", "Name", "Price", "Rating", "Reviews" },
                     SelectedSort = query.SortProperty,
                     SortOrder = query.SortDirection
-                }
+                },
+                Facets = results.Facets
             };
 
         

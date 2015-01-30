@@ -69,23 +69,23 @@ namespace VirtoCommerce.ApiWebClient.Extensions
     {
         public static string FacetPrefix = "f_";
 
-        public static string GetFacetKey(this UrlHelper helper, string field)
+        public static string GetFacetKey(this UrlHelper helper, object field)
         {
             return string.Concat(FacetPrefix, field);
         }
 
-        public static string SetFacet(this UrlHelper helper, string field, string value)
+        public static string SetFacet(this UrlHelper helper, string field, object value)
         {
             return helper.SetFacet(helper.RequestContext.HttpContext.Request.RawUrl, field, value);
         }
 
-        public static string SetFacet(this UrlHelper helper, string url, string field, string value)
+        public static string SetFacet(this UrlHelper helper, string url, string field, object value)
         {
             url = helper.SetParameter(url, helper.GetFacetKey(field), value, false);
             return helper.SetParameter(url, "p", "1");
         }
 
-        public static string RemoveFacet(this UrlHelper helper, string field, string value)
+        public static string RemoveFacet(this UrlHelper helper, string field, object value)
         {
             var noFacet = helper.RemoveParameterUrl(helper.RequestContext.HttpContext.Request.RawUrl, helper.GetFacetKey(field), value);
             return helper.SetParameter(noFacet, "p", "1");
@@ -122,7 +122,7 @@ namespace VirtoCommerce.ApiWebClient.Extensions
         /// <returns>
         /// Resulting URL
         /// </returns>
-        public static string SetParameter(this UrlHelper helper, string url, string key, string value, bool replace = true)
+        public static string SetParameter(this UrlHelper helper, string url, string key, object value, bool replace = true)
         {
             return helper.SetParameters(url, new Dictionary<string, object> { { key, value } }, replace);
         }
@@ -222,7 +222,7 @@ namespace VirtoCommerce.ApiWebClient.Extensions
             return parts[0] + "?" + DictToQuerystring(qs);
         }
 
-        public static string RemoveParameterUrl(this UrlHelper helper, string url, string parameter, string value)
+        public static string RemoveParameterUrl(this UrlHelper helper, string url, string parameter, object value)
         {
             var parts = url.Split('?');
             if (parts.Length == 1) return parts[0];
@@ -238,7 +238,7 @@ namespace VirtoCommerce.ApiWebClient.Extensions
                 }
                 else
                 {
-                    qs[parameter] = values.Where(x => !x.Equals(value, StringComparison.OrdinalIgnoreCase)).ToArray();
+                    qs[parameter] = values.Where(x => !x.Equals(value.ToString(), StringComparison.OrdinalIgnoreCase)).ToArray();
                 }
             }
 

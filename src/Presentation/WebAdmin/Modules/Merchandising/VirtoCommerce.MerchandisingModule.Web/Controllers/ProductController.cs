@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web.Http;
@@ -7,29 +8,29 @@ using System.Web.Http.ModelBinding;
 using VirtoCommerce.CatalogModule.Repositories;
 using VirtoCommerce.CatalogModule.Services;
 using VirtoCommerce.Foundation.AppConfig.Model;
+using VirtoCommerce.Foundation.Assets.Services;
 using VirtoCommerce.Foundation.Catalogs.Search;
 using VirtoCommerce.Foundation.Catalogs.Services;
 using VirtoCommerce.Foundation.Search;
+using VirtoCommerce.Foundation.Search.Schemas;
 using VirtoCommerce.Foundation.Stores.Repositories;
 using VirtoCommerce.MerchandisingModule.Web.Binders;
 using VirtoCommerce.MerchandisingModule.Web.Converters;
 using VirtoCommerce.MerchandisingModule.Web.Model;
+using VirtoCommerce.MerchandisingModule.Web.Services;
 using moduleModel = VirtoCommerce.CatalogModule.Model;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
-    using VirtoCommerce.Foundation.Assets.Services;
-    using VirtoCommerce.Foundation.Search.Schemas;
-    using VirtoCommerce.MerchandisingModule.Web.Services;
+
 
     [RoutePrefix("api/mp/{store}/{language}/products")]
 	public class ProductController : BaseController
 	{
 		private readonly IItemService _itemService;
-		private readonly ISearchProvider _searchService;
-		private readonly ISearchConnection _searchConnection;
 
         private readonly IItemBrowsingService _browseService;
+        private readonly IBrowseFilterService _browseFilterService;
 
         private readonly Func<IFoundationCatalogRepository> _foundationCatalogRepositoryFactory;
 	    private readonly Func<IFoundationAppConfigRepository> _foundationAppConfigRepFactory;
@@ -37,10 +38,10 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
         private readonly IAssetUrl _assetUri;
 
+
 		public ProductController(IItemService itemService,
-								 ISearchProvider indexedSearchProvider,
-								 ISearchConnection searchConnection,
-                                    IItemBrowsingService browseService,
+                                 IItemBrowsingService browseService,
+                                 IBrowseFilterService browseFilterService,
 								 Func<IFoundationCatalogRepository> foundationCatalogRepositoryFactory,
                                  Func<IFoundationAppConfigRepository> foundationAppConfigRepFactory,
                                  Func<ICatalogOutlineBuilder> catalogOutlineBuilderFactory,
@@ -48,14 +49,13 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 								 IAssetUrl assetUri) 
             : base(storeRepository)
 		{
-			_searchService = indexedSearchProvider;
-			_searchConnection = searchConnection;
 		    _itemService = itemService;
 			_foundationCatalogRepositoryFactory = foundationCatalogRepositoryFactory;
 		    _foundationAppConfigRepFactory = foundationAppConfigRepFactory;
 		    _catalogOutlineBuilderFactory = catalogOutlineBuilderFactory;
             _assetUri = assetUri;
-		    this._browseService = browseService;
+		    _browseService = browseService;
+		    _browseFilterService = browseFilterService;
 		}
 
         /// <summary>
@@ -73,6 +73,11 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		[ResponseType(typeof(ProductSearchResult))]
 		public IHttpActionResult Search(string store, [ModelBinder(typeof(SearchParametersBinder))] SearchParameters parameters, [FromUri]moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemMedium, [FromUri]string outline="", string language = "en-us", string currency = "USD")
         {
+            var context = new Dictionary<string, object>
+            {
+                {"StoreId", store},
+            };
+
             var catalog = GetCatalogId(store);
             string categoryId = null;
 
@@ -82,17 +87,27 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
             {
                 criteria.Outlines.Add(String.Format("{0}/{1}*", catalog, outline));
                 categoryId = outline.Split(new[] { '/' }).Last();
+                context.Add("CategoryId", categoryId);
+            }           
+
+            // Now fill in filters
+            var filters = _browseFilterService.GetFilters(context);
+
+            // Add all filters
+            foreach (var filter in filters)
+            {
+                criteria.Add(filter);
             }
 
-            // apply vendor filter if one specified
+            // apply terms
             if (parameters.Terms != null && parameters.Terms.Count > 0)
             {
                 foreach (var term in parameters.Terms)
                 {
-                    var termFilter = new AttributeFilter()
+                    var termFilter = new AttributeFilter
                     {
                         Key = term.Key,
-                        Values = term.Value.Select(x => new AttributeFilterValue() { Id = x.ToLowerInvariant(), Value = x.ToLowerInvariant() }).ToArray()
+                        Values = term.Value.Select(x => new AttributeFilterValue { Id = x.ToLowerInvariant(), Value = x.ToLowerInvariant() }).ToArray()
                     };
 
                     criteria.Apply(termFilter);
@@ -109,51 +124,58 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 
             #region sorting
 
-            var isDescending = "desc".Equals(parameters.SortOrder, StringComparison.OrdinalIgnoreCase);
-
-            SearchSort sortObject = null;
-
-            switch (parameters.Sort.ToLowerInvariant())
+            if (!string.IsNullOrEmpty(parameters.Sort))
             {
-                case "price":
-                    if (criteria.Pricelists != null)
-                    {
-                        sortObject = new SearchSort(criteria.Pricelists.Select(priceList =>
-                            new SearchSortField(
-                                String.Format("price_{0}_{1}",
-                                    criteria.Currency.ToLower(),
-                                    priceList.ToLower()))
-                            {
-                                IgnoredUnmapped = true,
-                                IsDescending = isDescending,
-                                DataType = SearchSortField.DOUBLE
-                            })
-                            .ToArray());
-                    }
-                    break;
-                case "position":
-                    sortObject = new SearchSort(new SearchSortField(string.Format("sort{0}{1}", catalog, categoryId).ToLower())
-                    {
-                        IgnoredUnmapped = true,
-                        IsDescending = isDescending
-                    });
-                    break;
-                case "name":
-                    sortObject = new SearchSort("name", isDescending);
-                    break;
-                case "rating":
-                    sortObject = new SearchSort(criteria.ReviewsAverageField, isDescending);
-                    break;
-                case "reviews":
-                    sortObject = new SearchSort(criteria.ReviewsTotalField, isDescending);
-                    break;
-                default:
-                    sortObject = CatalogItemSearchCriteria.DefaultSortOrder;
-                    break;
 
+                var isDescending = "desc".Equals(parameters.SortOrder, StringComparison.OrdinalIgnoreCase);
+
+                SearchSort sortObject = null;
+
+                switch (parameters.Sort.ToLowerInvariant())
+                {
+                    case "price":
+                        if (criteria.Pricelists != null)
+                        {
+                            sortObject = new SearchSort(criteria.Pricelists.Select(priceList =>
+                                new SearchSortField(
+                                    String.Format("price_{0}_{1}",
+                                        criteria.Currency.ToLower(),
+                                        priceList.ToLower()))
+                                {
+                                    IgnoredUnmapped = true,
+                                    IsDescending = isDescending,
+                                    DataType = SearchSortField.DOUBLE
+                                })
+                                .ToArray());
+                        }
+                        break;
+                    case "position":
+                        sortObject =
+                            new SearchSort(
+                                new SearchSortField(string.Format("sort{0}{1}", catalog, categoryId).ToLower())
+                                {
+                                    IgnoredUnmapped = true,
+                                    IsDescending = isDescending
+                                });
+                        break;
+                    case "name":
+                        sortObject = new SearchSort("name", isDescending);
+                        break;
+                    case "rating":
+                        sortObject = new SearchSort(criteria.ReviewsAverageField, isDescending);
+                        break;
+                    case "reviews":
+                        sortObject = new SearchSort(criteria.ReviewsTotalField, isDescending);
+                        break;
+                    default:
+                        sortObject = CatalogItemSearchCriteria.DefaultSortOrder;
+                        break;
+
+                }
+
+                criteria.Sort = sortObject;
             }
 
-            criteria.Sort = sortObject;
             #endregion
 
             //Load ALL products 
