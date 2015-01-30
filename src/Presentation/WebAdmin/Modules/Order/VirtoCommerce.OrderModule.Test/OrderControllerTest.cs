@@ -16,6 +16,8 @@ using VirtoCommerce.OrderModule.Web.Controllers.Api;
 using coreModel = VirtoCommerce.Domain.Order.Model;
 using webModel = VirtoCommerce.OrderModule.Web.Model;
 using VirtoCommerce.Domain.Payment.Services;
+using VirtoCommerce.OrderModule.Data.Interceptors;
+using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
 
 namespace VirtoCommerce.OrderModule.Test
 {
@@ -41,7 +43,7 @@ namespace VirtoCommerce.OrderModule.Test
 		[TestMethod]
 		public void CreateNewManualOrder()
 		{
-			var testOrder = GetTestOrder("order1");
+			var testOrder = GetTestOrder("order2");
 			var result = _controller.CreateOrder(testOrder) as OkNegotiatedContentResult<webModel.CustomerOrder>;
 			Assert.IsNotNull(result.Content);
 		}
@@ -157,7 +159,7 @@ namespace VirtoCommerce.OrderModule.Test
 			var newShipment = new webModel.Shipment
 			{
 				Currency = testOrder.Currency,
-				DeliveryAddress = testOrder.Addresses.First(),
+				DeliveryAddress = testOrder.Addresses.FirstOrDefault(),
 				IsApproved = true
 			};
 			testOrder.IsApproved = true;
@@ -184,8 +186,6 @@ namespace VirtoCommerce.OrderModule.Test
 			var order = new webModel.CustomerOrder
 			{
 				Id = id,
-				CreatedBy = "et",
-				CreatedDate = DateTime.UtcNow,
 				Currency = Foundation.Money.CurrencyCodes.USD,
 				CustomerId = "vasja customer",
 				EmployeeId = "employe",
@@ -217,8 +217,6 @@ namespace VirtoCommerce.OrderModule.Test
 			};
 			var item1 = new webModel.LineItem
 			{
-				CreatedBy = "et",
-				CreatedDate = DateTime.UtcNow,
 				BasePrice = 10,
 				Price = 9,
 				DisplayName = "shoes",
@@ -242,8 +240,6 @@ namespace VirtoCommerce.OrderModule.Test
 			};
 			var item2 = new webModel.LineItem
 			{
-				CreatedBy = "et",
-				CreatedDate = DateTime.UtcNow,
 				BasePrice = 100,
 				Price = 100,
 				DisplayName = "t-shirt",
@@ -304,12 +300,14 @@ namespace VirtoCommerce.OrderModule.Test
 
 		private static CustomerOrderController GetCustomerOrderController()
 		{
-			var cartRepository = new InMemoryCartRepository();
-			Func<IOrderRepository> orderRepositoryFactory = () => { return new OrderRepositoryImpl("VirtoCommerce"); };
-			var cartService = new ShoppingCartServiceImpl(cartRepository);
 			var mockInventory = new Mock<IInventoryService>();
-
-			var orderService = new CustomerOrderServiceImpl(orderRepositoryFactory, mockInventory.Object, cartService, new TimeBasedNumberGeneratorImpl());
+			var cartRepository = new InMemoryCartRepository();
+			Func<IOrderRepository> orderRepositoryFactory = () => { return new OrderRepositoryImpl("VirtoCommerce", 
+																		   new InventoryOperationInterceptor(mockInventory.Object),
+																		   new AuditableInterceptor());
+			};
+			var cartService = new ShoppingCartServiceImpl(cartRepository);
+			var orderService = new CustomerOrderServiceImpl(orderRepositoryFactory, cartService, new TimeBasedNumberGeneratorImpl());
 
 			var controller = new CustomerOrderController(orderService, null);
 			return controller;

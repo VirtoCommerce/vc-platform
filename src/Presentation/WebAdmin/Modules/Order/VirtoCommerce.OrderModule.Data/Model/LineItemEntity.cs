@@ -7,12 +7,13 @@ using VirtoCommerce.Foundation.Frameworks;
 
 namespace VirtoCommerce.OrderModule.Data.Model
 {
-	public class LineItemEntity : Entity
+	public class LineItemEntity : Entity, IAuditable
 	{
 		public DateTime CreatedDate { get; set; }
 		public string CreatedBy { get; set; }
 		public DateTime? ModifiedDate { get; set; }
 		public string ModifiedBy { get; set; }
+
 		public decimal BasePrice { get; set; }
 		public decimal Price { get; set; }
 		public decimal DiscountAmount { get; set; }

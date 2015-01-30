@@ -16,14 +16,11 @@ namespace VirtoCommerce.OrderModule.Data.Services
 {
 	public class CustomerOrderServiceImpl : ModuleServiceBase, ICustomerOrderService
 	{
-		private readonly IInventoryService _inventoryService;
 		private readonly Func<IOrderRepository> _repositoryFactory;
 		private readonly IOperationNumberGenerator _operationNumberGenerator;
 		private readonly IShoppingCartService _shoppingCartService;
-		public CustomerOrderServiceImpl(Func<IOrderRepository> orderRepositoryFactory, IInventoryService inventoryService, 
-									    IShoppingCartService shoppingCartService, IOperationNumberGenerator operationNumberGenerator)
+		public CustomerOrderServiceImpl(Func<IOrderRepository> orderRepositoryFactory, IShoppingCartService shoppingCartService, IOperationNumberGenerator operationNumberGenerator)
 		{
-			_inventoryService = inventoryService;
 			_repositoryFactory = orderRepositoryFactory;
 			_shoppingCartService = shoppingCartService;
 			_operationNumberGenerator = operationNumberGenerator;
