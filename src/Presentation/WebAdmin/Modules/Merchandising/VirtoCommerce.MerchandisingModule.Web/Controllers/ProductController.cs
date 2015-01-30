@@ -203,7 +203,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		[Route("")]
         public IHttpActionResult GetProductByCode(string store, [FromUri]string code, [FromUri]moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemLarge, string language = "en-us")
 		{
-            var catalog = GetCatalogId(store);
+            //var catalog = GetCatalogId(store);
 
 			using(var repository = _foundationCatalogRepositoryFactory())
 			{
@@ -211,7 +211,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 				var itemId = repository.Items.Where(x => x.Code == code).Select(x => x.ItemId).FirstOrDefault();
 				if(itemId != null)
 				{
-					return GetProduct(catalog, itemId,responseGroup);
+					return GetProduct(store, itemId,responseGroup);
 				}
 			}
 			return StatusCode(HttpStatusCode.NotFound);
