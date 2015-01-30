@@ -1,126 +1,128 @@
-﻿namespace VirtoCommerce.MerchandisingModule.Web.Services
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Xml.Serialization;
+
+using VirtoCommerce.Foundation.Catalogs.Repositories;
+using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Foundation.Search;
+using VirtoCommerce.Foundation.Search.Schemas;
+using VirtoCommerce.Foundation.Stores.Model;
+using VirtoCommerce.Foundation.Stores.Repositories;
+
+namespace VirtoCommerce.MerchandisingModule.Web.Services
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using System.Xml.Serialization;
+	public class FilterService : IBrowseFilterService
+	{
+		private readonly Func<IStoreRepository> _storeRepository;
+		private readonly ICacheRepository _cacheRepository;
 
-    using VirtoCommerce.Foundation.Catalogs.Repositories;
-    using VirtoCommerce.Foundation.Catalogs.Search;
-    using VirtoCommerce.Foundation.Frameworks;
-    using VirtoCommerce.Foundation.Search;
-    using VirtoCommerce.Foundation.Search.Schemas;
-    using VirtoCommerce.Foundation.Stores.Model;
-    using VirtoCommerce.Foundation.Stores.Repositories;
+		private readonly Func<ICatalogRepository> _catalogRepository;
+		private ISearchFilter[] _filters;
+		//private Store _store;
 
-    public class FilterService : IBrowseFilterService
-    {
-        private readonly Func<IStoreRepository> _storeRepository;
-        private readonly ICacheRepository _cacheRepository;
+		public FilterService(Func<IStoreRepository> storeRepository, Func<ICatalogRepository> catalogRepository, ICacheRepository cacheRepository)
+		{
+			_storeRepository = storeRepository;
+			_cacheRepository = cacheRepository;
+			_catalogRepository = catalogRepository;
+		}
 
-        private readonly Func<ICatalogRepository> _catalogRepository;
-        private ISearchFilter[] _filters;
-        private Store _store;
+		#region Private Helpers
+		/// <summary>
+		/// Gets the store browse filters.
+		/// </summary>
+		/// <param name="store">The store.</param>
+		/// <returns>Filtered browsing</returns>
+		private FilteredBrowsing GetStoreBrowseFilters(Store store)
+		{
+			var filter = (from s in store.Settings where s.Name == "FilteredBrowsing" select s.LongTextValue).FirstOrDefault();
+			if (!string.IsNullOrEmpty(filter))
+			{
+				var filterString = filter;
+				var serializer = new XmlSerializer(typeof(FilteredBrowsing));
+				var reader = new StringReader(filterString);
+				var browsing = serializer.Deserialize(reader) as FilteredBrowsing;
+				return browsing;
+			}
 
-        public FilterService(Func<IStoreRepository> storeRepository, Func<ICatalogRepository> catalogRepository, ICacheRepository cacheRepository)
-        {
-            this._storeRepository = storeRepository;
-            this._cacheRepository = cacheRepository;
-            this._catalogRepository = catalogRepository;
-        }
+			return null;
+		}
 
-        #region Private Helpers
-        /// <summary>
-        /// Gets the store browse filters.
-        /// </summary>
-        /// <param name="store">The store.</param>
-        /// <returns>Filtered browsing</returns>
-        private FilteredBrowsing GetStoreBrowseFilters(Store store)
-        {
-            var filter = (from s in store.Settings where s.Name == "FilteredBrowsing" select s.LongTextValue).FirstOrDefault();
-            if (!string.IsNullOrEmpty(filter))
-            {
-                var filterString = filter;
-                var serializer = new XmlSerializer(typeof(FilteredBrowsing));
-                var reader = new StringReader(filterString);
-                var browsing = serializer.Deserialize(reader) as FilteredBrowsing;
-                return browsing;
-            }
+		#endregion
 
-            return null;
-        }
+		public ISearchFilter[] GetFilters(IDictionary<string, object> context)
+		{
+			if (_filters != null)
+				return _filters;
 
-        #endregion
+			var filters = new List<ISearchFilter>();
+			if (context.ContainsKey("CategoryId")) // include sub categories
+			{
+				/*
+			// get category filters
+				using (var repository = _catalogRepository())
+				{
+					var children = repository.GetChildCategoriesById(context["CategoryId"]);
+					if (children != null)
+					{
+						var categoryFilter = new CategoryFilter { Key = "__outline" };
+						var listOfValues = (from child in children.OfType<Category>()
+							let outline =
+								String.Format(
+									"{0}*",
+									catalogClient.BuildCategoryOutline(
+										_customerSession.CustomerSession.CatalogId,
+										child))
+							select
+								new CategoryFilterValue
+								{
+									Id = child.CategoryId,
+									Outline = outline,
+									Name = child.DisplayName()
+								}).ToList();
 
-        public ISearchFilter[] GetFilters(IDictionary<string, object> context)
-        {
-            if (_filters != null) return _filters;
+						// add filters only if found any
+						if (listOfValues.Count > 0)
+						{
+							categoryFilter.Values = listOfValues.ToArray();
+							filters.Add(categoryFilter);
+						}
+					}
+				}
+				 * */
+			}
 
-            var filters = new List<ISearchFilter>();
-            if (context.ContainsKey("CategoryId")) // include sub categories
-            {
-                /*
-            // get category filters
-                using (var repository = _catalogRepository())
-                {
-                    var children = repository.GetChildCategoriesById(context["CategoryId"]);
-                    if (children != null)
-                    {
-                        var categoryFilter = new CategoryFilter { Key = "__outline" };
-                        var listOfValues = (from child in children.OfType<Category>()
-                            let outline =
-                                String.Format(
-                                    "{0}*",
-                                    catalogClient.BuildCategoryOutline(
-                                        _customerSession.CustomerSession.CatalogId,
-                                        child))
-                            select
-                                new CategoryFilterValue
-                                {
-                                    Id = child.CategoryId,
-                                    Outline = outline,
-                                    Name = child.DisplayName()
-                                }).ToList();
+			if (context.ContainsKey("StoreId")) // include store filters
+			{
+				var storeId = context["StoreId"] as string;
 
-                        // add filters only if found any
-                        if (listOfValues.Count > 0)
-                        {
-                            categoryFilter.Values = listOfValues.ToArray();
-                            filters.Add(categoryFilter);
-                        }
-                    }
-                }
-                 * */
-            }
+				using (var repository = _storeRepository())
+				{
+					var store = repository.Stores.SingleOrDefault(s => s.StoreId == storeId);
+					var browsing = GetStoreBrowseFilters(store);
 
-            if (context.ContainsKey("StoreId")) // include store filters
-            {
-                using (var repository = _storeRepository())
-                {
-                    var store = repository.Stores.SingleOrDefault(s => s.StoreId == context["StoreId"]);
+					if (browsing != null)
+					{
+						if (browsing.Attributes != null)
+						{
+							filters.AddRange(browsing.Attributes);
+						}
+						if (browsing.AttributeRanges != null)
+						{
+							filters.AddRange(browsing.AttributeRanges);
+						}
+						if (browsing.Prices != null)
+						{
+							filters.AddRange(browsing.Prices);
+						}
+					}
+				}
+			}
 
-                    var browsing = this.GetStoreBrowseFilters(store);
-                    if (browsing != null)
-                    {
-                        if (browsing.Attributes != null)
-                        {
-                            filters.AddRange(browsing.Attributes);
-                        }
-                        if (browsing.AttributeRanges != null)
-                        {
-                            filters.AddRange(browsing.AttributeRanges);
-                        }
-                        if (browsing.Prices != null)
-                        {
-                            filters.AddRange(browsing.Prices);
-                        }
-                    }
-                }
-            }
-
-            _filters = filters.ToArray();
-            return _filters;
-        }
-    }
+			_filters = filters.ToArray();
+			return _filters;
+		}
+	}
 }
