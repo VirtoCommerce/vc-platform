@@ -21,6 +21,8 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			retVal.Organization = retVal.OrganizationId;
 			retVal.Customer = retVal.CustomerId;
 
+			retVal.ChildrenOperations = payment.ChildrenOperations.Select(x => x.ToWebModel()).ToList();
+
 			return retVal;
 		}
 

@@ -117,7 +117,7 @@
     <Compile Include="Model\SearchCriteria.cs" />
     <Compile Include="Model\SearchResult.cs" />
     <Compile Include="Model\Shipment.cs" />
-    <Compile Include="Model\OperationTreeNode.cs" />
+    <Compile Include="Model\Operation.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

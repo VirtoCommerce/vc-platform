@@ -17,19 +17,22 @@ namespace VirtoCommerce.Domain.Order.Model
 		public Address DeliveryAddress { get; set; }
 		public Discount Discount { get; set; }
 
-		public override IEnumerable<Operation> GetAllRelatedOperations()
+		public override IEnumerable<Operation> ChildrenOperations
 		{
-			var retVal = base.GetAllRelatedOperations().ToList();
-
-			if (InPayments != null)
+			get
 			{
-				foreach (var inPayment in InPayments)
+				var retVal = new List<Operation>();
+
+				if (InPayments != null)
 				{
-					inPayment.ParentOperationId = this.Id;
-					retVal.AddRange(inPayment.GetAllRelatedOperations());
+					foreach (var inPayment in InPayments)
+					{
+						inPayment.ParentOperationId = this.Id;
+						retVal.Add(inPayment);
+					}
 				}
+				return retVal;
 			}
-			return retVal;
 		}
 
 		public virtual void CalculateTotals()

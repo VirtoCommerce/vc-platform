@@ -40,9 +40,10 @@ namespace VirtoCommerce.Domain.Order.Model
 		public decimal Sum { get; set; }
 		public decimal Tax { get; set; }
 
-		public virtual IEnumerable<Operation> GetAllRelatedOperations()
+		public abstract IEnumerable<Operation> ChildrenOperations
 		{
-			return new Operation[] { this };
+			get;
 		}
+	
 	}
 }

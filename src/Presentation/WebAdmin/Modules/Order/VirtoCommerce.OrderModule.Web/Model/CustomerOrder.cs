@@ -11,11 +11,6 @@ namespace VirtoCommerce.OrderModule.Web.Model
 {
 	public class CustomerOrder : Operation
 	{
-		public CustomerOrder()
-		{
-			OperationType = "CustomerOrder";
-		}
-
 		public string Customer { get; set; }
 		public string CustomerId { get; set; }
 		public string Site { get; set; }
@@ -30,7 +25,5 @@ namespace VirtoCommerce.OrderModule.Web.Model
 		public ICollection<LineItem> Items { get; set; }
 		public ICollection<Shipment> Shipments { get; set; }
 		public Discount Discount { get; set; }
-
-		public ICollection<Operation> AllRelatedOperations { get; set; }
 	}
 }

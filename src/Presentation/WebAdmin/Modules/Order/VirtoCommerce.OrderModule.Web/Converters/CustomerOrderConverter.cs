@@ -38,7 +38,7 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			if (customerOrder.Addresses != null)
 				retVal.Addresses = customerOrder.Addresses.Select(x => x.ToWebModel()).ToList();
 
-			retVal.AllRelatedOperations = customerOrder.GetAllRelatedOperations().Select(x => x.ToWebModel()).ToList();
+			retVal.ChildrenOperations = customerOrder.ChildrenOperations.Select(x => x.ToWebModel()).ToList();
 		
 			return retVal;
 		}

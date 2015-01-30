@@ -136,9 +136,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 
 					EnsureThatAllOperationsHasNumber(changedOrder);
 					
-					//reflect stock operation to inventory service
-					var changedStockOperations = changedOrder.GetAllRelatedOperations().OfType<StockOperation>().Where(x=>x.IsApproved ?? false);
-
+					
 					var sourceOrderEntity = changedOrder.ToEntity();
 					var targetOrderEntity = repository.GetCustomerOrderById(changedOrder.Id, CustomerOrderResponseGroup.Full);
 					if (targetOrderEntity == null)
@@ -163,7 +161,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 	
 		private void EnsureThatAllOperationsHasNumber(CustomerOrder order)
 		{
-			 foreach(var operation in order.GetAllRelatedOperations())
+			 foreach(var operation in order.Traverse<Operation>(x=>x.ChildrenOperations))
 			 {
 				 if (operation.Number == null)
 				 {

@@ -32,6 +32,8 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 			if(shipment.Discount != null)
 				retVal.Discount = shipment.Discount.ToWebModel();
 
+			retVal.ChildrenOperations = shipment.ChildrenOperations.Select(x => x.ToWebModel()).ToList();
+
 			return retVal;
 		}
 
