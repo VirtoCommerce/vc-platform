@@ -74,12 +74,14 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		public IHttpActionResult Search(string store, [ModelBinder(typeof(SearchParametersBinder))] SearchParameters parameters, [FromUri]moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemMedium, [FromUri]string outline="", string language = "en-us", string currency = "USD")
         {
             var catalog = GetCatalogId(store);
+            string categoryId = null;
 
             var criteria = new CatalogItemSearchCriteria { Locale = language, Catalog = catalog.ToLowerInvariant() };
 
             if (!string.IsNullOrWhiteSpace(outline))
             {
                 criteria.Outlines.Add(String.Format("{0}/{1}*", catalog, outline));
+                categoryId = outline.Split(new[] { '/' }).Last();
             }
 
             // apply vendor filter if one specified
@@ -97,11 +99,62 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
                 }
             }
 
+
             //criteria.ClassTypes.Add("Product");
             criteria.RecordsToRetrieve = parameters.PageSize == 0 ? 10 : parameters.PageSize;
-            criteria.StartingRecord = (parameters.PageIndex - 1) * criteria.RecordsToRetrieve;
+            criteria.StartingRecord = parameters.StartingRecord;
             criteria.Pricelists = null;//UserHelper.CustomerSession.Pricelists;
             criteria.Currency = currency;
+            criteria.StartDateFrom = parameters.StartDateFrom;
+
+            #region sorting
+
+            var isDescending = "desc".Equals(parameters.SortOrder, StringComparison.OrdinalIgnoreCase);
+
+            SearchSort sortObject = null;
+
+            switch (parameters.Sort.ToLowerInvariant())
+            {
+                case "price":
+                    if (criteria.Pricelists != null)
+                    {
+                        sortObject = new SearchSort(criteria.Pricelists.Select(priceList =>
+                            new SearchSortField(
+                                String.Format("price_{0}_{1}",
+                                    criteria.Currency.ToLower(),
+                                    priceList.ToLower()))
+                            {
+                                IgnoredUnmapped = true,
+                                IsDescending = isDescending,
+                                DataType = SearchSortField.DOUBLE
+                            })
+                            .ToArray());
+                    }
+                    break;
+                case "position":
+                    sortObject = new SearchSort(new SearchSortField(string.Format("sort{0}{1}", catalog, categoryId).ToLower())
+                    {
+                        IgnoredUnmapped = true,
+                        IsDescending = isDescending
+                    });
+                    break;
+                case "name":
+                    sortObject = new SearchSort("name", isDescending);
+                    break;
+                case "rating":
+                    sortObject = new SearchSort(criteria.ReviewsAverageField, isDescending);
+                    break;
+                case "reviews":
+                    sortObject = new SearchSort(criteria.ReviewsTotalField, isDescending);
+                    break;
+                default:
+                    sortObject = CatalogItemSearchCriteria.DefaultSortOrder;
+                    break;
+
+            }
+
+            criteria.Sort = sortObject;
+            #endregion
 
             //Load ALL products 
             var searchResults = _browseService.SearchItems(criteria, responseGroup);
