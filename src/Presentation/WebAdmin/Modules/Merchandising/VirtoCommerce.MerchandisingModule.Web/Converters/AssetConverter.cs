@@ -9,14 +9,16 @@ using webModel = VirtoCommerce.MerchandisingModule.Web.Model;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Converters
 {
-	public static class AssetConverter
+    using VirtoCommerce.Foundation.Assets.Services;
+
+    public static class AssetConverter
 	{
-		public static webModel.ItemImage ToWebModel(this moduleModel.ItemAsset assset, Uri baseUri)
+        public static webModel.ItemImage ToWebModel(this moduleModel.ItemAsset assset, IAssetUrl resolve)
 		{
 			var retVal = new webModel.ItemImage();
 			retVal.InjectFrom(assset);
-			retVal.Src = new Uri(baseUri, assset.Url).ToString();
-			retVal.ThumbSrc = new Uri(baseUri, assset.Url).ToString();
+			retVal.Src = resolve.ResolveUrl(assset.Url);
+            retVal.ThumbSrc = resolve.ResolveUrl(assset.Url);
 			retVal.Name = assset.Group;
 			return retVal;
 		}

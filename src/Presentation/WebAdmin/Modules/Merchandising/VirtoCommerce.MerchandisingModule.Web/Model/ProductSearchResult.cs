@@ -7,7 +7,7 @@ using VirtoCommerce.CatalogModule.Model;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Model
 {
-    public class ProductSearchResult : GenericSearchResult<Product>
+    public class ProductSearchResult : ResponseCollection<Product>
     {
         public Facet[] Facets { get; set; }
     }

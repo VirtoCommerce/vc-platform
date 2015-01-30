@@ -46,7 +46,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
         /// <param name="parentId">The parent identifier.</param>
         /// <returns></returns>
         [HttpGet]
-        [ResponseType(typeof(webModel.GenericSearchResult<webModel.Category>))]
+        [ResponseType(typeof(webModel.ResponseCollection<webModel.Category>))]
         [Route("")]
         public IHttpActionResult Search(string store, string language = "en-us", [FromUri]string parentId = null)
         {
@@ -61,7 +61,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
                 GetAllCategories = string.IsNullOrEmpty(parentId)
             };
             var result = _searchService.Search(criteria);
-            var retVal = new webModel.GenericSearchResult<webModel.Category>
+            var retVal = new webModel.ResponseCollection<webModel.Category>
             {
                 TotalCount = result.Categories.Count(),
                 Items = result.Categories.Where(x => x.IsActive).Select(x => x.ToWebModel()).ToList()
