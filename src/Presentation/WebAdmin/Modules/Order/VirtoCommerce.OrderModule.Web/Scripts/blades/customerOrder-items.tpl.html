@@ -1,43 +1,132 @@
-﻿<div class="blade-content blade-medium">
+﻿<style>
+    .tight-input {
+        width: 50px;
+    }
+</style>
+<div class="static"> <!--top expanded-->
+    <span class="search-count">Count: {{pageSettings.totalItems}}</span>
+</div>
+<div class="blade-content blade-medium">
     <div class="blade-inner">
         <div class="inner-block">
-            <style>
-                .fixed-td {
-                    width: 15px;
-                }
-            </style>
-            <table class="table hovered" ng-if="blade.currentEntities.length > 0">
-                <thead>
-                    <tr>
-                        <th class="text-left fixed-td"><input type="checkbox" ng-model="selectedAll" ng-change="checkAll(selectedAll)" /></th>
-                        <th class="text-left fixed-td">Img</th>
-                        <th class="text-left">Product</th>
-                        <th class="text-left fixed-td">Group</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="data in blade.currentEntities" ng-class="{'selected': data === selectedItem}">
-                        <td>
-                            <div data-role="input-control" class="input-control checkbox">
-                                <label>
-                                    <input type="checkbox" ng-model="data.selected">
-                                    <span class="check"></span>
-                                </label>
-                            </div>
-                        </td>
-                        <td>
-                            <img ng-src="{{data.productImg}}" height="42" width="42" ng-if="data.productImg" /><i class="icon-none" ng-if="!data.productImg" style="font-size:26px" />
-                        </td>
-                        <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis;">
-                            <span title="{{data.productName}}">{{data.productName}}</span>
-                            <span title="Code: {{data.productCode}}" class="blade-sw-title">{{data.productCode}}</span>
-                        </td>
-                        <td>
-                            <span title="Association group name">{{data.name}}</span>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="table-wrapper">
+                <table class="table hovered">
+                    <thead>
+                        <tr>
+                            <th class="text-left fixed-td">
+                                <div data-role="input-control" class="input-control checkbox">
+                                    <label>
+                                        <input type="checkbox" ng-model="blade.selectedAll" ng-change="checkAll(blade.selectedAll)" />
+                                        <span class="check"></span>
+                                    </label>
+                                </div>
+                            </th>
+                            <th class="text-left">Item</th>
+                            <th class="text-left fixed-td">Qty</th>
+                            <th class="text-left fixed-td">Avail</th>
+                            <th class="text-left fixed-td">Await</th>
+                            <th class="text-left fixed-td">Price</th>
+                            <th class="text-left fixed-td">Discount</th>
+                            <th class="text-left fixed-td">Tax</th>
+                            <th class="text-left fixed-td">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="data in blade.currentEntity.items" ng-class="{'selected': data.id === selectedNodeId}" context-menu data-target="col_menu_{{data.id}}">
+                            <td>
+                                <div data-role="input-control" class="input-control checkbox">
+                                    <label>
+                                        <input type="checkbox" ng-model="data.selected">
+                                        <span class="check"></span>
+                                    </label>
+                                </div>
+                            </td>
+                            <td ng-click='selectItem(data)' class="product-name">
+                                <div class="product-img">
+                                    <div class="image" style="background-image: url({{data.imageUrl}})" ng-if="data.imageUrl"></div>
+                                    <i class="fa fa-ban" ng-if="!data.imageUrl" />
+                                </div>
+                                <span title="{{data.name}}">{{data.name}}</span>
+                                <ul role="menu" class="dropdown-menu context-menu" id="col_menu_{{data.id}}">
+                                    <li ng-click='edit(data)'>
+                                        <i class="ico fa fa-edit"></i>&nbsp;Manage
+                                    </li>
+                                    <li ng-click='delete()'>
+                                        <i class="ico fa fa-trash-o"></i>&nbsp;Delete
+                                    </li>
+                                </ul>
+                            </td>
+                            <td ng-click='selectItem(data)'>
+                                <input required class="form-control tight-input" ng-model="data.quantity" type="number" step="1" min="1">
+                            </td>
+                            <td ng-click='selectItem(data)'>
+                                <span>{{data.avail?data.avail:0}}</span>
+                            </td>
+                            <td ng-click='selectItem(data)'>
+                                <span>{{data.await?data.await:0}}</span>
+                            </td>
+                            <td ng-click='selectItem(data)'>
+                                <input required class="form-control tight-input" ng-model="data.price" type="number" step="any">
+                            </td>
+                            <td ng-click='selectItem(data)'>
+                                <input required class="form-control tight-input" ng-model="data.staticDiscount" type="number" step="any">
+                            </td>
+                            <td ng-click='selectItem(data)'>
+                                <input required class="form-control tight-input" ng-model="data.tax" type="number" step="any">
+                            </td>
+                            <td ng-click='selectItem(data)'>
+                                <!--<span>{{data.total}}</span>-->
+                                <span>{{data.quantity*data.price-data.staticDiscount+data.tax}}</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems">
+                        <tr>
+                            <td colspan="9" ng-include="'pagerTemplate.html'"></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="order-info">
+                <div class="column col-50">
+                    <label>Comment</label>
+                    <div class="input-control textarea">
+                        <textarea></textarea>
+                    </div>
+                </div>
+                <div class="column col-50">
+                    <div class="table-wrapper">
+                        <table class="table">
+                            <tr>
+                                <td>Total:</td>
+                                <td>{{blade.currentEntity.sum}}</td>
+                            </tr>
+                            <tr>
+                                <td>Sub Total</td>
+                                <td>678.23</td>
+                            </tr>
+                            <tr>
+                                <td>Discount Total</td>
+                                <td>36.00</td>
+                            </tr>
+                            <tr>
+                                <td>Tax Total</td>
+                                <td>{{blade.currentEntity.tax}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="order-currency">
+                        <label>Currency:</label>
+                        <select ng-model="blade.currentEntity.currency" class="chosen-select">
+                            <option value="EUR">EUR</option>
+                            <option value="USD">USD</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <script type="text/ng-template" id="pagerTemplate.html">
+                <pagination ng-if="pageSettings.itemsPerPageCount < pageSettings.totalItems" boundary-links="true" max-size="pageSettings.numPages" items-per-page="pageSettings.itemsPerPageCount" total-items="pageSettings.totalItems" ng-model="pageSettings.currentPage" class="pagination-sm" previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></pagination>
+            </script>
         </div>
     </div>
 </div>
