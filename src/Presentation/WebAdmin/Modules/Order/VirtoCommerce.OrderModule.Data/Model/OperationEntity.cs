@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Money;
 
 namespace VirtoCommerce.OrderModule.Data.Model
 {
-	public abstract class OperationEntity : Entity
+	public abstract class OperationEntity : Entity, IAuditable
 	{
 		public DateTime CreatedDate { get; set; }
 		public string CreatedBy { get; set; }

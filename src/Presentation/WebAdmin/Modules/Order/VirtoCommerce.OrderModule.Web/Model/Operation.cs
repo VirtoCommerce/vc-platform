@@ -34,7 +34,8 @@ namespace VirtoCommerce.OrderModule.Web.Model
 		public decimal Tax { get; set; }
 
 		public string ParentOperationId { get; set; }
-	
+
+		public IEnumerable<Operation> ChildrenOperations { get; set; }
 		
 	}
 }

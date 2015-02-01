@@ -4,6 +4,7 @@ using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
 using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Foundation.Data;
+using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
 using VirtoCommerce.OrderModule.Data.Model;
 
 namespace VirtoCommerce.OrderModule.Data.Repositories
@@ -16,12 +17,14 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 			Configuration.LazyLoadingEnabled = false;
 		}
 
-		public OrderRepositoryImpl(string nameOrConnectionString)
-			: base(nameOrConnectionString)
+		public OrderRepositoryImpl(string nameOrConnectionString, params IInterceptor[] interceptors)
+			: base(nameOrConnectionString, null, null, interceptors)
 		{
 			Database.SetInitializer<OrderRepositoryImpl>(null);
 			Configuration.LazyLoadingEnabled = false;
 		}
+
+		
 
 		protected override void OnModelCreating(DbModelBuilder modelBuilder)
 		{

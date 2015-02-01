@@ -36,7 +36,7 @@ namespace VirtoCommerce.Search.Providers.Elastic
 
             #region Filters
             // Perform facet filters
-            if (criteria.CurrentFilters != null)
+            if (criteria.CurrentFilters != null && criteria.CurrentFilters.Any())
             {
                 var combinedFilter = new BoolFilter<ESDocument>();
                 // group filters

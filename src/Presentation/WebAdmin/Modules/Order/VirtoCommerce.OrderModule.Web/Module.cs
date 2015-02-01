@@ -12,6 +12,8 @@ using Moq;
 using VirtoCommerce.Domain.Cart.Services;
 using VirtoCommerce.OrderModule.Web.Controllers.Api;
 using VirtoCommerce.Domain.Order.Services;
+using VirtoCommerce.OrderModule.Data.Interceptors;
+using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
 
 namespace VirtoCommerce.OrderModule.Web
 {
@@ -27,9 +29,13 @@ namespace VirtoCommerce.OrderModule.Web
 
 		public void Initialize()
 		{
-			Func<IOrderRepository> orderRepositoryFactory = () => { return new OrderRepositoryImpl("VirtoCommerce"); };
-		
 			var mockInventory = new Mock<IInventoryService>();
+
+			Func<IOrderRepository> orderRepositoryFactory = () => { 
+										return new OrderRepositoryImpl("VirtoCommerce", 
+										  							 new InventoryOperationInterceptor(mockInventory.Object),
+																	 new AuditableInterceptor());
+			};
 
 			_container.RegisterType<Func<IOrderRepository>>(new InjectionFactory(x => orderRepositoryFactory));
 			_container.RegisterInstance<IInventoryService>(mockInventory.Object);

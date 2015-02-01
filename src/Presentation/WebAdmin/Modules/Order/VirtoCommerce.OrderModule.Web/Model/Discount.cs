@@ -9,9 +9,8 @@ using VirtoCommerce.Foundation.Money;
 
 namespace VirtoCommerce.OrderModule.Web.Model
 {
-	public class Discount : ValueObject<Discount>
+	public class Discount
 	{
-		public string Id { get; set; }
 		public string PromotionId { get; set; }
 		[JsonConverter(typeof(StringEnumConverter))]
 		public CurrencyCodes? Currency { get; set; }

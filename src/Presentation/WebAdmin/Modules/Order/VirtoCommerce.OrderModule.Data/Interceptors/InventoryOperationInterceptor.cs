@@ -1,0 +1,75 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using VirtoCommerce.Domain.Inventory.Model;
+using VirtoCommerce.Domain.Inventory.Services;
+using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
+using VirtoCommerce.OrderModule.Data.Model;
+
+namespace VirtoCommerce.OrderModule.Data.Interceptors
+{
+	/// <summary>
+	/// Translates the changes in the model system order 
+	/// </summary>
+	public class InventoryOperationInterceptor : IInterceptor
+	{
+		private readonly IInventoryService _inventoryService;
+		public InventoryOperationInterceptor(IInventoryService inventoryService)
+		{
+			_inventoryService = inventoryService;
+		}
+
+		#region IInterceptor Members
+
+		public void Before(InterceptionContext context)
+		{
+			var changedEntries = context.ChangeTracker.Entries().Where(entry => (entry.State == EntityState.Added) || (entry.State == EntityState.Modified) || (entry.State == EntityState.Deleted));
+			foreach (var changedEntry in changedEntries)
+			{
+				var shipmentEntity = changedEntry.Entity as ShipmentEntity;
+				if(shipmentEntity != null && shipmentEntity.IsApproved)
+				{
+					var inventoryInfos = _inventoryService.GetProductInventoryInfos(shipmentEntity.Items.Select(x=>x.ProductId))
+														  .ToArray();
+					var changedInventoryInfos = new List<InventoryInfo>();
+					foreach(var lineItem in shipmentEntity.Items)
+					{
+						var inventoryInfo = inventoryInfos.FirstOrDefault(x => x.ProductId == lineItem.ProductId);
+						if(inventoryInfo != null)
+						{
+							changedInventoryInfos.Add(inventoryInfo);
+							if(changedEntry.State == EntityState.Deleted)
+							{
+								inventoryInfo.Stock += lineItem.Quantity; 
+							}
+							else if(changedEntry.State == EntityState.Added)
+							{
+								inventoryInfo.Stock -= lineItem.Quantity; 
+							}
+							else
+							{
+								var quantityProperty = changedEntry.Property("Quantity");
+								var delta = (int)quantityProperty.CurrentValue - (int)quantityProperty.OriginalValue;
+								inventoryInfo.Stock -= lineItem.Quantity; 
+							}
+						}
+					}
+
+					if (changedInventoryInfos.Any())
+					{
+						_inventoryService.UpsertInventories(changedInventoryInfos);
+					}
+				}
+			}
+		}
+
+		public void After(InterceptionContext context)
+		{
+		}
+
+		#endregion
+	}
+}

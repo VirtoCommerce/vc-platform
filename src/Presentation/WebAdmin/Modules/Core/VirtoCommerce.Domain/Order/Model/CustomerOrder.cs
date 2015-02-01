@@ -18,28 +18,31 @@ namespace VirtoCommerce.Domain.Order.Model
 
 		public Discount Discount { get; set; }
 
-		public override IEnumerable<Operation> GetAllRelatedOperations()
+		public override IEnumerable<Operation> ChildrenOperations
 		{
-			var retVal = base.GetAllRelatedOperations().ToList();
-
-			if (InPayments != null)
+			get
 			{
-				foreach (var inPayment in InPayments)
-				{
-					inPayment.ParentOperationId = this.Id;
-					retVal.AddRange(inPayment.GetAllRelatedOperations());
-				}
-			}
+				var retVal = new List<Operation>();
 
-			if (Shipments != null)
-			{
-				foreach (var shipment in Shipments)
+				if (InPayments != null)
 				{
-					shipment.ParentOperationId = this.Id;
-					retVal.AddRange(shipment.GetAllRelatedOperations());
+					foreach (var inPayment in InPayments)
+					{
+						inPayment.ParentOperationId = this.Id;
+						retVal.Add(inPayment);
+					}
 				}
+
+				if (Shipments != null)
+				{
+					foreach (var shipment in Shipments)
+					{
+						shipment.ParentOperationId = this.Id;
+						retVal.Add(shipment);
+					}
+				}
+				return retVal;
 			}
-			return retVal;
 		}
 
 		public virtual void CalculateTotals()

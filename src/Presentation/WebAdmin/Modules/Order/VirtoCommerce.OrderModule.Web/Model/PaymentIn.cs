@@ -10,11 +10,6 @@ namespace VirtoCommerce.OrderModule.Web.Model
 {
 	public class PaymentIn : Operation
 	{
-		public PaymentIn()
-		{
-			OperationType = "PaymentIn";
-		}
-
 		public string Organization { get; set; }
 		public string OrganizationId { get; set; }
 		public string Customer { get; set; }

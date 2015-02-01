@@ -16,14 +16,11 @@ namespace VirtoCommerce.OrderModule.Data.Services
 {
 	public class CustomerOrderServiceImpl : ModuleServiceBase, ICustomerOrderService
 	{
-		private readonly IInventoryService _inventoryService;
 		private readonly Func<IOrderRepository> _repositoryFactory;
 		private readonly IOperationNumberGenerator _operationNumberGenerator;
 		private readonly IShoppingCartService _shoppingCartService;
-		public CustomerOrderServiceImpl(Func<IOrderRepository> orderRepositoryFactory, IInventoryService inventoryService, 
-									    IShoppingCartService shoppingCartService, IOperationNumberGenerator operationNumberGenerator)
+		public CustomerOrderServiceImpl(Func<IOrderRepository> orderRepositoryFactory, IShoppingCartService shoppingCartService, IOperationNumberGenerator operationNumberGenerator)
 		{
-			_inventoryService = inventoryService;
 			_repositoryFactory = orderRepositoryFactory;
 			_shoppingCartService = shoppingCartService;
 			_operationNumberGenerator = operationNumberGenerator;
@@ -136,9 +133,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 
 					EnsureThatAllOperationsHasNumber(changedOrder);
 					
-					//reflect stock operation to inventory service
-					var changedStockOperations = changedOrder.GetAllRelatedOperations().OfType<StockOperation>().Where(x=>x.IsApproved ?? false);
-
+					
 					var sourceOrderEntity = changedOrder.ToEntity();
 					var targetOrderEntity = repository.GetCustomerOrderById(changedOrder.Id, CustomerOrderResponseGroup.Full);
 					if (targetOrderEntity == null)
@@ -163,7 +158,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 	
 		private void EnsureThatAllOperationsHasNumber(CustomerOrder order)
 		{
-			 foreach(var operation in order.GetAllRelatedOperations())
+			 foreach(var operation in order.Traverse<Operation>(x=>x.ChildrenOperations))
 			 {
 				 if (operation.Number == null)
 				 {

@@ -138,6 +138,7 @@ namespace VirtoCommerce.MerchandisingModule.Web
 
 			Func<IReviewRepository> reviewRepFactory = () => new EFReviewRepository(_connectionStringName);
 			Func<IStoreRepository> storeRepFactory = () => new EFStoreRepository(_connectionStringName);
+          
 
 			#endregion
 
@@ -151,13 +152,13 @@ namespace VirtoCommerce.MerchandisingModule.Web
 
             var azureBlobStorageProvider = new AzureBlobAssetRepository("DefaultEndpointsProtocol=https;AccountName=virtotest;AccountKey=Qvy1huF8b0OE6upFh91/IMZPnETwhxe7BlRNZoZeJL59b921LeBb7zZZt03CiOVf7wVfPseUMKSXD8yz/rXVuQ==", null);
             var itemBrowseService = new ItemBrowsingService(itemService, catalogRepFactory, elasticSearchProvider, new HttpCacheRepository(), azureBlobStorageProvider, searchConnection);
+            var filterService = new FilterService(storeRepFactory, catalogRepFactory, new HttpCacheRepository());
 
 			Func<ICatalogOutlineBuilder> catalogOutlineBuilderFactory = () => new CatalogOutlineBuilder(catalogRepFactory(), new HttpCacheRepository());
 
 			var assetBaseUri = new Uri(@"http://virtotest.blob.core.windows.net/");
-
 			_container.RegisterType<ReviewController>(new InjectionConstructor(reviewRepFactory));
-            _container.RegisterType<ProductController>(new InjectionConstructor(itemService, elasticSearchProvider, searchConnection, itemBrowseService, catalogRepFactory, appConfigRepFactory, catalogOutlineBuilderFactory, storeRepFactory, azureBlobStorageProvider));
+            _container.RegisterType<ProductController>(new InjectionConstructor(itemService, itemBrowseService, filterService, catalogRepFactory, appConfigRepFactory, catalogOutlineBuilderFactory, storeRepFactory, azureBlobStorageProvider));
 			_container.RegisterType<ContentController>(new InjectionConstructor(dynamicContentServiceFactory));
 			_container.RegisterType<CategoryController>(new InjectionConstructor(itemSearchService, categoryService, propertyService, catalogRepFactory, appConfigRepFactory, storeRepFactory));
 			_container.RegisterType<StoreController>(new InjectionConstructor(storeRepFactory, appConfigRepFactory));

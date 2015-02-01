@@ -10,11 +10,6 @@ namespace VirtoCommerce.OrderModule.Web.Model
 {
 	public class Shipment : Operation
 	{
-		public Shipment()
-		{
-			OperationType = "Shipment";
-		}
-
 		public string Organization { get; set; }
 		public string OrganizationId { get; set; }
 		public string FulfilmentCenter { get; set; }
