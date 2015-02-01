@@ -40,6 +40,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Omu.ValueInjecter, Version=2.3.3.0, Culture=neutral, PublicKeyToken=c7694541b0ac80e4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\packages\valueinjecter.2.3.3\lib\net35\Omu.ValueInjecter.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -51,14 +55,24 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Converters\AddressConverter.cs" />
-    <Compile Include="Converters\CartItemConverter.cs" />
-    <Compile Include="Converters\DiscountConverter.cs" />
+    <Compile Include="Converters\LineItemConverter.cs" />
     <Compile Include="Converters\PaymentConverter.cs" />
     <Compile Include="Converters\ShipmentConverter.cs" />
-    <Compile Include="Converters\ShipmentItemConverter.cs" />
     <Compile Include="Converters\ShoppingCartConverter.cs" />
+    <Compile Include="Migrations\201502011543475_Initial.cs" />
+    <Compile Include="Migrations\201502011543475_Initial.Designer.cs">
+      <DependentUpon>201502011543475_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Model\AddressEntity.cs" />
+    <Compile Include="Model\LineItemEntity.cs" />
+    <Compile Include="Model\PaymentEntity.cs" />
+    <Compile Include="Model\ShipmentEntity.cs" />
+    <Compile Include="Model\ShoppingCartEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\InMemoryCartRepository.cs" />
+    <Compile Include="Repositories\ICartRepository.cs" />
+    <Compile Include="Repositories\CartRepositoryImpl.cs" />
+    <Compile Include="Services\ModuleSeviceBase.cs" />
     <Compile Include="Services\ShoppingCartSearchServiceImpl.cs" />
     <Compile Include="Services\ShoppingCartServiceImpl.cs" />
   </ItemGroup>
@@ -67,6 +81,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\Core\CommerceFoundation.Data\CommerceFoundation.Data.csproj">
+      <Project>{bb168a74-0f1e-43be-a616-134902238b80}</Project>
+      <Name>CommerceFoundation.Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\..\..\Core\CommerceFoundation\CommerceFoundation.csproj">
       <Project>{e7fc9a51-1b39-4bdc-983a-8a059c5fc58b}</Project>
       <Name>CommerceFoundation</Name>
@@ -75,6 +93,11 @@
       <Project>{67c58a78-ddea-4fa3-a969-1cab582918e4}</Project>
       <Name>VirtoCommerce.Domain</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201502011543475_Initial.resx">
+      <DependentUpon>201502011543475_Initial.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

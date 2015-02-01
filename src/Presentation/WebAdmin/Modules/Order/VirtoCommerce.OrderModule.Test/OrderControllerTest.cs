@@ -6,7 +6,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using VirtoCommerce.CartModule.Data.Repositories;
 using VirtoCommerce.CartModule.Data.Services;
-using VirtoCommerce.Domain.Cart.Repositories;
 using VirtoCommerce.Domain.Cart.Services;
 using VirtoCommerce.Domain.Inventory.Services;
 using VirtoCommerce.Domain.Order.Services;
@@ -36,7 +35,7 @@ namespace VirtoCommerce.OrderModule.Test
 		[TestMethod]
 		public void CreateNewOrderByShoppingCart()
 		{
-			var result = _controller.CreateOrderFromCart("123") as OkNegotiatedContentResult<webModel.CustomerOrder>;
+			var result = _controller.CreateOrderFromCart("e787db15-2f91-4665-bf0d-42d0c3ee8bf4") as OkNegotiatedContentResult<webModel.CustomerOrder>;
 			Assert.IsNotNull(result.Content);
 		}
 
@@ -301,12 +300,18 @@ namespace VirtoCommerce.OrderModule.Test
 		private static CustomerOrderController GetCustomerOrderController()
 		{
 			var mockInventory = new Mock<IInventoryService>();
-			var cartRepository = new InMemoryCartRepository();
+			Func<ICartRepository> repositoryFactory = () =>
+			{
+				return new CartRepositoryImpl("VirtoCommerce", new AuditableInterceptor());
+			};
+
+			var cartService = new ShoppingCartServiceImpl(repositoryFactory);
+
 			Func<IOrderRepository> orderRepositoryFactory = () => { return new OrderRepositoryImpl("VirtoCommerce", 
 																		   new InventoryOperationInterceptor(mockInventory.Object),
 																		   new AuditableInterceptor());
 			};
-			var cartService = new ShoppingCartServiceImpl(cartRepository);
+		
 			var orderService = new CustomerOrderServiceImpl(orderRepositoryFactory, cartService, new TimeBasedNumberGeneratorImpl());
 
 			var controller = new CustomerOrderController(orderService, null);

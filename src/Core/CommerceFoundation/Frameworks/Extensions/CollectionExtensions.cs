@@ -80,6 +80,11 @@ namespace VirtoCommerce.Foundation.Frameworks.Extensions
 			return collection is NullCollection<T>;
 		}
 
+		public static void Patch<T>(this ICollection<T> source, ICollection<T> target, Action<T, T> patch)
+		{
+			source.Patch(target, EqualityComparer<T>.Default, patch);
+		}
+
 		public static void Patch<T>(this ICollection<T> source, ICollection<T> target, IEqualityComparer<T> comparer, Action<T, T> patch)
 		{
 			//Change
@@ -125,5 +130,6 @@ namespace VirtoCommerce.Foundation.Frameworks.Extensions
 				}
 			};
 		}
+
     }
 }

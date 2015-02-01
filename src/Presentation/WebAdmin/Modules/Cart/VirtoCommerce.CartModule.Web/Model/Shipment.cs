@@ -15,11 +15,13 @@ namespace VirtoCommerce.CatalogModule.Web.Model
 		public string Id { get; set; }
 		public string ShipmentMethodCode { get; set; }
 		public string  WarehouseLocation { get; set; }
-		public Address RecipientAddress { get; set; }
+		public Address DeliveryAddress { get; set; }
 		public ICollection<Discount> Discounts { get; set; }
 
 		[JsonConverter(typeof(StringEnumConverter))]
 		public CurrencyCodes? Currency { get; set; }
+
+		public ICollection<LineItem> Items { get; set; }
 
 		public Weight Weight { get; set; }
 		public decimal? VolumetricWeight { get; set; }

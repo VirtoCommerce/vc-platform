@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Foundation.Frameworks;
 
-namespace VirtoCommerce.OrderModule.Data.Model
+namespace VirtoCommerce.CartModule.Data.Model
 {
 	public class AddressEntity : Entity
 	{
@@ -19,17 +18,17 @@ namespace VirtoCommerce.OrderModule.Data.Model
 		public string Line1 { get; set; }
 		public string Line2 { get; set; }
 		public string FirstName { get; set; }
+		public string MiddleName { get; set; }
 		public string LastName { get; set; }
 		public string Phone { get; set; }
 		public string Email { get; set; }
+		public string Zip { get; set; }
 
-		public CustomerOrderEntity CustomerOrder { get; set; }
-		public string CustomerOrderId { get; set; }
-
+		public ShoppingCartEntity ShoppingCart { get; set; }
+		public string ShoppingCartId { get; set; }
 		public ShipmentEntity Shipment { get; set; }
 		public string ShipmentId { get; set; }
-
-		public PaymentInEntity PaymentIn { get; set; }
-		public string PaymentInId { get; set; }
+		public PaymentEntity Payment { get; set; }
+		public string PaymentId { get; set; }
 	}
 }

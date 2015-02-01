@@ -10,11 +10,7 @@ namespace VirtoCommerce.Domain.Cart.Model
 {
 	public class ShoppingCart : Entity, IAuditable
 	{
-		public ShoppingCart()
-		{
-			CreatedDate = DateTime.UtcNow;
-			ModifiedDate = CreatedDate;
-		}
+	
 		#region IAuditable Members
 
 		public DateTime CreatedDate { get; set; }
@@ -31,9 +27,8 @@ namespace VirtoCommerce.Domain.Cart.Model
 		public string CustomerName { get; set; }
 		public string OrganizationId { get; set; }
 		public CurrencyCodes? Currency { get; set; }
-		public ICollection<Address> ShippingAddresses { get; set; }
-		public ICollection<Address> BillingAddresses { get; set; }
-		public ICollection<CartItem> Items { get; set; }
+		public ICollection<Address> Addresses { get; set; }
+		public ICollection<LineItem> Items { get; set; }
 		public ICollection<Payment> Payments { get; set; }
 		public ICollection<Shipment> Shipments { get; set; }
 		public ICollection<Discount> Discounts { get; set; }

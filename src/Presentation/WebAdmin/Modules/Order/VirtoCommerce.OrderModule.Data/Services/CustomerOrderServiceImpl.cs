@@ -72,6 +72,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 				OrganizationId = shoppingCart.OrganizationId
 			};
 
+			retVal.Items = new List<LineItem>();
 			foreach (var cartItem in shoppingCart.Items)
 			{
 				var orderItem = new LineItem
@@ -90,7 +91,31 @@ namespace VirtoCommerce.OrderModule.Data.Services
 				};
 				retVal.Items.Add(orderItem);
 			}
-			//TODO: split shipment
+			//TODO: split shipment if it not exist
+			retVal.Shipments = new List<Shipment>();
+			foreach(var cartShipment in shoppingCart.Shipments)
+			{
+				var shipment = new Shipment
+				{
+					Currency = cartShipment.Currency,
+					Sum = cartShipment.ShippingPrice,
+					 
+					DeliveryAddress = new Address
+					{
+						AddressType = Domain.Order.Model.AddressType.Shipping,
+						City = cartShipment.DeliveryAddress.City,
+						Phone = cartShipment.DeliveryAddress.Phone,
+						PostalCode = cartShipment.DeliveryAddress.PostalCode,
+						CountryCode = cartShipment.DeliveryAddress.CountryCode,
+						Email = cartShipment.DeliveryAddress.Email,
+						FirstName = cartShipment.DeliveryAddress.FirstName,
+						LastName = cartShipment.DeliveryAddress.LastName,
+						Line1 = cartShipment.DeliveryAddress.Line1,
+						Organization = cartShipment.DeliveryAddress.Organization
+					}
+				};
+				retVal.Shipments.Add(shipment);
+			}
 
 			retVal = Create(retVal);
 

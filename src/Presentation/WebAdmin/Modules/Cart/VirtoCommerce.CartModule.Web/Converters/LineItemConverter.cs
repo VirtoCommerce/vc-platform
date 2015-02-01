@@ -10,11 +10,11 @@ using webModel = VirtoCommerce.CatalogModule.Web.Model;
 
 namespace VirtoCommerce.CartModule.Web.Converters
 {
-	public static class CartItemConverter
+	public static class LineItemConverter
 	{
-		public static webModel.CartItem ToWebModel(this coreModel.CartItem cartItem)
+		public static webModel.LineItem ToWebModel(this coreModel.LineItem cartItem)
 		{
-			var retVal = new webModel.CartItem();
+			var retVal = new webModel.LineItem();
 			retVal.InjectFrom(cartItem);
 			retVal.Currency = cartItem.Currency;
 			if (cartItem.Discounts != null)
@@ -22,9 +22,9 @@ namespace VirtoCommerce.CartModule.Web.Converters
 			return retVal;
 		}
 
-		public static coreModel.CartItem ToCoreModel(this webModel.CartItem cartItem)
+		public static coreModel.LineItem ToCoreModel(this webModel.LineItem cartItem)
 		{
-			var retVal = new coreModel.CartItem();
+			var retVal = new coreModel.LineItem();
 			retVal.InjectFrom(cartItem);
 
 			retVal.Currency = cartItem.Currency;

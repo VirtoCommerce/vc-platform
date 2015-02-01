@@ -45,7 +45,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cart\Model\Address.cs" />
-    <Compile Include="Cart\Model\CartItem.cs" />
+    <Compile Include="Cart\Model\AddressType.cs" />
+    <Compile Include="Cart\Model\LineItem.cs" />
     <Compile Include="Cart\Model\Coupon.cs" />
     <Compile Include="Cart\Model\Payment.cs" />
     <Compile Include="Cart\Model\SearchCriteria.cs" />
@@ -54,11 +55,9 @@
     <Compile Include="Cart\Model\SearchResult.cs" />
     <Compile Include="Cart\Model\Shipment.cs" />
     <Compile Include="Cart\Model\PaymentMethod.cs" />
-    <Compile Include="Cart\Model\ShipmentItem.cs" />
     <Compile Include="Cart\Model\ShipmentMethod.cs" />
     <Compile Include="Cart\Model\ShoppingCart.cs" />
     <Compile Include="Cart\Model\Weight.cs" />
-    <Compile Include="Cart\Repositories\IShoppingCartRepository.cs" />
     <Compile Include="Cart\Services\IShoppingCartSearchService.cs" />
     <Compile Include="Cart\Services\IShoppingCartService.cs" />
     <Compile Include="Inventory\Model\InventoryInfo.cs" />

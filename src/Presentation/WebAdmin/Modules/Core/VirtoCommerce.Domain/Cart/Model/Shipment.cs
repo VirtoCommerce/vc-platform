@@ -12,9 +12,9 @@ namespace VirtoCommerce.Domain.Cart.Model
 	{
 		public string ShipmentMethodCode { get; set; }
 		public string  WarehouseLocation { get; set; }
-		public Address RecipientAddress { get; set; }
+		public Address DeliveryAddress { get; set; }
 		public ICollection<Discount> Discounts { get; set; }
-		public ICollection<ShipmentItem> Items { get; set; }
+		public ICollection<LineItem> Items { get; set; }
 		public CurrencyCodes? Currency { get; set; }
 		public Weight Weight { get; set; }
 		public decimal? VolumetricWeight { get; set; }
@@ -43,7 +43,7 @@ namespace VirtoCommerce.Domain.Cart.Model
 			{
 				foreach (var item in Items)
 				{
-					ItemSubtotal += item.CartItem.PlacedPrice * item.Quantity;
+					ItemSubtotal += item.PlacedPrice * item.Quantity;
 				}
 			}
 
