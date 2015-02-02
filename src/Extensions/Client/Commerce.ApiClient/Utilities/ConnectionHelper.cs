@@ -55,6 +55,7 @@ namespace VirtoCommerce.ApiClient.Utilities
             return settingValue;
         }
 
+        /*
         public static string ApiConnectionString(string nameOrConnectionString)
         {
             return ApiConnectionString(nameOrConnectionString, ConfigurationManager.AppSettings["DefaultStore"]).ToLower();
@@ -64,6 +65,7 @@ namespace VirtoCommerce.ApiClient.Utilities
         {
             return string.Format(GetConnectionString(nameOrConnectionString), catalog ?? "", language ?? Thread.CurrentThread.CurrentUICulture.Name).ToLower();
         }
+         * */
 
         public static void SetConnectionString(string name, string connectionString)
         {
