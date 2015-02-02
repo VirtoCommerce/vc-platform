@@ -81,7 +81,7 @@ namespace VirtoCommerce.CartModule.Data.Converters
 			{
 				retVal.Payments = new ObservableCollection<PaymentEntity>(order.Payments.Select(x => x.ToEntity()));
 			}
-		
+
 			return retVal;
 		}
 
@@ -100,18 +100,16 @@ namespace VirtoCommerce.CartModule.Data.Converters
 			//Simply properties patch
 			if (source.Name != null)
 				target.Name = source.Name;
-			if (source.Currency  != null)
+			if (source.Currency != null)
 				target.Currency = source.Currency;
 			if (source.CustomerId != null)
 				target.CustomerId = source.CustomerId;
 			if (source.CustomerName != null)
 				target.CustomerName = source.CustomerName;
-		
-			if(source.IsAnonymous != null)
-				target.IsAnonymous = source.IsAnonymous;
 
-			if(source.IsRecuring != null)
-				target.IsRecuring = source.IsRecuring;
+			target.IsAnonymous = source.IsAnonymous;
+			target.IsRecuring = source.IsRecuring;
+
 			if (source.LanguageCode != null)
 				target.LanguageCode = source.LanguageCode;
 			if (source.Note != null)
@@ -125,8 +123,8 @@ namespace VirtoCommerce.CartModule.Data.Converters
 			target.HandlingTotal = source.HandlingTotal;
 			target.DiscountTotal = source.DiscountTotal;
 			target.TaxTotal = source.TaxTotal;
-					
-			if(!source.Items.IsNullCollection())
+
+			if (!source.Items.IsNullCollection())
 			{
 				if (target.Items == null)
 					target.Items = new ObservableCollection<LineItemEntity>();
@@ -146,7 +144,7 @@ namespace VirtoCommerce.CartModule.Data.Converters
 				if (target.Addresses == null)
 					target.Addresses = new ObservableCollection<AddressEntity>();
 
-				source.Addresses.Patch(target.Addresses, new AddressComparer(),  (sourceAddress, targetAddress) => sourceAddress.Patch(targetAddress));
+				source.Addresses.Patch(target.Addresses, new AddressComparer(), (sourceAddress, targetAddress) => sourceAddress.Patch(targetAddress));
 			}
 
 			if (!source.Shipments.IsNullCollection())
