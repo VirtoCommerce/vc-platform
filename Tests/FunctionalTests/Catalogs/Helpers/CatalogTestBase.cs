@@ -72,7 +72,7 @@ namespace FunctionalTests.Catalogs.Helpers
 
 		protected ICatalogRepository GetRepository()
 		{
-			EnsureDatabaseInitialized(() => new EFCatalogRepository(TestDSCatalogService.DatabaseName), () => Database.SetInitializer(new SetupMigrateDatabaseToLatestVersion<EFCatalogRepository, Configuration>()));
+			EnsureDatabaseInitialized(() => new EFCatalogRepository(TestDSCatalogService.DatabaseName), () => Database.SetInitializer(new SetupDatabaseInitializer<EFCatalogRepository, Configuration>()));
 
 			if (RepositoryProvider == RepositoryProvider.DataService)
 			{

@@ -527,7 +527,7 @@ namespace FunctionalTests.Customers
 
 		private ICustomerRepository GetRepository()
 		{
-			EnsureDatabaseInitialized(() => new EFCustomerRepository(_databaseName), () => Database.SetInitializer(new SetupMigrateDatabaseToLatestVersion<EFCustomerRepository, Configuration>()));
+			EnsureDatabaseInitialized(() => new EFCustomerRepository(_databaseName), () => Database.SetInitializer(new SetupDatabaseInitializer<EFCustomerRepository, Configuration>()));
 			var retVal = new EFCustomerRepository(_databaseName);
 			return retVal;
 		}

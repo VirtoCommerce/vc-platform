@@ -24,12 +24,12 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
 					if (reduced)
 					{
 						SafeWriteVerbose("Running reduced sample scripts");
-						initializer = new SqlCatalogReducedSampleDatabaseInitializer(data);
+						initializer = new SqlCatalogReducedSampleDatabaseInitializer { DataDirectoryPath = data };
 					}
 					else
 					{
 						SafeWriteVerbose("Running sample scripts");
-						initializer = new SqlCatalogSampleDatabaseInitializer(data);
+						initializer = new SqlCatalogSampleDatabaseInitializer { DataDirectoryPath = data };
 					}
 
 				}

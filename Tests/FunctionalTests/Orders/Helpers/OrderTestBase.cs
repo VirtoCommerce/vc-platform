@@ -194,7 +194,7 @@ namespace FunctionalTests.Orders.Helpers
 		protected IOrderRepository GetRepository()
 		{
 			EnsureDatabaseInitialized(() => new EFOrderRepository(TestDSOrderService.DatabaseName),
-				() => Database.SetInitializer(new SetupMigrateDatabaseToLatestVersion<EFOrderRepository, VirtoCommerce.Foundation.Data.Orders.Migrations.Configuration>()));
+				() => Database.SetInitializer(new SetupDatabaseInitializer<EFOrderRepository, VirtoCommerce.Foundation.Data.Orders.Migrations.Configuration>()));
 
 			if (RepositoryProvider == RepositoryProvider.DataService)
 			{

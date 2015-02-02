@@ -192,7 +192,7 @@ namespace UI.FrontEnd.FunctionalTests
 
 					var repository = new EFAppConfigRepository(AppConfigDatabaseName);
 					EnsureDatabaseInitialized(() => repository,
-						() => Database.SetInitializer(new SetupMigrateDatabaseToLatestVersion<EFAppConfigRepository, VirtoCommerce.Foundation.Data.AppConfig.Migrations.Configuration>()));
+						() => Database.SetInitializer(new SetupDatabaseInitializer<EFAppConfigRepository, VirtoCommerce.Foundation.Data.AppConfig.Migrations.Configuration>()));
 					_createdDbs.Add(typeof(EFAppConfigRepository), AppConfigDatabaseName);
 				}
 				return _appConfigRepository ?? (_appConfigRepository = Locator.GetInstance<IAppConfigRepository>());
@@ -208,7 +208,7 @@ namespace UI.FrontEnd.FunctionalTests
 
 					var repository = new EFStoreRepository(StoreDatabaseName);
 					EnsureDatabaseInitialized(() => repository,
-						() => Database.SetInitializer(new SetupMigrateDatabaseToLatestVersion<EFStoreRepository, VirtoCommerce.Foundation.Data.Stores.Migrations.Configuration>()));
+						() => Database.SetInitializer(new SetupDatabaseInitializer<EFStoreRepository, VirtoCommerce.Foundation.Data.Stores.Migrations.Configuration>()));
 					_createdDbs.Add(typeof(EFStoreRepository), StoreDatabaseName);
 				}
 				return _storeRepository ?? (_storeRepository = Locator.GetInstance<IStoreRepository>());
@@ -224,7 +224,7 @@ namespace UI.FrontEnd.FunctionalTests
 
 					var repository = new EFMarketingRepository(MarketingDatabaseName);
 					EnsureDatabaseInitialized(() => repository,
-						() => Database.SetInitializer(new SetupMigrateDatabaseToLatestVersion<EFMarketingRepository, VirtoCommerce.Foundation.Data.Marketing.Migrations.Promotion.Configuration>()));
+						() => Database.SetInitializer(new SetupDatabaseInitializer<EFMarketingRepository, VirtoCommerce.Foundation.Data.Marketing.Migrations.Promotion.Configuration>()));
 					_createdDbs.Add(typeof(EFMarketingRepository), MarketingDatabaseName);
 				}
 				return _marketingRepository ?? (_marketingRepository = Locator.GetInstance<IMarketingRepository>());
@@ -239,7 +239,7 @@ namespace UI.FrontEnd.FunctionalTests
 				{
 					var repository = new EFCatalogRepository(CatalogDatabaseName);
 					EnsureDatabaseInitialized(() => repository,
-						() => Database.SetInitializer(new SetupMigrateDatabaseToLatestVersion<EFCatalogRepository, VirtoCommerce.Foundation.Data.Catalogs.Migrations.Configuration>()));
+						() => Database.SetInitializer(new SetupDatabaseInitializer<EFCatalogRepository, VirtoCommerce.Foundation.Data.Catalogs.Migrations.Configuration>()));
 					_createdDbs.Add(typeof(EFCatalogRepository), CatalogDatabaseName);
 				}
 				return _catalogRepository ?? (_catalogRepository = Locator.GetInstance<ICatalogRepository>());
@@ -253,7 +253,7 @@ namespace UI.FrontEnd.FunctionalTests
 				{
 					var repository = new EFCatalogRepository(CatalogDatabaseName);
 					EnsureDatabaseInitialized(() => repository,
-						() => Database.SetInitializer(new SetupMigrateDatabaseToLatestVersion<EFCatalogRepository, VirtoCommerce.Foundation.Data.Catalogs.Migrations.Configuration>()));
+						() => Database.SetInitializer(new SetupDatabaseInitializer<EFCatalogRepository, VirtoCommerce.Foundation.Data.Catalogs.Migrations.Configuration>()));
 					_createdDbs.Add(typeof(EFCatalogRepository), CatalogDatabaseName);
 				}
 				return _pricelistRepository ?? (_pricelistRepository = Locator.GetInstance<IPricelistRepository>());

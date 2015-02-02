@@ -19,7 +19,7 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
 
 			using (var db = new EFSearchRepository(connection))
 			{
-				new SetupMigrateDatabaseToLatestVersion<EFSearchRepository, Configuration>().InitializeDatabase(db);
+				new SetupDatabaseInitializer<EFSearchRepository, Configuration>().InitializeDatabase(db);
 			}
 		}
 	}
