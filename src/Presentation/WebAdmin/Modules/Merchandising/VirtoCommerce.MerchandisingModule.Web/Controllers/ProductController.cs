@@ -114,6 +114,19 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
                 }
             }
 
+            // apply filters
+            var facets = parameters.Facets;
+            if (facets.Count != 0)
+            {
+                foreach (var key in facets.Keys)
+                {
+                    var filter = filters.SingleOrDefault(x => x.Key.Equals(key, StringComparison.OrdinalIgnoreCase)
+                        && (!(x is PriceRangeFilter) || ((PriceRangeFilter)x).Currency.Equals(currency, StringComparison.OrdinalIgnoreCase)));
+
+                    var appliedFilter = _browseFilterService.Convert(filter, facets[key]);
+                    criteria.Apply(appliedFilter);
+                }
+            }
 
             //criteria.ClassTypes.Add("Product");
             criteria.RecordsToRetrieve = parameters.PageSize == 0 ? 10 : parameters.PageSize;
@@ -190,7 +203,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		[Route("")]
         public IHttpActionResult GetProductByCode(string store, [FromUri]string code, [FromUri]moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemLarge, string language = "en-us")
 		{
-            var catalog = GetCatalogId(store);
+            //var catalog = GetCatalogId(store);
 
 			using(var repository = _foundationCatalogRepositoryFactory())
 			{
@@ -198,7 +211,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 				var itemId = repository.Items.Where(x => x.Code == code).Select(x => x.ItemId).FirstOrDefault();
 				if(itemId != null)
 				{
-					return GetProduct(catalog, itemId,responseGroup);
+					return GetProduct(store, itemId,responseGroup);
 				}
 			}
 			return StatusCode(HttpStatusCode.NotFound);

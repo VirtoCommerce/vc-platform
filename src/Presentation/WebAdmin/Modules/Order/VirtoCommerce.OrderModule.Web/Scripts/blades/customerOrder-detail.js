@@ -8,6 +8,17 @@
             $scope.blade.currentEntity = angular.copy(results);
             $scope.blade.origEntity = results;
             $scope.blade.isLoading = false;
+
+            var newBlade = {
+                id: 'customerOrderItems',
+                title: $scope.blade.title + ' items',
+                subtitle: 'Edit order items',
+                currentEntity: $scope.blade.currentEntity,
+                isClosingDisabled: true,
+                controller: 'customerOrderItemsController',
+                template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/blades/customerOrder-items.tpl.html'
+            };
+            bladeNavigationService.showBlade(newBlade, $scope.blade);
         },
         function (error) {
             $scope.blade.isLoading = false;
@@ -66,27 +77,26 @@
                     if (needSave) {
                         saveChanges();
                     }
+                    closeChildrenBlades();
                     closeCallback();
                 }
             };
             dialogService.showConfirmationDialog(dialog);
         }
         else {
+            closeChildrenBlades();
             closeCallback();
         }
     };
+
+    function closeChildrenBlades() {
+        angular.forEach($scope.blade.childrenBlades.slice(), function (child) {
+            bladeNavigationService.closeBlade(child);
+        });
+    }
 
     // actions on load
     $scope.toolbarTemplate = 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/blades/customerOrder-detail-toolbar.tpl.html';
     $scope.blade.refresh();
 
-    //var newBlade = {
-    //    id: 'customerOrderItems',
-    //    title: $scope.blade.title + ' items',
-    //    subtitle: 'Edit order items',
-    //    isClosingDisabled: true,
-    //    controller: 'customerOrderItemsController',
-    //    template: 'Modules/Order/VirtoCommerce.OrderModule.Web/Scripts/blades/customerOrder-items.tpl.html'
-    //};
-    //bladeNavigationService.showBlade(newBlade, $scope.blade.parentBlade);
 }]);

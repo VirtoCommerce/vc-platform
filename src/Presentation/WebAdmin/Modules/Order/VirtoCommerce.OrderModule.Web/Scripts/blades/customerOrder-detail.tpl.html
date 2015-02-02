@@ -6,22 +6,23 @@
                     <div class="block">
                         <label>Customer order number</label>
                         <div class="input-control text">
-                            <input type="text">
+                            <input required type="text" ng-model="blade.currentEntity.number">
                         </div>
                     </div>
                     <div class="block">
                         <label>Status</label>
                         <div class="input-control select">
-                            <select name="" id="" class="chosen-select">
+                            <!--ng-options="x for x in types"-->
+                            <select ng-model="blade.currentEntity.statusId" class="chosen-select">
                                 <option value="new">New</option>
                             </select>
                         </div>
                     </div>
                     <div class="block">
-                        <label>Fulfilment centre</label>
+                        <label>Fulfillment center</label>
                         <div class="input-control select">
-                            <select name="" id="" class="chosen-select">
-                                <option value="bejieng">Bejieng</option>
+                            <select ng-model="blade.currentEntity.fulfillmentId" class="chosen-select">
+                                <option value="bejieng">Beijing</option>
                             </select>
                         </div>
                     </div>
@@ -30,13 +31,13 @@
                     <div class="block">
                         <label>from</label>
                         <div class="input-control text">
-                            2014-02-23 22:21
+                            {{blade.currentEntity.createdDate | date:'short'}}
                         </div>
                     </div>
                     <div class="block">
                         <label>Site</label>
                         <div class="input-control select">
-                            <select name="" id="" class="chosen-select">
+                            <select ng-model="blade.currentEntity.siteId" class="chosen-select">
                                 <option value="test">Test site</option>
                             </select>
                         </div>
@@ -44,7 +45,7 @@
                     <div class="block">
                         <label>Customer</label>
                         <div class="input-control select">
-                            <select name="" id="" class="chosen-select">
+                            <select ng-model="blade.currentEntity.customerId" class="chosen-select">
                                 <option value="Evant">Evant Moriss</option>
                             </select>
                         </div>
@@ -88,52 +89,27 @@
                         <li class="tree-item first">
                             <div class="tree-block">
                                 <div class="inner">
-                                    <span class="tree-el title">Заказ № 0969G40</span>
-                                    <span class="tree-el date">20.12.14 14:10:16</span>
-                                    <span class="tree-el price">46,50 рублей</span>
+                                    <span class="tree-el title">{{blade.currentEntity.operationType +' #'+blade.currentEntity.number}}</span>
+                                    <span class="tree-el date">{{blade.currentEntity.createdDate | date}}</span>
+                                    <span class="tree-el price">{{blade.currentEntity.sum +' '+blade.currentEntity.currency}}</span>
                                 </div>
                             </div>
-                            <ul class="tree-node">
-                                <li class="tree-item">
-                                    <div class="tree-block">
-                                        <div class="inner">
-                                            <span class="tree-el title">Отгрузка № 0969G40</span>
-                                            <span class="tree-el date">20.12.14 14:10:16</span>
-                                            <span class="tree-el price">46,50 рублей</span>
-                                        </div>
-                                    </div>
-                                    <ul class="tree-node">
-                                        <li class="tree-item">
-                                            <div class="tree-block">
-                                                <div class="inner">
-                                                    <span class="tree-el title">Отгрузка № 0969G40</span>
-                                                    <span class="tree-el date">20.12.14 14:10:16</span>
-                                                    <span class="tree-el price">46,50 рублей</span>
-                                                </div>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="tree-item">
-                                    <div class="tree-block">
-                                        <div class="inner">
-                                            <span class="tree-el title">Отгрузка № 0969G40</span>
-                                            <span class="tree-el date">20.12.14 14:10:16</span>
-                                            <span class="tree-el price">46,50 рублей</span>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="tree-item">
-                                    <div class="tree-block">
-                                        <div class="inner">
-                                            <span class="tree-el title">Отгрузка № 0969G40</span>
-                                            <span class="tree-el date">20.12.14 14:10:16</span>
-                                            <span class="tree-el price">46,50 рублей</span>
-                                        </div>
-                                    </div>
-                                </li>
+                            <ul class="tree-node" ng-if="(children = (blade.currentEntity.childrenOperations | filter: {parentOperationId: blade.currentEntity.id})).length>0">
+                                <li class="tree-item" ng-class="{'last':$last}" ng-repeat="data in children" ng-include="'document.html'"></li>
                             </ul>
                         </li>
+                        <script type="text/ng-template" id="document.html">
+                            <div class="tree-block">
+                                <div class="inner">
+                                    <span class="tree-el title">{{data.operationType +' #'+data.number}}</span>
+                                    <span class="tree-el date">{{data.createdDate | date}}</span>
+                                    <span class="tree-el price">{{data.sum +' '+data.currency}}</span>
+                                </div>
+                            </div>
+                            <ul class="tree-node" ng-if="(children = (blade.currentEntity.childrenOperations | filter: {parentOperationId: data.id})).length>0">
+                                <li class="tree-item" ng-class="{'last':$last}" ng-repeat="data in children" ng-include="'document.html'"></li>
+                            </ul>
+                        </script>
                     </ul>
                 </div>
             </div>
