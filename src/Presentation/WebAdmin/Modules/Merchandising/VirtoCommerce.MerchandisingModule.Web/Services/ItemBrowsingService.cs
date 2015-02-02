@@ -114,7 +114,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Services
             response.TotalCount = results.TotalCount;
 
             //TODO need better way to find applied filter values
-            var appliedFilters = criteria.CurrentFilters.OfType<AttributeFilter>().SelectMany(x => x.Values).Select(x=>x.Value).ToArray();
+            var appliedFilters = criteria.CurrentFilters.SelectMany(x => x.GetValues()).Select(x=>x.Id).ToArray();
             response.Facets = results.FacetGroups.Select(g => g.ToWebModel(appliedFilters)).ToArray();
             return response;
         }

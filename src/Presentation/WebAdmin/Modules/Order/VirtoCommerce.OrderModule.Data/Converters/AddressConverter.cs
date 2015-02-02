@@ -37,6 +37,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 				retVal.Id = Guid.NewGuid().ToString();
 			}
 
+			retVal.AddressType = address.AddressType.ToString();
 			return retVal;
 		}
 

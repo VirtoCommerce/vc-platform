@@ -17,7 +17,7 @@
         {
             <dt>@(group.Label ?? group.Field.Localize())</dt>
             <dd>
-                @if (group.FacetType.Equals("Color", StringComparison.InvariantCultureIgnoreCase))
+                @if (group.Field.Equals("Color", StringComparison.InvariantCultureIgnoreCase))
                 {
                     <ol>
                         @foreach (var facet in group.Values)
@@ -32,7 +32,7 @@
 
                     </ol>
                 }
-                else if (group.FacetType.Equals("Subcategory", StringComparison.InvariantCultureIgnoreCase))
+                else if (group.FacetType.Equals("category", StringComparison.InvariantCultureIgnoreCase))
                 {
                     <ol>
                         @foreach (var facet in group.Values)
