@@ -134,6 +134,7 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
             criteria.Pricelists = null;//UserHelper.CustomerSession.Pricelists;
             criteria.Currency = currency;
             criteria.StartDateFrom = parameters.StartDateFrom;
+            criteria.SearchPhrase = parameters.FreeSearch;
 
             #region sorting
 
