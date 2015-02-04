@@ -37,7 +37,7 @@
         });
 
         $('.set-url').click(function () {
-            var url = prompt('Введите адрес сайта:', '');
+            var url = prompt('Enter site address:', '');
 
             if (url != null) {
                 $('.live-preview iframe').prop('src', url);
