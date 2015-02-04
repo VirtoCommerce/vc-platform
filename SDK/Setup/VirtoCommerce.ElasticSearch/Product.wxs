@@ -28,14 +28,19 @@
         <Property Id="JAVAHOME_VERSION">    
           <RegistrySearch Id="JavaHome_version" Root="HKLM" Key="SOFTWARE\JavaSoft\Java Runtime Environment" Name="CurrentVersion" Type="raw" Win64="no"/>
         </Property>
-        <Property Id="JAVAHOME">
+        <Property Id="JAVAHOME32">
           <RegistrySearch Id="JavaHome" Root="HKLM" Key="SOFTWARE\JavaSoft\Java Runtime Environment\[JAVAHOME_VERSION]" Name="JavaHome" Type="raw" Win64="no"/>
         </Property>    
+
+        <SetProperty Id="JAVAHOME" After="AppSearch" Value="[JAVAHOME32]" Action="SetJAVAHOME1">
+          <![CDATA[JAVAHOME32 <> ""]]>
+        </SetProperty>    
     
-    <SetProperty Id="JAVAHOME" After="AppSearch" Value="[JAVAHOME64]">
-      VersionNT64
-    </SetProperty>
+        <SetProperty Id="JAVAHOME" After="AppSearch" Value="[JAVAHOME64]" Action="SetJAVAHOME0">
+          <![CDATA[JAVAHOME64 <> ""]]>
+        </SetProperty>
        
+    <Condition Message="Java Runtime Environment is not installed or outdated. Please install Oracle JRE 1.7 or later."><![CDATA[Installed OR (JAVAHOME_VERSION >= "1.7") OR (JAVAHOME_VERSION64 >= "1.7")]]></Condition>
 
     <!-- 
       http://msdn.microsoft.com/en-us/library/aa372380%28v=vs.85%29.aspx
