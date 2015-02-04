@@ -10,7 +10,7 @@ namespace VirtoCommerce.OrderModule.Data.Model
 {
 	public class AddressEntity : Entity
 	{
-		public AddressType AddressType { get; set; }
+		public string AddressType { get; set; }
 		public string Organization { get; set; }
 		public string CountryCode { get; set; }
 		public string CountryName { get; set; }

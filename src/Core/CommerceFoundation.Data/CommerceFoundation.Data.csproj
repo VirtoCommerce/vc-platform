@@ -169,7 +169,6 @@
     </Compile>
     <Compile Include="Infrastructure\Interceptors\AuditableInterceptor.cs" />
     <Compile Include="Infrastructure\SetupDatabaseInitializer.cs" />
-    <Compile Include="Infrastructure\SetupMigrateDatabaseToLatestVersion.cs" />
     <Compile Include="Customers\SqlCustomerSampleDatabaseInitializer.cs" />
     <Compile Include="Importing\EFImportingRepository.cs" />
     <Compile Include="Importing\DSImportClient.cs" />

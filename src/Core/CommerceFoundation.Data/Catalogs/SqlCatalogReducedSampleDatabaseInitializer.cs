@@ -2,21 +2,6 @@
 {
 	public class SqlCatalogReducedSampleDatabaseInitializer : SqlCatalogSampleDatabaseInitializer
 	{
-		public SqlCatalogReducedSampleDatabaseInitializer()
-		{
-		}
-
-		public SqlCatalogReducedSampleDatabaseInitializer(string location)
-			: base(location)
-		{
-		}
-
-		public SqlCatalogReducedSampleDatabaseInitializer(string location, string connectionString)
-			: base(location, connectionString)
-		{
-		}
-
-
 		readonly string[] _files =
 		{
 			"CatalogBase.sql",

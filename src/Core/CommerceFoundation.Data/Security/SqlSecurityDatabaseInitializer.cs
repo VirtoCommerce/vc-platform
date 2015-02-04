@@ -19,7 +19,7 @@ namespace VirtoCommerce.Foundation.Data.Security
 
 		private void CreateAspNetSecurity(EFSecurityRepository context)
 		{
-			RunCommand(context, "AspNetIdentity.sql", "Security");
+			ExecuteSqlScriptFile(context, "AspNetIdentity.sql", "Security");
 		}
 
 		private void CreatePermissions(EFSecurityRepository client)

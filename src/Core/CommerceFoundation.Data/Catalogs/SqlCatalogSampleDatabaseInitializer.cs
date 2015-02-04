@@ -2,21 +2,6 @@
 {
 	public class SqlCatalogSampleDatabaseInitializer : SqlCatalogDatabaseInitializer
 	{
-		public SqlCatalogSampleDatabaseInitializer()
-		{
-		}
-
-		public SqlCatalogSampleDatabaseInitializer(string location)
-			: base(location)
-		{
-		}
-
-		public SqlCatalogSampleDatabaseInitializer(string location, string connectionString)
-			: base(location, connectionString)
-		{
-		}
-
-
 		readonly string[] _files =
 		{
 			"CatalogBase.sql",
@@ -58,7 +43,7 @@
 		{
 			foreach (var file in GetSampleFiles())
 			{
-				RunCommand(context, file, "Catalogs");
+				ExecuteSqlScriptFile(context, file, "Catalogs");
 			}
 		}
 	}

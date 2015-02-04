@@ -18,7 +18,7 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
 
 			using (var db = new OperationLogContext(connection))
 			{
-				new SetupMigrateDatabaseToLatestVersion<OperationLogContext, Configuration>().InitializeDatabase(db);
+				new SetupDatabaseInitializer<OperationLogContext, Configuration>().InitializeDatabase(db);
 			}
 		}
 	}
