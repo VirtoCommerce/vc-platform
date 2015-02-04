@@ -9,12 +9,12 @@
     });
 
     $(window).load(function () {
-        $('.fade-block').remove();
+        //$('.fade-block').remove();
     });
 
     $(function () {
 
-        $('body').prepend('<div class="fade-block" style="background: rgba(0, 0, 0, .8); height: 100%; left: 0; position: fixed; right: 0; z-index: 10000;"><img src="responsive/images/preloader.gif" alt="" style="left: 50%; margin: -12px 0 0 -80px; position: absolute; top: 50%;" /></div>');
+        //$('body').prepend('<div class="fade-block" style="background: rgba(0, 0, 0, .8); height: 100%; left: 0; position: fixed; right: 0; z-index: 10000;"><img src="responsive/images/preloader.gif" alt="" style="left: 50%; margin: -12px 0 0 -80px; position: absolute; top: 50%;" /></div>');
 
         $('.top-nav li a').click(function () {
             var self = $(this),
