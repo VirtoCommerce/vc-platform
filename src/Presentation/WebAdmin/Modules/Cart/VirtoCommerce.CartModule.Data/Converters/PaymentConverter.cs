@@ -8,6 +8,7 @@ using VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Money;
 using Omu.ValueInjecter;
+using System.Collections.ObjectModel;
 
 namespace VirtoCommerce.CartModule.Data.Converters
 {
@@ -20,36 +21,28 @@ namespace VirtoCommerce.CartModule.Data.Converters
 
 			var retVal = new Payment();
 			retVal.InjectFrom(entity);
-			if (entity.Currency != null)
+			retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), entity.Currency);
+
+			if (entity.Addresses != null && entity.Addresses.Any())
 			{
-				retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), entity.Currency);
-			}
-			if (entity.BillingAddress != null)
-			{
-				retVal.BillingAddress = entity.BillingAddress.ToCoreModel();
+				retVal.BillingAddress = entity.Addresses.First().ToCoreModel();
 			}
 			return retVal;
 		}
 
-		public static PaymentEntity ToEntity(this Payment paymentIn)
+		public static PaymentEntity ToEntity(this Payment payment)
 		{
-			if (paymentIn == null)
+			if (payment == null)
 				throw new ArgumentNullException("payment");
 
 			var retVal = new PaymentEntity();
-			retVal.InjectFrom(paymentIn);
-			if (retVal.IsTransient())
-			{
-				retVal.Id = Guid.NewGuid().ToString();
-			}
-			if (paymentIn.Currency != null)
-			{
-				retVal.Currency = paymentIn.Currency.ToString();
-			}
+			retVal.InjectFrom(payment);
 
-			if (paymentIn.BillingAddress != null)
+			retVal.Currency = payment.Currency.ToString();
+
+			if (payment.BillingAddress != null)
 			{
-				retVal.BillingAddress = paymentIn.BillingAddress.ToEntity();
+				retVal.Addresses = new ObservableCollection<AddressEntity>(new AddressEntity[] { payment.BillingAddress.ToEntity() });
 			}
 			return retVal;
 		}
@@ -68,12 +61,13 @@ namespace VirtoCommerce.CartModule.Data.Converters
 			//Simply properties patch
 			target.Amount = source.Amount;
 
-			if (source.PaymentGatewayCode != null)
-				target.PaymentGatewayCode = source.PaymentGatewayCode;
+			if (source.GatewayCode != null)
+				target.GatewayCode = source.GatewayCode;
 
-			var addressComparer = new AddressComparer();
-			if (source.BillingAddress != null && !addressComparer.Equals(target.BillingAddress, source.BillingAddress))
-				target.BillingAddress = source.BillingAddress;
+			if (!source.Addresses.IsNullCollection())
+			{
+				source.Addresses.Patch(target.Addresses, new AddressComparer(), (sourceAddress, targetAddress) => sourceAddress.Patch(targetAddress));
+			}
 		}
 
 	}

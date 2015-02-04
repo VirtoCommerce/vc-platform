@@ -37,12 +37,6 @@ namespace VirtoCommerce.CartModule.Web.Converters
 			var retVal = new coreModel.ShoppingCart();
 			retVal.InjectFrom(cart);
 
-		
-			if(retVal.IsTransient())
-			{
-				retVal.Id = Guid.NewGuid().ToString();
-			}
-
 			retVal.Currency = cart.Currency;
 					
 			if(cart.Addresses != null)
@@ -55,7 +49,10 @@ namespace VirtoCommerce.CartModule.Web.Converters
 				retVal.Shipments = cart.Shipments.Select(x => x.ToCoreModel()).ToList();
 			if(cart.Discounts != null)
 				retVal.Discounts = cart.Discounts.Select(x => x.ToCoreModel()).ToList();
-
+			if(cart.Coupon != null)
+			{
+				retVal.Coupon = new coreModel.Coupon() { CouponCode = cart.Coupon.CouponCode, InvalidDescription = cart.Coupon.InvalidDescription };
+			}
 			return retVal;
 		}
 

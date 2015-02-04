@@ -31,9 +31,9 @@ namespace VirtoCommerce.CartModule.Data.Services
 				{
 					query = query.Where(x => x.CustomerId == criteria.CustomerId);
 				}
-				if (criteria.SiteId != null)
+				if (criteria.StoreId != null)
 				{
-					query = query.Where(x => x.SiteId == criteria.SiteId);
+					query = query.Where(x => x.StoreId == criteria.StoreId);
 				}
 
 				retVal = new SearchResult

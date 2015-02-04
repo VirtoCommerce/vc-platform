@@ -31,12 +31,6 @@ namespace VirtoCommerce.CartModule.Data.Converters
 
 			var retVal = new LineItemEntity();
 			retVal.InjectFrom(lineItem);
-
-			if (retVal.IsTransient())
-			{
-				retVal.Id = Guid.NewGuid().ToString();
-			}
-	
 			return retVal;
 		}
 

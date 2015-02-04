@@ -36,6 +36,8 @@ namespace VirtoCommerce.OrderModule.Data.Model
 		[StringLength(64)]
 		public string EmployeeId { get; set; }
 
+
+
 		public virtual ObservableCollection<AddressEntity> Addresses { get; set; }
 		public virtual ObservableCollection<PaymentInEntity> InPayments { get; set; }
 

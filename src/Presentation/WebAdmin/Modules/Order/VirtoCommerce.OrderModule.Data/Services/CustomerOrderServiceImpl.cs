@@ -17,6 +17,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 {
 	public class CustomerOrderServiceImpl : ModuleServiceBase, ICustomerOrderService
 	{
+		private const string _workflowName = "OrderRecalculate";
 		private readonly Func<IOrderRepository> _repositoryFactory;
 		private readonly IOperationNumberGenerator _operationNumberGenerator;
 		private readonly IShoppingCartService _shoppingCartService;
@@ -73,7 +74,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 			{
 				Currency = shoppingCart.Currency,
 				CustomerId = shoppingCart.CustomerId,
-				StoreId = shoppingCart.SiteId,
+				StoreId = shoppingCart.StoreId,
 				OrganizationId = shoppingCart.OrganizationId
 			};
 
@@ -190,7 +191,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 		{
 			var parameters = new Dictionary<string, object>();
 			parameters["order"] = order;
-			_workflowService.RunWorkflow("OrderRecalculate", parameters, null);
+			_workflowService.RunWorkflow(_workflowName, parameters, null);
 		}
 
 		private void EnsureThatAllOperationsHasNumber(CustomerOrder order)

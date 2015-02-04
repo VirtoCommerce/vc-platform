@@ -10,7 +10,6 @@ namespace VirtoCommerce.Domain.Cart.Model
 	public class Coupon : ValueObject<Coupon>
 	{
 		public string CouponCode { get; set; }
-		public bool IsValid { get; set; }
 		public string InvalidDescription { get; set; }
 	}
 }

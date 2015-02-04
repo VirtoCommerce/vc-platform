@@ -21,7 +21,8 @@ namespace VirtoCommerce.Domain.Cart.Model
 		#endregion
 
 		public string Name { get; set; }
-		public string SiteId { get; set; }
+		public string StoreId { get; set; }
+		public string ChannelId { get; set; }
 		public bool? IsAnonymous { get; set; }
 		public string CustomerId { get; set; }
 		public string CustomerName { get; set; }
@@ -32,55 +33,22 @@ namespace VirtoCommerce.Domain.Cart.Model
 		public ICollection<Payment> Payments { get; set; }
 		public ICollection<Shipment> Shipments { get; set; }
 		public ICollection<Discount> Discounts { get; set; }
+		public Coupon Coupon { get; set; }
 		public string LanguageCode { get; set; }
 		public bool? TaxIncluded { get; set; }
 		public bool? IsRecuring { get; set; }
-		public string Note { get; set; }
+		public string Comment { get; set; }
 
 		public Weight Weight { get; set; }
 		public decimal? VolumetricWeight { get; set; }
 		public Dimension Dimension { get; set; }
 
-		public decimal Total { get; private set; }
-		public decimal SubTotal { get; private set; }
-		public decimal ShippingTotal { get; private set; }
+		public decimal Total { get; set; }
+		public decimal SubTotal { get; set; }
+		public decimal ShippingTotal { get; set; }
 		public decimal HandlingTotal { get; set; }
-		public decimal DiscountTotal { get; private set; }
+		public decimal DiscountTotal { get; set; }
 		public decimal TaxTotal { get; set; }
-
-		public virtual void CalculateTotals()
-		{
-			if (Items != null)
-			{
-				foreach (var item in Items)
-				{
-					item.CalculateTotals();
-					DiscountTotal += item.DiscountTotal;
-					SubTotal += item.PlacedPrice * item.Quantity;
-				}
-			}
-
-			if (Shipments != null)
-			{
-				foreach (var shipment in Shipments)
-				{
-					shipment.CalculateTotals();
-					ShippingTotal += shipment.Total;
-					DiscountTotal += shipment.DiscountTotal;
-					TaxTotal += shipment.TaxTotal;
-				}
-			}
-
-			if (Discounts != null)
-			{
-				foreach (var discount in Discounts)
-				{
-					DiscountTotal += discount.DiscountAmount;
-				}
-			}
-
-			Total = SubTotal + ShippingTotal + TaxTotal - DiscountTotal;
-
-		}
+	
 	}
 }

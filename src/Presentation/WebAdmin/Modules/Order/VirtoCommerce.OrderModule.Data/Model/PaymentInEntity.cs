@@ -32,9 +32,9 @@ namespace VirtoCommerce.OrderModule.Data.Model
 		public virtual ObservableCollection<AddressEntity> Addresses { get; set; }
 
 		public string CustomerOrderId { get; set; }
-		public CustomerOrderEntity CustomerOrder { get; set; }
+		public virtual CustomerOrderEntity CustomerOrder { get; set; }
 
 		public string ShipmentId { get; set; }
-		public ShipmentEntity Shipment { get; set; }
+		public virtual ShipmentEntity Shipment { get; set; }
 	}
 }

@@ -22,11 +22,8 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			var retVal = new CustomerOrder();
 			retVal.InjectFrom(entity);
 
-			if (entity.Currency != null)
-			{
-				retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), entity.Currency);
-			}
-
+			retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), entity.Currency);
+			
 			if(entity.Discounts != null && entity.Discounts.Any())
 			{
 				retVal.Discount = entity.Discounts.First().ToCoreModel();
@@ -59,11 +56,8 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			var retVal = new CustomerOrderEntity();
 			retVal.InjectFrom(order);
 
-			if (order.Currency != null)
-			{
-				retVal.Currency = order.Currency.ToString();
-			}
-
+			retVal.Currency = order.Currency.ToString();
+		
 			if(order.Addresses != null)
 			{
 				retVal.Addresses = new ObservableCollection<AddressEntity>(order.Addresses.Select(x=>x.ToEntity()));

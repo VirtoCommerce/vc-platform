@@ -26,13 +26,13 @@ namespace VirtoCommerce.OrderModule.Data.Model
 		[StringLength(1024)]
 		public string CouponInvalidDescription { get; set; }
 
-		public CustomerOrderEntity CustomerOrder { get; set; }
+		public virtual CustomerOrderEntity CustomerOrder { get; set; }
 		public string CustomerOrderId { get; set; }
 
-		public ShipmentEntity Shipment { get; set; }
+		public virtual ShipmentEntity Shipment { get; set; }
 		public string ShipmentId { get; set; }
 
-		public LineItemEntity LineItem { get; set; }
+		public virtual LineItemEntity LineItem { get; set; }
 		public string LineItemId { get; set; }
 		
 

@@ -10,7 +10,7 @@ using VirtoCommerce.Foundation.Frameworks;
 
 namespace VirtoCommerce.CatalogModule.Web.Model
 {
-	public class Address
+	public class Address : ValueObject<Address>
 	{
 		[JsonConverter(typeof(StringEnumConverter))]
 		public AddressType Type { get; set; }

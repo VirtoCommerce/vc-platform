@@ -50,6 +50,12 @@ namespace VirtoCommerce.OrderModule.Data.Model
 		[Required]
 		[StringLength(256)]
 		public string Name { get; set; }
+
+		[StringLength(2048)]
+		public string Comment { get; set; }
+
+		public bool IsReccuring { get; set; }
+
 		[StringLength(1028)]
 		public string ImageUrl { get; set; }
 		public bool IsGift { get; set; }

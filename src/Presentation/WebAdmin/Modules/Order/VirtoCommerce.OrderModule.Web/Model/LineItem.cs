@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using VirtoCommerce.Foundation.Money;
 
 namespace VirtoCommerce.OrderModule.Web.Model
 {
@@ -31,6 +34,8 @@ namespace VirtoCommerce.OrderModule.Web.Model
 		/// </summary>
 		public decimal Tax { get; set; }
 
+		[JsonConverter(typeof(StringEnumConverter))]
+		public CurrencyCodes Currency { get; set; }
 		/// <summary>
 		/// Reserve quantity
 		/// </summary>

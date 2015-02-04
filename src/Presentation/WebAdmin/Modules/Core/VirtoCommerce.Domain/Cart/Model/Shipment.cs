@@ -23,33 +23,11 @@ namespace VirtoCommerce.Domain.Cart.Model
 		public bool? TaxIncluded { get; set; }
 
 		public decimal ShippingPrice { get; set; }
-		public decimal Total { get; private set; }
-		public decimal DiscountTotal { get; private set; }
+		public decimal Total { get; set; }
+		public decimal DiscountTotal { get; set; }
 		public decimal TaxTotal { get; set; }
-		public decimal ItemSubtotal { get; private set; }
-		public decimal Subtotal { get; private set; }
-
-		public void CalculateTotals()
-		{
-			if (Discounts != null)
-			{
-				foreach (var discount in Discounts)
-				{
-					DiscountTotal += discount.DiscountAmount;
-				}
-			}
-
-			if (Items != null)
-			{
-				foreach (var item in Items)
-				{
-					ItemSubtotal += item.PlacedPrice * item.Quantity;
-				}
-			}
-
-			Subtotal = ShippingPrice + TaxTotal;
-			Total = Subtotal - DiscountTotal;
-	
-		}
+		public decimal ItemSubtotal { get; set; }
+		public decimal Subtotal { get; set; }
+		
 	}
 }

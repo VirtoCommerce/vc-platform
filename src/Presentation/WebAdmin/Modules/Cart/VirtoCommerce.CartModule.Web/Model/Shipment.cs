@@ -10,11 +10,15 @@ using VirtoCommerce.Foundation.Money;
 
 namespace VirtoCommerce.CatalogModule.Web.Model
 {
-	public class Shipment
+	public class Shipment : Entity, IAuditable
 	{
-		public string Id { get; set; }
+		public DateTime CreatedDate { get; set; }
+		public string CreatedBy { get; set; }
+		public DateTime? ModifiedDate { get; set; }
+		public string ModifiedBy { get; set; }
+
 		public string ShipmentMethodCode { get; set; }
-		public string  WarehouseLocation { get; set; }
+		public string FulfilmentCenterId { get; set; }
 		public Address DeliveryAddress { get; set; }
 		public ICollection<Discount> Discounts { get; set; }
 
@@ -27,7 +31,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
 		public decimal? VolumetricWeight { get; set; }
 		public Dimension Dimension { get; set; }
 
-		public bool? TaxIncluded { get; set; }
+		public bool TaxIncluded { get; set; }
 
 		public decimal ShippingPrice { get; set; }
 		public decimal Total { get; set; }

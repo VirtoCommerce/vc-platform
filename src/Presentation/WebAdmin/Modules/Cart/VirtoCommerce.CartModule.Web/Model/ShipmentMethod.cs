@@ -10,7 +10,7 @@ using VirtoCommerce.Foundation.Money;
 
 namespace VirtoCommerce.CatalogModule.Web.Model
 {
-	public class ShipmentMethod
+	public class ShipmentMethod : ValueObject<ShipmentMethod>
 	{
 		public string ShipmentMethodCode { get; set; }
 		public string Name { get; set; }

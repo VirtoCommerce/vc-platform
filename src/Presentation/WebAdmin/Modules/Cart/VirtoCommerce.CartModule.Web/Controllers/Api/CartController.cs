@@ -28,14 +28,14 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		// GET: api/cart/store1/carts/current
 		[HttpGet]
 		[ResponseType(typeof(webModel.ShoppingCart))]
-		[Route("{siteId}/carts/current")]
-		public IHttpActionResult GetCurrentCart(string siteId)
+		[Route("{storeId}/carts/current")]
+		public IHttpActionResult GetCurrentCart(string storeId)
 		{
 			var customerId = User.Identity.Name;
 			var criteria = new coreModel.SearchCriteria
 			{
 				CustomerId = customerId,
-				SiteId = siteId
+				StoreId = storeId
 			};
 
 			var searchResult = _searchService.Search(criteria);
@@ -47,7 +47,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 					Id = Guid.NewGuid().ToString(),
 					CustomerId = customerId,
 					IsAnonymous = User.Identity.IsAuthenticated,
-					SiteId = siteId,
+					StoreId = storeId,
 					Name = "default",
 					Currency = CurrencyCodes.USD
 				};
@@ -147,26 +147,24 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		public IHttpActionResult ApplyCoupon(string cartId, string couponCode)
 		{
 			var retVal = _shoppingCartService.GetById(cartId);
-			
+
 			//TODO: check coupon from marketing service 
-			if(!retVal.Discounts.Any(x=>x.Coupon != null && x.Coupon.CouponCode == couponCode))
+
+			var coupon = new coreModel.Coupon
 			{
-				var coupon = new coreModel.Coupon
-				{
-					CouponCode = couponCode,
-					IsValid = true
-				};
-				var discount = new coreModel.Discount
-				{
-					Coupon = coupon,
-					Description = couponCode,
-					PromotionId = couponCode,
-					DiscountAmount = 10
-				};
-				retVal.Discounts.Add(discount);
-				_shoppingCartService.Update(new coreModel.ShoppingCart[] { retVal });
-			}
-			
+				CouponCode = couponCode
+			};
+			var discount = new coreModel.Discount
+			{
+				Description = couponCode,
+				PromotionId = couponCode,
+				DiscountAmount = 10
+			};
+			retVal.Discounts.Add(discount);
+			retVal.Coupon = coupon;
+			_shoppingCartService.Update(new coreModel.ShoppingCart[] { retVal });
+
+
 			return Ok(retVal.ToWebModel());
 		}
 

@@ -41,13 +41,13 @@ namespace VirtoCommerce.OrderModule.Data.Model
 		[StringLength(64)]
 		public string Email { get; set; }
 
-		public CustomerOrderEntity CustomerOrder { get; set; }
+		public virtual CustomerOrderEntity CustomerOrder { get; set; }
 		public string CustomerOrderId { get; set; }
 
-		public ShipmentEntity Shipment { get; set; }
+		public virtual ShipmentEntity Shipment { get; set; }
 		public string ShipmentId { get; set; }
 
-		public PaymentInEntity PaymentIn { get; set; }
+		public virtual PaymentInEntity PaymentIn { get; set; }
 		public string PaymentInId { get; set; }
 	}
 }

@@ -28,6 +28,18 @@ namespace VirtoCommerce.OrderModule.Data.Model
 		public string FulfilmentCenterId { get; set; }
 		[StringLength(64)]
 		public string EmployeeId { get; set; }
+		[StringLength(64)]
+		public string ShipmentMethodCode { get; set; }
+		[StringLength(16)]
+		public string WeightUnit { get; set; }
+		public decimal? WeightValue { get; set; }
+		public decimal? VolumetricWeight { get; set; }
+		[StringLength(16)]
+		public string DimensionUnit { get; set; }
+		public decimal? DimensionHeight { get; set; }
+		public decimal? DimensionLength { get; set; }
+		public decimal? DimensionWidth { get; set; }
+
 
 		public string CustomerOrderId { get; set; }
 		public virtual CustomerOrderEntity CustomerOrder { get; set; }

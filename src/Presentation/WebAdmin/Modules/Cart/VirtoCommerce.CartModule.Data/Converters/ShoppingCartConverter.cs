@@ -21,11 +21,7 @@ namespace VirtoCommerce.CartModule.Data.Converters
 
 			var retVal = new ShoppingCart();
 			retVal.InjectFrom(entity);
-
-			if (entity.Currency != null)
-			{
-				retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), entity.Currency);
-			}
+			retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), entity.Currency);
 
 			if (entity.Items != null)
 			{
@@ -55,16 +51,8 @@ namespace VirtoCommerce.CartModule.Data.Converters
 			var retVal = new ShoppingCartEntity();
 			retVal.InjectFrom(order);
 
-			if (retVal.IsTransient())
-			{
-				retVal.Id = Guid.NewGuid().ToString();
-			}
-
-			if (order.Currency != null)
-			{
-				retVal.Currency = order.Currency.ToString();
-			}
-
+			retVal.Currency = order.Currency.ToString();
+		
 			if (order.Addresses != null)
 			{
 				retVal.Addresses = new ObservableCollection<AddressEntity>(order.Addresses.Select(x => x.ToEntity()));
@@ -112,8 +100,8 @@ namespace VirtoCommerce.CartModule.Data.Converters
 
 			if (source.LanguageCode != null)
 				target.LanguageCode = source.LanguageCode;
-			if (source.Note != null)
-				target.Note = source.Note;
+			if (source.Comment != null)
+				target.Comment = source.Comment;
 			if (source.OrganizationId != null)
 				target.OrganizationId = source.OrganizationId;
 
@@ -126,32 +114,21 @@ namespace VirtoCommerce.CartModule.Data.Converters
 
 			if (!source.Items.IsNullCollection())
 			{
-				if (target.Items == null)
-					target.Items = new ObservableCollection<LineItemEntity>();
 				source.Items.Patch(target.Items, (sourceItem, targetItem) => sourceItem.Patch(targetItem));
 			}
 
 			if (!source.Payments.IsNullCollection())
 			{
-				if (target.Payments == null)
-					target.Payments = new ObservableCollection<PaymentEntity>();
-
 				source.Payments.Patch(target.Payments, (sourcePayment, targetPayment) => sourcePayment.Patch(targetPayment));
 			}
 
 			if (!source.Addresses.IsNullCollection())
 			{
-				if (target.Addresses == null)
-					target.Addresses = new ObservableCollection<AddressEntity>();
-
 				source.Addresses.Patch(target.Addresses, new AddressComparer(), (sourceAddress, targetAddress) => sourceAddress.Patch(targetAddress));
 			}
 
 			if (!source.Shipments.IsNullCollection())
 			{
-				if (target.Shipments == null)
-					target.Shipments = new ObservableCollection<ShipmentEntity>();
-
 				source.Shipments.Patch(target.Shipments, (sourceShipment, targetShipment) => sourceShipment.Patch(targetShipment));
 			}
 		}

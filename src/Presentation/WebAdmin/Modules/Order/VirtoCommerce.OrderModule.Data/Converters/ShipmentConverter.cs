@@ -21,11 +21,8 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 
 			var retVal = new Shipment();
 			retVal.InjectFrom(entity);
-			if (entity.Currency != null)
-			{
-				retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), entity.Currency);
-			}
-
+			retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), entity.Currency);
+		
 			if (entity.Addresses != null && entity.Addresses.Any())
 			{
 				retVal.DeliveryAddress = entity.Addresses.First().ToCoreModel();
@@ -54,10 +51,8 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			var retVal = new ShipmentEntity();
 			retVal.InjectFrom(shipment);
 
-			if (shipment.Currency != null)
-			{
-				retVal.Currency = shipment.Currency.ToString();
-			}
+			retVal.Currency = shipment.Currency.ToString();
+
 			if (shipment.DeliveryAddress != null)
 			{
 				retVal.Addresses = new ObservableCollection<AddressEntity>(new AddressEntity[] { shipment.DeliveryAddress.ToEntity() });

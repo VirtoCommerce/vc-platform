@@ -3,18 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using VirtoCommerce.Domain.Order.Model;
-using VirtoCommerce.Foundation.Frameworks.Workflow;
-using VirtoCommerce.Foundation.Frameworks.Workflow.Services;
 
-namespace VirtoCommerce.OrderModule.Data.Workflow
+namespace VirtoCommerce.Foundation.Frameworks.Workflow.Services
 {
-	public class ObservableOrderWorkflowService : IWorkflowService, IObservable<CustomerOrder>
+	public class ObservableWorkflowService<T> : IWorkflowService, IObservable<T>
 	{
-		private readonly List<IObserver<CustomerOrder>> _observers;
-		public ObservableOrderWorkflowService()
+		private readonly List<IObserver<T>> _observers;
+		public ObservableWorkflowService()
 		{
-			_observers = new List<IObserver<CustomerOrder>>();
+			_observers = new List<IObserver<T>>();
 		}
 
 		#region IWorkflowService Members
@@ -22,7 +19,7 @@ namespace VirtoCommerce.OrderModule.Data.Workflow
 		public WorkflowResult RunWorkflow(string workflowName, Dictionary<string, object> parameters, object[] extensions)
 		{
 			WorkflowResult retVal = new WorkflowResult();
-			var customerOrder = parameters.Values.OfType<CustomerOrder>().FirstOrDefault();
+			var customerOrder = parameters.Values.OfType<T>().FirstOrDefault();
 			if (customerOrder != null)
 			{
 				foreach (var observer in _observers)
@@ -42,7 +39,7 @@ namespace VirtoCommerce.OrderModule.Data.Workflow
 
 		#region IObservable<CustomerOrder> Members
 
-		public IDisposable Subscribe(IObserver<CustomerOrder> observer)
+		public IDisposable Subscribe(IObserver<T> observer)
 		{
 			_observers.Add(observer);
 			return new Unsubscriber(_observers, observer);
@@ -52,10 +49,10 @@ namespace VirtoCommerce.OrderModule.Data.Workflow
 
 		private class Unsubscriber : IDisposable
 		{
-			private List<IObserver<CustomerOrder>> _observers;
-			private IObserver<CustomerOrder> _observer;
+			private List<IObserver<T>> _observers;
+			private IObserver<T> _observer;
 
-			public Unsubscriber(List<IObserver<CustomerOrder>> observers, IObserver<CustomerOrder> observer)
+			public Unsubscriber(List<IObserver<T>> observers, IObserver<T> observer)
 			{
 				this._observers = observers;
 				this._observer = observer;

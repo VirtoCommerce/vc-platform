@@ -19,7 +19,7 @@ namespace VirtoCommerce.CartModule.Data.Converters
 
 			var retVal = new Address();
 			retVal.InjectFrom(entity);
-
+			retVal.AddressType = (AddressType)Enum.Parse(typeof(AddressType), entity.AddressType);
 			return retVal;
 		}
 
@@ -30,11 +30,7 @@ namespace VirtoCommerce.CartModule.Data.Converters
 
 			var retVal = new AddressEntity();
 			retVal.InjectFrom(address);
-
-			if (retVal.IsTransient())
-			{
-				retVal.Id = Guid.NewGuid().ToString();
-			}
+	
 			retVal.AddressType = address.AddressType.ToString();
 
 			return retVal;
@@ -70,17 +66,12 @@ namespace VirtoCommerce.CartModule.Data.Converters
 				target.Line1 = source.Line1;
 			if (source.Line2 != null)
 				target.Line2 = source.Line2;
-			if (source.MiddleName != null)
-				target.MiddleName = source.MiddleName;
 			if (source.Organization != null)
 				target.Organization = source.Organization;
 			if (source.Phone != null)
 				target.Phone = source.Phone;
 			if (source.PostalCode != null)
 				target.PostalCode = source.PostalCode;
-			if (source.Zip != null)
-				target.Zip = source.Zip;
-
 		}
 
 	}

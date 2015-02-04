@@ -41,7 +41,7 @@ namespace VirtoCommerce.OrderModule.Web
 			};
 
 			//Business logic for core model
-			var orderWorkflowService = new ObservableOrderWorkflowService();
+			var orderWorkflowService = new ObservableWorkflowService<CustomerOrder>();
 			//Subscribe to order changes. Calculate totals  
 			orderWorkflowService.Subscribe(new CalculateTotalsActivity());
 			_container.RegisterInstance<IObservable<CustomerOrder>>(orderWorkflowService);

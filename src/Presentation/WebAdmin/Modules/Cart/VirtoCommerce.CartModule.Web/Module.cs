@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.CartModule.Data.Repositories;
 using VirtoCommerce.CartModule.Data.Services;
+using VirtoCommerce.CartModule.Data.Workflow;
 using VirtoCommerce.CatalogModule.Web.Controllers.Api;
 using VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Domain.Cart.Services;
 using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
+using VirtoCommerce.Foundation.Frameworks.Workflow.Services;
 using VirtoCommerce.Foundation.Money;
 using VirtoCommerce.Framework.Web.Modularity;
 
@@ -26,8 +28,15 @@ namespace VirtoCommerce.CartModule.Web
 		{
 			Func<ICartRepository> cartRepositoryFactory = () =>
 			{
-				return new CartRepositoryImpl("VirtoCommerce", new AuditableInterceptor());
+				return new CartRepositoryImpl("VirtoCommerce", new AuditableInterceptor(),
+															   new EntityPrimaryKeyGeneratorInterceptor());
 			};
+			//Business logic for core model
+			var cartWorkflowService = new ObservableWorkflowService<ShoppingCart>();
+			//Subscribe to cart changes. Calculate totals  
+			cartWorkflowService.Subscribe(new CalculateTotalsActivity());
+			_container.RegisterInstance<IObservable<ShoppingCart>>(cartWorkflowService);
+		
 
 			_container.RegisterType<Func<ICartRepository>>(new InjectionFactory(x => cartRepositoryFactory));
 		

@@ -19,6 +19,7 @@ using VirtoCommerce.OrderModule.Data.Interceptors;
 using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Foundation.Money;
 using VirtoCommerce.OrderModule.Data.Workflow;
+using VirtoCommerce.Foundation.Frameworks.Workflow.Services;
 
 namespace VirtoCommerce.OrderModule.Test
 {
@@ -44,7 +45,7 @@ namespace VirtoCommerce.OrderModule.Test
 		[TestMethod]
 		public void CreateNewManualOrder()
 		{
-			var testOrder = GetTestOrder("order12");
+			var testOrder = GetTestOrder("order1");
 			var result = _controller.CreateOrder(testOrder) as OkNegotiatedContentResult<webModel.CustomerOrder>;
 			Assert.IsNotNull(result.Content);
 		}
@@ -225,6 +226,7 @@ namespace VirtoCommerce.OrderModule.Test
 				DisplayName = "shoes",
 				ProductId = "shoes",
 				CatalogId = "catalog",
+				Currency = CurrencyCodes.USD,
 				CategoryId = "category",
 				Name = "shoes",
 				Quantity = 2,
@@ -249,6 +251,7 @@ namespace VirtoCommerce.OrderModule.Test
 				ProductId = "t-shirt",
 				CatalogId = "catalog",
 				CategoryId = "category",
+				Currency = CurrencyCodes.USD,
 				Name = "t-shirt",
 				Quantity = 2,
 				FulfilmentLocationCode = "warehouse1",
@@ -326,7 +329,7 @@ namespace VirtoCommerce.OrderModule.Test
 																		   new AuditableInterceptor(),
 																		   new EntityPrimaryKeyGeneratorInterceptor());
 			};
-			var orderWorkflowService = new ObservableOrderWorkflowService();
+			var orderWorkflowService = new ObservableWorkflowService<coreModel.CustomerOrder>();
 			//Subscribe to order changes. Calculate totals  
 			orderWorkflowService.Subscribe(new CalculateTotalsActivity());
 			var orderService = new CustomerOrderServiceImpl(orderRepositoryFactory, cartService, new TimeBasedNumberGeneratorImpl(), orderWorkflowService);

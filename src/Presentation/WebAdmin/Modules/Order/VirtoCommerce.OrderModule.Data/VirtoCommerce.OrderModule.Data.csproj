@@ -84,7 +84,6 @@
     <Compile Include="Services\CustomerOrderServiceImpl.cs" />
     <Compile Include="Services\TimeBasedNumberGeneratorImpl.cs" />
     <Compile Include="Workflow\CalculateTotalsActivity.cs" />
-    <Compile Include="Workflow\ObservableOrderWorkflowService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -21,10 +21,8 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 
 			var retVal = new PaymentIn();
 			retVal.InjectFrom(entity);
-			if (entity.Currency != null)
-			{
-				retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), entity.Currency);
-			}
+			retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), entity.Currency);
+
 			if(entity.Addresses != null && entity.Addresses.Any())
 			{
 				retVal.BillingAddress = entity.Addresses.First().ToCoreModel();
@@ -40,10 +38,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			var retVal = new PaymentInEntity();
 			retVal.InjectFrom(paymentIn);
 
-			if (paymentIn.Currency != null)
-			{
-				retVal.Currency = paymentIn.Currency.ToString();
-			}
+			retVal.Currency = paymentIn.Currency.ToString();
 
 			if (paymentIn.BillingAddress != null)
 			{

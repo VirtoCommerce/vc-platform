@@ -31,9 +31,7 @@ namespace VirtoCommerce.Domain.Order.Model
 		public bool IsApproved { get; set; }
 		public string Status { get; set; }
 		
-		/// <summary>
-		/// Currecy code
-		/// </summary>
+		
 		public string Comment { get; set; }
 		public CurrencyCodes Currency { get; set; }
 		public bool TaxIncluded { get; set;	}

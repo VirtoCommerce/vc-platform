@@ -8,6 +8,7 @@ using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using Omu.ValueInjecter;
 using VirtoCommerce.OrderModule.Data.Model;
+using VirtoCommerce.Foundation.Money;
 
 namespace VirtoCommerce.OrderModule.Data.Converters
 {
@@ -20,7 +21,8 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 
 			var retVal = new LineItem();
 			retVal.InjectFrom(entity);
-	
+
+			retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), entity.Currency);
 			if (entity.Discounts != null && entity.Discounts.Any())
 			{
 				retVal.Discount = entity.Discounts.First().ToCoreModel();
@@ -36,7 +38,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 
 			var retVal = new LineItemEntity();
 			retVal.InjectFrom(lineItem);
-
+			retVal.Currency = lineItem.Currency.ToString();
 			if(lineItem.Discount != null)
 			{
 				retVal.Discounts = new ObservableCollection<DiscountEntity>(new DiscountEntity[] { lineItem.Discount.ToEntity() });
