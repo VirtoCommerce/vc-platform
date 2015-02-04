@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace VirtoCommerce.Web.Core.DataContracts.Contents
+namespace VirtoCommerce.ApiClient.DataContracts.Contents
 {
     public class DynamicContentItemGroup
     {

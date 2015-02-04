@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace VirtoCommerce.Web.Core.DataContracts.Contents
+namespace VirtoCommerce.ApiClient.DataContracts.Contents
 {
-
     public class DynamicContentItem
     {
         public string Id { get; set; }
