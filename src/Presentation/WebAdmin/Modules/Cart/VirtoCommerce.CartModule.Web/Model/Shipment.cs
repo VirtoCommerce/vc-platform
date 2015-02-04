@@ -19,7 +19,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
 		public ICollection<Discount> Discounts { get; set; }
 
 		[JsonConverter(typeof(StringEnumConverter))]
-		public CurrencyCodes? Currency { get; set; }
+		public CurrencyCodes Currency { get; set; }
 
 		public ICollection<LineItem> Items { get; set; }
 

@@ -27,9 +27,9 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 				retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), entity.Currency);
 			}
 
-			if(entity.Discount != null)
+			if(entity.Discounts != null && entity.Discounts.Any())
 			{
-				retVal.Discount = entity.Discount.ToCoreModel();
+				retVal.Discount = entity.Discounts.First().ToCoreModel();
 			}
 			if (entity.Items != null)
 			{
@@ -59,11 +59,6 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			var retVal = new CustomerOrderEntity();
 			retVal.InjectFrom(order);
 
-			if (retVal.IsTransient())
-			{
-				retVal.Id = Guid.NewGuid().ToString();
-			}
-
 			if (order.Currency != null)
 			{
 				retVal.Currency = order.Currency.ToString();
@@ -87,7 +82,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			}
 			if(order.Discount != null)
 			{
-				retVal.Discount = order.Discount.ToEntity();
+				retVal.Discounts = new ObservableCollection<DiscountEntity>(new DiscountEntity[] { order.Discount.ToEntity() });
 			}
 			return retVal;
 		}
@@ -106,8 +101,8 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 
 			if (source.CustomerId != null)
 				target.CustomerId = source.CustomerId;
-			if (source.SiteId != null)
-				target.SiteId = source.SiteId;
+			if (source.StoreId != null)
+				target.StoreId = source.StoreId;
 			if (source.OrganizationId != null)
 				target.OrganizationId = source.OrganizationId;
 			if (source.EmployeeId != null)
@@ -115,18 +110,22 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 
 			if (!source.Shipments.IsNullCollection())
 			{
-				source.Shipments.Patch(target.Shipments, new OperationComparer(),
-													 (sourceShipment, targetShipment) => sourceShipment.Patch(targetShipment));
+				source.Shipments.Patch(target.Shipments, (sourceShipment, targetShipment) => sourceShipment.Patch(targetShipment));
 			}
 
 			if (!source.Items.IsNullCollection())
 			{
-				source.Items.Patch(target.Items, new LineItemComparer(), (sourceItem, targetItem) => sourceItem.Patch(targetItem));
+				source.Items.Patch(target.Items, (sourceItem, targetItem) => sourceItem.Patch(targetItem));
 			}
 
 			if (!source.InPayments.IsNullCollection())
 			{
-				source.InPayments.Patch(target.InPayments, new OperationComparer(), (sourcePayment, targetPayment) => sourcePayment.Patch(targetPayment));
+				source.InPayments.Patch(target.InPayments, (sourcePayment, targetPayment) => sourcePayment.Patch(targetPayment));
+			}
+
+			if (!source.Discounts.IsNullCollection())
+			{
+				source.Discounts.Patch(target.Discounts, new DiscountComparer(), (sourceDiscount, targetDiscount) => sourceDiscount.Patch(targetDiscount));
 			}
 		}
 	}

@@ -8,6 +8,7 @@ using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.OrderModule.Data.Model;
 using Omu.ValueInjecter;
 using VirtoCommerce.Foundation.Money;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
 
 namespace VirtoCommerce.OrderModule.Data.Converters
 {
@@ -24,9 +25,9 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			{
 				retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), entity.Currency);
 			}
-			if(entity.BillingAddress != null)
+			if(entity.Addresses != null && entity.Addresses.Any())
 			{
-				retVal.BillingAddress = entity.BillingAddress.ToCoreModel();
+				retVal.BillingAddress = entity.Addresses.First().ToCoreModel();
 			}
 			return retVal;
 		}
@@ -38,10 +39,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 
 			var retVal = new PaymentInEntity();
 			retVal.InjectFrom(paymentIn);
-			if (retVal.IsTransient())
-			{
-				retVal.Id = Guid.NewGuid().ToString();
-			}
+
 			if (paymentIn.Currency != null)
 			{
 				retVal.Currency = paymentIn.Currency.ToString();
@@ -49,7 +47,7 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 
 			if (paymentIn.BillingAddress != null)
 			{
-				retVal.BillingAddress = paymentIn.BillingAddress.ToEntity();
+				retVal.Addresses = new ObservableCollection<AddressEntity>(new AddressEntity[] { paymentIn.BillingAddress.ToEntity() });
 			}
 			return retVal;
 		}
@@ -70,6 +68,11 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 				target.CustomerId = source.CustomerId;
 			if (source.OrganizationId != null)
 				target.OrganizationId = source.OrganizationId;
+
+			if (!source.Addresses.IsNullCollection())
+			{
+				source.Addresses.Patch(target.Addresses, new AddressComparer(),  (sourceAddress, targetAddress) => sourceAddress.Patch(targetAddress));
+			}
 		}
 	}
 

@@ -15,7 +15,7 @@ namespace VirtoCommerce.Domain.Cart.Model
 		public Address DeliveryAddress { get; set; }
 		public ICollection<Discount> Discounts { get; set; }
 		public ICollection<LineItem> Items { get; set; }
-		public CurrencyCodes? Currency { get; set; }
+		public CurrencyCodes Currency { get; set; }
 		public Weight Weight { get; set; }
 		public decimal? VolumetricWeight { get; set; }
 		public Dimension Dimension { get; set; }

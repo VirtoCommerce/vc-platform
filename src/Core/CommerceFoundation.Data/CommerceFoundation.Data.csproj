@@ -168,6 +168,7 @@
       <DependentUpon>201501271331013_BlankFix.cs</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\Interceptors\AuditableInterceptor.cs" />
+    <Compile Include="Infrastructure\Interceptors\EntityPrimaryKeyGeneratorInterceptor.cs" />
     <Compile Include="Infrastructure\SetupDatabaseInitializer.cs" />
     <Compile Include="Infrastructure\SetupMigrateDatabaseToLatestVersion.cs" />
     <Compile Include="Customers\SqlCustomerSampleDatabaseInitializer.cs" />

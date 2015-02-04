@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace VirtoCommerce.Domain.Order.Model
 {
-	public class Shipment : CommingOutOperation
+	public class Shipment : Operation, IStockOutOperation
 	{
 		public string OrganizationId { get; set; }
 		public string FulfilmentCenterId { get; set; }
@@ -35,34 +35,13 @@ namespace VirtoCommerce.Domain.Order.Model
 			}
 		}
 
-		public virtual void CalculateTotals()
+		#region IStockOperation Members
+
+		public IEnumerable<IPosition> Positions
 		{
-			this.Sum = 0;
-			if (Items != null)
-			{
-				foreach (var item in Items)
-				{
-					this.Sum += item.Price * item.Quantity;
-					if (item.Discount != null)
-					{
-						this.Sum -= item.Discount.DiscountAmount;
-					}
-					else
-					{
-						this.Sum -= item.StaticDiscount;
-					}
-				}
-			}
-
-			if (Discount != null)
-			{
-				this.Sum -= Discount.DiscountAmount;
-			}
-
-			if (TaxIncluded ?? false)
-			{
-				this.Sum += this.Tax;
-			}
+			get { return Items; }
 		}
+
+		#endregion
 	}
 }

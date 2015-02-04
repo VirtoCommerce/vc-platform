@@ -8,7 +8,7 @@ using VirtoCommerce.Foundation.Money;
 
 namespace VirtoCommerce.Domain.Order.Model
 {
-	public abstract class Operation : Entity, IAuditable
+	public abstract class Operation : Entity, IAuditable, IOperation
 	{
 		#region IAuditable Members
 
@@ -28,15 +28,15 @@ namespace VirtoCommerce.Domain.Order.Model
 
 		public string ParentOperationId { get; set; }
 		public string Number { get; set; }
-		public bool? IsApproved { get; set; }
+		public bool IsApproved { get; set; }
 		public string Status { get; set; }
 		
 		/// <summary>
 		/// Currecy code
 		/// </summary>
 		public string Comment { get; set; }
-		public CurrencyCodes? Currency { get; set; }
-		public bool? TaxIncluded { get; set;	}
+		public CurrencyCodes Currency { get; set; }
+		public bool TaxIncluded { get; set;	}
 		public decimal Sum { get; set; }
 		public decimal Tax { get; set; }
 

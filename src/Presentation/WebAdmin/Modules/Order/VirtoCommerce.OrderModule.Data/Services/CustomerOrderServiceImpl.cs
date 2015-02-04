@@ -11,6 +11,7 @@ using VirtoCommerce.OrderModule.Data.Converters;
 using VirtoCommerce.OrderModule.Data.Repositories;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Foundation.Frameworks.Workflow.Services;
 
 namespace VirtoCommerce.OrderModule.Data.Services
 {
@@ -19,11 +20,14 @@ namespace VirtoCommerce.OrderModule.Data.Services
 		private readonly Func<IOrderRepository> _repositoryFactory;
 		private readonly IOperationNumberGenerator _operationNumberGenerator;
 		private readonly IShoppingCartService _shoppingCartService;
-		public CustomerOrderServiceImpl(Func<IOrderRepository> orderRepositoryFactory, IShoppingCartService shoppingCartService, IOperationNumberGenerator operationNumberGenerator)
+		private readonly IWorkflowService _workflowService;
+		public CustomerOrderServiceImpl(Func<IOrderRepository> orderRepositoryFactory, IShoppingCartService shoppingCartService, 
+										IOperationNumberGenerator operationNumberGenerator, IWorkflowService workflowService)
 		{
 			_repositoryFactory = orderRepositoryFactory;
 			_shoppingCartService = shoppingCartService;
 			_operationNumberGenerator = operationNumberGenerator;
+			_workflowService = workflowService;
 		}
 
 		#region ICustomerOrderService Members
@@ -44,7 +48,8 @@ namespace VirtoCommerce.OrderModule.Data.Services
 
 		public virtual CustomerOrder Create(CustomerOrder order)
 		{
-			order.CalculateTotals();
+			RecalculateOrder(order);
+
 			EnsureThatAllOperationsHasNumber(order);
 
 			//TODO: for approved sipments need decrease inventory
@@ -68,7 +73,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 			{
 				Currency = shoppingCart.Currency,
 				CustomerId = shoppingCart.CustomerId,
-				SiteId = shoppingCart.SiteId,
+				StoreId = shoppingCart.SiteId,
 				OrganizationId = shoppingCart.OrganizationId
 			};
 
@@ -154,7 +159,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 				foreach (var changedOrder in changedOrders)
 				{
 					//Do business logic on temporary  order object
-					changedOrder.CalculateTotals();
+					RecalculateOrder(changedOrder);
 
 					EnsureThatAllOperationsHasNumber(changedOrder);
 					
@@ -180,7 +185,14 @@ namespace VirtoCommerce.OrderModule.Data.Services
 		}
 		#endregion
 
-	
+
+		private void RecalculateOrder(CustomerOrder order)
+		{
+			var parameters = new Dictionary<string, object>();
+			parameters["order"] = order;
+			_workflowService.RunWorkflow("OrderRecalculate", parameters, null);
+		}
+
 		private void EnsureThatAllOperationsHasNumber(CustomerOrder order)
 		{
 			 foreach(var operation in order.Traverse<Operation>(x=>x.ChildrenOperations))

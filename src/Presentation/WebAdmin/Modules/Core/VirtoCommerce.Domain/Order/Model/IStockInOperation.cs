@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace VirtoCommerce.Domain.Order.Model
 {
-	public abstract class FinanceOutOperation : FinanceOperation
+	public interface IStockInOperation : IStockOperation
 	{
 	}
 }

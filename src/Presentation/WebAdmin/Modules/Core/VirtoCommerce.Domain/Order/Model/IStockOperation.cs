@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace VirtoCommerce.Domain.Order.Model
 {
-	public abstract class CommingOutOperation : StockOperation
+	public interface IStockOperation : IOperation
 	{
+		IEnumerable<IPosition> Positions { get; }
 	}
 }

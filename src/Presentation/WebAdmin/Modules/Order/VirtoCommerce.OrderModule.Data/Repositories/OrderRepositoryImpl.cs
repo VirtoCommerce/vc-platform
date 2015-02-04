@@ -24,7 +24,7 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 			Configuration.LazyLoadingEnabled = false;
 		}
 
-		
+
 
 		protected override void OnModelCreating(DbModelBuilder modelBuilder)
 		{
@@ -34,12 +34,6 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 			modelBuilder.Entity<CustomerOrderEntity>().HasKey(x => x.Id)
 					.Property(x => x.Id);
 
-			modelBuilder.Entity<CustomerOrderEntity>().Property(x => x.DiscountId).HasColumnName("Discount_Id");
-
-			modelBuilder.Entity<CustomerOrderEntity>().HasOptional(x => x.Discount)
-												.WithMany(x => x.CustomerOrders)
-												.HasForeignKey(x => x.DiscountId);
-
 			modelBuilder.Entity<CustomerOrderEntity>().ToTable("order_CustomerOrder");
 			#endregion
 
@@ -47,21 +41,16 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 			modelBuilder.Entity<LineItemEntity>().HasKey(x => x.Id)
 					.Property(x => x.Id);
 
-			modelBuilder.Entity<LineItemEntity>().Property(x => x.CustomerOrderId).HasColumnName("CustomerOrder_Id");
-			modelBuilder.Entity<LineItemEntity>().Property(x => x.ShipmentId).HasColumnName("Shipment_Id");
-			modelBuilder.Entity<LineItemEntity>().Property(x => x.DiscountId).HasColumnName("Discount_Id");
-
-			modelBuilder.Entity<LineItemEntity>().HasOptional(x => x.Discount)
-												.WithMany(x => x.LineItems)
-												.HasForeignKey(x => x.DiscountId);
 
 			modelBuilder.Entity<LineItemEntity>().HasOptional(x => x.CustomerOrder)
 									   .WithMany(x => x.Items)
 									   .HasForeignKey(x => x.CustomerOrderId);
+									   
 
 			modelBuilder.Entity<LineItemEntity>().HasOptional(x => x.Shipment)
 									   .WithMany(x => x.Items)
 									   .HasForeignKey(x => x.ShipmentId);
+									   
 
 			modelBuilder.Entity<LineItemEntity>().ToTable("order_LineItem");
 			#endregion
@@ -70,16 +59,11 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 			modelBuilder.Entity<ShipmentEntity>().HasKey(x => x.Id)
 				.Property(x => x.Id);
 
-			modelBuilder.Entity<ShipmentEntity>().Property(x => x.CustomerOrderId).HasColumnName("CustomerOrder_Id");
-			modelBuilder.Entity<ShipmentEntity>().Property(x => x.DiscountId).HasColumnName("Discount_Id");
-
-			modelBuilder.Entity<ShipmentEntity>().HasOptional(x => x.Discount)
-												.WithMany(x => x.Shipments)
-												.HasForeignKey(x => x.DiscountId);
 
 			modelBuilder.Entity<ShipmentEntity>().HasRequired(x => x.CustomerOrder)
 										   .WithMany(x => x.Shipments)
 										   .HasForeignKey(x => x.CustomerOrderId);
+										   
 
 
 			modelBuilder.Entity<ShipmentEntity>().ToTable("order_Shipment");
@@ -89,21 +73,20 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 			modelBuilder.Entity<AddressEntity>().HasKey(x => x.Id)
 				.Property(x => x.Id);
 
-			modelBuilder.Entity<AddressEntity>().Property(x => x.CustomerOrderId).HasColumnName("CustomerOrder_Id");
-			modelBuilder.Entity<AddressEntity>().Property(x => x.ShipmentId).HasColumnName("Shipment_Id");
-			modelBuilder.Entity<AddressEntity>().Property(x => x.PaymentInId).HasColumnName("PaymentIn_Id");
-
 			modelBuilder.Entity<AddressEntity>().HasOptional(x => x.CustomerOrder)
 									   .WithMany(x => x.Addresses)
 									   .HasForeignKey(x => x.CustomerOrderId);
 
-			modelBuilder.Entity<AddressEntity>()
-				  .HasOptional(x => x.Shipment) // Mark  is optional 
-				  .WithRequired(x => x.DeliveryAddress); // Create inverse relationship
 
-			modelBuilder.Entity<AddressEntity>()
-				  .HasOptional(x => x.PaymentIn) // Mark  is optional 
-				  .WithRequired(x => x.BillingAddress); // Create inverse relationship
+			modelBuilder.Entity<AddressEntity>().HasOptional(x => x.Shipment)
+									   .WithMany(x => x.Addresses)
+									   .HasForeignKey(x => x.ShipmentId);
+
+
+			modelBuilder.Entity<AddressEntity>().HasOptional(x => x.PaymentIn)
+									   .WithMany(x => x.Addresses)
+									   .HasForeignKey(x => x.PaymentInId);
+									  
 
 			modelBuilder.Entity<AddressEntity>().ToTable("order_Address");
 			#endregion
@@ -112,23 +95,36 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 			modelBuilder.Entity<PaymentInEntity>().HasKey(x => x.Id)
 				.Property(x => x.Id);
 
-			modelBuilder.Entity<PaymentInEntity>().Property(x => x.CustomerOrderId).HasColumnName("CustomerOrder_Id");
-			modelBuilder.Entity<PaymentInEntity>().Property(x => x.ShipmentId).HasColumnName("Shipment_Id");
-
 			modelBuilder.Entity<PaymentInEntity>().HasOptional(x => x.CustomerOrder)
 									   .WithMany(x => x.InPayments)
 									   .HasForeignKey(x => x.CustomerOrderId);
 
+
 			modelBuilder.Entity<PaymentInEntity>().HasOptional(x => x.Shipment)
 									   .WithMany(x => x.InPayments)
 									   .HasForeignKey(x => x.ShipmentId);
+									   
 
 			modelBuilder.Entity<PaymentInEntity>().ToTable("order_PaymentIn");
 			#endregion
 
 			#region Discount
 			modelBuilder.Entity<DiscountEntity>().HasKey(x => x.Id)
-						.Property(x => x.Id);;
+						.Property(x => x.Id);
+
+
+			modelBuilder.Entity<DiscountEntity>().HasOptional(x => x.CustomerOrder)
+									   .WithMany(x => x.Discounts)
+									   .HasForeignKey(x => x.CustomerOrderId);
+									   
+			modelBuilder.Entity<DiscountEntity>().HasOptional(x => x.Shipment)
+									   .WithMany(x => x.Discounts)
+									   .HasForeignKey(x => x.ShipmentId);
+
+			modelBuilder.Entity<DiscountEntity>().HasOptional(x => x.LineItem)
+									   .WithMany(x => x.Discounts)
+									   .HasForeignKey(x => x.LineItemId);
+									  
 
 			modelBuilder.Entity<DiscountEntity>().ToTable("order_Discount");
 			#endregion
@@ -153,8 +149,8 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 
 		public CustomerOrderEntity GetCustomerOrderById(string id, CustomerOrderResponseGroup responseGroup)
 		{
-			var query = CustomerOrders.Where(x=>x.Id == id)
-									  .Include(x => x.Discount);
+			var query = CustomerOrders.Where(x => x.Id == id)
+									  .Include(x => x.Discounts);
 
 			if ((responseGroup & CustomerOrderResponseGroup.WithAddresses) == CustomerOrderResponseGroup.WithAddresses)
 			{
@@ -162,16 +158,16 @@ namespace VirtoCommerce.OrderModule.Data.Repositories
 			}
 			if ((responseGroup & CustomerOrderResponseGroup.WithInPayments) == CustomerOrderResponseGroup.WithInPayments)
 			{
-				query = query.Include(x => x.InPayments.Select(y => y.BillingAddress));
+				query = query.Include(x => x.InPayments.Select(y => y.Addresses));
 			}
 			if ((responseGroup & CustomerOrderResponseGroup.WithItems) == CustomerOrderResponseGroup.WithItems)
 			{
-				query = query.Include(x => x.Items.Select(y => y.Discount));
+				query = query.Include(x => x.Items.Select(y => y.Discounts));
 			}
 			if ((responseGroup & CustomerOrderResponseGroup.WithShipments) == CustomerOrderResponseGroup.WithShipments)
 			{
-				query = query.Include(x => x.Shipments.Select(y => y.Discount))
-						     .Include(x => x.Shipments.Select(y => y.DeliveryAddress));
+				query = query.Include(x => x.Shipments.Select(y => y.Discounts))
+							 .Include(x => x.Shipments.Select(y => y.Addresses));
 			}
 			return query.FirstOrDefault();
 		}

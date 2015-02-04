@@ -62,17 +62,9 @@
     <Compile Include="Converters\PaymentInConverter.cs" />
     <Compile Include="Converters\ShipmentConverter.cs" />
     <Compile Include="Interceptors\InventoryOperationInterceptor.cs" />
-    <Compile Include="Migrations\201501281601226_Initial.cs" />
-    <Compile Include="Migrations\201501281601226_Initial.Designer.cs">
-      <DependentUpon>201501281601226_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201501291202428_DiscountReference.cs" />
-    <Compile Include="Migrations\201501291202428_DiscountReference.Designer.cs">
-      <DependentUpon>201501291202428_DiscountReference.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201501291406043_PropertiesChange.cs" />
-    <Compile Include="Migrations\201501291406043_PropertiesChange.Designer.cs">
-      <DependentUpon>201501291406043_PropertiesChange.cs</DependentUpon>
+    <Compile Include="Migrations\201502031631109_Initial.cs" />
+    <Compile Include="Migrations\201502031631109_Initial.Designer.cs">
+      <DependentUpon>201502031631109_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
@@ -91,6 +83,8 @@
     <Compile Include="Services\ModuleSeviceBase.cs" />
     <Compile Include="Services\CustomerOrderServiceImpl.cs" />
     <Compile Include="Services\TimeBasedNumberGeneratorImpl.cs" />
+    <Compile Include="Workflow\CalculateTotalsActivity.cs" />
+    <Compile Include="Workflow\ObservableOrderWorkflowService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -111,17 +105,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201501281601226_Initial.resx">
-      <DependentUpon>201501281601226_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201501291202428_DiscountReference.resx">
-      <DependentUpon>201501291202428_DiscountReference.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201501291406043_PropertiesChange.resx">
-      <DependentUpon>201501291406043_PropertiesChange.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201502031631109_Initial.resx">
+      <DependentUpon>201502031631109_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

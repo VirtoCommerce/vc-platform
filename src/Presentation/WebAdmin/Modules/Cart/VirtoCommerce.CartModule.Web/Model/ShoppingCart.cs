@@ -25,7 +25,7 @@ namespace VirtoCommerce.CatalogModule.Web.Model
 		public string CustomerName { get; set; }
 		public string OrganizationId { get; set; }
 		[JsonConverter(typeof(StringEnumConverter))]
-		public CurrencyCodes? Currency { get; set; }
+		public CurrencyCodes Currency { get; set; }
 		public ICollection<Address> Addresses { get; set; }
 		public ICollection<LineItem> Items { get; set; }
 		public ICollection<Payment> Payments { get; set; }
