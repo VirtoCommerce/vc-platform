@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CartDatabaseInitializer.cs" />
     <Compile Include="Converters\AddressConverter.cs" />
     <Compile Include="Converters\LineItemConverter.cs" />
     <Compile Include="Converters\PaymentConverter.cs" />

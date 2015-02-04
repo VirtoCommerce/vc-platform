@@ -39,9 +39,14 @@ namespace VirtoCommerce.ApiClient
         /// <summary>
         /// Gets the current cart
         /// </summary>
-        public Task<ResponseCollection<ShoppingCart>> GetCurrentCartAsync(string storeId)
+        public Task<ShoppingCart> GetCurrentCartAsync(string storeId)
         {
-            return GetAsync<ResponseCollection<ShoppingCart>>(CreateRequestUri(string.Format(RelativePaths.CurrentCart, storeId)));
+            return GetAsync<ShoppingCart>(CreateRequestUri(string.Format(RelativePaths.CurrentCart, storeId)));
+        }
+
+        public Task UpdateCurrentCartAsync(ShoppingCart cart)
+        {
+            return SendAsync(CreateRequestUri(RelativePaths.UpdateCart), HttpMethod.Put, cart);
         }
     }
 }

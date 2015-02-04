@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{291360B7-9A91-453B-B81E-76D6C90B92EA}</ProjectGuid>
+    <ProjectGuid>{84B945B7-85E4-4057-B0DF-1F8A03B8D53C}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>VirtoCommerce.ApiClient</RootNamespace>

@@ -98,7 +98,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		public IHttpActionResult Update(webModel.ShoppingCart cart)
 		{
 			var coreCart = cart.ToCoreModel();
-			_shoppingCartService.Update(new coreModel.ShoppingCart[] { coreCart });
+			_shoppingCartService.Update(new [] { coreCart });
 			return StatusCode(HttpStatusCode.NoContent);
 		}
 
@@ -109,7 +109,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		public IHttpActionResult GetShipmentMethods(string cartId)
 		{
 			var cart = _shoppingCartService.GetById(cartId);
-			var retVal = new webModel.ShipmentMethod[] 
+			var retVal = new [] 
 			{
 				 new webModel.ShipmentMethod {
 					 Currency = cart.Currency,
@@ -129,7 +129,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 		public IHttpActionResult GetPaymentMethods(string cartId)
 		{
 			var cart = _shoppingCartService.GetById(cartId);
-			var retVal = new webModel.PaymentMethod[] 
+			var retVal = new [] 
 			{
 				 new webModel.PaymentMethod {
 					GatewayCode = "PayPal",
@@ -164,7 +164,7 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 					DiscountAmount = 10
 				};
 				retVal.Discounts.Add(discount);
-				_shoppingCartService.Update(new coreModel.ShoppingCart[] { retVal });
+				_shoppingCartService.Update(new [] { retVal });
 			}
 			
 			return Ok(retVal.ToWebModel());

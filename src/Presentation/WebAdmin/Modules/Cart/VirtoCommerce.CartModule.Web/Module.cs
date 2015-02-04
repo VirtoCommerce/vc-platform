@@ -12,7 +12,9 @@ using VirtoCommerce.Framework.Web.Modularity;
 
 namespace VirtoCommerce.CartModule.Web
 {
-	public class Module : IModule
+    using VirtoCommerce.CartModule.Data;
+
+    public class Module : IModule, IDatabaseModule
 	{
 		private readonly IUnityContainer _container;
 		public Module(IUnityContainer container)
@@ -38,6 +40,13 @@ namespace VirtoCommerce.CartModule.Web
 
 		#endregion
 
-		
+        public void SetupDatabase(SampleDataLevel sampleDataLevel)
+        {
+            using (var context = new CartRepositoryImpl())
+            {
+                var initializer = new CartDatabaseInitializer();
+                initializer.InitializeDatabase(context);
+            }
+        }
 	}
 }
