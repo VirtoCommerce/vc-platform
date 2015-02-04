@@ -286,7 +286,7 @@ namespace FunctionalTests.Security
 
 		private ISecurityRepository GetRepository()
 		{
-			EnsureDatabaseInitialized(() => new EFSecurityRepository(_databaseName), () => Database.SetInitializer(new SetupMigrateDatabaseToLatestVersion<EFSecurityRepository, Configuration>()));
+			EnsureDatabaseInitialized(() => new EFSecurityRepository(_databaseName), () => Database.SetInitializer(new SetupDatabaseInitializer<EFSecurityRepository, Configuration>()));
 			var retVal = new EFSecurityRepository(_databaseName);
 			return retVal;
 		}

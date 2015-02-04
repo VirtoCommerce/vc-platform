@@ -7,9 +7,9 @@ namespace VirtoCommerce.ApiClient.Extensions
 {
     public static class SeoClientExtensions
     {
-        public static SeoClient CreateDefaultSeoClient(this CommerceClients source, params object[] options)
+        public static SeoClient CreateDefaultSeoClient(this CommerceClients source)
         {
-            var connectionString = string.Format(AppConfigConfiguration.Instance.Connection.DataServiceUri, options);
+            var connectionString = String.Format("{0}{1}/", ClientContext.Configuration.ConnectionString, "mp");
             return CreateSeoClient(source, connectionString);
         }
 

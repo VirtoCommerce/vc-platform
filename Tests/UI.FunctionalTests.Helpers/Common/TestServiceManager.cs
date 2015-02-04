@@ -111,33 +111,33 @@ namespace UI.FunctionalTests.Helpers.Common
 			{
 				case ServiceNameEnum.AppConfig:
 					Database.SetInitializer(
-						new SetupMigrateDatabaseToLatestVersion
+						new SetupDatabaseInitializer
 							<EFAppConfigRepository, VirtoCommerce.Foundation.Data.AppConfig.Migrations.Configuration>());
 					break;
 				case ServiceNameEnum.Catalog:
 					Database.SetInitializer(
-						new SetupMigrateDatabaseToLatestVersion
+						new SetupDatabaseInitializer
 							<EFCatalogRepository, VirtoCommerce.Foundation.Data.Catalogs.Migrations.Configuration>());
 					break;
 				case ServiceNameEnum.DynamicContent:
 					Database.SetInitializer(
-	new SetupMigrateDatabaseToLatestVersion
-		<EFDynamicContentRepository, VirtoCommerce.Foundation.Data.Marketing.Migrations.Content.Configuration>());
+						new SetupDatabaseInitializer
+							<EFDynamicContentRepository, VirtoCommerce.Foundation.Data.Marketing.Migrations.Content.Configuration>());
 					break;
 				case ServiceNameEnum.Store:
 					Database.SetInitializer(
-	new SetupMigrateDatabaseToLatestVersion
-		<EFStoreRepository, VirtoCommerce.Foundation.Data.Stores.Migrations.Configuration>());
+						new SetupDatabaseInitializer
+							<EFStoreRepository, VirtoCommerce.Foundation.Data.Stores.Migrations.Configuration>());
 					break;
 				case ServiceNameEnum.Order:
 					Database.SetInitializer(
-	new SetupMigrateDatabaseToLatestVersion
-		<EFOrderRepository, VirtoCommerce.Foundation.Data.Orders.Migrations.Configuration>());
+						new SetupDatabaseInitializer
+							<EFOrderRepository, VirtoCommerce.Foundation.Data.Orders.Migrations.Configuration>());
 					break;
 				case ServiceNameEnum.Marketing:
 					Database.SetInitializer(
-	new SetupMigrateDatabaseToLatestVersion
-		<EFMarketingRepository, VirtoCommerce.Foundation.Data.Marketing.Migrations.Promotion.Configuration>());
+						new SetupDatabaseInitializer
+							<EFMarketingRepository, VirtoCommerce.Foundation.Data.Marketing.Migrations.Promotion.Configuration>());
 					break;
 			}
 		}

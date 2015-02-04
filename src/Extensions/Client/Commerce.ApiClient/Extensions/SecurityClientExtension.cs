@@ -14,7 +14,7 @@ namespace VirtoCommerce.ApiClient.Extensions
     {
         public static SecurityClient CreateSecurityClient(this CommerceClients source)
         {
-            var connectionString = ConnectionHelper.GetConnectionString("VirtoCommerceSecurity");
+            var connectionString = ClientContext.Configuration.ConnectionString + "security/";
             return CreateSecurityClient(source, connectionString);
         }
 

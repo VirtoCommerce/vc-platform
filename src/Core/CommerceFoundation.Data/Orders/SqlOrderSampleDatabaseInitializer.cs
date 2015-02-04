@@ -87,7 +87,7 @@ namespace VirtoCommerce.Foundation.Data.Orders
 		{
 			foreach (string file in _files)
 			{
-				RunCommand(repository, file, "Orders");
+				ExecuteSqlScriptFile(repository, file, "Orders");
 			}
 		}
 
