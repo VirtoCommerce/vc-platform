@@ -109,6 +109,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.CartModule.Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.OrderModule.Web", "src\Presentation\WebAdmin\Modules\Order\VirtoCommerce.OrderModule.Web\VirtoCommerce.OrderModule.Web.csproj", "{FB17571F-ED1B-4521-A120-58023AB1C6BF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtoCommerce.ApiClient", "src\Extensions\Client\Commerce.ApiClient\VirtoCommerce.ApiClient.csproj", "{84B945B7-85E4-4057-B0DF-1F8A03B8D53C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiClientTests", "tests\ApiClientTests\ApiClientTests.csproj", "{02D4C049-C185-4F59-A10E-03AF76451844}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -219,6 +223,14 @@ Global
 		{FB17571F-ED1B-4521-A120-58023AB1C6BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB17571F-ED1B-4521-A120-58023AB1C6BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB17571F-ED1B-4521-A120-58023AB1C6BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84B945B7-85E4-4057-B0DF-1F8A03B8D53C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84B945B7-85E4-4057-B0DF-1F8A03B8D53C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84B945B7-85E4-4057-B0DF-1F8A03B8D53C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84B945B7-85E4-4057-B0DF-1F8A03B8D53C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02D4C049-C185-4F59-A10E-03AF76451844}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02D4C049-C185-4F59-A10E-03AF76451844}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02D4C049-C185-4F59-A10E-03AF76451844}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02D4C049-C185-4F59-A10E-03AF76451844}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -261,5 +273,6 @@ Global
 		{79F334BD-425E-409C-AF6A-5ED95320D228} = {8B27E533-BA11-47BD-8392-05CEB5DB0ED5}
 		{C6AD60D0-25C3-4049-B0BC-970C10D8B862} = {8B27E533-BA11-47BD-8392-05CEB5DB0ED5}
 		{FB17571F-ED1B-4521-A120-58023AB1C6BF} = {0A7E7D8E-9573-4C10-9C37-A3E80798A6B0}
+		{02D4C049-C185-4F59-A10E-03AF76451844} = {5E27776F-7BE7-4D1A-B33A-1BC48987DF42}
 	EndGlobalSection
 EndGlobal
