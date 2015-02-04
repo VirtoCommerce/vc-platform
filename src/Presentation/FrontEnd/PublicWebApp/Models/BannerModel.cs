@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Web.Mvc;
+using VirtoCommerce.ApiClient.DataContracts.Contents;
 using VirtoCommerce.ApiWebClient.Extensions;
-using VirtoCommerce.Web.Core.DataContracts.Contents;
 
 namespace VirtoCommerce.Web.Models
 {
