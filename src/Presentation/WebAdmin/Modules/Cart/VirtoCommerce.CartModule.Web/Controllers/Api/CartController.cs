@@ -93,13 +93,14 @@ namespace VirtoCommerce.CatalogModule.Web.Controllers.Api
 
 		// PUT: api/cart/carts
 		[HttpPut]
-		[ResponseType(typeof(void))]
+        [ResponseType(typeof(webModel.ShoppingCart))]
 		[Route("carts")]
 		public IHttpActionResult Update(webModel.ShoppingCart cart)
 		{
 			var coreCart = cart.ToCoreModel();
 			_shoppingCartService.Update(new [] { coreCart });
-			return StatusCode(HttpStatusCode.NoContent);
+            var retVal = _shoppingCartService.GetById(coreCart.Id);
+			return this.Ok(retVal.ToWebModel());
 		}
 
 		// GET: api/cart/carts/{cartId}/shipmentMethods

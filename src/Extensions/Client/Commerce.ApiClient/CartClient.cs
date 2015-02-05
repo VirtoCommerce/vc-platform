@@ -44,9 +44,9 @@ namespace VirtoCommerce.ApiClient
             return GetAsync<ShoppingCart>(CreateRequestUri(string.Format(RelativePaths.CurrentCart, storeId)));
         }
 
-        public Task UpdateCurrentCartAsync(ShoppingCart cart)
+        public Task<ShoppingCart> UpdateCurrentCartAsync(ShoppingCart cart)
         {
-            return SendAsync(CreateRequestUri(RelativePaths.UpdateCart), HttpMethod.Put, cart);
+            return SendAsync<ShoppingCart, ShoppingCart>(CreateRequestUri(RelativePaths.UpdateCart), HttpMethod.Put, cart);
         }
     }
 }

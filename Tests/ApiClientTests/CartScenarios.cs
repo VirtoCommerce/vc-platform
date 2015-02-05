@@ -23,7 +23,7 @@ namespace ApiClientTests
         public void Can_get_current_cart()
         {
             var client = Cart;
-            var cart = Task.Run(()=>client.GetCurrentCartAsync("samplestore")).Result;
+            var cart = Task.Run(()=>client.GetCurrentCartAsync("SampleStore")).Result;
             Assert.NotNull(cart);
         }
 
@@ -33,8 +33,7 @@ namespace ApiClientTests
             var client = Cart;
             var cart = Task.Run(() => client.GetCurrentCartAsync("samplestore")).Result;
             cart.CustomerName = "Sample Customer";
-            Task.Run(() => client.UpdateCurrentCartAsync(cart));
-            var updatedCart = Task.Run(() => client.GetCurrentCartAsync("samplestore")).Result;
+            var updatedCart = Task.Run(() => client.UpdateCurrentCartAsync(cart)).Result;
             Assert.Equal(cart.CustomerName, updatedCart.CustomerName);
         }
 
