@@ -68,7 +68,7 @@ namespace VirtoCommerce.Foundation.Orders.Model
         }
 
         private string _OptionValue;
-        [StringLength(128)]
+        [StringLength(1024)]
         [DataMember]
         public string OptionValue
         {

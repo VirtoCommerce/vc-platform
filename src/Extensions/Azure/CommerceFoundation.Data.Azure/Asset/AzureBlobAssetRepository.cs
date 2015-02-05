@@ -1,7 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections;
+using System.Threading.Tasks;
 using Microsoft.Practices.ObjectBuilder2;
-using Microsoft.WindowsAzure.StorageClient;
-using Newtonsoft.Json.Schema;
 
 namespace VirtoCommerce.Foundation.Data.Azure.Asset
 {
@@ -16,6 +15,8 @@ namespace VirtoCommerce.Foundation.Data.Azure.Asset
     using System.IO;
     using System.Linq;
     using System.Reflection;
+
+    using VirtoCommerce.Foundation.Assets;
     using VirtoCommerce.Foundation.Assets.Factories;
     using VirtoCommerce.Foundation.Assets.Model;
     using VirtoCommerce.Foundation.Assets.Model.Exceptions;
@@ -43,7 +44,7 @@ namespace VirtoCommerce.Foundation.Data.Azure.Asset
         /// <param name="assetEntityFactory">The asset entity factory.</param>
         [InjectionConstructor]
         public AzureBlobAssetRepository(IAssetEntityFactory assetEntityFactory)
-            : this(ConnectionHelper.GetConnectionString(AzureConfiguration.Instance.Connection.StorageConnectionStringName), assetEntityFactory)
+            : this(ConnectionHelper.GetConnectionString(AssetConfiguration.Instance.Connection.StorageConnectionStringName), assetEntityFactory)
         {
         }
 
@@ -399,6 +400,11 @@ namespace VirtoCommerce.Foundation.Data.Azure.Asset
         }
 
         public IQueryable<T> GetAsQueryable<T>() where T : class
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Refresh(IEnumerable collection)
         {
             throw new NotImplementedException();
         }

@@ -38,6 +38,22 @@ namespace VirtoCommerce.Foundation.Assets
     {
         public AssetConnection() { }
 
+        [ConfigurationProperty("storageConnectionStringName", IsRequired = false, DefaultValue = "DataConnectionString")]
+        public string StorageConnectionStringName
+        {
+            get
+            {
+                return (string)this["storageConnectionStringName"];
+            }
+            set
+            {
+                this["storageConnectionStringName"] = value;
+            }
+        }
+
+
+
+        [Obsolete("Use StorageConnectionStringName instead")]
         [ConfigurationProperty("storageFolder", IsRequired = false)]
         public string StorageFolder
         {

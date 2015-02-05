@@ -81,12 +81,11 @@ namespace VirtoCommerce.OrderWorkflow
 				subTotal += item.PlacedPrice * item.Quantity;
 			}
 
-			// calculate form discounts
+			// calculate shipment totals
 			form.DiscountAmount = form.Discounts.Sum(discount => discount.DiscountAmount);
 
 			foreach (var shipment in form.Shipments)
 			{
-				// calculate discounts
 				shipment.ShippingDiscountAmount = shipment.Discounts.Sum(discount => discount.DiscountAmount);
 			    shipmentDiscountAmount += shipment.ShippingDiscountAmount;
 				shipment.ItemSubtotal = CalculateShipmentItemSubtotal(form, shipment);
@@ -98,9 +97,10 @@ namespace VirtoCommerce.OrderWorkflow
 
 			form.ShippingTotal = shippingCostTotal;
 			form.Subtotal = subTotal;
-			form.Total = form.Subtotal + shippingCostTotal + form.TaxTotal - (lineItemDiscountAmount + shipmentDiscountAmount + form.DiscountAmount);
-		    form.ShipmentDiscountAmount = shipmentDiscountAmount;
-		    form.LineItemDiscountAmount = lineItemDiscountAmount;
+            form.ShipmentDiscountAmount = shipmentDiscountAmount;
+            form.LineItemDiscountAmount = lineItemDiscountAmount;
+            form.Total = form.Subtotal + form.ShippingTotal + form.TaxTotal - (form.LineItemDiscountAmount + form.ShipmentDiscountAmount + form.DiscountAmount);
+
 		}
 
 		private static decimal CalculateShipmentItemSubtotal(OrderForm form, Shipment shipment)

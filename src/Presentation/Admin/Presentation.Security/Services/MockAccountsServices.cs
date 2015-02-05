@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,10 +28,10 @@ namespace VirtoCommerce.ManagementClient.Security.Services
 
         private void PopulateTestData()
         {
-            MockAccountList.Add(new Account { AccountId = 1, MemberId = "1", StoreId = "1", AccountState = AccountState.Approved.GetHashCode(), RegisterType = RegisterType.Administrator.GetHashCode() });
-            MockAccountList.Add(new Account { AccountId = 2, MemberId = "2", StoreId = "1", AccountState = AccountState.PendingApproval.GetHashCode(), RegisterType = RegisterType.GuestUser.GetHashCode() });
-            MockAccountList.Add(new Account{AccountId = 3, MemberId = "3", StoreId = "2", AccountState = AccountState.Approved.GetHashCode(), RegisterType = RegisterType.RegisteredUser.GetHashCode() });
-            MockAccountList.Add(new Account { AccountId = 4, MemberId = "4", StoreId = "2", AccountState = AccountState.Rejected.GetHashCode(), RegisterType = RegisterType.SiteAdministrator.GetHashCode() });
+            MockAccountList.Add(new Account { AccountId = "1", MemberId = "1", StoreId = "1", AccountState = AccountState.Approved.GetHashCode(), RegisterType = RegisterType.Administrator.GetHashCode() });
+            MockAccountList.Add(new Account { AccountId = "2", MemberId = "2", StoreId = "1", AccountState = AccountState.PendingApproval.GetHashCode(), RegisterType = RegisterType.GuestUser.GetHashCode() });
+            MockAccountList.Add(new Account { AccountId = "3", MemberId = "3", StoreId = "2", AccountState = AccountState.Approved.GetHashCode(), RegisterType = RegisterType.RegisteredUser.GetHashCode() });
+            MockAccountList.Add(new Account { AccountId = "4", MemberId = "4", StoreId = "2", AccountState = AccountState.Rejected.GetHashCode(), RegisterType = RegisterType.SiteAdministrator.GetHashCode() });
         }
         #region IDisposableMembers
 
@@ -84,6 +85,10 @@ namespace VirtoCommerce.ManagementClient.Security.Services
             throw new NotImplementedException();
         }
 
+        public void Refresh(IEnumerable collection)
+        {
+            throw new NotImplementedException();
+        }
 
         #endregion
 

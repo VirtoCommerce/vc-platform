@@ -29,6 +29,8 @@ namespace VirtoCommerce.Web.Client.Modules
         /// </summary>
         protected virtual string CurrencyCookie { get { return "vcf.currency"; } }
 
+
+
         /// <summary>
         /// You will need to configure this module in the Web.config file of your
         /// web and register it with IIS before being able to use it. For more information
@@ -205,7 +207,7 @@ namespace VirtoCommerce.Web.Client.Modules
             session.CatalogId = store.Catalog;
 
             // now save store in the cookie
-            StoreHelper.SetCookie(StoreCookie, session.StoreId, DateTime.Now.AddMonths(1), false);
+            StoreHelper.SetCookie(StoreCookie, session.StoreId, null, false);
             StoreHelper.SetCookie(CurrencyCookie, currency, DateTime.Now.AddMonths(1));
 
             if (context.Request.QueryString.AllKeys.Any(x => string.Equals(x, "loginas", StringComparison.OrdinalIgnoreCase)))
@@ -221,12 +223,11 @@ namespace VirtoCommerce.Web.Client.Modules
         /// <param name="context">The context.</param>
         protected virtual void RedirectToLogin(HttpContext context)
         {
-            var loginUrl = context.Request.ApplicationPath != null ? FormsAuthentication.LoginUrl.Substring(context.Request.ApplicationPath.Length) : FormsAuthentication.LoginUrl;
-
-            if (!context.Request.Url.AbsolutePath.EndsWith(loginUrl, StringComparison.InvariantCultureIgnoreCase) &&
+            //TODO: try to find LoginPath from owin context
+            if (!context.Request.Url.AbsolutePath.EndsWith("/Account/Logon", StringComparison.InvariantCultureIgnoreCase) &&
                 !context.Request.Url.AbsolutePath.EndsWith("/Account/Register", StringComparison.InvariantCultureIgnoreCase) && !IsAjax)
             {
-                context.Response.Redirect(FormsAuthentication.LoginUrl + context.Request.Url.Query);
+                context.Response.Redirect("~/Account/Logon" + context.Request.Url.Query);
             }
         }
 
@@ -237,7 +238,8 @@ namespace VirtoCommerce.Web.Client.Modules
         protected virtual void OnUnauthorized(HttpContext context)
         {
             //WebSecurity.Logout();
-            FormsAuthentication.SignOut(); // it is ok to use this here, since that is what WebSecurity calls anyway
+            //FormsAuthentication.SignOut(); // it is ok to use this here, since that is what WebSecurity calls anyway
+            context.GetOwinContext().Authentication.SignOut();
             // now check if store is accessible
             context.Response.Redirect(context.Request.RawUrl);
         }

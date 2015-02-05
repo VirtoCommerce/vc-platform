@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -86,6 +87,11 @@ namespace VirtoCommerce.ManagementClient.Marketing.Services
         }
 
         public IQueryable<T> GetAsQueryable<T>() where T : class
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Refresh(IEnumerable collection)
         {
             throw new NotImplementedException();
         }

@@ -57,6 +57,7 @@ Param(
         $deploy_search = $true,
         $deploy_scheduler = $true,
         $deploy_frontend = $true,
+		$deploy_frontend_website = $false, # deploys frontend as a website instead of cloud service, webjobs are deployed as well
         $deploy_admin = $true
      )
 
@@ -117,6 +118,9 @@ $search_packagename = 'ElasticSearch.cspkg'
 # common service deployment parameters
 # this parameters are common for all services we deploying
 $common_configfolder = "$common_deploymentdir\Configs" # folder contains configuration files for the specific azure server, including connection strings
+
+# set pub config folder that will be used to store modified configuration files
+$common_frontendpubxml = $common_configfolder
 
 if($publishsettingsfile -eq $null)
 {
@@ -188,9 +192,88 @@ Function Deploy
     }
 }
 
+# Get DB Connection String for SQL Azure
+Function Get-DBConnectionString
+{
+	$dbserverlogin = $db_serverlogin
+	$dbserverpassword = $db_serverpassword
+
+    $temp_connectionstring = "Server=tcp:$db_servername.database.windows.net,1433;Database=$db_databasename;User ID=$dbserverlogin@$db_servername;Password=$dbserverpassword;Trusted_Connection=False;Encrypt=True;Connection Timeout=30;MultipleActiveResultSets=True" 
+
+    Return $temp_connectionstring
+}
+
+Function Get-SearchConnectionString
+{
+    $temp_connectionstring = "server=$search_servicename.cloudapp.net:9200;scope=default" 
+
+    Return $temp_connectionstring
+}
+
+Function Get-StorageConnectionString
+{
+    Param(
+        [Parameter(Mandatory = $false)]
+        $secure = $true
+    )
+
+	if($secure)
+	{
+		$temp_connectionstring = "DefaultEndpointsProtocol=https;AccountName=$common_storageaccount;AccountKey=$common_storagekey" 
+	}
+	else
+	{
+		$temp_connectionstring = "DefaultEndpointsProtocol=http;AccountName=$common_storageaccount;AccountKey=$common_storagekey" 
+	}
+
+    Return $temp_connectionstring
+}
+
+# Generate the publish xml which will be used by MSBuild to deploy the project to website.
+Function Generate-PublishXml
+{
+    Param(
+        [Parameter(Mandatory = $true)]
+        [String]$WebsiteName
+    )
+
+	#& xcopy "pubxml.template" "$common_frontendpubxml\" /Y
+	$exists = Test-Path $common_frontendpubxml
+	if (! $exists)
+	{
+		New-Item -ItemType directory -Path $common_frontendpubxml
+	}
+    
+    # Get the current subscription you are working on
+    $s = Get-AzureSubscription -Current
+    # Get the certificate of the current subscription from your local cert store
+    $cert = Get-ChildItem ("Cert:\CurrentUser\My\{0}" -f $s.Certificate.Thumbprint)
+    $website = Get-AzureWebsite -Name $WebsiteName
+    # Compose the REST API URI from which you will get the publish settings info
+    $uri = "https://management.core.windows.net:8443/{0}/services/WebSpaces/{1}/sites/{2}/publishxml" -f `
+        $s.SubscriptionId, $website.WebSpace, $Website.Name
+
+    # Get the publish settings info from the REST API
+    $publishSettings = Invoke-RestMethod -Uri $uri -Certificate $cert -Headers @{"x-ms-version" = "2013-06-01"}
+
+    # Save the publish settings info into a .publishsettings file
+    # and read the content as xml
+    $publishSettings.InnerXml > ("{0}\{1}.publishsettings" -f $common_frontendpubxml, $WebsiteName)
+    [Xml]$xml = Get-Content ("{0}\{1}.publishsettings" -f $common_frontendpubxml, $WebsiteName)
+
+    # Get the publish xml template and generate the .pubxml file
+    [String]$template = Get-Content ("pubxml.template")
+    ($template -f $website.HostNames[0], $xml.publishData.publishProfile.publishUrl.Get(0), $WebsiteName) `
+        | Out-File -Encoding utf8 ("{0}\{1}.pubxml" -f $common_frontendpubxml, $WebsiteName)
+}
+
 Function update-config
 {
-    param ($configuration)
+    Param(
+		$configuration,
+        [Parameter(Mandatory = $false)]
+        $secure = $true
+    )
 
 	$dbserverlogin = $db_serverlogin
 	$dbserverpassword = $db_serverpassword
@@ -202,11 +285,14 @@ Function update-config
 		$dbserverpassword = $db_serveruserpassword
 	}
 
+	$searchConnectionString = Get-SearchConnectionString
+	$storageConnectionString = Get-StorageConnectionString -secure $secure
+
     Write-Output "loading config from $configuration"
     [xml]$temp_serviceConfig = Get-Content $configuration
 
     # set database connection string
-    $temp_connectionstring = "Server=tcp:$db_servername.database.windows.net,1433;Database=$db_databasename;User ID=$dbserverlogin@$db_servername;Password=$dbserverpassword;Trusted_Connection=False;Encrypt=True;Connection Timeout=30;MultipleActiveResultSets=True" 
+    $temp_connectionstring = Get-DBConnectionString
     $temp_serviceConfig.ServiceConfiguration.Role.ConfigurationSettings.Setting |
         ? { $_.name -eq 'VirtoCommerce' } |
         % { if($_ -ne $null) {$_.value = "$temp_connectionstring"} }
@@ -214,17 +300,17 @@ Function update-config
     # update search url
     $temp_serviceConfig.ServiceConfiguration.Role.ConfigurationSettings.Setting |
         ? { $_.name -eq 'SearchConnectionString' } |
-        % { if($_ -ne $null) { $_.value = "server=$search_servicename.cloudapp.net:9200;scope=default"} }
+        % { if($_ -ne $null) { $_.value = $searchConnectionString} }
 
     # update storage url
     $temp_serviceConfig.ServiceConfiguration.Role.ConfigurationSettings.Setting |
         ? { $_.name -eq 'Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString' } |
-        % { if($_ -ne $null) { $_.value = "DefaultEndpointsProtocol=https;AccountName=$common_storageaccount;AccountKey=$common_storagekey"} }
+        % { if($_ -ne $null) { $_.value = $storageConnectionString} }
 
     # update storage url
     $temp_serviceConfig.ServiceConfiguration.Role.ConfigurationSettings.Setting |
         ? { $_.name -eq 'DataConnectionString' } |
-        % { if($_ -ne $null) {$_.value = "DefaultEndpointsProtocol=http;AccountName=$common_storageaccount;AccountKey=$common_storagekey"} }
+        % { if($_ -ne $null) {$_.value = $storageConnectionString} }
 
     $temp_serviceConfig.Save("$configuration")
 }
@@ -245,20 +331,81 @@ Function deploy-frontend
     write-progress -id 1 -activity "Frontend Deployment" -status "In progress"
     Write-Output "$(Get-Date -f $timeStampFormat) - Frontend Deployment: In progress"
 
-	& xcopy "$frontend_workerroleconfig\$common_serviceconfig" "$common_configfolder\CommerceSite\" /Y
-    if ($LASTEXITCODE -ne 0)
+    if(!$deploy_frontend_website) # deploy using cloud service
     {
-       throw "XCOPY failed"
-    }
-
-    update-config $common_configfolder\CommerceSite\$common_serviceconfig
-
-    Write-Host "*** Starting Windows CommerceSite Azure deployment process ***"
-    . ".\azure-service-publish.ps1" -serviceName $frontend_servicename -storageAccountName $common_storageaccount -storageAccountKey $common_storagekey -cloudConfigLocation $common_configfolder\CommerceSite\$common_serviceconfig -packageLocation $build_path\$frontend_packagename -selectedSubscription $common_subscriptionname -publishSettingsFile $common_publishsettingsfile -subscriptionId $common_subscriptionid -slot $common_slot -location $common_region
-        if (! $?)	
+	    & xcopy "$frontend_workerroleconfig\$common_serviceconfig" "$common_configfolder\CommerceSite\" /Y
+        if ($LASTEXITCODE -ne 0)
         {
-          throw "Frontend deployment failed"
+           throw "XCOPY failed"
         }
+
+        update-config -configuration $common_configfolder\CommerceSite\$common_serviceconfig
+
+        Write-Host "*** Starting Windows CommerceSite Azure deployment process ***"
+        . ".\azure-service-publish.ps1" -serviceName $frontend_servicename -storageAccountName $common_storageaccount -storageAccountKey $common_storagekey -cloudConfigLocation $common_configfolder\CommerceSite\$common_serviceconfig -packageLocation $build_path\$frontend_packagename -selectedSubscription $common_subscriptionname -publishSettingsFile $common_publishsettingsfile -subscriptionId $common_subscriptionid -slot $common_slot -location $common_region
+            if (! $?)	
+            {
+              throw "Frontend deployment failed"
+            }
+    }
+	else # deploy as a website
+	{
+		$global:buildexe_path = (Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\MSBuild\ToolsVersions\4.0" -Name MSBuildToolsPath).MSBuildToolsPath
+		Write-Host "MSBUILD 4.0 Path = $buildexe_path"
+
+		# Create a new website
+		Write-Verbose ("[Start] Checking if website {0} exists in slot {1}" -f $frontend_servicename, $common_slot)
+		$website = Get-AzureWebsite -Name $frontend_servicename -ErrorAction SilentlyContinue #-Slot $common_slot 
+		Write-Verbose ("[Finished] Checking if website {0} exists in slot {1}" -f $frontend_servicename, $common_slot)
+
+		if (! $website)
+		{
+			Write-Verbose ("[Start] creating website {0} in location {1} and slot {2}" -f $frontend_servicename, $common_region, $common_slot)
+			$website = New-AzureWebsite -Name $frontend_servicename -Location $common_region -Verbose #-slot $slot
+			Write-Verbose ("[Finish] creating website {0} in location {1} and slot {2}" -f $frontend_servicename, $common_region, $common_slot)
+		}
+
+		$dbconnectionstring = Get-DBConnectionString
+		$searchConnectionString = Get-SearchConnectionString
+		$storageConnectionString = Get-StorageConnectionString
+
+		# Configure app settings for storage account
+		$appSettings = @{ `
+			"SearchConnectionString" = $searchConnectionString; `
+			"DataConnectionString" = $storageConnectionString; `
+			"Microsoft.WindowsAzure.Plugins.Diagnostics.ConnectionString" = $storageConnectionString; `
+			"AzureWebJobsDashboard" = $storageConnectionString; `
+		}
+
+		# Configure connection strings for appdb and ASP.NET member db
+		$connectionStrings = ( `
+			@{Name = "VirtoCommerce"; Type = "SQLAzure"; ConnectionString = $dbconnectionstring} 
+		)
+
+		# Add the connection string and storage account name/key to the website
+		Set-AzureWebsite -Name $frontend_servicename -AppSettings $appSettings -ConnectionStrings $connectionStrings
+
+		# Generate the .pubxml file which will be used by webdeploy later
+		Write-Verbose ("[Begin] generating {0}.pubxml file" -f $frontend_servicename)
+		Generate-PublishXml -Website $frontend_servicename
+		Write-Verbose ("{0}\{1}.pubxml" -f $common_frontendpubxml, $frontend_servicename )
+		Write-Verbose ("[Finish] generating {0}\{1}.pubxml file" -f $common_frontendpubxml, $frontend_servicename)
+
+		# Read from the publish settings file to get the deploy password
+		$publishXmlFile = "{0}\{1}.pubxml" -f $common_frontendpubxml, $frontend_servicename
+		[Xml]$xml = Get-Content ("{0}\{1}.publishsettings" -f $common_frontendpubxml, $frontend_servicename)
+		$password = $xml.publishData.publishProfile.userPWD.get(0)
+
+		$FrontendProjectFile = "$build_solutiondir\src\Presentation\FrontEnd\StoreWebApp\StoreWebApp.csproj"
+		# Run MSBuild to publish the project
+		& "$global:buildexe_path\MSBuild.exe" $FrontendProjectFile `
+			/p:VisualStudioVersion=12.0 `
+			/p:DeployOnBuild=true `
+			/p:PublishProfile=$publishXmlFile `
+			/p:Password=$password
+
+		Write-Verbose ("[Finish] deploying to Windows Azure website {0}" -f $frontend_servicename)
+	}
 
     write-progress -id 1 -activity "Frontend Deployment" -status "Finished"
     Write-Output "$(Get-Date -f $timeStampFormat) - Frontend Deployment: Finished"
@@ -376,7 +523,7 @@ Function deploy-search
        throw "XCOPY failed"
     }
 
-    update-config $common_configfolder\Search\$common_serviceconfig
+    update-config -configuration $common_configfolder\Search\$common_serviceconfig -secure $false # sicne search relies on cloud drive, it can't support https
 
     . ".\azure-service-publish.ps1" -serviceName $search_servicename -storageAccountName $common_storageaccount -storageAccountKey $common_storagekey -cloudConfigLocation $common_configfolder\Search\$common_serviceconfig -packageLocation $build_path\$search_packagename -selectedSubscription $common_subscriptionname -publishSettingsFile $common_publishsettingsfile -subscriptionId $common_subscriptionid -slot $common_slot -location $common_region
         if ($LASTEXITCODE -ne 0)
@@ -395,7 +542,7 @@ Function deploy-scheduler
     Write-Output "$(Get-Date -f $timeStampFormat) - Scheduler Deployment: In progress"
 
 	& xcopy "$scheduler_workerroleconfig\$common_serviceconfig" "$common_configfolder\Scheduler\" /Y
-    update-config $common_configfolder\Scheduler\$common_serviceconfig
+    update-config -configuration $common_configfolder\Scheduler\$common_serviceconfig
 
     . ".\azure-service-publish.ps1" -serviceName $scheduler_servicename -storageAccountName $common_storageaccount -storageAccountKey $common_storagekey -cloudConfigLocation $common_configfolder\Scheduler\$common_serviceconfig -packageLocation $build_path\$scheduler_packagename -selectedSubscription $common_subscriptionname -publishSettingsFile $common_publishsettingsfile -subscriptionId $common_subscriptionid -slot $common_slot -location $common_region
         if (! $?)
@@ -422,7 +569,7 @@ Function create-storage
         New-AzureStorageAccount -StorageAccountName $common_storageaccount -Label $common_storageaccount -Location $common_region
         if ($LASTEXITCODE -ne 0)
         {
-          throw "Build Failed"
+          throw "Failed to create storage account " + $common_storageaccount
         }
     }
 

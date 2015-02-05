@@ -114,7 +114,7 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 			get
 			{
 				return _navigationData ??
-					   (_navigationData = new NavigationItem(GetNavigationKey(OriginalItem.AccountId.ToString()),
+					   (_navigationData = new NavigationItem(GetNavigationKey(OriginalItem.AccountId),
 															NavigationNames.HomeName, NavigationNames.MenuName, this));
 			}
 		}
@@ -321,9 +321,9 @@ namespace VirtoCommerce.ManagementClient.Security.ViewModel.Implementations
 					{
 
 						if (isPasswordChanging)
-							_securityService.ChangePassword(InnerItem.UserName, itemVM.OldPassword, itemVM.Password);
+							_securityService.ChangePasswordAsync(InnerItem.UserName, itemVM.OldPassword, itemVM.Password);
 						else
-							_securityService.ResetPassword(InnerItem.UserName, itemVM.Password);
+							_securityService.ResetPasswordAsync(InnerItem.UserName, itemVM.Password);
 					}
 					catch (Exception ex)
 					{

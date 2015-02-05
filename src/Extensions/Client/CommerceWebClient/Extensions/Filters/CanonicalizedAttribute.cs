@@ -52,108 +52,112 @@ namespace VirtoCommerce.Web.Client.Extensions.Filters
                     var queryString = context.Request.QueryString;
                     var needRedirect = false;
 
-                        //Make sure we allways use same virtual path as Route provides
-                        var routePath = filterContext.RouteData.Route.GetVirtualPath(filterContext.RequestContext,
-                            filterContext.RouteData.Values);
+                    //Make sure we allways use same virtual path as Route provides
+                    var routePath = filterContext.RouteData.Route.GetVirtualPath(filterContext.RequestContext,
+                        filterContext.RouteData.Values);
 
-                        if (routePath != null && !string.IsNullOrEmpty(routePath.VirtualPath))
+                    if (routePath != null && !string.IsNullOrEmpty(routePath.VirtualPath))
+                    {
+                        var absoluteRoutePath = HttpUtility.UrlDecode(string.Concat(baseUri, context.Request.ApplicationPath, context.Request.ApplicationPath != "/" ? "/" : "", routePath.VirtualPath));
+
+                        if (!string.IsNullOrEmpty(absoluteRoutePath) && !absoluteRoutePath.Equals(path, StringComparison.InvariantCultureIgnoreCase))
                         {
-                            var absoluteRoutePath = HttpUtility.UrlDecode(string.Concat(baseUri, context.Request.ApplicationPath, context.Request.ApplicationPath != "/" ? "/" : "", routePath.VirtualPath));
-
-                            if (!string.IsNullOrEmpty(absoluteRoutePath) && !absoluteRoutePath.Equals(path, StringComparison.InvariantCultureIgnoreCase))
-                            {
-                                path = absoluteRoutePath;
-                                needRedirect = true;
-                            }
-                        }
-
-                        //Process query string
-                        if (!string.IsNullOrEmpty(query))
-                        {
-                            //Rebuild querystring from scratch
-                            var newQuery = string.Empty;
-
-                            //First goes search filter ordered based on document
-                            var helper = StoreHelper.SearchFilter;
-                            var urlHelper = new UrlHelper(context.Request.RequestContext);
-
-                            var parameters = helper.Filters.Where(f => !(f is PriceRangeFilter) || ((PriceRangeFilter)f).Currency.Equals(StoreHelper.CustomerSession.Currency, StringComparison.OrdinalIgnoreCase))
-                                .Select(filter => queryString.AllKeys
-                                .FirstOrDefault(k => k.Equals(urlHelper.GetFacetKey(filter.Key), StringComparison.InvariantCultureIgnoreCase)))
-                                .Where(key => !string.IsNullOrEmpty(key))
-                                .ToDictionary<string, string, object>(key => key, key => queryString[key]);
-
-                            if (parameters.Any())
-                            {
-                                newQuery = urlHelper.SetQueryParameters(newQuery, parameters);
-                            }
-
-                            //Order remaining parameters
-                            var otherParams = queryString.AllKeys.Where(key => !parameters.ContainsKey(key)).OrderBy(k => k)
-                                .ToDictionary<string, string, object>(key => key, key => queryString[key]);
-
-                            if (otherParams.Any())
-                            {
-                                newQuery = urlHelper.SetQueryParameters(newQuery, otherParams);
-                            }
-
-                            if (!string.IsNullOrEmpty(newQuery) && !newQuery.StartsWith("?"))
-                            {
-                                newQuery = string.Concat("?", newQuery);
-                            }
-
-                            newQuery = HttpUtility.UrlDecode(newQuery);
-
-                            if (!string.Equals(query, newQuery, StringComparison.InvariantCultureIgnoreCase))
-                            {
-                                query = newQuery;
-                                needRedirect = true;
-                            }
-                        }
-
-                      
-                        //make language code allways be five symbols
-                        if (filterContext.RouteData.Values.ContainsKey(Routing.Constants.Language) &&
-                            filterContext.RouteData.Values[Routing.Constants.Language] as string != null)
-                        {
-                            var lang = filterContext.RouteData.Values[Routing.Constants.Language].ToString();
-                            if (lang.Length < 5)
-                            {
-                                try
-                                {
-                                    var cult = CultureInfo.CreateSpecificCulture(lang);
-                                    if (!path.ToLowerInvariant().Contains(cult.Name.ToLowerInvariant()))
-                                    {
-                                        path = path.Replace(lang, cult.Name);
-                                        needRedirect = true;
-                                    }
-                                }
-                                catch
-                                {
-                                    //Something wrong with language??
-                                }
-                            }
-                        }
-
-                        //make path segments allways encoded
-                        var encodedPath = path;
-                        encodedPath = ProcessSegment(filterContext.RouteData.Values, encodedPath, Routing.Constants.Store);
-                        encodedPath = ProcessSegment(filterContext.RouteData.Values, encodedPath, Routing.Constants.Category);
-                        encodedPath = ProcessSegment(filterContext.RouteData.Values, encodedPath, Routing.Constants.Item);
-
-                        // check for any upper-case letters:
-                        if (path != encodedPath.ToLowerInvariant())
-                        {
-                            path = encodedPath.ToLowerInvariant();
+                            path = absoluteRoutePath;
                             needRedirect = true;
                         }
+                    }
 
+                    //Process query string
+                    if (!string.IsNullOrEmpty(query))
+                    {
+                        //Rebuild querystring from scratch
+                        var newQuery = string.Empty;
+
+                        //First goes search filter ordered based on document
+                        var helper = StoreHelper.SearchFilter;
+                        var urlHelper = new UrlHelper(context.Request.RequestContext);
+
+                        var parameters = helper.Filters.Where(f => !(f is PriceRangeFilter) || ((PriceRangeFilter)f).Currency.Equals(StoreHelper.CustomerSession.Currency, StringComparison.OrdinalIgnoreCase))
+                            .Select(filter => queryString.AllKeys
+                            .FirstOrDefault(k => k.Equals(urlHelper.GetFacetKey(filter.Key), StringComparison.InvariantCultureIgnoreCase)))
+                            .Where(key => !string.IsNullOrEmpty(key))
+                            .ToDictionary<string, string, object>(key => key, key => queryString[key]);
+
+                        if (parameters.Any())
+                        {
+                            newQuery = urlHelper.SetQueryParameters(newQuery, parameters);
+                        }
+
+                        //Order remaining parameters
+                        var otherParams = queryString.AllKeys.Where(key => !parameters.ContainsKey(key)).OrderBy(k => k)
+                            .ToDictionary<string, string, object>(key => key, key => queryString[key]);
+
+                        if (otherParams.Any())
+                        {
+                            newQuery = urlHelper.SetQueryParameters(newQuery, otherParams);
+                        }
+
+                        if (!string.IsNullOrEmpty(newQuery) && !newQuery.StartsWith("?"))
+                        {
+                            newQuery = string.Concat("?", newQuery);
+                        }
+
+                        newQuery = HttpUtility.UrlDecode(newQuery);
+
+                        if (!string.Equals(query, newQuery, StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            query = newQuery;
+                            needRedirect = true;
+                        }
+                    }
+
+
+                    //make language code allways be five symbols
+                    if (filterContext.RouteData.Values.ContainsKey(Routing.Constants.Language) &&
+                        filterContext.RouteData.Values[Routing.Constants.Language] as string != null)
+                    {
+                        var lang = filterContext.RouteData.Values[Routing.Constants.Language].ToString();
+                        if (lang.Length < 5)
+                        {
+                            try
+                            {
+                                var cult = CultureInfo.CreateSpecificCulture(lang);
+                                if (!path.ToLowerInvariant().Contains(cult.Name.ToLowerInvariant()))
+                                {
+                                    path = path.Replace(lang, cult.Name);
+                                    needRedirect = true;
+                                }
+                            }
+                            catch
+                            {
+                                //Something wrong with language??
+                            }
+                        }
+                    }
+
+                    //make path segments allways encoded
+                    var encodedPath = path;
+                    encodedPath = ProcessSegment(filterContext.RouteData.Values, encodedPath, Routing.Constants.Store);
+                    encodedPath = ProcessSegment(filterContext.RouteData.Values, encodedPath, Routing.Constants.Category);
+                    encodedPath = ProcessSegment(filterContext.RouteData.Values, encodedPath, Routing.Constants.Item);
+
+                    // check for any upper-case letters:
+                    if (path != encodedPath.ToLowerInvariant())
+                    {
+                        path = encodedPath.ToLowerInvariant();
+                        needRedirect = true;
+                    }
+
+                    //If request is for root dont chech this rule
+                    if (!context.Request.Url.AbsolutePath.Equals(context.Request.ApplicationPath))
+                    {
                         // make sure request ends with a "/"
                         if (path.EndsWith("/"))
                         {
                             needRedirect = true;
                         }
-                    
+                    }
+
 
                     if (needRedirect)
                     {
@@ -172,16 +176,16 @@ namespace VirtoCommerce.Web.Client.Extensions.Filters
             SeoUrlKeywordTypes type;
 
             if (routeValues.ContainsKey(key) &&
-                          routeValues[key] as string != null && Enum.TryParse(key,true, out type))
+                          routeValues[key] as string != null && Enum.TryParse(key, true, out type))
             {
                 var value = routeValues[key].ToString();
-                var lang  = routeValues.ContainsKey(Routing.Constants.Language) ? routeValues[Routing.Constants.Language] as string : null;
-                var valueDecoded = SettingsHelper.SeoEncode(value, type, lang).ToLowerInvariant();
+                var lang = routeValues.ContainsKey(Routing.Constants.Language) ? routeValues[Routing.Constants.Language] as string : null;
+                var valueEncoded = SettingsHelper.SeoEncode(value, type, lang).ToLowerInvariant();
 
                 //If encoded and used value does not match (keyword exist) and requested path contains not encoded value replace with encoded
-                if (!value.Equals(valueDecoded, StringComparison.InvariantCultureIgnoreCase) && path.ToLowerInvariant().Contains(value.ToLowerInvariant()))
+                if (!value.Equals(valueEncoded, StringComparison.InvariantCultureIgnoreCase) && path.ToLowerInvariant().Contains(value.ToLowerInvariant()))
                 {
-                    path = path.Replace(value, valueDecoded);
+                    path = path.Replace(value, valueEncoded);
                 }
             }
 

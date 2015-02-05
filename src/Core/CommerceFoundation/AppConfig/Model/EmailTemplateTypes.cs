@@ -10,6 +10,7 @@ namespace VirtoCommerce.Foundation.AppConfig.Model
     {
         Xsl,
         Html,
-        Text
+        Text,
+        Razor
     }
 }

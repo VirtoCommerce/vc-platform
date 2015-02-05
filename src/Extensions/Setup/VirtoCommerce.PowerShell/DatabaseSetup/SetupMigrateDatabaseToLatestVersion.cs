@@ -1,15 +1,14 @@
-﻿using System;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Migrations;
 using System.Data.SqlClient;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
 
 namespace VirtoCommerce.PowerShell.DatabaseSetup
 {
-    using VirtoCommerce.Foundation.Data.Infrastructure;
+    using System;
+
+    using VirtoCommerce.Foundation.Frameworks.Extensions;
 
     /// <summary>
     ///     An implementation of <see cref="IDatabaseInitializer{TContext}" /> that will use Code First Migrations
@@ -63,7 +62,7 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup
             }
 
             var seed = !context.Database.Exists();
-			var migrator = new DbMigrator(_config);
+            var migrator = new DbMigrator(_config);
             if (!seed)
             {
                 var local = migrator.GetLocalMigrations();
@@ -74,12 +73,20 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup
                 }
             }
 
-            migrator.Update();
+            try
+            {
+                migrator.Update();
+            }
+            catch (SqlException ex)
+            {
+                throw new ApplicationException(String.Format("Migrations failed with error \"{0}\"", ex.ExpandExceptionMessage()), ex);
+            }
+
             InitializeDbSettings(context);
 
             if (seed)
             {
-                 Seed(context);
+                Seed(context);
             }
         }
 
@@ -88,14 +95,15 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup
             // update general database settings here, for azure we need to connect to master db
             var originalDbName = context.Database.Connection.Database;
             var connectionString = context.Database.Connection.ConnectionString;
-            SqlConnectionStringBuilder sb = new SqlConnectionStringBuilder(connectionString);
+
+            // do not modify connection string for localdb
             if (!connectionString.ToLowerInvariant().Contains("(LocalDb)".ToLowerInvariant()))
-                // do not modify connection string for localdb
             {
-                connectionString = connectionString.Replace(originalDbName, "master");
+                var csBuilder = new SqlConnectionStringBuilder(connectionString) { InitialCatalog = "master" };
+                connectionString = csBuilder.ToString();
             }
 
-            using (SqlConnection dbConnection = new SqlConnection(connectionString))
+            using (var dbConnection = new SqlConnection(connectionString))
             {
                 dbConnection.Open();
                 var cmd = dbConnection.CreateCommand();

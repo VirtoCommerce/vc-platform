@@ -12,12 +12,11 @@ using Owin;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Web;
 
-[assembly: OwinStartup(typeof(SignalRStartup))]
 namespace VirtoCommerce.Web
 {
-    public class SignalRStartup
+    public partial class Startup
     {
-        public void Configuration(IAppBuilder app)
+        public void ConfigureSignlarR(IAppBuilder app)
         {
             var hubConfiguration = new HubConfiguration();
             // Any connection or hub wire up and configuration should go here

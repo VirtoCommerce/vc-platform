@@ -1,4 +1,6 @@
-﻿using System.Web.Http.OData;
+﻿using System.Threading.Tasks;
+using System.Web.Http.OData;
+using Microsoft.AspNet.Identity.Owin;
 using Omu.ValueInjecter;
 using System;
 using System.Collections.Generic;
@@ -79,9 +81,9 @@ namespace VirtoCommerce.Web.Virto.Helpers
             get { return DependencyResolver.Current.GetService<UserClient>(); }
         }
 
-        public static IUserSecurity UserSecurity
+        public static IdentityUserSecurity UserSecurity
         {
-            get { return DependencyResolver.Current.GetService<IUserSecurity>(); }
+            get { return DependencyResolver.Current.GetService<IdentityUserSecurity>(); }
         }
 
 	    /// <summary>
@@ -256,26 +258,23 @@ namespace VirtoCommerce.Web.Virto.Helpers
 
         #region Registration
 
-	    /// <summary>
-	    /// Registers the specified user.
-	    /// </summary>
-	    /// <param name="model">The registration model.</param>
-	    /// <param name="errorMessage">The error message that occured during regustration.</param>
-	    /// <param name="requireConfirmation">if set to <c>true</c> [require confirmation].</param>
-	    /// <param name="token">Confirmation token</param>
-	    /// <returns>
-	    /// true when user is registered and logged in
-	    /// </returns>
-	    public static bool Register(RegisterModel model, bool requireConfirmation, out string errorMessage, out string token)
-        {
-            errorMessage = string.Empty;
-            token = string.Empty;
+        /// <summary>
+        /// Registers the specified user.
+        /// </summary>
+        /// <param name="model">The registration model.</param>
+        /// <param name="requireConfirmation">if set to <c>true</c> [require confirmation].</param>
+        /// <returns>
+        /// true when user is registered and logged in
+        /// </returns>
+        public static async Task<RegistrationResult> RegisterAsync(RegisterModel model, bool requireConfirmation)
+	    {
+	        var retVal = new RegistrationResult();
 
             try
             {
                 var id = Guid.NewGuid().ToString();
 
-                token = UserSecurity.CreateUserAndAccount(model.Email, model.Password, new
+                retVal.ConfirmationToken = await UserSecurity.CreateUserAndAccountAsync(model.Email, model.Password, new
                 {
                     MemberId = id,
                     CustomerSession.StoreId,
@@ -297,18 +296,20 @@ namespace VirtoCommerce.Web.Virto.Helpers
 
                 UserClient.CreateContact(contact);
 
-                return requireConfirmation || UserSecurity.Login(model.Email, model.Password);
+                retVal.IsSuccess = requireConfirmation || await UserSecurity.LoginAsync(model.Email, model.Password) == SignInStatus.Success;
+
+                return retVal;
             }
             catch (MembershipCreateUserException e)
             {
-                errorMessage = ErrorCodeToString(e.StatusCode);
+                retVal.ErrorMessage = ErrorCodeToString(e.StatusCode);
             }
             catch (Exception ex)
             {
-                errorMessage = ex.Message;
+                retVal.ErrorMessage = ex.Message;
             }
 
-            return false;
+            return retVal;
         }
 
         public static bool SendEmail(string linkUrl, string user, string email, string templateName, Action<EmailMessage> defaultMessage = null)
@@ -343,6 +344,8 @@ namespace VirtoCommerce.Web.Virto.Helpers
                  defaultMessage(emailMessage);
             }
 
+            //UserSecurity.UserManager.SendEmailAsync()
+
             //Send email
             return EmailService.SendEmail(emailMessage);
         }
@@ -350,9 +353,9 @@ namespace VirtoCommerce.Web.Virto.Helpers
         /// <summary>
         /// After user has logged in do some actions
         /// </summary>
-        public static void OnPostLogon(string userName, string csrUserName = null)
+        public async static Task OnPostLogonAsync(string userName, string csrUserName = null)
         {
-            var customerId = UserSecurity.GetUserId(userName);
+            var customerId = await UserSecurity.GetUserIdAsync(userName);
             var contact = UserClient.GetCustomer(customerId.ToString(CultureInfo.InvariantCulture), false);
 
             if (!string.IsNullOrEmpty(csrUserName))

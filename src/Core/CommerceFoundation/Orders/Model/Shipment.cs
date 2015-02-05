@@ -279,6 +279,20 @@ namespace VirtoCommerce.Foundation.Orders.Model
 			}
 		}
 
+        private decimal _Weight;
+        [DataMember]
+        public decimal Weight
+        {
+            get
+            {
+                return _Weight;
+            }
+            set
+            {
+                SetValue(ref _Weight, () => this.Weight, value);
+            }
+        }
+
 
 		#endregion
 
@@ -348,6 +362,19 @@ namespace VirtoCommerce.Foundation.Orders.Model
 				return _ShipmentItems;
 			}
 		}
+
+        private ObservableCollection<ShipmentOption> _Options;
+        [DataMember]
+        public ObservableCollection<ShipmentOption> Options
+        {
+            get
+            {
+                if (_Options == null)
+                    _Options = new ObservableCollection<ShipmentOption>();
+
+                return _Options;
+            }
+        }
 		#endregion
 	}
 }

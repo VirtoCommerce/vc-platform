@@ -39,7 +39,6 @@
         {
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(true)
-            @Html.HiddenFor(m => m.ExternalLoginData)
 
             <span class="title">@("Associate your account".Localize())</span>
             <p>
@@ -51,9 +50,9 @@
             <fieldset>
                 <legend>@("Association Form".Localize())</legend>
                 <div class="control-group">
-                    @Html.LabelFor(m => m.UserName)
-                    @Html.TextBoxFor(m => m.UserName)
-                    @Html.ValidationMessageFor(m => m.UserName)
+                    @Html.LabelFor(m => m.Email)
+                    @Html.TextBoxFor(m => m.Email)
+                    @Html.ValidationMessageFor(m => m.Email)
                 </div>
                 <div class="control-group">
                     <div class="control">

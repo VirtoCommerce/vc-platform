@@ -33,15 +33,7 @@ namespace VirtoCommerce.Web.Controllers
 		/// <returns>System.String.</returns>
 		protected string RenderRazorViewToString(string viewName, object model)
 		{
-			ViewData.Model = model;
-			using (var sw = new StringWriter())
-			{
-				var viewResult = ViewEngines.Engines.FindPartialView(ControllerContext, viewName);
-				var viewContext = new ViewContext(ControllerContext, viewResult.View, ViewData, TempData, sw);
-				viewResult.View.Render(viewContext, sw);
-				viewResult.ViewEngine.ReleaseView(ControllerContext, viewResult.View);
-				return sw.GetStringBuilder().ToString().Replace(Environment.NewLine, string.Empty);
-			}
+		    return ViewRenderer.RenderPartialView(viewName, model, ControllerContext);
 		}
 
 	    protected override void OnActionExecuted(ActionExecutedContext filterContext)

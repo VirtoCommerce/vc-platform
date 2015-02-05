@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElementStateLogic", "ElementStateLogic\ElementStateLogic.csproj", "{C711E992-7BA2-4EA2-9573-67E79A6779C2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElementStateDemo", "ElementStateDemo\ElementStateDemo.csproj", "{177B9422-D534-4D70-80C3-9CB7454F6AE6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C711E992-7BA2-4EA2-9573-67E79A6779C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C711E992-7BA2-4EA2-9573-67E79A6779C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C711E992-7BA2-4EA2-9573-67E79A6779C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C711E992-7BA2-4EA2-9573-67E79A6779C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{177B9422-D534-4D70-80C3-9CB7454F6AE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{177B9422-D534-4D70-80C3-9CB7454F6AE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{177B9422-D534-4D70-80C3-9CB7454F6AE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{177B9422-D534-4D70-80C3-9CB7454F6AE6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -152,7 +152,12 @@ namespace VirtoCommerce.ManagementClient.Asset.Repositories
 			throw new NotImplementedException();
 		}
 
-		#endregion
+        public void Refresh(IEnumerable collection)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
 
 		#region IDisposable Members
 

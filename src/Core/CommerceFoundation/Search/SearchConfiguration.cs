@@ -21,7 +21,10 @@ namespace VirtoCommerce.Foundation.Search
 
 		private static SearchConfiguration CreateInstance()
 		{
-			return (SearchConfiguration)ConfigurationManager.GetSection("VirtoCommerce/Search");
+			var config = (SearchConfiguration)ConfigurationManager.GetSection("VirtoCommerce/Search") ??
+			             new SearchConfiguration();
+
+		    return config;
 		}
 
         [ConfigurationProperty("Connection", IsRequired = true)]

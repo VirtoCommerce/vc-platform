@@ -100,7 +100,8 @@ namespace VirtoCommerce.Foundation.Orders.Services
 			{
 				var totalSales = orderForm.Payments.Where(
 					p => p.Status == PaymentStatus.Completed.ToString() &&
-					     p.TransactionType == TransactionType.Sale.ToString()).Sum(p => p.Amount);
+                         (p.TransactionType == TransactionType.Sale.ToString() 
+                         || p.TransactionType == TransactionType.Capture.ToString())).Sum(p => p.Amount);
 
 				if (payment.Amount > totalSales)
 				{

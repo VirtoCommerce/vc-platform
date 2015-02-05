@@ -22,8 +22,14 @@
 
 		private static AzureConfiguration CreateInstance()
 		{
-			var retVal = (AzureConfiguration)ConfigurationManager.GetSection("VirtoCommerce/AzureRepository");
-			return retVal;
+            var config = (AzureConfiguration)ConfigurationManager.GetSection("VirtoCommerce/AzureRepository");
+
+            if (config == null)
+            {
+                config = new AzureConfiguration { Connection = new AzureConnection() };
+            }
+
+            return config;
 		}
 
 
@@ -54,6 +60,7 @@
 			{
 				return (AzureConnection)this["Connection"];
 			}
+            private set { this["Connection"] = value; }
 		}
 
 		[ConfigurationProperty("CQRSOrderQueueName", IsRequired = false)]
@@ -106,7 +113,7 @@
 	{
 		public AzureConnection() { }
 
-		[ConfigurationProperty("storageConnectionStringName", IsRequired = true)]
+        [ConfigurationProperty("storageConnectionStringName", IsRequired = true, DefaultValue = "AssetsConnectionString")]
 		public string StorageConnectionStringName
 		{
 			get

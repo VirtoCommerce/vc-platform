@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Services.Common;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
-using VirtoCommerce.Foundation.Customers.Model;
 using VirtoCommerce.Foundation.Frameworks;
 
 namespace VirtoCommerce.Foundation.Security.Model
@@ -20,14 +14,13 @@ namespace VirtoCommerce.Foundation.Security.Model
     {
         public Account()
 		{
-            //_AccountId = GenerateNewKey();
+            _AccountId = GenerateNewKey();
 		}
 
-        private int _AccountId;
+        private string _AccountId;
 		[Key]
 		[DataMember]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int AccountId
+        public string AccountId
 		{
 			get
 			{

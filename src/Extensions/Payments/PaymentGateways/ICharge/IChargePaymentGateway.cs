@@ -4,7 +4,7 @@ using nsoftware.InPay;
 using System;
 using VirtoCommerce.Foundation.Orders.Model;
 
-namespace VirtoCommerce.PaymentGateways.ICharge
+namespace VirtoCommerce.PaymentGateways
 {
 	public class IchargePaymentGateway : PaymentGatewayBase
 	{
@@ -58,8 +58,8 @@ namespace VirtoCommerce.PaymentGateways.ICharge
 				_icharge.GatewayURL = Settings["GatewayURL"];
 			}
 
-			var transactionId = payment.AuthorizationCode;
-			_icharge.AuthCode = payment.ValidationCode;
+			var transactionId = payment.ValidationCode;
+			_icharge.AuthCode = payment.AuthorizationCode;
 
 			_icharge.Card.ExpMonth = info.CreditCardExpirationMonth;
 			_icharge.Card.ExpYear = info.CreditCardExpirationYear;
@@ -230,8 +230,8 @@ namespace VirtoCommerce.PaymentGateways.ICharge
 
 			info.StatusCode = _icharge.Response.Code;
 			info.StatusDesc = _icharge.Response.Text;
-			info.ValidationCode = _icharge.Response.ApprovalCode;
-			info.AuthorizationCode = _icharge.Response.TransactionId;
+			info.ValidationCode = _icharge.Response.TransactionId;
+            info.AuthorizationCode = _icharge.Response.ApprovalCode;
 
 			// transaction is marked as completed every time the payment operation succeeds even if it is void transaction type
 			if (_icharge.Response.Approved)

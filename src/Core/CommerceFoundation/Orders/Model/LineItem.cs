@@ -526,6 +526,20 @@ namespace VirtoCommerce.Foundation.Orders.Model
 			}
 		}
 
+        private decimal _Weight;
+        [DataMember]
+        public decimal Weight
+        {
+            get
+            {
+                return _Weight;
+            }
+            set
+            {
+                SetValue(ref _Weight, () => this.Weight, value);
+            }
+        }
+
 		#region Navigation Properties
 
 		[DataMember]
@@ -558,6 +572,32 @@ namespace VirtoCommerce.Foundation.Orders.Model
 				return _Options;
 			}
 		}
+
+        private string _ParentLineItemId;
+        /// <summary>
+        /// Gets or sets the parent line item identifier.
+        /// Can be used for related items in bundles, packages, etc
+        /// </summary>
+        /// <value>
+        /// The parent line item identifier.
+        /// </value>
+        [DataMember]
+        [StringLength(128)]
+        [ForeignKey("ParentLineItem")]
+        public string ParentLineItemId
+        {
+            get
+            {
+                return _ParentLineItemId;
+            }
+            set
+            {
+                SetValue(ref _ParentLineItemId, () => this.ParentLineItemId, value);
+            }
+        }
+
+        [DataMember]
+        public virtual LineItem ParentLineItem { get; set; }
 
 		#endregion
 	}

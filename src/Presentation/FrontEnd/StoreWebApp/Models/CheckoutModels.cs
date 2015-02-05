@@ -132,7 +132,7 @@ namespace VirtoCommerce.Web.Models
 		/// <value>The confirm password.</value>
         [DataType(DataType.Password)]
         [Display(Name = "Confirm new password")]
-        [System.Web.Mvc.Compare("Password", ErrorMessage = "The new password and confirmation password do not match.")]
+        [Compare("Password", ErrorMessage = "The new password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
     }
 
@@ -265,7 +265,7 @@ namespace VirtoCommerce.Web.Models
 		/// </summary>
 		/// <value>The expiration month.</value>
         [Range(1, 12), Required]
-		[Display(Name = "Expiration Year")]
+		[Display(Name = "Expiration Month")]
         public int ExpirationMonth { get; set; }
 
 		/// <summary>
@@ -507,15 +507,15 @@ namespace VirtoCommerce.Web.Models
 		/// Gets the display name.
 		/// </summary>
 		/// <value>The display name.</value>
-        public string DisplayName
+       public string DisplayName
         {
             get
             {
                 var shippingMethodLanguage =
                     Method.ShippingMethodLanguages.FirstOrDefault(
-                        sl => sl.LanguageCode == UserHelper.CustomerSession.Language);
+                        sl => sl.LanguageCode.Equals(UserHelper.CustomerSession.Language, StringComparison.OrdinalIgnoreCase));
 
-                return shippingMethodLanguage != null ? shippingMethodLanguage.DisplayName : Method.DisplayName;
+                return shippingMethodLanguage != null ? shippingMethodLanguage.DisplayName : Method.DisplayName ?? Method.Name;
             }
         }
 

@@ -98,8 +98,8 @@ namespace VirtoCommerce.Foundation.Data.Catalogs
 			modelBuilder.Entity<CategoryItemRelation>().HasRequired(p => p.Category).WithMany().WillCascadeOnDelete(false);
 			modelBuilder.Entity<ItemRelation>().HasRequired(m => m.ChildItem).WithMany().WillCascadeOnDelete(false);
 			// cascade delete Item and Category when PropertySet is deleted. This should happen ONLY when catalog is being deleted.
-			modelBuilder.Entity<Item>().HasRequired(m => m.PropertySet).WithMany().WillCascadeOnDelete(true);
-			modelBuilder.Entity<Category>().HasOptional(m => m.PropertySet).WithMany().WillCascadeOnDelete(true);
+            modelBuilder.Entity<Item>().HasOptional(m => m.PropertySet).WithMany().WillCascadeOnDelete(false);
+			modelBuilder.Entity<Category>().HasOptional(m => m.PropertySet).WithMany().WillCascadeOnDelete(false);
 
 			base.OnModelCreating(modelBuilder);
 		}

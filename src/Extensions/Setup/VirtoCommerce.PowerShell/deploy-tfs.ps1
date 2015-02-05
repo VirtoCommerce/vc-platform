@@ -46,6 +46,7 @@ Param(
         $deploydatabase = "True",
         $deploysearch = "True",
         $deployfrontend = "True",
+		$deployfrontend_website = $false,
         $deployscheduler = "True",
         $deployadmin = "True",
 		[parameter(Mandatory=$true)]
@@ -109,4 +110,4 @@ if($build -eq "True")
 }
 
 Set-Location "$solutiondir\src\extensions\Setup\VirtoCommerce.PowerShell"
-. ".\azure-deploy.ps1" -db_sampledata $db_sampledata -db_customsqlfolder $db_customsqldir -db_recreate $deploy_dbrecreate -deploymentdir $deploymentdir -solutiondir $solutiondir -storageaccount $storageaccount -subscriptionname $subscriptionname -search_servicename $search_servicename -frontend_servicename $frontend_servicename -scheduler_servicename $scheduler_servicename -db_servername $db_servername -db_serverlogin $db_serverlogin -db_serverpassword $db_serverpassword -db_serveruserlogin $db_serveruserlogin -db_serveruserpassword $db_serveruserpassword -db_databasename $db_databasename -build $deploy_build -build_params $build_params -build_config $build_config -deploy_database $deploy_database -publishsettingsfile $publishsettingsfile -vcfpowershellfile $vcfpowershellfile -region $region -slot $slot -admin_version $admin_version -deploy_search $deploy_search -deploy_scheduler $deploy_scheduler -deploy_frontend $deploy_frontend -deploy_admin $deploy_admin
+. ".\azure-deploy.ps1" -db_sampledata $db_sampledata -db_customsqlfolder $db_customsqldir -db_recreate $deploy_dbrecreate -deploymentdir $deploymentdir -solutiondir $solutiondir -storageaccount $storageaccount -subscriptionname $subscriptionname -search_servicename $search_servicename -frontend_servicename $frontend_servicename -scheduler_servicename $scheduler_servicename -db_servername $db_servername -db_serverlogin $db_serverlogin -db_serverpassword $db_serverpassword -db_serveruserlogin $db_serveruserlogin -db_serveruserpassword $db_serveruserpassword -db_databasename $db_databasename -build $deploy_build -build_params $build_params -build_config $build_config -deploy_database $deploy_database -publishsettingsfile $publishsettingsfile -vcfpowershellfile $vcfpowershellfile -region $region -slot $slot -admin_version $admin_version -deploy_search $deploy_search -deploy_scheduler $deploy_scheduler -deploy_frontend $deploy_frontend -deploy_frontend_website $deployfrontend_website -deploy_admin $deploy_admin

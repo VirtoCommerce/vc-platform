@@ -105,6 +105,11 @@ namespace VirtoCommerce.Search.Providers.Elastic
                 {
                     AddQuery("catalog", mainQuery, c.Catalog);
                 }
+
+                if (c.ClassTypes != null && c.ClassTypes.Count > 0)
+                {
+                    AddQuery("__type", mainQuery, c.ClassTypes, false);
+                }
             }
             #endregion
 
@@ -125,7 +130,7 @@ namespace VirtoCommerce.Search.Providers.Elastic
         }
         #endregion
 
-        protected void AddQuery(string fieldName, BoolQuery<ESDocument> query, StringCollection filter)
+        protected void AddQuery(string fieldName, BoolQuery<ESDocument> query, StringCollection filter, bool lowerCase = true)
         {
             fieldName = fieldName.ToLower();
             if (filter.Count > 0)
@@ -134,7 +139,7 @@ namespace VirtoCommerce.Search.Providers.Elastic
                 {
                     if (!String.IsNullOrEmpty(filter[0]))
                     {
-                        AddQuery(fieldName, query, filter[0].ToLower());
+                        AddQuery(fieldName, query, filter[0], lowerCase);
                     }
                 }
                 else
@@ -143,7 +148,7 @@ namespace VirtoCommerce.Search.Providers.Elastic
                     var containsFilter = false;
                     foreach (var index in filter.Cast<string>().Where(index => !String.IsNullOrEmpty(index)))
                     {
-                        booleanQuery.Should(q => q.Custom("{{\"wildcard\" : {{ \"{0}\" : \"{1}\" }}}}", fieldName.ToLower(), index.ToLower()));
+                        booleanQuery.Should(q => q.Custom("{{\"wildcard\" : {{ \"{0}\" : \"{1}\" }}}}", fieldName.ToLower(), lowerCase ? index.ToLower() : index));
                         containsFilter = true;
                     }
                     if (containsFilter)
@@ -152,9 +157,9 @@ namespace VirtoCommerce.Search.Providers.Elastic
             }
         }
 
-        protected void AddQuery(string fieldName, BoolQuery<ESDocument> query, string filter)
+        protected void AddQuery(string fieldName, BoolQuery<ESDocument> query, string filter, bool lowerCase = true)
         {
-            query.Must(q => q.Custom("{{\"wildcard\" : {{ \"{0}\" : \"{1}\" }}}}", fieldName.ToLower(), filter.ToLower()));
+            query.Must(q => q.Custom("{{\"wildcard\" : {{ \"{0}\" : \"{1}\" }}}}", fieldName.ToLower(), lowerCase ? filter.ToLower() : filter));
         }
 
         protected void AddQueryString(BoolQuery<ESDocument> query, CatalogItemSearchCriteria filter, params string[] fields)
@@ -322,7 +327,7 @@ namespace VirtoCommerce.Search.Providers.Elastic
             foreach (var value in values)
             {
                 var query = ElasticQueryHelper.CreatePriceRangeFilter(criteria, fieldName, value);
-                
+
                 if (query != null)
                 {
                     query.Must(b => ffilter);

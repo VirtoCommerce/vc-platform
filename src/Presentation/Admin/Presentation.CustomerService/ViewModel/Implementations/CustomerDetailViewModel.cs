@@ -633,7 +633,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 
 							try
 							{
-								await Task.Run(() => _securityService.CreateUser(InnerItem.MemberId, userName, password, storeId));
+								await _securityService.CreateUserAsync(InnerItem.MemberId, userName, password, storeId);
 								HasCurrentContactLoginAndSuspendAccessCheck();
 							}
 							catch (Exception ex)
@@ -668,7 +668,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
 
 							try
 							{
-								await Task.Run(() => _securityService.ResetPassword(CurrentContactLoginUserName, newPass));
+								await _securityService.ResetPasswordAsync(CurrentContactLoginUserName, newPass);
 								HasCurrentContactLoginAndSuspendAccessCheck();
 							}
 							catch (Exception ex)

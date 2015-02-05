@@ -278,7 +278,12 @@ namespace VirtoCommerce.ManagementClient.Catalog.Services
 			throw new NotImplementedException();
 		}
 
-        public bool IsAttachedTo<T>(T item) where T : class
+	    public void Refresh(IEnumerable collection)
+	    {
+	        throw new NotImplementedException();
+	    }
+
+	    public bool IsAttachedTo<T>(T item) where T : class
         {
             throw new NotImplementedException();
         }

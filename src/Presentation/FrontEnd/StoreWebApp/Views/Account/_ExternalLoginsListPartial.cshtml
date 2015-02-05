@@ -1,24 +1,24 @@
-﻿@model ICollection<AuthenticationClientData>
-@if (Model.Count == 0)
+﻿@model IEnumerable<Microsoft.Owin.Security.AuthenticationDescription>
+@if (!Model.Any())
 {
     <div class="message-info">
-        <p>@(@"There are no external authentication services configured. See <a href='http://go.microsoft.com/fwlink/?LinkId=252166'>this article</a> for details on setting up this ASP.NET application to support logging in via external services.".LocalizeHtml())</p>
+        <p>@(@"There are no external authentication services configured. See <a href='http://go.microsoft.com/fwlink/?LinkId=313242'>this article</a> for details on setting up this ASP.NET application to support logging in via external services.".LocalizeHtml())</p>
     </div>
 }
 else
 {
     using (Html.BeginForm("ExternalLogin", "Account", new { ViewBag.ReturnUrl }))
     {
-    @Html.AntiForgeryToken()
+        @Html.AntiForgeryToken()
 
-    <span class="title">@("Log in using another service".Localize())</span>
-    <p>
-        @foreach (var p in Model)
-        {          
-            <button type="submit" name="provider" value="@p.AuthenticationClient.ProviderName" title="@("Log in using your {0} account".Localize((object)p.DisplayName))">
-                <img alt="@p.DisplayName" src="@Href(String.Format("~/content/themes/default/images/social/{0}.png", p.AuthenticationClient.ProviderName))"/>
-            </button>
-        }
-    </p>
+        <span class="title">@("Log in using another service".Localize())</span>
+        <p>
+            @foreach (var p in Model)
+            {          
+                <button type="submit" name="provider" value="@p.AuthenticationType" title="@("Log in using your {0} account".Localize((object)p.Caption))">
+                    <img alt="@p.Caption" src="@Href(String.Format("~/content/themes/default/images/social/{0}.png", p.AuthenticationType))"/>
+                </button>
+            }
+        </p>
     }
 }

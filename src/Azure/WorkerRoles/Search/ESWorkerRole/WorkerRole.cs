@@ -6,7 +6,7 @@ using System.Net;
 using System.Text;
 using System.Threading;
 
-namespace VirtoSoftware.ElasticSearch
+namespace VirtoCommerce.Azure.WorkerRoles.ElasticSearch
 {
     public class WorkerRole : RoleEntryPoint
     {
@@ -18,11 +18,11 @@ namespace VirtoSoftware.ElasticSearch
         public override void Run()
         {
             // This is a sample worker implementation. Replace with your logic.
-            Trace.WriteLine("ElasticSearch entry point called", "Information");
+            DiagnosticsHelper.TraceInformation("ElasticSearch entry point called");
 
-            Trace.TraceInformation("Configuring Elastic Search");
+            DiagnosticsHelper.TraceInformation("Configuring Elastic Search");
             ConfigureElasticSearch();
-            Trace.TraceInformation("Configured Elastic Search");
+            DiagnosticsHelper.TraceInformation("Configured Elastic Search");
 
             while (true)
             {
@@ -33,14 +33,15 @@ namespace VirtoSoftware.ElasticSearch
                 {
                     if ((_process != null) && _process.HasExited)
                     {
-                        _elastic.Log("ElasticSearch Process Exited. Hence recycling role.", "Information");
+                        DiagnosticsHelper.TraceInformation("ElasticSearch Process Exited. Hence recycling role.");
                         RoleEnvironment.RequestRecycle();
                         return;
                     }
                 }
                 catch (Exception ex)
                 {
-                    Trace.TraceError(ex.Message + " " + ex.StackTrace);
+                    DiagnosticsHelper.TraceError(ex.Message + " " + ex.StackTrace);
+                    throw new ApplicationException("Elastic Search Quit: " + ex.Message);
                 }
             }
         }
@@ -52,20 +53,17 @@ namespace VirtoSoftware.ElasticSearch
                 // Initializing RunES
                 _elastic = new RunES();
 
-                string workerIPs = ListWorkerRoles();
-                Trace.TraceInformation("OnStart workerIPs: " + workerIPs);
-                // Calling StartTomcat method to start the tomcat process
-                // RoleEnvironment.CurrentRoleInstance.InstanceEndpoints["ElasticSearch"].IPEndpoint.Port.ToString()
-
-                var path = RoleEnvironment.GetLocalResource("ESLocation").RootPath;
-                Trace.TraceInformation("OnStart ESLocation: " + path);
-                _process = _elastic.StartES(RoleEnvironment.GetLocalResource("ESLocation").RootPath, "9200", workerIPs);
+                var workerIPs = ListWorkerRoles();
+                DiagnosticsHelper.TraceInformation("OnStart workerIPs: " + workerIPs);
+                DiagnosticsHelper.TraceInformation("OnStart ESLocation: " + Settings.CacheDir);
+                _process = _elastic.StartES(Settings.CacheDir, Settings.DefaultElasticPort, workerIPs);
             }
             catch (Exception ex)
             {
-                Trace.TraceError(ex.Message + " " + ex.StackTrace);
+                DiagnosticsHelper.TraceInformation(ex.Message + " " + ex.StackTrace);
+                DiagnosticsHelper.TraceError(ex.Message + " " + ex.StackTrace);
                 Trace.Flush();
-                throw;
+                throw new ApplicationException("Can't configure Elastic Search: " + ex.Message);
             }
         }
 
@@ -73,27 +71,26 @@ namespace VirtoSoftware.ElasticSearch
         {
             var current = RoleEnvironment.CurrentRoleInstance;
             var endPoints = current.Role.Instances
-                            /*.Where(instance => instance != current)*/
                             .Select(instance => instance.InstanceEndpoints["ElasticCloudServiceEndpoint"]).ToArray();
 
             if(!endPoints.Any())
             {
-                Trace.WriteLine("no endpoints found");
+                DiagnosticsHelper.TraceInformation("no endpoints found");
                 return String.Empty;
             }
 
             var builder = new StringBuilder();
-            foreach (string endPointString in endPoints.Select(endPoint => String.Format("{0}:{1}", endPoint.IPEndpoint.Address, endPoint.IPEndpoint.Port)))
+            foreach (var endPointString in endPoints.Select(endPoint => String.Format("{0}:{1}", endPoint.IPEndpoint.Address, endPoint.IPEndpoint.Port)))
             {
                 if (builder.Length > 0)
                     builder.Append(", ");
 
                 builder.Append(endPointString);
-                Trace.WriteLine("endpoint:" + endPointString);
+                DiagnosticsHelper.TraceInformation("endpoint:" + endPointString);
             }
 
 
-            Trace.WriteLine("endpoints:" + builder);
+            DiagnosticsHelper.TraceInformation("endpoints:" + builder);
             return builder.ToString();
         }
 
@@ -115,7 +112,7 @@ namespace VirtoSoftware.ElasticSearch
 
         public override void OnStop()
         {
-            Trace.WriteLine("ElasticWorkerRole OnStop() called", "Information");
+            DiagnosticsHelper.TraceInformation("ElasticWorkerRole OnStop() called", "Information");
 
             if (_process != null)
             {
@@ -129,14 +126,7 @@ namespace VirtoSoftware.ElasticSearch
 
             if (_elastic != null)
             {
-                try
-                {
-                    _elastic.Unmount();
-                }
-                catch (Exception ex) {
-                    Trace.TraceError(ex.Message + " " + ex.StackTrace);
-                    Trace.Flush();
-                }
+                _elastic.Dispose();
             }
 
             base.OnStop();

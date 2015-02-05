@@ -255,7 +255,7 @@ INSERT INTO [EmailTemplate] ([EmailTemplateId],[Name],[Type],[Body],[DefaultLang
   </xsl:for-each>
   </xsl:template>
 </xsl:stylesheet>',N'en-US',N'Case created notification email',N'20130503 12:18:57.587',N'20130503 10:47:43.207',N'EmailTemplate');
-INSERT INTO [EmailTemplate] ([EmailTemplateId],[Name],[Type],[Body],[DefaultLanguageCode],[Subject],[LastModified],[Created],[Discriminator]) VALUES (N'7ba07b86-95e1-4e83-9d6a-365f41cdbd48',N'order-confirmation',N'Xsl',N'<?xml version="1.0" encoding="utf-8"?>
+INSERT INTO [EmailTemplate] ([EmailTemplateId],[Name],[Type],[Body],[DefaultLanguageCode],[Subject],[LastModified],[Created],[Discriminator]) VALUES (N'7ba07b86-95e1-4e83-9d6a-365f41cdbd48',N'order-confirmation-xsl',N'Xsl',N'<?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt">
   <xsl:output method="html" />
   <xsl:template match="/">
@@ -358,7 +358,107 @@ INSERT INTO [EmailTemplate] ([EmailTemplateId],[Name],[Type],[Body],[DefaultLang
       Amount: <xsl:value-of select="//BillingCurrency"/>&#160;<xsl:value-of select="format-number(Amount, ''###,##0.00'')"/>
     </div>
   </xsl:template>
-</xsl:stylesheet>',N'en-US',N'Order confirmation email template',N'20130514 12:22:12.583',N'20130424 12:20:12.767',N'EmailTemplate');
+</xsl:stylesheet>',N'en-US',N'Order confirmation email template',N'20141027 14:46:31.797',N'20130424 12:20:12.767',N'EmailTemplate');
+INSERT INTO [EmailTemplate] ([EmailTemplateId],[Name],[Type],[Body],[DefaultLanguageCode],[Subject],[LastModified],[Created],[Discriminator]) VALUES (N'8c46431a-ceb9-4faa-8cb5-7e9c240a8858',N'order-confirmation',N'Razor',N'@using VirtoCommerce.Foundation.Orders.Model
+@model IDictionary<string, object>
+
+@{
+    Order order = null;
+    if (Model.ContainsKey("order"))
+    {
+        order = Model["order"] as Order;
+    }
+}
+
+<html xmlns:ms="urn:schemas-microsoft-com:xslt">
+<head id="Head1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-16">
+    <style type="text/css">
+        #PurchaseOrder {
+        }
+
+        h1 {
+            font-size: 20px;
+        }
+
+        h2 {
+            font-size: 18px;
+        }
+
+        h3 {
+            font-size: 16px;
+            background-color: #cccccc;
+            padding: 2px 2px 2px 2px;
+        }
+
+        .introduction {
+            padding: 5px 0 0 0;
+        }
+    </style>
+    <title>
+        Order Notification
+    </title>
+</head>
+<body>
+    @if (order != null)
+    {
+        <div id="PurchaseOrder">
+            @order.CustomerName,<br><br>
+
+            Your order with YOUR COMPANY has been completed.<br><br>
+            We thank you for your business.<br><br><h1>**Thanks for ordering</h1>
+            <div class="introduction">
+                We thank you for your business
+            </div>
+            <h1>**YOUR ORDER SUMMARY</h1>
+            Order Number: @order.TrackingNumber<br>
+            Status: @order.Status<br>
+            Name: @order.CustomerName<br>
+            Email: <a href="mailto:@order.OrderAddresses.First(x=>x.OrderAddressId == order.AddressId).Email">
+                @order.OrderAddresses.First(x => x.OrderAddressId == order.AddressId).Email
+            </a>
+            <div class="OrderForms">
+                <h2>Products Purchased:</h2>
+                <div class="OrderForm">
+                    <div class="OrderForms">
+                        <h3>Line Items</h3>
+                        @foreach (var item in order.OrderForms.SelectMany(x => x.LineItems))
+                        {
+                            <div class="LineItem">
+                                @item.Quantity @item.DisplayName - @StoreHelper.FormatCurrency(item.PlacedPrice, order.BillingCurrency) each
+                            </div>
+                        }
+                        <h3>Payments</h3>
+                        <div class="Payment">
+                            @foreach (var p in order.OrderForms.SelectMany(x => x.Payments))
+                            {
+                                @:Payment Method: @p.PaymentMethodName<br />
+                                @:Amount: @StoreHelper.FormatCurrency(p.Amount, order.BillingCurrency)
+                        }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h3>Order Summary</h3>
+            <div class="OrderSummary">
+                Sub Total: @StoreHelper.FormatCurrency(order.Subtotal, order.BillingCurrency)<br>
+                Handling Total: @StoreHelper.FormatCurrency(order.HandlingTotal, order.BillingCurrency)<br>
+                Shipping Total: @StoreHelper.FormatCurrency(order.ShippingTotal, order.BillingCurrency)<br>
+                Total Tax: @StoreHelper.FormatCurrency(order.TaxTotal, order.BillingCurrency)<br>
+                TOTAL: @StoreHelper.FormatCurrency(order.Total, order.BillingCurrency)<br>
+            </div>
+            <h1>**SUPPORT AND ASSISTANCE</h1>
+            <div class="Footer">
+                If you need further assistance or have any other questions, feel free to contact us as follows:<br><br><strong>Support e-mail:</strong><a href="mailto:support@yourcompany.com">support@yourcompany.com</a><br><br>
+                For more information on YourCompany and our products and services, please visit
+                <a href="http://www.yourcompany.com">http://www.yourcompany.com</a>. <br><br>
+                Regards,<br> Your Company.
+            </div>
+        </div>
+
+    }
+</body>
+</html>',N'en-US',N'Order is confirmed',N'20141027 15:21:40.507',N'20141027 14:43:28.600',N'EmailTemplate');
 INSERT INTO [EmailTemplate] ([EmailTemplateId],[Name],[Type],[Body],[DefaultLanguageCode],[Subject],[LastModified],[Created],[Discriminator]) VALUES (N'8cd4d85d-9fad-47ad-9689-d179cd29ad52',N'case-public-reply',N'Xsl',N'<?xml version="1.0" encoding="utf-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ms="urn:schemas-microsoft-com:xslt">
   <xsl:output method="html" />

@@ -50,7 +50,7 @@
 </script>
 
 <div id="temp_variation_properties"style="display: none;">
-    @{ Html.RenderPartial("ItemProperties", Model.CatalogItem); }
+    @Html.DisplayFor(m => m.CatalogItem.Properties)
 </div>
 
 <div id="temp_price"style="display: none;">

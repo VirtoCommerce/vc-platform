@@ -29,10 +29,6 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing
         /// The language regex
         /// </summary>
         public const string LanguageRegex = "[a-z]{2}(-[A-Z]{2})?";
-        /// <summary>
-        /// The skip seo decode key
-        /// </summary>
-        public const string SkipSeoDecodeKey = "SkipSeoDecodeKey";
 
         /// <summary>
         /// Gets the item route. {lang}/{store}/{category}/{item}

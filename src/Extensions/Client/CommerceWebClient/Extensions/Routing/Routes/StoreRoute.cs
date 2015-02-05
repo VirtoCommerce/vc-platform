@@ -38,38 +38,64 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
 
         public override VirtualPathData GetVirtualPath(RequestContext requestContext, RouteValueDictionary values)
         {
-            if (!values.ContainsKey(Constants.Language))
-            {
-                values.Add(Constants.Language,
-                            StoreHelper.CustomerSession.Language ??
-                            StoreHelper.StoreClient.GetCurrentStore().DefaultLanguage);
-            }
-
             if (!values.ContainsKey(Constants.Store))
             {
                 values.Add(Constants.Store, StoreHelper.CustomerSession.StoreId);
             }
 
-
             var storeId = SettingsHelper.SeoDecode(values[Constants.Store].ToString(), SeoUrlKeywordTypes.Store, values[Constants.Language] as string);
             var store = StoreHelper.StoreClient.GetStoreById(storeId);
 
-            //Reset to default language if validation fails
-            if (!IsValidStoreLanguage(store, values[Constants.Language].ToString()))
+            if (!values.ContainsKey(Constants.Language))
             {
+                values.Add(Constants.Language,
+                    StoreHelper.CustomerSession.Language ??
+                    StoreHelper.StoreClient.GetCurrentStore().DefaultLanguage);
+            }
+
+            if (store != null && !IsValidStoreLanguage(store, values[Constants.Language].ToString()))
+            {
+                //Reset to default language if validation fails
                 values[Constants.Language] = store.DefaultLanguage;
             }
 
-            if (store != null && (!string.IsNullOrEmpty(store.Url) || !string.IsNullOrEmpty(store.SecureUrl)))
+            var isLanguageNeeded = IsLanguageNeeded(store);
+            var isStoreNeeded = IsStoreNeeded(store);
+
+
+            if (!isStoreNeeded || !isLanguageNeeded)
             {
                 //Need to be in lock to make sure other thread does not change originalUrl in this block
                 lock (thisLock)
                 {
-                    var originalUrl = Url;
+                    var modifiedUrl = Url;
 
                     //If for request store URL is used do not show it in path
-                    Url = Url.Replace(string.Format("/{{{0}}}", Constants.Store), string.Empty);
-                    values.Remove(Constants.Store);
+                    if (!isStoreNeeded)
+                    {
+                        modifiedUrl = modifiedUrl.Replace(string.Format("/{{{0}}}", Constants.Store), string.Empty);
+                        values.Remove(Constants.Store);
+                    }
+                    else
+                    {
+                        EncodeVirtualPath(requestContext, values, SeoUrlKeywordTypes.Store);
+                    }
+
+                    if (!isLanguageNeeded)
+                    {
+                        modifiedUrl = modifiedUrl.Replace(string.Format("{{{0}}}", Constants.Language), string.Empty);
+                        values.Remove(Constants.Language);
+                    }
+
+                    //The route URL cannot start with a '/' or '~' character and it cannot contain a '?' character.
+                    if (modifiedUrl.StartsWith("/") || modifiedUrl.StartsWith("~"))
+                    {
+                        modifiedUrl = modifiedUrl.Substring(1, modifiedUrl.Length - 1);
+                    }
+
+                    var originalUrl = Url;
+
+                    Url = modifiedUrl;
 
                     var retVal = base.GetVirtualPath(requestContext, values);
 
@@ -274,6 +300,40 @@ namespace VirtoCommerce.Web.Client.Extensions.Routing.Routes
             return Constraints == null || Constraints.All(constraintsItem => ProcessConstraint(httpContext, constraintsItem.Value, constraintsItem.Key, values, routeDirection));
         }
 
+        protected  virtual bool IsLanguageNeeded(Store dbStore)
+        {
+            if (dbStore != null)
+            {
+                return dbStore.Languages.Count > 1;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Returns true if there is only not closed store or current store override url
+        /// </summary>
+        /// <param name="dbStore"></param>
+        /// <returns></returns>
+        protected virtual bool IsStoreNeeded(Store dbStore)
+        {
+            if (StoreHelper.StoreClient.GetStores().Count(x => x.StoreState != (int)StoreState.Closed) <= 1)
+            {
+                return false;
+            }
+
+            if (dbStore != null)
+            {
+                return string.IsNullOrEmpty(dbStore.Url) && string.IsNullOrEmpty(dbStore.SecureUrl);
+            }
+
+            return true;
+        }
+        /// <summary>
+        /// Returns true if store has only one available language
+        /// </summary>
+        /// <param name="dbStore"></param>
+        /// <param name="lang"></param>
+        /// <returns></returns>
         private bool IsValidStoreLanguage(Store dbStore, string lang)
         {
             try

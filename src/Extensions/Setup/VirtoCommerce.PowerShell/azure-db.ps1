@@ -94,9 +94,9 @@ Function run-database-scripts
 #Write-Output "Running Azure Imports"
 Import-AzurePublishSettingsFile $publishSettingsFile
 
-Set-AzureSubscription -DefaultSubscription $selectedSubscription
+#Set-AzureSubscription -DefaultSubscription $selectedSubscription
 
-##Set-AzureSubscription -CurrentStorageAccount $storageAccountName -SubscriptionName $selectedSubscription
+Set-AzureSubscription -SubscriptionName $selectedSubscription
 
 # Clear out any previous Windows Azure subscription details in the current context (just to be safe).
 # Select-AzureSubscription -Clear

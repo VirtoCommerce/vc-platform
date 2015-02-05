@@ -9,13 +9,13 @@ using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 using System.Xml.Xsl;
-using DotNetOpenAuth.OpenId.Extensions.SimpleRegistration;
 using VirtoCommerce.Foundation.AppConfig;
 using VirtoCommerce.Foundation.AppConfig.Model;
 using VirtoCommerce.Foundation.AppConfig.Repositories;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Frameworks.Templates;
+using VirtoCommerce.Web.Client.Extensions;
 
 namespace VirtoCommerce.Web.Client.Services.Templates
 {
@@ -126,6 +126,9 @@ namespace VirtoCommerce.Web.Client.Services.Templates
 					case EmailTemplateTypes.Html:
 						returnMessage.Body = ProcessHtmlTemplate(templateBody, context);
 						break;
+                    case EmailTemplateTypes.Razor:
+                        returnMessage.Body = ProcessRazorTemplate(templateBody, context);
+                        break;
 					case EmailTemplateTypes.Text:
 						returnMessage.Body = ProcessTextTemplate(templateBody, context);
 						break;
@@ -138,6 +141,18 @@ namespace VirtoCommerce.Web.Client.Services.Templates
 
 			return returnMessage;
 		}
+
+        /// <summary>
+        /// Processes the razor template.
+        /// </summary>
+        /// <param name="templateBody">The template body.</param>
+        /// <param name="context">The context.</param>
+        /// <returns></returns>
+        /// <exception cref="System.NotImplementedException"></exception>
+        private string ProcessRazorTemplate(string templateBody, IDictionary<string, object> context)
+        {
+            return ViewRenderer.RenderTemplate(templateBody, context);
+        }
 
         /// <summary>
         /// Processes the text template.
@@ -301,4 +316,7 @@ namespace VirtoCommerce.Web.Client.Services.Templates
 			}
 		}
 	}
+
+
+    
 }

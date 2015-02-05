@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using VirtoCommerce.PowerShell.DatabaseSetup;
 using VirtoCommerce.Foundation.Data.Security;
@@ -13,15 +14,15 @@ namespace VirtoCommerce.PowerShell.Security
         protected override void Seed(EFSecurityRepository context)
         {
             base.Seed(context);
-            CreateSimpleMembership(context);
+            CreateAspNetSecurity(context);
 
             CreatePermissions(context);
             CreateRoles(context);
         }
 
-        private void CreateSimpleMembership(EFSecurityRepository context)
+        private void CreateAspNetSecurity(EFSecurityRepository context)
         {
-            RunCommand(context, "SimpleMembership.sql", "Security");
+            RunCommand(context, "AspNetIdentity.sql", "Security");
         }
 
         private void CreatePermissions(EFSecurityRepository client)

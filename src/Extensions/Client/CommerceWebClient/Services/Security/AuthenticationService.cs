@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.ServiceModel;
+using System.Threading.Tasks;
+using Microsoft.AspNet.Identity.Owin;
 using VirtoCommerce.Foundation.Frameworks;
-using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Security;
 using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.Foundation.Security.Repositories;
@@ -24,7 +25,7 @@ namespace VirtoCommerce.Web.Client.Services.Security
         /// <summary>
         /// The membership provider
         /// </summary>
-        protected IUserSecurity MembershipProvider;
+        protected IUserIdentitySecurity MembershipProvider;
         /// <summary>
         /// The security repository
         /// </summary>
@@ -37,7 +38,7 @@ namespace VirtoCommerce.Web.Client.Services.Security
         /// </summary>
         /// <param name="repository">The repository.</param>
         /// <param name="membershipProvider">The membership provider.</param>
-        public AuthenticationService(ISecurityRepository repository, IUserSecurity membershipProvider)
+        public AuthenticationService(ISecurityRepository repository, IdentityUserSecurity membershipProvider)
         {
             MembershipProvider = membershipProvider;
             SecurityRepository = repository;
@@ -51,11 +52,11 @@ namespace VirtoCommerce.Web.Client.Services.Security
         /// <param name="password">The password.</param>
         /// <param name="scope">The scope.</param>
         /// <returns>System.String.</returns>
-        public string AuthenticateUser(string userName, string password, Uri scope)
+        public async Task<string> AuthenticateUserAsync(string userName, string password, Uri scope)
         {
             string token = null;
 
-            if (MembershipProvider.Login(userName, password))
+            if (await MembershipProvider.LoginAsync(userName, password) == SignInStatus.Success)
             {
                 Account account;
                 // now check authorization, only administrators and site administrators can access this service                

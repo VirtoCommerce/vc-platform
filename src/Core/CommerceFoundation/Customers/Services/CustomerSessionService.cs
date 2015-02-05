@@ -20,16 +20,16 @@ namespace VirtoCommerce.Foundation.Customers.Services
         {
             get
             {
-                string key = SESSION_KEY;
+                var key = SESSION_KEY;
 
                 // Persist in thread
                 if (HttpContext.Current == null)
                 {
-                    object ctxThread = Thread.GetData(Thread.GetNamedDataSlot(key));
+                    var ctxThread = Thread.GetData(Thread.GetNamedDataSlot(key));
                     if (ctxThread != null)
                         return (CustomerSession)ctxThread;
 
-                    CustomerSession ctx = new CustomerSession();
+                    var ctx = new CustomerSession();
                     Thread.SetData(Thread.GetNamedDataSlot(key), ctx);
                     return ctx;
                 }
@@ -37,7 +37,7 @@ namespace VirtoCommerce.Foundation.Customers.Services
                 // Persist in HttpContext
                 if (HttpContext.Current.Items[key] == null)
                 {
-                    CustomerSession ctx = new CustomerSession();
+                    var ctx = new CustomerSession();
                     HttpContext.Current.Items.Add(key, ctx);
                     return ctx;
                 }

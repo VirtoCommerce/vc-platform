@@ -1770,7 +1770,7 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
             {
                 if (
                     (CaseDetailViewModel as ITagControlExtended<Account>).CollectionFromTagControl.All(
-                        i => (i.InnerItem as Account).AccountId != int.Parse(ccItem.AccountId)))
+                        i => (i.InnerItem as Account).AccountId != ccItem.AccountId))
                 {
                     InnerItem.CaseCc.Remove(ccItem);
                     Repository.Attach(ccItem);
@@ -1781,9 +1781,9 @@ namespace VirtoCommerce.ManagementClient.Customers.ViewModel.Implementations
             //add new values
             foreach (var ccItem in (CaseDetailViewModel as ITagControlExtended<Account>).CollectionFromTagControl)
             {
-                if (_originalItem.CaseCc.All(a => int.Parse(a.AccountId) != (ccItem.InnerItem as Account).AccountId))
+                if (_originalItem.CaseCc.All(a => a.AccountId != (ccItem.InnerItem as Account).AccountId))
                 {
-                    if ((ccItem.InnerItem as Account).AccountId != 0)
+                    if (!string.IsNullOrWhiteSpace((ccItem.InnerItem as Account).AccountId))
                     {
                         CaseCC ccToAdd = new CaseCC();
                         ccToAdd.AccountId = (ccItem.InnerItem as Account).AccountId.ToString();

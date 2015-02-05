@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.IO;
-using System.Linq;
-using System.Web;
-using System.Web.Hosting;
-using System.Web.Mvc;
-using FunctionalTests.Catalogs;
+﻿using FunctionalTests.Catalogs;
 using FunctionalTests.TestHelpers;
 using Microsoft.Practices.ServiceLocation;
 using Microsoft.Practices.Unity;
@@ -14,8 +6,18 @@ using Microsoft.Practices.Unity.Mvc;
 using Moq;
 using MvcSiteMapProvider;
 using MvcSiteMapProvider.Loader;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.IO;
+using System.Linq;
+using System.Web;
+using System.Web.Hosting;
+using System.Web.Mvc;
 using VirtoCommerce.Caching.HttpCache;
 using VirtoCommerce.Client;
+using VirtoCommerce.Client.Globalization;
+using VirtoCommerce.Client.Globalization.Repository;
 using VirtoCommerce.Client.Orders.StateMachines;
 using VirtoCommerce.Foundation.AppConfig.Factories;
 using VirtoCommerce.Foundation.AppConfig.Model;
@@ -32,6 +34,7 @@ using VirtoCommerce.Foundation.Customers.Factories;
 using VirtoCommerce.Foundation.Customers.Repositories;
 using VirtoCommerce.Foundation.Customers.Services;
 using VirtoCommerce.Foundation.Data.AppConfig;
+using VirtoCommerce.Foundation.Data.AppConfig.Services;
 using VirtoCommerce.Foundation.Data.Asset;
 using VirtoCommerce.Foundation.Data.Catalogs;
 using VirtoCommerce.Foundation.Data.Customers;
@@ -92,17 +95,13 @@ using VirtoCommerce.PowerShell.DatabaseSetup;
 using VirtoCommerce.Search.Index;
 using VirtoCommerce.Search.Providers.Elastic;
 using VirtoCommerce.Web.Client;
-using VirtoCommerce.Client.Globalization;
-using VirtoCommerce.Client.Globalization.Repository;
 using VirtoCommerce.Web.Client.Caching;
 using VirtoCommerce.Web.Client.Caching.Interfaces;
-using VirtoCommerce.Web.Client.Security;
 using VirtoCommerce.Web.Client.Services.Assets;
 using VirtoCommerce.Web.Client.Services.Cache;
 using VirtoCommerce.Web.Client.Services.Emails;
 using VirtoCommerce.Web.Client.Services.Listeners;
 using VirtoCommerce.Web.Client.Services.Security;
-using VirtoCommerce.Web.Client.Services.Sequences;
 using VirtoCommerce.Web.Client.Services.Templates;
 using VirtoCommerce.Web.Virto.Helpers;
 using VirtoCommerce.Web.Virto.Helpers.Payments;
@@ -529,10 +528,9 @@ namespace UI.FrontEnd.FunctionalTests
 			container.RegisterType<ISecurityEntityFactory, SecurityEntityFactory>(
 				new ContainerControlledLifetimeManager());
 			container.RegisterType<ISecurityRepository, EFSecurityRepository>();
-			container.RegisterType<IUserSecurity, WebUserSecurity>();
+            container.RegisterType<IUserIdentitySecurity, IdentityUserSecurity>();
 			container.RegisterType<IAuthenticationService, AuthenticationService>();
 			container.RegisterType<ISecurityService, SecurityService>();
-			container.RegisterType<IOAuthWebSecurity, OAuthWebSecurityWrapper>();
 
 			#endregion
 
@@ -561,7 +559,6 @@ namespace UI.FrontEnd.FunctionalTests
 			container.RegisterType<OrderClient>();
 			container.RegisterType<DisplayTemplateClient>();
 			container.RegisterType<SettingsClient>();
-			container.RegisterType<SequencesClient>();
 			container.RegisterType<IPaymentOption, CreditCardOption>("creditcard");
 
 			#endregion

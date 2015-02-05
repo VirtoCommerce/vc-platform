@@ -78,7 +78,12 @@ namespace VirtoCommerce.ManagementClient.Fulfillment.Services
 			throw new NotImplementedException();
 		}
 
-		#endregion
+	    public void Refresh(IEnumerable collection)
+	    {
+	        throw new NotImplementedException();
+	    }
+
+	    #endregion
 
 		#region IDisposable Members
 

@@ -43,7 +43,7 @@ namespace VirtoCommerce.Web
 
                 MvcSiteMapProviderConfig.Register(DependencyResolver.Current);
                
-                AuthConfig.RegisterAuth();
+                //AuthConfig.RegisterAuth();
 
                 ModelBinders.Binders[typeof (SearchParameters)] = new SearchParametersBinder();
                 ModelBinders.Binders[typeof(CategoryPathModel)] = new CategoryPathModelBinder();

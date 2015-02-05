@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.ComponentModel.DataAnnotations;
 using System.Configuration;
 using System.Data.Services.Client;
@@ -102,7 +103,12 @@ namespace VirtoCommerce.Foundation.Data
 			return CreateQuery<T>(ResolveEntitySetName(typeof(T)));
 		}
 
-		#endregion
+	    public void Refresh(IEnumerable collection)
+	    {
+	        throw new NotImplementedException();
+	    }
+
+	    #endregion
 
 		#region IUnitOfWork Members
 

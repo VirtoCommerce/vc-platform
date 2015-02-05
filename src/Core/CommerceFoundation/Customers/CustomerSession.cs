@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Security.Cryptography;
 using System.Text;
 using System.Web;
+using System.Web.Security;
 using VirtoCommerce.Foundation.Frameworks.Tagging;
 using System.Collections;
 
@@ -379,7 +379,7 @@ namespace VirtoCommerce.Foundation.Customers
         public static string EncryptCookie(string value)
         {
             var plainBytes = Encoding.UTF8.GetBytes(value);
-            var encryptedBytes = ProtectedData.Protect(plainBytes, null, DataProtectionScope.LocalMachine);
+            var encryptedBytes = MachineKey.Protect(plainBytes, "Cookie protection");
             return Convert.ToBase64String(encryptedBytes);
         }
 
@@ -388,8 +388,8 @@ namespace VirtoCommerce.Foundation.Customers
             try
             {
                 var encryptedBytes = Convert.FromBase64String(value);
-                var decryptedBytes = ProtectedData.Unprotect(encryptedBytes, null, DataProtectionScope.LocalMachine);
-                return Encoding.UTF8.GetString(decryptedBytes);
+                var decryptedBytes = MachineKey.Unprotect(encryptedBytes, "Cookie protection");
+                return decryptedBytes != null ? Encoding.UTF8.GetString(decryptedBytes) : value;
             }
             catch
             {

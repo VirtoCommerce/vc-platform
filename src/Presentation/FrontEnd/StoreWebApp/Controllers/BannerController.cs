@@ -16,6 +16,11 @@ namespace VirtoCommerce.Web.Controllers
 		/// </summary>
         private readonly DynamicContentClient _contentHelper;
 
+	    public BannerController()
+	    {
+	        
+	    }
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="BannerController"/> class.
 		/// </summary>

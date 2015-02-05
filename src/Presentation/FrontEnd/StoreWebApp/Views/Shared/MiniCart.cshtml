@@ -21,10 +21,10 @@
         </div>
     </div>
     <div class="buttons clearfix">
-        <button onclick="$.open('@Url.Action("Index", "Cart")')">
+        <button onclick="$.open('@Url.Action("Index", "Cart")','_blank')">
             <span>@("View cart".Localize())</span>
         </button>
-        <button onclick="$.open('@Url.Action("Index", "Checkout")')">
+        <button onclick="$.open('@Url.Action("Index", "Checkout")', '_blank')">
             <span>@("Continue to checkout".Localize())</span>
         </button>
     </div>  

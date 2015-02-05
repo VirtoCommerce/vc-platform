@@ -22,6 +22,7 @@ using VirtoCommerce.Foundation.Orders.Repositories;
 using VirtoCommerce.Foundation.Orders.Services;
 using VirtoCommerce.Foundation.Search.Services;
 using VirtoCommerce.Web.Client.Extensions;
+using VirtoCommerce.Foundation.Frameworks.Sequences;
 
 namespace VirtoCommerce.Web.Client.Helpers
 {
@@ -103,9 +104,9 @@ namespace VirtoCommerce.Web.Client.Helpers
         /// Gets the sequences client.
         /// </summary>
         /// <value>The sequences client.</value>
-        public static SequencesClient SequencesClient
+        public static ISequenceService SequencesService
         {
-            get { return DependencyResolver.Current.GetService<SequencesClient>(); }
+            get { return DependencyResolver.Current.GetService<ISequenceService>(); }
         }
 
         /// <summary>
@@ -303,7 +304,7 @@ namespace VirtoCommerce.Web.Client.Helpers
             order.CustomerName = customerName;
             order.Status = "Pending";
             order.Name = "Default";
-            order.TrackingNumber = SequencesClient.GenerateNext(typeof(Order).FullName);
+            order.TrackingNumber = SequencesService.GetNext(typeof(Order).FullName);
 
             foreach (var newOf in order.OrderForms)
             {
@@ -568,6 +569,7 @@ namespace VirtoCommerce.Web.Client.Helpers
             lineItem.MaxQuantity = item.MaxQuantity;
             lineItem.MinQuantity = item.MinQuantity;
             lineItem.Quantity = quantity;
+            lineItem.Weight = item.Weight;
             lineItem.Catalog = CustomerSession.CatalogId;
             lineItem.FulfillmentCenterId = StoreHelper.StoreClient.GetCurrentStore().FulfillmentCenterId;
             //lineItem.CatalogOutline = CatalogOutlineBuilder.BuildCategoryOutline(CatalogClient.CatalogRepository, CustomerSession.CatalogId, item);

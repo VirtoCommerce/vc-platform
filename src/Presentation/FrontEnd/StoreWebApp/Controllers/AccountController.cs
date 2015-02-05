@@ -1,9 +1,12 @@
-﻿using System.Globalization;
+﻿using System.Threading.Tasks;
+using System.Web;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security;
 using Omu.ValueInjecter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Transactions;
 using System.Web.Mvc;
 using VirtoCommerce.Client;
 using VirtoCommerce.Client.Globalization;
@@ -13,7 +16,7 @@ using VirtoCommerce.Foundation.Orders.Model;
 using VirtoCommerce.Foundation.Orders.Services;
 using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.Web.Client.Helpers;
-using VirtoCommerce.Web.Client.Security;
+using VirtoCommerce.Web.Client.Security.Identity.Configs;
 using VirtoCommerce.Web.Client.Services.Security;
 using VirtoCommerce.Web.Models;
 using VirtoCommerce.Web.Virto.Helpers;
@@ -36,10 +39,6 @@ namespace VirtoCommerce.Web.Controllers
         /// </summary>
         private readonly CountryClient _countryClient;
         /// <summary>
-        /// The _o authentication security
-        /// </summary>
-        private readonly IOAuthWebSecurity _oAuthSecurity;
-        /// <summary>
         /// The _order client
         /// </summary>
         private readonly OrderClient _orderClient;
@@ -59,7 +58,11 @@ namespace VirtoCommerce.Web.Controllers
         /// <summary>
         /// The _web security
         /// </summary>
-        private readonly IUserSecurity _webSecurity;
+        private readonly IdentityUserSecurity _identitySecurity;
+
+        private IAuthenticationManager _authenticationManager;
+        private ApplicationSignInManager _signInManager;
+        private ApplicationUserManager _userManager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AccountController" /> class.
@@ -69,16 +72,14 @@ namespace VirtoCommerce.Web.Controllers
         /// <param name="countryClient">The country client.</param>
         /// <param name="orderClient">The order client.</param>
         /// <param name="settingsClient">The settings client.</param>
-        /// <param name="webSecurity">The web security.</param>
-        /// <param name="oAuthSecurity">The o authentication security.</param>
+        /// <param name="identitySecurity">The web security.</param>
         /// <param name="orderService">The order service.</param>
         public AccountController(CatalogClient catalogClient,
                                  UserClient userClient,
                                  CountryClient countryClient,
                                  OrderClient orderClient,
                                  SettingsClient settingsClient,
-                                 IUserSecurity webSecurity,
-                                 IOAuthWebSecurity oAuthSecurity,
+                                 IdentityUserSecurity identitySecurity,
                                  IOrderService orderService)
         {
             _catalogClient = catalogClient;
@@ -86,9 +87,44 @@ namespace VirtoCommerce.Web.Controllers
             _countryClient = countryClient;
             _orderClient = orderClient;
             _settingsClient = settingsClient;
-            _webSecurity = webSecurity;
-            _oAuthSecurity = oAuthSecurity;
+            _identitySecurity = identitySecurity;
             _orderService = orderService;
+        }
+
+        public ApplicationSignInManager SignInManager
+        {
+            get
+            {
+                return _signInManager ?? (_signInManager = System.Web.HttpContext.Current.GetOwinContext().Get<ApplicationSignInManager>());
+            }
+            private set
+            {
+                _signInManager = value;
+            }
+        }
+
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? (_userManager = System.Web.HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>());
+            }
+            private set
+            {
+                _userManager = value;
+            }
+        }
+
+        public IAuthenticationManager AuthenticationManager
+        {
+            get
+            {
+                return _authenticationManager ?? (_authenticationManager = System.Web.HttpContext.Current.GetOwinContext().Authentication);
+            }
+            private set
+            {
+                _authenticationManager = value;
+            }
         }
 
         #region Authentication Methods
@@ -129,17 +165,17 @@ namespace VirtoCommerce.Web.Controllers
         /// <returns>ActionResult.</returns>
         [HttpPost]
         [AllowAnonymous]
-        public ActionResult LogOnAsync(LogOnModel model, string returnUrl)
+        public async Task<ActionResult> LogOnAsync(LogOnModel model, string returnUrl)
         {
             string errorMessage = null;
-            if (ModelState.IsValid && _webSecurity.Login(model.UserName, model.Password, model.RememberMe))
+            if (ModelState.IsValid && await _identitySecurity.LoginAsync(model.UserName, model.Password, model.RememberMe) == SignInStatus.Success)
             {
                 if (StoreHelper.IsUserAuthorized(model.UserName, out errorMessage))
                 {
                     if (Url.IsLocalUrl(returnUrl) && returnUrl.Length > 1 && returnUrl.StartsWith("/")
                         && !returnUrl.StartsWith("//") && !returnUrl.StartsWith("/\\"))
                     {
-                        UserHelper.OnPostLogon(model.UserName);
+                        await UserHelper.OnPostLogonAsync(model.UserName);
                         return Redirect(returnUrl);
                     }
                     var res = new JavaScriptResult { Script = "location.reload();" };
@@ -161,26 +197,27 @@ namespace VirtoCommerce.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult LogOn(LogOnModel model, string returnUrl)
+        public async Task<ActionResult> LogOn(LogOnModel model, string returnUrl)
         {
             string errorMessage = null;
             if (ModelState.IsValid)
             {
                 if (string.IsNullOrEmpty(model.ImpersonatedUserName))
                 {
-                    if (_webSecurity.Login(model.UserName, model.Password, model.RememberMe) && StoreHelper.IsUserAuthorized(model.UserName, out errorMessage))
+                    if (await _identitySecurity.LoginAsync(model.UserName, model.Password, model.RememberMe) == SignInStatus.Success && StoreHelper.IsUserAuthorized(model.UserName, out errorMessage))
                     {
-                        UserHelper.OnPostLogon(model.UserName);
+                        await UserHelper.OnPostLogonAsync(model.UserName);
                         return RedirectToLocal(returnUrl);
                     }
                 }
                 else
                 {
-                    if (_webSecurity.LoginAs(model.ImpersonatedUserName, model.UserName, model.Password, out errorMessage, model.RememberMe)
+                    errorMessage = await _identitySecurity.LoginAsAsync(model.ImpersonatedUserName, model.UserName, model.Password, model.RememberMe);
+                    if (string.IsNullOrEmpty(errorMessage)
                         && StoreHelper.IsUserAuthorized(model.UserName, out errorMessage)
                         && StoreHelper.IsUserAuthorized(model.ImpersonatedUserName, out errorMessage))
                     {
-                        UserHelper.OnPostLogon(model.ImpersonatedUserName, model.UserName);
+                        await UserHelper.OnPostLogonAsync(model.ImpersonatedUserName, model.UserName);
                         return RedirectToLocal(returnUrl);
                     }
                 }
@@ -203,7 +240,7 @@ namespace VirtoCommerce.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult LogOff()
         {
-            _webSecurity.Logout();
+            _identitySecurity.Logout();
             return RedirectToAction("Index", "Home");
         }
 
@@ -424,7 +461,7 @@ namespace VirtoCommerce.Web.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(ChangeAccountInfoModel model)
+        public async Task<ActionResult> Edit(ChangeAccountInfoModel model)
         {
             if (ModelState.IsValid)
             {
@@ -436,7 +473,7 @@ namespace VirtoCommerce.Web.Controllers
                 try
                 {
                     changePasswordSucceeded = !needToChangePassword ||
-                                              _webSecurity.ChangePassword(UserHelper.CustomerSession.Username, model.OldPassword,
+                                              await _identitySecurity.ChangePasswordAsync(UserHelper.CustomerSession.Username, model.OldPassword,
                                                                           model.NewPassword);
                 }
                 catch (Exception)
@@ -832,11 +869,11 @@ namespace VirtoCommerce.Web.Controllers
         /// </summary>
         /// <returns>ActionResult.</returns>
         [AllowAnonymous]
-        public ActionResult Register()
+        public async Task<ActionResult> Register()
         {
             //Can be set externally from Checkout
             var model = TempData["RegisterModel"] as RegisterModel;
-            return model != null ? Register(model) : View();
+            return model != null ? await Register(model) : View();
         }
 
         /// <summary>
@@ -852,9 +889,9 @@ namespace VirtoCommerce.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult RegisterAsync(RegisterModel model)
+        public async Task<ActionResult> RegisterAsync(RegisterModel model)
         {
-            Register(model);
+            await Register(model);
             return ModelState.IsValid ?
                 (ActionResult)RedirectToAction("Index", "Checkout") :
                 View("Register", model);
@@ -868,22 +905,22 @@ namespace VirtoCommerce.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult Register(RegisterModel model)
+        public async Task<ActionResult> Register(RegisterModel model)
         {
             if (ModelState.IsValid)
             {
-                string error, token;
-
                 var requireConfirmation = StoreHelper.GetSettingValue("RequireAccountConfirmation", false);
 
-                if (!UserHelper.Register(model, requireConfirmation, out error, out token))
+                var result = await UserHelper.RegisterAsync(model, requireConfirmation);
+
+                if (!result.IsSuccess)
                 {
-                    ModelState.AddModelError("", error);
+                    ModelState.AddModelError("", result.ErrorMessage);
                 }
                 else if (requireConfirmation)
                 {
 
-                    var linkUrl = Url.Action("ConfirmAccount", "Account", new { token, username = model.Email }, Request.Url.Scheme);
+                    var linkUrl = Url.Action("ConfirmAccount", "Account", new { result.ConfirmationToken, username = model.Email }, Request.Url.Scheme);
 
                     if (UserHelper.SendEmail(linkUrl, string.Format("{0} {1}", model.FirstName, model.LastName),
                         model.Email, "confirm-account",
@@ -910,7 +947,7 @@ namespace VirtoCommerce.Web.Controllers
                 }
                 else
                 {
-                    UserHelper.OnPostLogon(model.Email);
+                    await UserHelper.OnPostLogonAsync(model.Email);
                     return model.ActionResult ?? RedirectToAction("Index", "Home");
                 }
             }
@@ -930,31 +967,103 @@ namespace VirtoCommerce.Web.Controllers
         /// <returns>ActionResult.</returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Disassociate(string provider, string providerUserId)
+        public async Task<ActionResult> Disassociate(string provider, string providerUserId)
         {
-            var ownerAccount = _oAuthSecurity.GetUserName(provider, providerUserId);
+            var ownerAccount = await UserManager.FindByIdAsync(providerUserId);
 
             // Only disassociate the account if the currently logged in user is the owner
-            if (ownerAccount == UserHelper.CustomerSession.Username)
+            if (ownerAccount != null && ownerAccount.UserName == UserHelper.CustomerSession.Username)
             {
-                // Use a transaction to prevent the user from deleting their last login credential
-                using (
-                    var scope = new TransactionScope(TransactionScopeOption.Required,
-                                                     new TransactionOptions
-                                                     {
-                                                         IsolationLevel = IsolationLevel.Serializable
-                                                     }))
+                var hasLocalAccount = await UserManager.HasPasswordAsync(ownerAccount.Id);
+                var logins = await UserManager.GetLoginsAsync(ownerAccount.Id);
+                if (hasLocalAccount || logins.Count > 1)
                 {
-                    var hasLocalAccount = _oAuthSecurity.HasLocalAccount(_webSecurity.GetUserId(UserHelper.CustomerSession.Username));
-                    if (hasLocalAccount || _oAuthSecurity.GetAccountsFromUserName(UserHelper.CustomerSession.Username).Count > 1)
+                    var removeLogin = logins.FirstOrDefault(x => x.ProviderKey == provider);
+                    if (removeLogin != null)
                     {
-                        _oAuthSecurity.DeleteAccount(provider, providerUserId);
-                        scope.Complete();
+                        await UserManager.RemoveLoginAsync(ownerAccount.Id, removeLogin);
                     }
+
                 }
             }
 
             return RedirectToAction("Index");
+        }
+
+        [AllowAnonymous]
+        public async Task<ActionResult> SendCode(string returnUrl)
+        {
+            var userId = await SignInManager.GetVerifiedUserIdAsync();
+            if (userId == null)
+            {
+                return View("Error");
+            }
+            var userFactors = await UserManager.GetValidTwoFactorProvidersAsync(userId);
+            var factorOptions = userFactors.Select(purpose => new SelectListItem { Text = purpose, Value = purpose }).ToList();
+            return View(new SendCodeViewModel { Providers = factorOptions, ReturnUrl = returnUrl });
+        }
+
+        //
+        // POST: /Account/SendCode
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SendCode(SendCodeViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View();
+            }
+
+            // Generate the token and send it
+            if (!await SignInManager.SendTwoFactorCodeAsync(model.SelectedProvider))
+            {
+                return View("Error");
+            }
+            return RedirectToAction("VerifyCode", new { Provider = model.SelectedProvider, model.ReturnUrl });
+        }
+
+        // GET: /Account/VerifyCode
+        [AllowAnonymous]
+        public async Task<ActionResult> VerifyCode(string provider, string returnUrl)
+        {
+            // Require that the user has already logged in via username/password or external login
+            if (!await SignInManager.HasBeenVerifiedAsync())
+            {
+                return View("Error");
+            }
+            var user = await UserManager.FindByIdAsync(await SignInManager.GetVerifiedUserIdAsync());
+            if (user != null)
+            {
+                ViewBag.Status = "For DEMO purposes the current " + provider + " code is: " + await UserManager.GenerateTwoFactorTokenAsync(user.Id, provider);
+            }
+            return View(new VerifyCodeViewModel { Provider = provider, ReturnUrl = returnUrl });
+        }
+
+        //
+        // POST: /Account/VerifyCode
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> VerifyCode(VerifyCodeViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var result = await SignInManager.TwoFactorSignInAsync(model.Provider, model.Code, isPersistent: false, rememberBrowser: model.RememberBrowser);
+            switch (result)
+            {
+                case SignInStatus.Success:
+                    return RedirectToLocal(model.ReturnUrl);
+                case SignInStatus.LockedOut:
+                    return View("Lockout");
+                case SignInStatus.Failure:
+                default:
+                    ModelState.AddModelError("", "Invalid code.");
+                    return View(model);
+            }
         }
 
         //
@@ -971,8 +1080,7 @@ namespace VirtoCommerce.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ExternalLogin(string provider, string returnUrl)
         {
-            return new ExternalLoginResult(_oAuthSecurity, provider,
-                                           Url.Action("ExternalLoginCallback", new { ReturnUrl = returnUrl }));
+            return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
         }
 
         //
@@ -984,33 +1092,30 @@ namespace VirtoCommerce.Web.Controllers
         /// <param name="returnUrl">The return URL.</param>
         /// <returns>ActionResult.</returns>
         [AllowAnonymous]
-        public ActionResult ExternalLoginCallback(string returnUrl)
+        public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
         {
-            var result =
-                _oAuthSecurity.VerifyAuthentication(Url.Action("ExternalLoginCallback", new { ReturnUrl = returnUrl }));
-            if (!result.IsSuccessful)
+            var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
+            if (loginInfo == null)
             {
                 return RedirectToAction("ExternalLoginFailure");
             }
 
-            if (_oAuthSecurity.Login(result.Provider, result.ProviderUserId, createPersistentCookie: false))
+            // Sign in the user with this external login provider if the user already has a login
+            var result = await SignInManager.ExternalSignInAsync(loginInfo, false);
+            switch (result)
             {
-                UserHelper.OnPostLogon(result.UserName);
-                return RedirectToLocal(returnUrl);
+                case SignInStatus.Success:
+                    return RedirectToLocal(returnUrl);
+                case SignInStatus.LockedOut:
+                    return View("Lockout");
+                case SignInStatus.RequiresVerification:
+                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl });
+                default:
+                    // If the user does not have an account, then prompt the user to create an account
+                    ViewBag.ReturnUrl = returnUrl;
+                    ViewBag.ProviderDisplayName = loginInfo.Login.LoginProvider;
+                    return View("ExternalLoginConfirmation", new RegisterExternalLoginModel { Email = loginInfo.Email ?? loginInfo.DefaultUserName });
             }
-
-            if (UserHelper.CustomerSession.IsRegistered)
-            {
-                // If the current user is logged in add the new account
-                _oAuthSecurity.CreateOrUpdateAccount(result.Provider, result.ProviderUserId, UserHelper.CustomerSession.Username);
-                return RedirectToLocal(returnUrl);
-            }
-            // User is new, ask for their desired membership name
-            var loginData = _oAuthSecurity.SerializeProviderUserId(result.Provider, result.ProviderUserId);
-            ViewBag.ProviderDisplayName = _oAuthSecurity.GetOAuthClientData(result.Provider).DisplayName;
-            ViewBag.ReturnUrl = returnUrl;
-            return View("ExternalLoginConfirmation",
-                        new RegisterExternalLoginModel { UserName = result.UserName, ExternalLoginData = loginData });
         }
 
         //
@@ -1025,23 +1130,30 @@ namespace VirtoCommerce.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult ExternalLoginConfirmation(RegisterExternalLoginModel model, string returnUrl)
+        public async Task<ActionResult> ExternalLoginConfirmation(RegisterExternalLoginModel model, string returnUrl)
         {
-            string provider;
-            string providerUserId;
 
-            if (UserHelper.CustomerSession.IsRegistered ||
-                !_oAuthSecurity.TryDeserializeProviderUserId(model.ExternalLoginData, out provider, out providerUserId))
+            var info = await AuthenticationManager.GetExternalLoginInfoAsync();
+
+            if (UserHelper.CustomerSession.IsRegistered || info == null)
             {
                 return RedirectToLocal(returnUrl);
             }
 
             if (ModelState.IsValid)
             {
-                var user = _userClient.GetAccountByUserName(model.UserName.ToLower());
+                var user = _userClient.GetAccountByUserName(model.Email.ToLower());
+                var appUser = await UserManager.FindByNameAsync(model.Email);
+
+                //TODO: there is no guarantee that user is connected by userName
+                if (user != null && appUser == null || user == null && appUser != null ||
+                    user != null && user.AccountId != appUser.Id)
+                {
+                    return View("ExternalLoginFailure");
+                }
 
                 //If user has local account then password must be correct in order to associate it with external account
-                if (user != null && _oAuthSecurity.HasLocalAccount(user.AccountId.ToString(CultureInfo.InvariantCulture)))
+                if (appUser != null && await UserManager.HasPasswordAsync(appUser.Id))
                 {
                     if (user.StoreId != UserHelper.CustomerSession.StoreId)
                     {
@@ -1049,28 +1161,14 @@ namespace VirtoCommerce.Web.Controllers
                         var storeName = store != null ? store.Name : user.StoreId;
                         ModelState.AddModelError("", string.Format("This user name is already registered with store '{0}'. Use different user name or login to store '{0}'.", storeName).Localize());
                     }
-                    else if (string.IsNullOrEmpty(model.NewPassword) || !_webSecurity.Login(model.UserName, model.NewPassword))
+                    else if (string.IsNullOrEmpty(model.NewPassword) || await _identitySecurity.LoginAsync(model.Email, model.NewPassword) != SignInStatus.Success)
                     {
                         ModelState.AddModelError("", "This user name is already used. Use correct password or another user name.".Localize());
                     }
                 }
-                else
+                else if (model.CreateLocalLogin && (string.IsNullOrEmpty(model.NewPassword) || !model.NewPassword.Equals(model.ConfirmPassword)))
                 {
-                    //If there is any extrenal account associated with given user name, then we cannot allow 
-                    //associate any more external logins, because someone could steal account by mapping his own external login
-                    var externalAccounts = _oAuthSecurity.GetAccountsFromUserName(model.UserName);
-
-                    if (externalAccounts.Count > 0)
-                    {
-                        ModelState.AddModelError("", "This user name is already associated with external account. Use different user name.".Localize());
-                    }
-                    else if (model.CreateLocalLogin)
-                    {
-                        if (string.IsNullOrEmpty(model.NewPassword) || !model.NewPassword.Equals(model.ConfirmPassword))
-                        {
-                            ModelState.AddModelError("", "You must specifiy a valid password.".Localize());
-                        }
-                    }
+                    ModelState.AddModelError("", "You must specifiy a valid password.".Localize());
                 }
 
                 if (ModelState.IsValid)
@@ -1082,7 +1180,7 @@ namespace VirtoCommerce.Web.Controllers
                         user = new Account
                         {
                             MemberId = id,
-                            UserName = model.UserName,
+                            UserName = model.Email,
                             StoreId = UserHelper.CustomerSession.StoreId,
                             RegisterType = RegisterType.GuestUser.GetHashCode(),
                             AccountState = AccountState.Approved.GetHashCode()
@@ -1095,29 +1193,30 @@ namespace VirtoCommerce.Web.Controllers
                         _userClient.CreateContact(new Contact
                         {
                             MemberId = id,
-                            FullName = model.UserName
+                            FullName = model.Email
                         });
                     }
-                    //Create internal login
-                    if (model.CreateLocalLogin && !_oAuthSecurity.HasLocalAccount(user.AccountId.ToString(CultureInfo.InvariantCulture)))
+
+                    if (appUser == null)
                     {
-                        _webSecurity.CreateAccount(model.UserName, model.NewPassword);
+                        var result = await _identitySecurity.CreateAccountAsync(model.Email, model.CreateLocalLogin ? model.NewPassword : null);
+                        if (result.Succeeded)
+                        {
+                            appUser = await UserManager.FindByNameAsync(model.Email);
+                            result = await UserManager.AddLoginAsync(appUser.Id, info.Login);
+                            if (result.Succeeded)
+                            {
+                                await SignInManager.SignInAsync(appUser, isPersistent: false, rememberBrowser: false);
+                                await UserHelper.OnPostLogonAsync(model.Email);
+                                return RedirectToLocal(returnUrl);
+                            }
+                        }
+                        AddErrors(result);
                     }
-
-                    //Associate external login with user or create new
-                    _oAuthSecurity.CreateOrUpdateAccount(provider, providerUserId, model.UserName);
-
-                    if (_oAuthSecurity.Login(provider, providerUserId, false))
-                    {
-                        UserHelper.OnPostLogon(model.UserName);
-                        return RedirectToLocal(returnUrl);
-                    }
-
-                    ModelState.AddModelError("", "Failed to login".Localize());
                 }
             }
 
-            ViewBag.ProviderDisplayName = _oAuthSecurity.GetOAuthClientData(provider).DisplayName;
+            ViewBag.ProviderDisplayName = info.Login.LoginProvider;
             ViewBag.ReturnUrl = returnUrl;
             return View(model);
         }
@@ -1145,7 +1244,7 @@ namespace VirtoCommerce.Web.Controllers
         public ActionResult ExternalLoginsList(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
-            return PartialView("_ExternalLoginsListPartial", _oAuthSecurity.RegisteredClientData);
+            return PartialView("_ExternalLoginsListPartial", AuthenticationManager.GetExternalAuthenticationTypes());
         }
 
         /// <summary>
@@ -1155,18 +1254,21 @@ namespace VirtoCommerce.Web.Controllers
         [ChildActionOnly]
         public ActionResult RemoveExternalLogins()
         {
-            var accounts = _oAuthSecurity.GetAccountsFromUserName(UserHelper.CustomerSession.Username);
-            var externalLogins = (from account in accounts
-                                  let clientData = _oAuthSecurity.GetOAuthClientData(account.Provider)
-                                  select new ExternalLogin
-                                  {
-                                      Provider = account.Provider,
-                                      ProviderDisplayName = clientData.DisplayName,
-                                      ProviderUserId = account.ProviderUserId,
-                                  }).ToList();
 
-            ViewBag.ShowRemoveButton = externalLogins.Count > 1 ||
-                                       _oAuthSecurity.HasLocalAccount(_webSecurity.GetUserId(UserHelper.CustomerSession.Username));
+            var externalLogins = new List<ExternalLogin>();
+            var appUser = UserManager.FindByNameAsync(UserHelper.CustomerSession.Username).Result;
+            if (appUser != null)
+            {
+                externalLogins = (UserManager.GetLoginsAsync(appUser.Id).Result)
+                    .Select(x => new ExternalLogin
+                    {
+                        Provider = x.ProviderKey,
+                        ProviderUserId = appUser.Id,
+                        ProviderDisplayName = x.LoginProvider
+                    }).ToList();
+                ViewBag.ShowRemoveButton = externalLogins.Count > 1 || UserManager.HasPasswordAsync(appUser.Id).Result;
+
+            }
             return PartialView("_RemoveExternalLoginsPartial", externalLogins);
         }
 
@@ -1182,7 +1284,7 @@ namespace VirtoCommerce.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult ForgotPassword(ForgotPasswordModel model)
+        public async Task<ActionResult> ForgotPassword(ForgotPasswordModel model)
         {
             if (ModelState.IsValid)
             {
@@ -1204,7 +1306,7 @@ namespace VirtoCommerce.Web.Controllers
                     }
 
                     //Get reset token
-                    var token = _webSecurity.GeneratePasswordResetToken(model.UserName);
+                    var token = await _identitySecurity.GeneratePasswordResetTokenAsync(model.UserName);
 
                     //Collect data
                     var contact = _userClient.GetCustomer(account.MemberId);
@@ -1245,7 +1347,7 @@ namespace VirtoCommerce.Web.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public ActionResult ConfirmAccount(string token, string username)
+        public async Task<ActionResult> ConfirmAccount(string token, string username)
         {
             var account = _userClient.GetAccountByUserName(username, RegisterType.GuestUser);
 
@@ -1253,7 +1355,7 @@ namespace VirtoCommerce.Web.Controllers
             {
                 account.AccountState = AccountState.Approved.GetHashCode();
 
-                if (_webSecurity.ConfirmAccount(token, username))
+                if (await _identitySecurity.ConfirmAccountEmailAsync(token, username))
                 {
                     TempData[GetMessageTempKey(MessageType.Success)] = new[]
                 {
@@ -1274,13 +1376,13 @@ namespace VirtoCommerce.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult ResetPassword(ResetPasswordModel model)
+        public async Task<ActionResult> ResetPassword(ResetPasswordModel model)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    if (_webSecurity.ResetPasswordWithToken(model.Token, model.NewPassword))
+                    if (await _identitySecurity.ResetPasswordWithTokenAsync(model.Token, model.NewPassword, model.Email))
                     {
                         TempData[GetMessageTempKey(MessageType.Success)] = new[] { "Your password has been succesfully changed. You can now login using new password".Localize() };
                         return RedirectToAction("LogOn");
@@ -1403,186 +1505,199 @@ namespace VirtoCommerce.Web.Controllers
 
         #region Company Actions
 
-        public ActionResult CompanyIndex()
-        {
-            return View(_userClient.GetOrganizationsForCurrentUser());
-        }
+        //public ActionResult CompanyIndex()
+        //{
+        //    return View(_userClient.GetOrganizationsForCurrentUser());
+        //}
 
-        public ActionResult CompanyEdit(string companyId)
-        {
-            var userOrg = _userClient.GetOrganizationsForCurrentUser().SingleOrDefault();
-            if (userOrg == null)
-                return RedirectToAction("Index");
+        //public ActionResult CompanyEdit(string companyId)
+        //{
+        //    var userOrg = _userClient.GetOrganizationsForCurrentUser().SingleOrDefault();
+        //    if (userOrg == null)
+        //        return RedirectToAction("Index");
 
-            var model = new CompanyEditModel(userOrg.Name, userOrg.Description);
-            return View(model);
-        }
+        //    var model = new CompanyEditModel(userOrg.Name, userOrg.Description);
+        //    return View(model);
+        //}
 
-        [HttpPost]
-        public ActionResult CompanyEdit(CompanyEditModel o)
-        {
-            var org = _userClient.GetOrganizationsForCurrentUser().SingleOrDefault();
-            org.Name = o.Name;
-            org.Description = o.Description;
-            _userClient.SaveCustomerChanges(org.MemberId);
-            return View();
-        }
+        //[HttpPost]
+        //public ActionResult CompanyEdit(CompanyEditModel o)
+        //{
+        //    var org = _userClient.GetOrganizationsForCurrentUser().SingleOrDefault();
+        //    org.Name = o.Name;
+        //    org.Description = o.Description;
+        //    _userClient.SaveCustomerChanges(org.MemberId);
+        //    return View();
+        //}
 
-        public ActionResult CompanyUsers()
-        {
-            var model = new CompanyUserListModel();
-            model.CurrentOrganization = _userClient.GetOrganizationsForCurrentUser().SingleOrDefault();
-            var list = new List<Account>();
-            return View(new CompanyUserListModel());
-        }
+        //public ActionResult CompanyUsers()
+        //{
+        //    var model = new CompanyUserListModel();
+        //    model.CurrentOrganization = _userClient.GetOrganizationsForCurrentUser().SingleOrDefault();
+        //    var list = new List<Account>();
+        //    return View(new CompanyUserListModel());
+        //}
 
-        public ActionResult CompanyUserNew(string userId)
-        {
-            /*
-            if (!String.IsNullOrEmpty(userId))
-            {
-                var users = UserHelper.GetUserById(userId);
-                if (users != null)
-                {
-                    var model = new CompanyNewUserModel(users);
+        //public ActionResult CompanyUserNew(string userId)
+        //{
+        //    /*
+        //    if (!String.IsNullOrEmpty(userId))
+        //    {
+        //        var users = UserHelper.GetUserById(userId);
+        //        if (users != null)
+        //        {
+        //            var model = new CompanyNewUserModel(users);
 
-                    var list = new List<SelectListItem>();
+        //            var list = new List<SelectListItem>();
 
-                    var userRoles = _userClient.GetAllMemberRoles(userId);
-                    foreach (var role in userRoles)
-                    {
-                        list.Add(new SelectListItem { Text = role.Name, Value = role.RoleId, Selected = false });
-                    }
-                    model.UserRoles = list.ToArray();
-                    var allRoles = _userClient.GetAllRoles();
-                    var list2 = allRoles.Except(userRoles).Select(x => new SelectListItem { Selected = false, Text = x.Name, Value = x.RoleId });
-                    model.AllRoles = list2;
+        //            var userRoles = _userClient.GetAllMemberRoles(userId);
+        //            foreach (var role in userRoles)
+        //            {
+        //                list.Add(new SelectListItem { Text = role.Name, Value = role.RoleId, Selected = false });
+        //            }
+        //            model.UserRoles = list.ToArray();
+        //            var allRoles = _userClient.GetAllRoles();
+        //            var list2 = allRoles.Except(userRoles).Select(x => new SelectListItem { Selected = false, Text = x.Name, Value = x.RoleId });
+        //            model.AllRoles = list2;
 
-                    ViewData["List"] = model.AllRoles;
-                    ViewData["UserRoles"] = model.UserRoles;
-                    return View(model);
-                }
-            }
+        //            ViewData["List"] = model.AllRoles;
+        //            ViewData["UserRoles"] = model.UserRoles;
+        //            return View(model);
+        //        }
+        //    }
 
-            return View();
-             * */
+        //    return View();
+        //     * */
 
-            throw new NotImplementedException();
-        }
+        //    throw new NotImplementedException();
+        //}
 
-        [HttpPost]
-        public ActionResult CompanyUserNew(CompanyNewUserModel model)
-        {
-            /*
-            if (ModelState.IsValid)
-            {
-                var id = Guid.NewGuid();
-                // Attempt to register the user
-                MembershipCreateStatus createStatus;
+        //[HttpPost]
+        //public ActionResult CompanyUserNew(CompanyNewUserModel model)
+        //{
+        //    /*
+        //    if (ModelState.IsValid)
+        //    {
+        //        var id = Guid.NewGuid();
+        //        // Attempt to register the user
+        //        MembershipCreateStatus createStatus;
 
-                if (!String.IsNullOrEmpty(model.Password))
-                {
-                    var user = Membership.CreateUser(model.EMail, model.Password, model.EMail, null, null, true, id, out createStatus);
+        //        if (!String.IsNullOrEmpty(model.Password))
+        //        {
+        //            var user = Membership.CreateUser(model.EMail, model.Password, model.EMail, null, null, true, id, out createStatus);
 
-                    // now create new user member in commerce
-                    var account = new Account();
-                    account.RegisterType = RegisterType.GuestUser.GetHashCode();
-                    account.MemberId = id.ToString();
-                    account.StoreId = UserHelper.CustomerSession.StoreId;
-                    account.AccountState = AccountState.Approved.GetHashCode();
+        //            // now create new user member in commerce
+        //            var account = new Account();
+        //            account.RegisterType = RegisterType.GuestUser.GetHashCode();
+        //            account.MemberId = id.ToString();
+        //            account.StoreId = UserHelper.CustomerSession.StoreId;
+        //            account.AccountState = AccountState.Approved.GetHashCode();
 
-                    var contact = new Contact();
-                    contact.Email = model.EMail;
-                    contact.FirstName = model.FirstName;
-                    contact.LastName = model.LastName;
-                    contact.FullName = String.Format("{0} {1}", contact.FirstName, contact.LastName);
+        //            var contact = new Contact();
+        //            contact.Email = model.EMail;
+        //            contact.FirstName = model.FirstName;
+        //            contact.LastName = model.LastName;
+        //            contact.FullName = String.Format("{0} {1}", contact.FirstName, contact.LastName);
 
-                    var repo = UserHelper.CustomerRepository;
-                    repo.Add(contact);
-                    repo.UnitOfWork.Commit();
+        //            var repo = UserHelper.CustomerRepository;
+        //            repo.Add(contact);
+        //            repo.UnitOfWork.Commit();
 
-                    var repo2 = UserHelper.SecurityRepository;
-                    repo2.Add(account);
-                    repo2.UnitOfWork.Commit();
-					
-                    return RedirectToAction("CompanyUsers");
-                }
-                else
-                {
-                    var u = UserHelper.GetUserById(model.UserId);
-                    var currentOrg = _userClient.GetOrganizationsForCurrentUser().SingleOrDefault();
+        //            var repo2 = UserHelper.SecurityRepository;
+        //            repo2.Add(account);
+        //            repo2.UnitOfWork.Commit();
 
-                    foreach (var assignment in UserHelper.SecurityRepository.RoleAssignments)
-                    {
-                        UserHelper.SecurityRepository.Remove(assignment);
-                    }
+        //            return RedirectToAction("CompanyUsers");
+        //        }
+        //        else
+        //        {
+        //            var u = UserHelper.GetUserById(model.UserId);
+        //            var currentOrg = _userClient.GetOrganizationsForCurrentUser().SingleOrDefault();
 
-                    foreach (string s in model.GetSelectedUserRoles)
-                    {
-                        var assignment = UserHelper.SecurityRepository.RoleAssignments.Where(x => x.RoleId == s).FirstOrDefault();
-                        if (assignment != null)
-                        {
-                            assignment.OrganizationId = currentOrg.MemberId;
-                            assignment.AccountId = u.Account.MemberId;
-                        }
-                    }
+        //            foreach (var assignment in UserHelper.SecurityRepository.RoleAssignments)
+        //            {
+        //                UserHelper.SecurityRepository.Remove(assignment);
+        //            }
 
-                    u.Contact.Email = model.EMail;
-                    u.Contact.FirstName = model.FirstName;
-                    u.Contact.LastName = model.LastName;
+        //            foreach (string s in model.GetSelectedUserRoles)
+        //            {
+        //                var assignment = UserHelper.SecurityRepository.RoleAssignments.Where(x => x.RoleId == s).FirstOrDefault();
+        //                if (assignment != null)
+        //                {
+        //                    assignment.OrganizationId = currentOrg.MemberId;
+        //                    assignment.AccountId = u.Account.MemberId;
+        //                }
+        //            }
 
-                    UserHelper.CustomerRepository.UnitOfWork.Commit();
+        //            u.Contact.Email = model.EMail;
+        //            u.Contact.FirstName = model.FirstName;
+        //            u.Contact.LastName = model.LastName;
 
-                    UserHelper.SecurityRepository.UnitOfWork.Commit();
+        //            UserHelper.CustomerRepository.UnitOfWork.Commit();
 
-                    return RedirectToAction("CompanyUsers");
-                    //cm.User = model.CurrentUser;
-                    //todo: Edit
-					
-                }
-            }
+        //            UserHelper.SecurityRepository.UnitOfWork.Commit();
 
-            return View(model);
-             * */
-            throw new NotImplementedException();
-        }
+        //            return RedirectToAction("CompanyUsers");
+        //            //cm.User = model.CurrentUser;
+        //            //todo: Edit
 
-        public ActionResult CompanyAddressBook()
-        {
-            var org = _userClient.GetOrganizationsForCurrentUser().SingleOrDefault();
-            if (org != null || org.Addresses.Count == 0)
-                return RedirectToAction("AddressEdit", new { orgId = org.MemberId });
+        //        }
+        //    }
 
-            return View(UserHelper.GetShippingBillingForOrganization(org));
-        }
+        //    return View(model);
+        //     * */
+        //    throw new NotImplementedException();
+        //}
 
-        public ActionResult CompanyOrders()
-        {
-            /*
-            var criteria = new OrderSearchCriteria();
-            var org = _userClient.GetOrganizationsForCurrentUser().SingleOrDefault();
-            var orders = new Order[] { };
+        //public ActionResult CompanyAddressBook()
+        //{
+        //    var org = _userClient.GetOrganizationsForCurrentUser().SingleOrDefault();
+        //    if (org != null || org.Addresses.Count == 0)
+        //        return RedirectToAction("AddressEdit", new { orgId = org.MemberId });
 
-            if (org != null)
-            {
-                criteria.CompanyId = org.MemberId;
-                var groups = OrderHelper.OrderRepository.Orders.Where(x => x.CustomerName == "SampleUnitTest").ToArray();
+        //    return View(UserHelper.GetShippingBillingForOrganization(org));
+        //}
 
-                if (groups != null && groups.Count() > 0)
-                {
-                    orders = groups.OfType<Order>().ToArray<Order>();
-                }
-            }
+        //public ActionResult CompanyOrders()
+        //{
+        //    /*
+        //    var criteria = new OrderSearchCriteria();
+        //    var org = _userClient.GetOrganizationsForCurrentUser().SingleOrDefault();
+        //    var orders = new Order[] { };
 
-            return base.View("CompanyOrders", orders);
-            */
-            throw new NotImplementedException();
-        }
+        //    if (org != null)
+        //    {
+        //        criteria.CompanyId = org.MemberId;
+        //        var groups = OrderHelper.OrderRepository.Orders.Where(x => x.CustomerName == "SampleUnitTest").ToArray();
+
+        //        if (groups != null && groups.Count() > 0)
+        //        {
+        //            orders = groups.OfType<Order>().ToArray<Order>();
+        //        }
+        //    }
+
+        //    return base.View("CompanyOrders", orders);
+        //    */
+        //    throw new NotImplementedException();
+        //}
         #endregion
 
         #region Helpers
 
+        // Used for XSRF protection when adding external logins
+        private const string XsrfKey = "XsrfId";
 
+        /// <summary>
+        /// Adds the errors.
+        /// </summary>
+        /// <param name="result">The result.</param>
+        private void AddErrors(IdentityResult result)
+        {
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError("", error);
+            }
+        }
         /// <summary>
         /// Redirects to local.
         /// </summary>
@@ -1601,44 +1716,32 @@ namespace VirtoCommerce.Web.Controllers
         /// <summary>
         /// Class ExternalLoginResult.
         /// </summary>
-        internal class ExternalLoginResult : ActionResult
+        internal class ChallengeResult : HttpUnauthorizedResult
         {
-            /// <summary>
-            /// Initializes a new instance of the <see cref="ExternalLoginResult"/> class.
-            /// </summary>
-            /// <param name="security">The security.</param>
-            /// <param name="provider">The provider.</param>
-            /// <param name="returnUrl">The return URL.</param>
-            public ExternalLoginResult(IOAuthWebSecurity security, string provider, string returnUrl)
+            public ChallengeResult(string provider, string redirectUri)
+                : this(provider, redirectUri, null)
             {
-                Provider = provider;
-                ReturnUrl = returnUrl;
-                Security = security;
             }
 
-            /// <summary>
-            /// Gets the provider.
-            /// </summary>
-            /// <value>The provider.</value>
-            public string Provider { get; private set; }
-            /// <summary>
-            /// Gets the return URL.
-            /// </summary>
-            /// <value>The return URL.</value>
-            public string ReturnUrl { get; private set; }
-            /// <summary>
-            /// Gets the security.
-            /// </summary>
-            /// <value>The security.</value>
-            public IOAuthWebSecurity Security { get; private set; }
+            public ChallengeResult(string provider, string redirectUri, string userId)
+            {
+                LoginProvider = provider;
+                RedirectUri = redirectUri;
+                UserId = userId;
+            }
 
-            /// <summary>
-            /// Enables processing of the result of an action method by a custom type that inherits from the <see cref="T:System.Web.Mvc.ActionResult" /> class.
-            /// </summary>
-            /// <param name="context">The context in which the result is executed. The context information includes the controller, HTTP content, request context, and route data.</param>
+            public string LoginProvider { get; set; }
+            public string RedirectUri { get; set; }
+            public string UserId { get; set; }
+
             public override void ExecuteResult(ControllerContext context)
             {
-                Security.RequestAuthentication(Provider, ReturnUrl);
+                var properties = new AuthenticationProperties { RedirectUri = RedirectUri };
+                if (UserId != null)
+                {
+                    properties.Dictionary[XsrfKey] = UserId;
+                }
+                context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
             }
         }
 

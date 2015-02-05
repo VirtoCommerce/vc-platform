@@ -292,7 +292,7 @@ namespace FunctionalTests.Security
 			return retVal;
 		}
 
-	    private int AddAccount(string name)
+	    private string AddAccount(string name)
 	    {
 			var  client = GetRepository();
 			var account = new Account { UserName = name };
@@ -328,7 +328,7 @@ namespace FunctionalTests.Security
 			client.UnitOfWork.Commit();
 		}
 
-		private void AddRoleAssignment(string roleId, int accountId)
+		private void AddRoleAssignment(string roleId, string accountId)
 		{
 			var client = GetRepository();
 			var account = client.Accounts.Expand("RoleAssignments/Role").Where(x => x.AccountId == accountId).SingleOrDefault();

@@ -5,9 +5,9 @@ using System;
 using System.Diagnostics;
 using System.IO;
 
-namespace VirtoSoftware.ElasticSearch
+namespace VirtoCommerce.Azure.WorkerRoles.ElasticSearch
 {
-    public class RunES
+    public class RunES : IDisposable
     {
         private static CloudDrive _elasticStorageDrive = null;
 
@@ -19,53 +19,33 @@ namespace VirtoSoftware.ElasticSearch
         public Process StartES(string esLocation, string fsPort, string workerIPs)
         {
             // create VHD that will contain the instance
-            string cacheLocation = CreateElasticStorageVhd();
+            var dataLocation = GetElasticDataDirectory();
 
             // create storage directories if it is a new instance
-            CreateElasticStoragerDirs(cacheLocation);
+            CreateElasticStoragerDirs(dataLocation);
             
             // Call the RunCommand function to change the port in server.xml
-            var response = RunCommand(Environment.GetEnvironmentVariable("RoleRoot") + @"\approot\setupElasticSearch.bat", esLocation, fsPort, Environment.GetEnvironmentVariable("RoleRoot") + @"\approot");
+            RunCommand(Settings.ElasticSetupCommand, esLocation, fsPort, Settings.ElasticAppRootDir);
             
             // Call the StartTomcatProcess to start the tomcat process
-            return StartESProcess(esLocation, cacheLocation, workerIPs);
+            return StartESProcess(esLocation, dataLocation, workerIPs);
         }
 
-        private String CreateElasticStorageVhd()
+        private string GetElasticDataDirectory()
         {
-            Log("ElasticSearch - creating VHD", "Information");
-
-            var localCache = RoleEnvironment.GetLocalResource("ESLocation");
-            Log(String.Format("ESLocation {0} {1} MB", localCache.RootPath, localCache.MaximumSizeInMegabytes - 50), "Information");
-            CloudDrive.InitializeCache(localCache.RootPath.TrimEnd('\\'), localCache.MaximumSizeInMegabytes - 50);
-
-            var storageAccount = CloudStorageAccount.Parse(RoleEnvironment.GetConfigurationSettingValue("DataConnectionString"));
-            var client = storageAccount.CreateCloudBlobClient();
-
+            DiagnosticsHelper.TraceInformation("Getting db path");
             var roleId = RoleEnvironment.CurrentRoleInstance.Id;
-            var containerAddress = ContainerNameFromRoleId(roleId);
-            var drives = client.GetContainerReference(containerAddress);
+            var containerName = ContainerNameFromRoleId(roleId);
 
-            try { drives.CreateIfNotExist(); }
-            catch { };
+            var dataDrivePath = Utilities.GetMountedPathFromBlob(
+                Constants.LocalCacheSetting,
+                containerName,
+                Constants.ElasticSearchBlobName,
+                Settings.DefaultDriveSize,
+                out _elasticStorageDrive);
 
-            var vhdUrl = client.GetContainerReference(containerAddress).GetBlobReference("ElasticStorage.vhd").Uri.ToString();
-            Log(String.Format("ElasticStorage.vhd {0}", vhdUrl), "Information");
-            _elasticStorageDrive = storageAccount.CreateCloudDrive(vhdUrl);
-
-            int cloudDriveSizeInMb = int.Parse(RoleEnvironment.GetConfigurationSettingValue("CloudDriveSize"));
-            try { _elasticStorageDrive.Create(cloudDriveSizeInMb); }
-            catch (CloudDriveException) { }
-
-            Log(String.Format("CloudDriveSize {0} MB", cloudDriveSizeInMb), "Information");
-
-            //var dataPath = _elasticStorageDrive.Mount(localCache.MaximumSizeInMegabytes - 50, DriveMountOptions.Force);
-            var dataPath = _elasticStorageDrive.Mount(localCache.MaximumSizeInMegabytes - 50, DriveMountOptions.Force);
-            Log(String.Format("Mounted as {0}", dataPath), "Information");
-
-            Log("ElasticSearch - created VHD", "Information");
-
-            return dataPath;
+            DiagnosticsHelper.TraceInformation("Obtained data drive as {0}", dataDrivePath);
+            return dataDrivePath;
         }
 
         // follow container naming conventions to generate a unique container name
@@ -76,12 +56,12 @@ namespace VirtoSoftware.ElasticSearch
 
         private void CreateElasticStoragerDirs(String vhdPath)
         {
-            Log("ElasticSearch - creating Cache Directories, path="+vhdPath, "Information");
+            DiagnosticsHelper.TraceInformation("ElasticSearch - creating Cache Directories, path=" + vhdPath);
 
             var elasticStorageDir = Path.Combine(vhdPath, "ElasticStorage");
             var elasticDataDir = Path.Combine(elasticStorageDir, "data");
-            Log("ElasticSearch - elasticStorageDir=" + elasticStorageDir, "Information");
-            Log("ElasticSearch - elasticDataDir=" + elasticDataDir, "Information");
+            DiagnosticsHelper.TraceInformation("ElasticSearch - elasticStorageDir=" + elasticStorageDir);
+            DiagnosticsHelper.TraceInformation("ElasticSearch - elasticDataDir=" + elasticDataDir);
 
             if (Directory.Exists(elasticStorageDir) == false)
             {
@@ -91,7 +71,7 @@ namespace VirtoSoftware.ElasticSearch
             {
                 Directory.CreateDirectory(elasticDataDir);
             }
-            Log("ElasticSearch - done creating Cache Directories, path=" + vhdPath, "Information");
+            DiagnosticsHelper.TraceInformation("ElasticSearch - done creating Cache Directories, path=" + vhdPath);
         }
 
         /// <summary>
@@ -103,7 +83,7 @@ namespace VirtoSoftware.ElasticSearch
         /// <returns></returns>
         private Process StartESProcess(string esLocation, string cacheLocation, string workerIPs)
         {
-            Log("ElasticSearch - starting pricess at esLocation:" + esLocation + ",cacheLocation:" + cacheLocation + ",workerIPs:" + workerIPs, "Information");
+            DiagnosticsHelper.TraceInformation("ElasticSearch - starting pricess at esLocation:" + esLocation + ",cacheLocation:" + cacheLocation + ",workerIPs:" + workerIPs);
 
             // initiating process
             var newProc = new Process();
@@ -136,12 +116,12 @@ namespace VirtoSoftware.ElasticSearch
                 newProc.StartInfo.EnvironmentVariables.Add("ES_HOSTS", workerIPs);
                 
                 // setting the file name  bin\startup.bat in tomcatlocation of localresourcepath 
-                newProc.StartInfo.FileName = esLocation + @"bin\elasticsearch.bat";
-                 
-                Log("ElasticSearch start command line: " + esLocation + @"bin\elasticsearch.bat", "Information");
+                newProc.StartInfo.FileName = esLocation + Settings.ElasticStartApp;
+
+                DiagnosticsHelper.TraceInformation("ElasticSearch start command line: " + esLocation + Settings.ElasticStartApp);
                 // starting process
                 newProc.Start();
-                Log("Done - Starting ElasticSearch", "Information");
+                DiagnosticsHelper.TraceInformation("Done - Starting ElasticSearch");
 
                 newProc.OutputDataReceived += processToExecuteCommand_OutputDataReceived;
                 newProc.ErrorDataReceived += processToExecuteCommand_ErrorDataReceived;
@@ -149,20 +129,11 @@ namespace VirtoSoftware.ElasticSearch
                 newProc.BeginErrorReadLine();
                 newProc.Exited += Process_Exited;
 
-                // getting the process output
-                //sr = newProc.StandardOutput;
-
-                // storing the output in the string variable
-                //returnDetails = sr.ReadToEnd();
-
-                // Logging the output details
-                //Trace.TraceInformation("Information", returnDetails);  
-
             }
             catch (Exception ex)
             {
                 // Logging the exceptiom
-                Trace.TraceError(ex.Message);
+                DiagnosticsHelper.TraceError(ex.Message);
                 throw;
             }
 
@@ -199,7 +170,7 @@ namespace VirtoSoftware.ElasticSearch
 #endif
                 newProc.EnableRaisingEvents = false;
 
-                string esHome = esLocation.Substring(0, esLocation.Length - 1);
+                var esHome = esLocation.Substring(0, esLocation.Length - 1);
                 // setting the localsource path tomcatlocation to the environment variable catalina_home 
                 newProc.StartInfo.EnvironmentVariables.Add("ES_HOME", esHome);
                 
@@ -211,19 +182,10 @@ namespace VirtoSoftware.ElasticSearch
                 // {2} - approot path
                 newProc.StartInfo.Arguments = String.Format("{0} {1} \"{2}\"", esHome, port, appRoot);
 
-                Log("Arguments: " + newProc.StartInfo.Arguments, "Information");
+                DiagnosticsHelper.TraceInformation("Arguments: " + newProc.StartInfo.Arguments);
 
                 // starting the process
                 newProc.Start();
-
-                //getting the output details
-                //sr = newProc.StandardOutput;
-
-                // storing the output details in the string variable
-                //returnDetails = sr.ReadToEnd();
-               
-                // Logging the output details
-                //Log(returnDetails, "Information");
 
                 newProc.OutputDataReceived += processToExecuteCommand_OutputDataReceived;
                 newProc.ErrorDataReceived += processToExecuteCommand_ErrorDataReceived;
@@ -231,18 +193,7 @@ namespace VirtoSoftware.ElasticSearch
                 newProc.BeginErrorReadLine();
 
                 newProc.WaitForExit();
-                //returnDetails = sr.ReadToEnd();
                 newProc.Close();
-
-                /*
-                returnDetails = string.Empty;
-                
-                //setting the serverxml Configpath
-                string serverConfigPath = fsLocation + @"conf\server.xml"; 
-
-                //Calling ConfigTomcatPort method to configure the port in server.xml
-                ConfigTomcatPort(serverConfigPath,port);  
-                 * */
 
             }
             catch (Exception ex)
@@ -256,120 +207,38 @@ namespace VirtoSoftware.ElasticSearch
 
         void Process_Exited(object sender, EventArgs e)
         {
-            Log("ElasticSearch Exited", "Information");
+            DiagnosticsHelper.TraceInformation("ElasticSearch Exited");
             RoleEnvironment.RequestRecycle();
         }
 
-/*
-        private Process ExecuteShellCommand(String command, bool waitForExit, String workingDir = null)
-        {
-            var processToExecuteCommand = new Process();
-
-            processToExecuteCommand.StartInfo.FileName = "cmd.exe";
-            if (workingDir != null)
-            {
-                processToExecuteCommand.StartInfo.WorkingDirectory = workingDir;
-            }
-
-            processToExecuteCommand.StartInfo.Arguments = @"/C " + command;
-            processToExecuteCommand.StartInfo.RedirectStandardInput = true;
-            processToExecuteCommand.StartInfo.RedirectStandardError = true;
-            processToExecuteCommand.StartInfo.RedirectStandardOutput = true;
-            processToExecuteCommand.StartInfo.UseShellExecute = false;
-            processToExecuteCommand.StartInfo.CreateNoWindow = true;
-            processToExecuteCommand.EnableRaisingEvents = false;
-            processToExecuteCommand.Start();
-
-            processToExecuteCommand.OutputDataReceived += new DataReceivedEventHandler(processToExecuteCommand_OutputDataReceived);
-            processToExecuteCommand.ErrorDataReceived += new DataReceivedEventHandler(processToExecuteCommand_ErrorDataReceived);
-            processToExecuteCommand.BeginOutputReadLine();
-            processToExecuteCommand.BeginErrorReadLine();
-
-            if (waitForExit == true)
-            {
-                processToExecuteCommand.WaitForExit();
-                processToExecuteCommand.Close();
-                processToExecuteCommand.Dispose();
-                processToExecuteCommand = null;
-            }
-
-            return processToExecuteCommand;
-        }
-*/
-
         private void processToExecuteCommand_ErrorDataReceived(object sender, DataReceivedEventArgs e)
         {
-            Log(e.Data, "Message");
+            DiagnosticsHelper.TraceError(e.Data);
         }
 
         private void processToExecuteCommand_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            Log(e.Data, "Message");
+            DiagnosticsHelper.TraceVerbose(e.Data);
         }
 
-        public void Unmount()
+        public void Dispose()
         {
-            if (_elasticStorageDrive != null)
+            try
             {
-                try
+                if (_elasticStorageDrive != null)
                 {
+                    DiagnosticsHelper.TraceInformation("Unmount called on data drive");
                     _elasticStorageDrive.Unmount();
                 }
-                catch { }
+                DiagnosticsHelper.TraceInformation("Unmount completed on data drive");
+            }
+            catch (Exception e)
+            {
+                //Ignore any and all exceptions here
+                DiagnosticsHelper.TraceWarning(
+                    "Exception in onstop - unmount failed with {0} {1}",
+                    e.Message, e.StackTrace);
             }
         }
-
-        public void Log(string message, string category)
-        {
-            message = RoleEnvironment.CurrentRoleInstance.Id + "=> " + message;
-
-            /*
-            try
-            {
-                if (String.IsNullOrWhiteSpace(_logFileLocation) == false)
-                {
-                    File.AppendAllText(_logFileLocation, String.Concat(message, Environment.NewLine));
-                }
-            }
-            catch
-            { }
-             * */
-
-            Trace.WriteLine(message, category);
-        }
-
-/*
-        /// <summary>
-        /// ConfigTomcatPort method is to configure the port in server.xml
-        /// </summary>
-        /// <param name="serverConfigPath">Full path location of server.xml</param>
-        /// <param name="newPort">New value for connector</param>
-        private void ConfigTomcatPort(string serverConfigPath, string newPort)
-        {
-            try
-            {
-                XmlDocument config = new XmlDocument();
-
-                // Load \conf\server.xml
-                config.Load(serverConfigPath);
-
-                Trace.TraceInformation("Original Value = {0}", config.SelectSingleNode("/Server/Service/Connector").Attributes["port"].Value);
-
-                //Change the port with the new port Arg 1
-                config.SelectSingleNode("/Server/Service/Connector").Attributes["port"].Value = newPort;
-
-                Trace.TraceInformation("Updating Server.xml...");
-
-                config.Save(serverConfigPath);
-
-                Trace.TraceInformation("Server.xml updated...");
-            }
-            catch (Exception ex)
-            {
-                Trace.TraceError(ex.StackTrace);
-            }
-        }
-*/
-
     }
 }

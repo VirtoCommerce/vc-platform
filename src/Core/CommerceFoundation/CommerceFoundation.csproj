@@ -66,10 +66,11 @@
     </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\..\..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework.SqlServer">
-      <HintPath>..\..\..\packages\EntityFramework.6.0.2\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="ExpressionSerialization">
       <HintPath>..\..\..\Shared\ExpressionSerialization.dll</HintPath>
@@ -106,9 +107,6 @@
       <HintPath>..\..\..\packages\Unity.3.5.1404.0\lib\net45\Microsoft.Practices.Unity.RegistrationByConvention.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="Microsoft.WindowsAzure.Configuration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\..\packages\Microsoft.WindowsAzure.ConfigurationManager.2.0.3\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
-    </Reference>
     <Reference Include="Omu.ValueInjecter, Version=2.3.3.0, Culture=neutral, PublicKeyToken=c7694541b0ac80e4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\packages\ValueInjecter.2.3.3\lib\net35\Omu.ValueInjecter.dll</HintPath>
@@ -245,6 +243,7 @@
     <Compile Include="Frameworks\SqlDbConfiguration.cs" />
     <Compile Include="Orders\Extensions\JurisdictionExtensions.cs" />
     <Compile Include="Orders\Extensions\PaymentMethodExtensions.cs" />
+    <Compile Include="Orders\Model\ShipmentOption.cs" />
     <Compile Include="Orders\Model\OrderFormPropertyValue.cs" />
     <Compile Include="Orders\Model\OrderFormValueType.cs" />
     <Compile Include="Catalogs\Model\PropertyValueBase.cs" />
@@ -373,7 +372,6 @@
     <Compile Include="Reporting\Model\ReportInfo.cs" />
     <Compile Include="Reporting\ReportingConfiguration.cs" />
     <Compile Include="Reporting\Services\IReportingService.cs" />
-    <Compile Include="Reporting\Services\ReportingService.cs" />
     <Compile Include="Search\IndexDataType.cs" />
     <Compile Include="Search\ISearchConnection.cs" />
     <Compile Include="Search\ISearchFilterService.cs" />
@@ -779,7 +777,9 @@
     <None Include="Marketing\Model\MarketingClassDiagram2.cd" />
     <None Include="Orders\Model\OrderClassDiagram.cd" />
     <None Include="Orders\OrderClassDiagram.cd" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Search\Schemas\Filters.cd" />
     <None Include="Search\Schemas\Filters.xsd">
       <SubType>Designer</SubType>
@@ -814,7 +814,6 @@
     <Content Include="Search\Schemas\Filters.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <PropertyGroup>
     <PostBuildEvent>
     </PostBuildEvent>
@@ -827,3 +826,4 @@
   </Target>
   -->
 </Project>
+

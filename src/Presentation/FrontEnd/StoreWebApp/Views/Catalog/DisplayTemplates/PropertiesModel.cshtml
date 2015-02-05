@@ -1,0 +1,23 @@
+﻿@model PropertiesModel
+
+@if (Model != null)
+{
+    <table class="data-table" id="product-attribute-specs-table">
+        <col width="25%" />
+        <col />
+        <tbody>
+            @foreach (var prop in (from psp in Model orderby psp.Priority ascending select psp))
+            {
+                <tr>
+                    <th class="label">
+                        @prop.Name.Localize()
+                    </th>
+                    <td class="data">
+                        @prop.ToString()
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+

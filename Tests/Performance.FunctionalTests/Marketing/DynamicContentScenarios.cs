@@ -13,6 +13,8 @@ namespace PerformanceTests
     public class MarketingDynamicContent
     {
         [TestMethod]
+        [DeploymentItem("connectionStrings.config")]
+        [DeploymentItem("Configs/DynamicContent.config", "Configs")]
         public void Run_dynamiccontent_performance()
         {
             var repository = new EFDynamicContentRepository();

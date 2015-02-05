@@ -4,7 +4,7 @@
 <?define VirtoCommerceMSI = "VirtoCommerce"?>
 <?define VirtoCommerceSearchMSI = "VirtoCommerceSearch"?>
 
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util='http://schemas.microsoft.com/wix/UtilExtension'>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:util='http://schemas.microsoft.com/wix/UtilExtension' xmlns:bal="http://schemas.microsoft.com/wix/BalExtension">
   <Bundle Name="Virto Commerce $(var.DisplayVersion) SDK" Manufacturer="VirtoCommerce" Version="$(var.ProductVersion)" UpgradeCode="$(var.UpgradeCode)" SplashScreenSourceFile="splash.bmp"
           HelpUrl="http://support.virtocommerce.com" UpdateUrl="http://virtocommerce.com" AboutUrl="http://virtocommerce.com" Copyright="VirtoCommerce (c) All rights reserved." Compressed="yes">
     <BootstrapperApplicationRef Id="ManagedBootstrapperApplicationHost">
@@ -58,13 +58,17 @@
     <?if $(var.Platform) = x64 ?>
       <Variable Name="InstallFolder" Type="string" Value="[ProgramFiles64Folder]VirtoCommerce $(var.DisplayVersion)" />
       <WixVariable Id="WixBundleLayoutDirectory" Value="[ProgramFiles64Folder]VirtoCommerce $(var.DisplayVersion)\Setup"/>
+      <!--
       <util:RegistrySearch Variable="ElasticSearchInstalled" Root="HKLM" Key="SOFTWARE\Apache Software Foundation\Procrun 2.0\virtocommerce.elasticsearch" Result="exists" Win64="yes"/>
+      -->
       <util:RegistrySearch Variable="JavaInstalled_x64" Root="HKLM" Key="SOFTWARE\JavaSoft\Java Runtime Environment\1.7" Result="exists" Win64="yes"/>
       <util:RegistrySearch Variable="JavaInstalled_x64_Version" Root="HKLM" Key="SOFTWARE\JavaSoft\Java Runtime Environment" Value="CurrentVersion" Result="value" Win64="yes"/>
     <?else ?>
       <Variable Name="InstallFolder" Type="string" Value="[ProgramFilesFolder]VirtoCommerce $(var.DisplayVersion)" />
       <WixVariable Id="WixBundleLayoutDirectory" Value="[ProgramFilesFolder]VirtoCommerce $(var.DisplayVersion)\Setup"/>
+      <!--
       <util:RegistrySearch Variable="ElasticSearchInstalled" Root="HKLM" Key="SOFTWARE\Apache Software Foundation\Procrun 2.0\virtocommerce.elasticsearch" Result="exists"/>
+      -->
       <util:RegistrySearch Variable="JavaInstalled_x86" Root="HKLM" Key="SOFTWARE\JavaSoft\Java Runtime Environment\1.7" Result="exists"/>
       <util:RegistrySearch Variable="JavaInstalled_x86_Version" Root="HKLM" Key="SOFTWARE\JavaSoft\Java Runtime Environment" Value="CurrentVersion" Result="value"/>
     <?endif ?>     

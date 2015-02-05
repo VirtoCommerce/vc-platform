@@ -290,22 +290,14 @@ namespace FunctionalTests.Orders
 
 			var paymentMethodsRepository = new Mock<IPaymentMethodRepository>();
 
-			//Test authorize.Net gateway (Cannot test until license available)
-			//var gateway = new PaymentGateway
-			//	{
-			//		GatewayId = "gwAuthorizeNet",
-			//		ClassType = "VirtoCommerce.PaymentGateways.ICharge.IchargePaymentGateway, VirtoCommerce.PaymentGateways",
-			//		Name = "Authorize.Net",
-			//		SupportsRecurring = false,
-			//		SupportedTransactionTypes = 0x1F
-			//	};
-
-			var gateway = new PaymentGateway
-				{
-					ClassType = "VirtoCommerce.PaymentGateways.DefaultPaymentGateway, VirtoCommerce.PaymentGateways",
-					Name = "DefaultPaymentGateway",
-					SupportsRecurring = false
-				};
+            var gateway = new PaymentGateway
+                {
+                    GatewayId = "gwAuthorizeNet",
+                    ClassType = "VirtoCommerce.PaymentGateways.AuthorizeNetPaymentGateway, VirtoCommerce.PaymentGateways",
+                    Name = "Authorize.Net",
+                    SupportsRecurring = false,
+                    SupportedTransactionTypes = 0x1F
+                };
 
 			paymentMethodsRepository.Setup(x => x.PaymentGateways).Returns(() => new[] { gateway }.AsQueryable());
 
@@ -343,19 +335,23 @@ namespace FunctionalTests.Orders
 				Name = "TestMode",
 				BooleanValue = true
 			});
-			pm.PaymentMethodPropertyValues.Add(new PaymentMethodPropertyValue
-			{
-				ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-				Name = "GatewayURL",
-				ShortTextValue = "https://test.authorize.net/gateway/transact.dll"
-			});
+            //pm.PaymentMethodPropertyValues.Add(new PaymentMethodPropertyValue
+            //{
+            //    ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+            //    Name = "GatewayURL",
+            //    ShortTextValue = "https://test.authorize.net/gateway/transact.dll"
+            //});
 
 			paymentMethodsRepository.Setup(x => x.PaymentMethods).Returns(() => new[] { pm }.AsQueryable());
 
 			paymentMethodsRepository.SetupAllProperties();
 
-			var storesrep = new Mock<IStoreRepository>();
-			storesrep.Setup(x => x.Stores).Returns(() => new List<Store>().AsQueryable());
+            var storesrep = new Mock<IStoreRepository>();
+            storesrep.Setup(x => x.Stores).Returns(() => new List<Store>(){new Store
+			{
+			    CreditCardSavePolicy = CreditCardSavePolicy.LastFourDigits.GetHashCode(),
+                StoreId = "SampleStore"
+			}}.AsQueryable());
 			storesrep.SetupAllProperties();
 
 			orderGroup.OrderForms[0].Payments.Clear();
@@ -472,8 +468,8 @@ namespace FunctionalTests.Orders
 			// now check totals            
 
 			// Order totals
-			Assert.Equal(order.TaxTotal, 660.28M);
-			Assert.Equal(order.OrderForms[0].Shipments[0].ItemTaxTotal, 609.88M);
+			Assert.Equal(order.TaxTotal, 660.24M);
+			Assert.Equal(order.OrderForms[0].Shipments[0].ItemTaxTotal, 609.84M);
 			Assert.Equal(order.OrderForms[0].Shipments[0].ShippingTaxTotal, 12.6M);
 		}
 
@@ -725,7 +721,8 @@ namespace FunctionalTests.Orders
 			Assert.True(form.LineItems[1].ListPrice == 43);
 		}
 
-		[Fact]
+		[Fact(Skip = "Cannot credit payment, because payment is settled in 24h for authorize.net")]
+
 		public void can_create_payment_sale_and_credit()
 		{
 			var order = CreateOrder();
@@ -738,23 +735,15 @@ namespace FunctionalTests.Orders
 
 			var paymentMethodsRepository = new Mock<IPaymentMethodRepository>();
 
-			//Test authorize.Net gateway (Cannot test until license available)
-			//var gateway = new PaymentGateway
-			//	{
-			//		GatewayId = "gwAuthorizeNet",
-			//		ClassType = "VirtoCommerce.PaymentGateways.ICharge.IchargePaymentGateway, VirtoCommerce.PaymentGateways",
-			//		Name = "Authorize.Net",
-			//		SupportsRecurring = false,
-			//		SupportedTransactionTypes = 0x1F
-			//	};
+            var gateway = new PaymentGateway
+            {
+                GatewayId = "gwAuthorizeNet",
+                ClassType = "VirtoCommerce.PaymentGateways.AuthorizeNetPaymentGateway, VirtoCommerce.PaymentGateways",
+                Name = "Authorize.Net",
+                SupportsRecurring = false,
+                SupportedTransactionTypes = 0x1F
+            };
 
-			var gateway = new PaymentGateway
-			{
-				ClassType = "VirtoCommerce.PaymentGateways.DefaultPaymentGateway, VirtoCommerce.PaymentGateways",
-				Name = "DefaultPaymentGateway",
-				SupportsRecurring = false,
-				SupportedTransactionTypes = (int)(TransactionType.Sale | TransactionType.Credit)
-			};
 
 			paymentMethodsRepository.Setup(x => x.PaymentGateways).Returns(() => new[] { gateway }.AsQueryable());
 
@@ -792,19 +781,23 @@ namespace FunctionalTests.Orders
 				Name = "TestMode",
 				BooleanValue = true
 			});
-			pm.PaymentMethodPropertyValues.Add(new PaymentMethodPropertyValue
-			{
-				ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
-				Name = "GatewayURL",
-				ShortTextValue = "https://test.authorize.net/gateway/transact.dll"
-			});
+            //pm.PaymentMethodPropertyValues.Add(new PaymentMethodPropertyValue
+            //{
+            //    ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+            //    Name = "GatewayURL",
+            //    ShortTextValue = "https://test.authorize.net/gateway/transact.dll"
+            //});
 
 			paymentMethodsRepository.Setup(x => x.PaymentMethods).Returns(() => new[] { pm }.AsQueryable());
 
 			paymentMethodsRepository.SetupAllProperties();
 
 			var storesrep = new Mock<IStoreRepository>();
-			storesrep.Setup(x => x.Stores).Returns(() => new List<Store>().AsQueryable());
+			storesrep.Setup(x => x.Stores).Returns(() => new List<Store>(){new Store
+			{
+			    CreditCardSavePolicy = CreditCardSavePolicy.LastFourDigits.GetHashCode(),
+                StoreId = "SampleStore"
+			}}.AsQueryable());
 			storesrep.SetupAllProperties();
 
 			Payment payment = new CreditCardPayment
@@ -844,6 +837,127 @@ namespace FunctionalTests.Orders
 			Assert.True(order.OrderForms[0].Payments.Any(p => p.PaymentId == creditPayment.PaymentId), "Credit payment was not added");
 		}
 
+        [Fact]
+        public void can_create_payment_authorize_and_capture()
+        {
+            var orderGroup = CreateCart();
+
+            var paymentMethodsRepository = new Mock<IPaymentMethodRepository>();
+
+            var gateway = new PaymentGateway
+            {
+                GatewayId = "gwAuthorizeNet",
+                ClassType = "VirtoCommerce.PaymentGateways.AuthorizeNetPaymentGateway, VirtoCommerce.PaymentGateways",
+                Name = "Authorize.Net",
+                SupportsRecurring = false,
+                SupportedTransactionTypes = 0x1F
+            };
+
+            paymentMethodsRepository.Setup(x => x.PaymentGateways).Returns(() => new[] { gateway }.AsQueryable());
+
+            var pm = new PaymentMethod
+            {
+                Description = "Credit Card",
+                Name = "CreditCard",
+                PaymentGateway = gateway,
+                PaymentGatewayId = gateway.GatewayId,
+
+            };
+            var methodLanguage = new PaymentMethodLanguage
+            {
+                DisplayName = pm.Description,
+                LanguageCode = "en-US",
+                PaymentMethodId = pm.PaymentMethodId,
+            };
+            pm.PaymentMethodLanguages.Add(methodLanguage);
+
+            pm.PaymentMethodPropertyValues.Add(new PaymentMethodPropertyValue
+            {
+                ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+                Name = "MerchantLogin",
+                ShortTextValue = "87WmkB7W"
+            });
+            pm.PaymentMethodPropertyValues.Add(new PaymentMethodPropertyValue
+            {
+                ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+                Name = "MerchantPassword",
+                ShortTextValue = "8hAuD275892cBFcb"
+            });
+            pm.PaymentMethodPropertyValues.Add(new PaymentMethodPropertyValue
+            {
+                ValueType = GatewayProperty.ValueTypes.Boolean.GetHashCode(),
+                Name = "TestMode",
+                BooleanValue = true
+            });
+            //pm.PaymentMethodPropertyValues.Add(new PaymentMethodPropertyValue
+            //{
+            //    ValueType = GatewayProperty.ValueTypes.ShortString.GetHashCode(),
+            //    Name = "GatewayURL",
+            //    ShortTextValue = "https://test.authorize.net/gateway/transact.dll"
+            //});
+
+            paymentMethodsRepository.Setup(x => x.PaymentMethods).Returns(() => new[] { pm }.AsQueryable());
+
+            paymentMethodsRepository.SetupAllProperties();
+
+            var storesrep = new Mock<IStoreRepository>();
+            storesrep.Setup(x => x.Stores).Returns(() => new List<Store>(){new Store
+			{
+			    CreditCardSavePolicy = CreditCardSavePolicy.Full.GetHashCode(),
+                StoreId = "SampleStore"
+			}}.AsQueryable());
+            storesrep.SetupAllProperties();
+
+            orderGroup.OrderForms[0].Payments.Clear();
+            orderGroup.OrderForms[0].Payments.Add(new CreditCardPayment
+            {
+                PaymentType = PaymentType.CreditCard.GetHashCode(),
+                CreditCardCustomerName = "John Doe",
+                CreditCardExpirationMonth = 1,
+                CreditCardExpirationYear = 2016,
+                CreditCardNumber = "4007000000027",
+                CreditCardType = "VISA",
+                CreditCardSecurityCode = "123",
+                PaymentMethodId = pm.PaymentMethodId,
+                PaymentMethodName = pm.Description,
+                Amount = 32.53m,
+                TransactionType = TransactionType.Authorization.ToString(),
+                Status = PaymentStatus.Pending.ToString(),
+                OrderForm = orderGroup.OrderForms[0],
+                BillingAddressId = orderGroup.OrderAddresses.First().OrderAddressId
+            });
+
+            orderGroup.Total = orderGroup.OrderForms.SelectMany(orderForm => orderForm.Payments).Sum(payment => payment.Amount);
+
+            var activity = new ProcessPaymentActivity(paymentMethodsRepository.Object, storesrep.Object);
+
+            var result = InvokeActivity(activity, orderGroup);
+
+
+            foreach (var payment in result.OrderGroup.OrderForms[0].Payments)
+            {
+                Assert.True(payment.Status == PaymentStatus.Completed.ToString());
+            }
+
+            var authPayemnt =
+                result.OrderGroup.OrderForms[0].Payments.FirstOrDefault(
+                    x =>
+                        x.TransactionType == TransactionType.Authorization.ToString() &&
+                        x.Status == PaymentStatus.Completed.ToString());
+
+            Assert.NotNull(authPayemnt);
+
+            authPayemnt.TransactionType = TransactionType.Capture.ToString();
+            authPayemnt.Status = PaymentStatus.Pending.ToString();
+
+            result = InvokeActivity(activity, orderGroup);
+
+            foreach (var payment in result.OrderGroup.OrderForms[0].Payments)
+            {
+                Assert.True(payment.Status == PaymentStatus.Completed.ToString());
+            }
+
+        }
 		// [Fact]
 		[Fact(Skip = "fails on build server")]
 		public void Run_ProcessOrderStatusWorkQuartz_job()

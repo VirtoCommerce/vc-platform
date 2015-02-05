@@ -56,7 +56,7 @@ namespace VirtoCommerce.Web.Models
 		/// <value>The confirm password.</value>
         [DataType(DataType.Password)]
         [Display(Name = "Confirm new password")]
-        [System.Web.Mvc.Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match." )]
+        [System.ComponentModel.DataAnnotations.Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match." )]
         [RequiredIf("ChangePassword", true)]
         public string ConfirmPassword { get; set; }
 
@@ -206,6 +206,27 @@ namespace VirtoCommerce.Web.Models
         public string UserName { get; set; }
     }
 
+    public class SendCodeViewModel
+    {
+        public string SelectedProvider { get; set; }
+        public ICollection<SelectListItem> Providers { get; set; }
+        public string ReturnUrl { get; set; }
+    }
+
+    public class VerifyCodeViewModel
+    {
+        [Required]
+        public string Provider { get; set; }
+
+        [Required]
+        [Display(Name = "Code")]
+        public string Code { get; set; }
+        public string ReturnUrl { get; set; }
+
+        [Display(Name = "Remember this browser?")]
+        public bool RememberBrowser { get; set; }
+    }
+
     public class ResetPasswordModel
     {
         public ResetPasswordModel(){}
@@ -230,9 +251,18 @@ namespace VirtoCommerce.Web.Models
         /// <value>The confirm password.</value>
         [DataType(DataType.Password)]
         [Display(Name = "Confirm new password")]
-        [System.Web.Mvc.Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+        [System.ComponentModel.DataAnnotations.Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
         [RequiredIf("ChangePassword", true)]
         public string ConfirmPassword { get; set; }
+
+        /// <summary>
+        /// Gets or sets the email.
+        /// </summary>
+        /// <value>The email.</value>
+        [Required, EmailAddress]
+        [DataType(DataType.EmailAddress)]
+        [Display(Name = "Email address")]
+        public string Email { get; set; }
 
 
         [Required]
@@ -262,13 +292,16 @@ namespace VirtoCommerce.Web.Models
 	/// </summary>
     public class RegisterExternalLoginModel
     {
-		/// <summary>
-		/// Gets or sets the name of the user.
-		/// </summary>
-		/// <value>The name of the user.</value>
-        [Required]
-        [Display(Name = "User name")]
-        public string UserName { get; set; }
+        /// <summary>
+        /// Gets or sets the name of the user.
+        /// </summary>
+        /// <value>
+        /// The name of the user.
+        /// </value>
+        [Required, EmailAddress]
+        [DataType(DataType.EmailAddress)]
+        [Display(Name = "Email")]
+        public string Email { get; set; }
 
 		/// <summary>
 		/// Gets or sets the new password.
@@ -286,7 +319,7 @@ namespace VirtoCommerce.Web.Models
 		/// <value>The confirm password.</value>
 		[DataType(DataType.Password)]
 		[Display(Name = "Confirm new password")]
-		[System.Web.Mvc.Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+		[System.ComponentModel.DataAnnotations.Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
 		[RequiredIf("CreateLocalLogin", true)]
 		public string ConfirmPassword { get; set; }
 
@@ -296,12 +329,6 @@ namespace VirtoCommerce.Web.Models
 		/// <value><c>true</c> if [create local login]; otherwise, <c>false</c>.</value>
 		[Display(Name = "Create/Use local account?")]
 	    public bool CreateLocalLogin { get; set; }
-
-		/// <summary>
-		/// Gets or sets the external login data.
-		/// </summary>
-		/// <value>The external login data.</value>
-        public string ExternalLoginData { get; set; }
     }
 
 	/// <summary>
@@ -389,5 +416,30 @@ namespace VirtoCommerce.Web.Models
 		/// </summary>
 		/// <value>The provider user identifier.</value>
         public string ProviderUserId { get; set; }
+    }
+
+    public class RegistrationResult
+    {
+        /// <summary>
+        /// Gets or sets the error message.
+        /// </summary>
+        /// <value>
+        /// The error message.
+        /// </value>
+        public string ErrorMessage { get; set; }
+        /// <summary>
+        /// Gets or sets the confirmation token.
+        /// </summary>
+        /// <value>
+        /// The confirmation token.
+        /// </value>
+        public string ConfirmationToken { get; set; }
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is success.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance is success; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsSuccess { get; set; }
     }
 }

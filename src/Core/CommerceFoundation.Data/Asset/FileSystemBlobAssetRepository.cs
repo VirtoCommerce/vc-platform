@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -18,7 +19,9 @@ using VirtoCommerce.Foundation.Frameworks.Extensions;
 
 namespace VirtoCommerce.Foundation.Data.Asset
 {
-	public class FileSystemBlobAssetRepository : IAssetRepository, IBlobStorageProvider, IUnitOfWork
+    using VirtoCommerce.Foundation.Data.Infrastructure;
+
+    public class FileSystemBlobAssetRepository : IAssetRepository, IBlobStorageProvider, IUnitOfWork
 	{
 		private List<Action> _delayedActions = new List<Action>();
 
@@ -29,7 +32,7 @@ namespace VirtoCommerce.Foundation.Data.Asset
 
 		[InjectionConstructor]
 		public FileSystemBlobAssetRepository(IAssetEntityFactory assetEntityFactory)
-			: this(AssetConfiguration.Instance.Connection.StorageFolder, assetEntityFactory)
+            : this(ConnectionHelper.GetConnectionString(AssetConfiguration.Instance.Connection.StorageConnectionStringName), assetEntityFactory)
 		{
 		}
 
@@ -361,7 +364,12 @@ namespace VirtoCommerce.Foundation.Data.Asset
 			throw new NotImplementedException();
 		}
 
-		#endregion
+        public void Refresh(IEnumerable collection)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
 
 		#region IUnitOfWork Members
 

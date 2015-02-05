@@ -22,6 +22,7 @@ namespace VirtoCommerce.Foundation.Data.Reviews
         {
             this.Configuration.AutoDetectChangesEnabled = true;
             this.Configuration.ProxyCreationEnabled = false;
+            Database.SetInitializer<EFReviewRepository>(null);
         }
 
         public EFReviewRepository(string nameOrConnectionString, IReviewEntityFactory entityFactory, IInterceptor[] interceptors = null)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using VirtoCommerce.Foundation.Frameworks;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Security.Model;
@@ -22,7 +23,7 @@ namespace VirtoCommerce.Web.Client.Services.Security
         /// <summary>
         /// The membership provider
         /// </summary>
-		protected IUserSecurity MembershipProvider;
+		protected IUserIdentitySecurity MembershipProvider;
 		#endregion
 
 		#region ctor
@@ -31,7 +32,7 @@ namespace VirtoCommerce.Web.Client.Services.Security
         /// </summary>
         /// <param name="repository">The repository.</param>
         /// <param name="membershipProvider">The membership provider.</param>
-		public SecurityService(ISecurityRepository repository, IUserSecurity membershipProvider)
+        public SecurityService(ISecurityRepository repository, IUserIdentitySecurity membershipProvider)
 		{
 			SecurityRepository = repository;
 			MembershipProvider = membershipProvider;
@@ -49,9 +50,9 @@ namespace VirtoCommerce.Web.Client.Services.Security
         /// <param name="storeId">The store identifier.</param>
         /// <param name="requireConfirmationToken">if set to <c>true</c> [require confirmation token].</param>
         /// <returns>System.String.</returns>
-		public virtual string CreateUser(string memberId, string userName, string password, string storeId, bool requireConfirmationToken = false)
+		public virtual async Task<string> CreateUserAsync(string memberId, string userName, string password, string storeId, bool requireConfirmationToken = false)
 		{
-			var ret = MembershipProvider.CreateUserAndAccount(userName, password,
+			var ret = await MembershipProvider.CreateUserAndAccountAsync(userName, password,
 				new { Discriminator="Account", 
 					MemberId = memberId, 
 					RegisterType = RegisterType.GuestUser.GetHashCode(), 
@@ -68,15 +69,14 @@ namespace VirtoCommerce.Web.Client.Services.Security
         /// <param name="memberId">The member identifier.</param>
         /// <param name="userName">Name of the user.</param>
         /// <param name="password">The password.</param>
-        /// <param name="requireConfirmationToken">if set to <c>true</c> [require confirmation token].</param>
         /// <returns>System.String.</returns>
-		public virtual string CreateAdminUser(string memberId, string userName, string password, bool requireConfirmationToken = false)
+		public virtual async Task<string> CreateAdminUserAsync(string memberId, string userName, string password)
 		{
-			var ret = MembershipProvider.CreateUserAndAccount(userName, password, 
+			var ret = await MembershipProvider.CreateUserAndAccountAsync(userName, password, 
 				new { Discriminator="Account", 
 					MemberId = memberId, 
 					RegisterType = RegisterType.SiteAdministrator.GetHashCode(), 
-					AccountState = requireConfirmationToken ? AccountState.PendingApproval.GetHashCode() : AccountState.Approved.GetHashCode() });
+					AccountState = AccountState.Approved.GetHashCode() });
 
 			return ret;
 		}
@@ -86,9 +86,9 @@ namespace VirtoCommerce.Web.Client.Services.Security
         /// </summary>
         /// <param name="userName">Name of the user.</param>
         /// <returns><c>true</c> if success, <c>false</c> otherwise.</returns>
-		public virtual bool DeleteUser(string userName)
+		public virtual async Task<bool> DeleteUserAsync(string userName)
 		{
-			var ret = MembershipProvider.DeleteUser(userName);
+			var ret = await MembershipProvider.DeleteUserAsync(userName);
 			return ret;
 		}
 
@@ -99,9 +99,9 @@ namespace VirtoCommerce.Web.Client.Services.Security
         /// <param name="currentPassword">The current password.</param>
         /// <param name="newPassword">The new password.</param>
         /// <returns><c>true</c> if success, <c>false</c> otherwise.</returns>
-		public virtual bool ChangePassword(string userName, string currentPassword, string newPassword)
+		public virtual async Task<bool> ChangePasswordAsync(string userName, string currentPassword, string newPassword)
 		{
-			var ret = MembershipProvider.ChangePassword(userName, currentPassword, newPassword);
+			var ret = await MembershipProvider.ChangePasswordAsync(userName, currentPassword, newPassword);
 			return ret;
 		}
 
@@ -111,9 +111,9 @@ namespace VirtoCommerce.Web.Client.Services.Security
         /// <param name="userName">Name of the user.</param>
         /// <param name="newPassword">The new password.</param>
         /// <returns><c>true</c> if success, <c>false</c> otherwise.</returns>
-		public virtual bool ResetPassword(string userName, string newPassword)
+		public virtual async Task<bool> ResetPasswordAsync(string userName, string newPassword)
 		{
-			var ret = MembershipProvider.ResetPassword(userName, newPassword);
+			var ret = await MembershipProvider.ResetPasswordAsync(userName, newPassword);
 			return ret;
 		}
 

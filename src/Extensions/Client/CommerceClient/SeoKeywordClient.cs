@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using VirtoCommerce.Foundation;
 using VirtoCommerce.Foundation.Frameworks;

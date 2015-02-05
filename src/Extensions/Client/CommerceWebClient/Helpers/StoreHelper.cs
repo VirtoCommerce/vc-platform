@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.Eventing.Reader;
-using Microsoft.Practices.ServiceLocation;
+﻿using Microsoft.Practices.ServiceLocation;
 using System;
 using System.Collections.Specialized;
 using System.Linq;
@@ -11,11 +10,10 @@ using VirtoCommerce.Foundation.Frameworks.Currencies;
 using VirtoCommerce.Foundation.Security.Model;
 using VirtoCommerce.Foundation.Security.Services;
 using VirtoCommerce.Foundation.Stores.Model;
-using VirtoCommerce.Web.Client.Services.Filters;
+using VirtoCommerce.Foundation.Search;
 
 namespace VirtoCommerce.Web.Client.Helpers
 {
-    using VirtoCommerce.Foundation.Search;
 
     /// <summary>
     /// Class StoreHelper.
@@ -245,64 +243,10 @@ namespace VirtoCommerce.Web.Client.Helpers
         /// <param name="val">The val.</param>
         /// <param name="expires">The expires.</param>
         /// <param name="prefix">if set to <c>true</c> [prefix].</param>
-		public static void SetCookie(string key, string val, DateTime expires, bool prefix = true)
+		public static void SetCookie(string key, string val, DateTime? expires = null, bool prefix = true)
 		{
 			var cookieName = prefix ? MakeStoreCookieName(key) : key;
-			var httpCookie = HttpContext.Current.Request.Cookies.Get(cookieName) ?? new HttpCookie(cookieName);
-
-			if (httpCookie.Value != val)
-			{
-				// Set cookie value
-				httpCookie.Value = val;
-				httpCookie.Expires = expires;
-
-                HttpContext.Current.Response.Cookies.Set(httpCookie);
-			}
-		}
-
-        /// <summary>
-        /// Sets the cookie.
-        /// </summary>
-        /// <param name="key">The key.</param>
-        /// <param name="values">The values.</param>
-        /// <param name="expires">The expires.</param>
-        /// <param name="prefix">if set to <c>true</c> [prefix].</param>
-		public static void SetCookie(string key, NameValueCollection values, DateTime expires, bool prefix = true)
-		{
-			var cookieName = prefix ? MakeStoreCookieName(key) : key;
-			var httpCookie = HttpContext.Current.Request.Cookies.Get(cookieName) ?? new HttpCookie(cookieName);
-
-			// Set cookie value
-			httpCookie.Values.Clear();
-			httpCookie.Values.Add(values);
-
-			httpCookie.Expires = expires;
-			HttpContext.Current.Response.Cookies.Set(httpCookie);
-		}
-
-
-        /// <summary>
-        /// Gets the cookie.
-        /// </summary>
-        /// <param name="key">The key.</param>
-        /// <param name="prefix">if set to <c>true</c> [prefix].</param>
-        /// <returns>NameValueCollection.</returns>
-		public static NameValueCollection GetCookie(string key, bool prefix = true)
-		{
-			var cookieName = prefix ? MakeStoreCookieName(key) : key;
-			HttpCookie cookie = null;
-
-			foreach (string cookieKey in HttpContext.Current.Response.Cookies.Keys)
-			{
-				if (cookieName.Equals(cookieKey, StringComparison.OrdinalIgnoreCase))
-					cookie = HttpContext.Current.Response.Cookies.Get(cookieName);
-			}
-
-			if (cookie != null)
-				return cookie.Values;
-
-			cookie = HttpContext.Current.Request.Cookies.Get(cookieName);
-			return cookie != null ? cookie.Values : null;
+            Foundation.Customers.CustomerSession.SetCookie(cookieName, val, expires);
 		}
 
         /// <summary>
@@ -314,13 +258,54 @@ namespace VirtoCommerce.Web.Client.Helpers
 		public static string GetCookieValue(string key, bool prefix = true)
 		{
 			var cookieName = prefix ? MakeStoreCookieName(key) : key;
-			string val = null;
-
-			if (HttpContext.Current.Request.Cookies[cookieName] != null)
-				val = HttpContext.Current.Request.Cookies[cookieName].Value;
-
-			return val;
+            return Foundation.Customers.CustomerSession.GetCookieValue(cookieName);
 		}
+
+        /// <summary>
+        /// Sets the cookie.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="values">The values.</param>
+        /// <param name="expires">The expires.</param>
+        /// <param name="prefix">if set to <c>true</c> [prefix].</param>
+        public static void SetCookie(string key, NameValueCollection values, DateTime expires, bool prefix = true)
+        {
+            var cookieName = prefix ? MakeStoreCookieName(key) : key;
+            var httpCookie = HttpContext.Current.Request.Cookies.Get(cookieName) ?? new HttpCookie(cookieName);
+
+            // Set cookie value
+            httpCookie.Values.Clear();
+            httpCookie.Values.Add(values);
+
+            httpCookie.Expires = expires;
+            HttpContext.Current.Response.Cookies.Set(httpCookie);
+        }
+
+
+        /// <summary>
+        /// Gets the cookie.
+        /// </summary>
+        /// <param name="key">The key.</param>
+        /// <param name="prefix">if set to <c>true</c> [prefix].</param>
+        /// <returns>NameValueCollection.</returns>
+        public static NameValueCollection GetCookie(string key, bool prefix = true)
+        {
+            var cookieName = prefix ? MakeStoreCookieName(key) : key;
+
+            HttpCookie cookie = null;
+
+            foreach (string cookieKey in HttpContext.Current.Response.Cookies.Keys)
+            {
+                if (cookieName.Equals(cookieKey, StringComparison.OrdinalIgnoreCase))
+                    cookie = HttpContext.Current.Response.Cookies.Get(cookieName);
+            }
+
+            if (cookie != null)
+                return cookie.Values;
+
+            cookie = HttpContext.Current.Request.Cookies.Get(cookieName);
+            return cookie != null ? cookie.Values : null;
+        }
 
         /// <summary>
         /// Clears the cookie.

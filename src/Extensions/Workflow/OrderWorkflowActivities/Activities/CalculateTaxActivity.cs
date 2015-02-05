@@ -88,7 +88,7 @@ namespace VirtoCommerce.OrderWorkflow
 						decimal lineItemTaxTotal = 0m;
 
 						// Try getting an address
-						var address = GetAddressByName(form, shipment.ShippingAddressId);
+                        var address = GetAddressByName(order, shipment.ShippingAddressId);
 						if (address != null) // no taxes if there is no address
 						{
 							// Try getting an item
@@ -105,7 +105,7 @@ namespace VirtoCommerce.OrderWorkflow
 									{
 										if (tax != null)
 										{
-                                            var taxAmount = Math.Round(lineItem.PlacedPrice * (tax.Percentage / 100), 2) * lineItem.Quantity;
+                                            var taxAmount = Math.Round(lineItem.ExtendedPrice * (tax.Percentage / 100), 2);
 											if (tax.Tax.TaxType == (int) TaxTypes.SalesTax)
 											{
 												itemTax += taxAmount;
@@ -134,9 +134,9 @@ namespace VirtoCommerce.OrderWorkflow
 			order.TaxTotal = order.OrderForms.Sum(x=>x.TaxTotal);
 		}
 
-		private OrderAddress GetAddressByName(OrderForm form, string shipmentAddressId)
+		private OrderAddress GetAddressByName(OrderGroup orderGroup, string shipmentAddressId)
 		{
-			return form.OrderGroup.OrderAddresses
+            return orderGroup.OrderAddresses
 				.SingleOrDefault(a => a.OrderAddressId == shipmentAddressId);
 		}
 

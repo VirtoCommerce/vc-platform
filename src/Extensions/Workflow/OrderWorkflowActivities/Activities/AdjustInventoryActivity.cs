@@ -95,7 +95,7 @@ namespace VirtoCommerce.OrderWorkflow
 			if (item != null && item.TrackInventory)
 			{
                 var repo = InventoryRepository;
-                var inventory = catalogHelper.GetItemInventory(lineItem.CatalogItemId, lineItem.FulfillmentCenterId);
+                var inventory = catalogHelper.GetItemInventory(lineItem.CatalogItemId, lineItem.FulfillmentCenterId, false);
 			    if (inventory != null)
 			    {
 				    if (AdjustStockInventoryQuantity(lineItem, inventory))

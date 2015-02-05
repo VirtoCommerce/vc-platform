@@ -311,7 +311,7 @@ namespace VirtoCommerce.Bootstrapper.Main.ViewModels
 		{
 			get
 			{
-				return IsInDesignMode ? "Virto Commerce SDK 1.12" : _componentMessageAction;
+				return IsInDesignMode ? "Virto Commerce SDK 1.13" : _componentMessageAction;
 			}
 			private set { _componentMessageAction = value; OnPropertyChanged(); }
 		}

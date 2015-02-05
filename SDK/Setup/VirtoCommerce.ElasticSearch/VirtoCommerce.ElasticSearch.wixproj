@@ -52,8 +52,6 @@
   <ItemGroup>
     <Folder Include="Distro" />
     <Folder Include="Distro\bin\" />
-    <Folder Include="Distro\bin\x64\" />
-    <Folder Include="Distro\bin\x86\" />
     <Folder Include="Distro\config\" />
     <Folder Include="Distro\lib\" />
     <Folder Include="Distro\lib\sigar\" />
@@ -62,27 +60,44 @@
     <Content Include="..\VirtoCommerce.Installer\Shared.wxi">
       <Link>Shared.wxi</Link>
     </Content>
+    <Content Include="Distro\bin\elasticsearch-service-mgr.exe" />
+    <Content Include="Distro\bin\elasticsearch-service-x64.exe" />
+    <Content Include="Distro\bin\elasticsearch-service-x86.exe" />
     <Content Include="Distro\bin\elasticsearch.bat" />
+    <Content Include="Distro\bin\esi_config.bat" />
+    <Content Include="Distro\bin\esi_elasticsearch.bat" />
+    <Content Include="Distro\bin\esi_plugin.bat" />
+    <Content Include="Distro\bin\esi_service.bat" />
+    <Content Include="Distro\bin\esi_service_uninstall.bat" />
     <Content Include="Distro\bin\plugin.bat" />
-    <Content Include="Distro\bin\x64\elasticsearchw.exe" />
-    <Content Include="Distro\bin\x86\elasticsearchw.exe" />
+    <Content Include="Distro\bin\service.bat" />
     <Content Include="Distro\config\elasticsearch.yml" />
     <Content Include="Distro\config\logging.yml" />
-    <Content Include="Distro\lib\elasticsearch-0.20.5.jar" />
+    <Content Include="Distro\lib\elasticsearch-1.1.1.jar" />
     <Content Include="Distro\lib\elasticsearchw-uninstall.cmd" />
     <Content Include="Distro\lib\elasticsearchw-update.cmd" />
     <Content Include="Distro\lib\elasticsearchw.jar" />
     <Content Include="Distro\lib\jna-3.3.0.jar" />
+    <Content Include="Distro\lib\jts-1.13.jar" />
     <Content Include="Distro\lib\log4j-1.2.17.jar" />
-    <Content Include="Distro\lib\lucene-analyzers-3.6.2.jar" />
-    <Content Include="Distro\lib\lucene-core-3.6.2.jar" />
-    <Content Include="Distro\lib\lucene-highlighter-3.6.2.jar" />
-    <Content Include="Distro\lib\lucene-memory-3.6.2.jar" />
-    <Content Include="Distro\lib\lucene-queries-3.6.2.jar" />
+    <Content Include="Distro\lib\lucene-analyzers-common-4.7.2.jar" />
+    <Content Include="Distro\lib\lucene-codecs-4.7.2.jar" />
+    <Content Include="Distro\lib\lucene-core-4.7.2.jar" />
+    <Content Include="Distro\lib\lucene-grouping-4.7.2.jar" />
+    <Content Include="Distro\lib\lucene-highlighter-4.7.2.jar" />
+    <Content Include="Distro\lib\lucene-join-4.7.2.jar" />
+    <Content Include="Distro\lib\lucene-memory-4.7.2.jar" />
+    <Content Include="Distro\lib\lucene-misc-4.7.2.jar" />
+    <Content Include="Distro\lib\lucene-queries-4.7.2.jar" />
+    <Content Include="Distro\lib\lucene-queryparser-4.7.2.jar" />
+    <Content Include="Distro\lib\lucene-sandbox-4.7.2.jar" />
+    <Content Include="Distro\lib\lucene-spatial-4.7.2.jar" />
+    <Content Include="Distro\lib\lucene-suggest-4.7.2.jar" />
     <Content Include="Distro\lib\sigar\sigar-1.6.4.jar" />
     <Content Include="Distro\lib\sigar\sigar-amd64-winnt.dll" />
     <Content Include="Distro\lib\sigar\sigar-x86-winnt.dll" />
-    <Content Include="Distro\lib\snappy-java-1.0.4.1.jar" />
+    <Content Include="Distro\lib\sigar\sigar-x86-winnt.lib" />
+    <Content Include="Distro\lib\spatial4j-0.4.1.jar" />
     <Content Include="Distro\LICENSE.txt" />
     <Content Include="Distro\NOTICE.txt" />
   </ItemGroup>

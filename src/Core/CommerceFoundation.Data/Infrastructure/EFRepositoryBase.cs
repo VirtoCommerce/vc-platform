@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -258,7 +259,16 @@ namespace VirtoCommerce.Foundation.Data
 			return Set<T>();
 		}
 
-		#endregion
+        /// <summary>
+        /// Refreshes the specified collection.
+        /// </summary>
+        /// <param name="collection">The collection.</param>
+	    public void Refresh(IEnumerable collection)
+	    {
+            ObjectContext.Refresh(RefreshMode.StoreWins, collection);
+	    }
+
+	    #endregion
 
 		/// <summary>
 		/// Saves all changes made in this context to the underlying database.
