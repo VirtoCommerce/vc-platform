@@ -16,6 +16,7 @@ using VirtoCommerce.OrderModule.Data.Interceptors;
 using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Foundation.Frameworks.Workflow.Services;
 using VirtoCommerce.OrderModule.Data.Workflow;
+using VirtoCommerce.Foundation.Data.Infrastructure;
 
 namespace VirtoCommerce.OrderModule.Web
 {
@@ -45,6 +46,7 @@ namespace VirtoCommerce.OrderModule.Web
 			//Subscribe to order changes. Calculate totals  
 			orderWorkflowService.Subscribe(new CalculateTotalsActivity());
 			_container.RegisterInstance<IObservable<CustomerOrder>>(orderWorkflowService);
+			_container.RegisterInstance<IWorkflowService>(orderWorkflowService);
 		
 			_container.RegisterType<Func<IOrderRepository>>(new InjectionFactory(x => orderRepositoryFactory));
 			_container.RegisterInstance<IInventoryService>(mockInventory.Object);
@@ -63,7 +65,7 @@ namespace VirtoCommerce.OrderModule.Web
 		{
 			using (var context = new OrderRepositoryImpl())
 			{
-				var initializer = new OrderDatabaseInitializer();
+				var initializer = new  SetupDatabaseInitializer<OrderRepositoryImpl, VirtoCommerce.OrderModule.Data.Migrations.Configuration>();
 				initializer.InitializeDatabase(context);
 			}
 		}

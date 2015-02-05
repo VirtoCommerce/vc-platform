@@ -62,9 +62,9 @@
     <Compile Include="Converters\PaymentInConverter.cs" />
     <Compile Include="Converters\ShipmentConverter.cs" />
     <Compile Include="Interceptors\InventoryOperationInterceptor.cs" />
-    <Compile Include="Migrations\201502031631109_Initial.cs" />
-    <Compile Include="Migrations\201502031631109_Initial.Designer.cs">
-      <DependentUpon>201502031631109_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\201502050914047_Initial.cs" />
+    <Compile Include="Migrations\201502050914047_Initial.Designer.cs">
+      <DependentUpon>201502050914047_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
@@ -74,7 +74,6 @@
     <Compile Include="Model\OperationEntity.cs" />
     <Compile Include="Model\PaymentInEntity.cs" />
     <Compile Include="Model\ShipmentEntity.cs" />
-    <Compile Include="OrderDatabaseInitializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\InMemoryOrderRepository.cs" />
     <Compile Include="Repositories\IOrderRepository.cs" />
@@ -104,8 +103,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201502031631109_Initial.resx">
-      <DependentUpon>201502031631109_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201502050914047_Initial.resx">
+      <DependentUpon>201502050914047_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

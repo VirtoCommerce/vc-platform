@@ -322,7 +322,8 @@ namespace VirtoCommerce.OrderModule.Test
 				return new CartRepositoryImpl("VirtoCommerce", new AuditableInterceptor());
 			};
 
-			var cartService = new ShoppingCartServiceImpl(repositoryFactory);
+			var mockWorkflow = new Mock<IWorkflowService>();
+			var cartService = new ShoppingCartServiceImpl(repositoryFactory, mockWorkflow.Object);
 
 			Func<IOrderRepository> orderRepositoryFactory = () => { return new OrderRepositoryImpl("VirtoCommerce", 
 																		   new InventoryOperationInterceptor(mockInventory.Object),

@@ -7,6 +7,7 @@ using VirtoCommerce.CartModule.Data.Model;
 using VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using Omu.ValueInjecter;
+using VirtoCommerce.Foundation.Money;
 
 namespace VirtoCommerce.CartModule.Data.Converters
 {
@@ -19,7 +20,7 @@ namespace VirtoCommerce.CartModule.Data.Converters
 
 			var retVal = new LineItem();
 			retVal.InjectFrom(entity);
-
+			retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), entity.Currency);
 
 			return retVal;
 		}
@@ -31,6 +32,7 @@ namespace VirtoCommerce.CartModule.Data.Converters
 
 			var retVal = new LineItemEntity();
 			retVal.InjectFrom(lineItem);
+			retVal.Currency = lineItem.Currency.ToString();
 			return retVal;
 		}
 

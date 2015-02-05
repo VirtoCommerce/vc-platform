@@ -5,7 +5,7 @@ namespace VirtoCommerce.CartModule.Data.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<VirtoCommerce.CartModule.Data.Repositories.CartRepositoryImpl>
+    public sealed class Configuration : DbMigrationsConfiguration<VirtoCommerce.CartModule.Data.Repositories.CartRepositoryImpl>
     {
         public Configuration()
         {

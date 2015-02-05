@@ -30,9 +30,6 @@ namespace VirtoCommerce.Foundation.Frameworks
 			if (entity == null)
 				return false;
 
-			if (this.GetType() != obj.GetType())
-				return false;
-
 			if (Object.ReferenceEquals(this, obj))
 				return true;
 

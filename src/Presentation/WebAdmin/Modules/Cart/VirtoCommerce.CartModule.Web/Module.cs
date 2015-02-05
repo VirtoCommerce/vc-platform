@@ -7,6 +7,7 @@ using VirtoCommerce.CartModule.Data.Workflow;
 using VirtoCommerce.CatalogModule.Web.Controllers.Api;
 using VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Domain.Cart.Services;
+using VirtoCommerce.Foundation.Data.Infrastructure;
 using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Foundation.Frameworks.Workflow.Services;
 using VirtoCommerce.Foundation.Money;
@@ -14,7 +15,7 @@ using VirtoCommerce.Framework.Web.Modularity;
 
 namespace VirtoCommerce.CartModule.Web
 {
-	public class Module : IModule
+	public class Module : IModule, IDatabaseModule
 	{
 		private readonly IUnityContainer _container;
 		public Module(IUnityContainer container)
@@ -47,6 +48,20 @@ namespace VirtoCommerce.CartModule.Web
 
 		#endregion
 
+
+
+		#region IDatabaseModule Members
+
+		public void SetupDatabase(SampleDataLevel sampleDataLevel)
+		{
+			using (var context = new CartRepositoryImpl())
+			{
+				var initializer = new SetupDatabaseInitializer<CartRepositoryImpl, VirtoCommerce.CartModule.Data.Migrations.Configuration>();
+				initializer.InitializeDatabase(context);
+			}
 		
+		}
+
+		#endregion
 	}
 }

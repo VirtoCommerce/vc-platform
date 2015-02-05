@@ -39,6 +39,7 @@ namespace VirtoCommerce.CartModule.Test
 			{
 				CatalogId = "catalog",
 				CategoryId = "category",
+				ProductId = "product",
 				ListPrice = 10,
 				PlacedPrice = 20,
 				Quantity = 2,
@@ -71,6 +72,7 @@ namespace VirtoCommerce.CartModule.Test
 				Phone = "+68787687",
 				PostalCode = "2222",
 				CountryCode = "ENG",
+				CountryName = "England",
 				Email = "user@mail.com",
 				FirstName = "first name",
 				LastName = "last name",
@@ -114,6 +116,7 @@ namespace VirtoCommerce.CartModule.Test
 				Phone = "+68787687",
 				PostalCode = "2222",
 				CountryCode = "ENG",
+				CountryName = "England",
 				Email = "user@mail.com",
 				FirstName = "first name",
 				LastName = "last name",
