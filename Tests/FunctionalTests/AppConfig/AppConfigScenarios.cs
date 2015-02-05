@@ -65,8 +65,8 @@ namespace FunctionalTests.AppConfig
 
 			var setting = new Setting { Name = "Currencies", SettingValueType = "ShortText", IsMultiValue = true, IsSystem = true };
 			var id = setting.SettingId;
-			setting.SettingValues.Add(new SettingValue() { ValueType = "ShortText", ShortTextValue = "USD", SettingId = id });
-			setting.SettingValues.Add(new SettingValue() { ValueType = "ShortText", ShortTextValue = "EUR", SettingId = id });
+			setting.SettingValues.Add(new SettingValue { ValueType = "ShortText", ShortTextValue = "USD", SettingId = id });
+			setting.SettingValues.Add(new SettingValue { ValueType = "ShortText", ShortTextValue = "EUR", SettingId = id });
 
 			var client = GetRepository();
 			client.Add(setting);
@@ -109,7 +109,7 @@ namespace FunctionalTests.AppConfig
 
 		private IAppConfigRepository GetRepository()
 		{
-			EnsureDatabaseInitialized(() => new EFAppConfigRepository(_databaseName), () => Database.SetInitializer(new SetupMigrateDatabaseToLatestVersion<EFAppConfigRepository, Configuration>()));
+			EnsureDatabaseInitialized(() => new EFAppConfigRepository(_databaseName), () => Database.SetInitializer(new SetupDatabaseInitializer<EFAppConfigRepository, Configuration>()));
 			var retVal = new EFAppConfigRepository(_databaseName);
 			return retVal;
 		}

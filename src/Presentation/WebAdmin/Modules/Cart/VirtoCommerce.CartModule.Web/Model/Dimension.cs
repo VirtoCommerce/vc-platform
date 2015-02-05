@@ -7,7 +7,7 @@ using VirtoCommerce.Foundation.Frameworks;
 
 namespace VirtoCommerce.CatalogModule.Web.Model
 {
-	public class Dimension
+	public class Dimension : ValueObject<Coupon>
 	{
 		public string Unit { get; set; }
 		public decimal Height { get; set; }

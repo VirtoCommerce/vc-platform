@@ -18,10 +18,8 @@ namespace VirtoCommerce.CartModule.Web.Converters
 			retVal.InjectFrom(cart);
 
 			retVal.Currency = cart.Currency;
-			if(cart.BillingAddresses != null)
-				retVal.BillingAddresses = cart.BillingAddresses.Select(x => x.ToWebModel()).ToList();
-			if(cart.ShippingAddresses != null)
-				retVal.ShippingAddresses = cart.ShippingAddresses.Select(x => x.ToWebModel()).ToList();
+			if(cart.Addresses != null)
+				retVal.Addresses = cart.Addresses.Select(x => x.ToWebModel()).ToList();
 			if(cart.Items != null)
 				retVal.Items = cart.Items.Select(x => x.ToWebModel()).ToList();
 			if(cart.Payments != null)
@@ -39,18 +37,10 @@ namespace VirtoCommerce.CartModule.Web.Converters
 			var retVal = new coreModel.ShoppingCart();
 			retVal.InjectFrom(cart);
 
-		
-			if(retVal.IsTransient())
-			{
-				retVal.Id = Guid.NewGuid().ToString();
-			}
-
 			retVal.Currency = cart.Currency;
 					
-			if(cart.BillingAddresses != null)
-				retVal.BillingAddresses = cart.BillingAddresses.Select(x => x.ToCoreModel()).ToList();
-			if(cart.ShippingAddresses != null)
-				retVal.ShippingAddresses = cart.ShippingAddresses.Select(x => x.ToCoreModel()).ToList();
+			if(cart.Addresses != null)
+				retVal.Addresses = cart.Addresses.Select(x => x.ToCoreModel()).ToList();
 			if(cart.Items != null)
 				retVal.Items = cart.Items.Select(x => x.ToCoreModel()).ToList();
 			if(cart.Payments != null)
@@ -59,7 +49,10 @@ namespace VirtoCommerce.CartModule.Web.Converters
 				retVal.Shipments = cart.Shipments.Select(x => x.ToCoreModel()).ToList();
 			if(cart.Discounts != null)
 				retVal.Discounts = cart.Discounts.Select(x => x.ToCoreModel()).ToList();
-
+			if(cart.Coupon != null)
+			{
+				retVal.Coupon = new coreModel.Coupon() { CouponCode = cart.Coupon.CouponCode, InvalidDescription = cart.Coupon.InvalidDescription };
+			}
 			return retVal;
 		}
 

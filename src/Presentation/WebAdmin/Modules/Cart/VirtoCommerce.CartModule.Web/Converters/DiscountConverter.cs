@@ -25,11 +25,6 @@ namespace VirtoCommerce.CartModule.Web.Converters
 			var retVal = new coreModel.Discount();
 			retVal.InjectFrom(discount);
 			retVal.Currency = discount.Currency;
-			if (retVal.IsTransient())
-			{
-				retVal.Id = Guid.NewGuid().ToString();
-			}
-		
 			return retVal;
 		}
 

@@ -6,7 +6,8 @@ namespace VirtoCommerce.Domain.Order.Model
 	public class CustomerOrder : Operation
 	{
 		public string CustomerId { get; set; }
-		public string SiteId { get; set; }
+		public string ChannelId { get; set; }
+		public string StoreId { get; set; }
 		public string OrganizationId { get; set; }
 		public string EmployeeId { get; set; }
 
@@ -42,44 +43,6 @@ namespace VirtoCommerce.Domain.Order.Model
 					}
 				}
 				return retVal;
-			}
-		}
-
-		public virtual void CalculateTotals()
-		{
-			Sum = 0;
-			if (Items != null)
-			{
-				foreach (var item in Items)
-				{
-					Sum += item.Price * item.Quantity;
-					if (item.Discount != null)
-					{
-						Sum -= item.Discount.DiscountAmount;
-					}
-					else
-					{
-						Sum -= item.StaticDiscount;
-					}
-				}
-			}
-
-			if (Shipments != null)
-			{
-				foreach (var shipment in Shipments)
-				{
-					shipment.CalculateTotals();
-				}
-			}
-
-			if (Discount != null)
-			{
-				Sum -= Discount.DiscountAmount;
-			}
-
-			if (TaxIncluded ?? false)
-			{
-				Sum += Tax;
 			}
 		}
 	}

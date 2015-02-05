@@ -201,14 +201,14 @@
     <Compile Include="Providers\NamedSiteMapNodeVisibilityProvider.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Commerce.ApiClient\Commerce.ApiClient.csproj">
-      <Project>{84b945b7-85e4-4057-b0df-1f8a03b8d53c}</Project>
-      <Name>Commerce.ApiClient</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Commerce.ApiClient\VirtoCommerce.ApiClient.csproj">
+      <Project>{291360b7-9a91-453b-b81e-76d6c90b92ea}</Project>
+      <Name>VirtoCommerce.ApiClient</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />

@@ -17,7 +17,7 @@ namespace VirtoCommerce.ApiClient.Extensions
             var session = ClientContext.Session;
             language = String.IsNullOrEmpty(language) ? session.Language : language;
 
-            var connectionString = ClientContext.Configuration.ConnectionString + String.Format("{0}/", language);
+            var connectionString = String.Format("{0}{1}/{2}/", ClientContext.Configuration.ConnectionString, "mp", language);
             return CreateContentClient(source, connectionString);
         }
 

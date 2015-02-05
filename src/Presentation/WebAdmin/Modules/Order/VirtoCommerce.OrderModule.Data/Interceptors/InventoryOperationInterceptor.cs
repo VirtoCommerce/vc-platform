@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using VirtoCommerce.Domain.Inventory.Model;
 using VirtoCommerce.Domain.Inventory.Services;
+using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
 using VirtoCommerce.OrderModule.Data.Model;
 
@@ -29,13 +30,13 @@ namespace VirtoCommerce.OrderModule.Data.Interceptors
 			var changedEntries = context.ChangeTracker.Entries().Where(entry => (entry.State == EntityState.Added) || (entry.State == EntityState.Modified) || (entry.State == EntityState.Deleted));
 			foreach (var changedEntry in changedEntries)
 			{
-				var shipmentEntity = changedEntry.Entity as ShipmentEntity;
-				if(shipmentEntity != null && shipmentEntity.IsApproved)
+				var stockOutOperation = changedEntry.Entity as IStockOutOperation;
+				if (stockOutOperation != null && stockOutOperation.IsApproved)
 				{
-					var inventoryInfos = _inventoryService.GetProductInventoryInfos(shipmentEntity.Items.Select(x=>x.ProductId))
+					var inventoryInfos = _inventoryService.GetProductInventoryInfos(stockOutOperation.Positions.Select(x => x.ProductId))
 														  .ToArray();
 					var changedInventoryInfos = new List<InventoryInfo>();
-					foreach(var lineItem in shipmentEntity.Items)
+					foreach (var lineItem in stockOutOperation.Positions)
 					{
 						var inventoryInfo = inventoryInfos.FirstOrDefault(x => x.ProductId == lineItem.ProductId);
 						if(inventoryInfo != null)

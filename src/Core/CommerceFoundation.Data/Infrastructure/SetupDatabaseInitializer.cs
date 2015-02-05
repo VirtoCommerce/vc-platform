@@ -1,43 +1,107 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Migrations;
 using System.Data.SqlClient;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using Microsoft.Win32;
+using VirtoCommerce.Foundation.Frameworks.Extensions;
 
 namespace VirtoCommerce.Foundation.Data.Infrastructure
 {
-	public abstract class SetupDatabaseInitializer<TContext, TMigrationsConfiguration> : SetupMigrateDatabaseToLatestVersion<TContext, TMigrationsConfiguration>
+	/// <summary>
+	/// An implementation of <see cref="IDatabaseInitializer{TContext}" /> that will use Code First Migrations
+	/// to update the database to the latest version.
+	/// </summary>
+	public class SetupDatabaseInitializer<TContext, TMigrationsConfiguration> : IDatabaseInitializer<TContext>
 		where TContext : DbContext
 		where TMigrationsConfiguration : DbMigrationsConfiguration<TContext>, new()
 	{
-		private const string _splitByGoRegex = @"(?m)^\s*GO\s*\d*\s*$";
+		private DbMigrationsConfiguration _config;
 
-		protected string[] SplitScriptByGo(string script)
+		public string DataDirectoryPath { get; set; }
+
+		/// <summary>
+		/// Initializes the database.
+		/// </summary>
+		/// <param name="context">The context.</param>
+		/// <inheritdoc />
+		public virtual void InitializeDatabase(TContext context)
 		{
-			return Regex.Split(script + Environment.NewLine, _splitByGoRegex, RegexOptions.IgnoreCase | RegexOptions.Multiline);
+			if (_config == null)
+			{
+				_config = new TMigrationsConfiguration
+				{
+					TargetDatabase = new DbConnectionInfo(context.Database.Connection.ConnectionString, "System.Data.SqlClient")
+				};
+			}
+
+			var migrator = new System.Data.Entity.Migrations.DbMigrator(_config);
+			var pending = migrator.GetPendingMigrations().Count();
+			var local = migrator.GetLocalMigrations().Count();
+			var exists = context.Database.Exists();
+
+			if (!exists || pending > 0)
+			{
+				try
+				{
+					migrator.Update();
+				}
+				catch (SqlException ex)
+				{
+					throw new ApplicationException(string.Format("Migrations failed with error \"{0}\"", ex.ExpandExceptionMessage()), ex);
+				}
+
+				InitializeDbSettings(context);
+
+				if (pending == local)
+				{
+					Seed(context);
+				}
+			}
 		}
 
-		protected SetupDatabaseInitializer()
+		protected virtual void InitializeDbSettings(TContext context)
+		{
+			// update general database settings here, for azure we need to connect to master db
+			var originalDbName = context.Database.Connection.Database;
+			var connectionString = context.Database.Connection.ConnectionString;
+
+			// do not modify connection string for localdb
+			if (!connectionString.ToLowerInvariant().Contains("(LocalDb)".ToLowerInvariant()))
+			{
+				var csBuilder = new SqlConnectionStringBuilder(connectionString) { InitialCatalog = "master" };
+				connectionString = csBuilder.ToString();
+			}
+
+			using (var dbConnection = new SqlConnection(connectionString))
+			{
+				dbConnection.Open();
+				var cmd = dbConnection.CreateCommand();
+				cmd.CommandText = string.Format(@"ALTER DATABASE [{0}] SET RECURSIVE_TRIGGERS ON;", originalDbName);
+				cmd.ExecuteNonQuery();
+			}
+		}
+
+		/// <summary>
+		/// Seeds the specified context.
+		/// </summary>
+		/// <param name="context">The context.</param>
+		protected virtual void Seed(TContext context)
 		{
 		}
 
-		protected SetupDatabaseInitializer(string connectionString)
-			: base(connectionString)
+		protected virtual void ExecuteSqlScriptFile(DbContext context, string fileName, string modelName)
 		{
-		}
+			var text = ReadSqlScriptFile(fileName, modelName);
 
-		protected virtual void RunCommand(DbContext context, string fileName, string modelName)
-		{
-			var text = ReadSql(fileName, modelName);
-			if (!String.IsNullOrEmpty(text))
+			if (!string.IsNullOrEmpty(text))
 			{
 				// this allows to have GO in the script
-				foreach (var cmd in SplitScriptByGo(text).Where(cmd => !String.IsNullOrEmpty(cmd)))
+				foreach (var cmd in SplitScriptByGo(text).Where(cmd => !string.IsNullOrEmpty(cmd)))
 				{
 					try
 					{
@@ -46,7 +110,7 @@ namespace VirtoCommerce.Foundation.Data.Infrastructure
 					catch (SqlException ex)
 					{
 						throw new ApplicationException(
-							String.Format(
+							string.Format(
 								"Failed to process \"{0}\" in \"{1}\" model. Message: {2}",
 								fileName,
 								modelName,
@@ -61,71 +125,45 @@ namespace VirtoCommerce.Foundation.Data.Infrastructure
 			}
 		}
 
-		protected virtual bool ExecuteCommand(string filename, string arguments)
+		protected virtual string ReadSqlScriptFile(string fileName, string modelName)
 		{
-			var startInfo = new ProcessStartInfo
+			string result = null;
+
+			var paths = new List<string>
 			{
-				CreateNoWindow = true,
-				UseShellExecute = false,
-				FileName = filename,
-				WindowStyle = ProcessWindowStyle.Hidden,
-				Arguments = arguments
+				Path.Combine(AppDomain.CurrentDomain.BaseDirectory, modelName, "Data", fileName),
+				Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "bin", modelName, "Data", fileName),
+				Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "App_Data", modelName, "Data", fileName),
+				Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName)
 			};
 
-			try
+			if (!string.IsNullOrEmpty(DataDirectoryPath))
+				paths.Insert(0, Path.Combine(DataDirectoryPath, modelName, "Data", fileName));
+
+			var path = paths.FirstOrDefault(File.Exists);
+
+			if (path != null)
 			{
-				using (var exeProcess = Process.Start(startInfo))
-				{
-					if (exeProcess != null)
-					{
-						exeProcess.WaitForExit();
-					}
-				}
+				result = File.ReadAllText(path);
 			}
-			catch
+			else
 			{
-				return false;
+				var assembly = Assembly.GetExecutingAssembly();
+				var assemblyName = assembly.FullName.Substring(0, assembly.FullName.IndexOf(','));
+				var name = string.Join(".", assemblyName, modelName, "Data", fileName);
+				var stream = assembly.GetManifestResourceStream(name);
+
+				if (stream != null)
+					result = new StreamReader(stream).ReadToEnd();
 			}
-			return true;
+
+			return result;
 		}
 
-		protected virtual string ReadSql(string fileName, string modelName)
+		protected virtual string[] SplitScriptByGo(string script)
 		{
-			var assembly = Assembly.GetExecutingAssembly();
-			var assemblyName = assembly.FullName.Substring(0, assembly.FullName.IndexOf(','));
-			var name = String.Format("{0}.{1}.Data.{2}",
-				assemblyName,
-				modelName,
-				fileName);
-			var stream = assembly.GetManifestResourceStream(name);
-			Debug.Assert(stream != null);
-			return new StreamReader(stream).ReadToEnd();
-		}
-
-		public static string GetFrameworkDirectory()
-		{
-			// This is the location of the .Net Framework Registry Key
-			const string framworkRegPath = @"Software\Microsoft\.NetFramework";
-
-			// Get a non-writable key from the registry
-			var netFramework = Registry.LocalMachine.OpenSubKey(framworkRegPath, false);
-
-			// Retrieve the install root path for the framework
-			if (netFramework != null)
-			{
-				var installRoot = netFramework.GetValue("InstallRoot").ToString();
-
-				// Retrieve the version of the framework executing this program
-				var version = string.Format(@"v{0}.{1}.{2}\",
-					Environment.Version.Major,
-					Environment.Version.Minor,
-					Environment.Version.Build);
-
-				// Return the path of the framework
-				return Path.Combine(installRoot, version);
-			}
-
-			return string.Empty;
+			const string splitByGoRegex = @"(?m)^\s*GO\s*\d*\s*$";
+			return Regex.Split(script + Environment.NewLine, splitByGoRegex, RegexOptions.IgnoreCase | RegexOptions.Multiline);
 		}
 	}
 }

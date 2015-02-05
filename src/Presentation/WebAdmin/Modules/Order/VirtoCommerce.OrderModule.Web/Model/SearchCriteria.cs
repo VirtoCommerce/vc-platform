@@ -15,7 +15,7 @@ namespace VirtoCommerce.OrderModule.Web.Model
 
 		public string Keyword { get; set; }
 		public string CustomerId { get; set; }
-		public string SiteId { get; set; }
+		public string StoreId { get; set; }
 
 		public int Start { get; set; }
 

@@ -34,7 +34,7 @@ namespace VirtoCommerce.Foundation.Data.AppConfig
 		{
 			foreach (var file in GetSampleFiles())
 			{
-				RunCommand(context, file, "AppConfig");
+				ExecuteSqlScriptFile(context, file, "AppConfig");
 			}
 		}
 

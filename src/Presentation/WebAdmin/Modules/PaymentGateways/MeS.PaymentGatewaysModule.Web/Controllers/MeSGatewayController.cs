@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
+using System.Web.Http.ModelBinding;
 using VirtoCommerce.Domain.Payment.Services;
 using VirtoCommerce.Foundation.Money;
 using VirtoCommerce.Framework.Web.Settings;
@@ -35,21 +36,20 @@ namespace MeS.PaymentGatewaysModule.Web.Controllers
 
 		[HttpPost]
 		[Route("push")]
-		public IHttpActionResult PushMesResult()
+		public IHttpActionResult PushMes([FromBody] MeSPushRequestModel mesPushRequest)
 		{
-
-
 			return Ok();
 		}
 
 		[HttpGet]
 		[ResponseType(typeof(GetPaymentParametersResult))]
-		[Route("getpaymentparameters")]
-		public IHttpActionResult GetPaymentParameters()
+		[Route("create")]
+		public IHttpActionResult CreatePayment()
 		{
 			var retVal = new GetPaymentParametersResult();
 
 			retVal.MeSAccountId = _mesAccountId;
+			retVal.InvoiceNumber = Guid.NewGuid().ToString();
 
 			return Ok(retVal);
 		}

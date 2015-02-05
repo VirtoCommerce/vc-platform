@@ -3,12 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Foundation.Frameworks;
 
 namespace VirtoCommerce.CatalogModule.Web.Model
 {
-	public class Address
+	public class Address : ValueObject<Address>
 	{
+		[JsonConverter(typeof(StringEnumConverter))]
+		public AddressType Type { get; set; }
 		public string Organization { get; set; }
 		public string CountryCode { get; set; }
 		public string CountryName { get; set; }

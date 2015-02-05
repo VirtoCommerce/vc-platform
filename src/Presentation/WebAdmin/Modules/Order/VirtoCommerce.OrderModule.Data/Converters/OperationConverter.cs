@@ -35,21 +35,4 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			target.IsApproved = source.IsApproved;
 		}
 	}
-
-	public class OperationComparer : IEqualityComparer<OperationEntity>
-	{
-		#region IEqualityComparer<Discount> Members
-
-		public bool Equals(OperationEntity x, OperationEntity y)
-		{
-			return x.Id == y.Id;
-		}
-
-		public int GetHashCode(OperationEntity obj)
-		{
-			return obj.Id.GetHashCode();
-		}
-
-		#endregion
-	}
 }

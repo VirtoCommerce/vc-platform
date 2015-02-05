@@ -10,9 +10,9 @@
 
 		private void CreateReviews(EFReviewRepository context)
 		{
-			RunCommand(context, "Review.sql", "Reviews");
-			RunCommand(context, "ReviewComment.sql", "Reviews");
-			RunCommand(context, "ReviewFieldValue.sql", "Reviews");
+			ExecuteSqlScriptFile(context, "Review.sql", "Reviews");
+			ExecuteSqlScriptFile(context, "ReviewComment.sql", "Reviews");
+			ExecuteSqlScriptFile(context, "ReviewFieldValue.sql", "Reviews");
 		}
 	}
 }

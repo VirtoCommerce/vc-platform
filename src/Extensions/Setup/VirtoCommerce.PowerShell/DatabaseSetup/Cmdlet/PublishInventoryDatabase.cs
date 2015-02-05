@@ -20,7 +20,7 @@ namespace VirtoCommerce.PowerShell.DatabaseSetup.Cmdlet
 
 			using (var db = new EFInventoryRepository(connection))
 			{
-				new SetupMigrateDatabaseToLatestVersion<EFInventoryRepository, Configuration>().InitializeDatabase(db);
+				new SetupDatabaseInitializer<EFInventoryRepository, Configuration>().InitializeDatabase(db);
 			}
 		}
 	}

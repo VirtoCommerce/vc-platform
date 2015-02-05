@@ -136,7 +136,7 @@ namespace VirtoCommerce.Foundation.Data.Customers
 
 		private void FillCustomersScripts(EFCustomerRepository client)
 		{
-			RunCommand(client, "FillRequiredCaseProperty.sql", "Customers");
+			ExecuteSqlScriptFile(client, "FillRequiredCaseProperty.sql", "Customers");
 		}
 
 		private ContactPropertyValue CreateContactAttributeValue(string name, bool booleanValue, string contactId, DateTime? dateTimeValue, decimal decimalValue, int integerValue, string longTextValue, string shortTextValue, int valueType, int priority)

@@ -12,6 +12,7 @@ using VirtoCommerce.Framework.Web.Settings;
 namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 {
 	[RoutePrefix("api/settings")]
+	[Authorize]
 	public class SettingController : ApiController
 	{
 		private readonly ISettingsManager _settingManager;
@@ -51,6 +52,19 @@ namespace VirtoCommerce.CoreModule.Web.Controllers.Api
 		public void Update(SettingDescriptor[] settings)
 		{
 			_settingManager.SaveSettings(settings);
+		}
+
+		/// <summary>
+		/// api/settings/values/name
+		/// </summary>
+		/// <returns></returns>
+		[HttpGet]
+		[ResponseType(typeof(object))]
+		[Route("values/{name}")]
+		public IHttpActionResult GetValue(string name)
+		{
+			var value = _settingManager.GetValue<object>(name, null);
+			return Ok(value);
 		}
 	}
 }

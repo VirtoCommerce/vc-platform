@@ -138,6 +138,7 @@
     <Compile Include="Models\CreatePaymentResult.cs" />
     <Compile Include="Models\GetPaymentParametersResult.cs" />
     <Compile Include="Models\MesPaymentInfo.cs" />
+    <Compile Include="Models\MeSPushRequestModel.cs" />
     <Compile Include="Module.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

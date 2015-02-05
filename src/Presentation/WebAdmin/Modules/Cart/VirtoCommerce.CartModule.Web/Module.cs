@@ -1,16 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Practices.Unity;
 using VirtoCommerce.CartModule.Data.Repositories;
 using VirtoCommerce.CartModule.Data.Services;
+using VirtoCommerce.CartModule.Data.Workflow;
 using VirtoCommerce.CatalogModule.Web.Controllers.Api;
 using VirtoCommerce.Domain.Cart.Model;
 using VirtoCommerce.Domain.Cart.Services;
+using VirtoCommerce.Foundation.Data.Infrastructure;
+using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
+using VirtoCommerce.Foundation.Frameworks.Workflow.Services;
 using VirtoCommerce.Foundation.Money;
 using VirtoCommerce.Framework.Web.Modularity;
 
 namespace VirtoCommerce.CartModule.Web
 {
-	public class Module : IModule
+	public class Module : IModule, IDatabaseModule
 	{
 		private readonly IUnityContainer _container;
 		public Module(IUnityContainer container)
@@ -22,38 +27,39 @@ namespace VirtoCommerce.CartModule.Web
 
 		public void Initialize()
 		{
-			var repository = new InMemoryCartRepository();
-			var cart1 = new ShoppingCart
+			Func<ICartRepository> cartRepositoryFactory = () =>
 			{
-				Id = "cart1",
-				Currency = CurrencyCodes.USD,
-				SiteId = "site",
-				Name = "default",
-				Items = new List<CartItem>(new[] { new CartItem { Name = "product 1", ListPrice = 9.99m, PlacedPrice = 9.45m, SalePrice = 9.09m, Quantity = 12 } ,
-                                                   new CartItem { Name = "product 2", ListPrice = 9.99m, PlacedPrice = 9.45m, SalePrice = 9.09m, Quantity = 2 } }),
-				CustomerId = "customer1",
-				CustomerName = "customer name"
+				return new CartRepositoryImpl("VirtoCommerce", new AuditableInterceptor(),
+															   new EntityPrimaryKeyGeneratorInterceptor());
 			};
-			var cart2 = new ShoppingCart
+			//Business logic for core model
+			var cartWorkflowService = new ObservableWorkflowService<ShoppingCart>();
+			//Subscribe to cart changes. Calculate totals  
+			cartWorkflowService.Subscribe(new CalculateTotalsActivity());
+			_container.RegisterInstance<IObservable<ShoppingCart>>(cartWorkflowService);
+		
+
+			_container.RegisterType<Func<ICartRepository>>(new InjectionFactory(x => cartRepositoryFactory));
+		
+			_container.RegisterType<IShoppingCartService, ShoppingCartServiceImpl>();
+			_container.RegisterType<IShoppingCartSearchService, ShoppingCartSearchServiceImpl>();
+
+		}
+
+		#endregion
+
+
+
+		#region IDatabaseModule Members
+
+		public void SetupDatabase(SampleDataLevel sampleDataLevel)
+		{
+			using (var context = new CartRepositoryImpl())
 			{
-				Id = "cart2",
-				Currency = CurrencyCodes.USD,
-				SiteId = "site",
-				Name = "default",
-				Items = new List<CartItem>(new[] { new CartItem { Name = "product 1", ListPrice = 9.99m, PlacedPrice = 9.45m, SalePrice = 9.09m, Quantity = 2 } ,
-                                                   new CartItem { Name = "product 2", ListPrice = 90.99m, PlacedPrice = 9.45m, SalePrice = 9.09m, Quantity = 1 } ,
-                                                   new CartItem { Name = "product 3", ListPrice = 19.99m, PlacedPrice = 9.45m, SalePrice = 9.09m, Quantity = 2 } }),
-				CustomerId = "customer2",
-				CustomerName = "customer2 name"
-			};
-			repository.Add(cart1);
-			repository.Add(cart2);
-			var cartService = new ShoppingCartServiceImpl(repository);
-			var searchService = new ShoppingCartSearchServiceImpl(repository);
-
-			_container.RegisterInstance<IShoppingCartService>(cartService);
-
-			_container.RegisterType<CartController>(new InjectionConstructor(cartService, searchService));
+				var initializer = new SetupDatabaseInitializer<CartRepositoryImpl, VirtoCommerce.CartModule.Data.Migrations.Configuration>();
+				initializer.InitializeDatabase(context);
+			}
+		
 		}
 
 		#endregion

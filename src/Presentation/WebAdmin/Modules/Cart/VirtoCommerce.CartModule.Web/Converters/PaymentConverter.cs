@@ -27,10 +27,7 @@ namespace VirtoCommerce.CartModule.Web.Converters
 		{
 			var retVal = new coreModel.Payment();
 			retVal.InjectFrom(payment);
-			if (retVal.IsTransient())
-			{
-				retVal.Id = Guid.NewGuid().ToString();
-			}
+
 			retVal.Currency = payment.Currency;
 
 			if (payment.BillingAddress != null)

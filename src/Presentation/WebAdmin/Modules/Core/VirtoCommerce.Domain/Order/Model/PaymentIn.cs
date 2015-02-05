@@ -7,8 +7,12 @@ using VirtoCommerce.Foundation.Money;
 
 namespace VirtoCommerce.Domain.Order.Model
 {
-	public class PaymentIn : FinanceInOperation
+	public class PaymentIn : Operation
 	{
+		public string Purpose { get; set; }
+
+		public string GatewayCode { get; set; }
+
 		public string OrganizationId { get; set; }
 		public string CustomerId { get; set; }
 

@@ -31,12 +31,8 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 
 			var retVal = new AddressEntity();
 			retVal.InjectFrom(address);
-
-			if(retVal.IsTransient())
-			{
-				retVal.Id = Guid.NewGuid().ToString();
-			}
-
+		
+			retVal.AddressType = address.AddressType.ToString();
 			return retVal;
 		}
 

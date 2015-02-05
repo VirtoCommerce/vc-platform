@@ -28,13 +28,13 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 			_secretKey = secretKey;
 		}
 
-		private const string _code = "Klarna";
+		private const string _gatewayCode = "Klarna";
 		private const string _description = "Klarna description";
 		private const string _logoUrl = "https://cdn.klarna.com/1.0/shared/image/generic/logo/global/tagline/vertical-blue.png";
 
-		public string Code
+		public string GatewayCode
 		{
-			get { return _code; }
+			get { return _gatewayCode; }
 		}
 
 		public string Description
@@ -68,7 +68,7 @@ namespace Klarna.PaymentGatewaysModule.Web.Managers
 			retVal.Amount = amount;
 
 			var status = order.GetValue("status") as string;
-			retVal.Approved = status == "checkout_complete" ? true : false;
+			retVal.IsApproved = status == "checkout_complete";
 
 			var createdDate = order.GetValue("started_at") as string;
 			DateTime dateTime;

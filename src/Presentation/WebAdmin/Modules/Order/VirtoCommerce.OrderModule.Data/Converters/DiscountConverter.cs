@@ -46,11 +46,6 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			var retVal = new DiscountEntity();
 			retVal.InjectFrom(discount);
 
-			if (retVal.IsTransient())
-			{
-				retVal.Id = Guid.NewGuid().ToString();
-			}
-
 			if (discount.Currency != null)
 			{
 				retVal.Currency = discount.Currency.ToString();

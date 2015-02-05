@@ -148,7 +148,7 @@ namespace FunctionalTests.Reviews
 		private IReviewRepository GetRepository()
 		{
 			EnsureDatabaseInitialized(() => new EFReviewRepository(_databaseName),
-				() => Database.SetInitializer(new SetupMigrateDatabaseToLatestVersion<EFReviewRepository, Configuration>()));
+				() => Database.SetInitializer(new SetupDatabaseInitializer<EFReviewRepository, Configuration>()));
 
 			if (RepositoryProvider == RepositoryProvider.DataService)
 			{

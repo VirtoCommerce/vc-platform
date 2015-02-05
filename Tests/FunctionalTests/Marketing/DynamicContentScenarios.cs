@@ -112,7 +112,7 @@ namespace FunctionalTests.Marketing
 
 		private IDynamicContentRepository GetRepository()
 		{
-			EnsureDatabaseInitialized(() => new EFDynamicContentRepository(_databaseName), () => Database.SetInitializer(new SetupMigrateDatabaseToLatestVersion<EFDynamicContentRepository, Configuration>()));
+			EnsureDatabaseInitialized(() => new EFDynamicContentRepository(_databaseName), () => Database.SetInitializer(new SetupDatabaseInitializer<EFDynamicContentRepository, Configuration>()));
 
 			if (RepositoryProvider == RepositoryProvider.DataService)
 			{

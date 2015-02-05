@@ -43,6 +43,13 @@ namespace Klarna.PaymentGatewaysModule.Web.Controllers
 		}
 
 		[HttpGet]
+		[Route("pusher")]
+		public IHttpActionResult Push(string klarna, string sid)
+		{
+			return Ok();
+		}
+
+		[HttpGet]
 		[Route("push")]
 		public IHttpActionResult PushKlarnaResult(string klarna, string sid)
 		{

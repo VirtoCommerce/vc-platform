@@ -20,6 +20,8 @@ namespace VirtoCommerce.ApiClient
                     _ConnectionString = ConnectionHelper.GetConnectionString("VirtoCommerce");
                 }
 
+                if (!_ConnectionString.EndsWith("/")) _ConnectionString += "/";
+
                 return _ConnectionString;
             }
             set

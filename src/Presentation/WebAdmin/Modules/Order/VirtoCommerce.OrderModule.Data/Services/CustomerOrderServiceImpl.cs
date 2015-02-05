@@ -11,19 +11,24 @@ using VirtoCommerce.OrderModule.Data.Converters;
 using VirtoCommerce.OrderModule.Data.Repositories;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using VirtoCommerce.Foundation.Frameworks;
+using VirtoCommerce.Foundation.Frameworks.Workflow.Services;
 
 namespace VirtoCommerce.OrderModule.Data.Services
 {
 	public class CustomerOrderServiceImpl : ModuleServiceBase, ICustomerOrderService
 	{
+		private const string _workflowName = "OrderRecalculate";
 		private readonly Func<IOrderRepository> _repositoryFactory;
 		private readonly IOperationNumberGenerator _operationNumberGenerator;
 		private readonly IShoppingCartService _shoppingCartService;
-		public CustomerOrderServiceImpl(Func<IOrderRepository> orderRepositoryFactory, IShoppingCartService shoppingCartService, IOperationNumberGenerator operationNumberGenerator)
+		private readonly IWorkflowService _workflowService;
+		public CustomerOrderServiceImpl(Func<IOrderRepository> orderRepositoryFactory, IShoppingCartService shoppingCartService, 
+										IOperationNumberGenerator operationNumberGenerator, IWorkflowService workflowService)
 		{
 			_repositoryFactory = orderRepositoryFactory;
 			_shoppingCartService = shoppingCartService;
 			_operationNumberGenerator = operationNumberGenerator;
+			_workflowService = workflowService;
 		}
 
 		#region ICustomerOrderService Members
@@ -44,7 +49,8 @@ namespace VirtoCommerce.OrderModule.Data.Services
 
 		public virtual CustomerOrder Create(CustomerOrder order)
 		{
-			order.CalculateTotals();
+			RecalculateOrder(order);
+
 			EnsureThatAllOperationsHasNumber(order);
 
 			//TODO: for approved sipments need decrease inventory
@@ -68,10 +74,11 @@ namespace VirtoCommerce.OrderModule.Data.Services
 			{
 				Currency = shoppingCart.Currency,
 				CustomerId = shoppingCart.CustomerId,
-				SiteId = shoppingCart.SiteId,
+				StoreId = shoppingCart.StoreId,
 				OrganizationId = shoppingCart.OrganizationId
 			};
 
+			retVal.Items = new List<LineItem>();
 			foreach (var cartItem in shoppingCart.Items)
 			{
 				var orderItem = new LineItem
@@ -90,7 +97,31 @@ namespace VirtoCommerce.OrderModule.Data.Services
 				};
 				retVal.Items.Add(orderItem);
 			}
-			//TODO: split shipment
+			//TODO: split shipment if it not exist
+			retVal.Shipments = new List<Shipment>();
+			foreach(var cartShipment in shoppingCart.Shipments)
+			{
+				var shipment = new Shipment
+				{
+					Currency = cartShipment.Currency,
+					Sum = cartShipment.ShippingPrice,
+					 
+					DeliveryAddress = new Address
+					{
+						AddressType = Domain.Order.Model.AddressType.Shipping,
+						City = cartShipment.DeliveryAddress.City,
+						Phone = cartShipment.DeliveryAddress.Phone,
+						PostalCode = cartShipment.DeliveryAddress.PostalCode,
+						CountryCode = cartShipment.DeliveryAddress.CountryCode,
+						Email = cartShipment.DeliveryAddress.Email,
+						FirstName = cartShipment.DeliveryAddress.FirstName,
+						LastName = cartShipment.DeliveryAddress.LastName,
+						Line1 = cartShipment.DeliveryAddress.Line1,
+						Organization = cartShipment.DeliveryAddress.Organization
+					}
+				};
+				retVal.Shipments.Add(shipment);
+			}
 
 			retVal = Create(retVal);
 
@@ -129,7 +160,7 @@ namespace VirtoCommerce.OrderModule.Data.Services
 				foreach (var changedOrder in changedOrders)
 				{
 					//Do business logic on temporary  order object
-					changedOrder.CalculateTotals();
+					RecalculateOrder(changedOrder);
 
 					EnsureThatAllOperationsHasNumber(changedOrder);
 					
@@ -155,7 +186,14 @@ namespace VirtoCommerce.OrderModule.Data.Services
 		}
 		#endregion
 
-	
+
+		private void RecalculateOrder(CustomerOrder order)
+		{
+			var parameters = new Dictionary<string, object>();
+			parameters["order"] = order;
+			_workflowService.RunWorkflow(_workflowName, parameters, null);
+		}
+
 		private void EnsureThatAllOperationsHasNumber(CustomerOrder order)
 		{
 			 foreach(var operation in order.Traverse<Operation>(x=>x.ChildrenOperations))

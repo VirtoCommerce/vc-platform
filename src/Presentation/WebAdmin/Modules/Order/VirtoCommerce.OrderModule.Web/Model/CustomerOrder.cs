@@ -13,8 +13,8 @@ namespace VirtoCommerce.OrderModule.Web.Model
 	{
 		public string Customer { get; set; }
 		public string CustomerId { get; set; }
-		public string Site { get; set; }
-		public string SiteId { get; set; }
+		public string ChannelId { get; set; }
+		public string StoreId { get; set; }
 		public string Organization { get; set; }
 		public string OrganizationId { get; set; }
 		public string Employee { get; set; }

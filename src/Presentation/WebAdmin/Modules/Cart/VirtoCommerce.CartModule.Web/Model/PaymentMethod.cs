@@ -7,7 +7,7 @@ using VirtoCommerce.Foundation.Frameworks;
 
 namespace VirtoCommerce.CatalogModule.Web.Model
 {
-	public class PaymentMethod 
+	public class PaymentMethod  : ValueObject<PaymentMethod>
 	{
 		public string GatewayCode { get; set; }
 		public string Name { get; set; }

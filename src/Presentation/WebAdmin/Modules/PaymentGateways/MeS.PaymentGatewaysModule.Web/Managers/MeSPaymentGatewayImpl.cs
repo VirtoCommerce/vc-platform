@@ -2,19 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using VirtoCommerce.Domain.Payment.Model;
 using VirtoCommerce.Domain.Payment.Services;
 
 namespace MeS.PaymentGatewaysModule.Web.Managers
 {
 	public class MeSPaymentGatewayImpl : IPaymentGateway
 	{
-		private const string _code = "MeS";
+		private const string _gatewayCode = "MeS";
 		private const string _description = "MeS Description";
 		private const string _logoUrl = "https://www.merchante-solutions.com/wp-content/themes/Foundation-master/img/logo2.png";
 
-		public string Code
+		public string GatewayCode
 		{
-			get { return _code; }
+			get { return _gatewayCode; }
 		}
 
 		public string Description
@@ -27,12 +28,17 @@ namespace MeS.PaymentGatewaysModule.Web.Managers
 			get { return _logoUrl; }
 		}
 
-		public VirtoCommerce.Domain.Payment.Model.PaymentInfo GetPaymentById(string id)
+		public PaymentInfo GetPaymentById(string id)
 		{
-			throw new NotImplementedException();
+			var retVal = new PaymentInfo();
+			{
+
+			};
+
+			return retVal;
 		}
 
-		public VirtoCommerce.Domain.Payment.Model.PaymentInfo CreatePayment(VirtoCommerce.Domain.Payment.Model.PaymentInfo paymentInfo)
+		public PaymentInfo CreatePayment(PaymentInfo paymentInfo)
 		{
 			throw new NotImplementedException();
 		}
