@@ -163,7 +163,7 @@ $RECYCLE.BIN/
 /src/Presentation/FrontEnd/StoreWebApp/App_Data/Virto/search
 /src/Presentation/FrontEnd/StoreWebApp/App_Data/Virto/Storage
 /src/Presentation/FrontEnd/StoreWebApp/bin
-#/Tools/ElasticSearch
+/Tools/ElasticSearch/data
 /VirtoCommerce.sln.GhostDoc.xml
 /Projects/Initial/src/Presentation/CarombaWebApp/bin
 /Projects/Initial/packages
