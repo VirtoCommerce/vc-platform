@@ -17,6 +17,9 @@ using webModel = VirtoCommerce.OrderModule.Web.Model;
 using VirtoCommerce.Domain.Payment.Services;
 using VirtoCommerce.OrderModule.Data.Interceptors;
 using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
+using VirtoCommerce.Foundation.Money;
+using VirtoCommerce.OrderModule.Data.Workflow;
+using VirtoCommerce.Foundation.Frameworks.Workflow.Services;
 
 namespace VirtoCommerce.OrderModule.Test
 {
@@ -35,14 +38,14 @@ namespace VirtoCommerce.OrderModule.Test
 		[TestMethod]
 		public void CreateNewOrderByShoppingCart()
 		{
-			var result = _controller.CreateOrderFromCart("e787db15-2f91-4665-bf0d-42d0c3ee8bf4") as OkNegotiatedContentResult<webModel.CustomerOrder>;
+			var result = _controller.CreateOrderFromCart("dafe9502-973a-4c9b-9bf0-b5e9c754386d") as OkNegotiatedContentResult<webModel.CustomerOrder>;
 			Assert.IsNotNull(result.Content);
 		}
 
 		[TestMethod]
 		public void CreateNewManualOrder()
 		{
-			var testOrder = GetTestOrder("order2");
+			var testOrder = GetTestOrder("order1");
 			var result = _controller.CreateOrder(testOrder) as OkNegotiatedContentResult<webModel.CustomerOrder>;
 			Assert.IsNotNull(result.Content);
 		}
@@ -188,14 +191,16 @@ namespace VirtoCommerce.OrderModule.Test
 				Currency = Foundation.Money.CurrencyCodes.USD,
 				CustomerId = "vasja customer",
 				EmployeeId = "employe",
-				SiteId = "test store",
+				StoreId = "test store",
 				Addresses = new webModel.Address[]
 				{
-					new webModel.Address {							 
+					new webModel.Address {	
+					AddressType = coreModel.AddressType.Shipping, 
 					City = "london",
 					Phone = "+68787687",
-					PostalCode = "2222",
+					PostalCode = "22222",
 					CountryCode = "ENG",
+					CountryName = "England",
 					Email = "user@mail.com",
 					FirstName = "first name",
 					LastName = "last name",
@@ -221,6 +226,7 @@ namespace VirtoCommerce.OrderModule.Test
 				DisplayName = "shoes",
 				ProductId = "shoes",
 				CatalogId = "catalog",
+				Currency = CurrencyCodes.USD,
 				CategoryId = "category",
 				Name = "shoes",
 				Quantity = 2,
@@ -245,6 +251,7 @@ namespace VirtoCommerce.OrderModule.Test
 				ProductId = "t-shirt",
 				CatalogId = "catalog",
 				CategoryId = "category",
+				Currency = CurrencyCodes.USD,
 				Name = "t-shirt",
 				Quantity = 2,
 				FulfilmentLocationCode = "warehouse1",
@@ -266,12 +273,11 @@ namespace VirtoCommerce.OrderModule.Test
 
 			var shipment = new webModel.Shipment
 			{
-				CreatedBy = "et",
-				CreatedDate = DateTime.UtcNow,
 				Currency = Foundation.Money.CurrencyCodes.USD,
 				DeliveryAddress = new webModel.Address
 				{
 					City = "london",
+					CountryName = "England",
 					Phone = "+68787687",
 					PostalCode = "2222",
 					CountryCode = "ENG",
@@ -294,6 +300,17 @@ namespace VirtoCommerce.OrderModule.Test
 			};
 			order.Shipments = new List<webModel.Shipment>();
 			order.Shipments.Add(shipment);
+
+			var payment = new webModel.PaymentIn
+			{
+				PaymentGatewayCode = "PayPal",
+				Currency = CurrencyCodes.USD,
+				Sum = 10,
+				CustomerId = "et"
+			};
+			order.InPayments = new List<webModel.PaymentIn>();
+			order.InPayments.Add(payment);
+
 			return order;
 		}
 
@@ -305,14 +322,18 @@ namespace VirtoCommerce.OrderModule.Test
 				return new CartRepositoryImpl("VirtoCommerce", new AuditableInterceptor());
 			};
 
-			var cartService = new ShoppingCartServiceImpl(repositoryFactory);
+			var mockWorkflow = new Mock<IWorkflowService>();
+			var cartService = new ShoppingCartServiceImpl(repositoryFactory, mockWorkflow.Object);
 
 			Func<IOrderRepository> orderRepositoryFactory = () => { return new OrderRepositoryImpl("VirtoCommerce", 
 																		   new InventoryOperationInterceptor(mockInventory.Object),
-																		   new AuditableInterceptor());
+																		   new AuditableInterceptor(),
+																		   new EntityPrimaryKeyGeneratorInterceptor());
 			};
-		
-			var orderService = new CustomerOrderServiceImpl(orderRepositoryFactory, cartService, new TimeBasedNumberGeneratorImpl());
+			var orderWorkflowService = new ObservableWorkflowService<coreModel.CustomerOrder>();
+			//Subscribe to order changes. Calculate totals  
+			orderWorkflowService.Subscribe(new CalculateTotalsActivity());
+			var orderService = new CustomerOrderServiceImpl(orderRepositoryFactory, cartService, new TimeBasedNumberGeneratorImpl(), orderWorkflowService);
 
 			var controller = new CustomerOrderController(orderService, null);
 			return controller;

@@ -29,12 +29,6 @@ namespace VirtoCommerce.CartModule.Web.Converters
 
 			retVal.Currency = cartItem.Currency;
 
-	
-			if (retVal.IsTransient())
-			{
-				retVal.Id = Guid.NewGuid().ToString();
-			}
-
 			if(cartItem.Discounts != null)
 				retVal.Discounts = cartItem.Discounts.Select(x => x.ToCoreModel()).ToList();
 			return retVal;

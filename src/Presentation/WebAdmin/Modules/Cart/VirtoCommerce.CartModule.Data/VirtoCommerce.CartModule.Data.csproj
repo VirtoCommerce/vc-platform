@@ -54,14 +54,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CartDatabaseInitializer.cs" />
     <Compile Include="Converters\AddressConverter.cs" />
     <Compile Include="Converters\LineItemConverter.cs" />
     <Compile Include="Converters\PaymentConverter.cs" />
     <Compile Include="Converters\ShipmentConverter.cs" />
     <Compile Include="Converters\ShoppingCartConverter.cs" />
-    <Compile Include="Migrations\201502011543475_Initial.cs" />
-    <Compile Include="Migrations\201502011543475_Initial.Designer.cs">
-      <DependentUpon>201502011543475_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\201502041625363_Initial.cs" />
+    <Compile Include="Migrations\201502041625363_Initial.Designer.cs">
+      <DependentUpon>201502041625363_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Model\AddressEntity.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="Services\ModuleSeviceBase.cs" />
     <Compile Include="Services\ShoppingCartSearchServiceImpl.cs" />
     <Compile Include="Services\ShoppingCartServiceImpl.cs" />
+    <Compile Include="Workflow\CalculateTotalsActivity.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -95,8 +97,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201502011543475_Initial.resx">
-      <DependentUpon>201502011543475_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201502041625363_Initial.resx">
+      <DependentUpon>201502041625363_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

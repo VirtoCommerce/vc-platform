@@ -28,7 +28,7 @@ namespace VirtoCommerce.OrderModule.Web.Model
 		/// Currecy code
 		/// </summary>
 		[JsonConverter(typeof(StringEnumConverter))]
-		public CurrencyCodes? Currency { get; set; }
+		public CurrencyCodes Currency { get; set; }
 		public bool TaxIncluded { get; set; }
 		public decimal Sum { get; set; }
 		public decimal Tax { get; set; }

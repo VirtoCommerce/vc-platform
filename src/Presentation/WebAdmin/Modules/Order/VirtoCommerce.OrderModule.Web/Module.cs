@@ -14,6 +14,9 @@ using VirtoCommerce.OrderModule.Web.Controllers.Api;
 using VirtoCommerce.Domain.Order.Services;
 using VirtoCommerce.OrderModule.Data.Interceptors;
 using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
+using VirtoCommerce.Foundation.Frameworks.Workflow.Services;
+using VirtoCommerce.OrderModule.Data.Workflow;
+using VirtoCommerce.Foundation.Data.Infrastructure;
 
 namespace VirtoCommerce.OrderModule.Web
 {
@@ -34,9 +37,17 @@ namespace VirtoCommerce.OrderModule.Web
 			Func<IOrderRepository> orderRepositoryFactory = () => { 
 										return new OrderRepositoryImpl("VirtoCommerce", 
 										  							 new InventoryOperationInterceptor(mockInventory.Object),
-																	 new AuditableInterceptor());
+																	 new AuditableInterceptor(),
+																	 new EntityPrimaryKeyGeneratorInterceptor());
 			};
 
+			//Business logic for core model
+			var orderWorkflowService = new ObservableWorkflowService<CustomerOrder>();
+			//Subscribe to order changes. Calculate totals  
+			orderWorkflowService.Subscribe(new CalculateTotalsActivity());
+			_container.RegisterInstance<IObservable<CustomerOrder>>(orderWorkflowService);
+			_container.RegisterInstance<IWorkflowService>(orderWorkflowService);
+		
 			_container.RegisterType<Func<IOrderRepository>>(new InjectionFactory(x => orderRepositoryFactory));
 			_container.RegisterInstance<IInventoryService>(mockInventory.Object);
 			_container.RegisterType<IOperationNumberGenerator, TimeBasedNumberGeneratorImpl>();
@@ -54,7 +65,7 @@ namespace VirtoCommerce.OrderModule.Web
 		{
 			using (var context = new OrderRepositoryImpl())
 			{
-				var initializer = new OrderDatabaseInitializer();
+				var initializer = new  SetupDatabaseInitializer<OrderRepositoryImpl, VirtoCommerce.OrderModule.Data.Migrations.Configuration>();
 				initializer.InitializeDatabase(context);
 			}
 		}

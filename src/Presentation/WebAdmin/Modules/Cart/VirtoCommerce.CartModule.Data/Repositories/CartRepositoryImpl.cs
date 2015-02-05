@@ -74,13 +74,13 @@ namespace VirtoCommerce.CartModule.Data.Repositories
 									   .WithMany(x => x.Addresses)
 									   .HasForeignKey(x => x.ShoppingCartId);
 
-			modelBuilder.Entity<AddressEntity>()
-					  .HasOptional(x => x.Shipment) 
-					  .WithRequired(x => x.DeliveryAddress);
+			modelBuilder.Entity<AddressEntity>().HasOptional(x => x.Shipment)
+									   .WithMany(x => x.Addresses)
+									   .HasForeignKey(x => x.ShipmentId);
 
-			modelBuilder.Entity<AddressEntity>()
-					  .HasOptional(x => x.Payment) 
-					  .WithRequired(x => x.BillingAddress); 
+			modelBuilder.Entity<AddressEntity>().HasOptional(x => x.Payment)
+									   .WithMany(x => x.Addresses)
+									   .HasForeignKey(x => x.PaymentId);
 
 			modelBuilder.Entity<AddressEntity>().ToTable("cart_Address");
 			#endregion
@@ -109,9 +109,9 @@ namespace VirtoCommerce.CartModule.Data.Repositories
 		{
 			var query = ShoppingCarts.Where(x => x.Id == id)
 									 .Include(x => x.Addresses)
-									 .Include(x => x.Payments.Select(y => y.BillingAddress))
+									 .Include(x => x.Payments.Select(y => y.Addresses))
 									 .Include(x => x.Items)
-									 .Include(x => x.Shipments.Select(y=> y.DeliveryAddress));
+									 .Include(x => x.Shipments.Select(y=> y.Addresses));
 			return query.FirstOrDefault();
 		}
 		#endregion

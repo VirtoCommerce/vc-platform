@@ -19,7 +19,7 @@ namespace VirtoCommerce.OrderModule.Web.Converters
 
 			//TODO: resolve id to names
 			retVal.Customer = retVal.CustomerId;
-			retVal.Site = retVal.SiteId;
+			retVal.StoreId = retVal.StoreId;
 			retVal.OrganizationId = retVal.OrganizationId;
 			retVal.EmployeeId = retVal.EmployeeId;
 

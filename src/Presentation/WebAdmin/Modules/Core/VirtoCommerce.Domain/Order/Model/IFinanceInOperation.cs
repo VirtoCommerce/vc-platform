@@ -6,10 +6,7 @@ using System.Threading.Tasks;
 
 namespace VirtoCommerce.Domain.Order.Model
 {
-	public abstract class FinanceOperation : Operation
+	public interface IFinanceInOperation : IFinanceOperation
 	{
-		public string Purpose { get; set; }
-
-		public string GatewayCode { get; set; }
 	}
 }

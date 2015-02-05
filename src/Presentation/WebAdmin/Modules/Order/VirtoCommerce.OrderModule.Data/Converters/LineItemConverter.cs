@@ -8,6 +8,7 @@ using VirtoCommerce.Domain.Order.Model;
 using VirtoCommerce.Foundation.Frameworks.Extensions;
 using Omu.ValueInjecter;
 using VirtoCommerce.OrderModule.Data.Model;
+using VirtoCommerce.Foundation.Money;
 
 namespace VirtoCommerce.OrderModule.Data.Converters
 {
@@ -20,10 +21,11 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 
 			var retVal = new LineItem();
 			retVal.InjectFrom(entity);
-	
-			if (entity.Discount != null)
+
+			retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), entity.Currency);
+			if (entity.Discounts != null && entity.Discounts.Any())
 			{
-				retVal.Discount = entity.Discount.ToCoreModel();
+				retVal.Discount = entity.Discounts.First().ToCoreModel();
 			}
 		
 			return retVal;
@@ -36,15 +38,10 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 
 			var retVal = new LineItemEntity();
 			retVal.InjectFrom(lineItem);
-
-			if (retVal.IsTransient())
-			{
-				retVal.Id = Guid.NewGuid().ToString();
-			}
-
+			retVal.Currency = lineItem.Currency.ToString();
 			if(lineItem.Discount != null)
 			{
-				retVal.Discount = lineItem.Discount.ToEntity();
+				retVal.Discounts = new ObservableCollection<DiscountEntity>(new DiscountEntity[] { lineItem.Discount.ToEntity() });
 			}
 			return retVal;
 		}
@@ -64,25 +61,12 @@ namespace VirtoCommerce.OrderModule.Data.Converters
 			target.Quantity = source.Quantity;
 			target.DiscountAmount = source.DiscountAmount;
 			target.Tax = source.Tax;
-			
+
+			if (!source.Discounts.IsNullCollection())
+			{
+				source.Discounts.Patch(target.Discounts, new DiscountComparer(), (sourceDiscount, targetDiscount) => sourceDiscount.Patch(targetDiscount));
+			}
 		}
 
-	}
-
-	public class LineItemComparer : IEqualityComparer<LineItemEntity>
-	{
-		#region IEqualityComparer<Discount> Members
-
-		public bool Equals(LineItemEntity x, LineItemEntity y)
-		{
-			return x.Id == y.Id;
-		}
-
-		public int GetHashCode(LineItemEntity obj)
-		{
-			return obj.Id.GetHashCode();
-		}
-
-		#endregion
 	}
 }

@@ -12,6 +12,8 @@ using VirtoCommerce.Foundation.Data.Infrastructure.Interceptors;
 using VirtoCommerce.Foundation.Money;
 using coreModel = VirtoCommerce.Domain.Cart.Model;
 using webModel = VirtoCommerce.CatalogModule.Web.Model;
+using VirtoCommerce.Foundation.Frameworks.Workflow.Services;
+using VirtoCommerce.CartModule.Data.Workflow;
 
 namespace VirtoCommerce.CartModule.Test
 {
@@ -37,6 +39,7 @@ namespace VirtoCommerce.CartModule.Test
 			{
 				CatalogId = "catalog",
 				CategoryId = "category",
+				ProductId = "product",
 				ListPrice = 10,
 				PlacedPrice = 20,
 				Quantity = 2,
@@ -69,6 +72,7 @@ namespace VirtoCommerce.CartModule.Test
 				Phone = "+68787687",
 				PostalCode = "2222",
 				CountryCode = "ENG",
+				CountryName = "England",
 				Email = "user@mail.com",
 				FirstName = "first name",
 				LastName = "last name",
@@ -112,6 +116,7 @@ namespace VirtoCommerce.CartModule.Test
 				Phone = "+68787687",
 				PostalCode = "2222",
 				CountryCode = "ENG",
+				CountryName = "England",
 				Email = "user@mail.com",
 				FirstName = "first name",
 				LastName = "last name",
@@ -146,10 +151,15 @@ namespace VirtoCommerce.CartModule.Test
 		{
 			Func<ICartRepository> repositoryFactory = () =>
 			{
-				return new CartRepositoryImpl("VirtoCommerce", new AuditableInterceptor());
+				return new CartRepositoryImpl("VirtoCommerce", new AuditableInterceptor(),
+															   new EntityPrimaryKeyGeneratorInterceptor());
 			};
+			//Business logic for core model
+			var cartWorkflowService = new ObservableWorkflowService<ShoppingCart>();
+			//Subscribe to cart changes. Calculate totals  
+			cartWorkflowService.Subscribe(new CalculateTotalsActivity());
 
-			var cartService = new ShoppingCartServiceImpl(repositoryFactory);
+			var cartService = new ShoppingCartServiceImpl(repositoryFactory, cartWorkflowService);
 			var searchService = new ShoppingCartSearchServiceImpl(repositoryFactory);
 			var controller = new CartController(cartService, searchService);
 			return controller;

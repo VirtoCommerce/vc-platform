@@ -21,16 +21,14 @@ namespace VirtoCommerce.CartModule.Data.Converters
 
 			var retVal = new Shipment();
 			retVal.InjectFrom(entity);
-			if (entity.Currency != null)
-			{
-				retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), entity.Currency);
-			}
+			
+			retVal.Currency = (CurrencyCodes)Enum.Parse(typeof(CurrencyCodes), entity.Currency);
 
-			if (entity.DeliveryAddress != null)
+			if (entity.Addresses != null && entity.Addresses.Any())
 			{
-				retVal.DeliveryAddress = entity.DeliveryAddress.ToCoreModel();
+				retVal.DeliveryAddress = entity.Addresses.First().ToCoreModel();
 			}
-		
+					
 			if (entity.Items != null)
 			{
 				retVal.Items = entity.Items.Select(x => x.ToCoreModel()).ToList();
@@ -46,17 +44,12 @@ namespace VirtoCommerce.CartModule.Data.Converters
 
 			var retVal = new ShipmentEntity();
 			retVal.InjectFrom(shipment);
-			if (retVal.IsTransient())
-			{
-				retVal.Id = Guid.NewGuid().ToString();
-			}
-			if (shipment.Currency != null)
-			{
-				retVal.Currency = shipment.Currency.ToString();
-			}
+	
+			retVal.Currency = shipment.Currency.ToString();
+		
 			if (shipment.DeliveryAddress != null)
 			{
-				retVal.DeliveryAddress = shipment.DeliveryAddress.ToEntity();
+				retVal.Addresses = new ObservableCollection<AddressEntity>(new AddressEntity[] { shipment.DeliveryAddress.ToEntity() });
 			}
 			if (shipment.Items != null)
 			{
@@ -97,15 +90,13 @@ namespace VirtoCommerce.CartModule.Data.Converters
 			if (source.DimensionWidth != null)
 				target.DimensionWidth = source.DimensionWidth;
 
-			var addressComparer = new AddressComparer();
-			if (source.DeliveryAddress != null && !addressComparer.Equals(target.DeliveryAddress, source.DeliveryAddress))
-				target.DeliveryAddress = source.DeliveryAddress;
+			if (!source.Addresses.IsNullCollection())
+			{
+				source.Addresses.Patch(target.Addresses, new AddressComparer(), (sourceAddress, targetAddress) => sourceAddress.Patch(targetAddress));
+			}
 
 			if (source.Items != null)
 			{
-				if (target.Items == null)
-					target.Items = new ObservableCollection<LineItemEntity>();
-
 				source.Items.Patch(target.Items, (sourceItem, targetItem) => sourceItem.Patch(targetItem));
 			}
 

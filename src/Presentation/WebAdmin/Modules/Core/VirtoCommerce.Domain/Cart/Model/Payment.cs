@@ -11,7 +11,7 @@ namespace VirtoCommerce.Domain.Cart.Model
 	public class Payment : Entity
 	{
 		public string OuterId { get; set; }
-		public CurrencyCodes? Currency { get; set; }
+		public CurrencyCodes Currency { get; set; }
 		public string PaymentGatewayCode { get; set; }
 		public decimal Amount { get; set; }
 

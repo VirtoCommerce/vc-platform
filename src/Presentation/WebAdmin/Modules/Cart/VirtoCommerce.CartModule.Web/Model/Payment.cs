@@ -10,14 +10,14 @@ using VirtoCommerce.Foundation.Money;
 
 namespace VirtoCommerce.CatalogModule.Web.Model
 {
-	public class Payment 
+	public class Payment : Entity
 	{
-		public string Id { get; set; }
+		
 		public string OuterId { get; set; }
 		public string PaymentGatewayCode { get; set; }
 		[JsonConverter(typeof(StringEnumConverter))]
-		public CurrencyCodes? Currency { get; set; }
-		public decimal? Amount { get; set; }
+		public CurrencyCodes Currency { get; set; }
+		public decimal Amount { get; set; }
 
 		public Address BillingAddress { get; set; }
 	}
