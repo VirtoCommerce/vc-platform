@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<module>
+	<id>Klarna.PaymentGateway</id>
+	<version>1.0.0.0</version>
+	<dependencies>
+		<dependency>VirtoCommerce.Core</dependency>
+	</dependencies>
+
+	<title>Klarna PaymentGateway Web</title>
+	<description>APIs and UI for klarna payment gateway</description>
+	<authors>
+		<author>Virto Commerce</author>
+	</authors>
+	<owners>
+		<owner>Virto Commerce</owner>
+	</owners>
+	<projectUrl>http://virtocommerce.com/</projectUrl>
+	<iconUrl>http://nuget.org/Content/Images/packageDefaultIcon-50x50.png</iconUrl>
+	<releaseNotes>First version.</releaseNotes>
+	<copyright>Copyright © 2011-2015 Virto Commerce. All rights reserved</copyright>
+	<tags>klarna payment gateway</tags>
+
+	<assemblyFile>Klarna.PaymentGatewaysModule.Web.dll</assemblyFile>
+	<moduleType>Klarna.PaymentGatewaysModule.Web.Module, Klarna.PaymentGatewaysModule.Web</moduleType>
+	<!--<styles>
+		<directory virtualPath="$/Content/css" searchPattern="*.css" searchSubdirectories="true" />
+	</styles>-->
+	<!--<scripts>
+		<directory virtualPath="$/Scripts" searchPattern="*.js" searchSubdirectories="true" />
+	</scripts>-->
+
+	<settings>
+		<group>
+			<setting>
+				<name>Klarna.PaymentGateway.Credentials.AppKey</name>
+				<valueType>integer</valueType>
+				<defaultValue>1000</defaultValue>
+				<title>Int</title>
+				<description>App key of your's klarna account</description>
+			</setting>
+			<setting>
+				<name>Klarna.PaymentGateway.Credentials.SecretKey</name>
+				<valueType>string</valueType>
+				<defaultValue>SecretKey</defaultValue>
+				<title>String</title>
+				<description>Secret key of your's klarna account</description>
+			</setting>
+		</group>
+	</settings>
+</module>

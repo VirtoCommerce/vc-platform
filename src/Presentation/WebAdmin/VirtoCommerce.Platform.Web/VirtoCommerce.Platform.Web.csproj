@@ -226,8 +226,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\angular-multi-select.css" />
-    <Content Include="Content\font-awesome.css" />
-    <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\ng-tags-input.css" />
     <Content Include="Content\ng-tags-input.min.css" />
@@ -303,6 +301,7 @@
     <Content Include="Content\themes\metro\css\metro-bootstrap-responsive.min.css" />
     <Content Include="Content\themes\metro\css\metro-bootstrap.css" />
     <Content Include="Content\themes\metro\css\metro-bootstrap.min.css" />
+    <Content Include="Content\themes\metro\fonts\fontawesome-webfont.svg" />
     <Content Include="favicon.ico" />
     <Content Include="Content\themes\metro\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\themes\metro\fonts\iconFont.dev.svg" />
@@ -423,6 +422,10 @@
     <Content Include="Scripts\angular-messages.min.js.map" />
     <Content Include="Scripts\angular-loader.min.js.map" />
     <Content Include="Scripts\angular-aria.min.js.map" />
+    <Content Include="Content\themes\metro\fonts\fontawesome-webfont.eot" />
+    <Content Include="Content\themes\metro\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Content\themes\metro\fonts\fontawesome-webfont.woff" />
+    <Content Include="Content\themes\metro\fonts\FontAwesome.otf" />
     <None Include="Scripts\jquery-1.11.1.intellisense.js" />
     <Content Include="Scripts\i18n\angular-locale_aa-dj.js" />
     <Content Include="Scripts\i18n\angular-locale_aa-er.js" />

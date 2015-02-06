@@ -21,10 +21,13 @@ namespace VirtoCommerce.Web.Core.DataContracts
         [DataMember(Order = 1)]
         public string Message { get; set; }
 
+        [DataMember(Order = 2)]
+        public string ExceptionMessage { get; set; }
+
         /// <summary>
         /// Gets the list of error details. 
         /// </summary>
-        [DataMember(Order = 2)]
+        [DataMember(Order = 3)]
         public List<ErrorDetail> Details { get; set; }
     }
 }

@@ -220,7 +220,7 @@ namespace VirtoCommerce.ApiClient
                 if (managementServiceError != null)
                 {
                     errorCode = managementServiceError.Code;
-                    errorMessage = managementServiceError.Message;
+                    errorMessage = managementServiceError.Message + " " + managementServiceError.ExceptionMessage;
                     errorDetails = managementServiceError.Details;
                 }
                 else

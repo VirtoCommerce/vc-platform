@@ -68,7 +68,6 @@ namespace VirtoCommerce.Platform.Web
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                 "~/Content/angular-multi-select.css",
-                "~/Content/font-awesome.css",
                 "~/Content/ng-tags-input.css",
                 "~/Content/textAngular.css"));
 

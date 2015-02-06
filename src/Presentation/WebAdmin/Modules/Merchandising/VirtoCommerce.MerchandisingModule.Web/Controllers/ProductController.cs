@@ -22,8 +22,6 @@ using moduleModel = VirtoCommerce.Domain.Catalog.Model;
 
 namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 {
-
-
     [RoutePrefix("api/mp/{store}/{language}/products")]
 	public class ProductController : BaseController
 	{
@@ -253,5 +251,45 @@ namespace VirtoCommerce.MerchandisingModule.Web.Controllers
 		    }
 		    return StatusCode(HttpStatusCode.NotFound);
 		}
+
+        /*
+        [HttpPost]
+        [ResponseType(typeof(ResponseCollection<Product>))]
+        [Route("")]
+        public IHttpActionResult GetProducts(string store, string[] productIds, [FromUri]moduleModel.ItemResponseGroup responseGroup = moduleModel.ItemResponseGroup.ItemLarge, string language = "en-us")
+        {
+            var catalog = GetCatalogId(store);
+            var products = _itemService.GetByIds(productIds, responseGroup);
+            var response = new ResponseCollection<Product>();
+            if (products == null)
+            {
+                foreach (var product in products)
+                {
+                    response.Items.Add(product.ToWebModel(_assetUri));
+                }
+                //Lets treat product as slug
+                using (var appConfigRepo = _foundationAppConfigRepFactory())
+                {
+                    var keyword = appConfigRepo.SeoUrlKeywords.FirstOrDefault(x => x.KeywordType == (int)SeoUrlKeywordTypes.Item
+                        && x.Keyword.Equals(product, StringComparison.InvariantCultureIgnoreCase));
+
+                    if (keyword != null)
+                    {
+                        result = _itemService.GetById(keyword.KeywordValue, responseGroup);
+                    }
+                }
+            }
+
+            if (result != null)
+            {
+                var webModelProduct = result.ToWebModel(_assetUri);
+                //Build category path outline for requested catalog, can be virtual catalog as well
+                webModelProduct.Outline = _catalogOutlineBuilderFactory().BuildCategoryOutline(catalog, result.Id).ToString("/").ToLowerInvariant();
+                webModelProduct.Outline = webModelProduct.Outline.Replace(catalog + "/", "");
+                return Ok(webModelProduct);
+            }
+            return StatusCode(HttpStatusCode.NotFound);
+        }
+         * */
 	}
 }
